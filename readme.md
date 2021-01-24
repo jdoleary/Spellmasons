@@ -46,7 +46,7 @@ Player's summons have no loyalty! They just attack in the direction they are mov
 
 - Trap
   - Spell lies latent on a tile until it is triggered
-  - -4 mana
+  - -0 mana
 - Time delay
   - Sets spell on tile like a trap but to execute at a given time (turn)
   - +1 mana per turn delayed
@@ -59,8 +59,6 @@ Player's summons have no loyalty! They just attack in the direction they are mov
 
 ## Golem Modifier Spells
 
-- Avoid obstacles
-  - Move diagonal when facing an obstacle rather than attacking
 - Destruct
   - Deal health as damage to self and target
 

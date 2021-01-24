@@ -2,6 +2,21 @@ import type Game from './Game';
 import type Player from './Player';
 import type Unit from './Unit';
 
+export interface Spell {
+  mana_cost: number;
+  caster: Player;
+  target_x?: number;
+  target_y?: number;
+  // damage can be negative for healing
+  damage?: number;
+  freeze?: boolean;
+  chain?: boolean;
+  aoe_radius?: number;
+  rotate?: boolean;
+  summon?: Unit;
+  // in turns
+  delay?: number;
+}
 export interface EffectArgs {
   unit?: Unit;
   // Used to prevent infinite loops when recuring via chain for example
@@ -71,19 +86,4 @@ export function effect(spell: Spell, args: EffectArgs) {
       game.summon(spell.summon);
     }
   }
-}
-export interface Spell {
-  mana_cost: number;
-  caster: Player;
-  target_x?: number;
-  target_y?: number;
-  // damage can be negative for healing
-  damage?: number;
-  freeze?: boolean;
-  chain?: boolean;
-  aoe_radius?: number;
-  rotate?: boolean;
-  summon?: Unit;
-  // in turns
-  delay?: number;
 }
