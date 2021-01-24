@@ -28,7 +28,7 @@ export default class Unit {
     this.y = y;
     this.vx = vx;
     this.vy = vy;
-    this.image = new Image(this.x, this.y, 0, imagePath);
+    this.image = new Image(this.x, this.y, this.vx, this.vy, imagePath);
   }
   takeDamage(amount: number) {
     this.health -= amount;

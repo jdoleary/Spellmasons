@@ -38,7 +38,8 @@ export default class Image {
   constructor(
     cellX: number,
     cellY: number,
-    rotation: number,
+    directionX: number,
+    directionY: number,
     imageName: string,
   ) {
     if (imageName) {
@@ -49,6 +50,14 @@ export default class Image {
       this.element.width = CELL_SIZE;
       this.element.height = CELL_SIZE;
       Image.id++;
+      let rotation = 0;
+      if (directionX > 0) {
+        rotation = directionY == 0 ? -90 : directionY > 0 ? -45 : 225;
+      } else if (directionX < 0) {
+        rotation = directionY == 0 ? 90 : directionY > 0 ? 45 : -225;
+      } else {
+        rotation = directionY == 0 ? 0 : directionY > 0 ? 0 : 180;
+      }
       this.set(cellX, cellY, rotation);
       board.appendChild(this.element);
     }
@@ -99,7 +108,7 @@ export default class Image {
     this.targetX = this.x;
     this.y = cell_y * CELL_SIZE;
     this.targetY = this.y;
-    this.rotation = rotation;
+    this.rotation = normalizeDegrees(rotation);
     this.targetRotation = this.rotation;
     this.setTransform();
   }
