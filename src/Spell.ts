@@ -10,6 +10,9 @@ export function effect(spell: Spell, args: EffectArgs) {
     if (spell.damage) {
       unit.health -= spell.damage;
     }
+    if (spell.freeze) {
+      unit.frozen = true;
+    }
   }
 }
 export interface Spell {
