@@ -4,6 +4,7 @@ import type Player from './Player';
 import * as config from './config';
 
 export enum game_state {
+  WaitingForPlayers,
   Playing,
   GameOver,
 }
@@ -49,7 +50,7 @@ export default class Game {
   }
   cast(spell: Spell) {
     const { caster, target_x, target_y } = spell;
-    if (caster.canCast(spell)) {
+    if (caster?.canCast(spell)) {
       const targets = this.getUnitsAt(target_x, target_y);
       if (targets.length) {
         for (let unit of targets) {

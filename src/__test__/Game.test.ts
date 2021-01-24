@@ -2,12 +2,10 @@ import { describe, it, expect, beforeAll } from '@jest/globals';
 import Game, { game_state } from '../Game';
 import Player from '../Player';
 import Unit from '../Unit';
-import { Spell, effect } from '../Spell';
 
 describe('Game', () => {
   it('should transition to state "Game Over" when a nextTurn() occurs while a player\'s heart is destroyed', () => {
     const g = new Game();
-    expect(g.state).toEqual(game_state.Playing);
     const p = new Player();
     g.players.push(p);
     g.players.push(new Player());

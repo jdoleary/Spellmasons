@@ -4,7 +4,7 @@ import type Unit from './Unit';
 
 export interface Spell {
   mana_cost: number;
-  caster: Player;
+  caster?: Player;
   target_x?: number;
   target_y?: number;
   // damage can be negative for healing

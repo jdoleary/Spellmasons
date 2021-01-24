@@ -22,7 +22,9 @@
       "pre-commit": "npm run format"
     }
   },
-  "dependencies": {},
+  "dependencies": {
+    "pie-client": "^0.2.1"
+  },
   "devDependencies": {
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-typescript": "^7.12.7",

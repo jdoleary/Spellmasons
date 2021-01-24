@@ -2,6 +2,8 @@ import { PLAYER_HEART_HEALTH } from './config';
 import type { Spell } from './Spell';
 
 export default class Player {
+  // wsPie id
+  client_id?: string;
   heart_health: number = PLAYER_HEART_HEALTH;
   mana: number = 2;
   mana_max: number = 2;
