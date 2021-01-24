@@ -17,6 +17,7 @@ Player's summons have no loyalty!  They just attack in the direction they are mo
 - Summon golem
     - Golems move like pawns automatically
     - Golems do not have "owners", they just move in the direction they're facing
+        - This is core to the gameplay, it means that any unit could be an ally or enemy and their position and the direction that they are facing matters a lot.
     - -2 mana
     - TODO balance cost of summoning golem with golem health and cost to destroy golem (should be equal probably)
 - Summon Boulder

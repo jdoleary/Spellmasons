@@ -36,7 +36,12 @@ describe('Game', () => {
         mana_cost: 1,
       };
       // Setup spell to be cast
-      g.spellMetas.push({ caster: p, target: u2, spell: s });
+      g.spellMetas.push({
+        caster: p,
+        target_x: u2.x,
+        target_y: u2.y,
+        spell: s,
+      });
       // Trigger the next turn which will change the game state to
       // what will be tested in all the following tests
       g.nextTurn();

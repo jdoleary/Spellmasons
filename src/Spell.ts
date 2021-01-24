@@ -1,5 +1,4 @@
 import type Player from './Player';
-import type Unit from './Unit';
 
 export interface Spell {
   mana_cost: number;
@@ -9,6 +8,7 @@ export interface Spell {
 
 export interface SpellMeta {
   caster?: Player;
-  target?: Unit;
+  target_x: number;
+  target_y: number;
   spell: Spell;
 }

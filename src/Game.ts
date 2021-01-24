@@ -32,8 +32,11 @@ export default class Game {
   nextTurn() {
     // Cast spells
     for (let sm of this.spellMetas) {
-      const { spell, caster, target } = sm;
-      caster?.cast(spell, target);
+      const { spell, caster, target_x, target_y } = sm;
+      const targets = this.getUnitsAt(target_x, target_y);
+      for (let t of targets) {
+        caster?.cast(spell, t);
+      }
     }
     // Remove all spells, now that they are cast
     // TODO traps shouldn't be removed unless they are cast
