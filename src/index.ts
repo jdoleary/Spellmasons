@@ -2,6 +2,7 @@
 import wsPie from 'pie-client';
 import Game from './Game';
 import Player from './Player';
+import type { Spell } from './Spell';
 import Unit from './Unit';
 let clientId = 0;
 let clients = [];
@@ -42,11 +43,51 @@ function connect(pieArgs = {}, _room_info = {}) {
               );
           }
         },
-        onData: console.log,
+        onData,
       },
       pieArgs,
     ),
   );
+}
+// Keeps track of which players have ended their turn
+let turn_finished = {};
+enum MESSAGE_TYPES {
+  SPELL,
+  END_TURN,
+}
+function onData(d: {
+  fromClient: string;
+  payload: {
+    type: MESSAGE_TYPES;
+    spell?: Spell;
+  };
+}) {
+  console.log('onData', d);
+  const { payload, fromClient } = d;
+  const { type, spell } = payload;
+  // Get caster
+  const caster = game.players.find((p) => p.client_id === fromClient);
+  switch (type) {
+    case MESSAGE_TYPES.SPELL:
+      // Set caster based on which client sent it
+      spell.caster = caster;
+      game.queueSpell(spell);
+      break;
+    case MESSAGE_TYPES.END_TURN:
+      turn_finished[fromClient] = true;
+      let all_players_ended_turn = true;
+      for (let p of game.players) {
+        if (!turn_finished[p.client_id]) {
+          all_players_ended_turn = false;
+          break;
+        }
+      }
+      if (all_players_ended_turn) {
+        turn_finished = {};
+        game.nextTurn();
+      }
+      break;
+  }
 }
 function onClientPresenceChanged(o: any) {
   console.log('clientPresenceChanged', o);
@@ -67,21 +108,25 @@ function makeGame(clients: string[]) {
       p.client_id = c;
       game.players.push(p);
     }
+    // Start animations
+    game.animate(0);
+
+    // Test; TODO remove
     const u = new Unit(0, 0, 0, 1, 'crocodile.png');
     game.summon(u);
     game.summon(new Unit(0, 3, 0, 0, 'crocodile.png'));
-    // Start animations
-    game.animate(0);
-    // @ts-ignore
     window.game = game;
-    // document.querySelector('img')?.addEventListener('click', () => {
-    //   pie.sendData({ test: 1 });
-    // });
-    // // @ts-ignore
-    // gsap.to('img', { duration: 1, x: 200 });
   }
 }
-// @ts-ignore
 window.connect = connect;
 
+// Connect to PieServer
+
 connect();
+
+declare global {
+  interface Window {
+    connect: typeof connect;
+    game: Game;
+  }
+}
