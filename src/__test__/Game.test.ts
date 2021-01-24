@@ -1,12 +1,64 @@
-import {describe, it, expect} from '@jest/globals'
+import { describe, it, expect, beforeAll } from '@jest/globals';
+import Game, { game_state } from '../Game';
+import Player from '../Player';
+import Unit from '../Unit';
+import type { Spell } from '../Spell';
 
 describe('Game', () => {
-    it('should transition to state "Game Over" when a player heart is destroyed', () => {
+  it('should transition to state "Game Over" when a nextTurn() occurs while a player\'s heart is destroyed', () => {
+    const g = new Game();
+    expect(g.state).toEqual(game_state.Playing);
+    const p = new Player();
+    g.players.push(p);
+    g.players.push(new Player());
+    p.heart_health = 0;
 
-    })
-    it('should trigger "move" on all units every turn', () => {
-        // TODO should player's turns execute simultaneously?
-    })
-
-
-})
+    g.nextTurn();
+    expect(g.state).toEqual(game_state.GameOver);
+  });
+  describe('Turns - in order', () => {
+    let g: Game;
+    let u: Unit;
+    let u2: Unit;
+    let p: Player;
+    beforeAll(() => {
+      g = new Game();
+      p = new Player();
+      g.players.push(p);
+      // Simulate mana loss (this is handled mid-turn when spells are cast)
+      // in order to assert that mana is reset to mana_max
+      p.mana = p.mana_max - 1;
+      u = new Unit(0, 0, 0, 1, g);
+      u2 = new Unit(1, 0, 0, -1, g);
+      u2.alive = false;
+      const s: Spell = {
+        damage: u2.health,
+        mana_cost: 1,
+      };
+      // Setup spell to be cast
+      g.spellMetas.push({ caster: p, target: u2, spell: s });
+      // Trigger the next turn which will change the game state to
+      // what will be tested in all the following tests
+      g.nextTurn();
+    });
+    it('should cast spells on every turn', () => {
+      expect(u2.health).toEqual(0);
+      expect(u2.alive).toEqual(false);
+    });
+    it('Should remove spells after they are cast', () => {
+      expect(g.spellMetas.length).toEqual(0);
+    });
+    it('should remove dead units from the board', () => {
+      // Show that u2 has been removed
+      expect(g.units).toEqual([u]);
+    });
+    it('should trigger "move" on all living units every turn', () => {
+      expect(u.y).toEqual(1);
+      // Did not move because it's dead
+      expect(u2.y).toEqual(0);
+    });
+    it("should restore players' mana to mana_max", () => {
+      expect(p.mana).toEqual(p.mana_max);
+    });
+  });
+});

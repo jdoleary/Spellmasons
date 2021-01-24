@@ -6,10 +6,12 @@ export default class Player {
   heart_health: number = PLAYER_HEART_HEALTH;
   mana: number = 2;
   mana_max: number = 2;
-  cast(s: Spell, target: Unit): boolean {
+  cast(s: Spell, target?: Unit): boolean {
     if (this.mana >= s.mana_cost) {
       this.mana -= s.mana_cost;
-      target.health -= s.damage;
+      if (target) {
+        target.health -= s.damage;
+      }
       return true;
     } else {
       return false;

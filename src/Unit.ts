@@ -19,5 +19,8 @@ export default class Unit {
     this.game = game;
     this.game.units.push(this);
   }
-  move(dx: number, dy: number) {}
+  move() {
+    this.x += this.vx;
+    this.y += this.vy;
+  }
 }
