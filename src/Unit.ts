@@ -1,19 +1,23 @@
-import {UNIT_BASE_HEALTH} from './config'
-import type Grid from './Game'
+import { UNIT_BASE_HEALTH } from './config';
+import type Game from './Game';
 
 export default class Unit {
-    x:number;
-    y:number;
-    health:number = UNIT_BASE_HEALTH;
-    alive = true;
-    grid: Grid;
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  health: number = UNIT_BASE_HEALTH;
+  alive = true;
+  game: Game;
 
-    constructor(x:number, y:number, grid: Grid){
-        this.x = x;
-        this.y = y;
-        this.grid = grid;
-    }
-    move(dx:number, dy:number){
-        
-    }
+  constructor(x: number, y: number, vx: number, vy: number, game: Game) {
+    this.x = x;
+    this.y = y;
+    this.vx = vx;
+    this.vy = vy;
+    // Two-way reference to the Game
+    this.game = game;
+    this.game.units.push(this);
+  }
+  move(dx: number, dy: number) {}
 }

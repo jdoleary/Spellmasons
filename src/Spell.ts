@@ -1,8 +1,14 @@
-import type Unit from './Unit'
+import type Player from './Player';
+import type Unit from './Unit';
+
 export interface Spell {
-    mana_cost:number;
-    // damage can be negative for healing
-    damage:number;
-    cast: (target:Unit) => void;
+  mana_cost: number;
+  // damage can be negative for healing
+  damage: number;
 }
-export default {};
+
+export interface SpellMeta {
+  caster?: Player;
+  target?: Unit;
+  spell: Spell;
+}
