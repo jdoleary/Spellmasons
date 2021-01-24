@@ -10,6 +10,10 @@ export interface EffectArgs {
 }
 export function effect(spell: Spell, args: EffectArgs) {
   const { unit, game, ignore = [] } = args;
+  if (spell.delay && spell.delay > 0) {
+    spell.delay--;
+    return;
+  }
   if (unit) {
     if (ignore.includes(unit)) {
       return;
@@ -80,4 +84,6 @@ export interface Spell {
   aoe_radius?: number;
   rotate?: boolean;
   summon?: Unit;
+  // in turns
+  delay?: number;
 }

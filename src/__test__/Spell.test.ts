@@ -48,6 +48,40 @@ describe('Spell', () => {
     });
   });
   describe('Modifiers', () => {
+    describe('delay', () => {
+      it('should decrement delay by 1 every time effect() is called', () => {
+        const u = new Unit(0, 0, 0, 0);
+        const p = new Player();
+        p.mana = 1;
+        const start_health = u.health;
+        const s: Spell = {
+          mana_cost: 1,
+          caster: p,
+          damage: 1,
+          delay: 2,
+        };
+        effect(s, { unit: u });
+        expect(s.delay).toEqual(1);
+        effect(s, { unit: u });
+        expect(s.delay).toEqual(0);
+      });
+      it('should not cause effect until delay is 0', () => {
+        const u = new Unit(0, 0, 0, 0);
+        const p = new Player();
+        p.mana = 1;
+        const start_health = u.health;
+        const s: Spell = {
+          mana_cost: 1,
+          caster: p,
+          damage: 1,
+          delay: 1,
+        };
+        effect(s, { unit: u });
+        expect(u.health).toEqual(start_health);
+        effect(s, { unit: u });
+        expect(u.health).toEqual(start_health - (s.damage || 0));
+      });
+    });
     describe('AOE', () => {
       it('should AOE to units within radius', () => {
         const g = new Game();
