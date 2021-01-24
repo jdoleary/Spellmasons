@@ -1,14 +1,12 @@
-#img {
-  display: block;
-  margin: auto;
-  height: 128px;
-  width: 128px;
-  padding: 2rem;
+#game-container {
+  background: grey;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-
-#canvas {
-  display: block;
-  margin: 2rem auto;
-  width: 540px;
-  height: 540px;
+#board {
+  border: 1px solid black;
+  background-color: white;
+  width: 800px;
+  height: 800px;
 }

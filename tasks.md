@@ -6,6 +6,7 @@
   - Animation (greensock?)
   - Summonable unit types
   - All UI interacts with gamestate through Websocket Pie contract
+    - Link images and clicks to game actions
 
 - Spells
 

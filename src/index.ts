@@ -66,9 +66,11 @@ function makeGame(clients: string[]) {
       p.client_id = c;
       game.players.push(p);
     }
-    document.getElementById('test')?.addEventListener('click', () => {
+    document.querySelector('img')?.addEventListener('click', () => {
       pie.sendData({ test: 1 });
     });
+    // @ts-ignore
+    gsap.to('img', { duration: 1, x: 200 });
   }
 }
 // @ts-ignore
