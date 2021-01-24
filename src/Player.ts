@@ -10,7 +10,7 @@ export default class Player {
     if (this.mana >= s.mana_cost) {
       this.mana -= s.mana_cost;
       if (target) {
-        target.health -= s.damage;
+        target.takeDamage(s.damage);
       }
       return true;
     } else {
