@@ -1,5 +1,5 @@
 import type Unit from './Unit';
-import type { SpellMeta } from './Spell';
+import { Spell, effect } from './Spell';
 import type Player from './Player';
 import * as config from './config';
 
@@ -14,8 +14,8 @@ export default class Game {
   width: number = config.BOARD_WIDTH;
   players: Player[] = [];
   units: Unit[] = [];
-  spellMetas: SpellMeta[] = [];
-  getUnitsAt(x: number, y: number): Unit[] {
+  spells: Spell[] = [];
+  getUnitsAt(x?: number, y?: number): Unit[] {
     return this.units.filter((u) => u.x === x && u.y === y);
   }
   getPlayerAt(heart_x: number, heart_y: number): Player | undefined {
@@ -29,18 +29,23 @@ export default class Game {
       }
     }
   }
+  cast(spell: Spell) {
+    const { caster, target_x, target_y } = spell;
+    const targets = this.getUnitsAt(target_x, target_y);
+    if (caster.canCast(spell)) {
+      for (let unit of targets) {
+        effect(spell, { unit });
+      }
+    }
+  }
   nextTurn() {
     // Cast spells
-    for (let sm of this.spellMetas) {
-      const { spell, caster, target_x, target_y } = sm;
-      const targets = this.getUnitsAt(target_x, target_y);
-      for (let t of targets) {
-        caster?.cast(spell, t);
-      }
+    for (let sm of this.spells) {
+      this.cast(sm);
     }
     // Remove all spells, now that they are cast
     // TODO traps shouldn't be removed unless they are cast
-    this.spellMetas = [];
+    this.spells = [];
 
     // Remove dead units
     this.units = this.units.filter((u) => u.alive);

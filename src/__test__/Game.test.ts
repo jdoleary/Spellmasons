@@ -2,7 +2,7 @@ import { describe, it, expect, beforeAll } from '@jest/globals';
 import Game, { game_state } from '../Game';
 import Player from '../Player';
 import Unit from '../Unit';
-import type { Spell } from '../Spell';
+import { Spell, effect } from '../Spell';
 
 describe('Game', () => {
   it('should transition to state "Game Over" when a nextTurn() occurs while a player\'s heart is destroyed', () => {
@@ -31,16 +31,13 @@ describe('Game', () => {
       u = new Unit(0, 0, 0, 1, g);
       u2 = new Unit(1, 0, 0, -1, g);
       u2.alive = false;
-      const s: Spell = {
-        damage: u2.health,
-        mana_cost: 1,
-      };
       // Setup spell to be cast
-      g.spellMetas.push({
+      g.spells.push({
+        mana_cost: 1,
+        damage: u2.health,
         caster: p,
         target_x: u2.x,
         target_y: u2.y,
-        spell: s,
       });
       // Trigger the next turn which will change the game state to
       // what will be tested in all the following tests
@@ -51,7 +48,7 @@ describe('Game', () => {
       expect(u2.alive).toEqual(false);
     });
     it('Should remove spells after they are cast', () => {
-      expect(g.spellMetas.length).toEqual(0);
+      expect(g.spells.length).toEqual(0);
     });
     it('should remove dead units from the board', () => {
       // Show that u2 has been removed
