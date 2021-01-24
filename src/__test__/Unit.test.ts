@@ -1,6 +1,7 @@
 import { describe, it, expect } from '@jest/globals';
 import Unit from '../Unit';
 import Game from '../Game';
+import Player from '../Player';
 
 describe('Unit', () => {
   it('should die when health reaches 0', () => {
@@ -67,10 +68,27 @@ describe('Unit', () => {
     u.move();
     // Expect that u HAS physically moved because u2 was blocking but is now dead
     expect(u.x).toEqual(START_X);
-    expect(u.y).toEqual(START_Y+START_VY);
-
+    expect(u.y).toEqual(START_Y + START_VY);
   });
   it("should be able to move through multiple units if it's attacks kill them and it still has moves to make", () => {});
-  it('should attack the heart when it reaches the end of the board', () => {});
+  it('should attack the heart when it reaches the end of the board', () => {
+    const g = new Game();
+    const p = new Player();
+    const START_HEART_HEALTH = 1;
+    p.heart_health = START_HEART_HEALTH;
+    // Put player at the bottom of the board
+    p.heart_y = g.height + 1;
+    g.players.push(p);
+
+    const START_X = 0;
+    const START_Y = g.height;
+    const START_VY = 1;
+    // Set u up to move into p's heart at the bottom of the board
+    const u = new Unit(START_X, START_Y, 0, START_VY, g);
+    u.power = START_HEART_HEALTH;
+    // Move u into heart
+    u.move();
+    expect(p.heart_health).toEqual(0);
+  });
   it('should trigger all traps on a cell that it moves into', () => {});
 });

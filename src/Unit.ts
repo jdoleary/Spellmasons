@@ -1,5 +1,6 @@
 import * as config from './config';
 import type Game from './Game';
+import type Player from './Player';
 
 export default class Unit {
   x: number;
@@ -27,19 +28,29 @@ export default class Unit {
     }
   }
   move() {
-    const next_x = this.vx;
-    const next_y = this.vy;
-    const bump_into_units = this.game.units.filter(u => u.x === next_x && u.y === next_y)
+    const next_x = this.x + this.vx;
+    const next_y = this.y + this.vy;
+    const bump_into_units = this.game.units.filter(
+      (u) => u.x === next_x && u.y === next_y,
+    );
     // Deal damage to what you run into
-    for(let other_unit of bump_into_units){
-        other_unit.takeDamage(this.power);
-        this.takeDamage(other_unit.power)
+    for (let other_unit of bump_into_units) {
+      other_unit.takeDamage(this.power);
+      this.takeDamage(other_unit.power);
     }
-    const alive_bump_into_units = bump_into_units.filter(u => u.alive)
-    // Move, if nothing is obstructing
-    if(alive_bump_into_units.length === 0){
+    const alive_bump_into_units = bump_into_units.filter((u) => u.alive);
+    // If nothing is obstructing
+    if (alive_bump_into_units.length === 0) {
+      // Check if at edge of board
+      const player: Player | undefined = this.game.getPlayerAt(next_x, next_y);
+      if (player) {
+        // if player found, attack their heart
+        player.heart_health -= this.power;
+      } else {
+        // Otherwise, physically move
         this.x = next_x;
         this.y = next_y;
+      }
     }
   }
 }
