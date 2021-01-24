@@ -2,6 +2,7 @@
 import wsPie from 'pie-client';
 import Game from './Game';
 import Player from './Player';
+import Unit from './Unit';
 let clientId = 0;
 let clients = [];
 
@@ -66,11 +67,17 @@ function makeGame(clients: string[]) {
       p.client_id = c;
       game.players.push(p);
     }
-    document.querySelector('img')?.addEventListener('click', () => {
-      pie.sendData({ test: 1 });
-    });
+    const u = new Unit(0, 0, 1, 1, 'crocodile.png');
+    game.summon(u);
+    // Start animations
+    game.animate(0);
     // @ts-ignore
-    gsap.to('img', { duration: 1, x: 200 });
+    window.game = game;
+    // document.querySelector('img')?.addEventListener('click', () => {
+    //   pie.sendData({ test: 1 });
+    // });
+    // // @ts-ignore
+    // gsap.to('img', { duration: 1, x: 200 });
   }
 }
 // @ts-ignore

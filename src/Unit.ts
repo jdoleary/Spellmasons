@@ -1,6 +1,12 @@
 import * as config from './config';
 import type Game from './Game';
+import Image from './Image';
 import type Player from './Player';
+
+const image_mapping = {
+  golem: 'crocodile.png',
+  rock: 'sloth.png',
+};
 
 export default class Unit {
   x: number;
@@ -14,12 +20,20 @@ export default class Unit {
   alive = true;
   frozen: boolean = false;
   destruct: boolean = false;
+  image: Image;
 
-  constructor(x: number, y: number, vx: number, vy: number) {
+  constructor(
+    x: number,
+    y: number,
+    vx: number,
+    vy: number,
+    imagePath?: string,
+  ) {
     this.x = x;
     this.y = y;
     this.vx = vx;
     this.vy = vy;
+    this.image = new Image(imagePath);
   }
   takeDamage(amount: number) {
     this.health -= amount;
@@ -68,6 +82,7 @@ export default class Unit {
         // Otherwise, physically move
         this.x = next_x;
         this.y = next_y;
+        this.image.move(this.x, this.y);
       }
     }
   }

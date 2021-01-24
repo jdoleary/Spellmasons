@@ -16,6 +16,18 @@ export default class Game {
   players: Player[] = [];
   units: Unit[] = [];
   spells: Spell[] = [];
+  animateStart: number = 0;
+  constructor() {
+    this.animate = this.animate.bind(this);
+  }
+  animate(timestamp: number) {
+    const dt = timestamp - this.animateStart;
+    for (let u of this.units) {
+      u.image.animate(dt);
+    }
+    this.animateStart = timestamp;
+    window.requestAnimationFrame(this.animate);
+  }
   getUnitsWithinDistanceOfPoint(
     x: number,
     y: number,
@@ -70,6 +82,13 @@ export default class Game {
     // TODO traps shouldn't be removed unless they are cast
     this.spells = [];
 
+    // Clean up DOM of dead units
+    for (let u of this.units) {
+      if (!u.alive) {
+        // Remove image from DOM
+        u.image.cleanup();
+      }
+    }
     // Remove dead units
     this.units = this.units.filter((u) => u.alive);
 
