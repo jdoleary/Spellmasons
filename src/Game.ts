@@ -15,6 +15,9 @@ export default class Game {
   players: Player[] = [];
   units: Unit[] = [];
   spellMetas: SpellMeta[] = [];
+  getUnitsAt(x: number, y: number): Unit[] {
+    return this.units.filter((u) => u.x === x && u.y === y);
+  }
   getPlayerAt(heart_x: number, heart_y: number): Player | undefined {
     for (let p of this.players) {
       // Only one has to match

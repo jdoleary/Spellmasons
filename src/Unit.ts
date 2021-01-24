@@ -30,9 +30,7 @@ export default class Unit {
   move() {
     const next_x = this.x + this.vx;
     const next_y = this.y + this.vy;
-    const bump_into_units = this.game.units.filter(
-      (u) => u.x === next_x && u.y === next_y,
-    );
+    const bump_into_units = this.game.getUnitsAt(next_x, next_y);
     // Deal damage to what you run into
     for (let other_unit of bump_into_units) {
       other_unit.takeDamage(this.power);
