@@ -56,9 +56,6 @@ Player's summons have no loyalty! They just attack in the direction they are mov
 - Chain
   - Duplicates spell for any touching cells recursively
   - -3 mana
-- Greater Chain
-  - Duplicates spell for any spells with 2 squares recursively
-  - -8
 
 ## Golem Modifier Spells
 

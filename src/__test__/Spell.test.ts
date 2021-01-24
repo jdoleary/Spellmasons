@@ -48,6 +48,48 @@ describe('Spell', () => {
     });
   });
   describe('Modifiers', () => {
+    describe('AOE', () => {
+      it('should AOE to units within radius', () => {
+        const g = new Game();
+        const p = new Player();
+        g.players.push(p);
+        p.mana = 1;
+        const HEALTH = 4;
+        const u1 = new Unit(0, 0, 0, 1);
+        const u2 = new Unit(1, 0, 0, -1);
+        const u3 = new Unit(2, 0, 0, -1);
+        const u4 = new Unit(4, 0, 0, -1);
+        u1.name = 'u1';
+        u2.name = 'u2';
+        u3.name = 'u3';
+        u4.name = 'u4';
+        u1.health = HEALTH;
+        u2.health = HEALTH;
+        u3.health = HEALTH;
+        u4.health = HEALTH;
+        // Summon units into the game
+        g.summon(u1);
+        g.summon(u2);
+        g.summon(u3);
+        g.summon(u4);
+        // Setup spell to be cast
+        const s = {
+          mana_cost: 1,
+          // Spell will kill units
+          damage: HEALTH,
+          caster: p,
+          // Cast on u3, will also hit u2 due to aoe
+          target_x: u3.x,
+          target_y: u3.y,
+          aoe_radius: 1,
+        };
+        g.cast(s);
+        expect(u1.health).toEqual(HEALTH);
+        expect(u2.health).toEqual(0);
+        expect(u3.health).toEqual(0);
+        expect(u4.health).toEqual(HEALTH);
+      });
+    });
     describe('Chain', () => {
       it('should chain to touching units', () => {
         const g = new Game();
