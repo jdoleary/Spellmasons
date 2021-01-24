@@ -20,6 +20,7 @@ describe('Game', () => {
     let g: Game;
     let u: Unit;
     let u2: Unit;
+    let u_frozen: Unit;
     let p: Player;
     beforeAll(() => {
       g = new Game();
@@ -31,6 +32,8 @@ describe('Game', () => {
       u = new Unit(0, 0, 0, 1, g);
       u2 = new Unit(1, 0, 0, -1, g);
       u2.alive = false;
+      u_frozen = new Unit(7, 7, 0, 0, g);
+      u_frozen.frozen = true;
       // Setup spell to be cast
       g.spells.push({
         mana_cost: 1,
@@ -52,12 +55,15 @@ describe('Game', () => {
     });
     it('should remove dead units from the board', () => {
       // Show that u2 has been removed
-      expect(g.units).toEqual([u]);
+      expect(g.units).not.toContain(u2);
     });
     it('should trigger "move" on all living units every turn', () => {
       expect(u.y).toEqual(1);
       // Did not move because it's dead
       expect(u2.y).toEqual(0);
+    });
+    it('should unfreeze any frozen units', () => {
+      expect(u_frozen.frozen).toEqual(false);
     });
     it("should restore players' mana to mana_max", () => {
       expect(p.mana).toEqual(p.mana_max);

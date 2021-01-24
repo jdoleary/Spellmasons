@@ -55,6 +55,11 @@ export default class Game {
       u.move();
     }
 
+    // Unfreeze frozen units
+    for (let u of this.units) {
+      u.frozen = false;
+    }
+
     // Restore player mana
     for (let p of this.players) {
       p.mana = p.mana_max;
