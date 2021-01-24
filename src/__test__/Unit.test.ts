@@ -11,6 +11,31 @@ describe('Unit', () => {
     u.takeDamage(u.health);
     expect(u.alive).toEqual(false);
   });
+  describe('when frozen', () => {
+    it('should not move', () => {
+      const g = new Game();
+      const u = new Unit(0, 0, 0, 1, g);
+      u.frozen = true;
+      u.move();
+      expect(u.y).toEqual(0);
+    });
+    it('should not deal damage when it is moved into', () => {
+      const g = new Game();
+      // Set u up to move into u1
+      const u = new Unit(0, 0, 0, 1, g);
+      const u2 = new Unit(0, 1, 0, 0, g);
+      // Give u2 power to attack u when u moves into it
+      u2.power = 2;
+      // Make u2 frozen
+      u2.frozen = true;
+      const START_HEALTH = 4;
+      u.health = START_HEALTH;
+      u2.health = START_HEALTH;
+      u.move();
+      // Expect that no damage has been taken
+      expect(u.health).toEqual(START_HEALTH);
+    });
+  });
   it('should attack whatever it moves into', () => {
     const g = new Game();
     // Set u up to move into u1

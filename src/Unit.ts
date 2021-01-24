@@ -11,6 +11,7 @@ export default class Unit {
   health: number = config.UNIT_BASE_HEALTH;
   alive = true;
   game: Game;
+  frozen: boolean = false;
 
   constructor(x: number, y: number, vx: number, vy: number, game: Game) {
     this.x = x;
@@ -28,13 +29,20 @@ export default class Unit {
     }
   }
   move() {
+    // Do not move if frozen
+    if (this.frozen) {
+      return;
+    }
     const next_x = this.x + this.vx;
     const next_y = this.y + this.vy;
     const bump_into_units = this.game.getUnitsAt(next_x, next_y);
     // Deal damage to what you run into
     for (let other_unit of bump_into_units) {
       other_unit.takeDamage(this.power);
-      this.takeDamage(other_unit.power);
+      // Only take damage if the other unit is not frozen
+      if (!other_unit.frozen) {
+        this.takeDamage(other_unit.power);
+      }
     }
     const alive_bump_into_units = bump_into_units.filter((u) => u.alive);
     // If nothing is obstructing
