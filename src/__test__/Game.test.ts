@@ -29,11 +29,15 @@ describe('Game', () => {
       // Simulate mana loss (this is handled mid-turn when spells are cast)
       // in order to assert that mana is reset to mana_max
       p.mana = p.mana_max - 1;
-      u = new Unit(0, 0, 0, 1, g);
-      u2 = new Unit(1, 0, 0, -1, g);
+      u = new Unit(0, 0, 0, 1);
+      u2 = new Unit(1, 0, 0, -1);
       u2.alive = false;
-      u_frozen = new Unit(7, 7, 0, 0, g);
+      u_frozen = new Unit(7, 7, 0, 0);
       u_frozen.frozen = true;
+      // Summon units into the game
+      g.summon(u);
+      g.summon(u2);
+      g.summon(u_frozen);
       // Setup spell to be cast
       g.spells.push({
         mana_cost: 1,

@@ -29,12 +29,20 @@ export default class Game {
       }
     }
   }
+  summon(unit: Unit) {
+    unit.game = this;
+    this.units.push(unit);
+  }
   cast(spell: Spell) {
     const { caster, target_x, target_y } = spell;
     const targets = this.getUnitsAt(target_x, target_y);
     if (caster.canCast(spell)) {
-      for (let unit of targets) {
-        effect(spell, { unit });
+      if (targets.length) {
+        for (let unit of targets) {
+          effect(spell, { unit });
+        }
+      } else {
+        effect(spell, { game: this });
       }
     }
   }

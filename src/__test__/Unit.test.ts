@@ -6,15 +6,15 @@ import Player from '../Player';
 describe('Unit', () => {
   it('should die when health reaches 0', () => {
     const g = new Game();
-    const u = new Unit(0, 0, 0, 0, g);
+    const u = new Unit(0, 0, 0, 0);
+    g.summon(u);
     u.health = 5;
     u.takeDamage(u.health);
     expect(u.alive).toEqual(false);
   });
   describe('when frozen', () => {
     it('should not move', () => {
-      const g = new Game();
-      const u = new Unit(0, 0, 0, 1, g);
+      const u = new Unit(0, 0, 0, 1);
       u.frozen = true;
       u.move();
       expect(u.y).toEqual(0);
@@ -22,8 +22,10 @@ describe('Unit', () => {
     it('should not deal damage when it is moved into', () => {
       const g = new Game();
       // Set u up to move into u1
-      const u = new Unit(0, 0, 0, 1, g);
-      const u2 = new Unit(0, 1, 0, 0, g);
+      const u = new Unit(0, 0, 0, 1);
+      const u2 = new Unit(0, 1, 0, 0);
+      g.summon(u);
+      g.summon(u2);
       // Give u2 power to attack u when u moves into it
       u2.power = 2;
       // Make u2 frozen
@@ -39,8 +41,10 @@ describe('Unit', () => {
   it('should attack whatever it moves into', () => {
     const g = new Game();
     // Set u up to move into u1
-    const u = new Unit(0, 0, 0, 1, g);
-    const u2 = new Unit(0, 1, 0, 0, g);
+    const u = new Unit(0, 0, 0, 1);
+    const u2 = new Unit(0, 1, 0, 0);
+    g.summon(u);
+    g.summon(u2);
     u.power = 2;
     const START_HEALTH = 4;
     u2.health = START_HEALTH;
@@ -50,8 +54,10 @@ describe('Unit', () => {
   it('should BE attacked whatever it moves into if what it moves into is capable of dealing damage', () => {
     const g = new Game();
     // Set u up to move into u1
-    const u = new Unit(0, 0, 0, 1, g);
-    const u2 = new Unit(0, 1, 0, 0, g);
+    const u = new Unit(0, 0, 0, 1);
+    const u2 = new Unit(0, 1, 0, 0);
+    g.summon(u);
+    g.summon(u2);
     // Give u2 power to attack u when u moves into it
     u2.power = 2;
     const START_HEALTH = 4;
@@ -66,8 +72,10 @@ describe('Unit', () => {
     const START_Y = 0;
     const START_VY = 1;
     // Set u up to move into u1
-    const u = new Unit(START_X, START_Y, 0, START_VY, g);
-    const u2 = new Unit(0, START_Y + START_VY, 0, 0, g);
+    const u = new Unit(START_X, START_Y, 0, START_VY);
+    const u2 = new Unit(0, START_Y + START_VY, 0, 0);
+    g.summon(u);
+    g.summon(u2);
     u.power = 0;
     const START_HEALTH = 4;
     u.health = START_HEALTH;
@@ -83,8 +91,10 @@ describe('Unit', () => {
     const START_Y = 0;
     const START_VY = 1;
     // Set u up to move into u1
-    const u = new Unit(START_X, START_Y, 0, START_VY, g);
-    const u2 = new Unit(0, START_Y + START_VY, 0, 0, g);
+    const u = new Unit(START_X, START_Y, 0, START_VY);
+    const u2 = new Unit(0, START_Y + START_VY, 0, 0);
+    g.summon(u);
+    g.summon(u2);
     const START_HEALTH = 4;
     u.power = START_HEALTH;
     u.health = START_HEALTH;
@@ -109,7 +119,8 @@ describe('Unit', () => {
     const START_Y = g.height;
     const START_VY = 1;
     // Set u up to move into p's heart at the bottom of the board
-    const u = new Unit(START_X, START_Y, 0, START_VY, g);
+    const u = new Unit(START_X, START_Y, 0, START_VY);
+    g.summon(u);
     u.power = START_HEART_HEALTH;
     // Move u into heart
     u.move();

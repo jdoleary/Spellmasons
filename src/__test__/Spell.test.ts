@@ -7,8 +7,7 @@ import Game from '../Game';
 describe('Spell', () => {
   describe('effect', () => {
     it('it should deal damage to unit', () => {
-      const g = new Game();
-      const u = new Unit(0, 0, 0, 0, g);
+      const u = new Unit(0, 0, 0, 0);
       const p = new Player();
       p.mana = 1;
       const start_health = u.health;
@@ -22,11 +21,9 @@ describe('Spell', () => {
     });
     describe('when freeze == true', () => {
       it('it should freeze the unit', () => {
-        const g = new Game();
-        const u = new Unit(0, 0, 0, 0, g);
+        const u = new Unit(0, 0, 0, 0);
         const p = new Player();
         p.mana = 1;
-        const start_health = u.health;
         const s: Spell = {
           mana_cost: 1,
           caster: p,
@@ -35,6 +32,19 @@ describe('Spell', () => {
         effect(s, { unit: u });
         expect(u.frozen).toEqual(true);
       });
+    });
+    describe('summon', () => {
+      const g = new Game();
+      const u = new Unit(0, 0, 0, 0);
+      const p = new Player();
+      p.mana = 1;
+      const s: Spell = {
+        mana_cost: 1,
+        caster: p,
+        summon: u,
+      };
+      g.cast(s);
+      expect(g.units).toContain(u);
     });
   });
 });
