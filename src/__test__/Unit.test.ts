@@ -127,4 +127,56 @@ describe('Unit', () => {
     expect(p.heart_health).toEqual(0);
   });
   it('should trigger all traps on a cell that it moves into', () => {});
+  describe('when destruct == true', () => {
+    it('should attack the heart and selfdestruct when it reaches the end of the board', () => {
+      const g = new Game();
+      const p = new Player();
+      const START_HEART_HEALTH = 8;
+      const START_UNIT_HEALTH = 1;
+      const START_UNIT_POWER = 1;
+      p.heart_health = START_HEART_HEALTH;
+      // Put player at the bottom of the board
+      p.heart_y = g.height + 1;
+      g.players.push(p);
+
+      const START_X = 0;
+      const START_Y = g.height;
+      const START_VY = 1;
+      // Set u up to move into p's heart at the bottom of the board
+      const u = new Unit(START_X, START_Y, 0, START_VY);
+      // Set u to destruct
+      u.destruct = true;
+      g.summon(u);
+      u.health = START_UNIT_HEALTH;
+      u.power = START_UNIT_POWER;
+      // Move u into heart
+      u.move();
+      // Ensure the heart received u.power + u.health as damage
+      expect(p.heart_health).toEqual(
+        START_HEART_HEALTH - START_UNIT_HEALTH - START_UNIT_POWER,
+      );
+      // Ensure the unit self-destructed
+      expect(u.alive).toEqual(false);
+    });
+    it('should attack whatever it moves into with power AND health and should self-destruct', () => {
+      const g = new Game();
+      // Set u up to move into u1
+      const u = new Unit(0, 0, 0, 1);
+      // Set u to destruct
+      u.destruct = true;
+      const U_START_HEALTH = 1;
+      u.health = U_START_HEALTH;
+      u.power = 1;
+      const u2 = new Unit(0, 1, 0, 0);
+      g.summon(u);
+      g.summon(u2);
+      const U2_START_HEALTH = 4;
+      u2.health = U2_START_HEALTH;
+      u.move();
+      // Ensure u2 received u.power + u.health as damage
+      expect(u2.health).toEqual(U2_START_HEALTH - u.power - U_START_HEALTH);
+      // Ensure the unit self-destructed
+      expect(u.alive).toEqual(false);
+    });
+  });
 });

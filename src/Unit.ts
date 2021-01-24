@@ -13,6 +13,7 @@ export default class Unit {
   health: number = config.UNIT_BASE_HEALTH;
   alive = true;
   frozen: boolean = false;
+  destruct: boolean = false;
 
   constructor(x: number, y: number, vx: number, vy: number) {
     this.x = x;
@@ -39,6 +40,11 @@ export default class Unit {
     // Deal damage to what you run into
     for (let other_unit of bump_into_units) {
       other_unit.takeDamage(this.power);
+      // Note, destruct must occur before unit takes damage, so health isn't changed
+      if (this.destruct) {
+        other_unit.takeDamage(this.health);
+        this.alive = false;
+      }
       // Only take damage if the other unit is not frozen
       if (!other_unit.frozen) {
         this.takeDamage(other_unit.power);
@@ -54,6 +60,10 @@ export default class Unit {
       if (player) {
         // if player found, attack their heart
         player.heart_health -= this.power;
+        if (this.destruct) {
+          player.heart_health -= this.health;
+          this.alive = false;
+        }
       } else {
         // Otherwise, physically move
         this.x = next_x;
