@@ -3,11 +3,6 @@ import type Game from './Game';
 import Image from './Image';
 import type Player from './Player';
 
-const image_mapping = {
-  golem: 'crocodile.png',
-  rock: 'sloth.png',
-};
-
 export default class Unit {
   x: number;
   y: number;
@@ -33,10 +28,11 @@ export default class Unit {
     this.y = y;
     this.vx = vx;
     this.vy = vy;
-    this.image = new Image(imagePath);
+    this.image = new Image(this.x, this.y, 0, imagePath);
   }
   takeDamage(amount: number) {
     this.health -= amount;
+    this.image.anim_spin();
     if (this.health <= 0) {
       this.alive = false;
     }
@@ -53,6 +49,10 @@ export default class Unit {
       : [];
     // Deal damage to what you run into
     for (let other_unit of bump_into_units) {
+      // Do not attack self
+      if (other_unit === this) {
+        continue;
+      }
       other_unit.takeDamage(this.power);
       // Note, destruct must occur before unit takes damage, so health isn't changed
       if (this.destruct) {

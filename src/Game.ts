@@ -82,6 +82,11 @@ export default class Game {
     // TODO traps shouldn't be removed unless they are cast
     this.spells = [];
 
+    // Move units
+    for (let u of this.units) {
+      u.move();
+    }
+
     // Clean up DOM of dead units
     for (let u of this.units) {
       if (!u.alive) {
@@ -91,11 +96,6 @@ export default class Game {
     }
     // Remove dead units
     this.units = this.units.filter((u) => u.alive);
-
-    // Move units
-    for (let u of this.units) {
-      u.move();
-    }
 
     // Unfreeze frozen units
     for (let u of this.units) {

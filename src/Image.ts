@@ -35,14 +35,21 @@ export default class Image {
   targetY = 0;
   deltaTimeAcc = 0;
 
-  constructor(imageName: string) {
+  constructor(
+    cellX: number,
+    cellY: number,
+    rotation: number,
+    imageName: string,
+  ) {
     if (imageName) {
       this.element = document.createElement('img');
       this.element.src = BASE_PATH + imageName;
       this.element.id = `image-${Image.id}`;
+      this.element.className = 'unit';
       this.element.width = CELL_SIZE;
       this.element.height = CELL_SIZE;
       Image.id++;
+      this.set(cellX, cellY, rotation);
       board.appendChild(this.element);
     }
   }
@@ -55,7 +62,11 @@ export default class Image {
     if (lerpTime > 1) {
       // Normalize to set back to 0-360
       this.rotation = normalizeDegrees(this.rotation);
+      this.targetRotation = this.rotation;
     }
+    this.setTransform();
+  }
+  setTransform() {
     // Update styles:
     const newTransform =
       'translate(' +
@@ -81,5 +92,15 @@ export default class Image {
     this.targetY = cell_y * CELL_SIZE;
     // Reset delta time accumulator so it will animate again
     this.deltaTimeAcc = 0;
+  }
+  // Used for initialization
+  set(cell_x: number, cell_y: number, rotation: number) {
+    this.x = cell_x * CELL_SIZE;
+    this.targetX = this.x;
+    this.y = cell_y * CELL_SIZE;
+    this.targetY = this.y;
+    this.rotation = rotation;
+    this.targetRotation = this.rotation;
+    this.setTransform();
   }
 }

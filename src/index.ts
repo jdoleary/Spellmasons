@@ -67,8 +67,9 @@ function makeGame(clients: string[]) {
       p.client_id = c;
       game.players.push(p);
     }
-    const u = new Unit(0, 0, 1, 1, 'crocodile.png');
+    const u = new Unit(0, 0, 0, 1, 'crocodile.png');
     game.summon(u);
+    game.summon(new Unit(0, 3, 0, 0, 'crocodile.png'));
     // Start animations
     game.animate(0);
     // @ts-ignore
