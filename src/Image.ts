@@ -10,6 +10,14 @@ function lerp(start: number, end: number, time: number) {
   }
   return start * (1 - time) + end * time;
 }
+export function normalizeDegrees(degrees) {
+  const remainder = degrees % 360;
+  if (remainder < 0) {
+    return 360 + remainder;
+  } else {
+    return remainder;
+  }
+}
 export default class Image {
   size_x: number;
   size_y: number;
@@ -40,13 +48,14 @@ export default class Image {
   }
   animate(deltaTime: number) {
     this.deltaTimeAcc += deltaTime;
-    this.x = lerp(this.x, this.targetX, this.deltaTimeAcc / MOVE_SPEED);
-    this.y = lerp(this.y, this.targetY, this.deltaTimeAcc / MOVE_SPEED);
-    this.rotation = lerp(
-      this.rotation,
-      this.targetRotation,
-      this.deltaTimeAcc / MOVE_SPEED,
-    );
+    const lerpTime = this.deltaTimeAcc / MOVE_SPEED;
+    this.x = lerp(this.x, this.targetX, lerpTime);
+    this.y = lerp(this.y, this.targetY, lerpTime);
+    this.rotation = lerp(this.rotation, this.targetRotation, lerpTime);
+    if (lerpTime > 1) {
+      // Normalize to set back to 0-360
+      this.rotation = normalizeDegrees(this.rotation);
+    }
     // Update styles:
     const newTransform =
       'translate(' +
@@ -62,7 +71,11 @@ export default class Image {
     // Remove DOM element
     this.element.remove();
   }
-  anim_spin() {}
+  anim_spin() {
+    this.targetRotation += 360;
+    // Reset delta time accumulator so it will animate again
+    this.deltaTimeAcc = 0;
+  }
   move(cell_x: number, cell_y: number) {
     this.targetX = cell_x * CELL_SIZE;
     this.targetY = cell_y * CELL_SIZE;
