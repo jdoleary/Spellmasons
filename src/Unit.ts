@@ -38,6 +38,10 @@ export default class Unit {
     }
   }
   move() {
+    // Do not move if dead
+    if (!this.alive) {
+      return;
+    }
     // Do not move if frozen
     if (this.frozen) {
       return;
