@@ -15,6 +15,20 @@ export default class Game {
   players: Player[] = [];
   units: Unit[] = [];
   spells: Spell[] = [];
+  getUnitsWithinDistanceOfPoint(
+    x: number,
+    y: number,
+    distance: number,
+  ): Unit[] {
+    return this.units.filter((u) => {
+      return (
+        u.x <= x + distance &&
+        u.x >= x - distance &&
+        u.y <= y + distance &&
+        u.y >= y - distance
+      );
+    });
+  }
   getUnitsAt(x?: number, y?: number): Unit[] {
     return this.units.filter((u) => u.x === x && u.y === y);
   }
@@ -35,11 +49,11 @@ export default class Game {
   }
   cast(spell: Spell) {
     const { caster, target_x, target_y } = spell;
-    const targets = this.getUnitsAt(target_x, target_y);
     if (caster.canCast(spell)) {
+      const targets = this.getUnitsAt(target_x, target_y);
       if (targets.length) {
         for (let unit of targets) {
-          effect(spell, { unit });
+          effect(spell, { unit, game: this });
         }
       } else {
         effect(spell, { game: this });

@@ -7,6 +7,7 @@ export default class Unit {
   y: number;
   vx: number;
   vy: number;
+  name?: string;
   game?: Game;
   power: number = config.UNIT_BASE_POWER;
   health: number = config.UNIT_BASE_HEALTH;

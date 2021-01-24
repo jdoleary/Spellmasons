@@ -73,4 +73,35 @@ describe('Game', () => {
       expect(p.mana).toEqual(p.mana_max);
     });
   });
+  describe('getUnitsWithinDistanceOfPoint', () => {
+    it('should return units within distance of point', () => {
+      const g = new Game();
+      const u_not_in_range = new Unit(0, 0, 0, 0);
+      const u_not_in_range_2 = new Unit(7, 0, 0, 0);
+      const u_not_in_range_3 = new Unit(0, 7, 0, 0);
+      const u_not_in_range_4 = new Unit(7, 7, 0, 0);
+      const toSummon = [
+        new Unit(4, 4, 0, 0),
+        new Unit(3, 4, 0, 0),
+        new Unit(4, 3, 0, 0),
+        new Unit(3, 3, 0, 0),
+        new Unit(5, 4, 0, 0),
+        new Unit(4, 5, 0, 0),
+        u_not_in_range,
+        u_not_in_range_2,
+        u_not_in_range_3,
+        u_not_in_range_4,
+      ];
+      toSummon.forEach((u: Unit) => {
+        g.summon(u);
+      });
+
+      const inRange = g.getUnitsWithinDistanceOfPoint(4, 4, 1);
+      expect(inRange.length).toEqual(6);
+      expect(inRange).not.toContain(u_not_in_range);
+      expect(inRange).not.toContain(u_not_in_range_2);
+      expect(inRange).not.toContain(u_not_in_range_3);
+      expect(inRange).not.toContain(u_not_in_range_4);
+    });
+  });
 });
