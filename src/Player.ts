@@ -1,20 +1,11 @@
-import { PLAYER_HEART_HEALTH } from './config';
-import type { Spell } from './Spell';
+import { PLAYER_HEART_HEALTH, PLAYER_MANA } from './config';
 
 export default class Player {
   // wsPie id
   client_id?: string;
   heart_health: number = PLAYER_HEART_HEALTH;
-  mana: number = 2;
-  mana_max: number = 2;
+  mana: number = PLAYER_MANA;
+  mana_max: number = PLAYER_MANA;
   heart_x?: number;
   heart_y?: number;
-  canCast(s: Spell): boolean {
-    if (this.mana >= s.mana_cost) {
-      this.mana -= s.mana_cost;
-      return true;
-    } else {
-      return false;
-    }
-  }
 }

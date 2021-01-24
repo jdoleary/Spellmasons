@@ -1,5 +1,5 @@
 import type Unit from './Unit';
-import { Spell, effect } from './Spell';
+import { Spell, effect, getManaCost } from './Spell';
 import type Player from './Player';
 import * as config from './config';
 
@@ -60,17 +60,26 @@ export default class Game {
     unit.game = this;
     this.units.push(unit);
   }
+  queueSpell(spell: Spell) {
+    // Check mana:
+    const cost = getManaCost(spell);
+    if (cost > spell.caster.mana) {
+      console.log('Insufficient mana');
+      return;
+    } else {
+      spell.caster.mana -= cost;
+      this.spells.push(spell);
+    }
+  }
   cast(spell: Spell) {
-    const { caster, target_x, target_y } = spell;
-    if (caster?.canCast(spell)) {
-      const targets = this.getUnitsAt(target_x, target_y);
-      if (targets.length) {
-        for (let unit of targets) {
-          effect(spell, { unit, game: this });
-        }
-      } else {
-        effect(spell, { game: this });
+    const { target_x, target_y } = spell;
+    const targets = this.getUnitsAt(target_x, target_y);
+    if (targets.length) {
+      for (let unit of targets) {
+        effect(spell, { unit, game: this });
       }
+    } else {
+      effect(spell, { game: this });
     }
   }
   nextTurn() {

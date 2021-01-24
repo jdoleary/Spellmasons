@@ -21,7 +21,7 @@ export function normalizeDegrees(degrees) {
 export default class Image {
   size_x: number;
   size_y: number;
-  element: HTMLImageElement;
+  element?: HTMLImageElement;
   static id: number = 0;
   rotation = 0;
   // Pixel position, not cell position
@@ -80,7 +80,7 @@ export default class Image {
   }
   cleanup() {
     // Remove DOM element
-    this.element.remove();
+    this.element?.remove();
   }
   anim_spin() {
     this.targetRotation += 360;

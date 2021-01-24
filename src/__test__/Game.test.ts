@@ -4,6 +4,32 @@ import Player from '../Player';
 import Unit from '../Unit';
 
 describe('Game', () => {
+  describe.only('queueSpell()', () => {
+    it('should queue spell if caster has enough mana', () => {
+      const p = new Player();
+      const player_start_mana = p.mana;
+      const s = {
+        damage: 1,
+        caster: p,
+      };
+      const g = new Game();
+      g.queueSpell(s);
+      expect(p.mana).toEqual(player_start_mana - s.damage);
+      expect(g.spells).toContain(s);
+    });
+    it('should NOT queue spell if caster has insufficient mana', () => {
+      const p = new Player();
+      const player_start_mana = p.mana;
+      const s = {
+        caster: p,
+        damage: 1000,
+      };
+      const g = new Game();
+      g.queueSpell(s);
+      expect(p.mana).toEqual(player_start_mana);
+      expect(g.spells).not.toContain(s);
+    });
+  });
   it('should transition to state "Game Over" when a nextTurn() occurs while a player\'s heart is destroyed', () => {
     const g = new Game();
     const p = new Player();
@@ -38,7 +64,6 @@ describe('Game', () => {
       g.summon(u_frozen);
       // Setup spell to be cast
       g.spells.push({
-        mana_cost: 1,
         damage: u2.health,
         caster: p,
         target_x: u2.x,

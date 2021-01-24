@@ -12,7 +12,6 @@ describe('Spell', () => {
       p.mana = 1;
       const start_health = u.health;
       const s: Spell = {
-        mana_cost: 1,
         caster: p,
         damage: 1,
       };
@@ -25,7 +24,6 @@ describe('Spell', () => {
         const p = new Player();
         p.mana = 1;
         const s: Spell = {
-          mana_cost: 1,
           caster: p,
           freeze: true,
         };
@@ -39,7 +37,6 @@ describe('Spell', () => {
       const p = new Player();
       p.mana = 1;
       const s: Spell = {
-        mana_cost: 1,
         caster: p,
         summon: u,
       };
@@ -53,9 +50,7 @@ describe('Spell', () => {
         const u = new Unit(0, 0, 0, 0);
         const p = new Player();
         p.mana = 1;
-        const start_health = u.health;
         const s: Spell = {
-          mana_cost: 1,
           caster: p,
           damage: 1,
           delay: 2,
@@ -71,7 +66,6 @@ describe('Spell', () => {
         p.mana = 1;
         const start_health = u.health;
         const s: Spell = {
-          mana_cost: 1,
           caster: p,
           damage: 1,
           delay: 1,
@@ -108,7 +102,6 @@ describe('Spell', () => {
         g.summon(u4);
         // Setup spell to be cast
         const s = {
-          mana_cost: 1,
           // Spell will kill units
           damage: HEALTH,
           caster: p,
@@ -150,7 +143,6 @@ describe('Spell', () => {
         g.summon(u4);
         // Setup spell to be cast
         const s = {
-          mana_cost: 1,
           // Spell will kill units
           damage: HEALTH,
           caster: p,

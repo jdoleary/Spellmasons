@@ -3,7 +3,6 @@ import type Player from './Player';
 import type Unit from './Unit';
 
 export interface Spell {
-  mana_cost: number;
   caster?: Player;
   target_x?: number;
   target_y?: number;
@@ -12,10 +11,33 @@ export interface Spell {
   freeze?: boolean;
   chain?: boolean;
   aoe_radius?: number;
+  // TODO
   rotate?: boolean;
   summon?: Unit;
   // in turns
   delay?: number;
+}
+export function getManaCost(s: Spell) {
+  let cost = 0;
+  if (s.damage) {
+    cost += s.damage;
+  }
+  if (s.delay) {
+    cost -= s.delay;
+  }
+  if (s.freeze) {
+    cost += 2;
+  }
+  if (s.chain) {
+    cost += 4;
+  }
+  if (s.aoe_radius > 0) {
+    cost += 4 * s.aoe_radius;
+  }
+  if (s.summon) {
+    cost += 4;
+  }
+  return cost;
 }
 export interface EffectArgs {
   unit?: Unit;
