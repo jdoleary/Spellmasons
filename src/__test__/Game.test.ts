@@ -4,7 +4,7 @@ import Player from '../Player';
 import Unit from '../Unit';
 
 describe('Game', () => {
-  describe.only('queueSpell()', () => {
+  describe('queueSpell()', () => {
     it('should queue spell if caster has enough mana', () => {
       const p = new Player();
       const player_start_mana = p.mana;
