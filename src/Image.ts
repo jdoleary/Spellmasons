@@ -1,6 +1,6 @@
 const BASE_PATH = 'images/';
-const board = document.getElementById('board');
-const CELL_SIZE = 64;
+const boardContents = document.getElementById('board-contents');
+export const CELL_SIZE = 64;
 const MOVE_SPEED = 1000;
 
 // https://webdva.github.io/how-i-implemented-client-side-linear-interpolation/
@@ -59,7 +59,7 @@ export default class Image {
         rotation = directionY == 0 ? 0 : directionY > 0 ? 0 : 180;
       }
       this.set(cellX, cellY, rotation);
-      board.appendChild(this.element);
+      boardContents.appendChild(this.element);
     }
   }
   animate(deltaTime: number) {

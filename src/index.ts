@@ -3,6 +3,7 @@ import wsPie from 'pie-client';
 import Game from './Game';
 import Player from './Player';
 import type { Spell } from './Spell';
+import { CELL_SIZE } from './Image';
 
 // Mount svelte app
 // @ts-ignore
@@ -64,6 +65,17 @@ enum MESSAGE_TYPES {
 }
 document.getElementById('btn-end-turn').addEventListener('click', () => {
   pie.sendData({ type: MESSAGE_TYPES.END_TURN });
+});
+
+// Listen for clicks on grid
+document.getElementById('board').addEventListener('click', (e) => {
+  // @ts-ignore
+  const rect = e.target.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  const cell_x = Math.floor(x / CELL_SIZE);
+  const cell_y = Math.floor(y / CELL_SIZE);
+  console.log('Click in cell:', cell_x, cell_y);
 });
 function onData(d: {
   fromClient: string;
