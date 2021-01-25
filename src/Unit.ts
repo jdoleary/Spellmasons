@@ -32,8 +32,10 @@ export default class Unit {
   }
   takeDamage(amount: number) {
     this.health -= amount;
+    window.addToLog(`Unit at (${this.x}, ${this.y}) takes ${amount} damage.`);
     this.image.anim_spin();
     if (this.health <= 0) {
+      window.addToLog(`Unit at (${this.x}, ${this.y}) dies.`);
       this.alive = false;
     }
   }
@@ -44,6 +46,9 @@ export default class Unit {
     }
     // Do not move if frozen
     if (this.frozen) {
+      window.addToLog(
+        `Unit at (${this.x}, ${this.y}) is frozen and cannot move`,
+      );
       return;
     }
     const next_x = this.x + this.vx;
@@ -82,6 +87,9 @@ export default class Unit {
           player.heart_health -= this.health;
           this.alive = false;
         }
+        window.addToLog(
+          `Player ${player.client_id} heart health at ${player.heart_health}!`,
+        );
       } else {
         // Otherwise, physically move
         this.x = next_x;

@@ -8,7 +8,6 @@ export enum game_state {
   Playing,
   GameOver,
 }
-
 export default class Game {
   state: game_state = game_state.Playing;
   height: number = config.BOARD_HEIGHT;
@@ -17,7 +16,6 @@ export default class Game {
   units: Unit[] = [];
   spells: Spell[] = [];
   animateStart: number = 0;
-  log: string[];
   constructor() {
     this.animate = this.animate.bind(this);
   }
@@ -65,10 +63,17 @@ export default class Game {
     // Check mana:
     const cost = getManaCost(spell);
     if (cost > spell.caster.mana) {
-      console.log('Insufficient mana');
+      window.addToLog(
+        `You have insuffient mana to cast that spell`,
+        spell.caster.client_id,
+      );
       return;
     } else {
       spell.caster.mana -= cost;
+      window.addToLog(
+        `You are at ${spell.caster.mana}`,
+        spell.caster.client_id,
+      );
       this.spells.push(spell);
     }
   }
@@ -85,7 +90,7 @@ export default class Game {
   }
   nextTurn() {
     // Clear log
-    this.log = [];
+    window.log = [];
     // Cast spells
     for (let sm of this.spells) {
       this.cast(sm);
@@ -97,7 +102,6 @@ export default class Game {
     // Move units
     for (let u of this.units) {
       u.move();
-      this.log.push('unit moves');
     }
 
     // Clean up DOM of dead units
@@ -112,7 +116,10 @@ export default class Game {
 
     // Unfreeze frozen units
     for (let u of this.units) {
-      u.frozen = false;
+      if (u.frozen) {
+        window.addToLog(`Unit at (${u.x}, ${u.y}) unfreezes.`);
+        u.frozen = false;
+      }
     }
 
     // Restore player mana
@@ -121,9 +128,8 @@ export default class Game {
       // Lastly, Check for gameover
       if (p.heart_health <= 0) {
         this.state = game_state.GameOver;
+        window.addToLog('GAME OVER');
       }
     }
-    // Update log
-    document.getElementById('log').innerText = this.log.join('\n');
   }
 }

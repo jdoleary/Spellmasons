@@ -24,6 +24,7 @@ function connect(pieArgs = {}, _room_info = {}) {
         wsUri: wsUri,
         onServerAssignedData: (o: any) => {
           console.log('serverAssignedData', o);
+          window.clientId = o.clientId;
         },
         onClientPresenceChanged,
         onConnectInfo: (o: any) => {
@@ -76,6 +77,7 @@ function onData(d: {
       break;
     case MESSAGE_TYPES.END_TURN:
       turn_finished[fromClient] = true;
+      window.addToLog(`Player ${fromClient} ends turn.`);
       let all_players_ended_turn = true;
       for (let p of game.players) {
         if (!turn_finished[p.client_id]) {
@@ -113,9 +115,6 @@ function makeGame(clients: string[]) {
     game.animate(0);
 
     // Test; TODO remove
-    game.summon(new Unit(0, 3, 1, -1, 'crocodile.png'));
-    game.summon(new Unit(1, 3, 1, 0, 'crocodile.png'));
-    game.summon(new Unit(2, 3, 1, 1, 'crocodile.png'));
     window.game = game;
   }
 }
@@ -129,5 +128,19 @@ declare global {
   interface Window {
     connect: typeof connect;
     game: Game;
+    // A log of game happenings
+    log: string[];
+    addToLog: (message: string, ifOwnIdIs?: string) => void;
+    // Current clients id
+    clientId: string;
   }
 }
+
+window.log = [];
+function addToLog(message: string, ifOwnIdIs?: string) {
+  if (ifOwnIdIs === window.clientId) {
+    window.log.push(message);
+    document.getElementById('log').innerText = window.log.join('\n');
+  }
+}
+window.addToLog = addToLog;
