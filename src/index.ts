@@ -3,7 +3,15 @@ import wsPie from 'pie-client';
 import Game from './Game';
 import Player from './Player';
 import type { Spell } from './Spell';
-import Unit from './Unit';
+
+// Mount svelte app
+// @ts-ignore
+import App from './ui/App.svelte';
+new App({
+  target: document.getElementById('svelte'),
+});
+// End mount svelte app
+
 let clients = [];
 
 const wsUri = 'wss://websocket-pie-e4elx.ondigitalocean.app/';
@@ -130,7 +138,6 @@ function makeGame(clients: string[]) {
 window.connect = connect;
 
 // Connect to PieServer
-
 connect();
 
 declare global {
