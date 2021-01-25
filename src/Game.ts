@@ -17,6 +17,7 @@ export default class Game {
   units: Unit[] = [];
   spells: Spell[] = [];
   animateStart: number = 0;
+  log: string[];
   constructor() {
     this.animate = this.animate.bind(this);
   }
@@ -83,6 +84,8 @@ export default class Game {
     }
   }
   nextTurn() {
+    // Clear log
+    this.log = [];
     // Cast spells
     for (let sm of this.spells) {
       this.cast(sm);
@@ -94,6 +97,7 @@ export default class Game {
     // Move units
     for (let u of this.units) {
       u.move();
+      this.log.push('unit moves');
     }
 
     // Clean up DOM of dead units
@@ -119,5 +123,7 @@ export default class Game {
         this.state = game_state.GameOver;
       }
     }
+    // Update log
+    document.getElementById('log').innerText = this.log.join('\n');
   }
 }

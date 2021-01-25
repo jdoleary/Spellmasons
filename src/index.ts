@@ -4,7 +4,6 @@ import Game from './Game';
 import Player from './Player';
 import type { Spell } from './Spell';
 import Unit from './Unit';
-let clientId = 0;
 let clients = [];
 
 const wsUri = 'wss://websocket-pie-e4elx.ondigitalocean.app/';
@@ -25,7 +24,6 @@ function connect(pieArgs = {}, _room_info = {}) {
         wsUri: wsUri,
         onServerAssignedData: (o: any) => {
           console.log('serverAssignedData', o);
-          clientId = o.clientId;
         },
         onClientPresenceChanged,
         onConnectInfo: (o: any) => {
@@ -55,6 +53,9 @@ enum MESSAGE_TYPES {
   SPELL,
   END_TURN,
 }
+document.getElementById('btn-end-turn').addEventListener('click', () => {
+  pie.sendData({ type: MESSAGE_TYPES.END_TURN });
+});
 function onData(d: {
   fromClient: string;
   payload: {
@@ -112,9 +113,9 @@ function makeGame(clients: string[]) {
     game.animate(0);
 
     // Test; TODO remove
-    const u = new Unit(0, 0, 0, 1, 'crocodile.png');
-    game.summon(u);
-    game.summon(new Unit(0, 3, 0, 0, 'crocodile.png'));
+    game.summon(new Unit(0, 3, 1, -1, 'crocodile.png'));
+    game.summon(new Unit(1, 3, 1, 0, 'crocodile.png'));
+    game.summon(new Unit(2, 3, 1, 1, 'crocodile.png'));
     window.game = game;
   }
 }
