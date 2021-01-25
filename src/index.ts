@@ -106,8 +106,17 @@ function makeGame(clients: string[]) {
   if (!game) {
     console.log('Initialize game state');
     game = new Game();
-    for (let c of clients) {
+    for (let i = 0; i < clients.length; i++) {
+      const c = clients[i];
       const p = new Player();
+      if (i == 0) {
+        p.heart_y = -1;
+        window.addToLog(`You are at the top`, c);
+      } else {
+        p.heart_y = 9;
+        window.addToLog(`You are at the bottom`, c);
+      }
+      console.log('init', c, p);
       p.client_id = c;
       game.players.push(p);
     }
