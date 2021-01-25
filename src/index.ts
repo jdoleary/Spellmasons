@@ -133,9 +133,22 @@ declare global {
     addToLog: (message: string, ifOwnIdIs?: string) => void;
     // Current clients id
     clientId: string;
+    cast: (spell: Spell) => void;
+    summon: (x: number, y: number, vx: number, vy: number) => void;
   }
 }
 
+window.cast = (spell: Spell) => {
+  pie.sendData({ type: MESSAGE_TYPES.SPELL, spell });
+};
+window.summon = (x, y, vx, vy) => {
+  pie.sendData({
+    type: MESSAGE_TYPES.SPELL,
+    spell: {
+      summon: { x, y, vx, vy, imagePath: 'crocodile.png' },
+    },
+  });
+};
 window.log = [];
 function addToLog(message: string, ifOwnIdIs?: string) {
   if (ifOwnIdIs === window.clientId) {

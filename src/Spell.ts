@@ -1,6 +1,6 @@
 import type Game from './Game';
 import type Player from './Player';
-import type Unit from './Unit';
+import Unit from './Unit';
 
 export interface Spell {
   caster?: Player;
@@ -13,7 +13,8 @@ export interface Spell {
   aoe_radius?: number;
   // TODO
   rotate?: boolean;
-  summon?: Unit;
+  // TODO, in form of object
+  summon?: any;
   // in turns
   delay?: number;
 }
@@ -105,7 +106,9 @@ export function effect(spell: Spell, args: EffectArgs) {
   }
   if (game) {
     if (spell.summon) {
-      game.summon(spell.summon);
+      const { x, y, vx, vy, imagePath } = spell.summon;
+      const unit = new Unit(x, y, vx, vy, imagePath);
+      game.summon(unit);
     }
   }
 }
