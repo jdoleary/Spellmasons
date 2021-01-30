@@ -1,19 +1,40 @@
 <script>
-  let count = 0;
-
-  function handleClick() {
-    count += 1;
+  import SpellBuilder from './SpellBuilder.svelte'
+  import {MESSAGE_TYPES} from '../index.ts'
+  import { CELL_SIZE } from '../Image';
+  import store_spell from './store_spell'
+  let currentSpell = null;
+  store_spell.subscribe((spell) => {
+    currentSpell = spell;
+  });
+  function clickOnBoard(e) {
+    const rect = e.target.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const cell_x = Math.floor(x / CELL_SIZE);
+    const cell_y = Math.floor(y / CELL_SIZE);
+    console.log('Click in cell:', cell_x, cell_y, currentSpell);
+    if(currentSpell){
+      const {spell_type,...spell} = currentSpell;
+      if(spell_type === 'summon'){
+        window.pie.sendData({ type: MESSAGE_TYPES.SPELL, spell:{
+          summon: { x:cell_x, y:cell_y, vx:0, vy:0, imagePath: 'crocodile.png' },
+        }});
+      }else{
+        window.pie.sendData({ type: MESSAGE_TYPES.SPELL, spell:{...spell, target_x:cell_x, target_y:cell_y} });
+      }
+    }
   }
 </script>
 
 <div id="game-container">
   <div>
-    <button id="btn-end-turn">End Turn</button>
-    <button on:click="{handleClick}">
-      Clicked {count} {count === 1 ? 'time' : 'times'}
-    </button>
+    <SpellBuilder/>
+    <button on:click="{() => {
+  pie.sendData({ type: MESSAGE_TYPES.END_TURN });
+      }}">End Turn</button>
   </div>
-  <div id="board">
+  <div id="board"  on:click="{clickOnBoard}">
     <div id="board-contents">
       <img
         id="grid-background"

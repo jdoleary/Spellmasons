@@ -28,7 +28,7 @@ function connect(pieArgs = {}, _room_info = {}) {
     max_clients,
   });
   max_clients = room_info.max_clients;
-  pie = new wsPie(
+  window.pie = pie = new wsPie(
     Object.assign(
       {
         env: import.meta.env.MODE,
@@ -61,24 +61,11 @@ function connect(pieArgs = {}, _room_info = {}) {
 }
 // Keeps track of which players have ended their turn
 let turn_finished = {};
-enum MESSAGE_TYPES {
+export enum MESSAGE_TYPES {
   SPELL,
   END_TURN,
 }
-document.getElementById('btn-end-turn').addEventListener('click', () => {
-  pie.sendData({ type: MESSAGE_TYPES.END_TURN });
-});
 
-// Listen for clicks on grid
-document.getElementById('board').addEventListener('click', (e) => {
-  // @ts-ignore
-  const rect = e.target.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
-  const cell_x = Math.floor(x / CELL_SIZE);
-  const cell_y = Math.floor(y / CELL_SIZE);
-  console.log('Click in cell:', cell_x, cell_y);
-});
 function onData(d: {
   fromClient: string;
   payload: {
@@ -159,27 +146,15 @@ declare global {
     // Animation manager is globally accessable
     animationManager: AnimationManager;
     game: Game;
+    pie: any;
     // A log of game happenings
     log: string[];
     addToLog: (message: string, ifOwnIdIs?: string) => void;
     // Current clients id
     clientId: string;
-    cast: (spell: Spell) => void;
-    summon: (x: number, y: number, vx: number, vy: number) => void;
   }
 }
 
-window.cast = (spell: Spell) => {
-  pie.sendData({ type: MESSAGE_TYPES.SPELL, spell });
-};
-window.summon = (x, y, vx, vy) => {
-  pie.sendData({
-    type: MESSAGE_TYPES.SPELL,
-    spell: {
-      summon: { x, y, vx, vy, imagePath: 'crocodile.png' },
-    },
-  });
-};
 window.log = [];
 function addToLog(message: string, ifOwnIdIs?: string) {
   if (!ifOwnIdIs || ifOwnIdIs === window.clientId) {
