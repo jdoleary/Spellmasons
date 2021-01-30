@@ -15,6 +15,13 @@ interface Animation {
   current: Transform;
   target: Transform;
 }
+
+// AnimationManager allows for SEQUENTIAL animations
+// by bringing an HTML element from it's current state to a target state
+// over a period of time using a LERP.
+// Animation objects are stored in an array and when AnimationManager's animate()
+// is invoked, it will run through all the animations one at a time.
+// It will stop animating (requestFrameAnimation) when it has completed all the animations
 export default class AnimationManager {
   constructor() {
     this.animate = this.animate.bind(this);
@@ -40,6 +47,7 @@ export default class AnimationManager {
       const { element, current, target } = currentAnimation;
 
       // Lerp the transform properties
+      // Note: This mutates the current object
       if (target.x) {
         current.x = lerp(current.x, target.x, lerpTime);
       }
