@@ -12,6 +12,7 @@ export interface Transform {
 }
 interface Animation {
   element: HTMLElement;
+  start: Transform;
   current: Transform;
   target: Transform;
 }
@@ -28,34 +29,39 @@ export default class AnimationManager {
   }
   animations: Animation[] = [];
   addAnimation(element, current, target) {
-    this.animations.push({ element, current, target });
+    this.animations.push({
+      element,
+      start: Object.assign({}, current),
+      current,
+      target,
+    });
   }
   lerpTime: number = 0;
   // delta time accumulator
   deltaTimeAcc: number = 0;
   animateStart: number = 0;
-  millisPerAnimation = 1000;
+  millisPerAnimation = 500;
   animate(timestamp: number) {
     if (this.animateStart == 0) {
       this.animateStart = timestamp;
     }
-    this.deltaTimeAcc += timestamp - this.animateStart;
+    this.deltaTimeAcc = timestamp - this.animateStart;
     // Animate one at a time until the whole list of animations is done
     const lerpTime = this.deltaTimeAcc / this.millisPerAnimation;
     const currentAnimation = this.animations[0];
     if (currentAnimation) {
-      const { element, current, target } = currentAnimation;
+      const { element, start, current, target } = currentAnimation;
 
       // Lerp the transform properties
       // Note: This mutates the current object
       if (target.x) {
-        current.x = lerp(current.x, target.x, lerpTime);
+        current.x = lerp(start.x, target.x, lerpTime);
       }
       if (target.y) {
-        current.y = lerp(current.y, target.y, lerpTime);
+        current.y = lerp(start.y, target.y, lerpTime);
       }
       if (target.rotation) {
-        current.rotation = lerp(current.rotation, target.rotation, lerpTime);
+        current.rotation = lerp(start.rotation, target.rotation, lerpTime);
       }
 
       // Render the changes
@@ -65,16 +71,12 @@ export default class AnimationManager {
         // If animation is finished, remove it
         this.animations.splice(0, 1);
         // Reset the time
-        this.deltaTimeAcc = 0;
+        this.animateStart = 0;
       }
     }
     // Continue animating until all the animations are complete
     if (this.animations.length) {
       window.requestAnimationFrame(this.animate);
-    } else {
-      // When all animations are complete, do NOT request another animation frame
-      // and reset the animateStart time
-      this.animateStart = 0;
     }
   }
   setTransform(element: HTMLElement, transform: Transform) {
