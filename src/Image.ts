@@ -1,6 +1,5 @@
 import type { Transform } from './AnimationManager';
 const BASE_PATH = 'images/';
-const boardContents = document.getElementById('board-contents');
 export const CELL_SIZE = 64;
 
 export function normalizeDegrees(degrees) {
@@ -47,6 +46,7 @@ export default class Image {
         rotation = directionY == 0 ? 0 : directionY > 0 ? 0 : 180;
       }
       this.set(cellX, cellY, rotation);
+      const boardContents = document.getElementById('board-contents');
       boardContents.appendChild(this.element);
     }
   }
