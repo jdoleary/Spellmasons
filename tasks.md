@@ -1,5 +1,14 @@
 # Tasks
 
+- Overall
+
+  - Stats UI
+  - Fix attack heart
+  - Animation system
+  - Spell Builder
+  - wsPie lobby and reconnect
+  - Damage/spell effects
+
 - UI
 
   - Board display
