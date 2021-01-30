@@ -109,22 +109,27 @@ describe('Unit', () => {
   it('should attack the heart when it reaches the end of the board', () => {
     const g = new Game();
     const p = new Player();
-    const START_HEART_HEALTH = 1;
+    const START_HEART_HEALTH = 2;
     p.heart_health = START_HEART_HEALTH;
     // Put player at the bottom of the board
-    p.heart_y = g.height + 1;
+    p.heart_y = g.height;
     g.players.push(p);
 
     const START_X = 0;
-    const START_Y = g.height;
+    const START_Y = g.height - 1;
     const START_VY = 1;
     // Set u up to move into p's heart at the bottom of the board
     const u = new Unit(START_X, START_Y, 0, START_VY);
     g.summon(u);
-    u.power = START_HEART_HEALTH;
+    u.power = 1;
     // Move u into heart
     u.move();
-    expect(p.heart_health).toEqual(0);
+    expect(p.heart_health).toEqual(START_HEART_HEALTH - u.power);
+    // Move again into heart
+    u.move();
+    expect(p.heart_health).toEqual(START_HEART_HEALTH - u.power * 2);
+    // Verify that unit hasn't moved off the board
+    expect(u.y).toEqual(START_Y);
   });
   it('should trigger all traps on a cell that it moves into', () => {});
   describe('when destruct == true', () => {
