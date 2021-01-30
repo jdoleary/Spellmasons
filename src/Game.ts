@@ -15,18 +15,6 @@ export default class Game {
   players: Player[] = [];
   units: Unit[] = [];
   spells: Spell[] = [];
-  animateStart: number = 0;
-  constructor() {
-    this.animate = this.animate.bind(this);
-  }
-  animate(timestamp: number) {
-    const dt = timestamp - this.animateStart;
-    for (let u of this.units) {
-      u.image.animate(dt);
-    }
-    this.animateStart = timestamp;
-    window.requestAnimationFrame(this.animate);
-  }
   getUnitsWithinDistanceOfPoint(
     x: number,
     y: number,
@@ -49,7 +37,7 @@ export default class Game {
       // Only one has to match
       // Example heart postions are
       // p.heart_x = -1; p.heart_y = undefined;
-      // p.heart_y = 9; p.heart_x = undefined;
+      // p.heart_y = 8; p.heart_x = undefined;
       if (p.heart_x === heart_x || p.heart_y === heart_y) {
         return p;
       }
@@ -131,5 +119,8 @@ export default class Game {
         window.addToLog('GAME OVER');
       }
     }
+
+    // Animate everything
+    requestAnimationFrame(window.animationManager.animate);
   }
 }
