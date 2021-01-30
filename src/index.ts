@@ -180,7 +180,7 @@ window.summon = (x, y, vx, vy) => {
 };
 window.log = [];
 function addToLog(message: string, ifOwnIdIs?: string) {
-  if (ifOwnIdIs === window.clientId) {
+  if (!ifOwnIdIs || ifOwnIdIs === window.clientId) {
     window.log.push(message);
     document.getElementById('log').innerText = window.log.join('\n');
   }
