@@ -4,6 +4,7 @@ import Game from './Game';
 import Player from './Player';
 import type { Spell } from './Spell';
 import { CELL_SIZE } from './Image';
+import AnimationManager from './AnimationManager';
 import { BOARD_HEIGHT } from './config';
 
 // Mount svelte app
@@ -141,8 +142,6 @@ function makeGame(clients: string[]) {
       p.client_id = c;
       game.players.push(p);
     }
-    // Start animations
-    game.animate(0);
 
     // Test; TODO remove
     window.game = game;
@@ -152,10 +151,13 @@ window.connect = connect;
 
 // Connect to PieServer
 connect();
+window.animationManager = new AnimationManager();
 
 declare global {
   interface Window {
     connect: typeof connect;
+    // Animation manager is globally accessable
+    animationManager: AnimationManager;
     game: Game;
     // A log of game happenings
     log: string[];
