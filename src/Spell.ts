@@ -57,7 +57,7 @@ export function effect(spell: Spell, args: EffectArgs) {
       return;
     }
     if (spell.damage) {
-      unit.health -= spell.damage;
+      unit.takeDamage(spell.damage);
     }
     if (spell.freeze) {
       unit.frozen = true;
