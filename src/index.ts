@@ -3,7 +3,6 @@ import wsPie from 'pie-client';
 import Game from './Game';
 import Player from './Player';
 import type { Spell } from './Spell';
-import { CELL_SIZE } from './Image';
 import AnimationManager from './AnimationManager';
 import { BOARD_HEIGHT } from './config';
 

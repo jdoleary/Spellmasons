@@ -66,6 +66,7 @@ export default class Game {
     }
   }
   cast(spell: Spell) {
+    console.log('Game.cast spell', spell);
     const { target_x, target_y } = spell;
     const targets = this.getUnitsAt(target_x, target_y);
     if (targets.length) {

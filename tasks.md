@@ -3,7 +3,6 @@
 - Overall
 
   - Stats UI
-  - Spell Builder
   - wsPie lobby and reconnect
   - Damage/spell effects
 

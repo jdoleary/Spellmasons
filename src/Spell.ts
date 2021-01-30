@@ -19,6 +19,7 @@ export interface Spell {
   delay?: number;
 }
 export function getManaCost(s: Spell) {
+  console.log('spell', s);
   let cost = 0;
   if (s.damage) {
     cost += s.damage;
@@ -47,6 +48,7 @@ export interface EffectArgs {
   game?: Game;
 }
 export function effect(spell: Spell, args: EffectArgs) {
+  console.log('Spell effect', spell, args);
   const { unit, game, ignore = [] } = args;
   if (spell.delay && spell.delay > 0) {
     spell.delay--;
