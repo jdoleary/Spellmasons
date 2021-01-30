@@ -4,6 +4,7 @@ import Game from './Game';
 import Player from './Player';
 import type { Spell } from './Spell';
 import { CELL_SIZE } from './Image';
+import { BOARD_HEIGHT } from './config';
 
 // Mount svelte app
 // @ts-ignore
@@ -133,7 +134,7 @@ function makeGame(clients: string[]) {
         p.heart_y = -1;
         window.addToLog(`You are at the top`, c);
       } else {
-        p.heart_y = 9;
+        p.heart_y = BOARD_HEIGHT;
         window.addToLog(`You are at the bottom`, c);
       }
       console.log('init', c, p);
