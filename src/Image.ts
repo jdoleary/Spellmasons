@@ -1,15 +1,8 @@
+import type { Transform } from './AnimationManager';
 const BASE_PATH = 'images/';
 const boardContents = document.getElementById('board-contents');
 export const CELL_SIZE = 64;
-const MOVE_SPEED = 1000;
 
-// https://webdva.github.io/how-i-implemented-client-side-linear-interpolation/
-function lerp(start: number, end: number, time: number) {
-  if (time >= 1) {
-    return end;
-  }
-  return start * (1 - time) + end * time;
-}
 export function normalizeDegrees(degrees) {
   const remainder = degrees % 360;
   if (remainder < 0) {
@@ -23,17 +16,11 @@ export default class Image {
   size_y: number;
   element?: HTMLImageElement;
   static id: number = 0;
-  rotation = 0;
-  // Pixel position, not cell position
-  // Never set these directly,  they are set by this.animate
-  x = 0;
-  // Never set these directly,  they are set by this.animate
-  // Pixel position, not cell position
-  y = 0;
-  targetRotation = 0;
-  targetX = 0;
-  targetY = 0;
-  deltaTimeAcc = 0;
+  transform: Transform = {
+    x: 0,
+    y: 0,
+    rotation: 0,
+  };
 
   constructor(
     cellX: number,
@@ -51,6 +38,7 @@ export default class Image {
       this.element.height = CELL_SIZE;
       Image.id++;
       let rotation = 0;
+      // set and normalize rotation
       if (directionX > 0) {
         rotation = directionY == 0 ? -90 : directionY > 0 ? -45 : 225;
       } else if (directionX < 0) {
@@ -62,54 +50,26 @@ export default class Image {
       boardContents.appendChild(this.element);
     }
   }
-  animate(deltaTime: number) {
-    this.deltaTimeAcc += deltaTime;
-    const lerpTime = this.deltaTimeAcc / MOVE_SPEED;
-    this.x = lerp(this.x, this.targetX, lerpTime);
-    this.y = lerp(this.y, this.targetY, lerpTime);
-    this.rotation = lerp(this.rotation, this.targetRotation, lerpTime);
-    if (lerpTime > 1) {
-      // Normalize to set back to 0-360
-      this.rotation = normalizeDegrees(this.rotation);
-      this.targetRotation = this.rotation;
-    }
-    this.setTransform();
-  }
-  setTransform() {
-    // Update styles:
-    const newTransform =
-      'translate(' +
-      this.x +
-      'px, ' +
-      this.y +
-      'px) rotate(' +
-      this.rotation +
-      'deg)';
-    this.element.style.transform = newTransform;
-  }
   cleanup() {
     // Remove DOM element
     this.element?.remove();
   }
   anim_spin() {
-    this.targetRotation += 360;
-    // Reset delta time accumulator so it will animate again
-    this.deltaTimeAcc = 0;
+    window.animationManager.addAnimation(this.element, this.transform, {
+      rotation: this.transform.rotation + 360,
+    });
   }
   move(cell_x: number, cell_y: number) {
-    this.targetX = cell_x * CELL_SIZE;
-    this.targetY = cell_y * CELL_SIZE;
-    // Reset delta time accumulator so it will animate again
-    this.deltaTimeAcc = 0;
+    window.animationManager.addAnimation(this.element, this.transform, {
+      x: cell_x * CELL_SIZE,
+      y: cell_y * CELL_SIZE,
+    });
   }
   // Used for initialization
   set(cell_x: number, cell_y: number, rotation: number) {
-    this.x = cell_x * CELL_SIZE;
-    this.targetX = this.x;
-    this.y = cell_y * CELL_SIZE;
-    this.targetY = this.y;
-    this.rotation = normalizeDegrees(rotation);
-    this.targetRotation = this.rotation;
-    this.setTransform();
+    this.transform.x = cell_x * CELL_SIZE;
+    this.transform.y = cell_y * CELL_SIZE;
+    this.transform.rotation = normalizeDegrees(rotation);
+    window.animationManager.setTransform(this.element, this.transform);
   }
 }
