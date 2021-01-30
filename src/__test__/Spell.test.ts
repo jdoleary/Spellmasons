@@ -32,16 +32,33 @@ describe('Spell', () => {
       });
     });
     describe('summon', () => {
-      const g = new Game();
-      const u = new Unit(0, 0, 0, 0);
-      const p = new Player();
-      p.mana = 1;
-      const s: Spell = {
-        caster: p,
-        summon: u,
-      };
-      g.cast(s);
-      expect(g.units).toContain(u);
+      it('Should summon unit on game', () => {
+        const g = new Game();
+        const unitArgs = {
+          x: 0,
+          y: 0,
+          vx: 0,
+          vy: 0,
+          imagePath: '',
+        };
+        const p = new Player();
+        p.mana = 1;
+        const s: Spell = {
+          caster: p,
+          summon: unitArgs,
+        };
+        g.cast(s);
+        // Create unit that will match the one that was just summoned
+        const u = new Unit(
+          unitArgs.x,
+          unitArgs.y,
+          unitArgs.vx,
+          unitArgs.vy,
+          unitArgs.imagePath,
+        );
+        u.game = g;
+        expect(g.units).toContainEqual(u);
+      });
     });
   });
   describe('Modifiers', () => {
