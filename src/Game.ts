@@ -4,17 +4,30 @@ import type Player from './Player';
 import * as config from './config';
 
 export enum game_state {
-  WaitingForPlayers,
+  Lobby,
+  WaitingForPlayerReconnect,
   Playing,
   GameOver,
 }
+const debugInfo = {};
+const debugEl = document.getElementById('debug');
 export default class Game {
-  state: game_state = game_state.Playing;
+  state: game_state;
   height: number = config.BOARD_HEIGHT;
   width: number = config.BOARD_WIDTH;
   players: Player[] = [];
   units: Unit[] = [];
   spells: Spell[] = [];
+  constructor() {
+    this.setGameState(game_state.Lobby);
+  }
+  setDebug(json) {
+    debugEl.innerHTML = JSON.stringify(Object.assign(debugInfo, json), null, 2);
+  }
+  setGameState(g: game_state) {
+    this.state = g;
+    this.setDebug({ state: game_state[this.state] });
+  }
   getUnitsWithinDistanceOfPoint(
     x: number,
     y: number,
@@ -116,6 +129,7 @@ export default class Game {
       p.mana = p.mana_max;
       // Lastly, Check for gameover
       if (p.heart_health <= 0) {
+        this.setGameState(game_state.GameOver);
         this.state = game_state.GameOver;
         window.addToLog('GAME OVER');
       }
