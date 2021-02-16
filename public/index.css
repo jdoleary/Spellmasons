@@ -1,3 +1,6 @@
+body{
+  margin:0;
+}
 #game-container {
   background: grey;
   display: flex;
@@ -25,4 +28,9 @@
 }
 .unit {
   position: absolute;
+}
+
+#debug {
+  position: absolute;
+  right: 8px;
 }
