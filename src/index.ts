@@ -1,6 +1,6 @@
 // @ts-ignore
 import wsPie from 'pie-client';
-import Game from './Game';
+import Game, { game_state } from './Game';
 import Player from './Player';
 import type { Spell } from './Spell';
 import AnimationManager from './AnimationManager';
@@ -18,7 +18,7 @@ let clients = [];
 
 const wsUri = 'wss://websocket-pie-e4elx.ondigitalocean.app/';
 let pie: any;
-let game: Game;
+let game: Game = new Game();
 let max_clients = 2;
 function connect(pieArgs = {}, _room_info = {}) {
   const room_info = Object.assign(_room_info, {
@@ -104,34 +104,43 @@ function onClientPresenceChanged(o: any) {
   console.log('clientPresenceChanged', o);
   clients = o.clients;
   // Start game when max_clients reached
-  if (pie && clients.length === max_clients) {
-    makeGame(clients);
+  if (pie) {
+    if (game.state == game_state.Lobby && clients.length === max_clients) {
+      makeGame(clients);
+    } else if (
+      game.state == game_state.Playing &&
+      clients.length < max_clients
+    ) {
+      game.setGameState(game_state.WaitingForPlayerReconnect);
+    } else if (game.state == game_state.WaitingForPlayerReconnect) {
+      console.log('todo restore player');
+    } else {
+      console.error('Failed to make game');
+    }
   } else {
-    console.error('Failed to make game');
+    console.error('Failed to make game due to no connection to server');
   }
 }
 function makeGame(clients: string[]) {
-  if (!game) {
-    console.log('Initialize game state');
-    game = new Game();
-    for (let i = 0; i < clients.length; i++) {
-      const c = clients[i];
-      const p = new Player();
-      if (i == 0) {
-        p.heart_y = -1;
-        window.addToLog(`You are at the top`, c);
-      } else {
-        p.heart_y = BOARD_HEIGHT;
-        window.addToLog(`You are at the bottom`, c);
-      }
-      console.log('init', c, p);
-      p.client_id = c;
-      game.players.push(p);
+  console.log('Initialize game state');
+  game.setGameState(game_state.Playing);
+  for (let i = 0; i < clients.length; i++) {
+    const c = clients[i];
+    const p = new Player();
+    if (i == 0) {
+      p.heart_y = -1;
+      window.addToLog(`You are at the top`, c);
+    } else {
+      p.heart_y = BOARD_HEIGHT;
+      window.addToLog(`You are at the bottom`, c);
     }
-
-    // Test; TODO remove
-    window.game = game;
+    console.log('init', c, p);
+    p.client_id = c;
+    game.players.push(p);
   }
+
+  // Test; TODO remove
+  window.game = game;
 }
 window.connect = connect;
 
