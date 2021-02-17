@@ -1,5 +1,4 @@
-// @ts-ignore
-import wsPie from 'pie-client';
+import PieClient from 'pie-client';
 import Game, { game_state } from './Game';
 import Player from './Player';
 import type { Spell } from './Spell';
@@ -17,46 +16,39 @@ new App({
 let clients = [];
 
 const wsUri = 'wss://websocket-pie-e4elx.ondigitalocean.app/';
-let pie: any;
+let pie: PieClient;
 let game: Game = new Game();
 let max_clients = 2;
-function connect(pieArgs = {}, _room_info = {}) {
+function connect(_room_info = {}) {
   const room_info = Object.assign(_room_info, {
     app: 'Golems',
     version: '0.1.0',
     max_clients,
   });
   max_clients = room_info.max_clients;
-  window.pie = pie = new wsPie(
-    Object.assign(
-      {
-        env: import.meta.env.MODE,
-        wsUri: wsUri,
-        onServerAssignedData: (o: any) => {
-          console.log('serverAssignedData', o);
-          window.clientId = o.clientId;
-        },
-        onClientPresenceChanged,
-        onConnectInfo: (o: any) => {
-          console.log('onConnectInfo', o);
-          // Make and join room
-          if (o.connected) {
-            pie
-              .makeRoom(room_info)
-              // Since the room_info is hard-coded,
-              // if you can't make the room, it may be already made, so try to join it instead.
-              .catch(() => pie.joinRoom(room_info))
-              .then(() => console.log('You are now in the room'))
-              .catch((err: string) =>
-                console.error('Failed to join room', err),
-              );
-          }
-        },
-        onData,
-      },
-      pieArgs,
-    ),
-  );
+  window.pie = pie = new PieClient({
+    env: import.meta.env.MODE,
+    wsUri: wsUri,
+  });
+  pie.onServerAssignedData = (o) => {
+    console.log('serverAssignedData', o);
+    window.clientId = o.clientId;
+  };
+  pie.onData = onData;
+  pie.onClientPresenceChanged = onClientPresenceChanged;
+  pie.onConnectInfo = (o) => {
+    console.log('onConnectInfo', o);
+    // Make and join room
+    if (o.connected) {
+      pie
+        .makeRoom(room_info)
+        // Since the room_info is hard-coded,
+        // if you can't make the room, it may be already made, so try to join it instead.
+        .catch(() => pie.joinRoom(room_info))
+        .then(() => console.log('You are now in the room'))
+        .catch((err: string) => console.error('Failed to join room', err));
+    }
+  };
 }
 // Keeps track of which players have ended their turn
 let turn_finished = {};

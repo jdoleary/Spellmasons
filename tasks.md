@@ -2,6 +2,7 @@
 
 - Overall
   - wsPie lobby and reconnect (reconnect is important for testing)
+    - Add pie-client methods for client-joined, client-left
   - Stats UI
   - Damage/spell effects
 
