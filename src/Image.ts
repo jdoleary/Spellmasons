@@ -14,6 +14,7 @@ export default class Image {
   size_x: number;
   size_y: number;
   element?: HTMLImageElement;
+  imageName: string;
   static id: number = 0;
   transform: Transform = {
     x: 0,
@@ -29,6 +30,8 @@ export default class Image {
     imageName: string,
   ) {
     if (imageName) {
+      // Save image path in unit so it's accessible when loading gamestate
+      this.imageName = imageName;
       this.element = document.createElement('img');
       this.element.src = BASE_PATH + imageName;
       this.element.id = `image-${Image.id}`;

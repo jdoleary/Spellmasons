@@ -1,6 +1,7 @@
-import PieClient from 'pie-client';
+import PieClient, { ClientPresenceChangedArgs } from 'pie-client';
 import Game, { game_state } from './Game';
 import Player from './Player';
+import Image from './Image';
 import type { Spell } from './Spell';
 import AnimationManager from './AnimationManager';
 import { BOARD_HEIGHT } from './config';
@@ -55,21 +56,37 @@ let turn_finished = {};
 export enum MESSAGE_TYPES {
   SPELL,
   END_TURN,
+  LOAD_GAME_STATE,
 }
 
-function onData(d: {
-  fromClient: string;
-  payload: {
-    type: MESSAGE_TYPES;
-    spell?: Spell;
-  };
-}) {
+function onData(d: { fromClient: string; payload: any }) {
   console.log('onData', d);
   const { payload, fromClient } = d;
   const { type, spell } = payload;
   // Get caster
   const caster = game.players.find((p) => p.client_id === fromClient);
   switch (type) {
+    case MESSAGE_TYPES.LOAD_GAME_STATE:
+      // Resume game
+      const loadedGameState = { ...payload.game };
+      const players = loadedGameState.players;
+      const spells = loadedGameState.spells.map((s) => {
+        return {
+          caster: players.find((p) => p.client_id === s.caster.client_id),
+          ...s,
+        };
+      });
+      const units = loadedGameState.units.map((u) => {
+        return {
+          ...u,
+          image: new Image(u.x, u.y, u.vx, u.vy, u.image.imageName),
+        };
+      });
+      game.players = players;
+      game.spells = spells;
+      game.units = units;
+      game.setGameState(game_state.Playing);
+      break;
     case MESSAGE_TYPES.SPELL:
       // Set caster based on which client sent it
       spell.caster = caster;
@@ -92,25 +109,31 @@ function onData(d: {
       break;
   }
 }
-function onClientPresenceChanged(o: any) {
+function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
   console.log('clientPresenceChanged', o);
   clients = o.clients;
-  // Start game when max_clients reached
-  if (pie) {
+  // Client joined
+  if (o.present) {
+    // Start game when max_clients reached
     if (game.state == game_state.Lobby && clients.length === max_clients) {
       makeGame(clients);
-    } else if (
-      game.state == game_state.Playing &&
-      clients.length < max_clients
-    ) {
-      game.setGameState(game_state.WaitingForPlayerReconnect);
     } else if (game.state == game_state.WaitingForPlayerReconnect) {
-      console.log('todo restore player');
-    } else {
-      console.error('Failed to make game');
+      // Send game state to other player so they can load:
+      pie.sendData({
+        type: MESSAGE_TYPES.LOAD_GAME_STATE,
+        game: {
+          ...game,
+          units: game.units.map((u) => {
+            // Remove circular ref and image.element
+            const { element, ...rest } = u.image;
+            return { ...u, game: null, image: rest };
+          }),
+        },
+      });
     }
   } else {
-    console.error('Failed to make game due to no connection to server');
+    // Client left
+    game.setGameState(game_state.WaitingForPlayerReconnect);
   }
 }
 function makeGame(clients: string[]) {
