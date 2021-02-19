@@ -19,7 +19,7 @@ let clients = [];
 const wsUri = 'wss://websocket-pie-e4elx.ondigitalocean.app/';
 let pie: PieClient;
 let game: Game = new Game();
-let maxClients = 2;
+let maxClients = 1;
 function connect(_room_info = {}) {
   const room_info = Object.assign(_room_info, {
     app: 'Golems',
@@ -59,8 +59,21 @@ export enum MESSAGE_TYPES {
   LOAD_GAME_STATE,
 }
 
+window.messageLog = []
+window.replay = (messages, delay = 600) => {
+  for(let i = 0; i < messages.length; i++){
+    setTimeout(() => {
+      const message = JSON.parse(messages[i])
+      message.fromClient = game.players[0].client_id;
+      onData(message)
+    }, delay * i)
+  }
+}
 function onData(d: { fromClient: string; payload: any }) {
   console.log('onData', d);
+  // Temporarily for development
+  window.messageLog.push(JSON.stringify(d))
+
   const { payload, fromClient } = d;
   const { type, spell } = payload;
   // Get caster
@@ -137,7 +150,7 @@ function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
   }
 }
 function makeGame(clients: string[]) {
-  console.log('Initialize game state');
+  console.log('Initialize game state', clients);
   game.setGameState(game_state.Playing);
   for (let i = 0; i < clients.length; i++) {
     const c = clients[i];
@@ -170,6 +183,10 @@ declare global {
     animationManager: AnimationManager;
     game: Game;
     pie: any;
+    // A log of pie messages for recording and replay during development
+    messageLog: string[];
+    // Used to replay onData messages for development
+    replay: (messages:string[]) => void;
     // A log of game happenings
     log: string[];
     addToLog: (message: string, ifOwnIdIs?: string) => void;

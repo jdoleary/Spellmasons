@@ -18,7 +18,7 @@
       const {spell_type,...spell} = currentSpell;
       if(spell_type === 'summon'){
         window.pie.sendData({ type: MESSAGE_TYPES.SPELL, spell:{
-          summon: { x:cell_x, y:cell_y, vx:0, vy:0, imagePath: 'crocodile.png' },
+          summon: { x:cell_x, y:cell_y, vx:0, vy:1, imagePath: 'crocodile.png' },
         }});
       }else{
         window.pie.sendData({ type: MESSAGE_TYPES.SPELL, spell:{...spell, target_x:cell_x, target_y:cell_y} });
