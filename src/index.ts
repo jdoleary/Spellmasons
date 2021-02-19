@@ -19,14 +19,14 @@ let clients = [];
 const wsUri = 'wss://websocket-pie-e4elx.ondigitalocean.app/';
 let pie: PieClient;
 let game: Game = new Game();
-let max_clients = 2;
+let maxClients = 2;
 function connect(_room_info = {}) {
   const room_info = Object.assign(_room_info, {
     app: 'Golems',
     version: '0.1.0',
-    max_clients,
+    maxClients,
   });
-  max_clients = room_info.max_clients;
+  maxClients = room_info.maxClients;
   window.pie = pie = new PieClient({
     env: import.meta.env.MODE,
     wsUri: wsUri,
@@ -114,8 +114,8 @@ function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
   clients = o.clients;
   // Client joined
   if (o.present) {
-    // Start game when max_clients reached
-    if (game.state == game_state.Lobby && clients.length === max_clients) {
+    // Start game when maxClients reached
+    if (game.state == game_state.Lobby && clients.length === maxClients) {
       makeGame(clients);
     } else if (game.state == game_state.WaitingForPlayerReconnect) {
       // Send game state to other player so they can load:
