@@ -3,8 +3,6 @@
 - Overall
   - Fix incorrect client count
   - Caster is undefined comes from reconnecting with a different clientid
-  - Fix movement
-    - vx, vy is never set
   - Waiting for player to reconnect should only change if one of the two active players leave
   - Allow single player early start game for testing quickly
   - Stats UI
