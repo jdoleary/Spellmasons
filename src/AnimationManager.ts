@@ -29,6 +29,9 @@ export default class AnimationManager {
   constructor() {
     this.animate = this.animate.bind(this);
   }
+  // An array of callbacks that will be called when
+  // a set of animations is done
+  doneAnimatingCallbacks: (() => void)[] = [];
   animations: Animation[] = [];
   addAnimation(element, current, target) {
     this.animations.push({
@@ -42,6 +45,16 @@ export default class AnimationManager {
   deltaTimeAcc: number = 0;
   animateStart: number = 0;
   millisPerAnimation = 500;
+  animating = false;
+  doneAnimating: () => void;
+  
+  startAnimate() {
+    return new Promise<void>((resolve, _reject) => {
+      this.doneAnimating = resolve;
+      this.animating = true;
+      requestAnimationFrame(window.animationManager.animate);
+    })
+  }
   animate(timestamp: number) {
     const currentAnimation = this.animations[0];
     if (currentAnimation) {
@@ -82,6 +95,12 @@ export default class AnimationManager {
     // Continue animating until all the animations are complete
     if (this.animations.length) {
       window.requestAnimationFrame(this.animate);
+    } else {
+      this.animating = false
+      // Report that current animations are complete
+      if(this.doneAnimating){
+        this.doneAnimating()
+      }
     }
   }
   setTransform(element: HTMLElement, transform: AnimatableProps) {
