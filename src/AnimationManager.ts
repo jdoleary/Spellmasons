@@ -5,16 +5,18 @@ function lerp(start: number, end: number, time: number) {
   }
   return start * (1 - time) + end * time;
 }
-export interface Transform {
+export interface AnimatableProps {
   x?: number;
   y?: number;
   rotation?: number;
+  opacity: number;
+  
 }
 interface Animation {
   element: HTMLElement;
-  start?: Transform;
-  current: Transform;
-  target: Transform;
+  start?: AnimatableProps;
+  current: AnimatableProps;
+  target: AnimatableProps;
 }
 
 // AnimationManager allows for SEQUENTIAL animations
@@ -63,6 +65,9 @@ export default class AnimationManager {
       if (target.rotation) {
         current.rotation = lerp(start.rotation, target.rotation, lerpTime);
       }
+      if (target.opacity) {
+        current.opacity = lerp(start.opacity, target.opacity, lerpTime);
+      }
 
       // Render the changes
       this.setTransform(element, current);
@@ -79,7 +84,7 @@ export default class AnimationManager {
       window.requestAnimationFrame(this.animate);
     }
   }
-  setTransform(element: HTMLElement, transform: Transform) {
+  setTransform(element: HTMLElement, transform: AnimatableProps) {
     const newTransform =
       'translate(' +
       transform.x +
@@ -89,5 +94,8 @@ export default class AnimationManager {
       transform.rotation +
       'deg)';
     element.style.transform = newTransform;
+
+    const newFilter = `opacity(${transform.opacity}%)`;
+    element.style.filter = newFilter;
   }
 }

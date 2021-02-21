@@ -1,4 +1,4 @@
-import type { Transform } from './AnimationManager';
+import type { AnimatableProps } from './AnimationManager';
 const BASE_PATH = 'images/';
 export const CELL_SIZE = 64;
 
@@ -16,10 +16,11 @@ export default class Image {
   element?: HTMLImageElement;
   imageName: string;
   static id: number = 0;
-  transform: Transform = {
+  transform: AnimatableProps = {
     x: 0,
     y: 0,
     rotation: 0,
+    opacity: 100,
   };
 
   constructor(
@@ -56,6 +57,11 @@ export default class Image {
   cleanup() {
     // Remove DOM element
     this.element?.remove();
+  }
+  updateFilter(opacityPercentage) {
+    window.animationManager.addAnimation(this.element, this.transform, {
+      opacity: opacityPercentage,
+    });
   }
   anim_spin() {
     window.animationManager.addAnimation(this.element, this.transform, {

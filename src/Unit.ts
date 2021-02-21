@@ -32,6 +32,10 @@ export default class Unit {
     this.health -= amount;
     window.addToLog(`Unit at (${this.x}, ${this.y}) takes ${amount} damage.`);
     this.image.anim_spin();
+    // Change the opacity to represent health
+    this.image.updateFilter(
+      Math.floor((100 * this.health) / config.UNIT_BASE_HEALTH),
+    );
     if (this.health <= 0) {
       window.addToLog(`Unit at (${this.x}, ${this.y}) dies.`);
       this.alive = false;
