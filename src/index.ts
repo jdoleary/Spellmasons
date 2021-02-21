@@ -60,20 +60,29 @@ export enum MESSAGE_TYPES {
   LOAD_GAME_STATE,
 }
 
-window.messageLog = [];
-window.replay = (messages, delay = 600) => {
+const messageLog = [];
+window.saveReplay = (title) => {
+  localStorage.setItem('golems-' + title, JSON.stringify(messageLog));
+};
+window.replay = (title) => {
+  const messages = JSON.parse(localStorage.getItem('golems-' + title));
   for (let i = 0; i < messages.length; i++) {
-    setTimeout(() => {
-      const message = JSON.parse(messages[i]);
-      message.fromClient = game.players[0].client_id;
-      onData(message);
-    }, delay * i);
+    const message = messages[i];
+    message.fromClient = game.players[0].client_id;
+    onData(message);
   }
 };
+
+let onDataQueue = [];
 function onData(d: { fromClient: string; payload: any }) {
+  // Keep data messages in a queue until they are ready to be processed
+  if (window.animationManager.animating) {
+    onDataQueue.push(d);
+    return;
+  }
   console.log('onData', d);
   // Temporarily for development
-  window.messageLog.push(JSON.stringify(d));
+  messageLog.push(d);
 
   const { payload, fromClient } = d;
   const { type, spell } = payload;
@@ -118,7 +127,16 @@ function onData(d: { fromClient: string; payload: any }) {
       }
       if (all_players_ended_turn) {
         turn_finished = {};
-        game.nextTurn();
+        game.nextTurn().then(() => {
+          // Animations complete
+          const queue = [...onDataQueue];
+          // Clear the queue
+          onDataQueue = [];
+          // Allow new messages
+          for  (let d of queue)  {
+            onData(d);
+          }
+        });
       }
       break;
   }
@@ -184,8 +202,8 @@ declare global {
     animationManager: AnimationManager;
     game: Game;
     pie: any;
-    // A log of pie messages for recording and replay during development
-    messageLog: string[];
+    // Save pie messages for later replay
+    saveReplay: (title: string) => void;
     // Used to replay onData messages for development
     replay: (messages: string[]) => void;
     // A log of game happenings
