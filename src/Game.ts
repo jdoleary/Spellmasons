@@ -123,6 +123,7 @@ export default class Game {
     // Restore player mana
     for (let p of this.players) {
       p.mana = p.mana_max;
+      window.setDebug({ mana: p.mana });
       // Lastly, Check for gameover
       if (p.heart_health <= 0) {
         this.setGameState(game_state.GameOver);
