@@ -100,6 +100,7 @@ export default class Game {
     // Move units
     for (let u of this.units) {
       u.move();
+      u.justSpawned = false;
     }
 
     // Clean up DOM of dead units

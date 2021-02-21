@@ -10,7 +10,7 @@ export interface AnimatableProps {
   y?: number;
   rotation?: number;
   opacity: number;
-  
+  scale: number;
 }
 interface Animation {
   element: HTMLElement;
@@ -81,6 +81,9 @@ export default class AnimationManager {
       if (target.opacity !== undefined) {
         current.opacity = lerp(start.opacity, target.opacity, lerpTime);
       }
+      if (target.scale !== undefined) {
+        current.scale = lerp(start.scale, target.scale, lerpTime);
+      }
 
       // Render the changes
       this.setTransform(element, current);
@@ -111,7 +114,9 @@ export default class AnimationManager {
       transform.y +
       'px) rotate(' +
       transform.rotation +
-      'deg)';
+      'deg) scale(' +
+      transform.scale +
+      ')';
     element.style.transform = newTransform;
 
     const newFilter = `opacity(${transform.opacity}%)`;

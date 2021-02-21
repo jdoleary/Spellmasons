@@ -21,6 +21,7 @@ export default class Image {
     y: 0,
     rotation: 0,
     opacity: 100,
+    scale: 1,
   };
 
   constructor(
@@ -49,7 +50,7 @@ export default class Image {
       } else {
         rotation = directionY == 0 ? 0 : directionY > 0 ? 0 : 180;
       }
-      this.set(cellX, cellY, rotation);
+      this.set(cellX, cellY, rotation, 1.0);
       const boardContents = document.getElementById('board-contents');
       boardContents.appendChild(this.element);
     }
@@ -57,6 +58,12 @@ export default class Image {
   cleanup() {
     // Remove DOM element
     this.element?.remove();
+  }
+  scale(scale){
+    window.animationManager.addAnimation(this.element, this.transform, {
+      scale,
+    });
+
   }
   updateFilter(opacityPercentage) {
     window.animationManager.addAnimation(this.element, this.transform, {
@@ -75,10 +82,11 @@ export default class Image {
     });
   }
   // Used for initialization
-  set(cell_x: number, cell_y: number, rotation: number) {
+  set(cell_x: number, cell_y: number, rotation: number, scale: number) {
     this.transform.x = cell_x * CELL_SIZE;
     this.transform.y = cell_y * CELL_SIZE;
     this.transform.rotation = normalizeDegrees(rotation);
+    this.transform.scale = scale;
     window.animationManager.setTransform(this.element, this.transform);
   }
 }

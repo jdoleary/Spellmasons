@@ -14,6 +14,7 @@ export default class Unit {
   frozen: boolean = false;
   destruct: boolean = false;
   image: Image;
+  justSpawned: boolean = true;
 
   constructor(
     x: number,
@@ -27,6 +28,14 @@ export default class Unit {
     this.vx = vx;
     this.vy = vy;
     this.image = new Image(this.x, this.y, this.vx, this.vy, imagePath);
+
+    // Start images small so when they spawn in they will grow
+    this.image.transform.scale = 0.0;
+    window.animationManager.setTransform(
+      this.image.element,
+      this.image.transform,
+    );
+    this.image.scale(1.0);
   }
   takeDamage(amount: number) {
     this.health -= amount;
@@ -37,6 +46,7 @@ export default class Unit {
       Math.floor((100 * this.health) / config.UNIT_BASE_HEALTH),
     );
     if (this.health <= 0) {
+      this.image.scale(0.0);
       window.addToLog(`Unit at (${this.x}, ${this.y}) dies.`);
       this.alive = false;
     }
@@ -44,6 +54,10 @@ export default class Unit {
   move() {
     // Do not move if dead
     if (!this.alive) {
+      return;
+    }
+    // Do not move if just spawned
+    if  (this.justSpawned)  {
       return;
     }
     // Do not move if frozen
