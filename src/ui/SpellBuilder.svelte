@@ -71,5 +71,5 @@
   {:else}
   <!-- TODO summon modifiers -->
   {/if}
-  <div>Mana cost: {mana_cost}</div>
+  <div>Current Spell Mana Cost: {mana_cost}</div>
 </div>

@@ -70,10 +70,7 @@ export default class Game {
       return;
     } else {
       spell.caster.mana -= cost;
-      window.addToLog(
-        `You are at ${spell.caster.mana}`,
-        spell.caster.client_id,
-      );
+      this.setDebug({ mana: spell.caster.mana });
       this.spells.push(spell);
     }
   }
