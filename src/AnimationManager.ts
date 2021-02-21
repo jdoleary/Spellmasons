@@ -56,16 +56,16 @@ export default class AnimationManager {
 
       // Lerp the transform properties
       // Note: This mutates the current object
-      if (target.x) {
+      if (target.x !== undefined) {
         current.x = lerp(start.x, target.x, lerpTime);
       }
-      if (target.y) {
+      if (target.y !== undefined) {
         current.y = lerp(start.y, target.y, lerpTime);
       }
-      if (target.rotation) {
+      if (target.rotation !== undefined) {
         current.rotation = lerp(start.rotation, target.rotation, lerpTime);
       }
-      if (target.opacity) {
+      if (target.opacity !== undefined) {
         current.opacity = lerp(start.opacity, target.opacity, lerpTime);
       }
 
