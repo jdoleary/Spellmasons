@@ -11,6 +11,9 @@ export enum game_state {
 }
 const debugInfo = {};
 const debugEl = document.getElementById('debug');
+window.setDebug = function setDebug(json) {
+  debugEl.innerHTML = JSON.stringify(Object.assign(debugInfo, json), null, 2);
+};
 export default class Game {
   state: game_state;
   height: number = config.BOARD_HEIGHT;
@@ -21,12 +24,9 @@ export default class Game {
   constructor() {
     this.setGameState(game_state.Lobby);
   }
-  setDebug(json) {
-    debugEl.innerHTML = JSON.stringify(Object.assign(debugInfo, json), null, 2);
-  }
   setGameState(g: game_state) {
     this.state = g;
-    this.setDebug({ state: game_state[this.state] });
+    window.setDebug({ state: game_state[this.state] });
   }
   getUnitsWithinDistanceOfPoint(
     x: number,
@@ -70,7 +70,7 @@ export default class Game {
       return;
     } else {
       spell.caster.mana -= cost;
-      this.setDebug({ mana: spell.caster.mana });
+      window.setDebug({ mana: spell.caster.mana });
       this.spells.push(spell);
     }
   }

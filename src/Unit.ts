@@ -89,9 +89,9 @@ export default class Unit {
           player.heart_health -= this.health;
           this.alive = false;
         }
-        window.addToLog(
-          `Player ${player.client_id} heart health at ${player.heart_health}!`,
-        );
+        window.setDebug({
+          [`${player.client_id.slice(0, 6)} health`]: player.heart_health,
+        });
       } else {
         // Otherwise, physically move
         this.x = next_x;

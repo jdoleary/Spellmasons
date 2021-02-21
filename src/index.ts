@@ -192,6 +192,8 @@ declare global {
     addToLog: (message: string, ifOwnIdIs?: string) => void;
     // Current clients id
     clientId: string;
+    // Debug on screen:
+    setDebug: (json: object) => void;
   }
 }
 
