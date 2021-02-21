@@ -36,6 +36,7 @@ function connect(_room_info = {}) {
     window.clientId = o.clientId;
   };
   pie.onData = onData;
+  pie.onError = ({ message }) => window.alert(message);
   pie.onClientPresenceChanged = onClientPresenceChanged;
   pie.onConnectInfo = (o) => {
     console.log('onConnectInfo', o);
