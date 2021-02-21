@@ -86,7 +86,7 @@ export default class Game {
       effect(spell, { game: this });
     }
   }
-  nextTurn() {
+  nextTurn(): Promise<void> {
     // Clear log
     window.log = [];
     // Cast spells
@@ -132,6 +132,6 @@ export default class Game {
     }
 
     // Animate everything
-    requestAnimationFrame(window.animationManager.animate);
+    return window.animationManager.startAnimate();
   }
 }
