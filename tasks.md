@@ -1,7 +1,6 @@
 # Tasks
 
 - Overall
-  - Make window.replay wait for animations to finish before going on to next turn
   - Fix incorrect client count
   - Caster is undefined comes from reconnecting with a different clientid
   - Fix movement

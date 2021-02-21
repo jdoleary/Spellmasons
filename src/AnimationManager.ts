@@ -12,7 +12,7 @@ export interface Transform {
 }
 interface Animation {
   element: HTMLElement;
-  start: Transform;
+  start?: Transform;
   current: Transform;
   target: Transform;
 }
@@ -31,7 +31,6 @@ export default class AnimationManager {
   addAnimation(element, current, target) {
     this.animations.push({
       element,
-      start: Object.assign({}, current),
       current,
       target,
     });
@@ -42,14 +41,15 @@ export default class AnimationManager {
   animateStart: number = 0;
   millisPerAnimation = 500;
   animate(timestamp: number) {
-    if (this.animateStart == 0) {
-      this.animateStart = timestamp;
-    }
-    this.deltaTimeAcc = timestamp - this.animateStart;
-    // Animate one at a time until the whole list of animations is done
-    const lerpTime = this.deltaTimeAcc / this.millisPerAnimation;
     const currentAnimation = this.animations[0];
     if (currentAnimation) {
+      if (this.animateStart == 0) {
+        this.animateStart = timestamp;
+        currentAnimation.start = Object.assign({}, currentAnimation.current);
+      }
+      this.deltaTimeAcc = timestamp - this.animateStart;
+      // Animate one at a time until the whole list of animations is done
+      const lerpTime = this.deltaTimeAcc / this.millisPerAnimation;
       const { element, start, current, target } = currentAnimation;
 
       // Lerp the transform properties

@@ -59,20 +59,20 @@ export enum MESSAGE_TYPES {
   LOAD_GAME_STATE,
 }
 
-window.messageLog = []
+window.messageLog = [];
 window.replay = (messages, delay = 600) => {
-  for(let i = 0; i < messages.length; i++){
+  for (let i = 0; i < messages.length; i++) {
     setTimeout(() => {
-      const message = JSON.parse(messages[i])
+      const message = JSON.parse(messages[i]);
       message.fromClient = game.players[0].client_id;
-      onData(message)
-    }, delay * i)
+      onData(message);
+    }, delay * i);
   }
-}
+};
 function onData(d: { fromClient: string; payload: any }) {
   console.log('onData', d);
   // Temporarily for development
-  window.messageLog.push(JSON.stringify(d))
+  window.messageLog.push(JSON.stringify(d));
 
   const { payload, fromClient } = d;
   const { type, spell } = payload;
@@ -186,7 +186,7 @@ declare global {
     // A log of pie messages for recording and replay during development
     messageLog: string[];
     // Used to replay onData messages for development
-    replay: (messages:string[]) => void;
+    replay: (messages: string[]) => void;
     // A log of game happenings
     log: string[];
     addToLog: (message: string, ifOwnIdIs?: string) => void;
