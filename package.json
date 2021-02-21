@@ -17,11 +17,6 @@
   "author": "Jordan O'Leary",
   "license": "ISC",
   "homepage": "https://github.com/jdoleary/Golems#readme",
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run format"
-    }
-  },
   "dependencies": {
     "pie-client": "^0.3.0"
   },
@@ -33,7 +28,6 @@
     "@snowpack/plugin-typescript": "^1.2.0",
     "@types/jest": "^26.0.20",
     "@types/snowpack-env": "^2.3.2",
-    "husky": "^4.3.8",
     "jest": "^26.6.3",
     "prettier": "^2.0.5",
     "snowpack": "^3.0.1",
