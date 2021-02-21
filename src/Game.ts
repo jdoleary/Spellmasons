@@ -89,6 +89,20 @@ export default class Game {
   nextTurn(): Promise<void> {
     // Clear log
     window.log = [];
+
+    // Clean up DOM of dead units
+    // Note: This occurs at the beginning of a turn so that "dead" units can animate to death
+    // after they take mortally wounding damage without their html elements being removed before
+    // the animation takes place
+    for (let u of this.units) {
+      if (!u.alive) {
+        // Remove image from DOM
+        u.image.cleanup();
+      }
+    }
+    // Remove dead units
+    this.units = this.units.filter((u) => u.alive);
+
     // Cast spells
     for (let sm of this.spells) {
       this.cast(sm);
@@ -102,16 +116,6 @@ export default class Game {
       u.move();
       u.justSpawned = false;
     }
-
-    // Clean up DOM of dead units
-    for (let u of this.units) {
-      if (!u.alive) {
-        // Remove image from DOM
-        u.image.cleanup();
-      }
-    }
-    // Remove dead units
-    this.units = this.units.filter((u) => u.alive);
 
     // Unfreeze frozen units
     for (let u of this.units) {

@@ -37,19 +37,22 @@ export default class Unit {
     );
     this.image.scale(1.0);
   }
+  die() {
+    this.image.scale(0.1);
+    this.alive = false;
+  }
   takeDamage(amount: number) {
     this.health -= amount;
     window.addToLog(`Unit at (${this.x}, ${this.y}) takes ${amount} damage.`);
     this.image.anim_spin();
+    if (this.health <= 0) {
+      window.addToLog(`Unit at (${this.x}, ${this.y}) dies.`);
+      this.die();
+    }
     // Change the opacity to represent health
     this.image.updateFilter(
       Math.floor((100 * this.health) / config.UNIT_BASE_HEALTH),
     );
-    if (this.health <= 0) {
-      this.image.scale(0.0);
-      window.addToLog(`Unit at (${this.x}, ${this.y}) dies.`);
-      this.alive = false;
-    }
   }
   move() {
     // Do not move if dead
@@ -57,7 +60,7 @@ export default class Unit {
       return;
     }
     // Do not move if just spawned
-    if  (this.justSpawned)  {
+    if (this.justSpawned) {
       return;
     }
     // Do not move if frozen
@@ -82,7 +85,7 @@ export default class Unit {
       // Note, destruct must occur before unit takes damage, so health isn't changed
       if (this.destruct) {
         other_unit.takeDamage(this.health);
-        this.alive = false;
+        this.die();
       }
       // Only take damage if the other unit is not frozen
       if (!other_unit.frozen) {
@@ -101,7 +104,7 @@ export default class Unit {
         player.heart_health -= this.power;
         if (this.destruct) {
           player.heart_health -= this.health;
-          this.alive = false;
+          this.die();
         }
         window.setDebug({
           [`${player.client_id.slice(0, 6)} health`]: player.heart_health,

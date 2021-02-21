@@ -1,7 +1,7 @@
 # Tasks
+- Show UI for where to allow clicks and UI for pending golem spawn
 
 - Overall
-  - Fix incorrect client count
   - Caster is undefined comes from reconnecting with a different clientid
   - Waiting for player to reconnect should only change if one of the two active players leave
   - Stats UI
