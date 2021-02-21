@@ -57,7 +57,6 @@ export default class Game {
     }
   }
   summon(unit: Unit) {
-    unit.game = this;
     this.units.push(unit);
   }
   queueSpell(spell: Spell) {

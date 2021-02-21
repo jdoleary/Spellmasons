@@ -56,7 +56,6 @@ describe('Spell', () => {
           unitArgs.vy,
           unitArgs.imagePath,
         );
-        u.game = g;
         expect(g.units).toContainEqual(u);
       });
     });

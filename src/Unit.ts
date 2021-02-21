@@ -1,5 +1,4 @@
 import * as config from './config';
-import type Game from './Game';
 import Image from './Image';
 import type Player from './Player';
 
@@ -9,7 +8,6 @@ export default class Unit {
   vx: number;
   vy: number;
   name?: string;
-  game?: Game;
   power: number = config.UNIT_BASE_POWER;
   health: number = config.UNIT_BASE_HEALTH;
   alive = true;
@@ -53,8 +51,8 @@ export default class Unit {
     }
     const next_x = this.x + this.vx;
     const next_y = this.y + this.vy;
-    const bump_into_units = this.game
-      ? this.game.getUnitsAt(next_x, next_y)
+    const bump_into_units = window.game
+      ? window.game.getUnitsAt(next_x, next_y)
       : [];
     // Deal damage to what you run into
     for (let other_unit of bump_into_units) {
@@ -77,8 +75,8 @@ export default class Unit {
     // If nothing is obstructing
     if (alive_bump_into_units.length === 0) {
       // Check if at edge of board
-      const player: Player | undefined = this.game
-        ? this.game.getPlayerAt(next_x, next_y)
+      const player: Player | undefined = window.game
+        ? window.game.getPlayerAt(next_x, next_y)
         : undefined;
       if (player) {
         // if player found, attack their heart

@@ -137,9 +137,9 @@ function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
         game: {
           ...game,
           units: game.units.map((u) => {
-            // Remove circular ref and image.element
+            // Remove image.element
             const { element, ...rest } = u.image;
-            return { ...u, game: null, image: rest };
+            return { ...u, image: rest };
           }),
         },
       });
