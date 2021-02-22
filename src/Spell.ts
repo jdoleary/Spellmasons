@@ -59,7 +59,7 @@ export function effect(spell: Spell, args: EffectArgs) {
       return;
     }
     if (spell.damage) {
-      unit.takeDamage(spell.damage);
+      unit.takeDamage(spell.damage, 'spell');
     }
     if (spell.freeze) {
       unit.frozen = true;
@@ -87,21 +87,20 @@ export function effect(spell: Spell, args: EffectArgs) {
         }
       }
       if (spell.chain) {
-        const chained_units = game.getUnitsWithinDistanceOfPoint(
-          unit.x,
-          unit.y,
-          1,
-        );
+        const chained_units = game.getTouchingUnitsRecursive(unit.x, unit.y, 1);
         for (let chained_unit of chained_units) {
-          // Cast again on chained unit
-          // Add self to the ignore array so it doesn't cast again
-          // because current unit is still touching the unit it chains to, so
-          // we must make sure it doesn't chain back and forth forever
-          effect(spell, {
-            ...args,
-            unit: chained_unit,
-            ignore: [...ignore, unit],
-          });
+          if (chained_unit === unit) {
+            // Skip current unit who has already taken damage
+            continue;
+          }
+          // Cast on each chained unit without chaining again
+          effect(
+            {  ...spell, chain:  false  },
+            {
+              ...args,
+              unit: chained_unit,
+            },
+          );
         }
       }
     }

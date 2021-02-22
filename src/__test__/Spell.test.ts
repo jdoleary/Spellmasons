@@ -175,6 +175,43 @@ describe('Spell', () => {
         expect(u3.health).toEqual(0);
         expect(u4.health).toEqual(HEALTH);
       });
+      it('Ensure units are not effected more than once', () => {
+        const g = new Game();
+        const p = new Player();
+        g.players.push(p);
+        p.mana = 1;
+        const HEALTH = 4;
+        const u1 = new Unit(2, 3, 0, 1);
+        const u2 = new Unit(3, 4, 0, -1);
+        const u3 = new Unit(4, 4, 0, -1);
+        const u4 = new Unit(4, 5, 0, -1);
+        u1.name = 'u1';
+        u2.name = 'u2';
+        u3.name = 'u3';
+        u4.name = 'u4';
+        u1.health = HEALTH;
+        u2.health = HEALTH;
+        u3.health = HEALTH;
+        u4.health = HEALTH;
+        // Summon units into the game
+        g.summon(u1);
+        g.summon(u2);
+        g.summon(u3);
+        g.summon(u4);
+        // Setup spell to be cast
+        const s = {
+          damage: 1,
+          caster: p,
+          target_x: u1.x,
+          target_y: u1.y,
+          chain: true,
+        };
+        g.cast(s);
+        expect(u1.health).toEqual(HEALTH - 1);
+        expect(u2.health).toEqual(HEALTH - 1);
+        expect(u3.health).toEqual(HEALTH - 1);
+        expect(u4.health).toEqual(HEALTH - 1);
+      });
     });
   });
 });

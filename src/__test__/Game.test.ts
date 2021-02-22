@@ -46,7 +46,7 @@ describe('Game', () => {
     let u2: Unit;
     let u_frozen: Unit;
     let p: Player;
-    beforeAll(() => {
+    beforeEach(() => {
       g = new Game();
       p = new Player();
       g.players.push(p);
@@ -55,7 +55,6 @@ describe('Game', () => {
       p.mana = p.mana_max - 1;
       u = new Unit(0, 0, 0, 1);
       u2 = new Unit(1, 0, 0, -1);
-      u2.alive = false;
       u_frozen = new Unit(7, 7, 0, 0);
       u_frozen.frozen = true;
       // Summon units into the game
@@ -80,11 +79,18 @@ describe('Game', () => {
     it('Should remove spells after they are cast', () => {
       expect(g.spells.length).toEqual(0);
     });
-    it('should remove dead units from the board', () => {
+    it('should remove dead units from the board after they have had a turn to animate dead', () => {
+      // Pass one extra turn to allow them to animate dead
+      g.nextTurn();
       // Show that u2 has been removed
       expect(g.units).not.toContain(u2);
     });
-    it('should trigger "move" on all living units every turn', () => {
+    it('"just spawned" units should wait a turn before moving', () => {
+      expect(u.y).toEqual(0);
+    });
+    it('should trigger "move" on all living units every turn after they have been spawned for > 1 turn', () => {
+      // Next turn so the just_spawned units wake up
+      g.nextTurn();
       expect(u.y).toEqual(1);
       // Did not move because it's dead
       expect(u2.y).toEqual(0);
@@ -120,6 +126,37 @@ describe('Game', () => {
       });
 
       const inRange = g.getUnitsWithinDistanceOfPoint(4, 4, 1);
+      expect(inRange.length).toEqual(6);
+      expect(inRange).not.toContain(u_not_in_range);
+      expect(inRange).not.toContain(u_not_in_range_2);
+      expect(inRange).not.toContain(u_not_in_range_3);
+      expect(inRange).not.toContain(u_not_in_range_4);
+    });
+  });
+  describe('getTouchingUnitsRecursive', () => {
+    it('It should return all touching units (1 square away) with no duplicates', () => {
+      const g = new Game();
+      const u_not_in_range = new Unit(0, 0, 0, 0);
+      const u_not_in_range_2 = new Unit(7, 0, 0, 0);
+      const u_not_in_range_3 = new Unit(0, 7, 0, 0);
+      const u_not_in_range_4 = new Unit(7, 7, 0, 0);
+      const toSummon = [
+        new Unit(4, 4, 0, 0),
+        new Unit(3, 4, 0, 0),
+        new Unit(4, 3, 0, 0),
+        new Unit(3, 3, 0, 0),
+        new Unit(5, 4, 0, 0),
+        new Unit(4, 5, 0, 0),
+        u_not_in_range,
+        u_not_in_range_2,
+        u_not_in_range_3,
+        u_not_in_range_4,
+      ];
+      toSummon.forEach((u: Unit) => {
+        g.summon(u);
+      });
+
+      const inRange = g.getTouchingUnitsRecursive(4, 4, 1);
       expect(inRange.length).toEqual(6);
       expect(inRange).not.toContain(u_not_in_range);
       expect(inRange).not.toContain(u_not_in_range_2);

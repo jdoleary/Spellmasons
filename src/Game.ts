@@ -12,7 +12,9 @@ export enum game_state {
 const debugInfo = {};
 const debugEl = document.getElementById('debug');
 window.setDebug = function setDebug(json) {
-  debugEl.innerHTML = JSON.stringify(Object.assign(debugInfo, json), null, 2);
+  if (debugEl) {
+    debugEl.innerHTML = JSON.stringify(Object.assign(debugInfo, json), null, 2);
+  }
 };
 export default class Game {
   state: game_state;
@@ -23,6 +25,7 @@ export default class Game {
   spells: Spell[] = [];
   constructor() {
     this.setGameState(game_state.Lobby);
+    window.game = this;
   }
   setGameState(g: game_state) {
     this.state = g;
@@ -41,6 +44,29 @@ export default class Game {
         u.y >= y - distance
       );
     });
+  }
+  getTouchingUnitsRecursive(
+    x: number,
+    y: number,
+    distance: number,
+    ignore: Unit[] = [],
+  ): Unit[] {
+    let touching = this.units.filter((u) => {
+      return (
+        u.x <= x + distance &&
+        u.x >= x - distance &&
+        u.y <= y + distance &&
+        u.y >= y - distance &&
+        !ignore.includes(u)
+      );
+    });
+    ignore = ignore.concat(touching);
+    for (let u of touching) {
+      touching = touching.concat(
+        this.getTouchingUnitsRecursive(u.x, u.y, distance, ignore),
+      );
+    }
+    return touching;
   }
   getUnitsAt(x?: number, y?: number): Unit[] {
     return this.units.filter((u) => u.x === x && u.y === y);
@@ -75,7 +101,6 @@ export default class Game {
     }
   }
   cast(spell: Spell) {
-    console.log('Game.cast spell', spell);
     const { target_x, target_y } = spell;
     const targets = this.getUnitsAt(target_x, target_y);
     if (targets.length) {
