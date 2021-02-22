@@ -3,10 +3,12 @@ body {
 }
 #game-container {
   background: grey;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   height: 100vh;
+}
+#tools {
+  display: flex;
+  justify-content: space-between;
+  padding: 64px;
 }
 #board {
   border: 1px solid black;
@@ -17,6 +19,7 @@ body {
   /* Wrap cells */
   display: flex;
   flex-wrap: wrap;
+  margin: 40px auto 0 auto;
 }
 #board-contents {
   /* Only the board itself listens for clicks so that it can calculate which cell was clicked on */

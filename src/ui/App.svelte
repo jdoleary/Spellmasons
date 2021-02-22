@@ -29,12 +29,6 @@
 </script>
 
 <div id="game-container">
-  <div>
-    <SpellBuilder/>
-    <button on:click="{() => {
-  pie.sendData({ type: MESSAGE_TYPES.END_TURN });
-      }}">End Turn</button>
-  </div>
   <div id="board"  on:click="{clickOnBoard}">
     <div id="board-contents">
       <img
@@ -45,7 +39,15 @@
       />
     </div>
   </div>
-  <div>
-    <pre id="log"></pre>
+  <div id="tools">
+    <div>
+      <SpellBuilder/>
+      <button on:click="{() => {
+    pie.sendData({ type: MESSAGE_TYPES.END_TURN });
+        }}">End Turn</button>
+    </div>
+    <div>
+      <pre id="log"></pre>
+    </div>
   </div>
 </div>

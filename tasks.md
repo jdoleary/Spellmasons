@@ -2,9 +2,9 @@
 
 - MVP
 
+  - Animate text that rises up and dissapears
   - health and damage cell highlights
   - Show UI for where to allow clicks and UI for pending golem spawn
-  - Fix styling of tools and debug UI
 
 - Overall
 
