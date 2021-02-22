@@ -1,5 +1,5 @@
-body{
-  margin:0;
+body {
+  margin: 0;
 }
 #game-container {
   background: grey;
@@ -33,4 +33,7 @@ body{
 #debug {
   position: absolute;
   right: 8px;
+}
+.doob-stats {
+  margin-top: 40px;
 }
