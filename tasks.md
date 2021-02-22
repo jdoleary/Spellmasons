@@ -2,7 +2,6 @@
 
 - MVP
 
-  - Size not opacity represents health for golems
   - Golems grow rather than spawn and start weaker
   - Show UI for where to allow clicks and UI for pending golem spawn
     - Spells have images too (this is the indicator that shows the player where it's going to be cast)
