@@ -59,11 +59,11 @@ export default class Image {
     // Remove DOM element
     this.element?.remove();
   }
-  scale(scale){
+  scale(scale) {
     window.animationManager.addAnimation(this.element, this.transform, {
-      scale,
+      // Clamp to positive values
+      scale: Math.max(0, scale),
     });
-
   }
   updateFilter(opacityPercentage) {
     window.animationManager.addAnimation(this.element, this.transform, {
