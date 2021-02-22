@@ -185,9 +185,6 @@ function makeGame(clients: string[]) {
     p.client_id = c;
     game.players.push(p);
   }
-
-  // Test; TODO remove
-  window.game = game;
 }
 window.connect = connect;
 

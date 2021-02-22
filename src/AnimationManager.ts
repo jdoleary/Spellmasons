@@ -19,6 +19,7 @@ export interface AnimatableProps {
 }
 interface Animation {
   element: HTMLElement;
+  startTime: number;
   start?: AnimatableProps;
   current: AnimatableProps;
   target: AnimatableProps;
@@ -37,79 +38,102 @@ export default class AnimationManager {
   // An array of callbacks that will be called when
   // a set of animations is done
   doneAnimatingCallbacks: (() => void)[] = [];
-  animations: Animation[] = [];
-  addAnimation(element, current, target) {
-    this.animations.push({
-      element,
-      current,
-      target,
-    });
+  animations: Animation[][] = [];
+  currentGroup: Animation[];
+  grouping: boolean = false;
+  startGroup() {
+    this.grouping = true;
+    this.currentGroup = [];
   }
-  lerpTime: number = 0;
-  // delta time accumulator
-  deltaTimeAcc: number = 0;
-  animateStart: number = 0;
-  millisPerAnimation = 500;
+  endGroup() {
+    this.animations.push(this.currentGroup);
+    this.currentGroup = [];
+    this.grouping = false;
+  }
+  addAnimation(element, current, target) {
+    if (this.grouping) {
+      // Animation to be played together in a group
+      this.currentGroup.push({
+        startTime: 0,
+        element,
+        current,
+        target,
+      });
+    } else {
+      // Animation to be played by itself
+      this.animations.push([
+        {
+          startTime: 0,
+          element,
+          current,
+          target,
+        },
+      ]);
+    }
+  }
+  millisPerAnimation = 200;
   animating = false;
   doneAnimating: () => void;
-  
+
   startAnimate() {
     return new Promise<void>((resolve, _reject) => {
       this.doneAnimating = resolve;
       this.animating = true;
       requestAnimationFrame(window.animationManager.animate);
-    })
+    });
   }
   animate(timestamp: number) {
-    const currentAnimation = this.animations[0];
-    if (currentAnimation) {
-      if (this.animateStart == 0) {
-        this.animateStart = timestamp;
-        currentAnimation.start = Object.assign({}, currentAnimation.current);
-      }
-      this.deltaTimeAcc = timestamp - this.animateStart;
-      // Animate one at a time until the whole list of animations is done
-      const lerpTime = this.deltaTimeAcc / this.millisPerAnimation;
-      const { element, start, current, target } = currentAnimation;
+    stats.begin();
+    const currentAnimations = this.animations[0];
+    for (let currentAnimation of currentAnimations) {
+      if (currentAnimation) {
+        if (currentAnimation.startTime == 0) {
+          currentAnimation.startTime = timestamp;
+          currentAnimation.start = Object.assign({}, currentAnimation.current);
+        }
+        const deltaTimeSinceStart = timestamp - currentAnimation.startTime;
+        // Animate one at a time until the whole list of animations is done
+        const lerpTime = deltaTimeSinceStart / this.millisPerAnimation;
+        const { element, start, current, target } = currentAnimation;
 
-      // Lerp the transform properties
-      // Note: This mutates the current object
-      if (target.x !== undefined) {
-        current.x = lerp(start.x, target.x, lerpTime);
-      }
-      if (target.y !== undefined) {
-        current.y = lerp(start.y, target.y, lerpTime);
-      }
-      if (target.rotation !== undefined) {
-        current.rotation = lerp(start.rotation, target.rotation, lerpTime);
-      }
-      if (target.opacity !== undefined) {
-        current.opacity = lerp(start.opacity, target.opacity, lerpTime);
-      }
-      if (target.scale !== undefined) {
-        current.scale = lerp(start.scale, target.scale, lerpTime);
-      }
+        // Lerp the transform properties
+        // Note: This mutates the current object
+        if (target.x !== undefined) {
+          current.x = lerp(start.x, target.x, lerpTime);
+        }
+        if (target.y !== undefined) {
+          current.y = lerp(start.y, target.y, lerpTime);
+        }
+        if (target.rotation !== undefined) {
+          current.rotation = lerp(start.rotation, target.rotation, lerpTime);
+        }
+        if (target.opacity !== undefined) {
+          current.opacity = lerp(start.opacity, target.opacity, lerpTime);
+        }
+        if (target.scale !== undefined) {
+          current.scale = lerp(start.scale, target.scale, lerpTime);
+        }
 
-      // Render the changes
-      this.setTransform(element, current);
+        // Render the changes
+        this.setTransform(element, current);
 
-      if (lerpTime >= 1) {
-        // If animation is finished, remove it
-        this.animations.splice(0, 1);
-        // Reset the time
-        this.animateStart = 0;
+        if (lerpTime >= 1) {
+          // If animation is finished, remove it
+          this.animations.splice(0, 1);
+        }
       }
     }
     // Continue animating until all the animations are complete
     if (this.animations.length) {
       window.requestAnimationFrame(this.animate);
     } else {
-      this.animating = false
+      this.animating = false;
       // Report that current animations are complete
-      if(this.doneAnimating){
-        this.doneAnimating()
+      if (this.doneAnimating) {
+        this.doneAnimating();
       }
     }
+    stats.end();
   }
   setTransform(element: HTMLElement, transform: AnimatableProps) {
     const newTransform =

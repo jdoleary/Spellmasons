@@ -104,9 +104,12 @@ export default class Game {
     const { target_x, target_y } = spell;
     const targets = this.getUnitsAt(target_x, target_y);
     if (targets.length) {
+      // If there are multiple targets, group their animations together
+      window.animationManager.startGroup();
       for (let unit of targets) {
         effect(spell, { unit, game: this });
       }
+      window.animationManager.endGroup();
     } else {
       effect(spell, { game: this });
     }
