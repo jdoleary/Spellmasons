@@ -16,7 +16,7 @@ new App({
 
 let clients = [];
 
-const wsUri = 'wss://websocket-pie-e4elx.ondigitalocean.app/';
+const wsUri = 'ws://localhost:8000'; //'wss://websocket-pie-e4elx.ondigitalocean.app/';
 let pie: PieClient;
 let game: Game = new Game();
 let maxClients = 1;
