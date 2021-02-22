@@ -12,7 +12,6 @@ export default class Unit {
   health: number = config.UNIT_BASE_HEALTH;
   alive = true;
   frozen: boolean = false;
-  destruct: boolean = false;
   image: Image;
   justSpawned: boolean = true;
 
@@ -82,11 +81,6 @@ export default class Unit {
         continue;
       }
       other_unit.takeDamage(this.power);
-      // Note, destruct must occur before unit takes damage, so health isn't changed
-      if (this.destruct) {
-        other_unit.takeDamage(this.health);
-        this.die();
-      }
       // Only take damage if the other unit is not frozen
       if (!other_unit.frozen) {
         this.takeDamage(other_unit.power);
@@ -102,10 +96,6 @@ export default class Unit {
       if (player) {
         // if player found, attack their heart
         player.heart_health -= this.power;
-        if (this.destruct) {
-          player.heart_health -= this.health;
-          this.die();
-        }
         window.setDebug({
           [`${player.client_id.slice(0, 6)} health`]: player.heart_health,
         });
