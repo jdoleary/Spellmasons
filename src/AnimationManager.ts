@@ -84,7 +84,7 @@ export default class AnimationManager {
   }
   animate(timestamp: number) {
     stats.begin();
-    const currentAnimations = this.animations[0];
+    const currentAnimations = this.animations[0] || [];
     for (let currentAnimation of currentAnimations) {
       if (currentAnimation) {
         if (currentAnimation.startTime == 0) {
