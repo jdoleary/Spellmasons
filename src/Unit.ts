@@ -40,9 +40,11 @@ export default class Unit {
     this.image.scale(0.1);
     this.alive = false;
   }
-  takeDamage(amount: number) {
+  takeDamage(amount: number, cause?: string) {
     this.health -= amount;
-    window.addToLog(`Unit at (${this.x}, ${this.y}) takes ${amount} damage.`);
+    window.addToLog(
+           `Unit at (${this.x}, ${this.y}) takes ${amount} damage from ${cause}`
+    );
     this.image.anim_spin();
     if (this.health <= 0) {
       window.addToLog(`Unit at (${this.x}, ${this.y}) dies.`);
@@ -80,10 +82,10 @@ export default class Unit {
       if (other_unit === this) {
         continue;
       }
-      other_unit.takeDamage(this.power);
+      other_unit.takeDamage(this.power, 'unit');
       // Only take damage if the other unit is not frozen
       if (!other_unit.frozen) {
-        this.takeDamage(other_unit.power);
+        this.takeDamage(other_unit.power, 'unit');
       }
     }
     const alive_bump_into_units = bump_into_units.filter((u) => u.alive);
@@ -97,7 +99,7 @@ export default class Unit {
         // if player found, attack their heart
         player.heart_health -= this.power;
         window.setDebug({
-          [`${player.client_id.slice(0, 6)} health`]: player.heart_health,
+          [`${player.client_id && player.client_id.slice(0, 6)} health`]: player.heart_health,
         });
       } else {
         // Otherwise, physically move

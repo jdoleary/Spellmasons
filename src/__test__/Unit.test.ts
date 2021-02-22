@@ -45,6 +45,8 @@ describe('Unit', () => {
     const u2 = new Unit(0, 1, 0, 0);
     g.summon(u);
     g.summon(u2);
+    // Unfreeze the justSpawned units
+    g.nextTurn();
     u.power = 2;
     const START_HEALTH = 4;
     u2.health = START_HEALTH;
@@ -58,6 +60,8 @@ describe('Unit', () => {
     const u2 = new Unit(0, 1, 0, 0);
     g.summon(u);
     g.summon(u2);
+    // Unfreeze the justSpawned units
+    g.nextTurn();
     // Give u2 power to attack u when u moves into it
     u2.power = 2;
     const START_HEALTH = 4;
@@ -76,6 +80,8 @@ describe('Unit', () => {
     const u2 = new Unit(0, START_Y + START_VY, 0, 0);
     g.summon(u);
     g.summon(u2);
+    // Unfreeze the justSpawned units
+    g.nextTurn();
     u.power = 0;
     const START_HEALTH = 4;
     u.health = START_HEALTH;
@@ -95,6 +101,8 @@ describe('Unit', () => {
     const u2 = new Unit(0, START_Y + START_VY, 0, 0);
     g.summon(u);
     g.summon(u2);
+    // Unfreeze the justSpawned units
+    g.nextTurn();
     const START_HEALTH = 4;
     u.power = START_HEALTH;
     u.health = START_HEALTH;
@@ -122,6 +130,8 @@ describe('Unit', () => {
     const u = new Unit(START_X, START_Y, 0, START_VY);
     g.summon(u);
     u.power = 1;
+    // Unfreeze the justSpawned units
+    g.nextTurn();
     // Move u into heart
     u.move();
     expect(p.heart_health).toEqual(START_HEART_HEALTH - u.power);
