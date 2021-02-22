@@ -37,23 +37,20 @@ export default class Unit {
     this.image.scale(1.0);
   }
   die() {
-    this.image.scale(0.1);
     this.alive = false;
   }
   takeDamage(amount: number, cause?: string) {
     this.health -= amount;
     window.addToLog(
-           `Unit at (${this.x}, ${this.y}) takes ${amount} damage from ${cause}`
+      `Unit at (${this.x}, ${this.y}) takes ${amount} damage from ${cause}`,
     );
     this.image.anim_spin();
     if (this.health <= 0) {
       window.addToLog(`Unit at (${this.x}, ${this.y}) dies.`);
       this.die();
     }
-    // Change the opacity to represent health
-    this.image.updateFilter(
-      Math.floor((100 * this.health) / config.UNIT_BASE_HEALTH),
-    );
+    // Change the size to represent health
+    this.image.scale(this.health / config.UNIT_BASE_HEALTH);
   }
   move() {
     // Do not move if dead
@@ -99,7 +96,9 @@ export default class Unit {
         // if player found, attack their heart
         player.heart_health -= this.power;
         window.setDebug({
-          [`${player.client_id && player.client_id.slice(0, 6)} health`]: player.heart_health,
+          [`${
+            player.client_id && player.client_id.slice(0, 6)
+          } health`]: player.heart_health,
         });
       } else {
         // Otherwise, physically move
