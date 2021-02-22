@@ -2,9 +2,11 @@
 
 - MVP
 
-  - Animate text that rises up and dissapears
-  - health and damage cell highlights
+  - Size not opacity represents health for golems
+  - Golems grow rather than spawn and start weaker
   - Show UI for where to allow clicks and UI for pending golem spawn
+    - Spells have images too (this is the indicator that shows the player where it's going to be cast)
+  - health and damage cell highlights
 
 - Overall
 
@@ -13,9 +15,9 @@
 
 - Spells
   - Physical Movement Spells
-  - Steal life
   - Modifiers
     - Trap
+    - Turn
 
 ## Notes
 

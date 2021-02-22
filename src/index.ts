@@ -2,7 +2,6 @@ import PieClient, { ClientPresenceChangedArgs } from 'pie-client';
 import Game, { game_state } from './Game';
 import Player from './Player';
 import Image from './Image';
-import type { Spell } from './Spell';
 import AnimationManager from './AnimationManager';
 import { BOARD_HEIGHT } from './config';
 
@@ -133,7 +132,7 @@ function onData(d: { fromClient: string; payload: any }) {
           // Clear the queue
           onDataQueue = [];
           // Allow new messages
-          for  (let d of queue)  {
+          for (let d of queue) {
             onData(d);
           }
         });
