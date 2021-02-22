@@ -40,3 +40,9 @@ body {
 .doob-stats {
   margin-top: 40px;
 }
+
+.floating-text {
+  position: absolute;
+  transform: translateX(-50%);
+  z-index: 1;
+}

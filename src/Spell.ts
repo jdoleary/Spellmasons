@@ -1,6 +1,7 @@
 import type Game from './Game';
 import type Player from './Player';
 import Unit from './Unit';
+import floatingText from './FloatingText';
 
 export interface Spell {
   caster?: Player;
@@ -18,8 +19,29 @@ export interface Spell {
   // in turns
   delay?: number;
 }
+function toString(s: Spell) {
+  const strings = [];
+  if (s.damage) {
+    strings.push('Hurt');
+  }
+  if (s.delay) {
+    strings.push('Delay');
+  }
+  if (s.freeze) {
+    strings.push('Freeze');
+  }
+  if (s.chain) {
+    strings.push('Chain');
+  }
+  if (s.aoe_radius > 0) {
+    strings.push('AOE');
+  }
+  if (s.summon) {
+    strings.push('Summon');
+  }
+  return strings.join('|');
+}
 export function getManaCost(s: Spell) {
-  console.log('spell', s);
   let cost = 0;
   if (s.damage) {
     cost += s.damage;
@@ -59,6 +81,12 @@ export function effect(spell: Spell, args: EffectArgs) {
       return;
     }
     if (spell.damage) {
+      floatingText({
+        cellX: unit.x,
+        cellY: unit.y,
+        text: toString(spell),
+        color: 'red',
+      });
       unit.takeDamage(spell.damage, 'spell');
     }
     if (spell.freeze) {
@@ -95,7 +123,7 @@ export function effect(spell: Spell, args: EffectArgs) {
           }
           // Cast on each chained unit without chaining again
           effect(
-            {  ...spell, chain:  false  },
+            { ...spell, chain: false },
             {
               ...args,
               unit: chained_unit,
@@ -108,6 +136,12 @@ export function effect(spell: Spell, args: EffectArgs) {
   if (game) {
     if (spell.summon) {
       const { x, y, vx, vy, imagePath } = spell.summon;
+      floatingText({
+        cellX: x,
+        cellY: y,
+        text: 'Summon Golem',
+        color: 'blue',
+      });
       const unit = new Unit(x, y, vx, vy, imagePath);
       game.summon(unit);
     }
