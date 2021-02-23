@@ -4,4 +4,6 @@ window.animationManager = {
   addAnimation: () => {},
   setTransform: () => {},
   startAnimate: () => {},
+  startGroup: () => {},
+  endGroup: () => {},
 };
