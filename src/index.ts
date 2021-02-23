@@ -8,6 +8,7 @@ import { BOARD_HEIGHT } from './config';
 // Mount svelte app
 // @ts-ignore
 import App from './ui/App.svelte';
+import { getImage } from './Spell';
 new App({
   target: document.getElementById('svelte'),
 });
@@ -106,6 +107,9 @@ function onData(d: { fromClient: string; payload: any }) {
       });
       game.players = players;
       game.spells = spells;
+      game.spellImages = spells.map(
+        (s) => new Image(s.target_x, s.target_y, 0, 0, getImage(s)),
+      );
       game.units = units;
       game.setGameState(game_state.Playing);
       break;

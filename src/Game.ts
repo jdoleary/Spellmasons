@@ -1,7 +1,8 @@
 import type Unit from './Unit';
-import { Spell, effect, getManaCost } from './Spell';
+import { Spell, effect, getManaCost, getImage } from './Spell';
 import type Player from './Player';
 import * as config from './config';
+import Image from './Image';
 
 export enum game_state {
   Lobby,
@@ -23,6 +24,7 @@ export default class Game {
   players: Player[] = [];
   units: Unit[] = [];
   spells: Spell[] = [];
+  spellImages: Image[] = [];
   constructor() {
     this.setGameState(game_state.Lobby);
     window.game = this;
@@ -98,6 +100,12 @@ export default class Game {
       spell.caster.mana -= cost;
       window.setDebug({ mana: spell.caster.mana });
       this.spells.push(spell);
+      // Only show spell images for the client who casted it
+      if (window.clientId == (spell.caster && spell.caster.client_id)) {
+        this.spellImages.push(
+          new Image(spell.target_x, spell.target_y, 0, 0, getImage(spell)),
+        );
+      }
     }
   }
   cast(spell: Spell) {
@@ -138,6 +146,10 @@ export default class Game {
     // Remove all spells, now that they are cast
     // TODO traps shouldn't be removed unless they are cast
     this.spells = [];
+    this.spellImages.forEach((i) => {
+      // Remove spell images once they are cast
+      i.cleanup();
+    });
 
     // Move units
     for (let u of this.units) {

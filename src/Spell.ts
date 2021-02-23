@@ -19,6 +19,28 @@ export interface Spell {
   // in turns
   delay?: number;
 }
+export function getImage(s: Spell) {
+  let imgPath = 'crosshair.png';
+  if (s.damage) {
+    imgPath = 'crosshair.png';
+  }
+  if (s.delay) {
+    // TODO image for delay
+  }
+  if (s.freeze) {
+    imgPath = 'ice-cube.png';
+  }
+  if (s.chain) {
+    imgPath = 'lightning.png';
+  }
+  if (s.aoe_radius > 0) {
+    imgPath = 'bomb.png';
+  }
+  if (s.summon) {
+    imgPath = 'egg.png';
+  }
+  return imgPath;
+}
 function toString(s: Spell) {
   const strings = [];
   if (s.damage) {
