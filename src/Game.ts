@@ -103,14 +103,14 @@ export default class Game {
       // Only show spell images for the client who casted it
       if (window.clientId == (spell.caster && spell.caster.client_id)) {
         this.spellImages.push(
-          new Image(spell.target_x, spell.target_y, 0, 0, getImage(spell)),
+          new Image(spell.x, spell.y, 0, 0, getImage(spell)),
         );
       }
     }
   }
   cast(spell: Spell) {
-    const { target_x, target_y } = spell;
-    const targets = this.getUnitsAt(target_x, target_y);
+    const { x, y } = spell;
+    const targets = this.getUnitsAt(x, y);
     if (targets.length) {
       // If there are multiple targets, group their animations together
       window.animationManager.startGroup();

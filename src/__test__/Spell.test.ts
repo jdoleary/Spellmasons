@@ -34,24 +34,27 @@ describe('Spell', () => {
     describe('summon', () => {
       it('Should summon unit on game', () => {
         const g = new Game();
-        const unitArgs = {
+        const p = new Player();
+        p.mana = 1;
+        const spellArgs = {
+          caster: p,
           x: 0,
           y: 0,
+        };
+        const unitArgs = {
           vx: 0,
           vy: 0,
           imagePath: '',
         };
-        const p = new Player();
-        p.mana = 1;
         const s: Spell = {
-          caster: p,
+          ...spellArgs,
           summon: unitArgs,
         };
         g.cast(s);
         // Create unit that will match the one that was just summoned
         const u = new Unit(
-          unitArgs.x,
-          unitArgs.y,
+          s.x,
+          s.y,
           unitArgs.vx,
           unitArgs.vy,
           unitArgs.imagePath,
@@ -122,8 +125,8 @@ describe('Spell', () => {
           damage: HEALTH,
           caster: p,
           // Cast on u3, will also hit u2 due to aoe
-          target_x: u3.x,
-          target_y: u3.y,
+          x: u3.x,
+          y: u3.y,
           aoe_radius: 1,
         };
         g.cast(s);
@@ -165,8 +168,8 @@ describe('Spell', () => {
           // Cast on u1, will chain to u2 since they are touching
           // and u2 will chain to u3 even though u1 and u3 aren't touching
           // because u2 and u3 are
-          target_x: u1.x,
-          target_y: u1.y,
+          x: u1.x,
+          y: u1.y,
           chain: true,
         };
         g.cast(s);
@@ -202,8 +205,8 @@ describe('Spell', () => {
         const s = {
           damage: 1,
           caster: p,
-          target_x: u1.x,
-          target_y: u1.y,
+          x: u1.x,
+          y: u1.y,
           chain: true,
         };
         g.cast(s);

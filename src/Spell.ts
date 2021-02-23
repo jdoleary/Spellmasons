@@ -5,8 +5,8 @@ import floatingText from './FloatingText';
 
 export interface Spell {
   caster?: Player;
-  target_x?: number;
-  target_y?: number;
+  x?: number;
+  y?: number;
   // damage can be negative for healing
   damage?: number;
   freeze?: boolean;
@@ -157,7 +157,8 @@ export function effect(spell: Spell, args: EffectArgs) {
   }
   if (game) {
     if (spell.summon) {
-      const { x, y, vx, vy, imagePath } = spell.summon;
+      const { x, y } = spell;
+      const { vx, vy, imagePath } = spell.summon;
       floatingText({
         cellX: x,
         cellY: y,

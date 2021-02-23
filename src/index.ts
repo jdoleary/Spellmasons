@@ -108,7 +108,7 @@ function onData(d: { fromClient: string; payload: any }) {
       game.players = players;
       game.spells = spells;
       game.spellImages = spells.map(
-        (s) => new Image(s.target_x, s.target_y, 0, 0, getImage(s)),
+        (s) => new Image(s.x, s.y, 0, 0, getImage(s)),
       );
       game.units = units;
       game.setGameState(game_state.Playing);

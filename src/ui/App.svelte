@@ -19,10 +19,12 @@
       if(spell_type === 'summon'){
         const vy = cell_y > 3 ? -1 : 1
         window.pie.sendData({ type: MESSAGE_TYPES.SPELL, spell:{
-          summon: { x:cell_x, y:cell_y, vx:0, vy, imagePath: 'crocodile.png' },
+          x: cell_x,
+          y: cell_y,
+          summon: { vx:0, vy, imagePath: 'crocodile.png' },
         }});
       }else{
-        window.pie.sendData({ type: MESSAGE_TYPES.SPELL, spell:{...spell, target_x:cell_x, target_y:cell_y} });
+        window.pie.sendData({ type: MESSAGE_TYPES.SPELL, spell:{...spell, x:cell_x, y:cell_y} });
       }
     }
   }

@@ -65,8 +65,8 @@ describe('Game', () => {
       g.spells.push({
         damage: u2.health,
         caster: p,
-        target_x: u2.x,
-        target_y: u2.y,
+        x: u2.x,
+        y: u2.y,
       });
       // Trigger the next turn which will change the game state to
       // what will be tested in all the following tests
