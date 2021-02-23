@@ -81,6 +81,23 @@ export default class Image {
       y: cell_y * CELL_SIZE,
     });
   }
+  attack(
+    current_cell_x: number,
+    current_cell_y: number,
+    cell_x: number,
+    cell_y: number,
+  ) {
+    // Move forward
+    window.animationManager.addAnimation(this.element, this.transform, {
+      x: cell_x * CELL_SIZE,
+      y: cell_y * CELL_SIZE,
+    });
+    // Move back
+    window.animationManager.addAnimation(this.element, this.transform, {
+      x: current_cell_x * CELL_SIZE,
+      y: current_cell_y * CELL_SIZE,
+    });
+  }
   // Used for initialization
   set(cell_x: number, cell_y: number, rotation: number, scale: number) {
     this.transform.x = cell_x * CELL_SIZE;

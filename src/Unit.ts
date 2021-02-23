@@ -79,6 +79,7 @@ export default class Unit {
       if (other_unit === this) {
         continue;
       }
+      this.image.attack(this.x, this.y, next_x, next_y);
       other_unit.takeDamage(this.power, 'unit');
     }
     const alive_bump_into_units = bump_into_units.filter((u) => u.alive);
