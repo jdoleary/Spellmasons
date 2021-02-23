@@ -13,7 +13,7 @@ export default function floatingText({ cellX, cellY, text, color }) {
   el.innerText = text;
   el.classList.add('floating-text');
   el.style.color = color;
-  document.getElementById('board').appendChild(el);
+  document.getElementById('board')?.appendChild(el);
   const instance = {
     // Place in the middle of cell
     x: cellX * CELL_SIZE + CELL_SIZE / 2,

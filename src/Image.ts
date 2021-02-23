@@ -52,7 +52,7 @@ export default class Image {
       }
       this.set(cellX, cellY, rotation, 1.0);
       const boardContents = document.getElementById('board-contents');
-      boardContents.appendChild(this.element);
+      boardContents?.appendChild(this.element);
     }
   }
   cleanup() {
