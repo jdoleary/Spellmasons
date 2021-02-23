@@ -25,6 +25,8 @@ export default class Game {
   units: Unit.IUnit[] = [];
   spells: Spell[] = [];
   spellImages: Image[] = [];
+  // Keeps track of which players have ended their turn
+  turn_finished: { [clientId: string]: boolean } = {};
   constructor() {
     this.setGameState(game_state.Lobby);
     window.game = this;

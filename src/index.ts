@@ -52,8 +52,6 @@ function connect(_room_info = {}) {
     }
   };
 }
-// Keeps track of which players have ended their turn
-let turn_finished = {};
 export enum MESSAGE_TYPES {
   SPELL,
   END_TURN,
@@ -90,7 +88,14 @@ function onData(d: { fromClient: string; payload: any }) {
   const caster = game.players.find((p) => p.client_id === fromClient);
   switch (type) {
     case MESSAGE_TYPES.LOAD_GAME_STATE:
-      // Resume game
+      // Clear previous images:
+      game.units.forEach((x) => {
+        x.image.cleanup();
+      });
+      game.spellImages.forEach((x) => {
+        x.cleanup();
+      });
+      // Resume game / load game / rejoin game
       const loadedGameState = { ...payload.game };
       const players = loadedGameState.players;
       const spells = loadedGameState.spells.map((s) => {
@@ -111,6 +116,7 @@ function onData(d: { fromClient: string; payload: any }) {
         (s) => new Image(s.x, s.y, 0, 0, getImage(s)),
       );
       game.units = units;
+      game.turn_finished = loadedGameState.turn_finished;
       game.setGameState(game_state.Playing);
       break;
     case MESSAGE_TYPES.SPELL:
@@ -119,17 +125,17 @@ function onData(d: { fromClient: string; payload: any }) {
       game.queueSpell(spell);
       break;
     case MESSAGE_TYPES.END_TURN:
-      turn_finished[fromClient] = true;
+      game.turn_finished[fromClient] = true;
       window.addToLog(`Player ${fromClient} ends turn.`);
       let all_players_ended_turn = true;
       for (let p of game.players) {
-        if (!turn_finished[p.client_id]) {
+        if (!game.turn_finished[p.client_id]) {
           all_players_ended_turn = false;
           break;
         }
       }
       if (all_players_ended_turn) {
-        turn_finished = {};
+        game.turn_finished = {};
         game.nextTurn().then(() => {
           // Animations complete
           const queue = [...onDataQueue];
