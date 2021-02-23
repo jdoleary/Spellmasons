@@ -11,6 +11,7 @@
 - Overall
 
   - Caster is undefined comes from reconnecting with a different clientid
+    - Refreshed game doesn't trigger spells (caused by parent issue of clientIds changing)
   - Waiting for player to reconnect should only change if one of the two active players leave
 
 - Spells
