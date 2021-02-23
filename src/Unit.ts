@@ -80,10 +80,6 @@ export default class Unit {
         continue;
       }
       other_unit.takeDamage(this.power, 'unit');
-      // Only take damage if the other unit is not frozen
-      if (!other_unit.frozen) {
-        this.takeDamage(other_unit.power, 'unit');
-      }
     }
     const alive_bump_into_units = bump_into_units.filter((u) => u.alive);
     // If nothing is obstructing
