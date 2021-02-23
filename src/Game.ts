@@ -1,7 +1,7 @@
-import type Unit from './Unit';
 import { Spell, effect, getManaCost, getImage } from './Spell';
 import type Player from './Player';
 import * as config from './config';
+import * as Unit from './Unit';
 import Image from './Image';
 
 export enum game_state {
@@ -22,7 +22,7 @@ export default class Game {
   height: number = config.BOARD_HEIGHT;
   width: number = config.BOARD_WIDTH;
   players: Player[] = [];
-  units: Unit[] = [];
+  units: Unit.IUnit[] = [];
   spells: Spell[] = [];
   spellImages: Image[] = [];
   constructor() {
@@ -37,7 +37,7 @@ export default class Game {
     x: number,
     y: number,
     distance: number,
-  ): Unit[] {
+  ): Unit.IUnit[] {
     return this.units.filter((u) => {
       return (
         u.x <= x + distance &&
@@ -51,8 +51,8 @@ export default class Game {
     x: number,
     y: number,
     distance: number,
-    ignore: Unit[] = [],
-  ): Unit[] {
+    ignore: Unit.IUnit[] = [],
+  ): Unit.IUnit[] {
     let touching = this.units.filter((u) => {
       return (
         u.x <= x + distance &&
@@ -70,7 +70,7 @@ export default class Game {
     }
     return touching;
   }
-  getUnitsAt(x?: number, y?: number): Unit[] {
+  getUnitsAt(x?: number, y?: number): Unit.IUnit[] {
     return this.units.filter((u) => u.x === x && u.y === y);
   }
   getPlayerAt(heart_x: number, heart_y: number): Player | undefined {
@@ -84,7 +84,7 @@ export default class Game {
       }
     }
   }
-  summon(unit: Unit) {
+  summon(unit: Unit.IUnit) {
     this.units.push(unit);
   }
   queueSpell(spell: Spell) {
@@ -153,7 +153,7 @@ export default class Game {
 
     // Move units
     for (let u of this.units) {
-      u.move();
+      Unit.move(u);
       u.justSpawned = false;
     }
 

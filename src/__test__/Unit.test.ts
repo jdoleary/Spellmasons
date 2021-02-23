@@ -1,29 +1,29 @@
 import { describe, it, expect } from '@jest/globals';
-import Unit from '../Unit';
+import * as Unit from '../Unit';
 import Game from '../Game';
 import Player from '../Player';
 
 describe('Unit', () => {
   it('should die when health reaches 0', () => {
     const g = new Game();
-    const u = new Unit(0, 0, 0, 0);
+    const u = Unit.create(0, 0, 0, 0);
     g.summon(u);
     u.health = 5;
-    u.takeDamage(u.health);
+    Unit.takeDamage(u, u.health);
     expect(u.alive).toEqual(false);
   });
   describe('when frozen', () => {
     it('should not move', () => {
-      const u = new Unit(0, 0, 0, 1);
+      const u = Unit.create(0, 0, 0, 1);
       u.frozen = true;
-      u.move();
+      Unit.move(u);
       expect(u.y).toEqual(0);
     });
     it('should not deal damage when it is moved into', () => {
       const g = new Game();
       // Set u up to move into u1
-      const u = new Unit(0, 0, 0, 1);
-      const u2 = new Unit(0, 1, 0, 0);
+      const u = Unit.create(0, 0, 0, 1);
+      const u2 = Unit.create(0, 1, 0, 0);
       g.summon(u);
       g.summon(u2);
       // Give u2 power to attack u when u moves into it
@@ -33,7 +33,7 @@ describe('Unit', () => {
       const START_HEALTH = 4;
       u.health = START_HEALTH;
       u2.health = START_HEALTH;
-      u.move();
+      Unit.move(u);
       // Expect that no damage has been taken
       expect(u.health).toEqual(START_HEALTH);
     });
@@ -41,8 +41,8 @@ describe('Unit', () => {
   it('should attack whatever it moves into', () => {
     const g = new Game();
     // Set u up to move into u1
-    const u = new Unit(0, 0, 0, 1);
-    const u2 = new Unit(0, 1, 0, 0);
+    const u = Unit.create(0, 0, 0, 1);
+    const u2 = Unit.create(0, 1, 0, 0);
     g.summon(u);
     g.summon(u2);
     // Unfreeze the justSpawned units
@@ -50,25 +50,8 @@ describe('Unit', () => {
     u.power = 2;
     const START_HEALTH = 4;
     u2.health = START_HEALTH;
-    u.move();
+    Unit.move(u);
     expect(u2.health).toEqual(START_HEALTH - u.power);
-  });
-  it('should BE attacked whatever it moves into if what it moves into is capable of dealing damage', () => {
-    const g = new Game();
-    // Set u up to move into u1
-    const u = new Unit(0, 0, 0, 1);
-    const u2 = new Unit(0, 1, 0, 0);
-    g.summon(u);
-    g.summon(u2);
-    // Unfreeze the justSpawned units
-    g.nextTurn();
-    // Give u2 power to attack u when u moves into it
-    u2.power = 2;
-    const START_HEALTH = 4;
-    u.health = START_HEALTH;
-    u2.health = START_HEALTH;
-    u.move();
-    expect(u.health).toEqual(START_HEALTH - u2.power);
   });
   it('should not be able to move into a space occupied by a non-dead unit', () => {
     const g = new Game();
@@ -76,8 +59,8 @@ describe('Unit', () => {
     const START_Y = 0;
     const START_VY = 1;
     // Set u up to move into u1
-    const u = new Unit(START_X, START_Y, 0, START_VY);
-    const u2 = new Unit(0, START_Y + START_VY, 0, 0);
+    const u = Unit.create(START_X, START_Y, 0, START_VY);
+    const u2 = Unit.create(0, START_Y + START_VY, 0, 0);
     g.summon(u);
     g.summon(u2);
     // Unfreeze the justSpawned units
@@ -86,7 +69,7 @@ describe('Unit', () => {
     const START_HEALTH = 4;
     u.health = START_HEALTH;
     u2.health = START_HEALTH;
-    u.move();
+    Unit.move(u);
     // Expect that u has NOT physically moved because u2 is blocking and not dead
     expect(u.x).toEqual(START_X);
     expect(u.y).toEqual(START_Y);
@@ -97,8 +80,8 @@ describe('Unit', () => {
     const START_Y = 0;
     const START_VY = 1;
     // Set u up to move into u1
-    const u = new Unit(START_X, START_Y, 0, START_VY);
-    const u2 = new Unit(0, START_Y + START_VY, 0, 0);
+    const u = Unit.create(START_X, START_Y, 0, START_VY);
+    const u2 = Unit.create(0, START_Y + START_VY, 0, 0);
     g.summon(u);
     g.summon(u2);
     // Unfreeze the justSpawned units
@@ -108,7 +91,7 @@ describe('Unit', () => {
     u.health = START_HEALTH;
     u2.health = START_HEALTH;
     // Make u strong enough to kill u2 with one attack
-    u.move();
+    Unit.move(u);
     // Expect that u HAS physically moved because u2 was blocking but is now dead
     expect(u.x).toEqual(START_X);
     expect(u.y).toEqual(START_Y + START_VY);
@@ -127,16 +110,16 @@ describe('Unit', () => {
     const START_Y = g.height - 1;
     const START_VY = 1;
     // Set u up to move into p's heart at the bottom of the board
-    const u = new Unit(START_X, START_Y, 0, START_VY);
+    const u = Unit.create(START_X, START_Y, 0, START_VY);
     g.summon(u);
     u.power = 1;
     // Unfreeze the justSpawned units
     g.nextTurn();
     // Move u into heart
-    u.move();
+    Unit.move(u);
     expect(p.heart_health).toEqual(START_HEART_HEALTH - u.power);
     // Move again into heart
-    u.move();
+    Unit.move(u);
     expect(p.heart_health).toEqual(START_HEART_HEALTH - u.power * 2);
     // Verify that unit hasn't moved off the board
     expect(u.y).toEqual(START_Y);

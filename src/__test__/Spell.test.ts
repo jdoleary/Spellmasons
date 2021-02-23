@@ -1,13 +1,13 @@
 import { describe, it, expect } from '@jest/globals';
 import { Spell, effect } from '../Spell';
 import Player from '../Player';
-import Unit from '../Unit';
+import * as Unit from '../Unit';
 import Game from '../Game';
 
 describe('Spell', () => {
   describe('effect', () => {
     it('it should deal damage to unit', () => {
-      const u = new Unit(0, 0, 0, 0);
+      const u = Unit.create(0, 0, 0, 0);
       const p = new Player();
       p.mana = 1;
       const start_health = u.health;
@@ -20,7 +20,7 @@ describe('Spell', () => {
     });
     describe('when freeze == true', () => {
       it('it should freeze the unit', () => {
-        const u = new Unit(0, 0, 0, 0);
+        const u = Unit.create(0, 0, 0, 0);
         const p = new Player();
         p.mana = 1;
         const s: Spell = {
@@ -52,7 +52,7 @@ describe('Spell', () => {
         };
         g.cast(s);
         // Create unit that will match the one that was just summoned
-        const u = new Unit(
+        const u = Unit.create(
           s.x,
           s.y,
           unitArgs.vx,
@@ -66,7 +66,7 @@ describe('Spell', () => {
   describe('Modifiers', () => {
     describe('delay', () => {
       it('should decrement delay by 1 every time effect() is called', () => {
-        const u = new Unit(0, 0, 0, 0);
+        const u = Unit.create(0, 0, 0, 0);
         const p = new Player();
         p.mana = 1;
         const s: Spell = {
@@ -80,7 +80,7 @@ describe('Spell', () => {
         expect(s.delay).toEqual(0);
       });
       it('should not cause effect until delay is 0', () => {
-        const u = new Unit(0, 0, 0, 0);
+        const u = Unit.create(0, 0, 0, 0);
         const p = new Player();
         p.mana = 1;
         const start_health = u.health;
@@ -102,10 +102,10 @@ describe('Spell', () => {
         g.players.push(p);
         p.mana = 1;
         const HEALTH = 4;
-        const u1 = new Unit(0, 0, 0, 1);
-        const u2 = new Unit(1, 0, 0, -1);
-        const u3 = new Unit(2, 0, 0, -1);
-        const u4 = new Unit(4, 0, 0, -1);
+        const u1 = Unit.create(0, 0, 0, 1);
+        const u2 = Unit.create(1, 0, 0, -1);
+        const u3 = Unit.create(2, 0, 0, -1);
+        const u4 = Unit.create(4, 0, 0, -1);
         u1.name = 'u1';
         u2.name = 'u2';
         u3.name = 'u3';
@@ -143,10 +143,10 @@ describe('Spell', () => {
         g.players.push(p);
         p.mana = 1;
         const HEALTH = 4;
-        const u1 = new Unit(0, 0, 0, 1);
-        const u2 = new Unit(1, 0, 0, -1);
-        const u3 = new Unit(2, 0, 0, -1);
-        const u4 = new Unit(4, 0, 0, -1);
+        const u1 = Unit.create(0, 0, 0, 1);
+        const u2 = Unit.create(1, 0, 0, -1);
+        const u3 = Unit.create(2, 0, 0, -1);
+        const u4 = Unit.create(4, 0, 0, -1);
         u1.name = 'u1';
         u2.name = 'u2';
         u3.name = 'u3';
@@ -184,10 +184,10 @@ describe('Spell', () => {
         g.players.push(p);
         p.mana = 1;
         const HEALTH = 4;
-        const u1 = new Unit(2, 3, 0, 1);
-        const u2 = new Unit(3, 4, 0, -1);
-        const u3 = new Unit(4, 4, 0, -1);
-        const u4 = new Unit(4, 5, 0, -1);
+        const u1 = Unit.create(2, 3, 0, 1);
+        const u2 = Unit.create(3, 4, 0, -1);
+        const u3 = Unit.create(4, 4, 0, -1);
+        const u4 = Unit.create(4, 5, 0, -1);
         u1.name = 'u1';
         u2.name = 'u2';
         u3.name = 'u3';

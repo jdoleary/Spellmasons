@@ -1,108 +1,113 @@
 import * as config from './config';
 import Image from './Image';
 import type Player from './Player';
-
-export default class Unit {
+export interface IUnit {
   x: number;
   y: number;
   vx: number;
   vy: number;
   name?: string;
-  power: number = config.UNIT_BASE_POWER;
-  health: number = config.UNIT_BASE_HEALTH;
-  alive = true;
-  frozen: boolean = false;
   image: Image;
-  justSpawned: boolean = true;
+  power: number;
+  health: number;
+  alive: boolean;
+  frozen: boolean;
+  justSpawned: boolean;
+}
 
-  constructor(
-    x: number,
-    y: number,
-    vx: number,
-    vy: number,
-    imagePath?: string,
-  ) {
-    this.x = x;
-    this.y = y;
-    this.vx = vx;
-    this.vy = vy;
-    this.image = new Image(this.x, this.y, this.vx, this.vy, imagePath);
+export function create(
+  x: number,
+  y: number,
+  vx: number,
+  vy: number,
+  imagePath?: string,
+) {
+  const unit: IUnit = {
+    x,
+    y,
+    vx,
+    vy,
+    image: new Image(x, y, vx, vy, imagePath),
+    power: config.UNIT_BASE_POWER,
+    health: config.UNIT_BASE_HEALTH,
+    alive: true,
+    frozen: false,
+    justSpawned: true,
+  };
 
-    // Start images small so when they spawn in they will grow
-    this.image.transform.scale = 0.0;
-    window.animationManager.setTransform(
-      this.image.element,
-      this.image.transform,
-    );
-    this.image.scale(1.0);
+  // Start images small so when they spawn in they will grow
+  unit.image.transform.scale = 0.0;
+  window.animationManager.setTransform(
+    unit.image.element,
+    unit.image.transform,
+  );
+  unit.image.scale(1.0);
+  return unit;
+}
+export function die(u: IUnit) {
+  u.alive = false;
+}
+export function takeDamage(unit: IUnit, amount: number, cause?: string) {
+  unit.health -= amount;
+  window.addToLog(
+    `Unit at (${unit.x}, ${unit.y}) takes ${amount} damage from ${cause}`,
+  );
+  unit.image.anim_spin();
+  if (unit.health <= 0) {
+    window.addToLog(`Unit at (${unit.x}, ${unit.y}) dies.`);
+    die(unit);
   }
-  die() {
-    this.alive = false;
+  // Change the size to represent health
+  unit.image.scale(unit.health / config.UNIT_BASE_HEALTH);
+}
+export function move(unit: IUnit) {
+  // Do not move if dead
+  if (!unit.alive) {
+    return;
   }
-  takeDamage(amount: number, cause?: string) {
-    this.health -= amount;
-    window.addToLog(
-      `Unit at (${this.x}, ${this.y}) takes ${amount} damage from ${cause}`,
-    );
-    this.image.anim_spin();
-    if (this.health <= 0) {
-      window.addToLog(`Unit at (${this.x}, ${this.y}) dies.`);
-      this.die();
-    }
-    // Change the size to represent health
-    this.image.scale(this.health / config.UNIT_BASE_HEALTH);
+  // Do not move if just spawned
+  if (unit.justSpawned) {
+    return;
   }
-  move() {
-    // Do not move if dead
-    if (!this.alive) {
-      return;
+  // Do not move if frozen
+  if (unit.frozen) {
+    window.addToLog(`Unit at (${unit.x}, ${unit.y}) is frozen and cannot move`);
+    return;
+  }
+  const next_x = unit.x + unit.vx;
+  const next_y = unit.y + unit.vy;
+  const bump_into_units = window.game
+    ? window.game.getUnitsAt(next_x, next_y)
+    : [];
+  // Deal damage to what you run into
+  for (let other_unit of bump_into_units) {
+    // Do not attack self
+    if (other_unit === this) {
+      continue;
     }
-    // Do not move if just spawned
-    if (this.justSpawned) {
-      return;
-    }
-    // Do not move if frozen
-    if (this.frozen) {
-      window.addToLog(
-        `Unit at (${this.x}, ${this.y}) is frozen and cannot move`,
-      );
-      return;
-    }
-    const next_x = this.x + this.vx;
-    const next_y = this.y + this.vy;
-    const bump_into_units = window.game
-      ? window.game.getUnitsAt(next_x, next_y)
-      : [];
-    // Deal damage to what you run into
-    for (let other_unit of bump_into_units) {
-      // Do not attack self
-      if (other_unit === this) {
-        continue;
-      }
-      this.image.attack(this.x, this.y, next_x, next_y);
-      other_unit.takeDamage(this.power, 'unit');
-    }
-    const alive_bump_into_units = bump_into_units.filter((u) => u.alive);
-    // If nothing is obstructing
-    if (alive_bump_into_units.length === 0) {
-      // Check if at edge of board
-      const player: Player | undefined = window.game
-        ? window.game.getPlayerAt(next_x, next_y)
-        : undefined;
-      if (player) {
-        // if player found, attack their heart
-        player.heart_health -= this.power;
-        window.setDebug({
-          [`${
-            player.client_id && player.client_id.slice(0, 6)
-          } health`]: player.heart_health,
-        });
-      } else {
-        // Otherwise, physically move
-        this.x = next_x;
-        this.y = next_y;
-        this.image.move(this.x, this.y);
-      }
+    unit.image.attack(unit.x, unit.y, next_x, next_y);
+    takeDamage(other_unit, unit.power, 'unit');
+  }
+  const alive_bump_into_units = bump_into_units.filter((u) => u.alive);
+  // If nothing is obstructing
+  if (alive_bump_into_units.length === 0) {
+    // Check if at edge of board
+    const player: Player | undefined = window.game
+      ? window.game.getPlayerAt(next_x, next_y)
+      : undefined;
+    if (player) {
+      // if player found, attack their heart
+      player.heart_health -= unit.power;
+      window.setDebug({
+        [`${
+          player.client_id && player.client_id.slice(0, 6)
+        } health`]: player.heart_health,
+      });
+    } else {
+      // Otherwise, physically move
+      unit.x = next_x;
+      unit.y = next_y;
+      unit.image.move(unit.x, unit.y);
     }
   }
 }

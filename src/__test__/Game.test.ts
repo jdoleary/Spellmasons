@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll } from '@jest/globals';
 import Game, { game_state } from '../Game';
 import Player from '../Player';
-import Unit from '../Unit';
+import * as Unit from '../Unit';
 
 describe('Game', () => {
   describe('queueSpell()', () => {
@@ -42,9 +42,9 @@ describe('Game', () => {
   });
   describe('Turns - in order', () => {
     let g: Game;
-    let u: Unit;
-    let u2: Unit;
-    let u_frozen: Unit;
+    let u: Unit.IUnit;
+    let u2: Unit.IUnit;
+    let u_frozen: Unit.IUnit;
     let p: Player;
     beforeEach(() => {
       g = new Game();
@@ -53,9 +53,9 @@ describe('Game', () => {
       // Simulate mana loss (this is handled mid-turn when spells are cast)
       // in order to assert that mana is reset to mana_max
       p.mana = p.mana_max - 1;
-      u = new Unit(0, 0, 0, 1);
-      u2 = new Unit(1, 0, 0, -1);
-      u_frozen = new Unit(7, 7, 0, 0);
+      u = Unit.create(0, 0, 0, 1);
+      u2 = Unit.create(1, 0, 0, -1);
+      u_frozen = Unit.create(7, 7, 0, 0);
       u_frozen.frozen = true;
       // Summon units into the game
       g.summon(u);
@@ -105,23 +105,23 @@ describe('Game', () => {
   describe('getUnitsWithinDistanceOfPoint', () => {
     it('should return units within distance of point', () => {
       const g = new Game();
-      const u_not_in_range = new Unit(0, 0, 0, 0);
-      const u_not_in_range_2 = new Unit(7, 0, 0, 0);
-      const u_not_in_range_3 = new Unit(0, 7, 0, 0);
-      const u_not_in_range_4 = new Unit(7, 7, 0, 0);
+      const u_not_in_range = Unit.create(0, 0, 0, 0);
+      const u_not_in_range_2 = Unit.create(7, 0, 0, 0);
+      const u_not_in_range_3 = Unit.create(0, 7, 0, 0);
+      const u_not_in_range_4 = Unit.create(7, 7, 0, 0);
       const toSummon = [
-        new Unit(4, 4, 0, 0),
-        new Unit(3, 4, 0, 0),
-        new Unit(4, 3, 0, 0),
-        new Unit(3, 3, 0, 0),
-        new Unit(5, 4, 0, 0),
-        new Unit(4, 5, 0, 0),
+        Unit.create(4, 4, 0, 0),
+        Unit.create(3, 4, 0, 0),
+        Unit.create(4, 3, 0, 0),
+        Unit.create(3, 3, 0, 0),
+        Unit.create(5, 4, 0, 0),
+        Unit.create(4, 5, 0, 0),
         u_not_in_range,
         u_not_in_range_2,
         u_not_in_range_3,
         u_not_in_range_4,
       ];
-      toSummon.forEach((u: Unit) => {
+      toSummon.forEach((u: Unit.IUnit) => {
         g.summon(u);
       });
 
@@ -136,23 +136,23 @@ describe('Game', () => {
   describe('getTouchingUnitsRecursive', () => {
     it('It should return all touching units (1 square away) with no duplicates', () => {
       const g = new Game();
-      const u_not_in_range = new Unit(0, 0, 0, 0);
-      const u_not_in_range_2 = new Unit(7, 0, 0, 0);
-      const u_not_in_range_3 = new Unit(0, 7, 0, 0);
-      const u_not_in_range_4 = new Unit(7, 7, 0, 0);
+      const u_not_in_range = Unit.create(0, 0, 0, 0);
+      const u_not_in_range_2 = Unit.create(7, 0, 0, 0);
+      const u_not_in_range_3 = Unit.create(0, 7, 0, 0);
+      const u_not_in_range_4 = Unit.create(7, 7, 0, 0);
       const toSummon = [
-        new Unit(4, 4, 0, 0),
-        new Unit(3, 4, 0, 0),
-        new Unit(4, 3, 0, 0),
-        new Unit(3, 3, 0, 0),
-        new Unit(5, 4, 0, 0),
-        new Unit(4, 5, 0, 0),
+        Unit.create(4, 4, 0, 0),
+        Unit.create(3, 4, 0, 0),
+        Unit.create(4, 3, 0, 0),
+        Unit.create(3, 3, 0, 0),
+        Unit.create(5, 4, 0, 0),
+        Unit.create(4, 5, 0, 0),
         u_not_in_range,
         u_not_in_range_2,
         u_not_in_range_3,
         u_not_in_range_4,
       ];
-      toSummon.forEach((u: Unit) => {
+      toSummon.forEach((u: Unit.IUnit) => {
         g.summon(u);
       });
 
