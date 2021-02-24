@@ -106,7 +106,7 @@ export default class Game {
       return;
     } else {
       spell.caster.mana -= cost;
-      if (spell.caster.client_id === window.clientId) {
+      if (spell.caster === window.me) {
         UI.setCurrentMana(spell.caster.mana);
       }
       this.spells.push(spell);

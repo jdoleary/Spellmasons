@@ -36,8 +36,7 @@ function resetGame() {
   const doReset = window.confirm('Are you sure you want to start over?');
   if (doReset) {
     window.pie.sendData({
-      type: MESSAGE_TYPES.LOAD_GAME_STATE,
-      game: new Game(),
+      type: MESSAGE_TYPES.RESTART_GAME,
     });
   }
 }

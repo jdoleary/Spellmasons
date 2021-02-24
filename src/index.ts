@@ -15,7 +15,7 @@ const wsUri = 'ws://localhost:8000';
 // const wsUri = 'wss://websocket-pie-e4elx.ondigitalocean.app/';
 let pie: PieClient;
 let game: Game = new Game();
-let maxClients = 1;
+let maxClients = 2;
 function connect(_room_info = {}) {
   const room_info = Object.assign(_room_info, {
     app: 'Golems',
@@ -52,6 +52,7 @@ export enum MESSAGE_TYPES {
   SPELL,
   END_TURN,
   LOAD_GAME_STATE,
+  RESTART_GAME,
 }
 
 const messageLog = [];
@@ -66,7 +67,15 @@ window.replay = (title) => {
     onData(message);
   }
 };
-
+function cleanUpAllImages() {
+  // Clear previous images:
+  game.units.forEach((x) => {
+    x.image.cleanup();
+  });
+  game.spellImages.forEach((x) => {
+    x.cleanup();
+  });
+}
 let onDataQueue = [];
 function onData(d: { fromClient: string; payload: any }) {
   // Keep data messages in a queue until they are ready to be processed
@@ -83,14 +92,17 @@ function onData(d: { fromClient: string; payload: any }) {
   // Get caster
   const caster = game.players.find((p) => p.client_id === fromClient);
   switch (type) {
+    case MESSAGE_TYPES.RESTART_GAME:
+      cleanUpAllImages();
+      game = new Game();
+      if (game.state == game_state.Lobby && clients.length === maxClients) {
+        makeGame(clients);
+      } else {
+        alert('Could not restart game');
+      }
+      break;
     case MESSAGE_TYPES.LOAD_GAME_STATE:
-      // Clear previous images:
-      game.units.forEach((x) => {
-        x.image.cleanup();
-      });
-      game.spellImages.forEach((x) => {
-        x.cleanup();
-      });
+      cleanUpAllImages();
       // Resume game / load game / rejoin game
       const loadedGameState = { ...payload.game };
       const players = loadedGameState.players;
@@ -191,6 +203,7 @@ function makeGame(clients: string[]) {
     p.client_id = c;
     game.players.push(p);
     if (p.client_id === window.clientId) {
+      window.me = p;
       UI.setCurrentMana(p.mana, p.mana);
     }
   }
@@ -214,6 +227,7 @@ declare global {
     replay: (messages: string[]) => void;
     // Current clients id
     clientId: string;
+    me: Player;
     // Debug on screen:
     setDebug: (json: object) => void;
   }
