@@ -10,6 +10,7 @@ const elResetGameButton: HTMLButtonElement = document.getElementById(
   'resetGame',
 ) as HTMLButtonElement;
 const elMana = document.getElementById('mana');
+const elHealth = document.getElementById('health');
 
 export function setup() {
   window.addEventListener('keydown', (event) => {
@@ -35,6 +36,16 @@ function resetGame() {
       game: new Game(),
     });
   }
+}
+export function setHealth(health: number) {
+  elHealth.innerText = `${health} Health`;
+}
+let maxMana;
+export function setCurrentMana(mana: number, max?: number) {
+  if (max) {
+    maxMana = max;
+  }
+  elMana.innerText = `${mana} / ${maxMana} Mana`;
 }
 export function turnEnded(isEnded: boolean) {
   elEndTurnBtn.disabled = isEnded;

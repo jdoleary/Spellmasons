@@ -1,6 +1,7 @@
 import * as config from './config';
 import Image from './Image';
 import type Player from './Player';
+import * as UI from './UserInterface';
 export interface IUnit {
   x: number;
   y: number;
@@ -95,11 +96,9 @@ export function move(unit: IUnit) {
     if (player) {
       // if player found, attack their heart
       player.heart_health -= unit.power;
-      window.setDebug({
-        [`${
-          player.client_id && player.client_id.slice(0, 6)
-        } health`]: player.heart_health,
-      });
+      if (player.client_id === window.clientId) {
+        UI.setHealth(player.heart_health);
+      }
     } else {
       // Otherwise, physically move
       unit.x = next_x;

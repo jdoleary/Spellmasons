@@ -3,6 +3,7 @@ import type Player from './Player';
 import * as config from './config';
 import * as Unit from './Unit';
 import Image from './Image';
+import * as UI from './UserInterface';
 
 export enum game_state {
   Lobby,
@@ -93,11 +94,13 @@ export default class Game {
     // Check mana:
     const cost = getManaCost(spell);
     if (cost > spell.caster.mana) {
-      console.log('Insufficient Mana to cast')
+      console.log('Insufficient Mana to cast');
       return;
     } else {
       spell.caster.mana -= cost;
-      window.setDebug({ mana: spell.caster.mana });
+      if (spell.caster.client_id === window.clientId) {
+        UI.setCurrentMana(spell.caster.mana);
+      }
       this.spells.push(spell);
       // Only show spell images for the client who casted it
       if (window.clientId == (spell.caster && spell.caster.client_id)) {
@@ -163,12 +166,12 @@ export default class Game {
     // Restore player mana
     for (let p of this.players) {
       p.mana = p.mana_max;
-      window.setDebug({ mana: p.mana });
+      UI.setCurrentMana(p.mana, p.mana_max);
       // Lastly, Check for gameover
       if (p.heart_health <= 0) {
         this.setGameState(game_state.GameOver);
         this.state = game_state.GameOver;
-        alert('Game Over')
+        alert('Game Over');
       }
     }
 
