@@ -42,7 +42,11 @@ export default function setupSpellBuilderUI() {
   }
   // Add button handlers
   document.getElementById('spell-summon').addEventListener('click', () => {
-    setCurrentSpell({ summon: { imagePath: 'crocodile.png' } });
+    const imagePath =
+      window.clientId === window.game.players[0].clientId
+        ? 'crocodile.png'
+        : 'parrot.png';
+    setCurrentSpell({ summon: { imagePath } });
     elSpellConjurConfig.style.visibility = 'hidden';
   });
   document.getElementById('spell-conjure').addEventListener('click', () => {
