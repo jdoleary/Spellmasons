@@ -10,7 +10,7 @@ UI.setup();
 
 let clients = [];
 
-const wsUri = 'ws://localhsot:8000';
+const wsUri = 'ws://localhost:8000';
 // const wsUri = 'ws://192.168.0.21:8000';
 // const wsUri = 'wss://websocket-pie-e4elx.ondigitalocean.app/';
 let pie: PieClient;
