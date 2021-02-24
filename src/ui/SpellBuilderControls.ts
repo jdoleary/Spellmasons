@@ -1,6 +1,7 @@
 import { MESSAGE_TYPES } from '../index';
 import { CELL_SIZE } from '../Image';
 import { getManaCost, Spell } from '../Spell';
+import floatingText from '../FloatingText';
 let currentSpell: Spell = null;
 
 const elBoard = document.getElementById('board');
@@ -8,29 +9,45 @@ export default function setupSpellBuilderUI() {
   // Add board click handling
   elBoard.addEventListener('click', (e) => {
     const target = e.target as HTMLElement;
-    const rect = target.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const cell_x = Math.floor(x / CELL_SIZE);
-    const cell_y = Math.floor(y / CELL_SIZE);
-    console.log('Click in cell:', cell_x, cell_y, currentSpell);
-    if (currentSpell) {
-      if (currentSpell.summon) {
-        const vy = cell_y > 3 ? -1 : 1;
-        window.pie.sendData({
-          type: MESSAGE_TYPES.SPELL,
-          spell: {
-            x: cell_x,
-            y: cell_y,
-            summon: { ...currentSpell.summon, vx: 0, vy },
-          },
-        });
-      } else {
-        window.pie.sendData({
-          type: MESSAGE_TYPES.SPELL,
-          spell: { ...currentSpell, x: cell_x, y: cell_y },
-        });
+    if (e.target === elBoard) {
+      const rect = target.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const cell_x = Math.floor(x / CELL_SIZE);
+      const cell_y = Math.floor(y / CELL_SIZE);
+      console.log('Click in cell:', cell_x, cell_y, currentSpell);
+      if (currentSpell) {
+        if (currentSpell.summon) {
+          const vy = cell_y > 3 ? -1 : 1;
+          if (
+            window.game.units.filter((u) => u.x === cell_x && u.y === cell_y)
+              .length
+          ) {
+            floatingText({
+              cellX: cell_x,
+              cellY: cell_y,
+              color: 'red',
+              text: "Cannot cast here, something's in the way",
+            });
+          } else {
+            window.pie.sendData({
+              type: MESSAGE_TYPES.SPELL,
+              spell: {
+                x: cell_x,
+                y: cell_y,
+                summon: { ...currentSpell.summon, vx: 0, vy },
+              },
+            });
+          }
+        } else {
+          window.pie.sendData({
+            type: MESSAGE_TYPES.SPELL,
+            spell: { ...currentSpell, x: cell_x, y: cell_y },
+          });
+        }
       }
+    } else {
+      console.error('Board is not the target of click', e.target);
     }
   });
   const elManaCost = document.getElementById('mana-cost');
