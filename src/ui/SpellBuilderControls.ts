@@ -82,7 +82,9 @@ export default function setupSpellBuilderUI() {
       ...currentSpell,
       damage,
     });
-    elSpellDamageText.innerText = `${damage} ${damage > 0 ? 'Damage' : 'Heal'}`;
+    elSpellDamageText.innerText = `${Math.abs(damage)} ${
+      damage > 0 ? 'Damage' : 'Heal'
+    }`;
   });
   document.getElementById('spell-plus-heal').addEventListener('click', () => {
     const damage = (currentSpell.damage || 0) - 1;
