@@ -66,7 +66,12 @@ function toString(s: Spell) {
 export function getManaCost(s: Spell) {
   let cost = 0;
   if (s.damage) {
-    cost += s.damage;
+    if (s.damage < 0) {
+      // Healing is always 1 mana more expensive
+      cost += Math.abs(s.damage) + 1;
+    } else {
+      cost += s.damage;
+    }
   }
   if (s.delay) {
     cost -= s.delay;
