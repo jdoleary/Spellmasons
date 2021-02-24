@@ -37,7 +37,7 @@ export default class Image {
       this.element = document.createElement('img');
       this.element.src = BASE_PATH + imageName;
       this.element.id = `image-${Image.id}`;
-      this.element.className = 'unit';
+      this.element.classList.add('game-image');
       this.element.width = CELL_SIZE;
       this.element.height = CELL_SIZE;
       Image.id++;

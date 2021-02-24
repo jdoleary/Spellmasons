@@ -1,9 +1,8 @@
 # Tasks
 
-- MVP
-
-  - Golems grow rather than spawn and start weaker
-  - health and damage cell highlights
+- Show which spell you currently have queued
+- Brad suggests more unit types
+- Accumulate mana
 
 - Overall
 

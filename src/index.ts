@@ -68,12 +68,8 @@ window.replay = (title) => {
   }
 };
 function cleanUpAllImages() {
-  // Clear previous images:
-  game.units.forEach((x) => {
-    x.image.cleanup();
-  });
-  game.spellImages.forEach((x) => {
-    x.cleanup();
+  document.querySelectorAll('.game-image').forEach((i) => {
+    i.remove();
   });
 }
 let onDataQueue = [];
@@ -200,6 +196,7 @@ function makeGame(clients: string[]) {
     } else {
       p.heart_y = BOARD_HEIGHT;
     }
+    p.heart = new Image(3.5, p.heart_y, 0, 0, 'heart.png');
     p.clientId = c;
     game.players.push(p);
     if (p.clientId === window.clientId) {
