@@ -43,8 +43,11 @@ export function getImage(s: Spell) {
 }
 function toString(s: Spell) {
   const strings = [];
-  if (s.damage) {
+  if (s.damage > 0) {
     strings.push('Hurt');
+  }
+  if (s.damage < 0) {
+    strings.push('Heal');
   }
   if (s.delay) {
     strings.push('Delay');

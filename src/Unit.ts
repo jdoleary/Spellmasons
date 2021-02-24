@@ -49,6 +49,8 @@ export function die(u: IUnit) {
 }
 export function takeDamage(unit: IUnit, amount: number, cause?: string) {
   unit.health -= amount;
+  // Prevent health from going over maximum
+  unit.health = Math.min(unit.health, config.UNIT_BASE_HEALTH);
   window.addToLog(
     `Unit at (${unit.x}, ${unit.y}) takes ${amount} damage from ${cause}`,
   );
