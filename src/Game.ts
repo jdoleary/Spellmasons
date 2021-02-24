@@ -106,12 +106,12 @@ export default class Game {
       return;
     } else {
       spell.caster.mana -= cost;
-      if (spell.caster === window.me) {
+      if (spell.caster.clientId === window.clientId) {
         UI.setCurrentMana(spell.caster.mana);
       }
       this.spells.push(spell);
       // Only show spell images for the client who casted it
-      if (window.clientId == (spell.caster && spell.caster.client_id)) {
+      if (window.clientId == (spell.caster && spell.caster.clientId)) {
         this.spellImages.push(
           new Image(spell.x, spell.y, 0, 0, getImage(spell)),
         );

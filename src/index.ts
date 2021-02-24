@@ -63,7 +63,7 @@ window.replay = (title) => {
   const messages = JSON.parse(localStorage.getItem('golems-' + title));
   for (let i = 0; i < messages.length; i++) {
     const message = messages[i];
-    message.fromClient = game.players[0].client_id;
+    message.fromClient = game.players[0].clientId;
     onData(message);
   }
 };
@@ -90,7 +90,7 @@ function onData(d: { fromClient: string; payload: any }) {
   const { payload, fromClient } = d;
   const { type, spell } = payload;
   // Get caster
-  const caster = game.players.find((p) => p.client_id === fromClient);
+  const caster = game.players.find((p) => p.clientId === fromClient);
   switch (type) {
     case MESSAGE_TYPES.RESTART_GAME:
       cleanUpAllImages();
@@ -108,7 +108,7 @@ function onData(d: { fromClient: string; payload: any }) {
       const players = loadedGameState.players;
       const spells = loadedGameState.spells.map((s) => {
         return {
-          caster: players.find((p) => p.client_id === s.caster.client_id),
+          caster: players.find((p) => p.clientId === s.caster.clientId),
           ...s,
         };
       });
@@ -141,7 +141,7 @@ function onData(d: { fromClient: string; payload: any }) {
       }
       let all_players_ended_turn = true;
       for (let p of game.players) {
-        if (!game.turn_finished[p.client_id]) {
+        if (!game.turn_finished[p.clientId]) {
           all_players_ended_turn = false;
           break;
         }
@@ -200,10 +200,9 @@ function makeGame(clients: string[]) {
     } else {
       p.heart_y = BOARD_HEIGHT;
     }
-    p.client_id = c;
+    p.clientId = c;
     game.players.push(p);
-    if (p.client_id === window.clientId) {
-      window.me = p;
+    if (p.clientId === window.clientId) {
       UI.setCurrentMana(p.mana, p.mana);
     }
   }
@@ -227,7 +226,6 @@ declare global {
     replay: (messages: string[]) => void;
     // Current clients id
     clientId: string;
-    me: Player;
     // Debug on screen:
     setDebug: (json: object) => void;
   }

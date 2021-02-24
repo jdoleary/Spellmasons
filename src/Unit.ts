@@ -96,7 +96,7 @@ export function move(unit: IUnit) {
     if (player) {
       // if player found, attack their heart
       player.heart_health -= unit.power;
-      if (player === window.me) {
+      if (player.clientId === window.clientId) {
         UI.setHealth(player.heart_health);
       }
     } else {
