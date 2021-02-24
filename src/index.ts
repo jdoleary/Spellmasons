@@ -124,6 +124,8 @@ function onData(d: { fromClient: string; payload: any }) {
       game.turn_finished[fromClient] = true;
       if (fromClient == window.clientId) {
         UI.turnEnded(true);
+      } else {
+        UI.turnEndedOpponent();
       }
       let all_players_ended_turn = true;
       for (let p of game.players) {

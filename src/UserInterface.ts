@@ -2,6 +2,7 @@ import { MESSAGE_TYPES } from './index';
 import Game, { game_state } from './Game';
 
 const elControls = document.getElementById('controls');
+const elOppTurnStatus = document.getElementById('opponentTurnStatus');
 const elEndTurnBtn: HTMLButtonElement = document.getElementById(
   'endTurn',
 ) as HTMLButtonElement;
@@ -37,4 +38,8 @@ function resetGame() {
 }
 export function turnEnded(isEnded: boolean) {
   elEndTurnBtn.disabled = isEnded;
+  elOppTurnStatus.innerText = 'Opponent is thinking...';
+}
+export function turnEndedOpponent() {
+  elOppTurnStatus.innerText = 'Opponent waiting';
 }
