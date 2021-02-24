@@ -4,7 +4,8 @@ import Player from './Player';
 import Image from './Image';
 import AnimationManager from './AnimationManager';
 import { BOARD_HEIGHT } from './config';
-
+import * as UI from './UserInterface';
+UI.setup();
 // Mount svelte app
 // @ts-ignore
 import App from './ui/App.svelte';
@@ -126,6 +127,9 @@ function onData(d: { fromClient: string; payload: any }) {
       break;
     case MESSAGE_TYPES.END_TURN:
       game.turn_finished[fromClient] = true;
+      if (fromClient == window.clientId) {
+        UI.turnEnded(true);
+      }
       window.addToLog(`Player ${fromClient} ends turn.`);
       let all_players_ended_turn = true;
       for (let p of game.players) {
@@ -136,6 +140,7 @@ function onData(d: { fromClient: string; payload: any }) {
       }
       if (all_players_ended_turn) {
         game.turn_finished = {};
+        UI.turnEnded(false);
         game.nextTurn().then(() => {
           // Animations complete
           const queue = [...onDataQueue];
