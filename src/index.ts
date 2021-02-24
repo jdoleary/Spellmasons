@@ -187,10 +187,13 @@ function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
 }
 function makeGame(clients: string[]) {
   game.setGameState(game_state.Playing);
-  for (let i = 0; i < clients.length; i++) {
+  // Sort clients to make sure they're always in the same order, regardless of
+  // what order they joined the game (client refreshes can change the order)
+  for (let i = 0; i < clients.sort().length; i++) {
     const c = clients[i];
     let heart_y = 0;
-    if (i == 0) {
+    const isOnTop = i == 0;
+    if (isOnTop) {
       heart_y = -1;
     } else {
       heart_y = BOARD_HEIGHT;
@@ -199,7 +202,7 @@ function makeGame(clients: string[]) {
     game.players.push(p);
     if (p.clientId === window.clientId) {
       UI.setCurrentMana(p.mana, p.mana);
-      if (i === 0) {
+      if (isOnTop) {
         document.getElementById('board').classList.add('invert');
         window.inverted = true;
       }

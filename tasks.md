@@ -3,9 +3,7 @@
 - Show which spell you currently have queued
 - Brad suggests more unit types
 - Accumulate mana
-- Make Player classless and improve loading
-
-  - refreshing loading agme state flips the board
+- Spell animations
 
 - Overall
 
