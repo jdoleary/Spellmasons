@@ -4,6 +4,7 @@ import * as config from './config';
 import * as Unit from './Unit';
 import Image from './Image';
 import * as UI from './ui/UserInterface';
+import floatingText from './FloatingText';
 
 export enum game_state {
   Lobby,
@@ -106,7 +107,12 @@ export default class Game {
     // Check mana:
     const cost = getManaCost(spell);
     if (cost > spell.caster.mana) {
-      console.log('Insufficient Mana to cast');
+      floatingText({
+        cellX: spell.x,
+        cellY: spell.y,
+        text: 'Insufficient Mana',
+        color: 'blue',
+      });
       return;
     } else {
       spell.caster.mana -= cost;
