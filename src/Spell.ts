@@ -2,7 +2,7 @@ import type Game from './Game';
 import type { IPlayer } from './Player';
 import * as Unit from './Unit';
 import floatingText from './FloatingText';
-import type Image from './Image';
+import Image from './Image';
 
 export interface Spell {
   caster?: IPlayer;
@@ -166,6 +166,15 @@ export function effect(spell: Spell, args: EffectArgs) {
       }
     }
     spell.isCast = true;
+    // Show an image when cast occurs
+    const castImage = new Image(spell.x, spell.y, 0, 0, getImage(spell));
+    window.animationManager.startGroup();
+    castImage.scale(1.5);
+    castImage.updateFilter(0);
+    // .then(() => {
+    //   castImage.element?.remove();
+    // });
+    window.animationManager.endGroup();
   }
   if (game) {
     if (spell.summon) {
