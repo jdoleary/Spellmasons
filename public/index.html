@@ -11,21 +11,22 @@
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <script type="module" src="/dist/index.js"></script>
     <div id="websocket-pie-connection-status"></div>
-  <div id="game-container">
-    <div id="board"  on:click="{clickOnBoard}">
-      <div id="board-contents">
-        <img
-          id="grid-background"
-          src="images/grid.png"
-          width="512"
-          height="512"
-        />
+    <div id="game-container">
+      <div id="board">
+        <div id="board-contents">
+          <img
+            id="grid-background"
+            src="images/grid.png"
+            width="512"
+            height="512"
+          />
+        </div>
       </div>
     </div>
-    <div id='controls'>
-      <div id='mana'></div>
-      <button id='endTurn'>End Turn (Space Key)</button>
+    <div id="controls">
+      <div id="mana"></div>
+      <button id="endTurn">End Turn (Space Key)</button>
     </div>
-    <pre id='debug'>test</pre>
+    <pre id="debug">test</pre>
   </body>
 </html>
