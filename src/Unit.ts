@@ -99,6 +99,8 @@ export function move(unit: IUnit) {
       if (player.clientId === window.clientId) {
         UI.setHealth(player.heart_health);
       }
+      // Attack player animation
+      unit.image.attack(unit.x, unit.y, next_x, next_y);
     } else {
       // Otherwise, physically move
       unit.x = next_x;
