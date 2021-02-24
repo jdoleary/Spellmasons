@@ -31,6 +31,9 @@ body {
   flex-wrap: wrap;
   margin: 40px auto 0 auto; */
 }
+#board.invert {
+  transform: rotate(180deg);
+}
 #board-contents {
   /* Only the board itself listens for clicks so that it can calculate which cell was clicked on */
   pointer-events: none;
@@ -42,6 +45,9 @@ body {
 .game-image {
   position: absolute;
 }
+.invert .game-image {
+  transform: rotate(180deg);
+}
 
 #debug {
   position: fixed;
@@ -52,6 +58,9 @@ body {
   margin-top: 40px;
 }
 
+.invert .floating-text {
+  transform: translateX(-50%) rotate(180deg);
+}
 .floating-text {
   position: absolute;
   transform: translateX(-50%);

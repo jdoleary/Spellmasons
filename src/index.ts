@@ -114,7 +114,12 @@ function onData(d: { fromClient: string; payload: any }) {
           image: new Image(u.x, u.y, u.vx, u.vy, u.image.imageName),
         };
       });
-      game.players = players;
+      game = new Game();
+      makeGame(clients);
+      for (let i = 0; i < players.length; i++) {
+        const p = players[i];
+        game.players[i] = { ...game.players[i], ...p };
+      }
       game.spells = spells;
       game.spellImages = spells.map(
         (s) => new Image(s.x, s.y, 0, 0, getImage(s)),
@@ -201,6 +206,10 @@ function makeGame(clients: string[]) {
     game.players.push(p);
     if (p.clientId === window.clientId) {
       UI.setCurrentMana(p.mana, p.mana);
+      if (i === 0) {
+        document.getElementById('board').classList.add('invert');
+        window.inverted = true;
+      }
     }
   }
 }
@@ -225,5 +234,7 @@ declare global {
     clientId: string;
     // Debug on screen:
     setDebug: (json: object) => void;
+    // If the player's board is inverted so they are on the bottom:
+    inverted: boolean;
   }
 }

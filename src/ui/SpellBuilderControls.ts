@@ -1,5 +1,6 @@
 import { MESSAGE_TYPES } from '../index';
 import { CELL_SIZE } from '../Image';
+import { BOARD_WIDTH, BOARD_HEIGHT } from '../config';
 import { getManaCost, Spell } from '../Spell';
 import floatingText from '../FloatingText';
 let currentSpell: Spell = null;
@@ -13,8 +14,12 @@ export default function setupSpellBuilderUI() {
       const rect = target.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
-      const cell_x = Math.floor(x / CELL_SIZE);
-      const cell_y = Math.floor(y / CELL_SIZE);
+      let cell_x = Math.floor(x / CELL_SIZE);
+      let cell_y = Math.floor(y / CELL_SIZE);
+      if (window.inverted) {
+        cell_x = Math.abs((cell_x + 1 - BOARD_WIDTH) % BOARD_WIDTH);
+        cell_y = Math.abs((cell_y + 1 - BOARD_HEIGHT) % BOARD_HEIGHT);
+      }
       console.log('Click in cell:', cell_x, cell_y, currentSpell);
       if (currentSpell) {
         if (currentSpell.summon) {
