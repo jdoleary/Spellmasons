@@ -4,23 +4,18 @@ import Player from './Player';
 import Image from './Image';
 import AnimationManager from './AnimationManager';
 import { BOARD_HEIGHT } from './config';
+import { getImage } from './Spell';
 import * as UI from './UserInterface';
 UI.setup();
-// Mount svelte app
-// @ts-ignore
-import App from './ui/App.svelte';
-import { getImage } from './Spell';
-new App({
-  target: document.getElementById('svelte'),
-});
-// End mount svelte app
 
 let clients = [];
 
-const wsUri = 'ws://localhost:8000'; //'wss://websocket-pie-e4elx.ondigitalocean.app/';
+const wsUri = 'ws://localhsot:8000';
+// const wsUri = 'ws://192.168.0.21:8000';
+// const wsUri = 'wss://websocket-pie-e4elx.ondigitalocean.app/';
 let pie: PieClient;
 let game: Game = new Game();
-let maxClients = 1;
+let maxClients = 2;
 function connect(_room_info = {}) {
   const room_info = Object.assign(_room_info, {
     app: 'Golems',
@@ -130,7 +125,6 @@ function onData(d: { fromClient: string; payload: any }) {
       if (fromClient == window.clientId) {
         UI.turnEnded(true);
       }
-      window.addToLog(`Player ${fromClient} ends turn.`);
       let all_players_ended_turn = true;
       for (let p of game.players) {
         if (!game.turn_finished[p.client_id]) {
@@ -183,19 +177,15 @@ function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
   }
 }
 function makeGame(clients: string[]) {
-  console.log('Initialize game state', clients);
   game.setGameState(game_state.Playing);
   for (let i = 0; i < clients.length; i++) {
     const c = clients[i];
     const p = new Player();
     if (i == 0) {
       p.heart_y = -1;
-      window.addToLog(`You are at the top`, c);
     } else {
       p.heart_y = BOARD_HEIGHT;
-      window.addToLog(`You are at the bottom`, c);
     }
-    console.log('init', c, p);
     p.client_id = c;
     game.players.push(p);
   }
@@ -217,21 +207,9 @@ declare global {
     saveReplay: (title: string) => void;
     // Used to replay onData messages for development
     replay: (messages: string[]) => void;
-    // A log of game happenings
-    log: string[];
-    addToLog: (message: string, ifOwnIdIs?: string) => void;
     // Current clients id
     clientId: string;
     // Debug on screen:
     setDebug: (json: object) => void;
   }
 }
-
-window.log = [];
-function addToLog(message: string, ifOwnIdIs?: string) {
-  if (!ifOwnIdIs || ifOwnIdIs === window.clientId) {
-    window.log.push(message);
-    document.getElementById('log').innerText = window.log.join('\n');
-  }
-}
-window.addToLog = addToLog;

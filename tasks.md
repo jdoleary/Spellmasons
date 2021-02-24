@@ -14,7 +14,3 @@
   - Modifiers
     - Trap
     - Turn
-
-## Notes
-
-- Do not mix Svelte with the gamestate

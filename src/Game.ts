@@ -93,10 +93,7 @@ export default class Game {
     // Check mana:
     const cost = getManaCost(spell);
     if (cost > spell.caster.mana) {
-      window.addToLog(
-        `You have insuffient mana to cast that spell`,
-        spell.caster.client_id,
-      );
+      console.log('Insufficient Mana to cast')
       return;
     } else {
       spell.caster.mana -= cost;
@@ -125,9 +122,6 @@ export default class Game {
     }
   }
   nextTurn(): Promise<void> {
-    // Clear log
-    window.log = [];
-
     // Clean up DOM of dead units
     // Note: This occurs at the beginning of a turn so that "dead" units can animate to death
     // after they take mortally wounding damage without their html elements being removed before
@@ -162,7 +156,6 @@ export default class Game {
     // Unfreeze frozen units
     for (let u of this.units) {
       if (u.frozen) {
-        window.addToLog(`Unit at (${u.x}, ${u.y}) unfreezes.`);
         u.frozen = false;
       }
     }
@@ -175,7 +168,7 @@ export default class Game {
       if (p.heart_health <= 0) {
         this.setGameState(game_state.GameOver);
         this.state = game_state.GameOver;
-        window.addToLog('GAME OVER');
+        alert('Game Over')
       }
     }
 

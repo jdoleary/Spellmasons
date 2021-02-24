@@ -29,27 +29,3 @@
     }
   }
 </script>
-
-<div id="game-container">
-  <div id="board"  on:click="{clickOnBoard}">
-    <div id="board-contents">
-      <img
-        id="grid-background"
-        src="images/grid.png"
-        width="512"
-        height="512"
-      />
-    </div>
-  </div>
-  <div id="tools">
-    <div>
-      <SpellBuilder/>
-      <button on:click="{() => {
-    pie.sendData({ type: MESSAGE_TYPES.END_TURN });
-        }}">End Turn</button>
-    </div>
-    <div>
-      <pre id="log"></pre>
-    </div>
-  </div>
-</div>

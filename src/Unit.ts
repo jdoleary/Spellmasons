@@ -51,12 +51,8 @@ export function takeDamage(unit: IUnit, amount: number, cause?: string) {
   unit.health -= amount;
   // Prevent health from going over maximum
   unit.health = Math.min(unit.health, config.UNIT_BASE_HEALTH);
-  window.addToLog(
-    `Unit at (${unit.x}, ${unit.y}) takes ${amount} damage from ${cause}`,
-  );
   unit.image.anim_spin();
   if (unit.health <= 0) {
-    window.addToLog(`Unit at (${unit.x}, ${unit.y}) dies.`);
     die(unit);
   }
   // Change the size to represent health
@@ -73,7 +69,6 @@ export function move(unit: IUnit) {
   }
   // Do not move if frozen
   if (unit.frozen) {
-    window.addToLog(`Unit at (${unit.x}, ${unit.y}) is frozen and cannot move`);
     return;
   }
   const next_x = unit.x + unit.vx;
