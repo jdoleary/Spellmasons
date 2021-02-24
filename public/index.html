@@ -25,7 +25,8 @@
     </div>
     <div id="controls">
       <div>
-        <div id="mana"></div>
+        <div id="mana-cost"></div>
+        <div id="mana">Mana</div>
         <div id="health"></div>
         <div id="opponentTurnStatus">Opponent is thinking...</div>
         <button id="endTurn">End Turn (Space Key)</button>
@@ -34,22 +35,24 @@
       <div id="spellBuilder">
         <button id="spell-summon">Summon Creature</button>
         <button id="spell-conjure">Conjure Spell</button>
-        <div>
-          <button id="spell-plus-heal">+ Heal</button>
-          <span id="spell-damage-text"></span>
-          <button id="spell-plus-damage">+ Damage</button>
-        </div>
-        <div>
-          <input type="checkbox" id="spell-freeze" />
-          Freeze
-        </div>
-        <div>
-          <input type="checkbox" id="spell-chain" />
-          Chain
-        </div>
-        <div>
-          <input type="range" id="spell-range" min="0" max="3" />
-          AOE Radius
+        <div id="spell-conjure-config">
+          <div>
+            <button id="spell-plus-heal">+ Heal</button>
+            <span id="spell-damage-text"></span>
+            <button id="spell-plus-damage">+ Damage</button>
+          </div>
+          <div>
+            <input type="checkbox" id="spell-freeze" />
+            Freeze
+          </div>
+          <div>
+            <input type="checkbox" id="spell-chain" />
+            Chain
+          </div>
+          <div>
+            <input type="range" id="spell-range" min="0" max="3" value="0" />
+            <span id="spell-range-text">AOE</span>
+          </div>
         </div>
       </div>
     </div>

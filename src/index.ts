@@ -5,7 +5,7 @@ import Image from './Image';
 import AnimationManager from './AnimationManager';
 import { BOARD_HEIGHT } from './config';
 import { getImage } from './Spell';
-import * as UI from './UserInterface';
+import * as UI from './ui/UserInterface';
 UI.setup();
 
 let clients = [];
@@ -15,7 +15,7 @@ const wsUri = 'ws://localhost:8000';
 // const wsUri = 'wss://websocket-pie-e4elx.ondigitalocean.app/';
 let pie: PieClient;
 let game: Game = new Game();
-let maxClients = 2;
+let maxClients = 1;
 function connect(_room_info = {}) {
   const room_info = Object.assign(_room_info, {
     app: 'Golems',
@@ -190,6 +190,9 @@ function makeGame(clients: string[]) {
     }
     p.client_id = c;
     game.players.push(p);
+    if (p.client_id === window.clientId) {
+      UI.setCurrentMana(p.mana, p.mana);
+    }
   }
 }
 window.connect = connect;

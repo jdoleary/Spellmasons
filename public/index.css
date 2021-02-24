@@ -15,6 +15,8 @@ body {
   padding: 64px;
 }
 #board {
+  /* Board is hidden until game is made */
+  visibility: hidden;
   border: 1px solid black;
   background-color: white;
   width: 512px;

@@ -3,7 +3,7 @@ import type Player from './Player';
 import * as config from './config';
 import * as Unit from './Unit';
 import Image from './Image';
-import * as UI from './UserInterface';
+import * as UI from './ui/UserInterface';
 
 export enum game_state {
   Lobby,
@@ -34,7 +34,15 @@ export default class Game {
   }
   setGameState(g: game_state) {
     this.state = g;
-    window.setDebug({ state: game_state[this.state] });
+    const state = game_state[this.state];
+    switch (state) {
+      case 'Playing':
+        document.getElementById('board').style.visibility = 'visible';
+        break;
+      default:
+        document.getElementById('board').style.visibility = 'hidden';
+    }
+    window.setDebug({ state });
   }
   getUnitsWithinDistanceOfPoint(
     x: number,

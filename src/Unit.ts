@@ -1,7 +1,7 @@
 import * as config from './config';
 import Image from './Image';
 import type Player from './Player';
-import * as UI from './UserInterface';
+import * as UI from './ui/UserInterface';
 export interface IUnit {
   x: number;
   y: number;
