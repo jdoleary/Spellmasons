@@ -94,6 +94,23 @@ export default function setupSpellBuilderUI() {
       damage > 0 ? 'Damage' : 'Heal'
     }`;
   });
+  const elSpellDelayText = document.getElementById('spell-delay-text');
+  document.getElementById('spell-delay-minus').addEventListener('click', () => {
+    const delay = (currentSpell.delay || 0) - 1;
+    setCurrentSpell({
+      ...currentSpell,
+      delay,
+    });
+    elSpellDelayText.innerText = `${Math.abs(delay)} Turn Delay`;
+  });
+  document.getElementById('spell-delay-plus').addEventListener('click', () => {
+    const delay = (currentSpell.delay || 0) + 1;
+    setCurrentSpell({
+      ...currentSpell,
+      delay,
+    });
+    elSpellDelayText.innerText = `${Math.abs(delay)} Turn Delay`;
+  });
   document.getElementById('spell-freeze').addEventListener('click', (e) => {
     const { checked } = e.target as HTMLInputElement;
     setCurrentSpell({ ...currentSpell, freeze: checked });
