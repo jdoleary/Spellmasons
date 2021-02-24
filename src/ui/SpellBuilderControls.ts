@@ -68,7 +68,9 @@ export default function setupSpellBuilderUI() {
       ...currentSpell,
       damage,
     });
-    elSpellDamageText.innerText = `${damage} ${damage > 0 ? 'Damage' : 'Heal'}`;
+    elSpellDamageText.innerText = `${Math.abs(damage)} ${
+      damage > 0 ? 'Damage' : 'Heal'
+    }`;
   });
   document.getElementById('spell-freeze').addEventListener('click', (e) => {
     const { checked } = e.target as HTMLInputElement;
@@ -76,7 +78,7 @@ export default function setupSpellBuilderUI() {
   });
   document.getElementById('spell-chain').addEventListener('click', (e) => {
     const { checked } = e.target as HTMLInputElement;
-    setCurrentSpell({ ...currentSpell, freeze: checked });
+    setCurrentSpell({ ...currentSpell, chain: checked });
   });
   const spellRange = document.getElementById('spell-range');
   const spellRangeText = document.getElementById('spell-range-text');
