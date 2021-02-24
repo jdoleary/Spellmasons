@@ -1,5 +1,5 @@
 import { Spell, effect, getManaCost, getImage } from './Spell';
-import type Player from './Player';
+import type { IPlayer } from './Player';
 import * as config from './config';
 import * as Unit from './Unit';
 import Image from './Image';
@@ -22,7 +22,7 @@ export default class Game {
   state: game_state;
   height: number = config.BOARD_HEIGHT;
   width: number = config.BOARD_WIDTH;
-  players: Player[] = [];
+  players: IPlayer[] = [];
   units: Unit.IUnit[] = [];
   spells: Spell[] = [];
   // Keeps track of which players have ended their turn
@@ -83,7 +83,7 @@ export default class Game {
   getUnitsAt(x?: number, y?: number): Unit.IUnit[] {
     return this.units.filter((u) => u.x === x && u.y === y);
   }
-  getPlayerAt(heart_x: number, heart_y: number): Player | undefined {
+  getPlayerAt(heart_x: number, heart_y: number): IPlayer | undefined {
     for (let p of this.players) {
       // Only one has to match
       // Example heart postions are

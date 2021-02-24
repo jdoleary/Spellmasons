@@ -1,12 +1,12 @@
 import { describe, it, expect, beforeAll } from '@jest/globals';
 import Game, { game_state } from '../Game';
-import Player from '../Player';
+import * as Player from '../Player';
 import * as Unit from '../Unit';
 
 describe('Game', () => {
   describe('queueSpell()', () => {
     it('should queue spell if caster has enough mana', () => {
-      const p = new Player();
+      const p = Player.create('1', -1);
       const player_start_mana = p.mana;
       const s = {
         damage: 1,
@@ -18,7 +18,7 @@ describe('Game', () => {
       expect(g.spells).toContain(s);
     });
     it('should NOT queue spell if caster has insufficient mana', () => {
-      const p = new Player();
+      const p = Player.create('1', -1);
       const player_start_mana = p.mana;
       const s = {
         caster: p,
@@ -32,9 +32,9 @@ describe('Game', () => {
   });
   it('should transition to state "Game Over" when a nextTurn() occurs while a player\'s heart is destroyed', () => {
     const g = new Game();
-    const p = new Player();
+    const p = Player.create('1', -1);
     g.players.push(p);
-    g.players.push(new Player());
+    g.players.push(Player.create('2', 7));
     p.heart_health = 0;
 
     g.nextTurn();
@@ -45,10 +45,10 @@ describe('Game', () => {
     let u: Unit.IUnit;
     let u2: Unit.IUnit;
     let u_frozen: Unit.IUnit;
-    let p: Player;
+    let p: Player.IPlayer;
     beforeEach(() => {
       g = new Game();
-      p = new Player();
+      p = Player.create('1', -1);
       g.players.push(p);
       // Simulate mana loss (this is handled mid-turn when spells are cast)
       // in order to assert that mana is reset to mana_max

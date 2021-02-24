@@ -1,6 +1,6 @@
 import { describe, it, expect } from '@jest/globals';
 import { Spell, effect } from '../Spell';
-import Player from '../Player';
+import * as Player from '../Player';
 import * as Unit from '../Unit';
 import Game from '../Game';
 
@@ -8,7 +8,7 @@ describe('Spell', () => {
   describe('effect', () => {
     it('it should deal damage to unit', () => {
       const u = Unit.create(0, 0, 0, 0);
-      const p = new Player();
+      const p = Player.create('1', -1);
       p.mana = 1;
       const start_health = u.health;
       const s: Spell = {
@@ -21,7 +21,7 @@ describe('Spell', () => {
     describe('when freeze == true', () => {
       it('it should freeze the unit', () => {
         const u = Unit.create(0, 0, 0, 0);
-        const p = new Player();
+        const p = Player.create('1', -1);
         p.mana = 1;
         const s: Spell = {
           caster: p,
@@ -34,7 +34,7 @@ describe('Spell', () => {
     describe('summon', () => {
       it('Should summon unit on game', () => {
         const g = new Game();
-        const p = new Player();
+        const p = Player.create('1', -1);
         p.mana = 1;
         const spellArgs = {
           caster: p,
@@ -67,7 +67,7 @@ describe('Spell', () => {
     describe('delay', () => {
       it('should decrement delay by 1 every time effect() is called', () => {
         const u = Unit.create(0, 0, 0, 0);
-        const p = new Player();
+        const p = Player.create('1', -1);
         p.mana = 1;
         const s: Spell = {
           caster: p,
@@ -81,7 +81,7 @@ describe('Spell', () => {
       });
       it('should not cause effect until delay is 0', () => {
         const u = Unit.create(0, 0, 0, 0);
-        const p = new Player();
+        const p = Player.create('1', -1);
         p.mana = 1;
         const start_health = u.health;
         const s: Spell = {
@@ -98,7 +98,7 @@ describe('Spell', () => {
     describe('AOE', () => {
       it('should AOE to units within radius', () => {
         const g = new Game();
-        const p = new Player();
+        const p = Player.create('1', -1);
         g.players.push(p);
         p.mana = 1;
         const HEALTH = 4;
@@ -139,7 +139,7 @@ describe('Spell', () => {
     describe('Chain', () => {
       it('should chain to touching units', () => {
         const g = new Game();
-        const p = new Player();
+        const p = Player.create('1', -1);
         g.players.push(p);
         p.mana = 1;
         const HEALTH = 4;
@@ -180,7 +180,7 @@ describe('Spell', () => {
       });
       it('Ensure units are not effected more than once', () => {
         const g = new Game();
-        const p = new Player();
+        const p = Player.create('1', -1);
         g.players.push(p);
         p.mana = 1;
         const HEALTH = 4;

@@ -1,6 +1,6 @@
 import * as config from './config';
 import Image from './Image';
-import type Player from './Player';
+import type { IPlayer } from './Player';
 import * as UI from './ui/UserInterface';
 export interface IUnit {
   x: number;
@@ -22,7 +22,7 @@ export function create(
   vx: number,
   vy: number,
   imagePath?: string,
-) {
+): IUnit {
   const unit: IUnit = {
     x,
     y,
@@ -93,7 +93,7 @@ export function move(unit: IUnit) {
   // If nothing is obstructing
   if (alive_bump_into_units.length === 0) {
     // Check if at edge of board
-    const player: Player | undefined = window.game
+    const player: IPlayer | undefined = window.game
       ? window.game.getPlayerAt(next_x, next_y)
       : undefined;
     if (player) {

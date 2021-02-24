@@ -1,11 +1,11 @@
 import type Game from './Game';
-import type Player from './Player';
+import type { IPlayer } from './Player';
 import * as Unit from './Unit';
 import floatingText from './FloatingText';
 import type Image from './Image';
 
 export interface Spell {
-  caster?: Player;
+  caster?: IPlayer;
   x?: number;
   y?: number;
   // damage can be negative for healing

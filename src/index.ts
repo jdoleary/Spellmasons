@@ -1,6 +1,6 @@
 import PieClient, { ClientPresenceChangedArgs } from 'pie-client';
 import Game, { game_state } from './Game';
-import Player from './Player';
+import * as Player from './Player';
 import Image from './Image';
 import AnimationManager from './AnimationManager';
 import { BOARD_HEIGHT } from './config';
@@ -117,10 +117,10 @@ function onData(d: { fromClient: string; payload: any }) {
       });
       game = new Game();
       makeGame(clients);
-      // TODO, fix this overwrites heart image with null
       for (let i = 0; i < players.length; i++) {
         const p = players[i];
-        game.players[i] = { ...game.players[i], ...p };
+        // Keep newly created heart image
+        game.players[i] = { ...p, heart: game.players[i].heart };
       }
       game.spells = spells;
       game.units = units;
@@ -194,14 +194,13 @@ function makeGame(clients: string[]) {
   game.setGameState(game_state.Playing);
   for (let i = 0; i < clients.length; i++) {
     const c = clients[i];
-    const p = new Player();
+    let heart_y = 0;
     if (i == 0) {
-      p.heart_y = -1;
+      heart_y = -1;
     } else {
-      p.heart_y = BOARD_HEIGHT;
+      heart_y = BOARD_HEIGHT;
     }
-    p.heart = new Image(3.5, p.heart_y, 0, 0, 'heart.png');
-    p.clientId = c;
+    const p = Player.create(c, heart_y);
     game.players.push(p);
     if (p.clientId === window.clientId) {
       UI.setCurrentMana(p.mana, p.mana);

@@ -1,7 +1,7 @@
 import { describe, it, expect } from '@jest/globals';
 import * as Unit from '../Unit';
 import Game from '../Game';
-import Player from '../Player';
+import * as Player from '../Player';
 
 describe('Unit', () => {
   it('should die when health reaches 0', () => {
@@ -99,7 +99,7 @@ describe('Unit', () => {
   it("should be able to move through multiple units if it's attacks kill them and it still has moves to make", () => {});
   it('should attack the heart when it reaches the end of the board', () => {
     const g = new Game();
-    const p = new Player();
+    const p = Player.create('1', -1);
     const START_HEART_HEALTH = 2;
     p.heart_health = START_HEART_HEALTH;
     // Put player at the bottom of the board
