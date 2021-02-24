@@ -34,12 +34,17 @@ export default class Game {
   setGameState(g: game_state) {
     this.state = g;
     const state = game_state[this.state];
+    const elBoard = document.getElementById('board');
     switch (state) {
       case 'Playing':
-        document.getElementById('board').style.visibility = 'visible';
+        if (elBoard) {
+          elBoard.style.visibility = 'visible';
+        }
         break;
       default:
-        document.getElementById('board').style.visibility = 'hidden';
+        if (elBoard) {
+          elBoard.style.visibility = 'hidden';
+        }
     }
     window.setDebug({ state });
   }

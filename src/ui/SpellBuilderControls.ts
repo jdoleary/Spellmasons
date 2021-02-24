@@ -1,4 +1,4 @@
-import { MESSAGE_TYPES } from '../index';
+import { MESSAGE_TYPES } from '../MessageTypes';
 import { CELL_SIZE } from '../Image';
 import { BOARD_WIDTH, BOARD_HEIGHT } from '../config';
 import { getManaCost, Spell } from '../Spell';

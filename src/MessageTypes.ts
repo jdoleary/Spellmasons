@@ -1,0 +1,6 @@
+export enum MESSAGE_TYPES {
+  SPELL,
+  END_TURN,
+  LOAD_GAME_STATE,
+  RESTART_GAME,
+}

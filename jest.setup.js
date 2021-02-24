@@ -6,3 +6,5 @@ window.animationManager = {
   startGroup: () => {},
   endGroup: () => {},
 };
+
+window.alert = () => {}

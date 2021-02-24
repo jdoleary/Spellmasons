@@ -6,6 +6,7 @@ import AnimationManager from './AnimationManager';
 import { BOARD_HEIGHT } from './config';
 import { getImage } from './Spell';
 import * as UI from './ui/UserInterface';
+import { MESSAGE_TYPES } from './MessageTypes';
 UI.setup();
 
 let clients = [];
@@ -47,12 +48,6 @@ function connect(_room_info = {}) {
         .catch((err: string) => console.error('Failed to join room', err));
     }
   };
-}
-export enum MESSAGE_TYPES {
-  SPELL,
-  END_TURN,
-  LOAD_GAME_STATE,
-  RESTART_GAME,
 }
 
 const messageLog = [];

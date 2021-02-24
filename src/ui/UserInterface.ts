@@ -1,8 +1,7 @@
-import { MESSAGE_TYPES } from '../index';
-import Game from '../Game';
+import { MESSAGE_TYPES } from '../MessageTypes';
 import setupSpellBuilderUI from './SpellBuilderControls';
 
-const elControls = document.getElementById('controls');
+// const elControls = document.getElementById('controls');
 const elOppTurnStatus = document.getElementById('opponentTurnStatus');
 const elEndTurnBtn: HTMLButtonElement = document.getElementById(
   'endTurn',
@@ -48,7 +47,9 @@ export function setCurrentMana(mana: number, max?: number) {
   if (max) {
     maxMana = max;
   }
-  elMana.innerText = `${mana} / ${maxMana} Mana`;
+  if (elMana) {
+    elMana.innerText = `${mana} / ${maxMana} Mana`;
+  }
 }
 export function turnEnded(isEnded: boolean) {
   elEndTurnBtn.disabled = isEnded;
