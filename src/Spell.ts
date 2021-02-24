@@ -2,6 +2,7 @@ import type Game from './Game';
 import type Player from './Player';
 import * as Unit from './Unit';
 import floatingText from './FloatingText';
+import type Image from './Image';
 
 export interface Spell {
   caster?: Player;
@@ -18,6 +19,9 @@ export interface Spell {
   summon?: any;
   // in turns
   delay?: number;
+  // If the spell has been cast
+  isCast?: boolean;
+  image?: Image;
 }
 export function getImage(s: Spell) {
   let imgPath = 'crosshair.png';
@@ -159,6 +163,7 @@ export function effect(spell: Spell, args: EffectArgs) {
         );
       }
     }
+    spell.isCast = true;
   }
   if (game) {
     if (spell.summon) {

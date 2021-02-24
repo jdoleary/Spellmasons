@@ -105,6 +105,7 @@ function onData(d: { fromClient: string; payload: any }) {
       const spells = loadedGameState.spells.map((s) => {
         return {
           caster: players.find((p) => p.clientId === s.caster.clientId),
+          image: new Image(s.x, s.y, 0, 0, getImage(s)),
           ...s,
         };
       });
@@ -121,9 +122,6 @@ function onData(d: { fromClient: string; payload: any }) {
         game.players[i] = { ...game.players[i], ...p };
       }
       game.spells = spells;
-      game.spellImages = spells.map(
-        (s) => new Image(s.x, s.y, 0, 0, getImage(s)),
-      );
       game.units = units;
       game.turn_finished = loadedGameState.turn_finished;
       game.setGameState(game_state.Playing);

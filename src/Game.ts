@@ -25,7 +25,6 @@ export default class Game {
   players: Player[] = [];
   units: Unit.IUnit[] = [];
   spells: Spell[] = [];
-  spellImages: Image[] = [];
   // Keeps track of which players have ended their turn
   turn_finished: { [clientId: string]: boolean } = {};
   constructor() {
@@ -109,13 +108,11 @@ export default class Game {
       if (spell.caster.clientId === window.clientId) {
         UI.setCurrentMana(spell.caster.mana);
       }
-      this.spells.push(spell);
       // Only show spell images for the client who casted it
       if (window.clientId == (spell.caster && spell.caster.clientId)) {
-        this.spellImages.push(
-          new Image(spell.x, spell.y, 0, 0, getImage(spell)),
-        );
+        spell.image = new Image(spell.x, spell.y, 0, 0, getImage(spell));
       }
+      this.spells.push(spell);
     }
   }
   cast(spell: Spell) {
@@ -150,13 +147,14 @@ export default class Game {
     for (let sm of this.spells) {
       this.cast(sm);
     }
-    // Remove all spells, now that they are cast
-    // TODO traps shouldn't be removed unless they are cast
-    this.spells = [];
-    this.spellImages.forEach((i) => {
-      // Remove spell images once they are cast
-      i.cleanup();
-    });
+    // Remove all casted spells
+    this.spells
+      .filter((s) => s.isCast)
+      .forEach((s) => {
+        // Remove spell images once they are cast
+        s.image?.cleanup();
+      });
+    this.spells = this.spells.filter((s) => !s.isCast);
 
     // Move units
     for (let u of this.units) {
