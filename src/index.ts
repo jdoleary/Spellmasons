@@ -117,6 +117,7 @@ function onData(d: { fromClient: string; payload: any }) {
       });
       game = new Game();
       makeGame(clients);
+      // TODO, fix this overwrites heart image with null
       for (let i = 0; i < players.length; i++) {
         const p = players[i];
         game.players[i] = { ...game.players[i], ...p };
