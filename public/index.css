@@ -22,6 +22,10 @@ body {
   width: 512px;
   height: 512px;
   margin: auto;
+  /* Position relative allows inner absolute elements (such as
+  floating text) to be aligned correctly
+  */
+  position: relative;
   /* Wrap cells
   display: flex;
   flex-wrap: wrap;
