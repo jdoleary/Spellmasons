@@ -137,7 +137,9 @@ export default class Game {
       }
       window.animationManager.endGroup('spell-effects');
     } else {
+      window.animationManager.startGroup('spell-effects');
       effect(spell, { game: this });
+      window.animationManager.endGroup('spell-effects');
     }
   }
   nextTurn(): Promise<void> {

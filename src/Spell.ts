@@ -139,7 +139,12 @@ export function effect(spell: Spell, args: EffectArgs) {
           // Cast on units in radius but turn off aoe_radius
           // so it doesn't recur
           effect(
-            { ...spell, aoe_radius: 0 },
+            {
+              ...spell,
+              x: unit_in_radius.x,
+              y: unit_in_radius.y,
+              aoe_radius: 0,
+            },
             {
               ...args,
               unit: unit_in_radius,
@@ -168,13 +173,11 @@ export function effect(spell: Spell, args: EffectArgs) {
     spell.isCast = true;
     // Show an image when cast occurs
     const castImage = new Image(spell.x, spell.y, 0, 0, getImage(spell));
-    window.animationManager.startGroup('spell-cast');
     castImage.scale(1.5);
     castImage.updateFilter(0);
     // .then(() => {
     //   castImage.element?.remove();
     // });
-    window.animationManager.endGroup('spell-cast');
   }
   if (game) {
     if (spell.summon) {
