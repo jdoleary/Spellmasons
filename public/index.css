@@ -45,9 +45,6 @@ body {
 .game-image {
   position: absolute;
 }
-.invert .game-image {
-  transform: rotate(180deg);
-}
 
 #debug {
   position: fixed;

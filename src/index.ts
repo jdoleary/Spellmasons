@@ -191,8 +191,14 @@ function makeGame(clients: string[]) {
   // what order they joined the game (client refreshes can change the order)
   for (let i = 0; i < clients.sort().length; i++) {
     const c = clients[i];
-    let heart_y = 0;
     const isOnTop = i == 0;
+    if (c === window.clientId) {
+      if (isOnTop) {
+        document.getElementById('board').classList.add('invert');
+        window.inverted = true;
+      }
+    }
+    let heart_y = 0;
     if (isOnTop) {
       heart_y = -1;
     } else {
@@ -202,10 +208,6 @@ function makeGame(clients: string[]) {
     game.players.push(p);
     if (p.clientId === window.clientId) {
       UI.setCurrentMana(p.mana, p.mana);
-      if (isOnTop) {
-        document.getElementById('board').classList.add('invert');
-        window.inverted = true;
-      }
     }
   }
 }
