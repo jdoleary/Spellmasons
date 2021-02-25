@@ -131,11 +131,11 @@ export default class Game {
     const targets = this.getUnitsAt(x, y);
     if (targets.length) {
       // If there are multiple targets, group their animations together
-      window.animationManager.startGroup();
+      window.animationManager.startGroup('spell-effects');
       for (let unit of targets) {
         effect(spell, { unit, game: this });
       }
-      window.animationManager.endGroup();
+      window.animationManager.endGroup('spell-effects');
     } else {
       effect(spell, { game: this });
     }

@@ -43,20 +43,32 @@ export default class AnimationManager {
   doneAnimatingCallbacks: (() => void)[] = [];
   animationGroups: AnimationGroup[] = [];
   currentGroup: AnimationGroup;
-  grouping: boolean = false;
-  startGroup() {
-    this.grouping = true;
+  groupLabel: string;
+  startGroup(groupLabel: string) {
+    if (this.groupLabel) {
+      console.error(
+        'warning, a new animation group has been started before a previous group has ended.  This "new" group will be added to the current group',
+      );
+      return;
+    }
+    this.groupLabel = groupLabel;
     this.currentGroup = {
       startTime: 0,
       animations: [],
     };
   }
-  endGroup() {
+  endGroup(groupLabel: string) {
+    if (groupLabel !== this.groupLabel) {
+      console.error(
+        'unable to end animation group because there is another anim group in progress',
+      );
+      return;
+    }
     this.animationGroups.push(this.currentGroup);
-    this.grouping = false;
+    this.groupLabel = undefined;
   }
   addAnimation(element, current, target) {
-    if (this.grouping) {
+    if (this.groupLabel) {
       // Animation to be played together in a group
       this.currentGroup.animations.push({
         element,
