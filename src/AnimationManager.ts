@@ -20,6 +20,7 @@ export interface AnimatableProps {
 interface AnimationGroup {
   startTime: number;
   animations: Animation[];
+  onFinishedCallbacks: (() => void)[];
 }
 interface Animation {
   element: HTMLElement;
@@ -55,6 +56,7 @@ export default class AnimationManager {
     this.currentGroup = {
       startTime: 0,
       animations: [],
+      onFinishedCallbacks: [],
     };
   }
   endGroup(groupLabel: string) {
@@ -86,6 +88,7 @@ export default class AnimationManager {
             target,
           },
         ],
+        onFinishedCallbacks: [],
       });
     }
   }
@@ -148,6 +151,7 @@ export default class AnimationManager {
         }
       }
       if (lerpTime >= 1) {
+        currentAnimationGroup.onFinishedCallbacks.forEach((cb) => cb());
         // If the animationGroup is finished, remove it
         this.animationGroups.splice(0, 1);
       }

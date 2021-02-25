@@ -65,6 +65,11 @@ export default class Image {
       scale: Math.max(0, scale),
     });
   }
+  remove() {
+    window.animationManager.currentGroup.onFinishedCallbacks.push(() => {
+      this.element?.remove();
+    });
+  }
   updateFilter(opacityPercentage) {
     window.animationManager.addAnimation(this.element, this.transform, {
       opacity: opacityPercentage,

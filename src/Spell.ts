@@ -175,9 +175,7 @@ export function effect(spell: Spell, args: EffectArgs) {
     const castImage = new Image(spell.x, spell.y, 0, 0, getImage(spell));
     castImage.scale(1.5);
     castImage.updateFilter(0);
-    // .then(() => {
-    //   castImage.element?.remove();
-    // });
+    castImage.remove();
   }
   if (game) {
     if (spell.summon) {
