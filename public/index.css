@@ -35,8 +35,6 @@ body {
   transform: rotate(180deg);
 }
 #board-contents {
-  /* Only the board itself listens for clicks so that it can calculate which cell was clicked on */
-  pointer-events: none;
   user-select: none;
 }
 #grid-background {
@@ -44,6 +42,9 @@ body {
 }
 .game-image {
   position: absolute;
+}
+.game-image:hover {
+  background-color: green;
 }
 
 #debug {
@@ -63,4 +64,5 @@ body {
   transform: translateX(-50%);
   z-index: 1;
   pointer-events: none;
+  user-select: none;
 }
