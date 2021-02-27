@@ -25,7 +25,7 @@ export default function setupSpellBuilderUI() {
         if (currentSpell.summon) {
           const vy = cell_y > 3 ? -1 : 1;
           if (
-            window.game.units.filter((u) => u.x === cell_x && u.y === cell_y)
+            window.game.units.filter((u) => u.alive && u.x === cell_x && u.y === cell_y)
               .length
           ) {
             floatingText({
