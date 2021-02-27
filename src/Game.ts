@@ -106,7 +106,7 @@ export default class Game {
   queueSpell(spell: Spell) {
     // Check mana:
     const cost = getManaCost(spell);
-    if (cost > spell.caster.mana) {
+    if (spell.caster.clientId === window.clientId && cost > spell.caster.mana) {
       floatingText({
         cellX: spell.x,
         cellY: spell.y,
