@@ -102,7 +102,7 @@ export default function setupSpellBuilderUI() {
   });
   const elSpellDelayText = document.getElementById('spell-delay-text');
   document.getElementById('spell-delay-minus').addEventListener('click', () => {
-    const delay = (currentSpell.delay || 0) - 1;
+    const delay = Math.max(0, (currentSpell.delay || 0) - 1);
     setCurrentSpell({
       ...currentSpell,
       delay,
