@@ -106,6 +106,10 @@ export default class Game {
   queueSpell(spell: Spell) {
     // Check mana:
     const cost = getManaCost(spell);
+    if (cost <= 0) {
+      console.error('cannot cast a spell with no mana cost');
+      return;
+    }
     if (spell.caster.clientId === window.clientId && cost > spell.caster.mana) {
       floatingText({
         cellX: spell.x,

@@ -82,6 +82,8 @@ export function getManaCost(s: Spell) {
   }
   if (s.delay) {
     cost -= s.delay;
+    // Prevent spell from being free
+    cost = Math.max(cost, 1);
   }
   if (s.freeze) {
     cost += 2;
@@ -95,8 +97,6 @@ export function getManaCost(s: Spell) {
   if (s.summon) {
     cost += 4;
   }
-  // Prevent spell from being free
-  cost = Math.max(cost, 1);
   return cost;
 }
 export interface EffectArgs {
