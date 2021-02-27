@@ -1,7 +1,7 @@
 import { MESSAGE_TYPES } from '../MessageTypes';
 import { CELL_SIZE } from '../Image';
 import { BOARD_WIDTH, BOARD_HEIGHT } from '../config';
-import { getManaCost, Spell } from '../Spell';
+import { getManaCost, Spell, getImage } from '../Spell';
 import floatingText from '../FloatingText';
 let currentSpell: Spell = null;
 
@@ -70,6 +70,9 @@ export default function setupSpellBuilderUI() {
       damage < 0 ? `${Math.abs(damage)} Heal` : '0 Heal';
     elSpellDelayText.innerText = `${Math.abs(delay)} Turn Delay`;
     spellRangeText.innerText = `${aoe_radius} AOE`;
+    elBoard.style.cursor = `url('images/${getImage(currentSpell)}') ${
+      CELL_SIZE / 2
+    } ${CELL_SIZE / 2}, auto`;
   }
   // Add button handlers
   document.getElementById('spell-summon').addEventListener('click', () => {
