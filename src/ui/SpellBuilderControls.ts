@@ -57,10 +57,19 @@ export default function setupSpellBuilderUI() {
   });
   const elManaCost = document.getElementById('mana-cost');
   const elSpellConjurConfig = document.getElementById('spell-conjure-config');
+  const elSpellDamageText = document.getElementById('spell-damage-text');
+  const elSpellHealText = document.getElementById('spell-heal-text');
   function setCurrentSpell(spell: Spell) {
     currentSpell = spell;
+    const { aoe_radius = 0, damage = 0, delay = 0 } = currentSpell;
     console.log('set current spell to', currentSpell);
     elManaCost.innerText = getManaCost(spell) + ' mana cost';
+    elSpellDamageText.innerText =
+      damage > 0 ? `${Math.abs(damage)} Damage` : '0 Damage';
+    elSpellHealText.innerText =
+      damage < 0 ? `${Math.abs(damage)} Heal` : '0 Heal';
+    elSpellDelayText.innerText = `${Math.abs(delay)} Turn Delay`;
+    spellRangeText.innerText = `${aoe_radius} AOE`;
   }
   // Add button handlers
   document.getElementById('spell-summon').addEventListener('click', () => {
@@ -75,26 +84,21 @@ export default function setupSpellBuilderUI() {
     elSpellConjurConfig.style.visibility = 'visible';
     setCurrentSpell({});
   });
-  const elSpellDamageText = document.getElementById('spell-damage-text');
   document.getElementById('spell-plus-damage').addEventListener('click', () => {
-    const damage = (currentSpell.damage || 0) + 1;
+    const currentDamage = currentSpell.damage || 0;
+    const damage = currentDamage < 1 ? 1 : currentDamage + 1;
     setCurrentSpell({
       ...currentSpell,
       damage,
     });
-    elSpellDamageText.innerText = `${Math.abs(damage)} ${
-      damage > 0 ? 'Damage' : 'Heal'
-    }`;
   });
   document.getElementById('spell-plus-heal').addEventListener('click', () => {
-    const damage = (currentSpell.damage || 0) - 1;
+    const currentDamage = currentSpell.damage || 0;
+    const damage = currentDamage > -1 ? -1 : currentDamage - 1;
     setCurrentSpell({
       ...currentSpell,
       damage,
     });
-    elSpellDamageText.innerText = `${Math.abs(damage)} ${
-      damage > 0 ? 'Damage' : 'Heal'
-    }`;
   });
   const elSpellDelayText = document.getElementById('spell-delay-text');
   document.getElementById('spell-delay-minus').addEventListener('click', () => {
@@ -103,7 +107,6 @@ export default function setupSpellBuilderUI() {
       ...currentSpell,
       delay,
     });
-    elSpellDelayText.innerText = `${Math.abs(delay)} Turn Delay`;
   });
   document.getElementById('spell-delay-plus').addEventListener('click', () => {
     const delay = (currentSpell.delay || 0) + 1;
@@ -111,7 +114,6 @@ export default function setupSpellBuilderUI() {
       ...currentSpell,
       delay,
     });
-    elSpellDelayText.innerText = `${Math.abs(delay)} Turn Delay`;
   });
   document.getElementById('spell-freeze').addEventListener('click', (e) => {
     const { checked } = e.target as HTMLInputElement;
@@ -126,6 +128,5 @@ export default function setupSpellBuilderUI() {
   spellRange.addEventListener('click', (e) => {
     const { value } = e.target as HTMLInputElement;
     setCurrentSpell({ ...currentSpell, aoe_radius: parseInt(value) });
-    spellRangeText.innerText = `${value} AOE`;
   });
 }
