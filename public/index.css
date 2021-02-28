@@ -71,3 +71,47 @@ body {
   padding: 8px;
   background-color: #eee;
 }
+
+#spell-pool {
+  display: flex;
+  justify-content: space-between;
+  margin: 8px;
+}
+#spell-pool .spell {
+  border-radius: 32px;
+  width: 64px;
+  height: 64px;
+  background-color: white;
+}
+#spell-pool .spell img {
+  visibility: hidden;
+}
+#spell-pool.adding .spell img {
+  visibility: visible;
+}
+#spell-pool .spell img {
+  border-radius: 32px;
+}
+
+.card {
+  position: absolute;
+  top: 10px;
+  margin: 0 auto;
+  padding: 8px;
+  width: 225px;
+  height: 350px;
+  background-color: blue;
+  border-radius: 10px 10px;
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: column;
+}
+
+.card-thumb {
+  background-color: white;
+  flex-grow: 2;
+}
+.card-description {
+  background-color: green;
+  flex-grow: 3;
+}
