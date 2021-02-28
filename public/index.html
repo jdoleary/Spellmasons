@@ -22,44 +22,45 @@
           />
         </div>
       </div>
-    </div>
-    <div id="controls">
-      <div>
-        <div id="mana-cost"></div>
-        <div id="mana">Mana</div>
-        <div id="health"></div>
-        <div id="opponentTurnStatus">Opponent is thinking...</div>
-        <button id="endTurn">End Turn (Space Key)</button>
-        <button id="resetGame">Reset Game</button>
-      </div>
-      <div id="spellBuilder">
-        <button id="spell-summon">Summon Creature</button>
-        <button id="spell-conjure">Conjure Spell</button>
-        <div id="spell-conjure-config" style="visibility: hidden">
-          <div>
-            <span id="spell-damage-text">0 Damage</span>
-            <button id="spell-plus-damage">+ Damage</button>
-          </div>
-          <div>
-            <span id="spell-heal-text">0 Heal</span>
-            <button id="spell-plus-heal">+ Heal</button>
-          </div>
-          <div>
-            <input type="checkbox" id="spell-freeze" />
-            Freeze
-          </div>
-          <div>
-            <input type="checkbox" id="spell-chain" />
-            Chain
-          </div>
-          <div>
-            <input type="range" id="spell-range" min="0" max="3" value="0" />
-            <span id="spell-range-text">AOE</span>
-          </div>
-          <div>
-            <button id="spell-delay-minus">-</button>
-            <span id="spell-delay-text">0 Turn Delay</span>
-            <button id="spell-delay-plus">+</button>
+      <div id="controls">
+        <div id="tooltip"></div>
+        <div>
+          <div id="mana-cost"></div>
+          <div id="mana">Mana</div>
+          <div id="health"></div>
+          <div id="opponentTurnStatus">Opponent is thinking...</div>
+          <button id="endTurn">End Turn (Space Key)</button>
+          <button id="resetGame">Reset Game</button>
+        </div>
+        <div id="spellBuilder">
+          <button id="spell-summon">Summon Creature</button>
+          <button id="spell-conjure">Conjure Spell</button>
+          <div id="spell-conjure-config" style="visibility: hidden">
+            <div>
+              <span id="spell-damage-text">0 Damage</span>
+              <button id="spell-plus-damage">+ Damage</button>
+            </div>
+            <div>
+              <span id="spell-heal-text">0 Heal</span>
+              <button id="spell-plus-heal">+ Heal</button>
+            </div>
+            <div>
+              <input type="checkbox" id="spell-freeze" />
+              Freeze
+            </div>
+            <div>
+              <input type="checkbox" id="spell-chain" />
+              Chain
+            </div>
+            <div>
+              <input type="range" id="spell-range" min="0" max="3" value="0" />
+              <span id="spell-range-text">AOE</span>
+            </div>
+            <div>
+              <button id="spell-delay-minus">-</button>
+              <span id="spell-delay-text">0 Turn Delay</span>
+              <button id="spell-delay-plus">+</button>
+            </div>
           </div>
         </div>
       </div>

@@ -31,6 +31,7 @@ export default class Image {
     directionY: number,
     imageName: string,
   ) {
+    this.tooltip = this.tooltip.bind(this);
     if (imageName) {
       // Save image path in unit so it's accessible when loading gamestate
       this.imageName = imageName;
@@ -40,6 +41,7 @@ export default class Image {
       this.element.classList.add('game-image');
       this.element.width = CELL_SIZE;
       this.element.height = CELL_SIZE;
+      this.element.addEventListener('mouseover', this.tooltip);
       Image.id++;
       let rotation = 0;
       // set and normalize rotation
@@ -55,8 +57,12 @@ export default class Image {
       boardContents?.appendChild(this.element);
     }
   }
+  tooltip() {
+    window.setTooltip(this.element.id);
+  }
   cleanup() {
     // Remove DOM element
+    this.element.removeEventListener('mouseover', this.tooltip);
     this.element?.remove();
   }
   scale(scale) {

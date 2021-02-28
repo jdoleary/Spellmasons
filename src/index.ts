@@ -16,7 +16,7 @@ const wsUri = 'ws://localhost:8000';
 // const wsUri = 'wss://websocket-pie-e4elx.ondigitalocean.app/';
 let pie: PieClient;
 let game: Game = new Game();
-let maxClients = 2;
+let maxClients = 1;
 function connect(_room_info = {}) {
   const room_info = Object.assign(_room_info, {
     app: 'Golems',
@@ -234,5 +234,6 @@ declare global {
     setDebug: (json: object) => void;
     // If the player's board is inverted so they are on the bottom:
     inverted: boolean;
+    setTooltip: (description: string) => void;
   }
 }

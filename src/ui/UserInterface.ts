@@ -39,6 +39,11 @@ function resetGame() {
     });
   }
 }
+const elTooltip = document.getElementById('tooltip');
+function setTooltip(description: string) {
+  elTooltip.innerText = description;
+}
+window.setTooltip = setTooltip;
 export function setHealth(health: number) {
   elHealth.innerText = `${health} Health`;
 }
