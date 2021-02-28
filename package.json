@@ -30,6 +30,7 @@
     "typescript": "^4.0.0"
   },
   "dependencies": {
+    "random": "^3.0.0",
     "stats.js": "^0.17.0"
   }
 }
