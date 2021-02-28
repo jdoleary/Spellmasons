@@ -3,13 +3,12 @@ body {
 }
 #game-container {
   background: grey;
-  height: 100vh;
-  display: grid;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 #controls {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
   display: flex;
   justify-content: space-between;
   padding: 64px;
@@ -43,9 +42,6 @@ body {
 .game-image {
   position: absolute;
 }
-.game-image:hover {
-  background-color: green;
-}
 
 #debug {
   position: fixed;
@@ -65,4 +61,13 @@ body {
   z-index: 1;
   pointer-events: none;
   user-select: none;
+}
+
+#tooltip {
+  border-radius: 10px;
+  min-width: 300px;
+  min-height: 200px;
+  margin: 8px;
+  padding: 8px;
+  background-color: #eee;
 }
