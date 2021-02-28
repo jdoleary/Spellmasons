@@ -93,11 +93,25 @@ body {
   border-radius: 32px;
 }
 
-.card {
+#card-holder {
   position: absolute;
-  top: 10px;
-  margin: 0 auto;
+  margin: 40px auto;
+  display: flex;
+  justify-content: center;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.card {
+  border: 4px solid black;
+}
+.card.chosen {
+  border: 4px solid gold;
+}
+.card {
   padding: 8px;
+  margin: 8px;
   width: 225px;
   height: 350px;
   background-color: blue;
@@ -106,7 +120,6 @@ body {
   justify-content: space-evenly;
   flex-direction: column;
 }
-
 .card-thumb {
   background-color: white;
   flex-grow: 2;

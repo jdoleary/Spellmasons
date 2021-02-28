@@ -7,6 +7,14 @@ import { BOARD_HEIGHT } from './config';
 import { getImage } from './Spell';
 import * as UI from './ui/UserInterface';
 import { MESSAGE_TYPES } from './MessageTypes';
+import type { Random } from 'random';
+import makeSeededRandom from './rand';
+import { generateCards } from './cards';
+
+// Temporary! Call gen(5) to generate cards to choose
+// @ts-ignore
+window.gen = generateCards;
+
 UI.setup();
 
 let clients = [];
@@ -189,7 +197,8 @@ function makeGame(clients: string[]) {
   game.setGameState(game_state.Playing);
   // Sort clients to make sure they're always in the same order, regardless of
   // what order they joined the game (client refreshes can change the order)
-  for (let i = 0; i < clients.sort().length; i++) {
+  const sortedClients = clients.sort();
+  for (let i = 0; i < sortedClients.length; i++) {
     const c = clients[i];
     const isOnTop = i == 0;
     if (c === window.clientId) {
@@ -210,6 +219,10 @@ function makeGame(clients: string[]) {
       UI.setCurrentMana(p.mana, p.mana);
     }
   }
+  // Make seeded random number generator using portions of all players clientIds
+  window.random = makeSeededRandom(
+    sortedClients.map((clientId) => clientId.slice(0, 6)).join(''),
+  );
 }
 window.connect = connect;
 
@@ -235,5 +248,7 @@ declare global {
     // If the player's board is inverted so they are on the bottom:
     inverted: boolean;
     setTooltip: (description: string) => void;
+    // Seeded random number generator
+    random: Random;
   }
 }
