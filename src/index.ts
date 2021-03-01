@@ -194,7 +194,6 @@ function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
   }
 }
 function makeGame(clients: string[]) {
-  game.setGameState(game_state.Playing);
   // Sort clients to make sure they're always in the same order, regardless of
   // what order they joined the game (client refreshes can change the order)
   const sortedClients = clients.sort();
@@ -223,6 +222,7 @@ function makeGame(clients: string[]) {
   window.random = makeSeededRandom(
     sortedClients.map((clientId) => clientId.slice(0, 6)).join(''),
   );
+  game.setGameState(game_state.Playing);
 }
 window.connect = connect;
 

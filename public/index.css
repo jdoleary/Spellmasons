@@ -141,3 +141,14 @@ body {
   background-color: green;
   flex-grow: 3;
 }
+
+#player-turn-indicator {
+  position: fixed;
+  bottom: 8px;
+  left: 8px;
+  text-align: center;
+  pointer-events: none;
+  background-color: white;
+  padding: 8px;
+  border-radius: 10px 10px;
+}

@@ -15,6 +15,11 @@ export enum game_state {
   Playing,
   GameOver,
 }
+export enum turn_phases {
+  PickCards,
+  NPC,
+  Cast,
+}
 const debugInfo = {};
 const debugEl = document.getElementById('debug');
 window.setDebug = function setDebug(json) {
@@ -22,6 +27,7 @@ window.setDebug = function setDebug(json) {
     debugEl.innerHTML = JSON.stringify(Object.assign(debugInfo, json), null, 2);
   }
 };
+const elPlayerTurnIndicator = document.getElementById('player-turn-indicator');
 export default class Game {
   state: game_state;
   height: number = config.BOARD_HEIGHT;
@@ -31,9 +37,19 @@ export default class Game {
   spells: Spell[] = [];
   // Keeps track of which players have ended their turn
   turn_finished: { [clientId: string]: boolean } = {};
+  // The index of which player's turn it is
+  playerTurnIndex: number;
   constructor() {
     this.setGameState(game_state.Lobby);
     window.game = this;
+  }
+  setPlayerTurn(playerIndex: number) {
+    this.playerTurnIndex = playerIndex;
+    if (this.players[this.playerTurnIndex].clientId === window.clientId) {
+      elPlayerTurnIndicator.innerText = 'Your turn';
+    } else {
+      elPlayerTurnIndicator.innerText = 'Opponents turn';
+    }
   }
   setGameState(g: game_state) {
     this.state = g;
@@ -44,6 +60,7 @@ export default class Game {
         if (elBoard) {
           elBoard.style.visibility = 'visible';
         }
+        this.setPlayerTurn(window.random.integer(0, this.players.length - 1));
         break;
       default:
         if (elBoard) {
