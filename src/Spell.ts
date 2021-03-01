@@ -37,18 +37,18 @@ export function createSpellFromModifiers(
   return spell;
 }
 export function getImage(s: Spell) {
-  let imgPath = 'crosshair.png';
+  let imgPath = 'spell/damage.png';
   if (s.damage) {
-    imgPath = 'crosshair.png';
+    imgPath = 'spell/damage.png';
   }
   if (s.freeze) {
-    imgPath = 'ice-cube.png';
+    imgPath = 'spell/freeze.png';
   }
   if (s.chain) {
-    imgPath = 'lightning.png';
+    imgPath = 'spell/chain.png';
   }
   if (s.aoe_radius > 0) {
-    imgPath = 'bomb.png';
+    imgPath = 'spell/aoe.png';
   }
   return imgPath;
 }
