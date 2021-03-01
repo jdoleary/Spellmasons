@@ -39,6 +39,7 @@ export default class Game {
   turn_finished: { [clientId: string]: boolean } = {};
   // The index of which player's turn it is
   playerTurnIndex: number;
+  yourTurn: boolean;
   constructor() {
     this.setGameState(game_state.Lobby);
     window.game = this;
@@ -47,8 +48,12 @@ export default class Game {
     this.playerTurnIndex = (this.playerTurnIndex + 1) % this.players.length;
     if (this.players[this.playerTurnIndex].clientId === window.clientId) {
       elPlayerTurnIndicator.innerText = 'Your turn';
+      document.body.classList.add('your-turn');
+      this.yourTurn = true;
     } else {
       elPlayerTurnIndicator.innerText = 'Opponents turn';
+      document.body.classList.remove('your-turn');
+      this.yourTurn = false;
     }
   }
   setGameState(g: game_state) {
