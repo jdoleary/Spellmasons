@@ -3,7 +3,7 @@ import Game, { game_state, turn_phase } from './Game';
 import * as Player from './Player';
 import Image from './Image';
 import AnimationManager from './AnimationManager';
-import { BOARD_HEIGHT } from './config';
+import { BOARD_HEIGHT, CHOSEN_CARDS_TILL_NEXT_PHASE } from './config';
 import type { Spell } from './Spell';
 import * as UI from './ui/UserInterface';
 import { MESSAGE_TYPES } from './MessageTypes';
@@ -73,6 +73,8 @@ function cleanUpAllImages() {
   });
 }
 let onDataQueue = [];
+// Count the players who have cast so the game knows when to move onto the next phase
+let numberOfPlayersWhoHaveCast = 0;
 function onData(d: { fromClient: string; payload: any }) {
   // Keep data messages in a queue until they are ready to be processed
   if (window.animationManager.animating) {
@@ -123,7 +125,7 @@ function onData(d: { fromClient: string; payload: any }) {
       cardChosen(payload.id);
       const chosenCards = document.querySelectorAll('.card.disabled').length;
       // Once six cards have been chosen
-      if (chosenCards === 6) {
+      if (chosenCards === CHOSEN_CARDS_TILL_NEXT_PHASE) {
         // Advance the game phase
         game.setTurnPhase(turn_phase.NPC);
         // Remove the remaining unselected cards
@@ -143,11 +145,24 @@ function onData(d: { fromClient: string; payload: any }) {
         (!game.yourTurn && spell.caster.clientId !== window.clientId)
       ) {
         game.cast(spell);
+        numberOfPlayersWhoHaveCast++;
+        // Animate the spells
+        window.animationManager.startAnimate().then(() => {
+          // Allow the next player to cast
+          game.incrementPlayerTurn();
+          if (numberOfPlayersWhoHaveCast >= game.players.length) {
+            // Reset number of players who have cast
+            numberOfPlayersWhoHaveCast = 0;
+            // Move onto next phase
+            game.setTurnPhase(turn_phase.PickCards);
+          }
+        });
       } else {
         console.log('Someone is trying to cast out of turn');
       }
       break;
     case MESSAGE_TYPES.SKIP_TURN:
+      numberOfPlayersWhoHaveCast++;
       game.incrementPlayerTurn();
       // TODO
       // if (all_players_ended_turn) {
