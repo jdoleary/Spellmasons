@@ -1,12 +1,10 @@
-import { PLAYER_HEART_HEALTH, PLAYER_MANA } from './config';
+import { PLAYER_HEART_HEALTH } from './config';
 import Image from './Image';
 
 export interface IPlayer {
   // wsPie id
   clientId: string;
   heart_health: number;
-  mana: number;
-  mana_max: number;
   heart_x: number;
   heart_y: number;
   heart: Image;
@@ -24,8 +22,6 @@ export function create(clientId: string, heart_y: number): IPlayer {
   return {
     clientId,
     heart_health: PLAYER_HEART_HEALTH,
-    mana: PLAYER_MANA,
-    mana_max: PLAYER_MANA,
     heart_x,
     heart_y,
     heart,

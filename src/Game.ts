@@ -1,4 +1,4 @@
-import { Spell, effect, getManaCost, getImage } from './Spell';
+import { Spell, effect, getImage } from './Spell';
 import type { IPlayer } from './Player';
 import * as config from './config';
 import * as Unit from './Unit';
@@ -171,31 +171,11 @@ export default class Game {
     this.units.push(unit);
   }
   queueSpell(spell: Spell) {
-    // Check mana:
-    const cost = getManaCost(spell);
-    if (cost <= 0) {
-      console.error('cannot cast a spell with no mana cost');
-      return;
+    // Only show spell images for the client who casted it
+    if (window.clientId == (spell.caster && spell.caster.clientId)) {
+      spell.image = new Image(spell.x, spell.y, 0, 0, getImage(spell));
     }
-    if (spell.caster.clientId === window.clientId && cost > spell.caster.mana) {
-      floatingText({
-        cellX: spell.x,
-        cellY: spell.y,
-        text: 'Insufficient Mana',
-        color: 'blue',
-      });
-      return;
-    } else {
-      spell.caster.mana -= cost;
-      if (spell.caster.clientId === window.clientId) {
-        UI.setCurrentMana(spell.caster.mana);
-      }
-      // Only show spell images for the client who casted it
-      if (window.clientId == (spell.caster && spell.caster.clientId)) {
-        spell.image = new Image(spell.x, spell.y, 0, 0, getImage(spell));
-      }
-      this.spells.push(spell);
-    }
+    this.spells.push(spell);
   }
   cast(spell: Spell) {
     const { x, y } = spell;
@@ -253,10 +233,7 @@ export default class Game {
       }
     }
 
-    // Restore player mana
     for (let p of this.players) {
-      p.mana = p.mana_max;
-      UI.setCurrentMana(p.mana, p.mana_max);
       // Lastly, Check for gameover
       if (p.heart_health <= 0) {
         this.setGameState(game_state.GameOver);

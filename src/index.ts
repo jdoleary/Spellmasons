@@ -212,9 +212,6 @@ function makeGame(clients: string[]) {
     }
     const p = Player.create(c, heart_y);
     game.players.push(p);
-    if (p.clientId === window.clientId) {
-      UI.setCurrentMana(p.mana, p.mana);
-    }
   }
   // Make seeded random number generator using portions of all players clientIds
   window.random = makeSeededRandom(

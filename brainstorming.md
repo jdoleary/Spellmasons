@@ -13,7 +13,6 @@
 ## Ideas
 
 - Brad suggests more unit types
-- Accumulate mana
 
 ## Matt Ideas
 

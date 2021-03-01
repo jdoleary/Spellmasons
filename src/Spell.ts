@@ -70,35 +70,6 @@ function toString(s: Spell) {
   }
   return strings.join('|');
 }
-export function getManaCost(s: Spell) {
-  let cost = 0;
-  if (s.damage) {
-    if (s.damage < 0) {
-      // Healing is always 1 mana more expensive
-      cost += Math.abs(s.damage) + 1;
-    } else {
-      cost += s.damage;
-    }
-  }
-  if (s.delay) {
-    cost -= s.delay;
-    // Prevent spell from being free
-    cost = Math.max(cost, 1);
-  }
-  if (s.freeze) {
-    cost += 2;
-  }
-  if (s.chain) {
-    cost += 4;
-  }
-  if (s.aoe_radius > 0) {
-    cost += 4 * s.aoe_radius;
-  }
-  if (s.summon) {
-    cost += 4;
-  }
-  return cost;
-}
 export interface EffectArgs {
   unit?: Unit.IUnit;
   // Used to prevent infinite loops when recuring via chain for example

@@ -8,7 +8,6 @@ const elEndTurnBtn: HTMLButtonElement = document.getElementById(
 const elResetGameButton: HTMLButtonElement = document.getElementById(
   'resetGame',
 ) as HTMLButtonElement;
-const elMana = document.getElementById('mana');
 const elHealth = document.getElementById('health');
 
 export function setup() {
@@ -45,13 +44,4 @@ function setTooltip(description: string) {
 window.setTooltip = setTooltip;
 export function setHealth(health: number) {
   elHealth.innerText = `${health} Health`;
-}
-let maxMana;
-export function setCurrentMana(mana: number, max?: number) {
-  if (max) {
-    maxMana = max;
-  }
-  if (elMana) {
-    elMana.innerText = `${mana} / ${maxMana} Mana`;
-  }
 }

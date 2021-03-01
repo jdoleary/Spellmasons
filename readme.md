@@ -3,7 +3,6 @@
 8x8 board
 Wizard's heart on either end
 Turn based - Players turns execute simultaneous (but do wait for the other to finish). When they are both done, spells will take effect, then the units will move
-Mana - Player one starts with 2 max - Player two starts with 3 max - Each turn gain 1 max until 8 (or 10?)
 First player to have their "heart" destroyed loses
 Player's summons have no loyalty! They just attack in the direction they are moving, which makes turning them potentially make them a problem for the other player
 
