@@ -1,3 +1,4 @@
+import { game_state } from './Game';
 import { MESSAGE_TYPES } from './MessageTypes';
 export interface ISpellPool {
   spells: string[][];
@@ -14,18 +15,20 @@ export function create(): ISpellPool {
     );
     // Add card to spell
     el.addEventListener('click', (e) => {
-      self.spells[i].push(selectedCard.content);
-      el.querySelector('.spell-content').innerHTML = self.spells[
-        i
-      ].length.toString();
-      elPool.classList.remove('adding');
-      // Disable the card:
-      selectedCard.element.classList.remove('selected');
-      // Send the selection to the other player
-      window.pie.sendData({
-        type: MESSAGE_TYPES.CHOOSE_CARD,
-        id: selectedCard.element.id,
-      });
+      if (window.game.yourTurn) {
+        self.spells[i].push(selectedCard.content);
+        el.querySelector('.spell-content').innerHTML = self.spells[
+          i
+        ].length.toString();
+        elPool.classList.remove('adding');
+        // Disable the card:
+        selectedCard.element.classList.remove('selected');
+        // Send the selection to the other player
+        window.pie.sendData({
+          type: MESSAGE_TYPES.CHOOSE_CARD,
+          id: selectedCard.element.id,
+        });
+      }
     });
   }
   return self;
