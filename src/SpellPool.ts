@@ -2,11 +2,16 @@ import { MESSAGE_TYPES } from './MessageTypes';
 const elPool = document.getElementById('spell-pool');
 const spells: string[][] = [[], [], []];
 export let selectedSpell;
+export let selectedSpellIndex;
+export function clearSpellIndex(index: number) {
+  spells[index] = [];
+}
 export function selectSpell(index?: number) {
   // Deselect selected spell visually
   document.querySelector('.spell.selected')?.classList.remove('selected');
 
   selectedSpell = spells[index];
+  selectedSpellIndex = index;
   if (selectedSpell) {
     // Update the selected spell DOM element
     document.getElementById('spell-' + index)?.classList.add('selected');

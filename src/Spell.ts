@@ -8,28 +8,38 @@ export interface Spell {
   caster?: IPlayer;
   x?: number;
   y?: number;
+  // index in spell pool
+  index: number;
   // damage can be negative for healing
   damage?: number;
   freeze?: boolean;
   chain?: boolean;
   aoe_radius?: number;
-  // TODO
-  rotate?: boolean;
-  // TODO, in form of object
-  summon?: any;
-  // in turns
-  delay?: number;
-  // If the spell has been cast
-  isCast?: boolean;
   image?: Image;
+}
+
+// Creates a spell object from a list of modifier strings from cards.ts
+export function createSpellFromModifiers(
+  modifiers: string[],
+  initialValues: Spell,
+) {
+  const spell = initialValues;
+  spell.damage = modifiers.reduce(
+    (acc, mod) => acc + (mod === 'Damage' ? 1 : mod === 'Heal' ? -1 : 0),
+    0,
+  );
+  spell.freeze = modifiers.includes('Freeze');
+  spell.chain = modifiers.includes('Chain');
+  spell.aoe_radius = modifiers.reduce(
+    (acc, mod) => acc + (mod === 'AOE' ? 1 : 0),
+    0,
+  );
+  return spell;
 }
 export function getImage(s: Spell) {
   let imgPath = 'crosshair.png';
   if (s.damage) {
     imgPath = 'crosshair.png';
-  }
-  if (s.delay) {
-    // TODO image for delay
   }
   if (s.freeze) {
     imgPath = 'ice-cube.png';
@@ -39,9 +49,6 @@ export function getImage(s: Spell) {
   }
   if (s.aoe_radius > 0) {
     imgPath = 'bomb.png';
-  }
-  if (s.summon) {
-    imgPath = 'egg.png';
   }
   return imgPath;
 }
@@ -53,9 +60,6 @@ function toString(s: Spell) {
   if (s.damage < 0) {
     strings.push('Heal');
   }
-  if (s.delay) {
-    strings.push('Delay');
-  }
   if (s.freeze) {
     strings.push('Freeze');
   }
@@ -64,9 +68,6 @@ function toString(s: Spell) {
   }
   if (s.aoe_radius > 0) {
     strings.push('AOE');
-  }
-  if (s.summon) {
-    strings.push('Summon');
   }
   return strings.join('|');
 }
@@ -78,10 +79,6 @@ export interface EffectArgs {
 }
 export function effect(spell: Spell, args: EffectArgs) {
   const { unit, game, ignore = [] } = args;
-  if (spell.delay && spell.delay > 0) {
-    spell.delay--;
-    return;
-  }
   if (unit && ignore.includes(unit)) {
     return;
   }
@@ -141,25 +138,10 @@ export function effect(spell: Spell, args: EffectArgs) {
         );
       }
     }
-    spell.isCast = true;
     // Show an image when cast occurs
     const castImage = new Image(spell.x, spell.y, 0, 0, getImage(spell));
     castImage.scale(1.5);
     castImage.updateFilter(0);
     castImage.remove();
-  }
-  if (game) {
-    if (spell.summon) {
-      const { x, y } = spell;
-      const { vx, vy, imagePath } = spell.summon;
-      floatingText({
-        cellX: x,
-        cellY: y,
-        text: 'Summon Golem',
-        color: 'blue',
-      });
-      const unit = Unit.create(x, y, vx, vy, imagePath);
-      game.summon(unit);
-    }
   }
 }

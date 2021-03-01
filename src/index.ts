@@ -149,7 +149,6 @@ function onData(d: { fromClient: string; payload: any }) {
       ) {
         // Set caster based on which client sent it
         spell.caster = caster;
-        // TODO permissions based on turn_phase
         game.cast(spell);
       } else {
         console.log('Someone is trying to cast out of turn');

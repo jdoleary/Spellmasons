@@ -2,6 +2,7 @@ import { MESSAGE_TYPES } from '../MessageTypes';
 import { CELL_SIZE } from '../Image';
 import { BOARD_WIDTH, BOARD_HEIGHT } from '../config';
 import * as SpellPool from '../SpellPool';
+import { createSpellFromModifiers } from '../Spell';
 
 const elBoard = document.getElementById('board');
 SpellPool.create();
@@ -21,9 +22,11 @@ export default function setupSpellBuilderUI() {
     if (window.game.yourTurn && SpellPool.selectedSpell) {
       window.pie.sendData({
         type: MESSAGE_TYPES.SPELL,
-        modifiers: SpellPool.selectSpell,
-        x: cell_x,
-        y: cell_y,
+        spell: createSpellFromModifiers(SpellPool.selectedSpell, {
+          x: cell_x,
+          y: cell_y,
+          index: SpellPool.selectedSpellIndex,
+        }),
       });
     }
   });
