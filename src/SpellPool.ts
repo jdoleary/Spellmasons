@@ -15,7 +15,7 @@ export function create(): ISpellPool {
     );
     // Add card to spell
     el.addEventListener('click', (e) => {
-      if (window.game.yourTurn) {
+      if (window.game.yourTurn && selectedCard) {
         self.spells[i].push(selectedCard.content);
         el.querySelector('.spell-content').innerHTML = self.spells[
           i
@@ -28,6 +28,7 @@ export function create(): ISpellPool {
           type: MESSAGE_TYPES.CHOOSE_CARD,
           id: selectedCard.element.id,
         });
+        selectedCard = null;
       }
     });
   }

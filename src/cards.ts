@@ -54,7 +54,6 @@ function generateCard() {
   );
   // Choose random integer within the sum of all the probabilities
   const roll = window.random.integer(0, maxProbability);
-  console.log('🚀 ~ file: cards.ts ~ line 57 ~ generateCard ~ roll', roll);
   let rollingLowerBound = 0;
   // Iterate each modifier and check if the roll is between the lower bound and the upper bound
   // which means that the current mod would have been rolled
@@ -63,13 +62,6 @@ function generateCard() {
       roll >= rollingLowerBound &&
       roll <= mod.probability + rollingLowerBound
     ) {
-      console.log(
-        'chose',
-        mod,
-        rollingLowerBound,
-        roll,
-        mod.probability + rollingLowerBound,
-      );
       return mod;
     } else {
       rollingLowerBound += mod.probability;
