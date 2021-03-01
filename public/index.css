@@ -82,11 +82,15 @@ body {
   border-radius: 32px;
   width: 64px;
   height: 64px;
-  background-color: white;
+  border: 2px solid white;
+  color: white;
   /* Show text in bubble */
   text-align: center;
   line-height: 64px;
   font-size: large;
+}
+#spell-pool .spell.selected {
+  border: 2px solid gold;
 }
 body.your-turn #spell-pool .spell {
   /* Enable clicking on cards when it is your turn */
