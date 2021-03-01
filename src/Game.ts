@@ -34,7 +34,6 @@ export default class Game {
   width: number = config.BOARD_WIDTH;
   players: IPlayer[] = [];
   units: Unit.IUnit[] = [];
-  spells: Spell[] = [];
   // The index of which player's turn it is
   playerTurnIndex: number;
   yourTurn: boolean;
@@ -59,7 +58,7 @@ export default class Game {
     const phase = turn_phase[this.turn_phase];
     switch (phase) {
       case 'PickCards':
-        generateCards(7);
+        generateCards(8);
         break;
       case 'NPC':
         const TEMP_NUMBER_OF_UNITS = 2;
@@ -80,6 +79,19 @@ export default class Game {
           );
           this.summon(unit);
         }
+        // Move units
+        for (let u of this.units) {
+          Unit.move(u);
+          u.justSpawned = false;
+        }
+
+        // Unfreeze frozen units
+        for (let u of this.units) {
+          if (u.frozen) {
+            u.frozen = false;
+          }
+        }
+
         window.animationManager.startAnimate();
         break;
       default:
@@ -168,13 +180,6 @@ export default class Game {
   summon(unit: Unit.IUnit) {
     this.units.push(unit);
   }
-  queueSpell(spell: Spell) {
-    // Only show spell images for the client who casted it
-    if (window.clientId == (spell.caster && spell.caster.clientId)) {
-      spell.image = new Image(spell.x, spell.y, 0, 0, getImage(spell));
-    }
-    this.spells.push(spell);
-  }
   cast(spell: Spell) {
     const { x, y } = spell;
     const targets = this.getUnitsAt(x, y);
@@ -190,57 +195,5 @@ export default class Game {
       effect(spell, { game: this });
       window.animationManager.endGroup('spell-effects');
     }
-  }
-  nextTurn(): Promise<void> {
-    // Clean up DOM of dead units
-    // Note: This occurs at the beginning of a turn so that "dead" units can animate to death
-    // after they take mortally wounding damage without their html elements being removed before
-    // the animation takes place
-    for (let u of this.units) {
-      if (!u.alive) {
-        // Remove image from DOM
-        u.image.cleanup();
-      }
-    }
-    // Remove dead units
-    this.units = this.units.filter((u) => u.alive);
-
-    // Cast spells
-    for (let sm of this.spells) {
-      this.cast(sm);
-    }
-    // Remove all casted spells
-    this.spells
-      .filter((s) => s.isCast)
-      .forEach((s) => {
-        // Remove spell images once they are cast
-        s.image?.cleanup();
-      });
-    this.spells = this.spells.filter((s) => !s.isCast);
-
-    // Move units
-    for (let u of this.units) {
-      Unit.move(u);
-      u.justSpawned = false;
-    }
-
-    // Unfreeze frozen units
-    for (let u of this.units) {
-      if (u.frozen) {
-        u.frozen = false;
-      }
-    }
-
-    for (let p of this.players) {
-      // Lastly, Check for gameover
-      if (p.heart_health <= 0) {
-        this.setGameState(game_state.GameOver);
-        this.state = game_state.GameOver;
-        alert('Game Over');
-      }
-    }
-
-    // Animate everything
-    return window.animationManager.startAnimate();
   }
 }

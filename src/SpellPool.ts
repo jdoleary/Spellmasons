@@ -1,4 +1,3 @@
-import { game_state } from './Game';
 import { MESSAGE_TYPES } from './MessageTypes';
 export interface ISpellPool {
   spells: string[][];

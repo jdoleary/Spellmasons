@@ -21,7 +21,7 @@ const wsUri = 'ws://localhost:8000';
 // const wsUri = 'wss://websocket-pie-e4elx.ondigitalocean.app/';
 let pie: PieClient;
 let game: Game = new Game();
-let maxClients = 2;
+let maxClients = 1;
 function connect(_room_info = {}) {
   const room_info = Object.assign(_room_info, {
     app: 'Golems',
@@ -122,7 +122,6 @@ function onData(d: { fromClient: string; payload: any }) {
         // Keep newly created heart image
         game.players[i] = { ...p, heart: game.players[i].heart };
       }
-      game.spells = spells;
       game.units = units;
       game.setGameState(game_state.Playing);
       break;
@@ -144,7 +143,8 @@ function onData(d: { fromClient: string; payload: any }) {
     case MESSAGE_TYPES.SPELL:
       // Set caster based on which client sent it
       spell.caster = caster;
-      game.queueSpell(spell);
+      // TODO permissions based on turn_phase
+      game.cast(spell);
       break;
     case MESSAGE_TYPES.END_TURN:
       game.incrementPlayerTurn();
