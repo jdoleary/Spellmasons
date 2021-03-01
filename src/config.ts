@@ -4,3 +4,4 @@ export const PLAYER_HEART_HEALTH = 8;
 export const BOARD_HEIGHT = 8;
 export const BOARD_WIDTH = 8;
 export const CHOSEN_CARDS_TILL_NEXT_PHASE = 6;
+export const NUMBER_OF_UNITS_SPAWN_PER_TURN = 2;

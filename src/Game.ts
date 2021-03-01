@@ -70,8 +70,7 @@ export default class Game {
         this.units = this.units.filter((u) => u.alive);
         break;
       case 'NPC':
-        const TEMP_NUMBER_OF_UNITS = 2;
-        for (let i = 0; i < TEMP_NUMBER_OF_UNITS; i++) {
+        for (let i = 0; i < config.NUMBER_OF_UNITS_SPAWN_PER_TURN; i++) {
           // Extra "-1" is because board width is 0 indexed
           const x = window.random.integer(0, config.BOARD_WIDTH - 1);
           // Extra "-1" is because board height is 0 indexed
