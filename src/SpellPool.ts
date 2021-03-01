@@ -20,6 +20,7 @@ export function create(): ISpellPool {
         el.querySelector('.spell-content').innerHTML = self.spells[
           i
         ].length.toString();
+
         elPool.classList.remove('adding');
         // Disable the card:
         selectedCard.element.classList.remove('selected');
@@ -30,6 +31,8 @@ export function create(): ISpellPool {
         });
         selectedCard = null;
       }
+      // update tooltip with current state of clicked spell
+      window.setTooltip(JSON.stringify(self.spells[i], null, 2));
     });
   }
   return self;
