@@ -121,7 +121,6 @@ function onData(d: { fromClient: string; payload: any }) {
       game.setGameState(game_state.Playing);
       break;
     case MESSAGE_TYPES.CHOOSE_CARD:
-      console.log('choose', payload.id);
       cardChosen(payload.id);
       const chosenCards = document.querySelectorAll('.card.disabled').length;
       // Once six cards have been chosen

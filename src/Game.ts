@@ -56,6 +56,18 @@ export default class Game {
     switch (phase) {
       case 'PickCards':
         generateCards(8);
+        // Clean up DOM of dead units
+        // Note: This occurs in the first phase so that "dead" units can animate to death
+        // after they take mortally wounding damage without their html elements being removed before
+        // the animation takes place
+        for (let u of this.units) {
+          if (!u.alive) {
+            // Remove image from DOM
+            u.image.cleanup();
+          }
+        }
+        // Remove dead units
+        this.units = this.units.filter((u) => u.alive);
         break;
       case 'NPC':
         const TEMP_NUMBER_OF_UNITS = 2;
