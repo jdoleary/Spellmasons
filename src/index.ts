@@ -146,7 +146,7 @@ function onData(d: { fromClient: string; payload: any }) {
       // TODO permissions based on turn_phase
       game.cast(spell);
       break;
-    case MESSAGE_TYPES.END_TURN:
+    case MESSAGE_TYPES.SKIP_TURN:
       game.incrementPlayerTurn();
       // TODO
       // if (all_players_ended_turn) {

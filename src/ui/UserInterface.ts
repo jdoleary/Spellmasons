@@ -12,22 +12,22 @@ const elHealth = document.getElementById('health');
 
 export function setup() {
   // Add keyboard shortcuts
-  window.addEventListener('keydown', (event) => {
-    switch (event.code) {
-      case 'Space':
-        endTurn();
-        break;
-      default:
-        console.log('No set action for key' + event.code);
-    }
-  });
-
+  // window.addEventListener('keydown', (event) => {
+  // switch (event.code) {
+  // case 'Space':
+  // endTurn();
+  // break;
+  // default:
+  // console.log('No set action for key' + event.code);
+  // }
+  // });
+  //
   elEndTurnBtn.addEventListener('click', endTurn);
   elResetGameButton.addEventListener('click', resetGame);
   setupSpellBuilderUI();
 }
 function endTurn() {
-  window.pie.sendData({ type: MESSAGE_TYPES.END_TURN });
+  window.pie.sendData({ type: MESSAGE_TYPES.SKIP_TURN });
 }
 function resetGame() {
   const doReset = window.confirm('Are you sure you want to start over?');

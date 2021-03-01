@@ -2,7 +2,6 @@ import { Spell, effect, getImage } from './Spell';
 import type { IPlayer } from './Player';
 import * as config from './config';
 import * as Unit from './Unit';
-import Image from './Image';
 import * as SpellPool from './SpellPool';
 import { generateCards } from './cards';
 
