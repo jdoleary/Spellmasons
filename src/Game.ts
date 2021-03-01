@@ -64,6 +64,25 @@ export default class Game {
         generateCards(7);
         break;
       case 'NPC':
+        const TEMP_NUMBER_OF_UNITS = 2;
+        for (let i = 0; i < TEMP_NUMBER_OF_UNITS; i++) {
+          // Extra "-1" is because board width is 0 indexed
+          const x = window.random.integer(0, config.BOARD_WIDTH - 1);
+          // Extra "-1" is because board height is 0 indexed
+          const y = window.random.integer(
+            config.BOARD_HEIGHT / 2 - 1,
+            config.BOARD_HEIGHT / 2,
+          );
+          const unit = Unit.create(
+            x,
+            y,
+            0,
+            y < config.BOARD_HEIGHT / 2 ? -1 : 1,
+            'crocodile.png',
+          );
+          this.summon(unit);
+        }
+        window.animationManager.startAnimate();
         break;
       default:
         break;
@@ -88,7 +107,7 @@ export default class Game {
         // Initialize the player turn state
         this.incrementPlayerTurn();
         // Set the first turn phase
-        this.setTurnPhase(turn_phase.PickCards);
+        this.setTurnPhase(turn_phase.NPC);
         break;
       default:
         if (elBoard) {
