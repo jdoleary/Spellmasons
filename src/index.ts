@@ -4,7 +4,7 @@ import * as Player from './Player';
 import Image from './Image';
 import AnimationManager from './AnimationManager';
 import { BOARD_HEIGHT } from './config';
-import { getImage } from './Spell';
+import type { Spell } from './Spell';
 import * as UI from './ui/UserInterface';
 import { MESSAGE_TYPES } from './MessageTypes';
 import type { Random } from 'random';
@@ -84,7 +84,7 @@ function onData(d: { fromClient: string; payload: any }) {
   messageLog.push(d);
 
   const { payload, fromClient } = d;
-  const { type, spell } = payload;
+  const { type, spell }: { type: MESSAGE_TYPES; spell: Spell } = payload;
   // Get caster
   const caster = game.players.find((p) => p.clientId === fromClient);
   switch (type) {
@@ -102,13 +102,6 @@ function onData(d: { fromClient: string; payload: any }) {
       // Resume game / load game / rejoin game
       const loadedGameState = { ...payload.game };
       const players = loadedGameState.players;
-      const spells = loadedGameState.spells.map((s) => {
-        return {
-          caster: players.find((p) => p.clientId === s.caster.clientId),
-          image: new Image(s.x, s.y, 0, 0, getImage(s)),
-          ...s,
-        };
-      });
       const units = loadedGameState.units.map((u) => {
         return {
           ...u,
@@ -141,14 +134,14 @@ function onData(d: { fromClient: string; payload: any }) {
 
       break;
     case MESSAGE_TYPES.SPELL:
+      // Set caster based on which client sent it
+      spell.caster = caster;
       if (
         // If your turn and you are casting, allow
-        (game.yourTurn && spell.caster === window.clientId) ||
+        (game.yourTurn && spell.caster.clientId === window.clientId) ||
         // or if not your turn and opponent is casting, allow
-        (!game.yourTurn && spell.caster !== window.clientId)
+        (!game.yourTurn && spell.caster.clientId !== window.clientId)
       ) {
-        // Set caster based on which client sent it
-        spell.caster = caster;
         game.cast(spell);
       } else {
         console.log('Someone is trying to cast out of turn');
