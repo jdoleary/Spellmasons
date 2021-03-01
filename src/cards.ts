@@ -14,20 +14,83 @@ export function generateCards(numberOfCards: number) {
     cards.push(el);
   }
 }
-const modifiers = ['dmg', 'heal', 'chain', 'freeze', 'aoe'];
-function generateCard() {
-  return modifiers[window.random.integer(0, modifiers.length - 1)];
+interface SpellMod {
+  description: string;
+  thumbnail: string;
+  probability: number;
 }
-function cardDOM(content: string, index: number) {
+const modifiers: SpellMod[] = [
+  {
+    description: 'Damage',
+    thumbnail: 'images/spell/damage.png',
+    probability: 10,
+  },
+  {
+    description: 'Heal',
+    thumbnail: 'images/spell/heal.png',
+    probability: 5,
+  },
+  {
+    description: 'Chain',
+    thumbnail: 'images/spell/chain.png',
+    probability: 1,
+  },
+  {
+    description: 'Freeze',
+    thumbnail: 'images/spell/freeze.png',
+    probability: 1,
+  },
+  {
+    description: 'AOE',
+    thumbnail: 'images/spell/aoe.png',
+    probability: 1,
+  },
+];
+function generateCard() {
+  // Chooses a random modifier based on their probability
+  const maxProbability = modifiers.reduce(
+    (maxProbability, current) => current.probability + maxProbability,
+    0,
+  );
+  // Choose random integer within the sum of all the probabilities
+  const roll = window.random.integer(0, maxProbability);
+  console.log('🚀 ~ file: cards.ts ~ line 57 ~ generateCard ~ roll', roll);
+  let rollingLowerBound = 0;
+  // Iterate each modifier and check if the roll is between the lower bound and the upper bound
+  // which means that the current mod would have been rolled
+  for (let mod of modifiers) {
+    if (
+      roll >= rollingLowerBound &&
+      roll <= mod.probability + rollingLowerBound
+    ) {
+      console.log(
+        'chose',
+        mod,
+        rollingLowerBound,
+        roll,
+        mod.probability + rollingLowerBound,
+      );
+      return mod;
+    } else {
+      rollingLowerBound += mod.probability;
+    }
+  }
+  // Logically it should never reach this point
+  return modifiers[0];
+}
+function cardDOM(content: SpellMod, index: number) {
   const element = document.createElement('div');
   element.classList.add('card');
   element.id = 'card-' + index;
-  const thumb = document.createElement('div');
-  thumb.classList.add('card-thumb');
-  element.appendChild(thumb);
+  const thumbHolder = document.createElement('div');
+  const thumbnail = document.createElement('img');
+  thumbnail.src = content.thumbnail;
+  thumbHolder.appendChild(thumbnail);
+  thumbHolder.classList.add('card-thumb');
+  element.appendChild(thumbHolder);
   const desc = document.createElement('div');
   desc.classList.add('card-description');
-  desc.innerText = content;
+  desc.innerText = content.description;
   element.appendChild(desc);
   element.addEventListener('click', () => {
     if (window.game.yourTurn) {
@@ -35,7 +98,7 @@ function cardDOM(content: string, index: number) {
         // You cannot select disabled cards
         return;
       }
-      setSelectedCard(content, element);
+      setSelectedCard(content.description, element);
       // Remove selected from all cards
       document
         .querySelectorAll('.card')

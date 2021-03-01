@@ -150,6 +150,13 @@ body:not(.your-turn) #card-holder .card {
 .card-thumb {
   background-color: white;
   flex-grow: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.card-thumb img {
+  width: 64px;
+  height: 64px;
 }
 .card-description {
   background-color: green;
