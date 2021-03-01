@@ -1,3 +1,4 @@
+import floatingText from './FloatingText';
 import { setSelectedCard } from './SpellPool';
 const elCardHolder = document.getElementById('card-holder');
 // Cards are used for chanelling unique spells each turn.
@@ -21,13 +22,19 @@ function cardDOM(content: string, index: number) {
   element.id = 'card-' + index;
   element.innerText = content;
   element.addEventListener('click', () => {
-    setSelectedCard(content, element);
-    // Remove selected from all cards
-    document
-      .querySelectorAll('.card')
-      .forEach((el) => el.classList.remove('selected'));
-    // Add selected to clicked card
-    element.classList.add('selected');
+    if (window.game.yourTurn) {
+      if (element.classList.contains('disabled')) {
+        // You cannot select disabled cards
+        return;
+      }
+      setSelectedCard(content, element);
+      // Remove selected from all cards
+      document
+        .querySelectorAll('.card')
+        .forEach((el) => el.classList.remove('selected'));
+      // Add selected to clicked card
+      element.classList.add('selected');
+    }
   });
   elCardHolder.appendChild(element);
   return element;
