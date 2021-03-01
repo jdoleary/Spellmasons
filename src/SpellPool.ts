@@ -1,10 +1,22 @@
-import { MESSAGE_TYPES } from './MessageTypes';
-const elPool = document.getElementById('spell-pool');
+// const elPool = document.getElementById('spell-pool');
 const spells: string[][] = [[], [], []];
 export let selectedSpell;
 export let selectedSpellIndex;
 export function clearSpellIndex(index: number) {
   spells[index] = [];
+  updateSpellLabel(index);
+}
+function updateSpellLabel(index: number) {
+  // Change the UI label of the spell in the pool to the number of modifiers in the spell
+  const elSpell = document.getElementById('spell-' + index);
+  elSpell.querySelector('.spell-content').innerHTML = spells[
+    index
+  ].length.toString();
+}
+export function addModifierToSpell(modifier: string) {
+  // Add the modifier to the spell
+  spells[selectedSpellIndex].push(modifier);
+  updateSpellLabel(selectedSpellIndex);
 }
 export function selectSpell(index?: number) {
   // Deselect selected spell visually
@@ -27,49 +39,12 @@ export function create() {
     );
 
     // Click on spell
-    // Add card to spell
     el.addEventListener('click', (e) => {
-      // Apply selected card to spell
-      if (window.game.yourTurn && selectedCard) {
-        spells[i].push(selectedCard.content);
-        el.querySelector('.spell-content').innerHTML = spells[
-          i
-        ].length.toString();
-
-        elPool.classList.remove('adding');
-        // Disable the card:
-        selectedCard.element.classList.remove('selected');
-        // Send the selection to the other player
-        window.pie.sendData({
-          type: MESSAGE_TYPES.CHOOSE_CARD,
-          id: selectedCard.element.id,
-        });
-        selectedCard = null;
-      }
       // Keep the last selected spell in state for casting later
       selectSpell(i);
     });
   }
 }
-let selectedCard: {
-  content: string;
-  element: HTMLDivElement;
-};
 export function cardChosen(elementId: string) {
   document.getElementById(elementId)?.classList.add('disabled');
-}
-export function setSelectedCard(content: string, element: HTMLDivElement) {
-  selectedCard = {
-    content,
-    element,
-  };
-  if (selectedCard) {
-    // Add 'adding' class to the spell pool so spells change so as to suggest
-    // that they can accept the new spell
-    elPool.classList.add('adding');
-    // Deselect spells once a card is selected so all spells appear the same
-    selectSpell(undefined);
-  } else {
-    elPool.classList.remove('adding');
-  }
 }

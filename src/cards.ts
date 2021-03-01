@@ -1,4 +1,5 @@
-import { setSelectedCard } from './SpellPool';
+import { MESSAGE_TYPES } from './MessageTypes';
+import { addModifierToSpell, selectedSpellIndex } from './SpellPool';
 const elCardHolder = document.getElementById('card-holder');
 export function clearCards() {
   elCardHolder.innerHTML = '';
@@ -90,20 +91,19 @@ function cardDOM(content: SpellMod, index: number) {
         // You cannot select disabled cards
         return;
       }
-      setSelectedCard(content.description, element);
-      // Remove selected from all cards
-      document
-        .querySelectorAll('.card')
-        .forEach((el) => el.classList.remove('selected'));
-      // Add selected to clicked card
-      element.classList.add('selected');
+      if (selectedSpellIndex !== undefined) {
+        // Add card contents to spell:
+        addModifierToSpell(content.description);
+        // Send the selection to the other player
+        window.pie.sendData({
+          type: MESSAGE_TYPES.CHOOSE_CARD,
+          id: element.id,
+        });
+      } else {
+        alert('You must select a spell before choosing a card');
+      }
     }
   });
   elCardHolder.appendChild(element);
   return element;
 }
-
-// <div class="card">
-//   <div class="card-thumb"></div>
-//   <div class="card-description"></div>
-// </div>

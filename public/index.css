@@ -101,15 +101,6 @@ body:not(.your-turn) #spell-pool .spell {
   cursor: not-allowed;
 }
 #spell-pool .spell img {
-  visibility: hidden;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-#spell-pool.adding .spell img {
-  visibility: visible;
-}
-#spell-pool .spell img {
   border-radius: 32px;
 }
 
@@ -123,9 +114,6 @@ body:not(.your-turn) #spell-pool .spell {
   right: 0;
   bottom: 0;
   pointer-events: none;
-}
-body.your-turn #card-holder .card.selected {
-  border: 4px solid gold;
 }
 #card-holder .card.disabled {
   cursor: not-allowed;
