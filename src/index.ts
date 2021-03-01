@@ -1,5 +1,5 @@
 import PieClient, { ClientPresenceChangedArgs } from 'pie-client';
-import Game, { game_state } from './Game';
+import Game, { game_state, turn_phase } from './Game';
 import * as Player from './Player';
 import Image from './Image';
 import AnimationManager from './AnimationManager';
@@ -9,12 +9,8 @@ import * as UI from './ui/UserInterface';
 import { MESSAGE_TYPES } from './MessageTypes';
 import type { Random } from 'random';
 import makeSeededRandom from './rand';
-import { generateCards } from './cards';
 import { cardChosen } from './SpellPool';
-
-// Temporary! Call gen(5) to generate cards to choose
-// @ts-ignore
-window.gen = generateCards;
+import { clearCards } from './cards';
 
 UI.setup();
 
@@ -133,6 +129,14 @@ function onData(d: { fromClient: string; payload: any }) {
     case MESSAGE_TYPES.CHOOSE_CARD:
       console.log('choose', payload.id);
       cardChosen(payload.id);
+      const chosenCards = document.querySelectorAll('.card.disabled').length;
+      // Once six cards have been chosen
+      if (chosenCards === 6) {
+        // Advance the game phase
+        game.setTurnPhase(turn_phase.NPC);
+        // Remove the remaining unselected cards
+        clearCards();
+      }
       // go to next player for picking
       game.incrementPlayerTurn();
 

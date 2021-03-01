@@ -1,6 +1,8 @@
-import floatingText from './FloatingText';
 import { setSelectedCard } from './SpellPool';
 const elCardHolder = document.getElementById('card-holder');
+export function clearCards() {
+  elCardHolder.innerHTML = '';
+}
 // Cards are used for chanelling unique spells each turn.
 // Both players are presented with a number of cards and they take turns deciding which to
 // add to their chanelling spell orbs

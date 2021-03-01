@@ -6,6 +6,7 @@ import Image from './Image';
 import * as UI from './ui/UserInterface';
 import floatingText from './FloatingText';
 import * as SpellPool from './SpellPool';
+import { generateCards } from './cards';
 
 SpellPool.create();
 
@@ -15,7 +16,7 @@ export enum game_state {
   Playing,
   GameOver,
 }
-export enum turn_phases {
+export enum turn_phase {
   PickCards,
   NPC,
   Cast,
@@ -30,6 +31,7 @@ window.setDebug = function setDebug(json) {
 const elPlayerTurnIndicator = document.getElementById('player-turn-indicator');
 export default class Game {
   state: game_state;
+  turn_phase: turn_phase;
   height: number = config.BOARD_HEIGHT;
   width: number = config.BOARD_WIDTH;
   players: IPlayer[] = [];
@@ -54,6 +56,20 @@ export default class Game {
       this.yourTurn = false;
     }
   }
+  setTurnPhase(p: turn_phase) {
+    this.turn_phase = p;
+    const phase = turn_phase[this.turn_phase];
+    switch (phase) {
+      case 'PickCards':
+        generateCards(7);
+        break;
+      case 'NPC':
+        break;
+      default:
+        break;
+    }
+    window.setDebug({ phase });
+  }
   setGameState(g: game_state) {
     this.state = g;
     const state = game_state[this.state];
@@ -63,11 +79,16 @@ export default class Game {
         if (elBoard) {
           elBoard.style.visibility = 'visible';
         }
+        // Choose a random player index to start and immediately
+        // increment to setup the turn state properly
         this.playerTurnIndex = window.random.integer(
           0,
           this.players.length - 1,
         );
+        // Initialize the player turn state
         this.incrementPlayerTurn();
+        // Set the first turn phase
+        this.setTurnPhase(turn_phase.PickCards);
         break;
       default:
         if (elBoard) {
