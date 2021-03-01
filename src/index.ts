@@ -141,10 +141,19 @@ function onData(d: { fromClient: string; payload: any }) {
 
       break;
     case MESSAGE_TYPES.SPELL:
-      // Set caster based on which client sent it
-      spell.caster = caster;
-      // TODO permissions based on turn_phase
-      game.cast(spell);
+      if (
+        // If your turn and you are casting, allow
+        (game.yourTurn && spell.caster === window.clientId) ||
+        // or if not your turn and opponent is casting, allow
+        (!game.yourTurn && spell.caster !== window.clientId)
+      ) {
+        // Set caster based on which client sent it
+        spell.caster = caster;
+        // TODO permissions based on turn_phase
+        game.cast(spell);
+      } else {
+        console.log('Someone is trying to cast out of turn');
+      }
       break;
     case MESSAGE_TYPES.SKIP_TURN:
       game.incrementPlayerTurn();
