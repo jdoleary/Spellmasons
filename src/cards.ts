@@ -1,3 +1,4 @@
+import { setSelectedCard } from './SpellPool';
 const elCardHolder = document.getElementById('card-holder');
 // Cards are used for chanelling unique spells each turn.
 // Both players are presented with a number of cards and they take turns deciding which to
@@ -19,8 +20,13 @@ function cardDOM(content: string) {
   element.classList.add('card');
   element.innerText = content;
   element.addEventListener('click', () => {
-    console.log('chose card with ', content);
-    element.classList.add('chosen');
+    setSelectedCard(content, element);
+    // Remove selected from all cards
+    document
+      .querySelectorAll('.card')
+      .forEach((el) => el.classList.remove('selected'));
+    // Add selected to clicked card
+    element.classList.add('selected');
   });
   elCardHolder.appendChild(element);
   return element;

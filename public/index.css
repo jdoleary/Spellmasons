@@ -78,13 +78,21 @@ body {
   margin: 8px;
 }
 #spell-pool .spell {
+  position: relative;
   border-radius: 32px;
   width: 64px;
   height: 64px;
   background-color: white;
+  /* Show text in bubble */
+  text-align: center;
+  line-height: 64px;
+  font-size: large;
 }
 #spell-pool .spell img {
   visibility: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 #spell-pool.adding .spell img {
   visibility: visible;
@@ -102,14 +110,18 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
+  pointer-events: none;
 }
-.card {
-  border: 4px solid black;
-}
-.card.chosen {
+#card-holder .card.selected {
   border: 4px solid gold;
 }
-.card {
+#card-holder .card.disabled {
+  pointer-events: none;
+  opacity: 0.7;
+  filter: grayscale(100%);
+}
+#card-holder .card {
+  border: 4px solid black;
   padding: 8px;
   margin: 8px;
   width: 225px;
@@ -119,6 +131,7 @@ body {
   display: flex;
   justify-content: space-evenly;
   flex-direction: column;
+  pointer-events: all;
 }
 .card-thumb {
   background-color: white;

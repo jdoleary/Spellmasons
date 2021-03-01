@@ -5,6 +5,9 @@ import * as Unit from './Unit';
 import Image from './Image';
 import * as UI from './ui/UserInterface';
 import floatingText from './FloatingText';
+import * as SpellPool from './SpellPool';
+
+SpellPool.create();
 
 export enum game_state {
   Lobby,
