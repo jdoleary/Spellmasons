@@ -4,32 +4,6 @@ import * as Player from '../Player';
 import * as Unit from '../Unit';
 
 describe('Game', () => {
-  describe('queueSpell()', () => {
-    it('should queue spell if caster has enough mana', () => {
-      const p = Player.create('1', -1);
-      const player_start_mana = p.mana;
-      const s = {
-        damage: 1,
-        caster: p,
-      };
-      const g = new Game();
-      g.queueSpell(s);
-      expect(p.mana).toEqual(player_start_mana - s.damage);
-      expect(g.spells).toContain(s);
-    });
-    it('should NOT queue spell if caster has insufficient mana', () => {
-      const p = Player.create('1', -1);
-      const player_start_mana = p.mana;
-      const s = {
-        caster: p,
-        damage: 1000,
-      };
-      const g = new Game();
-      g.queueSpell(s);
-      expect(p.mana).toEqual(player_start_mana);
-      expect(g.spells).not.toContain(s);
-    });
-  });
   it('should transition to state "Game Over" when a nextTurn() occurs while a player\'s heart is destroyed', () => {
     const g = new Game();
     const p = Player.create('1', -1);
@@ -50,9 +24,6 @@ describe('Game', () => {
       g = new Game();
       p = Player.create('1', -1);
       g.players.push(p);
-      // Simulate mana loss (this is handled mid-turn when spells are cast)
-      // in order to assert that mana is reset to mana_max
-      p.mana = p.mana_max - 1;
       u = Unit.create(0, 0, 0, 1);
       u2 = Unit.create(1, 0, 0, -1);
       u_frozen = Unit.create(7, 7, 0, 0);
@@ -97,9 +68,6 @@ describe('Game', () => {
     });
     it('should unfreeze any frozen units', () => {
       expect(u_frozen.frozen).toEqual(false);
-    });
-    it("should restore players' mana to mana_max", () => {
-      expect(p.mana).toEqual(p.mana_max);
     });
   });
   describe('getUnitsWithinDistanceOfPoint', () => {
