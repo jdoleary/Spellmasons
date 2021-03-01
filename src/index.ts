@@ -25,7 +25,7 @@ const wsUri = 'ws://localhost:8000';
 // const wsUri = 'wss://websocket-pie-e4elx.ondigitalocean.app/';
 let pie: PieClient;
 let game: Game = new Game();
-let maxClients = 1;
+let maxClients = 2;
 function connect(_room_info = {}) {
   const room_info = Object.assign(_room_info, {
     app: 'Golems',
@@ -128,7 +128,6 @@ function onData(d: { fromClient: string; payload: any }) {
       }
       game.spells = spells;
       game.units = units;
-      game.turn_finished = loadedGameState.turn_finished;
       game.setGameState(game_state.Playing);
       break;
     case MESSAGE_TYPES.CHOOSE_CARD:
@@ -144,33 +143,20 @@ function onData(d: { fromClient: string; payload: any }) {
       game.queueSpell(spell);
       break;
     case MESSAGE_TYPES.END_TURN:
-      game.turn_finished[fromClient] = true;
-      if (fromClient == window.clientId) {
-        UI.turnEnded(true);
-      } else {
-        UI.turnEndedOpponent();
-      }
-      let all_players_ended_turn = true;
-      for (let p of game.players) {
-        if (!game.turn_finished[p.clientId]) {
-          all_players_ended_turn = false;
-          break;
-        }
-      }
-      if (all_players_ended_turn) {
-        game.turn_finished = {};
-        UI.turnEnded(false);
-        game.nextTurn().then(() => {
-          // Animations complete
-          const queue = [...onDataQueue];
-          // Clear the queue
-          onDataQueue = [];
-          // Allow new messages
-          for (let d of queue) {
-            onData(d);
-          }
-        });
-      }
+      game.incrementPlayerTurn();
+      // TODO
+      // if (all_players_ended_turn) {
+      // game.nextTurn().then(() => {
+      // Animations complete
+      // const queue = [...onDataQueue];
+      // Clear the queue
+      // onDataQueue = [];
+      // Allow new messages
+      // for (let d of queue) {
+      // onData(d);
+      // }
+      // });
+      // }
       break;
   }
 }

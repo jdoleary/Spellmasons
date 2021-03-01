@@ -35,8 +35,6 @@ export default class Game {
   players: IPlayer[] = [];
   units: Unit.IUnit[] = [];
   spells: Spell[] = [];
-  // Keeps track of which players have ended their turn
-  turn_finished: { [clientId: string]: boolean } = {};
   // The index of which player's turn it is
   playerTurnIndex: number;
   yourTurn: boolean;
