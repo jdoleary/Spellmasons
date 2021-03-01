@@ -154,6 +154,10 @@ body:not(.your-turn) #card-holder .card {
 .card-description {
   background-color: green;
   flex-grow: 3;
+  padding: 8px;
+  color: white;
+  text-align: center;
+  font-weight: bold;
 }
 
 #player-turn-indicator-holder {

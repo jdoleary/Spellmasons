@@ -3,8 +3,6 @@ import type { IPlayer } from './Player';
 import * as config from './config';
 import * as Unit from './Unit';
 import Image from './Image';
-import * as UI from './ui/UserInterface';
-import floatingText from './FloatingText';
 import * as SpellPool from './SpellPool';
 import { generateCards } from './cards';
 
@@ -107,7 +105,7 @@ export default class Game {
         // Initialize the player turn state
         this.incrementPlayerTurn();
         // Set the first turn phase
-        this.setTurnPhase(turn_phase.NPC);
+        this.setTurnPhase(turn_phase.PickCards);
         break;
       default:
         if (elBoard) {

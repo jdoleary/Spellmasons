@@ -22,7 +22,13 @@ function cardDOM(content: string, index: number) {
   const element = document.createElement('div');
   element.classList.add('card');
   element.id = 'card-' + index;
-  element.innerText = content;
+  const thumb = document.createElement('div');
+  thumb.classList.add('card-thumb');
+  element.appendChild(thumb);
+  const desc = document.createElement('div');
+  desc.classList.add('card-description');
+  desc.innerText = content;
+  element.appendChild(desc);
   element.addEventListener('click', () => {
     if (window.game.yourTurn) {
       if (element.classList.contains('disabled')) {
