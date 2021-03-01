@@ -1,11 +1,8 @@
-import { Spell, effect, getImage } from './Spell';
+import { Spell, effect } from './Spell';
 import type { IPlayer } from './Player';
 import * as config from './config';
 import * as Unit from './Unit';
-import * as SpellPool from './SpellPool';
 import { generateCards } from './cards';
-
-SpellPool.create();
 
 export enum game_state {
   Lobby,
@@ -190,6 +187,7 @@ export default class Game {
       }
       window.animationManager.endGroup('spell-effects');
     } else {
+      // Cast on empty cell (this should be supported for spell modifiers like AOE)
       window.animationManager.startGroup('spell-effects');
       effect(spell, { game: this });
       window.animationManager.endGroup('spell-effects');

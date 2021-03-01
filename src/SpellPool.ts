@@ -1,23 +1,20 @@
 import { MESSAGE_TYPES } from './MessageTypes';
 const elPool = document.getElementById('spell-pool');
-let spells = [[], [], []];
-let selectedSpellIndex;
+const spells: string[][] = [[], [], []];
+export let selectedSpell;
 export function selectSpell(index?: number) {
-  selectedSpellIndex = index;
   // Deselect selected spell visually
   document.querySelector('.spell.selected')?.classList.remove('selected');
 
-  const spell = spells[selectedSpellIndex];
-  if (spell) {
+  selectedSpell = spells[index];
+  if (selectedSpell) {
     // Update the selected spell DOM element
-    document
-      .getElementById('spell-' + selectedSpellIndex)
-      .classList.add('selected');
+    document.getElementById('spell-' + index)?.classList.add('selected');
   }
   // update tooltip with current state of clicked spell
-  window.setTooltip(JSON.stringify(spell || '', null, 2));
+  window.setTooltip(JSON.stringify(selectedSpell || '', null, 2));
 }
-export function create(): string[][] {
+export function create() {
   const elPoolSpells = document.querySelectorAll('#spell-pool .spell');
   for (let i = 0; i < elPoolSpells.length; i++) {
     const el: HTMLDivElement = document.querySelector(
@@ -48,7 +45,6 @@ export function create(): string[][] {
       selectSpell(i);
     });
   }
-  return spells;
 }
 let selectedCard: {
   content: string;
