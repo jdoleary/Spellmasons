@@ -31,7 +31,6 @@ export default class Image {
     directionY: number,
     imageName: string,
   ) {
-    this.tooltip = this.tooltip.bind(this);
     if (imageName) {
       // Save image path in unit so it's accessible when loading gamestate
       this.imageName = imageName;
