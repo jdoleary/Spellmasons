@@ -7,7 +7,7 @@ export function generateCards(numberOfCards: number) {
   const cards = [];
   for (let i = 0; i < numberOfCards; i++) {
     const card = generateCard();
-    const el = cardDOM(card);
+    const el = cardDOM(card, i);
     cards.push(el);
   }
 }
@@ -15,9 +15,10 @@ const modifiers = ['dmg', 'heal', 'chain', 'freeze', 'aoe'];
 function generateCard() {
   return modifiers[window.random.integer(0, modifiers.length - 1)];
 }
-function cardDOM(content: string) {
+function cardDOM(content: string, index: number) {
   const element = document.createElement('div');
   element.classList.add('card');
+  element.id = 'card-' + index;
   element.innerText = content;
   element.addEventListener('click', () => {
     setSelectedCard(content, element);

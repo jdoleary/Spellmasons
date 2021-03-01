@@ -1,3 +1,4 @@
+import { MESSAGE_TYPES } from './MessageTypes';
 export interface ISpellPool {
   spells: string[][];
 }
@@ -20,7 +21,11 @@ export function create(): ISpellPool {
       elPool.classList.remove('adding');
       // Disable the card:
       selectedCard.element.classList.remove('selected');
-      selectedCard.element.classList.add('disabled');
+      // Send the selection to the other player
+      window.pie.sendData({
+        type: MESSAGE_TYPES.CHOOSE_CARD,
+        id: selectedCard.element.id,
+      });
     });
   }
   return self;
@@ -29,6 +34,9 @@ let selectedCard: {
   content: string;
   element: HTMLDivElement;
 };
+export function cardChosen(elementId: string) {
+  document.getElementById(elementId)?.classList.add('disabled');
+}
 export function setSelectedCard(content: string, element: HTMLDivElement) {
   selectedCard = {
     content,

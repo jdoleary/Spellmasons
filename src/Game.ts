@@ -43,8 +43,8 @@ export default class Game {
     this.setGameState(game_state.Lobby);
     window.game = this;
   }
-  setPlayerTurn(playerIndex: number) {
-    this.playerTurnIndex = playerIndex;
+  incrementPlayerTurn() {
+    this.playerTurnIndex = (this.playerTurnIndex + 1) % this.players.length;
     if (this.players[this.playerTurnIndex].clientId === window.clientId) {
       elPlayerTurnIndicator.innerText = 'Your turn';
     } else {
@@ -60,7 +60,11 @@ export default class Game {
         if (elBoard) {
           elBoard.style.visibility = 'visible';
         }
-        this.setPlayerTurn(window.random.integer(0, this.players.length - 1));
+        this.playerTurnIndex = window.random.integer(
+          0,
+          this.players.length - 1,
+        );
+        this.incrementPlayerTurn();
         break;
       default:
         if (elBoard) {

@@ -10,6 +10,7 @@ import { MESSAGE_TYPES } from './MessageTypes';
 import type { Random } from 'random';
 import makeSeededRandom from './rand';
 import { generateCards } from './cards';
+import { cardChosen } from './SpellPool';
 
 // Temporary! Call gen(5) to generate cards to choose
 // @ts-ignore
@@ -129,6 +130,13 @@ function onData(d: { fromClient: string; payload: any }) {
       game.units = units;
       game.turn_finished = loadedGameState.turn_finished;
       game.setGameState(game_state.Playing);
+      break;
+    case MESSAGE_TYPES.CHOOSE_CARD:
+      console.log('choose', payload.id);
+      cardChosen(payload.id);
+      // go to next player for picking
+      game.incrementPlayerTurn();
+
       break;
     case MESSAGE_TYPES.SPELL:
       // Set caster based on which client sent it
