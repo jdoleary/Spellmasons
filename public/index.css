@@ -36,6 +36,13 @@ body {
 #board-contents {
   user-select: none;
 }
+#board-highlights {
+  position: absolute;
+  pointer-events: none;
+  display: flex;
+  flex-wrap: wrap;
+  z-index: 1;
+}
 #grid-background {
   position: absolute;
 }
