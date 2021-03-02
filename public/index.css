@@ -202,8 +202,16 @@ body.your-turn #player-turn-indicator-holder {
 .invert .health {
   transform: rotate(180deg);
 }
+.invert #health-theirs {
+  top: inherit;
+  bottom: -20px;
+}
 #health-theirs {
   top: -20px;
+}
+.invert #health-mine {
+  top: -20px;
+  bottom: inherit;
 }
 #health-mine {
   bottom: -20px;
