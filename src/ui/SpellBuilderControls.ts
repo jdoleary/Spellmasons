@@ -19,6 +19,16 @@ function getCell({ clientX, clientY }) {
   return { cell_x, cell_y };
 }
 const elHighlights = [];
+function clearHighlights() {
+  for (let y = 0; y < elHighlights.length; y++) {
+    for (let h of elHighlights[y]) {
+      window.animationManager.setTransform(h.img, {
+        ...h,
+        opacity: 0,
+      });
+    }
+  }
+}
 export default function setupSpellBuilderUI() {
   // Initialize spell pool
   SpellPool.create();
@@ -55,15 +65,8 @@ export default function setupSpellBuilderUI() {
     });
     // Find the targets of the spell
     const targets = window.game.getTargetsOfSpell(spell);
-    // Clear the highlights
-    for (let y = 0; y < elHighlights.length; y++) {
-      for (let h of elHighlights[y]) {
-        window.animationManager.setTransform(h.img, {
-          ...h,
-          opacity: 0,
-        });
-      }
-    }
+    // Clear the highlights in preparation for showing the current ones
+    clearHighlights();
     // Show highlights corresponding to targets
     for (let t of targets) {
       const elHighlight = elHighlights[t.y]?.[t.x];
@@ -74,6 +77,9 @@ export default function setupSpellBuilderUI() {
         });
       }
     }
+  });
+  elBoard.addEventListener('mouseleave', (e) => {
+    clearHighlights();
   });
 
   // Add board click handling

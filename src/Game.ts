@@ -120,7 +120,17 @@ export default class Game {
   }
   setTurnPhase(p: turn_phase) {
     this.turn_phase = p;
+
+    // Remove all phase classes from body
+    for (let phaseClass of document.body.classList.values()) {
+      if (phaseClass.includes('phase-')) {
+        document.body.classList.remove(phaseClass);
+      }
+    }
+
     const phase = turn_phase[this.turn_phase];
+    // Add current phase class to body
+    document.body.classList.add('phase-' + phase.toLowerCase());
     switch (phase) {
       case 'PickCards':
         generateCards(8);
