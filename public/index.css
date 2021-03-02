@@ -169,20 +169,19 @@ body:not(.your-turn) #card-holder .card {
 
 #player-turn-indicator-holder {
   position: fixed;
-  bottom: 8px;
+  top: 0;
   left: 0;
   right: 0;
   text-align: center;
-}
-#player-turn-indicator {
-  display: inline-block;
-  margin: 0 auto;
+  display: flex;
+  justify-content: center;
   pointer-events: none;
   background-color: grey;
-  padding: 8px;
-  border-radius: 10px 10px;
-  border: 1px solid black;
 }
-body.your-turn #player-turn-indicator {
+#player-turn-indicator-holder div {
+  padding: 8px;
+}
+
+body.your-turn #player-turn-indicator-holder {
   background-color: gold;
 }
