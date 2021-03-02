@@ -1,6 +1,8 @@
 // const elPool = document.getElementById('spell-pool');
 const spells: string[][] = [[], [], []];
-export let selectedSpell;
+export function getSelectedSpell() {
+  return spells[selectedSpellIndex];
+}
 export let selectedSpellIndex;
 export function clearSpellIndex(index: number) {
   spells[index] = [];
@@ -17,19 +19,22 @@ export function addModifierToSpell(modifier: string) {
   // Add the modifier to the spell
   spells[selectedSpellIndex].push(modifier);
   updateSpellLabel(selectedSpellIndex);
+  updateSelectedSpellUI();
+}
+export function updateSelectedSpellUI() {
+  // update tooltip with current state of clicked spell
+  window.setTooltip(JSON.stringify(getSelectedSpell() || '', null, 2));
 }
 export function selectSpell(index?: number) {
   // Deselect selected spell visually
   document.querySelector('.spell.selected')?.classList.remove('selected');
 
-  selectedSpell = spells[index];
   selectedSpellIndex = index;
-  if (selectedSpell) {
+  if (selectedSpellIndex !== undefined) {
     // Update the selected spell DOM element
     document.getElementById('spell-' + index)?.classList.add('selected');
+    updateSelectedSpellUI();
   }
-  // update tooltip with current state of clicked spell
-  window.setTooltip(JSON.stringify(selectedSpell || '', null, 2));
 }
 export function create() {
   const elPoolSpells = document.querySelectorAll('#spell-pool .spell');

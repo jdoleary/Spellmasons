@@ -3,7 +3,7 @@ import type { IPlayer } from './Player';
 import * as config from './config';
 import * as Unit from './Unit';
 import { generateCards } from './cards';
-import { clearSpellIndex } from './SpellPool';
+import { clearSpellIndex, updateSelectedSpellUI } from './SpellPool';
 
 export enum game_state {
   Lobby,
@@ -193,6 +193,7 @@ export default class Game {
     // If you are casting the spell, clear the spell in the spell pool that was just cast
     if (caster.clientId === window.clientId) {
       clearSpellIndex(index);
+      updateSelectedSpellUI();
     }
     const targets = this.getUnitsAt(x, y);
     window.animationManager.startGroup('spell-effects');

@@ -19,11 +19,11 @@ export default function setupSpellBuilderUI() {
       cell_x = Math.abs((cell_x + 1 - BOARD_WIDTH) % BOARD_WIDTH);
       cell_y = Math.abs((cell_y + 1 - BOARD_HEIGHT) % BOARD_HEIGHT);
     }
-    console.log('Click in cell:', cell_x, cell_y, SpellPool.selectedSpell);
-    if (window.game.yourTurn && SpellPool.selectedSpell) {
+    console.log('Click in cell:', cell_x, cell_y, SpellPool.getSelectedSpell());
+    if (window.game.yourTurn && SpellPool.getSelectedSpell()) {
       window.pie.sendData({
         type: MESSAGE_TYPES.SPELL,
-        spell: createSpellFromModifiers(SpellPool.selectedSpell, {
+        spell: createSpellFromModifiers(SpellPool.getSelectedSpell(), {
           x: cell_x,
           y: cell_y,
           index: SpellPool.selectedSpellIndex,
