@@ -100,7 +100,9 @@ export default class Game {
           }
         }
 
-        window.animationManager.startAnimate();
+        window.animationManager.startAnimate().then(() => {
+          this.setTurnPhase(turn_phase.Cast);
+        });
         break;
       default:
         break;
