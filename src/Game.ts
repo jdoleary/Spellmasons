@@ -204,22 +204,22 @@ export default class Game {
   getTouchingUnitsRecursive(
     x: number,
     y: number,
-    distance: number,
     ignore: Unit.IUnit[] = [],
   ): Unit.IUnit[] {
+    const touchingDistance = 1;
     let touching = this.units.filter((u) => {
       return (
-        u.x <= x + distance &&
-        u.x >= x - distance &&
-        u.y <= y + distance &&
-        u.y >= y - distance &&
+        u.x <= x + touchingDistance &&
+        u.x >= x - touchingDistance &&
+        u.y <= y + touchingDistance &&
+        u.y >= y - touchingDistance &&
         !ignore.includes(u)
       );
     });
     ignore = ignore.concat(touching);
     for (let u of touching) {
       touching = touching.concat(
-        this.getTouchingUnitsRecursive(u.x, u.y, distance, ignore),
+        this.getTouchingUnitsRecursive(u.x, u.y, ignore),
       );
     }
     return touching;
