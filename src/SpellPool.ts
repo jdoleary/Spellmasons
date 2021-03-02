@@ -37,6 +37,8 @@ export function create() {
     const el: HTMLDivElement = document.querySelector(
       '#spell-pool #spell-' + i,
     );
+    // Start with the first spell selected
+    selectSpell(0);
 
     // Click on spell
     el.addEventListener('click', (e) => {

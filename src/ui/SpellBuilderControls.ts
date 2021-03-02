@@ -5,8 +5,9 @@ import * as SpellPool from '../SpellPool';
 import { createSpellFromModifiers } from '../Spell';
 
 const elBoard = document.getElementById('board');
-SpellPool.create();
 export default function setupSpellBuilderUI() {
+  // Initialize spell pool
+  SpellPool.create();
   // Add board click handling
   elBoard.addEventListener('click', (e) => {
     const rect = elBoard.getBoundingClientRect();
