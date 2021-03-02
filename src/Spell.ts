@@ -99,7 +99,7 @@ export function effect(spell: Spell, args: EffectArgs) {
       const withinRadius = game.getUnitsWithinDistanceOfPoint(
         spell.x,
         spell.y,
-        1,
+        spell.aoe_radius,
       );
       for (let unit_in_radius of withinRadius) {
         // If not self (because self has already been cast on)
