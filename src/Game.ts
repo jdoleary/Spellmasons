@@ -23,6 +23,10 @@ window.setDebug = function setDebug(json) {
     debugEl.innerHTML = JSON.stringify(Object.assign(debugInfo, json), null, 2);
   }
 };
+interface Coords {
+  x: number;
+  y: number;
+}
 const elPlayerTurnIndicator = document.getElementById('player-turn-indicator');
 export default class Game {
   state: game_state;
@@ -135,6 +139,54 @@ export default class Game {
     }
     window.setDebug({ state });
   }
+  getTargetsOfSpell(spell: Spell): Coords[] {
+    let units = [];
+    if (spell.aoe_radius) {
+      const withinRadius = this.getUnitsWithinDistanceOfPoint(
+        spell.x,
+        spell.y,
+        spell.aoe_radius,
+      );
+      units = units.concat(withinRadius);
+    }
+    if (spell.chain) {
+      if (units.length === 0) {
+        const origin_units = this.getUnitsAt(spell.x, spell.y);
+        // Only chain if the spell is cast directly on a unit
+        // otherwise the chain will reach too far (1 distance away from empty cell)
+        if (origin_units.length) {
+          // Find all units touching the spell origin
+          const chained_units = this.getTouchingUnitsRecursive(
+            spell.x,
+            spell.y,
+          );
+          units = units.concat(chained_units);
+        }
+      } else {
+        // Find all units touching targeted units
+        // This supports AOE + chain combo for example where all units within the AOE blast will
+        // chain to units touching them
+        for (let alreadyTargetedUnit of units) {
+          const chained_units = this.getTouchingUnitsRecursive(
+            alreadyTargetedUnit.x,
+            alreadyTargetedUnit.y,
+            units,
+          );
+          units = units.concat(chained_units);
+        }
+      }
+    }
+    let coords = units.map((u) => ({ x: u.x, y: u.y }));
+    if (coords.length == 0) {
+      coords = [
+        {
+          x: spell.x,
+          y: spell.y,
+        },
+      ];
+    }
+    return coords;
+  }
   getUnitsWithinDistanceOfPoint(
     x: number,
     y: number,
@@ -196,16 +248,21 @@ export default class Game {
       clearSpellIndex(index);
       updateSelectedSpellUI();
     }
-    const targets = this.getUnitsAt(x, y);
+    // Get all units targeted by spell
+    const targetCoords = this.getTargetsOfSpell(spell);
+    // Convert targets to list of units
+    let unitsAtTargets = [];
+    for (let t of targetCoords) {
+      const { x, y } = t;
+      unitsAtTargets = unitsAtTargets.concat(this.getUnitsAt(x, y));
+    }
+
     window.animationManager.startGroup('spell-effects');
-    if (targets.length) {
-      // If there are multiple targets, cast on each of them
-      for (let unit of targets) {
-        effect(spell, { unit, game: this });
+    if (unitsAtTargets.length) {
+      // Cast on each unit targeted
+      for (let unit of unitsAtTargets) {
+        effect(spell, { unit });
       }
-    } else {
-      // Cast on empty cell (this should be supported for spell modifiers like AOE)
-      effect(spell, { game: this });
     }
     window.animationManager.endGroup('spell-effects');
   }

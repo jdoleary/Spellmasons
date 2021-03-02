@@ -75,10 +75,9 @@ export interface EffectArgs {
   unit?: Unit.IUnit;
   // Used to prevent infinite loops when recuring via chain for example
   ignore?: Unit.IUnit[];
-  game?: Game;
 }
 export function effect(spell: Spell, args: EffectArgs) {
-  const { unit, game, ignore = [] } = args;
+  const { unit, ignore = [] } = args;
   if (unit && ignore.includes(unit)) {
     return;
   }
@@ -94,54 +93,9 @@ export function effect(spell: Spell, args: EffectArgs) {
   if (unit && spell.freeze) {
     unit.frozen = true;
   }
-  if (game) {
-    if (spell.aoe_radius) {
-      const withinRadius = game.getUnitsWithinDistanceOfPoint(
-        spell.x,
-        spell.y,
-        spell.aoe_radius,
-      );
-      for (let unit_in_radius of withinRadius) {
-        // If not self (because self has already been cast on)
-        if (unit_in_radius !== unit) {
-          // Cast on units in radius but turn off aoe_radius
-          // so it doesn't recur
-          effect(
-            {
-              ...spell,
-              x: unit_in_radius.x,
-              y: unit_in_radius.y,
-              aoe_radius: 0,
-            },
-            {
-              ...args,
-              unit: unit_in_radius,
-            },
-          );
-        }
-      }
-    }
-    if (unit && spell.chain) {
-      const chained_units = game.getTouchingUnitsRecursive(unit.x, unit.y, 1);
-      for (let chained_unit of chained_units) {
-        if (chained_unit === unit) {
-          // Skip current unit who has already taken damage
-          continue;
-        }
-        // Cast on each chained unit without chaining again
-        effect(
-          { ...spell, chain: false },
-          {
-            ...args,
-            unit: chained_unit,
-          },
-        );
-      }
-    }
-    // Show an image when cast occurs
-    const castImage = new Image(spell.x, spell.y, 0, 0, getImage(spell));
-    castImage.scale(1.5);
-    castImage.updateFilter(0);
-    castImage.remove();
-  }
+  // Show an image when cast occurs
+  const castImage = new Image(spell.x, spell.y, 0, 0, getImage(spell));
+  castImage.scale(1.5);
+  castImage.updateFilter(0);
+  castImage.remove();
 }
