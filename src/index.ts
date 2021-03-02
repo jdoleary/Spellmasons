@@ -153,6 +153,9 @@ function onData(d: { fromClient: string; payload: any }) {
           // Allow the next player to cast
           game.incrementPlayerTurn();
           if (numberOfPlayersWhoHaveCast >= game.players.length) {
+            // Ensure the other player picks first
+            // (This alternates which player picks first)
+            game.incrementPlayerTurn();
             // Reset number of players who have cast
             numberOfPlayersWhoHaveCast = 0;
             // Move onto next phase
