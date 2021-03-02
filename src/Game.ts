@@ -2,8 +2,13 @@ import { Spell, effect } from './Spell';
 import type { IPlayer } from './Player';
 import * as config from './config';
 import * as Unit from './Unit';
-import { generateCards } from './cards';
-import { clearSpellIndex, updateSelectedSpellUI } from './SpellPool';
+import { generateCards, clearCards } from './cards';
+import {
+  clearSpellIndex,
+  hasAtLeastOneCastableSpell,
+  updateSelectedSpellUI,
+} from './SpellPool';
+import { MESSAGE_TYPES } from './MessageTypes';
 
 export enum game_state {
   Lobby,
@@ -28,6 +33,7 @@ interface Coords {
   y: number;
 }
 const elPlayerTurnIndicator = document.getElementById('player-turn-indicator');
+const elTurnTimeRemaining = document.getElementById('turn-time-remaining');
 export default class Game {
   state: game_state;
   turn_phase: turn_phase;
@@ -37,21 +43,79 @@ export default class Game {
   units: Unit.IUnit[] = [];
   // The index of which player's turn it is
   playerTurnIndex: number;
+  secondsLeftForTurn: number;
   yourTurn: boolean;
+  // A set of clientIds who have ended their turn
+  // Being a Set prevents a user from ending their turn more than once
+  endedTurn = new Set<string>();
   constructor() {
     this.setGameState(game_state.Lobby);
     window.game = this;
+    setInterval(() => {
+      if (this.turn_phase === turn_phase.Cast) {
+        // Limit turn duration during Cast phase
+        this.secondsLeftForTurn--;
+        elTurnTimeRemaining.innerText = `0:${
+          this.secondsLeftForTurn < 10
+            ? '0' + this.secondsLeftForTurn
+            : this.secondsLeftForTurn
+        }`;
+        // Skip your turn if you run out of time
+        if (this.yourTurn && this.secondsLeftForTurn <= 0) {
+          console.log('Out of time, turn ended');
+          this.endMyTurn();
+        }
+      } else {
+        elTurnTimeRemaining.innerText = '';
+      }
+    }, 1000);
+  }
+  goToNextPhaseIfAppropriate() {
+    if (this.turn_phase === turn_phase.PickCards) {
+      const chosenCards = document.querySelectorAll('.card.disabled').length;
+      // Once six cards have been chosen
+      if (chosenCards === config.CHOSEN_CARDS_TILL_NEXT_PHASE) {
+        // Advance the game phase
+        this.setTurnPhase(turn_phase.NPC);
+        // Remove the remaining unselected cards
+        clearCards();
+      }
+    } else if (this.turn_phase === turn_phase.Cast) {
+      if (this.endedTurn.size >= this.players.length) {
+        // Reset the endedTurn set so both players can take turns again next Cast phase
+        this.endedTurn.clear();
+        // Ensure the other player picks first
+        // (This alternates which player picks first)
+        this.incrementPlayerTurn();
+        // Move onto next phase
+        this.setTurnPhase(turn_phase.PickCards);
+      }
+    }
   }
   incrementPlayerTurn() {
     this.playerTurnIndex = (this.playerTurnIndex + 1) % this.players.length;
+    this.secondsLeftForTurn = config.MAX_SECONDS_PER_TURN;
     if (this.players[this.playerTurnIndex].clientId === window.clientId) {
       elPlayerTurnIndicator.innerText = 'Your turn';
       document.body.classList.add('your-turn');
       this.yourTurn = true;
+      if (this.turn_phase === turn_phase.Cast) {
+        if (!hasAtLeastOneCastableSpell()) {
+          this.endMyTurn();
+        }
+      }
     } else {
       elPlayerTurnIndicator.innerText = 'Opponents turn';
       document.body.classList.remove('your-turn');
       this.yourTurn = false;
+    }
+    this.goToNextPhaseIfAppropriate();
+  }
+  endMyTurn() {
+    // Turns can only be manually ended during the cast phase
+    // player turn is incremented automatically during the PickCard phase
+    if (this.turn_phase === turn_phase.Cast) {
+      window.pie.sendData({ type: MESSAGE_TYPES.END_TURN });
     }
   }
   setTurnPhase(p: turn_phase) {

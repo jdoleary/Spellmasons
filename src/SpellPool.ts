@@ -3,6 +3,11 @@ const prespells: string[][] = [[], [], []];
 export function getSelectedPreSpell() {
   return prespells[selectedPreSpellIndex];
 }
+// Returns false if all spells are empty
+// Returns true if player has at least one castable spell
+export function hasAtLeastOneCastableSpell() {
+  return !!prespells.filter((ps) => ps.length).length;
+}
 export let selectedPreSpellIndex;
 export function clearSpellIndex(index: number) {
   prespells[index] = [];

@@ -3,14 +3,13 @@ import Game, { game_state, turn_phase } from './Game';
 import * as Player from './Player';
 import Image from './Image';
 import AnimationManager from './AnimationManager';
-import { BOARD_HEIGHT, CHOSEN_CARDS_TILL_NEXT_PHASE } from './config';
+import { BOARD_HEIGHT } from './config';
 import type { Spell } from './Spell';
 import * as UI from './ui/UserInterface';
 import { MESSAGE_TYPES } from './MessageTypes';
 import type { Random } from 'random';
 import makeSeededRandom from './rand';
 import { cardChosen } from './SpellPool';
-import { clearCards } from './cards';
 
 window.animationManager = new AnimationManager();
 UI.setup();
@@ -22,7 +21,7 @@ const wsUri = 'ws://localhost:8000';
 // const wsUri = 'wss://websocket-pie-e4elx.ondigitalocean.app/';
 let pie: PieClient;
 let game: Game = new Game();
-let maxClients = 1;
+let maxClients = 2;
 function connect(_room_info = {}) {
   const room_info = Object.assign(_room_info, {
     app: 'Golems',
@@ -74,8 +73,6 @@ function cleanUpAllImages() {
   });
 }
 let onDataQueue = [];
-// Count the players who have cast so the game knows when to move onto the next phase
-let numberOfPlayersWhoHaveCast = 0;
 function onData(d: { fromClient: string; payload: any }) {
   // Keep data messages in a queue until they are ready to be processed
   if (window.animationManager.animating) {
@@ -123,14 +120,6 @@ function onData(d: { fromClient: string; payload: any }) {
       break;
     case MESSAGE_TYPES.CHOOSE_CARD:
       cardChosen(payload.id);
-      const chosenCards = document.querySelectorAll('.card.disabled').length;
-      // Once six cards have been chosen
-      if (chosenCards === CHOSEN_CARDS_TILL_NEXT_PHASE) {
-        // Advance the game phase
-        game.setTurnPhase(turn_phase.NPC);
-        // Remove the remaining unselected cards
-        clearCards();
-      }
       // go to next player for picking
       game.incrementPlayerTurn();
 
@@ -148,27 +137,17 @@ function onData(d: { fromClient: string; payload: any }) {
         (!game.yourTurn && spell.caster.clientId !== window.clientId)
       ) {
         game.cast(spell);
-        numberOfPlayersWhoHaveCast++;
         // Animate the spells
         window.animationManager.startAnimate().then(() => {
           // Allow the next player to cast
           game.incrementPlayerTurn();
-          if (numberOfPlayersWhoHaveCast >= game.players.length) {
-            // Ensure the other player picks first
-            // (This alternates which player picks first)
-            game.incrementPlayerTurn();
-            // Reset number of players who have cast
-            numberOfPlayersWhoHaveCast = 0;
-            // Move onto next phase
-            game.setTurnPhase(turn_phase.PickCards);
-          }
         });
       } else {
         console.log('Someone is trying to cast out of turn');
       }
       break;
-    case MESSAGE_TYPES.SKIP_TURN:
-      numberOfPlayersWhoHaveCast++;
+    case MESSAGE_TYPES.END_TURN:
+      game.endedTurn.add(caster.clientId);
       game.incrementPlayerTurn();
       // TODO
       // if (all_players_ended_turn) {
