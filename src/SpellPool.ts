@@ -1,36 +1,36 @@
 // const elPool = document.getElementById('spell-pool');
-const spells: string[][] = [[], [], []];
-export function getSelectedSpell() {
-  return spells[selectedSpellIndex];
+const prespells: string[][] = [[], [], []];
+export function getSelectedPreSpell() {
+  return prespells[selectedPreSpellIndex];
 }
-export let selectedSpellIndex;
+export let selectedPreSpellIndex;
 export function clearSpellIndex(index: number) {
-  spells[index] = [];
+  prespells[index] = [];
   updateSpellLabel(index);
 }
 function updateSpellLabel(index: number) {
   // Change the UI label of the spell in the pool to the number of modifiers in the spell
   const elSpell = document.getElementById('spell-' + index);
-  elSpell.querySelector('.spell-content').innerHTML = spells[
+  elSpell.querySelector('.spell-content').innerHTML = prespells[
     index
   ].length.toString();
 }
 export function addModifierToSpell(modifier: string) {
   // Add the modifier to the spell
-  spells[selectedSpellIndex].push(modifier);
-  updateSpellLabel(selectedSpellIndex);
+  prespells[selectedPreSpellIndex].push(modifier);
+  updateSpellLabel(selectedPreSpellIndex);
   updateSelectedSpellUI();
 }
 export function updateSelectedSpellUI() {
   // update tooltip with current state of clicked spell
-  window.setTooltip(JSON.stringify(getSelectedSpell() || '', null, 2));
+  window.setTooltip(JSON.stringify(getSelectedPreSpell() || '', null, 2));
 }
 export function selectSpell(index?: number) {
   // Deselect selected spell visually
   document.querySelector('.spell.selected')?.classList.remove('selected');
 
-  selectedSpellIndex = index;
-  if (selectedSpellIndex !== undefined) {
+  selectedPreSpellIndex = index;
+  if (selectedPreSpellIndex !== undefined) {
     // Update the selected spell DOM element
     document.getElementById('spell-' + index)?.classList.add('selected');
     updateSelectedSpellUI();

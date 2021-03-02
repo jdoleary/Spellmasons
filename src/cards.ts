@@ -1,5 +1,5 @@
 import { MESSAGE_TYPES } from './MessageTypes';
-import { addModifierToSpell, selectedSpellIndex } from './SpellPool';
+import { addModifierToSpell, selectedPreSpellIndex } from './SpellPool';
 const elCardHolder = document.getElementById('card-holder');
 export function clearCards() {
   elCardHolder.innerHTML = '';
@@ -91,7 +91,7 @@ function cardDOM(content: SpellMod, index: number) {
         // You cannot select disabled cards
         return;
       }
-      if (selectedSpellIndex !== undefined) {
+      if (selectedPreSpellIndex !== undefined) {
         // Add card contents to spell:
         addModifierToSpell(content.description);
         // Send the selection to the other player
