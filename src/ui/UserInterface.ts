@@ -1,5 +1,7 @@
 import { MESSAGE_TYPES } from '../MessageTypes';
+import type { IPlayer } from '../Player';
 import setupSpellBuilderUI from './SpellBuilderControls';
+import * as config from '../config';
 
 // const elControls = document.getElementById('controls');
 const elEndTurnBtn: HTMLButtonElement = document.getElementById(
@@ -8,7 +10,8 @@ const elEndTurnBtn: HTMLButtonElement = document.getElementById(
 const elResetGameButton: HTMLButtonElement = document.getElementById(
   'resetGame',
 ) as HTMLButtonElement;
-const elHealth = document.getElementById('health');
+const elHealthMine = document.getElementById('health-mine');
+const elHealthTheirs = document.getElementById('health-theirs');
 
 export function setup() {
   // Add keyboard shortcuts
@@ -42,6 +45,18 @@ function setTooltip(description: string) {
   elTooltip.innerText = description;
 }
 window.setTooltip = setTooltip;
-export function setHealth(health: number) {
-  elHealth.innerText = `${health} Health`;
+export function setHealth(player: IPlayer) {
+  let missingHearts = '';
+  let healthString = '';
+  for (let i = 0; i < config.PLAYER_HEART_HEALTH - player.heart_health; i++) {
+    missingHearts += '❤️';
+  }
+  for (let i = 0; i < player.heart_health; i++) {
+    healthString += '❤️';
+  }
+  if (player.clientId === window.clientId) {
+    elHealthMine.innerHTML = `<span class="health-missing">${missingHearts}</span><span>${healthString}</span>`;
+  } else {
+    elHealthTheirs.innerHTML = `<span class="health-missing">${missingHearts}</span><span>${healthString}</span>`;
+  }
 }

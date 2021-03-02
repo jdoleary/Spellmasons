@@ -99,14 +99,9 @@ export function move(unit: IUnit) {
     if (player) {
       // if player found, attack their heart
       player.heart_health -= unit.power;
-      if (player.clientId === window.clientId) {
-        UI.setHealth(player.heart_health);
-      }
+      UI.setHealth(player);
       // Attack player animation
       unit.image.attack(unit.x, unit.y, next_x, next_y);
-      // Animate player taking damage
-      player.heart?.anim_spin();
-      player.heart?.scale(player.heart_health / config.PLAYER_HEART_HEALTH);
     } else {
       // Otherwise, physically move
       unit.x = next_x;

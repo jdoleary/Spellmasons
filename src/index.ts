@@ -110,11 +110,7 @@ function onData(d: { fromClient: string; payload: any }) {
       });
       game = new Game();
       makeGame(clients);
-      for (let i = 0; i < players.length; i++) {
-        const p = players[i];
-        // Keep newly created heart image
-        game.players[i] = { ...p, heart: game.players[i].heart };
-      }
+      game.players = players;
       game.units = units;
       game.setGameState(game_state.Playing);
       break;

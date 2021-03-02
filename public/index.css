@@ -185,3 +185,22 @@ body:not(.your-turn) #card-holder .card {
 body.your-turn #player-turn-indicator-holder {
   background-color: gold;
 }
+
+.health {
+  position: absolute;
+  text-align: center;
+  left: 0;
+  right: 0;
+}
+.health-missing {
+  filter: grayscale(1);
+}
+.invert .health {
+  transform: rotate(180deg);
+}
+#health-theirs {
+  top: -20px;
+}
+#health-mine {
+  bottom: -20px;
+}
