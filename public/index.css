@@ -76,9 +76,9 @@ body {
 
 #tooltip {
   border-radius: 10px;
-  min-width: 300px;
+  width: 400px;
   min-height: 200px;
-  margin: 8px;
+  margin: 8px auto;
   padding: 8px;
   background-color: #eee;
 }
