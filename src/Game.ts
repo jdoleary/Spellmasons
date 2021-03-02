@@ -73,11 +73,10 @@ export default class Game {
         for (let i = 0; i < config.NUMBER_OF_UNITS_SPAWN_PER_TURN; i++) {
           // Extra "-1" is because board width is 0 indexed
           const x = window.random.integer(0, config.BOARD_WIDTH - 1);
-          // Extra "-1" is because board height is 0 indexed
-          const y = window.random.integer(
-            config.BOARD_HEIGHT / 2 - 1,
-            config.BOARD_HEIGHT / 2,
-          );
+          // Spawn equal amount of Golems per Player side:
+          const y =
+            i % 2 == 0 ? config.BOARD_HEIGHT / 2 - 1 : config.BOARD_HEIGHT / 2;
+
           const unit = Unit.create(
             x,
             y,
