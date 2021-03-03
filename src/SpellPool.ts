@@ -20,13 +20,10 @@ export function clearSpellIndex(index: number) {
   updateSpellLabel(index);
 }
 function updateSpellLabel(index: number) {
-  // Change the UI label of the spell in the pool to the number of modifiers in the spell
-  const elSpell = document.getElementById('spell-' + index);
-  elSpell.querySelector('.spell-content').innerHTML = JSON.stringify(
-    spells[index],
-    null,
-    2,
-  );
+  // TODO now that spells are not prespells, the label is currently meaningless
+  // find a new way to visually show what's in a spell
+  // const elSpell = document.getElementById('spell-' + index);
+  // elSpell.querySelector('.spell-content').innerHTML = 'TODO';
 }
 export function addModifierToSpell(modifier: string) {
   // Add the modifier to the spell
