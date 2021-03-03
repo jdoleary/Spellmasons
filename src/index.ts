@@ -90,6 +90,7 @@ function onData(d: { fromClient: string; payload: any }) {
   switch (type) {
     case MESSAGE_TYPES.RESTART_GAME:
       cleanUpAllImages();
+      clearCards();
       game = new Game();
       if (game.state == game_state.Lobby && clients.length === maxClients) {
         makeGame(clients);
