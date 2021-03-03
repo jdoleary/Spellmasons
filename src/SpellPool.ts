@@ -8,11 +8,6 @@ spells.forEach((_s, i) => clearSpellIndex(i));
 export function getSelectedSpell(): Spell {
   return spells[selectedSpellIndex];
 }
-// Returns false if all spells are empty
-// Returns true if player has at least one castable spell
-export function hasAtLeastOneCastableSpell() {
-  return !!spells.filter((s) => !!s).length;
-}
 let selectedSpellIndex;
 export function clearSpellIndex(index: number) {
   // Reset the spell to only contain it's index
