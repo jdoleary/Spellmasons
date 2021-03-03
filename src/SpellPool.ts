@@ -1,41 +1,49 @@
+import { modifySpell, Spell } from './Spell';
+
 // const elPool = document.getElementById('spell-pool');
-const prespells: string[][] = [[], [], []];
-export function getSelectedPreSpell() {
-  return prespells[selectedPreSpellIndex];
+const spells: Spell[] = [undefined, undefined, undefined];
+// Clear / initialize spells
+spells.forEach((_s, i) => clearSpellIndex(i));
+
+export function getSelectedSpell(): Spell {
+  return spells[selectedSpellIndex];
 }
 // Returns false if all spells are empty
 // Returns true if player has at least one castable spell
 export function hasAtLeastOneCastableSpell() {
-  return !!prespells.filter((ps) => ps.length).length;
+  return !!spells.filter((s) => !!s).length;
 }
-export let selectedPreSpellIndex;
+let selectedSpellIndex;
 export function clearSpellIndex(index: number) {
-  prespells[index] = [];
+  // Reset the spell to only contain it's index
+  spells[index] = { index };
   updateSpellLabel(index);
 }
 function updateSpellLabel(index: number) {
   // Change the UI label of the spell in the pool to the number of modifiers in the spell
   const elSpell = document.getElementById('spell-' + index);
-  elSpell.querySelector('.spell-content').innerHTML = prespells[
-    index
-  ].length.toString();
+  elSpell.querySelector('.spell-content').innerHTML = JSON.stringify(
+    spells[index],
+    null,
+    2,
+  );
 }
 export function addModifierToSpell(modifier: string) {
   // Add the modifier to the spell
-  prespells[selectedPreSpellIndex].push(modifier);
-  updateSpellLabel(selectedPreSpellIndex);
+  modifySpell(modifier, getSelectedSpell());
+  updateSpellLabel(selectedSpellIndex);
   updateSelectedSpellUI();
 }
 export function updateSelectedSpellUI() {
   // update tooltip with current state of clicked spell
-  window.setTooltip(JSON.stringify(getSelectedPreSpell() || '', null, 2));
+  window.setTooltip(JSON.stringify(getSelectedSpell() || '', null, 2));
 }
 export function selectSpell(index?: number) {
   // Deselect selected spell visually
   document.querySelector('.spell.selected')?.classList.remove('selected');
 
-  selectedPreSpellIndex = index;
-  if (selectedPreSpellIndex !== undefined) {
+  selectedSpellIndex = index;
+  if (selectedSpellIndex !== undefined) {
     // Update the selected spell DOM element
     document.getElementById('spell-' + index)?.classList.add('selected');
     updateSelectedSpellUI();

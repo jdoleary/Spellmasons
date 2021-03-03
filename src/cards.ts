@@ -1,5 +1,5 @@
 import { MESSAGE_TYPES } from './MessageTypes';
-import { addModifierToSpell, selectedPreSpellIndex } from './SpellPool';
+import { addModifierToSpell } from './SpellPool';
 const elCardHolder = document.getElementById('card-holder');
 export function clearCards() {
   elCardHolder.innerHTML = '';
@@ -91,17 +91,13 @@ function cardDOM(content: SpellMod, index: number) {
         // You cannot select disabled cards
         return;
       }
-      if (selectedPreSpellIndex !== undefined) {
-        // Add card contents to spell:
-        addModifierToSpell(content.description);
-        // Send the selection to the other player
-        window.pie.sendData({
-          type: MESSAGE_TYPES.CHOOSE_CARD,
-          id: element.id,
-        });
-      } else {
-        alert('You must select a spell before choosing a card');
-      }
+      // Add card contents to spell:
+      addModifierToSpell(content.description);
+      // Send the selection to the other player
+      window.pie.sendData({
+        type: MESSAGE_TYPES.CHOOSE_CARD,
+        id: element.id,
+      });
     }
   });
   elCardHolder.appendChild(element);

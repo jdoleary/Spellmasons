@@ -2,7 +2,6 @@ import { MESSAGE_TYPES } from '../MessageTypes';
 import { CELL_SIZE } from '../Image';
 import { BOARD_WIDTH, BOARD_HEIGHT } from '../config';
 import * as SpellPool from '../SpellPool';
-import { createSpellFromModifiers } from '../Spell';
 
 const elBoard = document.getElementById('board');
 const elBoardHighlights = document.getElementById('board-highlights');
@@ -57,14 +56,16 @@ export default function setupSpellBuilderUI() {
   // it stays in the game
   elBoard.addEventListener('mousemove', (e) => {
     const { cell_x, cell_y } = getCell(e);
-    // Make the spell from the preSpell
-    const spell = createSpellFromModifiers(SpellPool.getSelectedPreSpell(), {
-      x: cell_x,
-      y: cell_y,
-      index: SpellPool.selectedPreSpellIndex,
-    });
+    // Make a copy of the spell and add the target coords
+    const spellCopy = Object.assign(
+      {
+        x: cell_x,
+        y: cell_y,
+      },
+      SpellPool.getSelectedSpell(),
+    );
     // Find the targets of the spell
-    const targets = window.game.getTargetsOfSpell(spell);
+    const targets = window.game.getTargetsOfSpell(spellCopy);
     // Clear the highlights in preparation for showing the current ones
     clearHighlights();
     // Show highlights corresponding to targets
@@ -85,18 +86,15 @@ export default function setupSpellBuilderUI() {
   // Add board click handling
   elBoard.addEventListener('click', (e) => {
     const { cell_x, cell_y } = getCell(e);
-    console.log(
-      'Click in cell:',
-      cell_x,
-      cell_y,
-      SpellPool.getSelectedPreSpell(),
-    );
-    if (window.game.yourTurn && SpellPool.getSelectedPreSpell()) {
-      const spell = createSpellFromModifiers(SpellPool.getSelectedPreSpell(), {
-        x: cell_x,
-        y: cell_y,
-        index: SpellPool.selectedPreSpellIndex,
-      });
+    const selectedSpell = SpellPool.getSelectedSpell();
+    if (window.game.yourTurn && selectedSpell) {
+      const spell = Object.assign(
+        {
+          x: cell_x,
+          y: cell_y,
+        },
+        selectedSpell,
+      );
       window.pie.sendData({
         type: MESSAGE_TYPES.SPELL,
         spell,

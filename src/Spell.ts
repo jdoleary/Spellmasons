@@ -18,23 +18,24 @@ export interface Spell {
   image?: Image;
 }
 
-// Creates a spell object from a list of modifier strings from cards.ts
-export function createSpellFromModifiers(
-  modifiers: string[],
-  initialValues: Spell,
-) {
-  const spell = initialValues;
-  spell.damage = modifiers.reduce(
-    (acc, mod) => acc + (mod === 'Damage' ? 1 : mod === 'Heal' ? -1 : 0),
-    0,
-  );
-  spell.freeze = modifiers.includes('Freeze');
-  spell.chain = modifiers.includes('Chain');
-  spell.aoe_radius = modifiers.reduce(
-    (acc, mod) => acc + (mod === 'AOE' ? 1 : 0),
-    0,
-  );
-  return spell;
+export function modifySpell(modifier: string, spell?: Spell) {
+  switch (modifier) {
+    case 'Damage':
+      spell.damage = (spell.damage || 0) + 1;
+      break;
+    case 'Heal':
+      spell.damage = (spell.damage || 0) - 1;
+      break;
+    case 'Freeze':
+      spell.freeze = true;
+      break;
+    case 'Chain':
+      spell.chain = true;
+      break;
+    case 'AOE':
+      spell.aoe_radius = (spell.aoe_radius || 0) + 1;
+      break;
+  }
 }
 export function getImage(s: Spell) {
   let imgPath = 'spell/damage.png';
