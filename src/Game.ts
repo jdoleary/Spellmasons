@@ -3,11 +3,7 @@ import type { IPlayer } from './Player';
 import * as config from './config';
 import * as Unit from './Unit';
 import { generateCards, clearCards } from './cards';
-import {
-  clearSpellIndex,
-  hasAtLeastOneCastableSpell,
-  updateSelectedSpellUI,
-} from './SpellPool';
+import { clearSpellIndex, updateSelectedSpellUI } from './SpellPool';
 import { MESSAGE_TYPES } from './MessageTypes';
 
 export enum game_state {
@@ -99,11 +95,6 @@ export default class Game {
       elPlayerTurnIndicator.innerText = 'Your turn';
       document.body.classList.add('your-turn');
       this.yourTurn = true;
-      if (this.turn_phase === turn_phase.Cast) {
-        if (!hasAtLeastOneCastableSpell()) {
-          this.endMyTurn();
-        }
-      }
     } else {
       elPlayerTurnIndicator.innerText = 'Opponents turn';
       document.body.classList.remove('your-turn');
