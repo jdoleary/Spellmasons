@@ -39,7 +39,7 @@ const modifiers: SpellMod[] = [
   {
     description: 'Freeze',
     thumbnail: 'images/spell/freeze.png',
-    probability: 1,
+    probability: 2,
   },
   {
     description: 'AOE',
