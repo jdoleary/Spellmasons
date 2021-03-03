@@ -9,9 +9,11 @@ body {
   justify-content: space-between;
 }
 #controls {
+  position: fixed;
   display: flex;
   justify-content: space-between;
   padding: 64px;
+  bottom: 0;
 }
 #board {
   /* Board is hidden until game is made */
