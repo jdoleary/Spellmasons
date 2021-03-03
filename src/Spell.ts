@@ -53,24 +53,27 @@ export function getImage(s: Spell) {
   }
   return imgPath;
 }
-function toString(s: Spell) {
+export function toString(s?: Spell) {
+  if (!s) {
+    return '';
+  }
   const strings = [];
   if (s.damage > 0) {
-    strings.push('Hurt');
+    strings.push(`${s.damage}🔥`);
   }
   if (s.damage < 0) {
-    strings.push('Heal');
+    strings.push(`${Math.abs(s.damage)}✨`);
   }
   if (s.freeze) {
-    strings.push('Freeze');
+    strings.push('🧊');
   }
   if (s.chain) {
-    strings.push('Chain');
+    strings.push('⚡');
   }
-  if (s.aoe_radius > 0) {
-    strings.push('AOE');
+  if (s.aoe_radius) {
+    strings.push(`${s.aoe_radius}💣`);
   }
-  return strings.join('|');
+  return strings.join(' ');
 }
 export interface EffectArgs {
   unit?: Unit.IUnit;

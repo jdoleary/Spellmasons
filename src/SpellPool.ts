@@ -1,4 +1,4 @@
-import { modifySpell, Spell } from './Spell';
+import { modifySpell, Spell, toString } from './Spell';
 
 // const elPool = document.getElementById('spell-pool');
 const spells: Spell[] = [undefined, undefined, undefined];
@@ -17,8 +17,8 @@ export function clearSpellIndex(index: number) {
 function updateSpellLabel(index: number) {
   // TODO now that spells are not prespells, the label is currently meaningless
   // find a new way to visually show what's in a spell
-  // const elSpell = document.getElementById('spell-' + index);
-  // elSpell.querySelector('.spell-content').innerHTML = 'TODO';
+  const elSpell = document.getElementById('spell-' + index);
+  elSpell.querySelector('.spell-content').innerHTML = toString(spells[index]);
 }
 export function addModifierToSpell(modifier: string) {
   // Add the modifier to the spell

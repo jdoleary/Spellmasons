@@ -93,7 +93,7 @@ body {
 #spell-pool .spell {
   position: relative;
   border-radius: 32px;
-  width: 64px;
+  min-width: 64px;
   height: 64px;
   margin: 8px;
   border: 2px solid white;
