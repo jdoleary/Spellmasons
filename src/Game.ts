@@ -268,6 +268,7 @@ export default class Game {
   ): Unit.IUnit[] {
     return this.units.filter((u) => {
       return (
+        u.alive &&
         u.x <= x + distance &&
         u.x >= x - distance &&
         u.y <= y + distance &&
@@ -283,6 +284,7 @@ export default class Game {
     const touchingDistance = 1;
     let touching = this.units.filter((u) => {
       return (
+        u.alive &&
         u.x <= x + touchingDistance &&
         u.x >= x - touchingDistance &&
         u.y <= y + touchingDistance &&
@@ -299,7 +301,7 @@ export default class Game {
     return touching;
   }
   getUnitsAt(x?: number, y?: number): Unit.IUnit[] {
-    return this.units.filter((u) => u.x === x && u.y === y);
+    return this.units.filter((u) => u.alive && u.x === x && u.y === y);
   }
   getPlayerAt(heart_x: number, heart_y: number): IPlayer | undefined {
     for (let p of this.players) {
