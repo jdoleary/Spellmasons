@@ -143,8 +143,11 @@ function onData(d: { fromClient: string; payload: any }) {
       }
       break;
     case MESSAGE_TYPES.END_TURN:
-      game.endedTurn.add(caster.clientId);
-      game.incrementPlayerTurn();
+      // If it is currently your turn, end your turn
+      if(game.yourTurn){
+        game.endedTurn.add(caster.clientId);
+        game.incrementPlayerTurn();
+      }
       // TODO
       // if (all_players_ended_turn) {
       // game.nextTurn().then(() => {
