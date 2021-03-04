@@ -10,6 +10,7 @@ import { MESSAGE_TYPES } from './MessageTypes';
 import type { Random } from 'random';
 import makeSeededRandom from './rand';
 import { cardChosen } from './SpellPool';
+import { clearCards } from './cards';
 
 window.animationManager = new AnimationManager();
 UI.setup();
