@@ -2,6 +2,7 @@
 
 ## Ideas
 
+- Larger board size
 - Mega spells that don't combine and fill the whole pool
 - Relics placed on map with aura effects
 - Cusomize wizard stats

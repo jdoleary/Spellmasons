@@ -54,3 +54,7 @@ Player's summons have no loyalty! They just attack in the direction they are mov
 - Chain
   - Duplicates spell for any touching cells recursively
   - -3 mana
+
+## Assets
+
+Using kenny game assets
