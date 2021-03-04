@@ -24,27 +24,27 @@ const modifiers: SpellMod[] = [
   {
     description: 'Damage',
     thumbnail: 'images/spell/damage.png',
-    probability: 10,
+    probability: 100,
   },
   {
     description: 'Heal',
     thumbnail: 'images/spell/heal.png',
-    probability: 5,
+    probability: 50,
   },
   {
     description: 'Chain',
     thumbnail: 'images/spell/chain.png',
-    probability: 1,
+    probability: 10,
   },
   {
     description: 'Freeze',
     thumbnail: 'images/spell/freeze.png',
-    probability: 2,
+    probability: 20,
   },
   {
     description: 'AOE',
     thumbnail: 'images/spell/aoe.png',
-    probability: 1,
+    probability: 10,
   },
 ];
 function generateCard() {
@@ -73,18 +73,24 @@ function generateCard() {
 }
 function getCardRarityColor(content: SpellMod): string {
   if (content.probability == 1) {
+    // Super rare
     // Purple
     return '#9400FF';
   } else if (content.probability < 5) {
+    // Rare
     // Red
     return '#F00';
   } else if (content.probability < 10) {
+    // Uncommon
     return 'orange';
   } else if (content.probability < 20) {
+    // Special
     return 'green';
   } else if (content.probability < 50) {
+    // Semi-common
     return 'blue';
   }
+  // Highly-common
   // White
   return '#FFF';
 }
