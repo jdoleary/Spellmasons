@@ -60,6 +60,9 @@ body {
 .game-image {
   position: absolute;
 }
+.game-image img {
+  image-rendering: crisp-edges;
+}
 /* Direct descendants are positioned perfectly on top of game-image */
 .game-image > * {
   position: absolute;

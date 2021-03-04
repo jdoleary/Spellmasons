@@ -151,7 +151,7 @@ export default class Game {
             y,
             0,
             y < config.BOARD_HEIGHT / 2 ? -1 : 1,
-            'crocodile.png',
+            'golem.png',
           );
           this.summon(unit);
         }
