@@ -32,7 +32,12 @@ body {
   flex-wrap: wrap;
   margin: 40px auto 0 auto; */
 }
+/* If the board is inverted flip all contents of the board */
 #board.invert {
+  transform: rotate(180deg);
+}
+/* Subimages should always face right-side up, even if the board is inverted */
+#board.invert .subimage-holder {
   transform: rotate(180deg);
 }
 #board-contents {
@@ -54,6 +59,12 @@ body {
 }
 .game-image {
   position: absolute;
+}
+/* Direct descendants are positioned perfectly on top of game-image */
+.game-image > * {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 #debug {

@@ -1,4 +1,18 @@
+# Todo
+
+## Ideas
+
+- Mega spells that don't combine and fill the whole pool
+- Relics placed on map with aura effects
+- Cusomize wizard stats
+- Wizard as unit on map
+- Tile effects "burn/poison"
+
+## Other
+
 - Clean up onDataQueue (is it still necessary?)
+- Fix replay?
+- Hide cards button
 
 - Allow rejoining with saved client id
 

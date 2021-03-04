@@ -14,8 +14,8 @@ export interface AnimatableProps {
   x?: number;
   y?: number;
   rotation?: number;
-  opacity: number;
-  scale: number;
+  opacity?: number;
+  scale?: number;
 }
 interface AnimationGroup {
   startTime: number;
