@@ -51,6 +51,11 @@ body {
   z-index: 1;
   visibility: hidden;
 }
+.highlight {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
 .phase-cast #board-highlights {
   visibility: visible;
 }

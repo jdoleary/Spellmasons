@@ -5,6 +5,8 @@ import * as SpellPool from '../SpellPool';
 
 const elBoard = document.getElementById('board');
 const elBoardHighlights = document.getElementById('board-highlights');
+let mouseCellX;
+let mouseCellY;
 function getCell({ clientX, clientY }) {
   const rect = elBoard.getBoundingClientRect();
   const x = clientX - rect.left;
@@ -17,65 +19,48 @@ function getCell({ clientX, clientY }) {
   }
   return { cell_x, cell_y };
 }
-const elHighlights = [];
 function clearHighlights() {
-  for (let y = 0; y < elHighlights.length; y++) {
-    for (let h of elHighlights[y]) {
-      window.animationManager.setTransform(h.img, {
-        ...h,
-        opacity: 0,
-      });
-    }
-  }
+  elBoardHighlights.innerHTML = '';
 }
 export default function setupSpellBuilderUI() {
   // Initialize spell pool
   SpellPool.create();
-
-  // Initialize board highlights:
-  for (let y = 0; y < BOARD_HEIGHT; y++) {
-    elHighlights[y] = [];
-    for (let x = 0; x < BOARD_WIDTH; x++) {
-      const img = document.createElement('img');
-      img.src = 'images/spell/target.png';
-      img.classList.add('highlight');
-      elHighlights[y][x] = {
-        img,
-        x: 0,
-        y: 0,
-        opacity: 0,
-        scale: 1,
-      };
-      window.animationManager.setTransform(img, elHighlights[y][x]);
-      elBoardHighlights.appendChild(img);
-    }
-  }
 
   // on Hover
   // TODO: Hover target overlay is super unoptomized and should probably be refactored if
   // it stays in the game
   elBoard.addEventListener('mousemove', (e) => {
     const { cell_x, cell_y } = getCell(e);
-    // Make a copy of the spell and add the target coords
-    const spellCopy = Object.assign(
-      {
-        x: cell_x,
-        y: cell_y,
-      },
-      SpellPool.getSelectedSpell(),
-    );
-    // Find the targets of the spell
-    const targets = window.game.getTargetsOfSpell(spellCopy);
-    // Clear the highlights in preparation for showing the current ones
-    clearHighlights();
-    // Show highlights corresponding to targets
-    for (let t of targets) {
-      const elHighlight = elHighlights[t.y]?.[t.x];
-      if (elHighlight) {
-        window.animationManager.setTransform(elHighlight.img, {
-          ...elHighlight,
-          opacity: 50,
-        });
+    const didChange = mouseCellX !== cell_x || mouseCellY !== cell_y;
+    mouseCellX = cell_x;
+    mouseCellY = cell_y;
+    // If mouse hovering over a new cell, update the target images
+    if (didChange) {
+      // Make a copy of the spell and add the target coords
+      const spellCopy = Object.assign(
+        {
+          x: cell_x,
+          y: cell_y,
+        },
+        SpellPool.getSelectedSpell(),
+      );
+      // Find the targets of the spell
+      const targets = window.game.getTargetsOfSpell(spellCopy);
+      // Clear the highlights in preparation for showing the current ones
+      clearHighlights();
+      // Show highlights corresponding to targets
+      for (let t of targets) {
+        const img = document.createElement('img');
+        img.src = 'images/spell/target.png';
+        img.classList.add('highlight');
+        const transform = {
+          x: t.x * CELL_SIZE,
+          y: t.y * CELL_SIZE,
+          opacity: 100,
+          scale: 1,
+        };
+        window.animationManager.setTransform(img, transform);
+        elBoardHighlights.appendChild(img);
       }
     }
   });

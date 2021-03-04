@@ -175,9 +175,9 @@ export default class AnimationManager {
       'px, ' +
       transform.y +
       'px) rotate(' +
-      transform.rotation +
+      (transform.rotation || 0) +
       'deg) scale(' +
-      transform.scale +
+      (transform.scale === undefined ? 1 : transform.scale) +
       ')';
     element.style.transform = newTransform;
 
