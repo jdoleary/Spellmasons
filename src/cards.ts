@@ -71,20 +71,41 @@ function generateCard() {
   // Logically it should never reach this point
   return modifiers[0];
 }
+function getCardRarityColor(content: SpellMod): string {
+  if (content.probability == 1) {
+    // Purple
+    return '#9400FF';
+  } else if (content.probability < 5) {
+    // Red
+    return '#F00';
+  } else if (content.probability < 10) {
+    return 'orange';
+  } else if (content.probability < 20) {
+    return 'green';
+  } else if (content.probability < 50) {
+    return 'blue';
+  }
+  // White
+  return '#FFF';
+}
 function cardDOM(content: SpellMod, index: number) {
   const element = document.createElement('div');
   element.classList.add('card');
   element.id = 'card-' + index;
+  element.style.backgroundColor = getCardRarityColor(content);
+  const elCardInner = document.createElement('div');
+  elCardInner.classList.add('card-inner');
+  element.appendChild(elCardInner);
   const thumbHolder = document.createElement('div');
   const thumbnail = document.createElement('img');
   thumbnail.src = content.thumbnail;
   thumbHolder.appendChild(thumbnail);
   thumbHolder.classList.add('card-thumb');
-  element.appendChild(thumbHolder);
+  elCardInner.appendChild(thumbHolder);
   const desc = document.createElement('div');
   desc.classList.add('card-description');
   desc.innerText = content.description;
-  element.appendChild(desc);
+  elCardInner.appendChild(desc);
   element.addEventListener('click', () => {
     if (window.game.yourTurn) {
       if (element.classList.contains('disabled')) {

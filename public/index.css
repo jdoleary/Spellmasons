@@ -146,12 +146,18 @@ body:not(.your-turn) #card-holder .card {
   margin: 8px;
   width: 225px;
   height: 350px;
-  background-color: blue;
+  background-color: white;
   border-radius: 10px 10px;
+  pointer-events: all;
+  display: flex;
+}
+.card-inner {
+  border: 2px solid black;
+  border-radius: 4px 4px;
   display: flex;
   justify-content: space-evenly;
   flex-direction: column;
-  pointer-events: all;
+  flex-grow: 1;
 }
 .card-thumb {
   background-color: white;
@@ -165,7 +171,7 @@ body:not(.your-turn) #card-holder .card {
   height: 64px;
 }
 .card-description {
-  background-color: green;
+  background-color: #68c668;
   flex-grow: 3;
   padding: 8px;
   color: white;
