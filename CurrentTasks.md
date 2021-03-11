@@ -1,7 +1,21 @@
 # Todo
 
+## 3.11
+
 - Convert to pixijs
   - https://github.com/kittykatattack/learningPixi#settingup
+- Add player as unit on board
+  - Add player movement
+- Add portal and concept of levels
+- update cards to combine at bottom, remove spell pools, make cards combine only when about to cast
+- Add pickups
+
+## 3.12
+
+- Make relics
+- Add more spells
+- Improve turn management
+- Update golems to move toward player
 
 ## Ideas
 
