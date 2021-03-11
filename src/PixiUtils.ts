@@ -24,6 +24,11 @@ function loadTextures(): Promise<void> {
     const images = [
       'images/cell.png',
       'images/units/golem.png',
+      'images/spell/aoe.png',
+      'images/spell/chain.png',
+      'images/spell/damage.png',
+      'images/spell/freeze.png',
+      'images/spell/heal.png',
       'images/spell/target.png',
     ];
     images.forEach((path) => {
@@ -45,11 +50,20 @@ export function addPixiSprite(
       'PIXI is not finished setting up.  Cannot add a sprite yet',
     );
   }
-  const sprite = new PIXI.Sprite(resources[imagePath].texture);
-  if (parent) {
-    parent.addChild(sprite);
-  } else {
-    app.stage.addChild(sprite);
+  try {
+    const sprite = new PIXI.Sprite(resources[imagePath].texture);
+    if (parent) {
+      parent.addChild(sprite);
+    } else {
+      app.stage.addChild(sprite);
+    }
+    return sprite;
+  } catch (e) {
+    console.log(
+      'Could not find image',
+      imagePath,
+      'Add the image to the PixiUtils loader',
+    );
+    throw e;
   }
-  return sprite;
 }

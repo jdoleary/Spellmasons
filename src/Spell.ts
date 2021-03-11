@@ -38,18 +38,18 @@ export function modifySpell(modifier: string, spell?: Spell) {
   }
 }
 export function getImage(s: Spell) {
-  let imgPath = 'spell/damage.png';
+  let imgPath = 'images/spell/damage.png';
   if (s.damage) {
-    imgPath = 'spell/damage.png';
+    imgPath = 'images/spell/damage.png';
   }
   if (s.freeze) {
-    imgPath = 'spell/freeze.png';
+    imgPath = 'images/spell/freeze.png';
   }
   if (s.chain) {
-    imgPath = 'spell/chain.png';
+    imgPath = 'images/spell/chain.png';
   }
   if (s.aoe_radius > 0) {
-    imgPath = 'spell/aoe.png';
+    imgPath = 'images/spell/aoe.png';
   }
   return imgPath;
 }
