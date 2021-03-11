@@ -62,6 +62,8 @@ export default class Image {
     //   imageName,
     // );
     this.sprite = addPixiSprite(imageName);
+    this.sprite.anchor.x = 0.5;
+    this.sprite.anchor.y = 0.5;
     this.sprite.rotation = (rotation * Math.PI) / 180;
 
     // this.sprite.appendChild(this.unitImage.element);
@@ -109,7 +111,7 @@ export default class Image {
   }
   anim_spin() {
     window.animationManager.addAnimation(this.sprite, this.transform, {
-      rotation: this.transform.rotation + 360,
+      rotation: this.transform.rotation + Math.PI * 2,
     });
   }
   move(cell_x: number, cell_y: number) {
@@ -137,8 +139,8 @@ export default class Image {
   }
   // Used for initialization
   set(cell_x: number, cell_y: number, scale: number) {
-    this.transform.x = cell_x * CELL_SIZE;
-    this.transform.y = cell_y * CELL_SIZE;
+    this.transform.x = cell_x * CELL_SIZE + CELL_SIZE / 2;
+    this.transform.y = cell_y * CELL_SIZE + CELL_SIZE / 2;
     this.transform.scale = scale;
     window.animationManager.setTransform(this.sprite, this.transform);
   }

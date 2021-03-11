@@ -39,7 +39,7 @@ export function create(
   // Start images small so when they spawn in they will grow
   unit.image.transform.scale = 0.0;
   window.animationManager.setTransform(unit.image.sprite, unit.image.transform);
-  unit.image.scale(4.0);
+  unit.image.scale(1.0);
   return unit;
 }
 export function die(u: IUnit) {
