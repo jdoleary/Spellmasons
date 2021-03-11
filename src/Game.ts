@@ -191,7 +191,6 @@ export default class Game {
             y < config.BOARD_HEIGHT / 2 ? -1 : 1,
             'images/units/golem.png',
           );
-          console.log('golem position', x, y);
           this.summon(unit);
         }
         // Move units

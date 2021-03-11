@@ -79,6 +79,12 @@ export default class Image {
     // const boardContents = document.getElementById('board-contents');
     // boardContents?.appendChild(this.sprite);
   }
+  cellToBoardCoords(cell_x: number, cell_y: number) {
+    return {
+      x: cell_x * CELL_SIZE + CELL_SIZE / 2,
+      y: cell_y * CELL_SIZE + CELL_SIZE / 2,
+    };
+  }
   cleanup() {
     // Remove DOM element
     app.stage.removeChild(this.sprite);
@@ -115,10 +121,11 @@ export default class Image {
     });
   }
   move(cell_x: number, cell_y: number) {
-    window.animationManager.addAnimation(this.sprite, this.transform, {
-      x: cell_x * CELL_SIZE,
-      y: cell_y * CELL_SIZE,
-    });
+    window.animationManager.addAnimation(
+      this.sprite,
+      this.transform,
+      this.cellToBoardCoords(cell_x, cell_y),
+    );
   }
   attack(
     current_cell_x: number,
@@ -127,20 +134,23 @@ export default class Image {
     cell_y: number,
   ) {
     // Move forward
-    window.animationManager.addAnimation(this.sprite, this.transform, {
-      x: cell_x * CELL_SIZE,
-      y: cell_y * CELL_SIZE,
-    });
+    window.animationManager.addAnimation(
+      this.sprite,
+      this.transform,
+      this.cellToBoardCoords(cell_x, cell_y),
+    );
     // Move back
-    window.animationManager.addAnimation(this.sprite, this.transform, {
-      x: current_cell_x * CELL_SIZE,
-      y: current_cell_y * CELL_SIZE,
-    });
+    window.animationManager.addAnimation(
+      this.sprite,
+      this.transform,
+      this.cellToBoardCoords(current_cell_x, current_cell_y),
+    );
   }
   // Used for initialization
   set(cell_x: number, cell_y: number, scale: number) {
-    this.transform.x = cell_x * CELL_SIZE + CELL_SIZE / 2;
-    this.transform.y = cell_y * CELL_SIZE + CELL_SIZE / 2;
+    const { x, y } = this.cellToBoardCoords(cell_x, cell_y);
+    this.transform.x = x;
+    this.transform.y = y;
     this.transform.scale = scale;
     window.animationManager.setTransform(this.sprite, this.transform);
   }
