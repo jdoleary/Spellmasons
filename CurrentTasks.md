@@ -1,6 +1,11 @@
 # Todo
 
+- Convert to pixijs
+  - https://github.com/kittykatattack/learningPixi#settingup
+
 ## Ideas
+
+What if choosing cards collected them in your inventory instead of in a pool and you could combine them at will before you cast them and they would combine in predictable ways ("Binding of Isaac" style). And you could walk around the board with the other player and choose to be verses or cooperative
 
 - Larger board size
 - Mega spells that don't combine and fill the whole pool

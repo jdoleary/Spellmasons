@@ -58,3 +58,7 @@ Player's summons have no loyalty! They just attack in the direction they are mov
 ## Assets
 
 Using kenny game assets
+
+## Notes
+
+Minor versions are incremented for functional non-broken commit states that should be able to run without changes.
