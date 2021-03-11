@@ -1,17 +1,11 @@
 import type * as PIXI from 'pixi.js';
 import Stats from 'stats.js';
+import { lerp } from './math';
 
 const stats = new Stats();
 stats.showPanel(1);
 stats.dom.classList.add('doob-stats');
 document.body.appendChild(stats.dom);
-// https://webdva.github.io/how-i-implemented-client-side-linear-interpolation/
-function lerp(start: number, end: number, time: number) {
-  if (time >= 1) {
-    return end;
-  }
-  return start * (1 - time) + end * time;
-}
 export interface AnimatableProps {
   x?: number;
   y?: number;
