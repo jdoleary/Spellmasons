@@ -2,7 +2,7 @@ import type * as PIXI from 'pixi.js';
 
 import { addPixiSprite, app } from './PixiUtils';
 import type { AnimatableProps } from './AnimationManager';
-import SubImage from './SubImage';
+// import SubImage from './SubImage';
 import { CELL_SIZE } from './config';
 
 export function normalizeDegrees(degrees) {
@@ -21,7 +21,7 @@ export default class Image {
   // elSubImageHolder: HTMLDivElement;
   // unitImage: SubImage;
   imageName: string;
-  subImages: { [name: string]: SubImage };
+  // subImages: { [name: string]: SubImage };
   static id: number = 0;
   transform: AnimatableProps = {
     x: 0,
@@ -38,7 +38,7 @@ export default class Image {
     directionY: number,
     imageName: string,
   ) {
-    this.subImages = {};
+    // this.subImages = {};
     // Save image path in unit so it's accessible when loading gamestate
     this.imageName = imageName;
     // this.sprite = document.createElement('div');
@@ -74,13 +74,14 @@ export default class Image {
     // this.sprite?.remove();
   }
   addSubImage(key, imageName) {
-    const subImg = new SubImage(null, 20, 20, imageName);
+    console.log('TODO sub images not yet implemented');
+    // const subImg = new SubImage(null, 20, 20, imageName);
     // this.elSubImageHolder.appendChild(subImg.element);
-    this.subImages[key] = subImg;
+    // this.subImages[key] = subImg;
   }
   removeSubImage(key) {
-    this.subImages[key].cleanup();
-    delete this.subImages[key];
+    // this.subImages[key].cleanup();
+    // delete this.subImages[key];
   }
   scale(scale) {
     window.animationManager.addAnimation(this.sprite, this.transform, {
