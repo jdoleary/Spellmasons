@@ -174,8 +174,8 @@ export default class AnimationManager {
     sprite.x = transform.x;
     sprite.y = transform.y;
     sprite.rotation = transform.rotation || 0;
-    sprite.scale.x = transform.scale || 1;
-    sprite.scale.y = transform.scale || 1;
-    sprite.alpha = transform.alpha || 1;
+    sprite.scale.x = transform.scale === undefined ? 1 : transform.scale;
+    sprite.scale.y = transform.scale === undefined ? 1 : transform.scale;
+    sprite.alpha = transform.alpha === undefined ? 1 : transform.alpha;
   }
 }
