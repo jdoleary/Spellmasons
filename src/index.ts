@@ -3,7 +3,7 @@ import Game, { game_state, turn_phase } from './Game';
 import * as Player from './Player';
 import Image from './Image';
 import AnimationManager from './AnimationManager';
-import { BOARD_HEIGHT, CELL_SIZE, BOARD_WIDTH } from './config';
+import { BOARD_HEIGHT } from './config';
 import type { Spell } from './Spell';
 import * as UI from './ui/UserInterface';
 import { MESSAGE_TYPES } from './MessageTypes';
@@ -14,10 +14,6 @@ import { clearCards } from './cards';
 
 import { setupPixi, app } from './PixiUtils';
 setupPixi().then(() => {
-  // Center the app in the middle of the board
-  app.stage.x = app.renderer.width / 2 - (CELL_SIZE * BOARD_WIDTH) / 2;
-  app.stage.y = app.renderer.height / 2 - (CELL_SIZE * BOARD_HEIGHT) / 2;
-
   UI.setup();
   // Connect to PieServer
   connect();

@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js';
+import { BOARD_HEIGHT, CELL_SIZE, BOARD_WIDTH } from './config';
 // if PIXI is finished setting up
 let isReady = false;
 // PIXI app
@@ -7,8 +8,15 @@ app.renderer.backgroundColor = 0x45b6fe;
 app.renderer.view.style.position = 'absolute';
 app.renderer.view.style.top = '0';
 app.renderer.view.style.display = 'block';
-// app.renderer.autoResize = true;
-app.renderer.resize(window.innerWidth, window.innerHeight);
+resizePixi();
+window.addEventListener('resize', resizePixi);
+function resizePixi() {
+  console.log('resize');
+  app.renderer.resize(window.innerWidth, window.innerHeight);
+  // Center the app in the middle of the board
+  app.stage.x = app.renderer.width / 2 - (CELL_SIZE * BOARD_WIDTH) / 2;
+  app.stage.y = app.renderer.height / 2 - (CELL_SIZE * BOARD_HEIGHT) / 2;
+}
 // PIXI textures
 let resources;
 export function setupPixi(): Promise<void> {
