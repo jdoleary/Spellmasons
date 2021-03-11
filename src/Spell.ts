@@ -96,7 +96,7 @@ export function effect(spell: Spell, args: EffectArgs) {
   }
   if (unit && spell.freeze) {
     unit.frozen = true;
-    unit.image.addSubImage('frozen', 'spell/freeze.png');
+    unit.image.addSubImage('frozen', 'images/spell/freeze.png');
   }
   // Show an image when cast occurs
   const castImage = new Image(spell.x, spell.y, 0, 0, getImage(spell));
