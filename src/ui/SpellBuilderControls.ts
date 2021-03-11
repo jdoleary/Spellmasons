@@ -3,17 +3,8 @@ import { CELL_SIZE } from '../config';
 import * as SpellPool from '../SpellPool';
 import { addPixiSprite, app } from '../PixiUtils';
 
-const elBoard = document.getElementById('board');
 let mouseCellX;
 let mouseCellY;
-function getCell({ clientX, clientY }) {
-  const rect = elBoard.getBoundingClientRect();
-  const x = clientX - rect.left;
-  const y = clientY - rect.top;
-  let cell_x = Math.floor(x / CELL_SIZE);
-  let cell_y = Math.floor(y / CELL_SIZE);
-  return { cell_x, cell_y };
-}
 let highlights = [];
 function clearHighlights() {
   highlights.forEach((sprite) => {
@@ -66,17 +57,11 @@ export default function setupSpellBuilderUI() {
   // });
 
   // Add board click handling
-  elBoard.addEventListener('click', (e) => {
-    const { cell_x, cell_y } = getCell(e);
+  document.body.addEventListener('click', (e) => {
+    const { x, y } = window.game.getCellFromCurrentMousePos();
     const selectedSpell = SpellPool.getSelectedSpell();
     if (window.game.yourTurn && selectedSpell) {
-      const spell = Object.assign(
-        {
-          x: cell_x,
-          y: cell_y,
-        },
-        selectedSpell,
-      );
+      const spell = Object.assign({ x, y }, selectedSpell);
       window.pie.sendData({
         type: MESSAGE_TYPES.SPELL,
         spell,
