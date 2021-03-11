@@ -1,4 +1,4 @@
-import { CELL_SIZE } from './Image';
+import { CELL_SIZE } from './config';
 interface FText {
   x: number;
   y: number;
@@ -27,7 +27,7 @@ export default function floatingText({ cellX, cellY, text, color }) {
 }
 function floatAway(instance: FText) {
   if (instance.el) {
-    instance.y -= (window.inverted ? -1 : 1) * instance.vy;
+    instance.y -= instance.vy;
     instance.vy = instance.vy * 0.97;
     instance.opacity -= Math.max(instance.vopacity, 0);
     instance.vopacity += 0.004;

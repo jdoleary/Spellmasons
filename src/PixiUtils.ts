@@ -24,7 +24,7 @@ function loadTextures(): Promise<void> {
     const images = [
       'images/cell.png',
       'images/units/golem.png',
-      'images/plus.png',
+      'images/spell/target.png',
     ];
     images.forEach((path) => {
       loader.add(path);

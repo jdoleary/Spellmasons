@@ -56,6 +56,16 @@ export default class Game {
     boardContainer.x = 0;
     boardContainer.y = 0;
     app.stage.addChild(boardContainer);
+    document.body.addEventListener('click', (e) => {
+      const { x, y } = boardContainer.toLocal(
+        app.renderer.plugins.interaction.mouse.global,
+      );
+      console.log(
+        'click in tile:',
+        Math.floor(x / config.CELL_SIZE),
+        Math.floor(y / config.CELL_SIZE),
+      );
+    });
     // Make sprites for the board tiles
     let cell;
     for (let x = 0; x < config.BOARD_WIDTH; x++) {
@@ -172,8 +182,9 @@ export default class Game {
             y,
             0,
             y < config.BOARD_HEIGHT / 2 ? -1 : 1,
-            'units/golem.png',
+            'images/units/golem.png',
           );
+          console.log('golem position', x, y);
           this.summon(unit);
         }
         // Move units

@@ -3,7 +3,7 @@ import Game, { game_state, turn_phase } from './Game';
 import * as Player from './Player';
 import Image from './Image';
 import AnimationManager from './AnimationManager';
-import { BOARD_HEIGHT } from './config';
+import { BOARD_HEIGHT, CELL_SIZE, BOARD_WIDTH } from './config';
 import type { Spell } from './Spell';
 import * as UI from './ui/UserInterface';
 import { MESSAGE_TYPES } from './MessageTypes';
@@ -12,11 +12,11 @@ import makeSeededRandom from './rand';
 import { cardChosen } from './SpellPool';
 import { clearCards } from './cards';
 
-import { setupPixi, app, addPixiSprite } from './PixiUtils';
+import { setupPixi, app } from './PixiUtils';
 setupPixi().then(() => {
-  // Center the app on the screen so that 0,0 is the center
-  app.stage.x = app.renderer.width / 2;
-  app.stage.y = app.renderer.height / 2;
+  // Center the app in the middle of the board
+  app.stage.x = app.renderer.width / 2 - (CELL_SIZE * BOARD_WIDTH) / 2;
+  app.stage.y = app.renderer.height / 2 - (CELL_SIZE * BOARD_HEIGHT) / 2;
 
   UI.setup();
   // Connect to PieServer
@@ -193,8 +193,8 @@ function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
         game: {
           ...game,
           units: game.units.map((u) => {
-            // Remove image.element
-            const { element, ...rest } = u.image;
+            // Remove image.sprite
+            const { sprite, ...rest } = u.image;
             return { ...u, image: rest };
           }),
         },
@@ -214,8 +214,8 @@ function makeGame(clients: string[]) {
     const isOnTop = i == 0;
     if (c === window.clientId) {
       if (isOnTop) {
-        document.getElementById('board').classList.add('invert');
-        window.inverted = true;
+        // TODO, any logic if the current player is on top
+        // document.getElementById('board').classList.add('invert');
       }
     }
     let heart_y = 0;
@@ -250,8 +250,6 @@ declare global {
     clientId: string;
     // Debug on screen:
     setDebug: (json: object) => void;
-    // If the player's board is inverted so they are on the bottom:
-    inverted: boolean;
     setTooltip: (description: string) => void;
     // Seeded random number generator
     random: Random;

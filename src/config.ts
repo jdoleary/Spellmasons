@@ -6,3 +6,4 @@ export const BOARD_WIDTH = 8;
 export const CHOSEN_CARDS_TILL_NEXT_PHASE = 6;
 export const NUMBER_OF_UNITS_SPAWN_PER_TURN = 2;
 export const MAX_SECONDS_PER_TURN = 30;
+export const CELL_SIZE = 64;

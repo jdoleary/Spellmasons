@@ -1,4 +1,6 @@
+import type * as PIXI from 'pixi.js';
 import Stats from 'stats.js';
+
 const stats = new Stats();
 stats.showPanel(1);
 stats.dom.classList.add('doob-stats');
@@ -23,14 +25,14 @@ interface AnimationGroup {
   onFinishedCallbacks: (() => void)[];
 }
 interface Animation {
-  element: HTMLElement;
+  sprite: PIXI.Sprite;
   start?: AnimatableProps;
   current: AnimatableProps;
   target: AnimatableProps;
 }
 
 // AnimationManager allows for SEQUENTIAL animations
-// by bringing an HTML element from it's current state to a target state
+// by bringing a PIXI sprite from it's current state to a target state
 // over a period of time using a LERP.
 // Animation objects are stored in an array and when AnimationManager's animate()
 // is invoked, it will run through all the animations one at a time.
@@ -69,11 +71,11 @@ export default class AnimationManager {
     this.animationGroups.push(this.currentGroup);
     this.groupLabel = undefined;
   }
-  addAnimation(element, current, target) {
+  addAnimation(sprite: PIXI.Sprite, current, target) {
     if (this.groupLabel) {
       // Animation to be played together in a group
       this.currentGroup.animations.push({
-        element,
+        sprite,
         current,
         target,
       });
@@ -83,7 +85,7 @@ export default class AnimationManager {
         startTime: 0,
         animations: [
           {
-            element,
+            sprite,
             current,
             target,
           },
@@ -126,7 +128,7 @@ export default class AnimationManager {
       // Lerp animations
       for (let currentAnimation of currentAnimationGroup.animations) {
         if (currentAnimation) {
-          const { element, start, current, target } = currentAnimation;
+          const { sprite, start, current, target } = currentAnimation;
 
           // Lerp the transform properties
           // Note: This mutates the current object
@@ -147,7 +149,7 @@ export default class AnimationManager {
           }
 
           // Render the changes
-          this.setTransform(element, current);
+          this.setTransform(sprite, current);
         }
       }
       if (lerpTime >= 1) {
@@ -168,20 +170,12 @@ export default class AnimationManager {
     }
     stats.end();
   }
-  setTransform(element: HTMLElement, transform: AnimatableProps) {
-    const newTransform =
-      'translate(' +
-      transform.x +
-      'px, ' +
-      transform.y +
-      'px) rotate(' +
-      (transform.rotation || 0) +
-      'deg) scale(' +
-      (transform.scale === undefined ? 1 : transform.scale) +
-      ')';
-    element.style.transform = newTransform;
-
-    const newFilter = `opacity(${transform.opacity}%)`;
-    element.style.filter = newFilter;
+  setTransform(sprite: PIXI.Sprite, transform: AnimatableProps) {
+    sprite.x = transform.x;
+    sprite.y = transform.y;
+    sprite.rotation = transform.rotation;
+    sprite.scale.x = transform.scale;
+    sprite.scale.y = transform.scale;
+    sprite.alpha = transform.opacity;
   }
 }

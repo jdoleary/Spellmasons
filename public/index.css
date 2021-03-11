@@ -31,14 +31,6 @@ body {
   flex-wrap: wrap;
   margin: 40px auto 0 auto; */
 }
-/* If the board is inverted flip all contents of the board */
-#board.invert {
-  transform: rotate(180deg);
-}
-/* Subimages should always face right-side up, even if the board is inverted */
-#board.invert .subimage-holder {
-  transform: rotate(180deg);
-}
 #board-contents {
   user-select: none;
 }
@@ -85,9 +77,6 @@ body {
   margin-top: 40px;
 }
 
-.invert .floating-text {
-  transform: translateX(-50%) rotate(180deg);
-}
 .floating-text {
   position: absolute;
   transform: translateX(-50%);
@@ -227,20 +216,21 @@ body.your-turn #player-turn-indicator-holder {
 .health-missing {
   filter: grayscale(1);
 }
-.invert .health {
-  transform: rotate(180deg);
-}
-.invert #health-theirs {
-  top: inherit;
-  bottom: -20px;
-}
 #health-theirs {
   top: -20px;
 }
-.invert #health-mine {
-  top: -20px;
-  bottom: inherit;
-}
 #health-mine {
   bottom: -20px;
+}
+/* Test for PIXI conversion */
+#board {
+  opacity: 0.2;
+}
+#card-holder {
+  opacity: 0.2;
+}
+
+#PIXI-holder {
+  z-index: 1;
+  position: absolute;
 }

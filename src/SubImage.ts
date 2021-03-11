@@ -1,8 +1,9 @@
+import type * as PIXI from 'pixi.js';
+import { addPixiSprite, app } from './PixiUtils';
 import type { AnimatableProps } from './AnimationManager';
-const BASE_PATH = 'images/';
 
 export default class SubImage {
-  element: HTMLImageElement;
+  sprite: PIXI.Sprite;
   imageName: string;
   transform: AnimatableProps = {
     x: 0,
@@ -18,21 +19,18 @@ export default class SubImage {
     height: number,
     imageName: string,
   ) {
-    // NOTE: SubImage does not automatically get added to the DOM, the instantiator should add it
-    // where necessary
-    this.element = document.createElement('img');
-    this.element.src = BASE_PATH + imageName;
-    this.element.width = width;
-    this.element.height = height;
+    this.sprite = addPixiSprite(imageName);
+    this.sprite.scale.x = width;
+    this.sprite.scale.y = height;
+
     // Save image path in unit so it's accessible when loading gamestate
     this.imageName = imageName;
     if (transform) {
       Object.assign(this.transform, transform);
     }
-    window.animationManager.setTransform(this.element, this.transform);
+    window.animationManager.setTransform(this.sprite, this.transform);
   }
   cleanup() {
-    // Remove DOM element
-    this.element?.remove();
+    app.stage.removeChild(this.sprite);
   }
 }
