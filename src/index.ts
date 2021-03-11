@@ -148,8 +148,9 @@ function onData(d: { fromClient: string; payload: any }) {
       }
       break;
     case MESSAGE_TYPES.END_TURN:
-      // If it is currently your turn, end your turn
-      if (game.yourTurn) {
+      // Ensure players can only end the turn when it is their turn
+      const currentTurnPlayer = game.players[game.playerTurnIndex];
+      if (currentTurnPlayer.clientId === caster.clientId) {
         game.endedTurn.add(caster.clientId);
         game.incrementPlayerTurn();
       }
