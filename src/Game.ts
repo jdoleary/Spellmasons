@@ -61,9 +61,6 @@ export default class Game {
     this.boardContainer.x = 0;
     this.boardContainer.y = 0;
     app.stage.addChild(this.boardContainer);
-    document.body.addEventListener('click', (e) => {
-      console.log('click in tile:', this.getCellFromCurrentMousePos());
-    });
     // Make sprites for the board tiles
     let cell;
     for (let x = 0; x < config.BOARD_WIDTH; x++) {

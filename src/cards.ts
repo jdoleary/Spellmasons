@@ -60,12 +60,9 @@ export function clearCards() {
 // Both players are presented with a number of cards and they take turns deciding which to
 // add to their chanelling spell orbs
 export function generateCards(numberOfCards: number) {
-  const cards = [];
   for (let i = 0; i < numberOfCards; i++) {
     const card = generateCard();
-    const el = makeCardElement(card, i);
-    elCardHolder.appendChild(el);
-    cards.push(el);
+    addSpellModToCardHolder(card, i);
   }
 }
 // @ts-ignore
@@ -77,10 +74,12 @@ window.test = () => {
 };
 
 export function addCardToHand(card) {
-  // TODO refactor effect of index for use in card hand, not just in card holder where cards are initially picked
-  const el = makeCardElement(card, 0);
-  cardsInHand.push(el);
-  elCardHand.appendChild(el);
+  const element = createCardElement(card, undefined);
+  element.addEventListener('click', () => {
+    console.log('clicked on card in hand', card);
+  });
+  cardsInHand.push(element);
+  elCardHand.appendChild(element);
   // Initialize position with mouse in the middle
   recalcPositionForCards(window.innerWidth / 2);
 }
@@ -163,10 +162,12 @@ function getCardRarityColor(content: SpellMod): string {
   // White
   return '#FFF';
 }
-function makeCardElement(content: SpellMod, index: number) {
+function createCardElement(content: SpellMod, id?: string) {
   const element = document.createElement('div');
   element.classList.add('card');
-  element.id = 'card-' + index;
+  if (id) {
+    element.id = id;
+  }
   element.style.backgroundColor = getCardRarityColor(content);
   const elCardInner = document.createElement('div');
   elCardInner.classList.add('card-inner');
@@ -181,6 +182,10 @@ function makeCardElement(content: SpellMod, index: number) {
   desc.classList.add('card-description');
   desc.innerText = content.description;
   elCardInner.appendChild(desc);
+  return element;
+}
+function addSpellModToCardHolder(content: SpellMod, index: number) {
+  const element = createCardElement(content, 'card-' + index);
   element.addEventListener('click', () => {
     if (window.game.yourTurn) {
       if (element.classList.contains('disabled')) {
@@ -196,7 +201,7 @@ function makeCardElement(content: SpellMod, index: number) {
       });
     }
   });
-  return element;
+  elCardHolder.appendChild(element);
 }
 function setTransform(element: HTMLElement, transform: any) {
   const newTransform =
