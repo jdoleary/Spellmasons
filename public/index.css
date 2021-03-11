@@ -50,9 +50,6 @@ body {
 .phase-cast #board-highlights {
   visibility: visible;
 }
-#grid-background {
-  position: absolute;
-}
 .game-image {
   position: absolute;
 }
@@ -231,6 +228,5 @@ body.your-turn #player-turn-indicator-holder {
 }
 
 #PIXI-holder {
-  z-index: 1;
   position: absolute;
 }

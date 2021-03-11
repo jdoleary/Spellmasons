@@ -16,7 +16,7 @@ export interface AnimatableProps {
   x?: number;
   y?: number;
   rotation?: number;
-  opacity?: number;
+  alpha?: number;
   scale?: number;
 }
 interface AnimationGroup {
@@ -141,8 +141,8 @@ export default class AnimationManager {
           if (target.rotation !== undefined) {
             current.rotation = lerp(start.rotation, target.rotation, lerpTime);
           }
-          if (target.opacity !== undefined) {
-            current.opacity = lerp(start.opacity, target.opacity, lerpTime);
+          if (target.alpha !== undefined) {
+            current.alpha = lerp(start.alpha, target.alpha, lerpTime);
           }
           if (target.scale !== undefined) {
             current.scale = lerp(start.scale, target.scale, lerpTime);
@@ -173,9 +173,9 @@ export default class AnimationManager {
   setTransform(sprite: PIXI.Sprite, transform: AnimatableProps) {
     sprite.x = transform.x;
     sprite.y = transform.y;
-    sprite.rotation = transform.rotation;
-    sprite.scale.x = transform.scale;
-    sprite.scale.y = transform.scale;
-    sprite.alpha = transform.opacity;
+    sprite.rotation = transform.rotation || 0;
+    sprite.scale.x = transform.scale || 1;
+    sprite.scale.y = transform.scale || 1;
+    sprite.alpha = transform.alpha || 1;
   }
 }

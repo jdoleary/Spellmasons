@@ -27,7 +27,7 @@ export default class Image {
     x: 0,
     y: 0,
     rotation: 0,
-    opacity: 100,
+    alpha: 1,
     scale: 1,
   };
 
@@ -62,8 +62,6 @@ export default class Image {
     //   imageName,
     // );
     this.sprite = addPixiSprite(imageName);
-    this.sprite.scale.x = 4;
-    this.sprite.scale.y = 4;
     this.sprite.rotation = (rotation * Math.PI) / 180;
 
     // this.sprite.appendChild(this.unitImage.element);
@@ -139,11 +137,9 @@ export default class Image {
   }
   // Used for initialization
   set(cell_x: number, cell_y: number, scale: number) {
-    // this.transform.x = cell_x * CELL_SIZE;
-    // this.transform.y = cell_y * CELL_SIZE;
-    this.sprite.x = cell_x * CELL_SIZE;
-    this.sprite.y = cell_y * CELL_SIZE;
-    // this.transform.scale = scale;
-    // window.animationManager.setTransform(this.sprite, this.transform);
+    this.transform.x = cell_x * CELL_SIZE;
+    this.transform.y = cell_y * CELL_SIZE;
+    this.transform.scale = scale;
+    window.animationManager.setTransform(this.sprite, this.transform);
   }
 }

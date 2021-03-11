@@ -5,7 +5,11 @@ import type { IPlayer } from './Player';
 import * as config from './config';
 import * as Unit from './Unit';
 import { generateCards, clearCards } from './cards';
-import { clearSpellIndex, updateSelectedSpellUI } from './SpellPool';
+import {
+  clearSpellIndex,
+  getSelectedSpell,
+  updateSelectedSpellUI,
+} from './SpellPool';
 import { MESSAGE_TYPES } from './MessageTypes';
 import { addPixiSprite, app } from './PixiUtils';
 
@@ -35,6 +39,7 @@ const elPlayerTurnIndicator = document.getElementById('player-turn-indicator');
 const elTurnTimeRemaining = document.getElementById('turn-time-remaining');
 export default class Game {
   state: game_state;
+  boardContainer: PIXI.Container;
   turn_phase: turn_phase;
   height: number = config.BOARD_HEIGHT;
   width: number = config.BOARD_WIDTH;
@@ -52,25 +57,18 @@ export default class Game {
     window.game = this;
 
     // Visuals:
-    const boardContainer = new PIXI.Container();
-    boardContainer.x = 0;
-    boardContainer.y = 0;
-    app.stage.addChild(boardContainer);
+    this.boardContainer = new PIXI.Container();
+    this.boardContainer.x = 0;
+    this.boardContainer.y = 0;
+    app.stage.addChild(this.boardContainer);
     document.body.addEventListener('click', (e) => {
-      const { x, y } = boardContainer.toLocal(
-        app.renderer.plugins.interaction.mouse.global,
-      );
-      console.log(
-        'click in tile:',
-        Math.floor(x / config.CELL_SIZE),
-        Math.floor(y / config.CELL_SIZE),
-      );
+      console.log('click in tile:', this.getCellFromCurrentMousePos());
     });
     // Make sprites for the board tiles
     let cell;
     for (let x = 0; x < config.BOARD_WIDTH; x++) {
       for (let y = 0; y < config.BOARD_HEIGHT; y++) {
-        cell = addPixiSprite('images/cell.png', boardContainer);
+        cell = addPixiSprite('images/cell.png', this.boardContainer);
         cell.x = x * cell.texture.width;
         cell.y = y * cell.texture.height;
         // cell.anchor.x = 0.5;
@@ -96,6 +94,15 @@ export default class Game {
         elTurnTimeRemaining.innerText = '';
       }
     }, 1000);
+  }
+  getCellFromCurrentMousePos() {
+    const { x, y } = this.boardContainer.toLocal(
+      app.renderer.plugins.interaction.mouse.global,
+    );
+    return {
+      x: Math.floor(x / config.CELL_SIZE),
+      y: Math.floor(y / config.CELL_SIZE),
+    };
   }
   goToNextPhaseIfAppropriate() {
     if (this.turn_phase === turn_phase.PickCards) {

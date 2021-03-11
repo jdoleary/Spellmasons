@@ -26,18 +26,18 @@ export default function setupSpellBuilderUI() {
   SpellPool.create();
 
   // on Hover
-  elBoard.addEventListener('mousemove', (e) => {
-    const { cell_x, cell_y } = getCell(e);
-    const didChange = mouseCellX !== cell_x || mouseCellY !== cell_y;
-    mouseCellX = cell_x;
-    mouseCellY = cell_y;
+  document.body.addEventListener('mousemove', (e) => {
+    const { x, y } = window.game.getCellFromCurrentMousePos();
+    const didChange = mouseCellX !== x || mouseCellY !== y;
+    mouseCellX = x;
+    mouseCellY = y;
     // If mouse hovering over a new cell, update the target images
     if (didChange) {
       // Make a copy of the spell and add the target coords
       const spellCopy = Object.assign(
         {
-          x: cell_x,
-          y: cell_y,
+          x,
+          y,
         },
         SpellPool.getSelectedSpell(),
       );
@@ -48,20 +48,22 @@ export default function setupSpellBuilderUI() {
       // Show highlights corresponding to targets
       for (let t of targets) {
         const sprite = addPixiSprite('images/spell/target.png');
+        sprite.x = -10;
+        sprite.y = -10;
         highlights.push(sprite);
         const transform = {
           x: t.x * CELL_SIZE,
           y: t.y * CELL_SIZE,
-          opacity: 100,
+          alpha: 1,
           scale: 1,
         };
         window.animationManager.setTransform(sprite, transform);
       }
     }
   });
-  elBoard.addEventListener('mouseleave', (e) => {
-    clearHighlights();
-  });
+  // elBoard.addEventListener('mouseleave', (e) => {
+  //   clearHighlights();
+  // });
 
   // Add board click handling
   elBoard.addEventListener('click', (e) => {

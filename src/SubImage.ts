@@ -9,7 +9,7 @@ export default class SubImage {
     x: 0,
     y: 0,
     rotation: 0,
-    opacity: 100,
+    alpha: 1,
     scale: 1,
   };
 
