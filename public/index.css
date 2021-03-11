@@ -16,20 +16,8 @@ body {
   bottom: 0;
 }
 #board {
-  /* Board is hidden until game is made */
   visibility: hidden;
-  border: 1px solid black;
-  width: 512px;
-  height: 512px;
-  margin: 64px auto;
-  /* Position relative allows inner absolute elements (such as
-  floating text) to be aligned correctly
-  */
   position: relative;
-  /* Wrap cells
-  display: flex;
-  flex-wrap: wrap;
-  margin: 40px auto 0 auto; */
 }
 #board-contents {
   user-select: none;
@@ -218,15 +206,4 @@ body.your-turn #player-turn-indicator-holder {
 }
 #health-mine {
   bottom: -20px;
-}
-/* Test for PIXI conversion */
-#board {
-  opacity: 0.2;
-}
-#card-holder {
-  opacity: 0.2;
-}
-
-#PIXI-holder {
-  position: absolute;
 }
