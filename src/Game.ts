@@ -69,10 +69,8 @@ export default class Game {
     for (let x = 0; x < config.BOARD_WIDTH; x++) {
       for (let y = 0; y < config.BOARD_HEIGHT; y++) {
         cell = addPixiSprite('images/cell.png', this.boardContainer);
-        cell.x = x * cell.texture.width;
-        cell.y = y * cell.texture.height;
-        // cell.anchor.x = 0.5;
-        // cell.anchor.y = 0.5;
+        cell.x = x * config.CELL_SIZE;
+        cell.y = y * config.CELL_SIZE;
       }
     }
 
