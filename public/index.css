@@ -1,8 +1,8 @@
 body {
   margin: 0;
+  overflow: hidden;
 }
 #game-container {
-  background: grey;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -19,7 +19,6 @@ body {
   /* Board is hidden until game is made */
   visibility: hidden;
   border: 1px solid black;
-  background-color: white;
   width: 512px;
   height: 512px;
   margin: 64px auto;

@@ -53,6 +53,8 @@ export default class Game {
 
     // Visuals:
     const boardContainer = new PIXI.Container();
+    boardContainer.x = 0;
+    boardContainer.y = 0;
     app.stage.addChild(boardContainer);
     // Make sprites for the board tiles
     let cell;
@@ -61,12 +63,10 @@ export default class Game {
         cell = addPixiSprite('images/cell.png', boardContainer);
         cell.x = x * cell.texture.width;
         cell.y = y * cell.texture.height;
-        console.log(cell.x, cell.y);
+        // cell.anchor.x = 0.5;
+        // cell.anchor.y = 0.5;
       }
     }
-    // Center the board based on the width of the cells
-    boardContainer.x = -(cell.texture.width * config.BOARD_WIDTH) / 2;
-    boardContainer.y = -(cell.texture.height * config.BOARD_HEIGHT) / 2;
 
     setInterval(() => {
       if (this.turn_phase === turn_phase.Cast) {

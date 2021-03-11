@@ -14,14 +14,18 @@ let resources;
 export function setupPixi(): Promise<void> {
   // The application will create a canvas element for you that you
   // can then insert into the DOM
-  document.body.appendChild(app.view);
+  document.getElementById('PIXI-holder').appendChild(app.view);
 
   return loadTextures();
 }
 function loadTextures(): Promise<void> {
   return new Promise((resolve) => {
     const loader = PIXI.Loader.shared;
-    const images = ['images/cell.png', 'images/units/golem.png'];
+    const images = [
+      'images/cell.png',
+      'images/units/golem.png',
+      'images/plus.png',
+    ];
     images.forEach((path) => {
       loader.add(path);
     });
@@ -42,8 +46,6 @@ export function addPixiSprite(
     );
   }
   const sprite = new PIXI.Sprite(resources[imagePath].texture);
-  sprite.anchor.x = 0.5;
-  sprite.anchor.y = 0.5;
   if (parent) {
     parent.addChild(sprite);
   } else {
