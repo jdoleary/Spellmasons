@@ -2,6 +2,8 @@
 
 ## 3.11
 
+monday - call tile companies
+
 - Convert to pixijs
   - https://github.com/kittykatattack/learningPixi#settingup
 - Add player as unit on board

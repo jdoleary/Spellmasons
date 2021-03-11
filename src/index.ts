@@ -12,8 +12,10 @@ import makeSeededRandom from './rand';
 import { cardChosen } from './SpellPool';
 import { clearCards } from './cards';
 
-import SetupPixi from './SetupPixi';
-SetupPixi();
+import { setupPixi, addPixiSprite } from './PixiUtils';
+setupPixi().then(() => {
+  const golemSprite = addPixiSprite('images/units/golem.png');
+});
 
 window.animationManager = new AnimationManager();
 UI.setup();
@@ -25,7 +27,7 @@ const wsUri = 'ws://localhost:8000';
 // const wsUri = 'wss://websocket-pie-e4elx.ondigitalocean.app/';
 let pie: PieClient;
 let game: Game = new Game();
-let maxClients = 2;
+let maxClients = 1;
 function connect(_room_info = {}) {
   const room_info = Object.assign(_room_info, {
     app: 'Golems',
