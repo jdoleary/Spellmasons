@@ -112,6 +112,24 @@ body:not(.your-turn) #spell-pool .spell {
   border-radius: 32px;
 }
 
+#card-hand {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  border: 1px solid pink;
+  height: 100px;
+}
+#card-hand .card {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+#card-hand .card.active {
+  z-index: 2;
+  top: -50px;
+}
 #card-holder {
   position: absolute;
   margin: 40px auto;

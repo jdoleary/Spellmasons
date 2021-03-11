@@ -1,6 +1,21 @@
 import { MESSAGE_TYPES } from './MessageTypes';
 import { addModifierToSpell } from './SpellPool';
 const elCardHolder = document.getElementById('card-holder');
+const elCardHand = document.getElementById('card-hand');
+const cardsInHand: HTMLElement[] = [];
+elCardHand.addEventListener('mousemove', (e) => {
+  // Remove previously active card
+  document.querySelectorAll('#card-hand .card.active').forEach((el) => {
+    el.classList.remove('active');
+  });
+  const x = e.clientX;
+  const proportionX = x / window.innerWidth;
+  const index = Math.floor(cardsInHand.length * proportionX);
+  const card = cardsInHand[index];
+  if (card) {
+    card.classList.add('active');
+  }
+});
 export function clearCards() {
   elCardHolder.innerHTML = '';
 }
@@ -11,8 +26,29 @@ export function generateCards(numberOfCards: number) {
   const cards = [];
   for (let i = 0; i < numberOfCards; i++) {
     const card = generateCard();
-    const el = cardDOM(card, i);
+    const el = makeCardElement(card, i);
+    elCardHolder.appendChild(el);
     cards.push(el);
+  }
+}
+// @ts-ignore
+window.test = () => {
+  for (let i = 0; i < 20; i++) {
+    const card = generateCard();
+    addCardToHand(card);
+  }
+};
+
+export function addCardToHand(card) {
+  // TODO refactor effect of index for use in card hand, not just in card holder where cards are initially picked
+  const el = makeCardElement(card, 0);
+  cardsInHand.push(el);
+  elCardHand.appendChild(el);
+  // Recalc positions for all cards
+  for (let i = 0; i < cardsInHand.length; i++) {
+    const cardEl = cardsInHand[i];
+    const percentXPosition = i / cardsInHand.length;
+    setTransform(cardEl, { x: percentXPosition * window.innerWidth, y: 0 });
   }
 }
 interface SpellMod {
@@ -94,7 +130,7 @@ function getCardRarityColor(content: SpellMod): string {
   // White
   return '#FFF';
 }
-function cardDOM(content: SpellMod, index: number) {
+function makeCardElement(content: SpellMod, index: number) {
   const element = document.createElement('div');
   element.classList.add('card');
   element.id = 'card-' + index;
@@ -127,6 +163,16 @@ function cardDOM(content: SpellMod, index: number) {
       });
     }
   });
-  elCardHolder.appendChild(element);
   return element;
+}
+function setTransform(element: HTMLElement, transform: any) {
+  const newTransform =
+    'translate(' +
+    transform.x +
+    'px, ' +
+    transform.y +
+    'px) rotate(' +
+    (transform.rotation || 0) +
+    'deg)';
+  element.style.transform = newTransform;
 }
