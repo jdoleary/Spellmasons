@@ -2,12 +2,16 @@ import * as PIXI from 'pixi.js';
 // if PIXI is finished setting up
 let isReady = false;
 // PIXI app
-let app;
+export const app = new PIXI.Application();
+app.renderer.backgroundColor = 0x45b6fe;
+app.renderer.view.style.position = 'absolute';
+app.renderer.view.style.top = '0';
+app.renderer.view.style.display = 'block';
+// app.renderer.autoResize = true;
+app.renderer.resize(window.innerWidth, window.innerHeight);
 // PIXI textures
 let resources;
 export function setupPixi(): Promise<void> {
-  app = new PIXI.Application();
-
   // The application will create a canvas element for you that you
   // can then insert into the DOM
   document.body.appendChild(app.view);
@@ -28,9 +32,12 @@ function loadTextures(): Promise<void> {
     });
   });
 }
-export function addPixiSprite(imagePath: string, parent?: PIXI.Container) {
+export function addPixiSprite(
+  imagePath: string,
+  parent?: PIXI.Container,
+): PIXI.Sprite {
   if (!isReady) {
-    return new Error(
+    throw new Error(
       'PIXI is not finished setting up.  Cannot add a sprite yet',
     );
   }

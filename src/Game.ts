@@ -1,3 +1,5 @@
+import * as PIXI from 'pixi.js';
+
 import { Spell, effect } from './Spell';
 import type { IPlayer } from './Player';
 import * as config from './config';
@@ -5,6 +7,7 @@ import * as Unit from './Unit';
 import { generateCards, clearCards } from './cards';
 import { clearSpellIndex, updateSelectedSpellUI } from './SpellPool';
 import { MESSAGE_TYPES } from './MessageTypes';
+import { addPixiSprite, app } from './PixiUtils';
 
 export enum game_state {
   Lobby,
@@ -47,6 +50,24 @@ export default class Game {
   constructor() {
     this.setGameState(game_state.Lobby);
     window.game = this;
+
+    // Visuals:
+    const boardContainer = new PIXI.Container();
+    app.stage.addChild(boardContainer);
+    // Make sprites for the board tiles
+    let cell;
+    for (let x = 0; x < config.BOARD_WIDTH; x++) {
+      for (let y = 0; y < config.BOARD_HEIGHT; y++) {
+        cell = addPixiSprite('images/cell.png', boardContainer);
+        cell.x = x * cell.texture.width;
+        cell.y = y * cell.texture.height;
+        console.log(cell.x, cell.y);
+      }
+    }
+    // Center the board based on the width of the cells
+    boardContainer.x = -(cell.texture.width * config.BOARD_WIDTH) / 2;
+    boardContainer.y = -(cell.texture.height * config.BOARD_HEIGHT) / 2;
+
     setInterval(() => {
       if (this.turn_phase === turn_phase.Cast) {
         // Limit turn duration during Cast phase
