@@ -12,6 +12,9 @@ import makeSeededRandom from './rand';
 import { cardChosen } from './SpellPool';
 import { clearCards } from './cards';
 
+import SetupPixi from './SetupPixi';
+SetupPixi();
+
 window.animationManager = new AnimationManager();
 UI.setup();
 
@@ -146,7 +149,7 @@ function onData(d: { fromClient: string; payload: any }) {
       break;
     case MESSAGE_TYPES.END_TURN:
       // If it is currently your turn, end your turn
-      if(game.yourTurn){
+      if (game.yourTurn) {
         game.endedTurn.add(caster.clientId);
         game.incrementPlayerTurn();
       }
