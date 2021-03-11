@@ -1,10 +1,13 @@
 import { MESSAGE_TYPES } from './MessageTypes';
 import { addModifierToSpell } from './SpellPool';
+import { lerp } from './math';
 const elCardHolder = document.getElementById('card-holder');
 const elCardHand = document.getElementById('card-hand');
 const cardsInHand: HTMLElement[] = [];
 const CARD_WIDTH = 70;
+const CARD_HAND_MARGIN = 80;
 const Y_MOVE_AMOUNT_ON_HOVER = -50;
+const MOUSE_HOVER_DISTANCE_THRESHOLD = 400;
 function deselectActiveCardsInHand() {
   // Remove previously active card
   document.querySelectorAll('#card-hand .card.active').forEach((el) => {
@@ -19,21 +22,20 @@ function recalcPositionForCards(mouseX) {
   for (let i = 0; i < cardsInHand.length; i++) {
     const cardEl = cardsInHand[i];
     const proportionXPosition = i / (cardsInHand.length - 1);
-    const cardBasePositionX = proportionXPosition * cardHandWidth;
+    const cardBasePositionX =
+      proportionXPosition * cardHandWidth - CARD_WIDTH / 2;
 
     // -1.0 to 1.0
-    const distanceFromMouse = mouseX - cardBasePositionX;
-    // const MOUSE_DISTANCE_MOVER = Math.pow(
-    //   1 - distanceFromMouse / window.innerWidth,
-    //   10,
-    // );
-    const MOUSE_DISTANCE_MOVER = -(100 * distanceFromMouse) / window.innerWidth;
+    const distanceFromMouse =
+      mouseX - cardBasePositionX - CARD_HAND_MARGIN - CARD_WIDTH / 2;
+
+    // "+ 0.5" allows half of the negative threshold to be included and half of the positive threshold
+    // rather than just the positive side of the threshold
+    const lerpT = distanceFromMouse / MOUSE_HOVER_DISTANCE_THRESHOLD;
+    const MOUSE_DISTANCE_MOVER = lerp(-1, 1, lerpT + 0.5);
 
     setTransform(cardEl, {
-      x: Math.min(
-        window.innerWidth - CARD_WIDTH,
-        Math.max(0, cardBasePositionX + MOUSE_DISTANCE_MOVER),
-      ),
+      x: cardBasePositionX + -10 * MOUSE_DISTANCE_MOVER,
       y: 0,
     });
   }

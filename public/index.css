@@ -115,8 +115,8 @@ body:not(.your-turn) #spell-pool .spell {
 #card-hand {
   position: fixed;
   bottom: 0;
-  left: 0;
-  right: 0;
+  left: 80px;
+  right: 80px;
   z-index: 1;
   border: 2px solid pink;
   height: 100px;
