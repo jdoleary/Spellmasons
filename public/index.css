@@ -118,13 +118,14 @@ body:not(.your-turn) #spell-pool .spell {
   left: 0;
   right: 0;
   z-index: 1;
-  border: 1px solid pink;
+  border: 2px solid pink;
   height: 100px;
 }
 #card-hand .card {
   position: absolute;
   top: 0;
   left: 0;
+  width: 70px;
 }
 #card-hand .card.active {
   z-index: 2;

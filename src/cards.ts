@@ -3,18 +3,53 @@ import { addModifierToSpell } from './SpellPool';
 const elCardHolder = document.getElementById('card-holder');
 const elCardHand = document.getElementById('card-hand');
 const cardsInHand: HTMLElement[] = [];
-elCardHand.addEventListener('mousemove', (e) => {
+const CARD_WIDTH = 70;
+const Y_MOVE_AMOUNT_ON_HOVER = -50;
+function deselectActiveCardsInHand() {
   // Remove previously active card
   document.querySelectorAll('#card-hand .card.active').forEach((el) => {
     el.classList.remove('active');
   });
-  const x = e.clientX;
-  const proportionX = x / window.innerWidth;
-  const index = Math.floor(cardsInHand.length * proportionX);
-  const card = cardsInHand[index];
-  if (card) {
-    card.classList.add('active');
+}
+function recalcPositionForCards(mouseX) {
+  const cardHandWidth = elCardHand.getBoundingClientRect().width;
+  // How far the mouse is across the screen, 0 is far left, 1.0 is far right
+  const mouseProportionX = mouseX / window.innerWidth;
+  // Recalc positions for all cards
+  for (let i = 0; i < cardsInHand.length; i++) {
+    const cardEl = cardsInHand[i];
+    const proportionXPosition = i / (cardsInHand.length - 1);
+    const cardBasePositionX = proportionXPosition * cardHandWidth;
+
+    // -1.0 to 1.0
+    const distanceFromMouse = mouseX - cardBasePositionX;
+    // const MOUSE_DISTANCE_MOVER = Math.pow(
+    //   1 - distanceFromMouse / window.innerWidth,
+    //   10,
+    // );
+    const MOUSE_DISTANCE_MOVER = -(100 * distanceFromMouse) / window.innerWidth;
+
+    setTransform(cardEl, {
+      x: Math.min(
+        window.innerWidth - CARD_WIDTH,
+        Math.max(0, cardBasePositionX + MOUSE_DISTANCE_MOVER),
+      ),
+      y: 0,
+    });
   }
+}
+elCardHand.addEventListener('mouseleave', (e) => {
+  deselectActiveCardsInHand();
+});
+elCardHand.addEventListener('mousemove', (e) => {
+  deselectActiveCardsInHand();
+  const x = e.clientX;
+  // const index = Math.floor(cardsInHand.length * mouseProportionX);
+  // const card = cardsInHand[index];
+  // if (card) {
+  //   card.classList.add('active');
+  // }
+  recalcPositionForCards(x);
 });
 export function clearCards() {
   elCardHolder.innerHTML = '';
@@ -33,7 +68,7 @@ export function generateCards(numberOfCards: number) {
 }
 // @ts-ignore
 window.test = () => {
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < 3; i++) {
     const card = generateCard();
     addCardToHand(card);
   }
@@ -44,12 +79,8 @@ export function addCardToHand(card) {
   const el = makeCardElement(card, 0);
   cardsInHand.push(el);
   elCardHand.appendChild(el);
-  // Recalc positions for all cards
-  for (let i = 0; i < cardsInHand.length; i++) {
-    const cardEl = cardsInHand[i];
-    const percentXPosition = i / cardsInHand.length;
-    setTransform(cardEl, { x: percentXPosition * window.innerWidth, y: 0 });
-  }
+  // Initialize position with mouse in the middle
+  recalcPositionForCards(window.innerWidth / 2);
 }
 interface SpellMod {
   description: string;
