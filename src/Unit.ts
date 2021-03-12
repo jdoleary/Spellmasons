@@ -100,10 +100,13 @@ export function findClosestPlayerTo(unit: IUnit) {
   let currentClosest = window.game.players[0].unit;
   let currentClosestDistance = Number.MAX_SAFE_INTEGER;
   for (let p of window.game.players) {
-    const dist = distance(p.unit, unit);
-    if (dist < currentClosestDistance) {
-      currentClosest = p.unit;
-      currentClosestDistance = dist;
+    // Only consider units that are not in the portal
+    if (!p.inPortal) {
+      const dist = distance(p.unit, unit);
+      if (dist < currentClosestDistance) {
+        currentClosest = p.unit;
+        currentClosestDistance = dist;
+      }
     }
   }
   return currentClosest;
@@ -135,21 +138,9 @@ export function moveAI(unit: IUnit) {
   const alive_bump_into_units = bump_into_units.filter((u) => u.alive);
   // If nothing is obstructing
   if (alive_bump_into_units.length === 0) {
-    // Check if at edge of board
-    const player: IPlayer | undefined = window.game
-      ? window.game.getPlayerAt(next_x, next_y)
-      : undefined;
-    if (player) {
-      // if player found, attack their heart
-      player.heart_health -= unit.power;
-      UI.setHealth(player);
-      // Attack player animation
-      unit.image.attack(unit.x, unit.y, next_x, next_y);
-    } else {
-      // Otherwise, physically move
-      unit.x = next_x;
-      unit.y = next_y;
-      unit.image.move(unit.x, unit.y);
-    }
+    // physically move
+    unit.x = next_x;
+    unit.y = next_y;
+    unit.image.move(unit.x, unit.y);
   }
 }

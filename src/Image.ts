@@ -48,6 +48,7 @@ export default class Image {
 
     this.set(cellX, cellY, 1.0);
   }
+  // convert from cell coordinates to objective board coordinates
   cellToBoardCoords(cellX: number, cellY: number) {
     return {
       x: cellX * CELL_SIZE + CELL_SIZE / 2,
@@ -96,6 +97,12 @@ export default class Image {
       this.transform,
       this.cellToBoardCoords(cellX, cellY),
     );
+  }
+  hide() {
+    console.log(this.transform);
+    window.animationManager.addAnimation(this.sprite, this.transform, {
+      alpha: 0,
+    });
   }
   attack(
     current_cellX: number,

@@ -135,6 +135,8 @@ function onData(d: { fromClient: string; payload: any }) {
     case MESSAGE_TYPES.MOVE_PLAYER:
       // Move the player 1 magnitude on either or both axes towards the desired position
       Unit.moveTo(caster.unit, payload.x, payload.y);
+      // Check if the player collided with any pickups
+      window.game.checkPickupCollisions(caster);
       window.animationManager.startAnimate();
       // Moving the player unit ends your turn
       endPlayerTurn(caster.clientId);
@@ -222,20 +224,7 @@ function makeGame(clients: string[]) {
   const sortedClients = clients.sort();
   for (let i = 0; i < sortedClients.length; i++) {
     const c = clients[i];
-    const isOnTop = i == 0;
-    if (c === window.clientId) {
-      if (isOnTop) {
-        // TODO, any logic if the current player is on top
-        // document.getElementById('board').classList.add('invert');
-      }
-    }
-    let heart_y = 0;
-    if (isOnTop) {
-      heart_y = -1;
-    } else {
-      heart_y = BOARD_HEIGHT;
-    }
-    const p = Player.create(c, heart_y);
+    const p = Player.create(c);
     game.players.push(p);
   }
   // Make seeded random number generator using portions of all players clientIds

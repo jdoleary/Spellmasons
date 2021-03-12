@@ -1,9 +1,10 @@
 import * as PIXI from 'pixi.js';
 
 import { Spell, effect } from './Spell';
-import type { IPlayer } from './Player';
 import * as config from './config';
 import * as Unit from './Unit';
+import * as Pickup from './Pickup';
+import * as Player from './Player';
 import * as Card from './cards';
 import { updateSelectedSpellUI } from './SpellPool';
 import { MESSAGE_TYPES } from './MessageTypes';
@@ -38,9 +39,9 @@ export default class Game {
   turn_phase: turn_phase;
   height: number = config.BOARD_HEIGHT;
   width: number = config.BOARD_WIDTH;
-  portal: Unit.IUnit;
-  players: IPlayer[] = [];
+  players: Player.IPlayer[] = [];
   units: Unit.IUnit[] = [];
+  pickups: Pickup.IPickup[] = [];
   // The number of the current level
   level = 1;
   // The index of which player's turn it is
@@ -94,13 +95,28 @@ export default class Game {
       u.image.cleanup();
     }
     this.units = [];
+    // Clear all pickups
+    for (let p of this.pickups) {
+      p.image.cleanup();
+    }
+    this.pickups = [];
     this.level++;
     this.initLevel();
   }
 
   initLevel() {
+    for (let p of this.players) {
+      Player.respawnUnit(p);
+    }
     const portalPos = this.getRandomCell();
-    this.portal = Unit.create(portalPos.x, portalPos.y, 'images/portal.png');
+    Pickup.create(
+      portalPos.x,
+      portalPos.y,
+      'images/portal.png',
+      (p: Player.IPlayer) => {
+        Player.enterPortal(p);
+      },
+    );
     // Spawn units at the start of the level
     for (
       let i = 0;
@@ -111,6 +127,13 @@ export default class Game {
       Unit.create(x, y, 'images/units/golem.png');
     }
     window.animationManager.startAnimate();
+  }
+  checkPickupCollisions(player: Player.IPlayer) {
+    for (let pu of this.pickups) {
+      if (player.unit.x == pu.x && player.unit.y == pu.y) {
+        pu.effect(player);
+      }
+    }
   }
   getCellFromCurrentMousePos() {
     const { x, y } = this.boardContainer.toLocal(
@@ -150,6 +173,15 @@ export default class Game {
     // Turns can only be manually ended during the PlayerTurns phase
     if (this.turn_phase === turn_phase.PlayerTurns) {
       window.pie.sendData({ type: MESSAGE_TYPES.END_TURN });
+    }
+  }
+  checkForEndOfLevel() {
+    // Advance the level if all living players have entered the portal:
+    const doIncrementLevel = this.players.filter(
+      (p) => p.unit.alive && p.inPortal,
+    );
+    if (doIncrementLevel) {
+      this.moveToNextLevel();
     }
   }
   // Clean up resources of dead units
@@ -345,22 +377,14 @@ export default class Game {
   getUnitsAt(x?: number, y?: number): Unit.IUnit[] {
     return this.units.filter((u) => u.alive && u.x === x && u.y === y);
   }
-  getPlayerAt(heart_x: number, heart_y: number): IPlayer | undefined {
-    for (let p of this.players) {
-      // Only one has to match
-      // Example heart postions are
-      // p.heart_x = -1; p.heart_y = undefined;
-      // p.heart_y = 8; p.heart_x = undefined;
-      if (p.heart_x === heart_x || p.heart_y === heart_y) {
-        return p;
-      }
-    }
-  }
   addUnitToArray(unit: Unit.IUnit) {
     this.units.push(unit);
   }
+  addPickupToArray(pickup: Pickup.IPickup) {
+    this.pickups.push(pickup);
+  }
   cast(spell: Spell) {
-    const { x, y, caster } = spell;
+    const { caster } = spell;
     // If you are casting the spell, clear the spell in the spell pool that was just cast
     if (caster.clientId === window.clientId) {
       updateSelectedSpellUI();
