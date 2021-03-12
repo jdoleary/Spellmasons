@@ -54,23 +54,6 @@ elCardHand.addEventListener('mousemove', (e) => {
 export function clearCards() {
   elCardHolder.innerHTML = '';
 }
-// Cards are used for chanelling unique spells each turn.
-// Both players are presented with a number of cards and they take turns deciding which to
-// add to their chanelling spell orbs
-// Todo: unused since rev3 consider removing
-// export function generateCards(numberOfCards: number) {
-//   for (let i = 0; i < numberOfCards; i++) {
-//     const card = generateCard();
-//     addSpellModToCardHolder(card, i);
-//   }
-// }
-// @ts-ignore
-window.test = () => {
-  for (let i = 0; i < 3; i++) {
-    const card = generateCard();
-    addCardToHand(card);
-  }
-};
 export function clearSelectedCards() {
   SpellPool.clearCurrentSpell();
   for (let i = cardsInHand.length - 1; i >= 0; i--) {
@@ -142,7 +125,7 @@ const modifiers: SpellMod[] = [
     probability: 10,
   },
 ];
-function generateCard() {
+export function generateCard() {
   // Chooses a random modifier based on their probability
   const maxProbability = modifiers.reduce(
     (maxProbability, current) => current.probability + maxProbability,

@@ -4,6 +4,7 @@ import { Spell, effect } from './Spell';
 import type { IPlayer } from './Player';
 import * as config from './config';
 import * as Unit from './Unit';
+import * as Card from './cards';
 import { updateSelectedSpellUI } from './SpellPool';
 import { MESSAGE_TYPES } from './MessageTypes';
 import { addPixiSprite, app } from './PixiUtils';
@@ -155,6 +156,11 @@ export default class Game {
     document.body.classList.add('phase-' + phase.toLowerCase());
     switch (phase) {
       case 'PlayerTurns':
+        // Add cards to hand
+        for (let i = 0; i < 3; i++) {
+          const card = Card.generateCard();
+          Card.addCardToHand(card);
+        }
         this.bringOutYerDead();
         break;
       case 'NPC':
