@@ -35,9 +35,6 @@ export default class AnimationManager {
   constructor() {
     this.animate = this.animate.bind(this);
   }
-  // An array of callbacks that will be called when
-  // a set of animations is done
-  doneAnimatingCallbacks: (() => void)[] = [];
   animationGroups: AnimationGroup[] = [];
   currentGroup: AnimationGroup;
   groupLabel: string;
