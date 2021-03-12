@@ -113,5 +113,7 @@ export default function setupSpellBuilderUI() {
         }
       }
     }
+    // Remove the highlight once a click occurs
+    clearHighlights();
   });
 }
