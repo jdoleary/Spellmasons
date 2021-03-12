@@ -1,5 +1,14 @@
 # Todo
 
+## Bugs
+
+- brad got 'cannot read property unit of undefined'
+- I'm going twice and brad goes once
+- Two portals, it doesn't wait for both players to enter portal
+- Multiple portals spawn
+- AI affects player units too, brads guy attacked me
+- Dead players can take turns
+
 ## 3.12
 
 - Add portal and concept of levels
