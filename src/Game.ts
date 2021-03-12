@@ -99,25 +99,23 @@ export default class Game {
       if (this.endedTurn.size >= this.players.length) {
         // Reset the endedTurn set so both players can take turns again next Cast phase
         this.endedTurn.clear();
-        // Ensure the other player picks first
-        // (This alternates which player picks first)
-        this.incrementPlayerTurn();
         // Move onto next phase
         this.setTurnPhase(turn_phase.NPC);
       }
     }
   }
+  setYourTurn(yourTurn: boolean, message: string) {
+    elPlayerTurnIndicator.innerText = message;
+    document.body.classList.toggle('your-turn', yourTurn);
+    this.yourTurn = yourTurn;
+  }
   incrementPlayerTurn() {
     this.playerTurnIndex = (this.playerTurnIndex + 1) % this.players.length;
     this.secondsLeftForTurn = config.MAX_SECONDS_PER_TURN;
     if (this.players[this.playerTurnIndex].clientId === window.clientId) {
-      elPlayerTurnIndicator.innerText = 'Your turn';
-      document.body.classList.add('your-turn');
-      this.yourTurn = true;
+      this.setYourTurn(true, 'Your Turn');
     } else {
-      elPlayerTurnIndicator.innerText = 'Opponents turn';
-      document.body.classList.remove('your-turn');
-      this.yourTurn = false;
+      this.setYourTurn(false, "Other Player's Turn");
     }
     this.goToNextPhaseIfAppropriate();
   }
@@ -164,6 +162,7 @@ export default class Game {
         this.bringOutYerDead();
         break;
       case 'NPC':
+        this.setYourTurn(false, "NPC's Turn");
         for (let i = 0; i < config.NUMBER_OF_UNITS_SPAWN_PER_TURN; i++) {
           // Extra "-1" is because board width is 0 indexed
           const x = window.random.integer(0, config.BOARD_WIDTH - 1);
@@ -171,7 +170,7 @@ export default class Game {
           const y =
             i % 2 == 0 ? config.BOARD_HEIGHT / 2 - 1 : config.BOARD_HEIGHT / 2;
 
-          const unit = Unit.create(
+          Unit.create(
             x,
             y,
             0,
@@ -195,6 +194,8 @@ export default class Game {
 
         window.animationManager.startAnimate().then(() => {
           this.setTurnPhase(turn_phase.PlayerTurns);
+          // After NPC's are done, setup the next player to take their turn
+          this.incrementPlayerTurn();
         });
         break;
       default:

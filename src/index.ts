@@ -1,6 +1,7 @@
 import PieClient, { ClientPresenceChangedArgs } from 'pie-client';
 import Game, { game_state, turn_phase } from './Game';
 import * as Player from './Player';
+import * as Unit from './Unit';
 import Image from './Image';
 import AnimationManager from './AnimationManager';
 import { BOARD_HEIGHT } from './config';
@@ -29,7 +30,7 @@ const wsUri = 'ws://localhost:8000';
 // const wsUri = 'wss://websocket-pie-e4elx.ondigitalocean.app/';
 let pie: PieClient;
 let game: Game;
-let maxClients = 1;
+let maxClients = 2;
 function connect(_room_info = {}) {
   const room_info = Object.assign(_room_info, {
     app: 'Golems',
@@ -128,6 +129,11 @@ function onData(d: { fromClient: string; payload: any }) {
       // go to next player for picking
       game.incrementPlayerTurn();
 
+      break;
+    case MESSAGE_TYPES.MOVE_PLAYER:
+      // Move the player 1 magnitude on either or both axes towards the desired position
+      Unit.moveTo(caster.unit, payload.x, payload.y);
+      window.animationManager.startAnimate();
       break;
     case MESSAGE_TYPES.SPELL:
       // Set caster based on which client sent it

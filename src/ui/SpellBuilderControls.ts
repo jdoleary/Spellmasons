@@ -101,14 +101,14 @@ export default function setupSpellBuilderUI() {
             // Find the difference between current position and desired position
             const diffX = x - selfPlayer.unit.x;
             const diffY = y - selfPlayer.unit.y;
-            // Move the player 1 magnitude on either or both axes towards the desired position
-            Unit.moveTo(
-              selfPlayer.unit,
+            window.pie.sendData({
+              type: MESSAGE_TYPES.MOVE_PLAYER,
               // This formula clamps the diff to -1, 0 or 1
-              selfPlayer.unit.x + (diffX === 0 ? 0 : diffX / Math.abs(diffX)),
-              selfPlayer.unit.y + (diffY === 0 ? 0 : diffY / Math.abs(diffY)),
-            );
-            window.animationManager.startAnimate();
+              x:
+                selfPlayer.unit.x + (diffX === 0 ? 0 : diffX / Math.abs(diffX)),
+              y:
+                selfPlayer.unit.y + (diffY === 0 ? 0 : diffY / Math.abs(diffY)),
+            });
           }
         }
       }
