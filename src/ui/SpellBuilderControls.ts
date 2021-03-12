@@ -105,7 +105,7 @@ export default function setupSpellBuilderUI() {
               selfPlayer.unit.x + (diffX === 0 ? 0 : diffX / Math.abs(diffX));
             const moveY =
               selfPlayer.unit.y + (diffY === 0 ? 0 : diffY / Math.abs(diffY));
-            if (!window.game.isCellOccupied(moveX, moveY)) {
+            if (window.game.canUnitMoveIntoCell(moveX, moveY)) {
               window.pie.sendData({
                 type: MESSAGE_TYPES.MOVE_PLAYER,
                 // This formula clamps the diff to -1, 0 or 1
