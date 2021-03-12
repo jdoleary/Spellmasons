@@ -136,6 +136,8 @@ function onData(d: { fromClient: string; payload: any }) {
       // Move the player 1 magnitude on either or both axes towards the desired position
       Unit.moveTo(caster.unit, payload.x, payload.y);
       window.animationManager.startAnimate();
+      // Moving the player unit ends your turn
+      endPlayerTurn(caster.clientId);
       break;
     case MESSAGE_TYPES.SPELL:
       // Set caster based on which client sent it
@@ -158,14 +160,11 @@ function onData(d: { fromClient: string; payload: any }) {
       } else {
         console.log('Someone is trying to cast out of turn');
       }
+      // Casting a spell ends your turn
+      endPlayerTurn(caster.clientId);
       break;
     case MESSAGE_TYPES.END_TURN:
-      // Ensure players can only end the turn when it is their turn
-      const currentTurnPlayer = game.players[game.playerTurnIndex];
-      if (currentTurnPlayer.clientId === caster.clientId) {
-        game.endedTurn.add(caster.clientId);
-        game.incrementPlayerTurn();
-      }
+      endPlayerTurn(caster.clientId);
       // TODO
       // if (all_players_ended_turn) {
       // game.nextTurn().then(() => {
@@ -180,6 +179,14 @@ function onData(d: { fromClient: string; payload: any }) {
       // });
       // }
       break;
+  }
+}
+function endPlayerTurn(clientId) {
+  const currentTurnPlayer = game.players[game.playerTurnIndex];
+  // Ensure players can only end the turn when it is their turn
+  if (currentTurnPlayer.clientId === clientId) {
+    game.endedTurn.add(clientId);
+    game.incrementPlayerTurn();
   }
 }
 function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
