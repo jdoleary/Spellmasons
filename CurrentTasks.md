@@ -1,18 +1,17 @@
 # Todo
 
-## 3.11
-
-monday - call tile companies
-
-- Convert to pixijs
-  - https://github.com/kittykatattack/learningPixi#settingup
-- Add player as unit on board
-  - Add player movement
-- Add portal and concept of levels
-- update cards to combine at bottom, remove spell pools, make cards combine only when about to cast
-- Add pickups
-
 ## 3.12
+
+- Rethink game phases for rev3
+  - move, cast, endturn
+- Add player movement
+- Add portal and concept of levels
+  - Seed level difficulty based on level number
+  - Random mobs, and rocks
+- Add pickups
+- update cards to combine at bottom, remove spell pools, make cards combine only when about to cast
+
+## 3.13
 
 - Make relics
 - Add more spells
@@ -32,9 +31,11 @@ What if choosing cards collected them in your inventory instead of in a pool and
 
 ## Other
 
+- How to handle applying multiple freeze cards??
+  - removing one removes them all
+- fix floating text position due to pixi js
 - Clean up onDataQueue (is it still necessary?)
 - Fix replay?
-- Hide cards button
 
 - Allow rejoining with saved client id
 

@@ -17,9 +17,6 @@ function isOutOfBounds(x, y) {
   return x < 0 || x >= BOARD_WIDTH || y < 0 || y > BOARD_HEIGHT;
 }
 export default function setupSpellBuilderUI() {
-  // Initialize spell pool
-  SpellPool.create();
-
   // on Hover
   document.body.addEventListener('mousemove', (e) => {
     const { x, y } = window.game.getCellFromCurrentMousePos();
@@ -27,7 +24,7 @@ export default function setupSpellBuilderUI() {
       return;
     }
     // only show hover target when it's the correct turn phase
-    if (window.game.turn_phase == turn_phase.Cast) {
+    if (window.game.turn_phase == turn_phase.PlayerTurns) {
       const didChange = mouseCellX !== x || mouseCellY !== y;
       mouseCellX = x;
       mouseCellY = y;
@@ -74,7 +71,7 @@ export default function setupSpellBuilderUI() {
       return;
     }
     // Only allow casting in the proper phase
-    if (window.game.turn_phase == turn_phase.Cast) {
+    if (window.game.turn_phase == turn_phase.PlayerTurns) {
       const selectedSpell = SpellPool.getSelectedSpell();
       if (window.game.yourTurn && selectedSpell) {
         const spell = Object.assign({ x, y }, selectedSpell);

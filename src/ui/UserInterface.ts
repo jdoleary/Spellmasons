@@ -2,7 +2,6 @@ import { MESSAGE_TYPES } from '../MessageTypes';
 import type { IPlayer } from '../Player';
 import setupSpellBuilderUI from './SpellBuilderControls';
 import * as config from '../config';
-import { selectSpell } from '../SpellPool';
 
 // const elControls = document.getElementById('controls');
 const elEndTurnBtn: HTMLButtonElement = document.getElementById(
@@ -20,15 +19,6 @@ export function setup() {
     switch (event.code) {
       case 'Space':
         endTurn();
-        break;
-      case 'Digit1':
-        selectSpell(0);
-        break;
-      case 'Digit2':
-        selectSpell(1);
-        break;
-      case 'Digit3':
-        selectSpell(2);
         break;
       default:
         console.log('No set action for key ' + event.code);

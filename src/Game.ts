@@ -4,12 +4,7 @@ import { Spell, effect } from './Spell';
 import type { IPlayer } from './Player';
 import * as config from './config';
 import * as Unit from './Unit';
-import { generateCards, clearCards } from './cards';
-import {
-  clearSpellIndex,
-  getSelectedSpell,
-  updateSelectedSpellUI,
-} from './SpellPool';
+import { updateSelectedSpellUI } from './SpellPool';
 import { MESSAGE_TYPES } from './MessageTypes';
 import { addPixiSprite, app } from './PixiUtils';
 
@@ -20,9 +15,8 @@ export enum game_state {
   GameOver,
 }
 export enum turn_phase {
-  PickCards,
+  PlayerTurns,
   NPC,
-  Cast,
 }
 const debugInfo = {};
 const debugEl = document.getElementById('debug');
@@ -72,8 +66,8 @@ export default class Game {
     }
 
     setInterval(() => {
-      if (this.turn_phase === turn_phase.Cast) {
-        // Limit turn duration during Cast phase
+      if (this.turn_phase === turn_phase.PlayerTurns) {
+        // Limit turn duration
         this.secondsLeftForTurn--;
         elTurnTimeRemaining.innerText = `0:${
           this.secondsLeftForTurn < 10
@@ -100,16 +94,7 @@ export default class Game {
     };
   }
   goToNextPhaseIfAppropriate() {
-    if (this.turn_phase === turn_phase.PickCards) {
-      const chosenCards = document.querySelectorAll('.card.disabled').length;
-      // Once six cards have been chosen
-      if (chosenCards === config.CHOSEN_CARDS_TILL_NEXT_PHASE) {
-        // Advance the game phase
-        this.setTurnPhase(turn_phase.NPC);
-        // Remove the remaining unselected cards
-        clearCards();
-      }
-    } else if (this.turn_phase === turn_phase.Cast) {
+    if (this.turn_phase === turn_phase.PlayerTurns) {
       if (this.endedTurn.size >= this.players.length) {
         // Reset the endedTurn set so both players can take turns again next Cast phase
         this.endedTurn.clear();
@@ -117,7 +102,7 @@ export default class Game {
         // (This alternates which player picks first)
         this.incrementPlayerTurn();
         // Move onto next phase
-        this.setTurnPhase(turn_phase.PickCards);
+        this.setTurnPhase(turn_phase.NPC);
       }
     }
   }
@@ -136,11 +121,24 @@ export default class Game {
     this.goToNextPhaseIfAppropriate();
   }
   endMyTurn() {
-    // Turns can only be manually ended during the cast phase
-    // player turn is incremented automatically during the PickCard phase
-    if (this.turn_phase === turn_phase.Cast) {
+    // Turns can only be manually ended during the PlayerTurns phase
+    if (this.turn_phase === turn_phase.PlayerTurns) {
       window.pie.sendData({ type: MESSAGE_TYPES.END_TURN });
     }
+  }
+  // Clean up resources of dead units
+  bringOutYerDead() {
+    // Note: This occurs in the first phase so that "dead" units can animate to death
+    // after they take mortally wounding damage without their html elements being removed before
+    // the animation takes place
+    for (let u of this.units) {
+      if (!u.alive) {
+        // Remove image from DOM
+        u.image.cleanup();
+      }
+    }
+    // Remove dead units
+    this.units = this.units.filter((u) => u.alive);
   }
   setTurnPhase(p: turn_phase) {
     this.turn_phase = p;
@@ -156,20 +154,8 @@ export default class Game {
     // Add current phase class to body
     document.body.classList.add('phase-' + phase.toLowerCase());
     switch (phase) {
-      case 'PickCards':
-        generateCards(8);
-        // Clean up DOM of dead units
-        // Note: This occurs in the first phase so that "dead" units can animate to death
-        // after they take mortally wounding damage without their html elements being removed before
-        // the animation takes place
-        for (let u of this.units) {
-          if (!u.alive) {
-            // Remove image from DOM
-            u.image.cleanup();
-          }
-        }
-        // Remove dead units
-        this.units = this.units.filter((u) => u.alive);
+      case 'PlayerTurns':
+        this.bringOutYerDead();
         break;
       case 'NPC':
         for (let i = 0; i < config.NUMBER_OF_UNITS_SPAWN_PER_TURN; i++) {
@@ -203,7 +189,7 @@ export default class Game {
         }
 
         window.animationManager.startAnimate().then(() => {
-          this.setTurnPhase(turn_phase.Cast);
+          this.setTurnPhase(turn_phase.PlayerTurns);
         });
         break;
       default:
@@ -229,7 +215,7 @@ export default class Game {
         // Initialize the player turn state
         this.incrementPlayerTurn();
         // Set the first turn phase
-        this.setTurnPhase(turn_phase.PickCards);
+        this.setTurnPhase(turn_phase.PlayerTurns);
         break;
       default:
         if (elBoard) {
@@ -343,10 +329,9 @@ export default class Game {
     this.units.push(unit);
   }
   cast(spell: Spell) {
-    const { x, y, index, caster } = spell;
+    const { x, y, caster } = spell;
     // If you are casting the spell, clear the spell in the spell pool that was just cast
     if (caster.clientId === window.clientId) {
-      clearSpellIndex(index);
       updateSelectedSpellUI();
     }
     // Get all units targeted by spell

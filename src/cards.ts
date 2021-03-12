@@ -1,5 +1,5 @@
 import { MESSAGE_TYPES } from './MessageTypes';
-import { addModifierToSpell } from './SpellPool';
+import { addModifierToSpell, removeModifierFromSpell } from './SpellPool';
 import { lerp } from './math';
 const elCardHolder = document.getElementById('card-holder');
 const elCardHand = document.getElementById('card-hand');
@@ -59,12 +59,13 @@ export function clearCards() {
 // Cards are used for chanelling unique spells each turn.
 // Both players are presented with a number of cards and they take turns deciding which to
 // add to their chanelling spell orbs
-export function generateCards(numberOfCards: number) {
-  for (let i = 0; i < numberOfCards; i++) {
-    const card = generateCard();
-    addSpellModToCardHolder(card, i);
-  }
-}
+// Todo: unused since rev3 consider removing
+// export function generateCards(numberOfCards: number) {
+//   for (let i = 0; i < numberOfCards; i++) {
+//     const card = generateCard();
+//     addSpellModToCardHolder(card, i);
+//   }
+// }
 // @ts-ignore
 window.test = () => {
   for (let i = 0; i < 3; i++) {
@@ -77,6 +78,21 @@ export function addCardToHand(card) {
   const element = createCardElement(card, undefined);
   element.addEventListener('click', () => {
     console.log('clicked on card in hand', card);
+    if (window.game.yourTurn) {
+      if (element.classList.contains('selected')) {
+        element.classList.remove('selected');
+        // Remove card contents from spell
+        removeModifierFromSpell(card.description);
+      } else {
+        element.classList.add('selected');
+        // Add card contents to spell
+        addModifierToSpell(card.description);
+      }
+      // window.pie.sendData({
+      //   type: MESSAGE_TYPES.CHOOSE_CARD,
+      //   id: element.id,
+      // });
+    }
   });
   cardsInHand.push(element);
   elCardHand.appendChild(element);
@@ -184,25 +200,7 @@ function createCardElement(content: SpellMod, id?: string) {
   elCardInner.appendChild(desc);
   return element;
 }
-function addSpellModToCardHolder(content: SpellMod, index: number) {
-  const element = createCardElement(content, 'card-' + index);
-  element.addEventListener('click', () => {
-    if (window.game.yourTurn) {
-      if (element.classList.contains('disabled')) {
-        // You cannot select disabled cards
-        return;
-      }
-      // Add card contents to spell:
-      addModifierToSpell(content.description);
-      // Send the selection to the other player
-      window.pie.sendData({
-        type: MESSAGE_TYPES.CHOOSE_CARD,
-        id: element.id,
-      });
-    }
-  });
-  elCardHolder.appendChild(element);
-}
+
 function setTransform(element: HTMLElement, transform: any) {
   const newTransform =
     'translate(' +

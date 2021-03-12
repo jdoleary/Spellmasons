@@ -133,8 +133,8 @@ function onData(d: { fromClient: string; payload: any }) {
       // Set caster based on which client sent it
       spell.caster = caster;
       if (
-        // Only allow casting during the cast turn phase
-        (game.turn_phase === turn_phase.Cast &&
+        // Only allow casting during the PlayerTurns phase
+        (game.turn_phase === turn_phase.PlayerTurns &&
           // If your turn and you are casting, allow
           game.yourTurn &&
           spell.caster.clientId === window.clientId) ||

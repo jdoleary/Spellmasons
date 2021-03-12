@@ -8,8 +8,6 @@ export interface Spell {
   caster?: IPlayer;
   x?: number;
   y?: number;
-  // index in spell pool
-  index: number;
   // damage can be negative for healing
   damage?: number;
   freeze?: boolean;
@@ -34,6 +32,25 @@ export function modifySpell(modifier: string, spell?: Spell) {
       break;
     case 'AOE':
       spell.aoe_radius = (spell.aoe_radius || 0) + 1;
+      break;
+  }
+}
+export function unmodifySpell(modifier: string, spell?: Spell) {
+  switch (modifier) {
+    case 'Damage':
+      spell.damage = (spell.damage || 0) - 1;
+      break;
+    case 'Heal':
+      spell.damage = (spell.damage || 0) + 1;
+      break;
+    case 'Freeze':
+      spell.freeze = false;
+      break;
+    case 'Chain':
+      spell.chain = false;
+      break;
+    case 'AOE':
+      spell.aoe_radius = (spell.aoe_radius || 0) - 1;
       break;
   }
 }

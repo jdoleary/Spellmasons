@@ -78,38 +78,12 @@ body {
   padding: 8px;
   background-color: #eee;
 }
-
 #spell-pool {
-  display: flex;
-  justify-content: center;
-  margin: 8px;
-}
-#spell-pool .spell {
-  position: relative;
-  border-radius: 32px;
-  min-width: 64px;
-  height: 64px;
-  margin: 8px;
-  border: 2px solid white;
-  color: white;
-  /* Show text in bubble */
+  position: fixed;
+  bottom: 130px;
+  left: 0;
+  right: 0;
   text-align: center;
-  line-height: 64px;
-  font-size: large;
-}
-#spell-pool .spell.selected {
-  border: 2px solid gold;
-}
-body.your-turn #spell-pool .spell {
-  /* Enable clicking on cards when it is your turn */
-  pointer-events: all;
-  cursor: pointer;
-}
-body:not(.your-turn) #spell-pool .spell {
-  cursor: not-allowed;
-}
-#spell-pool .spell img {
-  border-radius: 32px;
 }
 
 #card-hand {
@@ -131,27 +105,13 @@ body:not(.your-turn) #spell-pool .spell {
   z-index: 2;
   top: -50px;
 }
-#card-holder {
-  position: absolute;
-  margin: 40px auto;
-  display: flex;
-  justify-content: center;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-}
-#card-holder .card.disabled {
-  cursor: not-allowed;
-  opacity: 0.7;
-  filter: grayscale(100%);
+#card-hand .card.selected {
+  -webkit-box-shadow: 0px 0px 5px 5px #ffee00;
+  box-shadow: 0px 0px 5px 5px #ffee00;
+  top: -20px;
 }
 body.your-turn .card {
   cursor: pointer;
-}
-body:not(.your-turn) #card-holder .card {
-  cursor: not-allowed;
 }
 #card-holder .card {
   border: 4px solid black;
