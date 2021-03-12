@@ -4,8 +4,8 @@ import * as SpellPool from '../SpellPool';
 import { addPixiSprite, app } from '../PixiUtils';
 import { turn_phase } from '../Game';
 import { clearSelectedCards } from '../cards';
-import * as Unit from '../Unit';
 import type { IPlayer } from '../Player';
+import floatingText from '../FloatingText';
 
 let mouseCellX;
 let mouseCellY;
@@ -101,14 +101,25 @@ export default function setupSpellBuilderUI() {
             // Find the difference between current position and desired position
             const diffX = x - selfPlayer.unit.x;
             const diffY = y - selfPlayer.unit.y;
-            window.pie.sendData({
-              type: MESSAGE_TYPES.MOVE_PLAYER,
-              // This formula clamps the diff to -1, 0 or 1
-              x:
-                selfPlayer.unit.x + (diffX === 0 ? 0 : diffX / Math.abs(diffX)),
-              y:
-                selfPlayer.unit.y + (diffY === 0 ? 0 : diffY / Math.abs(diffY)),
-            });
+            const moveX =
+              selfPlayer.unit.x + (diffX === 0 ? 0 : diffX / Math.abs(diffX));
+            const moveY =
+              selfPlayer.unit.y + (diffY === 0 ? 0 : diffY / Math.abs(diffY));
+            if (!window.game.isCellOccupied(moveX, moveY)) {
+              window.pie.sendData({
+                type: MESSAGE_TYPES.MOVE_PLAYER,
+                // This formula clamps the diff to -1, 0 or 1
+                x: moveX,
+                y: moveY,
+              });
+            } else {
+              floatingText({
+                cellX: moveX,
+                cellY: moveY,
+                text: 'You cannot move here',
+                color: 'red',
+              });
+            }
           }
         }
       }

@@ -156,6 +156,17 @@ export default class Game {
     const y = window.random.integer(0, config.BOARD_HEIGHT - 1);
     return { x, y };
   }
+  isCellOccupied(cell_x: number, cell_y: number): boolean {
+    for (let u of this.units) {
+      if (u.x === cell_x && u.y === cell_y) {
+        return true;
+      }
+    }
+    if (this.portal.x === cell_x && this.portal.y === cell_y) {
+      return true;
+    }
+    return false;
+  }
   setTurnPhase(p: turn_phase) {
     this.turn_phase = p;
 
