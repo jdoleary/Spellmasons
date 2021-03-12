@@ -2,12 +2,10 @@
 
 ## 3.12
 
-- Add player movement
 - Add portal and concept of levels
   - Seed level difficulty based on level number
   - Random mobs, and rocks
 - Add pickups
-- update cards to combine at bottom, remove spell pools, make cards combine only when about to cast
 
 ## 3.13
 
