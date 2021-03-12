@@ -5,7 +5,7 @@ import Game from '../Game';
 describe('Unit', () => {
   it('should die when health reaches 0', () => {
     const g = new Game();
-    const u = Unit.create(0, 0, 0, 0);
+    const u = Unit.create(0, 0);
     g.addUnitToArray(u);
     u.health = 5;
     Unit.takeDamage(u, u.health);
@@ -13,16 +13,16 @@ describe('Unit', () => {
   });
   describe('when frozen', () => {
     it('should not move', () => {
-      const u = Unit.create(0, 0, 0, 1);
+      const u = Unit.create(0, 0);
       u.frozen = true;
-      Unit.move(u);
+      Unit.moveAI(u);
       expect(u.y).toEqual(0);
     });
     it('should not deal damage when it is moved into', () => {
       const g = new Game();
       // Set u up to move into u1
-      const u = Unit.create(0, 0, 0, 1);
-      const u2 = Unit.create(0, 1, 0, 0);
+      const u = Unit.create(0, 0);
+      const u2 = Unit.create(0, 1);
       g.addUnitToArray(u);
       g.addUnitToArray(u2);
       // Give u2 power to attack u when u moves into it
@@ -32,7 +32,7 @@ describe('Unit', () => {
       const START_HEALTH = 4;
       u.health = START_HEALTH;
       u2.health = START_HEALTH;
-      Unit.move(u);
+      Unit.moveAI(u);
       // Expect that no damage has been taken
       expect(u.health).toEqual(START_HEALTH);
     });

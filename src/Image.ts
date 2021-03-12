@@ -31,26 +31,12 @@ export default class Image {
     scale: 1,
   };
 
-  constructor(
-    cellX: number,
-    cellY: number,
-    directionX: number,
-    directionY: number,
-    imageName: string,
-  ) {
+  constructor(cellX: number, cellY: number, imageName: string) {
     // this.subImages = {};
     // Save image path in unit so it's accessible when loading gamestate
     this.imageName = imageName;
     // this.sprite = document.createElement('div');
     let rotation = 0;
-    // set and normalize rotation
-    if (directionX > 0) {
-      rotation = directionY == 0 ? -90 : directionY > 0 ? -45 : 225;
-    } else if (directionX < 0) {
-      rotation = directionY == 0 ? 90 : directionY > 0 ? 45 : -225;
-    } else {
-      rotation = directionY == 0 ? 0 : directionY > 0 ? 0 : 180;
-    }
     // Unit rotation is handled explicitly in the unit subImage while other transforms that
     // happen in board space occur in this "Image".  This is so that sub images can stay with
     // the "Image" at large while the unit itself can have independent rotation

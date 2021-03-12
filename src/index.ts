@@ -32,7 +32,7 @@ const wsUri = 'ws://localhost:8000';
 // const wsUri = 'wss://websocket-pie-e4elx.ondigitalocean.app/';
 let pie: PieClient;
 let game: Game;
-let maxClients = 2;
+let maxClients = 1;
 function connect(_room_info = {}) {
   const room_info = Object.assign(_room_info, {
     app: 'Golems',
@@ -117,7 +117,7 @@ function onData(d: { fromClient: string; payload: any }) {
       const units = loadedGameState.units.map((u) => {
         return {
           ...u,
-          image: new Image(u.x, u.y, u.vx, u.vy, u.image.imageName),
+          image: new Image(u.x, u.y, u.image.imageName),
         };
       });
       game = new Game();
@@ -243,6 +243,7 @@ function makeGame(clients: string[]) {
     sortedClients.map((clientId) => clientId.slice(0, 6)).join(''),
   );
   game.setGameState(game_state.Playing);
+  // Initialize the first level
   game.initLevel();
 }
 window.connect = connect;

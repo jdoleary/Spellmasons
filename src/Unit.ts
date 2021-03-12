@@ -2,11 +2,10 @@ import * as config from './config';
 import Image from './Image';
 import type { IPlayer } from './Player';
 import * as UI from './ui/UserInterface';
+import { distance } from './math';
 export interface IUnit {
   x: number;
   y: number;
-  vx: number;
-  vy: number;
   name?: string;
   image: Image;
   power: number;
@@ -16,19 +15,11 @@ export interface IUnit {
   justSpawned: boolean;
 }
 
-export function create(
-  x: number,
-  y: number,
-  vx: number,
-  vy: number,
-  imagePath?: string,
-): IUnit {
+export function create(x: number, y: number, imagePath?: string): IUnit {
   const unit: IUnit = {
     x,
     y,
-    vx,
-    vy,
-    image: new Image(x, y, vx, vy, imagePath),
+    image: new Image(x, y, imagePath),
     power: config.UNIT_BASE_POWER,
     health: config.UNIT_BASE_HEALTH,
     alive: true,
@@ -93,12 +84,42 @@ export function moveTo(unit: IUnit, cell_x: number, cell_y: number) {
   unit.y = cell_y;
   unit.image.move(unit.x, unit.y);
 }
-export function move(unit: IUnit) {
+export function findCellOneStepCloserTo(
+  unit: IUnit,
+  desiredCellX: number,
+  desiredCellY: number,
+) {
+  // Find the difference between current position and desired position
+  const diffX = desiredCellX - unit.x;
+  const diffY = desiredCellY - unit.y;
+  const moveX = unit.x + (diffX === 0 ? 0 : diffX / Math.abs(diffX));
+  const moveY = unit.y + (diffY === 0 ? 0 : diffY / Math.abs(diffY));
+  return { x: moveX, y: moveY };
+}
+export function findClosestPlayerTo(unit: IUnit) {
+  let currentClosest = window.game.players[0].unit;
+  let currentClosestDistance = Number.MAX_SAFE_INTEGER;
+  for (let p of window.game.players) {
+    const dist = distance(p.unit, unit);
+    if (dist < currentClosestDistance) {
+      currentClosest = p.unit;
+      currentClosestDistance = dist;
+    }
+  }
+  return currentClosest;
+}
+export function moveAI(unit: IUnit) {
   if (!canMove(unit)) {
     return;
   }
-  const next_x = unit.x + unit.vx;
-  const next_y = unit.y + unit.vy;
+  const closestPlayerUnit = findClosestPlayerTo(unit);
+  const targetCell = findCellOneStepCloserTo(
+    unit,
+    closestPlayerUnit.x,
+    closestPlayerUnit.y,
+  );
+  const next_x = targetCell.x;
+  const next_y = targetCell.y;
   const bump_into_units = window.game
     ? window.game.getUnitsAt(next_x, next_y)
     : [];

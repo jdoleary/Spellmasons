@@ -116,7 +116,7 @@ export function effect(spell: Spell, args: EffectArgs) {
     unit.image.addSubImage('frozen', 'images/spell/freeze.png');
   }
   // Show an image when cast occurs
-  const castImage = new Image(spell.x, spell.y, 0, 0, getImage(spell));
+  const castImage = new Image(spell.x, spell.y, getImage(spell));
   castImage.scale(1.5);
   castImage.updateFilter(0);
   castImage.remove();

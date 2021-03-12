@@ -18,7 +18,7 @@ export function create(clientId: string, heart_y: number): IPlayer {
     heart_health: PLAYER_HEART_HEALTH,
     heart_x,
     heart_y,
-    unit: Unit.create(0, 0, 0, 0, 'images/units/man-blue.png'),
+    unit: Unit.create(0, 0, 'images/units/man-blue.png'),
   };
   player.unit.justSpawned = false;
   window.animationManager.startAnimate();

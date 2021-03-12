@@ -41,6 +41,8 @@ export default class Game {
   portal: Unit.IUnit;
   players: IPlayer[] = [];
   units: Unit.IUnit[] = [];
+  // The number of the current level
+  level = 1;
   // The index of which player's turn it is
   playerTurnIndex: number;
   secondsLeftForTurn: number;
@@ -86,15 +88,28 @@ export default class Game {
       }
     }, 1000);
   }
+  moveToNextLevel() {
+    // Clear all units
+    for (let u of this.units) {
+      u.image.cleanup();
+    }
+    this.units = [];
+    this.level++;
+    this.initLevel();
+  }
+
   initLevel() {
     const portalPos = this.getRandomCell();
-    this.portal = Unit.create(
-      portalPos.x,
-      portalPos.y,
-      0,
-      0,
-      'images/portal.png',
-    );
+    this.portal = Unit.create(portalPos.x, portalPos.y, 'images/portal.png');
+    // Spawn units at the start of the level
+    for (
+      let i = 0;
+      i < config.NUMBER_OF_UNITS_SPAWN_PER_LEVEL * this.level;
+      i++
+    ) {
+      const { x, y } = this.getRandomCell();
+      Unit.create(x, y, 'images/units/golem.png');
+    }
     window.animationManager.startAnimate();
   }
   getCellFromCurrentMousePos() {
@@ -188,24 +203,9 @@ export default class Game {
         break;
       case 'NPC':
         this.setYourTurn(false, "NPC's Turn");
-        for (let i = 0; i < config.NUMBER_OF_UNITS_SPAWN_PER_TURN; i++) {
-          // Extra "-1" is because board width is 0 indexed
-          const x = window.random.integer(0, config.BOARD_WIDTH - 1);
-          // Spawn equal amount of Golems per Player side:
-          const y =
-            i % 2 == 0 ? config.BOARD_HEIGHT / 2 - 1 : config.BOARD_HEIGHT / 2;
-
-          Unit.create(
-            x,
-            y,
-            0,
-            y < config.BOARD_HEIGHT / 2 ? -1 : 1,
-            'images/units/golem.png',
-          );
-        }
         // Move units
         for (let u of this.units) {
-          Unit.move(u);
+          Unit.moveAI(u);
           u.justSpawned = false;
         }
 

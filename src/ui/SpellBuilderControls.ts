@@ -6,6 +6,7 @@ import { turn_phase } from '../Game';
 import { clearSelectedCards } from '../cards';
 import type { IPlayer } from '../Player';
 import floatingText from '../FloatingText';
+import * as Unit from '../Unit';
 
 let mouseCellX;
 let mouseCellY;
@@ -98,24 +99,21 @@ export default function setupSpellBuilderUI() {
             (p) => p.clientId === window.clientId,
           );
           if (selfPlayer) {
-            // Find the difference between current position and desired position
-            const diffX = x - selfPlayer.unit.x;
-            const diffY = y - selfPlayer.unit.y;
-            const moveX =
-              selfPlayer.unit.x + (diffX === 0 ? 0 : diffX / Math.abs(diffX));
-            const moveY =
-              selfPlayer.unit.y + (diffY === 0 ? 0 : diffY / Math.abs(diffY));
-            if (window.game.canUnitMoveIntoCell(moveX, moveY)) {
+            const targetCell = Unit.findCellOneStepCloserTo(
+              selfPlayer.unit,
+              x,
+              y,
+            );
+            if (window.game.canUnitMoveIntoCell(targetCell.x, targetCell.y)) {
               window.pie.sendData({
                 type: MESSAGE_TYPES.MOVE_PLAYER,
                 // This formula clamps the diff to -1, 0 or 1
-                x: moveX,
-                y: moveY,
+                ...targetCell,
               });
             } else {
               floatingText({
-                cellX: moveX,
-                cellY: moveY,
+                cellX: targetCell.x,
+                cellY: targetCell.y,
                 text: 'You cannot move here',
                 color: 'red',
               });
