@@ -8,7 +8,7 @@ import * as Player from './Player';
 import * as Card from './cards';
 import { updateSelectedSpellUI } from './SpellPool';
 import { MESSAGE_TYPES } from './MessageTypes';
-import { addPixiSprite, app } from './PixiUtils';
+import { addPixiSprite, app, containerBoard } from './PixiUtils';
 
 export enum game_state {
   Lobby,
@@ -35,7 +35,6 @@ const elPlayerTurnIndicator = document.getElementById('player-turn-indicator');
 const elTurnTimeRemaining = document.getElementById('turn-time-remaining');
 export default class Game {
   state: game_state;
-  boardContainer: PIXI.Container;
   turn_phase: turn_phase;
   height: number = config.BOARD_HEIGHT;
   width: number = config.BOARD_WIDTH;
@@ -55,16 +54,11 @@ export default class Game {
     this.setGameState(game_state.Lobby);
     window.game = this;
 
-    // Visuals:
-    this.boardContainer = new PIXI.Container();
-    this.boardContainer.x = 0;
-    this.boardContainer.y = 0;
-    app.stage.addChild(this.boardContainer);
     // Make sprites for the board tiles
     let cell;
     for (let x = 0; x < config.BOARD_WIDTH; x++) {
       for (let y = 0; y < config.BOARD_HEIGHT; y++) {
-        cell = addPixiSprite('images/cell.png', this.boardContainer);
+        cell = addPixiSprite('images/cell.png', containerBoard);
         cell.x = x * config.CELL_SIZE;
         cell.y = y * config.CELL_SIZE;
       }
@@ -136,7 +130,7 @@ export default class Game {
     }
   }
   getCellFromCurrentMousePos() {
-    const { x, y } = this.boardContainer.toLocal(
+    const { x, y } = containerBoard.toLocal(
       app.renderer.plugins.interaction.mouse.global,
     );
     return {

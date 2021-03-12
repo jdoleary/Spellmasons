@@ -31,7 +31,12 @@ export default class Image {
     scale: 1,
   };
 
-  constructor(cellX: number, cellY: number, imageName: string) {
+  constructor(
+    cellX: number,
+    cellY: number,
+    imageName: string,
+    parent?: PIXI.Container,
+  ) {
     // this.subImages = {};
     // Save image path in unit so it's accessible when loading gamestate
     this.imageName = imageName;
@@ -41,7 +46,7 @@ export default class Image {
     // happen in board space occur in this "Image".  This is so that sub images can stay with
     // the "Image" at large while the unit itself can have independent rotation
     rotation = normalizeDegrees(rotation);
-    this.sprite = addPixiSprite(imageName);
+    this.sprite = addPixiSprite(imageName, parent);
     this.sprite.anchor.x = 0.5;
     this.sprite.anchor.y = 0.5;
     this.sprite.rotation = (rotation * Math.PI) / 180;

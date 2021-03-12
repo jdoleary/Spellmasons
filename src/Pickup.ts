@@ -1,6 +1,6 @@
 import Image from './Image';
 import type { IPlayer } from './Player';
-
+import { containerPickup } from './PixiUtils';
 export interface IPickup {
   x: number;
   y: number;
@@ -17,7 +17,7 @@ export function create(
   const self: IPickup = {
     x,
     y,
-    image: new Image(x, y, imagePath),
+    image: new Image(x, y, imagePath, containerPickup),
     effect,
   };
 

@@ -4,14 +4,16 @@ import { BOARD_HEIGHT, CELL_SIZE, BOARD_WIDTH } from './config';
 let isReady = false;
 // PIXI app
 export const app = new PIXI.Application();
+export const containerBoard = new PIXI.Container();
+export const containerPickup = new PIXI.Container();
 app.renderer.backgroundColor = 0x45b6fe;
 app.renderer.view.style.position = 'absolute';
 app.renderer.view.style.top = '0';
 app.renderer.view.style.display = 'block';
+
 resizePixi();
 window.addEventListener('resize', resizePixi);
 function resizePixi() {
-  console.log('resize');
   app.renderer.resize(window.innerWidth, window.innerHeight);
   // Center the app in the middle of the board
   app.stage.x = app.renderer.width / 2 - (CELL_SIZE * BOARD_WIDTH) / 2;
@@ -24,6 +26,9 @@ export function setupPixi(): Promise<void> {
   // can then insert into the DOM
   document.getElementById('PIXI-holder').appendChild(app.view);
 
+  // Add containers to the stage
+  app.stage.addChild(containerBoard);
+  app.stage.addChild(containerPickup);
   return loadTextures();
 }
 function loadTextures(): Promise<void> {
