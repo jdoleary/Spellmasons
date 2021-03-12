@@ -171,9 +171,9 @@ export default class Game {
     const y = window.random.integer(0, config.BOARD_HEIGHT - 1);
     return { x, y };
   }
-  canUnitMoveIntoCell(cell_x: number, cell_y: number): boolean {
+  canUnitMoveIntoCell(cellX: number, cellY: number): boolean {
     for (let u of this.units) {
-      if (u.x === cell_x && u.y === cell_y) {
+      if (u.x === cellX && u.y === cellY) {
         return false;
       }
     }

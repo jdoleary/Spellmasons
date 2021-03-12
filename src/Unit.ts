@@ -40,10 +40,10 @@ export function die(u: IUnit) {
 }
 export function cellDistanceFromUnit(
   unit: IUnit,
-  cell_x: number,
-  cell_y: number,
+  cellX: number,
+  cellY: number,
 ) {
-  return Math.max(Math.abs(unit.x - cell_x), Math.abs(unit.y - cell_y));
+  return Math.max(Math.abs(unit.x - cellX), Math.abs(unit.y - cellY));
 }
 export function takeDamage(unit: IUnit, amount: number, cause?: string) {
   unit.health -= amount;
@@ -74,14 +74,14 @@ function canMove(unit: IUnit): boolean {
   }
   return true;
 }
-export function moveTo(unit: IUnit, cell_x: number, cell_y: number) {
+export function moveTo(unit: IUnit, cellX: number, cellY: number) {
   if (!canMove(unit)) {
     console.log('unit cannot move');
     return;
   }
   // Otherwise, physically move
-  unit.x = cell_x;
-  unit.y = cell_y;
+  unit.x = cellX;
+  unit.y = cellY;
   unit.image.move(unit.x, unit.y);
 }
 export function findCellOneStepCloserTo(

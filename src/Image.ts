@@ -48,10 +48,10 @@ export default class Image {
 
     this.set(cellX, cellY, 1.0);
   }
-  cellToBoardCoords(cell_x: number, cell_y: number) {
+  cellToBoardCoords(cellX: number, cellY: number) {
     return {
-      x: cell_x * CELL_SIZE + CELL_SIZE / 2,
-      y: cell_y * CELL_SIZE + CELL_SIZE / 2,
+      x: cellX * CELL_SIZE + CELL_SIZE / 2,
+      y: cellY * CELL_SIZE + CELL_SIZE / 2,
     };
   }
   cleanup() {
@@ -90,35 +90,35 @@ export default class Image {
       rotation: this.transform.rotation + Math.PI * 2,
     });
   }
-  move(cell_x: number, cell_y: number) {
+  move(cellX: number, cellY: number) {
     window.animationManager.addAnimation(
       this.sprite,
       this.transform,
-      this.cellToBoardCoords(cell_x, cell_y),
+      this.cellToBoardCoords(cellX, cellY),
     );
   }
   attack(
-    current_cell_x: number,
-    current_cell_y: number,
-    cell_x: number,
-    cell_y: number,
+    current_cellX: number,
+    current_cellY: number,
+    cellX: number,
+    cellY: number,
   ) {
     // Move forward
     window.animationManager.addAnimation(
       this.sprite,
       this.transform,
-      this.cellToBoardCoords(cell_x, cell_y),
+      this.cellToBoardCoords(cellX, cellY),
     );
     // Move back
     window.animationManager.addAnimation(
       this.sprite,
       this.transform,
-      this.cellToBoardCoords(current_cell_x, current_cell_y),
+      this.cellToBoardCoords(current_cellX, current_cellY),
     );
   }
   // Used for initialization
-  set(cell_x: number, cell_y: number, scale: number) {
-    const { x, y } = this.cellToBoardCoords(cell_x, cell_y);
+  set(cellX: number, cellY: number, scale: number) {
+    const { x, y } = this.cellToBoardCoords(cellX, cellY);
     this.transform.x = x;
     this.transform.y = y;
     this.transform.scale = scale;
