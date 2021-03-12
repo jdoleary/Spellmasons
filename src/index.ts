@@ -134,9 +134,14 @@ function onData(d: { fromClient: string; payload: any }) {
       break;
     case MESSAGE_TYPES.MOVE_PLAYER:
       // Move the player 1 magnitude on either or both axes towards the desired position
+      window.animationManager.startGroup('Move player');
       Unit.moveTo(caster.unit, payload.x, payload.y);
-      // Check if the player collided with any pickups
-      window.game.checkPickupCollisions(caster);
+      // When animations are done, check for pickup collisions
+      window.animationManager.currentGroup.onFinishedCallbacks.push(() => {
+        // Check if the player collided with any pickups
+        window.game.checkPickupCollisions(caster);
+      });
+      window.animationManager.endGroup('Move player');
       window.animationManager.startAnimate();
       // Moving the player unit ends your turn
       endPlayerTurn(caster.clientId);
