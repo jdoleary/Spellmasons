@@ -1,7 +1,7 @@
-import type * as PIXI from 'pixi.js';
 import { PLAYER_HEART_HEALTH } from './config';
 import { addPixiSprite } from './PixiUtils';
 import * as UI from './ui/UserInterface';
+import * as Unit from './Unit';
 
 export interface IPlayer {
   // wsPie id
@@ -9,18 +9,19 @@ export interface IPlayer {
   heart_health: number;
   heart_x: number;
   heart_y: number;
-  sprite: PIXI.Sprite;
+  unit: Unit.IUnit;
 }
 export function create(clientId: string, heart_y: number): IPlayer {
   const heart_x = 3.5;
-  const sprite = addPixiSprite('images/units/man-blue.png');
   const player = {
     clientId,
     heart_health: PLAYER_HEART_HEALTH,
     heart_x,
     heart_y,
-    sprite,
+    unit: Unit.create(0, 0, 0, 0, 'images/units/man-blue.png'),
   };
+  player.unit.justSpawned = false;
+  window.animationManager.startAnimate();
   UI.setHealth(player);
   return player;
 }

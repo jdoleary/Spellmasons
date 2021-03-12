@@ -172,7 +172,6 @@ export default class Game {
             y < config.BOARD_HEIGHT / 2 ? -1 : 1,
             'images/units/golem.png',
           );
-          this.summon(unit);
         }
         // Move units
         for (let u of this.units) {
@@ -325,7 +324,7 @@ export default class Game {
       }
     }
   }
-  summon(unit: Unit.IUnit) {
+  addUnitToArray(unit: Unit.IUnit) {
     this.units.push(unit);
   }
   cast(spell: Spell) {

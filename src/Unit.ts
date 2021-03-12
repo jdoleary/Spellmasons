@@ -40,10 +40,19 @@ export function create(
   unit.image.transform.scale = 0.0;
   window.animationManager.setTransform(unit.image.sprite, unit.image.transform);
   unit.image.scale(1.0);
+  window.game.addUnitToArray(unit);
+
   return unit;
 }
 export function die(u: IUnit) {
   u.alive = false;
+}
+export function cellDistanceFromUnit(
+  unit: IUnit,
+  cell_x: number,
+  cell_y: number,
+) {
+  return Math.max(Math.abs(unit.x - cell_x), Math.abs(unit.y - cell_y));
 }
 export function takeDamage(unit: IUnit, amount: number, cause?: string) {
   unit.health -= amount;
@@ -59,7 +68,7 @@ export function takeDamage(unit: IUnit, amount: number, cause?: string) {
   // Change the size to represent health
   unit.image.scale(unit.health / config.UNIT_BASE_HEALTH);
 }
-export function move(unit: IUnit) {
+function canMove(unit: IUnit): boolean {
   // Do not move if dead
   if (!unit.alive) {
     return;
@@ -70,6 +79,22 @@ export function move(unit: IUnit) {
   }
   // Do not move if frozen
   if (unit.frozen) {
+    return;
+  }
+  return true;
+}
+export function moveTo(unit: IUnit, cell_x: number, cell_y: number) {
+  if (!canMove(unit)) {
+    console.log('unit cannot move');
+    return;
+  }
+  // Otherwise, physically move
+  unit.x = cell_x;
+  unit.y = cell_y;
+  unit.image.move(unit.x, unit.y);
+}
+export function move(unit: IUnit) {
+  if (!canMove(unit)) {
     return;
   }
   const next_x = unit.x + unit.vx;

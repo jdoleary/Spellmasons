@@ -7,7 +7,7 @@ describe('Unit', () => {
   it('should die when health reaches 0', () => {
     const g = new Game();
     const u = Unit.create(0, 0, 0, 0);
-    g.summon(u);
+    g.addUnitToArray(u);
     u.health = 5;
     Unit.takeDamage(u, u.health);
     expect(u.alive).toEqual(false);
@@ -24,8 +24,8 @@ describe('Unit', () => {
       // Set u up to move into u1
       const u = Unit.create(0, 0, 0, 1);
       const u2 = Unit.create(0, 1, 0, 0);
-      g.summon(u);
-      g.summon(u2);
+      g.addUnitToArray(u);
+      g.addUnitToArray(u2);
       // Give u2 power to attack u when u moves into it
       u2.power = 2;
       // Make u2 frozen

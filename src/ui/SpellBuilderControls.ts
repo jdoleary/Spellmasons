@@ -4,6 +4,8 @@ import * as SpellPool from '../SpellPool';
 import { addPixiSprite, app } from '../PixiUtils';
 import { turn_phase } from '../Game';
 import { clearSelectedCards } from '../cards';
+import * as Unit from '../Unit';
+import type { IPlayer } from '../Player';
 
 let mouseCellX;
 let mouseCellY;
@@ -74,13 +76,34 @@ export default function setupSpellBuilderUI() {
     // Only allow casting in the proper phase
     if (window.game.turn_phase == turn_phase.PlayerTurns) {
       const selectedSpell = SpellPool.getSelectedSpell();
-      if (window.game.yourTurn && selectedSpell) {
-        const spell = Object.assign({ x, y }, selectedSpell);
-        clearSelectedCards();
-        window.pie.sendData({
-          type: MESSAGE_TYPES.SPELL,
-          spell,
-        });
+      if (window.game.yourTurn) {
+        // If a spell exists
+        if (selectedSpell && Object.values(selectedSpell).length > 0) {
+          const spell = Object.assign({ x, y }, selectedSpell);
+          clearSelectedCards();
+          window.pie.sendData({
+            type: MESSAGE_TYPES.SPELL,
+            spell,
+          });
+        } else {
+          // try walking
+          const selfPlayer: IPlayer | undefined = window.game.players.find(
+            (p) => p.clientId === window.clientId,
+          );
+          if (selfPlayer) {
+            // Find the difference between current position and desired position
+            const diffX = x - selfPlayer.unit.x;
+            const diffY = y - selfPlayer.unit.y;
+            // Move the player 1 magnitude on either or both axes towards the desired position
+            Unit.moveTo(
+              selfPlayer.unit,
+              // This formula clamps the diff to -1, 0 or 1
+              selfPlayer.unit.x + (diffX === 0 ? 0 : diffX / Math.abs(diffX)),
+              selfPlayer.unit.y + (diffY === 0 ? 0 : diffY / Math.abs(diffY)),
+            );
+            window.animationManager.startAnimate();
+          }
+        }
       }
     }
   });

@@ -2,8 +2,6 @@
 
 ## 3.12
 
-- Rethink game phases for rev3
-  - move, cast, endturn
 - Add player movement
 - Add portal and concept of levels
   - Seed level difficulty based on level number
