@@ -1,5 +1,8 @@
 import * as SpellPool from './SpellPool';
 import { lerp } from './math';
+import random from 'random';
+// Each client gets their own random cards
+const cardRandom = random.clone(window.clientId);
 const elCardHolder = document.getElementById('card-holder');
 const elCardHand = document.getElementById('card-hand');
 const cardsInHand: HTMLElement[] = [];
@@ -132,7 +135,7 @@ export function generateCard() {
     0,
   );
   // Choose random integer within the sum of all the probabilities
-  const roll = window.random.integer(0, maxProbability);
+  const roll = cardRandom.integer(0, maxProbability);
   let rollingLowerBound = 0;
   // Iterate each modifier and check if the roll is between the lower bound and the upper bound
   // which means that the current mod would have been rolled
