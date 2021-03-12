@@ -40,6 +40,7 @@ function loadTextures(): Promise<void> {
       'images/spell/heal.png',
       'images/spell/target.png',
       'images/spell/feet.png',
+      'images/portal.png',
     ];
     images.forEach((path) => {
       loader.add(path);

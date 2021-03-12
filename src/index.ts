@@ -13,11 +13,13 @@ import makeSeededRandom from './rand';
 import { cardChosen } from './SpellPool';
 import { clearCards } from './cards';
 
-import { setupPixi, app } from './PixiUtils';
+import { setupPixi } from './PixiUtils';
 setupPixi().then(() => {
   UI.setup();
   // Connect to PieServer
   connect();
+  // See makeGame function for where setup truly happens
+  // This instantiation just spins up the instance of game
   game = new Game();
 });
 
@@ -234,6 +236,7 @@ function makeGame(clients: string[]) {
     sortedClients.map((clientId) => clientId.slice(0, 6)).join(''),
   );
   game.setGameState(game_state.Playing);
+  game.initLevel();
 }
 window.connect = connect;
 

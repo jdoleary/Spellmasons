@@ -38,6 +38,7 @@ export default class Game {
   turn_phase: turn_phase;
   height: number = config.BOARD_HEIGHT;
   width: number = config.BOARD_WIDTH;
+  portal: Unit.IUnit;
   players: IPlayer[] = [];
   units: Unit.IUnit[] = [];
   // The index of which player's turn it is
@@ -84,6 +85,17 @@ export default class Game {
         elTurnTimeRemaining.innerText = '';
       }
     }, 1000);
+  }
+  initLevel() {
+    const portalPos = this.getRandomCell();
+    this.portal = Unit.create(
+      portalPos.x,
+      portalPos.y,
+      0,
+      0,
+      'images/portal.png',
+    );
+    window.animationManager.startAnimate();
   }
   getCellFromCurrentMousePos() {
     const { x, y } = this.boardContainer.toLocal(
@@ -138,6 +150,11 @@ export default class Game {
     }
     // Remove dead units
     this.units = this.units.filter((u) => u.alive);
+  }
+  getRandomCell() {
+    const x = window.random.integer(0, config.BOARD_WIDTH - 1);
+    const y = window.random.integer(0, config.BOARD_HEIGHT - 1);
+    return { x, y };
   }
   setTurnPhase(p: turn_phase) {
     this.turn_phase = p;
