@@ -3,6 +3,7 @@ import { BOARD_HEIGHT, BOARD_WIDTH, CELL_SIZE } from '../config';
 import * as SpellPool from '../SpellPool';
 import { addPixiSprite, app } from '../PixiUtils';
 import { turn_phase } from '../Game';
+import { clearSelectedCards } from '../cards';
 
 let mouseCellX;
 let mouseCellY;
@@ -75,6 +76,7 @@ export default function setupSpellBuilderUI() {
       const selectedSpell = SpellPool.getSelectedSpell();
       if (window.game.yourTurn && selectedSpell) {
         const spell = Object.assign({ x, y }, selectedSpell);
+        clearSelectedCards();
         window.pie.sendData({
           type: MESSAGE_TYPES.SPELL,
           spell,

@@ -2,6 +2,9 @@ import { modifySpell, Spell, toString, unmodifySpell } from './Spell';
 
 let currentSpell = {};
 const elPool = document.getElementById('spell-pool');
+export function clearCurrentSpell() {
+  currentSpell = {};
+}
 export function getSelectedSpell(): Spell {
   return currentSpell;
 }

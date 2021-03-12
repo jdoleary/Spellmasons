@@ -1,12 +1,10 @@
-import { MESSAGE_TYPES } from './MessageTypes';
-import { addModifierToSpell, removeModifierFromSpell } from './SpellPool';
+import * as SpellPool from './SpellPool';
 import { lerp } from './math';
 const elCardHolder = document.getElementById('card-holder');
 const elCardHand = document.getElementById('card-hand');
 const cardsInHand: HTMLElement[] = [];
 const CARD_WIDTH = 70;
 const CARD_HAND_MARGIN = 80;
-const Y_MOVE_AMOUNT_ON_HOVER = -50;
 const MOUSE_HOVER_DISTANCE_THRESHOLD = 400;
 function deselectActiveCardsInHand() {
   // Remove previously active card
@@ -73,6 +71,19 @@ window.test = () => {
     addCardToHand(card);
   }
 };
+export function clearSelectedCards() {
+  SpellPool.clearCurrentSpell();
+  for (let i = cardsInHand.length - 1; i >= 0; i--) {
+    const cardElement = cardsInHand[i];
+    if (cardElement.classList.contains('selected')) {
+      // Remove card from DOM
+      cardElement.remove();
+      // Remove card from array
+      cardsInHand.splice(i, 1);
+    }
+  }
+  recalcPositionForCards(0);
+}
 
 export function addCardToHand(card) {
   const element = createCardElement(card, undefined);
@@ -82,11 +93,11 @@ export function addCardToHand(card) {
       if (element.classList.contains('selected')) {
         element.classList.remove('selected');
         // Remove card contents from spell
-        removeModifierFromSpell(card.description);
+        SpellPool.removeModifierFromSpell(card.description);
       } else {
         element.classList.add('selected');
         // Add card contents to spell
-        addModifierToSpell(card.description);
+        SpellPool.addModifierToSpell(card.description);
       }
       // window.pie.sendData({
       //   type: MESSAGE_TYPES.CHOOSE_CARD,
