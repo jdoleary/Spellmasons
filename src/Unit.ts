@@ -105,7 +105,7 @@ export function move(unit: IUnit) {
   // Deal damage to what you run into
   for (let other_unit of bump_into_units) {
     // Do not attack self
-    if (other_unit === this) {
+    if (other_unit === unit) {
       continue;
     }
     unit.image.attack(unit.x, unit.y, next_x, next_y);

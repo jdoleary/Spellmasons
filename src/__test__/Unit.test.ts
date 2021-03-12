@@ -1,7 +1,6 @@
 import { describe, it, expect } from '@jest/globals';
 import * as Unit from '../Unit';
 import Game from '../Game';
-import * as Player from '../Player';
 
 describe('Unit', () => {
   it('should die when health reaches 0', () => {
