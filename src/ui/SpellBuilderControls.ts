@@ -15,7 +15,7 @@ function clearHighlights() {
   highlights = [];
 }
 function isOutOfBounds(x, y) {
-  return x < 0 || x >= BOARD_WIDTH || y < 0 || y > BOARD_HEIGHT;
+  return x < 0 || x >= BOARD_WIDTH || y < 0 || y >= BOARD_HEIGHT;
 }
 export default function setupSpellBuilderUI() {
   // on Hover
