@@ -24,6 +24,8 @@ export default function setupSpellBuilderUI() {
   document.body.addEventListener('mousemove', (e) => {
     const { x, y } = window.game.getCellFromCurrentMousePos();
     if (isOutOfBounds(x, y)) {
+      // clear highlights since mouse is now out of bounds
+      clearHighlights();
       return;
     }
     // only show hover target when it's the correct turn phase
@@ -33,13 +35,18 @@ export default function setupSpellBuilderUI() {
       mouseCellY = y;
       // If mouse hovering over a new cell, update the target images
       if (didChange) {
+        const selectedSpell = SpellPool.getSelectedSpell();
+        // if spell exists show target image, otherwise show feet image for walking
+        const targetImgPath = Object.values(selectedSpell).length
+          ? 'images/spell/target.png'
+          : 'images/spell/feet.png';
         // Make a copy of the spell and add the target coords
         const spellCopy = Object.assign(
           {
             x,
             y,
           },
-          SpellPool.getSelectedSpell(),
+          selectedSpell,
         );
         // Find the targets of the spell
         const targets = window.game.getTargetsOfSpell(spellCopy);
@@ -47,7 +54,7 @@ export default function setupSpellBuilderUI() {
         clearHighlights();
         // Show highlights corresponding to targets
         for (let t of targets) {
-          const sprite = addPixiSprite('images/spell/feet.png');
+          const sprite = addPixiSprite(targetImgPath);
           sprite.x = -10;
           sprite.y = -10;
           highlights.push(sprite);
