@@ -4,8 +4,7 @@
 
 - brad got 'cannot read property unit of undefined'
 - I'm going twice and brad goes once
-- Two portals, it doesn't wait for both players to enter portal
-- Multiple portals spawn
+- it doesn't wait for both players to enter portal, it ends after one enters the portal
 - AI affects player units too, brads guy attacked me
 - Dead players can take turns
 

@@ -61,9 +61,8 @@ export default class Image {
     };
   }
   cleanup() {
-    // Remove DOM element
-    app.stage.removeChild(this.sprite);
-    // this.sprite?.remove();
+    // Remove PIXI sprite
+    this.sprite.parent.removeChild(this.sprite);
   }
   addSubImage(key, imageName) {
     console.log('TODO sub images not yet implemented');
