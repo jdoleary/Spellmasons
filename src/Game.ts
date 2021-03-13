@@ -6,7 +6,6 @@ import * as Unit from './Unit';
 import * as Pickup from './Pickup';
 import * as Player from './Player';
 import * as Card from './cards';
-import { updateSelectedSpellUI } from './SpellPool';
 import { MESSAGE_TYPES } from './MessageTypes';
 import { addPixiSprite, app, containerBoard } from './PixiUtils';
 
@@ -430,10 +429,6 @@ export default class Game {
   }
   cast(spell: Spell) {
     const { caster } = spell;
-    // If you are casting the spell, clear the spell in the spell pool that was just cast
-    if (caster.clientId === window.clientId) {
-      updateSelectedSpellUI();
-    }
     // Get all units targeted by spell
     const targetCoords = this.getTargetsOfSpell(spell);
     // Convert targets to list of units

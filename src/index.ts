@@ -10,7 +10,6 @@ import * as UI from './ui/UserInterface';
 import { MESSAGE_TYPES } from './MessageTypes';
 import type { Random } from 'random';
 import makeSeededRandom from './rand';
-import { clearCards } from './cards';
 
 import { setupPixi } from './PixiUtils';
 setupPixi().then(() => {
@@ -31,7 +30,7 @@ const wsUri = 'ws://192.168.0.21:8000';
 // const wsUri = 'wss://websocket-pie-e4elx.ondigitalocean.app/';
 let pie: PieClient;
 let game: Game;
-let maxClients = 1;
+let maxClients = 2;
 function connect(_room_info = {}) {
   const room_info = Object.assign(_room_info, {
     app: 'Golems',

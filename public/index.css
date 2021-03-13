@@ -33,7 +33,7 @@ body {
   user-select: none;
 }
 
-#spell-pool {
+#current-spell-description {
   position: fixed;
   bottom: 220px;
   left: 0;

@@ -4,6 +4,20 @@ import * as Unit from './Unit';
 import floatingText from './FloatingText';
 import Image from './Image';
 
+const elCurrentSpellDescription = document.getElementById(
+  'current-spell-description',
+);
+let currentSpell: Spell = {};
+export function clearCurrentSpell() {
+  currentSpell = {};
+  updateSelectedSpellUI();
+}
+export function getSelectedSpell(): Spell {
+  return currentSpell;
+}
+export function updateSelectedSpellUI() {
+  elCurrentSpellDescription.innerText = toString(currentSpell);
+}
 export interface Spell {
   caster?: IPlayer;
   x?: number;
@@ -16,7 +30,8 @@ export interface Spell {
   image?: Image;
 }
 
-export function modifySpell(modifier: string, spell?: Spell) {
+export function modifySpell(modifier: string) {
+  const spell = currentSpell;
   switch (modifier) {
     case 'Damage':
       spell.damage = (spell.damage || 0) + 1;
@@ -34,8 +49,10 @@ export function modifySpell(modifier: string, spell?: Spell) {
       spell.aoe_radius = (spell.aoe_radius || 0) + 1;
       break;
   }
+  updateSelectedSpellUI();
 }
-export function unmodifySpell(modifier: string, spell?: Spell) {
+export function unmodifySpell(modifier: string) {
+  const spell = currentSpell;
   switch (modifier) {
     case 'Damage':
       spell.damage = (spell.damage || 0) - 1;
@@ -53,6 +70,7 @@ export function unmodifySpell(modifier: string, spell?: Spell) {
       spell.aoe_radius = (spell.aoe_radius || 0) - 1;
       break;
   }
+  updateSelectedSpellUI();
 }
 export function getImage(s: Spell) {
   let imgPath = 'images/spell/damage.png';

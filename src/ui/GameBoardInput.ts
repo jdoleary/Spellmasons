@@ -1,6 +1,6 @@
 import { MESSAGE_TYPES } from '../MessageTypes';
 import { BOARD_HEIGHT, BOARD_WIDTH, CELL_SIZE } from '../config';
-import * as SpellPool from '../SpellPool';
+import * as Spell from '../Spell';
 import { addPixiSprite, app } from '../PixiUtils';
 import { turn_phase } from '../Game';
 import { clearSelectedCards } from '../cards';
@@ -37,7 +37,7 @@ export default function setupBoardInputHandlers() {
       mouseCellY = y;
       // If mouse hovering over a new cell, update the target images
       if (didChange) {
-        const selectedSpell = SpellPool.getSelectedSpell();
+        const selectedSpell = Spell.getSelectedSpell();
         // if spell exists show target image, otherwise show feet image for walking
         const targetImgPath = areAnyCardsSelected()
           ? 'images/spell/target.png'
@@ -83,7 +83,7 @@ export default function setupBoardInputHandlers() {
     }
     // Only allow casting in the proper phase
     if (window.game.turn_phase == turn_phase.PlayerTurns) {
-      const selectedSpell = SpellPool.getSelectedSpell();
+      const selectedSpell = Spell.getSelectedSpell();
       if (window.game.yourTurn) {
         // If a spell exists (based on the combination of cards selected)...
         if (areAnyCardsSelected()) {

@@ -1,4 +1,4 @@
-import * as SpellPool from './SpellPool';
+import * as Spell from './Spell';
 import random from 'random';
 // Each client gets their own random cards, so the seed the cardRandom number generator with the client's id
 const cardRandom = random.clone(window.clientId);
@@ -72,7 +72,7 @@ export function clearCards() {
 
 // This function fully deletes the cards that are 'selected' in the player's hand
 export function clearSelectedCards() {
-  SpellPool.clearCurrentSpell();
+  Spell.clearCurrentSpell();
   for (let i = cardsInHand.length - 1; i >= 0; i--) {
     const cardElement = cardsInHand[i].element;
     if (cardElement.classList.contains('selected')) {
@@ -93,11 +93,11 @@ export function addCardToHand(card) {
       if (element.classList.contains('selected')) {
         element.classList.remove('selected');
         // Remove card contents from spell
-        SpellPool.removeModifierFromSpell(card.description);
+        Spell.unmodifySpell(card.description);
       } else {
         element.classList.add('selected');
         // Add card contents to spell
-        SpellPool.addModifierToSpell(card.description);
+        Spell.modifySpell(card.description);
       }
     }
   });
