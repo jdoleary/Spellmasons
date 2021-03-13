@@ -1,8 +1,7 @@
 import * as config from './config';
 import Image from './Image';
-import type { IPlayer } from './Player';
-import * as UI from './ui/UserInterface';
 import { distance } from './math';
+type UnitType = 'PlayerControlled' | 'AI';
 export interface IUnit {
   x: number;
   y: number;
@@ -13,9 +12,15 @@ export interface IUnit {
   alive: boolean;
   frozen: boolean;
   justSpawned: boolean;
+  unitType: UnitType;
 }
 
-export function create(x: number, y: number, imagePath?: string): IUnit {
+export function create(
+  x: number,
+  y: number,
+  imagePath: string,
+  unitType: UnitType,
+): IUnit {
   const unit: IUnit = {
     x,
     y,
@@ -25,6 +30,7 @@ export function create(x: number, y: number, imagePath?: string): IUnit {
     alive: true,
     frozen: false,
     justSpawned: true,
+    unitType,
   };
 
   // Start images small so when they spawn in they will grow

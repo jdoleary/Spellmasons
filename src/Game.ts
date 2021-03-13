@@ -118,7 +118,7 @@ export default class Game {
       i++
     ) {
       const { x, y } = this.getRandomCell();
-      Unit.create(x, y, 'images/units/golem.png');
+      Unit.create(x, y, 'images/units/golem.png', 'AI');
     }
     window.animationManager.startAnimate();
   }
@@ -233,7 +233,7 @@ export default class Game {
       case 'NPC':
         this.setYourTurn(false, "NPC's Turn");
         // Move units
-        for (let u of this.units) {
+        for (let u of this.units.filter((u) => u.unitType === 'AI')) {
           Unit.moveAI(u);
           u.justSpawned = false;
         }

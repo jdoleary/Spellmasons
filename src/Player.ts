@@ -20,7 +20,12 @@ export function create(clientId: string): IPlayer {
   return player;
 }
 export function respawnUnit(player: IPlayer) {
-  player.unit = Unit.create(0, 0, 'images/units/man-blue.png');
+  player.unit = Unit.create(
+    0,
+    0,
+    'images/units/man-blue.png',
+    'PlayerControlled',
+  );
   player.unit.justSpawned = false;
 }
 export function enterPortal(player: IPlayer) {
