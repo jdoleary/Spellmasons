@@ -224,7 +224,7 @@ export default class Game {
         // alternates which player takes their turn first
         this.incrementPlayerTurn();
         // Add cards to hand
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 2; i++) {
           const card = Card.generateCard();
           Card.addCardToHand(card);
         }
