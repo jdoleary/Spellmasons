@@ -15,43 +15,6 @@ body {
   padding: 64px;
   bottom: 0;
 }
-#board {
-  visibility: hidden;
-  position: relative;
-}
-#board-contents {
-  user-select: none;
-}
-#board-highlights {
-  position: absolute;
-  pointer-events: none;
-  display: flex;
-  flex-wrap: wrap;
-  z-index: 1;
-  visibility: hidden;
-}
-.highlight {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-.phase-cast #board-highlights {
-  visibility: visible;
-}
-.game-image {
-  position: absolute;
-}
-.game-image img {
-  image-rendering: pixelated;
-  image-rendering: -moz-crisp-edges;
-  image-rendering: crisp-edges;
-}
-/* Direct descendants are positioned perfectly on top of game-image */
-.game-image > * {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
 
 #debug {
   position: fixed;
@@ -70,14 +33,6 @@ body {
   user-select: none;
 }
 
-#tooltip {
-  border-radius: 10px;
-  width: 400px;
-  min-height: 200px;
-  margin: 8px auto;
-  padding: 8px;
-  background-color: #eee;
-}
 #spell-pool {
   position: fixed;
   bottom: 220px;

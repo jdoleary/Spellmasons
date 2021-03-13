@@ -21,8 +21,3 @@ export function setup() {
   });
   setupBoardInputHandlers();
 }
-const elTooltip = document.getElementById('tooltip');
-function setTooltip(description: string) {
-  elTooltip.innerText = description;
-}
-window.setTooltip = setTooltip;

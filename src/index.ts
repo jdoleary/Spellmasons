@@ -77,11 +77,6 @@ window.replay = (title) => {
     onData(message);
   }
 };
-function cleanUpAllImages() {
-  document.querySelectorAll('.game-image').forEach((i) => {
-    i.remove();
-  });
-}
 let onDataQueue = [];
 function onData(d: { fromClient: string; payload: any }) {
   // Keep data messages in a queue until they are ready to be processed
@@ -99,7 +94,6 @@ function onData(d: { fromClient: string; payload: any }) {
   const caster = game.players.find((p) => p.clientId === fromClient);
   switch (type) {
     case MESSAGE_TYPES.LOAD_GAME_STATE:
-      cleanUpAllImages();
       // Resume game / load game / rejoin game
       const loadedGameState = { ...payload.game };
       const players = loadedGameState.players;
@@ -236,7 +230,6 @@ declare global {
     clientId: string;
     // Debug on screen:
     setDebug: (json: object) => void;
-    setTooltip: (description: string) => void;
     // Seeded random number generator
     random: Random;
   }
