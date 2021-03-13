@@ -2,25 +2,17 @@
 
 ## Bugs
 
-- brad got 'cannot read property unit of undefined'
-- I'm going twice and brad goes once
-- it doesn't wait for both players to enter portal, it ends after one enters the portal
-- AI affects player units too, brads guy attacked me
-- Dead players can take turns
+---
 
-## 3.12
+- PieClient reports "cyclic object value" when one client refreshes and then another does
+  - This is probably due to loading game state, not pie client
 
-- Add portal and concept of levels
-  - Seed level difficulty based on level number
-  - Random mobs, and rocks
-- Add pickups
+## 3.14
 
-## 3.13
-
+- Add tile effects
 - Make relics
 - Add more spells
-- Improve turn management
-- Update golems to move toward player
+  - (buffs / dots)
 
 ## Ideas
 
@@ -32,26 +24,15 @@ What if choosing cards collected them in your inventory instead of in a pool and
 - Cusomize wizard stats
 - Wizard as unit on map
 - Tile effects "burn/poison"
+- Allow wizards to join game in progress
 
 ## Other
 
+- Fix Mosters can spawn on top of things
+- Fix? Brad died after chain healing himself while there were also golems on top of him
+- How to know order of operations for golems
 - How to handle applying multiple freeze cards??
   - removing one removes them all
-- fix floating text position due to pixi js
 - Clean up onDataQueue (is it still necessary?)
 - Fix replay?
-
 - Allow rejoining with saved client id
-
-- Check for game over
-
-```js
-for (let p of this.players) {
-  // Lastly, Check for gameover
-  if (p.heart_health <= 0) {
-    this.setGameState(game_state.GameOver);
-    this.state = game_state.GameOver;
-    alert('Game Over');
-  }
-}
-```
