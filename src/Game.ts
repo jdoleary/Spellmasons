@@ -154,14 +154,29 @@ export default class Game {
     this.yourTurn = yourTurn;
   }
   incrementPlayerTurn() {
-    this.playerTurnIndex = (this.playerTurnIndex + 1) % this.players.length;
-    this.secondsLeftForTurn = config.MAX_SECONDS_PER_TURN;
+    // Check for gameOverState
+    if (!this.players.filter((p) => Player.ableToTakeTurn(p)).length) {
+      this.setGameState(game_state.GameOver);
+    } else {
+      // If there are players who are able to take their turns, increment to the next
+      this.playerTurnIndex = (this.playerTurnIndex + 1) % this.players.length;
+      const currentTurnPlayer = this.players[this.playerTurnIndex];
+      if (Player.ableToTakeTurn(currentTurnPlayer)) {
+        this.secondsLeftForTurn = config.MAX_SECONDS_PER_TURN;
+        this.syncYourTurnState();
+        this.goToNextPhaseIfAppropriate();
+      } else {
+        // current player is unable to take turn, skip
+        this.incrementPlayerTurn();
+      }
+    }
+  }
+  syncYourTurnState() {
     if (this.players[this.playerTurnIndex].clientId === window.clientId) {
       this.setYourTurn(true, 'Your Turn');
     } else {
       this.setYourTurn(false, "Other Player's Turn");
     }
-    this.goToNextPhaseIfAppropriate();
   }
   endMyTurn() {
     // Turns can only be manually ended during the PlayerTurns phase
@@ -222,7 +237,8 @@ export default class Game {
       case 'PlayerTurns':
         // Incrementing PlayerTurn at the beginning of the PlayerTurns phase
         // alternates which player takes their turn first
-        this.incrementPlayerTurn();
+        // this.incrementPlayerTurn();
+        this.syncYourTurnState();
         // Add cards to hand
         for (let i = 0; i < 2; i++) {
           const card = Card.generateCard();
@@ -259,6 +275,9 @@ export default class Game {
     const state = game_state[this.state];
     const elBoard = document.getElementById('board');
     switch (state) {
+      case 'GameOver':
+        alert('GameOver');
+        break;
       case 'Playing':
         if (elBoard) {
           elBoard.style.visibility = 'visible';

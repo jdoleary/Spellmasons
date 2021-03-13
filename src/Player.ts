@@ -26,3 +26,6 @@ export function enterPortal(player: IPlayer) {
   window.animationManager.startAnimate();
   window.game.checkForEndOfLevel();
 }
+export function ableToTakeTurn(player: IPlayer) {
+  return !player.inPortal && player.unit.alive;
+}
