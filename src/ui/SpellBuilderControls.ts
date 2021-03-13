@@ -38,7 +38,7 @@ export default function setupSpellBuilderUI() {
       if (didChange) {
         const selectedSpell = SpellPool.getSelectedSpell();
         // if spell exists show target image, otherwise show feet image for walking
-        const targetImgPath = Object.values(selectedSpell).length
+        const targetImgPath = areAnyCardsSelected()
           ? 'images/spell/target.png'
           : 'images/spell/feet.png';
         // Make a copy of the spell and add the target coords
@@ -73,7 +73,9 @@ export default function setupSpellBuilderUI() {
   // elBoard.addEventListener('mouseleave', (e) => {
   //   clearHighlights();
   // });
-
+  function areAnyCardsSelected() {
+    return !!document.querySelectorAll('.card.selected').length;
+  }
   // Add board click handling
   document.body.addEventListener('click', (e) => {
     const { x, y } = window.game.getCellFromCurrentMousePos();
@@ -86,7 +88,8 @@ export default function setupSpellBuilderUI() {
       const selectedSpell = SpellPool.getSelectedSpell();
       if (window.game.yourTurn) {
         // If a spell exists
-        if (selectedSpell && Object.values(selectedSpell).length > 0) {
+        if (areAnyCardsSelected()) {
+          // Cast
           const spell = Object.assign({ x, y }, selectedSpell);
           clearSelectedCards();
           window.pie.sendData({
