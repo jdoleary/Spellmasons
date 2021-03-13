@@ -166,6 +166,13 @@ body.your-turn .card {
 body.your-turn #player-turn-indicator-holder {
   background-color: gold;
 }
+/* Change turn indicator to red if you're low on time */
+body.your-turn #player-turn-indicator-holder.low-time {
+  background-color: red;
+  font-size: large;
+  font-weight: bold;
+  color: white;
+}
 
 .health {
   position: absolute;

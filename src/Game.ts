@@ -31,6 +31,9 @@ interface Coords {
   x: number;
   y: number;
 }
+const elPlayerTurnIndicatorHolder = document.getElementById(
+  'player-turn-indicator-holder',
+);
 const elPlayerTurnIndicator = document.getElementById('player-turn-indicator');
 const elTurnTimeRemaining = document.getElementById('turn-time-remaining');
 export default class Game {
@@ -68,6 +71,9 @@ export default class Game {
       if (this.turn_phase === turn_phase.PlayerTurns) {
         // Limit turn duration
         this.secondsLeftForTurn--;
+        if (this.secondsLeftForTurn <= 10) {
+          elPlayerTurnIndicatorHolder.classList.add('low-time');
+        }
         elTurnTimeRemaining.innerText = `0:${
           this.secondsLeftForTurn < 10
             ? '0' + this.secondsLeftForTurn
@@ -176,6 +182,7 @@ export default class Game {
       const currentTurnPlayer = this.players[this.playerTurnIndex];
       if (Player.ableToTakeTurn(currentTurnPlayer)) {
         this.secondsLeftForTurn = config.SECONDS_PER_TURN;
+        elPlayerTurnIndicatorHolder.classList.remove('low-time');
         this.syncYourTurnState();
         this.goToNextPhaseIfAppropriate();
       } else {
