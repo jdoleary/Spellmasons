@@ -95,6 +95,7 @@ export default class Game {
     for (let p of this.players) {
       p.inPortal = false;
       p.unit.image.show();
+      p.unit.alive = true;
       // Return to spawn
       Unit.moveTo(p.unit, 0, 0);
       window.animationManager.startAnimate();
