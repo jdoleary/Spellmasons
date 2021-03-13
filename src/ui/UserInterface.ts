@@ -1,9 +1,8 @@
 import { MESSAGE_TYPES } from '../MessageTypes';
 import type { IPlayer } from '../Player';
-import setupSpellBuilderUI from './SpellBuilderControls';
+import setupBoardInputHandlers from './GameBoardInput';
 import * as config from '../config';
 
-// const elControls = document.getElementById('controls');
 const elEndTurnBtn: HTMLButtonElement = document.getElementById(
   'endTurn',
 ) as HTMLButtonElement;
@@ -29,7 +28,7 @@ export function setup() {
     window.game.endMyTurn();
   });
   elResetGameButton.addEventListener('click', resetGame);
-  setupSpellBuilderUI();
+  setupBoardInputHandlers();
 }
 function resetGame() {
   const doReset = window.confirm('Are you sure you want to start over?');

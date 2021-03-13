@@ -21,7 +21,7 @@ function clearHighlights() {
 function isOutOfBounds(x, y) {
   return x < 0 || x >= BOARD_WIDTH || y < 0 || y >= BOARD_HEIGHT;
 }
-export default function setupSpellBuilderUI() {
+export default function setupBoardInputHandlers() {
   // on Hover
   document.body.addEventListener('mousemove', (e) => {
     const { x, y } = window.game.getCellFromCurrentMousePos();
