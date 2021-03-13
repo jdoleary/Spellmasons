@@ -1,7 +1,6 @@
 import * as SpellPool from './SpellPool';
-import { lerp } from './math';
 import random from 'random';
-// Each client gets their own random cards
+// Each client gets their own random cards, so the seed the cardRandom number generator with the client's id
 const cardRandom = random.clone(window.clientId);
 const elCardHolder = document.getElementById('card-holder');
 const elCardHand = document.getElementById('card-hand');
@@ -11,14 +10,6 @@ interface CardPair {
 }
 const cardsInHand: CardPair[] = [];
 const CARD_WIDTH = 70;
-const CARD_HAND_MARGIN = 80;
-const MOUSE_HOVER_DISTANCE_THRESHOLD = 400;
-function deselectActiveCardsInHand() {
-  // Remove previously active card
-  document.querySelectorAll('#card-hand .card.active').forEach((el) => {
-    el.classList.remove('active');
-  });
-}
 function recalcPositionForCards(mouseX) {
   const cardHandWidth = elCardHand.getBoundingClientRect().width;
   const cardPairsGroupedByType = cardsInHand
@@ -71,22 +62,15 @@ function recalcPositionForCards(mouseX) {
   //   });
   // }
 }
-elCardHand.addEventListener('mouseleave', (e) => {
-  deselectActiveCardsInHand();
-});
 elCardHand.addEventListener('mousemove', (e) => {
-  deselectActiveCardsInHand();
   const x = e.clientX;
-  // const index = Math.floor(cardsInHand.length * mouseProportionX);
-  // const card = cardsInHand[index];
-  // if (card) {
-  //   card.classList.add('active');
-  // }
   recalcPositionForCards(x);
 });
 export function clearCards() {
   elCardHolder.innerHTML = '';
 }
+
+// This function fully deletes the cards that are 'selected' in the player's hand
 export function clearSelectedCards() {
   SpellPool.clearCurrentSpell();
   for (let i = cardsInHand.length - 1; i >= 0; i--) {
@@ -105,7 +89,6 @@ export function addCardToHand(card) {
   const element = createCardElement(card, undefined);
   element.addEventListener('click', (e) => {
     e.stopPropagation();
-    console.log('clicked on card in hand', card);
     if (window.game.yourTurn) {
       if (element.classList.contains('selected')) {
         element.classList.remove('selected');
@@ -155,7 +138,9 @@ const modifiers: Card[] = [
     probability: 10,
   },
 ];
-export function generateCard() {
+
+// Chooses a random card based on the card's probabilities
+export function generateCard(): Card {
   // Chooses a random modifier based on their probability
   const maxProbability = modifiers.reduce(
     (maxProbability, current) => current.probability + maxProbability,
