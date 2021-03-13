@@ -21,15 +21,17 @@ function deselectActiveCardsInHand() {
 }
 function recalcPositionForCards(mouseX) {
   const cardHandWidth = elCardHand.getBoundingClientRect().width;
-  const cardPairsGroupedByType = cardsInHand.reduce<{
-    [description: string]: CardPair[];
-  }>((group, cardPair) => {
-    if (!group[cardPair.card.description]) {
-      group[cardPair.card.description] = [];
-    }
-    group[cardPair.card.description].push(cardPair);
-    return group;
-  }, {});
+  const cardPairsGroupedByType = cardsInHand
+    .sort((a, b) => a.card.probability - b.card.probability)
+    .reduce<{
+      [description: string]: CardPair[];
+    }>((group, cardPair) => {
+      if (!group[cardPair.card.description]) {
+        group[cardPair.card.description] = [];
+      }
+      group[cardPair.card.description].push(cardPair);
+      return group;
+    }, {});
   const DISTANCE_BETWEEN_LIKE_CARDS = 4;
   const keys = Object.keys(cardPairsGroupedByType);
   for (let i = 0; i < keys.length; i++) {
