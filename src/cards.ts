@@ -5,7 +5,11 @@ import random from 'random';
 const cardRandom = random.clone(window.clientId);
 const elCardHolder = document.getElementById('card-holder');
 const elCardHand = document.getElementById('card-hand');
-const cardsInHand: HTMLElement[] = [];
+interface CardPair {
+  card: Card;
+  element: HTMLElement;
+}
+const cardsInHand: CardPair[] = [];
 const CARD_WIDTH = 70;
 const CARD_HAND_MARGIN = 80;
 const MOUSE_HOVER_DISTANCE_THRESHOLD = 400;
@@ -17,29 +21,53 @@ function deselectActiveCardsInHand() {
 }
 function recalcPositionForCards(mouseX) {
   const cardHandWidth = elCardHand.getBoundingClientRect().width;
-  // How far the mouse is across the screen, 0 is far left, 1.0 is far right
-  const mouseProportionX = mouseX / window.innerWidth;
-  // Recalc positions for all cards
-  for (let i = 0; i < cardsInHand.length; i++) {
-    const cardEl = cardsInHand[i];
-    const proportionXPosition = i / (cardsInHand.length - 1);
-    const cardBasePositionX =
-      proportionXPosition * cardHandWidth - CARD_WIDTH / 2;
-
-    // -1.0 to 1.0
-    const distanceFromMouse =
-      mouseX - cardBasePositionX - CARD_HAND_MARGIN - CARD_WIDTH / 2;
-
-    // "+ 0.5" allows half of the negative threshold to be included and half of the positive threshold
-    // rather than just the positive side of the threshold
-    const lerpT = distanceFromMouse / MOUSE_HOVER_DISTANCE_THRESHOLD;
-    const MOUSE_DISTANCE_MOVER = lerp(-1, 1, lerpT + 0.5);
-
-    setTransform(cardEl, {
-      x: cardBasePositionX + -10 * MOUSE_DISTANCE_MOVER,
-      y: 0,
-    });
+  const cardPairsGroupedByType = cardsInHand.reduce<{
+    [description: string]: CardPair[];
+  }>((group, cardPair) => {
+    if (!group[cardPair.card.description]) {
+      group[cardPair.card.description] = [];
+    }
+    group[cardPair.card.description].push(cardPair);
+    return group;
+  }, {});
+  const DISTANCE_BETWEEN_LIKE_CARDS = 4;
+  const keys = Object.keys(cardPairsGroupedByType);
+  for (let i = 0; i < keys.length; i++) {
+    const group = cardPairsGroupedByType[keys[i]];
+    for (let j = 0; j < group.length; j++) {
+      const cardPair = group[j];
+      const proportionXPosition = i / (keys.length - 1);
+      const cardBasePositionX =
+        proportionXPosition * cardHandWidth - CARD_WIDTH / 2;
+      setTransform(cardPair.element, {
+        x: cardBasePositionX + j * DISTANCE_BETWEEN_LIKE_CARDS,
+        y: 0,
+      });
+    }
   }
+  // How far the mouse is across the screen, 0 is far left, 1.0 is far right
+  // const mouseProportionX = mouseX / window.innerWidth;
+  // // Recalc positions for all cards
+  // for (let i = 0; i < cardsInHand.length; i++) {
+  //   const cardEl = cardsInHand[i].element;
+  //   const proportionXPosition = i / (cardsInHand.length - 1);
+  //   const cardBasePositionX =
+  //     proportionXPosition * cardHandWidth - CARD_WIDTH / 2;
+
+  //   // -1.0 to 1.0
+  //   const distanceFromMouse =
+  //     mouseX - cardBasePositionX - CARD_HAND_MARGIN - CARD_WIDTH / 2;
+
+  //   // "+ 0.5" allows half of the negative threshold to be included and half of the positive threshold
+  //   // rather than just the positive side of the threshold
+  //   const lerpT = distanceFromMouse / MOUSE_HOVER_DISTANCE_THRESHOLD;
+  //   const MOUSE_DISTANCE_MOVER = lerp(-1, 1, lerpT + 0.5);
+
+  //   setTransform(cardEl, {
+  //     x: cardBasePositionX + -10 * MOUSE_DISTANCE_MOVER,
+  //     y: 0,
+  //   });
+  // }
 }
 elCardHand.addEventListener('mouseleave', (e) => {
   deselectActiveCardsInHand();
@@ -60,7 +88,7 @@ export function clearCards() {
 export function clearSelectedCards() {
   SpellPool.clearCurrentSpell();
   for (let i = cardsInHand.length - 1; i >= 0; i--) {
-    const cardElement = cardsInHand[i];
+    const cardElement = cardsInHand[i].element;
     if (cardElement.classList.contains('selected')) {
       // Remove card from DOM
       cardElement.remove();
@@ -88,7 +116,7 @@ export function addCardToHand(card) {
       }
     }
   });
-  cardsInHand.push(element);
+  cardsInHand.push({ card, element });
   elCardHand.appendChild(element);
   // Initialize position with mouse in the middle
   recalcPositionForCards(window.innerWidth / 2);
