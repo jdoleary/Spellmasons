@@ -1,5 +1,4 @@
 export enum MESSAGE_TYPES {
-  CHOOSE_CARD,
   SPELL,
   MOVE_PLAYER,
   END_TURN,

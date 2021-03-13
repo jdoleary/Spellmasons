@@ -85,10 +85,6 @@ export function addCardToHand(card) {
         // Add card contents to spell
         SpellPool.addModifierToSpell(card.description);
       }
-      // window.pie.sendData({
-      //   type: MESSAGE_TYPES.CHOOSE_CARD,
-      //   id: element.id,
-      // });
     }
   });
   cardsInHand.push(element);

@@ -21,6 +21,3 @@ export function removeModifierFromSpell(modifier: string) {
 export function updateSelectedSpellUI() {
   elPool.innerText = toString(currentSpell);
 }
-export function cardChosen(elementId: string) {
-  document.getElementById(elementId)?.classList.add('disabled');
-}

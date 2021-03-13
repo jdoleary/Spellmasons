@@ -10,7 +10,6 @@ import * as UI from './ui/UserInterface';
 import { MESSAGE_TYPES } from './MessageTypes';
 import type { Random } from 'random';
 import makeSeededRandom from './rand';
-import { cardChosen } from './SpellPool';
 import { clearCards } from './cards';
 
 import { setupPixi } from './PixiUtils';
@@ -125,12 +124,6 @@ function onData(d: { fromClient: string; payload: any }) {
       game.players = players;
       game.units = units;
       game.setGameState(game_state.Playing);
-      break;
-    case MESSAGE_TYPES.CHOOSE_CARD:
-      cardChosen(payload.id);
-      // go to next player for picking
-      game.incrementPlayerTurn();
-
       break;
     case MESSAGE_TYPES.MOVE_PLAYER:
       // Move the player 1 magnitude on either or both axes towards the desired position
