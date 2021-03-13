@@ -100,8 +100,8 @@ export function findClosestPlayerTo(unit: IUnit) {
   let currentClosest = window.game.players[0].unit;
   let currentClosestDistance = Number.MAX_SAFE_INTEGER;
   for (let p of window.game.players) {
-    // Only consider units that are not in the portal
-    if (!p.inPortal) {
+    // Only consider units that are not in the portal and are alive
+    if (!p.inPortal && p.unit.alive) {
       const dist = distance(p.unit, unit);
       if (dist < currentClosestDistance) {
         currentClosest = p.unit;
