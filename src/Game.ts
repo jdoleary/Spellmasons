@@ -171,9 +171,9 @@ export default class Game {
   }
   checkForEndOfLevel() {
     // Advance the level if all living players have entered the portal:
-    const doIncrementLevel = this.players.filter(
-      (p) => p.unit.alive && p.inPortal,
-    );
+    const doIncrementLevel =
+      this.players.filter((p) => p.unit.alive && p.inPortal).length ===
+      this.players.filter((p) => p.unit.alive).length;
     if (doIncrementLevel) {
       this.moveToNextLevel();
     }
