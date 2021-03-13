@@ -35,7 +35,7 @@ function loadTextures(): Promise<void> {
   return new Promise((resolve) => {
     const loader = PIXI.Loader.shared;
     const images = [
-      'images/cell.png',
+      'images/tiles/ground.png',
       'images/units/golem.png',
       'images/units/man-blue.png',
       'images/spell/aoe.png',

@@ -61,7 +61,7 @@ export default class Game {
     let cell;
     for (let x = 0; x < config.BOARD_WIDTH; x++) {
       for (let y = 0; y < config.BOARD_HEIGHT; y++) {
-        cell = addPixiSprite('images/cell.png', containerBoard);
+        cell = addPixiSprite('images/tiles/ground.png', containerBoard);
         cell.x = x * config.CELL_SIZE;
         cell.y = y * config.CELL_SIZE;
       }
