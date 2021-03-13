@@ -84,11 +84,14 @@ export default class Game {
     }, 1000);
   }
   moveToNextLevel() {
-    // Clear all units
-    for (let u of this.units) {
-      u.image.cleanup();
+    for (let i = this.units.length - 1; i >= 0; i--) {
+      const u = this.units[i];
+      // Clear all remaining AI units
+      if (u.unitType === 'AI') {
+        u.image.cleanup();
+        this.units.splice(i, 1);
+      }
     }
-    this.units = [];
     // Clear all pickups
     for (let p of this.pickups) {
       p.image.cleanup();
