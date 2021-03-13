@@ -1,5 +1,4 @@
-import { PLAYER_HEART_HEALTH } from './config';
-import * as UI from './ui/UserInterface';
+import { PLAYER_BASE_HEALTH } from './config';
 import * as Unit from './Unit';
 
 export interface IPlayer {
@@ -12,12 +11,11 @@ export interface IPlayer {
 export function create(clientId: string): IPlayer {
   const player = {
     clientId,
-    heart_health: PLAYER_HEART_HEALTH,
+    heart_health: PLAYER_BASE_HEALTH,
     unit: Unit.create(0, 0, 'images/units/man-blue.png', 'PlayerControlled'),
     inPortal: false,
   };
   window.animationManager.startAnimate();
-  UI.setHealth(player);
   return player;
 }
 export function enterPortal(player: IPlayer) {

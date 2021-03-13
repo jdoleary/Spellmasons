@@ -174,19 +174,3 @@ body.your-turn #player-turn-indicator-holder.low-time {
   font-weight: bold;
   color: white;
 }
-
-.health {
-  position: absolute;
-  text-align: center;
-  left: 0;
-  right: 0;
-}
-.health-missing {
-  filter: grayscale(1);
-}
-#health-theirs {
-  top: -20px;
-}
-#health-mine {
-  bottom: -20px;
-}
