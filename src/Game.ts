@@ -285,7 +285,6 @@ export default class Game {
         for (let u of this.units) {
           if (u.frozen) {
             u.frozen = false;
-            u.image.removeSubImage('frozen');
           }
         }
 

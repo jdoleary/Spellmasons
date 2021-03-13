@@ -1,8 +1,7 @@
 import type * as PIXI from 'pixi.js';
 
-import { addPixiSprite, app } from './PixiUtils';
+import { addPixiSprite } from './PixiUtils';
 import type { AnimatableProps } from './AnimationManager';
-// import SubImage from './SubImage';
 import { CELL_SIZE } from './config';
 
 export function normalizeDegrees(degrees) {
@@ -17,12 +16,7 @@ export default class Image {
   sprite: PIXI.Sprite;
   size_x: number;
   size_y: number;
-  // element: HTMLDivElement;
-  // elSubImageHolder: HTMLDivElement;
-  // unitImage: SubImage;
   imageName: string;
-  // subImages: { [name: string]: SubImage };
-  static id: number = 0;
   transform: AnimatableProps = {
     x: 0,
     y: 0,
@@ -37,14 +31,9 @@ export default class Image {
     imageName: string,
     parent?: PIXI.Container,
   ) {
-    // this.subImages = {};
     // Save image path in unit so it's accessible when loading gamestate
     this.imageName = imageName;
-    // this.sprite = document.createElement('div');
     let rotation = 0;
-    // Unit rotation is handled explicitly in the unit subImage while other transforms that
-    // happen in board space occur in this "Image".  This is so that sub images can stay with
-    // the "Image" at large while the unit itself can have independent rotation
     rotation = normalizeDegrees(rotation);
     this.sprite = addPixiSprite(imageName, parent);
     this.sprite.anchor.x = 0.5;
@@ -63,16 +52,6 @@ export default class Image {
   cleanup() {
     // Remove PIXI sprite
     this.sprite.parent.removeChild(this.sprite);
-  }
-  addSubImage(key, imageName) {
-    console.log('TODO sub images not yet implemented');
-    // const subImg = new SubImage(null, 20, 20, imageName);
-    // this.elSubImageHolder.appendChild(subImg.element);
-    // this.subImages[key] = subImg;
-  }
-  removeSubImage(key) {
-    // this.subImages[key].cleanup();
-    // delete this.subImages[key];
   }
   scale(scale) {
     window.animationManager.addAnimation(this.sprite, this.transform, {
