@@ -220,6 +220,9 @@ export default class Game {
     document.body.classList.add('phase-' + phase.toLowerCase());
     switch (phase) {
       case 'PlayerTurns':
+        // Incrementing PlayerTurn at the beginning of the PlayerTurns phase
+        // alternates which player takes their turn first
+        this.incrementPlayerTurn();
         // Add cards to hand
         for (let i = 0; i < 3; i++) {
           const card = Card.generateCard();
@@ -245,8 +248,6 @@ export default class Game {
 
         window.animationManager.startAnimate().then(() => {
           this.setTurnPhase(turn_phase.PlayerTurns);
-          // After NPC's are done, setup the next player to take their turn
-          this.incrementPlayerTurn();
         });
         break;
       default:

@@ -26,8 +26,8 @@ window.animationManager = new AnimationManager();
 
 let clients = [];
 
-const wsUri = 'ws://localhost:8000';
-// const wsUri = 'ws://192.168.0.21:8000';
+// const wsUri = 'ws://localhost:8000';
+const wsUri = 'ws://192.168.0.21:8000';
 // const wsUri = 'wss://websocket-pie-e4elx.ondigitalocean.app/';
 let pie: PieClient;
 let game: Game;
@@ -129,15 +129,13 @@ function onData(d: { fromClient: string; payload: any }) {
       // Move the player 1 magnitude on either or both axes towards the desired position
       window.animationManager.startGroup('Move player');
       Unit.moveTo(caster.unit, payload.x, payload.y);
-      // When animations are done, check for pickup collisions
-      window.animationManager.currentGroup.onFinishedCallbacks.push(() => {
-        // Check if the player collided with any pickups
-        window.game.checkPickupCollisions(caster);
-      });
       window.animationManager.endGroup('Move player');
-      window.animationManager.startAnimate();
-      // Moving the player unit ends your turn
-      endPlayerTurn(caster.clientId);
+      window.animationManager.startAnimate().then(() => {
+        // When animations are done, check if the player collided with any pickups
+        window.game.checkPickupCollisions(caster);
+        // Moving the player unit ends your turn
+        endPlayerTurn(caster.clientId);
+      });
       break;
     case MESSAGE_TYPES.SPELL:
       // Set caster based on which client sent it
@@ -154,14 +152,12 @@ function onData(d: { fromClient: string; payload: any }) {
         game.cast(spell);
         // Animate the spells
         window.animationManager.startAnimate().then(() => {
-          // Allow the next player to cast
-          game.incrementPlayerTurn();
+          // Casting a spell ends your turn
+          endPlayerTurn(caster.clientId);
         });
       } else {
         console.log('Someone is trying to cast out of turn');
       }
-      // Casting a spell ends your turn
-      endPlayerTurn(caster.clientId);
       break;
     case MESSAGE_TYPES.END_TURN:
       endPlayerTurn(caster.clientId);
@@ -183,7 +179,7 @@ function onData(d: { fromClient: string; payload: any }) {
 }
 function endPlayerTurn(clientId) {
   const currentTurnPlayer = game.players[game.playerTurnIndex];
-  // Ensure players can only end the turn when it is their turn
+  // Ensure players can only end the turn when it IS their turn
   if (currentTurnPlayer.clientId === clientId) {
     game.endedTurn.add(clientId);
     game.incrementPlayerTurn();
