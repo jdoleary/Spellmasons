@@ -93,12 +93,12 @@ export function addCardToHand(card) {
   // Initialize position with mouse in the middle
   recalcPositionForCards(window.innerWidth / 2);
 }
-interface SpellMod {
+interface Card {
   description: string;
   thumbnail: string;
   probability: number;
 }
-const modifiers: SpellMod[] = [
+const modifiers: Card[] = [
   {
     description: 'Damage',
     thumbnail: 'images/spell/damage.png',
@@ -149,7 +149,7 @@ export function generateCard() {
   // Logically it should never reach this point
   return modifiers[0];
 }
-function getCardRarityColor(content: SpellMod): string {
+function getCardRarityColor(content: Card): string {
   if (content.probability == 1) {
     // Super rare
     // Purple
@@ -172,7 +172,7 @@ function getCardRarityColor(content: SpellMod): string {
   // White
   return '#FFF';
 }
-function createCardElement(content: SpellMod, id?: string) {
+function createCardElement(content: Card, id?: string) {
   const element = document.createElement('div');
   element.classList.add('card');
   if (id) {
