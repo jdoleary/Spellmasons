@@ -7,3 +7,4 @@ export const NUMBER_OF_UNITS_SPAWN_PER_LEVEL = 3;
 export const SECONDS_PER_TURN = 60;
 export const CELL_SIZE = 64;
 export const GIVE_NUM_CARDS_PER_LEVEL = 6;
+export const NUM_PICKUPS_PER_LEVEL = 2;

@@ -108,9 +108,8 @@ export default class Game {
     }
     // Clear all pickups
     for (let p of this.pickups) {
-      p.image.cleanup();
+      Pickup.removePickup(p);
     }
-    this.pickups = [];
     this.level++;
     this.initLevel();
   }
@@ -121,10 +120,20 @@ export default class Game {
       const card = Card.generateCard();
       Card.addCardToHand(card);
     }
+    for (let i = 0; i < config.NUM_PICKUPS_PER_LEVEL; i++) {
+      const { x, y } = this.getRandomCell();
+      const randomPickupIndex = window.random.integer(
+        0,
+        Object.values(Pickup.pickups).length - 1,
+      );
+      const pickup = Pickup.pickups[randomPickupIndex];
+      Pickup.create(x, y, true, pickup.img, pickup.effect);
+    }
     const portalPos = this.getRandomCell();
     Pickup.create(
       portalPos.x,
       portalPos.y,
+      false,
       'images/portal.png',
       (p: Player.IPlayer) => {
         Player.enterPortal(p);
@@ -144,7 +153,7 @@ export default class Game {
   checkPickupCollisions(player: Player.IPlayer) {
     for (let pu of this.pickups) {
       if (player.unit.x == pu.x && player.unit.y == pu.y) {
-        pu.effect(player);
+        Pickup.triggerPickup(pu, player);
       }
     }
   }
@@ -412,6 +421,9 @@ export default class Game {
   }
   addUnitToArray(unit: Unit.IUnit) {
     this.units.push(unit);
+  }
+  removePickupFromArray(pickup: Pickup.IPickup) {
+    this.pickups = this.pickups.filter((p) => p !== pickup);
   }
   addPickupToArray(pickup: Pickup.IPickup) {
     this.pickups.push(pickup);
