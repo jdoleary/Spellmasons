@@ -100,6 +100,11 @@ export default class Game {
       Unit.moveTo(p.unit, 0, 0);
       window.animationManager.startAnimate();
     }
+    // Add cards to hand
+    for (let i = 0; i < config.GIVE_NUM_CARDS_PER_LEVEL; i++) {
+      const card = Card.generateCard();
+      Card.addCardToHand(card);
+    }
     // Clear all pickups
     for (let p of this.pickups) {
       p.image.cleanup();
@@ -248,11 +253,6 @@ export default class Game {
         // alternates which player takes their turn first
         // this.incrementPlayerTurn();
         this.syncYourTurnState();
-        // Add cards to hand
-        for (let i = 0; i < 2; i++) {
-          const card = Card.generateCard();
-          Card.addCardToHand(card);
-        }
         this.bringOutYerDead();
         break;
       case 'NPC':
