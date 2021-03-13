@@ -89,16 +89,14 @@ export function addCardToHand(card) {
   const element = createCardElement(card, undefined);
   element.addEventListener('click', (e) => {
     e.stopPropagation();
-    if (window.game.yourTurn) {
-      if (element.classList.contains('selected')) {
-        element.classList.remove('selected');
-        // Remove card contents from spell
-        Spell.unmodifySpell(card.description);
-      } else {
-        element.classList.add('selected');
-        // Add card contents to spell
-        Spell.modifySpell(card.description);
-      }
+    if (element.classList.contains('selected')) {
+      element.classList.remove('selected');
+      // Remove card contents from spell
+      Spell.unmodifySpell(card.description);
+    } else {
+      element.classList.add('selected');
+      // Add card contents to spell
+      Spell.modifySpell(card.description);
     }
   });
   cardsInHand.push({ card, element });
