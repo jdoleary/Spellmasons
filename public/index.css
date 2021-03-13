@@ -87,6 +87,7 @@ body {
 }
 
 #card-hand {
+  user-select: none;
   position: fixed;
   bottom: 0;
   left: 80px;
