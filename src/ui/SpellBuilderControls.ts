@@ -10,6 +10,7 @@ import * as Unit from '../Unit';
 
 let mouseCellX;
 let mouseCellY;
+// Highlights are images that appear above cells to denote some information, such as the spell or action about to be cast/taken when clicked
 let highlights = [];
 function clearHighlights() {
   highlights.forEach((sprite) => {
@@ -70,13 +71,10 @@ export default function setupSpellBuilderUI() {
       }
     }
   });
-  // elBoard.addEventListener('mouseleave', (e) => {
-  //   clearHighlights();
-  // });
   function areAnyCardsSelected() {
     return !!document.querySelectorAll('.card.selected').length;
   }
-  // Add board click handling
+  // Handle clicks on the game board
   document.body.addEventListener('click', (e) => {
     const { x, y } = window.game.getCellFromCurrentMousePos();
     if (isOutOfBounds(x, y)) {
@@ -87,9 +85,9 @@ export default function setupSpellBuilderUI() {
     if (window.game.turn_phase == turn_phase.PlayerTurns) {
       const selectedSpell = SpellPool.getSelectedSpell();
       if (window.game.yourTurn) {
-        // If a spell exists
+        // If a spell exists (based on the combination of cards selected)...
         if (areAnyCardsSelected()) {
-          // Cast
+          // cast the spell
           const spell = Object.assign({ x, y }, selectedSpell);
           clearSelectedCards();
           window.pie.sendData({
@@ -97,7 +95,7 @@ export default function setupSpellBuilderUI() {
             spell,
           });
         } else {
-          // try walking
+          // otherwise, move player character
           const selfPlayer: IPlayer | undefined = window.game.players.find(
             (p) => p.clientId === window.clientId,
           );
