@@ -154,8 +154,8 @@ export default class Game {
     this.yourTurn = yourTurn;
   }
   incrementPlayerTurn() {
-    // Check for gameOverState
-    if (!this.players.filter((p) => Player.ableToTakeTurn(p)).length) {
+    // If no players are living, it's game over
+    if (!this.players.filter((p) => p.unit.alive).length) {
       this.setGameState(game_state.GameOver);
     } else {
       // If there are players who are able to take their turns, increment to the next
