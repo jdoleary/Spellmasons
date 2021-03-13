@@ -175,7 +175,7 @@ export default class Game {
       this.playerTurnIndex = (this.playerTurnIndex + 1) % this.players.length;
       const currentTurnPlayer = this.players[this.playerTurnIndex];
       if (Player.ableToTakeTurn(currentTurnPlayer)) {
-        this.secondsLeftForTurn = config.MAX_SECONDS_PER_TURN;
+        this.secondsLeftForTurn = config.SECONDS_PER_TURN;
         this.syncYourTurnState();
         this.goToNextPhaseIfAppropriate();
       } else {

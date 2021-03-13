@@ -4,6 +4,6 @@ export const PLAYER_HEART_HEALTH = 8;
 export const BOARD_HEIGHT = 8;
 export const BOARD_WIDTH = 8;
 export const NUMBER_OF_UNITS_SPAWN_PER_LEVEL = 3;
-export const MAX_SECONDS_PER_TURN = 30;
+export const SECONDS_PER_TURN = 60;
 export const CELL_SIZE = 64;
 export const GIVE_NUM_CARDS_PER_LEVEL = 6;
