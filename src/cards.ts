@@ -73,7 +73,8 @@ export function clearSelectedCards() {
 
 export function addCardToHand(card) {
   const element = createCardElement(card, undefined);
-  element.addEventListener('click', () => {
+  element.addEventListener('click', (e) => {
+    e.stopPropagation();
     console.log('clicked on card in hand', card);
     if (window.game.yourTurn) {
       if (element.classList.contains('selected')) {
