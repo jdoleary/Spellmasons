@@ -2,9 +2,8 @@ import PieClient, { ClientPresenceChangedArgs } from 'pie-client';
 import Game, { game_state, turn_phase } from './Game';
 import * as Player from './Player';
 import * as Unit from './Unit';
-import Image from './Image';
+import * as Pickup from './Pickup';
 import AnimationManager from './AnimationManager';
-import { BOARD_HEIGHT } from './config';
 import type { Spell } from './Spell';
 import * as UI from './ui/UserInterface';
 import { MESSAGE_TYPES } from './MessageTypes';
@@ -95,17 +94,15 @@ function onData(d: { fromClient: string; payload: any }) {
     case MESSAGE_TYPES.LOAD_GAME_STATE:
       // Resume game / load game / rejoin game
       const loadedGameState = { ...payload.game };
-      const players = loadedGameState.players;
-      const units = loadedGameState.units.map((u) => {
+      game = new Game();
+      game.players = loadedGameState.players.map((p) => {
         return {
-          ...u,
-          image: new Image(u.x, u.y, u.image.imageName),
+          ...p,
+          unit: Unit.load(p.unit),
         };
       });
-      game = new Game();
-      makeGame(clients);
-      game.players = players;
-      game.units = units;
+      game.units = loadedGameState.units.map((u) => Unit.load(u));
+      game.pickups = loadedGameState.pickups.map((p) => Pickup.load(p));
       game.setGameState(game_state.Playing);
       break;
     case MESSAGE_TYPES.MOVE_PLAYER:
@@ -182,11 +179,29 @@ function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
         type: MESSAGE_TYPES.LOAD_GAME_STATE,
         game: {
           ...game,
-          units: game.units.map((u) => {
-            // Remove image.sprite
-            const { sprite, ...rest } = u.image;
-            return { ...u, image: rest };
-          }),
+          players: game.players.map((p) => ({
+            ...p,
+            unit: {
+              image: {
+                ...p.unit.image,
+                sprite: null,
+              },
+            },
+          })),
+          units: game.units.map((u) => ({
+            ...u,
+            image: {
+              ...u.image,
+              sprite: null,
+            },
+          })),
+          pickups: game.pickups.map((p) => ({
+            ...p,
+            image: {
+              ...p.image,
+              sprite: null,
+            },
+          })),
         },
       });
     }

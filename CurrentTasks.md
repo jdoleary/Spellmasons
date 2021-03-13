@@ -9,6 +9,11 @@
 
 ## 3.14
 
+- Fix LOADING
+  - Image.ts adds sprite
+    - Pickups add images
+    - Units add images
+  - Gmae.ts adds tile sprites
 - Add tile effects
 - Make relics
 - Add more spells

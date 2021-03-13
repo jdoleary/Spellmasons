@@ -36,6 +36,15 @@ export function create(
 
   return self;
 }
+// Reinitialize a pickup from another pickup object, this is used in loading game state after reconnect
+export function load(pickup: IPickup) {
+  const self = {
+    ...pickup,
+    image: new Image(pickup.x, pickup.y, pickup.image.imageName),
+  };
+  window.game.addPickupToArray(self);
+  return self;
+}
 export function removePickup(pickup: IPickup) {
   pickup.image.cleanup();
   window.game.removePickupFromArray(pickup);

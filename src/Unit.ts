@@ -13,7 +13,6 @@ export interface IUnit {
   frozen: boolean;
   unitType: UnitType;
 }
-
 export function create(
   x: number,
   y: number,
@@ -38,6 +37,14 @@ export function create(
   window.game.addUnitToArray(unit);
 
   return unit;
+}
+// Reinitialize a unit from another unit object, this is used in loading game state after reconnect
+export function load(unit: IUnit) {
+  const self = {
+    ...unit,
+    image: new Image(unit.x, unit.y, unit.image.imageName),
+  };
+  window.game.addUnitToArray(self);
 }
 export function die(u: IUnit) {
   u.alive = false;
