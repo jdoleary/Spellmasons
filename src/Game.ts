@@ -92,6 +92,13 @@ export default class Game {
         this.units.splice(i, 1);
       }
     }
+    for (let p of this.players) {
+      p.inPortal = false;
+      p.unit.image.show();
+      // Return to spawn
+      Unit.moveTo(p.unit, 0, 0);
+      window.animationManager.startAnimate();
+    }
     // Clear all pickups
     for (let p of this.pickups) {
       p.image.cleanup();

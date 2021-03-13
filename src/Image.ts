@@ -102,8 +102,12 @@ export default class Image {
       this.cellToBoardCoords(cellX, cellY),
     );
   }
+  show() {
+    window.animationManager.addAnimation(this.sprite, this.transform, {
+      alpha: 1,
+    });
+  }
   hide() {
-    console.log(this.transform);
     window.animationManager.addAnimation(this.sprite, this.transform, {
       alpha: 0,
     });

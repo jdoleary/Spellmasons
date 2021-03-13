@@ -23,6 +23,8 @@ export function create(clientId: string): IPlayer {
 export function enterPortal(player: IPlayer) {
   player.inPortal = true;
   player.unit.image.hide();
+  // Move "portaled" unit out of the way to prevent collisions and chaining while portaled
+  Unit.moveTo(player.unit, 0, -1);
   window.animationManager.startAnimate();
   window.game.checkForEndOfLevel();
 }
