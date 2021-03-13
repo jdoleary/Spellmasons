@@ -31,7 +31,7 @@ const wsUri = 'ws://192.168.0.21:8000';
 // const wsUri = 'wss://websocket-pie-e4elx.ondigitalocean.app/';
 let pie: PieClient;
 let game: Game;
-let maxClients = 2;
+let maxClients = 1;
 function connect(_room_info = {}) {
   const room_info = Object.assign(_room_info, {
     app: 'Golems',
@@ -98,16 +98,6 @@ function onData(d: { fromClient: string; payload: any }) {
   // Get caster
   const caster = game.players.find((p) => p.clientId === fromClient);
   switch (type) {
-    case MESSAGE_TYPES.RESTART_GAME:
-      cleanUpAllImages();
-      clearCards();
-      game = new Game();
-      if (game.state == game_state.Lobby && clients.length === maxClients) {
-        makeGame(clients);
-      } else {
-        alert('Could not restart game');
-      }
-      break;
     case MESSAGE_TYPES.LOAD_GAME_STATE:
       cleanUpAllImages();
       // Resume game / load game / rejoin game

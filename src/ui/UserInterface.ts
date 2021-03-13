@@ -1,13 +1,9 @@
-import { MESSAGE_TYPES } from '../MessageTypes';
 import type { IPlayer } from '../Player';
 import setupBoardInputHandlers from './GameBoardInput';
 import * as config from '../config';
 
 const elEndTurnBtn: HTMLButtonElement = document.getElementById(
   'endTurn',
-) as HTMLButtonElement;
-const elResetGameButton: HTMLButtonElement = document.getElementById(
-  'resetGame',
 ) as HTMLButtonElement;
 const elHealthMine = document.getElementById('health-mine');
 const elHealthTheirs = document.getElementById('health-theirs');
@@ -27,16 +23,7 @@ export function setup() {
   elEndTurnBtn.addEventListener('click', () => {
     window.game.endMyTurn();
   });
-  elResetGameButton.addEventListener('click', resetGame);
   setupBoardInputHandlers();
-}
-function resetGame() {
-  const doReset = window.confirm('Are you sure you want to start over?');
-  if (doReset) {
-    window.pie.sendData({
-      type: MESSAGE_TYPES.RESTART_GAME,
-    });
-  }
 }
 const elTooltip = document.getElementById('tooltip');
 function setTooltip(description: string) {
