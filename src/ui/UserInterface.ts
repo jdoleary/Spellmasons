@@ -18,19 +18,18 @@ export function setup() {
   window.addEventListener('keydown', (event) => {
     switch (event.code) {
       case 'Space':
-        endTurn();
+        window.game.endMyTurn();
         break;
       default:
         console.log('No set action for key ' + event.code);
     }
   });
 
-  elEndTurnBtn.addEventListener('click', endTurn);
+  elEndTurnBtn.addEventListener('click', () => {
+    window.game.endMyTurn();
+  });
   elResetGameButton.addEventListener('click', resetGame);
   setupSpellBuilderUI();
-}
-export function endTurn() {
-  window.game.endMyTurn();
 }
 function resetGame() {
   const doReset = window.confirm('Are you sure you want to start over?');
