@@ -214,7 +214,8 @@ export default class Game {
   }
   canUnitMoveIntoCell(cellX: number, cellY: number): boolean {
     for (let u of this.units) {
-      if (u.x === cellX && u.y === cellY) {
+      // If a living unit is obstructing, do not allow movement
+      if (u.alive && u.x === cellX && u.y === cellY) {
         return false;
       }
     }
