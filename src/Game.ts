@@ -99,9 +99,6 @@ export default class Game {
   }
 
   initLevel() {
-    for (let p of this.players) {
-      Player.respawnUnit(p);
-    }
     const portalPos = this.getRandomCell();
     Pickup.create(
       portalPos.x,
@@ -235,7 +232,6 @@ export default class Game {
         // Move units
         for (let u of this.units.filter((u) => u.unitType === 'AI')) {
           Unit.moveAI(u);
-          u.justSpawned = false;
         }
 
         // Unfreeze frozen units

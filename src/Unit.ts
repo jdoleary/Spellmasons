@@ -11,7 +11,6 @@ export interface IUnit {
   health: number;
   alive: boolean;
   frozen: boolean;
-  justSpawned: boolean;
   unitType: UnitType;
 }
 
@@ -29,7 +28,6 @@ export function create(
     health: config.UNIT_BASE_HEALTH,
     alive: true,
     frozen: false,
-    justSpawned: true,
     unitType,
   };
 
@@ -68,10 +66,6 @@ export function takeDamage(unit: IUnit, amount: number, cause?: string) {
 function canMove(unit: IUnit): boolean {
   // Do not move if dead
   if (!unit.alive) {
-    return;
-  }
-  // Do not move if just spawned
-  if (unit.justSpawned) {
     return;
   }
   // Do not move if frozen

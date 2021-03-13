@@ -6,27 +6,19 @@ export interface IPlayer {
   // wsPie id
   clientId: string;
   heart_health: number;
-  unit?: Unit.IUnit;
+  unit: Unit.IUnit;
   inPortal: boolean;
 }
 export function create(clientId: string): IPlayer {
   const player = {
     clientId,
     heart_health: PLAYER_HEART_HEALTH,
+    unit: Unit.create(0, 0, 'images/units/man-blue.png', 'PlayerControlled'),
     inPortal: false,
   };
   window.animationManager.startAnimate();
   UI.setHealth(player);
   return player;
-}
-export function respawnUnit(player: IPlayer) {
-  player.unit = Unit.create(
-    0,
-    0,
-    'images/units/man-blue.png',
-    'PlayerControlled',
-  );
-  player.unit.justSpawned = false;
 }
 export function enterPortal(player: IPlayer) {
   player.inPortal = true;
