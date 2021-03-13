@@ -106,11 +106,6 @@ export default class Game {
       Unit.moveTo(p.unit, 0, 0);
       window.animationManager.startAnimate();
     }
-    // Add cards to hand
-    for (let i = 0; i < config.GIVE_NUM_CARDS_PER_LEVEL; i++) {
-      const card = Card.generateCard();
-      Card.addCardToHand(card);
-    }
     // Clear all pickups
     for (let p of this.pickups) {
       p.image.cleanup();
@@ -121,6 +116,11 @@ export default class Game {
   }
 
   initLevel() {
+    // Add cards to hand
+    for (let i = 0; i < config.GIVE_NUM_CARDS_PER_LEVEL; i++) {
+      const card = Card.generateCard();
+      Card.addCardToHand(card);
+    }
     const portalPos = this.getRandomCell();
     Pickup.create(
       portalPos.x,
