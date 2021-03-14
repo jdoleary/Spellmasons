@@ -54,6 +54,7 @@ export default class Game {
   secondsLeftForTurn: number;
   yourTurn: boolean;
   turnInterval: any;
+  hostClientId: string;
   // A set of clientIds who have ended their turn
   // Being a Set prevents a user from ending their turn more than once
   endedTurn = new Set<string>();

@@ -103,6 +103,7 @@ function onData(d: { fromClient: string; payload: any }) {
       game.level = loadedGameState.level;
       game.playerTurnIndex = loadedGameState.playerTurnIndex;
       game.secondsLeftForTurn = loadedGameState.secondsLeftForTurn;
+      game.hostClientId = loadedGameState.hostClientId;
       // Load all units that are not player's, those will be loaded indepentently
       game.units = loadedGameState.units
         .filter((u) => u.unitType !== 'PlayerControlled')
@@ -117,6 +118,8 @@ function onData(d: { fromClient: string; payload: any }) {
       game.restorePlayerCardsInHand();
       game.syncYourTurnState();
       game.setGameState(game_state.Playing);
+      // Animate in restored game state
+      window.animationManager.startAnimate();
       break;
     case MESSAGE_TYPES.MOVE_PLAYER:
       // Move the player 1 magnitude on either or both axes towards the desired position
@@ -178,7 +181,6 @@ function endPlayerTurn(clientId) {
     game.incrementPlayerTurn();
   }
 }
-let host = false;
 function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
   console.log('clientPresenceChanged', o);
   clients = o.clients;
@@ -187,8 +189,8 @@ function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
     if (clients.length === 1) {
       // if you are the only client, make the game
       makeGame(clients);
-      host = true;
-    } else if (host) {
+      game.hostClientId = window.clientId;
+    } else if (game.hostClientId === window.clientId) {
       // If you are the host, send the game state to the other player
       // who just joined
       // --
@@ -229,6 +231,16 @@ function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
           })),
         },
       });
+    }
+  } else {
+    // client left
+
+    // if host left
+    if (o.clientThatChanged === game.hostClientId) {
+      console.log('host left');
+      // Set host to the 0th client that is still connected
+      const sortedClients = o.clients.sort();
+      game.hostClientId = sortedClients[0];
     }
   }
 }
