@@ -10,7 +10,7 @@ export interface IUnit {
   power: number;
   health: number;
   alive: boolean;
-  frozen: boolean;
+  frozenForTurns: number;
   unitType: UnitType;
 }
 export function create(
@@ -26,7 +26,7 @@ export function create(
     power: config.UNIT_BASE_POWER,
     health: config.UNIT_BASE_HEALTH,
     alive: true,
-    frozen: false,
+    frozenForTurns: 0,
     unitType,
   };
 
@@ -77,7 +77,7 @@ function canMove(unit: IUnit): boolean {
     return;
   }
   // Do not move if frozen
-  if (unit.frozen) {
+  if (unit.frozenForTurns > 0) {
     return;
   }
   return true;

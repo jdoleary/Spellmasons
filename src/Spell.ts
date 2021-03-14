@@ -24,7 +24,7 @@ export interface Spell {
   y?: number;
   // damage can be negative for healing
   damage?: number;
-  freeze?: boolean;
+  freeze?: number;
   chain?: boolean;
   aoe_radius?: number;
   image?: Image;
@@ -40,7 +40,7 @@ export function modifySpell(modifier: string) {
       spell.damage = (spell.damage || 0) - 1;
       break;
     case 'Freeze':
-      spell.freeze = true;
+      spell.freeze = (spell.freeze || 0) + 1;
       break;
     case 'Chain':
       spell.chain = true;
@@ -61,7 +61,7 @@ export function unmodifySpell(modifier: string) {
       spell.damage = (spell.damage || 0) + 1;
       break;
     case 'Freeze':
-      spell.freeze = false;
+      spell.freeze = (spell.freeze || 0) - 1;
       break;
     case 'Chain':
       spell.chain = false;
@@ -129,8 +129,8 @@ export function effect(spell: Spell, args: EffectArgs) {
     });
     Unit.takeDamage(unit, spell.damage, 'spell');
   }
-  if (unit && spell.freeze) {
-    unit.frozen = true;
+  if (unit && spell.freeze > 0) {
+    unit.frozenForTurns = spell.freeze;
   }
   // Show an image when cast occurs
   const castImage = new Image(spell.x, spell.y, getImage(spell));

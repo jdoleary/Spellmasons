@@ -11,9 +11,6 @@
 
 - Make status modifiers (freeze) stack for x number of turns
 - Mob agro based on distance
-- Fix LOADING
-  - maybe "creating" a game and loading a game should be the same. It takes a game state and initializes everything. This would work for saving, loading, or just starting a game, and would enable clients to join part way through.
-  - You must decouple the client connection with the game state
 - Add tile effects
 - Make relics
 - Add more spells
@@ -23,6 +20,7 @@
 
 What if choosing cards collected them in your inventory instead of in a pool and you could combine them at will before you cast them and they would combine in predictable ways ("Binding of Isaac" style). And you could walk around the board with the other player and choose to be verses or cooperative
 
+- Mobs that end your turn if you get within range of them
 - Two actions per turn (move, move; move, cast; cast, cast)
 - Taunt totem
 - Once per game "super moves"

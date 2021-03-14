@@ -307,10 +307,11 @@ export default class Game {
           Unit.moveAI(u);
         }
 
-        // Unfreeze frozen units
+        // If units are frozen, decrement the number of turns that they are frozen for
+        // since a turn has passed
         for (let u of this.units) {
-          if (u.frozen) {
-            u.frozen = false;
+          if (u.frozenForTurns > 0) {
+            u.frozenForTurns--;
           }
         }
 
