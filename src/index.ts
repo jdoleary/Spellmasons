@@ -224,6 +224,9 @@ function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
               ...p.unit,
               image: {
                 ...p.unit.image,
+                subSprites: {
+                  // TODO, restore subSprites on load
+                },
                 sprite: null,
               },
             },
@@ -232,6 +235,9 @@ function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
             ...u,
             image: {
               ...u.image,
+              subSprites: {
+                // TODO, restore subSprites on load
+              },
               sprite: null,
             },
           })),
