@@ -164,6 +164,15 @@ export default class Game {
     }
     window.animationManager.startAnimate();
   }
+  restorePlayerCardsInHand() {
+    // Temporarily just regenerate cards
+    // TODO actually restore player cards after disconnect
+    // Add cards to hand
+    for (let i = 0; i < config.GIVE_NUM_CARDS_PER_LEVEL; i++) {
+      const card = Card.generateCard();
+      Card.addCardToHand(card);
+    }
+  }
   checkPickupCollisions(player: Player.IPlayer) {
     for (let pu of this.pickups) {
       if (player.unit.x == pu.x && player.unit.y == pu.y) {

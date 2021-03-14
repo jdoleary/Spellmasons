@@ -100,6 +100,9 @@ function onData(d: { fromClient: string; payload: any }) {
       // Resume game / load game / rejoin game
       const loadedGameState: Game = { ...payload.game };
       game = new Game(loadedGameState.seed);
+      game.level = loadedGameState.level;
+      game.playerTurnIndex = loadedGameState.playerTurnIndex;
+      game.secondsLeftForTurn = loadedGameState.secondsLeftForTurn;
       // Load all units that are not player's, those will be loaded indepentently
       game.units = loadedGameState.units
         .filter((u) => u.unitType !== 'PlayerControlled')
@@ -111,6 +114,8 @@ function onData(d: { fromClient: string; payload: any }) {
         };
       });
       game.pickups = loadedGameState.pickups.map((p) => Pickup.load(p));
+      game.restorePlayerCardsInHand();
+      game.syncYourTurnState();
       game.setGameState(game_state.Playing);
       break;
     case MESSAGE_TYPES.MOVE_PLAYER:
