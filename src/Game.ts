@@ -8,6 +8,8 @@ import * as Player from './Player';
 import * as Card from './cards';
 import { MESSAGE_TYPES } from './MessageTypes';
 import { addPixiSprite, app, containerBoard } from './PixiUtils';
+import type { Random } from 'random';
+import makeSeededRandom from './rand';
 
 export enum game_state {
   Lobby,
@@ -37,6 +39,8 @@ const elPlayerTurnIndicator = document.getElementById('player-turn-indicator');
 const elTurnTimeRemaining = document.getElementById('turn-time-remaining');
 export default class Game {
   state: game_state;
+  seed: string;
+  random: Random;
   turn_phase: turn_phase;
   height: number = config.BOARD_HEIGHT;
   width: number = config.BOARD_WIDTH;
@@ -49,10 +53,13 @@ export default class Game {
   playerTurnIndex: number;
   secondsLeftForTurn: number;
   yourTurn: boolean;
+  turnInterval: any;
   // A set of clientIds who have ended their turn
   // Being a Set prevents a user from ending their turn more than once
   endedTurn = new Set<string>();
-  constructor() {
+  constructor(seed: string) {
+    this.seed = seed;
+    this.random = makeSeededRandom(this.seed);
     this.setGameState(game_state.Lobby);
     window.game = this;
 
@@ -66,7 +73,7 @@ export default class Game {
       }
     }
 
-    setInterval(() => {
+    this.turnInterval = setInterval(() => {
       if (this.turn_phase === turn_phase.PlayerTurns) {
         // Limit turn duration
         this.secondsLeftForTurn--;
@@ -87,6 +94,15 @@ export default class Game {
         elTurnTimeRemaining.innerText = '';
       }
     }, 1000);
+  }
+  cleanup() {
+    clearInterval(this.turnInterval);
+    for (let u of this.units) {
+      u.image.cleanup();
+    }
+    for (let x of this.pickups) {
+      x.image.cleanup();
+    }
   }
   moveToNextLevel() {
     for (let i = this.units.length - 1; i >= 0; i--) {
@@ -121,7 +137,7 @@ export default class Game {
     }
     for (let i = 0; i < config.NUM_PICKUPS_PER_LEVEL; i++) {
       const { x, y } = this.getRandomCell();
-      const randomPickupIndex = window.random.integer(
+      const randomPickupIndex = this.random.integer(
         0,
         Object.values(Pickup.pickups).length - 1,
       );
@@ -240,8 +256,8 @@ export default class Game {
     this.units = this.units.filter((u) => u.alive);
   }
   getRandomCell() {
-    const x = window.random.integer(0, config.BOARD_WIDTH - 1);
-    const y = window.random.integer(0, config.BOARD_HEIGHT - 1);
+    const x = this.random.integer(0, config.BOARD_WIDTH - 1);
+    const y = this.random.integer(0, config.BOARD_HEIGHT - 1);
     return { x, y };
   }
   canUnitMoveIntoCell(cellX: number, cellY: number): boolean {
@@ -311,10 +327,7 @@ export default class Game {
         }
         // Choose a random player index to start and immediately
         // increment to setup the turn state properly
-        this.playerTurnIndex = window.random.integer(
-          0,
-          this.players.length - 1,
-        );
+        this.playerTurnIndex = this.random.integer(0, this.players.length - 1);
         // Initialize the player turn state
         this.incrementPlayerTurn();
         // Set the first turn phase
