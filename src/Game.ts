@@ -51,7 +51,7 @@ export default class Game {
   level = 1;
   // The index of which player's turn it is
   playerTurnIndex: number;
-  secondsLeftForTurn: number;
+  secondsLeftForTurn: number = config.SECONDS_PER_TURN;
   yourTurn: boolean;
   turnInterval: any;
   hostClientId: string;
@@ -338,7 +338,7 @@ export default class Game {
         // increment to setup the turn state properly
         this.playerTurnIndex = this.random.integer(0, this.players.length - 1);
         // Initialize the player turn state
-        this.incrementPlayerTurn();
+        this.syncYourTurnState();
         // Set the first turn phase
         this.setTurnPhase(turn_phase.PlayerTurns);
         break;
