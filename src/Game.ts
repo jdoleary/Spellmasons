@@ -142,17 +142,16 @@ export default class Game {
         Object.values(Pickup.pickups).length - 1,
       );
       const pickup = Pickup.pickups[randomPickupIndex];
-      Pickup.create(x, y, true, pickup.img, pickup.effect);
+      Pickup.create(x, y, true, pickup.imagePath, pickup.effect);
     }
     const portalPos = this.getRandomCell();
+    const portalPickup = Pickup.specialPickups['images/portal.png'];
     Pickup.create(
       portalPos.x,
       portalPos.y,
       false,
-      'images/portal.png',
-      (p: Player.IPlayer) => {
-        Player.enterPortal(p);
-      },
+      portalPickup.imagePath,
+      portalPickup.effect,
     );
     // Spawn units at the start of the level
     for (

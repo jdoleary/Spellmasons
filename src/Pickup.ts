@@ -1,11 +1,13 @@
 import Image from './Image';
 import type { IPlayer } from './Player';
 import * as Card from './cards';
+import * as Player from './Player';
 import * as config from './config';
 import { containerPickup } from './PixiUtils';
 export interface IPickup {
   x: number;
   y: number;
+  imagePath: string;
   image: Image;
   // Only can be picked up once
   singleUse: boolean;
@@ -23,8 +25,9 @@ export function create(
   const self: IPickup = {
     x,
     y,
-    singleUse,
+    imagePath,
     image: new Image(x, y, imagePath, containerPickup),
+    singleUse,
     effect,
   };
 
@@ -38,12 +41,24 @@ export function create(
 }
 // Reinitialize a pickup from another pickup object, this is used in loading game state after reconnect
 export function load(pickup: IPickup) {
-  const self = {
-    ...pickup,
-    image: new Image(pickup.x, pickup.y, pickup.image.imageName),
-  };
-  window.game.addPickupToArray(self);
-  return self;
+  // Get the pickup object
+  let foundPickup = pickups.find((p) => p.imagePath == pickup.imagePath);
+  // If it does not exist, perhaps it is a special pickup such as a portal
+  if (!foundPickup) {
+    foundPickup = specialPickups[pickup.imagePath];
+  }
+  if (foundPickup) {
+    const self = create(
+      pickup.x,
+      pickup.y,
+      pickup.singleUse,
+      pickup.imagePath,
+      foundPickup.effect,
+    );
+    return self;
+  } else {
+    console.error('Could not load pickup with path', pickup.imagePath);
+  }
 }
 export function removePickup(pickup: IPickup) {
   pickup.image.cleanup();
@@ -56,9 +71,24 @@ export function triggerPickup(pickup: IPickup, player: IPlayer) {
   }
 }
 
+// Special pickups are not stored in the pickups array because they shouldn't be
+// randomly selected when adding pickups to a generated level.
+export const specialPickups: {
+  [imagePath: string]: {
+    imagePath: string;
+    effect: (p: IPlayer) => void;
+  };
+} = {
+  'images/portal.png': {
+    imagePath: 'images/portal.png',
+    effect: (p: Player.IPlayer) => {
+      Player.enterPortal(p);
+    },
+  },
+};
 export const pickups = [
   {
-    img: 'images/pickups/card.png',
+    imagePath: 'images/pickups/card.png',
     effect: (p: IPlayer) => {
       if (p.clientId === window.clientId) {
         for (let i = 0; i < config.GIVE_NUM_CARDS_PER_LEVEL; i++) {
