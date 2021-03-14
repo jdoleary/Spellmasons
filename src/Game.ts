@@ -312,6 +312,9 @@ export default class Game {
         for (let u of this.units) {
           if (u.frozenForTurns > 0) {
             u.frozenForTurns--;
+            if (u.frozenForTurns <= 0) {
+              u.image.removeSubSprite('frozen');
+            }
           }
         }
 

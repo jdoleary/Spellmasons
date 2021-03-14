@@ -131,6 +131,7 @@ export function effect(spell: Spell, args: EffectArgs) {
   }
   if (unit && spell.freeze > 0) {
     unit.frozenForTurns = spell.freeze;
+    unit.image.addSubSprite('images/spell/freeze.png', 'frozen');
   }
   // Show an image when cast occurs
   const castImage = new Image(spell.x, spell.y, getImage(spell));

@@ -14,6 +14,7 @@ export function normalizeDegrees(degrees) {
 }
 export default class Image {
   sprite: PIXI.Sprite;
+  subSprites: { [key: string]: PIXI.Sprite } = {};
   size_x: number;
   size_y: number;
   imageName: string;
@@ -58,6 +59,17 @@ export default class Image {
       // Clamp to positive values
       scale: Math.max(0, scale),
     });
+  }
+  addSubSprite(imageName, key) {
+    const subSprite = addPixiSprite(imageName, this.sprite);
+    subSprite.anchor.x = 0.5;
+    subSprite.anchor.y = 0.5;
+    this.subSprites[key] = subSprite;
+  }
+  removeSubSprite(key) {
+    const subSprite = this.subSprites[key];
+    subSprite.parent.removeChild(subSprite);
+    delete this.subSprites[key];
   }
   remove() {
     window.animationManager.currentGroup.onFinishedCallbacks.push(() => {
