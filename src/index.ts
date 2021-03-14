@@ -10,6 +10,7 @@ import * as UI from './ui/UserInterface';
 import { MESSAGE_TYPES } from './MessageTypes';
 
 import { setupPixi } from './PixiUtils';
+import floatingText from './FloatingText';
 setupPixi().then(() => {
   UI.setup();
   // Connect to PieServer
@@ -173,6 +174,15 @@ function onData(d: { fromClient: string; payload: any }) {
       // }
       // });
       // }
+      break;
+    case MESSAGE_TYPES.PING:
+      const { x: cellX, y: cellY } = payload;
+      floatingText({
+        cellX,
+        cellY,
+        text: '🎈',
+        color: 'blue',
+      });
       break;
   }
 }

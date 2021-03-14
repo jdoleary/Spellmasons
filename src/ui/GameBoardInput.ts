@@ -81,6 +81,14 @@ export default function setupBoardInputHandlers() {
       // Disallow click out of bounds
       return;
     }
+    if (e.altKey) {
+      window.pie.sendData({
+        type: MESSAGE_TYPES.PING,
+        x,
+        y,
+      });
+      return;
+    }
     // Only allow casting in the proper phase
     if (window.game.turn_phase == turn_phase.PlayerTurns) {
       const selectedSpell = Spell.getSelectedSpell();
