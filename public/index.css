@@ -22,7 +22,8 @@ body {
   right: 20px;
 }
 .doob-stats {
-  margin-top: 40px;
+  margin-top: 70px;
+  margin-left: 10px;
 }
 
 .floating-text {
@@ -128,4 +129,8 @@ body.your-turn #player-turn-indicator-holder.low-time {
   font-size: large;
   font-weight: bold;
   color: white;
+}
+
+#websocket-pie-connection-status {
+  transform: translate(0, 30px);
 }
