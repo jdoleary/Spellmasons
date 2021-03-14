@@ -65,6 +65,7 @@ export default class Image {
     subSprite.anchor.x = 0.5;
     subSprite.anchor.y = 0.5;
     this.subSprites[key] = subSprite;
+    return subSprite;
   }
   removeSubSprite(key) {
     const subSprite = this.subSprites[key];

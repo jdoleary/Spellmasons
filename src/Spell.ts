@@ -131,7 +131,15 @@ export function effect(spell: Spell, args: EffectArgs) {
   }
   if (unit && spell.freeze > 0) {
     unit.frozenForTurns = spell.freeze;
-    unit.image.addSubSprite('images/spell/freeze.png', 'frozen');
+    const frozenSprite = unit.image.addSubSprite(
+      'images/spell/freeze.png',
+      'frozen',
+    );
+    frozenSprite.alpha = 0.5;
+    frozenSprite.anchor.x = 0;
+    frozenSprite.anchor.y = 0;
+    frozenSprite.scale.x = 0.5;
+    frozenSprite.scale.y = 0.5;
   }
   // Show an image when cast occurs
   const castImage = new Image(spell.x, spell.y, getImage(spell));
