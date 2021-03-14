@@ -7,8 +7,6 @@ import AnimationManager from './AnimationManager';
 import type { Spell } from './Spell';
 import * as UI from './ui/UserInterface';
 import { MESSAGE_TYPES } from './MessageTypes';
-import type { Random } from 'random';
-import makeSeededRandom from './rand';
 
 import { setupPixi } from './PixiUtils';
 setupPixi().then(() => {
@@ -17,7 +15,7 @@ setupPixi().then(() => {
   connect();
   // See makeGame function for where setup truly happens
   // This instantiation just spins up the instance of game
-  game = new Game();
+  game = new Game(Math.random().toString());
 });
 
 window.animationManager = new AnimationManager();
@@ -29,7 +27,7 @@ const wsUri = 'ws://192.168.0.21:8000';
 // const wsUri = 'wss://websocket-pie-e4elx.ondigitalocean.app/';
 let pie: PieClient;
 let game: Game;
-let maxClients = 2;
+let maxClients = 8;
 function connect(_room_info = {}) {
   const room_info = Object.assign(_room_info, {
     app: 'Golems',
@@ -37,13 +35,15 @@ function connect(_room_info = {}) {
     maxClients,
   });
   maxClients = room_info.maxClients;
+  const storedClientId = sessionStorage.getItem('pie-clientId');
   window.pie = pie = new PieClient({
     env: import.meta.env.MODE,
-    wsUri: wsUri,
+    wsUri: wsUri + (storedClientId ? `?clientId=${storedClientId}` : ''),
   });
   pie.onServerAssignedData = (o) => {
     console.log('serverAssignedData', o);
     window.clientId = o.clientId;
+    sessionStorage.setItem('pie-clientId', o.clientId);
   };
   pie.onData = onData;
   pie.onError = ({ message }) => window.alert(message);
@@ -92,16 +92,24 @@ function onData(d: { fromClient: string; payload: any }) {
   const caster = game.players.find((p) => p.clientId === fromClient);
   switch (type) {
     case MESSAGE_TYPES.LOAD_GAME_STATE:
+      console.log('LOAD GAME STATE');
+      // Clean up old game state
+      if (game) {
+        game.cleanup();
+      }
       // Resume game / load game / rejoin game
-      const loadedGameState = { ...payload.game };
-      game = new Game();
+      const loadedGameState: Game = { ...payload.game };
+      game = new Game(loadedGameState.seed);
+      // Load all units that are not player's, those will be loaded indepentently
+      game.units = loadedGameState.units
+        .filter((u) => u.unitType !== 'PlayerControlled')
+        .map((u) => Unit.load(u));
       game.players = loadedGameState.players.map((p) => {
         return {
           ...p,
           unit: Unit.load(p.unit),
         };
       });
-      game.units = loadedGameState.units.map((u) => Unit.load(u));
       game.pickups = loadedGameState.pickups.map((p) => Pickup.load(p));
       game.setGameState(game_state.Playing);
       break;
@@ -165,15 +173,19 @@ function endPlayerTurn(clientId) {
     game.incrementPlayerTurn();
   }
 }
+let host = false;
 function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
   console.log('clientPresenceChanged', o);
   clients = o.clients;
   // Client joined
   if (o.present) {
-    // Start game when maxClients reached
-    if (game.state == game_state.Lobby && clients.length === maxClients) {
+    if (clients.length === 1) {
+      // if you are the only client, make the game
       makeGame(clients);
-    } else if (game.state == game_state.WaitingForPlayerReconnect) {
+      host = true;
+    } else if (host) {
+      // If you are the host, send the game state to the other player
+      // who just joined
       // Send game state to other player so they can load:
       pie.sendData({
         type: MESSAGE_TYPES.LOAD_GAME_STATE,
@@ -182,6 +194,7 @@ function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
           players: game.players.map((p) => ({
             ...p,
             unit: {
+              ...p.unit,
               image: {
                 ...p.unit.image,
                 sprite: null,
@@ -205,9 +218,6 @@ function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
         },
       });
     }
-  } else {
-    // Client left
-    game.setGameState(game_state.WaitingForPlayerReconnect);
   }
 }
 function makeGame(clients: string[]) {
@@ -219,10 +229,6 @@ function makeGame(clients: string[]) {
     const p = Player.create(c);
     game.players.push(p);
   }
-  // Make seeded random number generator using portions of all players clientIds
-  window.random = makeSeededRandom(
-    sortedClients.map((clientId) => clientId.slice(0, 6)).join(''),
-  );
   game.setGameState(game_state.Playing);
   // Initialize the first level
   game.initLevel();
@@ -244,7 +250,5 @@ declare global {
     clientId: string;
     // Debug on screen:
     setDebug: (json: object) => void;
-    // Seeded random number generator
-    random: Random;
   }
 }

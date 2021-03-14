@@ -45,6 +45,7 @@ export function load(unit: IUnit) {
     image: new Image(unit.x, unit.y, unit.image.imageName),
   };
   window.game.addUnitToArray(self);
+  return self;
 }
 export function die(u: IUnit) {
   u.alive = false;
