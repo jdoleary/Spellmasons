@@ -190,7 +190,9 @@ function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
       // If client that just joined doesn't have an associated player, create
       // that player and add them to the game before sending out the game state
       // for other clients to load:
-      game.players.push(Player.create(o.clientThatChanged));
+      if (!game.players.find((p) => p.clientId === o.clientThatChanged)) {
+        game.players.push(Player.create(o.clientThatChanged));
+      }
       // Send game state to other player so they can load:
       pie.sendData({
         type: MESSAGE_TYPES.LOAD_GAME_STATE,
