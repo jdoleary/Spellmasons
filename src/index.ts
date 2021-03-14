@@ -109,14 +109,9 @@ function onData(d: { fromClient: string; payload: any }) {
       // Load all units that are not player's, those will be loaded indepentently
       game.units = loadedGameState.units
         .filter((u) => u.unitType !== 'PlayerControlled')
-        .map((u) => Unit.load(u));
-      game.players = loadedGameState.players.map((p) => {
-        return {
-          ...p,
-          unit: Unit.load(p.unit),
-        };
-      });
-      game.pickups = loadedGameState.pickups.map((p) => Pickup.load(p));
+        .map(Unit.load);
+      game.players = loadedGameState.players.map(Player.load);
+      game.pickups = loadedGameState.pickups.map(Pickup.load);
       game.restorePlayerCardsInHand();
       game.syncYourTurnState();
       game.setGameState(game_state.Playing);

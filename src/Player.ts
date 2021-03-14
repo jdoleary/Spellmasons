@@ -16,9 +16,26 @@ export function create(clientId: string): IPlayer {
     inPortal: false,
     actionsUsed: 0,
   };
+  addHighlighIfPlayerBelongsToCurrentClient(player);
   player.unit.health = PLAYER_BASE_HEALTH;
   window.animationManager.startAnimate();
   return player;
+}
+function addHighlighIfPlayerBelongsToCurrentClient(player: IPlayer) {
+  if (player.clientId === window.clientId) {
+    player.unit.image.addSubSprite(
+      'images/units/unit-underline.png',
+      'ownCharacterMarker',
+    );
+  }
+}
+export function load(player: IPlayer) {
+  const self = {
+    ...player,
+    unit: Unit.load(player.unit),
+  };
+  addHighlighIfPlayerBelongsToCurrentClient(self);
+  return self;
 }
 export function enterPortal(player: IPlayer) {
   player.inPortal = true;
