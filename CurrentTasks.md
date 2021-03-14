@@ -10,7 +10,6 @@
 ## 3.14
 
 - Make status modifiers (freeze) stack for x number of turns
-- Move and cast in one turn
 - Mob agro based on distance
 - Fix LOADING
   - maybe "creating" a game and loading a game should be the same. It takes a game state and initializes everything. This would work for saving, loading, or just starting a game, and would enable clients to join part way through.

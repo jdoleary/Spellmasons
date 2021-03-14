@@ -6,12 +6,15 @@ export interface IPlayer {
   clientId: string;
   unit: Unit.IUnit;
   inPortal: boolean;
+  // The number of actions used this turn
+  actionsUsed: number;
 }
 export function create(clientId: string): IPlayer {
   const player = {
     clientId,
     unit: Unit.create(0, 0, 'images/units/man-blue.png', 'PlayerControlled'),
     inPortal: false,
+    actionsUsed: 0,
   };
   player.unit.health = PLAYER_BASE_HEALTH;
   window.animationManager.startAnimate();

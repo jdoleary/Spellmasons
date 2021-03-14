@@ -3,6 +3,7 @@ import Game, { game_state, turn_phase } from './Game';
 import * as Player from './Player';
 import * as Unit from './Unit';
 import * as Pickup from './Pickup';
+import * as config from './config';
 import AnimationManager from './AnimationManager';
 import type { Spell } from './Spell';
 import * as UI from './ui/UserInterface';
@@ -129,8 +130,9 @@ function onData(d: { fromClient: string; payload: any }) {
       window.animationManager.startAnimate().then(() => {
         // When animations are done, check if the player collided with any pickups
         window.game.checkPickupCollisions(caster);
-        // Moving the player unit ends your turn
-        endPlayerTurn(caster.clientId);
+        // Moving the player unit uses an action
+        caster.actionsUsed++;
+        checkEndPlayerTurn(caster);
       });
       break;
     case MESSAGE_TYPES.SPELL:
@@ -148,8 +150,9 @@ function onData(d: { fromClient: string; payload: any }) {
         game.cast(spell);
         // Animate the spells
         window.animationManager.startAnimate().then(() => {
-          // Casting a spell ends your turn
-          endPlayerTurn(caster.clientId);
+          // Casting a spell uses an action
+          caster.actionsUsed++;
+          checkEndPlayerTurn(caster);
         });
       } else {
         console.log('Someone is trying to cast out of turn');
@@ -171,6 +174,11 @@ function onData(d: { fromClient: string; payload: any }) {
       // });
       // }
       break;
+  }
+}
+function checkEndPlayerTurn(player: Player.IPlayer) {
+  if (player.actionsUsed >= config.PLAYER_ACTIONS_PER_TURN) {
+    endPlayerTurn(player.clientId);
   }
 }
 function endPlayerTurn(clientId) {

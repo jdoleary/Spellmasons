@@ -8,3 +8,5 @@ export const SECONDS_PER_TURN = 60;
 export const CELL_SIZE = 64;
 export const GIVE_NUM_CARDS_PER_LEVEL = 6;
 export const NUM_PICKUPS_PER_LEVEL = 2;
+// the number of actions a player can take in a turn
+export const PLAYER_ACTIONS_PER_TURN = 2;

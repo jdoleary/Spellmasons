@@ -210,14 +210,18 @@ export default class Game {
     this.yourTurn = yourTurn;
   }
   incrementPlayerTurn() {
+    // Set current player actions used back to 0 now that their turn has ended
+    const currentTurnPlayer = this.players[this.playerTurnIndex];
+    currentTurnPlayer.actionsUsed = 0;
+
     // If no players are living, it's game over
     if (!this.players.filter((p) => p.unit.alive).length) {
       this.setGameState(game_state.GameOver);
     } else {
       // If there are players who are able to take their turns, increment to the next
       this.playerTurnIndex = (this.playerTurnIndex + 1) % this.players.length;
-      const currentTurnPlayer = this.players[this.playerTurnIndex];
-      if (Player.ableToTakeTurn(currentTurnPlayer)) {
+      const nextTurnPlayer = this.players[this.playerTurnIndex];
+      if (Player.ableToTakeTurn(nextTurnPlayer)) {
         this.secondsLeftForTurn = config.SECONDS_PER_TURN;
         elPlayerTurnIndicatorHolder.classList.remove('low-time');
         this.syncYourTurnState();
@@ -293,9 +297,6 @@ export default class Game {
     document.body.classList.add('phase-' + phase.toLowerCase());
     switch (phase) {
       case 'PlayerTurns':
-        // Incrementing PlayerTurn at the beginning of the PlayerTurns phase
-        // alternates which player takes their turn first
-        // this.incrementPlayerTurn();
         this.syncYourTurnState();
         this.bringOutYerDead();
         break;
