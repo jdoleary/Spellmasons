@@ -20,9 +20,9 @@ export function distance(cell1: Coords, cell2: Coords) {
 }
 
 // Converts a singular index into x,y coords on a rectangle with a known width
-export function indexToXY(index: number, width: number) {
+export function indexToXY(index: number, width: number): Coords {
   return { x: index % width, y: Math.floor(index / width) };
 }
-export function xyToIndex(coords: { x: number; y: number }, width: number) {
+export function xyToIndex(coords: Coords, width: number) {
   return coords.y * width + coords.x;
 }
