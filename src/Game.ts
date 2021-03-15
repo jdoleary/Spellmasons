@@ -156,19 +156,14 @@ export default class Game {
         console.error('Pickup not spawned due to no empty cells');
       }
     }
-    const portalPos = this.getRandomEmptyCell();
-    if (portalPos) {
-      const portalPickup = Pickup.specialPickups['images/portal.png'];
-      Pickup.create(
-        portalPos.x,
-        portalPos.y,
-        false,
-        portalPickup.imagePath,
-        portalPickup.effect,
-      );
-    } else {
-      console.error('No empty cells exist for portal to spawn in!!');
-    }
+    const portalPickup = Pickup.specialPickups['images/portal.png'];
+    Pickup.create(
+      config.BOARD_WIDTH - 1,
+      Math.floor(config.BOARD_HEIGHT / 2),
+      false,
+      portalPickup.imagePath,
+      portalPickup.effect,
+    );
     // Spawn units at the start of the level
     for (
       let i = 0;

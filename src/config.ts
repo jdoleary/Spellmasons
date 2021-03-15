@@ -1,7 +1,7 @@
 export const PLAYER_BASE_HEALTH = 8;
 export const UNIT_BASE_HEALTH = 4;
 export const UNIT_BASE_POWER = 1;
-export const BOARD_HEIGHT = 8;
+export const BOARD_HEIGHT = 9;
 export const BOARD_WIDTH = 12;
 export const NUMBER_OF_UNITS_SPAWN_PER_LEVEL = 3;
 export const SECONDS_PER_TURN = 60;
