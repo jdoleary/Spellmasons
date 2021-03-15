@@ -1,4 +1,5 @@
 import * as config from './config';
+import floatingText from './FloatingText';
 import Image from './Image';
 import { distance } from './math';
 type UnitType = 'PlayerControlled' | 'AI';
@@ -11,6 +12,7 @@ export interface IUnit {
   health: number;
   alive: boolean;
   frozenForTurns: number;
+  shield: number;
   unitType: UnitType;
 }
 export function create(
@@ -27,6 +29,7 @@ export function create(
     health: config.UNIT_BASE_HEALTH,
     alive: true,
     frozenForTurns: 0,
+    shield: 0,
     unitType,
   };
 
@@ -58,6 +61,20 @@ export function cellDistanceFromUnit(
   return Math.max(Math.abs(unit.x - cellX), Math.abs(unit.y - cellY));
 }
 export function takeDamage(unit: IUnit, amount: number, cause?: string) {
+  // Shield prevents damage
+  if (unit.shield > 0) {
+    unit.shield--;
+    floatingText({
+      cellX: unit.x,
+      cellY: unit.y,
+      text: 'Shielded from damage!',
+      color: 'blue',
+    });
+    if (unit.shield <= 1) {
+      unit.image.removeSubSprite('shield');
+    }
+    return;
+  }
   unit.health -= amount;
   // Prevent health from going over maximum
   unit.health = Math.min(unit.health, config.UNIT_BASE_HEALTH);

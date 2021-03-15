@@ -3,6 +3,7 @@ import type { IPlayer } from './Player';
 import * as Unit from './Unit';
 import floatingText from './FloatingText';
 import Image from './Image';
+import { SHIELD_MULTIPLIER } from './config';
 
 const elCurrentSpellDescription = document.getElementById(
   'current-spell-description',
@@ -25,6 +26,7 @@ export interface Spell {
   // damage can be negative for healing
   damage?: number;
   freeze?: number;
+  shield?: number;
   chain?: boolean;
   aoe_radius?: number;
   image?: Image;
@@ -48,6 +50,9 @@ export function modifySpell(modifier: string) {
     case 'AOE':
       spell.aoe_radius = (spell.aoe_radius || 0) + 1;
       break;
+    case 'Shield':
+      spell.shield = (spell.shield || 0) + 1;
+      break;
   }
   updateSelectedSpellUI();
 }
@@ -69,6 +74,9 @@ export function unmodifySpell(modifier: string) {
     case 'AOE':
       spell.aoe_radius = (spell.aoe_radius || 0) - 1;
       break;
+    case 'Shield':
+      spell.shield = (spell.shield || 0) - 1;
+      break;
   }
   updateSelectedSpellUI();
 }
@@ -77,7 +85,7 @@ export function getImage(s: Spell) {
   if (s.damage) {
     imgPath = 'images/spell/damage.png';
   }
-  if (s.freeze) {
+  if (s.freeze > 0) {
     imgPath = 'images/spell/freeze.png';
   }
   if (s.chain) {
@@ -85,6 +93,9 @@ export function getImage(s: Spell) {
   }
   if (s.aoe_radius > 0) {
     imgPath = 'images/spell/aoe.png';
+  }
+  if (s.shield > 0) {
+    imgPath = 'images/spell/shield.png';
   }
   return imgPath;
 }
@@ -99,14 +110,17 @@ export function toString(s?: Spell) {
   if (s.damage < 0) {
     strings.push(`${Math.abs(s.damage)}✨`);
   }
-  if (s.freeze) {
-    strings.push('🧊');
+  if (s.freeze > 0) {
+    strings.push('${s.freeze}🧊');
   }
   if (s.chain) {
     strings.push('⚡');
   }
-  if (s.aoe_radius) {
+  if (s.aoe_radius > 0) {
     strings.push(`${s.aoe_radius}💣`);
+  }
+  if (s.shield > 0) {
+    strings.push('🛡️');
   }
   return strings.join(' ');
 }
@@ -130,7 +144,7 @@ export function effect(spell: Spell, args: EffectArgs) {
     Unit.takeDamage(unit, spell.damage, 'spell');
   }
   if (unit && spell.freeze > 0) {
-    unit.frozenForTurns = spell.freeze;
+    unit.frozenForTurns += spell.freeze;
     const frozenSprite = unit.image.addSubSprite(
       'images/spell/freeze.png',
       'frozen',
@@ -140,6 +154,18 @@ export function effect(spell: Spell, args: EffectArgs) {
     frozenSprite.anchor.y = 0;
     frozenSprite.scale.x = 0.5;
     frozenSprite.scale.y = 0.5;
+  }
+  if (unit && spell.shield > 0) {
+    unit.shield += spell.shield * SHIELD_MULTIPLIER;
+    const shieldSprite = unit.image.addSubSprite(
+      'images/spell/shield.png',
+      'shield',
+    );
+    shieldSprite.alpha = 0.5;
+    shieldSprite.anchor.x = 0;
+    shieldSprite.anchor.y = 0;
+    shieldSprite.scale.x = 0.5;
+    shieldSprite.scale.y = 0.5;
   }
   // Show an image when cast occurs
   const castImage = new Image(spell.x, spell.y, getImage(spell));

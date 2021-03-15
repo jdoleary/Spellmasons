@@ -135,6 +135,11 @@ const modifiers: Card[] = [
     thumbnail: 'images/spell/aoe.png',
     probability: 10,
   },
+  {
+    description: 'Shield',
+    thumbnail: 'images/spell/shield.png',
+    probability: 10,
+  },
 ];
 
 // Chooses a random card based on the card's probabilities
