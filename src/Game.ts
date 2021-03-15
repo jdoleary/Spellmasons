@@ -33,6 +33,12 @@ interface Coords {
   x: number;
   y: number;
 }
+interface Bounds {
+  xMin?: number;
+  xMax?: number;
+  yMin?: number;
+  yMax?: number;
+}
 const elPlayerTurnIndicatorHolder = document.getElementById(
   'player-turn-indicator-holder',
 );
@@ -138,7 +144,7 @@ export default class Game {
       Card.addCardToHand(card);
     }
     for (let i = 0; i < config.NUM_PICKUPS_PER_LEVEL; i++) {
-      const coords = this.getRandomEmptyCell();
+      const coords = this.getRandomEmptyCell({ xMin: 2 });
       if (coords) {
         const randomPickupIndex = this.random.integer(
           0,
@@ -170,7 +176,7 @@ export default class Game {
       i < config.NUMBER_OF_UNITS_SPAWN_PER_LEVEL * this.level;
       i++
     ) {
-      const coords = this.getRandomEmptyCell();
+      const coords = this.getRandomEmptyCell({ xMin: 2 });
       if (coords) {
         Unit.create(coords.x, coords.y, 'images/units/golem.png', 'AI');
       } else {
@@ -282,20 +288,42 @@ export default class Game {
     // Remove dead units
     this.units = this.units.filter((u) => u.alive);
   }
-  // Generate an array of indices cooresponding to board cells in shuffled order
-  _getShuffledCellIndicies() {
+  // Generate an array of cell coordinates in shuffled order
+  // between optional boundaries
+  _getShuffledCoordinates({ xMin, xMax, yMin, yMax }: Bounds): Coords[] {
     const numberOfIndices = config.BOARD_WIDTH * config.BOARD_HEIGHT;
-    const indices = [];
+    const indices: number[] = [];
     // Populate an array with the 1-dimentional indices of the board
     // so if the board is 2x2, the array will be [0,1,2,3]
     for (let i = 0; i < numberOfIndices; i++) {
       indices.push(i);
     }
     // Now randomly remove indicies from that array and add them to a new array
-    const shuffledIndices = [];
+    const shuffledIndices: Coords[] = [];
     for (let i = 0; i < numberOfIndices; i++) {
-      const index = this.random.integer(0, indices.length);
-      shuffledIndices.push(indices.splice(index, 1));
+      const metaIndex = this.random.integer(0, indices.length);
+      // pull chosen index out of the indices array so that it wont be picked next loop
+      const pluckedIndex = indices.splice(metaIndex, 1)[0];
+      if (pluckedIndex === undefined) {
+        continue;
+      }
+      const coords = math.indexToXY(pluckedIndex, config.BOARD_WIDTH);
+      // If plucked index is not within specified bounds continue
+      if (xMin !== undefined && coords.x < xMin) {
+        continue;
+      }
+      if (xMax !== undefined && coords.x > xMax) {
+        continue;
+      }
+      if (yMin !== undefined && coords.y < yMin) {
+        continue;
+      }
+      if (yMax !== undefined && coords.y > yMax) {
+        continue;
+      }
+      // If coordinates are within specified bounds, or if there are not specified bounds,
+      // add it to the list of shuffled coordinates
+      shuffledIndices.push(coords);
     }
     // Resulting in an array of shuffled indicies (e.g. [2,1,0,3])
     // This new array can now be used to randomly access cell coordinates
@@ -317,11 +345,11 @@ export default class Game {
     }
     return true;
   }
-  getRandomEmptyCell(): Coords | undefined {
-    const shuffledIndices = this._getShuffledCellIndicies();
-    for (let index of shuffledIndices) {
-      const coords = math.indexToXY(index, config.BOARD_WIDTH);
+  getRandomEmptyCell(bounds: Bounds): Coords | undefined {
+    const shuffledCoords = this._getShuffledCoordinates(bounds);
+    for (let coords of shuffledCoords) {
       const isEmpy = this._isCellEmpty(coords);
+      // if cell if empty return the coords, if it's not loop to the next coords that may be empty
       if (isEmpy) {
         return coords;
       }

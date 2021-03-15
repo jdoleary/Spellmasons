@@ -10,9 +10,16 @@ export interface IPlayer {
   actionsUsed: number;
 }
 export function create(clientId: string): IPlayer {
+  // limit spawn to the leftmost column
+  const coords = window.game.getRandomEmptyCell({ xMax: 0 });
   const player = {
     clientId,
-    unit: Unit.create(0, 0, 'images/units/man-blue.png', 'PlayerControlled'),
+    unit: Unit.create(
+      coords.x,
+      coords.y,
+      'images/units/man-blue.png',
+      'PlayerControlled',
+    ),
     inPortal: false,
     actionsUsed: 0,
   };
