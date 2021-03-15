@@ -111,7 +111,7 @@ export function toString(s?: Spell) {
     strings.push(`${Math.abs(s.damage)}✨`);
   }
   if (s.freeze > 0) {
-    strings.push('${s.freeze}🧊');
+    strings.push(`${s.freeze}🧊`);
   }
   if (s.chain) {
     strings.push('⚡');
