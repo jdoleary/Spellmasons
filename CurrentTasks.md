@@ -2,6 +2,7 @@
 
 ## Bugs
 - Loading
+  - restore subsprites
   - Fix restore cards after disconnect
 
 - Sometimes one player gets to move and then it goes directly to NPC instead of letting the other player move
@@ -9,7 +10,6 @@
 
 ## 3.14
 
-- Make status modifiers (freeze) stack for x number of turns
 - Mob agro based on distance
 - Add tile effects
 - Make relics
@@ -21,9 +21,7 @@
 What if choosing cards collected them in your inventory instead of in a pool and you could combine them at will before you cast them and they would combine in predictable ways ("Binding of Isaac" style). And you could walk around the board with the other player and choose to be verses or cooperative
 
 - Mobs that end your turn if you get within range of them
-- Two actions per turn (move, move; move, cast; cast, cast)
 - Taunt totem
-- Once per game "super moves"
 - Spell ideas
   - sythe cleaver
   - Vanish (invisible for x number of turns) "creating separation"
@@ -31,9 +29,7 @@ What if choosing cards collected them in your inventory instead of in a pool and
 - Mega spells that don't combine and fill the whole pool
 - Relics placed on map with aura effects
 - Cusomize wizard stats
-- Wizard as unit on map
 - Tile effects "burn/poison"
-- Allow wizards to join game in progress
 
 ## Other
 
