@@ -69,8 +69,10 @@ export default class Image {
   }
   removeSubSprite(key) {
     const subSprite = this.subSprites[key];
-    subSprite.parent.removeChild(subSprite);
-    delete this.subSprites[key];
+    if (subSprite) {
+      subSprite.parent.removeChild(subSprite);
+      delete this.subSprites[key];
+    }
   }
   remove() {
     window.animationManager.currentGroup.onFinishedCallbacks.push(() => {
