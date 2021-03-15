@@ -66,6 +66,23 @@ function connect(_room_info = {}) {
 }
 
 const messageLog = [];
+window.save = (title) => {
+  localStorage.setItem(
+    'golems-save-' + title,
+    JSON.stringify(window.game.sanitizeForSaving()),
+  );
+};
+window.load = (title) => {
+  const game = localStorage.getItem('golems-save-' + title);
+  if (game) {
+    pie.sendData({
+      type: MESSAGE_TYPES.LOAD_GAME_STATE,
+      game: JSON.parse(game),
+    });
+  } else {
+    console.error('no save game found with title', title);
+  }
+};
 window.saveReplay = (title) => {
   localStorage.setItem('golems-' + title, JSON.stringify(messageLog));
 };
@@ -216,39 +233,7 @@ function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
       // Send game state to other player so they can load:
       pie.sendData({
         type: MESSAGE_TYPES.LOAD_GAME_STATE,
-        game: {
-          ...game,
-          players: game.players.map((p) => ({
-            ...p,
-            unit: {
-              ...p.unit,
-              image: {
-                ...p.unit.image,
-                subSprites: {
-                  // TODO, restore subSprites on load
-                },
-                sprite: null,
-              },
-            },
-          })),
-          units: game.units.map((u) => ({
-            ...u,
-            image: {
-              ...u.image,
-              subSprites: {
-                // TODO, restore subSprites on load
-              },
-              sprite: null,
-            },
-          })),
-          pickups: game.pickups.map((p) => ({
-            ...p,
-            image: {
-              ...p.image,
-              sprite: null,
-            },
-          })),
-        },
+        game: game.sanitizeForSaving(),
       });
     }
   } else {
@@ -285,6 +270,8 @@ declare global {
     animationManager: AnimationManager;
     game: Game;
     pie: any;
+    save: (title: string) => void;
+    load: (title: string) => void;
     // Save pie messages for later replay
     saveReplay: (title: string) => void;
     // Used to replay onData messages for development

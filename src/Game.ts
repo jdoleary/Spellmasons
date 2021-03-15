@@ -473,4 +473,39 @@ export default class Game {
     }
     window.animationManager.endGroup('spell-effects');
   }
+  sanitizeForSaving(): Game {
+    return {
+      ...this,
+      players: this.players.map((p) => ({
+        ...p,
+        unit: {
+          ...p.unit,
+          image: {
+            ...p.unit.image,
+            subSprites: {
+              // TODO, restore subSprites on load
+            },
+            sprite: null,
+          },
+        },
+      })),
+      units: this.units.map((u) => ({
+        ...u,
+        image: {
+          ...u.image,
+          subSprites: {
+            // TODO, restore subSprites on load
+          },
+          sprite: null,
+        },
+      })),
+      pickups: this.pickups.map((p) => ({
+        ...p,
+        image: {
+          ...p.image,
+          sprite: null,
+        },
+      })),
+    };
+  }
 }
