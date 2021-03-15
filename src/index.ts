@@ -127,7 +127,7 @@ function onData(d: { fromClient: string; payload: any }) {
         // When animations are done, check if the player collided with any pickups
         window.game.checkPickupCollisions(caster);
         // Moving the player unit uses an action
-        caster.actionsUsed++;
+        caster.actionsUsed += config.ACTION_COST_WALK;
         checkEndPlayerTurn(caster);
       });
       break;
@@ -147,7 +147,7 @@ function onData(d: { fromClient: string; payload: any }) {
         // Animate the spells
         window.animationManager.startAnimate().then(() => {
           // Casting a spell uses an action
-          caster.actionsUsed++;
+          caster.actionsUsed += config.ACTION_COST_CAST;
           checkEndPlayerTurn(caster);
         });
       } else {
