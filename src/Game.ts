@@ -6,6 +6,7 @@ import * as Unit from './Unit';
 import * as Pickup from './Pickup';
 import * as Player from './Player';
 import * as Card from './cards';
+import * as math from './math';
 import { MESSAGE_TYPES } from './MessageTypes';
 import { addPixiSprite, app, containerBoard } from './PixiUtils';
 import type { Random } from 'random';
@@ -137,31 +138,49 @@ export default class Game {
       Card.addCardToHand(card);
     }
     for (let i = 0; i < config.NUM_PICKUPS_PER_LEVEL; i++) {
-      const { x, y } = this.getRandomCell();
-      const randomPickupIndex = this.random.integer(
-        0,
-        Object.values(Pickup.pickups).length - 1,
-      );
-      const pickup = Pickup.pickups[randomPickupIndex];
-      Pickup.create(x, y, true, pickup.imagePath, pickup.effect);
+      const coords = this.getRandomEmptyCell();
+      if (coords) {
+        const randomPickupIndex = this.random.integer(
+          0,
+          Object.values(Pickup.pickups).length - 1,
+        );
+        const pickup = Pickup.pickups[randomPickupIndex];
+        Pickup.create(
+          coords.x,
+          coords.y,
+          true,
+          pickup.imagePath,
+          pickup.effect,
+        );
+      } else {
+        console.error('Pickup not spawned due to no empty cells');
+      }
     }
-    const portalPos = this.getRandomCell();
-    const portalPickup = Pickup.specialPickups['images/portal.png'];
-    Pickup.create(
-      portalPos.x,
-      portalPos.y,
-      false,
-      portalPickup.imagePath,
-      portalPickup.effect,
-    );
+    const portalPos = this.getRandomEmptyCell();
+    if (portalPos) {
+      const portalPickup = Pickup.specialPickups['images/portal.png'];
+      Pickup.create(
+        portalPos.x,
+        portalPos.y,
+        false,
+        portalPickup.imagePath,
+        portalPickup.effect,
+      );
+    } else {
+      console.error('No empty cells exist for portal to spawn in!!');
+    }
     // Spawn units at the start of the level
     for (
       let i = 0;
       i < config.NUMBER_OF_UNITS_SPAWN_PER_LEVEL * this.level;
       i++
     ) {
-      const { x, y } = this.getRandomCell();
-      Unit.create(x, y, 'images/units/golem.png', 'AI');
+      const coords = this.getRandomEmptyCell();
+      if (coords) {
+        Unit.create(coords.x, coords.y, 'images/units/golem.png', 'AI');
+      } else {
+        console.error('Unit not spawned due to no empty cells');
+      }
     }
     window.animationManager.startAnimate();
   }
@@ -268,10 +287,52 @@ export default class Game {
     // Remove dead units
     this.units = this.units.filter((u) => u.alive);
   }
-  getRandomCell() {
-    const x = this.random.integer(0, config.BOARD_WIDTH - 1);
-    const y = this.random.integer(0, config.BOARD_HEIGHT - 1);
-    return { x, y };
+  // Generate an array of indices cooresponding to board cells in shuffled order
+  _getShuffledCellIndicies() {
+    const numberOfIndices = config.BOARD_WIDTH * config.BOARD_HEIGHT;
+    const indices = [];
+    // Populate an array with the 1-dimentional indices of the board
+    // so if the board is 2x2, the array will be [0,1,2,3]
+    for (let i = 0; i < numberOfIndices; i++) {
+      indices.push(i);
+    }
+    // Now randomly remove indicies from that array and add them to a new array
+    const shuffledIndices = [];
+    for (let i = 0; i < numberOfIndices; i++) {
+      const index = this.random.integer(0, indices.length);
+      shuffledIndices.push(indices.splice(index, 1));
+    }
+    // Resulting in an array of shuffled indicies (e.g. [2,1,0,3])
+    // This new array can now be used to randomly access cell coordinates
+    // using (math.indexToXY) multiple times without getting the same index more than once
+    return shuffledIndices;
+  }
+  _isCellEmpty({ x, y }: Coords): boolean {
+    // Test for units in cell
+    for (let u of this.units) {
+      if (u.alive && u.x === x && u.y === y) {
+        return false;
+      }
+    }
+    // Test for pickups
+    for (let u of this.pickups) {
+      if (u.x === x && u.y === y) {
+        return false;
+      }
+    }
+    return true;
+  }
+  getRandomEmptyCell(): Coords | undefined {
+    const shuffledIndices = this._getShuffledCellIndicies();
+    for (let index of shuffledIndices) {
+      const coords = math.indexToXY(index, config.BOARD_WIDTH);
+      const isEmpy = this._isCellEmpty(coords);
+      if (isEmpy) {
+        return coords;
+      }
+    }
+    // Returns undefined if there are no empty cells
+    return undefined;
   }
   canUnitMoveIntoCell(cellX: number, cellY: number): boolean {
     for (let u of this.units) {
