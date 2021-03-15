@@ -1,16 +1,16 @@
 # Todo
+- Prevent overlapping units
+- Improve spawning rules for portal, mobs, & pickups
 
 ## Bugs
 - Loading
-  - restore subsprites
+  - restore subsprites after load
   - Fix restore cards after disconnect
 
 - Sometimes one player gets to move and then it goes directly to NPC instead of letting the other player move
-- Prevent overlapping units
 
 ## 3.14
 
-- Mob agro based on distance
 - Add tile effects
 - Make relics
 - Add more spells
@@ -34,10 +34,6 @@ What if choosing cards collected them in your inventory instead of in a pool and
 ## Other
 
 - Fix Mosters can spawn on top of things
-- Fix? Brad died after chain healing himself while there were also golems on top of him
 - How to know order of operations for golems
-- How to handle applying multiple freeze cards??
-  - removing one removes them all
 - Clean up onDataQueue (is it still necessary?)
 - Fix replay?
-- Allow rejoining with saved client id
