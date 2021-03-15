@@ -1,3 +1,7 @@
+## Features
+- Alt click to ping a cell on the board to other players
+- Use window.save and window.load to persist the game state
+
 ## Setting
 
 8x8 board
