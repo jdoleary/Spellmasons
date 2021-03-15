@@ -121,9 +121,9 @@ export function findCellOneStepCloserTo(
   const moveY = unit.y + (diffY === 0 ? 0 : diffY / Math.abs(diffY));
   return { x: moveX, y: moveY };
 }
-export function findClosestPlayerTo(unit: IUnit) {
-  let currentClosest = window.game.players[0].unit;
-  let currentClosestDistance = Number.MAX_SAFE_INTEGER;
+export function findClosestPlayerTo(unit: IUnit): IUnit | undefined {
+  let currentClosest;
+  let currentClosestDistance = config.AI_AGRO_DISTANCE;
   for (let p of window.game.players) {
     // Only consider units that are not in the portal and are alive
     if (!p.inPortal && p.unit.alive) {
@@ -141,6 +141,10 @@ export function moveAI(unit: IUnit) {
     return;
   }
   const closestPlayerUnit = findClosestPlayerTo(unit);
+  if (!closestPlayerUnit) {
+    // Do not move if they don't have a target
+    return;
+  }
   const targetCell = findCellOneStepCloserTo(
     unit,
     closestPlayerUnit.x,
