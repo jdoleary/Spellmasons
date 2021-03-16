@@ -1,12 +1,20 @@
 # Todo
 - Show health when damaged or on hover
+- Add more golem types
+  - Boss (demon)
+  - Ranged (blue)
+  - Fast (sand)
+  - Jumping (red)
+- Add "Dark" cards for killing an ally
+  - Sacrifice
+    - Lose 3 cards at random for health
+  - Obliterate
+    - Sends everything in range into the void (has a special effect on portals - secret level)
+  - Corrupt
 - Add Relics
 - Add more spells
   - Push spell
   - Poison
-- Add more golem types
-  - Boss
-  - Ranged
 - Add tiles
   - Lava
   - Tree
