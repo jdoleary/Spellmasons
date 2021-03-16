@@ -20,9 +20,10 @@ export function recalcPositionForCards(player: Player.IPlayer) {
     for (let i = 0; i < Math.abs(difference); i++) {
       const doRemove = difference < 0;
       if (doRemove) {
-        document.querySelectorAll('.' + className).forEach((el) => {
-          elCardHand.removeChild(el);
-        });
+        const matchingCards = document.querySelectorAll('.' + className);
+        for (let i = 0; i < Math.abs(difference); i++) {
+          elCardHand.removeChild(matchingCards[i]);
+        }
       } else {
         // Create UI element for card
         const element = createCardElement(
@@ -85,9 +86,6 @@ export function recalcPositionForCards(player: Player.IPlayer) {
   //   });
   // }
 }
-export function clearCards() {
-  elCardHolder.innerHTML = '';
-}
 
 // This function fully deletes the cards that are 'selected' in the player's hand
 export function removeCardsFromHand(player: Player.IPlayer, cards: CardTally) {
@@ -117,6 +115,9 @@ const elCurrentSpellDescription = document.getElementById(
 );
 export function clearSelectedCardTally() {
   selectedCardTally = {};
+  document.querySelectorAll('.card.selected').forEach((el) => {
+    el.classList.remove('selected');
+  });
   updateSelectedSpellUI();
 }
 export function updateSelectedSpellUI() {
