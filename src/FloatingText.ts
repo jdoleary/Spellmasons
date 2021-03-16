@@ -12,12 +12,14 @@ interface FText {
 }
 export default function floatingText({ cellX, cellY, text, color }) {
   const pixiText = new PIXI.Text(text, { fill: color });
+  pixiText.x = cellX * CELL_SIZE + CELL_SIZE / 2;
+  pixiText.y = cellY * CELL_SIZE + CELL_SIZE / 2;
   pixiText.anchor.x = 0.5;
   pixiText.anchor.y = 0.5;
   const instance = {
     // Place in the middle of cell
-    x: cellX * CELL_SIZE + CELL_SIZE / 2,
-    y: cellY * CELL_SIZE + CELL_SIZE / 2,
+    x: pixiText.x,
+    y: pixiText.y,
     pixiText,
     vy: 1,
     alpha: 1,
