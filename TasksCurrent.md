@@ -1,6 +1,11 @@
 # Todo
+## 2021.3.16
+- restore subsprites after load
+- Fix restore cards after disconnect
+---
+- Event.ts file where you can add content based on events that happened
 - Show health when damaged or on hover
-- Add more golem types
+- Add more golem types (tint)
   - Boss (demon)
   - Ranged (blue)
   - Fast (sand)
@@ -23,8 +28,6 @@
 - Fix sometimes Game.playerTurnIndex is out of sync
   - this caused the game to desync golem movement (replays'desync1' and 'desync2')
 - Loading
-  - restore subsprites after load
-  - Fix restore cards after disconnect
 
 - Sometimes one player gets to move and then it goes directly to NPC instead of letting the other player move
 
