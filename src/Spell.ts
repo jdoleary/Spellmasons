@@ -1,29 +1,15 @@
-import type Game from './Game';
 import type { IPlayer } from './Player';
 import * as Unit from './Unit';
+import type * as Card from './cards';
 import floatingText from './FloatingText';
 import Image from './Image';
 import { SHIELD_MULTIPLIER } from './config';
 
-const elCurrentSpellDescription = document.getElementById(
-  'current-spell-description',
-);
-let currentSpell: Spell = {};
-export function clearCurrentSpell() {
-  currentSpell = {};
-  updateSelectedSpellUI();
-}
-export function getSelectedSpell(): Spell {
-  return currentSpell;
-}
-export function updateSelectedSpellUI() {
-  elCurrentSpellDescription.innerText = toString(currentSpell);
-}
 export interface Spell {
   caster?: IPlayer;
   x?: number;
   y?: number;
-  // damage can be negative for healing
+  heal?: number;
   damage?: number;
   freeze?: number;
   shield?: number;
@@ -31,59 +17,21 @@ export interface Spell {
   aoe_radius?: number;
   image?: Image;
 }
-
-export function modifySpell(modifier: string) {
-  const spell = currentSpell;
-  switch (modifier) {
-    case 'Damage':
-      spell.damage = (spell.damage || 0) + 1;
-      break;
-    case 'Heal':
-      spell.damage = (spell.damage || 0) - 1;
-      break;
-    case 'Freeze':
-      spell.freeze = (spell.freeze || 0) + 1;
-      break;
-    case 'Chain':
-      spell.chain = true;
-      break;
-    case 'AOE':
-      spell.aoe_radius = (spell.aoe_radius || 0) + 1;
-      break;
-    case 'Shield':
-      spell.shield = (spell.shield || 0) + 1;
-      break;
+export function buildSpellFromCardTally(cardTally: Card.CardTally): Spell {
+  const cardCountPairs = Object.entries(cardTally);
+  let spell: Spell = {};
+  for (let [cardId, count] of cardCountPairs) {
+    spell[cardId] = count;
   }
-  updateSelectedSpellUI();
-}
-export function unmodifySpell(modifier: string) {
-  const spell = currentSpell;
-  switch (modifier) {
-    case 'Damage':
-      spell.damage = (spell.damage || 0) - 1;
-      break;
-    case 'Heal':
-      spell.damage = (spell.damage || 0) + 1;
-      break;
-    case 'Freeze':
-      spell.freeze = (spell.freeze || 0) - 1;
-      break;
-    case 'Chain':
-      spell.chain = false;
-      break;
-    case 'AOE':
-      spell.aoe_radius = (spell.aoe_radius || 0) - 1;
-      break;
-    case 'Shield':
-      spell.shield = (spell.shield || 0) - 1;
-      break;
-  }
-  updateSelectedSpellUI();
+  return spell;
 }
 export function getImage(s: Spell) {
   let imgPath = 'images/spell/damage.png';
-  if (s.damage) {
+  if (s.damage > 0) {
     imgPath = 'images/spell/damage.png';
+  }
+  if (s.heal > 0) {
+    imgPath = 'images/spell/heal.png';
   }
   if (s.freeze > 0) {
     imgPath = 'images/spell/freeze.png';
@@ -99,48 +47,21 @@ export function getImage(s: Spell) {
   }
   return imgPath;
 }
-export function toString(s?: Spell) {
-  if (!s) {
-    return '';
-  }
-  const strings = [];
-  if (s.damage > 0) {
-    strings.push(`${s.damage}🔥`);
-  }
-  if (s.damage < 0) {
-    strings.push(`${Math.abs(s.damage)}✨`);
-  }
-  if (s.freeze > 0) {
-    strings.push(`${s.freeze}🧊`);
-  }
-  if (s.chain) {
-    strings.push('⚡');
-  }
-  if (s.aoe_radius > 0) {
-    strings.push(`${s.aoe_radius}💣`);
-  }
-  if (s.shield > 0) {
-    strings.push('🛡️');
-  }
-  return strings.join(' ');
-}
 export interface EffectArgs {
   unit?: Unit.IUnit;
   // Used to prevent infinite loops when recuring via chain for example
   ignore?: Unit.IUnit[];
 }
 export function effect(spell: Spell, args: EffectArgs) {
+  console.log('🚀 ~ file: Spell.ts ~ line 53 ~ effect ~ spell', spell);
   const { unit, ignore = [] } = args;
   if (unit && ignore.includes(unit)) {
     return;
   }
+  if (unit && spell.heal) {
+    Unit.takeDamage(unit, -spell.heal, 'spell');
+  }
   if (unit && spell.damage) {
-    floatingText({
-      cellX: unit.x,
-      cellY: unit.y,
-      text: toString(spell),
-      color: 'red',
-    });
     Unit.takeDamage(unit, spell.damage, 'spell');
   }
   if (unit && spell.freeze > 0) {

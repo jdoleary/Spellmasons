@@ -5,12 +5,14 @@ import * as Unit from './Unit';
 import * as Pickup from './Pickup';
 import * as config from './config';
 import AnimationManager from './AnimationManager';
-import type { Spell } from './Spell';
+import * as Spell from './Spell';
 import * as UI from './ui/UserInterface';
+import * as Card from './cards';
 import { MESSAGE_TYPES } from './MessageTypes';
 
 import { setupPixi } from './PixiUtils';
 import floatingText from './FloatingText';
+import { xyToIndex } from './math';
 setupPixi().then(() => {
   UI.setup();
   // Connect to PieServer
@@ -106,7 +108,7 @@ function onData(d: { fromClient: string; payload: any }) {
   messageLog.push(d);
 
   const { payload, fromClient } = d;
-  const { type, spell }: { type: MESSAGE_TYPES; spell: Spell } = payload;
+  const type: MESSAGE_TYPES = payload.type;
   // Get caster
   const caster = game.players.find((p) => p.clientId === fromClient);
   switch (type) {
@@ -129,7 +131,6 @@ function onData(d: { fromClient: string; payload: any }) {
         .map(Unit.load);
       game.players = loadedGameState.players.map(Player.load);
       game.pickups = loadedGameState.pickups.map(Pickup.load);
-      game.restorePlayerCardsInHand();
       game.syncYourTurnState();
       game.setGameState(game_state.Playing);
       // Animate in restored game state
@@ -149,8 +150,12 @@ function onData(d: { fromClient: string; payload: any }) {
       });
       break;
     case MESSAGE_TYPES.SPELL:
+      const spell = Spell.buildSpellFromCardTally(payload.cards);
+      spell.x = payload.x;
+      spell.y = payload.y;
       // Set caster based on which client sent it
       spell.caster = caster;
+      Card.removeCardsFromHand(spell.caster, payload.cards);
       if (
         // Only allow casting during the PlayerTurns phase
         (game.turn_phase === turn_phase.PlayerTurns &&
@@ -161,6 +166,12 @@ function onData(d: { fromClient: string; payload: any }) {
         (!game.yourTurn && spell.caster.clientId !== window.clientId)
       ) {
         game.cast(spell);
+        floatingText({
+          cellX: spell.x,
+          cellY: spell.y,
+          text: Card.toString(payload.cards),
+          color: 'black',
+        });
         // Animate the spells
         window.animationManager.startAnimate().then(() => {
           // Casting a spell uses an action
@@ -228,7 +239,8 @@ function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
       // that player and add them to the game before sending out the game state
       // for other clients to load:
       if (!game.players.find((p) => p.clientId === o.clientThatChanged)) {
-        game.players.push(Player.create(o.clientThatChanged));
+        const player = Player.create(o.clientThatChanged);
+        game.players.push(player);
       }
       // Send game state to other player so they can load:
       pie.sendData({
@@ -249,6 +261,8 @@ function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
   }
 }
 function makeGame(clients: string[]) {
+  // Initialize the first level
+  game.initLevel();
   // Sort clients to make sure they're always in the same order, regardless of
   // what order they joined the game (client refreshes can change the order)
   const sortedClients = clients.sort();
@@ -258,8 +272,6 @@ function makeGame(clients: string[]) {
     game.players.push(p);
   }
   game.setGameState(game_state.Playing);
-  // Initialize the first level
-  game.initLevel();
 }
 window.connect = connect;
 
@@ -269,6 +281,8 @@ declare global {
     // Animation manager is globally accessable
     animationManager: AnimationManager;
     game: Game;
+    // A reference to the player instance of the client playing on this instance
+    player: Player.IPlayer;
     pie: any;
     save: (title: string) => void;
     load: (title: string) => void;

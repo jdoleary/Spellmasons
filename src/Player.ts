@@ -1,5 +1,7 @@
 import { PLAYER_BASE_HEALTH } from './config';
 import * as Unit from './Unit';
+import * as Card from './cards';
+import * as config from './config';
 
 export interface IPlayer {
   // wsPie id
@@ -8,6 +10,8 @@ export interface IPlayer {
   inPortal: boolean;
   // The number of actions used this turn
   actionsUsed: number;
+  // The players "hand" which contains cards
+  hand: Card.CardTally;
 }
 export function create(clientId: string): IPlayer {
   // limit spawn to the leftmost column
@@ -22,11 +26,24 @@ export function create(clientId: string): IPlayer {
     ),
     inPortal: false,
     actionsUsed: 0,
+    hand: {},
   };
+  updateGlobalRefToCurrentClientPlayer(player);
+  // Add cards to hand
+  for (let i = 0; i < config.GIVE_NUM_CARDS_PER_LEVEL; i++) {
+    const card = Card.generateCard();
+    Card.addCardToHand(card, player);
+  }
   addHighlighIfPlayerBelongsToCurrentClient(player);
   player.unit.health = PLAYER_BASE_HEALTH;
   window.animationManager.startAnimate();
   return player;
+}
+// Keep a global reference to the current client's player
+function updateGlobalRefToCurrentClientPlayer(player: IPlayer) {
+  if (window.clientId === player.clientId) {
+    window.player = player;
+  }
 }
 function addHighlighIfPlayerBelongsToCurrentClient(player: IPlayer) {
   if (player.clientId === window.clientId) {
@@ -37,12 +54,14 @@ function addHighlighIfPlayerBelongsToCurrentClient(player: IPlayer) {
   }
 }
 export function load(player: IPlayer) {
-  const self = {
+  const playerLoaded = {
     ...player,
     unit: Unit.load(player.unit),
   };
-  addHighlighIfPlayerBelongsToCurrentClient(self);
-  return self;
+  addHighlighIfPlayerBelongsToCurrentClient(playerLoaded);
+  updateGlobalRefToCurrentClientPlayer(playerLoaded);
+  Card.recalcPositionForCards(playerLoaded);
+  return playerLoaded;
 }
 export function enterPortal(player: IPlayer) {
   player.inPortal = true;

@@ -1,7 +1,9 @@
 # Todo
 ## 2021.3.16
+- bug fix player going from 8 health to 4 when they get hit
 - restore subsprites after load
-- Fix restore cards after disconnect
+- Fix restore card elements after disconnect
+  - player's hand prop should be fine, you just have to reconcile the elements
 ---
 - Event.ts file where you can add content based on events that happened
 - Show health when damaged or on hover

@@ -1,43 +1,66 @@
-import * as Spell from './Spell';
-import random from 'random';
-// Each client gets their own random cards, so the seed the cardRandom number generator with the client's id
-const cardRandom = random.clone(window.clientId);
+import type * as Player from './Player';
 const elCardHolder = document.getElementById('card-holder');
 const elCardHand = document.getElementById('card-hand');
-interface CardPair {
-  card: Card;
-  element: HTMLElement;
-}
-const cardsInHand: CardPair[] = [];
+
 const CARD_WIDTH = 70;
-function recalcPositionForCards(mouseX) {
-  const cardHandWidth = elCardHand.getBoundingClientRect().width;
-  const cardPairsGroupedByType = cardsInHand
-    .sort((a, b) => a.card.probability - b.card.probability)
-    .reduce<{
-      [description: string]: CardPair[];
-    }>((group, cardPair) => {
-      if (!group[cardPair.card.description]) {
-        group[cardPair.card.description] = [];
+export function recalcPositionForCards(player: Player.IPlayer) {
+  if (window.player !== player) {
+    // Do not reconcile dom elements for a player who is not the current client's player
+    return;
+  }
+  // const cardHandWidth = elCardHand.getBoundingClientRect().width;
+  // const DISTANCE_BETWEEN_LIKE_CARDS = 4;
+  const cardCountPairs = Object.entries(player.hand);
+  // Reconcile the elements with the player's hand
+  for (let [cardId, count] of cardCountPairs) {
+    const className = `card-${cardId}`;
+
+    const difference =
+      count - document.querySelectorAll('.' + className).length;
+    for (let i = 0; i < Math.abs(difference); i++) {
+      const doRemove = difference < 0;
+      if (doRemove) {
+        document.querySelectorAll('.' + className).forEach((el) => {
+          elCardHand.removeChild(el);
+        });
+      } else {
+        // Create UI element for card
+        const element = createCardElement(
+          cardSource.find((card) => card.id === cardId),
+          undefined,
+        );
+        element.classList.add(className);
+        // When the user clicks on a card
+        element.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (element.classList.contains('selected')) {
+            element.classList.remove('selected');
+            // Remove card contents from spell, (prevent card count from becoming negative, this should not be possible
+            // because you cannot remove a card that's not added but Math.max will ensure a count can't be negative
+            selectedCardTally[cardId] = Math.max(
+              0,
+              (selectedCardTally[cardId] || 0) - 1,
+            );
+          } else {
+            element.classList.add('selected');
+            // Add card contents to spell
+            selectedCardTally[cardId] = (selectedCardTally[cardId] || 0) + 1;
+          }
+        });
+        elCardHand.appendChild(element);
       }
-      group[cardPair.card.description].push(cardPair);
-      return group;
-    }, {});
-  const DISTANCE_BETWEEN_LIKE_CARDS = 4;
-  const keys = Object.keys(cardPairsGroupedByType);
-  for (let i = 0; i < keys.length; i++) {
-    const group = cardPairsGroupedByType[keys[i]];
-    for (let j = 0; j < group.length; j++) {
-      const cardPair = group[j];
-      const proportionXPosition = i / (keys.length - 1);
-      const cardBasePositionX =
-        proportionXPosition * cardHandWidth - CARD_WIDTH / 2;
-      setTransform(cardPair.element, {
-        x: cardBasePositionX + j * DISTANCE_BETWEEN_LIKE_CARDS,
-        y: 0,
-      });
     }
   }
+  // for (let j = 0; j < group.length; j++) {
+  //   const card = group[j];
+  //   const proportionXPosition = i / (keys.length - 1);
+  //   const cardBasePositionX =
+  //     proportionXPosition * cardHandWidth - CARD_WIDTH / 2;
+  //   setTransform(card.element, {
+  //     x: cardBasePositionX + j * DISTANCE_BETWEEN_LIKE_CARDS,
+  //     y: 0,
+  //   });
+  // }
   // How far the mouse is across the screen, 0 is far left, 1.0 is far right
   // const mouseProportionX = mouseX / window.innerWidth;
   // // Recalc positions for all cards
@@ -62,99 +85,119 @@ function recalcPositionForCards(mouseX) {
   //   });
   // }
 }
-elCardHand.addEventListener('mousemove', (e) => {
-  const x = e.clientX;
-  recalcPositionForCards(x);
-});
 export function clearCards() {
   elCardHolder.innerHTML = '';
 }
 
 // This function fully deletes the cards that are 'selected' in the player's hand
-export function clearSelectedCards() {
-  Spell.clearCurrentSpell();
-  for (let i = cardsInHand.length - 1; i >= 0; i--) {
-    const cardElement = cardsInHand[i].element;
-    if (cardElement.classList.contains('selected')) {
-      // Remove card from DOM
-      cardElement.remove();
-      // Remove card from array
-      cardsInHand.splice(i, 1);
-    }
+export function removeCardsFromHand(player: Player.IPlayer, cards: CardTally) {
+  const cardCountPairs = Object.entries(cards);
+  for (let [cardId, count] of cardCountPairs) {
+    player.hand[cardId] -= count;
   }
-  recalcPositionForCards(0);
+  recalcPositionForCards(window.player);
 }
 
-export function addCardToHand(card) {
-  const element = createCardElement(card, undefined);
-  element.addEventListener('click', (e) => {
-    e.stopPropagation();
-    if (element.classList.contains('selected')) {
-      element.classList.remove('selected');
-      // Remove card contents from spell
-      Spell.unmodifySpell(card.description);
-    } else {
-      element.classList.add('selected');
-      // Add card contents to spell
-      Spell.modifySpell(card.description);
-    }
-  });
-  cardsInHand.push({ card, element });
-  elCardHand.appendChild(element);
-  // Initialize position with mouse in the middle
-  recalcPositionForCards(window.innerWidth / 2);
+export function addCardToHand(card: ICard, player: Player.IPlayer) {
+  player.hand[card.id] = (player.hand[card.id] || 0) + 1;
+  if (player === window.player) {
+    recalcPositionForCards(window.player);
+  }
 }
-interface Card {
-  description: string;
+export interface CardTally {
+  [id: string]: number;
+}
+let selectedCardTally: CardTally = {};
+export function getSelectedCardTally(): CardTally {
+  return selectedCardTally;
+}
+
+const elCurrentSpellDescription = document.getElementById(
+  'current-spell-description',
+);
+export function clearSelectedCardTally() {
+  selectedCardTally = {};
+  updateSelectedSpellUI();
+}
+export function updateSelectedSpellUI() {
+  elCurrentSpellDescription.innerText = toString(selectedCardTally);
+}
+export function toString(s?: CardTally) {
+  if (!s) {
+    return '';
+  }
+  const strings = [];
+  if (s.damage > 0) {
+    strings.push(`${s.damage}🔥`);
+  }
+  if (s.heal > 0) {
+    strings.push(`${s.heal}💖`);
+  }
+  if (s.freeze > 0) {
+    strings.push(`${s.freeze}🧊`);
+  }
+  if (s.chain) {
+    strings.push('⚡');
+  }
+  if (s.aoe_radius > 0) {
+    strings.push(`${s.aoe_radius}💣`);
+  }
+  if (s.shield > 0) {
+    strings.push('🛡️');
+  }
+  return strings.join(' ');
+}
+export interface ICard {
+  id: string;
   thumbnail: string;
   probability: number;
 }
-const modifiers: Card[] = [
+const cardSource: ICard[] = [
   {
-    description: 'Damage',
+    id: 'damage',
     thumbnail: 'images/spell/damage.png',
     probability: 100,
   },
   {
-    description: 'Heal',
+    id: 'heal',
     thumbnail: 'images/spell/heal.png',
     probability: 50,
   },
   {
-    description: 'Chain',
+    id: 'chain',
     thumbnail: 'images/spell/chain.png',
     probability: 10,
   },
   {
-    description: 'Freeze',
+    id: 'freeze',
     thumbnail: 'images/spell/freeze.png',
     probability: 20,
   },
   {
-    description: 'AOE',
+    id: 'area_of_effect',
     thumbnail: 'images/spell/aoe.png',
     probability: 10,
   },
   {
-    description: 'Shield',
+    id: 'shield',
     thumbnail: 'images/spell/shield.png',
     probability: 10,
   },
 ];
 
 // Chooses a random card based on the card's probabilities
-export function generateCard(): Card {
+export function generateCard(): ICard {
   // Chooses a random modifier based on their probability
-  const maxProbability = modifiers.reduce(
+  const maxProbability = cardSource.reduce(
     (maxProbability, current) => current.probability + maxProbability,
     0,
   );
   // Choose random integer within the sum of all the probabilities
-  const roll = cardRandom.integer(0, maxProbability);
+  const roll = window.game.random.integer(0, maxProbability);
   let rollingLowerBound = 0;
   // Iterate each modifier and check if the roll is between the lower bound and the upper bound
   // which means that the current mod would have been rolled
-  for (let mod of modifiers) {
+  for (let mod of cardSource) {
     if (
       roll >= rollingLowerBound &&
       roll <= mod.probability + rollingLowerBound
@@ -165,9 +208,9 @@ export function generateCard(): Card {
     }
   }
   // Logically it should never reach this point
-  return modifiers[0];
+  return cardSource[0];
 }
-function getCardRarityColor(content: Card): string {
+function getCardRarityColor(content: ICard): string {
   if (content.probability == 1) {
     // Super rare
     // Purple
@@ -190,7 +233,7 @@ function getCardRarityColor(content: Card): string {
   // White
   return '#FFF';
 }
-function createCardElement(content: Card, id?: string) {
+function createCardElement(content: ICard, id?: string) {
   const element = document.createElement('div');
   element.classList.add('card');
   if (id) {
@@ -208,7 +251,7 @@ function createCardElement(content: Card, id?: string) {
   elCardInner.appendChild(thumbHolder);
   const desc = document.createElement('div');
   desc.classList.add('card-description');
-  desc.innerText = content.description;
+  desc.innerText = content.id;
   elCardInner.appendChild(desc);
   return element;
 }

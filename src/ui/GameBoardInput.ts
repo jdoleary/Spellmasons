@@ -3,7 +3,7 @@ import { BOARD_HEIGHT, BOARD_WIDTH, CELL_SIZE } from '../config';
 import * as Spell from '../Spell';
 import { addPixiSprite, app } from '../PixiUtils';
 import { turn_phase } from '../Game';
-import { clearSelectedCards } from '../cards';
+import * as Card from '../cards';
 import type { IPlayer } from '../Player';
 import floatingText from '../FloatingText';
 import * as Unit from '../Unit';
@@ -35,7 +35,9 @@ export function syncMouseHoverIcon() {
   if (window.game.turn_phase == turn_phase.PlayerTurns) {
     // If mouse hovering over a new cell, update the target images
 
-    const selectedSpell = Spell.getSelectedSpell();
+    const selectedSpell = Spell.buildSpellFromCardTally(
+      Card.getSelectedCardTally(),
+    );
     // if spell exists show target image, otherwise show feet image for walking
     const targetImgPath = areAnyCardsSelected()
       ? 'images/spell/target.png'
@@ -95,17 +97,17 @@ export default function setupBoardInputHandlers() {
     }
     // Only allow casting in the proper phase
     if (window.game.turn_phase == turn_phase.PlayerTurns) {
-      const selectedSpell = Spell.getSelectedSpell();
       if (window.game.yourTurn) {
         // If a spell exists (based on the combination of cards selected)...
         if (areAnyCardsSelected()) {
           // cast the spell
-          const spell = Object.assign({ x, y }, selectedSpell);
-          clearSelectedCards();
           window.pie.sendData({
             type: MESSAGE_TYPES.SPELL,
-            spell,
+            x,
+            y,
+            cards: Card.getSelectedCardTally(),
           });
+          Card.clearSelectedCardTally();
         } else {
           // otherwise, move player character
           const selfPlayer: IPlayer | undefined = window.game.players.find(

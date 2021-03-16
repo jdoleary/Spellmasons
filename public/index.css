@@ -51,11 +51,12 @@ body {
   z-index: 1;
   border: 2px solid pink;
   height: 100px;
+  display: flex;
 }
 #card-hand .card {
-  position: absolute;
+  /* position: absolute;
   top: 0;
-  left: 0;
+  left: 0; */
   width: 70px;
 }
 #card-hand .card.selected {

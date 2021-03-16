@@ -93,7 +93,7 @@ export const pickups = [
       if (p.clientId === window.clientId) {
         for (let i = 0; i < config.GIVE_NUM_CARDS_PER_LEVEL; i++) {
           const card = Card.generateCard();
-          Card.addCardToHand(card);
+          Card.addCardToHand(card, p);
         }
       }
     },

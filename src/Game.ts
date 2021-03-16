@@ -140,9 +140,11 @@ export default class Game {
 
   initLevel() {
     // Add cards to hand
-    for (let i = 0; i < config.GIVE_NUM_CARDS_PER_LEVEL; i++) {
-      const card = Card.generateCard();
-      Card.addCardToHand(card);
+    for (let p of this.players) {
+      for (let i = 0; i < config.GIVE_NUM_CARDS_PER_LEVEL; i++) {
+        const card = Card.generateCard();
+        Card.addCardToHand(card, p);
+      }
     }
     for (let i = 0; i < config.NUM_PICKUPS_PER_LEVEL; i++) {
       const coords = this.getRandomEmptyCell({ xMin: 2 });
@@ -185,15 +187,6 @@ export default class Game {
       }
     }
     window.animationManager.startAnimate();
-  }
-  restorePlayerCardsInHand() {
-    // Temporarily just regenerate cards
-    // TODO actually restore player cards after disconnect
-    // Add cards to hand
-    for (let i = 0; i < config.GIVE_NUM_CARDS_PER_LEVEL; i++) {
-      const card = Card.generateCard();
-      Card.addCardToHand(card);
-    }
   }
   checkPickupCollisions(player: Player.IPlayer) {
     for (let pu of this.pickups) {
@@ -468,7 +461,7 @@ export default class Game {
         }
       } else {
         // Find all units touching targeted units
-        // This supports AOE + chain combo for example where all units within the AOE blast will
+        // This supports area_of_effect + chain combo for example where all units within the area_of_effect blast will
         // chain to units touching them
         for (let alreadyTargetedUnit of units) {
           const chained_units = this.getTouchingUnitsRecursive(
@@ -543,7 +536,6 @@ export default class Game {
     this.pickups.push(pickup);
   }
   cast(spell: Spell) {
-    const { caster } = spell;
     // Get all units targeted by spell
     const targetCoords = this.getTargetsOfSpell(spell);
     // Convert targets to list of units
