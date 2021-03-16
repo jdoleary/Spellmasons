@@ -36,6 +36,7 @@ export function create(clientId: string): IPlayer {
   }
   addHighlighIfPlayerBelongsToCurrentClient(player);
   player.unit.health = PLAYER_BASE_HEALTH;
+  player.unit.healthMax = PLAYER_BASE_HEALTH;
   window.animationManager.startAnimate();
   return player;
 }

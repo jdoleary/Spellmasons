@@ -10,6 +10,7 @@ export interface IUnit {
   image: Image;
   power: number;
   health: number;
+  healthMax: number;
   alive: boolean;
   frozenForTurns: number;
   shield: number;
@@ -27,6 +28,7 @@ export function create(
     image: new Image(x, y, imagePath),
     power: config.UNIT_BASE_POWER,
     health: config.UNIT_BASE_HEALTH,
+    healthMax: config.UNIT_BASE_HEALTH,
     alive: true,
     frozenForTurns: 0,
     shield: 0,
@@ -77,7 +79,7 @@ export function takeDamage(unit: IUnit, amount: number, cause?: string) {
   }
   unit.health -= amount;
   // Prevent health from going over maximum
-  unit.health = Math.min(unit.health, config.UNIT_BASE_HEALTH);
+  unit.health = Math.min(unit.health, unit.healthMax);
   // Make the unit spin if it takes damage
   if (amount > 0) {
     unit.image.anim_spin();
@@ -86,7 +88,7 @@ export function takeDamage(unit: IUnit, amount: number, cause?: string) {
     die(unit);
   }
   // Change the size to represent health
-  unit.image.scale(unit.health / config.UNIT_BASE_HEALTH);
+  unit.image.scale(unit.health / unit.healthMax);
 }
 function canMove(unit: IUnit): boolean {
   // Do not move if dead
