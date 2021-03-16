@@ -141,8 +141,6 @@ function onData(d: { fromClient: string; payload: any }) {
       Unit.moveTo(caster.unit, payload.x, payload.y);
       window.animationManager.endGroup('Move player');
       window.animationManager.startAnimate().then(() => {
-        // When animations are done, check if the player collided with any pickups
-        window.game.checkPickupCollisions(caster);
         // Moving the player unit uses an action
         caster.actionsUsed += config.ACTION_COST_WALK;
         checkEndPlayerTurn(caster);

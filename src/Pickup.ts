@@ -1,9 +1,9 @@
 import Image from './Image';
-import type { IPlayer } from './Player';
 import * as Card from './Card';
 import * as Player from './Player';
 import * as config from './config';
 import { containerPickup } from './PixiUtils';
+import type { IUnit } from './Unit';
 export interface IPickup {
   x: number;
   y: number;
@@ -12,7 +12,7 @@ export interface IPickup {
   // Only can be picked up once
   singleUse: boolean;
   // effect is ONLY to be called within triggerPickup
-  effect: (p: IPlayer) => void;
+  effect: (u: IUnit) => void;
 }
 
 export function create(
@@ -20,7 +20,7 @@ export function create(
   y: number,
   singleUse: boolean,
   imagePath: string,
-  effect: (p: IPlayer) => void,
+  effect: (unit: IUnit) => void,
 ): IPickup {
   const self: IPickup = {
     x,
@@ -64,8 +64,8 @@ export function removePickup(pickup: IPickup) {
   pickup.image.cleanup();
   window.game.removePickupFromArray(pickup);
 }
-export function triggerPickup(pickup: IPickup, player: IPlayer) {
-  pickup.effect(player);
+export function triggerPickup(pickup: IPickup, unit: IUnit) {
+  pickup.effect(unit);
   if (pickup.singleUse) {
     removePickup(pickup);
   }
@@ -76,24 +76,26 @@ export function triggerPickup(pickup: IPickup, player: IPlayer) {
 export const specialPickups: {
   [imagePath: string]: {
     imagePath: string;
-    effect: (p: IPlayer) => void;
+    effect: (u: IUnit) => void;
   };
 } = {
   'images/portal.png': {
     imagePath: 'images/portal.png',
-    effect: (p: Player.IPlayer) => {
-      Player.enterPortal(p);
+    effect: (u: IUnit) => {
+      const player = window.game.players.find((p) => p.unit === u);
+      Player.enterPortal(player);
     },
   },
 };
 export const pickups = [
   {
     imagePath: 'images/pickups/card.png',
-    effect: (p: IPlayer) => {
-      if (p.clientId === window.clientId) {
+    effect: (u: IUnit) => {
+      const player = window.game.players.find((p) => p.unit === u);
+      if (player.clientId === window.clientId) {
         for (let i = 0; i < config.GIVE_NUM_CARDS_PER_LEVEL; i++) {
           const card = Card.generateCard();
-          Card.addCardToHand(card, p);
+          Card.addCardToHand(card, player);
         }
       }
     },

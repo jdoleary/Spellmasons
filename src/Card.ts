@@ -194,6 +194,11 @@ const cardSource: ICard[] = [
     thumbnail: 'images/spell/shield.png',
     probability: 10,
   },
+  {
+    id: 'trap',
+    thumbnail: 'images/spell/trap.png',
+    probability: 20,
+  },
 ];
 
 // Chooses a random card based on the card's probabilities

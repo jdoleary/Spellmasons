@@ -110,6 +110,7 @@ export function moveTo(unit: IUnit, cellX: number, cellY: number) {
   unit.x = cellX;
   unit.y = cellY;
   unit.image.move(unit.x, unit.y);
+  window.game.checkPickupCollisions(unit);
 }
 export function findCellOneStepCloserTo(
   unit: IUnit,
@@ -174,4 +175,5 @@ export function moveAI(unit: IUnit) {
     unit.y = next_y;
     unit.image.move(unit.x, unit.y);
   }
+  window.game.checkPickupCollisions(unit);
 }

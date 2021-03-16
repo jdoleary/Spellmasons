@@ -4,7 +4,7 @@
 ---
 - Event.ts file where you can add content based on events that happened
 - Show health when damaged or on hover
-- Add more golem types (tint)
+- Add more golem types (use tint on white parts of units to give them special colors)
   - Boss (demon)
   - Ranged (blue)
   - Fast (sand)

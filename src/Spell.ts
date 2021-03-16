@@ -1,7 +1,6 @@
 import type { IPlayer } from './Player';
 import * as Unit from './Unit';
 import type * as Card from './Card';
-import floatingText from './FloatingText';
 import Image from './Image';
 import { SHIELD_MULTIPLIER } from './config';
 
@@ -14,6 +13,7 @@ export interface Spell {
   freeze?: number;
   shield?: number;
   chain?: boolean;
+  trap?: boolean;
   area_of_effect?: number;
   image?: Image;
 }
@@ -45,6 +45,9 @@ export function getImage(s: Spell) {
   if (s.shield > 0) {
     imgPath = 'images/spell/shield.png';
   }
+  if (s.trap) {
+    imgPath = 'images/spell/trap.png';
+  }
   return imgPath;
 }
 export interface EffectArgs {
@@ -52,9 +55,8 @@ export interface EffectArgs {
   // Used to prevent infinite loops when recuring via chain for example
   ignore?: Unit.IUnit[];
 }
-export function effect(spell: Spell, args: EffectArgs) {
-  console.log('🚀 ~ file: Spell.ts ~ line 53 ~ effect ~ spell', spell);
-  const { unit, ignore = [] } = args;
+export function effect(spell: Spell, args?: EffectArgs) {
+  const { unit, ignore = [] } = args || {};
   if (unit && ignore.includes(unit)) {
     return;
   }

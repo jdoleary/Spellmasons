@@ -188,10 +188,10 @@ export default class Game {
     }
     window.animationManager.startAnimate();
   }
-  checkPickupCollisions(player: Player.IPlayer) {
+  checkPickupCollisions(unit: Unit.IUnit) {
     for (let pu of this.pickups) {
-      if (player.unit.x == pu.x && player.unit.y == pu.y) {
-        Pickup.triggerPickup(pu, player);
+      if (unit.x == pu.x && unit.y == pu.y) {
+        Pickup.triggerPickup(pu, unit);
       }
     }
   }
@@ -533,6 +533,22 @@ export default class Game {
     this.pickups.push(pickup);
   }
   cast(spell: Spell) {
+    if (spell.trap) {
+      Pickup.create(
+        spell.x,
+        spell.y,
+        true,
+        'images/spell/trap.png',
+        (unit: Unit.IUnit) => {
+          window.animationManager.startGroup('trap-effects');
+          // Trigger the spell held in the trap on the unit that activated it
+          // Override trap property so it doesn't simply place another trap
+          this.cast(Object.assign({}, spell, { trap: false }));
+          window.animationManager.endGroup('trap-effects');
+        },
+      );
+      return;
+    }
     // Get all units targeted by spell
     const targetCoords = this.getTargetsOfSpell(spell);
     // Convert targets to list of units
@@ -548,6 +564,10 @@ export default class Game {
       for (let unit of unitsAtTargets) {
         effect(spell, { unit });
       }
+    } else {
+      // If no units were targeted,
+      // Cast on the tile that was clicked on
+      effect(spell);
     }
     window.animationManager.endGroup('spell-effects');
   }
