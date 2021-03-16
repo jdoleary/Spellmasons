@@ -1,8 +1,6 @@
 # Todo
 ## 2021.3.16
 - restore subsprites after load
-- Fix restore card elements after disconnect
-  - player's hand prop should be fine, you just have to reconcile the elements
 ---
 - Event.ts file where you can add content based on events that happened
 - Show health when damaged or on hover
@@ -28,6 +26,7 @@
 ## Bugs
 - Fix sometimes Game.playerTurnIndex is out of sync
   - this caused the game to desync golem movement (replays'desync1' and 'desync2')
+  - a clue: window.game was unset for the client that was out of sync
 - Loading
 
 - Sometimes one player gets to move and then it goes directly to NPC instead of letting the other player move

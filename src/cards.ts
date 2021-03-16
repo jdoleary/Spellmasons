@@ -1,8 +1,8 @@
 import type * as Player from './Player';
-const elCardHolder = document.getElementById('card-holder');
 const elCardHand = document.getElementById('card-hand');
 
 const CARD_WIDTH = 70;
+const CARD_OFFSET = 4;
 export function recalcPositionForCards(player: Player.IPlayer) {
   if (window.player !== player) {
     // Do not reconcile dom elements for a player who is not the current client's player
@@ -21,7 +21,7 @@ export function recalcPositionForCards(player: Player.IPlayer) {
     for (let i = 0; i < Math.abs(difference); i++) {
       const doRemove = difference < 0;
       if (doRemove) {
-        elCardHand.removeChild(matchingCards[i]);
+        matchingCards[i].remove();
       } else {
         // Create UI element for card
         const element = createCardElement(
@@ -46,7 +46,22 @@ export function recalcPositionForCards(player: Player.IPlayer) {
             selectedCardTally[cardId] = (selectedCardTally[cardId] || 0) + 1;
           }
         });
-        elCardHand.appendChild(element);
+        let elCardTypeGroup = document.getElementById(`holder-${cardId}`);
+        if (!elCardTypeGroup) {
+          elCardTypeGroup = document.createElement('div');
+          elCardTypeGroup.classList.add('card-type-group');
+          elCardTypeGroup.id = `holder-${cardId}`;
+          elCardHand.appendChild(elCardTypeGroup);
+        }
+        elCardTypeGroup.appendChild(element);
+        // Set the width of the cardtypegroup relative to the number of cards that it holds
+        elCardTypeGroup.style.width =
+          elCardTypeGroup.childElementCount * CARD_OFFSET + CARD_WIDTH + 'px';
+        // Set the position of the card
+        setTransform(element, {
+          x: elCardTypeGroup.childElementCount * CARD_OFFSET,
+          y: 0,
+        });
       }
     }
   }
@@ -78,10 +93,6 @@ export function recalcPositionForCards(player: Player.IPlayer) {
   //   const lerpT = distanceFromMouse / MOUSE_HOVER_DISTANCE_THRESHOLD;
   //   const MOUSE_DISTANCE_MOVER = lerp(-1, 1, lerpT + 0.5);
 
-  //   setTransform(cardEl, {
-  //     x: cardBasePositionX + -10 * MOUSE_DISTANCE_MOVER,
-  //     y: 0,
-  //   });
   // }
 }
 

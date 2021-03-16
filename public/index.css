@@ -53,16 +53,20 @@ body {
   height: 100px;
   display: flex;
 }
+.card-type-group {
+  position: relative;
+  width:120px;
+}
 #card-hand .card {
-  /* position: absolute;
+  position: absolute;
   top: 0;
-  left: 0; */
+  left: 0;
   width: 70px;
 }
 #card-hand .card.selected {
   -webkit-box-shadow: 0px 0px 5px 5px #ffee00;
   box-shadow: 0px 0px 5px 5px #ffee00;
-  top: -100px;
+  top:-100px;
 }
 body.your-turn .card {
   cursor: pointer;
