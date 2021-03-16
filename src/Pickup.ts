@@ -1,6 +1,6 @@
 import Image from './Image';
 import type { IPlayer } from './Player';
-import * as Card from './cards';
+import * as Card from './Card';
 import * as Player from './Player';
 import * as config from './config';
 import { containerPickup } from './PixiUtils';

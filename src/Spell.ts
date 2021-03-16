@@ -1,6 +1,6 @@
 import type { IPlayer } from './Player';
 import * as Unit from './Unit';
-import type * as Card from './cards';
+import type * as Card from './Card';
 import floatingText from './FloatingText';
 import Image from './Image';
 import { SHIELD_MULTIPLIER } from './config';

@@ -3,7 +3,7 @@ import { BOARD_HEIGHT, BOARD_WIDTH, CELL_SIZE } from '../config';
 import * as Spell from '../Spell';
 import { addPixiSprite, app } from '../PixiUtils';
 import { turn_phase } from '../Game';
-import * as Card from '../cards';
+import * as Card from '../Card';
 import type { IPlayer } from '../Player';
 import floatingText from '../FloatingText';
 import * as Unit from '../Unit';

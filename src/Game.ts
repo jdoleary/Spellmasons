@@ -5,7 +5,7 @@ import * as config from './config';
 import * as Unit from './Unit';
 import * as Pickup from './Pickup';
 import * as Player from './Player';
-import * as Card from './cards';
+import * as Card from './Card';
 import * as math from './math';
 import * as GameBoardInput from './ui/GameBoardInput';
 import { MESSAGE_TYPES } from './MessageTypes';

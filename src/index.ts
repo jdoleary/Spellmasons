@@ -7,7 +7,7 @@ import * as config from './config';
 import AnimationManager from './AnimationManager';
 import * as Spell from './Spell';
 import * as UI from './ui/UserInterface';
-import * as Card from './cards';
+import * as Card from './Card';
 import { MESSAGE_TYPES } from './MessageTypes';
 
 import { setupPixi } from './PixiUtils';

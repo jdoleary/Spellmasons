@@ -1,6 +1,6 @@
 import { PLAYER_BASE_HEALTH } from './config';
 import * as Unit from './Unit';
-import * as Card from './cards';
+import * as Card from './Card';
 import * as config from './config';
 
 export interface IPlayer {
