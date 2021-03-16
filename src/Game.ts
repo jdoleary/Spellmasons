@@ -224,6 +224,7 @@ export default class Game {
     this.yourTurn = yourTurn;
   }
   incrementPlayerTurn() {
+    console.trace('incrementPlayerTurn from', this.playerTurnIndex);
     // Set current player actions used back to 0 now that their turn has ended
     const currentTurnPlayer = this.players[this.playerTurnIndex];
     currentTurnPlayer.actionsUsed = 0;
