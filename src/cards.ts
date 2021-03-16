@@ -45,6 +45,7 @@ export function recalcPositionForCards(player: Player.IPlayer) {
             // Add card contents to spell
             selectedCardTally[cardId] = (selectedCardTally[cardId] || 0) + 1;
           }
+          updateSelectedSpellUI();
         });
         let elCardTypeGroup = document.getElementById(`holder-${cardId}`);
         if (!elCardTypeGroup) {
