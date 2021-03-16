@@ -150,8 +150,8 @@ export function toString(s?: CardTally) {
   if (s.chain) {
     strings.push('⚡');
   }
-  if (s.aoe_radius > 0) {
-    strings.push(`${s.aoe_radius}💣`);
+  if (s.area_of_effect > 0) {
+    strings.push(`${s.area_of_effect}💣`);
   }
   if (s.shield > 0) {
     strings.push('🛡️');

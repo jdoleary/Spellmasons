@@ -435,11 +435,11 @@ export default class Game {
   }
   getTargetsOfSpell(spell: Spell): Coords[] {
     let units = [];
-    if (spell.aoe_radius) {
+    if (spell.area_of_effect) {
       const withinRadius = this.getUnitsWithinDistanceOfPoint(
         spell.x,
         spell.y,
-        spell.aoe_radius,
+        spell.area_of_effect,
       );
       units = units.concat(withinRadius);
     }

@@ -14,7 +14,7 @@ export interface Spell {
   freeze?: number;
   shield?: number;
   chain?: boolean;
-  aoe_radius?: number;
+  area_of_effect?: number;
   image?: Image;
 }
 export function buildSpellFromCardTally(cardTally: Card.CardTally): Spell {
@@ -39,7 +39,7 @@ export function getImage(s: Spell) {
   if (s.chain) {
     imgPath = 'images/spell/chain.png';
   }
-  if (s.aoe_radius > 0) {
+  if (s.area_of_effect > 0) {
     imgPath = 'images/spell/aoe.png';
   }
   if (s.shield > 0) {
