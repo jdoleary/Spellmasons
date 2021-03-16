@@ -58,7 +58,7 @@ export default class Game {
   // The number of the current level
   level = 1;
   // The index of which player's turn it is
-  playerTurnIndex: number;
+  playerTurnIndex: number = 0;
   secondsLeftForTurn: number = config.SECONDS_PER_TURN;
   yourTurn: boolean;
   turnInterval: any;
@@ -67,10 +67,10 @@ export default class Game {
   // Being a Set prevents a user from ending their turn more than once
   endedTurn = new Set<string>();
   constructor(seed: string) {
+    window.game = this;
     this.seed = seed;
     this.random = makeSeededRandom(this.seed);
     this.setGameState(game_state.Lobby);
-    window.game = this;
 
     // Make sprites for the board tiles
     let cell;
@@ -224,7 +224,6 @@ export default class Game {
     this.yourTurn = yourTurn;
   }
   incrementPlayerTurn() {
-    console.trace('incrementPlayerTurn from', this.playerTurnIndex);
     // Set current player actions used back to 0 now that their turn has ended
     const currentTurnPlayer = this.players[this.playerTurnIndex];
     currentTurnPlayer.actionsUsed = 0;
@@ -422,9 +421,6 @@ export default class Game {
         if (elBoard) {
           elBoard.style.visibility = 'visible';
         }
-        // Choose a random player index to start and immediately
-        // increment to setup the turn state properly
-        this.playerTurnIndex = this.random.integer(0, this.players.length - 1);
         // Initialize the player turn state
         this.syncYourTurnState();
         // Set the first turn phase
