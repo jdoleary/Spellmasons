@@ -21,59 +21,63 @@ function clearHighlights() {
 function isOutOfBounds(x, y) {
   return x < 0 || x >= BOARD_WIDTH || y < 0 || y >= BOARD_HEIGHT;
 }
+function areAnyCardsSelected() {
+  return !!document.querySelectorAll('.card.selected').length;
+}
+export function syncMouseHoverIcon() {
+  // Clear the highlights in preparation for showing the current ones
+  clearHighlights();
+  if (isOutOfBounds(mouseCellX, mouseCellY)) {
+    // Mouse is out of bounds, do not show a hover icon
+    return;
+  }
+  // only show hover target when it's the correct turn phase
+  if (window.game.turn_phase == turn_phase.PlayerTurns) {
+    // If mouse hovering over a new cell, update the target images
+
+    const selectedSpell = Spell.getSelectedSpell();
+    // if spell exists show target image, otherwise show feet image for walking
+    const targetImgPath = areAnyCardsSelected()
+      ? 'images/spell/target.png'
+      : 'images/spell/feet.png';
+    // Make a copy of the spell and add the target coords
+    const spellCopy = Object.assign(
+      {
+        x: mouseCellX,
+        y: mouseCellY,
+      },
+      selectedSpell,
+    );
+    // Find the targets of the spell
+    const targets = window.game.getTargetsOfSpell(spellCopy);
+    // Show highlights corresponding to targets
+    for (let t of targets) {
+      const sprite = addPixiSprite(targetImgPath);
+      sprite.x = -10;
+      sprite.y = -10;
+      highlights.push(sprite);
+      const transform = {
+        x: t.x * CELL_SIZE,
+        y: t.y * CELL_SIZE,
+        alpha: 1,
+        scale: 1,
+      };
+      window.animationManager.setTransform(sprite, transform);
+    }
+  }
+}
 export default function setupBoardInputHandlers() {
   // on Hover
   document.body.addEventListener('mousemove', (e) => {
     const { x, y } = window.game.getCellFromCurrentMousePos();
-    if (isOutOfBounds(x, y)) {
-      // clear highlights since mouse is now out of bounds
-      clearHighlights();
-      return;
-    }
-    // only show hover target when it's the correct turn phase
-    if (window.game.turn_phase == turn_phase.PlayerTurns) {
-      const didChange = mouseCellX !== x || mouseCellY !== y;
-      mouseCellX = x;
-      mouseCellY = y;
-      // If mouse hovering over a new cell, update the target images
-      if (didChange) {
-        const selectedSpell = Spell.getSelectedSpell();
-        // if spell exists show target image, otherwise show feet image for walking
-        const targetImgPath = areAnyCardsSelected()
-          ? 'images/spell/target.png'
-          : 'images/spell/feet.png';
-        // Make a copy of the spell and add the target coords
-        const spellCopy = Object.assign(
-          {
-            x,
-            y,
-          },
-          selectedSpell,
-        );
-        // Find the targets of the spell
-        const targets = window.game.getTargetsOfSpell(spellCopy);
-        // Clear the highlights in preparation for showing the current ones
-        clearHighlights();
-        // Show highlights corresponding to targets
-        for (let t of targets) {
-          const sprite = addPixiSprite(targetImgPath);
-          sprite.x = -10;
-          sprite.y = -10;
-          highlights.push(sprite);
-          const transform = {
-            x: t.x * CELL_SIZE,
-            y: t.y * CELL_SIZE,
-            alpha: 1,
-            scale: 1,
-          };
-          window.animationManager.setTransform(sprite, transform);
-        }
-      }
+    const didChange = mouseCellX !== x || mouseCellY !== y;
+    mouseCellX = x;
+    mouseCellY = y;
+    // If mouse hovering over a new cell, update the target images
+    if (didChange) {
+      syncMouseHoverIcon();
     }
   });
-  function areAnyCardsSelected() {
-    return !!document.querySelectorAll('.card.selected').length;
-  }
   // Handle clicks on the game board
   document.body.addEventListener('click', (e) => {
     const { x, y } = window.game.getCellFromCurrentMousePos();

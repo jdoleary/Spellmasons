@@ -7,6 +7,7 @@ import * as Pickup from './Pickup';
 import * as Player from './Player';
 import * as Card from './cards';
 import * as math from './math';
+import * as GameBoardInput from './ui/GameBoardInput';
 import { MESSAGE_TYPES } from './MessageTypes';
 import { addPixiSprite, app, containerBoard } from './PixiUtils';
 import type { Random } from 'random';
@@ -255,6 +256,10 @@ export default class Game {
   syncYourTurnState() {
     if (this.players[this.playerTurnIndex].clientId === window.clientId) {
       this.setYourTurn(true, 'Your Turn');
+      // In the event that it becomes your turn but the mouse hasn't moved,
+      // syncMouseHoverIcon needs to be called so that the icon ("footprints" for example)
+      // will be shown in the tile that the mouse is hovering over
+      GameBoardInput.syncMouseHoverIcon();
     } else {
       this.setYourTurn(false, "Other Player's Turn");
     }
