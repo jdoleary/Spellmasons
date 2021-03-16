@@ -17,13 +17,11 @@ export function recalcPositionForCards(player: Player.IPlayer) {
 
     const difference =
       count - document.querySelectorAll('.' + className).length;
+    const matchingCards = document.querySelectorAll('.' + className);
     for (let i = 0; i < Math.abs(difference); i++) {
       const doRemove = difference < 0;
       if (doRemove) {
-        const matchingCards = document.querySelectorAll('.' + className);
-        for (let i = 0; i < Math.abs(difference); i++) {
-          elCardHand.removeChild(matchingCards[i]);
-        }
+        elCardHand.removeChild(matchingCards[i]);
       } else {
         // Create UI element for card
         const element = createCardElement(
