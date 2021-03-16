@@ -12,7 +12,6 @@ import { MESSAGE_TYPES } from './MessageTypes';
 
 import { setupPixi } from './PixiUtils';
 import floatingText from './FloatingText';
-import { xyToIndex } from './math';
 setupPixi().then(() => {
   UI.setup();
   // Connect to PieServer

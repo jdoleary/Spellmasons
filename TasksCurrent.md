@@ -27,9 +27,9 @@
 - Fix sometimes Game.playerTurnIndex is out of sync
   - this caused the game to desync golem movement (replays'desync1' and 'desync2')
   - a clue: window.game was unset for the client that was out of sync
-- Loading
-
+  - **I think this is now fixed**
 - Sometimes one player gets to move and then it goes directly to NPC instead of letting the other player move
+  - **I think this is now fixed**
 
 ## Content
 - Add tile effects
