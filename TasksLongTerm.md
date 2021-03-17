@@ -1,5 +1,12 @@
 ## Tasks
 
+- Critical Path
+
+  - Redo animation system and make events system to support ALL visuals occurring on a timeline
+    - supports triggering things such as getting new cards in hand when you move onto cards or slay an ally mage
+  - Add more enemy types
+  - Wizard modification with XP granted on going through portal
+
 - Polish
   - Art
   - SoundFX
