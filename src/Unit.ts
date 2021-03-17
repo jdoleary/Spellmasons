@@ -78,12 +78,23 @@ export function showHealthText(unit: IUnit) {
 }
 // Reinitialize a unit from another unit object, this is used in loading game state after reconnect
 export function load(unit: IUnit) {
-  const self = {
+  const loadedunit = {
     ...unit,
     image: new Image(unit.x, unit.y, unit.image.imageName),
+    healthText: new PIXI.Text('', {
+      fill: 'red',
+      // Allow health hearts to wrap
+      wordWrap: true,
+      wordWrapWidth: 120,
+      breakWords: true,
+    }),
   };
-  window.game.addUnitToArray(self);
-  return self;
+  // TODO, this code for initializing healthText occurs in both load and create, merge them
+  loadedunit.healthText.anchor.x = 0.5;
+  loadedunit.healthText.anchor.y = -0.2;
+  loadedunit.image.sprite.addChild(loadedunit.healthText);
+  window.game.addUnitToArray(loadedunit);
+  return loadedunit;
 }
 export function die(u: IUnit) {
   u.image.scale(0);
@@ -193,7 +204,7 @@ export function moveAI(unit: IUnit) {
     : [];
   // Deal damage to what you run into
   for (let other_unit of bump_into_units) {
-    // Do not attack self
+    // Do not attack self 
     if (other_unit === unit) {
       continue;
     }
