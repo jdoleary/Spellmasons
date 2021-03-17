@@ -94,27 +94,39 @@ export default function setupBoardInputHandlers() {
   document.body.addEventListener('contextmenu', (e) => {
     e.preventDefault();
     const { x, y } = window.game.getCellFromCurrentMousePos();
-    // Move player
-    const selfPlayer: IPlayer | undefined = window.game.players.find(
-      (p) => p.clientId === window.clientId,
-    );
-    if (selfPlayer) {
-      const targetCell = Unit.findCellOneStepCloserTo(selfPlayer.unit, x, y);
-      if (window.game.canUnitMoveIntoCell(targetCell.x, targetCell.y)) {
-        window.pie.sendData({
-          type: MESSAGE_TYPES.MOVE_PLAYER,
-          // This formula clamps the diff to -1, 0 or 1
-          ...targetCell,
-        });
-      } else {
-        floatingText({
-          cellX: targetCell.x,
-          cellY: targetCell.y,
-          text: 'You cannot move here',
-          style: {
-            fill: 'red',
-          },
-        });
+    if (isOutOfBounds(x, y)) {
+      // Disallow click out of bounds
+      return;
+    }
+    if (window.game.turn_phase == turn_phase.PlayerTurns) {
+      if (window.game.yourTurn) {
+        // Move player
+        const selfPlayer: IPlayer | undefined = window.game.players.find(
+          (p) => p.clientId === window.clientId,
+        );
+        if (selfPlayer) {
+          const targetCell = Unit.findCellOneStepCloserTo(
+            selfPlayer.unit,
+            x,
+            y,
+          );
+          if (window.game.canUnitMoveIntoCell(targetCell.x, targetCell.y)) {
+            window.pie.sendData({
+              type: MESSAGE_TYPES.MOVE_PLAYER,
+              // This formula clamps the diff to -1, 0 or 1
+              ...targetCell,
+            });
+          } else {
+            floatingText({
+              cellX: targetCell.x,
+              cellY: targetCell.y,
+              text: 'You cannot move here',
+              style: {
+                fill: 'red',
+              },
+            });
+          }
+        }
       }
     }
     return false;
