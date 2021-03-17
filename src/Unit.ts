@@ -1,3 +1,4 @@
+import * as PIXI from 'pixi.js';
 import * as config from './config';
 import floatingText from './FloatingText';
 import Image from './Image';
@@ -11,6 +12,8 @@ export interface IUnit {
   power: number;
   health: number;
   healthMax: number;
+  healthText: PIXI.Text;
+  healthTextAnimationInterval: NodeJS.Timeout;
   alive: boolean;
   frozenForTurns: number;
   shield: number;
@@ -29,11 +32,22 @@ export function create(
     power: config.UNIT_BASE_POWER,
     health: config.UNIT_BASE_HEALTH,
     healthMax: config.UNIT_BASE_HEALTH,
+    healthText: new PIXI.Text('', {
+      fill: 'red',
+      // Allow health hearts to wrap
+      wordWrap: true,
+      wordWrapWidth: 120,
+      breakWords: true,
+    }),
+    healthTextAnimationInterval: null,
     alive: true,
     frozenForTurns: 0,
     shield: 0,
     unitType,
   };
+  unit.healthText.anchor.x = 0.5;
+  unit.healthText.anchor.y = -0.2;
+  unit.image.sprite.addChild(unit.healthText);
 
   // Start images small so when they spawn in they will grow
   unit.image.transform.scale = 0.0;
@@ -42,6 +56,25 @@ export function create(
   window.game.addUnitToArray(unit);
 
   return unit;
+}
+export function showHealthText(unit: IUnit) {
+  // Update to current health
+  let healthString = '';
+  for (let i = 0; i < unit.health; i++) {
+    healthString += '❤️';
+  }
+  unit.healthText.text = healthString;
+  // Even though an alpha of 1 is max
+  // Set alpha to more than 1 so that it stays at full alpha for a while before disappearing
+  unit.healthText.alpha = 2;
+  // Make it disappear over time
+  clearInterval(unit.healthTextAnimationInterval);
+  unit.healthTextAnimationInterval = setInterval(() => {
+    unit.healthText.alpha -= 0.1;
+    if (unit.healthText.alpha <= 0) {
+      clearInterval(unit.healthTextAnimationInterval);
+    }
+  }, 100);
 }
 // Reinitialize a unit from another unit object, this is used in loading game state after reconnect
 export function load(unit: IUnit) {
@@ -78,17 +111,25 @@ export function takeDamage(unit: IUnit, amount: number, cause?: string) {
     return;
   }
   unit.health -= amount;
+  if (amount > 0) {
+    // Show hearts floating away due to damage taken
+    let healthChangedString = '';
+    for (let i = 0; i < Math.abs(amount); i++) {
+      healthChangedString += '❤️';
+    }
+    floatingText({
+      cellX: unit.x,
+      cellY: unit.y,
+      text: healthChangedString,
+    });
+  }
+  showHealthText(unit);
+  unit.image.take_hit();
   // Prevent health from going over maximum
   unit.health = Math.min(unit.health, unit.healthMax);
-  // Make the unit spin if it takes damage
-  if (amount > 0) {
-    unit.image.anim_spin();
-  }
   if (unit.health <= 0) {
     die(unit);
   }
-  // Change the size to represent health
-  unit.image.scale(unit.health / unit.healthMax);
 }
 function canMove(unit: IUnit): boolean {
   // Do not move if dead

@@ -10,7 +10,7 @@ interface FText {
   valpha: number;
   pixiText: PIXI.Text;
 }
-export default function floatingText({ cellX, cellY, text, color }) {
+export default function floatingText({ cellX, cellY, text, color = 'black' }) {
   const pixiText = new PIXI.Text(text, { fill: color });
   pixiText.x = cellX * CELL_SIZE + CELL_SIZE / 2;
   pixiText.y = cellY * CELL_SIZE + CELL_SIZE / 2;

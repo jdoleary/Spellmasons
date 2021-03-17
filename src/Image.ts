@@ -77,11 +77,6 @@ export default class Image {
       opacity: opacityPercentage,
     });
   }
-  anim_spin() {
-    window.animationManager.addAnimation(this.sprite, this.transform, {
-      rotation: this.transform.rotation + Math.PI * 2,
-    });
-  }
   move(cellX: number, cellY: number) {
     window.animationManager.addAnimation(
       this.sprite,
@@ -97,6 +92,17 @@ export default class Image {
   hide() {
     window.animationManager.addAnimation(this.sprite, this.transform, {
       alpha: 0,
+    });
+  }
+  take_hit() {
+    window.animationManager.addAnimation(this.sprite, this.transform, {
+      x: this.transform.x + 10,
+    });
+    window.animationManager.addAnimation(this.sprite, this.transform, {
+      x: this.transform.x - 10,
+    });
+    window.animationManager.addAnimation(this.sprite, this.transform, {
+      x: this.transform.x,
     });
   }
   attack(

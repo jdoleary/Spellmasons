@@ -77,7 +77,14 @@ export default function setupBoardInputHandlers() {
     mouseCellY = y;
     // If mouse hovering over a new cell, update the target images
     if (didChange) {
+      // Show target hover on cells
       syncMouseHoverIcon();
+      // Show health for hovered units
+      for (let u of window.game.units) {
+        if (u.x === mouseCellX && u.y === mouseCellY) {
+          Unit.showHealthText(u);
+        }
+      }
     }
   });
   // Handle clicks on the game board
