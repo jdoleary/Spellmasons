@@ -596,6 +596,7 @@ export default class Game {
             },
             sprite: null,
           },
+          healthText: null,
         },
       })),
       units: this.units.map((u) => ({
@@ -607,6 +608,7 @@ export default class Game {
           },
           sprite: null,
         },
+        healthText: null,
       })),
       pickups: this.pickups.map((p) => ({
         ...p,
