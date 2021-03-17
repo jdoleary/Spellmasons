@@ -167,7 +167,6 @@ function onData(d: { fromClient: string; payload: any }) {
           cellX: spell.x,
           cellY: spell.y,
           text: Card.toString(payload.cards),
-          color: 'black',
         });
         // Animate the spells
         window.animationManager.startAnimate().then(() => {
@@ -201,7 +200,6 @@ function onData(d: { fromClient: string; payload: any }) {
         cellX,
         cellY,
         text: '🎈',
-        color: 'blue',
       });
       break;
   }

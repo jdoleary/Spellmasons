@@ -137,7 +137,9 @@ export default function setupBoardInputHandlers() {
                 cellX: targetCell.x,
                 cellY: targetCell.y,
                 text: 'You cannot move here',
-                color: 'red',
+                style: {
+                  fill: 'red',
+                },
               });
             }
           }

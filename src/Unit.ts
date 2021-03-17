@@ -103,7 +103,9 @@ export function takeDamage(unit: IUnit, amount: number, cause?: string) {
       cellX: unit.x,
       cellY: unit.y,
       text: 'Shielded from damage!',
-      color: 'blue',
+      style: {
+        fill: 'blue',
+      },
     });
     if (unit.shield <= 1) {
       unit.image.removeSubSprite('shield');
