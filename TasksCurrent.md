@@ -2,7 +2,6 @@
 
 ## brad feedback 2021.03.17
 
-- BUG: When other player picks up cards it doesn't persist correctly to the other client
 - BUG: Sometimes after shake due to damage animation a golem will move an entire cell to the left
 
 ## bugs
