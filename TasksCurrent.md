@@ -5,8 +5,6 @@
 - BUG: When other player picks up cards it doesn't persist correctly to the other client
 - BUG: Golems can pickup cards
 - BUG: "SHielded from 2 damage" triggered when brad healed
-- traps are too common, damage isn't common enough
-- Should be able to move, then cast
 - BUG: Sometimes after shake due to damage animation a golem will move an entire cell to the left
 
 ## bugs
