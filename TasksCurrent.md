@@ -2,8 +2,6 @@
 
 ## brad feedback 2021.03.17
 
-- Do you get anything for killing the golems?
-- Click on your hero and right click to move, click on unit to get information
 - BUG: When other player picks up cards it doesn't persist correctly to the other client
 - BUG: Golems can pickup cards
 - BUG: "SHielded from 2 damage" triggered when brad healed

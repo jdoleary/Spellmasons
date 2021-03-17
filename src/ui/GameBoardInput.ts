@@ -8,6 +8,9 @@ import type { IPlayer } from '../Player';
 import floatingText from '../FloatingText';
 import * as Unit from '../Unit';
 
+// This is the unit that is currently selected
+// This likely means that information about it will display
+let selectedUnit: Unit.IUnit;
 let mouseCellX;
 let mouseCellY;
 // Highlights are images that appear above cells to denote some information, such as the spell or action about to be cast/taken when clicked
@@ -24,6 +27,8 @@ function isOutOfBounds(x, y) {
 function areAnyCardsSelected() {
   return !!document.querySelectorAll('.card.selected').length;
 }
+
+// Draws the image that shows on the cell under the mouse
 export function syncMouseHoverIcon() {
   // Clear the highlights in preparation for showing the current ones
   clearHighlights();
@@ -41,7 +46,11 @@ export function syncMouseHoverIcon() {
     // if spell exists show target image, otherwise show feet image for walking
     const targetImgPath = areAnyCardsSelected()
       ? 'images/spell/target.png'
-      : 'images/spell/feet.png';
+      : null;
+    if (!targetImgPath) {
+      // Do not render if there is no target image path
+      return;
+    }
     // Make a copy of the spell and add the target coords
     const spellCopy = Object.assign(
       {
@@ -79,13 +88,36 @@ export default function setupBoardInputHandlers() {
     if (didChange) {
       // Show target hover on cells
       syncMouseHoverIcon();
-      // Show health for hovered units
-      for (let u of window.game.units) {
-        if (u.x === mouseCellX && u.y === mouseCellY) {
-          Unit.showHealthText(u);
-        }
+    }
+  });
+  // Handle right click on game board
+  document.body.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+    const { x, y } = window.game.getCellFromCurrentMousePos();
+    // Move player
+    const selfPlayer: IPlayer | undefined = window.game.players.find(
+      (p) => p.clientId === window.clientId,
+    );
+    if (selfPlayer) {
+      const targetCell = Unit.findCellOneStepCloserTo(selfPlayer.unit, x, y);
+      if (window.game.canUnitMoveIntoCell(targetCell.x, targetCell.y)) {
+        window.pie.sendData({
+          type: MESSAGE_TYPES.MOVE_PLAYER,
+          // This formula clamps the diff to -1, 0 or 1
+          ...targetCell,
+        });
+      } else {
+        floatingText({
+          cellX: targetCell.x,
+          cellY: targetCell.y,
+          text: 'You cannot move here',
+          style: {
+            fill: 'red',
+          },
+        });
       }
     }
+    return false;
   });
   // Handle clicks on the game board
   document.body.addEventListener('click', (e) => {
@@ -116,31 +148,15 @@ export default function setupBoardInputHandlers() {
           });
           Card.clearSelectedCardTally();
         } else {
-          // otherwise, move player character
-          const selfPlayer: IPlayer | undefined = window.game.players.find(
-            (p) => p.clientId === window.clientId,
-          );
-          if (selfPlayer) {
-            const targetCell = Unit.findCellOneStepCloserTo(
-              selfPlayer.unit,
-              x,
-              y,
-            );
-            if (window.game.canUnitMoveIntoCell(targetCell.x, targetCell.y)) {
-              window.pie.sendData({
-                type: MESSAGE_TYPES.MOVE_PLAYER,
-                // This formula clamps the diff to -1, 0 or 1
-                ...targetCell,
-              });
-            } else {
-              floatingText({
-                cellX: targetCell.x,
-                cellY: targetCell.y,
-                text: 'You cannot move here',
-                style: {
-                  fill: 'red',
-                },
-              });
+          // Select unit
+          // Show health for hovered units
+          if (selectedUnit) {
+            Unit.deselect(selectedUnit);
+          }
+          for (let u of window.game.units) {
+            if (u.x === x && u.y === y) {
+              selectedUnit = u;
+              Unit.select(u);
             }
           }
         }
