@@ -99,7 +99,7 @@ export function cellDistanceFromUnit(
 }
 export function takeDamage(unit: IUnit, amount: number, cause?: string) {
   // Shield prevents damage
-  if (unit.shield > 0) {
+  if (unit.shield > 0 && amount > 0) {
     unit.shield--;
     floatingText({
       cellX: unit.x,
