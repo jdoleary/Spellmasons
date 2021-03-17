@@ -186,7 +186,7 @@ const cardSource: ICard[] = [
   {
     id: 'damage',
     thumbnail: 'images/spell/damage.png',
-    probability: 100,
+    probability: 120,
   },
   {
     id: 'heal',
@@ -216,7 +216,7 @@ const cardSource: ICard[] = [
   {
     id: 'trap',
     thumbnail: 'images/spell/trap.png',
-    probability: 20,
+    probability: 5,
   },
 ];
 
