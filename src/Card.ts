@@ -162,7 +162,16 @@ export interface ICard {
   id: string;
   thumbnail: string;
   probability: number;
+  isDark?: boolean;
 }
+const darkCardSource: ICard[] = [
+  {
+    id: 'obliterate',
+    thumbnail: 'images/spell/obliterate.png',
+    probability: 1,
+    isDark: true,
+  },
+];
 const cardSource: ICard[] = [
   {
     id: 'damage',
@@ -227,6 +236,9 @@ export function generateCard(): ICard {
   return cardSource[0];
 }
 function getCardRarityColor(content: ICard): string {
+  if (content.isDark) {
+    return '#000';
+  }
   if (content.probability == 1) {
     // Super rare
     // Purple
