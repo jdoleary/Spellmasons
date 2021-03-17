@@ -8,18 +8,17 @@
 ## bugs
 
 - Fix sometimes Game.playerTurnIndex is out of sync
-  - this caused the game to desync golem movement (replays'desync1' and 'desync2')
-  - a clue: window.game was unset for the client that was out of sync
-  - This happened after a golem picked up a card
   - Maybe this happened because I was alt-tabbed when he took his turn
-- Sometimes one player gets to move and then it goes directly to NPC instead of letting the other player move
-
-  - **I think this is now fixed**
-
 - Card's desynced (cannot read property remove of undefined)
+  - Same problem as "seed desynced after portaling"
 - Seed desynced after portaling
   - this is not due to differing pie messages
+  - this is not due to picking up cards
+  - **solution** this is because when another player loads they get the gamestate immediately, but not the number of times that the seeded random had already rolled
+    - Oddly, sometimes both clients trigger the LOAD_GAME_STATE and sometimes only one does, which is why it desyncs
+    - Looks like this can happen when I'm developing and it automatically refreshes
 - Skipped ally's turn after portaling
+  - Could not reproduce
 - Frozen applied via a trap is instantly removed
   - How to solve status changes (poison, frozen) that can be applied at any time but are supposed to trigger after a unit takes their turn
 - Shield should apply to a single turn, not to an amount of damage
