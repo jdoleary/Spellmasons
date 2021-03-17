@@ -12,6 +12,7 @@ import { MESSAGE_TYPES } from './MessageTypes';
 import { addPixiSprite, app, containerBoard } from './PixiUtils';
 import type { Random } from 'random';
 import makeSeededRandom from './rand';
+import floatingText from './FloatingText';
 
 export enum game_state {
   Lobby,
@@ -82,9 +83,9 @@ export default class Game {
       }
     }
 
+    // Limit turn duration
     this.turnInterval = setInterval(() => {
       if (this.turn_phase === turn_phase.PlayerTurns) {
-        // Limit turn duration
         this.secondsLeftForTurn--;
         if (this.secondsLeftForTurn <= 10) {
           elPlayerTurnIndicatorHolder.classList.add('low-time');
@@ -135,6 +136,16 @@ export default class Game {
       Pickup.removePickup(p);
     }
     this.level++;
+    // Show text in center of screen for the new level
+    floatingText({
+      cellX: config.BOARD_WIDTH / 2 - 0.5,
+      cellY: config.BOARD_HEIGHT / 2,
+      text: `Level ${this.level}`,
+      style: {
+        fill: 'white',
+        fontSize: '60px',
+      },
+    });
     this.initLevel();
   }
 
