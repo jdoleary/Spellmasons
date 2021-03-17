@@ -21,7 +21,17 @@ export function recalcPositionForCards(player: Player.IPlayer) {
     for (let i = 0; i < Math.abs(difference); i++) {
       const doRemove = difference < 0;
       if (doRemove) {
-        matchingCards[i].remove();
+        if (matchingCards[i]) {
+          matchingCards[i].remove();
+        } else {
+          console.error(
+            "Something went wrong trying to remove a card that doesn't exist",
+            i,
+            matchingCards,
+            className,
+          );
+          debugger;
+        }
       } else {
         // Create UI element for card
         const element = createCardElement(
