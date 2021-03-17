@@ -3,15 +3,8 @@ import type * as PIXI from 'pixi.js';
 import { addPixiSprite } from './PixiUtils';
 import type { AnimatableProps } from './AnimationManager';
 import { CELL_SIZE } from './config';
+import { normalizeDegrees } from './math';
 
-export function normalizeDegrees(degrees) {
-  const remainder = degrees % 360;
-  if (remainder < 0) {
-    return 360 + remainder;
-  } else {
-    return remainder;
-  }
-}
 export default class Image {
   sprite: PIXI.Sprite;
   subSprites: { [key: string]: PIXI.Sprite } = {};

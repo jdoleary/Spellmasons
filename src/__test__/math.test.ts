@@ -1,6 +1,29 @@
-import { indexToXY, xyToIndex } from '../math';
+import { indexToXY, xyToIndex, normalizeDegrees } from '../math';
 
 describe('math', () => {
+  describe('normalizeDegrees', () => {
+    it('should normalize 360 to 0', () => {
+      const actual = normalizeDegrees(360);
+      const expected = 0;
+      expect(actual).toEqual(expected);
+    });
+    it('should normalize 370 to 10', () => {
+      const actual = normalizeDegrees(370);
+      const expected = 10;
+      expect(actual).toEqual(expected);
+    });
+    it('should normalize -10 to 350', () => {
+      const actual = normalizeDegrees(-10);
+      const expected = 350;
+      expect(actual).toEqual(expected);
+    });
+    it('should leave numbers between 0 inclusive and 360 exclusive as they are', () => {
+      const actual = normalizeDegrees(170);
+      const expected = 170;
+      expect(actual).toEqual(expected);
+    });
+  });
+
   describe('should take an index and a width of a rectangle and return the x,y coordinates of the cell which is at that index if counted from left to right and top to bottom', () => {
     const testPairs = [
       {

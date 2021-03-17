@@ -26,3 +26,16 @@ export function indexToXY(index: number, width: number): Coords {
 export function xyToIndex(coords: Coords, width: number) {
   return coords.y * width + coords.x;
 }
+
+// Normalizes degrees within [0,360)
+// for example 360 turns into 0
+// 370 turns into 10
+// -10 turns into 350
+export function normalizeDegrees(degrees) {
+  const remainder = degrees % 360;
+  if (remainder < 0) {
+    return 360 + remainder;
+  } else {
+    return remainder;
+  }
+}
