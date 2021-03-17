@@ -101,17 +101,6 @@ function canMove(unit: IUnit): boolean {
   }
   return true;
 }
-export function moveTo(unit: IUnit, cellX: number, cellY: number) {
-  if (!canMove(unit)) {
-    console.log('unit cannot move');
-    return;
-  }
-  // Otherwise, physically move
-  unit.x = cellX;
-  unit.y = cellY;
-  unit.image.move(unit.x, unit.y);
-  window.game.checkPickupCollisions(unit);
-}
 export function findCellOneStepCloserTo(
   unit: IUnit,
   desiredCellX: number,
@@ -171,9 +160,17 @@ export function moveAI(unit: IUnit) {
   // If nothing is obstructing
   if (alive_bump_into_units.length === 0) {
     // physically move
-    unit.x = next_x;
-    unit.y = next_y;
-    unit.image.move(unit.x, unit.y);
+    moveTo(unit, next_x, next_y);
   }
+}
+export function moveTo(unit: IUnit, cellX: number, cellY: number) {
+  if (!canMove(unit)) {
+    console.log('unit cannot move');
+    return;
+  }
+  unit.x = cellX;
+  unit.y = cellY;
+  unit.image.move(unit.x, unit.y);
+  // check for collisions with pickups in new location
   window.game.checkPickupCollisions(unit);
 }
