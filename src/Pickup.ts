@@ -83,7 +83,9 @@ export const specialPickups: {
     imagePath: 'images/portal.png',
     effect: (u: IUnit) => {
       const player = window.game.players.find((p) => p.unit === u);
-      Player.enterPortal(player);
+      if (player) {
+        Player.enterPortal(player);
+      }
     },
   },
 };
@@ -92,7 +94,7 @@ export const pickups = [
     imagePath: 'images/pickups/card.png',
     effect: (u: IUnit) => {
       const player = window.game.players.find((p) => p.unit === u);
-      if (player.clientId === window.clientId) {
+      if (player && player.clientId === window.clientId) {
         for (let i = 0; i < config.GIVE_NUM_CARDS_PER_LEVEL; i++) {
           const card = Card.generateCard();
           Card.addCardToHand(card, player);
