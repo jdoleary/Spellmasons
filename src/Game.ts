@@ -170,6 +170,7 @@ export default class Game {
           coords.y,
           true,
           pickup.imagePath,
+          true,
           pickup.effect,
         );
       } else {
@@ -182,6 +183,7 @@ export default class Game {
       Math.floor(config.BOARD_HEIGHT / 2),
       false,
       portalPickup.imagePath,
+      true,
       portalPickup.effect,
     );
     // Spawn units at the start of the level
@@ -550,7 +552,8 @@ export default class Game {
         spell.y,
         true,
         'images/spell/trap.png',
-        (unit: Unit.IUnit) => {
+        false,
+        ({ unit }) => {
           window.animationManager.startGroup('trap-effects');
           // Trigger the spell held in the trap on the unit that activated it
           // Override trap property so it doesn't simply place another trap

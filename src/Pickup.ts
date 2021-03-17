@@ -11,8 +11,10 @@ export interface IPickup {
   image: Image;
   // Only can be picked up once
   singleUse: boolean;
+  // Only can be picked up by players
+  playerOnly: boolean;
   // effect is ONLY to be called within triggerPickup
-  effect: (u: IUnit) => void;
+  effect: ({ unit, player }: { unit?: IUnit; player?: Player.IPlayer }) => void;
 }
 
 export function create(
@@ -20,7 +22,8 @@ export function create(
   y: number,
   singleUse: boolean,
   imagePath: string,
-  effect: (unit: IUnit) => void,
+  playerOnly: boolean,
+  effect: ({ unit, player }: { unit?: IUnit; player?: Player.IPlayer }) => void,
 ): IPickup {
   const self: IPickup = {
     x,
@@ -28,6 +31,7 @@ export function create(
     imagePath,
     image: new Image(x, y, imagePath, containerPickup),
     singleUse,
+    playerOnly,
     effect,
   };
 
@@ -53,6 +57,7 @@ export function load(pickup: IPickup) {
       pickup.y,
       pickup.singleUse,
       pickup.imagePath,
+      pickup.playerOnly,
       foundPickup.effect,
     );
     return self;
@@ -65,7 +70,12 @@ export function removePickup(pickup: IPickup) {
   window.game.removePickupFromArray(pickup);
 }
 export function triggerPickup(pickup: IPickup, unit: IUnit) {
-  pickup.effect(unit);
+  const player = window.game.players.find((p) => p.unit === unit);
+  if (pickup.playerOnly && !player) {
+    // If pickup is playerOnly, do not trigger if a player is not the one triggering it
+    return;
+  }
+  pickup.effect({ unit, player });
   if (pickup.singleUse) {
     removePickup(pickup);
   }
@@ -73,16 +83,11 @@ export function triggerPickup(pickup: IPickup, unit: IUnit) {
 
 // Special pickups are not stored in the pickups array because they shouldn't be
 // randomly selected when adding pickups to a generated level.
-export const specialPickups: {
-  [imagePath: string]: {
-    imagePath: string;
-    effect: (u: IUnit) => void;
-  };
-} = {
+export const specialPickups = {
   'images/portal.png': {
     imagePath: 'images/portal.png',
-    effect: (u: IUnit) => {
-      const player = window.game.players.find((p) => p.unit === u);
+    playerOnly: true,
+    effect: ({ unit, player }: { unit?: IUnit; player?: Player.IPlayer }) => {
       if (player) {
         Player.enterPortal(player);
       }
@@ -92,8 +97,7 @@ export const specialPickups: {
 export const pickups = [
   {
     imagePath: 'images/pickups/card.png',
-    effect: (u: IUnit) => {
-      const player = window.game.players.find((p) => p.unit === u);
+    effect: ({ unit, player }) => {
       if (player && player.clientId === window.clientId) {
         for (let i = 0; i < config.GIVE_NUM_CARDS_PER_LEVEL; i++) {
           const card = Card.generateCard();
