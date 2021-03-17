@@ -86,6 +86,7 @@ export function load(unit: IUnit) {
   return self;
 }
 export function die(u: IUnit) {
+  u.image.scale(0);
   u.alive = false;
 }
 export function cellDistanceFromUnit(
