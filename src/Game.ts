@@ -126,9 +126,11 @@ export default class Game {
     for (let p of this.players) {
       p.inPortal = false;
       p.unit.image.show();
-      p.unit.alive = true;
+      Unit.resurrect(p.unit);
       // Return to spawn
-      Unit.moveTo(p.unit, 0, 0);
+      // limit spawn to the leftmost column
+      const coords = window.game.getRandomEmptyCell({ xMax: 0 });
+      Unit.moveTo(p.unit, 0, coords.y);
       window.animationManager.startAnimate();
     }
     // Clear all pickups
@@ -246,22 +248,23 @@ export default class Game {
     const currentTurnPlayer = this.players[this.playerTurnIndex];
     currentTurnPlayer.actionsUsed = 0;
 
-    // If no players are living, it's game over
-    if (!this.players.filter((p) => p.unit.alive).length) {
-      this.setGameState(game_state.GameOver);
-    } else {
+    // If there are players who are able to take their turn
+    if (this.players.filter(Player.ableToTakeTurn).length) {
       // If there are players who are able to take their turns, increment to the next
       this.playerTurnIndex = (this.playerTurnIndex + 1) % this.players.length;
       const nextTurnPlayer = this.players[this.playerTurnIndex];
+      // If this current player is able to take their turn...
       if (Player.ableToTakeTurn(nextTurnPlayer)) {
         this.secondsLeftForTurn = config.SECONDS_PER_TURN;
         elPlayerTurnIndicatorHolder.classList.remove('low-time');
         this.syncYourTurnState();
         this.goToNextPhaseIfAppropriate();
       } else {
-        // current player is unable to take turn, skip
+        // otherwise, skip them
         this.incrementPlayerTurn();
       }
+    } else {
+      this.checkForEndOfLevel();
     }
   }
   syncYourTurnState() {
@@ -282,11 +285,17 @@ export default class Game {
     }
   }
   checkForEndOfLevel() {
+    const areAllPlayersDead =
+      this.players.filter((p) => p.unit.alive).length === 0;
+    if (areAllPlayersDead) {
+      this.setGameState(game_state.GameOver);
+      return;
+    }
     // Advance the level if all living players have entered the portal:
-    const doIncrementLevel =
+    const areAllLivingPlayersInPortal =
       this.players.filter((p) => p.unit.alive && p.inPortal).length ===
       this.players.filter((p) => p.unit.alive).length;
-    if (doIncrementLevel) {
+    if (areAllLivingPlayersInPortal) {
       this.moveToNextLevel();
     }
   }

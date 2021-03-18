@@ -89,9 +89,22 @@ export function load(unit: IUnit) {
   window.game.addUnitToArray(loadedunit);
   return loadedunit;
 }
+export function resurrect(u: IUnit) {
+  u.image.scale(1);
+  u.alive = true;
+}
 export function die(u: IUnit) {
   u.image.scale(0);
   u.alive = false;
+  // If the unit is a player
+  if (u.unitType === UnitType.PLAYER_CONTROLLED) {
+    const unitPlayer = window.game.players[window.game.playerTurnIndex];
+    // If player whose current turn it is just died...
+    if (unitPlayer.clientId === window.clientId && unitPlayer.unit === u) {
+      console.log('endMyTurn');
+      window.game.endMyTurn();
+    }
+  }
 }
 export function cellDistanceFromUnit(
   unit: IUnit,

@@ -67,8 +67,10 @@ export function load(player: IPlayer) {
 export function enterPortal(player: IPlayer) {
   player.inPortal = true;
   player.unit.image.hide();
+  // limit spawn to the leftmost column
+  const coords = window.game.getRandomEmptyCell({ xMax: 0 });
   // Move "portaled" unit out of the way to prevent collisions and chaining while portaled
-  Unit.moveTo(player.unit, 0, -1);
+  Unit.moveTo(player.unit, -1, coords.y);
   window.animationManager.startAnimate();
   window.game.checkForEndOfLevel();
 }
