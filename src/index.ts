@@ -144,7 +144,7 @@ function onData(d: { fromClient: string; payload: any }) {
       window.animationManager.endGroup('Move player');
       window.animationManager.startAnimate().then(() => {
         // Moving the player unit uses an action
-        caster.actionsUsed += config.ACTION_COST_WALK;
+        caster.thisTurnMoved = true;
         checkEndPlayerTurn(caster);
       });
       break;
@@ -173,7 +173,7 @@ function onData(d: { fromClient: string; payload: any }) {
         // Animate the spells
         window.animationManager.startAnimate().then(() => {
           // Casting a spell uses an action
-          caster.actionsUsed += config.ACTION_COST_CAST;
+          caster.thisTurnSpellCast = true;
           checkEndPlayerTurn(caster);
         });
       } else {
@@ -207,7 +207,7 @@ function onData(d: { fromClient: string; payload: any }) {
   }
 }
 function checkEndPlayerTurn(player: Player.IPlayer) {
-  if (player.actionsUsed >= config.PLAYER_ACTIONS_PER_TURN) {
+  if (player.thisTurnMoved && player.thisTurnSpellCast) {
     endPlayerTurn(player.clientId);
   }
 }

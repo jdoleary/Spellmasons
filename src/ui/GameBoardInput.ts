@@ -102,11 +102,12 @@ export default function setupBoardInputHandlers() {
     }
     if (window.game.turn_phase == turn_phase.PlayerTurns) {
       if (window.game.yourTurn) {
-        // Move player
+        // Get current client's player
         const selfPlayer: IPlayer | undefined = window.game.players.find(
           (p) => p.clientId === window.clientId,
         );
-        if (selfPlayer) {
+        // If player hasn't already moved this turn...
+        if (selfPlayer && !selfPlayer.thisTurnMoved) {
           const targetCell = Unit.findCellOneStepCloserTo(
             selfPlayer.unit,
             x,
@@ -128,6 +129,12 @@ export default function setupBoardInputHandlers() {
               },
             });
           }
+        } else {
+          floatingText({
+            cellX: x,
+            cellY: y,
+            text: 'You cannot move more than once per turn.',
+          });
         }
       }
     }
@@ -151,28 +158,41 @@ export default function setupBoardInputHandlers() {
     // Only allow casting in the proper phase
     if (window.game.turn_phase == turn_phase.PlayerTurns) {
       if (window.game.yourTurn) {
-        // If a spell exists (based on the combination of cards selected)...
-        if (areAnyCardsSelected()) {
-          // cast the spell
-          window.pie.sendData({
-            type: MESSAGE_TYPES.SPELL,
-            x,
-            y,
-            cards: Card.getSelectedCardTally(),
-          });
-          Card.clearSelectedCardTally();
-        } else {
-          // Select unit
-          // Show health for hovered units
-          if (selectedUnit) {
-            Unit.deselect(selectedUnit);
-          }
-          for (let u of window.game.units) {
-            if (u.x === x && u.y === y) {
-              selectedUnit = u;
-              Unit.select(u);
+        // Get current client's player
+        const selfPlayer: IPlayer | undefined = window.game.players.find(
+          (p) => p.clientId === window.clientId,
+        );
+        // If player hasn't already cast this turn...
+        if (selfPlayer && !selfPlayer.thisTurnSpellCast) {
+          // If a spell exists (based on the combination of cards selected)...
+          if (areAnyCardsSelected()) {
+            // cast the spell
+            window.pie.sendData({
+              type: MESSAGE_TYPES.SPELL,
+              x,
+              y,
+              cards: Card.getSelectedCardTally(),
+            });
+            Card.clearSelectedCardTally();
+          } else {
+            // Select unit
+            // Show health for hovered units
+            if (selectedUnit) {
+              Unit.deselect(selectedUnit);
+            }
+            for (let u of window.game.units) {
+              if (u.x === x && u.y === y) {
+                selectedUnit = u;
+                Unit.select(u);
+              }
             }
           }
+        } else {
+          floatingText({
+            cellX: x,
+            cellY: y,
+            text: 'You cannot cast more than once per turn.',
+          });
         }
       }
     }

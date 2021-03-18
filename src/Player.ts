@@ -8,8 +8,9 @@ export interface IPlayer {
   clientId: string;
   unit: Unit.IUnit;
   inPortal: boolean;
-  // The number of actions used this turn
-  actionsUsed: number;
+  // Action flags determine what the player is allowed to do in a turn
+  thisTurnSpellCast: boolean;
+  thisTurnMoved: boolean;
   // The players "hand" which contains cards
   hand: Card.CardTally;
 }
@@ -24,6 +25,8 @@ export function create(clientId: string): IPlayer {
       'images/units/man-blue.png',
       Unit.UnitType.PLAYER_CONTROLLED,
     ),
+    thisTurnSpellCast: false,
+    thisTurnMoved: false,
     inPortal: false,
     actionsUsed: 0,
     hand: {},
