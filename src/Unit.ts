@@ -237,6 +237,10 @@ export function moveAI(unit: IUnit) {
     if (other_unit === unit) {
       continue;
     }
+    // Do not attack ally AI units
+    if (other_unit.unitType === UnitType.AI) {
+      continue;
+    }
     unit.image.attack(unit.x, unit.y, next_x, next_y);
     takeDamage(other_unit, unit.power, 'unit');
   }
