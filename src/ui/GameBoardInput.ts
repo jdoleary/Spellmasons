@@ -1,7 +1,7 @@
 import { MESSAGE_TYPES } from '../MessageTypes';
 import { BOARD_HEIGHT, BOARD_WIDTH, CELL_SIZE } from '../config';
 import * as Spell from '../Spell';
-import { addPixiSprite, app } from '../PixiUtils';
+import { addPixiSprite, containerUI } from '../PixiUtils';
 import { turn_phase } from '../Game';
 import * as Card from '../Card';
 import type { IPlayer } from '../Player';
@@ -17,7 +17,9 @@ let mouseCellY;
 let highlights = [];
 function clearHighlights() {
   highlights.forEach((sprite) => {
-    app.stage.removeChild(sprite);
+    if (sprite.parent) {
+      sprite.parent.removeChild(sprite);
+    }
   });
   highlights = [];
 }
@@ -63,7 +65,7 @@ export function syncMouseHoverIcon() {
     const targets = window.game.getTargetsOfSpell(spellCopy);
     // Show highlights corresponding to targets
     for (let t of targets) {
-      const sprite = addPixiSprite(targetImgPath);
+      const sprite = addPixiSprite(targetImgPath, containerUI);
       sprite.x = -10;
       sprite.y = -10;
       highlights.push(sprite);

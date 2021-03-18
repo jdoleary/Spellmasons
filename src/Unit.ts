@@ -3,6 +3,7 @@ import * as config from './config';
 import floatingText from './FloatingText';
 import Image from './Image';
 import { distance } from './math';
+import { containerUnits } from './PixiUtils';
 export enum UnitType {
   PLAYER_CONTROLLED,
   AI,
@@ -30,7 +31,7 @@ export function create(
   const unit: IUnit = {
     x,
     y,
-    image: new Image(x, y, imagePath),
+    image: new Image(x, y, imagePath, containerUnits),
     power: config.UNIT_BASE_POWER,
     health: config.UNIT_BASE_HEALTH,
     healthMax: config.UNIT_BASE_HEALTH,
@@ -77,7 +78,7 @@ export function select(unit: IUnit) {
 export function load(unit: IUnit) {
   const loadedunit = {
     ...unit,
-    image: new Image(unit.x, unit.y, unit.image.imageName),
+    image: new Image(unit.x, unit.y, unit.image.imageName, containerUnits),
     healthText: new PIXI.Text('', {
       fill: 'red',
       // Allow health hearts to wrap

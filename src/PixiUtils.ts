@@ -5,7 +5,10 @@ let isReady = false;
 // PIXI app
 export const app = new PIXI.Application();
 export const containerBoard = new PIXI.Container();
+export const containerUnits = new PIXI.Container();
 export const containerPickup = new PIXI.Container();
+export const containerSpells = new PIXI.Container();
+export const containerUI = new PIXI.Container();
 export const containerFloatingText = new PIXI.Container();
 app.renderer.backgroundColor = 0x45b6fe;
 app.renderer.view.style.position = 'absolute';
@@ -29,7 +32,10 @@ export function setupPixi(): Promise<void> {
 
   // Add containers to the stage in the order that they will be rendered on top of each other
   app.stage.addChild(containerBoard);
+  app.stage.addChild(containerUnits);
   app.stage.addChild(containerPickup);
+  app.stage.addChild(containerSpells);
+  app.stage.addChild(containerUI);
   app.stage.addChild(containerFloatingText);
   return loadTextures();
 }
@@ -65,7 +71,7 @@ function loadTextures(): Promise<void> {
 }
 export function addPixiSprite(
   imagePath: string,
-  parent?: PIXI.Container,
+  parent: PIXI.Container,
 ): PIXI.Sprite {
   if (!isReady) {
     throw new Error(
@@ -74,11 +80,7 @@ export function addPixiSprite(
   }
   try {
     const sprite = new PIXI.Sprite(resources[imagePath].texture);
-    if (parent) {
-      parent.addChild(sprite);
-    } else {
-      app.stage.addChild(sprite);
-    }
+    parent.addChild(sprite);
     return sprite;
   } catch (e) {
     console.log(
