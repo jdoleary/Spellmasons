@@ -13,11 +13,15 @@ interface Coords {
   x: number;
   y: number;
 }
-export function distance(cell1: Coords, cell2: Coords) {
-  return Math.sqrt(
-    Math.pow(cell2.x - cell1.x, 2) + Math.pow(cell2.y - cell1.y, 2),
-  );
+// The distance between two cells if you allow diagonal movement
+export function cellDistance(cell1: Coords, cell2: Coords) {
+  return Math.max(Math.abs(cell2.x - cell1.x), Math.abs(cell2.y - cell1.y));
 }
+// export function distance(cell1: Coords, cell2: Coords) {
+//   return Math.sqrt(
+//     Math.pow(cell2.x - cell1.x, 2) + Math.pow(cell2.y - cell1.y, 2),
+//   );
+// }
 
 // Converts a singular index into x,y coords on a rectangle with a known width
 export function indexToXY(index: number, width: number): Coords {

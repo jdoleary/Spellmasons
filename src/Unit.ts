@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js';
 import * as config from './config';
 import floatingText from './FloatingText';
 import Image from './Image';
-import { distance } from './math';
+import { cellDistance } from './math';
 import { containerUnits } from './PixiUtils';
 export enum UnitType {
   PLAYER_CONTROLLED,
@@ -21,6 +21,7 @@ export interface IUnit {
   frozenForTurns: number;
   shield: number;
   unitType: UnitType;
+  agroOverlay?: PIXI.Graphics;
 }
 export function create(
   x: number,
@@ -56,13 +57,29 @@ export function create(
 
   return unit;
 }
+
 export function deselect(unit: IUnit) {
   // Hide health text
   if (unit.healthText.parent) {
     unit.healthText.parent.removeChild(unit.healthText);
   }
+  if (unit.agroOverlay) {
+    unit.image.sprite.parent.removeChild(unit.agroOverlay);
+  }
 }
 export function select(unit: IUnit) {
+  // Show health text
+  unit.image.sprite.addChild(unit.healthText);
+  // Make AGRO UI rectangle
+  if (!unit.agroOverlay) {
+    unit.agroOverlay = new PIXI.Graphics();
+  }
+  if (!unit.agroOverlay.parent) {
+    unit.image.sprite.parent.addChild(unit.agroOverlay);
+  }
+  updateSelectedOverlay(unit);
+}
+function updateSelectedOverlay(unit: IUnit) {
   // Update to current health
   let healthString = '';
   for (let i = 0; i < unit.health; i++) {
@@ -71,8 +88,18 @@ export function select(unit: IUnit) {
   unit.healthText.text = healthString;
   unit.healthText.anchor.x = 0.5;
   unit.healthText.anchor.y = -0.2;
-  // Show health text
-  unit.image.sprite.addChild(unit.healthText);
+  if (unit.unitType === UnitType.AI) {
+    unit.agroOverlay.clear();
+    unit.agroOverlay.lineStyle(2, 0x000000, 0.3);
+    unit.agroOverlay.beginFill(0xff0000, 0.1);
+    unit.agroOverlay.drawRect(
+      (unit.x - config.AI_AGRO_DISTANCE) * config.CELL_SIZE,
+      (unit.y - config.AI_AGRO_DISTANCE) * config.CELL_SIZE,
+      (1 + config.AI_AGRO_DISTANCE * 2) * config.CELL_SIZE,
+      (1 + config.AI_AGRO_DISTANCE * 2) * config.CELL_SIZE,
+    );
+    unit.agroOverlay.endFill();
+  }
 }
 // Reinitialize a unit from another unit object, this is used in loading game state after reconnect
 export function load(unit: IUnit) {
@@ -97,6 +124,8 @@ export function resurrect(u: IUnit) {
 export function die(u: IUnit) {
   u.image.scale(0);
   u.alive = false;
+  // When a unit dies, deselect it
+  deselect(u);
   // If the unit is a player
   if (u.unitType === UnitType.PLAYER_CONTROLLED) {
     const unitPlayer = window.game.players[window.game.playerTurnIndex];
@@ -105,13 +134,6 @@ export function die(u: IUnit) {
       window.game.endMyTurn();
     }
   }
-}
-export function cellDistanceFromUnit(
-  unit: IUnit,
-  cellX: number,
-  cellY: number,
-) {
-  return Math.max(Math.abs(unit.x - cellX), Math.abs(unit.y - cellY));
 }
 export function takeDamage(unit: IUnit, amount: number, cause?: string) {
   // Shield prevents damage
@@ -131,6 +153,8 @@ export function takeDamage(unit: IUnit, amount: number, cause?: string) {
     return;
   }
   unit.health -= amount;
+  // If the unit is "selected" this will update it's overlay to reflect the damage
+  updateSelectedOverlay(unit);
   if (amount > 0) {
     // Show hearts floating away due to damage taken
     let healthChangedString = '';
@@ -179,8 +203,8 @@ export function findClosestPlayerTo(unit: IUnit): IUnit | undefined {
   for (let p of window.game.players) {
     // Only consider units that are not in the portal and are alive
     if (!p.inPortal && p.unit.alive) {
-      const dist = distance(p.unit, unit);
-      if (dist < currentClosestDistance) {
+      const dist = cellDistance(p.unit, unit);
+      if (dist <= currentClosestDistance) {
         currentClosest = p.unit;
         currentClosestDistance = dist;
       }
@@ -221,6 +245,8 @@ export function moveAI(unit: IUnit) {
   if (alive_bump_into_units.length === 0) {
     // physically move
     moveTo(unit, next_x, next_y);
+    // Update the "planning view" overlay that shows the unit's agro radius
+    updateSelectedOverlay(unit);
   }
 }
 export function moveTo(unit: IUnit, cellX: number, cellY: number) {

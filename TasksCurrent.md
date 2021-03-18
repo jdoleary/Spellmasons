@@ -6,17 +6,12 @@
 
 ## brad feedback 2021.03.17
 
-- Level # text appears BEHIND units on screen
-- Holding down alt should just show everyone's health and maybe turn order too and agro radius instead of select
-- Only allow walking once per turn
-- Taking damage doesn't update health of currently selected unit
 - Bug: Verified, when I alt tab it desyncs
-- Going through the portal should end yoru turn
-- Click to select should work even when it's not your turn
 - The get hit Animation can sometimes bring golems off their location
 - BUG: Sometimes it skips other players turn when one goes through the protal
 - BUG: After death and on new level I didn't return visible but could still move
 - What happens if one player is already portaled but the other player dies (does incrementPlayerTurn stack overflow)
+- BUG: Alt key doesn't trigger after you've held it down, release and pressed it again until you click, then it works again
 
 ## bugs
 
