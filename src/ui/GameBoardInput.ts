@@ -174,18 +174,6 @@ export default function setupBoardInputHandlers() {
               cards: Card.getSelectedCardTally(),
             });
             Card.clearSelectedCardTally();
-          } else {
-            // Select unit
-            // Show health for hovered units
-            if (selectedUnit) {
-              Unit.deselect(selectedUnit);
-            }
-            for (let u of window.game.units) {
-              if (u.x === x && u.y === y) {
-                selectedUnit = u;
-                Unit.select(u);
-              }
-            }
           }
         } else {
           floatingText({

@@ -1,3 +1,4 @@
+import * as Unit from '../Unit';
 import setupBoardInputHandlers from './GameBoardInput';
 
 const elEndTurnBtn: HTMLButtonElement = document.getElementById(
@@ -11,8 +12,13 @@ export function setup() {
       case 'Space':
         window.game.endMyTurn();
         break;
-      default:
-        console.log('No set action for key ' + event.code);
+    }
+  });
+  window.addEventListener('keypress', (event) => {
+    switch (event.code) {
+      case 'KeyZ':
+        togglePlanningView();
+        break;
     }
   });
 
@@ -20,4 +26,13 @@ export function setup() {
     window.game.endMyTurn();
   });
   setupBoardInputHandlers();
+}
+let planningViewActive = false;
+function togglePlanningView() {
+  planningViewActive = !planningViewActive;
+  if (planningViewActive) {
+    window.game.units.forEach((u) => Unit.select(u));
+  } else {
+    window.game.units.forEach((u) => Unit.deselect(u));
+  }
 }

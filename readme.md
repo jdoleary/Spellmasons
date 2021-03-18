@@ -3,6 +3,7 @@
 - Alt click to ping a cell on the board to other players
 - Use window.save and window.load to persist the game state
 - Left click to select or cast, right-click to move
+- Press 'Z' key to toggle planning view
 
 ## Setting
 
