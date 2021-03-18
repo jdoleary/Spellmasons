@@ -95,13 +95,15 @@ window.replay = (title) => {
     onData(message);
   }
 };
-let onDataQueue = [];
+// let onDataQueue = [];
 function onData(d: { fromClient: string; payload: any }) {
   // Keep data messages in a queue until they are ready to be processed
-  if (window.animationManager.animating) {
-    onDataQueue.push(d);
-    return;
-  }
+  // CAUTION: If data queue is not implemented this will catch and hold forever
+  // messages that were sent while animation was occurring
+  // if (window.animationManager.animating) {
+  //   onDataQueue.push(d);
+  //   return;
+  // }
   console.log('onData', d);
   // Temporarily for development
   messageLog.push(d);

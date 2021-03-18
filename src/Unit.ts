@@ -101,7 +101,6 @@ export function die(u: IUnit) {
     const unitPlayer = window.game.players[window.game.playerTurnIndex];
     // If player whose current turn it is just died...
     if (unitPlayer.clientId === window.clientId && unitPlayer.unit === u) {
-      console.log('endMyTurn');
       window.game.endMyTurn();
     }
   }
