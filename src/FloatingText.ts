@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { CELL_SIZE } from './config';
-import { app } from './PixiUtils';
+import { app, containerFloatingText } from './PixiUtils';
 interface FText {
   x: number;
   y: number;
@@ -35,7 +35,7 @@ export default function floatingText({
     alpha: 1,
     valpha: -0.2,
   };
-  app.stage.addChild(pixiText);
+  containerFloatingText.addChild(pixiText);
   requestAnimationFrame(() => floatAway(instance));
 }
 function floatAway(instance: FText) {

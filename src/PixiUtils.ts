@@ -6,6 +6,7 @@ let isReady = false;
 export const app = new PIXI.Application();
 export const containerBoard = new PIXI.Container();
 export const containerPickup = new PIXI.Container();
+export const containerFloatingText = new PIXI.Container();
 app.renderer.backgroundColor = 0x45b6fe;
 app.renderer.view.style.position = 'absolute';
 app.renderer.view.style.top = '0';
@@ -26,9 +27,10 @@ export function setupPixi(): Promise<void> {
   // can then insert into the DOM
   document.getElementById('PIXI-holder').appendChild(app.view);
 
-  // Add containers to the stage
+  // Add containers to the stage in the order that they will be rendered on top of each other
   app.stage.addChild(containerBoard);
   app.stage.addChild(containerPickup);
+  app.stage.addChild(containerFloatingText);
   return loadTextures();
 }
 function loadTextures(): Promise<void> {
