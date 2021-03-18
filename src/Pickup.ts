@@ -35,9 +35,8 @@ export function create(
     effect,
   };
 
-  // Start images small so when they spawn in they will grow
-  self.image.transform.scale = 0.0;
-  window.animationManager.setTransform(self.image.sprite, self.image.transform);
+  // Start images small and make them grow when they spawn in
+  self.image.sprite.scale.set(0.0);
   self.image.scale(1.0);
   window.game.addPickupToArray(self);
 

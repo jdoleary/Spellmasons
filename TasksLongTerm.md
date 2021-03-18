@@ -2,15 +2,14 @@
 
 - Critical Path
 
-  - Redo animation system and make events system to support ALL visuals occurring on a timeline
-    - supports triggering things such as getting new cards in hand when you move onto cards or slay an ally mage
-  - Alt view for planning
-  - Add more enemy types
+- Gameplay
   - Wizard modification with XP granted on going through portal
-
-- Make sure pie-client isn't still linked and uses most up-to-date version on NPM
-
+  - Add enemy variety
+  - Add secret levels and dark cards
+  - Add more spell content
+  - Add tutorial
 - Polish
+  - Make sure pie-client isn't still linked and uses most up-to-date version on NPM
   - Art
   - SoundFX
   - CoverArt

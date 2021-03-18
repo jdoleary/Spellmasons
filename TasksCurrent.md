@@ -1,18 +1,20 @@
 # Todo
 
-- Remove select in favor of Alt key view/planning mode
-- redo action points so that actions are number of cast per turn and walking can't go twice
-- Prevent golems from attacking each other / set golem health to 1 instead of 4
-
-## brad feedback 2021.03.17
-
-- Bug: Verified, when I alt tab it desyncs
+- Refactor animation manager
+  - Redo animation system and make events system to support ALL visuals occurring on a timeline
+    - supports triggering things such as getting new cards in hand when you move onto cards or slay an ally mage
+  - Because attacks happen instantly and the animations are stuttered, the textual feedback of the effect of the animation is lost because they all happen at the same time (loosing health for example)
+    - What if the animations occur directly in the event log rather than in the gameplay functions. This will allow them to trigger one at a time and also allow them to cause NEW gameplay changes (such as get a card for slaying ally mage) right when the animation occurs
+    - Improve animation groups. You should be able to play multiple transforms together and trigger callbacks when they are done.
+    - If animations cause gameplay changes, will that affect loading? if a load is requested mid-animation?
+      - not if the visual are all that's animating and the gameplay state still changes immediately
 - The get hit Animation can sometimes bring golems off their location
-- BUG: Sometimes it skips other players turn when one goes through the protal
+  - Sometimes after shake due to damage animation a golem will move an entire cell to the left
 
 ## bugs
 
-- Sometimes after shake due to damage animation a golem will move an entire cell to the left
+- Bug: Verified, when I alt tab it desyncs
+- BUG: Sometimes it skips other players turn when one goes through the protal
 - Fix sometimes Game.playerTurnIndex is out of sync
   - Maybe this happened because I was alt-tabbed when he took his turn
 - Skipped ally's turn after portaling
@@ -21,10 +23,6 @@
   - How to solve status changes (poison, frozen) that can be applied at any time but are supposed to trigger after a unit takes their turn
 - Shield should apply to a single turn, not to an amount of damage
 - restore subsprites after load
-- Because attacks happen instantly and the animations are stuttered, the textual feedback of the effect of the animation is lost because they all happen at the same time (loosing health for example)
-  - What if the animations occur directly in the event log rather than in the gameplay functions. This will allow them to trigger one at a time and also allow them to cause NEW gameplay changes (such as get a card for slaying ally mage) right when the animation occurs
-  - Improve animation groups. You should be able to play multiple transforms together and trigger callbacks when they are done.
-  - If animations cause gameplay changes, will that affect loading? if a load is requested mid-animation?
 
 ## 2021.3.17
 

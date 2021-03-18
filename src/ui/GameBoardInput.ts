@@ -66,16 +66,9 @@ export function syncMouseHoverIcon() {
     // Show highlights corresponding to targets
     for (let t of targets) {
       const sprite = addPixiSprite(targetImgPath, containerUI);
-      sprite.x = -10;
-      sprite.y = -10;
+      sprite.x = t.x * CELL_SIZE;
+      sprite.y = t.y * CELL_SIZE;
       highlights.push(sprite);
-      const transform = {
-        x: t.x * CELL_SIZE,
-        y: t.y * CELL_SIZE,
-        alpha: 1,
-        scale: 1,
-      };
-      window.animationManager.setTransform(sprite, transform);
     }
   }
 }

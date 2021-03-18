@@ -40,7 +40,6 @@ export function create(clientId: string): IPlayer {
   addHighlighIfPlayerBelongsToCurrentClient(player);
   player.unit.health = PLAYER_BASE_HEALTH;
   player.unit.healthMax = PLAYER_BASE_HEALTH;
-  window.animationManager.startAnimate();
   return player;
 }
 // Keep a global reference to the current client's player
@@ -74,7 +73,6 @@ export function enterPortal(player: IPlayer) {
   const coords = window.game.getRandomEmptyCell({ xMax: 0 });
   // Move "portaled" unit out of the way to prevent collisions and chaining while portaled
   Unit.moveTo(player.unit, -1, coords.y);
-  window.animationManager.startAnimate();
   window.game.checkForEndOfLevel();
   // If player that entered the portal is the current client's player, end their turn
   if (player.clientId === window.clientId) {

@@ -131,7 +131,6 @@ export default class Game {
       // limit spawn to the leftmost column
       const coords = window.game.getRandomEmptyCell({ xMax: 0 });
       Unit.moveTo(p.unit, 0, coords.y);
-      window.animationManager.startAnimate();
     }
     // Clear all pickups
     for (let p of this.pickups) {
@@ -206,7 +205,6 @@ export default class Game {
         console.error('Unit not spawned due to no empty cells');
       }
     }
-    window.animationManager.startAnimate();
   }
   checkPickupCollisions(unit: Unit.IUnit) {
     for (let pu of this.pickups) {
@@ -413,11 +411,13 @@ export default class Game {
         break;
       case 'NPC':
         this.setYourTurn(false, "NPC's Turn");
+        const animationPromises = [];
         // Move units
         for (let u of this.units.filter(
           (u) => u.unitType === Unit.UnitType.AI,
         )) {
-          Unit.moveAI(u);
+          const promise = Unit.moveAI(u);
+          animationPromises.push(promise);
         }
 
         // If units are frozen, decrement the number of turns that they are frozen for
@@ -430,8 +430,8 @@ export default class Game {
             }
           }
         }
-
-        window.animationManager.startAnimate().then(() => {
+        // When all animations are done, set turn phase to player turn
+        Promise.all(animationPromises).then(() => {
           this.setTurnPhase(turn_phase.PlayerTurns);
         });
         break;
@@ -572,11 +572,9 @@ export default class Game {
         'images/spell/trap.png',
         false,
         ({ unit }) => {
-          window.animationManager.startGroup('trap-effects');
           // Trigger the spell held in the trap on the unit that activated it
           // Override trap property so it doesn't simply place another trap
           this.cast(Object.assign({}, spell, { trap: false }));
-          window.animationManager.endGroup('trap-effects');
         },
       );
       return;
@@ -590,7 +588,6 @@ export default class Game {
       unitsAtTargets = unitsAtTargets.concat(this.getUnitsAt(x, y));
     }
 
-    window.animationManager.startGroup('spell-effects');
     if (unitsAtTargets.length) {
       // Cast on each unit targeted
       for (let unit of unitsAtTargets) {
@@ -601,7 +598,6 @@ export default class Game {
       // Cast on the tile that was clicked on
       effect(spell);
     }
-    window.animationManager.endGroup('spell-effects');
   }
   sanitizeForSaving(): Game {
     return {

@@ -3,8 +3,7 @@ import Game, { game_state, turn_phase } from './Game';
 import * as Player from './Player';
 import * as Unit from './Unit';
 import * as Pickup from './Pickup';
-import * as config from './config';
-import AnimationManager from './AnimationManager';
+import AnimationTimeline from './AnimationTimeline';
 import * as Spell from './Spell';
 import * as UI from './ui/UserInterface';
 import * as Card from './Card';
@@ -12,6 +11,7 @@ import { MESSAGE_TYPES } from './MessageTypes';
 
 import { setupPixi } from './PixiUtils';
 import floatingText from './FloatingText';
+
 setupPixi().then(() => {
   UI.setup();
   // Connect to PieServer
@@ -21,7 +21,7 @@ setupPixi().then(() => {
   game = new Game(Math.random().toString());
 });
 
-window.animationManager = new AnimationManager();
+window.animationTimeline = new AnimationTimeline();
 
 let clients = [];
 
@@ -134,15 +134,10 @@ function onData(d: { fromClient: string; payload: any }) {
       game.pickups = loadedGameState.pickups.map(Pickup.load);
       game.syncYourTurnState();
       game.setGameState(game_state.Playing);
-      // Animate in restored game state
-      window.animationManager.startAnimate();
       break;
     case MESSAGE_TYPES.MOVE_PLAYER:
       // Move the player 1 magnitude on either or both axes towards the desired position
-      window.animationManager.startGroup('Move player');
-      Unit.moveTo(caster.unit, payload.x, payload.y);
-      window.animationManager.endGroup('Move player');
-      window.animationManager.startAnimate().then(() => {
+      Unit.moveTo(caster.unit, payload.x, payload.y).then(() => {
         // Moving the player unit uses an action
         caster.thisTurnMoved = true;
         checkEndPlayerTurn(caster);
@@ -170,12 +165,9 @@ function onData(d: { fromClient: string; payload: any }) {
           cellY: spell.y,
           text: Card.toString(payload.cards),
         });
-        // Animate the spells
-        window.animationManager.startAnimate().then(() => {
-          // Casting a spell uses an action
-          caster.thisTurnSpellCast = true;
-          checkEndPlayerTurn(caster);
-        });
+        // Casting a spell uses an action
+        caster.thisTurnSpellCast = true;
+        checkEndPlayerTurn(caster);
       } else {
         console.log('Someone is trying to cast out of turn');
       }
@@ -275,8 +267,7 @@ window.connect = connect;
 declare global {
   interface Window {
     connect: typeof connect;
-    // Animation manager is globally accessable
-    animationManager: AnimationManager;
+    animationTimeline: AnimationTimeline;
     game: Game;
     // A reference to the player instance of the client playing on this instance
     player: Player.IPlayer;

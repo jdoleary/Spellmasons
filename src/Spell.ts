@@ -98,7 +98,18 @@ export function effect(spell: Spell, args?: EffectArgs) {
     getImage(spell),
     containerSpells,
   );
-  castImage.scale(1.5);
-  castImage.updateFilter(0);
-  castImage.remove();
+
+  window.animationTimeline
+    .addAnimation([
+      {
+        sprite: castImage.sprite,
+        target: {
+          scale: 1.5,
+          alpha: 0,
+        },
+      },
+    ])
+    .then(() => {
+      castImage.cleanup();
+    });
 }

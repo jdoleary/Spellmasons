@@ -49,9 +49,8 @@ export function create(
     unitType,
   };
 
-  // Start images small so when they spawn in they will grow
-  unit.image.transform.scale = 0.0;
-  window.animationManager.setTransform(unit.image.sprite, unit.image.transform);
+  // Start images small and make them grow when they spawn in
+  unit.image.sprite.scale.set(0);
   unit.image.scale(1.0);
   window.game.addUnitToArray(unit);
 
@@ -258,9 +257,11 @@ export function moveTo(unit: IUnit, cellX: number, cellY: number) {
     console.log('unit cannot move');
     return;
   }
+  // Set state instantly to new position
   unit.x = cellX;
   unit.y = cellY;
-  unit.image.move(unit.x, unit.y);
   // check for collisions with pickups in new location
   window.game.checkPickupCollisions(unit);
+  // Animate movement visually
+  return unit.image.move(unit.x, unit.y);
 }

@@ -1,7 +1,6 @@
 import type * as PIXI from 'pixi.js';
 
 import { addPixiSprite } from './PixiUtils';
-import type { AnimatableProps } from './AnimationManager';
 import { CELL_SIZE } from './config';
 import { normalizeDegrees } from './math';
 
@@ -11,13 +10,6 @@ export default class Image {
   size_x: number;
   size_y: number;
   imageName: string;
-  transform: AnimatableProps = {
-    x: 0,
-    y: 0,
-    rotation: 0,
-    alpha: 1,
-    scale: 1,
-  };
 
   constructor(
     cellX: number,
@@ -34,7 +26,9 @@ export default class Image {
     this.sprite.anchor.y = 0.5;
     this.sprite.rotation = (rotation * Math.PI) / 180;
 
-    this.set(cellX, cellY, 1.0);
+    const { x, y } = this.cellToBoardCoords(cellX, cellY);
+    this.sprite.x = x;
+    this.sprite.y = y;
   }
   // convert from cell coordinates to objective board coordinates
   cellToBoardCoords(cellX: number, cellY: number) {
@@ -48,10 +42,14 @@ export default class Image {
     this.sprite.parent.removeChild(this.sprite);
   }
   scale(scale) {
-    window.animationManager.addAnimation(this.sprite, this.transform, {
-      // Clamp to positive values
-      scale: Math.max(0, scale),
-    });
+    // Clamp to a positive value
+    scale = Math.max(0, scale);
+    window.animationTimeline.addAnimation([
+      {
+        sprite: this.sprite,
+        target: { scale },
+      },
+    ]);
   }
   addSubSprite(imageName, key) {
     const subSprite = addPixiSprite(imageName, this.sprite);
@@ -67,43 +65,57 @@ export default class Image {
       delete this.subSprites[key];
     }
   }
-  remove() {
-    window.animationManager.currentGroup.onFinishedCallbacks.push(() => {
-      this.cleanup();
-    });
-  }
-  updateFilter(opacityPercentage) {
-    window.animationManager.addAnimation(this.sprite, this.transform, {
-      opacity: opacityPercentage,
-    });
+  updateFilter(alpha) {
+    window.animationTimeline.addAnimation([
+      {
+        sprite: this.sprite,
+        target: { alpha },
+      },
+    ]);
   }
   move(cellX: number, cellY: number) {
-    window.animationManager.addAnimation(
-      this.sprite,
-      this.transform,
-      this.cellToBoardCoords(cellX, cellY),
-    );
+    return window.animationTimeline.addAnimation([
+      {
+        sprite: this.sprite,
+        target: this.cellToBoardCoords(cellX, cellY),
+      },
+    ]);
   }
   show() {
-    window.animationManager.addAnimation(this.sprite, this.transform, {
-      alpha: 1,
-    });
+    window.animationTimeline.addAnimation([
+      {
+        sprite: this.sprite,
+        target: { alpha: 1 },
+      },
+    ]);
   }
   hide() {
-    window.animationManager.addAnimation(this.sprite, this.transform, {
-      alpha: 0,
-    });
+    window.animationTimeline.addAnimation([
+      {
+        sprite: this.sprite,
+        target: { alpha: 0 },
+      },
+    ]);
   }
   take_hit() {
-    window.animationManager.addAnimation(this.sprite, this.transform, {
-      x: this.transform.x + 10,
-    });
-    window.animationManager.addAnimation(this.sprite, this.transform, {
-      x: this.transform.x - 10,
-    });
-    window.animationManager.addAnimation(this.sprite, this.transform, {
-      x: this.transform.x,
-    });
+    window.animationTimeline.addAnimation([
+      {
+        sprite: this.sprite,
+        target: { x: this.sprite.x + 10 },
+      },
+    ]);
+    window.animationTimeline.addAnimation([
+      {
+        sprite: this.sprite,
+        target: { x: this.sprite.x - 10 },
+      },
+    ]);
+    window.animationTimeline.addAnimation([
+      {
+        sprite: this.sprite,
+        target: { x: this.sprite.x },
+      },
+    ]);
   }
   attack(
     current_cellX: number,
@@ -112,24 +124,18 @@ export default class Image {
     cellY: number,
   ) {
     // Move forward
-    window.animationManager.addAnimation(
-      this.sprite,
-      this.transform,
-      this.cellToBoardCoords(cellX, cellY),
-    );
+    window.animationTimeline.addAnimation([
+      {
+        sprite: this.sprite,
+        target: this.cellToBoardCoords(cellX, cellY),
+      },
+    ]);
     // Move back
-    window.animationManager.addAnimation(
-      this.sprite,
-      this.transform,
-      this.cellToBoardCoords(current_cellX, current_cellY),
-    );
-  }
-  // Used for initialization
-  set(cellX: number, cellY: number, scale: number) {
-    const { x, y } = this.cellToBoardCoords(cellX, cellY);
-    this.transform.x = x;
-    this.transform.y = y;
-    this.transform.scale = scale;
-    window.animationManager.setTransform(this.sprite, this.transform);
+    window.animationTimeline.addAnimation([
+      {
+        sprite: this.sprite,
+        target: this.cellToBoardCoords(current_cellX, current_cellY),
+      },
+    ]);
   }
 }
