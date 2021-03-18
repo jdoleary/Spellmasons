@@ -1,15 +1,28 @@
 # Todo
 
+- Remove select in favor of Alt key view/planning mode
+- redo action points so that actions are number of cast per turn and walking can't go twice
+- Prevent golems from attacking each other / set golem health to 1 instead of 4
+
 ## brad feedback 2021.03.17
 
-- BUG: Sometimes after shake due to damage animation a golem will move an entire cell to the left
+- Level # text appears BEHIND units on screen
+- Holding down alt should just show everyone's health and maybe turn order too and agro radius instead of select
+- Only allow walking once per turn
+- Taking damage doesn't update health of currently selected unit
+- Bug: Verified, when I alt tab it desyncs
+- Going through the portal should end yoru turn
+- Click to select should work even when it's not your turn
+- The get hit Animation can sometimes bring golems off their location
+- BUG: Sometimes it skips other players turn when one goes through the protal
+- BUG: After death and on new level I didn't return visible but could still move
+- What happens if one player is already portaled but the other player dies (does incrementPlayerTurn stack overflow)
 
 ## bugs
 
+- Sometimes after shake due to damage animation a golem will move an entire cell to the left
 - Fix sometimes Game.playerTurnIndex is out of sync
   - Maybe this happened because I was alt-tabbed when he took his turn
-- Card's desynced (cannot read property remove of undefined)
-  - Same problem as "seed desynced after portaling"
 - Seed desynced after portaling
   - this is not due to differing pie messages
   - this is not due to picking up cards
@@ -60,6 +73,10 @@
   - sythe cleaver
   - Vanish (invisible for x number of turns) "creating separation"
 - Mega spells that don't combine and fill the whole pool
+- Classes with cards for each class
+  - each class should have a movement spell
+- "blue shell" ability so you're never in doom state
+- Wizard modification between levels if you portal
 
 ## Other
 
