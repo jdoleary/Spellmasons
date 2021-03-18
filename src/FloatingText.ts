@@ -39,7 +39,7 @@ export default function floatingText({
   requestAnimationFrame(() => floatAway(instance));
 }
 function floatAway(instance: FText) {
-  if (instance.pixiText) {
+  if (instance.alpha > 0) {
     instance.y -= instance.vy;
     instance.vy = instance.vy * 0.97;
     instance.alpha -= Math.max(instance.valpha, 0);
@@ -48,11 +48,11 @@ function floatAway(instance: FText) {
     instance.pixiText.x = instance.x;
     instance.pixiText.alpha = instance.alpha;
     // Once it's fully hidden / done animating
-    if (instance.alpha < 0) {
+    if (instance.alpha <= 0) {
       // Clean up the element
-      app.stage.removeChild(instance.pixiText);
-      // Prevent continued looping
-      instance.pixiText = null;
+      if (instance.pixiText.parent) {
+        instance.pixiText.parent.removeChild(instance.pixiText);
+      }
     } else {
       requestAnimationFrame(() => floatAway(instance));
     }
