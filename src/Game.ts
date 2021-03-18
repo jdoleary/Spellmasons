@@ -118,7 +118,7 @@ export default class Game {
     for (let i = this.units.length - 1; i >= 0; i--) {
       const u = this.units[i];
       // Clear all remaining AI units
-      if (u.unitType === 'AI') {
+      if (u.unitType === Unit.UnitType.AI) {
         u.image.cleanup();
         this.units.splice(i, 1);
       }
@@ -194,7 +194,12 @@ export default class Game {
     ) {
       const coords = this.getRandomEmptyCell({ xMin: 2 });
       if (coords) {
-        Unit.create(coords.x, coords.y, 'images/units/golem.png', 'AI');
+        Unit.create(
+          coords.x,
+          coords.y,
+          'images/units/golem.png',
+          Unit.UnitType.AI,
+        );
       } else {
         console.error('Unit not spawned due to no empty cells');
       }
@@ -398,7 +403,9 @@ export default class Game {
       case 'NPC':
         this.setYourTurn(false, "NPC's Turn");
         // Move units
-        for (let u of this.units.filter((u) => u.unitType === 'AI')) {
+        for (let u of this.units.filter(
+          (u) => u.unitType === Unit.UnitType.AI,
+        )) {
           Unit.moveAI(u);
         }
 

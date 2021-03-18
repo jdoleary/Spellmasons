@@ -22,7 +22,7 @@ export function create(clientId: string): IPlayer {
       coords.x,
       coords.y,
       'images/units/man-blue.png',
-      'PlayerControlled',
+      Unit.UnitType.PLAYER_CONTROLLED,
     ),
     inPortal: false,
     actionsUsed: 0,

@@ -126,7 +126,7 @@ function onData(d: { fromClient: string; payload: any }) {
       game.hostClientId = loadedGameState.hostClientId;
       // Load all units that are not player's, those will be loaded indepentently
       game.units = loadedGameState.units
-        .filter((u) => u.unitType !== 'PlayerControlled')
+        .filter((u) => u.unitType !== Unit.UnitType.PLAYER_CONTROLLED)
         .map(Unit.load);
       game.players = loadedGameState.players.map(Player.load);
       game.pickups = loadedGameState.pickups.map(Pickup.load);

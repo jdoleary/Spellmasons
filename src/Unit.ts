@@ -3,7 +3,10 @@ import * as config from './config';
 import floatingText from './FloatingText';
 import Image from './Image';
 import { distance } from './math';
-type UnitType = 'PlayerControlled' | 'AI';
+export enum UnitType {
+  PLAYER_CONTROLLED,
+  AI,
+}
 export interface IUnit {
   x: number;
   y: number;
