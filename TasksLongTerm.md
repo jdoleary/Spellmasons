@@ -8,6 +8,8 @@
   - Add more enemy types
   - Wizard modification with XP granted on going through portal
 
+- Make sure pie-client isn't still linked and uses most up-to-date version on NPM
+
 - Polish
   - Art
   - SoundFX

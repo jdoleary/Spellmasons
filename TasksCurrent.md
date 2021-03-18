@@ -9,21 +9,12 @@
 - Bug: Verified, when I alt tab it desyncs
 - The get hit Animation can sometimes bring golems off their location
 - BUG: Sometimes it skips other players turn when one goes through the protal
-- BUG: After death and on new level I didn't return visible but could still move
-- What happens if one player is already portaled but the other player dies (does incrementPlayerTurn stack overflow)
-- BUG: Alt key doesn't trigger after you've held it down, release and pressed it again until you click, then it works again
 
 ## bugs
 
 - Sometimes after shake due to damage animation a golem will move an entire cell to the left
 - Fix sometimes Game.playerTurnIndex is out of sync
   - Maybe this happened because I was alt-tabbed when he took his turn
-- Seed desynced after portaling
-  - this is not due to differing pie messages
-  - this is not due to picking up cards
-  - **solution** this is because when another player loads they get the gamestate immediately, but not the number of times that the seeded random had already rolled
-    - Oddly, sometimes both clients trigger the LOAD_GAME_STATE and sometimes only one does, which is why it desyncs
-    - Looks like this can happen when I'm developing and it automatically refreshes
 - Skipped ally's turn after portaling
   - Could not reproduce
 - Frozen applied via a trap is instantly removed
