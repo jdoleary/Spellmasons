@@ -87,7 +87,7 @@ function updateSelectedOverlay(unit: IUnit) {
   unit.healthText.text = healthString;
   unit.healthText.anchor.x = 0.5;
   unit.healthText.anchor.y = -0.2;
-  if (unit.unitType === UnitType.AI) {
+  if (unit.unitType === UnitType.AI && unit.agroOverlay) {
     unit.agroOverlay.clear();
     unit.agroOverlay.lineStyle(2, 0x000000, 0.3);
     unit.agroOverlay.beginFill(0xff0000, 0.1);
