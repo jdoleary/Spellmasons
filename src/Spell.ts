@@ -1,9 +1,8 @@
 import type { IPlayer } from './Player';
 import * as Unit from './Unit';
 import type * as Card from './Card';
-import Image from './Image';
+import type Image from './Image';
 import { SHIELD_MULTIPLIER } from './config';
-import { containerSpells } from './PixiUtils';
 
 export interface Spell {
   caster?: IPlayer;
@@ -91,25 +90,4 @@ export function effect(spell: Spell, args?: EffectArgs) {
     shieldSprite.scale.x = 0.5;
     shieldSprite.scale.y = 0.5;
   }
-  // Show an image when cast occurs
-  const castImage = new Image(
-    spell.x,
-    spell.y,
-    getImage(spell),
-    containerSpells,
-  );
-
-  window.animationTimeline
-    .addAnimation([
-      {
-        sprite: castImage.sprite,
-        target: {
-          scale: 1.5,
-          alpha: 0,
-        },
-      },
-    ])
-    .then(() => {
-      castImage.cleanup();
-    });
 }

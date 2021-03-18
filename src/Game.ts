@@ -1,15 +1,19 @@
-import * as PIXI from 'pixi.js';
-
-import { Spell, effect } from './Spell';
+import { Spell, effect, getImage } from './Spell';
 import * as config from './config';
 import * as Unit from './Unit';
 import * as Pickup from './Pickup';
 import * as Player from './Player';
 import * as Card from './Card';
 import * as math from './math';
+import Image from './Image';
 import * as GameBoardInput from './ui/GameBoardInput';
 import { MESSAGE_TYPES } from './MessageTypes';
-import { addPixiSprite, app, containerBoard } from './PixiUtils';
+import {
+  addPixiSprite,
+  app,
+  containerBoard,
+  containerSpells,
+} from './PixiUtils';
 import type { Random } from 'random';
 import makeSeededRandom from './rand';
 import floatingText from './FloatingText';
@@ -593,11 +597,35 @@ export default class Game {
       for (let unit of unitsAtTargets) {
         effect(spell, { unit });
       }
+      this.animateSpellEffects(
+        unitsAtTargets.map((u) => ({ x: u.x, y: u.y, spell })),
+      );
     } else {
       // If no units were targeted,
       // Cast on the tile that was clicked on
       effect(spell);
+      this.animateSpellEffects([{ x: spell.x, y: spell.y, spell }]);
     }
+  }
+  animateSpellEffects(castInstances: { x: number; y: number; spell: Spell }[]) {
+    // Show an image when cast occurs
+    const images = castInstances.map(
+      (i) => new Image(i.x, i.y, getImage(i.spell), containerSpells),
+    );
+
+    window.animationTimeline
+      .addAnimation(
+        images.map((i) => ({
+          sprite: i.sprite,
+          target: {
+            scale: 1.5,
+            alpha: 0,
+          },
+        })),
+      )
+      .then(() => {
+        images.forEach((i) => i.cleanup());
+      });
   }
   sanitizeForSaving(): Game {
     return {
