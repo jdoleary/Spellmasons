@@ -76,6 +76,10 @@ export function enterPortal(player: IPlayer) {
   Unit.moveTo(player.unit, -1, coords.y);
   window.animationManager.startAnimate();
   window.game.checkForEndOfLevel();
+  // If player that entered the portal is the current client's player, end their turn
+  if (player.clientId === window.clientId) {
+    window.game.endMyTurn();
+  }
 }
 export function ableToTakeTurn(player: IPlayer) {
   return !player.inPortal && player.unit.alive;
