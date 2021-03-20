@@ -2,7 +2,6 @@
 
 - Fix all known bugs
 - Fix replay (control with arrow keys?)
-- Movement ends your turn
 - Projectile Animation
 - Ranged blue golem
 - Movement spells "swap"

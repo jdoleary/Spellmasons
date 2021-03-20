@@ -199,7 +199,8 @@ function onData(d: { fromClient: string; payload: any }) {
   }
 }
 function checkEndPlayerTurn(player: Player.IPlayer) {
-  if (player.thisTurnMoved && player.thisTurnSpellCast) {
+  // Moving ends your turn
+  if (player.thisTurnMoved) {
     endPlayerTurn(player.clientId);
   }
 }
