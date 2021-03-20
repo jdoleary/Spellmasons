@@ -1,8 +1,6 @@
 # Todo
 
 - Fix replay (control with arrow keys?)
-- Projectile Animation
-- Ranged blue golem
 - Movement spells "swap"
 - Wizard customization
 - Terrain (stuck units move laterally?)
@@ -15,6 +13,7 @@
 
 ## bugs
 
+- Probability 0 can still spawn if the roll rolls 0
 - The get hit Animation can sometimes bring golems off their location
   - Sometimes after shake due to damage animation a golem will move an entire cell to the left
 - Bug: Verified, when I alt tab it desyncs

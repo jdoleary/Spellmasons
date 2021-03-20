@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
 import * as config from './config';
+import * as AI from './AI';
 import floatingText from './FloatingText';
 import Image from './Image';
 import { cellDistance } from './math';
@@ -85,7 +86,7 @@ export function select(unit: IUnit) {
   }
   updateSelectedOverlay(unit);
 }
-function updateSelectedOverlay(unit: IUnit) {
+export function updateSelectedOverlay(unit: IUnit) {
   // Update to current health
   let healthString = '';
   for (let i = 0; i < unit.health; i++) {
@@ -184,7 +185,7 @@ export function takeDamage(unit: IUnit, amount: number, cause?: string) {
     die(unit);
   }
 }
-function canMove(unit: IUnit): boolean {
+export function canMove(unit: IUnit): boolean {
   // Do not move if dead
   if (!unit.alive) {
     return;
@@ -223,44 +224,13 @@ export function findClosestPlayerTo(unit: IUnit): IUnit | undefined {
   return currentClosest;
 }
 export function moveAI(unit: IUnit) {
-  if (!canMove(unit)) {
-    return;
-  }
-  const closestPlayerUnit = findClosestPlayerTo(unit);
-  if (!closestPlayerUnit) {
-    // Do not move if they don't have a target
-    return;
-  }
-  const targetCell = findCellOneStepCloserTo(
-    unit,
-    closestPlayerUnit.x,
-    closestPlayerUnit.y,
-  );
-  const next_x = targetCell.x;
-  const next_y = targetCell.y;
-  const bump_into_units = window.game
-    ? window.game.getUnitsAt(next_x, next_y)
-    : [];
-  // Deal damage to what you run into
-  for (let other_unit of bump_into_units) {
-    // Do not attack self
-    if (other_unit === unit) {
-      continue;
-    }
-    // Do not attack ally AI units
-    if (other_unit.unitType === UnitType.AI) {
-      continue;
-    }
-    unit.image.attack(unit.x, unit.y, next_x, next_y);
-    takeDamage(other_unit, unit.power, 'unit');
-  }
-  const alive_bump_into_units = bump_into_units.filter((u) => u.alive);
-  // If nothing is obstructing
-  if (alive_bump_into_units.length === 0) {
-    // physically move
-    moveTo(unit, next_x, next_y);
-    // Update the "planning view" overlay that shows the unit's agro radius
-    updateSelectedOverlay(unit);
+  switch (unit.unitSubType) {
+    case UnitSubType.AI_melee:
+      AI.meleeAction(unit);
+      break;
+    case UnitSubType.AI_ranged:
+      AI.rangedAction(unit);
+      break;
   }
 }
 export function moveTo(unit: IUnit, cellX: number, cellY: number) {
