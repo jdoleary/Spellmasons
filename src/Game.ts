@@ -565,6 +565,28 @@ export default class Game {
     this.pickups.push(pickup);
   }
   cast(spell: Spell) {
+    if (spell.swap) {
+      const units = this.getUnitsAt(spell.x, spell.y);
+      // Physically swap with target
+      if (units.length) {
+        const unitToSwapWith = units[0];
+        Unit.moveTo(unitToSwapWith, spell.caster.unit.x, spell.caster.unit.y);
+      }
+      const newTargetX = spell.caster.unit.x;
+      const newTargetY = spell.caster.unit.y;
+      Unit.moveTo(spell.caster.unit, spell.x, spell.y).then(() => {
+        this.cast(
+          Object.assign({}, spell, {
+            // Cast the spell on the location that the caster WAS in
+            x: newTargetX,
+            y: newTargetY,
+            // Disable swap so it doesn't recurse forever
+            swap: false,
+          }),
+        );
+      });
+      return;
+    }
     if (spell.trap) {
       Pickup.create(
         spell.x,

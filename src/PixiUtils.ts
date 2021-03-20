@@ -56,6 +56,7 @@ function loadTextures(): Promise<void> {
       'images/spell/feet.png',
       'images/spell/shield.png',
       'images/spell/trap.png',
+      'images/spell/swap.png',
       'images/spell/arrow.png',
       'images/portal.png',
       'images/units/unit-underline.png',

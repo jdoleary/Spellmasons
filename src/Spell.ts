@@ -14,6 +14,7 @@ export interface Spell {
   shield?: number;
   chain?: boolean;
   trap?: boolean;
+  swap?: boolean;
   area_of_effect?: number;
   image?: Image;
 }
@@ -47,6 +48,9 @@ export function getImage(s: Spell) {
   }
   if (s.trap) {
     imgPath = 'images/spell/trap.png';
+  }
+  if (s.swap) {
+    imgPath = 'images/spell/swap.png';
   }
   return imgPath;
 }
