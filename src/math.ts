@@ -18,11 +18,11 @@ interface Coords {
 export function cellDistance(cell1: Coords, cell2: Coords) {
   return Math.max(Math.abs(cell2.x - cell1.x), Math.abs(cell2.y - cell1.y));
 }
-// export function distance(cell1: Coords, cell2: Coords) {
-//   return Math.sqrt(
-//     Math.pow(cell2.x - cell1.x, 2) + Math.pow(cell2.y - cell1.y, 2),
-//   );
-// }
+export function distance(coords1: Coords, coords2: Coords) {
+  return Math.sqrt(
+    Math.pow(coords2.x - coords1.x, 2) + Math.pow(coords2.y - coords1.y, 2),
+  );
+}
 
 // Converts a singular index into x,y coords on a rectangle with a known width
 export function indexToXY(index: number, width: number): Coords {

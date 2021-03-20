@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { CELL_SIZE } from './config';
-import { app, containerFloatingText } from './PixiUtils';
+import { containerFloatingText } from './PixiUtils';
 interface FText {
   x: number;
   y: number;
