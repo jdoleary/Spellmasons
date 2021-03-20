@@ -123,7 +123,7 @@ export default class Game {
       const u = this.units[i];
       // Clear all remaining AI units
       if (u.unitType === Unit.UnitType.AI) {
-        u.image.cleanup();
+        Unit.cleanup(u);
         this.units.splice(i, 1);
       }
     }

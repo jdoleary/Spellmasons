@@ -100,6 +100,10 @@ function updateSelectedOverlay(unit: IUnit) {
     unit.agroOverlay.endFill();
   }
 }
+export function cleanup(unit: IUnit) {
+  unit.image.cleanup();
+  deselect(unit);
+}
 // Reinitialize a unit from another unit object, this is used in loading game state after reconnect
 export function load(unit: IUnit) {
   const loadedunit = {
