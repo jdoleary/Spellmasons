@@ -1,8 +1,7 @@
 import type * as PIXI from 'pixi.js';
 
 import { addPixiSprite } from './PixiUtils';
-import { CELL_SIZE } from './config';
-import { normalizeDegrees } from './math';
+import { normalizeDegrees, cellToBoardCoords } from './math';
 
 export default class Image {
   sprite: PIXI.Sprite;
@@ -26,16 +25,9 @@ export default class Image {
     this.sprite.anchor.y = 0.5;
     this.sprite.rotation = (rotation * Math.PI) / 180;
 
-    const { x, y } = this.cellToBoardCoords(cellX, cellY);
+    const { x, y } = cellToBoardCoords(cellX, cellY);
     this.sprite.x = x;
     this.sprite.y = y;
-  }
-  // convert from cell coordinates to objective board coordinates
-  cellToBoardCoords(cellX: number, cellY: number) {
-    return {
-      x: cellX * CELL_SIZE + CELL_SIZE / 2,
-      y: cellY * CELL_SIZE + CELL_SIZE / 2,
-    };
   }
   cleanup() {
     // Remove PIXI sprite
@@ -77,7 +69,7 @@ export default class Image {
     return window.animationTimeline.addAnimation([
       {
         sprite: this.sprite,
-        target: this.cellToBoardCoords(cellX, cellY),
+        target: cellToBoardCoords(cellX, cellY),
       },
     ]);
   }
@@ -127,14 +119,14 @@ export default class Image {
     window.animationTimeline.addAnimation([
       {
         sprite: this.sprite,
-        target: this.cellToBoardCoords(cellX, cellY),
+        target: cellToBoardCoords(cellX, cellY),
       },
     ]);
     // Move back
     window.animationTimeline.addAnimation([
       {
         sprite: this.sprite,
-        target: this.cellToBoardCoords(current_cellX, current_cellY),
+        target: cellToBoardCoords(current_cellX, current_cellY),
       },
     ]);
   }

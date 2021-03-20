@@ -1,3 +1,4 @@
+import { CELL_SIZE } from './config';
 // https://webdva.github.io/how-i-implemented-client-side-linear-interpolation/
 export function lerp(start: number, end: number, time: number) {
   if (time >= 1) {
@@ -72,4 +73,11 @@ export function chooseObjectWithProbability<T extends objectWithProbability>(
   }
   // Logically it should never reach this point
   return source[0];
+}
+// convert from cell coordinates to objective board coordinates
+export function cellToBoardCoords(cellX: number, cellY: number) {
+  return {
+    x: cellX * CELL_SIZE + CELL_SIZE / 2,
+    y: cellY * CELL_SIZE + CELL_SIZE / 2,
+  };
 }
