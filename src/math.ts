@@ -43,3 +43,33 @@ export function normalizeDegrees(degrees) {
     return remainder;
   }
 }
+
+interface objectWithProbability {
+  probability: number;
+}
+export function chooseObjectWithProbability<T extends objectWithProbability>(
+  source: T[],
+): T {
+  // Chooses a random object in the source list based on its probability
+  const maxProbability = source.reduce(
+    (maxProbability, current) => current.probability + maxProbability,
+    0,
+  );
+  // Choose random integer within the sum of all the probabilities
+  const roll = window.game.random.integer(0, maxProbability);
+  let rollingLowerBound = 0;
+  // Iterate each object and check if the roll is between the lower bound and the upper bound
+  // which means that the current object would have been rolled
+  for (let x of source) {
+    if (
+      roll >= rollingLowerBound &&
+      roll <= x.probability + rollingLowerBound
+    ) {
+      return x;
+    } else {
+      rollingLowerBound += x.probability;
+    }
+  }
+  // Logically it should never reach this point
+  return source[0];
+}

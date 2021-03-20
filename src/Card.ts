@@ -1,4 +1,5 @@
 import type * as Player from './Player';
+import * as math from './math';
 const elCardHand = document.getElementById('card-hand');
 
 const CARD_WIDTH = 70;
@@ -222,28 +223,7 @@ const cardSource: ICard[] = [
 
 // Chooses a random card based on the card's probabilities
 export function generateCard(): ICard {
-  // Chooses a random modifier based on their probability
-  const maxProbability = cardSource.reduce(
-    (maxProbability, current) => current.probability + maxProbability,
-    0,
-  );
-  // Choose random integer within the sum of all the probabilities
-  const roll = window.game.random.integer(0, maxProbability);
-  let rollingLowerBound = 0;
-  // Iterate each modifier and check if the roll is between the lower bound and the upper bound
-  // which means that the current mod would have been rolled
-  for (let mod of cardSource) {
-    if (
-      roll >= rollingLowerBound &&
-      roll <= mod.probability + rollingLowerBound
-    ) {
-      return mod;
-    } else {
-      rollingLowerBound += mod.probability;
-    }
-  }
-  // Logically it should never reach this point
-  return cardSource[0];
+  return math.chooseObjectWithProbability(cardSource);
 }
 function getCardRarityColor(content: ICard): string {
   if (content.isDark) {
