@@ -1,24 +1,30 @@
 # Todo
 
-- Refactor animation manager
-  - Redo animation system and make events system to support ALL visuals occurring on a timeline
-    - supports triggering things such as getting new cards in hand when you move onto cards or slay an ally mage
-  - Because attacks happen instantly and the animations are stuttered, the textual feedback of the effect of the animation is lost because they all happen at the same time (loosing health for example)
-    - What if the animations occur directly in the event log rather than in the gameplay functions. This will allow them to trigger one at a time and also allow them to cause NEW gameplay changes (such as get a card for slaying ally mage) right when the animation occurs
-    - Improve animation groups. You should be able to play multiple transforms together and trigger callbacks when they are done.
-    - If animations cause gameplay changes, will that affect loading? if a load is requested mid-animation?
-      - not if the visual are all that's animating and the gameplay state still changes immediately
-- The get hit Animation can sometimes bring golems off their location
-  - Sometimes after shake due to damage animation a golem will move an entire cell to the left
+- Fix all known bugs
+- Fix replay (control with arrow keys?)
+- Movement ends your turn
+- Projectile Animation
+- Ranged blue golem
+- Movement spells "swap"
+- Wizard customization
+- Terrain (stuck units move laterally?)
+- Event manager for granting dark card when you slay ally
+
+## Brad 2021-3-18
+
+- Got "you cannot move more than once per turn right after portaling"
+- Number keys to queue up spells
+- BUG if you click fast you can move more than once
+- After new level, agro radius doesn't go away
 
 ## bugs
 
+- The get hit Animation can sometimes bring golems off their location
+  - Sometimes after shake due to damage animation a golem will move an entire cell to the left
 - Bug: Verified, when I alt tab it desyncs
 - BUG: Sometimes it skips other players turn when one goes through the protal
 - Fix sometimes Game.playerTurnIndex is out of sync
   - Maybe this happened because I was alt-tabbed when he took his turn
-- Skipped ally's turn after portaling
-  - Could not reproduce
 - Frozen applied via a trap is instantly removed
   - How to solve status changes (poison, frozen) that can be applied at any time but are supposed to trigger after a unit takes their turn
 - Shield should apply to a single turn, not to an amount of damage
