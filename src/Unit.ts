@@ -8,6 +8,10 @@ export enum UnitType {
   PLAYER_CONTROLLED,
   AI,
 }
+export enum UnitSubType {
+  AI_melee,
+  AI_ranged,
+}
 export interface IUnit {
   x: number;
   y: number;
@@ -21,6 +25,7 @@ export interface IUnit {
   frozenForTurns: number;
   shield: number;
   unitType: UnitType;
+  unitSubType?: UnitSubType;
   agroOverlay?: PIXI.Graphics;
 }
 export function create(
@@ -28,6 +33,7 @@ export function create(
   y: number,
   imagePath: string,
   unitType: UnitType,
+  unitSubType?: UnitSubType,
 ): IUnit {
   const unit: IUnit = {
     x,
@@ -47,6 +53,7 @@ export function create(
     frozenForTurns: 0,
     shield: 0,
     unitType,
+    unitSubType,
   };
 
   // Start images small and make them grow when they spawn in

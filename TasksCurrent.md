@@ -1,6 +1,5 @@
 # Todo
 
-- Fix all known bugs
 - Fix replay (control with arrow keys?)
 - Projectile Animation
 - Ranged blue golem

@@ -45,6 +45,7 @@ function loadTextures(): Promise<void> {
     const images = [
       'images/tiles/ground.png',
       'images/units/golem.png',
+      'images/units/golem-blue.png',
       'images/units/man-blue.png',
       'images/spell/aoe.png',
       'images/spell/chain.png',

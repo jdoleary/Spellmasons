@@ -17,6 +17,7 @@ import {
 import type { Random } from 'random';
 import makeSeededRandom from './rand';
 import floatingText from './FloatingText';
+import { generateEnemy } from './EnemyUnit';
 
 export enum game_state {
   Lobby,
@@ -193,11 +194,13 @@ export default class Game {
     ) {
       const coords = this.getRandomEmptyCell({ xMin: 2 });
       if (coords) {
+        const sourceUnit = generateEnemy();
         Unit.create(
           coords.x,
           coords.y,
-          'images/units/golem.png',
+          sourceUnit.image,
           Unit.UnitType.AI,
+          sourceUnit.subtype,
         );
       } else {
         console.error('Unit not spawned due to no empty cells');
