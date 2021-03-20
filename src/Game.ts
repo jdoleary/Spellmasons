@@ -128,13 +128,7 @@ export default class Game {
       }
     }
     for (let p of this.players) {
-      p.inPortal = false;
-      p.unit.image.show();
-      Unit.resurrect(p.unit);
-      // Return to spawn
-      // limit spawn to the leftmost column
-      const coords = window.game.getRandomEmptyCell({ xMax: 0 });
-      Unit.moveTo(p.unit, 0, coords.y);
+      Player.resetPlayerForNextLevel(p);
     }
     // Clear all pickups
     for (let p of this.pickups) {

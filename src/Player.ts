@@ -42,6 +42,23 @@ export function create(clientId: string): IPlayer {
   player.unit.healthMax = PLAYER_BASE_HEALTH;
   return player;
 }
+export function resetPlayerForNextLevel(player: IPlayer) {
+  // Player is no longer in portal
+  player.inPortal = false;
+
+  // Reset action limitations
+  player.thisTurnMoved = false;
+  player.thisTurnSpellCast = false;
+
+  // Make unit visible
+  player.unit.image.show();
+  Unit.resurrect(player.unit);
+
+  // Return to a spawn location
+  // limit spawn to the leftmost column
+  const coords = window.game.getRandomEmptyCell({ xMax: 0 });
+  Unit.moveTo(player.unit, 0, coords.y);
+}
 // Keep a global reference to the current client's player
 function updateGlobalRefToCurrentClientPlayer(player: IPlayer) {
   if (window.clientId === player.clientId) {
