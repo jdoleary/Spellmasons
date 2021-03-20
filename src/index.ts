@@ -136,10 +136,10 @@ function onData(d: { fromClient: string; payload: any }) {
       game.setGameState(game_state.Playing);
       break;
     case MESSAGE_TYPES.MOVE_PLAYER:
+      // Moving the player unit uses an action
+      caster.thisTurnMoved = true;
       // Move the player 1 magnitude on either or both axes towards the desired position
       Unit.moveTo(caster.unit, payload.x, payload.y).then(() => {
-        // Moving the player unit uses an action
-        caster.thisTurnMoved = true;
         checkEndPlayerTurn(caster);
       });
       break;

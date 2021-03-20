@@ -14,7 +14,6 @@
 
 - Got "you cannot move more than once per turn right after portaling"
 - Number keys to queue up spells
-- BUG if you click fast you can move more than once
 - After new level, agro radius doesn't go away
 
 ## bugs
