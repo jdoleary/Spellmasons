@@ -14,6 +14,14 @@ export enum UnitSubType {
   AI_ranged,
   AI_reach,
 }
+export function getDangerZoneColor(unit: IUnit) {
+  switch (unit.unitSubType) {
+    case UnitSubType.AI_ranged:
+      return 0x0000ff;
+    default:
+      return 0xff0000;
+  }
+}
 export interface IUnit {
   x: number;
   y: number;
