@@ -39,7 +39,6 @@ export function rangedAction(unit: Unit.IUnit) {
   if (closestPlayerUnit) {
     const moveTo = math.oneCellAwayFromCell(unit, closestPlayerUnit);
     Unit.moveTo(unit, moveTo.x, moveTo.y);
-    return;
   }
 
   // Shoot at player if in same horizontal, diagonal, or vertical
