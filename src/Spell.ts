@@ -27,7 +27,7 @@ export function buildSpellFromCardTally(cardTally: Card.CardTally): Spell {
   return spell;
 }
 export function getImage(s: Spell) {
-  let imgPath = 'images/spell/damage.png';
+  let imgPath = '';
   if (s.damage > 0) {
     imgPath = 'images/spell/damage.png';
   }
