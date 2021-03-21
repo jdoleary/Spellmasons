@@ -18,6 +18,7 @@ import type { Random } from 'random';
 import makeSeededRandom from './rand';
 import floatingText from './FloatingText';
 import { generateEnemy } from './EnemyUnit';
+import type { Coords } from './commonTypes';
 
 export enum game_state {
   Lobby,
@@ -36,10 +37,6 @@ window.setDebug = function setDebug(json) {
     debugEl.innerHTML = JSON.stringify(Object.assign(debugInfo, json), null, 2);
   }
 };
-interface Coords {
-  x: number;
-  y: number;
-}
 interface Bounds {
   xMin?: number;
   xMax?: number;

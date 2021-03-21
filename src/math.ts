@@ -1,4 +1,5 @@
 import { CELL_SIZE } from './config';
+import type { Coords } from './commonTypes';
 // https://webdva.github.io/how-i-implemented-client-side-linear-interpolation/
 export function lerp(start: number, end: number, time: number) {
   if (time >= 1) {
@@ -10,10 +11,6 @@ export function lerp(start: number, end: number, time: number) {
   return start * (1 - time) + end * time;
 }
 
-interface Coords {
-  x: number;
-  y: number;
-}
 // The distance between two cells if you allow diagonal movement
 export function cellDistance(cell1: Coords, cell2: Coords) {
   return Math.max(Math.abs(cell2.x - cell1.x), Math.abs(cell2.y - cell1.y));

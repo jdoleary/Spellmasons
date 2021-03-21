@@ -1,11 +1,7 @@
 import type * as PIXI from 'pixi.js';
 import { containerSpells, addPixiSprite } from './PixiUtils';
 import { cellToBoardCoords, lerp, distance } from './math';
-
-interface Coords {
-  x: number;
-  y: number;
-}
+import type { Coords } from './commonTypes';
 
 interface Projectile {
   x: number;
