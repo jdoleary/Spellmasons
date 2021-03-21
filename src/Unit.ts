@@ -71,7 +71,7 @@ export function deselect(unit: IUnit) {
     unit.healthText.parent.removeChild(unit.healthText);
   }
   if (unit.agroOverlay) {
-    unit.image.sprite.parent.removeChild(unit.agroOverlay);
+    unit.agroOverlay.parent.removeChild(unit.agroOverlay);
   }
 }
 export function select(unit: IUnit) {
