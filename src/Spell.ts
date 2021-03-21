@@ -16,7 +16,7 @@ export interface Spell {
   chain?: boolean;
   trap?: boolean;
   swap?: boolean;
-  push?: boolean;
+  push?: number;
   area_of_effect?: number;
   image?: Image;
 }
@@ -69,9 +69,11 @@ export function effect(spell: Spell, args?: EffectArgs) {
   if (unit && ignore.includes(unit)) {
     return;
   }
-  if (unit && spell.push) {
-    const moveTo = math.oneCellAwayFromCell(unit, spell.caster.unit);
-    Unit.moveTo(unit, moveTo.x, moveTo.y);
+  if (unit && spell.push > 0) {
+    for (let i = 0; i < spell.push; i++) {
+      const moveTo = math.oneCellAwayFromCell(unit, spell.caster.unit);
+      Unit.moveTo(unit, moveTo.x, moveTo.y);
+    }
   }
   if (unit && spell.heal) {
     Unit.takeDamage(unit, -spell.heal, 'spell');
