@@ -48,11 +48,6 @@ export function rangedAction(unit: Unit.IUnit) {
     const isOnSameVertical = player.unit.y === unit.y;
     const isDiagonal =
       Math.abs(player.unit.x - unit.x) === Math.abs(player.unit.y - unit.y);
-    console.log(
-      '🚀 ~ file: AI. - unit.y',
-      player.unit.x - unit.x,
-      player.unit.y - unit.y,
-    );
     if (isOnSameHorizontal || isOnSameVertical || isDiagonal) {
       targetPlayerUnit = player.unit;
       break;
