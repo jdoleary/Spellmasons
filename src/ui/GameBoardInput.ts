@@ -150,7 +150,7 @@ export default function setupBoardInputHandlers() {
       // Disallow click out of bounds
       return;
     }
-    if (e.altKey) {
+    if (window.planningViewActive) {
       window.pie.sendData({
         type: MESSAGE_TYPES.PING,
         x,
