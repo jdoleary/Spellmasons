@@ -425,9 +425,6 @@ export default class Game {
           animationPromises.push(promise);
         }
 
-        // Since units have moved, update the danger overlay
-        drawDangerOverlay();
-
         // If units are frozen, decrement the number of turns that they are frozen for
         // since a turn has passed
         for (let u of this.units) {
@@ -442,6 +439,11 @@ export default class Game {
         Promise.all(animationPromises).then(() => {
           this.setTurnPhase(turn_phase.PlayerTurns);
         });
+
+        // Since NPC turn is over, update the danger overlay
+        // They may have moved or unfrozen which would update
+        // which cells they can attack next turn
+        drawDangerOverlay();
         break;
       default:
         break;
