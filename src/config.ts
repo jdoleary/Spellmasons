@@ -10,5 +10,4 @@ export const GIVE_NUM_CARDS_PER_LEVEL = 6;
 export const NUM_PICKUPS_PER_LEVEL = 2;
 // How many times a single shield will block damage
 export const SHIELD_MULTIPLIER = 2;
-export const AI_AGRO_DISTANCE = 12;
 export const MILLIS_PER_ANIMATION = 200;

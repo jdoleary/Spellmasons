@@ -1,10 +1,11 @@
 import * as PIXI from 'pixi.js';
 import * as config from './config';
 import * as AI from './AI';
+import * as math from './math';
 import floatingText from './FloatingText';
 import Image from './Image';
 import { cellDistance } from './math';
-import { containerUnits } from './PixiUtils';
+import { containerDangerOverlay, containerUnits } from './PixiUtils';
 export enum UnitType {
   PLAYER_CONTROLLED,
   AI,
@@ -70,7 +71,7 @@ export function deselect(unit: IUnit) {
   if (unit.healthText.parent) {
     unit.healthText.parent.removeChild(unit.healthText);
   }
-  if (unit.agroOverlay) {
+  if (unit.agroOverlay && unit.agroOverlay.parent) {
     unit.agroOverlay.parent.removeChild(unit.agroOverlay);
   }
 }
@@ -82,7 +83,7 @@ export function select(unit: IUnit) {
     unit.agroOverlay = new PIXI.Graphics();
   }
   if (!unit.agroOverlay.parent) {
-    unit.image.sprite.parent.addChild(unit.agroOverlay);
+    containerDangerOverlay.addChild(unit.agroOverlay);
   }
   updateSelectedOverlay(unit);
 }
@@ -97,16 +98,69 @@ export function updateSelectedOverlay(unit: IUnit) {
   unit.healthText.anchor.y = -0.2;
   if (unit.unitType === UnitType.AI && unit.agroOverlay) {
     unit.agroOverlay.clear();
-    unit.agroOverlay.lineStyle(2, 0x000000, 0.3);
-    unit.agroOverlay.beginFill(0xff0000, 0.1);
-    unit.agroOverlay.drawRect(
-      (unit.x - config.AI_AGRO_DISTANCE) * config.CELL_SIZE,
-      (unit.y - config.AI_AGRO_DISTANCE) * config.CELL_SIZE,
-      (1 + config.AI_AGRO_DISTANCE * 2) * config.CELL_SIZE,
-      (1 + config.AI_AGRO_DISTANCE * 2) * config.CELL_SIZE,
-    );
+    unit.agroOverlay.beginFill(0xff0000);
+    if (unit.unitSubType === UnitSubType.AI_melee) {
+      drawRectFromPoints(
+        unit.agroOverlay,
+        unit.x - 1.5,
+        unit.y - 1.5,
+        unit.x + 1.5,
+        unit.y + 1.5,
+      );
+    } else if (unit.unitSubType === UnitSubType.AI_ranged) {
+      // Horizontal
+      drawRectFromPoints(
+        unit.agroOverlay,
+        unit.x - 0.5,
+        0 - 0.5,
+        unit.x + 0.5,
+        config.BOARD_HEIGHT - 1 + 0.5,
+      );
+      // Vertical
+      drawRectFromPoints(
+        unit.agroOverlay,
+        0 - 0.5,
+        unit.y - 0.5,
+        config.BOARD_WIDTH - 1 + 0.5,
+        unit.y + 0.5,
+      );
+      // Diagonal
+      // TODO: This is non optimized and may be heavy
+      for (let x = 0; x < config.BOARD_WIDTH; x++) {
+        for (let y = 0; y < config.BOARD_WIDTH; y++) {
+          const isDiagonal = Math.abs(x - unit.x) === Math.abs(y - unit.y);
+          if (isDiagonal) {
+            drawRectFromPoints(
+              unit.agroOverlay,
+              x - 0.5,
+              y - 0.5,
+              x + 0.5,
+              y + 0.5,
+            );
+          }
+        }
+      }
+    }
     unit.agroOverlay.endFill();
   }
+}
+function drawRectFromPoints(
+  g: PIXI.Graphics,
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number,
+) {
+  // Upper-left corner
+  const startCell = math.cellToBoardCoords(x1, y1);
+  // Lower-right corner
+  const endCell = math.cellToBoardCoords(x2, y2);
+  g.drawRect(
+    startCell.x,
+    startCell.y,
+    endCell.x - startCell.x,
+    endCell.y - startCell.y,
+  );
 }
 export function cleanup(unit: IUnit) {
   unit.image.cleanup();
@@ -210,7 +264,7 @@ export function findCellOneStepCloserTo(
 }
 export function findClosestPlayerTo(unit: IUnit): IUnit | undefined {
   let currentClosest;
-  let currentClosestDistance = config.AI_AGRO_DISTANCE;
+  let currentClosestDistance = Number.MAX_SAFE_INTEGER;
   for (let p of window.game.players) {
     // Only consider units that are not in the portal and are alive
     if (!p.inPortal && p.unit.alive) {
