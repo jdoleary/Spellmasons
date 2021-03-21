@@ -659,6 +659,9 @@ export default class Game {
       effect(spell);
       this.animateSpellEffects([{ x: spell.x, y: spell.y, spell }]);
     }
+    // Since units may have moved or become frozen, redraw the danger overlay which takes these
+    // changes into consideration
+    drawDangerOverlay();
   }
   animateSpellEffects(castInstances: { x: number; y: number; spell: Spell }[]) {
     // Show an image when cast occurs
