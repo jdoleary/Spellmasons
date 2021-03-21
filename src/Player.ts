@@ -89,7 +89,7 @@ export function enterPortal(player: IPlayer) {
   // limit spawn to the leftmost column
   const coords = window.game.getRandomEmptyCell({ xMax: 0 });
   // Move "portaled" unit out of the way to prevent collisions and chaining while portaled
-  Unit.moveTo(player.unit, -1, coords.y);
+  Unit.setLocation(player.unit, -1, coords.y);
   window.game.checkForEndOfLevel();
   // If player that entered the portal is the current client's player, end their turn
   if (player.clientId === window.clientId) {
