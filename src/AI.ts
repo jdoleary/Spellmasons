@@ -42,6 +42,18 @@ export function meleeAction(unit: Unit.IUnit) {
   }
 }
 export function rangedAction(unit: Unit.IUnit) {
+  // Move opposite to closest hero
+  const closestPlayerUnit = Unit.findClosestPlayerTo(unit);
+  if (closestPlayerUnit) {
+    const dx = unit.x - closestPlayerUnit.x;
+    const dy = unit.y - closestPlayerUnit.y;
+    const normalizedX = dx === 0 ? 0 : dx / Math.abs(dx);
+    const normalizedY = dy === 0 ? 0 : dy / Math.abs(dy);
+    Unit.moveTo(unit, unit.x + normalizedX, unit.y + normalizedY);
+    return;
+  }
+
+  // Shoot at player if in same horizontal, diagonal, or vertical
   let targetPlayerUnit;
   for (let player of window.game.players) {
     const isOnSameHorizontal = player.unit.x === unit.x;
