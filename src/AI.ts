@@ -59,6 +59,34 @@ export function rangedAction(unit: Unit.IUnit) {
     Unit.takeDamage(targetPlayerUnit, unit.power, 'unit');
   }
 }
+export function reachAction(unit: Unit.IUnit) {
+  let runFromTarget;
+  let targetPlayerUnit;
+  for (let player of window.game.players) {
+    // Will run away if player gets within 1
+    if (math.cellDistance(unit, player.unit) < 2) {
+      runFromTarget = player.unit;
+    }
+    if (canAttackCell(unit, player.unit.x, player.unit.y)) {
+      targetPlayerUnit = player.unit;
+      break;
+    }
+  }
+  if (targetPlayerUnit) {
+    createVisualProjectile(
+      unit,
+      targetPlayerUnit.x,
+      targetPlayerUnit.y,
+      'images/spell/green-thing.png',
+    );
+    Unit.takeDamage(targetPlayerUnit, unit.power, 'unit');
+  } else {
+    if (runFromTarget) {
+      const moveTo = math.oneCellAwayFromCell(unit, runFromTarget);
+      Unit.moveTo(unit, moveTo.x, moveTo.y);
+    }
+  }
+}
 
 // If a unit can attack (x,y), return true
 export function canAttackCell(unit: Unit.IUnit, x: number, y: number): boolean {
@@ -72,6 +100,10 @@ export function canAttackCell(unit: Unit.IUnit, x: number, y: number): boolean {
     const isOnSameVertical = y === unit.y;
     const isDiagonal = Math.abs(x - unit.x) === Math.abs(y - unit.y);
     return isOnSameHorizontal || isOnSameVertical || isDiagonal;
+  } else if (unit.unitSubType === Unit.UnitSubType.AI_reach) {
+    // Can hit you if you are 2 away but not 1 away
+    const cellDistance = math.cellDistance(unit, { x, y });
+    return cellDistance == 2;
   }
   return false;
 }

@@ -12,6 +12,7 @@ export enum UnitType {
 export enum UnitSubType {
   AI_melee,
   AI_ranged,
+  AI_reach,
 }
 export interface IUnit {
   x: number;
@@ -207,6 +208,9 @@ export function moveAI(unit: IUnit) {
       break;
     case UnitSubType.AI_ranged:
       AI.rangedAction(unit);
+      break;
+    case UnitSubType.AI_reach:
+      AI.reachAction(unit);
       break;
   }
 }

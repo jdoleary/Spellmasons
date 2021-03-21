@@ -19,6 +19,12 @@ const source = [
     subtype: UnitSubType.AI_ranged,
     probability: 50,
   },
+  {
+    id: 'golem-reach',
+    image: 'images/units/golem-sand.png',
+    subtype: UnitSubType.AI_reach,
+    probability: 30,
+  },
 ];
 
 export function generateEnemy(): Enemy {
