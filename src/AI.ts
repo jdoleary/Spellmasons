@@ -16,25 +16,16 @@ export function meleeAction(unit: Unit.IUnit) {
   );
   const next_x = targetCell.x;
   const next_y = targetCell.y;
-  const bump_into_units = window.game
-    ? window.game.getUnitsAt(next_x, next_y)
-    : [];
+  const other_unit = window.game.getUnitAt(next_x, next_y);
   // Deal damage to what you run into
-  for (let other_unit of bump_into_units) {
-    // Do not attack self
-    if (other_unit === unit) {
-      continue;
-    }
+  if (other_unit) {
     // Do not attack ally AI units
-    if (other_unit.unitType === Unit.UnitType.AI) {
-      continue;
+    if (other_unit.unitType != Unit.UnitType.AI) {
+      unit.image.attack(unit.x, unit.y, next_x, next_y);
+      Unit.takeDamage(other_unit, unit.power, 'unit');
     }
-    unit.image.attack(unit.x, unit.y, next_x, next_y);
-    Unit.takeDamage(other_unit, unit.power, 'unit');
-  }
-  const alive_bump_into_units = bump_into_units.filter((u) => u.alive);
-  // If nothing is obstructing
-  if (alive_bump_into_units.length === 0) {
+  } else {
+    // If nothing is obstructing
     // physically move
     Unit.moveTo(unit, next_x, next_y);
     // Update the "planning view" overlay that shows the unit's agro radius

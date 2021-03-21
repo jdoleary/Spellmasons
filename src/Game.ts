@@ -477,10 +477,10 @@ export default class Game {
     }
     if (spell.chain) {
       if (units.length === 0) {
-        const origin_units = this.getUnitsAt(spell.x, spell.y);
+        const origin_unit = this.getUnitAt(spell.x, spell.y);
         // Only chain if the spell is cast directly on a unit
         // otherwise the chain will reach too far (1 distance away from empty cell)
-        if (origin_units.length) {
+        if (origin_unit) {
           // Find all units touching the spell origin
           const chained_units = this.getTouchingUnitsRecursive(
             spell.x,
@@ -552,8 +552,8 @@ export default class Game {
     }
     return touching;
   }
-  getUnitsAt(x?: number, y?: number): Unit.IUnit[] {
-    return this.units.filter((u) => u.alive && u.x === x && u.y === y);
+  getUnitAt(x: number, y: number): Unit.IUnit | undefined {
+    return this.units.find((u) => u.alive && u.x === x && u.y === y);
   }
   getPickupAt(x: number, y: number): Pickup.IPickup | undefined {
     return this.pickups.find((p) => p.x === x && p.y === y);
@@ -582,10 +582,9 @@ export default class Game {
   }
   cast(spell: Spell) {
     if (spell.swap) {
-      const units = this.getUnitsAt(spell.x, spell.y);
+      const unitToSwapWith = this.getUnitAt(spell.x, spell.y);
       // Physically swap with target
-      if (units.length) {
-        const unitToSwapWith = units[0];
+      if (unitToSwapWith) {
         Unit.moveTo(unitToSwapWith, spell.caster.unit.x, spell.caster.unit.y);
       }
       // Physically swap with pickups
@@ -633,7 +632,10 @@ export default class Game {
     let unitsAtTargets = [];
     for (let t of targetCoords) {
       const { x, y } = t;
-      unitsAtTargets = unitsAtTargets.concat(this.getUnitsAt(x, y));
+      const unitAtCoords = this.getUnitAt(x, y);
+      if (unitAtCoords) {
+        unitsAtTargets.push(unitAtCoords);
+      }
     }
 
     if (unitsAtTargets.length) {
