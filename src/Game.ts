@@ -567,6 +567,19 @@ export default class Game {
   addPickupToArray(pickup: Pickup.IPickup) {
     this.pickups.push(pickup);
   }
+  isCellObstructed(x: number, y: number): boolean {
+    // Out of map bounds is considered "obstructed"
+    if (x < 0 || y < 0 || x >= config.BOARD_WIDTH || y >= config.BOARD_HEIGHT) {
+      return true;
+    }
+    // Cell is obstructed if it is already occupied by a unit
+    for (let unit of this.units) {
+      if (unit.x === x && unit.y === y) {
+        return true;
+      }
+    }
+    return false;
+  }
   cast(spell: Spell) {
     if (spell.swap) {
       const units = this.getUnitsAt(spell.x, spell.y);
