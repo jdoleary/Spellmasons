@@ -118,6 +118,8 @@ export default class Game {
     }
   }
   moveToNextLevel() {
+    // Reset player turn index so all players can take their turns
+    this.playerTurnIndex = 0;
     for (let i = this.units.length - 1; i >= 0; i--) {
       const u = this.units[i];
       // Clear all remaining AI units
