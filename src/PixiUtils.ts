@@ -87,9 +87,9 @@ export function addPixiSprite(
     return sprite;
   } catch (e) {
     console.log(
-      'Could not find image',
+      'Could not find image "',
       imagePath,
-      'Add the image to the PixiUtils loader',
+      '". Add the image to the PixiUtils loader',
     );
     throw e;
   }
