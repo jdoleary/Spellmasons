@@ -116,6 +116,8 @@ export function load(unit: IUnit) {
 }
 export function resurrect(u: IUnit) {
   u.image.scale(1);
+  // Return dead units back to full health
+  u.health = u.healthMax;
   u.alive = true;
 }
 export function die(u: IUnit) {

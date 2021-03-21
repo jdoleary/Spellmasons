@@ -319,8 +319,8 @@ export default class Game {
     // after they take mortally wounding damage without their html elements being removed before
     // the animation takes place
     for (let u of this.units) {
-      if (!u.alive) {
-        // Remove image from DOM
+      // Remove dead, non-player character images
+      if (!u.alive && u.unitType !== Unit.UnitType.PLAYER_CONTROLLED) {
         u.image.cleanup();
       }
     }
