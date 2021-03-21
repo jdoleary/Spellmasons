@@ -283,10 +283,19 @@ export default class Game {
       this.setYourTurn(false, "Other Player's Turn");
     }
   }
+  // Sends a network message to end turn
   endMyTurn() {
     // Turns can only be manually ended during the PlayerTurns phase
     if (this.turn_phase === turn_phase.PlayerTurns) {
       window.pie.sendData({ type: MESSAGE_TYPES.END_TURN });
+    }
+  }
+  endPlayerTurn(clientId: string) {
+    const currentTurnPlayer = this.players[this.playerTurnIndex];
+    // Ensure players can only end the turn when it IS their turn
+    if (currentTurnPlayer.clientId === clientId) {
+      this.endedTurn.add(clientId);
+      this.incrementPlayerTurn();
     }
   }
   checkForEndOfLevel() {

@@ -173,7 +173,7 @@ function onData(d: { fromClient: string; payload: any }) {
       }
       break;
     case MESSAGE_TYPES.END_TURN:
-      endPlayerTurn(caster.clientId);
+      game.endPlayerTurn(caster.clientId);
       // TODO
       // if (all_players_ended_turn) {
       // game.nextTurn().then(() => {
@@ -201,15 +201,7 @@ function onData(d: { fromClient: string; payload: any }) {
 function checkEndPlayerTurn(player: Player.IPlayer) {
   // Moving ends your turn
   if (player.thisTurnMoved) {
-    endPlayerTurn(player.clientId);
-  }
-}
-function endPlayerTurn(clientId) {
-  const currentTurnPlayer = game.players[game.playerTurnIndex];
-  // Ensure players can only end the turn when it IS their turn
-  if (currentTurnPlayer.clientId === clientId) {
-    game.endedTurn.add(clientId);
-    game.incrementPlayerTurn();
+    game.endPlayerTurn(player.clientId);
   }
 }
 function onClientPresenceChanged(o: ClientPresenceChangedArgs) {

@@ -118,10 +118,7 @@ export function die(u: IUnit) {
   // If the unit is a player
   if (u.unitType === UnitType.PLAYER_CONTROLLED) {
     const unitPlayer = window.game.players[window.game.playerTurnIndex];
-    // If player whose current turn it is just died...
-    if (unitPlayer.clientId === window.clientId && unitPlayer.unit === u) {
-      window.game.endMyTurn();
-    }
+    window.game.endPlayerTurn(unitPlayer.clientId);
   }
 }
 export function takeDamage(unit: IUnit, amount: number, cause?: string) {
