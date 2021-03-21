@@ -475,15 +475,20 @@ export default class Game {
     window.setDebug({ state });
   }
   getTargetsOfSpell(spell: Spell): Coords[] {
-    let units = [];
+    let coords: Coords[] = [];
     if (spell.area_of_effect) {
-      const withinRadius = this.getUnitsWithinDistanceOfPoint(
+      const withinRadius = this.getCoordsWithinDistanceOfTarget(
         spell.x,
         spell.y,
         spell.area_of_effect,
       );
-      units = units.concat(withinRadius);
+      coords = coords.concat(withinRadius);
     }
+    let units: Unit.IUnit[] = coords
+      // Find units at coordinates
+      .map((coord) => this.getUnitAt(coord.x, coord.y))
+      // Filter out dead units
+      .filter((x) => x && x.alive);
     if (spell.chain) {
       if (units.length === 0) {
         const origin_unit = this.getUnitAt(spell.x, spell.y);
@@ -511,7 +516,7 @@ export default class Game {
         }
       }
     }
-    let coords = units.map((u) => ({ x: u.x, y: u.y }));
+    coords = coords.concat(units.map((u) => ({ x: u.x, y: u.y })));
     if (coords.length == 0) {
       coords = [
         {
@@ -522,20 +527,25 @@ export default class Game {
     }
     return coords;
   }
-  getUnitsWithinDistanceOfPoint(
-    x: number,
-    y: number,
+  getCoordsWithinDistanceOfTarget(
+    targetX: number,
+    targetY: number,
     distance: number,
-  ): Unit.IUnit[] {
-    return this.units.filter((u) => {
-      return (
-        u.alive &&
-        u.x <= x + distance &&
-        u.x >= x - distance &&
-        u.y <= y + distance &&
-        u.y >= y - distance
-      );
-    });
+  ): Coords[] {
+    const coords: Coords[] = [];
+    for (let cellX = 0; cellX < config.BOARD_WIDTH; cellX++) {
+      for (let cellY = 0; cellY < config.BOARD_HEIGHT; cellY++) {
+        if (
+          cellX <= targetX + distance &&
+          cellX >= targetX - distance &&
+          cellY <= targetY + distance &&
+          cellY >= targetY - distance
+        ) {
+          coords.push({ x: cellX, y: cellY });
+        }
+      }
+    }
+    return coords;
   }
   getTouchingUnitsRecursive(
     x: number,
