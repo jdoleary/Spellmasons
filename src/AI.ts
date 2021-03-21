@@ -1,4 +1,5 @@
 import * as Unit from './Unit';
+import * as math from './math';
 import createVisualProjectile from './Projectile';
 export function meleeAction(unit: Unit.IUnit) {
   if (!Unit.canMove(unit)) {
@@ -36,11 +37,8 @@ export function rangedAction(unit: Unit.IUnit) {
   // Move opposite to closest hero
   const closestPlayerUnit = Unit.findClosestPlayerTo(unit);
   if (closestPlayerUnit) {
-    const dx = unit.x - closestPlayerUnit.x;
-    const dy = unit.y - closestPlayerUnit.y;
-    const normalizedX = dx === 0 ? 0 : dx / Math.abs(dx);
-    const normalizedY = dy === 0 ? 0 : dy / Math.abs(dy);
-    Unit.moveTo(unit, unit.x + normalizedX, unit.y + normalizedY);
+    const moveTo = math.oneCellAwayFromCell(unit, closestPlayerUnit);
+    Unit.moveTo(unit, moveTo.x, moveTo.y);
     return;
   }
 

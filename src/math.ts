@@ -78,3 +78,13 @@ export function cellToBoardCoords(cellX: number, cellY: number) {
     y: cellY * CELL_SIZE + CELL_SIZE / 2,
   };
 }
+
+// Returns a point one step from start in the direction away from
+// awayFrom
+export function oneCellAwayFromCell(start: Coords, awayFrom: Coords): Coords {
+  const dx = start.x - awayFrom.x;
+  const dy = start.y - awayFrom.y;
+  const normalizedX = dx === 0 ? 0 : dx / Math.abs(dx);
+  const normalizedY = dy === 0 ? 0 : dy / Math.abs(dy);
+  return { x: start.x + normalizedX, y: start.y + normalizedY };
+}
