@@ -193,13 +193,19 @@ export default class Game {
       const coords = this.getRandomEmptyCell({ xMin: 2 });
       if (coords) {
         const sourceUnit = generateEnemy();
-        Unit.create(
+        const unit = Unit.create(
           coords.x,
           coords.y,
           sourceUnit.image,
           Unit.UnitType.AI,
           sourceUnit.subtype,
         );
+        const roll = window.game.random.integer(0, 100);
+        if (roll <= config.PERCENT_CHANCE_OF_HEAVY_UNIT) {
+          unit.healthMax = 3;
+          unit.health = unit.healthMax;
+          unit.image.scale(1.0);
+        }
       } else {
         console.error('Unit not spawned due to no empty cells');
       }
