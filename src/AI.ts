@@ -1,6 +1,7 @@
 import * as Unit from './Unit';
 import * as math from './math';
 import createVisualProjectile from './Projectile';
+import { ableToTakeTurn } from './Player';
 export function meleeAction(unit: Unit.IUnit) {
   if (!Unit.canMove(unit)) {
     return;
@@ -39,7 +40,8 @@ export function meleeAction(unit: Unit.IUnit) {
 export function rangedAction(unit: Unit.IUnit) {
   // Shoot at player if in same horizontal, diagonal, or vertical
   let targetPlayerUnit;
-  for (let player of window.game.players) {
+  // Filter on players able to take their turn to ensure, for example, that dead players don't get targeted
+  for (let player of window.game.players.filter(ableToTakeTurn)) {
     if (canAttackCell(unit, player.unit.x, player.unit.y)) {
       targetPlayerUnit = player.unit;
       break;
@@ -65,7 +67,8 @@ export function rangedAction(unit: Unit.IUnit) {
 export function reachAction(unit: Unit.IUnit) {
   let runFromTarget;
   let targetPlayerUnit;
-  for (let player of window.game.players) {
+  // Filter on players able to take their turn to ensure, for example, that dead players don't get targeted
+  for (let player of window.game.players.filter(ableToTakeTurn)) {
     // Will run away if player gets within 1
     if (math.cellDistance(unit, player.unit) < 2) {
       runFromTarget = player.unit;

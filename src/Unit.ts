@@ -5,6 +5,7 @@ import floatingText from './FloatingText';
 import Image from './Image';
 import { cellDistance } from './math';
 import { containerUnits } from './PixiUtils';
+import { ableToTakeTurn } from './Player';
 export enum UnitType {
   PLAYER_CONTROLLED,
   AI,
@@ -196,14 +197,12 @@ export function findCellOneStepCloserTo(
 export function findClosestPlayerTo(unit: IUnit): IUnit | undefined {
   let currentClosest;
   let currentClosestDistance = Number.MAX_SAFE_INTEGER;
-  for (let p of window.game.players) {
-    // Only consider units that are not in the portal and are alive
-    if (!p.inPortal && p.unit.alive) {
-      const dist = cellDistance(p.unit, unit);
-      if (dist <= currentClosestDistance) {
-        currentClosest = p.unit;
-        currentClosestDistance = dist;
-      }
+  // Filter on players able to take their turn to ensure, for example, that dead players don't get targeted
+  for (let p of window.game.players.filter(ableToTakeTurn)) {
+    const dist = cellDistance(p.unit, unit);
+    if (dist <= currentClosestDistance) {
+      currentClosest = p.unit;
+      currentClosestDistance = dist;
     }
   }
   return currentClosest;

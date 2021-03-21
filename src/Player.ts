@@ -96,6 +96,7 @@ export function enterPortal(player: IPlayer) {
     window.game.endMyTurn();
   }
 }
+// Note: this is also used for AI targeting to ensure that AI don't target disabled plaeyrs
 export function ableToTakeTurn(player: IPlayer) {
   return !player.inPortal && player.unit.alive;
 }
