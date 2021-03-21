@@ -1,11 +1,10 @@
 import * as PIXI from 'pixi.js';
 import * as config from './config';
 import * as AI from './AI';
-import * as math from './math';
 import floatingText from './FloatingText';
 import Image from './Image';
 import { cellDistance } from './math';
-import { containerDangerOverlay, containerUnits } from './PixiUtils';
+import { containerUnits } from './PixiUtils';
 export enum UnitType {
   PLAYER_CONTROLLED,
   AI,
@@ -28,7 +27,6 @@ export interface IUnit {
   shield: number;
   unitType: UnitType;
   unitSubType?: UnitSubType;
-  agroOverlay?: PIXI.Graphics;
 }
 export function create(
   x: number,
@@ -71,20 +69,10 @@ export function deselect(unit: IUnit) {
   if (unit.healthText.parent) {
     unit.healthText.parent.removeChild(unit.healthText);
   }
-  if (unit.agroOverlay && unit.agroOverlay.parent) {
-    unit.agroOverlay.parent.removeChild(unit.agroOverlay);
-  }
 }
 export function select(unit: IUnit) {
   // Show health text
   unit.image.sprite.addChild(unit.healthText);
-  // Make AGRO UI rectangle
-  if (!unit.agroOverlay) {
-    unit.agroOverlay = new PIXI.Graphics();
-  }
-  if (!unit.agroOverlay.parent) {
-    containerDangerOverlay.addChild(unit.agroOverlay);
-  }
   updateSelectedOverlay(unit);
 }
 export function updateSelectedOverlay(unit: IUnit) {
@@ -96,71 +84,6 @@ export function updateSelectedOverlay(unit: IUnit) {
   unit.healthText.text = healthString;
   unit.healthText.anchor.x = 0.5;
   unit.healthText.anchor.y = -0.2;
-  if (unit.unitType === UnitType.AI && unit.agroOverlay) {
-    unit.agroOverlay.clear();
-    unit.agroOverlay.beginFill(0xff0000);
-    if (unit.unitSubType === UnitSubType.AI_melee) {
-      drawRectFromPoints(
-        unit.agroOverlay,
-        unit.x - 1.5,
-        unit.y - 1.5,
-        unit.x + 1.5,
-        unit.y + 1.5,
-      );
-    } else if (unit.unitSubType === UnitSubType.AI_ranged) {
-      // Horizontal
-      drawRectFromPoints(
-        unit.agroOverlay,
-        unit.x - 0.5,
-        0 - 0.5,
-        unit.x + 0.5,
-        config.BOARD_HEIGHT - 1 + 0.5,
-      );
-      // Vertical
-      drawRectFromPoints(
-        unit.agroOverlay,
-        0 - 0.5,
-        unit.y - 0.5,
-        config.BOARD_WIDTH - 1 + 0.5,
-        unit.y + 0.5,
-      );
-      // Diagonal
-      // TODO: This is non optimized and may be heavy
-      for (let x = 0; x < config.BOARD_WIDTH; x++) {
-        for (let y = 0; y < config.BOARD_WIDTH; y++) {
-          const isDiagonal = Math.abs(x - unit.x) === Math.abs(y - unit.y);
-          if (isDiagonal) {
-            drawRectFromPoints(
-              unit.agroOverlay,
-              x - 0.5,
-              y - 0.5,
-              x + 0.5,
-              y + 0.5,
-            );
-          }
-        }
-      }
-    }
-    unit.agroOverlay.endFill();
-  }
-}
-function drawRectFromPoints(
-  g: PIXI.Graphics,
-  x1: number,
-  y1: number,
-  x2: number,
-  y2: number,
-) {
-  // Upper-left corner
-  const startCell = math.cellToBoardCoords(x1, y1);
-  // Lower-right corner
-  const endCell = math.cellToBoardCoords(x2, y2);
-  g.drawRect(
-    startCell.x,
-    startCell.y,
-    endCell.x - startCell.x,
-    endCell.y - startCell.y,
-  );
 }
 export function cleanup(unit: IUnit) {
   unit.image.cleanup();

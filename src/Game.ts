@@ -19,6 +19,7 @@ import makeSeededRandom from './rand';
 import floatingText from './FloatingText';
 import { generateEnemy } from './EnemyUnit';
 import type { Coords } from './commonTypes';
+import { drawDangerOverlay } from './ui/UserInterface';
 
 export enum game_state {
   Lobby,
@@ -417,6 +418,9 @@ export default class Game {
           const promise = Unit.moveAI(u);
           animationPromises.push(promise);
         }
+
+        // Since units have moved, update the danger overlay
+        drawDangerOverlay();
 
         // If units are frozen, decrement the number of turns that they are frozen for
         // since a turn has passed

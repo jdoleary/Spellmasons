@@ -44,11 +44,7 @@ export function rangedAction(unit: Unit.IUnit) {
   // Shoot at player if in same horizontal, diagonal, or vertical
   let targetPlayerUnit;
   for (let player of window.game.players) {
-    const isOnSameHorizontal = player.unit.x === unit.x;
-    const isOnSameVertical = player.unit.y === unit.y;
-    const isDiagonal =
-      Math.abs(player.unit.x - unit.x) === Math.abs(player.unit.y - unit.y);
-    if (isOnSameHorizontal || isOnSameVertical || isDiagonal) {
+    if (canAttackCell(unit, player.unit.x, player.unit.y)) {
       targetPlayerUnit = player.unit;
       break;
     }
@@ -62,4 +58,20 @@ export function rangedAction(unit: Unit.IUnit) {
     );
     Unit.takeDamage(targetPlayerUnit, unit.power, 'unit');
   }
+}
+
+// If a unit can attack (x,y), return true
+export function canAttackCell(unit: Unit.IUnit, x: number, y: number): boolean {
+  // Melee units can attack any cell 1 distance from them
+  if (unit.unitSubType === Unit.UnitSubType.AI_melee) {
+    return Math.abs(unit.x - x) <= 1 && Math.abs(unit.y - y) <= 1;
+  }
+  // Ranged units can attack like a queen in chess
+  if (unit.unitSubType === Unit.UnitSubType.AI_ranged) {
+    const isOnSameHorizontal = x === unit.x;
+    const isOnSameVertical = y === unit.y;
+    const isDiagonal = Math.abs(x - unit.x) === Math.abs(y - unit.y);
+    return isOnSameHorizontal || isOnSameVertical || isDiagonal;
+  }
+  return false;
 }
