@@ -235,7 +235,10 @@ export function moveAI(unit: IUnit) {
 }
 export function moveTo(unit: IUnit, cellX: number, cellY: number) {
   if (!canMove(unit)) {
-    console.log('unit cannot move');
+    return;
+  }
+  // Cannot move into an obstructed cell
+  if (window.game.isCellObstructed(cellX, cellY)) {
     return;
   }
   // Set state instantly to new position
