@@ -64,7 +64,7 @@ export function drawDangerOverlay() {
     dangerOverlayGraphics.clear();
     // Iterate all cells and paint ones that are able to be attacked by an AI
     for (let x = 0; x < config.BOARD_WIDTH; x++) {
-      for (let y = 0; y < config.BOARD_WIDTH; y++) {
+      for (let y = 0; y < config.BOARD_HEIGHT; y++) {
         // for each unit...
         for (let unit of window.game.units) {
           if (unit.alive && unit.unitType === Unit.UnitType.AI) {
