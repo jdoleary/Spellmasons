@@ -233,13 +233,17 @@ export function moveAI(unit: IUnit) {
       break;
   }
 }
-export function moveTo(unit: IUnit, cellX: number, cellY: number) {
+export function moveTo(
+  unit: IUnit,
+  cellX: number,
+  cellY: number,
+): Promise<void> {
   if (!canMove(unit)) {
-    return;
+    return Promise.resolve();
   }
   // Cannot move into an obstructed cell
   if (window.game.isCellObstructed(cellX, cellY)) {
-    return;
+    return Promise.resolve();
   }
   // Set state instantly to new position
   unit.x = cellX;
