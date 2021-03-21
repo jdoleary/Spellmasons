@@ -1,7 +1,7 @@
 import type * as PIXI from 'pixi.js';
 
 import { addPixiSprite } from './PixiUtils';
-import { normalizeDegrees, cellToBoardCoords } from './math';
+import { normalizeRadians, cellToBoardCoords } from './math';
 
 export default class Image {
   sprite: PIXI.Sprite;
@@ -18,12 +18,10 @@ export default class Image {
   ) {
     // Save image path in unit so it's accessible when loading gamestate
     this.imageName = imageName;
-    let rotation = 0;
-    rotation = normalizeDegrees(rotation);
     this.sprite = addPixiSprite(imageName, parent);
     this.sprite.anchor.x = 0.5;
     this.sprite.anchor.y = 0.5;
-    this.sprite.rotation = (rotation * Math.PI) / 180;
+    this.sprite.rotation = 0;
     this.setPosition(cellX, cellY);
   }
   cleanup() {
@@ -92,24 +90,16 @@ export default class Image {
     ]);
   }
   take_hit() {
-    window.animationTimeline.addAnimation([
-      {
-        sprite: this.sprite,
-        target: { x: this.sprite.x + 10 },
-      },
-    ]);
-    window.animationTimeline.addAnimation([
-      {
-        sprite: this.sprite,
-        target: { x: this.sprite.x - 10 },
-      },
-    ]);
-    window.animationTimeline.addAnimation([
-      {
-        sprite: this.sprite,
-        target: { x: this.sprite.x },
-      },
-    ]);
+    window.animationTimeline
+      .addAnimation([
+        {
+          sprite: this.sprite,
+          target: { rotation: this.sprite.rotation + Math.PI * 2 },
+        },
+      ])
+      .then(() => {
+        this.sprite.rotation = normalizeRadians(this.sprite.rotation);
+      });
   }
   attack(
     current_cellX: number,

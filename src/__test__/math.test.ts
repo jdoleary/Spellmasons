@@ -1,25 +1,25 @@
-import { indexToXY, xyToIndex, normalizeDegrees } from '../math';
+import { indexToXY, xyToIndex, normalizeRadians } from '../math';
 
 describe('math', () => {
-  describe('normalizeDegrees', () => {
-    it('should normalize 360 to 0', () => {
-      const actual = normalizeDegrees(360);
+  describe('normalizeRadiants', () => {
+    it('should normalize Math.PI*2 to 0', () => {
+      const actual = normalizeRadians(Math.PI * 2);
       const expected = 0;
       expect(actual).toEqual(expected);
     });
-    it('should normalize 370 to 10', () => {
-      const actual = normalizeDegrees(370);
-      const expected = 10;
+    it('should normalize Math.PI*3 to Math.PI', () => {
+      const actual = normalizeRadians(Math.PI * 3);
+      const expected = Math.PI;
       expect(actual).toEqual(expected);
     });
-    it('should normalize -10 to 350', () => {
-      const actual = normalizeDegrees(-10);
-      const expected = 350;
+    it('should normalize -Math.PI to Math.PI', () => {
+      const actual = normalizeRadians(-Math.PI);
+      const expected = Math.PI;
       expect(actual).toEqual(expected);
     });
-    it('should leave numbers between 0 inclusive and 360 exclusive as they are', () => {
-      const actual = normalizeDegrees(170);
-      const expected = 170;
+    it('should leave numbers between 0 inclusive and Math.PI*2 exclusive as they are', () => {
+      const actual = normalizeRadians(Math.PI);
+      const expected = Math.PI;
       expect(actual).toEqual(expected);
     });
   });
