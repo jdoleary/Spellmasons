@@ -97,6 +97,10 @@ export function canAttackCell(unit: Unit.IUnit, x: number, y: number): boolean {
   if (unit.frozenForTurns > 0) {
     return false;
   }
+  // Dead units cannot attack
+  if (!unit.alive) {
+    return false;
+  }
   // Melee units can attack any cell 1 distance from them
   if (unit.unitSubType === Unit.UnitSubType.AI_melee) {
     return math.cellDistance(unit, { x, y }) == 1;
