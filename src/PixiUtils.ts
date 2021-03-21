@@ -61,6 +61,7 @@ function loadTextures(): Promise<void> {
       'images/portal.png',
       'images/units/unit-underline.png',
       'images/pickups/card.png',
+      'images/empty.png',
     ];
     images.forEach((path) => {
       loader.add(path);
@@ -81,16 +82,10 @@ export function addPixiSprite(
       'PIXI is not finished setting up.  Cannot add a sprite yet',
     );
   }
-  try {
-    const sprite = new PIXI.Sprite(resources[imagePath].texture);
-    parent.addChild(sprite);
-    return sprite;
-  } catch (e) {
-    console.log(
-      'Could not find image "',
-      imagePath,
-      '". Add the image to the PixiUtils loader',
-    );
-    throw e;
-  }
+  const resource = resources[imagePath];
+  const sprite = new PIXI.Sprite(
+    resource ? resource.texture : resources['images/empty.png'].texture,
+  );
+  parent.addChild(sprite);
+  return sprite;
 }
