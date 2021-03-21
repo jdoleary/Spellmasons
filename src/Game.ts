@@ -593,7 +593,7 @@ export default class Game {
     }
     // Cell is obstructed if it is already occupied by a unit
     for (let unit of this.units) {
-      if (unit.x === x && unit.y === y) {
+      if (unit.alive && unit.x === x && unit.y === y) {
         return true;
       }
     }
