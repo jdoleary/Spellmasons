@@ -61,8 +61,18 @@ export function syncMouseHoverIcon() {
       },
       selectedSpell,
     );
+    if (spellCopy.swap) {
+      const currentPlayer = window.game.players.find(
+        (p) => p.clientId === window.clientId,
+      );
+      spellCopy.x = currentPlayer.unit.x;
+      spellCopy.y = currentPlayer.unit.y;
+    }
     // Find the targets of the spell
     const targets = window.game.getTargetsOfSpell(spellCopy);
+    if (spellCopy.swap) {
+      targets.push({ x: mouseCellX, y: mouseCellY });
+    }
     // Show highlights corresponding to targets
     for (let t of targets) {
       const sprite = addPixiSprite(targetImgPath, containerUI);
