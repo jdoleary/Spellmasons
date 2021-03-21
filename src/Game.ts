@@ -592,7 +592,11 @@ export default class Game {
       const unitToSwapWith = this.getUnitAt(spell.x, spell.y);
       // Physically swap with target
       if (unitToSwapWith) {
-        Unit.moveTo(unitToSwapWith, spell.caster.unit.x, spell.caster.unit.y);
+        Unit.setLocation(
+          unitToSwapWith,
+          spell.caster.unit.x,
+          spell.caster.unit.y,
+        );
       }
       // Physically swap with pickups
       const pickupToSwapWith = this.getPickupAt(spell.x, spell.y);
@@ -605,7 +609,7 @@ export default class Game {
       }
       const newTargetX = spell.caster.unit.x;
       const newTargetY = spell.caster.unit.y;
-      Unit.moveTo(spell.caster.unit, spell.x, spell.y).then(() => {
+      Unit.setLocation(spell.caster.unit, spell.x, spell.y).then(() => {
         this.cast(
           Object.assign({}, spell, {
             // Cast the spell on the location that the caster WAS in

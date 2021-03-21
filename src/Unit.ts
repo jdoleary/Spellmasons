@@ -226,6 +226,14 @@ export function moveTo(
   if (window.game.isCellObstructed(cellX, cellY)) {
     return Promise.resolve();
   }
+  return setLocation(unit, cellX, cellY);
+}
+
+export function setLocation(
+  unit: IUnit,
+  cellX: number,
+  cellY: number,
+): Promise<void> {
   // Set state instantly to new position
   unit.x = cellX;
   unit.y = cellY;
