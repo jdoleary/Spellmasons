@@ -21,7 +21,10 @@ export function meleeAction(unit: Unit.IUnit) {
   // Deal damage to what you run into
   if (other_unit) {
     // Do not attack ally AI units
-    if (other_unit.unitType != Unit.UnitType.AI) {
+    if (
+      other_unit.unitType != Unit.UnitType.AI &&
+      canAttackCell(unit, next_x, next_y)
+    ) {
       unit.image.attack(unit.x, unit.y, next_x, next_y);
       Unit.takeDamage(other_unit, unit.power, 'unit');
     }
@@ -90,12 +93,16 @@ export function reachAction(unit: Unit.IUnit) {
 
 // If a unit can attack (x,y), return true
 export function canAttackCell(unit: Unit.IUnit, x: number, y: number): boolean {
+  // Frozen units cannot attack
+  if (unit.frozenForTurns > 0) {
+    return false;
+  }
   // Melee units can attack any cell 1 distance from them
   if (unit.unitSubType === Unit.UnitSubType.AI_melee) {
-    return Math.abs(unit.x - x) <= 1 && Math.abs(unit.y - y) <= 1;
-  }
-  // Ranged units can attack like a queen in chess
-  if (unit.unitSubType === Unit.UnitSubType.AI_ranged) {
+    return math.cellDistance(unit, { x, y }) == 1;
+    // return Math.abs(unit.x - x) <= 1 && Math.abs(unit.y - y) <= 1;
+  } else if (unit.unitSubType === Unit.UnitSubType.AI_ranged) {
+    // Ranged units can attack like a queen in chess
     const isOnSameHorizontal = x === unit.x;
     const isOnSameVertical = y === unit.y;
     const isDiagonal = Math.abs(x - unit.x) === Math.abs(y - unit.y);
