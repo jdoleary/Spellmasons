@@ -24,14 +24,16 @@ export default class Image {
     this.sprite.anchor.x = 0.5;
     this.sprite.anchor.y = 0.5;
     this.sprite.rotation = (rotation * Math.PI) / 180;
-
-    const { x, y } = cellToBoardCoords(cellX, cellY);
-    this.sprite.x = x;
-    this.sprite.y = y;
+    this.setPosition(cellX, cellY);
   }
   cleanup() {
     // Remove PIXI sprite
     this.sprite.parent.removeChild(this.sprite);
+  }
+  setPosition(cellX: number, cellY: number) {
+    const { x, y } = cellToBoardCoords(cellX, cellY);
+    this.sprite.x = x;
+    this.sprite.y = y;
   }
   scale(scale) {
     // Clamp to a positive value

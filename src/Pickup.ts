@@ -5,6 +5,7 @@ import * as config from './config';
 import { containerPickup } from './PixiUtils';
 import type { IUnit } from './Unit';
 export interface IPickup {
+  // note: x,y are cell positions, not board positions
   x: number;
   y: number;
   imagePath: string;
@@ -41,6 +42,11 @@ export function create(
   window.game.addPickupToArray(self);
 
   return self;
+}
+export function setPosition(pickup: IPickup, x: number, y: number) {
+  pickup.x = x;
+  pickup.y = y;
+  pickup.image.setPosition(x, y);
 }
 // Reinitialize a pickup from another pickup object, this is used in loading game state after reconnect
 export function load(pickup: IPickup) {

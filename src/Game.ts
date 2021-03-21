@@ -555,6 +555,9 @@ export default class Game {
   getUnitsAt(x?: number, y?: number): Unit.IUnit[] {
     return this.units.filter((u) => u.alive && u.x === x && u.y === y);
   }
+  getPickupAt(x: number, y: number): Pickup.IPickup | undefined {
+    return this.pickups.find((p) => p.x === x && p.y === y);
+  }
   addUnitToArray(unit: Unit.IUnit) {
     this.units.push(unit);
   }
@@ -571,6 +574,15 @@ export default class Game {
       if (units.length) {
         const unitToSwapWith = units[0];
         Unit.moveTo(unitToSwapWith, spell.caster.unit.x, spell.caster.unit.y);
+      }
+      // Physically swap with pickups
+      const pickupToSwapWith = this.getPickupAt(spell.x, spell.y);
+      if (pickupToSwapWith) {
+        Pickup.setPosition(
+          pickupToSwapWith,
+          spell.caster.unit.x,
+          spell.caster.unit.y,
+        );
       }
       const newTargetX = spell.caster.unit.x;
       const newTargetY = spell.caster.unit.y;
