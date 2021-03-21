@@ -37,13 +37,6 @@ export function meleeAction(unit: Unit.IUnit) {
   }
 }
 export function rangedAction(unit: Unit.IUnit) {
-  // Move opposite to closest hero
-  const closestPlayerUnit = Unit.findClosestPlayerTo(unit);
-  if (closestPlayerUnit) {
-    const moveTo = math.oneCellAwayFromCell(unit, closestPlayerUnit);
-    Unit.moveTo(unit, moveTo.x, moveTo.y);
-  }
-
   // Shoot at player if in same horizontal, diagonal, or vertical
   let targetPlayerUnit;
   for (let player of window.game.players) {
@@ -60,6 +53,13 @@ export function rangedAction(unit: Unit.IUnit) {
       'images/spell/arrow.png',
     );
     Unit.takeDamage(targetPlayerUnit, unit.power, 'unit');
+  } else {
+    // Move opposite to closest hero
+    const closestPlayerUnit = Unit.findClosestPlayerTo(unit);
+    if (closestPlayerUnit) {
+      const moveTo = math.oneCellAwayFromCell(unit, closestPlayerUnit);
+      Unit.moveTo(unit, moveTo.x, moveTo.y);
+    }
   }
 }
 export function reachAction(unit: Unit.IUnit) {
