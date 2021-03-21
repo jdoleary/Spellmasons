@@ -2,6 +2,7 @@ import type { IPlayer } from './Player';
 import * as Unit from './Unit';
 import type * as Card from './Card';
 import type Image from './Image';
+import * as math from './math';
 import { SHIELD_MULTIPLIER } from './config';
 
 export interface Spell {
@@ -15,6 +16,7 @@ export interface Spell {
   chain?: boolean;
   trap?: boolean;
   swap?: boolean;
+  push?: boolean;
   area_of_effect?: number;
   image?: Image;
 }
@@ -49,6 +51,9 @@ export function getImage(s: Spell) {
   if (s.trap) {
     imgPath = 'images/spell/trap.png';
   }
+  if (s.push) {
+    imgPath = 'images/spell/push.png';
+  }
   if (s.swap) {
     imgPath = 'images/spell/swap.png';
   }
@@ -63,6 +68,10 @@ export function effect(spell: Spell, args?: EffectArgs) {
   const { unit, ignore = [] } = args || {};
   if (unit && ignore.includes(unit)) {
     return;
+  }
+  if (unit && spell.push) {
+    const moveTo = math.oneCellAwayFromCell(unit, spell.caster.unit);
+    Unit.moveTo(unit, moveTo.x, moveTo.y);
   }
   if (unit && spell.heal) {
     Unit.takeDamage(unit, -spell.heal, 'spell');
