@@ -1,6 +1,6 @@
 import type * as Player from './Player';
 import * as math from './math';
-import { alwaysIds, IUpgrade } from './Upgrade';
+import { alwaysIds, IUpgrade, upgradeSource } from './Upgrade';
 const elCardHand = document.getElementById('card-hand');
 
 const CARD_WIDTH = 70;
@@ -289,7 +289,8 @@ function createCardElement(content: ICard, id?: string) {
   elCardInner.appendChild(thumbHolder);
   const desc = document.createElement('div');
   desc.classList.add('card-description');
-  desc.innerText = content.id;
+  const infinite = upgradeSource.find((u) => u.id === content.id).infinite;
+  desc.innerHTML = (infinite ? '♾️<br/>' : '') + content.id;
   elCardInner.appendChild(desc);
   return element;
 }
