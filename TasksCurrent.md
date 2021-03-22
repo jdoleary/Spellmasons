@@ -1,9 +1,6 @@
 # Todo
 
-- Feature: Abilities, not cards. (Wizard customization)
-  - After every level, you choose things that modify your character, you choose from a few options like choosing heros in autochess which allows your character to evolve uniquely and bit by bit over the course of the game
-  - IDEA: RATher than cards you have abilities and you can limit strong ones by the number of times you can use them in a level
-  - IDEA: Auto attack is one of the things that can get upgrdaded
+- Implement increasing always cards such as "base damage" and "base heal"
 - **Bug**: "push" spell doesn't work well for multiple units when it would make them run into each other
   - based on order of operations sometimes they don't move, when they should,
     - they're not really blocked by an ally golem, because the ally will move out of the way
