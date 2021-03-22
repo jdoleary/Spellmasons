@@ -152,6 +152,7 @@ body.your-turn .card {
 }
 #player-turn-indicator-holder div {
   padding: 8px;
+  width: 100px;
 }
 
 body.your-turn #player-turn-indicator-holder {
