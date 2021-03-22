@@ -114,7 +114,6 @@ function onData(d: { fromClient: string; payload: any }) {
   const caster = game.players.find((p) => p.clientId === fromClient);
   switch (type) {
     case MESSAGE_TYPES.LOAD_GAME_STATE:
-      console.log('LOAD GAME STATE');
       // Clean up old game state
       if (game) {
         game.cleanup();
@@ -133,7 +132,7 @@ function onData(d: { fromClient: string; payload: any }) {
       game.players = loadedGameState.players.map(Player.load);
       game.pickups = loadedGameState.pickups.map(Pickup.load);
       game.syncYourTurnState();
-      game.setGameState(game_state.Playing);
+      game.setGameState(loadedGameState.state);
       break;
     case MESSAGE_TYPES.MOVE_PLAYER:
       // Moving the player unit uses an action
