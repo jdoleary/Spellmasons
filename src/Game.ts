@@ -3,7 +3,6 @@ import * as config from './config';
 import * as Unit from './Unit';
 import * as Pickup from './Pickup';
 import * as Player from './Player';
-import * as Card from './Card';
 import * as math from './math';
 import Image from './Image';
 import * as GameBoardInput from './ui/GameBoardInput';
