@@ -247,6 +247,7 @@ export default class Game {
     elPlayerTurnIndicator.innerText = message;
     document.body.classList.toggle('your-turn', yourTurn);
     this.yourTurn = yourTurn;
+    window.updateTurnAbilitiesLeft(this.players[this.playerTurnIndex]);
   }
   incrementPlayerTurn() {
     // Set current player actions used back to 0 now that their turn has ended

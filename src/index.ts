@@ -138,6 +138,7 @@ function onData(d: { fromClient: string; payload: any }) {
     case MESSAGE_TYPES.MOVE_PLAYER:
       // Moving the player unit uses an action
       caster.thisTurnMoved = true;
+      window.updateTurnAbilitiesLeft(caster);
       // Move the player 1 magnitude on either or both axes towards the desired position
       Unit.moveTo(caster.unit, payload.x, payload.y).then(() => {
         checkEndPlayerTurn(caster);
@@ -167,6 +168,7 @@ function onData(d: { fromClient: string; payload: any }) {
         });
         // Casting a spell uses an action
         caster.thisTurnSpellCast = true;
+        window.updateTurnAbilitiesLeft(caster);
         checkEndPlayerTurn(caster);
       } else {
         console.log('Someone is trying to cast out of turn');
@@ -242,6 +244,22 @@ function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
     }
   }
 }
+const elTurnAbilitiesLeft = document.getElementById('turn-abilities-left');
+// Shows what you can do with the remainder of your turn
+window.updateTurnAbilitiesLeft = function updateTurnAbilitiesLeft(
+  player: Player.IPlayer,
+) {
+  if (player.clientId === window.clientId) {
+    const actions = [];
+    if (!player.thisTurnSpellCast) {
+      actions.push('Cast');
+    }
+    if (!player.thisTurnMoved) {
+      actions.push('Move');
+    }
+    elTurnAbilitiesLeft.innerText = actions.join(' | ');
+  }
+};
 function makeGame(clients: string[]) {
   // Initialize the first level
   game.initLevel();
@@ -260,6 +278,7 @@ window.connect = connect;
 declare global {
   interface Window {
     connect: typeof connect;
+    updateTurnAbilitiesLeft: (player: Player.IPlayer) => void;
     animationTimeline: AnimationTimeline;
     game: Game;
     // A reference to the player instance of the client playing on this instance
