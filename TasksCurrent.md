@@ -1,7 +1,5 @@
 # Todo
 
-- Implement increasing always upgrades such as "base damage" and "base heal"
-
 - Terrain (stuck units move laterally?)
 
 ## Bugs Suspected Fixed
