@@ -67,6 +67,9 @@ export function createUpgradeElement(upgrade: IUpgrade) {
       type: MESSAGE_TYPES.CHOOSE_UPGRADE,
       upgrade,
     });
+    // Clear upgrades after one is chosen
+    const elUpgradePicker = document.getElementById('upgrade-picker');
+    elUpgradePicker.innerHTML = '';
   });
   return element;
 }
