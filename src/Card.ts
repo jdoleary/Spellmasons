@@ -36,45 +36,50 @@ export function recalcPositionForCards(player: Player.IPlayer) {
         }
       } else {
         // Create UI element for card
-        const element = createCardElement(
-          cardSource.find((card) => card.id === cardId),
-          undefined,
-        );
-        element.classList.add(className);
-        // When the user clicks on a card
-        element.addEventListener('click', (e) => {
-          e.stopPropagation();
-          if (element.classList.contains('selected')) {
-            element.classList.remove('selected');
-            // Remove card contents from spell, (prevent card count from becoming negative, this should not be possible
-            // because you cannot remove a card that's not added but Math.max will ensure a count can't be negative
-            selectedCardTally[cardId] = Math.max(
-              0,
-              (selectedCardTally[cardId] || 0) - 1,
-            );
-          } else {
-            element.classList.add('selected');
-            // Add card contents to spell
-            selectedCardTally[cardId] = (selectedCardTally[cardId] || 0) + 1;
+        const card = cardSource.find((card) => card.id === cardId);
+        // Note: Some upgrades don't have corresponding cards (such as resurrect)
+        if (card) {
+          const element = createCardElement(card);
+          element.classList.add(className);
+          // When the user clicks on a card
+          element.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (element.classList.contains('selected')) {
+              element.classList.remove('selected');
+              // Remove card contents from spell, (prevent card count from becoming negative, this should not be possible
+              // because you cannot remove a card that's not added but Math.max will ensure a count can't be negative
+              selectedCardTally[cardId] = Math.max(
+                0,
+                (selectedCardTally[cardId] || 0) - 1,
+              );
+            } else {
+              element.classList.add('selected');
+              // Add card contents to spell
+              selectedCardTally[cardId] = (selectedCardTally[cardId] || 0) + 1;
+            }
+            updateSelectedSpellUI();
+          });
+          let elCardTypeGroup = document.getElementById(`holder-${cardId}`);
+          if (!elCardTypeGroup) {
+            elCardTypeGroup = document.createElement('div');
+            elCardTypeGroup.classList.add('card-type-group');
+            elCardTypeGroup.id = `holder-${cardId}`;
+            elCardHand.appendChild(elCardTypeGroup);
           }
-          updateSelectedSpellUI();
-        });
-        let elCardTypeGroup = document.getElementById(`holder-${cardId}`);
-        if (!elCardTypeGroup) {
-          elCardTypeGroup = document.createElement('div');
-          elCardTypeGroup.classList.add('card-type-group');
-          elCardTypeGroup.id = `holder-${cardId}`;
-          elCardHand.appendChild(elCardTypeGroup);
+          elCardTypeGroup.appendChild(element);
+          // Set the width of the cardtypegroup relative to the number of cards that it holds
+          elCardTypeGroup.style.width =
+            elCardTypeGroup.childElementCount * CARD_OFFSET + CARD_WIDTH + 'px';
+          // Set the position of the card
+          setTransform(element, {
+            x: elCardTypeGroup.childElementCount * CARD_OFFSET,
+            y: 0,
+          });
+        } else {
+          console.log(
+            `No corresponding card exists for the "${cardId}" upgrade`,
+          );
         }
-        elCardTypeGroup.appendChild(element);
-        // Set the width of the cardtypegroup relative to the number of cards that it holds
-        elCardTypeGroup.style.width =
-          elCardTypeGroup.childElementCount * CARD_OFFSET + CARD_WIDTH + 'px';
-        // Set the position of the card
-        setTransform(element, {
-          x: elCardTypeGroup.childElementCount * CARD_OFFSET,
-          y: 0,
-        });
       }
     }
   }
