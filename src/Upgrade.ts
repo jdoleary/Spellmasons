@@ -1,4 +1,4 @@
-import * as math from './math';
+import makeSeededRandom from './rand';
 interface IUpgrade {
   title: string;
   description: string;
@@ -7,9 +7,13 @@ interface IUpgrade {
 }
 // Chooses a random card based on the card's probabilities
 export function generateUpgrades(numberOfUpgrades: number): IUpgrade[] {
-  const upgrades = [];
+  let upgrades = [];
+  const random = makeSeededRandom(`${window.clientId}-${window.game.level}`);
+  const clonedUpgradeSource = [...upgradeSource];
+  // Choose non duplicate upgrades
   for (let i = 0; i < numberOfUpgrades; i++) {
-    upgrades.push(math.chooseObjectWithProbability(upgradeSource));
+    const randomIndex = random.integer(0, clonedUpgradeSource.length - 1);
+    upgrades = upgrades.concat(clonedUpgradeSource.splice(randomIndex, 1));
   }
   return upgrades;
 }
