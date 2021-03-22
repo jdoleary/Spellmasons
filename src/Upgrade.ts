@@ -7,11 +7,13 @@ export interface IUpgrade {
   title: string;
   description: string;
   thumbnail: string;
-  // Some upgrades can be chosen more than once and stack
+  // Some upgrades can be chosen more than once
   allowDuplicate?: boolean;
   // Infinite cards never run out...
   // Whereas finite cards (!infinite) are refreshed at the beginning of each level and cannot be used more
   // than the number that the player has per level
+  // --
+  // When infinite cards are chosen more than once, they affect the base stat, such as "+ base damage"
   infinite?: boolean;
   // A card that a player always has in hand
   always?: boolean;
