@@ -43,6 +43,36 @@ body {
   font-size: 24px;
 }
 
+#upgrade-picker {
+  position: fixed;
+  top: 80px;
+  bottom: 80px;
+  left: 80px;
+  right: 80px;
+  z-index: 1;
+  border: 4px solid red;
+  justify-content: center;
+  align-items: center;
+  /* default to hidden */
+  display: none;
+}
+#upgrade-picker .card {
+  width: 100%;
+  margin: 8px;
+}
+#upgrade-picker .card-inner {
+  height: 400px;
+}
+#upgrade-picker .card-title {
+  text-align: center;
+  color: white;
+}
+#upgrade-picker .card-thumb {
+  height: 180px;
+}
+#upgrade-picker.active {
+  display: flex;
+}
 #card-hand {
   user-select: none;
   position: fixed;
@@ -56,7 +86,7 @@ body {
 }
 .card-type-group {
   position: relative;
-  width:120px;
+  width: 120px;
 }
 #card-hand .card {
   position: absolute;
@@ -67,7 +97,7 @@ body {
 #card-hand .card.selected {
   -webkit-box-shadow: 0px 0px 5px 5px #ffee00;
   box-shadow: 0px 0px 5px 5px #ffee00;
-  top:-100px;
+  top: -100px;
 }
 body.your-turn .card {
   cursor: pointer;
@@ -86,10 +116,9 @@ body.your-turn .card {
 .card-inner {
   border: 2px solid black;
   border-radius: 4px 4px;
-  display: flex;
-  justify-content: space-evenly;
   flex-direction: column;
   flex-grow: 1;
+  background-color: #68c668;
 }
 .card-thumb {
   background-color: white;
@@ -103,7 +132,6 @@ body.your-turn .card {
   height: 64px;
 }
 .card-description {
-  background-color: #68c668;
   flex-grow: 3;
   padding: 8px;
   color: white;

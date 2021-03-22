@@ -20,11 +20,13 @@ import floatingText from './FloatingText';
 import { generateEnemy } from './EnemyUnit';
 import type { Coords } from './commonTypes';
 import { drawDangerOverlay } from './ui/UserInterface';
+import { createUpgradeElement, generateUpgrades } from './Upgrade';
 
 export enum game_state {
   Lobby,
   WaitingForPlayerReconnect,
   Playing,
+  Upgrade,
   GameOver,
 }
 export enum turn_phase {
@@ -147,6 +149,7 @@ export default class Game {
       },
     });
     this.initLevel();
+    this.setGameState(game_state.Playing);
   }
 
   initLevel() {
@@ -313,7 +316,9 @@ export default class Game {
       this.players.filter((p) => p.unit.alive && p.inPortal).length ===
       this.players.filter((p) => p.unit.alive).length;
     if (areAllLivingPlayersInPortal) {
-      this.moveToNextLevel();
+      // Now that level is complete, move to the Upgrade gamestate where players can choose upgrades
+      // before moving on to the next level
+      this.setGameState(game_state.Upgrade);
     }
   }
   // Clean up resources of dead units
@@ -466,6 +471,8 @@ export default class Game {
     this.state = g;
     const state = game_state[this.state];
     const elBoard = document.getElementById('board');
+    const elUpgradePicker = document.getElementById('upgrade-picker');
+    elUpgradePicker.classList.remove('active');
     switch (state) {
       case 'GameOver':
         alert('GameOver');
@@ -478,6 +485,18 @@ export default class Game {
         this.syncYourTurnState();
         // Set the first turn phase
         this.setTurnPhase(turn_phase.PlayerTurns);
+        break;
+      case 'Upgrade':
+        if (elBoard) {
+          elBoard.style.visibility = 'hidden';
+        }
+        elUpgradePicker.classList.add('active');
+        const upgrades = generateUpgrades(5);
+        const elUpgrades = upgrades.map(createUpgradeElement);
+        elUpgradePicker.innerHTML = '';
+        for (let elUpgrade of elUpgrades) {
+          elUpgradePicker.appendChild(elUpgrade);
+        }
         break;
       default:
         if (elBoard) {
