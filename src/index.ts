@@ -144,7 +144,7 @@ function onData(d: { fromClient: string; payload: any }) {
       });
       break;
     case MESSAGE_TYPES.SPELL:
-      const spell = Spell.buildSpellFromCardTally(payload.cards);
+      const spell = Spell.buildSpellFromCardTally(payload.cards, caster);
       spell.x = payload.x;
       spell.y = payload.y;
       // Set caster based on which client sent it

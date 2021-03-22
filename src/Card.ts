@@ -54,17 +54,8 @@ export function recalcPositionForCards(player: Player.IPlayer) {
               );
             } else {
               element.classList.add('selected');
-              const upgrade = player.upgrades.find((u) => u.id === cardId);
-              let baseStat = 1;
-              // "infinite" cards get the tally that is the summation of all of the upgrades with that id
-              // whereas "finite" cards get the tally of as many finite cards that are chosen
-              if (upgrade.infinite) {
-                baseStat = player.upgrades.filter((u) => u.id === cardId)
-                  .length;
-              }
               // Add card contents to spell
-              selectedCardTally[cardId] =
-                (selectedCardTally[cardId] || 0) + baseStat;
+              selectedCardTally[cardId] = (selectedCardTally[cardId] || 0) + 1;
             }
             updateSelectedSpellUI();
           });

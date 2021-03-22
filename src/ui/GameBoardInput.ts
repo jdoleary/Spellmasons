@@ -44,6 +44,7 @@ export function syncMouseHoverIcon() {
 
     const selectedSpell = Spell.buildSpellFromCardTally(
       Card.getSelectedCardTally(),
+      window.player,
     );
     // if spell exists show target image, otherwise show feet image for walking
     const targetImgPath = areAnyCardsSelected()

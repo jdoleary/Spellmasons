@@ -20,11 +20,21 @@ export interface Spell {
   area_of_effect?: number;
   image?: Image;
 }
-export function buildSpellFromCardTally(cardTally: Card.CardTally): Spell {
+export function buildSpellFromCardTally(
+  cardTally: Card.CardTally,
+  player: IPlayer,
+): Spell {
   const cardCountPairs = Object.entries(cardTally);
   let spell: Spell = {};
   for (let [cardId, count] of cardCountPairs) {
-    spell[cardId] = count;
+    const upgrade = player.upgrades.find((u) => u.id === cardId);
+    // "infinite" cards get the tally that is the summation of all of the upgrades with that id
+    // whereas "finite" cards get the tally of as many finite cards that are chosen
+    if (upgrade.infinite) {
+      spell[cardId] = player.upgrades.filter((u) => u.id === cardId).length;
+    } else {
+      spell[cardId] = count;
+    }
   }
   return spell;
 }
