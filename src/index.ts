@@ -175,6 +175,14 @@ function onData(d: { fromClient: string; payload: any }) {
       break;
     case MESSAGE_TYPES.CHOOSE_UPGRADE:
       Player.addUpgrade(caster, payload.upgrade);
+      window.game.choseUpgrades.add(caster.clientId);
+      // Once all players have chosen their upgrades
+      if (window.game.choseUpgrades.size == window.game.players.length) {
+        // Reset the choseUpgrades Set it can count players who have chosen upgrades on next upgrade phase
+        window.game.choseUpgrades.clear();
+        // Move onto next level
+        window.game.moveToNextLevel();
+      }
       break;
     case MESSAGE_TYPES.END_TURN:
       game.endPlayerTurn(caster.clientId);

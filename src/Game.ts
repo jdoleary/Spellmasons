@@ -72,6 +72,8 @@ export default class Game {
   // A set of clientIds who have ended their turn
   // Being a Set prevents a user from ending their turn more than once
   endedTurn = new Set<string>();
+  // A set of the cliendIds who have chosen their upgrades
+  choseUpgrades = new Set<string>();
   constructor(seed: string) {
     window.game = this;
     this.seed = seed;
@@ -155,10 +157,7 @@ export default class Game {
   initLevel() {
     // Add cards to hand
     for (let p of this.players) {
-      for (let i = 0; i < config.GIVE_NUM_CARDS_PER_LEVEL; i++) {
-        const card = Card.generateCard();
-        Card.addCardToHand(card, p);
-      }
+      Player.generateCardsFromUpgrades(p);
     }
     for (let i = 0; i < config.NUM_PICKUPS_PER_LEVEL; i++) {
       const coords = this.getRandomEmptyCell({ xMin: 2 });

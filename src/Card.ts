@@ -1,5 +1,6 @@
 import type * as Player from './Player';
 import * as math from './math';
+import { alwaysIds, IUpgrade } from './Upgrade';
 const elCardHand = document.getElementById('card-hand');
 
 const CARD_WIDTH = 70;
@@ -112,12 +113,16 @@ export function recalcPositionForCards(player: Player.IPlayer) {
 export function removeCardsFromHand(player: Player.IPlayer, cards: CardTally) {
   const cardCountPairs = Object.entries(cards);
   for (let [cardId, count] of cardCountPairs) {
+    // Do not remove "always" cards
+    if (alwaysIds.includes(cardId)) {
+      continue;
+    }
     player.hand[cardId] -= count;
   }
   recalcPositionForCards(window.player);
 }
 
-export function addCardToHand(card: ICard, player: Player.IPlayer) {
+export function addCardToHand(card: IUpgrade, player: Player.IPlayer) {
   player.hand[card.id] = (player.hand[card.id] || 0) + 1;
   if (player === window.player) {
     recalcPositionForCards(window.player);
