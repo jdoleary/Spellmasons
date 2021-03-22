@@ -113,6 +113,9 @@ export function load(unit: IUnit) {
     }),
   };
   window.game.addUnitToArray(loadedunit);
+  if (!loadedunit.alive) {
+    die(loadedunit);
+  }
   return loadedunit;
 }
 export function resurrect(u: IUnit) {
@@ -129,7 +132,9 @@ export function die(u: IUnit) {
   // If the unit is a player
   if (u.unitType === UnitType.PLAYER_CONTROLLED) {
     const unitPlayer = window.game.players[window.game.playerTurnIndex];
-    window.game.endPlayerTurn(unitPlayer.clientId);
+    if (unitPlayer) {
+      window.game.endPlayerTurn(unitPlayer.clientId);
+    }
   }
 }
 export function takeDamage(unit: IUnit, amount: number, cause?: string) {
