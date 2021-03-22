@@ -297,11 +297,15 @@ export default class Game {
     }
   }
   endPlayerTurn(clientId: string) {
-    const currentTurnPlayer = this.players[this.playerTurnIndex];
-    // Ensure players can only end the turn when it IS their turn
-    if (currentTurnPlayer.clientId === clientId) {
-      this.endedTurn.add(clientId);
-      this.incrementPlayerTurn();
+    // Turns can only be ended when the game is in Playing state
+    // and not, for example, in Upgrade state
+    if (this.state === game_state.Playing) {
+      const currentTurnPlayer = this.players[this.playerTurnIndex];
+      // Ensure players can only end the turn when it IS their turn
+      if (currentTurnPlayer.clientId === clientId) {
+        this.endedTurn.add(clientId);
+        this.incrementPlayerTurn();
+      }
     }
   }
   checkForEndOfLevel() {
