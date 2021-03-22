@@ -31,6 +31,7 @@ export function buildSpellFromCardTally(
     // "infinite" cards get the tally that is the summation of all of the upgrades with that id
     // whereas "finite" cards get the tally of as many finite cards that are chosen
     if (upgrade.infinite) {
+      // Supports increasing base stat
       spell[cardId] = player.upgrades.filter((u) => u.id === cardId).length;
     } else {
       spell[cardId] = count;
