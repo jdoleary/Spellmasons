@@ -173,6 +173,9 @@ function onData(d: { fromClient: string; payload: any }) {
         console.log('Someone is trying to cast out of turn');
       }
       break;
+    case MESSAGE_TYPES.CHOOSE_UPGRADE:
+      Player.addUpgrade(caster, payload.upgrade);
+      break;
     case MESSAGE_TYPES.END_TURN:
       game.endPlayerTurn(caster.clientId);
       // TODO

@@ -1,5 +1,6 @@
 import { PLAYER_BASE_HEALTH } from './config';
 import * as Unit from './Unit';
+import type * as Upgrade from './Upgrade';
 import * as Card from './Card';
 import * as config from './config';
 
@@ -13,6 +14,7 @@ export interface IPlayer {
   thisTurnMoved: boolean;
   // The players "hand" which contains cards
   hand: Card.CardTally;
+  upgrades: Upgrade.IUpgrade[];
 }
 export function create(clientId: string): IPlayer {
   // limit spawn to the leftmost column
@@ -30,6 +32,7 @@ export function create(clientId: string): IPlayer {
     inPortal: false,
     actionsUsed: 0,
     hand: {},
+    upgrades: [],
   };
   updateGlobalRefToCurrentClientPlayer(player);
   // Add cards to hand
@@ -72,6 +75,12 @@ function addHighlighIfPlayerBelongsToCurrentClient(player: IPlayer) {
       'ownCharacterMarker',
     );
   }
+}
+export function addUpgrade(player: IPlayer, upgrade: Upgrade.IUpgrade) {
+  console.log(
+    'TODO implement how the player is modified when an upgrade is added',
+  );
+  player.upgrades.push(upgrade);
 }
 export function load(player: IPlayer) {
   const playerLoaded = {

@@ -495,7 +495,7 @@ export default class Game {
           elBoard.style.visibility = 'hidden';
         }
         elUpgradePicker.classList.add('active');
-        const upgrades = generateUpgrades(5);
+        const upgrades = generateUpgrades(this.players[this.playerTurnIndex]);
         const elUpgrades = upgrades.map(createUpgradeElement);
         elUpgradePicker.innerHTML = '';
         for (let elUpgrade of elUpgrades) {
