@@ -1,14 +1,10 @@
-## Tasks
+## Critical Path
 
 - Critical Path
 
 - Gameplay
-  - Wizard modification with XP granted on going through portal
-  - Add enemy variety
-  - Add secret levels and dark cards
-  - Add more spell content
-  - Add tutorial
 - Polish
+  - Add tutorial
   - Make sure pie-client isn't still linked and uses most up-to-date version on NPM
   - Art
     - Pinterest board for inspiration
