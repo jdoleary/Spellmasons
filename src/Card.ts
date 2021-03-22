@@ -272,7 +272,7 @@ function createCardElement(content: ICard, id?: string) {
   if (id) {
     element.id = id;
   }
-  element.style.backgroundColor = getCardRarityColor(content);
+  // element.style.backgroundColor = getCardRarityColor(content);
   const elCardInner = document.createElement('div');
   elCardInner.classList.add('card-inner');
   element.appendChild(elCardInner);

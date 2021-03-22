@@ -45,10 +45,11 @@ body {
 }
 #upgrade-picker .card {
   width: 100%;
+  max-width: 300px;
   margin: 8px;
 }
 #upgrade-picker .card-inner {
-  height: 400px;
+  height: 500px;
 }
 #upgrade-picker .card-title {
   text-align: center;
