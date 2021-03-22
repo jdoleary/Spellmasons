@@ -57,7 +57,6 @@ export function recalcPositionForCards(player: Player.IPlayer) {
               // Add card contents to spell
               selectedCardTally[cardId] = (selectedCardTally[cardId] || 0) + 1;
             }
-            updateSelectedSpellUI();
           });
           let elCardTypeGroup = document.getElementById(`holder-${cardId}`);
           if (!elCardTypeGroup) {
@@ -141,18 +140,11 @@ export function getSelectedCardTally(): CardTally {
   return selectedCardTally;
 }
 
-const elCurrentSpellDescription = document.getElementById(
-  'current-spell-description',
-);
 export function clearSelectedCardTally() {
   selectedCardTally = {};
   document.querySelectorAll('.card.selected').forEach((el) => {
     el.classList.remove('selected');
   });
-  updateSelectedSpellUI();
-}
-export function updateSelectedSpellUI() {
-  elCurrentSpellDescription.innerText = toString(selectedCardTally);
 }
 export function toString(s?: CardTally) {
   if (!s) {

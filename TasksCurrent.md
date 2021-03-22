@@ -1,9 +1,7 @@
 # Todo
 
-- Implement increasing always cards such as "base damage" and "base heal"
-- **Bug**: "push" spell doesn't work well for multiple units when it would make them run into each other
-  - based on order of operations sometimes they don't move, when they should,
-    - they're not really blocked by an ally golem, because the ally will move out of the way
+- Implement increasing always upgrades such as "base damage" and "base heal"
+
 - Terrain (stuck units move laterally?)
 
 ## Bugs Suspected Fixed
@@ -21,6 +19,10 @@
 
 ## bugs
 
+- **Bug**: "push" spell doesn't work well for multiple units when it would make them run into each other
+  - based on order of operations sometimes they don't move, when they should,
+    - they're not really blocked by an ally golem, because the ally will move out of the way
+- Bug: Loading doesn't work if clientIds have changed reassigning clientIds
 - Shield should apply to a single turn, not to an amount of damage
 - BUG: I froze a guy, brad moved, and the guy still hit brad
   - Frozen applied via a trap is instantly removed
