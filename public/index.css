@@ -64,7 +64,7 @@ body {
 #card-hand {
   user-select: none;
   position: fixed;
-  bottom: 0;
+  bottom: 30px;
   left: 80px;
   right: 80px;
   z-index: 1;

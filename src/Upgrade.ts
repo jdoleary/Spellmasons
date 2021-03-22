@@ -9,9 +9,10 @@ export interface IUpgrade {
   thumbnail: string;
   // Some upgrades can be chosen more than once and stack
   allowDuplicate?: boolean;
-  // Are refreshed at the beginning of each level and cannot be used more
+  // Infinite cards never run out...
+  // Whereas finite cards (!infinite) are refreshed at the beginning of each level and cannot be used more
   // than the number that the player has per level
-  finite?: boolean;
+  infinite?: boolean;
   // A card that a player always has in hand
   always?: boolean;
 }
@@ -92,6 +93,7 @@ export const upgradeSource: IUpgrade[] = [
     thumbnail: 'images/spell/damage.png',
     allowDuplicate: true,
     always: true,
+    infinite: true,
   },
   {
     id: 'heal',
@@ -100,6 +102,7 @@ export const upgradeSource: IUpgrade[] = [
     thumbnail: 'images/spell/heal.png',
     allowDuplicate: true,
     always: true,
+    infinite: true,
   },
   {
     id: 'chain',
@@ -113,7 +116,6 @@ export const upgradeSource: IUpgrade[] = [
     description: 'Makes the target frozen for one turn',
     thumbnail: 'images/spell/freeze.png',
     allowDuplicate: true,
-    finite: true,
   },
   {
     id: 'area_of_effect',
@@ -121,7 +123,6 @@ export const upgradeSource: IUpgrade[] = [
     description: 'Makes a spell affect a larger area',
     thumbnail: 'images/spell/aoe.png',
     allowDuplicate: true,
-    finite: true,
   },
   {
     id: 'shield',
@@ -129,7 +130,6 @@ export const upgradeSource: IUpgrade[] = [
     description: 'Protects the target from the next damage it recieves',
     thumbnail: 'images/spell/shield.png',
     allowDuplicate: true,
-    finite: true,
   },
   {
     id: 'trap',
@@ -145,7 +145,6 @@ export const upgradeSource: IUpgrade[] = [
       'Swaps the casters location with the target and casts the remainder of the spell on the target',
     thumbnail: 'images/spell/swap.png',
     allowDuplicate: false,
-    finite: true,
   },
   {
     id: 'push',
@@ -153,6 +152,7 @@ export const upgradeSource: IUpgrade[] = [
     description: 'Pushes the target away from the caster',
     thumbnail: 'images/spell/push.png',
     allowDuplicate: true,
+    infinite: true,
   },
 ];
 export const alwaysIds = upgradeSource.filter((u) => u.always).map((u) => u.id);
