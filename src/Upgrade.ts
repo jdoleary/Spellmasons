@@ -17,6 +17,10 @@ export interface IUpgrade {
 }
 // Chooses a random card based on the card's probabilities
 export function generateUpgrades(player: IPlayer): IUpgrade[] {
+  // Dead players choose special upgrades
+  if (!player.unit.alive) {
+    return [...upgradeSourceWhenDead];
+  }
   let upgrades = [];
   const random = makeSeededRandom(`${window.clientId}-${window.game.level}`);
   // Clone and filter out non-duplicatable upgrades that the player already has
@@ -66,6 +70,17 @@ export function createUpgradeElement(upgrade: IUpgrade) {
   });
   return element;
 }
+export const upgradeSourceWhenDead: IUpgrade[] = [
+  {
+    id: 'resurrect',
+    title: 'Resurrect',
+    description:
+      'You have died, but find yourself resurrected as your allies enter the portal.',
+    thumbnail: 'images/spell/resurrect.png',
+    allowDuplicate: false,
+    always: false,
+  },
+];
 export const upgradeSource: IUpgrade[] = [
   {
     id: 'damage',
