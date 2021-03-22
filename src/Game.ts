@@ -33,13 +33,6 @@ export enum turn_phase {
   PlayerTurns,
   NPC,
 }
-const debugInfo = {};
-const debugEl = document.getElementById('debug');
-window.setDebug = function setDebug(json) {
-  if (debugEl) {
-    debugEl.innerHTML = JSON.stringify(Object.assign(debugInfo, json), null, 2);
-  }
-};
 interface Bounds {
   xMin?: number;
   xMax?: number;
@@ -468,7 +461,6 @@ export default class Game {
       default:
         break;
     }
-    window.setDebug({ phase });
   }
   setGameState(g: game_state) {
     this.state = g;
@@ -506,7 +498,6 @@ export default class Game {
           elBoard.style.visibility = 'hidden';
         }
     }
-    window.setDebug({ state });
   }
   getTargetsOfSpell(spell: Spell): Coords[] {
     let coords: Coords[] = [];

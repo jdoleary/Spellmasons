@@ -16,11 +16,6 @@ body {
   bottom: 0;
 }
 
-#debug {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-}
 .doob-stats {
   margin-top: 70px;
   margin-left: 10px;
