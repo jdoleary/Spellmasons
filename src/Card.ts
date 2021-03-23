@@ -171,6 +171,12 @@ export function toString(s?: CardTally) {
   }
   return strings.join(' ');
 }
+// Card "Hook" Modifier Stages
+// PreSpell (ex: Swap)
+// ModifyTargets (ex: Chain, AOE)
+// SingleTargetEffect (ex: Damage, heal)
+// Add Modifier (ex: freeze, poison)
+// PostSpell
 export interface ICard {
   id: string;
   thumbnail: string;
