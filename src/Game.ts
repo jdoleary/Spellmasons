@@ -293,6 +293,12 @@ export default class Game {
     // and not, for example, in Upgrade state
     if (this.state === game_state.Playing) {
       const currentTurnPlayer = this.players[this.playerTurnIndex];
+      if (!currentTurnPlayer.unit.thisTurnMoved) {
+        // If the user didn't move and just ended their turn, decrement the frozen modifier
+        // because it is meant to decrement every turn and it automatically decrements when they
+        // try to move, but since they didn't, decrement it here.
+        Unit.decrementModifier(currentTurnPlayer.unit, 'frozen');
+      }
       // Ensure players can only end the turn when it IS their turn
       if (currentTurnPlayer.clientId === clientId) {
         this.endedTurn.add(clientId);
@@ -444,17 +450,6 @@ export default class Game {
           animationPromises.push(promise);
         }
         this.initiateIntelligentAIMovement();
-
-        // If units are frozen, decrement the number of turns that they are frozen for
-        // since a turn has passed
-        for (let u of this.units) {
-          if (u.frozenForTurns > 0) {
-            u.frozenForTurns--;
-            if (u.frozenForTurns <= 0) {
-              u.image.removeSubSprite('frozen');
-            }
-          }
-        }
         // When all animations are done, set turn phase to player turn
         Promise.all(animationPromises).then(() => {
           this.setTurnPhase(turn_phase.PlayerTurns);

@@ -98,7 +98,7 @@ export function effect(spell: Spell, args?: EffectArgs) {
     Unit.takeDamage(unit, spell.damage, 'spell');
   }
   if (unit && spell.freeze > 0) {
-    unit.frozenForTurns += spell.freeze;
+    unit.modifiers.frozen = (unit.modifiers.frozen || 0) + spell.freeze;
     const frozenSprite = unit.image.addSubSprite(
       'images/spell/freeze.png',
       'frozen',

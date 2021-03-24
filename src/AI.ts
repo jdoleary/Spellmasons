@@ -95,7 +95,7 @@ export function reachAction(unit: Unit.IUnit) {
 // If a unit can attack (x,y), return true
 export function canAttackCell(unit: Unit.IUnit, x: number, y: number): boolean {
   // Frozen units cannot attack
-  if (unit.frozenForTurns > 0) {
+  if (unit.modifiers.frozen > 0) {
     return false;
   }
   // Dead units cannot attack

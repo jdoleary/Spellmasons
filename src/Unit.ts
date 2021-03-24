@@ -37,7 +37,8 @@ export interface IUnit {
   healthMax: number;
   healthText: PIXI.Text;
   alive: boolean;
-  frozenForTurns: number;
+  // modifiers such as "frozen" or "poisoned"
+  modifiers: { [key: string]: number };
   shield: number;
   unitType: UnitType;
   unitSubType?: UnitSubType;
@@ -66,7 +67,7 @@ export function create(
       breakWords: true,
     }),
     alive: true,
-    frozenForTurns: 0,
+    modifiers: {},
     shield: 0,
     unitType,
     unitSubType,
@@ -188,7 +189,10 @@ export function canMove(unit: IUnit): boolean {
     return false;
   }
   // Do not move if frozen
-  if (unit.frozenForTurns > 0) {
+  if (unit.modifiers.frozen > 0) {
+    // Now that they have attempted to move, decrement frozen (which prevents movement the same
+    // number of turns as the value of frozen)
+    decrementModifier(unit, 'frozen');
     return false;
   }
   // Do not move if already moved
@@ -233,6 +237,14 @@ export function moveAI(unit: IUnit) {
     case UnitSubType.AI_reach:
       AI.reachAction(unit);
       break;
+  }
+}
+export function decrementModifier(unit: IUnit, modifier: string) {
+  if (unit.modifiers[modifier]) {
+    unit.modifiers[modifier]--;
+    if (unit.modifiers[modifier] <= 0) {
+      unit.image.removeSubSprite(modifier);
+    }
   }
 }
 export function moveTo(unit: IUnit, coordinates: Coords): Promise<void> {
