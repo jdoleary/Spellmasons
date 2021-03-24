@@ -12,6 +12,7 @@
 ---
 
 - Terrain (stuck units move laterally?)
+- [Spell Hooks](https://docs.google.com/spreadsheets/d/1PntBWT4twXoKRKBZBOg7zZtWNzoqtfu6SD-EMQYedt4/edit#gid=0)
 
 ## Refactor tasks
 

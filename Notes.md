@@ -1,5 +1,20 @@
 # Notes
 
+Game Design thoughts:
+Each level should be fun, even early on. Prevent "doom state" (impossible scenario based on state). Randomness adds potential for excitement and narrow escapes. Add risk/reward mechanics so users can tune their difficulty.
+Progression feels good.
+It's not fun to be out of cards, but it's not fun to have infinite damage (there has to be a reason NOT to use it).
+
+- It IS fun planning your approach to beating a level with your friends.
+- It IS fun when luck goes your way.
+- It IS fun to present risk/reward.
+- It is NOT fun to be in doom state.
+  - What if every golem you kill grants you a card?
+- It is NOT fun when using your "rocket launcher" is disincentivised.
+  - What if you can't take them with you to the next level?
+
+---
+
 - Clients desyncing issue:
 
   - Seed desynced after portaling
