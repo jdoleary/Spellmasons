@@ -29,13 +29,11 @@ export function meleeAction(unit: Unit.IUnit) {
       unit.image.attack(unit.x, unit.y, next_x, next_y);
       Unit.takeDamage(other_unit, unit.power, 'unit');
     }
-  } else {
-    // If nothing is obstructing
-    // set move intention
-    unit.intendedNextMove = { x: next_x, y: next_y };
-    // Update the "planning view" overlay that shows the unit's agro radius
-    Unit.updateSelectedOverlay(unit);
   }
+  // set move intention
+  unit.intendedNextMove = { x: next_x, y: next_y };
+  // Update the "planning view" overlay that shows the unit's agro radius
+  Unit.updateSelectedOverlay(unit);
 }
 export function rangedAction(unit: Unit.IUnit) {
   // Shoot at player if in same horizontal, diagonal, or vertical
