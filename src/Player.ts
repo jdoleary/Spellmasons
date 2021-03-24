@@ -2,6 +2,7 @@ import { PLAYER_BASE_HEALTH } from './config';
 import * as Unit from './Unit';
 import * as Upgrade from './Upgrade';
 import * as Card from './Card';
+import * as config from './config';
 
 export interface IPlayer {
   // wsPie id
@@ -35,7 +36,11 @@ export function create(clientId: string): IPlayer {
     upgrades: [...Upgrade.upgradeSource.filter((u) => u.always)],
   };
   updateGlobalRefToCurrentClientPlayer(player);
-  generateCardsFromUpgrades(player);
+  // Add cards to hand
+  for (let i = 0; i < config.GIVE_NUM_CARDS_PER_LEVEL; i++) {
+    const card = Card.generateCard();
+    Card.addCardToHand(card, player);
+  }
   addHighlighIfPlayerBelongsToCurrentClient(player);
   player.unit.health = PLAYER_BASE_HEALTH;
   player.unit.healthMax = PLAYER_BASE_HEALTH;
@@ -70,18 +75,6 @@ function addHighlighIfPlayerBelongsToCurrentClient(player: IPlayer) {
       'images/units/unit-underline.png',
       'ownCharacterMarker',
     );
-  }
-}
-export function generateCardsFromUpgrades(player: IPlayer) {
-  // Add the "always" cards if the player doesn't already have them:
-  for (let alwaysUpgrade of Upgrade.upgradeSource.filter((u) => u.always)) {
-    if (!Object.keys(player.hand).includes(alwaysUpgrade.id)) {
-      Card.addCardToHand(alwaysUpgrade, player);
-    }
-  }
-  // Note: "always" cards don't get added more than once
-  for (let upgrade of player.upgrades.filter((u) => !u.always)) {
-    Card.addCardToHand(upgrade, player);
   }
 }
 export function addUpgrade(player: IPlayer, upgrade: Upgrade.IUpgrade) {

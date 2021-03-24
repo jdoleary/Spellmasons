@@ -3,7 +3,7 @@ import { MESSAGE_TYPES } from './MessageTypes';
 import type { IPlayer } from './Player';
 import makeSeededRandom from './rand';
 export interface IUpgrade {
-  id: string;
+  spellId?: string;
   title: string;
   description: string;
   thumbnail: string;
@@ -78,7 +78,6 @@ export function createUpgradeElement(upgrade: IUpgrade) {
 }
 export const upgradeSourceWhenDead: IUpgrade[] = [
   {
-    id: 'resurrect',
     title: 'Resurrect',
     description:
       'You have died, but find yourself resurrected as your allies enter the portal.',
@@ -89,7 +88,7 @@ export const upgradeSourceWhenDead: IUpgrade[] = [
 ];
 export const upgradeSource: IUpgrade[] = [
   {
-    id: 'damage',
+    spellId: 'damage',
     title: '+ Base Damage',
     description: 'Upgrades base damage',
     thumbnail: 'images/spell/damage.png',
@@ -98,7 +97,7 @@ export const upgradeSource: IUpgrade[] = [
     infinite: true,
   },
   {
-    id: 'heal',
+    spellId: 'heal',
     title: '+ Base Heal',
     description: 'Upgrades base heal',
     thumbnail: 'images/spell/heal.png',
@@ -107,41 +106,36 @@ export const upgradeSource: IUpgrade[] = [
     infinite: true,
   },
   {
-    id: 'chain',
     title: 'Chain',
     description: 'Makes a spell chain between touching units',
     thumbnail: 'images/spell/chain.png',
+    allowDuplicate: false,
   },
   {
-    id: 'freeze',
     title: 'Freeze',
     description: 'Makes the target frozen for one turn',
     thumbnail: 'images/spell/freeze.png',
     allowDuplicate: true,
   },
   {
-    id: 'area_of_effect',
     title: 'Area of Effect',
     description: 'Makes a spell affect a larger area',
     thumbnail: 'images/spell/aoe.png',
     allowDuplicate: true,
   },
   {
-    id: 'shield',
     title: 'Shield',
     description: 'Protects the target from the next damage it recieves',
     thumbnail: 'images/spell/shield.png',
     allowDuplicate: true,
   },
   {
-    id: 'trap',
     title: 'Trap',
     description: 'Creates a latent spell that triggers when it is stepped on',
     thumbnail: 'images/spell/trap.png',
     allowDuplicate: false,
   },
   {
-    id: 'swap',
     title: 'Swap',
     description:
       'Swaps the casters location with the target and casts the remainder of the spell on the target',
@@ -149,7 +143,6 @@ export const upgradeSource: IUpgrade[] = [
     allowDuplicate: false,
   },
   {
-    id: 'push',
     title: 'Push',
     description: 'Pushes the target away from the caster',
     thumbnail: 'images/spell/push.png',
@@ -157,7 +150,7 @@ export const upgradeSource: IUpgrade[] = [
     infinite: true,
   },
 ];
-export const alwaysIds = upgradeSource.filter((u) => u.always).map((u) => u.id);
+
 // Template
 //   {
 //     title: '',

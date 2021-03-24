@@ -4,6 +4,7 @@ import * as Unit from './Unit';
 import * as Pickup from './Pickup';
 import * as Player from './Player';
 import * as math from './math';
+import * as Card from './Card';
 import Image from './Image';
 import * as GameBoardInput from './ui/GameBoardInput';
 import { MESSAGE_TYPES } from './MessageTypes';
@@ -64,8 +65,6 @@ export default class Game {
   // A set of clientIds who have ended their turn
   // Being a Set prevents a user from ending their turn more than once
   endedTurn = new Set<string>();
-  // A set of the cliendIds who have chosen their upgrades
-  choseUpgrades = new Set<string>();
   constructor(seed: string) {
     window.game = this;
     this.seed = seed;
@@ -149,7 +148,10 @@ export default class Game {
   initLevel() {
     // Add cards to hand
     for (let p of this.players) {
-      Player.generateCardsFromUpgrades(p);
+      for (let i = 0; i < config.GIVE_NUM_CARDS_PER_LEVEL; i++) {
+        const card = Card.generateCard();
+        Card.addCardToHand(card, p);
+      }
     }
     for (let i = 0; i < config.NUM_PICKUPS_PER_LEVEL; i++) {
       const coords = this.getRandomEmptyCell({ xMin: 2 });
