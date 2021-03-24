@@ -1,5 +1,34 @@
 # Todo
 
+## Brad 2021-03-24
+
+- How do players know what their upgrades are
+- notify which players have left to upgrade
+- why do we keep accidentally ending our turns
+- bug: for a moment I showed more health and it reverted
+- top bar should tell you what level you're on
+- You get "cannot move more than once per turn" while spell animations are firing
+- Archers hsould only firein diag
+- bug: heal tooltip is stuck at 1 even when you have upgrades
+- Celebratory damage counter for huge combos!
+- "Other player's turn" can be highlighted by the cursor
+- I didn't get to take a turn, brad didn't know how he died, (game log?)
+- Brad still had a shield after dying and resurrecting
+  - Brad's health doesn't show after resurrecting
+- Brad healed himself and his turn just ended without letting him move
+  - he's stuck unable to move
+- Don't let players cast fizzle spells (AOE or chain without damage)
+- Brad is now not taking damage
+
+- Brad's final feedback
+  - units need pathing, it's weird if they don't move at all
+  - Needs balance, at the end you have a lot of cards but you die quickly
+  - having less, stronger units is more of a challenge than having many, weak units
+
+---
+
+- bug: Damage and health no longer stack now that they are driven by upgrades
+
 - Idea: What if all spells where "pluggable" and used husky-style hooks
   - can you make a system where they fit in with no special if checks
     - how to solve freeze, trap, swap?
