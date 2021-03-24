@@ -50,6 +50,7 @@ export function resetPlayerForNextLevel(player: IPlayer) {
 
   // Reset action limitations
   player.thisTurnSpellCast = false;
+  player.unit.thisTurnMoved = false;
 
   // Make unit visible
   player.unit.image.show();
