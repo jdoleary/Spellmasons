@@ -135,12 +135,10 @@ function onData(d: { fromClient: string; payload: any }) {
       game.setGameState(loadedGameState.state);
       break;
     case MESSAGE_TYPES.MOVE_PLAYER:
-      // Moving the player unit uses an action
-      caster.thisTurnMoved = true;
-      window.updateTurnAbilitiesLeft(caster);
       // Move the player 1 magnitude on either or both axes towards the desired position
       Unit.moveTo(caster.unit, payload.x, payload.y).then(() => {
         checkEndPlayerTurn(caster);
+        window.updateTurnAbilitiesLeft(caster);
       });
       break;
     case MESSAGE_TYPES.SPELL:
@@ -204,7 +202,7 @@ function onData(d: { fromClient: string; payload: any }) {
 }
 function checkEndPlayerTurn(player: Player.IPlayer) {
   // Moving ends your turn
-  if (player.thisTurnMoved) {
+  if (player.unit.thisTurnMoved) {
     game.endPlayerTurn(player.clientId);
   }
 }
@@ -256,7 +254,7 @@ window.updateTurnAbilitiesLeft = function updateTurnAbilitiesLeft(
     if (!player.thisTurnSpellCast) {
       actions.push('Cast');
     }
-    if (!player.thisTurnMoved) {
+    if (!player.unit.thisTurnMoved) {
       actions.push('Move');
     }
     elTurnAbilitiesLeft.innerText = actions.join(' | ');

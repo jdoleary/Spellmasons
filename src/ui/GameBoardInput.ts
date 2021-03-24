@@ -111,7 +111,7 @@ export default function setupBoardInputHandlers() {
           (p) => p.clientId === window.clientId,
         );
         // If player hasn't already moved this turn...
-        if (selfPlayer && !selfPlayer.thisTurnMoved) {
+        if (selfPlayer && !selfPlayer.unit.thisTurnMoved) {
           const targetCell = Unit.findCellOneStepCloserTo(
             selfPlayer.unit,
             x,

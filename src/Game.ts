@@ -249,7 +249,6 @@ export default class Game {
     // Set current player actions used back to 0 now that their turn has ended
     const currentTurnPlayer = this.players[this.playerTurnIndex];
     // Reset action flags
-    currentTurnPlayer.thisTurnMoved = false;
     currentTurnPlayer.thisTurnSpellCast = false;
 
     // If there are players who are able to take their turn
@@ -425,6 +424,11 @@ export default class Game {
     document.body.classList.add('phase-' + phase.toLowerCase());
     switch (phase) {
       case 'PlayerTurns':
+        for (let u of this.units) {
+          // Reset thisTurnMoved flag now that it is a new turn
+          // Because no units have moved yet this turn
+          u.thisTurnMoved = false;
+        }
         this.syncYourTurnState();
         this.bringOutYerDead();
         break;

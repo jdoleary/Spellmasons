@@ -27,6 +27,8 @@ export interface IUnit {
   x: number;
   y: number;
   name?: string;
+  // If the unit moved this turn
+  thisTurnMoved: boolean;
   image: Image;
   power: number;
   health: number;
@@ -48,6 +50,7 @@ export function create(
   const unit: IUnit = {
     x,
     y,
+    thisTurnMoved: false,
     image: new Image(x, y, imagePath, containerUnits),
     power: config.UNIT_BASE_POWER,
     health: config.UNIT_BASE_HEALTH,
@@ -179,11 +182,15 @@ export function takeDamage(unit: IUnit, amount: number, cause?: string) {
 export function canMove(unit: IUnit): boolean {
   // Do not move if dead
   if (!unit.alive) {
-    return;
+    return false;
   }
   // Do not move if frozen
   if (unit.frozenForTurns > 0) {
-    return;
+    return false;
+  }
+  // Do not move if already moved
+  if (unit.thisTurnMoved) {
+    return false;
   }
   return true;
 }
@@ -237,6 +244,7 @@ export function moveTo(
   if (window.game.isCellObstructed(cellX, cellY)) {
     return Promise.resolve();
   }
+  unit.thisTurnMoved = true;
   return setLocation(unit, cellX, cellY);
 }
 

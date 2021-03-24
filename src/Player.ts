@@ -11,7 +11,6 @@ export interface IPlayer {
   inPortal: boolean;
   // Action flags determine what the player is allowed to do in a turn
   thisTurnSpellCast: boolean;
-  thisTurnMoved: boolean;
   // The players "hand" which contains cards
   hand: Card.CardTally;
   upgrades: Upgrade.IUpgrade[];
@@ -28,7 +27,6 @@ export function create(clientId: string): IPlayer {
       Unit.UnitType.PLAYER_CONTROLLED,
     ),
     thisTurnSpellCast: false,
-    thisTurnMoved: false,
     inPortal: false,
     actionsUsed: 0,
     hand: {},
@@ -51,7 +49,6 @@ export function resetPlayerForNextLevel(player: IPlayer) {
   player.inPortal = false;
 
   // Reset action limitations
-  player.thisTurnMoved = false;
   player.thisTurnSpellCast = false;
 
   // Make unit visible
