@@ -178,7 +178,7 @@ function onData(d: { fromClient: string; payload: any }) {
       }
       break;
     case MESSAGE_TYPES.CHOOSE_UPGRADE:
-      Player.addUpgrade(caster, payload.upgrade);
+      game.chooseUpgrade(caster, payload.upgrade);
       break;
     case MESSAGE_TYPES.END_TURN:
       game.endPlayerTurn(caster.clientId);

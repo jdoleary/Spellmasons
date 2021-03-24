@@ -74,12 +74,6 @@ function addHighlighIfPlayerBelongsToCurrentClient(player: IPlayer) {
     );
   }
 }
-export function addUpgrade(player: IPlayer, upgrade: Upgrade.IUpgrade) {
-  console.log(
-    'TODO implement how the player is modified when an upgrade is added',
-  );
-  player.upgrades.push(upgrade);
-}
 export function load(player: IPlayer) {
   const playerLoaded = {
     ...player,

@@ -3,6 +3,7 @@ import * as config from './config';
 import * as Unit from './Unit';
 import * as Pickup from './Pickup';
 import * as Player from './Player';
+import type * as Upgrade from './Upgrade';
 import * as math from './math';
 import * as Card from './Card';
 import Image from './Image';
@@ -65,6 +66,7 @@ export default class Game {
   // A set of clientIds who have ended their turn
   // Being a Set prevents a user from ending their turn more than once
   endedTurn = new Set<string>();
+  choseUpgrade = new Set<string>();
   constructor(seed: string) {
     window.game = this;
     this.seed = seed;
@@ -198,7 +200,7 @@ export default class Game {
           Unit.UnitType.AI,
           sourceUnit.subtype,
         );
-        const roll = window.game.random.integer(0, 100);
+        const roll = this.random.integer(0, 100);
         if (roll <= config.PERCENT_CHANCE_OF_HEAVY_UNIT) {
           unit.healthMax = 3;
           unit.health = unit.healthMax;
@@ -304,6 +306,18 @@ export default class Game {
         this.endedTurn.add(clientId);
         this.incrementPlayerTurn();
       }
+    }
+  }
+  chooseUpgrade(player: Player.IPlayer, upgrade: Upgrade.IUpgrade) {
+    console.log(
+      'TODO implement how the player is modified when an upgrade is added',
+    );
+    player.upgrades.push(upgrade);
+    this.choseUpgrade.add(player.clientId);
+
+    if (this.choseUpgrade.size >= this.players.length) {
+      this.moveToNextLevel();
+      this.choseUpgrade.clear();
     }
   }
   checkForEndOfLevel() {
