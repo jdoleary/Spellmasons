@@ -428,6 +428,7 @@ export default class Game {
           // Reset thisTurnMoved flag now that it is a new turn
           // Because no units have moved yet this turn
           u.thisTurnMoved = false;
+          u.intendedNextMove = undefined;
         }
         this.syncYourTurnState();
         this.bringOutYerDead();
@@ -466,6 +467,17 @@ export default class Game {
       default:
         break;
     }
+  }
+  initiateIntelligentAIMovement() {
+    // This function ensures that all units who can move, do move, in the proper order
+    // so, for example, three units next to each other all trying to move left can
+    // all do so, regardless of the order that they are in in the units array
+    const AIUnits = this.units.filter((u) => u.unitType === Unit.UnitType.AI);
+    // Move all unimpeded units
+    AIUnits.filter((u) => !!u.intendedNextMove).forEach((u) => {
+      // If unimpeded
+      Unit.moveTo(u, u.intendedNextMove);
+    });
   }
   setGameState(g: game_state) {
     this.state = g;
@@ -618,7 +630,8 @@ export default class Game {
   addPickupToArray(pickup: Pickup.IPickup) {
     this.pickups.push(pickup);
   }
-  isCellObstructed(x: number, y: number): boolean {
+  isCellObstructed(coordinates: Coords): boolean {
+    const { x, y } = coordinates;
     // Out of map bounds is considered "obstructed"
     if (x < 0 || y < 0 || x >= config.BOARD_WIDTH || y >= config.BOARD_HEIGHT) {
       return true;
@@ -636,11 +649,7 @@ export default class Game {
       const unitToSwapWith = this.getUnitAt(spell.x, spell.y);
       // Physically swap with target
       if (unitToSwapWith) {
-        Unit.setLocation(
-          unitToSwapWith,
-          spell.caster.unit.x,
-          spell.caster.unit.y,
-        );
+        Unit.setLocation(unitToSwapWith, spell.caster.unit);
       }
       // Physically swap with pickups
       const pickupToSwapWith = this.getPickupAt(spell.x, spell.y);
@@ -653,7 +662,7 @@ export default class Game {
       }
       const newTargetX = spell.caster.unit.x;
       const newTargetY = spell.caster.unit.y;
-      Unit.setLocation(spell.caster.unit, spell.x, spell.y).then(() => {
+      Unit.setLocation(spell.caster.unit, spell).then(() => {
         this.cast(
           Object.assign({}, spell, {
             // Cast the spell on the location that the caster WAS in

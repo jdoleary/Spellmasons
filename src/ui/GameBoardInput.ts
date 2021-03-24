@@ -45,6 +45,10 @@ export function syncMouseHoverIcon() {
     const selectedSpell = Spell.buildSpellFromCardTally(
       Card.getSelectedCardTally(),
       window.player,
+      {
+        x: mouseCellX,
+        y: mouseCellY,
+      },
     );
     // if spell exists show target image, otherwise show feet image for walking
     const targetImgPath = areAnyCardsSelected()
@@ -55,23 +59,16 @@ export function syncMouseHoverIcon() {
       return;
     }
     // Make a copy of the spell and add the target coords
-    const spellCopy = Object.assign(
-      {
-        x: mouseCellX,
-        y: mouseCellY,
-      },
-      selectedSpell,
-    );
-    if (spellCopy.swap) {
+    if (selectedSpell.swap) {
       const currentPlayer = window.game.players.find(
         (p) => p.clientId === window.clientId,
       );
-      spellCopy.x = currentPlayer.unit.x;
-      spellCopy.y = currentPlayer.unit.y;
+      selectedSpell.x = currentPlayer.unit.x;
+      selectedSpell.y = currentPlayer.unit.y;
     }
     // Find the targets of the spell
-    const targets = window.game.getTargetsOfSpell(spellCopy);
-    if (spellCopy.swap) {
+    const targets = window.game.getTargetsOfSpell(selectedSpell);
+    if (selectedSpell.swap) {
       targets.push({ x: mouseCellX, y: mouseCellY });
     }
     // Show highlights corresponding to targets

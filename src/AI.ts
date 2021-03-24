@@ -31,8 +31,8 @@ export function meleeAction(unit: Unit.IUnit) {
     }
   } else {
     // If nothing is obstructing
-    // physically move
-    Unit.moveTo(unit, next_x, next_y);
+    // set move intention
+    unit.intendedNextMove = { x: next_x, y: next_y };
     // Update the "planning view" overlay that shows the unit's agro radius
     Unit.updateSelectedOverlay(unit);
   }
@@ -60,7 +60,7 @@ export function rangedAction(unit: Unit.IUnit) {
     const closestPlayerUnit = Unit.findClosestPlayerTo(unit);
     if (closestPlayerUnit) {
       const moveTo = math.oneCellAwayFromCell(unit, closestPlayerUnit);
-      Unit.moveTo(unit, moveTo.x, moveTo.y);
+      unit.intendedNextMove = moveTo;
     }
   }
 }
@@ -89,7 +89,7 @@ export function reachAction(unit: Unit.IUnit) {
   } else {
     if (runFromTarget) {
       const moveTo = math.oneCellAwayFromCell(unit, runFromTarget);
-      Unit.moveTo(unit, moveTo.x, moveTo.y);
+      unit.intendedNextMove = moveTo;
     }
   }
 }

@@ -4,11 +4,12 @@ import type * as Card from './Card';
 import type Image from './Image';
 import * as math from './math';
 import { SHIELD_MULTIPLIER } from './config';
+import type { Coords } from './commonTypes';
 
 export interface Spell {
   caster?: IPlayer;
-  x?: number;
-  y?: number;
+  x: number;
+  y: number;
   heal?: number;
   damage?: number;
   freeze?: number;
@@ -23,9 +24,11 @@ export interface Spell {
 export function buildSpellFromCardTally(
   cardTally: Card.CardTally,
   player: IPlayer,
+  coords: Coords,
 ): Spell {
   const cardCountPairs = Object.entries(cardTally);
-  let spell: Spell = {};
+  // Begin building spell from the coordinates
+  let spell: Spell = coords;
   for (let [cardId, count] of cardCountPairs) {
     const upgrade = player.upgrades.find((u) => u.spellId === cardId);
     // "infinite" cards get the tally that is the summation of all of the upgrades with that id
@@ -85,7 +88,7 @@ export function effect(spell: Spell, args?: EffectArgs) {
   if (unit && spell.push > 0) {
     for (let i = 0; i < spell.push; i++) {
       const moveTo = math.oneCellAwayFromCell(unit, spell.caster.unit);
-      Unit.moveTo(unit, moveTo.x, moveTo.y);
+      Unit.moveTo(unit, moveTo);
     }
   }
   if (unit && spell.heal) {

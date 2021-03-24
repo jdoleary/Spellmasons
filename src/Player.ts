@@ -58,7 +58,7 @@ export function resetPlayerForNextLevel(player: IPlayer) {
   // Return to a spawn location
   // limit spawn to the leftmost column
   const coords = window.game.getRandomEmptyCell({ xMax: 0 });
-  Unit.moveTo(player.unit, 0, coords.y);
+  Unit.moveTo(player.unit, coords);
 }
 // Keep a global reference to the current client's player
 function updateGlobalRefToCurrentClientPlayer(player: IPlayer) {
@@ -96,7 +96,8 @@ export function enterPortal(player: IPlayer) {
   // limit spawn to the leftmost column
   const coords = window.game.getRandomEmptyCell({ xMax: 0 });
   // Move "portaled" unit out of the way to prevent collisions and chaining while portaled
-  Unit.setLocation(player.unit, -1, coords.y);
+  coords.x = -1;
+  Unit.setLocation(player.unit, coords);
   window.game.checkForEndOfLevel();
   // If player that entered the portal is the current client's player, end their turn
   if (player.clientId === window.clientId) {

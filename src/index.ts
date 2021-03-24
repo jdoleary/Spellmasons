@@ -136,15 +136,21 @@ function onData(d: { fromClient: string; payload: any }) {
       break;
     case MESSAGE_TYPES.MOVE_PLAYER:
       // Move the player 1 magnitude on either or both axes towards the desired position
-      Unit.moveTo(caster.unit, payload.x, payload.y).then(() => {
+      Unit.moveTo(caster.unit, payload).then(() => {
         checkEndPlayerTurn(caster);
         window.updateTurnAbilitiesLeft(caster);
       });
       break;
     case MESSAGE_TYPES.SPELL:
-      const spell = Spell.buildSpellFromCardTally(payload.cards, caster);
-      spell.x = payload.x;
-      spell.y = payload.y;
+      if (typeof payload.x !== 'number' || typeof payload.y !== 'number') {
+        console.error('Spell is invalid, it must have coordinates');
+        return;
+      }
+      const spell = Spell.buildSpellFromCardTally(
+        payload.cards,
+        caster,
+        payload,
+      );
       // Set caster based on which client sent it
       spell.caster = caster;
       Card.removeCardsFromHand(spell.caster, payload.cards);

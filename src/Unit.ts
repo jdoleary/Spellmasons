@@ -6,6 +6,7 @@ import Image from './Image';
 import { cellDistance } from './math';
 import { containerUnits } from './PixiUtils';
 import { ableToTakeTurn } from './Player';
+import type { Coords } from './commonTypes';
 export enum UnitType {
   PLAYER_CONTROLLED,
   AI,
@@ -29,6 +30,7 @@ export interface IUnit {
   name?: string;
   // If the unit moved this turn
   thisTurnMoved: boolean;
+  intendedNextMove?: Coords;
   image: Image;
   power: number;
   health: number;
@@ -51,6 +53,7 @@ export function create(
     x,
     y,
     thisTurnMoved: false,
+    intendedNextMove: undefined,
     image: new Image(x, y, imagePath, containerUnits),
     power: config.UNIT_BASE_POWER,
     health: config.UNIT_BASE_HEALTH,
@@ -232,30 +235,22 @@ export function moveAI(unit: IUnit) {
       break;
   }
 }
-export function moveTo(
-  unit: IUnit,
-  cellX: number,
-  cellY: number,
-): Promise<void> {
+export function moveTo(unit: IUnit, coordinates: Coords): Promise<void> {
   if (!canMove(unit)) {
     return Promise.resolve();
   }
   // Cannot move into an obstructed cell
-  if (window.game.isCellObstructed(cellX, cellY)) {
+  if (window.game.isCellObstructed(coordinates)) {
     return Promise.resolve();
   }
   unit.thisTurnMoved = true;
-  return setLocation(unit, cellX, cellY);
+  return setLocation(unit, coordinates);
 }
 
-export function setLocation(
-  unit: IUnit,
-  cellX: number,
-  cellY: number,
-): Promise<void> {
+export function setLocation(unit: IUnit, coordinates: Coords): Promise<void> {
   // Set state instantly to new position
-  unit.x = cellX;
-  unit.y = cellY;
+  unit.x = coordinates.x;
+  unit.y = coordinates.y;
   // check for collisions with pickups in new location
   window.game.checkPickupCollisions(unit);
   // Animate movement visually
