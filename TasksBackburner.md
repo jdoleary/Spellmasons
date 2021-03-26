@@ -1,3 +1,6 @@
+- why do we keep accidentally ending our turns (force of habit with spacebar being used in auto chess?)
+- You get "cannot move more than once per turn" while spell animations are firing
+- Celebratory damage counter for huge combos!
 - Event manager for granting dark card when you slay ally
 - Number keys to queue up spells
 

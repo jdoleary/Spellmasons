@@ -4,9 +4,6 @@
 
 - How do players know what their upgrades are
 - notify which players have left to upgrade
-- why do we keep accidentally ending our turns
-- You get "cannot move more than once per turn" while spell animations are firing
-- Celebratory damage counter for huge combos!
 - I didn't get to take a turn, brad didn't know how he died, (game log?)
 - Brad still had a shield after dying and resurrecting
   - Brad's health doesn't show after resurrecting
