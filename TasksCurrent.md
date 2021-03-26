@@ -9,7 +9,6 @@
 - You get "cannot move more than once per turn" while spell animations are firing
 - bug: heal tooltip is stuck at 1 even when you have upgrades
 - Celebratory damage counter for huge combos!
-- "Other player's turn" can be highlighted by the cursor
 - I didn't get to take a turn, brad didn't know how he died, (game log?)
 - Brad still had a shield after dying and resurrecting
   - Brad's health doesn't show after resurrecting

@@ -134,6 +134,7 @@ body.your-turn #endTurn {
   justify-content: center;
   pointer-events: none;
   background-color: grey;
+  user-select: none;
 }
 #player-turn-indicator-holder div {
   padding: 8px;
