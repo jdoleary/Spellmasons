@@ -2,12 +2,6 @@
 
 ## Brad 2021-03-24
 
-- How do players know what their upgrades are
-- notify which players have left to upgrade
-- I didn't get to take a turn, brad didn't know how he died, (game log?)
-- Brad still had a shield after dying and resurrecting
-- Don't let players cast fizzle spells (AOE or chain without damage)
-
 - Brad's final feedback
   - units need pathing, it's weird if they don't move at all
   - Needs balance, at the end you have a lot of cards but you die quickly
@@ -16,8 +10,6 @@
     - Expose the raw variables to the player so they can make calculated positions
 
 ---
-
-- bug: Damage and health no longer stack now that they are driven by upgrades
 
 - Idea: What if all spells where "pluggable" and used husky-style hooks
   - can you make a system where they fit in with no special if checks

@@ -1,3 +1,5 @@
+- How do players know what their upgrades are
+- notify which players have left to upgrade
 - why do we keep accidentally ending our turns (force of habit with spacebar being used in auto chess?)
 - You get "cannot move more than once per turn" while spell animations are firing
 - Celebratory damage counter for huge combos!
