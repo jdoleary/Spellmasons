@@ -319,7 +319,7 @@ export const cardSource: ICard[] = [
           ({ unit }) => {
             // Trigger the spell held in the trap on the unit that activated it
             // Override trap property so it doesn't simply place another trap
-            cardTally.trap = undefined;
+            delete cardTally.trap;
             window.game.castCards(caster, cardTally, unit);
           },
         );
@@ -347,7 +347,7 @@ export const cardSource: ICard[] = [
         const newTargetY = caster.unit.y;
         Unit.setLocation(caster.unit, target).then(() => {
           // Disable swap so it doesn't recurse forever
-          cardTally.swap = undefined;
+          delete cardTally.swap;
           window.game.castCards(caster, cardTally, {
             x: newTargetX,
             y: newTargetY,
