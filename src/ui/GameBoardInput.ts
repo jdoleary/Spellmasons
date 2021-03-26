@@ -5,6 +5,7 @@ import * as Card from '../Card';
 import type { IPlayer } from '../Player';
 import floatingText from '../FloatingText';
 import * as Unit from '../Unit';
+import { addPixiSprite, containerUI } from '../PixiUtils';
 
 // This is the unit that is currently selected
 // This likely means that information about it will display
@@ -57,19 +58,26 @@ export function syncMouseHoverIcon() {
     //   selectedSpell.x = currentPlayer.unit.x;
     //   selectedSpell.y = currentPlayer.unit.y;
     // }
-    // TODO: Fix showing the targets of the spell ahead of time using the new SpellEffects
+    const currentPlayer = window.game.players.find(
+      (p) => p.clientId === window.clientId,
+    );
     // Find the targets of the spell
-    // const targets = window.game.getTargetsOfSpell(selectedSpell);
+    const targets = window.game.getTargetsOfCardTally(
+      currentPlayer,
+      Card.getSelectedCardTally(),
+      { x: mouseCellX, y: mouseCellY },
+    );
+    // TODO: Fix showing the targets of the spell ahead of time using the new SpellEffects
     // if (selectedSpell.swap) {
     //   targets.push({ x: mouseCellX, y: mouseCellY });
     // }
-    // // Show highlights corresponding to targets
-    // for (let t of targets) {
-    //   const sprite = addPixiSprite(targetImgPath, containerUI);
-    //   sprite.x = t.x * CELL_SIZE;
-    //   sprite.y = t.y * CELL_SIZE;
-    //   highlights.push(sprite);
-    // }
+    // Show highlights corresponding to targets
+    for (let t of targets) {
+      const sprite = addPixiSprite(targetImgPath, containerUI);
+      sprite.x = t.x * CELL_SIZE;
+      sprite.y = t.y * CELL_SIZE;
+      highlights.push(sprite);
+    }
   }
 }
 export default function setupBoardInputHandlers() {

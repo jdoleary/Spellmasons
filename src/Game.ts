@@ -626,17 +626,12 @@ export default class Game {
     }
     return false;
   }
-  castCards(caster: Player.IPlayer, cardTally: Card.CardTally, target: Coords) {
+  getTargetsOfCardTally(
+    caster: Player.IPlayer,
+    cardTally: Card.CardTally,
+    target: Coords,
+  ): Coords[] {
     const cardIds = Object.keys(cardTally);
-    // Cast all preSpell effects, abort if needed
-    for (let cardId of cardIds) {
-      const abort = Card.cardSource
-        .find((c) => c.id == cardId)
-        .effect?.preSpell?.(caster, cardTally, target);
-      if (abort) {
-        return;
-      }
-    }
     let targets: Coords[] = [target];
     // Execute all modifyTargets effects
     for (let cardId of cardIds) {
@@ -648,6 +643,20 @@ export default class Game {
         targets = newTargets;
       }
     }
+    return targets;
+  }
+  castCards(caster: Player.IPlayer, cardTally: Card.CardTally, target: Coords) {
+    const cardIds = Object.keys(cardTally);
+    // Cast all preSpell effects, abort if needed
+    for (let cardId of cardIds) {
+      const abort = Card.cardSource
+        .find((c) => c.id == cardId)
+        .effect?.preSpell?.(caster, cardTally, target);
+      if (abort) {
+        return;
+      }
+    }
+    const targets = this.getTargetsOfCardTally(caster, cardTally, target);
 
     // Cast on all targets
     for (let target of targets) {
