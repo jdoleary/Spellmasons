@@ -6,11 +6,7 @@
 - notify which players have left to upgrade
 - I didn't get to take a turn, brad didn't know how he died, (game log?)
 - Brad still had a shield after dying and resurrecting
-  - Brad's health doesn't show after resurrecting
-- Brad healed himself and his turn just ended without letting him move
-  - he's stuck unable to move
 - Don't let players cast fizzle spells (AOE or chain without damage)
-- Brad is now not taking damage
 
 - Brad's final feedback
   - units need pathing, it's weird if they don't move at all

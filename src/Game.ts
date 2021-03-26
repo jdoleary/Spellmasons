@@ -351,8 +351,10 @@ export default class Game {
         u.image.cleanup();
       }
     }
-    // Remove dead units
-    this.units = this.units.filter((u) => u.alive);
+    // Remove dead non-player units
+    this.units = this.units.filter(
+      (u) => !(u.unitType !== Unit.UnitType.PLAYER_CONTROLLED && !u.alive),
+    );
   }
   // Generate an array of cell coordinates in shuffled order
   // between optional boundaries
