@@ -163,8 +163,11 @@ export function takeDamage(unit: IUnit, amount: number, cause?: string) {
     return;
   }
   unit.health -= amount;
+  // Prevent health from going over maximum
+  unit.health = Math.min(unit.health, unit.healthMax);
   // If the unit is "selected" this will update it's overlay to reflect the damage
   updateSelectedOverlay(unit);
+
   if (amount > 0) {
     // Show hearts floating away due to damage taken
     let healthChangedString = '';
@@ -178,8 +181,6 @@ export function takeDamage(unit: IUnit, amount: number, cause?: string) {
     });
   }
   unit.image.take_hit();
-  // Prevent health from going over maximum
-  unit.health = Math.min(unit.health, unit.healthMax);
   if (unit.health <= 0) {
     die(unit);
   }
