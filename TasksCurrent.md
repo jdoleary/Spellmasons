@@ -8,6 +8,7 @@
 - Bug: I selected chain and deselected it and tried to push but it still used chain
 - Bug: Brad couldn't move at first after resurrecting
 - Bug: Shield didn't work, brad cast it, got hit by 4 guys and died immediately
+- Bug: Brad could still cast one spell after the game was over and he was dead
 
 # Todo
 
