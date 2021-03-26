@@ -1,5 +1,8 @@
 import type * as Player from './Player';
+import * as Unit from './Unit';
+import * as Pickup from './Pickup';
 import * as math from './math';
+import type { Effect } from './SpellEffects';
 const elCardHand = document.getElementById('card-hand');
 
 const CARD_WIDTH = 70;
@@ -166,6 +169,7 @@ export function toString(s?: CardTally) {
   }
   return strings.join(' ');
 }
+
 // Card "Hook" Modifier Stages
 // PreSpell (ex: Swap)
 // ModifyTargets (ex: Chain, AOE)
@@ -176,67 +180,206 @@ export interface ICard {
   id: string;
   thumbnail: string;
   probability: number;
+  effect?: Effect;
   isDark?: boolean;
 }
-const darkCardSource: ICard[] = [
+export const cardSource: ICard[] = [
   {
     id: 'obliterate',
     thumbnail: 'images/spell/obliterate.png',
     probability: 1,
     isDark: true,
   },
-];
-const cardSource: ICard[] = [
   {
     id: 'damage',
     thumbnail: 'images/spell/damage.png',
     probability: 120,
+    effect: {
+      singleTargetEffect: (_caster, target, magnitude) => {
+        const unit = window.game.getUnitAt(target.x, target.y);
+        if (unit) {
+          Unit.takeDamage(unit, magnitude, 'spell');
+        }
+      },
+    },
   },
   {
     id: 'heal',
     thumbnail: 'images/spell/heal.png',
     probability: 50,
+    effect: {
+      singleTargetEffect: (_caster, target, magnitude) => {
+        const unit = window.game.getUnitAt(target.x, target.y);
+        if (unit) {
+          Unit.takeDamage(unit, -magnitude, 'spell');
+        }
+      },
+    },
   },
   {
     id: 'chain',
     thumbnail: 'images/spell/chain.png',
     probability: 10,
+    effect: {
+      modifyTargets: (_caster, targets, _magnitude) => {
+        let updatedTargets = [...targets];
+        for (let target of updatedTargets) {
+          const unit = window.game.getUnitAt(target.x, target.y);
+          if (unit) {
+            // Find all units touching the spell origin
+            const chained_units = window.game.getTouchingUnitsRecursive(
+              target.x,
+              target.y,
+              updatedTargets,
+            );
+            updatedTargets = updatedTargets.concat(chained_units);
+          }
+        }
+        return updatedTargets;
+      },
+    },
   },
   {
     id: 'freeze',
     thumbnail: 'images/spell/freeze.png',
     probability: 20,
+    effect: {
+      singleTargetEffect: (_caster, target, magnitude) => {
+        const unit = window.game.getUnitAt(target.x, target.y);
+        if (unit) {
+          Unit.addToModifier(unit, 'frozen', magnitude);
+          // Visual
+          const frozenSprite = unit.image.addSubSprite(
+            'images/spell/freeze.png',
+            'frozen',
+          );
+          frozenSprite.alpha = 0.5;
+          frozenSprite.anchor.x = 0;
+          frozenSprite.anchor.y = 0;
+          frozenSprite.scale.x = 0.5;
+          frozenSprite.scale.y = 0.5;
+        }
+      },
+    },
   },
   {
     id: 'area_of_effect',
     thumbnail: 'images/spell/aoe.png',
     probability: 10,
+    effect: {
+      modifyTargets: (_caster, targets, magnitude) => {
+        let updatedTargets = [...targets];
+        for (let target of updatedTargets) {
+          const withinRadius = window.game.getCoordsWithinDistanceOfTarget(
+            target.x,
+            target.y,
+            magnitude,
+          );
+          updatedTargets = updatedTargets.concat(withinRadius);
+        }
+        return updatedTargets;
+      },
+    },
   },
   {
     id: 'shield',
     thumbnail: 'images/spell/shield.png',
     probability: 10,
+    effect: {
+      singleTargetEffect: (_caster, target, magnitude) => {
+        const unit = window.game.getUnitAt(target.x, target.y);
+        if (unit) {
+          Unit.addToModifier(unit, 'shield', magnitude);
+          // Visual
+          const shieldSprite = unit.image.addSubSprite(
+            'images/spell/shield.png',
+            'shield',
+          );
+          shieldSprite.alpha = 0.5;
+          shieldSprite.anchor.x = 0;
+          shieldSprite.anchor.y = 0;
+          shieldSprite.scale.x = 0.5;
+          shieldSprite.scale.y = 0.5;
+        }
+      },
+    },
   },
   {
     id: 'trap',
     thumbnail: 'images/spell/trap.png',
     probability: 5,
+    effect: {
+      preSpell: (caster, cardTally, target) => {
+        Pickup.create(
+          target.x,
+          target.y,
+          true,
+          'images/spell/trap.png',
+          false,
+          ({ unit }) => {
+            // Trigger the spell held in the trap on the unit that activated it
+            // Override trap property so it doesn't simply place another trap
+            cardTally.trap = undefined;
+            window.game.castCards(caster, cardTally, unit);
+          },
+        );
+        return true;
+      },
+    },
   },
   {
     id: 'swap',
     thumbnail: 'images/spell/swap.png',
     probability: 3,
+    effect: {
+      preSpell: (caster, cardTally, target) => {
+        const unitToSwapWith = window.game.getUnitAt(target.x, target.y);
+        // Physically swap with target
+        if (unitToSwapWith) {
+          Unit.setLocation(unitToSwapWith, caster.unit);
+        }
+        // Physically swap with pickups
+        const pickupToSwapWith = window.game.getPickupAt(target.x, target.y);
+        if (pickupToSwapWith) {
+          Pickup.setPosition(pickupToSwapWith, caster.unit.x, caster.unit.y);
+        }
+        const newTargetX = caster.unit.x;
+        const newTargetY = caster.unit.y;
+        Unit.setLocation(caster.unit, target).then(() => {
+          // Disable swap so it doesn't recurse forever
+          cardTally.swap = undefined;
+          window.game.castCards(caster, cardTally, {
+            x: newTargetX,
+            y: newTargetY,
+          });
+        });
+        // Do not continue with casting the spell
+        return true;
+      },
+    },
   },
   {
     id: 'push',
     thumbnail: 'images/spell/push.png',
     probability: 5,
+    effect: {
+      singleTargetEffect: (caster, target, magnitude) => {
+        for (let i = 0; i < magnitude; i++) {
+          const unit = window.game.getUnitAt(target.x, target.y);
+          if (unit) {
+            const moveTo = math.oneCellAwayFromCell(unit, caster.unit);
+            Unit.moveTo(unit, moveTo);
+          }
+        }
+      },
+    },
   },
 ];
 
 // Chooses a random card based on the card's probabilities
 export function generateCard(): ICard {
-  return math.chooseObjectWithProbability(cardSource);
+  // Excludes dark cards
+  return math.chooseObjectWithProbability(cardSource.filter((c) => !c.isDark));
 }
 function getCardRarityColor(content: ICard): string {
   if (content.isDark) {
