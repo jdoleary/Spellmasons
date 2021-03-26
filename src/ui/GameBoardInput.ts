@@ -1,7 +1,5 @@
 import { MESSAGE_TYPES } from '../MessageTypes';
 import { BOARD_HEIGHT, BOARD_WIDTH, CELL_SIZE } from '../config';
-import * as Spell from '../Spell';
-import { addPixiSprite, containerUI } from '../PixiUtils';
 import { turn_phase } from '../Game';
 import * as Card from '../Card';
 import type { IPlayer } from '../Player';
@@ -42,14 +40,6 @@ export function syncMouseHoverIcon() {
   if (window.game.turn_phase == turn_phase.PlayerTurns) {
     // If mouse hovering over a new cell, update the target images
 
-    const selectedSpell = Spell.buildSpellFromCardTally(
-      Card.getSelectedCardTally(),
-      window.player,
-      {
-        x: mouseCellX,
-        y: mouseCellY,
-      },
-    );
     // if spell exists show target image, otherwise show feet image for walking
     const targetImgPath = areAnyCardsSelected()
       ? 'images/spell/target.png'
@@ -58,14 +48,15 @@ export function syncMouseHoverIcon() {
       // Do not render if there is no target image path
       return;
     }
+    // TODO restore after spell refactor
     // Make a copy of the spell and add the target coords
-    if (selectedSpell.swap) {
-      const currentPlayer = window.game.players.find(
-        (p) => p.clientId === window.clientId,
-      );
-      selectedSpell.x = currentPlayer.unit.x;
-      selectedSpell.y = currentPlayer.unit.y;
-    }
+    // if (selectedSpell.swap) {
+    //   const currentPlayer = window.game.players.find(
+    //     (p) => p.clientId === window.clientId,
+    //   );
+    //   selectedSpell.x = currentPlayer.unit.x;
+    //   selectedSpell.y = currentPlayer.unit.y;
+    // }
     // TODO: Fix showing the targets of the spell ahead of time using the new SpellEffects
     // Find the targets of the spell
     // const targets = window.game.getTargetsOfSpell(selectedSpell);

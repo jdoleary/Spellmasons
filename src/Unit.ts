@@ -244,6 +244,16 @@ export function moveAI(unit: IUnit) {
       break;
   }
 }
+export function addToModifier(
+  unit: IUnit,
+  modifier: string,
+  magnitude: number,
+) {
+  if (!unit.modifiers[modifier]) {
+    unit.modifiers[modifier] = 0;
+  }
+  unit.modifiers[modifier] += magnitude;
+}
 export function decrementModifier(unit: IUnit, modifier: string) {
   if (unit.modifiers[modifier]) {
     unit.modifiers[modifier]--;

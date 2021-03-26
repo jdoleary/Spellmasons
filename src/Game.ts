@@ -1,4 +1,3 @@
-import { Spell, effect, getImage } from './Spell';
 import * as config from './config';
 import * as Unit from './Unit';
 import * as Pickup from './Pickup';
@@ -553,59 +552,7 @@ export default class Game {
         }
     }
   }
-  getTargetsOfSpell(spell: Spell): Coords[] {
-    let coords: Coords[] = [];
-    if (spell.area_of_effect) {
-      const withinRadius = this.getCoordsWithinDistanceOfTarget(
-        spell.x,
-        spell.y,
-        spell.area_of_effect,
-      );
-      coords = coords.concat(withinRadius);
-    }
-    let units: Unit.IUnit[] = coords
-      // Find units at coordinates
-      .map((coord) => this.getUnitAt(coord.x, coord.y))
-      // Filter out dead units
-      .filter((x) => x && x.alive);
-    if (spell.chain) {
-      if (units.length === 0) {
-        const origin_unit = this.getUnitAt(spell.x, spell.y);
-        // Only chain if the spell is cast directly on a unit
-        // otherwise the chain will reach too far (1 distance away from empty cell)
-        if (origin_unit) {
-          // Find all units touching the spell origin
-          const chained_units = this.getTouchingUnitsRecursive(
-            spell.x,
-            spell.y,
-          );
-          units = units.concat(chained_units);
-        }
-      } else {
-        // Find all units touching targeted units
-        // This supports area_of_effect + chain combo for example where all units within the area_of_effect blast will
-        // chain to units touching them
-        for (let alreadyTargetedUnit of units) {
-          const chained_units = this.getTouchingUnitsRecursive(
-            alreadyTargetedUnit.x,
-            alreadyTargetedUnit.y,
-            units,
-          );
-          units = units.concat(chained_units);
-        }
-      }
-    }
-    coords = coords.concat(units.map((u) => ({ x: u.x, y: u.y })));
-    if (coords.length == 0) {
-      coords = [
-        {
-          x: spell.x,
-          y: spell.y,
-        },
-      ];
-    }
-    return coords;
-  }
+
   getCoordsWithinDistanceOfTarget(
     targetX: number,
     targetY: number,
@@ -629,7 +576,7 @@ export default class Game {
   getTouchingUnitsRecursive(
     x: number,
     y: number,
-    ignore: Unit.IUnit[] = [],
+    ignore: Coords[] = [],
   ): Unit.IUnit[] {
     const touchingDistance = 1;
     let touching = this.units.filter((u) => {
@@ -639,10 +586,10 @@ export default class Game {
         u.x >= x - touchingDistance &&
         u.y <= y + touchingDistance &&
         u.y >= y - touchingDistance &&
-        !ignore.includes(u)
+        !ignore.find((i) => i.x == u.x && i.y == u.y)
       );
     });
-    ignore = ignore.concat(touching);
+    ignore = ignore.concat(touching.map((u) => ({ x: u.x, y: u.y })));
     for (let u of touching) {
       touching = touching.concat(
         this.getTouchingUnitsRecursive(u.x, u.y, ignore),
@@ -679,102 +626,79 @@ export default class Game {
     }
     return false;
   }
-  cast(spell: Spell) {
-    if (spell.swap) {
-      const unitToSwapWith = this.getUnitAt(spell.x, spell.y);
-      // Physically swap with target
-      if (unitToSwapWith) {
-        Unit.setLocation(unitToSwapWith, spell.caster.unit);
+  castCards(caster: Player.IPlayer, cardTally: Card.CardTally, target: Coords) {
+    const cardIds = Object.keys(cardTally);
+    // Cast all preSpell effects, abort if needed
+    for (let cardId of cardIds) {
+      const abort = Card.cardSource
+        .find((c) => c.id == cardId)
+        .effect?.preSpell?.(caster, cardTally, target);
+      if (abort) {
+        return;
       }
-      // Physically swap with pickups
-      const pickupToSwapWith = this.getPickupAt(spell.x, spell.y);
-      if (pickupToSwapWith) {
-        Pickup.setPosition(
-          pickupToSwapWith,
-          spell.caster.unit.x,
-          spell.caster.unit.y,
-        );
-      }
-      const newTargetX = spell.caster.unit.x;
-      const newTargetY = spell.caster.unit.y;
-      Unit.setLocation(spell.caster.unit, spell).then(() => {
-        this.cast(
-          Object.assign({}, spell, {
-            // Cast the spell on the location that the caster WAS in
-            x: newTargetX,
-            y: newTargetY,
-            // Disable swap so it doesn't recurse forever
-            swap: false,
-          }),
-        );
-      });
-      return;
     }
-    if (spell.trap) {
-      Pickup.create(
-        spell.x,
-        spell.y,
-        true,
-        'images/spell/trap.png',
-        false,
-        ({ unit }) => {
-          // Trigger the spell held in the trap on the unit that activated it
-          // Override trap property so it doesn't simply place another trap
-          this.cast(Object.assign({}, spell, { trap: false }));
-        },
-      );
-      return;
-    }
-    // Get all units targeted by spell
-    const targetCoords = this.getTargetsOfSpell(spell);
-    // Convert targets to list of units
-    let unitsAtTargets = [];
-    for (let t of targetCoords) {
-      const { x, y } = t;
-      const unitAtCoords = this.getUnitAt(x, y);
-      if (unitAtCoords) {
-        unitsAtTargets.push(unitAtCoords);
+    let targets: Coords[] = [target];
+    // Execute all modifyTargets effects
+    for (let cardId of cardIds) {
+      // Continually remodifies the targets array
+      const newTargets = Card.cardSource
+        .find((c) => c.id == cardId)
+        .effect?.modifyTargets?.(caster, targets, cardTally[cardId]);
+      if (newTargets) {
+        targets = newTargets;
       }
     }
 
-    if (unitsAtTargets.length) {
-      // Cast on each unit targeted
-      for (let unit of unitsAtTargets) {
-        effect(spell, { unit });
+    // Cast on all targets
+    for (let target of targets) {
+      for (let cardId of cardIds) {
+        Card.cardSource
+          .find((c) => c.id == cardId)
+          .effect?.singleTargetEffect?.(caster, target, cardTally[cardId]);
       }
-      this.animateSpellEffects(
-        unitsAtTargets.map((u) => ({ x: u.x, y: u.y, spell })),
-      );
-    } else {
-      // If no units were targeted,
-      // Cast on the tile that was clicked on
-      effect(spell);
-      this.animateSpellEffects([{ x: spell.x, y: spell.y, spell }]);
     }
+
     // Since units may have moved or become frozen, redraw the danger overlay which takes these
     // changes into consideration
     drawDangerOverlay();
-  }
-  animateSpellEffects(castInstances: { x: number; y: number; spell: Spell }[]) {
-    // Show an image when cast occurs
-    const images = castInstances.map(
-      (i) => new Image(i.x, i.y, getImage(i.spell), containerSpells),
-    );
 
-    window.animationTimeline
-      .addAnimation(
-        images.map((i) => ({
-          sprite: i.sprite,
-          target: {
-            scale: 1.5,
-            alpha: 0,
-          },
-        })),
-      )
-      .then(() => {
-        images.forEach((i) => i.cleanup());
-      });
+    // let units: Unit.IUnit[] = coords
+    //   // Find units at coordinates
+    //   .map((coord) => this.getUnitAt(coord.x, coord.y))
+    //   // Filter out dead units
+    //   .filter((x) => x && x.alive);
+
+    // coords = coords.concat(units.map((u) => ({ x: u.x, y: u.y })));
+    // if (coords.length == 0) {
+    //   coords = [
+    //     {
+    //       x: spell.x,
+    //       y: spell.y,
+    //     },
+    //   ];
+    // }
   }
+
+  // animateSpellEffects(castInstances: { x: number; y: number; spell: Spell }[]) {
+  //   // Show an image when cast occurs
+  //   const images = castInstances.map(
+  //     (i) => new Image(i.x, i.y, getImage(i.spell), containerSpells),
+  //   );
+
+  //   window.animationTimeline
+  //     .addAnimation(
+  //       images.map((i) => ({
+  //         sprite: i.sprite,
+  //         target: {
+  //           scale: 1.5,
+  //           alpha: 0,
+  //         },
+  //       })),
+  //     )
+  //     .then(() => {
+  //       images.forEach((i) => i.cleanup());
+  //     });
+  // }
   sanitizeForSaving(): Game {
     return {
       ...this,

@@ -4,7 +4,6 @@ import * as Player from './Player';
 import * as Unit from './Unit';
 import * as Pickup from './Pickup';
 import AnimationTimeline from './AnimationTimeline';
-import * as Spell from './Spell';
 import * as UI from './ui/UserInterface';
 import * as Card from './Card';
 import { MESSAGE_TYPES } from './MessageTypes';
@@ -146,27 +145,20 @@ function onData(d: { fromClient: string; payload: any }) {
         console.error('Spell is invalid, it must have coordinates');
         return;
       }
-      const spell = Spell.buildSpellFromCardTally(
-        payload.cards,
-        caster,
-        payload,
-      );
-      // Set caster based on which client sent it
-      spell.caster = caster;
-      Card.removeCardsFromHand(spell.caster, payload.cards);
+      Card.removeCardsFromHand(caster, payload.cards);
       if (
         // Only allow casting during the PlayerTurns phase
         (game.turn_phase === turn_phase.PlayerTurns &&
           // If your turn and you are casting, allow
           game.yourTurn &&
-          spell.caster.clientId === window.clientId) ||
+          caster.clientId === window.clientId) ||
         // or if not your turn and opponent is casting, allow
-        (!game.yourTurn && spell.caster.clientId !== window.clientId)
+        (!game.yourTurn && caster.clientId !== window.clientId)
       ) {
-        game.cast(spell);
+        game.castCards(caster, payload.cards, payload);
         floatingText({
-          cellX: spell.x,
-          cellY: spell.y,
+          cellX: payload.x,
+          cellY: payload.y,
           text: Card.toString(payload.cards),
         });
         // Casting a spell uses an action

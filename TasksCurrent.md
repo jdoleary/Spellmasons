@@ -4,6 +4,8 @@
   - can you make a system where they fit in with no special if checks
     - how to solve freeze, trap, swap?
   - what if there was a planning phase where you could pick your arsenal of cards once you see the board to prevent doom state?
+  - TODO: Ensure order of operations for AOE and chain in new hooks system
+  - TODO: How will GameBoardInput display the targets ahead of time?
 - Better way to manage cards in hand
   - Add data-id to selected card tally elements and use document.query instead of an object to keep track
     so the ui is never out of sync with the game state. this makes it easier to clear all selected cards for example
