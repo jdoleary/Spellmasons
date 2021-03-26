@@ -66,18 +66,19 @@ export function syncMouseHoverIcon() {
       selectedSpell.x = currentPlayer.unit.x;
       selectedSpell.y = currentPlayer.unit.y;
     }
+    // TODO: Fix showing the targets of the spell ahead of time using the new SpellEffects
     // Find the targets of the spell
-    const targets = window.game.getTargetsOfSpell(selectedSpell);
-    if (selectedSpell.swap) {
-      targets.push({ x: mouseCellX, y: mouseCellY });
-    }
-    // Show highlights corresponding to targets
-    for (let t of targets) {
-      const sprite = addPixiSprite(targetImgPath, containerUI);
-      sprite.x = t.x * CELL_SIZE;
-      sprite.y = t.y * CELL_SIZE;
-      highlights.push(sprite);
-    }
+    // const targets = window.game.getTargetsOfSpell(selectedSpell);
+    // if (selectedSpell.swap) {
+    //   targets.push({ x: mouseCellX, y: mouseCellY });
+    // }
+    // // Show highlights corresponding to targets
+    // for (let t of targets) {
+    //   const sprite = addPixiSprite(targetImgPath, containerUI);
+    //   sprite.x = t.x * CELL_SIZE;
+    //   sprite.y = t.y * CELL_SIZE;
+    //   highlights.push(sprite);
+    // }
   }
 }
 export default function setupBoardInputHandlers() {
