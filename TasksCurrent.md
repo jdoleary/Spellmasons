@@ -6,9 +6,7 @@
 - notify which players have left to upgrade
 - why do we keep accidentally ending our turns
 - bug: for a moment I showed more health and it reverted
-- top bar should tell you what level you're on
 - You get "cannot move more than once per turn" while spell animations are firing
-- Archers hsould only firein diag
 - bug: heal tooltip is stuck at 1 even when you have upgrades
 - Celebratory damage counter for huge combos!
 - "Other player's turn" can be highlighted by the cursor

@@ -45,6 +45,7 @@ const elPlayerTurnIndicatorHolder = document.getElementById(
 );
 const elPlayerTurnIndicator = document.getElementById('player-turn-indicator');
 const elTurnTimeRemaining = document.getElementById('turn-time-remaining');
+const elLevelIndicator = document.getElementById('level-indicator');
 export default class Game {
   state: game_state;
   seed: string;
@@ -148,6 +149,8 @@ export default class Game {
   }
 
   initLevel() {
+    // Update level indicator UI at top of screen
+    elLevelIndicator.innerText = `Level ${this.level}`;
     // Add cards to hand
     for (let p of this.players) {
       for (let i = 0; i < config.GIVE_NUM_CARDS_PER_LEVEL; i++) {
