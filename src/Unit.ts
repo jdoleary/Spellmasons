@@ -13,12 +13,13 @@ export enum UnitType {
 }
 export enum UnitSubType {
   AI_melee,
-  AI_ranged,
+  AI_bishop,
+  AI_rook,
   AI_reach,
 }
 export function getDangerZoneColor(unit: IUnit) {
   switch (unit.unitSubType) {
-    case UnitSubType.AI_ranged:
+    case UnitSubType.AI_bishop:
       return 0x0000ff;
     default:
       return 0xff0000;
@@ -231,7 +232,10 @@ export function moveAI(unit: IUnit) {
     case UnitSubType.AI_melee:
       AI.meleeAction(unit);
       break;
-    case UnitSubType.AI_ranged:
+    case UnitSubType.AI_bishop:
+      AI.rangedAction(unit);
+      break;
+    case UnitSubType.AI_rook:
       AI.rangedAction(unit);
       break;
     case UnitSubType.AI_reach:

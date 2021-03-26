@@ -49,6 +49,7 @@ function loadTextures(): Promise<void> {
       'images/tiles/ground.png',
       'images/units/golem.png',
       'images/units/golem-blue.png',
+      'images/units/golem-red.png',
       'images/units/golem-sand.png',
       'images/units/man-blue.png',
       'images/spell/aoe.png',

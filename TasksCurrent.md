@@ -24,6 +24,8 @@
   - units need pathing, it's weird if they don't move at all
   - Needs balance, at the end you have a lot of cards but you die quickly
   - having less, stronger units is more of a challenge than having many, weak units
+  - show the rarity of cards to a player?
+    - Expose the raw variables to the player so they can make calculated positions
 
 ---
 

@@ -16,8 +16,14 @@ const source = [
   {
     id: 'golem-ranged',
     image: 'images/units/golem-blue.png',
-    subtype: UnitSubType.AI_ranged,
+    subtype: UnitSubType.AI_bishop,
     probability: 50,
+  },
+  {
+    id: 'golem-rook',
+    image: 'images/units/golem-red.png',
+    subtype: UnitSubType.AI_rook,
+    probability: 10,
   },
   {
     id: 'golem-reach',

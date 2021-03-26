@@ -106,12 +106,14 @@ export function canAttackCell(unit: Unit.IUnit, x: number, y: number): boolean {
   if (unit.unitSubType === Unit.UnitSubType.AI_melee) {
     return math.cellDistance(unit, { x, y }) == 1;
     // return Math.abs(unit.x - x) <= 1 && Math.abs(unit.y - y) <= 1;
-  } else if (unit.unitSubType === Unit.UnitSubType.AI_ranged) {
+  } else if (unit.unitSubType === Unit.UnitSubType.AI_bishop) {
+    const isDiagonal = Math.abs(x - unit.x) === Math.abs(y - unit.y);
+    return isDiagonal;
+  } else if (unit.unitSubType === Unit.UnitSubType.AI_rook) {
     // Ranged units can attack like a queen in chess
     const isOnSameHorizontal = x === unit.x;
     const isOnSameVertical = y === unit.y;
-    const isDiagonal = Math.abs(x - unit.x) === Math.abs(y - unit.y);
-    return isOnSameHorizontal || isOnSameVertical || isDiagonal;
+    return isOnSameHorizontal || isOnSameVertical;
   } else if (unit.unitSubType === Unit.UnitSubType.AI_reach) {
     // Can hit you if you are 2 away but not 1 away
     const cellDistance = math.cellDistance(unit, { x, y });
