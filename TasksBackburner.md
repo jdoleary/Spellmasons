@@ -1,3 +1,9 @@
+- 2021-03-24 Brad feedback
+  - Needs balance, at the end you have a lot of cards but you die quickly
+  - having less, stronger units is more of a challenge than having many, weak units
+  - show the rarity of cards to a player?
+    - Expose the raw variables to the player so they can make calculated positions
+- Don't let players cast fizzle spells (AOE or chain without damage)
 - How do players know what their upgrades are
 - notify which players have left to upgrade
 - why do we keep accidentally ending our turns (force of habit with spacebar being used in auto chess?)
