@@ -217,6 +217,25 @@ export const cardSource: ICard[] = [
     },
   },
   {
+    id: 'area_of_effect',
+    thumbnail: 'images/spell/aoe.png',
+    probability: 10,
+    effect: {
+      modifyTargets: (_caster, targets, magnitude) => {
+        let updatedTargets = [...targets];
+        for (let target of updatedTargets) {
+          const withinRadius = window.game.getCoordsWithinDistanceOfTarget(
+            target.x,
+            target.y,
+            magnitude,
+          );
+          updatedTargets = updatedTargets.concat(withinRadius);
+        }
+        return updatedTargets;
+      },
+    },
+  },
+  {
     id: 'chain',
     thumbnail: 'images/spell/chain.png',
     probability: 10,
@@ -259,25 +278,6 @@ export const cardSource: ICard[] = [
           frozenSprite.scale.x = 0.5;
           frozenSprite.scale.y = 0.5;
         }
-      },
-    },
-  },
-  {
-    id: 'area_of_effect',
-    thumbnail: 'images/spell/aoe.png',
-    probability: 10,
-    effect: {
-      modifyTargets: (_caster, targets, magnitude) => {
-        let updatedTargets = [...targets];
-        for (let target of updatedTargets) {
-          const withinRadius = window.game.getCoordsWithinDistanceOfTarget(
-            target.x,
-            target.y,
-            magnitude,
-          );
-          updatedTargets = updatedTargets.concat(withinRadius);
-        }
-        return updatedTargets;
       },
     },
   },
