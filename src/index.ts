@@ -156,11 +156,6 @@ function onData(d: { fromClient: string; payload: any }) {
         (!game.yourTurn && caster.clientId !== window.clientId)
       ) {
         game.castCards(caster, payload.cards, payload);
-        floatingText({
-          cellX: payload.x,
-          cellY: payload.y,
-          text: Card.toString(payload.cards),
-        });
         // Casting a spell uses an action
         caster.thisTurnSpellCast = true;
         window.updateTurnAbilitiesLeft(caster);

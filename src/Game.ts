@@ -666,6 +666,11 @@ export default class Game {
           .effect?.singleTargetEffect?.(caster, target, cardTally[cardId]);
       }
     }
+    floatingText({
+      cellX: target.x,
+      cellY: target.y,
+      text: Card.toString(cardTally),
+    });
 
     // Since units may have moved or become frozen, redraw the danger overlay which takes these
     // changes into consideration
