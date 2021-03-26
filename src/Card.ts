@@ -147,10 +147,10 @@ export function toString(s?: CardTally) {
   }
   const strings = [];
   if (s.damage > 0) {
-    strings.push(`${s.damage}🔥`);
+    strings.push(`🔥`);
   }
   if (s.heal > 0) {
-    strings.push(`${s.heal}💖`);
+    strings.push(`💖`);
   }
   if (s.freeze > 0) {
     strings.push(`${s.freeze}🧊`);
