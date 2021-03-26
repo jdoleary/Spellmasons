@@ -30,8 +30,7 @@ export function create(clientId: string): IPlayer {
     inPortal: false,
     actionsUsed: 0,
     hand: {},
-    // Start with all the "always" upgrades because each player always has them
-    upgrades: [...Upgrade.upgradeSource.filter((u) => u.always)],
+    upgrades: [],
   };
   updateGlobalRefToCurrentClientPlayer(player);
   // Add cards to hand
