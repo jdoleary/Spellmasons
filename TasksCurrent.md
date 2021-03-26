@@ -1,5 +1,17 @@
+## Brad feedback 2021-03-26
+
+- All golems are the same size, heavy not showing, only on first level
+- health went back to max after portaling??
+- freezing is permanent? a unit unfroze between brad and my turns, unfreezing logic is broke
+- advice: need more diversity of challenge with the enemy types than just "avboid that line"
+  - a unit that summons other units (adds stimulation to the thought, more than just avoid the shape)
+- Bug: I selected chain and deselected it and tried to push but it still used chain
+- Bug: Brad couldn't move at first after resurrecting
+- Bug: Shield didn't work, brad cast it, got hit by 4 guys and died immediately
+
 # Todo
 
+- Next: Be more creative with enemies
 - Idea: What if all spells where "pluggable" and used husky-style hooks
   - can you make a system where they fit in with no special if checks
     - how to solve freeze, trap, swap?
