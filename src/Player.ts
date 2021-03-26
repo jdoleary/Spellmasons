@@ -1,6 +1,6 @@
 import { PLAYER_BASE_HEALTH } from './config';
 import * as Unit from './Unit';
-import * as Upgrade from './Upgrade';
+import type * as Upgrade from './Upgrade';
 import * as Card from './Card';
 import * as config from './config';
 
@@ -58,7 +58,7 @@ export function resetPlayerForNextLevel(player: IPlayer) {
   // Return to a spawn location
   // limit spawn to the leftmost column
   const coords = window.game.getRandomEmptyCell({ xMax: 0 });
-  Unit.moveTo(player.unit, coords);
+  Unit.setLocation(player.unit, coords);
 }
 // Keep a global reference to the current client's player
 function updateGlobalRefToCurrentClientPlayer(player: IPlayer) {

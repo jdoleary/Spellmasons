@@ -252,6 +252,8 @@ export function decrementModifier(unit: IUnit, modifier: string) {
     }
   }
 }
+// moveTo moves a unit, considering all the in-game blockers and flags
+// the units property thisTurnMoved
 export function moveTo(unit: IUnit, coordinates: Coords): Promise<void> {
   if (!canMove(unit)) {
     return Promise.resolve();
@@ -264,6 +266,8 @@ export function moveTo(unit: IUnit, coordinates: Coords): Promise<void> {
   return setLocation(unit, coordinates);
 }
 
+// setLocation, unlike moveTo, simply sets a unit to a cell coordinate without
+// considering in-game blockers or changing any unit flags
 export function setLocation(unit: IUnit, coordinates: Coords): Promise<void> {
   // Set state instantly to new position
   unit.x = coordinates.x;
