@@ -1,5 +1,5 @@
 export const PLAYER_BASE_HEALTH = 4;
-export const UNIT_BASE_HEALTH = 1;
+export const UNIT_BASE_HEALTH = 2;
 export const UNIT_BASE_POWER = 1;
 export const BOARD_HEIGHT = 9;
 export const BOARD_WIDTH = 12;
