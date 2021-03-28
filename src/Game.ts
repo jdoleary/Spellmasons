@@ -646,6 +646,10 @@ export default class Game {
     return targets;
   }
   castCards(caster: Player.IPlayer, cardTally: Card.CardTally, target: Coords) {
+    if (!caster.unit.alive) {
+      // Prevent dead players from casting
+      return;
+    }
     const cardIds = Object.keys(cardTally);
     // Cast all preSpell effects, abort if needed
     for (let cardId of cardIds) {

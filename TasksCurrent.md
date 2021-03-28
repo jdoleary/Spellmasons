@@ -7,7 +7,6 @@
   - a unit that summons other units (adds stimulation to the thought, more than just avoid the shape)
 - Bug: Brad couldn't move at first after resurrecting
 - Bug: Shield didn't work, brad cast it, got hit by 4 guys and died immediately
-- Bug: Brad could still cast one spell after the game was over and he was dead
 
 # Todo
 
