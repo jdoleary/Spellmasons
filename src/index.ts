@@ -11,6 +11,14 @@ import { MESSAGE_TYPES } from './MessageTypes';
 import { setupPixi } from './PixiUtils';
 import floatingText from './FloatingText';
 
+// Print aggressive due date for game!
+console.log(
+  `${Math.round(
+    // @ts-ignore
+    (new Date('2021-05-22') - new Date()) / 1000 / 60 / 60 / 24,
+  )} days until due date!`,
+);
+
 setupPixi().then(() => {
   UI.setup();
   // Connect to PieServer
