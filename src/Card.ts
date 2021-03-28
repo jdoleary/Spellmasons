@@ -54,6 +54,10 @@ export function recalcPositionForCards(player: Player.IPlayer) {
                 0,
                 (selectedCardTally[cardId] || 0) - 1,
               );
+              // If a card count reaches 0, remove the property entirely
+              if (selectedCardTally[cardId] === 0) {
+                delete selectedCardTally[cardId];
+              }
             } else {
               element.classList.add('selected');
               // Add card contents to spell
