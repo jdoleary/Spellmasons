@@ -164,7 +164,7 @@ export default function setupBoardInputHandlers() {
           (p) => p.clientId === window.clientId,
         );
         // If player hasn't already cast this turn...
-        if (selfPlayer && !selfPlayer.thisTurnSpellCast) {
+        if (selfPlayer) {
           // If a spell exists (based on the combination of cards selected)...
           if (areAnyCardsSelected()) {
             // cast the spell
@@ -176,12 +176,6 @@ export default function setupBoardInputHandlers() {
             });
             Card.clearSelectedCardTally();
           }
-        } else {
-          floatingText({
-            cellX: x,
-            cellY: y,
-            text: 'You cannot cast more than once per turn.',
-          });
         }
       }
     }
