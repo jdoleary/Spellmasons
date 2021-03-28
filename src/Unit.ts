@@ -40,7 +40,6 @@ export interface IUnit {
   alive: boolean;
   // modifiers such as "frozen" or "poisoned"
   modifiers: { [key: string]: number };
-  shield: number;
   unitType: UnitType;
   unitSubType?: UnitSubType;
 }
@@ -69,7 +68,6 @@ export function create(
     }),
     alive: true,
     modifiers: {},
-    shield: 0,
     unitType,
     unitSubType,
   };
@@ -147,8 +145,8 @@ export function die(u: IUnit) {
 }
 export function takeDamage(unit: IUnit, amount: number, cause?: string) {
   // Shield prevents damage
-  if (unit.shield > 0 && amount > 0) {
-    unit.shield--;
+  if (unit.modifiers.shield > 0 && amount > 0) {
+    unit.modifiers.shield--;
     floatingText({
       cellX: unit.x,
       cellY: unit.y,
@@ -157,7 +155,7 @@ export function takeDamage(unit: IUnit, amount: number, cause?: string) {
         fill: 'blue',
       },
     });
-    if (unit.shield <= 1) {
+    if (unit.modifiers.shield <= 0) {
       unit.image.removeSubSprite('shield');
     }
     return;
