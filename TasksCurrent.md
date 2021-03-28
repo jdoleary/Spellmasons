@@ -5,7 +5,6 @@
 - freezing is permanent? a unit unfroze between brad and my turns, unfreezing logic is broke
 - advice: need more diversity of challenge with the enemy types than just "avboid that line"
   - a unit that summons other units (adds stimulation to the thought, more than just avoid the shape)
-- Bug: Brad couldn't move at first after resurrecting
 - Bug: Shield didn't work, brad cast it, got hit by 4 guys and died immediately
 
 # Todo
