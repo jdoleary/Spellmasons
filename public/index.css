@@ -118,12 +118,6 @@ body {
 }
 
 /* Hide end turn button until it is your turn */
-#endTurn {
-  display: none;
-}
-body.your-turn #endTurn {
-  display: block;
-}
 #player-turn-indicator-holder {
   position: fixed;
   top: 0;
@@ -136,13 +130,26 @@ body.your-turn #endTurn {
   background-color: grey;
   user-select: none;
 }
-#player-turn-indicator-holder div {
+#player-turn-indicator-holder > div {
   padding: 8px;
   width: 140px;
 }
 
 body.your-turn #player-turn-indicator-holder {
   background-color: gold;
+}
+#endTurn {
+  pointer-events: auto;
+  display: none;
+}
+body.your-turn #endTurn {
+  display: block;
+}
+#player-turn-indicator {
+  display: block;
+}
+body.your-turn #player-turn-indicator {
+  display: none;
 }
 /* Change turn indicator to red if you're low on time */
 body.your-turn #player-turn-indicator-holder.low-time {
