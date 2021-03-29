@@ -37,11 +37,27 @@ export default class Image {
     // Remove PIXI sprite
     this.sprite.parent.removeChild(this.sprite);
   }
+  static load(image: any, parent?: PIXI.Container) {
+    const instantiatedImage = new Image(0, 0, image.imageName, parent);
+    instantiatedImage.sprite.x = image.sprite.x;
+    instantiatedImage.sprite.y = image.sprite.y;
+    // Re-add subsprites
+    const subSprites = [...image.subSprites];
+    image.subSprites = [];
+    for (let subSprite of subSprites) {
+      instantiatedImage.addSubSprite(subSprite);
+    }
+    return instantiatedImage;
+  }
   // Returns only the properties that can be saved
   // callbacks and complicated objects such as PIXI.Sprites
   // are removed
   serialize() {
     return {
+      sprite: {
+        x: this.sprite.x,
+        y: this.sprite.y,
+      },
       subSprites: this.subSprites,
       size_x: this.size_x,
       size_y: this.size_y,
@@ -66,6 +82,7 @@ export default class Image {
   addSubSprite(key) {
     // Don't add more than one copy
     if (!this.subSprites.includes(key)) {
+      this.subSprites.push(key);
       const subSpriteData = Subsprites[key];
       const sprite = addPixiSprite(subSpriteData.imageName, this.sprite);
       sprite.alpha = subSpriteData.alpha;

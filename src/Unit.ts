@@ -118,7 +118,7 @@ export function cleanup(unit: IUnit) {
 export function load(unit: IUnit) {
   const loadedunit = {
     ...unit,
-    image: new Image(unit.x, unit.y, unit.image.imageName, containerUnits),
+    image: Image.load(unit.image, containerUnits),
     healthText: new PIXI.Text('', {
       fill: 'red',
       // Allow health hearts to wrap
@@ -132,6 +132,15 @@ export function load(unit: IUnit) {
     die(loadedunit);
   }
   return loadedunit;
+}
+
+export function serializeUnit(unit: IUnit) {
+  return {
+    ...unit,
+    image: unit.image.serialize(),
+    healthText: null,
+    agroOverlay: null,
+  };
 }
 export function resurrect(u: IUnit) {
   u.image.scale(1);
@@ -267,13 +276,4 @@ export function setLocation(unit: IUnit, coordinates: Coords): Promise<void> {
   window.game.checkPickupCollisions(unit);
   // Animate movement visually
   return unit.image.move(unit.x, unit.y);
-}
-
-export function serializeUnit(unit: IUnit) {
-  return {
-    ...unit,
-    image: unit.image.serialize(),
-    healthText: null,
-    agroOverlay: null,
-  };
 }
