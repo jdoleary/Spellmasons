@@ -4,7 +4,6 @@
 
 ## Brad feedback 2021-03-26
 
-- health went back to max after portaling??
 - Make game really really hard for testing
 - advice: need more diversity of challenge with the enemy types than just "avboid that line"
   - a unit that summons other units (adds stimulation to the thought, more than just avoid the shape)

@@ -48,7 +48,9 @@ export function resetPlayerForNextLevel(player: IPlayer) {
 
   // Make unit visible
   player.unit.image.show();
-  Unit.resurrect(player.unit);
+  if (!player.unit.alive) {
+    Unit.resurrect(player.unit);
+  }
 
   // Return to a spawn location
   // limit spawn to the leftmost column
