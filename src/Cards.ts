@@ -3,6 +3,11 @@ import * as Unit from './Unit';
 // import * as Pickup from './Pickup';
 import type { Coords } from './commonTypes';
 // import * as math from './math';
+
+// Guiding rules for designing card effects:
+// Follow the Priciple of Least Surpise
+// Every card should be designed to respond well to potentially more than one target
+
 export interface EffectState {
   caster: Player.IPlayer;
   targets: Coords[];
