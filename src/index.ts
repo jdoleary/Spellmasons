@@ -15,7 +15,7 @@ import floatingText from './FloatingText';
 console.log(
   `${Math.round(
     // @ts-ignore
-    (new Date('2021-05-22') - new Date()) / 1000 / 60 / 60 / 24,
+    (new Date('2021-05-12') - new Date()) / 1000 / 60 / 60 / 24,
   )} days until due date!`,
 );
 
