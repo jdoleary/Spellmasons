@@ -62,20 +62,24 @@ body {
   height: 100px;
   display: flex;
 }
-.card-type-group {
-  position: relative;
-  width: 120px;
-}
+/* The "card" width is very thin to allow them to stack.  The card-inner is what
+actually contains the full width of the card. */
 #card-hand .card {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 70px;
+  width: 5px;
 }
 #card-hand .card.selected {
+  position: relative;
+  top: -100px;
+}
+#card-hand .card.selected .card-inner {
   -webkit-box-shadow: 0px 0px 5px 5px #ffee00;
   box-shadow: 0px 0px 5px 5px #ffee00;
-  top: -100px;
+}
+/* The group of similar cards has a margin the same size as the width of a card inner so that
+the face of the last card in the group is seen*/
+.card-type-group {
+  display: flex;
+  margin-right: 70px;
 }
 .card {
   cursor: pointer;
@@ -92,6 +96,7 @@ body {
   display: flex;
 }
 .card-inner {
+  width: 70px;
   border: 2px solid black;
   border-radius: 4px 4px;
   flex-direction: column;

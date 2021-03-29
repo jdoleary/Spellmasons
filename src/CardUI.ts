@@ -67,14 +67,6 @@ export function recalcPositionForCards(player: Player.IPlayer) {
             elCardHand.appendChild(elCardTypeGroup);
           }
           elCardTypeGroup.appendChild(element);
-          // Set the width of the cardtypegroup relative to the number of cards that it holds
-          elCardTypeGroup.style.width =
-            elCardTypeGroup.childElementCount * CARD_OFFSET + CARD_WIDTH + 'px';
-          // Set the position of the card
-          setTransform(element, {
-            x: elCardTypeGroup.childElementCount * CARD_OFFSET,
-            y: 0,
-          });
         } else {
           console.log(
             `No corresponding card exists for the "${cardId}" upgrade`,
@@ -83,35 +75,6 @@ export function recalcPositionForCards(player: Player.IPlayer) {
       }
     }
   }
-  // for (let j = 0; j < group.length; j++) {
-  //   const card = group[j];
-  //   const proportionXPosition = i / (keys.length - 1);
-  //   const cardBasePositionX =
-  //     proportionXPosition * cardHandWidth - CARD_WIDTH / 2;
-  //   setTransform(card.element, {
-  //     x: cardBasePositionX + j * DISTANCE_BETWEEN_LIKE_CARDS,
-  //     y: 0,
-  //   });
-  // }
-  // How far the mouse is across the screen, 0 is far left, 1.0 is far right
-  // const mouseProportionX = mouseX / window.innerWidth;
-  // // Recalc positions for all cards
-  // for (let i = 0; i < cardsInHand.length; i++) {
-  //   const cardEl = cardsInHand[i].element;
-  //   const proportionXPosition = i / (cardsInHand.length - 1);
-  //   const cardBasePositionX =
-  //     proportionXPosition * cardHandWidth - CARD_WIDTH / 2;
-
-  //   // -1.0 to 1.0
-  //   const distanceFromMouse =
-  //     mouseX - cardBasePositionX - CARD_HAND_MARGIN - CARD_WIDTH / 2;
-
-  //   // "+ 0.5" allows half of the negative threshold to be included and half of the positive threshold
-  //   // rather than just the positive side of the threshold
-  //   const lerpT = distanceFromMouse / MOUSE_HOVER_DISTANCE_THRESHOLD;
-  //   const MOUSE_DISTANCE_MOVER = lerp(-1, 1, lerpT + 0.5);
-
-  // }
 }
 
 // This function fully deletes the cards that are 'selected' in the player's hand
