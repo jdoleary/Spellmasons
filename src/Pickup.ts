@@ -48,6 +48,12 @@ export function setPosition(pickup: IPickup, x: number, y: number) {
   pickup.y = y;
   pickup.image.setPosition(x, y);
 }
+export function serialize(p: IPickup) {
+  return {
+    ...p,
+    image: p.image.serialize(),
+  };
+}
 // Reinitialize a pickup from another pickup object, this is used in loading game state after reconnect
 export function load(pickup: IPickup) {
   // Get the pickup object

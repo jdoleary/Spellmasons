@@ -7,6 +7,8 @@ import Subsprites from './Subsprites';
 export default class Image {
   // Not to be serialized
   sprite: PIXI.Sprite;
+  // This IS serializable and is used to create sprite
+  imageName: string;
   // Not to be serialized
   subSpriteInstances: { [key: string]: PIXI.Sprite };
   // This IS serializable, it is a list of the keys corresponding to subSprite
@@ -14,7 +16,6 @@ export default class Image {
   subSprites: string[];
   size_x: number;
   size_y: number;
-  imageName: string;
 
   constructor(
     cellX: number,
@@ -35,6 +36,17 @@ export default class Image {
   cleanup() {
     // Remove PIXI sprite
     this.sprite.parent.removeChild(this.sprite);
+  }
+  // Returns only the properties that can be saved
+  // callbacks and complicated objects such as PIXI.Sprites
+  // are removed
+  serialize() {
+    return {
+      subSprites: this.subSprites,
+      size_x: this.size_x,
+      size_y: this.size_y,
+      imageName: this.imageName,
+    };
   }
   setPosition(cellX: number, cellY: number) {
     const { x, y } = cellToBoardCoords(cellX, cellY);

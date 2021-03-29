@@ -6,15 +6,9 @@ import type * as Upgrade from './Upgrade';
 import * as math from './math';
 import * as Card from './CardUI';
 import * as Cards from './Cards';
-import Image from './Image';
 import * as GameBoardInput from './ui/GameBoardInput';
 import { MESSAGE_TYPES } from './MessageTypes';
-import {
-  addPixiSprite,
-  app,
-  containerBoard,
-  containerSpells,
-} from './PixiUtils';
+import { addPixiSprite, app, containerBoard } from './PixiUtils';
 import type { Random } from 'random';
 import makeSeededRandom from './rand';
 import floatingText from './FloatingText';
@@ -684,43 +678,19 @@ export default class Game {
   //       images.forEach((i) => i.cleanup());
   //     });
   // }
+
+  // Returns only the properties that can be saved
+  // callbacks and complicated objects such as PIXI.Sprites
+  // are removed
   sanitizeForSaving(): Game {
     return {
       ...this,
       players: this.players.map((p) => ({
         ...p,
-        unit: {
-          ...p.unit,
-          image: {
-            ...p.unit.image,
-            subSprites: {
-              // TODO, restore subSprites on load
-            },
-            sprite: null,
-          },
-          healthText: null,
-          agroOverlay: null,
-        },
+        unit: Unit.serializeUnit(p.unit),
       })),
-      units: this.units.map((u) => ({
-        ...u,
-        image: {
-          ...u.image,
-          subSprites: {
-            // TODO, restore subSprites on load
-          },
-          sprite: null,
-        },
-        healthText: null,
-        agroOverlay: null,
-      })),
-      pickups: this.pickups.map((p) => ({
-        ...p,
-        image: {
-          ...p.image,
-          sprite: null,
-        },
-      })),
+      units: this.units.map(Unit.serializeUnit),
+      pickups: this.pickups.map(Pickup.serialize),
     };
   }
 }

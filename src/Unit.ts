@@ -268,3 +268,12 @@ export function setLocation(unit: IUnit, coordinates: Coords): Promise<void> {
   // Animate movement visually
   return unit.image.move(unit.x, unit.y);
 }
+
+export function serializeUnit(unit: IUnit) {
+  return {
+    ...unit,
+    image: unit.image.serialize(),
+    healthText: null,
+    agroOverlay: null,
+  };
+}
