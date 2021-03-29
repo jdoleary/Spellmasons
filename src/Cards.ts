@@ -140,52 +140,49 @@ export const allCards: ICard[] = [
     thumbnail: 'images/spell/freeze.png',
     probability: 20,
     effect: (state) => {
-      return state;
+      for (let target of state.targets) {
+        const unit = window.game.getUnitAt(target.x, target.y);
+        if (unit) {
+          unit.onMoveEvents.push('freeze');
+          // Visual
+          const frozenSprite = unit.image.addSubSprite(
+            'images/spell/freeze.png',
+            'frozen',
+          );
+          frozenSprite.alpha = 0.5;
+          frozenSprite.anchor.x = 0;
+          frozenSprite.anchor.y = 0;
+          frozenSprite.scale.x = 0.5;
+          frozenSprite.scale.y = 0.5;
+        }
+        return state;
+      }
     },
-    // effect: {
-    //   singleTargetEffect: (_caster, target, magnitude) => {
-    //     const unit = window.game.getUnitAt(target.x, target.y);
-    //     if (unit) {
-    //       Unit.addToModifier(unit, 'frozen', magnitude);
-    //       // Visual
-    //       const frozenSprite = unit.image.addSubSprite(
-    //         'images/spell/freeze.png',
-    //         'frozen',
-    //       );
-    //       frozenSprite.alpha = 0.5;
-    //       frozenSprite.anchor.x = 0;
-    //       frozenSprite.anchor.y = 0;
-    //       frozenSprite.scale.x = 0.5;
-    //       frozenSprite.scale.y = 0.5;
-    //     }
-    //   },
-    // },
   },
   {
     id: 'shield',
     thumbnail: 'images/spell/shield.png',
     probability: 10,
     effect: (state) => {
+      for (let target of state.targets) {
+        const unit = window.game.getUnitAt(target.x, target.y);
+        if (unit) {
+          unit.onDamageEvents.push('shield');
+          // Visual
+          const frozenSprite = unit.image.addSubSprite(
+            'images/spell/shield.png',
+            'shield',
+          );
+          frozenSprite.alpha = 0.5;
+          frozenSprite.anchor.x = 0;
+          frozenSprite.anchor.y = 0;
+          frozenSprite.scale.x = 0.5;
+          frozenSprite.scale.y = 0.5;
+        }
+        return state;
+      }
       return state;
     },
-    // effect: {
-    //   singleTargetEffect: (_caster, target, magnitude) => {
-    //     const unit = window.game.getUnitAt(target.x, target.y);
-    //     if (unit) {
-    //       Unit.addToModifier(unit, 'shield', magnitude);
-    //       // Visual
-    //       const shieldSprite = unit.image.addSubSprite(
-    //         'images/spell/shield.png',
-    //         'shield',
-    //       );
-    //       shieldSprite.alpha = 0.5;
-    //       shieldSprite.anchor.x = 0;
-    //       shieldSprite.anchor.y = 0;
-    //       shieldSprite.scale.x = 0.5;
-    //       shieldSprite.scale.y = 0.5;
-    //     }
-    //   },
-    // },
   },
   {
     id: 'trap',

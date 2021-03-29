@@ -295,12 +295,6 @@ export default class Game {
     // and not, for example, in Upgrade state
     if (this.state === game_state.Playing) {
       const currentTurnPlayer = this.players[this.playerTurnIndex];
-      if (!currentTurnPlayer.unit.thisTurnMoved) {
-        // If the user didn't move and just ended their turn, decrement the frozen modifier
-        // because it is meant to decrement every turn and it automatically decrements when they
-        // try to move, but since they didn't, decrement it here.
-        Unit.decrementModifier(currentTurnPlayer.unit, 'frozen');
-      }
       // Ensure players can only end the turn when it IS their turn
       if (currentTurnPlayer.clientId === clientId) {
         this.endedTurn.add(clientId);

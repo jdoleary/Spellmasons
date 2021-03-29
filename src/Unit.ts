@@ -7,6 +7,7 @@ import { cellDistance } from './math';
 import { containerUnits } from './PixiUtils';
 import { ableToTakeTurn } from './Player';
 import type { Coords } from './commonTypes';
+import { onDamageSource, onMoveSource } from './Events';
 export enum UnitType {
   PLAYER_CONTROLLED,
   AI,
@@ -38,10 +39,14 @@ export interface IUnit {
   healthMax: number;
   healthText: PIXI.Text;
   alive: boolean;
-  // modifiers such as "frozen" or "poisoned"
-  modifiers: { [key: string]: number };
   unitType: UnitType;
   unitSubType?: UnitSubType;
+  // A list of names that correspond to Events.ts functions
+  onDamageEvents: string[];
+  onDeathEvents: string[];
+  onMoveEvents: string[];
+  onAgroEvents: string[];
+  onTurnStartEvents: string[];
 }
 export function create(
   x: number,
@@ -67,9 +72,13 @@ export function create(
       breakWords: true,
     }),
     alive: true,
-    modifiers: {},
     unitType,
     unitSubType,
+    onDamageEvents: [],
+    onDeathEvents: [],
+    onMoveEvents: [],
+    onAgroEvents: [],
+    onTurnStartEvents: [],
   };
 
   // Start images small and make them grow when they spawn in
@@ -144,32 +153,24 @@ export function die(u: IUnit) {
   }
 }
 export function takeDamage(unit: IUnit, amount: number) {
-  // Shield prevents damage
-  if (unit.modifiers.shield > 0 && amount > 0) {
-    unit.modifiers.shield--;
-    floatingText({
-      cellX: unit.x,
-      cellY: unit.y,
-      text: 'Shielded from damage!',
-      style: {
-        fill: 'blue',
-      },
-    });
-    if (unit.modifiers.shield <= 0) {
-      unit.image.removeSubSprite('shield');
+  let alteredAmount = amount;
+  // Compose onDamageEvents
+  for (let eventName of unit.onDamageEvents) {
+    const fn = onDamageSource[eventName];
+    if (fn) {
+      alteredAmount = fn(unit, alteredAmount);
     }
-    return;
   }
-  unit.health -= amount;
+  unit.health -= alteredAmount;
   // Prevent health from going over maximum
   unit.health = Math.min(unit.health, unit.healthMax);
   // If the unit is "selected" this will update it's overlay to reflect the damage
   updateSelectedOverlay(unit);
 
-  if (amount > 0) {
+  if (alteredAmount > 0) {
     // Show hearts floating away due to damage taken
     let healthChangedString = '';
-    for (let i = 0; i < Math.abs(amount); i++) {
+    for (let i = 0; i < Math.abs(alteredAmount); i++) {
       healthChangedString += '❤️';
     }
     floatingText({
@@ -186,13 +187,6 @@ export function takeDamage(unit: IUnit, amount: number) {
 export function canMove(unit: IUnit): boolean {
   // Do not move if dead
   if (!unit.alive) {
-    return false;
-  }
-  // Do not move if frozen
-  if (unit.modifiers.frozen > 0) {
-    // Now that they have attempted to move, decrement frozen (which prevents movement the same
-    // number of turns as the value of frozen)
-    decrementModifier(unit, 'frozen');
     return false;
   }
   // Do not move if already moved
@@ -242,24 +236,6 @@ export function moveAI(unit: IUnit) {
       break;
   }
 }
-export function addToModifier(
-  unit: IUnit,
-  modifier: string,
-  magnitude: number,
-) {
-  if (!unit.modifiers[modifier]) {
-    unit.modifiers[modifier] = 0;
-  }
-  unit.modifiers[modifier] += magnitude;
-}
-export function decrementModifier(unit: IUnit, modifier: string) {
-  if (unit.modifiers[modifier]) {
-    unit.modifiers[modifier]--;
-    if (unit.modifiers[modifier] <= 0) {
-      unit.image.removeSubSprite(modifier);
-    }
-  }
-}
 // moveTo moves a unit, considering all the in-game blockers and flags
 // the units property thisTurnMoved
 export function moveTo(unit: IUnit, coordinates: Coords): Promise<void> {
@@ -269,6 +245,13 @@ export function moveTo(unit: IUnit, coordinates: Coords): Promise<void> {
   // Cannot move into an obstructed cell
   if (window.game.isCellObstructed(coordinates)) {
     return Promise.resolve();
+  }
+  // Compose onMoveEvents
+  for (let eventName of unit.onMoveEvents) {
+    const fn = onMoveSource[eventName];
+    if (fn) {
+      coordinates = fn(unit, coordinates);
+    }
   }
   unit.thisTurnMoved = true;
   return setLocation(unit, coordinates);

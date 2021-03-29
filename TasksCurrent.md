@@ -1,3 +1,9 @@
+- New modifier:
+  - weak (more vulnerable to damage)
+- prevent frozen units from attacking
+- Add events
+  Here's how events work. Some units get event names added to their subscribed list. For example onDamageShield. Then when they take damage,
+  all of the onDamage events trigger in a chain and the result is applied as damage
 - What I need is a SYSTEM that is so expressive you can write all spells using it's API without any logic written elsewhere outside of the spell file.
   - If it can handle obliterate, and swap and others it will be very expressive and powerful
   - If all "hooks" such as "preDamage" are pure and chained then interrupts such as freeze and shield will be possible
