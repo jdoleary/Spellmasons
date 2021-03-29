@@ -41,6 +41,10 @@ export default class Image {
     const instantiatedImage = new Image(0, 0, image.imageName, parent);
     instantiatedImage.sprite.x = image.sprite.x;
     instantiatedImage.sprite.y = image.sprite.y;
+    instantiatedImage.sprite.scale.set(
+      image.sprite.scale.x,
+      image.sprite.scale.y,
+    );
     // Re-add subsprites
     const subSprites = [...image.subSprites];
     image.subSprites = [];
@@ -57,6 +61,10 @@ export default class Image {
       sprite: {
         x: this.sprite.x,
         y: this.sprite.y,
+        scale: {
+          x: this.sprite.scale.x,
+          y: this.sprite.scale.y,
+        },
       },
       subSprites: this.subSprites,
       size_x: this.size_x,

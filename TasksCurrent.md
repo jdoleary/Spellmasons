@@ -4,7 +4,6 @@
 
 ## Brad feedback 2021-03-26
 
-- All golems are the same size, heavy not showing, only on first level
 - health went back to max after portaling??
 - Make game really really hard for testing
 - advice: need more diversity of challenge with the enemy types than just "avboid that line"
