@@ -65,7 +65,7 @@ body {
 /* The "card" width is very thin to allow them to stack.  The card-inner is what
 actually contains the full width of the card. */
 #card-hand .card {
-  width: 5px;
+  width: 3px;
 }
 #card-hand .card.selected {
   position: relative;
