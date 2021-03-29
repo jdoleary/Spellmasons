@@ -1,3 +1,4 @@
+- How to inform users the order of operations of the spell they cast
 - How to support multiple instances of freeze?
 - prevent frozen units from attacking
 

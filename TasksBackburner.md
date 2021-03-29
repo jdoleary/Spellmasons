@@ -20,8 +20,6 @@
 
   - Maybe this happened because I was alt-tabbed when he took his turn
 
-- restore subsprites after load
-
 - Clean up onDataQueue (is it still necessary?)
 - Fix replay?
 
