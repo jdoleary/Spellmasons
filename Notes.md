@@ -1,5 +1,15 @@
 # Notes
 
+Added in v6-ordered-spell-system:
+
+- What I need is a SYSTEM that is so expressive you can write all spells using it's API without any logic written elsewhere outside of the spell file.
+  - If it can handle obliterate, and swap and others it will be very expressive and powerful
+  - If all "hooks" such as "preDamage" are pure and chained then interrupts such as freeze and shield will be possible
+  - Hooks may have to have their own state (such as shield)
+  - **What if the order that you clicked the spells mattered? Like AOE/Swap is different from Swap/AOE**
+
+---
+
 Game Design thoughts:
 Each level should be fun, even early on. Prevent "doom state" (impossible scenario based on state). Randomness adds potential for excitement and narrow escapes. Add risk/reward mechanics so users can tune their difficulty.
 Progression feels good.
