@@ -75,11 +75,12 @@ actually contains the full width of the card. */
   -webkit-box-shadow: 0px 0px 5px 5px #ffee00;
   box-shadow: 0px 0px 5px 5px #ffee00;
 }
-/* The group of similar cards has a margin the same size as the width of a card inner so that
+/* The group of similar cards has a padding the same size as the width of a card inner so that
 the face of the last card in the group is seen*/
 .card-type-group {
   display: flex;
-  margin-right: 70px;
+  padding-right: 70px;
+  margin-right: 3px;
 }
 .card {
   cursor: pointer;
