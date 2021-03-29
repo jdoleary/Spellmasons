@@ -9,7 +9,7 @@ type onDamage = {
 
 export const onDamageSource: { [name: string]: onDamage } = {
   shield: (unit, amount, damageDealer) => {
-    // Remove shield
+    // Remove self
     unit.onDamageEvents = unit.onDamageEvents.filter(
       (name) => name !== 'shield',
     );
@@ -38,8 +38,10 @@ type onMove = {
 };
 export const onMoveSource: { [name: string]: onMove } = {
   freeze: (unit, newLocation) => {
+    // Remove self
+    unit.onMoveEvents = unit.onMoveEvents.filter((name) => name !== 'freeze');
     // Remove subsprite
-    unit.image.removeSubSprite('frozen');
+    unit.image.removeSubSprite('freeze');
     // Return current location, unit is frozen and cannot move
     return unit;
   },
