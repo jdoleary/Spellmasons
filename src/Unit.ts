@@ -143,7 +143,7 @@ export function die(u: IUnit) {
     }
   }
 }
-export function takeDamage(unit: IUnit, amount: number, cause?: string) {
+export function takeDamage(unit: IUnit, amount: number) {
   // Shield prevents damage
   if (unit.modifiers.shield > 0 && amount > 0) {
     unit.modifiers.shield--;

@@ -4,7 +4,8 @@ import * as Pickup from './Pickup';
 import * as Player from './Player';
 import type * as Upgrade from './Upgrade';
 import * as math from './math';
-import * as Card from './Card';
+import * as Card from './CardUI';
+import * as Cards from './Cards';
 import Image from './Image';
 import * as GameBoardInput from './ui/GameBoardInput';
 import { MESSAGE_TYPES } from './MessageTypes';
@@ -623,75 +624,50 @@ export default class Game {
     }
     return false;
   }
-  getTargetsOfCardTally(
+  getTargetsOfCards(
     caster: Player.IPlayer,
-    cardTally: Card.CardTally,
+    cards: string[],
     target: Coords,
   ): Coords[] {
-    const cardIds = Object.keys(cardTally);
-    let targets: Coords[] = [target];
-    // Execute all modifyTargets effects
-    for (let cardId of cardIds) {
-      // Continually remodifies the targets array
-      const newTargets = Card.cardSource
-        .find((c) => c.id == cardId)
-        .effect?.modifyTargets?.(caster, targets, cardTally[cardId]);
-      if (newTargets) {
-        targets = newTargets;
+    console.log('cards', cards);
+    let targetOnlyCards = [];
+    // TODO: optimize.  This converts from string to card back to string, just to filter for
+    // card.onlyChangesTarget
+    for (let cardId of cards) {
+      const card = Cards.allCards.find((c) => c.id == cardId);
+      if (card && card.onlyChangesTarget) {
+        targetOnlyCards.push(card.id);
       }
     }
+    const { targets } = this.castCards(caster, targetOnlyCards, target);
     return targets;
   }
-  castCards(caster: Player.IPlayer, cardTally: Card.CardTally, target: Coords) {
+  castCards(
+    caster: Player.IPlayer,
+    cards: string[],
+    target: Coords,
+  ): Cards.EffectState {
+    let effectState = {
+      caster,
+      targets: [target],
+      cards,
+      aggregator: {},
+    };
     if (!caster.unit.alive) {
       // Prevent dead players from casting
-      return;
+      return effectState;
     }
-    const cardIds = Object.keys(cardTally);
-    // Cast all preSpell effects, abort if needed
-    for (let cardId of cardIds) {
-      const abort = Card.cardSource
-        .find((c) => c.id == cardId)
-        .effect?.preSpell?.(caster, cardTally, target);
-      if (abort) {
-        return;
+    for (let cardId of cards) {
+      const card = Cards.allCards.find((c) => c.id == cardId);
+      if (card) {
+        effectState = card.effect(effectState);
       }
     }
-    const targets = this.getTargetsOfCardTally(caster, cardTally, target);
-
-    // Cast on all targets
-    for (let target of targets) {
-      for (let cardId of cardIds) {
-        Card.cardSource
-          .find((c) => c.id == cardId)
-          .effect?.singleTargetEffect?.(caster, target, cardTally[cardId]);
-      }
-    }
-    floatingText({
-      cellX: target.x,
-      cellY: target.y,
-      text: Card.toString(cardTally),
-    });
 
     // Since units may have moved or become frozen, redraw the danger overlay which takes these
     // changes into consideration
     drawDangerOverlay();
-
-    // let units: Unit.IUnit[] = coords
-    //   // Find units at coordinates
-    //   .map((coord) => this.getUnitAt(coord.x, coord.y))
-    //   // Filter out dead units
-    //   .filter((x) => x && x.alive);
-
-    // coords = coords.concat(units.map((u) => ({ x: u.x, y: u.y })));
-    // if (coords.length == 0) {
-    //   coords = [
-    //     {
-    //       x: spell.x,
-    //       y: spell.y,
-    //     },
-    //   ];
-    // }
+    return effectState;
   }
 
   // animateSpellEffects(castInstances: { x: number; y: number; spell: Spell }[]) {

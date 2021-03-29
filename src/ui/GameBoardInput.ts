@@ -1,7 +1,7 @@
 import { MESSAGE_TYPES } from '../MessageTypes';
 import { BOARD_HEIGHT, BOARD_WIDTH, CELL_SIZE } from '../config';
 import { turn_phase } from '../Game';
-import * as Card from '../Card';
+import * as Card from '../CardUI';
 import type { IPlayer } from '../Player';
 import floatingText from '../FloatingText';
 import * as Unit from '../Unit';
@@ -62,9 +62,9 @@ export function syncMouseHoverIcon() {
       (p) => p.clientId === window.clientId,
     );
     // Find the targets of the spell
-    const targets = window.game.getTargetsOfCardTally(
+    const targets = window.game.getTargetsOfCards(
       currentPlayer,
-      Card.getSelectedCardTally(),
+      Card.getSelectedCards(),
       { x: mouseCellX, y: mouseCellY },
     );
     // TODO: Fix showing the targets of the spell ahead of time using the new SpellEffects
@@ -172,9 +172,9 @@ export default function setupBoardInputHandlers() {
               type: MESSAGE_TYPES.SPELL,
               x,
               y,
-              cards: Card.getSelectedCardTally(),
+              cards: Card.getSelectedCards(),
             });
-            Card.clearSelectedCardTally();
+            Card.clearSelectedCards();
           }
         }
       }

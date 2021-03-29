@@ -1,3 +1,4 @@
+- Do traps still work after loading?
 - 2021-03-24 Brad feedback
   - Needs balance, at the end you have a lot of cards but you die quickly
   - having less, stronger units is more of a challenge than having many, weak units

@@ -5,7 +5,7 @@ import * as Unit from './Unit';
 import * as Pickup from './Pickup';
 import AnimationTimeline from './AnimationTimeline';
 import * as UI from './ui/UserInterface';
-import * as Card from './Card';
+import * as Card from './CardUI';
 import { MESSAGE_TYPES } from './MessageTypes';
 
 import { setupPixi } from './PixiUtils';

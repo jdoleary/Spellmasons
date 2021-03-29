@@ -27,7 +27,7 @@ export function meleeAction(unit: Unit.IUnit) {
       canAttackCell(unit, next_x, next_y)
     ) {
       unit.image.attack(unit.x, unit.y, next_x, next_y);
-      Unit.takeDamage(other_unit, unit.power, 'unit');
+      Unit.takeDamage(other_unit, unit.power);
     }
   }
   // set move intention
@@ -52,7 +52,7 @@ export function rangedAction(unit: Unit.IUnit) {
       targetPlayerUnit.y,
       'images/spell/arrow.png',
     );
-    Unit.takeDamage(targetPlayerUnit, unit.power, 'unit');
+    Unit.takeDamage(targetPlayerUnit, unit.power);
   } else {
     // Move opposite to closest hero
     const closestPlayerUnit = Unit.findClosestPlayerTo(unit);
@@ -83,7 +83,7 @@ export function reachAction(unit: Unit.IUnit) {
       targetPlayerUnit.y,
       'images/spell/green-thing.png',
     );
-    Unit.takeDamage(targetPlayerUnit, unit.power, 'unit');
+    Unit.takeDamage(targetPlayerUnit, unit.power);
   } else {
     if (runFromTarget) {
       const moveTo = math.oneCellAwayFromCell(unit, runFromTarget);

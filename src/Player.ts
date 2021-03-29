@@ -1,7 +1,7 @@
 import { PLAYER_BASE_HEALTH } from './config';
 import * as Unit from './Unit';
 import type * as Upgrade from './Upgrade';
-import * as Card from './Card';
+import * as Card from './CardUI';
 import * as config from './config';
 
 export interface IPlayer {
@@ -9,8 +9,7 @@ export interface IPlayer {
   clientId: string;
   unit: Unit.IUnit;
   inPortal: boolean;
-  // The players "hand" which contains cards
-  hand: Card.CardTally;
+  cards: string[];
   upgrades: Upgrade.IUpgrade[];
 }
 export function create(clientId: string): IPlayer {
@@ -26,7 +25,7 @@ export function create(clientId: string): IPlayer {
     ),
     inPortal: false,
     actionsUsed: 0,
-    hand: {},
+    cards: [],
     upgrades: [],
   };
   updateGlobalRefToCurrentClientPlayer(player);

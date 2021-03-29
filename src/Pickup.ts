@@ -1,5 +1,5 @@
 import Image from './Image';
-import * as Card from './Card';
+import * as Card from './CardUI';
 import * as Player from './Player';
 import * as config from './config';
 import { containerPickup } from './PixiUtils';
