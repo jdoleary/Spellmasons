@@ -5,6 +5,7 @@ import { containerDangerOverlay } from '../PixiUtils';
 import * as config from '../config';
 import * as math from '../math';
 import { canAttackCell } from '../AI';
+import { clearSelectedCards } from '../CardUI';
 
 const elEndTurnBtn: HTMLButtonElement = document.getElementById(
   'endTurn',
@@ -19,6 +20,9 @@ export function setup() {
         break;
       case 'KeyZ':
         setPlanningView(true);
+        break;
+      case 'Escape':
+        clearSelectedCards();
         break;
     }
   });
