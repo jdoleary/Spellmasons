@@ -144,16 +144,7 @@ export const allCards: ICard[] = [
         const unit = window.game.getUnitAt(target.x, target.y);
         if (unit) {
           unit.onMoveEvents.push('freeze');
-          // Visual
-          const frozenSprite = unit.image.addSubSprite(
-            'images/spell/freeze.png',
-            'frozen',
-          );
-          frozenSprite.alpha = 0.5;
-          frozenSprite.anchor.x = 0;
-          frozenSprite.anchor.y = 0;
-          frozenSprite.scale.x = 0.5;
-          frozenSprite.scale.y = 0.5;
+          unit.image.addSubSprite('freeze');
         }
         return state;
       }
@@ -168,16 +159,7 @@ export const allCards: ICard[] = [
         const unit = window.game.getUnitAt(target.x, target.y);
         if (unit) {
           unit.onDamageEvents.push('shield');
-          // Visual
-          const frozenSprite = unit.image.addSubSprite(
-            'images/spell/shield.png',
-            'shield',
-          );
-          frozenSprite.alpha = 0.5;
-          frozenSprite.anchor.x = 0;
-          frozenSprite.anchor.y = 0;
-          frozenSprite.scale.x = 0.5;
-          frozenSprite.scale.y = 0.5;
+          unit.image.addSubSprite('shield');
         }
         return state;
       }

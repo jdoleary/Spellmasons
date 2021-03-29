@@ -63,10 +63,7 @@ function updateGlobalRefToCurrentClientPlayer(player: IPlayer) {
 }
 function addHighlighIfPlayerBelongsToCurrentClient(player: IPlayer) {
   if (player.clientId === window.clientId) {
-    player.unit.image.addSubSprite(
-      'images/units/unit-underline.png',
-      'ownCharacterMarker',
-    );
+    player.unit.image.addSubSprite('ownCharacterMarker');
   }
 }
 export function load(player: IPlayer) {

@@ -2,10 +2,16 @@ import type * as PIXI from 'pixi.js';
 
 import { addPixiSprite } from './PixiUtils';
 import { normalizeRadians, cellToBoardCoords } from './math';
+import Subsprites from './Subsprites';
 
 export default class Image {
+  // Not to be serialized
   sprite: PIXI.Sprite;
-  subSprites: { [key: string]: PIXI.Sprite } = {};
+  // Not to be serialized
+  subSpriteInstances: { [key: string]: PIXI.Sprite };
+  // This IS serializable, it is a list of the keys corresponding to subSprite
+  // data in Subsprites.ts
+  subSprites: string[];
   size_x: number;
   size_y: number;
   imageName: string;
@@ -22,6 +28,8 @@ export default class Image {
     this.sprite.anchor.x = 0.5;
     this.sprite.anchor.y = 0.5;
     this.sprite.rotation = 0;
+    this.subSpriteInstances = {};
+    this.subSprites = [];
     this.setPosition(cellX, cellY);
   }
   cleanup() {
@@ -43,18 +51,25 @@ export default class Image {
       },
     ]);
   }
-  addSubSprite(imageName, key) {
-    const subSprite = addPixiSprite(imageName, this.sprite);
-    subSprite.anchor.x = 0.5;
-    subSprite.anchor.y = 0.5;
-    this.subSprites[key] = subSprite;
-    return subSprite;
+  addSubSprite(key) {
+    // Don't add more than one copy
+    if (!this.subSprites.includes(key)) {
+      const subSpriteData = Subsprites[key];
+      const sprite = addPixiSprite(subSpriteData.imageName, this.sprite);
+      sprite.alpha = subSpriteData.alpha;
+      sprite.anchor.set(subSpriteData.anchor.x, subSpriteData.anchor.y);
+      sprite.scale.set(subSpriteData.scale.x, subSpriteData.scale.y);
+      this.subSpriteInstances[key] = sprite;
+    }
   }
   removeSubSprite(key) {
-    const subSprite = this.subSprites[key];
+    const subSprite = this.subSpriteInstances[key];
     if (subSprite) {
+      // Remove PIXI.Sprite instance
       subSprite.parent.removeChild(subSprite);
-      delete this.subSprites[key];
+      delete this.subSpriteInstances[key];
+      // Remove from subSprites list
+      this.subSprites = this.subSprites.filter((k) => k !== key);
     }
   }
   updateFilter(alpha) {
