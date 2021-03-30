@@ -79,7 +79,6 @@ export const allCards: ICard[] = [
     probability: 10,
     onlyChangesTarget: true,
     effect: (state) => {
-      console.log('aoe');
       let updatedTargets = [...state.targets];
       for (let target of state.targets) {
         const withinRadius = window.game.getCoordsWithinDistanceOfTarget(
@@ -90,7 +89,7 @@ export const allCards: ICard[] = [
         updatedTargets = updatedTargets.concat(withinRadius);
       }
       // deduplicate
-      updatedTargets.filter((coord, index) => {
+      updatedTargets = updatedTargets.filter((coord, index) => {
         return (
           updatedTargets.findIndex(
             (findCoords) => findCoords.x == coord.x && findCoords.y === coord.y,
@@ -108,7 +107,6 @@ export const allCards: ICard[] = [
     probability: 10,
     onlyChangesTarget: true,
     effect: (state) => {
-      console.log('chain');
       let updatedTargets = [...state.targets];
       for (let target of state.targets) {
         const unit = window.game.getUnitAt(target.x, target.y);
@@ -123,7 +121,7 @@ export const allCards: ICard[] = [
         }
       }
       // deduplicate
-      updatedTargets.filter((coord, index) => {
+      updatedTargets = updatedTargets.filter((coord, index) => {
         return (
           updatedTargets.findIndex(
             (findCoords) => findCoords.x == coord.x && findCoords.y === coord.y,
