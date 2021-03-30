@@ -60,7 +60,6 @@ function loadTextures(): Promise<void> {
       'images/spell/target.png',
       'images/spell/feet.png',
       'images/spell/shield.png',
-      'images/spell/trap.png',
       'images/spell/swap.png',
       'images/spell/arrow.png',
       'images/spell/green-thing.png',

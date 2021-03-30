@@ -165,32 +165,7 @@ export const allCards: ICard[] = [
       return state;
     },
   },
-  {
-    id: 'trap',
-    thumbnail: 'images/spell/trap.png',
-    probability: 5,
-    effect: (state) => {
-      return state;
-    },
-    // effect: {
-    //   preSpell: (caster, cardTally, target) => {
-    //     Pickup.create(
-    //       target.x,
-    //       target.y,
-    //       true,
-    //       'images/spell/trap.png',
-    //       false,
-    //       ({ unit }) => {
-    //         // Trigger the spell held in the trap on the unit that activated it
-    //         // Override trap property so it doesn't simply place another trap
-    //         delete cardTally.trap;
-    //         window.game.castCards(caster, cardTally, unit);
-    //       },
-    //     );
-    //     return true;
-    //   },
-    // },
-  },
+
   {
     id: 'swap',
     thumbnail: 'images/spell/swap.png',

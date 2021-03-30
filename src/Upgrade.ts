@@ -130,12 +130,6 @@ export const upgradeSource: IUpgrade[] = [
     allowDuplicate: true,
   },
   {
-    title: 'Trap',
-    description: 'Creates a latent spell that triggers when it is stepped on',
-    thumbnail: 'images/spell/trap.png',
-    allowDuplicate: false,
-  },
-  {
     title: 'Swap',
     description:
       'Swaps the casters location with the target and casts the remainder of the spell on the target',
