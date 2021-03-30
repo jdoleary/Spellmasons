@@ -55,21 +55,6 @@ See Cards.ts, Modifiers.ts, and Events.ts for more information
 - Steal Life
   - -x own health for +x mana
 
-## Spell Modifiers
-
-- Trap
-  - Spell lies latent on a tile until it is triggered
-  - -0 mana
-- Time delay
-  - Sets spell on tile like a trap but to execute at a given time (turn)
-  - +1 mana per turn delayed
-- Area Of Effect
-  - Affect a cell and the cells directly around it
-  - -2 mana
-- Chain
-  - Duplicates spell for any touching cells recursively
-  - -3 mana
-
 ## Assets
 
 Using kenny game assets
