@@ -65,6 +65,7 @@ function loadTextures(): Promise<void> {
       'images/spell/green-thing.png',
       'images/spell/resurrect.png',
       'images/spell/weaken.png',
+      'images/spell/raise-dead.png',
       'images/portal.png',
       'images/units/unit-underline.png',
       'images/units/corpse.png',

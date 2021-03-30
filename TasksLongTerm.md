@@ -2,7 +2,6 @@
 
 - Critical Path
   - Gameplay
-    - Better onEvents for managing (what used to be called) modifiers
     - More creative, more difficult enemies
     - More Spells
   - Polish

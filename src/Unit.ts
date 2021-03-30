@@ -147,6 +147,7 @@ export function serializeUnit(unit: IUnit) {
   };
 }
 export function resurrect(u: IUnit) {
+  changeSpriteTexture(u.image.imageName, u.image.sprite);
   // Return dead units back to full health
   u.health = u.healthMax;
   u.alive = true;

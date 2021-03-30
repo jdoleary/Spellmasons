@@ -1,6 +1,6 @@
-- Improve spell UI
-  - How to inform users the order of operations of the spell they cast
-- Add batching to card effects?
+- Add factions
+- Resurrect should restore sprite image
+- Refactor, card UI reconciliation algorithm is slow
 
 ## Brad feedback 2021-03-26
 
@@ -11,11 +11,9 @@
 # Todo
 
 - Next: Be more creative with enemies
-- TODO: Fix retargeting for swap
-  - If you can cast multiple times, maybe swap need not combine with others
-
----
-
+- Improve spell UI
+  - How to inform users the order of operations of the spell they cast
+- Add batching to card effects?
 - units need pathing, it's weird if they don't move at all
 - Terrain (stuck units move laterally?)
 

@@ -243,4 +243,20 @@ export const allCards: ICard[] = [
       }
     },
   },
+  {
+    id: 'raise-dead',
+    thumbnail: 'images/spell/raise-dead.png',
+    probability: 5,
+    effect: (state) => {
+      for (let target of state.targets) {
+        const dead_unit = window.game.units.find(
+          (u) => !u.alive && u.x === target.x && u.y === target.y,
+        );
+        if (dead_unit) {
+          Unit.resurrect(dead_unit);
+        }
+      }
+      return state;
+    },
+  },
 ];
