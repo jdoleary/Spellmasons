@@ -1,6 +1,28 @@
 import type { IUnit } from './Unit';
 
 export const modifiersSource = {
+  weaken: {
+    add: (unit: IUnit) => {
+      // First time setup
+      if (!unit.modifiers.weaken) {
+        unit.modifiers.weaken = {};
+        // Add event
+        unit.onDamageEvents.push('weaken');
+
+        // Add subsprite image
+        unit.image.addSubSprite('weaken');
+      }
+    },
+    remove: (unit: IUnit) => {
+      delete unit.modifiers.weaken;
+      // Remove event
+      unit.onDamageEvents = unit.onMoveEvents.filter(
+        (name) => name !== 'weaken',
+      );
+      // Remove subsprite
+      unit.image.removeSubSprite('weaken');
+    },
+  },
   freeze: {
     add: (unit: IUnit) => {
       // First time setup

@@ -229,4 +229,18 @@ export const allCards: ICard[] = [
       return state;
     },
   },
+  {
+    id: 'weaken',
+    thumbnail: 'images/spell/weaken.png',
+    probability: 5,
+    effect: (state) => {
+      for (let target of state.targets) {
+        const unit = window.game.getUnitAt(target.x, target.y);
+        if (unit) {
+          modifiersSource.weaken.add(unit);
+        }
+        return state;
+      }
+    },
+  },
 ];

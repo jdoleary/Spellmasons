@@ -9,6 +9,14 @@ type onDamage = {
 };
 
 export const onDamageSource: { [name: string]: onDamage } = {
+  weaken: (unit, amount, damageDealer) => {
+    // Magnify positive damage
+    if (amount > 0) {
+      return amount * 2;
+    } else {
+      return amount;
+    }
+  },
   shield: (unit, amount, damageDealer) => {
     // Only block damage, not heals
     if (amount > 0) {

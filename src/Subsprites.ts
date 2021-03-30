@@ -14,6 +14,18 @@ interface Subsprites {
   [key: string]: Subsprite;
 }
 const Subsprites: Subsprites = {
+  weaken: {
+    imageName: 'images/spell/weaken.png',
+    alpha: 1.0,
+    anchor: {
+      x: 0,
+      y: 0,
+    },
+    scale: {
+      x: 0.5,
+      y: 0.5,
+    },
+  },
   freeze: {
     imageName: 'images/spell/freeze.png',
     alpha: 1.0,
