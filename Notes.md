@@ -1,5 +1,8 @@
 # Notes
 
+- [Spell Hooks](https://docs.google.com/spreadsheets/d/1PntBWT4twXoKRKBZBOg7zZtWNzoqtfu6SD-EMQYedt4/edit#gid=0)
+- Idea: what if there was a planning phase where you could pick your arsenal of cards once you see the board to prevent doom state?
+
 Added in v6-ordered-spell-system:
 
 - What I need is a SYSTEM that is so expressive you can write all spells using it's API without any logic written elsewhere outside of the spell file.
