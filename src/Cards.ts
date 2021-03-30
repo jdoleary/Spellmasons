@@ -1,6 +1,6 @@
 import type * as Player from './Player';
 import * as Unit from './Unit';
-// import * as Pickup from './Pickup';
+import * as Pickup from './Pickup';
 import type { Coords } from './commonTypes';
 import { modifiersSource } from './Modifiers';
 // import * as math from './math';
@@ -169,34 +169,52 @@ export const allCards: ICard[] = [
     thumbnail: 'images/spell/swap.png',
     probability: 3,
     effect: (state) => {
+      const { caster, targets, aggregator } = state;
+      if (!aggregator.swap) {
+        aggregator.swap = {
+          originalCasterPosition: {
+            x: caster.unit.x,
+            y: caster.unit.y,
+          },
+        };
+      }
+      if (targets.length) {
+        // Find movement change between caster and original target
+        const dx = targets[0].x - aggregator.swap.originalCasterPosition.x;
+        const dy = targets[0].y - aggregator.swap.originalCasterPosition.y;
+
+        // Loop through all targets and swap if possible
+        for (let target of targets) {
+          const swapLocation = { x: target.x - dx, y: target.y - dy };
+          // You cannot swap with a statically blocked cell
+          if (window.game.isCellStaticallyBlocked(swapLocation)) {
+            continue;
+          }
+          const targetUnit = window.game.getUnitAt(target.x, target.y);
+          const swapUnit = window.game.getUnitAt(
+            swapLocation.x,
+            swapLocation.y,
+          );
+          const pickupToSwapWith = window.game.getPickupAt(target.x, target.y);
+          // Physically swap with target
+          if (targetUnit) {
+            Unit.setLocation(targetUnit, swapLocation);
+          }
+          if (swapUnit) {
+            Unit.setLocation(caster.unit, target);
+          }
+          // Physically swap with pickups
+          if (pickupToSwapWith) {
+            Pickup.setPosition(
+              pickupToSwapWith,
+              swapLocation.x,
+              swapLocation.y,
+            );
+          }
+        }
+      }
       return state;
     },
-    // effect: {
-    //   preSpell: (caster, cardTally, target) => {
-    //     const unitToSwapWith = window.game.getUnitAt(target.x, target.y);
-    //     // Physically swap with target
-    //     if (unitToSwapWith) {
-    //       Unit.setLocation(unitToSwapWith, caster.unit);
-    //     }
-    //     // Physically swap with pickups
-    //     const pickupToSwapWith = window.game.getPickupAt(target.x, target.y);
-    //     if (pickupToSwapWith) {
-    //       Pickup.setPosition(pickupToSwapWith, caster.unit.x, caster.unit.y);
-    //     }
-    //     const newTargetX = caster.unit.x;
-    //     const newTargetY = caster.unit.y;
-    //     Unit.setLocation(caster.unit, target).then(() => {
-    //       // Disable swap so it doesn't recurse forever
-    //       delete cardTally.swap;
-    //       window.game.castCards(caster, cardTally, {
-    //         x: newTargetX,
-    //         y: newTargetY,
-    //       });
-    //     });
-    //     // Do not continue with casting the spell
-    //     return true;
-    //   },
-    // },
   },
   {
     id: 'push',

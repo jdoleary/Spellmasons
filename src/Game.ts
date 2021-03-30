@@ -622,12 +622,20 @@ export default class Game {
   addPickupToArray(pickup: Pickup.IPickup) {
     this.pickups.push(pickup);
   }
-  isCellObstructed(coordinates: Coords): boolean {
+  // A cell is statically blocked if it does not exist or is occupied by something immovable
+  isCellStaticallyBlocked(coordinates: Coords): boolean {
     const { x, y } = coordinates;
     // Out of map bounds is considered "obstructed"
     if (x < 0 || y < 0 || x >= config.BOARD_WIDTH || y >= config.BOARD_HEIGHT) {
       return true;
     }
+    return false;
+  }
+  isCellObstructed(coordinates: Coords): boolean {
+    if (this.isCellStaticallyBlocked(coordinates)) {
+      return true;
+    }
+    const { x, y } = coordinates;
     // Cell is obstructed if it is already occupied by a unit
     for (let unit of this.units) {
       if (unit.alive && unit.x === x && unit.y === y) {
