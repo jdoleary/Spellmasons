@@ -10,22 +10,27 @@ type onDamage = {
 
 export const onDamageSource: { [name: string]: onDamage } = {
   shield: (unit, amount, damageDealer) => {
-    floatingText({
-      cellX: unit.x,
-      cellY: unit.y,
-      text: 'Shielded from damage!',
-      style: {
-        fill: 'blue',
-      },
-    });
+    // Only block damage, not heals
+    if (amount > 0) {
+      floatingText({
+        cellX: unit.x,
+        cellY: unit.y,
+        text: 'Shielded from damage!',
+        style: {
+          fill: 'blue',
+        },
+      });
 
-    unit.modifiers.shield && unit.modifiers.shield.stacks--;
-    if (unit.modifiers.shield && unit.modifiers.shield.stacks <= 0) {
-      modifiersSource.shield.remove(unit);
+      unit.modifiers.shield && unit.modifiers.shield.stacks--;
+      if (unit.modifiers.shield && unit.modifiers.shield.stacks <= 0) {
+        modifiersSource.shield.remove(unit);
+      }
+
+      // Take no damage
+      return 0;
+    } else {
+      return amount;
     }
-
-    // Take no damage
-    return 0;
   },
 };
 
