@@ -3,7 +3,7 @@ import * as Unit from './Unit';
 import * as Pickup from './Pickup';
 import type { Coords } from './commonTypes';
 import { modifiersSource } from './Modifiers';
-// import * as math from './math';
+import * as math from './math';
 
 // Guiding rules for designing card effects:
 // Follow the Priciple of Least Surpise
@@ -212,18 +212,21 @@ export const allCards: ICard[] = [
     thumbnail: 'images/spell/push.png',
     probability: 5,
     effect: (state) => {
+      // TODO: This card needs some work, it doesn't work great due to not using initiateIntelligentAIMovement and order of operations
+      const { caster, targets } = state;
+      // Push AWAY from the original target
+      const pushAwayFromLocation = { x: targets[0].x, y: targets[0].y };
+      if (targets.length) {
+        // Loop through all targets and move if possible
+        for (let target of targets) {
+          const unit = window.game.getUnitAt(target.x, target.y);
+          if (unit) {
+            const moveTo = math.oneCellAwayFromCell(unit, pushAwayFromLocation);
+            Unit.moveTo(unit, moveTo);
+          }
+        }
+      }
       return state;
     },
-    // effect: {
-    //   singleTargetEffect: (caster, target, magnitude) => {
-    //     for (let i = 0; i < magnitude; i++) {
-    //       const unit = window.game.getUnitAt(target.x, target.y);
-    //       if (unit) {
-    //         const moveTo = math.oneCellAwayFromCell(unit, caster.unit);
-    //         Unit.moveTo(unit, moveTo);
-    //       }
-    //     }
-    //   },
-    // },
   },
 ];
