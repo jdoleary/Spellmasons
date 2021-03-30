@@ -1,6 +1,5 @@
 - Add factions
-- Resurrect should restore sprite image
-- Refactor, card UI reconciliation algorithm is slow
+  - Resurrected units come back on your side
 
 ## Brad feedback 2021-03-26
 
