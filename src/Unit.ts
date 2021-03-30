@@ -4,7 +4,7 @@ import * as AI from './AI';
 import floatingText from './FloatingText';
 import Image from './Image';
 import { cellDistance } from './math';
-import { containerUnits } from './PixiUtils';
+import { changeSpriteTexture, containerUnits } from './PixiUtils';
 import { ableToTakeTurn } from './Player';
 import type { Coords } from './commonTypes';
 import { onDamageSource, onMoveSource } from './Events';
@@ -147,13 +147,12 @@ export function serializeUnit(unit: IUnit) {
   };
 }
 export function resurrect(u: IUnit) {
-  u.image.scale(1);
   // Return dead units back to full health
   u.health = u.healthMax;
   u.alive = true;
 }
 export function die(u: IUnit) {
-  u.image.scale(0);
+  changeSpriteTexture('images/units/corpse.png', u.image.sprite);
   u.alive = false;
   // When a unit dies, deselect it
   deselect(u);

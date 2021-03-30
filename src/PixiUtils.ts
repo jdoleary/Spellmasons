@@ -67,6 +67,7 @@ function loadTextures(): Promise<void> {
       'images/spell/weaken.png',
       'images/portal.png',
       'images/units/unit-underline.png',
+      'images/units/corpse.png',
       'images/pickups/card.png',
       'images/empty.png',
     ];
@@ -95,4 +96,14 @@ export function addPixiSprite(
   );
   parent.addChild(sprite);
   return sprite;
+}
+
+export function changeSpriteTexture(imagePath: string, sprite: PIXI.Sprite) {
+  if (!isReady) {
+    throw new Error(
+      'PIXI is not finished setting up.  Cannot add a sprite yet',
+    );
+  }
+  const resource = resources[imagePath];
+  sprite.texture = resource.texture;
 }

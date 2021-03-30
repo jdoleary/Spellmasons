@@ -339,22 +339,6 @@ export default class Game {
       this.setGameState(game_state.Upgrade);
     }
   }
-  // Clean up resources of dead units
-  bringOutYerDead() {
-    // Note: This occurs in the first phase so that "dead" units can animate to death
-    // after they take mortally wounding damage without their html elements being removed before
-    // the animation takes place
-    for (let u of this.units) {
-      // Remove dead, non-player character images
-      if (!u.alive && u.unitType !== Unit.UnitType.PLAYER_CONTROLLED) {
-        u.image.cleanup();
-      }
-    }
-    // Remove dead non-player units
-    this.units = this.units.filter(
-      (u) => !(u.unitType !== Unit.UnitType.PLAYER_CONTROLLED && !u.alive),
-    );
-  }
   // Generate an array of cell coordinates in shuffled order
   // between optional boundaries
   _getShuffledCoordinates({ xMin, xMax, yMin, yMax }: Bounds): Coords[] {
@@ -455,7 +439,6 @@ export default class Game {
           u.intendedNextMove = undefined;
         }
         this.syncYourTurnState();
-        this.bringOutYerDead();
         break;
       case 'NPC':
         this.setYourTurn(false, "NPC's Turn");
