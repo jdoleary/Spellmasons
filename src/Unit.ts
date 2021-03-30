@@ -47,6 +47,9 @@ export interface IUnit {
   onMoveEvents: string[];
   onAgroEvents: string[];
   onTurnStartEvents: string[];
+  modifiers: {
+    [name: string]: any;
+  };
 }
 export function create(
   x: number,
@@ -79,6 +82,7 @@ export function create(
     onMoveEvents: [],
     onAgroEvents: [],
     onTurnStartEvents: [],
+    modifiers: {},
   };
 
   // Start images small and make them grow when they spawn in

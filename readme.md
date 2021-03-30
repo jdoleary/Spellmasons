@@ -14,6 +14,13 @@ Turn based - Players turns execute simultaneous (but do wait for the other to fi
 First player to have their "heart" destroyed loses
 Player's summons have no loyalty! They just attack in the direction they are moving, which makes turning them potentially make them a problem for the other player
 
+## Cards, Modifiers and Effects
+
+Cards use a common api to allow for them to compose with each other.
+Some cards add modifiers and modifiers add events. Events are functions that are triggered when certain events occur.
+
+See Cards.ts, Modifiers.ts, and Events.ts for more information
+
 ## Spells
 
 - Summon

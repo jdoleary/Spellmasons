@@ -1,5 +1,6 @@
 import type { Coords } from './commonTypes';
 import floatingText from './FloatingText';
+import { modifiersSource } from './Modifiers';
 import type { IUnit } from './Unit';
 
 type onDamage = {
@@ -9,10 +10,6 @@ type onDamage = {
 
 export const onDamageSource: { [name: string]: onDamage } = {
   shield: (unit, amount, damageDealer) => {
-    // Remove self
-    unit.onDamageEvents = unit.onDamageEvents.filter(
-      (name) => name !== 'shield',
-    );
     floatingText({
       cellX: unit.x,
       cellY: unit.y,
@@ -21,8 +18,12 @@ export const onDamageSource: { [name: string]: onDamage } = {
         fill: 'blue',
       },
     });
-    // Remove subsprite
-    unit.image.removeSubSprite('shield');
+
+    unit.modifiers.shield && unit.modifiers.shield.stacks--;
+    if (unit.modifiers.shield && unit.modifiers.shield.stacks <= 0) {
+      modifiersSource.shield.remove(unit);
+    }
+
     // Take no damage
     return 0;
   },
@@ -36,16 +37,7 @@ type onMove = {
   // Returns a possibly modified coordinate
   (unit: IUnit, newLocation: Coords): Coords;
 };
-export const onMoveSource: { [name: string]: onMove } = {
-  freeze: (unit, newLocation) => {
-    // Remove self
-    unit.onMoveEvents = unit.onMoveEvents.filter((name) => name !== 'freeze');
-    // Remove subsprite
-    unit.image.removeSubSprite('freeze');
-    // Return current location, unit is frozen and cannot move
-    return unit;
-  },
-};
+export const onMoveSource: { [name: string]: onMove } = {};
 
 type onAgro = {
   // Returns a possibly modified agroTarget
@@ -53,5 +45,17 @@ type onAgro = {
 };
 
 type onTurnStart = {
-  (unit: IUnit): void;
+  // Return boolean skips the turn if true
+  (unit: IUnit): boolean;
+};
+export const onTurnSource: { [name: string]: onTurnStart } = {
+  freeze: (unit) => {
+    // Decrement how many turns left the unit is frozen
+    unit.modifiers.freeze && unit.modifiers.freeze.turnsLeft--;
+    if (unit.modifiers.freeze && unit.modifiers.freeze.turnsLeft <= 0) {
+      modifiersSource.freeze.remove(unit);
+    }
+    // Abort turn
+    return true;
+  },
 };

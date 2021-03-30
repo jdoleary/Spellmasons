@@ -16,6 +16,7 @@ import { generateEnemy } from './EnemyUnit';
 import type { Coords } from './commonTypes';
 import { drawDangerOverlay } from './ui/UserInterface';
 import { createUpgradeElement, generateUpgrades } from './Upgrade';
+import { onTurnSource } from './Events';
 
 export enum game_state {
   Lobby,
@@ -252,15 +253,28 @@ export default class Game {
       // If there are players who are able to take their turns, increment to the next
       this.playerTurnIndex = (this.playerTurnIndex + 1) % this.players.length;
       const nextTurnPlayer = this.players[this.playerTurnIndex];
-      // If this current player is able to take their turn...
-      if (Player.ableToTakeTurn(nextTurnPlayer)) {
-        this.secondsLeftForTurn = config.SECONDS_PER_TURN;
-        elPlayerTurnIndicatorHolder.classList.remove('low-time');
-        this.syncYourTurnState();
-        this.goToNextPhaseIfAppropriate();
-      } else {
-        // otherwise, skip them
+      // If this current player is NOT able to take their turn...
+      if (!Player.ableToTakeTurn(nextTurnPlayer)) {
+        // Skip them
         this.incrementPlayerTurn();
+      } else {
+        // Trigger onTurnStart Events
+        const onTurnStartEventResults: boolean[] = nextTurnPlayer.unit.onTurnStartEvents.map(
+          (eventName) => {
+            const fn = onTurnSource[eventName];
+            return fn ? fn(nextTurnPlayer.unit) : false;
+          },
+        );
+        if (onTurnStartEventResults.some((b) => b)) {
+          // If any onTurnStartEvents return true, skip the player
+          this.incrementPlayerTurn();
+        } else {
+          // Start the nextTurnPlayer's turn
+          this.secondsLeftForTurn = config.SECONDS_PER_TURN;
+          elPlayerTurnIndicatorHolder.classList.remove('low-time');
+          this.syncYourTurnState();
+          this.goToNextPhaseIfAppropriate();
+        }
       }
     } else {
       this.checkForEndOfLevel();
@@ -447,9 +461,19 @@ export default class Game {
         this.setYourTurn(false, "NPC's Turn");
         const animationPromises = [];
         // Move units
-        for (let u of this.units.filter(
+        unitloop: for (let u of this.units.filter(
           (u) => u.unitType === Unit.UnitType.AI,
         )) {
+          // Trigger onTurnStart Events
+          for (let eventName of u.onTurnStartEvents) {
+            const fn = onTurnSource[eventName];
+            if (fn) {
+              const abortTurn = fn(u);
+              if (abortTurn) {
+                continue unitloop;
+              }
+            }
+          }
           const promise = Unit.moveAI(u);
           animationPromises.push(promise);
         }
@@ -617,7 +641,6 @@ export default class Game {
     cards: string[],
     target: Coords,
   ): Coords[] {
-    console.log('cards', cards);
     let targetOnlyCards = [];
     // TODO: optimize.  This converts from string to card back to string, just to filter for
     // card.onlyChangesTarget

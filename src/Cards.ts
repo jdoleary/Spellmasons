@@ -2,6 +2,7 @@ import type * as Player from './Player';
 import * as Unit from './Unit';
 // import * as Pickup from './Pickup';
 import type { Coords } from './commonTypes';
+import { modifiersSource } from './Modifiers';
 // import * as math from './math';
 
 // Guiding rules for designing card effects:
@@ -143,8 +144,7 @@ export const allCards: ICard[] = [
       for (let target of state.targets) {
         const unit = window.game.getUnitAt(target.x, target.y);
         if (unit) {
-          unit.onMoveEvents.push('freeze');
-          unit.image.addSubSprite('freeze');
+          modifiersSource.freeze.add(unit);
         }
         return state;
       }
@@ -158,8 +158,7 @@ export const allCards: ICard[] = [
       for (let target of state.targets) {
         const unit = window.game.getUnitAt(target.x, target.y);
         if (unit) {
-          unit.onDamageEvents.push('shield');
-          unit.image.addSubSprite('shield');
+          modifiersSource.shield.add(unit);
         }
         return state;
       }
