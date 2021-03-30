@@ -21,57 +21,40 @@ export function recalcPositionForCards(player: Player.IPlayer) {
       return tally;
     }, {}),
   );
+  // Remove all current cards:
+  elCardHand.innerHTML = '';
+
   // Reconcile the elements with the player's hand
   for (let [cardId, count] of cardCountPairs) {
     const className = `card-${cardId}`;
 
-    const difference =
-      count - document.querySelectorAll('.' + className).length;
-    const matchingCards = document.querySelectorAll('.' + className);
-    for (let i = 0; i < Math.abs(difference); i++) {
-      const doRemove = difference < 0;
-      if (doRemove) {
-        if (matchingCards[i]) {
-          matchingCards[i].remove();
-        } else {
-          console.error(
-            "Something went wrong trying to remove a card that doesn't exist",
-            i,
-            matchingCards,
-            className,
-          );
-          debugger;
-        }
-      } else {
-        // Create UI element for card
-        const card = Cards.allCards.find((card) => card.id === cardId);
-        // Note: Some upgrades don't have corresponding cards (such as resurrect)
-        if (card) {
-          const element = createCardElement(card);
-          element.classList.add(className);
-          // When the user clicks on a card
-          element.addEventListener('click', (e) => {
-            e.stopPropagation();
-            if (element.classList.contains('selected')) {
-              element.classList.remove('selected');
-            } else {
-              element.dataset.order = getSelectedCards().length.toString();
-              element.classList.add('selected');
-            }
-          });
-          let elCardTypeGroup = document.getElementById(`holder-${cardId}`);
-          if (!elCardTypeGroup) {
-            elCardTypeGroup = document.createElement('div');
-            elCardTypeGroup.classList.add('card-type-group');
-            elCardTypeGroup.id = `holder-${cardId}`;
-            elCardHand.appendChild(elCardTypeGroup);
+    for (let i = 0; i < count; i++) {
+      // Create UI element for card
+      const card = Cards.allCards.find((card) => card.id === cardId);
+      // Note: Some upgrades don't have corresponding cards (such as resurrect)
+      if (card) {
+        const element = createCardElement(card);
+        element.classList.add(className);
+        // When the user clicks on a card
+        element.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (element.classList.contains('selected')) {
+            element.classList.remove('selected');
+          } else {
+            element.dataset.order = getSelectedCards().length.toString();
+            element.classList.add('selected');
           }
-          elCardTypeGroup.appendChild(element);
-        } else {
-          console.log(
-            `No corresponding card exists for the "${cardId}" upgrade`,
-          );
+        });
+        let elCardTypeGroup = document.getElementById(`holder-${cardId}`);
+        if (!elCardTypeGroup) {
+          elCardTypeGroup = document.createElement('div');
+          elCardTypeGroup.classList.add('card-type-group');
+          elCardTypeGroup.id = `holder-${cardId}`;
+          elCardHand.appendChild(elCardTypeGroup);
         }
+        elCardTypeGroup.appendChild(element);
+      } else {
+        console.log(`No corresponding card exists for the "${cardId}" upgrade`);
       }
     }
   }
@@ -79,10 +62,11 @@ export function recalcPositionForCards(player: Player.IPlayer) {
 
 // This function fully deletes the cards that are 'selected' in the player's hand
 export function removeCardsFromHand(player: Player.IPlayer, cards: string[]) {
-  for (let cardToRemove of cards) {
+  cardLoop: for (let cardToRemove of cards) {
     for (let i = player.cards.length; i >= 0; i--) {
       if (player.cards[i] === cardToRemove) {
         player.cards.splice(i, 1);
+        continue cardLoop;
       }
     }
   }
