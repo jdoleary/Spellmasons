@@ -191,8 +191,8 @@ export function takeDamage(unit: IUnit, amount: number) {
       cellY: unit.y,
       text: healthChangedString,
     });
+    unit.image.take_hit();
   }
-  unit.image.take_hit();
   if (unit.health <= 0) {
     die(unit);
   }
