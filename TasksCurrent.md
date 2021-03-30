@@ -1,5 +1,6 @@
 - Improve spell UI
   - How to inform users the order of operations of the spell they cast
+- Add batching to card effects?
 
 ## Brad feedback 2021-03-26
 

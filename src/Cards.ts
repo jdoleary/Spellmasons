@@ -169,20 +169,11 @@ export const allCards: ICard[] = [
     thumbnail: 'images/spell/swap.png',
     probability: 3,
     effect: (state) => {
-      const { caster, targets, aggregator } = state;
-      if (!aggregator.swap) {
-        aggregator.swap = {
-          originalCasterPosition: {
-            x: caster.unit.x,
-            y: caster.unit.y,
-          },
-        };
-      }
+      const { caster, targets } = state;
+      // Find movement change between caster and original target
+      const dx = targets[0].x - caster.unit.x;
+      const dy = targets[0].y - caster.unit.y;
       if (targets.length) {
-        // Find movement change between caster and original target
-        const dx = targets[0].x - aggregator.swap.originalCasterPosition.x;
-        const dy = targets[0].y - aggregator.swap.originalCasterPosition.y;
-
         // Loop through all targets and swap if possible
         for (let target of targets) {
           const swapLocation = { x: target.x - dx, y: target.y - dy };
