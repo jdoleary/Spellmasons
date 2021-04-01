@@ -1,6 +1,3 @@
-- Add factions
-  - Resurrected units come back on your side
-
 # Todo
 
 - Improve spell UI

@@ -72,6 +72,7 @@ function loadTextures(): Promise<void> {
       'images/units/unit-underline.png',
       'images/units/corpse.png',
       'images/pickups/card.png',
+      'images/headband.png',
       'images/empty.png',
     ];
     images.forEach((path) => {

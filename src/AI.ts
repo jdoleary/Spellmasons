@@ -132,7 +132,7 @@ export function demonAction(unit: Unit.IUnit) {
       'images/spell/green-thing.png',
     );
     Unit.resurrect(deadUnit);
-    deadUnit.faction = Faction.ENEMY;
+    Unit.changeFaction(deadUnit, Faction.ENEMY);
   }
   // Move randomly
   const moveCoords = window.game.getRandomEmptyCell({ xMin: 2 });

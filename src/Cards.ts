@@ -1,7 +1,7 @@
 import type * as Player from './Player';
 import * as Unit from './Unit';
 import * as Pickup from './Pickup';
-import type { Coords } from './commonTypes';
+import { Coords } from './commonTypes';
 import { modifiersSource } from './Modifiers';
 import * as math from './math';
 
@@ -254,7 +254,7 @@ export const allCards: ICard[] = [
         );
         if (dead_unit) {
           Unit.resurrect(dead_unit);
-          dead_unit.faction = state.caster.unit.faction;
+          Unit.changeFaction(dead_unit, state.caster.unit.faction);
         }
       }
       return state;

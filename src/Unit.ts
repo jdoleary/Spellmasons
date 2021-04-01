@@ -290,3 +290,12 @@ export function setLocation(unit: IUnit, coordinates: Coords): Promise<void> {
   // Animate movement visually
   return unit.image.move(unit.x, unit.y);
 }
+export function changeFaction(unit: IUnit, faction: Faction) {
+  unit.faction = faction;
+  if (unit.faction === Faction.PLAYER) {
+    // headband signifies a player ally unit
+    unit.image.addSubSprite('headband');
+  } else {
+    unit.image.removeSubSprite('headband');
+  }
+}
