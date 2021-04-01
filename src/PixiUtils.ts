@@ -51,6 +51,8 @@ function loadTextures(): Promise<void> {
       'images/units/golem-blue.png',
       'images/units/golem-red.png',
       'images/units/golem-sand.png',
+      'images/units/golem-summoner.png',
+      'images/units/demon.png',
       'images/units/man-blue.png',
       'images/spell/aoe.png',
       'images/spell/chain.png',

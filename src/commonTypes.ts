@@ -13,4 +13,5 @@ export enum UnitSubType {
   AI_rook,
   AI_reach,
   AI_summoner,
+  AI_demon,
 }

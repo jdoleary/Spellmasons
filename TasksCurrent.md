@@ -1,6 +1,3 @@
-- Enemy level difficulty scaling
-  - Make game really really hard for testing
-- Summoner enemy
 - Add factions
   - Resurrected units come back on your side
 

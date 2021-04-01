@@ -31,6 +31,18 @@ export const enemySource = [
     subtype: UnitSubType.AI_reach,
     probability: 30,
   },
+  {
+    id: 'golem-summoner',
+    image: 'images/units/golem-summoner.png',
+    subtype: UnitSubType.AI_summoner,
+    probability: 30,
+  },
+  {
+    id: 'demon',
+    image: 'images/units/demon.png',
+    subtype: UnitSubType.AI_demon,
+    probability: 30,
+  },
 ];
 
 const hardCodedLevelEnemies = [
@@ -38,12 +50,12 @@ const hardCodedLevelEnemies = [
   [0, 0, 0, 1],
   [0, 0, 1, 1, 1],
   [0, 0, 0, 1, 3],
-  [0, 0, 0, 0, 3, 3, 3],
+  [0, 0, 0, 0, 3, 3, 4],
   [0, 1, 1, 1, 3, 3, 3, 2],
-  [0, 0, 0, 0, 0, 0, 0, 1],
-  [0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3],
-  [0, 0, 0, 0, 0, 0, 0, 1, 1, 3, 3],
-  [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+  [0, 0, 0, 0, 0, 0, 0, 4],
+  [0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 5],
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 3, 3],
+  [0, 0, 0, 0, 0, 0, 1, 1, 1, 4, 5],
 ];
 
 export function generateHardCodedLevelEnemies(level: number) {

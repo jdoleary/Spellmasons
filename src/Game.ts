@@ -46,6 +46,8 @@ export default class Game {
   seed: string;
   random: Random;
   turn_phase: turn_phase;
+  // A count of the number of turns
+  turn_number: number = 0;
   height: number = config.BOARD_HEIGHT;
   width: number = config.BOARD_WIDTH;
   players: Player.IPlayer[] = [];
@@ -429,6 +431,7 @@ export default class Game {
     document.body.classList.add('phase-' + phase.toLowerCase());
     switch (phase) {
       case 'PlayerTurns':
+        this.turn_number++;
         for (let u of this.units) {
           // Reset thisTurnMoved flag now that it is a new turn
           // Because no units have moved yet this turn

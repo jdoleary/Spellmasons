@@ -93,6 +93,52 @@ export function reachAction(unit: Unit.IUnit) {
     }
   }
 }
+export function summonerAction(unit: Unit.IUnit) {
+  // Move opposite to closest hero
+  const closestPlayerUnit = Unit.findClosestPlayerTo(unit);
+  if (closestPlayerUnit) {
+    const moveTo = math.oneCellAwayFromCell(unit, closestPlayerUnit);
+    unit.intendedNextMove = moveTo;
+  }
+  // Summon unit
+  // Every x number of tunrs
+  if (window.game.turn_number % 3 === 0) {
+    const coords = window.game.getRandomEmptyCell({ xMin: 2 });
+    if (coords) {
+      const sourceUnit = enemySource[0];
+      const summonedUnit = Unit.create(
+        // Start the unit at the summoners location
+        unit.x,
+        unit.y,
+        sourceUnit.image,
+        UnitType.AI,
+        sourceUnit.subtype,
+      );
+      Unit.moveTo(summonedUnit, coords);
+    }
+  }
+}
+export function demonAction(unit: Unit.IUnit) {
+  // Resurrect a unit
+  const deadAIs = window.game.units.filter(
+    (u) => u.unitType === UnitType.AI && !u.alive,
+  );
+  if (deadAIs.length) {
+    const deadUnit = deadAIs[0];
+    createVisualProjectile(
+      unit,
+      deadUnit.x,
+      deadUnit.y,
+      'images/spell/green-thing.png',
+    );
+    Unit.resurrect(deadUnit);
+  }
+  // Move randomly
+  const moveCoords = window.game.getRandomEmptyCell({ xMin: 2 });
+  if (moveCoords) {
+    unit.intendedNextMove = moveCoords;
+  }
+}
 
 // If a unit can attack (x,y), return true
 export function canAttackCell(unit: Unit.IUnit, x: number, y: number): boolean {
