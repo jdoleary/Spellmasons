@@ -1,5 +1,8 @@
 # Todo
 
+- Add cast range limits
+- Bug: undoing SOME cards and redoing them in a different order didn't work as expected
+
 - Improve spell UI
   - How to inform users the order of operations of the spell they cast
 - Add batching to card effects?
