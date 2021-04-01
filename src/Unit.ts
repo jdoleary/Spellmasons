@@ -78,6 +78,9 @@ export function create(
     modifiers: {},
   };
 
+  // Ensure all change factions logic applies when a unit is first created
+  changeFaction(unit, faction);
+
   // Start images small and make them grow when they spawn in
   unit.image.sprite.scale.set(0);
   unit.image.scale(0.8);

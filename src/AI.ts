@@ -109,7 +109,8 @@ export function summonerAction(unit: Unit.IUnit) {
         // Start the unit at the summoners location
         unit.x,
         unit.y,
-        Faction.ENEMY,
+        // A unit always summons units in their own faction
+        unit.faction,
         sourceUnit.image,
         UnitType.AI,
         sourceUnit.subtype,
