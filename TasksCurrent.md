@@ -1,5 +1,16 @@
 # Todo
 
+- bug: Second player shows 'ownCharacterMarker' on all players
+- bug: When brad went through the portal i didn't get to take my turn
+- bug: freezing me let brad take two turns in a row but he couldn't move twice
+- bug: Demon can still cast even when dead
+- bug: demon resurrects enemys not on his faction
+- bug: Game over triggers too early if the player is ressed in the same turn that they die
+- let our faction go before enemy units go
+- What happens if you freeze a ally hero then go through the portal yourself
+- rename weaken
+- Something is wrong with game loading, sometimes I don't see any units
+
 - Add cast range limits
 - Bug: undoing SOME cards and redoing them in a different order didn't work as expected
 
@@ -12,8 +23,6 @@
 ## Bugs Suspected Fixed
 
 - BUG: Sometimes it skips other players turn when one goes through the protal
-- BUG: Dead player still able to cast and keeps moving????
-  - Players don't resurrect AGAIN
 
 ## bugs
 

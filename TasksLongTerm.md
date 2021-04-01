@@ -6,6 +6,7 @@
     - More Spells
   - Polish
     - Add tutorial
+      - Introduce unit types
     - Make sure pie-client isn't still linked and uses most up-to-date version on NPM
     - Art
       - Pinterest board for inspiration
