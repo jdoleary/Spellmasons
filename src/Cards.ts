@@ -42,7 +42,7 @@ export const allCards: ICard[] = [
   {
     id: 'damage',
     thumbnail: 'images/spell/damage.png',
-    probability: 120,
+    probability: 50,
     effect: (state) => {
       for (let target of state.targets) {
         const unit = window.game.getUnitAt(target.x, target.y);
