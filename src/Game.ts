@@ -12,7 +12,7 @@ import { addPixiSprite, app, containerBoard } from './PixiUtils';
 import type { Random } from 'random';
 import makeSeededRandom from './rand';
 import floatingText from './FloatingText';
-import { generateEnemy } from './EnemyUnit';
+import { enemySource, generateHardCodedLevelEnemies } from './EnemyUnit';
 import type { Coords } from './commonTypes';
 import { drawDangerOverlay } from './ui/UserInterface';
 import { createUpgradeElement, generateUpgrades } from './Upgrade';
@@ -183,14 +183,11 @@ export default class Game {
       portalPickup.effect,
     );
     // Spawn units at the start of the level
-    for (
-      let i = 0;
-      i < config.NUMBER_OF_UNITS_SPAWN_PER_LEVEL * this.level;
-      i++
-    ) {
+    const enemyIndexes = generateHardCodedLevelEnemies(this.level);
+    for (let index of enemyIndexes) {
       const coords = this.getRandomEmptyCell({ xMin: 2 });
       if (coords) {
-        const sourceUnit = generateEnemy();
+        const sourceUnit = enemySource[index];
         const unit = Unit.create(
           coords.x,
           coords.y,
@@ -200,7 +197,7 @@ export default class Game {
         );
         const roll = this.random.integer(0, 100);
         if (roll <= config.PERCENT_CHANCE_OF_HEAVY_UNIT) {
-          unit.healthMax = config.UNIT_BASE_HEALTH + 2;
+          unit.healthMax = config.UNIT_BASE_HEALTH * 2;
           unit.health = unit.healthMax;
           unit.image.scale(1.0);
         }

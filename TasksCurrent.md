@@ -1,15 +1,11 @@
+- Enemy level difficulty scaling
+  - Make game really really hard for testing
+- Summoner enemy
 - Add factions
   - Resurrected units come back on your side
 
-## Brad feedback 2021-03-26
-
-- Make game really really hard for testing
-- advice: need more diversity of challenge with the enemy types than just "avboid that line"
-  - a unit that summons other units (adds stimulation to the thought, more than just avoid the shape)
-
 # Todo
 
-- Next: Be more creative with enemies
 - Improve spell UI
   - How to inform users the order of operations of the spell they cast
 - Add batching to card effects?

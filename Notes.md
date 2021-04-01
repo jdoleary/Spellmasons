@@ -1,5 +1,6 @@
 # Notes
 
+- advice: need more diversity of challenge with the enemy types than just "avboid that line"
 - [Spell Hooks](https://docs.google.com/spreadsheets/d/1PntBWT4twXoKRKBZBOg7zZtWNzoqtfu6SD-EMQYedt4/edit#gid=0)
 - Idea: what if there was a planning phase where you could pick your arsenal of cards once you see the board to prevent doom state?
 

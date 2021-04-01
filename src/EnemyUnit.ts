@@ -6,7 +6,7 @@ interface Enemy {
   subtype: UnitSubType;
   probability: number;
 }
-const source = [
+export const enemySource = [
   {
     id: 'golem',
     image: 'images/units/golem.png',
@@ -33,6 +33,24 @@ const source = [
   },
 ];
 
+const hardCodedLevelEnemies = [
+  [0, 0, 0],
+  [0, 0, 0, 1],
+  [0, 0, 1, 1, 1],
+  [0, 0, 0, 1, 3],
+  [0, 0, 0, 0, 3, 3, 3],
+  [0, 1, 1, 1, 3, 3, 3, 2],
+  [0, 0, 0, 0, 0, 0, 0, 1],
+  [0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3],
+  [0, 0, 0, 0, 0, 0, 0, 1, 1, 3, 3],
+  [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1],
+];
+
+export function generateHardCodedLevelEnemies(level: number) {
+  // 0 indexed level
+  return hardCodedLevelEnemies[level - 1];
+}
+
 export function generateEnemy(): Enemy {
-  return math.chooseObjectWithProbability(source);
+  return math.chooseObjectWithProbability(enemySource);
 }
