@@ -16,6 +16,7 @@ export default class Image {
   subSprites: string[];
   size_x: number;
   size_y: number;
+  _scale: number;
 
   constructor(
     cellX: number,
@@ -42,8 +43,8 @@ export default class Image {
     instantiatedImage.sprite.x = image.sprite.x;
     instantiatedImage.sprite.y = image.sprite.y;
     instantiatedImage.sprite.scale.set(
-      image.sprite.scale.x,
-      image.sprite.scale.y,
+      image.sprite._scale,
+      image.sprite._scale,
     );
     // Re-add subsprites
     const subSprites = [...image.subSprites];
@@ -61,10 +62,7 @@ export default class Image {
       sprite: {
         x: this.sprite.x,
         y: this.sprite.y,
-        scale: {
-          x: this.sprite.scale.x,
-          y: this.sprite.scale.y,
-        },
+        _scale: this._scale,
       },
       subSprites: this.subSprites,
       size_x: this.size_x,
@@ -80,6 +78,7 @@ export default class Image {
   scale(scale) {
     // Clamp to a positive value
     scale = Math.max(0, scale);
+    this._scale = scale;
     window.animationTimeline.addAnimation([
       {
         sprite: this.sprite,
