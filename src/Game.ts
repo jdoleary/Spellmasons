@@ -13,7 +13,7 @@ import type { Random } from 'random';
 import makeSeededRandom from './rand';
 import floatingText from './FloatingText';
 import { enemySource, generateHardCodedLevelEnemies } from './EnemyUnit';
-import { UnitType, Coords } from './commonTypes';
+import { UnitType, Coords, Faction } from './commonTypes';
 import { drawDangerOverlay } from './ui/UserInterface';
 import { createUpgradeElement, generateUpgrades } from './Upgrade';
 import { onTurnSource } from './Events';
@@ -46,7 +46,11 @@ export default class Game {
   seed: string;
   random: Random;
   turn_phase: turn_phase;
-  // A count of the number of turns
+  // A count of which turn it is, this is useful for
+  // governing AI actions that occur every few turns
+  // instead of every turn.  A "turn" is a full cycle,
+  // meaning, players take their turn, npcs take their
+  // turn, then it resets to player turn, that is a full "turn"
   turn_number: number = 0;
   height: number = config.BOARD_HEIGHT;
   width: number = config.BOARD_WIDTH;
@@ -193,6 +197,7 @@ export default class Game {
         const unit = Unit.create(
           coords.x,
           coords.y,
+          Faction.ENEMY,
           sourceUnit.image,
           UnitType.AI,
           sourceUnit.subtype,

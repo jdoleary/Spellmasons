@@ -254,6 +254,7 @@ export const allCards: ICard[] = [
         );
         if (dead_unit) {
           Unit.resurrect(dead_unit);
+          dead_unit.faction = state.caster.unit.faction;
         }
       }
       return state;

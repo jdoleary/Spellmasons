@@ -6,7 +6,7 @@ import Image from './Image';
 import { cellDistance } from './math';
 import { changeSpriteTexture, containerUnits } from './PixiUtils';
 import { ableToTakeTurn } from './Player';
-import { Coords, UnitSubType, UnitType } from './commonTypes';
+import { Coords, UnitSubType, UnitType, Faction } from './commonTypes';
 import { onDamageSource, onMoveSource } from './Events';
 export function getDangerZoneColor(unit: IUnit) {
   switch (unit.unitSubType) {
@@ -20,6 +20,7 @@ export interface IUnit {
   x: number;
   y: number;
   name?: string;
+  faction: number;
   // If the unit moved this turn
   thisTurnMoved: boolean;
   intendedNextMove?: Coords;
@@ -44,6 +45,7 @@ export interface IUnit {
 export function create(
   x: number,
   y: number,
+  faction: Faction,
   imagePath: string,
   unitType: UnitType,
   unitSubType?: UnitSubType,
@@ -51,6 +53,7 @@ export function create(
   const unit: IUnit = {
     x,
     y,
+    faction,
     thisTurnMoved: false,
     intendedNextMove: undefined,
     image: new Image(x, y, imagePath, containerUnits),
@@ -210,18 +213,28 @@ export function findCellOneStepCloserTo(
   const moveY = unit.y + (diffY === 0 ? 0 : diffY / Math.abs(diffY));
   return { x: moveX, y: moveY };
 }
-export function findClosestPlayerTo(unit: IUnit): IUnit | undefined {
-  let currentClosest;
-  let currentClosestDistance = Number.MAX_SAFE_INTEGER;
-  // Filter on players able to take their turn to ensure, for example, that dead players don't get targeted
-  for (let p of window.game.players.filter(ableToTakeTurn)) {
-    const dist = cellDistance(p.unit, unit);
-    if (dist <= currentClosestDistance) {
-      currentClosest = p.unit;
-      currentClosestDistance = dist;
-    }
-  }
-  return currentClosest;
+export function livingUnitsInDifferentFaction(unit: IUnit) {
+  return window.game.units.filter((u) => u.faction !== unit.faction && u.alive);
+}
+function closestInListOfUnits(
+  sourceUnit: IUnit,
+  units: IUnit[],
+): IUnit | undefined {
+  return units.reduce(
+    (acc, currentUnitConsidered) => {
+      const dist = cellDistance(currentUnitConsidered, sourceUnit);
+      if (dist <= acc.distance) {
+        return { closest: currentUnitConsidered, distance: dist };
+      }
+      return acc;
+    },
+    { closest: undefined, distance: Number.MAX_SAFE_INTEGER },
+  ).closest;
+}
+export function findClosestUnitInDifferentFaction(
+  unit: IUnit,
+): IUnit | undefined {
+  return closestInListOfUnits(unit, livingUnitsInDifferentFaction(unit));
 }
 export function moveAI(unit: IUnit) {
   switch (unit.unitSubType) {

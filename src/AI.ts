@@ -1,31 +1,32 @@
 import * as Unit from './Unit';
 import * as math from './math';
 import createVisualProjectile from './Projectile';
-import { ableToTakeTurn } from './Player';
 import { enemySource } from './EnemyUnit';
-import { UnitType, UnitSubType } from './commonTypes';
+import { UnitType, UnitSubType, Faction } from './commonTypes';
+
+function livingUnitsInDifferentFaction(u: Unit.IUnit, faction: Faction) {}
 export function meleeAction(unit: Unit.IUnit) {
   if (!Unit.canMove(unit)) {
     return;
   }
-  const closestPlayerUnit = Unit.findClosestPlayerTo(unit);
-  if (!closestPlayerUnit) {
+  const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit);
+  if (!closestEnemy) {
     // Do not move if they don't have a target
     return;
   }
   const targetCell = Unit.findCellOneStepCloserTo(
     unit,
-    closestPlayerUnit.x,
-    closestPlayerUnit.y,
+    closestEnemy.x,
+    closestEnemy.y,
   );
   const next_x = targetCell.x;
   const next_y = targetCell.y;
   const other_unit = window.game.getUnitAt(next_x, next_y);
   // Deal damage to what you run into
   if (other_unit) {
-    // Do not attack ally AI units
+    // Do not attack ally units
     if (
-      other_unit.unitType != UnitType.AI &&
+      other_unit.faction != unit.faction &&
       canAttackCell(unit, next_x, next_y)
     ) {
       unit.image.attack(unit.x, unit.y, next_x, next_y);
@@ -38,54 +39,52 @@ export function meleeAction(unit: Unit.IUnit) {
   Unit.updateSelectedOverlay(unit);
 }
 export function rangedAction(unit: Unit.IUnit) {
-  // Shoot at player if in same horizontal, diagonal, or vertical
-  let targetPlayerUnit;
-  // Filter on players able to take their turn to ensure, for example, that dead players don't get targeted
-  for (let player of window.game.players.filter(ableToTakeTurn)) {
-    if (canAttackCell(unit, player.unit.x, player.unit.y)) {
-      targetPlayerUnit = player.unit;
+  // Shoot at enemy if in same horizontal, diagonal, or vertical
+  let targetEnemy;
+  for (let enemy of Unit.livingUnitsInDifferentFaction(unit)) {
+    if (canAttackCell(unit, enemy.x, enemy.y)) {
+      targetEnemy = enemy;
       break;
     }
   }
-  if (targetPlayerUnit) {
+  if (targetEnemy) {
     createVisualProjectile(
       unit,
-      targetPlayerUnit.x,
-      targetPlayerUnit.y,
+      targetEnemy.x,
+      targetEnemy.y,
       'images/spell/arrow.png',
     );
-    Unit.takeDamage(targetPlayerUnit, unit.power);
+    Unit.takeDamage(targetEnemy, unit.power);
   } else {
-    // Move opposite to closest hero
-    const closestPlayerUnit = Unit.findClosestPlayerTo(unit);
-    if (closestPlayerUnit) {
-      const moveTo = math.oneCellAwayFromCell(unit, closestPlayerUnit);
+    // Move opposite to enemy
+    const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit);
+    if (closestEnemy) {
+      const moveTo = math.oneCellAwayFromCell(unit, closestEnemy);
       unit.intendedNextMove = moveTo;
     }
   }
 }
 export function reachAction(unit: Unit.IUnit) {
   let runFromTarget;
-  let targetPlayerUnit;
-  // Filter on players able to take their turn to ensure, for example, that dead players don't get targeted
-  for (let player of window.game.players.filter(ableToTakeTurn)) {
-    // Will run away if player gets within 1
-    if (math.cellDistance(unit, player.unit) < 2) {
-      runFromTarget = player.unit;
+  let targetEnemy;
+  for (let enemy of Unit.livingUnitsInDifferentFaction(unit)) {
+    // Will run away if enemy gets within 1
+    if (math.cellDistance(unit, enemy) < 2) {
+      runFromTarget = enemy;
     }
-    if (canAttackCell(unit, player.unit.x, player.unit.y)) {
-      targetPlayerUnit = player.unit;
+    if (canAttackCell(unit, enemy.x, enemy.y)) {
+      targetEnemy = enemy;
       break;
     }
   }
-  if (targetPlayerUnit) {
+  if (targetEnemy) {
     createVisualProjectile(
       unit,
-      targetPlayerUnit.x,
-      targetPlayerUnit.y,
+      targetEnemy.x,
+      targetEnemy.y,
       'images/spell/green-thing.png',
     );
-    Unit.takeDamage(targetPlayerUnit, unit.power);
+    Unit.takeDamage(targetEnemy, unit.power);
   } else {
     if (runFromTarget) {
       const moveTo = math.oneCellAwayFromCell(unit, runFromTarget);
@@ -94,10 +93,10 @@ export function reachAction(unit: Unit.IUnit) {
   }
 }
 export function summonerAction(unit: Unit.IUnit) {
-  // Move opposite to closest hero
-  const closestPlayerUnit = Unit.findClosestPlayerTo(unit);
-  if (closestPlayerUnit) {
-    const moveTo = math.oneCellAwayFromCell(unit, closestPlayerUnit);
+  // Move opposite to closest enemy
+  const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit);
+  if (closestEnemy) {
+    const moveTo = math.oneCellAwayFromCell(unit, closestEnemy);
     unit.intendedNextMove = moveTo;
   }
   // Summon unit
@@ -110,6 +109,7 @@ export function summonerAction(unit: Unit.IUnit) {
         // Start the unit at the summoners location
         unit.x,
         unit.y,
+        Faction.ENEMY,
         sourceUnit.image,
         UnitType.AI,
         sourceUnit.subtype,
@@ -132,6 +132,7 @@ export function demonAction(unit: Unit.IUnit) {
       'images/spell/green-thing.png',
     );
     Unit.resurrect(deadUnit);
+    deadUnit.faction = Faction.ENEMY;
   }
   // Move randomly
   const moveCoords = window.game.getRandomEmptyCell({ xMin: 2 });

@@ -15,3 +15,8 @@ export enum UnitSubType {
   AI_summoner,
   AI_demon,
 }
+
+export enum Faction {
+  PLAYER,
+  ENEMY,
+}
