@@ -13,3 +13,4 @@ export const SHIELD_MULTIPLIER = 2;
 export const MILLIS_PER_ANIMATION = 100;
 export const PERCENT_CHANCE_OF_HEAVY_UNIT = 10;
 export const NUMBER_OF_UPGRADES_TO_CHOOSE_FROM = 5;
+export const PLAYER_CAST_RANGE = 4;

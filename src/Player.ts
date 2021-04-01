@@ -3,7 +3,8 @@ import * as Unit from './Unit';
 import type * as Upgrade from './Upgrade';
 import * as Card from './CardUI';
 import * as config from './config';
-import { Faction, UnitType } from './commonTypes';
+import * as math from './math';
+import { Coords, Faction, UnitType } from './commonTypes';
 
 export interface IPlayer {
   // wsPie id
@@ -12,11 +13,16 @@ export interface IPlayer {
   inPortal: boolean;
   cards: string[];
   upgrades: Upgrade.IUpgrade[];
+  // Cast range
+  range: number;
+}
+export function isTargetInRange(player: IPlayer, target: Coords): boolean {
+  return math.distance(target, player.unit) <= player.range;
 }
 export function create(clientId: string): IPlayer {
   // limit spawn to the leftmost column
   const coords = window.game.getRandomEmptyCell({ xMax: 0 });
-  const player = {
+  const player: IPlayer = {
     clientId,
     unit: Unit.create(
       coords.x,
@@ -26,9 +32,9 @@ export function create(clientId: string): IPlayer {
       UnitType.PLAYER_CONTROLLED,
     ),
     inPortal: false,
-    actionsUsed: 0,
     cards: [],
     upgrades: [],
+    range: config.PLAYER_CAST_RANGE,
   };
   updateGlobalRefToCurrentClientPlayer(player);
   // Add cards to hand

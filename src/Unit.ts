@@ -5,10 +5,12 @@ import floatingText from './FloatingText';
 import Image from './Image';
 import { cellDistance } from './math';
 import { changeSpriteTexture, containerUnits } from './PixiUtils';
-import { ableToTakeTurn } from './Player';
 import { Coords, UnitSubType, UnitType, Faction } from './commonTypes';
 import { onDamageSource, onMoveSource } from './Events';
 export function getDangerZoneColor(unit: IUnit) {
+  if (unit.unitType === UnitType.PLAYER_CONTROLLED) {
+    return 0x00ff00;
+  }
   switch (unit.unitSubType) {
     case UnitSubType.AI_bishop:
       return 0x0000ff;

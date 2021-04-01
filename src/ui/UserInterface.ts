@@ -4,6 +4,7 @@ import setupBoardInputHandlers from './GameBoardInput';
 import { containerDangerOverlay } from '../PixiUtils';
 import * as config from '../config';
 import * as math from '../math';
+import * as Player from '../Player';
 import { canAttackCell } from '../AI';
 import { clearSelectedCards } from '../CardUI';
 import { UnitType } from '../commonTypes';
@@ -87,6 +88,19 @@ export function drawDangerOverlay() {
               dangerOverlayGraphics.endFill();
             }
           }
+        }
+        // For the player, draw their range
+        if (Player.isTargetInRange(window.player, { x, y })) {
+          const cell = math.cellToBoardCoords(x, y);
+          const color = Unit.getDangerZoneColor(window.player.unit);
+          dangerOverlayGraphics.beginFill(color);
+          dangerOverlayGraphics.drawRect(
+            cell.x - halfCell,
+            cell.y - halfCell,
+            config.CELL_SIZE,
+            config.CELL_SIZE,
+          );
+          dangerOverlayGraphics.endFill();
         }
       }
     }

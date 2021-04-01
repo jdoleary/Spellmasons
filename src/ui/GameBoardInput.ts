@@ -2,7 +2,7 @@ import { MESSAGE_TYPES } from '../MessageTypes';
 import { BOARD_HEIGHT, BOARD_WIDTH, CELL_SIZE } from '../config';
 import { turn_phase } from '../Game';
 import * as Card from '../CardUI';
-import type { IPlayer } from '../Player';
+import * as Player from '../Player';
 import floatingText from '../FloatingText';
 import * as Unit from '../Unit';
 import { addPixiSprite, containerUI } from '../PixiUtils';
@@ -49,6 +49,14 @@ export function syncMouseHoverIcon() {
       // Do not render if there is no target image path
       return;
     }
+    const currentPlayer = window.game.players.find(
+      (p) => p.clientId === window.clientId,
+    );
+    const mouseTarget = { x: mouseCellX, y: mouseCellY };
+    if (!Player.isTargetInRange(currentPlayer, mouseTarget)) {
+      // Do not render if out of cast range
+      return;
+    }
     // TODO restore after spell refactor
     // Make a copy of the spell and add the target coords
     // if (selectedSpell.swap) {
@@ -58,14 +66,11 @@ export function syncMouseHoverIcon() {
     //   selectedSpell.x = currentPlayer.unit.x;
     //   selectedSpell.y = currentPlayer.unit.y;
     // }
-    const currentPlayer = window.game.players.find(
-      (p) => p.clientId === window.clientId,
-    );
     // Find the targets of the spell
     const targets = window.game.getTargetsOfCards(
       currentPlayer,
       Card.getSelectedCards(),
-      { x: mouseCellX, y: mouseCellY },
+      mouseTarget,
     );
     // TODO: Fix showing the targets of the spell ahead of time using the new SpellEffects
     // if (selectedSpell.swap) {
@@ -104,7 +109,7 @@ export default function setupBoardInputHandlers() {
     if (window.game.turn_phase == turn_phase.PlayerTurns) {
       if (window.game.yourTurn) {
         // Get current client's player
-        const selfPlayer: IPlayer | undefined = window.game.players.find(
+        const selfPlayer: Player.IPlayer | undefined = window.game.players.find(
           (p) => p.clientId === window.clientId,
         );
         // If player hasn't already moved this turn...
@@ -160,21 +165,27 @@ export default function setupBoardInputHandlers() {
     if (window.game.turn_phase == turn_phase.PlayerTurns) {
       if (window.game.yourTurn) {
         // Get current client's player
-        const selfPlayer: IPlayer | undefined = window.game.players.find(
+        const selfPlayer: Player.IPlayer | undefined = window.game.players.find(
           (p) => p.clientId === window.clientId,
         );
         // If player hasn't already cast this turn...
         if (selfPlayer) {
           // If a spell exists (based on the combination of cards selected)...
           if (areAnyCardsSelected()) {
-            // cast the spell
-            window.pie.sendData({
-              type: MESSAGE_TYPES.SPELL,
-              x,
-              y,
-              cards: Card.getSelectedCards(),
-            });
-            Card.clearSelectedCards();
+            // If the spell is not in range
+            if (!Player.isTargetInRange(selfPlayer, { x, y })) {
+              // Show floating message to alert player
+              floatingText({ cellX: x, cellY: y, text: 'out of range' });
+            } else {
+              // cast the spell
+              window.pie.sendData({
+                type: MESSAGE_TYPES.SPELL,
+                x,
+                y,
+                cards: Card.getSelectedCards(),
+              });
+              Card.clearSelectedCards();
+            }
           }
         }
       }
