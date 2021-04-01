@@ -13,7 +13,7 @@ import type { Random } from 'random';
 import makeSeededRandom from './rand';
 import floatingText from './FloatingText';
 import { enemySource, generateHardCodedLevelEnemies } from './EnemyUnit';
-import type { Coords } from './commonTypes';
+import { UnitType, Coords } from './commonTypes';
 import { drawDangerOverlay } from './ui/UserInterface';
 import { createUpgradeElement, generateUpgrades } from './Upgrade';
 import { onTurnSource } from './Events';
@@ -116,7 +116,7 @@ export default class Game {
     for (let i = this.units.length - 1; i >= 0; i--) {
       const u = this.units[i];
       // Clear all remaining AI units
-      if (u.unitType === Unit.UnitType.AI) {
+      if (u.unitType === UnitType.AI) {
         Unit.cleanup(u);
         this.units.splice(i, 1);
       }
@@ -192,7 +192,7 @@ export default class Game {
           coords.x,
           coords.y,
           sourceUnit.image,
-          Unit.UnitType.AI,
+          UnitType.AI,
           sourceUnit.subtype,
         );
         const roll = this.random.integer(0, 100);
@@ -442,7 +442,7 @@ export default class Game {
         const animationPromises = [];
         // Move units
         unitloop: for (let u of this.units.filter(
-          (u) => u.unitType === Unit.UnitType.AI,
+          (u) => u.unitType === UnitType.AI,
         )) {
           // Trigger onTurnStart Events
           for (let eventName of u.onTurnStartEvents) {
@@ -476,7 +476,7 @@ export default class Game {
     // This function ensures that all units who can move, do move, in the proper order
     // so, for example, three units next to each other all trying to move left can
     // all do so, regardless of the order that they are in in the units array
-    const AIUnits = this.units.filter((u) => u.unitType === Unit.UnitType.AI);
+    const AIUnits = this.units.filter((u) => u.unitType === UnitType.AI);
     // Move all units who intend to move
     // Units who are obstructed will not move due to collision checks in Unit.moveTo
     AIUnits.filter((u) => !!u.intendedNextMove).forEach((u) => {

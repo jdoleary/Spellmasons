@@ -3,6 +3,7 @@ import * as Unit from './Unit';
 import type * as Upgrade from './Upgrade';
 import * as Card from './CardUI';
 import * as config from './config';
+import { UnitType } from './commonTypes';
 
 export interface IPlayer {
   // wsPie id
@@ -21,7 +22,7 @@ export function create(clientId: string): IPlayer {
       coords.x,
       coords.y,
       'images/units/man-blue.png',
-      Unit.UnitType.PLAYER_CONTROLLED,
+      UnitType.PLAYER_CONTROLLED,
     ),
     inPortal: false,
     actionsUsed: 0,

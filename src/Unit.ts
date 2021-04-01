@@ -6,18 +6,8 @@ import Image from './Image';
 import { cellDistance } from './math';
 import { changeSpriteTexture, containerUnits } from './PixiUtils';
 import { ableToTakeTurn } from './Player';
-import type { Coords } from './commonTypes';
+import { Coords, UnitSubType, UnitType } from './commonTypes';
 import { onDamageSource, onMoveSource } from './Events';
-export enum UnitType {
-  PLAYER_CONTROLLED,
-  AI,
-}
-export enum UnitSubType {
-  AI_melee,
-  AI_bishop,
-  AI_rook,
-  AI_reach,
-}
 export function getDangerZoneColor(unit: IUnit) {
   switch (unit.unitSubType) {
     case UnitSubType.AI_bishop:
@@ -246,6 +236,9 @@ export function moveAI(unit: IUnit) {
       break;
     case UnitSubType.AI_reach:
       AI.reachAction(unit);
+      break;
+    case UnitSubType.AI_summoner:
+      AI.summonerAction(unit);
       break;
   }
 }

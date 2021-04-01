@@ -1,5 +1,5 @@
 import * as math from './math';
-import { UnitSubType } from './Unit';
+import { UnitSubType } from './commonTypes';
 interface Enemy {
   id: string;
   image: string;

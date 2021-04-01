@@ -2,6 +2,8 @@ import * as Unit from './Unit';
 import * as math from './math';
 import createVisualProjectile from './Projectile';
 import { ableToTakeTurn } from './Player';
+import { enemySource } from './EnemyUnit';
+import { UnitType, UnitSubType } from './commonTypes';
 export function meleeAction(unit: Unit.IUnit) {
   if (!Unit.canMove(unit)) {
     return;
@@ -23,7 +25,7 @@ export function meleeAction(unit: Unit.IUnit) {
   if (other_unit) {
     // Do not attack ally AI units
     if (
-      other_unit.unitType != Unit.UnitType.AI &&
+      other_unit.unitType != UnitType.AI &&
       canAttackCell(unit, next_x, next_y)
     ) {
       unit.image.attack(unit.x, unit.y, next_x, next_y);
@@ -99,18 +101,18 @@ export function canAttackCell(unit: Unit.IUnit, x: number, y: number): boolean {
     return false;
   }
   // Melee units can attack any cell 1 distance from them
-  if (unit.unitSubType === Unit.UnitSubType.AI_melee) {
+  if (unit.unitSubType === UnitSubType.AI_melee) {
     return math.cellDistance(unit, { x, y }) == 1;
     // return Math.abs(unit.x - x) <= 1 && Math.abs(unit.y - y) <= 1;
-  } else if (unit.unitSubType === Unit.UnitSubType.AI_bishop) {
+  } else if (unit.unitSubType === UnitSubType.AI_bishop) {
     const isDiagonal = Math.abs(x - unit.x) === Math.abs(y - unit.y);
     return isDiagonal;
-  } else if (unit.unitSubType === Unit.UnitSubType.AI_rook) {
+  } else if (unit.unitSubType === UnitSubType.AI_rook) {
     // Ranged units can attack like a queen in chess
     const isOnSameHorizontal = x === unit.x;
     const isOnSameVertical = y === unit.y;
     return isOnSameHorizontal || isOnSameVertical;
-  } else if (unit.unitSubType === Unit.UnitSubType.AI_reach) {
+  } else if (unit.unitSubType === UnitSubType.AI_reach) {
     // Can hit you if you are 2 away but not 1 away
     const cellDistance = math.cellDistance(unit, { x, y });
     return cellDistance == 2;
