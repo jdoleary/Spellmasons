@@ -1,7 +1,7 @@
 import type * as Player from './Player';
 import * as Unit from './Unit';
 import * as Pickup from './Pickup';
-import { Coords } from './commonTypes';
+import type { Coords } from './commonTypes';
 import { modifiersSource } from './Modifiers';
 import * as math from './math';
 
