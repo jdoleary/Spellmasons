@@ -329,7 +329,8 @@ export default class Game {
     const areAllPlayersDead =
       this.players.filter((p) => p.unit.alive).length === 0;
     if (areAllPlayersDead) {
-      this.setGameState(game_state.GameOver);
+      // - bug: Game over triggers too early if the player is ressed in the same turn that they die
+      // this.setGameState(game_state.GameOver);
       return;
     }
     // Advance the level if all living players have entered the portal:

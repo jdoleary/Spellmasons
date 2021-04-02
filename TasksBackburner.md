@@ -1,3 +1,4 @@
+- bug: Game over triggers too early if the player is ressed in the same turn that they die
 - "level 1" text never appears on load
 - Refactor, card UI reconciliation algorithm is slow
 - corpse image doesn't save when a game is loaded and a unit is dead

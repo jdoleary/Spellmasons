@@ -1,6 +1,5 @@
 # Todo
 
-- bug: Game over triggers too early if the player is ressed in the same turn that they die
 - let our faction go before enemy units go
 
 - Bug: undoing SOME cards and redoing them in a different order didn't work as expected
