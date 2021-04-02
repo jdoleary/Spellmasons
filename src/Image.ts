@@ -30,6 +30,9 @@ export function create(
     subSprites: [],
     scale: 1,
   };
+  image.sprite.anchor.x = 0.5;
+  image.sprite.anchor.y = 0.5;
+  image.sprite.rotation = 0;
   setPosition(image, cellX, cellY);
   return image;
 }
