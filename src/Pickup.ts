@@ -1,4 +1,4 @@
-import Image from './Image';
+import * as Image from './Image';
 import * as Card from './CardUI';
 import * as Player from './Player';
 import * as config from './config';
@@ -9,7 +9,7 @@ export interface IPickup {
   x: number;
   y: number;
   imagePath: string;
-  image: Image;
+  image: Image.IImage;
   // Only can be picked up once
   singleUse: boolean;
   // Only can be picked up by players
@@ -30,7 +30,7 @@ export function create(
     x,
     y,
     imagePath,
-    image: new Image(x, y, imagePath, containerPickup),
+    image: Image.create(x, y, imagePath, containerPickup),
     singleUse,
     playerOnly,
     effect,
@@ -38,7 +38,7 @@ export function create(
 
   // Start images small and make them grow when they spawn in
   self.image.sprite.scale.set(0.0);
-  self.image.scale(1.0);
+  Image.scale(self.image, 1.0);
   window.game.addPickupToArray(self);
 
   return self;
@@ -46,12 +46,12 @@ export function create(
 export function setPosition(pickup: IPickup, x: number, y: number) {
   pickup.x = x;
   pickup.y = y;
-  pickup.image.setPosition(x, y);
+  Image.setPosition(pickup.image, x, y);
 }
 export function serialize(p: IPickup) {
   return {
     ...p,
-    image: p.image.serialize(),
+    image: Image.serialize(p.image),
   };
 }
 // Reinitialize a pickup from another pickup object, this is used in loading game state after reconnect
@@ -77,7 +77,7 @@ export function load(pickup: IPickup) {
   }
 }
 export function removePickup(pickup: IPickup) {
-  pickup.image.cleanup();
+  Image.cleanup(pickup.image);
   window.game.removePickupFromArray(pickup);
 }
 export function triggerPickup(pickup: IPickup, unit: IUnit) {

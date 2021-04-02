@@ -1,3 +1,4 @@
+- "level 1" text never appears on load
 - Refactor, card UI reconciliation algorithm is slow
 - corpse image doesn't save when a game is loaded and a unit is dead
   - textures should be saved using pixi sprite texture cache instead of this.imageName

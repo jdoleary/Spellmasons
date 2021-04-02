@@ -1,4 +1,5 @@
 import type { IUnit } from './Unit';
+import * as Image from './Image';
 
 export const modifiersSource = {
   make_vulnerable: {
@@ -10,7 +11,7 @@ export const modifiersSource = {
         unit.onDamageEvents.push('make_vulnerable');
 
         // Add subsprite image
-        unit.image.addSubSprite('make_vulnerable');
+        Image.addSubSprite(unit.image, 'make_vulnerable');
       }
     },
     remove: (unit: IUnit) => {
@@ -20,7 +21,7 @@ export const modifiersSource = {
         (name) => name !== 'make_vulnerable',
       );
       // Remove subsprite
-      unit.image.removeSubSprite('make_vulnerable');
+      Image.removeSubSprite(unit.image, 'make_vulnerable');
     },
   },
   freeze: {
@@ -32,7 +33,7 @@ export const modifiersSource = {
         unit.onTurnStartEvents.push('freeze');
 
         // Add subsprite image
-        unit.image.addSubSprite('freeze');
+        Image.addSubSprite(unit.image, 'freeze');
       }
       // Increment the number of turns that freeze is applied (can stack)
       unit.modifiers.freeze.turnsLeft =
@@ -45,7 +46,7 @@ export const modifiersSource = {
         (name) => name !== 'freeze',
       );
       // Remove subsprite
-      unit.image.removeSubSprite('freeze');
+      Image.removeSubSprite(unit.image, 'freeze');
     },
   },
   shield: {
@@ -56,7 +57,7 @@ export const modifiersSource = {
         // Add event
         unit.onDamageEvents.push('shield');
         // Add subsprite image
-        unit.image.addSubSprite('shield');
+        Image.addSubSprite(unit.image, 'shield');
       }
       // Increment the number of stacks of shield
       unit.modifiers.shield.stacks = (unit.modifiers.shield.stacks || 0) + 1;
@@ -68,7 +69,7 @@ export const modifiersSource = {
         (name) => name !== 'shield',
       );
       // Remove subsprite
-      unit.image.removeSubSprite('shield');
+      Image.removeSubSprite(unit.image, 'shield');
     },
   },
 };

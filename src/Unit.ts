@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js';
 import * as config from './config';
 import * as AI from './AI';
 import floatingText from './FloatingText';
-import Image from './Image';
+import * as Image from './Image';
 import { cellDistance } from './math';
 import { changeSpriteTexture, containerUnits } from './PixiUtils';
 import { Coords, UnitSubType, UnitType, Faction } from './commonTypes';
@@ -26,7 +26,7 @@ export interface IUnit {
   // If the unit moved this turn
   thisTurnMoved: boolean;
   intendedNextMove?: Coords;
-  image: Image;
+  image: Image.IImage;
   power: number;
   health: number;
   healthMax: number;
@@ -58,7 +58,7 @@ export function create(
     faction,
     thisTurnMoved: false,
     intendedNextMove: undefined,
-    image: new Image(x, y, imagePath, containerUnits),
+    image: Image.create(x, y, imagePath, containerUnits),
     power: config.UNIT_BASE_POWER,
     health: config.UNIT_BASE_HEALTH,
     healthMax: config.UNIT_BASE_HEALTH,
@@ -85,7 +85,7 @@ export function create(
 
   // Start images small and make them grow when they spawn in
   unit.image.sprite.scale.set(0);
-  unit.image.scale(0.8);
+  Image.scale(unit.image, 0.8);
   window.game.addUnitToArray(unit);
 
   return unit;
@@ -113,7 +113,7 @@ export function updateSelectedOverlay(unit: IUnit) {
   unit.healthText.anchor.y = -0.2;
 }
 export function cleanup(unit: IUnit) {
-  unit.image.cleanup();
+  Image.cleanup(unit.image);
   deselect(unit);
 }
 // Reinitialize a unit from another unit object, this is used in loading game state after reconnect
@@ -139,7 +139,7 @@ export function load(unit: IUnit) {
 export function serializeUnit(unit: IUnit) {
   return {
     ...unit,
-    image: unit.image.serialize(),
+    image: Image.serialize(unit.image),
     healthText: null,
     agroOverlay: null,
   };
@@ -189,7 +189,7 @@ export function takeDamage(unit: IUnit, amount: number) {
       cellY: unit.y,
       text: healthChangedString,
     });
-    unit.image.take_hit();
+    Image.take_hit(unit.image);
   }
   if (unit.health <= 0) {
     die(unit);
@@ -293,14 +293,14 @@ export function setLocation(unit: IUnit, coordinates: Coords): Promise<void> {
   // check for collisions with pickups in new location
   window.game.checkPickupCollisions(unit);
   // Animate movement visually
-  return unit.image.move(unit.x, unit.y);
+  return Image.move(unit.image, unit.x, unit.y);
 }
 export function changeFaction(unit: IUnit, faction: Faction) {
   unit.faction = faction;
   if (unit.faction === Faction.PLAYER) {
     // headband signifies a player ally unit
-    unit.image.addSubSprite('headband');
+    Image.addSubSprite(unit.image, 'headband');
   } else {
-    unit.image.removeSubSprite('headband');
+    Image.removeSubSprite(unit.image, 'headband');
   }
 }

@@ -1,4 +1,5 @@
 import * as Unit from './Unit';
+import * as Image from './Image';
 import * as math from './math';
 import createVisualProjectile from './Projectile';
 import { enemySource } from './EnemyUnit';
@@ -29,7 +30,7 @@ export function meleeAction(unit: Unit.IUnit) {
       other_unit.faction != unit.faction &&
       canAttackCell(unit, next_x, next_y)
     ) {
-      unit.image.attack(unit.x, unit.y, next_x, next_y);
+      Image.attack(unit.image, unit.x, unit.y, next_x, next_y);
       Unit.takeDamage(other_unit, unit.power);
     }
   }

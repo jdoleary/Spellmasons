@@ -6,6 +6,7 @@ import type * as Upgrade from './Upgrade';
 import * as math from './math';
 import * as Card from './CardUI';
 import * as Cards from './Cards';
+import * as Image from './Image';
 import * as GameBoardInput from './ui/GameBoardInput';
 import { MESSAGE_TYPES } from './MessageTypes';
 import { addPixiSprite, app, containerBoard } from './PixiUtils';
@@ -110,10 +111,10 @@ export default class Game {
   cleanup() {
     clearInterval(this.turnInterval);
     for (let u of this.units) {
-      u.image.cleanup();
+      Image.cleanup(u.image);
     }
     for (let x of this.pickups) {
-      x.image.cleanup();
+      Image.cleanup(x.image);
     }
   }
   moveToNextLevel() {
@@ -206,7 +207,7 @@ export default class Game {
         if (roll <= config.PERCENT_CHANCE_OF_HEAVY_UNIT) {
           unit.healthMax = config.UNIT_BASE_HEALTH * 2;
           unit.health = unit.healthMax;
-          unit.image.scale(1.0);
+          Image.scale(unit.image, 1.0);
         }
       } else {
         console.error('Unit not spawned due to no empty cells');
@@ -678,7 +679,7 @@ export default class Game {
   // animateSpellEffects(castInstances: { x: number; y: number; spell: Spell }[]) {
   //   // Show an image when cast occurs
   //   const images = castInstances.map(
-  //     (i) => new Image(i.x, i.y, getImage(i.spell), containerSpells),
+  //     (i) => Image.create(i.x, i.y, getImage(i.spell), containerSpells),
   //   );
 
   //   window.animationTimeline

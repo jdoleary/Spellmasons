@@ -1,5 +1,6 @@
 import { PLAYER_BASE_HEALTH } from './config';
 import * as Unit from './Unit';
+import * as Image from './Image';
 import type * as Upgrade from './Upgrade';
 import * as Card from './CardUI';
 import * as config from './config';
@@ -59,7 +60,7 @@ export function resetPlayerForNextLevel(player: IPlayer) {
   player.unit.thisTurnMoved = false;
 
   // Make unit visible
-  player.unit.image.show();
+  Image.show(player.unit.image);
   if (!player.unit.alive) {
     Unit.resurrect(player.unit);
   }
@@ -77,9 +78,9 @@ function updateGlobalRefToCurrentClientPlayer(player: IPlayer) {
 }
 function addHighlighIfPlayerBelongsToCurrentClient(player: IPlayer) {
   if (player.clientId === window.clientId) {
-    player.unit.image.addSubSprite('ownCharacterMarker');
+    Image.addSubSprite(player.unit.image, 'ownCharacterMarker');
   } else {
-    player.unit.image.removeSubSprite('ownCharacterMarker');
+    Image.removeSubSprite(player.unit.image, 'ownCharacterMarker');
   }
 }
 export function load(player: IPlayer) {
@@ -94,7 +95,7 @@ export function load(player: IPlayer) {
 }
 export function enterPortal(player: IPlayer) {
   player.inPortal = true;
-  player.unit.image.hide();
+  Image.hide(player.unit.image);
   // limit spawn to the leftmost column
   const coords = window.game.getRandomEmptyCell({ xMax: 0 });
   // Move "portaled" unit out of the way to prevent collisions and chaining while portaled
