@@ -22,6 +22,10 @@ export function isTargetInRange(player: IPlayer, target: Coords): boolean {
 export function create(clientId: string): IPlayer {
   // limit spawn to the leftmost column
   const coords = window.game.getRandomEmptyCell({ xMax: 0 });
+  if (!coords) {
+    console.error('Could not find empty cell to create player in');
+    return;
+  }
   const player: IPlayer = {
     clientId,
     unit: Unit.create(
