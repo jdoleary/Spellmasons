@@ -1,6 +1,5 @@
 # Todo
 
-- bug: When brad went through the portal i didn't get to take my turn
 - bug: Game over triggers too early if the player is ressed in the same turn that they die
 - let our faction go before enemy units go
 - What happens if you freeze a ally hero then go through the portal yourself

@@ -233,8 +233,9 @@ export default class Game {
     if (this.turn_phase === turn_phase.PlayerTurns) {
       // If all players that CAN take turns HAVE taken turns, then...
       if (
-        this.endedTurn.size >=
-        this.players.filter((p) => Player.ableToTakeTurn(p)).length
+        this.players
+          .filter((p) => Player.ableToTakeTurn(p))
+          .every((p) => this.endedTurn.has(p.clientId))
       ) {
         // Reset the endedTurn set so both players can take turns again next Cast phase
         this.endedTurn.clear();
