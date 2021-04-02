@@ -120,7 +120,7 @@ export function summonerAction(unit: Unit.IUnit) {
   }
 }
 export function demonAction(unit: Unit.IUnit) {
-  // Resurrect a unit
+  // Resurrect a dead unit
   const deadAIs = window.game.units.filter(
     (u) => u.unitType === UnitType.AI && !u.alive,
   );
@@ -133,7 +133,8 @@ export function demonAction(unit: Unit.IUnit) {
       'images/spell/green-thing.png',
     );
     Unit.resurrect(deadUnit);
-    Unit.changeFaction(deadUnit, Faction.ENEMY);
+    // Change resurrected unit to own faction
+    Unit.changeFaction(deadUnit, unit.faction);
   }
   // Move randomly
   const moveCoords = window.game.getRandomEmptyCell({ xMin: 2 });
