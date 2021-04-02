@@ -450,7 +450,7 @@ export default class Game {
         const animationPromises = [];
         // Move units
         unitloop: for (let u of this.units.filter(
-          (u) => u.unitType === UnitType.AI,
+          (u) => u.unitType === UnitType.AI && u.alive,
         )) {
           // Trigger onTurnStart Events
           for (let eventName of u.onTurnStartEvents) {

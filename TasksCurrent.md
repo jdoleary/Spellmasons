@@ -2,7 +2,6 @@
 
 - bug: When brad went through the portal i didn't get to take my turn
 - bug: freezing me let brad take two turns in a row but he couldn't move twice
-- bug: Demon can still cast even when dead
 - bug: demon resurrects enemys not on his faction
 - bug: Game over triggers too early if the player is ressed in the same turn that they die
 - let our faction go before enemy units go
