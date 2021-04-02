@@ -8,7 +8,6 @@
 - rename weaken
 - Something is wrong with game loading, sometimes I don't see any units
 
-- Add cast range limits
 - Bug: undoing SOME cards and redoing them in a different order didn't work as expected
 
 - Improve spell UI

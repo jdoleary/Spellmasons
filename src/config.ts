@@ -3,7 +3,6 @@ export const UNIT_BASE_HEALTH = 1;
 export const UNIT_BASE_POWER = 1;
 export const BOARD_HEIGHT = 9;
 export const BOARD_WIDTH = 12;
-export const NUMBER_OF_UNITS_SPAWN_PER_LEVEL = 3;
 export const SECONDS_PER_TURN = 100;
 export const CELL_SIZE = 64;
 export const GIVE_NUM_CARDS_PER_LEVEL = 9;

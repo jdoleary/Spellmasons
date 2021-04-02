@@ -249,9 +249,6 @@ export default class Game {
     this.yourTurn = yourTurn;
   }
   incrementPlayerTurn() {
-    // Set current player actions used back to 0 now that their turn has ended
-    const currentTurnPlayer = this.players[this.playerTurnIndex];
-
     // If there are players who are able to take their turn
     if (this.players.filter(Player.ableToTakeTurn).length) {
       // If there are players who are able to take their turns, increment to the next
