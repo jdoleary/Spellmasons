@@ -1,26 +1,26 @@
 import type { IUnit } from './Unit';
 
 export const modifiersSource = {
-  weaken: {
+  make_vulnerable: {
     add: (unit: IUnit) => {
       // First time setup
-      if (!unit.modifiers.weaken) {
-        unit.modifiers.weaken = {};
+      if (!unit.modifiers.make_vulnerable) {
+        unit.modifiers.make_vulnerable = {};
         // Add event
-        unit.onDamageEvents.push('weaken');
+        unit.onDamageEvents.push('make_vulnerable');
 
         // Add subsprite image
-        unit.image.addSubSprite('weaken');
+        unit.image.addSubSprite('make_vulnerable');
       }
     },
     remove: (unit: IUnit) => {
-      delete unit.modifiers.weaken;
+      delete unit.modifiers.make_vulnerable;
       // Remove event
       unit.onDamageEvents = unit.onMoveEvents.filter(
-        (name) => name !== 'weaken',
+        (name) => name !== 'make_vulnerable',
       );
       // Remove subsprite
-      unit.image.removeSubSprite('weaken');
+      unit.image.removeSubSprite('make_vulnerable');
     },
   },
   freeze: {

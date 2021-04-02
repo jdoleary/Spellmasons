@@ -230,14 +230,14 @@ export const allCards: ICard[] = [
     },
   },
   {
-    id: 'weaken',
-    thumbnail: 'images/spell/weaken.png',
+    id: 'make_vulnerable',
+    thumbnail: 'images/spell/make_vulnerable.png',
     probability: 5,
     effect: (state) => {
       for (let target of state.targets) {
         const unit = window.game.getUnitAt(target.x, target.y);
         if (unit) {
-          modifiersSource.weaken.add(unit);
+          modifiersSource.make_vulnerable.add(unit);
         }
         return state;
       }

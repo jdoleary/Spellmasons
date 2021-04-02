@@ -26,8 +26,8 @@ const Subsprites: Subsprites = {
       y: 1,
     },
   },
-  weaken: {
-    imageName: 'images/spell/weaken.png',
+  make_vulnerable: {
+    imageName: 'images/spell/make_vulnerable.png',
     alpha: 1.0,
     anchor: {
       x: 0,

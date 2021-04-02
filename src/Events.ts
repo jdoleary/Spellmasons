@@ -9,7 +9,7 @@ type onDamage = {
 };
 
 export const onDamageSource: { [name: string]: onDamage } = {
-  weaken: (unit, amount, damageDealer) => {
+  make_vulnerable: (unit, amount, damageDealer) => {
     // Magnify positive damage
     if (amount > 0) {
       return amount * 2;
