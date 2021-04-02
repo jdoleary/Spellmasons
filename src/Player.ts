@@ -74,6 +74,8 @@ function updateGlobalRefToCurrentClientPlayer(player: IPlayer) {
 function addHighlighIfPlayerBelongsToCurrentClient(player: IPlayer) {
   if (player.clientId === window.clientId) {
     player.unit.image.addSubSprite('ownCharacterMarker');
+  } else {
+    player.unit.image.removeSubSprite('ownCharacterMarker');
   }
 }
 export function load(player: IPlayer) {

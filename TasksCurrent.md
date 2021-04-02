@@ -1,6 +1,5 @@
 # Todo
 
-- bug: Second player shows 'ownCharacterMarker' on all players
 - bug: When brad went through the portal i didn't get to take my turn
 - bug: freezing me let brad take two turns in a row but he couldn't move twice
 - bug: Demon can still cast even when dead
