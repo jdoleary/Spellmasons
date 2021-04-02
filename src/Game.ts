@@ -257,7 +257,7 @@ export default class Game {
       // If this current player is NOT able to take their turn...
       if (!Player.ableToTakeTurn(nextTurnPlayer)) {
         // Skip them
-        this.incrementPlayerTurn();
+        this.endPlayerTurn(nextTurnPlayer.clientId);
       } else {
         // Trigger onTurnStart Events
         const onTurnStartEventResults: boolean[] = nextTurnPlayer.unit.onTurnStartEvents.map(
@@ -268,7 +268,7 @@ export default class Game {
         );
         if (onTurnStartEventResults.some((b) => b)) {
           // If any onTurnStartEvents return true, skip the player
-          this.incrementPlayerTurn();
+          this.endPlayerTurn(nextTurnPlayer.clientId);
         } else {
           // Start the nextTurnPlayer's turn
           this.secondsLeftForTurn = config.SECONDS_PER_TURN;
