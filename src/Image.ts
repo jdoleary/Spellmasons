@@ -14,8 +14,6 @@ export default class Image {
   // This IS serializable, it is a list of the keys corresponding to subSprite
   // data in Subsprites.ts
   subSprites: string[];
-  size_x: number;
-  size_y: number;
   _scale: number;
 
   constructor(
@@ -42,10 +40,7 @@ export default class Image {
     const instantiatedImage = new Image(0, 0, image.imageName, parent);
     instantiatedImage.sprite.x = image.sprite.x;
     instantiatedImage.sprite.y = image.sprite.y;
-    instantiatedImage.sprite.scale.set(
-      image.sprite._scale,
-      image.sprite._scale,
-    );
+    instantiatedImage.scale(image.sprite.scale);
     // Re-add subsprites
     const subSprites = [...image.subSprites];
     image.subSprites = [];
@@ -62,11 +57,9 @@ export default class Image {
       sprite: {
         x: this.sprite.x,
         y: this.sprite.y,
-        _scale: this._scale,
+        scale: this._scale,
       },
       subSprites: this.subSprites,
-      size_x: this.size_x,
-      size_y: this.size_y,
       imageName: this.imageName,
     };
   }

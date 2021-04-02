@@ -3,7 +3,8 @@
 - bug: Game over triggers too early if the player is ressed in the same turn that they die
 - let our faction go before enemy units go
 - What happens if you freeze a ally hero then go through the portal yourself
-- Something is wrong with game loading, sometimes I don't see any units
+
+  - "level 1" text never appears on load
 
 - Bug: undoing SOME cards and redoing them in a different order didn't work as expected
 
