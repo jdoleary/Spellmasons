@@ -160,6 +160,16 @@ export default class Game {
   }
 
   initLevel() {
+    // Spawn portal
+    const portalPickup = Pickup.specialPickups['images/portal.png'];
+    Pickup.create(
+      config.BOARD_WIDTH - 1,
+      Math.floor(config.BOARD_HEIGHT / 2),
+      false,
+      portalPickup.imagePath,
+      true,
+      portalPickup.effect,
+    );
     // Update level indicator UI at top of screen
     elLevelIndicator.innerText = `Level ${this.level}`;
     // Add cards to hand
@@ -197,15 +207,6 @@ export default class Game {
         console.error('Obstacle not spawned due to no empty cells');
       }
     }
-    const portalPickup = Pickup.specialPickups['images/portal.png'];
-    Pickup.create(
-      config.BOARD_WIDTH - 1,
-      Math.floor(config.BOARD_HEIGHT / 2),
-      false,
-      portalPickup.imagePath,
-      true,
-      portalPickup.effect,
-    );
     // Spawn units at the start of the level
     const enemyIndexes = generateHardCodedLevelEnemies(this.level);
     for (let index of enemyIndexes) {
