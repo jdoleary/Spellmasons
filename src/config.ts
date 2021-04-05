@@ -8,8 +8,6 @@ export const CELL_SIZE = 64;
 export const GIVE_NUM_CARDS_PER_LEVEL = 9;
 export const NUM_PICKUPS_PER_LEVEL = 2;
 export const NUM_OBSTACLES_PER_LEVEL = 10;
-// How many times a single shield will block damage
-export const SHIELD_MULTIPLIER = 2;
 export const MILLIS_PER_ANIMATION = 50;
 export const PERCENT_CHANCE_OF_HEAVY_UNIT = 10;
 export const NUMBER_OF_UPGRADES_TO_CHOOSE_FROM = 5;
