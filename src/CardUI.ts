@@ -2,9 +2,8 @@ import type * as Player from './Player';
 import * as Cards from './Cards';
 import * as math from './math';
 const elCardHand = document.getElementById('card-hand');
+const elSelectedCards = document.getElementById('selected-cards');
 
-const CARD_WIDTH = 70;
-const CARD_OFFSET = 4;
 export function recalcPositionForCards(player: Player.IPlayer) {
   if (window.player !== player) {
     // Do not reconcile dom elements for a player who is not the current client's player
@@ -39,18 +38,15 @@ export function recalcPositionForCards(player: Player.IPlayer) {
         element.addEventListener('click', (e) => {
           e.stopPropagation();
           if (element.classList.contains('selected')) {
-            element.classList.remove('selected');
+            moveCardFromSelectedToHand(element, cardId);
           } else {
-            element.dataset.order = getSelectedCards().length.toString();
+            elSelectedCards.appendChild(element);
             element.classList.add('selected');
           }
         });
         let elCardTypeGroup = document.getElementById(`holder-${cardId}`);
         if (!elCardTypeGroup) {
-          elCardTypeGroup = document.createElement('div');
-          elCardTypeGroup.classList.add('card-type-group');
-          elCardTypeGroup.id = `holder-${cardId}`;
-          elCardHand.appendChild(elCardTypeGroup);
+          elCardTypeGroup = makeCardTypeGroup(cardId);
         }
         elCardTypeGroup.appendChild(element);
       } else {
@@ -58,6 +54,21 @@ export function recalcPositionForCards(player: Player.IPlayer) {
       }
     }
   }
+}
+function makeCardTypeGroup(cardId: string): HTMLDivElement {
+  const elCardTypeGroup = document.createElement('div');
+  elCardTypeGroup.classList.add('card-type-group');
+  elCardTypeGroup.id = `holder-${cardId}`;
+  elCardHand.appendChild(elCardTypeGroup);
+  return elCardTypeGroup;
+}
+function moveCardFromSelectedToHand(element: HTMLElement, cardId: string) {
+  let elCardTypeGroup = document.getElementById(`holder-${cardId}`);
+  if (!elCardTypeGroup) {
+    elCardTypeGroup = makeCardTypeGroup(cardId);
+  }
+  elCardTypeGroup.appendChild(element);
+  element.classList.remove('selected');
 }
 
 // This function fully deletes the cards that are 'selected' in the player's hand
@@ -81,21 +92,20 @@ export function addCardToHand(card: Cards.ICard, player: Player.IPlayer) {
 }
 
 export function getSelectedCards(): string[] {
-  return Array.from(document.querySelectorAll('.card.selected'))
-    .sort((a, b) =>
-      a instanceof HTMLElement && b instanceof HTMLElement
-        ? parseInt(a.dataset.order) - parseInt(b.dataset.order)
-        : 0,
-    )
-    .map((el) => (el instanceof HTMLElement ? el.dataset.cardId : ''));
+  return Array.from(document.querySelectorAll('.card.selected')).map((el) =>
+    el instanceof HTMLElement ? el.dataset.cardId : '',
+  );
 }
 
 export function clearSelectedCards() {
   document.querySelectorAll('.card.selected').forEach((el) => {
     if (el instanceof HTMLElement) {
-      el.dataset.order = '0';
+      moveCardFromSelectedToHand(el, el.dataset.cardId);
+    } else {
+      console.error(
+        'Cannot clearSelectedCards due to selectednode not being the correct type',
+      );
     }
-    el.classList.remove('selected');
   });
 }
 

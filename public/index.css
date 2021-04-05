@@ -52,7 +52,7 @@ body {
 #upgrade-picker.active {
   display: flex;
 }
-#card-hand {
+#card-holders {
   user-select: none;
   position: fixed;
   bottom: 30px;
@@ -61,6 +61,11 @@ body {
   z-index: 1;
   height: 100px;
   display: flex;
+  flex-direction: column-reverse;
+}
+#card-holders > div {
+  display: flex;
+  width: 100%;
 }
 /* The "card" width is very thin to allow them to stack.  The card-inner is what
 actually contains the full width of the card. */
@@ -68,8 +73,9 @@ actually contains the full width of the card. */
   width: 3px;
 }
 #card-hand .card.selected {
-  position: relative;
-  top: -100px;
+  visibility: hidden;
+  /* position: relative;
+  top: -100px; */
 }
 #card-hand .card.selected .card-inner {
   -webkit-box-shadow: 0px 0px 5px 5px #ffee00;
