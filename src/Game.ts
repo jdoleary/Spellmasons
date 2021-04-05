@@ -180,8 +180,8 @@ export default class Game {
     // Spawn portal
     const portalPickup = Pickup.specialPickups['images/portal.png'];
     Pickup.create(
-      config.BOARD_WIDTH - 1,
-      Math.floor(config.BOARD_HEIGHT / 2),
+      config.PORTAL_COORDINATES.x,
+      config.PORTAL_COORDINATES.y,
       false,
       portalPickup.imagePath,
       true,
@@ -219,7 +219,19 @@ export default class Game {
     for (let i = 0; i < config.NUM_OBSTACLES_PER_LEVEL; i++) {
       const coords = this.getRandomEmptyCell({ xMin: 2 });
       if (coords) {
-        Obstacle.create(coords.x, coords.y, 'images/tiles/lava.png');
+        const newObstacle = Obstacle.create(
+          coords.x,
+          coords.y,
+          'images/tiles/lava.png',
+        );
+        // Ensure the players have a path to the portal
+        const pathToPortal = this.findPath(
+          { x: 0, y: 0 },
+          config.PORTAL_COORDINATES,
+        );
+        if (pathToPortal.length === 0) {
+          Obstacle.remove(newObstacle);
+        }
       } else {
         console.error('Obstacle not spawned due to no empty cells');
       }
