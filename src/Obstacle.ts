@@ -1,5 +1,5 @@
 import * as Image from './Image';
-import { containerPickup } from './PixiUtils';
+import { containerBoard } from './PixiUtils';
 export interface IObstacle {
   // note: x,y are cell positions, not board positions
   x: number;
@@ -12,7 +12,7 @@ export function create(x: number, y: number, imagePath: string) {
     x,
     y,
     imagePath,
-    image: Image.create(x, y, imagePath, containerPickup),
+    image: Image.create(x, y, imagePath, containerBoard),
   };
   self.image.sprite.scale.set(0.0);
   Image.scale(self.image, 1.0);
