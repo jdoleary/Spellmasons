@@ -84,7 +84,9 @@ export default class Game {
 
     // Setup pathfinding
     this.pfGrid = new PF.Grid(config.BOARD_WIDTH, config.BOARD_HEIGHT);
-    this.pfFinder = new PF.BiBestFirstFinder();
+    this.pfFinder = new PF.BiBestFirstFinder({
+      diagonalMovement: PF.DiagonalMovement.Always,
+    });
 
     // Make sprites for the board tiles
     let cell;
