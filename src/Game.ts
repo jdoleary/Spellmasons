@@ -202,7 +202,7 @@ export default class Game {
     for (let i = 0; i < config.NUM_OBSTACLES_PER_LEVEL; i++) {
       const coords = this.getRandomEmptyCell({ xMin: 2 });
       if (coords) {
-        Obstacle.create(coords.x, coords.y, 'images/rock.png');
+        Obstacle.create(coords.x, coords.y, 'images/tiles/lava.png');
       } else {
         console.error('Obstacle not spawned due to no empty cells');
       }

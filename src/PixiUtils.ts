@@ -47,6 +47,7 @@ function loadTextures(): Promise<void> {
     const loader = PIXI.Loader.shared;
     const images = [
       'images/tiles/ground.png',
+      'images/tiles/lava.png',
       'images/units/golem.png',
       'images/units/golem-blue.png',
       'images/units/golem-red.png',
@@ -69,7 +70,6 @@ function loadTextures(): Promise<void> {
       'images/spell/make_vulnerable.png',
       'images/spell/raise-dead.png',
       'images/portal.png',
-      'images/rock.png',
       'images/units/unit-underline.png',
       'images/units/corpse.png',
       'images/pickups/card.png',
