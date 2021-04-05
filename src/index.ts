@@ -3,6 +3,7 @@ import Game, { game_state, turn_phase } from './Game';
 import * as Player from './Player';
 import * as Unit from './Unit';
 import * as Pickup from './Pickup';
+import * as Obstacle from './Obstacle';
 import AnimationTimeline from './AnimationTimeline';
 import * as UI from './ui/UserInterface';
 import * as Card from './CardUI';
@@ -139,6 +140,7 @@ function onData(d: { fromClient: string; payload: any }) {
         .map(Unit.load);
       game.players = loadedGameState.players.map(Player.load);
       game.pickups = loadedGameState.pickups.map(Pickup.load);
+      game.obstacles = loadedGameState.obstacles.map(Obstacle.load);
       game.syncYourTurnState();
       game.setGameState(loadedGameState.state);
       break;

@@ -1,6 +1,7 @@
 import * as config from './config';
 import * as Unit from './Unit';
 import * as Pickup from './Pickup';
+import * as Obstacle from './Obstacle';
 import * as Player from './Player';
 import type * as Upgrade from './Upgrade';
 import * as math from './math';
@@ -58,6 +59,7 @@ export default class Game {
   players: Player.IPlayer[] = [];
   units: Unit.IUnit[] = [];
   pickups: Pickup.IPickup[] = [];
+  obstacles: Obstacle.IObstacle[] = [];
   // The number of the current level
   level = 1;
   // The index of which player's turn it is
@@ -116,6 +118,9 @@ export default class Game {
     for (let x of this.pickups) {
       Image.cleanup(x.image);
     }
+    for (let x of this.obstacles) {
+      Image.cleanup(x.image);
+    }
   }
   moveToNextLevel() {
     // Reset the endedTurn set so both players can take turns again
@@ -134,6 +139,10 @@ export default class Game {
     // Clear all pickups
     for (let p of this.pickups) {
       Pickup.removePickup(p);
+    }
+    // Clear all obstacles
+    for (let o of this.obstacles) {
+      Obstacle.remove(o);
     }
     this.level++;
     // Show text in center of screen for the new level
@@ -178,6 +187,14 @@ export default class Game {
         );
       } else {
         console.error('Pickup not spawned due to no empty cells');
+      }
+    }
+    for (let i = 0; i < config.NUM_OBSTACLES_PER_LEVEL; i++) {
+      const coords = this.getRandomEmptyCell({ xMin: 2 });
+      if (coords) {
+        Obstacle.create(coords.x, coords.y, 'images/rock.png');
+      } else {
+        console.error('Obstacle not spawned due to no empty cells');
       }
     }
     const portalPickup = Pickup.specialPickups['images/portal.png'];
@@ -398,6 +415,12 @@ export default class Game {
         return false;
       }
     }
+    // Test for obstacles
+    for (let o of this.obstacles) {
+      if (o.x === x && o.y === y) {
+        return false;
+      }
+    }
     return true;
   }
   getRandomEmptyCell(bounds: Bounds): Coords | undefined {
@@ -610,6 +633,12 @@ export default class Game {
   addPickupToArray(pickup: Pickup.IPickup) {
     this.pickups.push(pickup);
   }
+  removeObstacleFromArray(obstacle: Obstacle.IObstacle) {
+    this.obstacles = this.obstacles.filter((o) => o !== obstacle);
+  }
+  addObstacleToArray(o: Obstacle.IObstacle) {
+    this.obstacles.push(o);
+  }
   // A cell is statically blocked if it does not exist or is occupied by something immovable
   isCellStaticallyBlocked(coordinates: Coords): boolean {
     const { x, y } = coordinates;
@@ -617,6 +646,13 @@ export default class Game {
     if (x < 0 || y < 0 || x >= config.BOARD_WIDTH || y >= config.BOARD_HEIGHT) {
       return true;
     }
+    // Obstacles statically block cells
+    for (let o of this.obstacles) {
+      if (o.x === x && o.y === y) {
+        return true;
+      }
+    }
+
     return false;
   }
   isCellObstructed(coordinates: Coords): boolean {
@@ -710,6 +746,7 @@ export default class Game {
       })),
       units: this.units.map(Unit.serializeUnit),
       pickups: this.pickups.map(Pickup.serialize),
+      obstacles: this.obstacles.map(Obstacle.serialize),
     };
   }
 }

@@ -69,6 +69,7 @@ function loadTextures(): Promise<void> {
       'images/spell/make_vulnerable.png',
       'images/spell/raise-dead.png',
       'images/portal.png',
+      'images/rock.png',
       'images/units/unit-underline.png',
       'images/units/corpse.png',
       'images/pickups/card.png',

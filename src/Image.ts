@@ -20,7 +20,7 @@ export function create(
   cellX: number,
   cellY: number,
   imageName: string,
-  parent?: PIXI.Container,
+  parent: PIXI.Container,
 ): IImage {
   const image: IImage = {
     // Save image path in unit so it's accessible when loading gamestate
