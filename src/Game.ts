@@ -1,3 +1,4 @@
+import PF from 'pathfinding';
 import * as config from './config';
 import * as Unit from './Unit';
 import * as Pickup from './Pickup';
@@ -72,11 +73,18 @@ export default class Game {
   // Being a Set prevents a user from ending their turn more than once
   endedTurn = new Set<string>();
   choseUpgrade = new Set<string>();
+
+  pfGrid: PF.Grid;
+  pfFinder: PF.BiBestFirstFinder;
   constructor(seed: string) {
     window.game = this;
     this.seed = seed;
     this.random = makeSeededRandom(this.seed);
     this.setGameState(game_state.Lobby);
+
+    // Setup pathfinding
+    this.pfGrid = new PF.Grid(config.BOARD_WIDTH, config.BOARD_HEIGHT);
+    this.pfFinder = new PF.BiBestFirstFinder();
 
     // Make sprites for the board tiles
     let cell;
@@ -121,6 +129,15 @@ export default class Game {
     for (let x of this.obstacles) {
       Image.cleanup(x.image);
     }
+  }
+  findPath(from: Coords, to: Coords) {
+    return this.pfFinder.findPath(
+      from.x,
+      from.y,
+      to.x,
+      to.y,
+      this.pfGrid.clone(),
+    );
   }
   moveToNextLevel() {
     // Reset the endedTurn set so both players can take turns again
@@ -636,9 +653,11 @@ export default class Game {
   }
   removeObstacleFromArray(obstacle: Obstacle.IObstacle) {
     this.obstacles = this.obstacles.filter((o) => o !== obstacle);
+    this.pfGrid.setWalkableAt(obstacle.x, obstacle.y, true);
   }
   addObstacleToArray(o: Obstacle.IObstacle) {
     this.obstacles.push(o);
+    this.pfGrid.setWalkableAt(o.x, o.y, false);
   }
   // A cell is statically blocked if it does not exist or is occupied by something immovable
   isCellStaticallyBlocked(coordinates: Coords): boolean {

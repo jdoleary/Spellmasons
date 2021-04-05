@@ -5,7 +5,6 @@ import createVisualProjectile from './Projectile';
 import { enemySource } from './EnemyUnit';
 import { UnitType, UnitSubType, Faction } from './commonTypes';
 
-function livingUnitsInDifferentFaction(u: Unit.IUnit, faction: Faction) {}
 export function meleeAction(unit: Unit.IUnit) {
   if (!Unit.canMove(unit)) {
     return;
@@ -15,29 +14,30 @@ export function meleeAction(unit: Unit.IUnit) {
     // Do not move if they don't have a target
     return;
   }
-  const targetCell = Unit.findCellOneStepCloserTo(
-    unit,
-    closestEnemy.x,
-    closestEnemy.y,
-  );
-  const next_x = targetCell.x;
-  const next_y = targetCell.y;
-  const other_unit = window.game.getUnitAt(next_x, next_y);
-  // Deal damage to what you run into
-  if (other_unit) {
-    // Do not attack ally units
-    if (
-      other_unit.faction != unit.faction &&
-      canAttackCell(unit, next_x, next_y)
-    ) {
-      Image.attack(unit.image, unit.x, unit.y, next_x, next_y);
-      Unit.takeDamage(other_unit, unit.power);
+  const path = window.game.findPath(unit, closestEnemy);
+  if (path && path.length >= 2) {
+    // 0 index is the current coordinates, so 1 is the next coordinates to move to
+    const [next_x, next_y] = path[1];
+
+    if (next_x !== undefined && next_y !== undefined) {
+      const other_unit = window.game.getUnitAt(next_x, next_y);
+      // Deal damage to what you run into
+      if (other_unit) {
+        // Do not attack ally units
+        if (
+          other_unit.faction != unit.faction &&
+          canAttackCell(unit, next_x, next_y)
+        ) {
+          Image.attack(unit.image, unit.x, unit.y, next_x, next_y);
+          Unit.takeDamage(other_unit, unit.power);
+        }
+      }
+      // set move intention
+      unit.intendedNextMove = { x: next_x, y: next_y };
+      // Update the "planning view" overlay that shows the unit's agro radius
+      Unit.updateSelectedOverlay(unit);
     }
   }
-  // set move intention
-  unit.intendedNextMove = { x: next_x, y: next_y };
-  // Update the "planning view" overlay that shows the unit's agro radius
-  Unit.updateSelectedOverlay(unit);
 }
 export function rangedAction(unit: Unit.IUnit) {
   // Shoot at enemy if in same horizontal, diagonal, or vertical
