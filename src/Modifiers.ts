@@ -42,7 +42,7 @@ export const modifiersSource = {
     remove: (unit: IUnit) => {
       delete unit.modifiers.freeze;
       // Remove event
-      unit.onTurnStartEvents = unit.onMoveEvents.filter(
+      unit.onTurnStartEvents = unit.onTurnStartEvents.filter(
         (name) => name !== 'freeze',
       );
       // Remove subsprite
