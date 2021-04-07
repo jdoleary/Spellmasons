@@ -3,7 +3,6 @@ import * as Unit from './Unit';
 import * as Pickup from './Pickup';
 import type { Coords } from './commonTypes';
 import { modifiersSource } from './Modifiers';
-import * as math from './math';
 
 // Guiding rules for designing card effects:
 // Follow the Priciple of Least Surpise

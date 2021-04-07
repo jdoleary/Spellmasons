@@ -9,16 +9,20 @@ export function recalcPositionForCards(player: Player.IPlayer) {
     // Do not reconcile dom elements for a player who is not the current client's player
     return;
   }
-  // const cardHandWidth = elCardHand.getBoundingClientRect().width;
-  // const DISTANCE_BETWEEN_LIKE_CARDS = 4;
   const cardCountPairs = Object.entries<number>(
-    player.cards.reduce<{ [cardId: string]: number }>((tally, cardId) => {
-      if (!tally[cardId]) {
-        tally[cardId] = 0;
-      }
-      tally[cardId]++;
-      return tally;
-    }, {}),
+    player.cards
+      .sort(
+        (a, b) =>
+          Cards.allCards.findIndex((card) => card.id === a) -
+          Cards.allCards.findIndex((card) => card.id === b),
+      )
+      .reduce<{ [cardId: string]: number }>((tally, cardId) => {
+        if (!tally[cardId]) {
+          tally[cardId] = 0;
+        }
+        tally[cardId]++;
+        return tally;
+      }, {}),
   );
   // Remove all current cards:
   elCardHand.innerHTML = '';
