@@ -10,6 +10,7 @@ import { Coords, Faction, UnitType } from './commonTypes';
 export interface IPlayer {
   // wsPie id
   clientId: string;
+  clientConnected: boolean;
   unit: Unit.IUnit;
   inPortal: boolean;
   cards: string[];
@@ -29,6 +30,7 @@ export function create(clientId: string): IPlayer {
   }
   const player: IPlayer = {
     clientId,
+    clientConnected: true,
     unit: Unit.create(
       coords.x,
       coords.y,
@@ -104,5 +106,5 @@ export function enterPortal(player: IPlayer) {
 }
 // Note: this is also used for AI targeting to ensure that AI don't target disabled plaeyrs
 export function ableToTakeTurn(player: IPlayer) {
-  return !player.inPortal && player.unit.alive;
+  return !player.inPortal && player.unit.alive && player.clientConnected;
 }

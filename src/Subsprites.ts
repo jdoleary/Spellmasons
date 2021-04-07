@@ -14,6 +14,18 @@ interface Subsprites {
   [key: string]: Subsprite;
 }
 const Subsprites: Subsprites = {
+  disconnected: {
+    imageName: 'images/disconnected.png',
+    alpha: 1.0,
+    anchor: {
+      x: 0.5,
+      y: 0.5,
+    },
+    scale: {
+      x: 1,
+      y: 1,
+    },
+  },
   headband: {
     imageName: 'images/headband.png',
     alpha: 1.0,

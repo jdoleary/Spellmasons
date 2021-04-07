@@ -12,6 +12,7 @@ import { UnitType } from './commonTypes';
 
 import { setupPixi } from './PixiUtils';
 import floatingText from './FloatingText';
+import { addSubSprite, removeSubSprite } from './Image';
 
 // Print aggressive due date for game!
 console.log(
@@ -209,6 +210,7 @@ function checkEndPlayerTurn(player: Player.IPlayer) {
 function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
   console.log('clientPresenceChanged', o);
   clients = o.clients;
+  const player = game.players.find((p) => p.clientId === o.clientThatChanged);
   // Client joined
   if (o.present) {
     if (clients.length === 1) {
@@ -222,9 +224,12 @@ function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
       // If client that just joined doesn't have an associated player, create
       // that player and add them to the game before sending out the game state
       // for other clients to load:
-      if (!game.players.find((p) => p.clientId === o.clientThatChanged)) {
-        const player = Player.create(o.clientThatChanged);
-        game.players.push(player);
+      if (!player) {
+        const newPlayer = Player.create(o.clientThatChanged);
+        game.players.push(newPlayer);
+      } else {
+        player.clientConnected = true;
+        removeSubSprite(player.unit.image, 'disconnected');
       }
       // Send game state to other player so they can load:
       pie.sendData({
@@ -234,6 +239,9 @@ function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
     }
   } else {
     // client left
+    player.clientConnected = false;
+    addSubSprite(player.unit.image, 'disconnected');
+    game.endPlayerTurn(player.clientId);
 
     // if host left
     if (o.clientThatChanged === game.hostClientId) {

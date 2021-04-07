@@ -74,6 +74,7 @@ function loadTextures(): Promise<void> {
       'images/units/corpse.png',
       'images/pickups/card.png',
       'images/headband.png',
+      'images/disconnected.png',
       'images/empty.png',
     ];
     images.forEach((path) => {
