@@ -101,10 +101,6 @@ export function enterPortal(player: IPlayer) {
   // Move "portaled" unit out of the way to prevent collisions and chaining while portaled
   coords.x = -1;
   Unit.setLocation(player.unit, coords);
-  // If player that entered the portal is the current client's player, end their turn
-  if (player.clientId === window.clientId) {
-    window.game.endMyTurn();
-  }
 }
 // Note: this is also used for AI targeting to ensure that AI don't target disabled plaeyrs
 export function ableToTakeTurn(player: IPlayer) {
