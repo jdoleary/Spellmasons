@@ -59,7 +59,7 @@ export const allCards: ICard[] = [
   {
     id: 'heal',
     thumbnail: 'images/spell/heal.png',
-    probability: 50,
+    probability: 20,
     effect: (state) => {
       for (let target of state.targets) {
         const unit = window.game.getUnitAt(target.x, target.y);
@@ -167,7 +167,7 @@ export const allCards: ICard[] = [
   {
     id: 'swap',
     thumbnail: 'images/spell/swap.png',
-    probability: 3,
+    probability: 10,
     effect: (state) => {
       const { caster, targets } = state;
       // Find movement change between caster and original target
@@ -207,28 +207,28 @@ export const allCards: ICard[] = [
       return state;
     },
   },
-  {
-    id: 'push',
-    thumbnail: 'images/spell/push.png',
-    probability: 5,
-    effect: (state) => {
-      // TODO: This card needs some work, it doesn't work great due to not using initiateIntelligentAIMovement and order of operations
-      const { caster, targets } = state;
-      // Push AWAY from the original target
-      const pushAwayFromLocation = { x: targets[0].x, y: targets[0].y };
-      if (targets.length) {
-        // Loop through all targets and move if possible
-        for (let target of targets) {
-          const unit = window.game.getUnitAt(target.x, target.y);
-          if (unit) {
-            const moveTo = math.oneCellAwayFromCell(unit, pushAwayFromLocation);
-            Unit.moveTo(unit, moveTo);
-          }
-        }
-      }
-      return state;
-    },
-  },
+  // {
+  //   id: 'push',
+  //   thumbnail: 'images/spell/push.png',
+  //   probability: 5,
+  //   effect: (state) => {
+  //     // TODO: This card needs some work, it doesn't work great due to not using initiateIntelligentAIMovement and order of operations
+  //     const { caster, targets } = state;
+  //     // Push AWAY from the original target
+  //     const pushAwayFromLocation = { x: targets[0].x, y: targets[0].y };
+  //     if (targets.length) {
+  //       // Loop through all targets and move if possible
+  //       for (let target of targets) {
+  //         const unit = window.game.getUnitAt(target.x, target.y);
+  //         if (unit) {
+  //           const moveTo = math.oneCellAwayFromCell(unit, pushAwayFromLocation);
+  //           Unit.moveTo(unit, moveTo);
+  //         }
+  //       }
+  //     }
+  //     return state;
+  //   },
+  // },
   {
     id: 'make_vulnerable',
     thumbnail: 'images/spell/make_vulnerable.png',
