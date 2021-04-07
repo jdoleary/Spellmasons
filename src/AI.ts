@@ -102,7 +102,7 @@ export function summonerAction(unit: Unit.IUnit) {
   }
   // Summon unit
   // Every x number of tunrs
-  if (window.game.turn_number % 3 === 0) {
+  if (window.game.turn_number % 2 === 0) {
     const coords = window.game.getRandomEmptyCell({ xMin: 2 });
     if (coords) {
       const sourceUnit = enemySource[0];
