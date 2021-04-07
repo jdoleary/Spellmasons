@@ -7,7 +7,7 @@ import * as math from '../math';
 import * as Player from '../Player';
 import { canAttackCell } from '../AI';
 import { clearSelectedCards } from '../CardUI';
-import { UnitType } from '../commonTypes';
+import { Faction, UnitType } from '../commonTypes';
 
 const elEndTurnBtn: HTMLButtonElement = document.getElementById(
   'endTurn',
@@ -73,7 +73,11 @@ export function drawDangerOverlay() {
       for (let y = 0; y < config.BOARD_HEIGHT; y++) {
         // for each unit...
         for (let unit of window.game.units) {
-          if (unit.alive && unit.unitType === UnitType.AI) {
+          if (
+            unit.alive &&
+            unit.unitType === UnitType.AI &&
+            unit.faction === Faction.ENEMY
+          ) {
             if (canAttackCell(unit, x, y)) {
               const cell = math.cellToBoardCoords(x, y);
               const color = Unit.getDangerZoneColor(unit);

@@ -9,9 +9,7 @@
 - archer hit me after i portaled due to my locationzz
 - show how many players have left to choose upgrades
 - keybinding common spells
-- (balance) we got all the way to level 6 without having to combine spells
 - Holding down "z" should show safe squares to move to
-- golems in your faction still show "Z" damage zone
 
 ---
 
