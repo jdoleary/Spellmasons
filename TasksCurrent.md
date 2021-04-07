@@ -1,5 +1,20 @@
 # Todo
 
+- balance
+
+## Brad 2021.04.05
+
+- Every card should be clickable and give a description
+- Freezing lava should let you walk over it (casts should work on obstacles)
+- archer hit me after i portaled due to my locationzz
+- show how many players have left to choose upgrades
+- keybinding common spells
+- (balance) we got all the way to level 6 without having to combine spells
+- Holding down "z" should show safe squares to move to
+- golems in your faction still show "Z" damage zone
+
+---
+
 - let our faction go before enemy units go
 
 - Add batching to card effects?
