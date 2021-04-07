@@ -279,58 +279,66 @@ export default class Game {
       y: Math.floor(y / config.CELL_SIZE),
     };
   }
-  goToNextPhaseIfAppropriate() {
+  goToNextPhaseIfAppropriate(): boolean {
     if (this.turn_phase === turn_phase.PlayerTurns) {
-      // If all players that CAN take turns HAVE taken turns, then...
-      if (
-        this.players
-          .filter((p) => Player.ableToTakeTurn(p))
-          .every((p) => this.endedTurn.has(p.clientId))
-      ) {
-        // Reset the endedTurn set so both players can take turns again next Cast phase
+      // If all players that have taken turns, then...
+      // (Players who CANT take turns have their turn ended automatically)
+      if (this.players.every((p) => this.endedTurn.has(p.clientId))) {
+        // Reset the endedTurn set so all players can take turns again next Cast phase
         this.endedTurn.clear();
         // Move onto next phase
         this.setTurnPhase(turn_phase.NPC);
+        return true;
       }
     }
+    return false;
   }
   setYourTurn(yourTurn: boolean, message: string) {
     elPlayerTurnIndicator.innerText = message;
     document.body.classList.toggle('your-turn', yourTurn);
     this.yourTurn = yourTurn;
   }
-  incrementPlayerTurn() {
-    // If there are players who are able to take their turn
-    if (this.players.filter(Player.ableToTakeTurn).length) {
-      // If there are players who are able to take their turns, increment to the next
-      this.playerTurnIndex = (this.playerTurnIndex + 1) % this.players.length;
-      const nextTurnPlayer = this.players[this.playerTurnIndex];
-      // If this current player is NOT able to take their turn...
-      if (!Player.ableToTakeTurn(nextTurnPlayer)) {
-        // Skip them
-        this.endPlayerTurn(nextTurnPlayer.clientId);
-      } else {
-        // Trigger onTurnStart Events
-        const onTurnStartEventResults: boolean[] = nextTurnPlayer.unit.onTurnStartEvents.map(
-          (eventName) => {
-            const fn = onTurnSource[eventName];
-            return fn ? fn(nextTurnPlayer.unit) : false;
-          },
-        );
-        if (onTurnStartEventResults.some((b) => b)) {
-          // If any onTurnStartEvents return true, skip the player
-          this.endPlayerTurn(nextTurnPlayer.clientId);
-        } else {
-          // Start the nextTurnPlayer's turn
-          this.secondsLeftForTurn = config.SECONDS_PER_TURN;
-          elPlayerTurnIndicatorHolder.classList.remove('low-time');
-          this.syncYourTurnState();
-          this.goToNextPhaseIfAppropriate();
-        }
-      }
-    } else {
-      this.checkForEndOfLevel();
+  initializePlayerTurn() {
+    // Start the currentTurnPlayer's turn
+    const currentTurnPlayer = this.players[this.playerTurnIndex];
+    // If this current player is NOT able to take their turn...
+    if (!Player.ableToTakeTurn(currentTurnPlayer)) {
+      // Skip them
+      this.endPlayerTurn(currentTurnPlayer.clientId);
+      // Do not continue with initialization
+      return;
     }
+    // Trigger onTurnStart Events
+    const onTurnStartEventResults: boolean[] = currentTurnPlayer.unit.onTurnStartEvents.map(
+      (eventName) => {
+        const fn = onTurnSource[eventName];
+        return fn ? fn(currentTurnPlayer.unit) : false;
+      },
+    );
+    if (onTurnStartEventResults.some((b) => b)) {
+      // If any onTurnStartEvents return true, skip the player
+      this.endPlayerTurn(currentTurnPlayer.clientId);
+      // Do not continue with initialization
+      return;
+    }
+
+    // Finally initialize their turn
+    this.secondsLeftForTurn = config.SECONDS_PER_TURN;
+    elPlayerTurnIndicatorHolder.classList.remove('low-time');
+    this.syncYourTurnState();
+  }
+  incrementPlayerTurn() {
+    const wentToNextLevel = this.checkForEndOfLevel();
+    if (wentToNextLevel) {
+      // Do not continue incrementing player turn
+      return;
+    }
+    const wentToNextPhase = this.goToNextPhaseIfAppropriate();
+    if (wentToNextPhase) {
+      return;
+    }
+    this.playerTurnIndex = (this.playerTurnIndex + 1) % this.players.length;
+    this.initializePlayerTurn();
   }
   syncYourTurnState() {
     if (this.players[this.playerTurnIndex].clientId === window.clientId) {
@@ -374,13 +382,13 @@ export default class Game {
       this.choseUpgrade.clear();
     }
   }
-  checkForEndOfLevel() {
+  checkForEndOfLevel(): boolean {
     const areAllPlayersDead =
       this.players.filter((p) => p.unit.alive).length === 0;
     if (areAllPlayersDead) {
       // - bug: Game over triggers too early if the player is ressed in the same turn that they die
       // this.setGameState(game_state.GameOver);
-      return;
+      return false;
     }
     // Advance the level if all living players have entered the portal:
     const areAllLivingPlayersInPortal =
@@ -390,6 +398,8 @@ export default class Game {
       // Now that level is complete, move to the Upgrade gamestate where players can choose upgrades
       // before moving on to the next level
       this.setGameState(game_state.Upgrade);
+      // Return of true signifies it went to the next level
+      return true;
     }
   }
   // Generate an array of cell coordinates in shuffled order
@@ -498,7 +508,7 @@ export default class Game {
           u.thisTurnMoved = false;
           u.intendedNextMove = undefined;
         }
-        this.syncYourTurnState();
+        this.initializePlayerTurn();
         break;
       case 'NPC':
         this.setYourTurn(false, "NPC's Turn");
