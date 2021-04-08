@@ -7,7 +7,10 @@ const spell: Spell = {
     id: 'freeze',
     thumbnail: 'images/spell/freeze.png',
     probability: 20,
-    effect: (state) => {
+    effect: (state, dryRun) => {
+      if (dryRun) {
+        return state;
+      }
       for (let target of state.targets) {
         const unit = window.game.getUnitAt(target.x, target.y);
         if (unit) {

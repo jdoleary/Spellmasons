@@ -7,7 +7,10 @@ const spell: Spell = {
     id: 'vulnerable',
     thumbnail: 'images/spell/vulnerable.png',
     probability: 5,
-    effect: (state) => {
+    effect: (state, dryRun) => {
+      if (dryRun) {
+        return state;
+      }
       for (let target of state.targets) {
         const unit = window.game.getUnitAt(target.x, target.y);
         if (unit) {
@@ -19,11 +22,6 @@ const spell: Spell = {
   },
   events: {
     onDamage: (unit, amount, damageDealer) => {
-      console.log(
-        '🚀 ~ file: vulnerable.ts ~ line 22 ~ amount, damageDealer',
-        amount,
-        damageDealer,
-      );
       // Magnify positive damage
       if (amount > 0) {
         return amount * 2;

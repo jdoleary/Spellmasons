@@ -6,7 +6,10 @@ const spell: Spell = {
     id: 'raise_dead',
     thumbnail: 'images/spell/raise_dead.png',
     probability: 5,
-    effect: (state) => {
+    effect: (state, dryRun) => {
+      if (dryRun) {
+        return state;
+      }
       for (let target of state.targets) {
         const dead_unit = window.game.units.find(
           (u) => !u.alive && u.x === target.x && u.y === target.y,
