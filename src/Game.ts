@@ -726,8 +726,8 @@ export default class Game {
     cards: string[],
     target: Coords,
   ): Coords[] {
-    const { targets } = this.castCards(caster, cards, target, true);
-    return targets;
+    const state = this.castCards(caster, cards, target, true);
+    return (state && state.targets) || [];
   }
   castCards(
     caster: Player.IPlayer,
