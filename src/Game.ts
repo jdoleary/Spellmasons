@@ -726,22 +726,14 @@ export default class Game {
     cards: string[],
     target: Coords,
   ): Coords[] {
-    let targetOnlyCards = [];
-    // TODO: optimize.  This converts from string to card back to string, just to filter for
-    // card.onlyChangesTarget
-    for (let cardId of cards) {
-      const card = Cards.allCards.find((c) => c.id == cardId);
-      if (card && card.onlyChangesTarget) {
-        targetOnlyCards.push(card.id);
-      }
-    }
-    const { targets } = this.castCards(caster, targetOnlyCards, target);
+    const { targets } = this.castCards(caster, cards, target, true);
     return targets;
   }
   castCards(
     caster: Player.IPlayer,
     cards: string[],
     target: Coords,
+    dryRun: boolean,
   ): Cards.EffectState {
     let effectState = {
       caster,
@@ -756,7 +748,7 @@ export default class Game {
     for (let cardId of cards) {
       const card = Cards.allCards.find((c) => c.id == cardId);
       if (card) {
-        effectState = card.effect(effectState);
+        effectState = card.effect(effectState, dryRun);
       }
     }
 

@@ -4,7 +4,6 @@ const spell: Spell = {
   card: {
     id: 'area_of_effect',
     thumbnail: 'images/spell/aoe.png',
-    onlyChangesTarget: true,
     probability: 10,
     effect: (state) => {
       let updatedTargets = [...state.targets];

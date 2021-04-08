@@ -1,13 +1,14 @@
 import * as Unit from '../Unit';
 import * as Pickup from '../Pickup';
 import type { Spell } from '.';
+import { drawSwapLine } from '../ui/GameBoardInput';
 
 const spell: Spell = {
   card: {
     id: 'swap',
     thumbnail: 'images/spell/swap.png',
     probability: 10,
-    effect: (state) => {
+    effect: (state, dryRun) => {
       const { caster, targets } = state;
       // Find movement change between caster and original target
       const dx = targets[0].x - caster.unit.x;
@@ -26,20 +27,32 @@ const spell: Spell = {
             swapLocation.y,
           );
           const pickupToSwapWith = window.game.getPickupAt(target.x, target.y);
-          // Physically swap with target
           if (targetUnit) {
-            Unit.setLocation(targetUnit, swapLocation);
+            if (dryRun) {
+              drawSwapLine(targetUnit, swapLocation);
+            } else {
+              // Physically swap with target
+              Unit.setLocation(targetUnit, swapLocation);
+            }
           }
           if (swapUnit) {
-            Unit.setLocation(caster.unit, target);
+            if (dryRun) {
+              drawSwapLine(caster.unit, target);
+            } else {
+              Unit.setLocation(caster.unit, target);
+            }
           }
           // Physically swap with pickups
           if (pickupToSwapWith) {
-            Pickup.setPosition(
-              pickupToSwapWith,
-              swapLocation.x,
-              swapLocation.y,
-            );
+            if (dryRun) {
+              drawSwapLine(pickupToSwapWith, swapLocation);
+            } else {
+              Pickup.setPosition(
+                pickupToSwapWith,
+                swapLocation.x,
+                swapLocation.y,
+              );
+            }
           }
         }
       }

@@ -169,7 +169,7 @@ function onData(d: { fromClient: string; payload: any }) {
         // or if not your turn and opponent is casting, allow
         (!game.yourTurn && caster.clientId !== window.clientId)
       ) {
-        game.castCards(caster, payload.cards, payload);
+        game.castCards(caster, payload.cards, payload, false);
         checkEndPlayerTurn(caster);
       } else {
         console.log('Someone is trying to cast out of turn');

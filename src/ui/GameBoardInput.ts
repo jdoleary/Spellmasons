@@ -1,3 +1,4 @@
+import * as PIXI from 'pixi.js';
 import { MESSAGE_TYPES } from '../MessageTypes';
 import { BOARD_HEIGHT, BOARD_WIDTH, CELL_SIZE } from '../config';
 import { turn_phase } from '../Game';
@@ -6,10 +7,8 @@ import * as Player from '../Player';
 import floatingText from '../FloatingText';
 import * as Unit from '../Unit';
 import { addPixiSprite, containerUI } from '../PixiUtils';
+import type { Coords } from '../commonTypes';
 
-// This is the unit that is currently selected
-// This likely means that information about it will display
-let selectedUnit: Unit.IUnit;
 let mouseCellX;
 let mouseCellY;
 // Highlights are images that appear above cells to denote some information, such as the spell or action about to be cast/taken when clicked
@@ -21,12 +20,31 @@ function clearHighlights() {
     }
   });
   highlights = [];
+  dryRunGraphics.clear();
 }
 function isOutOfBounds(x, y) {
   return x < 0 || x >= BOARD_WIDTH || y < 0 || y >= BOARD_HEIGHT;
 }
 function areAnyCardsSelected() {
   return !!document.querySelectorAll('.card.selected').length;
+}
+const dryRunGraphics = new PIXI.Graphics();
+containerUI.addChild(dryRunGraphics);
+
+export function drawSwapLine(one: Coords, two: Coords) {
+  if (one && two) {
+    const x1 = one.x * CELL_SIZE + CELL_SIZE / 2;
+    const y1 = one.y * CELL_SIZE + CELL_SIZE / 2;
+    const x2 = two.x * CELL_SIZE + CELL_SIZE / 2;
+    const y2 = two.y * CELL_SIZE + CELL_SIZE / 2;
+    dryRunGraphics.beginFill(0xffff0b, 0.5);
+    dryRunGraphics.lineStyle(3, 0x33ff00);
+    dryRunGraphics.drawCircle(x1, y1, 10);
+    dryRunGraphics.moveTo(x1, y1);
+    dryRunGraphics.lineTo(x2, y2);
+    dryRunGraphics.drawCircle(x2, y2, 10);
+    dryRunGraphics.endFill();
+  }
 }
 
 // Draws the image that shows on the cell under the mouse
@@ -79,6 +97,7 @@ export function syncMouseHoverIcon() {
     // Show highlights corresponding to targets
     for (let t of targets) {
       const sprite = addPixiSprite(targetImgPath, containerUI);
+      sprite.alpha = 0.5;
       sprite.x = t.x * CELL_SIZE;
       sprite.y = t.y * CELL_SIZE;
       highlights.push(sprite);

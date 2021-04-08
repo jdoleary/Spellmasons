@@ -107,7 +107,8 @@ export interface EffectState {
   aggregator: any;
 }
 export type EffectFn = {
-  (state: EffectState): EffectState;
+  // Dry run is for displaying to the user what will happen if they cast
+  (state: EffectState, dryRun: boolean): EffectState;
 };
 
 export interface ICard {
@@ -115,7 +116,6 @@ export interface ICard {
   thumbnail: string;
   probability: number;
   effect: EffectFn;
-  onlyChangesTarget?: boolean;
   isDark?: boolean;
 }
 

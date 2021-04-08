@@ -1,11 +1,9 @@
-import * as Unit from '../Unit';
 import type { Spell } from '.';
 
 const spell: Spell = {
   card: {
     id: 'chain',
     thumbnail: 'images/spell/chain.png',
-    onlyChangesTarget: true,
     probability: 10,
     effect: (state) => {
       let updatedTargets = [...state.targets];
