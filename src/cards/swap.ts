@@ -14,45 +14,68 @@ const spell: Spell = {
       const dx = targets[0].x - caster.unit.x;
       const dy = targets[0].y - caster.unit.y;
       if (targets.length) {
-        // Loop through all targets and swap if possible
+        // Loop through all targets and batch swap locations
+        const swapUnits = [];
+        const swapPickups = [];
         for (let target of targets) {
           const swapLocation = { x: target.x - dx, y: target.y - dy };
           // You cannot swap with a statically blocked cell
-          if (window.game.isCellStaticallyBlocked(swapLocation)) {
+          if (
+            window.game.isCellStaticallyBlocked(swapLocation) ||
+            window.game.isCellStaticallyBlocked(target)
+          ) {
             continue;
           }
+          // The unit at the target location
           const targetUnit = window.game.getUnitAt(target.x, target.y);
-          const swapUnit = window.game.getUnitAt(
-            swapLocation.x,
-            swapLocation.y,
-          );
-          const pickupToSwapWith = window.game.getPickupAt(target.x, target.y);
           if (targetUnit) {
-            if (dryRun) {
-              drawSwapLine(targetUnit, swapLocation);
-            } else {
-              // Physically swap with target
-              Unit.setLocation(targetUnit, swapLocation);
-            }
+            swapUnits.push([targetUnit, swapLocation]);
           }
-          if (swapUnit) {
-            if (dryRun) {
-              drawSwapLine(caster.unit, target);
-            } else {
-              Unit.setLocation(caster.unit, target);
-            }
-          }
+          // The pickup at the target location
+          const pickupAtTarget = window.game.getPickupAt(target.x, target.y);
           // Physically swap with pickups
-          if (pickupToSwapWith) {
-            if (dryRun) {
-              drawSwapLine(pickupToSwapWith, swapLocation);
-            } else {
-              Pickup.setPosition(
-                pickupToSwapWith,
-                swapLocation.x,
-                swapLocation.y,
-              );
+          if (pickupAtTarget) {
+            swapPickups.push([pickupAtTarget, swapLocation]);
+          }
+          // If there is no overlap between the swaplocation and the targets
+          if (
+            !targets.find(
+              (t) => t.x === swapLocation.x && t.y === swapLocation.y,
+            )
+          ) {
+            // The unit at the location that the targetUnit will swap to
+            const swapUnit = window.game.getUnitAt(
+              swapLocation.x,
+              swapLocation.y,
+            );
+            if (swapUnit) {
+              swapUnits.push([swapUnit, target]);
             }
+            // The pickup at the swap location
+            const pickupAtSwap = window.game.getPickupAt(
+              swapLocation.x,
+              swapLocation.y,
+            );
+
+            if (pickupAtSwap) {
+              swapPickups.push([pickupAtSwap, target]);
+            }
+          }
+        }
+        for (let [unit, newLocation] of swapUnits) {
+          if (dryRun) {
+            drawSwapLine(unit, newLocation);
+          } else {
+            // Physically swap
+            Unit.setLocation(unit, newLocation);
+          }
+        }
+        for (let [pickup, newLocation] of swapPickups) {
+          if (dryRun) {
+            drawSwapLine(pickup, newLocation);
+          } else {
+            // Physically swap
+            Pickup.setPosition(pickup, newLocation.x, newLocation.y);
           }
         }
       }

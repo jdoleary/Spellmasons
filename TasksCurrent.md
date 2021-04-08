@@ -1,6 +1,6 @@
 # Todo
 
-- bug: swap can still cause player to move more than once
+- bug: chain swapping didn't move me, this occurs when the chain retarget's self
 - bug: When last player dies and there are no NPCs it enters infinite loop
 
   - bug: checkForEndOfLevel has infinite loop
