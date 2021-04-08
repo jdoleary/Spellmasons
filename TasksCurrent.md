@@ -2,6 +2,8 @@
 
 - bug: When last player dies and there are no NPCs it enters infinite loop
 
+  - bug: checkForEndOfLevel has infinite loop
+
 - Cohesive spells
   - effect: EffectFn
   - modifiers
