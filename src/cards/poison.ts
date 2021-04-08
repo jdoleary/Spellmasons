@@ -11,7 +11,7 @@ function add(unit: IUnit) {
   Image.addSubSprite(unit.image, 'poison');
 }
 
-const poison: Spell = {
+const spell: Spell = {
   subsprites: {
     poison: {
       imageName: 'images/spell/poison.png',
@@ -47,4 +47,4 @@ const poison: Spell = {
     },
   },
 };
-export default poison;
+export default spell;
