@@ -2,8 +2,12 @@
 
 - Critical Path
   - Gameplay
+    - Make dead bodies interactable, non-walkable, and destructable
+    - Really polish synergies (chaining dead bodies, obstacles, etc)
     - More creative, more difficult enemies
     - More Spells
+    - Upgrades (+range, )
+    - Some sense of progression (items / inventory??)
   - Polish
     - Add tutorial
       - Introduce unit types
