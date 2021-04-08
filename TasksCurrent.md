@@ -1,5 +1,6 @@
 # Todo
 
+- task: Persist (save/load) (and allow for removing via purify) modifiers, work with poison and purify as examples
 - bug: chain swapping didn't move me, this occurs when the chain retarget's self
 - bug: When last player dies and there are no NPCs it enters infinite loop
 

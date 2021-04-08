@@ -18,6 +18,7 @@ import freeze from './freeze';
 import raise_dead from './raise_dead';
 import shield from './shield';
 import swap from './swap';
+import purify from './purify';
 import poison from './poison';
 import vulnerable from './vulnerable';
 export interface Spell {
@@ -81,6 +82,7 @@ export function registerCards() {
   register(raise_dead);
   register(shield);
   register(poison);
+  register(purify);
   register(swap);
   register(vulnerable);
   // Dedup images
