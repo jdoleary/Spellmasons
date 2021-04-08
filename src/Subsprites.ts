@@ -1,4 +1,4 @@
-interface Subsprite {
+export interface Subsprite {
   imageName: string;
   alpha: number;
   anchor: {
@@ -10,10 +10,10 @@ interface Subsprite {
     y: number;
   };
 }
-interface Subsprites {
+export interface ISubsprites {
   [key: string]: Subsprite;
 }
-const Subsprites: Subsprites = {
+const Subsprites: ISubsprites = {
   disconnected: {
     imageName: 'images/disconnected.png',
     alpha: 1.0,

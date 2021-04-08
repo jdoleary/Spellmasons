@@ -7,7 +7,7 @@ import * as Player from './Player';
 import type * as Upgrade from './Upgrade';
 import * as math from './math';
 import * as Card from './CardUI';
-import * as Cards from './Cards';
+import * as Cards from './cards';
 import * as Image from './Image';
 import * as GameBoardInput from './ui/GameBoardInput';
 import { MESSAGE_TYPES } from './MessageTypes';
@@ -19,7 +19,7 @@ import { enemySource, generateHardCodedLevelEnemies } from './EnemyUnit';
 import { UnitType, Coords, Faction } from './commonTypes';
 import { drawDangerOverlay } from './ui/UserInterface';
 import { createUpgradeElement, generateUpgrades } from './Upgrade';
-import { onTurnSource } from './Events';
+import Events from './Events';
 
 export enum game_state {
   Lobby,
@@ -312,7 +312,7 @@ export default class Game {
     // Trigger onTurnStart Events
     const onTurnStartEventResults: boolean[] = currentTurnPlayer.unit.onTurnStartEvents.map(
       (eventName) => {
-        const fn = onTurnSource[eventName];
+        const fn = Events.onTurnSource[eventName];
         return fn ? fn(currentTurnPlayer.unit) : false;
       },
     );
@@ -525,7 +525,7 @@ export default class Game {
         )) {
           // Trigger onTurnStart Events
           for (let eventName of u.onTurnStartEvents) {
-            const fn = onTurnSource[eventName];
+            const fn = Events.onTurnSource[eventName];
             if (fn) {
               const abortTurn = fn(u);
               if (abortTurn) {

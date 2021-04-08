@@ -3,12 +3,12 @@ import floatingText from './FloatingText';
 import { modifiersSource } from './Modifiers';
 import type { IUnit } from './Unit';
 
-type onDamage = {
+export type onDamage = {
   // Returns a possibly modified damage
   (unit: IUnit, amount: number, damageDealer?: IUnit): number;
 };
 
-export const onDamageSource: { [name: string]: onDamage } = {
+const onDamageSource: { [name: string]: onDamage } = {
   make_vulnerable: (unit, amount, damageDealer) => {
     // Magnify positive damage
     if (amount > 0) {
@@ -42,26 +42,28 @@ export const onDamageSource: { [name: string]: onDamage } = {
   },
 };
 
-type onDeath = {
+export type onDeath = {
   (unit: IUnit, damageDealer?: IUnit): void;
 };
+const onDeathSource: { [name: string]: onDeath } = {};
 
-type onMove = {
+export type onMove = {
   // Returns a possibly modified coordinate
   (unit: IUnit, newLocation: Coords): Coords;
 };
-export const onMoveSource: { [name: string]: onMove } = {};
+const onMoveSource: { [name: string]: onMove } = {};
 
-type onAgro = {
+export type onAgro = {
   // Returns a possibly modified agroTarget
   (agroer: IUnit, agroTarget: IUnit): IUnit;
 };
+const onAgroSource: { [name: string]: onAgro } = {};
 
-type onTurnStart = {
+export type onTurnStart = {
   // Return boolean skips the turn if true
   (unit: IUnit): boolean;
 };
-export const onTurnSource: { [name: string]: onTurnStart } = {
+const onTurnSource: { [name: string]: onTurnStart } = {
   freeze: (unit) => {
     // Decrement how many turns left the unit is frozen
     unit.modifiers.freeze && unit.modifiers.freeze.turnsLeft--;
@@ -71,4 +73,12 @@ export const onTurnSource: { [name: string]: onTurnStart } = {
     // Abort turn
     return true;
   },
+};
+
+export default {
+  onAgroSource,
+  onDamageSource,
+  onDeathSource,
+  onMoveSource,
+  onTurnSource,
 };

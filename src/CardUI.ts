@@ -1,5 +1,5 @@
 import type * as Player from './Player';
-import * as Cards from './Cards';
+import * as Cards from './cards';
 import * as math from './math';
 const elCardHand = document.getElementById('card-hand');
 const elSelectedCards = document.getElementById('selected-cards');

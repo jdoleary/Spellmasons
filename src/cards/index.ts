@@ -1,8 +1,80 @@
-import type * as Player from './Player';
-import * as Unit from './Unit';
-import * as Pickup from './Pickup';
-import type { Coords } from './commonTypes';
-import { modifiersSource } from './Modifiers';
+import Poison from './spell_poison';
+import Events, {
+  onDamage,
+  onDeath,
+  onMove,
+  onAgro,
+  onTurnStart,
+} from '../Events';
+import Subsprites, { ISubsprites } from '../Subsprites';
+export interface Spell {
+  card: ICard;
+  // modifiers keep track of additional state on an individual unit basis
+  modifiers?: {
+    add: (unit: Unit.IUnit) => void;
+    remove: (unit: Unit.IUnit) => void;
+  };
+  // events trigger custom behavior when some event occurs
+  events?: {
+    onDamage?: onDamage;
+    onDeath?: onDeath;
+    onMove?: onMove;
+    onAgro?: onAgro;
+    onTurnStart?: onTurnStart;
+  };
+  subsprites?: ISubsprites;
+}
+
+const additionalImagePaths = [];
+function register(spell: Spell) {
+  const { subsprites, card, events } = spell;
+  const { id } = card;
+  // Add card to cards pool
+  allCards.push(card);
+  // Add images
+  additionalImagePaths.push(card.thumbnail);
+  // Add subsprites
+  if (subsprites) {
+    Object.entries(subsprites).forEach(([key, value]) => {
+      Subsprites[key] = value;
+      additionalImagePaths.push(value.imageName);
+    });
+  }
+  // Add events
+  if (events) {
+    if (events.onAgro) {
+      Events.onAgroSource[id] = events.onAgro;
+    }
+    if (events.onDamage) {
+      Events.onDamageSource[id] = events.onDamage;
+    }
+    if (events.onDeath) {
+      Events.onDeathSource[id] = events.onDeath;
+    }
+    if (events.onMove) {
+      Events.onMoveSource[id] = events.onMove;
+    }
+    if (events.onTurnStart) {
+      Events.onTurnSource[id] = events.onTurnStart;
+    }
+  }
+}
+export function registerCards() {
+  register(Poison);
+  // Dedup images
+  const dedupedImages = additionalImagePaths.filter(
+    (imagePath, index) => additionalImagePaths.indexOf(imagePath) === index,
+  );
+  return Promise.resolve(dedupedImages);
+}
+
+/// ---- refactor below
+
+import type * as Player from '../Player';
+import * as Unit from '../Unit';
+import * as Pickup from '../Pickup';
+import type { Coords } from '../commonTypes';
+import { modifiersSource } from '../Modifiers';
 
 // Guiding rules for designing card effects:
 // Follow the Priciple of Least Surpise
@@ -31,6 +103,7 @@ export interface ICard {
   onlyChangesTarget?: boolean;
   isDark?: boolean;
 }
+
 export const allCards: ICard[] = [
   //   {
   //     id: 'obliterate',

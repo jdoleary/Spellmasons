@@ -27,7 +27,7 @@ function resizePixi() {
 }
 // PIXI textures
 let resources;
-export function setupPixi(): Promise<void> {
+export function setupPixi(additionalImagePaths: string[]): Promise<void> {
   // The application will create a canvas element for you that you
   // can then insert into the DOM
   document.getElementById('PIXI-holder').appendChild(app.view);
@@ -40,12 +40,13 @@ export function setupPixi(): Promise<void> {
   app.stage.addChild(containerSpells);
   app.stage.addChild(containerUI);
   app.stage.addChild(containerFloatingText);
-  return loadTextures();
+  return loadTextures(additionalImagePaths);
 }
-function loadTextures(): Promise<void> {
+function loadTextures(additionalImagePaths: string[]): Promise<void> {
   return new Promise((resolve) => {
     const loader = PIXI.Loader.shared;
     const images = [
+      ...additionalImagePaths,
       'images/tiles/ground.png',
       'images/tiles/lava.png',
       'images/units/golem.png',

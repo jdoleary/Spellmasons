@@ -6,7 +6,7 @@ import * as Image from './Image';
 import { cellDistance } from './math';
 import { changeSpriteTexture, containerUnits } from './PixiUtils';
 import { Coords, UnitSubType, UnitType, Faction } from './commonTypes';
-import { onDamageSource, onMoveSource } from './Events';
+import Events from './Events';
 export function getDangerZoneColor(unit: IUnit) {
   if (unit.unitType === UnitType.PLAYER_CONTROLLED) {
     return 0x00ff00;
@@ -167,7 +167,7 @@ export function takeDamage(unit: IUnit, amount: number) {
   let alteredAmount = amount;
   // Compose onDamageEvents
   for (let eventName of unit.onDamageEvents) {
-    const fn = onDamageSource[eventName];
+    const fn = Events.onDamageSource[eventName];
     if (fn) {
       alteredAmount = fn(unit, alteredAmount);
     }
@@ -275,7 +275,7 @@ export function moveTo(unit: IUnit, coordinates: Coords): Promise<void> {
   }
   // Compose onMoveEvents
   for (let eventName of unit.onMoveEvents) {
-    const fn = onMoveSource[eventName];
+    const fn = Events.onMoveSource[eventName];
     if (fn) {
       coordinates = fn(unit, coordinates);
     }

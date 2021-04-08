@@ -13,6 +13,7 @@ import { UnitType } from './commonTypes';
 import { setupPixi } from './PixiUtils';
 import floatingText from './FloatingText';
 import { addSubSprite, removeSubSprite } from './Image';
+import * as Cards from './cards';
 
 // Print aggressive due date for game!
 console.log(
@@ -22,14 +23,16 @@ console.log(
   )} days until due date!`,
 );
 
-setupPixi().then(() => {
-  UI.setup();
-  // Connect to PieServer
-  connect();
-  // See makeGame function for where setup truly happens
-  // This instantiation just spins up the instance of game
-  game = new Game(Math.random().toString());
-});
+Cards.registerCards()
+  .then(setupPixi)
+  .then(() => {
+    UI.setup();
+    // Connect to PieServer
+    connect();
+    // See makeGame function for where setup truly happens
+    // This instantiation just spins up the instance of game
+    game = new Game(Math.random().toString());
+  });
 
 window.animationTimeline = new AnimationTimeline();
 
