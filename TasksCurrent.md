@@ -1,5 +1,6 @@
 # Todo
 
+- bug: swap can still cause player to move more than once
 - bug: When last player dies and there are no NPCs it enters infinite loop
 
   - bug: checkForEndOfLevel has infinite loop
