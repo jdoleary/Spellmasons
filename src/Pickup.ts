@@ -110,7 +110,7 @@ export const pickups = [
     imagePath: 'images/pickups/card.png',
     effect: ({ unit, player }) => {
       if (player) {
-        for (let i = 0; i < config.GIVE_NUM_CARDS_PER_LEVEL; i++) {
+        for (let i = 0; i < 4; i++) {
           const card = Card.generateCard();
           Card.addCardToHand(card, player);
         }
