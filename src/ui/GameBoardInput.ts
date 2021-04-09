@@ -13,7 +13,7 @@ let mouseCellX;
 let mouseCellY;
 // SpellEffectProjection are images that appear above cells to denote some information, such as the spell or action about to be cast/taken when clicked
 let spellEffectProjections = [];
-function clearSpellEffectProjection() {
+export function clearSpellEffectProjection() {
   spellEffectProjections.forEach((sprite) => {
     if (sprite.parent) {
       sprite.parent.removeChild(sprite);
@@ -204,8 +204,6 @@ export default function setupBoardInputHandlers() {
                 cards: Card.getSelectedCards(),
               });
               Card.clearSelectedCards();
-              // Remove the highlight once a click occurs
-              clearSpellEffectProjection();
             }
           }
         }

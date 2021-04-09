@@ -1,6 +1,7 @@
 import type * as Player from './Player';
 import * as Cards from './cards';
 import * as math from './math';
+import { clearSpellEffectProjection } from './ui/GameBoardInput';
 const elCardHand = document.getElementById('card-hand');
 const elSelectedCards = document.getElementById('selected-cards');
 
@@ -102,6 +103,9 @@ export function getSelectedCards(): string[] {
 }
 
 export function clearSelectedCards() {
+  // Remove the highlight once a click occurs
+  clearSpellEffectProjection();
+  // Deselect all selected cards
   document.querySelectorAll('.card.selected').forEach((el) => {
     if (el instanceof HTMLElement) {
       moveCardFromSelectedToHand(el, el.dataset.cardId);

@@ -11,7 +11,6 @@
 - freezing pickup should make it not-pickupable while it's frozen??
 - Balance: we got too many cards for the end to be challenging
 - feature: Chain should chain through dead bodies
-- bug: clearing cards doesn't clear target overlay
 - task: Push should push away from the target area regardless of how many targets there are
 - task: Persist (save/load) (and allow for removing via purify) modifiers, work with poison and purify as examples
 - bug: chain swapping didn't move me, this occurs when the chain retarget's self
