@@ -27,7 +27,7 @@ export interface IUnit {
   thisTurnMoved: boolean;
   intendedNextMove?: Coords;
   image: Image.IImage;
-  power: number;
+  damage: number;
   health: number;
   healthMax: number;
   healthText: PIXI.Text;
@@ -59,7 +59,7 @@ export function create(
     thisTurnMoved: false,
     intendedNextMove: undefined,
     image: Image.create(x, y, imagePath, containerUnits),
-    power: config.UNIT_BASE_POWER,
+    damage: config.UNIT_BASE_DAMAGE,
     health: config.UNIT_BASE_HEALTH,
     healthMax: config.UNIT_BASE_HEALTH,
     healthText: new PIXI.Text('', {

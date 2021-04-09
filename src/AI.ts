@@ -29,7 +29,7 @@ export function meleeAction(unit: Unit.IUnit) {
           canAttackCell(unit, next_x, next_y)
         ) {
           Image.attack(unit.image, unit.x, unit.y, next_x, next_y);
-          Unit.takeDamage(other_unit, unit.power);
+          Unit.takeDamage(other_unit, unit.damage);
         }
       }
       // set move intention
@@ -55,7 +55,7 @@ export function rangedAction(unit: Unit.IUnit) {
       targetEnemy.y,
       'images/spell/arrow.png',
     );
-    Unit.takeDamage(targetEnemy, unit.power);
+    Unit.takeDamage(targetEnemy, unit.damage);
   } else {
     // Move opposite to enemy
     const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit);
@@ -85,7 +85,7 @@ export function reachAction(unit: Unit.IUnit) {
       targetEnemy.y,
       'images/spell/green-thing.png',
     );
-    Unit.takeDamage(targetEnemy, unit.power);
+    Unit.takeDamage(targetEnemy, unit.damage);
   } else {
     if (runFromTarget) {
       const moveTo = math.oneCellAwayFromCell(unit, runFromTarget);
