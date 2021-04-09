@@ -6,7 +6,7 @@ const spell: Spell = {
     id,
     thumbnail: 'images/spell/aoe.png',
     probability: 10,
-    effect: (state) => {
+    effect: async (state) => {
       let updatedTargets = [...state.targets];
       for (let target of state.targets) {
         const withinRadius = window.game.getCoordsWithinDistanceOfTarget(

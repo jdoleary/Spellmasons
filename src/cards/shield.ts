@@ -9,7 +9,7 @@ const spell: Spell = {
     id,
     thumbnail: 'images/spell/shield.png',
     probability: 10,
-    effect: (state, dryRun) => {
+    effect: async (state, dryRun) => {
       if (dryRun) {
         return state;
       }

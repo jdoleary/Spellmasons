@@ -176,7 +176,7 @@ export function die(u: IUnit) {
     }
   }
 }
-export function takeDamage(unit: IUnit, amount: number) {
+export async function takeDamage(unit: IUnit, amount: number) {
   let alteredAmount = amount;
   // Compose onDamageEvents
   for (let eventName of unit.onDamageEvents) {
@@ -202,7 +202,7 @@ export function takeDamage(unit: IUnit, amount: number) {
       cellY: unit.y,
       text: healthChangedString,
     });
-    Image.take_hit(unit.image);
+    await Image.take_hit(unit.image);
   }
   if (unit.health <= 0) {
     if (unit.alive) {

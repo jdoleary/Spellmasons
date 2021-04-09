@@ -721,20 +721,20 @@ export default class Game {
     }
     return false;
   }
-  getTargetsOfCards(
+  async getTargetsOfCards(
     caster: Player.IPlayer,
     cards: string[],
     target: Coords,
-  ): Coords[] {
-    const state = this.castCards(caster, cards, target, true);
+  ): Promise<Coords[]> {
+    const state = await this.castCards(caster, cards, target, true);
     return (state && state.targets) || [];
   }
-  castCards(
+  async castCards(
     caster: Player.IPlayer,
     cards: string[],
     target: Coords,
     dryRun: boolean,
-  ): Cards.EffectState {
+  ): Promise<Cards.EffectState> {
     let effectState = {
       caster,
       targets: [target],
@@ -748,7 +748,7 @@ export default class Game {
     for (let cardId of cards) {
       const card = Cards.allCards.find((c) => c.id == cardId);
       if (card) {
-        effectState = card.effect(effectState, dryRun);
+        effectState = await card.effect(effectState, dryRun);
       }
     }
 

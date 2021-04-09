@@ -3,6 +3,7 @@ import type * as PIXI from 'pixi.js';
 import { addPixiSprite } from './PixiUtils';
 import { normalizeRadians, cellToBoardCoords } from './math';
 import Subsprites from './Subsprites';
+import { animateIndependent } from './AnimationTimeline';
 
 export interface IImage {
   // Not to be serialized
@@ -130,16 +131,14 @@ export function hide(image: IImage) {
   ]);
 }
 export function take_hit(image: IImage) {
-  window.animationTimeline
-    .addAnimation([
-      {
-        sprite: image.sprite,
-        target: { rotation: image.sprite.rotation + Math.PI * 2 },
-      },
-    ])
-    .then(() => {
-      image.sprite.rotation = normalizeRadians(image.sprite.rotation);
-    });
+  return animateIndependent([
+    {
+      sprite: image.sprite,
+      target: { rotation: image.sprite.rotation + Math.PI * 2 },
+    },
+  ]).then(() => {
+    image.sprite.rotation = normalizeRadians(image.sprite.rotation);
+  });
 }
 export function attack(
   image: IImage,

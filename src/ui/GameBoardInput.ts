@@ -48,7 +48,7 @@ export function drawSwapLine(one: Coords, two: Coords) {
 }
 
 // Draws the image that shows on the cell under the mouse
-export function syncMouseHoverIcon() {
+export async function syncMouseHoverIcon() {
   // Clear the spelleffectprojection in preparation for showing the current ones
   clearSpellEffectProjection();
   if (isOutOfBounds(mouseCellX, mouseCellY)) {
@@ -77,7 +77,7 @@ export function syncMouseHoverIcon() {
       targetImgPath = 'images/spell/deny.png';
     } else {
       // Find the targets of the spell
-      targets = window.game.getTargetsOfCards(
+      targets = await window.game.getTargetsOfCards(
         currentPlayer,
         Card.getSelectedCards(),
         mouseTarget,

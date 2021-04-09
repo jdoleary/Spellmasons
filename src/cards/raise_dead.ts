@@ -6,7 +6,7 @@ const spell: Spell = {
     id,
     thumbnail: 'images/spell/raise_dead.png',
     probability: 5,
-    effect: (state, dryRun) => {
+    effect: async (state, dryRun) => {
       if (dryRun) {
         return state;
       }

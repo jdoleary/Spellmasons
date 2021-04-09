@@ -50,7 +50,6 @@ export default class AnimationTimeline {
     });
   }
   animate(timestamp: number) {
-    stats.begin();
     const currentAnimationGroup: AnimationGroup = this.animationGroups[0];
     if (currentAnimationGroup) {
       // Initialize startTime for group and start object for animations
@@ -108,6 +107,93 @@ export default class AnimationTimeline {
     } else {
       this.animating = false;
     }
-    stats.end();
+  }
+}
+
+let independentAnimations: AnimationGroup[] = [];
+export function animateIndependent(animations: Animation[]) {
+  return new Promise<void>((resolve) => {
+    independentAnimations.push({
+      startTime: 0,
+      animations,
+      resolvePromise: resolve,
+    });
+  });
+}
+function animateIndependents(timestamp: number) {
+  stats.begin();
+  for (
+    let groupIndex = independentAnimations.length - 1;
+    groupIndex >= 0;
+    groupIndex--
+  ) {
+    const group = independentAnimations[groupIndex];
+    const doRemove = animateGroup(group, timestamp);
+    if (doRemove) {
+      independentAnimations.splice(groupIndex, 1);
+    }
+  }
+
+  requestAnimationFrame(animateIndependents);
+  stats.end();
+}
+// Start animating:
+requestAnimationFrame(animateIndependents);
+
+// Executes the animating of an AnimationGroup
+// Return value of true signifies that the animation is complete
+function animateGroup(group: AnimationGroup, timestamp: number): boolean {
+  if (group === undefined) {
+    console.error('unexpected, animationGroup is undefined');
+    return true;
+  }
+  // Initialize startTime for group and start object for animations
+  if (group.startTime == 0) {
+    for (let currentAnimation of group.animations) {
+      if (currentAnimation) {
+        currentAnimation.start = {
+          x: currentAnimation.sprite.x,
+          y: currentAnimation.sprite.y,
+          rotation: currentAnimation.sprite.rotation,
+          // Scale is not designed to ever be skewed
+          scale: currentAnimation.sprite.scale.x,
+          alpha: currentAnimation.sprite.alpha,
+        };
+      }
+    }
+    group.startTime = timestamp;
+  }
+  // Calculate detla time from the start time (must come after startTime is initialized)
+  const deltaTimeSinceStart = timestamp - group.startTime;
+  // Animate one at a time until the whole list of animations is done
+  const lerpTime = deltaTimeSinceStart / MILLIS_PER_ANIMATION;
+  // Lerp animations within  group
+  for (let currentAnimation of group.animations) {
+    if (currentAnimation) {
+      const { sprite, start, target } = currentAnimation;
+      // Lerp the transform properties
+      if (target.x !== undefined) {
+        sprite.x = lerp(start.x, target.x, lerpTime);
+      }
+      if (target.y !== undefined) {
+        sprite.y = lerp(start.y, target.y, lerpTime);
+      }
+      if (target.rotation !== undefined) {
+        sprite.rotation = lerp(start.rotation, target.rotation, lerpTime);
+      }
+      if (target.alpha !== undefined) {
+        sprite.alpha = lerp(start.alpha, target.alpha, lerpTime);
+      }
+      if (target.scale !== undefined) {
+        sprite.scale.set(lerp(start.scale, target.scale, lerpTime));
+      }
+    }
+  }
+  if (lerpTime >= 1) {
+    // Report via promise that the anition is finished
+    group.resolvePromise();
+    return true;
+  } else {
+    return false;
   }
 }

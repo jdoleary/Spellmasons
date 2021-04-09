@@ -7,19 +7,21 @@ const spell: Spell = {
     id,
     thumbnail: 'images/spell/damage.png',
     probability: 50,
-    effect: (state, dryRun) => {
+    effect: async (state, dryRun) => {
       if (dryRun) {
         return state;
       }
+      let promises = [];
       for (let target of state.targets) {
         const unit = window.game.getUnitAt(target.x, target.y);
         if (unit) {
           const damage = 1;
-          Unit.takeDamage(unit, damage);
+          promises.push(Unit.takeDamage(unit, damage));
           state.aggregator.damageDealt =
             (state.aggregator.damageDealt || 0) + damage;
         }
       }
+      await Promise.all(promises);
       return state;
     },
   },

@@ -9,7 +9,7 @@ const spell: Spell = {
     id,
     thumbnail: 'images/spell/swap.png',
     probability: 10,
-    effect: (state, dryRun) => {
+    effect: async (state, dryRun) => {
       const { caster, targets } = state;
       // Find movement change between caster and original target
       const dx = targets[0].x - caster.unit.x;
