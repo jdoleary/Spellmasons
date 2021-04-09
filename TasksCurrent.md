@@ -1,5 +1,14 @@
 # Todo
 
+- Make animations trigger based on each card that's cast in order
+
+  - What if rather than using an AnimationTimeline, I just made the turns actually asyncronous and animations happened right when a change occurred?
+  - Types of animations
+    - Projectiles,
+    - Targeting
+    - Unit position, rotation, scale animations
+    - Unit image changing (skeleton)
+
 - What's to stop player from just bumming around to get extra cards?
   - Maybe only as long as there are enemies alive? Or set a hand max?
 - Swapping should only work with a target, not an empty spell
