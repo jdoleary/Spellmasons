@@ -35,8 +35,8 @@ const spell: Spell = {
           },
         });
 
-        unit.modifiers.shield && unit.modifiers.shield.stacks--;
-        if (unit.modifiers.shield && unit.modifiers.shield.stacks <= 0) {
+        unit.modifiers[id] && unit.modifiers[id].stacks--;
+        if (unit.modifiers[id] && unit.modifiers[id].stacks <= 0) {
           Unit.removeModifier(unit, id);
         }
 
@@ -65,14 +65,16 @@ const spell: Spell = {
 
 function addTo(unit: Unit.IUnit) {
   // First time setup
-  if (!unit.modifiers.shield) {
-    unit.modifiers.shield = {};
+  if (!unit.modifiers[id]) {
+    unit.modifiers[id] = {
+      isCurse: false,
+    };
     // Add event
     unit.onDamageEvents.push(id);
     // Add subsprite image
     Image.addSubSprite(unit.image, id);
   }
   // Increment the number of stacks of shield
-  unit.modifiers.shield.stacks = (unit.modifiers.shield.stacks || 0) + 1;
+  unit.modifiers[id].stacks = (unit.modifiers[id].stacks || 0) + 1;
 }
 export default spell;

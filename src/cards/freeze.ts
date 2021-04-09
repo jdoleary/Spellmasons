@@ -23,8 +23,8 @@ const spell: Spell = {
   events: {
     onTurnStart: (unit: Unit.IUnit) => {
       // Decrement how many turns left the unit is frozen
-      unit.modifiers.freeze && unit.modifiers.freeze.turnsLeft--;
-      if (unit.modifiers.freeze && unit.modifiers.freeze.turnsLeft <= 0) {
+      unit.modifiers[id] && unit.modifiers[id].turnsLeft--;
+      if (unit.modifiers[id] && unit.modifiers[id].turnsLeft <= 0) {
         Unit.removeModifier(unit, id);
       }
       // Abort turn
@@ -49,8 +49,8 @@ const spell: Spell = {
 
 function addTo(unit: Unit.IUnit) {
   // First time setup
-  if (!unit.modifiers.freeze) {
-    unit.modifiers.freeze = {};
+  if (!unit.modifiers[id]) {
+    unit.modifiers[id] = { isCurse: true };
     // Add event
     unit.onTurnStartEvents.push(id);
 
@@ -58,7 +58,7 @@ function addTo(unit: Unit.IUnit) {
     Image.addSubSprite(unit.image, id);
   }
   // Increment the number of turns that freeze is applied (can stack)
-  unit.modifiers.freeze.turnsLeft = (unit.modifiers.freeze.turnsLeft || 0) + 1;
+  unit.modifiers[id].turnsLeft = (unit.modifiers[id].turnsLeft || 0) + 1;
 }
 
 export default spell;
