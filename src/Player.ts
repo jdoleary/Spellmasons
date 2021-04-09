@@ -2,7 +2,7 @@ import { PLAYER_BASE_HEALTH } from './config';
 import * as Unit from './Unit';
 import * as Image from './Image';
 import type * as Upgrade from './Upgrade';
-import * as Card from './CardUI';
+import * as CardUI from './CardUI';
 import * as config from './config';
 import * as math from './math';
 import { Coords, Faction, UnitType } from './commonTypes';
@@ -47,9 +47,9 @@ export function create(clientId: string): IPlayer {
   };
   updateGlobalRefToCurrentClientPlayer(player);
   // Add cards to hand
-  for (let i = 0; i < config.GIVE_NUM_CARDS_PER_LEVEL; i++) {
-    const card = Card.generateCard();
-    Card.addCardToHand(card, player);
+  for (let i = 0; i < config.START_CARDS_COUNT; i++) {
+    const card = CardUI.generateCard();
+    CardUI.addCardToHand(card, player);
   }
   addHighlighIfPlayerBelongsToCurrentClient(player);
   player.unit.health = PLAYER_BASE_HEALTH;
@@ -58,8 +58,8 @@ export function create(clientId: string): IPlayer {
 }
 export function checkForGetCardOnTurn(player: IPlayer) {
   if (window.game.turn_number % player.turnsPerCard === 0) {
-    const card = Card.generateCard();
-    Card.addCardToHand(card, player);
+    const card = CardUI.generateCard();
+    CardUI.addCardToHand(card, player);
     console.log('You got a card!');
   }
 }
@@ -101,7 +101,7 @@ export function load(player: IPlayer) {
   };
   addHighlighIfPlayerBelongsToCurrentClient(playerLoaded);
   updateGlobalRefToCurrentClientPlayer(playerLoaded);
-  Card.recalcPositionForCards(playerLoaded);
+  CardUI.recalcPositionForCards(playerLoaded);
   return playerLoaded;
 }
 export function enterPortal(player: IPlayer) {

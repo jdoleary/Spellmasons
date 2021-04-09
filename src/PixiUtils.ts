@@ -67,6 +67,7 @@ function loadTextures(additionalImagePaths: string[]): Promise<void> {
       'images/pickups/card.png',
       'images/upgrades/more_cards.png',
       'images/upgrades/plus_range.png',
+      'images/upgrades/plus_card_frequency.png',
       'images/headband.png',
       'images/disconnected.png',
       'images/empty.png',

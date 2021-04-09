@@ -1,6 +1,7 @@
 import { NUMBER_OF_UPGRADES_TO_CHOOSE_FROM } from './config';
 import { MESSAGE_TYPES } from './MessageTypes';
 import * as config from './config';
+import * as CardUI from './CardUI';
 import { checkForGetCardOnTurn, IPlayer } from './Player';
 import makeSeededRandom from './rand';
 export interface IUpgrade {
@@ -91,16 +92,27 @@ export const upgradeSource: IUpgrade[] = [
     effect: (player) => player.range++,
   },
   {
-    title: '+ Card Aquisition Rate',
+    title: '+ Card Frequency',
     description:
       'Decreases the number of turns that it takes to get a new card',
-    thumbnail: 'images/upgrades/more_cards.png',
+    thumbnail: 'images/upgrades/plus_card_frequency.png',
     maxCopies: config.PLAYER_BASE_TURNS_PER_CARD - 1,
     effect: (player) => {
       player.turnsPerCard--;
       // Check if decreasing the turnsPerCard will land on the current turn
       // as being a turn that the player should get a card so that they don't get skipped
       checkForGetCardOnTurn(player);
+    },
+  },
+  {
+    title: 'More Cards',
+    description: `Gives you ${config.UPGRADE_MORE_CARDS_AMOUNT} more cards immediately`,
+    thumbnail: 'images/upgrades/more_cards.png',
+    effect: (player) => {
+      for (let i = 0; i < config.UPGRADE_MORE_CARDS_AMOUNT; i++) {
+        const card = CardUI.generateCard();
+        CardUI.addCardToHand(card, player);
+      }
     },
   },
 ];

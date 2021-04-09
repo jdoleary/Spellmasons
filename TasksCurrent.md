@@ -1,5 +1,9 @@
 # Todo
 
+- What's to stop player from just bumming around to get extra cards?
+
+  - Maybe only as long as there are enemies alive? Or set a hand max?
+
 - Implement purify
 - Swapping should only work with a target, not an empty spell
 - Make units clickable for information
@@ -10,8 +14,6 @@
 - task: Push should push away from the target area regardless of how many targets there are
 - task: Persist (save/load) (and allow for removing via purify) modifiers, work with poison and purify as examples
 - bug: chain swapping didn't move me, this occurs when the chain retarget's self
-- upgrade: + cast range
-- upgrade: - number of turns it takes to be granted a new card
 - bug: When last player dies and there are no NPCs it enters infinite loop
   - bug: checkForEndOfLevel has infinite loop
 - bug: turn time still ticks away during upgrade phase

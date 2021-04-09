@@ -1,7 +1,6 @@
 import * as Image from './Image';
-import * as Card from './CardUI';
+import * as CardUI from './CardUI';
 import * as Player from './Player';
-import * as config from './config';
 import { containerPickup } from './PixiUtils';
 import type { IUnit } from './Unit';
 export interface IPickup {
@@ -111,8 +110,8 @@ export const pickups = [
     effect: ({ unit, player }) => {
       if (player) {
         for (let i = 0; i < 4; i++) {
-          const card = Card.generateCard();
-          Card.addCardToHand(card, player);
+          const card = CardUI.generateCard();
+          CardUI.addCardToHand(card, player);
         }
       }
     },

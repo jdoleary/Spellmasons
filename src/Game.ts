@@ -6,7 +6,6 @@ import * as Obstacle from './Obstacle';
 import * as Player from './Player';
 import type * as Upgrade from './Upgrade';
 import * as math from './math';
-import * as Card from './CardUI';
 import * as Cards from './cards';
 import * as Image from './Image';
 import * as GameBoardInput from './ui/GameBoardInput';
@@ -195,13 +194,6 @@ export default class Game {
     );
     // Update level indicator UI at top of screen
     elLevelIndicator.innerText = `Level ${this.level}`;
-    // Add cards to hand
-    for (let p of this.players) {
-      for (let i = 0; i < config.GIVE_NUM_CARDS_PER_LEVEL; i++) {
-        const card = Card.generateCard();
-        Card.addCardToHand(card, p);
-      }
-    }
     for (let i = 0; i < config.NUM_PICKUPS_PER_LEVEL; i++) {
       const coords = this.getRandomEmptyCell({ xMin: 2 });
       if (coords) {

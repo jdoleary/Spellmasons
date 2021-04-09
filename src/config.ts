@@ -5,13 +5,16 @@ export const BOARD_HEIGHT = 9;
 export const BOARD_WIDTH = 12;
 export const SECONDS_PER_TURN = 100;
 export const CELL_SIZE = 64;
-export const GIVE_NUM_CARDS_PER_LEVEL = 9;
+export const START_CARDS_COUNT = 6;
+export const UPGRADE_MORE_CARDS_AMOUNT = 4;
 export const NUM_PICKUPS_PER_LEVEL = 2;
 export const NUM_OBSTACLES_PER_LEVEL = 10;
 export const MILLIS_PER_ANIMATION = 100;
 export const PERCENT_CHANCE_OF_HEAVY_UNIT = 10;
 export const NUMBER_OF_UPGRADES_TO_CHOOSE_FROM = 5;
 export const PLAYER_CAST_RANGE = 4;
+// How many turns it takes to get a new card
+export const PLAYER_BASE_TURNS_PER_CARD = 4;
 export const PORTAL_COORDINATES = {
   x: BOARD_WIDTH - 1,
   y: Math.floor(BOARD_HEIGHT / 2),
