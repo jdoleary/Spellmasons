@@ -192,7 +192,14 @@ export function takeDamage(unit: IUnit, amount: number) {
     Image.take_hit(unit.image);
   }
   if (unit.health <= 0) {
-    die(unit);
+    if (unit.alive) {
+      die(unit);
+    } else {
+      // if unit is already dead, destroy bones
+      cleanup(unit);
+      // Remove unit entirely
+      window.game.units = window.game.units.filter((u) => u !== unit);
+    }
   }
 }
 export function canMove(unit: IUnit): boolean {
