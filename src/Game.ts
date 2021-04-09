@@ -45,6 +45,9 @@ const elPlayerTurnIndicator = document.getElementById('player-turn-indicator');
 const elTurnTimeRemaining = document.getElementById('turn-time-remaining');
 const elLevelIndicator = document.getElementById('level-indicator');
 const elUpgradePickerLabel = document.getElementById('upgrade-picker-label');
+const elUpgradePickerContent = document.getElementById(
+  'upgrade-picker-content',
+);
 export default class Game {
   state: game_state;
   seed: string;
@@ -377,6 +380,10 @@ export default class Game {
     );
     player.upgrades.push(upgrade);
     this.choseUpgrade.add(player.clientId);
+    // Clear upgrade choices once one is chosen
+    if (player.clientId === window.clientId) {
+      elUpgradePickerContent.innerHTML = '';
+    }
 
     if (this.choseUpgrade.size >= this.players.length) {
       this.moveToNextLevel();
@@ -587,9 +594,6 @@ export default class Game {
     const state = game_state[this.state];
     const elBoard = document.getElementById('board');
     const elUpgradePicker = document.getElementById('upgrade-picker');
-    const elUpgradePickerContent = document.getElementById(
-      'upgrade-picker-content',
-    );
     elUpgradePicker.classList.remove('active');
     switch (state) {
       case 'GameOver':
