@@ -461,7 +461,7 @@ export default class Game {
   _isCellEmpty({ x, y }: Coords): boolean {
     // Test for units in cell
     for (let u of this.units) {
-      if (u.alive && u.x === x && u.y === y) {
+      if (u.x === x && u.y === y) {
         return false;
       }
     }
@@ -493,8 +493,8 @@ export default class Game {
   }
   canUnitMoveIntoCell(cellX: number, cellY: number): boolean {
     for (let u of this.units) {
-      // If a living unit is obstructing, do not allow movement
-      if (u.alive && u.x === cellX && u.y === cellY) {
+      // If a unit is obstructing, do not allow movement
+      if (u.x === cellX && u.y === cellY) {
         return false;
       }
     }
@@ -658,7 +658,6 @@ export default class Game {
     const touchingDistance = 1;
     let touching = this.units.filter((u) => {
       return (
-        u.alive &&
         u.x <= x + touchingDistance &&
         u.x >= x - touchingDistance &&
         u.y <= y + touchingDistance &&
@@ -675,7 +674,7 @@ export default class Game {
     return touching;
   }
   getUnitAt(x: number, y: number): Unit.IUnit | undefined {
-    return this.units.find((u) => u.alive && u.x === x && u.y === y);
+    return this.units.find((u) => u.x === x && u.y === y);
   }
   getPickupAt(x: number, y: number): Pickup.IPickup | undefined {
     return this.pickups.find((p) => p.x === x && p.y === y);
@@ -720,7 +719,7 @@ export default class Game {
     const { x, y } = coordinates;
     // Cell is obstructed if it is already occupied by a unit
     for (let unit of this.units) {
-      if (unit.alive && unit.x === x && unit.y === y) {
+      if (unit.x === x && unit.y === y) {
         return true;
       }
     }
