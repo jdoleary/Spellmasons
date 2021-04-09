@@ -47,20 +47,15 @@ const spell: Spell = {
 };
 
 function addTo(unit: Unit.IUnit) {
-  // First time setup
-  if (!unit.modifiers.vulnerable) {
-    unit.modifiers.vulnerable = {};
-    // Add event
-    unit.onDamageEvents.push('vulnerable');
+  // Add event
+  unit.onDamageEvents.push('vulnerable');
 
-    // Add subsprite image
-    Image.addSubSprite(unit.image, 'vulnerable');
-  }
+  // Add subsprite image
+  Image.addSubSprite(unit.image, 'vulnerable');
 }
 function removeFrom(unit: Unit.IUnit) {
-  delete unit.modifiers.vulnerable;
   // Remove event
-  unit.onDamageEvents = unit.onMoveEvents.filter(
+  unit.onDamageEvents = unit.onDamageEvents.filter(
     (name) => name !== 'vulnerable',
   );
   // Remove subsprite

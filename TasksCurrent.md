@@ -12,7 +12,6 @@
 - freezing pickup should make it not-pickupable while it's frozen??
 - we got too many cards for the end to be challenging
 - some units should do extra damage
-- bug: 2 vulnerables and a damage only did 2 damage
 - feature: Chain should chain through dead bodies
 - bug: clearing cards doesn't clear target overlay
 - task: Push should push away from the target area regardless of how many targets there are
