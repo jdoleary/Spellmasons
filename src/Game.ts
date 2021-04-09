@@ -260,6 +260,7 @@ export default class Game {
         if (roll <= config.PERCENT_CHANCE_OF_HEAVY_UNIT) {
           unit.healthMax = config.UNIT_BASE_HEALTH * 2;
           unit.health = unit.healthMax;
+          unit.damage = config.UNIT_BASE_DAMAGE * 2;
           Image.scale(unit.image, 1.0);
         }
       } else {

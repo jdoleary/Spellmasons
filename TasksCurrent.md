@@ -2,15 +2,14 @@
 
 - Implement purify
 - Swapping should only work with a target, not an empty spell
-  - Add spell teleport? How would it work with multiple targets?
 - Make units clickable for information
   - Need way to count modifiers
 - Units dropped into lava should die
-- Enemy spellcasters that could poison YOU!
-- Enemy priest
+- New enemies:
+  - Enemy spellcasters that could poison YOU!
+  - Enemy priest
 - freezing pickup should make it not-pickupable while it's frozen??
-- we got too many cards for the end to be challenging
-- some units should do extra damage
+- Balance: we got too many cards for the end to be challenging
 - feature: Chain should chain through dead bodies
 - bug: clearing cards doesn't clear target overlay
 - task: Push should push away from the target area regardless of how many targets there are
