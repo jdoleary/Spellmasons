@@ -11,15 +11,15 @@ import type { Coords } from '../commonTypes';
 
 let mouseCellX;
 let mouseCellY;
-// Highlights are images that appear above cells to denote some information, such as the spell or action about to be cast/taken when clicked
-let highlights = [];
-function clearHighlights() {
-  highlights.forEach((sprite) => {
+// SpellEffectProjection are images that appear above cells to denote some information, such as the spell or action about to be cast/taken when clicked
+let spellEffectProjections = [];
+function clearSpellEffectProjection() {
+  spellEffectProjections.forEach((sprite) => {
     if (sprite.parent) {
       sprite.parent.removeChild(sprite);
     }
   });
-  highlights = [];
+  spellEffectProjections = [];
   dryRunGraphics.clear();
 }
 function isOutOfBounds(x, y) {
@@ -49,8 +49,8 @@ export function drawSwapLine(one: Coords, two: Coords) {
 
 // Draws the image that shows on the cell under the mouse
 export function syncMouseHoverIcon() {
-  // Clear the highlights in preparation for showing the current ones
-  clearHighlights();
+  // Clear the spelleffectprojection in preparation for showing the current ones
+  clearSpellEffectProjection();
   if (isOutOfBounds(mouseCellX, mouseCellY)) {
     // Mouse is out of bounds, do not show a hover icon
     return;
@@ -94,13 +94,13 @@ export function syncMouseHoverIcon() {
     // if (selectedSpell.swap) {
     //   targets.push({ x: mouseCellX, y: mouseCellY });
     // }
-    // Show highlights corresponding to targets
+    // Show spelleffectprojection corresponding to targets
     for (let t of targets) {
       const sprite = addPixiSprite(targetImgPath, containerUI);
       sprite.alpha = 0.5;
       sprite.x = t.x * CELL_SIZE;
       sprite.y = t.y * CELL_SIZE;
-      highlights.push(sprite);
+      spellEffectProjections.push(sprite);
     }
   }
 }
@@ -210,6 +210,6 @@ export default function setupBoardInputHandlers() {
       }
     }
     // Remove the highlight once a click occurs
-    clearHighlights();
+    clearSpellEffectProjection();
   });
 }
