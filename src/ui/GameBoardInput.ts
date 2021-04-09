@@ -209,6 +209,8 @@ export default function setupBoardInputHandlers() {
             }
           }
         }
+      } else {
+        floatingText({ cellX: x, cellY: y, text: 'It is not your turn yet' });
       }
     }
   });
