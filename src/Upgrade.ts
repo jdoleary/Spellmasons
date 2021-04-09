@@ -33,11 +33,15 @@ export function generateUpgrades(player: IPlayer): IUpgrade[] {
       : !player.upgrades.map((pu) => pu.title).includes(u.title),
   );
   // Choose from upgrades
+  const numberOfCardsToChoose = Math.min(
+    NUMBER_OF_UPGRADES_TO_CHOOSE_FROM,
+    clonedUpgradeSource.length,
+  );
   for (
     let i = 0;
     // limited by the config.NUMBER_OF_UPGRADES_TO_CHOOSE_FROM or the number of cloned
     // upgrades that are left, whichever is less
-    i < Math.min(NUMBER_OF_UPGRADES_TO_CHOOSE_FROM, clonedUpgradeSource.length);
+    i < numberOfCardsToChoose;
     i++
   ) {
     const randomIndex = random.integer(0, clonedUpgradeSource.length - 1);
