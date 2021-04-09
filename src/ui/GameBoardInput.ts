@@ -187,7 +187,7 @@ export default function setupBoardInputHandlers() {
         const selfPlayer: Player.IPlayer | undefined = window.game.players.find(
           (p) => p.clientId === window.clientId,
         );
-        // If player hasn't already cast this turn...
+        // If the player casting is the current client player
         if (selfPlayer) {
           // If a spell exists (based on the combination of cards selected)...
           if (areAnyCardsSelected()) {
@@ -204,12 +204,12 @@ export default function setupBoardInputHandlers() {
                 cards: Card.getSelectedCards(),
               });
               Card.clearSelectedCards();
+              // Remove the highlight once a click occurs
+              clearSpellEffectProjection();
             }
           }
         }
       }
     }
-    // Remove the highlight once a click occurs
-    clearSpellEffectProjection();
   });
 }
