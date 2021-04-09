@@ -103,7 +103,10 @@ export default class Game {
 
     // Limit turn duration
     this.turnInterval = setInterval(() => {
-      if (this.turn_phase === turn_phase.PlayerTurns) {
+      if (
+        this.state === game_state.Playing &&
+        this.turn_phase === turn_phase.PlayerTurns
+      ) {
         this.secondsLeftForTurn--;
         if (this.secondsLeftForTurn <= 10) {
           elPlayerTurnIndicatorHolder.classList.add('low-time');

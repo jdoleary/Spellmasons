@@ -16,7 +16,6 @@
 - bug: chain swapping didn't move me, this occurs when the chain retarget's self
 - bug: When last player dies and there are no NPCs it enters infinite loop
   - bug: checkForEndOfLevel has infinite loop
-- bug: turn time still ticks away during upgrade phase
 
 ## Brad 2021.04.05
 
