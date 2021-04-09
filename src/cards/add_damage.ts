@@ -1,9 +1,10 @@
 import * as Unit from '../Unit';
 import type { Spell } from '.';
 
+const id = 'damage';
 const spell: Spell = {
   card: {
-    id: 'damage',
+    id,
     thumbnail: 'images/spell/damage.png',
     probability: 50,
     effect: (state, dryRun) => {

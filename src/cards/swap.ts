@@ -3,9 +3,10 @@ import * as Pickup from '../Pickup';
 import type { Spell } from '.';
 import { drawSwapLine } from '../ui/GameBoardInput';
 
+const id = 'swap';
 const spell: Spell = {
   card: {
-    id: 'swap',
+    id,
     thumbnail: 'images/spell/swap.png',
     probability: 10,
     effect: (state, dryRun) => {

@@ -1,14 +1,14 @@
 import { IUnit, takeDamage } from '../Unit';
 import * as Image from '../Image';
 import type { Spell } from '.';
-
+const id = 'poison';
 function add(unit: IUnit) {
   // First time setup
   // Add event
-  unit.onTurnStartEvents.push('poison');
+  unit.onTurnStartEvents.push(id);
 
   // Add subsprite image
-  Image.addSubSprite(unit.image, 'poison');
+  Image.addSubSprite(unit.image, id);
 }
 
 const spell: Spell = {
@@ -27,7 +27,7 @@ const spell: Spell = {
     },
   },
   card: {
-    id: 'poison',
+    id,
     thumbnail: 'images/spell/poison.png',
     probability: 10,
     effect: (state, dryRun) => {

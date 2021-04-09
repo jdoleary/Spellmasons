@@ -1,10 +1,10 @@
-import type * as Unit from '../Unit';
+import * as Unit from '../Unit';
 import * as Image from '../Image';
 import type { Spell } from '.';
-
+const id = 'freeze';
 const spell: Spell = {
   card: {
-    id: 'freeze',
+    id,
     thumbnail: 'images/spell/freeze.png',
     probability: 20,
     effect: (state, dryRun) => {
@@ -25,7 +25,7 @@ const spell: Spell = {
       // Decrement how many turns left the unit is frozen
       unit.modifiers.freeze && unit.modifiers.freeze.turnsLeft--;
       if (unit.modifiers.freeze && unit.modifiers.freeze.turnsLeft <= 0) {
-        removeFrom(unit);
+        Unit.removeModifier(unit, id);
       }
       // Abort turn
       return true;
@@ -52,25 +52,13 @@ function addTo(unit: Unit.IUnit) {
   if (!unit.modifiers.freeze) {
     unit.modifiers.freeze = {};
     // Add event
-    unit.onTurnStartEvents.push('freeze');
+    unit.onTurnStartEvents.push(id);
 
     // Add subsprite image
-    Image.addSubSprite(unit.image, 'freeze');
+    Image.addSubSprite(unit.image, id);
   }
   // Increment the number of turns that freeze is applied (can stack)
   unit.modifiers.freeze.turnsLeft = (unit.modifiers.freeze.turnsLeft || 0) + 1;
-  console.log(
-    '🚀 ~ file: freeze.ts ~ line 62 ~ addTo ~ unit.modifiers',
-    unit.modifiers,
-  );
 }
-function removeFrom(unit: Unit.IUnit) {
-  delete unit.modifiers.freeze;
-  // Remove event
-  unit.onTurnStartEvents = unit.onTurnStartEvents.filter(
-    (name) => name !== 'freeze',
-  );
-  // Remove subsprite
-  Image.removeSubSprite(unit.image, 'freeze');
-}
+
 export default spell;

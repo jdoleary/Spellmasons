@@ -2,9 +2,10 @@ import type * as Unit from '../Unit';
 import * as Image from '../Image';
 import type { Spell } from '.';
 
+const id = 'vulnerable';
 const spell: Spell = {
   card: {
-    id: 'vulnerable',
+    id,
     thumbnail: 'images/spell/vulnerable.png',
     probability: 5,
     effect: (state, dryRun) => {
@@ -48,17 +49,9 @@ const spell: Spell = {
 
 function addTo(unit: Unit.IUnit) {
   // Add event
-  unit.onDamageEvents.push('vulnerable');
+  unit.onDamageEvents.push(id);
 
   // Add subsprite image
-  Image.addSubSprite(unit.image, 'vulnerable');
-}
-function removeFrom(unit: Unit.IUnit) {
-  // Remove event
-  unit.onDamageEvents = unit.onDamageEvents.filter(
-    (name) => name !== 'vulnerable',
-  );
-  // Remove subsprite
-  Image.removeSubSprite(unit.image, 'vulnerable');
+  Image.addSubSprite(unit.image, id);
 }
 export default spell;

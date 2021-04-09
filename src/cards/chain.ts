@@ -1,8 +1,9 @@
 import type { Spell } from '.';
 
+const id = 'chain';
 const spell: Spell = {
   card: {
-    id: 'chain',
+    id,
     thumbnail: 'images/spell/chain.png',
     probability: 10,
     effect: (state) => {

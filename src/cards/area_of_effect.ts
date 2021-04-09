@@ -1,8 +1,9 @@
 import type { Spell } from '.';
 
+const id = 'area_of_effect';
 const spell: Spell = {
   card: {
-    id: 'area_of_effect',
+    id,
     thumbnail: 'images/spell/aoe.png',
     probability: 10,
     effect: (state) => {

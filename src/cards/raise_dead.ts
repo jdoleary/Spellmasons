@@ -1,9 +1,9 @@
 import * as Unit from '../Unit';
 import type { Spell } from '.';
-
+const id = 'raise_dead';
 const spell: Spell = {
   card: {
-    id: 'raise_dead',
+    id,
     thumbnail: 'images/spell/raise_dead.png',
     probability: 5,
     effect: (state, dryRun) => {

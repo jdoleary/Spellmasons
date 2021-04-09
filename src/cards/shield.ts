@@ -1,11 +1,12 @@
-import type * as Unit from '../Unit';
+import * as Unit from '../Unit';
 import * as Image from '../Image';
 import type { Spell } from '.';
 import floatingText from '../FloatingText';
 
+const id = 'shield';
 const spell: Spell = {
   card: {
-    id: 'shield',
+    id,
     thumbnail: 'images/spell/shield.png',
     probability: 10,
     effect: (state, dryRun) => {
@@ -36,7 +37,7 @@ const spell: Spell = {
 
         unit.modifiers.shield && unit.modifiers.shield.stacks--;
         if (unit.modifiers.shield && unit.modifiers.shield.stacks <= 0) {
-          removeFrom(unit);
+          Unit.removeModifier(unit, id);
         }
 
         // Take no damage
@@ -67,18 +68,11 @@ function addTo(unit: Unit.IUnit) {
   if (!unit.modifiers.shield) {
     unit.modifiers.shield = {};
     // Add event
-    unit.onDamageEvents.push('shield');
+    unit.onDamageEvents.push(id);
     // Add subsprite image
-    Image.addSubSprite(unit.image, 'shield');
+    Image.addSubSprite(unit.image, id);
   }
   // Increment the number of stacks of shield
   unit.modifiers.shield.stacks = (unit.modifiers.shield.stacks || 0) + 1;
-}
-function removeFrom(unit: Unit.IUnit) {
-  delete unit.modifiers.shield;
-  // Remove event
-  unit.onDamageEvents = unit.onDamageEvents.filter((name) => name !== 'shield');
-  // Remove subsprite
-  Image.removeSubSprite(unit.image, 'shield');
 }
 export default spell;
