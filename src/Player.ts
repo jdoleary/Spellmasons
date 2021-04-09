@@ -17,6 +17,7 @@ export interface IPlayer {
   upgrades: Upgrade.IUpgrade[];
   // Cast range
   range: number;
+  turnsPerCard: number;
 }
 export function isTargetInRange(player: IPlayer, target: Coords): boolean {
   return math.distance(target, player.unit) <= player.range;
@@ -42,6 +43,7 @@ export function create(clientId: string): IPlayer {
     cards: [],
     upgrades: [],
     range: config.PLAYER_CAST_RANGE,
+    turnsPerCard: config.PLAYER_BASE_TURNS_PER_CARD,
   };
   updateGlobalRefToCurrentClientPlayer(player);
   // Add cards to hand
@@ -53,6 +55,13 @@ export function create(clientId: string): IPlayer {
   player.unit.health = PLAYER_BASE_HEALTH;
   player.unit.healthMax = PLAYER_BASE_HEALTH;
   return player;
+}
+export function checkForGetCardOnTurn(player: IPlayer) {
+  if (window.game.turn_number % player.turnsPerCard === 0) {
+    const card = Card.generateCard();
+    Card.addCardToHand(card, player);
+    console.log('You got a card!');
+  }
 }
 export function resetPlayerForNextLevel(player: IPlayer) {
   // Player is no longer in portal

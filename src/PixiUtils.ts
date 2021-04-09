@@ -65,6 +65,8 @@ function loadTextures(additionalImagePaths: string[]): Promise<void> {
       'images/units/unit-underline.png',
       'images/units/corpse.png',
       'images/pickups/card.png',
+      'images/upgrades/more_cards.png',
+      'images/upgrades/plus_range.png',
       'images/headband.png',
       'images/disconnected.png',
       'images/empty.png',

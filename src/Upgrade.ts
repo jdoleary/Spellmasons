@@ -1,22 +1,15 @@
 import { NUMBER_OF_UPGRADES_TO_CHOOSE_FROM } from './config';
 import { MESSAGE_TYPES } from './MessageTypes';
-import type { IPlayer } from './Player';
+import * as config from './config';
+import { checkForGetCardOnTurn, IPlayer } from './Player';
 import makeSeededRandom from './rand';
 export interface IUpgrade {
-  spellId?: string;
   title: string;
   description: string;
   thumbnail: string;
-  // Some upgrades can be chosen more than once
-  allowDuplicate?: boolean;
-  // Infinite cards never run out...
-  // Whereas finite cards (!infinite) are refreshed at the beginning of each level and cannot be used more
-  // than the number that the player has per level
-  // --
-  // When infinite cards are chosen more than once, they affect the base stat, such as "+ base damage"
-  infinite?: boolean;
-  // A card that a player always has in hand
-  always?: boolean;
+  // The maximum number of copies a player can have of this upgrade
+  maxCopies?: number;
+  effect: (player: IPlayer) => void;
 }
 // Chooses a random card based on the card's probabilities
 export function generateUpgrades(player: IPlayer): IUpgrade[] {
@@ -26,11 +19,14 @@ export function generateUpgrades(player: IPlayer): IUpgrade[] {
   }
   let upgrades = [];
   const random = makeSeededRandom(`${window.clientId}-${window.game.level}`);
-  // Clone and filter out non-duplicatable upgrades that the player already has
+  // Clone upgrades for later mutation
   const clonedUpgradeSource = [...upgradeSource].filter((u) =>
-    u.allowDuplicate
-      ? true
-      : !player.upgrades.map((pu) => pu.title).includes(u.title),
+    u.maxCopies === undefined
+      ? // Always include upgrades that don't have a specified maxCopies
+        true
+      : // Filter out  upgrades that the player can't have more of
+        player.upgrades.filter((pu) => pu.title === u.title).length <
+        u.maxCopies,
   );
   // Choose from upgrades
   const numberOfCardsToChoose = Math.min(
@@ -83,66 +79,29 @@ export const upgradeSourceWhenDead: IUpgrade[] = [
     description:
       'You have died, but find yourself resurrected as your allies enter the portal.',
     thumbnail: 'images/spell/resurrect.png',
-    allowDuplicate: false,
-    always: false,
+    // Resurrection happens automatically at the start of each level
+    effect: () => {},
   },
 ];
 export const upgradeSource: IUpgrade[] = [
   {
-    spellId: 'damage',
-    title: '+ Base Damage',
-    description: 'Upgrades base damage',
-    thumbnail: 'images/spell/damage.png',
-    allowDuplicate: true,
-    always: true,
-    infinite: true,
+    title: '+ Cast Range',
+    description: 'Increases how far away you can cast',
+    thumbnail: 'images/upgrades/plus_range.png',
+    effect: (player) => player.range++,
   },
   {
-    spellId: 'heal',
-    title: '+ Base Heal',
-    description: 'Upgrades base heal',
-    thumbnail: 'images/spell/heal.png',
-    allowDuplicate: true,
-    always: true,
-    infinite: true,
-  },
-  {
-    title: 'Chain',
-    description: 'Makes a spell chain between touching units',
-    thumbnail: 'images/spell/chain.png',
-    allowDuplicate: false,
-  },
-  {
-    title: 'Freeze',
-    description: 'Makes the target frozen for one turn',
-    thumbnail: 'images/spell/freeze.png',
-    allowDuplicate: true,
-  },
-  {
-    title: 'Area of Effect',
-    description: 'Makes a spell affect a larger area',
-    thumbnail: 'images/spell/aoe.png',
-    allowDuplicate: true,
-  },
-  {
-    title: 'Shield',
-    description: 'Protects the target from the next damage it recieves',
-    thumbnail: 'images/spell/shield.png',
-    allowDuplicate: true,
-  },
-  {
-    title: 'Swap',
+    title: '+ Card Aquisition Rate',
     description:
-      'Swaps the casters location with the target and casts the remainder of the spell on the target',
-    thumbnail: 'images/spell/swap.png',
-    allowDuplicate: false,
-  },
-  {
-    title: 'Push',
-    description: 'Pushes the target away from the caster',
-    thumbnail: 'images/spell/push.png',
-    allowDuplicate: true,
-    infinite: true,
+      'Decreases the number of turns that it takes to get a new card',
+    thumbnail: 'images/upgrades/more_cards.png',
+    maxCopies: config.PLAYER_BASE_TURNS_PER_CARD - 1,
+    effect: (player) => {
+      player.turnsPerCard--;
+      // Check if decreasing the turnsPerCard will land on the current turn
+      // as being a turn that the player should get a card so that they don't get skipped
+      checkForGetCardOnTurn(player);
+    },
   },
 ];
 

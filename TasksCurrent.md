@@ -5,26 +5,16 @@
 - Make units clickable for information
   - Need way to count modifiers
 - Units dropped into lava should die
-- New enemies:
-  - Enemy spellcasters that could poison YOU!
-  - Enemy priest
 - freezing pickup should make it not-pickupable while it's frozen??
 - Balance: we got too many cards for the end to be challenging
-- feature: Chain should chain through dead bodies
 - task: Push should push away from the target area regardless of how many targets there are
 - task: Persist (save/load) (and allow for removing via purify) modifiers, work with poison and purify as examples
 - bug: chain swapping didn't move me, this occurs when the chain retarget's self
 - upgrade: + cast range
 - upgrade: - number of turns it takes to be granted a new card
 - bug: When last player dies and there are no NPCs it enters infinite loop
-
   - bug: checkForEndOfLevel has infinite loop
-
-- Cohesive spells
-  - effect: EffectFn
-  - modifiers
-  - events
-- balance
+- bug: turn time still ticks away during upgrade phase
 
 ## Brad 2021.04.05
 
@@ -40,10 +30,12 @@
 
 - Add batching to card effects?
 
-## Bugs Suspected Fixed
-
-- BUG: Sometimes it skips other players turn when one goes through the protal
-
 ## bugs
 
 - Bug: Loading doesn't work if clientIds have changed reassigning clientIds
+
+## Features
+
+- New enemies:
+  - Enemy spellcasters that could poison YOU!
+  - Enemy priest

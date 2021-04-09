@@ -58,7 +58,7 @@ export default class Game {
   // instead of every turn.  A "turn" is a full cycle,
   // meaning, players take their turn, npcs take their
   // turn, then it resets to player turn, that is a full "turn"
-  turn_number: number = 0;
+  turn_number: number = -1;
   height: number = config.BOARD_HEIGHT;
   width: number = config.BOARD_WIDTH;
   players: Player.IPlayer[] = [];
@@ -376,9 +376,7 @@ export default class Game {
     }
   }
   chooseUpgrade(player: Player.IPlayer, upgrade: Upgrade.IUpgrade) {
-    console.log(
-      'TODO implement how the player is modified when an upgrade is added',
-    );
+    upgrade.effect(player);
     player.upgrades.push(upgrade);
     this.choseUpgrade.add(player.clientId);
     // Clear upgrade choices once one is chosen
@@ -516,6 +514,9 @@ export default class Game {
     switch (phase) {
       case 'PlayerTurns':
         this.turn_number++;
+        for (let p of this.players) {
+          Player.checkForGetCardOnTurn(p);
+        }
         for (let u of this.units) {
           // Reset thisTurnMoved flag now that it is a new turn
           // Because no units have moved yet this turn

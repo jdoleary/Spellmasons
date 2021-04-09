@@ -14,6 +14,7 @@ import { setupPixi } from './PixiUtils';
 import floatingText from './FloatingText';
 import { addSubSprite, removeSubSprite } from './Image';
 import * as Cards from './cards';
+import { upgradeSource } from './Upgrade';
 
 // Print aggressive due date for game!
 console.log(
@@ -176,7 +177,10 @@ function onData(d: { fromClient: string; payload: any }) {
       }
       break;
     case MESSAGE_TYPES.CHOOSE_UPGRADE:
-      game.chooseUpgrade(caster, payload.upgrade);
+      const upgrade = upgradeSource.find(
+        (u) => u.title === payload.upgrade.title,
+      );
+      game.chooseUpgrade(caster, upgrade);
       break;
     case MESSAGE_TYPES.END_TURN:
       game.endPlayerTurn(caster.clientId);
