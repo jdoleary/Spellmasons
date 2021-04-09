@@ -79,7 +79,7 @@ function moveCardFromSelectedToHand(element: HTMLElement, cardId: string) {
 // This function fully deletes the cards that are 'selected' in the player's hand
 export function removeCardsFromHand(player: Player.IPlayer, cards: string[]) {
   cardLoop: for (let cardToRemove of cards) {
-    for (let i = player.cards.length; i >= 0; i--) {
+    for (let i = player.cards.length - 1; i >= 0; i--) {
       if (player.cards[i] === cardToRemove) {
         player.cards.splice(i, 1);
         continue cardLoop;
