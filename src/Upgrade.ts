@@ -115,6 +115,15 @@ export const upgradeSource: IUpgrade[] = [
       }
     },
   },
+  {
+    title: '+ Max Health',
+    description: `Increases your max health by one`,
+    thumbnail: 'images/upgrades/plus_max_health.png',
+    effect: (player) => {
+      player.unit.healthMax++;
+      player.unit.health++;
+    },
+  },
 ];
 
 // Template
