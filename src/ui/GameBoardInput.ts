@@ -60,7 +60,7 @@ export function syncMouseHoverIcon() {
     // If mouse hovering over a new cell, update the target images
 
     // if spell exists show target image, otherwise show feet image for walking
-    const targetImgPath = areAnyCardsSelected()
+    let targetImgPath = areAnyCardsSelected()
       ? 'images/spell/target.png'
       : null;
     if (!targetImgPath) {
@@ -71,9 +71,17 @@ export function syncMouseHoverIcon() {
       (p) => p.clientId === window.clientId,
     );
     const mouseTarget = { x: mouseCellX, y: mouseCellY };
+    let targets = [];
     if (!Player.isTargetInRange(currentPlayer, mouseTarget)) {
-      // Do not render if out of cast range
-      return;
+      targets = [mouseTarget];
+      targetImgPath = 'images/spell/deny.png';
+    } else {
+      // Find the targets of the spell
+      targets = window.game.getTargetsOfCards(
+        currentPlayer,
+        Card.getSelectedCards(),
+        mouseTarget,
+      );
     }
     // TODO restore after spell refactor
     // Make a copy of the spell and add the target coords
@@ -84,12 +92,6 @@ export function syncMouseHoverIcon() {
     //   selectedSpell.x = currentPlayer.unit.x;
     //   selectedSpell.y = currentPlayer.unit.y;
     // }
-    // Find the targets of the spell
-    const targets = window.game.getTargetsOfCards(
-      currentPlayer,
-      Card.getSelectedCards(),
-      mouseTarget,
-    );
     // TODO: Fix showing the targets of the spell ahead of time using the new SpellEffects
     // if (selectedSpell.swap) {
     //   targets.push({ x: mouseCellX, y: mouseCellY });
