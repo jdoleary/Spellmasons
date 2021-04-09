@@ -5,7 +5,6 @@
   - Add spell teleport? How would it work with multiple targets?
 - Make units clickable for information
   - Need way to count modifiers
-- brad says AOE freeze \*4 did nothing
 - Units dropped into lava should die
 - Enemy spellcasters that could poison YOU!
 - Enemy priest

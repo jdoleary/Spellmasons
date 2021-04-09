@@ -16,8 +16,8 @@ const spell: Spell = {
         if (unit) {
           addTo(unit);
         }
-        return state;
       }
+      return state;
     },
   },
   events: {

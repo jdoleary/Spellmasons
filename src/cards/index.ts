@@ -96,6 +96,7 @@ export function registerCards() {
 // Follow the Priciple of Least Surpise
 // Every spell effect should be designed to respond well to potentially more than one target
 // Note: spells can be found in their own files in src/cards/*
+// Make sure each spell's effect returns the state at the very end
 
 export interface EffectState {
   caster: Player.IPlayer;

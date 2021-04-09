@@ -16,8 +16,8 @@ const spell: Spell = {
         if (unit) {
           addTo(unit);
         }
-        return state;
       }
+      return state;
     },
   },
   events: {
@@ -59,6 +59,10 @@ function addTo(unit: Unit.IUnit) {
   }
   // Increment the number of turns that freeze is applied (can stack)
   unit.modifiers.freeze.turnsLeft = (unit.modifiers.freeze.turnsLeft || 0) + 1;
+  console.log(
+    '🚀 ~ file: freeze.ts ~ line 62 ~ addTo ~ unit.modifiers',
+    unit.modifiers,
+  );
 }
 function removeFrom(unit: Unit.IUnit) {
   delete unit.modifiers.freeze;
