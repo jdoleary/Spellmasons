@@ -91,6 +91,16 @@ export function create(
   return unit;
 }
 
+export function removeModifier(unit: IUnit, key: string) {
+  Image.removeSubSprite(unit.image, key);
+  unit.onDamageEvents = unit.onDamageEvents.filter((e) => e !== key);
+  unit.onDeathEvents = unit.onDeathEvents.filter((e) => e !== key);
+  unit.onMoveEvents = unit.onMoveEvents.filter((e) => e !== key);
+  unit.onAgroEvents = unit.onAgroEvents.filter((e) => e !== key);
+  unit.onTurnStartEvents = unit.onTurnStartEvents.filter((e) => e !== key);
+  delete unit.modifiers[key];
+}
+
 export function deselect(unit: IUnit) {
   // Hide health text
   if (unit.healthText.parent) {
