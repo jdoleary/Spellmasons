@@ -6,21 +6,15 @@ import * as Card from '../CardUI';
 import * as Player from '../Player';
 import floatingText from '../FloatingText';
 import * as Unit from '../Unit';
-import { addPixiSprite, containerUI } from '../PixiUtils';
+import { containerSpells, containerUI } from '../PixiUtils';
 import type { Coords } from '../commonTypes';
 
 let mouseCellX;
 let mouseCellY;
 // SpellEffectProjection are images that appear above cells to denote some information, such as the spell or action about to be cast/taken when clicked
-let spellEffectProjections = [];
 export function clearSpellEffectProjection() {
-  spellEffectProjections.forEach((sprite) => {
-    if (sprite.parent) {
-      sprite.parent.removeChild(sprite);
-    }
-  });
-  spellEffectProjections = [];
   dryRunGraphics.clear();
+  containerSpells.removeChildren();
 }
 function isOutOfBounds(x, y) {
   return x < 0 || x >= BOARD_WIDTH || y < 0 || y >= BOARD_HEIGHT;
@@ -76,20 +70,13 @@ export async function syncMouseHoverIcon() {
       targets = [mouseTarget];
       targetImgPath = 'images/spell/deny.png';
     } else {
-      // Find the targets of the spell
-      targets = await window.game.getTargetsOfCards(
+      // Dry run cast so the user can see what effect it's going to have
+      await this.castCards(
         currentPlayer,
         Card.getSelectedCards(),
         mouseTarget,
+        true,
       );
-    }
-    // Show spelleffectprojection corresponding to targets
-    for (let t of targets) {
-      const sprite = addPixiSprite(targetImgPath, containerUI);
-      sprite.alpha = 0.5;
-      sprite.x = t.x * CELL_SIZE;
-      sprite.y = t.y * CELL_SIZE;
-      spellEffectProjections.push(sprite);
     }
   }
 }

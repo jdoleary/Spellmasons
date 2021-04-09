@@ -39,7 +39,9 @@ export function create(
 }
 export function cleanup(image: IImage) {
   // Remove PIXI sprite
-  image.sprite.parent.removeChild(image.sprite);
+  if (image.sprite && image.sprite.parent) {
+    image.sprite.parent.removeChild(image.sprite);
+  }
 }
 export function load(image: IImage, parent?: PIXI.Container) {
   const instantiatedImage = create(0, 0, image.imageName, parent);
@@ -76,13 +78,14 @@ export function setPosition(image: IImage, cellX: number, cellY: number) {
 export function scale(image: IImage, scale) {
   // Clamp to a positive value
   scale = Math.max(0, scale);
-  image.scale = scale;
-  window.animationTimeline.addAnimation([
+  return animateIndependent([
     {
       sprite: image.sprite,
       target: { scale },
     },
-  ]);
+  ]).then(() => {
+    image.scale = scale;
+  });
 }
 export function addSubSprite(image: IImage, key) {
   // Don't add more than one copy
