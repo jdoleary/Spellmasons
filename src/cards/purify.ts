@@ -1,7 +1,7 @@
 import { removeModifier } from '../Unit';
 import type { Spell } from '.';
 const id = 'purify';
-// Removes all modifiers (buffs and curses)
+// Removes all curse modifiers
 const spell: Spell = {
   card: {
     id,
@@ -14,8 +14,12 @@ const spell: Spell = {
       for (let target of state.targets) {
         const unit = window.game.getUnitAt(target.x, target.y);
         if (unit) {
-          for (let modifier of Object.keys(unit.modifiers)) {
-            removeModifier(unit, modifier);
+          for (let [modifier, modifierProperties] of Object.entries(
+            unit.modifiers,
+          )) {
+            if (modifierProperties.isCurse) {
+              removeModifier(unit, modifier);
+            }
           }
         }
       }

@@ -41,7 +41,10 @@ export interface IUnit {
   onAgroEvents: string[];
   onTurnStartEvents: string[];
   modifiers: {
-    [name: string]: any;
+    [name: string]: {
+      isCurse: boolean;
+      [key: string]: any;
+    };
   };
 }
 export function create(

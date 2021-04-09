@@ -3,10 +3,12 @@ import * as Image from '../Image';
 import type { Spell } from '.';
 const id = 'poison';
 function add(unit: IUnit) {
-  // First time setup
+  // Note: Curse can stack multiple times but doesn't keep any state
+  // so it doesn't need a first time setup like freeze does
+
+  unit.modifiers[id] = { isCurse: true };
   // Add event
   unit.onTurnStartEvents.push(id);
-
   // Add subsprite image
   Image.addSubSprite(unit.image, id);
 }
