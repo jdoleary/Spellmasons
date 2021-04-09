@@ -83,19 +83,6 @@ export function syncMouseHoverIcon() {
         mouseTarget,
       );
     }
-    // TODO restore after spell refactor
-    // Make a copy of the spell and add the target coords
-    // if (selectedSpell.swap) {
-    //   const currentPlayer = window.game.players.find(
-    //     (p) => p.clientId === window.clientId,
-    //   );
-    //   selectedSpell.x = currentPlayer.unit.x;
-    //   selectedSpell.y = currentPlayer.unit.y;
-    // }
-    // TODO: Fix showing the targets of the spell ahead of time using the new SpellEffects
-    // if (selectedSpell.swap) {
-    //   targets.push({ x: mouseCellX, y: mouseCellY });
-    // }
     // Show spelleffectprojection corresponding to targets
     for (let t of targets) {
       const sprite = addPixiSprite(targetImgPath, containerUI);
