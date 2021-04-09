@@ -16,6 +16,7 @@ const spell: Spell = {
         );
         if (dead_unit) {
           Unit.resurrect(dead_unit);
+          dead_unit.health = 1;
           Unit.changeFaction(dead_unit, state.caster.unit.faction);
         }
       }
