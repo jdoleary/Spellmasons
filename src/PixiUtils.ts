@@ -60,7 +60,6 @@ function loadTextures(additionalImagePaths: string[]): Promise<void> {
       'images/spell/target.png',
       'images/spell/deny.png',
       'images/spell/green-thing.png',
-      'images/spell/raise-dead.png',
       'images/portal.png',
       'images/units/unit-underline.png',
       'images/units/corpse.png',
