@@ -13,8 +13,10 @@ let mouseCellX;
 let mouseCellY;
 // SpellEffectProjection are images that appear above cells to denote some information, such as the spell or action about to be cast/taken when clicked
 export function clearSpellEffectProjection() {
-  dryRunGraphics.clear();
-  containerSpells.removeChildren();
+  if (!window.animatingSpells) {
+    dryRunGraphics.clear();
+    containerSpells.removeChildren();
+  }
 }
 function isOutOfBounds(x, y) {
   return x < 0 || x >= BOARD_WIDTH || y < 0 || y >= BOARD_HEIGHT;
@@ -71,12 +73,14 @@ export async function syncMouseHoverIcon() {
       targetImgPath = 'images/spell/deny.png';
     } else {
       // Dry run cast so the user can see what effect it's going to have
-      await this.castCards(
+      window.animatingSpells = true;
+      await window.game.castCards(
         currentPlayer,
         Card.getSelectedCards(),
         mouseTarget,
         true,
       );
+      window.animatingSpells = false;
     }
   }
 }

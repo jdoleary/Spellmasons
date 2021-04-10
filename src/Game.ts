@@ -10,7 +10,7 @@ import * as Cards from './cards';
 import * as Image from './Image';
 import * as GameBoardInput from './ui/GameBoardInput';
 import { MESSAGE_TYPES } from './MessageTypes';
-import { addPixiSprite, app, containerBoard } from './PixiUtils';
+import { addPixiSprite, app, containerBoard, containerUI } from './PixiUtils';
 import type { Random } from 'random';
 import makeSeededRandom from './rand';
 import floatingText from './FloatingText';
@@ -748,6 +748,20 @@ export default class Game {
     for (let cardId of cards) {
       const card = Cards.allCards.find((c) => c.id == cardId);
       if (card) {
+        // Show the card that's being cast:
+        if (!dryRun) {
+          const image = Image.create(
+            target.x,
+            target.y,
+            card.thumbnail,
+            containerUI,
+          );
+          image.sprite.alpha = 0.5;
+          image.sprite.scale.set(1.0);
+          Image.scale(image, 2.0).then(() => {
+            Image.cleanup(image);
+          });
+        }
         effectState = await card.effect(effectState, dryRun);
       }
     }
@@ -757,27 +771,6 @@ export default class Game {
     drawDangerOverlay();
     return effectState;
   }
-
-  // animateSpellEffects(castInstances: { x: number; y: number; spell: Spell }[]) {
-  //   // Show an image when cast occurs
-  //   const images = castInstances.map(
-  //     (i) => Image.create(i.x, i.y, getImage(i.spell), containerSpells),
-  //   );
-
-  //   window.animationTimeline
-  //     .addAnimation(
-  //       images.map((i) => ({
-  //         sprite: i.sprite,
-  //         target: {
-  //           scale: 1.5,
-  //           alpha: 0,
-  //         },
-  //       })),
-  //     )
-  //     .then(() => {
-  //       images.forEach((i) => i.cleanup());
-  //     });
-  // }
 
   // Returns only the properties that can be saved
   // callbacks and complicated objects such as PIXI.Sprites

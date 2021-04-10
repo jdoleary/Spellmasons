@@ -1,5 +1,5 @@
 import type * as PIXI from 'pixi.js';
-import { MILLIS_PER_ANIMATION } from './config';
+import { MILLIS_PER_ANIMATION, MILLIS_PER_SPELL_ANIMATION } from './config';
 import { lerp } from './math';
 // Add fps stats
 import Stats from 'stats.js';
@@ -166,7 +166,7 @@ function animateGroup(group: AnimationGroup, timestamp: number): boolean {
   // Calculate detla time from the start time (must come after startTime is initialized)
   const deltaTimeSinceStart = timestamp - group.startTime;
   // Animate one at a time until the whole list of animations is done
-  const lerpTime = deltaTimeSinceStart / MILLIS_PER_ANIMATION;
+  const lerpTime = deltaTimeSinceStart / MILLIS_PER_SPELL_ANIMATION;
   // Lerp animations within  group
   for (let currentAnimation of group.animations) {
     if (currentAnimation) {
