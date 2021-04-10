@@ -1,13 +1,17 @@
 ## Critical Path
 
 - Critical Path
-  - Gameplay
-    - Make dead bodies interactable, non-walkable, and destructable
-    - Really polish synergies (chaining dead bodies, obstacles, etc)
+  - Gameplay Core (Due April 21, 2021)
+    - **Really polish synergies** (chaining dead bodies, obstacles, etc)
+    - Make units clickable to see detail view
+    - Tab to bring spell combo to backburner and tab to bring it back so you can see detail view
+    - Better movement for players
+  - Gameplay Polish
     - More creative, more difficult enemies
     - More Spells
-    - Upgrades (+range, )
-    - Some sense of progression (items / inventory??)
+    - More Upgrades
+    - Some sense of progression (items / inventory??) (or are upgrades enough?)
+    - Level Progression (which enemies, how is it random, etc)
   - Polish
     - Add tutorial
       - Introduce unit types
@@ -23,7 +27,10 @@
     - SoundFX
     - CoverArt
     - Better Game Name
-  - Publish via Steamworks / Itch.io
+  - Chores
+    - Make executable with Electron
+    - Include WebsocketPie and make hosting for friends simple
+  - Publish via [Steamworks](https://partner.steamgames.com/steamdirect) / Itch.io
     - Trailer
     - Keys to streamers and youtubers
 
