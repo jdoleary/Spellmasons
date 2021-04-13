@@ -84,6 +84,13 @@ actually contains the full width of the card. */
 #card-hand .card {
   width: 3px;
 }
+#card-hand .card img {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+}
 #card-hand .card.selected {
   visibility: hidden;
   /* position: relative;
