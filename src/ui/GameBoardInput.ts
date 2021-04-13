@@ -45,6 +45,10 @@ export function drawSwapLine(one: Coords, two: Coords) {
 
 // Draws the image that shows on the cell under the mouse
 export async function syncMouseHoverIcon() {
+  if (window.animatingSpells) {
+    // Do not change the hover icons when spells are animating
+    return;
+  }
   // Clear the spelleffectprojection in preparation for showing the current ones
   clearSpellEffectProjection();
   if (isOutOfBounds(mouseCellX, mouseCellY)) {
@@ -73,14 +77,12 @@ export async function syncMouseHoverIcon() {
       targetImgPath = 'images/spell/deny.png';
     } else {
       // Dry run cast so the user can see what effect it's going to have
-      window.animatingSpells = true;
       await window.game.castCards(
         currentPlayer,
         Card.getSelectedCards(),
         mouseTarget,
         true,
       );
-      window.animatingSpells = false;
     }
   }
 }

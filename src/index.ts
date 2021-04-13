@@ -162,25 +162,7 @@ function onData(d: { fromClient: string; payload: any }) {
       });
       break;
     case MESSAGE_TYPES.SPELL:
-      if (typeof payload.x !== 'number' || typeof payload.y !== 'number') {
-        console.error('Spell is invalid, it must have coordinates');
-        return;
-      }
-      Card.removeCardsFromHand(caster, payload.cards);
-      if (
-        // Only allow casting during the PlayerTurns phase
-        (game.turn_phase === turn_phase.PlayerTurns &&
-          // If your turn and you are casting, allow
-          game.yourTurn &&
-          caster.clientId === window.clientId) ||
-        // or if not your turn and opponent is casting, allow
-        (!game.yourTurn && caster.clientId !== window.clientId)
-      ) {
-        game.castCards(caster, payload.cards, payload, false);
-        checkEndPlayerTurn(caster);
-      } else {
-        console.log('Someone is trying to cast out of turn');
-      }
+      handleSpell(caster, payload);
       break;
     case MESSAGE_TYPES.CHOOSE_UPGRADE:
       const upgrade = upgradeSource.find(
@@ -212,6 +194,29 @@ function onData(d: { fromClient: string; payload: any }) {
         text: '🎈',
       });
       break;
+  }
+}
+async function handleSpell(caster: Player.IPlayer, payload: any) {
+  if (typeof payload.x !== 'number' || typeof payload.y !== 'number') {
+    console.error('Spell is invalid, it must have coordinates');
+    return;
+  }
+  Card.removeCardsFromHand(caster, payload.cards);
+  if (
+    // Only allow casting during the PlayerTurns phase
+    (game.turn_phase === turn_phase.PlayerTurns &&
+      // If your turn and you are casting, allow
+      game.yourTurn &&
+      caster.clientId === window.clientId) ||
+    // or if not your turn and opponent is casting, allow
+    (!game.yourTurn && caster.clientId !== window.clientId)
+  ) {
+    window.animatingSpells = true;
+    await game.castCards(caster, payload.cards, payload, false);
+    window.animatingSpells = false;
+    checkEndPlayerTurn(caster);
+  } else {
+    console.log('Someone is trying to cast out of turn');
   }
 }
 function checkEndPlayerTurn(player: Player.IPlayer) {

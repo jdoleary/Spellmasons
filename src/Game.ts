@@ -10,7 +10,13 @@ import * as Cards from './cards';
 import * as Image from './Image';
 import * as GameBoardInput from './ui/GameBoardInput';
 import { MESSAGE_TYPES } from './MessageTypes';
-import { addPixiSprite, app, containerBoard, containerUI } from './PixiUtils';
+import {
+  addPixiSprite,
+  app,
+  containerBoard,
+  containerSpells,
+  containerUI,
+} from './PixiUtils';
 import type { Random } from 'random';
 import makeSeededRandom from './rand';
 import floatingText from './FloatingText';
@@ -764,6 +770,10 @@ export default class Game {
         }
         effectState = await card.effect(effectState, dryRun);
       }
+    }
+    if (!dryRun) {
+      // Clear spell animations once all cards are done playing their animations
+      containerSpells.removeChildren();
     }
 
     // Since units may have moved or become frozen, redraw the danger overlay which takes these
