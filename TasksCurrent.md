@@ -2,7 +2,6 @@
 
 ## Tasks
 
-- Ensure that mouse moving doesn't clear the animated cast icons
 - Does swap overlay (green line) still show?
 - Make animations trigger based on each card that's cast in order
 

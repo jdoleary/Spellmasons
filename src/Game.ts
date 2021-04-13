@@ -751,8 +751,11 @@ export default class Game {
       // Prevent dead players from casting
       return effectState;
     }
+    // Draw the original target
+    drawTarget(target.x, target.y, !dryRun);
     for (let cardId of cards) {
       const card = Cards.allCards.find((c) => c.id == cardId);
+      const animationPromises = [];
       if (card) {
         // Show the card that's being cast:
         if (!dryRun) {
@@ -762,13 +765,25 @@ export default class Game {
             card.thumbnail,
             containerUI,
           );
-          image.sprite.alpha = 0.5;
+          // image.sprite.alpha = 0.5;
           image.sprite.scale.set(1.0);
-          Image.scale(image, 2.0).then(() => {
+          const scaleAnimation = Image.scale(image, 2.0).then(() => {
             Image.cleanup(image);
           });
+          animationPromises.push(scaleAnimation);
         }
+        const { targets: previousTargets } = effectState;
         effectState = await card.effect(effectState, dryRun);
+        // Animate target additions:
+        for (let target of effectState.targets) {
+          // If not already included target:
+          if (
+            !previousTargets.find((t) => t.x === target.x && t.y === target.y)
+          ) {
+            animationPromises.push(drawTarget(target.x, target.y, !dryRun));
+          }
+        }
+        await Promise.all(animationPromises);
       }
     }
     if (!dryRun) {
@@ -796,5 +811,15 @@ export default class Game {
       pickups: this.pickups.map(Pickup.serialize),
       obstacles: this.obstacles.map(Obstacle.serialize),
     };
+  }
+}
+
+function drawTarget(x: number, y: number, animate: boolean): Promise<void> {
+  const image = Image.create(x, y, 'images/spell/target.png', containerSpells);
+  if (animate) {
+    image.sprite.scale.set(0.0);
+    return Image.scale(image, 1.0);
+  } else {
+    return Promise.resolve();
   }
 }

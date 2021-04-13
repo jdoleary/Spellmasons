@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js';
+import * as Image from '../Image';
 import { MESSAGE_TYPES } from '../MessageTypes';
 import { BOARD_HEIGHT, BOARD_WIDTH, CELL_SIZE } from '../config';
 import { turn_phase } from '../Game';
@@ -59,22 +60,22 @@ export async function syncMouseHoverIcon() {
   if (window.game.turn_phase == turn_phase.PlayerTurns) {
     // If mouse hovering over a new cell, update the target images
 
-    // if spell exists show target image, otherwise show feet image for walking
-    let targetImgPath = areAnyCardsSelected()
-      ? 'images/spell/target.png'
-      : null;
-    if (!targetImgPath) {
-      // Do not render if there is no target image path
+    if (!areAnyCardsSelected()) {
+      // Do not render if there are no cards selected meaning there is no spell
       return;
     }
     const currentPlayer = window.game.players.find(
       (p) => p.clientId === window.clientId,
     );
     const mouseTarget = { x: mouseCellX, y: mouseCellY };
-    let targets = [];
     if (!Player.isTargetInRange(currentPlayer, mouseTarget)) {
-      targets = [mouseTarget];
-      targetImgPath = 'images/spell/deny.png';
+      // Draw deny icon to show the player they are out of range
+      Image.create(
+        mouseTarget.x,
+        mouseTarget.y,
+        'images/spell/deny.png',
+        containerSpells,
+      );
     } else {
       // Dry run cast so the user can see what effect it's going to have
       await window.game.castCards(
