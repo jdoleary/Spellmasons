@@ -4,6 +4,9 @@ body {
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
     'Lucida Sans', Arial, sans-serif;
 }
+#PIXI-holder.inspect-mode {
+  cursor: help;
+}
 #game-container {
   min-height: 100vh;
   display: flex;
@@ -99,6 +102,10 @@ actually contains the full width of the card. */
 #card-hand .card.selected .card-inner {
   -webkit-box-shadow: 0px 0px 5px 5px #ffee00;
   box-shadow: 0px 0px 5px 5px #ffee00;
+}
+#selected-cards.hide {
+  filter: grayscale(50%);
+  opacity: 50%;
 }
 /* The group of similar cards has a padding the same size as the width of a card inner so that
 the face of the last card in the group is seen*/

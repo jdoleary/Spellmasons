@@ -1,9 +1,13 @@
 import type * as Player from './Player';
 import * as Cards from './cards';
 import * as math from './math';
-import { clearSpellEffectProjection } from './ui/GameBoardInput';
+import {
+  clearSpellEffectProjection,
+  syncMouseHoverIcon,
+} from './ui/GameBoardInput';
 const elCardHand = document.getElementById('card-hand');
 const elSelectedCards = document.getElementById('selected-cards');
+const elPIXIHolder = document.getElementById('PIXI-holder');
 
 export function recalcPositionForCards(player: Player.IPlayer) {
   if (window.player !== player) {
@@ -97,13 +101,21 @@ export function addCardToHand(card: Cards.ICard, player: Player.IPlayer) {
 }
 
 export function getSelectedCards(): string[] {
+  if (elSelectedCards.classList.contains('hide')) {
+    return [];
+  }
   return Array.from(document.querySelectorAll('.card.selected')).map((el) =>
     el instanceof HTMLElement ? el.dataset.cardId : '',
   );
 }
 
+export function toggleInspectMode(active: boolean) {
+  elSelectedCards.classList.toggle('hide', active);
+  elPIXIHolder.classList.toggle('inspect-mode', active);
+  syncMouseHoverIcon();
+}
 export function clearSelectedCards() {
-  // Remove the highlight once a click occurs
+  // Remove the board highlight
   clearSpellEffectProjection();
   // Deselect all selected cards
   document.querySelectorAll('.card.selected').forEach((el) => {

@@ -26,7 +26,7 @@ function isOutOfBounds(x, y) {
   return x < 0 || x >= BOARD_WIDTH || y < 0 || y >= BOARD_HEIGHT;
 }
 function areAnyCardsSelected() {
-  return !!document.querySelectorAll('.card.selected').length;
+  return !!Card.getSelectedCards().length;
 }
 const dryRunGraphics = new PIXI.Graphics();
 containerUI.addChild(dryRunGraphics);

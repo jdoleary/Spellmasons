@@ -6,7 +6,7 @@ import * as config from '../config';
 import * as math from '../math';
 import * as Player from '../Player';
 import { canAttackCell } from '../AI';
-import { clearSelectedCards } from '../CardUI';
+import { clearSelectedCards, toggleInspectMode } from '../CardUI';
 import { Faction, UnitType } from '../commonTypes';
 
 const elEndTurnBtn: HTMLButtonElement = document.getElementById(
@@ -26,12 +26,20 @@ export function setup() {
       case 'Escape':
         clearSelectedCards();
         break;
+      case 'ShiftLeft':
+      case 'ShiftRight':
+        toggleInspectMode(true);
+        break;
     }
   });
   window.addEventListener('keyup', (event) => {
     switch (event.code) {
       case 'KeyZ':
         setPlanningView(false);
+        break;
+      case 'ShiftLeft':
+      case 'ShiftRight':
+        toggleInspectMode(false);
         break;
     }
   });
