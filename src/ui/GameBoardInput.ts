@@ -48,7 +48,7 @@ export function drawSwapLine(one: Coords, two: Coords) {
 }
 
 // Draws the image that shows on the cell under the mouse
-export async function syncMouseHoverIcon() {
+export async function syncSpellEffectProjection() {
   if (window.animatingSpells) {
     // Do not change the hover icons when spells are animating
     return;
@@ -100,7 +100,7 @@ export default function setupBoardInputHandlers() {
     // If mouse hovering over a new cell, update the target images
     if (didChange) {
       // Show target hover on cells
-      syncMouseHoverIcon();
+      syncSpellEffectProjection();
     }
   });
   // Handle right click on game board

@@ -354,9 +354,9 @@ export default class Game {
     if (this.players[this.playerTurnIndex].clientId === window.clientId) {
       this.setYourTurn(true, 'Your Turn');
       // In the event that it becomes your turn but the mouse hasn't moved,
-      // syncMouseHoverIcon needs to be called so that the icon ("footprints" for example)
+      // syncSpellEffectProjection needs to be called so that the icon ("footprints" for example)
       // will be shown in the tile that the mouse is hovering over
-      GameBoardInput.syncMouseHoverIcon();
+      GameBoardInput.syncSpellEffectProjection();
     } else {
       this.setYourTurn(false, "Other Player's Turn");
     }

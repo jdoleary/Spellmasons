@@ -3,7 +3,7 @@ import * as Cards from './cards';
 import * as math from './math';
 import {
   clearSpellEffectProjection,
-  syncMouseHoverIcon,
+  syncSpellEffectProjection,
 } from './ui/GameBoardInput';
 const elCardHand = document.getElementById('card-hand');
 const elSelectedCards = document.getElementById('selected-cards');
@@ -112,7 +112,7 @@ export function getSelectedCards(): string[] {
 export function toggleInspectMode(active: boolean) {
   elSelectedCards.classList.toggle('hide', active);
   elPIXIHolder.classList.toggle('inspect-mode', active);
-  syncMouseHoverIcon();
+  syncSpellEffectProjection();
 }
 export function clearSelectedCards() {
   // Remove the board highlight
