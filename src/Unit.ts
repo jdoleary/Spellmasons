@@ -230,13 +230,15 @@ export function findCellOneStepCloserTo(
   unit: IUnit,
   desiredCellX: number,
   desiredCellY: number,
-) {
-  // Find the difference between current position and desired position
-  const diffX = desiredCellX - unit.x;
-  const diffY = desiredCellY - unit.y;
-  const moveX = unit.x + (diffX === 0 ? 0 : diffX / Math.abs(diffX));
-  const moveY = unit.y + (diffY === 0 ? 0 : diffY / Math.abs(diffY));
-  return { x: moveX, y: moveY };
+): Coords | undefined {
+  const path = window.game.findPath(unit, { x: desiredCellX, y: desiredCellY });
+  if (path && path.length >= 2) {
+    const [x, y] = path[1];
+    return { x, y };
+  } else {
+    // No Path
+    return undefined;
+  }
 }
 export function livingUnitsInDifferentFaction(unit: IUnit) {
   return window.game.units.filter((u) => u.faction !== unit.faction && u.alive);

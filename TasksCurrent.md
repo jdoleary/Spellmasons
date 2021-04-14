@@ -4,7 +4,6 @@
 
 - What's to stop player from just bumming around to get extra cards?
   - Maybe only as long as there are enemies alive? Or set a hand max?
-- Make units clickable for information
 
 ## Brad 2021.04.05
 

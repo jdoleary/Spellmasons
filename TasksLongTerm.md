@@ -3,7 +3,6 @@
 - Critical Path
   - Gameplay Core (Due April 21, 2021)
     - **Really polish synergies** (chaining dead bodies, obstacles, etc)
-    - Better movement for players
   - Gameplay Polish
     - More creative, more difficult enemies
     - More Spells
