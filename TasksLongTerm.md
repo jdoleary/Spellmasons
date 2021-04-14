@@ -16,6 +16,8 @@
     - Add tutorial
       - Introduce unit types
     - Make sure pie-client isn't still linked and uses most up-to-date version on NPM
+    - WebsocketPie: Make clients receive their own messages immediately?
+      - So that when a player is alone they can just keep clicking to move?
     - Art
       - Pinterest board for inspiration
       - Add Juice! tools:

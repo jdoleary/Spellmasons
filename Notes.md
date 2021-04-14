@@ -1,5 +1,14 @@
 # Notes
 
+- Make animations trigger based on each card that's cast in order
+
+  - What if rather than using an AnimationTimeline, I just made the turns actually asyncronous and animations happened right when a change occurred?
+  - Types of animations
+    - Projectiles,
+    - Targeting
+    - Unit position, rotation, scale animations
+    - Unit image changing (skeleton)
+
 - advice: need more diversity of challenge with the enemy types than just "avboid that line"
 - [Spell Hooks](https://docs.google.com/spreadsheets/d/1PntBWT4twXoKRKBZBOg7zZtWNzoqtfu6SD-EMQYedt4/edit#gid=0)
 - Idea: what if there was a planning phase where you could pick your arsenal of cards once you see the board to prevent doom state?
