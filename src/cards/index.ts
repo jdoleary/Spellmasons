@@ -39,7 +39,7 @@ export interface Spell {
   subsprites?: ISubsprites;
 }
 
-const additionalImagePaths = [];
+const additionalImagePaths: string[] = [];
 function register(spell: Spell) {
   const { subsprites, card, events } = spell;
   const { id } = card;

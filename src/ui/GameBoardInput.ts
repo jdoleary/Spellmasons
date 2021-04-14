@@ -10,8 +10,8 @@ import * as Unit from '../Unit';
 import { app, containerSpells, containerUI } from '../PixiUtils';
 import { Coords, Faction, UnitSubType, UnitType } from '../commonTypes';
 
-let mouseCellX;
-let mouseCellY;
+let mouseCellX: number;
+let mouseCellY: number;
 const elInspectorTooltip = document.getElementById('inspector-tooltip');
 const elInspectorTooltipContent = document.getElementById(
   'inspector-tooltip-content',
@@ -23,7 +23,7 @@ export function clearSpellEffectProjection() {
     containerSpells.removeChildren();
   }
 }
-function isOutOfBounds(x, y) {
+function isOutOfBounds(x: number, y: number) {
   return x < 0 || x >= BOARD_WIDTH || y < 0 || y >= BOARD_HEIGHT;
 }
 function areAnyCardsSelected() {
@@ -71,27 +71,32 @@ export async function syncSpellEffectProjection() {
     const currentPlayer = window.game.players.find(
       (p) => p.clientId === window.clientId,
     );
-    const mouseTarget = { x: mouseCellX, y: mouseCellY };
-    if (!Player.isTargetInRange(currentPlayer, mouseTarget)) {
-      // Draw deny icon to show the player they are out of range
-      Image.create(
-        mouseTarget.x,
-        mouseTarget.y,
-        'images/spell/deny.png',
-        containerSpells,
-      );
-    } else {
-      // Dry run cast so the user can see what effect it's going to have
-      await window.game.castCards(
-        currentPlayer,
-        Card.getSelectedCards(),
-        mouseTarget,
-        true,
-      );
+    if (currentPlayer) {
+      const mouseTarget = { x: mouseCellX, y: mouseCellY };
+      if (!Player.isTargetInRange(currentPlayer, mouseTarget)) {
+        // Draw deny icon to show the player they are out of range
+        Image.create(
+          mouseTarget.x,
+          mouseTarget.y,
+          'images/spell/deny.png',
+          containerSpells,
+        );
+      } else {
+        // Dry run cast so the user can see what effect it's going to have
+        await window.game.castCards(
+          currentPlayer,
+          Card.getSelectedCards(),
+          mouseTarget,
+          true,
+        );
+      }
     }
   }
 }
 function setHoverTooltipPosition(x: number, y: number) {
+  if (!(elInspectorTooltipContent && elInspectorTooltip)) {
+    return;
+  }
   const pixiCoords = app.renderer.plugins.interaction.mouse.global;
   // Update position of HTML element
   elInspectorTooltip.style.transform = `translate(${pixiCoords.x}px, ${pixiCoords.y}px)`;
@@ -174,8 +179,8 @@ export default function setupBoardInputHandlers() {
             });
           } else {
             floatingText({
-              cellX: targetCell.x,
-              cellY: targetCell.y,
+              cellX: x,
+              cellY: y,
               text: 'You cannot move here',
               style: {
                 fill: 'red',

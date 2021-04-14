@@ -33,7 +33,7 @@ export interface IUnit {
   healthText: PIXI.Text;
   alive: boolean;
   unitType: UnitType;
-  unitSubType?: UnitSubType;
+  unitSubType: UnitSubType;
   // A list of names that correspond to Events.ts functions
   onDamageEvents: string[];
   onDeathEvents: string[];
@@ -53,7 +53,7 @@ export function create(
   faction: Faction,
   imagePath: string,
   unitType: UnitType,
-  unitSubType?: UnitSubType,
+  unitSubType: UnitSubType,
 ): IUnit {
   const unit: IUnit = {
     x,
@@ -247,7 +247,7 @@ function closestInListOfUnits(
   sourceUnit: IUnit,
   units: IUnit[],
 ): IUnit | undefined {
-  return units.reduce(
+  return units.reduce<{ closest: IUnit | undefined; distance: number }>(
     (acc, currentUnitConsidered) => {
       const dist = cellDistance(currentUnitConsidered, sourceUnit);
       if (dist <= acc.distance) {

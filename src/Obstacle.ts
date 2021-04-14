@@ -9,7 +9,13 @@ export interface IObstacle {
   imagePath: string;
   image: Image.IImage;
 }
-export function create(x: number, y: number, obstacle: Partial<IObstacle>) {
+interface IObstacleSource {
+  name: string;
+  description: string;
+  imagePath: string;
+
+}
+export function create(x: number, y: number, obstacle: IObstacleSource) {
   const self: IObstacle = {
     x,
     y,
@@ -37,3 +43,10 @@ export function serialize(o: IObstacle) {
     image: Image.serialize(o.image),
   };
 }
+
+export const obstacleSource: IObstacleSource[] = [{
+          name: 'Lava',
+          description: 'This is lava',
+          imagePath: 'images/tiles/lava.png',
+
+}];

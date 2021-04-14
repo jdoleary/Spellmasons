@@ -54,10 +54,10 @@ const elUpgradePickerContent = document.getElementById(
   'upgrade-picker-content',
 );
 export default class Game {
-  state: game_state;
+  state: game_state = game_state.Lobby;
   seed: string;
   random: Random;
-  turn_phase: turn_phase;
+  turn_phase: turn_phase = turn_phase.PlayerTurns;
   // A count of which turn it is, this is useful for
   // governing AI actions that occur every few turns
   // instead of every turn.  A "turn" is a full cycle,
@@ -75,9 +75,9 @@ export default class Game {
   // The index of which player's turn it is
   playerTurnIndex: number = 0;
   secondsLeftForTurn: number = config.SECONDS_PER_TURN;
-  yourTurn: boolean;
+  yourTurn: boolean = false;
   turnInterval: any;
-  hostClientId: string;
+  hostClientId: string = '';
   // A set of clientIds who have ended their turn
   // Being a Set prevents a user from ending their turn more than once
   endedTurn = new Set<string>();
@@ -115,20 +115,27 @@ export default class Game {
       ) {
         this.secondsLeftForTurn--;
         if (this.secondsLeftForTurn <= 10) {
-          elPlayerTurnIndicatorHolder.classList.add('low-time');
+          elPlayerTurnIndicatorHolder &&
+            elPlayerTurnIndicatorHolder.classList.add('low-time');
         }
-        elTurnTimeRemaining.innerText = `0:${
-          this.secondsLeftForTurn < 10
-            ? '0' + this.secondsLeftForTurn
-            : this.secondsLeftForTurn
-        }`;
+        if (elTurnTimeRemaining) {
+          elTurnTimeRemaining.innerText = `0:${
+            this.secondsLeftForTurn < 10
+              ? '0' + this.secondsLeftForTurn
+              : this.secondsLeftForTurn
+          }`;
+        } else {
+          console.error('elTurnTimeRemaining is null');
+        }
         // Skip your turn if you run out of time
         if (this.yourTurn && this.secondsLeftForTurn <= 0) {
           console.log('Out of time, turn ended');
           this.endMyTurn();
         }
       } else {
-        elTurnTimeRemaining.innerText = '';
+        if (elTurnTimeRemaining) {
+          elTurnTimeRemaining.innerText = '';
+        }
       }
     }, 1000);
   }
@@ -204,7 +211,11 @@ export default class Game {
       portalPickup.effect,
     );
     // Update level indicator UI at top of screen
-    elLevelIndicator.innerText = `Level ${this.level}`;
+    if (elLevelIndicator) {
+      elLevelIndicator.innerText = `Level ${this.level}`;
+    } else {
+      console.error('elLevelIndicator is null');
+    }
     for (let i = 0; i < config.NUM_PICKUPS_PER_LEVEL; i++) {
       const coords = this.getRandomEmptyCell({ xMin: 2 });
       if (coords) {
@@ -230,11 +241,12 @@ export default class Game {
     for (let i = 0; i < config.NUM_OBSTACLES_PER_LEVEL; i++) {
       const coords = this.getRandomEmptyCell({ xMin: 2 });
       if (coords) {
-        const newObstacle = Obstacle.create(coords.x, coords.y, {
-          name: 'Lava',
-          description: 'This is lava',
-          imagePath: 'images/tiles/lava.png',
-        });
+        const randomIndex = this.random.integer(
+          0,
+          Obstacle.obstacleSource.length - 1,
+        );
+        const obstacle = Obstacle.obstacleSource[randomIndex];
+        const newObstacle = Obstacle.create(coords.x, coords.y, obstacle);
         // Ensure the players have a path to the portal
         const pathToPortal = this.findPath(
           { x: 0, y: 0 },
@@ -304,7 +316,9 @@ export default class Game {
     return false;
   }
   setYourTurn(yourTurn: boolean, message: string) {
-    elPlayerTurnIndicator.innerText = message;
+    if (elPlayerTurnIndicator) {
+      elPlayerTurnIndicator.innerText = message;
+    }
     document.body.classList.toggle('your-turn', yourTurn);
     this.yourTurn = yourTurn;
   }
@@ -334,7 +348,9 @@ export default class Game {
 
     // Finally initialize their turn
     this.secondsLeftForTurn = config.SECONDS_PER_TURN;
-    elPlayerTurnIndicatorHolder.classList.remove('low-time');
+    if (elPlayerTurnIndicatorHolder) {
+      elPlayerTurnIndicatorHolder.classList.remove('low-time');
+    }
     this.syncYourTurnState();
   }
   incrementPlayerTurn() {
@@ -386,17 +402,23 @@ export default class Game {
     this.choseUpgrade.add(player.clientId);
     // Clear upgrade choices once one is chosen
     if (player.clientId === window.clientId) {
-      elUpgradePickerContent.innerHTML = '';
+      if (elUpgradePickerContent) {
+        elUpgradePickerContent.innerHTML = '';
+      }
     }
 
     if (this.choseUpgrade.size >= this.players.length) {
       this.moveToNextLevel();
       this.choseUpgrade.clear();
-      elUpgradePickerLabel.innerText = '';
+      if (elUpgradePickerLabel) {
+        elUpgradePickerLabel.innerText = '';
+      }
     } else {
-      elUpgradePickerLabel.innerText = `${
-        this.players.length - this.choseUpgrade.size
-      } players left to pick upgrades`;
+      if (elUpgradePickerLabel) {
+        elUpgradePickerLabel.innerText = `${
+          this.players.length - this.choseUpgrade.size
+        } players left to pick upgrades`;
+      }
     }
   }
   checkForEndOfLevel(): boolean {
@@ -418,6 +440,7 @@ export default class Game {
       // Return of true signifies it went to the next level
       return true;
     }
+    return false;
   }
   // Generate an array of cell coordinates in shuffled order
   // between optional boundaries
@@ -482,7 +505,7 @@ export default class Game {
     }
     return true;
   }
-  getRandomEmptyCell(bounds: Bounds): Coords | undefined {
+  getRandomEmptyCell(bounds: Bounds): Coords {
     const shuffledCoords = this._getShuffledCoordinates(bounds);
     for (let coords of shuffledCoords) {
       const isEmpy = this._isCellEmpty(coords);
@@ -491,8 +514,7 @@ export default class Game {
         return coords;
       }
     }
-    // Returns undefined if there are no empty cells
-    return undefined;
+    throw new Error('Could not find random empty cell');
   }
   canUnitMoveIntoCell(cellX: number, cellY: number): boolean {
     for (let u of this.units) {
@@ -572,8 +594,10 @@ export default class Game {
     const AIUnits = this.units.filter((u) => u.unitType === UnitType.AI);
     // Move all units who intend to move
     // Units who are obstructed will not move due to collision checks in Unit.moveTo
-    AIUnits.filter((u) => !!u.intendedNextMove).forEach((u) => {
-      Unit.moveTo(u, u.intendedNextMove);
+    AIUnits.filter((u) => u.intendedNextMove !== undefined).forEach((u) => {
+      if (u.intendedNextMove) {
+        Unit.moveTo(u, u.intendedNextMove);
+      }
     });
     // While there are units who intend to move but havent yet
     let remainingUnitsWhoIntendToMove = [];
@@ -585,7 +609,9 @@ export default class Game {
       );
       // Try moving them again
       remainingUnitsWhoIntendToMove.forEach((u) => {
-        Unit.moveTo(u, u.intendedNextMove);
+        if (u.intendedNextMove) {
+          Unit.moveTo(u, u.intendedNextMove);
+        }
       });
     } while (
       remainingUnitsWhoIntendToMove.length &&
@@ -601,7 +627,7 @@ export default class Game {
     const state = game_state[this.state];
     const elBoard = document.getElementById('board');
     const elUpgradePicker = document.getElementById('upgrade-picker');
-    elUpgradePicker.classList.remove('active');
+    elUpgradePicker && elUpgradePicker.classList.remove('active');
     switch (state) {
       case 'GameOver':
         alert('GameOver');
@@ -619,14 +645,19 @@ export default class Game {
         if (elBoard) {
           elBoard.style.visibility = 'hidden';
         }
-        elUpgradePicker.classList.add('active');
-        const upgrades = generateUpgrades(
-          this.players.find((p) => p.clientId === window.clientId),
-        );
-        const elUpgrades = upgrades.map(createUpgradeElement);
-        elUpgradePickerContent.innerHTML = '';
-        for (let elUpgrade of elUpgrades) {
-          elUpgradePickerContent.appendChild(elUpgrade);
+        elUpgradePicker && elUpgradePicker.classList.add('active');
+        const player = this.players.find((p) => p.clientId === window.clientId);
+        if (player) {
+          const upgrades = generateUpgrades(player);
+          const elUpgrades = upgrades.map(createUpgradeElement);
+          if (elUpgradePickerContent) {
+            elUpgradePickerContent.innerHTML = '';
+            for (let elUpgrade of elUpgrades) {
+              elUpgradePickerContent.appendChild(elUpgrade);
+            }
+          }
+        } else {
+          console.error('Upgrades cannot be generated, player not found');
         }
         break;
       default:

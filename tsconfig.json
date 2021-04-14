@@ -20,7 +20,7 @@
     /* noEmit - We only use TypeScript for type checking. */
     "noEmit": true,
     /* Additional Options */
-    "strict": false,
+    "strict": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,

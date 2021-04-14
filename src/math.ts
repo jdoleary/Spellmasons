@@ -33,7 +33,7 @@ export function xyToIndex(coords: Coords, width: number) {
 // for example Math.PI*2 turns into 0
 // Math.PI*3 turns into Math.PI
 // -Math.PI turns into Math.PI
-export function normalizeRadians(degrees) {
+export function normalizeRadians(degrees: number) {
   const remainder = degrees % (Math.PI * 2);
   if (remainder < 0) {
     return Math.PI * 2 + remainder;

@@ -43,11 +43,12 @@ export function cleanup(image: IImage) {
     image.sprite.parent.removeChild(image.sprite);
   }
 }
-export function load(image: IImage, parent?: PIXI.Container) {
+export function load(image: IImage, parent: PIXI.Container) {
   const instantiatedImage = create(0, 0, image.imageName, parent);
   instantiatedImage.sprite.x = image.sprite.x;
   instantiatedImage.sprite.y = image.sprite.y;
-  scale(instantiatedImage, image.sprite.scale);
+  // Note, scale x and y will always be the same due to this game's choice to not support skewing
+  scale(instantiatedImage, image.sprite.scale.x);
   // Re-add subsprites
   const subSprites = [...image.subSprites];
   image.subSprites = [];
@@ -75,7 +76,7 @@ export function setPosition(image: IImage, cellX: number, cellY: number) {
   image.sprite.x = x;
   image.sprite.y = y;
 }
-export function scale(image: IImage, scale) {
+export function scale(image: IImage, scale: number) {
   // Clamp to a positive value
   scale = Math.max(0, scale);
   return animateIndependent([
@@ -87,7 +88,7 @@ export function scale(image: IImage, scale) {
     image.scale = scale;
   });
 }
-export function addSubSprite(image: IImage, key) {
+export function addSubSprite(image: IImage, key: string) {
   // Don't add more than one copy
   if (!image.subSprites.includes(key)) {
     image.subSprites.push(key);
@@ -99,7 +100,7 @@ export function addSubSprite(image: IImage, key) {
     image.subSpriteInstances[key] = sprite;
   }
 }
-export function removeSubSprite(image: IImage, key) {
+export function removeSubSprite(image: IImage, key: string) {
   const subSprite = image.subSpriteInstances[key];
   if (subSprite) {
     // Remove PIXI.Sprite instance

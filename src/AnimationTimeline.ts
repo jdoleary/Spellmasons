@@ -29,7 +29,7 @@ export default class AnimationTimeline {
   constructor() {
     this.animate = this.animate.bind(this);
   }
-  animating: boolean;
+  animating: boolean = false;
   animationGroups: AnimationGroup[] = [];
   // addAnimation takes an array of animations which will all be played simultaneously and returns
   // a promise that is fulfilled when the animations are done
@@ -76,21 +76,23 @@ export default class AnimationTimeline {
       for (let currentAnimation of currentAnimationGroup.animations) {
         if (currentAnimation) {
           const { sprite, start, target } = currentAnimation;
-          // Lerp the transform properties
-          if (target.x !== undefined) {
-            sprite.x = lerp(start.x, target.x, lerpTime);
-          }
-          if (target.y !== undefined) {
-            sprite.y = lerp(start.y, target.y, lerpTime);
-          }
-          if (target.rotation !== undefined) {
-            sprite.rotation = lerp(start.rotation, target.rotation, lerpTime);
-          }
-          if (target.alpha !== undefined) {
-            sprite.alpha = lerp(start.alpha, target.alpha, lerpTime);
-          }
-          if (target.scale !== undefined) {
-            sprite.scale.set(lerp(start.scale, target.scale, lerpTime));
+          if (start) {
+            // Lerp the transform properties
+            if (target.x !== undefined && start.x !== undefined) {
+              sprite.x = lerp(start.x, target.x, lerpTime);
+            }
+            if (target.y !== undefined && start.y !== undefined) {
+              sprite.y = lerp(start.y, target.y, lerpTime);
+            }
+            if (target.rotation !== undefined && start.rotation !== undefined) {
+              sprite.rotation = lerp(start.rotation, target.rotation, lerpTime);
+            }
+            if (target.alpha !== undefined && start.alpha !== undefined) {
+              sprite.alpha = lerp(start.alpha, target.alpha, lerpTime);
+            }
+            if (target.scale !== undefined && start.scale !== undefined) {
+              sprite.scale.set(lerp(start.scale, target.scale, lerpTime));
+            }
           }
         }
       }
@@ -171,21 +173,23 @@ function animateGroup(group: AnimationGroup, timestamp: number): boolean {
   for (let currentAnimation of group.animations) {
     if (currentAnimation) {
       const { sprite, start, target } = currentAnimation;
-      // Lerp the transform properties
-      if (target.x !== undefined) {
-        sprite.x = lerp(start.x, target.x, lerpTime);
-      }
-      if (target.y !== undefined) {
-        sprite.y = lerp(start.y, target.y, lerpTime);
-      }
-      if (target.rotation !== undefined) {
-        sprite.rotation = lerp(start.rotation, target.rotation, lerpTime);
-      }
-      if (target.alpha !== undefined) {
-        sprite.alpha = lerp(start.alpha, target.alpha, lerpTime);
-      }
-      if (target.scale !== undefined) {
-        sprite.scale.set(lerp(start.scale, target.scale, lerpTime));
+      if (start) {
+        // Lerp the transform properties
+        if (target.x !== undefined && start.x !== undefined) {
+          sprite.x = lerp(start.x, target.x, lerpTime);
+        }
+        if (target.y !== undefined && start.y !== undefined) {
+          sprite.y = lerp(start.y, target.y, lerpTime);
+        }
+        if (target.rotation !== undefined && start.rotation !== undefined) {
+          sprite.rotation = lerp(start.rotation, target.rotation, lerpTime);
+        }
+        if (target.alpha !== undefined && start.alpha !== undefined) {
+          sprite.alpha = lerp(start.alpha, target.alpha, lerpTime);
+        }
+        if (target.scale !== undefined && start.scale !== undefined) {
+          sprite.scale.set(lerp(start.scale, target.scale, lerpTime));
+        }
       }
     }
   }

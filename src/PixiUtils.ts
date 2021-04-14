@@ -26,11 +26,16 @@ function resizePixi() {
   app.stage.y = app.renderer.height / 2 - (CELL_SIZE * BOARD_HEIGHT) / 2;
 }
 // PIXI textures
-let resources;
+let resources: { [key: string]: PIXI.ILoaderResource };
 export function setupPixi(additionalImagePaths: string[]): Promise<void> {
   // The application will create a canvas element for you that you
   // can then insert into the DOM
-  document.getElementById('PIXI-holder').appendChild(app.view);
+  const elPIXIHolder = document.getElementById('PIXI-holder');
+  if (elPIXIHolder) {
+    elPIXIHolder.appendChild(app.view);
+  } else {
+    throw new Error('element PIXI-holder does not exist');
+  }
 
   // Add containers to the stage in the order that they will be rendered on top of each other
   app.stage.addChild(containerBoard);
@@ -90,7 +95,7 @@ export function addPixiSprite(
       'PIXI is not finished setting up.  Cannot add a sprite yet',
     );
   }
-  const resource = resources[imagePath];
+  const resource: PIXI.ILoaderResource = resources[imagePath];
   const sprite = new PIXI.Sprite(
     resource ? resource.texture : resources['images/empty.png'].texture,
   );
@@ -104,6 +109,15 @@ export function changeSpriteTexture(imagePath: string, sprite: PIXI.Sprite) {
       'PIXI is not finished setting up.  Cannot add a sprite yet',
     );
   }
-  const resource = resources[imagePath];
-  sprite.texture = resource.texture;
+  const resource: PIXI.ILoaderResource = resources[imagePath];
+  if (resource.texture) {
+    sprite.texture = resource.texture;
+  }
+  {
+    console.error(
+      'Texture at ',
+      imagePath,
+      'was unable to be set as sprite texture',
+    );
+  }
 }

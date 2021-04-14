@@ -14,6 +14,7 @@ export enum UnitSubType {
   AI_reach,
   AI_summoner,
   AI_demon,
+  PLAYER_CONTROLLED,
 }
 
 export enum Faction {

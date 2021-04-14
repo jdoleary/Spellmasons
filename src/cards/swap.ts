@@ -2,6 +2,7 @@ import * as Unit from '../Unit';
 import * as Pickup from '../Pickup';
 import type { Spell } from '.';
 import { drawSwapLine } from '../ui/GameBoardInput';
+import type { Coords } from 'src/commonTypes';
 
 const id = 'swap';
 const spell: Spell = {
@@ -16,8 +17,8 @@ const spell: Spell = {
       const dy = targets[0].y - caster.unit.y;
       if (targets.length) {
         // Loop through all targets and batch swap locations
-        const swapUnits = [];
-        const swapPickups = [];
+        const swapUnits: [Unit.IUnit, Coords][] = [];
+        const swapPickups: [Pickup.IPickup, Coords][] = [];
         for (let target of targets) {
           const swapLocation = { x: target.x - dx, y: target.y - dy };
           // You cannot swap with a statically blocked cell

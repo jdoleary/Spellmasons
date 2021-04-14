@@ -1,3 +1,5 @@
+- How to best handle not being able to find a random empty cell? This can mess up things like entering a portal
+  - see all `if(coords){...}` or all calls to `getRandomEmptyCell`
 - Swapping should only work with a target, not an empty spell
 - Does swap overlay (green line) still show?
 - is removing units when their bones take damage a footgun? See Unit.ts: `window.game.units = window.game.units.filter((u) => u !== unit);`

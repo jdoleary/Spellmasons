@@ -30,7 +30,11 @@ export function recalcPositionForCards(player: Player.IPlayer) {
       }, {}),
   );
   // Remove all current cards:
-  elCardHand.innerHTML = '';
+  if (elCardHand) {
+    elCardHand.innerHTML = '';
+  } else {
+    console.error('elCardHand is null');
+  }
 
   // Reconcile the elements with the player's hand
   for (let [cardId, count] of cardCountPairs) {
@@ -49,7 +53,11 @@ export function recalcPositionForCards(player: Player.IPlayer) {
           if (element.classList.contains('selected')) {
             moveCardFromSelectedToHand(element, cardId);
           } else {
-            elSelectedCards.appendChild(element);
+            if (elSelectedCards) {
+              elSelectedCards.appendChild(element);
+            } else {
+              console.error('elSelectedCards is null');
+            }
             element.classList.add('selected');
           }
         });
@@ -68,7 +76,11 @@ function makeCardTypeGroup(cardId: string): HTMLDivElement {
   const elCardTypeGroup = document.createElement('div');
   elCardTypeGroup.classList.add('card-type-group');
   elCardTypeGroup.id = `holder-${cardId}`;
-  elCardHand.appendChild(elCardTypeGroup);
+  if (elCardHand) {
+    elCardHand.appendChild(elCardTypeGroup);
+  } else {
+    console.error('elCardHand is null');
+  }
   return elCardTypeGroup;
 }
 function moveCardFromSelectedToHand(element: HTMLElement, cardId: string) {
@@ -101,17 +113,17 @@ export function addCardToHand(card: Cards.ICard, player: Player.IPlayer) {
 }
 
 export function getSelectedCards(): string[] {
-  if (elSelectedCards.classList.contains('hide')) {
+  if (elSelectedCards && elSelectedCards.classList.contains('hide')) {
     return [];
   }
   return Array.from(document.querySelectorAll('.card.selected')).map((el) =>
-    el instanceof HTMLElement ? el.dataset.cardId : '',
+    el instanceof HTMLElement ? el.dataset.cardId || '' : '',
   );
 }
 
 export function toggleInspectMode(active: boolean) {
-  elSelectedCards.classList.toggle('hide', active);
-  elInspectorTooltip.classList.toggle('active', active);
+  elSelectedCards && elSelectedCards.classList.toggle('hide', active);
+  elInspectorTooltip && elInspectorTooltip.classList.toggle('active', active);
   syncSpellEffectProjection();
 }
 export function clearSelectedCards() {
@@ -120,7 +132,7 @@ export function clearSelectedCards() {
   // Deselect all selected cards
   document.querySelectorAll('.card.selected').forEach((el) => {
     if (el instanceof HTMLElement) {
-      moveCardFromSelectedToHand(el, el.dataset.cardId);
+      moveCardFromSelectedToHand(el, el.dataset.cardId || '');
     } else {
       console.error(
         'Cannot clearSelectedCards due to selectednode not being the correct type',

@@ -18,6 +18,13 @@ export interface IPickup {
   // effect is ONLY to be called within triggerPickup
   effect: ({ unit, player }: { unit?: IUnit; player?: Player.IPlayer }) => void;
 }
+interface IPickupSource {
+  name: string;
+  description: string;
+  imagePath: string;
+  playerOnly?: boolean;
+  effect: ({ unit, player }: { unit?: IUnit; player?: Player.IPlayer }) => void;
+}
 
 export function create(
   x: number,
@@ -80,7 +87,7 @@ export function load(pickup: IPickup) {
     );
     return self;
   } else {
-    console.error('Could not load pickup with path', pickup.imagePath);
+    throw new Error(`Could not load pickup with path ${pickup.imagePath}`);
   }
 }
 export function removePickup(pickup: IPickup) {
@@ -101,7 +108,7 @@ export function triggerPickup(pickup: IPickup, unit: IUnit) {
 
 // Special pickups are not stored in the pickups array because they shouldn't be
 // randomly selected when adding pickups to a generated level.
-export const specialPickups: { [image: string]: Partial<IPickup> } = {
+export const specialPickups: { [image: string]: IPickupSource } = {
   'images/portal.png': {
     imagePath: 'images/portal.png',
     playerOnly: true,
@@ -115,7 +122,7 @@ export const specialPickups: { [image: string]: Partial<IPickup> } = {
     },
   },
 };
-export const pickups: Partial<IPickup>[] = [
+export const pickups: IPickupSource[] = [
   {
     imagePath: 'images/pickups/card.png',
     name: 'Cards',

@@ -86,7 +86,7 @@ function connect(_room_info = {}) {
   };
 }
 
-const messageLog = [];
+const messageLog: any[] = [];
 window.save = (title) => {
   localStorage.setItem(
     'golems-save-' + title,
@@ -104,11 +104,11 @@ window.load = (title) => {
     console.error('no save game found with title', title);
   }
 };
-window.saveReplay = (title) => {
+window.saveReplay = (title: string) => {
   localStorage.setItem('golems-' + title, JSON.stringify(messageLog));
 };
-window.replay = (title) => {
-  const messages = JSON.parse(localStorage.getItem('golems-' + title));
+window.replay = (title: string) => {
+  const messages = JSON.parse(localStorage.getItem('golems-' + title) || '');
   for (let i = 0; i < messages.length; i++) {
     const message = messages[i];
     message.fromClient = game.players[0].clientId;
@@ -156,22 +156,42 @@ function onData(d: { fromClient: string; payload: any }) {
       game.setGameState(loadedGameState.state);
       break;
     case MESSAGE_TYPES.MOVE_PLAYER:
-      // Move the player 1 magnitude on either or both axes towards the desired position
-      Unit.moveTo(caster.unit, payload).then(() => {
-        checkEndPlayerTurn(caster);
-      });
+      if (caster) {
+        // Move the player 1 magnitude on either or both axes towards the desired position
+        Unit.moveTo(caster.unit, payload).then(() => {
+          checkEndPlayerTurn(caster);
+        });
+      } else {
+        console.error('Cannot move player, caster does not exist');
+      }
       break;
     case MESSAGE_TYPES.SPELL:
-      handleSpell(caster, payload);
+      if (caster) {
+        handleSpell(caster, payload);
+      } else {
+        console.error('Cannot cast, caster does not exist');
+      }
       break;
     case MESSAGE_TYPES.CHOOSE_UPGRADE:
       const upgrade = upgradeSource.find(
         (u) => u.title === payload.upgrade.title,
       );
-      game.chooseUpgrade(caster, upgrade);
+      if (caster && upgrade) {
+        game.chooseUpgrade(caster, upgrade);
+      } else {
+        console.error(
+          'Cannot choose upgrade, caster or upgrade does not exist',
+          caster,
+          upgrade,
+        );
+      }
       break;
     case MESSAGE_TYPES.END_TURN:
-      game.endPlayerTurn(caster.clientId);
+      if (caster) {
+        game.endPlayerTurn(caster.clientId);
+      } else {
+        console.error('Unable to end turn because caster is undefined');
+      }
       // TODO
       // if (all_players_ended_turn) {
       // game.nextTurn().then(() => {
@@ -257,9 +277,13 @@ function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
     }
   } else {
     // client left
-    player.clientConnected = false;
-    addSubSprite(player.unit.image, 'disconnected');
-    game.endPlayerTurn(player.clientId);
+    if (player) {
+      player.clientConnected = false;
+      addSubSprite(player.unit.image, 'disconnected');
+      game.endPlayerTurn(player.clientId);
+    } else {
+      console.error('Cannot disconnect player that is undefined');
+    }
 
     // if host left
     if (o.clientThatChanged === game.hostClientId) {
@@ -298,7 +322,7 @@ declare global {
     // Save pie messages for later replay
     saveReplay: (title: string) => void;
     // Used to replay onData messages for development
-    replay: (messages: string[]) => void;
+    replay: (title: string) => void;
     // Current clients id
     clientId: string;
     // Shows the "danger zone" where golems can attack,

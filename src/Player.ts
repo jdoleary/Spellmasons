@@ -5,7 +5,7 @@ import type * as Upgrade from './Upgrade';
 import * as CardUI from './CardUI';
 import * as config from './config';
 import * as math from './math';
-import { Coords, Faction, UnitType } from './commonTypes';
+import { Coords, Faction, UnitSubType, UnitType } from './commonTypes';
 
 export interface IPlayer {
   // wsPie id
@@ -25,10 +25,6 @@ export function isTargetInRange(player: IPlayer, target: Coords): boolean {
 export function create(clientId: string): IPlayer {
   // limit spawn to the leftmost column
   const coords = window.game.getRandomEmptyCell({ xMax: 0 });
-  if (!coords) {
-    console.error('Could not find empty cell to create player in');
-    return;
-  }
   const player: IPlayer = {
     clientId,
     clientConnected: true,
@@ -38,6 +34,7 @@ export function create(clientId: string): IPlayer {
       Faction.PLAYER,
       'images/units/man-blue.png',
       UnitType.PLAYER_CONTROLLED,
+      UnitSubType.PLAYER_CONTROLLED,
     ),
     inPortal: false,
     cards: [],
@@ -109,9 +106,13 @@ export function enterPortal(player: IPlayer) {
   Image.hide(player.unit.image);
   // limit spawn to the leftmost column
   const coords = window.game.getRandomEmptyCell({ xMax: 0 });
-  // Move "portaled" unit out of the way to prevent collisions and chaining while portaled
-  coords.x = -1;
-  Unit.setLocation(player.unit, coords);
+  if (coords) {
+    // Move "portaled" unit out of the way to prevent collisions and chaining while portaled
+    coords.x = -1;
+    Unit.setLocation(player.unit, coords);
+  } else {
+    console.error('Could not find random empty cell');
+  }
 }
 // Note: this is also used for AI targeting to ensure that AI don't target disabled plaeyrs
 export function ableToTakeTurn(player: IPlayer) {
