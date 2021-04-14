@@ -7,13 +7,14 @@ import * as Card from '../CardUI';
 import * as Player from '../Player';
 import floatingText from '../FloatingText';
 import * as Unit from '../Unit';
-import { containerSpells, containerUI } from '../PixiUtils';
+import { app, containerSpells, containerUI } from '../PixiUtils';
 import { Coords, Faction, UnitSubType, UnitType } from '../commonTypes';
 
 let mouseCellX;
 let mouseCellY;
-const elClickInspectorContent = document.getElementById(
-  'click-inspector-content',
+const elInspectorTooltip = document.getElementById('inspector-tooltip');
+const elInspectorTooltipContent = document.getElementById(
+  'inspector-tooltip-content',
 );
 // SpellEffectProjection are images that appear above cells to denote some information, such as the spell or action about to be cast/taken when clicked
 export function clearSpellEffectProjection() {
@@ -90,10 +91,48 @@ export async function syncSpellEffectProjection() {
     }
   }
 }
+function setHoverTooltipPosition(x: number, y: number) {
+  const pixiCoords = app.renderer.plugins.interaction.mouse.global;
+  // Update position of HTML element
+  elInspectorTooltip.style.transform = `translate(${pixiCoords.x}px, ${pixiCoords.y}px)`;
+
+  // Update information in content
+  // show info on cell, unit, pickup, etc clicked
+  let text = '';
+  // Find unit:
+  const unit = window.game.getUnitAt(x, y);
+  if (unit) {
+    text += `\
+Unit
+Type ${UnitType[unit.unitType]}
+SubType ${UnitSubType[unit.unitSubType]}
+Faction ${Faction[unit.faction]}
+Health ${unit.health}/${unit.healthMax}
+Modifiers ${JSON.stringify(unit.modifiers, null, 2)}
+        `;
+  }
+  const pickup = window.game.getPickupAt(x, y);
+  if (pickup) {
+    text += `\
+Pickup
+${pickup.name}
+${pickup.description}
+        `;
+  }
+  const obstacle = window.game.getObstacleAt(x, y);
+  if (obstacle) {
+    text += `\
+${obstacle.name}
+${obstacle.description}
+        `;
+  }
+  elInspectorTooltipContent.innerText = text;
+}
 export default function setupBoardInputHandlers() {
   // on Hover
   document.body.addEventListener('mousemove', (e) => {
     const { x, y } = window.game.getCellFromCurrentMousePos();
+    setHoverTooltipPosition(x, y);
     const didChange = mouseCellX !== x || mouseCellY !== y;
     mouseCellX = x;
     mouseCellY = y;
@@ -198,37 +237,6 @@ export default function setupBoardInputHandlers() {
           floatingText({ cellX: x, cellY: y, text: 'It is not your turn yet' });
         }
       }
-    } else {
-      // show info on cell, unit, pickup, etc clicked
-      let text = '';
-      // Find unit:
-      const unit = window.game.getUnitAt(x, y);
-      if (unit) {
-        text += `\
-Unit
-Type ${UnitType[unit.unitType]}
-SubType ${UnitSubType[unit.unitSubType]}
-Faction ${Faction[unit.faction]}
-Health ${unit.health}/${unit.healthMax}
-Modifiers ${JSON.stringify(unit.modifiers, null, 2)}
-        `;
-      }
-      const pickup = window.game.getPickupAt(x, y);
-      if (pickup) {
-        text += `\
-Pickup
-${pickup.name}
-${pickup.description}
-        `;
-      }
-      const obstacle = window.game.getObstacleAt(x, y);
-      if (obstacle) {
-        text += `\
-${obstacle.name}
-${obstacle.description}
-        `;
-      }
-      elClickInspectorContent.innerText = text;
     }
   });
 }

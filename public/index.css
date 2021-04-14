@@ -4,9 +4,6 @@ body {
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
     'Lucida Sans', Arial, sans-serif;
 }
-#PIXI-holder.inspect-mode {
-  cursor: help;
-}
 #game-container {
   min-height: 100vh;
   display: flex;
@@ -201,18 +198,21 @@ body.your-turn #player-turn-indicator-holder.low-time {
   transform: translate(0, 30px);
 }
 
-#click-inspector {
+#inspector-tooltip {
+  display: none;
+}
+#inspector-tooltip.active {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  position: fixed;
-  right: 8px;
-  top: 0;
-  bottom: 0;
   pointer-events: none;
+  /* Transform position is determined on hover*/
+  position: fixed;
+  top: 0;
+  left: 0;
 }
-#click-inspector-container {
-  border: 2px solid purple;
+#inspector-tooltip-container {
+  border-radius: 10px 10px;
   background-color: rgba(255, 255, 255, 0.7);
   padding: 8px;
   width: 300px;

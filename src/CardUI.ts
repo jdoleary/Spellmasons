@@ -7,7 +7,7 @@ import {
 } from './ui/GameBoardInput';
 const elCardHand = document.getElementById('card-hand');
 const elSelectedCards = document.getElementById('selected-cards');
-const elPIXIHolder = document.getElementById('PIXI-holder');
+const elInspectorTooltip = document.getElementById('inspector-tooltip');
 
 export function recalcPositionForCards(player: Player.IPlayer) {
   if (window.player !== player) {
@@ -111,7 +111,7 @@ export function getSelectedCards(): string[] {
 
 export function toggleInspectMode(active: boolean) {
   elSelectedCards.classList.toggle('hide', active);
-  elPIXIHolder.classList.toggle('inspect-mode', active);
+  elInspectorTooltip.classList.toggle('active', active);
   syncSpellEffectProjection();
 }
 export function clearSelectedCards() {
