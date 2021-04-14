@@ -1,3 +1,4 @@
+- let our faction go before enemy units go
 - How to best handle not being able to find a random empty cell? This can mess up things like entering a portal
   - see all `if(coords){...}` or all calls to `getRandomEmptyCell`
 - Swapping should only work with a target, not an empty spell
