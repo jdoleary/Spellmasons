@@ -193,3 +193,23 @@ body.your-turn #player-turn-indicator-holder.low-time {
 #websocket-pie-connection-status {
   transform: translate(0, 30px);
 }
+
+#click-inspector {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: fixed;
+  right: 8px;
+  top: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+#click-inspector-container {
+  border: 2px solid purple;
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 8px;
+  width: 300px;
+  max-height: 800px;
+  height: 100%;
+  white-space: pre-wrap;
+}

@@ -8,10 +8,13 @@ import * as Player from '../Player';
 import floatingText from '../FloatingText';
 import * as Unit from '../Unit';
 import { containerSpells, containerUI } from '../PixiUtils';
-import type { Coords } from '../commonTypes';
+import { Coords, Faction, UnitSubType, UnitType } from '../commonTypes';
 
 let mouseCellX;
 let mouseCellY;
+const elClickInspectorContent = document.getElementById(
+  'click-inspector-content',
+);
 // SpellEffectProjection are images that appear above cells to denote some information, such as the spell or action about to be cast/taken when clicked
 export function clearSpellEffectProjection() {
   if (!window.animatingSpells) {
@@ -163,17 +166,19 @@ export default function setupBoardInputHandlers() {
       });
       return;
     }
-    // Only allow casting in the proper phase
-    if (window.game.turn_phase == turn_phase.PlayerTurns) {
-      if (window.game.yourTurn) {
-        // Get current client's player
-        const selfPlayer: Player.IPlayer | undefined = window.game.players.find(
-          (p) => p.clientId === window.clientId,
-        );
-        // If the player casting is the current client player
-        if (selfPlayer) {
-          // If a spell exists (based on the combination of cards selected)...
-          if (areAnyCardsSelected()) {
+    // If a spell exists (based on the combination of cards selected)...
+    if (areAnyCardsSelected()) {
+      // Only allow casting in the proper phase
+      if (window.game.turn_phase == turn_phase.PlayerTurns) {
+        if (window.game.yourTurn) {
+          // Get current client's player
+          const selfPlayer:
+            | Player.IPlayer
+            | undefined = window.game.players.find(
+            (p) => p.clientId === window.clientId,
+          );
+          // If the player casting is the current client player
+          if (selfPlayer) {
             // If the spell is not in range
             if (!Player.isTargetInRange(selfPlayer, { x, y })) {
               // Show floating message to alert player
@@ -189,10 +194,41 @@ export default function setupBoardInputHandlers() {
               Card.clearSelectedCards();
             }
           }
+        } else {
+          floatingText({ cellX: x, cellY: y, text: 'It is not your turn yet' });
         }
-      } else {
-        floatingText({ cellX: x, cellY: y, text: 'It is not your turn yet' });
       }
+    } else {
+      // show info on cell, unit, pickup, etc clicked
+      let text = '';
+      // Find unit:
+      const unit = window.game.getUnitAt(x, y);
+      if (unit) {
+        text += `\
+Unit
+Type ${UnitType[unit.unitType]}
+SubType ${UnitSubType[unit.unitSubType]}
+Faction ${Faction[unit.faction]}
+Health ${unit.health}/${unit.healthMax}
+Modifiers ${JSON.stringify(unit.modifiers, null, 2)}
+        `;
+      }
+      const pickup = window.game.getPickupAt(x, y);
+      if (pickup) {
+        text += `\
+Pickup
+${pickup.name}
+${pickup.description}
+        `;
+      }
+      const obstacle = window.game.getObstacleAt(x, y);
+      if (obstacle) {
+        text += `\
+${obstacle.name}
+${obstacle.description}
+        `;
+      }
+      elClickInspectorContent.innerText = text;
     }
   });
 }

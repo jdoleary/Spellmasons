@@ -4,15 +4,19 @@ export interface IObstacle {
   // note: x,y are cell positions, not board positions
   x: number;
   y: number;
+  name: string;
+  description: string;
   imagePath: string;
   image: Image.IImage;
 }
-export function create(x: number, y: number, imagePath: string) {
+export function create(x: number, y: number, obstacle: Partial<IObstacle>) {
   const self: IObstacle = {
     x,
     y,
-    imagePath,
-    image: Image.create(x, y, imagePath, containerBoard),
+    name: obstacle.name,
+    description: obstacle.description,
+    imagePath: obstacle.imagePath,
+    image: Image.create(x, y, obstacle.imagePath, containerBoard),
   };
   self.image.sprite.scale.set(0.0);
   Image.scale(self.image, 1.0);
@@ -21,7 +25,7 @@ export function create(x: number, y: number, imagePath: string) {
 }
 // Reinitialize an obstacle from another obstacle object, this is used in loading game state after reconnect
 export function load(o: IObstacle) {
-  return create(o.x, o.y, o.imagePath);
+  return create(o.x, o.y, o);
 }
 export function remove(o: IObstacle) {
   Image.cleanup(o.image);

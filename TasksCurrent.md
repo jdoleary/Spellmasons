@@ -2,11 +2,8 @@
 
 ## Tasks
 
-- Does swap overlay (green line) still show?
-
 - What's to stop player from just bumming around to get extra cards?
   - Maybe only as long as there are enemies alive? Or set a hand max?
-- Swapping should only work with a target, not an empty spell
 - Make units clickable for information
 
 ## Brad 2021.04.05

@@ -196,6 +196,8 @@ export default class Game {
     Pickup.create(
       config.PORTAL_COORDINATES.x,
       config.PORTAL_COORDINATES.y,
+      portalPickup.name,
+      portalPickup.description,
       false,
       portalPickup.imagePath,
       true,
@@ -214,6 +216,8 @@ export default class Game {
         Pickup.create(
           coords.x,
           coords.y,
+          pickup.name,
+          pickup.description,
           true,
           pickup.imagePath,
           true,
@@ -226,11 +230,11 @@ export default class Game {
     for (let i = 0; i < config.NUM_OBSTACLES_PER_LEVEL; i++) {
       const coords = this.getRandomEmptyCell({ xMin: 2 });
       if (coords) {
-        const newObstacle = Obstacle.create(
-          coords.x,
-          coords.y,
-          'images/tiles/lava.png',
-        );
+        const newObstacle = Obstacle.create(coords.x, coords.y, {
+          name: 'Lava',
+          description: 'This is lava',
+          imagePath: 'images/tiles/lava.png',
+        });
         // Ensure the players have a path to the portal
         const pathToPortal = this.findPath(
           { x: 0, y: 0 },
@@ -680,6 +684,9 @@ export default class Game {
   }
   getPickupAt(x: number, y: number): Pickup.IPickup | undefined {
     return this.pickups.find((p) => p.x === x && p.y === y);
+  }
+  getObstacleAt(x: number, y: number): Obstacle.IObstacle | undefined {
+    return this.obstacles.find((p) => p.x === x && p.y === y);
   }
   addUnitToArray(unit: Unit.IUnit) {
     this.units.push(unit);

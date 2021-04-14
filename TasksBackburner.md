@@ -1,3 +1,5 @@
+- Swapping should only work with a target, not an empty spell
+- Does swap overlay (green line) still show?
 - is removing units when their bones take damage a footgun? See Unit.ts: `window.game.units = window.game.units.filter((u) => u !== unit);`
 - quality of life: If you click on the portal and no enemies remain, then auto move there
 - There should be an icon for out of range

@@ -7,6 +7,8 @@ export interface IPickup {
   // note: x,y are cell positions, not board positions
   x: number;
   y: number;
+  name: string;
+  description: string;
   imagePath: string;
   image: Image.IImage;
   // Only can be picked up once
@@ -20,6 +22,8 @@ export interface IPickup {
 export function create(
   x: number,
   y: number,
+  name: string,
+  description: string,
   singleUse: boolean,
   imagePath: string,
   playerOnly: boolean,
@@ -28,6 +32,8 @@ export function create(
   const self: IPickup = {
     x,
     y,
+    name,
+    description,
     imagePath,
     image: Image.create(x, y, imagePath, containerPickup),
     singleUse,
@@ -65,6 +71,8 @@ export function load(pickup: IPickup) {
     const self = create(
       pickup.x,
       pickup.y,
+      pickup.name,
+      pickup.description,
       pickup.singleUse,
       pickup.imagePath,
       pickup.playerOnly,
@@ -93,10 +101,13 @@ export function triggerPickup(pickup: IPickup, unit: IUnit) {
 
 // Special pickups are not stored in the pickups array because they shouldn't be
 // randomly selected when adding pickups to a generated level.
-export const specialPickups = {
+export const specialPickups: { [image: string]: Partial<IPickup> } = {
   'images/portal.png': {
     imagePath: 'images/portal.png',
     playerOnly: true,
+    name: 'Portal',
+    description:
+      'Takes you to the next level when all players are either in the portal or dead.',
     effect: ({ unit, player }: { unit?: IUnit; player?: Player.IPlayer }) => {
       if (player) {
         Player.enterPortal(player);
@@ -104,9 +115,11 @@ export const specialPickups = {
     },
   },
 };
-export const pickups = [
+export const pickups: Partial<IPickup>[] = [
   {
     imagePath: 'images/pickups/card.png',
+    name: 'Cards',
+    description: 'Grants the player extra cards',
     effect: ({ unit, player }) => {
       if (player) {
         for (let i = 0; i < 4; i++) {
