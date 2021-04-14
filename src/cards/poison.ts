@@ -19,12 +19,12 @@ const spell: Spell = {
       imageName: 'images/spell/poison.png',
       alpha: 1.0,
       anchor: {
-        x: 0.5,
-        y: 0.5,
+        x: 0,
+        y: 0,
       },
       scale: {
-        x: 1,
-        y: 1,
+        x: 0.5,
+        y: 0.5,
       },
     },
   },
