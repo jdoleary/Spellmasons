@@ -61,6 +61,8 @@ function loadTextures(additionalImagePaths: string[]): Promise<void> {
       'images/units/golem-summoner.png',
       'images/units/demon.png',
       'images/units/man-blue.png',
+      'images/units/golem-poison.png',
+      'images/units/priest.png',
       'images/spell/arrow.png',
       'images/spell/target.png',
       'images/spell/deny.png',

@@ -2,7 +2,7 @@ import { IUnit, takeDamage } from '../Unit';
 import * as Image from '../Image';
 import type { Spell } from '.';
 const id = 'poison';
-function add(unit: IUnit) {
+export function add(unit: IUnit) {
   // Note: Curse can stack multiple times but doesn't keep any state
   // so it doesn't need a first time setup like freeze does
 

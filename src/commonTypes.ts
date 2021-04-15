@@ -14,6 +14,8 @@ export enum UnitSubType {
   AI_reach,
   AI_summoner,
   AI_demon,
+  AI_priest,
+  AI_poisoner,
   PLAYER_CONTROLLED,
 }
 

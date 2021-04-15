@@ -43,6 +43,18 @@ export const enemySource = [
     subtype: UnitSubType.AI_demon,
     probability: 30,
   },
+  {
+    id: 'priest',
+    image: 'images/units/priest.png',
+    subtype: UnitSubType.AI_priest,
+    probability: 30,
+  },
+  {
+    id: 'poisoner',
+    image: 'images/units/golem-poison.png',
+    subtype: UnitSubType.AI_poisoner,
+    probability: 30,
+  },
 ];
 
 const hardCodedLevelEnemies = [

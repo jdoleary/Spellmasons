@@ -283,6 +283,12 @@ export function moveAI(unit: IUnit) {
     case UnitSubType.AI_demon:
       AI.demonAction(unit);
       break;
+    case UnitSubType.AI_priest:
+      AI.priestAction(unit);
+      break;
+    case UnitSubType.AI_poisoner:
+      AI.poisonerAction(unit);
+      break;
   }
 }
 // moveTo moves a unit, considering all the in-game blockers and flags

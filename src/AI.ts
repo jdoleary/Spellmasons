@@ -3,7 +3,8 @@ import * as Image from './Image';
 import * as math from './math';
 import createVisualProjectile from './Projectile';
 import { enemySource } from './EnemyUnit';
-import { UnitType, UnitSubType, Faction } from './commonTypes';
+import { UnitType, UnitSubType } from './commonTypes';
+import { add as AddPoison } from './cards/poison';
 
 export function meleeAction(unit: Unit.IUnit) {
   if (!Unit.canMove(unit)) {
@@ -141,6 +142,47 @@ export function demonAction(unit: Unit.IUnit) {
   const moveCoords = window.game.getRandomEmptyCell({ xMin: 2 });
   if (moveCoords) {
     unit.intendedNextMove = moveCoords;
+  }
+}
+
+export function priestAction(unit: Unit.IUnit) {
+  // Move opposite to closest enemy
+  const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit);
+  if (closestEnemy) {
+    const moveTo = math.oneCellAwayFromCell(unit, closestEnemy);
+    unit.intendedNextMove = moveTo;
+  }
+  // Heal an ally
+  const damagedAllys = window.game.units.filter(
+    (u) => u.faction === unit.faction && u.alive && u.health < u.healthMax,
+  );
+  if (damagedAllys.length) {
+    const chosenUnit = damagedAllys[0];
+    createVisualProjectile(
+      unit,
+      chosenUnit.x,
+      chosenUnit.y,
+      'images/spell/green-thing.png',
+    );
+    // Heal for 2
+    Unit.takeDamage(chosenUnit, -2);
+  }
+}
+
+export function poisonerAction(unit: Unit.IUnit) {
+  const nonPoisonedEnemyUnits = window.game.units.filter(
+    (u) =>
+      u.faction !== unit.faction && u.alive && u.modifiers.poison === undefined,
+  );
+  if (nonPoisonedEnemyUnits.length) {
+    const chosenUnit = nonPoisonedEnemyUnits[0];
+    createVisualProjectile(
+      unit,
+      chosenUnit.x,
+      chosenUnit.y,
+      'images/spell/green-thing.png',
+    );
+    AddPoison(chosenUnit);
   }
 }
 
