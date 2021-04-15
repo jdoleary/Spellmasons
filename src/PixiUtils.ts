@@ -29,6 +29,10 @@ function resizePixi() {
 // PIXI textures
 let resources: { [key: string]: PIXI.ILoaderResource };
 export function setupPixi(additionalImagePaths: string[]): Promise<void> {
+  // Dedup images
+  const additionalImagePathsDeduped = additionalImagePaths.filter(
+    (imagePath, index) => additionalImagePaths.indexOf(imagePath) === index,
+  );
   // The application will create a canvas element for you that you
   // can then insert into the DOM
   const elPIXIHolder = document.getElementById('PIXI-holder');
@@ -47,7 +51,7 @@ export function setupPixi(additionalImagePaths: string[]): Promise<void> {
   app.stage.addChild(containerProjectiles);
   app.stage.addChild(containerUI);
   app.stage.addChild(containerFloatingText);
-  return loadTextures(additionalImagePaths);
+  return loadTextures(additionalImagePathsDeduped);
 }
 function loadTextures(additionalImagePaths: string[]): Promise<void> {
   return new Promise((resolve) => {
@@ -56,15 +60,6 @@ function loadTextures(additionalImagePaths: string[]): Promise<void> {
       ...additionalImagePaths,
       'images/tiles/ground.png',
       'images/tiles/lava.png',
-      'images/units/golem.png',
-      'images/units/golem-blue.png',
-      'images/units/golem-red.png',
-      'images/units/golem-sand.png',
-      'images/units/golem-summoner.png',
-      'images/units/demon.png',
-      'images/units/man-blue.png',
-      'images/units/golem-poison.png',
-      'images/units/priest.png',
       'images/spell/arrow.png',
       'images/spell/target.png',
       'images/spell/deny.png',

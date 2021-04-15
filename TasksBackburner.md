@@ -1,5 +1,6 @@
 - projectiles are on the containerSpells container and so get cleared when mouse moves
   - Do i need to make AI casts work the same way that player casts do??
+- Convert console.error(s) to Sentry.captureException?? before deployment?
 - let our faction go before enemy units go
 - How to best handle not being able to find a random empty cell? This can mess up things like entering a portal
   - see all `if(coords){...}` or all calls to `getRandomEmptyCell`

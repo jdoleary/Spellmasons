@@ -1,6 +1,5 @@
 import * as PIXI from 'pixi.js';
 import * as config from './config';
-import * as AI from './AI';
 import floatingText from './FloatingText';
 import * as Image from './Image';
 import { cellDistance } from './math';
@@ -19,6 +18,7 @@ export function getDangerZoneColor(unit: IUnit) {
   }
 }
 export interface IUnit {
+  unitSourceId: string;
   x: number;
   y: number;
   name?: string;
@@ -48,6 +48,7 @@ export interface IUnit {
   };
 }
 export function create(
+  unitSourceId: string,
   x: number,
   y: number,
   faction: Faction,
@@ -56,6 +57,7 @@ export function create(
   unitSubType: UnitSubType,
 ): IUnit {
   const unit: IUnit = {
+    unitSourceId,
     x,
     y,
     faction,
@@ -255,34 +257,6 @@ export function findClosestUnitInDifferentFaction(
   unit: IUnit,
 ): IUnit | undefined {
   return closestInListOfUnits(unit, livingUnitsInDifferentFaction(unit));
-}
-export function moveAI(unit: IUnit) {
-  switch (unit.unitSubType) {
-    case UnitSubType.AI_melee:
-      AI.meleeAction(unit);
-      break;
-    case UnitSubType.AI_bishop:
-      AI.rangedAction(unit);
-      break;
-    case UnitSubType.AI_rook:
-      AI.rangedAction(unit);
-      break;
-    case UnitSubType.AI_reach:
-      AI.reachAction(unit);
-      break;
-    case UnitSubType.AI_summoner:
-      AI.summonerAction(unit);
-      break;
-    case UnitSubType.AI_demon:
-      AI.demonAction(unit);
-      break;
-    case UnitSubType.AI_priest:
-      AI.priestAction(unit);
-      break;
-    case UnitSubType.AI_poisoner:
-      AI.poisonerAction(unit);
-      break;
-  }
 }
 // moveTo moves a unit, considering all the in-game blockers and flags
 // the units property thisTurnMoved

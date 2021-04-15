@@ -14,6 +14,7 @@ import { setupPixi } from './PixiUtils';
 import floatingText from './FloatingText';
 import { addSubSprite, removeSubSprite } from './Image';
 import * as Cards from './cards';
+import * as Units from './units';
 import { upgradeSource } from './Upgrade';
 
 // Print aggressive due date for game!
@@ -30,7 +31,13 @@ console.log(
   )} days until Gameplay core is due!`,
 );
 
-Cards.registerCards()
+Promise.all([Cards.registerCards(), Units.registerUnits()])
+  .then((listOfListOfImages: string[][]) => {
+    return listOfListOfImages.reduce((acc, list) => {
+      acc = acc.concat(list);
+      return acc;
+    }, []);
+  })
   .then(setupPixi)
   .then(() => {
     UI.setup();

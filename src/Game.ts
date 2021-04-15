@@ -20,11 +20,11 @@ import {
 import type { Random } from 'random';
 import makeSeededRandom from './rand';
 import floatingText from './FloatingText';
-import { enemySource, generateHardCodedLevelEnemies } from './EnemyUnit';
 import { UnitType, Coords, Faction } from './commonTypes';
 import { drawDangerOverlay } from './ui/UserInterface';
 import { createUpgradeElement, generateUpgrades } from './Upgrade';
 import Events from './Events';
+import { allUnits, generateHardCodedLevelEnemies } from './units';
 
 export enum game_state {
   Lobby,
@@ -264,14 +264,15 @@ export default class Game {
     for (let index of enemyIndexes) {
       const coords = this.getRandomEmptyCell({ xMin: 2 });
       if (coords) {
-        const sourceUnit = enemySource[index];
+        const sourceUnit = Object.values(allUnits)[index];
         const unit = Unit.create(
+          sourceUnit.id,
           coords.x,
           coords.y,
           Faction.ENEMY,
-          sourceUnit.image,
+          sourceUnit.info.image,
           UnitType.AI,
-          sourceUnit.subtype,
+          sourceUnit.info.subtype,
         );
         const roll = this.random.integer(0, 100);
         if (roll <= config.PERCENT_CHANCE_OF_HEAVY_UNIT) {
@@ -583,8 +584,16 @@ export default class Game {
               }
             }
           }
-          const promise = Unit.moveAI(u);
-          animationPromises.push(promise);
+          const unitSource = allUnits[u.unitSourceId];
+          if (unitSource) {
+            const promise = unitSource.action(u);
+            animationPromises.push(promise);
+          } else {
+            console.error(
+              'Could not find unit source data for',
+              u.unitSourceId,
+            );
+          }
         }
         this.initiateIntelligentAIMovement();
         // When all animations are done, set turn phase to player turn

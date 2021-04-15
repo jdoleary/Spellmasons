@@ -5,7 +5,8 @@ import type * as Upgrade from './Upgrade';
 import * as CardUI from './CardUI';
 import * as config from './config';
 import * as math from './math';
-import { Coords, Faction, UnitSubType, UnitType } from './commonTypes';
+import { Coords, Faction, UnitType } from './commonTypes';
+import { allUnits } from './units';
 
 export interface IPlayer {
   // wsPie id
@@ -25,16 +26,23 @@ export function isTargetInRange(player: IPlayer, target: Coords): boolean {
 export function create(clientId: string): IPlayer {
   // limit spawn to the leftmost column
   const coords = window.game.getRandomEmptyCell({ xMax: 0 });
+  const userSource = allUnits.user;
+  if (!userSource) {
+    throw new Error(
+      'User unit source file not registered, cannot create player',
+    );
+  }
   const player: IPlayer = {
     clientId,
     clientConnected: true,
     unit: Unit.create(
+      userSource.id,
       coords.x,
       coords.y,
       Faction.PLAYER,
-      'images/units/man-blue.png',
+      userSource.info.image,
       UnitType.PLAYER_CONTROLLED,
-      UnitSubType.PLAYER_CONTROLLED,
+      userSource.info.subtype,
     ),
     inPortal: false,
     cards: [],
