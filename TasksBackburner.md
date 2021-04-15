@@ -9,7 +9,6 @@
 - quality of life: If you click on the portal and no enemies remain, then auto move there
 - There should be an icon for out of range
 - Player can still move after freezing themselves on during their turn
-- bug: Game over triggers too early if the player is ressed in the same turn that they die
 - "level 1" text never appears on load
 - Refactor, card UI reconciliation algorithm is slow
 - corpse image doesn't save when a game is loaded and a unit is dead
