@@ -116,12 +116,11 @@ export function changeSpriteTexture(imagePath: string, sprite: PIXI.Sprite) {
   const resource: PIXI.ILoaderResource = resources[imagePath];
   if (resource.texture) {
     sprite.texture = resource.texture;
-  }
-  {
+  } else {
     console.error(
       'Texture at ',
       imagePath,
-      'was unable to be set as sprite texture',
+      'was unable to be set as sprite texture because the texture does not exist',
     );
   }
 }
