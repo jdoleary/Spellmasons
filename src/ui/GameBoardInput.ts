@@ -40,7 +40,6 @@ export function drawSwapLine(one: Coords, two: Coords) {
     const y2 = two.y * CELL_SIZE + CELL_SIZE / 2;
     dryRunGraphics.beginFill(0xffff0b, 0.5);
     dryRunGraphics.lineStyle(3, 0x33ff00);
-    dryRunGraphics.drawCircle(x1, y1, 10);
     dryRunGraphics.moveTo(x1, y1);
     dryRunGraphics.lineTo(x2, y2);
     dryRunGraphics.drawCircle(x2, y2, 10);
