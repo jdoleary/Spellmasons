@@ -1,5 +1,20 @@
 # Todo
 
+- You should be incentivized to use all of your spells to clear a level
+
+  - "rocket launcher problem"
+
+- Playtest with brad 2021.04.15
+  - Units don't path around frozen units
+  - poison should go away when a unit dies
+  - enemies should be able to be on the portal
+  - way to single attack if your next to something so that corpses can't block the portal
+  - Game.findPath (114) cannot set property 'g' of undefined
+    - pathfinding.js:1286 endNode.g = 0
+  - wehn you choose ALL the spells in your hand, the active spell div shifts down because the card hand div is now empty
+
+---
+
 ## Tasks
 
 - after spells are done animating, check if it should show the spell projection again
