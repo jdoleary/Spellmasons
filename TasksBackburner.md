@@ -35,8 +35,9 @@
 
   - Maybe this happened because I was alt-tabbed when he took his turn
 
-- Clean up onDataQueue (is it still necessary?)
 - Fix replay?
+
+  - This should be easy now that onDataQueue has been restored
 
 - Taunt totem
 - Tile effects

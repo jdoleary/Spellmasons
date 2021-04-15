@@ -2,12 +2,12 @@
 
 ## Tasks
 
-- bug: Wait to move player until spells are done animating
 - New enemies:
   - Enemy spellcasters that could poison YOU!
   - Enemy priest
 - Fix swap
   - bug: chain swapping didn't move me, this occurs when the chain retarget's self
+- Add obstacles to spell effect? So freeze can freeze lava?
 - What's to stop player from just bumming around to get extra cards?
   - Maybe only as long as there are enemies alive? Or set a hand max?
 

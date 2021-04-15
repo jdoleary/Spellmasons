@@ -1,4 +1,4 @@
-import PieClient, { ClientPresenceChangedArgs } from 'pie-client';
+import PieClient, { ClientPresenceChangedArgs, OnDataArgs } from 'pie-client';
 import Game, { game_state, turn_phase } from './Game';
 import * as Player from './Player';
 import * as Unit from './Unit';
@@ -115,19 +115,48 @@ window.replay = (title: string) => {
     onData(message);
   }
 };
-// let onDataQueue = [];
-function onData(d: { fromClient: string; payload: any }) {
-  // Keep data messages in a queue until they are ready to be processed
-  // CAUTION: If data queue is not implemented this will catch and hold forever
-  // messages that were sent while animation was occurring
-  // if (window.animationManager.animating) {
-  //   onDataQueue.push(d);
-  //   return;
-  // }
+function onData(d: OnDataArgs) {
   console.log('onData', d);
   // Temporarily for development
   messageLog.push(d);
 
+  const { payload } = d;
+  const type: MESSAGE_TYPES = payload.type;
+  switch (type) {
+    case MESSAGE_TYPES.PING:
+      const { x: cellX, y: cellY } = payload;
+      floatingText({
+        cellX,
+        cellY,
+        text: '🎈',
+      });
+      break;
+    default:
+      handleOnDataMessageSyncronously(d);
+      break;
+  }
+}
+let onDataQueue: OnDataArgs[] = [];
+let currentMessagePromise: Promise<any> | null = null;
+// Waits until a message is done before it will continue to process more messages that come through
+// This ensures that players can't move in the middle of when spell effects are occurring for example.
+function handleOnDataMessageSyncronously(d: OnDataArgs) {
+  onDataQueue.push(d);
+  // If no messages are currently being processed...
+  if (!currentMessagePromise) {
+    // process the "next" (the one that was just added) immediately
+    processNextInQueue();
+  }
+}
+function processNextInQueue() {
+  if (onDataQueue.length) {
+    currentMessagePromise = handleOnDataMessage(onDataQueue.splice(0, 1)[0]);
+    currentMessagePromise.then(processNextInQueue);
+  } else {
+    currentMessagePromise = null;
+  }
+}
+async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
   const { payload, fromClient } = d;
   const type: MESSAGE_TYPES = payload.type;
   // Get caster
@@ -158,7 +187,7 @@ function onData(d: { fromClient: string; payload: any }) {
     case MESSAGE_TYPES.MOVE_PLAYER:
       if (caster) {
         // Move the player 1 magnitude on either or both axes towards the desired position
-        Unit.moveTo(caster.unit, payload).then(() => {
+        await Unit.moveTo(caster.unit, payload).then(() => {
           checkEndPlayerTurn(caster);
         });
       } else {
@@ -167,7 +196,7 @@ function onData(d: { fromClient: string; payload: any }) {
       break;
     case MESSAGE_TYPES.SPELL:
       if (caster) {
-        handleSpell(caster, payload);
+        await handleSpell(caster, payload);
       } else {
         console.error('Cannot cast, caster does not exist');
       }
@@ -192,27 +221,6 @@ function onData(d: { fromClient: string; payload: any }) {
       } else {
         console.error('Unable to end turn because caster is undefined');
       }
-      // TODO
-      // if (all_players_ended_turn) {
-      // game.nextTurn().then(() => {
-      // Animations complete
-      // const queue = [...onDataQueue];
-      // Clear the queue
-      // onDataQueue = [];
-      // Allow new messages
-      // for (let d of queue) {
-      // onData(d);
-      // }
-      // });
-      // }
-      break;
-    case MESSAGE_TYPES.PING:
-      const { x: cellX, y: cellY } = payload;
-      floatingText({
-        cellX,
-        cellY,
-        text: '🎈',
-      });
       break;
   }
 }
