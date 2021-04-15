@@ -199,11 +199,13 @@ export async function takeDamage(unit: IUnit, amount: number) {
     });
     await Image.take_hit(unit.image);
   }
-  if (unit.health <= 0) {
+  // If taking damage (not healing) and health is 0 or less...
+  if (amount > 0 && unit.health <= 0) {
+    // if unit is alive, die
     if (unit.alive) {
       die(unit);
     } else {
-      // if unit is already dead, destroy bones
+      // if unit is already dead, destroy corpse
       cleanup(unit);
       // Remove unit entirely
       window.game.units = window.game.units.filter((u) => u !== unit);
