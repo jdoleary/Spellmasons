@@ -2,7 +2,9 @@
 
 ## Tasks
 
-- Add unit description
+- after spells are done animating, check if it should show the spell projection again
+- add unit description to tooltip
+- make tooltip update constantly so it gets current health when it changes
 
 - Fix swap
   - bug: chain swapping didn't move me, this occurs when the chain retarget's self
