@@ -10,6 +10,7 @@ containerDangerOverlay.alpha = 0.5;
 export const containerUnits = new PIXI.Container();
 export const containerPickup = new PIXI.Container();
 export const containerSpells = new PIXI.Container();
+export const containerProjectiles = new PIXI.Container();
 export const containerUI = new PIXI.Container();
 export const containerFloatingText = new PIXI.Container();
 app.renderer.backgroundColor = 0x45b6fe;
@@ -43,6 +44,7 @@ export function setupPixi(additionalImagePaths: string[]): Promise<void> {
   app.stage.addChild(containerUnits);
   app.stage.addChild(containerPickup);
   app.stage.addChild(containerSpells);
+  app.stage.addChild(containerProjectiles);
   app.stage.addChild(containerUI);
   app.stage.addChild(containerFloatingText);
   return loadTextures(additionalImagePaths);

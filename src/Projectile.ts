@@ -1,5 +1,5 @@
 import type * as PIXI from 'pixi.js';
-import { containerSpells, addPixiSprite } from './PixiUtils';
+import { addPixiSprite, containerProjectiles } from './PixiUtils';
 import { cellToBoardCoords, lerp, distance } from './math';
 import type { Coords } from './commonTypes';
 
@@ -21,7 +21,7 @@ export default function createVisualProjectile(
   toY: number,
   imagePath: string,
 ) {
-  const sprite = addPixiSprite(imagePath, containerSpells);
+  const sprite = addPixiSprite(imagePath, containerProjectiles);
   sprite.anchor.x = 0.5;
   sprite.anchor.y = 0.5;
   sprite.scale.set(2);
