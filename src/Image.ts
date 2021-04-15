@@ -47,8 +47,7 @@ export function load(image: IImage, parent: PIXI.Container) {
   const instantiatedImage = create(0, 0, image.imageName, parent);
   instantiatedImage.sprite.x = image.sprite.x;
   instantiatedImage.sprite.y = image.sprite.y;
-  // Note, scale x and y will always be the same due to this game's choice to not support skewing
-  scale(instantiatedImage, image.sprite.scale.x);
+  scale(instantiatedImage, image.scale);
   // Re-add subsprites
   const subSprites = [...image.subSprites];
   image.subSprites = [];
@@ -65,8 +64,8 @@ export function serialize(image: IImage) {
     sprite: {
       x: image.sprite.x,
       y: image.sprite.y,
-      scale: image.scale,
     },
+    scale: image.scale,
     subSprites: image.subSprites,
     imageName: image.imageName,
   };
