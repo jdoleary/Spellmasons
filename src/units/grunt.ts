@@ -30,9 +30,9 @@ const unit: UnitSource = {
         const other_unit = window.game.getUnitAt(next_x, next_y);
         // Deal damage to what you run into
         if (other_unit) {
-          // Do not attack ally units
+          // Do not attack living ally units (allow them to clear ally corpses)
           if (
-            other_unit.faction != unit.faction &&
+            (!other_unit.alive || other_unit.faction != unit.faction) &&
             canAttackCell(unit, next_x, next_y)
           ) {
             Image.attack(unit.image, unit.x, unit.y, next_x, next_y);
