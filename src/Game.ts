@@ -278,7 +278,12 @@ export default class Game {
           unit.healthMax = config.UNIT_BASE_HEALTH * 2;
           unit.health = unit.healthMax;
           unit.damage = config.UNIT_BASE_DAMAGE * 2;
+          unit.image.sprite.scale.set(0);
           Image.scale(unit.image, 1.0);
+        } else {
+          // Start images small and make them grow when they spawn in
+          unit.image.sprite.scale.set(0);
+          Image.scale(unit.image, 0.8);
         }
       } else {
         console.error('Unit not spawned due to no empty cells');
