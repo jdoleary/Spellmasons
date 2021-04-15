@@ -248,8 +248,9 @@ async function handleSpell(caster: Player.IPlayer, payload: any) {
   }
 }
 function checkEndPlayerTurn(player: Player.IPlayer) {
+  // Being dead ends your turn
   // Moving ends your turn
-  if (player.unit.thisTurnMoved) {
+  if (!player.unit.alive || player.unit.thisTurnMoved) {
     game.endPlayerTurn(player.clientId);
   }
 }

@@ -421,19 +421,24 @@ export default class Game {
       }
     }
   }
-  checkForEndOfLevel(): boolean {
+  // Returns true if game is over
+  checkForGameOver(): boolean {
     const areAllPlayersDead =
       this.players.filter((p) => p.unit.alive).length === 0;
     if (areAllPlayersDead) {
-      // - bug: Game over triggers too early if the player is ressed in the same turn that they die
       this.setGameState(game_state.GameOver);
       return true;
+    } else {
+      return false;
     }
-    // Advance the level if all living players have entered the portal:
+  }
+  // Returns true if it goes to the next level
+  checkForEndOfLevel(): boolean {
+    const livingPlayers = this.players.filter((p) => p.unit.alive);
     const areAllLivingPlayersInPortal =
-      this.players.filter((p) => p.unit.alive && p.inPortal).length ===
-      this.players.filter((p) => p.unit.alive).length;
-    if (areAllLivingPlayersInPortal) {
+      livingPlayers.filter((p) => p.inPortal).length === livingPlayers.length;
+    // Advance the level if there are living players and they all are in the portal:
+    if (livingPlayers.length && areAllLivingPlayersInPortal) {
       // Now that level is complete, move to the Upgrade gamestate where players can choose upgrades
       // before moving on to the next level
       this.setGameState(game_state.Upgrade);
@@ -526,6 +531,10 @@ export default class Game {
     return true;
   }
   setTurnPhase(p: turn_phase) {
+    // Before the turn phase changes, check if the game should transition to game over
+    if (this.checkForGameOver()) {
+      return;
+    }
     this.turn_phase = p;
 
     // Remove all phase classes from body

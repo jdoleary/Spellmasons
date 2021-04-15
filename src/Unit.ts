@@ -168,13 +168,6 @@ export function die(u: IUnit) {
   u.alive = false;
   // When a unit dies, deselect it
   deselect(u);
-  // If the unit is a player
-  if (u.unitType === UnitType.PLAYER_CONTROLLED) {
-    const unitPlayer = window.game.players[window.game.playerTurnIndex];
-    if (unitPlayer) {
-      window.game.endPlayerTurn(unitPlayer.clientId);
-    }
-  }
 }
 export async function takeDamage(unit: IUnit, amount: number) {
   let alteredAmount = amount;
