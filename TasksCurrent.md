@@ -2,9 +2,6 @@
 
 ## Tasks
 
-- New enemies:
-  - Enemy spellcasters that could poison YOU!
-  - Enemy priest
 - Fix swap
   - bug: chain swapping didn't move me, this occurs when the chain retarget's self
 - Add obstacles to spell effect? So freeze can freeze lava?
