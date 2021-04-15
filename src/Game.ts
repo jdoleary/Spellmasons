@@ -359,12 +359,12 @@ export default class Game {
       // Do not continue incrementing player turn
       return;
     }
-    this.playerTurnIndex = (this.playerTurnIndex + 1) % this.players.length;
-    this.initializePlayerTurn();
     const wentToNextPhase = this.goToNextPhaseIfAppropriate();
     if (wentToNextPhase) {
       return;
     }
+    this.playerTurnIndex = (this.playerTurnIndex + 1) % this.players.length;
+    this.initializePlayerTurn();
   }
   syncYourTurnState() {
     if (this.players[this.playerTurnIndex].clientId === window.clientId) {
@@ -550,7 +550,7 @@ export default class Game {
           u.thisTurnMoved = false;
           u.intendedNextMove = undefined;
         }
-        this.initializePlayerTurn();
+        this.incrementPlayerTurn();
         break;
       case 'NPC':
         this.setYourTurn(false, "NPC's Turn");
