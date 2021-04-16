@@ -210,17 +210,26 @@ body.your-turn #player-turn-indicator-holder.low-time {
   flex-direction: column;
   justify-content: center;
   pointer-events: none;
-  /* Transform position is determined on hover*/
-  position: fixed;
-  top: 0;
-  left: 0;
+  position: absolute;
+}
+/* Transform position is determined on hover*/
+#inspector-tooltip-container.top {
+  top: 64px;
+}
+#inspector-tooltip-container.bottom {
+  bottom: 0;
+}
+#inspector-tooltip-container.left {
+  left: 64px;
+}
+#inspector-tooltip-container.right {
+  right: 0;
 }
 #inspector-tooltip-container {
   border-radius: 10px 10px;
   background-color: rgba(255, 255, 255, 0.7);
   padding: 8px;
   width: 300px;
-  max-height: 800px;
-  height: 100%;
   white-space: pre-wrap;
+  position: absolute;
 }

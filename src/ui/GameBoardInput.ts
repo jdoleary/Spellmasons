@@ -13,6 +13,9 @@ import { allUnits } from '../units';
 
 let mouseCell: Coords = { x: -1, y: -1 };
 const elInspectorTooltip = document.getElementById('inspector-tooltip');
+const elInspectorTooltipContainer = document.getElementById(
+  'inspector-tooltip-container',
+);
 const elInspectorTooltipContent = document.getElementById(
   'inspector-tooltip-content',
 );
@@ -89,13 +92,29 @@ export async function syncSpellEffectProjection() {
   }
 }
 export function updateTooltip() {
-  if (!(elInspectorTooltipContent && elInspectorTooltip)) {
+  if (
+    !(
+      elInspectorTooltipContent &&
+      elInspectorTooltip &&
+      elInspectorTooltipContainer
+    )
+  ) {
     return;
   }
   // Update position of HTML element
   elInspectorTooltip.style.transform = `translate(${
-    app.stage.x + mouseCell.x * CELL_SIZE + CELL_SIZE
-  }px, ${app.stage.y + mouseCell.y * CELL_SIZE + CELL_SIZE}px)`;
+    app.stage.x + mouseCell.x * CELL_SIZE
+  }px, ${app.stage.y + mouseCell.y * CELL_SIZE}px)`;
+  elInspectorTooltipContainer.classList.remove('top');
+  elInspectorTooltipContainer.classList.remove('bottom');
+  elInspectorTooltipContainer.classList.remove('left');
+  elInspectorTooltipContainer.classList.remove('right');
+  elInspectorTooltipContainer.classList.add(
+    mouseCell.y > BOARD_HEIGHT / 2 ? 'bottom' : 'top',
+  );
+  elInspectorTooltipContainer.classList.add(
+    mouseCell.x > BOARD_WIDTH / 2 ? 'right' : 'left',
+  );
 
   // Update information in content
   // show info on cell, unit, pickup, etc clicked
