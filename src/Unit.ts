@@ -227,10 +227,9 @@ export function canMove(unit: IUnit): boolean {
 }
 export function findCellOneStepCloserTo(
   unit: IUnit,
-  desiredCellX: number,
-  desiredCellY: number,
+  desiredCell: Coords,
 ): Coords | undefined {
-  const path = window.game.findPath(unit, { x: desiredCellX, y: desiredCellY });
+  const path = window.game.findPath(unit, desiredCell);
   if (path && path.length >= 2) {
     const [x, y] = path[1];
     return { x, y };
@@ -241,6 +240,12 @@ export function findCellOneStepCloserTo(
 }
 export function livingUnitsInDifferentFaction(unit: IUnit) {
   return window.game.units.filter((u) => u.faction !== unit.faction && u.alive);
+}
+export function livingUnitsInSameFaction(unit: IUnit) {
+  // u !== unit excludes self from returning as the closest unit
+  return window.game.units.filter(
+    (u) => u !== unit && u.faction == unit.faction && u.alive,
+  );
 }
 function closestInListOfUnits(
   sourceUnit: IUnit,
@@ -261,6 +266,9 @@ export function findClosestUnitInDifferentFaction(
   unit: IUnit,
 ): IUnit | undefined {
   return closestInListOfUnits(unit, livingUnitsInDifferentFaction(unit));
+}
+export function findClosestUnitInSameFaction(unit: IUnit): IUnit | undefined {
+  return closestInListOfUnits(unit, livingUnitsInSameFaction(unit));
 }
 // moveTo moves a unit, considering all the in-game blockers and flags
 // the units property thisTurnMoved

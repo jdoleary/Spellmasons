@@ -162,11 +162,10 @@ export default function setupBoardInputHandlers() {
         );
         // If player hasn't already moved this turn...
         if (selfPlayer && !selfPlayer.unit.thisTurnMoved) {
-          const targetCell = Unit.findCellOneStepCloserTo(
-            selfPlayer.unit,
+          const targetCell = Unit.findCellOneStepCloserTo(selfPlayer.unit, {
             x,
             y,
-          );
+          });
           if (targetCell && !window.game.isCellObstructed(targetCell)) {
             window.pie.sendData({
               type: MESSAGE_TYPES.MOVE_PLAYER,

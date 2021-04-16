@@ -1,8 +1,6 @@
 # Todo
 
-- You should be incentivized to use all of your spells to clear a level
-
-  - "rocket launcher problem"
+- cannot find 'spell/arrow.png'
 
 - Playtest with brad 2021.04.15
   - Units don't path around frozen units

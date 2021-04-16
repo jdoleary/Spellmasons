@@ -1,9 +1,10 @@
 import * as Unit from '../Unit';
 import type { UnitSource } from './index';
-import { UnitSubType } from '../commonTypes';
+import { Coords, UnitSubType } from '../commonTypes';
 import * as math from '../math';
 import createVisualProjectile from '../Projectile';
 
+const range = 3;
 const unit: UnitSource = {
   id: 'Priest',
   info: {
@@ -14,10 +15,11 @@ const unit: UnitSource = {
   },
 
   action: (unit: Unit.IUnit) => {
-    // Move opposite to closest enemy
-    const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit);
-    if (closestEnemy) {
-      const moveTo = math.oneCellAwayFromCell(unit, closestEnemy);
+    // Move to closest ally
+    const closestAlly = Unit.findClosestUnitInSameFaction(unit);
+    console.log('🚀 ~ file: priest.ts ~ line 20 ~ closestAlly', closestAlly);
+    if (closestAlly) {
+      const moveTo = Unit.findCellOneStepCloserTo(unit, closestAlly);
       unit.intendedNextMove = moveTo;
     }
     // Heal an ally
@@ -25,17 +27,28 @@ const unit: UnitSource = {
       (u) => u.faction === unit.faction && u.alive && u.health < u.healthMax,
     );
     if (damagedAllys.length) {
-      const chosenUnit = damagedAllys[0];
-      createVisualProjectile(
-        unit,
-        chosenUnit.x,
-        chosenUnit.y,
-        'spell/green-thing.png',
-      );
-      // Heal for 2
-      Unit.takeDamage(chosenUnit, -2);
+      for (let ally of damagedAllys) {
+        if (inRange(unit, ally)) {
+          const chosenUnit = damagedAllys[0];
+          createVisualProjectile(
+            unit,
+            chosenUnit.x,
+            chosenUnit.y,
+            'spell/green-thing.png',
+          );
+          // Heal for 2
+          Unit.takeDamage(chosenUnit, -2);
+          break;
+        }
+      }
     }
   },
+  canInteractWithCell: (unit, x, y) => {
+    return inRange(unit, { x, y });
+  },
 };
+function inRange(unit: Unit.IUnit, coords: Coords): boolean {
+  return math.distance(unit, coords) <= range;
+}
 
 export default unit;
