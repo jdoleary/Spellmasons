@@ -7,6 +7,7 @@ import * as Obstacle from './Obstacle';
 import AnimationTimeline from './AnimationTimeline';
 import * as UI from './ui/UserInterface';
 import * as Card from './CardUI';
+import * as GameBoardInput from './ui/GameBoardInput';
 import { MESSAGE_TYPES } from './MessageTypes';
 import { UnitType } from './commonTypes';
 
@@ -247,6 +248,10 @@ async function handleSpell(caster: Player.IPlayer, payload: any) {
     window.animatingSpells = true;
     await game.castCards(caster, payload.cards, payload, false);
     window.animatingSpells = false;
+    // When spells are done animating but the mouse hasn't moved,
+    // syncSpellEffectProjection needs to be called so that the icon ("footprints" for example)
+    // will be shown in the tile that the mouse is hovering over
+    GameBoardInput.syncSpellEffectProjection();
     checkEndPlayerTurn(caster);
   } else {
     console.log('Someone is trying to cast out of turn');

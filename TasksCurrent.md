@@ -9,7 +9,6 @@
 
 ## Tasks
 
-- after spells are done animating, check if it should show the spell projection again
 - add unit description to tooltip
 - make tooltip update constantly so it gets current health when it changes
 
@@ -22,7 +21,7 @@
 ## Brad 2021.04.05
 
 - Freezing lava should let you walk over it (casts should work on obstacles)
-- archer hit me after i portaled due to my locationzz
+- archer hit me after i portaled due to my location
 - keybinding common spells
 - Holding down "z" should show safe squares to move to
 
