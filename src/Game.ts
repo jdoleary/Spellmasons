@@ -742,14 +742,14 @@ export default class Game {
     }
     return touching;
   }
-  getUnitAt(x: number, y: number): Unit.IUnit | undefined {
-    return this.units.find((u) => u.x === x && u.y === y);
+  getUnitAt(cell: Coords): Unit.IUnit | undefined {
+    return this.units.find((u) => u.x === cell.x && u.y === cell.y);
   }
-  getPickupAt(x: number, y: number): Pickup.IPickup | undefined {
-    return this.pickups.find((p) => p.x === x && p.y === y);
+  getPickupAt(cell: Coords): Pickup.IPickup | undefined {
+    return this.pickups.find((p) => p.x === cell.x && p.y === cell.y);
   }
-  getObstacleAt(x: number, y: number): Obstacle.IObstacle | undefined {
-    return this.obstacles.find((p) => p.x === x && p.y === y);
+  getObstacleAt(cell: Coords): Obstacle.IObstacle | undefined {
+    return this.obstacles.find((p) => p.x === cell.x && p.y === cell.y);
   }
   addUnitToArray(unit: Unit.IUnit) {
     this.units.push(unit);

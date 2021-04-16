@@ -30,12 +30,12 @@ const spell: Spell = {
             continue;
           }
           // The unit at the target location
-          const targetUnit = window.game.getUnitAt(target.x, target.y);
+          const targetUnit = window.game.getUnitAt(target);
           if (targetUnit) {
             swapUnits.push([targetUnit, swapLocation]);
           }
           // The pickup at the target location
-          const pickupAtTarget = window.game.getPickupAt(target.x, target.y);
+          const pickupAtTarget = window.game.getPickupAt(target);
           // Physically swap with pickups
           if (pickupAtTarget) {
             swapPickups.push([pickupAtTarget, swapLocation]);
@@ -47,18 +47,12 @@ const spell: Spell = {
             )
           ) {
             // The unit at the location that the targetUnit will swap to
-            const swapUnit = window.game.getUnitAt(
-              swapLocation.x,
-              swapLocation.y,
-            );
+            const swapUnit = window.game.getUnitAt(swapLocation);
             if (swapUnit) {
               swapUnits.push([swapUnit, target]);
             }
             // The pickup at the swap location
-            const pickupAtSwap = window.game.getPickupAt(
-              swapLocation.x,
-              swapLocation.y,
-            );
+            const pickupAtSwap = window.game.getPickupAt(swapLocation);
 
             if (pickupAtSwap) {
               swapPickups.push([pickupAtSwap, target]);

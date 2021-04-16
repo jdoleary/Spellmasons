@@ -13,7 +13,7 @@ const spell: Spell = {
       }
       let promises = [];
       for (let target of state.targets) {
-        const unit = window.game.getUnitAt(target.x, target.y);
+        const unit = window.game.getUnitAt(target);
         if (unit) {
           const damage = 1;
           promises.push(Unit.takeDamage(unit, damage));

@@ -12,7 +12,7 @@ const spell: Spell = {
         return state;
       }
       for (let target of state.targets) {
-        const unit = window.game.getUnitAt(target.x, target.y);
+        const unit = window.game.getUnitAt(target);
         if (unit) {
           addTo(unit);
         }

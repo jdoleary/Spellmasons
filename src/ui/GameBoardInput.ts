@@ -87,19 +87,20 @@ export async function syncSpellEffectProjection() {
     }
   }
 }
-function setHoverTooltipPosition(x: number, y: number) {
+export function updateTooltip() {
   if (!(elInspectorTooltipContent && elInspectorTooltip)) {
     return;
   }
-  const pixiCoords = app.renderer.plugins.interaction.mouse.global;
   // Update position of HTML element
-  elInspectorTooltip.style.transform = `translate(${pixiCoords.x}px, ${pixiCoords.y}px)`;
+  elInspectorTooltip.style.transform = `translate(${
+    app.stage.x + mouseCell.x * CELL_SIZE + CELL_SIZE
+  }px, ${app.stage.y + mouseCell.y * CELL_SIZE + CELL_SIZE}px)`;
 
   // Update information in content
   // show info on cell, unit, pickup, etc clicked
   let text = '';
   // Find unit:
-  const unit = window.game.getUnitAt(x, y);
+  const unit = window.game.getUnitAt(mouseCell);
   if (unit) {
     text += `\
 Unit
@@ -110,7 +111,7 @@ Health ${unit.health}/${unit.healthMax}
 Modifiers ${JSON.stringify(unit.modifiers, null, 2)}
         `;
   }
-  const pickup = window.game.getPickupAt(x, y);
+  const pickup = window.game.getPickupAt(mouseCell);
   if (pickup) {
     text += `\
 Pickup
@@ -118,7 +119,7 @@ ${pickup.name}
 ${pickup.description}
         `;
   }
-  const obstacle = window.game.getObstacleAt(x, y);
+  const obstacle = window.game.getObstacleAt(mouseCell);
   if (obstacle) {
     text += `\
 ${obstacle.name}
@@ -130,13 +131,12 @@ ${obstacle.description}
 export default function setupBoardInputHandlers() {
   // on Hover
   document.body.addEventListener('mousemove', (e) => {
-    const { x, y } = window.game.getCellFromCurrentMousePos();
-    setHoverTooltipPosition(x, y);
-    const didChange = mouseCell.x !== x || mouseCell.y !== y;
-    mouseCell.x = x;
-    mouseCell.y = y;
+    const cell = window.game.getCellFromCurrentMousePos();
+    const didChange = mouseCell.x !== cell.x || mouseCell.y !== cell.y;
     // If mouse hovering over a new cell, update the target images
     if (didChange) {
+      // Update mouseCell
+      mouseCell = cell;
       // Show target hover on cells
       syncSpellEffectProjection();
     }

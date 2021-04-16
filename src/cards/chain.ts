@@ -9,7 +9,7 @@ const spell: Spell = {
     effect: async (state, dryRun) => {
       let updatedTargets = [...state.targets];
       for (let target of state.targets) {
-        const unit = window.game.getUnitAt(target.x, target.y);
+        const unit = window.game.getUnitAt(target);
         if (unit) {
           // Find all units touching the spell origin
           const chained_units = window.game.getTouchingUnitsRecursive(

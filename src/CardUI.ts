@@ -4,6 +4,7 @@ import * as math from './math';
 import {
   clearSpellEffectProjection,
   syncSpellEffectProjection,
+  updateTooltip,
 } from './ui/GameBoardInput';
 const elCardHand = document.getElementById('card-hand');
 const elSelectedCards = document.getElementById('selected-cards');
@@ -121,10 +122,25 @@ export function getSelectedCards(): string[] {
   );
 }
 
+let inspectIntervalId: NodeJS.Timeout | undefined;
 export function toggleInspectMode(active: boolean) {
   elSelectedCards && elSelectedCards.classList.toggle('hide', active);
   elInspectorTooltip && elInspectorTooltip.classList.toggle('active', active);
   syncSpellEffectProjection();
+  if (active) {
+    // if the "update tooltip interval" is not currently running, start it:
+    if (inspectIntervalId == undefined) {
+      inspectIntervalId = setInterval(() => {
+        updateTooltip();
+      }, 60);
+    }
+  } else {
+    // If inspect mode is set to inactive, clear the "update tooltip interval"
+    if (inspectIntervalId !== undefined) {
+      clearInterval(inspectIntervalId);
+      inspectIntervalId = undefined;
+    }
+  }
 }
 export function clearSelectedCards() {
   // Remove the board highlight

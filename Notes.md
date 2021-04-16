@@ -1,5 +1,7 @@
 # Notes
 
+- Global coordinates if you need them: `const pixiCoords = app.renderer.plugins.interaction.mouse.global;`
+
 - Make animations trigger based on each card that's cast in order
 
   - What if rather than using an AnimationTimeline, I just made the turns actually asyncronous and animations happened right when a change occurred?
