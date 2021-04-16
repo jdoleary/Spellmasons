@@ -132,7 +132,8 @@ export function enterPortal(player: IPlayer) {
   const coords = window.game.getRandomEmptyCell({ xMax: 0 });
   if (coords) {
     // Move "portaled" unit out of the way to prevent collisions and chaining while portaled
-    coords.x = -1;
+    coords.x = NaN;
+    coords.y = NaN;
     Unit.setLocation(player.unit, coords);
   } else {
     console.error('Could not find random empty cell');

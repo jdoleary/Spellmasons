@@ -1,3 +1,4 @@
+- enemies should not be able to be on the portal
 - Try to reproduce: Game.findPath (114) cannot set property 'g' of undefined
   - pathfinding.js:1286 endNode.g = 0
 - Reproduce: wehn you choose ALL the spells in your hand, the active spell div shifts down because the card hand div is now empty

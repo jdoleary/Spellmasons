@@ -3,7 +3,6 @@
 - Playtest with brad 2021.04.15
   - Units don't path around frozen units
     - Should units path arround each other? Right now the pathing doesn't consider units as obstacles
-  - enemies should not be able to be on the portal
 
 ---
 
@@ -18,7 +17,6 @@
 ## Brad 2021.04.05
 
 - Freezing lava should let you walk over it (casts should work on obstacles)
-- archer hit me after i portaled due to my location
 - keybinding common spells
 - Holding down "z" should show safe squares to move to
 
