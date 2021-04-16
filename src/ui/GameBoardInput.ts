@@ -103,6 +103,29 @@ export function updateTooltip() {
   // Find unit:
   const unit = window.game.getUnitAt(mouseCell);
   if (unit) {
+    let cards = '';
+    if (unit.unitType === UnitType.PLAYER_CONTROLLED) {
+      const player = window.game.players.find((p) => p.unit === unit);
+      if (player) {
+        cards =
+          'Cards: \n' +
+          Object.entries(
+            player.cards.reduce<{ [card: string]: number }>((acc, card) => {
+              if (!acc[card]) {
+                acc[card] = 0;
+              }
+              acc[card]++;
+              return acc;
+            }, {}),
+          )
+            .map(([card, amount]) => `${amount} ${card}`)
+            .join('\n');
+      } else {
+        console.error(
+          'Could not find player corresponding to player controlled unit',
+        );
+      }
+    }
     text += `\
 Unit
 ${allUnits[unit.unitSourceId].info.description}
@@ -111,6 +134,7 @@ SubType ${UnitSubType[unit.unitSubType]}
 Faction ${Faction[unit.faction]}
 Health ${unit.health}/${unit.healthMax}
 Modifiers ${JSON.stringify(unit.modifiers, null, 2)}
+${cards}
         `;
   }
   const pickup = window.game.getPickupAt(mouseCell);
@@ -152,37 +176,37 @@ export default function setupBoardInputHandlers() {
       return;
     }
     if (window.game.turn_phase == turn_phase.PlayerTurns) {
-        // Get current client's player
-        const selfPlayer: Player.IPlayer | undefined = window.game.players.find(
-          (p) => p.clientId === window.clientId,
+      // Get current client's player
+      const selfPlayer: Player.IPlayer | undefined = window.game.players.find(
+        (p) => p.clientId === window.clientId,
+      );
+      // If player hasn't already moved this turn...
+      if (selfPlayer && !selfPlayer.unit.thisTurnMoved) {
+        const targetCell = Unit.findCellOneStepCloserTo(
+          selfPlayer.unit,
+          mouseTarget,
         );
-        // If player hasn't already moved this turn...
-        if (selfPlayer && !selfPlayer.unit.thisTurnMoved) {
-          const targetCell = Unit.findCellOneStepCloserTo(
-            selfPlayer.unit,
-            mouseTarget,
-          );
-          if (targetCell && !window.game.isCellObstructed(targetCell)) {
-            window.pie.sendData({
-              type: MESSAGE_TYPES.MOVE_PLAYER,
-              // This formula clamps the diff to -1, 0 or 1
-              ...targetCell,
-            });
-          } else {
-            floatingText({
-              cell: mouseTarget,
-              text: 'You cannot move here',
-              style: {
-                fill: 'red',
-              },
-            });
-          }
+        if (targetCell && !window.game.isCellObstructed(targetCell)) {
+          window.pie.sendData({
+            type: MESSAGE_TYPES.MOVE_PLAYER,
+            // This formula clamps the diff to -1, 0 or 1
+            ...targetCell,
+          });
         } else {
           floatingText({
             cell: mouseTarget,
-            text: 'You cannot move more than once per turn.',
+            text: 'You cannot move here',
+            style: {
+              fill: 'red',
+            },
           });
         }
+      } else {
+        floatingText({
+          cell: mouseTarget,
+          text: 'You cannot move more than once per turn.',
+        });
+      }
     }
     return false;
   });
@@ -205,32 +229,30 @@ export default function setupBoardInputHandlers() {
     if (areAnyCardsSelected()) {
       // Only allow casting in the proper phase
       if (window.game.turn_phase == turn_phase.PlayerTurns) {
-          // Get current client's player
-          const selfPlayer:
-            | Player.IPlayer
-            | undefined = window.game.players.find(
-            (p) => p.clientId === window.clientId,
-          );
-          // If the player casting is the current client player
-          if (selfPlayer) {
-            // If the spell is not in range
-            if (!Player.isTargetInRange(selfPlayer, mouseTarget)) {
-              // Show floating message to alert player
-              floatingText({
-                cell: mouseTarget,
-                text: 'out of range',
-              });
-            } else {
-              // cast the spell
-              window.pie.sendData({
-                type: MESSAGE_TYPES.SPELL,
-                x: mouseTarget.x,
-                y: mouseTarget.y,
-                cards: Card.getSelectedCards(),
-              });
-              Card.clearSelectedCards();
-            }
+        // Get current client's player
+        const selfPlayer: Player.IPlayer | undefined = window.game.players.find(
+          (p) => p.clientId === window.clientId,
+        );
+        // If the player casting is the current client player
+        if (selfPlayer) {
+          // If the spell is not in range
+          if (!Player.isTargetInRange(selfPlayer, mouseTarget)) {
+            // Show floating message to alert player
+            floatingText({
+              cell: mouseTarget,
+              text: 'out of range',
+            });
+          } else {
+            // cast the spell
+            window.pie.sendData({
+              type: MESSAGE_TYPES.SPELL,
+              x: mouseTarget.x,
+              y: mouseTarget.y,
+              cards: Card.getSelectedCards(),
+            });
+            Card.clearSelectedCards();
           }
+        }
       }
     }
   });

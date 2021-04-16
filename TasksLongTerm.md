@@ -8,7 +8,6 @@
     - Fix grunt attack positions to account for non-diagonal
     - Fix units not pathing around frozen units
     - Fix infinite loop when you go to a new level when another player is disconnected
-    - Add way to see other player's cards when you hover over them
   - Gameplay Sprinkles
     - More creative, more difficult enemies
     - More Spells
