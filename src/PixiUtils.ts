@@ -144,21 +144,3 @@ export function addPixiSprite(
   parent.addChild(sprite);
   return sprite;
 }
-
-export function changeSpriteTexture(imagePath: string, sprite: PIXI.Sprite) {
-  if (!isReady) {
-    throw new Error(
-      'PIXI is not finished setting up.  Cannot add a sprite yet',
-    );
-  }
-  const texture = sheet.textures[imagePath];
-  if (texture) {
-    sprite.texture = texture;
-  } else {
-    console.error(
-      'Texture at ',
-      imagePath,
-      'was unable to be set as sprite texture because the texture does not exist',
-    );
-  }
-}

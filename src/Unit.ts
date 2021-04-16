@@ -3,7 +3,7 @@ import * as config from './config';
 import floatingText from './FloatingText';
 import * as Image from './Image';
 import { cellDistance } from './math';
-import { changeSpriteTexture, containerUnits } from './PixiUtils';
+import { addPixiSprite, containerUnits } from './PixiUtils';
 import { Coords, UnitSubType, UnitType, Faction } from './commonTypes';
 import Events from './Events';
 export function getPlanningViewColor(unit: IUnit) {
@@ -164,13 +164,19 @@ export function serializeUnit(unit: IUnit) {
   };
 }
 export function resurrect(u: IUnit) {
-  changeSpriteTexture(u.image.imageName, u.image.sprite);
+  Image.changeSprite(
+    u.image,
+    addPixiSprite(u.image.imageName, u.image.sprite.parent),
+  );
   // Return dead units back to full health
   u.health = u.healthMax;
   u.alive = true;
 }
 export function die(unit: IUnit) {
-  changeSpriteTexture('units/corpse.png', unit.image.sprite);
+  Image.changeSprite(
+    unit.image,
+    addPixiSprite('units/corpse.png', unit.image.sprite.parent),
+  );
   unit.alive = false;
   // Remove all modifiers:
   for (let [modifier, _modifierProperties] of Object.entries(unit.modifiers)) {

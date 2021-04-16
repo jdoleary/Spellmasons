@@ -45,6 +45,16 @@ export function cleanup(image: IImage) {
     image.sprite.parent.removeChild(image.sprite);
   }
 }
+export function changeSprite(image: IImage, sprite: PIXI.Sprite) {
+  sprite.x = image.sprite.x;
+  sprite.y = image.sprite.y;
+  sprite.scale.x = image.sprite.scale.x;
+  sprite.scale.y = image.sprite.scale.y;
+  sprite.anchor.x = image.sprite.anchor.x;
+  sprite.anchor.y = image.sprite.anchor.y;
+  cleanup(image);
+  image.sprite = sprite;
+}
 export function load(image: IImage, parent: PIXI.Container) {
   const instantiatedImage = create(0, 0, image.imageName, parent);
   instantiatedImage.sprite.x = image.sprite.x;

@@ -3,7 +3,6 @@
 - Critical Path
   - Gameplay Core (Due April 21, 2021)
     - **Really polish synergies** (obstacle spell interactions, etc)
-    - Fix corpse texture revert to animation
     - Fix units not pathing around frozen units
   - Gameplay Sprinkles
     - More creative, more difficult enemies
