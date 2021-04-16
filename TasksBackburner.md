@@ -1,3 +1,4 @@
+- It's possible that summoner could block you from finishing the level by summoning too many allies
 - enemies should not be able to be on the portal
 - Try to reproduce: Game.findPath (114) cannot set property 'g' of undefined
   - pathfinding.js:1286 endNode.g = 0

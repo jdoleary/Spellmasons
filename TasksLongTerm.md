@@ -3,15 +3,25 @@
 - Critical Path
   - Gameplay Core (Due April 21, 2021)
     - **Really polish synergies** (obstacle spell interactions, etc)
+    - Fix grunt attack positions to account for non-diagonal
+    - Fix Card frequency gives cards while the player is portaled
+    - Fix corpse texture revert to animation
+    - Fix planning mode doesn't refresh on level change
+    - Fix grunt attack positions to account for non-diagonal
+    - Fix units not pathing around frozen units
+    - Fix infinite loop when you go to a new level when another player is disconnected
+    - Add way to see other player's cards when you hover over them
   - Gameplay Sprinkles
     - More creative, more difficult enemies
     - More Spells
+      - Add tiers that only unlock with upgrades?
     - More Upgrades
     - Some sense of progression (items / inventory??) (or are upgrades enough?)
     - Level Progression (which enemies, how is it random, etc)
   - Polish
     - Add tutorial
       - Introduce unit types
+    - Add quicksaves
     - Make sure pie-client isn't still linked and uses most up-to-date version on NPM
     - WebsocketPie: Make clients receive their own messages immediately?
       - So that when a player is alone they can just keep clicking to move?
@@ -26,6 +36,7 @@
     - SoundFX
     - CoverArt
     - Better Game Name
+      - Think of "Into the Breach", "Binding of Isaac", and "Faster than light". They all communicate seriousness
   - Chores
     - Make executable with Electron
     - Include WebsocketPie and make hosting for friends simple
