@@ -20,17 +20,17 @@ export interface IImage {
 export function create(
   cellX: number,
   cellY: number,
-  imageName: string,
+  spritesheetId: string,
   parent: PIXI.Container,
 ): IImage {
-  const sprite = addPixiSprite(imageName, parent);
+  const sprite = addPixiSprite(spritesheetId, parent);
   sprite.anchor.x = 0.5;
   sprite.anchor.y = 0.5;
   sprite.rotation = 0;
 
   const image: IImage = {
     // Save image path in unit so it's accessible when loading gamestate
-    imageName,
+    imageName: spritesheetId,
     sprite,
     subSpriteInstances: {},
     subSprites: [],

@@ -28,7 +28,7 @@ function resizePixi() {
 }
 // PIXI textures
 let resources: { [key: string]: PIXI.ILoaderResource };
-let sheet: PIXI.ILoaderResource;
+let sheet: PIXI.Spritesheet;
 export function setupPixi(additionalImagePaths: string[]): Promise<void> {
   // Dedup images
   const additionalImagePathsDeduped = additionalImagePaths.filter(
@@ -82,11 +82,11 @@ function loadTextures(additionalImagePaths: string[]): Promise<void> {
     // images.forEach((path) => {
     //   loader.add(path);
     // });
-    const sheetPath = 'images/sheet1.json';
+    const sheetPath = 'sheet1.json';
     loader.add(sheetPath);
     loader.load((_loader, all_resources) => {
       resources = all_resources;
-      sheet = all_resources[sheetPath];
+      sheet = all_resources[sheetPath].spritesheet;
       isReady = true;
       resolve();
     });
@@ -127,8 +127,20 @@ export function addPixiSprite(
       'PIXI is not finished setting up.  Cannot add a sprite yet',
     );
   }
-  const texture = sheet.textures?.[imagePath];
-  const sprite = new PIXI.Sprite(texture || sheet.textures?.['empty.png']);
+  let sprite: PIXI.Sprite;
+  let texture = sheet.animations[imagePath];
+  if (texture) {
+    const animatedSprite = new PIXI.AnimatedSprite(sheet.animations[imagePath]);
+    animatedSprite.animationSpeed = 0.02;
+    animatedSprite.play();
+    sprite = animatedSprite;
+  } else {
+    let singleTexture = sheet.textures[imagePath];
+    sprite = new PIXI.Sprite(singleTexture);
+    if (!singleTexture) {
+      console.error('Could not find texture for', imagePath);
+    }
+  }
   parent.addChild(sprite);
   return sprite;
 }

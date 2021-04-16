@@ -124,7 +124,7 @@ export const specialPickups: { [image: string]: IPickupSource } = {
 };
 export const pickups: IPickupSource[] = [
   {
-    imagePath: 'pickups/card.png',
+    imagePath: 'pickups/card',
     name: 'Cards',
     description: 'Grants the player extra cards',
     effect: ({ unit, player }) => {
