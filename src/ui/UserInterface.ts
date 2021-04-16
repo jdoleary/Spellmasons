@@ -7,6 +7,7 @@ import * as math from '../math';
 import * as Player from '../Player';
 import { clearSelectedCards, toggleInspectMode } from '../CardUI';
 import { Faction, UnitType } from '../commonTypes';
+import { allUnits } from '../units';
 
 const elEndTurnBtn: HTMLButtonElement = document.getElementById(
   'endTurn',
@@ -79,27 +80,27 @@ export function drawDangerOverlay() {
     for (let x = 0; x < config.BOARD_WIDTH; x++) {
       for (let y = 0; y < config.BOARD_HEIGHT; y++) {
         // for each unit...
-        // for (let unit of window.game.units) {
-        //   if (
-        //     unit.alive &&
-        //     unit.unitType === UnitType.AI &&
-        //     unit.faction === Faction.ENEMY
-        //   ) {
-        //     if (canAttackCell(unit, x, y)) {
-        //       const cell = math.cellToBoardCoords(x, y);
-        //       const color = Unit.getDangerZoneColor(unit);
-        //       // dangerOverlayGraphics.lineStyle(8, color, 0.9);
-        //       dangerOverlayGraphics.beginFill(color);
-        //       dangerOverlayGraphics.drawRect(
-        //         cell.x - halfCell,
-        //         cell.y - halfCell,
-        //         config.CELL_SIZE,
-        //         config.CELL_SIZE,
-        //       );
-        //       dangerOverlayGraphics.endFill();
-        //     }
-        //   }
-        // }
+        for (let unit of window.game.units) {
+          if (
+            unit.alive &&
+            unit.unitType === UnitType.AI &&
+            unit.faction === Faction.ENEMY
+          ) {
+            if (allUnits[unit.unitSourceId].canInteractWithCell?.(unit, x, y)) {
+              const cell = math.cellToBoardCoords(x, y);
+              const color = Unit.getDangerZoneColor(unit);
+              // dangerOverlayGraphics.lineStyle(8, color, 0.9);
+              dangerOverlayGraphics.beginFill(color);
+              dangerOverlayGraphics.drawRect(
+                cell.x - halfCell,
+                cell.y - halfCell,
+                config.CELL_SIZE,
+                config.CELL_SIZE,
+              );
+              dangerOverlayGraphics.endFill();
+            }
+          }
+        }
         // For the player, draw their range
         if (Player.isTargetInRange(window.player, { x, y })) {
           const cell = math.cellToBoardCoords(x, y);

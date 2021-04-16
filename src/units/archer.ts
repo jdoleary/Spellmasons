@@ -16,7 +16,7 @@ const unit: UnitSource = {
     // Shoot at enemy if in same horizontal, diagonal, or vertical
     let targetEnemy;
     for (let enemy of Unit.livingUnitsInDifferentFaction(unit)) {
-      if (canAttackCell(unit, enemy.x, enemy.y)) {
+      if (canInteractWithCell(unit, enemy.x, enemy.y)) {
         targetEnemy = enemy;
         break;
       }
@@ -38,8 +38,9 @@ const unit: UnitSource = {
       }
     }
   },
+  canInteractWithCell,
 };
-function canAttackCell(unit: Unit.IUnit, x: number, y: number): boolean {
+function canInteractWithCell(unit: Unit.IUnit, x: number, y: number): boolean {
   // Dead units cannot attack
   if (!unit.alive) {
     return false;

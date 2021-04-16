@@ -33,7 +33,7 @@ const unit: UnitSource = {
           // Do not attack living ally units (allow them to clear ally corpses)
           if (
             (!other_unit.alive || other_unit.faction != unit.faction) &&
-            canAttackCell(unit, next_x, next_y)
+            canInteractWithCell(unit, next_x, next_y)
           ) {
             Image.attack(unit.image, unit.x, unit.y, next_x, next_y);
             Unit.takeDamage(other_unit, unit.damage);
@@ -46,8 +46,9 @@ const unit: UnitSource = {
       }
     }
   },
+  canInteractWithCell,
 };
-function canAttackCell(unit: Unit.IUnit, x: number, y: number): boolean {
+function canInteractWithCell(unit: Unit.IUnit, x: number, y: number): boolean {
   // Dead units cannot attack
   if (!unit.alive) {
     return false;
