@@ -169,11 +169,15 @@ export function resurrect(u: IUnit) {
   u.health = u.healthMax;
   u.alive = true;
 }
-export function die(u: IUnit) {
-  changeSpriteTexture('units/corpse.png', u.image.sprite);
-  u.alive = false;
+export function die(unit: IUnit) {
+  changeSpriteTexture('units/corpse.png', unit.image.sprite);
+  unit.alive = false;
+  // Remove all modifiers:
+  for (let [modifier, _modifierProperties] of Object.entries(unit.modifiers)) {
+    removeModifier(unit, modifier);
+  }
   // When a unit dies, deselect it
-  deselect(u);
+  deselect(unit);
 }
 export async function takeDamage(unit: IUnit, amount: number) {
   let alteredAmount = amount;

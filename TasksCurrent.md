@@ -3,7 +3,6 @@
 - Playtest with brad 2021.04.15
   - Units don't path around frozen units
     - Should units path arround each other? Right now the pathing doesn't consider units as obstacles
-  - poison should go away when a unit dies
   - enemies should be able to be on the portal
   - way to single attack if your next to something so that corpses can't block the portal
   - Game.findPath (114) cannot set property 'g' of undefined
