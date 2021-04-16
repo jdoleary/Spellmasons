@@ -8,7 +8,7 @@ const unit: UnitSource = {
   id: 'Poisoner',
   info: {
     description: 'Poisons enemies',
-    image: 'images/units/golem-poison.png',
+    image: 'units/golem-poison.png',
     subtype: UnitSubType.AI_poisoner,
     probability: 30,
   },
@@ -25,7 +25,7 @@ const unit: UnitSource = {
         unit,
         chosenUnit.x,
         chosenUnit.y,
-        'images/spell/green-thing.png',
+        'spell/green-thing.png',
       );
       floatingText({
         cellX: chosenUnit.x,

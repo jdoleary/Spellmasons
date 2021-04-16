@@ -77,7 +77,7 @@ export async function syncSpellEffectProjection() {
         Image.create(
           mouseTarget.x,
           mouseTarget.y,
-          'images/spell/deny.png',
+          'spell/deny.png',
           containerSpells,
         );
       } else {

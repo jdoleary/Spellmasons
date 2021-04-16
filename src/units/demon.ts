@@ -7,7 +7,7 @@ const unit: UnitSource = {
   id: 'demon',
   info: {
     description: 'Raises the dead and teleports!',
-    image: 'images/units/demon.png',
+    image: 'units/demon.png',
     subtype: UnitSubType.AI_demon,
     probability: 30,
   },
@@ -22,7 +22,7 @@ const unit: UnitSource = {
         unit,
         deadUnit.x,
         deadUnit.y,
-        'images/spell/green-thing.png',
+        'spell/green-thing.png',
       );
       Unit.resurrect(deadUnit);
       // Change resurrected unit to own faction

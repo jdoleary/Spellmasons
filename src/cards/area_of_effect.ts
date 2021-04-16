@@ -4,7 +4,7 @@ const id = 'area_of_effect';
 const spell: Spell = {
   card: {
     id,
-    thumbnail: 'images/spell/aoe.png',
+    thumbnail: 'spell/aoe.png',
     probability: 10,
     effect: async (state, dryRun) => {
       let updatedTargets = [...state.targets];

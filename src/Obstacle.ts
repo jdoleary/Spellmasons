@@ -13,7 +13,6 @@ interface IObstacleSource {
   name: string;
   description: string;
   imagePath: string;
-
 }
 export function create(x: number, y: number, obstacle: IObstacleSource) {
   const self: IObstacle = {
@@ -44,9 +43,10 @@ export function serialize(o: IObstacle) {
   };
 }
 
-export const obstacleSource: IObstacleSource[] = [{
-          name: 'Lava',
-          description: 'This is lava',
-          imagePath: 'images/tiles/lava.png',
-
-}];
+export const obstacleSource: IObstacleSource[] = [
+  {
+    name: 'Lava',
+    description: 'This is lava',
+    imagePath: 'tiles/lava.png',
+  },
+];

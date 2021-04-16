@@ -9,7 +9,7 @@ const id = 'swap';
 const spell: Spell = {
   card: {
     id,
-    thumbnail: 'images/spell/swap.png',
+    thumbnail: 'spell/swap.png',
     probability: 10,
     effect: async (state, dryRun) => {
       const { caster, targets } = state;

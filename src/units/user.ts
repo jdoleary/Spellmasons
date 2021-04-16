@@ -6,7 +6,7 @@ const unit: UnitSource = {
   id: 'user',
   info: {
     description: '',
-    image: 'images/units/man-blue.png',
+    image: 'units/man-blue.png',
     subtype: UnitSubType.PLAYER_CONTROLLED,
     probability: 0,
   },

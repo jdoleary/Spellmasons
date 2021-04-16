@@ -8,7 +8,7 @@ const unit: UnitSource = {
   id: 'Priest',
   info: {
     description: 'Heals allies',
-    image: 'images/units/priest.png',
+    image: 'units/priest.png',
     subtype: UnitSubType.AI_priest,
     probability: 30,
   },
@@ -30,7 +30,7 @@ const unit: UnitSource = {
         unit,
         chosenUnit.x,
         chosenUnit.y,
-        'images/spell/green-thing.png',
+        'spell/green-thing.png',
       );
       // Heal for 2
       Unit.takeDamage(chosenUnit, -2);

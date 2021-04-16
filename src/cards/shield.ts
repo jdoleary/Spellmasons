@@ -7,7 +7,7 @@ const id = 'shield';
 const spell: Spell = {
   card: {
     id,
-    thumbnail: 'images/spell/shield.png',
+    thumbnail: 'spell/shield.png',
     probability: 10,
     effect: async (state, dryRun) => {
       if (dryRun) {
@@ -49,7 +49,7 @@ const spell: Spell = {
   },
   subsprites: {
     shield: {
-      imageName: 'images/spell/shield.png',
+      imageName: 'spell/shield.png',
       alpha: 1.0,
       anchor: {
         x: 0,

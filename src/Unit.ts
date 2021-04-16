@@ -170,7 +170,7 @@ export function resurrect(u: IUnit) {
   u.alive = true;
 }
 export function die(u: IUnit) {
-  changeSpriteTexture('images/units/corpse.png', u.image.sprite);
+  changeSpriteTexture('units/corpse.png', u.image.sprite);
   u.alive = false;
   // When a unit dies, deselect it
   deselect(u);

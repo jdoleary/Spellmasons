@@ -109,8 +109,8 @@ export function triggerPickup(pickup: IPickup, unit: IUnit) {
 // Special pickups are not stored in the pickups array because they shouldn't be
 // randomly selected when adding pickups to a generated level.
 export const specialPickups: { [image: string]: IPickupSource } = {
-  'images/portal.png': {
-    imagePath: 'images/portal.png',
+  'portal.png': {
+    imagePath: 'portal.png',
     playerOnly: true,
     name: 'Portal',
     description:
@@ -124,7 +124,7 @@ export const specialPickups: { [image: string]: IPickupSource } = {
 };
 export const pickups: IPickupSource[] = [
   {
-    imagePath: 'images/pickups/card.png',
+    imagePath: 'pickups/card.png',
     name: 'Cards',
     description: 'Grants the player extra cards',
     effect: ({ unit, player }) => {

@@ -8,7 +8,7 @@ const unit: UnitSource = {
   id: 'Sand Golem',
   info: {
     description: 'A sand golem, runs away if you get too close!',
-    image: 'images/units/golem-sand.png',
+    image: 'units/golem-sand.png',
     subtype: UnitSubType.AI_reach,
     probability: 30,
   },
@@ -30,7 +30,7 @@ const unit: UnitSource = {
         unit,
         targetEnemy.x,
         targetEnemy.y,
-        'images/spell/green-thing.png',
+        'spell/green-thing.png',
       );
       Unit.takeDamage(targetEnemy, unit.damage);
     } else {

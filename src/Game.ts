@@ -101,7 +101,7 @@ export default class Game {
     let cell;
     for (let x = 0; x < config.BOARD_WIDTH; x++) {
       for (let y = 0; y < config.BOARD_HEIGHT; y++) {
-        cell = addPixiSprite('images/tiles/ground.png', containerBoard);
+        cell = addPixiSprite('tiles/ground.png', containerBoard);
         cell.x = x * config.CELL_SIZE;
         cell.y = y * config.CELL_SIZE;
       }
@@ -199,7 +199,7 @@ export default class Game {
 
   initLevel() {
     // Spawn portal
-    const portalPickup = Pickup.specialPickups['images/portal.png'];
+    const portalPickup = Pickup.specialPickups['portal.png'];
     Pickup.create(
       config.PORTAL_COORDINATES.x,
       config.PORTAL_COORDINATES.y,
@@ -879,7 +879,7 @@ export default class Game {
 }
 
 function drawTarget(x: number, y: number, animate: boolean): Promise<void> {
-  const image = Image.create(x, y, 'images/spell/target.png', containerSpells);
+  const image = Image.create(x, y, 'spell/target.png', containerSpells);
   if (animate) {
     image.sprite.scale.set(0.0);
     return Image.scale(image, 1.0);

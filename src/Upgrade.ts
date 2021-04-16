@@ -79,7 +79,7 @@ export const upgradeSourceWhenDead: IUpgrade[] = [
     title: 'Resurrect',
     description:
       'You have died, but find yourself resurrected as your allies enter the portal.',
-    thumbnail: 'images/spell/resurrect.png',
+    thumbnail: 'spell/resurrect.png',
     // Resurrection happens automatically at the start of each level
     effect: () => {},
   },
@@ -88,14 +88,14 @@ export const upgradeSource: IUpgrade[] = [
   {
     title: '+ Cast Range',
     description: 'Increases how far away you can cast',
-    thumbnail: 'images/upgrades/plus_range.png',
+    thumbnail: 'upgrades/plus_range.png',
     effect: (player) => player.range++,
   },
   {
     title: '+ Card Frequency',
     description:
       'Decreases the number of turns that it takes to get a new card',
-    thumbnail: 'images/upgrades/plus_card_frequency.png',
+    thumbnail: 'upgrades/plus_card_frequency.png',
     maxCopies: config.PLAYER_BASE_TURNS_PER_CARD - 1,
     effect: (player) => {
       player.turnsPerCard--;
@@ -107,7 +107,7 @@ export const upgradeSource: IUpgrade[] = [
   {
     title: 'More Cards',
     description: `Increases the number of cards that you get at the beginning of each level`,
-    thumbnail: 'images/upgrades/more_cards.png',
+    thumbnail: 'upgrades/more_cards.png',
     effect: (player) => {
       player.cardsAmount++;
     },
@@ -115,7 +115,7 @@ export const upgradeSource: IUpgrade[] = [
   {
     title: '+ Max Health',
     description: `Increases your max health by one`,
-    thumbnail: 'images/upgrades/plus_max_health.png',
+    thumbnail: 'upgrades/plus_max_health.png',
     effect: (player) => {
       player.unit.healthMax++;
       player.unit.health++;
@@ -127,6 +127,6 @@ export const upgradeSource: IUpgrade[] = [
 //   {
 //     title: '',
 //     description: '',
-//     thumbnail: 'images/spell/.png',
+//     thumbnail: 'spell/.png',
 //     probability:1
 //   },

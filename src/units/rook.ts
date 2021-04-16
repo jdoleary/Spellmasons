@@ -8,7 +8,7 @@ const unit: UnitSource = {
   id: 'rook',
   info: {
     description: 'Can slliiiiiiiiiiide',
-    image: 'images/units/golem-red.png',
+    image: 'units/golem-red.png',
     subtype: UnitSubType.AI_rook,
     probability: 10,
   },
@@ -26,7 +26,7 @@ const unit: UnitSource = {
         unit,
         targetEnemy.x,
         targetEnemy.y,
-        'images/spell/arrow.png',
+        'spell/arrow.png',
       );
       Unit.takeDamage(targetEnemy, unit.damage);
     } else {

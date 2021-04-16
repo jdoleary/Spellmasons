@@ -6,7 +6,7 @@ const id = 'vulnerable';
 const spell: Spell = {
   card: {
     id,
-    thumbnail: 'images/spell/vulnerable.png',
+    thumbnail: 'spell/vulnerable.png',
     probability: 5,
     effect: async (state, dryRun) => {
       if (dryRun) {
@@ -33,7 +33,7 @@ const spell: Spell = {
   },
   subsprites: {
     vulnerable: {
-      imageName: 'images/spell/vulnerable.png',
+      imageName: 'spell/vulnerable.png',
       alpha: 1.0,
       anchor: {
         x: 0,

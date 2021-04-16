@@ -23,17 +23,19 @@ export function create(
   imageName: string,
   parent: PIXI.Container,
 ): IImage {
+  const sprite = addPixiSprite(imageName, parent);
+  sprite.anchor.x = 0.5;
+  sprite.anchor.y = 0.5;
+  sprite.rotation = 0;
+
   const image: IImage = {
     // Save image path in unit so it's accessible when loading gamestate
     imageName,
-    sprite: addPixiSprite(imageName, parent),
+    sprite,
     subSpriteInstances: {},
     subSprites: [],
     scale: 1,
   };
-  image.sprite.anchor.x = 0.5;
-  image.sprite.anchor.y = 0.5;
-  image.sprite.rotation = 0;
   setPosition(image, cellX, cellY);
   return image;
 }

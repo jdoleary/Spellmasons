@@ -8,7 +8,7 @@ const unit: UnitSource = {
   id: 'archer',
   info: {
     description: 'Will shoot you with an arrow!',
-    image: 'images/units/golem-blue.png',
+    image: 'units/golem-blue.png',
     subtype: UnitSubType.AI_bishop,
     probability: 50,
   },
@@ -26,7 +26,7 @@ const unit: UnitSource = {
         unit,
         targetEnemy.x,
         targetEnemy.y,
-        'images/spell/arrow.png',
+        'spell/arrow.png',
       );
       Unit.takeDamage(targetEnemy, unit.damage);
     } else {

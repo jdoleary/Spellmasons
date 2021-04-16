@@ -15,7 +15,7 @@ export interface ISubsprites {
 }
 const Subsprites: ISubsprites = {
   disconnected: {
-    imageName: 'images/disconnected.png',
+    imageName: 'disconnected.png',
     alpha: 1.0,
     anchor: {
       x: 0.5,
@@ -27,7 +27,7 @@ const Subsprites: ISubsprites = {
     },
   },
   headband: {
-    imageName: 'images/headband.png',
+    imageName: 'headband.png',
     alpha: 1.0,
     anchor: {
       x: 0.5,
@@ -39,7 +39,7 @@ const Subsprites: ISubsprites = {
     },
   },
   ownCharacterMarker: {
-    imageName: 'images/units/unit-underline.png',
+    imageName: 'units/unit-underline.png',
     alpha: 1.0,
     anchor: {
       x: 0.5,

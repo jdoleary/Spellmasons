@@ -28,6 +28,7 @@ function resizePixi() {
 }
 // PIXI textures
 let resources: { [key: string]: PIXI.ILoaderResource };
+let sheet: PIXI.ILoaderResource;
 export function setupPixi(additionalImagePaths: string[]): Promise<void> {
   // Dedup images
   const additionalImagePathsDeduped = additionalImagePaths.filter(
@@ -56,34 +57,66 @@ export function setupPixi(additionalImagePaths: string[]): Promise<void> {
 function loadTextures(additionalImagePaths: string[]): Promise<void> {
   return new Promise((resolve) => {
     const loader = PIXI.Loader.shared;
-    const images = [
-      ...additionalImagePaths,
-      'images/tiles/ground.png',
-      'images/tiles/lava.png',
-      'images/spell/arrow.png',
-      'images/spell/target.png',
-      'images/spell/deny.png',
-      'images/spell/green-thing.png',
-      'images/portal.png',
-      'images/units/unit-underline.png',
-      'images/units/corpse.png',
-      'images/pickups/card.png',
-      'images/upgrades/more_cards.png',
-      'images/upgrades/plus_range.png',
-      'images/upgrades/plus_card_frequency.png',
-      'images/headband.png',
-      'images/disconnected.png',
-      'images/empty.png',
-    ];
-    images.forEach((path) => {
-      loader.add(path);
-    });
+    // const images = [
+    //   ...additionalImagePaths,
+    //   'images/tiles/ground.png',
+    //   'images/tiles/lava.png',
+    //   'images/spell/arrow.png',
+    //   'images/spell/target.png',
+    //   'images/spell/deny.png',
+    //   'images/spell/green-thing.png',
+    //   'images/portal.png',
+    //   'images/units/unit-underline.png',
+    //   'images/units/corpse.png',
+    //   'images/pickups/card.png',
+    //   'images/pickups/card1.png',
+    //   'images/pickups/card2.png',
+    //   'images/pickups/card3.png',
+    //   'images/upgrades/more_cards.png',
+    //   'images/upgrades/plus_range.png',
+    //   'images/upgrades/plus_card_frequency.png',
+    //   'images/headband.png',
+    //   'images/disconnected.png',
+    //   'images/empty.png',
+    // ];
+    // images.forEach((path) => {
+    //   loader.add(path);
+    // });
+    const sheetPath = 'images/sheet1.json';
+    loader.add(sheetPath);
     loader.load((_loader, all_resources) => {
       resources = all_resources;
+      sheet = all_resources[sheetPath];
       isReady = true;
       resolve();
     });
   });
+}
+export function addAnimatedPixiSprite(
+  imagePaths: string[],
+  parent: PIXI.Container,
+  animationSpeed: number = 0.1,
+): PIXI.Sprite {
+  if (!isReady) {
+    throw new Error(
+      'PIXI is not finished setting up.  Cannot add a sprite yet',
+    );
+  }
+  const textures = [];
+  for (let path of imagePaths) {
+    const resource: PIXI.ILoaderResource = resources[path];
+    if (resource && resource.texture) {
+      textures.push(resource.texture);
+    } else {
+      console.error('path', path, 'cannot be loaded as a texture');
+    }
+  }
+  const sprite = new PIXI.AnimatedSprite(textures);
+  sprite.animationSpeed = animationSpeed;
+  sprite.play();
+  parent.addChild(sprite);
+
+  return sprite;
 }
 export function addPixiSprite(
   imagePath: string,
@@ -94,10 +127,8 @@ export function addPixiSprite(
       'PIXI is not finished setting up.  Cannot add a sprite yet',
     );
   }
-  const resource: PIXI.ILoaderResource = resources[imagePath];
-  const sprite = new PIXI.Sprite(
-    resource ? resource.texture : resources['images/empty.png'].texture,
-  );
+  const texture = sheet.textures?.[imagePath];
+  const sprite = new PIXI.Sprite(texture || sheet.textures?.['empty.png']);
   parent.addChild(sprite);
   return sprite;
 }

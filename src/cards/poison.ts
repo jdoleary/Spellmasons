@@ -16,7 +16,7 @@ export function add(unit: IUnit) {
 const spell: Spell = {
   subsprites: {
     poison: {
-      imageName: 'images/spell/poison.png',
+      imageName: 'spell/poison.png',
       alpha: 1.0,
       anchor: {
         x: 0,
@@ -30,7 +30,7 @@ const spell: Spell = {
   },
   card: {
     id,
-    thumbnail: 'images/spell/poison.png',
+    thumbnail: 'spell/poison.png',
     probability: 10,
     effect: async (state, dryRun) => {
       if (dryRun) {
