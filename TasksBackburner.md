@@ -1,5 +1,6 @@
 - Try to reproduce: Game.findPath (114) cannot set property 'g' of undefined
   - pathfinding.js:1286 endNode.g = 0
+- Reproduce: wehn you choose ALL the spells in your hand, the active spell div shifts down because the card hand div is now empty
 - projectiles are on the containerSpells container and so get cleared when mouse moves
   - Do i need to make AI casts work the same way that player casts do??
 - Convert console.error(s) to Sentry.captureException?? before deployment?

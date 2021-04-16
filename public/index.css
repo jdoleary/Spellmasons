@@ -79,6 +79,10 @@ body {
   display: flex;
   width: 100%;
 }
+#card-hand {
+  /* This prevents the card-hand from disappearing when all cards are selected */
+  min-height: 103px;
+}
 /* The "card" width is very thin to allow them to stack.  The card-inner is what
 actually contains the full width of the card. */
 #card-hand .card {
