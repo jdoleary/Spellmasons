@@ -17,7 +17,6 @@ const unit: UnitSource = {
   action: (unit: Unit.IUnit) => {
     // Move to closest ally
     const closestAlly = Unit.findClosestUnitInSameFaction(unit);
-    console.log('🚀 ~ file: priest.ts ~ line 20 ~ closestAlly', closestAlly);
     if (closestAlly) {
       const moveTo = Unit.findCellOneStepCloserTo(unit, closestAlly);
       unit.intendedNextMove = moveTo;
