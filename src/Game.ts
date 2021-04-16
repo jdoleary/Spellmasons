@@ -413,7 +413,10 @@ export default class Game {
       }
     }
 
-    if (this.choseUpgrade.size >= this.players.length) {
+    if (
+      this.choseUpgrade.size >=
+      this.players.filter((p) => p.clientConnected).length
+    ) {
       this.moveToNextLevel();
       this.choseUpgrade.clear();
       if (elUpgradePickerLabel) {
@@ -440,7 +443,10 @@ export default class Game {
   }
   // Returns true if it goes to the next level
   checkForEndOfLevel(): boolean {
-    const livingPlayers = this.players.filter((p) => p.unit.alive);
+    // All living (and client connected) players
+    const livingPlayers = this.players.filter(
+      (p) => p.unit.alive && p.clientConnected,
+    );
     const areAllLivingPlayersInPortal =
       livingPlayers.filter((p) => p.inPortal).length === livingPlayers.length;
     // Advance the level if there are living players and they all are in the portal:
