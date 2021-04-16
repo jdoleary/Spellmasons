@@ -215,7 +215,7 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
         game.chooseUpgrade(caster, upgrade);
       } else {
         console.error(
-          'Cannot choose upgrade, caster or upgrade does not exist',
+          'Cannot choose upgrade, caster of upgrade does not exist',
           caster,
           upgrade,
         );
