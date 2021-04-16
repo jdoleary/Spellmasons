@@ -27,7 +27,7 @@ const unit: UnitSource = {
       const [next_x, next_y] = path[1];
 
       if (next_x !== undefined && next_y !== undefined) {
-        const other_unit = window.game.getUnitAt({x:next_x, y:next_y});
+        const other_unit = window.game.getUnitAt({ x: next_x, y: next_y });
         // Deal damage to what you run into
         if (other_unit) {
           // Do not attack living ally units (allow them to clear ally corpses)
@@ -54,6 +54,11 @@ function canInteractWithCell(unit: Unit.IUnit, x: number, y: number): boolean {
     return false;
   }
   // Melee units can attack any cell 1 distance from them
-  return math.cellDistance(unit, { x, y }) == 1;
+  return (
+    (x == unit.x - 1 && y == unit.y) ||
+    (x == unit.x + 1 && y == unit.y) ||
+    (x == unit.x && y == unit.y - 1) ||
+    (x == unit.x && y == unit.y + 1)
+  );
 }
 export default unit;

@@ -20,7 +20,7 @@ const unit: UnitSource = {
       if (math.cellDistance(unit, enemy) < 2) {
         runFromTarget = enemy;
       }
-      if (canAttackCell(unit, enemy.x, enemy.y)) {
+      if (canInteractWithCell(unit, enemy.x, enemy.y)) {
         targetEnemy = enemy;
         break;
       }
@@ -40,8 +40,9 @@ const unit: UnitSource = {
       }
     }
   },
+  canInteractWithCell,
 };
-function canAttackCell(unit: Unit.IUnit, x: number, y: number): boolean {
+function canInteractWithCell(unit: Unit.IUnit, x: number, y: number): boolean {
   // Dead units cannot attack
   if (!unit.alive) {
     return false;
