@@ -25,7 +25,7 @@ const unit: UnitSource = {
         unit,
         chosenUnit.x,
         chosenUnit.y,
-        'spell/green-thing.png',
+        'green-thing.png',
       );
       floatingText({
         cell: chosenUnit,

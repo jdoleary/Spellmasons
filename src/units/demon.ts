@@ -18,12 +18,7 @@ const unit: UnitSource = {
     );
     if (deadAIs.length) {
       const deadUnit = deadAIs[0];
-      createVisualProjectile(
-        unit,
-        deadUnit.x,
-        deadUnit.y,
-        'spell/green-thing.png',
-      );
+      createVisualProjectile(unit, deadUnit.x, deadUnit.y, 'green-thing.png');
       Unit.resurrect(deadUnit);
       // Change resurrected unit to own faction
       Unit.changeFaction(deadUnit, unit.faction);

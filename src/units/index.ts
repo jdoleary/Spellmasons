@@ -55,6 +55,7 @@ export function registerUnits() {
 export const allUnits: { [id: string]: UnitSource } = {};
 
 const hardCodedLevelEnemies = [
+  [1],
   [0, 0, 0, 6],
   [0, 0, 0, 1, 7],
   [0, 0, 1, 1, 1],

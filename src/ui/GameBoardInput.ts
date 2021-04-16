@@ -74,12 +74,7 @@ export async function syncSpellEffectProjection() {
     if (currentPlayer) {
       if (!Player.isTargetInRange(currentPlayer, mouseCell)) {
         // Draw deny icon to show the player they are out of range
-        Image.create(
-          mouseCell.x,
-          mouseCell.y,
-          'spell/deny.png',
-          containerSpells,
-        );
+        Image.create(mouseCell.x, mouseCell.y, 'deny.png', containerSpells);
       } else {
         // Dry run cast so the user can see what effect it's going to have
         await window.game.castCards(

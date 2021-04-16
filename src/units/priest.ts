@@ -33,7 +33,7 @@ const unit: UnitSource = {
             unit,
             chosenUnit.x,
             chosenUnit.y,
-            'spell/green-thing.png',
+            'green-thing.png',
           );
           // Heal for 2
           Unit.takeDamage(chosenUnit, -2);

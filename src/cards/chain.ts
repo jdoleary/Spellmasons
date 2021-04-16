@@ -4,7 +4,7 @@ const id = 'chain';
 const spell: Spell = {
   card: {
     id,
-    thumbnail: 'spell/chain.png',
+    thumbnail: 'chain.png',
     probability: 10,
     effect: async (state, dryRun) => {
       let updatedTargets = [...state.targets];

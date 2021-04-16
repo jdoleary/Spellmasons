@@ -79,7 +79,7 @@ export const upgradeSourceWhenDead: IUpgrade[] = [
     title: 'Resurrect',
     description:
       'You have died, but find yourself resurrected as your allies enter the portal.',
-    thumbnail: 'spell/resurrect.png',
+    thumbnail: 'resurrect.png',
     // Resurrection happens automatically at the start of each level
     effect: () => {},
   },
@@ -127,6 +127,6 @@ export const upgradeSource: IUpgrade[] = [
 //   {
 //     title: '',
 //     description: '',
-//     thumbnail: 'spell/.png',
+//     thumbnail: '.png',
 //     probability:1
 //   },

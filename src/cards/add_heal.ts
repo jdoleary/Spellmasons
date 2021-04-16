@@ -5,7 +5,7 @@ const id = 'heal';
 const spell: Spell = {
   card: {
     id,
-    thumbnail: 'spell/heal.png',
+    thumbnail: 'heal.png',
     probability: 20,
     effect: async (state, dryRun) => {
       if (dryRun) {

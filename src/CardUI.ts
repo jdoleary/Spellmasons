@@ -185,7 +185,7 @@ function createCardElement(content: Cards.ICard) {
   element.appendChild(elCardInner);
   const thumbHolder = document.createElement('div');
   const thumbnail = document.createElement('img');
-  thumbnail.src = 'images/' + content.thumbnail;
+  thumbnail.src = 'images/spell/' + content.thumbnail;
   thumbHolder.appendChild(thumbnail);
   thumbHolder.classList.add('card-thumb');
   elCardInner.appendChild(thumbHolder);

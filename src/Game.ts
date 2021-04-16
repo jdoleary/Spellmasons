@@ -881,7 +881,7 @@ export default class Game {
 }
 
 function drawTarget(x: number, y: number, animate: boolean): Promise<void> {
-  const image = Image.create(x, y, 'spell/target.png', containerSpells);
+  const image = Image.create(x, y, 'target.png', containerSpells);
   if (animate) {
     image.sprite.scale.set(0.0);
     return Image.scale(image, 1.0);

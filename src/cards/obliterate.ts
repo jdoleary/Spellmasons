@@ -4,7 +4,7 @@ import type { Spell } from '.';
 const spell: Spell = {
   card: {
     id: 'obliterate',
-    thumbnail: 'spell/obliterate.png',
+    thumbnail: 'obliterate.png',
     probability: 5,
     isDark: true,
     effect: async (state) => {

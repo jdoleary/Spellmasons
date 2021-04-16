@@ -22,12 +22,7 @@ const unit: UnitSource = {
       }
     }
     if (targetEnemy) {
-      createVisualProjectile(
-        unit,
-        targetEnemy.x,
-        targetEnemy.y,
-        'spell/arrow.png',
-      );
+      createVisualProjectile(unit, targetEnemy.x, targetEnemy.y, 'arrow.png');
       Unit.takeDamage(targetEnemy, unit.damage);
     } else {
       // Move opposite to enemy

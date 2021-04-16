@@ -30,7 +30,7 @@ const unit: UnitSource = {
         unit,
         targetEnemy.x,
         targetEnemy.y,
-        'spell/green-thing.png',
+        'green-thing.png',
       );
       Unit.takeDamage(targetEnemy, unit.damage);
     } else {
