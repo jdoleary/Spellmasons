@@ -185,8 +185,10 @@ export default class Game {
     this.level++;
     // Show text in center of screen for the new level
     floatingText({
-      cellX: config.BOARD_WIDTH / 2 - 0.5,
-      cellY: config.BOARD_HEIGHT / 2,
+      cell: {
+        x: config.BOARD_WIDTH / 2 - 0.5,
+        y: config.BOARD_HEIGHT / 2,
+      },
       text: `Level ${this.level}`,
       style: {
         fill: 'white',

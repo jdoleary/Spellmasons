@@ -27,8 +27,7 @@ const spell: Spell = {
       // Only block damage, not heals
       if (amount > 0) {
         floatingText({
-          cellX: unit.x,
-          cellY: unit.y,
+          cell: unit,
           text: 'Shielded from damage!',
           style: {
             fill: 'blue',

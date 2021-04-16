@@ -10,8 +10,7 @@ import * as Unit from '../Unit';
 import { app, containerSpells, containerUI } from '../PixiUtils';
 import { Coords, Faction, UnitSubType, UnitType } from '../commonTypes';
 
-let mouseCellX: number;
-let mouseCellY: number;
+let mouseCell: Coords = { x: -1, y: -1 };
 const elInspectorTooltip = document.getElementById('inspector-tooltip');
 const elInspectorTooltipContent = document.getElementById(
   'inspector-tooltip-content',
@@ -23,8 +22,10 @@ export function clearSpellEffectProjection() {
     containerSpells.removeChildren();
   }
 }
-function isOutOfBounds(x: number, y: number) {
-  return x < 0 || x >= BOARD_WIDTH || y < 0 || y >= BOARD_HEIGHT;
+function isOutOfBounds(cell: Coords) {
+  return (
+    cell.x < 0 || cell.x >= BOARD_WIDTH || cell.y < 0 || cell.y >= BOARD_HEIGHT
+  );
 }
 function areAnyCardsSelected() {
   return !!Card.getSelectedCards().length;
@@ -55,7 +56,7 @@ export async function syncSpellEffectProjection() {
   }
   // Clear the spelleffectprojection in preparation for showing the current ones
   clearSpellEffectProjection();
-  if (isOutOfBounds(mouseCellX, mouseCellY)) {
+  if (isOutOfBounds(mouseCell)) {
     // Mouse is out of bounds, do not show a hover icon
     return;
   }
@@ -71,12 +72,11 @@ export async function syncSpellEffectProjection() {
       (p) => p.clientId === window.clientId,
     );
     if (currentPlayer) {
-      const mouseTarget = { x: mouseCellX, y: mouseCellY };
-      if (!Player.isTargetInRange(currentPlayer, mouseTarget)) {
+      if (!Player.isTargetInRange(currentPlayer, mouseCell)) {
         // Draw deny icon to show the player they are out of range
         Image.create(
-          mouseTarget.x,
-          mouseTarget.y,
+          mouseCell.x,
+          mouseCell.y,
           'spell/deny.png',
           containerSpells,
         );
@@ -85,7 +85,7 @@ export async function syncSpellEffectProjection() {
         await window.game.castCards(
           currentPlayer,
           Card.getSelectedCards(),
-          mouseTarget,
+          mouseCell,
           true,
         );
       }
@@ -137,9 +137,9 @@ export default function setupBoardInputHandlers() {
   document.body.addEventListener('mousemove', (e) => {
     const { x, y } = window.game.getCellFromCurrentMousePos();
     setHoverTooltipPosition(x, y);
-    const didChange = mouseCellX !== x || mouseCellY !== y;
-    mouseCellX = x;
-    mouseCellY = y;
+    const didChange = mouseCell.x !== x || mouseCell.y !== y;
+    mouseCell.x = x;
+    mouseCell.y = y;
     // If mouse hovering over a new cell, update the target images
     if (didChange) {
       // Show target hover on cells
@@ -149,8 +149,8 @@ export default function setupBoardInputHandlers() {
   // Handle right click on game board
   document.body.addEventListener('contextmenu', (e) => {
     e.preventDefault();
-    const { x, y } = window.game.getCellFromCurrentMousePos();
-    if (isOutOfBounds(x, y)) {
+    const mouseTarget = window.game.getCellFromCurrentMousePos();
+    if (isOutOfBounds(mouseTarget)) {
       // Disallow click out of bounds
       return;
     }
@@ -162,10 +162,10 @@ export default function setupBoardInputHandlers() {
         );
         // If player hasn't already moved this turn...
         if (selfPlayer && !selfPlayer.unit.thisTurnMoved) {
-          const targetCell = Unit.findCellOneStepCloserTo(selfPlayer.unit, {
-            x,
-            y,
-          });
+          const targetCell = Unit.findCellOneStepCloserTo(
+            selfPlayer.unit,
+            mouseTarget,
+          );
           if (targetCell && !window.game.isCellObstructed(targetCell)) {
             window.pie.sendData({
               type: MESSAGE_TYPES.MOVE_PLAYER,
@@ -174,8 +174,7 @@ export default function setupBoardInputHandlers() {
             });
           } else {
             floatingText({
-              cellX: x,
-              cellY: y,
+              cell: mouseTarget,
               text: 'You cannot move here',
               style: {
                 fill: 'red',
@@ -184,8 +183,7 @@ export default function setupBoardInputHandlers() {
           }
         } else {
           floatingText({
-            cellX: x,
-            cellY: y,
+            cell: mouseTarget,
             text: 'You cannot move more than once per turn.',
           });
         }
@@ -195,16 +193,16 @@ export default function setupBoardInputHandlers() {
   });
   // Handle clicks on the game board
   document.body.addEventListener('click', (e) => {
-    const { x, y } = window.game.getCellFromCurrentMousePos();
-    if (isOutOfBounds(x, y)) {
+    const mouseTarget = window.game.getCellFromCurrentMousePos();
+    if (isOutOfBounds(mouseTarget)) {
       // Disallow click out of bounds
       return;
     }
     if (window.planningViewActive) {
       window.pie.sendData({
         type: MESSAGE_TYPES.PING,
-        x,
-        y,
+        x: mouseTarget.x,
+        y: mouseTarget.y,
       });
       return;
     }
@@ -222,22 +220,28 @@ export default function setupBoardInputHandlers() {
           // If the player casting is the current client player
           if (selfPlayer) {
             // If the spell is not in range
-            if (!Player.isTargetInRange(selfPlayer, { x, y })) {
+            if (!Player.isTargetInRange(selfPlayer, mouseTarget)) {
               // Show floating message to alert player
-              floatingText({ cellX: x, cellY: y, text: 'out of range' });
+              floatingText({
+                cell: mouseTarget,
+                text: 'out of range',
+              });
             } else {
               // cast the spell
               window.pie.sendData({
                 type: MESSAGE_TYPES.SPELL,
-                x,
-                y,
+                x: mouseTarget.x,
+                y: mouseTarget.y,
                 cards: Card.getSelectedCards(),
               });
               Card.clearSelectedCards();
             }
           }
         } else {
-          floatingText({ cellX: x, cellY: y, text: 'It is not your turn yet' });
+          floatingText({
+            cell: mouseTarget,
+            text: 'It is not your turn yet',
+          });
         }
       }
     }

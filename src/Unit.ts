@@ -197,8 +197,7 @@ export async function takeDamage(unit: IUnit, amount: number) {
       healthChangedString += '❤️';
     }
     floatingText({
-      cellX: unit.x,
-      cellY: unit.y,
+      cell: unit,
       text: healthChangedString,
     });
     await Image.take_hit(unit.image);

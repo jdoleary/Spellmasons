@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js';
+import type { Coords } from './commonTypes';
 import { CELL_SIZE } from './config';
 import { containerFloatingText } from './PixiUtils';
 interface FText {
@@ -11,19 +12,17 @@ interface FText {
   pixiText: PIXI.Text;
 }
 export default function floatingText({
-  cellX,
-  cellY,
+  cell,
   text,
   style = { fill: 'black' },
 }: {
-  cellX: number;
-  cellY: number;
+  cell: Coords;
   text: string;
   style?: Partial<PIXI.ITextStyle>;
 }) {
   const pixiText = new PIXI.Text(text, style);
-  pixiText.x = cellX * CELL_SIZE + CELL_SIZE / 2;
-  pixiText.y = cellY * CELL_SIZE + CELL_SIZE / 2;
+  pixiText.x = cell.x * CELL_SIZE + CELL_SIZE / 2;
+  pixiText.y = cell.y * CELL_SIZE + CELL_SIZE / 2;
   pixiText.anchor.x = 0.5;
   pixiText.anchor.y = 0.5;
   const instance = {

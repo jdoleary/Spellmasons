@@ -28,8 +28,7 @@ const unit: UnitSource = {
         'spell/green-thing.png',
       );
       floatingText({
-        cellX: chosenUnit.x,
-        cellY: chosenUnit.y,
+        cell: chosenUnit,
         text: 'TODO poison!',
       });
     }

@@ -131,10 +131,8 @@ function onData(d: OnDataArgs) {
   const type: MESSAGE_TYPES = payload.type;
   switch (type) {
     case MESSAGE_TYPES.PING:
-      const { x: cellX, y: cellY } = payload;
       floatingText({
-        cellX,
-        cellY,
+        cell: payload,
         text: '🎈',
       });
       break;
