@@ -9,6 +9,7 @@ import floatingText from '../FloatingText';
 import * as Unit from '../Unit';
 import { app, containerSpells, containerUI } from '../PixiUtils';
 import { Coords, Faction, UnitSubType, UnitType } from '../commonTypes';
+import { allUnits } from '../units';
 
 let mouseCell: Coords = { x: -1, y: -1 };
 const elInspectorTooltip = document.getElementById('inspector-tooltip');
@@ -104,6 +105,7 @@ export function updateTooltip() {
   if (unit) {
     text += `\
 Unit
+${allUnits[unit.unitSourceId].info.description}
 Type ${UnitType[unit.unitType]}
 SubType ${UnitSubType[unit.unitSubType]}
 Faction ${Faction[unit.faction]}

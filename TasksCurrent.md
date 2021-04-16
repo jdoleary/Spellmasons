@@ -9,9 +9,6 @@
 
 ## Tasks
 
-- add unit description to tooltip
-- make tooltip update constantly so it gets current health when it changes
-
 - Fix swap
   - bug: chain swapping didn't move me, this occurs when the chain retarget's self
 - Add obstacles to spell effect? So freeze can freeze lava?
