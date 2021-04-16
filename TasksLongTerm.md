@@ -4,8 +4,6 @@
   - Gameplay Core (Due April 21, 2021)
     - **Really polish synergies** (obstacle spell interactions, etc)
     - Fix corpse texture revert to animation
-    - Fix planning mode doesn't refresh on level change
-    - Fix grunt attack positions to account for non-diagonal
     - Fix units not pathing around frozen units
   - Gameplay Sprinkles
     - More creative, more difficult enemies

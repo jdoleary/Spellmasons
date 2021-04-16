@@ -5,8 +5,8 @@ let isReady = false;
 // PIXI app
 export const app = new PIXI.Application();
 export const containerBoard = new PIXI.Container();
-export const containerDangerOverlay = new PIXI.Container();
-containerDangerOverlay.alpha = 0.5;
+export const containerPlanningView = new PIXI.Container();
+containerPlanningView.alpha = 0.5;
 export const containerUnits = new PIXI.Container();
 export const containerPickup = new PIXI.Container();
 export const containerSpells = new PIXI.Container();
@@ -45,7 +45,7 @@ export function setupPixi(additionalImagePaths: string[]): Promise<void> {
 
   // Add containers to the stage in the order that they will be rendered on top of each other
   app.stage.addChild(containerBoard);
-  app.stage.addChild(containerDangerOverlay);
+  app.stage.addChild(containerPlanningView);
   app.stage.addChild(containerUnits);
   app.stage.addChild(containerPickup);
   app.stage.addChild(containerSpells);

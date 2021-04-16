@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 import * as Unit from '../Unit';
 import setupBoardInputHandlers from './GameBoardInput';
-import { containerDangerOverlay } from '../PixiUtils';
+import { containerPlanningView } from '../PixiUtils';
 import * as config from '../config';
 import * as math from '../math';
 import * as Player from '../Player';
@@ -57,7 +57,7 @@ function setPlanningView(active: boolean) {
   }
   window.planningViewActive = active;
   if (window.planningViewActive) {
-    drawDangerOverlay();
+    updatePlanningView();
     window.game.units.forEach((u) => {
       // "Select" living units, this shows their overlay for planning purposes
       if (u.alive) {
@@ -65,17 +65,17 @@ function setPlanningView(active: boolean) {
       }
     });
   } else {
-    dangerOverlayGraphics.clear();
+    planningViewGraphics.clear();
     window.game.units.forEach((u) => Unit.deselect(u));
   }
 }
 
-const dangerOverlayGraphics = new PIXI.Graphics();
-containerDangerOverlay.addChild(dangerOverlayGraphics);
-export function drawDangerOverlay() {
+const planningViewGraphics = new PIXI.Graphics();
+containerPlanningView.addChild(planningViewGraphics);
+export function updatePlanningView() {
   if (window.planningViewActive) {
     const halfCell = config.CELL_SIZE / 2;
-    dangerOverlayGraphics.clear();
+    planningViewGraphics.clear();
     // Iterate all cells and paint ones that are able to be attacked by an AI
     for (let x = 0; x < config.BOARD_WIDTH; x++) {
       for (let y = 0; y < config.BOARD_HEIGHT; y++) {
@@ -88,31 +88,31 @@ export function drawDangerOverlay() {
           ) {
             if (allUnits[unit.unitSourceId].canInteractWithCell?.(unit, x, y)) {
               const cell = math.cellToBoardCoords(x, y);
-              const color = Unit.getDangerZoneColor(unit);
-              // dangerOverlayGraphics.lineStyle(8, color, 0.9);
-              dangerOverlayGraphics.beginFill(color);
-              dangerOverlayGraphics.drawRect(
+              const color = Unit.getPlanningViewColor(unit);
+              // planningViewGraphics.lineStyle(8, color, 0.9);
+              planningViewGraphics.beginFill(color);
+              planningViewGraphics.drawRect(
                 cell.x - halfCell,
                 cell.y - halfCell,
                 config.CELL_SIZE,
                 config.CELL_SIZE,
               );
-              dangerOverlayGraphics.endFill();
+              planningViewGraphics.endFill();
             }
           }
         }
         // For the player, draw their range
         if (Player.isTargetInRange(window.player, { x, y })) {
           const cell = math.cellToBoardCoords(x, y);
-          const color = Unit.getDangerZoneColor(window.player.unit);
-          dangerOverlayGraphics.beginFill(color);
-          dangerOverlayGraphics.drawRect(
+          const color = Unit.getPlanningViewColor(window.player.unit);
+          planningViewGraphics.beginFill(color);
+          planningViewGraphics.drawRect(
             cell.x - halfCell,
             cell.y - halfCell,
             config.CELL_SIZE,
             config.CELL_SIZE,
           );
-          dangerOverlayGraphics.endFill();
+          planningViewGraphics.endFill();
         }
       }
     }

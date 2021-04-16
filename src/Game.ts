@@ -21,7 +21,7 @@ import type { Random } from 'random';
 import makeSeededRandom from './rand';
 import floatingText from './FloatingText';
 import { UnitType, Coords, Faction } from './commonTypes';
-import { drawDangerOverlay } from './ui/UserInterface';
+import { updatePlanningView } from './ui/UserInterface';
 import { createUpgradeElement, generateUpgrades } from './Upgrade';
 import Events from './Events';
 import { allUnits, generateHardCodedLevelEnemies } from './units';
@@ -294,6 +294,9 @@ export default class Game {
         console.error('Unit not spawned due to no empty cells');
       }
     }
+    // Since a new level changes the existing units, redraw the planningView in
+    // the event that the planningView is active
+    updatePlanningView();
   }
   checkPickupCollisions(unit: Unit.IUnit) {
     for (let pu of this.pickups) {
@@ -601,10 +604,10 @@ export default class Game {
           this.setTurnPhase(turn_phase.PlayerTurns);
         });
 
-        // Since NPC turn is over, update the danger overlay
+        // Since NPC turn is over, update the planningView
         // They may have moved or unfrozen which would update
         // which cells they can attack next turn
-        drawDangerOverlay();
+        updatePlanningView();
         break;
       default:
         break;
@@ -851,9 +854,9 @@ export default class Game {
       containerSpells.removeChildren();
     }
 
-    // Since units may have moved or become frozen, redraw the danger overlay which takes these
+    // Since units may have moved or become frozen, redraw the planningView which takes these
     // changes into consideration
-    drawDangerOverlay();
+    updatePlanningView();
     return effectState;
   }
 

@@ -6,7 +6,7 @@ import { cellDistance } from './math';
 import { changeSpriteTexture, containerUnits } from './PixiUtils';
 import { Coords, UnitSubType, UnitType, Faction } from './commonTypes';
 import Events from './Events';
-export function getDangerZoneColor(unit: IUnit) {
+export function getPlanningViewColor(unit: IUnit) {
   if (unit.unitType === UnitType.PLAYER_CONTROLLED) {
     return 0x00ff00;
   }

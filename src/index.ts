@@ -335,7 +335,7 @@ declare global {
     replay: (title: string) => void;
     // Current clients id
     clientId: string;
-    // Shows the "danger zone" where golems can attack,
+    // Shows the "planningView" where golems can attack,
     // allows for left clicking to ping to other players
     planningViewActive: boolean;
     animatingSpells: boolean;
