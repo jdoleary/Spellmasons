@@ -106,13 +106,10 @@ export const upgradeSource: IUpgrade[] = [
   },
   {
     title: 'More Cards',
-    description: `Gives you ${config.UPGRADE_MORE_CARDS_AMOUNT} more cards immediately`,
+    description: `Increases the number of cards that you get at the beginning of each level`,
     thumbnail: 'images/upgrades/more_cards.png',
     effect: (player) => {
-      for (let i = 0; i < config.UPGRADE_MORE_CARDS_AMOUNT; i++) {
-        const card = CardUI.generateCard();
-        CardUI.addCardToHand(card, player);
-      }
+      player.cardsAmount++;
     },
   },
   {

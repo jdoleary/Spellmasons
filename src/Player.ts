@@ -15,6 +15,8 @@ export interface IPlayer {
   unit: Unit.IUnit;
   inPortal: boolean;
   cards: string[];
+  // The number of cards a player's hand is populated with at the start of a level
+  cardsAmount: number;
   upgrades: Upgrade.IUpgrade[];
   // Cast range
   range: number;
@@ -46,6 +48,7 @@ export function create(clientId: string): IPlayer {
     ),
     inPortal: false,
     cards: [],
+    cardsAmount: config.START_CARDS_COUNT,
     upgrades: [],
     range: config.PLAYER_CAST_RANGE,
     turnsPerCard: config.PLAYER_BASE_TURNS_PER_CARD,
@@ -81,6 +84,13 @@ export function resetPlayerForNextLevel(player: IPlayer) {
     Unit.resurrect(player.unit);
   }
 
+  // Clear and reset cards (solves "rocket launcher problem")
+  removeAllCards(player);
+  for (let i = 0; i < player.cardsAmount; i++) {
+    const card = CardUI.generateCard();
+    CardUI.addCardToHand(card, player);
+  }
+
   // Return to a spawn location
   // limit spawn to the leftmost column
   const coords = window.game.getRandomEmptyCell({ xMax: 0 });
@@ -109,9 +119,15 @@ export function load(player: IPlayer) {
   CardUI.recalcPositionForCards(playerLoaded);
   return playerLoaded;
 }
+// Remove all of the player's cards
+function removeAllCards(player: IPlayer) {
+  player.cards = [];
+  CardUI.recalcPositionForCards(player);
+}
 export function enterPortal(player: IPlayer) {
   player.inPortal = true;
   Image.hide(player.unit.image);
+  removeAllCards(player);
   // limit spawn to the leftmost column
   const coords = window.game.getRandomEmptyCell({ xMax: 0 });
   if (coords) {
