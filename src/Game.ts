@@ -151,14 +151,19 @@ export default class Game {
       Image.cleanup(x.image);
     }
   }
-  findPath(from: Coords, to: Coords) {
-    return this.pfFinder.findPath(
-      from.x,
-      from.y,
-      to.x,
-      to.y,
-      this.pfGrid.clone(),
-    );
+  findPath(from: Coords, to: Coords): number[][] {
+    try {
+      return this.pfFinder.findPath(
+        from.x,
+        from.y,
+        to.x,
+        to.y,
+        this.pfGrid.clone(),
+      );
+    } catch (e) {
+      console.error(e);
+      return [];
+    }
   }
   moveToNextLevel() {
     // Reset the endedTurn set so both players can take turns again

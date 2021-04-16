@@ -1,3 +1,5 @@
+- Try to reproduce: Game.findPath (114) cannot set property 'g' of undefined
+  - pathfinding.js:1286 endNode.g = 0
 - projectiles are on the containerSpells container and so get cleared when mouse moves
   - Do i need to make AI casts work the same way that player casts do??
 - Convert console.error(s) to Sentry.captureException?? before deployment?
