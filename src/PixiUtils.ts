@@ -151,9 +151,9 @@ export function changeSpriteTexture(imagePath: string, sprite: PIXI.Sprite) {
       'PIXI is not finished setting up.  Cannot add a sprite yet',
     );
   }
-  const resource: PIXI.ILoaderResource = resources[imagePath];
-  if (resource.texture) {
-    sprite.texture = resource.texture;
+  const texture = sheet.textures[imagePath];
+  if (texture) {
+    sprite.texture = texture;
   } else {
     console.error(
       'Texture at ',
