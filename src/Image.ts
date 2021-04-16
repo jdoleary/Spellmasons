@@ -110,7 +110,7 @@ export function removeSubSprite(image: IImage, key: string) {
   }
 }
 export function move(image: IImage, cellX: number, cellY: number) {
-  return window.animationTimeline.addAnimation([
+  return animateIndependent([
     {
       sprite: image.sprite,
       target: cellToBoardCoords(cellX, cellY),
