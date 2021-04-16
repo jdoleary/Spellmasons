@@ -4,6 +4,7 @@ import type { Spell } from '.';
 import { drawSwapLine } from '../ui/GameBoardInput';
 import type { Coords } from 'src/commonTypes';
 
+// TODO: Swapping with corpses destroys them due to the order of setting location
 const id = 'swap';
 const spell: Spell = {
   card: {

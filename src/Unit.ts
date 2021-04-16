@@ -34,6 +34,7 @@ export interface IUnit {
   alive: boolean;
   unitType: UnitType;
   unitSubType: UnitSubType;
+  flaggedForRemoval?: boolean;
   // A list of names that correspond to Events.ts functions
   onDamageEvents: string[];
   onDeathEvents: string[];
@@ -128,6 +129,9 @@ export function updateSelectedOverlay(unit: IUnit) {
   unit.healthText.anchor.y = -0.2;
 }
 export function cleanup(unit: IUnit) {
+  unit.x = NaN;
+  unit.y = NaN;
+  unit.flaggedForRemoval = true;
   Image.cleanup(unit.image);
   deselect(unit);
 }
@@ -207,8 +211,6 @@ export async function takeDamage(unit: IUnit, amount: number) {
     } else {
       // if unit is already dead, destroy corpse
       cleanup(unit);
-      // Remove unit entirely
-      window.game.units = window.game.units.filter((u) => u !== unit);
     }
   }
 }
@@ -289,6 +291,8 @@ export function setLocation(unit: IUnit, coordinates: Coords): Promise<void> {
   unit.y = coordinates.y;
   // check for collisions with pickups in new location
   window.game.checkPickupCollisions(unit);
+  // check for collisions with corpses
+  window.game.handlePossibleCorpseCollision(unit);
   // Animate movement visually
   return Image.move(unit.image, unit.x, unit.y);
 }

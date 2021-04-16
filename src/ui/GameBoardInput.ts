@@ -167,10 +167,7 @@ export default function setupBoardInputHandlers() {
             x,
             y,
           );
-          if (
-            targetCell &&
-            window.game.canUnitMoveIntoCell(targetCell.x, targetCell.y)
-          ) {
+          if (targetCell && !window.game.isCellObstructed(targetCell)) {
             window.pie.sendData({
               type: MESSAGE_TYPES.MOVE_PLAYER,
               // This formula clamps the diff to -1, 0 or 1

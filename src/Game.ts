@@ -298,6 +298,14 @@ export default class Game {
       }
     }
   }
+  handlePossibleCorpseCollision(unit: Unit.IUnit) {
+    for (let u of this.units) {
+      // If unit is colliding with a corpse, destroy the corpse
+      if (!u.alive && u !== unit && unit.x == u.x && unit.y == u.y) {
+        Unit.cleanup(u);
+      }
+    }
+  }
   getCellFromCurrentMousePos() {
     const { x, y } = containerBoard.toLocal(
       app.renderer.plugins.interaction.mouse.global,
@@ -527,15 +535,6 @@ export default class Game {
     }
     throw new Error('Could not find random empty cell');
   }
-  canUnitMoveIntoCell(cellX: number, cellY: number): boolean {
-    for (let u of this.units) {
-      // If a unit is obstructing, do not allow movement
-      if (u.x === cellX && u.y === cellY) {
-        return false;
-      }
-    }
-    return true;
-  }
   setTurnPhase(p: turn_phase) {
     // Before the turn phase changes, check if the game should transition to game over
     if (this.checkForGameOver()) {
@@ -549,6 +548,9 @@ export default class Game {
         document.body.classList.remove(phaseClass);
       }
     }
+
+    // Clean up invalid units
+    this.units = this.units.filter((u) => !u.flaggedForRemoval);
 
     const phase = turn_phase[this.turn_phase];
     // Add current phase class to body
@@ -780,9 +782,10 @@ export default class Game {
       return true;
     }
     const { x, y } = coordinates;
-    // Cell is obstructed if it is already occupied by a unit
+    // Cell is obstructed if it is already occupied by a living unit
+    // note: corpses do not obstruct because they are destroyed when walked on
     for (let unit of this.units) {
-      if (unit.x === x && unit.y === y) {
+      if (unit.alive && unit.x === x && unit.y === y) {
         return true;
       }
     }
