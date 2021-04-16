@@ -128,16 +128,8 @@ export function enterPortal(player: IPlayer) {
   player.inPortal = true;
   Image.hide(player.unit.image);
   removeAllCards(player);
-  // limit spawn to the leftmost column
-  const coords = window.game.getRandomEmptyCell({ xMax: 0 });
-  if (coords) {
-    // Move "portaled" unit out of the way to prevent collisions and chaining while portaled
-    coords.x = NaN;
-    coords.y = NaN;
-    Unit.setLocation(player.unit, coords);
-  } else {
-    console.error('Could not find random empty cell');
-  }
+  // Move "portaled" unit out of the way to prevent collisions and chaining while portaled
+  Unit.setLocation(player.unit, { x: NaN, y: NaN });
 }
 // Note: this is also used for AI targeting to ensure that AI don't target disabled plaeyrs
 export function ableToTakeTurn(player: IPlayer) {
