@@ -72,10 +72,7 @@ export default class Game {
   obstacles: Obstacle.IObstacle[] = [];
   // The number of the current level
   level = 1;
-  // The index of which player's turn it is
-  playerTurnIndex: number = 0;
   secondsLeftForTurn: number = config.SECONDS_PER_TURN;
-  yourTurn: boolean = false;
   turnInterval: any;
   hostClientId: string = '';
   // A set of clientIds who have ended their turn
@@ -127,10 +124,10 @@ export default class Game {
         } else {
           console.error('elTurnTimeRemaining is null');
         }
-        // Skip your turn if you run out of time
-        if (this.yourTurn && this.secondsLeftForTurn <= 0) {
+        // Skip player turns if they run out of time
+        if (this.secondsLeftForTurn <= 0) {
           console.log('Out of time, turn ended');
-          this.endMyTurn();
+          this.endPlayerTurnPhase();
         }
       } else {
         if (elTurnTimeRemaining) {
@@ -327,75 +324,54 @@ export default class Game {
       // If all players that have taken turns, then...
       // (Players who CANT take turns have their turn ended automatically)
       if (this.players.every((p) => this.endedTurn.has(p.clientId))) {
-        // Reset the endedTurn set so all players can take turns again next Cast phase
-        this.endedTurn.clear();
-        // Move onto next phase
-        this.setTurnPhase(turn_phase.NPC);
+        this.endPlayerTurnPhase();
         return true;
       }
     }
     return false;
   }
-  setYourTurn(yourTurn: boolean, message: string) {
+  endPlayerTurnPhase() {
+    // Reset the endedTurn set so all players can take turns again next Cast phase
+    this.endedTurn.clear();
+    // Move onto next phase
+    this.setTurnPhase(turn_phase.NPC);
+  }
+  setTurnMessage(yourTurn: boolean, message: string) {
     if (elPlayerTurnIndicator) {
       elPlayerTurnIndicator.innerText = message;
     }
     document.body.classList.toggle('your-turn', yourTurn);
-    this.yourTurn = yourTurn;
   }
-  initializePlayerTurn() {
+  initializePlayerTurns() {
+    this.setTurnMessage(true, 'Your Turn');
     // Start the currentTurnPlayer's turn
-    const currentTurnPlayer = this.players[this.playerTurnIndex];
-    // If this current player is NOT able to take their turn...
-    if (!Player.ableToTakeTurn(currentTurnPlayer)) {
-      // Skip them
-      this.endPlayerTurn(currentTurnPlayer.clientId);
-      // Do not continue with initialization
-      return;
-    }
-    // Trigger onTurnStart Events
-    const onTurnStartEventResults: boolean[] = currentTurnPlayer.unit.onTurnStartEvents.map(
-      (eventName) => {
-        const fn = Events.onTurnSource[eventName];
-        return fn ? fn(currentTurnPlayer.unit) : false;
-      },
-    );
-    if (onTurnStartEventResults.some((b) => b)) {
-      // If any onTurnStartEvents return true, skip the player
-      this.endPlayerTurn(currentTurnPlayer.clientId);
-      // Do not continue with initialization
-      return;
-    }
+    for (let player of this.players) {
+      // If this current player is NOT able to take their turn...
+      if (!Player.ableToTakeTurn(player)) {
+        // Skip them
+        this.endPlayerTurn(player.clientId);
+        // Do not continue with initialization
+        return;
+      }
+      // Trigger onTurnStart Events
+      const onTurnStartEventResults: boolean[] = player.unit.onTurnStartEvents.map(
+        (eventName) => {
+          const fn = Events.onTurnSource[eventName];
+          return fn ? fn(player.unit) : false;
+        },
+      );
+      if (onTurnStartEventResults.some((b) => b)) {
+        // If any onTurnStartEvents return true, skip the player
+        this.endPlayerTurn(player.clientId);
+        // Do not continue with initialization
+        return;
+      }
 
-    // Finally initialize their turn
-    this.secondsLeftForTurn = config.SECONDS_PER_TURN;
-    if (elPlayerTurnIndicatorHolder) {
-      elPlayerTurnIndicatorHolder.classList.remove('low-time');
-    }
-    this.syncYourTurnState();
-  }
-  incrementPlayerTurn() {
-    const wentToNextLevel = this.checkForEndOfLevel();
-    if (wentToNextLevel) {
-      // Do not continue incrementing player turn
-      return;
-    }
-    const wentToNextPhase = this.goToNextPhaseIfAppropriate();
-    if (wentToNextPhase) {
-      return;
-    }
-    this.playerTurnIndex = (this.playerTurnIndex + 1) % this.players.length;
-    this.initializePlayerTurn();
-  }
-  syncYourTurnState() {
-    if (this.players[this.playerTurnIndex].clientId === window.clientId) {
-      this.setYourTurn(true, 'Your Turn');
-      // In the event that it becomes your turn but the mouse hasn't moved,
-      // syncSpellEffectProjection needs to be called so that the icon ("footprints" for example)
-      // will be shown in the tile that the mouse is hovering over
-      GameBoardInput.syncSpellEffectProjection();
-    } else {
-      this.setYourTurn(false, "Other Player's Turn");
+      // Finally initialize their turn
+      this.secondsLeftForTurn = config.SECONDS_PER_TURN;
+      if (elPlayerTurnIndicatorHolder) {
+        elPlayerTurnIndicatorHolder.classList.remove('low-time');
+      }
     }
   }
   // Sends a network message to end turn
@@ -409,11 +385,20 @@ export default class Game {
     // Turns can only be ended when the game is in Playing state
     // and not, for example, in Upgrade state
     if (this.state === game_state.Playing) {
-      const currentTurnPlayer = this.players[this.playerTurnIndex];
       // Ensure players can only end the turn when it IS their turn
-      if (currentTurnPlayer.clientId === clientId) {
+      if (this.turn_phase === turn_phase.PlayerTurns) {
+        if (clientId === window.clientId) {
+          this.setTurnMessage(false, 'Waiting on others');
+        }
         this.endedTurn.add(clientId);
-        this.incrementPlayerTurn();
+        const wentToNextLevel = this.checkForEndOfLevel();
+        if (wentToNextLevel) {
+          return;
+        }
+        const wentToNextPhase = this.goToNextPhaseIfAppropriate();
+        if (wentToNextPhase) {
+          return;
+        }
       }
     }
   }
@@ -565,6 +550,7 @@ export default class Game {
     switch (phase) {
       case 'PlayerTurns':
         this.turn_number++;
+        this.initializePlayerTurns();
         for (let p of this.players) {
           Player.checkForGetCardOnTurn(p);
         }
@@ -574,10 +560,9 @@ export default class Game {
           u.thisTurnMoved = false;
           u.intendedNextMove = undefined;
         }
-        this.incrementPlayerTurn();
         break;
       case 'NPC':
-        this.setYourTurn(false, "NPC's Turn");
+        this.setTurnMessage(false, "NPC's Turn");
         const animationPromises = [];
         // Move units
         unitloop: for (let u of this.units.filter(
@@ -668,8 +653,6 @@ export default class Game {
         if (elBoard) {
           elBoard.style.visibility = 'visible';
         }
-        // Initialize the player turn state
-        this.syncYourTurnState();
         // Set the first turn phase
         this.setTurnPhase(turn_phase.PlayerTurns);
         break;

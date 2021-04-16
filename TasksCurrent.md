@@ -1,7 +1,5 @@
 # Todo
 
-- What if all players could take turns during the player turn phase? rather than once at a time
-
 - Playtest with brad 2021.04.16
   - Possible AI unit coord desync with image after stepping on a corpse?
   - error `units/golem was unable to be set as sprite texture because the texture does not exist` after resurrect??

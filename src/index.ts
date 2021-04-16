@@ -177,7 +177,6 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       const loadedGameState: Game = { ...payload.game };
       game = new Game(loadedGameState.seed);
       game.level = loadedGameState.level;
-      game.playerTurnIndex = loadedGameState.playerTurnIndex;
       game.secondsLeftForTurn = loadedGameState.secondsLeftForTurn;
       game.hostClientId = loadedGameState.hostClientId;
       // Load all units that are not player's, those will be loaded indepentently
@@ -187,7 +186,6 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       game.players = loadedGameState.players.map(Player.load);
       game.pickups = loadedGameState.pickups.map(Pickup.load);
       game.obstacles = loadedGameState.obstacles.map(Obstacle.load);
-      game.syncYourTurnState();
       game.setGameState(loadedGameState.state);
       break;
     case MESSAGE_TYPES.MOVE_PLAYER:
@@ -236,15 +234,8 @@ async function handleSpell(caster: Player.IPlayer, payload: any) {
     return;
   }
   Card.removeCardsFromHand(caster, payload.cards);
-  if (
-    // Only allow casting during the PlayerTurns phase
-    (game.turn_phase === turn_phase.PlayerTurns &&
-      // If your turn and you are casting, allow
-      game.yourTurn &&
-      caster.clientId === window.clientId) ||
-    // or if not your turn and opponent is casting, allow
-    (!game.yourTurn && caster.clientId !== window.clientId)
-  ) {
+  // Only allow casting during the PlayerTurns phase
+  if (game.turn_phase === turn_phase.PlayerTurns) {
     window.animatingSpells = true;
     await game.castCards(caster, payload.cards, payload, false);
     window.animatingSpells = false;

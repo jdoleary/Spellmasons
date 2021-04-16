@@ -152,7 +152,6 @@ export default function setupBoardInputHandlers() {
       return;
     }
     if (window.game.turn_phase == turn_phase.PlayerTurns) {
-      if (window.game.yourTurn) {
         // Get current client's player
         const selfPlayer: Player.IPlayer | undefined = window.game.players.find(
           (p) => p.clientId === window.clientId,
@@ -184,7 +183,6 @@ export default function setupBoardInputHandlers() {
             text: 'You cannot move more than once per turn.',
           });
         }
-      }
     }
     return false;
   });
@@ -207,7 +205,6 @@ export default function setupBoardInputHandlers() {
     if (areAnyCardsSelected()) {
       // Only allow casting in the proper phase
       if (window.game.turn_phase == turn_phase.PlayerTurns) {
-        if (window.game.yourTurn) {
           // Get current client's player
           const selfPlayer:
             | Player.IPlayer
@@ -234,12 +231,6 @@ export default function setupBoardInputHandlers() {
               Card.clearSelectedCards();
             }
           }
-        } else {
-          floatingText({
-            cell: mouseTarget,
-            text: 'It is not your turn yet',
-          });
-        }
       }
     }
   });
