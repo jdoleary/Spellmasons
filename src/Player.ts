@@ -65,7 +65,7 @@ export function create(clientId: string): IPlayer {
   return player;
 }
 export function checkForGetCardOnTurn(player: IPlayer) {
-  if (window.game.turn_number % player.turnsPerCard === 0) {
+  if (!player.inPortal && window.game.turn_number % player.turnsPerCard === 0) {
     const card = CardUI.generateCard();
     CardUI.addCardToHand(card, player);
     console.log('You got a card!');
