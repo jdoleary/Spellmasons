@@ -3,7 +3,6 @@
 - Critical Path
   - Gameplay Core (Due April 21, 2021)
     - **Really polish synergies** (obstacle spell interactions, etc)
-    - Make animations and still images driven by id not by path
   - Gameplay Sprinkles
     - More creative, more difficult enemies
     - More Spells

@@ -8,7 +8,7 @@ const unit: UnitSource = {
   id: 'grunt',
   info: {
     description: 'A basic grunt that will pursue enemies and hit them',
-    image: 'units/golem.png',
+    image: 'units/golem',
     subtype: UnitSubType.AI_melee,
     probability: 100,
   },
