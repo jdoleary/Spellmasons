@@ -42,6 +42,8 @@ export function create(
 export function cleanup(image: IImage) {
   // Remove PIXI sprite
   if (image.sprite && image.sprite.parent) {
+    // Remove subsprites
+    image.sprite.removeChildren();
     image.sprite.parent.removeChild(image.sprite);
   }
 }
@@ -54,19 +56,24 @@ export function changeSprite(image: IImage, sprite: PIXI.Sprite) {
   sprite.anchor.y = image.sprite.anchor.y;
   cleanup(image);
   image.sprite = sprite;
+  restoreSubsprites(image);
 }
 export function load(image: IImage, parent: PIXI.Container) {
   const instantiatedImage = create(0, 0, image.imageName, parent);
   instantiatedImage.sprite.x = image.sprite.x;
   instantiatedImage.sprite.y = image.sprite.y;
   scale(instantiatedImage, image.scale);
+  restoreSubsprites(instantiatedImage);
+  return instantiatedImage;
+}
+export function restoreSubsprites(image: IImage) {
   // Re-add subsprites
   const subSprites = [...image.subSprites];
+  image.sprite.removeChildren();
   image.subSprites = [];
   for (let subSprite of subSprites) {
-    addSubSprite(instantiatedImage, subSprite);
+    addSubSprite(image, subSprite);
   }
-  return instantiatedImage;
 }
 // Returns only the properties that can be saved
 // callbacks and complicated objects such as PIXI.Sprites
