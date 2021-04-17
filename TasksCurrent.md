@@ -1,7 +1,6 @@
 # Todo
 
 - Playtest with brad 2021.04.16
-  - Possible AI unit coord desync with image after stepping on a corpse?
   - error `units/golem was unable to be set as sprite texture because the texture does not exist` after resurrect??
   - Bullshit experience, brad accidentally destroyed his corpse with a spell and tried to res but it didn't work, THEN brad couldn't res at end of level
   - After I disconnected, I closed my browser, rejoined, Brad's player was stuck between two cells and i joined as a new player instead of the old
