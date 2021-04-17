@@ -217,9 +217,6 @@ export async function takeDamage(unit: IUnit, amount: number) {
     // if unit is alive, die
     if (unit.alive) {
       die(unit);
-    } else {
-      // if unit is already dead, destroy corpse
-      cleanup(unit);
     }
   }
 }
