@@ -164,10 +164,7 @@ export function serializeUnit(unit: IUnit) {
   };
 }
 export function resurrect(u: IUnit) {
-  Image.changeSprite(
-    u.image,
-    addPixiSprite(u.image.imageName, u.image.sprite.parent),
-  );
+  Image.changeSprite(u.image, addPixiSprite(u.image.imageName, containerUnits));
   // Return dead units back to full health
   u.health = u.healthMax;
   u.alive = true;
