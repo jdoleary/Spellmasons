@@ -16,7 +16,7 @@ import floatingText from './FloatingText';
 import { addSubSprite, removeSubSprite } from './Image';
 import * as Cards from './cards';
 import * as Units from './units';
-import { upgradeSource } from './Upgrade';
+import { getUpgradeByTitle } from './Upgrade';
 
 // Print aggressive due date for game!
 console.log(
@@ -206,14 +206,12 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       }
       break;
     case MESSAGE_TYPES.CHOOSE_UPGRADE:
-      const upgrade = upgradeSource.find(
-        (u) => u.title === payload.upgrade.title,
-      );
+      const upgrade = getUpgradeByTitle(payload.upgrade.title);
       if (caster && upgrade) {
         game.chooseUpgrade(caster, upgrade);
       } else {
         console.error(
-          'Cannot choose upgrade, caster of upgrade does not exist',
+          'Cannot choose upgrade, either the caster or upgrade does not exist',
           caster,
           upgrade,
         );

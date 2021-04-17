@@ -1,7 +1,6 @@
 import { NUMBER_OF_UPGRADES_TO_CHOOSE_FROM } from './config';
 import { MESSAGE_TYPES } from './MessageTypes';
 import * as config from './config';
-import * as CardUI from './CardUI';
 import { checkForGetCardOnTurn, IPlayer } from './Player';
 import makeSeededRandom from './rand';
 export interface IUpgrade {
@@ -73,6 +72,10 @@ export function createUpgradeElement(upgrade: IUpgrade) {
     });
   });
   return element;
+}
+export function getUpgradeByTitle(title: string): IUpgrade | undefined {
+  const all_upgrades = upgradeSource.concat(upgradeSourceWhenDead);
+  return all_upgrades.find((u) => u.title === title);
 }
 export const upgradeSourceWhenDead: IUpgrade[] = [
   {
