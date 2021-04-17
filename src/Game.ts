@@ -326,7 +326,11 @@ export default class Game {
     if (this.turn_phase === turn_phase.PlayerTurns) {
       // If all players that have taken turns, then...
       // (Players who CANT take turns have their turn ended automatically)
-      if (this.players.every((p) => this.endedTurn.has(p.clientId))) {
+      if (
+        this.players
+          .filter(Player.ableToTakeTurn)
+          .every((p) => this.endedTurn.has(p.clientId))
+      ) {
         this.endPlayerTurnPhase();
         return true;
       }
@@ -416,10 +420,10 @@ export default class Game {
       }
     }
 
-    if (
-      this.choseUpgrade.size >=
-      this.players.filter((p) => p.clientConnected).length
-    ) {
+    const numberOfPlayersWhoNeedToChooseUpgradesTotal = this.players.filter(
+      (p) => p.clientConnected,
+    ).length;
+    if (this.choseUpgrade.size >= numberOfPlayersWhoNeedToChooseUpgradesTotal) {
       this.moveToNextLevel();
       this.choseUpgrade.clear();
       if (elUpgradePickerLabel) {
@@ -428,7 +432,7 @@ export default class Game {
     } else {
       if (elUpgradePickerLabel) {
         elUpgradePickerLabel.innerText = `${
-          this.players.length - this.choseUpgrade.size
+          numberOfPlayersWhoNeedToChooseUpgradesTotal - this.choseUpgrade.size
         } players left to pick upgrades`;
       }
     }
