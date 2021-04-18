@@ -59,12 +59,20 @@ export function changeSprite(image: IImage, sprite: PIXI.Sprite) {
   restoreSubsprites(image);
 }
 export function load(image: IImage, parent: PIXI.Container) {
-  const instantiatedImage = create(0, 0, image.imageName, parent);
-  instantiatedImage.sprite.x = image.sprite.x;
-  instantiatedImage.sprite.y = image.sprite.y;
-  scale(instantiatedImage, image.scale);
-  restoreSubsprites(instantiatedImage);
-  return instantiatedImage;
+  const { x, y } = image.sprite;
+  // Recreate the sprite using the create function so it initializes it properly
+  const remadeSprite = create(0, 0, image.imageName, parent).sprite;
+  image.sprite = remadeSprite;
+  // Restore position
+  image.sprite.x = x;
+  image.sprite.y = y;
+  // Restore subsprites
+  image.subSpriteInstances = {};
+  restoreSubsprites(image);
+
+  // Restore scale
+  scale(image, image.scale);
+  return image;
 }
 export function restoreSubsprites(image: IImage) {
   // Re-add subsprites
