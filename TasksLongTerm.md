@@ -3,12 +3,14 @@
 - Critical Path
   - Gameplay Core (Due April 21, 2021)
     - **Really polish synergies** (obstacle spell interactions, etc)
+      - Since spells need to be independent, maybe "freeze" can change any "pit"-type obstacle (water, void, lava) into a new obstacle (frozen water)? So that the spell isn't tied to the existance of obstacles?? or maybe it should be
+    - A way to change sprite without interrupting animations midway?
   - Gameplay Sprinkles
-    - More creative, more difficult enemies
-    - More Spells
+    - **More creative, more difficult enemies**
+    - **More Spells**
       - Add tiers that only unlock with upgrades?
     - More Upgrades
-    - Some sense of progression (items / inventory??) (or are upgrades enough?)
+    - Some sense of player progression (items / inventory??) (or are upgrades enough?)
     - Level Progression (which enemies, how is it random, etc)
   - Polish
     - Add tutorial
@@ -29,12 +31,14 @@
     - CoverArt
     - Better Game Name
       - Think of "Into the Breach", "Binding of Isaac", and "Faster than light". They all communicate seriousness
+      - Tower/Guild of Spell Makers? (don't use the word "weavers" due to name conflicts with other bad games)
   - Chores
     - Make executable with Electron
     - Include WebsocketPie and make hosting for friends simple
   - Publish via [Steamworks](https://partner.steamgames.com/steamdirect) / Itch.io
     - Trailer
       - "The most creative spell-weaving game you've never heard of"
+      - Make sure it's CLEAR what is going on in the trailer (don't be like StitchCraft)
     - Keys to streamers and youtubers
 
 ## Elements

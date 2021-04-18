@@ -1,3 +1,4 @@
+- What about a prisoner AI that you can unleash, or traps that you can unlease in a line
 - keybinding common spells
 - Holding down "z" should show safe squares to move to
 - What's to stop player from just bumming around to get extra cards via turnsPerCard?

@@ -1,9 +1,6 @@
 # Todo
 
-- What about a prisoner AI that you can unleash, or traps that you can unlease in a line
-- Playtest with brad 2021.04.16
-  - We had some 3 disconnected players, brad killed me, destroyed my corpse and entered the portal and it entered an infinte loop
-- When 1 player is disconnected and the other dies, it enters infinite loop
+- Fixed?: We had some 3 disconnected players, brad killed me, destroyed my corpse and entered the portal and it entered an infinte loop
 
 ---
 
