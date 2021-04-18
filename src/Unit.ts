@@ -165,7 +165,7 @@ export function serializeUnit(unit: IUnit) {
 }
 export function resurrect(unit: IUnit) {
   // Now that unit is alive again they take up space in the path
-  window.game.pfGrid.setWalkableAt(unit.x, unit.y, false);
+  window.game.setWalkableAt(unit, false);
   Image.changeSprite(
     unit.image,
     addPixiSprite(unit.image.imageName, containerUnits),
@@ -176,7 +176,7 @@ export function resurrect(unit: IUnit) {
 }
 export function die(unit: IUnit) {
   // Ensure that corpses can be stepped on to be destroyed
-  window.game.pfGrid.setWalkableAt(unit.x, unit.y, true);
+  window.game.setWalkableAt(unit, true);
   Image.changeSprite(
     unit.image,
     addPixiSprite('units/corpse.png', unit.image.sprite.parent),
@@ -305,9 +305,9 @@ export function moveTo(unit: IUnit, coordinates: Coords): Promise<void> {
 // considering in-game blockers or changing any unit flags
 export function setLocation(unit: IUnit, coordinates: Coords): Promise<void> {
   // Set old location back to walkable
-  window.game.pfGrid.setWalkableAt(unit.x, unit.y, true);
+  window.game.setWalkableAt(unit, true);
   // Set new location to not walkable
-  window.game.pfGrid.setWalkableAt(coordinates.x, coordinates.y, false);
+  window.game.setWalkableAt(coordinates, false);
   // Set state instantly to new position
   unit.x = coordinates.x;
   unit.y = coordinates.y;

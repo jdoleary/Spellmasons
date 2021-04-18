@@ -560,17 +560,7 @@ export default class Game {
     const keepUnits = [];
     for (let u of this.units) {
       if (u.flaggedForRemoval) {
-        // Protect against trying to setWalkable for invalid coordinates
-        // NaN is used occasionally for units that exist in memory but do not have
-        // valid coordinates
-        // All units flagged for removal "should" already have invalid coordinates
-        // but this call to setWalkableAt is here as a safety measure to make sure
-        // that if a unit is removed, it's coordinates aren't permanently set to
-        // non-walkable
-        if (!Number.isNaN(u.x) && !Number.isNaN(u.y)) {
-          // Set their cell walkable and DON'T add them back to the units array
-          this.pfGrid.setWalkableAt(u.x, u.y, true);
-        }
+        this.setWalkableAt(u, true);
       } else {
         keepUnits.push(u);
       }
@@ -776,7 +766,7 @@ export default class Game {
   }
   addUnitToArray(unit: Unit.IUnit) {
     this.units.push(unit);
-    this.pfGrid.setWalkableAt(unit.x, unit.y, false);
+    this.setWalkableAt(unit, false);
   }
   removePickupFromArray(pickup: Pickup.IPickup) {
     this.pickups = this.pickups.filter((p) => p !== pickup);
@@ -786,11 +776,11 @@ export default class Game {
   }
   removeObstacleFromArray(obstacle: Obstacle.IObstacle) {
     this.obstacles = this.obstacles.filter((o) => o !== obstacle);
-    this.pfGrid.setWalkableAt(obstacle.x, obstacle.y, true);
+    this.setWalkableAt(obstacle, true);
   }
   addObstacleToArray(o: Obstacle.IObstacle) {
     this.obstacles.push(o);
-    this.pfGrid.setWalkableAt(o.x, o.y, false);
+    this.setWalkableAt(o, false);
   }
   // A cell is statically blocked if it does not exist or is occupied by something immovable
   isCellStaticallyBlocked(coordinates: Coords): boolean {
@@ -906,6 +896,14 @@ export default class Game {
       pickups: this.pickups.map(Pickup.serialize),
       obstacles: this.obstacles.map(Obstacle.serialize),
     };
+  }
+  setWalkableAt(coords: Coords, walkable: boolean) {
+    // Protect against trying to setWalkable for invalid coordinates
+    if (0 <= coords.x && coords.x < this.pfGrid.width) {
+      if (0 <= coords.y && coords.y < this.pfGrid.height) {
+        this.pfGrid.setWalkableAt(coords.x, coords.y, walkable);
+      }
+    }
   }
 }
 
