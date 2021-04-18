@@ -560,8 +560,17 @@ export default class Game {
     const keepUnits = [];
     for (let u of this.units) {
       if (u.flaggedForRemoval) {
-        // Set their cell walkable and DON'T add them back to the units array
-        this.pfGrid.setWalkableAt(u.x, u.y, true);
+        // Protect against trying to setWalkable for invalid coordinates
+        // NaN is used occasionally for units that exist in memory but do not have
+        // valid coordinates
+        // All units flagged for removal "should" already have invalid coordinates
+        // but this call to setWalkableAt is here as a safety measure to make sure
+        // that if a unit is removed, it's coordinates aren't permanently set to
+        // non-walkable
+        if (!Number.isNaN(u.x) && !Number.isNaN(u.y)) {
+          // Set their cell walkable and DON'T add them back to the units array
+          this.pfGrid.setWalkableAt(u.x, u.y, true);
+        }
       } else {
         keepUnits.push(u);
       }

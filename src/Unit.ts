@@ -163,13 +163,20 @@ export function serializeUnit(unit: IUnit) {
     agroOverlay: null,
   };
 }
-export function resurrect(u: IUnit) {
-  Image.changeSprite(u.image, addPixiSprite(u.image.imageName, containerUnits));
+export function resurrect(unit: IUnit) {
+  // Now that unit is alive again they take up space in the path
+  window.game.pfGrid.setWalkableAt(unit.x, unit.y, false);
+  Image.changeSprite(
+    unit.image,
+    addPixiSprite(unit.image.imageName, containerUnits),
+  );
   // Return dead units back to full health
-  u.health = u.healthMax;
-  u.alive = true;
+  unit.health = unit.healthMax;
+  unit.alive = true;
 }
 export function die(unit: IUnit) {
+  // Ensure that corpses can be stepped on to be destroyed
+  window.game.pfGrid.setWalkableAt(unit.x, unit.y, true);
   Image.changeSprite(
     unit.image,
     addPixiSprite('units/corpse.png', unit.image.sprite.parent),
