@@ -197,16 +197,16 @@ export async function takeDamage(unit: IUnit, amount: number) {
   // If the unit is "selected" this will update it's overlay to reflect the damage
   updateSelectedOverlay(unit);
 
+  // Show hearts floating away due to damage taken
+  let healthChangedString = '';
+  for (let i = 0; i < Math.abs(alteredAmount); i++) {
+    healthChangedString += alteredAmount > 0 ? '🔥' : '❤️';
+  }
+  floatingText({
+    cell: unit,
+    text: healthChangedString,
+  });
   if (alteredAmount > 0) {
-    // Show hearts floating away due to damage taken
-    let healthChangedString = '';
-    for (let i = 0; i < Math.abs(alteredAmount); i++) {
-      healthChangedString += '❤️';
-    }
-    floatingText({
-      cell: unit,
-      text: healthChangedString,
-    });
     await Image.take_hit(unit.image);
   }
   // If taking damage (not healing) and health is 0 or less...
