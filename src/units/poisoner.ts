@@ -12,7 +12,7 @@ const unit: UnitSource = {
     subtype: UnitSubType.AI_poisoner,
     probability: 30,
   },
-  action: (unit: Unit.IUnit) => {
+  action: async (unit: Unit.IUnit) => {
     const nonPoisonedEnemyUnits = window.game.units.filter(
       (u) =>
         u.faction !== unit.faction &&

@@ -10,6 +10,6 @@ const unit: UnitSource = {
     subtype: UnitSubType.PLAYER_CONTROLLED,
     probability: 0,
   },
-  action: (unit: Unit.IUnit) => {},
+  action: async (unit: Unit.IUnit) => {},
 };
 export default unit;

@@ -8,7 +8,7 @@ interface ConstructorInfo {
   probability: number;
 }
 export type UnitAction = {
-  (unit: Unit.IUnit): void;
+  (unit: Unit.IUnit): Promise<void>;
 };
 export type CanInteractWithCell = {
   (unit: Unit.IUnit, x: number, y: number): boolean;
@@ -55,6 +55,7 @@ export function registerUnits() {
 export const allUnits: { [id: string]: UnitSource } = {};
 
 const hardCodedLevelEnemies = [
+  [0],
   [0, 0, 0, 6],
   [0, 0, 0, 1, 7],
   [0, 0, 1, 1, 1],

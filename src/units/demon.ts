@@ -11,7 +11,7 @@ const unit: UnitSource = {
     subtype: UnitSubType.AI_demon,
     probability: 30,
   },
-  action: (unit: Unit.IUnit) => {
+  action: async (unit: Unit.IUnit) => {
     // Resurrect a dead unit
     const deadAIs = window.game.units.filter(
       (u) => u.unitType === UnitType.AI && !u.alive,

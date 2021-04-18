@@ -12,7 +12,7 @@ const unit: UnitSource = {
     subtype: UnitSubType.AI_reach,
     probability: 30,
   },
-  action: (unit: Unit.IUnit) => {
+  action: async (unit: Unit.IUnit) => {
     let runFromTarget;
     let targetEnemy;
     for (let enemy of Unit.livingUnitsInDifferentFaction(unit)) {

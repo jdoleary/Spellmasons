@@ -14,7 +14,7 @@ const unit: UnitSource = {
     probability: 30,
   },
 
-  action: (unit: Unit.IUnit) => {
+  action: async (unit: Unit.IUnit) => {
     // Move to closest ally
     const closestAlly = Unit.findClosestUnitInSameFaction(unit);
     if (closestAlly) {

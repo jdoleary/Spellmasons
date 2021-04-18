@@ -297,7 +297,9 @@ export function moveTo(unit: IUnit, coordinates: Coords): Promise<void> {
 // setLocation, unlike moveTo, simply sets a unit to a cell coordinate without
 // considering in-game blockers or changing any unit flags
 export function setLocation(unit: IUnit, coordinates: Coords): Promise<void> {
+  // Set old location back to walkable
   window.game.pfGrid.setWalkableAt(unit.x, unit.y, true);
+  // Set new location to not walkable
   window.game.pfGrid.setWalkableAt(coordinates.x, coordinates.y, false);
   // Set state instantly to new position
   unit.x = coordinates.x;

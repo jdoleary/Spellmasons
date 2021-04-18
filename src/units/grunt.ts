@@ -2,7 +2,6 @@ import * as Unit from '../Unit';
 import * as Image from '../Image';
 import type { UnitSource } from './index';
 import { UnitSubType } from '../commonTypes';
-import * as math from '../math';
 
 const unit: UnitSource = {
   id: 'grunt',
@@ -12,7 +11,7 @@ const unit: UnitSource = {
     subtype: UnitSubType.AI_melee,
     probability: 100,
   },
-  action: (unit: Unit.IUnit) => {
+  action: async (unit: Unit.IUnit) => {
     if (!Unit.canMove(unit)) {
       return;
     }
@@ -24,7 +23,7 @@ const unit: UnitSource = {
     // Attack closest enemy
     if (canInteractWithCell(unit, closestEnemy.x, closestEnemy.y)) {
       Image.attack(unit.image, unit.x, unit.y, closestEnemy.x, closestEnemy.y);
-      Unit.takeDamage(closestEnemy, unit.damage);
+      await Unit.takeDamage(closestEnemy, unit.damage);
     } else {
       const path = window.game.findPath(unit, closestEnemy);
       if (path && path.length >= 2) {

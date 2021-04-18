@@ -353,6 +353,7 @@ export default class Game {
     this.setTurnMessage(true, 'Your Turn');
     // Start the currentTurnPlayer's turn
     for (let player of this.players) {
+      Player.checkForGetCardOnTurn(player);
       // If this current player is NOT able to take their turn...
       if (!Player.ableToTakeTurn(player)) {
         // Skip them
@@ -573,20 +574,20 @@ export default class Game {
     switch (phase) {
       case 'PlayerTurns':
         this.turn_number++;
-        this.initializePlayerTurns();
-        for (let p of this.players) {
-          Player.checkForGetCardOnTurn(p);
-        }
         for (let u of this.units) {
           // Reset thisTurnMoved flag now that it is a new turn
           // Because no units have moved yet this turn
           u.thisTurnMoved = false;
           u.intendedNextMove = undefined;
         }
+        // Lastly, initialize the player turns.
+        // Note, it is possible that calling this will immediately end
+        // the player phase (if there are no players to take turns)
+        this.initializePlayerTurns();
         break;
       case 'NPC':
         this.setTurnMessage(false, "NPC's Turn");
-        const animationPromises = [];
+        let animationPromises: Promise<void>[] = [];
         // Move units
         unitloop: for (let u of this.units.filter(
           (u) => u.unitType === UnitType.AI && u.alive,
@@ -603,7 +604,8 @@ export default class Game {
           }
           const unitSource = allUnits[u.unitSourceId];
           if (unitSource) {
-            const promise = unitSource.action(u);
+            // Add unit action to the array of promises to wait for
+            let promise = unitSource.action(u);
             animationPromises.push(promise);
           } else {
             console.error(
@@ -612,7 +614,10 @@ export default class Game {
             );
           }
         }
-        this.initiateIntelligentAIMovement();
+        // Wait for units to finish moving
+        animationPromises = animationPromises.concat(
+          this.initiateIntelligentAIMovement(),
+        );
         // When all animations are done, set turn phase to player turn
         Promise.all(animationPromises).then(() => {
           this.setTurnPhase(turn_phase.PlayerTurns);
@@ -622,12 +627,14 @@ export default class Game {
         // They may have moved or unfrozen which would update
         // which cells they can attack next turn
         updatePlanningView();
+        console.log('end switch to NPC turn');
         break;
       default:
         break;
     }
   }
-  initiateIntelligentAIMovement() {
+  initiateIntelligentAIMovement(): Promise<void>[] {
+    let promises: Promise<void>[] = [];
     // This function ensures that all units who can move, do move, in the proper order
     // so, for example, three units next to each other all trying to move left can
     // all do so, regardless of the order that they are in in the units array
@@ -636,7 +643,7 @@ export default class Game {
     // Units who are obstructed will not move due to collision checks in Unit.moveTo
     AIUnits.filter((u) => u.intendedNextMove !== undefined).forEach((u) => {
       if (u.intendedNextMove) {
-        Unit.moveTo(u, u.intendedNextMove);
+        promises.push(Unit.moveTo(u, u.intendedNextMove));
       }
     });
     // While there are units who intend to move but havent yet
@@ -650,7 +657,7 @@ export default class Game {
       // Try moving them again
       remainingUnitsWhoIntendToMove.forEach((u) => {
         if (u.intendedNextMove) {
-          Unit.moveTo(u, u.intendedNextMove);
+          promises.push(Unit.moveTo(u, u.intendedNextMove));
         }
       });
     } while (
@@ -661,6 +668,7 @@ export default class Game {
       // the units left that intend to move truly cannot.
       remainingUnitsWhoIntendToMove.length !== previousUnmovedUnitCount
     );
+    return promises;
   }
   setGameState(g: game_state) {
     this.state = g;
