@@ -1,3 +1,8 @@
+- keybinding common spells
+- Holding down "z" should show safe squares to move to
+- What's to stop player from just bumming around to get extra cards via turnsPerCard?
+  - Maybe only as long as there are enemies alive? Or set a hand max?
+  - Or just make sure the enemies are hard enough that killing time is dangerous, also since cards now reset between levels this may not be a problem
 - Maybe refactor how setWalkableAt works rather than doing it piece-meal, doing it all at once, once the grid is needed? to prevent bugs where a cell will appear walkable but wont be because some odd state left it as false walkable instead of true walkable
 - After I disconnected, I closed my browser, rejoined, Brad's player was stuck between two cells and i joined as a new player instead of the old
   - Make loading occur only after animations are done
