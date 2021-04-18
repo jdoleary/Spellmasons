@@ -1,3 +1,6 @@
+- Maybe refactor how setWalkableAt works rather than doing it piece-meal, doing it all at once, once the grid is needed? to prevent bugs where a cell will appear walkable but wont be because some odd state left it as false walkable instead of true walkable
+- After I disconnected, I closed my browser, rejoined, Brad's player was stuck between two cells and i joined as a new player instead of the old
+  - Make loading occur only after animations are done
 - It's possible that summoner could block you from finishing the level by summoning too many allies
 - enemies should not be able to be on the portal
 - Try to reproduce: Game.findPath (114) cannot set property 'g' of undefined

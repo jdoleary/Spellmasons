@@ -1,9 +1,13 @@
 # Todo
 
+- make dead bodies walkable
+- What about a prisoner AI that you can unleash, or traps that you can unlease in a line
 - Playtest with brad 2021.04.16
-  - error `units/golem was unable to be set as sprite texture because the texture does not exist` after resurrect??
-  - After I disconnected, I closed my browser, rejoined, Brad's player was stuck between two cells and i joined as a new player instead of the old
   - We had some 3 disconnected players, brad killed me, destroyed my corpse and entered the portal and it entered an infinte loop
+- When 1 player is disconnected and the other dies, it enters infinite loop
+- Loading game doesn't remember unit scale
+  - But only on refresh from 2nd player's client
+- disconnected subsprite is not restored on load
 
 ---
 
@@ -14,6 +18,7 @@
 - Add obstacles to spell effect? So freeze can freeze lava?
 - What's to stop player from just bumming around to get extra cards?
   - Maybe only as long as there are enemies alive? Or set a hand max?
+  - Or just make sure the enemies are hard enough that killing time is dangerous, also since cards now reset between levels this may not be a problem
 
 ## Brad 2021.04.05
 

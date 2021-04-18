@@ -4,6 +4,7 @@
   - Gameplay Core (Due April 21, 2021)
     - **Really polish synergies** (obstacle spell interactions, etc)
     - Fix units not pathing around frozen units
+      - Sometimes you get "cannot move here" when pathing due to a unit in the way
   - Gameplay Sprinkles
     - More creative, more difficult enemies
     - More Spells
