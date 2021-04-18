@@ -112,6 +112,7 @@ actually contains the full width of the card. */
 the face of the last card in the group is seen*/
 .card-type-group {
   display: flex;
+  flex-direction: row-reverse;
   padding-right: 70px;
   margin-right: 3px;
 }
