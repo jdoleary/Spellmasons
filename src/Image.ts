@@ -178,17 +178,18 @@ export function attack(
   cellY: number,
 ) {
   // Move forward
-  window.animationTimeline.addAnimation([
+  return animateIndependent([
     {
       sprite: image.sprite,
       target: cellToBoardCoords(cellX, cellY),
     },
-  ]);
-  // Move back
-  window.animationTimeline.addAnimation([
-    {
-      sprite: image.sprite,
-      target: cellToBoardCoords(current_cellX, current_cellY),
-    },
-  ]);
+  ]).then(() => {
+    // Move back
+    return animateIndependent([
+      {
+        sprite: image.sprite,
+        target: cellToBoardCoords(current_cellX, current_cellY),
+      },
+    ]);
+  });
 }

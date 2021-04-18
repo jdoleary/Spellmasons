@@ -22,7 +22,13 @@ const unit: UnitSource = {
     }
     // Attack closest enemy
     if (canInteractWithCell(unit, closestEnemy.x, closestEnemy.y)) {
-      Image.attack(unit.image, unit.x, unit.y, closestEnemy.x, closestEnemy.y);
+      await Image.attack(
+        unit.image,
+        unit.x,
+        unit.y,
+        closestEnemy.x,
+        closestEnemy.y,
+      );
       await Unit.takeDamage(closestEnemy, unit.damage);
     } else {
       const path = window.game.findPath(unit, closestEnemy);
