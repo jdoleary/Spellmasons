@@ -555,7 +555,16 @@ export default class Game {
     }
 
     // Clean up invalid units
-    this.units = this.units.filter((u) => !u.flaggedForRemoval);
+    const keepUnits = [];
+    for (let u of this.units) {
+      if (u.flaggedForRemoval) {
+        // Set their cell walkable and DON'T add them back to the units array
+        this.pfGrid.setWalkableAt(u.x, u.y, true);
+      } else {
+        keepUnits.push(u);
+      }
+    }
+    this.units = keepUnits;
 
     const phase = turn_phase[this.turn_phase];
     // Add current phase class to body
@@ -749,6 +758,7 @@ export default class Game {
   }
   addUnitToArray(unit: Unit.IUnit) {
     this.units.push(unit);
+    this.pfGrid.setWalkableAt(unit.x, unit.y, false);
   }
   removePickupFromArray(pickup: Pickup.IPickup) {
     this.pickups = this.pickups.filter((p) => p !== pickup);

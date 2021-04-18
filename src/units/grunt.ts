@@ -21,29 +21,22 @@ const unit: UnitSource = {
       // Do not move if they don't have a target
       return;
     }
+    // Attack closest enemy
+    if (canInteractWithCell(unit, closestEnemy.x, closestEnemy.y)) {
+      Image.attack(unit.image, unit.x, unit.y, closestEnemy.x, closestEnemy.y);
+      Unit.takeDamage(closestEnemy, unit.damage);
+    }
     const path = window.game.findPath(unit, closestEnemy);
     if (path && path.length >= 2) {
       // 0 index is the current coordinates, so 1 is the next coordinates to move to
       const [next_x, next_y] = path[1];
 
       if (next_x !== undefined && next_y !== undefined) {
-        const other_unit = window.game.getUnitAt({ x: next_x, y: next_y });
-        // Deal damage to what you run into
-        if (other_unit) {
-          // Do not attack ally units
-          if (
-            other_unit.faction != unit.faction &&
-            canInteractWithCell(unit, next_x, next_y)
-          ) {
-            Image.attack(unit.image, unit.x, unit.y, next_x, next_y);
-            Unit.takeDamage(other_unit, unit.damage);
-          }
-        }
         // set move intention
         unit.intendedNextMove = { x: next_x, y: next_y };
-        // Update the "planning view" overlay that shows the unit's agro radius
-        Unit.updateSelectedOverlay(unit);
       }
+      // Update the "planning view" overlay that shows the unit's agro radius
+      Unit.updateSelectedOverlay(unit);
     }
   },
   canInteractWithCell,
