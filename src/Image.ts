@@ -181,7 +181,10 @@ export function attack(
   return animateIndependent([
     {
       sprite: image.sprite,
-      target: cellToBoardCoords(cellX, cellY),
+      target: cellToBoardCoords(
+        current_cellX + (cellX - current_cellX) / 2,
+        current_cellY + (cellY - current_cellY) / 2,
+      ),
     },
   ]).then(() => {
     // Move back
