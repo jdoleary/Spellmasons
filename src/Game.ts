@@ -440,7 +440,8 @@ export default class Game {
   // Returns true if game is over
   checkForGameOver(): boolean {
     const areAllPlayersDead =
-      this.players.filter((p) => p.unit.alive).length === 0;
+      this.players.filter((p) => p.unit.alive && p.clientConnected).length ===
+      0;
     if (areAllPlayersDead) {
       this.setGameState(game_state.GameOver);
       return true;
