@@ -116,6 +116,10 @@ the face of the last card in the group is seen*/
   padding-right: 70px;
   margin-right: 3px;
 }
+.card-type-group:empty {
+  padding-right: 0;
+  margin-right: 0;
+}
 .card {
   cursor: pointer;
 }
