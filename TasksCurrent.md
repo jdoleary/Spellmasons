@@ -11,6 +11,7 @@
 
 - Fix swap
   - bug: chain swapping didn't move me, this occurs when the chain retarget's self
+  - Swapping doesn't work with cards, the player picks them up
 - Add obstacles to spell effect? So freeze can freeze lava?
 
 ## Brad 2021.04.05
