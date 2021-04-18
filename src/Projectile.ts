@@ -20,7 +20,7 @@ export default function createVisualProjectile(
   toX: number,
   toY: number,
   imagePath: string,
-) {
+): Promise<void> {
   const sprite = addPixiSprite(imagePath, containerProjectiles);
   sprite.anchor.x = 0.5;
   sprite.anchor.y = 0.5;
@@ -44,10 +44,16 @@ export default function createVisualProjectile(
     toY: toYBoard,
     sprite,
   };
-  requestAnimationFrame((time) => fly(instance, time));
+  return new Promise((resolve) => {
+    requestAnimationFrame((time) => fly(instance, time, resolve));
+  });
 }
 
-function fly(instance: Projectile, time: number) {
+function fly(
+  instance: Projectile,
+  time: number,
+  resolve: (value: void | PromiseLike<void>) => void,
+) {
   if (instance.startTime == 0) {
     instance.startTime = time;
     const time_in_flight =
@@ -67,7 +73,8 @@ function fly(instance: Projectile, time: number) {
     if (instance.sprite.parent) {
       instance.sprite.parent.removeChild(instance.sprite);
     }
+    resolve();
   } else {
-    requestAnimationFrame((time) => fly(instance, time));
+    requestAnimationFrame((time) => fly(instance, time, resolve));
   }
 }

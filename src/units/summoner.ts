@@ -36,7 +36,7 @@ const unit: UnitSource = {
             UnitType.AI,
             sourceUnit.info.subtype,
           );
-          Unit.moveTo(summonedUnit, coords);
+          await Unit.moveTo(summonedUnit, coords);
         } else {
           console.error('Summoner could not find unit source to summon from');
         }

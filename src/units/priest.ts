@@ -29,14 +29,14 @@ const unit: UnitSource = {
       for (let ally of damagedAllys) {
         if (inRange(unit, ally)) {
           const chosenUnit = damagedAllys[0];
-          createVisualProjectile(
+          await createVisualProjectile(
             unit,
             chosenUnit.x,
             chosenUnit.y,
             'green-thing.png',
           );
           // Heal for 2
-          Unit.takeDamage(chosenUnit, -2);
+          await Unit.takeDamage(chosenUnit, -2);
           break;
         }
       }

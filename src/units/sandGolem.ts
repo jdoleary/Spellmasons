@@ -26,13 +26,13 @@ const unit: UnitSource = {
       }
     }
     if (targetEnemy) {
-      createVisualProjectile(
+      await createVisualProjectile(
         unit,
         targetEnemy.x,
         targetEnemy.y,
         'green-thing.png',
       );
-      Unit.takeDamage(targetEnemy, unit.damage);
+      await Unit.takeDamage(targetEnemy, unit.damage);
     } else {
       if (runFromTarget) {
         const moveTo = math.oneCellAwayFromCell(unit, runFromTarget);
