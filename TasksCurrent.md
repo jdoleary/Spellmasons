@@ -1,8 +1,10 @@
 # Todo
 
 - Question for Brad: Should Protection protect any single ally? So that it can work for both players if you stack it?
-
   - stash: "protection stackable"
+- Question for Brad: Do you like charge and should it trigger pickups when it moves you?
+
+  - Bug: Charge doesn't play well with AOE
 
 - Fixed?: We had some 3 disconnected players, brad killed me, destroyed my corpse and entered the portal and it entered an infinte loop
 - Protection doesn't SHOW target being removed because target drawing is additive right now

@@ -1,3 +1,4 @@
+- why does swap use Unit.setLocation but charge uses Unit.moveTo? Is there a bug here?
 - What about a prisoner AI that you can unleash, or traps that you can unlease in a line
 - keybinding common spells
 - Holding down "z" should show safe squares to move to
