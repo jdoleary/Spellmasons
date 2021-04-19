@@ -812,14 +812,6 @@ export default class Game {
     }
     return false;
   }
-  async getTargetsOfCards(
-    caster: Player.IPlayer,
-    cards: string[],
-    target: Coords,
-  ): Promise<Coords[]> {
-    const state = await this.castCards(caster, cards, target, true);
-    return (state && state.targets) || [];
-  }
   async castCards(
     caster: Player.IPlayer,
     cards: string[],
@@ -836,8 +828,6 @@ export default class Game {
       // Prevent dead players from casting
       return effectState;
     }
-    // Draw the original target
-    drawTarget(target.x, target.y, !dryRun);
     for (let cardId of cards) {
       const card = Cards.allCards.find((c) => c.id == cardId);
       const animationPromises = [];
@@ -859,12 +849,18 @@ export default class Game {
         }
         const { targets: previousTargets } = effectState;
         effectState = await card.effect(effectState, dryRun);
+        // Clear images from previous card before drawing the images from the new card
+        containerSpells.removeChildren();
         // Animate target additions:
         for (let target of effectState.targets) {
-          // If not already included target:
+          // If already included target:
           if (
-            !previousTargets.find((t) => t.x === target.x && t.y === target.y)
+            previousTargets.find((t) => t.x === target.x && t.y === target.y)
           ) {
+            // Don't animate previous targets, they should be drawn full, immediately
+            animationPromises.push(drawTarget(target.x, target.y, false));
+          } else {
+            // If a new target, animate it in
             animationPromises.push(drawTarget(target.x, target.y, !dryRun));
           }
         }
