@@ -253,6 +253,7 @@ body.your-turn #player-turn-indicator-holder.low-time {
 
 #inspector-tooltip {
   display: none;
+  user-select: none;
 }
 #inspector-tooltip.active {
   display: flex;
