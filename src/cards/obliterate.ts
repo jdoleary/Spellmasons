@@ -6,7 +6,6 @@ const spell: Spell = {
     id: 'obliterate',
     thumbnail: 'obliterate.png',
     probability: 5,
-    isDark: true,
     effect: async (state) => {
       for (let target of state.targets) {
         // TODO
