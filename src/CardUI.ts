@@ -6,9 +6,49 @@ import {
   syncSpellEffectProjection,
   updateTooltip,
 } from './ui/GameBoardInput';
+const elCardHolders = document.getElementById('card-holders');
+// Where the non-selected cards are displayed
 const elCardHand = document.getElementById('card-hand');
+// Where the selected cards are displayed
 const elSelectedCards = document.getElementById('selected-cards');
+// Displays a full card with info on shift+hover of card
+const elCardInspect = document.getElementById('card-inspect');
+// A tooltip that shows information for stuff on the gameboard on Shift+hoverk
 const elInspectorTooltip = document.getElementById('inspector-tooltip');
+if (elCardHolders) {
+  // Show full card on hover
+  elCardHolders.addEventListener('mousemove', (e) => {
+    if (e.target instanceof HTMLElement) {
+      const element = e.target?.closest('.card');
+      const cardId =
+        element instanceof HTMLElement ? element.dataset.cardId || '' : '';
+      if (cardId) {
+        const card = Cards.allCards.find((card) => card.id === cardId);
+        if (card) {
+          showFullCard(card);
+        } else {
+          console.error(`Could not find source card with id "${cardId}"`);
+        }
+      }
+    }
+  });
+  elCardHolders.addEventListener('mouseleave', (e) => {
+    // Clear cardInspect when the mouse leaves elCardHolders so that the large card
+    // doesn't stay in the center of the screen
+    if (elCardInspect) {
+      elCardInspect.innerHTML = '';
+    }
+  });
+}
+function showFullCard(card: Cards.ICard) {
+  if (elCardInspect) {
+    // Clear previous
+    elCardInspect.innerHTML = '';
+    elCardInspect.appendChild(createCardElement(card));
+  } else {
+    console.error('card-inspect div does not exist');
+  }
+}
 
 export function recalcPositionForCards(player: Player.IPlayer) {
   if (window.player !== player) {
@@ -124,6 +164,7 @@ export function getSelectedCards(): string[] {
 
 let inspectIntervalId: NodeJS.Timeout | undefined;
 export function toggleInspectMode(active: boolean) {
+  document.body.classList.toggle('inspect-mode', active);
   elSelectedCards && elSelectedCards.classList.toggle('hide', active);
   elInspectorTooltip && elInspectorTooltip.classList.toggle('active', active);
   syncSpellEffectProjection();
@@ -203,9 +244,15 @@ function createCardElement(content: Cards.ICard) {
   thumbHolder.appendChild(thumbnail);
   thumbHolder.classList.add('card-thumb');
   elCardInner.appendChild(thumbHolder);
+  const title = document.createElement('div');
+  title.classList.add('card-title');
+  title.innerHTML = content.id;
+  elCardInner.appendChild(title);
   const desc = document.createElement('div');
   desc.classList.add('card-description');
-  desc.innerHTML = content.id;
+  if (content.description) {
+    desc.innerHTML = content.description;
+  }
   elCardInner.appendChild(desc);
   return element;
 }

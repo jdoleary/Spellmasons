@@ -64,6 +64,29 @@ body {
 #upgrade-picker .card-thumb {
   height: 180px;
 }
+body.inspect-mode #card-inspect {
+  display: flex;
+}
+#card-inspect {
+  /*Hidden until inspect-mode reveals it*/
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid red;
+  pointer-events: none;
+}
+#card-inspect .card-inner {
+  width: 300px;
+  height: 400px;
+}
+#card-inspect .card-inner .card-thumb {
+  height: 150px;
+}
 #card-holders {
   user-select: none;
   position: fixed;
@@ -75,7 +98,8 @@ body {
   display: flex;
   flex-direction: column-reverse;
 }
-#card-holders > div {
+#card-holders #selected-cards,
+#card-holders #card-hand {
   display: flex;
   width: 100%;
 }
@@ -153,12 +177,24 @@ the face of the last card in the group is seen*/
   width: 64px;
   height: 64px;
 }
-.card-description {
+.card-title {
   flex-grow: 3;
   padding: 8px;
   color: white;
   text-align: center;
   font-weight: bold;
+}
+.card-description {
+  /* Only shows within card-inspect*/
+  display: none;
+  flex-grow: 3;
+  padding: 8px;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+}
+#card-inspect .card-description {
+  display: block;
 }
 
 /* Hide end turn button until it is your turn */
