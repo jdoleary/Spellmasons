@@ -199,7 +199,6 @@ the face of the last card in the group is seen*/
   padding: 8px;
   color: white;
   text-align: center;
-  font-weight: bold;
 }
 #card-inspect .card-description {
   display: block;
