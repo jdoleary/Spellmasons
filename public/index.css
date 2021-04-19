@@ -64,6 +64,9 @@ body {
 #upgrade-picker .card-thumb {
   height: 180px;
 }
+body.inspect-mode {
+  cursor: help;
+}
 body.inspect-mode #card-inspect {
   display: flex;
 }
