@@ -57,11 +57,16 @@ export function recalcPositionForCards(player: Player.IPlayer) {
   }
   const cardCountPairs = Object.entries<number>(
     player.cards
-      .sort(
-        (a, b) =>
-          Cards.allCards.findIndex((card) => card.id === a) -
-          Cards.allCards.findIndex((card) => card.id === b),
-      )
+      .sort((a, b) => {
+        const cardA = Cards.allCards.find((card) => card.id === a);
+        const cardB = Cards.allCards.find((card) => card.id === b);
+        if (cardA && cardB) {
+          // Sort cards by probability
+          return cardB.probability - cardA.probability;
+        } else {
+          return 0;
+        }
+      })
       .reduce<{ [cardId: string]: number }>((tally, cardId) => {
         if (!tally[cardId]) {
           tally[cardId] = 0;
@@ -205,7 +210,6 @@ export function generateCard(): Cards.ICard {
   // Excludes dark cards
   return math.chooseObjectWithProbability(Cards.allCards);
 }
-/*
 function getCardRarityColor(content: Cards.ICard): string {
   if (content.isDark) {
     return '#000';
@@ -231,14 +235,14 @@ function getCardRarityColor(content: Cards.ICard): string {
   // Highly-common
   // White
   return '#FFF';
-}*/
+}
 function createCardElement(content: Cards.ICard) {
   const element = document.createElement('div');
   element.classList.add('card');
   element.dataset.cardId = content.id;
-  // element.style.backgroundColor = getCardRarityColor(content);
   const elCardInner = document.createElement('div');
   elCardInner.classList.add('card-inner');
+  elCardInner.style.borderColor = getCardRarityColor(content);
   element.appendChild(elCardInner);
   const thumbHolder = document.createElement('div');
   const thumbnail = document.createElement('img');
