@@ -181,6 +181,11 @@ the face of the last card in the group is seen*/
   width: 64px;
   height: 64px;
 }
+#card-inspect .card-thumb img {
+  width: 128px;
+  height: 128px;
+  image-rendering: pixelated;
+}
 .card-title {
   font-size: 12px;
   flex-grow: 3;
