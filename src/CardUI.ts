@@ -171,6 +171,8 @@ export function toggleInspectMode(active: boolean) {
   if (active) {
     // if the "update tooltip interval" is not currently running, start it:
     if (inspectIntervalId == undefined) {
+      // updateTooltip runs on an interval so that if a units health changes under the tooltip
+      // without the user moving the mouse it will stay up to date.
       inspectIntervalId = setInterval(() => {
         updateTooltip();
       }, 60);
