@@ -23,6 +23,7 @@ import poison from './poison';
 import vulnerable from './vulnerable';
 import lance from './lance';
 import stomp from './stomp';
+import protection from './protection';
 export interface Spell {
   card: ICard;
   // modifiers keep track of additional state on an individual unit basis
@@ -90,6 +91,7 @@ export function registerCards() {
   register(vulnerable);
   register(lance);
   register(stomp);
+  register(protection);
   return Promise.resolve(additionalImagePaths);
 }
 
@@ -121,6 +123,7 @@ export interface ICard {
   probability: number;
   effect: EffectFn;
   isDark?: boolean;
+  description?: string;
 }
 
 export const allCards: ICard[] = [];

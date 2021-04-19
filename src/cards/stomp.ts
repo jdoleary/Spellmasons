@@ -6,11 +6,17 @@ const spell: Spell = {
     id,
     thumbnail: 'stomp.png',
     probability: 10,
+    description: 'Targets all the spaces directly around you',
     effect: async (state, dryRun) => {
-      const withinRadius = window.game.getCoordsWithinDistanceOfTarget(
+      let withinRadius = window.game.getCoordsWithinDistanceOfTarget(
         state.caster.unit.x,
         state.caster.unit.y,
         1,
+      );
+      // Remove self from radius (for the new targets of this spell only, not from existing targets)
+      withinRadius = withinRadius.filter(
+        (coord) =>
+          !(coord.x == state.caster.unit.x && coord.y == state.caster.unit.y),
       );
       let updatedTargets = [...state.targets, ...withinRadius];
       // deduplicate
@@ -21,11 +27,6 @@ const spell: Spell = {
           ) === index
         );
       });
-      // Remove self from target
-      updatedTargets = updatedTargets.filter(
-        (coord) =>
-          !(coord.x == state.caster.unit.x && coord.y == state.caster.unit.y),
-      );
 
       // Update targets
       state.targets = updatedTargets;
