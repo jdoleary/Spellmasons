@@ -1,19 +1,3 @@
-# Tasks
-
-- Allow reconnection by storing clientId in local storage?
-  - When doing 2 players get's spell.caster is undefined
-- Visibility
-
-  - Put health next to heart
-  - Way to see health for units
-
-- Prevent units from going off board if there aren't enough players
-- Waiting for player to reconnect should only change if one of the two active players leave
-
-## Ideas
-
-- Brad suggests more unit types
-
 ## Matt Ideas
 
 - Spell pool (3 spells that you channel and build up over time)

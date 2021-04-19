@@ -1,5 +1,7 @@
 ## Critical Path
 
+- How could spells better interact?
+  - Moreso than just updating targets?
 - Critical Path
   - Gameplay Core (Due April 21, 2021)
     - **Really polish synergies** (obstacle spell interactions, etc)
@@ -39,6 +41,7 @@
     - Trailer
       - "The most creative spell-weaving game you've never heard of"
       - Make sure it's CLEAR what is going on in the trailer (don't be like StitchCraft)
+      - Also make the "trailer" tom francis style where you just walk it through, doesn't have to be and should be an attempt to be "epic"
     - Keys to streamers and youtubers
 
 ## Elements
@@ -62,3 +65,9 @@ Elements as building blocks for combined spells:
 
 - Iterate as much as possible through playtesting
 - Refactor as necessary to keep the codebase robust and simple to work in
+
+## Game values and Pillars
+
+(via [Charlie Cleveland](https://www.charliecleveland.com/game-pillars/))
+
+- Pillar: True creativity in spell-making

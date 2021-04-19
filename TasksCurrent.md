@@ -1,6 +1,11 @@
 # Todo
 
+- Question for Brad: Should Protection protect any single ally? So that it can work for both players if you stack it?
+
+  - stash: "protection stackable"
+
 - Fixed?: We had some 3 disconnected players, brad killed me, destroyed my corpse and entered the portal and it entered an infinte loop
+- Protection doesn't SHOW target being removed because target drawing is additive right now
 
 ---
 
