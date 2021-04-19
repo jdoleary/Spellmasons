@@ -130,6 +130,8 @@ export function enterPortal(player: IPlayer) {
   removeAllCards(player);
   // Move "portaled" unit out of the way to prevent collisions and chaining while portaled
   Unit.setLocation(player.unit, { x: NaN, y: NaN });
+  // Entering the portal ends the player's turn
+  window.game.endPlayerTurn(player.clientId);
 }
 // Note: this is also used for AI targeting to ensure that AI don't target disabled plaeyrs
 export function ableToTakeTurn(player: IPlayer) {
