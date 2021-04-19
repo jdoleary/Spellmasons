@@ -1,6 +1,6 @@
 import type { Spell } from '.';
 
-const id = 'area_of_effect';
+const id = 'AOE';
 const spell: Spell = {
   card: {
     id,

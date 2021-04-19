@@ -1,6 +1,6 @@
 import * as Unit from '../Unit';
 import type { Spell } from '.';
-const id = 'raise_dead';
+const id = 'resurrect';
 const spell: Spell = {
   card: {
     id,
