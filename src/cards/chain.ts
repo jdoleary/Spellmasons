@@ -6,6 +6,10 @@ const spell: Spell = {
     id,
     thumbnail: 'chain.png',
     probability: 10,
+    description: `
+Adds targets for the following cards to effect by "chaining like electricity" 
+off of all existing targeted units to units touching them. 
+    `,
     effect: async (state, dryRun) => {
       let updatedTargets = [...state.targets];
       for (let target of state.targets) {

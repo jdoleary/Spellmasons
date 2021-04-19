@@ -32,6 +32,10 @@ const spell: Spell = {
     id,
     thumbnail: 'poison.png',
     probability: 10,
+    description: `
+Poisons all target(s).  Poison will deal 1 base damage every turn
+at the start of the unit's turn.
+    `,
     effect: async (state, dryRun) => {
       if (dryRun) {
         return state;

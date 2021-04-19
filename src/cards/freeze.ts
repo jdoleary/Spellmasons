@@ -7,6 +7,9 @@ const spell: Spell = {
     id,
     thumbnail: 'freeze.png',
     probability: 20,
+    description: `
+Freezes the target(s) for 1 turn, preventing them from moving or acting.
+    `,
     effect: async (state, dryRun) => {
       if (dryRun) {
         return state;

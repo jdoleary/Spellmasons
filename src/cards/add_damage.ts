@@ -7,6 +7,9 @@ const spell: Spell = {
     id,
     thumbnail: 'damage.png',
     probability: 50,
+    description: `
+Deals damage to all targets.    
+    `,
     effect: async (state, dryRun) => {
       if (dryRun) {
         return state;

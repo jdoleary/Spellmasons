@@ -6,6 +6,9 @@ const spell: Spell = {
     id,
     thumbnail: 'raise_dead.png',
     probability: 5,
+    description: `
+Resurrects a dead unit and converts them to the caster's faction.
+    `,
     effect: async (state, dryRun) => {
       if (dryRun) {
         return state;

@@ -8,6 +8,10 @@ const spell: Spell = {
     id,
     thumbnail: 'vulnerable.png',
     probability: 5,
+    description: `
+Makes the target(s) take double damage whenever they receive damage
+in the future.
+    `,
     effect: async (state, dryRun) => {
       if (dryRun) {
         return state;

@@ -5,7 +5,11 @@ const spell: Spell = {
   card: {
     id,
     thumbnail: 'aoe.png',
-    probability: 10,
+    probability: 1,
+    description: `
+Adds targets for the following cards to effect by "growing" existing targets
+by 1 grid cell in each direction.
+    `,
     effect: async (state, dryRun) => {
       let updatedTargets = [...state.targets];
       for (let target of state.targets) {

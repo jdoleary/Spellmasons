@@ -11,6 +11,9 @@ const spell: Spell = {
     id,
     thumbnail: 'swap.png',
     probability: 10,
+    description: `
+Swaps the caster's and the initial target's locations.
+    `,
     effect: async (state, dryRun) => {
       const { caster, targets } = state;
       // Find movement change between caster and original target

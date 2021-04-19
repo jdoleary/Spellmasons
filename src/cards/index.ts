@@ -125,7 +125,7 @@ export interface ICard {
   probability: number;
   effect: EffectFn;
   isDark?: boolean;
-  description?: string;
+  description: string;
 }
 
 export const allCards: ICard[] = [];

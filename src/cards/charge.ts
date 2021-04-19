@@ -10,6 +10,10 @@ const spell: Spell = {
     id,
     thumbnail: 'charge.png',
     probability: 30,
+    description: `
+Moves the caster in a straight line towards the initial target
+if the target is on the same horizontal or vertical axis as the caster.
+    `,
     effect: async (state, dryRun) => {
       const { caster, targets } = state;
       const originalTarget = targets[0];

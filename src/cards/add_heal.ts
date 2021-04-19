@@ -7,6 +7,9 @@ const spell: Spell = {
     id,
     thumbnail: 'heal.png',
     probability: 20,
+    description: `
+Heals all targets (no greater than maximum health).
+    `,
     effect: async (state, dryRun) => {
       if (dryRun) {
         return state;

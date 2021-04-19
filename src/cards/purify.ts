@@ -7,6 +7,9 @@ const spell: Spell = {
     id,
     thumbnail: 'purify.png',
     probability: 10,
+    description: `
+Removes all curses from the target(s).
+    `,
     effect: async (state, dryRun) => {
       if (dryRun) {
         return state;

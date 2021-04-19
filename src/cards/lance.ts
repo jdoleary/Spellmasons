@@ -7,6 +7,11 @@ const spell: Spell = {
     id,
     thumbnail: 'lance.png',
     probability: 10,
+    description: `
+Adds targets towards the initial target if
+the initial target is on the same vertical or horizontal axis
+as the caster.
+    `,
     effect: async (state, dryRun) => {
       let updatedTargets = [...state.targets];
       for (let target of state.targets) {

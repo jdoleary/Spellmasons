@@ -9,6 +9,9 @@ const spell: Spell = {
     id,
     thumbnail: 'shield.png',
     probability: 10,
+    description: `
+Protects the target(s) from the next time they would take damage.
+    `,
     effect: async (state, dryRun) => {
       if (dryRun) {
         return state;
