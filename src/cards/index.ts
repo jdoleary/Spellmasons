@@ -21,6 +21,8 @@ import swap from './swap';
 import purify from './purify';
 import poison from './poison';
 import vulnerable from './vulnerable';
+import lance from './lance';
+import stomp from './stomp';
 export interface Spell {
   card: ICard;
   // modifiers keep track of additional state on an individual unit basis
@@ -86,6 +88,8 @@ export function registerCards() {
   register(purify);
   register(swap);
   register(vulnerable);
+  register(lance);
+  register(stomp);
   return Promise.resolve(additionalImagePaths);
 }
 
