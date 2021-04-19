@@ -34,12 +34,7 @@ const spell: Spell = {
               : state.caster.unit.x + 1;
           const endX =
             state.caster.unit.x >= target.x ? state.caster.unit.x : target.x;
-          console.log('aaa', startX, endX);
           for (let x = startX; x < endX; x++) {
-            console.log({
-              x,
-              y: state.caster.unit.y,
-            });
             targetsOnSameVerticalOrHorizontal.push({
               x,
               y: state.caster.unit.y,
