@@ -510,7 +510,7 @@ export default class Game {
     // using (math.indexToXY) multiple times without getting the same index more than once
     return shuffledIndices;
   }
-  _isCellEmpty({ x, y }: Coords): boolean {
+  isCellEmpty({ x, y }: Coords): boolean {
     // Test for units in cell
     for (let u of this.units) {
       if (u.x === x && u.y === y) {
@@ -534,7 +534,7 @@ export default class Game {
   getRandomEmptyCell(bounds: Bounds): Coords {
     const shuffledCoords = this._getShuffledCoordinates(bounds);
     for (let coords of shuffledCoords) {
-      const isEmpy = this._isCellEmpty(coords);
+      const isEmpy = this.isCellEmpty(coords);
       // if cell if empty return the coords, if it's not loop to the next coords that may be empty
       if (isEmpy) {
         return coords;
