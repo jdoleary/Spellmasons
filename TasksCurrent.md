@@ -1,5 +1,8 @@
 # Todo
 
+- Allow some spells, like charge and swap, just interact with initial target?
+- Idea: A discard card that discards the following cards cast and gets you new cards
+
 - Question for Brad: Should Protection protect any single ally? So that it can work for both players if you stack it?
   - stash: "protection stackable"
 - Question for Brad: Do you like charge and should it trigger pickups when it moves you?

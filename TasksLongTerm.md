@@ -7,6 +7,7 @@
     - **Really polish synergies** (obstacle spell interactions, etc)
       - Since spells need to be independent, maybe "freeze" can change any "pit"-type obstacle (water, void, lava) into a new obstacle (frozen water)? So that the spell isn't tied to the existance of obstacles?? or maybe it should be
     - A way to change sprite without interrupting animations midway?
+    - Support hosting for external clients
   - Gameplay Sprinkles
     - **More creative, more difficult enemies**
     - **More Spells**
@@ -15,6 +16,8 @@
     - Some sense of player progression (items / inventory??) (or are upgrades enough?)
     - Level Progression (which enemies, how is it random, etc)
   - Polish
+    - Finish all TODOs
+    - Add menu
     - Add tutorial
       - Introduce unit types
     - Add quicksaves
@@ -34,6 +37,9 @@
     - Better Game Name
       - Think of "Into the Breach", "Binding of Isaac", and "Faster than light". They all communicate seriousness
       - Tower/Guild of Spell Makers? (don't use the word "weavers" due to name conflicts with other bad games)
+      - Journeyman Spellmaker
+      - Council of Spell Smiths
+      - Guild of Spellmasons
   - Chores
     - Make executable with Electron
     - Include WebsocketPie and make hosting for friends simple
