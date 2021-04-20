@@ -828,7 +828,9 @@ export default class Game {
       // Prevent dead players from casting
       return effectState;
     }
-    for (let cardId of cards) {
+    let cardsToLoop = effectState.cards;
+    for (let index = 0; index < cardsToLoop.length; index++) {
+      const cardId = cardsToLoop[index];
       const card = Cards.allCards.find((c) => c.id == cardId);
       const animationPromises = [];
       if (card) {
@@ -848,7 +850,9 @@ export default class Game {
           animationPromises.push(scaleAnimation);
         }
         const { targets: previousTargets } = effectState;
-        effectState = await card.effect(effectState, dryRun);
+        effectState = await card.effect(effectState, dryRun, index);
+        // Update cardsToLoop (some cards can change the following cards)
+        cardsToLoop = effectState.cards;
         // Clear images from previous card before drawing the images from the new card
         containerSpells.removeChildren();
         // Animate target additions:

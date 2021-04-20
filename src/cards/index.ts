@@ -26,6 +26,7 @@ import stomp from './stomp';
 import protection from './protection';
 import charge from './charge';
 import obliterate from './obliterate';
+import amplify from './amplify';
 export interface Spell {
   card: ICard;
   // modifiers keep track of additional state on an individual unit basis
@@ -96,6 +97,7 @@ export function registerCards() {
   register(protection);
   register(charge);
   register(obliterate);
+  register(amplify);
   return Promise.resolve(additionalImagePaths);
 }
 
@@ -118,7 +120,7 @@ export interface EffectState {
 }
 export type EffectFn = {
   // Dry run is for displaying to the user what will happen if they cast
-  (state: EffectState, dryRun: boolean): Promise<EffectState>;
+  (state: EffectState, dryRun: boolean, index: number): Promise<EffectState>;
 };
 
 export interface ICard {
