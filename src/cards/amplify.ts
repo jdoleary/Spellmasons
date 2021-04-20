@@ -5,7 +5,7 @@ const id = 'amplify';
 const spell: Spell = {
   card: {
     id,
-    thumbnail: 'damage.png',
+    thumbnail: 'amplify.png',
     probability: 50,
     description: `
 Doubles all the cards that follow (excluding amplify cards).
