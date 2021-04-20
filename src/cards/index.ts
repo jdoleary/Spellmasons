@@ -25,6 +25,7 @@ import lance from './lance';
 import stomp from './stomp';
 import protection from './protection';
 import charge from './charge';
+import obliterate from './obliterate';
 export interface Spell {
   card: ICard;
   // modifiers keep track of additional state on an individual unit basis
@@ -94,6 +95,7 @@ export function registerCards() {
   register(stomp);
   register(protection);
   register(charge);
+  register(obliterate);
   return Promise.resolve(additionalImagePaths);
 }
 
