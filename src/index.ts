@@ -18,6 +18,22 @@ import * as Cards from './cards';
 import * as Units from './units';
 import { getUpgradeByTitle } from './Upgrade';
 
+import Stats from 'stats.js';
+const stats = new Stats();
+// Add fps stats
+function monitorFPS() {
+  stats.end();
+  stats.begin();
+  requestAnimationFrame(monitorFPS);
+}
+stats.begin();
+monitorFPS();
+
+stats.showPanel(3);
+const latencyPanel = stats.addPanel(new Stats.Panel('latency', '#ff8', '#221'));
+stats.dom.classList.add('doob-stats');
+document.body.appendChild(stats.dom);
+
 // Print aggressive due date for game!
 console.log(
   `${Math.round(
@@ -72,6 +88,7 @@ function connect(_room_info = {}) {
   window.pie = pie = new PieClient({
     env: import.meta.env.MODE,
     wsUri: wsUri + (storedClientId ? `?clientId=${storedClientId}` : ''),
+    useStats: true,
   });
   pie.onServerAssignedData = (o) => {
     console.log('serverAssignedData', o);
@@ -93,6 +110,9 @@ function connect(_room_info = {}) {
         .then(() => console.log('You are now in the room'))
         .catch((err: string) => console.error('Failed to join room', err));
     }
+  };
+  pie.onLatency = (l) => {
+    latencyPanel.update(l.average, l.max);
   };
 }
 
@@ -126,7 +146,6 @@ window.replay = (title: string) => {
   }
 };
 function onData(d: OnDataArgs) {
-  console.log('onData', d);
   // Temporarily for development
   messageLog.push(d);
 

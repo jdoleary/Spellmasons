@@ -1,12 +1,6 @@
 import type * as PIXI from 'pixi.js';
 import { MILLIS_PER_ANIMATION, MILLIS_PER_SPELL_ANIMATION } from './config';
 import { lerp } from './math';
-// Add fps stats
-import Stats from 'stats.js';
-const stats = new Stats();
-stats.showPanel(1);
-stats.dom.classList.add('doob-stats');
-document.body.appendChild(stats.dom);
 
 export interface AnimatableProps {
   x: number;
@@ -123,7 +117,6 @@ export function animateIndependent(animations: Animation[]) {
   });
 }
 function animateIndependents(timestamp: number) {
-  stats.begin();
   for (
     let groupIndex = independentAnimations.length - 1;
     groupIndex >= 0;
@@ -137,7 +130,6 @@ function animateIndependents(timestamp: number) {
   }
 
   requestAnimationFrame(animateIndependents);
-  stats.end();
 }
 // Start animating:
 requestAnimationFrame(animateIndependents);
