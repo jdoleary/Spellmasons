@@ -48,22 +48,16 @@ console.log(
   )} days until Gameplay core is due!`,
 );
 
-Promise.all([Cards.registerCards(), Units.registerUnits()])
-  .then((listOfListOfImages: string[][]) => {
-    return listOfListOfImages.reduce((acc, list) => {
-      acc = acc.concat(list);
-      return acc;
-    }, []);
-  })
-  .then(setupPixi)
-  .then(() => {
-    UI.setup();
-    // Connect to PieServer
-    connect();
-    // See makeGame function for where setup truly happens
-    // This instantiation just spins up the instance of game
-    game = new Game(Math.random().toString());
-  });
+Cards.registerCards();
+Units.registerUnits();
+setupPixi().then(() => {
+  UI.setup();
+  // Connect to PieServer
+  connect();
+  // See makeGame function for where setup truly happens
+  // This instantiation just spins up the instance of game
+  game = new Game(Math.random().toString());
+});
 
 window.animationTimeline = new AnimationTimeline();
 
