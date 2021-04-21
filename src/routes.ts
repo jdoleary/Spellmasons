@@ -11,6 +11,7 @@ import * as Cards from './cards';
 import * as Units from './units';
 import { initializeGameObject } from './wsPieHandler';
 import { connect_to_wsPie_server, hostRoom, joinRoom } from './wsPieSetup';
+import { setupMonitoring } from './monitoring';
 
 export enum Route {
   Menu,
@@ -27,6 +28,8 @@ export function setRoute(r: Route) {
   route = r;
   switch (r) {
     case Route.Menu:
+      // Start monitoring with development overlay
+      setupMonitoring();
       // Initialize content
       Cards.registerCards();
       Units.registerUnits();

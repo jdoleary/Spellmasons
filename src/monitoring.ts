@@ -10,6 +10,7 @@ export function setupMonitoring() {
   stats.begin();
   monitorFPS();
 
+  // Add latency stats
   stats.showPanel(3);
   window.latencyPanel = stats.addPanel(
     new Stats.Panel('latency', '#ff8', '#221'),
