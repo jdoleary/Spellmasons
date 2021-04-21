@@ -1,8 +1,8 @@
 import * as Unit from '../Unit';
 import type { Spell } from '.';
-import { drawSwapLine } from '../ui/GameBoardInput';
 import type { Coords } from '../commonTypes';
 import { BOARD_WIDTH } from '../config';
+import { drawSwapLine } from '../ui/PlanningView';
 
 const id = 'charge';
 const spell: Spell = {

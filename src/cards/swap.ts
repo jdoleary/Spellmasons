@@ -1,8 +1,8 @@
 import * as Unit from '../Unit';
 import * as Pickup from '../Pickup';
 import type { Spell } from '.';
-import { drawSwapLine } from '../ui/GameBoardInput';
-import type { Coords } from 'src/commonTypes';
+import type { Coords } from '../commonTypes';
+import { drawSwapLine } from '../ui/PlanningView';
 
 // TODO: Swapping with corpses destroys them due to the order of setting location
 const id = 'swap';

@@ -1,11 +1,11 @@
-import type * as Player from './Player';
+import type * as CardUI from './Player';
 import * as Cards from './cards';
 import * as math from './math';
 import {
   clearSpellEffectProjection,
   syncSpellEffectProjection,
   updateTooltip,
-} from './ui/GameBoardInput';
+} from './ui/PlanningView';
 const elCardHolders = document.getElementById('card-holders');
 // Where the non-selected cards are displayed
 const elCardHand = document.getElementById('card-hand');
@@ -50,7 +50,7 @@ function showFullCard(card: Cards.ICard) {
   }
 }
 
-export function recalcPositionForCards(player: Player.IPlayer) {
+export function recalcPositionForCards(player: CardUI.IPlayer) {
   if (window.player !== player) {
     // Do not reconcile dom elements for a player who is not the current client's player
     return;
@@ -137,9 +137,12 @@ function moveCardFromSelectedToHand(element: HTMLElement, cardId: string) {
   elCardTypeGroup.appendChild(element);
   element.classList.remove('selected');
 }
+export function areAnyCardsSelected() {
+  return !!getSelectedCards().length;
+}
 
 // This function fully deletes the cards that are 'selected' in the player's hand
-export function removeCardsFromHand(player: Player.IPlayer, cards: string[]) {
+export function removeCardsFromHand(player: CardUI.IPlayer, cards: string[]) {
   cardLoop: for (let cardToRemove of cards) {
     for (let i = player.cards.length - 1; i >= 0; i--) {
       if (player.cards[i] === cardToRemove) {
@@ -151,7 +154,7 @@ export function removeCardsFromHand(player: Player.IPlayer, cards: string[]) {
   recalcPositionForCards(window.player);
 }
 
-export function addCardToHand(card: Cards.ICard, player: Player.IPlayer) {
+export function addCardToHand(card: Cards.ICard, player: CardUI.IPlayer) {
   player.cards.push(card.id);
   if (player === window.player) {
     recalcPositionForCards(window.player);

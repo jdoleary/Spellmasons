@@ -8,7 +8,6 @@ import type * as Upgrade from './Upgrade';
 import * as math from './math';
 import * as Cards from './cards';
 import * as Image from './Image';
-import * as GameBoardInput from './ui/GameBoardInput';
 import { MESSAGE_TYPES } from './MessageTypes';
 import {
   addPixiSprite,
@@ -21,10 +20,10 @@ import type { Random } from 'random';
 import makeSeededRandom from './rand';
 import floatingText from './FloatingText';
 import { UnitType, Coords, Faction } from './commonTypes';
-import { updatePlanningView } from './ui/UserInterface';
 import { createUpgradeElement, generateUpgrades } from './Upgrade';
 import Events from './Events';
 import { allUnits, generateHardCodedLevelEnemies } from './units';
+import { updatePlanningView } from './ui/PlanningView';
 
 export enum game_state {
   Lobby,

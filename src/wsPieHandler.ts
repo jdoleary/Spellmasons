@@ -1,145 +1,24 @@
-import PieClient, { ClientPresenceChangedArgs, OnDataArgs } from 'pie-client';
+import type { ClientPresenceChangedArgs, OnDataArgs } from 'pie-client';
+import { MESSAGE_TYPES } from './MessageTypes';
+import { UnitType } from './commonTypes';
+import floatingText from './FloatingText';
+import { addSubSprite, removeSubSprite } from './Image';
+import { getUpgradeByTitle } from './Upgrade';
 import Game, { game_state, turn_phase } from './Game';
 import * as Player from './Player';
 import * as Unit from './Unit';
 import * as Pickup from './Pickup';
 import * as Obstacle from './Obstacle';
-import AnimationTimeline from './AnimationTimeline';
 import * as Card from './CardUI';
-import { MESSAGE_TYPES } from './MessageTypes';
-import { UnitType } from './commonTypes';
-
-import { setupPixi } from './PixiUtils';
-import floatingText from './FloatingText';
-import { addSubSprite, removeSubSprite } from './Image';
-import * as Cards from './cards';
-import * as Units from './units';
-import { getUpgradeByTitle } from './Upgrade';
-
-import Stats from 'stats.js';
 import { syncSpellEffectProjection } from './ui/PlanningView';
-const stats = new Stats();
-// Add fps stats
-function monitorFPS() {
-  stats.end();
-  stats.begin();
-  requestAnimationFrame(monitorFPS);
-}
-stats.begin();
-monitorFPS();
-
-stats.showPanel(3);
-const latencyPanel = stats.addPanel(new Stats.Panel('latency', '#ff8', '#221'));
-stats.dom.classList.add('doob-stats');
-document.body.appendChild(stats.dom);
-
-// Print aggressive due date for game!
-console.log(
-  `${Math.round(
-    // @ts-ignore
-    (new Date('2021-05-12') - new Date()) / 1000 / 60 / 60 / 24,
-  )} days until due date!`,
-);
-console.log(
-  `${Math.round(
-    // @ts-ignore
-    (new Date('2021-04-21') - new Date()) / 1000 / 60 / 60 / 24,
-  )} days until Gameplay core is due!`,
-);
-
-Cards.registerCards();
-Units.registerUnits();
-setupPixi().then(() => {
-  // TODO setup  UI
-  // Connect to PieServer
-  connect();
-  // See makeGame function for where setup truly happens
-  // This instantiation just spins up the instance of game
-  game = new Game(Math.random().toString());
-});
-
-window.animationTimeline = new AnimationTimeline();
-
-let clients = [];
-
-// const wsUri = 'ws://localhost:8000';
-// const wsUri = 'ws://192.168.0.21:8000';
-// Locally hosted, externally accessed
-// const wsUri = 'ws://68.48.199.138:7337';
-const wsUri = 'wss://websocket-pie-6ggew.ondigitalocean.app';
-// const wsUri = 'wss://websocket-pie-e4elx.ondigitalocean.app/';
-let pie: PieClient;
-let game: Game;
-let maxClients = 8;
-function connect(_room_info = {}) {
-  const room_info = Object.assign(_room_info, {
-    app: 'Golems',
-    version: '0.1.0',
-    maxClients,
-  });
-  maxClients = room_info.maxClients;
-  const storedClientId = sessionStorage.getItem('pie-clientId');
-  window.pie = pie = new PieClient({
-    env: import.meta.env.MODE,
-    wsUri: wsUri + (storedClientId ? `?clientId=${storedClientId}` : ''),
-    useStats: true,
-  });
-  pie.onServerAssignedData = (o) => {
-    console.log('serverAssignedData', o);
-    window.clientId = o.clientId;
-    sessionStorage.setItem('pie-clientId', o.clientId);
-  };
-  pie.onData = onData;
-  pie.onError = ({ message }) => window.alert(message);
-  pie.onClientPresenceChanged = onClientPresenceChanged;
-  pie.onConnectInfo = (o) => {
-    console.log('onConnectInfo', o);
-    // Make and join room
-    if (o.connected) {
-      pie
-        .makeRoom(room_info)
-        // Since the room_info is hard-coded,
-        // if you can't make the room, it may be already made, so try to join it instead.
-        .catch(() => pie.joinRoom(room_info))
-        .then(() => console.log('You are now in the room'))
-        .catch((err: string) => console.error('Failed to join room', err));
-    }
-  };
-  pie.onLatency = (l) => {
-    latencyPanel.update(l.average, l.max);
-  };
-}
 
 const messageLog: any[] = [];
-window.save = (title) => {
-  localStorage.setItem(
-    'golems-save-' + title,
-    JSON.stringify(window.game.sanitizeForSaving()),
-  );
-};
-window.load = (title) => {
-  const game = localStorage.getItem('golems-save-' + title);
-  if (game) {
-    pie.sendData({
-      type: MESSAGE_TYPES.LOAD_GAME_STATE,
-      game: JSON.parse(game),
-    });
-  } else {
-    console.error('no save game found with title', title);
-  }
-};
-window.saveReplay = (title: string) => {
-  localStorage.setItem('golems-' + title, JSON.stringify(messageLog));
-};
-window.replay = (title: string) => {
-  const messages = JSON.parse(localStorage.getItem('golems-' + title) || '');
-  for (let i = 0; i < messages.length; i++) {
-    const message = messages[i];
-    message.fromClient = game.players[0].clientId;
-    onData(message);
-  }
-};
-function onData(d: OnDataArgs) {
+let clients = [];
+let game: Game;
+export function initializeGameObject() {
+  game = new Game(Math.random().toString());
+}
+export function onData(d: OnDataArgs) {
   // Temporarily for development
   messageLog.push(d);
 
@@ -261,14 +140,7 @@ async function handleSpell(caster: Player.IPlayer, payload: any) {
     console.log('Someone is trying to cast out of turn');
   }
 }
-function checkEndPlayerTurn(player: Player.IPlayer) {
-  // Being dead ends your turn
-  // Moving ends your turn
-  if (!player.unit.alive || player.unit.thisTurnMoved) {
-    game.endPlayerTurn(player.clientId);
-  }
-}
-function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
+export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
   console.log('clientPresenceChanged', o);
   clients = o.clients;
   const player = game.players.find((p) => p.clientId === o.clientThatChanged);
@@ -293,7 +165,7 @@ function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
         removeSubSprite(player.unit.image, 'disconnected');
       }
       // Send game state to other player so they can load:
-      pie.sendData({
+      window.pie.sendData({
         type: MESSAGE_TYPES.LOAD_GAME_STATE,
         game: game.sanitizeForSaving(),
       });
@@ -317,7 +189,15 @@ function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
     }
   }
 }
-function makeGame(clients: string[]) {
+function checkEndPlayerTurn(player: Player.IPlayer) {
+  // Being dead ends your turn
+  // Moving ends your turn
+  if (!player.unit.alive || player.unit.thisTurnMoved) {
+    game.endPlayerTurn(player.clientId);
+  }
+}
+
+export function makeGame(clients: string[]) {
   // Initialize the first level
   game.initLevel();
   // Sort clients to make sure they're always in the same order, regardless of
@@ -330,27 +210,33 @@ function makeGame(clients: string[]) {
   }
   game.setGameState(game_state.Playing);
 }
-window.connect = connect;
 
-declare global {
-  interface Window {
-    connect: typeof connect;
-    animationTimeline: AnimationTimeline;
-    game: Game;
-    // A reference to the player instance of the client playing on this instance
-    player: Player.IPlayer;
-    pie: any;
-    save: (title: string) => void;
-    load: (title: string) => void;
-    // Save pie messages for later replay
-    saveReplay: (title: string) => void;
-    // Used to replay onData messages for development
-    replay: (title: string) => void;
-    // Current clients id
-    clientId: string;
-    // Shows the "planningView" where golems can attack,
-    // allows for left clicking to ping to other players
-    planningViewActive: boolean;
-    animatingSpells: boolean;
+window.save = (title) => {
+  localStorage.setItem(
+    'golems-save-' + title,
+    JSON.stringify(window.game.sanitizeForSaving()),
+  );
+};
+window.load = (title) => {
+  const game = localStorage.getItem('golems-save-' + title);
+  if (game) {
+    window.pie.sendData({
+      type: MESSAGE_TYPES.LOAD_GAME_STATE,
+      game: JSON.parse(game),
+    });
+  } else {
+    console.error('no save game found with title', title);
   }
-}
+};
+
+window.saveReplay = (title: string) => {
+  localStorage.setItem('golems-' + title, JSON.stringify(messageLog));
+};
+window.replay = (title: string) => {
+  const messages = JSON.parse(localStorage.getItem('golems-' + title) || '');
+  for (let i = 0; i < messages.length; i++) {
+    const message = messages[i];
+    message.fromClient = game.players[0].clientId;
+    onData(message);
+  }
+};
