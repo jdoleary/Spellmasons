@@ -12,7 +12,7 @@
     <script type="module" src="/dist/index.js"></script>
     <div id="websocket-pie-connection-status"></div>
     <div id="PIXI-holder"></div>
-    <div id="game-container">
+    <div id="underworld-container">
       <div id="card-holders">
         <div id="card-inspect"></div>
         <div id="card-hand"></div>
@@ -22,18 +22,18 @@
         <div id="upgrade-picker-label"></div>
         <div id="upgrade-picker-content"></div>
       </div>
-      <div id="inspector-tooltip">
-        <div id="inspector-tooltip-container">
-          <pre id="inspector-tooltip-content"></pre>
+      <div id="player-turn-indicator-holder">
+        <div id="level-indicator"></div>
+        <div id="turn-time-remaining"></div>
+        <div>
+          <button id="endTurn">Skip Turn (Space)</button>
+          <div id="player-turn-indicator">Waiting for players</div>
         </div>
       </div>
     </div>
-    <div id="player-turn-indicator-holder">
-      <div id="level-indicator"></div>
-      <div id="turn-time-remaining"></div>
-      <div>
-        <button id="endTurn">Skip Turn (Space)</button>
-        <div id="player-turn-indicator">Waiting for players</div>
+    <div id="inspector-tooltip">
+      <div id="inspector-tooltip-container">
+        <pre id="inspector-tooltip-content"></pre>
       </div>
     </div>
   </body>

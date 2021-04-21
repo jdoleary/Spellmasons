@@ -7,9 +7,12 @@ body {
 #websocket-pie-connection-status {
   z-index: 1;
 }
-#game-container {
-  min-height: 100vh;
+body.route-Underworld #underworld-container {
   display: flex;
+}
+#underworld-container {
+  min-height: 100vh;
+  display: none;
   flex-direction: column;
   justify-content: space-between;
 }
@@ -260,6 +263,10 @@ body.your-turn #player-turn-indicator-holder.low-time {
 #inspector-tooltip {
   display: none;
   user-select: none;
+  z-index: 1;
+  position: fixed;
+  top: 0;
+  left: 0;
 }
 #inspector-tooltip.active {
   display: flex;
