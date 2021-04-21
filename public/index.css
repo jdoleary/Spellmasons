@@ -4,6 +4,9 @@ body {
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
     'Lucida Sans', Arial, sans-serif;
 }
+#websocket-pie-connection-status {
+  z-index: 1;
+}
 #game-container {
   min-height: 100vh;
   display: flex;
