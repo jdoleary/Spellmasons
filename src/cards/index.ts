@@ -46,20 +46,15 @@ export interface Spell {
   subsprites?: ISubsprites;
 }
 
-// Used to cache new images in pixi
-const additionalImagePaths: string[] = [];
 function register(spell: Spell) {
   const { subsprites, card, events } = spell;
   const { id } = card;
   // Add card to cards pool
   allCards.push(card);
-  // Add images
-  additionalImagePaths.push(card.thumbnail);
   // Add subsprites
   if (subsprites) {
     Object.entries(subsprites).forEach(([key, value]) => {
       Subsprites[key] = value;
-      additionalImagePaths.push(value.imageName);
     });
   }
   // Add events
@@ -100,7 +95,6 @@ export function registerCards() {
   register(obliterate);
   register(amplify);
   register(clone);
-  return Promise.resolve(additionalImagePaths);
 }
 
 // Guiding rules for designing spells:

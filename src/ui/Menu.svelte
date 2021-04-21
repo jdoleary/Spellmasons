@@ -19,12 +19,6 @@
   const version = import.meta.env.SNOWPACK_PUBLIC_PACKAGE_VERSION;
   try {
     Promise.all([Cards.registerCards(), Units.registerUnits()])
-      .then((listOfListOfImages) => {
-        return listOfListOfImages.reduce((acc, list) => {
-          acc = acc.concat(list);
-          return acc;
-        }, []);
-      })
       .then(setupPixi)
       .catch(console.error)
       .then(() => {

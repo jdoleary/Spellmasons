@@ -31,12 +31,7 @@ import demon from './demon';
 import priest from './priest';
 import poisoner from './poisoner';
 
-// Used to cache new images in pixi
-const additionalImagePaths: string[] = [];
 function register(unit: UnitSource) {
-  // Add images
-  additionalImagePaths.push(unit.info.image);
-
   allUnits[unit.id] = unit;
 }
 export function registerUnits() {
@@ -49,7 +44,6 @@ export function registerUnits() {
   register(priest);
   register(poisoner);
   register(user);
-  return Promise.resolve(additionalImagePaths);
 }
 
 export const allUnits: { [id: string]: UnitSource } = {};
