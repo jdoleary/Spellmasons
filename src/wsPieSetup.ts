@@ -1,8 +1,10 @@
-import PieClient from 'pie-client';
+import type PieClient from 'pie-client';
 import { onData, onClientPresenceChanged } from './wsPieHandler';
 let maxClients = 8;
-let pie: PieClient;
-export function connect(_room_info = {}, wsUri: string) {
+export function connect(pie?: PieClient, _room_info = {}) {
+  if (!pie) {
+    return;
+  }
   const room_info = Object.assign(_room_info, {
     app: 'Golems',
     version: '0.1.0',
@@ -10,19 +12,13 @@ export function connect(_room_info = {}, wsUri: string) {
   });
   console.log('Connecting to pie server with', room_info);
   maxClients = room_info.maxClients;
-  const storedClientId = sessionStorage.getItem('pie-clientId');
-  window.pie = pie = new PieClient({
-    env: import.meta.env.MODE,
-    wsUri: wsUri + (storedClientId ? `?clientId=${storedClientId}` : ''),
-    useStats: true,
-  });
   pie.onServerAssignedData = (o) => {
     console.log('serverAssignedData', o);
     window.clientId = o.clientId;
     sessionStorage.setItem('pie-clientId', o.clientId);
   };
   pie.onData = onData;
-  pie.onError = ({ message }) => window.alert(message);
+  pie.onError = ({ message }: { message: any }) => window.alert(message);
   pie.onClientPresenceChanged = onClientPresenceChanged;
   pie.onConnectInfo = (o) => {
     console.log('onConnectInfo', o);
