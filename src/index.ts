@@ -70,9 +70,10 @@ window.animationTimeline = new AnimationTimeline();
 let clients = [];
 
 // const wsUri = 'ws://localhost:8000';
-const wsUri = 'ws://192.168.0.21:8000';
+// const wsUri = 'ws://192.168.0.21:8000';
 // Locally hosted, externally accessed
 // const wsUri = 'ws://68.48.199.138:7337';
+const wsUri = 'wss://websocket-pie-6ggew.ondigitalocean.app';
 // const wsUri = 'wss://websocket-pie-e4elx.ondigitalocean.app/';
 let pie: PieClient;
 let game: Game;
