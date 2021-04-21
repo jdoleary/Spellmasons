@@ -9,6 +9,7 @@
     - A way to change sprite without interrupting animations midway?
     - Support hosting for external clients
   - Gameplay Sprinkles
+    - Should the board size scale over time as levels move on
     - **More creative, more difficult enemies**
     - **More Spells**
       - Add tiers that only unlock with upgrades?
@@ -42,6 +43,7 @@
       - Journeyman Spellmaker
       - Council of Spell Smiths
       - Guild of Spellmasons
+      - Forbidden spells
   - Chores
     - Make executable with Electron
     - Include WebsocketPie and make hosting for friends simple

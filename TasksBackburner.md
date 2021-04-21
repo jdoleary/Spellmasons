@@ -1,3 +1,4 @@
+- Allow keybind customization
 - What happens if you clone yourself? If you clone yourself, it makes copies but they don't move when you move
 - when using a public server, sometimes the ws connection will close. Fix wsPie so it will try to reconnect
 - why does swap use Unit.setLocation but charge uses Unit.moveTo? Is there a bug here?
