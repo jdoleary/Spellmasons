@@ -5,7 +5,7 @@ const spell: Spell = {
   card: {
     id,
     thumbnail: 'aoe.png',
-    probability: 1,
+    probability: 20,
     description: `
 Adds targets for the following cards to effect by "growing" existing targets
 by 1 grid cell in each direction.
