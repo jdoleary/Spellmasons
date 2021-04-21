@@ -27,7 +27,6 @@ import { updatePlanningView } from './ui/PlanningView';
 
 export enum game_state {
   Lobby,
-  WaitingForPlayerReconnect,
   Playing,
   Upgrade,
   GameOver,

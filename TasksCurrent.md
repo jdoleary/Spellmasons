@@ -1,5 +1,8 @@
 # Todo
 
+- make connectToPieServer return a promise
+- make use of wsPieSetup once pieserver is connected to
+
 - Support an Overworld between levels so players can choose where to go (and choose the difficulty). It makes the game feel like a journey and gives it a setting.
 - latency reported negative
 - ```
