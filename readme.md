@@ -23,3 +23,22 @@ Using kenny game assets
 ## Notes
 
 Minor versions are incremented for functional non-broken commit states that should be able to run without changes.
+
+## Game Setup Dependencies
+
+- Boot up game
+  - Both:
+    - Init Assets
+    - Init Network (retriggered if user edits server url in options)
+  - User initiated host or join wsPie room
+  - Route: Character Select
+  - Route: Overworld
+    - All players choose a level to "travel to"
+  - All:
+    - Init Game
+    - Init event handlers
+  - Route: Gameplay
+    - beat level
+    - Unlisten event handlers
+  - Route: Upgrade Screen
+  - Loop: Route: Overworld
