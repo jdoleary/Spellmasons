@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "start": "snowpack dev --polyfill-node",
-    "build": "snowpack build",
+    "build": "snowpack build --polyfill-node",
     "test": "jest",
     "format": "prettier --write \"src/**/*.{ts,js}\"",
     "lint": "prettier --check \"src/**/*.{ts,js}\""
@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "pathfinding": "^0.4.18",
-    "pie-client": "^0.4.0",
+    "pie-client": "^0.5.0",
     "pixi.js": "^6.0.0",
     "random": "^3.0.0",
     "stats.js": "^0.17.0"
