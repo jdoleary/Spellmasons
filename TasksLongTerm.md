@@ -18,6 +18,7 @@
     - Level Progression (which enemies, how is it random, etc)
   - Polish
     - Overworld with meaningful decisions
+      - Allows user to manage the risk/reward themselves
     - Finish all TODOs
     - Add menu
     - Add tutorial

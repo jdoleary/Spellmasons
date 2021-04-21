@@ -1,5 +1,16 @@
 # Todo
 
+- Host frontend
+- wsPie reduce latency
+- wsPie allow rejoining after browser closes
+- menu for hosting and joining
+- character select (and NAME yourself)
+- add player melee attacks
+  - add melee attacks to some spells
+- Upgrade: fully heal between levels
+- Pickup: heal pickup
+- Pickup: random teleport pickup
+- obstacle that blocks ranged attacks and casting?
 - Support an Overworld between levels so players can choose where to go (and choose the difficulty). It makes the game feel like a journey and gives it a setting.
 - latency reported negative
 - ```
