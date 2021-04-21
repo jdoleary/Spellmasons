@@ -17,6 +17,7 @@
     - Some sense of player progression (items / inventory??) (or are upgrades enough?)
     - Level Progression (which enemies, how is it random, etc)
   - Polish
+    - Overworld with meaningful decisions
     - Finish all TODOs
     - Add menu
     - Add tutorial
