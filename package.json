@@ -21,6 +21,7 @@
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-typescript": "^7.12.7",
     "@jest/globals": "^26.6.2",
+    "@snowpack/plugin-svelte": "^3.6.1",
     "@snowpack/plugin-typescript": "^1.2.0",
     "@types/jest": "^26.0.20",
     "@types/pathfinding": "^0.0.4",
@@ -37,6 +38,7 @@
     "pie-client": "^0.4.0",
     "pixi.js": "^6.0.0",
     "random": "^3.0.0",
-    "stats.js": "^0.17.0"
+    "stats.js": "^0.17.0",
+    "svelte": "^3.37.0"
   }
 }
