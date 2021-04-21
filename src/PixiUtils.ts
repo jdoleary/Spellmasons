@@ -29,11 +29,7 @@ function resizePixi() {
 // PIXI textures
 let resources: { [key: string]: PIXI.ILoaderResource };
 let sheet: PIXI.Spritesheet;
-export function setupPixi(additionalImagePaths: string[]): Promise<void> {
-  // Dedup images
-  const additionalImagePathsDeduped = additionalImagePaths.filter(
-    (imagePath, index) => additionalImagePaths.indexOf(imagePath) === index,
-  );
+export function setupPixi(): Promise<void> {
   // The application will create a canvas element for you that you
   // can then insert into the DOM
   const elPIXIHolder = document.getElementById('PIXI-holder');
@@ -52,38 +48,17 @@ export function setupPixi(additionalImagePaths: string[]): Promise<void> {
   app.stage.addChild(containerProjectiles);
   app.stage.addChild(containerUI);
   app.stage.addChild(containerFloatingText);
-  return loadTextures(additionalImagePathsDeduped);
+  return loadTextures();
 }
-function loadTextures(additionalImagePaths: string[]): Promise<void> {
+function loadTextures(): Promise<void> {
   return new Promise((resolve) => {
     const loader = PIXI.Loader.shared;
-    // const images = [
-    //   ...additionalImagePaths,
-    //   'images/tiles/ground.png',
-    //   'images/tiles/lava.png',
-    //   'images/arrow.png',
-    //   'images/target.png',
-    //   'images/deny.png',
-    //   'images/green-thing.png',
-    //   'images/portal.png',
-    //   'images/units/unit-underline.png',
-    //   'images/units/corpse.png',
-    //   'images/pickups/card.png',
-    //   'images/pickups/card1.png',
-    //   'images/pickups/card2.png',
-    //   'images/pickups/card3.png',
-    //   'images/upgrades/more_cards.png',
-    //   'images/upgrades/plus_range.png',
-    //   'images/upgrades/plus_card_frequency.png',
-    //   'images/headband.png',
-    //   'images/disconnected.png',
-    //   'images/empty.png',
-    // ];
-    // images.forEach((path) => {
-    //   loader.add(path);
-    // });
     const sheetPath = 'sheet1.json';
-    loader.add(sheetPath);
+    try {
+      loader.add(sheetPath);
+    } catch (e) {
+      console.error('caught', e);
+    }
     loader.load((_loader, all_resources) => {
       resources = all_resources;
       sheet = all_resources[sheetPath].spritesheet;

@@ -1,17 +1,38 @@
 import type PieClient from 'pie-client';
-import { onData, onClientPresenceChanged } from './wsPieHandler';
+import { onData, onClientPresenceChanged, makeGame } from './wsPieHandler';
+import * as UI from './ui/UserInterface';
 let maxClients = 8;
-export function connect(pie?: PieClient, _room_info = {}) {
-  if (!pie) {
-    return;
-  }
+function defaultRoomInfo(_room_info = {}) {
   const room_info = Object.assign(_room_info, {
     app: 'Golems',
     version: '0.1.0',
     maxClients,
   });
-  console.log('Connecting to pie server with', room_info);
   maxClients = room_info.maxClients;
+  return room_info;
+}
+function prepareForGame(pie: PieClient) {
+  makeGame([]);
+  UI.setup();
+  addHandlers(pie);
+}
+export function hostRoom(pie?: PieClient, _room_info = {}): Promise<unknown> {
+  if (!pie) {
+    return Promise.reject();
+  }
+  const room_info = defaultRoomInfo(_room_info);
+  prepareForGame(pie);
+  return pie.makeRoom(room_info);
+}
+export function joinRoom(pie?: PieClient, _room_info = {}): Promise<unknown> {
+  if (!pie) {
+    return Promise.reject();
+  }
+  const room_info = defaultRoomInfo(_room_info);
+  prepareForGame(pie);
+  return pie.joinRoom(room_info);
+}
+function addHandlers(pie: PieClient) {
   pie.onServerAssignedData = (o) => {
     console.log('serverAssignedData', o);
     window.clientId = o.clientId;
@@ -20,19 +41,6 @@ export function connect(pie?: PieClient, _room_info = {}) {
   pie.onData = onData;
   pie.onError = ({ message }: { message: any }) => window.alert(message);
   pie.onClientPresenceChanged = onClientPresenceChanged;
-  pie.onConnectInfo = (o) => {
-    console.log('onConnectInfo', o);
-    // Make and join room
-    if (o.connected) {
-      pie
-        .makeRoom(room_info)
-        // Since the room_info is hard-coded,
-        // if you can't make the room, it may be already made, so try to join it instead.
-        .catch(() => pie.joinRoom(room_info))
-        .then(() => console.log('You are now in the room'))
-        .catch((err: string) => console.error('Failed to join room', err));
-    }
-  };
   pie.onLatency = (l) => {
     if (latencyPanel) {
       latencyPanel.update(l.average, l.max);

@@ -3,45 +3,49 @@
   import * as Cards from '../cards';
   import * as Units from '../units';
   import { setupPixi } from '../PixiUtils';
-  // import * as UI from '../ui/UserInterface';
-  // import { makeGame } from '../wsPieHandler';
-  import { connect } from '../wsPieSetup';
+  import { hostRoom, joinRoom } from '../wsPieSetup';
   // const wsUri = 'ws://localhost:8000';
   // const wsUri = 'ws://192.168.0.21:8000';
   // Locally hosted, externally accessed
   // const wsUri = 'ws://68.48.199.138:7337';
   let wsUri = 'wss://websocket-pie-6ggew.ondigitalocean.app';
   let checkingWsUri = false;
+  let loadingAssets = true;
   // Try to initially connect to server with default wsUri
   handleChangeWSURI();
   let app = 'spellmason';
   let name = '';
   let wsConnected = false;
   const version = import.meta.env.SNOWPACK_PUBLIC_PACKAGE_VERSION;
-  const loadingPromise = Promise.all([
-    Cards.registerCards(),
-    Units.registerUnits(),
-  ])
-    .then((listOfListOfImages) => {
-      return listOfListOfImages.reduce((acc, list) => {
-        acc = acc.concat(list);
-        return acc;
-      }, []);
-    })
-    .then(setupPixi);
+  try {
+    Promise.all([Cards.registerCards(), Units.registerUnits()])
+      .then((listOfListOfImages) => {
+        return listOfListOfImages.reduce((acc, list) => {
+          acc = acc.concat(list);
+          return acc;
+        }, []);
+      })
+      .then(setupPixi)
+      .catch(console.error)
+      .then(() => {
+        loadingAssets = false;
+      });
+  } catch (e) {
+    console.error('caught:', e);
+  }
   function handleHost() {
-    loadingPromise.then(() => {
-      // Connect to PieServer
-      connect(window.pie, { app, version, name });
-      // makeGame(clients);
-      // UI.setup();
-    });
+    // Connect to PieServer
+    hostRoom(window.pie, { app, version, name })
+      .then(() => {
+        console.log('You are now in the room');
+      })
+      .catch((err: string) => console.error('Failed to join room', err));
   }
   function handleJoin() {
-    loadingPromise.then(() => {
-      // Connect to PieServer
-      connect(window.pie, { app, version, name });
-    });
+    // Connect to PieServer
+    joinRoom(window.pie, { app, version, name })
+      .then(() => console.log('You are now in the room'))
+      .catch((err: string) => console.error('Failed to join room', err));
   }
   function handleChangeWSURI() {
     checkingWsUri = true;
@@ -62,6 +66,7 @@
   }
 </script>
 
+Server Url
 <input
   bind:value={wsUri}
   on:blur={handleChangeWSURI}
@@ -76,6 +81,7 @@
     <div style="color:red;">Disconnected</div>
   {/if}
 </div>
+Room Name
 <input
   bind:value={name}
   placeholder="Enter a room name for your friends to join!"
@@ -83,8 +89,15 @@
 <p>{name}</p>
 <p>{app}-{version}</p>
 
-<button on:click|once={handleHost}> Host Game </button>
-<button on:click|once={handleJoin}> Join Game </button>
+{#if loadingAssets}
+  Loading assets...
+{/if}
+<button disabled={!wsConnected || loadingAssets} on:click|once={handleHost}>
+  Host Game
+</button>
+<button disabled={!wsConnected || loadingAssets} on:click|once={handleJoin}>
+  Join Game
+</button>
 
 <style>
   #wspie-connection-status {
