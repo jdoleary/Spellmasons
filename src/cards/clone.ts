@@ -2,6 +2,8 @@ import type { Spell } from '.';
 import * as Unit from '../Unit';
 import * as Pickup from '../Pickup';
 import * as Obstacle from '../Obstacle';
+import { UnitSubType, UnitType } from '../commonTypes';
+import { removeSubSprite } from '../Image';
 
 const id = 'clone';
 const spell: Spell = {
@@ -28,6 +30,12 @@ Requires more than 1 target to work
         }
         if (unit) {
           const clone = Unit.load(unit);
+          // If the cloned unit is player controlled, make them be controlled by the AI
+          if (clone.unitSubType == UnitSubType.PLAYER_CONTROLLED) {
+            clone.unitType = UnitType.AI;
+            clone.unitSubType = UnitSubType.AI_melee;
+            removeSubSprite(clone.image, 'ownCharacterMarker');
+          }
           Unit.setLocation(clone, target);
         }
         if (pickup) {

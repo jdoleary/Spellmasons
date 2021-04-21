@@ -136,7 +136,7 @@ export function cleanup(unit: IUnit) {
   deselect(unit);
 }
 // Reinitialize a unit from another unit object, this is used in loading game state after reconnect
-export function load(unit: IUnit) {
+export function load(unit: IUnit): IUnit {
   const loadedunit = {
     ...unit,
     image: Image.load(unit.image, containerUnits),
