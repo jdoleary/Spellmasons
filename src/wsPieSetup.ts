@@ -1,6 +1,9 @@
 import type PieClient from 'pie-client';
-import { onData, onClientPresenceChanged, makeGame } from './wsPieHandler';
-import * as UI from './ui/UserInterface';
+import {
+  onData,
+  onClientPresenceChanged,
+  initializeGameObject,
+} from './wsPieHandler';
 let maxClients = 8;
 function defaultRoomInfo(_room_info = {}) {
   const room_info = Object.assign(_room_info, {
@@ -12,8 +15,7 @@ function defaultRoomInfo(_room_info = {}) {
   return room_info;
 }
 function prepareForGame(pie: PieClient) {
-  makeGame([]);
-  UI.setup();
+  initializeGameObject();
   addHandlers(pie);
 }
 export function hostRoom(pie?: PieClient, _room_info = {}): Promise<unknown> {

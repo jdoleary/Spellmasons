@@ -10,11 +10,15 @@ import * as Unit from './Unit';
 import * as Pickup from './Pickup';
 import * as Obstacle from './Obstacle';
 import * as Card from './CardUI';
+import * as UI from './ui/UserInterface';
 import * as GameBoardInput from './ui/GameBoardInput';
 
 const messageLog: any[] = [];
 let clients = [];
 let game: Game;
+export function initializeGameObject() {
+  game = new Game(Math.random().toString());
+}
 export function onData(d: OnDataArgs) {
   // Temporarily for development
   messageLog.push(d);
@@ -146,6 +150,7 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
     if (clients.length === 1) {
       // if you are the only client, make the game
       makeGame(clients);
+      UI.setup();
       game.hostClientId = window.clientId;
     } else if (game.hostClientId === window.clientId) {
       // If you are the host, send the game state to the other player
@@ -195,7 +200,6 @@ function checkEndPlayerTurn(player: Player.IPlayer) {
 }
 
 export function makeGame(clients: string[]) {
-  game = new Game(Math.random().toString());
   // Initialize the first level
   game.initLevel();
   // Sort clients to make sure they're always in the same order, regardless of

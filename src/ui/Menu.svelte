@@ -32,13 +32,17 @@
     hostRoom(window.pie, { app, version, name })
       .then(() => {
         console.log('You are now in the room');
+        document.body.classList.toggle('in-game', true);
       })
       .catch((err: string) => console.error('Failed to join room', err));
   }
   function handleJoin() {
     // Connect to PieServer
     joinRoom(window.pie, { app, version, name })
-      .then(() => console.log('You are now in the room'))
+      .then(() => {
+        console.log('You are now in the room');
+        document.body.classList.toggle('in-game', true);
+      })
       .catch((err: string) => console.error('Failed to join room', err));
   }
   function handleChangeWSURI() {
