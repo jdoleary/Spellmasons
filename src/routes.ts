@@ -1,4 +1,3 @@
-import PieClient from 'pie-client';
 import { setupPixi } from './PixiUtils';
 import {
   clickHandler,
@@ -10,7 +9,8 @@ import {
 } from './ui/eventListeners';
 import * as Cards from './cards';
 import * as Units from './units';
-import Game, { game_state, turn_phase } from './Game';
+import { initializeGameObject } from './wsPieHandler';
+import { connect_to_wsPie_server, hostRoom, joinRoom } from './wsPieSetup';
 
 export enum Route {
   Menu,
@@ -23,8 +23,6 @@ export enum Route {
   Upgrade,
 }
 let route: Route = Route.Menu;
-let pie: PieClient;
-let game: Game;
 export function setRoute(r: Route) {
   route = r;
   switch (r) {
@@ -38,10 +36,22 @@ export function setRoute(r: Route) {
       // Initialize Network
       let connectToPieServerPromise = connect_to_wsPie_server();
       Promise.all([setupPixiPromise, connectToPieServerPromise]).then(() => {
+        // Now that we are both connected to the pieServer and assets are loaded,
+        // we can host or join a game
+
         // Initialize Game Object
         // See makeGame function for where setup truly happens
         // This instantiation just spins up the instance of game
-        game = new Game(Math.random().toString());
+        initializeGameObject();
+        // ---
+        // TEMP temporarily default to just entering a generic game for speed of development
+        hostRoom({})
+          .catch(joinRoom)
+          .then(() => console.log('You are now in the room'))
+          .then(() => {
+            setRoute(Route.Underworld);
+          })
+          .catch((err: string) => console.error('Failed to join room', err));
       });
       break;
     case Route.CharacterSelect:
@@ -81,40 +91,4 @@ function removeUnderworldEventListeners() {
   document.body.removeEventListener('contextmenu', contextmenuHandler);
   document.body.removeEventListener('click', clickHandler);
   document.body.removeEventListener('mousemove', mousemoveHandler);
-}
-
-// const wsUri = 'ws://localhost:8000';
-// const wsUri = 'ws://192.168.0.21:8000';
-// Locally hosted, externally accessed
-// const wsUri = 'ws://68.48.199.138:7337';
-const wsUri = 'wss://websocket-pie-6ggew.ondigitalocean.app';
-// const wsUri = 'wss://websocket-pie-e4elx.ondigitalocean.app/';
-function connect_to_wsPie_server() {
-  const room_info = {
-    app: 'Golems',
-    version: '0.1.0',
-    maxClients: 8,
-  };
-  const storedClientId = sessionStorage.getItem('pie-clientId');
-  window.pie = pie = new PieClient({
-    env: import.meta.env.MODE,
-    wsUri: wsUri + (storedClientId ? `?clientId=${storedClientId}` : ''),
-    useStats: true,
-  });
-  pie.onConnectInfo = (o) => {
-    console.log('onConnectInfo', o);
-    // Make and join room
-    if (o.connected) {
-      pie
-        .makeRoom(room_info)
-        // Since the room_info is hard-coded,
-        // if you can't make the room, it may be already made, so try to join it instead.
-        .catch(() => pie.joinRoom(room_info))
-        .then(() => console.log('You are now in the room'))
-        .catch((err: string) => console.error('Failed to join room', err));
-    }
-  };
-  pie.onLatency = (l: any) => {
-    window.latencyPanel.update(l.average, l.max);
-  };
 }

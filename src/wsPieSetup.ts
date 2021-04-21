@@ -1,9 +1,32 @@
-import type PieClient from 'pie-client';
-import {
-  onData,
-  onClientPresenceChanged,
-  initializeGameObject,
-} from './wsPieHandler';
+import PieClient from 'pie-client';
+import { onData, onClientPresenceChanged } from './wsPieHandler';
+// const wsUri = 'ws://localhost:8000';
+// const wsUri = 'ws://192.168.0.21:8000';
+// Locally hosted, externally accessed
+// const wsUri = 'ws://68.48.199.138:7337';
+const wsUri = 'wss://websocket-pie-6ggew.ondigitalocean.app';
+// const wsUri = 'wss://websocket-pie-e4elx.ondigitalocean.app/';
+let pie: PieClient | undefined;
+export function connect_to_wsPie_server(): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const storedClientId = sessionStorage.getItem('pie-clientId');
+    window.pie = pie = new PieClient({
+      env: import.meta.env.MODE,
+      wsUri: wsUri + (storedClientId ? `?clientId=${storedClientId}` : ''),
+      useStats: true,
+    });
+    addHandlers(pie);
+    pie.onConnectInfo = (o) => {
+      console.log('onConnectInfo', o);
+      // Make and join room
+      if (o.connected) {
+        resolve();
+      } else {
+        reject();
+      }
+    };
+  });
+}
 let maxClients = 8;
 function defaultRoomInfo(_room_info = {}) {
   const room_info = Object.assign(_room_info, {
@@ -14,24 +37,18 @@ function defaultRoomInfo(_room_info = {}) {
   maxClients = room_info.maxClients;
   return room_info;
 }
-function prepareForGame(pie: PieClient) {
-  initializeGameObject();
-  addHandlers(pie);
-}
-export function hostRoom(pie?: PieClient, _room_info = {}): Promise<unknown> {
+export function hostRoom(_room_info = {}): Promise<unknown> {
   if (!pie) {
     return Promise.reject();
   }
   const room_info = defaultRoomInfo(_room_info);
-  prepareForGame(pie);
   return pie.makeRoom(room_info);
 }
-export function joinRoom(pie?: PieClient, _room_info = {}): Promise<unknown> {
+export function joinRoom(_room_info = {}): Promise<unknown> {
   if (!pie) {
     return Promise.reject();
   }
   const room_info = defaultRoomInfo(_room_info);
-  prepareForGame(pie);
   return pie.joinRoom(room_info);
 }
 function addHandlers(pie: PieClient) {
