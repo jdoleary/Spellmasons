@@ -1,3 +1,4 @@
+- when using a public server, sometimes the ws connection will close. Fix wsPie so it will try to reconnect
 - why does swap use Unit.setLocation but charge uses Unit.moveTo? Is there a bug here?
 - What about a prisoner AI that you can unleash, or traps that you can unlease in a line
 - keybinding common spells

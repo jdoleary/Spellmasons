@@ -1,5 +1,8 @@
 # Todo
 
+- Make websockets respond immediately to the sender to reduce latency
+- Can players still resurrect after being obliterated??
+- Setup steam page
 - Allow some spells, like charge and swap, just interact with initial target?
 - Idea: A discard card that discards the following cards cast and gets you new cards
 

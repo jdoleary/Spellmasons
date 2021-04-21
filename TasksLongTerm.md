@@ -25,6 +25,8 @@
     - WebsocketPie: Make clients receive their own messages immediately?
       - So that when a player is alone they can just keep clicking to move?
     - Art
+      - Artists
+        - https://www.fiverr.com/harsimarjit_
       - Pinterest board for inspiration
       - Add Juice! tools:
         - [Juice FX](https://codemanu.itch.io/juicefx)
@@ -43,6 +45,7 @@
   - Chores
     - Make executable with Electron
     - Include WebsocketPie and make hosting for friends simple
+  - Publish via [Humble](https://www.humblebundle.com)
   - Publish via [Steamworks](https://partner.steamgames.com/steamdirect) / Itch.io
     - Trailer
       - "The most creative spell-weaving game you've never heard of"
@@ -58,14 +61,13 @@ Elements as building blocks for combined spells:
 - position
   - Aura / AOE
   - Adjacent
-- orientation / direction
-  - e.g. facing twoard or away (example: Medusa stone)
 - state
   - wet / poisoned / etc
 - unit attribute
   - e.g. health, strength, etc
     - e.g. has effect relative to health remaining
 - movement / collision
+- random chances
 
 ## Plan
 
