@@ -62,10 +62,10 @@ export function setRoute(r: Route) {
         // ---
         // TEMP temporarily default to just entering a generic game for speed of development
         hostRoom({})
-          .catch(joinRoom)
+          .catch(() => joinRoom({}))
           .then(() => console.log('You are now in the room'))
           .then(() => {
-            setRoute(Route.Overworld);
+            setRoute(Route.Underworld);
           })
           .catch((err: string) => console.error('Failed to join room', err));
       });
