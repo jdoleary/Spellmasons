@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { BOARD_HEIGHT, CELL_SIZE, BOARD_WIDTH } from './config';
+import { Route } from './routes';
 // if PIXI is finished setting up
 let isReady = false;
 // PIXI app
@@ -13,6 +13,20 @@ export const containerSpells = new PIXI.Container();
 export const containerProjectiles = new PIXI.Container();
 export const containerUI = new PIXI.Container();
 export const containerFloatingText = new PIXI.Container();
+const underworldPixiContainers = [
+  containerBoard,
+  containerPlanningView,
+  containerUnits,
+  containerPickup,
+  containerSpells,
+  containerProjectiles,
+  containerUI,
+  containerFloatingText,
+];
+export const containerOverworld = new PIXI.Container();
+export const overworldGraphics = new PIXI.Graphics();
+containerOverworld.addChild(overworldGraphics);
+const overworldPixiContainers = [containerOverworld];
 app.renderer.backgroundColor = 0x45b6fe;
 app.renderer.view.style.position = 'absolute';
 app.renderer.view.style.top = '0';
@@ -22,9 +36,6 @@ resizePixi();
 window.addEventListener('resize', resizePixi);
 function resizePixi() {
   app.renderer.resize(window.innerWidth, window.innerHeight);
-  // Center the app in the middle of the board
-  app.stage.x = app.renderer.width / 2 - (CELL_SIZE * BOARD_WIDTH) / 2;
-  app.stage.y = app.renderer.height / 2 - (CELL_SIZE * BOARD_HEIGHT) / 2;
 }
 // PIXI textures
 let resources: { [key: string]: PIXI.ILoaderResource };
@@ -39,16 +50,24 @@ export function setupPixi(): Promise<void> {
     throw new Error('element PIXI-holder does not exist');
   }
 
-  // Add containers to the stage in the order that they will be rendered on top of each other
-  app.stage.addChild(containerBoard);
-  app.stage.addChild(containerPlanningView);
-  app.stage.addChild(containerUnits);
-  app.stage.addChild(containerPickup);
-  app.stage.addChild(containerSpells);
-  app.stage.addChild(containerProjectiles);
-  app.stage.addChild(containerUI);
-  app.stage.addChild(containerFloatingText);
   return loadTextures();
+}
+export function addPixiContainersForRoute(route: Route) {
+  app.stage.removeChildren();
+  switch (route) {
+    case Route.Overworld:
+      addContainers(overworldPixiContainers);
+      break;
+    case Route.Underworld:
+      addContainers(underworldPixiContainers);
+      break;
+  }
+}
+function addContainers(containers: PIXI.Container[]) {
+  // Add containers to the stage in the order that they will be rendered on top of each other
+  for (let container of containers) {
+    app.stage.addChild(container);
+  }
 }
 function loadTextures(): Promise<void> {
   return new Promise((resolve) => {

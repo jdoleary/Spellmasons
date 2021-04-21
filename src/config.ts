@@ -5,7 +5,7 @@ export const BOARD_HEIGHT = 9;
 export const BOARD_WIDTH = 12;
 export const SECONDS_PER_TURN = 100;
 export const CELL_SIZE = 64;
-export const START_CARDS_COUNT = 10;
+export const START_CARDS_COUNT = 60;
 export const NUM_PICKUPS_PER_LEVEL = 2;
 export const NUM_OBSTACLES_PER_LEVEL = 10;
 export const MILLIS_PER_ANIMATION = 200;
@@ -19,3 +19,8 @@ export const PORTAL_COORDINATES = {
   x: BOARD_WIDTH - 1,
   y: Math.floor(BOARD_HEIGHT / 2),
 };
+
+// Overworld
+export const OVERWORLD_HEIGHT = 9;
+export const OVERWORLD_MAX_WIDTH = 9;
+export const OVERWORLD_SPACING = 100;

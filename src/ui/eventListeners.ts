@@ -10,6 +10,8 @@ import {
   setPlanningView,
   syncSpellEffectProjection,
 } from './PlanningView';
+import { app } from '../PixiUtils';
+import { distance } from '../math';
 
 export function keydownListener(event: KeyboardEvent) {
   switch (event.code) {
@@ -102,6 +104,21 @@ export function contextmenuHandler(e: MouseEvent) {
     }
   }
   return false;
+}
+export function clickHandlerOverworld(e: MouseEvent) {
+  const mousePos = app.stage.toLocal(
+    app.renderer.plugins.interaction.mouse.global,
+  );
+  let closestDist = Number.MAX_SAFE_INTEGER;
+  let closestLocation;
+  for (let location of window.overworld.locations) {
+    const dist = distance(mousePos, location);
+    if (dist < closestDist) {
+      closestDist = dist;
+      closestLocation = location;
+    }
+  }
+  console.log('Overworld: you clicked location at', closestLocation);
 }
 // Handle clicks on the game board
 export function clickHandler(e: MouseEvent) {
