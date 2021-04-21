@@ -8,7 +8,7 @@ const spell: Spell = {
   card: {
     id,
     thumbnail: 'clone.png',
-    probability: 100,
+    probability: 3,
     description: `
 Clones whatever is in the source target into all the other targets.
 Requires more than 1 target to work
