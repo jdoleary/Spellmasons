@@ -154,6 +154,15 @@ export function removeCardsFromHand(player: CardUI.IPlayer, cards: string[]) {
   recalcPositionForCards(window.player);
 }
 
+// TODO remove dev helper function for production release
+window.giveMeCard = (cardId: string) => {
+  const card = Cards.allCards.find((c) => c.id === cardId);
+  if (card) {
+    addCardToHand(card, window.player);
+  } else {
+    console.log('card', card, 'not found');
+  }
+};
 export function addCardToHand(card: Cards.ICard, player: CardUI.IPlayer) {
   player.cards.push(card.id);
   if (player === window.player) {
