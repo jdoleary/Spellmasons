@@ -210,6 +210,7 @@ the face of the last card in the group is seen*/
   color: white;
   text-align: center;
 }
+#upgrade-picker-content .card-description,
 #card-inspect .card-description {
   display: block;
 }

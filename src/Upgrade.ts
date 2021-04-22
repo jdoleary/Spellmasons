@@ -5,7 +5,7 @@ import { checkForGetCardOnTurn, IPlayer } from './Player';
 import makeSeededRandom from './rand';
 export interface IUpgrade {
   title: string;
-  description: string;
+  description: (player: IPlayer) => string;
   thumbnail: string;
   // The maximum number of copies a player can have of this upgrade
   maxCopies?: number;
@@ -45,7 +45,7 @@ export function generateUpgrades(player: IPlayer): IUpgrade[] {
   }
   return upgrades;
 }
-export function createUpgradeElement(upgrade: IUpgrade) {
+export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer) {
   const element = document.createElement('div');
   element.classList.add('card');
   const elCardInner = document.createElement('div');
@@ -63,7 +63,7 @@ export function createUpgradeElement(upgrade: IUpgrade) {
   elCardInner.appendChild(title);
   const desc = document.createElement('div');
   desc.classList.add('card-description');
-  desc.innerText = upgrade.description;
+  desc.innerText = upgrade.description(player);
   elCardInner.appendChild(desc);
   element.addEventListener('click', (e) => {
     window.pie.sendData({
@@ -80,8 +80,7 @@ export function getUpgradeByTitle(title: string): IUpgrade | undefined {
 export const upgradeSourceWhenDead: IUpgrade[] = [
   {
     title: 'Resurrect',
-    description:
-      'You have died, but find yourself resurrected as your allies enter the portal.',
+    description: () => 'Resurrects you so the adventure can continue!',
     thumbnail: 'images/upgrades/resurrect.png',
     // Resurrection happens automatically at the start of each level
     effect: () => {},
@@ -90,14 +89,15 @@ export const upgradeSourceWhenDead: IUpgrade[] = [
 export const upgradeSource: IUpgrade[] = [
   {
     title: '+ Cast Range',
-    description: 'Increases how far away you can cast',
+    description: (player) =>
+      `Upgrade cast range from ${player.range} to ${player.range + 1}`,
     thumbnail: 'images/upgrades/plus_range.png',
     effect: (player) => player.range++,
   },
   {
     title: '+ Card Frequency',
-    description:
-      'Decreases the number of turns that it takes to get a new card',
+    description: (player) =>
+      `Get a new card every ${player.turnsPerCard} turns.`,
     thumbnail: 'images/upgrades/plus_card_frequency.png',
     maxCopies: config.PLAYER_BASE_TURNS_PER_CARD - 1,
     effect: (player) => {
@@ -109,7 +109,10 @@ export const upgradeSource: IUpgrade[] = [
   },
   {
     title: 'More Cards',
-    description: `Increases the number of cards that you get at the beginning of each level`,
+    description: (player) =>
+      `Increases the number of cards that you get at the beginning of each level from ${
+        player.cardsAmount
+      } to ${player.cardsAmount + 1}`,
     thumbnail: 'images/upgrades/more_cards.png',
     effect: (player) => {
       player.cardsAmount++;
@@ -117,7 +120,10 @@ export const upgradeSource: IUpgrade[] = [
   },
   {
     title: '+ Max Health',
-    description: `Increases your max health by one`,
+    description: (player) =>
+      `Increases your max health from ${player.unit.healthMax} to ${
+        player.unit.healthMax + 1
+      }`,
     thumbnail: 'images/upgrades/plus_max_health.png',
     effect: (player) => {
       player.unit.healthMax++;

@@ -692,7 +692,9 @@ export default class Game {
         const player = this.players.find((p) => p.clientId === window.clientId);
         if (player) {
           const upgrades = generateUpgrades(player);
-          const elUpgrades = upgrades.map(createUpgradeElement);
+          const elUpgrades = upgrades.map((upgrade) =>
+            createUpgradeElement(upgrade, player),
+          );
           if (elUpgradePickerContent) {
             elUpgradePickerContent.innerHTML = '';
             for (let elUpgrade of elUpgrades) {
