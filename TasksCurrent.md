@@ -3,7 +3,6 @@
 ## 2021.04.21 Playtest with Rachel
 
 - Rachels screen was too small and the cards overlapped the grid
-- Rachel keeps disconnecting, make it auto reconnect
 - Support click and drag for queued cards
 - latency graph is broken
 - carge green line doesn't work right if unit is in the way
