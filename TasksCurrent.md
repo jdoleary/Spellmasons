@@ -28,21 +28,10 @@
     - trap doors? Environmental interactions
       - Blow up a square to make it lava
   - Only start timelimit if 2 of 3 players have ended their turn
-  - chain purify didn't work(didn't remove poison)
 
 ---
 
 - Support an Overworld between levels so players can choose where to go (and choose the difficulty). It makes the game feel like a journey and gives it a setting.
-- latency reported negative
-- ```
-  Player.js:10 Uncaught TypeError: Cannot read property 'unit' of undefined
-      at Module.isTargetInRange (Player.js:10)
-      at updatePlanningView (UserInterface.js:83)
-      at setPlanningView (UserInterface.js:53)
-      at UserInterface.js:19
-
-      I pressed 'z' before the game was finsihed initializing
-  ```
 
 - "Mind control" spell, changes their faction temporarily?
 - Change clone so that is clones all the targets once, rather than cloning one target as many times as there are empty targets

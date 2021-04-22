@@ -23,7 +23,11 @@ export interface IPlayer {
   turnsPerCard: number;
 }
 export function isTargetInRange(player: IPlayer, target: Coords): boolean {
-  return math.distance(target, player.unit) <= player.range;
+  if (player.unit) {
+    return math.distance(target, player.unit) <= player.range;
+  } else {
+    return false;
+  }
 }
 export function create(clientId: string): IPlayer {
   // limit spawn to the leftmost column
