@@ -9,7 +9,6 @@
   - This seems to happen right after I cast a single card, I get it back
 - my turns seem to be ending unexpecedly, i just poisoned a guy and i din'dt move
 - see save('cannotmovehere'), i couldn't move directly to my right or left after i killed the guy to my left, also one of the grunts wasn't moving
-- Out of time timer didn't reset and it just ended our turn over and over again until the NPCs killed us all
 
 - Rachel's Feedback
   - Multiplayer is awesome

@@ -101,8 +101,17 @@ export default class Game {
         cell.y = y * config.CELL_SIZE;
       }
     }
-
+    this.startTurnTimer();
+  }
+  startTurnTimer() {
     // Limit turn duration
+    if (elPlayerTurnIndicatorHolder) {
+      elPlayerTurnIndicatorHolder.classList.remove('low-time');
+    }
+    // Reset the seconds left
+    this.secondsLeftForTurn = config.SECONDS_PER_TURN;
+    clearInterval(this.turnInterval);
+    // Start the interval which will end the player's turn when secondsLeftForTurn is <= 0
     this.turnInterval = setInterval(() => {
       if (
         this.state === game_state.Playing &&
@@ -122,10 +131,11 @@ export default class Game {
         } else {
           console.error('elTurnTimeRemaining is null');
         }
-        // Skip player turns if they run out of time
+        // Skip player turn if they run out of time
         if (this.secondsLeftForTurn <= 0) {
           console.log('Out of time, turn ended');
-          this.endPlayerTurnPhase();
+          this.endMyTurn();
+          clearInterval(this.turnInterval);
         }
       } else {
         if (elTurnTimeRemaining) {
@@ -374,10 +384,7 @@ export default class Game {
       }
 
       // Finally initialize their turn
-      this.secondsLeftForTurn = config.SECONDS_PER_TURN;
-      if (elPlayerTurnIndicatorHolder) {
-        elPlayerTurnIndicatorHolder.classList.remove('low-time');
-      }
+      this.startTurnTimer();
     }
   }
   // Sends a network message to end turn
