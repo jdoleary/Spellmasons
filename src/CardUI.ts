@@ -232,10 +232,12 @@ export function removeCardsFromHand(player: CardUI.IPlayer, cards: string[]) {
 }
 
 // TODO remove dev helper function for production release
-window.giveMeCard = (cardId: string) => {
+window.giveMeCard = (cardId: string, quantity: number = 1) => {
   const card = Cards.allCards.find((c) => c.id === cardId);
   if (card) {
-    addCardToHand(card, window.player);
+    for (let i = 0; i < quantity; i++) {
+      addCardToHand(card, window.player);
+    }
   } else {
     console.log('card', card, 'not found');
   }

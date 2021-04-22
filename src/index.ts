@@ -31,6 +31,6 @@ declare global {
     animatingSpells: boolean;
     setRoute: (r: Route) => void;
     // For development use
-    giveMeCard: (cardId: string) => void;
+    giveMeCard: (cardId: string, quantity: number) => void;
   }
 }
