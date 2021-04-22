@@ -17,6 +17,10 @@ if the target is on the same horizontal or vertical axis as the caster.
     effect: async (state, dryRun) => {
       const { caster, targets } = state;
       const originalTarget = targets[0];
+      // Charge does nothing if the target cell is obstructed
+      if (window.game.isCellObstructed(originalTarget)) {
+        return state;
+      }
       let moveLocation: Coords = originalTarget;
       // Find closest non-blocked cell between those points to move to
       if (state.caster.unit.y == originalTarget.y) {
@@ -64,7 +68,7 @@ if the target is on the same horizontal or vertical axis as the caster.
       if (dryRun) {
         drawSwapLine(caster.unit, moveLocation);
       } else {
-        Unit.moveTo(caster.unit, moveLocation);
+        Unit.setLocation(caster.unit, moveLocation);
       }
       return state;
     },
