@@ -87,11 +87,17 @@ body.inspect-mode #card-inspect {
   justify-content: center;
   align-items: center;
   pointer-events: none;
+  flex-direction: column;
 }
 #card-inspect .card-inner {
   width: 300px;
   height: 400px;
   border-width: 6px;
+}
+#card-inspect .card-quantity {
+  color: white;
+  text-align: center;
+  font-weight: bold;
 }
 #card-inspect .card-inner .card-thumb {
   height: 150px;

@@ -37,16 +37,31 @@ if (elCardHolders) {
     // doesn't stay in the center of the screen
     if (elCardInspect) {
       elCardInspect.innerHTML = '';
+      currentlyShownCardId = '';
     }
   });
 }
+let currentlyShownCardId = '';
 function showFullCard(card: Cards.ICard) {
-  if (elCardInspect) {
-    // Clear previous
-    elCardInspect.innerHTML = '';
-    elCardInspect.appendChild(createCardElement(card));
-  } else {
-    console.error('card-inspect div does not exist');
+  // Prevent changing the DOM more than necessary
+  if (card.id != currentlyShownCardId) {
+    currentlyShownCardId = card.id;
+    if (elCardInspect) {
+      // Clear previous
+      elCardInspect.innerHTML = '';
+      elCardInspect.appendChild(createCardElement(card));
+      const elQuantity = document.createElement('div');
+      elQuantity.classList.add('card-quantity');
+      elQuantity.innerText = `You have ${[
+        ...window.player.cards,
+        ...window.player.cardsSelected,
+      ].reduce((count, c) => count + (c == card.id ? 1 : 0), 0)} ${
+        card.id
+      } in your hand`;
+      elCardInspect.appendChild(elQuantity);
+    } else {
+      console.error('card-inspect div does not exist');
+    }
   }
 }
 
@@ -81,7 +96,6 @@ export function recalcPositionForCards(player: CardUI.IPlayer) {
   } else {
     console.error('elCardHand is null');
   }
-  console.log(player.cards, player.cardsSelected);
 
   // Reconcile the elements with the player's hand
   for (let [cardId, count] of cardCountPairs) {
