@@ -215,6 +215,12 @@ export function areAnyCardsSelected() {
 // This function fully deletes the cards that are 'selected' in the player's hand
 export function removeCardsFromHand(player: CardUI.IPlayer, cards: string[]) {
   cardLoop: for (let cardToRemove of cards) {
+    for (let i = player.cardsSelected.length - 1; i >= 0; i--) {
+      if (player.cardsSelected[i] === cardToRemove) {
+        player.cardsSelected.splice(i, 1);
+        continue cardLoop;
+      }
+    }
     for (let i = player.cards.length - 1; i >= 0; i--) {
       if (player.cards[i] === cardToRemove) {
         player.cards.splice(i, 1);
