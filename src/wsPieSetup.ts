@@ -1,7 +1,7 @@
 import PieClient from 'pie-client';
 import { onData, onClientPresenceChanged } from './wsPieHandler';
-const wsUri = 'ws://localhost:8000';
-// const wsUri = 'ws://192.168.0.21:8000';
+// Locally hosted, available to LAN
+const wsUri = 'ws://192.168.0.21:8000';
 // Locally hosted, externally accessed
 // const wsUri = 'ws://68.48.199.138:7337';
 // Current digital ocean wsPie app:
