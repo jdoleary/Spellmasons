@@ -29,6 +29,8 @@
     - Art
       - Artists
         - https://www.fiverr.com/harsimarjit_
+        - Rachel says look on instagram
+        - [Reddit](https://www.reddit.com/r/PixelArt/comments/mvod6w/oc_my_first_speed_art_im_still_figuring_out_how/)
       - Pinterest board for inspiration
       - Add Juice! tools:
         - [Juice FX](https://codemanu.itch.io/juicefx)

@@ -4,11 +4,8 @@
 
 - Rachels screen was too small and the cards overlapped the grid
 - Support click and drag for queued cards
-- latency graph is broken
-- carge green line doesn't work right if unit is in the way
 - Rachel was frozen and I had taken my turn but it said "waiting on others"
-- Rachel says she moved twice after being frozen
-- A damage spell is out of order, ended up on the end
+- A damage spell is out of order in my hand, ended up on the end
   - This seems to happen right after I cast a single card, I get it back
 - my turns seem to be ending unexpecedly, i just poisoned a guy and i din'dt move
 - see save('cannotmovehere'), i couldn't move directly to my right or left after i killed the guy to my left, also one of the grunts wasn't moving
@@ -47,32 +44,24 @@
   - Entering the portal doens't currently end my turn because movement does, and if you don't swap into the portal you have to move into it
   - Maybe since there are more movement spells now, move spelling into the portal should end your turn.
 - Fixed?: We had some 3 disconnected players, brad killed me, destroyed my corpse and entered the portal and it entered an infinte loop
-- Protection doesn't SHOW target being removed because target drawing is additive right now
-- Bug-ish: If you cast, "AOE, damage, protection" it will damage you before the protection removes the target, but Spell Projection doesn't show that
-
----
 
 ## Tasks
 
-- Fix swap
-  - bug: chain swapping didn't move me, this occurs when the chain retarget's self
-  - Swapping doesn't work with cards, the player picks them up
 - Add obstacles to spell effect? So freeze can freeze lava?
-
-## Brad 2021.04.05
-
 - Freezing lava should let you walk over it (casts should work on obstacles)
 
 ## bugs
 
 - Bug: Loading doesn't work if clientIds have changed reassigning clientIds
+- These bugs occurred while playtesting with Rachel but I haven't been able to reproduce myself
+  - chain purify didn't work(didn't remove poison)
+  - latency reported negative
+- Fix swap
+  - Swapping doesn't work with cards, the player picks them up
+- Protection doesn't SHOW target being removed because target drawing is additive right now
+  - Bug-ish: If you cast, "AOE, damage, protection" it will damage you before the protection removes the target, but Spell Projection doesn't show that
 
-## Features
+## Spell bugs:
 
-- Units dropped into lava should die
-- freezing pickup should make it not-pickupable while it's frozen??
-- task: Push should push away from the target area regardless of how many targets there are
-
-```
-
-```
+- charge green line doesn't work right if unit is in the way
+- Rachel says she moved twice after being frozen
