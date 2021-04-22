@@ -1,5 +1,14 @@
 # Todo
 
+- Could I do without the external port checker and check from the current client via the external ip?
+- should unit.die cause player turn to end?
+
+## 2021.04.22 Playtest with Brad
+
+- We desynced unit positions until brad finished his turn, then it synced back up (one included a new spawned unit from summoner)
+- Brad desynced when he charged
+- It's somehow not Brad's turn on his screen (timer 0:00), but he's still casting on my screen and I have 0:42 seconds left. It seems to be that our turnTimeRemaining tiimers are far off
+
 ## 2021.04.21 Playtest with Rachel
 
 - Rachels screen was too small and the cards overlapped the grid
@@ -8,7 +17,6 @@
 - A damage spell is out of order in my hand, ended up on the end
   - This seems to happen right after I cast a single card, I get it back
 - my turns seem to be ending unexpecedly, i just poisoned a guy and i din'dt move
-- see save('cannotmovehere'), i couldn't move directly to my right or left after i killed the guy to my left, also one of the grunts wasn't moving
 
 - Rachel's Feedback
   - Multiplayer is awesome
@@ -22,6 +30,7 @@
     - trap doors? Environmental interactions
       - Blow up a square to make it lava
   - Only start timelimit if 2 of 3 players have ended their turn
+  - see save('cannotmovehere'), i couldn't move directly to my right or left after i killed the guy to my left, also one of the grunts wasn't moving
 
 ---
 
