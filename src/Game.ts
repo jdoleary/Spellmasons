@@ -395,6 +395,10 @@ export default class Game {
     }
   }
   endPlayerTurn(clientId: string) {
+    if (this.endedTurn.has(clientId)) {
+      // Do not end a player's turn more than once
+      return;
+    }
     // Turns can only be ended when the game is in Playing state
     // and not, for example, in Upgrade state
     if (this.state === game_state.Playing) {
