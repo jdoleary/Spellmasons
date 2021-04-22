@@ -1,11 +1,11 @@
 import PieClient from 'pie-client';
 import { onData, onClientPresenceChanged } from './wsPieHandler';
-// const wsUri = 'ws://localhost:8000';
+const wsUri = 'ws://localhost:8000';
 // const wsUri = 'ws://192.168.0.21:8000';
 // Locally hosted, externally accessed
 // const wsUri = 'ws://68.48.199.138:7337';
-const wsUri = 'wss://websocket-pie-6ggew.ondigitalocean.app';
-// const wsUri = 'wss://websocket-pie-e4elx.ondigitalocean.app/';
+// Current digital ocean wsPie app:
+// const wsUri = 'wss://websocket-pie-6ggew.ondigitalocean.app';
 let pie: PieClient | undefined;
 export function connect_to_wsPie_server(): Promise<void> {
   return new Promise((resolve, reject) => {
