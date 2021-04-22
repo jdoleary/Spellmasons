@@ -81,6 +81,7 @@ export function recalcPositionForCards(player: CardUI.IPlayer) {
   } else {
     console.error('elCardHand is null');
   }
+  console.log(player.cards, player.cardsSelected);
 
   // Reconcile the elements with the player's hand
   for (let [cardId, count] of cardCountPairs) {
@@ -94,29 +95,76 @@ export function recalcPositionForCards(player: CardUI.IPlayer) {
         const element = createCardElement(card);
         element.classList.add(className);
         // When the user clicks on a card
-        element.addEventListener('click', (e) => {
-          e.stopPropagation();
-          if (element.classList.contains('selected')) {
-            moveCardFromSelectedToHand(element, cardId);
-          } else {
-            if (elSelectedCards) {
-              elSelectedCards.appendChild(element);
-            } else {
-              console.error('elSelectedCards is null');
-            }
-            element.classList.add('selected');
-          }
-        });
+        addClickListenerToCardElement(player, element, cardId);
         let elCardTypeGroup = document.getElementById(`holder-${cardId}`);
         if (!elCardTypeGroup) {
           elCardTypeGroup = makeCardTypeGroup(cardId);
         }
         elCardTypeGroup.appendChild(element);
       } else {
-        console.log(`No corresponding card exists for the "${cardId}" upgrade`);
+        console.log(`No corresponding source card exists for "${cardId}"`);
       }
     }
   }
+  // Remove all current selected cards
+  if (elSelectedCards) {
+    elSelectedCards.innerHTML = '';
+  } else {
+    console.error('elSelectedCards is null');
+  }
+  // Rebuild all the card elements within #selected-cards
+  for (let cardId of player.cardsSelected) {
+    const className = `card-${cardId}`;
+
+    // Create UI element for card
+    const card = Cards.allCards.find((card) => card.id === cardId);
+    // Note: Some upgrades don't have corresponding cards (such as resurrect)
+    if (card) {
+      const element = createCardElement(card);
+      element.classList.add(className);
+      // When the user clicks on a card
+      addClickListenerToCardElement(player, element, cardId);
+      moveCardToSelected(element);
+    } else {
+      console.log(`No corresponding source card exists for "${cardId}"`);
+    }
+  }
+}
+function addClickListenerToCardElement(
+  player: CardUI.IPlayer,
+  element: HTMLElement,
+  cardId: string,
+) {
+  element.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (element.classList.contains('selected')) {
+      const index = player.cardsSelected.findIndex((c) => c === cardId);
+      if (index !== -1) {
+        player.cardsSelected.splice(index, 1);
+        player.cards.push(cardId);
+      } else {
+        console.log(
+          'Attempted to remove card',
+          cardId,
+          'from selected-cards but it does not exist',
+        );
+      }
+      moveCardToHand(element, cardId);
+    } else {
+      const index = player.cards.findIndex((c) => c === cardId);
+      if (index !== -1) {
+        player.cards.splice(index, 1);
+        player.cardsSelected.push(cardId);
+      } else {
+        console.log(
+          'Attempted to remove card',
+          cardId,
+          'from card-hand but it does not exist',
+        );
+      }
+      moveCardToSelected(element);
+    }
+  });
 }
 function makeCardTypeGroup(cardId: string): HTMLDivElement {
   const elCardTypeGroup = document.createElement('div');
@@ -129,7 +177,16 @@ function makeCardTypeGroup(cardId: string): HTMLDivElement {
   }
   return elCardTypeGroup;
 }
-function moveCardFromSelectedToHand(element: HTMLElement, cardId: string) {
+// Moves a card element to selected-cards div
+function moveCardToSelected(element: HTMLElement) {
+  if (elSelectedCards) {
+    elSelectedCards.appendChild(element);
+  } else {
+    console.error('elSelectedCards is null');
+  }
+  element.classList.add('selected');
+}
+function moveCardToHand(element: HTMLElement, cardId: string) {
   let elCardTypeGroup = document.getElementById(`holder-${cardId}`);
   if (!elCardTypeGroup) {
     elCardTypeGroup = makeCardTypeGroup(cardId);
@@ -208,7 +265,7 @@ export function clearSelectedCards() {
   // Deselect all selected cards
   document.querySelectorAll('.card.selected').forEach((el) => {
     if (el instanceof HTMLElement) {
-      moveCardFromSelectedToHand(el, el.dataset.cardId || '');
+      moveCardToHand(el, el.dataset.cardId || '');
     } else {
       console.error(
         'Cannot clearSelectedCards due to selectednode not being the correct type',

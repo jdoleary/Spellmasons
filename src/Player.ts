@@ -16,6 +16,7 @@ export interface IPlayer {
   unit: Unit.IUnit;
   inPortal: boolean;
   cards: string[];
+  cardsSelected: string[];
   // The number of cards a player's hand is populated with at the start of a level
   cardsAmount: number;
   upgrades: Upgrade.IUpgrade[];
@@ -53,6 +54,7 @@ export function create(clientId: string): IPlayer {
     ),
     inPortal: false,
     cards: [],
+    cardsSelected: [],
     cardsAmount: config.START_CARDS_COUNT,
     upgrades: [],
     range: config.PLAYER_CAST_RANGE,
@@ -73,7 +75,7 @@ export function checkForGetCardOnTurn(player: IPlayer) {
   if (!player.inPortal && window.game.turn_number % player.turnsPerCard === 0) {
     const card = CardUI.generateCard();
     CardUI.addCardToHand(card, player);
-    console.log('You got a card!');
+    console.log('You got a card!', card.id);
   }
 }
 export function resetPlayerForNextLevel(player: IPlayer) {
@@ -138,6 +140,7 @@ export function setClientConnected(player: IPlayer, connected: boolean) {
 // Remove all of the player's cards
 function removeAllCards(player: IPlayer) {
   player.cards = [];
+  player.cardsSelected = [];
   CardUI.recalcPositionForCards(player);
 }
 export function enterPortal(player: IPlayer) {

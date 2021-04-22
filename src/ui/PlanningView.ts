@@ -202,7 +202,9 @@ export function updateTooltip() {
         cards =
           'Cards: \n' +
           Object.entries(
-            player.cards.reduce<{ [card: string]: number }>((acc, card) => {
+            [...player.cards, ...player.cardsSelected].reduce<{
+              [card: string]: number;
+            }>((acc, card) => {
               if (!acc[card]) {
                 acc[card] = 0;
               }
