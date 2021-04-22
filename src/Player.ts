@@ -7,6 +7,7 @@ import * as config from './config';
 import * as math from './math';
 import { Coords, Faction, UnitType } from './commonTypes';
 import { allUnits } from './units';
+import { getClients } from './wsPieHandler';
 
 export interface IPlayer {
   // wsPie id
@@ -114,14 +115,25 @@ function addHighlighIfPlayerBelongsToCurrentClient(player: IPlayer) {
   }
 }
 export function load(player: IPlayer) {
-  const playerLoaded = {
+  const playerLoaded: IPlayer = {
     ...player,
     unit: Unit.load(player.unit),
   };
+  const clients = getClients();
+  setClientConnected(playerLoaded, clients.includes(player.clientId));
   addHighlighIfPlayerBelongsToCurrentClient(playerLoaded);
   updateGlobalRefToCurrentClientPlayer(playerLoaded);
   CardUI.recalcPositionForCards(playerLoaded);
   return playerLoaded;
+}
+// Sets boolean and substring denoting if the player has a pie-client client associated with it
+export function setClientConnected(player: IPlayer, connected: boolean) {
+  player.clientConnected = connected;
+  if (connected) {
+    Image.removeSubSprite(player.unit.image, 'disconnected');
+  } else {
+    Image.addSubSprite(player.unit.image, 'disconnected');
+  }
 }
 // Remove all of the player's cards
 function removeAllCards(player: IPlayer) {

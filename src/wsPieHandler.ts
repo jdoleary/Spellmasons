@@ -13,7 +13,7 @@ import * as Card from './CardUI';
 import { syncSpellEffectProjection } from './ui/PlanningView';
 
 const messageLog: any[] = [];
-let clients = [];
+let clients: string[] = [];
 let game: Game;
 export function initializeGameObject() {
   game = new Game(Math.random().toString());
@@ -140,6 +140,10 @@ async function handleSpell(caster: Player.IPlayer, payload: any) {
     console.log('Someone is trying to cast out of turn');
   }
 }
+// Returns the list of clientIds
+export function getClients(): string[] {
+  return clients;
+}
 export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
   console.log('clientPresenceChanged', o);
   clients = o.clients;
@@ -161,8 +165,7 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
         const newPlayer = Player.create(o.clientThatChanged);
         game.players.push(newPlayer);
       } else {
-        player.clientConnected = true;
-        removeSubSprite(player.unit.image, 'disconnected');
+        Player.setClientConnected(player, true);
       }
       // Send game state to other player so they can load:
       window.pie.sendData({
@@ -173,8 +176,7 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
   } else {
     // client left
     if (player) {
-      player.clientConnected = false;
-      addSubSprite(player.unit.image, 'disconnected');
+      Player.setClientConnected(player, false);
       game.endPlayerTurn(player.clientId);
     } else {
       console.error('Cannot disconnect player that is undefined');
