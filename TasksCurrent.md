@@ -1,5 +1,37 @@
 # Todo
 
+## 2021.04.21 Playtest with Rachel
+
+- Rachels screen was too small and the cards overlapped the grid
+- Rachel keeps disconnecting, make it auto reconnect
+- Support click and drag for queued cards
+- latency graph is broken
+- carge green line doesn't work right if unit is in the way
+- Rachel was frozen and I had taken my turn but it said "waiting on others"
+- Rachel says she moved twice after being frozen
+- A damage spell is out of order, ended up on the end
+  - This seems to happen right after I cast a single card, I get it back
+- my turns seem to be ending unexpecedly, i just poisoned a guy and i din'dt move
+- see save('cannotmovehere'), i couldn't move directly to my right or left after i killed the guy to my left, also one of the grunts wasn't moving
+- Clarify descriptions for "more cards" and "card frequency" (also show how much cast range increases, give the player ALL the info to make the best decision)
+- Out of time timer didn't reset and it just ended our turn over and over again until the NPCs killed us all
+
+- Rachel's Feedback
+  - Multiplayer is awesome
+  - She loves stacking the spells
+  - Upgrades are a good way to balance the harder levels
+  - Doesn't see the point of lance
+    - Should it work diagonally?
+  - Slay the Spire style chests
+  - Make board bigger for more players?
+  - Two stage levels? Pull a level to reveal a portal
+    - trap doors? Environmental interactions
+      - Blow up a square to make it lava
+  - Only start timelimit if 2 of 3 players have ended their turn
+  - chain purify didn't work(didn't remove poison)
+
+---
+
 - Support an Overworld between levels so players can choose where to go (and choose the difficulty). It makes the game feel like a journey and gives it a setting.
 - latency reported negative
 - ```
