@@ -84,9 +84,8 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       break;
     case MESSAGE_TYPES.MOVE_PLAYER:
       if (caster) {
-        // Move the player 1 magnitude on either or both axes towards the desired position
         await Unit.moveTo(caster.unit, payload).then(() => {
-          checkEndPlayerTurn(caster);
+          game.endPlayerTurn(caster.clientId);
         });
       } else {
         console.error('Cannot move player, caster does not exist');
@@ -135,7 +134,14 @@ async function handleSpell(caster: Player.IPlayer, payload: any) {
     // syncSpellEffectProjection needs to be called so that the icon ("footprints" for example)
     // will be shown in the tile that the mouse is hovering over
     syncSpellEffectProjection();
-    checkEndPlayerTurn(caster);
+    // Check for dead players to end their turn,
+    // this occurs here because spells may have caused their death
+    for (let p of game.players) {
+      // If a player's unit is dead, end their turn
+      if (!p.unit.alive) {
+        game.endPlayerTurn(p.clientId);
+      }
+    }
   } else {
     console.log('Someone is trying to cast out of turn');
   }
@@ -189,13 +195,6 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
       const sortedClients = o.clients.sort();
       game.hostClientId = sortedClients[0];
     }
-  }
-}
-function checkEndPlayerTurn(player: Player.IPlayer) {
-  // Being dead ends your turn
-  // Moving ends your turn
-  if (!player.unit.alive || player.unit.thisTurnMoved) {
-    game.endPlayerTurn(player.clientId);
   }
 }
 
