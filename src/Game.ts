@@ -20,19 +20,12 @@ import type { Random } from 'random';
 import makeSeededRandom from './rand';
 import floatingText from './FloatingText';
 import { UnitType, Coords, Faction } from './commonTypes';
-import { createUpgradeElement, generateUpgrades } from './Upgrade';
 import Events from './Events';
 import { allUnits } from './units';
 import { updatePlanningView } from './ui/PlanningView';
 import { ILevel, getEnemiesForAltitude } from './overworld';
 import { setRoute, Route } from './routes';
 
-export enum game_state {
-  Lobby,
-  Playing,
-  Upgrade,
-  GameOver,
-}
 export enum turn_phase {
   PlayerTurns,
   NPC,
@@ -49,12 +42,7 @@ const elPlayerTurnIndicatorHolder = document.getElementById(
 const elPlayerTurnIndicator = document.getElementById('player-turn-indicator');
 const elTurnTimeRemaining = document.getElementById('turn-time-remaining');
 const elLevelIndicator = document.getElementById('level-indicator');
-const elUpgradePickerLabel = document.getElementById('upgrade-picker-label');
-const elUpgradePickerContent = document.getElementById(
-  'upgrade-picker-content',
-);
 export default class Game {
-  state: game_state = game_state.Lobby;
   seed: string;
   random: Random;
   turn_phase: turn_phase = turn_phase.PlayerTurns;
@@ -85,7 +73,6 @@ export default class Game {
     window.game = this;
     this.seed = seed;
     this.random = makeSeededRandom(this.seed);
-    this.setGameState(game_state.Lobby);
 
     // Setup pathfinding
     this.pfGrid = new PF.Grid(config.BOARD_WIDTH, config.BOARD_HEIGHT);
@@ -115,7 +102,7 @@ export default class Game {
     // Start the interval which will end the player's turn when secondsLeftForTurn is <= 0
     this.turnInterval = setInterval(() => {
       if (
-        this.state === game_state.Playing &&
+        window.route === Route.Underworld &&
         this.turn_phase === turn_phase.PlayerTurns
       ) {
         this.secondsLeftForTurn--;
@@ -194,7 +181,6 @@ export default class Game {
       Obstacle.remove(o);
     }
     this.initLevel(level);
-    this.setGameState(game_state.Playing);
   }
 
   initLevel(level: ILevel) {
@@ -404,9 +390,9 @@ export default class Game {
       // Do not end a player's turn more than once
       return;
     }
-    // Turns can only be ended when the game is in Playing state
-    // and not, for example, in Upgrade state
-    if (this.state === game_state.Playing) {
+    // Turns can only be ended when the route is the Underworld
+    // and not, for example, Upgrade
+    if (window.route === Route.Underworld) {
       // Ensure players can only end the turn when it IS their turn
       if (this.turn_phase === turn_phase.PlayerTurns) {
         if (clientId === window.clientId) {
@@ -425,6 +411,12 @@ export default class Game {
     }
   }
   chooseUpgrade(player: Player.IPlayer, upgrade: Upgrade.IUpgrade) {
+    const elUpgradePickerLabel = document.getElementById(
+      'upgrade-picker-label',
+    );
+    const elUpgradePickerContent = document.getElementById(
+      'upgrade-picker-content',
+    );
     upgrade.effect(player);
     player.upgrades.push(upgrade);
     this.choseUpgrade.add(player.clientId);
@@ -459,7 +451,7 @@ export default class Game {
       this.players.filter((p) => p.unit.alive && p.clientConnected).length ===
       0;
     if (areAllPlayersDead) {
-      this.setGameState(game_state.GameOver);
+      // TODO handle game over
       return true;
     } else {
       return false;
@@ -477,7 +469,7 @@ export default class Game {
     if (livingPlayers.length && areAllLivingPlayersInPortal) {
       // Now that level is complete, move to the Upgrade gamestate where players can choose upgrades
       // before moving on to the next level
-      this.setGameState(game_state.Upgrade);
+      setRoute(Route.Upgrade);
       // Return of true signifies it went to the next level
       return true;
     }
@@ -683,44 +675,6 @@ export default class Game {
       remainingUnitsWhoIntendToMove.length !== previousUnmovedUnitCount
     );
     return promises;
-  }
-  setGameState(g: game_state) {
-    this.state = g;
-    const state = game_state[this.state];
-    const elUpgradePicker = document.getElementById('upgrade-picker');
-    elUpgradePicker && elUpgradePicker.classList.remove('active');
-    switch (state) {
-      case 'GameOver':
-        alert('GameOver');
-        break;
-      case 'Playing':
-        // Set the first turn phase
-        this.setTurnPhase(turn_phase.PlayerTurns);
-        break;
-      case 'Upgrade':
-        elUpgradePicker && elUpgradePicker.classList.add('active');
-        const player = this.players.find((p) => p.clientId === window.clientId);
-        if (player) {
-          const upgrades = generateUpgrades(player);
-          const elUpgrades = upgrades.map((upgrade) =>
-            createUpgradeElement(upgrade, player),
-          );
-          if (elUpgradePickerContent) {
-            elUpgradePickerContent.innerHTML = '';
-            for (let elUpgrade of elUpgrades) {
-              elUpgradePickerContent.appendChild(elUpgrade);
-            }
-          }
-        } else {
-          console.error('Upgrades cannot be generated, player not found');
-        }
-        break;
-      default:
-        console.error(
-          `Cannot set gamestate. Game state ${game_state[g]} does not exist.`,
-        );
-        break;
-    }
   }
 
   getCoordsWithinDistanceOfTarget(

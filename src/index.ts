@@ -30,6 +30,7 @@ declare global {
     planningViewActive: boolean;
     animatingSpells: boolean;
     setRoute: (r: Route) => void;
+    route: Route;
     // For development use
     giveMeCard: (cardId: string, quantity: number) => void;
   }

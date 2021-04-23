@@ -1,5 +1,6 @@
 # Todo
 
+- Support saving and loading the route
 - check disconnects, reconnects, and mid-game -connect now that character select screen exists
 
 - Support an Overworld between levels so players can choose where to go (and choose the difficulty). It makes the game feel like a journey and gives it a setting.

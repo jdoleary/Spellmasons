@@ -3,7 +3,7 @@ import { MESSAGE_TYPES } from './MessageTypes';
 import { UnitType } from './commonTypes';
 import floatingText from './FloatingText';
 import { getUpgradeByTitle } from './Upgrade';
-import Game, { game_state, turn_phase } from './Game';
+import Game, { turn_phase } from './Game';
 import * as Player from './Player';
 import * as Unit from './Unit';
 import * as Pickup from './Pickup';
@@ -92,7 +92,6 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       game.players = loadedGameState.players.map(Player.load);
       game.pickups = loadedGameState.pickups.map(Pickup.load);
       game.obstacles = loadedGameState.obstacles.map(Obstacle.load);
-      game.setGameState(loadedGameState.state);
       break;
     case MESSAGE_TYPES.MOVE_PLAYER:
       if (caster) {

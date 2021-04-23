@@ -23,7 +23,8 @@ import * as Image from './Image';
 import { BOARD_HEIGHT, BOARD_WIDTH, CELL_SIZE } from './config';
 import { UnitSubType } from './commonTypes';
 import { MESSAGE_TYPES } from './MessageTypes';
-import { game_state } from './Game';
+import { turn_phase } from './Game';
+import { createUpgradeElement, generateUpgrades } from './Upgrade';
 
 export enum Route {
   Menu,
@@ -35,7 +36,7 @@ export enum Route {
   // Post combat
   Upgrade,
 }
-let route: Route = Route.Menu;
+window.route = Route.Menu;
 // temp for testing
 window.setRoute = setRoute;
 
@@ -45,7 +46,7 @@ export function setRoute(r: Route) {
     document.body.classList.remove(`route-${route}`);
   }
   document.body.classList.add(`route-${Route[r]}`);
-  route = r;
+  window.route = r;
   addPixiContainersForRoute(r);
 
   // Remove previous event listeners:
@@ -123,7 +124,8 @@ export function setRoute(r: Route) {
 
       break;
     case Route.Underworld:
-      window.game.setGameState(game_state.Playing);
+      // Set the first turn phase
+      window.game.setTurnPhase(turn_phase.PlayerTurns);
       // Align Camera: center the app in the middle of the board
       app.stage.x = app.renderer.width / 2 - (CELL_SIZE * BOARD_WIDTH) / 2;
       app.stage.y = app.renderer.height / 2 - (CELL_SIZE * BOARD_HEIGHT) / 2;
@@ -131,6 +133,29 @@ export function setRoute(r: Route) {
       // Beating a level takes players from Underworld to Upgrade
       break;
     case Route.Upgrade:
+      const elUpgradePicker = document.getElementById('upgrade-picker');
+      const elUpgradePickerContent = document.getElementById(
+        'upgrade-picker-content',
+      );
+      elUpgradePicker && elUpgradePicker.classList.remove('active');
+      elUpgradePicker && elUpgradePicker.classList.add('active');
+      const player = window.game.players.find(
+        (p) => p.clientId === window.clientId,
+      );
+      if (player) {
+        const upgrades = generateUpgrades(player);
+        const elUpgrades = upgrades.map((upgrade) =>
+          createUpgradeElement(upgrade, player),
+        );
+        if (elUpgradePickerContent) {
+          elUpgradePickerContent.innerHTML = '';
+          for (let elUpgrade of elUpgrades) {
+            elUpgradePickerContent.appendChild(elUpgrade);
+          }
+        }
+      } else {
+        console.error('Upgrades cannot be generated, player not found');
+      }
       break;
   }
 }
