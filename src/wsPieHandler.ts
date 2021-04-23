@@ -34,6 +34,11 @@ export function onData(d: OnDataArgs) {
     case MESSAGE_TYPES.VOTE_FOR_LEVEL:
       voteForLevel(fromClient, payload.levelIndex);
       break;
+    case MESSAGE_TYPES.SELECT_CHARACTER:
+      console.log(`${fromClient} select character ${payload.unitId}`);
+      // const p = Player.create(fromClient, payload.unitId);
+      // game.players.push(p);
+      break;
     default:
       handleOnDataMessageSyncronously(d);
       break;

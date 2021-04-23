@@ -1,4 +1,8 @@
-import { addPixiContainersForRoute, setupPixi } from './PixiUtils';
+import {
+  addPixiContainersForRoute,
+  containerCharacterSelect,
+  setupPixi,
+} from './PixiUtils';
 import {
   clickHandler,
   clickHandlerOverworld,
@@ -15,7 +19,10 @@ import { initializeGameObject } from './wsPieHandler';
 import { connect_to_wsPie_server, hostRoom, joinRoom } from './wsPieSetup';
 import { setupMonitoring } from './monitoring';
 import { app } from './PixiUtils';
+import * as Image from './Image';
 import { BOARD_HEIGHT, BOARD_WIDTH, CELL_SIZE } from './config';
+import { UnitSubType } from './commonTypes';
+import { MESSAGE_TYPES } from './MessageTypes';
 
 export enum Route {
   Menu,
@@ -69,13 +76,33 @@ export function setRoute(r: Route) {
           .catch(() => joinRoom({}))
           .then(() => console.log('You are now in the room'))
           .then(() => {
-            setRoute(Route.Overworld);
+            setRoute(Route.CharacterSelect);
           })
           .catch((err: string) => console.error('Failed to join room', err));
       });
       break;
     case Route.CharacterSelect:
       // Host or join a game brings client to Character select
+      Object.values(Units.allUnits)
+        .filter(
+          (unitSource) =>
+            unitSource.info.subtype === UnitSubType.PLAYER_CONTROLLED,
+        )
+        .forEach((unitSource, index) => {
+          const image = Image.create(
+            index,
+            0,
+            unitSource.info.image,
+            containerCharacterSelect,
+          );
+          image.sprite.interactive = true;
+          image.sprite.on('click', () => {
+            window.pie.sendData({
+              type: MESSAGE_TYPES.SELECT_CHARACTER,
+              unitId: unitSource.id,
+            });
+          });
+        });
       break;
     case Route.Overworld:
       // Picking a level brings players to Underworld from Overworld

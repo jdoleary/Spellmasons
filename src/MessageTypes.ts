@@ -8,4 +8,5 @@ export enum MESSAGE_TYPES {
   PING,
   // Vote for a level to go to in the overworld
   VOTE_FOR_LEVEL,
+  SELECT_CHARACTER,
 }

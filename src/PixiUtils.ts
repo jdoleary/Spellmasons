@@ -27,6 +27,10 @@ export const containerOverworld = new PIXI.Container();
 export const overworldGraphics = new PIXI.Graphics();
 containerOverworld.addChild(overworldGraphics);
 const overworldPixiContainers = [containerOverworld];
+
+export const containerCharacterSelect = new PIXI.Container();
+const characterSelectContainers = [containerCharacterSelect];
+
 app.renderer.backgroundColor = 0x45b6fe;
 app.renderer.view.style.position = 'absolute';
 app.renderer.view.style.top = '0';
@@ -60,6 +64,9 @@ export function addPixiContainersForRoute(route: Route) {
       break;
     case Route.Underworld:
       addContainers(underworldPixiContainers);
+      break;
+    case Route.CharacterSelect:
+      addContainers(characterSelectContainers);
       break;
   }
 }
