@@ -23,6 +23,7 @@ import * as Image from './Image';
 import { BOARD_HEIGHT, BOARD_WIDTH, CELL_SIZE } from './config';
 import { UnitSubType } from './commonTypes';
 import { MESSAGE_TYPES } from './MessageTypes';
+import { game_state } from './Game';
 
 export enum Route {
   Menu,
@@ -97,10 +98,16 @@ export function setRoute(r: Route) {
           );
           image.sprite.interactive = true;
           image.sprite.on('click', () => {
-            window.pie.sendData({
-              type: MESSAGE_TYPES.SELECT_CHARACTER,
-              unitId: unitSource.id,
-            });
+            // Timeout prevents click from propagating into overworld listener
+            // for some reason e.stopPropagation doesn't work :/
+            setTimeout(() => {
+              // Cleanup container
+              containerCharacterSelect.removeChildren();
+              window.pie.sendData({
+                type: MESSAGE_TYPES.SELECT_CHARACTER,
+                unitId: unitSource.id,
+              });
+            }, 0);
           });
         });
       break;
@@ -116,6 +123,7 @@ export function setRoute(r: Route) {
 
       break;
     case Route.Underworld:
+      window.game.setGameState(game_state.Playing);
       // Align Camera: center the app in the middle of the board
       app.stage.x = app.renderer.width / 2 - (CELL_SIZE * BOARD_WIDTH) / 2;
       app.stage.y = app.renderer.height / 2 - (CELL_SIZE * BOARD_HEIGHT) / 2;

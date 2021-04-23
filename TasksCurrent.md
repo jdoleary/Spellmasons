@@ -1,5 +1,7 @@
 # Todo
 
+- check disconnects, reconnects, and mid-game -connect now that character select screen exists
+
 - Support an Overworld between levels so players can choose where to go (and choose the difficulty). It makes the game feel like a journey and gives it a setting.
 - Change clone so that is clones all the targets once, rather than cloning one target as many times as there are empty targets
 

@@ -31,10 +31,10 @@ export function isTargetInRange(player: IPlayer, target: Coords): boolean {
     return false;
   }
 }
-export function create(clientId: string): IPlayer {
+export function create(clientId: string, unitId: string): IPlayer {
   // limit spawn to the leftmost column
   const coords = window.game.getRandomEmptyCell({ xMax: 0 });
-  const userSource = allUnits.manMohawk;
+  const userSource = allUnits[unitId];
   if (!userSource) {
     throw new Error(
       'User unit source file not registered, cannot create player',

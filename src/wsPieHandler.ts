@@ -11,6 +11,7 @@ import * as Obstacle from './Obstacle';
 import * as Card from './CardUI';
 import { syncSpellEffectProjection } from './ui/PlanningView';
 import { voteForLevel } from './overworld';
+import { setRoute, Route } from './routes';
 
 const messageLog: any[] = [];
 let clients: string[] = [];
@@ -35,9 +36,12 @@ export function onData(d: OnDataArgs) {
       voteForLevel(fromClient, payload.levelIndex);
       break;
     case MESSAGE_TYPES.SELECT_CHARACTER:
-      console.log(`${fromClient} select character ${payload.unitId}`);
-      // const p = Player.create(fromClient, payload.unitId);
-      // game.players.push(p);
+      // If player doesn't already exist, make them
+      if (!game.players.find((p) => p.clientId === fromClient)) {
+        const p = Player.create(fromClient, payload.unitId);
+        game.players.push(p);
+        setRoute(Route.Overworld);
+      }
       break;
     default:
       handleOnDataMessageSyncronously(d);
@@ -165,8 +169,7 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
   // Client joined
   if (o.present) {
     if (clients.length === 1) {
-      // if you are the only client, make the game
-      makeGame(clients);
+      // if you are the only client, set yourself as the host
       game.hostClientId = window.clientId;
     } else if (game.hostClientId === window.clientId) {
       // If you are the host, send the game state to the other player
@@ -175,12 +178,12 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
       // If client that just joined doesn't have an associated player, create
       // that player and add them to the game before sending out the game state
       // for other clients to load:
-      if (!player) {
-        const newPlayer = Player.create(o.clientThatChanged);
-        game.players.push(newPlayer);
-      } else {
-        Player.setClientConnected(player, true);
-      }
+      // if (!player) {
+      //   const newPlayer = Player.create(o.clientThatChanged);
+      //   game.players.push(newPlayer);
+      // } else {
+      //   Player.setClientConnected(player, true);
+      // }
       // Send game state to other player so they can load:
       window.pie.sendData({
         type: MESSAGE_TYPES.LOAD_GAME_STATE,
@@ -204,18 +207,6 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
       game.hostClientId = sortedClients[0];
     }
   }
-}
-
-export function makeGame(clients: string[]) {
-  // Sort clients to make sure they're always in the same order, regardless of
-  // what order they joined the game (client refreshes can change the order)
-  const sortedClients = clients.sort();
-  for (let i = 0; i < sortedClients.length; i++) {
-    const c = clients[i];
-    const p = Player.create(c);
-    game.players.push(p);
-  }
-  game.setGameState(game_state.Playing);
 }
 
 window.save = (title) => {
