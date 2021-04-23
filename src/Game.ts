@@ -687,7 +687,6 @@ export default class Game {
   setGameState(g: game_state) {
     this.state = g;
     const state = game_state[this.state];
-    const elBoard = document.getElementById('board');
     const elUpgradePicker = document.getElementById('upgrade-picker');
     elUpgradePicker && elUpgradePicker.classList.remove('active');
     switch (state) {
@@ -695,16 +694,10 @@ export default class Game {
         alert('GameOver');
         break;
       case 'Playing':
-        if (elBoard) {
-          elBoard.style.visibility = 'visible';
-        }
         // Set the first turn phase
         this.setTurnPhase(turn_phase.PlayerTurns);
         break;
       case 'Upgrade':
-        if (elBoard) {
-          elBoard.style.visibility = 'hidden';
-        }
         elUpgradePicker && elUpgradePicker.classList.add('active');
         const player = this.players.find((p) => p.clientId === window.clientId);
         if (player) {
@@ -723,9 +716,10 @@ export default class Game {
         }
         break;
       default:
-        if (elBoard) {
-          elBoard.style.visibility = 'hidden';
-        }
+        console.error(
+          `Cannot set gamestate. Game state ${game_state[g]} does not exist.`,
+        );
+        break;
     }
   }
 
