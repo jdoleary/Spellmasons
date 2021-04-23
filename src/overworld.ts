@@ -13,6 +13,7 @@ export interface ILevel {
 }
 export interface IOverworld {
   levels: ILevel[];
+  votes: { [clientId: string]: number };
 }
 const hardCodedLevelEnemies = [
   [0, 4],
@@ -34,14 +35,48 @@ export function getEnemiesForAltitude(altitude: number) {
 }
 export function voteForLevel(clientId: string, levelIndex: number) {
   console.log('voteForLevel', clientId, levelIndex);
-  chooseLevel(window.overworld.levels[levelIndex]);
+  const votes = window.overworld.votes;
+  votes[clientId] = levelIndex;
+  // Redraw overworld:
+  draw(window.overworld);
+  // If all players have voted:
+  if (Object.keys(votes).length == window.game.players.length) {
+    // Tally votes:
+    const tally = Object.entries(votes).reduce<{
+      [levelIndex: number]: number;
+    }>((tally, [clientId, levelIndex]) => {
+      if (!tally[levelIndex]) {
+        tally[levelIndex] = 0;
+      }
+      tally[levelIndex]++;
+      return tally;
+    }, {});
+    const levelWithMostVotes = Object.entries(tally).reduce<{
+      levelIndex: string;
+      votes: number;
+    }>(
+      (mostVotes, [index, votes]) => {
+        if (votes > mostVotes.votes) {
+          return { levelIndex: index, votes };
+        }
+        return mostVotes;
+      },
+      { levelIndex: '0', votes: 0 },
+    );
+    chooseLevel(
+      window.overworld.levels[parseInt(levelWithMostVotes.levelIndex, 10)],
+    );
+  }
 }
 function chooseLevel(level: ILevel) {
   window.game.moveToNextLevel(level);
+  // reset votes
+  window.overworld.votes = {};
 }
 export function generate(): IOverworld {
   const o: IOverworld = {
     levels: [],
+    votes: {},
   };
   // Generate diamond shape of locations
   for (let y = 0; y < OVERWORLD_HEIGHT; y++) {
@@ -65,10 +100,24 @@ export function generate(): IOverworld {
 }
 export function draw(o: IOverworld) {
   overworldGraphics.clear();
-  for (let l of o.levels) {
+  for (let i = 0; i < o.levels.length; i++) {
+    const l = o.levels[i];
     overworldGraphics.beginFill(0xffff0b, 0.5);
     overworldGraphics.lineStyle(3, 0x33ff00);
-    overworldGraphics.drawCircle(l.location.x, l.location.y, 10);
+    const { x, y } = l.location;
+    overworldGraphics.drawCircle(x, y, 10);
     overworldGraphics.endFill();
+    // Draw votes
+    const votesForThisLevel = Object.values(o.votes).reduce(
+      (total, levelIndex) => {
+        return total + (levelIndex === i ? 1 : 0);
+      },
+      0,
+    );
+    overworldGraphics.lineStyle(1, 0xff0000);
+    // Draw tick marks for each vote
+    for (let v = 0; v < votesForThisLevel; v++) {
+      overworldGraphics.drawRect(x + 3 * v, y - 10, 1, 20);
+    }
   }
 }
