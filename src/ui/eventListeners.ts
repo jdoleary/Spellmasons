@@ -110,15 +110,19 @@ export function clickHandlerOverworld(e: MouseEvent) {
     app.renderer.plugins.interaction.mouse.global,
   );
   let closestDist = Number.MAX_SAFE_INTEGER;
-  let closestLocation;
-  for (let location of window.overworld.locations) {
-    const dist = distance(mousePos, location);
+  let levelIndex;
+  for (let i = 0; i < window.overworld.levels.length; i++) {
+    const level = window.overworld.levels[i];
+    const dist = distance(mousePos, level.location);
     if (dist < closestDist) {
       closestDist = dist;
-      closestLocation = location;
+      levelIndex = i;
     }
   }
-  console.log('Overworld: you clicked location at', closestLocation);
+  window.pie.sendData({
+    type: MESSAGE_TYPES.VOTE_FOR_LEVEL,
+    levelIndex,
+  });
 }
 // Handle clicks on the game board
 export function clickHandler(e: MouseEvent) {

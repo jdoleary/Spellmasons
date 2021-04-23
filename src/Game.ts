@@ -22,8 +22,10 @@ import floatingText from './FloatingText';
 import { UnitType, Coords, Faction } from './commonTypes';
 import { createUpgradeElement, generateUpgrades } from './Upgrade';
 import Events from './Events';
-import { allUnits, generateHardCodedLevelEnemies } from './units';
+import { allUnits } from './units';
 import { updatePlanningView } from './ui/PlanningView';
+import { ILevel, getEnemiesForAltitude } from './overworld';
+import { setRoute, Route } from './routes';
 
 export enum game_state {
   Lobby,
@@ -68,11 +70,10 @@ export default class Game {
   units: Unit.IUnit[] = [];
   pickups: Pickup.IPickup[] = [];
   obstacles: Obstacle.IObstacle[] = [];
-  // The number of the current level
-  level = 1;
   secondsLeftForTurn: number = config.SECONDS_PER_TURN;
   turnInterval: any;
   hostClientId: string = '';
+  level?: ILevel;
   // A set of clientIds who have ended their turn
   // Being a Set prevents a user from ending their turn more than once
   endedTurn = new Set<string>();
@@ -170,7 +171,7 @@ export default class Game {
       return [];
     }
   }
-  moveToNextLevel() {
+  moveToNextLevel(level: ILevel) {
     // Reset the endedTurn set so both players can take turns again
     this.endedTurn.clear();
     for (let i = this.units.length - 1; i >= 0; i--) {
@@ -192,24 +193,24 @@ export default class Game {
     for (let o of this.obstacles) {
       Obstacle.remove(o);
     }
-    this.level++;
+    this.initLevel(level);
+    this.setGameState(game_state.Playing);
+  }
+
+  initLevel(level: ILevel) {
+    this.level = level;
     // Show text in center of screen for the new level
     floatingText({
       cell: {
         x: config.BOARD_WIDTH / 2 - 0.5,
         y: config.BOARD_HEIGHT / 2,
       },
-      text: `Level ${this.level}`,
+      text: `Altitude ${this.level.altitude}`,
       style: {
         fill: 'white',
         fontSize: '60px',
       },
     });
-    this.initLevel();
-    this.setGameState(game_state.Playing);
-  }
-
-  initLevel() {
     // Spawn portal
     const portalPickup = Pickup.specialPickups['portal.png'];
     Pickup.create(
@@ -224,7 +225,7 @@ export default class Game {
     );
     // Update level indicator UI at top of screen
     if (elLevelIndicator) {
-      elLevelIndicator.innerText = `Level ${this.level}`;
+      elLevelIndicator.innerText = `Altitude ${this.level.altitude}`;
     } else {
       console.error('elLevelIndicator is null');
     }
@@ -272,7 +273,7 @@ export default class Game {
       }
     }
     // Spawn units at the start of the level
-    const enemyIndexes = generateHardCodedLevelEnemies(this.level);
+    const enemyIndexes = getEnemiesForAltitude(level.altitude);
     for (let index of enemyIndexes) {
       const coords = this.getRandomEmptyCell({ xMin: 2 });
       if (coords) {
@@ -302,9 +303,13 @@ export default class Game {
         console.error('Unit not spawned due to no empty cells');
       }
     }
+
     // Since a new level changes the existing units, redraw the planningView in
     // the event that the planningView is active
     updatePlanningView();
+
+    // Go to underworld, now that level is ready
+    setRoute(Route.Underworld);
   }
   checkPickupCollisions(unit: Unit.IUnit) {
     for (let pu of this.pickups) {
@@ -434,7 +439,6 @@ export default class Game {
       (p) => p.clientConnected,
     ).length;
     if (this.choseUpgrade.size >= numberOfPlayersWhoNeedToChooseUpgradesTotal) {
-      this.moveToNextLevel();
       this.choseUpgrade.clear();
       if (elUpgradePickerLabel) {
         elUpgradePickerLabel.innerText = '';
@@ -446,6 +450,8 @@ export default class Game {
         } players left to pick upgrades`;
       }
     }
+    // Go to overworld now that upgrade is chosen
+    setRoute(Route.Overworld);
   }
   // Returns true if game is over
   checkForGameOver(): boolean {

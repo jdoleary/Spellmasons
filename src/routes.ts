@@ -39,6 +39,10 @@ export function setRoute(r: Route) {
   document.body.classList.add(`route-${Route[r]}`);
   route = r;
   addPixiContainersForRoute(r);
+
+  // Remove previous event listeners:
+  removeOverworldEventListeners();
+  removeUnderworldEventListeners();
   switch (r) {
     case Route.Menu:
       // Start monitoring with development overlay
@@ -65,7 +69,7 @@ export function setRoute(r: Route) {
           .catch(() => joinRoom({}))
           .then(() => console.log('You are now in the room'))
           .then(() => {
-            setRoute(Route.Underworld);
+            setRoute(Route.Overworld);
           })
           .catch((err: string) => console.error('Failed to join room', err));
       });
@@ -79,8 +83,8 @@ export function setRoute(r: Route) {
       window.overworld = overworld;
       Overworld.draw(overworld);
       // Align camera:
-      app.stage.x = app.stage.width / 2 - overworld.locations[0].x;
-      app.stage.y = app.stage.height - overworld.locations[0].y;
+      app.stage.x = app.stage.width / 2 - overworld.levels[0].location.x;
+      app.stage.y = app.stage.height - overworld.levels[0].location.y;
       addOverworldEventListeners();
 
       break;
@@ -92,7 +96,6 @@ export function setRoute(r: Route) {
       // Beating a level takes players from Underworld to Upgrade
       break;
     case Route.Upgrade:
-      removeUnderworldEventListeners();
       break;
   }
 }
@@ -104,6 +107,9 @@ elEndTurnBtn.addEventListener('click', endTurnBtnListener);
 function addOverworldEventListeners() {
   // Add keyboard shortcuts
   document.body.addEventListener('click', clickHandlerOverworld);
+}
+function removeOverworldEventListeners() {
+  document.body.removeEventListener('click', clickHandlerOverworld);
 }
 function addUnderworldEventListeners() {
   // Add keyboard shortcuts

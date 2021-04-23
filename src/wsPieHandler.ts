@@ -2,7 +2,6 @@ import type { ClientPresenceChangedArgs, OnDataArgs } from 'pie-client';
 import { MESSAGE_TYPES } from './MessageTypes';
 import { UnitType } from './commonTypes';
 import floatingText from './FloatingText';
-import { addSubSprite, removeSubSprite } from './Image';
 import { getUpgradeByTitle } from './Upgrade';
 import Game, { game_state, turn_phase } from './Game';
 import * as Player from './Player';
@@ -11,6 +10,7 @@ import * as Pickup from './Pickup';
 import * as Obstacle from './Obstacle';
 import * as Card from './CardUI';
 import { syncSpellEffectProjection } from './ui/PlanningView';
+import { voteForLevel } from './overworld';
 
 const messageLog: any[] = [];
 let clients: string[] = [];
@@ -22,7 +22,7 @@ export function onData(d: OnDataArgs) {
   // Temporarily for development
   messageLog.push(d);
 
-  const { payload } = d;
+  const { payload, fromClient } = d;
   const type: MESSAGE_TYPES = payload.type;
   switch (type) {
     case MESSAGE_TYPES.PING:
@@ -30,6 +30,9 @@ export function onData(d: OnDataArgs) {
         cell: payload,
         text: '🎈',
       });
+      break;
+    case MESSAGE_TYPES.VOTE_FOR_LEVEL:
+      voteForLevel(fromClient, payload.levelIndex);
       break;
     default:
       handleOnDataMessageSyncronously(d);
@@ -199,8 +202,6 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
 }
 
 export function makeGame(clients: string[]) {
-  // Initialize the first level
-  game.initLevel();
   // Sort clients to make sure they're always in the same order, regardless of
   // what order they joined the game (client refreshes can change the order)
   const sortedClients = clients.sort();

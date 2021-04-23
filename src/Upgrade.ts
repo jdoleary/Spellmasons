@@ -66,6 +66,8 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer) {
   desc.innerText = upgrade.description(player);
   elCardInner.appendChild(desc);
   element.addEventListener('click', (e) => {
+    // Prevent click from "falling through" upgrade and propagating to vote for overworld level
+    e.stopPropagation();
     window.pie.sendData({
       type: MESSAGE_TYPES.CHOOSE_UPGRADE,
       upgrade,
