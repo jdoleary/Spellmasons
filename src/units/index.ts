@@ -21,7 +21,10 @@ export interface UnitSource {
 }
 
 /// Units to register
-import user from './user';
+import manBlue from './manBlue';
+import ladyBlue from './ladyBlue';
+import manMohawk from './manMohawk';
+import jester from './jester';
 import grunt from './grunt';
 import archer from './archer';
 import sandGolem from './sandGolem';
@@ -43,7 +46,10 @@ export function registerUnits() {
   register(demon);
   register(priest);
   register(poisoner);
-  register(user);
+  register(manBlue);
+  register(ladyBlue);
+  register(manMohawk);
+  register(jester);
 }
 
 export const allUnits: { [id: string]: UnitSource } = {};

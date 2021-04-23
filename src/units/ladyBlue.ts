@@ -3,15 +3,15 @@ import { UnitSubType } from '../commonTypes';
 import { canInteractWithCell, action } from './actions/gruntAction';
 
 const unit: UnitSource = {
-  id: 'grunt',
+  id: 'ladyBlue',
   info: {
-    description: 'A basic grunt that will pursue enemies and hit them',
-    image: 'units/golem',
-    subtype: UnitSubType.AI_melee,
-    probability: 100,
+    description: '',
+    image: 'units/lady-blue.png',
+    subtype: UnitSubType.PLAYER_CONTROLLED,
+    probability: 0,
   },
+  // This is how a user unit would act if controlled by AI (this can happen if you clone yourself)
   action,
   canInteractWithCell,
 };
-
 export default unit;
