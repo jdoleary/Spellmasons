@@ -1,6 +1,10 @@
-- Allow keybind customization
-- What happens if you clone yourself? If you clone yourself, it makes copies but they don't move when you move
-- when using a public server, sometimes the ws connection will close. Fix wsPie so it will try to reconnect
+- Could I do without the external port checker and check from the current client via the external ip?
+- should unit.die cause player turn to end?
+  - or is it fine that this is handled after castCards?
+- Should ending turn always go over the network to prevent desyncs?
+- A way to change sprite without interrupting animations midway?
+- Rachel request: Support click and drag for queued cards
+- Brad request: Allow keybind customization
 - why does swap use Unit.setLocation but charge uses Unit.moveTo? Is there a bug here?
 - What about a prisoner AI that you can unleash, or traps that you can unlease in a line
 - keybinding common spells

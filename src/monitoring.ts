@@ -18,7 +18,7 @@ export function setupMonitoring() {
   stats.dom.classList.add('doob-stats');
   document.body.appendChild(stats.dom);
 
-  // Print aggressive due date for game!
+  // Print aggressive due date for game! (goal, deadline)
   console.log(
     `${Math.round(
       // @ts-ignore

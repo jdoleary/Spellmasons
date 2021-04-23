@@ -3,11 +3,9 @@
 - How could spells better interact?
   - Moreso than just updating targets?
 - Critical Path
-  - Gameplay Core (Due April 21, 2021)
-    - **Really polish synergies** (obstacle spell interactions, etc)
-      - Since spells need to be independent, maybe "freeze" can change any "pit"-type obstacle (water, void, lava) into a new obstacle (frozen water)? So that the spell isn't tied to the existance of obstacles?? or maybe it should be
-    - A way to change sprite without interrupting animations midway?
-    - Support hosting for external clients
+  - Gameplay Core 2
+    - Functional Overworld
+    - MVP Character Select
   - Gameplay Sprinkles
     - Should the board size scale over time as levels move on
     - **More creative, more difficult enemies**
@@ -27,7 +25,10 @@
     - WebsocketPie: Make clients receive their own messages immediately?
       - So that when a player is alone they can just keep clicking to move?
     - Art
+      - Pixel art tool
+        - [Aseprite](https://www.aseprite.org/)
       - Artists
+        - [DeviantArt](https://www.deviantart.com/topic/pixel-art)
         - https://www.fiverr.com/harsimarjit_
         - Rachel says look on instagram
         - [Reddit](https://www.reddit.com/r/PixelArt/comments/mvod6w/oc_my_first_speed_art_im_still_figuring_out_how/)

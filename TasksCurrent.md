@@ -1,7 +1,7 @@
 # Todo
 
-- Could I do without the external port checker and check from the current client via the external ip?
-- should unit.die cause player turn to end?
+- Support an Overworld between levels so players can choose where to go (and choose the difficulty). It makes the game feel like a journey and gives it a setting.
+- Change clone so that is clones all the targets once, rather than cloning one target as many times as there are empty targets
 
 ## 2021.04.22 Playtest with Brad
 
@@ -12,10 +12,7 @@
 ## 2021.04.21 Playtest with Rachel
 
 - Rachels screen was too small and the cards overlapped the grid
-- Support click and drag for queued cards
 - Rachel was frozen and I had taken my turn but it said "waiting on others"
-- A damage spell is out of order in my hand, ended up on the end
-  - This seems to happen right after I cast a single card, I get it back
 - my turns seem to be ending unexpecedly, i just poisoned a guy and i din'dt move
 
 - Rachel's Feedback
@@ -34,13 +31,8 @@
 
 ---
 
-- Support an Overworld between levels so players can choose where to go (and choose the difficulty). It makes the game feel like a journey and gives it a setting.
-
 - "Mind control" spell, changes their faction temporarily?
-- Change clone so that is clones all the targets once, rather than cloning one target as many times as there are empty targets
-- Make websockets respond immediately to the sender to reduce latency
 - Can players still resurrect after being obliterated??
-- Setup steam page
 - Allow some spells, like charge and swap, just interact with initial target?
 - Idea: A discard card that discards the following cards cast and gets you new cards
 
