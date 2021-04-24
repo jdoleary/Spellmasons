@@ -4,6 +4,7 @@ import { addPixiSprite } from './PixiUtils';
 import { normalizeRadians, cellToBoardCoords } from './math';
 import Subsprites from './Subsprites';
 import { animateIndependent } from './AnimationTimeline';
+import type { Coords } from './commonTypes';
 
 export interface IImage {
   // Not to be serialized
@@ -136,6 +137,14 @@ export function removeSubSprite(image: IImage, key: string) {
     // Remove from subSprites list
     image.subSprites = image.subSprites.filter((k) => k !== key);
   }
+}
+export function moveAbs(image: IImage, target: Coords) {
+  return animateIndependent([
+    {
+      sprite: image.sprite,
+      target,
+    },
+  ]);
 }
 export function move(image: IImage, cellX: number, cellY: number) {
   return animateIndependent([

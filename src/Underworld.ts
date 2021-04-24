@@ -134,6 +134,11 @@ export default class Underworld {
   }
   cleanup() {
     clearInterval(this.turnInterval);
+    for (let p of this.players) {
+      // Note: Player's unit is cleaned up  below where it also has a reference in this.units
+      // Clean up overworldImage
+      Image.cleanup(p.overworldImage);
+    }
     for (let u of this.units) {
       Image.cleanup(u.image);
     }
@@ -856,6 +861,7 @@ export default class Underworld {
       players: this.players.map((p) => ({
         ...p,
         unit: Unit.serializeUnit(p.unit),
+        overworldImage: Image.serialize(p.overworldImage),
       })),
       units: this.units.map(Unit.serializeUnit),
       pickups: this.pickups.map(Pickup.serialize),

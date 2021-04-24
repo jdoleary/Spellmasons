@@ -8,6 +8,8 @@ import * as math from './math';
 import { Coords, Faction, UnitType } from './commonTypes';
 import { allUnits } from './units';
 import { getClients } from './wsPieHandler';
+import { containerOverworld } from './PixiUtils';
+import { currentOverworldLocation } from './overworld';
 
 export interface IPlayer {
   // wsPie id
@@ -23,6 +25,7 @@ export interface IPlayer {
   // Cast range
   range: number;
   turnsPerCard: number;
+  overworldImage: Image.IImage;
 }
 export function isTargetInRange(player: IPlayer, target: Coords): boolean {
   if (player.unit) {
@@ -59,7 +62,19 @@ export function create(clientId: string, unitId: string): IPlayer {
     upgrades: [],
     range: config.PLAYER_CAST_RANGE,
     turnsPerCard: config.PLAYER_BASE_TURNS_PER_CARD,
+    overworldImage: Image.create(
+      0,
+      0,
+      userSource.info.image,
+      containerOverworld,
+    ),
   };
+  // Set position for player overworld image
+  // offset between player images:
+  const offset = window.underworld.players.length * 10;
+  player.overworldImage.sprite.x = currentOverworldLocation.x + offset;
+  player.overworldImage.sprite.y = currentOverworldLocation.y + offset;
+
   updateGlobalRefToCurrentClientPlayer(player);
   // Add cards to hand
   for (let i = 0; i < config.START_CARDS_COUNT; i++) {
@@ -69,6 +84,7 @@ export function create(clientId: string, unitId: string): IPlayer {
   addHighlighIfPlayerBelongsToCurrentClient(player);
   player.unit.health = PLAYER_BASE_HEALTH;
   player.unit.healthMax = PLAYER_BASE_HEALTH;
+
   return player;
 }
 export function checkForGetCardOnTurn(player: IPlayer) {
@@ -123,6 +139,7 @@ export function load(player: IPlayer) {
   const playerLoaded: IPlayer = {
     ...player,
     unit: Unit.load(player.unit),
+    overworldImage: Image.load(player.overworldImage, containerOverworld),
   };
   const clients = getClients();
   setClientConnected(playerLoaded, clients.includes(player.clientId));

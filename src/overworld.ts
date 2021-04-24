@@ -4,6 +4,7 @@ import {
   OVERWORLD_MAX_WIDTH,
   OVERWORLD_SPACING,
 } from './config';
+import * as Image from './Image';
 import { overworldGraphics } from './PixiUtils';
 
 export interface ILevel {
@@ -15,6 +16,7 @@ export interface IOverworld {
   levels: ILevel[];
   votes: { [clientId: string]: number };
 }
+export const currentOverworldLocation: Coords = { x: 0, y: 0 };
 const hardCodedLevelEnemies = [
   [0, 4],
   [0, 0, 0, 6],
@@ -69,9 +71,18 @@ export function voteForLevel(clientId: string, levelIndex: number) {
   }
 }
 function chooseLevel(level: ILevel) {
-  window.underworld.moveToNextLevel(level);
-  // reset votes
-  window.overworld.votes = {};
+  const promises = [];
+  for (let player of window.underworld.players) {
+    const image = player.overworldImage;
+    promises.push(Image.moveAbs(image, level.location));
+  }
+  Promise.all(promises).then(() => {
+    currentOverworldLocation.x = level.location.x;
+    currentOverworldLocation.y = level.location.y;
+    window.underworld.moveToNextLevel(level);
+    // reset votes
+    window.overworld.votes = {};
+  });
 }
 export function generate(): IOverworld {
   const o: IOverworld = {
