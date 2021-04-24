@@ -14,7 +14,6 @@
 
 ---
 
-- Can players still resurrect after being obliterated??
 - Allow some spells, like charge and swap, just interact with initial target?
 - Idea: A discard card that discards the following cards cast and gets you new cards
 

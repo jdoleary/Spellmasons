@@ -2,6 +2,7 @@ import * as Unit from '../Unit';
 import type { Spell } from '.';
 import { removePickup } from '../Pickup';
 import { remove } from '../Obstacle';
+import { UnitType } from '../commonTypes';
 
 const id = 'obliterate';
 const spell: Spell = {
@@ -19,8 +20,13 @@ Completely obliterates all targets.
       for (let target of state.targets) {
         const unit = window.underworld.getUnitAt(target);
         if (unit) {
-          unit.alive = false;
-          Unit.cleanup(unit);
+          Unit.die(unit);
+          if (unit.unitType === UnitType.PLAYER_CONTROLLED) {
+            // Image.setPosition(unit.image, -10000, -10000);
+            Unit.setLocation(unit, { x: NaN, y: NaN });
+          } else {
+            Unit.cleanup(unit);
+          }
         }
         const pickup = window.underworld.getPickupAt(target);
         if (pickup) {
