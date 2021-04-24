@@ -1,9 +1,11 @@
-import type * as Unit from '../Unit';
+import * as Unit from '../Unit';
 import type { UnitSource } from './index';
-import { UnitSubType } from '../commonTypes';
+import { Coords, UnitSubType } from '../commonTypes';
 import createVisualProjectile from '../Projectile';
-import floatingText from '../FloatingText';
+import * as math from '../math';
+import * as poison from '../cards/poison';
 
+const range = 3;
 const unit: UnitSource = {
   id: 'Poisoner',
   info: {
@@ -21,17 +23,24 @@ const unit: UnitSource = {
     );
     if (nonPoisonedEnemyUnits.length) {
       const chosenUnit = nonPoisonedEnemyUnits[0];
-      createVisualProjectile(
-        unit,
-        chosenUnit.x,
-        chosenUnit.y,
-        'green-thing.png',
-      );
-      floatingText({
-        cell: chosenUnit,
-        text: 'TODO poison!',
-      });
+      const moveTo = Unit.findCellOneStepCloserTo(unit, chosenUnit);
+      unit.intendedNextMove = moveTo;
+      if (inRange(unit, chosenUnit)) {
+        createVisualProjectile(
+          unit,
+          chosenUnit.x,
+          chosenUnit.y,
+          'green-thing.png',
+        );
+        poison.add(chosenUnit);
+      }
     }
   },
+  canInteractWithCell: (unit, x, y) => {
+    return inRange(unit, { x, y });
+  },
 };
+function inRange(unit: Unit.IUnit, coords: Coords): boolean {
+  return math.distance(unit, coords) <= range;
+}
 export default unit;

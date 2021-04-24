@@ -21,18 +21,10 @@ export async function action(unit: Unit.IUnit) {
     );
     await Unit.takeDamage(closestEnemy, unit.damage);
   } else {
-    const path = window.underworld.findPath(unit, closestEnemy);
-    if (path && path.length >= 2) {
-      // 0 index is the current coordinates, so 1 is the next coordinates to move to
-      const [next_x, next_y] = path[1];
-
-      if (next_x !== undefined && next_y !== undefined) {
-        // set move intention
-        unit.intendedNextMove = { x: next_x, y: next_y };
-      }
-      // Update the "planning view" overlay that shows the unit's agro radius
-      Unit.updateSelectedOverlay(unit);
-    }
+    const moveTo = Unit.findCellOneStepCloserTo(unit, closestEnemy);
+    unit.intendedNextMove = moveTo;
+    // Update the "planning view" overlay that shows the unit's agro radius
+    Unit.updateSelectedOverlay(unit);
   }
 }
 

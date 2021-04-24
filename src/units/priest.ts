@@ -20,6 +20,13 @@ const unit: UnitSource = {
     if (closestAlly) {
       const moveTo = Unit.findCellOneStepCloserTo(unit, closestAlly);
       unit.intendedNextMove = moveTo;
+    } else {
+      // flee from closest enemey
+      const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit);
+      if (closestEnemy) {
+        const moveTo = math.oneCellAwayFromCell(unit, closestEnemy);
+        unit.intendedNextMove = moveTo;
+      }
     }
     // Heal an ally
     const damagedAllys = window.underworld.units.filter(
