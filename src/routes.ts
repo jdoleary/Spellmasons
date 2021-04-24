@@ -47,8 +47,8 @@ export function setRoute(r: Route) {
       window.overworld = overworld;
       Overworld.draw(overworld);
       // Align camera:
-      app.stage.x = app.stage.width / 2 - overworld.levels[0].location.x;
-      app.stage.y = app.stage.height - overworld.levels[0].location.y;
+      app.stage.x = window.innerWidth / 2 - overworld.levels[0].location.x;
+      app.stage.y = window.innerHeight;
       addOverworldEventListeners();
 
       break;

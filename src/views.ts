@@ -1,4 +1,5 @@
 import {
+  app,
   setupPixi,
   containerCharacterSelect,
   addPixiContainersForView,
@@ -11,7 +12,6 @@ import { setupMonitoring } from './monitoring';
 import { UnitSubType } from './commonTypes';
 import { MESSAGE_TYPES } from './MessageTypes';
 import * as Image from './Image';
-import { Route, setRoute } from './routes';
 import { initPlanningView } from './ui/PlanningView';
 
 // A view is not shared between players in the same game, a player could choose any view at any time
@@ -56,6 +56,8 @@ export function setView(v: View) {
       });
       break;
     case View.CharacterSelect:
+      app.stage.x = window.innerWidth / 2;
+      app.stage.y = window.innerHeight / 2;
       // Host or join a game brings client to Character select
       Object.values(Units.allUnits)
         .filter(
