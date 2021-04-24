@@ -28,7 +28,7 @@ if the target is on the same horizontal or vertical axis as the caster.
       if (window.underworld.isCellObstructed(originalTarget)) {
         return state;
       }
-      let moveLocation: Coords = originalTarget;
+      let moveLocation: Coords | undefined;
       // Find closest non-blocked cell between those points to move to
       if (state.caster.unit.y == originalTarget.y) {
         if (state.caster.unit.x >= originalTarget.x) {
@@ -72,10 +72,12 @@ if the target is on the same horizontal or vertical axis as the caster.
           }
         }
       }
-      if (dryRun) {
-        drawSwapLine(caster.unit, moveLocation);
-      } else {
-        Unit.setLocation(caster.unit, moveLocation);
+      if (moveLocation) {
+        if (dryRun) {
+          drawSwapLine(caster.unit, moveLocation);
+        } else {
+          Unit.setLocation(caster.unit, moveLocation);
+        }
       }
       return state;
     },

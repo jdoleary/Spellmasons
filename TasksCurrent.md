@@ -60,5 +60,4 @@
 
 ## Spell bugs:
 
-- charge green line doesn't work right if unit is in the way
 - Rachel says she moved twice after being frozen
