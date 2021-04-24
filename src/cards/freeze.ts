@@ -39,6 +39,12 @@ Freezes the target(s) for 1 turn, preventing them from moving or acting.
       if (unit.modifiers[id] && unit.modifiers[id].turnsLeft <= 0) {
         Unit.removeModifier(unit, id);
       }
+      // Ensure that the unit cannot move when frozen
+      // (even when players' turns are ended they can still act so long
+      // as it is underworld.turn_phase === turn_phase.PlayerTurns, this is because all players act simultaneously
+      // during that phase, so setting unit.thisTurnMoved = true prevents players from moving when they are frozen)
+      // and then returning true also ends their turn.
+      unit.thisTurnMoved = true;
       // Abort turn
       return true;
     },

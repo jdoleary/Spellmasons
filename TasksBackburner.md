@@ -1,3 +1,4 @@
+- Frozen players can still cast, they just can't move
 - Rachel's Feedback
   - Multiplayer is awesome
   - She loves stacking the spells

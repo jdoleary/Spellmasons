@@ -43,7 +43,3 @@
   - Swapping doesn't work with cards, the player picks them up
 - Protection doesn't SHOW target being removed because target drawing is additive right now
   - Bug-ish: If you cast, "AOE, damage, protection" it will damage you before the protection removes the target, but Spell Projection doesn't show that
-
-## Spell bugs:
-
-- Rachel says she moved twice after being frozen
