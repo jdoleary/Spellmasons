@@ -33,7 +33,7 @@ export function isTargetInRange(player: IPlayer, target: Coords): boolean {
 }
 export function create(clientId: string, unitId: string): IPlayer {
   // limit spawn to the leftmost column
-  const coords = window.game.getRandomEmptyCell({ xMax: 0 });
+  const coords = window.underworld.getRandomEmptyCell({ xMax: 0 });
   const userSource = allUnits[unitId];
   if (!userSource) {
     throw new Error(
@@ -72,7 +72,10 @@ export function create(clientId: string, unitId: string): IPlayer {
   return player;
 }
 export function checkForGetCardOnTurn(player: IPlayer) {
-  if (!player.inPortal && window.game.turn_number % player.turnsPerCard === 0) {
+  if (
+    !player.inPortal &&
+    window.underworld.turn_number % player.turnsPerCard === 0
+  ) {
     const card = CardUI.generateCard();
     CardUI.addCardToHand(card, player);
     console.log('You got a card!', card.id);
@@ -100,7 +103,7 @@ export function resetPlayerForNextLevel(player: IPlayer) {
 
   // Return to a spawn location
   // limit spawn to the leftmost column
-  const coords = window.game.getRandomEmptyCell({ xMax: 0 });
+  const coords = window.underworld.getRandomEmptyCell({ xMax: 0 });
   Unit.setLocation(player.unit, coords);
 }
 // Keep a global reference to the current client's player
@@ -150,7 +153,7 @@ export function enterPortal(player: IPlayer) {
   // Move "portaled" unit out of the way to prevent collisions and chaining while portaled
   Unit.setLocation(player.unit, { x: NaN, y: NaN });
   // Entering the portal ends the player's turn
-  window.game.endPlayerTurn(player.clientId);
+  window.underworld.endPlayerTurn(player.clientId);
 }
 // Note: this is also used for AI targeting to ensure that AI don't target disabled plaeyrs
 export function ableToTakeTurn(player: IPlayer) {

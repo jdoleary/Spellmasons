@@ -3,7 +3,7 @@ import { MESSAGE_TYPES } from './MessageTypes';
 import { UnitType } from './commonTypes';
 import floatingText from './FloatingText';
 import { getUpgradeByTitle } from './Upgrade';
-import Game, { turn_phase } from './Game';
+import Underworld, { turn_phase } from './Underworld';
 import * as Player from './Player';
 import * as Unit from './Unit';
 import * as Pickup from './Pickup';
@@ -15,9 +15,9 @@ import { setRoute, Route } from './routes';
 
 const messageLog: any[] = [];
 let clients: string[] = [];
-let game: Game;
-export function initializeGameObject() {
-  game = new Game(Math.random().toString());
+let underworld: Underworld;
+export function initializeUnderworld() {
+  underworld = new Underworld(Math.random().toString());
 }
 export function onData(d: OnDataArgs) {
   // Temporarily for development
@@ -37,9 +37,9 @@ export function onData(d: OnDataArgs) {
       break;
     case MESSAGE_TYPES.SELECT_CHARACTER:
       // If player doesn't already exist, make them
-      if (!game.players.find((p) => p.clientId === fromClient)) {
+      if (!underworld.players.find((p) => p.clientId === fromClient)) {
         const p = Player.create(fromClient, payload.unitId);
-        game.players.push(p);
+        underworld.players.push(p);
         setRoute(Route.Overworld);
       }
       break;
@@ -72,31 +72,31 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
   const { payload, fromClient } = d;
   const type: MESSAGE_TYPES = payload.type;
   // Get caster
-  const caster = game.players.find((p) => p.clientId === fromClient);
+  const caster = underworld.players.find((p) => p.clientId === fromClient);
   switch (type) {
     case MESSAGE_TYPES.LOAD_GAME_STATE:
       // Clean up old game state
-      if (game) {
-        game.cleanup();
+      if (underworld) {
+        underworld.cleanup();
       }
       // Resume game / load game / rejoin game
-      const loadedGameState: Game = { ...payload.game };
-      game = new Game(loadedGameState.seed);
-      game.level = loadedGameState.level;
-      game.secondsLeftForTurn = loadedGameState.secondsLeftForTurn;
-      game.hostClientId = loadedGameState.hostClientId;
+      const loadedGameState: Underworld = { ...payload.underworld };
+      underworld = new Underworld(loadedGameState.seed);
+      underworld.level = loadedGameState.level;
+      underworld.secondsLeftForTurn = loadedGameState.secondsLeftForTurn;
+      underworld.hostClientId = loadedGameState.hostClientId;
       // Load all units that are not player's, those will be loaded indepentently
-      game.units = loadedGameState.units
+      underworld.units = loadedGameState.units
         .filter((u) => u.unitType !== UnitType.PLAYER_CONTROLLED)
         .map(Unit.load);
-      game.players = loadedGameState.players.map(Player.load);
-      game.pickups = loadedGameState.pickups.map(Pickup.load);
-      game.obstacles = loadedGameState.obstacles.map(Obstacle.load);
+      underworld.players = loadedGameState.players.map(Player.load);
+      underworld.pickups = loadedGameState.pickups.map(Pickup.load);
+      underworld.obstacles = loadedGameState.obstacles.map(Obstacle.load);
       break;
     case MESSAGE_TYPES.MOVE_PLAYER:
       if (caster) {
         await Unit.moveTo(caster.unit, payload).then(() => {
-          game.endPlayerTurn(caster.clientId);
+          underworld.endPlayerTurn(caster.clientId);
         });
       } else {
         console.error('Cannot move player, caster does not exist');
@@ -112,7 +112,7 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
     case MESSAGE_TYPES.CHOOSE_UPGRADE:
       const upgrade = getUpgradeByTitle(payload.upgrade.title);
       if (caster && upgrade) {
-        game.chooseUpgrade(caster, upgrade);
+        underworld.chooseUpgrade(caster, upgrade);
       } else {
         console.error(
           'Cannot choose upgrade, either the caster or upgrade does not exist',
@@ -123,7 +123,7 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       break;
     case MESSAGE_TYPES.END_TURN:
       if (caster) {
-        game.endPlayerTurn(caster.clientId);
+        underworld.endPlayerTurn(caster.clientId);
       } else {
         console.error('Unable to end turn because caster is undefined');
       }
@@ -137,9 +137,9 @@ async function handleSpell(caster: Player.IPlayer, payload: any) {
   }
   Card.removeCardsFromHand(caster, payload.cards);
   // Only allow casting during the PlayerTurns phase
-  if (game.turn_phase === turn_phase.PlayerTurns) {
+  if (underworld.turn_phase === turn_phase.PlayerTurns) {
     window.animatingSpells = true;
-    await game.castCards(caster, payload.cards, payload, false);
+    await underworld.castCards(caster, payload.cards, payload, false);
     window.animatingSpells = false;
     // When spells are done animating but the mouse hasn't moved,
     // syncSpellEffectProjection needs to be called so that the icon ("footprints" for example)
@@ -147,10 +147,10 @@ async function handleSpell(caster: Player.IPlayer, payload: any) {
     syncSpellEffectProjection();
     // Check for dead players to end their turn,
     // this occurs here because spells may have caused their death
-    for (let p of game.players) {
+    for (let p of underworld.players) {
       // If a player's unit is dead, end their turn
       if (!p.unit.alive) {
-        game.endPlayerTurn(p.clientId);
+        underworld.endPlayerTurn(p.clientId);
       }
     }
   } else {
@@ -164,13 +164,15 @@ export function getClients(): string[] {
 export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
   console.log('clientPresenceChanged', o);
   clients = o.clients;
-  const player = game.players.find((p) => p.clientId === o.clientThatChanged);
+  const player = underworld.players.find(
+    (p) => p.clientId === o.clientThatChanged,
+  );
   // Client joined
   if (o.present) {
     if (clients.length === 1) {
       // if you are the only client, set yourself as the host
-      game.hostClientId = window.clientId;
-    } else if (game.hostClientId === window.clientId) {
+      underworld.hostClientId = window.clientId;
+    } else if (underworld.hostClientId === window.clientId) {
       // If you are the host, send the game state to the other player
       // who just joined
       // --
@@ -186,24 +188,24 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
       // Send game state to other player so they can load:
       window.pie.sendData({
         type: MESSAGE_TYPES.LOAD_GAME_STATE,
-        game: game.sanitizeForSaving(),
+        game: underworld.sanitizeForSaving(),
       });
     }
   } else {
     // client left
     if (player) {
       Player.setClientConnected(player, false);
-      game.endPlayerTurn(player.clientId);
+      underworld.endPlayerTurn(player.clientId);
     } else {
       console.error('Cannot disconnect player that is undefined');
     }
 
     // if host left
-    if (o.clientThatChanged === game.hostClientId) {
+    if (o.clientThatChanged === underworld.hostClientId) {
       console.log('host left');
       // Set host to the 0th client that is still connected
       const sortedClients = o.clients.sort();
-      game.hostClientId = sortedClients[0];
+      underworld.hostClientId = sortedClients[0];
     }
   }
 }
@@ -211,7 +213,7 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
 window.save = (title) => {
   localStorage.setItem(
     'golems-save-' + title,
-    JSON.stringify(window.game.sanitizeForSaving()),
+    JSON.stringify(window.underworld.sanitizeForSaving()),
   );
 };
 window.load = (title) => {
@@ -233,7 +235,7 @@ window.replay = (title: string) => {
   const messages = JSON.parse(localStorage.getItem('golems-' + title) || '');
   for (let i = 0; i < messages.length; i++) {
     const message = messages[i];
-    message.fromClient = game.players[0].clientId;
+    message.fromClient = underworld.players[0].clientId;
     onData(message);
   }
 };

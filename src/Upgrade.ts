@@ -18,7 +18,9 @@ export function generateUpgrades(player: IPlayer): IUpgrade[] {
     return [...upgradeSourceWhenDead];
   }
   let upgrades: IUpgrade[] = [];
-  const random = makeSeededRandom(`${window.clientId}-${window.game.level}`);
+  const random = makeSeededRandom(
+    `${window.clientId}-${window.underworld.level}`,
+  );
   // Clone upgrades for later mutation
   const clonedUpgradeSource = [...upgradeSource].filter((u) =>
     u.maxCopies === undefined

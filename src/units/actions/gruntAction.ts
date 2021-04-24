@@ -21,7 +21,7 @@ export async function action(unit: Unit.IUnit) {
     );
     await Unit.takeDamage(closestEnemy, unit.damage);
   } else {
-    const path = window.game.findPath(unit, closestEnemy);
+    const path = window.underworld.findPath(unit, closestEnemy);
     if (path && path.length >= 2) {
       // 0 index is the current coordinates, so 1 is the next coordinates to move to
       const [next_x, next_y] = path[1];

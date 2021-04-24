@@ -51,7 +51,7 @@ export function create(
   // Start images small and make them grow when they spawn in
   self.image.sprite.scale.set(0.0);
   Image.scale(self.image, 1.0);
-  window.game.addPickupToArray(self);
+  window.underworld.addPickupToArray(self);
 
   return self;
 }
@@ -92,10 +92,10 @@ export function load(pickup: IPickup) {
 }
 export function removePickup(pickup: IPickup) {
   Image.cleanup(pickup.image);
-  window.game.removePickupFromArray(pickup);
+  window.underworld.removePickupFromArray(pickup);
 }
 export function triggerPickup(pickup: IPickup, unit: IUnit) {
-  const player = window.game.players.find((p) => p.unit === unit);
+  const player = window.underworld.players.find((p) => p.unit === unit);
   if (pickup.playerOnly && !player) {
     // If pickup is playerOnly, do not trigger if a player is not the one triggering it
     return;

@@ -6,7 +6,7 @@ import { BOARD_HEIGHT, BOARD_WIDTH, CELL_SIZE } from '../config';
 import { containerPlanningView } from '../PixiUtils';
 import { Coords, Faction, UnitSubType, UnitType } from '../commonTypes';
 import { getCurrentMouseCellOnGrid } from './eventListeners';
-import { turn_phase } from '../Game';
+import { turn_phase } from '../Underworld';
 import * as CardUI from '../CardUI';
 import * as config from '../config';
 import * as Image from '../Image';
@@ -23,7 +23,7 @@ export function setPlanningView(active: boolean) {
   window.planningViewActive = active;
   if (window.planningViewActive) {
     updatePlanningView();
-    window.game.units.forEach((u) => {
+    window.underworld.units.forEach((u) => {
       // "Select" living units, this shows their overlay for planning purposes
       if (u.alive) {
         Unit.select(u);
@@ -31,7 +31,7 @@ export function setPlanningView(active: boolean) {
     });
   } else {
     planningViewGraphics.clear();
-    window.game.units.forEach((u) => Unit.deselect(u));
+    window.underworld.units.forEach((u) => Unit.deselect(u));
   }
 }
 
@@ -45,7 +45,7 @@ export function updatePlanningView() {
     for (let x = 0; x < config.BOARD_WIDTH; x++) {
       for (let y = 0; y < config.BOARD_HEIGHT; y++) {
         // for each unit...
-        for (let unit of window.game.units) {
+        for (let unit of window.underworld.units) {
           if (
             unit.alive &&
             unit.unitType === UnitType.AI &&
@@ -98,14 +98,14 @@ export async function syncSpellEffectProjection() {
     return;
   }
   // only show hover target when it's the correct turn phase
-  if (window.game.turn_phase == turn_phase.PlayerTurns) {
+  if (window.underworld.turn_phase == turn_phase.PlayerTurns) {
     // If mouse hovering over a new cell, update the target images
 
     if (!CardUI.areAnyCardsSelected()) {
       // Do not render if there are no cards selected meaning there is no spell
       return;
     }
-    const currentPlayer = window.game.players.find(
+    const currentPlayer = window.underworld.players.find(
       (p) => p.clientId === window.clientId,
     );
     if (currentPlayer) {
@@ -114,7 +114,7 @@ export async function syncSpellEffectProjection() {
         Image.create(mouseCell.x, mouseCell.y, 'deny.png', containerSpells);
       } else {
         // Dry run cast so the user can see what effect it's going to have
-        await window.game.castCards(
+        await window.underworld.castCards(
           currentPlayer,
           CardUI.getSelectedCards(),
           mouseCell,
@@ -193,11 +193,11 @@ export function updateTooltip() {
   // show info on cell, unit, pickup, etc clicked
   let text = '';
   // Find unit:
-  const unit = window.game.getUnitAt(mouseCell);
+  const unit = window.underworld.getUnitAt(mouseCell);
   if (unit) {
     let cards = '';
     if (unit.unitType === UnitType.PLAYER_CONTROLLED) {
-      const player = window.game.players.find((p) => p.unit === unit);
+      const player = window.underworld.players.find((p) => p.unit === unit);
       if (player) {
         cards =
           'Cards: \n' +
@@ -231,7 +231,7 @@ Modifiers ${JSON.stringify(unit.modifiers, null, 2)}
 ${cards}
         `;
   }
-  const pickup = window.game.getPickupAt(mouseCell);
+  const pickup = window.underworld.getPickupAt(mouseCell);
   if (pickup) {
     text += `\
 Pickup
@@ -239,7 +239,7 @@ ${pickup.name}
 ${pickup.description}
         `;
   }
-  const obstacle = window.game.getObstacleAt(mouseCell);
+  const obstacle = window.underworld.getObstacleAt(mouseCell);
   if (obstacle) {
     text += `\
 ${obstacle.name}

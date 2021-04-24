@@ -25,7 +25,7 @@ export function create(x: number, y: number, obstacle: IObstacleSource) {
   };
   self.image.sprite.scale.set(0.0);
   Image.scale(self.image, 1.0);
-  window.game.addObstacleToArray(self);
+  window.underworld.addObstacleToArray(self);
   return self;
 }
 // Reinitialize an obstacle from another obstacle object, this is used in loading game state after reconnect
@@ -34,7 +34,7 @@ export function load(o: IObstacle) {
 }
 export function remove(o: IObstacle) {
   Image.cleanup(o.image);
-  window.game.removeObstacleFromArray(o);
+  window.underworld.removeObstacleFromArray(o);
 }
 export function serialize(o: IObstacle) {
   return {

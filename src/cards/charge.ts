@@ -18,7 +18,7 @@ if the target is on the same horizontal or vertical axis as the caster.
       const { caster, targets } = state;
       const originalTarget = targets[0];
       // Charge does nothing if the target cell is obstructed
-      if (window.game.isCellObstructed(originalTarget)) {
+      if (window.underworld.isCellObstructed(originalTarget)) {
         return state;
       }
       let moveLocation: Coords = originalTarget;
@@ -27,7 +27,7 @@ if the target is on the same horizontal or vertical axis as the caster.
         if (state.caster.unit.x >= originalTarget.x) {
           for (let x = state.caster.unit.x - 1; x >= 0; x--) {
             const testLocation = { x, y: originalTarget.y };
-            if (!window.game.isCellObstructed(testLocation)) {
+            if (!window.underworld.isCellObstructed(testLocation)) {
               moveLocation = testLocation;
             } else {
               break;
@@ -36,7 +36,7 @@ if the target is on the same horizontal or vertical axis as the caster.
         } else {
           for (let x = state.caster.unit.x + 1; x <= BOARD_WIDTH; x++) {
             const testLocation = { x, y: originalTarget.y };
-            if (!window.game.isCellObstructed(testLocation)) {
+            if (!window.underworld.isCellObstructed(testLocation)) {
               moveLocation = testLocation;
             } else {
               break;
@@ -48,7 +48,7 @@ if the target is on the same horizontal or vertical axis as the caster.
         if (state.caster.unit.y >= originalTarget.y) {
           for (let y = state.caster.unit.y - 1; y >= 0; y--) {
             const testLocation = { x: originalTarget.x, y };
-            if (!window.game.isCellObstructed(testLocation)) {
+            if (!window.underworld.isCellObstructed(testLocation)) {
               moveLocation = testLocation;
             } else {
               break;
@@ -57,7 +57,7 @@ if the target is on the same horizontal or vertical axis as the caster.
         } else {
           for (let y = state.caster.unit.y + 1; y <= BOARD_WIDTH; y++) {
             const testLocation = { x: originalTarget.x, y };
-            if (!window.game.isCellObstructed(testLocation)) {
+            if (!window.underworld.isCellObstructed(testLocation)) {
               moveLocation = testLocation;
             } else {
               break;

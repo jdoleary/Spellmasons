@@ -20,11 +20,11 @@ Requires more than 1 target to work
         return state;
       }
       const sourceTarget = state.targets[0];
-      const unit = window.game.getUnitAt(sourceTarget);
-      const pickup = window.game.getPickupAt(sourceTarget);
-      const obstacle = window.game.getObstacleAt(sourceTarget);
+      const unit = window.underworld.getUnitAt(sourceTarget);
+      const pickup = window.underworld.getPickupAt(sourceTarget);
+      const obstacle = window.underworld.getObstacleAt(sourceTarget);
       for (let target of state.targets) {
-        if (!window.game.isCellEmpty(target)) {
+        if (!window.underworld.isCellEmpty(target)) {
           // Don't clone into non-empty cells
           continue;
         }

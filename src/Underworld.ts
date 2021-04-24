@@ -42,7 +42,7 @@ const elPlayerTurnIndicatorHolder = document.getElementById(
 const elPlayerTurnIndicator = document.getElementById('player-turn-indicator');
 const elTurnTimeRemaining = document.getElementById('turn-time-remaining');
 const elLevelIndicator = document.getElementById('level-indicator');
-export default class Game {
+export default class Underworld {
   seed: string;
   random: Random;
   turn_phase: turn_phase = turn_phase.PlayerTurns;
@@ -70,7 +70,7 @@ export default class Game {
   pfGrid: PF.Grid;
   pfFinder: PF.BiBestFirstFinder;
   constructor(seed: string) {
-    window.game = this;
+    window.underworld = this;
     this.seed = seed;
     this.random = makeSeededRandom(this.seed);
 
@@ -850,7 +850,7 @@ export default class Game {
   // Returns only the properties that can be saved
   // callbacks and complicated objects such as PIXI.Sprites
   // are removed
-  sanitizeForSaving(): Game {
+  sanitizeForSaving(): Underworld {
     return {
       ...this,
       players: this.players.map((p) => ({

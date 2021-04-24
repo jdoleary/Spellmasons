@@ -14,7 +14,7 @@ Resurrects a dead unit and converts them to the caster's faction.
         return state;
       }
       for (let target of state.targets) {
-        const dead_unit = window.game.units.find(
+        const dead_unit = window.underworld.units.find(
           (u) => !u.alive && u.x === target.x && u.y === target.y,
         );
         if (dead_unit) {

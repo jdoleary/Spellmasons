@@ -16,13 +16,15 @@ Freezes the target(s) for 1 turn, preventing them from moving or acting.
         return state;
       }
       for (let target of state.targets) {
-        const unit = window.game.getUnitAt(target);
+        const unit = window.underworld.getUnitAt(target);
         if (unit) {
           addTo(unit);
           if (unit.unitType === UnitType.PLAYER_CONTROLLED) {
-            const player = window.game.players.find((p) => p.unit === unit);
+            const player = window.underworld.players.find(
+              (p) => p.unit === unit,
+            );
             if (player) {
-              window.game.endPlayerTurn(player.clientId);
+              window.underworld.endPlayerTurn(player.clientId);
             }
           }
         }

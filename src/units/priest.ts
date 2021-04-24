@@ -22,7 +22,7 @@ const unit: UnitSource = {
       unit.intendedNextMove = moveTo;
     }
     // Heal an ally
-    const damagedAllys = window.game.units.filter(
+    const damagedAllys = window.underworld.units.filter(
       (u) => u.faction === unit.faction && u.alive && u.health < u.healthMax,
     );
     if (damagedAllys.length) {

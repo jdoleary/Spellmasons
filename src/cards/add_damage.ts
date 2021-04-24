@@ -16,7 +16,7 @@ Deals damage to all targets.
       }
       let promises = [];
       for (let target of state.targets) {
-        const unit = window.game.getUnitAt(target);
+        const unit = window.underworld.getUnitAt(target);
         if (unit) {
           const damage = 1;
           promises.push(Unit.takeDamage(unit, damage));

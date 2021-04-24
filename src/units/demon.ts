@@ -13,7 +13,7 @@ const unit: UnitSource = {
   },
   action: async (unit: Unit.IUnit) => {
     // Resurrect a dead unit
-    const deadAIs = window.game.units.filter(
+    const deadAIs = window.underworld.units.filter(
       (u) => u.unitType === UnitType.AI && !u.alive,
     );
     if (deadAIs.length) {
@@ -29,7 +29,7 @@ const unit: UnitSource = {
       Unit.changeFaction(deadUnit, unit.faction);
     }
     // Move randomly
-    const moveCoords = window.game.getRandomEmptyCell({ xMin: 2 });
+    const moveCoords = window.underworld.getRandomEmptyCell({ xMin: 2 });
     if (moveCoords) {
       unit.intendedNextMove = moveCoords;
     }

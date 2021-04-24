@@ -8,7 +8,7 @@ const spell: Spell = {
     probability: 10,
     description: 'Targets all the spaces directly around you',
     effect: async (state, dryRun) => {
-      let withinRadius = window.game.getCoordsWithinDistanceOfTarget(
+      let withinRadius = window.underworld.getCoordsWithinDistanceOfTarget(
         state.caster.unit.x,
         state.caster.unit.y,
         1,

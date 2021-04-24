@@ -1,5 +1,5 @@
 import { MESSAGE_TYPES } from '../MessageTypes';
-import { turn_phase } from '../Game';
+import { turn_phase } from '../Underworld';
 import * as CardUI from '../CardUI';
 import * as Player from '../Player';
 import * as Unit from '../Unit';
@@ -16,7 +16,7 @@ import { distance } from '../math';
 export function keydownListener(event: KeyboardEvent) {
   switch (event.code) {
     case 'Space':
-      window.game.endMyTurn();
+      window.underworld.endMyTurn();
       break;
     case 'KeyZ':
       setPlanningView(true);
@@ -44,7 +44,7 @@ export function keyupListener(event: KeyboardEvent) {
 }
 
 export function endTurnBtnListener() {
-  window.game.endMyTurn();
+  window.underworld.endMyTurn();
 }
 
 let mouseCell: Coords = { x: -1, y: -1 };
@@ -52,7 +52,7 @@ export function getCurrentMouseCellOnGrid(): Coords {
   return mouseCell;
 }
 export function mousemoveHandler(e: MouseEvent) {
-  const cell = window.game.getCellFromCurrentMousePos();
+  const cell = window.underworld.getCellFromCurrentMousePos();
   const didChange = mouseCell.x !== cell.x || mouseCell.y !== cell.y;
   // If mouse hovering over a new cell, update the target images
   if (didChange) {
@@ -65,14 +65,16 @@ export function mousemoveHandler(e: MouseEvent) {
 // Handle right click on game board
 export function contextmenuHandler(e: MouseEvent) {
   e.preventDefault();
-  const mouseTarget = window.game.getCellFromCurrentMousePos();
+  const mouseTarget = window.underworld.getCellFromCurrentMousePos();
   if (isOutOfBounds(mouseTarget)) {
     // Disallow click out of bounds
     return;
   }
-  if (window.game.turn_phase == turn_phase.PlayerTurns) {
+  if (window.underworld.turn_phase == turn_phase.PlayerTurns) {
     // Get current client's player
-    const selfPlayer: Player.IPlayer | undefined = window.game.players.find(
+    const selfPlayer:
+      | Player.IPlayer
+      | undefined = window.underworld.players.find(
       (p) => p.clientId === window.clientId,
     );
     // If player hasn't already moved this turn...
@@ -81,7 +83,7 @@ export function contextmenuHandler(e: MouseEvent) {
         selfPlayer.unit,
         mouseTarget,
       );
-      if (targetCell && !window.game.isCellObstructed(targetCell)) {
+      if (targetCell && !window.underworld.isCellObstructed(targetCell)) {
         window.pie.sendData({
           type: MESSAGE_TYPES.MOVE_PLAYER,
           // This formula clamps the diff to -1, 0 or 1
@@ -126,7 +128,7 @@ export function clickHandlerOverworld(e: MouseEvent) {
 }
 // Handle clicks on the game board
 export function clickHandler(e: MouseEvent) {
-  const mouseTarget = window.game.getCellFromCurrentMousePos();
+  const mouseTarget = window.underworld.getCellFromCurrentMousePos();
   if (isOutOfBounds(mouseTarget)) {
     // Disallow click out of bounds
     return;
@@ -142,9 +144,11 @@ export function clickHandler(e: MouseEvent) {
   // If a spell exists (based on the combination of cards selected)...
   if (CardUI.areAnyCardsSelected()) {
     // Only allow casting in the proper phase
-    if (window.game.turn_phase == turn_phase.PlayerTurns) {
+    if (window.underworld.turn_phase == turn_phase.PlayerTurns) {
       // Get current client's player
-      const selfPlayer: Player.IPlayer | undefined = window.game.players.find(
+      const selfPlayer:
+        | Player.IPlayer
+        | undefined = window.underworld.players.find(
         (p) => p.clientId === window.clientId,
       );
       // If the player casting is the current client player

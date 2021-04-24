@@ -26,18 +26,18 @@ Swaps the caster with the source target.
       const swapLocation = { x: target.x - dx, y: target.y - dy };
       // You cannot swap with a statically blocked cell
       if (
-        window.game.isCellStaticallyBlocked(swapLocation) ||
-        window.game.isCellStaticallyBlocked(target)
+        window.underworld.isCellStaticallyBlocked(swapLocation) ||
+        window.underworld.isCellStaticallyBlocked(target)
       ) {
         return state;
       }
       // The unit at the target location
-      const targetUnit = window.game.getUnitAt(target);
+      const targetUnit = window.underworld.getUnitAt(target);
       if (targetUnit) {
         swapUnits.push([targetUnit, swapLocation]);
       }
       // The pickup at the target location
-      const pickupAtTarget = window.game.getPickupAt(target);
+      const pickupAtTarget = window.underworld.getPickupAt(target);
       // Physically swap with pickups
       if (pickupAtTarget) {
         swapPickups.push([pickupAtTarget, swapLocation]);
@@ -47,12 +47,12 @@ Swaps the caster with the source target.
         !targets.find((t) => t.x === swapLocation.x && t.y === swapLocation.y)
       ) {
         // The unit at the location that the targetUnit will swap to
-        const swapUnit = window.game.getUnitAt(swapLocation);
+        const swapUnit = window.underworld.getUnitAt(swapLocation);
         if (swapUnit) {
           swapUnits.push([swapUnit, target]);
         }
         // The pickup at the swap location
-        const pickupAtSwap = window.game.getPickupAt(swapLocation);
+        const pickupAtSwap = window.underworld.getPickupAt(swapLocation);
 
         if (pickupAtSwap) {
           swapPickups.push([pickupAtSwap, target]);

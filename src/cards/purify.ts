@@ -15,7 +15,7 @@ Removes all curses from the target(s).
         return state;
       }
       for (let target of state.targets) {
-        const unit = window.game.getUnitAt(target);
+        const unit = window.underworld.getUnitAt(target);
         if (unit) {
           for (let [modifier, modifierProperties] of Object.entries(
             unit.modifiers,

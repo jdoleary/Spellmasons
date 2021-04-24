@@ -1,7 +1,7 @@
 import { Route, setRoute } from './routes';
 import AnimationTimeline from './AnimationTimeline';
 import type * as Player from './Player';
-import type Game from './Game';
+import type Underworld from './Underworld';
 import type { IOverworld } from './overworld';
 
 window.animationTimeline = new AnimationTimeline();
@@ -11,8 +11,7 @@ declare global {
   interface Window {
     latencyPanel: Stats.Panel;
     animationTimeline: AnimationTimeline;
-    // game contains the "underworld" game state
-    game: Game;
+    underworld: Underworld;
     overworld: IOverworld;
     // A reference to the player instance of the client playing on this instance
     player: Player.IPlayer;

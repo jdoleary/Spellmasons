@@ -20,8 +20,8 @@ const unit: UnitSource = {
     }
     // Summon unit
     // Every x number of tunrs
-    if (window.game.turn_number % 2 === 0) {
-      const coords = window.game.getRandomEmptyCell({ xMin: 2 });
+    if (window.underworld.turn_number % 2 === 0) {
+      const coords = window.underworld.getRandomEmptyCell({ xMin: 2 });
       if (coords) {
         const sourceUnit = allUnits.grunt;
         if (sourceUnit) {

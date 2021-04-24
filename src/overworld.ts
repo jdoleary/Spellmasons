@@ -40,7 +40,7 @@ export function voteForLevel(clientId: string, levelIndex: number) {
   // Redraw overworld:
   draw(window.overworld);
   // If all players have voted:
-  if (Object.keys(votes).length == window.game.players.length) {
+  if (Object.keys(votes).length == window.underworld.players.length) {
     // Tally votes:
     const tally = Object.entries(votes).reduce<{
       [levelIndex: number]: number;
@@ -69,7 +69,7 @@ export function voteForLevel(clientId: string, levelIndex: number) {
   }
 }
 function chooseLevel(level: ILevel) {
-  window.game.moveToNextLevel(level);
+  window.underworld.moveToNextLevel(level);
   // reset votes
   window.overworld.votes = {};
 }

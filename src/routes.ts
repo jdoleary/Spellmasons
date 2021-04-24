@@ -15,7 +15,7 @@ import {
 import * as Cards from './cards';
 import * as Units from './units';
 import * as Overworld from './overworld';
-import { initializeGameObject } from './wsPieHandler';
+import { initializeUnderworld } from './wsPieHandler';
 import { connect_to_wsPie_server, hostRoom, joinRoom } from './wsPieSetup';
 import { setupMonitoring } from './monitoring';
 import { app } from './PixiUtils';
@@ -23,7 +23,7 @@ import * as Image from './Image';
 import { BOARD_HEIGHT, BOARD_WIDTH, CELL_SIZE } from './config';
 import { UnitSubType } from './commonTypes';
 import { MESSAGE_TYPES } from './MessageTypes';
-import { turn_phase } from './Game';
+import { turn_phase } from './Underworld';
 import { createUpgradeElement, generateUpgrades } from './Upgrade';
 
 export enum Route {
@@ -71,7 +71,7 @@ export function setRoute(r: Route) {
         // Initialize Game Object
         // See makeGame function for where setup truly happens
         // This instantiation just spins up the instance of game
-        initializeGameObject();
+        initializeUnderworld();
         // ---
         // TEMP temporarily default to just entering a generic game for speed of development
         hostRoom({})
@@ -125,7 +125,7 @@ export function setRoute(r: Route) {
       break;
     case Route.Underworld:
       // Set the first turn phase
-      window.game.setTurnPhase(turn_phase.PlayerTurns);
+      window.underworld.setTurnPhase(turn_phase.PlayerTurns);
       // Align Camera: center the app in the middle of the board
       app.stage.x = app.renderer.width / 2 - (CELL_SIZE * BOARD_WIDTH) / 2;
       app.stage.y = app.renderer.height / 2 - (CELL_SIZE * BOARD_HEIGHT) / 2;
@@ -139,7 +139,7 @@ export function setRoute(r: Route) {
       );
       elUpgradePicker && elUpgradePicker.classList.remove('active');
       elUpgradePicker && elUpgradePicker.classList.add('active');
-      const player = window.game.players.find(
+      const player = window.underworld.players.find(
         (p) => p.clientId === window.clientId,
       );
       if (player) {

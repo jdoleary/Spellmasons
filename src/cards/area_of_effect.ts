@@ -13,7 +13,7 @@ by 1 grid cell in each direction.
     effect: async (state, dryRun) => {
       let updatedTargets = [...state.targets];
       for (let target of state.targets) {
-        const withinRadius = window.game.getCoordsWithinDistanceOfTarget(
+        const withinRadius = window.underworld.getCoordsWithinDistanceOfTarget(
           target.x,
           target.y,
           1,

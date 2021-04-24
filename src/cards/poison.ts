@@ -41,7 +41,7 @@ at the start of the unit's turn.
         return state;
       }
       for (let target of state.targets) {
-        const unit = window.game.getUnitAt(target);
+        const unit = window.underworld.getUnitAt(target);
         if (unit) {
           add(unit);
         }

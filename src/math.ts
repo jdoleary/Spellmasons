@@ -54,7 +54,7 @@ export function chooseObjectWithProbability<T extends objectWithProbability>(
     0,
   );
   // Choose random integer within the sum of all the probabilities
-  const roll = window.game.random.integer(0, maxProbability);
+  const roll = window.underworld.random.integer(0, maxProbability);
   let rollingLowerBound = 0;
   // Iterate each object and check if the roll is between the lower bound and the upper bound
   // which means that the current object would have been rolled

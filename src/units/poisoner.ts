@@ -13,7 +13,7 @@ const unit: UnitSource = {
     probability: 30,
   },
   action: async (unit: Unit.IUnit) => {
-    const nonPoisonedEnemyUnits = window.game.units.filter(
+    const nonPoisonedEnemyUnits = window.underworld.units.filter(
       (u) =>
         u.faction !== unit.faction &&
         u.alive &&

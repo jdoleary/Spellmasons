@@ -92,7 +92,7 @@ export function create(
   unit.image.scale = 0.8;
   unit.image.sprite.scale.set(unit.image.scale);
 
-  window.game.addUnitToArray(unit);
+  window.underworld.addUnitToArray(unit);
 
   return unit;
 }
@@ -148,7 +148,7 @@ export function load(unit: IUnit): IUnit {
       breakWords: true,
     }),
   };
-  window.game.addUnitToArray(loadedunit);
+  window.underworld.addUnitToArray(loadedunit);
   if (!loadedunit.alive) {
     die(loadedunit);
   }
@@ -165,7 +165,7 @@ export function serializeUnit(unit: IUnit) {
 }
 export function resurrect(unit: IUnit) {
   // Now that unit is alive again they take up space in the path
-  window.game.setWalkableAt(unit, false);
+  window.underworld.setWalkableAt(unit, false);
   Image.changeSprite(
     unit.image,
     addPixiSprite(unit.image.imageName, containerUnits),
@@ -176,7 +176,7 @@ export function resurrect(unit: IUnit) {
 }
 export function die(unit: IUnit) {
   // Ensure that corpses can be stepped on to be destroyed
-  window.game.setWalkableAt(unit, true);
+  window.underworld.setWalkableAt(unit, true);
   Image.changeSprite(
     unit.image,
     addPixiSprite('units/corpse.png', unit.image.sprite.parent),
@@ -239,7 +239,7 @@ export function findCellOneStepCloserTo(
   unit: IUnit,
   desiredCell: Coords,
 ): Coords | undefined {
-  const path = window.game.findPath(unit, desiredCell);
+  const path = window.underworld.findPath(unit, desiredCell);
   if (path && path.length >= 2) {
     const [x, y] = path[1];
     return { x, y };
@@ -249,11 +249,13 @@ export function findCellOneStepCloserTo(
   }
 }
 export function livingUnitsInDifferentFaction(unit: IUnit) {
-  return window.game.units.filter((u) => u.faction !== unit.faction && u.alive);
+  return window.underworld.units.filter(
+    (u) => u.faction !== unit.faction && u.alive,
+  );
 }
 export function livingUnitsInSameFaction(unit: IUnit) {
   // u !== unit excludes self from returning as the closest unit
-  return window.game.units.filter(
+  return window.underworld.units.filter(
     (u) => u !== unit && u.faction == unit.faction && u.alive,
   );
 }
@@ -287,7 +289,7 @@ export function moveTo(unit: IUnit, coordinates: Coords): Promise<void> {
     return Promise.resolve();
   }
   // Cannot move into an obstructed cell
-  if (window.game.isCellObstructed(coordinates)) {
+  if (window.underworld.isCellObstructed(coordinates)) {
     return Promise.resolve();
   }
   // Compose onMoveEvents
@@ -305,16 +307,16 @@ export function moveTo(unit: IUnit, coordinates: Coords): Promise<void> {
 // considering in-game blockers or changing any unit flags
 export function setLocation(unit: IUnit, coordinates: Coords): Promise<void> {
   // Set old location back to walkable
-  window.game.setWalkableAt(unit, true);
+  window.underworld.setWalkableAt(unit, true);
   // Set new location to not walkable
-  window.game.setWalkableAt(coordinates, false);
+  window.underworld.setWalkableAt(coordinates, false);
   // Set state instantly to new position
   unit.x = coordinates.x;
   unit.y = coordinates.y;
   // check for collisions with pickups in new location
-  window.game.checkPickupCollisions(unit);
+  window.underworld.checkPickupCollisions(unit);
   // check for collisions with corpses
-  window.game.handlePossibleCorpseCollision(unit);
+  window.underworld.handlePossibleCorpseCollision(unit);
   // Animate movement visually
   return Image.move(unit.image, unit.x, unit.y);
 }

@@ -17,7 +17,7 @@ Protects the target(s) from the next time they would take damage.
         return state;
       }
       for (let target of state.targets) {
-        const unit = window.game.getUnitAt(target);
+        const unit = window.underworld.getUnitAt(target);
         if (unit) {
           addTo(unit);
         }

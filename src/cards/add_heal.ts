@@ -15,7 +15,7 @@ Heals all targets (no greater than maximum health).
         return state;
       }
       for (let target of state.targets) {
-        const unit = window.game.getUnitAt(target);
+        const unit = window.underworld.getUnitAt(target);
         if (unit) {
           const damage = -1;
           Unit.takeDamage(unit, damage);

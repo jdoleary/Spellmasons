@@ -17,17 +17,17 @@ Completely obliterates all targets.
         return state;
       }
       for (let target of state.targets) {
-        const unit = window.game.getUnitAt(target);
+        const unit = window.underworld.getUnitAt(target);
         if (unit) {
           unit.alive = false;
           Unit.cleanup(unit);
         }
-        const pickup = window.game.getPickupAt(target);
+        const pickup = window.underworld.getPickupAt(target);
         if (pickup) {
           // TODO don't remove portal
           removePickup(pickup);
         }
-        const obstacle = window.game.getObstacleAt(target);
+        const obstacle = window.underworld.getObstacleAt(target);
         if (obstacle) {
           remove(obstacle);
         }

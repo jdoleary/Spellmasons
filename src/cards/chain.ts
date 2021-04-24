@@ -13,10 +13,10 @@ off of all existing targeted units to units touching them.
     effect: async (state, dryRun) => {
       let updatedTargets = [...state.targets];
       for (let target of state.targets) {
-        const unit = window.game.getUnitAt(target);
+        const unit = window.underworld.getUnitAt(target);
         if (unit) {
           // Find all units touching the spell origin
-          const chained_units = window.game.getTouchingUnitsRecursive(
+          const chained_units = window.underworld.getTouchingUnitsRecursive(
             target.x,
             target.y,
             updatedTargets,
