@@ -8,23 +8,18 @@
 
 ## 2021.04.21 Playtest with Rachel
 
-- Rachels screen was too small and the cards overlapped the grid
-- Rachel was frozen and I had taken my turn but it said "waiting on others"
+- Fixed now?
+  - Rachel was frozen and I had taken my turn but it said "waiting on others"
 - my turns seem to be ending unexpecedly, i just poisoned a guy and i din'dt move
 
 ---
 
-- Allow some spells, like charge and swap, just interact with initial target?
 - Idea: A discard card that discards the following cards cast and gets you new cards
 
 - Question for Brad: Should Protection protect any single ally? So that it can work for both players if you stack it?
   - stash: "protection stackable"
 - Question for Brad: Do you like charge and should it trigger pickups when it moves you?
   - Bug: Charge doesn't play well with AOE
-- Bug: Swapping with the portal while there was an enemy behind it swapped but made me disappear without triggering end of level (even though inPortal is true)
-  - Entering the portal doens't currently end my turn because movement does, and if you don't swap into the portal you have to move into it
-  - Maybe since there are more movement spells now, move spelling into the portal should end your turn.
-- Fixed?: We had some 3 disconnected players, brad killed me, destroyed my corpse and entered the portal and it entered an infinte loop
 
 ## Tasks
 

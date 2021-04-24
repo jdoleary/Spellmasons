@@ -1,3 +1,4 @@
+- Rachels screen was too small and the cards overlapped the grid
 - "Mind control" spell, changes their faction temporarily?
 - Protection doesn't SHOW target being removed because target drawing is additive right now
   - Bug-ish: If you cast, "AOE, damage, protection" it will damage you before the protection removes the target, but Spell Projection doesn't show that
