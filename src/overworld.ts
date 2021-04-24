@@ -41,8 +41,11 @@ export function voteForLevel(clientId: string, levelIndex: number) {
   votes[clientId] = levelIndex;
   // Redraw overworld:
   draw(window.overworld);
-  // If all players have voted:
-  if (Object.keys(votes).length == window.underworld.players.length) {
+  // If all connected players have voted:
+  if (
+    Object.keys(votes).length ==
+    window.underworld.players.filter((p) => p.clientConnected).length
+  ) {
     // Tally votes:
     const tally = Object.entries(votes).reduce<{
       [levelIndex: number]: number;
