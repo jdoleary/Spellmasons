@@ -3,9 +3,6 @@
 - How could spells better interact?
   - Moreso than just updating targets?
 - Critical Path
-  - Gameplay Core 2
-    - Functional Overworld
-    - MVP Character Select
   - Gameplay Sprinkles
     - Should the board size scale over time as levels move on
     - **More creative, more difficult enemies**

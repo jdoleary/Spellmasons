@@ -7,6 +7,7 @@
   - or is it fine that this is handled after castCards?
 - Should ending turn always go over the network to prevent desyncs?
 - A way to change sprite without interrupting animations midway?
+  - For example: This occurs when a unit dies while it's attacking
 - Rachel request: Support click and drag for queued cards
 - Brad request: Allow keybind customization
 - why does swap use Unit.setLocation but charge uses Unit.moveTo? Is there a bug here?
