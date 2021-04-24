@@ -92,6 +92,8 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       underworld.players = loadedGameState.players.map(Player.load);
       underworld.pickups = loadedGameState.pickups.map(Pickup.load);
       underworld.obstacles = loadedGameState.obstacles.map(Obstacle.load);
+      // Set route
+      setRoute(payload.route);
       break;
     case MESSAGE_TYPES.MOVE_PLAYER:
       if (caster) {
@@ -188,7 +190,8 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
       // Send game state to other player so they can load:
       window.pie.sendData({
         type: MESSAGE_TYPES.LOAD_GAME_STATE,
-        game: underworld.sanitizeForSaving(),
+        route: window.route,
+        underworld: underworld.sanitizeForSaving(),
       });
     }
   } else {
@@ -213,15 +216,20 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
 window.save = (title) => {
   localStorage.setItem(
     'golems-save-' + title,
-    JSON.stringify(window.underworld.sanitizeForSaving()),
+    JSON.stringify({
+      underworld: window.underworld.sanitizeForSaving(),
+      route: window.route,
+    }),
   );
 };
 window.load = (title) => {
-  const game = localStorage.getItem('golems-save-' + title);
-  if (game) {
+  const savedGameString = localStorage.getItem('golems-save-' + title);
+  if (savedGameString) {
+    const { underworld, route } = JSON.parse(savedGameString);
     window.pie.sendData({
       type: MESSAGE_TYPES.LOAD_GAME_STATE,
-      game: JSON.parse(game),
+      route,
+      underworld,
     });
   } else {
     console.error('no save game found with title', title);
