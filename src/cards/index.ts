@@ -28,6 +28,7 @@ import charge from './charge';
 import obliterate from './obliterate';
 import amplify from './amplify';
 import clone from './clone';
+import discard from './discard_cards';
 export interface Spell {
   card: ICard;
   // modifiers keep track of additional state on an individual unit basis
@@ -95,6 +96,7 @@ export function registerCards() {
   register(obliterate);
   register(amplify);
   register(clone);
+  register(discard);
 }
 
 // Guiding rules for designing spells:
