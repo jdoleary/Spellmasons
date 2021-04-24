@@ -1,3 +1,16 @@
+- Rachel's Feedback
+  - Multiplayer is awesome
+  - She loves stacking the spells
+  - Upgrades are a good way to balance the harder levels
+  - Doesn't see the point of lance
+    - Should it work diagonally?
+  - Slay the Spire style chests
+  - Make board bigger for more players?
+  - Two stage levels? Pull a level to reveal a portal
+    - trap doors? Environmental interactions
+      - Blow up a square to make it lava
+  - Only start timelimit if 2 of 3 players have ended their turn
+  - see save('cannotmovehere'), i couldn't move directly to my right or left after i killed the guy to my left, also one of the grunts wasn't moving
 - how to set pixi resolution?
 - Heavily test auto reconnect when pie gets disconnected
   - Prevent user input while reconnecting?
