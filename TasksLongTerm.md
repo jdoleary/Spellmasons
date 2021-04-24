@@ -48,6 +48,9 @@
   - Chores
     - Make executable with Electron
     - Include WebsocketPie and make hosting for friends simple
+  - [Steamworks Home](https://partner.steamgames.com/)
+  - [Steamworks Docs](https://partner.steamgames.com/doc/features/multiplayer/game_servers)
+  - Release beta and test for bugs before publishing
   - Publish via [Humble](https://www.humblebundle.com)
   - Publish via [Steamworks](https://partner.steamgames.com/steamdirect) / Itch.io
     - Trailer
