@@ -1,8 +1,5 @@
 # Todo
 
-- Support an Overworld between levels so players can choose where to go (and choose the difficulty). It makes the game feel like a journey and gives it a setting.
-- Change clone so that is clones all the targets once, rather than cloning one target as many times as there are empty targets
-
 ## 2021.04.22 Playtest with Brad
 
 - We desynced unit positions until brad finished his turn, then it synced back up (one included a new spawned unit from summoner)
