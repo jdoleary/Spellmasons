@@ -14,7 +14,6 @@
 
 ---
 
-- "Mind control" spell, changes their faction temporarily?
 - Can players still resurrect after being obliterated??
 - Allow some spells, like charge and swap, just interact with initial target?
 - Idea: A discard card that discards the following cards cast and gets you new cards
@@ -35,9 +34,6 @@
 
 ## bugs
 
-- Bug: Loading doesn't work if clientIds have changed reassigning clientIds
 - These bugs occurred while playtesting with Rachel but I haven't been able to reproduce myself
   - chain purify didn't work(didn't remove poison)
   - latency reported negative
-- Protection doesn't SHOW target being removed because target drawing is additive right now
-  - Bug-ish: If you cast, "AOE, damage, protection" it will damage you before the protection removes the target, but Spell Projection doesn't show that

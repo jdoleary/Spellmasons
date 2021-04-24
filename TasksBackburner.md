@@ -1,3 +1,7 @@
+- "Mind control" spell, changes their faction temporarily?
+- Protection doesn't SHOW target being removed because target drawing is additive right now
+  - Bug-ish: If you cast, "AOE, damage, protection" it will damage you before the protection removes the target, but Spell Projection doesn't show that
+- Bug: Loading doesn't work if clientIds have changed reassigning clientIds
 - Frozen players can still cast, they just can't move
 - Rachel's Feedback
   - Multiplayer is awesome
