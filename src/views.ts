@@ -52,9 +52,6 @@ export function setView(v: View) {
         hostRoom({})
           .catch(() => joinRoom({}))
           .then(() => console.log('You are now in the room'))
-          .then(() => {
-            setView(View.CharacterSelect);
-          })
           .catch((err: string) => console.error('Failed to join room', err));
       });
       break;

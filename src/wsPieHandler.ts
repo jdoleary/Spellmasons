@@ -12,6 +12,7 @@ import * as Card from './CardUI';
 import { syncSpellEffectProjection } from './ui/PlanningView';
 import { voteForLevel } from './overworld';
 import { setRoute, Route } from './routes';
+import { setView, View } from './views';
 
 const messageLog: any[] = [];
 let clients: string[] = [];
@@ -95,8 +96,16 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       underworld.players = loadedGameState.players.map(Player.load);
       underworld.pickups = loadedGameState.pickups.map(Pickup.load);
       underworld.obstacles = loadedGameState.obstacles.map(Obstacle.load);
-      // Set route
+      // Load route
       setRoute(payload.route);
+      // If current client already has a player... (meaning they disconnected and rejoined)
+      if (underworld.players.find((p) => p.clientId === window.clientId)) {
+        // go to game view
+        setView(View.Game);
+      } else {
+        // otherwise, go to character select
+        setView(View.CharacterSelect);
+      }
       break;
     case MESSAGE_TYPES.MOVE_PLAYER:
       if (caster) {
@@ -180,6 +189,7 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
       // Since the game was just created,
       // move the game to the Overworld
       setRoute(Route.Overworld);
+      setView(View.CharacterSelect);
     } else if (underworld.hostClientId === window.clientId) {
       // If you are the host, send the game state to the other player
       // who just joined
