@@ -39,7 +39,5 @@
 - These bugs occurred while playtesting with Rachel but I haven't been able to reproduce myself
   - chain purify didn't work(didn't remove poison)
   - latency reported negative
-- Fix swap
-  - Swapping doesn't work with cards, the player picks them up
 - Protection doesn't SHOW target being removed because target drawing is additive right now
   - Bug-ish: If you cast, "AOE, damage, protection" it will damage you before the protection removes the target, but Spell Projection doesn't show that

@@ -58,20 +58,20 @@ Swaps the caster with the source target.
           swapPickups.push([pickupAtSwap, target]);
         }
       }
-      for (let [unit, newLocation] of swapUnits) {
-        if (dryRun) {
-          drawSwapLine(unit, newLocation);
-        } else {
-          // Physically swap
-          Unit.setLocation(unit, newLocation);
-        }
-      }
       for (let [pickup, newLocation] of swapPickups) {
         if (dryRun) {
           drawSwapLine(pickup, newLocation);
         } else {
           // Physically swap
           Pickup.setPosition(pickup, newLocation.x, newLocation.y);
+        }
+      }
+      for (let [unit, newLocation] of swapUnits) {
+        if (dryRun) {
+          drawSwapLine(unit, newLocation);
+        } else {
+          // Physically swap
+          Unit.setLocation(unit, newLocation);
         }
       }
       return state;
