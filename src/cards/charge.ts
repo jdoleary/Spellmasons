@@ -9,7 +9,7 @@ const spell: Spell = {
   card: {
     id,
     thumbnail: 'charge.png',
-    probability: 30,
+    probability: 5,
     description: `
 Moves the caster in a straight line towards the initial target
 if the target is on the same horizontal or vertical axis as the caster.
@@ -17,6 +17,13 @@ if the target is on the same horizontal or vertical axis as the caster.
     effect: async (state, dryRun) => {
       const { caster, targets } = state;
       const originalTarget = targets[0];
+
+      const isOnSameHorizontal = originalTarget.x === caster.unit.x;
+      const isOnSameVertical = originalTarget.y === caster.unit.y;
+      if (!(isOnSameHorizontal || isOnSameVertical)) {
+        return state;
+      }
+
       // Charge does nothing if the target cell is obstructed
       if (window.underworld.isCellObstructed(originalTarget)) {
         return state;
