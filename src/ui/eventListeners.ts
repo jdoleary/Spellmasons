@@ -12,8 +12,13 @@ import {
 } from './PlanningView';
 import { app } from '../PixiUtils';
 import { distance } from '../math';
+import { View } from '../views';
 
 export function keydownListener(event: KeyboardEvent) {
+  // Only handle hotkeys when viewing the Game
+  if (window.view !== View.Game) {
+    return;
+  }
   switch (event.code) {
     case 'Space':
       window.underworld.endMyTurn();
@@ -32,6 +37,10 @@ export function keydownListener(event: KeyboardEvent) {
 }
 
 export function keyupListener(event: KeyboardEvent) {
+  // Only handle hotkeys when viewing the Game
+  if (window.view !== View.Game) {
+    return;
+  }
   switch (event.code) {
     case 'KeyZ':
       setPlanningView(false);
@@ -52,6 +61,10 @@ export function getCurrentMouseCellOnGrid(): Coords {
   return mouseCell;
 }
 export function mousemoveHandler(e: MouseEvent) {
+  // Only handle clicks when viewing the Game
+  if (window.view !== View.Game) {
+    return;
+  }
   const cell = window.underworld.getCellFromCurrentMousePos();
   const didChange = mouseCell.x !== cell.x || mouseCell.y !== cell.y;
   // If mouse hovering over a new cell, update the target images
@@ -64,6 +77,10 @@ export function mousemoveHandler(e: MouseEvent) {
 }
 // Handle right click on game board
 export function contextmenuHandler(e: MouseEvent) {
+  // Only handle clicks when viewing the Game
+  if (window.view !== View.Game) {
+    return;
+  }
   e.preventDefault();
   const mouseTarget = window.underworld.getCellFromCurrentMousePos();
   if (isOutOfBounds(mouseTarget)) {
@@ -108,6 +125,10 @@ export function contextmenuHandler(e: MouseEvent) {
   return false;
 }
 export function clickHandlerOverworld(e: MouseEvent) {
+  // Only handle overworld clicks when viewing the Game
+  if (window.view !== View.Game) {
+    return;
+  }
   const mousePos = app.stage.toLocal(
     app.renderer.plugins.interaction.mouse.global,
   );
@@ -128,6 +149,10 @@ export function clickHandlerOverworld(e: MouseEvent) {
 }
 // Handle clicks on the game board
 export function clickHandler(e: MouseEvent) {
+  // Only handle clicks when viewing the Game
+  if (window.view !== View.Game) {
+    return;
+  }
   const mouseTarget = window.underworld.getCellFromCurrentMousePos();
   if (isOutOfBounds(mouseTarget)) {
     // Disallow click out of bounds
