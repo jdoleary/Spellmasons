@@ -62,9 +62,6 @@ export default class Underworld {
   turnInterval: any;
   hostClientId: string = '';
   level?: ILevel;
-  // A set of clientIds who have ended their turn
-  // Being a Set prevents a user from ending their turn more than once
-  endedTurn = new Set<string>();
   choseUpgrade = new Set<string>();
 
   pfGrid: PF.Grid;
@@ -164,8 +161,8 @@ export default class Underworld {
     }
   }
   moveToNextLevel(level: ILevel) {
-    // Reset the endedTurn set so both players can take turns again
-    this.endedTurn.clear();
+    // Reset the endedTurn flag so all players can take turns again
+    this.players.forEach((p) => (p.endedTurn = false));
     for (let i = this.units.length - 1; i >= 0; i--) {
       const u = this.units[i];
       // Clear all remaining AI units
@@ -331,9 +328,7 @@ export default class Underworld {
       // If all players that have taken turns, then...
       // (Players who CANT take turns have their turn ended automatically)
       if (
-        this.players
-          .filter(Player.ableToTakeTurn)
-          .every((p) => this.endedTurn.has(p.clientId))
+        this.players.filter(Player.ableToTakeTurn).every((p) => p.endedTurn)
       ) {
         this.endPlayerTurnPhase();
         return true;
@@ -342,8 +337,8 @@ export default class Underworld {
     return false;
   }
   endPlayerTurnPhase() {
-    // Reset the endedTurn set so all players can take turns again next Cast phase
-    this.endedTurn.clear();
+    // Reset the endedTurn flag so all players can take turns again next Cast phase
+    this.players.forEach((p) => (p.endedTurn = false));
     // Move onto next phase
     this.setTurnPhase(turn_phase.NPC);
   }
@@ -391,7 +386,12 @@ export default class Underworld {
     }
   }
   endPlayerTurn(clientId: string) {
-    if (this.endedTurn.has(clientId)) {
+    const player = this.players.find((p) => p.clientId === clientId);
+    if (!player) {
+      console.error('Cannot end turn, player', clientId, 'does not exist');
+      return;
+    }
+    if (player.endedTurn) {
       // Do not end a player's turn more than once
       return;
     }
@@ -403,7 +403,7 @@ export default class Underworld {
         if (clientId === window.clientId) {
           this.setTurnMessage(false, 'Waiting on others');
         }
-        this.endedTurn.add(clientId);
+        player.endedTurn = true;
         const wentToNextLevel = this.checkForEndOfLevel();
         if (wentToNextLevel) {
           return;
