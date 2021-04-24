@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { Route } from './routes';
+import { View } from './views';
 // if PIXI is finished setting up
 let isReady = false;
 // PIXI app
@@ -57,7 +58,8 @@ export function setupPixi(): Promise<void> {
   return loadTextures();
 }
 export function addPixiContainersForRoute(route: Route) {
-  app.stage.removeChildren();
+  removeContainers(overworldPixiContainers);
+  removeContainers(underworldPixiContainers);
   switch (route) {
     case Route.Overworld:
       addContainers(overworldPixiContainers);
@@ -65,8 +67,16 @@ export function addPixiContainersForRoute(route: Route) {
     case Route.Underworld:
       addContainers(underworldPixiContainers);
       break;
-    case Route.CharacterSelect:
+  }
+}
+export function addPixiContainersForView(view: View) {
+  app.stage.removeChildren();
+  switch (view) {
+    case View.CharacterSelect:
       addContainers(characterSelectContainers);
+      break;
+    case View.Game:
+      addPixiContainersForRoute(window.route);
       break;
   }
 }
@@ -74,6 +84,12 @@ function addContainers(containers: PIXI.Container[]) {
   // Add containers to the stage in the order that they will be rendered on top of each other
   for (let container of containers) {
     app.stage.addChild(container);
+  }
+}
+function removeContainers(containers: PIXI.Container[]) {
+  // Add containers to the stage in the order that they will be rendered on top of each other
+  for (let container of containers) {
+    app.stage.removeChild(container);
   }
 }
 function loadTextures(): Promise<void> {

@@ -15,6 +15,8 @@ import * as Player from '../Player';
 import * as Unit from '../Unit';
 
 window.planningViewActive = false;
+let planningViewGraphics: PIXI.Graphics;
+let dryRunGraphics: PIXI.Graphics;
 export function setPlanningView(active: boolean) {
   if (active == window.planningViewActive) {
     // Short-circuit if planningViewActive state wont change
@@ -34,9 +36,12 @@ export function setPlanningView(active: boolean) {
     window.underworld.units.forEach((u) => Unit.deselect(u));
   }
 }
-
-const planningViewGraphics = new PIXI.Graphics();
-containerPlanningView.addChild(planningViewGraphics);
+export function initPlanningView() {
+  planningViewGraphics = new PIXI.Graphics();
+  containerPlanningView.addChild(planningViewGraphics);
+  dryRunGraphics = new PIXI.Graphics();
+  containerUI.addChild(dryRunGraphics);
+}
 export function updatePlanningView() {
   if (window.planningViewActive) {
     const halfCell = config.CELL_SIZE / 2;
@@ -132,8 +137,6 @@ export function clearSpellEffectProjection() {
     containerSpells.removeChildren();
   }
 }
-const dryRunGraphics = new PIXI.Graphics();
-containerUI.addChild(dryRunGraphics);
 
 export function drawSwapLine(one: Coords, two: Coords) {
   if (one && two) {

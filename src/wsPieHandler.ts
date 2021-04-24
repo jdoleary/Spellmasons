@@ -40,7 +40,10 @@ export function onData(d: OnDataArgs) {
       if (!underworld.players.find((p) => p.clientId === fromClient)) {
         const p = Player.create(fromClient, payload.unitId);
         underworld.players.push(p);
-        setRoute(Route.Overworld);
+      } else {
+        console.error(
+          'Client already has a character and cannot create a new one.',
+        );
       }
       break;
     default:
@@ -174,19 +177,12 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
     if (clients.length === 1) {
       // if you are the only client, set yourself as the host
       underworld.hostClientId = window.clientId;
+      // Since the game was just created,
+      // move the game to the Overworld
+      setRoute(Route.Overworld);
     } else if (underworld.hostClientId === window.clientId) {
       // If you are the host, send the game state to the other player
       // who just joined
-      // --
-      // If client that just joined doesn't have an associated player, create
-      // that player and add them to the game before sending out the game state
-      // for other clients to load:
-      // if (!player) {
-      //   const newPlayer = Player.create(o.clientThatChanged);
-      //   game.players.push(newPlayer);
-      // } else {
-      //   Player.setClientConnected(player, true);
-      // }
       // Send game state to other player so they can load:
       window.pie.sendData({
         type: MESSAGE_TYPES.LOAD_GAME_STATE,

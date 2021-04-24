@@ -1,11 +1,12 @@
-import { Route, setRoute } from './routes';
+import type { Route } from './routes';
 import AnimationTimeline from './AnimationTimeline';
 import type * as Player from './Player';
 import type Underworld from './Underworld';
 import type { IOverworld } from './overworld';
+import { setView, View } from './views';
 
 window.animationTimeline = new AnimationTimeline();
-setRoute(Route.Menu);
+setView(View.Menu);
 
 declare global {
   interface Window {
@@ -30,6 +31,7 @@ declare global {
     animatingSpells: boolean;
     setRoute: (r: Route) => void;
     route: Route;
+    view: View;
     // For development use
     giveMeCard: (cardId: string, quantity: number) => void;
   }

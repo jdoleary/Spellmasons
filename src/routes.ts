@@ -1,8 +1,4 @@
-import {
-  addPixiContainersForRoute,
-  containerCharacterSelect,
-  setupPixi,
-} from './PixiUtils';
+import { addPixiContainersForRoute } from './PixiUtils';
 import {
   clickHandler,
   clickHandlerOverworld,
@@ -12,23 +8,14 @@ import {
   keyupListener,
   mousemoveHandler,
 } from './ui/eventListeners';
-import * as Cards from './cards';
-import * as Units from './units';
 import * as Overworld from './overworld';
-import { initializeUnderworld } from './wsPieHandler';
-import { connect_to_wsPie_server, hostRoom, joinRoom } from './wsPieSetup';
-import { setupMonitoring } from './monitoring';
 import { app } from './PixiUtils';
-import * as Image from './Image';
 import { BOARD_HEIGHT, BOARD_WIDTH, CELL_SIZE } from './config';
-import { UnitSubType } from './commonTypes';
-import { MESSAGE_TYPES } from './MessageTypes';
 import { turn_phase } from './Underworld';
 import { createUpgradeElement, generateUpgrades } from './Upgrade';
+import { View } from './views';
 
 export enum Route {
-  Menu,
-  CharacterSelect,
   // Overworld is where players, as a team, decide which level to tackle next
   Overworld,
   // Underworld contains the grid with levels and casting
@@ -36,7 +23,6 @@ export enum Route {
   // Post combat
   Upgrade,
 }
-window.route = Route.Menu;
 // temp for testing
 window.setRoute = setRoute;
 
@@ -47,71 +33,14 @@ export function setRoute(r: Route) {
   }
   document.body.classList.add(`route-${Route[r]}`);
   window.route = r;
-  addPixiContainersForRoute(r);
+  if (window.view === View.Game) {
+    addPixiContainersForRoute(r);
+  }
 
   // Remove previous event listeners:
   removeOverworldEventListeners();
   removeUnderworldEventListeners();
   switch (r) {
-    case Route.Menu:
-      // Start monitoring with development overlay
-      setupMonitoring();
-      // Initialize content
-      Cards.registerCards();
-      Units.registerUnits();
-
-      // Initialize Assets
-      let setupPixiPromise = setupPixi();
-      // Initialize Network
-      let connectToPieServerPromise = connect_to_wsPie_server();
-      Promise.all([setupPixiPromise, connectToPieServerPromise]).then(() => {
-        // Now that we are both connected to the pieServer and assets are loaded,
-        // we can host or join a game
-
-        // Initialize Game Object
-        // See makeGame function for where setup truly happens
-        // This instantiation just spins up the instance of game
-        initializeUnderworld();
-        // ---
-        // TEMP temporarily default to just entering a generic game for speed of development
-        hostRoom({})
-          .catch(() => joinRoom({}))
-          .then(() => console.log('You are now in the room'))
-          .then(() => {
-            setRoute(Route.CharacterSelect);
-          })
-          .catch((err: string) => console.error('Failed to join room', err));
-      });
-      break;
-    case Route.CharacterSelect:
-      // Host or join a game brings client to Character select
-      Object.values(Units.allUnits)
-        .filter(
-          (unitSource) =>
-            unitSource.info.subtype === UnitSubType.PLAYER_CONTROLLED,
-        )
-        .forEach((unitSource, index) => {
-          const image = Image.create(
-            index,
-            0,
-            unitSource.info.image,
-            containerCharacterSelect,
-          );
-          image.sprite.interactive = true;
-          image.sprite.on('click', () => {
-            // Timeout prevents click from propagating into overworld listener
-            // for some reason e.stopPropagation doesn't work :/
-            setTimeout(() => {
-              // Cleanup container
-              containerCharacterSelect.removeChildren();
-              window.pie.sendData({
-                type: MESSAGE_TYPES.SELECT_CHARACTER,
-                unitId: unitSource.id,
-              });
-            }, 0);
-          });
-        });
-      break;
     case Route.Overworld:
       // Picking a level brings players to Underworld from Overworld
       const overworld = Overworld.generate();
