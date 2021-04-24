@@ -1,3 +1,7 @@
+- how to set pixi resolution?
+- Heavily test auto reconnect when pie gets disconnected
+  - Prevent user input while reconnecting?
+  - Will it support reconnecting multiple players if the whole server goes down?
 - Could I do without the external port checker and check from the current client via the external ip?
 - should unit.die cause player turn to end?
   - or is it fine that this is handled after castCards?
