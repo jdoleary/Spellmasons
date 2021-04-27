@@ -1,5 +1,9 @@
 # Todo
 
+- Update website on 2021/04/27 once DNSSEC is off
+  - https://vercel.com/jdoleary/spellmason-com/settings/domains
+  - https://domains.google.com/registrar/spellmason.com/dns
+
 ## 2021.04.22 Playtest with Brad
 
 - We desynced unit positions until brad finished his turn, then it synced back up (one included a new spawned unit from summoner)

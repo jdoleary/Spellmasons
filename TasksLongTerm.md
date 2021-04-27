@@ -3,6 +3,10 @@
 - How could spells better interact?
   - Moreso than just updating targets?
 - Critical Path
+  - Fix networking issue (use WebRTC)
+    - [WebRTC Adapter (polyfill?)](https://github.com/webrtcHacks/adapter)
+      - [Which is real?](https://github.com/webrtc/adapter/)
+      - [learn more about Adapter](https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/adapter.js)
   - Gameplay Sprinkles
     - Should the board size scale over time as levels move on
     - **More creative, more difficult enemies**
@@ -19,8 +23,6 @@
       - Introduce unit types
     - Add quicksaves
     - Make sure pie-client isn't still linked and uses most up-to-date version on NPM
-    - WebsocketPie: Make clients receive their own messages immediately?
-      - So that when a player is alone they can just keep clicking to move?
     - Art
       - Pixel art tool
         - [Aseprite](https://www.aseprite.org/)
@@ -38,19 +40,13 @@
         - [Bundle containing the above tools](https://itch.io/b/814/gamedev-pro)
     - SoundFX
     - CoverArt
-    - Better Game Name
-      - Think of "Into the Breach", "Binding of Isaac", and "Faster than light". They all communicate seriousness
-      - Tower/Guild of Spell Makers? (don't use the word "weavers" due to name conflicts with other bad games)
-      - Journeyman Spellmaker
-      - Council of Spell Smiths
-      - Guild of Spellmasons
-      - Forbidden spells
   - Chores
     - Make executable with Electron
     - Include WebsocketPie and make hosting for friends simple
   - [Steamworks Home](https://partner.steamgames.com/)
   - [Steamworks Docs](https://partner.steamgames.com/doc/features/multiplayer/game_servers)
   - Release beta and test for bugs before publishing
+  - Update steam designation to support "remote play together"? Support local coop?
   - Publish via [Humble](https://www.humblebundle.com)
   - Publish via [Steamworks](https://partner.steamgames.com/steamdirect) / Itch.io
     - Trailer
