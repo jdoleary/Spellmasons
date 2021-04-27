@@ -17,18 +17,4 @@ export function setupMonitoring() {
   );
   stats.dom.classList.add('doob-stats');
   document.body.appendChild(stats.dom);
-
-  // Print aggressive due date for game! (goal, deadline)
-  console.log(
-    `${Math.round(
-      // @ts-ignore
-      (new Date('2021-05-12') - new Date()) / 1000 / 60 / 60 / 24,
-    )} days until due date!`,
-  );
-  console.log(
-    `${Math.round(
-      // @ts-ignore
-      (new Date('2021-04-21') - new Date()) / 1000 / 60 / 60 / 24,
-    )} days until Gameplay core is due!`,
-  );
 }
