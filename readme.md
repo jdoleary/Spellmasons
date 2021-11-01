@@ -7,6 +7,18 @@
 - Press 'Escape' to clear selected cards
 - Hold 'Shift' to temporarily hide selected cards to allow for click inspecting
 
+## Getting Started
+
+- Run an instance of WebsocketPie to start the backend
+  - Clone https://github.com/jdoleary/WebsocketPie.git
+  - `cd WebsocketPie && npm run setup`
+  - `cd packages/PieServer && npm start`
+- Back in this directory
+  - `npm i`
+  - `npm start`
+  - Make sure the wsUri in wsPieSetup.ts points to the WebSocketServer
+  - Play the game! (Have friends join too)
+
 ## Dev information
 
 - Images are stored NOT in the public/ director because they are processed into a sprite sheet and the sprite sheet is added to that directory
