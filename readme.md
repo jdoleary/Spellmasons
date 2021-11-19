@@ -1,3 +1,5 @@
+**Spellmasons is a multiplayer, turn-based spell-weaving game about building powerful spells from small pieces and working together with your fellow wizards to decimate hordes of enemies!**
+
 ## Features
 
 - Alt click to ping a cell on the board to other players
