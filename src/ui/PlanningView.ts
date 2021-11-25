@@ -14,7 +14,6 @@ import * as math from '../math';
 import * as Player from '../Player';
 import * as Unit from '../Unit';
 
-window.planningViewActive = false;
 let planningViewGraphics: PIXI.Graphics;
 let dryRunGraphics: PIXI.Graphics;
 export function initPlanningView() {

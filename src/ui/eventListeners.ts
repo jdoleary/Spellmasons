@@ -20,6 +20,9 @@ export function keydownListener(event: KeyboardEvent) {
     return;
   }
   switch (event.code) {
+    case 'AltLeft': 
+      window.altDown = true;
+      break;
     case 'Space':
       window.underworld.endMyTurn();
       break;
@@ -39,6 +42,9 @@ export function keyupListener(event: KeyboardEvent) {
     return;
   }
   switch (event.code) {
+    case 'AltLeft': 
+      window.altDown = false;
+      break;
     case 'ShiftLeft':
     case 'ShiftRight':
       CardUI.toggleInspectMode(false);
@@ -154,7 +160,7 @@ export function clickHandler(e: MouseEvent) {
     // Disallow click out of bounds
     return;
   }
-  if (window.planningViewActive) {
+  if (window.altDown) {
     window.pie.sendData({
       type: MESSAGE_TYPES.PING,
       x: mouseTarget.x,
