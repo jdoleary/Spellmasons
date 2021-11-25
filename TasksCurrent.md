@@ -1,6 +1,12 @@
 # Todo
-- What happens when you clone yourself
-- Fix desync issues by making the server the single source of truth
+- Networking: Fix desync issues by making the server the single source of truth
+- Improve / Fix Spells:
+  - What happens when you clone yourself?
+- Rather than an overworld, what if you and your team have to mix potions in a culdrun to create a portal that leads you to a unique level?
+- More interaction with tiles / obstacles
+  - Maybe pushing an enemy into another unit does damage, into a wall does damage, into a movable obstacle appplys the obstacle's "arrived" effect
+  - Freezing lava should let you walk over it (casts should work on obstacles)
+- Moving or dropping enemies or self into lava
 
 
 ## 2021.04.22 Playtest with Brad
@@ -22,11 +28,6 @@
   - stash: "protection stackable"
 - Question for Brad: Do you like charge and should it trigger pickups when it moves you?
   - Bug: Charge doesn't play well with AOE
-
-## Tasks
-
-- Add obstacles to spell effect? So freeze can freeze lava?
-- Freezing lava should let you walk over it (casts should work on obstacles)
 
 ## bugs
 

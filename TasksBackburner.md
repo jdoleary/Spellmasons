@@ -12,7 +12,7 @@
     - Should it work diagonally?
   - Slay the Spire style chests
   - Make board bigger for more players?
-  - Two stage levels? Pull a level to reveal a portal
+  - Two stage levels? Pull a lever to reveal a portal
     - trap doors? Environmental interactions
       - Blow up a square to make it lava
   - Only start timelimit if 2 of 3 players have ended their turn
