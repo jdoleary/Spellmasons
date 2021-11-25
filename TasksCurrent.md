@@ -1,4 +1,5 @@
 # Todo
+- What happens when you clone yourself
 
 - Update website on 2021/04/27 once DNSSEC is off
   - https://vercel.com/jdoleary/spellmason-com/settings/domains

@@ -80,4 +80,4 @@ Elements as building blocks for combined spells:
 
 (via [Charlie Cleveland](https://www.charliecleveland.com/game-pillars/))
 
-- Pillar: True creativity in spell-making
+- Pillar: Ultimate creativity in Spellcasting
