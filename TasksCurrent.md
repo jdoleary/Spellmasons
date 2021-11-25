@@ -1,4 +1,6 @@
 # Todo
+- Support recentering the screen when the window resizes
+- Support smaller screens (like Rachels) that don't show the whole map
 - Networking: Fix desync issues by making the server the single source of truth
   - See DesyncTHoughts.md
 - More spells:
