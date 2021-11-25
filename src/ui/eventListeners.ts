@@ -7,8 +7,8 @@ import floatingText from '../FloatingText';
 import type { Coords } from '../commonTypes';
 import {
   isOutOfBounds,
-  setPlanningView,
   syncSpellEffectProjection,
+  updatePlanningView,
 } from './PlanningView';
 import { app } from '../PixiUtils';
 import { distance } from '../math';
@@ -22,9 +22,6 @@ export function keydownListener(event: KeyboardEvent) {
   switch (event.code) {
     case 'Space':
       window.underworld.endMyTurn();
-      break;
-    case 'KeyZ':
-      setPlanningView(true);
       break;
     case 'Escape':
       CardUI.clearSelectedCards();
@@ -42,9 +39,6 @@ export function keyupListener(event: KeyboardEvent) {
     return;
   }
   switch (event.code) {
-    case 'KeyZ':
-      setPlanningView(false);
-      break;
     case 'ShiftLeft':
     case 'ShiftRight':
       CardUI.toggleInspectMode(false);
@@ -73,6 +67,8 @@ export function mousemoveHandler(e: MouseEvent) {
     mouseCell = cell;
     // Show target hover on cells
     syncSpellEffectProjection();
+    // Update planning view for new cell
+    updatePlanningView();
   }
 }
 // Handle right click on game board

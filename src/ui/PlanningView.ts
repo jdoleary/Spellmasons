@@ -17,25 +17,6 @@ import * as Unit from '../Unit';
 window.planningViewActive = false;
 let planningViewGraphics: PIXI.Graphics;
 let dryRunGraphics: PIXI.Graphics;
-export function setPlanningView(active: boolean) {
-  if (active == window.planningViewActive) {
-    // Short-circuit if planningViewActive state wont change
-    return;
-  }
-  window.planningViewActive = active;
-  if (window.planningViewActive) {
-    updatePlanningView();
-    window.underworld.units.forEach((u) => {
-      // "Select" living units, this shows their overlay for planning purposes
-      if (u.alive) {
-        Unit.select(u);
-      }
-    });
-  } else {
-    planningViewGraphics.clear();
-    window.underworld.units.forEach((u) => Unit.deselect(u));
-  }
-}
 export function initPlanningView() {
   planningViewGraphics = new PIXI.Graphics();
   containerPlanningView.addChild(planningViewGraphics);
@@ -43,14 +24,15 @@ export function initPlanningView() {
   containerUI.addChild(dryRunGraphics);
 }
 export function updatePlanningView() {
-  if (window.planningViewActive) {
+  const hoverCell = getCurrentMouseCellOnGrid();
     const halfCell = config.CELL_SIZE / 2;
     planningViewGraphics.clear();
     // Iterate all cells and paint ones that are able to be attacked by an AI
     for (let x = 0; x < config.BOARD_WIDTH; x++) {
       for (let y = 0; y < config.BOARD_HEIGHT; y++) {
         // for each unit...
-        for (let unit of window.underworld.units) {
+        const unit = window.underworld.getUnitAt(hoverCell);
+        if(unit){
           if (
             unit.alive &&
             unit.unitType === UnitType.AI &&
@@ -72,7 +54,7 @@ export function updatePlanningView() {
           }
         }
         // For the player, draw their range
-        if (Player.isTargetInRange(window.player, { x, y })) {
+        if (window.player.unit == unit && Player.isTargetInRange(window.player, { x, y })) {
           const cell = math.cellToBoardCoords(x, y);
           const color = Unit.getPlanningViewColor(window.player.unit);
           planningViewGraphics.beginFill(color);
@@ -86,7 +68,6 @@ export function updatePlanningView() {
         }
       }
     }
-  }
 }
 
 // Draws the image that shows on the cell under the mouse
