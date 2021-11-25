@@ -1,16 +1,22 @@
 # Todo
 - Networking: Fix desync issues by making the server the single source of truth
+  - See DesyncTHoughts.md
+- More spells:
+  - Vanish (loses agro) (invisible for x number of turns) "creating separation"
+  - Taunt (gain agro)
 - Improve / Fix Spells:
   - What happens when you clone yourself?
   - Charge doesn't play well with AOE
   - chain purify didn't work(didn't remove poison)
   - Some kind of visible error mechanism to show when cards don't apply
+    - Don't let players cast fizzle spells (AOE or chain without damage)
     - Like if you cast "Protection" on yourself and then AOE it does nothing because there are no targets to AOE off of
     - Or if you cast cards out of order like Dicard without a card after it
 - Rather than an overworld, what if you and your team have to mix potions in a culdrun to create a portal that leads you to a unique level?
 - More interaction with tiles / obstacles
   - Maybe pushing an enemy into another unit does damage, into a wall does damage, into a movable obstacle appplys the obstacle's "arrived" effect
   - Freezing lava should let you walk over it (casts should work on obstacles)
+  - Add tree, which can spread burn?
 - Moving or dropping enemies or self into lava
 - Juice: Animate cards
 
@@ -19,7 +25,7 @@
 
 - We desynced unit positions until brad finished his turn, then it synced back up (one included a new spawned unit from summoner)
 - Brad desynced when he charged
-- It's somehow not Brad's turn on his screen (timer 0:00), but he's still casting on my screen and I have 0:42 seconds left. It seems to be that our turnTimeRemaining tiimers are far off
+- It's somehow not Brad's turn on his screen (timer 0:00), but he's still casting on my screen and I have 0:42 seconds left. It seems to be that our turnTimeRemaining timers are far off
 
 ## 2021.04.21 Playtest with Rachel
 
