@@ -10,7 +10,7 @@ const spell: Spell = {
     effect: async (state, dryRun) => {
       let updatedTargets = state.targets.filter(
         (coord) =>
-          !(coord.x == state.caster.unit.x && coord.y == state.caster.unit.y),
+          !(coord.x == state.casterUnit.x && coord.y == state.casterUnit.y),
       );
       // Update targets
       state.targets = updatedTargets;

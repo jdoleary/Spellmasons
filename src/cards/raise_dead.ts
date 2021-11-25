@@ -20,7 +20,7 @@ Resurrects a dead unit and converts them to the caster's faction.
         if (dead_unit) {
           Unit.resurrect(dead_unit);
           dead_unit.health = 1;
-          Unit.changeFaction(dead_unit, state.caster.unit.faction);
+          Unit.changeFaction(dead_unit, state.casterUnit.faction);
         }
       }
       return state;

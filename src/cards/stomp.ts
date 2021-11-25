@@ -9,14 +9,14 @@ const spell: Spell = {
     description: 'Targets all the spaces directly around you',
     effect: async (state, dryRun) => {
       let withinRadius = window.underworld.getCoordsWithinDistanceOfTarget(
-        state.caster.unit.x,
-        state.caster.unit.y,
+        state.casterUnit.x,
+        state.casterUnit.y,
         1,
       );
       // Remove self from radius (for the new targets of this spell only, not from existing targets)
       withinRadius = withinRadius.filter(
         (coord) =>
-          !(coord.x == state.caster.unit.x && coord.y == state.caster.unit.y),
+          !(coord.x == state.casterUnit.x && coord.y == state.casterUnit.y),
       );
       let updatedTargets = [...state.targets, ...withinRadius];
       // deduplicate

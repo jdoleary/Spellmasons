@@ -17,7 +17,9 @@ Discards all the following cards and draws the number of cards you discarded as 
       const discarded = state.cards.slice(index + 1);
       for (let i = 0; i < discarded.length; i++) {
         const card = CardUI.generateCard();
-        CardUI.addCardToHand(card, state.caster);
+        if(state.casterPlayer){
+          CardUI.addCardToHand(card, state.casterPlayer);
+        }
       }
       state.cards = state.cards.slice(0, index + 1);
       return state;

@@ -17,32 +17,32 @@ as the caster.
       for (let target of state.targets) {
         // If target is on same vertical
         let targetsOnSameVerticalOrHorizontal: Coords[] = [];
-        if (state.caster.unit.x == target.x) {
+        if (state.casterUnit.x == target.x) {
           const startY =
-            state.caster.unit.y >= target.y
+            state.casterUnit.y >= target.y
               ? target.y
-              : state.caster.unit.y + 1;
+              : state.casterUnit.y + 1;
           const endY =
-            state.caster.unit.y >= target.y ? state.caster.unit.y : target.y;
+            state.casterUnit.y >= target.y ? state.casterUnit.y : target.y;
           for (let y = startY; y < endY; y++) {
             targetsOnSameVerticalOrHorizontal.push({
-              x: state.caster.unit.x,
+              x: state.casterUnit.x,
               y,
             });
           }
         }
         // If target is on same horizontal
-        if (state.caster.unit.y == target.y) {
+        if (state.casterUnit.y == target.y) {
           const startX =
-            state.caster.unit.x >= target.x
+            state.casterUnit.x >= target.x
               ? target.x
-              : state.caster.unit.x + 1;
+              : state.casterUnit.x + 1;
           const endX =
-            state.caster.unit.x >= target.x ? state.caster.unit.x : target.x;
+            state.casterUnit.x >= target.x ? state.casterUnit.x : target.x;
           for (let x = startX; x < endX; x++) {
             targetsOnSameVerticalOrHorizontal.push({
               x,
-              y: state.caster.unit.y,
+              y: state.casterUnit.y,
             });
           }
         }

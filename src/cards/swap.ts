@@ -15,11 +15,11 @@ const spell: Spell = {
 Swaps the caster with the source target.
     `,
     effect: async (state, dryRun) => {
-      const { caster, targets } = state;
+      const { casterUnit, targets } = state;
       const target = targets[0];
       // Find movement change between caster and original target
-      const dx = targets[0].x - caster.unit.x;
-      const dy = targets[0].y - caster.unit.y;
+      const dx = targets[0].x - casterUnit.x;
+      const dy = targets[0].y - casterUnit.y;
       // Loop through all targets and batch swap locations
       const swapUnits: [Unit.IUnit, Coords][] = [];
       const swapPickups: [Pickup.IPickup, Coords][] = [];

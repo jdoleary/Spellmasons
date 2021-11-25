@@ -15,11 +15,11 @@ Moves the caster in a straight line towards the initial target
 if the target is on the same horizontal or vertical axis as the caster.
     `,
     effect: async (state, dryRun) => {
-      const { caster, targets } = state;
+      const { casterUnit, targets } = state;
       const originalTarget = targets[0];
 
-      const isOnSameHorizontal = originalTarget.x === caster.unit.x;
-      const isOnSameVertical = originalTarget.y === caster.unit.y;
+      const isOnSameHorizontal = originalTarget.x === casterUnit.x;
+      const isOnSameVertical = originalTarget.y === casterUnit.y;
       if (!(isOnSameHorizontal || isOnSameVertical)) {
         return state;
       }
@@ -30,9 +30,9 @@ if the target is on the same horizontal or vertical axis as the caster.
       }
       let moveLocation: Coords | undefined;
       // Find closest non-blocked cell between those points to move to
-      if (state.caster.unit.y == originalTarget.y) {
-        if (state.caster.unit.x >= originalTarget.x) {
-          for (let x = state.caster.unit.x - 1; x >= 0; x--) {
+      if (state.casterUnit.y == originalTarget.y) {
+        if (state.casterUnit.x >= originalTarget.x) {
+          for (let x = state.casterUnit.x - 1; x >= 0; x--) {
             const testLocation = { x, y: originalTarget.y };
             if (!window.underworld.isCellObstructed(testLocation)) {
               moveLocation = testLocation;
@@ -41,7 +41,7 @@ if the target is on the same horizontal or vertical axis as the caster.
             }
           }
         } else {
-          for (let x = state.caster.unit.x + 1; x <= BOARD_WIDTH; x++) {
+          for (let x = state.casterUnit.x + 1; x <= BOARD_WIDTH; x++) {
             const testLocation = { x, y: originalTarget.y };
             if (!window.underworld.isCellObstructed(testLocation)) {
               moveLocation = testLocation;
@@ -51,9 +51,9 @@ if the target is on the same horizontal or vertical axis as the caster.
           }
         }
       }
-      if (state.caster.unit.x == originalTarget.x) {
-        if (state.caster.unit.y >= originalTarget.y) {
-          for (let y = state.caster.unit.y - 1; y >= 0; y--) {
+      if (state.casterUnit.x == originalTarget.x) {
+        if (state.casterUnit.y >= originalTarget.y) {
+          for (let y = state.casterUnit.y - 1; y >= 0; y--) {
             const testLocation = { x: originalTarget.x, y };
             if (!window.underworld.isCellObstructed(testLocation)) {
               moveLocation = testLocation;
@@ -62,7 +62,7 @@ if the target is on the same horizontal or vertical axis as the caster.
             }
           }
         } else {
-          for (let y = state.caster.unit.y + 1; y <= BOARD_WIDTH; y++) {
+          for (let y = state.casterUnit.y + 1; y <= BOARD_WIDTH; y++) {
             const testLocation = { x: originalTarget.x, y };
             if (!window.underworld.isCellObstructed(testLocation)) {
               moveLocation = testLocation;
@@ -74,9 +74,9 @@ if the target is on the same horizontal or vertical axis as the caster.
       }
       if (moveLocation) {
         if (dryRun) {
-          drawSwapLine(caster.unit, moveLocation);
+          drawSwapLine(casterUnit, moveLocation);
         } else {
-          Unit.setLocation(caster.unit, moveLocation);
+          Unit.setLocation(casterUnit, moveLocation);
         }
       }
       return state;

@@ -14,6 +14,7 @@ import add_damage from './add_damage';
 import add_heal from './add_heal';
 import area_of_effect from './area_of_effect';
 import chain from './chain';
+import contageous from './contageous';
 import freeze from './freeze';
 import raise_dead from './raise_dead';
 import shield from './shield';
@@ -82,6 +83,7 @@ export function registerCards() {
   register(add_heal);
   register(area_of_effect);
   register(chain);
+  register(contageous);
   register(freeze);
   register(raise_dead);
   register(shield);
@@ -106,7 +108,8 @@ export function registerCards() {
 // Make sure each spell's effect returns the state at the very end
 
 export interface EffectState {
-  caster: Player.IPlayer;
+  casterPlayer?: Player.IPlayer;
+  casterUnit: Unit.IUnit;
   targets: Coords[];
   cards: string[];
   // aggregator carries extra information that can be passed

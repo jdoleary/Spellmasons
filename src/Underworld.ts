@@ -783,18 +783,19 @@ export default class Underworld {
     return false;
   }
   async castCards(
-    caster: Player.IPlayer,
+    casterPlayer: Player.IPlayer,
     cards: string[],
     target: Coords,
     dryRun: boolean,
   ): Promise<Cards.EffectState> {
-    let effectState = {
-      caster,
+    let effectState: Cards.EffectState = {
+      casterPlayer,
+      casterUnit: casterPlayer.unit,
       targets: [target],
       cards,
       aggregator: {},
     };
-    if (!caster.unit.alive) {
+    if (!casterPlayer.unit.alive) {
       // Prevent dead players from casting
       return effectState;
     }
