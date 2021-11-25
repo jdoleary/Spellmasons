@@ -1,9 +1,9 @@
 - Rachels screen was too small and the cards overlapped the grid
 - "Mind control" spell, changes their faction temporarily?
 - Protection doesn't SHOW target being removed because target drawing is additive right now
-  - Bug-ish: If you cast, "AOE, damage, protection" it will damage you before the protection removes the target, but Spell Projection doesn't show that
 - Bug: Loading doesn't work if clientIds have changed reassigning clientIds
 - Frozen players can still cast, they just can't move
+  - This might be resolved once I remove the ability to take turns simultaneously
 - Rachel's Feedback
   - Multiplayer is awesome
   - She loves stacking the spells
@@ -29,10 +29,8 @@
   - For example: This occurs when a unit dies while it's attacking
 - Rachel request: Support click and drag for queued cards
 - Brad request: Allow keybind customization
-- why does swap use Unit.setLocation but charge uses Unit.moveTo? Is there a bug here?
 - What about a prisoner AI that you can unleash, or traps that you can unlease in a line
 - keybinding common spells
-- Holding down "z" should show safe squares to move to
 - What's to stop player from just bumming around to get extra cards via turnsPerCard?
   - Maybe only as long as there are enemies alive? Or set a hand max?
   - Or just make sure the enemies are hard enough that killing time is dangerous, also since cards now reset between levels this may not be a problem
@@ -43,18 +41,13 @@
 - enemies should not be able to be on the portal
 - Try to reproduce: Game.findPath (114) cannot set property 'g' of undefined
   - pathfinding.js:1286 endNode.g = 0
-- Reproduce: wehn you choose ALL the spells in your hand, the active spell div shifts down because the card hand div is now empty
-- projectiles are on the containerSpells container and so get cleared when mouse moves
-  - Do i need to make AI casts work the same way that player casts do??
 - Convert console.error(s) to Sentry.captureException?? before deployment?
 - let our faction go before enemy units go
 - How to best handle not being able to find a random empty cell? This can mess up things like entering a portal
   - see all `if(coords){...}` or all calls to `getRandomEmptyCell`
 - Swapping should only work with a target, not an empty spell
-- Does swap overlay (green line) still show?
-- is removing units when their bones take damage a footgun? See Unit.ts: `window.underworld.units = window.underworld.units.filter((u) => u !== unit);`
+- is removing units when their bones ~~take damage~~ are stepped on a footgun? See Unit.ts: `window.underworld.units = window.underworld.units.filter((u) => u !== unit);`
 - quality of life: If you click on the portal and no enemies remain, then auto move there
-- There should be an icon for out of range
 - Player can still move after freezing themselves on during their turn
 - "level 1" text never appears on load
 - Refactor, card UI reconciliation algorithm is slow
@@ -62,11 +55,6 @@
   - textures should be saved using pixi sprite texture cache instead of this.imageName
 - Card Push needs some work, it doesn't work great due to not using initiateIntelligentAIMovement and order of operations
 - Swap can have unexpected effects if the aoe swap targets overlap with the caster original location, units may end up in an unexpected position, need batching to solve this
-- 2021-03-24 Brad feedback
-  - Needs balance, at the end you have a lot of cards but you die quickly
-  - having less, stronger units is more of a challenge than having many, weak units
-  - show the rarity of cards to a player?
-    - Expose the raw variables to the player so they can make calculated positions
 - Don't let players cast fizzle spells (AOE or chain without damage)
 - How do players know what their upgrades are
 - notify which players have left to upgrade
