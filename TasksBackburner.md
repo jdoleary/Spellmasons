@@ -76,7 +76,6 @@
 - Event manager for granting dark card when you slay ally
 - Number keys to queue up spells
 
-- Probability 0 can still spawn if the roll rolls 0
 - Bug: Verified, when I alt tab it desyncs
 
 - Fix sometimes Game.playerTurnIndex is out of sync

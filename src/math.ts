@@ -45,22 +45,13 @@ export function normalizeRadians(degrees: number) {
 interface objectWithProbability {
   probability: number;
 }
-export function chooseObjectWithProbability<T extends objectWithProbability>(
-  source: T[],
-): T {
-  // Chooses a random object in the source list based on its probability
-  const maxProbability = source.reduce(
-    (maxProbability, current) => current.probability + maxProbability,
-    0,
-  );
-  // Choose random integer within the sum of all the probabilities
-  const roll = window.underworld.random.integer(0, maxProbability);
+export function _chooseObjectWithProbability<T extends objectWithProbability>(roll: number, source: T[]): T {
   let rollingLowerBound = 0;
   // Iterate each object and check if the roll is between the lower bound and the upper bound
   // which means that the current object would have been rolled
   for (let x of source) {
     if (
-      roll >= rollingLowerBound &&
+      roll > rollingLowerBound &&
       roll <= x.probability + rollingLowerBound
     ) {
       return x;
@@ -70,6 +61,19 @@ export function chooseObjectWithProbability<T extends objectWithProbability>(
   }
   // Logically it should never reach this point
   return source[0];
+
+}
+export function chooseObjectWithProbability<T extends objectWithProbability>(
+  source: T[],
+): T {
+  // Chooses a random object in the source list based on its probability
+  const maxProbability = source.reduce(
+    (maxProbability, current) => current.probability + maxProbability,
+    0,
+  );
+  // Choose random integer within the sum of all the probabilities
+  const roll = window.underworld.random.integer(1, maxProbability);
+  return _chooseObjectWithProbability(roll, source);
 }
 // convert from cell coordinates to objective board coordinates
 export function cellToBoardCoords(cellX: number, cellY: number) {
