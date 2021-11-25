@@ -24,6 +24,8 @@
 
 - Images are stored NOT in the public/ director because they are processed into a sprite sheet and the sprite sheet is added to that directory
 
+How to update the sprite sheet:
+Using TexturePacker, add images, public/spell, and public/upgrades as smart folders and publish.  Make sure both the png and the json are saved.  This is done by choosing Pixijs in the Data Format.
 ## Cards, Modifiers and Effects
 
 Cards use a common api to allow for them to compose with each other.
