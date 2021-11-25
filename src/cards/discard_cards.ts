@@ -12,6 +12,10 @@ Discards all the following cards and draws the number of cards you discarded as 
     `,
     effect: async (state, dryRun, index) => {
       if (dryRun) {
+        // Remove the cards following this card from the cards
+        // array since they will be discarded and not applied and
+        // therefore shouldn't show in the prediction
+        state.cards = state.cards.slice(0,index);
         return state;
       }
       const discarded = state.cards.slice(index + 1);

@@ -19,7 +19,6 @@
 
 ---
 
-- Idea: A discard card that discards the following cards cast and gets you new cards
 
 - Question for Brad: Should Protection protect any single ally? So that it can work for both players if you stack it?
   - stash: "protection stackable"
