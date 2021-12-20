@@ -1,0 +1,23 @@
+- Headless Server
+  - When client joins, server sends client full game state
+  - When client takes action
+    - It is sent to server which updates it's local state and sends the message (with message id to all clients)
+  - Q: How to build clients so that it can update it's state out of order, so if it starts with state A, executes order C and then recieves B? Could it rollback to A, play B and then replay C?
+  - Should all messages be reversable?  Is this over engineering? Or would it never get to the point where it executes out of order because users can only act when it's their turn, so if it's their turn, they act (it's reflected immediately on the client) and then it waits to execute all new messages until it receives the one it just sent.
+  - RNG will have to be able to be synced over the network, RNG desynces feel more likely, like with AI movement.  So if I send messages like grunt at 3B moves to 7D and if there is no grunt at 3B the client will trigger a desync error and request the full gamestate from the server and 
+  force update it's local.  I should collect metrics on how often this happens, because ideally it should never happen. 
+- Support recentering the screen when the window resizes
+- Support smaller screens (like Rachels) that don't show the whole map
+- More spells:
+  - Vanish (loses agro) (invisible for x number of turns) "creating separation"
+  - Taunt (gain agro)
+- Improve / Fix Spells:
+  - What happens when you clone yourself?
+  - Charge doesn't play well with AOE
+  - chain purify didn't work(didn't remove poison)
+- Rather than an overworld, what if you and your team have to mix potions in a culdrun to create a portal that leads you to a unique level?
+- More interaction with tiles / obstacles
+  - Maybe pushing an enemy into another unit does damage, into a wall does damage, into a movable obstacle appplys the obstacle's "arrived" effect
+  - Freezing lava should let you walk over it (casts should work on obstacles)
+  - Add tree, which can spread burn?
+- Moving or dropping enemies or self into lava

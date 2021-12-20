@@ -13,3 +13,30 @@ Game phases:
 - Pick (both players apply "cards" to their spells (one at a time alternating))
 - NPC (golems spawn and/or advance)
 - Cast (players cast one at a time)
+
+## Elements
+
+Elements as building blocks for combined spells:
+
+- time
+- position
+  - Aura / AOE
+  - Adjacent
+- state
+  - wet / poisoned / etc
+- unit attribute
+  - e.g. health, strength, etc
+    - e.g. has effect relative to health remaining
+- movement / collision
+- random chances
+
+## Plan
+
+- Iterate as much as possible through playtesting
+- Refactor as necessary to keep the codebase robust and simple to work in
+
+## Game values and Pillars
+
+(via [Charlie Cleveland](https://www.charliecleveland.com/game-pillars/))
+
+- Pillar: Ultimate creativity in Spellcasting

@@ -1,0 +1,23 @@
+# Critical Path
+- Functionality
+    - Headless server
+        - No input handlers
+        - Replay 
+    - Gameplay refinement: Ideas 2021-12-17 (See TasksLongTerm entry)
+- Polish
+    - Add Juice
+        - Animate cards
+        - Some kind of visible error mechanism to show when cards don't apply
+            - Don't let players cast fizzle spells (AOE or chain without damage)
+            - Like if you cast "Protection" on yourself and then AOE it does nothing because there are no targets to AOE off of
+            - Or if you cast cards out of order like Dicard without a card after it
+    - Make executable with Electron
+    - Finish all TODOs
+    - Tutorial
+    - Art
+    - Music
+    - SFX
+    - Menus
+- Publicity
+    - Publish on Steamworks
+    - Social Media stuff

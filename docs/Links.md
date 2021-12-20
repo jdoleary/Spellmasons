@@ -1,0 +1,20 @@
+
+- Art
+    - Pixel art tool
+    - [Aseprite](https://www.aseprite.org/)
+    - Artists
+    - [DeviantArt](https://www.deviantart.com/topic/pixel-art)
+    - https://www.fiverr.com/harsimarjit_
+    - Rachel says look on instagram
+    - [Reddit](https://www.reddit.com/r/PixelArt/comments/mvod6w/oc_my_first_speed_art_im_still_figuring_out_how/)
+    - Pinterest board for inspiration
+    - Add Juice! tools:
+    - [Juice FX](https://codemanu.itch.io/juicefx)
+    - [Spells / Pixel FX Designer](https://codemanu.itch.io/particle-fx-designer)
+    - [Smear](https://codemanu.itch.io/smear-fx)
+    - [Hit animations](https://codemanu.itch.io/impacthit-fx-animations)
+    - [Bundle containing the above tools](https://itch.io/b/814/gamedev-pro)
+- [Steamworks Home](https://partner.steamgames.com/)
+- [Steamworks Docs](https://partner.steamgames.com/doc/features/multiplayer/game_servers)
+- Publish via [Humble](https://www.humblebundle.com)
+- Publish via [Steamworks](https://partner.steamgames.com/steamdirect) / Itch.io

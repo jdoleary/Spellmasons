@@ -1,0 +1,6 @@
+- Release beta and test for bugs before publishing
+- Update steam designation to support "remote play together"? Support local coop?
+- Trailer
+    - "The most creative spell-weaving game you've never heard of"
+    - Make sure it's CLEAR what is going on in the trailer (don't be like StitchCraft)
+    - Also make the "trailer" tom francis style where you just walk it through, doesn't have to be and should be an attempt to be "epic"

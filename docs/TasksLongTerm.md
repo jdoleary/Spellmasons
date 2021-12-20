@@ -1,0 +1,9 @@
+- Ideas 2021-12-17
+  - Smaller and more units
+  - Get rid of cells  / Allow free movement
+  - Cast spells with base radius
+  - Cost mana for each card and the farther away you cast so there is no range limit (this allows for more strategy, more tradeoffs)
+  - Never run out of cards, you're limited by mana instead (this way you don't get stuck)
+  - New cards for mana, mana potions
+  - Interactive environment (freeze water to walk on, ignite grass to spread fire)
+  - Lots of little bad guys, some big ones
