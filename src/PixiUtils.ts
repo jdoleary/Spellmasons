@@ -44,6 +44,19 @@ window.addEventListener('load', () => {
 })
 function resizePixi() {
   app.renderer.resize(window.innerWidth, window.innerHeight);
+  // Set the scale of the stage based on the available window pixel space
+  // so that players with smaller screens can see the whole board
+  const hardCodedCardHeight = 120;
+  const margin = CELL_SIZE*4;
+  const requiredRenderWidth = BOARD_WIDTH * CELL_SIZE + margin;
+  const requiredRenderHeight = BOARD_HEIGHT * CELL_SIZE + hardCodedCardHeight + margin;
+  const widthRatio = window.innerWidth / requiredRenderWidth;
+  // window height shouldn't consider the card height, since the card height doesn't scale
+  const heightRatio = (window.innerHeight - hardCodedCardHeight) / requiredRenderHeight;
+  // Use the smaller ratio for scaling the camera:
+  const smallerRatio = widthRatio < heightRatio ? widthRatio : heightRatio;
+  app.stage.scale.x = smallerRatio;
+  app.stage.scale.y = smallerRatio;
   recenterStage();
 }
 export function recenterStage(){
@@ -64,8 +77,10 @@ export function recenterStage(){
         case Route.Underworld:
           console.log('Render: recenter for Underworld')
           // Align Camera: center the app in the middle of the board
-          app.stage.x = app.renderer.width / 2 - (CELL_SIZE * BOARD_WIDTH) / 2;
-          app.stage.y = app.renderer.height / 2 - (CELL_SIZE * BOARD_HEIGHT) / 2;
+          // app.stage.x = app.renderer.width / 2 - (CELL_SIZE * BOARD_WIDTH) / 2;
+          // app.stage.y = app.renderer.height / 2 - (CELL_SIZE * BOARD_HEIGHT) / 2;
+          app.stage.x = app.renderer.width /2 - (CELL_SIZE * BOARD_WIDTH) / 2 * app.stage.scale.x;
+          app.stage.y = app.renderer.height /2 - (CELL_SIZE * BOARD_HEIGHT) / 2 * app.stage.scale.y;
           break;
       }
     break;

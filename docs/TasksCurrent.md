@@ -6,8 +6,6 @@
   - Should all messages be reversable?  Is this over engineering? Or would it never get to the point where it executes out of order because users can only act when it's their turn, so if it's their turn, they act (it's reflected immediately on the client) and then it waits to execute all new messages until it receives the one it just sent.
   - RNG will have to be able to be synced over the network, RNG desynces feel more likely, like with AI movement.  So if I send messages like grunt at 3B moves to 7D and if there is no grunt at 3B the client will trigger a desync error and request the full gamestate from the server and 
   force update it's local.  I should collect metrics on how often this happens, because ideally it should never happen. 
-- Support recentering the screen when the window resizes
-- Support smaller screens (like Rachels) that don't show the whole map
 - Ideas 2021-12-17
   - Smaller and more units
   - Get rid of cells  / Allow free movement
