@@ -8,6 +8,15 @@
   force update it's local.  I should collect metrics on how often this happens, because ideally it should never happen. 
 - Support recentering the screen when the window resizes
 - Support smaller screens (like Rachels) that don't show the whole map
+- Ideas 2021-12-17
+  - Smaller and more units
+  - Get rid of cells  / Allow free movement
+  - Cast spells with base radius
+  - Cost mana for each card and the farther away you cast so there is no range limit (this allows for more strategy, more tradeoffs)
+  - Never run out of cards, you're limited by mana instead (this way you don't get stuck)
+  - New cards for mana, mana potions
+  - Interactive environment (freeze water to walk on, ignite grass to spread fire)
+  - Lots of little bad guys, some big ones
 - More spells:
   - Vanish (loses agro) (invisible for x number of turns) "creating separation"
   - Taunt (gain agro)

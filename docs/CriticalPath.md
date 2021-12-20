@@ -2,8 +2,9 @@
 - Functionality
     - Headless server
         - No input handlers
-        - Replay 
-    - Gameplay refinement: Ideas 2021-12-17 (See TasksLongTerm entry)
+        - Support "Game Replay" by executing logged actions one at a time.
+            - This will be useful for debugging or even testing
+    - Do gameplay refinement tasks: "Ideas 2021-12-17" (See TasksLongTerm entry)
 - Polish
     - Add Juice
         - Animate cards
