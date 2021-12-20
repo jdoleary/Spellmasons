@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js';
+import { BOARD_HEIGHT, BOARD_WIDTH, CELL_SIZE } from './config';
 import { Route } from './routes';
 import { View } from './views';
 // if PIXI is finished setting up
@@ -37,10 +38,39 @@ app.renderer.view.style.position = 'absolute';
 app.renderer.view.style.top = '0';
 app.renderer.view.style.display = 'block';
 
-resizePixi();
 window.addEventListener('resize', resizePixi);
+window.addEventListener('load', () => {
+  resizePixi();
+})
 function resizePixi() {
   app.renderer.resize(window.innerWidth, window.innerHeight);
+  recenterStage();
+}
+export function recenterStage(){
+
+  switch (window.view) {
+    case View.CharacterSelect:
+      console.log('Render: recenter for View.CharacterSelect')
+      app.stage.x = window.innerWidth / 2;
+      app.stage.y = window.innerHeight / 2;
+    break;
+    case View.Game:
+      switch(window.route){
+        case Route.Overworld:
+          console.log('Render: recenter for Overworld')
+          app.stage.x = window.innerWidth / 2 - window.overworld.levels[0].location.x;
+          app.stage.y = window.innerHeight;
+          break;
+        case Route.Underworld:
+          console.log('Render: recenter for Underworld')
+          // Align Camera: center the app in the middle of the board
+          app.stage.x = app.renderer.width / 2 - (CELL_SIZE * BOARD_WIDTH) / 2;
+          app.stage.y = app.renderer.height / 2 - (CELL_SIZE * BOARD_HEIGHT) / 2;
+          break;
+      }
+    break;
+  }
+
 }
 // PIXI textures
 let resources: { [key: string]: PIXI.ILoaderResource };

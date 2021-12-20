@@ -1,4 +1,4 @@
-import { addPixiContainersForRoute } from './PixiUtils';
+import { addPixiContainersForRoute, recenterStage } from './PixiUtils';
 import {
   clickHandler,
   clickHandlerOverworld,
@@ -46,18 +46,12 @@ export function setRoute(r: Route) {
       const overworld = Overworld.generate();
       window.overworld = overworld;
       Overworld.draw(overworld);
-      // Align camera:
-      app.stage.x = window.innerWidth / 2 - overworld.levels[0].location.x;
-      app.stage.y = window.innerHeight;
       addOverworldEventListeners();
 
       break;
     case Route.Underworld:
       // Set the first turn phase
       window.underworld.setTurnPhase(turn_phase.PlayerTurns);
-      // Align Camera: center the app in the middle of the board
-      app.stage.x = app.renderer.width / 2 - (CELL_SIZE * BOARD_WIDTH) / 2;
-      app.stage.y = app.renderer.height / 2 - (CELL_SIZE * BOARD_HEIGHT) / 2;
       addUnderworldEventListeners();
       // Beating a level takes players from Underworld to Upgrade
       break;
@@ -87,6 +81,10 @@ export function setRoute(r: Route) {
       }
       break;
   }
+  // Recentering should happen after stage setup
+  // because, for example, route Overworld requires up-to-date knowledge
+  // of the overworld to center the camera
+  recenterStage();
 }
 const elEndTurnBtn: HTMLButtonElement = document.getElementById(
   'endTurn',

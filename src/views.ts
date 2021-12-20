@@ -1,8 +1,8 @@
 import {
-  app,
   setupPixi,
   containerCharacterSelect,
   addPixiContainersForView,
+  recenterStage,
 } from './PixiUtils';
 import * as Cards from './cards';
 import * as Units from './units';
@@ -25,6 +25,7 @@ export function setView(v: View) {
   console.log('Set game view', View[v]);
   window.view = v;
   addPixiContainersForView(v);
+  recenterStage();
   switch (v) {
     case View.Menu:
       // Start monitoring with development overlay
@@ -56,8 +57,6 @@ export function setView(v: View) {
       });
       break;
     case View.CharacterSelect:
-      app.stage.x = window.innerWidth / 2;
-      app.stage.y = window.innerHeight / 2;
       // Host or join a game brings client to Character select
       Object.values(Units.allUnits)
         .filter(
