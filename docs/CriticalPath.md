@@ -1,10 +1,19 @@
 # Critical Path
-- Functionality
-    - Headless server
-        - No input handlers
-        - Support "Game Replay" by executing logged actions one at a time.
-            - This will be useful for debugging or even testing
-    - Do gameplay refinement tasks: "Ideas 2021-12-17" (See TasksLongTerm entry)
+- Headless server
+    - Why: This will fix the networking issues
+    - No input handlers
+    - Support "Game Replay" by executing logged actions one at a time.
+        - This will be useful for debugging or even testing
+- Do gameplay refinement tasks: "Ideas 2021-12-17" (See TasksLongTerm entry)
+    - Why: This adds better tradeoffs (more player creativity) and makes the game more resiliant to doomstate
+- Start a following:
+    - Youtube Alpha version video
+- Content
+    - More spells
+    - More monsters
+- Security
+    - Since I'm using electron, I should evaluate my dependencies for safety: https://www.electronjs.org/docs/latest/tutorial/security#security-is-everyones-responsibility
+    - [Security Recommendations](https://www.electronjs.org/docs/latest/tutorial/security#checklist-security-recommendations)
 - Polish
     - Add Juice
         - Animate cards

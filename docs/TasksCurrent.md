@@ -1,4 +1,12 @@
 - Headless Server
+  - Contrary thought: May not need headless server:
+    - So long as turn order is enforced, even wsPie should be sufficient
+    - There are only 2 things that change state
+      1. Player action
+      2. CPU turn
+      - So long as the game state is identical between clients before CPU turn occurs (and the RNG is in the same state). the clients should remain synced.
+      - Maybe I can hash the gamestate and compare to validate that the clients' gamestates are the same. Try npm's object-hash for this
+        - object-hash can hash a string of 1120398 bytes in 3.8ms
   - When client joins, server sends client full game state
   - When client takes action
     - It is sent to server which updates it's local state and sends the message (with message id to all clients)
@@ -8,13 +16,19 @@
   force update it's local.  I should collect metrics on how often this happens, because ideally it should never happen. 
 - Ideas 2021-12-17
   - Smaller and more units
-  - Get rid of cells  / Allow free movement
+  - Get rid of cells / Allow free movement
+    - This might make judgements about AI danger more dynamic and less boring and mathematical
   - Cast spells with base radius
   - Cost mana for each card and the farther away you cast so there is no range limit (this allows for more strategy, more tradeoffs)
   - Never run out of cards, you're limited by mana instead (this way you don't get stuck)
   - New cards for mana, mana potions
   - Interactive environment (freeze water to walk on, ignite grass to spread fire)
   - Lots of little bad guys, some big ones
+    - Heros have much more health, bad guys die more quickly, getting hit isn't as big of a deal, so you don't have to worry about overcalculating agro range, you can be more **intuitive** in your play.
+  - Categories of spells, the combinable ones (cards), the special spells (teleport and such) limited in use
+- wsPie: how to handle reconnection
+  1. Reconnection when the server goes down and comes back up (loses room state)
+  2. Reconnection when the client goes down and comes back up (keeps room?)
 - More spells:
   - Vanish (loses agro) (invisible for x number of turns) "creating separation"
   - Taunt (gain agro)
