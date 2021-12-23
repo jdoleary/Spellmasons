@@ -1,5 +1,6 @@
 import { CELL_SIZE } from './config';
 import type { Coords } from './commonTypes';
+import { randInt } from './rand';
 // https://webdva.github.io/how-i-implemented-client-side-linear-interpolation/
 export function lerp(start: number, end: number, time: number) {
   if (time >= 1) {
@@ -72,7 +73,7 @@ export function chooseObjectWithProbability<T extends objectWithProbability>(
     0,
   );
   // Choose random integer within the sum of all the probabilities
-  const roll = window.underworld.random.integer(1, maxProbability);
+  const roll = randInt(window.underworld.random, 1, maxProbability);
   return _chooseObjectWithProbability(roll, source);
 }
 // convert from cell coordinates to objective board coordinates

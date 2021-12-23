@@ -1,4 +1,5 @@
 import PF from 'pathfinding';
+import seedrandom from 'seedrandom';
 import * as config from './config';
 import * as Unit from './Unit';
 import * as Pickup from './Pickup';
@@ -16,8 +17,6 @@ import {
   containerSpells,
   containerUI,
 } from './PixiUtils';
-import type { Random } from 'random';
-import makeSeededRandom from './rand';
 import floatingText from './FloatingText';
 import { UnitType, Coords, Faction } from './commonTypes';
 import Events from './Events';
@@ -25,6 +24,7 @@ import { allUnits } from './units';
 import { updatePlanningView } from './ui/PlanningView';
 import { ILevel, getEnemiesForAltitude } from './overworld';
 import { setRoute, Route } from './routes';
+import { prng, randInt } from './rand';
 
 export enum turn_phase {
   PlayerTurns,
@@ -44,7 +44,7 @@ const elTurnTimeRemaining = document.getElementById('turn-time-remaining');
 const elLevelIndicator = document.getElementById('level-indicator');
 export default class Underworld {
   seed: string;
-  random: Random;
+  random: prng;
   turn_phase: turn_phase = turn_phase.PlayerTurns;
   // A count of which turn it is, this is useful for
   // governing AI actions that occur every few turns
@@ -69,7 +69,7 @@ export default class Underworld {
   constructor(seed: string) {
     window.underworld = this;
     this.seed = seed;
-    this.random = makeSeededRandom(this.seed);
+    this.random = seedrandom(this.seed, {state:true});
 
     // Setup pathfinding
     this.pfGrid = new PF.Grid(config.BOARD_WIDTH, config.BOARD_HEIGHT);
@@ -240,7 +240,7 @@ export default class Underworld {
     for (let i = 0; i < config.NUM_PICKUPS_PER_LEVEL; i++) {
       const coords = this.getRandomEmptyCell({ xMin: 2 });
       if (coords) {
-        const randomPickupIndex = this.random.integer(
+        const randomPickupIndex = randInt(this.random,
           0,
           Object.values(Pickup.pickups).length - 1,
         );
@@ -262,7 +262,7 @@ export default class Underworld {
     for (let i = 0; i < config.NUM_OBSTACLES_PER_LEVEL; i++) {
       const coords = this.getRandomEmptyCell({ xMin: 2 });
       if (coords) {
-        const randomIndex = this.random.integer(
+        const randomIndex = randInt(this.random,
           0,
           Obstacle.obstacleSource.length - 1,
         );
@@ -295,7 +295,7 @@ export default class Underworld {
           UnitType.AI,
           sourceUnit.info.subtype,
         );
-        const roll = this.random.integer(0, 100);
+        const roll = randInt(this.random, 0, 100);
         if (roll <= config.PERCENT_CHANCE_OF_HEAVY_UNIT) {
           unit.healthMax = config.UNIT_BASE_HEALTH * 2;
           unit.health = unit.healthMax;
@@ -513,7 +513,7 @@ export default class Underworld {
     // Now randomly remove indicies from that array and add them to a new array
     const shuffledIndices: Coords[] = [];
     for (let i = 0; i < numberOfIndices; i++) {
-      const metaIndex = this.random.integer(0, indices.length);
+      const metaIndex = randInt(this.random, 0, indices.length);
       // pull chosen index out of the indices array so that it wont be picked next loop
       const pluckedIndex = indices.splice(metaIndex, 1)[0];
       if (pluckedIndex === undefined) {

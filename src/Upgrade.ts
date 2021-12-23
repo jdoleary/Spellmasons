@@ -1,8 +1,9 @@
+import seedrandom from 'seedrandom';
 import { NUMBER_OF_UPGRADES_TO_CHOOSE_FROM } from './config';
 import { MESSAGE_TYPES } from './MessageTypes';
 import * as config from './config';
 import { checkForGetCardOnTurn, IPlayer } from './Player';
-import makeSeededRandom from './rand';
+import { randInt } from './rand';
 export interface IUpgrade {
   title: string;
   description: (player: IPlayer) => string;
@@ -18,9 +19,8 @@ export function generateUpgrades(player: IPlayer): IUpgrade[] {
     return [...upgradeSourceWhenDead];
   }
   let upgrades: IUpgrade[] = [];
-  const random = makeSeededRandom(
-    `${window.clientId}-${window.underworld.level}`,
-  );
+  // Upgrade selection is unique to each client and each level
+  const random = seedrandom(`${window.clientId}-${window.underworld.level}`);
   // Clone upgrades for later mutation
   const clonedUpgradeSource = [...upgradeSource].filter((u) =>
     u.maxCopies === undefined
@@ -42,7 +42,7 @@ export function generateUpgrades(player: IPlayer): IUpgrade[] {
     i < numberOfCardsToChoose;
     i++
   ) {
-    const randomIndex = random.integer(0, clonedUpgradeSource.length - 1);
+    const randomIndex = randInt(random, 0, clonedUpgradeSource.length - 1);
     upgrades = upgrades.concat(clonedUpgradeSource.splice(randomIndex, 1));
   }
   return upgrades;
