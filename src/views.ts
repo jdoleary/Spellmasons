@@ -32,9 +32,15 @@ export function setView(v: View) {
       setupMonitoring();
 
       // Initialize Assets
-      let setupPixiPromise = setupPixi();
+      console.log("Loading Pixi assets...")
+      let setupPixiPromise = setupPixi().then(() => {
+        console.log("Done loading Pixi assets.")
+      });
       // Initialize Network
-      let connectToPieServerPromise = connect_to_wsPie_server();
+      console.log("Connecting to server...")
+      let connectToPieServerPromise = connect_to_wsPie_server().then(() => {
+        console.log("Done connecting to server.")
+      });
       Promise.all([setupPixiPromise, connectToPieServerPromise]).then(() => {
         // Now that we are both connected to the pieServer and assets are loaded,
         // we can host or join a game
