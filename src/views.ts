@@ -42,6 +42,7 @@ export function setView(v: View) {
         console.log("Done connecting to server.")
       });
       Promise.all([setupPixiPromise, connectToPieServerPromise]).then(() => {
+        console.log("Loading complete.. initialize game")
         // Now that we are both connected to the pieServer and assets are loaded,
         // we can host or join a game
         // --

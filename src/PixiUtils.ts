@@ -140,11 +140,15 @@ function removeContainers(containers: PIXI.Container[]) {
 function loadTextures(): Promise<void> {
   return new Promise((resolve) => {
     const loader = PIXI.Loader.shared;
+    loader.onProgress.add(a=>console.log("onProgress", a)); // called once per loaded/errored file
+    loader.onError.add(e => console.error("Pixi loader on error:", e)); // called once per errored file
+    loader.onLoad.add(a => console.log("Pixi loader onLoad", a)); // called once per loaded file
+    loader.onComplete.add(a => console.log("Pixi loader onComplete")); // called once when the queued resources all load.
     const sheetPath = 'sheet1.json';
     loader.add(sheetPath);
-    loader.load((_loader, all_resources) => {
-      resources = all_resources;
-      sheet = all_resources[sheetPath].spritesheet;
+    loader.load((_loader, resources) => {
+      resources = resources;
+      sheet = resources[sheetPath].spritesheet;
       isReady = true;
       resolve();
     });
