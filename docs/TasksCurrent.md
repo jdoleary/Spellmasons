@@ -1,3 +1,14 @@
+- PIE: bump versions and publish to npm and do a release in github
+- PIE: When server reboots and player tries to move: Object { type: "Err", message: "Cannot echo to room, missing \"client\", \"client.room\", or \"message\"" }
+- PIE: When server reboots and player joins, there is no clientPresenceChanges message so it thinks there's only 1 player connected even if there are 2
+- Does roomInfo save the following for all clients? so that if the second client remakes the room the room will maintain those properties?
+
+```
+    maxClients: number, // max clients allowed in room
+    togetherTimeoutMs: number, // number of milliseconds when a group of together messages echos without waiting for the remainder of the clients to send a together message
+    hidden: boolean, // if a room should be visible to anyone who queries the rooms
+```
+
 - Players take turn one at a time
 - Ideas 2021-12-17
   - (L) Mana Update
