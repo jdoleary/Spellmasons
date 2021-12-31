@@ -42,9 +42,12 @@ const elPlayerTurnIndicatorHolder = document.getElementById(
 const elPlayerTurnIndicator = document.getElementById('player-turn-indicator');
 const elTurnTimeRemaining = document.getElementById('turn-time-remaining');
 const elLevelIndicator = document.getElementById('level-indicator');
+
 export default class Underworld {
   seed: string;
   random: prng;
+  // for serializing random: prng
+  RNGState?: object;
   turn_phase: turn_phase = turn_phase.PlayerTurns;
   // A count of which turn it is, this is useful for
   // governing AI actions that occur every few turns
@@ -66,10 +69,13 @@ export default class Underworld {
 
   pfGrid: PF.Grid;
   pfFinder: PF.BiBestFirstFinder;
-  constructor(seed: string) {
+  constructor(seed: string, RNGState: object | boolean = true) {
     window.underworld = this;
     this.seed = seed;
-    this.random = seedrandom(this.seed, {state:true});
+    console.log("RNG create with seed:", seed, ", state: ", RNGState);
+    // state of "true" initializes the RNG with the ability to save it's state,
+    // state of a state object, rehydrates the RNG to a particular state
+    this.random = seedrandom(this.seed, {state:RNGState});
 
     // Setup pathfinding
     this.pfGrid = new PF.Grid(config.BOARD_WIDTH, config.BOARD_HEIGHT);
@@ -887,6 +893,8 @@ export default class Underworld {
       units: this.units.map(Unit.serializeUnit),
       pickups: this.pickups.map(Pickup.serialize),
       obstacles: this.obstacles.map(Obstacle.serialize),
+      // the state of the Random Number Generator
+      RNGState: this.random.state()
     };
   }
   setWalkableAt(coords: Coords, walkable: boolean) {

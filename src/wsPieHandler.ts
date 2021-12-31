@@ -91,7 +91,7 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       }
       // Resume game / load game / rejoin game
       const loadedGameState: Underworld = { ...payload.underworld };
-      underworld = new Underworld(loadedGameState.seed);
+      underworld = new Underworld(loadedGameState.seed, loadedGameState.RNGState);
       underworld.level = loadedGameState.level;
       underworld.secondsLeftForTurn = loadedGameState.secondsLeftForTurn;
       underworld.hostClientId = loadedGameState.hostClientId;
