@@ -41,6 +41,12 @@ export function onData(d: OnDataArgs) {
       if (!underworld.players.find((p) => p.clientId === fromClient)) {
         const p = Player.create(fromClient, payload.unitId);
         underworld.players.push(p);
+        // Sort underworld.players according to client order so that all
+        // instances of the game have a underworld.players array in the same
+        // order
+        // --
+        // (the .filter removes possible undefined players so that underworld.players doesn't contain any undefined values)
+        underworld.players = clients.map(c => underworld.players.find(p => p.clientId == c)).filter(x => !!x) as Player.IPlayer[];
       } else {
         console.error(
           'Client already has a character and cannot create a new one.',
