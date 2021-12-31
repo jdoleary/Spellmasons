@@ -1,4 +1,4 @@
-import PieClient from 'pie-client';
+import PieClient, { Room } from 'pie-client';
 import { onData, onClientPresenceChanged } from './wsPieHandler';
 // Locally hosted, locally accessed
 const wsUri = 'ws://localhost:8080';
@@ -30,8 +30,9 @@ export function connect_to_wsPie_server(): Promise<void> {
   });
 }
 let maxClients = 8;
-function defaultRoomInfo(_room_info = {}) {
+function defaultRoomInfo(_room_info = {}): Room {
   const room_info = Object.assign(_room_info, {
+    name: 'Golems Lobby 1',
     app: 'Golems',
     version: '0.1.0',
     maxClients,
@@ -39,19 +40,13 @@ function defaultRoomInfo(_room_info = {}) {
   maxClients = room_info.maxClients;
   return room_info;
 }
-export function hostRoom(_room_info = {}): Promise<unknown> {
-  if (!pie) {
-    return Promise.reject();
-  }
-  const room_info = defaultRoomInfo(_room_info);
-  return pie.makeRoom(room_info);
-}
+
 export function joinRoom(_room_info = {}): Promise<unknown> {
   if (!pie) {
     return Promise.reject();
   }
   const room_info = defaultRoomInfo(_room_info);
-  return pie.joinRoom(room_info);
+  return pie.joinRoom(room_info, true);
 }
 function addHandlers(pie: PieClient) {
   pie.onServerAssignedData = (o) => {

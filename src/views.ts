@@ -7,7 +7,7 @@ import {
 import * as Cards from './cards';
 import * as Units from './units';
 import { initializeUnderworld } from './wsPieHandler';
-import { connect_to_wsPie_server, hostRoom, joinRoom } from './wsPieSetup';
+import { connect_to_wsPie_server, joinRoom } from './wsPieSetup';
 import { setupMonitoring } from './monitoring';
 import { UnitSubType } from './commonTypes';
 import { MESSAGE_TYPES } from './MessageTypes';
@@ -57,8 +57,7 @@ export function setView(v: View) {
         initializeUnderworld();
         // ---
         // TEMP temporarily default to just entering a generic game for speed of development
-        hostRoom({})
-          .catch(() => joinRoom({}))
+        joinRoom({})
           .then(() => console.log('You are now in the room'))
           .catch((err: string) => console.error('Failed to join room', err));
       });
