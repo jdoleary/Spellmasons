@@ -1,6 +1,6 @@
+- Potential problem where I killed snowpack and left 2 tabs open (and left wsPie open) and my browser was really struggling to load homedepot.com
 
 - Here's a desync question: How do I connect a client to the server before they become a "player" in the game. (e.g. before they choose a character on the character select screen)
-- Handle all cases when getRandomEmptyCell cannot find an empty cell
 - Desync occurred where I connected two clients (both at the character select), I chose a character on #1, and chose a level, the level spawned in. Then I chose a character on #2 and chose a DIFFERENT level and they both spawned in but the levels looked different even though it said altitude one for both and the RNG had the same state
 - Desync where if one client misses a `clientPresenceChanged` message their game will continue to operate as if that client isn't connected and can't take turns.
   - AHA, I think due to the fake lag, clients messages MAY arrive out of order
