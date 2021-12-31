@@ -20,7 +20,7 @@ export function keydownListener(event: KeyboardEvent) {
     return;
   }
   switch (event.code) {
-    case 'AltLeft': 
+    case 'AltLeft':
       window.altDown = true;
       break;
     case 'Space':
@@ -42,7 +42,7 @@ export function keyupListener(event: KeyboardEvent) {
     return;
   }
   switch (event.code) {
-    case 'AltLeft': 
+    case 'AltLeft':
       window.altDown = false;
       break;
     case 'ShiftLeft':
@@ -89,13 +89,13 @@ export function contextmenuHandler(e: MouseEvent) {
     // Disallow click out of bounds
     return;
   }
-  if (window.underworld.turn_phase == turn_phase.PlayerTurns) {
+  if (window.underworld.isMyTurn()) {
     // Get current client's player
     const selfPlayer:
       | Player.IPlayer
       | undefined = window.underworld.players.find(
-      (p) => p.clientId === window.clientId,
-    );
+        (p) => p.clientId === window.clientId,
+      );
     // If player hasn't already moved this turn...
     if (selfPlayer && !selfPlayer.unit.thisTurnMoved) {
       const targetCell = Unit.findCellOneStepCloserTo(
@@ -123,6 +123,12 @@ export function contextmenuHandler(e: MouseEvent) {
         text: 'You cannot move more than once per turn.',
       });
     }
+  } else {
+    floatingText({
+      cell: mouseTarget,
+      text: 'You must wait for your turn to move',
+    });
+
   }
   return false;
 }
@@ -170,14 +176,14 @@ export function clickHandler(e: MouseEvent) {
   }
   // If a spell exists (based on the combination of cards selected)...
   if (CardUI.areAnyCardsSelected()) {
-    // Only allow casting in the proper phase
-    if (window.underworld.turn_phase == turn_phase.PlayerTurns) {
+    // Only allow casting in the proper phase and on player's turn only
+    if (window.underworld.isMyTurn()) {
       // Get current client's player
       const selfPlayer:
         | Player.IPlayer
         | undefined = window.underworld.players.find(
-        (p) => p.clientId === window.clientId,
-      );
+          (p) => p.clientId === window.clientId,
+        );
       // If the player casting is the current client player
       if (selfPlayer) {
         // If the spell is not in range
@@ -198,6 +204,11 @@ export function clickHandler(e: MouseEvent) {
           CardUI.clearSelectedCards();
         }
       }
+    } else {
+      floatingText({
+        cell: mouseTarget,
+        text: 'You must wait for your turn to cast',
+      });
     }
   }
 }

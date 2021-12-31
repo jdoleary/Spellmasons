@@ -227,10 +227,12 @@ export async function takeDamage(unit: IUnit, amount: number) {
 export function canMove(unit: IUnit): boolean {
   // Do not move if dead
   if (!unit.alive) {
+    console.log("canMove: false - unit is not alive")
     return false;
   }
   // Do not move if already moved
   if (unit.thisTurnMoved) {
+    console.log("canMove: false - unit has already moved this turn")
     return false;
   }
   return true;

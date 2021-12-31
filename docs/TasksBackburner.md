@@ -1,3 +1,4 @@
+- Potential problem where I killed snowpack and left 2 tabs open (and left wsPie open) and my browser was really struggling to load homedepot.com
 - Rachels screen was too small and the cards overlapped the grid
 - "Mind control" spell, changes their faction temporarily?
 - Protection doesn't SHOW target being removed because target drawing is additive right now

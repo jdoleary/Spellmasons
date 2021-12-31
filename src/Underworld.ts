@@ -49,6 +49,8 @@ export default class Underworld {
   // for serializing random: prng
   RNGState?: object;
   turn_phase: turn_phase = turn_phase.PlayerTurns;
+  // Index of the player whose turn it is
+  playerTurnIndex: number = 0;
   // A count of which turn it is, this is useful for
   // governing AI actions that occur every few turns
   // instead of every turn.  A "turn" is a full cycle,
@@ -135,8 +137,8 @@ export default class Underworld {
         }
         if (elTurnTimeRemaining) {
           elTurnTimeRemaining.innerText = `0:${this.secondsLeftForTurn < 10
-              ? '0' + this.secondsLeftForTurn
-              : this.secondsLeftForTurn
+            ? '0' + this.secondsLeftForTurn
+            : this.secondsLeftForTurn
             }`;
         } else {
           console.error('elTurnTimeRemaining is null');
@@ -153,6 +155,11 @@ export default class Underworld {
         }
       }
     }, 1000);
+  }
+  // Returns true if it is the current players turn
+  isMyTurn() {
+    return window.underworld.turn_phase == turn_phase.PlayerTurns
+      && window.underworld.playerTurnIndex === window.underworld.players.findIndex(p => p === window.player)
   }
   cleanup() {
     clearInterval(this.turnInterval);
@@ -373,35 +380,38 @@ export default class Underworld {
     }
     document.body.classList.toggle('your-turn', yourTurn);
   }
-  initializePlayerTurns() {
-    this.setTurnMessage(true, 'Your Turn');
+  initializePlayerTurn(playerIndex: number) {
+    const player = this.players[playerIndex];
     // Start the currentTurnPlayer's turn
-    for (let player of this.players) {
-      Player.checkForGetCardOnTurn(player);
-      // If this current player is NOT able to take their turn...
-      if (!Player.ableToTakeTurn(player)) {
-        // Skip them
-        this.endPlayerTurn(player.clientId);
-        // Do not continue with initialization
-        return;
-      }
-      // Trigger onTurnStart Events
-      const onTurnStartEventResults: boolean[] = player.unit.onTurnStartEvents.map(
-        (eventName) => {
-          const fn = Events.onTurnSource[eventName];
-          return fn ? fn(player.unit) : false;
-        },
-      );
-      if (onTurnStartEventResults.some((b) => b)) {
-        // If any onTurnStartEvents return true, skip the player
-        this.endPlayerTurn(player.clientId);
-        // Do not continue with initialization
-        return;
-      }
-
-      // Finally initialize their turn
-      this.startTurnTimer();
+    Player.checkForGetCardOnTurn(player);
+    // If this current player is NOT able to take their turn...
+    if (!Player.ableToTakeTurn(player)) {
+      // Skip them
+      this.endPlayerTurn(player.clientId);
+      // Do not continue with initialization
+      return;
     }
+    // Trigger onTurnStart Events
+    const onTurnStartEventResults: boolean[] = player.unit.onTurnStartEvents.map(
+      (eventName) => {
+        const fn = Events.onTurnSource[eventName];
+        return fn ? fn(player.unit) : false;
+      },
+    );
+    if (onTurnStartEventResults.some((b) => b)) {
+      // If any onTurnStartEvents return true, skip the player
+      this.endPlayerTurn(player.clientId);
+      // Do not continue with initialization
+      return;
+    }
+    if (player === window.player) {
+      this.setTurnMessage(true, 'Your Turn');
+    } else {
+      this.setTurnMessage(false, `Player ${playerIndex + 1}'s turn`);
+    }
+
+    // Finally initialize their turn
+    this.startTurnTimer();
   }
   // Sends a network message to end turn
   endMyTurn() {
@@ -411,13 +421,15 @@ export default class Underworld {
     }
   }
   endPlayerTurn(clientId: string) {
-    const player = this.players.find((p) => p.clientId === clientId);
+    const playerIndex = this.players.findIndex((p) => p.clientId === clientId);
+    const player = this.players[playerIndex];
     if (!player) {
-      console.error('Cannot end turn, player', clientId, 'does not exist');
+      console.error('Cannot end turn, player with clientId:', clientId, 'does not exist');
       return;
     }
     if (player.endedTurn) {
       // Do not end a player's turn more than once
+      console.error('Cannot end player turn more than once')
       return;
     }
     // Turns can only be ended when the route is the Underworld
@@ -437,6 +449,9 @@ export default class Underworld {
         if (wentToNextPhase) {
           return;
         }
+        // Go to next players' turn
+        this.playerTurnIndex = playerIndex + 1;
+        this.initializePlayerTurn(this.playerTurnIndex)
       }
     }
   }
@@ -609,6 +624,8 @@ export default class Underworld {
     document.body.classList.add('phase-' + phase.toLowerCase());
     switch (phase) {
       case 'PlayerTurns':
+        // Reset to first player's turn
+        this.playerTurnIndex = 0;
         this.turn_number++;
         for (let u of this.units) {
           // Reset thisTurnMoved flag now that it is a new turn
@@ -619,7 +636,7 @@ export default class Underworld {
         // Lastly, initialize the player turns.
         // Note, it is possible that calling this will immediately end
         // the player phase (if there are no players to take turns)
-        this.initializePlayerTurns();
+        this.initializePlayerTurn(this.playerTurnIndex);
         break;
       case 'NPC':
         this.setTurnMessage(false, "NPC's Turn");
