@@ -382,6 +382,10 @@ export default class Underworld {
   }
   initializePlayerTurn(playerIndex: number) {
     const player = this.players[playerIndex];
+    if (!player) {
+      console.error("Attempted to initialize turn for a non existant player index")
+      return
+    }
     // Start the currentTurnPlayer's turn
     Player.checkForGetCardOnTurn(player);
     // If this current player is NOT able to take their turn...
@@ -431,6 +435,12 @@ export default class Underworld {
       // Do not end a player's turn more than once
       console.error('Cannot end player turn more than once')
       return;
+    }
+    if (this.playerTurnIndex != playerIndex) {
+      // (A player "ending their turn" when it is not their turn
+      // can occur when a client disconnects when it is not their turn)
+      console.info('Cannot end the turn of a player when it isn\'t currently their turn')
+      return
     }
     // Turns can only be ended when the route is the Underworld
     // and not, for example, Upgrade
