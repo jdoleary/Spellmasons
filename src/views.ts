@@ -13,6 +13,7 @@ import { UnitSubType } from './commonTypes';
 import { MESSAGE_TYPES } from './MessageTypes';
 import * as Image from './Image';
 import { initPlanningView } from './ui/PlanningView';
+import * as readyState from './readyState';
 
 // A view is not shared between players in the same game, a player could choose any view at any time
 export enum View {
@@ -34,11 +35,13 @@ export function setView(v: View) {
       // Initialize Assets
       console.log("Loading Pixi assets...")
       let setupPixiPromise = setupPixi().then(() => {
+        readyState.set('pixiAssets', true);
         console.log("Done loading Pixi assets.")
       });
       // Initialize Network
       console.log("Connecting to server...")
       let connectToPieServerPromise = connect_to_wsPie_server().then(() => {
+        readyState.set('wsPieConnection', true);
         console.log("Done connecting to server.")
       });
       Promise.all([setupPixiPromise, connectToPieServerPromise]).then(() => {
@@ -58,7 +61,10 @@ export function setView(v: View) {
         // ---
         // TEMP temporarily default to just entering a generic game for speed of development
         joinRoom({})
-          .then(() => console.log('You are now in the room'))
+          .then(() => {
+            readyState.set('wsPieRoomJoined', true);
+            console.log('You are now in the room');
+          })
           .catch((err: string) => console.error('Failed to join room', err));
       });
       break;
@@ -89,6 +95,7 @@ export function setView(v: View) {
               });
               // Now that user has selected a character, they can enter the game
               setView(View.Game);
+              readyState.set('player', true);
             }, 0);
           });
         });

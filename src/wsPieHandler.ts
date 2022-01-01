@@ -13,16 +13,21 @@ import { syncSpellEffectProjection } from './ui/PlanningView';
 import { voteForLevel } from './overworld';
 import { setRoute, Route } from './routes';
 import { setView, View } from './views';
+import * as readyState from './readyState';
+import * as messageQueue from './messageQueue';
 
 const messageLog: any[] = [];
 let clients: string[] = [];
 let underworld: Underworld;
 export function initializeUnderworld() {
   underworld = new Underworld(Math.random().toString());
+  // Mark the underworld as "ready"
+  readyState.set('underworld', true);
 }
 export function onData(d: OnDataArgs) {
   // Temporarily for development
   messageLog.push(d);
+  console.log("ONDATA:", d.payload, d.fromClient)
 
   const { payload, fromClient } = d;
   const type: MESSAGE_TYPES = payload.type;
@@ -58,29 +63,26 @@ export function onData(d: OnDataArgs) {
       }
       break;
     default:
+      // All other messages should be handled one at a time to prevent desync
       handleOnDataMessageSyncronously(d);
       break;
   }
 }
 let onDataQueue: OnDataArgs[] = [];
-let currentMessagePromise: Promise<any> | null = null;
 // Waits until a message is done before it will continue to process more messages that come through
 // This ensures that players can't move in the middle of when spell effects are occurring for example.
 function handleOnDataMessageSyncronously(d: OnDataArgs) {
+  // Queue message for processing one at a time
   onDataQueue.push(d);
-  // If no messages are currently being processed...
-  if (!currentMessagePromise) {
+  // If game is ready to process messages, begin processing
+  // (if not, they will remain in the queue until the game is ready)
+  if (readyState.isReady()) {
     // process the "next" (the one that was just added) immediately
     processNextInQueue();
   }
 }
-function processNextInQueue() {
-  if (onDataQueue.length) {
-    currentMessagePromise = handleOnDataMessage(onDataQueue.splice(0, 1)[0]);
-    currentMessagePromise.then(processNextInQueue);
-  } else {
-    currentMessagePromise = null;
-  }
+export function processNextInQueue() {
+  messageQueue.processNextInQueue(onDataQueue, handleOnDataMessage);
 }
 async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
   const { payload, fromClient } = d;
@@ -106,6 +108,9 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       underworld.players = loadedGameState.players.map(Player.load);
       underworld.pickups = loadedGameState.pickups.map(Pickup.load);
       underworld.obstacles = loadedGameState.obstacles.map(Obstacle.load);
+      // Mark the underworld as "ready"
+      readyState.set('underworld', true);
+
       // Load route
       setRoute(payload.route);
       // If current client already has a player... (meaning they disconnected and rejoined)
