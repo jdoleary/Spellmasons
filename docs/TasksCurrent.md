@@ -1,15 +1,10 @@
 
-- TODO: Wait for underworld to be ready before processing pie messages to prevent desync
-- Desync occurred, if both tabs are in game, but one hasn't been focused since the underworld was generated for the first and it starts receiving messages, the messages might not trigger (such as move) because the underworld wasn't finished being generated yet
-  - Reproduce:
-    - Open two tabs to character select
-    - on 1: select char
-    - on 2: select char
-    - on 1: vote for level
-    - on 2: vote for same level
-    - execute a bunch of actions on 2
-    - switch back to 1 tab and see that actions come through but don't execute because they were recieved before the underworld was ready maybe???
-      - verified: if the message is recieved before "Set game route underworld" it doesn't work
+- Desync will occur if:
+  - Two tabs on character select (make sure you view both tabs once)
+  - tab 1, choose character, vote level, do a bunch of actions
+  - tab 2, choose character, (BUG) it then goes to vote level, but the game is already in play
+  - it should just load the current gamestate
+    - This can also happen when the HOST (who sends LOAD_GAME_STATE) remains on character select while someone else starts the game
 - Here's a desync question: How do I connect a client to the server before they become a "player" in the game. (e.g. before they choose a character on the character select screen)
 - Desync occurred where I connected two clients (both at the character select), I chose a character on #1, and chose a level, the level spawned in. Then I chose a character on #2 and chose a DIFFERENT level and they both spawned in but the levels looked different even though it said altitude one for both and the RNG had the same state
 - Desync where if one client misses a `clientPresenceChanged` message their game will continue to operate as if that client isn't connected and can't take turns.
