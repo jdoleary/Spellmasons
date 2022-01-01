@@ -25,10 +25,10 @@ export function generateUpgrades(player: IPlayer): IUpgrade[] {
   const clonedUpgradeSource = [...upgradeSource].filter((u) =>
     u.maxCopies === undefined
       ? // Always include upgrades that don't have a specified maxCopies
-        true
+      true
       : // Filter out  upgrades that the player can't have more of
-        player.upgrades.filter((pu) => pu.title === u.title).length <
-        u.maxCopies,
+      player.upgrades.filter((pu) => pu.title === u.title).length <
+      u.maxCopies,
   );
   // Choose from upgrades
   const numberOfCardsToChoose = Math.min(
@@ -87,7 +87,7 @@ export const upgradeSourceWhenDead: IUpgrade[] = [
     description: () => 'Resurrects you so the adventure can continue!',
     thumbnail: 'images/upgrades/resurrect.png',
     // Resurrection happens automatically at the start of each level
-    effect: () => {},
+    effect: () => { },
   },
 ];
 export const upgradeSource: IUpgrade[] = [
@@ -114,8 +114,7 @@ export const upgradeSource: IUpgrade[] = [
   {
     title: 'More Cards',
     description: (player) =>
-      `Increases the number of cards that you get at the beginning of each level from ${
-        player.cardsAmount
+      `Increases the number of cards that you get at the beginning of each level from ${player.cardsAmount
       } to ${player.cardsAmount + 1}`,
     thumbnail: 'images/upgrades/more_cards.png',
     effect: (player) => {
@@ -125,8 +124,7 @@ export const upgradeSource: IUpgrade[] = [
   {
     title: '+ Max Health',
     description: (player) =>
-      `Increases your max health from ${player.unit.healthMax} to ${
-        player.unit.healthMax + 1
+      `Increases your max health from ${player.unit.healthMax} to ${player.unit.healthMax + 1
       }`,
     thumbnail: 'images/upgrades/plus_max_health.png',
     effect: (player) => {
