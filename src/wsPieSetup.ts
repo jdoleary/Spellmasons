@@ -20,7 +20,6 @@ export function connect_to_wsPie_server(): Promise<void> {
     addHandlers(pie);
     pie.onConnectInfo = (o) => {
       console.log('onConnectInfo', o);
-      // Make and join room
       if (o.connected) {
         resolve();
       } else {
