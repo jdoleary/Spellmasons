@@ -1,9 +1,3 @@
-- Here's a desync question: How do I connect a client to the server before they become a "player" in the game. (e.g. before they choose a character on the character select screen)
-- Desync occurred where I connected two clients (both at the character select), I chose a character on #1, and chose a level, the level spawned in. Then I chose a character on #2 and chose a DIFFERENT level and they both spawned in but the levels looked different even though it said altitude one for both and the RNG had the same state
-- Desync where if one client misses a `clientPresenceChanged` message their game will continue to operate as if that client isn't connected and can't take turns.
-  - AHA, I think due to the fake lag, clients messages MAY arrive out of order
-- I was able to cause a desync, by makings a 5 second lag for messages, having two clients in the same window on different tabs and moving one while the other's message was still in flight
-- Was able to cause a `window.overworld is undefined` in overworld.js:27 voteForLevel by having the two tabs start loading then having one vote before the other was finished. Now the overworld is going away in favor of the cauldron, but I should keep this kind of bug in mind when expecting users to join at any stage of the game
 - Ideas 2021-12-17
   - (L) Mana Update
     - (M) Cost mana for each card and the farther away you cast so there is no range limit (this allows for more strategy, more tradeoffs)

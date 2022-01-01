@@ -1,3 +1,9 @@
+- Desyncs that occur when messages arrive out of order:
+  - Desync, with fake lag, I was actually able to make a desync occur when two messages got send with varying delays and arrived out of order.  Maybe solution is to increment message counter?
+  - Desync where if one client misses a `clientPresenceChanged` message their game will continue to operate as if that client isn't connected and can't take turns.
+    - AHA, I think due to the fake lag, clients messages MAY arrive out of order
+  - I was able to cause a desync, by makings a 5 second lag for messages, having two clients in the same window on different tabs and moving one while the other's message was still in flight
+- Was able to cause a `window.overworld is undefined` in overworld.js:27 voteForLevel by having the two tabs start loading then having one vote before the other was finished. Now the overworld is going away in favor of the cauldron, but I should keep this kind of bug in mind when expecting users to join at any stage of the game
 - Headless Server
   - Contrary thought: May not need headless server:
     - So long as turn order is enforced, even wsPie should be sufficient
