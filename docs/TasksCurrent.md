@@ -1,14 +1,11 @@
-- PIE: bump versions and publish to npm and do a release in github
-- PIE: When server reboots and player tries to move: Object { type: "Err", message: "Cannot echo to room, missing \"client\", \"client.room\", or \"message\"" }
-- PIE: When server reboots and player joins, there is no clientPresenceChanges message so it thinks there's only 1 player connected even if there are 2
-- Does roomInfo save the following for all clients? so that if the second client remakes the room the room will maintain those properties?
 
-```
-    maxClients: number, // max clients allowed in room
-    togetherTimeoutMs: number, // number of milliseconds when a group of together messages echos without waiting for the remainder of the clients to send a together message
-    hidden: boolean, // if a room should be visible to anyone who queries the rooms
-```
-
+- Here's a desync question: How do I connect a client to the server before they become a "player" in the game. (e.g. before they choose a character on the character select screen)
+- Handle all cases when getRandomEmptyCell cannot find an empty cell
+- Desync occurred where I connected two clients (both at the character select), I chose a character on #1, and chose a level, the level spawned in. Then I chose a character on #2 and chose a DIFFERENT level and they both spawned in but the levels looked different even though it said altitude one for both and the RNG had the same state
+- Desync where if one client misses a `clientPresenceChanged` message their game will continue to operate as if that client isn't connected and can't take turns.
+  - AHA, I think due to the fake lag, clients messages MAY arrive out of order
+- I was able to cause a desync, by makings a 5 second lag for messages, having two clients in the same window on different tabs and moving one while the other's message was still in flight
+- Was able to cause a `window.overworld is undefined` in overworld.js:27 voteForLevel by having the two tabs start loading then having one vote before the other was finished. Now the overworld is going away in favor of the cauldron, but I should keep this kind of bug in mind when expecting users to join at any stage of the game
 - Players take turn one at a time
 - Ideas 2021-12-17
   - (L) Mana Update
