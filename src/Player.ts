@@ -36,14 +36,17 @@ export function isTargetInRange(player: IPlayer, target: Coords): boolean {
     return false;
   }
 }
-export function create(clientId: string, unitId: string): IPlayer {
+export function create(clientId: string, unitId: string): IPlayer | undefined {
   // limit spawn to the leftmost column
   const coords = window.underworld.getRandomEmptyCell({ xMax: 0 });
+  if (!coords) {
+    console.error("Important Error: Unable to find empty coords to create new Player in")
+    return undefined;
+  }
   const userSource = allUnits[unitId];
   if (!userSource) {
-    throw new Error(
-      'User unit source file not registered, cannot create player',
-    );
+    console.error('User unit source file not registered, cannot create player');
+    return undefined;
   }
   const player: IPlayer = {
     clientId,
@@ -123,7 +126,11 @@ export function resetPlayerForNextLevel(player: IPlayer) {
   // Return to a spawn location
   // limit spawn to the leftmost column
   const coords = window.underworld.getRandomEmptyCell({ xMax: 0 });
-  Unit.setLocation(player.unit, coords);
+  if (coords) {
+    Unit.setLocation(player.unit, coords);
+  } else {
+    console.error('Important Error: Unable to find empty coords to resetPlayerForNextLevel')
+  }
 }
 // Keep a global reference to the current client's player
 function updateGlobalRefToCurrentClientPlayer(player: IPlayer) {

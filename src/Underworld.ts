@@ -569,7 +569,7 @@ export default class Underworld {
     }
     return true;
   }
-  getRandomEmptyCell(bounds: Bounds): Coords {
+  getRandomEmptyCell(bounds: Bounds): Coords | undefined {
     const shuffledCoords = this._getShuffledCoordinates(bounds);
     for (let coords of shuffledCoords) {
       const isEmpy = this.isCellEmpty(coords);
@@ -578,7 +578,8 @@ export default class Underworld {
         return coords;
       }
     }
-    throw new Error('Could not find random empty cell');
+    // Unable to find an empty cell in the given bounds
+    return undefined
   }
   setTurnPhase(p: turn_phase) {
     // Before the turn phase changes, check if the game should transition to game over
