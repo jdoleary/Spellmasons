@@ -303,3 +303,10 @@ body.your-turn #player-turn-indicator-holder.low-time {
   white-space: pre-wrap;
   position: absolute;
 }
+
+#ready-state {
+  position: absolute;
+  top: 110px;
+  left: 10px;
+  z-index: 1;
+}
