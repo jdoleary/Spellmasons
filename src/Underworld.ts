@@ -75,7 +75,7 @@ export default class Underworld {
     console.log("RNG create with seed:", seed, ", state: ", RNGState);
     // state of "true" initializes the RNG with the ability to save it's state,
     // state of a state object, rehydrates the RNG to a particular state
-    this.random = seedrandom(this.seed, {state:RNGState});
+    this.random = seedrandom(this.seed, { state: RNGState });
 
     // Setup pathfinding
     this.pfGrid = new PF.Grid(config.BOARD_WIDTH, config.BOARD_HEIGHT);
@@ -85,29 +85,29 @@ export default class Underworld {
 
     // Make sprites for the board tiles
     let cell;
-    const makeWall = (x:number,y:number)  => {
-         const wall = addPixiSprite('tiles/wall.png', containerBoard);
-          wall.x = x * config.CELL_SIZE;
-          wall.y = y * config.CELL_SIZE;
+    const makeWall = (x: number, y: number) => {
+      const wall = addPixiSprite('tiles/wall.png', containerBoard);
+      wall.x = x * config.CELL_SIZE;
+      wall.y = y * config.CELL_SIZE;
 
     }
     // Make corners
-    makeWall(-1,-1);
-    makeWall(-1,config.BOARD_HEIGHT);
-    makeWall(config.BOARD_WIDTH,-1);
-    makeWall(config.BOARD_WIDTH,config.BOARD_HEIGHT);
+    makeWall(-1, -1);
+    makeWall(-1, config.BOARD_HEIGHT);
+    makeWall(config.BOARD_WIDTH, -1);
+    makeWall(config.BOARD_WIDTH, config.BOARD_HEIGHT);
     // Make floor and walls
     for (let x = 0; x < config.BOARD_WIDTH; x++) {
       for (let y = 0; y < config.BOARD_HEIGHT; y++) {
         cell = addPixiSprite('tiles/ground.png', containerBoard);
         cell.x = x * config.CELL_SIZE;
         cell.y = y * config.CELL_SIZE;
-        if(x == 0){
-          makeWall(-1,y);
-          makeWall(config.BOARD_WIDTH,y);
+        if (x == 0) {
+          makeWall(-1, y);
+          makeWall(config.BOARD_WIDTH, y);
         }
-        if(y == 0){
-          makeWall(x,-1);
+        if (y == 0) {
+          makeWall(x, -1);
           makeWall(x, config.BOARD_HEIGHT);
         }
       }
@@ -134,11 +134,10 @@ export default class Underworld {
             elPlayerTurnIndicatorHolder.classList.add('low-time');
         }
         if (elTurnTimeRemaining) {
-          elTurnTimeRemaining.innerText = `0:${
-            this.secondsLeftForTurn < 10
+          elTurnTimeRemaining.innerText = `0:${this.secondsLeftForTurn < 10
               ? '0' + this.secondsLeftForTurn
               : this.secondsLeftForTurn
-          }`;
+            }`;
         } else {
           console.error('elTurnTimeRemaining is null');
         }
@@ -468,9 +467,8 @@ export default class Underworld {
       }
     } else {
       if (elUpgradePickerLabel) {
-        elUpgradePickerLabel.innerText = `${
-          numberOfPlayersWhoNeedToChooseUpgradesTotal - this.choseUpgrade.size
-        } players left to pick upgrades`;
+        elUpgradePickerLabel.innerText = `${numberOfPlayersWhoNeedToChooseUpgradesTotal - this.choseUpgrade.size
+          } players left to pick upgrades`;
       }
     }
     // Go to overworld now that upgrade is chosen

@@ -35,6 +35,8 @@ export function getEnemiesForAltitude(altitude: number) {
     Math.min(altitude, hardCodedLevelEnemies.length - 1)
   ];
 }
+// TODO: this function can be broken if a vote comes through before the overworld has been created,
+// keep this in mind when replacing overworld with cauldron
 export function voteForLevel(clientId: string, levelIndex: number) {
   console.log('voteForLevel', clientId, levelIndex);
   const votes = window.overworld.votes;

@@ -24,49 +24,49 @@ export function initPlanningView() {
 }
 export function updatePlanningView() {
   const hoverCell = getCurrentMouseCellOnGrid();
-    const halfCell = config.CELL_SIZE / 2;
-    planningViewGraphics.clear();
-    // Iterate all cells and paint ones that are able to be attacked by an AI
-    for (let x = 0; x < config.BOARD_WIDTH; x++) {
-      for (let y = 0; y < config.BOARD_HEIGHT; y++) {
-        // for each unit...
-        const unit = window.underworld.getUnitAt(hoverCell);
-        if(unit){
-          if (
-            unit.alive &&
-            unit.unitType === UnitType.AI &&
-            unit.faction === Faction.ENEMY
-          ) {
-            if (allUnits[unit.unitSourceId].canInteractWithCell?.(unit, x, y)) {
-              const cell = math.cellToBoardCoords(x, y);
-              const color = Unit.getPlanningViewColor(unit);
-              // planningViewGraphics.lineStyle(8, color, 0.9);
-              planningViewGraphics.beginFill(color);
-              planningViewGraphics.drawRect(
-                cell.x - halfCell,
-                cell.y - halfCell,
-                config.CELL_SIZE,
-                config.CELL_SIZE,
-              );
-              planningViewGraphics.endFill();
-            }
+  const halfCell = config.CELL_SIZE / 2;
+  planningViewGraphics.clear();
+  // Iterate all cells and paint ones that are able to be attacked by an AI
+  for (let x = 0; x < config.BOARD_WIDTH; x++) {
+    for (let y = 0; y < config.BOARD_HEIGHT; y++) {
+      // for each unit...
+      const unit = window.underworld.getUnitAt(hoverCell);
+      if (unit) {
+        if (
+          unit.alive &&
+          unit.unitType === UnitType.AI &&
+          unit.faction === Faction.ENEMY
+        ) {
+          if (allUnits[unit.unitSourceId].canInteractWithCell?.(unit, x, y)) {
+            const cell = math.cellToBoardCoords(x, y);
+            const color = Unit.getPlanningViewColor(unit);
+            // planningViewGraphics.lineStyle(8, color, 0.9);
+            planningViewGraphics.beginFill(color);
+            planningViewGraphics.drawRect(
+              cell.x - halfCell,
+              cell.y - halfCell,
+              config.CELL_SIZE,
+              config.CELL_SIZE,
+            );
+            planningViewGraphics.endFill();
           }
         }
-        // For the player, draw their range
-        if (window.player.unit == unit && Player.isTargetInRange(window.player, { x, y })) {
-          const cell = math.cellToBoardCoords(x, y);
-          const color = Unit.getPlanningViewColor(window.player.unit);
-          planningViewGraphics.beginFill(color);
-          planningViewGraphics.drawRect(
-            cell.x - halfCell,
-            cell.y - halfCell,
-            config.CELL_SIZE,
-            config.CELL_SIZE,
-          );
-          planningViewGraphics.endFill();
-        }
+      }
+      // For the player, draw their range
+      if (window.player.unit == unit && Player.isTargetInRange(window.player, { x, y })) {
+        const cell = math.cellToBoardCoords(x, y);
+        const color = Unit.getPlanningViewColor(window.player.unit);
+        planningViewGraphics.beginFill(color);
+        planningViewGraphics.drawRect(
+          cell.x - halfCell,
+          cell.y - halfCell,
+          config.CELL_SIZE,
+          config.CELL_SIZE,
+        );
+        planningViewGraphics.endFill();
       }
     }
+  }
 }
 
 // Draws the image that shows on the cell under the mouse
@@ -158,9 +158,8 @@ export function updateTooltip() {
   }
   const mouseCell = getCurrentMouseCellOnGrid();
   // Update position of HTML element
-  elInspectorTooltip.style.transform = `translate(${
-    app.stage.x + mouseCell.x * CELL_SIZE
-  }px, ${app.stage.y + mouseCell.y * CELL_SIZE}px)`;
+  elInspectorTooltip.style.transform = `translate(${app.stage.x + mouseCell.x * CELL_SIZE
+    }px, ${app.stage.y + mouseCell.y * CELL_SIZE}px)`;
   elInspectorTooltipContainer.classList.remove('top');
   elInspectorTooltipContainer.classList.remove('bottom');
   elInspectorTooltipContainer.classList.remove('left');
