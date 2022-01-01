@@ -10,6 +10,7 @@ import { allUnits } from './units';
 import { getClients } from './wsPieHandler';
 import { containerOverworld } from './PixiUtils';
 import { currentOverworldLocation } from './overworld';
+import * as readyState from './readyState';
 
 export interface IPlayer {
   // wsPie id
@@ -134,6 +135,7 @@ export function resetPlayerForNextLevel(player: IPlayer) {
 }
 // Keep a global reference to the current client's player
 function updateGlobalRefToCurrentClientPlayer(player: IPlayer) {
+  readyState.set('player', true);
   if (window.clientId === player.clientId) {
     window.player = player;
   }

@@ -95,7 +95,6 @@ export function setView(v: View) {
               });
               // Now that user has selected a character, they can enter the game
               setView(View.Game);
-              readyState.set('player', true);
             }, 0);
           });
         });

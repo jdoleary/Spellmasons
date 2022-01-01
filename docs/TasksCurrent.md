@@ -1,5 +1,3 @@
-- Bug, when I refresh one client, they stop recieving their own messages but the other client does
-  - This is because when it loads, readyState.player is still false
 - Ideas 2021-12-17
   - (L) Mana Update
     - (M) Cost mana for each card and the farther away you cast so there is no range limit (this allows for more strategy, more tradeoffs)

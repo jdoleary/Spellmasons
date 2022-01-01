@@ -203,6 +203,8 @@ export function clickHandler(e: MouseEvent) {
           });
           CardUI.clearSelectedCards();
         }
+      } else {
+        console.error("Attempting to cast while clientId is unassociated with existing players");
       }
     } else {
       floatingText({
