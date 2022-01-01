@@ -6,6 +6,7 @@ import {
 } from './config';
 import * as Image from './Image';
 import { overworldGraphics } from './PixiUtils';
+import { getClients } from './wsPieHandler';
 
 export interface ILevel {
   location: Coords;
@@ -43,10 +44,10 @@ export function voteForLevel(clientId: string, levelIndex: number) {
   votes[clientId] = levelIndex;
   // Redraw overworld:
   draw(window.overworld);
-  // If all connected players have voted:
+  // If all clients have voted:
   if (
     Object.keys(votes).length ==
-    window.underworld.players.filter((p) => p.clientConnected).length
+    getClients().length
   ) {
     // Tally votes:
     const tally = Object.entries(votes).reduce<{
