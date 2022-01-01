@@ -47,7 +47,7 @@ function resizePixi() {
   // Set the scale of the stage based on the available window pixel space
   // so that players with smaller screens can see the whole board
   const hardCodedCardHeight = 120;
-  const margin = CELL_SIZE*4;
+  const margin = CELL_SIZE * 4;
   const requiredRenderWidth = BOARD_WIDTH * CELL_SIZE + margin;
   const requiredRenderHeight = BOARD_HEIGHT * CELL_SIZE + hardCodedCardHeight + margin;
   const widthRatio = window.innerWidth / requiredRenderWidth;
@@ -59,31 +59,28 @@ function resizePixi() {
   app.stage.scale.y = smallerRatio;
   recenterStage();
 }
-export function recenterStage(){
+export function recenterStage() {
 
   switch (window.view) {
     case View.CharacterSelect:
-      console.log('Render: recenter for View.CharacterSelect')
       app.stage.x = window.innerWidth / 2;
       app.stage.y = window.innerHeight / 2;
-    break;
+      break;
     case View.Game:
-      switch(window.route){
+      switch (window.route) {
         case Route.Overworld:
-          console.log('Render: recenter for Overworld')
           app.stage.x = window.innerWidth / 2 - window.overworld.levels[0].location.x;
           app.stage.y = window.innerHeight;
           break;
         case Route.Underworld:
-          console.log('Render: recenter for Underworld')
           // Align Camera: center the app in the middle of the board
           // app.stage.x = app.renderer.width / 2 - (CELL_SIZE * BOARD_WIDTH) / 2;
           // app.stage.y = app.renderer.height / 2 - (CELL_SIZE * BOARD_HEIGHT) / 2;
-          app.stage.x = app.renderer.width /2 - (CELL_SIZE * BOARD_WIDTH) / 2 * app.stage.scale.x;
-          app.stage.y = app.renderer.height /2 - (CELL_SIZE * BOARD_HEIGHT) / 2 * app.stage.scale.y;
+          app.stage.x = app.renderer.width / 2 - (CELL_SIZE * BOARD_WIDTH) / 2 * app.stage.scale.x;
+          app.stage.y = app.renderer.height / 2 - (CELL_SIZE * BOARD_HEIGHT) / 2 * app.stage.scale.y;
           break;
       }
-    break;
+      break;
   }
 
 }
@@ -140,7 +137,7 @@ function removeContainers(containers: PIXI.Container[]) {
 function loadTextures(): Promise<void> {
   return new Promise((resolve) => {
     const loader = PIXI.Loader.shared;
-    loader.onProgress.add(a=>console.log("onProgress", a)); // called once per loaded/errored file
+    loader.onProgress.add(a => console.log("onProgress", a)); // called once per loaded/errored file
     loader.onError.add(e => console.error("Pixi loader on error:", e)); // called once per errored file
     loader.onLoad.add(a => console.log("Pixi loader onLoad", a)); // called once per loaded file
     loader.onComplete.add(a => console.log("Pixi loader onComplete")); // called once when the queued resources all load.
