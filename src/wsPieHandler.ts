@@ -27,7 +27,6 @@ export function initializeUnderworld() {
 export function onData(d: OnDataArgs) {
   // Temporarily for development
   messageLog.push(d);
-  console.log("ONDATA:", d.payload, d.fromClient)
 
   const { payload, fromClient } = d;
   const type: MESSAGE_TYPES = payload.type;
@@ -102,6 +101,7 @@ export function processNextInQueue() {
 async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
   const { payload, fromClient } = d;
   const type: MESSAGE_TYPES = payload.type;
+  console.log("Handle ONDATA", type, payload)
   // Get caster
   const caster = underworld.players.find((p) => p.clientId === fromClient);
   switch (type) {
@@ -205,6 +205,7 @@ async function handleSpell(caster: Player.IPlayer, payload: any) {
 export function getClients(): string[] {
   return clients;
 }
+
 export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
   console.log('clientPresenceChanged', o);
   clients = o.clients;
