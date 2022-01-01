@@ -62,6 +62,21 @@ export function onData(d: OnDataArgs) {
         );
       }
       break;
+    case MESSAGE_TYPES.LOAD_GAME_STATE:
+      // If a client loads a full game state, they should be fully synced
+      // so clear the onDataQueue to prevent old messages from being processed
+      onDataQueue = [d];
+      // The LOAD_GAME_STATE message is tricky, it is an 
+      // exception to the normal pattern used
+      // with the queue, but it should still be processed sequentially to prevent
+      // weird race conditions.
+      // Since it is a fully copy of the latest
+      // game state, it should empty the queue (except for itself).
+      // And rather than calling handleOnDataMessageSyncronously(d) here,
+      // we just skip right to calling processNextInQueue since this message
+      // can execute regardless of whether readyState.isReady() is true or not
+      processNextInQueue();
+      break;
     default:
       // All other messages should be handled one at a time to prevent desync
       handleOnDataMessageSyncronously(d);
