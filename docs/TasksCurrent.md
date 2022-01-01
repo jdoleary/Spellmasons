@@ -1,3 +1,5 @@
+- Bug, when I refresh one client, they stop recieving their own messages but the other client does
+  - This is because when it loads, readyState.player is still false
 - Ideas 2021-12-17
   - (L) Mana Update
     - (M) Cost mana for each card and the farther away you cast so there is no range limit (this allows for more strategy, more tradeoffs)
@@ -20,6 +22,7 @@
     - In the boss battle, maybe you need to protect the culdron and there's no portal?
 - (M) wsPie: how to handle reconnection
   1. Reconnection when the server goes down and comes back up (loses room state)
+    - This currently puts the game in a buggy state
   2. Reconnection when the client goes down and comes back up (keeps room?)
   - How to handle user joining mid stage (say during overworld or during underworld)?
 - More spells:
