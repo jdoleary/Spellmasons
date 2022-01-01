@@ -8,7 +8,8 @@
     "build": "snowpack build --polyfill-node",
     "test": "jest",
     "format": "prettier --write \"src/**/*.{ts,js}\"",
-    "lint": "prettier --check \"src/**/*.{ts,js}\""
+    "lint": "prettier --check \"src/**/*.{ts,js}\"",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -27,6 +28,7 @@
     "@types/seedrandom": "^3.0.1",
     "@types/snowpack-env": "^2.3.2",
     "@types/stats.js": "^0.17.0",
+    "husky": "^7.0.4",
     "jest": "^26.6.3",
     "prettier": "^2.0.5",
     "snowpack": "^3.8.8",
