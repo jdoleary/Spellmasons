@@ -1,0 +1,1 @@
+- Immortal: prevents a unit from dying, Interesting for contageous units
