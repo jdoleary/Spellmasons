@@ -12,11 +12,27 @@ export function lerp(start: number, end: number, time: number) {
   return start * (1 - time) + end * time;
 }
 
-// The distance between two cells if you allow diagonal movement
-export function cellDistance(cell1: Coords, cell2: Coords) {
-  return Math.max(Math.abs(cell2.x - cell1.x), Math.abs(cell2.y - cell1.y));
+// For a triangle with sides x,y, and d (desired distance / hypotenuse), find the value
+// of x and y given a known h and a known similar triangle of X,Y, and D (distance / hypotenuse)
+export function similarTriangles(X: number, Y: number, D: number, d: number): Coords {
+  const hypotenuseRatio = d / D;
+  return {
+    x: hypotenuseRatio * X,
+    y: hypotenuseRatio * Y
+  }
 }
-export function distance(coords1: Coords, coords2: Coords) {
+
+// getCoordsAtLengthAlongVector is used, for example, to move 'length' distance across
+// the vector 'start' to 'end'
+export function getCoordsAtLengthAlongVector(start: Coords, target: Coords, length: number): Coords {
+  const normalizedResult = similarTriangles(target.x - start.x, target.y - start.y, distance(start, target), length)
+  return {
+    x: start.x + normalizedResult.x,
+    y: start.y + normalizedResult.y
+  }
+}
+
+export function distance(coords1: Coords, coords2: Coords): number {
   return Math.sqrt(
     Math.pow(coords2.x - coords1.x, 2) + Math.pow(coords2.y - coords1.y, 2),
   );
