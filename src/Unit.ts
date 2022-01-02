@@ -306,8 +306,6 @@ export function setLocation(unit: IUnit, coordinates: Coords): Promise<void> {
   unit.y = coordinates.y;
   // check for collisions with pickups in new location
   window.underworld.checkPickupCollisions(unit);
-  // check for collisions with corpses
-  window.underworld.handlePossibleCorpseCollision(unit);
   // Animate movement visually
   return Image.move(unit.image, unit.x, unit.y);
 }

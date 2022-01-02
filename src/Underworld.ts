@@ -307,14 +307,6 @@ export default class Underworld {
       }
     }
   }
-  handlePossibleCorpseCollision(unit: Unit.IUnit) {
-    for (let u of this.units) {
-      // If unit is colliding with a corpse, destroy the corpse
-      if (!u.alive && u !== unit && unit.x == u.x && unit.y == u.y) {
-        Unit.cleanup(u);
-      }
-    }
-  }
   getMousePos(): Coords {
     const { x, y } = containerBoard.toLocal(
       app.renderer.plugins.interaction.mouse.global,

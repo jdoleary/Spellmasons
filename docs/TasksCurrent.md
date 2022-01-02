@@ -3,7 +3,6 @@
   - This is because "setting" the turn phase to something that it already was executes logic required to initialize the turn phase
 - Ideas 2021-12-17
   - (L) Remove Grid, allow free movement
-    - What about stepping on dead units
   - (S) Heros have much more health, bad guys die more quickly, getting hit isn't as big of a deal, so you don't have to worry about overcalculating agro range, you can be more **intuitive** in your play.
   - (L) Mana Update
     - (M) Cost mana for each card and the farther away you cast so there is no range limit (this allows for more strategy, more tradeoffs)
