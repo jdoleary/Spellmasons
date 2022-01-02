@@ -7,6 +7,7 @@ import { distance } from './math';
 import { addPixiSprite, containerUnits } from './PixiUtils';
 import { Vec2, UnitSubType, UnitType, Faction } from './commonTypes';
 import Events from './Events';
+import makeAllRedShader from './shaders/selected';
 const elHealthBar: HTMLElement = document.querySelector('#health .fill') as HTMLElement;
 const elHealthLabel: HTMLElement = document.querySelector('#health .label') as HTMLElement;
 const elManaBar: HTMLElement = document.querySelector('#mana .fill') as HTMLElement;
@@ -46,6 +47,7 @@ export interface IUnit {
   thisTurnMoved: boolean;
   intendedNextMove?: Vec2;
   image: Image.IImage;
+  shaderUniforms: { [key: string]: any };
   damage: number;
   health: number;
   healthMax: number;
@@ -96,6 +98,8 @@ export function create(
     thisTurnMoved: false,
     intendedNextMove: undefined,
     image: Image.create(x, y, imagePath, containerUnits),
+    // TODO restore shaderUniforms on load
+    shaderUniforms: {},
     damage: config.UNIT_BASE_DAMAGE,
     health: config.UNIT_BASE_HEALTH,
     healthMax: config.UNIT_BASE_HEALTH,
@@ -119,6 +123,10 @@ export function create(
     onTurnStartEvents: [],
     modifiers: {},
   }, sourceUnitProps);
+
+  const all_red = makeAllRedShader()
+  unit.shaderUniforms.all_red = all_red.uniforms;
+  unit.image.sprite.filters = [all_red.filter];
 
   // Ensure all change factions logic applies when a unit is first created
   changeFaction(unit, faction);
@@ -231,6 +239,9 @@ export async function takeDamage(unit: IUnit, amount: number) {
   unit.health -= alteredAmount;
   // Prevent health from going over maximum or under 0
   unit.health = Math.max(0, Math.min(unit.health, unit.healthMax));
+  // Update the shader to reflect health level
+  unit.shaderUniforms.all_red.alpha = 1 - (unit.health / unit.healthMax);
+  console.log("jtest alpha", unit.shaderUniforms.all_red);
   // If the unit is "selected" this will update it's overlay to reflect the damage
   updateSelectedOverlay(unit);
 
