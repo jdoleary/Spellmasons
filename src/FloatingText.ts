@@ -12,7 +12,7 @@ interface FText {
   pixiText: PIXI.Text;
 }
 export default function floatingText({
-  cell,
+  cell: coords,
   text,
   style = { fill: 'black' },
 }: {
@@ -21,12 +21,11 @@ export default function floatingText({
   style?: Partial<PIXI.ITextStyle>;
 }) {
   const pixiText = new PIXI.Text(text, style);
-  pixiText.x = cell.x * CELL_SIZE + CELL_SIZE / 2;
-  pixiText.y = cell.y * CELL_SIZE + CELL_SIZE / 2;
+  pixiText.x = coords.x;
+  pixiText.y = coords.y;
   pixiText.anchor.x = 0.5;
   pixiText.anchor.y = 0.5;
   const instance = {
-    // Place in the middle of cell
     x: pixiText.x,
     y: pixiText.y,
     pixiText,

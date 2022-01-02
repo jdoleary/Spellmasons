@@ -197,8 +197,8 @@ export default class Underworld {
     // Show text in center of screen for the new level
     floatingText({
       cell: {
-        x: config.BOARD_WIDTH / 2 - 0.5,
-        y: config.BOARD_HEIGHT / 2,
+        x: config.MAP_WIDTH / 2,
+        y: config.MAP_HEIGHT / 2,
       },
       text: `Altitude ${this.level.altitude}`,
       style: {
