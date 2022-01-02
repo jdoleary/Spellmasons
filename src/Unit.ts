@@ -6,6 +6,7 @@ import { cellDistance } from './math';
 import { addPixiSprite, containerUnits } from './PixiUtils';
 import { Coords, UnitSubType, UnitType, Faction } from './commonTypes';
 import Events from './Events';
+import makeAllRedShader from './shaders/selected';
 export function getPlanningViewColor(unit: IUnit) {
   if (unit.unitType === UnitType.PLAYER_CONTROLLED) {
     return 0x00ff00;
@@ -27,6 +28,7 @@ export interface IUnit {
   thisTurnMoved: boolean;
   intendedNextMove?: Coords;
   image: Image.IImage;
+  shaderUniforms: { [key: string]: any };
   damage: number;
   health: number;
   healthMax: number;
@@ -65,6 +67,8 @@ export function create(
     thisTurnMoved: false,
     intendedNextMove: undefined,
     image: Image.create(x, y, imagePath, containerUnits),
+    // TODO restore shaderUniforms on load
+    shaderUniforms: {},
     damage: config.UNIT_BASE_DAMAGE,
     health: config.UNIT_BASE_HEALTH,
     healthMax: config.UNIT_BASE_HEALTH,
@@ -85,6 +89,10 @@ export function create(
     onTurnStartEvents: [],
     modifiers: {},
   };
+
+  const all_red = makeAllRedShader()
+  unit.shaderUniforms.all_red = all_red.uniforms;
+  unit.image.sprite.filters = [all_red.filter];
 
   // Ensure all change factions logic applies when a unit is first created
   changeFaction(unit, faction);
@@ -201,6 +209,9 @@ export async function takeDamage(unit: IUnit, amount: number) {
   unit.health -= alteredAmount;
   // Prevent health from going over maximum
   unit.health = Math.min(unit.health, unit.healthMax);
+  // Update the shader to reflect health level
+  unit.shaderUniforms.all_red.alpha = 1 - (unit.health / unit.healthMax);
+  console.log("jtest alpha", unit.shaderUniforms.all_red);
   // If the unit is "selected" this will update it's overlay to reflect the damage
   updateSelectedOverlay(unit);
 
