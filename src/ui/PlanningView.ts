@@ -78,16 +78,19 @@ export async function syncSpellEffectProjection() {
       (p) => p.clientId === window.clientId,
     );
     if (currentPlayer) {
-      // TODO if insufficient mana...
+      // TODO if implement mana...
       // if (!Player.isTargetInRange(currentPlayer, mousePos)) {
       //   // Draw deny icon to show the player they are out of range
       //   Image.create(mousePos.x, mousePos.y, 'deny.png', containerSpells);
       // } else {
       // Dry run cast so the user can see what effect it's going to have
+      // getUnitAt corrects to the nearest Unit if there is one, otherwise
+      // allow casting right on the mouseTarget
+      const target = window.underworld.getUnitAt(mousePos) || mousePos;
       await window.underworld.castCards(
         currentPlayer,
         CardUI.getSelectedCards(),
-        mousePos,
+        target,
         true,
       );
       // }
