@@ -302,7 +302,7 @@ export default class Underworld {
   }
   checkPickupCollisions(unit: Unit.IUnit) {
     for (let pu of this.pickups) {
-      if (unit.x == pu.x && unit.y == pu.y) {
+      if (math.distance(unit, pu) <= Pickup.PICKUP_RADIUS) {
         Pickup.triggerPickup(pu, unit);
       }
     }
