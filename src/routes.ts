@@ -9,8 +9,6 @@ import {
   mousemoveHandler,
 } from './ui/eventListeners';
 import * as Overworld from './overworld';
-import { app } from './PixiUtils';
-import { BOARD_HEIGHT, BOARD_WIDTH, CELL_SIZE } from './config';
 import { turn_phase } from './Underworld';
 import { createUpgradeElement, generateUpgrades } from './Upgrade';
 import { View } from './views';

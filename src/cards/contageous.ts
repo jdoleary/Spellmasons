@@ -2,6 +2,7 @@
 import type { IUnit } from '../Unit';
 import * as Image from '../Image';
 import { allCards, ICard, Spell } from './index';
+import { COLLISION_MESH_RADIUS } from '../config';
 const id = 'contageous';
 export function add(unit: IUnit) {
   // Note: Curse can stack multiple times but doesn't keep any state
@@ -51,14 +52,14 @@ Makes this unit's curses contageous to other nearby units
   },
   events: {
     onTurnStart: (unit: IUnit) => {
-      const coords = window.underworld.getCoordsWithinDistanceOfTarget(unit.x, unit.y, 1);
+      const coords = window.underworld.getCoordsForUnitsWithinDistanceOfTarget(unit, COLLISION_MESH_RADIUS * 4);
       // Filter out undefineds, filter out self
       const touchingUnits: IUnit[] = coords.map((coord) => window.underworld.getUnitAt(coord)).filter(x => x !== undefined).filter(x => x !== unit) as IUnit[];
       const curseCards: ICard[] = Object.entries(unit.modifiers).filter(([_id, modValue]) => modValue.isCurse).map(([id, mod]) => allCards.find(card => card.id == id)).filter(x => x !== undefined) as ICard[];
-      for (let card of curseCards){
+      for (let card of curseCards) {
 
 
-          card?.effect({casterUnit:unit, targets:touchingUnits, cards:[card.id], aggregator:{}}, false, 0);
+        card?.effect({ casterUnit: unit, targets: touchingUnits, cards: [card.id], aggregator: {} }, false, 0);
       }
 
       return false;

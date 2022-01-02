@@ -1,4 +1,6 @@
+import { drawDryRunLine } from '../ui/PlanningView';
 import type { Spell } from '.';
+import type { Coords } from '../commonTypes';
 
 const id = 'chain';
 const spell: Spell = {
@@ -11,7 +13,7 @@ Adds targets for the following cards to effect by "chaining like electricity"
 off of all existing targeted units to units touching them. 
     `,
     effect: async (state, dryRun) => {
-      let updatedTargets = [...state.targets];
+      let newTargets: Coords[] = [];
       for (let target of state.targets) {
         const unit = window.underworld.getUnitAt(target);
         if (unit) {
@@ -19,11 +21,15 @@ off of all existing targeted units to units touching them.
           const chained_units = window.underworld.getTouchingUnitsRecursive(
             target.x,
             target.y,
-            updatedTargets,
+            [...state.targets, ...newTargets],
           );
-          updatedTargets = updatedTargets.concat(chained_units);
+          chained_units.forEach(chained_unit => {
+            drawDryRunLine(unit, chained_unit);
+          })
+          newTargets = newTargets.concat(chained_units);
         }
       }
+      let updatedTargets = [...state.targets, ...newTargets];
       // deduplicate
       updatedTargets = updatedTargets.filter((coord, index) => {
         return (

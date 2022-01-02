@@ -695,22 +695,14 @@ export default class Underworld {
     return promises;
   }
 
-  getCoordsWithinDistanceOfTarget(
-    targetX: number,
-    targetY: number,
+  getCoordsForUnitsWithinDistanceOfTarget(
+    target: Coords,
     distance: number,
   ): Coords[] {
     const coords: Coords[] = [];
-    for (let cellX = 0; cellX < config.BOARD_WIDTH; cellX++) {
-      for (let cellY = 0; cellY < config.BOARD_HEIGHT; cellY++) {
-        if (
-          cellX <= targetX + distance &&
-          cellX >= targetX - distance &&
-          cellY <= targetY + distance &&
-          cellY >= targetY - distance
-        ) {
-          coords.push({ x: cellX, y: cellY });
-        }
+    for (let unit of this.units) {
+      if (math.distance(unit, target) <= distance) {
+        coords.push({ x: unit.x, y: unit.y });
       }
     }
     return coords;
@@ -720,7 +712,7 @@ export default class Underworld {
     y: number,
     ignore: Coords[] = [],
   ): Unit.IUnit[] {
-    const touchingDistance = 1;
+    const touchingDistance = config.COLLISION_MESH_RADIUS * 4;
     let touching = this.units.filter((u) => {
       return (
         u.x <= x + touchingDistance &&
@@ -738,14 +730,14 @@ export default class Underworld {
     }
     return touching;
   }
-  getUnitAt(cell: Coords): Unit.IUnit | undefined {
-    return this.units.find((u) => u.x === cell.x && u.y === cell.y);
+  getUnitAt(coords: Coords): Unit.IUnit | undefined {
+    return this.units.find((u) => math.distance(u, coords) <= config.COLLISION_MESH_RADIUS);
   }
-  getPickupAt(cell: Coords): Pickup.IPickup | undefined {
-    return this.pickups.find((p) => p.x === cell.x && p.y === cell.y);
+  getPickupAt(coords: Coords): Pickup.IPickup | undefined {
+    return this.pickups.find((p) => math.distance(p, coords) <= config.COLLISION_MESH_RADIUS);
   }
-  getObstacleAt(cell: Coords): Obstacle.IObstacle | undefined {
-    return this.obstacles.find((p) => p.x === cell.x && p.y === cell.y);
+  getObstacleAt(coords: Coords): Obstacle.IObstacle | undefined {
+    return this.obstacles.find((o) => math.distance(o, coords) <= config.COLLISION_MESH_RADIUS);
   }
   addUnitToArray(unit: Unit.IUnit) {
     this.units.push(unit);

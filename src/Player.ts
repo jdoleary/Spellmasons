@@ -23,17 +23,8 @@ export interface IPlayer {
   // The number of cards a player's hand is populated with at the start of a level
   cardsAmount: number;
   upgrades: Upgrade.IUpgrade[];
-  // Cast range
-  range: number;
   turnsPerCard: number;
   overworldImage: Image.IImage;
-}
-export function isTargetInRange(player: IPlayer, target: Coords): boolean {
-  if (player.unit) {
-    return math.distance(target, player.unit) <= player.range;
-  } else {
-    return false;
-  }
 }
 export function create(clientId: string, unitId: string): IPlayer | undefined {
   // limit spawn to the leftmost column
@@ -65,7 +56,6 @@ export function create(clientId: string, unitId: string): IPlayer | undefined {
     cardsSelected: [],
     cardsAmount: config.START_CARDS_COUNT,
     upgrades: [],
-    range: config.PLAYER_CAST_RANGE,
     turnsPerCard: config.PLAYER_BASE_TURNS_PER_CARD,
     overworldImage: Image.create(
       0,

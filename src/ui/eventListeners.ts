@@ -56,27 +56,15 @@ export function endTurnBtnListener() {
   window.underworld.endMyTurn();
 }
 
-// TODO remove for "free movement" refactor
-let mouseCell: Coords = { x: -1, y: -1 };
-export function getCurrentMouseCellOnGrid(): Coords {
-  return mouseCell;
-}
 export function mousemoveHandler(e: MouseEvent) {
   // Only handle clicks when viewing the Game
   if (window.view !== View.Game) {
     return;
   }
-  const coords = window.underworld.getMousePos();
-  const didChange = mouseCell.x !== coords.x || mouseCell.y !== coords.y;
-  // If mouse hovering over a new cell, update the target images
-  if (didChange) {
-    // Update mouseCell
-    mouseCell = coords;
-    // Show target hover on cells
-    syncSpellEffectProjection();
-    // Update planning view for new cell
-    updatePlanningView();
-  }
+  // Show target hover on cells
+  syncSpellEffectProjection();
+  // Update planning view for new cell
+  updatePlanningView();
 }
 // Handle right click on game board
 export function contextmenuHandler(e: MouseEvent) {
@@ -172,23 +160,14 @@ export function clickHandler(e: MouseEvent) {
         );
       // If the player casting is the current client player
       if (selfPlayer) {
-        // If the spell is not in range
-        if (!Player.isTargetInRange(selfPlayer, mouseTarget)) {
-          // Show floating message to alert player
-          floatingText({
-            cell: mouseTarget,
-            text: 'out of range',
-          });
-        } else {
-          // cast the spell
-          window.pie.sendData({
-            type: MESSAGE_TYPES.SPELL,
-            x: mouseTarget.x,
-            y: mouseTarget.y,
-            cards: CardUI.getSelectedCards(),
-          });
-          CardUI.clearSelectedCards();
-        }
+        // cast the spell
+        window.pie.sendData({
+          type: MESSAGE_TYPES.SPELL,
+          x: mouseTarget.x,
+          y: mouseTarget.y,
+          cards: CardUI.getSelectedCards(),
+        });
+        CardUI.clearSelectedCards();
       } else {
         console.error("Attempting to cast while clientId is unassociated with existing players");
       }

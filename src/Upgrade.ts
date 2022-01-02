@@ -92,13 +92,6 @@ export const upgradeSourceWhenDead: IUpgrade[] = [
 ];
 export const upgradeSource: IUpgrade[] = [
   {
-    title: '+ Cast Range',
-    description: (player) =>
-      `Upgrade cast range from ${player.range} to ${player.range + 1}`,
-    thumbnail: 'images/upgrades/plus_range.png',
-    effect: (player) => player.range++,
-  },
-  {
     title: '+ Card Frequency',
     description: (player) =>
       `Get a new card every ${player.turnsPerCard} turns.`,

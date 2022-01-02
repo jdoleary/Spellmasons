@@ -4,6 +4,7 @@ import * as Pickup from '../Pickup';
 import * as Obstacle from '../Obstacle';
 import { Coords, UnitSubType, UnitType } from '../commonTypes';
 import { removeSubSprite } from '../Image';
+import { COLLISION_MESH_RADIUS } from '../config';
 
 const id = 'clone';
 const spell: Spell = {
@@ -22,17 +23,7 @@ Clones each target into an adjecent cell if there is an open adjacent cell
       // Note: They need to be batched so that the new clones don't get cloned
       const clonePairs: Coords[][] = [];
       for (let target of state.targets) {
-        let withinRadius = window.underworld.getCoordsWithinDistanceOfTarget(
-          target.x,
-          target.y,
-          1,
-        );
-        for (let coord of withinRadius) {
-          if (window.underworld.isCellEmpty(coord)) {
-            clonePairs.push([target, coord]);
-            break;
-          }
-        }
+        clonePairs.push([target, { x: target.x + COLLISION_MESH_RADIUS, y: target.y + COLLISION_MESH_RADIUS }]);
       }
       // Clone all the batched clone jobs
       for (let [target, cloneToCoords] of clonePairs) {

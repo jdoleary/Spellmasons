@@ -1,6 +1,7 @@
 import type { Spell } from '.';
 
 const id = 'stomp';
+const range = 200;
 const spell: Spell = {
   card: {
     id,
@@ -8,10 +9,9 @@ const spell: Spell = {
     probability: 10,
     description: 'Targets all the spaces directly around you',
     effect: async (state, dryRun) => {
-      let withinRadius = window.underworld.getCoordsWithinDistanceOfTarget(
-        state.casterUnit.x,
-        state.casterUnit.y,
-        1,
+      let withinRadius = window.underworld.getCoordsForUnitsWithinDistanceOfTarget(
+        state.casterUnit,
+        range,
       );
       // Remove self from radius (for the new targets of this spell only, not from existing targets)
       withinRadius = withinRadius.filter(

@@ -100,7 +100,6 @@ export function serialize(image: IImage) {
   };
 }
 export function setPosition(image: IImage, x: number, y: number) {
-  console.log("jest set position", x, y)
   image.sprite.x = x;
   image.sprite.y = y;
 }
