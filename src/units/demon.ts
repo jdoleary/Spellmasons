@@ -30,9 +30,7 @@ const unit: UnitSource = {
     }
     // Move randomly
     const moveCoords = window.underworld.getRandomCoordsWithinBounds({ xMin: 2 });
-    if (moveCoords) {
-      unit.intendedNextMove = moveCoords;
-    }
+    unit.intendedNextMove = moveCoords;
   },
 };
 

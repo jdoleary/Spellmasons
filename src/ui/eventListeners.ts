@@ -1,10 +1,7 @@
 import { MESSAGE_TYPES } from '../MessageTypes';
-import { turn_phase } from '../Underworld';
 import * as CardUI from '../CardUI';
-import * as Player from '../Player';
-import * as Unit from '../Unit';
+import type * as Player from '../Player';
 import floatingText from '../FloatingText';
-import type { Coords } from '../commonTypes';
 import {
   isOutOfBounds,
   syncSpellEffectProjection,
@@ -61,9 +58,9 @@ export function mousemoveHandler(e: MouseEvent) {
   if (window.view !== View.Game) {
     return;
   }
-  // Show target hover on cells
+  // Show target hover
   syncSpellEffectProjection();
-  // Update planning view for new cell
+  // Update planning view
   updatePlanningView();
 }
 // Handle right click on game board
@@ -93,13 +90,13 @@ export function contextmenuHandler(e: MouseEvent) {
       });
     } else {
       floatingText({
-        cell: mouseTarget,
+        coords: mouseTarget,
         text: 'You cannot move more than once per turn.',
       });
     }
   } else {
     floatingText({
-      cell: mouseTarget,
+      coords: mouseTarget,
       text: 'You must wait for your turn to move',
     });
 
@@ -173,7 +170,7 @@ export function clickHandler(e: MouseEvent) {
       }
     } else {
       floatingText({
-        cell: mouseTarget,
+        coords: mouseTarget,
         text: 'You must wait for your turn to cast',
       });
     }

@@ -30,7 +30,7 @@ Protects the target(s) from the next time they would take damage.
       // Only block damage, not heals
       if (amount > 0) {
         floatingText({
-          cell: unit,
+          coords: unit,
           text: 'Shielded from damage!',
           style: {
             fill: 'blue',

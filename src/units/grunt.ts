@@ -1,6 +1,6 @@
 import type { UnitSource } from './index';
 import { UnitSubType } from '../commonTypes';
-import { canInteractWithCell, action } from './actions/gruntAction';
+import { canInteractWithTarget, action } from './actions/gruntAction';
 
 const unit: UnitSource = {
   id: 'grunt',
@@ -11,7 +11,7 @@ const unit: UnitSource = {
     probability: 100,
   },
   action,
-  canInteractWithCell,
+  canInteractWithTarget,
 };
 
 export default unit;

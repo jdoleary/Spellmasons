@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js';
 
 import { allUnits } from '../units';
 import { app, containerSpells, containerUI } from '../PixiUtils';
-import { BOARD_HEIGHT, BOARD_WIDTH, CELL_SIZE } from '../config';
+import { MAP_WIDTH, MAP_HEIGHT } from '../config';
 import { containerPlanningView } from '../PixiUtils';
 import { Coords, Faction, UnitSubType, UnitType } from '../commonTypes';
 import { turn_phase } from '../Underworld';
@@ -30,7 +30,7 @@ export function updatePlanningView() {
   //   unit.unitType === UnitType.AI &&
   //   unit.faction === Faction.ENEMY
   // ) {
-  //   if (allUnits[unit.unitSourceId].canInteractWithCell?.(unit, x, y)) {
+  //   if (allUnits[unit.unitSourceId].canInteractWithTarget?.(unit, x, y)) {
   //     const color = Unit.getPlanningViewColor(unit);
   //     // planningViewGraphics.lineStyle(8, color, 0.9);
   //     planningViewGraphics.beginFill(color);
@@ -55,7 +55,6 @@ export function updatePlanningView() {
   planningViewGraphics.endFill();
 }
 
-// Draws the image that shows on the cell under the mouse
 export async function syncSpellEffectProjection() {
   if (window.animatingSpells) {
     // Do not change the hover icons when spells are animating
@@ -70,7 +69,6 @@ export async function syncSpellEffectProjection() {
   }
   // only show hover target when it's the correct turn phase
   if (window.underworld.turn_phase == turn_phase.PlayerTurns) {
-    // If mouse hovering over a new cell, update the target images
 
     if (!CardUI.areAnyCardsSelected()) {
       // Do not render if there are no cards selected meaning there is no spell
@@ -97,7 +95,7 @@ export async function syncSpellEffectProjection() {
   }
 }
 
-// SpellEffectProjection are images that appear above cells to denote some information, such as the spell or action about to be cast/taken when clicked
+// SpellEffectProjection are images to denote some information, such as the spell or action about to be cast/taken when clicked
 export function clearSpellEffectProjection() {
   if (!window.animatingSpells) {
     dryRunGraphics.clear();
@@ -107,15 +105,11 @@ export function clearSpellEffectProjection() {
 
 export function drawSwapLine(one: Coords, two: Coords) {
   if (one && two) {
-    const x1 = one.x * CELL_SIZE + CELL_SIZE / 2;
-    const y1 = one.y * CELL_SIZE + CELL_SIZE / 2;
-    const x2 = two.x * CELL_SIZE + CELL_SIZE / 2;
-    const y2 = two.y * CELL_SIZE + CELL_SIZE / 2;
     dryRunGraphics.beginFill(0xffff0b, 0.5);
     dryRunGraphics.lineStyle(3, 0x33ff00);
-    dryRunGraphics.moveTo(x1, y1);
-    dryRunGraphics.lineTo(x2, y2);
-    dryRunGraphics.drawCircle(x2, y2, 10);
+    dryRunGraphics.moveTo(one.x, one.y);
+    dryRunGraphics.lineTo(two.x, two.y);
+    dryRunGraphics.drawCircle(two.x, two.y, 10);
     dryRunGraphics.endFill();
   }
 }
@@ -165,14 +159,14 @@ export function updateTooltip() {
   elInspectorTooltipContainer.classList.remove('left');
   elInspectorTooltipContainer.classList.remove('right');
   elInspectorTooltipContainer.classList.add(
-    mousePos.y > BOARD_HEIGHT / 2 ? 'bottom' : 'top',
+    mousePos.y > MAP_HEIGHT / 2 ? 'bottom' : 'top',
   );
   elInspectorTooltipContainer.classList.add(
-    mousePos.x > BOARD_WIDTH / 2 ? 'right' : 'left',
+    mousePos.x > MAP_WIDTH / 2 ? 'right' : 'left',
   );
 
   // Update information in content
-  // show info on cell, unit, pickup, etc clicked
+  // show info on unit, pickup, etc clicked
   let text = '';
   // Find unit:
   const unit = window.underworld.getUnitAt(mousePos);

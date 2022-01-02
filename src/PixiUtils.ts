@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { BOARD_HEIGHT, BOARD_WIDTH, CELL_SIZE } from './config';
+import { MAP_HEIGHT, MAP_WIDTH } from './config';
 import { Route } from './routes';
 import { View } from './views';
 // if PIXI is finished setting up
@@ -47,9 +47,9 @@ function resizePixi() {
   // Set the scale of the stage based on the available window pixel space
   // so that players with smaller screens can see the whole board
   const hardCodedCardHeight = 120;
-  const margin = CELL_SIZE * 4;
-  const requiredRenderWidth = BOARD_WIDTH * CELL_SIZE + margin;
-  const requiredRenderHeight = BOARD_HEIGHT * CELL_SIZE + hardCodedCardHeight + margin;
+  const margin = 256;
+  const requiredRenderWidth = MAP_WIDTH + margin;
+  const requiredRenderHeight = MAP_HEIGHT + hardCodedCardHeight + margin;
   const widthRatio = window.innerWidth / requiredRenderWidth;
   // window height shouldn't consider the card height, since the card height doesn't scale
   const heightRatio = (window.innerHeight - hardCodedCardHeight) / requiredRenderHeight;
@@ -73,11 +73,9 @@ export function recenterStage() {
           app.stage.y = window.innerHeight;
           break;
         case Route.Underworld:
-          // Align Camera: center the app in the middle of the board
-          // app.stage.x = app.renderer.width / 2 - (CELL_SIZE * BOARD_WIDTH) / 2;
-          // app.stage.y = app.renderer.height / 2 - (CELL_SIZE * BOARD_HEIGHT) / 2;
-          app.stage.x = app.renderer.width / 2 - (CELL_SIZE * BOARD_WIDTH) / 2 * app.stage.scale.x;
-          app.stage.y = app.renderer.height / 2 - (CELL_SIZE * BOARD_HEIGHT) / 2 * app.stage.scale.y;
+          // Align Camera: center the app in the middle of the map 
+          app.stage.x = app.renderer.width / 2 - (MAP_WIDTH) / 2 * app.stage.scale.x;
+          app.stage.y = app.renderer.height / 2 - (MAP_HEIGHT) / 2 * app.stage.scale.y;
           break;
       }
       break;

@@ -11,7 +11,6 @@ const spell: Spell = {
     probability: 20,
     description: `
 Adds targets for the following cards to effect by "growing" existing targets
-by 1 grid cell in each direction.
     `,
     effect: async (state, dryRun) => {
       let newTargets: Coords[] = [];

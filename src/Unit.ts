@@ -210,7 +210,7 @@ export async function takeDamage(unit: IUnit, amount: number) {
     healthChangedString += alteredAmount > 0 ? '🔥' : '❤️';
   }
   floatingText({
-    cell: unit,
+    coords: unit,
     text: healthChangedString,
   });
   if (alteredAmount > 0) {
@@ -298,7 +298,7 @@ export function moveTowards(unit: IUnit, target: Coords): Promise<void> {
   return setLocation(unit, coordinates);
 }
 
-// setLocation, unlike moveTo, simply sets a unit to a cell coordinate without
+// setLocation, unlike moveTo, simply sets a unit to a coordinate without
 // considering in-game blockers or changing any unit flags
 export function setLocation(unit: IUnit, coordinates: Coords): Promise<void> {
   // Set state instantly to new position

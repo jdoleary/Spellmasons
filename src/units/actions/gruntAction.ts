@@ -12,7 +12,7 @@ export async function action(unit: Unit.IUnit) {
     return;
   }
   // Attack closest enemy
-  if (canInteractWithCell(unit, closestEnemy.x, closestEnemy.y)) {
+  if (canInteractWithTarget(unit, closestEnemy.x, closestEnemy.y)) {
     await Image.attack(
       unit.image,
       unit.x,
@@ -29,7 +29,8 @@ export async function action(unit: Unit.IUnit) {
   }
 }
 
-export function canInteractWithCell(
+const range = 100;
+export function canInteractWithTarget(
   unit: Unit.IUnit,
   x: number,
   y: number,
@@ -38,11 +39,8 @@ export function canInteractWithCell(
   if (!unit.alive) {
     return false;
   }
-  // Melee units can attack any cell 1 distance from them
+  // Melee units can attack target "range" distance from them
   return (
-    (x == unit.x - 1 && y == unit.y) ||
-    (x == unit.x + 1 && y == unit.y) ||
-    (x == unit.x && y == unit.y - 1) ||
-    (x == unit.x && y == unit.y + 1)
+    math.distance(unit, { x, y }) <= range
   );
 }

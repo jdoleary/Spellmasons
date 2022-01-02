@@ -3,14 +3,9 @@ export const UNIT_BASE_MOVE_DISTANCE = 120;
 export const COLLISION_MESH_RADIUS = 32;
 export const UNIT_BASE_HEALTH = 4;
 export const UNIT_BASE_DAMAGE = 1;
-// DEPRECIATED, due to "free movement refactor"
-export const BOARD_HEIGHT = 9;
-// DEPRECIATED, due to "free movement refactor"
-export const BOARD_WIDTH = 12;
 export const MAP_WIDTH = 800;
 export const MAP_HEIGHT = 600;
 export const SECONDS_PER_TURN = 100;
-export const CELL_SIZE = 64;
 export const START_CARDS_COUNT = 60;
 export const NUM_PICKUPS_PER_LEVEL = 2;
 export const NUM_OBSTACLES_PER_LEVEL = 10;
@@ -21,8 +16,8 @@ export const NUMBER_OF_UPGRADES_TO_CHOOSE_FROM = 5;
 // How many turns it takes to get a new card
 export const PLAYER_BASE_TURNS_PER_CARD = 4;
 export const PORTAL_COORDINATES = {
-  x: BOARD_WIDTH - 1,
-  y: Math.floor(BOARD_HEIGHT / 2),
+  x: MAP_WIDTH - COLLISION_MESH_RADIUS,
+  y: MAP_HEIGHT / 2,
 };
 
 // Overworld

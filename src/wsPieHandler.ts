@@ -33,7 +33,7 @@ export function onData(d: OnDataArgs) {
   switch (type) {
     case MESSAGE_TYPES.PING:
       floatingText({
-        cell: payload,
+        coords: payload,
         text: '🎈',
       });
       break;

@@ -10,14 +10,14 @@ interface ConstructorInfo {
 export type UnitAction = {
   (unit: Unit.IUnit): Promise<void>;
 };
-export type CanInteractWithCell = {
+export type canInteractWithTarget = {
   (unit: Unit.IUnit, x: number, y: number): boolean;
 };
 export interface UnitSource {
   id: string;
   info: ConstructorInfo;
   action: UnitAction;
-  canInteractWithCell?: CanInteractWithCell;
+  canInteractWithTarget?: canInteractWithTarget;
 }
 
 /// Units to register

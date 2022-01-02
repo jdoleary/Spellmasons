@@ -1,7 +1,6 @@
 import * as Image from './Image';
 import { containerBoard } from './PixiUtils';
 export interface IObstacle {
-  // note: x,y are cell positions, not board positions
   x: number;
   y: number;
   name: string;

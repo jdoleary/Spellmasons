@@ -24,13 +24,6 @@ Swaps the caster with the source target.
       const swapUnits: [Unit.IUnit, Coords][] = [];
       const swapPickups: [Pickup.IPickup, Coords][] = [];
       const swapLocation = { x: target.x - dx, y: target.y - dy };
-      // You cannot swap with a statically blocked cell
-      if (
-        window.underworld.isCellStaticallyBlocked(swapLocation) ||
-        window.underworld.isCellStaticallyBlocked(target)
-      ) {
-        return state;
-      }
       // The unit at the target location
       const targetUnit = window.underworld.getUnitAt(target);
       if (targetUnit) {

@@ -6,7 +6,6 @@ import type { IUnit } from './Unit';
 
 export const PICKUP_RADIUS = 64;
 export interface IPickup {
-  // note: x,y are cell positions, not board positions
   x: number;
   y: number;
   name: string;

@@ -29,10 +29,6 @@ export interface IPlayer {
 export function create(clientId: string, unitId: string): IPlayer | undefined {
   // limit spawn to the leftmost column
   const coords = window.underworld.getRandomCoordsWithinBounds({ xMax: 0 });
-  if (!coords) {
-    console.error("Important Error: Unable to find empty coords to create new Player in")
-    return undefined;
-  }
   const userSource = allUnits[unitId];
   if (!userSource) {
     console.error('User unit source file not registered, cannot create player');
@@ -115,11 +111,7 @@ export function resetPlayerForNextLevel(player: IPlayer) {
   // Return to a spawn location
   // limit spawn to the leftmost column
   const coords = window.underworld.getRandomCoordsWithinBounds({ xMax: 0 });
-  if (coords) {
-    Unit.setLocation(player.unit, coords);
-  } else {
-    console.error('Important Error: Unable to find empty coords to resetPlayerForNextLevel')
-  }
+  Unit.setLocation(player.unit, coords);
 }
 // Keep a global reference to the current client's player
 function updateGlobalRefToCurrentClientPlayer(player: IPlayer) {

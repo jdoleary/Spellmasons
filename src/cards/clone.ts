@@ -13,13 +13,13 @@ const spell: Spell = {
     thumbnail: 'clone.png',
     probability: 3,
     description: `
-Clones each target into an adjecent cell if there is an open adjacent cell
+Clones each target
     `,
     effect: async (state, dryRun) => {
       if (dryRun) {
         return state;
       }
-      // Batch find targets that should be cloned and which empty cell to clone into
+      // Batch find targets that should be cloned
       // Note: They need to be batched so that the new clones don't get cloned
       const clonePairs: Coords[][] = [];
       for (let target of state.targets) {
@@ -31,7 +31,7 @@ Clones each target into an adjecent cell if there is an open adjacent cell
         const pickup = window.underworld.getPickupAt(target);
         const obstacle = window.underworld.getObstacleAt(target);
 
-        // If there is an empty cell to clone into
+        // If there is are clone coordinates to clone into
         if (cloneToCoords) {
           if (unit) {
             const clone = Unit.load(unit);

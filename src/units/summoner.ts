@@ -22,25 +22,23 @@ const unit: UnitSource = {
     // Every x number of tunrs
     if (window.underworld.turn_number % 2 === 0) {
       const coords = window.underworld.getRandomCoordsWithinBounds({ xMin: 2 });
-      if (coords) {
-        const sourceUnit = allUnits.grunt;
-        if (sourceUnit) {
-          const summonedUnit = Unit.create(
-            sourceUnit.id,
-            // Start the unit at the summoners location
-            unit.x,
-            unit.y,
-            unit.moveDistance,
-            // A unit always summons units in their own faction
-            unit.faction,
-            sourceUnit.info.image,
-            UnitType.AI,
-            sourceUnit.info.subtype,
-          );
-          await Unit.moveTowards(summonedUnit, coords);
-        } else {
-          console.error('Summoner could not find unit source to summon from');
-        }
+      const sourceUnit = allUnits.grunt;
+      if (sourceUnit) {
+        const summonedUnit = Unit.create(
+          sourceUnit.id,
+          // Start the unit at the summoners location
+          unit.x,
+          unit.y,
+          unit.moveDistance,
+          // A unit always summons units in their own faction
+          unit.faction,
+          sourceUnit.info.image,
+          UnitType.AI,
+          sourceUnit.info.subtype,
+        );
+        await Unit.moveTowards(summonedUnit, coords);
+      } else {
+        console.error('Summoner could not find unit source to summon from');
       }
     }
   },

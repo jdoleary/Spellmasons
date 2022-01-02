@@ -1,3 +1,4 @@
+import * as PIXI from 'pixi.js';
 import seedrandom from 'seedrandom';
 import * as config from './config';
 import * as Unit from './Unit';
@@ -56,8 +57,8 @@ export default class Underworld {
   // meaning, players take their turn, npcs take their
   // turn, then it resets to player turn, that is a full "turn"
   turn_number: number = -1;
-  height: number = config.BOARD_HEIGHT;
-  width: number = config.BOARD_WIDTH;
+  height: number = config.MAP_HEIGHT;
+  width: number = config.MAP_WIDTH;
   players: Player.IPlayer[] = [];
   units: Unit.IUnit[] = [];
   pickups: Pickup.IPickup[] = [];
@@ -76,35 +77,14 @@ export default class Underworld {
     // state of a state object, rehydrates the RNG to a particular state
     this.random = seedrandom(this.seed, { state: RNGState });
 
-    // Make sprites for the board tiles
-    let cell;
-    const makeWall = (x: number, y: number) => {
-      const wall = addPixiSprite('tiles/wall.png', containerBoard);
-      wall.x = x * config.CELL_SIZE;
-      wall.y = y * config.CELL_SIZE;
+    const mapGraphics = new PIXI.Graphics();
+    containerBoard.addChild(mapGraphics);
+    mapGraphics.lineStyle(3, 0x000000, 1);
+    mapGraphics.beginFill(0x795644, 1);
+    mapGraphics.drawRect(0, 0, config.MAP_WIDTH, config.MAP_HEIGHT);
+    mapGraphics.endFill();
 
-    }
-    // Make corners
-    makeWall(-1, -1);
-    makeWall(-1, config.BOARD_HEIGHT);
-    makeWall(config.BOARD_WIDTH, -1);
-    makeWall(config.BOARD_WIDTH, config.BOARD_HEIGHT);
-    // Make floor and walls
-    for (let x = 0; x < config.BOARD_WIDTH; x++) {
-      for (let y = 0; y < config.BOARD_HEIGHT; y++) {
-        cell = addPixiSprite('tiles/ground.png', containerBoard);
-        cell.x = x * config.CELL_SIZE;
-        cell.y = y * config.CELL_SIZE;
-        if (x == 0) {
-          makeWall(-1, y);
-          makeWall(config.BOARD_WIDTH, y);
-        }
-        if (y == 0) {
-          makeWall(x, -1);
-          makeWall(x, config.BOARD_HEIGHT);
-        }
-      }
-    }
+    // TODO this probably shouldn't get initialized here
     this.startTurnTimer();
   }
   startTurnTimer() {
@@ -196,7 +176,7 @@ export default class Underworld {
     this.level = level;
     // Show text in center of screen for the new level
     floatingText({
-      cell: {
+      coords: {
         x: config.MAP_WIDTH / 2,
         y: config.MAP_HEIGHT / 2,
       },
@@ -226,70 +206,58 @@ export default class Underworld {
     }
     for (let i = 0; i < config.NUM_PICKUPS_PER_LEVEL; i++) {
       const coords = this.getRandomCoordsWithinBounds({ xMin: 2 });
-      if (coords) {
-        const randomPickupIndex = randInt(this.random,
-          0,
-          Object.values(Pickup.pickups).length - 1,
-        );
-        const pickup = Pickup.pickups[randomPickupIndex];
-        Pickup.create(
-          coords.x,
-          coords.y,
-          pickup.name,
-          pickup.description,
-          true,
-          pickup.imagePath,
-          true,
-          pickup.effect,
-        );
-      } else {
-        console.error('Pickup not spawned due to no empty cells');
-      }
+      const randomPickupIndex = randInt(this.random,
+        0,
+        Object.values(Pickup.pickups).length - 1,
+      );
+      const pickup = Pickup.pickups[randomPickupIndex];
+      Pickup.create(
+        coords.x,
+        coords.y,
+        pickup.name,
+        pickup.description,
+        true,
+        pickup.imagePath,
+        true,
+        pickup.effect,
+      );
     }
     for (let i = 0; i < config.NUM_OBSTACLES_PER_LEVEL; i++) {
       const coords = this.getRandomCoordsWithinBounds({ xMin: 2 });
-      if (coords) {
-        const randomIndex = randInt(this.random,
-          0,
-          Obstacle.obstacleSource.length - 1,
-        );
-        const obstacle = Obstacle.obstacleSource[randomIndex];
-        Obstacle.create(coords.x, coords.y, obstacle);
-        // TODO: Ensure the players have a path to the portal
-      } else {
-        console.error('Obstacle not spawned due to no empty cells');
-      }
+      const randomIndex = randInt(this.random,
+        0,
+        Obstacle.obstacleSource.length - 1,
+      );
+      const obstacle = Obstacle.obstacleSource[randomIndex];
+      Obstacle.create(coords.x, coords.y, obstacle);
+      // TODO: Ensure the players have a path to the portal
     }
     // Spawn units at the start of the level
     const enemyIndexes = getEnemiesForAltitude(level.altitude);
     for (let index of enemyIndexes) {
       const coords = this.getRandomCoordsWithinBounds({ xMin: 2 });
-      if (coords) {
-        const sourceUnit = Object.values(allUnits)[index];
-        const unit = Unit.create(
-          sourceUnit.id,
-          coords.x,
-          coords.y,
-          config.UNIT_BASE_MOVE_DISTANCE,
-          Faction.ENEMY,
-          sourceUnit.info.image,
-          UnitType.AI,
-          sourceUnit.info.subtype,
-        );
-        const roll = randInt(this.random, 0, 100);
-        if (roll <= config.PERCENT_CHANCE_OF_HEAVY_UNIT) {
-          unit.healthMax = config.UNIT_BASE_HEALTH * 2;
-          unit.health = unit.healthMax;
-          unit.damage = config.UNIT_BASE_DAMAGE * 2;
-          unit.image.sprite.scale.set(0);
-          Image.scale(unit.image, 1.0);
-        } else {
-          // Start images small and make them grow when they spawn in
-          unit.image.sprite.scale.set(0);
-          Image.scale(unit.image, 0.8);
-        }
+      const sourceUnit = Object.values(allUnits)[index];
+      const unit = Unit.create(
+        sourceUnit.id,
+        coords.x,
+        coords.y,
+        config.UNIT_BASE_MOVE_DISTANCE,
+        Faction.ENEMY,
+        sourceUnit.info.image,
+        UnitType.AI,
+        sourceUnit.info.subtype,
+      );
+      const roll = randInt(this.random, 0, 100);
+      if (roll <= config.PERCENT_CHANCE_OF_HEAVY_UNIT) {
+        unit.healthMax = config.UNIT_BASE_HEALTH * 2;
+        unit.health = unit.healthMax;
+        unit.damage = config.UNIT_BASE_DAMAGE * 2;
+        unit.image.sprite.scale.set(0);
+        Image.scale(unit.image, 1.0);
       } else {
-        console.error('Unit not spawned due to no empty cells');
+        // Start images small and make them grow when they spawn in
+        unit.image.sprite.scale.set(0);
+        Image.scale(unit.image, 0.8);
       }
     }
 
@@ -502,70 +470,7 @@ export default class Underworld {
     }
     return false;
   }
-  // Generate an array of cell coordinates in shuffled order
-  // between optional boundaries
-  _getShuffledCoordinates({ xMin, xMax, yMin, yMax }: Bounds): Coords[] {
-    const numberOfIndices = config.BOARD_WIDTH * config.BOARD_HEIGHT;
-    const indices: number[] = [];
-    // Populate an array with the 1-dimentional indices of the board
-    // so if the board is 2x2, the array will be [0,1,2,3]
-    for (let i = 0; i < numberOfIndices; i++) {
-      indices.push(i);
-    }
-    // Now randomly remove indicies from that array and add them to a new array
-    const shuffledIndices: Coords[] = [];
-    for (let i = 0; i < numberOfIndices; i++) {
-      const metaIndex = randInt(this.random, 0, indices.length);
-      // pull chosen index out of the indices array so that it wont be picked next loop
-      const pluckedIndex = indices.splice(metaIndex, 1)[0];
-      if (pluckedIndex === undefined) {
-        continue;
-      }
-      const coords = math.indexToXY(pluckedIndex, config.BOARD_WIDTH);
-      // If plucked index is not within specified bounds continue
-      if (xMin !== undefined && coords.x < xMin) {
-        continue;
-      }
-      if (xMax !== undefined && coords.x > xMax) {
-        continue;
-      }
-      if (yMin !== undefined && coords.y < yMin) {
-        continue;
-      }
-      if (yMax !== undefined && coords.y > yMax) {
-        continue;
-      }
-      // If coordinates are within specified bounds, or if there are not specified bounds,
-      // add it to the list of shuffled coordinates
-      shuffledIndices.push(coords);
-    }
-    // Resulting in an array of shuffled indicies (e.g. [2,1,0,3])
-    // This new array can now be used to randomly access cell coordinates
-    // using (math.indexToXY) multiple times without getting the same index more than once
-    return shuffledIndices;
-  }
-  isCellEmpty({ x, y }: Coords): boolean {
-    // Test for units in cell
-    for (let u of this.units) {
-      if (u.x === x && u.y === y) {
-        return false;
-      }
-    }
-    // Test for pickups
-    for (let u of this.pickups) {
-      if (u.x === x && u.y === y) {
-        return false;
-      }
-    }
-    // Test for obstacles
-    for (let o of this.obstacles) {
-      if (o.x === x && o.y === y) {
-        return false;
-      }
-    }
-    return true;
-  }
-  getRandomCoordsWithinBounds(bounds: Bounds): Coords | undefined {
+  getRandomCoordsWithinBounds(bounds: Bounds): Coords {
     const x = randInt(window.underworld.random, bounds.xMin || 0, bounds.yMax || config.MAP_WIDTH);
     const y = randInt(window.underworld.random, bounds.yMin || 0, bounds.yMax || config.MAP_HEIGHT);
     return { x, y };
@@ -649,7 +554,7 @@ export default class Underworld {
 
         // Since NPC turn is over, update the planningView
         // They may have moved or unfrozen which would update
-        // which cells they can attack next turn
+        // where they can attack next turn
         updatePlanningView();
         console.log('end switch to NPC turn');
         break;
@@ -733,36 +638,6 @@ export default class Underworld {
   }
   addObstacleToArray(o: Obstacle.IObstacle) {
     this.obstacles.push(o);
-  }
-  // A cell is statically blocked if it does not exist or is occupied by something immovable
-  isCellStaticallyBlocked(coordinates: Coords): boolean {
-    const { x, y } = coordinates;
-    // Out of map bounds is considered "obstructed"
-    if (x < 0 || y < 0 || x >= config.BOARD_WIDTH || y >= config.BOARD_HEIGHT) {
-      return true;
-    }
-    // Obstacles statically block cells
-    for (let o of this.obstacles) {
-      if (o.x === x && o.y === y) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-  isCellObstructed(coordinates: Coords): boolean {
-    if (this.isCellStaticallyBlocked(coordinates)) {
-      return true;
-    }
-    const { x, y } = coordinates;
-    // Cell is obstructed if it is already occupied by a living unit
-    // note: corpses do not obstruct because they are destroyed when walked on
-    for (let unit of this.units) {
-      if (unit.alive && unit.x === x && unit.y === y) {
-        return true;
-      }
-    }
-    return false;
   }
   async castCards(
     casterPlayer: Player.IPlayer,

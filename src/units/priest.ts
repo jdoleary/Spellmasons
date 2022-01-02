@@ -49,7 +49,7 @@ const unit: UnitSource = {
       }
     }
   },
-  canInteractWithCell: (unit, x, y) => {
+  canInteractWithTarget: (unit, x, y) => {
     return inRange(unit, { x, y });
   },
 };
