@@ -1,5 +1,6 @@
 import * as Unit from '../../Unit';
 import * as Image from '../../Image';
+import * as math from '../../math';
 
 export async function action(unit: Unit.IUnit) {
   if (!Unit.canMove(unit)) {
@@ -21,7 +22,7 @@ export async function action(unit: Unit.IUnit) {
     );
     await Unit.takeDamage(closestEnemy, unit.damage);
   } else {
-    const moveTo = Unit.findCellOneStepCloserTo(unit, closestEnemy);
+    const moveTo = math.getCoordsDistanceTowardsTarget(unit, closestEnemy, unit.moveDistance);
     unit.intendedNextMove = moveTo;
     // Update the "planning view" overlay that shows the unit's agro radius
     Unit.updateSelectedOverlay(unit);

@@ -24,15 +24,18 @@ export function similarTriangles(X: number, Y: number, D: number, d: number): Co
   }
 }
 
-// getCoordsAtLengthAlongVector is used, for example, to move 'length' distance across
+// getCoordsDistanceTowardsTarget is used, for example, to move 'travelDist' distance across
 // the vector 'start' to 'end'
 // --
 // hint: Use a negative length to move away from target
-export function getCoordsAtLengthAlongVector(start: Coords, target: Coords, length: number): Coords {
-  const normalizedResult = similarTriangles(target.x - start.x, target.y - start.y, distance(start, target), length)
+export function getCoordsDistanceTowardsTarget(start: Coords, target: Coords, travelDist: number): Coords {
+  const distanceBetweenPoints = distance(start, target);
+  // Travel at most length, however, don't move beyond target
+  const travelDistance = Math.min(travelDist, distanceBetweenPoints)
+  const result = similarTriangles(target.x - start.x, target.y - start.y, distanceBetweenPoints, travelDistance)
   return {
-    x: start.x + normalizedResult.x,
-    y: start.y + normalizedResult.y
+    x: start.x + result.x,
+    y: start.y + result.y
   }
 }
 

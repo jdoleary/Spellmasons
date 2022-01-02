@@ -11,7 +11,7 @@ import {
   updatePlanningView,
 } from './PlanningView';
 import { app } from '../PixiUtils';
-import { distance } from '../math';
+import { distance, getCoordsDistanceTowardsTarget } from '../math';
 import { View } from '../views';
 
 export function keydownListener(event: KeyboardEvent) {
@@ -56,6 +56,7 @@ export function endTurnBtnListener() {
   window.underworld.endMyTurn();
 }
 
+// TODO remove for "free movement" refactor
 let mouseCell: Coords = { x: -1, y: -1 };
 export function getCurrentMouseCellOnGrid(): Coords {
   return mouseCell;
@@ -65,12 +66,12 @@ export function mousemoveHandler(e: MouseEvent) {
   if (window.view !== View.Game) {
     return;
   }
-  const cell = window.underworld.getCellFromCurrentMousePos();
-  const didChange = mouseCell.x !== cell.x || mouseCell.y !== cell.y;
+  const coords = window.underworld.getMousePos();
+  const didChange = mouseCell.x !== coords.x || mouseCell.y !== coords.y;
   // If mouse hovering over a new cell, update the target images
   if (didChange) {
     // Update mouseCell
-    mouseCell = cell;
+    mouseCell = coords;
     // Show target hover on cells
     syncSpellEffectProjection();
     // Update planning view for new cell
@@ -84,7 +85,7 @@ export function contextmenuHandler(e: MouseEvent) {
     return;
   }
   e.preventDefault();
-  const mouseTarget = window.underworld.getCellFromCurrentMousePos();
+  const mouseTarget = window.underworld.getMousePos();
   if (isOutOfBounds(mouseTarget)) {
     // Disallow click out of bounds
     return;
@@ -98,25 +99,10 @@ export function contextmenuHandler(e: MouseEvent) {
       );
     // If player hasn't already moved this turn...
     if (selfPlayer && !selfPlayer.unit.thisTurnMoved) {
-      const targetCell = Unit.findCellOneStepCloserTo(
-        selfPlayer.unit,
-        mouseTarget,
-      );
-      if (targetCell && !window.underworld.isCellObstructed(targetCell)) {
-        window.pie.sendData({
-          type: MESSAGE_TYPES.MOVE_PLAYER,
-          // This formula clamps the diff to -1, 0 or 1
-          ...targetCell,
-        });
-      } else {
-        floatingText({
-          cell: mouseTarget,
-          text: 'You cannot move here',
-          style: {
-            fill: 'red',
-          },
-        });
-      }
+      window.pie.sendData({
+        type: MESSAGE_TYPES.MOVE_PLAYER,
+        ...mouseTarget,
+      });
     } else {
       floatingText({
         cell: mouseTarget,
@@ -161,7 +147,7 @@ export function clickHandler(e: MouseEvent) {
   if (window.view !== View.Game) {
     return;
   }
-  const mouseTarget = window.underworld.getCellFromCurrentMousePos();
+  const mouseTarget = window.underworld.getMousePos();
   if (isOutOfBounds(mouseTarget)) {
     // Disallow click out of bounds
     return;

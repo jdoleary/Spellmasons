@@ -24,7 +24,6 @@ export function initPlanningView() {
 }
 export function updatePlanningView() {
   const hoverCell = getCurrentMouseCellOnGrid();
-  const halfCell = config.CELL_SIZE / 2;
   planningViewGraphics.clear();
   // Iterate all cells and paint ones that are able to be attacked by an AI
   for (let x = 0; x < config.BOARD_WIDTH; x++) {
@@ -38,15 +37,13 @@ export function updatePlanningView() {
           unit.faction === Faction.ENEMY
         ) {
           if (allUnits[unit.unitSourceId].canInteractWithCell?.(unit, x, y)) {
-            const cell = math.cellToBoardCoords(x, y);
             const color = Unit.getPlanningViewColor(unit);
             // planningViewGraphics.lineStyle(8, color, 0.9);
             planningViewGraphics.beginFill(color);
-            planningViewGraphics.drawRect(
-              cell.x - halfCell,
-              cell.y - halfCell,
-              config.CELL_SIZE,
-              config.CELL_SIZE,
+            planningViewGraphics.drawCircle(
+              unit.x,
+              unit.y,
+              unit.moveDistance
             );
             planningViewGraphics.endFill();
           }
@@ -54,14 +51,12 @@ export function updatePlanningView() {
       }
       // For the player, draw their range
       if (window.player.unit == unit && Player.isTargetInRange(window.player, { x, y })) {
-        const cell = math.cellToBoardCoords(x, y);
         const color = Unit.getPlanningViewColor(window.player.unit);
         planningViewGraphics.beginFill(color);
-        planningViewGraphics.drawRect(
-          cell.x - halfCell,
-          cell.y - halfCell,
-          config.CELL_SIZE,
-          config.CELL_SIZE,
+        planningViewGraphics.drawCircle(
+          unit.x,
+          unit.y,
+          unit.moveDistance
         );
         planningViewGraphics.endFill();
       }
@@ -133,9 +128,9 @@ export function drawSwapLine(one: Coords, two: Coords) {
   }
 }
 
-export function isOutOfBounds(cell: Coords) {
+export function isOutOfBounds(target: Coords) {
   return (
-    cell.x < 0 || cell.x >= BOARD_WIDTH || cell.y < 0 || cell.y >= BOARD_HEIGHT
+    target.x < 0 || target.x >= config.MAP_WIDTH || target.y < 0 || target.y >= config.MAP_HEIGHT
   );
 }
 

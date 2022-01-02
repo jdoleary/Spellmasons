@@ -88,6 +88,9 @@ let onDataQueue: OnDataArgs[] = [];
 function handleOnDataMessageSyncronously(d: OnDataArgs) {
   // Queue message for processing one at a time
   onDataQueue.push(d);
+  if (onDataQueue.length > 10) {
+    console.warn("onData queue is growing unusually large: ", onDataQueue.length);
+  }
   // If game is ready to process messages, begin processing
   // (if not, they will remain in the queue until the game is ready)
   if (readyState.isReady()) {
@@ -140,7 +143,7 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       break;
     case MESSAGE_TYPES.MOVE_PLAYER:
       if (caster) {
-        await Unit.moveTo(caster.unit, payload).then(() => {
+        await Unit.moveTowards(caster.unit, payload).then(() => {
           underworld.endPlayerTurn(caster.clientId);
         });
       } else {

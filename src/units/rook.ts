@@ -33,7 +33,7 @@ const unit: UnitSource = {
       // Move opposite to enemy
       const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit);
       if (closestEnemy) {
-        const moveTo = math.oneCellAwayFromCell(unit, closestEnemy);
+        const moveTo = math.getCoordsDistanceTowardsTarget(unit, closestEnemy, -unit.moveDistance);
         unit.intendedNextMove = moveTo;
       }
     }

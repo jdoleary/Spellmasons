@@ -1,4 +1,3 @@
-import PF from 'pathfinding';
 import seedrandom from 'seedrandom';
 import * as config from './config';
 import * as Unit from './Unit';
@@ -69,8 +68,6 @@ export default class Underworld {
   level?: ILevel;
   choseUpgrade = new Set<string>();
 
-  pfGrid: PF.Grid;
-  pfFinder: PF.BiBestFirstFinder;
   constructor(seed: string, RNGState: object | boolean = true) {
     window.underworld = this;
     this.seed = seed;
@@ -78,12 +75,6 @@ export default class Underworld {
     // state of "true" initializes the RNG with the ability to save it's state,
     // state of a state object, rehydrates the RNG to a particular state
     this.random = seedrandom(this.seed, { state: RNGState });
-
-    // Setup pathfinding
-    this.pfGrid = new PF.Grid(config.BOARD_WIDTH, config.BOARD_HEIGHT);
-    this.pfFinder = new PF.BiBestFirstFinder({
-      diagonalMovement: PF.DiagonalMovement.Never,
-    });
 
     // Make sprites for the board tiles
     let cell;
@@ -178,20 +169,6 @@ export default class Underworld {
       Image.cleanup(x.image);
     }
   }
-  findPath(from: Coords, to: Coords): number[][] {
-    try {
-      return this.pfFinder.findPath(
-        from.x,
-        from.y,
-        to.x,
-        to.y,
-        this.pfGrid.clone(),
-      );
-    } catch (e) {
-      console.error(e);
-      return [];
-    }
-  }
   moveToNextLevel(level: ILevel) {
     for (let i = this.units.length - 1; i >= 0; i--) {
       const u = this.units[i];
@@ -248,7 +225,7 @@ export default class Underworld {
       console.error('elLevelIndicator is null');
     }
     for (let i = 0; i < config.NUM_PICKUPS_PER_LEVEL; i++) {
-      const coords = this.getRandomEmptyCell({ xMin: 2 });
+      const coords = this.getRandomCoordsWithinBounds({ xMin: 2 });
       if (coords) {
         const randomPickupIndex = randInt(this.random,
           0,
@@ -270,22 +247,15 @@ export default class Underworld {
       }
     }
     for (let i = 0; i < config.NUM_OBSTACLES_PER_LEVEL; i++) {
-      const coords = this.getRandomEmptyCell({ xMin: 2 });
+      const coords = this.getRandomCoordsWithinBounds({ xMin: 2 });
       if (coords) {
         const randomIndex = randInt(this.random,
           0,
           Obstacle.obstacleSource.length - 1,
         );
         const obstacle = Obstacle.obstacleSource[randomIndex];
-        const newObstacle = Obstacle.create(coords.x, coords.y, obstacle);
-        // Ensure the players have a path to the portal
-        const pathToPortal = this.findPath(
-          { x: 0, y: 0 },
-          config.PORTAL_COORDINATES,
-        );
-        if (pathToPortal.length === 0) {
-          Obstacle.remove(newObstacle);
-        }
+        Obstacle.create(coords.x, coords.y, obstacle);
+        // TODO: Ensure the players have a path to the portal
       } else {
         console.error('Obstacle not spawned due to no empty cells');
       }
@@ -293,13 +263,14 @@ export default class Underworld {
     // Spawn units at the start of the level
     const enemyIndexes = getEnemiesForAltitude(level.altitude);
     for (let index of enemyIndexes) {
-      const coords = this.getRandomEmptyCell({ xMin: 2 });
+      const coords = this.getRandomCoordsWithinBounds({ xMin: 2 });
       if (coords) {
         const sourceUnit = Object.values(allUnits)[index];
         const unit = Unit.create(
           sourceUnit.id,
           coords.x,
           coords.y,
+          config.UNIT_BASE_MOVE_DISTANCE,
           Faction.ENEMY,
           sourceUnit.info.image,
           UnitType.AI,
@@ -344,14 +315,11 @@ export default class Underworld {
       }
     }
   }
-  getCellFromCurrentMousePos() {
+  getMousePos(): Coords {
     const { x, y } = containerBoard.toLocal(
       app.renderer.plugins.interaction.mouse.global,
     );
-    return {
-      x: Math.floor(x / config.CELL_SIZE),
-      y: Math.floor(y / config.CELL_SIZE),
-    };
+    return { x, y };
   }
   goToNextPhaseIfAppropriate(): boolean {
     if (this.turn_phase === turn_phase.PlayerTurns) {
@@ -605,17 +573,10 @@ export default class Underworld {
     }
     return true;
   }
-  getRandomEmptyCell(bounds: Bounds): Coords | undefined {
-    const shuffledCoords = this._getShuffledCoordinates(bounds);
-    for (let coords of shuffledCoords) {
-      const isEmpy = this.isCellEmpty(coords);
-      // if cell if empty return the coords, if it's not loop to the next coords that may be empty
-      if (isEmpy) {
-        return coords;
-      }
-    }
-    // Unable to find an empty cell in the given bounds
-    return undefined
+  getRandomCoordsWithinBounds(bounds: Bounds): Coords | undefined {
+    const x = randInt(window.underworld.random, bounds.xMin || 0, bounds.yMax || config.MAP_WIDTH);
+    const y = randInt(window.underworld.random, bounds.yMin || 0, bounds.yMax || config.MAP_HEIGHT);
+    return { x, y };
   }
   setTurnPhase(p: turn_phase) {
     // Before the turn phase changes, check if the game should transition to game over
@@ -634,9 +595,7 @@ export default class Underworld {
     // Clean up invalid units
     const keepUnits = [];
     for (let u of this.units) {
-      if (u.flaggedForRemoval) {
-        this.setWalkableAt(u, true);
-      } else {
+      if (!u.flaggedForRemoval) {
         keepUnits.push(u);
       }
     }
@@ -716,7 +675,7 @@ export default class Underworld {
     // Units who are obstructed will not move due to collision checks in Unit.moveTo
     AIUnits.filter((u) => u.intendedNextMove !== undefined).forEach((u) => {
       if (u.intendedNextMove) {
-        promises.push(Unit.moveTo(u, u.intendedNextMove));
+        promises.push(Unit.moveTowards(u, u.intendedNextMove));
       }
     });
     // While there are units who intend to move but havent yet
@@ -730,7 +689,7 @@ export default class Underworld {
       // Try moving them again
       remainingUnitsWhoIntendToMove.forEach((u) => {
         if (u.intendedNextMove) {
-          promises.push(Unit.moveTo(u, u.intendedNextMove));
+          promises.push(Unit.moveTowards(u, u.intendedNextMove));
         }
       });
     } while (
@@ -798,7 +757,6 @@ export default class Underworld {
   }
   addUnitToArray(unit: Unit.IUnit) {
     this.units.push(unit);
-    this.setWalkableAt(unit, false);
   }
   removePickupFromArray(pickup: Pickup.IPickup) {
     this.pickups = this.pickups.filter((p) => p !== pickup);
@@ -808,11 +766,9 @@ export default class Underworld {
   }
   removeObstacleFromArray(obstacle: Obstacle.IObstacle) {
     this.obstacles = this.obstacles.filter((o) => o !== obstacle);
-    this.setWalkableAt(obstacle, true);
   }
   addObstacleToArray(o: Obstacle.IObstacle) {
     this.obstacles.push(o);
-    this.setWalkableAt(o, false);
   }
   // A cell is statically blocked if it does not exist or is occupied by something immovable
   isCellStaticallyBlocked(coordinates: Coords): boolean {
@@ -932,14 +888,6 @@ export default class Underworld {
       // the state of the Random Number Generator
       RNGState: this.random.state()
     };
-  }
-  setWalkableAt(coords: Coords, walkable: boolean) {
-    // Protect against trying to setWalkable for invalid coordinates
-    if (0 <= coords.x && coords.x < this.pfGrid.width) {
-      if (0 <= coords.y && coords.y < this.pfGrid.height) {
-        this.pfGrid.setWalkableAt(coords.x, coords.y, walkable);
-      }
-    }
   }
 }
 

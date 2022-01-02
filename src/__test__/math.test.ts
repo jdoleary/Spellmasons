@@ -1,4 +1,4 @@
-import { indexToXY, xyToIndex, normalizeRadians, _chooseObjectWithProbability, similarTriangles, getCoordsAtLengthAlongVector, distance } from '../math';
+import { indexToXY, xyToIndex, normalizeRadians, _chooseObjectWithProbability, similarTriangles, getCoordsDistanceTowardsTarget, distance } from '../math';
 
 describe('math', () => {
   describe('probability', () => {
@@ -147,27 +147,35 @@ describe('math', () => {
       expect(actual).toEqual(expected);
     });
   });
-  describe('getCoordsAtLengthAlongVector', () => {
+  describe('getCoordsDistanceTowardsTarget', () => {
     // Using the known triangle sides 3, 4, and 5 in these tests to make the expected results easy and obvious
-    it('should return a coord "length" distance away from "start" along the vector "start" to "end"', () => {
+    it('should return a coord "travelDist" distance away from "start" along the vector "start" to "end"', () => {
       const start = { x: 3, y: 4 };
       const end = { x: 9, y: 12 };
-      const actual = getCoordsAtLengthAlongVector(start, end, 5);
+      const actual = getCoordsDistanceTowardsTarget(start, end, 5);
       const expected = { x: 6, y: 8 };
       expect(actual).toEqual(expected);
     });
-    it('should return coord "length" distance away from "start" along the vector "start" to "end" even if the start contains greater numbers than the end', () => {
+    it('should return coord "travelDist" distance away from "start" along the vector "start" to "end" even if the start contains greater numbers than the end', () => {
       const start = { x: 9, y: 12 };
       const end = { x: 3, y: 4 };
-      const actual = getCoordsAtLengthAlongVector(start, end, 5);
+      const actual = getCoordsDistanceTowardsTarget(start, end, 5);
       const expected = { x: 6, y: 8 };
       expect(actual).toEqual(expected);
     });
-    it('should return coord "length" distance away from "start" along the vector "end" to "start" (backwards) for a negative length', () => {
+    it('should return coord "travelDist" distance away from "start" along the vector "end" to "start" (backwards) for a negative travelDist', () => {
       const start = { x: 3, y: 4 };
       const end = { x: 9, y: 12 };
-      const actual = getCoordsAtLengthAlongVector(start, end, -5);
+      const actual = getCoordsDistanceTowardsTarget(start, end, -5);
       const expected = { x: 0, y: 0 };
+      expect(actual).toEqual(expected);
+    });
+    it('should return target if travelDist is greater than the distance to the target so the returned coords are not beyond the target', () => {
+      const start = { x: 3, y: 4 };
+      const target = { x: 10, y: 10 };
+      const travelDist = 5000;
+      const actual = getCoordsDistanceTowardsTarget(start, target, travelDist);
+      const expected = target;
       expect(actual).toEqual(expected);
     });
   });

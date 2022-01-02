@@ -15,13 +15,13 @@ const unit: UnitSource = {
     // Move opposite to closest enemy
     const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit);
     if (closestEnemy) {
-      const moveTo = math.oneCellAwayFromCell(unit, closestEnemy);
+      const moveTo = math.getCoordsDistanceTowardsTarget(unit, closestEnemy, -unit.moveDistance);
       unit.intendedNextMove = moveTo;
     }
     // Summon unit
     // Every x number of tunrs
     if (window.underworld.turn_number % 2 === 0) {
-      const coords = window.underworld.getRandomEmptyCell({ xMin: 2 });
+      const coords = window.underworld.getRandomCoordsWithinBounds({ xMin: 2 });
       if (coords) {
         const sourceUnit = allUnits.grunt;
         if (sourceUnit) {
@@ -30,13 +30,14 @@ const unit: UnitSource = {
             // Start the unit at the summoners location
             unit.x,
             unit.y,
+            unit.moveDistance,
             // A unit always summons units in their own faction
             unit.faction,
             sourceUnit.info.image,
             UnitType.AI,
             sourceUnit.info.subtype,
           );
-          await Unit.moveTo(summonedUnit, coords);
+          await Unit.moveTowards(summonedUnit, coords);
         } else {
           console.error('Summoner could not find unit source to summon from');
         }

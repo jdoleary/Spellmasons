@@ -2,7 +2,8 @@ import * as PIXI from 'pixi.js';
 import * as config from './config';
 import floatingText from './FloatingText';
 import * as Image from './Image';
-import { cellDistance } from './math';
+import * as math from './math';
+import { distance } from './math';
 import { addPixiSprite, containerUnits } from './PixiUtils';
 import { Coords, UnitSubType, UnitType, Faction } from './commonTypes';
 import Events from './Events';
@@ -21,6 +22,7 @@ export interface IUnit {
   unitSourceId: string;
   x: number;
   y: number;
+  moveDistance: number;
   name?: string;
   faction: number;
   // If the unit moved this turn
@@ -52,6 +54,7 @@ export function create(
   unitSourceId: string,
   x: number,
   y: number,
+  moveDistance: number,
   faction: Faction,
   imagePath: string,
   unitType: UnitType,
@@ -61,6 +64,7 @@ export function create(
     unitSourceId,
     x,
     y,
+    moveDistance,
     faction,
     thisTurnMoved: false,
     intendedNextMove: undefined,
@@ -164,8 +168,6 @@ export function serializeUnit(unit: IUnit) {
   };
 }
 export function resurrect(unit: IUnit) {
-  // Now that unit is alive again they take up space in the path
-  window.underworld.setWalkableAt(unit, false);
   Image.changeSprite(
     unit.image,
     addPixiSprite(unit.image.imageName, containerUnits),
@@ -175,8 +177,6 @@ export function resurrect(unit: IUnit) {
   unit.alive = true;
 }
 export function die(unit: IUnit) {
-  // Ensure that corpses can be stepped on to be destroyed
-  window.underworld.setWalkableAt(unit, true);
   Image.changeSprite(
     unit.image,
     addPixiSprite('units/corpse.png', unit.image.sprite.parent),
@@ -237,19 +237,6 @@ export function canMove(unit: IUnit): boolean {
   }
   return true;
 }
-export function findCellOneStepCloserTo(
-  unit: IUnit,
-  desiredCell: Coords,
-): Coords | undefined {
-  const path = window.underworld.findPath(unit, desiredCell);
-  if (path && path.length >= 2) {
-    const [x, y] = path[1];
-    return { x, y };
-  } else {
-    // No Path
-    return undefined;
-  }
-}
 export function livingUnitsInDifferentFaction(unit: IUnit) {
   return window.underworld.units.filter(
     (u) => u.faction !== unit.faction && u.alive,
@@ -267,7 +254,7 @@ function closestInListOfUnits(
 ): IUnit | undefined {
   return units.reduce<{ closest: IUnit | undefined; distance: number }>(
     (acc, currentUnitConsidered) => {
-      const dist = cellDistance(currentUnitConsidered, sourceUnit);
+      const dist = distance(currentUnitConsidered, sourceUnit);
       if (dist <= acc.distance) {
         return { closest: currentUnitConsidered, distance: dist };
       }
@@ -286,14 +273,20 @@ export function findClosestUnitInSameFaction(unit: IUnit): IUnit | undefined {
 }
 // moveTo moves a unit, considering all the in-game blockers and flags
 // the units property thisTurnMoved
-export function moveTo(unit: IUnit, coordinates: Coords): Promise<void> {
+export function moveTowards(unit: IUnit, target: Coords): Promise<void> {
   if (!canMove(unit)) {
     return Promise.resolve();
   }
+  let coordinates = math.getCoordsDistanceTowardsTarget(
+    unit,
+    target,
+    unit.moveDistance
+  );
   // Cannot move into an obstructed cell
-  if (window.underworld.isCellObstructed(coordinates)) {
-    return Promise.resolve();
-  }
+  // TODO re add obstructions (that were removed during the "free movement" gameplay refactor)
+  // if (window.underworld.isCellObstructed(coordinates)) {
+  //   return Promise.resolve();
+  // }
   // Compose onMoveEvents
   for (let eventName of unit.onMoveEvents) {
     const fn = Events.onMoveSource[eventName];
@@ -308,10 +301,6 @@ export function moveTo(unit: IUnit, coordinates: Coords): Promise<void> {
 // setLocation, unlike moveTo, simply sets a unit to a cell coordinate without
 // considering in-game blockers or changing any unit flags
 export function setLocation(unit: IUnit, coordinates: Coords): Promise<void> {
-  // Set old location back to walkable
-  window.underworld.setWalkableAt(unit, true);
-  // Set new location to not walkable
-  window.underworld.setWalkableAt(coordinates, false);
   // Set state instantly to new position
   unit.x = coordinates.x;
   unit.y = coordinates.y;

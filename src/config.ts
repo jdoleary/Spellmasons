@@ -1,8 +1,13 @@
 export const PLAYER_BASE_HEALTH = 4;
+export const UNIT_BASE_MOVE_DISTANCE = 40;
 export const UNIT_BASE_HEALTH = 4;
 export const UNIT_BASE_DAMAGE = 1;
+// DEPRECIATED, due to "free movement refactor"
 export const BOARD_HEIGHT = 9;
+// DEPRECIATED, due to "free movement refactor"
 export const BOARD_WIDTH = 12;
+export const MAP_WIDTH = 800;
+export const MAP_HEIGHT = 600;
 export const SECONDS_PER_TURN = 100;
 export const CELL_SIZE = 64;
 export const START_CARDS_COUNT = 60;

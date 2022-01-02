@@ -29,7 +29,7 @@ const unit: UnitSource = {
       Unit.changeFaction(deadUnit, unit.faction);
     }
     // Move randomly
-    const moveCoords = window.underworld.getRandomEmptyCell({ xMin: 2 });
+    const moveCoords = window.underworld.getRandomCoordsWithinBounds({ xMin: 2 });
     if (moveCoords) {
       unit.intendedNextMove = moveCoords;
     }

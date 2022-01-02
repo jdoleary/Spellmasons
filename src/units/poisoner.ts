@@ -1,7 +1,7 @@
-import * as Unit from '../Unit';
 import type { UnitSource } from './index';
 import { Coords, UnitSubType } from '../commonTypes';
 import createVisualProjectile from '../Projectile';
+import type * as Unit from '../Unit';
 import * as math from '../math';
 import * as poison from '../cards/poison';
 
@@ -23,7 +23,7 @@ const unit: UnitSource = {
     );
     if (nonPoisonedEnemyUnits.length) {
       const chosenUnit = nonPoisonedEnemyUnits[0];
-      const moveTo = Unit.findCellOneStepCloserTo(unit, chosenUnit);
+      const moveTo = math.getCoordsDistanceTowardsTarget(unit, chosenUnit, unit.moveDistance);
       unit.intendedNextMove = moveTo;
       if (inRange(unit, chosenUnit)) {
         createVisualProjectile(

@@ -37,7 +37,7 @@ export function isTargetInRange(player: IPlayer, target: Coords): boolean {
 }
 export function create(clientId: string, unitId: string): IPlayer | undefined {
   // limit spawn to the leftmost column
-  const coords = window.underworld.getRandomEmptyCell({ xMax: 0 });
+  const coords = window.underworld.getRandomCoordsWithinBounds({ xMax: 0 });
   if (!coords) {
     console.error("Important Error: Unable to find empty coords to create new Player in")
     return undefined;
@@ -54,6 +54,7 @@ export function create(clientId: string, unitId: string): IPlayer | undefined {
       userSource.id,
       coords.x,
       coords.y,
+      config.UNIT_BASE_MOVE_DISTANCE,
       Faction.PLAYER,
       userSource.info.image,
       UnitType.PLAYER_CONTROLLED,
@@ -123,7 +124,7 @@ export function resetPlayerForNextLevel(player: IPlayer) {
 
   // Return to a spawn location
   // limit spawn to the leftmost column
-  const coords = window.underworld.getRandomEmptyCell({ xMax: 0 });
+  const coords = window.underworld.getRandomCoordsWithinBounds({ xMax: 0 });
   if (coords) {
     Unit.setLocation(player.unit, coords);
   } else {

@@ -16,8 +16,8 @@ const unit: UnitSource = {
     let runFromTarget;
     let targetEnemy;
     for (let enemy of Unit.livingUnitsInDifferentFaction(unit)) {
-      // Will run away if enemy gets within 1
-      if (math.cellDistance(unit, enemy) < 2) {
+      // Will run away if enemy gets too close
+      if (math.distance(unit, enemy) < 20) {
         runFromTarget = enemy;
       }
       if (canInteractWithCell(unit, enemy.x, enemy.y)) {
@@ -35,7 +35,7 @@ const unit: UnitSource = {
       await Unit.takeDamage(targetEnemy, unit.damage);
     } else {
       if (runFromTarget) {
-        const moveTo = math.oneCellAwayFromCell(unit, runFromTarget);
+        const moveTo = math.getCoordsDistanceTowardsTarget(unit, runFromTarget, -unit.moveDistance);
         unit.intendedNextMove = moveTo;
       }
     }
@@ -47,8 +47,8 @@ function canInteractWithCell(unit: Unit.IUnit, x: number, y: number): boolean {
   if (!unit.alive) {
     return false;
   }
-  // Can hit you if you are 2 away but not 1 away
-  const cellDistance = math.cellDistance(unit, { x, y });
-  return cellDistance == 2;
+  const dist = math.distance(unit, { x, y });
+  // Can hit you if you are within 30 but not 10
+  return dist > 10 && dist < 30
 }
 export default unit;
