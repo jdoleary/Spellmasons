@@ -13,39 +13,31 @@ const unit: UnitSource = {
     probability: 50,
   },
   action: async (unit: Unit.IUnit) => {
-    // Shoot at enemy if in same horizontal, diagonal, or vertical
-    let targetEnemy;
-    for (let enemy of Unit.livingUnitsInDifferentFaction(unit)) {
-      if (canInteractWithTarget(unit, enemy.x, enemy.y)) {
-        targetEnemy = enemy;
-        break;
-      }
+    // Move opposite to enemy if the enemy is too close
+    const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit);
+    if (closestEnemy && math.distance(unit, closestEnemy) < (range - 10)) {
+      const moveTo = math.getCoordsDistanceTowardsTarget(unit, closestEnemy, -unit.moveDistance);
+      unit.intendedNextMove = moveTo;
     }
-    if (targetEnemy) {
+    // Shoot at enemy
+    if (closestEnemy && canInteractWithTarget(unit, closestEnemy.x, closestEnemy.y)) {
       await createVisualProjectile(
         unit,
-        targetEnemy.x,
-        targetEnemy.y,
+        closestEnemy.x,
+        closestEnemy.y,
         'arrow.png',
       );
-      await Unit.takeDamage(targetEnemy, unit.damage);
-    } else {
-      // Move opposite to enemy
-      const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit);
-      if (closestEnemy) {
-        const moveTo = math.getCoordsDistanceTowardsTarget(unit, closestEnemy, -unit.moveDistance);
-        unit.intendedNextMove = moveTo;
-      }
+      await Unit.takeDamage(closestEnemy, unit.damage);
     }
   },
   canInteractWithTarget,
 };
+const range = 100;
 function canInteractWithTarget(unit: Unit.IUnit, x: number, y: number): boolean {
   // Dead units cannot attack
   if (!unit.alive) {
     return false;
   }
-  const isDiagonal = Math.abs(x - unit.x) === Math.abs(y - unit.y);
-  return isDiagonal;
+  return math.distance(unit, { x, y }) <= range;
 }
 export default unit;
