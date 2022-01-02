@@ -606,10 +606,7 @@ export default class Underworld {
   ): Coords[] {
     const coords: Coords[] = [];
     for (let unit of this.units) {
-      // + config.COLLISION_MESH_RADIUS so that if any part of the unit is within
-      // "distance", it will evaluate to true.  Without this, it would only return
-      // coords for units whose centers are within distance.
-      if (math.distance(unit, target) <= distance + config.COLLISION_MESH_RADIUS) {
+      if (math.distance(unit, target) <= distance) {
         coords.push({ x: unit.x, y: unit.y });
       }
     }
