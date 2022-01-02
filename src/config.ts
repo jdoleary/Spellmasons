@@ -1,7 +1,8 @@
-export const PLAYER_BASE_HEALTH = 4;
+export const PLAYER_BASE_HEALTH = 100;
 export const UNIT_BASE_MOVE_DISTANCE = 120;
 export const COLLISION_MESH_RADIUS = 32;
-export const UNIT_BASE_HEALTH = 4;
+export const UNIT_BASE_HEALTH = 10;
+export const UNIT_BASE_MANA = 40;
 export const UNIT_BASE_DAMAGE = 1;
 export const MAP_WIDTH = 800;
 export const MAP_HEIGHT = 600;

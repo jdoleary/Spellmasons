@@ -310,3 +310,45 @@ body.your-turn #player-turn-indicator-holder.low-time {
   left: 10px;
   z-index: 1;
 }
+
+#health-mana {
+  position: absolute;
+  top: 150px;
+  left: 150px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+.health-mana-bar {
+  width: 200px;
+  height: 32px;
+  border-radius: 10px;
+  border: 2px solid black;
+  margin:2px auto;
+}
+#health, #mana {
+  overflow: hidden;
+  position: relative;
+}
+#health .fill {
+  background-color: #d55656;
+}
+#mana .fill {
+  background-color: #5656d5;
+}
+#health-mana .fill {
+  height: 100%;
+  width: 100%;
+  transition: width 2s ease;
+}
+#health-mana .label {
+  position: absolute;
+  margin: 0 auto;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  text-align: center;
+  line-height: 32px;
+  color: white;
+}

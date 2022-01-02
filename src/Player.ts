@@ -75,6 +75,7 @@ export function create(clientId: string, unitId: string): IPlayer | undefined {
   addHighlighIfPlayerBelongsToCurrentClient(player);
   player.unit.health = PLAYER_BASE_HEALTH;
   player.unit.healthMax = PLAYER_BASE_HEALTH;
+  Unit.syncPlayerHealthManaUI();
 
   return player;
 }
@@ -118,6 +119,8 @@ function updateGlobalRefToCurrentClientPlayer(player: IPlayer) {
   readyState.set('player', true);
   if (window.clientId === player.clientId) {
     window.player = player;
+    // When the player is first created or loaded, sync the health-mana UI
+    Unit.syncPlayerHealthManaUI();
   }
 }
 function addHighlighIfPlayerBelongsToCurrentClient(player: IPlayer) {

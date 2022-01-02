@@ -7,6 +7,11 @@ import { distance } from './math';
 import { addPixiSprite, containerUnits } from './PixiUtils';
 import { Coords, UnitSubType, UnitType, Faction } from './commonTypes';
 import Events from './Events';
+const elHealthBar: HTMLElement = document.querySelector('#health .fill') as HTMLElement;
+const elHealthLabel: HTMLElement = document.querySelector('#health .label') as HTMLElement;
+const elManaBar: HTMLElement = document.querySelector('#mana .fill') as HTMLElement;
+const elManaLabel: HTMLElement = document.querySelector('#mana .label') as HTMLElement;
+
 export function getPlanningViewColor(unit: IUnit) {
   if (unit.unitType === UnitType.PLAYER_CONTROLLED) {
     return 0x00ff00;
@@ -32,6 +37,8 @@ export interface IUnit {
   damage: number;
   health: number;
   healthMax: number;
+  mana: number;
+  manaMax: number;
   healthText: PIXI.Text;
   alive: boolean;
   unitType: UnitType;
@@ -72,6 +79,8 @@ export function create(
     damage: config.UNIT_BASE_DAMAGE,
     health: config.UNIT_BASE_HEALTH,
     healthMax: config.UNIT_BASE_HEALTH,
+    mana: config.UNIT_BASE_MANA,
+    manaMax: config.UNIT_BASE_MANA,
     healthText: new PIXI.Text('', {
       fill: 'red',
       // Allow health hearts to wrap
@@ -223,6 +232,17 @@ export async function takeDamage(unit: IUnit, amount: number) {
       die(unit);
     }
   }
+
+  if (unit === window.player.unit && elHealthBar && elHealthLabel) {
+    syncPlayerHealthManaUI();
+  }
+}
+export function syncPlayerHealthManaUI() {
+  const unit = window.player.unit;
+  elHealthBar.style["width"] = `${100 * unit.health / unit.healthMax}%`;
+  elHealthLabel.innerHTML = `${unit.health}/${unit.healthMax}`;
+  elManaBar.style["width"] = `${100 * unit.mana / unit.manaMax}%`;
+  elManaLabel.innerHTML = `${unit.mana}/${unit.manaMax}`;
 }
 export function canMove(unit: IUnit): boolean {
   // Do not move if dead
