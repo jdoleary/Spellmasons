@@ -30,6 +30,8 @@
 - More spells:
   - Vanish (loses agro) (invisible for x number of turns) "creating separation"
   - Taunt (gain agro)
+- Idea: If you're out of mana, a spell should be able to subtract from your health (so you could sacrifice yourself to save an ally)
+- Idea: Brad likes the idea of deck management though some kind of gambling / chance mechanic (turn in 3 cards for a chance to get a better one)
 - Improve / Fix Spells:
   - What happens when you clone yourself?
   - Charge doesn't play well with AOE
