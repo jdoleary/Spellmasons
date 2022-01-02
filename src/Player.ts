@@ -16,8 +16,6 @@ export interface IPlayer {
   // wsPie id
   clientId: string;
   clientConnected: boolean;
-  // whether or not the player has ended their turn.
-  endedTurn: boolean;
   unit: Unit.IUnit;
   inPortal: boolean;
   cards: string[];
@@ -52,7 +50,6 @@ export function create(clientId: string, unitId: string): IPlayer | undefined {
   const player: IPlayer = {
     clientId,
     clientConnected: true,
-    endedTurn: false,
     unit: Unit.create(
       userSource.id,
       coords.x,

@@ -193,8 +193,6 @@ export default class Underworld {
     }
   }
   moveToNextLevel(level: ILevel) {
-    // Reset the endedTurn flag so all players can take turns again
-    this.players.forEach((p) => (p.endedTurn = false));
     for (let i = this.units.length - 1; i >= 0; i--) {
       const u = this.units[i];
       // Clear all remaining AI units
@@ -360,7 +358,7 @@ export default class Underworld {
       // If all players that have taken turns, then...
       // (Players who CANT take turns have their turn ended automatically)
       if (
-        this.players.filter(Player.ableToTakeTurn).every((p) => p.endedTurn)
+        this.playerTurnIndex >= this.players.length
       ) {
         this.endPlayerTurnPhase();
         return true;
@@ -369,10 +367,27 @@ export default class Underworld {
     return false;
   }
   endPlayerTurnPhase() {
-    // Reset the endedTurn flag so all players can take turns again next Cast phase
-    this.players.forEach((p) => (p.endedTurn = false));
     // Move onto next phase
     this.setTurnPhase(turn_phase.NPC);
+  }
+  endNPCTurnPhase() {
+    // Move onto next phase
+    // --
+    // Note: The reason this logic happens here instead of in setTurnPhase
+    // is because setTurnPhase needs to be called on game load to put everything
+    // in a good state when updating to the canonical client's game state. (this 
+    // happens when one client disconnects and rejoins).  If playerTurnIndex were
+    // reset in setTurnPhase, a client reconnecting would also reset the 
+    // playerTurnIndex (which is not desireable because it's trying to LOAD the
+    // game state).  Instead, it's handled here, when the NPC turn phase ends
+    // so that clients CAN reconnect mid player turn and the playerTurnIndex is 
+    // maintained
+    // --
+    // Reset to first player's turn
+    this.playerTurnIndex = 0;
+    // Increment the turn number now that it's starting over at the first phase
+    this.turn_number++;
+    this.setTurnPhase(turn_phase.PlayerTurns);
   }
   setTurnMessage(yourTurn: boolean, message: string) {
     if (elPlayerTurnIndicator) {
@@ -431,11 +446,6 @@ export default class Underworld {
       console.error('Cannot end turn, player with clientId:', clientId, 'does not exist');
       return;
     }
-    if (player.endedTurn) {
-      // Do not end a player's turn more than once
-      console.error('Cannot end player turn more than once')
-      return;
-    }
     if (this.playerTurnIndex != playerIndex) {
       // (A player "ending their turn" when it is not their turn
       // can occur when a client disconnects when it is not their turn)
@@ -447,10 +457,14 @@ export default class Underworld {
     if (window.route === Route.Underworld) {
       // Ensure players can only end the turn when it IS their turn
       if (this.turn_phase === turn_phase.PlayerTurns) {
+        // Incrememt the playerTurnIndex
+        // This must happen before goToNextPhaseIfAppropriate
+        // which checks if the playerTurnIndex is >= the number of players
+        // to see if it should go to the next phase
+        this.playerTurnIndex = playerIndex + 1;
         if (clientId === window.clientId) {
           this.setTurnMessage(false, 'Waiting on others');
         }
-        player.endedTurn = true;
         const wentToNextLevel = this.checkForEndOfLevel();
         if (wentToNextLevel) {
           return;
@@ -460,7 +474,6 @@ export default class Underworld {
           return;
         }
         // Go to next players' turn
-        this.playerTurnIndex = playerIndex + 1;
         this.initializePlayerTurn(this.playerTurnIndex)
       }
     }
@@ -634,9 +647,6 @@ export default class Underworld {
     document.body.classList.add('phase-' + phase.toLowerCase());
     switch (phase) {
       case 'PlayerTurns':
-        // Reset to first player's turn
-        this.playerTurnIndex = 0;
-        this.turn_number++;
         for (let u of this.units) {
           // Reset thisTurnMoved flag now that it is a new turn
           // Because no units have moved yet this turn
@@ -683,7 +693,7 @@ export default class Underworld {
         );
         // When all animations are done, set turn phase to player turn
         Promise.all(animationPromises).then(() => {
-          this.setTurnPhase(turn_phase.PlayerTurns);
+          this.endNPCTurnPhase();
         });
 
         // Since NPC turn is over, update the planningView
