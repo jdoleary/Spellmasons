@@ -124,7 +124,7 @@ export function drawDryRunLine(start: Coords, end: Coords) {
   dryRunGraphics.endFill();
 }
 export function drawDryRunCircle(target: Coords, radius: number) {
-  dryRunGraphics.lineStyle(3, targetBlue, 1);
+  dryRunGraphics.lineStyle(3, targetBlue, 0.5);
   dryRunGraphics.beginFill(0x000000, 0);
   dryRunGraphics.drawCircle(target.x, target.y, radius);
   dryRunGraphics.endFill();
