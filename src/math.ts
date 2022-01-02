@@ -1,4 +1,3 @@
-import { CELL_SIZE } from './config';
 import type { Coords } from './commonTypes';
 import { randInt } from './rand';
 // https://webdva.github.io/how-i-implemented-client-side-linear-interpolation/
@@ -15,6 +14,9 @@ export function lerp(start: number, end: number, time: number) {
 // For a triangle with sides x,y, and d (desired distance / hypotenuse), find the value
 // of x and y given a known h and a known similar triangle of X,Y, and D (distance / hypotenuse)
 export function similarTriangles(X: number, Y: number, D: number, d: number): Coords {
+  if (D === 0 || d === 0) {
+    return { x: X, y: Y };
+  }
   const hypotenuseRatio = d / D;
   return {
     x: hypotenuseRatio * X,
@@ -24,6 +26,8 @@ export function similarTriangles(X: number, Y: number, D: number, d: number): Co
 
 // getCoordsAtLengthAlongVector is used, for example, to move 'length' distance across
 // the vector 'start' to 'end'
+// --
+// hint: Use a negative length to move away from target
 export function getCoordsAtLengthAlongVector(start: Coords, target: Coords, length: number): Coords {
   const normalizedResult = similarTriangles(target.x - start.x, target.y - start.y, distance(start, target), length)
   return {
@@ -91,21 +95,4 @@ export function chooseObjectWithProbability<T extends objectWithProbability>(
   // Choose random integer within the sum of all the probabilities
   const roll = randInt(window.underworld.random, 1, maxProbability);
   return _chooseObjectWithProbability(roll, source);
-}
-// convert from cell coordinates to objective board coordinates
-export function cellToBoardCoords(cellX: number, cellY: number) {
-  return {
-    x: cellX * CELL_SIZE + CELL_SIZE / 2,
-    y: cellY * CELL_SIZE + CELL_SIZE / 2,
-  };
-}
-
-// Returns a point one step from start in the direction away from
-// awayFrom
-export function oneCellAwayFromCell(start: Coords, awayFrom: Coords): Coords {
-  const dx = start.x - awayFrom.x;
-  const dy = start.y - awayFrom.y;
-  const normalizedX = dx === 0 ? 0 : dx / Math.abs(dx);
-  const normalizedY = dy === 0 ? 0 : dy / Math.abs(dy);
-  return { x: start.x + normalizedX, y: start.y + normalizedY };
 }

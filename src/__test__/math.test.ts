@@ -131,22 +131,43 @@ describe('math', () => {
       const actual = similarTriangles(knownTriangle.X, knownTriangle.Y, knownTriangle.D, desiredDistance);
       const expected = { x: 1, y: 2 };
       expect(actual).toEqual(expected);
-    })
+    });
+    it('should return X,Y if d is 0', () => {
+      const knownTriangle = { X: 10, Y: 20, D: 100 };
+      const desiredDistance = 0;
+      const actual = similarTriangles(knownTriangle.X, knownTriangle.Y, knownTriangle.D, desiredDistance);
+      const expected = { x: knownTriangle.X, y: knownTriangle.Y };
+      expect(actual).toEqual(expected);
+    });
+    it('should return X,Y if D is 0', () => {
+      const knownTriangle = { X: 10, Y: 20, D: 0 };
+      const desiredDistance = 10;
+      const actual = similarTriangles(knownTriangle.X, knownTriangle.Y, knownTriangle.D, desiredDistance);
+      const expected = { x: knownTriangle.X, y: knownTriangle.Y };
+      expect(actual).toEqual(expected);
+    });
   });
   describe('getCoordsAtLengthAlongVector', () => {
     // Using the known triangle sides 3, 4, and 5 in these tests to make the expected results easy and obvious
-    it('should return a coord "length" distance along the vector "start" to "end"', () => {
+    it('should return a coord "length" distance away from "start" along the vector "start" to "end"', () => {
       const start = { x: 3, y: 4 };
       const end = { x: 9, y: 12 };
       const actual = getCoordsAtLengthAlongVector(start, end, 5);
       const expected = { x: 6, y: 8 };
       expect(actual).toEqual(expected);
     });
-    it('should return the correct result even if the start contains greater numbers than the end', () => {
+    it('should return coord "length" distance away from "start" along the vector "start" to "end" even if the start contains greater numbers than the end', () => {
       const start = { x: 9, y: 12 };
       const end = { x: 3, y: 4 };
       const actual = getCoordsAtLengthAlongVector(start, end, 5);
       const expected = { x: 6, y: 8 };
+      expect(actual).toEqual(expected);
+    });
+    it('should return coord "length" distance away from "start" along the vector "end" to "start" (backwards) for a negative length', () => {
+      const start = { x: 3, y: 4 };
+      const end = { x: 9, y: 12 };
+      const actual = getCoordsAtLengthAlongVector(start, end, -5);
+      const expected = { x: 0, y: 0 };
       expect(actual).toEqual(expected);
     });
   });
