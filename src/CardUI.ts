@@ -55,9 +55,8 @@ function showFullCard(card: Cards.ICard) {
       elQuantity.innerText = `You have ${[
         ...window.player.cards,
         ...window.player.cardsSelected,
-      ].reduce((count, c) => count + (c == card.id ? 1 : 0), 0)} ${
-        card.id
-      } in your hand`;
+      ].reduce((count, c) => count + (c == card.id ? 1 : 0), 0)} ${card.id
+        } in your hand`;
       elCardInspect.appendChild(elQuantity);
     } else {
       console.error('card-inspect div does not exist');
@@ -138,7 +137,7 @@ export function recalcPositionForCards(player: CardUI.IPlayer) {
       element.classList.add(className);
       // When the user clicks on a card
       addClickListenerToCardElement(player, element, cardId);
-      moveCardToSelected(element);
+      selectCard(element);
     } else {
       console.log(`No corresponding source card exists for "${cardId}"`);
     }
@@ -155,7 +154,6 @@ function addClickListenerToCardElement(
       const index = player.cardsSelected.findIndex((c) => c === cardId);
       if (index !== -1) {
         player.cardsSelected.splice(index, 1);
-        player.cards.push(cardId);
       } else {
         console.log(
           'Attempted to remove card',
@@ -163,20 +161,9 @@ function addClickListenerToCardElement(
           'from selected-cards but it does not exist',
         );
       }
-      moveCardToHand(element, cardId);
     } else {
-      const index = player.cards.findIndex((c) => c === cardId);
-      if (index !== -1) {
-        player.cards.splice(index, 1);
-        player.cardsSelected.push(cardId);
-      } else {
-        console.log(
-          'Attempted to remove card',
-          cardId,
-          'from card-hand but it does not exist',
-        );
-      }
-      moveCardToSelected(element);
+      player.cardsSelected.push(cardId);
+      selectCard(element);
     }
   });
 }
@@ -192,21 +179,14 @@ function makeCardTypeGroup(cardId: string): HTMLDivElement {
   return elCardTypeGroup;
 }
 // Moves a card element to selected-cards div
-function moveCardToSelected(element: HTMLElement) {
+function selectCard(element: HTMLElement) {
   if (elSelectedCards) {
-    elSelectedCards.appendChild(element);
+    const clone = element.cloneNode(true) as HTMLElement;
+    clone.classList.add('selected');
+    elSelectedCards.appendChild(clone);
   } else {
     console.error('elSelectedCards is null');
   }
-  element.classList.add('selected');
-}
-function moveCardToHand(element: HTMLElement, cardId: string) {
-  let elCardTypeGroup = document.getElementById(`holder-${cardId}`);
-  if (!elCardTypeGroup) {
-    elCardTypeGroup = makeCardTypeGroup(cardId);
-  }
-  elCardTypeGroup.appendChild(element);
-  element.classList.remove('selected');
 }
 export function areAnyCardsSelected() {
   return !!getSelectedCards().length;
@@ -243,9 +223,13 @@ window.giveMeCard = (cardId: string, quantity: number = 1) => {
   }
 };
 export function addCardToHand(card: Cards.ICard, player: CardUI.IPlayer) {
-  player.cards.push(card.id);
-  if (player === window.player) {
-    recalcPositionForCards(window.player);
+  // Players may not have more than 1 of a particular card, because now, cards are
+  // not removed when cast
+  if (!player.cards.includes(card.id)) {
+    player.cards.push(card.id);
+    if (player === window.player) {
+      recalcPositionForCards(window.player);
+    }
   }
 }
 
@@ -285,9 +269,10 @@ export function clearSelectedCards() {
   // Remove the board highlight
   clearSpellEffectProjection();
   // Deselect all selected cards
+  window.player.cardsSelected = []
   document.querySelectorAll('.card.selected').forEach((el) => {
     if (el instanceof HTMLElement) {
-      moveCardToHand(el, el.dataset.cardId || '');
+      el.remove();
     } else {
       console.error(
         'Cannot clearSelectedCards due to selectednode not being the correct type',
