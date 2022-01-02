@@ -1,7 +1,4 @@
 - Bug: Spell chain still draws dryRun lines for ignored units
-- Bug: disconnected client doesn't get their turn ended if they disconnect on their turn
-  - This is happening because a call to setTurnPhase on load resets this.playerTurnIndex = 0 in the PlayerTurns block.  Loading should set the phase without calling setTurnPhase?? But then there might be other desyncs
-  - This is because "setting" the turn phase to something that it already was executes logic required to initialize the turn phase
 - Ideas 2021-12-17
   - (L) Remove Grid, allow free movement
     - Fix spells for free movement
