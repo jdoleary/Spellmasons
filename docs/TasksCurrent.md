@@ -1,3 +1,5 @@
+- Bug: disconnected client doesn't get their turn ended if they disconnect on their turn
+  - This is happening because a call to setTurnPhase on load resets this.playerTurnIndex = 0 in the PlayerTurns block.  Loading should set the phase without calling setTurnPhase?? But then there might be other desyncs
 - Ideas 2021-12-17
   - (L) Mana Update
     - (M) Cost mana for each card and the farther away you cast so there is no range limit (this allows for more strategy, more tradeoffs)
