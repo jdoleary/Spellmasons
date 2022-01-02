@@ -1,6 +1,9 @@
 - Bug: disconnected client doesn't get their turn ended if they disconnect on their turn
   - This is happening because a call to setTurnPhase on load resets this.playerTurnIndex = 0 in the PlayerTurns block.  Loading should set the phase without calling setTurnPhase?? But then there might be other desyncs
+  - This is because "setting" the turn phase to something that it already was executes logic required to initialize the turn phase
 - Ideas 2021-12-17
+  - (L) Remove Grid, allow free movement
+  - (S) Heros have much more health, bad guys die more quickly, getting hit isn't as big of a deal, so you don't have to worry about overcalculating agro range, you can be more **intuitive** in your play.
   - (L) Mana Update
     - (M) Cost mana for each card and the farther away you cast so there is no range limit (this allows for more strategy, more tradeoffs)
     - (S) Never run out of cards, you're limited by mana instead (this way you don't get stuck)
@@ -12,7 +15,6 @@
     - Update pathing
     - Cast spells with base radius, or on nearest enemy or cursor?
     - (S) Lots of little bad guys, some big ones; Smaller units visually
-  - (S) Heros have much more health, bad guys die more quickly, getting hit isn't as big of a deal, so you don't have to worry about overcalculating agro range, you can be more **intuitive** in your play.
   - (s) Categories of spells, the combinable ones (cards), the special spells (teleport and such) limited in use - represent them differently (with, say, a hexagon, for the ones that can get used up)
     - Make these pickupable (call them runes?) and they persist between levels
   - (L) Rather than an overworld, what if you and your team have to mix potions in a cauldron to create a portal that leads you to a unique level? (The cauldron makes the portal)
