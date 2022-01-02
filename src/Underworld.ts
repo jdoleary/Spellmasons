@@ -701,34 +701,14 @@ export default class Underworld {
   ): Coords[] {
     const coords: Coords[] = [];
     for (let unit of this.units) {
-      if (math.distance(unit, target) <= distance) {
+      // + config.COLLISION_MESH_RADIUS so that if any part of the unit is within
+      // "distance", it will evaluate to true.  Without this, it would only return
+      // coords for units whose centers are within distance.
+      if (math.distance(unit, target) <= distance + config.COLLISION_MESH_RADIUS) {
         coords.push({ x: unit.x, y: unit.y });
       }
     }
     return coords;
-  }
-  getTouchingUnitsRecursive(
-    x: number,
-    y: number,
-    ignore: Coords[] = [],
-  ): Unit.IUnit[] {
-    const touchingDistance = config.COLLISION_MESH_RADIUS * 4;
-    let touching = this.units.filter((u) => {
-      return (
-        u.x <= x + touchingDistance &&
-        u.x >= x - touchingDistance &&
-        u.y <= y + touchingDistance &&
-        u.y >= y - touchingDistance &&
-        !ignore.find((i) => i.x == u.x && i.y == u.y)
-      );
-    });
-    ignore = ignore.concat(touching.map((u) => ({ x: u.x, y: u.y })));
-    for (let u of touching) {
-      touching = touching.concat(
-        this.getTouchingUnitsRecursive(u.x, u.y, ignore),
-      );
-    }
-    return touching;
   }
   getUnitAt(coords: Coords): Unit.IUnit | undefined {
     return this.units.find((u) => math.distance(u, coords) <= config.COLLISION_MESH_RADIUS);
