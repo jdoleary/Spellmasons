@@ -465,6 +465,8 @@ export default class Underworld {
       // Now that level is complete, move to the Upgrade gamestate where players can choose upgrades
       // before moving on to the next level
       setRoute(Route.Upgrade);
+      // Reset the playerTurnIndex
+      this.playerTurnIndex = 0;
       // Return of true signifies it went to the next level
       return true;
     }
