@@ -23,7 +23,6 @@ export interface IPlayer {
   // The number of cards a player's hand is populated with at the start of a level
   cardsAmount: number;
   upgrades: Upgrade.IUpgrade[];
-  turnsPerCard: number;
   overworldImage: Image.IImage;
 }
 export function create(clientId: string, unitId: string): IPlayer | undefined {
@@ -52,7 +51,6 @@ export function create(clientId: string, unitId: string): IPlayer | undefined {
     cardsSelected: [],
     cardsAmount: config.START_CARDS_COUNT,
     upgrades: [],
-    turnsPerCard: config.PLAYER_BASE_TURNS_PER_CARD,
     overworldImage: Image.create(
       0,
       0,
@@ -78,16 +76,6 @@ export function create(clientId: string, unitId: string): IPlayer | undefined {
   Unit.syncPlayerHealthManaUI();
 
   return player;
-}
-export function checkForGetCardOnTurn(player: IPlayer) {
-  if (
-    !player.inPortal &&
-    window.underworld.turn_number % player.turnsPerCard === 0
-  ) {
-    const card = CardUI.generateCard();
-    CardUI.addCardToHand(card, player);
-    console.log('You got a card!', card.id);
-  }
 }
 export function resetPlayerForNextLevel(player: IPlayer) {
   // Player is no longer in portal
