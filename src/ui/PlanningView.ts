@@ -56,6 +56,7 @@ export function updatePlanningView() {
 }
 
 export async function syncSpellEffectProjection() {
+  clearTooltipSpellCost();
   if (window.animatingSpells) {
     // Do not change the hover icons when spells are animating
     return;
@@ -149,6 +150,15 @@ const elSpellManaCost = document.getElementById(
 const elSpellHealthCost = document.getElementById(
   'spell-health-cost',
 );
+export function clearTooltipSpellCost() {
+  if (elSpellManaCost) {
+    elSpellManaCost.innerHTML = '';
+  }
+  if (elSpellHealthCost) {
+    elSpellHealthCost.innerHTML = '';
+  }
+
+}
 export function updateTooltipSpellCost({ manaCost, healthCost, willCauseDeath }: { manaCost: number, healthCost: number, willCauseDeath: boolean }) {
   if (elSpellManaCost) {
     elSpellManaCost.innerHTML = `- ${manaCost}`
