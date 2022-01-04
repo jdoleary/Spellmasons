@@ -4,7 +4,6 @@ import * as math from './math';
 import {
   clearSpellEffectProjection,
   syncSpellEffectProjection,
-  updateTooltip,
   updateTooltipContent,
   updateTooltipPosition,
 } from './ui/PlanningView';
@@ -138,8 +137,7 @@ export function recalcPositionForCards(player: CardUI.IPlayer) {
       const element = createCardElement(card);
       element.classList.add(className);
       // When the user clicks on a card
-      addClickListenerToCardElement(player, element, cardId);
-      selectCard(element);
+      selectCard(player, element, cardId);
     } else {
       console.log(`No corresponding source card exists for "${cardId}"`);
     }
@@ -156,6 +154,7 @@ function addClickListenerToCardElement(
       const index = player.cardsSelected.findIndex((c) => c === cardId);
       if (index !== -1) {
         player.cardsSelected.splice(index, 1);
+        deselectCard(element);
       } else {
         console.log(
           'Attempted to remove card',
@@ -165,7 +164,7 @@ function addClickListenerToCardElement(
       }
     } else {
       player.cardsSelected.push(cardId);
-      selectCard(element);
+      selectCard(player, element, cardId);
     }
   });
 }
@@ -180,10 +179,14 @@ function makeCardTypeGroup(cardId: string): HTMLDivElement {
   }
   return elCardTypeGroup;
 }
+function deselectCard(element: HTMLElement) {
+  element.remove();
+}
 // Moves a card element to selected-cards div
-function selectCard(element: HTMLElement) {
+function selectCard(player: CardUI.IPlayer, element: HTMLElement, cardId: string) {
   if (elSelectedCards) {
     const clone = element.cloneNode(true) as HTMLElement;
+    addClickListenerToCardElement(player, clone, cardId);
     clone.classList.add('selected');
     elSelectedCards.appendChild(clone);
   } else {
