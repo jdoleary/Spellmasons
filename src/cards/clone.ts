@@ -4,7 +4,7 @@ import * as Pickup from '../Pickup';
 import * as Obstacle from '../Obstacle';
 import { Coords, UnitSubType, UnitType } from '../commonTypes';
 import { removeSubSprite } from '../Image';
-import { COLLISION_MESH_RADIUS } from '../config';
+import { COLLISION_MESH_RADIUS, MANA_BASE_COST, MANA_MULTIPLIER_NONE } from '../config';
 
 const id = 'clone';
 const spell: Spell = {
@@ -15,6 +15,8 @@ const spell: Spell = {
     description: `
 Clones each target
     `,
+    manaCost: MANA_BASE_COST * 10,
+    manaMultiplier: MANA_MULTIPLIER_NONE,
     effect: async (state, dryRun) => {
       if (dryRun) {
         return state;

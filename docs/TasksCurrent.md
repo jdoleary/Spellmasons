@@ -1,7 +1,9 @@
+- LEFT OFF: Implement mana cost / mana multiplier for cards
 - Bug: Spell chain still draws dryRun lines for ignored units
 - Ideas 2021-12-17
   - (L) Remove Grid, allow free movement
     - Fix spells for free movement
+    - Fix enemies for free movement
     - Implement obstacles
       - Prevent units from running away outside of bounds
   - (S) Heros have much more health, bad guys die more quickly, getting hit isn't as big of a deal, so you don't have to worry about overcalculating agro range, you can be more **intuitive** in your play.

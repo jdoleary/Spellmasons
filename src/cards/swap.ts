@@ -3,8 +3,8 @@ import * as Pickup from '../Pickup';
 import type { Spell } from '.';
 import type { Coords } from '../commonTypes';
 import { drawSwapLine } from '../ui/PlanningView';
+import { MANA_BASE_COST, MANA_MULTIPLIER_NONE } from '../config';
 
-// TODO: Swapping with corpses destroys them due to the order of setting location
 const id = 'swap';
 const spell: Spell = {
   card: {
@@ -14,6 +14,8 @@ const spell: Spell = {
     description: `
 Swaps the caster with the source target.
     `,
+    manaCost: MANA_BASE_COST * 10,
+    manaMultiplier: MANA_MULTIPLIER_NONE,
     effect: async (state, dryRun) => {
       const { casterUnit, targets } = state;
       const target = targets[0];

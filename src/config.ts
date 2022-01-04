@@ -25,3 +25,11 @@ export const PORTAL_COORDINATES = {
 export const OVERWORLD_HEIGHT = 9;
 export const OVERWORLD_MAX_WIDTH = 9;
 export const OVERWORLD_SPACING = 100;
+
+// Mana
+export const MANA_BASE_COST = 1;
+// * 1 will not change the mana, therefore 1 is a "none" multiplier
+export const MANA_MULTIPLIER_NONE = 1;
+export const MANA_MULTIPLIER_SM = 2;
+export const MANA_MULTIPLIER_M = 3;
+export const MANA_MULTIPLIER_L = 3;

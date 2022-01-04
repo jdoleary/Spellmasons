@@ -2,7 +2,7 @@
 import type { IUnit } from '../Unit';
 import * as Image from '../Image';
 import { allCards, ICard, Spell } from './index';
-import { COLLISION_MESH_RADIUS } from '../config';
+import { COLLISION_MESH_RADIUS, MANA_BASE_COST, MANA_MULTIPLIER_NONE } from '../config';
 const id = 'contageous';
 export function add(unit: IUnit) {
   // Note: Curse can stack multiple times but doesn't keep any state
@@ -37,6 +37,8 @@ const spell: Spell = {
     description: `
 Makes this unit's curses contageous to other nearby units
     `,
+    manaCost: MANA_BASE_COST * 10,
+    manaMultiplier: MANA_MULTIPLIER_NONE,
     effect: async (state, dryRun) => {
       if (dryRun) {
         return state;

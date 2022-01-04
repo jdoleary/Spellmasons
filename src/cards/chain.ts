@@ -14,6 +14,8 @@ const spell: Spell = {
 Adds targets for the following cards to effect by "chaining like electricity" 
 off of all existing targeted units to units touching them. 
     `,
+    manaCost: config.MANA_BASE_COST,
+    manaMultiplier: config.MANA_MULTIPLIER_SM,
     effect: async (state, dryRun) => {
       let newTargets: Coords[] = [];
       for (let target of state.targets) {

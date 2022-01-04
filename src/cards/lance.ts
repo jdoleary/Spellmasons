@@ -1,5 +1,6 @@
 import type { Coords } from 'src/commonTypes';
 import type { Spell } from '.';
+import { MANA_BASE_COST, MANA_MULTIPLIER_SM } from '../config';
 
 const id = 'lance';
 const spell: Spell = {
@@ -12,6 +13,8 @@ Adds targets towards the initial target if
 the initial target is on the same vertical or horizontal axis
 as the caster.
     `,
+    manaCost: MANA_BASE_COST,
+    manaMultiplier: MANA_MULTIPLIER_SM,
     effect: async (state, dryRun) => {
       let updatedTargets = [...state.targets];
       for (let target of state.targets) {

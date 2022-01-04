@@ -1,4 +1,5 @@
 import type { Spell } from '.';
+import { MANA_BASE_COST, MANA_MULTIPLIER_SM } from '../config';
 
 const id = 'stomp';
 const range = 200;
@@ -8,6 +9,8 @@ const spell: Spell = {
     thumbnail: 'stomp.png',
     probability: 10,
     description: 'Targets all the spaces directly around you',
+    manaCost: MANA_BASE_COST,
+    manaMultiplier: MANA_MULTIPLIER_SM,
     effect: async (state, dryRun) => {
       let withinRadius = window.underworld.getCoordsForUnitsWithinDistanceOfTarget(
         state.casterUnit,

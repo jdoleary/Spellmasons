@@ -1,6 +1,7 @@
 import type * as Unit from '../Unit';
 import * as Image from '../Image';
 import type { Spell } from '.';
+import { MANA_BASE_COST, MANA_MULTIPLIER_NONE } from '../config';
 
 const id = 'vulnerable';
 const spell: Spell = {
@@ -12,6 +13,8 @@ const spell: Spell = {
 Makes the target(s) take double damage whenever they receive damage
 in the future.
     `,
+    manaCost: MANA_BASE_COST * 10,
+    manaMultiplier: MANA_MULTIPLIER_NONE,
     effect: async (state, dryRun) => {
       if (dryRun) {
         return state;

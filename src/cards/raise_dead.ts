@@ -1,5 +1,6 @@
 import * as Unit from '../Unit';
 import type { Spell } from '.';
+import { MANA_BASE_COST, MANA_MULTIPLIER_NONE } from '../config';
 const id = 'resurrect';
 const spell: Spell = {
   card: {
@@ -9,6 +10,8 @@ const spell: Spell = {
     description: `
 Resurrects a dead unit and converts them to the caster's faction.
     `,
+    manaCost: MANA_BASE_COST * 20,
+    manaMultiplier: MANA_MULTIPLIER_NONE,
     effect: async (state, dryRun) => {
       if (dryRun) {
         return state;

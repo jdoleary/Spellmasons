@@ -1,6 +1,7 @@
 import type { Coords } from '../commonTypes';
 import type { Spell } from '.';
 import { drawDryRunCircle } from '../ui/PlanningView';
+import { MANA_BASE_COST, MANA_MULTIPLIER_SM } from '../config';
 
 const id = 'AOE';
 const range = 200;
@@ -12,6 +13,8 @@ const spell: Spell = {
     description: `
 Adds targets for the following cards to effect by "growing" existing targets
     `,
+    manaCost: MANA_BASE_COST,
+    manaMultiplier: MANA_MULTIPLIER_SM,
     effect: async (state, dryRun) => {
       let newTargets: Coords[] = [];
       for (let target of state.targets) {

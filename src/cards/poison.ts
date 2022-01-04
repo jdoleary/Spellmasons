@@ -1,6 +1,7 @@
 import { IUnit, takeDamage } from '../Unit';
 import * as Image from '../Image';
 import type { Spell } from '.';
+import { MANA_BASE_COST, MANA_MULTIPLIER_NONE } from '../config';
 const id = 'poison';
 export function add(unit: IUnit) {
   // Note: Curse can stack multiple times but doesn't keep any state
@@ -36,6 +37,8 @@ const spell: Spell = {
 Poisons all target(s).  Poison will deal 1 base damage every turn
 at the start of the unit's turn.
     `,
+    manaCost: MANA_BASE_COST * 2,
+    manaMultiplier: MANA_MULTIPLIER_NONE,
     effect: async (state, dryRun) => {
       if (dryRun) {
         return state;

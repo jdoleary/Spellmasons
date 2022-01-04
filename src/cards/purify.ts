@@ -1,5 +1,6 @@
 import { removeModifier } from '../Unit';
 import type { Spell } from '.';
+import { MANA_BASE_COST, MANA_MULTIPLIER_NONE } from '../config';
 const id = 'purify';
 // Removes all curse modifiers
 const spell: Spell = {
@@ -10,6 +11,8 @@ const spell: Spell = {
     description: `
 Removes all curses from the target(s).
     `,
+    manaCost: MANA_BASE_COST * 10,
+    manaMultiplier: MANA_MULTIPLIER_NONE,
     effect: async (state, dryRun) => {
       if (dryRun) {
         return state;
