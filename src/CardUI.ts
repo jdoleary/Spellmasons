@@ -192,6 +192,7 @@ export function areAnyCardsSelected() {
   return !!getSelectedCards().length;
 }
 
+// TODO: Keep this around for when we have one-use cards
 // This function fully deletes the cards that are 'selected' in the player's hand
 export function removeCardsFromHand(player: CardUI.IPlayer, cards: string[]) {
   cardLoop: for (let cardToRemove of cards) {

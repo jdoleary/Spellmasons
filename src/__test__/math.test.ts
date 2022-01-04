@@ -1,4 +1,4 @@
-import { indexToXY, xyToIndex, normalizeRadians, _chooseObjectWithProbability, similarTriangles, getCoordsDistanceTowardsTarget, distance } from '../math';
+import { indexToXY, xyToIndex, normalizeRadians, _chooseObjectWithProbability, similarTriangles, getCoordsDistanceTowardsTarget } from '../math';
 
 describe('math', () => {
   describe('probability', () => {

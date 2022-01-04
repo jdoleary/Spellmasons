@@ -25,6 +25,7 @@ import { updatePlanningView } from './ui/PlanningView';
 import { ILevel, getEnemiesForAltitude } from './overworld';
 import { setRoute, Route } from './routes';
 import { prng, randInt } from './rand';
+import { calculateManaHealthCost } from './cards/cardUtils';
 
 export enum turn_phase {
   PlayerTurns,
@@ -640,7 +641,7 @@ export default class Underworld {
   }
   async castCards(
     casterPlayer: Player.IPlayer,
-    cards: string[],
+    cardIds: string[],
     target: Coords,
     dryRun: boolean,
   ): Promise<Cards.EffectState> {
@@ -648,17 +649,16 @@ export default class Underworld {
       casterPlayer,
       casterUnit: casterPlayer.unit,
       targets: [target],
-      cards,
       aggregator: {},
     };
     if (!casterPlayer.unit.alive) {
       // Prevent dead players from casting
       return effectState;
     }
-    let cardsToLoop = effectState.cards;
-    for (let index = 0; index < cardsToLoop.length; index++) {
-      const cardId = cardsToLoop[index];
-      const card = Cards.allCards.find((c) => c.id == cardId);
+    const cards = Cards.getCardsFromIds(cardIds);
+    const { manaCost, healthCost } = calculateManaHealthCost(cards, casterPlayer.unit);
+    for (let index = 0; index < cards.length; index++) {
+      const card = cards[index];
       const animationPromises = [];
       if (card) {
         // Show the card that's being cast:
@@ -678,8 +678,6 @@ export default class Underworld {
         }
         const { targets: previousTargets } = effectState;
         effectState = await card.effect(effectState, dryRun, index);
-        // Update cardsToLoop (some cards can change the following cards)
-        cardsToLoop = effectState.cards;
         // Clear images from previous card before drawing the images from the new card
         containerSpells.removeChildren();
         // Animate target additions:
@@ -695,8 +693,18 @@ export default class Underworld {
             animationPromises.push(drawTarget(target.x, target.y, !dryRun));
           }
         }
+
         await Promise.all(animationPromises);
       }
+    }
+    if (!dryRun) {
+      // Apply mana cost to caster
+      casterPlayer.unit.mana -= manaCost;
+      // Apply health cost to caster
+      if (healthCost > 0) {
+        Unit.takeDamage(casterPlayer.unit, healthCost)
+      }
+      Unit.syncPlayerHealthManaUI();
     }
     if (!dryRun) {
       // Clear spell animations once all cards are done playing their animations

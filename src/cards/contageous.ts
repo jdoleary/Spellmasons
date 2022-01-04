@@ -61,7 +61,7 @@ Makes this unit's curses contageous to other nearby units
       for (let card of curseCards) {
 
 
-        card?.effect({ casterUnit: unit, targets: touchingUnits, cards: [card.id], aggregator: {} }, false, 0);
+        card?.effect({ casterUnit: unit, targets: touchingUnits, aggregator: {} }, false, 0);
       }
 
       return false;

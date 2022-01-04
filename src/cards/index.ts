@@ -107,7 +107,6 @@ export interface EffectState {
   casterPlayer?: Player.IPlayer;
   casterUnit: Unit.IUnit;
   targets: Coords[];
-  cards: string[];
   // aggregator carries extra information that can be passed
   // between card effects.
   // For example, "Vampiric" adds all damage taken
@@ -132,3 +131,14 @@ export interface ICard {
 }
 
 export const allCards: ICard[] = [];
+
+export function getCardsFromIds(cardIds: string[]): ICard[] {
+  let cards = []
+  for (let id of cardIds) {
+    const card = allCards.find(c => c.id === id);
+    if (card) {
+      cards.push(card);
+    }
+  }
+  return cards;
+}

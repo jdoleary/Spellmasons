@@ -183,7 +183,10 @@ async function handleSpell(caster: Player.IPlayer, payload: any) {
     console.error('Spell is invalid, it must have coordinates');
     return;
   }
-  Card.removeCardsFromHand(caster, payload.cards);
+
+  // TODO: Keep this around for when we have one-use cards
+  // Card.removeCardsFromHand(caster, payload.cards);
+
   // Only allow casting during the PlayerTurns phase
   if (underworld.turn_phase === turn_phase.PlayerTurns) {
     window.animatingSpells = true;
