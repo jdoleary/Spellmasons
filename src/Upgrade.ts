@@ -1,8 +1,7 @@
 import seedrandom from 'seedrandom';
 import { NUMBER_OF_UPGRADES_TO_CHOOSE_FROM } from './config';
 import { MESSAGE_TYPES } from './MessageTypes';
-import * as config from './config';
-import { checkForGetCardOnTurn, IPlayer } from './Player';
+import type { IPlayer } from './Player';
 import { randInt } from './rand';
 export interface IUpgrade {
   title: string;
@@ -91,29 +90,6 @@ export const upgradeSourceWhenDead: IUpgrade[] = [
   },
 ];
 export const upgradeSource: IUpgrade[] = [
-  {
-    title: '+ Card Frequency',
-    description: (player) =>
-      `Get a new card every ${player.turnsPerCard} turns.`,
-    thumbnail: 'images/upgrades/plus_card_frequency.png',
-    maxCopies: config.PLAYER_BASE_TURNS_PER_CARD - 1,
-    effect: (player) => {
-      player.turnsPerCard--;
-      // Check if decreasing the turnsPerCard will land on the current turn
-      // as being a turn that the player should get a card so that they don't get skipped
-      checkForGetCardOnTurn(player);
-    },
-  },
-  {
-    title: 'More Cards',
-    description: (player) =>
-      `Increases the number of cards that you get at the beginning of each level from ${player.cardsAmount
-      } to ${player.cardsAmount + 1}`,
-    thumbnail: 'images/upgrades/more_cards.png',
-    effect: (player) => {
-      player.cardsAmount++;
-    },
-  },
   {
     title: '+ Max Health',
     description: (player) =>
