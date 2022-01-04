@@ -18,7 +18,11 @@ export interface IOverworld {
   votes: { [clientId: string]: number };
 }
 export const currentOverworldLocation: Coords = { x: 0, y: 0 };
+// hardCodedLevelEnemies is a list of the enemies in a level.  The number represents the type of enemy as an index
+// in the units/index.ts registerUnits list
 const hardCodedLevelEnemies = [
+  [],
+  [0, 1, 2],
   [0, 4],
   [0, 0, 0, 6],
   [0, 0, 0, 1, 7],
