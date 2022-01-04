@@ -14,8 +14,6 @@ export const MILLIS_PER_ANIMATION = 200;
 export const MILLIS_PER_SPELL_ANIMATION = 200;
 export const PERCENT_CHANCE_OF_HEAVY_UNIT = 10;
 export const NUMBER_OF_UPGRADES_TO_CHOOSE_FROM = 5;
-// How many turns it takes to get a new card
-export const PLAYER_BASE_TURNS_PER_CARD = 4;
 export const PORTAL_COORDINATES = {
   x: MAP_WIDTH - COLLISION_MESH_RADIUS,
   y: MAP_HEIGHT / 2,
@@ -33,6 +31,7 @@ export const MANA_MULTIPLIER_NONE = 1;
 export const MANA_MULTIPLIER_SM = 2;
 export const MANA_MULTIPLIER_M = 3;
 export const MANA_MULTIPLIER_L = 3;
+export const MANA_GET_PER_TURN = 10;
 // An arbitrary number which affects the multiplying affect that distance has on mana cost
 // A bigger number means distance costs less.  
 // distance/SPELL_DISTANCE_MANA_DENOMINATOR is what the mana is multiplied by

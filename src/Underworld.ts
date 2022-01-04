@@ -331,8 +331,10 @@ export default class Underworld {
       console.error("Attempted to initialize turn for a non existant player index")
       return
     }
-    // Start the currentTurnPlayer's turn
-    Player.checkForGetCardOnTurn(player);
+    // Give mana at the start of turn
+    player.unit.mana += config.MANA_GET_PER_TURN;
+    Unit.syncPlayerHealthManaUI();
+
     // If this current player is NOT able to take their turn...
     if (!Player.ableToTakeTurn(player)) {
       // Skip them

@@ -208,8 +208,8 @@ export async function takeDamage(unit: IUnit, amount: number) {
     }
   }
   unit.health -= alteredAmount;
-  // Prevent health from going over maximum
-  unit.health = Math.min(unit.health, unit.healthMax);
+  // Prevent health from going over maximum or under 0
+  unit.health = Math.max(0, Math.min(unit.health, unit.healthMax));
   // If the unit is "selected" this will update it's overlay to reflect the damage
   updateSelectedOverlay(unit);
 
