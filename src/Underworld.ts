@@ -21,11 +21,12 @@ import floatingText from './FloatingText';
 import { UnitType, Coords, Faction } from './commonTypes';
 import Events from './Events';
 import { allUnits } from './units';
-import { updatePlanningView } from './ui/PlanningView';
+import { updatePlanningView, updateTooltipPosition, updateTooltipSpellCost } from './ui/PlanningView';
 import { ILevel, getEnemiesForAltitude } from './overworld';
 import { setRoute, Route } from './routes';
 import { prng, randInt } from './rand';
 import { calculateManaHealthCost } from './cards/cardUtils';
+import unit from './units/manBlue';
 
 export enum turn_phase {
   PlayerTurns,
@@ -656,7 +657,7 @@ export default class Underworld {
       return effectState;
     }
     const cards = Cards.getCardsFromIds(cardIds);
-    const { manaCost, healthCost } = calculateManaHealthCost(cards, casterPlayer.unit);
+    const { manaCost, healthCost } = calculateManaHealthCost(cards, casterPlayer.unit, math.distance(casterPlayer.unit, target));
     for (let index = 0; index < cards.length; index++) {
       const card = cards[index];
       const animationPromises = [];
@@ -705,6 +706,9 @@ export default class Underworld {
         Unit.takeDamage(casterPlayer.unit, healthCost)
       }
       Unit.syncPlayerHealthManaUI();
+    } else {
+      updateTooltipSpellCost({ manaCost, healthCost, willCauseDeath: healthCost >= casterPlayer.unit.health })
+      updateTooltipPosition();
     }
     if (!dryRun) {
       // Clear spell animations once all cards are done playing their animations

@@ -143,7 +143,21 @@ const elInspectorTooltipContainer = document.getElementById(
 const elInspectorTooltipContent = document.getElementById(
   'inspector-tooltip-content',
 );
-export function updateTooltip() {
+const elSpellManaCost = document.getElementById(
+  'spell-mana-cost',
+);
+const elSpellHealthCost = document.getElementById(
+  'spell-health-cost',
+);
+export function updateTooltipSpellCost({ manaCost, healthCost, willCauseDeath }: { manaCost: number, healthCost: number, willCauseDeath: boolean }) {
+  if (elSpellManaCost) {
+    elSpellManaCost.innerHTML = `- ${manaCost}`
+  }
+  if (elSpellHealthCost) {
+    elSpellHealthCost.innerHTML = `- ${healthCost} ${willCauseDeath ? '💀' : ''} `
+  }
+}
+export function updateTooltipPosition() {
   if (
     !(
       elInspectorTooltipContent &&
@@ -151,6 +165,7 @@ export function updateTooltip() {
       elInspectorTooltipContainer
     )
   ) {
+    console.error("Tooltip elements failed to initialize")
     return;
   }
   const mousePos = window.underworld.getMousePos();
@@ -167,6 +182,19 @@ export function updateTooltip() {
   elInspectorTooltipContainer.classList.add(
     mousePos.x > MAP_WIDTH / 2 ? 'right' : 'left',
   );
+}
+export function updateTooltipContent() {
+  if (
+    !(
+      elInspectorTooltipContent &&
+      elInspectorTooltip &&
+      elInspectorTooltipContainer
+    )
+  ) {
+    console.error("Tooltip elements failed to initialize")
+    return;
+  }
+  const mousePos = window.underworld.getMousePos();
 
   // Update information in content
   // show info on unit, pickup, etc clicked

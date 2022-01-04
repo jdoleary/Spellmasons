@@ -259,19 +259,30 @@ body.your-turn #player-turn-indicator-holder.low-time {
 }
 
 #inspector-tooltip {
-  display: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  pointer-events: none;
+  position: absolute;
   user-select: none;
   z-index: 1;
   position: fixed;
   top: 0;
   left: 0;
 }
-#inspector-tooltip.active {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  pointer-events: none;
-  position: absolute;
+#inspector-tooltip #inspector-tooltip-content {
+  display: none;
+}
+#inspector-tooltip.active #inspector-tooltip-content {
+  display: block;
+}
+/* The spell-cost portion of the tooltip should ONLY show when inspect mode
+is NOT active so that it doesn't conflict with the regular tooltip content*/
+#inspector-tooltip.active #inspector-tooltip-spell-cost {
+  display: none;
+}
+#inspector-tooltip #inspector-tooltip-spell-cost {
+  display: block;
 }
 /* Transform position is determined on hover*/
 #inspector-tooltip-container.top {
@@ -286,13 +297,22 @@ body.your-turn #player-turn-indicator-holder.low-time {
 #inspector-tooltip-container.right {
   right: 0;
 }
-#inspector-tooltip-container {
+#inspector-tooltip-content {
   border-radius: 10px 10px;
   background-color: rgba(255, 255, 255, 0.7);
   padding: 8px;
   width: 300px;
   white-space: pre-wrap;
   position: absolute;
+}
+#inspector-tooltip-spell-cost {
+  font-size: xx-large;
+}
+#inspector-tooltip-spell-cost #spell-mana-cost {
+  color:blue;
+}
+#inspector-tooltip-spell-cost #spell-health-cost {
+  color:red;
 }
 
 #ready-state {

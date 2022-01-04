@@ -33,3 +33,7 @@ export const MANA_MULTIPLIER_NONE = 1;
 export const MANA_MULTIPLIER_SM = 2;
 export const MANA_MULTIPLIER_M = 3;
 export const MANA_MULTIPLIER_L = 3;
+// An arbitrary number which affects the multiplying affect that distance has on mana cost
+// A bigger number means distance costs less.  
+// distance/SPELL_DISTANCE_MANA_DENOMINATOR is what the mana is multiplied by
+export const SPELL_DISTANCE_MANA_DENOMINATOR = 100;

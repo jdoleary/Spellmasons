@@ -5,6 +5,8 @@ import {
   clearSpellEffectProjection,
   syncSpellEffectProjection,
   updateTooltip,
+  updateTooltipContent,
+  updateTooltipPosition,
 } from './ui/PlanningView';
 const elCardHolders = document.getElementById('card-holders');
 // Where the non-selected cards are displayed
@@ -255,7 +257,8 @@ export function toggleInspectMode(active: boolean) {
       // updateTooltip runs on an interval so that if a units health changes under the tooltip
       // without the user moving the mouse it will stay up to date.
       inspectIntervalId = setInterval(() => {
-        updateTooltip();
+        updateTooltipContent();
+        updateTooltipPosition();
       }, 60);
     }
   } else {
