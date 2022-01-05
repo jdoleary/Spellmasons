@@ -11,6 +11,7 @@ const unit: UnitSource = {
     subtype: UnitSubType.AI_summoner,
     probability: 30,
   },
+  unitProps: {},
   action: async (unit: Unit.IUnit) => {
     // Move opposite to closest enemy
     const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit);
