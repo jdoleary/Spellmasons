@@ -39,6 +39,7 @@ export interface IUnit {
   healthMax: number;
   mana: number;
   manaMax: number;
+  manaPerTurn: number;
   healthText: PIXI.Text;
   alive: boolean;
   unitType: UnitType;
@@ -81,6 +82,7 @@ export function create(
     healthMax: config.UNIT_BASE_HEALTH,
     mana: config.UNIT_BASE_MANA,
     manaMax: config.UNIT_BASE_MANA,
+    manaPerTurn: config.MANA_GET_PER_TURN,
     healthText: new PIXI.Text('', {
       fill: 'red',
       // Allow health hearts to wrap

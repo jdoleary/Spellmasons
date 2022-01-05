@@ -1,7 +1,7 @@
 export const PLAYER_BASE_HEALTH = 100;
 export const UNIT_BASE_MOVE_DISTANCE = 120;
 export const COLLISION_MESH_RADIUS = 32;
-export const UNIT_BASE_HEALTH = 10;
+export const UNIT_BASE_HEALTH = 3;
 export const UNIT_BASE_MANA = 40;
 export const UNIT_BASE_DAMAGE = 1;
 export const MAP_WIDTH = 800;
@@ -31,7 +31,7 @@ export const MANA_MULTIPLIER_NONE = 1;
 export const MANA_MULTIPLIER_SM = 2;
 export const MANA_MULTIPLIER_M = 3;
 export const MANA_MULTIPLIER_L = 3;
-export const MANA_GET_PER_TURN = 10;
+export const MANA_GET_PER_TURN = 5;
 // An arbitrary number which affects the multiplying affect that distance has on mana cost
 // A bigger number means distance costs less.  
 // distance/SPELL_DISTANCE_MANA_DENOMINATOR is what the mana is multiplied by

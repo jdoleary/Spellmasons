@@ -101,7 +101,30 @@ export const upgradeSource: IUpgrade[] = [
       player.unit.health++;
     },
   },
+  {
+    title: '+ Max Mana',
+    description: (player) =>
+      `Increases your mana from ${player.unit.manaMax} to ${player.unit.manaMax + maxManaIncreaseAmount
+      }`,
+    thumbnail: 'images/upgrades/todo.png',
+    effect: (player) => {
+      player.unit.manaMax += maxManaIncreaseAmount;
+      player.unit.mana += maxManaIncreaseAmount;
+    },
+  },
+  {
+    title: '+ Mana per turn',
+    description: (player) =>
+      `Increases your mana per turn from ${player.unit.manaPerTurn} per turn to ${player.unit.manaPerTurn + manaPerTurnIncreaseAmount
+      } per turn.`,
+    thumbnail: 'images/upgrades/todo.png',
+    effect: (player) => {
+      player.unit.manaPerTurn += maxManaIncreaseAmount;
+    },
+  },
 ];
+const maxManaIncreaseAmount = 10;
+const manaPerTurnIncreaseAmount = 2;
 
 // Template
 //   {

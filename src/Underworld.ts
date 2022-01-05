@@ -332,7 +332,7 @@ export default class Underworld {
       return
     }
     // Give mana at the start of turn
-    player.unit.mana += config.MANA_GET_PER_TURN;
+    player.unit.mana += player.unit.manaPerTurn;
     Unit.syncPlayerHealthManaUI();
 
     // If this current player is NOT able to take their turn...
