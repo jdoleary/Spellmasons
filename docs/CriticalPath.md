@@ -1,16 +1,10 @@
 # Critical Path
-- (L) Headless server
-    - Why: This will fix the networking issues
-    - No input handlers
-    - Support "Game Replay" by executing logged actions one at a time.
-        - This will be useful for debugging or even testing
-- Do gameplay refinement tasks: "Ideas 2021-12-17" (See TasksCurrent entry)
-    - Why: This adds better tradeoffs (more player creativity) and makes the game more resiliant to doomstate
-    - Mana Update
-    - Free Movement, No cells update
-    - Overworld cauldron
+- Gameplay
+    - Collisions
+    - Balance
 - Start a following (Tom Francis style):
     - Youtube Alpha version video
+- Playtest with friends
 - Content
     - More spells
     - More monsters
@@ -38,5 +32,7 @@
     - Publish on Steamworks
     - Social Media stuff
 
-## Schedule
-- 6 working days until 1/6
+## Deadlines
+- My part (gameplay) should be finished end of Feb 2022
+## Thoughts
+Don't get stuck on feature creep.  Finish the game and get it out so you can move on

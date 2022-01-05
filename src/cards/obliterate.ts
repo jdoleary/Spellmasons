@@ -33,7 +33,7 @@ Completely obliterates all targets.
         }
         const pickup = window.underworld.getPickupAt(target);
         if (pickup) {
-          // TODO don't remove portal
+          // TODO don't remove portal, or go to game over if the portal is destroyed because then the players are stuck
           removePickup(pickup);
         }
         const obstacle = window.underworld.getObstacleAt(target);
