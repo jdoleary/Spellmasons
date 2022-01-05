@@ -482,7 +482,7 @@ export default class Underworld {
     return false;
   }
   getRandomCoordsWithinBounds(bounds: Bounds): Coords {
-    const x = randInt(window.underworld.random, bounds.xMin || 0, bounds.yMax || config.MAP_WIDTH);
+    const x = randInt(window.underworld.random, bounds.xMin || 0, bounds.xMax || config.MAP_WIDTH);
     const y = randInt(window.underworld.random, bounds.yMin || 0, bounds.yMax || config.MAP_HEIGHT);
     return { x, y };
   }
