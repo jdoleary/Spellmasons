@@ -1,6 +1,6 @@
 import * as Unit from '../Unit';
 import type { Spell } from '.';
-import { MANA_BASE_COST, MANA_MULTIPLIER_NONE } from '../config';
+import { MANA_MULTIPLIER_NONE } from '../config';
 
 const id = 'heal';
 const healAmount = 10;
