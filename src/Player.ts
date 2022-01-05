@@ -98,7 +98,7 @@ export function resetPlayerForNextLevel(player: IPlayer) {
 
   // Return to a spawn location
   // limit spawn to the leftmost column
-  const coords = window.underworld.getRandomCoordsWithinBounds({ xMax: 0 });
+  const coords = window.underworld.getRandomCoordsWithinBounds({ xMax: 10 });
   Unit.setLocation(player.unit, coords);
 }
 // Keep a global reference to the current client's player
