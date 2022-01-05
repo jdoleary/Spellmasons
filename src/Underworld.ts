@@ -300,6 +300,10 @@ export default class Underworld {
   endPlayerTurnPhase() {
     // Move onto next phase
     this.setTurnPhase(turn_phase.NPC);
+    // Add mana to AI units
+    for (let unit of this.units.filter((u) => u.unitType === UnitType.AI && u.alive)) {
+      unit.mana += unit.manaPerTurn;
+    }
   }
   endNPCTurnPhase() {
     // Move onto next phase
