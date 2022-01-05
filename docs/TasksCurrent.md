@@ -1,30 +1,27 @@
-- LEFT OFF: Implement mana cost / mana multiplier for cards
-- Bug: Spell chain still draws dryRun lines for ignored units
-- Ideas 2021-12-17
-  - (L) Remove Grid, allow free movement
-    - Fix spells for free movement
-    - Fix enemies for free movement
-    - Implement obstacles
-      - Prevent units from running away outside of bounds
-  - (S) Heros have much more health, bad guys die more quickly, getting hit isn't as big of a deal, so you don't have to worry about overcalculating agro range, you can be more **intuitive** in your play.
-  - (L) Mana Update
-    - (M) Cost mana for each card and the farther away you cast so there is no range limit (this allows for more strategy, more tradeoffs)
-    - (S) Never run out of cards, you're limited by mana instead (this way you don't get stuck)
-      - Update Card management, how do you get new cards now?
-    - (S) New cards for mana, mana potions
-  - (L) Get rid of cells / Allow free movement
-    - This might make judgements about AI danger more dynamic and less boring and mathematical
-    - This may simplify movement code as it relates to units getting in each others way
-    - Update pathing
-    - Cast spells with base radius, or on nearest enemy or cursor?
-    - (S) Lots of little bad guys, some big ones; Smaller units visually
-  - (s) Categories of spells, the combinable ones (cards), the special spells (teleport and such) limited in use - represent them differently (with, say, a hexagon, for the ones that can get used up)
-    - Make these pickupable (call them runes?) and they persist between levels
-  - (L) Rather than an overworld, what if you and your team have to mix potions in a cauldron to create a portal that leads you to a unique level? (The cauldron makes the portal)
-    - This adds another tradeoff, the more dangerous the portal, the greater the reward for surviving it.
-    - Should cauldron have bounds so players can't under do the difficulty or over do it?
-    - Should there be a time constraint for end game? so you can only make so many culdrons?
-    - In the boss battle, maybe you need to protect the culdron and there's no portal?
+- Implement new way of getting cards over time
+- Balance mana
+  - To make this challenging, players should often be on the verge of no mana, it should feel scarce so they have to pick carefully what spells they want to use.
+  - Maybe max mana should increase over time
+  - or mana refresh rate
+- Health should cost more than 1 mana per 1hp or else you can directly convert mana to HP
+- Damage should be able to kill simple mob easier
+- Mobs should be able to hit your unit edge, not your center
+- Single use abilities
+  - Abilities for mana, mana potions?
+---
+- (L) Collision
+  - Unit collision
+  - Obstacles
+  - Prevent units from running away outside of bounds
+- (M) Push spells
+  - Depends on: Collision task
+- (s) Categories of spells, the combinable ones (cards), the special spells (teleport and such) limited in use - represent them differently (with, say, a hexagon, for the ones that can get used up)
+  - Make these pickupable (call them runes?) and they persist between levels
+- (L) Rather than an overworld, what if you and your team have to mix potions in a cauldron to create a portal that leads you to a unique level? (The cauldron makes the portal)
+  - This adds another tradeoff, the more dangerous the portal, the greater the reward for surviving it.
+  - Should cauldron have bounds so players can't under do the difficulty or over do it?
+  - Should there be a time constraint for end game? so you can only make so many culdrons?
+  - In the boss battle, maybe you need to protect the culdron and there's no portal?
 - (M) wsPie: how to handle reconnection
   1. Reconnection when the server goes down and comes back up (loses room state)
     - This currently puts the game in a buggy state
@@ -37,3 +34,10 @@
   - What happens when you clone yourself?
   - Charge doesn't play well with AOE
   - chain purify didn't work(didn't remove poison)
+
+## Advice from Elon:
+1. Make your requirements less dumb.  Everyone is wrong sometimes
+2. Try very hard to delete the part or process.  If you're not occasionally adding things back in then you're not deleting enough.
+3. Simplify or optimize.  Note: It's the third step for a reason. Possibly the most common error of a smart engineer is to optimize a thing that should not exist.
+4. Accelerate cycle time.  You're moving too slowly, go faster.
+5. Automate
