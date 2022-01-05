@@ -13,7 +13,7 @@ const unit: UnitSource = {
     subtype: UnitSubType.AI_priest,
     probability: 30,
   },
-
+  unitProps: {},
   action: async (unit: Unit.IUnit) => {
     // Move to closest ally
     const closestAlly = Unit.findClosestUnitInSameFaction(unit);

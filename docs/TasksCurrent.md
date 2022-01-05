@@ -2,6 +2,8 @@
 - Balance mana
   - To make this challenging, players should often be on the verge of no mana, it should feel scarce so they have to pick carefully what spells they want to use.
 - Spell: Burn mana / Steal mana
+- Swap should only swap with targets, it shouldn't allow arbitrary teleportation
+- swapping with portal shouldn't make user portal
 ---
 - (L) Collision
   - Unit collision

@@ -12,6 +12,7 @@ const unit: UnitSource = {
     subtype: UnitSubType.AI_rook,
     probability: 10,
   },
+  unitProps: {},
   action: async (unit: Unit.IUnit) => {
     // Shoot at enemy if in same horizontal, diagonal, or vertical
     let targetEnemy;

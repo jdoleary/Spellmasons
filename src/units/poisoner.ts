@@ -14,6 +14,7 @@ const unit: UnitSource = {
     subtype: UnitSubType.AI_poisoner,
     probability: 30,
   },
+  unitProps: {},
   action: async (unit: Unit.IUnit) => {
     const nonPoisonedEnemyUnits = window.underworld.units.filter(
       (u) =>

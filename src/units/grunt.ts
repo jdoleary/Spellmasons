@@ -10,6 +10,7 @@ const unit: UnitSource = {
     subtype: UnitSubType.AI_melee,
     probability: 100,
   },
+  unitProps: {},
   action,
   canInteractWithTarget,
 };
