@@ -243,15 +243,12 @@ export default class Underworld {
         sourceUnit.id,
         coords.x,
         coords.y,
-        config.UNIT_BASE_MOVE_DISTANCE,
-        config.UNIT_BASE_ATTACK_RANGE,
         Faction.ENEMY,
         sourceUnit.info.image,
         UnitType.AI,
         sourceUnit.info.subtype,
+        sourceUnit.unitProps
       );
-      // Add the sourceUnits unitProps to unit
-      Object.assign(unit, sourceUnit.unitProps);
 
       const roll = randInt(this.random, 0, 100);
       if (roll <= config.PERCENT_CHANCE_OF_HEAVY_UNIT) {

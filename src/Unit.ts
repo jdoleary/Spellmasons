@@ -63,19 +63,18 @@ export function create(
   unitSourceId: string,
   x: number,
   y: number,
-  moveDistance: number,
-  attackRange: number,
   faction: Faction,
   imagePath: string,
   unitType: UnitType,
   unitSubType: UnitSubType,
+  sourceUnitProps: Partial<IUnit> = {}
 ): IUnit {
-  const unit: IUnit = {
+  const unit: IUnit = Object.assign({
     unitSourceId,
     x,
     y,
-    moveDistance,
-    attackRange,
+    moveDistance: config.UNIT_BASE_MOVE_DISTANCE,
+    attackRange: config.UNIT_BASE_ATTACK_RANGE,
     faction,
     thisTurnMoved: false,
     intendedNextMove: undefined,
@@ -102,7 +101,7 @@ export function create(
     onAgroEvents: [],
     onTurnStartEvents: [],
     modifiers: {},
-  };
+  }, sourceUnitProps);
 
   // Ensure all change factions logic applies when a unit is first created
   changeFaction(unit, faction);
