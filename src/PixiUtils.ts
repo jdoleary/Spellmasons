@@ -188,7 +188,7 @@ export function addPixiSprite(
   let texture = sheet.animations[imagePath];
   if (texture) {
     const animatedSprite = new PIXI.AnimatedSprite(sheet.animations[imagePath]);
-    animatedSprite.animationSpeed = 0.02;
+    animatedSprite.animationSpeed = 0.1;
     animatedSprite.play();
     sprite = animatedSprite;
   } else {

@@ -137,4 +137,14 @@ export const pickups: IPickupSource[] = [
       }
     },
   },
+  {
+    imagePath: 'pickups/mana-potion',
+    name: 'Mana Potion',
+    description: 'Grants the player more mana',
+    effect: ({ unit, player }) => {
+      if (player) {
+        player.unit.mana += 20;
+      }
+    },
+  },
 ];
