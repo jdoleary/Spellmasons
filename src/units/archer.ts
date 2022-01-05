@@ -12,10 +12,13 @@ const unit: UnitSource = {
     subtype: UnitSubType.AI_bishop,
     probability: 50,
   },
+  unitProps: {
+    attackRange: 300
+  },
   action: async (unit: Unit.IUnit) => {
     // Move opposite to enemy if the enemy is too close
     const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit);
-    if (closestEnemy && math.distance(unit, closestEnemy) < (range - 10)) {
+    if (closestEnemy && math.distance(unit, closestEnemy) < (unit.attackRange - 10)) {
       const moveTo = math.getCoordsDistanceTowardsTarget(unit, closestEnemy, -unit.moveDistance);
       unit.intendedNextMove = moveTo;
     }
@@ -32,12 +35,11 @@ const unit: UnitSource = {
   },
   canInteractWithTarget,
 };
-const range = 100;
 function canInteractWithTarget(unit: Unit.IUnit, x: number, y: number): boolean {
   // Dead units cannot attack
   if (!unit.alive) {
     return false;
   }
-  return math.distance(unit, { x, y }) <= range;
+  return math.distance(unit, { x, y }) <= unit.attackRange;
 }
 export default unit;

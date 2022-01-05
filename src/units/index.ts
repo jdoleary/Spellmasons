@@ -18,6 +18,7 @@ export interface UnitSource {
   info: ConstructorInfo;
   action: UnitAction;
   canInteractWithTarget?: canInteractWithTarget;
+  unitProps: Partial<Unit.IUnit>
 }
 
 /// Units to register

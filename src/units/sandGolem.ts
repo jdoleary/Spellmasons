@@ -48,7 +48,7 @@ function canInteractWithTarget(unit: Unit.IUnit, x: number, y: number): boolean 
     return false;
   }
   const dist = math.distance(unit, { x, y });
-  // Can hit you if you are within 30 but not 10
-  return dist > 10 && dist < 30
+  // Can hit you if you are within 300 but not 100
+  return dist > 100 && dist < 300
 }
 export default unit;
