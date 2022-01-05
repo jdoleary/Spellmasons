@@ -237,6 +237,7 @@ Type ${UnitType[unit.unitType]}
 SubType ${UnitSubType[unit.unitSubType]}
 Faction ${Faction[unit.faction]}
 Health ${unit.health}/${unit.healthMax}
+Mana ${unit.mana}/${unit.manaMax}
 Modifiers ${JSON.stringify(unit.modifiers, null, 2)}
 ${cards}
         `;
