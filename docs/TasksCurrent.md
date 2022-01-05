@@ -1,8 +1,7 @@
 - Implement new way of getting cards over time
 - Balance mana
   - To make this challenging, players should often be on the verge of no mana, it should feel scarce so they have to pick carefully what spells they want to use.
-- Spell: Burn mana
-- Make caster enemies use mana to cast
+- Spell: Burn mana / Steal mana
 ---
 - (L) Collision
   - Unit collision
