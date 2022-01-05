@@ -3,6 +3,7 @@ import type { Spell } from '.';
 import { MANA_BASE_COST, MANA_MULTIPLIER_NONE } from '../config';
 
 const id = 'damage';
+const damageDone = 10;
 const spell: Spell = {
   card: {
     id,
@@ -21,10 +22,9 @@ Deals damage to all targets.
       for (let target of state.targets) {
         const unit = window.underworld.getUnitAt(target);
         if (unit) {
-          const damage = 1;
-          promises.push(Unit.takeDamage(unit, damage));
+          promises.push(Unit.takeDamage(unit, damageDone));
           state.aggregator.damageDealt =
-            (state.aggregator.damageDealt || 0) + damage;
+            (state.aggregator.damageDealt || 0) + damageDone;
         }
       }
       await Promise.all(promises);

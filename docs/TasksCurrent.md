@@ -3,7 +3,6 @@
   - To make this challenging, players should often be on the verge of no mana, it should feel scarce so they have to pick carefully what spells they want to use.
   - Maybe max mana should increase over time
   - or mana refresh rate
-- Damage should be able to kill simple mob easier
 - Mobs should be able to hit your unit edge, not your center
 - Single use abilities
   - Abilities for mana, mana potions?

@@ -2,7 +2,7 @@ export const PLAYER_BASE_HEALTH = 100;
 export const UNIT_BASE_MOVE_DISTANCE = 120;
 export const COLLISION_MESH_RADIUS = 32;
 export const UNIT_BASE_HEALTH = 3;
-export const UNIT_BASE_MANA = 40;
+export const UNIT_BASE_MANA = 10;
 export const UNIT_BASE_DAMAGE = 1;
 export const MAP_WIDTH = 800;
 export const MAP_HEIGHT = 600;
@@ -25,7 +25,7 @@ export const OVERWORLD_MAX_WIDTH = 9;
 export const OVERWORLD_SPACING = 100;
 
 // Mana
-export const MANA_BASE_COST = 1;
+export const MANA_BASE_COST = 8;
 // * 1 will not change the mana, therefore 1 is a "none" multiplier
 export const MANA_MULTIPLIER_NONE = 1;
 export const MANA_MULTIPLIER_SM = 2;
