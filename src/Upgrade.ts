@@ -93,12 +93,12 @@ export const upgradeSource: IUpgrade[] = [
   {
     title: '+ Max Health',
     description: (player) =>
-      `Increases your max health from ${player.unit.healthMax} to ${player.unit.healthMax + 1
+      `Increases your max health from ${player.unit.healthMax} to ${player.unit.healthMax + maxHealthIncreaseAmount
       }`,
     thumbnail: 'images/upgrades/plus_max_health.png',
     effect: (player) => {
-      player.unit.healthMax++;
-      player.unit.health++;
+      player.unit.healthMax += maxHealthIncreaseAmount;
+      player.unit.health += maxHealthIncreaseAmount;
     },
   },
   {
@@ -124,6 +124,7 @@ export const upgradeSource: IUpgrade[] = [
   },
 ];
 const maxManaIncreaseAmount = 10;
+const maxHealthIncreaseAmount = 5;
 const manaPerTurnIncreaseAmount = 2;
 
 // Template
