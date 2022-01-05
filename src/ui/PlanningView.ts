@@ -21,37 +21,30 @@ export function initPlanningView() {
 }
 export function updatePlanningView() {
   planningViewGraphics.clear();
-  // TODO: Restore planning view for "free movement" refactor
-  // for each unit...
-  // const unit = window.underworld.getUnitAt(hoverCell);
-  // if (unit) {
-  // if (
-  //   unit.alive &&
-  //   unit.unitType === UnitType.AI &&
-  //   unit.faction === Faction.ENEMY
-  // ) {
-  //   if (allUnits[unit.unitSourceId].canInteractWithTarget?.(unit, x, y)) {
-  //     const color = Unit.getPlanningViewColor(unit);
-  //     // planningViewGraphics.lineStyle(8, color, 0.9);
-  //     planningViewGraphics.beginFill(color);
-  //     planningViewGraphics.drawCircle(
-  //       unit.x,
-  //       unit.y,
-  //       unit.moveDistance
-  //     );
-  //     planningViewGraphics.endFill();
-  //   }
-  // }
-  // }
-  // For the player, draw their move distance 
-  const color = Unit.getPlanningViewColor(window.player.unit);
-  planningViewGraphics.lineStyle(2, color, 1);
-  planningViewGraphics.beginFill(0x000000, 0);
-  planningViewGraphics.drawCircle(
-    window.player.unit.x,
-    window.player.unit.y,
-    window.player.unit.moveDistance
-  );
+  const mousePos = window.underworld.getMousePos();
+  // Draw UI for units under the mouse on hover
+  const unit = window.underworld.getUnitAt(mousePos);
+  if (unit) {
+    if (
+      unit.alive
+    ) {
+      const color = Unit.getPlanningViewColor(unit);
+      planningViewGraphics.lineStyle(8, color, 0.9);
+      planningViewGraphics.drawCircle(
+        unit.x,
+        unit.y,
+        unit.attackRange
+      );
+      planningViewGraphics.beginFill(color);
+      planningViewGraphics.drawCircle(
+        unit.x,
+        unit.y,
+        unit.moveDistance
+      );
+      planningViewGraphics.endFill();
+    }
+  }
+
   planningViewGraphics.endFill();
 }
 
