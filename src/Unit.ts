@@ -28,6 +28,7 @@ export interface IUnit {
   x: number;
   y: number;
   moveDistance: number;
+  attackRange: number;
   name?: string;
   faction: number;
   // If the unit moved this turn
@@ -63,6 +64,7 @@ export function create(
   x: number,
   y: number,
   moveDistance: number,
+  attackRange: number,
   faction: Faction,
   imagePath: string,
   unitType: UnitType,
@@ -73,6 +75,7 @@ export function create(
     x,
     y,
     moveDistance,
+    attackRange,
     faction,
     thisTurnMoved: false,
     intendedNextMove: undefined,

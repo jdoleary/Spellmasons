@@ -30,6 +30,7 @@ const unit: UnitSource = {
           unit.x,
           unit.y,
           unit.moveDistance,
+          unit.attackRange,
           // A unit always summons units in their own faction
           unit.faction,
           sourceUnit.info.image,

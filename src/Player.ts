@@ -41,6 +41,7 @@ export function create(clientId: string, unitId: string): IPlayer | undefined {
       coords.x,
       coords.y,
       config.UNIT_BASE_MOVE_DISTANCE,
+      0, // Player units do not have an attack range since they only cast
       Faction.PLAYER,
       userSource.info.image,
       UnitType.PLAYER_CONTROLLED,
