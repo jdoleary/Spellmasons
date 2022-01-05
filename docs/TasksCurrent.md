@@ -1,7 +1,6 @@
 - Implement new way of getting cards over time
 - Balance mana
   - To make this challenging, players should often be on the verge of no mana, it should feel scarce so they have to pick carefully what spells they want to use.
-- Mobs should be able to hit your unit edge, not your center
 - Single use abilities
 ---
 - (L) Collision

@@ -1,6 +1,7 @@
 import * as Unit from '../../Unit';
 import * as Image from '../../Image';
 import * as math from '../../math';
+import { COLLISION_MESH_RADIUS } from '../../config';
 
 export async function action(unit: Unit.IUnit) {
   if (!Unit.canMove(unit)) {
@@ -40,7 +41,9 @@ export function canInteractWithTarget(
     return false;
   }
   // Melee units can attack target "range" distance from them
+  // + COLLISION_MESH_RADIUS*2 ensures that grunt can attack if it can reach the edge of a unit,
+  // rather than their center
   return (
-    math.distance(unit, { x, y }) <= range
+    math.distance(unit, { x, y }) <= range + COLLISION_MESH_RADIUS * 2
   );
 }
