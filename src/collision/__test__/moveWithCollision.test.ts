@@ -1,5 +1,5 @@
 import type { Coords } from '../../commonTypes';
-import { Circle, isCircleIntersectingCircle, move, moveAwayFrom, normalizedVector } from '../moveWithCollision';
+import { Circle, isCircleIntersectingCircle, move, moveAlongVector, moveAwayFrom, normalizedVector } from '../moveWithCollision';
 
 describe("moveWithCollision", () => {
     describe("move", () => {
@@ -152,6 +152,16 @@ describe("moveWithCollision", () => {
             const p2 = { x: 1 + 3, y: 1 + 4 };
             const actual = normalizedVector(p1, p2);
             const expected = { vector: { x: 0.6, y: 0.8 }, distance: 5 };
+            expect(actual).toEqual(expected);
+        });
+    });
+    describe("moveAlongVector", () => {
+        it("should returns a new coordinate representing \"startPos\" moved \"distance\" along \"normalizedVector\"", () => {
+            const start = { x: 1, y: 1 };
+            const vector = { x: 0.6, y: 0.8 };
+            const distance = 5;
+            const actual = moveAlongVector(start, vector, distance);
+            const expected = { x: 4, y: 5 };
             expect(actual).toEqual(expected);
         });
     });

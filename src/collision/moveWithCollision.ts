@@ -1,5 +1,5 @@
 import type { Coords } from "../commonTypes";
-import { distance } from "../math";
+import { distance, normalizeRadians } from "../math";
 
 export interface Circle {
     position: Coords;
@@ -23,6 +23,14 @@ export function moveAwayFrom(circle: Circle, from: Coords) {
     // against the move distance to determine the final position
     circle.position.x -= a * moveDistance;
     circle.position.y -= b * moveDistance;
+}
+// Returns a new coordinate represending "startPos" moved "distance" along "normalizedVector"
+// Pure Function
+export function moveAlongVector(startPos: Coords, normalizedVector: Coords, distance: number): Coords {
+    return {
+        x: startPos.x + normalizedVector.x * distance,
+        y: startPos.y + normalizedVector.y * distance,
+    }
 }
 // Get a normalized vector and distance between two points
 // (this distance is a bonus since it needs to be calculated anyway, might as well return it)
@@ -55,6 +63,10 @@ export function move(mover: Circle, destination: Coords, circles: Circle[]) {
         // If the mover now intersects with another circle...
         if (isCircleIntersectingCircle(mover, other)) {
             // Repel, so they don't intersect
+            // Circles should move mover.radius/2 + other.radius/2 away from each others
+            // positions
+            const { vector, distance } = normalizedVector(mover.position, other.position);
+
 
 
         }
