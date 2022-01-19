@@ -35,10 +35,13 @@ export function moveAlongVector(startPos: Coords, normalizedVector: Coords, dist
 // Get a normalized vector and distance between two points
 // (this distance is a bonus since it needs to be calculated anyway, might as well return it)
 // Pure Function
-export function normalizedVector(point1: Coords, point2: Coords): { vector: Coords, distance: number } {
+export function normalizedVector(point1: Coords, point2: Coords): { vector: Coords | undefined, distance: number } {
     const bigA = point2.x - point1.x;
     const bigB = point2.y - point1.y;
     const bigC = Math.sqrt(bigA * bigA + bigB * bigB);
+    if (bigC === 0) {
+        return { vector: undefined, distance: 0 }
+    }
     // little "a" and little "b" represent the normalized vector of movement
     const a = bigA / bigC;
     const b = bigB / bigC;
@@ -58,6 +61,7 @@ export function move(mover: Circle, destination: Coords, circles: Circle[]) {
     // of mover's movement
 
     // Actually move the mover
+    const originalPosition = { x: mover.position.x, y: mover.position.y };
     mover.position = destination;
     for (let other of circles) {
         // If the mover now intersects with another circle...
@@ -65,10 +69,26 @@ export function move(mover: Circle, destination: Coords, circles: Circle[]) {
             // Repel, so they don't intersect
             // Circles should move mover.radius/2 + other.radius/2 away from each others
             // positions
-            const { vector, distance } = normalizedVector(mover.position, other.position);
-
-
-
+            let { vector, distance } = normalizedVector(mover.position, other.position);
+            if (!vector) {
+                // If vector is undefined, then mover.position and other.position are
+                // equal, in which case we should determien the vector from the 
+                // mover's start point:
+                vector = normalizedVector(originalPosition, other.position).vector;
+            }
+            if (vector) {
+                const overlap = mover.radius + other.radius - distance;
+                const moveDistance = overlap / 2;
+                // Use a negative moveDistance for mover to move in the opposite direction of vector
+                mover.position = moveAlongVector(mover.position, vector, -moveDistance);
+                other.position = moveAlongVector(other.position, vector, moveDistance);
+            } else {
+                // If vector is still undefined after trying both the new point and the start point
+                // then we need not calculate any collision or movement because the mover isn't moving
+                // --
+                // return early
+                return
+            }
         }
     }
 

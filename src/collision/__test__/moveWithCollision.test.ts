@@ -2,7 +2,7 @@ import type { Coords } from '../../commonTypes';
 import { Circle, isCircleIntersectingCircle, move, moveAlongVector, moveAwayFrom, normalizedVector } from '../moveWithCollision';
 
 describe("moveWithCollision", () => {
-    describe("move", () => {
+    describe.only("move", () => {
         it("should travel to it's destination if unobstructed", () => {
             const c1: Circle = { position: { x: 0, y: 0 }, radius: 2 };
             const destination = { x: 2, y: 2 };
@@ -11,18 +11,18 @@ describe("moveWithCollision", () => {
             const expected = destination;
             expect(actual).toEqual(expected);
         });
-        describe("colliding circles of the same radius", () => {
+        describe("colliding circles", () => {
             it("should push another circle if it moves into it", () => {
                 // These circles start touching and with the same radius,
                 // so they should split the movement distance
-                const c1: Circle = { position: { x: 0, y: 0 }, radius: 2 };
+                const c1: Circle = { position: { x: -1000, y: 0 }, radius: 2 };
                 const circles: Circle[] = [
-                    { position: { x: 2, y: 0 }, radius: 2 }
+                    { position: { x: 6, y: 0 }, radius: 5 }
                 ];
-                const destination = { x: 2, y: 0 };
+                const destination = { x: 0, y: 0 };
                 move(c1, destination, circles);
                 const actual = circles[0].position;
-                const expected = { x: 2 + 1, y: 0 };
+                const expected = { x: 6.5, y: 0 };
                 expect(actual).toEqual(expected);
             });
             it("should not travel as far as it would unobstructed if it pushes another circle", () => {
@@ -43,14 +43,14 @@ describe("moveWithCollision", () => {
                 // so they should split the movement distance
                 const c1: Circle = { position: { x: 0, y: 0 }, radius: 2 };
                 const circles: Circle[] = [
-                    { position: { x: 2, y: 0 }, radius: 2 }
+                    { position: { x: 4, y: 0 }, radius: 2 }
                 ];
-                const destination = { x: 2, y: 0 };
+                const destination = { x: 4, y: 0 };
                 move(c1, destination, circles);
                 const actual = c1.position;
                 // It only moves half as far as it intended since it starts touching another
                 // circle of the same radius and tries to move exactly into it
-                const expected = { x: 1, y: 0 };
+                const expected = { x: 2, y: 0 };
                 expect(actual).toEqual(expected);
             });
             describe("collisions at non direct angles", () => {
@@ -68,7 +68,7 @@ describe("moveWithCollision", () => {
                     const destination = { x: 2, y: 2 };
                     move(c1, destination, circles);
                     const actual = circles[0].position;
-                    const expected = { x: 2, y: 1 };
+                    const expected = { x: 2, y: -1 };
                     expect(actual).toEqual(expected);
                 });
                 it("should not travel as far as it would unobstructed if it pushes another circle", () => {
@@ -83,26 +83,26 @@ describe("moveWithCollision", () => {
                     expect(actual).toEqual(expected);
                 });
             });
-            describe("multiple colliders", () => {
-                it("should push other circles if it moves into them", () => {
-                    // These circles start touching and with the same radius,
-                    // so they should split the movement distance
-                    const c1: Circle = { position: { x: 0, y: 0 }, radius: 2 };
-                    const circles: Circle[] = [
-                        { position: { x: 2, y: 1 }, radius: 2 },
-                        { position: { x: 2, y: -1 }, radius: 2 }
-                    ];
-                    const destination = { x: 2, y: 0 };
-                    move(c1, destination, circles);
-                    const actual = circles[0].position;
-                    const expected = { x: 2, y: 3 };
-                    expect(actual).toEqual(expected);
-                });
-                // it("should not travel as far as it would unobstructed if it pushes another circle", () => {
-                // });
-            });
+            // describe("multiple colliders", () => {
+            // it("should push other circles if it moves into them", () => {
+            //     // These circles start touching and with the same radius,
+            //     // so they should split the movement distance
+            //     const c1: Circle = { position: { x: 0, y: 0 }, radius: 2 };
+            //     const circles: Circle[] = [
+            //         { position: { x: 2, y: 1 }, radius: 2 },
+            //         { position: { x: 2, y: -1 }, radius: 2 }
+            //     ];
+            //     const destination = { x: 2, y: 0 };
+            //     move(c1, destination, circles);
+            //     const actual = circles[0].position;
+            //     const expected = { x: 2, y: 3 };
+            //     expect(actual).toEqual(expected);
+            // });
+            // it("should not travel as far as it would unobstructed if it pushes another circle", () => {
+            // });
+            // });
         });
-        // For the purposes that this system is built for, larger radius == larger mass
+        // POSSIBLE FUTURE TASK: For the purposes that this system is built for, larger radius == larger mass
         // it("should push another circle if it moves into it relative to it's radius", () => {
         // });
     });
@@ -153,6 +153,14 @@ describe("moveWithCollision", () => {
             const actual = normalizedVector(p1, p2);
             const expected = { vector: { x: 0.6, y: 0.8 }, distance: 5 };
             expect(actual).toEqual(expected);
+        });
+        it("should return {vector:undefined, distance:0} if the two points are the same", () => {
+            const p1 = { x: 1, y: 1 };
+            const p2 = { x: 1, y: 1 };
+            const actual = normalizedVector(p1, p2);
+            const expected = { vector: undefined, distance: 0 };
+            expect(actual).toEqual(expected);
+
         });
     });
     describe("moveAlongVector", () => {
