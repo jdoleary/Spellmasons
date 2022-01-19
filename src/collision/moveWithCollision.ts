@@ -53,7 +53,7 @@ export function normalizedVector(point1: Coords, point2: Coords): { vector: Coor
 // collisions with circles and eventaully lines.  Collisions may cause
 // both colliders to move
 // mover may not end up at destination if it collides
-export function move(mover: Circle, destination: Coords, circles: Circle[]) {
+export function moveWithCollisions(mover: Circle, destination: Coords, circles: Circle[]) {
     // Determine if the mover intersects with any "circles" as
     // it travels from mover.position to destination
     // We do this by adding mover.radius to the other circle's radius
