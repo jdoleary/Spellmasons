@@ -1,15 +1,7 @@
-export interface Coordinate {
-    x: number;
-    y: number;
-}
-export interface Circle {
-    position: Coordinate;
-    mass: number;
-    radius: number;
-}
+import type { Coords } from "../commonTypes";
 export interface LineSegment {
-    p1: Coordinate;
-    p2: Coordinate;
+    p1: Coords;
+    p2: Coords;
 }
 
 function slope(line: LineSegment): number | undefined {
@@ -42,7 +34,7 @@ function toStandardForm(line: LineSegment): LineInStandardForm | undefined {
         return undefined
     }
 }
-function intersectionOfLines(line: LineInStandardForm, line2: LineInStandardForm): Coordinate {
+function intersectionOfLines(line: LineInStandardForm, line2: LineInStandardForm): Coords {
     // https://www.cuemath.com/geometry/intersection-of-two-lines/
     return {
         x: (line.b * line2.c - line2.b * line.c) / (line.a * line2.b - line2.a * line.b),
@@ -50,7 +42,7 @@ function intersectionOfLines(line: LineInStandardForm, line2: LineInStandardForm
     }
 
 }
-function findWherePointIntersectLineAtRightAngle(point: Coordinate, line: LineInStandardForm): Coordinate {
+function findWherePointIntersectLineAtRightAngle(point: Coords, line: LineInStandardForm): Coords {
     const inverseLine1Slope = line.a;
     const line2 = { p1: point, p2: { x: point.x + inverseLine1Slope, y: point.y + 1 } }
     const line2InStandardForm = toStandardForm(line2);
@@ -64,7 +56,7 @@ function findWherePointIntersectLineAtRightAngle(point: Coordinate, line: LineIn
         }
     }
 }
-export function findWherePointIntersectLineSegmentAtRightAngle(point: Coordinate, line: LineSegment): Coordinate | undefined {
+export function findWherePointIntersectLineSegmentAtRightAngle(point: Coords, line: LineSegment): Coords | undefined {
     const lineInStandardForm = toStandardForm(line);
     const largestX = Math.max(line.p1.x, line.p2.x);
     const smallestX = Math.min(line.p1.x, line.p2.x);
