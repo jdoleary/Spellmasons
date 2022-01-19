@@ -11,14 +11,15 @@
 ## Large Changes
 - (L) Collision
   - Unit collision
-  - Obstacles
+    - Handle multiple colliders or recursive colliders
+  - Obstacles (Walls)
   - Prevent units from running away outside of bounds
 - (M) Push spells
   - Depends on: Collision task
   - Rework movement spells such as charge and stomp
 
 ## Advice from Elon:
-1. Make your requirements less dumb.  Everyone is wrong sometimes
+1. Make your requirements less dumb.  Everyone is wrong sometimes even smart people, and your requirements are definitely dumb
 2. Try very hard to delete the part or process.  If you're not occasionally adding things back in then you're not deleting enough.
 3. Simplify or optimize.  Note: It's the third step for a reason. Possibly the most common error of a smart engineer is to optimize a thing that should not exist.
 4. Accelerate cycle time.  You're moving too slowly, go faster.
