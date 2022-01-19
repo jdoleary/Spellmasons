@@ -1,8 +1,8 @@
 import type { Coords } from '../../commonTypes';
-import { Circle, isCircleIntersectingCircle, move, moveAwayFromToEdgeOfCircle } from '../moveWithCollision';
+import { Circle, isCircleIntersectingCircle, move, moveAwayFrom, normalizedVector } from '../moveWithCollision';
 
 describe("moveWithCollision", () => {
-    describe.skip("move", () => {
+    describe("move", () => {
         it("should travel to it's destination if unobstructed", () => {
             const c1: Circle = { position: { x: 0, y: 0 }, radius: 2 };
             const destination = { x: 2, y: 2 };
@@ -26,6 +26,19 @@ describe("moveWithCollision", () => {
                 expect(actual).toEqual(expected);
             });
             it("should not travel as far as it would unobstructed if it pushes another circle", () => {
+                // These circles start touching and with the same radius,
+                // so they should split the movement distance
+                const c1: Circle = { position: { x: 0, y: 0 }, radius: 2 };
+                const circles: Circle[] = [
+                    { position: { x: 4, y: 0 }, radius: 2 }
+                ];
+                const destination = { x: 1, y: 0 };
+                move(c1, destination, circles);
+                const actual = c1.position;
+                const expected = { x: 0.5, y: 0 };
+                expect(actual).toEqual(expected);
+            });
+            it("should not travel as far as it would unobstructed if it pushes another circle (even if the destination is exactly equal to the other circle's position)", () => {
                 // These circles start touching and with the same radius,
                 // so they should split the movement distance
                 const c1: Circle = { position: { x: 0, y: 0 }, radius: 2 };
@@ -119,11 +132,34 @@ describe("moveWithCollision", () => {
             });
         });
     });
-    describe("moveAwayFromToEdgeOfCircle", () => {
+    describe("normalizedVector", () => {
+        it("should return the normalized vector between two points", () => {
+            const p1 = { x: 1, y: 0 };
+            const p2 = { x: 3, y: 0 };
+            const actual = normalizedVector(p1, p2);
+            const expected = { vector: { x: 1, y: 0 }, distance: 2 };
+            expect(actual).toEqual(expected);
+        });
+        it("should return the normalized vector between two points (example 2)", () => {
+            const p1 = { x: 0, y: 1 };
+            const p2 = { x: 0, y: 10 };
+            const actual = normalizedVector(p1, p2);
+            const expected = { vector: { x: 0, y: 1 }, distance: 9 };
+            expect(actual).toEqual(expected);
+        });
+        it("should return the normalized vector between two points (example 3)", () => {
+            const p1 = { x: 1, y: 1 };
+            const p2 = { x: 1 + 3, y: 1 + 4 };
+            const actual = normalizedVector(p1, p2);
+            const expected = { vector: { x: 0.6, y: 0.8 }, distance: 5 };
+            expect(actual).toEqual(expected);
+        });
+    });
+    describe("moveAwayFrom", () => {
         it("should move the circle away from \"from\" until \"from\" is at the edge of the circle", () => {
             const c1: Circle = { position: { x: 1, y: 0 }, radius: 3 };
             const from: Coords = { x: 3, y: 0 };
-            moveAwayFromToEdgeOfCircle(c1, from);
+            moveAwayFrom(c1, from);
             const actual = c1.position;
             const expected = { x: 0, y: 0 };
             expect(actual).toEqual(expected);
@@ -132,7 +168,7 @@ describe("moveWithCollision", () => {
             const initialPosition = { x: 1, y: 0 }
             const c1: Circle = { position: Object.assign({}, initialPosition), radius: 10 };
             const from: Coords = { x: 0, y: 0 };
-            moveAwayFromToEdgeOfCircle(c1, from);
+            moveAwayFrom(c1, from);
             const actual = c1.position;
             const expected = { x: 10, y: 0 };
             expect(actual).toEqual(expected);
@@ -142,7 +178,7 @@ describe("moveWithCollision", () => {
             // to make the expected result more obvious
             const c1: Circle = { position: { x: 1, y: 1 }, radius: 6 * Math.sqrt(2) };
             const from: Coords = { x: 1 + 3, y: 1 + 3 };
-            moveAwayFromToEdgeOfCircle(c1, from);
+            moveAwayFrom(c1, from);
             const actual = { x: Math.round(c1.position.x), y: Math.round(c1.position.y) };
             const expected = { x: -2, y: -2 };
             expect(actual).toEqual(expected);
