@@ -1,6 +1,6 @@
 import { drawDryRunLine } from '../ui/PlanningView';
 import type { Spell } from '.';
-import type { Coords } from '../commonTypes';
+import type { Vec2 } from '../commonTypes';
 import type * as Unit from '../Unit';
 import * as config from '../config';
 
@@ -17,7 +17,7 @@ off of all existing targeted units to units touching them.
     manaCost: config.MANA_BASE_COST,
     manaMultiplier: config.MANA_MULTIPLIER_SM,
     effect: async (state, dryRun) => {
-      let newTargets: Coords[] = [];
+      let newTargets: Vec2[] = [];
       for (let target of state.targets) {
         const unit = window.underworld.getUnitAt(target);
         if (unit) {
@@ -49,7 +49,7 @@ off of all existing targeted units to units touching them.
 function getTouchingUnitsRecursive(
   x: number,
   y: number,
-  ignore: Coords[] = [],
+  ignore: Vec2[] = [],
 ): Unit.IUnit[] {
   const touchingDistance = config.COLLISION_MESH_RADIUS * 4;
   let touching = window.underworld.units.filter((u) => {

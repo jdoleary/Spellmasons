@@ -1,4 +1,4 @@
-import type { Coords } from './commonTypes';
+import type { Vec2 } from './commonTypes';
 import { randInt } from './rand';
 // https://webdva.github.io/how-i-implemented-client-side-linear-interpolation/
 export function lerp(start: number, end: number, time: number) {
@@ -13,7 +13,7 @@ export function lerp(start: number, end: number, time: number) {
 
 // For a triangle with sides x,y, and d (desired distance / hypotenuse), find the value
 // of x and y given a known h and a known similar triangle of X,Y, and D (distance / hypotenuse)
-export function similarTriangles(X: number, Y: number, D: number, d: number): Coords {
+export function similarTriangles(X: number, Y: number, D: number, d: number): Vec2 {
   if (D === 0 || d === 0) {
     return { x: X, y: Y };
   }
@@ -28,7 +28,7 @@ export function similarTriangles(X: number, Y: number, D: number, d: number): Co
 // the vector 'start' to 'end'
 // --
 // hint: Use a negative length to move away from target
-export function getCoordsDistanceTowardsTarget(start: Coords, target: Coords, travelDist: number): Coords {
+export function getCoordsDistanceTowardsTarget(start: Vec2, target: Vec2, travelDist: number): Vec2 {
   const distanceBetweenPoints = distance(start, target);
   // Travel at most length, however, don't move beyond target
   const travelDistance = Math.min(travelDist, distanceBetweenPoints)
@@ -39,17 +39,17 @@ export function getCoordsDistanceTowardsTarget(start: Coords, target: Coords, tr
   }
 }
 
-export function distance(coords1: Coords, coords2: Coords): number {
+export function distance(coords1: Vec2, coords2: Vec2): number {
   return Math.sqrt(
     Math.pow(coords2.x - coords1.x, 2) + Math.pow(coords2.y - coords1.y, 2),
   );
 }
 
 // Converts a singular index into x,y coords on a rectangle with a known width
-export function indexToXY(index: number, width: number): Coords {
+export function indexToXY(index: number, width: number): Vec2 {
   return { x: index % width, y: Math.floor(index / width) };
 }
-export function xyToIndex(coords: Coords, width: number) {
+export function xyToIndex(coords: Vec2, width: number) {
   return coords.y * width + coords.x;
 }
 

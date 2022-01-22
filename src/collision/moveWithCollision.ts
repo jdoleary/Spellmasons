@@ -1,8 +1,8 @@
-import type { Coords } from "../commonTypes";
+import type { Vec2 } from "../commonTypes";
 import { distance, normalizeRadians } from "../math";
 
 export interface Circle {
-    position: Coords;
+    position: Vec2;
     radius: number;
 }
 export function isCircleIntersectingCircle(c1: Circle, c2: Circle): boolean {
@@ -11,7 +11,7 @@ export function isCircleIntersectingCircle(c1: Circle, c2: Circle): boolean {
 // Given a position ("from"), inside a circle, move the circle away from the position "from",
 // until "from" is at the edge of the cricle.
 // The circle moves in the vector of "from" to circle.position
-export function moveAwayFrom(circle: Circle, from: Coords) {
+export function moveAwayFrom(circle: Circle, from: Vec2) {
     const bigA = from.x - circle.position.x;
     const bigB = from.y - circle.position.y;
     const bigC = Math.sqrt(bigA * bigA + bigB * bigB);
@@ -26,7 +26,7 @@ export function moveAwayFrom(circle: Circle, from: Coords) {
 }
 // Returns a new coordinate represending "startPos" moved "distance" along "normalizedVector"
 // Pure Function
-export function moveAlongVector(startPos: Coords, normalizedVector: Coords, distance: number): Coords {
+export function moveAlongVector(startPos: Vec2, normalizedVector: Vec2, distance: number): Vec2 {
     return {
         x: startPos.x + normalizedVector.x * distance,
         y: startPos.y + normalizedVector.y * distance,
@@ -35,7 +35,7 @@ export function moveAlongVector(startPos: Coords, normalizedVector: Coords, dist
 // Get a normalized vector and distance between two points
 // (this distance is a bonus since it needs to be calculated anyway, might as well return it)
 // Pure Function
-export function normalizedVector(point1: Coords, point2: Coords): { vector: Coords | undefined, distance: number } {
+export function normalizedVector(point1: Vec2, point2: Vec2): { vector: Vec2 | undefined, distance: number } {
     const bigA = point2.x - point1.x;
     const bigB = point2.y - point1.y;
     const bigC = Math.sqrt(bigA * bigA + bigB * bigB);
@@ -53,7 +53,7 @@ export function normalizedVector(point1: Coords, point2: Coords): { vector: Coor
 // collisions with circles and eventaully lines.  Collisions may cause
 // both colliders to move
 // mover may not end up at destination if it collides
-export function moveWithCollisions(mover: Circle, destination: Coords, circles: Circle[]) {
+export function moveWithCollisions(mover: Circle, destination: Vec2, circles: Circle[]) {
     // Determine if the mover intersects with any "circles" as
     // it travels from mover.position to destination
     // We do this by adding mover.radius to the other circle's radius

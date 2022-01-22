@@ -1,7 +1,7 @@
 import type * as PIXI from 'pixi.js';
 import { addPixiSprite, containerProjectiles } from './PixiUtils';
 import { lerp, distance } from './math';
-import type { Coords } from './commonTypes';
+import type { Vec2 } from './commonTypes';
 
 interface Projectile {
   x: number;
@@ -16,7 +16,7 @@ interface Projectile {
 }
 const SPEED_PER_MILLI = 0.7;
 export default function createVisualProjectile(
-  coords: Coords,
+  coords: Vec2,
   toX: number,
   toY: number,
   imagePath: string,

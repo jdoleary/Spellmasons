@@ -5,7 +5,7 @@ import type * as Upgrade from './Upgrade';
 import * as CardUI from './CardUI';
 import * as config from './config';
 import * as math from './math';
-import { Coords, Faction, UnitType } from './commonTypes';
+import { Vec2, Faction, UnitType } from './commonTypes';
 import { allUnits } from './units';
 import { getClients } from './wsPieHandler';
 import { containerOverworld } from './PixiUtils';

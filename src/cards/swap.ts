@@ -1,7 +1,7 @@
 import * as Unit from '../Unit';
 import * as Pickup from '../Pickup';
 import type { Spell } from '.';
-import type { Coords } from '../commonTypes';
+import type { Vec2 } from '../commonTypes';
 import { drawSwapLine } from '../ui/PlanningView';
 import { MANA_BASE_COST, MANA_MULTIPLIER_NONE } from '../config';
 
@@ -23,8 +23,8 @@ Swaps the caster with the source target.
       const dx = targets[0].x - casterUnit.x;
       const dy = targets[0].y - casterUnit.y;
       // Loop through all targets and batch swap locations
-      const swapUnits: [Unit.IUnit, Coords][] = [];
-      const swapPickups: [Pickup.IPickup, Coords][] = [];
+      const swapUnits: [Unit.IUnit, Vec2][] = [];
+      const swapPickups: [Pickup.IPickup, Vec2][] = [];
       const swapLocation = { x: target.x - dx, y: target.y - dy };
       // The unit at the target location
       const targetUnit = window.underworld.getUnitAt(target);

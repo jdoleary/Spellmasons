@@ -1,6 +1,6 @@
 import type * as Player from '../Player';
 import type * as Unit from '../Unit';
-import type { Coords } from '../commonTypes';
+import type { Vec2 } from '../commonTypes';
 import Events, {
   onDamage,
   onDeath,
@@ -106,7 +106,7 @@ export function registerCards() {
 export interface EffectState {
   casterPlayer?: Player.IPlayer;
   casterUnit: Unit.IUnit;
-  targets: Coords[];
+  targets: Vec2[];
   // aggregator carries extra information that can be passed
   // between card effects.
   // For example, "Vampiric" adds all damage taken

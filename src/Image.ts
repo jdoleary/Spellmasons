@@ -4,7 +4,7 @@ import { addPixiSprite } from './PixiUtils';
 import { normalizeRadians } from './math';
 import Subsprites from './Subsprites';
 import { animateIndependent } from './AnimationTimeline';
-import type { Coords } from './commonTypes';
+import type { Vec2 } from './commonTypes';
 
 export interface IImage {
   // Not to be serialized
@@ -137,7 +137,7 @@ export function removeSubSprite(image: IImage, key: string) {
     image.subSprites = image.subSprites.filter((k) => k !== key);
   }
 }
-export function moveAbs(image: IImage, target: Coords) {
+export function moveAbs(image: IImage, target: Vec2) {
   return animateIndependent([
     {
       sprite: image.sprite,

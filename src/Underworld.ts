@@ -18,7 +18,7 @@ import {
   containerUI,
 } from './PixiUtils';
 import floatingText from './FloatingText';
-import { UnitType, Coords, Faction } from './commonTypes';
+import { UnitType, Vec2, Faction } from './commonTypes';
 import Events from './Events';
 import { allUnits } from './units';
 import { updatePlanningView, updateTooltipPosition, updateTooltipSpellCost } from './ui/PlanningView';
@@ -278,7 +278,7 @@ export default class Underworld {
       }
     }
   }
-  getMousePos(): Coords {
+  getMousePos(): Vec2 {
     const { x, y } = containerBoard.toLocal(
       app.renderer.plugins.interaction.mouse.global,
     );
@@ -481,7 +481,7 @@ export default class Underworld {
     }
     return false;
   }
-  getRandomCoordsWithinBounds(bounds: Bounds): Coords {
+  getRandomCoordsWithinBounds(bounds: Bounds): Vec2 {
     const x = randInt(window.underworld.random, bounds.xMin || 0, bounds.xMax || config.MAP_WIDTH);
     const y = randInt(window.underworld.random, bounds.yMin || 0, bounds.yMax || config.MAP_HEIGHT);
     return { x, y };
@@ -612,10 +612,10 @@ export default class Underworld {
   }
 
   getCoordsForUnitsWithinDistanceOfTarget(
-    target: Coords,
+    target: Vec2,
     distance: number,
-  ): Coords[] {
-    const coords: Coords[] = [];
+  ): Vec2[] {
+    const coords: Vec2[] = [];
     for (let unit of this.units) {
       if (math.distance(unit, target) <= distance) {
         coords.push({ x: unit.x, y: unit.y });
@@ -623,13 +623,13 @@ export default class Underworld {
     }
     return coords;
   }
-  getUnitAt(coords: Coords): Unit.IUnit | undefined {
+  getUnitAt(coords: Vec2): Unit.IUnit | undefined {
     return this.units.find((u) => math.distance(u, coords) <= config.COLLISION_MESH_RADIUS);
   }
-  getPickupAt(coords: Coords): Pickup.IPickup | undefined {
+  getPickupAt(coords: Vec2): Pickup.IPickup | undefined {
     return this.pickups.find((p) => math.distance(p, coords) <= config.COLLISION_MESH_RADIUS);
   }
-  getObstacleAt(coords: Coords): Obstacle.IObstacle | undefined {
+  getObstacleAt(coords: Vec2): Obstacle.IObstacle | undefined {
     return this.obstacles.find((o) => math.distance(o, coords) <= config.COLLISION_MESH_RADIUS);
   }
   addUnitToArray(unit: Unit.IUnit) {
@@ -650,7 +650,7 @@ export default class Underworld {
   async castCards(
     casterPlayer: Player.IPlayer,
     cardIds: string[],
-    target: Coords,
+    target: Vec2,
     dryRun: boolean,
   ): Promise<Cards.EffectState> {
     let effectState: Cards.EffectState = {

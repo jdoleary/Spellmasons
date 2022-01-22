@@ -1,6 +1,6 @@
 import * as Unit from '../Unit';
 import type { UnitSource } from './index';
-import { Coords, UnitSubType } from '../commonTypes';
+import { Vec2, UnitSubType } from '../commonTypes';
 import * as math from '../math';
 import createVisualProjectile from '../Projectile';
 
@@ -53,7 +53,7 @@ const unit: UnitSource = {
     return inRange(unit, { x, y });
   },
 };
-function inRange(unit: Unit.IUnit, coords: Coords): boolean {
+function inRange(unit: Unit.IUnit, coords: Vec2): boolean {
   return math.distance(unit, coords) <= range;
 }
 

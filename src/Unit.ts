@@ -5,7 +5,7 @@ import * as Image from './Image';
 import * as math from './math';
 import { distance } from './math';
 import { addPixiSprite, containerUnits } from './PixiUtils';
-import { Coords, UnitSubType, UnitType, Faction } from './commonTypes';
+import { Vec2, UnitSubType, UnitType, Faction } from './commonTypes';
 import Events from './Events';
 const elHealthBar: HTMLElement = document.querySelector('#health .fill') as HTMLElement;
 const elHealthLabel: HTMLElement = document.querySelector('#health .label') as HTMLElement;
@@ -33,7 +33,7 @@ export interface IUnit {
   faction: number;
   // If the unit moved this turn
   thisTurnMoved: boolean;
-  intendedNextMove?: Coords;
+  intendedNextMove?: Vec2;
   image: Image.IImage;
   damage: number;
   health: number;
@@ -297,7 +297,7 @@ export function findClosestUnitInSameFaction(unit: IUnit): IUnit | undefined {
 }
 // moveTo moves a unit, considering all the in-game blockers and flags
 // the units property thisTurnMoved
-export function moveTowards(unit: IUnit, target: Coords): Promise<void> {
+export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
   if (!canMove(unit)) {
     return Promise.resolve();
   }
@@ -319,12 +319,13 @@ export function moveTowards(unit: IUnit, target: Coords): Promise<void> {
     }
   }
   unit.thisTurnMoved = true;
+  // LEFT OFF: integrate moveWithCollisions with the rest of the game
   return setLocation(unit, coordinates);
 }
 
 // setLocation, unlike moveTo, simply sets a unit to a coordinate without
 // considering in-game blockers or changing any unit flags
-export function setLocation(unit: IUnit, coordinates: Coords): Promise<void> {
+export function setLocation(unit: IUnit, coordinates: Vec2): Promise<void> {
   // Set state instantly to new position
   unit.x = coordinates.x;
   unit.y = coordinates.y;

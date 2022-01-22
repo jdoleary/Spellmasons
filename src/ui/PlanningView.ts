@@ -4,7 +4,7 @@ import { allUnits } from '../units';
 import { app, containerSpells, containerUI } from '../PixiUtils';
 import { MAP_WIDTH, MAP_HEIGHT } from '../config';
 import { containerPlanningView } from '../PixiUtils';
-import { Coords, Faction, UnitSubType, UnitType } from '../commonTypes';
+import { Vec2, Faction, UnitSubType, UnitType } from '../commonTypes';
 import { turn_phase } from '../Underworld';
 import * as CardUI from '../CardUI';
 import * as config from '../config';
@@ -100,7 +100,7 @@ export function clearSpellEffectProjection() {
   }
 }
 
-export function drawSwapLine(one: Coords, two: Coords) {
+export function drawSwapLine(one: Vec2, two: Vec2) {
   if (one && two) {
     dryRunGraphics.beginFill(0xffff0b, 0.5);
     dryRunGraphics.lineStyle(3, 0x33ff00);
@@ -110,21 +110,21 @@ export function drawSwapLine(one: Coords, two: Coords) {
     dryRunGraphics.endFill();
   }
 }
-export function drawDryRunLine(start: Coords, end: Coords) {
+export function drawDryRunLine(start: Vec2, end: Vec2) {
   dryRunGraphics.beginFill(0xffff0b, 0.5);
   dryRunGraphics.lineStyle(3, 0x33ff00);
   dryRunGraphics.moveTo(start.x, start.y);
   dryRunGraphics.lineTo(end.x, end.y);
   dryRunGraphics.endFill();
 }
-export function drawDryRunCircle(target: Coords, radius: number) {
+export function drawDryRunCircle(target: Vec2, radius: number) {
   dryRunGraphics.lineStyle(3, targetBlue, 0.5);
   dryRunGraphics.beginFill(0x000000, 0);
   dryRunGraphics.drawCircle(target.x, target.y, radius);
   dryRunGraphics.endFill();
 }
 
-export function isOutOfBounds(target: Coords) {
+export function isOutOfBounds(target: Vec2) {
   return (
     target.x < 0 || target.x >= config.MAP_WIDTH || target.y < 0 || target.y >= config.MAP_HEIGHT
   );

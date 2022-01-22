@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import type { Coords } from './commonTypes';
+import type { Vec2 } from './commonTypes';
 import { containerFloatingText } from './PixiUtils';
 interface FText {
   x: number;
@@ -15,7 +15,7 @@ export default function floatingText({
   text,
   style = { fill: 'black' },
 }: {
-  coords: Coords;
+  coords: Vec2;
   text: string;
   style?: Partial<PIXI.ITextStyle>;
 }) {

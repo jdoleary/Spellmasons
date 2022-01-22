@@ -1,7 +1,7 @@
-import type { Coords } from "../commonTypes";
+import type { Vec2 } from "../commonTypes";
 export interface LineSegment {
-    p1: Coords;
-    p2: Coords;
+    p1: Vec2;
+    p2: Vec2;
 }
 
 function slope(line: LineSegment): number | undefined {
@@ -34,7 +34,7 @@ function toStandardForm(line: LineSegment): LineInStandardForm | undefined {
         return undefined
     }
 }
-function intersectionOfLines(line: LineInStandardForm, line2: LineInStandardForm): Coords {
+function intersectionOfLines(line: LineInStandardForm, line2: LineInStandardForm): Vec2 {
     // https://www.cuemath.com/geometry/intersection-of-two-lines/
     return {
         x: (line.b * line2.c - line2.b * line.c) / (line.a * line2.b - line2.a * line.b),
@@ -42,7 +42,7 @@ function intersectionOfLines(line: LineInStandardForm, line2: LineInStandardForm
     }
 
 }
-function findWherePointIntersectLineAtRightAngle(point: Coords, line: LineInStandardForm): Coords {
+function findWherePointIntersectLineAtRightAngle(point: Vec2, line: LineInStandardForm): Vec2 {
     const inverseLine1Slope = line.a;
     const line2 = { p1: point, p2: { x: point.x + inverseLine1Slope, y: point.y + 1 } }
     const line2InStandardForm = toStandardForm(line2);
@@ -56,7 +56,7 @@ function findWherePointIntersectLineAtRightAngle(point: Coords, line: LineInStan
         }
     }
 }
-export function findWherePointIntersectLineSegmentAtRightAngle(point: Coords, line: LineSegment): Coords | undefined {
+export function findWherePointIntersectLineSegmentAtRightAngle(point: Vec2, line: LineSegment): Vec2 | undefined {
     const lineInStandardForm = toStandardForm(line);
     const largestX = Math.max(line.p1.x, line.p2.x);
     const smallestX = Math.min(line.p1.x, line.p2.x);

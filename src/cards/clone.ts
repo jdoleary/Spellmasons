@@ -2,7 +2,7 @@ import type { Spell } from '.';
 import * as Unit from '../Unit';
 import * as Pickup from '../Pickup';
 import * as Obstacle from '../Obstacle';
-import { Coords, UnitSubType, UnitType } from '../commonTypes';
+import { Vec2, UnitSubType, UnitType } from '../commonTypes';
 import { removeSubSprite } from '../Image';
 import { COLLISION_MESH_RADIUS, MANA_BASE_COST, MANA_MULTIPLIER_NONE } from '../config';
 
@@ -23,7 +23,7 @@ Clones each target
       }
       // Batch find targets that should be cloned
       // Note: They need to be batched so that the new clones don't get cloned
-      const clonePairs: Coords[][] = [];
+      const clonePairs: Vec2[][] = [];
       for (let target of state.targets) {
         clonePairs.push([target, { x: target.x + COLLISION_MESH_RADIUS, y: target.y + COLLISION_MESH_RADIUS }]);
       }

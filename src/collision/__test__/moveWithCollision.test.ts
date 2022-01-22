@@ -1,4 +1,4 @@
-import type { Coords } from '../../commonTypes';
+import type { Vec2 } from '../../commonTypes';
 import { Circle, isCircleIntersectingCircle, moveWithCollisions, moveAlongVector, moveAwayFrom, normalizedVector } from '../moveWithCollision';
 
 describe("moveWithCollisions", () => {
@@ -175,7 +175,7 @@ describe("moveAlongVector", () => {
 describe("moveAwayFrom", () => {
     it("should move the circle away from \"from\" until \"from\" is at the edge of the circle", () => {
         const c1: Circle = { position: { x: 1, y: 0 }, radius: 3 };
-        const from: Coords = { x: 3, y: 0 };
+        const from: Vec2 = { x: 3, y: 0 };
         moveAwayFrom(c1, from);
         const actual = c1.position;
         const expected = { x: 0, y: 0 };
@@ -184,7 +184,7 @@ describe("moveAwayFrom", () => {
     it("should move the circle away from \"from\" until \"from\" is at the edge of the circle (example 2)", () => {
         const initialPosition = { x: 1, y: 0 }
         const c1: Circle = { position: Object.assign({}, initialPosition), radius: 10 };
-        const from: Coords = { x: 0, y: 0 };
+        const from: Vec2 = { x: 0, y: 0 };
         moveAwayFrom(c1, from);
         const actual = c1.position;
         const expected = { x: 10, y: 0 };
@@ -194,7 +194,7 @@ describe("moveAwayFrom", () => {
         // This test uses the common triangle: x,x,x*sqrt(2)
         // to make the expected result more obvious
         const c1: Circle = { position: { x: 1, y: 1 }, radius: 6 * Math.sqrt(2) };
-        const from: Coords = { x: 1 + 3, y: 1 + 3 };
+        const from: Vec2 = { x: 1 + 3, y: 1 + 3 };
         moveAwayFrom(c1, from);
         const actual = { x: Math.round(c1.position.x), y: Math.round(c1.position.y) };
         const expected = { x: -2, y: -2 };
