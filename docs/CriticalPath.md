@@ -7,6 +7,7 @@
     - If a client becomes desynced
         1. How will they know?
         2. How does it resolve?
+- What if it was in a dungeon instead of outside so there could be rooms?
 - Terrain
     - Trees (chainable, destroyable?)
     - Rocks (non chainable, non destroyable)
