@@ -1,18 +1,19 @@
 ## Current Priorities
+- Collision
+  - Handle multiple colliders or recursive colliders
+  - Figure out how to use new collision functions incrementally, as a unit moves frame by frame
 - Implement new way of getting cards over time
   - You shouldn't start with a bunch of cards
 - Balance mana
   - To make this challenging, players should often be on the verge of no mana, it should feel scarce so they have to pick carefully what spells they want to use.
+    - Maybe the answer to this is to make spells more expensive every time you use them
 - Playtest with brad
 ## Small Content Changes
 - Spell: Burn mana / Steal mana
 - Swap should only swap with targets, it shouldn't allow arbitrary teleportation
 - swapping with portal shouldn't make user portal
+- Spells that summon walls or pillars to prevent enemy movement (maybe to trap them)
 ## Large Changes
-- (L) Collision
-  - Unit collision
-    - Handle multiple colliders or recursive colliders
-  - Prevent units from running away outside of bounds
 - (M) Push spells
   - Depends on: Collision task
   - Rework movement spells such as charge and stomp
