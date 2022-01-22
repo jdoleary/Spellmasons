@@ -2,12 +2,51 @@
 - Collision
   - Handle multiple colliders or recursive colliders
   - Figure out how to use new collision functions incrementally, as a unit moves frame by frame
+- Stresstest gamestate sync:
+    - If you delay messages on the backend are you sure they'll arrive in the right order?
+    - Can collisions cause desync
+    - If a client becomes desynced
+        1. How will they know?
+        2. How does it resolve?
+- What if it was in a dungeon instead of outside so there could be rooms?
+- Playtest with friends
+    - Verify gamestate integrity between clients
 - Implement new way of getting cards over time
   - You shouldn't start with a bunch of cards
 - Balance mana
   - To make this challenging, players should often be on the verge of no mana, it should feel scarce so they have to pick carefully what spells they want to use.
     - Maybe the answer to this is to make spells more expensive every time you use them
 - Playtest with brad
+- Security
+    - Since I'm using electron, I should evaluate my dependencies for safety: https://www.electronjs.org/docs/latest/tutorial/security#security-is-everyones-responsibility
+    - [Security Recommendations](https://www.electronjs.org/docs/latest/tutorial/security#checklist-security-recommendations)
+- Polish
+    - [Add Juice](https://itch.io/b/1219/gamedev-pro)
+        - (M) Animate cards
+            - https://3dtransforms.desandro.com/perspective
+            - https://3dtransforms.desandro.com/card-flip
+            - Use transform3d functions to trigger hardware acceleration: "In essence, any transform that has a 3D operation as one of its functions will trigger hardware compositing, even when the actual transform is 2D, or not doing anything at all (such as translate3d(0,0,0)). Note this is just current behaviour, and could change in the future (which is why we don’t document or encourage it). But it is very helpful in some situations and can significantly improve redraw performance."
+        - (L) Add shaders (see branch "shaders-yay")
+        - (VERY OPTIONAL) Some kind of visible error mechanism to show when cards don't apply
+            - Don't let players cast fizzle spells (AOE or chain without damage)
+            - Like if you cast "Protection" on yourself and then AOE it does nothing because there are no targets to AOE off of
+            - Or if you cast cards out of order like Dicard without a card after it
+    - Finish all TODOs
+    - Tutorial (Mario style, don't make it explicit)
+    - SFX
+        - Special sfx for when ally dies
+- Hire Out?
+    - Art
+        - Do what you can with Juice and shaders before hiring and artist
+        - What if I did CGI for faster iteration
+        - Calculate the value of your time for making art and music yourself vs the cost of hiring at $3000 expenses / month.  I'm -$18.75 per working hour
+    - Music
+        - Have special music for intense moments (low health, boss fight)
+        - https://www.fiverr.com/categories/music-audio/session-musicians?source=gallery-listing
+- Menus / Options
+- Publicity
+    - Publish on Steamworks
+    - Social Media stuff
 ## Small Content Changes
 - Spell: Burn mana / Steal mana
 - Swap should only swap with targets, it shouldn't allow arbitrary teleportation
@@ -17,12 +56,3 @@
 - (M) Push spells
   - Depends on: Collision task
   - Rework movement spells such as charge and stomp
-
-## Advice from Elon:
-1. Make your requirements less dumb.  Everyone is wrong sometimes even smart people, and your requirements are definitely dumb
-2. Try very hard to delete the part or process.  If you're not occasionally adding things back in then you're not deleting enough.
-3. Simplify or optimize.  Note: It's the third step for a reason. Possibly the most common error of a smart engineer is to optimize a thing that should not exist.
-4. Accelerate cycle time.  You're moving too slowly, go faster.
-5. Automate
-
-2020-01-05: If I want to be done by end of February I only have 8 weekends left to work on it
