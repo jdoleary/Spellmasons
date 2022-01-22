@@ -19,6 +19,7 @@ interface LineInStandardForm {
     y: number,
     c: number
 }
+// Converts a LineSegment to a LineInStandardForm
 function toStandardForm(line: LineSegment): LineInStandardForm | undefined {
     const M = slope(line);
     if (M !== undefined) {
@@ -42,6 +43,9 @@ function intersectionOfLines(line: LineInStandardForm, line2: LineInStandardForm
     }
 
 }
+// Given a line and a point, find the intersection point of the line an a vector starting at "point",
+// moving twords line at a right angle to line
+// This is useful for determining if a circle intersects with a line
 function findWherePointIntersectLineAtRightAngle(point: Vec2, line: LineInStandardForm): Vec2 {
     const inverseLine1Slope = line.a;
     const line2 = { p1: point, p2: { x: point.x + inverseLine1Slope, y: point.y + 1 } }
@@ -56,6 +60,13 @@ function findWherePointIntersectLineAtRightAngle(point: Vec2, line: LineInStanda
         }
     }
 }
+// See comments for the similar function "findWherePointIntersectLineAtRightAngle"; this function differs
+// in that it considers a point and a lineSEGMENT.
+// Note, this function is useful for determining intersection between a circle and a linesegment; HOWEVER, if the 
+// circle is only intersecting with an endpoint of the line, this function will likely return undefined because
+// the right angle point of intersection will be outside of the line segment (unless the circle is positioned at a 
+// perfect right angle to the endpoint).  So this function should be used together with other functions to account
+// for the endpoints of the line segment
 export function findWherePointIntersectLineSegmentAtRightAngle(point: Vec2, line: LineSegment): Vec2 | undefined {
     const lineInStandardForm = toStandardForm(line);
     const largestX = Math.max(line.p1.x, line.p2.x);
