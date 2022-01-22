@@ -1,5 +1,6 @@
-const { PerformanceObserver, performance } = require('perf_hooks');
+const { performance } = require('perf_hooks');
 import type { Vec2 } from '../../commonTypes';
+import type { LineSegment } from '../collisionMath';
 import {
     Circle,
     isCircleIntersectingCircle,
@@ -7,8 +8,30 @@ import {
     moveAlongVector,
     moveAwayFrom,
     normalizedVector,
+    moveWithLineCollisions,
+    testables
 } from '../moveWithCollision';
+const { repelCircles } = testables;
 
+describe('repelCircles', () => {
+    it('should only repel the mover if the other colliding circle is fixed (immovable)', () => {
+        const mover: Circle = { position: { x: -1, y: 0 }, radius: 2 };
+        const otherStartPosition = { x: 4, y: 0 };
+        const other: Circle = { position: { ...otherStartPosition }, radius: 2 };
+        const destination = { x: 1, y: 0 };
+        const originalPosition = { x: mover.position.x, y: mover.position.y };
+        mover.position = destination;
+        // This is the flag that ensures "other" does not move when the collision occurs
+        const otherIsFixed = true;
+        repelCircles(mover, originalPosition, other, otherIsFixed);
+        const actual = other.position;
+        const expected = otherStartPosition;
+        // Assert that "other" did NOT move
+        expect(actual).toEqual(expected);
+        // Ensure that the mover did move, if mover did not move at all then this test is likely broken
+        expect(mover.position.x).toEqual(0);
+    });
+})
 describe('moveWithCollisions', () => {
     it("should travel to it's destination if unobstructed", () => {
         const c1: Circle = { position: { x: 0, y: 0 }, radius: 2 };
@@ -219,5 +242,55 @@ describe('moveAwayFrom', () => {
         };
         const expected = { x: -2, y: -2 };
         expect(actual).toEqual(expected);
+    });
+});
+
+describe('moveWithLineCollisions', () => {
+    describe('performance', () => {
+        it('should support calculating collisions with 1000 line segments in under 16 milliseconds', () => {
+            performance.mark('moveWithLineCollisions-start');
+            const c1: Circle = { position: { x: 4, y: 0 }, radius: 2 };
+            const numberOfCollidingLines = 1000;
+            const lineSegments: LineSegment[] = [];
+            for (let n = 0; n < numberOfCollidingLines; n++) {
+                lineSegments.push(
+                    { p1: { x: 0, y: 10 }, p2: { x: 0, y: -10 } }
+                );
+            }
+            const destination = { x: 0, y: 0 };
+            moveWithLineCollisions(c1, destination, lineSegments);
+            const { duration } = performance.measure(
+                'end',
+                'moveWithLineCollisions-start',
+            );
+            expect(duration).toBeLessThan(16);
+        });
+    });
+    it('should prevent a circle from moving through a line', () => {
+        const c1: Circle = { position: { x: 4, y: 0 }, radius: 2 };
+        const lines: LineSegment[] = [
+            { p1: { x: 0, y: 10 }, p2: { x: 0, y: -10 } }
+        ]
+        const destination = { x: 0, y: 0 }
+        moveWithLineCollisions(c1, destination, lines);
+        expect(c1.position.x).toEqual(2);
+    });
+    it('should prevent a circle from moving into intersection with an endpoint of the line', () => {
+        const c1: Circle = { position: { x: 4, y: 1 }, radius: 2 };
+        const lines: LineSegment[] = [
+            { p1: { x: 0, y: 10 }, p2: { x: 0, y: 0 } }
+        ]
+        const destination = { x: 0, y: 1 }
+        moveWithLineCollisions(c1, destination, lines);
+        expect(c1.position).toEqual({ x: 2, y: 1 });
+    });
+    it('should work even when line is parallel to movement direction of circle', () => {
+        const c1: Circle = { position: { x: 4, y: 0 }, radius: 2 };
+        const lines: LineSegment[] = [
+            { p1: { x: -10, y: 0 }, p2: { x: 0, y: 0 } }
+        ]
+        const destination = { x: 0, y: 0 }
+        moveWithLineCollisions(c1, destination, lines);
+        expect(c1.position.x).toEqual(2);
     });
 });

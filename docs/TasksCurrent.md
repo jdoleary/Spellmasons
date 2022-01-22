@@ -12,7 +12,6 @@
 - (L) Collision
   - Unit collision
     - Handle multiple colliders or recursive colliders
-  - Obstacles (Walls)
   - Prevent units from running away outside of bounds
 - (M) Push spells
   - Depends on: Collision task
