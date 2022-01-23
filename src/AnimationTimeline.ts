@@ -186,7 +186,7 @@ function animateGroup(group: AnimationGroup, timestamp: number): boolean {
     }
   }
   if (lerpTime >= 1) {
-    // Report via promise that the anition is finished
+    // Report via promise that the animation is finished
     group.resolvePromise();
     return true;
   } else {

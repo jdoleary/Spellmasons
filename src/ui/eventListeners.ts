@@ -8,7 +8,7 @@ import {
   updatePlanningView,
 } from './PlanningView';
 import { app } from '../PixiUtils';
-import { distance, getCoordsDistanceTowardsTarget } from '../math';
+import { distance } from '../math';
 import { View } from '../views';
 
 export function keydownListener(event: KeyboardEvent) {

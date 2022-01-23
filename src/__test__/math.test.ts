@@ -1,4 +1,4 @@
-import { indexToXY, xyToIndex, normalizeRadians, _chooseObjectWithProbability, similarTriangles, getCoordsDistanceTowardsTarget } from '../math';
+import { indexToXY, xyToIndex, normalizeRadians, _chooseObjectWithProbability, similarTriangles, getCoordsAtDistanceTowardsTarget } from '../math';
 
 describe('math', () => {
   describe('probability', () => {
@@ -152,21 +152,21 @@ describe('math', () => {
     it('should return a coord "travelDist" distance away from "start" along the vector "start" to "end"', () => {
       const start = { x: 3, y: 4 };
       const end = { x: 9, y: 12 };
-      const actual = getCoordsDistanceTowardsTarget(start, end, 5);
+      const actual = getCoordsAtDistanceTowardsTarget(start, end, 5);
       const expected = { x: 6, y: 8 };
       expect(actual).toEqual(expected);
     });
     it('should return coord "travelDist" distance away from "start" along the vector "start" to "end" even if the start contains greater numbers than the end', () => {
       const start = { x: 9, y: 12 };
       const end = { x: 3, y: 4 };
-      const actual = getCoordsDistanceTowardsTarget(start, end, 5);
+      const actual = getCoordsAtDistanceTowardsTarget(start, end, 5);
       const expected = { x: 6, y: 8 };
       expect(actual).toEqual(expected);
     });
     it('should return coord "travelDist" distance away from "start" along the vector "end" to "start" (backwards) for a negative travelDist', () => {
       const start = { x: 3, y: 4 };
       const end = { x: 9, y: 12 };
-      const actual = getCoordsDistanceTowardsTarget(start, end, -5);
+      const actual = getCoordsAtDistanceTowardsTarget(start, end, -5);
       const expected = { x: 0, y: 0 };
       expect(actual).toEqual(expected);
     });
@@ -174,7 +174,7 @@ describe('math', () => {
       const start = { x: 3, y: 4 };
       const target = { x: 10, y: 10 };
       const travelDist = 5000;
-      const actual = getCoordsDistanceTowardsTarget(start, target, travelDist);
+      const actual = getCoordsAtDistanceTowardsTarget(start, target, travelDist);
       const expected = target;
       expect(actual).toEqual(expected);
     });

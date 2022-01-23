@@ -36,7 +36,7 @@ const unit: UnitSource = {
       await Unit.takeDamage(targetEnemy, unit.damage);
     } else {
       if (runFromTarget) {
-        const moveTo = math.getCoordsDistanceTowardsTarget(unit, runFromTarget, -unit.moveDistance);
+        const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, runFromTarget, -unit.moveDistance);
         unit.intendedNextMove = moveTo;
       }
     }

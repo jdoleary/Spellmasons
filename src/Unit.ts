@@ -301,7 +301,7 @@ export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
   if (!canMove(unit)) {
     return Promise.resolve();
   }
-  let coordinates = math.getCoordsDistanceTowardsTarget(
+  let coordinates = math.getCoordsAtDistanceTowardsTarget(
     unit,
     target,
     unit.moveDistance

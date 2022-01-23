@@ -24,7 +24,7 @@ const unit: UnitSource = {
     );
     if (nonPoisonedEnemyUnits.length) {
       const chosenUnit = nonPoisonedEnemyUnits[0];
-      const moveTo = math.getCoordsDistanceTowardsTarget(unit, chosenUnit, unit.moveDistance);
+      const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, chosenUnit, unit.moveDistance);
       unit.intendedNextMove = moveTo;
       if (inRange(unit, chosenUnit)) {
         createVisualProjectile(

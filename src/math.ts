@@ -24,11 +24,11 @@ export function similarTriangles(X: number, Y: number, D: number, d: number): Ve
   }
 }
 
-// getCoordsDistanceTowardsTarget is used, for example, to move 'travelDist' distance across
+// getCoordsAtDistanceTowardsTarget is used, for example, to move 'travelDist' distance across
 // the vector 'start' to 'end'
 // --
 // hint: Use a negative length to move away from target
-export function getCoordsDistanceTowardsTarget(start: Vec2, target: Vec2, travelDist: number): Vec2 {
+export function getCoordsAtDistanceTowardsTarget(start: Vec2, target: Vec2, travelDist: number): Vec2 {
   const distanceBetweenPoints = distance(start, target);
   // Travel at most length, however, don't move beyond target
   const travelDistance = Math.min(travelDist, distanceBetweenPoints)

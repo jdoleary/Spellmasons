@@ -19,7 +19,7 @@ const unit: UnitSource = {
     // Move opposite to enemy if the enemy is too close
     const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit);
     if (closestEnemy && math.distance(unit, closestEnemy) < (unit.attackRange - 10)) {
-      const moveTo = math.getCoordsDistanceTowardsTarget(unit, closestEnemy, -unit.moveDistance);
+      const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestEnemy, -unit.moveDistance);
       unit.intendedNextMove = moveTo;
     }
     // Shoot at enemy
