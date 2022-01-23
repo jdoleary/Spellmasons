@@ -138,6 +138,8 @@ export default class Underworld {
   }
   gameLoopUnits = () => {
     for (let u of this.units) {
+      // Sync Image even for non moving units since they may be moved by forces other than themselves
+      Unit.syncImage(u)
       if (u.moveTarget) {
         // Move towards target
         const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.moveTarget, u.moveSpeed)
@@ -153,7 +155,6 @@ export default class Underworld {
           u.resolveDoneMoving();
           u.moveTarget = undefined;
         }
-        Unit.syncImage(u)
         // check for collisions with pickups in new location
         this.checkPickupCollisions(u);
         // TODO should I have other units (moved via collision also check for pickups?)
