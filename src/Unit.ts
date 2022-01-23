@@ -24,13 +24,15 @@ export function getPlanningViewColor(unit: IUnit) {
   }
 }
 // in px
-const UNIT_BASE_RADIUS = 32;
+const UNIT_BASE_RADIUS = 28;
 export interface IUnit {
   unitSourceId: string;
   x: number;
   y: number;
   moveTarget: Vec2;
   moveSpeed: number;
+  // A resolve callback for when a unit is done moving
+  resolveDoneMoving: () => void;
   radius: number;
   moveDistance: number;
   attackRange: number;
@@ -80,7 +82,8 @@ export function create(
     y,
     radius: UNIT_BASE_RADIUS,
     moveTarget: { x, y },
-    moveSpeed: 1,
+    moveSpeed: config.UNIT_MOVE_SPEED,
+    resolveDoneMoving: () => { },
     moveDistance: config.UNIT_BASE_MOVE_DISTANCE,
     attackRange: config.UNIT_BASE_ATTACK_RANGE,
     faction,
@@ -314,11 +317,6 @@ export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
     target,
     unit.moveDistance
   );
-  // Cannot move into an obstructed cell
-  // TODO re add obstructions (that were removed during the "free movement" gameplay refactor)
-  // if (window.underworld.isCellObstructed(coordinates)) {
-  //   return Promise.resolve();
-  // }
   // Compose onMoveEvents
   for (let eventName of unit.onMoveEvents) {
     const fn = Events.onMoveSource[eventName];
@@ -327,18 +325,21 @@ export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
     }
   }
   unit.thisTurnMoved = true;
-  // LEFT OFF: integrate moveWithCollisions with the rest of the game
-  return setLocation(unit, coordinates);
+  unit.moveTarget = coordinates
+  return new Promise((resolve) => {
+    unit.resolveDoneMoving = resolve;
+  });
 }
 
 // setLocation, unlike moveTo, simply sets a unit to a coordinate without
 // considering in-game blockers or changing any unit flags
+// Note: NOT TO BE USED FOR in-game collision-based movement
 export function setLocation(unit: IUnit, coordinates: Vec2): Promise<void> {
   // Set state instantly to new position
   unit.x = coordinates.x;
   unit.y = coordinates.y;
-  // check for collisions with pickups in new location
-  window.underworld.checkPickupCollisions(unit);
+  unit.moveTarget.x = unit.x;
+  unit.moveTarget.y = unit.y;
   // Animate movement visually
   return Image.move(unit.image, unit.x, unit.y);
 }

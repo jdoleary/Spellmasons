@@ -5,6 +5,7 @@ export const COLLISION_MESH_RADIUS = 32;
 export const UNIT_BASE_HEALTH = 3;
 export const UNIT_BASE_MANA = 10;
 export const UNIT_BASE_DAMAGE = 1;
+export const UNIT_MOVE_SPEED = 3;
 export const MAP_WIDTH = 800;
 export const MAP_HEIGHT = 600;
 export const SECONDS_PER_TURN = 100;

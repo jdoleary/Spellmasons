@@ -132,16 +132,18 @@ export default class Underworld {
     }, 1000);
   }
   gameLoopUnits = () => {
-    if (this.players[0]) {
-      this.players[0].unit.moveTarget = { x: this.players[0].unit.x + 100, y: this.players[0].unit.y };
-    }
     for (let u of this.units) {
       // Move towards target
       const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.moveTarget, u.moveSpeed)
-      console.log("jtest", u.x, u.y)
-      moveWithCollisions({ position: u, radius: u.radius }, stepTowardsTarget, this.units.map(o => ({ position: o, radius: o.radius })))
-      console.log("jtest2", u.x, u.y)
+      moveWithCollisions(u, stepTowardsTarget, this.units)
+      if (u.x === u.moveTarget.x && u.y === u.moveTarget.y) {
+        // TODO: Problem, due to collisions the unit may not end up at their target position so the promise will never resolve
+        u.resolveDoneMoving();
+      }
       Unit.syncImage(u)
+      // check for collisions with pickups in new location
+      this.checkPickupCollisions(u);
+      // TODO should I have other units (moved via collision also check for pickups?)
     }
     requestAnimationFrame(this.gameLoopUnits)
   }
