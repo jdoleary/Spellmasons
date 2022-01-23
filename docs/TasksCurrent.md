@@ -1,7 +1,5 @@
 ## Current Priorities
-- Collision
-  - Handle multiple colliders or recursive colliders
-  - Figure out how to use new collision functions incrementally, as a unit moves frame by frame
+- Bug: Units can get shoved out of the map
 - Stresstest gamestate sync:
     - If you delay messages on the backend are you sure they'll arrive in the right order?
     - Can collisions cause desync
