@@ -5,7 +5,8 @@ export const COLLISION_MESH_RADIUS = 32;
 export const UNIT_BASE_HEALTH = 3;
 export const UNIT_BASE_MANA = 10;
 export const UNIT_BASE_DAMAGE = 1;
-export const UNIT_MOVE_SPEED = 3;
+export const UNIT_MOVE_SPEED = 4;
+export const NON_HEAVY_UNIT_SCALE = 0.8;
 // Stops units from moving when they are close enough
 export const UNIT_STOP_MOVING_MARGIN = 1;
 export const MAP_WIDTH = 800;

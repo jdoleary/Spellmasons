@@ -23,8 +23,7 @@ export function getPlanningViewColor(unit: IUnit) {
       return 0xff0000;
   }
 }
-// in px
-const UNIT_BASE_RADIUS = 28;
+const UNIT_BASE_RADIUS = config.COLLISION_MESH_RADIUS * config.NON_HEAVY_UNIT_SCALE;
 export interface IUnit {
   unitSourceId: string;
   x: number;
@@ -124,7 +123,7 @@ export function create(
   // Ensure all change factions logic applies when a unit is first created
   changeFaction(unit, faction);
 
-  unit.image.scale = 0.8;
+  unit.image.scale = config.NON_HEAVY_UNIT_SCALE;
   unit.image.sprite.scale.set(unit.image.scale);
 
   window.underworld.addUnitToArray(unit);

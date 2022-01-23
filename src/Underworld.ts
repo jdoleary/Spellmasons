@@ -288,11 +288,12 @@ export default class Underworld {
         unit.health = unit.healthMax;
         unit.damage = config.UNIT_BASE_DAMAGE * 2;
         unit.image.sprite.scale.set(0);
+        unit.radius = config.COLLISION_MESH_RADIUS;
         Image.scale(unit.image, 1.0);
       } else {
         // Start images small and make them grow when they spawn in
         unit.image.sprite.scale.set(0);
-        Image.scale(unit.image, 0.8);
+        Image.scale(unit.image, config.NON_HEAVY_UNIT_SCALE);
       }
     }
 
