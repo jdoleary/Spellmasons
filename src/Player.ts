@@ -5,7 +5,7 @@ import type * as Upgrade from './Upgrade';
 import * as CardUI from './CardUI';
 import * as config from './config';
 import * as math from './math';
-import { Coords, Faction, UnitType } from './commonTypes';
+import { Vec2, Faction, UnitType } from './commonTypes';
 import { allUnits } from './units';
 import { getClients } from './wsPieHandler';
 import { containerOverworld } from './PixiUtils';
@@ -23,25 +23,11 @@ export interface IPlayer {
   // The number of cards a player's hand is populated with at the start of a level
   cardsAmount: number;
   upgrades: Upgrade.IUpgrade[];
-  // Cast range
-  range: number;
-  turnsPerCard: number;
   overworldImage: Image.IImage;
-}
-export function isTargetInRange(player: IPlayer, target: Coords): boolean {
-  if (player.unit) {
-    return math.distance(target, player.unit) <= player.range;
-  } else {
-    return false;
-  }
 }
 export function create(clientId: string, unitId: string): IPlayer | undefined {
   // limit spawn to the leftmost column
-  const coords = window.underworld.getRandomEmptyCell({ xMax: 0 });
-  if (!coords) {
-    console.error("Important Error: Unable to find empty coords to create new Player in")
-    return undefined;
-  }
+  const coords = window.underworld.getRandomCoordsWithinBounds({ xMax: 0 });
   const userSource = allUnits[unitId];
   if (!userSource) {
     console.error('User unit source file not registered, cannot create player');
@@ -64,8 +50,6 @@ export function create(clientId: string, unitId: string): IPlayer | undefined {
     cardsSelected: [],
     cardsAmount: config.START_CARDS_COUNT,
     upgrades: [],
-    range: config.PLAYER_CAST_RANGE,
-    turnsPerCard: config.PLAYER_BASE_TURNS_PER_CARD,
     overworldImage: Image.create(
       0,
       0,
@@ -88,18 +72,9 @@ export function create(clientId: string, unitId: string): IPlayer | undefined {
   addHighlighIfPlayerBelongsToCurrentClient(player);
   player.unit.health = PLAYER_BASE_HEALTH;
   player.unit.healthMax = PLAYER_BASE_HEALTH;
+  Unit.syncPlayerHealthManaUI();
 
   return player;
-}
-export function checkForGetCardOnTurn(player: IPlayer) {
-  if (
-    !player.inPortal &&
-    window.underworld.turn_number % player.turnsPerCard === 0
-  ) {
-    const card = CardUI.generateCard();
-    CardUI.addCardToHand(card, player);
-    console.log('You got a card!', card.id);
-  }
 }
 export function resetPlayerForNextLevel(player: IPlayer) {
   // Player is no longer in portal
@@ -123,18 +98,16 @@ export function resetPlayerForNextLevel(player: IPlayer) {
 
   // Return to a spawn location
   // limit spawn to the leftmost column
-  const coords = window.underworld.getRandomEmptyCell({ xMax: 0 });
-  if (coords) {
-    Unit.setLocation(player.unit, coords);
-  } else {
-    console.error('Important Error: Unable to find empty coords to resetPlayerForNextLevel')
-  }
+  const coords = window.underworld.getRandomCoordsWithinBounds({ xMax: 10 });
+  Unit.setLocation(player.unit, coords);
 }
 // Keep a global reference to the current client's player
 function updateGlobalRefToCurrentClientPlayer(player: IPlayer) {
   readyState.set('player', true);
   if (window.clientId === player.clientId) {
     window.player = player;
+    // When the player is first created or loaded, sync the health-mana UI
+    Unit.syncPlayerHealthManaUI();
   }
 }
 function addHighlighIfPlayerBelongsToCurrentClient(player: IPlayer) {

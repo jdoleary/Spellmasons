@@ -12,15 +12,16 @@ const unit: UnitSource = {
     subtype: UnitSubType.AI_reach,
     probability: 30,
   },
+  unitProps: {},
   action: async (unit: Unit.IUnit) => {
     let runFromTarget;
     let targetEnemy;
     for (let enemy of Unit.livingUnitsInDifferentFaction(unit)) {
-      // Will run away if enemy gets within 1
-      if (math.cellDistance(unit, enemy) < 2) {
+      // Will run away if enemy gets too close
+      if (math.distance(unit, enemy) < 20) {
         runFromTarget = enemy;
       }
-      if (canInteractWithCell(unit, enemy.x, enemy.y)) {
+      if (canInteractWithTarget(unit, enemy.x, enemy.y)) {
         targetEnemy = enemy;
         break;
       }
@@ -35,20 +36,20 @@ const unit: UnitSource = {
       await Unit.takeDamage(targetEnemy, unit.damage);
     } else {
       if (runFromTarget) {
-        const moveTo = math.oneCellAwayFromCell(unit, runFromTarget);
+        const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, runFromTarget, -unit.moveDistance);
         unit.intendedNextMove = moveTo;
       }
     }
   },
-  canInteractWithCell,
+  canInteractWithTarget,
 };
-function canInteractWithCell(unit: Unit.IUnit, x: number, y: number): boolean {
+function canInteractWithTarget(unit: Unit.IUnit, x: number, y: number): boolean {
   // Dead units cannot attack
   if (!unit.alive) {
     return false;
   }
-  // Can hit you if you are 2 away but not 1 away
-  const cellDistance = math.cellDistance(unit, { x, y });
-  return cellDistance == 2;
+  const dist = math.distance(unit, { x, y });
+  // Can hit you if you are within 300 but not 100
+  return dist > 100 && dist < 300
 }
 export default unit;

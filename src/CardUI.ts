@@ -4,7 +4,8 @@ import * as math from './math';
 import {
   clearSpellEffectProjection,
   syncSpellEffectProjection,
-  updateTooltip,
+  updateTooltipContent,
+  updateTooltipPosition,
 } from './ui/PlanningView';
 const elCardHolders = document.getElementById('card-holders');
 // Where the non-selected cards are displayed
@@ -55,9 +56,8 @@ function showFullCard(card: Cards.ICard) {
       elQuantity.innerText = `You have ${[
         ...window.player.cards,
         ...window.player.cardsSelected,
-      ].reduce((count, c) => count + (c == card.id ? 1 : 0), 0)} ${
-        card.id
-      } in your hand`;
+      ].reduce((count, c) => count + (c == card.id ? 1 : 0), 0)} ${card.id
+        } in your hand`;
       elCardInspect.appendChild(elQuantity);
     } else {
       console.error('card-inspect div does not exist');
@@ -137,8 +137,7 @@ export function recalcPositionForCards(player: CardUI.IPlayer) {
       const element = createCardElement(card);
       element.classList.add(className);
       // When the user clicks on a card
-      addClickListenerToCardElement(player, element, cardId);
-      moveCardToSelected(element);
+      selectCard(player, element, cardId);
     } else {
       console.log(`No corresponding source card exists for "${cardId}"`);
     }
@@ -155,7 +154,7 @@ function addClickListenerToCardElement(
       const index = player.cardsSelected.findIndex((c) => c === cardId);
       if (index !== -1) {
         player.cardsSelected.splice(index, 1);
-        player.cards.push(cardId);
+        deselectCard(element);
       } else {
         console.log(
           'Attempted to remove card',
@@ -163,20 +162,9 @@ function addClickListenerToCardElement(
           'from selected-cards but it does not exist',
         );
       }
-      moveCardToHand(element, cardId);
     } else {
-      const index = player.cards.findIndex((c) => c === cardId);
-      if (index !== -1) {
-        player.cards.splice(index, 1);
-        player.cardsSelected.push(cardId);
-      } else {
-        console.log(
-          'Attempted to remove card',
-          cardId,
-          'from card-hand but it does not exist',
-        );
-      }
-      moveCardToSelected(element);
+      player.cardsSelected.push(cardId);
+      selectCard(player, element, cardId);
     }
   });
 }
@@ -191,27 +179,25 @@ function makeCardTypeGroup(cardId: string): HTMLDivElement {
   }
   return elCardTypeGroup;
 }
+function deselectCard(element: HTMLElement) {
+  element.remove();
+}
 // Moves a card element to selected-cards div
-function moveCardToSelected(element: HTMLElement) {
+function selectCard(player: CardUI.IPlayer, element: HTMLElement, cardId: string) {
   if (elSelectedCards) {
-    elSelectedCards.appendChild(element);
+    const clone = element.cloneNode(true) as HTMLElement;
+    addClickListenerToCardElement(player, clone, cardId);
+    clone.classList.add('selected');
+    elSelectedCards.appendChild(clone);
   } else {
     console.error('elSelectedCards is null');
   }
-  element.classList.add('selected');
-}
-function moveCardToHand(element: HTMLElement, cardId: string) {
-  let elCardTypeGroup = document.getElementById(`holder-${cardId}`);
-  if (!elCardTypeGroup) {
-    elCardTypeGroup = makeCardTypeGroup(cardId);
-  }
-  elCardTypeGroup.appendChild(element);
-  element.classList.remove('selected');
 }
 export function areAnyCardsSelected() {
   return !!getSelectedCards().length;
 }
 
+// TODO: Keep this around for when we have one-use cards
 // This function fully deletes the cards that are 'selected' in the player's hand
 export function removeCardsFromHand(player: CardUI.IPlayer, cards: string[]) {
   cardLoop: for (let cardToRemove of cards) {
@@ -243,9 +229,13 @@ window.giveMeCard = (cardId: string, quantity: number = 1) => {
   }
 };
 export function addCardToHand(card: Cards.ICard, player: CardUI.IPlayer) {
-  player.cards.push(card.id);
-  if (player === window.player) {
-    recalcPositionForCards(window.player);
+  // Players may not have more than 1 of a particular card, because now, cards are
+  // not removed when cast
+  if (!player.cards.includes(card.id)) {
+    player.cards.push(card.id);
+    if (player === window.player) {
+      recalcPositionForCards(window.player);
+    }
   }
 }
 
@@ -270,7 +260,8 @@ export function toggleInspectMode(active: boolean) {
       // updateTooltip runs on an interval so that if a units health changes under the tooltip
       // without the user moving the mouse it will stay up to date.
       inspectIntervalId = setInterval(() => {
-        updateTooltip();
+        updateTooltipContent();
+        updateTooltipPosition();
       }, 60);
     }
   } else {
@@ -285,9 +276,10 @@ export function clearSelectedCards() {
   // Remove the board highlight
   clearSpellEffectProjection();
   // Deselect all selected cards
+  window.player.cardsSelected = []
   document.querySelectorAll('.card.selected').forEach((el) => {
     if (el instanceof HTMLElement) {
-      moveCardToHand(el, el.dataset.cardId || '');
+      el.remove();
     } else {
       console.error(
         'Cannot clearSelectedCards due to selectednode not being the correct type',

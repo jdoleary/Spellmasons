@@ -1,6 +1,6 @@
 import type * as Player from '../Player';
 import type * as Unit from '../Unit';
-import type { Coords } from '../commonTypes';
+import type { Vec2 } from '../commonTypes';
 import Events, {
   onDamage,
   onDeath,
@@ -27,9 +27,7 @@ import stomp from './stomp';
 import protection from './protection';
 import charge from './charge';
 import obliterate from './obliterate';
-import amplify from './amplify';
 import clone from './clone';
-import discard from './discard_cards';
 export interface Spell {
   card: ICard;
   // modifiers keep track of additional state on an individual unit basis
@@ -96,9 +94,7 @@ export function registerCards() {
   register(protection);
   register(charge);
   register(obliterate);
-  register(amplify);
   register(clone);
-  register(discard);
 }
 
 // Guiding rules for designing spells:
@@ -110,8 +106,7 @@ export function registerCards() {
 export interface EffectState {
   casterPlayer?: Player.IPlayer;
   casterUnit: Unit.IUnit;
-  targets: Coords[];
-  cards: string[];
+  targets: Vec2[];
   // aggregator carries extra information that can be passed
   // between card effects.
   // For example, "Vampiric" adds all damage taken
@@ -131,6 +126,19 @@ export interface ICard {
   effect: EffectFn;
   isDark?: boolean;
   description: string;
+  manaCost: number;
+  manaMultiplier: number;
 }
 
 export const allCards: ICard[] = [];
+
+export function getCardsFromIds(cardIds: string[]): ICard[] {
+  let cards = []
+  for (let id of cardIds) {
+    const card = allCards.find(c => c.id === id);
+    if (card) {
+      cards.push(card);
+    }
+  }
+  return cards;
+}

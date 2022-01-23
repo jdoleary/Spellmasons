@@ -1,38 +1,57 @@
-- Bug: disconnected client doesn't get their turn ended if they disconnect on their turn
-  - This is happening because a call to setTurnPhase on load resets this.playerTurnIndex = 0 in the PlayerTurns block.  Loading should set the phase without calling setTurnPhase?? But then there might be other desyncs
-  - This is because "setting" the turn phase to something that it already was executes logic required to initialize the turn phase
-- Ideas 2021-12-17
-  - (L) Remove Grid, allow free movement
-  - (S) Heros have much more health, bad guys die more quickly, getting hit isn't as big of a deal, so you don't have to worry about overcalculating agro range, you can be more **intuitive** in your play.
-  - (L) Mana Update
-    - (M) Cost mana for each card and the farther away you cast so there is no range limit (this allows for more strategy, more tradeoffs)
-    - (S) Never run out of cards, you're limited by mana instead (this way you don't get stuck)
-      - Update Card management, how do you get new cards now?
-    - (S) New cards for mana, mana potions
-  - (L) Get rid of cells / Allow free movement
-    - This might make judgements about AI danger more dynamic and less boring and mathematical
-    - This may simplify movement code as it relates to units getting in each others way
-    - Update pathing
-    - Cast spells with base radius, or on nearest enemy or cursor?
-    - (S) Lots of little bad guys, some big ones; Smaller units visually
-  - (s) Categories of spells, the combinable ones (cards), the special spells (teleport and such) limited in use - represent them differently (with, say, a hexagon, for the ones that can get used up)
-    - Make these pickupable (call them runes?) and they persist between levels
-  - (L) Rather than an overworld, what if you and your team have to mix potions in a cauldron to create a portal that leads you to a unique level? (The cauldron makes the portal)
-    - This adds another tradeoff, the more dangerous the portal, the greater the reward for surviving it.
-    - Should cauldron have bounds so players can't under do the difficulty or over do it?
-    - Should there be a time constraint for end game? so you can only make so many culdrons?
-    - In the boss battle, maybe you need to protect the culdron and there's no portal?
-- (M) wsPie: how to handle reconnection
-  1. Reconnection when the server goes down and comes back up (loses room state)
-    - This currently puts the game in a buggy state
-  2. Reconnection when the client goes down and comes back up (keeps room?)
-  - How to handle user joining mid stage (say during overworld or during underworld)?
-- More spells:
-  - Vanish (loses agro) (invisible for x number of turns) "creating separation"
-  - Taunt (gain agro)
-- Idea: If you're out of mana, a spell should be able to subtract from your health (so you could sacrifice yourself to save an ally)
-- Idea: Brad likes the idea of deck management though some kind of gambling / chance mechanic (turn in 3 cards for a chance to get a better one)
-- Improve / Fix Spells:
-  - What happens when you clone yourself?
-  - Charge doesn't play well with AOE
-  - chain purify didn't work(didn't remove poison)
+## Current Priorities
+- Bug: Units can get shoved out of the map
+- TODO: Merge moveWithCollisions and moveWithLineCollisions so it considers both lines and other circles when moving
+- Stresstest gamestate sync:
+    - If you delay messages on the backend are you sure they'll arrive in the right order?
+    - Can collisions cause desync
+    - If a client becomes desynced
+        1. How will they know?
+        2. How does it resolve?
+- What if it was in a dungeon instead of outside so there could be rooms?
+- Playtest with friends
+    - Verify gamestate integrity between clients
+- Implement new way of getting cards over time
+  - You shouldn't start with a bunch of cards
+- Balance mana
+  - To make this challenging, players should often be on the verge of no mana, it should feel scarce so they have to pick carefully what spells they want to use.
+    - Maybe the answer to this is to make spells more expensive every time you use them
+- Playtest with brad
+- Security
+    - Since I'm using electron, I should evaluate my dependencies for safety: https://www.electronjs.org/docs/latest/tutorial/security#security-is-everyones-responsibility
+    - [Security Recommendations](https://www.electronjs.org/docs/latest/tutorial/security#checklist-security-recommendations)
+- Polish
+    - [Add Juice](https://itch.io/b/1219/gamedev-pro)
+        - (M) Animate cards
+            - https://3dtransforms.desandro.com/perspective
+            - https://3dtransforms.desandro.com/card-flip
+            - Use transform3d functions to trigger hardware acceleration: "In essence, any transform that has a 3D operation as one of its functions will trigger hardware compositing, even when the actual transform is 2D, or not doing anything at all (such as translate3d(0,0,0)). Note this is just current behaviour, and could change in the future (which is why we don’t document or encourage it). But it is very helpful in some situations and can significantly improve redraw performance."
+        - (L) Add shaders (see branch "shaders-yay")
+        - (VERY OPTIONAL) Some kind of visible error mechanism to show when cards don't apply
+            - Don't let players cast fizzle spells (AOE or chain without damage)
+            - Like if you cast "Protection" on yourself and then AOE it does nothing because there are no targets to AOE off of
+            - Or if you cast cards out of order like Dicard without a card after it
+    - Finish all TODOs
+    - Tutorial (Mario style, don't make it explicit)
+    - SFX
+        - Special sfx for when ally dies
+- Hire Out?
+    - Art
+        - Do what you can with Juice and shaders before hiring and artist
+        - What if I did CGI for faster iteration
+        - Calculate the value of your time for making art and music yourself vs the cost of hiring at $3000 expenses / month.  I'm -$18.75 per working hour
+    - Music
+        - Have special music for intense moments (low health, boss fight)
+        - https://www.fiverr.com/categories/music-audio/session-musicians?source=gallery-listing
+- Menus / Options
+- Publicity
+    - Publish on Steamworks
+    - Social Media stuff
+## Small Content Changes
+- Spell: Burn mana / Steal mana
+- Swap should only swap with targets, it shouldn't allow arbitrary teleportation
+- swapping with portal shouldn't make user portal
+- Spells that summon walls or pillars to prevent enemy movement (maybe to trap them)
+## Large Changes
+- (M) Push spells
+  - Depends on: Collision task
+  - Rework movement spells such as charge and stomp

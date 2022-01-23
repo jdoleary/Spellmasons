@@ -1,5 +1,6 @@
-import type { Coords } from 'src/commonTypes';
+import type { Vec2 } from 'src/commonTypes';
 import type { Spell } from '.';
+import { MANA_BASE_COST, MANA_MULTIPLIER_SM } from '../config';
 
 const id = 'lance';
 const spell: Spell = {
@@ -12,11 +13,13 @@ Adds targets towards the initial target if
 the initial target is on the same vertical or horizontal axis
 as the caster.
     `,
+    manaCost: MANA_BASE_COST,
+    manaMultiplier: MANA_MULTIPLIER_SM,
     effect: async (state, dryRun) => {
       let updatedTargets = [...state.targets];
       for (let target of state.targets) {
         // If target is on same vertical
-        let targetsOnSameVerticalOrHorizontal: Coords[] = [];
+        let targetsOnSameVerticalOrHorizontal: Vec2[] = [];
         if (state.casterUnit.x == target.x) {
           const startY =
             state.casterUnit.y >= target.y
@@ -68,7 +71,7 @@ as the caster.
 };
 export default spell;
 
-function isOnSameVerticalOrHorizondal(unit: Coords, coords: Coords) {
+function isOnSameVerticalOrHorizondal(unit: Vec2, coords: Vec2) {
   const isOnSameHorizontal = coords.x === unit.x;
   const isOnSameVertical = coords.y === unit.y;
   return isOnSameHorizontal || isOnSameVertical;

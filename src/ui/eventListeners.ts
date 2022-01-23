@@ -1,10 +1,7 @@
 import { MESSAGE_TYPES } from '../MessageTypes';
-import { turn_phase } from '../Underworld';
 import * as CardUI from '../CardUI';
-import * as Player from '../Player';
-import * as Unit from '../Unit';
+import type * as Player from '../Player';
 import floatingText from '../FloatingText';
-import type { Coords } from '../commonTypes';
 import {
   isOutOfBounds,
   syncSpellEffectProjection,
@@ -56,26 +53,15 @@ export function endTurnBtnListener() {
   window.underworld.endMyTurn();
 }
 
-let mouseCell: Coords = { x: -1, y: -1 };
-export function getCurrentMouseCellOnGrid(): Coords {
-  return mouseCell;
-}
 export function mousemoveHandler(e: MouseEvent) {
   // Only handle clicks when viewing the Game
   if (window.view !== View.Game) {
     return;
   }
-  const cell = window.underworld.getCellFromCurrentMousePos();
-  const didChange = mouseCell.x !== cell.x || mouseCell.y !== cell.y;
-  // If mouse hovering over a new cell, update the target images
-  if (didChange) {
-    // Update mouseCell
-    mouseCell = cell;
-    // Show target hover on cells
-    syncSpellEffectProjection();
-    // Update planning view for new cell
-    updatePlanningView();
-  }
+  // Show target hover
+  syncSpellEffectProjection();
+  // Update planning view
+  updatePlanningView();
 }
 // Handle right click on game board
 export function contextmenuHandler(e: MouseEvent) {
@@ -84,7 +70,7 @@ export function contextmenuHandler(e: MouseEvent) {
     return;
   }
   e.preventDefault();
-  const mouseTarget = window.underworld.getCellFromCurrentMousePos();
+  const mouseTarget = window.underworld.getMousePos();
   if (isOutOfBounds(mouseTarget)) {
     // Disallow click out of bounds
     return;
@@ -98,34 +84,19 @@ export function contextmenuHandler(e: MouseEvent) {
       );
     // If player hasn't already moved this turn...
     if (selfPlayer && !selfPlayer.unit.thisTurnMoved) {
-      const targetCell = Unit.findCellOneStepCloserTo(
-        selfPlayer.unit,
-        mouseTarget,
-      );
-      if (targetCell && !window.underworld.isCellObstructed(targetCell)) {
-        window.pie.sendData({
-          type: MESSAGE_TYPES.MOVE_PLAYER,
-          // This formula clamps the diff to -1, 0 or 1
-          ...targetCell,
-        });
-      } else {
-        floatingText({
-          cell: mouseTarget,
-          text: 'You cannot move here',
-          style: {
-            fill: 'red',
-          },
-        });
-      }
+      window.pie.sendData({
+        type: MESSAGE_TYPES.MOVE_PLAYER,
+        ...mouseTarget,
+      });
     } else {
       floatingText({
-        cell: mouseTarget,
+        coords: mouseTarget,
         text: 'You cannot move more than once per turn.',
       });
     }
   } else {
     floatingText({
-      cell: mouseTarget,
+      coords: mouseTarget,
       text: 'You must wait for your turn to move',
     });
 
@@ -161,7 +132,7 @@ export function clickHandler(e: MouseEvent) {
   if (window.view !== View.Game) {
     return;
   }
-  const mouseTarget = window.underworld.getCellFromCurrentMousePos();
+  const mouseTarget = window.underworld.getMousePos();
   if (isOutOfBounds(mouseTarget)) {
     // Disallow click out of bounds
     return;
@@ -186,29 +157,23 @@ export function clickHandler(e: MouseEvent) {
         );
       // If the player casting is the current client player
       if (selfPlayer) {
-        // If the spell is not in range
-        if (!Player.isTargetInRange(selfPlayer, mouseTarget)) {
-          // Show floating message to alert player
-          floatingText({
-            cell: mouseTarget,
-            text: 'out of range',
-          });
-        } else {
-          // cast the spell
-          window.pie.sendData({
-            type: MESSAGE_TYPES.SPELL,
-            x: mouseTarget.x,
-            y: mouseTarget.y,
-            cards: CardUI.getSelectedCards(),
-          });
-          CardUI.clearSelectedCards();
-        }
+        // cast the spell
+        // getUnitAt corrects to the nearest Unit if there is one, otherwise
+        // allow casting right on the mouseTarget
+        const target = window.underworld.getUnitAt(mouseTarget) || mouseTarget;
+        window.pie.sendData({
+          type: MESSAGE_TYPES.SPELL,
+          x: target.x,
+          y: target.y,
+          cards: CardUI.getSelectedCards(),
+        });
+        CardUI.clearSelectedCards();
       } else {
         console.error("Attempting to cast while clientId is unassociated with existing players");
       }
     } else {
       floatingText({
-        cell: mouseTarget,
+        coords: mouseTarget,
         text: 'You must wait for your turn to cast',
       });
     }

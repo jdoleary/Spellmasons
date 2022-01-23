@@ -77,11 +77,12 @@ export function setView(v: View) {
         )
         .forEach((unitSource, index) => {
           const image = Image.create(
-            index,
+            0,
             0,
             unitSource.info.image,
             containerCharacterSelect,
           );
+          Image.setPosition(image, index * image.sprite.width, 0)
           image.sprite.interactive = true;
           image.sprite.on('click', () => {
             // Timeout prevents click from propagating into overworld listener

@@ -1,10 +1,10 @@
 import type * as PIXI from 'pixi.js';
 
 import { addPixiSprite } from './PixiUtils';
-import { normalizeRadians, cellToBoardCoords } from './math';
+import { normalizeRadians } from './math';
 import Subsprites from './Subsprites';
 import { animateIndependent } from './AnimationTimeline';
-import type { Coords } from './commonTypes';
+import type { Vec2 } from './commonTypes';
 
 export interface IImage {
   // Not to be serialized
@@ -19,8 +19,8 @@ export interface IImage {
   scale: number;
 }
 export function create(
-  cellX: number,
-  cellY: number,
+  x: number,
+  y: number,
   spritesheetId: string,
   parent: PIXI.Container,
 ): IImage {
@@ -37,7 +37,7 @@ export function create(
     subSprites: [],
     scale: 1,
   };
-  setPosition(image, cellX, cellY);
+  setPosition(image, x, y);
   return image;
 }
 export function cleanup(image: IImage) {
@@ -99,8 +99,7 @@ export function serialize(image: IImage) {
     imageName: image.imageName,
   };
 }
-export function setPosition(image: IImage, cellX: number, cellY: number) {
-  const { x, y } = cellToBoardCoords(cellX, cellY);
+export function setPosition(image: IImage, x: number, y: number) {
   image.sprite.x = x;
   image.sprite.y = y;
 }
@@ -138,7 +137,7 @@ export function removeSubSprite(image: IImage, key: string) {
     image.subSprites = image.subSprites.filter((k) => k !== key);
   }
 }
-export function moveAbs(image: IImage, target: Coords) {
+export function moveAbs(image: IImage, target: Vec2) {
   return animateIndependent([
     {
       sprite: image.sprite,
@@ -146,11 +145,11 @@ export function moveAbs(image: IImage, target: Coords) {
     },
   ]);
 }
-export function move(image: IImage, cellX: number, cellY: number) {
+export function move(image: IImage, x: number, y: number) {
   return animateIndependent([
     {
       sprite: image.sprite,
-      target: cellToBoardCoords(cellX, cellY),
+      target: { x, y },
     },
   ]);
 }
@@ -182,26 +181,26 @@ export function take_hit(image: IImage) {
 }
 export function attack(
   image: IImage,
-  current_cellX: number,
-  current_cellY: number,
-  cellX: number,
-  cellY: number,
+  current_x: number,
+  current_y: number,
+  x: number,
+  y: number,
 ) {
   // Move forward
   return animateIndependent([
     {
       sprite: image.sprite,
-      target: cellToBoardCoords(
-        current_cellX + (cellX - current_cellX) / 2,
-        current_cellY + (cellY - current_cellY) / 2,
-      ),
+      target: {
+        x: current_x + (x - current_x) / 2,
+        y: current_y + (y - current_y) / 2,
+      },
     },
   ]).then(() => {
     // Move back
     return animateIndependent([
       {
         sprite: image.sprite,
-        target: cellToBoardCoords(current_cellX, current_cellY),
+        target: { x: current_x, y: current_y },
       },
     ]);
   });

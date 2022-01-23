@@ -1,8 +1,7 @@
 import seedrandom from 'seedrandom';
 import { NUMBER_OF_UPGRADES_TO_CHOOSE_FROM } from './config';
 import { MESSAGE_TYPES } from './MessageTypes';
-import * as config from './config';
-import { checkForGetCardOnTurn, IPlayer } from './Player';
+import type { IPlayer } from './Player';
 import { randInt } from './rand';
 export interface IUpgrade {
   title: string;
@@ -92,47 +91,41 @@ export const upgradeSourceWhenDead: IUpgrade[] = [
 ];
 export const upgradeSource: IUpgrade[] = [
   {
-    title: '+ Cast Range',
-    description: (player) =>
-      `Upgrade cast range from ${player.range} to ${player.range + 1}`,
-    thumbnail: 'images/upgrades/plus_range.png',
-    effect: (player) => player.range++,
-  },
-  {
-    title: '+ Card Frequency',
-    description: (player) =>
-      `Get a new card every ${player.turnsPerCard} turns.`,
-    thumbnail: 'images/upgrades/plus_card_frequency.png',
-    maxCopies: config.PLAYER_BASE_TURNS_PER_CARD - 1,
-    effect: (player) => {
-      player.turnsPerCard--;
-      // Check if decreasing the turnsPerCard will land on the current turn
-      // as being a turn that the player should get a card so that they don't get skipped
-      checkForGetCardOnTurn(player);
-    },
-  },
-  {
-    title: 'More Cards',
-    description: (player) =>
-      `Increases the number of cards that you get at the beginning of each level from ${player.cardsAmount
-      } to ${player.cardsAmount + 1}`,
-    thumbnail: 'images/upgrades/more_cards.png',
-    effect: (player) => {
-      player.cardsAmount++;
-    },
-  },
-  {
     title: '+ Max Health',
     description: (player) =>
-      `Increases your max health from ${player.unit.healthMax} to ${player.unit.healthMax + 1
+      `Increases your max health from ${player.unit.healthMax} to ${player.unit.healthMax + maxHealthIncreaseAmount
       }`,
     thumbnail: 'images/upgrades/plus_max_health.png',
     effect: (player) => {
-      player.unit.healthMax++;
-      player.unit.health++;
+      player.unit.healthMax += maxHealthIncreaseAmount;
+      player.unit.health += maxHealthIncreaseAmount;
+    },
+  },
+  {
+    title: '+ Max Mana',
+    description: (player) =>
+      `Increases your mana from ${player.unit.manaMax} to ${player.unit.manaMax + maxManaIncreaseAmount
+      }`,
+    thumbnail: 'images/upgrades/todo.png',
+    effect: (player) => {
+      player.unit.manaMax += maxManaIncreaseAmount;
+      player.unit.mana += maxManaIncreaseAmount;
+    },
+  },
+  {
+    title: '+ Mana per turn',
+    description: (player) =>
+      `Increases your mana per turn from ${player.unit.manaPerTurn} per turn to ${player.unit.manaPerTurn + manaPerTurnIncreaseAmount
+      } per turn.`,
+    thumbnail: 'images/upgrades/todo.png',
+    effect: (player) => {
+      player.unit.manaPerTurn += maxManaIncreaseAmount;
     },
   },
 ];
+const maxManaIncreaseAmount = 10;
+const maxHealthIncreaseAmount = 5;
+const manaPerTurnIncreaseAmount = 2;
 
 // Template
 //   {

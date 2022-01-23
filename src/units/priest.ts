@@ -1,6 +1,6 @@
 import * as Unit from '../Unit';
 import type { UnitSource } from './index';
-import { Coords, UnitSubType } from '../commonTypes';
+import { Vec2, UnitSubType } from '../commonTypes';
 import * as math from '../math';
 import createVisualProjectile from '../Projectile';
 
@@ -13,18 +13,18 @@ const unit: UnitSource = {
     subtype: UnitSubType.AI_priest,
     probability: 30,
   },
-
+  unitProps: {},
   action: async (unit: Unit.IUnit) => {
     // Move to closest ally
     const closestAlly = Unit.findClosestUnitInSameFaction(unit);
     if (closestAlly) {
-      const moveTo = Unit.findCellOneStepCloserTo(unit, closestAlly);
+      const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestAlly, unit.moveDistance);
       unit.intendedNextMove = moveTo;
     } else {
       // flee from closest enemey
       const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit);
       if (closestEnemy) {
-        const moveTo = math.oneCellAwayFromCell(unit, closestEnemy);
+        const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestEnemy, -unit.moveDistance);
         unit.intendedNextMove = moveTo;
       }
     }
@@ -49,11 +49,11 @@ const unit: UnitSource = {
       }
     }
   },
-  canInteractWithCell: (unit, x, y) => {
+  canInteractWithTarget: (unit, x, y) => {
     return inRange(unit, { x, y });
   },
 };
-function inRange(unit: Unit.IUnit, coords: Coords): boolean {
+function inRange(unit: Unit.IUnit, coords: Vec2): boolean {
   return math.distance(unit, coords) <= range;
 }
 

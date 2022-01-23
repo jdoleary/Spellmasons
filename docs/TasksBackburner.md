@@ -40,8 +40,6 @@
   - Make loading occur only after animations are done
 - It's possible that summoner could block you from finishing the level by summoning too many allies
 - enemies should not be able to be on the portal
-- Try to reproduce: Game.findPath (114) cannot set property 'g' of undefined
-  - pathfinding.js:1286 endNode.g = 0
 - Convert console.error(s) to Sentry.captureException?? before deployment?
 - let our faction go before enemy units go
 - How to best handle not being able to find a random empty cell? This can mess up things like entering a portal

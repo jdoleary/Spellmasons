@@ -1,57 +1,57 @@
-import { indexToXY, xyToIndex, normalizeRadians, _chooseObjectWithProbability } from '../math';
+import { indexToXY, xyToIndex, normalizeRadians, _chooseObjectWithProbability, similarTriangles, getCoordsAtDistanceTowardsTarget } from '../math';
 
 describe('math', () => {
   describe('probability', () => {
     const objects = [
-        // Won't be selected because roll will never be 0 see chooseObjectWithProbability randome.integer(1...
+      // Won't be selected because roll will never be 0 see chooseObjectWithProbability randome.integer(1...
       {
-        id:1,
-        probability:0
+        id: 1,
+        probability: 0
       },
-        // Selected if roll is 1
+      // Selected if roll is 1
       {
-        id:2,
-        probability:1
+        id: 2,
+        probability: 1
       },
-        // Selected if roll is 2-6
+      // Selected if roll is 2-6
       {
-        id:3,
-        probability:5
+        id: 3,
+        probability: 5
       },
-        // Wont be selected
+      // Wont be selected
       {
-        id:4,
-        probability:0
+        id: 4,
+        probability: 0
       },
-        // Selected if roll is 7-8
+      // Selected if roll is 7-8
       {
-        
-        id:5,
-        probability:2
+
+        id: 5,
+        probability: 2
       },
     ]
     describe('should never choose an object with probability of 0', () => {
       it("should choose id 2 for roll of 1", () => {
         const choice = _chooseObjectWithProbability(1, objects);
-        expect(choice.id).toEqual(2); 
+        expect(choice.id).toEqual(2);
       });
       it("should choose id 3 for roll of 2-6", () => {
         let choice = _chooseObjectWithProbability(2, objects);
-        expect(choice.id).toEqual(3); 
+        expect(choice.id).toEqual(3);
         choice = _chooseObjectWithProbability(3, objects);
-        expect(choice.id).toEqual(3); 
+        expect(choice.id).toEqual(3);
         choice = _chooseObjectWithProbability(4, objects);
-        expect(choice.id).toEqual(3); 
+        expect(choice.id).toEqual(3);
         choice = _chooseObjectWithProbability(5, objects);
-        expect(choice.id).toEqual(3); 
+        expect(choice.id).toEqual(3);
         choice = _chooseObjectWithProbability(6, objects);
-        expect(choice.id).toEqual(3); 
+        expect(choice.id).toEqual(3);
       });
       it("should choose id 5 for roll of 7-8 because it skips id 4 with a probability of 0", () => {
         let choice = _chooseObjectWithProbability(7, objects);
-        expect(choice.id).toEqual(5); 
+        expect(choice.id).toEqual(5);
         choice = _chooseObjectWithProbability(8, objects);
-        expect(choice.id).toEqual(5); 
+        expect(choice.id).toEqual(5);
       });
     });
 
@@ -123,5 +123,60 @@ describe('math', () => {
         expect(acutal).toEqual(expected);
       });
     }
+  });
+  describe('similarTriangles', () => {
+    it('should find the x,y value of the point "d" distance along the known triangle hypotenuse D', () => {
+      const knownTriangle = { X: 10, Y: 20, D: 100 };
+      const desiredDistance = 10;
+      const actual = similarTriangles(knownTriangle.X, knownTriangle.Y, knownTriangle.D, desiredDistance);
+      const expected = { x: 1, y: 2 };
+      expect(actual).toEqual(expected);
+    });
+    it('should return X,Y if d is 0', () => {
+      const knownTriangle = { X: 10, Y: 20, D: 100 };
+      const desiredDistance = 0;
+      const actual = similarTriangles(knownTriangle.X, knownTriangle.Y, knownTriangle.D, desiredDistance);
+      const expected = { x: knownTriangle.X, y: knownTriangle.Y };
+      expect(actual).toEqual(expected);
+    });
+    it('should return X,Y if D is 0', () => {
+      const knownTriangle = { X: 10, Y: 20, D: 0 };
+      const desiredDistance = 10;
+      const actual = similarTriangles(knownTriangle.X, knownTriangle.Y, knownTriangle.D, desiredDistance);
+      const expected = { x: knownTriangle.X, y: knownTriangle.Y };
+      expect(actual).toEqual(expected);
+    });
+  });
+  describe('getCoordsDistanceTowardsTarget', () => {
+    // Using the known triangle sides 3, 4, and 5 in these tests to make the expected results easy and obvious
+    it('should return a coord "travelDist" distance away from "start" along the vector "start" to "end"', () => {
+      const start = { x: 3, y: 4 };
+      const end = { x: 9, y: 12 };
+      const actual = getCoordsAtDistanceTowardsTarget(start, end, 5);
+      const expected = { x: 6, y: 8 };
+      expect(actual).toEqual(expected);
+    });
+    it('should return coord "travelDist" distance away from "start" along the vector "start" to "end" even if the start contains greater numbers than the end', () => {
+      const start = { x: 9, y: 12 };
+      const end = { x: 3, y: 4 };
+      const actual = getCoordsAtDistanceTowardsTarget(start, end, 5);
+      const expected = { x: 6, y: 8 };
+      expect(actual).toEqual(expected);
+    });
+    it('should return coord "travelDist" distance away from "start" along the vector "end" to "start" (backwards) for a negative travelDist', () => {
+      const start = { x: 3, y: 4 };
+      const end = { x: 9, y: 12 };
+      const actual = getCoordsAtDistanceTowardsTarget(start, end, -5);
+      const expected = { x: 0, y: 0 };
+      expect(actual).toEqual(expected);
+    });
+    it('should return target if travelDist is greater than the distance to the target so the returned coords are not beyond the target', () => {
+      const start = { x: 3.1253245123, y: 4.4239879812 };
+      const target = { x: 10, y: 10 };
+      const travelDist = 5000;
+      const actual = getCoordsAtDistanceTowardsTarget(start, target, travelDist);
+      const expected = target;
+      expect(actual).toEqual(expected);
+    });
   });
 });

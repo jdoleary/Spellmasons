@@ -1,7 +1,7 @@
-import * as Unit from '../Unit';
 import type { UnitSource } from './index';
-import { Coords, UnitSubType } from '../commonTypes';
+import { Vec2, UnitSubType } from '../commonTypes';
 import createVisualProjectile from '../Projectile';
+import type * as Unit from '../Unit';
 import * as math from '../math';
 import * as poison from '../cards/poison';
 
@@ -14,6 +14,7 @@ const unit: UnitSource = {
     subtype: UnitSubType.AI_poisoner,
     probability: 30,
   },
+  unitProps: {},
   action: async (unit: Unit.IUnit) => {
     const nonPoisonedEnemyUnits = window.underworld.units.filter(
       (u) =>
@@ -23,7 +24,7 @@ const unit: UnitSource = {
     );
     if (nonPoisonedEnemyUnits.length) {
       const chosenUnit = nonPoisonedEnemyUnits[0];
-      const moveTo = Unit.findCellOneStepCloserTo(unit, chosenUnit);
+      const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, chosenUnit, unit.moveDistance);
       unit.intendedNextMove = moveTo;
       if (inRange(unit, chosenUnit)) {
         createVisualProjectile(
@@ -36,11 +37,11 @@ const unit: UnitSource = {
       }
     }
   },
-  canInteractWithCell: (unit, x, y) => {
+  canInteractWithTarget: (unit, x, y) => {
     return inRange(unit, { x, y });
   },
 };
-function inRange(unit: Unit.IUnit, coords: Coords): boolean {
+function inRange(unit: Unit.IUnit, coords: Vec2): boolean {
   return math.distance(unit, coords) <= range;
 }
 export default unit;

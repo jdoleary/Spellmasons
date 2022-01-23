@@ -1,4 +1,4 @@
-import type { Coords } from './commonTypes';
+import type { Vec2 } from './commonTypes';
 import {
   OVERWORLD_HEIGHT,
   OVERWORLD_MAX_WIDTH,
@@ -9,7 +9,7 @@ import { overworldGraphics } from './PixiUtils';
 import { getClients } from './wsPieHandler';
 
 export interface ILevel {
-  location: Coords;
+  location: Vec2;
   altitude: number;
   enemies: number[];
 }
@@ -17,8 +17,12 @@ export interface IOverworld {
   levels: ILevel[];
   votes: { [clientId: string]: number };
 }
-export const currentOverworldLocation: Coords = { x: 0, y: 0 };
+export const currentOverworldLocation: Vec2 = { x: 0, y: 0 };
+// hardCodedLevelEnemies is a list of the enemies in a level.  The number represents the type of enemy as an index
+// in the units/index.ts registerUnits list
 const hardCodedLevelEnemies = [
+  [],
+  [0, 1, 2],
   [0, 4],
   [0, 0, 0, 6],
   [0, 0, 0, 1, 7],

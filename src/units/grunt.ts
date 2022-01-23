@@ -1,6 +1,6 @@
 import type { UnitSource } from './index';
 import { UnitSubType } from '../commonTypes';
-import { canInteractWithCell, action } from './actions/gruntAction';
+import { canInteractWithTarget, action } from './actions/gruntAction';
 
 const unit: UnitSource = {
   id: 'grunt',
@@ -10,8 +10,9 @@ const unit: UnitSource = {
     subtype: UnitSubType.AI_melee,
     probability: 100,
   },
+  unitProps: {},
   action,
-  canInteractWithCell,
+  canInteractWithTarget,
 };
 
 export default unit;

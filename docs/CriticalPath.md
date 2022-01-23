@@ -1,42 +1,33 @@
 # Critical Path
-- (L) Headless server
-    - Why: This will fix the networking issues
-    - No input handlers
-    - Support "Game Replay" by executing logged actions one at a time.
-        - This will be useful for debugging or even testing
-- Do gameplay refinement tasks: "Ideas 2021-12-17" (See TasksCurrent entry)
-    - Why: This adds better tradeoffs (more player creativity) and makes the game more resiliant to doomstate
-    - Mana Update
-    - Free Movement, No cells update
-    - Overworld cauldron
-- Start a following (Tom Francis style):
-    - Youtube Alpha version video
-- Content
-    - More spells
-    - More monsters
-- Security
-    - Since I'm using electron, I should evaluate my dependencies for safety: https://www.electronjs.org/docs/latest/tutorial/security#security-is-everyones-responsibility
-    - [Security Recommendations](https://www.electronjs.org/docs/latest/tutorial/security#checklist-security-recommendations)
-- Add endgame: Think Nuclear Throne or FTL, should it loop?
-- Polish
-    - Add Juice
-        - (M) Animate cards
-        - (XL) Add shaders
-        - (M?) Animate culdron
-        - Some kind of visible error mechanism to show when cards don't apply
-            - Don't let players cast fizzle spells (AOE or chain without damage)
-            - Like if you cast "Protection" on yourself and then AOE it does nothing because there are no targets to AOE off of
-            - Or if you cast cards out of order like Dicard without a card after it
-    - Make executable with Electron
-    - Finish all TODOs
-    - Tutorial
-    - Art
-    - Music
-    - SFX
-    - Menus
+- Jan 31: Collisions
+- Feb 2: Ensure gamestate desyncs don't occur or are handled when they do
+- Feb 6: Gameplay Balance
+- Playtest with friends
+- Feb 7: Youtube Alpha version video / Setup Social Media system
+- Feb 17: Finish Content / Endgame
+- Feb 18: Menus / Options
+- Feb 25, Feb 26: Electron Security Evaluation
+- Feb 27 - Mar 12: Art in Blender / Shaders / Juice
+- Mar 13 - Mar 19: Open
+- Mar 20 - Mar 26: Music
+- Mar 27 - Mar 30: SFX
+- Monitoring (Sentry.io?)
 - Publicity
-    - Publish on Steamworks
-    - Social Media stuff
+- March 31: Publish on Steamworks
 
-## Schedule
-- 6 working days until 1/6
+## Deadlines
+- My part (gameplay) should be finished end of Feb 2022
+- Entire game should be ready to ship end of March 2022
+    - Keeping to a hard deadline will ensure that I iterate and keep making more games and improving
+## Thoughts
+Don't get stuck on feature creep.  Finish the game and get it out so you can move on
+
+I will succeed with iterating on making many games similar to each other because I will continue to get better at them.  I must prioritize shipping and use hard deadlines to cut features so I don't get stuck with a forever project.
+If I make the art myself (blender) and the music, I will both save my "runway" (dangerous game funds) and incrementally improve at those things too making me faster and more effective AND I will have assets that I can reuse.
+
+## Advice from Elon:
+1. Make your requirements less dumb.  Everyone is wrong sometimes even smart people, and your requirements are definitely dumb
+2. Try very hard to delete the part or process.  If you're not occasionally adding things back in then you're not deleting enough.
+3. Simplify or optimize.  Note: It's the third step for a reason. Possibly the most common error of a smart engineer is to optimize a thing that should not exist.
+4. Accelerate cycle time.  You're moving too slowly, go faster.
+5. Automate

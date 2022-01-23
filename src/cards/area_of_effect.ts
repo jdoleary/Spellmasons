@@ -1,6 +1,10 @@
+import type { Vec2 } from '../commonTypes';
 import type { Spell } from '.';
+import { drawDryRunCircle } from '../ui/PlanningView';
+import { MANA_BASE_COST, MANA_MULTIPLIER_SM } from '../config';
 
 const id = 'AOE';
+const range = 200;
 const spell: Spell = {
   card: {
     id,
@@ -8,18 +12,21 @@ const spell: Spell = {
     probability: 20,
     description: `
 Adds targets for the following cards to effect by "growing" existing targets
-by 1 grid cell in each direction.
     `,
+    manaCost: MANA_BASE_COST,
+    manaMultiplier: MANA_MULTIPLIER_SM,
     effect: async (state, dryRun) => {
-      let updatedTargets = [...state.targets];
+      let newTargets: Vec2[] = [];
       for (let target of state.targets) {
-        const withinRadius = window.underworld.getCoordsWithinDistanceOfTarget(
-          target.x,
-          target.y,
-          1,
+        const withinRadius = window.underworld.getCoordsForUnitsWithinDistanceOfTarget(
+          target,
+          range,
         );
-        updatedTargets = updatedTargets.concat(withinRadius);
+        // Draw visual circle for dryRun
+        drawDryRunCircle(target, range);
+        newTargets = newTargets.concat(withinRadius);
       }
+      let updatedTargets = [...state.targets, ...newTargets];
       // deduplicate
       updatedTargets = updatedTargets.filter((coord, index) => {
         return (

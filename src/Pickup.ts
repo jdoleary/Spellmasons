@@ -3,8 +3,9 @@ import * as CardUI from './CardUI';
 import * as Player from './Player';
 import { containerPickup } from './PixiUtils';
 import type { IUnit } from './Unit';
+
+export const PICKUP_RADIUS = 64;
 export interface IPickup {
-  // note: x,y are cell positions, not board positions
   x: number;
   y: number;
   name: string;
@@ -133,6 +134,16 @@ export const pickups: IPickupSource[] = [
           const card = CardUI.generateCard();
           CardUI.addCardToHand(card, player);
         }
+      }
+    },
+  },
+  {
+    imagePath: 'pickups/mana-potion',
+    name: 'Mana Potion',
+    description: 'Grants the player more mana',
+    effect: ({ unit, player }) => {
+      if (player) {
+        player.unit.mana += 20;
       }
     },
   },

@@ -1,5 +1,7 @@
 import * as Unit from '../../Unit';
 import * as Image from '../../Image';
+import * as math from '../../math';
+import { COLLISION_MESH_RADIUS } from '../../config';
 
 export async function action(unit: Unit.IUnit) {
   if (!Unit.canMove(unit)) {
@@ -11,7 +13,7 @@ export async function action(unit: Unit.IUnit) {
     return;
   }
   // Attack closest enemy
-  if (canInteractWithCell(unit, closestEnemy.x, closestEnemy.y)) {
+  if (canInteractWithTarget(unit, closestEnemy.x, closestEnemy.y)) {
     await Image.attack(
       unit.image,
       unit.x,
@@ -21,14 +23,15 @@ export async function action(unit: Unit.IUnit) {
     );
     await Unit.takeDamage(closestEnemy, unit.damage);
   } else {
-    const moveTo = Unit.findCellOneStepCloserTo(unit, closestEnemy);
+    const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestEnemy, unit.moveDistance);
     unit.intendedNextMove = moveTo;
     // Update the "planning view" overlay that shows the unit's agro radius
     Unit.updateSelectedOverlay(unit);
   }
 }
 
-export function canInteractWithCell(
+const range = 100;
+export function canInteractWithTarget(
   unit: Unit.IUnit,
   x: number,
   y: number,
@@ -37,11 +40,10 @@ export function canInteractWithCell(
   if (!unit.alive) {
     return false;
   }
-  // Melee units can attack any cell 1 distance from them
+  // Melee units can attack target "range" distance from them
+  // + COLLISION_MESH_RADIUS*2 ensures that grunt can attack if it can reach the edge of a unit,
+  // rather than their center
   return (
-    (x == unit.x - 1 && y == unit.y) ||
-    (x == unit.x + 1 && y == unit.y) ||
-    (x == unit.x && y == unit.y - 1) ||
-    (x == unit.x && y == unit.y + 1)
+    math.distance(unit, { x, y }) <= range + COLLISION_MESH_RADIUS * 2
   );
 }

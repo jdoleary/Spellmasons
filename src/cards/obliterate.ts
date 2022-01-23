@@ -3,6 +3,7 @@ import type { Spell } from '.';
 import { removePickup } from '../Pickup';
 import { remove } from '../Obstacle';
 import { UnitType } from '../commonTypes';
+import { MANA_BASE_COST, MANA_MULTIPLIER_NONE } from '../config';
 
 const id = 'obliterate';
 const spell: Spell = {
@@ -13,6 +14,8 @@ const spell: Spell = {
     description: `
 Completely obliterates all targets.
     `,
+    manaCost: MANA_BASE_COST * 40,
+    manaMultiplier: MANA_MULTIPLIER_NONE,
     effect: async (state, dryRun) => {
       if (dryRun) {
         return state;
@@ -30,7 +33,7 @@ Completely obliterates all targets.
         }
         const pickup = window.underworld.getPickupAt(target);
         if (pickup) {
-          // TODO don't remove portal
+          // TODO don't remove portal, or go to game over if the portal is destroyed because then the players are stuck
           removePickup(pickup);
         }
         const obstacle = window.underworld.getObstacleAt(target);

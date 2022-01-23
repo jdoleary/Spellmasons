@@ -1,7 +1,11 @@
 import * as Unit from '../Unit';
 import type { Spell } from '.';
+import { MANA_MULTIPLIER_NONE } from '../config';
 
 const id = 'heal';
+const healAmount = 10;
+const manaCost = 20;
+
 const spell: Spell = {
   card: {
     id,
@@ -10,6 +14,8 @@ const spell: Spell = {
     description: `
 Heals all targets (no greater than maximum health).
     `,
+    manaCost,
+    manaMultiplier: MANA_MULTIPLIER_NONE,
     effect: async (state, dryRun) => {
       if (dryRun) {
         return state;
@@ -17,7 +23,7 @@ Heals all targets (no greater than maximum health).
       for (let target of state.targets) {
         const unit = window.underworld.getUnitAt(target);
         if (unit) {
-          const damage = -1;
+          const damage = -healAmount;
           Unit.takeDamage(unit, damage);
           state.aggregator.damageDealt =
             (state.aggregator.damageDealt || 0) + damage;

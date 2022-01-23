@@ -12,11 +12,12 @@ const unit: UnitSource = {
     subtype: UnitSubType.AI_rook,
     probability: 10,
   },
+  unitProps: {},
   action: async (unit: Unit.IUnit) => {
     // Shoot at enemy if in same horizontal, diagonal, or vertical
     let targetEnemy;
     for (let enemy of Unit.livingUnitsInDifferentFaction(unit)) {
-      if (canInteractWithCell(unit, enemy.x, enemy.y)) {
+      if (canInteractWithTarget(unit, enemy.x, enemy.y)) {
         targetEnemy = enemy;
         break;
       }
@@ -33,14 +34,14 @@ const unit: UnitSource = {
       // Move opposite to enemy
       const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit);
       if (closestEnemy) {
-        const moveTo = math.oneCellAwayFromCell(unit, closestEnemy);
+        const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestEnemy, -unit.moveDistance);
         unit.intendedNextMove = moveTo;
       }
     }
   },
-  canInteractWithCell,
+  canInteractWithTarget,
 };
-function canInteractWithCell(unit: Unit.IUnit, x: number, y: number): boolean {
+function canInteractWithTarget(unit: Unit.IUnit, x: number, y: number): boolean {
   // Dead units cannot attack
   if (!unit.alive) {
     return false;

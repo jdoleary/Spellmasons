@@ -1,7 +1,7 @@
 import type * as PIXI from 'pixi.js';
 import { addPixiSprite, containerProjectiles } from './PixiUtils';
-import { cellToBoardCoords, lerp, distance } from './math';
-import type { Coords } from './commonTypes';
+import { lerp, distance } from './math';
+import type { Vec2 } from './commonTypes';
 
 interface Projectile {
   x: number;
@@ -16,7 +16,7 @@ interface Projectile {
 }
 const SPEED_PER_MILLI = 0.7;
 export default function createVisualProjectile(
-  coords: Coords,
+  coords: Vec2,
   toX: number,
   toY: number,
   imagePath: string,
@@ -26,22 +26,20 @@ export default function createVisualProjectile(
   sprite.anchor.y = 0.5;
   sprite.scale.set(2);
 
-  const { x, y } = cellToBoardCoords(coords.x, coords.y);
-  sprite.x = x;
-  sprite.y = y;
+  sprite.x = coords.x;
+  sprite.y = coords.y;
 
-  const { x: toXBoard, y: toYBoard } = cellToBoardCoords(toX, toY);
-  sprite.rotation = Math.atan2(toYBoard - y, toXBoard - x);
+  sprite.rotation = Math.atan2(toY - coords.y, toX - coords.x);
 
   const instance = {
-    x,
-    y,
-    startX: x,
-    startY: y,
+    x: coords.x,
+    y: coords.y,
+    startX: coords.x,
+    startY: coords.y,
     startTime: 0,
     endTime: 0,
-    toX: toXBoard,
-    toY: toYBoard,
+    toX,
+    toY,
     sprite,
   };
   return new Promise((resolve) => {

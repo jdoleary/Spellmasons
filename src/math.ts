@@ -1,5 +1,4 @@
-import { CELL_SIZE } from './config';
-import type { Coords } from './commonTypes';
+import type { Vec2 } from './commonTypes';
 import { randInt } from './rand';
 // https://webdva.github.io/how-i-implemented-client-side-linear-interpolation/
 export function lerp(start: number, end: number, time: number) {
@@ -12,21 +11,47 @@ export function lerp(start: number, end: number, time: number) {
   return start * (1 - time) + end * time;
 }
 
-// The distance between two cells if you allow diagonal movement
-export function cellDistance(cell1: Coords, cell2: Coords) {
-  return Math.max(Math.abs(cell2.x - cell1.x), Math.abs(cell2.y - cell1.y));
+// For a triangle with sides x,y, and d (desired distance / hypotenuse), find the value
+// of x and y given a known h and a known similar triangle of X,Y, and D (distance / hypotenuse)
+export function similarTriangles(X: number, Y: number, D: number, d: number): Vec2 {
+  if (D === 0 || d === 0) {
+    return { x: X, y: Y };
+  }
+  const hypotenuseRatio = d / D;
+  return {
+    x: hypotenuseRatio * X,
+    y: hypotenuseRatio * Y
+  }
 }
-export function distance(coords1: Coords, coords2: Coords) {
+
+// getCoordsAtDistanceTowardsTarget is used, for example, to move 'travelDist' distance across
+// the vector 'start' to 'end'
+// --
+// hint: Use a negative length to move away from target
+export function getCoordsAtDistanceTowardsTarget(start: Vec2, target: Vec2, travelDist: number): Vec2 {
+  const distanceBetweenPoints = distance(start, target);
+  // Travel at most length, however, don't move beyond target
+  if (travelDist >= distanceBetweenPoints) {
+    return target;
+  }
+  const result = similarTriangles(target.x - start.x, target.y - start.y, distanceBetweenPoints, travelDist)
+  return {
+    x: start.x + result.x,
+    y: start.y + result.y
+  }
+}
+
+export function distance(coords1: Vec2, coords2: Vec2): number {
   return Math.sqrt(
     Math.pow(coords2.x - coords1.x, 2) + Math.pow(coords2.y - coords1.y, 2),
   );
 }
 
 // Converts a singular index into x,y coords on a rectangle with a known width
-export function indexToXY(index: number, width: number): Coords {
+export function indexToXY(index: number, width: number): Vec2 {
   return { x: index % width, y: Math.floor(index / width) };
 }
-export function xyToIndex(coords: Coords, width: number) {
+export function xyToIndex(coords: Vec2, width: number) {
   return coords.y * width + coords.x;
 }
 
@@ -75,21 +100,4 @@ export function chooseObjectWithProbability<T extends objectWithProbability>(
   // Choose random integer within the sum of all the probabilities
   const roll = randInt(window.underworld.random, 1, maxProbability);
   return _chooseObjectWithProbability(roll, source);
-}
-// convert from cell coordinates to objective board coordinates
-export function cellToBoardCoords(cellX: number, cellY: number) {
-  return {
-    x: cellX * CELL_SIZE + CELL_SIZE / 2,
-    y: cellY * CELL_SIZE + CELL_SIZE / 2,
-  };
-}
-
-// Returns a point one step from start in the direction away from
-// awayFrom
-export function oneCellAwayFromCell(start: Coords, awayFrom: Coords): Coords {
-  const dx = start.x - awayFrom.x;
-  const dy = start.y - awayFrom.y;
-  const normalizedX = dx === 0 ? 0 : dx / Math.abs(dx);
-  const normalizedY = dy === 0 ? 0 : dy / Math.abs(dy);
-  return { x: start.x + normalizedX, y: start.y + normalizedY };
 }

@@ -1,10 +1,10 @@
 import * as Unit from '../Unit';
 import * as Pickup from '../Pickup';
 import type { Spell } from '.';
-import type { Coords } from '../commonTypes';
+import type { Vec2 } from '../commonTypes';
 import { drawSwapLine } from '../ui/PlanningView';
+import { MANA_BASE_COST, MANA_MULTIPLIER_NONE } from '../config';
 
-// TODO: Swapping with corpses destroys them due to the order of setting location
 const id = 'swap';
 const spell: Spell = {
   card: {
@@ -14,6 +14,8 @@ const spell: Spell = {
     description: `
 Swaps the caster with the source target.
     `,
+    manaCost: MANA_BASE_COST * 2,
+    manaMultiplier: MANA_MULTIPLIER_NONE,
     effect: async (state, dryRun) => {
       const { casterUnit, targets } = state;
       const target = targets[0];
@@ -21,16 +23,9 @@ Swaps the caster with the source target.
       const dx = targets[0].x - casterUnit.x;
       const dy = targets[0].y - casterUnit.y;
       // Loop through all targets and batch swap locations
-      const swapUnits: [Unit.IUnit, Coords][] = [];
-      const swapPickups: [Pickup.IPickup, Coords][] = [];
+      const swapUnits: [Unit.IUnit, Vec2][] = [];
+      const swapPickups: [Pickup.IPickup, Vec2][] = [];
       const swapLocation = { x: target.x - dx, y: target.y - dy };
-      // You cannot swap with a statically blocked cell
-      if (
-        window.underworld.isCellStaticallyBlocked(swapLocation) ||
-        window.underworld.isCellStaticallyBlocked(target)
-      ) {
-        return state;
-      }
       // The unit at the target location
       const targetUnit = window.underworld.getUnitAt(target);
       if (targetUnit) {

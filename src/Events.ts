@@ -1,4 +1,4 @@
-import type { Coords } from './commonTypes';
+import type { Vec2 } from './commonTypes';
 import type { IUnit } from './Unit';
 
 export type onDamage = {
@@ -15,7 +15,7 @@ const onDeathSource: { [name: string]: onDeath } = {};
 
 export type onMove = {
   // Returns a possibly modified coordinate
-  (unit: IUnit, newLocation: Coords): Coords;
+  (unit: IUnit, newLocation: Vec2): Vec2;
 };
 const onMoveSource: { [name: string]: onMove } = {};
 

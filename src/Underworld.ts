@@ -1,4 +1,4 @@
-import PF from 'pathfinding';
+import * as PIXI from 'pixi.js';
 import seedrandom from 'seedrandom';
 import * as config from './config';
 import * as Unit from './Unit';
@@ -11,20 +11,22 @@ import * as Cards from './cards';
 import * as Image from './Image';
 import { MESSAGE_TYPES } from './MessageTypes';
 import {
-  addPixiSprite,
   app,
   containerBoard,
   containerSpells,
   containerUI,
 } from './PixiUtils';
 import floatingText from './FloatingText';
-import { UnitType, Coords, Faction } from './commonTypes';
+import { UnitType, Vec2, Faction } from './commonTypes';
 import Events from './Events';
 import { allUnits } from './units';
-import { updatePlanningView } from './ui/PlanningView';
+import { updatePlanningView, updateTooltipPosition, updateTooltipSpellCost } from './ui/PlanningView';
 import { ILevel, getEnemiesForAltitude } from './overworld';
 import { setRoute, Route } from './routes';
 import { prng, randInt } from './rand';
+import { calculateManaHealthCost } from './cards/cardUtils';
+import { moveWithCollisions, moveWithLineCollisions } from './collision/moveWithCollision';
+import type { LineSegment } from './collision/collisionMath';
 
 export enum turn_phase {
   PlayerTurns,
@@ -57,20 +59,19 @@ export default class Underworld {
   // meaning, players take their turn, npcs take their
   // turn, then it resets to player turn, that is a full "turn"
   turn_number: number = -1;
-  height: number = config.BOARD_HEIGHT;
-  width: number = config.BOARD_WIDTH;
+  height: number = config.MAP_HEIGHT;
+  width: number = config.MAP_WIDTH;
   players: Player.IPlayer[] = [];
   units: Unit.IUnit[] = [];
   pickups: Pickup.IPickup[] = [];
   obstacles: Obstacle.IObstacle[] = [];
+  walls: LineSegment[] = [];
   secondsLeftForTurn: number = config.SECONDS_PER_TURN;
   turnInterval: any;
   hostClientId: string = '';
   level?: ILevel;
   choseUpgrade = new Set<string>();
 
-  pfGrid: PF.Grid;
-  pfFinder: PF.BiBestFirstFinder;
   constructor(seed: string, RNGState: object | boolean = true) {
     window.underworld = this;
     this.seed = seed;
@@ -79,42 +80,21 @@ export default class Underworld {
     // state of a state object, rehydrates the RNG to a particular state
     this.random = seedrandom(this.seed, { state: RNGState });
 
-    // Setup pathfinding
-    this.pfGrid = new PF.Grid(config.BOARD_WIDTH, config.BOARD_HEIGHT);
-    this.pfFinder = new PF.BiBestFirstFinder({
-      diagonalMovement: PF.DiagonalMovement.Never,
-    });
+    const mapGraphics = new PIXI.Graphics();
+    containerBoard.addChild(mapGraphics);
+    mapGraphics.lineStyle(3, 0x000000, 1);
+    mapGraphics.beginFill(0x795644, 1);
+    mapGraphics.drawRect(0, 0, config.MAP_WIDTH, config.MAP_HEIGHT);
+    mapGraphics.endFill();
 
-    // Make sprites for the board tiles
-    let cell;
-    const makeWall = (x: number, y: number) => {
-      const wall = addPixiSprite('tiles/wall.png', containerBoard);
-      wall.x = x * config.CELL_SIZE;
-      wall.y = y * config.CELL_SIZE;
+    this.walls.push({ p1: { x: 0, y: 0 }, p2: { x: config.MAP_WIDTH, y: 0 } });
+    this.walls.push({ p1: { x: 0, y: 0 }, p2: { x: 0, y: config.MAP_HEIGHT } });
+    this.walls.push({ p1: { x: config.MAP_WIDTH, y: config.MAP_HEIGHT }, p2: { x: config.MAP_WIDTH, y: 0 } });
+    this.walls.push({ p1: { x: config.MAP_WIDTH, y: config.MAP_HEIGHT }, p2: { x: 0, y: config.MAP_HEIGHT } });
 
-    }
-    // Make corners
-    makeWall(-1, -1);
-    makeWall(-1, config.BOARD_HEIGHT);
-    makeWall(config.BOARD_WIDTH, -1);
-    makeWall(config.BOARD_WIDTH, config.BOARD_HEIGHT);
-    // Make floor and walls
-    for (let x = 0; x < config.BOARD_WIDTH; x++) {
-      for (let y = 0; y < config.BOARD_HEIGHT; y++) {
-        cell = addPixiSprite('tiles/ground.png', containerBoard);
-        cell.x = x * config.CELL_SIZE;
-        cell.y = y * config.CELL_SIZE;
-        if (x == 0) {
-          makeWall(-1, y);
-          makeWall(config.BOARD_WIDTH, y);
-        }
-        if (y == 0) {
-          makeWall(x, -1);
-          makeWall(x, config.BOARD_HEIGHT);
-        }
-      }
-    }
+    // TODO this probably shouldn't get initialized here
     this.startTurnTimer();
+    this.gameLoopUnits();
   }
   startTurnTimer() {
     // Limit turn duration
@@ -156,6 +136,32 @@ export default class Underworld {
       }
     }, 1000);
   }
+  gameLoopUnits = () => {
+    for (let u of this.units) {
+      // Sync Image even for non moving units since they may be moved by forces other than themselves
+      Unit.syncImage(u)
+      if (u.moveTarget) {
+        // Move towards target
+        const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.moveTarget, u.moveSpeed)
+        moveWithCollisions(u, stepTowardsTarget, this.units)
+        moveWithLineCollisions(u, stepTowardsTarget, this.walls);
+
+        // UNIT_STOP_MOVING_MARGIN ensures that units wont continue to move imperceptibly while
+        // players wait for the seemingly non-moving unit's turn to end (which ends when it's done moving via resolveDoneMoving)
+        // --
+        // Also stops moving if moveTarget is undefined in the event that some other code sets the move target to undefined, we
+        // want to make sure this promise resolves so the game doesn't get stuck
+        if (u.moveTarget === undefined || Math.abs(u.x - u.lastX) < config.UNIT_STOP_MOVING_MARGIN && Math.abs(u.y - u.lastY) < config.UNIT_STOP_MOVING_MARGIN) {
+          u.resolveDoneMoving();
+          u.moveTarget = undefined;
+        }
+        // check for collisions with pickups in new location
+        this.checkPickupCollisions(u);
+        // TODO should I have other units (moved via collision also check for pickups?)
+      }
+    }
+    requestAnimationFrame(this.gameLoopUnits)
+  }
   // Returns true if it is the current players turn
   isMyTurn() {
     return window.underworld.turn_phase == turn_phase.PlayerTurns
@@ -176,20 +182,6 @@ export default class Underworld {
     }
     for (let x of this.obstacles) {
       Image.cleanup(x.image);
-    }
-  }
-  findPath(from: Coords, to: Coords): number[][] {
-    try {
-      return this.pfFinder.findPath(
-        from.x,
-        from.y,
-        to.x,
-        to.y,
-        this.pfGrid.clone(),
-      );
-    } catch (e) {
-      console.error(e);
-      return [];
     }
   }
   moveToNextLevel(level: ILevel) {
@@ -219,9 +211,9 @@ export default class Underworld {
     this.level = level;
     // Show text in center of screen for the new level
     floatingText({
-      cell: {
-        x: config.BOARD_WIDTH / 2 - 0.5,
-        y: config.BOARD_HEIGHT / 2,
+      coords: {
+        x: config.MAP_WIDTH / 2,
+        y: config.MAP_HEIGHT / 2,
       },
       text: `Altitude ${this.level.altitude}`,
       style: {
@@ -248,77 +240,61 @@ export default class Underworld {
       console.error('elLevelIndicator is null');
     }
     for (let i = 0; i < config.NUM_PICKUPS_PER_LEVEL; i++) {
-      const coords = this.getRandomEmptyCell({ xMin: 2 });
-      if (coords) {
-        const randomPickupIndex = randInt(this.random,
-          0,
-          Object.values(Pickup.pickups).length - 1,
-        );
-        const pickup = Pickup.pickups[randomPickupIndex];
-        Pickup.create(
-          coords.x,
-          coords.y,
-          pickup.name,
-          pickup.description,
-          true,
-          pickup.imagePath,
-          true,
-          pickup.effect,
-        );
-      } else {
-        console.error('Pickup not spawned due to no empty cells');
-      }
+      const coords = this.getRandomCoordsWithinBounds({ xMin: 2 });
+      const randomPickupIndex = randInt(this.random,
+        0,
+        Object.values(Pickup.pickups).length - 1,
+      );
+      const pickup = Pickup.pickups[randomPickupIndex];
+      Pickup.create(
+        coords.x,
+        coords.y,
+        pickup.name,
+        pickup.description,
+        true,
+        pickup.imagePath,
+        true,
+        pickup.effect,
+      );
     }
     for (let i = 0; i < config.NUM_OBSTACLES_PER_LEVEL; i++) {
-      const coords = this.getRandomEmptyCell({ xMin: 2 });
-      if (coords) {
-        const randomIndex = randInt(this.random,
-          0,
-          Obstacle.obstacleSource.length - 1,
-        );
-        const obstacle = Obstacle.obstacleSource[randomIndex];
-        const newObstacle = Obstacle.create(coords.x, coords.y, obstacle);
-        // Ensure the players have a path to the portal
-        const pathToPortal = this.findPath(
-          { x: 0, y: 0 },
-          config.PORTAL_COORDINATES,
-        );
-        if (pathToPortal.length === 0) {
-          Obstacle.remove(newObstacle);
-        }
-      } else {
-        console.error('Obstacle not spawned due to no empty cells');
-      }
+      const coords = this.getRandomCoordsWithinBounds({ xMin: 2 });
+      const randomIndex = randInt(this.random,
+        0,
+        Obstacle.obstacleSource.length - 1,
+      );
+      const obstacle = Obstacle.obstacleSource[randomIndex];
+      Obstacle.create(coords.x, coords.y, obstacle);
+      // TODO: Ensure the players have a path to the portal
     }
     // Spawn units at the start of the level
     const enemyIndexes = getEnemiesForAltitude(level.altitude);
     for (let index of enemyIndexes) {
-      const coords = this.getRandomEmptyCell({ xMin: 2 });
-      if (coords) {
-        const sourceUnit = Object.values(allUnits)[index];
-        const unit = Unit.create(
-          sourceUnit.id,
-          coords.x,
-          coords.y,
-          Faction.ENEMY,
-          sourceUnit.info.image,
-          UnitType.AI,
-          sourceUnit.info.subtype,
-        );
-        const roll = randInt(this.random, 0, 100);
-        if (roll <= config.PERCENT_CHANCE_OF_HEAVY_UNIT) {
-          unit.healthMax = config.UNIT_BASE_HEALTH * 2;
-          unit.health = unit.healthMax;
-          unit.damage = config.UNIT_BASE_DAMAGE * 2;
-          unit.image.sprite.scale.set(0);
-          Image.scale(unit.image, 1.0);
-        } else {
-          // Start images small and make them grow when they spawn in
-          unit.image.sprite.scale.set(0);
-          Image.scale(unit.image, 0.8);
-        }
+      const coords = this.getRandomCoordsWithinBounds({ xMin: 2 });
+      const sourceUnit = Object.values(allUnits)[index];
+      let unit: Unit.IUnit = Unit.create(
+        sourceUnit.id,
+        coords.x,
+        coords.y,
+        Faction.ENEMY,
+        sourceUnit.info.image,
+        UnitType.AI,
+        sourceUnit.info.subtype,
+        sourceUnit.unitProps
+      );
+
+      const roll = randInt(this.random, 0, 100);
+      if (roll <= config.PERCENT_CHANCE_OF_HEAVY_UNIT) {
+        unit.healthMax = config.UNIT_BASE_HEALTH * 2;
+        unit.health = unit.healthMax;
+        unit.damage = config.UNIT_BASE_DAMAGE * 2;
+        unit.image.sprite.scale.set(0);
+        unit.radius = config.COLLISION_MESH_RADIUS;
+        Image.scale(unit.image, 1.0);
       } else {
-        console.error('Unit not spawned due to no empty cells');
+        // Start images small and make them grow when they spawn in
+        unit.image.sprite.scale.set(0);
+        Image.scale(unit.image, config.NON_HEAVY_UNIT_SCALE);
       }
     }
 
@@ -331,27 +307,16 @@ export default class Underworld {
   }
   checkPickupCollisions(unit: Unit.IUnit) {
     for (let pu of this.pickups) {
-      if (unit.x == pu.x && unit.y == pu.y) {
+      if (math.distance(unit, pu) <= Pickup.PICKUP_RADIUS) {
         Pickup.triggerPickup(pu, unit);
       }
     }
   }
-  handlePossibleCorpseCollision(unit: Unit.IUnit) {
-    for (let u of this.units) {
-      // If unit is colliding with a corpse, destroy the corpse
-      if (!u.alive && u !== unit && unit.x == u.x && unit.y == u.y) {
-        Unit.cleanup(u);
-      }
-    }
-  }
-  getCellFromCurrentMousePos() {
+  getMousePos(): Vec2 {
     const { x, y } = containerBoard.toLocal(
       app.renderer.plugins.interaction.mouse.global,
     );
-    return {
-      x: Math.floor(x / config.CELL_SIZE),
-      y: Math.floor(y / config.CELL_SIZE),
-    };
+    return { x, y };
   }
   goToNextPhaseIfAppropriate(): boolean {
     if (this.turn_phase === turn_phase.PlayerTurns) {
@@ -369,6 +334,10 @@ export default class Underworld {
   endPlayerTurnPhase() {
     // Move onto next phase
     this.setTurnPhase(turn_phase.NPC);
+    // Add mana to AI units
+    for (let unit of this.units.filter((u) => u.unitType === UnitType.AI && u.alive)) {
+      unit.mana += unit.manaPerTurn;
+    }
   }
   endNPCTurnPhase() {
     // Move onto next phase
@@ -401,8 +370,10 @@ export default class Underworld {
       console.error("Attempted to initialize turn for a non existant player index")
       return
     }
-    // Start the currentTurnPlayer's turn
-    Player.checkForGetCardOnTurn(player);
+    // Give mana at the start of turn
+    player.unit.mana += player.unit.manaPerTurn;
+    Unit.syncPlayerHealthManaUI();
+
     // If this current player is NOT able to take their turn...
     if (!Player.ableToTakeTurn(player)) {
       // Skip them
@@ -537,85 +508,17 @@ export default class Underworld {
       // Now that level is complete, move to the Upgrade gamestate where players can choose upgrades
       // before moving on to the next level
       setRoute(Route.Upgrade);
+      // Reset the playerTurnIndex
+      this.playerTurnIndex = 0;
       // Return of true signifies it went to the next level
       return true;
     }
     return false;
   }
-  // Generate an array of cell coordinates in shuffled order
-  // between optional boundaries
-  _getShuffledCoordinates({ xMin, xMax, yMin, yMax }: Bounds): Coords[] {
-    const numberOfIndices = config.BOARD_WIDTH * config.BOARD_HEIGHT;
-    const indices: number[] = [];
-    // Populate an array with the 1-dimentional indices of the board
-    // so if the board is 2x2, the array will be [0,1,2,3]
-    for (let i = 0; i < numberOfIndices; i++) {
-      indices.push(i);
-    }
-    // Now randomly remove indicies from that array and add them to a new array
-    const shuffledIndices: Coords[] = [];
-    for (let i = 0; i < numberOfIndices; i++) {
-      const metaIndex = randInt(this.random, 0, indices.length);
-      // pull chosen index out of the indices array so that it wont be picked next loop
-      const pluckedIndex = indices.splice(metaIndex, 1)[0];
-      if (pluckedIndex === undefined) {
-        continue;
-      }
-      const coords = math.indexToXY(pluckedIndex, config.BOARD_WIDTH);
-      // If plucked index is not within specified bounds continue
-      if (xMin !== undefined && coords.x < xMin) {
-        continue;
-      }
-      if (xMax !== undefined && coords.x > xMax) {
-        continue;
-      }
-      if (yMin !== undefined && coords.y < yMin) {
-        continue;
-      }
-      if (yMax !== undefined && coords.y > yMax) {
-        continue;
-      }
-      // If coordinates are within specified bounds, or if there are not specified bounds,
-      // add it to the list of shuffled coordinates
-      shuffledIndices.push(coords);
-    }
-    // Resulting in an array of shuffled indicies (e.g. [2,1,0,3])
-    // This new array can now be used to randomly access cell coordinates
-    // using (math.indexToXY) multiple times without getting the same index more than once
-    return shuffledIndices;
-  }
-  isCellEmpty({ x, y }: Coords): boolean {
-    // Test for units in cell
-    for (let u of this.units) {
-      if (u.x === x && u.y === y) {
-        return false;
-      }
-    }
-    // Test for pickups
-    for (let u of this.pickups) {
-      if (u.x === x && u.y === y) {
-        return false;
-      }
-    }
-    // Test for obstacles
-    for (let o of this.obstacles) {
-      if (o.x === x && o.y === y) {
-        return false;
-      }
-    }
-    return true;
-  }
-  getRandomEmptyCell(bounds: Bounds): Coords | undefined {
-    const shuffledCoords = this._getShuffledCoordinates(bounds);
-    for (let coords of shuffledCoords) {
-      const isEmpy = this.isCellEmpty(coords);
-      // if cell if empty return the coords, if it's not loop to the next coords that may be empty
-      if (isEmpy) {
-        return coords;
-      }
-    }
-    // Unable to find an empty cell in the given bounds
-    return undefined
+  getRandomCoordsWithinBounds(bounds: Bounds): Vec2 {
+    const x = randInt(window.underworld.random, bounds.xMin || 0, bounds.xMax || config.MAP_WIDTH);
+    const y = randInt(window.underworld.random, bounds.yMin || 0, bounds.yMax || config.MAP_HEIGHT);
+    return { x, y };
   }
   setTurnPhase(p: turn_phase) {
     // Before the turn phase changes, check if the game should transition to game over
@@ -634,9 +537,7 @@ export default class Underworld {
     // Clean up invalid units
     const keepUnits = [];
     for (let u of this.units) {
-      if (u.flaggedForRemoval) {
-        this.setWalkableAt(u, true);
-      } else {
+      if (!u.flaggedForRemoval) {
         keepUnits.push(u);
       }
     }
@@ -698,7 +599,7 @@ export default class Underworld {
 
         // Since NPC turn is over, update the planningView
         // They may have moved or unfrozen which would update
-        // which cells they can attack next turn
+        // where they can attack next turn
         updatePlanningView();
         console.log('end switch to NPC turn');
         break;
@@ -716,7 +617,7 @@ export default class Underworld {
     // Units who are obstructed will not move due to collision checks in Unit.moveTo
     AIUnits.filter((u) => u.intendedNextMove !== undefined).forEach((u) => {
       if (u.intendedNextMove) {
-        promises.push(Unit.moveTo(u, u.intendedNextMove));
+        promises.push(Unit.moveTowards(u, u.intendedNextMove));
       }
     });
     // While there are units who intend to move but havent yet
@@ -730,7 +631,7 @@ export default class Underworld {
       // Try moving them again
       remainingUnitsWhoIntendToMove.forEach((u) => {
         if (u.intendedNextMove) {
-          promises.push(Unit.moveTo(u, u.intendedNextMove));
+          promises.push(Unit.moveTowards(u, u.intendedNextMove));
         }
       });
     } while (
@@ -744,61 +645,29 @@ export default class Underworld {
     return promises;
   }
 
-  getCoordsWithinDistanceOfTarget(
-    targetX: number,
-    targetY: number,
+  getCoordsForUnitsWithinDistanceOfTarget(
+    target: Vec2,
     distance: number,
-  ): Coords[] {
-    const coords: Coords[] = [];
-    for (let cellX = 0; cellX < config.BOARD_WIDTH; cellX++) {
-      for (let cellY = 0; cellY < config.BOARD_HEIGHT; cellY++) {
-        if (
-          cellX <= targetX + distance &&
-          cellX >= targetX - distance &&
-          cellY <= targetY + distance &&
-          cellY >= targetY - distance
-        ) {
-          coords.push({ x: cellX, y: cellY });
-        }
+  ): Vec2[] {
+    const coords: Vec2[] = [];
+    for (let unit of this.units) {
+      if (math.distance(unit, target) <= distance) {
+        coords.push({ x: unit.x, y: unit.y });
       }
     }
     return coords;
   }
-  getTouchingUnitsRecursive(
-    x: number,
-    y: number,
-    ignore: Coords[] = [],
-  ): Unit.IUnit[] {
-    const touchingDistance = 1;
-    let touching = this.units.filter((u) => {
-      return (
-        u.x <= x + touchingDistance &&
-        u.x >= x - touchingDistance &&
-        u.y <= y + touchingDistance &&
-        u.y >= y - touchingDistance &&
-        !ignore.find((i) => i.x == u.x && i.y == u.y)
-      );
-    });
-    ignore = ignore.concat(touching.map((u) => ({ x: u.x, y: u.y })));
-    for (let u of touching) {
-      touching = touching.concat(
-        this.getTouchingUnitsRecursive(u.x, u.y, ignore),
-      );
-    }
-    return touching;
+  getUnitAt(coords: Vec2): Unit.IUnit | undefined {
+    return this.units.find((u) => math.distance(u, coords) <= config.COLLISION_MESH_RADIUS);
   }
-  getUnitAt(cell: Coords): Unit.IUnit | undefined {
-    return this.units.find((u) => u.x === cell.x && u.y === cell.y);
+  getPickupAt(coords: Vec2): Pickup.IPickup | undefined {
+    return this.pickups.find((p) => math.distance(p, coords) <= config.COLLISION_MESH_RADIUS);
   }
-  getPickupAt(cell: Coords): Pickup.IPickup | undefined {
-    return this.pickups.find((p) => p.x === cell.x && p.y === cell.y);
-  }
-  getObstacleAt(cell: Coords): Obstacle.IObstacle | undefined {
-    return this.obstacles.find((p) => p.x === cell.x && p.y === cell.y);
+  getObstacleAt(coords: Vec2): Obstacle.IObstacle | undefined {
+    return this.obstacles.find((o) => math.distance(o, coords) <= config.COLLISION_MESH_RADIUS);
   }
   addUnitToArray(unit: Unit.IUnit) {
     this.units.push(unit);
-    this.setWalkableAt(unit, false);
   }
   removePickupFromArray(pickup: Pickup.IPickup) {
     this.pickups = this.pickups.filter((p) => p !== pickup);
@@ -808,63 +677,30 @@ export default class Underworld {
   }
   removeObstacleFromArray(obstacle: Obstacle.IObstacle) {
     this.obstacles = this.obstacles.filter((o) => o !== obstacle);
-    this.setWalkableAt(obstacle, true);
   }
   addObstacleToArray(o: Obstacle.IObstacle) {
     this.obstacles.push(o);
-    this.setWalkableAt(o, false);
-  }
-  // A cell is statically blocked if it does not exist or is occupied by something immovable
-  isCellStaticallyBlocked(coordinates: Coords): boolean {
-    const { x, y } = coordinates;
-    // Out of map bounds is considered "obstructed"
-    if (x < 0 || y < 0 || x >= config.BOARD_WIDTH || y >= config.BOARD_HEIGHT) {
-      return true;
-    }
-    // Obstacles statically block cells
-    for (let o of this.obstacles) {
-      if (o.x === x && o.y === y) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-  isCellObstructed(coordinates: Coords): boolean {
-    if (this.isCellStaticallyBlocked(coordinates)) {
-      return true;
-    }
-    const { x, y } = coordinates;
-    // Cell is obstructed if it is already occupied by a living unit
-    // note: corpses do not obstruct because they are destroyed when walked on
-    for (let unit of this.units) {
-      if (unit.alive && unit.x === x && unit.y === y) {
-        return true;
-      }
-    }
-    return false;
   }
   async castCards(
     casterPlayer: Player.IPlayer,
-    cards: string[],
-    target: Coords,
+    cardIds: string[],
+    target: Vec2,
     dryRun: boolean,
   ): Promise<Cards.EffectState> {
     let effectState: Cards.EffectState = {
       casterPlayer,
       casterUnit: casterPlayer.unit,
       targets: [target],
-      cards,
       aggregator: {},
     };
     if (!casterPlayer.unit.alive) {
       // Prevent dead players from casting
       return effectState;
     }
-    let cardsToLoop = effectState.cards;
-    for (let index = 0; index < cardsToLoop.length; index++) {
-      const cardId = cardsToLoop[index];
-      const card = Cards.allCards.find((c) => c.id == cardId);
+    const cards = Cards.getCardsFromIds(cardIds);
+    const { manaCost, healthCost } = calculateManaHealthCost(cards, casterPlayer.unit, math.distance(casterPlayer.unit, target));
+    for (let index = 0; index < cards.length; index++) {
+      const card = cards[index];
       const animationPromises = [];
       if (card) {
         // Show the card that's being cast:
@@ -884,8 +720,6 @@ export default class Underworld {
         }
         const { targets: previousTargets } = effectState;
         effectState = await card.effect(effectState, dryRun, index);
-        // Update cardsToLoop (some cards can change the following cards)
-        cardsToLoop = effectState.cards;
         // Clear images from previous card before drawing the images from the new card
         containerSpells.removeChildren();
         // Animate target additions:
@@ -901,8 +735,21 @@ export default class Underworld {
             animationPromises.push(drawTarget(target.x, target.y, !dryRun));
           }
         }
+
         await Promise.all(animationPromises);
       }
+    }
+    if (!dryRun) {
+      // Apply mana cost to caster
+      casterPlayer.unit.mana -= manaCost;
+      // Apply health cost to caster
+      if (healthCost > 0) {
+        Unit.takeDamage(casterPlayer.unit, healthCost)
+      }
+      Unit.syncPlayerHealthManaUI();
+    } else {
+      updateTooltipSpellCost({ manaCost, healthCost, willCauseDeath: healthCost >= casterPlayer.unit.health })
+      updateTooltipPosition();
     }
     if (!dryRun) {
       // Clear spell animations once all cards are done playing their animations
@@ -932,14 +779,6 @@ export default class Underworld {
       // the state of the Random Number Generator
       RNGState: this.random.state()
     };
-  }
-  setWalkableAt(coords: Coords, walkable: boolean) {
-    // Protect against trying to setWalkable for invalid coordinates
-    if (0 <= coords.x && coords.x < this.pfGrid.width) {
-      if (0 <= coords.y && coords.y < this.pfGrid.height) {
-        this.pfGrid.setWalkableAt(coords.x, coords.y, walkable);
-      }
-    }
   }
 }
 

@@ -1,0 +1,1 @@
+export const targetBlue = 0x00a5df;

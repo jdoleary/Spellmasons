@@ -12,40 +12,34 @@ const unit: UnitSource = {
     subtype: UnitSubType.AI_bishop,
     probability: 50,
   },
+  unitProps: {
+    attackRange: 300
+  },
   action: async (unit: Unit.IUnit) => {
-    // Shoot at enemy if in same horizontal, diagonal, or vertical
-    let targetEnemy;
-    for (let enemy of Unit.livingUnitsInDifferentFaction(unit)) {
-      if (canInteractWithCell(unit, enemy.x, enemy.y)) {
-        targetEnemy = enemy;
-        break;
-      }
+    // Move opposite to enemy if the enemy is too close
+    const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit);
+    if (closestEnemy && math.distance(unit, closestEnemy) < (unit.attackRange - 10)) {
+      const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestEnemy, -unit.moveDistance);
+      unit.intendedNextMove = moveTo;
     }
-    if (targetEnemy) {
+    // Shoot at enemy
+    if (closestEnemy && canInteractWithTarget(unit, closestEnemy.x, closestEnemy.y)) {
       await createVisualProjectile(
         unit,
-        targetEnemy.x,
-        targetEnemy.y,
+        closestEnemy.x,
+        closestEnemy.y,
         'arrow.png',
       );
-      await Unit.takeDamage(targetEnemy, unit.damage);
-    } else {
-      // Move opposite to enemy
-      const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit);
-      if (closestEnemy) {
-        const moveTo = math.oneCellAwayFromCell(unit, closestEnemy);
-        unit.intendedNextMove = moveTo;
-      }
+      await Unit.takeDamage(closestEnemy, unit.damage);
     }
   },
-  canInteractWithCell,
+  canInteractWithTarget,
 };
-function canInteractWithCell(unit: Unit.IUnit, x: number, y: number): boolean {
+function canInteractWithTarget(unit: Unit.IUnit, x: number, y: number): boolean {
   // Dead units cannot attack
   if (!unit.alive) {
     return false;
   }
-  const isDiagonal = Math.abs(x - unit.x) === Math.abs(y - unit.y);
-  return isDiagonal;
+  return math.distance(unit, { x, y }) <= unit.attackRange;
 }
 export default unit;
