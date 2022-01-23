@@ -41,6 +41,17 @@ describe('moveWithCollisions', () => {
         const expected = destination;
         expect(actual).toEqual(expected);
     });
+    // In use this function will be used on the array containing ALL circles so
+    // it will probably include the mover in the circles array, so we don't
+    // want the circle to run collision math on itself
+    it("should not make a circle collide with itself", () => {
+        const c1: Circle = { position: { x: 0, y: 0 }, radius: 5 };
+        const destination = { x: 1, y: 0 };
+        moveWithCollisions(c1, destination, [c1]);
+        const actual = c1.position;
+        const expected = destination;
+        expect(actual).toEqual(expected);
+    });
     describe('colliding circles', () => {
         describe('performance', () => {
             it('should support calculating collisions for 1000 circles in under 16 milliseconds', () => {

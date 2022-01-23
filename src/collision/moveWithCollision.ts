@@ -65,7 +65,10 @@ export function moveWithCollisions(mover: Circle, destination: Vec2, circles: Ci
     // Actually move the mover
     mover.position = destination;
     for (let other of circles) {
-        repelCircles(mover, originalPosition, other);
+        // Do not repel self
+        if (mover !== other) {
+            repelCircles(mover, originalPosition, other);
+        }
     }
 }
 // repelCircles moves two intersecting circles away from each other
