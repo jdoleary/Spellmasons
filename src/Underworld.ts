@@ -11,7 +11,6 @@ import * as Cards from './cards';
 import * as Image from './Image';
 import { MESSAGE_TYPES } from './MessageTypes';
 import {
-  addPixiSprite,
   app,
   containerBoard,
   containerSpells,
@@ -26,8 +25,8 @@ import { ILevel, getEnemiesForAltitude } from './overworld';
 import { setRoute, Route } from './routes';
 import { prng, randInt } from './rand';
 import { calculateManaHealthCost } from './cards/cardUtils';
-import unit from './units/manBlue';
-import { moveWithCollisions } from './collision/moveWithCollision';
+import { moveWithCollisions, moveWithLineCollisions } from './collision/moveWithCollision';
+import type { LineSegment } from './collision/collisionMath';
 
 export enum turn_phase {
   PlayerTurns,
@@ -66,6 +65,7 @@ export default class Underworld {
   units: Unit.IUnit[] = [];
   pickups: Pickup.IPickup[] = [];
   obstacles: Obstacle.IObstacle[] = [];
+  walls: LineSegment[] = [];
   secondsLeftForTurn: number = config.SECONDS_PER_TURN;
   turnInterval: any;
   hostClientId: string = '';
@@ -86,6 +86,11 @@ export default class Underworld {
     mapGraphics.beginFill(0x795644, 1);
     mapGraphics.drawRect(0, 0, config.MAP_WIDTH, config.MAP_HEIGHT);
     mapGraphics.endFill();
+
+    this.walls.push({ p1: { x: 0, y: 0 }, p2: { x: config.MAP_WIDTH, y: 0 } });
+    this.walls.push({ p1: { x: 0, y: 0 }, p2: { x: 0, y: config.MAP_HEIGHT } });
+    this.walls.push({ p1: { x: config.MAP_WIDTH, y: config.MAP_HEIGHT }, p2: { x: config.MAP_WIDTH, y: 0 } });
+    this.walls.push({ p1: { x: config.MAP_WIDTH, y: config.MAP_HEIGHT }, p2: { x: 0, y: config.MAP_HEIGHT } });
 
     // TODO this probably shouldn't get initialized here
     this.startTurnTimer();
@@ -133,17 +138,20 @@ export default class Underworld {
   }
   gameLoopUnits = () => {
     for (let u of this.units) {
-      // Move towards target
-      const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.moveTarget, u.moveSpeed)
-      moveWithCollisions(u, stepTowardsTarget, this.units)
-      if (u.x === u.moveTarget.x && u.y === u.moveTarget.y) {
-        // TODO: Problem, due to collisions the unit may not end up at their target position so the promise will never resolve
-        u.resolveDoneMoving();
+      if (u.moveTarget) {
+        // Move towards target
+        const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.moveTarget, u.moveSpeed)
+        moveWithCollisions(u, stepTowardsTarget, this.units)
+        moveWithLineCollisions(u, stepTowardsTarget, this.walls);
+        if (u.x === u.moveTarget.x && u.y === u.moveTarget.y) {
+          // TODO: Problem, due to collisions the unit may not end up at their target position so the promise will never resolve
+          u.resolveDoneMoving();
+        }
+        Unit.syncImage(u)
+        // check for collisions with pickups in new location
+        this.checkPickupCollisions(u);
+        // TODO should I have other units (moved via collision also check for pickups?)
       }
-      Unit.syncImage(u)
-      // check for collisions with pickups in new location
-      this.checkPickupCollisions(u);
-      // TODO should I have other units (moved via collision also check for pickups?)
     }
     requestAnimationFrame(this.gameLoopUnits)
   }
