@@ -29,7 +29,7 @@ export interface IUnit {
   unitSourceId: string;
   x: number;
   y: number;
-  moveTarget: Vec2;
+  moveTarget?: Vec2;
   moveSpeed: number;
   // A resolve callback for when a unit is done moving
   resolveDoneMoving: () => void;
@@ -81,7 +81,7 @@ export function create(
     x,
     y,
     radius: UNIT_BASE_RADIUS,
-    moveTarget: { x, y },
+    moveTarget: undefined,
     moveSpeed: config.UNIT_MOVE_SPEED,
     resolveDoneMoving: () => { },
     moveDistance: config.UNIT_BASE_MOVE_DISTANCE,
@@ -338,8 +338,7 @@ export function setLocation(unit: IUnit, coordinates: Vec2): Promise<void> {
   // Set state instantly to new position
   unit.x = coordinates.x;
   unit.y = coordinates.y;
-  unit.moveTarget.x = unit.x;
-  unit.moveTarget.y = unit.y;
+  unit.moveTarget = undefined;
   // Animate movement visually
   return Image.move(unit.image, unit.x, unit.y);
 }
