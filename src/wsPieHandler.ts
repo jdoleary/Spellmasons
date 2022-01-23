@@ -88,8 +88,10 @@ let onDataQueue: OnDataArgs[] = [];
 function handleOnDataMessageSyncronously(d: OnDataArgs) {
   // Queue message for processing one at a time
   onDataQueue.push(d);
+  // 10 is an arbitrary limit which will report that something may be wrong
+  // because it's unusual for the queue to get this large
   if (onDataQueue.length > 10) {
-    console.warn("onData queue is growing unusually large: ", onDataQueue.length);
+    console.warn("onData queue is growing unusually large: ", onDataQueue.length, "stuck on message: ", currentlyProcessingOnDataMessage);
   }
   // If game is ready to process messages, begin processing
   // (if not, they will remain in the queue until the game is ready)
@@ -98,10 +100,14 @@ function handleOnDataMessageSyncronously(d: OnDataArgs) {
     processNextInQueue();
   }
 }
+// currentlyProcessingOnDataMessage is used to help with bug reports to show
+// which message is stuck and didn't finish being processed.
+let currentlyProcessingOnDataMessage: any = null;
 export function processNextInQueue() {
   messageQueue.processNextInQueue(onDataQueue, handleOnDataMessage);
 }
 async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
+  currentlyProcessingOnDataMessage = d;
   const { payload, fromClient } = d;
   const type: MESSAGE_TYPES = payload.type;
   console.log("Handle ONDATA", type, payload)
