@@ -171,7 +171,7 @@ describe('math', () => {
       expect(actual).toEqual(expected);
     });
     it('should return target if travelDist is greater than the distance to the target so the returned coords are not beyond the target', () => {
-      const start = { x: 3, y: 4 };
+      const start = { x: 3.1253245123, y: 4.4239879812 };
       const target = { x: 10, y: 10 };
       const travelDist = 5000;
       const actual = getCoordsAtDistanceTowardsTarget(start, target, travelDist);

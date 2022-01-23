@@ -31,8 +31,10 @@ export function similarTriangles(X: number, Y: number, D: number, d: number): Ve
 export function getCoordsAtDistanceTowardsTarget(start: Vec2, target: Vec2, travelDist: number): Vec2 {
   const distanceBetweenPoints = distance(start, target);
   // Travel at most length, however, don't move beyond target
-  const travelDistance = Math.min(travelDist, distanceBetweenPoints)
-  const result = similarTriangles(target.x - start.x, target.y - start.y, distanceBetweenPoints, travelDistance)
+  if (travelDist >= distanceBetweenPoints) {
+    return target;
+  }
+  const result = similarTriangles(target.x - start.x, target.y - start.y, distanceBetweenPoints, travelDist)
   return {
     x: start.x + result.x,
     y: start.y + result.y
