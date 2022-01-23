@@ -29,6 +29,11 @@ export interface IUnit {
   unitSourceId: string;
   x: number;
   y: number;
+  // lastX and lastY are used to determine when a unit has finished
+  // moving (because then their current x,y and lastX,lastY will be 
+  // identical)
+  lastX: number;
+  lastY: number;
   moveTarget?: Vec2;
   moveSpeed: number;
   // A resolve callback for when a unit is done moving
@@ -80,6 +85,8 @@ export function create(
     unitSourceId,
     x,
     y,
+    lastX: x,
+    lastY: y,
     radius: UNIT_BASE_RADIUS,
     moveTarget: undefined,
     moveSpeed: config.UNIT_MOVE_SPEED,
@@ -354,6 +361,8 @@ export function changeFaction(unit: IUnit, faction: Faction) {
 
 // syncImage updates a unit's Image to match it's game state
 export function syncImage(unit: IUnit) {
+  unit.lastX = unit.image.sprite.x;
+  unit.lastY = unit.image.sprite.y;
   unit.image.sprite.x = unit.x;
   unit.image.sprite.y = unit.y;
   unit.image.scale = unit.radius / UNIT_BASE_RADIUS;

@@ -143,9 +143,12 @@ export default class Underworld {
         const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.moveTarget, u.moveSpeed)
         moveWithCollisions(u, stepTowardsTarget, this.units)
         moveWithLineCollisions(u, stepTowardsTarget, this.walls);
-        if (u.x === u.moveTarget.x && u.y === u.moveTarget.y) {
-          // TODO: Problem, due to collisions the unit may not end up at their target position so the promise will never resolve
+
+        // UNIT_STOP_MOVING_MARGIN ensures that units wont continue to move imperceptibly while
+        // players wait for the seemingly non-moving unit's turn to end (which ends when it's done moving via resolveDoneMoving)
+        if (Math.abs(u.x - u.lastX) < config.UNIT_STOP_MOVING_MARGIN && Math.abs(u.y - u.lastY) < config.UNIT_STOP_MOVING_MARGIN) {
           u.resolveDoneMoving();
+          u.moveTarget = undefined;
         }
         Unit.syncImage(u)
         // check for collisions with pickups in new location
