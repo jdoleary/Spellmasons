@@ -23,10 +23,15 @@ export function getPlanningViewColor(unit: IUnit) {
       return 0xff0000;
   }
 }
+// in px
+const UNIT_BASE_RADIUS = 32;
 export interface IUnit {
   unitSourceId: string;
   x: number;
   y: number;
+  moveTarget: Vec2;
+  moveSpeed: number;
+  radius: number;
   moveDistance: number;
   attackRange: number;
   name?: string;
@@ -73,6 +78,9 @@ export function create(
     unitSourceId,
     x,
     y,
+    radius: UNIT_BASE_RADIUS,
+    moveTarget: { x, y },
+    moveSpeed: 1,
     moveDistance: config.UNIT_BASE_MOVE_DISTANCE,
     attackRange: config.UNIT_BASE_ATTACK_RANGE,
     faction,
@@ -342,4 +350,11 @@ export function changeFaction(unit: IUnit, faction: Faction) {
   } else {
     Image.removeSubSprite(unit.image, 'headband');
   }
+}
+
+// syncImage updates a unit's Image to match it's game state
+export function syncImage(unit: IUnit) {
+  unit.image.sprite.x = unit.x;
+  unit.image.sprite.y = unit.y;
+  unit.image.scale = unit.radius / UNIT_BASE_RADIUS;
 }

@@ -27,6 +27,7 @@ import { setRoute, Route } from './routes';
 import { prng, randInt } from './rand';
 import { calculateManaHealthCost } from './cards/cardUtils';
 import unit from './units/manBlue';
+import { moveWithCollisions } from './collision/moveWithCollision';
 
 export enum turn_phase {
   PlayerTurns,
@@ -88,6 +89,7 @@ export default class Underworld {
 
     // TODO this probably shouldn't get initialized here
     this.startTurnTimer();
+    this.gameLoopUnits();
   }
   startTurnTimer() {
     // Limit turn duration
@@ -128,6 +130,20 @@ export default class Underworld {
         }
       }
     }, 1000);
+  }
+  gameLoopUnits = () => {
+    if (this.players[0]) {
+      this.players[0].unit.moveTarget = { x: this.players[0].unit.x + 100, y: this.players[0].unit.y };
+    }
+    for (let u of this.units) {
+      // Move towards target
+      const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.moveTarget, u.moveSpeed)
+      console.log("jtest", u.x, u.y)
+      moveWithCollisions({ position: u, radius: u.radius }, stepTowardsTarget, this.units.map(o => ({ position: o, radius: o.radius })))
+      console.log("jtest2", u.x, u.y)
+      Unit.syncImage(u)
+    }
+    requestAnimationFrame(this.gameLoopUnits)
   }
   // Returns true if it is the current players turn
   isMyTurn() {
