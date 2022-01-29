@@ -26,14 +26,16 @@ export async function action(unit: Unit.IUnit) {
 
     await Unit.takeDamage(closestEnemy, unit.damage);
   } else {
-    const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestEnemy, unit.moveDistance);
+    // Prevent unit from moving inside of target closestEnemy
+    const moveDist = Math.min(math.distance(unit, closestEnemy) - COLLISION_MESH_RADIUS * 2, unit.moveDistance)
+    const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestEnemy, moveDist);
     unit.intendedNextMove = moveTo;
     // Update the "planning view" overlay that shows the unit's agro radius
     Unit.updateSelectedOverlay(unit);
   }
 }
 
-const range = 100;
+const range = 10;
 export function canInteractWithTarget(
   unit: Unit.IUnit,
   x: number,
