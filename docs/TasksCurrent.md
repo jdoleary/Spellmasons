@@ -1,9 +1,4 @@
 ## Current Priorities
-- What if movement and collisions were handled separately to support multi unit collisions without recursion
-    - for example, a unit could move (and would store it's vector of movement) and all units would move if needed
-    - then it would calculate collisions for all overlapping units
-    - **What if I'm over thinking this and only need collisions with walls?**
-- Bug: Units can get shoved out of the map
 - Stresstest gamestate sync:
     - If you delay messages on the backend are you sure they'll arrive in the right order?
     - Can collisions cause desync

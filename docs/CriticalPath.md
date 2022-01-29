@@ -1,5 +1,5 @@
 # Critical Path
-- Jan 31: Collisions
+- DONE(2 days early) Jan 31: Collisions
 - Feb 2: Ensure gamestate desyncs don't occur or are handled when they do
 - Feb 6: Gameplay Balance
 - Playtest with friends
