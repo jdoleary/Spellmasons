@@ -13,6 +13,11 @@ export async function action(unit: Unit.IUnit) {
     // Do not move if they don't have a target
     return;
   }
+  // Orient; make the sprite face it's enemy
+  if (closestEnemy.x > unit.x) {
+    // Assuming all units are left facing, if the enemy is to the right, make it right facing
+    unit.image.sprite.scale.x = -Math.abs(unit.image.sprite.scale.x);
+  }
   // Attack closest enemy
   if (canInteractWithTarget(unit, closestEnemy.x, closestEnemy.y)) {
     // Change animation and change back
