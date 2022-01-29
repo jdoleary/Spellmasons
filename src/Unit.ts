@@ -8,6 +8,7 @@ import { addPixiSprite, containerUnits } from './PixiUtils';
 import { Vec2, UnitSubType, UnitType, Faction } from './commonTypes';
 import Events from './Events';
 import makeAllRedShader from './shaders/selected';
+import { addLerpable } from './lerpList';
 const elHealthBar: HTMLElement = document.querySelector('#health .fill') as HTMLElement;
 const elHealthLabel: HTMLElement = document.querySelector('#health .label') as HTMLElement;
 const elManaBar: HTMLElement = document.querySelector('#mana .fill') as HTMLElement;
@@ -240,8 +241,8 @@ export async function takeDamage(unit: IUnit, amount: number) {
   // Prevent health from going over maximum or under 0
   unit.health = Math.max(0, Math.min(unit.health, unit.healthMax));
   // Update the shader to reflect health level
-  unit.shaderUniforms.all_red.alpha = 1 - (unit.health / unit.healthMax);
-  console.log("jtest alpha", unit.shaderUniforms.all_red);
+  unit.shaderUniforms.all_red.alpha = 1;
+  addLerpable(unit.shaderUniforms.all_red, "alpha", 0, 200);
   // If the unit is "selected" this will update it's overlay to reflect the damage
   updateSelectedOverlay(unit);
 
