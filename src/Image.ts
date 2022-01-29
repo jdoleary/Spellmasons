@@ -1,7 +1,6 @@
 import type * as PIXI from 'pixi.js';
 
 import { addPixiSprite } from './PixiUtils';
-import { normalizeRadians } from './math';
 import Subsprites from './Subsprites';
 import { animateIndependent } from './AnimationTimeline';
 import type { Vec2 } from './commonTypes';
@@ -168,40 +167,4 @@ export function hide(image: IImage) {
       target: { alpha: 0 },
     },
   ]);
-}
-export function take_hit(image: IImage) {
-  return animateIndependent([
-    {
-      sprite: image.sprite,
-      target: { rotation: image.sprite.rotation + Math.PI * 2 },
-    },
-  ]).then(() => {
-    image.sprite.rotation = normalizeRadians(image.sprite.rotation);
-  });
-}
-export function attack(
-  image: IImage,
-  current_x: number,
-  current_y: number,
-  x: number,
-  y: number,
-) {
-  // Move forward
-  return animateIndependent([
-    {
-      sprite: image.sprite,
-      target: {
-        x: current_x + (x - current_x) / 2,
-        y: current_y + (y - current_y) / 2,
-      },
-    },
-  ]).then(() => {
-    // Move back
-    return animateIndependent([
-      {
-        sprite: image.sprite,
-        target: { x: current_x, y: current_y },
-      },
-    ]);
-  });
 }

@@ -57,3 +57,15 @@ Minor versions are incremented for functional non-broken commit states that shou
     - Unlisten event handlers
   - Route: Upgrade Screen
   - Loop: Route: Overworld
+
+## Development Tips
+To change a sprites animation temporarily and have it change back to the regular animation:
+```js
+    const currentImageName = unit.image.imageName
+    Image.changeSprite(unit.image, addPixiSprite('units/golem_eat', unit.image.sprite.parent, {
+      loop: false,
+      onComplete: () => {
+        Image.changeSprite(unit.image, addPixiSprite(currentImageName, unit.image.sprite.parent));
+      }
+    }));
+```

@@ -255,9 +255,6 @@ export async function takeDamage(unit: IUnit, amount: number) {
     coords: unit,
     text: healthChangedString,
   });
-  if (alteredAmount > 0) {
-    await Image.take_hit(unit.image);
-  }
   // If taking damage (not healing) and health is 0 or less...
   if (amount > 0 && unit.health <= 0) {
     // if unit is alive, die

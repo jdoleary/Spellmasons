@@ -2,6 +2,7 @@ import * as Unit from '../../Unit';
 import * as Image from '../../Image';
 import * as math from '../../math';
 import { COLLISION_MESH_RADIUS } from '../../config';
+import { addPixiSprite } from '../../PixiUtils';
 
 export async function action(unit: Unit.IUnit) {
   if (!Unit.canMove(unit)) {
@@ -14,13 +15,15 @@ export async function action(unit: Unit.IUnit) {
   }
   // Attack closest enemy
   if (canInteractWithTarget(unit, closestEnemy.x, closestEnemy.y)) {
-    await Image.attack(
-      unit.image,
-      unit.x,
-      unit.y,
-      closestEnemy.x,
-      closestEnemy.y,
-    );
+    // Change animation and change back
+    const currentImageName = unit.image.imageName
+    Image.changeSprite(unit.image, addPixiSprite('units/golem_eat', unit.image.sprite.parent, {
+      loop: false,
+      onComplete: () => {
+        Image.changeSprite(unit.image, addPixiSprite(currentImageName, unit.image.sprite.parent));
+      }
+    }));
+
     await Unit.takeDamage(closestEnemy, unit.damage);
   } else {
     const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestEnemy, unit.moveDistance);
