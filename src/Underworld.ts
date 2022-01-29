@@ -143,7 +143,7 @@ export default class Underworld {
       if (u.moveTarget) {
         // Move towards target
         const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.moveTarget, u.moveSpeed)
-        moveWithCollisions(u, stepTowardsTarget, this.units, this.walls)
+        moveWithCollisions(u, stepTowardsTarget, [], this.walls)
 
         // UNIT_STOP_MOVING_MARGIN ensures that units wont continue to move imperceptibly while
         // players wait for the seemingly non-moving unit's turn to end (which ends when it's done moving via resolveDoneMoving)
