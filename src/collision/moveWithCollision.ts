@@ -53,7 +53,7 @@ export function normalizedVector(point1: Vec2, point2: Vec2): { vector: Vec2 | u
 // collisions with circles and eventaully lines.  Collisions may cause
 // both colliders to move
 // mover may not end up at destination if it collides
-export function moveWithCollisions(mover: Circle, destination: Vec2, circles: Circle[]) {
+export function moveWithCollisions(mover: Circle, destination: Vec2, circles: Circle[], lines: LineSegment[]) {
     // Determine if the mover intersects with any "circles" as
     // it travels from mover to destination
     // We do this by adding mover.radius to the other circle's radius
@@ -65,10 +65,13 @@ export function moveWithCollisions(mover: Circle, destination: Vec2, circles: Ci
     mover.x = destination.x;
     mover.y = destination.y;
     for (let other of circles) {
-        // Do not repel self
+        // Do not repel self from self
         if (mover !== other) {
             repelCircles(mover, originalPosition, other);
         }
+    }
+    for (let line of lines) {
+        repelCircleFromLine(mover, originalPosition, line);
     }
 }
 // repelCircles moves two intersecting circles away from each other
@@ -100,12 +103,7 @@ function repelCircles(mover: Circle, originalPosition: Vec2, other: Circle, othe
                 mover.x = moverPos.x;
                 mover.y = moverPos.y;
             } else {
-                const moveDistance = overlap / 2;
-                // Use a negative moveDistance for mover to move in the opposite direction of vector
-                const moverPos = moveAlongVector(mover, vector, -moveDistance);
-                mover.x = moverPos.x;
-                mover.y = moverPos.y;
-                const otherPos = moveAlongVector(other, vector, moveDistance);
+                const otherPos = moveAlongVector(other, vector, overlap);
                 other.x = otherPos.x;
                 other.y = otherPos.y;
             }
@@ -118,35 +116,28 @@ function repelCircles(mover: Circle, originalPosition: Vec2, other: Circle, othe
         }
     }
 }
-// moveWithLineCollisions calculates the final destination of the mover when possibly intersecting
+// repelCircleFromLine calculates the final destination of the mover when possibly intersecting
 // with fixed line segments.
 // Note: this function is only meant to handle small increments of movements, this function
 // will not account for the case where the destination does not intersect
 // a line but the mover would travel through a linesegment on it's way to destination.  This is by design.
-export function moveWithLineCollisions(mover: Circle, destination: Vec2, lines: LineSegment[]) {
-    const originalPosition = { x: mover.x, y: mover.y };
-    // Actually move the mover
-    mover.x = destination.x;
-    mover.y = destination.y;
-    for (let line of lines) {
-
-        // Test for intersection with the line segment
-        const rightAngleIntersectionWithLineFromMoverCenterPoint = findWherePointIntersectLineSegmentAtRightAngle(mover, line);
-        if (rightAngleIntersectionWithLineFromMoverCenterPoint
-            && distance(rightAngleIntersectionWithLineFromMoverCenterPoint, mover) <= mover.radius) {
-            // circle intersects line
-            repelCircles(mover, originalPosition, { ...rightAngleIntersectionWithLineFromMoverCenterPoint, radius: 0 }, true);
-        }
-        // Test for intersection with the line segment endpoints
-        if (distance(line.p1, mover) <= mover.radius) {
-            repelCircles(mover, originalPosition, { ...line.p1, radius: 0 }, true);
-        }
-        if (distance(line.p2, mover) <= mover.radius) {
-            repelCircles(mover, originalPosition, { ...line.p2, radius: 0 }, true);
-        }
-
+function repelCircleFromLine(mover: Circle, originalPosition: Vec2, line: LineSegment) {
+    // Test for intersection with the line segment
+    const rightAngleIntersectionWithLineFromMoverCenterPoint = findWherePointIntersectLineSegmentAtRightAngle(mover, line);
+    if (rightAngleIntersectionWithLineFromMoverCenterPoint
+        && distance(rightAngleIntersectionWithLineFromMoverCenterPoint, mover) <= mover.radius) {
+        // circle intersects line
+        repelCircles(mover, originalPosition, { ...rightAngleIntersectionWithLineFromMoverCenterPoint, radius: 0 }, true);
+    }
+    // Test for intersection with the line segment endpoints
+    if (distance(line.p1, mover) <= mover.radius) {
+        repelCircles(mover, originalPosition, { ...line.p1, radius: 0 }, true);
+    }
+    if (distance(line.p2, mover) <= mover.radius) {
+        repelCircles(mover, originalPosition, { ...line.p2, radius: 0 }, true);
     }
 }
 export const testables = {
-    repelCircles
+    repelCircles,
+    repelCircleFromLine
 }

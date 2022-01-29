@@ -25,7 +25,7 @@ import { ILevel, getEnemiesForAltitude } from './overworld';
 import { setRoute, Route } from './routes';
 import { prng, randInt } from './rand';
 import { calculateManaHealthCost } from './cards/cardUtils';
-import { moveWithCollisions, moveWithLineCollisions } from './collision/moveWithCollision';
+import { moveWithCollisions } from './collision/moveWithCollision';
 import type { LineSegment } from './collision/collisionMath';
 
 export enum turn_phase {
@@ -143,8 +143,7 @@ export default class Underworld {
       if (u.moveTarget) {
         // Move towards target
         const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.moveTarget, u.moveSpeed)
-        moveWithCollisions(u, stepTowardsTarget, this.units)
-        moveWithLineCollisions(u, stepTowardsTarget, this.walls);
+        moveWithCollisions(u, stepTowardsTarget, this.units, this.walls)
 
         // UNIT_STOP_MOVING_MARGIN ensures that units wont continue to move imperceptibly while
         // players wait for the seemingly non-moving unit's turn to end (which ends when it's done moving via resolveDoneMoving)

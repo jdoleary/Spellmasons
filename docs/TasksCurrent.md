@@ -1,6 +1,5 @@
 ## Current Priorities
 - Bug: Units can get shoved out of the map
-- TODO: Merge moveWithCollisions and moveWithLineCollisions so it considers both lines and other circles when moving
 - Stresstest gamestate sync:
     - If you delay messages on the backend are you sure they'll arrive in the right order?
     - Can collisions cause desync

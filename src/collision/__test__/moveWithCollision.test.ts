@@ -8,10 +8,9 @@ import {
     moveAlongVector,
     moveAwayFrom,
     normalizedVector,
-    moveWithLineCollisions,
     testables
 } from '../moveWithCollision';
-const { repelCircles } = testables;
+const { repelCircles, repelCircleFromLine } = testables;
 
 describe('repelCircles', () => {
     it('should only repel the mover if the other colliding circle is fixed (immovable)', () => {
@@ -37,7 +36,7 @@ describe('moveWithCollisions', () => {
     it("should travel to it's destination if unobstructed", () => {
         const c1: Circle = { x: 0, y: 0, radius: 2 };
         const destination = { x: 2, y: 2 };
-        moveWithCollisions(c1, destination, []);
+        moveWithCollisions(c1, destination, [], []);
         const actual = { x: c1.x, y: c1.y };
         const expected = destination;
         expect(actual).toEqual(expected);
@@ -48,7 +47,7 @@ describe('moveWithCollisions', () => {
     it("should not make a circle collide with itself", () => {
         const c1: Circle = { x: 0, y: 0, radius: 5 };
         const destination = { x: 1, y: 0 };
-        moveWithCollisions(c1, destination, [c1]);
+        moveWithCollisions(c1, destination, [c1], []);
         const actual = { x: c1.x, y: c1.y };
         const expected = destination;
         expect(actual).toEqual(expected);
@@ -64,7 +63,7 @@ describe('moveWithCollisions', () => {
                     circles.push({ x: 6, y: 0, radius: 5 });
                 }
                 const destination = { x: 0, y: 0 };
-                moveWithCollisions(c1, destination, circles);
+                moveWithCollisions(c1, destination, circles, []);
                 const { duration } = performance.measure(
                     'end',
                     'moveWithCollisions-start',
@@ -78,35 +77,12 @@ describe('moveWithCollisions', () => {
             const c1: Circle = { x: -1000, y: 0, radius: 2 };
             const circles: Circle[] = [{ x: 6, y: 0, radius: 5 }];
             const destination = { x: 0, y: 0 };
-            moveWithCollisions(c1, destination, circles);
+            moveWithCollisions(c1, destination, circles, []);
             const actual = { x: circles[0].x, y: circles[0].y };
-            const expected = { x: 6.5, y: 0 };
+            const expected = { x: 7, y: 0 };
             expect(actual).toEqual(expected);
         });
-        it('should not travel as far as it would unobstructed if it pushes another circle', () => {
-            // These circles start touching and with the same radius,
-            // so they should split the movement distance
-            const c1: Circle = { x: 0, y: 0, radius: 2 };
-            const circles: Circle[] = [{ x: 4, y: 0, radius: 2 }];
-            const destination = { x: 1, y: 0 };
-            moveWithCollisions(c1, destination, circles);
-            const actual = { x: c1.x, y: c1.y };
-            const expected = { x: 0.5, y: 0 };
-            expect(actual).toEqual(expected);
-        });
-        it("should not travel as far as it would unobstructed if it pushes another circle (even if the destination is exactly equal to the other circle's position)", () => {
-            // These circles start touching and with the same radius,
-            // so they should split the movement distance
-            const c1: Circle = { x: 0, y: 0, radius: 2 };
-            const circles: Circle[] = [{ x: 4, y: 0, radius: 2 }];
-            const destination = { x: 4, y: 0 };
-            moveWithCollisions(c1, destination, circles);
-            const actual = { x: c1.x, y: c1.y };
-            // It only moves half as far as it intended since it starts touching another
-            // circle of the same radius and tries to move exactly into it
-            const expected = { x: 2, y: 0 };
-            expect(actual).toEqual(expected);
-        });
+
         describe('collisions at non direct angles', () => {
             // Collision force transfer happens at the endpoint of the movement,
             // it is expected that many small movements will occur over time, so
@@ -118,18 +94,9 @@ describe('moveWithCollisions', () => {
                 const c1: Circle = { x: 0, y: 0, radius: 2 };
                 const circles: Circle[] = [{ x: 2, y: 0, radius: 2 }];
                 const destination = { x: 2, y: 2 };
-                moveWithCollisions(c1, destination, circles);
+                moveWithCollisions(c1, destination, circles, []);
                 const actual = { x: circles[0].x, y: circles[0].y };
-                const expected = { x: 2, y: -1 };
-                expect(actual).toEqual(expected);
-            });
-            it('should not travel as far as it would unobstructed if it pushes another circle', () => {
-                const c1: Circle = { x: 0, y: 0, radius: 2 };
-                const circles: Circle[] = [{ x: 2, y: 0, radius: 2 }];
-                const destination = { x: 2, y: 2 };
-                moveWithCollisions(c1, destination, circles);
-                const actual = { x: c1.x, y: c1.y };
-                const expected = { x: 2, y: 3 };
+                const expected = { x: 2, y: -2 };
                 expect(actual).toEqual(expected);
             });
         });
@@ -257,10 +224,10 @@ describe('moveAwayFrom', () => {
     });
 });
 
-describe('moveWithLineCollisions', () => {
+describe('repelCircleFromLine', () => {
     describe('performance', () => {
         it('should support calculating collisions with 1000 line segments in under 16 milliseconds', () => {
-            performance.mark('moveWithLineCollisions-start');
+            performance.mark('repelCircleFromLine-start');
             const c1: Circle = { x: 4, y: 0, radius: 2 };
             const numberOfCollidingLines = 1000;
             const lineSegments: LineSegment[] = [];
@@ -270,40 +237,58 @@ describe('moveWithLineCollisions', () => {
                 );
             }
             const destination = { x: 0, y: 0 };
-            moveWithLineCollisions(c1, destination, lineSegments);
+            const originalPosition = { x: c1.x, y: c1.y };
+            // Actually move the mover
+            c1.x = destination.x;
+            c1.y = destination.y;
+            for (let line of lineSegments) {
+                repelCircleFromLine(c1, originalPosition, line);
+            }
             const { duration } = performance.measure(
                 'end',
-                'moveWithLineCollisions-start',
+                'repelCircleFromLine-start',
             );
             expect(duration).toBeLessThan(16);
         });
     });
     it('should prevent a circle from moving through a line', () => {
         const c1: Circle = { x: 4, y: 0, radius: 2 };
-        const lines: LineSegment[] = [
+        const line: LineSegment =
             { p1: { x: 0, y: 10 }, p2: { x: 0, y: -10 } }
-        ]
+
         const destination = { x: 0, y: 0 }
-        moveWithLineCollisions(c1, destination, lines);
+        const originalPosition = { x: c1.x, y: c1.y };
+        // Actually move the mover
+        c1.x = destination.x;
+        c1.y = destination.y;
+        repelCircleFromLine(c1, originalPosition, line);
         expect(c1.x).toEqual(2);
     });
     it('should prevent a circle from moving into intersection with an endpoint of the line', () => {
         const c1: Circle = { x: 4, y: 1, radius: 2 };
-        const lines: LineSegment[] = [
+        const line: LineSegment =
             { p1: { x: 0, y: 10 }, p2: { x: 0, y: 0 } }
-        ]
+
         const destination = { x: 0, y: 1 }
-        moveWithLineCollisions(c1, destination, lines);
+        const originalPosition = { x: c1.x, y: c1.y };
+        // Actually move the mover
+        c1.x = destination.x;
+        c1.y = destination.y;
+        repelCircleFromLine(c1, originalPosition, line);
         expect(c1.x).toEqual(2);
         expect(c1.y).toEqual(1);
     });
     it('should work even when line is parallel to movement direction of circle', () => {
         const c1: Circle = { x: 4, y: 0, radius: 2 };
-        const lines: LineSegment[] = [
+        const line: LineSegment =
             { p1: { x: -10, y: 0 }, p2: { x: 0, y: 0 } }
-        ]
+
         const destination = { x: 0, y: 0 }
-        moveWithLineCollisions(c1, destination, lines);
+        const originalPosition = { x: c1.x, y: c1.y };
+        // Actually move the mover
+        c1.x = destination.x;
+        c1.y = destination.y;
+        repelCircleFromLine(c1, originalPosition, line);
         expect(c1.x).toEqual(2);
     });
 });
