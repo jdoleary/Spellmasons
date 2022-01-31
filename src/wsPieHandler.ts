@@ -1,6 +1,6 @@
 import type { ClientPresenceChangedArgs, OnDataArgs } from 'pie-client';
 // TODO remove deep-object-diff before shipping
-import { diff } from 'deep-object-diff';
+import { detailedDiff } from 'deep-object-diff';
 import { MESSAGE_TYPES } from './MessageTypes';
 import { UnitType } from './commonTypes';
 import floatingText from './FloatingText';
@@ -63,8 +63,8 @@ export function onData(d: OnDataArgs) {
             fontSize: '60px',
           },
         })
-        console.log("gamestate diff:\n", JSON.stringify(diff(underworld.sanitizeForHash(), payload.state), null, 2))
-        console.log('gamestates', underworld.sanitizeForHash(), payload.state)
+        console.log("gamestate diff:\n", detailedDiff(underworld.sanitizeForHash(), payload.state));
+        console.log('gamestates', JSON.stringify(underworld.sanitizeForHash(), null, 2), JSON.stringify(payload.state, null, 2));
         window.pie.sendData({
           type: MESSAGE_TYPES.DESYNC
         });
