@@ -3,9 +3,9 @@
     - If you delay messages on the backend are you sure they'll arrive in the right order?
     - Can collisions cause desync
     - If a client becomes desynced
-        1. How will they know?
         2. How does it resolve?
 - What if it was in a dungeon instead of outside so there could be rooms?
+- Cards become more expensive when you use them
 - Playtest with friends
     - Verify gamestate integrity between clients
 - Implement new way of getting cards over time

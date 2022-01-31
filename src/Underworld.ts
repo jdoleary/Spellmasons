@@ -93,7 +93,7 @@ export default class Underworld {
     this.walls.push({ p1: { x: config.MAP_WIDTH, y: config.MAP_HEIGHT }, p2: { x: config.MAP_WIDTH, y: 0 } });
     this.walls.push({ p1: { x: config.MAP_WIDTH, y: config.MAP_HEIGHT }, p2: { x: 0, y: config.MAP_HEIGHT } });
 
-    // TODO these probably shouldn't get initialized here
+    // TODO: these probably shouldn't get initialized here
     this.startTurnTimer();
     this.gameLoopUnits();
     clearInterval(window.sendHashInterval);
