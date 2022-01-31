@@ -91,7 +91,9 @@ export function serialize(image: IImage) {
       y: image.sprite.y,
       scale: { x: image.sprite.scale.x, y: image.sprite.scale.y }
     },
-    subSprites: image.subSprites,
+    // serialize all subsprites other than "ownCharacterMarker", which is the only one that isn't synced
+    // between clients
+    subSprites: image.subSprites.filter(s => s != "ownCharacterMarker"),
     imageName: image.imageName,
   };
 }
