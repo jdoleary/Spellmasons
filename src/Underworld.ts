@@ -170,7 +170,7 @@ export default class Underworld {
         // TODO should I have other units (moved via collision also check for pickups?)
       }
     }
-    requestAnimationFrame(this.gameLoopUnits)
+    requestAnimationFrame(this.gameLoopUnits.bind(this))
   }
   // Returns true if it is the current players turn
   isMyTurn() {
