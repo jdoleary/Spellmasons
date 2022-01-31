@@ -290,6 +290,7 @@ window.load = (title) => {
 window.saveReplay = (title: string) => {
   localStorage.setItem('golems-' + title, JSON.stringify(messageLog));
 };
+// Note, replay is currently broken
 window.replay = (title: string) => {
   const messages = JSON.parse(localStorage.getItem('golems-' + title) || '');
   for (let i = 0; i < messages.length; i++) {
