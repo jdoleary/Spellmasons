@@ -1,9 +1,6 @@
 ## Current Priorities
 - Stresstest gamestate sync:
     - If you delay messages on the backend are you sure they'll arrive in the right order?
-    - Can collisions cause desync
-    - If a client becomes desynced
-        2. How does it resolve?
 - What if it was in a dungeon instead of outside so there could be rooms?
 - Cards become more expensive when you use them
 - Playtest with friends

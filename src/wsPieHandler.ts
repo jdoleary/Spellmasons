@@ -43,11 +43,19 @@ export function onData(d: OnDataArgs) {
     case MESSAGE_TYPES.VOTE_FOR_LEVEL:
       voteForLevel(fromClient, payload.levelIndex);
       break;
+    case MESSAGE_TYPES.DESYNC:
+      console.warn(`Client ${fromClient} detected desync from host`)
+      if (window.underworld.hostClientId === window.clientId) {
+        // When a desync is detected, the host should force the other clients to
+        // sync with it
+        forceSyncClients();
+      }
+      break;
     case MESSAGE_TYPES.GAMESTATE_HASH:
       const hostClientsHash = payload.hash;
       if (underworld.hash() != hostClientsHash) {
-        console.error("Out of sync with host");
-        // TODO: Remove for production
+        console.error("Desync: Out of sync with host");
+        // TODO: Remove floating text for production
         floatingText({
           coords: { x: MAP_WIDTH / 2, y: MAP_HEIGHT / 2 }, text: "Out of sync with host!",
           style: {
@@ -57,6 +65,9 @@ export function onData(d: OnDataArgs) {
         })
         console.log("gamestate diff:\n", JSON.stringify(diff(underworld.sanitizeForHash(), payload.state), null, 2))
         console.log('gamestates', underworld.sanitizeForHash(), payload.state)
+        window.pie.sendData({
+          type: MESSAGE_TYPES.DESYNC
+        });
       }
       break;
     case MESSAGE_TYPES.SELECT_CHARACTER:
@@ -238,6 +249,13 @@ async function handleSpell(caster: Player.IPlayer, payload: any) {
 export function getClients(): string[] {
   return clients;
 }
+function forceSyncClients() {
+  window.pie.sendData({
+    type: MESSAGE_TYPES.LOAD_GAME_STATE,
+    route: window.route,
+    underworld: underworld.sanitizeForSaving(),
+  });
+}
 
 export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
   console.log('clientPresenceChanged', o);
@@ -258,11 +276,7 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
       // If you are the host, send the game state to the other player
       // who just joined
       // Send game state to other player so they can load:
-      window.pie.sendData({
-        type: MESSAGE_TYPES.LOAD_GAME_STATE,
-        route: window.route,
-        underworld: underworld.sanitizeForSaving(),
-      });
+      forceSyncClients();
     }
   } else {
     // client left
