@@ -11,7 +11,7 @@
     - This currently puts the game in a buggy state
   2. Reconnection when the client goes down and comes back up (keeps room?)
     - How to handle user joining mid stage (say during overworld or during underworld)?
-- Restore save/load/replay
+- Restore replay
 - What should happen when you clone yourself?
 ## Feature Creep Ideas
 - More spells:

@@ -12,3 +12,4 @@
   - latency reported negative
 - If server restarts mid game, wsPie's RoomManager.onData will fail because client.room is undefined
 - Upgrades will be the same for a given user if their clientId stays the same between games.  They shouldn't get the same upgrades on multiple different games
+- If a player disconnects in level select, make sure the game can go on without them
