@@ -22,6 +22,7 @@ export const currentOverworldLocation: Vec2 = { x: 0, y: 0 };
 // in the units/index.ts registerUnits list
 const hardCodedLevelEnemies = [
   [],
+  // [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 1, 2],
   [0, 4],
   [0, 0, 0, 6],
