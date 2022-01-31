@@ -283,11 +283,14 @@ export async function takeDamage(unit: IUnit, amount: number) {
     }
   }
 
-  if (unit === window.player.unit && elHealthBar && elHealthLabel) {
+  if ((window.player && unit === window.player.unit) && elHealthBar && elHealthLabel) {
     syncPlayerHealthManaUI();
   }
 }
 export function syncPlayerHealthManaUI() {
+  if (!window.player) {
+    return
+  }
   const unit = window.player.unit;
   elHealthBar.style["width"] = `${100 * unit.health / unit.healthMax}%`;
   elHealthLabel.innerHTML = `${unit.health}/${unit.healthMax}`;

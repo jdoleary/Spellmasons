@@ -15,7 +15,7 @@ declare global {
     underworld: Underworld;
     overworld: IOverworld;
     // A reference to the player instance of the client playing on this instance
-    player: Player.IPlayer;
+    player: Player.IPlayer | undefined;
     pie: any;
     save: (title: string) => void;
     load: (title: string) => void;

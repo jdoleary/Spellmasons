@@ -53,11 +53,13 @@ function showFullCard(card: Cards.ICard) {
       elCardInspect.appendChild(createCardElement(card));
       const elQuantity = document.createElement('div');
       elQuantity.classList.add('card-quantity');
-      elQuantity.innerText = `You have ${[
-        ...window.player.cards,
-        ...window.player.cardsSelected,
-      ].reduce((count, c) => count + (c == card.id ? 1 : 0), 0)} ${card.id
-        } in your hand`;
+      if (window.player) {
+        elQuantity.innerText = `You have ${[
+          ...window.player.cards,
+          ...window.player.cardsSelected,
+        ].reduce((count, c) => count + (c == card.id ? 1 : 0), 0)} ${card.id
+          } in your hand`;
+      }
       elCardInspect.appendChild(elQuantity);
     } else {
       console.error('card-inspect div does not exist');
@@ -65,7 +67,10 @@ function showFullCard(card: Cards.ICard) {
   }
 }
 
-export function recalcPositionForCards(player: CardUI.IPlayer) {
+export function recalcPositionForCards(player: CardUI.IPlayer | undefined) {
+  if (!window.player) {
+    return
+  }
   if (window.player !== player) {
     // Do not reconcile dom elements for a player who is not the current client's player
     return;
@@ -228,7 +233,11 @@ window.giveMeCard = (cardId: string, quantity: number = 1) => {
     console.log('card', card, 'not found');
   }
 };
-export function addCardToHand(card: Cards.ICard, player: CardUI.IPlayer) {
+export function addCardToHand(card: Cards.ICard, player: CardUI.IPlayer | undefined) {
+  if (!player) {
+    console.warn("Attempted to add cards to a non-existant player's hand")
+    return
+  }
   // Players may not have more than 1 of a particular card, because now, cards are
   // not removed when cast
   if (!player.cards.includes(card.id)) {
@@ -276,7 +285,9 @@ export function clearSelectedCards() {
   // Remove the board highlight
   clearSpellEffectProjection();
   // Deselect all selected cards
-  window.player.cardsSelected = []
+  if (window.player) {
+    window.player.cardsSelected = []
+  }
   document.querySelectorAll('.card.selected').forEach((el) => {
     if (el instanceof HTMLElement) {
       el.remove();
