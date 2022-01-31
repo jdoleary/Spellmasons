@@ -117,6 +117,7 @@ body.inspect-mode #card-inspect {
 #card-holders #card-hand {
   display: flex;
   width: 100%;
+  justify-content: center;
 }
 #card-hand {
   /* This prevents the card-hand from disappearing when all cards are selected */
