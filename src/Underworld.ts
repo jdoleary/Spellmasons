@@ -786,7 +786,10 @@ export default class Underworld {
         unit: Unit.serializeUnit(p.unit),
         overworldImage: Image.serialize(p.overworldImage),
       })),
-      units: this.units.map(Unit.serializeUnit),
+      units: this.units
+        // Player controlled units are serialized within the players object
+        .filter((u) => u.unitType !== UnitType.PLAYER_CONTROLLED)
+        .map(Unit.serializeUnit),
       pickups: this.pickups.map(Pickup.serialize),
       obstacles: this.obstacles.map(Obstacle.serialize),
       // the state of the Random Number Generator

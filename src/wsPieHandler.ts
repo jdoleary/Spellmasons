@@ -128,6 +128,7 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       underworld.hostClientId = loadedGameState.hostClientId;
       // Load all units that are not player's, those will be loaded indepentently
       underworld.units = loadedGameState.units
+        // Player controlled units are loaded within the players array
         .filter((u) => u.unitType !== UnitType.PLAYER_CONTROLLED)
         .map(Unit.load);
       underworld.players = loadedGameState.players.map(Player.load);
