@@ -735,6 +735,11 @@ export default class Underworld {
   hash() {
     return hash(this.serializeForHash());
   }
+  // Returns a modified copy of gamestate that is used when generating a hash
+  // of the gamestate to determine if clients have identical states
+  // Use caution: any properties improperly modified or removed could cause
+  // a silent desync between clients.  Only properties that are client-only
+  // and need not be syncronized, should be removed.
   serializeForHash() {
     const serializedState: any = this.serializeForSaving();
     // Remove variables that would cause the hash to change second to second.

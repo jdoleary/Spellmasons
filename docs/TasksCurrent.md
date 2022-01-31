@@ -1,7 +1,5 @@
 ## Current Priorities
-- Stresstest gamestate sync:
-    - If you delay messages on the backend are you sure they'll arrive in the right order?
-- What if it was in a dungeon instead of outside so there could be rooms?
+- Player.cardsSelected causes desync
 - Cards become more expensive when you use them
 - Playtest with friends
     - Verify gamestate integrity between clients
