@@ -99,7 +99,6 @@ export function create(
     thisTurnMoved: false,
     intendedNextMove: undefined,
     image: Image.create(x, y, imagePath, containerUnits),
-    // TODO restore shaderUniforms on load
     shaderUniforms: {},
     damage: config.UNIT_BASE_DAMAGE,
     health: config.UNIT_BASE_HEALTH,
@@ -125,9 +124,7 @@ export function create(
     modifiers: {},
   }, sourceUnitProps);
 
-  const all_red = makeAllRedShader()
-  unit.shaderUniforms.all_red = all_red.uniforms;
-  unit.image.sprite.filters = [all_red.filter];
+  setupShaders(unit);
 
   // Ensure all change factions logic applies when a unit is first created
   changeFaction(unit, faction);
@@ -138,6 +135,11 @@ export function create(
   window.underworld.addUnitToArray(unit);
 
   return unit;
+}
+function setupShaders(unit: IUnit) {
+  const all_red = makeAllRedShader()
+  unit.shaderUniforms.all_red = all_red.uniforms;
+  unit.image.sprite.filters = [all_red.filter];
 }
 
 export function removeModifier(unit: IUnit, key: string) {
@@ -180,8 +182,10 @@ export function cleanup(unit: IUnit) {
 }
 // Reinitialize a unit from another unit object, this is used in loading game state after reconnect
 export function load(unit: IUnit): IUnit {
-  const loadedunit = {
-    ...unit,
+  const { shaderUniforms, ...restUnit } = unit
+  const loadedunit: IUnit = {
+    ...restUnit,
+    shaderUniforms: {},
     image: Image.load(unit.image, containerUnits),
     healthText: new PIXI.Text('', {
       fill: 'red',
@@ -191,6 +195,15 @@ export function load(unit: IUnit): IUnit {
       breakWords: true,
     }),
   };
+  setupShaders(loadedunit);
+  // Load in shader uniforms by ONLY setting the uniforms that are saved
+  // it is important that the other objects stay exactly the same
+  // or else the shader won't render
+  for (let [key, uniformObject] of Object.entries(shaderUniforms)) {
+    for (let [keyUniform, value] of Object.entries(uniformObject)) {
+      loadedunit.shaderUniforms[key][keyUniform] = value;
+    }
+  }
   window.underworld.addUnitToArray(loadedunit);
   if (!loadedunit.alive) {
     die(loadedunit);
@@ -204,7 +217,14 @@ export function serializeUnit(unit: IUnit) {
     image: Image.serialize(unit.image),
     healthText: null,
     agroOverlay: null,
-    shaderUniforms: null,
+    shaderUniforms: Object.entries(unit.shaderUniforms).reduce((obj, cur) => {
+      const [key, value] = cur;
+      // Pare down shaderUniforms to only the uniforms that the game sets so they
+      // can be loaded back in later
+      const { filterGlobals, globals, uSampler, ...keep } = value
+      obj[key] = { ...keep };
+      return obj;
+    }, {} as any),
   };
 }
 export function resurrect(unit: IUnit) {
