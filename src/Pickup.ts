@@ -62,10 +62,13 @@ export function setPosition(pickup: IPickup, x: number, y: number) {
   Image.setPosition(pickup.image, x, y);
 }
 export function serialize(p: IPickup) {
-  return {
+  const serialized: any = {
     ...p,
     image: Image.serialize(p.image),
   };
+  // effect is a callback and cannot be serialized
+  delete serialized.effect;
+  return serialized;
 }
 // Reinitialize a pickup from another pickup object, this is used in loading game state after reconnect
 export function load(pickup: IPickup) {
