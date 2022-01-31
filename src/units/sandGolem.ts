@@ -37,7 +37,7 @@ const unit: UnitSource = {
     } else {
       if (runFromTarget) {
         const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, runFromTarget, -unit.moveDistance);
-        unit.intendedNextMove = moveTo;
+        await Unit.moveTowards(unit, moveTo);
       }
     }
   },

@@ -52,7 +52,6 @@
 - Refactor, card UI reconciliation algorithm is slow
 - corpse image doesn't save when a game is loaded and a unit is dead
   - textures should be saved using pixi sprite texture cache instead of this.imageName
-- Card Push needs some work, it doesn't work great due to not using initiateIntelligentAIMovement and order of operations
 - Swap can have unexpected effects if the aoe swap targets overlap with the caster original location, units may end up in an unexpected position, need batching to solve this
 - How do players know what their upgrades are
 - notify which players have left to upgrade

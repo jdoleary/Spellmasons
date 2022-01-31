@@ -19,13 +19,13 @@ const unit: UnitSource = {
     const closestAlly = Unit.findClosestUnitInSameFaction(unit);
     if (closestAlly) {
       const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestAlly, unit.moveDistance);
-      unit.intendedNextMove = moveTo;
+      await Unit.moveTowards(unit, moveTo);
     } else {
       // flee from closest enemey
       const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit);
       if (closestEnemy) {
         const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestEnemy, -unit.moveDistance);
-        unit.intendedNextMove = moveTo;
+        await Unit.moveTowards(unit, moveTo);
       }
     }
     // Heal an ally

@@ -46,7 +46,6 @@ export interface IUnit {
   faction: number;
   // If the unit moved this turn
   thisTurnMoved: boolean;
-  intendedNextMove?: Vec2;
   image: Image.IImage;
   shaderUniforms: { [key: string]: any };
   damage: number;
@@ -97,7 +96,6 @@ export function create(
     attackRange: config.UNIT_BASE_ATTACK_RANGE,
     faction,
     thisTurnMoved: false,
-    intendedNextMove: undefined,
     image: Image.create(x, y, imagePath, containerUnits),
     shaderUniforms: {},
     damage: config.UNIT_BASE_DAMAGE,

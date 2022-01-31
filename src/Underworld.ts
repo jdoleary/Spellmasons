@@ -562,7 +562,6 @@ export default class Underworld {
           // Reset thisTurnMoved flag now that it is a new turn
           // Because no units have moved yet this turn
           u.thisTurnMoved = false;
-          u.intendedNextMove = undefined;
         }
         // Lastly, initialize the player turns.
         // Note, it is possible that calling this will immediately end
@@ -598,10 +597,6 @@ export default class Underworld {
             );
           }
         }
-        // Wait for units to finish moving
-        animationPromises = animationPromises.concat(
-          this.initiateIntelligentAIMovement(),
-        );
         // When all animations are done, set turn phase to player turn
         Promise.all(animationPromises).then(() => {
           this.endNPCTurnPhase();
@@ -616,43 +611,6 @@ export default class Underworld {
       default:
         break;
     }
-  }
-  initiateIntelligentAIMovement(): Promise<void>[] {
-    let promises: Promise<void>[] = [];
-    // This function ensures that all units who can move, do move, in the proper order
-    // so, for example, three units next to each other all trying to move left can
-    // all do so, regardless of the order that they are in in the units array
-    const AIUnits = this.units.filter((u) => u.unitType === UnitType.AI);
-    // Move all units who intend to move
-    // Units who are obstructed will not move due to collision checks in Unit.moveTo
-    AIUnits.filter((u) => u.intendedNextMove !== undefined).forEach((u) => {
-      if (u.intendedNextMove) {
-        promises.push(Unit.moveTowards(u, u.intendedNextMove));
-      }
-    });
-    // While there are units who intend to move but havent yet
-    let remainingUnitsWhoIntendToMove = [];
-    let previousUnmovedUnitCount = 0;
-    do {
-      previousUnmovedUnitCount = remainingUnitsWhoIntendToMove.length;
-      remainingUnitsWhoIntendToMove = AIUnits.filter(
-        (u) => !!u.intendedNextMove && !u.thisTurnMoved,
-      );
-      // Try moving them again
-      remainingUnitsWhoIntendToMove.forEach((u) => {
-        if (u.intendedNextMove) {
-          promises.push(Unit.moveTowards(u, u.intendedNextMove));
-        }
-      });
-    } while (
-      remainingUnitsWhoIntendToMove.length &&
-      // So long as the number of units who intend to move continues to change on the loop,
-      // keep looping.  This will ensure that units that CAN move do, and as they move
-      // they may free up space for other units to move.  But once these numbers are equal,
-      // the units left that intend to move truly cannot.
-      remainingUnitsWhoIntendToMove.length !== previousUnmovedUnitCount
-    );
-    return promises;
   }
 
   getCoordsForUnitsWithinDistanceOfTarget(

@@ -38,7 +38,7 @@ const unit: UnitSource = {
     }
     // Move randomly
     const moveCoords = window.underworld.getRandomCoordsWithinBounds({ xMin: 2 });
-    unit.intendedNextMove = moveCoords;
+    await Unit.moveTowards(unit, moveCoords);
   },
 };
 

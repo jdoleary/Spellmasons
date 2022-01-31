@@ -35,7 +35,7 @@ const unit: UnitSource = {
       const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit);
       if (closestEnemy) {
         const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestEnemy, -unit.moveDistance);
-        unit.intendedNextMove = moveTo;
+        await Unit.moveTowards(unit, moveTo);
       }
     }
   },
