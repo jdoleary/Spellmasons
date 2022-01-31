@@ -129,8 +129,7 @@ export function create(
   // Ensure all change factions logic applies when a unit is first created
   changeFaction(unit, faction);
 
-  unit.image.scale = config.NON_HEAVY_UNIT_SCALE;
-  unit.image.sprite.scale.set(unit.image.scale);
+  unit.image.sprite.scale.set(config.NON_HEAVY_UNIT_SCALE);
 
   window.underworld.addUnitToArray(unit);
 
@@ -390,9 +389,10 @@ export function changeFaction(unit: IUnit, faction: Faction) {
 
 // syncImage updates a unit's Image to match it's game state
 export function syncImage(unit: IUnit) {
+  // TODO does scale syncing need to happen here?  I don't think so cause it's
+  // just stored in the sprite so it wont get out of sync
   unit.lastX = unit.image.sprite.x;
   unit.lastY = unit.image.sprite.y;
   unit.image.sprite.x = unit.x;
   unit.image.sprite.y = unit.y;
-  unit.image.scale = unit.radius / UNIT_BASE_RADIUS;
 }

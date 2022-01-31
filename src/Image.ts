@@ -15,7 +15,6 @@ export interface IImage {
   // image IS serializable, it is a list of the keys corresponding to subSprite
   // data in Subsprites.ts
   subSprites: string[];
-  scale: number;
 }
 export function create(
   x: number,
@@ -34,7 +33,6 @@ export function create(
     sprite,
     subSpriteInstances: {},
     subSprites: [],
-    scale: 1,
   };
   setPosition(image, x, y);
   return image;
@@ -60,19 +58,18 @@ export function changeSprite(image: IImage, sprite: PIXI.Sprite) {
 }
 export function load(image: IImage, parent: PIXI.Container) {
   const copy = { ...image };
-  const { x, y } = copy.sprite;
+  const { x, y, scale } = copy.sprite;
   // Recreate the sprite using the create function so it initializes it properly
   const remadeSprite = create(0, 0, copy.imageName, parent).sprite;
   copy.sprite = remadeSprite;
   // Restore position
   copy.sprite.x = x;
   copy.sprite.y = y;
+  copy.sprite.scale.set(scale.x, scale.y);
   // Restore subsprites
   copy.subSpriteInstances = {};
   restoreSubsprites(copy);
 
-  // Restore scale
-  scale(copy, copy.scale);
   return copy;
 }
 export function restoreSubsprites(image: IImage) {
@@ -92,8 +89,8 @@ export function serialize(image: IImage) {
     sprite: {
       x: image.sprite.x,
       y: image.sprite.y,
+      scale: { x: image.sprite.scale.x, y: image.sprite.scale.y }
     },
-    scale: image.scale,
     subSprites: image.subSprites,
     imageName: image.imageName,
   };
@@ -110,9 +107,7 @@ export function scale(image: IImage, scale: number) {
       sprite: image.sprite,
       target: { scale },
     },
-  ]).then(() => {
-    image.scale = scale;
-  });
+  ]);
 }
 export function addSubSprite(image: IImage, key: string) {
   // Don't add more than one copy
