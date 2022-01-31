@@ -102,7 +102,7 @@ export default class Underworld {
         window.pie.sendData({
           type: MESSAGE_TYPES.GAMESTATE_HASH,
           hash: this.hash(),
-          state: this.sanitizeForHash()
+          state: this.serializeForHash()
         });
       }
     }, config.REPORT_HASH_EVERY_X_MILLIS)
@@ -147,7 +147,7 @@ export default class Underworld {
       }
     }, 1000);
   }
-  gameLoopUnits = () => {
+  gameLoopUnits() {
     for (let u of this.units) {
       // Sync Image even for non moving units since they may be moved by forces other than themselves
       Unit.syncImage(u)
@@ -733,24 +733,24 @@ export default class Underworld {
   // Create a hash from the gamestate.  Useful for determining if
   // clients have desynced.
   hash() {
-    return hash(this.sanitizeForHash());
+    return hash(this.serializeForHash());
   }
-  sanitizeForHash() {
-    const sanitizedState: any = this.sanitizeForSaving();
+  serializeForHash() {
+    const serializedState: any = this.serializeForSaving();
     // Remove variables that would cause the hash to change second to second.
     // The hash is meant to show if clients have roughly identical game state
     // but it will take time to communicate the hash. and since secondsLeftForTurn
     // changes second to second, it isn't useful for determining if clients have
     // desynced
-    delete sanitizedState.secondsLeftForTurn;
-    return sanitizedState;
+    delete serializedState.secondsLeftForTurn;
+    return serializedState;
   }
 
   // Returns only the properties that can be saved
   // callbacks and complicated objects such as PIXI.Sprites
   // are removed
-  sanitizeForSaving(): Underworld {
-    return {
+  serializeForSaving(): Underworld {
+    const serializedState: any = {
       ...this,
       players: this.players.map((p) => ({
         ...p,
@@ -765,9 +765,10 @@ export default class Underworld {
       obstacles: this.obstacles.map(Obstacle.serialize),
       // the state of the Random Number Generator
       RNGState: this.random.state(),
-      random: undefined,
-      turnInterval: undefined
     };
+    delete serializedState.random;
+    delete serializedState.turnInterval;
+    return serializedState;
   }
 }
 

@@ -63,8 +63,7 @@ export function onData(d: OnDataArgs) {
             fontSize: '60px',
           },
         })
-        console.log("gamestate diff:\n", detailedDiff(underworld.sanitizeForHash(), payload.state));
-        console.log('gamestates', JSON.stringify(underworld.sanitizeForHash(), null, 2), JSON.stringify(payload.state, null, 2));
+        console.log("gamestate diff:\n", detailedDiff(underworld.serializeForHash(), payload.state));
         window.pie.sendData({
           type: MESSAGE_TYPES.DESYNC
         });
@@ -253,7 +252,7 @@ function forceSyncClients() {
   window.pie.sendData({
     type: MESSAGE_TYPES.LOAD_GAME_STATE,
     route: window.route,
-    underworld: underworld.sanitizeForSaving(),
+    underworld: underworld.serializeForSaving(),
   });
 }
 
@@ -301,7 +300,7 @@ window.save = (title) => {
   localStorage.setItem(
     'golems-save-' + title,
     JSON.stringify({
-      underworld: window.underworld.sanitizeForSaving(),
+      underworld: window.underworld.serializeForSaving(),
       route: window.route,
     }),
   );
