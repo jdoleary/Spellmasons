@@ -43,4 +43,4 @@ export const MANA_GET_PER_TURN = 5;
 export const SPELL_DISTANCE_MANA_DENOMINATOR = 100;
 
 // Networking
-export const REPORT_HASH_EVERY_X_MILLIS = 10000;
+export const REPORT_HASH_EVERY_X_MILLIS = 3000;
