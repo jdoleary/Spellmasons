@@ -31,6 +31,8 @@ export function initializeUnderworld() {
 }
 export function onData(d: OnDataArgs) {
   // Temporarily for development
+  // TODO: Remove for production, messageLog will take
+  // up a lot of memory for real games
   messageLog.push(d);
 
   const { payload, fromClient } = d;
