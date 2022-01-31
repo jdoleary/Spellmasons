@@ -1,4 +1,6 @@
 import type { ClientPresenceChangedArgs, OnDataArgs } from 'pie-client';
+// TODO remove deep-object-diff before shipping
+import { diff } from 'deep-object-diff';
 import { MESSAGE_TYPES } from './MessageTypes';
 import { UnitType } from './commonTypes';
 import floatingText from './FloatingText';
@@ -39,6 +41,14 @@ export function onData(d: OnDataArgs) {
       break;
     case MESSAGE_TYPES.VOTE_FOR_LEVEL:
       voteForLevel(fromClient, payload.levelIndex);
+      break;
+    case MESSAGE_TYPES.GAMESTATE_HASH:
+      const hostClientsHash = payload.hash;
+      if (underworld.hash() != hostClientsHash) {
+        console.error("Out of sync with host");
+        console.log("gamestate diff:\n", JSON.stringify(diff(underworld.sanitizeForHash(), payload.state), null, 2))
+        console.log('gamestates', underworld.sanitizeForHash(), payload.state)
+      }
       break;
     case MESSAGE_TYPES.SELECT_CHARACTER:
       // If player doesn't already exist, make them

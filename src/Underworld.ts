@@ -93,9 +93,19 @@ export default class Underworld {
     this.walls.push({ p1: { x: config.MAP_WIDTH, y: config.MAP_HEIGHT }, p2: { x: config.MAP_WIDTH, y: 0 } });
     this.walls.push({ p1: { x: config.MAP_WIDTH, y: config.MAP_HEIGHT }, p2: { x: 0, y: config.MAP_HEIGHT } });
 
-    // TODO this probably shouldn't get initialized here
+    // TODO these probably shouldn't get initialized here
     this.startTurnTimer();
     this.gameLoopUnits();
+    clearInterval(window.sendHashInterval);
+    window.sendHashInterval = setInterval(() => {
+      if (this.hostClientId == window.clientId) {
+        window.pie.sendData({
+          type: MESSAGE_TYPES.GAMESTATE_HASH,
+          hash: this.hash(),
+          state: this.sanitizeForHash()
+        });
+      }
+    }, config.REPORT_HASH_EVERY_X_MILLIS)
   }
   startTurnTimer() {
     // Limit turn duration
@@ -765,6 +775,9 @@ export default class Underworld {
   // Create a hash from the gamestate.  Useful for determining if
   // clients have desynced.
   hash() {
+    return hash(this.sanitizeForHash());
+  }
+  sanitizeForHash() {
     const sanitizedState: any = this.sanitizeForSaving();
     // Remove variables that would cause the hash to change second to second.
     // The hash is meant to show if clients have roughly identical game state
@@ -772,7 +785,7 @@ export default class Underworld {
     // changes second to second, it isn't useful for determining if clients have
     // desynced
     delete sanitizedState.secondsLeftForTurn;
-    return hash(sanitizedState);
+    return sanitizedState;
   }
 
   // Returns only the properties that can be saved
@@ -794,7 +807,8 @@ export default class Underworld {
       obstacles: this.obstacles.map(Obstacle.serialize),
       // the state of the Random Number Generator
       RNGState: this.random.state(),
-      random: undefined
+      random: undefined,
+      turnInterval: undefined
     };
   }
 }
