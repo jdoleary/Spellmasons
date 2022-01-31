@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
 import seedrandom from 'seedrandom';
+import hash from 'object-hash';
 import * as config from './config';
 import * as Unit from './Unit';
 import * as Pickup from './Pickup';
@@ -761,6 +762,19 @@ export default class Underworld {
     return effectState;
   }
 
+  // Create a hash from the gamestate.  Useful for determining if
+  // clients have desynced.
+  hash() {
+    const sanitizedState: any = this.sanitizeForSaving();
+    // Remove variables that would cause the hash to change second to second.
+    // The hash is meant to show if clients have roughly identical game state
+    // but it will take time to communicate the hash. and since secondsLeftForTurn
+    // changes second to second, it isn't useful for determining if clients have
+    // desynced
+    delete sanitizedState.secondsLeftForTurn;
+    return hash(sanitizedState);
+  }
+
   // Returns only the properties that can be saved
   // callbacks and complicated objects such as PIXI.Sprites
   // are removed
@@ -776,7 +790,8 @@ export default class Underworld {
       pickups: this.pickups.map(Pickup.serialize),
       obstacles: this.obstacles.map(Obstacle.serialize),
       // the state of the Random Number Generator
-      RNGState: this.random.state()
+      RNGState: this.random.state(),
+      random: undefined
     };
   }
 }

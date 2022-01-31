@@ -204,6 +204,7 @@ export function serializeUnit(unit: IUnit) {
     image: Image.serialize(unit.image),
     healthText: null,
     agroOverlay: null,
+    shaderUniforms: null,
   };
 }
 export function resurrect(unit: IUnit) {
