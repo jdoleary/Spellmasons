@@ -1,6 +1,8 @@
 import type { ClientPresenceChangedArgs, OnDataArgs } from 'pie-client';
 // TODO remove deep-object-diff before shipping
-import { detailedDiff } from 'deep-object-diff';
+import { diff } from 'deep-object-diff';
+import hash from 'object-hash';
+
 import { MESSAGE_TYPES } from './MessageTypes';
 import { UnitType } from './commonTypes';
 import floatingText from './FloatingText';
@@ -53,8 +55,14 @@ export function onData(d: OnDataArgs) {
       break;
     case MESSAGE_TYPES.GAMESTATE_HASH:
       const hostClientsHash = payload.hash;
-      if (underworld.hash() != hostClientsHash) {
-        console.error("Desync: Out of sync with host");
+      if (underworld.processedMessageCount != payload.processedMessageCount) {
+        console.log('Skip hash comparison as one of the clients is still catching up to the other in the message queue', underworld.processedMessageCount, payload.processedMessageCount)
+        break;
+      }
+      const currentSerializedGameState = underworld.serializeForHash();
+      const currentHash = hash(JSON.stringify(currentSerializedGameState));
+      if (currentHash != hostClientsHash) {
+        console.error(`Desync: ${underworld.processedMessageCount} ${payload.processedMessageCount} Out of sync with host, ${currentHash} ${hostClientsHash} (${hash(payload.state)})`);
         // TODO: Remove floating text for production
         floatingText({
           coords: { x: MAP_WIDTH / 2, y: MAP_HEIGHT / 2 }, text: "Out of sync with host!",
@@ -63,7 +71,7 @@ export function onData(d: OnDataArgs) {
             fontSize: '60px',
           },
         })
-        console.log("gamestate diff:\n", detailedDiff(underworld.serializeForHash(), payload.state));
+        console.log("gamestate diff:\n", diff(currentSerializedGameState, JSON.parse(payload.state)));
         window.pie.sendData({
           type: MESSAGE_TYPES.DESYNC
         });
@@ -94,6 +102,10 @@ export function onData(d: OnDataArgs) {
       // If a client loads a full game state, they should be fully synced
       // so clear the onDataQueue to prevent old messages from being processed
       onDataQueue = [d];
+      // Reset processedMessageCount since once a client loads a new state
+      // it will be synced with all the others and they can all start counting again
+      // from 0 to see if they're up to date.
+      underworld.processedMessageCount = 0;
       // The LOAD_GAME_STATE message is tricky, it is an 
       // exception to the normal pattern used
       // with the queue, but it should still be processed sequentially to prevent
@@ -136,6 +148,7 @@ export function processNextInQueue() {
   messageQueue.processNextInQueue(onDataQueue, handleOnDataMessage);
 }
 async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
+  underworld.processedMessageCount++;
   currentlyProcessingOnDataMessage = d;
   const { payload, fromClient } = d;
   const type: MESSAGE_TYPES = payload.type;

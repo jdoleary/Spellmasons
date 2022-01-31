@@ -72,6 +72,10 @@ export default class Underworld {
   hostClientId: string = '';
   level?: ILevel;
   choseUpgrade = new Set<string>();
+  // Keeps track of how many messages have been processed so that clients can
+  // know when they've desynced.  Only used for syncronous message processing
+  // since only the syncronous messages affect gamestate.
+  processedMessageCount: number = 0;
 
   constructor(seed: string, RNGState: object | boolean = true) {
     window.underworld = this;
@@ -99,10 +103,12 @@ export default class Underworld {
     clearInterval(window.sendHashInterval);
     window.sendHashInterval = setInterval(() => {
       if (this.hostClientId == window.clientId) {
+        const serializedState = JSON.stringify(this.serializeForHash());
         window.pie.sendData({
           type: MESSAGE_TYPES.GAMESTATE_HASH,
-          hash: this.hash(),
-          state: this.serializeForHash()
+          hash: hash(serializedState),
+          processedMessageCount: this.processedMessageCount,
+          state: serializedState
         });
       }
     }, config.REPORT_HASH_EVERY_X_MILLIS)
@@ -732,9 +738,12 @@ export default class Underworld {
 
   // Create a hash from the gamestate.  Useful for determining if
   // clients have desynced.
-  hash() {
-    return hash(this.serializeForHash());
-  }
+  // hash() {
+  //   const state = this.serializeForHash();
+  //   const hashResult = hash(state);
+  //   console.log(`hash-${hashResult}:`, JSON.stringify(state));
+  //   return hashResult
+  // }
   // Returns a modified copy of gamestate that is used when generating a hash
   // of the gamestate to determine if clients have identical states
   // Use caution: any properties improperly modified or removed could cause
