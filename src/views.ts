@@ -64,6 +64,12 @@ export function setView(v: View) {
           .then(() => {
             readyState.set('wsPieRoomJoined', true);
             console.log('You are now in the room');
+            // Useful for development to get into the game quickly
+            let quickloadName = localStorage.getItem('quickload')
+            if (quickloadName) {
+              console.log('ADMIN: quickload:', quickloadName);
+              window.load(quickloadName);
+            }
           })
           .catch((err: string) => console.error('Failed to join room', err));
       });
