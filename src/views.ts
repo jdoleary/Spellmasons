@@ -37,6 +37,8 @@ export function setView(v: View) {
       let setupPixiPromise = setupPixi().then(() => {
         readyState.set('pixiAssets', true);
         console.log("Done loading Pixi assets.")
+      }).catch(e => {
+        console.error('Failed to setup pixi', e);
       });
       // Initialize Network
       console.log("Connecting to server...")

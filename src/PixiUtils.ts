@@ -133,7 +133,7 @@ function removeContainers(containers: PIXI.Container[]) {
   }
 }
 function loadTextures(): Promise<void> {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const loader = PIXI.Loader.shared;
     loader.onProgress.add(a => console.log("onProgress", a)); // called once per loaded/errored file
     loader.onError.add(e => console.error("Pixi loader on error:", e)); // called once per errored file
@@ -143,9 +143,13 @@ function loadTextures(): Promise<void> {
     loader.add(sheetPath);
     loader.load((_loader, resources) => {
       resources = resources;
-      sheet = resources[sheetPath].spritesheet;
-      isReady = true;
-      resolve();
+      if (resources[sheetPath] && resources[sheetPath].spritesheet) {
+        sheet = resources[sheetPath].spritesheet as PIXI.Spritesheet;
+        isReady = true;
+        resolve();
+      } else {
+        reject();
+      }
     });
   });
 }
