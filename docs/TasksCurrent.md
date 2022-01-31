@@ -1,5 +1,24 @@
 ## Current Priorities
-- Player.cardsSelected causes desync
+- desync: bug: with shaderUniforms:
+```
+"shaderUniforms": {
+    "all_red": {
+        "alpha": 0.7556000000000132
+    }
+},
+
+"shaderUniforms": {
+    "all_red": {
+        "alpha": 0.760600000000013
+    }
+},
+```
+- desync often happens with moveTarget since moveTarget can be set mid way through executing a gamestate_hash check which would make the hashes not equal
+    - LEFT OFF HERE: Try doing hashcheck as a synchronous onData message instead of at an arbitrary interval
+- desync:
+    - moveTarget
+    - shaderUniforms
+- Update server to send message number so clients can know when they both have the latest message.  This'll prevent false positive desync detection
 - Cards become more expensive when you use them
 - Playtest with friends
     - Verify gamestate integrity between clients
