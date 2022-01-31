@@ -214,20 +214,8 @@ export function updateTooltipContent() {
       const player = window.underworld.players.find((p) => p.unit === unit);
       if (player) {
         cards =
-          'Cards: \n' +
-          Object.entries(
-            [...player.cards, ...player.cardsSelected].reduce<{
-              [card: string]: number;
-            }>((acc, card) => {
-              if (!acc[card]) {
-                acc[card] = 0;
-              }
-              acc[card]++;
-              return acc;
-            }, {}),
-          )
-            .map(([card, amount]) => `${amount} ${card}`)
-            .join('\n');
+          'Cards: ' +
+          player.cards.join(', ');
       } else {
         console.error(
           'Could not find player corresponding to player controlled unit',

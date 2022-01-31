@@ -53,19 +53,13 @@ function showFullCard(card: Cards.ICard) {
       elCardInspect.appendChild(createCardElement(card));
       const elQuantity = document.createElement('div');
       elQuantity.classList.add('card-quantity');
-      if (window.player) {
-        elQuantity.innerText = `You have ${[
-          ...window.player.cards,
-          ...window.player.cardsSelected,
-        ].reduce((count, c) => count + (c == card.id ? 1 : 0), 0)} ${card.id
-          } in your hand`;
-      }
       elCardInspect.appendChild(elQuantity);
     } else {
       console.error('card-inspect div does not exist');
     }
   }
 }
+let cardsSelected: string[] = [];
 
 export function recalcPositionForCards(player: CardUI.IPlayer | undefined) {
   if (!window.player) {
@@ -132,7 +126,7 @@ export function recalcPositionForCards(player: CardUI.IPlayer | undefined) {
     console.error('elSelectedCards is null');
   }
   // Rebuild all the card elements within #selected-cards
-  for (let cardId of player.cardsSelected) {
+  for (let cardId of cardsSelected) {
     const className = `card-${cardId}`;
 
     // Create UI element for card
@@ -156,9 +150,9 @@ function addClickListenerToCardElement(
   element.addEventListener('click', (e) => {
     e.stopPropagation();
     if (element.classList.contains('selected')) {
-      const index = player.cardsSelected.findIndex((c) => c === cardId);
+      const index = cardsSelected.findIndex((c) => c === cardId);
       if (index !== -1) {
-        player.cardsSelected.splice(index, 1);
+        cardsSelected.splice(index, 1);
         deselectCard(element);
       } else {
         console.log(
@@ -168,7 +162,7 @@ function addClickListenerToCardElement(
         );
       }
     } else {
-      player.cardsSelected.push(cardId);
+      cardsSelected.push(cardId);
       selectCard(player, element, cardId);
     }
   });
@@ -216,9 +210,9 @@ export function areAnyCardsSelected() {
 // This function fully deletes the cards that are 'selected' in the player's hand
 export function removeCardsFromHand(player: CardUI.IPlayer, cards: string[]) {
   cardLoop: for (let cardToRemove of cards) {
-    for (let i = player.cardsSelected.length - 1; i >= 0; i--) {
-      if (player.cardsSelected[i] === cardToRemove) {
-        player.cardsSelected.splice(i, 1);
+    for (let i = cardsSelected.length - 1; i >= 0; i--) {
+      if (cardsSelected[i] === cardToRemove) {
+        cardsSelected.splice(i, 1);
         continue cardLoop;
       }
     }
@@ -295,9 +289,7 @@ export function clearSelectedCards() {
   // Remove the board highlight
   clearSpellEffectProjection();
   // Deselect all selected cards
-  if (window.player) {
-    window.player.cardsSelected = []
-  }
+  cardsSelected = []
   document.querySelectorAll('.card.selected').forEach((el) => {
     if (el instanceof HTMLElement) {
       el.remove();

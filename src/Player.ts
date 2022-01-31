@@ -19,7 +19,6 @@ export interface IPlayer {
   unit: Unit.IUnit;
   inPortal: boolean;
   cards: string[];
-  cardsSelected: string[];
   // The number of cards a player's hand is populated with at the start of a level
   cardsAmount: number;
   upgrades: Upgrade.IUpgrade[];
@@ -47,7 +46,6 @@ export function create(clientId: string, unitId: string): IPlayer | undefined {
     ),
     inPortal: false,
     cards: [],
-    cardsSelected: [],
     cardsAmount: config.START_CARDS_COUNT,
     upgrades: [],
     overworldImage: Image.create(
@@ -133,7 +131,7 @@ export function setClientConnected(player: IPlayer, connected: boolean) {
 // Remove all of the player's cards
 function removeAllCards(player: IPlayer) {
   player.cards = [];
-  player.cardsSelected = [];
+  CardUI.clearSelectedCards();
   CardUI.recalcPositionForCards(player);
 }
 export function enterPortal(player: IPlayer) {
