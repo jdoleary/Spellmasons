@@ -17,6 +17,7 @@ import { setRoute, Route } from './routes';
 import { setView, View } from './views';
 import * as readyState from './readyState';
 import * as messageQueue from './messageQueue';
+import { MAP_HEIGHT, MAP_WIDTH } from './config';
 
 const messageLog: any[] = [];
 let clients: string[] = [];
@@ -46,6 +47,14 @@ export function onData(d: OnDataArgs) {
       const hostClientsHash = payload.hash;
       if (underworld.hash() != hostClientsHash) {
         console.error("Out of sync with host");
+        // TODO: Remove for production
+        floatingText({
+          coords: { x: MAP_WIDTH / 2, y: MAP_HEIGHT / 2 }, text: "Out of sync with host!",
+          style: {
+            fill: 'red',
+            fontSize: '60px',
+          },
+        })
         console.log("gamestate diff:\n", JSON.stringify(diff(underworld.sanitizeForHash(), payload.state), null, 2))
         console.log('gamestates', underworld.sanitizeForHash(), payload.state)
       }
