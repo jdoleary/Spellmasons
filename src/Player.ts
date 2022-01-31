@@ -4,13 +4,13 @@ import * as Image from './Image';
 import type * as Upgrade from './Upgrade';
 import * as CardUI from './CardUI';
 import * as config from './config';
-import * as math from './math';
-import { Vec2, Faction, UnitType } from './commonTypes';
+import { Faction, UnitType } from './commonTypes';
 import { allUnits } from './units';
 import { getClients } from './wsPieHandler';
 import { containerOverworld } from './PixiUtils';
 import { currentOverworldLocation } from './overworld';
 import * as readyState from './readyState';
+import { allCards } from './cards';
 
 export interface IPlayer {
   // wsPie id
@@ -64,11 +64,9 @@ export function create(clientId: string, unitId: string): IPlayer | undefined {
   player.overworldImage.sprite.y = currentOverworldLocation.y + offset;
 
   updateGlobalRefToCurrentClientPlayer(player);
-  // Add cards to hand
-  for (let i = 0; i < config.START_CARDS_COUNT; i++) {
-    const card = CardUI.generateCard();
-    CardUI.addCardToHand(card, player);
-  }
+  // Add initial cards to hand
+  CardUI.addCardToHand(allCards[0], player);
+  CardUI.addCardToHand(allCards[1], player);
   addHighlighIfPlayerBelongsToCurrentClient(player);
   player.unit.health = PLAYER_BASE_HEALTH;
   player.unit.healthMax = PLAYER_BASE_HEALTH;
@@ -87,13 +85,6 @@ export function resetPlayerForNextLevel(player: IPlayer) {
   Image.show(player.unit.image);
   if (!player.unit.alive) {
     Unit.resurrect(player.unit);
-  }
-
-  // Clear and reset cards (solves "rocket launcher problem")
-  removeAllCards(player);
-  for (let i = 0; i < player.cardsAmount; i++) {
-    const card = CardUI.generateCard();
-    CardUI.addCardToHand(card, player);
   }
 
   // Return to a spawn location
