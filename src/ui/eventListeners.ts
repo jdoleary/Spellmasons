@@ -30,6 +30,36 @@ export function keydownListener(event: KeyboardEvent) {
     case 'ShiftRight':
       CardUI.toggleInspectMode(true);
       break;
+    case 'Digit1':
+      CardUI.selectCardByIndex(0);
+      break;
+    case 'Digit2':
+      CardUI.selectCardByIndex(1);
+      break;
+    case 'Digit3':
+      CardUI.selectCardByIndex(2);
+      break;
+    case 'Digit4':
+      CardUI.selectCardByIndex(3);
+      break;
+    case 'Digit5':
+      CardUI.selectCardByIndex(4);
+      break;
+    case 'Digit6':
+      CardUI.selectCardByIndex(5);
+      break;
+    case 'Digit7':
+      CardUI.selectCardByIndex(6);
+      break;
+    case 'Digit8':
+      CardUI.selectCardByIndex(7);
+      break;
+    case 'Digit9':
+      CardUI.selectCardByIndex(8);
+      break;
+    case 'Digit0':
+      CardUI.selectCardByIndex(9);
+      break;
   }
 }
 

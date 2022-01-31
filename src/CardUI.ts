@@ -187,6 +187,16 @@ function makeCardTypeGroup(cardId: string): HTMLDivElement {
 function deselectCard(element: HTMLElement) {
   element.remove();
 }
+export function selectCardByIndex(index: number) {
+  if (elCardHand) {
+    const cardGroup = elCardHand.children.item(index) as HTMLElement;
+    if (cardGroup) {
+      (cardGroup.children.item(0) as HTMLElement).click();
+    } else {
+      console.warn(`Cannot select a card, no card in hand at index ${index}`)
+    }
+  }
+}
 // Moves a card element to selected-cards div
 function selectCard(player: CardUI.IPlayer, element: HTMLElement, cardId: string) {
   if (elSelectedCards) {
