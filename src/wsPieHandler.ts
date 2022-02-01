@@ -9,14 +9,12 @@ import * as Player from './Player';
 import * as Unit from './Unit';
 import * as Pickup from './Pickup';
 import * as Obstacle from './Obstacle';
-import * as Card from './CardUI';
 import { syncSpellEffectProjection } from './ui/PlanningView';
 import { voteForLevel } from './overworld';
 import { setRoute, Route } from './routes';
 import { setView, View } from './views';
 import * as readyState from './readyState';
 import * as messageQueue from './messageQueue';
-import { MAP_HEIGHT, MAP_WIDTH } from './config';
 
 const messageLog: any[] = [];
 let clients: string[] = [];
