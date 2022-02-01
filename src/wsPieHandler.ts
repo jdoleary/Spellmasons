@@ -76,7 +76,7 @@ export function onData(d: OnDataArgs) {
     case MESSAGE_TYPES.LOAD_GAME_STATE:
       // If a client loads a full game state, they should be fully synced
       // so clear the onDataQueue to prevent old messages from being processed
-      onDataQueue = [d];
+      onDataQueueContainer.queue = [d];
       // Reset processedMessageCount since once a client loads a new state
       // it will be synced with all the others and they can all start counting again
       // from 0 to see if they're up to date.
@@ -90,6 +90,7 @@ export function onData(d: OnDataArgs) {
       // And rather than calling handleOnDataMessageSyncronously(d) here,
       // we just skip right to calling processNextInQueue since this message
       // can execute regardless of whether readyState.isReady() is true or not
+      // --
       processNextInQueue();
       break;
     default:
@@ -98,29 +99,29 @@ export function onData(d: OnDataArgs) {
       break;
   }
 }
-let onDataQueue: OnDataArgs[] = [];
+let onDataQueueContainer = messageQueue.makeContainer<OnDataArgs>();
 // Waits until a message is done before it will continue to process more messages that come through
 // This ensures that players can't move in the middle of when spell effects are occurring for example.
 function handleOnDataMessageSyncronously(d: OnDataArgs) {
   // Queue message for processing one at a time
-  onDataQueue.push(d);
+  onDataQueueContainer.queue.push(d);
   // 10 is an arbitrary limit which will report that something may be wrong
   // because it's unusual for the queue to get this large
-  if (onDataQueue.length > 10) {
-    console.warn("onData queue is growing unusually large: ", onDataQueue.length, "stuck on message: ", currentlyProcessingOnDataMessage);
+  if (onDataQueueContainer.queue.length > 10) {
+    console.warn("onData queue is growing unusually large: ", onDataQueueContainer.queue.length, "stuck on message: ", currentlyProcessingOnDataMessage);
   }
-  // If game is ready to process messages, begin processing
-  // (if not, they will remain in the queue until the game is ready)
-  if (readyState.isReady()) {
-    // process the "next" (the one that was just added) immediately
-    processNextInQueue();
-  }
+  // process the "next" (the one that was just added) immediately
+  processNextInQueue();
 }
 // currentlyProcessingOnDataMessage is used to help with bug reports to show
 // which message is stuck and didn't finish being processed.
 let currentlyProcessingOnDataMessage: any = null;
 export function processNextInQueue() {
-  messageQueue.processNextInQueue(onDataQueue, handleOnDataMessage);
+  // If game is ready to process messages, begin processing
+  // (if not, they will remain in the queue until the game is ready)
+  if (readyState.isReady()) {
+    messageQueue.processNextInQueue(onDataQueueContainer, handleOnDataMessage);
+  }
 }
 async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
   underworld.processedMessageCount++;
