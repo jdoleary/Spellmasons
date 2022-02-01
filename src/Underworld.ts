@@ -70,7 +70,7 @@ export default class Underworld {
   turnInterval: any;
   hostClientId: string = '';
   level?: ILevel;
-  choseUpgrade = new Set<string>();
+  playersWhoHaveChosenUpgrade = new Set<string>();
   // Keeps track of how many messages have been processed so that clients can
   // know when they've desynced.  Only used for syncronous message processing
   // since only the syncronous messages affect gamestate.
@@ -461,7 +461,7 @@ export default class Underworld {
     );
     upgrade.effect(player);
     player.upgrades.push(upgrade);
-    this.choseUpgrade.add(player.clientId);
+    this.playersWhoHaveChosenUpgrade.add(player.clientId);
     // Clear upgrade choices once one is chosen
     if (player.clientId === window.clientId) {
       if (elUpgradePickerContent) {
@@ -472,14 +472,14 @@ export default class Underworld {
     const numberOfPlayersWhoNeedToChooseUpgradesTotal = this.players.filter(
       (p) => p.clientConnected,
     ).length;
-    if (this.choseUpgrade.size >= numberOfPlayersWhoNeedToChooseUpgradesTotal) {
-      this.choseUpgrade.clear();
+    if (this.playersWhoHaveChosenUpgrade.size >= numberOfPlayersWhoNeedToChooseUpgradesTotal) {
+      this.playersWhoHaveChosenUpgrade.clear();
       if (elUpgradePickerLabel) {
         elUpgradePickerLabel.innerText = '';
       }
     } else {
       if (elUpgradePickerLabel) {
-        elUpgradePickerLabel.innerText = `${numberOfPlayersWhoNeedToChooseUpgradesTotal - this.choseUpgrade.size
+        elUpgradePickerLabel.innerText = `${numberOfPlayersWhoNeedToChooseUpgradesTotal - this.playersWhoHaveChosenUpgrade.size
           } players left to pick upgrades`;
       }
     }
