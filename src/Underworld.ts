@@ -170,10 +170,15 @@ export default class Underworld {
     return window.underworld.turn_phase == turn_phase.PlayerTurns
       && window.underworld.playerTurnIndex === window.underworld.players.findIndex(p => p === window.player)
   }
+  // Caution: Be careful when changing clean up code.  There are times when you just want to
+  // clean up assets and then there are times when you want to clear and empty the arrays
+  // Be sure not to confuse them.
+  // cleanup cleans up all assets that must be manually removed (for now `Image`s)
+  // if an object stops being used.  It does not empty the underworld arrays, by design.
   cleanup() {
     clearInterval(this.turnInterval);
     for (let p of this.players) {
-      // Note: Player's unit is cleaned up  below where it also has a reference in this.units
+      // Note: Player's unit image is cleaned up below where it also has a reference in this.units
       // Clean up overworldImage
       Image.cleanup(p.overworldImage);
     }

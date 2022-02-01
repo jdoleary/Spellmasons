@@ -1,5 +1,6 @@
 ## Current Priorities
-- Tings to sync
+- Note: There may need to be a difference from `load`ing an object into a gameentity and updating an object to synchronize it
+- Things to sync
     - Add syncing for units
         - position, health, mana, spell effects?
         - Send message at start of units turn which asserts RNG state and unit state; then all simulations calculate together
