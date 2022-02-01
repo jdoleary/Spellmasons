@@ -227,18 +227,15 @@ export function serializeUnit(unit: IUnit) {
     agroOverlay: null,
     // resolveDoneMoving is a callback that cannot be serialized
     resolveDoneMoving: null,
-    shaderUniforms: {},
-    // The below "can" successfully save shaderUniforms for loading later; however,
-    // since shaders are "client only effects" and don't need to be synced,
-    // they easily cause a client desync when the gamestate hash is compared
-    // shaderUniforms: Object.entries(unit.shaderUniforms).reduce((obj, cur) => {
-    //   const [key, value] = cur;
-    //   // Pare down shaderUniforms to only the uniforms that the game sets so they
-    //   // can be loaded back in later
-    //   const { filterGlobals, globals, uSampler, ...keep } = value
-    //   obj[key] = { ...keep };
-    //   return obj;
-    // }, {} as any),
+    // Pick the uniforms needed to rehydrate
+    shaderUniforms: Object.entries(unit.shaderUniforms).reduce((obj, cur) => {
+      const [key, value] = cur;
+      // Pare down shaderUniforms to only the uniforms that the game sets so they
+      // can be loaded back in later
+      const { filterGlobals, globals, uSampler, ...keep } = value
+      obj[key] = { ...keep };
+      return obj;
+    }, {} as any),
   };
 }
 export function resurrect(unit: IUnit) {
