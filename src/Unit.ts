@@ -171,6 +171,10 @@ export function updateSelectedOverlay(unit: IUnit) {
   unit.healthText.anchor.y = -0.2;
 }
 export function cleanup(unit: IUnit) {
+  // Resolve done moving on cleanup to ensure that there are no forever-blocking promises
+  if (unit.resolveDoneMoving) {
+    unit.resolveDoneMoving();
+  }
   unit.x = NaN;
   unit.y = NaN;
   unit.flaggedForRemoval = true;
@@ -180,9 +184,16 @@ export function cleanup(unit: IUnit) {
 // Reinitialize a unit from another unit object, this is used in loading game state after reconnect
 export function load(unit: IUnit): IUnit {
   const { shaderUniforms, ...restUnit } = unit
+  // Since resolveDoneMoving is about to be overwritten,
+  // call it, just in case there is a pending promise (there shouldn't be)
+  // so the promise doesn't hang forever
+  if (unit.resolveDoneMoving) {
+    unit.resolveDoneMoving();
+  }
   const loadedunit: IUnit = {
     ...restUnit,
     shaderUniforms: {},
+    resolveDoneMoving: () => { },
     image: Image.load(unit.image, containerUnits),
     healthText: new PIXI.Text('', {
       fill: 'red',
