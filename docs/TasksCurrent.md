@@ -1,24 +1,23 @@
 ## Current Priorities
-- desync: bug: with shaderUniforms:
-```
-"shaderUniforms": {
-    "all_red": {
-        "alpha": 0.7556000000000132
-    }
-},
-
-"shaderUniforms": {
-    "all_red": {
-        "alpha": 0.760600000000013
-    }
-},
-```
+- Tings to sync
+    - Add syncing for units
+        - position, health, mana, spell effects?
+        - Send message at start of units turn which asserts RNG state and unit state; then all simulations calculate together
+    - Underworld
+        - Exludes Players, Units
+        - Syncing RNG
+        - turn state
+        - pickups
+        - obstacles
+        - walls
+    - Players (eschew player units)
+        - this will also sync upgrades
+- Add tests / refactor into module for syncronous message processing to account for:
+    - messages arriving out of order
+---
 - desync often happens with moveTarget since moveTarget can be set mid way through executing a gamestate_hash check which would make the hashes not equal
-    - LEFT OFF HERE: Try doing hashcheck as a synchronous onData message instead of at an arbitrary interval
-- desync:
-    - moveTarget
-    - shaderUniforms
 - Update server to send message number so clients can know when they both have the latest message.  This'll prevent false positive desync detection
+---
 - Cards become more expensive when you use them
 - Playtest with friends
     - Verify gamestate integrity between clients
@@ -48,10 +47,9 @@
         - Special sfx for when ally dies
 - Hire Out?
     - Art
-        - Do what you can with Juice and shaders before hiring and artist
-        - What if I did CGI for faster iteration
         - Calculate the value of your time for making art and music yourself vs the cost of hiring at $3000 expenses / month.  I'm -$18.75 per working hour
     - Music
+        - Stina offered
         - Have special music for intense moments (low health, boss fight)
         - https://www.fiverr.com/categories/music-audio/session-musicians?source=gallery-listing
 - Menus / Options

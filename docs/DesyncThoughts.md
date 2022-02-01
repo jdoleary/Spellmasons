@@ -1,11 +1,23 @@
 ## 2022-02-01
+- Messages to Sync
+  - MOVE_PLAYER
+  - SPELL
+  - CHOOSE_UPGRADE
+- State to Sync
+  - Players
+  - Units
+  - Underworld
+- Should messages have IDs? What should determine them? PieServer?
+- Should units have IDs or should I assume their index is their ID
+
+---
 Checking the hash of the whole gamestate turns out to not work very well.  For one, there's a lot of data, and if something small changes, such as a unit's moveTarget the whole hash will be different.  Also originally I was calculating the hash on an interval, which means it would eventually calculate a hash mid-turn, when things were changing.  Which would make the hashes not match even if both clients had the same state message to message.
 Possible solutions:
   - Calculate hashes for subgroups of the game state, such as units, players, pickups, etc.
   - Have the host send a message for the result of the AI turn (with from and to positions)
     - Give every unit a unique ID
     - Use full gameplay sync as a last resort
-    
+
 ---
 - Desyncs that occur when messages arrive out of order:
   - Desync, with fake lag, I was actually able to make a desync occur when two messages got send with varying delays and arrived out of order.  Maybe solution is to increment message counter?
@@ -73,3 +85,8 @@ So long as every network message is received and executed in order and random nu
   - When a client takes an action, it executes it immediately locally
   - Actions received from server overwrite local state
     - Move actions should contain a from and a to
+---
+[How Age of Empires did it](https://www.gamasutra.com/view/feature/3094/1500_archers_on_a_288_network_.php)
+- Commands have to be checked for validity both on send and receive. 
+- We ended up with three different minimal test applications, all to isolate and highlight problems like connection flooding, problems with simultaneous matchmaking connects, and dropped guaranteed packets. 
+- Recorded games are incredibly popular with the fan sites as it allows gamers to trade and analyze strategies, view famous battles, and review the games they played in. As a debugging tool, recorded games are invaluable. 
