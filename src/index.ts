@@ -33,6 +33,5 @@ declare global {
     view: View;
     // For development use
     giveMeCard: (cardId: string, quantity: number) => void;
-    sendHashInterval: NodeJS.Timeout;
   }
 }

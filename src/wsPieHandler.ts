@@ -1,7 +1,4 @@
 import type { ClientPresenceChangedArgs, OnDataArgs } from 'pie-client';
-// TODO remove deep-object-diff before shipping
-import { diff } from 'deep-object-diff';
-import hash from 'object-hash';
 
 import { MESSAGE_TYPES } from './MessageTypes';
 import { UnitType } from './commonTypes';
@@ -53,30 +50,6 @@ export function onData(d: OnDataArgs) {
         // When a desync is detected, the host should force the other clients to
         // sync with it
         forceSyncClients();
-      }
-      break;
-    case MESSAGE_TYPES.GAMESTATE_HASH:
-      const hostClientsHash = payload.hash;
-      if (underworld.processedMessageCount != payload.processedMessageCount) {
-        console.log('Skip hash comparison as one of the clients is still catching up to the other in the message queue', underworld.processedMessageCount, payload.processedMessageCount)
-        break;
-      }
-      const currentSerializedGameState = underworld.serializeForHash();
-      const currentHash = hash(JSON.stringify(currentSerializedGameState));
-      if (currentHash != hostClientsHash) {
-        console.error(`Desync: ${underworld.processedMessageCount} ${payload.processedMessageCount} Out of sync with host, ${currentHash} ${hostClientsHash} (${hash(payload.state)})`);
-        // TODO: Remove floating text for production
-        floatingText({
-          coords: { x: MAP_WIDTH / 2, y: MAP_HEIGHT / 2 }, text: "Out of sync with host!",
-          style: {
-            fill: 'red',
-            fontSize: '60px',
-          },
-        })
-        console.log("gamestate diff:\n", diff(currentSerializedGameState, JSON.parse(payload.state)));
-        window.pie.sendData({
-          type: MESSAGE_TYPES.DESYNC
-        });
       }
       break;
     case MESSAGE_TYPES.SELECT_CHARACTER:
@@ -158,6 +131,37 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
   // Get caster
   const caster = underworld.players.find((p) => p.clientId === fromClient);
   switch (type) {
+    // Checks to see if desync has occurred between clients
+    // It is important that this message is handled syncronously, so we don't get 
+    // false positives (reporting on desyncs when it's client-only state such as moveTarget -
+    // moveTarget changes rapidly in the gameLoop, if it were to be factored into the hash, 
+    // there would easily be false positives where it reports that clients are out of sync
+    // when really they just took a snapshot (the hash) at slightly different times when executing
+    // the same messages.
+    // case MESSAGE_TYPES.GAMESTATE_HASH:
+    //   const hostClientsHash = payload.hash;
+    //   if (underworld.processedMessageCount != payload.processedMessageCount) {
+    //     console.log('Skip hash comparison as one of the clients is still catching up to the other in the message queue', underworld.processedMessageCount, payload.processedMessageCount)
+    //     break;
+    //   }
+    //   const currentSerializedGameState = underworld.serializeForHash();
+    //   const currentHash = hash(JSON.stringify(currentSerializedGameState));
+    //   if (currentHash != hostClientsHash) {
+    //     console.error(`Desync: ${underworld.processedMessageCount} ${payload.processedMessageCount} Out of sync with host, ${currentHash} ${hostClientsHash} (${hash(payload.state)})`);
+    //     // TODO: Remove floating text for production
+    //     floatingText({
+    //       coords: { x: MAP_WIDTH / 2, y: MAP_HEIGHT / 2 }, text: "Out of sync with host!",
+    //       style: {
+    //         fill: 'red',
+    //         fontSize: '60px',
+    //       },
+    //     })
+    //     console.log("gamestate diff:\n", diff(currentSerializedGameState, JSON.parse(payload.state)));
+    //     window.pie.sendData({
+    //       type: MESSAGE_TYPES.DESYNC
+    //     });
+    //   }
+    //   break;
     case MESSAGE_TYPES.LOAD_GAME_STATE:
       // Clean up old game state
       if (underworld) {

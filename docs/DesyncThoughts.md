@@ -1,3 +1,12 @@
+## 2022-02-01
+Checking the hash of the whole gamestate turns out to not work very well.  For one, there's a lot of data, and if something small changes, such as a unit's moveTarget the whole hash will be different.  Also originally I was calculating the hash on an interval, which means it would eventually calculate a hash mid-turn, when things were changing.  Which would make the hashes not match even if both clients had the same state message to message.
+Possible solutions:
+  - Calculate hashes for subgroups of the game state, such as units, players, pickups, etc.
+  - Have the host send a message for the result of the AI turn (with from and to positions)
+    - Give every unit a unique ID
+    - Use full gameplay sync as a last resort
+    
+---
 - Desyncs that occur when messages arrive out of order:
   - Desync, with fake lag, I was actually able to make a desync occur when two messages got send with varying delays and arrived out of order.  Maybe solution is to increment message counter?
   - Desync where if one client misses a `clientPresenceChanged` message their game will continue to operate as if that client isn't connected and can't take turns.

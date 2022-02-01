@@ -41,6 +41,3 @@ export const MANA_GET_PER_TURN = 5;
 // A bigger number means distance costs less.  
 // distance/SPELL_DISTANCE_MANA_DENOMINATOR is what the mana is multiplied by
 export const SPELL_DISTANCE_MANA_DENOMINATOR = 100;
-
-// Networking
-export const REPORT_HASH_EVERY_X_MILLIS = 3000;

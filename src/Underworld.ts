@@ -1,6 +1,5 @@
 import * as PIXI from 'pixi.js';
 import seedrandom from 'seedrandom';
-import hash from 'object-hash';
 import * as config from './config';
 import * as Unit from './Unit';
 import * as Pickup from './Pickup';
@@ -100,18 +99,6 @@ export default class Underworld {
     // TODO: these probably shouldn't get initialized here
     this.startTurnTimer();
     this.gameLoopUnits();
-    clearInterval(window.sendHashInterval);
-    window.sendHashInterval = setInterval(() => {
-      if (this.hostClientId == window.clientId) {
-        const serializedState = JSON.stringify(this.serializeForHash());
-        window.pie.sendData({
-          type: MESSAGE_TYPES.GAMESTATE_HASH,
-          hash: hash(serializedState),
-          processedMessageCount: this.processedMessageCount,
-          state: serializedState
-        });
-      }
-    }, config.REPORT_HASH_EVERY_X_MILLIS)
   }
   startTurnTimer() {
     // Limit turn duration
