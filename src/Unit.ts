@@ -181,12 +181,16 @@ export function cleanup(unit: IUnit) {
   Image.cleanup(unit.image);
   deselect(unit);
 }
-// Reinitialize a unit from another unit object, this is used in loading game state after reconnect
+// Reinitialize a unit from another unit object
+// this is useful when loading game state after reconnect
+// This is the opposite of serialize
 export function load(unit: IUnit): IUnit {
   const { shaderUniforms, ...restUnit } = unit
   // Since resolveDoneMoving is about to be overwritten,
   // call it, just in case there is a pending promise (there shouldn't be)
   // so the promise doesn't hang forever
+  // ---
+  // TODO: I think this doesn't do anything because it's doesn't use the old unit
   if (unit.resolveDoneMoving) {
     unit.resolveDoneMoving();
   }
@@ -195,6 +199,7 @@ export function load(unit: IUnit): IUnit {
     shaderUniforms: {},
     resolveDoneMoving: () => { },
     image: Image.load(unit.image, containerUnits),
+    // TODO: is healthText still used?
     healthText: new PIXI.Text('', {
       fill: 'red',
       // Allow health hearts to wrap
@@ -219,6 +224,11 @@ export function load(unit: IUnit): IUnit {
   return loadedunit;
 }
 
+// Converts a unit object into a serialized form
+// that can be saved as JSON and rehydrated later into
+// a full unit object (with callbacks, shaderUniforms, etc - the things
+// that can't be saved as JSON)
+// This is the opposite of load
 export function serializeUnit(unit: IUnit) {
   return {
     ...unit,
