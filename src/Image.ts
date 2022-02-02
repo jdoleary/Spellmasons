@@ -105,11 +105,14 @@ export function load(image: IImageSerialized, parent: PIXI.Container) {
 // mutates originalImage
 // TODO test for memory leaks
 export function syncronize(imageSerialized: IImageSerialized, originalImage: IImage): void {
-  const { subSprites, imageName, ...rest } = imageSerialized;
+  const { x, y, scale } = imageSerialized.sprite;
+  originalImage.sprite.x = x;
+  originalImage.sprite.y = y;
+  originalImage.sprite.scale.x = scale.x
+  originalImage.sprite.scale.y = scale.y;
   if (imageSerialized.imageName === originalImage.imageName) {
     // then we only need to update properties:
-    Object.assign(originalImage, rest);
-    if (JSON.stringify(imageSerialized.subSprites) != JSON.stringify(originalImage.subSprites)) {
+    if (JSON.stringify(imageSerialized.subSprites.filter(s => s != 'ownCharacterMarker')) != JSON.stringify(originalImage.subSprites)) {
       originalImage.subSprites = imageSerialized.subSprites;
       restoreSubsprites(originalImage);
     }

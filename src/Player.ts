@@ -144,6 +144,7 @@ export function syncronize(playerSerialized: IPlayerSerialized, originalPlayer: 
   Object.assign(originalPlayer, rest);
   Unit.syncronize(unit, originalPlayer.unit);
   Image.syncronize(overworldImage, originalPlayer.overworldImage);
+  addHighlighIfPlayerBelongsToCurrentClient(originalPlayer);
 }
 // Sets boolean and substring denoting if the player has a pie-client client associated with it
 export function setClientConnected(player: IPlayer, connected: boolean) {
