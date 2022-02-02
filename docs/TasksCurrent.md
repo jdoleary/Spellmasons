@@ -1,5 +1,8 @@
 ## Current Priorities
 - Bug: LOAD_GAME_STATE no longer triggers for players who haven't started a game yet, so it's broken for first time setup
+- Bug: get two clients to SELECT_CHARACTER, choose a character for client 1, disconnect client 2, vote for a level on client 1, notice that the player unit is invisible
+    - this also happens when a player joins a game in process
+    - it seems like since load waits in queue, it overwrites the newly created player
 - Things to sync
     - Add syncing for units
         - when: At start of unit turn
