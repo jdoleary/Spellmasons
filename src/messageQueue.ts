@@ -1,6 +1,6 @@
 
 
-export function processNextInQueue<T>(container: MessageQueueContainer<T>, callback: (x: any) => any) {
+export function processNextInQueue<T>(container: MessageQueueContainer<T>, callback: (x: any) => Promise<void>) {
     // Only allow the next message to be processed if it is not
     // already processing (this ensures only one message is processed at a time)
     if (!container._isProcessing) {
