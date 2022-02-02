@@ -12,6 +12,10 @@ import { currentOverworldLocation } from './overworld';
 import * as readyState from './readyState';
 import { allCards } from './cards';
 
+// The serialized version of the interface changes the interface to allow only the data
+// that can be serialized in JSON.  It may exclude data that is not neccessary to
+// rehydrate the JSON into an entity
+export type IPlayerSerialized = Omit<IPlayer, "unit"> & { unit: Unit.IUnitSerialized };
 export interface IPlayer {
   // wsPie id
   clientId: string;
@@ -106,7 +110,19 @@ function addHighlighIfPlayerBelongsToCurrentClient(player: IPlayer) {
     Image.removeSubSprite(player.unit.image, 'ownCharacterMarker');
   }
 }
-export function load(player: IPlayer) {
+// Converts a player entity into a serialized form
+// that can be saved as JSON and rehydrated later into
+// a full player entity 
+// This is the opposite of load
+export function serialize(player: IPlayer): IPlayerSerialized {
+  const { unit, ...rest } = player;
+  return {
+    ...rest,
+    unit: Unit.serialize(unit)
+  }
+}
+// load rehydrates a player entity from IPlayerSerialized
+export function load(player: IPlayerSerialized) {
   const playerLoaded: IPlayer = {
     ...player,
     unit: Unit.load(player.unit),

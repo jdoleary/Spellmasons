@@ -26,6 +26,10 @@ export function getPlanningViewColor(unit: IUnit) {
   }
 }
 const UNIT_BASE_RADIUS = config.COLLISION_MESH_RADIUS * config.NON_HEAVY_UNIT_SCALE;
+// The serialized version of the interface changes the interface to allow only the data
+// that can be serialized in JSON.  It may exclude data that is not neccessary to
+// rehydrate the JSON into an entity
+export type IUnitSerialized = Omit<IUnit, "resolveDoneMoving" | "healthText" | "image"> & { image: Image.IImageSerialized };
 export interface IUnit {
   unitSourceId: string;
   x: number;
@@ -181,19 +185,43 @@ export function cleanup(unit: IUnit) {
   Image.cleanup(unit.image);
   deselect(unit);
 }
+// Similar but not the same as `load`, syncronize updates (mutates) a unit 
+// entity with properties from a unit (in JSON)
+export function syncronize(unit: IUnit, originalUnit: IUnit): void {
+
+  Object.assign(originalUnit, unit);
+
+}
+// Converts a unit entity into a serialized form
+// that can be saved as JSON and rehydrated later into
+// a full unit entity (with callbacks, shaderUniforms, etc - the things
+// that can't be saved as JSON)
+// This is the opposite of load
+export function serialize(unit: IUnit): IUnitSerialized {
+  // resolveDoneMoving is a callback that cannot be serialized
+  const { resolveDoneMoving, healthText, ...rest } = unit
+  return {
+    ...rest,
+    image: Image.serialize(unit.image),
+    // Pick the uniforms needed to rehydrate
+    shaderUniforms: Object.entries(unit.shaderUniforms).reduce((obj, cur) => {
+      const [key, value] = cur;
+      // Pare down shaderUniforms to only the uniforms that the game sets so they
+      // can be loaded back in later
+      const { filterGlobals, globals, uSampler, ...keep } = value
+      obj[key] = { ...keep };
+      return obj;
+    }, {} as any),
+  };
+}
 // Reinitialize a unit from another unit object
 // this is useful when loading game state after reconnect
 // This is the opposite of serialize
-export function load(unit: IUnit): IUnit {
+export function load(unit: IUnitSerialized): IUnit {
   const { shaderUniforms, ...restUnit } = unit
   // Since resolveDoneMoving is about to be overwritten,
   // call it, just in case there is a pending promise (there shouldn't be)
   // so the promise doesn't hang forever
-  // ---
-  // TODO: I think this doesn't do anything because it's doesn't use the old unit
-  if (unit.resolveDoneMoving) {
-    unit.resolveDoneMoving();
-  }
   const loadedunit: IUnit = {
     ...restUnit,
     shaderUniforms: {},
@@ -224,30 +252,6 @@ export function load(unit: IUnit): IUnit {
   return loadedunit;
 }
 
-// Converts a unit object into a serialized form
-// that can be saved as JSON and rehydrated later into
-// a full unit object (with callbacks, shaderUniforms, etc - the things
-// that can't be saved as JSON)
-// This is the opposite of load
-export function serializeUnit(unit: IUnit) {
-  return {
-    ...unit,
-    image: Image.serialize(unit.image),
-    healthText: null,
-    agroOverlay: null,
-    // resolveDoneMoving is a callback that cannot be serialized
-    resolveDoneMoving: null,
-    // Pick the uniforms needed to rehydrate
-    shaderUniforms: Object.entries(unit.shaderUniforms).reduce((obj, cur) => {
-      const [key, value] = cur;
-      // Pare down shaderUniforms to only the uniforms that the game sets so they
-      // can be loaded back in later
-      const { filterGlobals, globals, uSampler, ...keep } = value
-      obj[key] = { ...keep };
-      return obj;
-    }, {} as any),
-  };
-}
 export function resurrect(unit: IUnit) {
   Image.changeSprite(
     unit.image,

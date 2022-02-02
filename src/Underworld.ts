@@ -760,13 +760,13 @@ export default class Underworld {
       ...this,
       players: this.players.map((p) => ({
         ...p,
-        unit: Unit.serializeUnit(p.unit),
+        unit: Unit.serialize(p.unit),
         overworldImage: Image.serialize(p.overworldImage),
       })),
       units: this.units
         // Player controlled units are serialized within the players object
         .filter((u) => u.unitType !== UnitType.PLAYER_CONTROLLED)
-        .map(Unit.serializeUnit),
+        .map(Unit.serialize),
       pickups: this.pickups.map(Pickup.serialize),
       obstacles: this.obstacles.map(Obstacle.serialize),
       // the state of the Random Number Generator

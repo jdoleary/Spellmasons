@@ -5,6 +5,18 @@ import Subsprites from './Subsprites';
 import { animateIndependent } from './AnimationTimeline';
 import type { Vec2 } from './commonTypes';
 
+// The serialized version of the interface changes the interface to allow only the data
+// that can be serialized in JSON.  It may exclude data that is not neccessary to
+// rehydrate the JSON into an entity
+export type IImageSerialized = {
+  sprite: {
+    x: number,
+    y: number,
+    scale: { x: number, y: number }
+  },
+  subSprites: string[],
+  imageName: string
+};
 export interface IImage {
   // Not to be serialized
   sprite: PIXI.Sprite;
@@ -56,35 +68,13 @@ export function changeSprite(image: IImage, sprite: PIXI.Sprite) {
   image.sprite = sprite;
   restoreSubsprites(image);
 }
-export function load(image: IImage, parent: PIXI.Container) {
-  const copy = { ...image };
-  const { x, y, scale } = copy.sprite;
-  // Recreate the sprite using the create function so it initializes it properly
-  const remadeSprite = create(0, 0, copy.imageName, parent).sprite;
-  copy.sprite = remadeSprite;
-  // Restore position
-  copy.sprite.x = x;
-  copy.sprite.y = y;
-  copy.sprite.scale.set(scale.x, scale.y);
-  // Restore subsprites
-  copy.subSpriteInstances = {};
-  restoreSubsprites(copy);
-
-  return copy;
-}
-export function restoreSubsprites(image: IImage) {
-  // Re-add subsprites
-  const subSprites = [...image.subSprites];
-  image.sprite.removeChildren();
-  image.subSprites = [];
-  for (let subSprite of subSprites) {
-    addSubSprite(image, subSprite);
-  }
-}
+// Converts an Image entity into a serialized form
+// that can be saved as JSON and rehydrated later into
+// a full Image entity.
 // Returns only the properties that can be saved
 // callbacks and complicated objects such as PIXI.Sprites
 // are removed
-export function serialize(image: IImage) {
+export function serialize(image: IImage): IImageSerialized {
   return {
     sprite: {
       x: image.sprite.x,
@@ -96,6 +86,29 @@ export function serialize(image: IImage) {
     subSprites: image.subSprites.filter(s => s != "ownCharacterMarker"),
     imageName: image.imageName,
   };
+}
+// Reinitialize an Image from IImageSerialized JSON
+// this is useful when loading game state after reconnect
+// This is the opposite of serialize
+export function load(image: IImageSerialized, parent: PIXI.Container) {
+  const copy = { ...image };
+  const { x, y, scale } = copy.sprite;
+  // Recreate the sprite using the create function so it initializes it properly
+  const newImage = create(x, y, copy.imageName, parent);
+  newImage.sprite.scale.set(scale.x, scale.y);
+  // Restore subsprites
+  restoreSubsprites(newImage);
+
+  return newImage;
+}
+export function restoreSubsprites(image: IImage) {
+  // Re-add subsprites
+  const subSprites = [...image.subSprites];
+  image.sprite.removeChildren();
+  image.subSprites = [];
+  for (let subSprite of subSprites) {
+    addSubSprite(image, subSprite);
+  }
 }
 export function setPosition(image: IImage, x: number, y: number) {
   image.sprite.x = x;
