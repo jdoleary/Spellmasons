@@ -4,7 +4,18 @@ const readyState = {
     wsPieConnection: false,
     pixiAssets: false,
     wsPieRoomJoined: false,
-    player: false,
+    // Maybe player will be needed in the ready state, but for now
+    // I had to disable it so that clients that join can start
+    // processing messages before they pick their character
+    // (which is what creates their player entity) because
+    // LOAD_GAME_STATE is now processed syncronously. So the
+    // order needs to be:
+    // 1. UI Chooses player which queues SELECT_CHARACTER
+    // 2. Message queue starts processing
+    // 3. LOAD_GAME_STATE (which should be already in the queue is processed)
+    // TODO is it possible that a player could be chosen BEFORE the LOAD_GAME_STATE is there? YES, fix this
+    // 4. SELECT_CHARACTER message is processed
+    // player: false,
     underworld: false,
 }
 let is_fully_ready = false;

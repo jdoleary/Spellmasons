@@ -21,10 +21,14 @@ let clients: string[] = [];
 let underworld: Underworld;
 export function initializeUnderworld() {
   underworld = new Underworld(Math.random().toString());
+  // Since the game was just created,
+  // move the game to the Overworld
+  setRoute(Route.Overworld);
   // Mark the underworld as "ready"
   readyState.set('underworld', true);
 }
 export function onData(d: OnDataArgs) {
+  console.log("onData:", MESSAGE_TYPES[d.payload.type], d)
   // Temporarily for development
   // TODO: Remove for production, messageLog will take
   // up a lot of memory for real games
@@ -44,32 +48,8 @@ export function onData(d: OnDataArgs) {
       break;
     case MESSAGE_TYPES.DESYNC:
       console.warn(`Client ${fromClient} detected desync from host`)
-      if (window.underworld.hostClientId === window.clientId) {
-        // When a desync is detected, the host should force the other clients to
-        // sync with it
-        forceSyncClients();
-      }
-      break;
-    case MESSAGE_TYPES.SELECT_CHARACTER:
-      // If player doesn't already exist, make them
-      if (!underworld.players.find((p) => p.clientId === fromClient)) {
-        const p = Player.create(fromClient, payload.unitId);
-        if (p) {
-          underworld.players.push(p);
-          // Sort underworld.players according to client order so that all
-          // instances of the game have a underworld.players array in the same
-          // order
-          // --
-          // (the .filter removes possible undefined players so that underworld.players doesn't contain any undefined values)
-          underworld.players = clients.map(c => underworld.players.find(p => p.clientId == c)).filter(x => !!x) as Player.IPlayer[];
-        } else {
-          console.error("Failed to SelectCharacter because Player.create did not return a player object")
-        }
-      } else {
-        console.error(
-          'Client already has a character and cannot create a new one.',
-        );
-      }
+      // When a desync is detected, sync the clients 
+      forceSyncClients();
       break;
     case MESSAGE_TYPES.LOAD_GAME_STATE:
       // If a client loads a full game state, they should be fully synced
@@ -115,6 +95,7 @@ function handleOnDataMessageSyncronously(d: OnDataArgs) {
 // which message is stuck and didn't finish being processed.
 let currentlyProcessingOnDataMessage: any = null;
 export function processNextInQueue() {
+  console.log("queue", onDataQueueContainer.queue);
   // If game is ready to process messages, begin processing
   // (if not, they will remain in the queue until the game is ready)
   if (readyState.isReady()) {
@@ -161,6 +142,30 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
     //     });
     //   }
     //   break;
+    case MESSAGE_TYPES.SELECT_CHARACTER:
+      // If player doesn't already exist, make them
+      if (!underworld.players.find((p) => p.clientId === fromClient)) {
+        const p = Player.create(fromClient, payload.unitId);
+        if (p) {
+          underworld.players.push(p);
+          // Sort underworld.players according to client order so that all
+          // instances of the game have a underworld.players array in the same
+          // order
+          // --
+          // (the .filter removes possible undefined players so that underworld.players doesn't contain any undefined values)
+          underworld.players = clients.map(c => underworld.players.find(p => p.clientId == c)).filter(x => !!x) as Player.IPlayer[];
+          // Now that another player has joined the game
+          // send game state to other player so they can load:
+          forceSyncClients();
+        } else {
+          console.error("Failed to SelectCharacter because Player.create did not return a player object")
+        }
+      } else {
+        console.error(
+          'Client already has a character and cannot create a new one.',
+        );
+      }
+      break;
     case MESSAGE_TYPES.SYNC:
       const { players, units, underworldPartial } = payload;
       for (let i = 0; i < underworld.players.length; i++) {
@@ -289,11 +294,15 @@ export function getClients(): string[] {
   return clients;
 }
 function forceSyncClients() {
-  window.pie.sendData({
-    type: MESSAGE_TYPES.LOAD_GAME_STATE,
-    route: window.route,
-    underworld: underworld.serializeForSaving(),
-  });
+  console.log("try force sync:", window.underworld.hostClientId, window.clientId);
+  if (window.underworld.hostClientId === window.clientId) {
+    console.log("JTEST SEND LOAD_GAME_STATE")
+    window.pie.sendData({
+      type: MESSAGE_TYPES.LOAD_GAME_STATE,
+      route: window.route,
+      underworld: underworld.serializeForSaving(),
+    });
+  }
 }
 
 export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
@@ -304,19 +313,16 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
   );
   // Client joined
   if (o.present) {
-    if (clients.length === 1) {
-      // if you are the only client, set yourself as the host
-      underworld.hostClientId = window.clientId;
-      // Since the game was just created,
-      // move the game to the Overworld
-      setRoute(Route.Overworld);
+    if (o.clientThatChanged === window.clientId) {
+      // All clients should join at the CharacterSelect screen so they can
+      // choose their character.  Once they choose their character their
+      // Player entity is created and then the messageQueue can begin processing
+      // including LOAD_GAME_STATE.
       setView(View.CharacterSelect);
-    } else if (underworld.hostClientId === window.clientId) {
-      // If you are the host, send the game state to the other player
-      // who just joined
-      // Send game state to other player so they can load:
-      forceSyncClients();
     }
+    // The host is always the first client
+    underworld.hostClientId = clients[0]
+    console.log('Host client is', underworld.hostClientId, JSON.stringify(clients));
   } else {
     // client left
     if (player) {
@@ -331,9 +337,8 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
     // if host left
     if (o.clientThatChanged === underworld.hostClientId) {
       // Set host to the 0th client that is still connected
-      const sortedClients = o.clients.sort();
-      underworld.hostClientId = sortedClients[0];
-      console.log('host left, reassigning host to ', underworld.hostClientId);
+      underworld.hostClientId = clients[0];
+      console.log('Host client left, reassigning host to ', underworld.hostClientId);
     }
   }
 }
