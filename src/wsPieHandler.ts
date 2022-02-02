@@ -323,15 +323,17 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
       Player.setClientConnected(player, false);
       underworld.endPlayerTurn(player.clientId);
     } else {
-      console.error('Cannot disconnect player that is undefined');
+      // this can occur naturally if a client disconnects before choosing
+      // a character
+      console.warn('Cannot disconnect player that is undefined');
     }
 
     // if host left
     if (o.clientThatChanged === underworld.hostClientId) {
-      console.log('host left');
       // Set host to the 0th client that is still connected
       const sortedClients = o.clients.sort();
       underworld.hostClientId = sortedClients[0];
+      console.log('host left, reassigning host to ', underworld.hostClientId);
     }
   }
 }

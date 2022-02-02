@@ -49,11 +49,12 @@ export function joinRoom(_room_info = {}): Promise<unknown> {
 }
 function addHandlers(pie: PieClient) {
   pie.onServerAssignedData = (o) => {
-    console.log('serverAssignedData', o);
+    // console.log('serverAssignedData', o);
     window.clientId = o.clientId;
     sessionStorage.setItem('pie-clientId', o.clientId);
   };
   pie.onData = onData;
+  // TODO: remove alert for production
   pie.onError = ({ message }: { message: any }) => window.alert(message);
   pie.onClientPresenceChanged = onClientPresenceChanged;
   pie.onLatency = (l) => {
