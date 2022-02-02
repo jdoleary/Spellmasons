@@ -25,7 +25,7 @@ export enum Route {
 window.setRoute = setRoute;
 
 export function setRoute(r: Route) {
-  console.log('Set game route', Route[r]);
+  console.log('setRoute(', Route[r], ')');
   for (let route of Object.keys(Route)) {
     document.body.classList.remove(`route-${route}`);
   }

@@ -229,7 +229,7 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
   }
 }
 async function handleSelectCharacter(d: OnDataArgs) {
-  console.log("Setup: Select Character", d);
+  console.log(`Setup: Select Character for client ${d.fromClient}`);
   const { payload, fromClient } = d;
   // If player doesn't already exist, make them
   if (!underworld.players.find((p) => p.clientId === fromClient)) {

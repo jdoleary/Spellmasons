@@ -24,7 +24,7 @@ export enum View {
   Game,
 }
 export function setView(v: View) {
-  console.log('Set game view', View[v]);
+  console.log('setView(', View[v], ')');
   window.view = v;
   addPixiContainersForView(v);
   recenterStage();
@@ -37,21 +37,21 @@ export function setView(v: View) {
       setupMonitoring();
 
       // Initialize Assets
-      console.log("Loading Pixi assets...")
+      console.log("Setup: Loading Pixi assets...")
       let setupPixiPromise = setupPixi().then(() => {
         readyState.set('pixiAssets', true);
-        console.log("Done loading Pixi assets.")
+        console.log("Setup: Done loading Pixi assets.")
       }).catch(e => {
-        console.error('Failed to setup pixi', e);
+        console.error('Setup: Failed to setup pixi', e);
       });
       // Initialize Network
-      console.log("Connecting to server...")
+      console.log("Pie: Connecting to server...")
       let connectToPieServerPromise = connect_to_wsPie_server().then(() => {
         readyState.set('wsPieConnection', true);
-        console.log("Done connecting to server.")
+        console.log("Pie: Successfully connected to PieServer.")
       });
       Promise.all([setupPixiPromise, connectToPieServerPromise]).then(() => {
-        console.log("Loading complete.. initialize game")
+        console.log("Setup: Loading complete.. initialize game")
         // Now that we are both connected to the pieServer and assets are loaded,
         // we can host or join a game
         // --
@@ -65,7 +65,7 @@ export function setView(v: View) {
         joinRoom({})
           .then(() => {
             readyState.set('wsPieRoomJoined', true);
-            console.log('You are now in the room');
+            console.log('Pie: You are now in the room');
             // Useful for development to get into the game quickly
             let quickloadName = localStorage.getItem('quickload')
             if (quickloadName) {
