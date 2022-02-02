@@ -23,7 +23,7 @@ import { allUnits } from './units';
 import { updatePlanningView, updateTooltipPosition, updateTooltipSpellCost } from './ui/PlanningView';
 import { ILevel, getEnemiesForAltitude } from './overworld';
 import { setRoute, Route } from './routes';
-import { prng, randInt } from './rand';
+import { prng, randInt, SeedrandomState } from './rand';
 import { calculateManaHealthCost } from './cards/cardUtils';
 import { moveWithCollisions } from './collision/moveWithCollision';
 import type { LineSegment } from './collision/collisionMath';
@@ -49,7 +49,7 @@ export default class Underworld {
   seed: string;
   random: prng;
   // for serializing random: prng
-  RNGState?: object;
+  RNGState?: SeedrandomState;
   turn_phase: turn_phase = turn_phase.PlayerTurns;
   // Index of the player whose turn it is
   playerTurnIndex: number = 0;
@@ -76,13 +76,11 @@ export default class Underworld {
   // since only the syncronous messages affect gamestate.
   processedMessageCount: number = 0;
 
-  constructor(seed: string, RNGState: object | boolean = true) {
+  constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
     window.underworld = this;
     this.seed = seed;
     console.log("RNG create with seed:", seed, ", state: ", RNGState);
-    // state of "true" initializes the RNG with the ability to save it's state,
-    // state of a state object, rehydrates the RNG to a particular state
-    this.random = seedrandom(this.seed, { state: RNGState });
+    this.random = this.syncronizeRNG(RNGState);
 
     const mapGraphics = new PIXI.Graphics();
     containerBoard.addChild(mapGraphics);
@@ -99,6 +97,12 @@ export default class Underworld {
     // TODO: these probably shouldn't get initialized here
     this.startTurnTimer();
     this.gameLoopUnits();
+  }
+  syncronizeRNG(RNGState: SeedrandomState | boolean) {
+    // state of "true" initializes the RNG with the ability to save it's state,
+    // state of a state object, rehydrates the RNG to a particular state
+    this.random = seedrandom(this.seed, { state: RNGState })
+    return this.random;
   }
   startTurnTimer() {
     // Limit turn duration
@@ -755,14 +759,11 @@ export default class Underworld {
   // Returns only the properties that can be saved
   // callbacks and complicated objects such as PIXI.Sprites
   // are removed
-  serializeForSaving(): Underworld {
-    const serializedState: any = {
-      ...this,
-      players: this.players.map((p) => ({
-        ...p,
-        unit: Unit.serialize(p.unit),
-        overworldImage: Image.serialize(p.overworldImage),
-      })),
+  serializeForSaving(): IUnderworldSerialized {
+    const { random, turnInterval, players, units, pickups, obstacles, ...rest } = this;
+    return {
+      ...rest,
+      players: this.players.map(Player.serialize),
       units: this.units
         // Player controlled units are serialized within the players object
         .filter((u) => u.unitType !== UnitType.PLAYER_CONTROLLED)
@@ -772,9 +773,25 @@ export default class Underworld {
       // the state of the Random Number Generator
       RNGState: this.random.state(),
     };
-    delete serializedState.random;
-    delete serializedState.turnInterval;
-    return serializedState;
+  }
+  // Updates specifically selected properties of underworld
+  // Mutates current object
+  // The purpose of this function is to keep underworld in sync
+  // between clients
+  syncronize(serialized: IUnderworldSerializedForSyncronize) {
+    if (serialized.RNGState) {
+      this.syncronizeRNG(serialized.RNGState);
+    }
+    Object.assign(this, serialized);
+  }
+  serializeForSyncronize(): IUnderworldSerializedForSyncronize {
+    const { secondsLeftForTurn, players, units, pickups, obstacles, random, turnInterval, processedMessageCount, walls, ...rest } = this;
+    const serialized: IUnderworldSerializedForSyncronize = {
+      ...rest,
+      // the state of the Random Number Generator
+      RNGState: this.random.state() as SeedrandomState,
+    }
+    return serialized;
   }
 }
 
@@ -787,3 +804,12 @@ function drawTarget(x: number, y: number, animate: boolean): Promise<void> {
     return Promise.resolve();
   }
 }
+type IUnderworldSerialized = Omit<Underworld, "players" | "units" | "pickups" | "obstacles" | "random" | "turnInterval"> & {
+  players: Player.IPlayerSerialized[],
+  units: Unit.IUnitSerialized[],
+  pickups: Pickup.IPickupSerialized[],
+  obstacles: Obstacle.IObstacleSerialized[],
+};
+type NonFunctionPropertyNames<T> = { [K in keyof T]: T[K] extends Function ? never : K }[keyof T];
+type UnderworldNonFunctionProperties = Exclude<NonFunctionPropertyNames<Underworld>, null | undefined>;
+type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFunctionProperties>, "secondsLeftForTurn" | "players" | "units" | "pickups" | "obstacles" | "random" | "turnInterval" | "processedMessageCount" | "walls">;
