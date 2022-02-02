@@ -6,7 +6,7 @@ import type { IOverworld } from './overworld';
 import { setView, View } from './views';
 
 window.animationTimeline = new AnimationTimeline();
-setView(View.Menu);
+setView(View.Setup);
 
 declare global {
   interface Window {
@@ -23,7 +23,10 @@ declare global {
     saveReplay: (title: string) => void;
     // Used to replay onData messages for development
     replay: (title: string) => void;
-    // Current clients id
+    // The client id of the host of the game, may or may not be
+    // identical to clientId
+    hostClientId: string;
+    // Current client's id
     clientId: string;
     // allows for left clicking to ping to other players
     altDown: boolean;

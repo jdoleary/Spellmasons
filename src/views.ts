@@ -18,6 +18,7 @@ import * as readyState from './readyState';
 // A view is not shared between players in the same game, a player could choose any view at any time
 export enum View {
   Menu,
+  Setup,
   CharacterSelect,
   // Game view shows all the routes, the overworld, upgrade screen, underworld, etc
   Game,
@@ -29,6 +30,9 @@ export function setView(v: View) {
   recenterStage();
   switch (v) {
     case View.Menu:
+      // TODO: implement menu
+      break;
+    case View.Setup:
       // Start monitoring with development overlay
       setupMonitoring();
 
@@ -55,12 +59,8 @@ export function setView(v: View) {
         Cards.registerCards();
         Units.registerUnits();
         initPlanningView();
+        readyState.set("content", true);
 
-        // Initialize Game Object
-        // See makeGame function for where setup truly happens
-        // This instantiation just spins up the instance of game
-        initializeUnderworld();
-        // ---
         // TODO: TEMP temporarily default to just entering a generic game for speed of development
         joinRoom({})
           .then(() => {

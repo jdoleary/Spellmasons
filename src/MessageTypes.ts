@@ -3,12 +3,19 @@ export enum MESSAGE_TYPES {
   MOVE_PLAYER,
   CHOOSE_UPGRADE,
   END_TURN,
+  // INIT_GAME_STATE is very similar to LOAD_GAME_STATE, in fact, they run identical code
+  // paths; however, INIT_GAME_STATE can occur before readyState.isReady() while
+  // LOAD_GAME_STATE is used synchronously for an already initialized game that needs to
+  // load to a new state
+  INIT_GAME_STATE,
+  // Occurs synchronously, fully replaces the game state
   LOAD_GAME_STATE,
+  // SELECT_CHARACTER triggers a client becoming a fully initialized player
+  SELECT_CHARACTER,
   // Ping a location on the map
   PING,
   // Vote for a level to go to in the overworld
   VOTE_FOR_LEVEL,
-  SELECT_CHARACTER,
   // Sent from a client that has detected a major desync from the host
   // TODO: Is this unused now that I'm syncing things independently with the below 3 messages?
   DESYNC,

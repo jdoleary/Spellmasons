@@ -54,6 +54,7 @@ describe('processNextInQueue', () => {
             setTimeout(resolve, 500);
         }));
 
+        // @ts-ignore; the mock messes up typechecking, safe to ignore
         processNextInQueue(container, handle);
 
         // If this expectation fails, it is because the queue did

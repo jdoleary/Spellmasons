@@ -50,3 +50,8 @@ It's not fun to be out of cards, but it's not fun to have infinite damage (there
     - Looks like this can happen when I'm developing and it automatically refreshes
 
 - Upgrades are still granted like cards, so that a user can choose to use 2 aoe as a HUGE AOE or to use smaller AOE's twice
+
+---
+## Message order
+In order to join a game a client needs a fully readyState (pie connection, pixi assets, pie room joined, underworld setup, player setup)
+The underworld setup and player setup need to occur via pie messages: underworld from the LOAD_GAME_STATE message and player from the CHOOSE_CHARACTER and they should happen in that order
