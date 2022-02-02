@@ -16,11 +16,9 @@ export enum MESSAGE_TYPES {
   // the AI takes their turn
   // Note: It is important that sync messages are handled synchonously, especially when the RNG seed is
   // involved or else it could sync in parallel with a codepath that would quickly unsync it
-  SYNC_UNITS,
-  // Ensures that Players are syncronized between clients
-  // Note: Excludes player units because units are already synced with SYNC_UNITS message
-  SYNC_PLAYERS,
-  SYNC_UNDERWORLD
+  // Note: SYNC is not the same as LOAD_GAME_STATE.  Load fully wipes out data and replaces it
+  // while SYNC only includes specific data and mutates existing objects
+  SYNC,
 
 
 }

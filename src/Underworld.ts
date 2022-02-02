@@ -351,6 +351,17 @@ export default class Underworld {
       unit.mana += unit.manaPerTurn;
     }
   }
+  hostSendSync() {
+    // Only the host should send sync data to clients
+    if (this.hostClientId === window.clientId) {
+      window.pie.sendData({
+        type: MESSAGE_TYPES.SYNC,
+        players: this.players.map(Player.serialize),
+        units: this.units.map(Unit.serialize),
+        underworldPartial: this.serializeForSyncronize()
+      })
+    }
+  }
   endNPCTurnPhase() {
     // Move onto next phase
     // --
@@ -368,6 +379,10 @@ export default class Underworld {
     this.playerTurnIndex = 0;
     // Increment the turn number now that it's starting over at the first phase
     this.turn_number++;
+    // Have the host send out syncronization messages so all clients are sync'd
+    this.hostSendSync();
+
+    // Actually update the turn_phase
     this.setTurnPhase(turn_phase.PlayerTurns);
   }
   setTurnMessage(yourTurn: boolean, message: string) {
