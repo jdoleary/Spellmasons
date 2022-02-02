@@ -242,9 +242,6 @@ async function handleSelectCharacter(d: OnDataArgs) {
       // --
       // (the .filter removes possible undefined players so that underworld.players doesn't contain any undefined values)
       underworld.players = clients.map(c => underworld.players.find(p => p.clientId == c)).filter(x => !!x) as Player.IPlayer[];
-      // Now that another player has joined the game
-      // send game state to other player so they can load:
-      forceSyncClients(true);
     } else {
       console.error("Failed to SelectCharacter because Player.create did not return a player object")
     }
@@ -322,10 +319,25 @@ async function handleSpell(caster: Player.IPlayer, payload: any) {
 export function getClients(): string[] {
   return clients;
 }
-function forceSyncClients(initial: boolean = false) {
+function forceSyncClients() {
+  // Only the host should be sending LOAD_GAME_STATE messages
+  // because the host has the canonical game state
   if (window.hostClientId === window.clientId) {
     window.pie.sendData({
-      type: initial ? MESSAGE_TYPES.INIT_GAME_STATE : MESSAGE_TYPES.LOAD_GAME_STATE,
+      type: MESSAGE_TYPES.LOAD_GAME_STATE,
+      route: window.route,
+      underworld: underworld.serializeForSaving(),
+    });
+  }
+}
+function giveClientGameStateForInitialLoad(clientId: string) {
+  // Only the host should be sending INIT_GAME_STATE messages
+  // because the host has the canonical game state
+  if (window.hostClientId === window.clientId) {
+    window.pie.sendData({
+      type: MESSAGE_TYPES.INIT_GAME_STATE,
+      subType: "Whisper",
+      whisperClientIds: [clientId],
       route: window.route,
       underworld: underworld.serializeForSaving(),
     });
@@ -352,6 +364,9 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
       console.log("Setup: Initializing underworld as host");
       initializeUnderworld();
     }
+    // Now that another client has joined the game
+    // send game state to other player so they can load:
+    giveClientGameStateForInitialLoad(o.clientThatChanged);
   } else {
     // client left
 
