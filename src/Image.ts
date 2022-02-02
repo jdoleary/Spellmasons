@@ -101,6 +101,25 @@ export function load(image: IImageSerialized, parent: PIXI.Container) {
 
   return newImage;
 }
+// syncronize updates an existing originalImage to match the properties of imageSerialized
+// mutates originalImage
+// TODO test for memory leaks
+export function syncronize(imageSerialized: IImageSerialized, originalImage: IImage): void {
+  const { subSprites, imageName, ...rest } = imageSerialized;
+  if (imageSerialized.imageName === originalImage.imageName) {
+    // then we only need to update properties:
+    Object.assign(originalImage, rest);
+    if (JSON.stringify(imageSerialized.subSprites) != JSON.stringify(originalImage.subSprites)) {
+      originalImage.subSprites = imageSerialized.subSprites;
+      restoreSubsprites(originalImage);
+    }
+  } else {
+    // if the imageNames do not match, then the sprite is majorly out of sync and it's
+    // best to just load()
+    originalImage = load(imageSerialized, originalImage.sprite.parent);
+  }
+
+}
 export function restoreSubsprites(image: IImage) {
   // Re-add subsprites
   const subSprites = [...image.subSprites];

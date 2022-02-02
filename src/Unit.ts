@@ -185,13 +185,6 @@ export function cleanup(unit: IUnit) {
   Image.cleanup(unit.image);
   deselect(unit);
 }
-// Similar but not the same as `load`, syncronize updates (mutates) a unit 
-// entity with properties from a unit (in JSON)
-export function syncronize(unit: IUnit, originalUnit: IUnit): void {
-
-  Object.assign(originalUnit, unit);
-
-}
 // Converts a unit entity into a serialized form
 // that can be saved as JSON and rehydrated later into
 // a full unit entity (with callbacks, shaderUniforms, etc - the things
@@ -250,6 +243,14 @@ export function load(unit: IUnitSerialized): IUnit {
     die(loadedunit);
   }
   return loadedunit;
+}
+// Similar but not the same as `load`, syncronize updates (mutates) a unit 
+// entity with properties from a unit (in JSON)
+// mutates originalUnit
+export function syncronize(unitSerialized: IUnitSerialized, originalUnit: IUnit): void {
+  const { image, ...rest } = unitSerialized;
+  Object.assign(originalUnit, rest);
+  Image.syncronize(image, originalUnit.image);
 }
 
 export function resurrect(unit: IUnit) {

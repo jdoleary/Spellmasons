@@ -15,7 +15,7 @@ import { allCards } from './cards';
 // The serialized version of the interface changes the interface to allow only the data
 // that can be serialized in JSON.  It may exclude data that is not neccessary to
 // rehydrate the JSON into an entity
-export type IPlayerSerialized = Omit<IPlayer, "unit"> & { unit: Unit.IUnitSerialized };
+export type IPlayerSerialized = Omit<IPlayer, "unit" | "overworldImage"> & { unit: Unit.IUnitSerialized } & { overworldImage: Image.IImageSerialized };
 export interface IPlayer {
   // wsPie id
   clientId: string;
@@ -115,10 +115,11 @@ function addHighlighIfPlayerBelongsToCurrentClient(player: IPlayer) {
 // a full player entity 
 // This is the opposite of load
 export function serialize(player: IPlayer): IPlayerSerialized {
-  const { unit, ...rest } = player;
+  const { unit, overworldImage, ...rest } = player;
   return {
     ...rest,
-    unit: Unit.serialize(unit)
+    unit: Unit.serialize(unit),
+    overworldImage: Image.serialize(overworldImage)
   }
 }
 // load rehydrates a player entity from IPlayerSerialized
@@ -134,6 +135,15 @@ export function load(player: IPlayerSerialized) {
   updateGlobalRefToCurrentClientPlayer(playerLoaded);
   CardUI.recalcPositionForCards(playerLoaded);
   return playerLoaded;
+}
+// Similar but not the same as `load`, syncronize updates (mutates) a player 
+// entity with properties from a player (in JSON)
+// mutates originalUnit
+export function syncronize(playerSerialized: IPlayerSerialized, originalPlayer: IPlayer): void {
+  const { unit, overworldImage, ...rest } = playerSerialized;
+  Object.assign(originalPlayer, rest);
+  Unit.syncronize(unit, originalPlayer.unit);
+  Image.syncronize(overworldImage, originalPlayer.overworldImage);
 }
 // Sets boolean and substring denoting if the player has a pie-client client associated with it
 export function setClientConnected(player: IPlayer, connected: boolean) {
