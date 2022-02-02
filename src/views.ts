@@ -61,7 +61,7 @@ export function setView(v: View) {
         // This instantiation just spins up the instance of game
         initializeUnderworld();
         // ---
-        // TEMP temporarily default to just entering a generic game for speed of development
+        // TODO: TEMP temporarily default to just entering a generic game for speed of development
         joinRoom({})
           .then(() => {
             readyState.set('wsPieRoomJoined', true);
