@@ -35,7 +35,8 @@ export function remove(o: IObstacle) {
   Image.cleanup(o.image);
   window.underworld.removeObstacleFromArray(o);
 }
-export function serialize(o: IObstacle) {
+export type IObstacleSerialized = Omit<IObstacle, "image"> & { image: Image.IImageSerialized };
+export function serialize(o: IObstacle): IObstacleSerialized {
   return {
     ...o,
     image: Image.serialize(o.image),
