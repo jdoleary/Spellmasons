@@ -65,7 +65,6 @@ export default class Underworld {
   units: Unit.IUnit[] = [];
   pickups: Pickup.IPickup[] = [];
   obstacles: Obstacle.IObstacle[] = [];
-  walls: LineSegment[] = [];
   secondsLeftForTurn: number = config.SECONDS_PER_TURN;
   turnInterval: any;
   hostClientId: string = '';
@@ -89,10 +88,6 @@ export default class Underworld {
     mapGraphics.drawRect(0, 0, config.MAP_WIDTH, config.MAP_HEIGHT);
     mapGraphics.endFill();
 
-    this.walls.push({ p1: { x: 0, y: 0 }, p2: { x: config.MAP_WIDTH, y: 0 } });
-    this.walls.push({ p1: { x: 0, y: 0 }, p2: { x: 0, y: config.MAP_HEIGHT } });
-    this.walls.push({ p1: { x: config.MAP_WIDTH, y: config.MAP_HEIGHT }, p2: { x: config.MAP_WIDTH, y: 0 } });
-    this.walls.push({ p1: { x: config.MAP_WIDTH, y: config.MAP_HEIGHT }, p2: { x: 0, y: config.MAP_HEIGHT } });
 
     // TODO: these probably shouldn't get initialized here
     this.startTurnTimer();
@@ -145,13 +140,14 @@ export default class Underworld {
     }, 1000);
   }
   gameLoopUnits() {
+    let walls = this.obstacles.reduce<LineSegment[]>((agg, cur) => agg.concat(cur.walls), [])
     for (let u of this.units) {
       // Sync Image even for non moving units since they may be moved by forces other than themselves
       Unit.syncImage(u)
       if (u.moveTarget) {
         // Move towards target
         const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.moveTarget, u.moveSpeed)
-        moveWithCollisions(u, stepTowardsTarget, [], this.walls)
+        moveWithCollisions(u, stepTowardsTarget, [], walls)
 
         // Also stops moving if moveTarget is undefined in the event that some other code sets the move target to undefined, we
         // want to make sure this promise resolves so the game doesn't get stuck
@@ -809,7 +805,7 @@ export default class Underworld {
     Object.assign(this, serialized);
   }
   serializeForSyncronize(): IUnderworldSerializedForSyncronize {
-    const { secondsLeftForTurn, players, units, pickups, obstacles, random, turnInterval, processedMessageCount, walls, ...rest } = this;
+    const { secondsLeftForTurn, players, units, pickups, obstacles, random, turnInterval, processedMessageCount, ...rest } = this;
     const serialized: IUnderworldSerializedForSyncronize = {
       ...rest,
       // the state of the Random Number Generator
@@ -836,4 +832,4 @@ type IUnderworldSerialized = Omit<Underworld, "players" | "units" | "pickups" | 
 };
 type NonFunctionPropertyNames<T> = { [K in keyof T]: T[K] extends Function ? never : K }[keyof T];
 type UnderworldNonFunctionProperties = Exclude<NonFunctionPropertyNames<Underworld>, null | undefined>;
-type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFunctionProperties>, "secondsLeftForTurn" | "players" | "units" | "pickups" | "obstacles" | "random" | "turnInterval" | "processedMessageCount" | "walls">;
+type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFunctionProperties>, "secondsLeftForTurn" | "players" | "units" | "pickups" | "obstacles" | "random" | "turnInterval" | "processedMessageCount">;
