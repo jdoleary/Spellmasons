@@ -473,7 +473,11 @@ export default class Underworld {
         }
         // Go to next players' turn
         this.initializePlayerTurn(this.playerTurnIndex)
+      } else {
+        console.error("turn_phase must be PlayerTurns to end turn.  Cannot be ", this.turn_phase);
       }
+    } else {
+      console.error("Route must be Underworld to end turn. Cannot end turn when the route is ", window.route);
     }
   }
   chooseUpgrade(player: Player.IPlayer, upgrade: Upgrade.IUpgrade) {
