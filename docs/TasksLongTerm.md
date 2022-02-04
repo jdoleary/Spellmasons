@@ -26,3 +26,21 @@
 - Stresstest gamestate sync:
     - If you delay messages on the backend are you sure they'll arrive in the right order?
 - What if it was in a dungeon instead of outside so there could be rooms?
+- Things to sync
+    - Add syncing for units
+        - when: At start of unit turn
+        - position, health, mana, spell effects?
+        - Send message at start of units turn which asserts RNG state and unit state; then all simulations calculate together
+    - Underworld
+        - when: ?
+        - Exludes Players, Units
+        - Syncing RNG
+        - turn state
+        - pickups
+    - Players
+        - when: at start of player turn
+        - this will also sync upgrades
+- Add tests / refactor into module for syncronous message processing to account for:
+    - messages arriving out of order
+- When a user disconnects on overworld it doesn't check if everyone has voted (this may not be a problem once
+i switch to the cauldron overworld)

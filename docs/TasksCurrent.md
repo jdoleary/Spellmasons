@@ -1,21 +1,5 @@
 ## Current Priorities
-- Things to sync
-    - Add syncing for units
-        - when: At start of unit turn
-        - position, health, mana, spell effects?
-        - Send message at start of units turn which asserts RNG state and unit state; then all simulations calculate together
-    - Underworld
-        - when: ?
-        - Exludes Players, Units
-        - Syncing RNG
-        - turn state
-        - pickups
-    - Players
-        - when: at start of player turn
-        - this will also sync upgrades
-- Add tests / refactor into module for syncronous message processing to account for:
-    - messages arriving out of order
-- Merge walls and obstacles
+- Add walls to whole map (and possibly rooms?)
 ---
 - desync often happens with moveTarget since moveTarget can be set mid way through executing a gamestate_hash check which would make the hashes not equal
 - Update server to send message number so clients can know when they both have the latest message.  This'll prevent false positive desync detection

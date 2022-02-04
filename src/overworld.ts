@@ -43,6 +43,8 @@ export function getEnemiesForAltitude(altitude: number) {
 }
 // TODO: this function can be broken if a vote comes through before the overworld has been created,
 // keep this in mind when replacing overworld with cauldron
+// TODO: bug: when client disconnects before voting it leaves players in the overworld (they can unstuck if
+// they vote again) but it should just carry them through.  Keep in mind when replacing with cauldron.
 export function voteForLevel(clientId: string, levelIndex: number) {
   console.log('voteForLevel', clientId, levelIndex);
   const votes = window.overworld.votes;
