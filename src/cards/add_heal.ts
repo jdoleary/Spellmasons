@@ -12,7 +12,8 @@ const spell: Spell = {
     thumbnail: 'heal.png',
     probability: 20,
     description: `
-Heals all targets (no greater than maximum health).
+Heals all targets ${healAmount} HP.
+Will not heal beyond maximum health.
     `,
     manaCost,
     manaMultiplier: MANA_MULTIPLIER_NONE,

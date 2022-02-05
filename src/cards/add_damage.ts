@@ -10,7 +10,7 @@ const spell: Spell = {
     thumbnail: 'damage.png',
     probability: 50,
     description: `
-Deals damage to all targets.    
+Deals ${damageDone} damage to all targets.    
     `,
     manaCost: MANA_BASE_COST,
     manaMultiplier: MANA_MULTIPLIER_NONE,
