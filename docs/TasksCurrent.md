@@ -1,7 +1,6 @@
 ## Current Priorities
 - Add linesegment collisions to prevent archers from shooting through walls
 - Prevent spawning inside of obstacles
-- Add walls to whole map (and possibly rooms?)
 ---
 - desync often happens with moveTarget since moveTarget can be set mid way through executing a gamestate_hash check which would make the hashes not equal
 - Update server to send message number so clients can know when they both have the latest message.  This'll prevent false positive desync detection

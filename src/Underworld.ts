@@ -65,6 +65,7 @@ export default class Underworld {
   units: Unit.IUnit[] = [];
   pickups: Pickup.IPickup[] = [];
   obstacles: Obstacle.IObstacle[] = [];
+  walls: LineSegment[] = [];
   secondsLeftForTurn: number = config.SECONDS_PER_TURN;
   turnInterval: any;
   hostClientId: string = '';
@@ -140,14 +141,13 @@ export default class Underworld {
     }, 1000);
   }
   gameLoopUnits() {
-    let walls = this.obstacles.reduce<LineSegment[]>((agg, cur) => agg.concat(cur.walls), [])
     for (let u of this.units) {
       // Sync Image even for non moving units since they may be moved by forces other than themselves
       Unit.syncImage(u)
       if (u.moveTarget) {
         // Move towards target
         const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.moveTarget, u.moveSpeed)
-        moveWithCollisions(u, stepTowardsTarget, [], walls)
+        moveWithCollisions(u, stepTowardsTarget, [], this.walls)
 
         // Also stops moving if moveTarget is undefined in the event that some other code sets the move target to undefined, we
         // want to make sure this promise resolves so the game doesn't get stuck
@@ -219,6 +219,18 @@ export default class Underworld {
     }
     this.initLevel(level);
   }
+  // cacheWalls updates underworld.walls array
+  // with the walls for the edge of the map
+  // and the walls from the current obstacles
+  // TODO:  this will need to be called if objects become
+  // destructable
+  cacheWalls() {
+    this.walls = this.obstacles.reduce<LineSegment[]>((agg, cur) => agg.concat(cur.walls), [])
+    this.walls.push({ p1: { x: 0, y: 0 }, p2: { x: config.MAP_WIDTH, y: 0 } });
+    this.walls.push({ p1: { x: 0, y: 0 }, p2: { x: 0, y: config.MAP_HEIGHT } });
+    this.walls.push({ p1: { x: config.MAP_WIDTH, y: config.MAP_HEIGHT }, p2: { x: config.MAP_WIDTH, y: 0 } });
+    this.walls.push({ p1: { x: config.MAP_WIDTH, y: config.MAP_HEIGHT }, p2: { x: 0, y: config.MAP_HEIGHT } });
+  }
 
   initLevel(level: ILevel) {
     this.level = level;
@@ -280,6 +292,7 @@ export default class Underworld {
       Obstacle.create(coords.x, coords.y, obstacle);
       // TODO: Ensure the players have a path to the portal
     }
+    this.cacheWalls();
     // Spawn units at the start of the level
     const enemyIndexes = getEnemiesForAltitude(level.altitude);
     for (let index of enemyIndexes) {
