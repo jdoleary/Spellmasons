@@ -5,7 +5,6 @@ import {
   clearSpellEffectProjection,
   syncSpellEffectProjection,
   updateTooltipContent,
-  updateTooltipPosition,
 } from './ui/PlanningView';
 const elCardHolders = document.getElementById('card-holders');
 // Where the non-selected cards are displayed
@@ -265,7 +264,6 @@ let inspectIntervalId: NodeJS.Timeout | undefined;
 export function toggleInspectMode(active: boolean) {
   document.body.classList.toggle('inspect-mode', active);
   elSelectedCards && elSelectedCards.classList.toggle('hide', active);
-  elInspectorTooltip && elInspectorTooltip.classList.toggle('active', active);
   syncSpellEffectProjection();
   if (active) {
     // if the "update tooltip interval" is not currently running, start it:
@@ -274,7 +272,6 @@ export function toggleInspectMode(active: boolean) {
       // without the user moving the mouse it will stay up to date.
       inspectIntervalId = setInterval(() => {
         updateTooltipContent();
-        updateTooltipPosition();
       }, 60);
     }
   } else {

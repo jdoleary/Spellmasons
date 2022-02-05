@@ -166,32 +166,6 @@ export function updateTooltipSpellCost({ manaCost, healthCost, willCauseDeath }:
     elSpellHealthCost.innerHTML = `- ${healthCost} ${willCauseDeath ? '💀' : ''} `
   }
 }
-export function updateTooltipPosition() {
-  if (
-    !(
-      elInspectorTooltipContent &&
-      elInspectorTooltip &&
-      elInspectorTooltipContainer
-    )
-  ) {
-    console.error("Tooltip elements failed to initialize")
-    return;
-  }
-  const mousePos = window.underworld.getMousePos();
-  // Update position of HTML element
-  elInspectorTooltip.style.transform = `translate(${app.stage.x + mousePos.x
-    }px, ${app.stage.y + mousePos.y}px)`;
-  elInspectorTooltipContainer.classList.remove('top');
-  elInspectorTooltipContainer.classList.remove('bottom');
-  elInspectorTooltipContainer.classList.remove('left');
-  elInspectorTooltipContainer.classList.remove('right');
-  elInspectorTooltipContainer.classList.add(
-    mousePos.y > MAP_HEIGHT / 2 ? 'bottom' : 'top',
-  );
-  elInspectorTooltipContainer.classList.add(
-    mousePos.x > MAP_WIDTH / 2 ? 'right' : 'left',
-  );
-}
 export function updateTooltipContent() {
   if (
     !(

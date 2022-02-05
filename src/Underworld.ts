@@ -20,7 +20,7 @@ import floatingText from './FloatingText';
 import { UnitType, Vec2, Faction } from './commonTypes';
 import Events from './Events';
 import { allUnits } from './units';
-import { updatePlanningView, updateTooltipPosition, updateTooltipSpellCost } from './ui/PlanningView';
+import { updatePlanningView, updateTooltipSpellCost } from './ui/PlanningView';
 import { ILevel, getEnemiesForAltitude } from './overworld';
 import { setRoute, Route } from './routes';
 import { prng, randInt, SeedrandomState } from './rand';
@@ -739,7 +739,6 @@ export default class Underworld {
       Unit.syncPlayerHealthManaUI();
     } else {
       updateTooltipSpellCost({ manaCost, healthCost, willCauseDeath: healthCost >= casterPlayer.unit.health })
-      updateTooltipPosition();
     }
     if (!dryRun) {
       // Clear spell animations once all cards are done playing their animations

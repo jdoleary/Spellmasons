@@ -16,6 +16,14 @@ body.route-Underworld #underworld-container {
   flex-direction: column;
   justify-content: space-between;
 }
+#game-content-holder {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  height:100vh;
+  pointer-events: none;
+}
 
 .doob-stats {
   margin-top: 70px;
@@ -264,26 +272,10 @@ body.your-turn #player-turn-indicator-holder.low-time {
   flex-direction: column;
   justify-content: center;
   pointer-events: none;
-  position: absolute;
   user-select: none;
   z-index: 1;
-  position: fixed;
-  top: 0;
-  left: 0;
-}
-#inspector-tooltip #inspector-tooltip-content {
-  display: none;
-}
-#inspector-tooltip.active #inspector-tooltip-content {
   display: block;
-}
-/* The spell-cost portion of the tooltip should ONLY show when inspect mode
-is NOT active so that it doesn't conflict with the regular tooltip content*/
-#inspector-tooltip.active #inspector-tooltip-spell-cost {
-  display: none;
-}
-#inspector-tooltip #inspector-tooltip-spell-cost {
-  display: block;
+  border:1px solid pink;
 }
 /* Transform position is determined on hover*/
 #inspector-tooltip-container.top {
@@ -304,7 +296,6 @@ is NOT active so that it doesn't conflict with the regular tooltip content*/
   padding: 8px;
   width: 300px;
   white-space: pre-wrap;
-  position: absolute;
 }
 #inspector-tooltip-spell-cost {
   font-size: xx-large;
@@ -324,12 +315,10 @@ is NOT active so that it doesn't conflict with the regular tooltip content*/
 }
 
 #health-mana {
-  position: absolute;
-  top: 150px;
-  left: 150px;
   display: flex;
   justify-content: center;
   flex-direction: column;
+  border: 1px solid green;
 }
 .health-mana-bar {
   width: 200px;
