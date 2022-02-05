@@ -225,11 +225,5 @@ ${obstacle.name}
 ${obstacle.description}
         `;
   }
-  // Only show tooltip if it has contents
-  if (!text) {
-    elInspectorTooltip.style.visibility = 'hidden';
-  } else {
-    elInspectorTooltip.style.visibility = 'visible';
-  }
   elInspectorTooltipContent.innerText = text;
 }
