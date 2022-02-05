@@ -374,11 +374,13 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
     // state in the middle of an action (which could cause desyncs for
     // code that depends on promises such as resolveDoneMoving)
     onDataQueueContainer.queue.push({
-      type: MESSAGE_TYPES.ASK_FOR_INIT_GAME_STATE.toString(),
+      type: "Data",
       // This is the client that needs to be wispered to
       fromClient: o.clientThatChanged,
       time: new Date().getTime(),
-      payload: {}
+      payload: {
+        type: MESSAGE_TYPES.ASK_FOR_INIT_GAME_STATE,
+      }
 
     })
   } else {
