@@ -1,5 +1,7 @@
 ## Current Priorities
-- Add linesegment collisions to prevent archers from shooting through walls
+- Address possible desync issues around projectile promise? same as with loading a game mid-movement
+    - shouldn't this not be an issue though if loading a game happens synchronously? 
+    - maybe it should happen synchronously for the sender and then it wont be a problem
 - Prevent spawning inside of obstacles
 ---
 - desync often happens with moveTarget since moveTarget can be set mid way through executing a gamestate_hash check which would make the hashes not equal

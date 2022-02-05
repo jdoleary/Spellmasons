@@ -8,6 +8,11 @@ export enum MESSAGE_TYPES {
   // LOAD_GAME_STATE is used synchronously for an already initialized game that needs to
   // load to a new state
   INIT_GAME_STATE,
+  // This message is never sent over the network.  It allows the host to queue up
+  // sending a player that just connected the gamestate.
+  // TODO: If the host disconnects while this is queued, the just joined player will never
+  // receive the gamestate
+  ASK_FOR_INIT_GAME_STATE,
   // Occurs synchronously, fully replaces the game state
   LOAD_GAME_STATE,
   // SELECT_CHARACTER triggers a client becoming a fully initialized player

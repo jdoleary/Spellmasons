@@ -162,6 +162,9 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
     //     });
     //   }
     //   break;
+    case MESSAGE_TYPES.ASK_FOR_INIT_GAME_STATE:
+      giveClientGameStateForInitialLoad(fromClient);
+      break;
     case MESSAGE_TYPES.SYNC:
       const { players, units, underworldPartial } = payload;
       for (let i = 0; i < underworld.players.length; i++) {
@@ -363,8 +366,19 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
       initializeUnderworld();
     }
     // Now that another client has joined the game
-    // send game state to other player so they can load:
-    giveClientGameStateForInitialLoad(o.clientThatChanged);
+    // queue sending game state to other player so they can load:
+    // The reason sending game state is queued and not sent immediately
+    // is that if there's a game in progress you don't want to send the
+    // state in the middle of an action (which could cause desyncs for
+    // code that depends on promises such as resolveDoneMoving)
+    onDataQueueContainer.queue.push({
+      type: MESSAGE_TYPES.ASK_FOR_INIT_GAME_STATE.toString(),
+      // This is the client that needs to be wispered to
+      fromClient: o.clientThatChanged,
+      time: new Date().getTime(),
+      payload: {}
+
+    })
   } else {
     // client left
 
