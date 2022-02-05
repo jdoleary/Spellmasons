@@ -1,6 +1,78 @@
-import { LineSegment, findWherePointIntersectLineSegmentAtRightAngle, testables } from '../collisionMath';
+import { LineSegment, findWherePointIntersectLineSegmentAtRightAngle, lineSegmentIntersection, testables } from '../collisionMath';
 const { slope, toStandardForm } = testables;
 describe('collisionMath', () => {
+    // describe('intersectionOfLines', () => {
+    //     it('should return the point of intersection for 2 lines', () => {
+    //         const ls1: LineSegment = { p1: { x: -1, y: -1 }, p2: { x: 1, y: 1 } };
+    //         const ls2: LineSegment = { p1: { x: -1, y: 1 }, p2: { x: 1, y: -1 } };
+    //         const l1 = toStandardForm(ls1);
+    //         const l2 = toStandardForm(ls2);
+    //         const actual = intersectionOfLines(l1 as LineInStandardForm, l2 as LineInStandardForm);
+    //         const expected = { x: 0, y: 0 };
+    //         expect(actual).toEqual(expected);
+
+    //     });
+    //     it('should handle 1 vertical line', () => {
+    //         const ls1: LineSegment = { p1: { x: 0, y: 0 }, p2: { x: 2, y: 0 } };
+    //         const ls2: LineSegment = { p1: { x: 1, y: -1 }, p2: { x: 1, y: 1 } };
+    //         const l1 = toStandardForm(ls1);
+    //         const l2 = toStandardForm(ls2);
+    //         console.log("jtest ", l2);
+    //         const actual = intersectionOfLines(l1, l2);
+    //         const expected = { x: 1, y: 0 };
+    //         expect(actual).toEqual(expected);
+
+    //     });
+    //     it('should handle 2 vertical lines', () => { });
+    //     it('should handle overlapping lines', () => { });
+    // });
+    describe('intersectionOfLineSegments', () => {
+        it('should return the point of intersection for 2 lines', () => {
+            const ls1: LineSegment = { p1: { x: -1, y: -1 }, p2: { x: 1, y: 1 } };
+            const ls2: LineSegment = { p1: { x: -1, y: 1 }, p2: { x: 1, y: -1 } };
+            const actual = lineSegmentIntersection(ls1, ls2);
+            const expected = { x: 0, y: 0 };
+            expect(actual).toEqual(expected);
+        });
+        it('should handle intersections for vertical lines', () => {
+            const ls1: LineSegment = { p1: { x: 0, y: 0 }, p2: { x: 2, y: 0 } };
+            const ls2: LineSegment = { p1: { x: 1, y: -1 }, p2: { x: 1, y: 1 } };
+            const actual = lineSegmentIntersection(ls1, ls2);
+            const expected = { x: 1, y: 0 };
+            expect(actual).toEqual(expected);
+        });
+        it('should return undefined for colinear lines that intersect', () => {
+            const ls1: LineSegment = { p1: { x: 0, y: 0 }, p2: { x: 2, y: 0 } };
+            const ls2: LineSegment = { p1: { x: 1, y: 0 }, p2: { x: 3, y: 0 } };
+            const actual = lineSegmentIntersection(ls1, ls2);
+            // Note: Technically there are infinite intersecting points,
+            // but I'm opting to return undefined in this corner case.
+            // I may decide to change this in the future
+            const expected = undefined
+            expect(actual).toEqual(expected);
+        });
+        it('should return undefined for colinear lines that do NOT intersect', () => {
+            const ls1: LineSegment = { p1: { x: 0, y: 0 }, p2: { x: 2, y: 0 } };
+            const ls2: LineSegment = { p1: { x: 3, y: 0 }, p2: { x: 4, y: 0 } };
+            const actual = lineSegmentIntersection(ls1, ls2);
+            const expected = undefined;
+            expect(actual).toEqual(expected);
+        });
+        it('should return undefined for line segments that do not intersect', () => {
+            const ls1: LineSegment = { p1: { x: 0, y: 0 }, p2: { x: 2, y: 0 } };
+            const ls2: LineSegment = { p1: { x: 1, y: 10 }, p2: { x: 2, y: 0.5 } };
+            const actual = lineSegmentIntersection(ls1, ls2);
+            const expected = undefined;
+            expect(actual).toEqual(expected);
+        });
+        it('should return undefined for parallel, non-intersecting lines', () => {
+            const ls1: LineSegment = { p1: { x: 0, y: 0 }, p2: { x: 2, y: 0 } };
+            const ls2: LineSegment = { p1: { x: 0, y: 10 }, p2: { x: 2, y: 10 } };
+            const actual = lineSegmentIntersection(ls1, ls2);
+            const expected = undefined;
+            expect(actual).toEqual(expected);
+        });
+    });
     describe('toStandardForm', () => {
         it('Should convert a lineSegment to a line in standard form', () => {
             const p1 = { x: 1, y: 2 };
@@ -124,5 +196,14 @@ describe('collisionMath', () => {
                 expect(actual).toEqual(expected);
             });
         });
+    });
+    describe('intersectionOfLineSegments', () => {
+        it('should return the point of intersection of two line segments', () => {
+
+        });
+        it('should handle vertical lines', () => { });
+        it('should return undefined if the point is not on the first line segment', () => { });
+        it('should return undefined if the point is not on the second line segment', () => { });
+
     });
 });
