@@ -1,4 +1,5 @@
 ## Current Priorities
+- Prevent spawning inside of obstacles
 - Add walls to whole map (and possibly rooms?)
 ---
 - desync often happens with moveTarget since moveTarget can be set mid way through executing a gamestate_hash check which would make the hashes not equal
