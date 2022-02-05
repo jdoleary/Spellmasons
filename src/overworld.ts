@@ -47,6 +47,9 @@ export function getEnemiesForAltitude(altitude: number) {
 // they vote again) but it should just carry them through.  Keep in mind when replacing with cauldron.
 export function voteForLevel(clientId: string, levelIndex: number) {
   console.log('voteForLevel', clientId, levelIndex);
+  const elVoteLevelLabel = document.getElementById(
+    'vote-level-label',
+  );
   const votes = window.overworld.votes;
   votes[clientId] = levelIndex;
   // Redraw overworld:
@@ -81,6 +84,14 @@ export function voteForLevel(clientId: string, levelIndex: number) {
     chooseLevel(
       window.overworld.levels[parseInt(levelWithMostVotes.levelIndex, 10)],
     );
+    if (elVoteLevelLabel) {
+      elVoteLevelLabel.innerText = '';
+    }
+  } else {
+    if (elVoteLevelLabel) {
+      elVoteLevelLabel.innerText = `${getClients().length - Object.keys(votes).length} players left to vote`;
+    }
+
   }
 }
 function chooseLevel(level: ILevel) {

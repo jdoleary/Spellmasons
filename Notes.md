@@ -64,7 +64,6 @@ The underworld setup and player setup need to occur via pie messages: underworld
 - Assumption: if grunts can move close to me they should also be able to attack me
 - when trying to figure out the effect of a spell, he doesn't know what it'll do (damage to enemy and how much health they have)
 - Health net result for health should show on health/mana tooltip
-- On level pick: "Consensus is x location.  Changing in 5... 4.."
 - Expectation: health would reset on new level
 - Bug: When I pick an upgrade before brad has selected an upgrade it leaves the upgrade screen up while it changes his background to the level select screen
 - Shift tooltip should always show something even if it's dirt ("This is dirt, it's not important, I don't recommend casting spells here")
