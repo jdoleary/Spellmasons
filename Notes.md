@@ -61,7 +61,6 @@ The underworld setup and player setup need to occur via pie messages: underworld
 - I want the tooltip menu to happen on click
 - I can't tell how far I can move
 - Want there to be pathfinding to go around obstacles
-- Bug: My cards array emptied somehow.  I got purify from a pickup, picked max health, and now my spell hand are empty
 - Assumption: if grunts can move close to me they should also be able to attack me
 - UI: mana cost thing disappeared for brad
   - if you press shift while your on a guy it makes the mana tooltip come back (it depends on the existance of the info tooltip)
