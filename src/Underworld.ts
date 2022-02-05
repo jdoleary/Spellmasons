@@ -26,7 +26,7 @@ import { setRoute, Route } from './routes';
 import { prng, randInt, SeedrandomState } from './rand';
 import { calculateManaHealthCost } from './cards/cardUtils';
 import { moveWithCollisions } from './collision/moveWithCollision';
-import type { LineSegment } from './collision/collisionMath';
+import { intersectionOfLineSegments, LineSegment } from './collision/collisionMath';
 
 export enum turn_phase {
   PlayerTurns,
@@ -768,6 +768,17 @@ export default class Underworld {
     // changes into consideration
     updatePlanningView();
     return effectState;
+  }
+  // hasLineOfSight returns true if there are no walls interrupting
+  // a line from seer to target
+  hasLineOfSight(seer: Vec2, target: Vec2): boolean {
+    const lineOfSight: LineSegment = { p1: seer, p2: target };
+    for (let w of this.walls) {
+      if (intersectionOfLineSegments(lineOfSight, w)) {
+        return false
+      }
+    }
+    return true
   }
 
   // Create a hash from the gamestate.  Useful for determining if
