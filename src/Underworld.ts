@@ -506,19 +506,20 @@ export default class Underworld {
     const numberOfPlayersWhoNeedToChooseUpgradesTotal = this.players.filter(
       (p) => p.clientConnected,
     ).length;
+    // TODO, this code may be vulnerable to mid-game disconnections, same as VOTE_FOR_LEVEL
     if (this.playersWhoHaveChosenUpgrade.size >= numberOfPlayersWhoNeedToChooseUpgradesTotal) {
       this.playersWhoHaveChosenUpgrade.clear();
       if (elUpgradePickerLabel) {
         elUpgradePickerLabel.innerText = '';
       }
+      // Go to overworld now that upgrade is chosen
+      setRoute(Route.Overworld);
     } else {
       if (elUpgradePickerLabel) {
         elUpgradePickerLabel.innerText = `${numberOfPlayersWhoNeedToChooseUpgradesTotal - this.playersWhoHaveChosenUpgrade.size
           } players left to pick upgrades`;
       }
     }
-    // Go to overworld now that upgrade is chosen
-    setRoute(Route.Overworld);
   }
   // Returns true if game is over
   checkForGameOver(): boolean {
