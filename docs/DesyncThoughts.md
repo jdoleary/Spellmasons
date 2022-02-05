@@ -1,3 +1,9 @@
+## 2022-02-05
+When a new client needs to fully sync the current game state:
+- The sender of the gamestate should always send the gamestate from within the onDataMessageQueue.  Forcing it to occur synchronously ensures that the gamestate that's sent isn't a mid-turn state (this protects against desync issues caused by promise resolution such as resolveDoneMoving).
+- The reciever shouldn't request the gamestate until readyState.player is true.  Because all clients need associated player entities before the queue is allowed to process.
+- Maybe I could just ensure that the first message of a new queue is always a gamestate message that initializes the underworld.  Even for the first client
+
 ## 2022-02-01
 - Messages to Sync
   - MOVE_PLAYER

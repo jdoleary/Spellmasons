@@ -1,4 +1,5 @@
 ## Current Priorities
+- Somehow a RNG desync is happening when I start a game with 2 clients connected and let the host pick character first then immediately compare RNG state.  Left off: See desyncThoughts.md
 - Address possible desync issues around projectile promise? same as with loading a game mid-movement
     - shouldn't this not be an issue though if loading a game happens synchronously? 
     - maybe it should happen synchronously for the sender and then it wont be a problem
