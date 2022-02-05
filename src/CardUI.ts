@@ -13,8 +13,6 @@ const elCardHand = document.getElementById('card-hand');
 const elSelectedCards = document.getElementById('selected-cards');
 // Displays a full card with info on shift+hover of card
 const elCardInspect = document.getElementById('card-inspect');
-// A tooltip that shows information for stuff on the gameboard on Shift+hoverk
-const elInspectorTooltip = document.getElementById('inspector-tooltip');
 if (elCardHolders) {
   // Show full card on hover
   elCardHolders.addEventListener('mousemove', (e) => {

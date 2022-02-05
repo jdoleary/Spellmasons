@@ -90,8 +90,6 @@ export function mousemoveHandler(e: MouseEvent) {
   }
   // Show target hover
   syncSpellEffectProjection();
-  // Update planning view
-  updatePlanningView();
 }
 // Handle right click on game board
 export function contextmenuHandler(e: MouseEvent) {
@@ -167,6 +165,9 @@ export function clickHandler(e: MouseEvent) {
     // Disallow click out of bounds
     return;
   }
+  // Update planning view
+  updatePlanningView();
+
   if (window.altDown) {
     window.pie.sendData({
       type: MESSAGE_TYPES.PING,
