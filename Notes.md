@@ -69,7 +69,6 @@ The underworld setup and player setup need to occur via pie messages: underworld
 - Health card description should tell how much it heals
 - Health net result for health should show on health/mana tooltip
 - I wanna see mana/turn
-- Bug: When brad chose a card it erased my vote on level
 - On level pick: "Consensus is x location.  Changing in 5... 4.."
 - Expectation: health would reset on new level
 - Put health/mana (spell effect) tooltip in realestate instead of follow mouse

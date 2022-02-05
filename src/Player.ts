@@ -155,16 +155,9 @@ export function setClientConnected(player: IPlayer, connected: boolean) {
     Image.addSubSprite(player.unit.image, 'disconnected');
   }
 }
-// Remove all of the player's cards
-function removeAllCards(player: IPlayer) {
-  player.cards = [];
-  CardUI.clearSelectedCards();
-  CardUI.recalcPositionForCards(player);
-}
 export function enterPortal(player: IPlayer) {
   player.inPortal = true;
   Image.hide(player.unit.image);
-  removeAllCards(player);
   // Move "portaled" unit out of the way to prevent collisions and chaining while portaled
   Unit.setLocation(player.unit, { x: NaN, y: NaN });
   // Entering the portal ends the player's turn
