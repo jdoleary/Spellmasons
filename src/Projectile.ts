@@ -14,13 +14,12 @@ interface Projectile {
   toY: number;
   sprite: PIXI.Sprite;
 }
-const SPEED_PER_MILLI = 0.7;
-export default function createVisualProjectile(
+function createProjectile(
   coords: Vec2,
   toX: number,
   toY: number,
   imagePath: string,
-): Promise<void> {
+): Projectile {
   const sprite = addPixiSprite(imagePath, containerProjectiles);
   sprite.anchor.x = 0.5;
   sprite.anchor.y = 0.5;
@@ -31,7 +30,7 @@ export default function createVisualProjectile(
 
   sprite.rotation = Math.atan2(toY - coords.y, toX - coords.x);
 
-  const instance = {
+  return {
     x: coords.x,
     y: coords.y,
     startX: coords.x,
@@ -42,6 +41,16 @@ export default function createVisualProjectile(
     toY,
     sprite,
   };
+
+}
+const SPEED_PER_MILLI = 0.7;
+export function createVisualFlyingProjectile(
+  coords: Vec2,
+  toX: number,
+  toY: number,
+  imagePath: string,
+): Promise<void> {
+  const instance = createProjectile(coords, toX, toY, imagePath);
   return new Promise((resolve) => {
     requestAnimationFrame((time) => fly(instance, time, resolve));
   });
@@ -74,5 +83,52 @@ function fly(
     resolve();
   } else {
     requestAnimationFrame((time) => fly(instance, time, resolve));
+  }
+}
+const LOB_SPEED_PER_MILLI = 0.25;
+export function createVisualLobbingProjectile(
+  coords: Vec2,
+  toX: number,
+  toY: number,
+  imagePath: string,
+): Promise<void> {
+  const instance = createProjectile(coords, toX, toY, imagePath);
+  return new Promise((resolve) => {
+    requestAnimationFrame((time) => lob(instance, time, resolve));
+  });
+}
+// Arbitrary lobHeight (negative so it lobs the projectile UP)
+const lobHeight = -100;
+// lob a projectile in an arch
+function lob(
+  instance: Projectile,
+  time: number,
+  resolve: (value: void | PromiseLike<void>) => void,
+) {
+  if (instance.startTime == 0) {
+    instance.startTime = time;
+    const time_in_flight =
+      distance(instance, { x: instance.toX, y: instance.toY }) /
+      LOB_SPEED_PER_MILLI;
+    instance.endTime = time + time_in_flight;
+  }
+  instance.sprite.x = instance.x;
+  instance.sprite.y = instance.y;
+  instance.sprite.rotation += 0.2;
+  const t =
+    (time - instance.startTime) / (instance.endTime - instance.startTime);
+  instance.x = lerp(instance.startX, instance.toX, t);
+  // y goes from startY to toY but is offset Math.sin(Math.PI/2)*lobHeight in the middle
+  const yOffset = Math.sin(t * Math.PI) * lobHeight;
+  instance.y = lerp(instance.startY, instance.toY, t) + yOffset;
+  // Once it's fully done animating
+  if (time >= instance.endTime) {
+    // Clean up the element
+    if (instance.sprite.parent) {
+      instance.sprite.parent.removeChild(instance.sprite);
+    }
+    resolve();
+  } else {
+    requestAnimationFrame((time) => lob(instance, time, resolve));
   }
 }

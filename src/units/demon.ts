@@ -1,7 +1,7 @@
 import * as Unit from '../Unit';
 import type { UnitSource } from './index';
 import { UnitSubType, UnitType } from '../commonTypes';
-import createVisualProjectile from '../Projectile';
+import { createVisualFlyingProjectile } from '../Projectile';
 
 const CAST_MANA_COST = 30;
 const unit: UnitSource = {
@@ -25,7 +25,7 @@ const unit: UnitSource = {
       );
       if (deadAIs.length) {
         const deadUnit = deadAIs[0];
-        await createVisualProjectile(
+        await createVisualFlyingProjectile(
           unit,
           deadUnit.x,
           deadUnit.y,

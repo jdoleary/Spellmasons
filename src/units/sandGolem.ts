@@ -2,7 +2,7 @@ import * as Unit from '../Unit';
 import type { UnitSource } from './index';
 import { UnitSubType } from '../commonTypes';
 import * as math from '../math';
-import createVisualProjectile from '../Projectile';
+import { createVisualLobbingProjectile } from '../Projectile';
 
 const unit: UnitSource = {
   id: 'Sand Golem',
@@ -12,7 +12,9 @@ const unit: UnitSource = {
     subtype: UnitSubType.AI_reach,
     probability: 30,
   },
-  unitProps: {},
+  unitProps: {
+    attackRange: 300
+  },
   action: async (unit: Unit.IUnit) => {
     let runFromTarget;
     let targetEnemy;
@@ -27,7 +29,7 @@ const unit: UnitSource = {
       }
     }
     if (targetEnemy) {
-      await createVisualProjectile(
+      await createVisualLobbingProjectile(
         unit,
         targetEnemy.x,
         targetEnemy.y,
@@ -49,7 +51,7 @@ function canInteractWithTarget(unit: Unit.IUnit, x: number, y: number): boolean 
     return false;
   }
   const dist = math.distance(unit, { x, y });
-  // Can hit you if you are within 300 but not 100
-  return dist > 100 && dist < 300
+  // Can hit you if you are within attackRange but not 100
+  return dist > 100 && dist < unit.attackRange
 }
 export default unit;

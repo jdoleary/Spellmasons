@@ -2,7 +2,7 @@ import * as Unit from '../Unit';
 import type { UnitSource } from './index';
 import { UnitSubType } from '../commonTypes';
 import * as math from '../math';
-import createVisualProjectile from '../Projectile';
+import { createVisualFlyingProjectile } from '../Projectile';
 
 const unit: UnitSource = {
   id: 'rook',
@@ -23,7 +23,7 @@ const unit: UnitSource = {
       }
     }
     if (targetEnemy) {
-      await createVisualProjectile(
+      await createVisualFlyingProjectile(
         unit,
         targetEnemy.x,
         targetEnemy.y,

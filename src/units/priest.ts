@@ -2,7 +2,7 @@ import * as Unit from '../Unit';
 import type { UnitSource } from './index';
 import { Vec2, UnitSubType } from '../commonTypes';
 import * as math from '../math';
-import createVisualProjectile from '../Projectile';
+import { createVisualFlyingProjectile } from '../Projectile';
 
 const range = 3;
 const unit: UnitSource = {
@@ -36,7 +36,7 @@ const unit: UnitSource = {
       for (let ally of damagedAllys) {
         if (inRange(unit, ally)) {
           const chosenUnit = damagedAllys[0];
-          await createVisualProjectile(
+          await createVisualFlyingProjectile(
             unit,
             chosenUnit.x,
             chosenUnit.y,

@@ -1,6 +1,6 @@
 import type { UnitSource } from './index';
 import { Vec2, UnitSubType } from '../commonTypes';
-import createVisualProjectile from '../Projectile';
+import { createVisualFlyingProjectile } from '../Projectile';
 import * as Unit from '../Unit';
 import * as math from '../math';
 import * as poison from '../cards/poison';
@@ -27,7 +27,7 @@ const unit: UnitSource = {
       const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, chosenUnit, unit.moveDistance);
       await Unit.moveTowards(unit, moveTo);
       if (inRange(unit, chosenUnit)) {
-        createVisualProjectile(
+        createVisualFlyingProjectile(
           unit,
           chosenUnit.x,
           chosenUnit.y,
