@@ -62,8 +62,6 @@ The underworld setup and player setup need to occur via pie messages: underworld
 - I can't tell how far I can move
 - Want there to be pathfinding to go around obstacles
 - Assumption: if grunts can move close to me they should also be able to attack me
-- UI: mana cost thing disappeared for brad
-  - if you press shift while your on a guy it makes the mana tooltip come back (it depends on the existance of the info tooltip)
 - when trying to figure out the effect of a spell, he doesn't know what it'll do (damage to enemy and how much health they have)
 - Health net result for health should show on health/mana tooltip
 - On level pick: "Consensus is x location.  Changing in 5... 4.."
