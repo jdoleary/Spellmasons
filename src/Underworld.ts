@@ -422,6 +422,11 @@ export default class Underworld {
       // Do not continue with initialization
       return;
     }
+    // If player is killed at the start of their turn (for example, due to poison)
+    // end their turn
+    if (!player.unit.alive) {
+      this.endPlayerTurn(player.clientId);
+    }
     if (player === window.player) {
       this.setTurnMessage(true, 'Your Turn');
     } else {

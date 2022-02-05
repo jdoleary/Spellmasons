@@ -66,7 +66,6 @@ The underworld setup and player setup need to occur via pie messages: underworld
 - Health net result for health should show on health/mana tooltip
 - On level pick: "Consensus is x location.  Changing in 5... 4.."
 - Expectation: health would reset on new level
-- Bug: It didn't end brads turn when he died (he was poisoned)
 - Bug: When I pick an upgrade before brad has selected an upgrade it leaves the upgrade screen up while it changes his background to the level select screen
 - Shift tooltip should always show something even if it's dirt ("This is dirt, it's not important, I don't recommend casting spells here")
 - If I wanna see information on a guy, I don't want to be restricted in hovering over him.  I wanna see that information and still be able to move my mouse, which is why I wanna be able to select
