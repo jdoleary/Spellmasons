@@ -3,7 +3,7 @@ import { onData, onClientPresenceChanged } from './wsPieHandler';
 // Locally hosted, locally accessed
 const wsUri = 'ws://localhost:8080';
 // Locally hosted, available to LAN (use your own IP)
-// const wsUri = 'ws://192.168.0.21:8000';
+//const wsUri = 'ws://192.168.0.19:8080';
 // Locally hosted, externally accessed (use your own IP)
 // const wsUri = 'ws://68.48.199.138:7337';
 // Current digital ocean wsPie app:
