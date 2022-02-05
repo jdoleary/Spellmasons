@@ -7,7 +7,7 @@ export const UNIT_BASE_MANA = 10;
 export const UNIT_BASE_DAMAGE = 1;
 // Note: UNIT_MOVE_SPEED cannot be less than
 // UNIT_STOP_MOVING_MARGIN or else it will assume
-// no movement has happened 
+// no movement has happend and invoke resolveDoneMoving
 export const UNIT_MOVE_SPEED = 4;
 // Stops units from moving when they are close enough
 export const UNIT_STOP_MOVING_MARGIN = 1;

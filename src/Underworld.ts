@@ -149,19 +149,14 @@ export default class Underworld {
         const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.moveTarget, u.moveSpeed)
         moveWithCollisions(u, stepTowardsTarget, [], this.walls)
 
+        // UNIT_STOP_MOVING_MARGIN ensures that units wont continue to move imperceptibly while
+        // players wait for the seemingly non-moving unit's turn to end (which ends when it's done moving via resolveDoneMoving)
+        // --
         // Also stops moving if moveTarget is undefined in the event that some other code sets the move target to undefined, we
         // want to make sure this promise resolves so the game doesn't get stuck
         if (u.moveTarget === undefined || Math.abs(u.x - u.lastX) < config.UNIT_STOP_MOVING_MARGIN && Math.abs(u.y - u.lastY) < config.UNIT_STOP_MOVING_MARGIN) {
+          u.resolveDoneMoving();
           u.moveTarget = undefined;
-          // Unit is done moving.
-          // If unit is a play unit, end the player's turn
-          // TODO: This is probably not the best place to do this
-          // may need refactoring later
-          for (let p of this.players) {
-            if (p.unit == u) {
-              this.endPlayerTurn(p.clientId);
-            }
-          }
         }
         // check for collisions with pickups in new location
         this.checkPickupCollisions(u);

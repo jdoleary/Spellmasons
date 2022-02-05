@@ -30,7 +30,7 @@ const UNIT_BASE_RADIUS = config.COLLISION_MESH_RADIUS * config.NON_HEAVY_UNIT_SC
 // The serialized version of the interface changes the interface to allow only the data
 // that can be serialized in JSON.  It may exclude data that is not neccessary to
 // rehydrate the JSON into an entity
-export type IUnitSerialized = Omit<IUnit, "healthText" | "image"> & { image: Image.IImageSerialized };
+export type IUnitSerialized = Omit<IUnit, "resolveDoneMoving" | "healthText" | "image"> & { image: Image.IImageSerialized };
 export interface IUnit {
   unitSourceId: string;
   x: number;
@@ -42,6 +42,8 @@ export interface IUnit {
   lastY: number;
   moveTarget?: Vec2;
   moveSpeed: number;
+  // A resolve callback for when a unit is done moving
+  resolveDoneMoving: () => void;
   radius: number;
   moveDistance: number;
   attackRange: number;
@@ -94,6 +96,7 @@ export function create(
     radius: UNIT_BASE_RADIUS,
     moveTarget: undefined,
     moveSpeed: config.UNIT_MOVE_SPEED,
+    resolveDoneMoving: () => { },
     moveDistance: config.UNIT_BASE_MOVE_DISTANCE,
     attackRange: config.UNIT_BASE_ATTACK_RANGE,
     faction,
@@ -173,6 +176,10 @@ export function updateSelectedOverlay(unit: IUnit) {
   unit.healthText.anchor.y = -0.2;
 }
 export function cleanup(unit: IUnit) {
+  // Resolve done moving on cleanup to ensure that there are no forever-blocking promises
+  if (unit.resolveDoneMoving) {
+    unit.resolveDoneMoving();
+  }
   unit.x = NaN;
   unit.y = NaN;
   unit.flaggedForRemoval = true;
@@ -185,7 +192,8 @@ export function cleanup(unit: IUnit) {
 // that can't be saved as JSON)
 // This is the opposite of load
 export function serialize(unit: IUnit): IUnitSerialized {
-  const { healthText, ...rest } = unit
+  // resolveDoneMoving is a callback that cannot be serialized
+  const { resolveDoneMoving, healthText, ...rest } = unit
   return {
     ...rest,
     image: Image.serialize(unit.image),
@@ -205,9 +213,13 @@ export function serialize(unit: IUnit): IUnitSerialized {
 // This is the opposite of serialize
 export function load(unit: IUnitSerialized): IUnit {
   const { shaderUniforms, ...restUnit } = unit
+  // Since resolveDoneMoving is about to be overwritten,
+  // call it, just in case there is a pending promise (there shouldn't be)
+  // so the promise doesn't hang forever
   const loadedunit: IUnit = {
     ...restUnit,
     shaderUniforms: {},
+    resolveDoneMoving: () => { },
     image: Image.load(unit.image, containerUnits),
     // TODO: is healthText still used?
     healthText: new PIXI.Text('', {
@@ -365,7 +377,7 @@ export function findClosestUnitInSameFaction(unit: IUnit): IUnit | undefined {
 }
 // moveTo moves a unit, considering all the in-game blockers and flags
 // the units property thisTurnMoved
-export function moveTowards(unit: IUnit, target: Vec2) {
+export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
   if (!canMove(unit)) {
     return Promise.resolve();
   }
@@ -383,6 +395,9 @@ export function moveTowards(unit: IUnit, target: Vec2) {
   }
   unit.thisTurnMoved = true;
   unit.moveTarget = coordinates
+  return new Promise((resolve) => {
+    unit.resolveDoneMoving = resolve;
+  });
 }
 
 // setLocation, unlike moveTo, simply sets a unit to a coordinate without
