@@ -1,4 +1,4 @@
-import { processNextInQueue } from "./wsPieHandler";
+import { processNextInQueueIfReady } from "./wsPieHandler";
 
 const readyState = {
     wsPieConnection: false,
@@ -28,11 +28,9 @@ export function set(key: keyof typeof readyState, value: boolean) {
             elReadyState.innerHTML = "";
         }
     }
-    if (is_fully_ready) {
-        // When the game is ready to process wsPie messages, begin
-        // processing them
-        processNextInQueue();
-    }
+    // When the game is ready to process wsPie messages, begin
+    // processing them
+    processNextInQueueIfReady();
 }
 export function get(key: keyof typeof readyState) {
     return readyState[key];

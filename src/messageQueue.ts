@@ -27,6 +27,7 @@ export function makeContainer<T>(): MessageQueueContainer<T> {
 export interface MessageQueueContainer<T> {
     queue: T[],
     // isProcessing is true if the queue is processing a message and awaiting that message's resolution
-    // It's value should only be changed inside of this module.
+    // It's value should only be changed inside of this module, which is why it is preceeded by 
+    // an underscore
     _isProcessing: boolean
 }

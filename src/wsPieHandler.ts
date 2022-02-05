@@ -90,7 +90,7 @@ export function onData(d: OnDataArgs) {
       // we just skip right to calling processNextInQueue since this message
       // can execute regardless of whether readyState.isReady() is true or not
       // --
-      processNextInQueue();
+      processNextInQueueIfReady();
       break;
     default:
       // All other messages should be handled one at a time to prevent desync
@@ -110,12 +110,12 @@ function handleOnDataMessageSyncronously(d: OnDataArgs) {
     console.warn("onData queue is growing unusually large: ", onDataQueueContainer.queue.length, "stuck on message: ", currentlyProcessingOnDataMessage);
   }
   // process the "next" (the one that was just added) immediately
-  processNextInQueue();
+  processNextInQueueIfReady();
 }
 // currentlyProcessingOnDataMessage is used to help with bug reports to show
 // which message is stuck and didn't finish being processed.
 let currentlyProcessingOnDataMessage: any = null;
-export function processNextInQueue() {
+export function processNextInQueueIfReady() {
   // If game is ready to process messages, begin processing
   // (if not, they will remain in the queue until the game is ready)
   if (readyState.isReady()) {
