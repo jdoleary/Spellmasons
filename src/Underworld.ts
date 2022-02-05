@@ -26,7 +26,7 @@ import { setRoute, Route } from './routes';
 import { prng, randInt, SeedrandomState } from './rand';
 import { calculateManaHealthCost } from './cards/cardUtils';
 import { moveWithCollisions } from './collision/moveWithCollision';
-import { intersectionOfLineSegments, LineSegment } from './collision/collisionMath';
+import { lineSegmentIntersection, LineSegment } from './collision/collisionMath';
 
 export enum turn_phase {
   PlayerTurns,
@@ -774,7 +774,7 @@ export default class Underworld {
   hasLineOfSight(seer: Vec2, target: Vec2): boolean {
     const lineOfSight: LineSegment = { p1: seer, p2: target };
     for (let w of this.walls) {
-      if (intersectionOfLineSegments(lineOfSight, w)) {
+      if (lineSegmentIntersection(lineOfSight, w)) {
         return false
       }
     }

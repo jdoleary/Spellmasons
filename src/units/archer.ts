@@ -40,6 +40,7 @@ function canInteractWithTarget(unit: Unit.IUnit, x: number, y: number): boolean 
   if (!unit.alive) {
     return false;
   }
-  return math.distance(unit, { x, y }) <= unit.attackRange;
+  // Archers can only attack if they can see enemy and are close enough
+  return window.underworld.hasLineOfSight(unit, { x, y }) && math.distance(unit, { x, y }) <= unit.attackRange;
 }
 export default unit;
