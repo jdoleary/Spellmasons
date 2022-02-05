@@ -45,3 +45,4 @@
 - When a user disconnects on overworld it doesn't check if everyone has voted (this may not be a problem once
 i switch to the cauldron overworld)
 - Like how dying at start of turn didn't end turn until 24be49dfb4904bc81e683c903ffe0bdcdfc75065, maybe other death causing events wont end turn.  Maybe I should add a check in the unit code when they take damage to always see if it's a player
+- repelCircleFromLine doesn't handle corner cases such as vertical lines due to it using intersection of lines under the hood.  Improve intersectionOfLines cornercases.  I protect against this case by doing special handling of vertical lines in findWherePointIntersectLineSegmentAtRightAngle() which calls findWherePointIntersectLineAtRightAngle is the only place that uses intersectionOfLines

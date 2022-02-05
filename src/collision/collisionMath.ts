@@ -36,7 +36,7 @@ function toStandardForm(line: LineSegment): LineInStandardForm | undefined {
         return undefined
     }
 }
-// Doesn't account for edge cases.  Prefer lineSegmentIntersection instead
+// TODO Doesn't account for edge cases such as vertical lines
 function intersectionOfLines(line: LineInStandardForm, line2: LineInStandardForm): Vec2 {
     // https://www.cuemath.com/geometry/intersection-of-two-lines/
     return {
@@ -138,5 +138,6 @@ export function lineSegmentIntersection(l1: LineSegment, l2: LineSegment): Vec2 
 export const testables = {
     slope,
     toStandardForm,
-    findWherePointIntersectLineAtRightAngle
+    findWherePointIntersectLineAtRightAngle,
+    intersectionOfLines
 }

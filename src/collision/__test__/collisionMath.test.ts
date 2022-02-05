@@ -1,5 +1,5 @@
 import { LineSegment, findWherePointIntersectLineSegmentAtRightAngle, lineSegmentIntersection, testables } from '../collisionMath';
-const { slope, toStandardForm } = testables;
+const { slope, toStandardForm, intersectionOfLines } = testables;
 describe('collisionMath', () => {
     // describe('intersectionOfLines', () => {
     //     it('should return the point of intersection for 2 lines', () => {
