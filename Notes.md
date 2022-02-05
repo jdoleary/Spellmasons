@@ -67,7 +67,6 @@ The underworld setup and player setup need to occur via pie messages: underworld
   - if you press shift while your on a guy it makes the mana tooltip come back (it depends on the existance of the info tooltip)
 - when trying to figure out the effect of a spell, he doesn't know what it'll do (damage to enemy and how much health they have)
 - Health net result for health should show on health/mana tooltip
-- I wanna see mana/turn
 - On level pick: "Consensus is x location.  Changing in 5... 4.."
 - Expectation: health would reset on new level
 - Bug: It didn't end brads turn when he died (he was poisoned)

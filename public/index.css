@@ -319,6 +319,8 @@ body.your-turn #player-turn-indicator-holder.low-time {
   justify-content: center;
   flex-direction: column;
   border: 1px solid green;
+  /* Display above pixi */
+  z-index: 1;
 }
 .health-mana-bar {
   width: 200px;

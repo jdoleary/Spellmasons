@@ -13,6 +13,7 @@ const elHealthBar: HTMLElement = document.querySelector('#health .fill') as HTML
 const elHealthLabel: HTMLElement = document.querySelector('#health .label') as HTMLElement;
 const elManaBar: HTMLElement = document.querySelector('#mana .fill') as HTMLElement;
 const elManaLabel: HTMLElement = document.querySelector('#mana .label') as HTMLElement;
+const elPlayerStats: HTMLElement = document.querySelector('#player-stats') as HTMLElement;
 
 export function getPlanningViewColor(unit: IUnit) {
   if (unit.unitType === UnitType.PLAYER_CONTROLLED) {
@@ -311,6 +312,9 @@ export function syncPlayerHealthManaUI() {
   elHealthLabel.innerHTML = `${unit.health}/${unit.healthMax}`;
   elManaBar.style["width"] = `${100 * unit.mana / unit.manaMax}%`;
   elManaLabel.innerHTML = `${unit.mana}/${unit.manaMax}`;
+  elPlayerStats.innerHTML = `
+Mana per turn: ${window.player.unit.manaPerTurn}
+  `
 }
 export function canMove(unit: IUnit): boolean {
   // Do not move if dead
