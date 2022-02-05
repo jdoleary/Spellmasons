@@ -62,6 +62,7 @@ The underworld setup and player setup need to occur via pie messages: underworld
 - I can't tell how far I can move
 - Want there to be pathfinding to go around obstacles
 - Assumption: if grunts can move close to me they should also be able to attack me
+  - This is blocked because there's no longer a resolveDoneMoving promise due to how it can cause desync
 - when trying to figure out the effect of a spell, he doesn't know what it'll do (damage to enemy and how much health they have)
 - Health net result for health should show on health/mana tooltip
 - Expectation: health would reset on new level

@@ -1,4 +1,5 @@
 ## Current Priorities
+- Add linesegment collisions to prevent archers from shooting through walls
 - Prevent spawning inside of obstacles
 - Add walls to whole map (and possibly rooms?)
 ---
