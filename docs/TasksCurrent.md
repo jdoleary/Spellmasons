@@ -1,7 +1,6 @@
 ## Current Priorities
 - Cards become more expensive when you use them
 - Playtest with friends
-- Get cards on upgrade screen
 - Balance mana
   - To make this challenging, players should often be on the verge of no mana, it should feel scarce so they have to pick carefully what spells they want to use.
     - Maybe the answer to this is to make spells more expensive every time you use them

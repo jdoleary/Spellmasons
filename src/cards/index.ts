@@ -28,6 +28,8 @@ import protection from './protection';
 import charge from './charge';
 import obliterate from './obliterate';
 import clone from './clone';
+import { IUpgrade, upgradeSource } from '../Upgrade';
+import { addCardToHand } from '../CardUI';
 export interface Spell {
   card: ICard;
   // modifiers keep track of additional state on an individual unit basis
@@ -51,6 +53,8 @@ function register(spell: Spell) {
   const { id } = card;
   // Add card to cards pool
   allCards.push(card);
+  // Add card as upgrade:
+  upgradeSource.push(cardToUpgrade(card));
   // Add subsprites
   if (subsprites) {
     Object.entries(subsprites).forEach(([key, value]) => {
@@ -95,6 +99,18 @@ export function registerCards() {
   register(charge);
   register(obliterate);
   register(clone);
+}
+function cardToUpgrade(c: ICard): IUpgrade {
+  return {
+    title: c.id,
+    description: () => c.description,
+    thumbnail: `images/spell/${c.thumbnail}`,
+    // TODO: Feature creep: What if you could UPGRADE the effect of a spell!! 0.o
+    maxCopies: 1,
+    effect: (player) => {
+      addCardToHand(c, player);
+    }
+  };
 }
 
 // Guiding rules for designing spells:
