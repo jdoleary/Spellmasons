@@ -260,7 +260,7 @@ export default class Underworld {
       console.error('elLevelIndicator is null');
     }
     for (let i = 0; i < config.NUM_PICKUPS_PER_LEVEL; i++) {
-      const coords = this.getRandomCoordsWithinBounds({ xMin: 2 });
+      const coords = this.getRandomCoordsWithinBounds({ xMin: 2 * config.UNIT_SIZE, yMin: config.COLLISION_MESH_RADIUS, xMax: config.MAP_WIDTH - config.COLLISION_MESH_RADIUS, yMax: config.MAP_HEIGHT - config.COLLISION_MESH_RADIUS });
       const randomPickupIndex = randInt(this.random,
         0,
         Object.values(Pickup.pickups).length - 1,
@@ -280,7 +280,7 @@ export default class Underworld {
     // Spawn units at the start of the level
     const enemyIndexes = getEnemiesForAltitude(level.altitude);
     for (let index of enemyIndexes) {
-      const coords = this.getRandomCoordsWithinBounds({ xMin: 2 });
+      const coords = this.getRandomCoordsWithinBounds({ xMin: 2 * config.UNIT_SIZE, yMin: config.COLLISION_MESH_RADIUS, xMax: config.MAP_WIDTH - config.COLLISION_MESH_RADIUS, yMax: config.MAP_HEIGHT - config.COLLISION_MESH_RADIUS });
       const sourceUnit = Object.values(allUnits)[index];
       let unit: Unit.IUnit = Unit.create(
         sourceUnit.id,
@@ -311,7 +311,7 @@ export default class Underworld {
     for (let i = 0; i < config.NUM_OBSTACLES_PER_LEVEL; i++) {
       let badLocation = false;
       // Ensure obstacles don't spawn in the column that spawns players:
-      const coords = this.getRandomCoordsWithinBounds({ xMin: 2 * config.UNIT_SIZE });
+      const coords = this.getRandomCoordsWithinBounds({ xMin: 2 * config.UNIT_SIZE, yMin: config.COLLISION_MESH_RADIUS, xMax: config.MAP_WIDTH - config.COLLISION_MESH_RADIUS, yMax: config.MAP_HEIGHT - config.COLLISION_MESH_RADIUS });
       for (let u of this.units) {
         if (math.distance(u, coords) < config.COLLISION_MESH_RADIUS * 2) {
           // Abort spawning the obstacle if it collides with a unit

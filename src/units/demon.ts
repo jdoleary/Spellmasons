@@ -2,6 +2,7 @@ import * as Unit from '../Unit';
 import type { UnitSource } from './index';
 import { UnitSubType, UnitType } from '../commonTypes';
 import { createVisualFlyingProjectile } from '../Projectile';
+import * as config from '../config';
 
 const CAST_MANA_COST = 30;
 const unit: UnitSource = {
@@ -37,7 +38,7 @@ const unit: UnitSource = {
       }
     }
     // Move randomly
-    const moveCoords = window.underworld.getRandomCoordsWithinBounds({ xMin: 2 });
+    const moveCoords = window.underworld.getRandomCoordsWithinBounds({ xMin: config.UNIT_SIZE, yMin: config.COLLISION_MESH_RADIUS, xMax: config.MAP_WIDTH - config.COLLISION_MESH_RADIUS, yMax: config.MAP_HEIGHT - config.COLLISION_MESH_RADIUS });
     await Unit.moveTowards(unit, moveCoords);
   },
 };
