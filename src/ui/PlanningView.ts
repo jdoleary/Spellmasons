@@ -75,6 +75,10 @@ export async function syncSpellEffectProjection() {
   // Clear the spelleffectprojection in preparation for showing the current ones
   clearSpellEffectProjection();
   if (isOutOfBounds(mousePos)) {
+    // Calculate the mana cost for 0 distance
+    const cards = CardUI.getSelectedCards();
+    const manaCost = calculateManaCost(cards, 0)
+    updateManaCostUI(manaCost);
     // Mouse is out of bounds, do not show a hover icon
     return;
   }
