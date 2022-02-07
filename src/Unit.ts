@@ -272,6 +272,9 @@ export function die(unit: IUnit) {
     addPixiSprite('units/corpse.png', unit.image.sprite.parent),
   );
   unit.alive = false;
+  // Ensure that the unit resolvesDoneMoving when they die in the event that 
+  // they die while they are moving.  This prevents turn phase from getting stuck
+  unit.resolveDoneMoving();
   // Remove all modifiers:
   for (let [modifier, _modifierProperties] of Object.entries(unit.modifiers)) {
     removeModifier(unit, modifier);
