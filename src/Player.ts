@@ -29,8 +29,6 @@ export interface IPlayer {
   overworldImage: Image.IImage;
 }
 export function create(clientId: string, unitId: string): IPlayer | undefined {
-  // limit spawn to the leftmost column
-  const coords = window.underworld.getRandomCoordsWithinBounds({ xMax: 0 });
   const userSource = allUnits[unitId];
   if (!userSource) {
     console.error('User unit source file not registered, cannot create player');
@@ -41,8 +39,8 @@ export function create(clientId: string, unitId: string): IPlayer | undefined {
     clientConnected: true,
     unit: Unit.create(
       userSource.id,
-      coords.x,
-      coords.y,
+      NaN,
+      NaN,
       Faction.PLAYER,
       userSource.info.image,
       UnitType.PLAYER_CONTROLLED,

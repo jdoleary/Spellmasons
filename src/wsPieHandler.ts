@@ -44,9 +44,6 @@ export function onData(d: OnDataArgs) {
         text: '🎈',
       });
       break;
-    case MESSAGE_TYPES.VOTE_FOR_LEVEL:
-      voteForLevel(fromClient, payload.levelIndex);
-      break;
     case MESSAGE_TYPES.DESYNC:
       console.warn(`Client ${fromClient} detected desync from host`)
       // When a desync is detected, sync the clients 
@@ -162,6 +159,9 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
     //     });
     //   }
     //   break;
+    case MESSAGE_TYPES.VOTE_FOR_LEVEL:
+      voteForLevel(fromClient, payload.levelIndex);
+      break;
     case MESSAGE_TYPES.ASK_FOR_INIT_GAME_STATE:
       giveClientGameStateForInitialLoad(fromClient);
       break;
@@ -358,6 +358,22 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
       // Player entity is created and then the messageQueue can begin processing
       // including LOAD_GAME_STATE.
       setView(View.CharacterSelect);
+
+      // If this client has just joined, queue asking for the gamestate
+      // from the other players.
+      // The reason sending game state is queued and not sent immediately
+      // is that if there's a game in progress you don't want to send the
+      // state in the middle of an action (which could cause desyncs for
+      // code that depends on promises such as resolveDoneMoving)
+      onDataQueueContainer.queue.push({
+        type: "Data",
+        // This is the client that needs to be wispered to
+        fromClient: o.clientThatChanged,
+        time: new Date().getTime(),
+        payload: {
+          type: MESSAGE_TYPES.ASK_FOR_INIT_GAME_STATE,
+        }
+      });
     }
     // The host is always the first client
     window.hostClientId = clients[0]
@@ -367,22 +383,6 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
       console.log("Setup: Initializing underworld as host");
       initializeUnderworld();
     }
-    // Now that another client has joined the game
-    // queue sending game state to other player so they can load:
-    // The reason sending game state is queued and not sent immediately
-    // is that if there's a game in progress you don't want to send the
-    // state in the middle of an action (which could cause desyncs for
-    // code that depends on promises such as resolveDoneMoving)
-    onDataQueueContainer.queue.push({
-      type: "Data",
-      // This is the client that needs to be wispered to
-      fromClient: o.clientThatChanged,
-      time: new Date().getTime(),
-      payload: {
-        type: MESSAGE_TYPES.ASK_FOR_INIT_GAME_STATE,
-      }
-
-    })
   } else {
     // client left
 
