@@ -277,17 +277,6 @@ export default class Underworld {
         pickup.effect,
       );
     }
-    for (let i = 0; i < config.NUM_OBSTACLES_PER_LEVEL; i++) {
-      const coords = this.getRandomCoordsWithinBounds({ xMin: 2 });
-      const randomIndex = randInt(this.random,
-        0,
-        Obstacle.obstacleSource.length - 1,
-      );
-      const obstacle = Obstacle.obstacleSource[randomIndex];
-      Obstacle.create(coords.x, coords.y, obstacle);
-      // TODO: Ensure the players have a path to the portal
-    }
-    this.cacheWalls();
     // Spawn units at the start of the level
     const enemyIndexes = getEnemiesForAltitude(level.altitude);
     for (let index of enemyIndexes) {
@@ -318,6 +307,34 @@ export default class Underworld {
         Image.scale(unit.image, config.NON_HEAVY_UNIT_SCALE);
       }
     }
+
+    for (let i = 0; i < config.NUM_OBSTACLES_PER_LEVEL; i++) {
+      let badLocation = false;
+      // Ensure obstacles don't spawn in the column that spawns players:
+      const coords = this.getRandomCoordsWithinBounds({ xMin: 2 * config.UNIT_SIZE });
+      for (let u of this.units) {
+        if (math.distance(u, coords) < config.COLLISION_MESH_RADIUS * 2) {
+          // Abort spawning the obstacle if it collides with a unit
+          badLocation = true;
+          break;
+        }
+      }
+      // Do not create if it didn't choose a good location
+      // For now, to prevent obstacles from trapping units when they
+      // spawn, just skip making one if the coordinates collide with
+      // a unit
+      if (badLocation) {
+        continue;
+      }
+      const randomIndex = randInt(this.random,
+        0,
+        Obstacle.obstacleSource.length - 1,
+      );
+      const obstacle = Obstacle.obstacleSource[randomIndex];
+      Obstacle.create(coords.x, coords.y, obstacle);
+      // TODO: Ensure the players have a path to the portal
+    }
+    this.cacheWalls();
 
     // Since a new level changes the existing units, redraw the planningView in
     // the event that the planningView is active
