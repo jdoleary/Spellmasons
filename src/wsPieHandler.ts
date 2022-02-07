@@ -363,11 +363,6 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
     // The host is always the first client
     window.hostClientId = clients[0]
     console.log(`Setup: Setting Host client to ${window.hostClientId}. ${window.hostClientId === window.clientId ? 'you are the host.' : ''}`);
-    // If the underworld doesn't exist, have the host setup the underworld
-    if (window.hostClientId == window.clientId && !readyState.get("underworld")) {
-      console.log("Setup: Initializing underworld as host");
-      initializeUnderworld();
-    }
   } else {
     // client left
 
@@ -393,6 +388,15 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
       window.hostClientId = clients[0];
       console.log(`Setup: Host client left, reassigning host to ${window.hostClientId}. ${window.hostClientId === window.clientId ? 'you are the host.' : ''}`);
     }
+  }
+  // If the underworld doesn't exist, have the host setup the underworld
+  // Note: This should occur regardless if the client in question is joining or leaving
+  // because it will trigger if the host JOINs and is the first to join the room (thus being the host)
+  // or if the host leaves and the 2nd client (which becomes the host) never got the gamestate and is thus
+  // needed to initialize
+  if (window.hostClientId == window.clientId && !readyState.get("underworld")) {
+    console.log("Setup: Initializing underworld as host");
+    initializeUnderworld();
   }
 }
 
