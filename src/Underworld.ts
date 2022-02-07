@@ -24,7 +24,7 @@ import { updatePlanningView, updateTooltipSpellCost } from './ui/PlanningView';
 import { ILevel, getEnemiesForAltitude } from './overworld';
 import { setRoute, Route } from './routes';
 import { prng, randInt, SeedrandomState } from './rand';
-import { calculateManaHealthCost } from './cards/cardUtils';
+import { calculateManaCost } from './cards/cardUtils';
 import { moveWithCollisions } from './collision/moveWithCollision';
 import { lineSegmentIntersection, LineSegment } from './collision/collisionMath';
 
@@ -718,7 +718,7 @@ export default class Underworld {
       return effectState;
     }
     const cards = Cards.getCardsFromIds(cardIds);
-    const { manaCost, healthCost } = calculateManaHealthCost(cards, casterPlayer.unit, math.distance(casterPlayer.unit, target));
+
     for (let index = 0; index < cards.length; index++) {
       const card = cards[index];
       const animationPromises = [];
@@ -759,16 +759,11 @@ export default class Underworld {
         await Promise.all(animationPromises);
       }
     }
+    const manaCost = calculateManaCost(cards, math.distance(casterPlayer.unit, target) / config.SPELL_DISTANCE_MANA_DENOMINATOR);
     if (!dryRun) {
       // Apply mana cost to caster
       casterPlayer.unit.mana -= manaCost;
-      // Apply health cost to caster
-      if (healthCost > 0) {
-        Unit.takeDamage(casterPlayer.unit, healthCost)
-      }
       Unit.syncPlayerHealthManaUI();
-    } else {
-      updateTooltipSpellCost({ manaCost, healthCost, willCauseDeath: healthCost >= casterPlayer.unit.health })
     }
     if (!dryRun) {
       // Clear spell animations once all cards are done playing their animations

@@ -1,5 +1,6 @@
 import { MESSAGE_TYPES } from '../MessageTypes';
 import * as CardUI from '../CardUI';
+import * as config from '../config';
 import type * as Player from '../Player';
 import floatingText from '../FloatingText';
 import {
@@ -10,6 +11,8 @@ import {
 import { app } from '../PixiUtils';
 import { distance } from '../math';
 import { View } from '../views';
+import { calculateManaCost } from '../cards/cardUtils';
+import * as math from '../math';
 
 export function keydownListener(event: KeyboardEvent) {
   // Only handle hotkeys when viewing the Game
@@ -192,13 +195,24 @@ export function clickHandler(e: MouseEvent) {
         // getUnitAt corrects to the nearest Unit if there is one, otherwise
         // allow casting right on the mouseTarget
         const target = window.underworld.getUnitAt(mouseTarget) || mouseTarget;
-        window.pie.sendData({
-          type: MESSAGE_TYPES.SPELL,
-          x: target.x,
-          y: target.y,
-          cards: CardUI.getSelectedCards(),
-        });
-        CardUI.clearSelectedCards();
+        const cardIds = CardUI.getSelectedCardIds();
+        const cards = CardUI.getSelectedCards();
+
+        const manaCost = calculateManaCost(cards, math.distance(selfPlayer.unit, target) / config.SPELL_DISTANCE_MANA_DENOMINATOR);
+        if (manaCost <= selfPlayer.unit.mana) {
+          window.pie.sendData({
+            type: MESSAGE_TYPES.SPELL,
+            x: target.x,
+            y: target.y,
+            cards: cardIds,
+          });
+          CardUI.clearSelectedCards();
+        } else {
+          floatingText({
+            coords: target,
+            text: 'Insufficient mana!',
+          });
+        }
       } else {
         console.error("Attempting to cast while clientId is unassociated with existing players");
       }

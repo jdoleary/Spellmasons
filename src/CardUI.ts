@@ -4,8 +4,10 @@ import * as math from './math';
 import {
   clearSpellEffectProjection,
   syncSpellEffectProjection,
+  updateManaCostUI,
   updateTooltipContent,
 } from './ui/PlanningView';
+import { calculateManaCost } from './cards/cardUtils';
 const elCardHolders = document.getElementById('card-holders');
 // Where the non-selected cards are displayed
 const elCardHand = document.getElementById('card-hand');
@@ -195,12 +197,16 @@ function selectCard(player: CardUI.IPlayer, element: HTMLElement, cardId: string
     addClickListenerToCardElement(player, clone, cardId);
     clone.classList.add('selected');
     elSelectedCards.appendChild(clone);
+    // Updates the mana cost
+    const cards = getSelectedCards();
+    const manaCost = calculateManaCost(cards, 0)
+    updateManaCostUI(manaCost);
   } else {
     console.error('elSelectedCards is null');
   }
 }
 export function areAnyCardsSelected() {
-  return !!getSelectedCards().length;
+  return !!getSelectedCardIds().length;
 }
 
 // TODO: Keep this around for when we have one-use cards
@@ -249,13 +255,17 @@ export function addCardToHand(card: Cards.ICard, player: CardUI.IPlayer | undefi
   }
 }
 
-export function getSelectedCards(): string[] {
+export function getSelectedCardIds(): string[] {
   if (elSelectedCards && elSelectedCards.classList.contains('hide')) {
     return [];
   }
   return Array.from(document.querySelectorAll('.card.selected')).map((el) =>
     el instanceof HTMLElement ? el.dataset.cardId || '' : '',
   );
+}
+export function getSelectedCards(): Cards.ICard[] {
+  const cardIds = getSelectedCardIds();
+  return Cards.getCardsFromIds(cardIds);
 }
 
 let inspectIntervalId: NodeJS.Timeout | undefined;

@@ -317,9 +317,6 @@ body.your-turn #player-turn-indicator-holder.low-time {
 #inspector-tooltip-spell-cost #spell-mana-cost {
   color:blue;
 }
-#inspector-tooltip-spell-cost #spell-health-cost {
-  color:red;
-}
 
 #ready-state {
   position: absolute;

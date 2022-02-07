@@ -1,15 +1,17 @@
 import * as PIXI from 'pixi.js';
 
 import { allUnits } from '../units';
-import { app, containerSpells, containerUI } from '../PixiUtils';
-import { MAP_WIDTH, MAP_HEIGHT } from '../config';
+import { containerSpells, containerUI } from '../PixiUtils';
 import { containerPlanningView } from '../PixiUtils';
 import { Vec2, Faction, UnitSubType, UnitType } from '../commonTypes';
 import { turn_phase } from '../Underworld';
 import * as CardUI from '../CardUI';
 import * as config from '../config';
 import * as Unit from '../Unit';
+import * as Image from '../Image';
+import * as math from '../math';
 import { targetBlue } from './colors';
+import { calculateManaCost } from '../cards/cardUtils';
 
 let planningViewGraphics: PIXI.Graphics;
 let dryRunGraphics: PIXI.Graphics;
@@ -51,6 +53,17 @@ export function updatePlanningView() {
 
   planningViewGraphics.endFill();
 }
+export function updateManaCostUI(manaCost: number) {
+  if (window.player) {
+
+    if (manaCost <= window.player.unit.mana) {
+      updateTooltipSpellCost(manaCost)
+    } else {
+      updateTooltipSpellCost(`${manaCost} - Insufficient mana`)
+    }
+  }
+
+}
 
 export async function syncSpellEffectProjection() {
   clearTooltipSpellCost();
@@ -76,22 +89,24 @@ export async function syncSpellEffectProjection() {
       (p) => p.clientId === window.clientId,
     );
     if (currentPlayer) {
-      // TODO if implement mana...
-      // if (!Player.isTargetInRange(currentPlayer, mousePos)) {
-      //   // Draw deny icon to show the player they are out of range
-      //   Image.create(mousePos.x, mousePos.y, 'deny.png', containerSpells);
-      // } else {
-      // Dry run cast so the user can see what effect it's going to have
-      // getUnitAt corrects to the nearest Unit if there is one, otherwise
-      // allow casting right on the mouseTarget
-      const target = window.underworld.getUnitAt(mousePos) || mousePos;
-      await window.underworld.castCards(
-        currentPlayer,
-        CardUI.getSelectedCards(),
-        target,
-        true,
-      );
-      // }
+      const cards = CardUI.getSelectedCards();
+      const manaCost = calculateManaCost(cards, math.distance(mousePos, currentPlayer.unit) / config.SPELL_DISTANCE_MANA_DENOMINATOR)
+      updateManaCostUI(manaCost);
+      if (manaCost > currentPlayer.unit.mana) {
+        // Draw deny icon to show the player they are out of range
+        Image.create(mousePos.x, mousePos.y, 'deny.png', containerSpells);
+      } else {
+        // Dry run cast so the user can see what effect it's going to have
+        // getUnitAt corrects to the nearest Unit if there is one, otherwise
+        // allow casting right on the mouseTarget
+        const target = window.underworld.getUnitAt(mousePos) || mousePos;
+        await window.underworld.castCards(
+          currentPlayer,
+          CardUI.getSelectedCardIds(),
+          target,
+          true,
+        );
+      }
     }
   }
 }
@@ -144,24 +159,15 @@ const elInspectorTooltipContent = document.getElementById(
 const elSpellManaCost = document.getElementById(
   'spell-mana-cost',
 );
-const elSpellHealthCost = document.getElementById(
-  'spell-health-cost',
-);
 export function clearTooltipSpellCost() {
   if (elSpellManaCost) {
     elSpellManaCost.innerHTML = '';
   }
-  if (elSpellHealthCost) {
-    elSpellHealthCost.innerHTML = '';
-  }
 
 }
-export function updateTooltipSpellCost({ manaCost, healthCost, willCauseDeath }: { manaCost: number, healthCost: number, willCauseDeath: boolean }) {
+export function updateTooltipSpellCost(manaCost: any) {
   if (elSpellManaCost) {
-    elSpellManaCost.innerHTML = `- ${manaCost}`
-  }
-  if (elSpellHealthCost) {
-    elSpellHealthCost.innerHTML = `- ${healthCost} ${willCauseDeath ? '💀' : ''} `
+    elSpellManaCost.innerHTML = `${manaCost}`
   }
 }
 export function updateTooltipContent() {

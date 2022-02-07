@@ -1,6 +1,4 @@
-import { SPELL_DISTANCE_MANA_DENOMINATOR } from '../../config';
-import { testables, calculateManaHealthCost } from '../cardUtils';
-const { calculateManaCost } = testables;
+import { calculateManaCost } from '../cardUtils';
 
 describe("cards", () => {
     describe("calculateManaCost", () => {
@@ -59,40 +57,5 @@ describe("cards", () => {
             const expected = 3 * distanceMultiplier;
             expect(actual).toEqual(expected);
         })
-    });
-    describe("calculateManaHealthCost", () => {
-        it('if the manaCost is > the units current mana, the remainder should turn into health cost and the mana cost should be floored to the amount of current unit mana', () => {
-            const card = {
-                manaCost: 30,
-                manaMultiplier: 1
-            };
-            const distance = SPELL_DISTANCE_MANA_DENOMINATOR; // not relevant to this test
-            const unit = { mana: 10 };
-            const actual = calculateManaHealthCost([card], unit, distance)
-            const expected = { manaCost: unit.mana, healthCost: card.manaCost - unit.mana };
-            expect(actual).toEqual(expected);
-        });
-        it('if the manaCost is < the units current mana, there should be no health cost', () => {
-            const card = {
-                manaCost: 1,
-                manaMultiplier: 1
-            };
-            const unit = { mana: 10 };
-            const distance = SPELL_DISTANCE_MANA_DENOMINATOR; // not relevant to this test
-            const actual = calculateManaHealthCost([card], unit, distance)
-            const expected = { manaCost: card.manaCost, healthCost: 0 };
-            expect(actual).toEqual(expected);
-        });
-        it('should divide the "distance" by config.SPELL_DISTANCE_MANA_DENOMINATOR before passing it on to calculateManaCost', () => {
-            const card = {
-                manaCost: 1,
-                manaMultiplier: 1
-            };
-            const unit = { mana: 10 };
-            const distance = SPELL_DISTANCE_MANA_DENOMINATOR * 2;
-            const actual = calculateManaHealthCost([card], unit, distance)
-            const expected = { manaCost: card.manaCost * 2, healthCost: 0 };
-            expect(actual).toEqual(expected);
-        });
     });
 });

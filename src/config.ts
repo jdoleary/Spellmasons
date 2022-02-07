@@ -44,4 +44,4 @@ export const MANA_GET_PER_TURN = 5;
 // An arbitrary number which affects the multiplying affect that distance has on mana cost
 // A bigger number means distance costs less.  
 // distance/SPELL_DISTANCE_MANA_DENOMINATOR is what the mana is multiplied by
-export const SPELL_DISTANCE_MANA_DENOMINATOR = 100;
+export const SPELL_DISTANCE_MANA_DENOMINATOR = 200;
