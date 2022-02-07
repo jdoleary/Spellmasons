@@ -142,25 +142,23 @@ export default class Underworld {
   }
   gameLoopUnits() {
     for (let u of this.units) {
-      // Sync Image even for non moving units since they may be moved by forces other than themselves
-      Unit.syncImage(u)
       if (u.moveTarget) {
         // Move towards target
         const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.moveTarget, u.moveSpeed)
-        moveWithCollisions(u, stepTowardsTarget, [], this.walls)
-
-        // UNIT_STOP_MOVING_MARGIN ensures that units wont continue to move imperceptibly while
-        // players wait for the seemingly non-moving unit's turn to end (which ends when it's done moving via resolveDoneMoving)
-        // --
-        // Also stops moving if moveTarget is undefined in the event that some other code sets the move target to undefined, we
-        // want to make sure this promise resolves so the game doesn't get stuck
-        if (u.moveTarget === undefined || Math.abs(u.x - u.lastX) < config.UNIT_STOP_MOVING_MARGIN && Math.abs(u.y - u.lastY) < config.UNIT_STOP_MOVING_MARGIN) {
-          u.resolveDoneMoving();
-          u.moveTarget = undefined;
-        }
+        moveWithCollisions(u, stepTowardsTarget, this.units, this.walls)
         // check for collisions with pickups in new location
         this.checkPickupCollisions(u);
-        // TODO should I have other units (moved via collision also check for pickups?)
+      }
+      // Sync Image even for non moving units since they may be moved by forces other than themselves
+      Unit.syncImage(u)
+      // UNIT_STOP_MOVING_MARGIN ensures that units wont continue to move imperceptibly while
+      // players wait for the seemingly non-moving unit's turn to end (which ends when it's done moving via resolveDoneMoving)
+      // --
+      // Also stops moving if moveTarget is undefined in the event that some other code sets the move target to undefined, we
+      // want to make sure this promise resolves so the game doesn't get stuck
+      if (u.moveTarget === undefined || Math.abs(u.x - u.lastX) < config.UNIT_STOP_MOVING_MARGIN && Math.abs(u.y - u.lastY) < config.UNIT_STOP_MOVING_MARGIN) {
+        u.resolveDoneMoving();
+        u.moveTarget = undefined;
       }
     }
     requestAnimationFrame(this.gameLoopUnits.bind(this))

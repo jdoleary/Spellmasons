@@ -1,5 +1,4 @@
 ## Current Priorities
-- Add repulsion between units for swap, clone, and general movement
 - Cards become more expensive when you use them
 - Balance mana
   - To make this challenging, players should often be on the verge of no mana, it should feel scarce so they have to pick carefully what spells they want to use.

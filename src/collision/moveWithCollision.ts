@@ -67,7 +67,16 @@ export function moveWithCollisions(mover: Circle, destination: Vec2, circles: Ci
     for (let other of circles) {
         // Do not repel self from self
         if (mover !== other) {
-            repelCircles(mover, originalPosition, other);
+            // If the mover now intersects with another circle...
+            if (isCircleIntersectingCircle(mover, other)) {
+                // Prevent the mover from moving through other circles
+                // This turns out to be the best solution to prevent
+                // units from ending up inside walls or out of the level
+                // If, alternatively, movers could "push" other units,
+                // that is when they get pushed through walls. This is better
+                // to just make it so you can't move through other units
+                repelCircles(mover, originalPosition, other, true);
+            }
         }
     }
     for (let line of lines) {
@@ -84,20 +93,22 @@ export function moveWithCollisions(mover: Circle, destination: Vec2, circles: Ci
 // will not account for the case where the destination does not intersect
 // a circle but the mover would travel through a circle on it's way to destination.  This is by design.
 function repelCircles(mover: Circle, originalPosition: Vec2, other: Circle, otherIsFixed: boolean = false) {
-    // If the mover now intersects with another circle...
-    if (isCircleIntersectingCircle(mover, other)) {
-        // Repel, so they don't intersect
-        // Circles should move mover.radius/2 + other.radius/2 away from each others
-        // positions
-        let { vector, distance } = normalizedVector(mover, other);
-        if (!vector) {
-            // If vector is undefined, then mover and other are
-            // equal, in which case we should determien the vector from the 
-            // mover's start point:
-            vector = normalizedVector(originalPosition, other).vector;
-        }
-        if (vector) {
-            const overlap = mover.radius + other.radius - distance;
+    // Repel, so they don't intersect
+    // Circles should move mover.radius/2 + other.radius/2 away from each others
+    // positions
+    let { vector, distance } = normalizedVector(mover, other);
+    if (!vector) {
+        // If vector is undefined, then mover and other are
+        // equal, in which case we should determien the vector from the 
+        // mover's start point:
+        vector = normalizedVector(originalPosition, other).vector;
+    }
+    if (vector) {
+        const overlap = mover.radius + other.radius - distance;
+        // Prevent "pulling" circles towards each other, this function
+        // will only repel if they are intersecting (which would mean "overlap"
+        // would be a non-zero positive number)
+        if (overlap > 0) {
             if (otherIsFixed) {
                 const moverPos = moveAlongVector(mover, vector, -overlap);
                 mover.x = moverPos.x;
@@ -107,13 +118,13 @@ function repelCircles(mover: Circle, originalPosition: Vec2, other: Circle, othe
                 other.x = otherPos.x;
                 other.y = otherPos.y;
             }
-        } else {
-            // If vector is still undefined after trying both the new point and the start point
-            // then we need not calculate any collision or movement because the mover isn't moving
-            // --
-            // return early
-            return
         }
+    } else {
+        // If vector is still undefined after trying both the new point and the start point
+        // then we need not calculate any collision or movement because the mover isn't moving
+        // --
+        // return early
+        return
     }
 }
 // repelCircleFromLine calculates the final destination of the mover when possibly intersecting
