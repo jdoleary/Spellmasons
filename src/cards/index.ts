@@ -52,7 +52,7 @@ function register(spell: Spell) {
   const { subsprites, card, events } = spell;
   const { id } = card;
   // Add card to cards pool
-  allCards.push(card);
+  allCards[id] = card;
   // Add card as upgrade:
   upgradeSource.push(cardToUpgrade(card));
   // Add subsprites
@@ -146,15 +146,8 @@ export interface ICard {
   manaMultiplier: number;
 }
 
-export const allCards: ICard[] = [];
+export const allCards: { [cardId: string]: ICard } = {};
 
 export function getCardsFromIds(cardIds: string[]): ICard[] {
-  let cards = []
-  for (let id of cardIds) {
-    const card = allCards.find(c => c.id === id);
-    if (card) {
-      cards.push(card);
-    }
-  }
-  return cards;
+  return Object.values(allCards).filter(card => cardIds.includes(card.id))
 }

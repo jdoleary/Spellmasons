@@ -57,7 +57,7 @@ Makes this unit's curses contageous to other nearby units
       const coords = window.underworld.getCoordsForUnitsWithinDistanceOfTarget(unit, COLLISION_MESH_RADIUS * 4);
       // Filter out undefineds, filter out self
       const touchingUnits: IUnit[] = coords.map((coord) => window.underworld.getUnitAt(coord)).filter(x => x !== undefined).filter(x => x !== unit) as IUnit[];
-      const curseCards: ICard[] = Object.entries(unit.modifiers).filter(([_id, modValue]) => modValue.isCurse).map(([id, mod]) => allCards.find(card => card.id == id)).filter(x => x !== undefined) as ICard[];
+      const curseCards: ICard[] = Object.entries(unit.modifiers).filter(([_id, modValue]) => modValue.isCurse).map(([id, _mod]) => allCards[id]).filter(x => x !== undefined) as ICard[];
       for (let card of curseCards) {
 
 

@@ -21,7 +21,7 @@ if (elCardHolders) {
       const cardId =
         element instanceof HTMLElement ? element.dataset.cardId || '' : '';
       if (cardId) {
-        const card = Cards.allCards.find((card) => card.id === cardId);
+        const card = Cards.allCards[cardId];
         if (card) {
           showFullCard(card);
         } else {
@@ -69,8 +69,8 @@ export function recalcPositionForCards(player: CardUI.IPlayer | undefined) {
   const cardCountPairs = Object.entries<number>(
     player.cards
       .sort((a, b) => {
-        const cardA = Cards.allCards.find((card) => card.id === a);
-        const cardB = Cards.allCards.find((card) => card.id === b);
+        const cardA = Cards.allCards[a];
+        const cardB = Cards.allCards[b];
         if (cardA && cardB) {
           // Sort cards by probability
           return cardB.probability - cardA.probability;
@@ -99,7 +99,7 @@ export function recalcPositionForCards(player: CardUI.IPlayer | undefined) {
 
     for (let i = 0; i < count; i++) {
       // Create UI element for card
-      const card = Cards.allCards.find((card) => card.id === cardId);
+      const card = Cards.allCards[cardId];
       // Note: Some upgrades don't have corresponding cards (such as resurrect)
       if (card) {
         const element = createCardElement(card);
@@ -127,7 +127,7 @@ export function recalcPositionForCards(player: CardUI.IPlayer | undefined) {
     const className = `card-${cardId}`;
 
     // Create UI element for card
-    const card = Cards.allCards.find((card) => card.id === cardId);
+    const card = Cards.allCards[cardId];
     // Note: Some upgrades don't have corresponding cards (such as resurrect)
     if (card) {
       const element = createCardElement(card);
@@ -225,7 +225,7 @@ export function removeCardsFromHand(player: CardUI.IPlayer, cards: string[]) {
 
 // TODO remove dev helper function for production release
 window.giveMeCard = (cardId: string, quantity: number = 1) => {
-  const card = Cards.allCards.find((c) => c.id === cardId);
+  const card = Cards.allCards[cardId];
   if (card) {
     for (let i = 0; i < quantity; i++) {
       addCardToHand(card, window.player);
@@ -299,7 +299,7 @@ export function clearSelectedCards() {
 // Chooses a random card based on the card's probabilities
 export function generateCard(): Cards.ICard {
   // Excludes dark cards
-  return math.chooseObjectWithProbability(Cards.allCards);
+  return math.chooseObjectWithProbability(Object.values(Cards.allCards));
 }
 function getCardRarityColor(content: Cards.ICard): string {
   if (content.isDark) {
