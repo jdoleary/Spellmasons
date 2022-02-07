@@ -3,7 +3,7 @@ import type { Spell } from '.';
 import { MANA_BASE_COST, MANA_MULTIPLIER_NONE } from '../config';
 
 const id = 'damage';
-const damageDone = 10;
+const damageDone = 3;
 const spell: Spell = {
   card: {
     id,

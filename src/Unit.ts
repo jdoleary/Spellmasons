@@ -110,7 +110,7 @@ export function create(
     health: config.UNIT_BASE_HEALTH,
     healthMax: config.UNIT_BASE_HEALTH,
     mana: config.UNIT_BASE_MANA,
-    manaMax: config.UNIT_BASE_MANA,
+    manaMax: config.UNIT_BASE_MANA * 10,
     manaPerTurn: config.MANA_GET_PER_TURN,
     healthText: new PIXI.Text('', {
       fill: 'red',

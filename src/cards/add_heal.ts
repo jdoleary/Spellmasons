@@ -1,10 +1,10 @@
 import * as Unit from '../Unit';
 import type { Spell } from '.';
-import { MANA_MULTIPLIER_NONE } from '../config';
+import { MANA_BASE_COST, MANA_MULTIPLIER_NONE } from '../config';
 
 const id = 'heal';
-const healAmount = 10;
-const manaCost = 20;
+const healAmount = 3;
+const manaCost = MANA_BASE_COST * 2;
 
 const spell: Spell = {
   card: {

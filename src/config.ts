@@ -1,4 +1,4 @@
-export const PLAYER_BASE_HEALTH = 100;
+export const PLAYER_BASE_HEALTH = 10;
 export const UNIT_BASE_MOVE_DISTANCE = 120;
 export const UNIT_BASE_ATTACK_RANGE = 120;
 export const COLLISION_MESH_RADIUS = 32;
