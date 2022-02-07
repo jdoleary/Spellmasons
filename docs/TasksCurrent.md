@@ -1,4 +1,9 @@
 ## Current Priorities
+- Bug: Summoner was hiding under portal - confusing
+- Bug: Protection removes the target but not the drawn line with chain
+- Bug: Chain targets dead units
+- Bug: Animated sprite caused a dead unit to appear alive.  It was a skeleton for a moment but switched back - maybe mid attack
+- Bug: Chain showed up in upgrades when I already had it.  This is because I got it through a pickup so it wasn't listed in the upgrades array
 - Bug: Stuck on AI turn after archers killed resurrected grunt
 - Brad feedback: change inspect mode to work on click
     - Combine planning view and updateTooltipContent on click like brad suggested

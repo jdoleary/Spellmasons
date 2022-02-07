@@ -1,4 +1,10 @@
-
+## 2022.02.07 Erin
+- Erin expected to see line from me to enemies when casting chain to show that it's casting from me
+- Bug: Summoner was hiding under portal - confusing
+- Bug: Protection removes the target but not the drawn line with chain
+- Bug: Chain targets dead units
+- Bug: Animated sprite caused a dead unit to appear alive.  It was a skeleton for a moment but switched back - maybe mid attack
+- Bug: Chain showed up in upgrades when I already had it.  This is because I got it through a pickup so it wasn't listed in the upgrades array
 ## 2021.04.22 Playtest with Brad
 
 - We desynced unit positions until brad finished his turn, then it synced back up (one included a new spawned unit from summoner)
