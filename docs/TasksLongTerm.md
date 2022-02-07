@@ -11,6 +11,31 @@
   - Should there be a time constraint for end game? so you can only make so many culdrons?
   - In the boss battle, maybe you need to protect the culdron and there's no portal?
 ## Tasks Long Term
+- Security
+    - Since I'm using electron, I should evaluate my dependencies for safety: https://www.electronjs.org/docs/latest/tutorial/security#security-is-everyones-responsibility
+    - [Security Recommendations](https://www.electronjs.org/docs/latest/tutorial/security#checklist-security-recommendations)
+- Polish
+    - [Add Juice](https://itch.io/b/1219/gamedev-pro)
+        - (M) Animate cards
+            - https://3dtransforms.desandro.com/perspective
+            - https://3dtransforms.desandro.com/card-flip
+            - Use transform3d functions to trigger hardware acceleration: "In essence, any transform that has a 3D operation as one of its functions will trigger hardware compositing, even when the actual transform is 2D, or not doing anything at all (such as translate3d(0,0,0)). Note this is just current behaviour, and could change in the future (which is why we don’t document or encourage it). But it is very helpful in some situations and can significantly improve redraw performance."
+        - (L) Add shaders (see branch "shaders-yay")
+    - Finish all TODOs
+    - Tutorial (Mario style, don't make it explicit)
+    - SFX
+        - Special sfx for when ally dies
+- Hire Out?
+    - Art
+        - Calculate the value of your time for making art and music yourself vs the cost of hiring at $3000 expenses / month.  I'm -$18.75 per working hour
+    - Music
+        - Stina offered
+        - Have special music for intense moments (low health, boss fight)
+- Menus / Options
+- Publicity
+    - Publish on Steamworks
+    - Social Media stuff
+## Backburner Tasks
 - Should I send a pie message everytime i need to end a players turn so we never end up with desynced turn state? rather than f3c23e59c99362c6fc9229cfc19499c3789439a6
 - Optional: (M) Interactive terrain (grass spreads fire, water can be frozen to walk on, boulders can be destroyed)
 - Potential bug: This may not be a bug once overworld is replaced with Cauldron but currently voteForLevel waits until all clients have voted to move on, however, if a client disconnects without voting, the other clients will be stuck until another client votes

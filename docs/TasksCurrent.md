@@ -1,33 +1,11 @@
 ## Current Priorities
+- Bug: Mob tooltip doesn't update when their health changes until you move your mouse 
+- Brad feedback: change inspect mode to work on click
 - Cards become more expensive when you use them
 - Balance mana
   - To make this challenging, players should often be on the verge of no mana, it should feel scarce so they have to pick carefully what spells they want to use.
     - Maybe the answer to this is to make spells more expensive every time you use them
 - Playtest
-- Security
-    - Since I'm using electron, I should evaluate my dependencies for safety: https://www.electronjs.org/docs/latest/tutorial/security#security-is-everyones-responsibility
-    - [Security Recommendations](https://www.electronjs.org/docs/latest/tutorial/security#checklist-security-recommendations)
-- Polish
-    - [Add Juice](https://itch.io/b/1219/gamedev-pro)
-        - (M) Animate cards
-            - https://3dtransforms.desandro.com/perspective
-            - https://3dtransforms.desandro.com/card-flip
-            - Use transform3d functions to trigger hardware acceleration: "In essence, any transform that has a 3D operation as one of its functions will trigger hardware compositing, even when the actual transform is 2D, or not doing anything at all (such as translate3d(0,0,0)). Note this is just current behaviour, and could change in the future (which is why we don’t document or encourage it). But it is very helpful in some situations and can significantly improve redraw performance."
-        - (L) Add shaders (see branch "shaders-yay")
-    - Finish all TODOs
-    - Tutorial (Mario style, don't make it explicit)
-    - SFX
-        - Special sfx for when ally dies
-- Hire Out?
-    - Art
-        - Calculate the value of your time for making art and music yourself vs the cost of hiring at $3000 expenses / month.  I'm -$18.75 per working hour
-    - Music
-        - Stina offered
-        - Have special music for intense moments (low health, boss fight)
-- Menus / Options
-- Publicity
-    - Publish on Steamworks
-    - Social Media stuff
 ## Small Content Changes
 - Spell: Burn mana / Steal mana
 - Swap should only swap with targets, it shouldn't allow arbitrary teleportation
@@ -36,4 +14,4 @@
 ## Large Changes
 - (M) Push spells
   - Depends on: Collision task
-  - Rework movement spells such as charge and stomp
+  - Rework movement spells such as charge, stomp, lance
