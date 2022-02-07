@@ -1,18 +1,15 @@
 ## Current Priorities
-- Somehow a RNG desync is happening when I start a game with 2 clients connected and let the host pick character first then immediately compare RNG state.  Left off: See desyncThoughts.md
+- Fix init underworld
+    - Somehow a RNG desync is happening when I start a game with 2 clients connected and let the host pick character first then immediately compare RNG state.  Left off: See desyncThoughts.md
 - Address possible desync issues around projectile promise? same as with loading a game mid-movement
     - shouldn't this not be an issue though if loading a game happens synchronously? 
     - maybe it should happen synchronously for the sender and then it wont be a problem
+    - Also: desync often happens with moveTarget since moveTarget can be set mid way through executing a gamestate_hash check which would make the hashes not equal
 - Prevent spawning inside of obstacles
----
-- desync often happens with moveTarget since moveTarget can be set mid way through executing a gamestate_hash check which would make the hashes not equal
-- Update server to send message number so clients can know when they both have the latest message.  This'll prevent false positive desync detection
 ---
 - Cards become more expensive when you use them
 - Playtest with friends
-    - Verify gamestate integrity between clients
-- Implement new way of getting cards over time
-  - You shouldn't start with a bunch of cards
+- Get cards on upgrade screen
 - Balance mana
   - To make this challenging, players should often be on the verge of no mana, it should feel scarce so they have to pick carefully what spells they want to use.
     - Maybe the answer to this is to make spells more expensive every time you use them

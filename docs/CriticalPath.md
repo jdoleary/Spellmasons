@@ -3,7 +3,7 @@
 - Feb 2: Ensure gamestate desyncs don't occur or are handled when they do
 - Feb 6: Gameplay Balance
 - Playtest with friends
-- Feb 7: Youtube Alpha version video / Setup Social Media system
+- Feb 8: Youtube Alpha version video / Setup Social Media system
 - Feb 17: Finish Content / Endgame
 - Feb 18: Menus / Options
 - Feb 25, Feb 26: Electron Security Evaluation

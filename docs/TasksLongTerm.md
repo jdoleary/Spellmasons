@@ -48,3 +48,4 @@ i switch to the cauldron overworld)
 - repelCircleFromLine doesn't handle corner cases such as vertical lines due to it using intersection of lines under the hood.  Improve intersectionOfLines cornercases.  I protect against this case by doing special handling of vertical lines in findWherePointIntersectLineSegmentAtRightAngle() which calls findWherePointIntersectLineAtRightAngle is the only place that uses intersectionOfLines
 - if the host disconnects in character selection mode, the other players get stuck and can't choose characters
 - If second client picks character first there is  a bug
+- Update server to send message number so clients can know when they both have the latest message.  This'll prevent false positive desync detection
