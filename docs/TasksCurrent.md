@@ -1,4 +1,5 @@
 ## Current Priorities
+- Add repulsion between units for swap, clone, and general movement
 - Cards become more expensive when you use them
 - Balance mana
   - To make this challenging, players should often be on the verge of no mana, it should feel scarce so they have to pick carefully what spells they want to use.
@@ -14,10 +15,6 @@
             - https://3dtransforms.desandro.com/card-flip
             - Use transform3d functions to trigger hardware acceleration: "In essence, any transform that has a 3D operation as one of its functions will trigger hardware compositing, even when the actual transform is 2D, or not doing anything at all (such as translate3d(0,0,0)). Note this is just current behaviour, and could change in the future (which is why we don’t document or encourage it). But it is very helpful in some situations and can significantly improve redraw performance."
         - (L) Add shaders (see branch "shaders-yay")
-        - (VERY OPTIONAL) Some kind of visible error mechanism to show when cards don't apply
-            - Don't let players cast fizzle spells (AOE or chain without damage)
-            - Like if you cast "Protection" on yourself and then AOE it does nothing because there are no targets to AOE off of
-            - Or if you cast cards out of order like Dicard without a card after it
     - Finish all TODOs
     - Tutorial (Mario style, don't make it explicit)
     - SFX
@@ -28,7 +25,6 @@
     - Music
         - Stina offered
         - Have special music for intense moments (low health, boss fight)
-        - https://www.fiverr.com/categories/music-audio/session-musicians?source=gallery-listing
 - Menus / Options
 - Publicity
     - Publish on Steamworks

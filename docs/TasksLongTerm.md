@@ -53,3 +53,8 @@ i switch to the cauldron overworld)
     - shouldn't this not be an issue though if loading a game happens synchronously? 
     - maybe it should happen synchronously for the sender and then it wont be a problem
     - Also: desync often happens with moveTarget since moveTarget can be set mid way through executing a gamestate_hash check which would make the hashes not equal
+- (VERY OPTIONAL) Some kind of visible error mechanism to show when cards don't apply
+    - Don't let players cast fizzle spells (AOE or chain without damage)
+    - Like if you cast "Protection" on yourself and then AOE it does nothing because there are no targets to AOE off of
+    - Or if you cast cards out of order like Dicard without a card after it
+- Swap still seems to be broken with chain
