@@ -141,11 +141,12 @@ export default class Underworld {
     }, 1000);
   }
   gameLoopUnits() {
-    for (let u of this.units) {
+    const aliveUnits = this.units.filter(u => u.alive);
+    for (let u of aliveUnits) {
       if (u.moveTarget) {
         // Move towards target
         const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.moveTarget, u.moveSpeed)
-        moveWithCollisions(u, stepTowardsTarget, this.units, this.walls)
+        moveWithCollisions(u, stepTowardsTarget, aliveUnits, this.walls)
         // check for collisions with pickups in new location
         this.checkPickupCollisions(u);
       }
