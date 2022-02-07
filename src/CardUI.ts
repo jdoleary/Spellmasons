@@ -1,4 +1,4 @@
-import type * as CardUI from './Player';
+import type * as Player from './Player';
 import * as Cards from './cards';
 import * as math from './math';
 import {
@@ -60,7 +60,7 @@ function showFullCard(card: Cards.ICard) {
 }
 let cardsSelected: string[] = [];
 
-export function recalcPositionForCards(player: CardUI.IPlayer | undefined) {
+export function recalcPositionForCards(player: Player.IPlayer | undefined) {
   if (!window.player) {
     return
   }
@@ -142,7 +142,7 @@ export function recalcPositionForCards(player: CardUI.IPlayer | undefined) {
   }
 }
 function addClickListenerToCardElement(
-  player: CardUI.IPlayer,
+  player: Player.IPlayer,
   element: HTMLElement,
   cardId: string,
 ) {
@@ -191,7 +191,7 @@ export function selectCardByIndex(index: number) {
   }
 }
 // Moves a card element to selected-cards div
-function selectCard(player: CardUI.IPlayer, element: HTMLElement, cardId: string) {
+function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string) {
   if (elSelectedCards) {
     const clone = element.cloneNode(true) as HTMLElement;
     addClickListenerToCardElement(player, clone, cardId);
@@ -211,7 +211,7 @@ export function areAnyCardsSelected() {
 
 // TODO: Keep this around for when we have one-use cards
 // This function fully deletes the cards that are 'selected' in the player's hand
-export function removeCardsFromHand(player: CardUI.IPlayer, cards: string[]) {
+export function removeCardsFromHand(player: Player.IPlayer, cards: string[]) {
   cardLoop: for (let cardToRemove of cards) {
     for (let i = cardsSelected.length - 1; i >= 0; i--) {
       if (cardsSelected[i] === cardToRemove) {
@@ -240,7 +240,7 @@ window.giveMeCard = (cardId: string, quantity: number = 1) => {
     console.log('card', card, 'not found');
   }
 };
-export function addCardToHand(card: Cards.ICard, player: CardUI.IPlayer | undefined) {
+export function addCardToHand(card: Cards.ICard, player: Player.IPlayer | undefined) {
   if (!player) {
     console.warn("Attempted to add cards to a non-existant player's hand")
     return
