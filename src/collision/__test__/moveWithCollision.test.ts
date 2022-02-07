@@ -71,35 +71,7 @@ describe('moveWithCollisions', () => {
                 expect(duration).toBeLessThan(16);
             });
         });
-        it('should push another circle if it moves into it', () => {
-            // These circles start touching and with the same radius,
-            // so they should split the movement distance
-            const c1: Circle = { x: -1000, y: 0, radius: 2 };
-            const circles: Circle[] = [{ x: 6, y: 0, radius: 5 }];
-            const destination = { x: 0, y: 0 };
-            moveWithCollisions(c1, destination, circles, []);
-            const actual = { x: circles[0].x, y: circles[0].y };
-            const expected = { x: 7, y: 0 };
-            expect(actual).toEqual(expected);
-        });
 
-        describe('collisions at non direct angles', () => {
-            // Collision force transfer happens at the endpoint of the movement,
-            // it is expected that many small movements will occur over time, so
-            // this collision system calculates discrete collisions: only
-            // the destination is considered, so, by design, if the destination
-            // would have c1 travel THROUGH another circle, it would not
-            // detect collision
-            it('should push another circle if it moves into it', () => {
-                const c1: Circle = { x: 0, y: 0, radius: 2 };
-                const circles: Circle[] = [{ x: 2, y: 0, radius: 2 }];
-                const destination = { x: 2, y: 2 };
-                moveWithCollisions(c1, destination, circles, []);
-                const actual = { x: circles[0].x, y: circles[0].y };
-                const expected = { x: 2, y: -2 };
-                expect(actual).toEqual(expected);
-            });
-        });
         // describe("multiple colliders", () => {
         // it("should push other circles if it moves into them", () => {
         //     // These circles start touching and with the same radius,
