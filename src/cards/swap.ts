@@ -59,6 +59,7 @@ Swaps the caster with the source target.
           drawSwapLine(unit, newLocation);
         } else {
           // Physically swap
+          // TODO, ensure that multiple units don't appear in exactly the same location
           Unit.setLocation(unit, newLocation);
         }
       }
