@@ -136,7 +136,8 @@ export const pickups: IPickupSource[] = [
     description: 'Grants the player extra cards',
     effect: ({ unit, player }) => {
       if (player) {
-        for (let i = 0; i < 4; i++) {
+        const numCardsToGive = 1;
+        for (let i = 0; i < numCardsToGive; i++) {
           const card = CardUI.generateCard();
           CardUI.addCardToHand(card, player);
         }
