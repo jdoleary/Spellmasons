@@ -2,7 +2,7 @@ import * as Image from './Image';
 import * as CardUI from './CardUI';
 import * as Player from './Player';
 import { containerPickup } from './PixiUtils';
-import type { IUnit } from './Unit';
+import { IUnit, syncPlayerHealthManaUI } from './Unit';
 
 export const PICKUP_RADIUS = 64;
 export interface IPickup {
@@ -150,7 +150,9 @@ export const pickups: IPickupSource[] = [
     description: 'Grants the player more mana',
     effect: ({ unit, player }) => {
       if (player) {
-        player.unit.mana += 20;
+        player.unit.mana += 40;
+        // Sync UI immediately when mana changes
+        syncPlayerHealthManaUI();
       }
     },
   },

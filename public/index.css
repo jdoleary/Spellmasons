@@ -353,7 +353,7 @@ body.your-turn #player-turn-indicator-holder.low-time {
 #health-mana .fill {
   height: 100%;
   width: 100%;
-  transition: width 2s ease;
+  transition: width 0.5s ease;
 }
 #health-mana .label {
   position: absolute;
