@@ -49,3 +49,7 @@ i switch to the cauldron overworld)
 - if the host disconnects in character selection mode, the other players get stuck and can't choose characters
 - If second client picks character first there is  a bug
 - Update server to send message number so clients can know when they both have the latest message.  This'll prevent false positive desync detection
+- (MAYBE ALREADY SOLVED)Address possible desync issues around projectile promise? same as with loading a game mid-movement
+    - shouldn't this not be an issue though if loading a game happens synchronously? 
+    - maybe it should happen synchronously for the sender and then it wont be a problem
+    - Also: desync often happens with moveTarget since moveTarget can be set mid way through executing a gamestate_hash check which would make the hashes not equal
