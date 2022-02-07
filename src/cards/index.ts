@@ -29,6 +29,7 @@ import charge from './charge';
 import obliterate from './obliterate';
 import clone from './clone';
 import { IUpgrade, upgradeSource } from '../Upgrade';
+import { _getCardsFromIds } from './cardUtils';
 import { addCardToHand } from '../CardUI';
 export interface Spell {
   card: ICard;
@@ -149,5 +150,5 @@ export interface ICard {
 export const allCards: { [cardId: string]: ICard } = {};
 
 export function getCardsFromIds(cardIds: string[]): ICard[] {
-  return Object.values(allCards).filter(card => cardIds.includes(card.id))
+  return _getCardsFromIds(cardIds, allCards);
 }

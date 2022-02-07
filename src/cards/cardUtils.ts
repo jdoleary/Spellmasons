@@ -13,3 +13,12 @@ export function calculateManaCost(cards: Pick<ICard, "manaCost" | "manaMultiplie
     manaCost = Math.floor(manaCost);
     return manaCost;
 }
+export function _getCardsFromIds(cardIds: string[], cards: { [cardId: string]: ICard }): ICard[] {
+    const result = []
+    // Note: it is important that this function be able to return multiple copies of the same card
+    // or else players wont be able to combine spells with multiple instances of the same card
+    for (let id of cardIds) {
+        result.push(cards[id]);
+    }
+    return result;
+}
