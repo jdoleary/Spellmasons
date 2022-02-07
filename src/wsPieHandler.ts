@@ -27,7 +27,6 @@ export function initializeUnderworld() {
   // Mark the underworld as "ready"
   readyState.set('underworld', true);
 }
-let onCharacterSelectQueueContainer = messageQueue.makeContainer<OnDataArgs>();
 export function onData(d: OnDataArgs) {
   console.log("onData:", MESSAGE_TYPES[d.payload.type], d)
   // Temporarily for development
@@ -58,15 +57,6 @@ export function onData(d: OnDataArgs) {
       // asynchronously.
       if (!readyState.get("underworld")) {
         handleLoadGameState(payload);
-      }
-      break;
-    case MESSAGE_TYPES.SELECT_CHARACTER:
-      // Add this message to a queue, SELECT_CHARACTER messages shouldn't be processed until
-      // the underworld is setup
-      onCharacterSelectQueueContainer.queue.push(d);
-      // If the underworld is already setup, process the onCharacterSelectQueue
-      if (readyState.get("underworld")) {
-        messageQueue.processNextInQueue(onCharacterSelectQueueContainer, handleSelectCharacter);
       }
       break;
     case MESSAGE_TYPES.LOAD_GAME_STATE:
@@ -162,8 +152,41 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
     case MESSAGE_TYPES.VOTE_FOR_LEVEL:
       voteForLevel(fromClient, payload.levelIndex);
       break;
-    case MESSAGE_TYPES.ASK_FOR_INIT_GAME_STATE:
-      giveClientGameStateForInitialLoad(fromClient);
+    case MESSAGE_TYPES.JOIN_GAME:
+      // JOIN_GAME is meant to be handled by everyone except the client that 
+      // send the message so that they can add the new client as a player instance
+      // Also, if the client recieving this message is the host, they will send
+      // the latest gamestate to the newly joining client
+      // Exception: The host should handle their own player creation
+      if (readyState.isReady() && (window.hostClientId == window.clientId || fromClient !== window.clientId)) {
+        // Create Player entity for the client that just joined:
+        // If player doesn't already exist, make them
+        if (!underworld.players.find((p) => p.clientId === fromClient)) {
+          console.log(`Setup: Create a Player instance for ${fromClient}`)
+          const p = Player.create(fromClient, payload.unitId);
+          if (p) {
+            underworld.players.push(p);
+            // Sort underworld.players according to client order so that all
+            // instances of the game have a underworld.players array in the same
+            // order
+            // --
+            // (the .filter removes possible undefined players so that underworld.players doesn't contain any undefined values)
+            underworld.players = clients.map(c => underworld.players.find(p => p.clientId == c)).filter(x => !!x) as Player.IPlayer[];
+          } else {
+            console.error("Failed to SelectCharacter because Player.create did not return a player object")
+          }
+        } else {
+          console.error(
+            'Client is already associated with a Player instance, so a new one cannot be created.',
+            fromClient
+          );
+        }
+
+        // Send the lastest gamestate to that client so they can be up-to-date:
+        // Note: It is important that this occurs AFTER the player instance is created for the
+        // client who just joined
+        giveClientGameStateForInitialLoad(fromClient);
+      }
       break;
     case MESSAGE_TYPES.SYNC:
       const { players, units, underworldPartial } = payload;
@@ -231,29 +254,6 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       break;
   }
 }
-async function handleSelectCharacter(d: OnDataArgs) {
-  console.log(`Setup: Select Character for client ${d.fromClient}`);
-  const { payload, fromClient } = d;
-  // If player doesn't already exist, make them
-  if (!underworld.players.find((p) => p.clientId === fromClient)) {
-    const p = Player.create(fromClient, payload.unitId);
-    if (p) {
-      underworld.players.push(p);
-      // Sort underworld.players according to client order so that all
-      // instances of the game have a underworld.players array in the same
-      // order
-      // --
-      // (the .filter removes possible undefined players so that underworld.players doesn't contain any undefined values)
-      underworld.players = clients.map(c => underworld.players.find(p => p.clientId == c)).filter(x => !!x) as Player.IPlayer[];
-    } else {
-      console.error("Failed to SelectCharacter because Player.create did not return a player object")
-    }
-  } else {
-    console.error(
-      'Client already has a character and cannot create a new one.',
-    );
-  }
-}
 function handleLoadGameState(payload: any) {
   console.log("Setup: Load game state", payload)
   // Resume game / load game / rejoin game
@@ -284,8 +284,6 @@ function handleLoadGameState(payload: any) {
     // otherwise, go to character select
     setView(View.CharacterSelect);
   }
-  // Proccess any CHARACTER_SELECT messages in the queue now that the underworld is setup
-  messageQueue.processNextInQueue(onCharacterSelectQueueContainer, handleSelectCharacter);
 
 }
 async function handleSpell(caster: Player.IPlayer, payload: any) {
@@ -337,13 +335,16 @@ function giveClientGameStateForInitialLoad(clientId: string) {
   // Only the host should be sending INIT_GAME_STATE messages
   // because the host has the canonical game state
   if (window.hostClientId === window.clientId) {
-    window.pie.sendData({
-      type: MESSAGE_TYPES.INIT_GAME_STATE,
-      subType: "Whisper",
-      whisperClientIds: [clientId],
-      route: window.route,
-      underworld: underworld.serializeForSaving(),
-    });
+    // Do not send this message to self
+    if (window.clientId !== clientId) {
+      window.pie.sendData({
+        type: MESSAGE_TYPES.INIT_GAME_STATE,
+        subType: "Whisper",
+        whisperClientIds: [clientId],
+        route: window.route,
+        underworld: underworld.serializeForSaving(),
+      });
+    }
   }
 }
 
@@ -358,22 +359,6 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
       // Player entity is created and then the messageQueue can begin processing
       // including LOAD_GAME_STATE.
       setView(View.CharacterSelect);
-
-      // If this client has just joined, queue asking for the gamestate
-      // from the other players.
-      // The reason sending game state is queued and not sent immediately
-      // is that if there's a game in progress you don't want to send the
-      // state in the middle of an action (which could cause desyncs for
-      // code that depends on promises such as resolveDoneMoving)
-      onDataQueueContainer.queue.push({
-        type: "Data",
-        // This is the client that needs to be wispered to
-        fromClient: o.clientThatChanged,
-        time: new Date().getTime(),
-        payload: {
-          type: MESSAGE_TYPES.ASK_FOR_INIT_GAME_STATE,
-        }
-      });
     }
     // The host is always the first client
     window.hostClientId = clients[0]

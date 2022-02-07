@@ -8,13 +8,15 @@ export enum MESSAGE_TYPES {
   // LOAD_GAME_STATE is used synchronously for an already initialized game that needs to
   // load to a new state
   INIT_GAME_STATE,
-  // This message is never sent over the network.  It allows the host to queue up
+  // JOIN_GAME allows the host to queue up
   // sending a player that just connected the gamestate.
-  ASK_FOR_INIT_GAME_STATE,
+  // It should include all data necessary to fully instantiate a player
+  // for the client that just joined
+  // Note: Not to be confused with joining a room via wsPie.  This message
+  // is specific to Spellmasons, and is how a client gets the current gamestate
+  JOIN_GAME,
   // Occurs synchronously, fully replaces the game state
   LOAD_GAME_STATE,
-  // SELECT_CHARACTER triggers a client becoming a fully initialized player
-  SELECT_CHARACTER,
   // Ping a location on the map
   PING,
   // Vote for a level to go to in the overworld

@@ -57,6 +57,8 @@ export function create(clientId: string, unitId: string): IPlayer | undefined {
       containerOverworld,
     ),
   };
+  player.inPortal = true;
+  player.unit.alive = false;
   // Set position for player overworld image
   // offset between player images:
   const offset = window.underworld.players.length * 10;
@@ -94,7 +96,6 @@ export function resetPlayerForNextLevel(player: IPlayer) {
 }
 // Keep a global reference to the current client's player
 function updateGlobalRefToCurrentClientPlayer(player: IPlayer) {
-  readyState.set('player', true);
   if (window.clientId === player.clientId) {
     window.player = player;
     // When the player is first created or loaded, sync the health-mana UI
@@ -156,6 +157,9 @@ export function setClientConnected(player: IPlayer, connected: boolean) {
 export function enterPortal(player: IPlayer) {
   player.inPortal = true;
   Image.hide(player.unit.image);
+  // Make sure to resolve the moving promise once they enter the portal or else 
+  // the client queue will get stuck
+  player.unit.resolveDoneMoving();
   // Move "portaled" unit out of the way to prevent collisions and chaining while portaled
   Unit.setLocation(player.unit, { x: NaN, y: NaN });
   // Entering the portal ends the player's turn
