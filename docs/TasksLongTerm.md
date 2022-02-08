@@ -85,3 +85,4 @@ i switch to the cauldron overworld)
 - Swap still seems to be broken with chain
 - Fixed i think: 
     - Bug: Stuck on AI turn after archers killed resurrected grunt
+- Maybe I want this?? Bug: Chain targets dead units
