@@ -1,3 +1,5 @@
+## 2022.02.08 Brad discussion
+ Talked about making spells more expensive as you use them to incentivize creativity and to remove the possibility where there are ever moments where the solution is to just fireball everything on screen (which is boring).  He also suggested maybe adding another tradeoff for surplus mana, like spending it to do something somehow, maybe purchase something?
 ## 2022.02.07 Brad
 - There were 3 clients, I closed one client, brad didn't vote.  It moves me into the game but left him on the vote screen
 - Revisit the idea of cards if they're not treated like playable cards
