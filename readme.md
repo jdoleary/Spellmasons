@@ -57,3 +57,6 @@ Minor versions are incremented for functional non-broken commit states that shou
     - Unlisten event handlers
   - Route: Upgrade Screen
   - Loop: Route: Overworld
+
+## Backup
+Backup repositories are on Gitlab and Keybase.  The primary repository is on Github
