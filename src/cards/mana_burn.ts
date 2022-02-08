@@ -1,19 +1,19 @@
 import * as Unit from '../Unit';
 import type { Spell } from '.';
-import { MANA_BASE_COST, MANA_MULTIPLIER_NONE } from '../config';
+import { CardType, cardTypeToProbability } from './cardUtils';
 
 const id = 'mana_burn';
-const mana_burnt = MANA_BASE_COST;
+const mana_burnt = 8;
+const type = CardType.Special;
 const spell: Spell = {
   card: {
     id,
+    type,
+    probability: cardTypeToProbability(type),
     thumbnail: 'todo.png',
-    probability: 50,
     description: `
 Burn ${mana_burnt} of the targets' mana, causing the target take damage and lose the mana.
     `,
-    manaCost: MANA_BASE_COST,
-    manaMultiplier: MANA_MULTIPLIER_NONE,
     effect: async (state, dryRun) => {
       if (dryRun) {
         return state;

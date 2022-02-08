@@ -1,21 +1,21 @@
 import * as Unit from '../Unit';
 import type { Spell } from '.';
-import { MANA_BASE_COST, MANA_MULTIPLIER_NONE } from '../config';
 import { createVisualLobbingProjectile } from '../Projectile';
 import floatingText from '../FloatingText';
+import { CardType, cardTypeToProbability } from './cardUtils';
 
 const id = 'mana_steal';
-const mana_stolen = MANA_BASE_COST;
+const mana_stolen = 8;
+const type = CardType.Special;
 const spell: Spell = {
   card: {
     id,
+    type,
+    probability: cardTypeToProbability(type),
     thumbnail: 'todo.png',
-    probability: 50,
     description: `
 Sacrifice ${mana_stolen} of your own health to steal ${mana_stolen} from each target.
     `,
-    manaCost: 0,
-    manaMultiplier: 0,
     effect: async (state, dryRun) => {
       if (dryRun) {
         return state;

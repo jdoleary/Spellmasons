@@ -769,7 +769,7 @@ export default class Underworld {
         await Promise.all(animationPromises);
       }
     }
-    const manaCost = calculateManaCost(cards, math.distance(casterPlayer.unit, target) / config.SPELL_DISTANCE_MANA_DENOMINATOR);
+    const manaCost = calculateManaCost(cards, math.distance(casterPlayer.unit, target));
     if (!dryRun) {
       // Apply mana cost to caster
       casterPlayer.unit.mana -= manaCost;

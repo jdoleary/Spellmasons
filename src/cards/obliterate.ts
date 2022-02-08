@@ -3,19 +3,19 @@ import type { Spell } from '.';
 import { removePickup } from '../Pickup';
 import { remove } from '../Obstacle';
 import { UnitType } from '../commonTypes';
-import { MANA_BASE_COST, MANA_MULTIPLIER_NONE } from '../config';
+import { CardType, cardTypeToProbability } from './cardUtils';
 
 const id = 'obliterate';
+const type = CardType.Forbidden;
 const spell: Spell = {
   card: {
     id,
+    type,
+    probability: cardTypeToProbability(type),
     thumbnail: 'obliterate.png',
-    probability: 5,
     description: `
 Completely obliterates all targets.
     `,
-    manaCost: MANA_BASE_COST * 40,
-    manaMultiplier: MANA_MULTIPLIER_NONE,
     effect: async (state, dryRun) => {
       if (dryRun) {
         return state;

@@ -1,8 +1,10 @@
 import { IUnit, takeDamage } from '../Unit';
 import * as Image from '../Image';
 import type { Spell } from '.';
-import { MANA_BASE_COST, MANA_MULTIPLIER_NONE } from '../config';
+import { CardType, cardTypeToProbability } from './cardUtils';
+
 const id = 'poison';
+const type = CardType.Special;
 export function add(unit: IUnit) {
   // Note: Curse can stack multiple times but doesn't keep any state
   // so it doesn't need a first time setup like freeze does
@@ -31,14 +33,13 @@ const spell: Spell = {
   },
   card: {
     id,
+    type,
+    probability: cardTypeToProbability(type),
     thumbnail: 'poison.png',
-    probability: 10,
     description: `
 Poisons all target(s).  Poison will deal 1 base damage every turn
 at the start of the unit's turn.
     `,
-    manaCost: MANA_BASE_COST * 2,
-    manaMultiplier: MANA_MULTIPLIER_NONE,
     effect: async (state, dryRun) => {
       if (dryRun) {
         return state;

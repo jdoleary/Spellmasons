@@ -1,5 +1,6 @@
 import type * as Player from '../Player';
 import type * as Unit from '../Unit';
+import * as config from '../config';
 import type { Vec2 } from '../commonTypes';
 import Events, {
   onDamage,
@@ -31,7 +32,7 @@ import clone from './clone';
 import mana_burn from './mana_burn';
 import mana_steal from './mana_steal';
 import { IUpgrade, upgradeSource } from '../Upgrade';
-import { _getCardsFromIds } from './cardUtils';
+import { CardType, _getCardsFromIds } from './cardUtils';
 import { addCardToHand } from '../CardUI';
 export interface Spell {
   card: ICard;
@@ -142,12 +143,11 @@ export type EffectFn = {
 
 export interface ICard {
   id: string;
+  type: CardType;
   thumbnail: string;
   probability: number;
   effect: EffectFn;
   description: string;
-  manaCost: number;
-  manaMultiplier: number;
 }
 
 export const allCards: { [cardId: string]: ICard } = {};

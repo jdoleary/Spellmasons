@@ -3,19 +3,19 @@ import * as Pickup from '../Pickup';
 import type { Spell } from '.';
 import type { Vec2 } from '../commonTypes';
 import { drawSwapLine } from '../ui/PlanningView';
-import { MANA_BASE_COST, MANA_MULTIPLIER_NONE } from '../config';
+import { CardType, cardTypeToProbability } from './cardUtils';
 
 const id = 'swap';
+const type = CardType.Powerful;
 const spell: Spell = {
   card: {
     id,
+    type,
+    probability: cardTypeToProbability(type),
     thumbnail: 'swap.png',
-    probability: 10,
     description: `
 Swaps the caster with the source target.
     `,
-    manaCost: MANA_BASE_COST * 2,
-    manaMultiplier: MANA_MULTIPLIER_NONE,
     effect: async (state, dryRun) => {
       const { casterUnit, targets } = state;
       // Loop through all targets and batch swap locations

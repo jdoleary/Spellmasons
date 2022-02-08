@@ -1,20 +1,20 @@
 import type { Vec2 } from 'src/commonTypes';
 import type { Spell } from '.';
-import { MANA_BASE_COST, MANA_MULTIPLIER_SM } from '../config';
+import { CardType, cardTypeToProbability } from './cardUtils';
 
 const id = 'lance';
+const type = CardType.Common;
 const spell: Spell = {
   card: {
     id,
+    type,
+    probability: cardTypeToProbability(type),
     thumbnail: 'lance.png',
-    probability: 10,
     description: `
 Adds targets towards the initial target if
 the initial target is on the same vertical or horizontal axis
 as the caster.
     `,
-    manaCost: MANA_BASE_COST,
-    manaMultiplier: MANA_MULTIPLIER_SM,
     effect: async (state, dryRun) => {
       let updatedTargets = [...state.targets];
       for (let target of state.targets) {

@@ -57,7 +57,7 @@ export function updateManaCostUI(): number {
     const cards = CardUI.getSelectedCards();
     const mousePos = window.underworld.getMousePos();
     const castDistance = isOutOfBounds(mousePos) ? 0 : math.distance(mousePos, window.player.unit)
-    const manaCost = calculateManaCost(cards, castDistance / config.SPELL_DISTANCE_MANA_DENOMINATOR)
+    const manaCost = calculateManaCost(cards, castDistance)
     _updateManaCostUI(manaCost);
     return manaCost;
   }

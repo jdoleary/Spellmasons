@@ -3,19 +3,20 @@ import type { Spell } from '.';
 import type { Vec2 } from '../commonTypes';
 import type * as Unit from '../Unit';
 import * as config from '../config';
+import { CardType, cardTypeToProbability } from './cardUtils';
 
 const id = 'chain';
+const type = CardType.Special;
 const spell: Spell = {
   card: {
     id,
+    type,
+    probability: cardTypeToProbability(type),
     thumbnail: 'chain.png',
-    probability: 10,
     description: `
 Adds targets for the following cards to effect by "chaining like electricity" 
 off of all existing targeted units to units touching them. 
     `,
-    manaCost: config.MANA_BASE_COST,
-    manaMultiplier: config.MANA_MULTIPLIER_SM,
     effect: async (state, dryRun) => {
       let newTargets: Vec2[] = [];
       for (let target of state.targets) {

@@ -35,14 +35,6 @@ export const OVERWORLD_MAX_WIDTH = 9;
 export const OVERWORLD_SPACING = 100;
 
 // Mana
-export const MANA_BASE_COST = 8;
-// * 1 will not change the mana, therefore 1 is a "none" multiplier
-export const MANA_MULTIPLIER_NONE = 1;
-export const MANA_MULTIPLIER_SM = 2;
-export const MANA_MULTIPLIER_M = 3;
-export const MANA_MULTIPLIER_L = 3;
 export const MANA_GET_PER_TURN = 5;
-// An arbitrary number which affects the multiplying affect that distance has on mana cost
-// A bigger number means distance costs less.  
-// distance/SPELL_DISTANCE_MANA_DENOMINATOR is what the mana is multiplied by
-export const SPELL_DISTANCE_MANA_DENOMINATOR = 200;
+export const DISTANCE_FAR = 300;
+export const DISTANCE_VERY_FAR = 600;

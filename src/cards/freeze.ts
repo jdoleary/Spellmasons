@@ -2,18 +2,19 @@ import * as Unit from '../Unit';
 import * as Image from '../Image';
 import type { Spell } from '.';
 import { UnitType } from '../commonTypes';
-import { MANA_BASE_COST, MANA_MULTIPLIER_NONE } from '../config';
+import { CardType, cardTypeToProbability } from './cardUtils';
+
 const id = 'freeze';
+const type = CardType.Common;
 const spell: Spell = {
   card: {
     id,
+    type,
+    probability: cardTypeToProbability(type),
     thumbnail: 'freeze.png',
-    probability: 20,
     description: `
 Freezes the target(s) for 1 turn, preventing them from moving or acting.
     `,
-    manaCost: MANA_BASE_COST,
-    manaMultiplier: MANA_MULTIPLIER_NONE,
     effect: async (state, dryRun) => {
       if (dryRun) {
         return state;

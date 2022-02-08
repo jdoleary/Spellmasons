@@ -1,17 +1,17 @@
 import type { Spell } from '.';
 import * as Unit from '../Unit'
-import { MANA_BASE_COST, MANA_MULTIPLIER_NONE } from '../config';
 import { UnitType, Vec2 } from '../commonTypes';
+import { CardType, cardTypeToProbability } from './cardUtils';
 
+const type = CardType.Special;
 const id = 'protection';
 const spell: Spell = {
   card: {
     id,
+    type,
+    probability: cardTypeToProbability(type),
     thumbnail: 'protection.png',
-    probability: 10,
     description: 'Removes self or ally from existing spell targets.  Will protect 1 allied unit (including self) per use.  Prioritizes protecting yourself, then ally wizards, then other allies.  You may cast more than one in a single spell to protect multiple allies.',
-    manaCost: MANA_BASE_COST * 10,
-    manaMultiplier: MANA_MULTIPLIER_NONE,
     effect: async (state, dryRun) => {
       const allies = [
         // Prioritize self over all other allies

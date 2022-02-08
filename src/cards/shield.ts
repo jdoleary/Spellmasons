@@ -2,19 +2,19 @@ import * as Unit from '../Unit';
 import * as Image from '../Image';
 import type { Spell } from '.';
 import floatingText from '../FloatingText';
-import { MANA_BASE_COST, MANA_MULTIPLIER_NONE } from '../config';
+import { CardType, cardTypeToProbability } from './cardUtils';
 
+const type = CardType.Powerful;
 const id = 'shield';
 const spell: Spell = {
   card: {
     id,
+    type,
+    probability: cardTypeToProbability(type),
     thumbnail: 'shield.png',
-    probability: 10,
     description: `
 Protects the target(s) from the next time they would take damage.
     `,
-    manaCost: MANA_BASE_COST * 20,
-    manaMultiplier: MANA_MULTIPLIER_NONE,
     effect: async (state, dryRun) => {
       if (dryRun) {
         return state;

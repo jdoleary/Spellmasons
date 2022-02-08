@@ -1,17 +1,18 @@
 import * as Unit from '../Unit';
 import type { Spell } from '.';
-import { MANA_BASE_COST, MANA_MULTIPLIER_NONE } from '../config';
+import { CardType, cardTypeToProbability } from './cardUtils';
+
 const id = 'resurrect';
+const type = CardType.Powerful;
 const spell: Spell = {
   card: {
     id,
+    type,
+    probability: cardTypeToProbability(type),
     thumbnail: 'raise_dead.png',
-    probability: 5,
     description: `
 Resurrects a dead unit and converts them to the caster's faction.
     `,
-    manaCost: MANA_BASE_COST * 20,
-    manaMultiplier: MANA_MULTIPLIER_NONE,
     effect: async (state, dryRun) => {
       if (dryRun) {
         return state;

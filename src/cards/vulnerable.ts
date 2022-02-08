@@ -1,20 +1,20 @@
 import type * as Unit from '../Unit';
 import * as Image from '../Image';
 import type { Spell } from '.';
-import { MANA_BASE_COST, MANA_MULTIPLIER_NONE } from '../config';
+import { CardType, cardTypeToProbability } from './cardUtils';
 
 const id = 'vulnerable';
+const type = CardType.Special;
 const spell: Spell = {
   card: {
     id,
+    type,
+    probability: cardTypeToProbability(type),
     thumbnail: 'vulnerable.png',
-    probability: 5,
     description: `
 Makes the target(s) take double damage whenever they receive damage
 in the future.
     `,
-    manaCost: MANA_BASE_COST * 10,
-    manaMultiplier: MANA_MULTIPLIER_NONE,
     effect: async (state, dryRun) => {
       if (dryRun) {
         return state;

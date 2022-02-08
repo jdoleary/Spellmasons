@@ -2,8 +2,11 @@
 import type { IUnit } from '../Unit';
 import * as Image from '../Image';
 import { allCards, ICard, Spell } from './index';
-import { COLLISION_MESH_RADIUS, MANA_BASE_COST, MANA_MULTIPLIER_NONE } from '../config';
+import { COLLISION_MESH_RADIUS } from '../config';
+import { CardType, cardTypeToProbability } from './cardUtils';
+
 const id = 'contageous';
+const type = CardType.Powerful;
 export function add(unit: IUnit) {
   // Note: Curse can stack multiple times but doesn't keep any state
   // so it doesn't need a first time setup like freeze does
@@ -32,13 +35,12 @@ const spell: Spell = {
   },
   card: {
     id,
+    type,
+    probability: cardTypeToProbability(type),
     thumbnail: 'contageous.png',
-    probability: 10,
     description: `
 Makes this unit's curses contageous to other nearby units
     `,
-    manaCost: MANA_BASE_COST * 10,
-    manaMultiplier: MANA_MULTIPLIER_NONE,
     effect: async (state, dryRun) => {
       if (dryRun) {
         return state;

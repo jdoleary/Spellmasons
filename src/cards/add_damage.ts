@@ -1,19 +1,19 @@
 import * as Unit from '../Unit';
 import type { Spell } from '.';
-import { MANA_BASE_COST, MANA_MULTIPLIER_NONE } from '../config';
+import { CardType, cardTypeToProbability } from './cardUtils';
 
 const id = 'damage';
 const damageDone = 3;
+const type = CardType.Common;
 const spell: Spell = {
   card: {
     id,
+    type,
+    probability: cardTypeToProbability(type),
     thumbnail: 'damage.png',
-    probability: 50,
     description: `
 Deals ${damageDone} damage to all targets.    
     `,
-    manaCost: MANA_BASE_COST,
-    manaMultiplier: MANA_MULTIPLIER_NONE,
     effect: async (state, dryRun) => {
       if (dryRun) {
         return state;

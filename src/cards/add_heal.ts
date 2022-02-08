@@ -1,22 +1,21 @@
 import * as Unit from '../Unit';
 import type { Spell } from '.';
-import { MANA_BASE_COST, MANA_MULTIPLIER_NONE } from '../config';
+import { CardType, cardTypeToProbability } from './cardUtils';
 
 const id = 'heal';
 const healAmount = 3;
-const manaCost = MANA_BASE_COST * 2;
+const type = CardType.Common;
 
 const spell: Spell = {
   card: {
     id,
+    type,
+    probability: cardTypeToProbability(type),
     thumbnail: 'heal.png',
-    probability: 20,
     description: `
 Heals all targets ${healAmount} HP.
 Will not heal beyond maximum health.
     `,
-    manaCost,
-    manaMultiplier: MANA_MULTIPLIER_NONE,
     effect: async (state, dryRun) => {
       if (dryRun) {
         return state;

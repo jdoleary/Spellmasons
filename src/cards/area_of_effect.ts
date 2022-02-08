@@ -1,20 +1,20 @@
 import type { Vec2 } from '../commonTypes';
 import type { Spell } from '.';
 import { drawDryRunCircle } from '../ui/PlanningView';
-import { MANA_BASE_COST, MANA_MULTIPLIER_SM } from '../config';
+import { CardType, cardTypeToProbability } from './cardUtils';
 
 const id = 'AOE';
 const range = 200;
+const type = CardType.Special;
 const spell: Spell = {
   card: {
     id,
+    type,
+    probability: cardTypeToProbability(type),
     thumbnail: 'aoe.png',
-    probability: 20,
     description: `
 Adds targets for the following cards to effect by "growing" existing targets
     `,
-    manaCost: MANA_BASE_COST,
-    manaMultiplier: MANA_MULTIPLIER_SM,
     effect: async (state, dryRun) => {
       let newTargets: Vec2[] = [];
       for (let target of state.targets) {
