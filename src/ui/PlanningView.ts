@@ -24,9 +24,9 @@ export function initPlanningView() {
 export function updatePlanningView() {
   planningViewGraphics.clear();
   // TODO: remove; Temp for testing, draw collision walls visually
-  for (let w of window.underworld.walls) {
-    drawSwapLine(w.p1, w.p2);
-  }
+  // for (let w of window.underworld.walls) {
+  //   drawSwapLine(w.p1, w.p2);
+  // }
   const mousePos = window.underworld.getMousePos();
   // Draw UI for units under the mouse on hover
   const unit = window.underworld.getUnitAt(mousePos);
