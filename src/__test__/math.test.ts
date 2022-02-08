@@ -132,18 +132,18 @@ describe('math', () => {
       const expected = { x: 1, y: 2 };
       expect(actual).toEqual(expected);
     });
-    it('should return X,Y if d is 0', () => {
+    it('should return 0,0 if d (the desired distance) is 0 because the desired distance is 0 so the expected x and y should be at origin', () => {
       const knownTriangle = { X: 10, Y: 20, D: 100 };
       const desiredDistance = 0;
       const actual = similarTriangles(knownTriangle.X, knownTriangle.Y, knownTriangle.D, desiredDistance);
-      const expected = { x: knownTriangle.X, y: knownTriangle.Y };
+      const expected = { x: 0, y: 0 };
       expect(actual).toEqual(expected);
     });
-    it('should return X,Y if D is 0', () => {
+    it('should return 0,0 if D is 0 (to prevent div by 0)', () => {
       const knownTriangle = { X: 10, Y: 20, D: 0 };
       const desiredDistance = 10;
       const actual = similarTriangles(knownTriangle.X, knownTriangle.Y, knownTriangle.D, desiredDistance);
-      const expected = { x: knownTriangle.X, y: knownTriangle.Y };
+      const expected = { x: 0, y: 0 };
       expect(actual).toEqual(expected);
     });
   });

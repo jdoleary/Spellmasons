@@ -15,7 +15,7 @@ export function lerp(start: number, end: number, time: number) {
 // of x and y given a known h and a known similar triangle of X,Y, and D (distance / hypotenuse)
 export function similarTriangles(X: number, Y: number, D: number, d: number): Vec2 {
   if (D === 0 || d === 0) {
-    return { x: X, y: Y };
+    return { x: 0, y: 0 };
   }
   const hypotenuseRatio = d / D;
   return {
