@@ -19,12 +19,7 @@ export function getPlanningViewColor(unit: IUnit) {
   if (unit.unitType === UnitType.PLAYER_CONTROLLED) {
     return 0x00ff00;
   }
-  switch (unit.unitSubType) {
-    case UnitSubType.AI_bishop:
-      return 0x0000ff;
-    default:
-      return 0xff0000;
-  }
+  return 0xff0000;
 }
 // Make the UNIT_BASE_RADIUS a little smaller than the actual size of the image
 // so that moving units can overlap with each other a bit so "crowding" looks more
