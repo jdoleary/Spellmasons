@@ -89,6 +89,10 @@ export function resetPlayerForNextLevel(player: IPlayer) {
     Unit.resurrect(player.unit);
   }
 
+  // Reset mana - otherwise players are incentivized to bum around after killing all enemies
+  // to get their mana back to full
+  player.unit.mana = player.unit.manaMax;
+
   // Return to a spawn location
   // limit spawn to the leftmost column
   const coords = window.underworld.getRandomCoordsWithinBounds({ xMin: config.COLLISION_MESH_RADIUS, yMin: config.COLLISION_MESH_RADIUS, xMax: config.COLLISION_MESH_RADIUS, yMax: config.MAP_HEIGHT - config.COLLISION_MESH_RADIUS });

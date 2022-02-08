@@ -1,7 +1,6 @@
 ## 2022.02.07 Brad
 - There were 3 clients, I closed one client, brad didn't vote.  It moves me into the game but left him on the vote screen
 - Revisit the idea of cards if they're not treated like playable cards
-- Default everyone back to full mana at beginning of level or else they'll bum around at the end of a level
 - Number below them to show hotkeys
 - idea: Pickups should be destroyable if you cast on them
 - Feedback UI for mana multiplier
