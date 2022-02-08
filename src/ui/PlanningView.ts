@@ -8,6 +8,8 @@ import { turn_phase } from '../Underworld';
 import * as CardUI from '../CardUI';
 import * as config from '../config';
 import * as Unit from '../Unit';
+import type * as Obstacle from '../Obstacle';
+import type * as Pickup from '../Pickup';
 import * as Image from '../Image';
 import * as math from '../math';
 import { targetBlue } from './colors';
@@ -22,36 +24,32 @@ export function initPlanningView() {
   containerUI.addChild(dryRunGraphics);
 }
 export function updatePlanningView() {
-  planningViewGraphics.clear();
-  // TODO: remove; Temp for testing, draw collision walls visually
-  // for (let w of window.underworld.walls) {
-  //   drawSwapLine(w.p1, w.p2);
-  // }
-  const mousePos = window.underworld.getMousePos();
-  // Draw UI for units under the mouse on hover
-  const unit = window.underworld.getUnitAt(mousePos);
-  if (unit) {
-    if (
-      unit.alive
-    ) {
-      const color = Unit.getPlanningViewColor(unit);
-      planningViewGraphics.lineStyle(8, color, 0.9);
-      planningViewGraphics.drawCircle(
-        unit.x,
-        unit.y,
-        unit.attackRange
-      );
-      planningViewGraphics.beginFill(color);
-      planningViewGraphics.drawCircle(
-        unit.x,
-        unit.y,
-        unit.moveDistance
-      );
-      planningViewGraphics.endFill();
+  if (planningViewGraphics) {
+    planningViewGraphics.clear();
+    // Draw UI for the selectedUnit
+    if (selectedUnit) {
+      if (
+        selectedUnit.alive
+      ) {
+        const color = Unit.getPlanningViewColor(selectedUnit);
+        planningViewGraphics.lineStyle(8, color, 0.9);
+        planningViewGraphics.drawCircle(
+          selectedUnit.x,
+          selectedUnit.y,
+          selectedUnit.attackRange
+        );
+        planningViewGraphics.beginFill(color);
+        planningViewGraphics.drawCircle(
+          selectedUnit.x,
+          selectedUnit.y,
+          selectedUnit.moveDistance
+        );
+        planningViewGraphics.endFill();
+      }
     }
+    planningViewGraphics.endFill();
   }
-
-  planningViewGraphics.endFill();
+  updateTooltipContent();
 }
 export function updateManaCostUI(): number {
   if (window.player) {
@@ -181,6 +179,11 @@ export function updateTooltipSpellCost(manaCost: any) {
     elSpellManaCost.innerHTML = `${manaCost}`
   }
 }
+
+let selectedType: "unit" | "pickup" | "obstacle" | null = null;
+let selectedUnit: Unit.IUnit | undefined;
+let selectedObstacle: Obstacle.IObstacle | undefined;
+let selectedPickup: Pickup.IPickup | undefined;
 export function updateTooltipContent() {
   if (
     !(
@@ -192,53 +195,77 @@ export function updateTooltipContent() {
     console.error("Tooltip elements failed to initialize")
     return;
   }
-  const mousePos = window.underworld.getMousePos();
-
   // Update information in content
   // show info on unit, pickup, etc clicked
   let text = '';
+  switch (selectedType) {
+    case "unit":
+      let cards = '';
+      if (selectedUnit) {
+
+        if (selectedUnit.unitType === UnitType.PLAYER_CONTROLLED) {
+          const player = window.underworld.players.find((p) => p.unit === selectedUnit);
+          if (player) {
+            cards =
+              'Cards: ' +
+              player.cards.join(', ');
+          } else {
+            console.error(
+              'Could not find player corresponding to player controlled unit',
+            );
+          }
+        }
+        text += `\
+Unit
+${allUnits[selectedUnit.unitSourceId].info.description}
+Type ${UnitType[selectedUnit.unitType]}
+SubType ${UnitSubType[selectedUnit.unitSubType]}
+Faction ${Faction[selectedUnit.faction]}
+Health ${selectedUnit.health}/${selectedUnit.healthMax}
+Mana ${selectedUnit.mana}/${selectedUnit.manaMax}
+Modifiers ${JSON.stringify(selectedUnit.modifiers, null, 2)}
+${cards}
+        `;
+      }
+      break;
+    case "pickup":
+      if (selectedPickup) {
+        text += `\
+Pickup
+${selectedPickup.name}
+${selectedPickup.description}
+        `;
+      }
+      break;
+    case "obstacle":
+      if (selectedObstacle) {
+        text += `\
+${selectedObstacle.name}
+${selectedObstacle.description}
+        `;
+
+      }
+      break;
+  }
+
+  elInspectorTooltipContent.innerText = text;
+}
+export function updateTooltipSelection(mousePos: Vec2) {
+
   // Find unit:
   const unit = window.underworld.getUnitAt(mousePos);
   if (unit) {
-    let cards = '';
-    if (unit.unitType === UnitType.PLAYER_CONTROLLED) {
-      const player = window.underworld.players.find((p) => p.unit === unit);
-      if (player) {
-        cards =
-          'Cards: ' +
-          player.cards.join(', ');
-      } else {
-        console.error(
-          'Could not find player corresponding to player controlled unit',
-        );
-      }
-    }
-    text += `\
-Unit
-${allUnits[unit.unitSourceId].info.description}
-Type ${UnitType[unit.unitType]}
-SubType ${UnitSubType[unit.unitSubType]}
-Faction ${Faction[unit.faction]}
-Health ${unit.health}/${unit.healthMax}
-Mana ${unit.mana}/${unit.manaMax}
-Modifiers ${JSON.stringify(unit.modifiers, null, 2)}
-${cards}
-        `;
+    selectedUnit = unit;
+    selectedType = "unit";
   }
   const pickup = window.underworld.getPickupAt(mousePos);
   if (pickup) {
-    text += `\
-Pickup
-${pickup.name}
-${pickup.description}
-        `;
+    selectedPickup = pickup;
+    selectedType = "pickup";
   }
   const obstacle = window.underworld.getObstacleAt(mousePos);
   if (obstacle) {
-    text += `\
-${obstacle.name}
-${obstacle.description}
-        `;
+    selectedObstacle = obstacle;
+    selectedType = "obstacle";
   }
-  elInspectorTooltipContent.innerText = text;
 }

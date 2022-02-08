@@ -7,6 +7,7 @@ import {
   isOutOfBounds,
   syncSpellEffectProjection,
   updatePlanningView,
+  updateTooltipSelection,
 } from './PlanningView';
 import { app } from '../PixiUtils';
 import { distance } from '../math';
@@ -163,19 +164,20 @@ export function clickHandler(e: MouseEvent) {
   if (window.view !== View.Game) {
     return;
   }
-  const mouseTarget = window.underworld.getMousePos();
-  if (isOutOfBounds(mouseTarget)) {
+  const mousePos = window.underworld.getMousePos();
+  if (isOutOfBounds(mousePos)) {
     // Disallow click out of bounds
     return;
   }
+  updateTooltipSelection(mousePos);
   // Update planning view
   updatePlanningView();
 
   if (window.altDown) {
     window.pie.sendData({
       type: MESSAGE_TYPES.PING,
-      x: mouseTarget.x,
-      y: mouseTarget.y,
+      x: mousePos.x,
+      y: mousePos.y,
     });
     return;
   }
@@ -194,7 +196,7 @@ export function clickHandler(e: MouseEvent) {
         // cast the spell
         // getUnitAt corrects to the nearest Unit if there is one, otherwise
         // allow casting right on the mouseTarget
-        const target = window.underworld.getUnitAt(mouseTarget) || mouseTarget;
+        const target = window.underworld.getUnitAt(mousePos) || mousePos;
         const cardIds = CardUI.getSelectedCardIds();
         const cards = CardUI.getSelectedCards();
 
@@ -218,7 +220,7 @@ export function clickHandler(e: MouseEvent) {
       }
     } else {
       floatingText({
-        coords: mouseTarget,
+        coords: mousePos,
         text: 'You must wait for your turn to cast',
       });
     }

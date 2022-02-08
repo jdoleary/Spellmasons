@@ -5,6 +5,7 @@ import {
   clearSpellEffectProjection,
   syncSpellEffectProjection,
   updateManaCostUI,
+  updatePlanningView,
   updateTooltipContent,
 } from './ui/PlanningView';
 import { calculateManaCost } from './cards/cardUtils';
@@ -265,28 +266,17 @@ export function getSelectedCards(): Cards.ICard[] {
   return Cards.getCardsFromIds(cardIds);
 }
 
-let inspectIntervalId: NodeJS.Timeout | undefined;
+// Currently used only for reading spell details on hover
 export function toggleInspectMode(active: boolean) {
   document.body.classList.toggle('inspect-mode', active);
   elSelectedCards && elSelectedCards.classList.toggle('hide', active);
   syncSpellEffectProjection();
-  if (active) {
-    // if the "update tooltip interval" is not currently running, start it:
-    if (inspectIntervalId == undefined) {
-      // updateTooltip runs on an interval so that if a units health changes under the tooltip
-      // without the user moving the mouse it will stay up to date.
-      inspectIntervalId = setInterval(() => {
-        updateTooltipContent();
-      }, 60);
-    }
-  } else {
-    // If inspect mode is set to inactive, clear the "update tooltip interval"
-    if (inspectIntervalId !== undefined) {
-      clearInterval(inspectIntervalId);
-      inspectIntervalId = undefined;
-    }
-  }
 }
+// updatePlanningView runs on an interval so that the selected entity
+// is kept up to date as the gameplay changes
+setInterval(() => {
+  updatePlanningView();
+}, 30);
 export function clearSelectedCards() {
   // Remove the board highlight
   clearSpellEffectProjection();
