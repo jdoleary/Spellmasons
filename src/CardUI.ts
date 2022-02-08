@@ -197,10 +197,7 @@ function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string
     addClickListenerToCardElement(player, clone, cardId);
     clone.classList.add('selected');
     elSelectedCards.appendChild(clone);
-    // Updates the mana cost
-    const cards = getSelectedCards();
-    const manaCost = calculateManaCost(cards, 0)
-    updateManaCostUI(manaCost);
+    updateManaCostUI();
   } else {
     console.error('elSelectedCards is null');
   }
@@ -304,6 +301,8 @@ export function clearSelectedCards() {
       );
     }
   });
+  // Now that there are no more cards, update the mana cost UI
+  updateManaCostUI();
 }
 
 // Chooses a random card based on the card's probabilities

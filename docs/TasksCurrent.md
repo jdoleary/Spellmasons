@@ -2,7 +2,6 @@
 - Brad feedback: change inspect mode to work on click
     - Combine planning view and updateTooltipContent on click like brad suggested
     - Bug: Mob tooltip doesn't update when their health changes until you move your mouse 
-- Mana UI updates inconsistently on card click and mouse move
 - Balance mana
   - To make this challenging, players should often be on the verge of no mana, it should feel scarce so they have to pick carefully what spells they want to use.
     - Maybe the answer to this is to make spells more expensive every time you use them

@@ -10,10 +10,10 @@
 - Why can you target skeles but not destroy them?
 - If you have just enough mana, enemies are both targetable and not depending on which side of their circle you hover over.  Make it so that casting on enemies always shows the value of their actual distance.  This was a bug for UI but the game logic didn't let him cast because it's using his location
 - On accidental disconnect. it shows him as disconnected on my screen even though he can still take his turn and move around.  He didn't get to pick an upgrade because I moved on beyond that screen. "shouldn't he still get his level up reward?" even if the game has moved on.  Error shows "Client is already associated with a Player instance, so a new one cannot be created. 01c0d178-5b46-4d75-a0f4-98cc3b1c2d46"
-- Mana cost update when you press ESC, not just when you move yoru mouse
 - There was a desync with enemy units
   - On brads screen later one of the units went through a wall (didn't collide)
   - It happened again when brad clicked on the portal but there was a wall in the way.  On his screen he stopped and had to manually navigate around it but for me I got to the upgrade screen before he was in which suggests that he wasn't colliding
+  - Maybe this happens when animations are occurring while a window loses focus?
 - Ranged units should pursue you if you're out of their range, they shouldn't just stand still
   - Every unit should always be trying to get in position to do damage
 - Click for info doesn't conflict with click to cast in brad's opinion he just cleared it out when he needed to inspect (maybe I could change the cursor too to help with this)

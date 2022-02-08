@@ -53,7 +53,19 @@ export function updatePlanningView() {
 
   planningViewGraphics.endFill();
 }
-export function updateManaCostUI(manaCost: number) {
+export function updateManaCostUI(): number {
+  if (window.player) {
+    // Updates the mana cost
+    const cards = CardUI.getSelectedCards();
+    const mousePos = window.underworld.getMousePos();
+    const castDistance = isOutOfBounds(mousePos) ? 0 : math.distance(mousePos, window.player.unit)
+    const manaCost = calculateManaCost(cards, castDistance / config.SPELL_DISTANCE_MANA_DENOMINATOR)
+    _updateManaCostUI(manaCost);
+    return manaCost;
+  }
+  return 0;
+}
+function _updateManaCostUI(manaCost: number) {
   if (window.player) {
 
     if (manaCost <= window.player.unit.mana) {
@@ -75,10 +87,7 @@ export async function syncSpellEffectProjection() {
   // Clear the spelleffectprojection in preparation for showing the current ones
   clearSpellEffectProjection();
   if (isOutOfBounds(mousePos)) {
-    // Calculate the mana cost for 0 distance
-    const cards = CardUI.getSelectedCards();
-    const manaCost = calculateManaCost(cards, 0)
-    updateManaCostUI(manaCost);
+    updateManaCostUI();
     // Mouse is out of bounds, do not show a hover icon
     return;
   }
@@ -93,9 +102,7 @@ export async function syncSpellEffectProjection() {
       (p) => p.clientId === window.clientId,
     );
     if (currentPlayer) {
-      const cards = CardUI.getSelectedCards();
-      const manaCost = calculateManaCost(cards, math.distance(mousePos, currentPlayer.unit) / config.SPELL_DISTANCE_MANA_DENOMINATOR)
-      updateManaCostUI(manaCost);
+      const manaCost = updateManaCostUI();
       if (manaCost > currentPlayer.unit.mana) {
         // Draw deny icon to show the player they are out of range
         Image.create(mousePos.x, mousePos.y, 'deny.png', containerSpells);
