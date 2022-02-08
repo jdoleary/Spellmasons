@@ -1,8 +1,6 @@
 ## Current Priorities
 - Bug: Summoner was hiding under portal - confusing
 - Bug: Chain targets dead units
-- Bug: Animated sprite caused a dead unit to appear alive.  It was a skeleton for a moment but switched back - maybe mid attack
-- Bug: Chain showed up in upgrades when I already had it.  This is because I got it through a pickup so it wasn't listed in the upgrades array
 - Brad feedback: change inspect mode to work on click
     - Combine planning view and updateTooltipContent on click like brad suggested
     - Bug: Mob tooltip doesn't update when their health changes until you move your mouse 

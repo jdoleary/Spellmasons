@@ -29,14 +29,7 @@ export async function action(unit: Unit.IUnit) {
 
   // Attack closest enemy
   if (canInteractWithTarget(unit, closestEnemy.x, closestEnemy.y)) {
-    // Change animation and change back
-    const currentImageName = unit.image.imageName
-    Image.changeSprite(unit.image, addPixiSprite('units/golem_eat', unit.image.sprite.parent, {
-      loop: false,
-      onComplete: () => {
-        Image.changeSprite(unit.image, addPixiSprite(currentImageName, unit.image.sprite.parent));
-      }
-    }));
+    await Unit.playAnimation(unit, 'units/golem_eat');
 
     await Unit.takeDamage(closestEnemy, unit.damage);
   }

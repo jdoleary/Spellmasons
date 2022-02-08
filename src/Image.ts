@@ -57,6 +57,10 @@ export function cleanup(image: IImage) {
     image.sprite.parent.removeChild(image.sprite);
   }
 }
+// changeSprite changes the still image or animation of a sprite
+// Note: if playing a temporary animation, opt for Unit.playAnimation
+// because it has built in protections for returning to the correct  
+// default sprite
 export function changeSprite(image: IImage, sprite: PIXI.Sprite) {
   sprite.x = image.sprite.x;
   sprite.y = image.sprite.y;

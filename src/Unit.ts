@@ -55,6 +55,7 @@ export interface IUnit {
   // If the unit moved this turn
   thisTurnMoved: boolean;
   image: Image.IImage;
+  defaultImagePath: string;
   shaderUniforms: { [key: string]: any };
   damage: number;
   health: number;
@@ -85,7 +86,7 @@ export function create(
   x: number,
   y: number,
   faction: Faction,
-  imagePath: string,
+  defaultImagePath: string,
   unitType: UnitType,
   unitSubType: UnitSubType,
   sourceUnitProps: Partial<IUnit> = {}
@@ -104,7 +105,8 @@ export function create(
     attackRange: config.UNIT_BASE_ATTACK_RANGE,
     faction,
     thisTurnMoved: false,
-    image: Image.create(x, y, imagePath, containerUnits),
+    image: Image.create(x, y, defaultImagePath, containerUnits),
+    defaultImagePath,
     shaderUniforms: {},
     damage: config.UNIT_BASE_DAMAGE,
     health: config.UNIT_BASE_HEALTH,
@@ -257,14 +259,36 @@ export function syncronize(unitSerialized: IUnitSerialized, originalUnit: IUnit)
   Image.syncronize(image, originalUnit.image);
 }
 
-export function resurrect(unit: IUnit) {
+// It is important to use this function when returning a unit to the previous
+// sprite because it takes into account wether or not a unit is dead.  If a unit
+// dies mid-animation and this function is not used, it would return to the default
+// LIVING sprite, instead of the dead sprite.
+export function returnToDefaultSprite(unit: IUnit) {
+  const defaultImageString = unit.alive ? unit.defaultImagePath : 'units/corpse.png'
   Image.changeSprite(
     unit.image,
-    addPixiSprite(unit.image.imageName, containerUnits),
+    addPixiSprite(defaultImageString, containerUnits),
   );
+}
+
+export function playAnimation(unit: IUnit, spritePath: string): Promise<void> {
+  // Change animation and change back to default
+  return new Promise<void>((resolve) => {
+    Image.changeSprite(unit.image, addPixiSprite(spritePath, unit.image.sprite.parent, {
+      loop: false,
+      onComplete: () => {
+        returnToDefaultSprite(unit);
+        resolve();
+      }
+    }));
+  });
+}
+
+export function resurrect(unit: IUnit) {
   // Return dead units back to full health
   unit.health = unit.healthMax;
   unit.alive = true;
+  returnToDefaultSprite(unit);
 }
 export function die(unit: IUnit) {
   Image.changeSprite(
