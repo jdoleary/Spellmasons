@@ -374,6 +374,8 @@ export default class Underworld {
     // Add mana to AI units
     for (let unit of this.units.filter((u) => u.unitType === UnitType.AI && u.alive)) {
       unit.mana += unit.manaPerTurn;
+      // Cap manaPerTurn at manaMax
+      unit.mana = Math.min(unit.mana, unit.manaMax);
     }
   }
   hostSendSync() {
@@ -423,7 +425,12 @@ export default class Underworld {
       return
     }
     // Give mana at the start of turn
-    player.unit.mana += player.unit.manaPerTurn;
+    const manaTillFull = player.unit.manaMax - player.unit.mana;
+    // Give the player their mana per turn but don't let it go beyond manaMax
+    // It's implemented this way instead of an actual capping in a setter so that
+    // mana CAN go beyond max for other reasons (like mana potions), by design
+    player.unit.mana += Math.max(0, Math.min(player.unit.manaPerTurn, manaTillFull));
+
     Unit.syncPlayerHealthManaUI();
     // Sync spell effect projection in the event that the player has a
     // spell queued up, it should show it in the HUD when it becomes their turn again
