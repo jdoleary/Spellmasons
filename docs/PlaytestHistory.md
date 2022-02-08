@@ -11,16 +11,17 @@
   - On brads screen later one of the units went through a wall (didn't collide)
   - It happened again when brad clicked on the portal but there was a wall in the way.  On his screen he stopped and had to manually navigate around it but for me I got to the upgrade screen before he was in which suggests that he wasn't colliding
   - Maybe this happens when animations are occurring while a window loses focus?
-- Click for info doesn't conflict with click to cast in brad's opinion he just cleared it out when he needed to inspect (maybe I could change the cursor too to help with this)
+  - I'm not actually sure how this happened since the host does send out sync messages via hostSendSync already.
+- No action needed: Click for info doesn't conflict with click to cast in brad's opinion he just cleared it out when he needed to inspect (maybe I could change the cursor too to help with this)
 - Queued spell should reset on next level
 - Need better way to tell what spells are going to do
 ## 2022.02.07 Erin
 - Erin expected to see line from me to enemies when casting chain to show that it's casting from me
 - WONT DO: Bug: Summoner was hiding under portal - confusing
-- Bug: Protection removes the target but not the drawn line with chain
-- Bug: Chain targets dead units
-- Bug: Animated sprite caused a dead unit to appear alive.  It was a skeleton for a moment but switched back - maybe mid attack
-- Bug: Chain showed up in upgrades when I already had it.  This is because I got it through a pickup so it wasn't listed in the upgrades array
+- WONT DO: Bug: Protection removes the target but not the drawn line with chain
+- WONT DO: Bug: Chain targets dead units
+- DONE: Bug: Animated sprite caused a dead unit to appear alive.  It was a skeleton for a moment but switched back - maybe mid attack
+- DONE: Bug: Chain showed up in upgrades when I already had it.  This is because I got it through a pickup so it wasn't listed in the upgrades array
 ## 2021.04.22 Playtest with Brad
 
 - We desynced unit positions until brad finished his turn, then it synced back up (one included a new spawned unit from summoner)

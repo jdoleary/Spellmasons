@@ -5,6 +5,7 @@
 - Feb 7: Youtube Alpha version video / Setup Social Media system
 - Reach out to Stina for music and cover art once you have a trailer
 - Feb 17: Finish Content / Endgame
+- Revisint SYNCing.  Make it happen on a regular interval to protect against desyncs
 - Feb 18: Menus / Options
 - Feb 25, Feb 26: Electron Security Evaluation
 - Feb 27 - Mar 12: Art in Blender / Shaders / Juice
