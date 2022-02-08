@@ -18,11 +18,12 @@ body.route-Underworld #underworld-container {
 }
 #game-content-holder {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-direction: row;
+  align-items: flex-start;
+  flex-direction: column;
   height:100vh;
   pointer-events: none;
+  margin: 125px 0 0 8px;
+
 }
 
 .doob-stats {
@@ -289,7 +290,6 @@ body.your-turn #player-turn-indicator-holder.low-time {
   user-select: none;
   z-index: 1;
   display: block;
-  border:1px solid pink;
 }
 /* Transform position is determined on hover*/
 #inspector-tooltip-container.top {
@@ -320,7 +320,7 @@ body.your-turn #player-turn-indicator-holder.low-time {
 
 #ready-state {
   position: absolute;
-  top: 110px;
+  bottom: 10px;
   left: 10px;
   z-index: 1;
 }
@@ -329,7 +329,6 @@ body.your-turn #player-turn-indicator-holder.low-time {
   display: flex;
   justify-content: center;
   flex-direction: column;
-  border: 1px solid green;
   /* Display above pixi */
   z-index: 1;
 }
