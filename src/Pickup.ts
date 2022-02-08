@@ -1,8 +1,11 @@
 import * as Image from './Image';
 import * as CardUI from './CardUI';
+import * as Cards from './cards';
+import * as config from './config';
 import * as Player from './Player';
 import { containerPickup } from './PixiUtils';
 import { IUnit, syncPlayerHealthManaUI } from './Unit';
+import floatingText from './FloatingText';
 
 export const PICKUP_RADIUS = 64;
 export interface IPickup {
@@ -133,13 +136,24 @@ export const pickups: IPickupSource[] = [
   {
     imagePath: 'pickups/card',
     name: 'Cards',
-    description: 'Grants the player extra cards',
+    description: 'Grants the player a new spell',
     effect: ({ unit, player }) => {
       if (player) {
         const numCardsToGive = 1;
         for (let i = 0; i < numCardsToGive; i++) {
-          const card = CardUI.generateCard();
-          CardUI.addCardToHand(card, player);
+          const cardsToChooseFrom = Object.values(Cards.allCards).filter(card => !player.cards.includes(card.id));
+          const card = CardUI.generateCard(cardsToChooseFrom);
+          if (card) {
+            CardUI.addCardToHand(card, player);
+          } else {
+            floatingText({
+              coords: {
+                x: config.MAP_WIDTH / 2,
+                y: config.MAP_HEIGHT / 2,
+              },
+              text: `You have all of the cards already!`
+            });
+          }
         }
       }
     },

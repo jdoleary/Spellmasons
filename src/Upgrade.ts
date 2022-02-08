@@ -22,12 +22,15 @@ export function generateUpgrades(player: IPlayer): IUpgrade[] {
   const random = seedrandom(`${window.clientId}-${window.underworld.level}`);
   // Clone upgrades for later mutation
   const clonedUpgradeSource = [...upgradeSource].filter((u) =>
-    u.maxCopies === undefined
+    (u.maxCopies === undefined
       ? // Always include upgrades that don't have a specified maxCopies
       true
       : // Filter out  upgrades that the player can't have more of
       player.upgrades.filter((pu) => pu.title === u.title).length <
-      u.maxCopies,
+      u.maxCopies)
+    // Now that upgrades are cards too, make sure it doesn't
+    // show upgrades that the player already has as cards
+    && !player.cards.includes(u.title)
   );
   // Choose from upgrades
   const numberOfCardsToChoose = Math.min(

@@ -307,9 +307,9 @@ export function clearSelectedCards() {
 }
 
 // Chooses a random card based on the card's probabilities
-export function generateCard(): Cards.ICard {
+export function generateCard(cards: Cards.ICard[] = Object.values(Cards.allCards)): Cards.ICard | undefined {
   // Excludes dark cards
-  return math.chooseObjectWithProbability(Object.values(Cards.allCards));
+  return math.chooseObjectWithProbability(cards);
 }
 function getCardRarityColor(content: Cards.ICard): string {
   if (content.isDark) {
