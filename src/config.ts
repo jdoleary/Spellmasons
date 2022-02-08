@@ -2,6 +2,7 @@ export const PLAYER_BASE_HEALTH = 10;
 export const UNIT_BASE_MOVE_DISTANCE = 120;
 export const UNIT_BASE_ATTACK_RANGE = 120;
 export const COLLISION_MESH_RADIUS = 32;
+export const LOB_PROJECTILE_SPEED = 600; // in millis
 export const UNIT_SIZE = COLLISION_MESH_RADIUS * 2;
 export const UNIT_BASE_HEALTH = 3;
 export const UNIT_BASE_MANA = 10;

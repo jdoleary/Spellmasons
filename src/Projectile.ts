@@ -2,6 +2,7 @@ import type * as PIXI from 'pixi.js';
 import { addPixiSprite, containerProjectiles } from './PixiUtils';
 import { lerp, distance } from './math';
 import type { Vec2 } from './commonTypes';
+import * as config from './config';
 
 interface Projectile {
   x: number;
@@ -85,7 +86,6 @@ function fly(
     requestAnimationFrame((time) => fly(instance, time, resolve));
   }
 }
-const LOB_SPEED_PER_MILLI = 0.25;
 export function createVisualLobbingProjectile(
   coords: Vec2,
   toX: number,
@@ -107,9 +107,7 @@ function lob(
 ) {
   if (instance.startTime == 0) {
     instance.startTime = time;
-    const time_in_flight =
-      distance(instance, { x: instance.toX, y: instance.toY }) /
-      LOB_SPEED_PER_MILLI;
+    const time_in_flight = config.LOB_PROJECTILE_SPEED;
     instance.endTime = time + time_in_flight;
   }
   instance.sprite.x = instance.x;
