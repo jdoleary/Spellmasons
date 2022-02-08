@@ -348,6 +348,13 @@ body.your-turn #player-turn-indicator-holder.low-time {
 }
 #mana .fill {
   background-color: #5656d5;
+  position: absolute;
+}
+#mana .fill:nth-child(2) {
+  background-color: #8d56d5;
+}
+#mana .fill:nth-child(3) {
+  background-color: #4e1172;
 }
 #health-mana .fill {
   height: 100%;

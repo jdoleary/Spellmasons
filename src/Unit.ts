@@ -11,7 +11,9 @@ import makeAllRedShader from './shaders/selected';
 import { addLerpable } from './lerpList';
 const elHealthBar: HTMLElement = document.querySelector('#health .fill') as HTMLElement;
 const elHealthLabel: HTMLElement = document.querySelector('#health .label') as HTMLElement;
-const elManaBar: HTMLElement = document.querySelector('#mana .fill') as HTMLElement;
+const elManaBar: HTMLElement = document.querySelector('#mana .fill:nth-child(1)') as HTMLElement;
+const elManaBar2: HTMLElement = document.querySelector('#mana .fill:nth-child(2)') as HTMLElement;
+const elManaBar3: HTMLElement = document.querySelector('#mana .fill:nth-child(3)') as HTMLElement;
 const elManaLabel: HTMLElement = document.querySelector('#mana .label') as HTMLElement;
 const elPlayerStats: HTMLElement = document.querySelector('#player-stats') as HTMLElement;
 
@@ -351,6 +353,9 @@ export function syncPlayerHealthManaUI() {
   elHealthBar.style["width"] = `${100 * unit.health / unit.healthMax}%`;
   elHealthLabel.innerHTML = `${unit.health}/${unit.healthMax}`;
   elManaBar.style["width"] = `${100 * unit.mana / unit.manaMax}%`;
+  elManaBar2.style["width"] = `${100 * (Math.max(0, unit.mana - unit.manaMax)) / unit.manaMax}%`;
+  elManaBar3.style["width"] = `${100 * (Math.max(0, unit.mana - unit.manaMax * 2)) / unit.manaMax}%`;
+
   elManaLabel.innerHTML = `${unit.mana}/${unit.manaMax}`;
   elPlayerStats.innerHTML = `
 Mana per turn: ${window.player.unit.manaPerTurn}
