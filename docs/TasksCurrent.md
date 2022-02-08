@@ -1,5 +1,4 @@
 ## Current Priorities
-- Blue targeting circle doesn't appear until you move your mouse when you queue a spell using hotkeys
 - Balance mana
   - To make this challenging, players should often be on the verge of no mana, it should feel scarce so they have to pick carefully what spells they want to use.
     - Maybe the answer to this is to make spells more expensive every time you use them

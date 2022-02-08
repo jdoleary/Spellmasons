@@ -199,6 +199,11 @@ function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string
     clone.classList.add('selected');
     elSelectedCards.appendChild(clone);
     updateManaCostUI();
+    // Since a new card has been selected, we must sync the spell
+    // effect projection so it will be up to date in the event
+    // that the user is hovering over a unit while selecting this card
+    // but hadn't moved the mouse since selecting it
+    syncSpellEffectProjection();
   } else {
     console.error('elSelectedCards is null');
   }
