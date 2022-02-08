@@ -678,13 +678,19 @@ export default class Underworld {
     return coords;
   }
   getUnitAt(coords: Vec2): Unit.IUnit | undefined {
-    return this.units.find((u) => math.distance(u, coords) <= config.COLLISION_MESH_RADIUS);
+    const sortedByProximityToCoords = this.units.sort((a, b) => math.distance(a, coords) - math.distance(b, coords));
+    const closest = sortedByProximityToCoords[0]
+    return closest && math.distance(closest, coords) <= config.COLLISION_MESH_RADIUS ? closest : undefined;
   }
   getPickupAt(coords: Vec2): Pickup.IPickup | undefined {
-    return this.pickups.find((p) => math.distance(p, coords) <= config.COLLISION_MESH_RADIUS);
+    const sortedByProximityToCoords = this.pickups.sort((a, b) => math.distance(a, coords) - math.distance(b, coords));
+    const closest = sortedByProximityToCoords[0]
+    return closest && math.distance(closest, coords) <= config.COLLISION_MESH_RADIUS ? closest : undefined;
   }
   getObstacleAt(coords: Vec2): Obstacle.IObstacle | undefined {
-    return this.obstacles.find((o) => math.distance(o, coords) <= config.COLLISION_MESH_RADIUS);
+    const sortedByProximityToCoords = this.obstacles.sort((a, b) => math.distance(a, coords) - math.distance(b, coords));
+    const closest = sortedByProximityToCoords[0]
+    return closest && math.distance(closest, coords) <= config.COLLISION_MESH_RADIUS ? closest : undefined;
   }
   addUnitToArray(unit: Unit.IUnit) {
     this.units.push(unit);
