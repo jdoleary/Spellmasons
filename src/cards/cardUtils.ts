@@ -48,10 +48,10 @@ export function cardTypeToManaCost(cardType: CardType): number {
 }
 export function distanceToManaMultiplier(distance: number): number {
     if (distance < config.DISTANCE_FAR) {
-        return 1.5;
-    } else if (distance < config.DISTANCE_VERY_FAR) {
-        return 2;
-    } else {
         return 1;
+    } else if (distance < config.DISTANCE_VERY_FAR) {
+        return 1.5;
+    } else {
+        return 2;
     }
 }
