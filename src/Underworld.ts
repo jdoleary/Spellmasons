@@ -20,7 +20,7 @@ import floatingText from './FloatingText';
 import { UnitType, Vec2, Faction } from './commonTypes';
 import Events from './Events';
 import { allUnits } from './units';
-import { updatePlanningView, updateTooltipSpellCost } from './ui/PlanningView';
+import { syncSpellEffectProjection, updatePlanningView, updateTooltipSpellCost } from './ui/PlanningView';
 import { ILevel, getEnemiesForAltitude } from './overworld';
 import { setRoute, Route } from './routes';
 import { prng, randInt, SeedrandomState } from './rand';
@@ -425,6 +425,10 @@ export default class Underworld {
     // Give mana at the start of turn
     player.unit.mana += player.unit.manaPerTurn;
     Unit.syncPlayerHealthManaUI();
+    // Sync spell effect projection in the event that the player has a
+    // spell queued up, it should show it in the HUD when it becomes their turn again
+    // even if they don't move the mouse
+    syncSpellEffectProjection();
 
     // If this current player is NOT able to take their turn...
     if (!Player.ableToTakeTurn(player)) {
