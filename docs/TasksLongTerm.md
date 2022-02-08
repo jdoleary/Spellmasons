@@ -1,6 +1,9 @@
 
 ## Feature Creep Ideas
+- Make pickups destructable (even portal - which could spawn in at another location if you destroy it - aim to plesantly suprise players)
 - More spells:
+  - A card that changes mana cost of spells to health cost (vampire)
+  - Movement spells
   - Vanish (loses agro) (invisible for x number of turns) "creating separation"
   - Taunt (gain agro)
 - (s) Categories of spells, the combinable ones (cards), the special spells (teleport and such) limited in use - represent them differently (with, say, a hexagon, for the ones that can get used up)
