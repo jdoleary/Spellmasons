@@ -10,7 +10,7 @@
 },
 "arrow.png":
 {
-	"frame": {"x":1616,"y":106,"w":16,"h":9},
+	"frame": {"x":1634,"y":106,"w":16,"h":9},
 	"rotated": true,
 	"trimmed": true,
 	"spriteSourceSize": {"x":0,"y":4,"w":16,"h":9},
@@ -119,6 +119,14 @@
 	"trimmed": true,
 	"spriteSourceSize": {"x":6,"y":10,"w":52,"h":42},
 	"sourceSize": {"w":64,"h":64}
+},
+"holy-projectile.png":
+{
+	"frame": {"x":1580,"y":109,"w":16,"h":16},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
+	"sourceSize": {"w":16,"h":16}
 },
 "lance.png":
 {
@@ -258,7 +266,7 @@
 },
 "relics/fire.png":
 {
-	"frame": {"x":1580,"y":109,"w":16,"h":16},
+	"frame": {"x":1598,"y":106,"w":16,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
@@ -266,7 +274,7 @@
 },
 "relics/poison.png":
 {
-	"frame": {"x":1598,"y":106,"w":16,"h":16},
+	"frame": {"x":1616,"y":106,"w":16,"h":16},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
@@ -533,6 +541,6 @@
 	"format": "RGBA8888",
 	"size": {"w":1678,"h":128},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:e6fd9a3734447d1f45f2ecd7cd3e8035:a711e1be3483b77cbc7edbffcff1e187:81b8455959c6df0a71f2d78f10f487eb$"
+	"smartupdate": "$TexturePacker:SmartUpdate:334112240cf62a6eb6aa54407c8437cc:138119694805728d79c65d2edaaa83c2:81b8455959c6df0a71f2d78f10f487eb$"
 }
 }
