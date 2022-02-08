@@ -38,7 +38,8 @@ const hardCodedLevelEnemies = [
 ];
 export function getEnemiesForAltitude(altitude: number) {
   return hardCodedLevelEnemies[
-    Math.min(altitude, hardCodedLevelEnemies.length - 1)
+    // altitude starts at 1, not 0
+    Math.min(altitude - 1, hardCodedLevelEnemies.length - 1)
   ];
 }
 // TODO: this function can be broken if a vote comes through before the overworld has been created,
