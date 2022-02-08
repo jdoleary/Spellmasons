@@ -2,6 +2,7 @@
 - Balance mana
   - To make this challenging, players should often be on the verge of no mana, it should feel scarce so they have to pick carefully what spells they want to use.
     - Maybe the answer to this is to make spells more expensive every time you use them
+      - Branch `log2mana`
       - use log2 so it doesn't get absurdly more expensive
 ## Small Content Changes
 - Spell: Burn mana / Steal mana
