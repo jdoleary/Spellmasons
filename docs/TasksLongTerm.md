@@ -2,10 +2,12 @@
 ## Feature Creep Ideas
 - Make pickups destructable (even portal - which could spawn in at another location if you destroy it - aim to plesantly suprise players)
 - More spells:
-  - A card that changes mana cost of spells to health cost (vampire)
-  - Movement spells
-  - Vanish (loses agro) (invisible for x number of turns) "creating separation"
-  - Taunt (gain agro)
+    - (M) Push spells
+    - Fix movement spells such as charge, stomp, lance
+    - A card that changes mana cost of spells to health cost (vampire)
+    - Movement spells
+    - Vanish (loses agro) (invisible for x number of turns) "creating separation"
+    - Taunt (gain agro)
 - (s) Categories of spells, the combinable ones (cards), the special spells (teleport and such) limited in use - represent them differently (with, say, a hexagon, for the ones that can get used up)
   - Make these pickupable (call them runes?) and they persist between levels
 - (L) Rather than an overworld, what if you and your team have to mix potions in a cauldron to create a portal that leads you to a unique level? (The cauldron makes the portal)

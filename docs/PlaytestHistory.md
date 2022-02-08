@@ -16,7 +16,7 @@
 - Need better way to tell what spells are going to do
 ## 2022.02.07 Erin
 - Erin expected to see line from me to enemies when casting chain to show that it's casting from me
-- Bug: Summoner was hiding under portal - confusing
+- WONT DO: Bug: Summoner was hiding under portal - confusing
 - Bug: Protection removes the target but not the drawn line with chain
 - Bug: Chain targets dead units
 - Bug: Animated sprite caused a dead unit to appear alive.  It was a skeleton for a moment but switched back - maybe mid attack
