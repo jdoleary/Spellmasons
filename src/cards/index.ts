@@ -145,7 +145,6 @@ export interface ICard {
   thumbnail: string;
   probability: number;
   effect: EffectFn;
-  isDark?: boolean;
   description: string;
   manaCost: number;
   manaMultiplier: number;

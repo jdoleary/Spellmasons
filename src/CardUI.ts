@@ -302,13 +302,9 @@ export function clearSelectedCards() {
 
 // Chooses a random card based on the card's probabilities
 export function generateCard(cards: Cards.ICard[] = Object.values(Cards.allCards)): Cards.ICard | undefined {
-  // Excludes dark cards
   return math.chooseObjectWithProbability(cards);
 }
 function getCardRarityColor(content: Cards.ICard): string {
-  if (content.isDark) {
-    return '#000';
-  }
   if (content.probability == 1) {
     // Super rare
     // Purple
