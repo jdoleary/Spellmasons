@@ -28,6 +28,8 @@ import protection from './protection';
 import charge from './charge';
 import obliterate from './obliterate';
 import clone from './clone';
+import mana_burn from './mana_burn';
+import mana_steal from './mana_steal';
 import { IUpgrade, upgradeSource } from '../Upgrade';
 import { _getCardsFromIds } from './cardUtils';
 import { addCardToHand } from '../CardUI';
@@ -100,6 +102,8 @@ export function registerCards() {
   register(charge);
   register(obliterate);
   register(clone);
+  register(mana_burn);
+  register(mana_steal);
 }
 function cardToUpgrade(c: ICard): IUpgrade {
   return {
