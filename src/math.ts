@@ -91,7 +91,10 @@ export function _chooseObjectWithProbability<T extends objectWithProbability>(ro
 }
 export function chooseObjectWithProbability<T extends objectWithProbability>(
   source: T[],
-): T {
+): T | undefined {
+  if (source.length == 0) {
+    return undefined;
+  }
   // Chooses a random object in the source list based on its probability
   const maxProbability = source.reduce(
     (maxProbability, current) => current.probability + maxProbability,
