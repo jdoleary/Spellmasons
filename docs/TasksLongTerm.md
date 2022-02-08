@@ -83,3 +83,5 @@ i switch to the cauldron overworld)
     - Like if you cast "Protection" on yourself and then AOE it does nothing because there are no targets to AOE off of
     - Or if you cast cards out of order like Dicard without a card after it
 - Swap still seems to be broken with chain
+- Fixed i think: 
+    - Bug: Stuck on AI turn after archers killed resurrected grunt
