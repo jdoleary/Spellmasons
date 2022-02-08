@@ -1,8 +1,6 @@
 import * as Unit from '../../Unit';
-import * as Image from '../../Image';
 import * as math from '../../math';
 import { COLLISION_MESH_RADIUS } from '../../config';
-import { addPixiSprite } from '../../PixiUtils';
 
 export async function action(unit: Unit.IUnit) {
   if (!Unit.canMove(unit)) {

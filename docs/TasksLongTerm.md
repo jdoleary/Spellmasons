@@ -86,3 +86,4 @@ i switch to the cauldron overworld)
 - Fixed i think: 
     - Bug: Stuck on AI turn after archers killed resurrected grunt
 - Maybe I want this?? Bug: Chain targets dead units
+- Every unit should always be trying to get in position to do damage

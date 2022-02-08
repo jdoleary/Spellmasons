@@ -3,6 +3,7 @@ import type { UnitSource } from './index';
 import { UnitSubType } from '../commonTypes';
 import * as math from '../math';
 import { createVisualFlyingProjectile } from '../Projectile';
+import { action } from './actions/rangedAction';
 
 const unit: UnitSource = {
   id: 'archer',
@@ -16,22 +17,16 @@ const unit: UnitSource = {
     attackRange: 300
   },
   action: async (unit: Unit.IUnit) => {
-    // Move opposite to enemy if the enemy is too close
-    const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit);
-    if (closestEnemy && math.distance(unit, closestEnemy) < (unit.attackRange - 10)) {
-      const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestEnemy, -unit.moveDistance);
-      await Unit.moveTowards(unit, moveTo);
-    }
-    // Shoot at enemy
-    if (closestEnemy && canInteractWithTarget(unit, closestEnemy.x, closestEnemy.y)) {
-      await createVisualFlyingProjectile(
+    action(unit, canInteractWithTarget, (target: Unit.IUnit) => {
+      return createVisualFlyingProjectile(
         unit,
-        closestEnemy.x,
-        closestEnemy.y,
+        target.x,
+        target.y,
         'arrow.png',
-      );
-      await Unit.takeDamage(closestEnemy, unit.damage);
-    }
+      ).then(() => {
+        Unit.takeDamage(target, unit.damage);
+      })
+    });
   },
   canInteractWithTarget,
 };

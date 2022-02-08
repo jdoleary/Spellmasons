@@ -3,6 +3,7 @@ import type { UnitSource } from './index';
 import { UnitSubType } from '../commonTypes';
 import * as math from '../math';
 import { createVisualLobbingProjectile } from '../Projectile';
+import { action } from './actions/rangedAction';
 
 const unit: UnitSource = {
   id: 'Sand Golem',
@@ -16,32 +17,20 @@ const unit: UnitSource = {
     attackRange: 300
   },
   action: async (unit: Unit.IUnit) => {
-    let runFromTarget;
-    let targetEnemy;
-    for (let enemy of Unit.livingUnitsInDifferentFaction(unit)) {
-      // Will run away if enemy gets too close
-      if (math.distance(unit, enemy) < 20) {
-        runFromTarget = enemy;
-      }
-      if (canInteractWithTarget(unit, enemy.x, enemy.y)) {
-        targetEnemy = enemy;
-        break;
-      }
-    }
-    if (targetEnemy) {
-      await createVisualLobbingProjectile(
+    action(unit, canInteractWithTarget, (target: Unit.IUnit) => {
+      return createVisualLobbingProjectile(
         unit,
-        targetEnemy.x,
-        targetEnemy.y,
+        target.x,
+        target.y,
         'green-thing.png',
-      );
-      await Unit.takeDamage(targetEnemy, unit.damage);
-    } else {
-      if (runFromTarget) {
-        const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, runFromTarget, -unit.moveDistance);
-        await Unit.moveTowards(unit, moveTo);
-      }
-    }
+      ).then(() => {
+        if (target) {
+          Unit.takeDamage(target, unit.damage);
+        }
+      });
+    });
+
+
   },
   canInteractWithTarget,
 };
@@ -51,7 +40,7 @@ function canInteractWithTarget(unit: Unit.IUnit, x: number, y: number): boolean 
     return false;
   }
   const dist = math.distance(unit, { x, y });
-  // Can hit you if you are within attackRange but not 100
-  return dist > 100 && dist < unit.attackRange
+  // Can hit you if you are within attackRange
+  return dist <= unit.attackRange
 }
 export default unit;
