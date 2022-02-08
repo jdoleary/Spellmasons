@@ -2,7 +2,8 @@ import * as Unit from '../Unit';
 import type { UnitSource } from './index';
 import { Vec2, UnitSubType } from '../commonTypes';
 import * as math from '../math';
-import { createVisualFlyingProjectile } from '../Projectile';
+import { createVisualFlyingProjectile, createVisualLobbingProjectile } from '../Projectile';
+import { allCards } from '../cards';
 
 const range = 3;
 const unit: UnitSource = {
@@ -46,6 +47,17 @@ const unit: UnitSource = {
           await Unit.takeDamage(chosenUnit, -2);
           break;
         }
+      }
+    } else {
+      // if there are no damaged allies cast shield on the closest:
+      if (closestAlly) {
+        await createVisualLobbingProjectile(
+          unit,
+          closestAlly.x,
+          closestAlly.y,
+          'holy-projectile.png',
+        );
+        allCards['shield'].effect({ casterUnit: unit, targets: [closestAlly], aggregator: {} }, false, 0);
       }
     }
   },
