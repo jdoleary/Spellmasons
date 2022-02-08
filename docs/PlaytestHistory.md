@@ -20,6 +20,7 @@
 - Sand golems don't run away
 - Remove sand golems min range, just a max range
 - Queued spell should reset on next level
+- Need better way to tell what spells are going to do
 ## 2022.02.07 Erin
 - Erin expected to see line from me to enemies when casting chain to show that it's casting from me
 - Bug: Summoner was hiding under portal - confusing
