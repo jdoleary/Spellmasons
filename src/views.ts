@@ -6,7 +6,6 @@ import {
 } from './PixiUtils';
 import * as Cards from './cards';
 import * as Units from './units';
-import { initializeUnderworld } from './wsPieHandler';
 import { connect_to_wsPie_server, joinRoom } from './wsPieSetup';
 import { setupMonitoring } from './monitoring';
 import { UnitSubType } from './commonTypes';
@@ -49,6 +48,9 @@ export function setView(v: View) {
       let connectToPieServerPromise = connect_to_wsPie_server().then(() => {
         readyState.set('wsPieConnection', true);
         console.log("Pie: Successfully connected to PieServer.")
+      }).catch(() => {
+        console.error('Unable to connect to server.  Please check the wsURI.');
+        alert('Unable to connect to server.  Please check the wsURI.');
       });
       Promise.all([setupPixiPromise, connectToPieServerPromise]).then(() => {
         console.log("Setup: Loading complete.. initialize game")
