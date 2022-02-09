@@ -697,17 +697,17 @@ export default class Underworld {
     return coords;
   }
   getUnitAt(coords: Vec2): Unit.IUnit | undefined {
-    const sortedByProximityToCoords = this.units.sort((a, b) => math.distance(a, coords) - math.distance(b, coords));
+    const sortedByProximityToCoords = this.units.filter(u => !u.flaggedForRemoval && !isNaN(u.x) && !isNaN(u.y)).sort((a, b) => math.distance(a, coords) - math.distance(b, coords));
     const closest = sortedByProximityToCoords[0]
     return closest && math.distance(closest, coords) <= config.COLLISION_MESH_RADIUS ? closest : undefined;
   }
   getPickupAt(coords: Vec2): Pickup.IPickup | undefined {
-    const sortedByProximityToCoords = this.pickups.sort((a, b) => math.distance(a, coords) - math.distance(b, coords));
+    const sortedByProximityToCoords = this.pickups.filter(p => !isNaN(p.x) && !isNaN(p.y)).sort((a, b) => math.distance(a, coords) - math.distance(b, coords));
     const closest = sortedByProximityToCoords[0]
     return closest && math.distance(closest, coords) <= config.COLLISION_MESH_RADIUS ? closest : undefined;
   }
   getObstacleAt(coords: Vec2): Obstacle.IObstacle | undefined {
-    const sortedByProximityToCoords = this.obstacles.sort((a, b) => math.distance(a, coords) - math.distance(b, coords));
+    const sortedByProximityToCoords = this.obstacles.filter(o => !isNaN(o.x) && !isNaN(o.y)).sort((a, b) => math.distance(a, coords) - math.distance(b, coords));
     const closest = sortedByProximityToCoords[0]
     return closest && math.distance(closest, coords) <= config.COLLISION_MESH_RADIUS ? closest : undefined;
   }
