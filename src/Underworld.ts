@@ -68,7 +68,6 @@ export default class Underworld {
   walls: LineSegment[] = [];
   secondsLeftForTurn: number = config.SECONDS_PER_TURN;
   turnInterval: any;
-  hostClientId: string = '';
   level?: ILevel;
   playersWhoHaveChosenUpgrade = new Set<string>();
   // Keeps track of how many messages have been processed so that clients can
@@ -380,7 +379,7 @@ export default class Underworld {
   }
   hostSendSync() {
     // Only the host should send sync data to clients
-    if (this.hostClientId === window.clientId) {
+    if (window.hostClientId === window.clientId) {
       window.pie.sendData({
         type: MESSAGE_TYPES.SYNC,
         players: this.players.map(Player.serialize),
