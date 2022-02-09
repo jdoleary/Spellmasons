@@ -257,15 +257,27 @@ export function updateTooltipSelection(mousePos: Vec2) {
   if (unit) {
     selectedUnit = unit;
     selectedType = "unit";
+    return
+  } else {
+    selectedUnit = undefined;
   }
   const pickup = window.underworld.getPickupAt(mousePos);
   if (pickup) {
     selectedPickup = pickup;
     selectedType = "pickup";
+    return
+  } else {
+    selectedPickup = undefined;
   }
   const obstacle = window.underworld.getObstacleAt(mousePos);
   if (obstacle) {
     selectedObstacle = obstacle;
     selectedType = "obstacle";
+    return
+  } else {
+    selectedObstacle = undefined;
   }
+  // If nothing was found to select, null-out selectedType
+  // deselect
+  selectedType = null;
 }
