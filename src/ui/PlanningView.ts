@@ -67,7 +67,7 @@ function _updateManaCostUI(manaCost: number) {
   if (window.player) {
 
     if (manaCost <= window.player.unit.mana) {
-      updateTooltipSpellCost(manaCost)
+      updateTooltipSpellCost(manaCost.toString())
     } else {
       updateTooltipSpellCost(`${manaCost} - Insufficient mana`)
     }
@@ -174,8 +174,8 @@ export function clearTooltipSpellCost() {
   }
 
 }
-export function updateTooltipSpellCost(manaCost: any) {
-  if (elSpellManaCost) {
+export function updateTooltipSpellCost(manaCost: string) {
+  if (elSpellManaCost && parseInt(manaCost) !== 0) {
     elSpellManaCost.innerHTML = `${manaCost}`
   }
 }
@@ -222,7 +222,7 @@ Type ${UnitType[selectedUnit.unitType]}
 SubType ${UnitSubType[selectedUnit.unitSubType]}
 Faction ${Faction[selectedUnit.faction]}
 Health ${selectedUnit.health}/${selectedUnit.healthMax}
-Mana ${selectedUnit.mana}/${selectedUnit.manaMax}
+Mana ${selectedUnit.mana}/${selectedUnit.manaMax} + ${selectedUnit.manaPerTurn} per turn
 Modifiers ${JSON.stringify(selectedUnit.modifiers, null, 2)}
 ${cards}
         `;
@@ -231,7 +231,6 @@ ${cards}
     case "pickup":
       if (selectedPickup) {
         text += `\
-Pickup
 ${selectedPickup.name}
 ${selectedPickup.description}
         `;
@@ -249,6 +248,12 @@ ${selectedObstacle.description}
   }
 
   elInspectorTooltipContent.innerText = text;
+  if (text == '') {
+    elInspectorTooltipContent.style.visibility = "hidden";
+  } else {
+    elInspectorTooltipContent.style.visibility = "visible";
+
+  }
 }
 export function updateTooltipSelection(mousePos: Vec2) {
 
