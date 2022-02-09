@@ -22,8 +22,6 @@ export async function action(unit: Unit.IUnit) {
   const moveDist = Math.min(math.distance(unit, closestEnemy) - COLLISION_MESH_RADIUS * 2, unit.moveDistance)
   const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestEnemy, moveDist);
   await Unit.moveTowards(unit, moveTo);
-  // Update the "planning view" overlay that shows the unit's agro radius
-  Unit.updateSelectedOverlay(unit);
 
   // Attack closest enemy
   if (canInteractWithTarget(unit, closestEnemy.x, closestEnemy.y)) {

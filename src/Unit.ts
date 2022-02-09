@@ -29,7 +29,7 @@ const UNIT_BASE_RADIUS = 0.7 * config.COLLISION_MESH_RADIUS * config.NON_HEAVY_U
 // The serialized version of the interface changes the interface to allow only the data
 // that can be serialized in JSON.  It may exclude data that is not neccessary to
 // rehydrate the JSON into an entity
-export type IUnitSerialized = Omit<IUnit, "resolveDoneMoving" | "resolveDoneMovingTimeout" | "healthText" | "image"> & { image: Image.IImageSerialized };
+export type IUnitSerialized = Omit<IUnit, "resolveDoneMoving" | "resolveDoneMovingTimeout" | "image"> & { image: Image.IImageSerialized };
 export interface IUnit {
   unitSourceId: string;
   x: number;
@@ -60,7 +60,6 @@ export interface IUnit {
   mana: number;
   manaMax: number;
   manaPerTurn: number;
-  healthText: PIXI.Text;
   alive: boolean;
   unitType: UnitType;
   unitSubType: UnitSubType;
@@ -112,13 +111,6 @@ export function create(
     mana: config.UNIT_BASE_MANA,
     manaMax: config.UNIT_BASE_MANA,
     manaPerTurn: config.MANA_GET_PER_TURN,
-    healthText: new PIXI.Text('', {
-      fill: 'red',
-      // Allow health hearts to wrap
-      wordWrap: true,
-      wordWrapWidth: 120,
-      breakWords: true,
-    }),
     alive: true,
     unitType,
     unitSubType,
@@ -157,27 +149,6 @@ export function removeModifier(unit: IUnit, key: string) {
   delete unit.modifiers[key];
 }
 
-export function deselect(unit: IUnit) {
-  // Hide health text
-  if (unit.healthText.parent) {
-    unit.healthText.parent.removeChild(unit.healthText);
-  }
-}
-export function select(unit: IUnit) {
-  // Show health text
-  unit.image.sprite.addChild(unit.healthText);
-  updateSelectedOverlay(unit);
-}
-export function updateSelectedOverlay(unit: IUnit) {
-  // Update to current health
-  let healthString = '';
-  for (let i = 0; i < unit.health; i++) {
-    healthString += '❤️';
-  }
-  unit.healthText.text = healthString;
-  unit.healthText.anchor.x = 0.5;
-  unit.healthText.anchor.y = -0.2;
-}
 export function cleanup(unit: IUnit) {
   // Resolve done moving on cleanup to ensure that there are no forever-blocking promises
   if (unit.resolveDoneMoving) {
@@ -187,7 +158,6 @@ export function cleanup(unit: IUnit) {
   unit.y = NaN;
   unit.flaggedForRemoval = true;
   Image.cleanup(unit.image);
-  deselect(unit);
 }
 // Converts a unit entity into a serialized form
 // that can be saved as JSON and rehydrated later into
@@ -197,7 +167,7 @@ export function cleanup(unit: IUnit) {
 export function serialize(unit: IUnit): IUnitSerialized {
   // resolveDoneMoving is a callback that cannot be serialized
   // resolveDoneMovingTimeout is a setTimeout id that should not be serialized
-  const { resolveDoneMoving, resolveDoneMovingTimeout, healthText, ...rest } = unit
+  const { resolveDoneMoving, resolveDoneMovingTimeout, ...rest } = unit
   return {
     ...rest,
     image: Image.serialize(unit.image),
@@ -225,14 +195,6 @@ export function load(unit: IUnitSerialized): IUnit {
     shaderUniforms: {},
     resolveDoneMoving: () => { },
     image: Image.load(unit.image, containerUnits),
-    // TODO: is healthText still used?
-    healthText: new PIXI.Text('', {
-      fill: 'red',
-      // Allow health hearts to wrap
-      wordWrap: true,
-      wordWrapWidth: 120,
-      breakWords: true,
-    }),
   };
   setupShaders(loadedunit);
   // Load in shader uniforms by ONLY setting the uniforms that are saved
@@ -302,8 +264,6 @@ export function die(unit: IUnit) {
   for (let [modifier, _modifierProperties] of Object.entries(unit.modifiers)) {
     removeModifier(unit, modifier);
   }
-  // When a unit dies, deselect it
-  deselect(unit);
 }
 export async function takeDamage(unit: IUnit, amount: number) {
   let alteredAmount = amount;
@@ -320,18 +280,7 @@ export async function takeDamage(unit: IUnit, amount: number) {
   // Update the shader to reflect health level
   unit.shaderUniforms.all_red.alpha = 1;
   addLerpable(unit.shaderUniforms.all_red, "alpha", 0, 200);
-  // If the unit is "selected" this will update it's overlay to reflect the damage
-  updateSelectedOverlay(unit);
 
-  // Show hearts floating away due to damage taken
-  let healthChangedString = '';
-  for (let i = 0; i < Math.abs(alteredAmount); i++) {
-    healthChangedString += alteredAmount > 0 ? '🔥' : '❤️';
-  }
-  floatingText({
-    coords: unit,
-    text: healthChangedString,
-  });
   // If taking damage (not healing) and health is 0 or less...
   if (amount > 0 && unit.health <= 0) {
     // if unit is alive, die
