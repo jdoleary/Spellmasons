@@ -100,7 +100,9 @@ export function load(image: IImageSerialized, parent: PIXI.Container) {
   // Recreate the sprite using the create function so it initializes it properly
   const newImage = create(x, y, copy.imageName, parent);
   newImage.sprite.scale.set(scale.x, scale.y);
-  // Restore subsprites
+  // copy over the subsprite array (list of strings)
+  newImage.subSprites = [...copy.subSprites];
+  // Restore subsprites (the actual sprites)
   restoreSubsprites(newImage);
 
   return newImage;
@@ -130,6 +132,7 @@ export function syncronize(imageSerialized: IImageSerialized, originalImage: IIm
 export function restoreSubsprites(image: IImage) {
   // Re-add subsprites
   const subSprites = [...image.subSprites];
+  console.log("restore subSprites", subSprites)
   image.sprite.removeChildren();
   image.subSprites = [];
   for (let subSprite of subSprites) {
