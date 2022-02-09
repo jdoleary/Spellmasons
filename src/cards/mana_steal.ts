@@ -12,7 +12,7 @@ const spell: Spell = {
     id,
     type,
     probability: cardTypeToProbability(type),
-    thumbnail: 'todo.png',
+    thumbnail: 'mana_steal.png',
     description: `
 Sacrifice ${mana_stolen} of your own health to steal ${mana_stolen} from each target.
     `,
@@ -29,8 +29,7 @@ Sacrifice ${mana_stolen} of your own health to steal ${mana_stolen} from each ta
           const unitManaBurnt = Math.min(unit.mana, mana_stolen);
           unit.mana -= unitManaBurnt;
           state.casterUnit.mana += unitManaBurnt;
-          // TODO: Use better projectile image that communicates what's happening
-          promises.push(createVisualLobbingProjectile(unit, caster.x, caster.y, 'holy-projectile.png').then(() => {
+          promises.push(createVisualLobbingProjectile(unit, caster.x, caster.y, 'blue-projectile.png').then(() => {
             floatingText({
               coords: caster,
               text: `+ ${unitManaBurnt} Mana`,

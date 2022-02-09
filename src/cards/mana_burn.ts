@@ -10,7 +10,7 @@ const spell: Spell = {
     id,
     type,
     probability: cardTypeToProbability(type),
-    thumbnail: 'todo.png',
+    thumbnail: 'mana_burn.png',
     description: `
 Burn ${mana_burnt} of the targets' mana, causing the target take damage and lose the mana.
     `,
