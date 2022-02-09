@@ -12,6 +12,7 @@
 - Mar 13 - Mar 19: Open
 - Mar 20 - Mar 26: Music
 - Mar 27 - Mar 30: SFX
+- [Tutorial](https://www.youtube.com/watch?v=-GV814cWiAw)
 - Monitoring (Sentry.io?)
 - Publicity
 - March 31: Publish on Steamworks

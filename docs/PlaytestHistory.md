@@ -14,7 +14,8 @@
 - Chaining too many units crashed the game
 - If there are too many units they can stutter their position and it gets stuck on NPC turn cause they don't resolve the move promise; add a timeout to the move promise
 - comments on mana:  there's too many times where i run out of mana and have to run around until it gets back
-- Chain clone is too cheap=
+- Chain clone is too cheap
+- UI issue where top yellow bar didn't render and the whole UI was messed up and there was a space at the bottom of the canvas
 ## 2022.02.08 Brad discussion
  Talked about making spells more expensive as you use them to incentivize creativity and to remove the possibility where there are ever moments where the solution is to just fireball everything on screen (which is boring).  He also suggested maybe adding another tradeoff for surplus mana, like spending it to do something somehow, maybe purchase something?
 ## 2022.02.07 Brad

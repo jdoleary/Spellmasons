@@ -1,11 +1,17 @@
 ## Current Priorities
-- Balance mana
-  - To make this challenging, players should often be on the verge of no mana, it should feel scarce so they have to pick carefully what spells they want to use.
-    - Maybe the answer to this is to make spells more expensive every time you use them
-      - Branch `log2mana`
-      - use log2 so it doesn't get absurdly more expensive
-## Small Content Changes
-- Spell: Burn mana / Steal mana
-- Swap should only swap with targets, it shouldn't allow arbitrary teleportation
-- swapping with portal shouldn't make user portal
-- Spells that summon walls or pillars to prevent enemy movement (maybe to trap them)
+- If i have someone selected and click off it should deselect
+- Poison unit AI is broken, didn't attack when resurrected
+- Way to see how much mana a card costs without clicking on it
+- Need pathfinding so you can't just hide and get all your mana back
+- Chain needs a radius to show how far away chaining will occur, maybe
+- Movement spells could help you cast farther than you should be able to and move a far unit into another group and chain them, cause it should keep the target after they move
+- I wish i could bring goons with me through the portal
+- Cloned unit didn't get a headband
+- Brad got confused about the order of chain and damage; there should be a UI element to help 
+- Clone caused guys to spawn out of bounds
+- Animating golem attack causes it to change z-index; or maybe clones of brad's player unit is turning into an attack golem and attacking
+- Chaining too many units crashed the game
+- If there are too many units they can stutter their position and it gets stuck on NPC turn cause they don't resolve the move promise; add a timeout to the move promise
+- comments on mana:  there's too many times where i run out of mana and have to run around until it gets back
+- Chain clone is too cheap
+- UI issue where top yellow bar didn't render and the whole UI was messed up and there was a space at the bottom of the canvas

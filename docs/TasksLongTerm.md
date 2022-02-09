@@ -2,6 +2,7 @@
 ## Feature Creep Ideas
 - Make pickups destructable (even portal - which could spawn in at another location if you destroy it - aim to plesantly suprise players)
 - More spells:
+    - Spells that summon walls or pillars to prevent enemy movement (maybe to trap them)
     - (M) Push spells
     - Fix movement spells such as charge, stomp, lance
     - A card that changes mana cost of spells to health cost (vampire)
@@ -92,3 +93,10 @@ i switch to the cauldron overworld)
     - Bug: Stuck on AI turn after archers killed resurrected grunt
 - Maybe I want this?? Bug: Chain targets dead units
 - Every unit should always be trying to get in position to do damage
+- Swap should only swap with targets, it shouldn't allow arbitrary teleportation
+- Balance mana
+  - To make this challenging, players should often be on the verge of no mana, it should feel scarce so they have to pick carefully what spells they want to use.
+    - Maybe the answer to this is to make spells more expensive every time you use them
+      - Branch `log2mana`
+      - use log2 so it doesn't get absurdly more expensive
+- Brad pickuped cards and kept playing and was later suprised at his new cards. Make it obvious
