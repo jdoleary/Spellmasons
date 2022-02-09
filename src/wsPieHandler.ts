@@ -262,7 +262,6 @@ function handleLoadGameState(payload: any) {
   underworld.playerTurnIndex = loadedGameState.playerTurnIndex;
   underworld.level = loadedGameState.level;
   underworld.secondsLeftForTurn = loadedGameState.secondsLeftForTurn;
-  window.hostClientId = loadedGameState.hostClientId;
   // Load all units that are not player's, those will be loaded indepentently
   underworld.units = loadedGameState.units
     // Player controlled units are loaded within the players array
