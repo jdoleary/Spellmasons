@@ -42,8 +42,8 @@ export function cardTypeToManaCost(cardType: CardType): number {
     return {
         [CardType.Common]: 10,
         [CardType.Special]: 20,
-        [CardType.Powerful]: 30,
-        [CardType.Forbidden]: 40,
+        [CardType.Powerful]: 50,
+        [CardType.Forbidden]: 80,
     }[cardType]
 }
 export function distanceToManaMultiplier(distance: number): number {
