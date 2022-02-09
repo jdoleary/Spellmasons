@@ -1,6 +1,5 @@
 ## Current Priorities
 - If i have someone selected and click off it should deselect
-- Poison unit AI is broken, didn't attack when resurrected
 - Way to see how much mana a card costs without clicking on it
 - Need pathfinding so you can't just hide and get all your mana back
 - Chain needs a radius to show how far away chaining will occur, maybe

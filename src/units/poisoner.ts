@@ -5,7 +5,6 @@ import * as Unit from '../Unit';
 import * as math from '../math';
 import * as poison from '../cards/poison';
 
-const range = 3;
 const unit: UnitSource = {
   id: 'Poisoner',
   info: {
@@ -14,7 +13,9 @@ const unit: UnitSource = {
     subtype: UnitSubType.AI_poisoner,
     probability: 30,
   },
-  unitProps: {},
+  unitProps: {
+    attackRange: 150
+  },
   action: async (unit: Unit.IUnit) => {
     const nonPoisonedEnemyUnits = window.underworld.units.filter(
       (u) =>
@@ -42,6 +43,6 @@ const unit: UnitSource = {
   },
 };
 function inRange(unit: Unit.IUnit, coords: Vec2): boolean {
-  return math.distance(unit, coords) <= range;
+  return math.distance(unit, coords) <= unit.attackRange;
 }
 export default unit;
