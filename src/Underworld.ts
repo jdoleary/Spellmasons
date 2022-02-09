@@ -405,11 +405,13 @@ export default class Underworld {
     this.playerTurnIndex = 0;
     // Increment the turn number now that it's starting over at the first phase
     this.turn_number++;
+
+    // Actually update the turn_phase, note, this must occur before hostSendSync
+    // or else it will cause all clients to sync to the previous turn_phase
+    this.setTurnPhase(turn_phase.PlayerTurns);
+
     // Have the host send out syncronization messages so all clients are sync'd
     this.hostSendSync();
-
-    // Actually update the turn_phase
-    this.setTurnPhase(turn_phase.PlayerTurns);
   }
   setTurnMessage(yourTurn: boolean, message: string) {
     if (elPlayerTurnIndicator) {
