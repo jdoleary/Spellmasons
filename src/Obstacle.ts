@@ -58,8 +58,8 @@ export function serialize(o: IObstacle): IObstacleSerialized {
 
 export const obstacleSource: IObstacleSource[] = [
   {
-    name: 'Lava',
-    description: 'This is lava',
-    imagePath: 'tiles/lava.png',
+    name: 'Wall',
+    description: 'This is a wall that will block your way.',
+    imagePath: 'tiles/wall.png',
   },
 ];
