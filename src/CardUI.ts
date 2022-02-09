@@ -6,9 +6,8 @@ import {
   syncSpellEffectProjection,
   updateManaCostUI,
   updatePlanningView,
-  updateTooltipContent,
 } from './ui/PlanningView';
-import { calculateManaCost } from './cards/cardUtils';
+import { cardTypeToManaCost } from './cards/cardUtils';
 const elCardHolders = document.getElementById('card-holders');
 // Where the non-selected cards are displayed
 const elCardHand = document.getElementById('card-hand');
@@ -338,6 +337,10 @@ function createCardElement(content: Cards.ICard) {
   elCardInner.classList.add('card-inner');
   elCardInner.style.borderColor = getCardRarityColor(content);
   element.appendChild(elCardInner);
+  const elCardManaBadge = document.createElement('div');
+  elCardManaBadge.innerText = cardTypeToManaCost(content.type).toString();
+  elCardManaBadge.classList.add('card-mana-badge');
+  element.appendChild(elCardManaBadge);
   const thumbHolder = document.createElement('div');
   const thumbnail = document.createElement('img');
   thumbnail.src = 'images/spell/' + content.thumbnail;

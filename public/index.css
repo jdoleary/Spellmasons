@@ -176,6 +176,7 @@ the face of the last card in the group is seen*/
 }
 .card {
   cursor: pointer;
+  position: relative;
 }
 #card-holder .card {
   padding: 8px;
@@ -186,6 +187,18 @@ the face of the last card in the group is seen*/
   border-radius: 10px 10px;
   pointer-events: all;
   display: flex;
+}
+.card-mana-badge {
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  border-radius: 12px;
+  color: white;
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  background-color: #5656d5;
+  text-align: center;
 }
 .card-inner {
   width: 70px;

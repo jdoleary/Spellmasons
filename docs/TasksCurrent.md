@@ -1,5 +1,4 @@
 ## Current Priorities
-- Way to see how much mana a card costs without clicking on it
 - Need pathfinding so you can't just hide and get all your mana back
 - Chain needs a radius to show how far away chaining will occur, maybe
 - Movement spells could help you cast farther than you should be able to and move a far unit into another group and chain them, cause it should keep the target after they move
