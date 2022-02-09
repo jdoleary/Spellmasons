@@ -132,7 +132,6 @@ export function syncronize(imageSerialized: IImageSerialized, originalImage: IIm
 export function restoreSubsprites(image: IImage) {
   // Re-add subsprites
   const subSprites = [...image.subSprites];
-  console.log("restore subSprites", subSprites)
   image.sprite.removeChildren();
   image.subSprites = [];
   for (let subSprite of subSprites) {
