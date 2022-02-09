@@ -317,6 +317,13 @@ export default class Underworld {
           break;
         }
       }
+      for (let p of this.pickups) {
+        if (math.distance(p, coords) < config.COLLISION_MESH_RADIUS * 2) {
+          // Abort spawning the obstacle if it collides with a pickup
+          badLocation = true;
+          break;
+        }
+      }
       // Do not create if it didn't choose a good location
       // For now, to prevent obstacles from trapping units when they
       // spawn, just skip making one if the coordinates collide with
