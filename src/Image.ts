@@ -199,7 +199,7 @@ export function show(image: IImage) {
   ]);
 }
 export function hide(image: IImage) {
-  window.animationTimeline.addAnimation([
+  return window.animationTimeline.addAnimation([
     {
       sprite: image.sprite,
       target: { alpha: 0 },

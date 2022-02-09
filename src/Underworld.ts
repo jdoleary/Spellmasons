@@ -756,11 +756,21 @@ export default class Underworld {
             card.thumbnail,
             containerUI,
           );
-          // image.sprite.alpha = 0.5;
+          // Animate icons of spell cards as they are cast:
           image.sprite.scale.set(1.0);
-          const scaleAnimation = Image.scale(image, 2.0).then(() => {
-            Image.cleanup(image);
-          });
+          const scaleAnimation = Promise.all([
+            Image.scale(image, 1.4),
+            Image.move(image, image.sprite.x, image.sprite.y - 50),
+            new Promise<void>((resolve) => {
+              // Make the image fade out after a delay
+              setTimeout(() => {
+                resolve();
+                Image.hide(image).then(() => {
+                  Image.cleanup(image);
+                })
+              }, config.MILLIS_PER_SPELL_ANIMATION * .8)
+            })
+          ]);
           animationPromises.push(scaleAnimation);
         }
         const { targets: previousTargets } = effectState;
