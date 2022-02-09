@@ -100,3 +100,6 @@ i switch to the cauldron overworld)
       - Branch `log2mana`
       - use log2 so it doesn't get absurdly more expensive
 - Brad pickuped cards and kept playing and was later suprised at his new cards. Make it obvious
+- I wish i could bring goons with me through the portal
+- Chaining too many units crashed the game (optimize chain)
+- Attack animation for cloned players is the same as the grunt attack animation which is confusing visually

@@ -1,0 +1,24 @@
+
+- Units
+    - Player Characters (4?)
+        - Animations
+            - Move
+            - Cast
+            - Die
+    - grunt
+    - archer
+    - sandGolem
+    - rook?
+    - summoner
+    - demon
+    - priest
+    - poisoner
+    - Skeleton (for dead units?)
+- Tiles
+    - Floor
+    - Wall
+    - Obstacle (similar to wall?)
+- Pickups
+    - Portal
+    - Potion
+    - Scroll (instead of cards for new spell to add to your spell book)
