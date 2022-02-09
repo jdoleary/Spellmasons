@@ -33,7 +33,7 @@ export function setView(v: View) {
       break;
     case View.Setup:
       // Start monitoring with development overlay
-      setupMonitoring();
+      // setupMonitoring();
 
       // Initialize Assets
       console.log("Setup: Loading Pixi assets...")
