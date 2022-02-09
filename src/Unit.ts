@@ -29,7 +29,7 @@ const UNIT_BASE_RADIUS = 0.7 * config.COLLISION_MESH_RADIUS * config.NON_HEAVY_U
 // The serialized version of the interface changes the interface to allow only the data
 // that can be serialized in JSON.  It may exclude data that is not neccessary to
 // rehydrate the JSON into an entity
-export type IUnitSerialized = Omit<IUnit, "resolveDoneMoving" | "healthText" | "image"> & { image: Image.IImageSerialized };
+export type IUnitSerialized = Omit<IUnit, "resolveDoneMoving" | "resolveDoneMovingTimeout" | "healthText" | "image"> & { image: Image.IImageSerialized };
 export interface IUnit {
   unitSourceId: string;
   x: number;
@@ -43,6 +43,7 @@ export interface IUnit {
   moveSpeed: number;
   // A resolve callback for when a unit is done moving
   resolveDoneMoving: () => void;
+  resolveDoneMovingTimeout?: number;
   radius: number;
   moveDistance: number;
   attackRange: number;
@@ -97,6 +98,7 @@ export function create(
     moveTarget: undefined,
     moveSpeed: config.UNIT_MOVE_SPEED,
     resolveDoneMoving: () => { },
+    resolveDoneMovingTimeout: undefined,
     moveDistance: config.UNIT_BASE_MOVE_DISTANCE,
     attackRange: config.UNIT_BASE_ATTACK_RANGE,
     faction,
@@ -194,7 +196,8 @@ export function cleanup(unit: IUnit) {
 // This is the opposite of load
 export function serialize(unit: IUnit): IUnitSerialized {
   // resolveDoneMoving is a callback that cannot be serialized
-  const { resolveDoneMoving, healthText, ...rest } = unit
+  // resolveDoneMovingTimeout is a setTimeout id that should not be serialized
+  const { resolveDoneMoving, resolveDoneMovingTimeout, healthText, ...rest } = unit
   return {
     ...rest,
     image: Image.serialize(unit.image),
@@ -425,7 +428,12 @@ export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
   unit.thisTurnMoved = true;
   unit.moveTarget = coordinates
   return new Promise((resolve) => {
+    // Clear previous timeout
+    if (unit.resolveDoneMovingTimeout !== undefined) {
+      clearTimeout(unit.resolveDoneMovingTimeout);
+    }
     unit.resolveDoneMoving = resolve;
+    unit.resolveDoneMovingTimeout = setTimeout(resolve, config.RESOLVE_DONE_MOVING_TIMEOUT_MS);
   });
 }
 

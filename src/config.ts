@@ -7,6 +7,10 @@ export const UNIT_SIZE = COLLISION_MESH_RADIUS * 2;
 export const UNIT_BASE_HEALTH = 3;
 export const UNIT_BASE_MANA = 100;
 export const UNIT_BASE_DAMAGE = 1;
+// Ensures that the resolveDoneMoving callback will timeout if it never gets called.
+// This ensures that the game doesn't get stuck if, say, the collision system bugs
+// out and a unit never comes to rest
+export const RESOLVE_DONE_MOVING_TIMEOUT_MS = 1000;
 // Note: UNIT_MOVE_SPEED cannot be less than
 // UNIT_STOP_MOVING_MARGIN or else it will assume
 // no movement has happend and invoke resolveDoneMoving
