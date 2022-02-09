@@ -22,8 +22,7 @@ body.route-Underworld #underworld-container {
   flex-direction: column;
   height:100vh;
   pointer-events: none;
-  margin: 125px 0 0 8px;
-
+  margin: 65px 0 0 8px;
 }
 
 .doob-stats {
@@ -404,4 +403,12 @@ body.your-turn #player-turn-indicator-holder.low-time {
   justify-content: center;
   flex-direction: column;
   text-align: center; 
+}
+#version {
+  color: white;
+  position: absolute;
+  top: 40px;
+  right: 8px;
+  font-size: 25px;
+  text-align: right;
 }
