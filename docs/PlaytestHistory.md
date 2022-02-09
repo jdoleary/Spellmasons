@@ -1,3 +1,20 @@
+## 2022.02.08 Brad
+- If i have someone selected and click off it should deselect
+- Brad pickuped cards and kept playing and was later suprised at his new cards. Make it obvious
+- Poison unit AI is broken, didn't attack when resurrected
+- Way to see how much mana a card costs without clicking on it
+- Need pathfinding so you can't just hide and get all your mana back
+- Chain needs a radius to show how far away chaining will occur, maybe
+- Movement spells could help you cast farther than you should be able to and move a far unit into another group and chain them, cause it should keep the target after they move
+- I wish i could bring goons with me through the portal
+- Cloned unit didn't get a headband
+- Brad got confused about the order of chain and damage; there should be a UI element to help 
+- Clone caused guys to spawn out of bounds
+- Animating golem attack causes it to change z-index; or maybe clones of brad's player unit is turning into an attack golem and attacking
+- Chaining too many units crashed the game
+- If there are too many units they can stutter their position and it gets stuck on NPC turn cause they don't resolve the move promise; add a timeout to the move promise
+- comments on mana:  there's too many times where i run out of mana and have to run around until it gets back
+- Chain clone is too cheap=
 ## 2022.02.08 Brad discussion
  Talked about making spells more expensive as you use them to incentivize creativity and to remove the possibility where there are ever moments where the solution is to just fireball everything on screen (which is boring).  He also suggested maybe adding another tradeoff for surplus mana, like spending it to do something somehow, maybe purchase something?
 ## 2022.02.07 Brad
