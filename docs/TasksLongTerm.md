@@ -5,6 +5,7 @@
     - Spells that summon walls or pillars to prevent enemy movement (maybe to trap them)
     - (M) Push spells
     - Fix movement spells such as charge, stomp, lance
+        - Movement spells could help you cast farther than you should be able to and move a far unit into another group and chain them, cause it should keep the target after they move
     - A card that changes mana cost of spells to health cost (vampire)
     - Movement spells
     - Vanish (loses agro) (invisible for x number of turns) "creating separation"
