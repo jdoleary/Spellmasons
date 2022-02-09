@@ -16,7 +16,7 @@ export function set(key: keyof typeof readyState, value: boolean) {
     is_fully_ready = Object.values(readyState).every(x => !!x)
     if (elReadyState) {
         elReadyState.innerHTML = JSON.stringify(readyState, null, 2) + `
-You are the ${window.hostClientId == window.clientId ? '' : 'not '} the host.`;
+You are${window.hostClientId == window.clientId ? '' : ' not '} the host.`;
         if (is_fully_ready) {
             // Don't show any debug information from readyState if it's
             // fully ready
