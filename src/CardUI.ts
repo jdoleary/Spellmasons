@@ -179,6 +179,19 @@ function makeCardTypeGroup(cardId: string): HTMLDivElement {
 }
 function deselectCard(element: HTMLElement) {
   element.remove();
+  // Update the mana cost UI AFTER the card is removed
+  updateManaCostUI();
+}
+export function deselectLastCard() {
+  if (elSelectedCards) {
+    const cardGroup = elSelectedCards.children.item(elSelectedCards.children.length - 1) as HTMLElement;
+    if (cardGroup) {
+      (cardGroup.children.item(0) as HTMLElement).click();
+    } else {
+      console.warn(`Cannot deselect last card in selected cards`)
+    }
+  }
+
 }
 export function selectCardByIndex(index: number) {
   if (elCardHand) {

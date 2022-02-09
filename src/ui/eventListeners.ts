@@ -34,6 +34,9 @@ export function keydownListener(event: KeyboardEvent) {
     case 'ShiftRight':
       CardUI.toggleInspectMode(true);
       break;
+    case 'Backspace':
+      CardUI.deselectLastCard();
+      break;
     case 'Digit1':
       CardUI.selectCardByIndex(0);
       break;
