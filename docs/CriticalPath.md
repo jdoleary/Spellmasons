@@ -2,8 +2,10 @@
 - DONE(2 days early) Jan 31: Collisions
 - DONE(5 days late) Feb 2: Ensure gamestate desyncs don't occur or are handled when they do
 - MOVING ON FOR NOW (3 days late) Feb 6: Gameplay Balance
+---
 - Feb 7: Youtube Alpha version video / Setup Social Media system
 - Reach out to Stina for music and cover art once you have a trailer
+---
 - Pathfinding (this is core to difficulty so you cant hide and get mana)
 - Feb 17: Finish Content / Endgame
 - Revisint SYNCing.  Make it happen on a regular interval to protect against desyncs

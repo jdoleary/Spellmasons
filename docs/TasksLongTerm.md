@@ -104,3 +104,5 @@ i switch to the cauldron overworld)
 - I wish i could bring goons with me through the portal
 - Chaining too many units crashed the game (optimize chain)
 - Attack animation for cloned players is the same as the grunt attack animation which is confusing visually
+- (maybe) Chain needs a radius to show how far away chaining will occur, maybe
+- Clone caused guys to spawn out of bounds
