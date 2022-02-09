@@ -372,3 +372,23 @@ body.your-turn #player-turn-indicator-holder.low-time {
   line-height: 32px;
   color: white;
 }
+
+#selected-cards .card {
+  position: relative;
+}
+#selected-cards .card.requires-following-card:last-child:after {
+  content: "Add another card";
+  color: white;
+  background-color:rgba(253, 98, 98, 0.596);
+  height: 92%;
+  width: 90%;
+  border: 4px red dotted;
+  border-left:0;
+  position: absolute;
+  left: 70px;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center; 
+}

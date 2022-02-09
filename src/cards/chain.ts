@@ -13,6 +13,7 @@ const spell: Spell = {
     type,
     probability: cardTypeToProbability(type),
     thumbnail: 'chain.png',
+    requiresFollowingCard: true,
     description: `
 Adds targets for the following cards to effect by "chaining like electricity" 
 off of all existing targeted units to units touching them. 

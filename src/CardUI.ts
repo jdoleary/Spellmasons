@@ -197,6 +197,9 @@ function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string
     const clone = element.cloneNode(true) as HTMLElement;
     addClickListenerToCardElement(player, clone, cardId);
     clone.classList.add('selected');
+    if (Cards.allCards[cardId].requiresFollowingCard) {
+      clone.classList.add('requires-following-card')
+    }
     elSelectedCards.appendChild(clone);
     updateManaCostUI();
     // Since a new card has been selected, we must sync the spell

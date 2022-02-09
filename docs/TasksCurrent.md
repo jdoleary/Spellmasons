@@ -5,7 +5,6 @@
 - Chain needs a radius to show how far away chaining will occur, maybe
 - Movement spells could help you cast farther than you should be able to and move a far unit into another group and chain them, cause it should keep the target after they move
 - I wish i could bring goons with me through the portal
-- Brad got confused about the order of chain and damage; there should be a UI element to help 
 - Clone caused guys to spawn out of bounds
 - Animating golem attack causes it to change z-index; or maybe clones of brad's player unit is turning into an attack golem and attacking
 - Chaining too many units crashed the game

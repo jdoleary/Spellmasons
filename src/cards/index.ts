@@ -148,6 +148,9 @@ export interface ICard {
   probability: number;
   effect: EffectFn;
   description: string;
+  // requiresFollowingCard is for cards like chain or AOE that need another
+  // card to follow them in order to have an effect
+  requiresFollowingCard?: boolean;
 }
 
 export const allCards: { [cardId: string]: ICard } = {};

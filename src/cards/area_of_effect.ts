@@ -12,6 +12,7 @@ const spell: Spell = {
     type,
     probability: cardTypeToProbability(type),
     thumbnail: 'aoe.png',
+    requiresFollowingCard: true,
     description: `
 Adds targets for the following cards to effect by "growing" existing targets
     `,
