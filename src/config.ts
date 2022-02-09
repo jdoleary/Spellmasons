@@ -5,7 +5,7 @@ export const COLLISION_MESH_RADIUS = 32;
 export const LOB_PROJECTILE_SPEED = 600; // in millis
 export const UNIT_SIZE = COLLISION_MESH_RADIUS * 2;
 export const UNIT_BASE_HEALTH = 3;
-export const UNIT_BASE_MANA = 10;
+export const UNIT_BASE_MANA = 100;
 export const UNIT_BASE_DAMAGE = 1;
 // Note: UNIT_MOVE_SPEED cannot be less than
 // UNIT_STOP_MOVING_MARGIN or else it will assume
