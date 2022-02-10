@@ -1,8 +1,6 @@
 ## Current Priorities
 - Thursday:
     - log2n mana modifier
-    - Make alpha video - https://youtu.be/BwnSWuRdszk
-    - Reach out to Stina for music
     - Need pathfinding so you can't just hide and get all your mana back
 ---
 Finish Content:

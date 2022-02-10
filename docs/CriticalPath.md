@@ -16,7 +16,7 @@
 - Mar 27 - Mar 30: SFX
 - [Tutorial](https://www.youtube.com/watch?v=-GV814cWiAw)
 - Monitoring (Sentry.io?)
-- Publicity
+- Publicity: https://buffer.com/pricing?cta=bufferSite-homepage-hero-selectAPlan-1#compare      
 - March 31: Publish on Steamworks
 
 ## Deadlines
