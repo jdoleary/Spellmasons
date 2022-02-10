@@ -1,5 +1,6 @@
-import type { LineSegment } from "./collision/collisionMath";
+import { LineSegment, lineSegmentIntersection } from "./collision/collisionMath";
 import type { Vec2 } from "./commonTypes";
+import * as vectorMath from './collision/vectorMath';
 
 // How pathfinding works:
 // 1. You start with an array of line sgments (walls) that cannot be moved through
@@ -43,11 +44,17 @@ function findConnectionsToHub(hub: Vec2, lineSegmentEnd: Vec2, lineSegments: Lin
         }
 
     }
-    // Order connections by angle to hub
-    // Note: Angles must be normalized
-    point.connections.sort((a, b) => { return normalizeAngle(getAngleBetweenVec2s(point.hub, a)) - normalizeAngle(getAngleBetweenVec2s(point.hub, b)) })
+    sortConnectionsByAngle(point);
     return point;
 }
+
+// Order connections by angle to hub
+// Note: Angles must be normalized
+// mutates point
+function sortConnectionsByAngle(point: Point) {
+    point.connections = point.connections.sort((a, b) => { return normalizeAngle(getAngleBetweenVec2s(point.hub, a)) - normalizeAngle(getAngleBetweenVec2s(point.hub, b)) })
+}
+
 
 function lineSegmentsToPoints(lineSegments: LineSegment[]): Point[] {
     const points: Point[] = [];
@@ -92,29 +99,88 @@ function isAngleBetweenAngles(angle1: number, angle2: number, angle3: number): b
 // Mutates: point
 function split(point: Point, allPoints: Point[]) {
     const { hub, connections } = point;
+    let newConnections: Vec2[] = [];
     for (let i = 0; i < connections.length; i++) {
-        const currentVec2 = connections[0];
+        const currentVec2 = connections[i];
         const nextVec2Index = i + 1 >= connections.length ? 0 : i + 1;
         const nextVec2 = connections[nextVec2Index];
         const angle1 = getAngleBetweenVec2s(hub, currentVec2);
         const angle2 = getAngleBetweenVec2s(hub, nextVec2);
-        console.log('jtest', currentVec2, angle1, nextVec2, angle2);
-        const angleBetweenConnections = angle1 + angle2;
+        // To find the angle between connections the order matters
+        // The angle between 45 degrees and 135 degrees is 90 degrees; while
+        // the angle between 135 degrees and 45 degrees (going all the way around the angle circle)
+        // is 270 degrees.  This is why we adjust angle2
+        const shouldInvertAngle = angle1 > angle2
+        const adjustedAngle2 = shouldInvertAngle ? angle2 + Math.PI * 2 : angle2
+        const angleBetweenConnections = adjustedAngle2 - angle1;
+        // console.log(`|||||||||angles: ${angle1 * 180 / Math.PI} to ${angle2 * 180 / Math.PI} = ${angleBetweenConnections * 180 / Math.PI}`);
+        // console.log(`jtest ${i};${nextVec2Index} Point: ${JSON.stringify(nextVec2)} ${JSON.stringify(hub)} ${JSON.stringify(currentVec2)}; angle: ${angleBetweenConnections} `);
+        // Only angles that are > Math.PI need to be split because that those are the angles
+        // that would make the polygon concave
         if (angleBetweenConnections > Math.PI) {
+            // console.log("jtest split the angle", angleBetweenConnections);
             // Connections must be split
             // TODO greedy: Prefer the biggest split
             // TODO: Get angles between hub and all other points that don't cause
             // an intersection and take the biggest angle
             for (let otherPoint of allPoints) {
+                if (otherPoint.hub == hub) {
+                    // Do not run on self
+                    continue;
+                }
+                console.log('try other point', otherPoint)
                 const angle = getAngleBetweenVec2s(hub, otherPoint.hub);
-                if (isAngleBetweenAngles(angle, angle1, angle2)) {
-                } else {
-                    // Do not consider this point because making a connection wouldn't split the angle
+                // console.log(`between angles: ${angle1 * 180 / Math.PI} ${angle * 180 / Math.PI} ${angle2 * 180 / Math.PI} `);
+                const adjustedAngle1 = shouldInvertAngle ? angle1 - Math.PI * 2 : angle1;
+                // Only consider otherPoints that are between the angles that we are splitting; because if it
+                // wasn't than adding it as a connection wouldn't split the angle that we need to split
+                if (isAngleBetweenAngles(angle, adjustedAngle1, adjustedAngle2)) {
+                    // console.log("angle is between", `${adjustedAngle1} ${angle}`);
+                    // If choosing this angle would create a <= Math.PI angle between it and angle1, allow it:
+                    if (adjustedAngle1 - angle <= Math.PI) {
+                        // console.log("angle is good for point", otherPoint.hub);
+                        // If lineSegment from hub to otherPoint.hub doesn't intersect other connections, allow it:
+                        // TODO: future possible optimization, it currently tests all linesegments twice
+                        if (allPoints.filter(p => {
+                            // Do not include self point or otherPoint
+                            // or else you will get false positive intersections
+                            // which would make the new connection appear invalid
+                            if (p.hub == hub || p.hub == otherPoint.hub) {
+                                return false;
+                            }
+                            return p.connections.some(connection => {
+                                const l1 = { p1: p.hub, p2: connection };
+                                const l2 = { p1: hub, p2: otherPoint.hub }
+                                const intersection = lineSegmentIntersection(l1, l2);
+                                // Ignore intersections with the linesegment we are trying to find a connection to
+                                if (intersection == undefined || vectorMath.equal(intersection, l1.p1) || vectorMath.equal(intersection, l2.p2)) {
+                                    return false
+                                } else {
+                                    console.log('intersection of', l1, l2, 'at', intersection, 'EXCLUDE');
+                                    // Skip if the new connection intersects with a line segment other than
+                                    // the linesegment in question (which is l1)
+                                    return true;
+                                }
+                            });
+                        }).length == 0) {
+                            console.log("it's a keeper", otherPoint.hub);
+                            // It's a keeper, add it to connections
+                            newConnections.push(otherPoint.hub);
+                        }
+
+                    }
                 }
             }
         }
 
     }
+    if (newConnections.length) {
+        point.connections = [...point.connections, ...newConnections];
+        // Resort connections now that there are new connections because the angles have split
+        sortConnectionsByAngle(point);
+    }
+    // TODO, merge connections that are superfluous (divisions that don't prevent it from becoming concave) so we don't have more polygons than we need
+
 }
 export const testables = {
     split,

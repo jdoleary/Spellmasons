@@ -61,8 +61,7 @@ describe("Pathfinding", () => {
         });
 
     });
-    describe("split", () => {
-        // TODO: LEFT OFF:
+    describe.only("split", () => {
         it("should take a Point and add connections to other points until none of the angles between the point.hub and its connections are > 180 degress", () => {
             const hub = { x: 0, y: 0 };
             const c1 = { x: 1, y: 1 };
@@ -75,9 +74,10 @@ describe("Pathfinding", () => {
             ];
             split(point, allPoints);
             const mutatedPoint = { hub: point.hub, connections: [c1, c2, point2.hub] };
+            console.log(point, mutatedPoint);
             expect(point).toEqual(mutatedPoint);
         });
-        it("should prefer the biggest split it can find so we don't have too many unnecessary polygons", () => {
+        it.skip("should prefer the biggest split it can find so we don't have too many unnecessary polygons", () => {
             const hub = { x: 0, y: 0 };
             const c1 = { x: 1, y: 1 };
             const c2 = { x: -1, y: 1 };
@@ -101,9 +101,9 @@ describe("Pathfinding", () => {
             const hub = { x: 0, y: 0 };
             const c1 = { x: 1, y: 0 };
             const c2 = { x: 0, y: 1 };
-            const point: Point = { hub, connections: [c1, c2] };
-            const point2 = { hub: { x: -1, y: -1 }, connections: [] };
-            const point3 = { hub: { x: -1, y: 0 }, connections: [] };
+            const c3 = { x: 1, y: -1 };
+            const point: Point = { hub, connections: [c1, c2, c3] };
+            const point2 = { hub: { x: -1, y: 0 }, connections: [] };
             const blocking1: Vec2 = { x: -0.5, y: -0.5 };
             const blocking2: Vec2 = { x: -0.5, y: 0.5 };
             const allPoints: Point[] = [
@@ -112,10 +112,9 @@ describe("Pathfinding", () => {
                 { hub: blocking2, connections: [blocking1] },
                 // For this test the blocking points are designed to block access to point2
                 point2,
-                point3
             ];
             split(point, allPoints);
-            const mutatedPoint = { hub: point.hub, connections: [c1, c2, blocking1, blocking2, point3.hub] };
+            const mutatedPoint = { hub: point.hub, connections: [blocking1, c3, c1, c2, blocking2] };
             expect(point).toEqual(mutatedPoint);
 
         });
