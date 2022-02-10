@@ -69,6 +69,8 @@ export function create(clientId: string, unitId: string): IPlayer | undefined {
   // Add initial cards to hand
   CardUI.addCardToHand(allCards['damage'], player);
   CardUI.addCardToHand(allCards['heal'], player);
+  CardUI.addCardToHand(allCards['AOE'], player);
+  CardUI.addCardToHand(allCards['chain'], player);
   addHighlighIfPlayerBelongsToCurrentClient(player);
   player.unit.health = PLAYER_BASE_HEALTH;
   player.unit.healthMax = PLAYER_BASE_HEALTH;
