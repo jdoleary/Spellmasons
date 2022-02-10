@@ -746,33 +746,39 @@ export default class Underworld {
 
     for (let index = 0; index < cards.length; index++) {
       const card = cards[index];
-      const animationPromises = [];
+      const animationPromises: Promise<void>[] = [];
       if (card) {
-        // Show the card that's being cast:
-        if (!dryRun) {
-          const image = Image.create(
-            target.x,
-            target.y,
-            card.thumbnail,
-            containerUI,
-          );
-          // Animate icons of spell cards as they are cast:
-          image.sprite.scale.set(1.0);
-          const scaleAnimation = Promise.all([
-            Image.scale(image, 1.4),
-            Image.move(image, image.sprite.x, image.sprite.y - 50),
-            new Promise<void>((resolve) => {
-              // Make the image fade out after a delay
-              setTimeout(() => {
-                resolve();
-                Image.hide(image).then(() => {
-                  Image.cleanup(image);
-                })
-              }, config.MILLIS_PER_SPELL_ANIMATION * .8)
-            })
-          ]);
-          animationPromises.push(scaleAnimation);
+        const animations = []
+        for (let target of effectState.targets) {
+
+          // Show the card that's being cast:
+          if (!dryRun) {
+            const image = Image.create(
+              target.x,
+              target.y,
+              card.thumbnail,
+              containerUI,
+            );
+            // Animate icons of spell cards as they are cast:
+            image.sprite.scale.set(1.0);
+            const scaleAnimation = Promise.all([
+              Image.scale(image, 1.4),
+              Image.move(image, image.sprite.x, image.sprite.y - 50),
+              new Promise<void>((resolve) => {
+                // Make the image fade out after a delay
+                setTimeout(() => {
+                  resolve();
+                  Image.hide(image).then(() => {
+                    Image.cleanup(image);
+                  })
+                }, config.MILLIS_PER_SPELL_ANIMATION * .8)
+              })
+            ]);
+            animations.push(scaleAnimation);
+          }
         }
+        // .then is necessary to convert return type of promise.all to just be void
+        animationPromises.push(Promise.all([animations]).then(() => { }));
         const { targets: previousTargets } = effectState;
         effectState = await card.effect(effectState, dryRun, index);
         // Clear images from previous card before drawing the images from the new card
