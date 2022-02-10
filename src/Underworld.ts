@@ -27,6 +27,7 @@ import { prng, randInt, SeedrandomState } from './rand';
 import { calculateManaCost } from './cards/cardUtils';
 import { moveWithCollisions } from './collision/moveWithCollision';
 import { lineSegmentIntersection, LineSegment } from './collision/collisionMath';
+import { updateCardManaBadges } from './CardUI';
 
 export enum turn_phase {
   PlayerTurns,
@@ -383,6 +384,15 @@ export default class Underworld {
       // Cap manaPerTurn at manaMax
       unit.mana = Math.min(unit.mana, unit.manaMax);
     }
+    // Decrement card usage counts,
+    // This makes spells less expensive
+    for (let p of this.players) {
+      for (let cardId of p.cards) {
+        // Decrement, cap at 0
+        p.cardUsageCounts[cardId] = Math.max(0, p.cardUsageCounts[cardId] - 1);
+      }
+    }
+    updateCardManaBadges();
   }
   hostSendSync() {
     // Only the host should send sync data to clients
@@ -800,11 +810,22 @@ export default class Underworld {
         await Promise.all(animationPromises);
       }
     }
-    const manaCost = calculateManaCost(cards, math.distance(casterPlayer.unit, target));
+    const manaCost = calculateManaCost(cards, math.distance(casterPlayer.unit, target), casterPlayer);
     if (!dryRun) {
       // Apply mana cost to caster
       casterPlayer.unit.mana -= manaCost;
       Unit.syncPlayerHealthManaUI();
+    }
+    if (!dryRun) {
+      // Now that the caster has used the card, increment usage count
+      for (let cardId of cardIds) {
+        if (casterPlayer.cardUsageCounts[cardId] === undefined) {
+          casterPlayer.cardUsageCounts[cardId] = 0;
+        }
+        casterPlayer.cardUsageCounts[cardId]++;
+      }
+      updateCardManaBadges();
+
     }
     if (!dryRun) {
       // Clear spell animations once all cards are done playing their animations

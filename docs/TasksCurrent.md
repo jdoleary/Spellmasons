@@ -1,6 +1,5 @@
 ## Current Priorities
 - Thursday:
-    - log2n mana modifier
     - Need pathfinding so you can't just hide and get all your mana back
 ---
 Finish Content:

@@ -1,10 +1,16 @@
 import type { ICard } from ".";
 import * as config from '../config';
+import type { IPlayer } from "../Player";
 
-export function calculateManaCost(cards: ICard[], distance: number) {
+export function calculateManaCost(cards: ICard[], distance: number, caster: IPlayer) {
     let manaCost = 0;
     for (let card of cards) {
         manaCost += cardTypeToManaCost(card.type);
+        // || 0 protects against multiplying by undefined
+        // + 2 because log2(2) == 1 so 2 should be the starting number for the first time a user casts; so if 
+        // the usage count is 1 (the caster has already used it once), we get log2(3) which is 1.58
+        // console.log(`card used: ${caster.cardUsageCounts[card.id]}, multiplier ${Math.log2((caster.cardUsageCounts[card.id] || 0) + 2)}`);
+        manaCost *= Math.log2((caster.cardUsageCounts[card.id] || 0) + 2);
     }
     // Distance multiplier may not be less than 1
     // because it would be undesireable for spells cast on or close to one's self to be cheaper.

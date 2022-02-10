@@ -203,7 +203,7 @@ export function clickHandler(e: MouseEvent) {
         const cardIds = CardUI.getSelectedCardIds();
         const cards = CardUI.getSelectedCards();
 
-        const manaCost = calculateManaCost(cards, math.distance(selfPlayer.unit, target));
+        const manaCost = calculateManaCost(cards, math.distance(selfPlayer.unit, target), selfPlayer);
         if (manaCost <= selfPlayer.unit.mana) {
           window.pie.sendData({
             type: MESSAGE_TYPES.SPELL,

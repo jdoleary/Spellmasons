@@ -7,7 +7,7 @@ import {
   updateManaCostUI,
   updatePlanningView,
 } from './ui/PlanningView';
-import { cardTypeToManaCost } from './cards/cardUtils';
+import { calculateManaCost, cardTypeToManaCost } from './cards/cardUtils';
 const elCardHolders = document.getElementById('card-holders');
 // Where the non-selected cards are displayed
 const elCardHand = document.getElementById('card-hand');
@@ -371,6 +371,29 @@ function createCardElement(content: Cards.ICard) {
   }
   elCardInner.appendChild(desc);
   return element;
+}
+// Updates the UI mana badge for cards in hand.  To be invoked whenever a player's
+// cardUsageCounts object is modified in order to sync the UI
+export function updateCardManaBadges() {
+  if (window.player) {
+    const cards = Cards.getCardsFromIds(window.player.cards);
+    for (let card of cards) {
+      const manaCost = calculateManaCost([card], 0, window.player);
+      const elBadges = document.querySelectorAll(`.card[data-card-id="${card.id}"] .card-mana-badge`);
+      for (let elBadge of elBadges.values()) {
+        if (elBadge) {
+          elBadge.innerHTML = manaCost.toString();
+          if (window.player.cardUsageCounts[card.id] && window.player.cardUsageCounts[card.id] > 0) {
+            elBadge.classList.add('modified-by-usage')
+          } else {
+            elBadge.classList.remove('modified-by-usage')
+          }
+        } else {
+          console.warn("Err UI: Found card, but could not find associated mana badge element to update mana cost");
+        }
+      }
+    }
+  }
 }
 
 function setTransform(element: HTMLElement, transform: any) {

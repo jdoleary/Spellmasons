@@ -27,6 +27,9 @@ export interface IPlayer {
   cardsAmount: number;
   upgrades: Upgrade.IUpgrade[];
   overworldImage: Image.IImage;
+  // Note: call updateCardManaBadges() any time you modify cardUsageCounts so it will
+  // be reflected in the UI
+  cardUsageCounts: { [cardId: string]: number };
 }
 export function create(clientId: string, unitId: string): IPlayer | undefined {
   const userSource = allUnits[unitId];
@@ -48,6 +51,7 @@ export function create(clientId: string, unitId: string): IPlayer | undefined {
     ),
     inPortal: false,
     cards: [],
+    cardUsageCounts: {},
     cardsAmount: config.START_CARDS_COUNT,
     upgrades: [],
     overworldImage: Image.create(
