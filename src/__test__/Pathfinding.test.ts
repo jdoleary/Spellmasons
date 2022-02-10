@@ -1,7 +1,7 @@
 import type { LineSegment } from '../collision/collisionMath';
 import type { Vec2 } from '../commonTypes';
 import { generateConvexPolygonMesh, findPath, testables, Point } from '../Pathfinding';
-const { split, lineSegmentsToPoints, getAngleBetweenVec2s } = testables;
+const { split, lineSegmentsToPoints, getAngleBetweenVec2s, isAngleBetweenAngles, normalizeAngle } = testables;
 
 describe("Pathfinding", () => {
     describe("generateConvexPolygonMesh", () => { });
@@ -19,21 +19,90 @@ describe("Pathfinding", () => {
             expect(actual).toEqual(expected);
         });
     });
+    describe("normalizeAngle", () => {
+        it("should return an angle between 0 and 360", () => {
+            const angle = Math.PI * 5;
+            const actual = normalizeAngle(angle);
+            const expected = Math.PI;
+            expect(actual).toEqual(expected);
+
+        });
+        it("should not change the angle if it is already between 0 and 360", () => {
+            const angle = Math.PI / 2;
+            const actual = normalizeAngle(angle);
+            const expected = angle;
+            expect(actual).toEqual(expected);
+
+        });
+        it("should handle negative angles", () => {
+            const angle = -Math.PI / 2;
+            const actual = normalizeAngle(angle) * 180 / Math.PI;
+            const expected = 270;
+            expect(actual).toEqual(expected);
+        });
+
+    });
+    describe("isAngleBetweenAngles", () => {
+        it('extra test', () => {
+            const angle1 = -Math.PI / 2;
+            const angle2 = -3 * Math.PI / 2;
+            const angle3 = 7 * Math.PI / 4;
+            const actual = isAngleBetweenAngles(angle1, angle2, angle3);
+            const expected = true;
+            expect(actual).toEqual(expected);
+        });
+        it('should return true if angle1 is between angles 2 and 3', () => {
+            const angle1 = 0;
+            const angle2 = -Math.PI / 2;
+            const angle3 = Math.PI / 2;
+            const actual = isAngleBetweenAngles(angle1, angle2, angle3);
+            const expected = true;
+            expect(actual).toEqual(expected);
+        });
+        it('should return false if angle1 is NOT between angles 2 and 3', () => {
+            const angle1 = 0;
+            const angle2 = Math.PI / 2;
+            const angle3 = -Math.PI / 2;
+            const actual = isAngleBetweenAngles(angle1, angle2, angle3);
+            const expected = false;
+            expect(actual).toEqual(expected);
+        });
+
+    });
     describe("split", () => {
+        // TODO: LEFT OFF:
         it("should take a Point and add connections to other points until none of the angles between the point.hub and its connections are > 180 degress", () => {
             const hub = { x: 0, y: 0 };
-            const c1 = { x: 1, y: 0 };
-            const c2 = { x: 0, y: 1 };
+            const c1 = { x: 1, y: 1 };
+            const c2 = { x: -1, y: 1 };
             const point: Point = { hub, connections: [c1, c2] };
-            const point2 = { hub: { x: -1, y: -1 }, connections: [] };
-            const point3 = { hub: { x: -1, y: 0 }, connections: [] };
+            const point2 = { hub: { x: 0, y: -1 }, connections: [] };
             const allPoints: Point[] = [
                 point,
                 point2,
-                point3
             ];
             split(point, allPoints);
-            const mutatedPoint = { hub: point.hub, connections: [c1, c2, point2.hub, point3.hub] };
+            const mutatedPoint = { hub: point.hub, connections: [c1, c2, point2.hub] };
+            expect(point).toEqual(mutatedPoint);
+        });
+        it("should prefer the biggest split it can find so we don't have too many unnecessary polygons", () => {
+            const hub = { x: 0, y: 0 };
+            const c1 = { x: 1, y: 1 };
+            const c2 = { x: -1, y: 1 };
+            const point: Point = { hub, connections: [c1, c2] };
+            const point_no_connect_1 = { hub: { x: -1, y: -1 }, connections: [] };
+            // We want it to connect to point_desired, so it only has to make 1 extra connection,
+            // even though it could make convex polygons by making all of the possible connections
+            const point_desired = { hub: { x: 0, y: -1 }, connections: [] };
+            const point_no_connect_2 = { hub: { x: 1, y: -1 }, connections: [] };
+            const allPoints: Point[] = [
+                point,
+                point_no_connect_1,
+                point_desired,
+                point_no_connect_2
+            ];
+            split(point, allPoints);
+            const mutatedPoint = { hub: point.hub, connections: [c1, c2, point_desired.hub] };
             expect(point).toEqual(mutatedPoint);
         });
         it("should not create new connections that intersect with another point's connections", () => {
@@ -58,7 +127,19 @@ describe("Pathfinding", () => {
             expect(point).toEqual(mutatedPoint);
 
         });
-        it("should fail gracefully if there are not enclosing points to connect to", () => { });
+        it("should fail gracefully if there are not enclosing points to connect to", () => {
+            const hub = { x: 0, y: 0 };
+            const c1 = { x: 1, y: 0 };
+            const c2 = { x: 0, y: 1 };
+            const point: Point = { hub, connections: [c1, c2] };
+            const allPoints: Point[] = [
+                point,
+            ];
+            split(point, allPoints);
+            const mutatedPoint = { hub: point.hub, connections: [c1, c2] };
+            expect(point).toEqual(mutatedPoint);
+            // TODO: how will a non-split point affect mesh generation? Will it cause it to break?
+        });
 
     });
     describe("lineSegmentsToPoints", () => {

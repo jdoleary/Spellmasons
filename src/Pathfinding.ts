@@ -44,7 +44,8 @@ function findConnectionsToHub(hub: Vec2, lineSegmentEnd: Vec2, lineSegments: Lin
 
     }
     // Order connections by angle to hub
-    point.connections.sort((a, b) => { return getAngleBetweenVec2s(point.hub, a) - getAngleBetweenVec2s(point.hub, b) })
+    // Note: Angles must be normalized
+    point.connections.sort((a, b) => { return normalizeAngle(getAngleBetweenVec2s(point.hub, a)) - normalizeAngle(getAngleBetweenVec2s(point.hub, b)) })
     return point;
 }
 
@@ -69,29 +70,68 @@ function getAngleBetweenVec2s(v1: Vec2, v2: Vec2): number {
     return Math.atan2(dy, dx);
 }
 
+// returns the angle between [0, Math.PI*2)
+function normalizeAngle(radians: number): number {
+    const n1 = radians % (Math.PI * 2);
+    if (n1 < 0) {
+        return n1 + Math.PI * 2;
+    } else {
+        return n1;
+
+    }
+}
+
+// Returns true if angle1 is between angle 2 and 3
+function isAngleBetweenAngles(angle1: number, angle2: number, angle3: number): boolean {
+    // TODO LEFT OFF, At which point do I normalize angles
+    const normalizedAngle1 = normalizeAngle(angle1);
+    const normalizedAngle2 = normalizeAngle(angle2);
+    const normalizedAngle3 = normalizeAngle(angle3);
+    // const adjustedAngle2 = normalizedAngle2 > normalizedAngle3
+    //     ? normalizedAngle2 - Math.PI * 2
+    //     : normalizedAngle2;
+    // console.log("jtest", adjustedAngle2 * 180 / Math.PI, normalizedAngle1 * 180 / Math.PI, normalizedAngle3 * 180 / Math.PI);
+    // return normalizedAngle1 > adjustedAngle2 && normalizedAngle1 < normalizedAngle3;
+    console.log("jtest", normalizedAngle2 * 180 / Math.PI, normalizedAngle1 * 180 / Math.PI, normalizedAngle3 * 180 / Math.PI);
+    return normalizedAngle1 > normalizedAngle2 && normalizedAngle1 < normalizedAngle3;
+}
+
 // If a points connections are at an angle > 180 degrees, it will make a new connection
 // in between that angle so all connections are at angles <= 180 degrees.
 // This function is used for turning concave Polygons into convex polygons
 // Mutates: point
 function split(point: Point, allPoints: Point[]) {
-    // Math.atan2(dy, dx)
-    // Math.atan2(1,1) * 180/Math.PI == 45
     const { hub, connections } = point;
-    for (let connection of connections) {
-        const dy = connection.y - hub.y;
-        const dx = connection.x - hub.x;
-        const angle = Math.atan2(dy, dx);
-        if (angle > Math.PI) {
-            // split
-            // LEFT OFF: this won't work yet, angle should be the angle from the previous connection to this connection,
-            // not just from the hub
+    for (let i = 0; i < connections.length; i++) {
+        const currentVec2 = connections[0];
+        const nextVec2Index = i + 1 >= connections.length ? 0 : i + 1;
+        const nextVec2 = connections[nextVec2Index];
+        const angle1 = getAngleBetweenVec2s(hub, currentVec2);
+        const angle2 = getAngleBetweenVec2s(hub, nextVec2);
+        console.log('jtest', currentVec2, angle1, nextVec2, angle2);
+        const angleBetweenConnections = angle1 + angle2;
+        if (angleBetweenConnections > Math.PI) {
+            // Connections must be split
+            // TODO greedy: Prefer the biggest split
+            // TODO: Get angles between hub and all other points that don't cause
+            // an intersection and take the biggest angle
+            for (let otherPoint of allPoints) {
+                const angle = getAngleBetweenVec2s(hub, otherPoint.hub);
+                if (isAngleBetweenAngles(angle, angle1, angle2)) {
+                } else {
+                    // Do not consider this point because making a connection wouldn't split the angle
+                }
+            }
         }
+
     }
 }
 export const testables = {
     split,
     lineSegmentsToPoints,
-    getAngleBetweenVec2s
+    getAngleBetweenVec2s,
+    isAngleBetweenAngles,
+    normalizeAngle
 }
 // Takes an array of points and turns them into an array of convex polygons for pathfinding.
 // insetSize is the distance that the points of the mesh should be away from the "points".
