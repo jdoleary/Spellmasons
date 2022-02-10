@@ -83,17 +83,7 @@ function normalizeAngle(radians: number): number {
 
 // Returns true if angle1 is between angle 2 and 3
 function isAngleBetweenAngles(angle1: number, angle2: number, angle3: number): boolean {
-    // TODO LEFT OFF, At which point do I normalize angles
-    const normalizedAngle1 = normalizeAngle(angle1);
-    const normalizedAngle2 = normalizeAngle(angle2);
-    const normalizedAngle3 = normalizeAngle(angle3);
-    // const adjustedAngle2 = normalizedAngle2 > normalizedAngle3
-    //     ? normalizedAngle2 - Math.PI * 2
-    //     : normalizedAngle2;
-    // console.log("jtest", adjustedAngle2 * 180 / Math.PI, normalizedAngle1 * 180 / Math.PI, normalizedAngle3 * 180 / Math.PI);
-    // return normalizedAngle1 > adjustedAngle2 && normalizedAngle1 < normalizedAngle3;
-    console.log("jtest", normalizedAngle2 * 180 / Math.PI, normalizedAngle1 * 180 / Math.PI, normalizedAngle3 * 180 / Math.PI);
-    return normalizedAngle1 > normalizedAngle2 && normalizedAngle1 < normalizedAngle3;
+    return angle2 < angle1 && angle1 < angle3;
 }
 
 // If a points connections are at an angle > 180 degrees, it will make a new connection

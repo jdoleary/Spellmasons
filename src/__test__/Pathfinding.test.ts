@@ -43,14 +43,6 @@ describe("Pathfinding", () => {
 
     });
     describe("isAngleBetweenAngles", () => {
-        it('extra test', () => {
-            const angle1 = -Math.PI / 2;
-            const angle2 = -3 * Math.PI / 2;
-            const angle3 = 7 * Math.PI / 4;
-            const actual = isAngleBetweenAngles(angle1, angle2, angle3);
-            const expected = true;
-            expect(actual).toEqual(expected);
-        });
         it('should return true if angle1 is between angles 2 and 3', () => {
             const angle1 = 0;
             const angle2 = -Math.PI / 2;
