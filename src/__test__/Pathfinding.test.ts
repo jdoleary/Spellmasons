@@ -20,7 +20,7 @@ describe("Pathfinding", () => {
         });
     });
     describe("normalizeAngle", () => {
-        it("should return an angle between 0 and 360", () => {
+        it("should return an angle between -Math.PI and Math.PI (positive example)", () => {
             const angle = Math.PI * 5;
             const actual = normalizeAngle(angle);
             const expected = Math.PI;
@@ -34,10 +34,10 @@ describe("Pathfinding", () => {
             expect(actual).toEqual(expected);
 
         });
-        it("should handle negative angles", () => {
-            const angle = -Math.PI / 2;
+        it("should return an angle between -Math.PI and Math.PI (negative example)", () => {
+            const angle = -3 * Math.PI / 2;
             const actual = normalizeAngle(angle) * 180 / Math.PI;
-            const expected = 270;
+            const expected = 90;
             expect(actual).toEqual(expected);
         });
 

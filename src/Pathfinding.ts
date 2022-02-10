@@ -70,10 +70,10 @@ function getAngleBetweenVec2s(v1: Vec2, v2: Vec2): number {
     return Math.atan2(dy, dx);
 }
 
-// returns the angle between [0, Math.PI*2)
+// returns the angle between (-Math.PI, Math.PI]
 function normalizeAngle(radians: number): number {
     const n1 = radians % (Math.PI * 2);
-    if (n1 < 0) {
+    if (n1 <= -Math.PI) {
         return n1 + Math.PI * 2;
     } else {
         return n1;
