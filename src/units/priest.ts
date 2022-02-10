@@ -1,6 +1,7 @@
 import * as Unit from '../Unit';
 import type { UnitSource } from './index';
-import { Vec2, UnitSubType } from '../commonTypes';
+import { UnitSubType } from '../commonTypes';
+import type { Vec2 } from '../Vec';
 import * as math from '../math';
 import { createVisualFlyingProjectile, createVisualLobbingProjectile } from '../Projectile';
 import { allCards } from '../cards';

@@ -269,7 +269,8 @@ function handleLoadGameState(payload: any) {
     .map(Unit.load);
   underworld.players = loadedGameState.players.map(Player.load);
   underworld.pickups = loadedGameState.pickups.map(Pickup.load);
-  underworld.obstacles = loadedGameState.obstacles.map(Obstacle.load);
+  // Filtering out the undefined ensures that this is an array of IObstacle
+  underworld.obstacles = loadedGameState.obstacles.map(Obstacle.load).filter(o => !!o) as Obstacle.IObstacle[];
   // Mark the underworld as "ready"
   readyState.set('underworld', true);
 

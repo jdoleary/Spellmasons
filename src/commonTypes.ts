@@ -1,8 +1,3 @@
-export interface Vec2 {
-  x: number;
-  y: number;
-}
-
 export enum UnitType {
   PLAYER_CONTROLLED,
   AI,

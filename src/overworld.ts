@@ -1,4 +1,4 @@
-import type { Vec2 } from './commonTypes';
+import type { Vec2 } from './Vec';
 import {
   OVERWORLD_HEIGHT,
   OVERWORLD_MAX_WIDTH,

@@ -1,23 +1,20 @@
-# Critical Path
-- DONE(2 days early) Jan 31: Collisions
-- DONE(5 days late) Feb 2: Ensure gamestate desyncs don't occur or are handled when they do
-- MOVING ON FOR NOW (3 days late) Feb 6: Gameplay Balance
-- Feb 7: Youtube Alpha version video / Setup Social Media system
-- Reach out to Stina for music and cover art once you have a trailer
-- Pathfinding (this is core to difficulty so you cant hide and get mana)
-- Feb 17: Finish Content / Endgame
-- Improve spell animations so it's obvious what's happening
-- Revisint SYNCing.  Make it happen on a regular interval to protect against desyncs
-- Feb 18: Menus / Options
-- Feb 25, Feb 26: Electron Security Evaluation
-- Feb 27 - Mar 12: Art in Blender / Shaders / Juice
-- Mar 13 - Mar 19: Open
-- Mar 20 - Mar 26: Music
-- Mar 27 - Mar 30: SFX
+# Critical Path (2nd revision)
+- March 3 - March 5: Pathfinding (this is core to difficulty so you cant hide and get mana)
+- Anytime: Playtest with Brad and Jake
+- March 6: Youtube Alpha version video / Setup Social Media system
+- March 7 - March 11: Finish Content / Endgame
+- March 14, March 15: Improve spell animations so it's obvious what's happening. (Add juice)
+- March 16: Revisit SYNCing.  Make it happen on a regular interval to protect against desyncs
+- Menus / Options
+- Electron Security Evaluation
+- Art in Blender / Shaders / Juice
+- Music
+- SFX
 - [Tutorial](https://www.youtube.com/watch?v=-GV814cWiAw)
 - Monitoring (Sentry.io?)
 - Publicity: https://buffer.com/pricing?cta=bufferSite-homepage-hero-selectAPlan-1#compare      
 - March 31: Publish on Steamworks
+    - Update game tags (is card game still appropriate?)
 
 ## Deadlines
 - My part (gameplay) should be finished end of Feb 2022

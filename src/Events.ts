@@ -1,4 +1,4 @@
-import type { Vec2 } from './commonTypes';
+import type { Vec2 } from './Vec';
 import type { IUnit } from './Unit';
 
 export type onDamage = {

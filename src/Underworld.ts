@@ -17,10 +17,11 @@ import {
   containerUI,
 } from './PixiUtils';
 import floatingText from './FloatingText';
-import { UnitType, Vec2, Faction } from './commonTypes';
+import { UnitType, Faction } from './commonTypes';
+import type { Vec2 } from "./Vec";
 import Events from './Events';
 import { allUnits } from './units';
-import { syncSpellEffectProjection, updatePlanningView, updateTooltipSpellCost } from './ui/PlanningView';
+import { syncSpellEffectProjection, updatePlanningView } from './ui/PlanningView';
 import { ILevel, getEnemiesForAltitude } from './overworld';
 import { setRoute, Route } from './routes';
 import { prng, randInt, SeedrandomState } from './rand';
@@ -28,6 +29,7 @@ import { calculateManaCost } from './cards/cardUtils';
 import { moveWithCollisions } from './collision/moveWithCollision';
 import { lineSegmentIntersection, LineSegment } from './collision/collisionMath';
 import { updateCardManaBadges } from './CardUI';
+import { expandPolygon, mergeOverlappingPolygons, Polygon, PolygonLineSegment, polygonToPolygonLineSegments } from './Polygon';
 
 export enum turn_phase {
   PlayerTurns,
@@ -67,6 +69,9 @@ export default class Underworld {
   pickups: Pickup.IPickup[] = [];
   obstacles: Obstacle.IObstacle[] = [];
   walls: LineSegment[] = [];
+  // pathingWalls are build using walls but are modified to be grown, so that units with thickness
+  // don't clip through walls as they path.  See this.cacheWalls for more
+  pathingWalls: PolygonLineSegment[] = [];
   secondsLeftForTurn: number = config.SECONDS_PER_TURN;
   turnInterval: any;
   level?: ILevel;
@@ -75,6 +80,7 @@ export default class Underworld {
   // know when they've desynced.  Only used for syncronous message processing
   // since only the syncronous messages affect gamestate.
   processedMessageCount: number = 0;
+  debugGraphics: PIXI.Graphics;
 
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
     window.underworld = this;
@@ -88,6 +94,9 @@ export default class Underworld {
     mapGraphics.beginFill(0x795644, 1);
     mapGraphics.drawRect(0, 0, config.MAP_WIDTH, config.MAP_HEIGHT);
     mapGraphics.endFill();
+
+    this.debugGraphics = new PIXI.Graphics();
+    containerBoard.addChild(this.debugGraphics);
 
 
     // TODO: these probably shouldn't get initialized here
@@ -219,11 +228,21 @@ export default class Underworld {
   // TODO:  this will need to be called if objects become
   // destructable
   cacheWalls() {
-    this.walls = this.obstacles.reduce<LineSegment[]>((agg, cur) => agg.concat(cur.walls), [])
-    this.walls.push({ p1: { x: 0, y: 0 }, p2: { x: config.MAP_WIDTH, y: 0 } });
-    this.walls.push({ p1: { x: 0, y: 0 }, p2: { x: 0, y: config.MAP_HEIGHT } });
-    this.walls.push({ p1: { x: config.MAP_WIDTH, y: config.MAP_HEIGHT }, p2: { x: config.MAP_WIDTH, y: 0 } });
-    this.walls.push({ p1: { x: config.MAP_WIDTH, y: config.MAP_HEIGHT }, p2: { x: 0, y: config.MAP_HEIGHT } });
+    const mapBounds: Polygon = {
+      points: [
+        { x: 0, y: 0 },
+        { x: 0, y: config.MAP_HEIGHT },
+        { x: config.MAP_WIDTH, y: config.MAP_HEIGHT },
+        { x: config.MAP_WIDTH, y: 0 },
+      ], inverted: true
+    };
+    const collidablePolygons = [...this.obstacles.map(o => o.bounds), mapBounds];
+    this.walls = collidablePolygons.map(polygonToPolygonLineSegments).flat()
+
+    // Save the pathing walls for the underworld
+    const expandedAndMergedPolygons = mergeOverlappingPolygons(collidablePolygons.map(p => expandPolygon(p, config.COLLISION_MESH_RADIUS)));
+    console.log('Number of polys', expandedAndMergedPolygons.length, expandedAndMergedPolygons)
+    this.pathingWalls = expandedAndMergedPolygons.map(polygonToPolygonLineSegments).flat();
   }
 
   initLevel(level: ILevel) {
@@ -340,6 +359,24 @@ export default class Underworld {
       Obstacle.create(coords.x, coords.y, obstacle);
       // TODO: Ensure the players have a path to the portal
     }
+    // Test obstaclese
+    // [
+    //   {
+    //     "x": 412,
+    //     "y": 548
+    //   },
+    //   {
+    //     "x": 478,
+    //     "y": 474
+    //   },
+    //   {
+    //     "x": 368,
+    //     "y": 472
+    //   },
+    // ]
+    //   .map(({ x, y }) => { Obstacle.create(x, y, Obstacle.obstacleSource[0]) });
+
+
     this.cacheWalls();
 
     // Since a new level changes the existing units, redraw the planningView in
@@ -902,7 +939,7 @@ export default class Underworld {
     Object.assign(this, serialized);
   }
   serializeForSyncronize(): IUnderworldSerializedForSyncronize {
-    const { secondsLeftForTurn, players, units, pickups, obstacles, random, turnInterval, processedMessageCount, ...rest } = this;
+    const { debugGraphics, secondsLeftForTurn, players, units, pickups, obstacles, random, turnInterval, processedMessageCount, ...rest } = this;
     const serialized: IUnderworldSerializedForSyncronize = {
       ...rest,
       // the state of the Random Number Generator
@@ -929,4 +966,4 @@ type IUnderworldSerialized = Omit<Underworld, "players" | "units" | "pickups" | 
 };
 type NonFunctionPropertyNames<T> = { [K in keyof T]: T[K] extends Function ? never : K }[keyof T];
 type UnderworldNonFunctionProperties = Exclude<NonFunctionPropertyNames<Underworld>, null | undefined>;
-type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFunctionProperties>, "secondsLeftForTurn" | "players" | "units" | "pickups" | "obstacles" | "random" | "turnInterval" | "processedMessageCount">;
+type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFunctionProperties>, "secondsLeftForTurn" | "debugGraphics" | "players" | "units" | "pickups" | "obstacles" | "random" | "turnInterval" | "processedMessageCount">;

@@ -1,6 +1,225 @@
-import { LineSegment, findWherePointIntersectLineSegmentAtRightAngle, lineSegmentIntersection, testables } from '../collisionMath';
-const { slope, toStandardForm, intersectionOfLines } = testables;
+import { LineSegment, findWherePointIntersectLineSegmentAtRightAngle, lineSegmentIntersection, testables, isPointOnLineSegment, isCollinearAndOverlapping } from '../collisionMath';
+import type { Vec2 } from '../../Vec';
+const { slope, toStandardForm } = testables;
 describe('collisionMath', () => {
+    describe('isCollinearAndOverlapping', () => {
+        [
+            {
+                description: 'Horizontal lines that are collinear',
+                l1: {
+                    p1: {
+                        x: 0, y: 0
+                    },
+                    p2: {
+                        x: 2, y: 0
+                    }
+                },
+                l2: {
+                    p1: {
+                        x: 1, y: 0
+                    }, p2: {
+                        x: 3, y: 0
+                    }
+                },
+                expected: true
+            },
+            {
+                description: 'Horizontal lines that are collinear and one is large',
+                l1: {
+                    p1: {
+                        x: 0, y: 0
+                    },
+                    p2: {
+                        x: 2, y: 0
+                    }
+                },
+                l2: {
+                    p1: {
+                        x: -10, y: 0
+                    }, p2: {
+                        x: 10, y: 0
+                    }
+                },
+                expected: true
+            },
+            {
+                description: 'Horizontal lines that are collinear and one is large and they point in opposite directions',
+                l1: {
+                    p1: {
+                        x: 0, y: 0
+                    },
+                    p2: {
+                        x: 2, y: 0
+                    }
+                },
+                l2: {
+                    p1: {
+                        x: 10, y: 0
+                    }, p2: {
+                        x: -10, y: 0
+                    }
+                },
+                expected: true
+            },
+            {
+                description: 'Horizontal lines that are collinear but NOT touching because they have a gap inbetween',
+                l1: {
+                    p1: {
+                        x: 0, y: 0
+                    },
+                    p2: {
+                        x: 2, y: 0
+                    }
+                },
+                l2: {
+                    p1: {
+                        x: 3, y: 0
+                    }, p2: {
+                        x: 4, y: 0
+                    }
+                },
+                expected: false
+            },
+            {
+                description: 'Non parallel lines',
+                l1: {
+                    p1: {
+                        x: 0, y: 0
+                    },
+                    p2: {
+                        x: 2, y: 0
+                    }
+                },
+                l2: {
+                    p1: {
+                        x: 0, y: 0
+                    }, p2: {
+                        x: 0, y: 1
+                    }
+                },
+                expected: false
+            },
+            {
+                description: 'Vertical lines that are collinear',
+                l1: {
+                    p1: {
+                        x: 0, y: 0
+                    },
+                    p2: {
+                        x: 0, y: 2
+                    }
+                },
+                l2: {
+                    p1: {
+                        x: 0, y: 1
+                    }, p2: {
+                        x: 0, y: 3
+                    }
+                },
+                expected: true
+            },
+            {
+                description: 'Vertical lines that are collinear but NOT touching because they have a gap inbetween',
+                l1: {
+                    p1: {
+                        x: 0, y: 0
+                    },
+                    p2: {
+                        x: 0, y: 2
+                    }
+                },
+                l2: {
+                    p1: {
+                        x: 0, y: 3
+                    }, p2: {
+                        x: 0, y: 4
+                    }
+                },
+                expected: false
+            },
+            {
+                description: 'lines that are collinear and touching',
+                l1: {
+                    p1: {
+                        x: 0, y: 0
+                    },
+                    p2: {
+                        x: 2, y: 2
+                    }
+                },
+                l2: {
+                    p1: {
+                        x: 1, y: 1
+                    }, p2: {
+                        x: 3, y: 3
+                    }
+                },
+                expected: true
+            },
+            {
+                description: 'lines that are parallel but not collinear nor touching',
+                l1: {
+                    p1: {
+                        x: 0, y: 0
+                    },
+                    p2: {
+                        x: 5, y: 5
+                    }
+                },
+                l2: {
+                    p1: {
+                        x: 1, y: 0
+                    }, p2: {
+                        x: 6, y: 3
+                    }
+                },
+                expected: false
+            },
+            {
+                description: 'lines that are overlapping but are pointing away from each other',
+                l1: {
+                    p1: {
+                        x: 0, y: 0
+                    },
+                    p2: {
+                        x: 2, y: 0
+                    }
+                },
+                l2: {
+                    p1: {
+                        x: 1, y: 0
+                    }, p2: {
+                        x: -1, y: 0
+                    }
+                },
+                expected: true
+            },
+            {
+                description: 'lines that are NOT overlapping and are pointing away from each other',
+                l1: {
+                    p1: {
+                        x: 0, y: 0
+                    },
+                    p2: {
+                        x: 2, y: 0
+                    }
+                },
+                l2: {
+                    p1: {
+                        x: -1, y: 0
+                    }, p2: {
+                        x: -2, y: 0
+                    }
+                },
+                expected: false
+            },
+        ].forEach(({ l1, l2, expected, description }) => {
+            it(`should return ${expected} when lines are touching and collinear for "${description}"`, () => {
+                const actual = isCollinearAndOverlapping(l1, l2);
+                expect(actual).toEqual(expected);
+            });
+        });
+    });
     // describe('intersectionOfLines', () => {
     //     it('should return the point of intersection for 2 lines', () => {
     //         const ls1: LineSegment = { p1: { x: -1, y: -1 }, p2: { x: 1, y: 1 } };
@@ -17,7 +236,6 @@ describe('collisionMath', () => {
     //         const ls2: LineSegment = { p1: { x: 1, y: -1 }, p2: { x: 1, y: 1 } };
     //         const l1 = toStandardForm(ls1);
     //         const l2 = toStandardForm(ls2);
-    //         console.log("jtest ", l2);
     //         const actual = intersectionOfLines(l1, l2);
     //         const expected = { x: 1, y: 0 };
     //         expect(actual).toEqual(expected);
@@ -26,7 +244,73 @@ describe('collisionMath', () => {
     //     it('should handle 2 vertical lines', () => { });
     //     it('should handle overlapping lines', () => { });
     // });
+    describe('isPointOnLineSegment', () => {
+        it('should return true if the point is on the line segment', () => {
+            const ls1: LineSegment = { p1: { x: 0, y: 0 }, p2: { x: 2, y: 2 } };
+            const point: Vec2 = { x: 1, y: 1 };
+            const actual = isPointOnLineSegment(point, ls1);
+            const expected = true;
+            expect(actual).toEqual(expected);
+        });
+        it('should return false if the point is NOT on the line segment', () => {
+            const ls1: LineSegment = { p1: { x: 0, y: 0 }, p2: { x: 200, y: 200 } };
+            const point: Vec2 = { x: 2, y: 1 };
+            const actual = isPointOnLineSegment(point, ls1);
+            const expected = false;
+            expect(actual).toEqual(expected);
+        });
+
+    });
     describe('intersectionOfLineSegments', () => {
+        describe('colinear', () => {
+            it('test co-linear non-overlapping lines', () => {
+                const ls1: LineSegment = { p1: { x: 0, y: 0 }, p2: { x: 1, y: 1 } };
+                const ls2: LineSegment = { p1: { x: 2, y: 2 }, p2: { x: 3, y: 3 } };
+                const actual = lineSegmentIntersection(ls1, ls2);
+                const expected = undefined;
+                expect(actual).toEqual(expected);
+
+            });
+
+            it('test overlapping co-linear vertical lines', () => {
+                const ls1: LineSegment = { p1: { x: 0, y: 0 }, p2: { x: 0, y: 3 } };
+                const ls2: LineSegment = { p1: { x: 0, y: 1 }, p2: { x: 0, y: 4 } };
+                // values 0 { x: 0, y: 1 } { x: 0, y: 3 }
+                const actual = lineSegmentIntersection(ls1, ls2);
+                // Since there are infinite collision points, I want it to return 
+                // the ls1 endpoint that is within ls2, if none, then the ls2 endpoint
+                // within ls1, (prefer p2)
+                const expected = ls1.p2;
+                expect(actual).toEqual(expected);
+
+            });
+            it('test overlapping co-linear horizontal lines', () => {
+                const ls1: LineSegment = { p1: { x: 0, y: 0 }, p2: { x: 3, y: 0 } };
+                const ls2: LineSegment = { p1: { x: 1, y: 0 }, p2: { x: 4, y: 0 } };
+                const actual = lineSegmentIntersection(ls1, ls2);
+                const expected = ls1.p2;
+                expect(actual).toEqual(expected);
+            });
+            describe('if lines are collinear and overlapping but l1.p2 is not within the overlap', () => {
+                it('should return l1.p1 when l1.p1 is within the overlap', () => {
+                    const ls1: LineSegment = { p1: { x: 0, y: 0 }, p2: { x: 2, y: 2 } };
+                    const ls2: LineSegment = { p1: { x: -1, y: -1 }, p2: { x: 1, y: 1 } };
+                    const actual = lineSegmentIntersection(ls1, ls2);
+                    const expected = ls1.p1;
+                    expect(actual).toEqual(expected);
+                });
+                describe('if neither l1.p2 nor l1.p1 are inside the overlap because l2 is entirely inside the overlap', () => {
+                    it('should return l2.p2', () => {
+                        const ls1: LineSegment = { p1: { x: 0, y: 0 }, p2: { x: 4, y: 4 } };
+                        const ls2: LineSegment = { p1: { x: 1, y: 1 }, p2: { x: 2, y: 2 } };
+                        const actual = lineSegmentIntersection(ls1, ls2);
+                        const expected = ls2.p2;
+                        expect(actual).toEqual(expected);
+
+                    });
+                });
+            });
+        });
         it('should return the point of intersection for 2 lines', () => {
             const ls1: LineSegment = { p1: { x: -1, y: -1 }, p2: { x: 1, y: 1 } };
             const ls2: LineSegment = { p1: { x: -1, y: 1 }, p2: { x: 1, y: -1 } };
@@ -39,16 +323,6 @@ describe('collisionMath', () => {
             const ls2: LineSegment = { p1: { x: 1, y: -1 }, p2: { x: 1, y: 1 } };
             const actual = lineSegmentIntersection(ls1, ls2);
             const expected = { x: 1, y: 0 };
-            expect(actual).toEqual(expected);
-        });
-        it('should return undefined for colinear lines that intersect', () => {
-            const ls1: LineSegment = { p1: { x: 0, y: 0 }, p2: { x: 2, y: 0 } };
-            const ls2: LineSegment = { p1: { x: 1, y: 0 }, p2: { x: 3, y: 0 } };
-            const actual = lineSegmentIntersection(ls1, ls2);
-            // Note: Technically there are infinite intersecting points,
-            // but I'm opting to return undefined in this corner case.
-            // I may decide to change this in the future
-            const expected = undefined
             expect(actual).toEqual(expected);
         });
         it('should return undefined for colinear lines that do NOT intersect', () => {

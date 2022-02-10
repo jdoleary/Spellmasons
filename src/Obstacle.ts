@@ -1,5 +1,5 @@
-import type { LineSegment } from './collision/collisionMath';
 import * as Image from './Image';
+import type { Polygon } from './Polygon';
 import { containerBoard } from './PixiUtils';
 export interface IObstacle {
   x: number;
@@ -8,7 +8,7 @@ export interface IObstacle {
   description: string;
   imagePath: string;
   image: Image.IImage;
-  walls: LineSegment[];
+  bounds: Polygon;
 }
 interface IObstacleSource {
   name: string;
@@ -16,24 +16,35 @@ interface IObstacleSource {
   imagePath: string;
 }
 export function create(x: number, y: number, obstacle: IObstacleSource) {
+  const image = Image.create(x, y, obstacle.imagePath, containerBoard);
+  const width = image.sprite.width;
+  const height = image.sprite.height;
+  const _x = x - width / 2;
+  const _y = y - height / 2;
+  const bounds = {
+    points: [
+      { x: _x, y: _y },
+      { x: _x, y: _y + height },
+      { x: _x + width, y: _y + height },
+      { x: _x + width, y: _y },
+    ], inverted: false
+  };
+
+  if (bounds === undefined) {
+    console.error("Cannot create Obstacle, points do not make up a valid polygon");
+    return
+  }
+
   const self: IObstacle = {
     x,
     y,
     name: obstacle.name,
     description: obstacle.description,
     imagePath: obstacle.imagePath,
-    image: Image.create(x, y, obstacle.imagePath, containerBoard),
-    walls: []
+    image,
+    bounds,
   };
-  const width = self.image.sprite.width;
-  const height = self.image.sprite.height;
-  const _x = x - width / 2;
-  const _y = y - height / 2;
-  // add walls for collision
-  self.walls.push({ p1: { x: _x, y: _y }, p2: { x: _x + width, y: _y } });
-  self.walls.push({ p1: { x: _x, y: _y }, p2: { x: _x, y: _y + height } });
-  self.walls.push({ p1: { x: _x + width, y: _y + height }, p2: { x: _x + width, y: _y } });
-  self.walls.push({ p1: { x: _x + width, y: _y + height }, p2: { x: _x, y: _y + height } });
+
 
   self.image.sprite.scale.set(0.0);
   Image.scale(self.image, 1.0);

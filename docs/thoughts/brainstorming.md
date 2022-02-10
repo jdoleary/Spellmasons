@@ -40,3 +40,18 @@ Elements as building blocks for combined spells:
 (via [Charlie Cleveland](https://www.charliecleveland.com/game-pillars/))
 
 - Pillar: Ultimate creativity in Spellcasting
+
+## Pathfinding
+- Need only path around outside corners
+
+Ways to determine which points are branchable 
+  - If the start point of the intersection is coming from the outside (this would solve both problems of inside corners and going through obstacles
+    - requires that memory maintains and understanding of inside and outside
+    - works for non squares
+  - Collision points on the same shape could reject all but the closest corners (only solves problem 2)
+    - requires that memory maintains a list of shapes
+
+  - If there is an intersection keep adding next and prev to 2 new paths until the next line doesn't collide with the same shape
+
+### 2022-03-05
+- What if I didn't need verticies to be doubly linked? and I could just determine the normal by iterating the polygon? and store in the Polygon structure if it's inverted or not

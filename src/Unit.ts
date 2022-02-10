@@ -1,11 +1,10 @@
-import * as PIXI from 'pixi.js';
 import * as config from './config';
-import floatingText from './FloatingText';
 import * as Image from './Image';
 import * as math from './math';
 import { distance } from './math';
 import { addPixiSprite, containerUnits } from './PixiUtils';
-import { Vec2, UnitSubType, UnitType, Faction } from './commonTypes';
+import { UnitSubType, UnitType, Faction } from './commonTypes';
+import type { Vec2 } from './Vec';
 import Events from './Events';
 import makeAllRedShader from './shaders/selected';
 import { addLerpable } from './lerpList';

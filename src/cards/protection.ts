@@ -1,6 +1,7 @@
 import type { Spell } from '.';
 import * as Unit from '../Unit'
-import { UnitType, Vec2 } from '../commonTypes';
+import { UnitType } from '../commonTypes';
+import type { Vec2 } from '../Vec';
 import { CardType, cardTypeToProbability } from './cardUtils';
 
 const type = CardType.Special;
