@@ -1,11 +1,13 @@
 ## Current Priorities
 - Thursday:
-    - Make alpha video
+    - log2n mana modifier
+    - Make alpha video - https://youtu.be/BwnSWuRdszk
     - Reach out to Stina for music
     - Need pathfinding so you can't just hide and get all your mana back
 ---
 Finish Content:
 - More spells:
+    - Haste modifier lets you move farther
     - Spells that summon walls or pillars to prevent enemy movement (maybe to trap them)
     - Push spells
         - If you push a unit into a portal they appear in the next level
