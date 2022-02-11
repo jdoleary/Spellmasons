@@ -1,7 +1,7 @@
 import type { LineSegment } from '../collision/collisionMath';
 import type { Vec2 } from '../commonTypes';
 import { generateConvexPolygonMesh, findPath, testables, Point } from '../Pathfinding';
-const { split, lineSegmentsToPoints, getAngleBetweenVec2s, isAngleBetweenAngles, normalizeAngle } = testables;
+const { split, lineSegmentsToPoints, getAngleBetweenVec2s, isAngleBetweenAngles, normalizeAngle, counterClockwiseAngle } = testables;
 
 describe("Pathfinding", () => {
     describe("generateConvexPolygonMesh", () => { });
@@ -9,6 +9,20 @@ describe("Pathfinding", () => {
         describe("given a pathing mesh", () => {
             it('should return Vec2[] of a path that, when followed, leads from the "from" Vec2 to the "to" Vec2', () => { });
         });
+    });
+    describe('counterClockwiseAngle', () => {
+        const testPairs = [
+            [135, -135, 90],
+            [-45, 45, 90],
+            [45, -45, 270],
+        ];
+        for (let [from, to, expected] of testPairs) {
+            it(`should return the angle going counterclockwise between the angles ${from} and ${to}`, () => {
+                const actual = counterClockwiseAngle(from * Math.PI / 180, to * Math.PI / 180) * 180 / Math.PI;
+                expect(actual).toEqual(expected);
+            });
+        }
+
     });
     describe("getAngleBetweenVec2s", () => {
         it('should find the angle in radians between 2 Vec2s', () => {
@@ -61,7 +75,7 @@ describe("Pathfinding", () => {
         });
 
     });
-    describe.only("split", () => {
+    describe("split", () => {
         it("should take a Point and add connections to other points until none of the angles between the point.hub and its connections are > 180 degress", () => {
             const hub = { x: 0, y: 0 };
             const c1 = { x: 1, y: 1 };
@@ -73,11 +87,10 @@ describe("Pathfinding", () => {
                 point2,
             ];
             split(point, allPoints);
-            const mutatedPoint = { hub: point.hub, connections: [c1, c2, point2.hub] };
-            console.log(point, mutatedPoint);
+            const mutatedPoint = { hub: point.hub, connections: [point2.hub, c1, c2,] };
             expect(point).toEqual(mutatedPoint);
         });
-        it.skip("should prefer the biggest split it can find so we don't have too many unnecessary polygons", () => {
+        it("should prefer the biggest split it can find so we don't have too many unnecessary polygons", () => {
             const hub = { x: 0, y: 0 };
             const c1 = { x: 1, y: 1 };
             const c2 = { x: -1, y: 1 };
@@ -94,8 +107,8 @@ describe("Pathfinding", () => {
                 point_no_connect_2
             ];
             split(point, allPoints);
-            const mutatedPoint = { hub: point.hub, connections: [c1, c2, point_desired.hub] };
-            expect(point).toEqual(mutatedPoint);
+            const expectedPoint = { hub: point.hub, connections: [point_desired.hub, c1, c2,] };
+            expect(point).toEqual(expectedPoint);
         });
         it("should not create new connections that intersect with another point's connections", () => {
             const hub = { x: 0, y: 0 };
@@ -114,8 +127,8 @@ describe("Pathfinding", () => {
                 point2,
             ];
             split(point, allPoints);
-            const mutatedPoint = { hub: point.hub, connections: [blocking1, c3, c1, c2, blocking2] };
-            expect(point).toEqual(mutatedPoint);
+            const expectedPoint = { hub: point.hub, connections: [c3, c2, blocking2] };
+            expect(point).toEqual(expectedPoint);
 
         });
         it("should fail gracefully if there are not enclosing points to connect to", () => {
@@ -127,8 +140,8 @@ describe("Pathfinding", () => {
                 point,
             ];
             split(point, allPoints);
-            const mutatedPoint = { hub: point.hub, connections: [c1, c2] };
-            expect(point).toEqual(mutatedPoint);
+            const expectedPoint = { hub: point.hub, connections: [c1, c2] };
+            expect(point).toEqual(expectedPoint);
             // TODO: how will a non-split point affect mesh generation? Will it cause it to break?
         });
 
