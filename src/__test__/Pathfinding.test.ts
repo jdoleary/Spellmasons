@@ -4,9 +4,36 @@ import { generateConvexPolygonMesh, findPath, testables, Point } from '../Pathfi
 const { split, lineSegmentsToPoints, getAngleBetweenVec2s, isAngleBetweenAngles, normalizeAngle, counterClockwiseAngle } = testables;
 
 describe("Pathfinding", () => {
-    describe("generateConvexPolygonMesh", () => { });
+    describe("generateConvexPolygonMesh", () => {
+        // TODO
+        it.only('should generate a mesh of convex polygons from a list of lineSegments', () => {
+            const lineSegments: LineSegment[] = [
+                // Outside bounds
+                { p1: { x: 0, y: 0 }, p2: { x: 4, y: 0 } },
+                { p1: { x: 4, y: 0 }, p2: { x: 4, y: 4 } },
+                { p1: { x: 4, y: 4 }, p2: { x: 0, y: 4 } },
+                { p1: { x: 0, y: 4 }, p2: { x: 0, y: 0 } },
+
+                { p1: { x: 1, y: 2 }, p2: { x: 1, y: 1 } },
+                { p1: { x: 1, y: 1 }, p2: { x: 2, y: 1 } },
+                { p1: { x: 2, y: 1 }, p2: { x: 2, y: 2 } },
+                { p1: { x: 2, y: 2 }, p2: { x: 1, y: 2 } },
+            ];
+            const points = generateConvexPolygonMesh(lineSegments, 0);
+            expect(points[9]).toEqual({
+                hub: { x: 1, y: 1 }, connections: [
+                    { x: 0, y: 0 },
+                    { x: 2, y: 1 },
+                    { x: 1, y: 2 }
+                ]
+            });
+            // TODO it shouldn't be able to remove it's source connections
+        });
+        it('should support inset', () => { });
+    });
     describe("findPath", () => {
         describe("given a pathing mesh", () => {
+            // TODO
             it('should return Vec2[] of a path that, when followed, leads from the "from" Vec2 to the "to" Vec2', () => { });
         });
     });
@@ -15,6 +42,7 @@ describe("Pathfinding", () => {
             [135, -135, 90],
             [-45, 45, 90],
             [45, -45, 270],
+            [-90, 355, 85]
         ];
         for (let [from, to, expected] of testPairs) {
             it(`should return the angle going counterclockwise between the angles ${from} and ${to}`, () => {
@@ -57,23 +85,20 @@ describe("Pathfinding", () => {
 
     });
     describe("isAngleBetweenAngles", () => {
-        it('should return true if angle1 is between angles 2 and 3', () => {
-            const angle1 = 0;
-            const angle2 = -Math.PI / 2;
-            const angle3 = Math.PI / 2;
-            const actual = isAngleBetweenAngles(angle1, angle2, angle3);
-            const expected = true;
-            expect(actual).toEqual(expected);
-        });
-        it('should return false if angle1 is NOT between angles 2 and 3', () => {
-            const angle1 = 0;
-            const angle2 = Math.PI / 2;
-            const angle3 = -Math.PI / 2;
-            const actual = isAngleBetweenAngles(angle1, angle2, angle3);
-            const expected = false;
-            expect(actual).toEqual(expected);
-        });
+        const testGroups: [number, number, number, boolean][] = [
+            [0, -Math.PI / 2, Math.PI / 2, true],
+            [2 * Math.PI - 0.1, -Math.PI / 2, Math.PI / 2, true],
+            [0, Math.PI / 2, -Math.PI / 2, false],
+            [Math.PI, Math.PI / 2, -Math.PI / 2, true],
+            [-3 * Math.PI / 4, Math.PI / 2, 0, true],
 
+        ];
+        for (let [testAngle, angleLowerBound, angleUpperBound, expected] of testGroups) {
+            it(`should return ${expected} for ${testAngle * 180 / Math.PI} between ${angleLowerBound * 180 / Math.PI} and ${angleUpperBound * 180 / Math.PI}`, () => {
+                const actual = isAngleBetweenAngles(testAngle, angleLowerBound, angleUpperBound);
+                expect(actual).toEqual(expected);
+            });
+        }
     });
     describe("split", () => {
         it("should take a Point and add connections to other points until none of the angles between the point.hub and its connections are > 180 degress", () => {
@@ -109,6 +134,16 @@ describe("Pathfinding", () => {
             split(point, allPoints);
             const expectedPoint = { hub: point.hub, connections: [point_desired.hub, c1, c2,] };
             expect(point).toEqual(expectedPoint);
+        });
+        it.only("should never remove it's original connections during optimization", () => {
+            // This is because those are the actual walls
+            const point = {
+                hub: { x: 1, y: 1 },
+                // New connections
+                // connections: [{ x: 0, y: 0 }, { x: 2, y: 1 }, { x: 1, y: 2 }, { x: 0, y: 4 }]
+                // Original connections:
+                connections: [{ x: 2, y: 1 }, { x: 1, y: 2 }]
+            }
         });
         it("should not create new connections that intersect with another point's connections", () => {
             const hub = { x: 0, y: 0 };
