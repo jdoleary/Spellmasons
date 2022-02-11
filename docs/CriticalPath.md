@@ -18,6 +18,7 @@
 - Monitoring (Sentry.io?)
 - Publicity: https://buffer.com/pricing?cta=bufferSite-homepage-hero-selectAPlan-1#compare      
 - March 31: Publish on Steamworks
+    - Update game tags (is card game still appropriate?)
 
 ## Deadlines
 - My part (gameplay) should be finished end of Feb 2022

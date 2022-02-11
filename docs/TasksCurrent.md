@@ -1,6 +1,6 @@
 ## Current Priorities
-- Thursday:
-    - Need pathfinding so you can't just hide and get all your mana back
+- Pathfinding: Need pathfinding so you can't just hide and get all your mana back
+- Setup Buffer with social medias and start a following
 ---
 Finish Content:
 - More spells:
