@@ -29,7 +29,7 @@ export interface Point {
 
 // Called by lineSegmentToPoints
 function findConnectionsToHub(hub: Vec2, lineSegmentEnd: Vec2, lineSegments: LineSegment[]): Point {
-    const point: Point = { hub, connections: [lineSegmentEnd] };
+    const point: Point = { hub, connections: [vectorMath.clone(lineSegmentEnd)] };
     for (let otherSegment of lineSegments) {
         if ((hub == otherSegment.p1 && lineSegmentEnd == otherSegment.p2) || (hub == otherSegment.p2 && lineSegmentEnd == otherSegment.p1)) {
             // Do not process the same segment or else you'll get bad results
@@ -40,11 +40,11 @@ function findConnectionsToHub(hub: Vec2, lineSegmentEnd: Vec2, lineSegments: Lin
         // Find connections to p1:
         if (vectorMath.equal(otherSegment.p1, hub)) {
             // If p1 is the same as hub, then p2 is a connection
-            point.connections.push(otherSegment.p2);
+            point.connections.push(vectorMath.clone(otherSegment.p2));
         }
         if (vectorMath.equal(otherSegment.p2, hub)) {
             // If p2 is the same as hub, then p1 is a connection
-            point.connections.push(otherSegment.p1);
+            point.connections.push(vectorMath.clone(otherSegment.p1));
         }
 
     }
@@ -241,9 +241,11 @@ export function generateConvexPolygonMesh(lineSegments: LineSegment[], insetSize
     // (should be exactly 2 per hub), I should just be able to project
     // the hub on the normal vector away from each connection for the magnitude of
     // each connection
+    // --
+    // Batch adjustedPoints and then adjust them all at once
+    const adjustedPointPairs: [Point, Vec2][] = [];
     for (let point of points) {
-        const startVec2 = { x: point.hub.x, y: point.hub.y };
-        const projectToPoint = { x: point.hub.x, y: point.hub.y }
+        const projectToPoint = vectorMath.clone(point.hub);
         for (let connection of point.connections) {
             const dx = point.hub.x - connection.x;
             const dy = point.hub.y - connection.y;
@@ -257,26 +259,32 @@ export function generateConvexPolygonMesh(lineSegments: LineSegment[], insetSize
         const relativeAdjustedPoint = similarTriangles(X, Y, D, d);
         const _adjustedPoint = vectorMath.subtract(point.hub, relativeAdjustedPoint);
         const adjustedPoint = { x: Math.round(_adjustedPoint.x), y: Math.round(_adjustedPoint.y) };
+        adjustedPointPairs.push([point, adjustedPoint]);
 
+    }
+    // Batch update points to adjust for inset
+    for (let [point, adjustedPoint] of adjustedPointPairs) {
         // Update connections to the hub that's about to change:
         for (let otherPoint of points) {
             // Exclude self
-            if (vectorMath.equal(otherPoint.hub, startVec2)) {
+            if (vectorMath.equal(otherPoint.hub, point.hub)) {
                 continue;
             }
             for (let connection of otherPoint.connections) {
-                if (vectorMath.equal(connection, startVec2)) {
+                if (vectorMath.equal(connection, point.hub)) {
                     connection.x = adjustedPoint.x;
                     connection.y = adjustedPoint.y;
                 }
             }
         }
         // Update hub
-        point.hub = adjustedPoint;
+        point.hub.x = adjustedPoint.x;
+        point.hub.y = adjustedPoint.y;
+
     }
 
     // test print
-    // points.map(p => { console.log(p.hub, JSON.stringify(p.connections)) });
+    // points.map(p => { console.log('test print', p.hub, JSON.stringify(p.connections)) });
 
     // split points
     points.forEach(p => split(p, points));
