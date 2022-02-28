@@ -64,10 +64,10 @@ function lineSegmentsToPoints(lineSegments: LineSegment[]): Point[] {
     for (let segment of lineSegments) {
         const { p1, p2 } = segment;
         // Do not generate a point for a hub that has already been processed
-        if (!points.find(p => p.hub == p1)) {
+        if (!points.find(p => vectorMath.equal(p.hub, p1))) {
             points.push(findConnectionsToHub(p1, p2, lineSegments));
         }
-        if (!points.find(p => p.hub == p2)) {
+        if (!points.find(p => vectorMath.equal(p.hub, p2))) {
             points.push(findConnectionsToHub(p2, p1, lineSegments));
         }
     }
