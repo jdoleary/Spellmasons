@@ -60,7 +60,9 @@ function sortConnectionsByAngle(point: Point) {
 }
 
 
-function lineSegmentsToPoints(lineSegments: LineSegment[]): Point[] {
+function lineSegmentsToPoints(_lineSegments: LineSegment[]): Point[] {
+    // Clone points to prevent mutating the args
+    const lineSegments = _lineSegments.map(({ p1, p2 }) => ({ p1: vectorMath.clone(p1), p2: vectorMath.clone(p2) }));
     const points: Point[] = [];
     for (let segment of lineSegments) {
         const { p1, p2 } = segment;

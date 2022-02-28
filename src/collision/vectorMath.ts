@@ -26,3 +26,7 @@ export function crossproduct(p1: Vec2, p2: Vec2): number {
 export function equal(p1: Vec2, p2: Vec2): boolean {
     return p1.x == p2.x && p1.y == p2.y;
 }
+
+export function clone(p: Vec2): Vec2 {
+    return { x: p.x, y: p.y };
+}
