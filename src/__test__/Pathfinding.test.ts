@@ -19,7 +19,6 @@ describe("Pathfinding", () => {
                 { p1: { x: 2, y: 2 }, p2: { x: 1, y: 2 } },
             ];
             const points = generateConvexPolygonMesh(lineSegments, 0);
-            console.log('jtest connections', points[9].connections);
             expect(points[9].hub).toEqual({ x: 1, y: 1 });
             expect(points[9].connections).toEqual([
                 { x: 0, y: 0 },
@@ -183,7 +182,7 @@ describe("Pathfinding", () => {
                 point2,
             ];
             split(point, allPoints);
-            const expectedPoint = { hub: point.hub, connections: [c3, c2, blocking2] };
+            const expectedPoint = { hub: point.hub, connections: [c3, c1, c2, blocking2] };
             expect(point).toEqual(expectedPoint);
 
         });
