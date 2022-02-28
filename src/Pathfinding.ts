@@ -1,6 +1,7 @@
 import { LineSegment, lineSegmentIntersection } from "./collision/collisionMath";
 import type { Vec2 } from "./commonTypes";
 import * as vectorMath from './collision/vectorMath';
+import { distance, similarTriangles } from "./math";
 
 const TO_DEG = 180 / Math.PI;
 // How pathfinding works:
@@ -230,12 +231,63 @@ export const testables = {
 // through.
 // export function generateConvexPolygonMesh(lineSegments: LineSegment[], insetSize: number): Polygon[] {
 export function generateConvexPolygonMesh(lineSegments: LineSegment[], insetSize: number): Point[] {
+
     const points = lineSegmentsToPoints(lineSegments);
+    // Adjust points according to inset:
+    // --
+    // Since at this stage points just have their original connections
+    // (should be exactly 2 per hub), I should just be able to project
+    // the hub on the normal vector away from each connection for the magnitude of
+    // each connection
+    for (let point of points) {
+        const startVec2 = { x: point.hub.x, y: point.hub.y };
+        const projectToPoint = { x: point.hub.x, y: point.hub.y }
+        for (let connection of point.connections) {
+            const dx = point.hub.x - connection.x;
+            const dy = point.hub.y - connection.y;
+            projectToPoint.x -= dx;
+            projectToPoint.y -= dy;
+        }
+        const X = projectToPoint.x - point.hub.x;
+        const Y = projectToPoint.y - point.hub.y;
+        const D = distance(projectToPoint, point.hub);
+        const d = insetSize;
+        const relativeAdjustedPoint = similarTriangles(X, Y, D, d);
+        const _adjustedPoint = vectorMath.subtract(point.hub, relativeAdjustedPoint);
+        const adjustedPoint = { x: Math.round(_adjustedPoint.x), y: Math.round(_adjustedPoint.y) };
+
+        // Update connections to the hub that's about to change:
+        for (let otherPoint of points) {
+            // Exclude self
+            if (vectorMath.equal(otherPoint.hub, startVec2)) {
+                continue;
+            }
+            for (let connection of otherPoint.connections) {
+                if (vectorMath.equal(connection, startVec2)) {
+                    connection.x = adjustedPoint.x;
+                    connection.y = adjustedPoint.y;
+                }
+            }
+        }
+        // Update hub
+        point.hub = adjustedPoint;
+    }
+
     // test print
     // points.map(p => { console.log(p.hub, JSON.stringify(p.connections)) });
 
     // split points
     points.forEach(p => split(p, points));
+
+    // Optimize further
+    // Given, each line between a hub and a connection,
+    // there are at most 2 polygons attached, if without the line
+    // both polygons make up a convex polygon the line can be removed:
+    // Note: Can this replace split()'s optimization (which may be broken under
+    // certain circumstances.
+    // TODO: Develop this
+
+
     return points;
 }
 
