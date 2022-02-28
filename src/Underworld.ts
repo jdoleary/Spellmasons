@@ -28,6 +28,7 @@ import { calculateManaCost } from './cards/cardUtils';
 import { moveWithCollisions } from './collision/moveWithCollision';
 import { lineSegmentIntersection, LineSegment } from './collision/collisionMath';
 import { updateCardManaBadges } from './CardUI';
+import { generateConvexPolygonMesh } from './Pathfinding';
 
 export enum turn_phase {
   PlayerTurns,
@@ -75,6 +76,7 @@ export default class Underworld {
   // know when they've desynced.  Only used for syncronous message processing
   // since only the syncronous messages affect gamestate.
   processedMessageCount: number = 0;
+  debugGraphics: PIXI.Graphics;
 
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
     window.underworld = this;
@@ -88,6 +90,10 @@ export default class Underworld {
     mapGraphics.beginFill(0x795644, 1);
     mapGraphics.drawRect(0, 0, config.MAP_WIDTH, config.MAP_HEIGHT);
     mapGraphics.endFill();
+
+    this.debugGraphics = new PIXI.Graphics();
+    containerBoard.addChild(this.debugGraphics);
+    this.debugGraphics.lineStyle(3, 0x00aabb, 1);
 
 
     // TODO: these probably shouldn't get initialized here
@@ -224,6 +230,15 @@ export default class Underworld {
     this.walls.push({ p1: { x: 0, y: 0 }, p2: { x: 0, y: config.MAP_HEIGHT } });
     this.walls.push({ p1: { x: config.MAP_WIDTH, y: config.MAP_HEIGHT }, p2: { x: config.MAP_WIDTH, y: 0 } });
     this.walls.push({ p1: { x: config.MAP_WIDTH, y: config.MAP_HEIGHT }, p2: { x: 0, y: config.MAP_HEIGHT } });
+    const points = generateConvexPolygonMesh(this.walls, 10);
+    for (let p of points) {
+      const { hub, connections } = p;
+      for (let c of connections) {
+        this.debugGraphics.moveTo(hub.x, hub.y);
+        this.debugGraphics.lineTo(c.x, c.y);
+      }
+    }
+
   }
 
   initLevel(level: ILevel) {
@@ -307,39 +322,53 @@ export default class Underworld {
       }
     }
 
-    for (let i = 0; i < config.NUM_OBSTACLES_PER_LEVEL; i++) {
-      let badLocation = false;
-      // Ensure obstacles don't spawn in the column that spawns players:
-      const coords = this.getRandomCoordsWithinBounds({ xMin: 2 * config.UNIT_SIZE, yMin: config.COLLISION_MESH_RADIUS, xMax: config.MAP_WIDTH - config.COLLISION_MESH_RADIUS, yMax: config.MAP_HEIGHT - config.COLLISION_MESH_RADIUS });
-      for (let u of this.units) {
-        if (math.distance(u, coords) < config.COLLISION_MESH_RADIUS * 2) {
-          // Abort spawning the obstacle if it collides with a unit
-          badLocation = true;
-          break;
-        }
+    // for (let i = 0; i < config.NUM_OBSTACLES_PER_LEVEL; i++) {
+    //   let badLocation = false;
+    //   // Ensure obstacles don't spawn in the column that spawns players:
+    //   const coords = this.getRandomCoordsWithinBounds({ xMin: 2 * config.UNIT_SIZE, yMin: config.COLLISION_MESH_RADIUS, xMax: config.MAP_WIDTH - config.COLLISION_MESH_RADIUS, yMax: config.MAP_HEIGHT - config.COLLISION_MESH_RADIUS });
+    //   for (let u of this.units) {
+    //     if (math.distance(u, coords) < config.COLLISION_MESH_RADIUS * 2) {
+    //       // Abort spawning the obstacle if it collides with a unit
+    //       badLocation = true;
+    //       break;
+    //     }
+    //   }
+    //   for (let p of this.pickups) {
+    //     if (math.distance(p, coords) < config.COLLISION_MESH_RADIUS * 2) {
+    //       // Abort spawning the obstacle if it collides with a pickup
+    //       badLocation = true;
+    //       break;
+    //     }
+    //   }
+    //   // Do not create if it didn't choose a good location
+    //   // For now, to prevent obstacles from trapping units when they
+    //   // spawn, just skip making one if the coordinates collide with
+    //   // a unit
+    //   if (badLocation) {
+    //     continue;
+    //   }
+    //   const randomIndex = randInt(this.random,
+    //     0,
+    //     Obstacle.obstacleSource.length - 1,
+    //   );
+    //   const obstacle = Obstacle.obstacleSource[randomIndex];
+    //   Obstacle.create(coords.x, coords.y, obstacle);
+    //   // TODO: Ensure the players have a path to the portal
+    // }
+    [
+      {
+        "x": 413,
+        "y": 306
+      },
+      {
+        "x": 500,
+        "y": 429
+      },
+      {
+        "x": 722,
+        "y": 559
       }
-      for (let p of this.pickups) {
-        if (math.distance(p, coords) < config.COLLISION_MESH_RADIUS * 2) {
-          // Abort spawning the obstacle if it collides with a pickup
-          badLocation = true;
-          break;
-        }
-      }
-      // Do not create if it didn't choose a good location
-      // For now, to prevent obstacles from trapping units when they
-      // spawn, just skip making one if the coordinates collide with
-      // a unit
-      if (badLocation) {
-        continue;
-      }
-      const randomIndex = randInt(this.random,
-        0,
-        Obstacle.obstacleSource.length - 1,
-      );
-      const obstacle = Obstacle.obstacleSource[randomIndex];
-      Obstacle.create(coords.x, coords.y, obstacle);
-      // TODO: Ensure the players have a path to the portal
-    }
+    ].map(({ x, y }) => { Obstacle.create(x, y, Obstacle.obstacleSource[0]) });
     this.cacheWalls();
 
     // Since a new level changes the existing units, redraw the planningView in
@@ -902,7 +931,7 @@ export default class Underworld {
     Object.assign(this, serialized);
   }
   serializeForSyncronize(): IUnderworldSerializedForSyncronize {
-    const { secondsLeftForTurn, players, units, pickups, obstacles, random, turnInterval, processedMessageCount, ...rest } = this;
+    const { debugGraphics, secondsLeftForTurn, players, units, pickups, obstacles, random, turnInterval, processedMessageCount, ...rest } = this;
     const serialized: IUnderworldSerializedForSyncronize = {
       ...rest,
       // the state of the Random Number Generator
@@ -929,4 +958,4 @@ type IUnderworldSerialized = Omit<Underworld, "players" | "units" | "pickups" | 
 };
 type NonFunctionPropertyNames<T> = { [K in keyof T]: T[K] extends Function ? never : K }[keyof T];
 type UnderworldNonFunctionProperties = Exclude<NonFunctionPropertyNames<Underworld>, null | undefined>;
-type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFunctionProperties>, "secondsLeftForTurn" | "players" | "units" | "pickups" | "obstacles" | "random" | "turnInterval" | "processedMessageCount">;
+type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFunctionProperties>, "secondsLeftForTurn" | "debugGraphics" | "players" | "units" | "pickups" | "obstacles" | "random" | "turnInterval" | "processedMessageCount">;
