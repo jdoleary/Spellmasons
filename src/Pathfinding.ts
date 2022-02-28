@@ -104,6 +104,7 @@ function isAngleBetweenAngles(angle1: number, angle2: number, angle3: number): b
 // Mutates: point
 function split(point: Point, allPoints: Point[]) {
     const { hub, connections } = point;
+    const originalConnections = point.connections;
     // console.log('split', hub, connections);
     let newConnections: Vec2[] = [];
     // Search for new connections
@@ -197,6 +198,11 @@ function split(point: Point, allPoints: Point[]) {
             const prevVec2Index = i - 1 < 0 ? point.connections.length - 1 : i - 1;
             const prevVec2 = point.connections[prevVec2Index];
             const currentVec2 = point.connections[i];
+            if (originalConnections.some(p => vectorMath.equal(currentVec2, p))) {
+                // Do not remove original connections.  The original connections are walls
+                // and should not be "optimized" away since they MUST remain connections.
+                continue;
+            }
             const nextVec2Index = i + 1 >= point.connections.length ? 0 : i + 1;
             const nextVec2 = point.connections[nextVec2Index];
             const angle1 = getAngleBetweenVec2s(hub, prevVec2);

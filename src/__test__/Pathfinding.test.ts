@@ -5,8 +5,7 @@ const { split, lineSegmentsToPoints, getAngleBetweenVec2s, isAngleBetweenAngles,
 
 describe("Pathfinding", () => {
     describe("generateConvexPolygonMesh", () => {
-        // TODO
-        it.only('should generate a mesh of convex polygons from a list of lineSegments', () => {
+        it('should generate a mesh of convex polygons from a list of lineSegments', () => {
             const lineSegments: LineSegment[] = [
                 // Outside bounds
                 { p1: { x: 0, y: 0 }, p2: { x: 4, y: 0 } },
@@ -20,14 +19,13 @@ describe("Pathfinding", () => {
                 { p1: { x: 2, y: 2 }, p2: { x: 1, y: 2 } },
             ];
             const points = generateConvexPolygonMesh(lineSegments, 0);
-            expect(points[9]).toEqual({
-                hub: { x: 1, y: 1 }, connections: [
-                    { x: 0, y: 0 },
-                    { x: 2, y: 1 },
-                    { x: 1, y: 2 }
-                ]
-            });
-            // TODO it shouldn't be able to remove it's source connections
+            console.log('jtest connections', points[9].connections);
+            expect(points[9].hub).toEqual({ x: 1, y: 1 });
+            expect(points[9].connections).toEqual([
+                { x: 0, y: 0 },
+                { x: 2, y: 1 },
+                { x: 1, y: 2 }
+            ]);
         });
         it('should support inset', () => { });
     });
@@ -135,7 +133,7 @@ describe("Pathfinding", () => {
             const expectedPoint = { hub: point.hub, connections: [point_desired.hub, c1, c2,] };
             expect(point).toEqual(expectedPoint);
         });
-        it.only("should never remove it's original connections during optimization", () => {
+        it("should never remove it's original connections during optimization", () => {
             // This is because those are the actual walls
             const point = {
                 hub: { x: 1, y: 1 },
@@ -144,6 +142,29 @@ describe("Pathfinding", () => {
                 // Original connections:
                 connections: [{ x: 2, y: 1 }, { x: 1, y: 2 }]
             }
+            const allPoints = [
+                {
+                    hub: { x: 0, y: 0 },
+                    connections: [],
+                },
+                {
+                    hub: { x: 2, y: 0 },
+                    connections: [],
+                },
+                {
+                    hub: { x: 2, y: 2 },
+                    connections: [],
+                },
+                {
+                    hub: { x: 0, y: 2 },
+                    connections: [],
+                },
+                point
+            ];
+            // Split will make connections with 0,0 and 0,2; but one of these should
+            // be optimized out; however, the orignal points should stay
+            split(point, allPoints);
+            expect(point.connections).toEqual([{ x: 0, y: 0 }, { x: 2, y: 1 }, { x: 1, y: 2 }]);
         });
         it("should not create new connections that intersect with another point's connections", () => {
             const hub = { x: 0, y: 0 };
