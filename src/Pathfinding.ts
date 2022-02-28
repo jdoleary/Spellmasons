@@ -105,7 +105,6 @@ function isAngleBetweenAngles(angle1: number, angle2: number, angle3: number): b
 function split(point: Point, allPoints: Point[]) {
     const { hub, connections } = point;
     const originalConnections = point.connections;
-    // console.log('split', hub, connections);
     let newConnections: Vec2[] = [];
     // Search for new connections
     for (let i = 0; i < connections.length; i++) {
@@ -119,7 +118,6 @@ function split(point: Point, allPoints: Point[]) {
         // the angle between 135 degrees and 45 degrees (going all the way around the angle circle)
         // is 270 degrees.  This is why we adjust angle2
         const angleBetweenConnections = counterClockwiseAngle(angle1, angle2);
-        // console.log('1', angleBetweenConnections * 180 / Math.PI);
         // Only angles that are > Math.PI need to be split because that those are the angles
         // that would make the polygon concave
         if (angleBetweenConnections > Math.PI) {
@@ -137,10 +135,8 @@ function split(point: Point, allPoints: Point[]) {
                 const angle = getAngleBetweenVec2s(hub, otherPoint.hub);
                 // Only consider otherPoints that are between the angles that we are splitting; because if it
                 // wasn't than adding it as a connection wouldn't split the angle that we need to split
-                // console.log('2:', otherPoint.hub, angle * TO_DEG, angle1 * TO_DEG, angle2 * TO_DEG);
                 if (isAngleBetweenAngles(angle, angle1, angle2)) {
                     // If choosing this angle would create a <= Math.PI angle between it and currentVec2, allow it:
-                    // console.log('3:', counterClockwiseAngle(angle1, angle) * TO_DEG);
                     if (counterClockwiseAngle(angle1, angle) <= Math.PI) {
                         // If lineSegment from hub to otherPoint.hub doesn't intersect other connections, allow it:
                         // TODO: future possible optimization, it currently tests all linesegments twice
@@ -162,14 +158,12 @@ function split(point: Point, allPoints: Point[]) {
                                 if (intersection == undefined || vectorMath.equal(intersection, l1.p1) || vectorMath.equal(intersection, l1.p2)) {
                                     return false
                                 } else {
-                                    // console.log('check intersections', l1, l2, intersection);
                                     // Skip if the new connection intersects with a line segment other than
                                     // the linesegment in question (which is l1)
                                     return true;
                                 }
                             });
                         }).length == 0) {
-                            // console.log("its a keeper", otherPoint.hub);
                             // It's a keeper, add it to connections
                             newConnections.push(otherPoint.hub);
                         }
@@ -185,15 +179,9 @@ function split(point: Point, allPoints: Point[]) {
         // Resort connections now that there are new connections because the angles have split
         sortConnectionsByAngle(point);
     }
-    if (vectorMath.equal(point.hub, { x: 0, y: 0 })) {
-        console.log('result', hub, point.connections);
-    }
     // Merge connections that are superfluous (divisions that don't prevent it from becoming concave) so we don't have more polygons than we need
     // Note, all connections are NOT superfluous if it has less than 3
     if (point.connections.length > 3) {
-        if (vectorMath.equal(point.hub, { x: 1, y: 1 })) {
-            console.log('point', point);
-        }
         for (let i = 0; i < point.connections.length; i++) {
             const prevVec2Index = i - 1 < 0 ? point.connections.length - 1 : i - 1;
             const prevVec2 = point.connections[prevVec2Index];
@@ -209,20 +197,11 @@ function split(point: Point, allPoints: Point[]) {
             const middlePointAngle = getAngleBetweenVec2s(hub, currentVec2)
             const angle2 = counterClockwiseAngle(angle1, middlePointAngle);
             const angle3 = counterClockwiseAngle(middlePointAngle, getAngleBetweenVec2s(hub, nextVec2));
-            if (vectorMath.equal(point.hub, { x: 1, y: 1 })) {
-                console.log('test', prevVec2Index, i, nextVec2Index, ';', prevVec2, currentVec2, nextVec2, ';', angle1 * TO_DEG, middlePointAngle * TO_DEG, angle2 * TO_DEG, angle3 * TO_DEG)
-            }
             if (angle2 + angle3 <= Math.PI) {
                 // Merge angles by removing currentVec2 from connections
                 point.connections.splice(i, 1);
-                if (vectorMath.equal(point.hub, { x: 1, y: 1 })) {
-                    console.log("remove", currentVec2, point);
-                }
             }
         }
-    }
-    if (vectorMath.equal(point.hub, { x: 1, y: 1 })) {
-        console.log('optimize', hub, point.connections);
     }
 }
 // Find the angle between two angles going counter-clockwise around the angle circle
