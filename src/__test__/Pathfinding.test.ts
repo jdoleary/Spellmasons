@@ -26,7 +26,30 @@ describe("Pathfinding", () => {
                 { x: 1, y: 2 }
             ]);
         });
-        it('should support inset', () => { });
+        it.only('should support inset', () => {
+            const lineSegments: LineSegment[] = [
+                // Outside bounds
+                { p1: { x: 0, y: 0 }, p2: { x: 400, y: 0 } },
+                { p1: { x: 400, y: 0 }, p2: { x: 400, y: 400 } },
+                { p1: { x: 400, y: 400 }, p2: { x: 0, y: 400 } },
+                { p1: { x: 0, y: 400 }, p2: { x: 0, y: 0 } },
+
+                { p1: { x: 100, y: 200 }, p2: { x: 100, y: 100 } },
+                { p1: { x: 100, y: 100 }, p2: { x: 200, y: 100 } },
+                { p1: { x: 200, y: 100 }, p2: { x: 200, y: 200 } },
+                { p1: { x: 200, y: 200 }, p2: { x: 100, y: 200 } },
+            ];
+            const points = generateConvexPolygonMesh(lineSegments, 10);
+            // Note: These test values may need to be tweaked later, but will
+            // do for now 
+            expect(points[5].hub).toEqual({ x: 93, y: 92 });
+            expect(points[5].connections).toEqual([
+                { x: -7, y: -7 },
+                { x: 208, y: 93 },
+                { x: 93, y: 207 }
+            ]);
+
+        });
     });
     describe("findPath", () => {
         describe("given a pathing mesh", () => {
