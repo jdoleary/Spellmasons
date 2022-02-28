@@ -1,5 +1,6 @@
 ## Current Priorities
 - Pathfinding: Need pathfinding so you can't just hide and get all your mana back
+    - See TODOs in Pathfinding.test.ts
 - Setup Buffer with social medias and start a following
 ---
 Finish Content:
@@ -11,6 +12,6 @@ Finish Content:
     - Fix charge, stomp, lance
         - Movement spells could help you cast farther than you should be able to and move a far unit into another group and chain them, cause it should keep the target after they move
     - A card that changes mana cost of spells to health cost (vampire)
-    - soul swap (swap bodies with another unit)
+    - soul swap (swap bodies with another unit, until they die, then you return to your own body - and you get their abilities as cards)
 - More enemies:
     - 
