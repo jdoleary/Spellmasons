@@ -29,6 +29,7 @@ import { moveWithCollisions } from './collision/moveWithCollision';
 import { lineSegmentIntersection, LineSegment } from './collision/collisionMath';
 import { updateCardManaBadges } from './CardUI';
 import { generateConvexPolygonMesh } from './Pathfinding';
+import { polygonToVec2s } from './PathfindingAttempt2';
 
 export enum turn_phase {
   PlayerTurns,
@@ -225,7 +226,21 @@ export default class Underworld {
   // TODO:  this will need to be called if objects become
   // destructable
   cacheWalls() {
-    this.walls = this.obstacles.reduce<LineSegment[]>((agg, cur) => agg.concat(cur.walls), [])
+    this.walls = this.obstacles.reduce<LineSegment[]>((agg, cur) => {
+      const points = polygonToVec2s(cur.bounds);
+      let lastPoint: Vec2 | undefined;
+      for (let point of points) {
+        if (lastPoint) {
+          agg.push({ p1: lastPoint, p2: point });
+        }
+        lastPoint = point;
+      }
+      // Close the shape:
+      if (lastPoint) {
+        agg.push({ p1: lastPoint, p2: points[0] });
+      }
+      return agg;
+    }, [])
     this.walls.push({ p1: { x: 0, y: 0 }, p2: { x: config.MAP_WIDTH, y: 0 } });
     this.walls.push({ p1: { x: 0, y: 0 }, p2: { x: 0, y: config.MAP_HEIGHT } });
     this.walls.push({ p1: { x: config.MAP_WIDTH, y: config.MAP_HEIGHT }, p2: { x: config.MAP_WIDTH, y: 0 } });
