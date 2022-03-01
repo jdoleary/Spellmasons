@@ -1,6 +1,8 @@
 ## Current Priorities
 - Pathfinding: Need pathfinding so you can't just hide and get all your mana back
-    - See TODOs in Pathfinding.test.ts
+    - How to handle inset that intersects with another wall?
+    - Optimize polygons
+    - Implement pathing
 - Setup Buffer with social medias and start a following
 ---
 Finish Content:
