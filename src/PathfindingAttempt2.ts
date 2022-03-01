@@ -56,11 +56,11 @@ function getAngleBetweenAngles(anglePrev: number, angleNext: number): number {
     return angleBetween
 }
 
-// Inset polygon: Grows a polygon into it's "outside" by the distance of magnitude
+// Expand polygon: Grows a polygon into it's "outside" by the distance of magnitude
 // along the normal vectors of each vertex.
 // Uses the ordered verticies (from prev to next; running clockwise) to determine what is
 // "inside" and what is "outside"
-function insetPolygon(polygon: Polygon, magnitude: number): Polygon {
+function expandPolygon(polygon: Polygon, magnitude: number): Polygon {
     const vertices = getVerticies(polygon);
     // Batch adjustedPoints and then adjust them all at once
     const newPoints: Vec2[] = vertices.map(v => projectVertexAlongOutsideNormal(v, magnitude));
@@ -86,8 +86,6 @@ function projectVertexAlongOutsideNormal(vertex: Vertex, magnitude: number): Vec
     const angleNext = getAngleBetweenVec2s(vertex, vertex.next);
     const angleBetween = getAngleBetweenAngles(anglePrev, angleNext);
     const isInverted = angleBetween <= Math.PI / 2;
-    // console.log('angle', angleBetween);
-    const degToRad = Math.PI / 180;
     // Find the point magnitude away from vertex along the normal
     const X = projectToPoint.x - vertex.x;
     const Y = projectToPoint.y - vertex.y;
@@ -98,23 +96,23 @@ function projectVertexAlongOutsideNormal(vertex: Vertex, magnitude: number): Vec
 }
 
 export const testables = {
-    insetPolygon,
+    expandPolygon,
     projectVertexAlongOutsideNormal,
     getAngleBetweenAngles,
 }
 
 // In order to pathfind, I need a non-intersecting convex polygon mesh.
 
-// The corner cases include walls that overlap, and insets that overlap.
+// The corner cases include walls that overlap, and expands that overlap.
 
 // How to solve:
 // 0. Start with collidable walls as Polygons (the Polygon interface is designed so it is clear what is inside the polygon and what is outside.  For example, the outer bounds of the game world is kind of an inverted polygon like the inside of a box is spacious and the entire outside is solid. Whereas obstacles are regular polygons where the inside is solid (you can't move through it) and the outside
 // is spacious and available for movement.  So inverted polygons can be expressed by the direction of prev and next in it's verticies.
 // --
 // Takes an array of Polygons and transforms them into a fully connected convex poly mesh
-export function generateConvexPolygonMesh(polys: Polygon[], insetSize: number): Polygon[] {
-    // 1. Grow the polygons according to `inset`.  Inset is used to give a margin to the pathing mesh so that units with thickness won't clip through walls as they pass by the corners or through a narrow area.
-    // 2. Solve for intersecting / overlapping polygons.  This step is important, for example if there is a very thin corridor and the inset is large enough, no space in the corridor will be pathable and this is because the collidable polygons will grow so much (due to the inset) that they will overlap.
+export function generateConvexPolygonMesh(polys: Polygon[], expandSize: number): Polygon[] {
+    // 1. Grow the polygons according to `expand`.  Expand is used to give a margin to the pathing mesh so that units with thickness won't clip through walls as they pass by the corners or through a narrow area.
+    // 2. Solve for intersecting / overlapping polygons.  This step is important, for example if there is a very thin corridor and the expand is large enough, no space in the corridor will be pathable and this is because the collidable polygons will grow so much (due to the expand) that they will overlap.
     // 3. Take the world bounds (the inverted polygon I mentioned before) and all the collidable polygons and make more connections between their verticies so that there are no concave polygons. This step will return a new array of polygons (probably 3-sided).
     // 4.  Optimize the new array of polygons so that multiple polygons are combined if the unified polygon remains convex.
     // 5.  Give polygons references to their neighbors (a neighboring polygon is any polygon that shares an edge

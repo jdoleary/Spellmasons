@@ -1,5 +1,5 @@
 import { polygonToVec2s, vec2sToPolygon, testables } from "../PathfindingAttempt2";
-const { projectVertexAlongOutsideNormal, insetPolygon, getAngleBetweenAngles } = testables;
+const { projectVertexAlongOutsideNormal, expandPolygon, getAngleBetweenAngles } = testables;
 import type { Vec2 } from "../commonTypes";
 describe('projectVertexAlongOutsideNormal', () => {
     it('should find the point "magnitude" distance away from p2 along the normal', () => {
@@ -52,7 +52,7 @@ describe('getAngleBetweenAngles', () => {
     });
 });
 
-describe('insetPolygon', () => {
+describe('expandPolygon', () => {
     it('should return a new polygon with all of its points grown by magnitude', () => {
         const p1 = { x: 0, y: 0 }
         const p2 = { x: 0, y: 1 }
@@ -61,7 +61,7 @@ describe('insetPolygon', () => {
         const points: Vec2[] = [p1, p2, p3, p4];
         const polygon = vec2sToPolygon(points);
 
-        const newPolygon = insetPolygon(polygon, Math.sqrt(2));
+        const newPolygon = expandPolygon(polygon, Math.sqrt(2));
         const newPoints = polygonToVec2s(newPolygon);
         expect(newPoints).toEqual([
             { x: -1, y: -1 },
@@ -70,7 +70,7 @@ describe('insetPolygon', () => {
             { x: 2, y: -1 },
         ]);
     });
-    it('should inset in the opposite direction for inverted polygons where the inside and outside are flipped', () => {
+    it('should expand in the opposite direction for inverted polygons where the inside and outside are flipped', () => {
         const p1 = { x: 0, y: 0 }
         const p2 = { x: 0, y: 2 }
         const p3 = { x: 2, y: 2 }
@@ -79,7 +79,7 @@ describe('insetPolygon', () => {
         const points: Vec2[] = [p1, p2, p3, p4].reverse();
         const polygon = vec2sToPolygon(points);
 
-        const newPolygon = insetPolygon(polygon, Math.sqrt(2));
+        const newPolygon = expandPolygon(polygon, Math.sqrt(2));
         const newPoints = polygonToVec2s(newPolygon);
         expect(newPoints).toEqual([
             { x: 1, y: 1 },
