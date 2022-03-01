@@ -1,4 +1,3 @@
-import type { LineSegment } from "./collision/collisionMath";
 import type { Vec2, Polygon, Vertex } from "./commonTypes";
 import * as vectorMath from './collision/vectorMath';
 import { distance, similarTriangles } from "./math";
@@ -50,7 +49,7 @@ function getAngleBetweenVec2s(v1: Vec2, v2: Vec2): number {
     return Math.atan2(dy, dx);
 }
 // order matters
-// radians
+// angles are in radians
 function getAngleBetweenAngles(anglePrev: number, angleNext: number): number {
     const angleBetween = (anglePrev > angleNext ? anglePrev : anglePrev + Math.PI * 2) - angleNext;
     return angleBetween
@@ -94,11 +93,16 @@ function projectVertexAlongOutsideNormal(vertex: Vertex, magnitude: number): Vec
     const relativeAdjustedPoint = similarTriangles(X, Y, D, d);
     return vectorMath.subtract(vertex, relativeAdjustedPoint);
 }
+function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
+    // TODO: LEFT OFF: implement
+
+}
 
 export const testables = {
     expandPolygon,
     projectVertexAlongOutsideNormal,
     getAngleBetweenAngles,
+    mergeOverlappingPolygons,
 }
 
 // In order to pathfind, I need a non-intersecting convex polygon mesh.
@@ -112,7 +116,9 @@ export const testables = {
 // Takes an array of Polygons and transforms them into a fully connected convex poly mesh
 export function generateConvexPolygonMesh(polys: Polygon[], expandSize: number): Polygon[] {
     // 1. Grow the polygons according to `expand`.  Expand is used to give a margin to the pathing mesh so that units with thickness won't clip through walls as they pass by the corners or through a narrow area.
-    // 2. Solve for intersecting / overlapping polygons.  This step is important, for example if there is a very thin corridor and the expand is large enough, no space in the corridor will be pathable and this is because the collidable polygons will grow so much (due to the expand) that they will overlap.
+    const expandedPolygons = polys.map(p => expandPolygon(p, expandSize));
+    // 2. Merge parts of intersecting or overlapping polygons so that none of them intersect or overlap.  This step is important, for example if there is a very thin corridor and the expand is large enough, no space in the corridor will be pathable and this is because the collidable polygons will grow so much (due to the expand) that they will overlap.
+    // TODO: Left off here
     // 3. Take the world bounds (the inverted polygon I mentioned before) and all the collidable polygons and make more connections between their verticies so that there are no concave polygons. This step will return a new array of polygons (probably 3-sided).
     // 4.  Optimize the new array of polygons so that multiple polygons are combined if the unified polygon remains convex.
     // 5.  Give polygons references to their neighbors (a neighboring polygon is any polygon that shares an edge

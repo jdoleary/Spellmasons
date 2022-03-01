@@ -1,5 +1,5 @@
 import { polygonToVec2s, vec2sToPolygon, testables } from "../PathfindingAttempt2";
-const { projectVertexAlongOutsideNormal, expandPolygon, getAngleBetweenAngles } = testables;
+const { projectVertexAlongOutsideNormal, expandPolygon, getAngleBetweenAngles, mergeOverlappingPolygons } = testables;
 import type { Vec2 } from "../commonTypes";
 describe('projectVertexAlongOutsideNormal', () => {
     it('should find the point "magnitude" distance away from p2 along the normal', () => {
@@ -127,4 +127,80 @@ describe('polygonToVec2s', () => {
         const expected = points;
         expect(actual).toEqual(expected);
     });
+});
+
+describe('mergeOverlappingPolygons', () => {
+    describe('given overlapping boxes on one axis', () => {
+        it("should remove the overlapping verticies and return a polygon that is one large rectangle", () => {
+            const p1 = { x: 0, y: 0 }
+            const p2 = { x: 0, y: 1 }
+            const p3 = { x: 1, y: 1 }
+            const p4 = { x: 1, y: 0 }
+            const points: Vec2[] = [p1, p2, p3, p4];
+            const polygonA = vec2sToPolygon(points);
+            const p1b = { x: 0, y: 1 }
+            const p2b = { x: 0, y: 2 }
+            const p3b = { x: 1, y: 2 }
+            const p4b = { x: 1, y: 1 }
+            const pointsb: Vec2[] = [p1b, p2b, p3b, p4b];
+            const polygonB = vec2sToPolygon(pointsb);
+            const mergedPolygon = mergeOverlappingPolygons([polygonA, polygonB])[0];
+
+            const actual = polygonToVec2s(mergedPolygon);
+            const expected = [
+                p1,
+                p2b,
+                p3b,
+                p4
+            ];
+            expect(actual).toEqual(expected);
+        });
+    });
+    describe('given boxes that each share 1 vertex inside of the other', () => {
+        it("should remove inside verticies and make a polygon that is the spacial addition of the two boxes", () => {
+            const p1 = { x: 0, y: 0 }
+            const p2 = { x: 0, y: 2 }
+            const p3 = { x: 2, y: 2 }
+            const p4 = { x: 2, y: 0 }
+            const points: Vec2[] = [p1, p2, p3, p4];
+            const polygonA = vec2sToPolygon(points);
+            const p1b = { x: 1, y: 1 }
+            const p2b = { x: 1, y: 3 }
+            const p3b = { x: 3, y: 3 }
+            const p4b = { x: 3, y: 1 }
+            const pointsb: Vec2[] = [p1b, p2b, p3b, p4b];
+            const polygonB = vec2sToPolygon(pointsb);
+            const mergedPolygon = mergeOverlappingPolygons([polygonA, polygonB])[0];
+
+            const actual = polygonToVec2s(mergedPolygon);
+            const expected = [
+                p1,
+                p2,
+                { x: 1, y: 2 },
+                p2b,
+                p3b,
+                p4b,
+                { x: 2, y: 1 },
+                p4
+            ];
+            expect(actual).toEqual(expected);
+
+        });
+    });
+    describe('given boxes that are identical', () => {
+        it("should remove one box entirely", () => {
+            const p1 = { x: 0, y: 0 }
+            const p2 = { x: 0, y: 2 }
+            const p3 = { x: 2, y: 2 }
+            const p4 = { x: 2, y: 0 }
+            const points: Vec2[] = [p1, p2, p3, p4];
+            const polygonA = vec2sToPolygon(points);
+            const polygonB = vec2sToPolygon(points);
+            const mergedPolygons = mergeOverlappingPolygons([polygonA, polygonB]);
+            const actual = mergedPolygons.length;
+            const expected = 1;
+            expect(actual).toEqual(expected);
+        });
+    });
+
 });
