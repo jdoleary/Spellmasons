@@ -5,7 +5,7 @@ const { split, lineSegmentsToPoints, getAngleBetweenVec2s, isAngleBetweenAngles,
 
 describe("Pathfinding", () => {
     describe("generateConvexPolygonMesh", () => {
-        it('should generate a mesh of convex polygons from a list of lineSegments', () => {
+        it.skip('should generate a mesh of convex polygons from a list of lineSegments', () => {
             const lineSegments: LineSegment[] = [
                 // Outside bounds
                 { p1: { x: 0, y: 0 }, p2: { x: 4, y: 0 } },
@@ -26,7 +26,7 @@ describe("Pathfinding", () => {
                 { x: 1, y: 2 }
             ]);
         });
-        it.only('should support inset', () => {
+        it.skip('should support inset', () => {
             const lineSegments: LineSegment[] = [
                 // Outside bounds
                 { p1: { x: 0, y: 0 }, p2: { x: 400, y: 0 } },
@@ -70,7 +70,6 @@ describe("Pathfinding", () => {
                 expect(actual).toEqual(expected);
             });
         }
-
     });
     describe("getAngleBetweenVec2s", () => {
         it('should find the angle in radians between 2 Vec2s', () => {

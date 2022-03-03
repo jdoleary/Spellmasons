@@ -129,7 +129,7 @@ describe('polygonToVec2s', () => {
     });
 });
 
-describe('mergeOverlappingPolygons', () => {
+describe.skip('mergeOverlappingPolygons', () => {
     describe('given overlapping boxes on one axis', () => {
         it("should remove the overlapping verticies and return a polygon that is one large rectangle", () => {
             const p1 = { x: 0, y: 0 }
