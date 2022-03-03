@@ -3,3 +3,5 @@
 - 2022-02-09: 5 hours?
 - 2022-02-10: 7 hours
 - 2022-02-11: 1 hour
+- 2022-02-12 to 2022-02-28: Break for working on house
+- 2022-03-01: 3 hours

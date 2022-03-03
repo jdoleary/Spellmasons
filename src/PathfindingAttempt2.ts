@@ -120,7 +120,9 @@ export function generateConvexPolygonMesh(polys: Polygon[], expandSize: number):
     // 2. Merge parts of intersecting or overlapping polygons so that none of them intersect or overlap.  This step is important, for example if there is a very thin corridor and the expand is large enough, no space in the corridor will be pathable and this is because the collidable polygons will grow so much (due to the expand) that they will overlap.
     // TODO: Left off here
     // 3. Take the world bounds (the inverted polygon I mentioned before) and all the collidable polygons and make more connections between their verticies so that there are no concave polygons. This step will return a new array of polygons (probably 3-sided).
+    // This is currently done inside of split
     // 4.  Optimize the new array of polygons so that multiple polygons are combined if the unified polygon remains convex.
+    // This is currently done inside of split but should be redone to use polygons instead of Points
     // 5.  Give polygons references to their neighbors (a neighboring polygon is any polygon that shares an edge
     // 6. Use this array of polygons and their neighbors via an A* algorithm or something similar to pathfind.
 }

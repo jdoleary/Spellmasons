@@ -37,6 +37,7 @@ function toStandardForm(line: LineSegment): LineInStandardForm | undefined {
     }
 }
 // TODO Doesn't account for edge cases such as vertical lines
+// OLD, do not use
 function intersectionOfLines(line: LineInStandardForm, line2: LineInStandardForm): Vec2 {
     // https://www.cuemath.com/geometry/intersection-of-two-lines/
     return {
