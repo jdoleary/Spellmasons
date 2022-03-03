@@ -1,8 +1,15 @@
 import type { Vec2, Polygon, Vertex } from "./commonTypes";
 import * as vectorMath from './collision/vectorMath';
 import { distance, similarTriangles } from "./math";
-import type { LineSegment } from "./collision/collisionMath";
+import { LineSegment, lineSegmentIntersection } from "./collision/collisionMath";
 
+export function lineSegmentsToVec2s(lineSegments: LineSegment[]): Vec2[] {
+    return [lineSegments[0].p1, ...lineSegments.reduce<Vec2[]>((agg, cur) => {
+        agg.push(cur.p2)
+        return agg
+    }, [])]
+
+}
 export function vec2sToPolygon(points: Vec2[]): Polygon {
     let startVertex;
     let lastVertex;
@@ -118,6 +125,78 @@ export const testables = {
     // mergeOverlappingPolygons,
 }
 
+export function findPath(startPoint: Vec2, target: Vec2, pathingWalls: LineSegment[]): Vec2[] {
+    const potentialPaths: Path[] = [
+        [{ p1: startPoint, p2: target }]
+    ];
+    return lineSegmentsToVec2s(tryPaths(potentialPaths, pathingWalls, 0));
+}
+function tryPaths(paths: Path[], pathingWalls: LineSegment[], recursionCount: number): Path {
+    console.log("trypaths", recursionCount, paths);
+    // Protect against infinite recursion
+    if (recursionCount > 6) {
+        console.error('couldnt find path', recursionCount);
+        // Draw all the paths:
+
+        window.underworld.debugGraphics.lineStyle(3, 0xaa0000, 1);
+        for (let path of paths) {
+            for (let lineSegment of path) {
+                window.underworld.debugGraphics.moveTo(lineSegment.p1.x, lineSegment.p1.y);
+                window.underworld.debugGraphics.lineTo(lineSegment.p2.x, lineSegment.p2.y);
+            }
+        }
+        return paths[0]
+    }
+    // TODO:
+    // Deal with not drawing a next path line through the inside of an obstacle
+
+    for (let path of paths) {
+        const nextStraightLinePath = path[path.length - 1];
+        const target = nextStraightLinePath.p2;
+        let intersectingWall;
+        let closestIntersection;
+        let closestIntersectionDistance;
+        for (let wall of pathingWalls) {
+            const intersection = lineSegmentIntersection(nextStraightLinePath, wall);
+            if (intersection) {
+                const dist = distance(nextStraightLinePath.p1, intersection);
+                // If there is no closest intersection, make this intersection the closest intersection
+                // If there is and this intersection is closer, make it the closest
+                if (!closestIntersection || (closestIntersection && closestIntersectionDistance && closestIntersectionDistance > dist)) {
+                    closestIntersection = intersection;
+                    closestIntersectionDistance = dist;
+                    intersectingWall = wall
+                }
+
+            }
+        }
+        // If there is an intersection between a straight line path and a pathing wall
+        // we have to branch the path to the corners of the wall and try again
+        if (closestIntersection && intersectingWall) {
+            window.underworld.debugGraphics.drawCircle(closestIntersection.x, closestIntersection.y, 7);
+            // nextStraightLinePath.p2 = wall.p1;
+            path[path.length - 1].p2 = intersectingWall.p1;
+            path.push({ p1: nextStraightLinePath.p2, p2: target });
+
+            // const branchedPath = deepClonePath(path)
+            // branchedPath[branchedPath.length - 1].p2 = wall.p2;
+            // branchedPath.push({ p1: wall.p2, p2: target });
+            // paths.push(branchedPath);
+
+            return tryPaths(paths, pathingWalls, ++recursionCount);
+
+        } else {
+            // If no intersections were found then we have a path to the target, return that path:
+            return path;
+        }
+    }
+    return paths[0];
+}
+type Path = LineSegment[];
+
+function deepClonePath(path: Path): Path {
+    return path.map(l => ({ p1: vectorMath.clone(l.p1), p2: vectorMath.clone(l.p2) }))
+}
 // In order to pathfind, I need a non-intersecting convex polygon mesh.
 
 // The corner cases include walls that overlap, and expands that overlap.

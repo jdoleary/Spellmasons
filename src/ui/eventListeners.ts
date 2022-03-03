@@ -14,6 +14,7 @@ import { distance } from '../math';
 import { View } from '../views';
 import { calculateManaCost } from '../cards/cardUtils';
 import * as math from '../math';
+import { findPath } from '../PathfindingAttempt2';
 
 export function keydownListener(event: KeyboardEvent) {
   // Only handle hotkeys when viewing the Game
@@ -97,6 +98,25 @@ export function mousemoveHandler(e: MouseEvent) {
   }
   // Show target hover
   syncSpellEffectProjection();
+
+  // Test pathing
+  if (window.player) {
+    window.underworld.debugGraphics.clear()
+    window.underworld.debugGraphics.lineStyle(3, 0xaa00bb, 1);
+    const mouseTarget = window.underworld.getMousePos();
+    const path = findPath(window.player.unit, mouseTarget, window.underworld.pathingWalls);
+    window.underworld.debugGraphics.moveTo(path[0].x, path[0].y);
+    // Draw the path
+    for (let point of path) {
+      window.underworld.debugGraphics.lineTo(point.x, point.y);
+    }
+    // Draw the pathing walls
+    window.underworld.debugGraphics.lineStyle(3, 0x00aabb, 1);
+    for (let lineSegment of window.underworld.pathingWalls) {
+      window.underworld.debugGraphics.moveTo(lineSegment.p1.x, lineSegment.p1.y);
+      window.underworld.debugGraphics.lineTo(lineSegment.p2.x, lineSegment.p2.y);
+    }
+  }
 }
 // Handle right click on game board
 export function contextmenuHandler(e: MouseEvent) {

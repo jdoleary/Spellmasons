@@ -96,7 +96,6 @@ export default class Underworld {
 
     this.debugGraphics = new PIXI.Graphics();
     containerBoard.addChild(this.debugGraphics);
-    this.debugGraphics.lineStyle(3, 0x00aabb, 1);
 
 
     // TODO: these probably shouldn't get initialized here
@@ -251,12 +250,8 @@ export default class Underworld {
       return agg;
     }, [])
 
-    // Draw path collision polygons
+    // Save the pathing walls for the underworld
     this.pathingWalls = collidablePolygons.map(p => polygonToLineSegments(expandPolygon(p, config.COLLISION_MESH_RADIUS))).flat();
-    for (let lineSegment of this.pathingWalls) {
-      this.debugGraphics.moveTo(lineSegment.p1.x, lineSegment.p1.y);
-      this.debugGraphics.lineTo(lineSegment.p2.x, lineSegment.p2.y);
-    }
   }
 
   initLevel(level: ILevel) {
