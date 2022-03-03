@@ -50,16 +50,22 @@ export function getVerticies(polygon: Polygon): Vertex[] {
 export function polygonToVec2s(polygon: Polygon): Vec2[] {
     return getVerticies(polygon).map(({ x, y }) => ({ x, y }));
 }
-export function polygonToLineSegments(polygon: Polygon): LineSegment[] {
-    const points = polygonToVec2s(polygon);
-    let lastPoint = points[0];
-    let lineSegments: LineSegment[] = [];
-    for (let i = 1; i < points.length; i++) {
-        lineSegments.push({ p1: lastPoint, p2: points[i] });
-        lastPoint = points[i];
+
+// Similar to LineSegment but Verticies instead of Vec2s
+export interface VertexLineSegment {
+    p1: Vertex;
+    p2: Vertex;
+}
+export function polygonToVertexLineSegments(polygon: Polygon): VertexLineSegment[] {
+    const verticies = getVerticies(polygon);
+    let lastPoint = verticies[0];
+    let lineSegments: VertexLineSegment[] = [];
+    for (let i = 1; i < verticies.length; i++) {
+        lineSegments.push({ p1: lastPoint, p2: verticies[i] });
+        lastPoint = verticies[i];
     }
     // Add line from last point to first point:
-    lineSegments.push({ p1: lastPoint, p2: points[0] });
+    lineSegments.push({ p1: lastPoint, p2: verticies[0] });
     return lineSegments;
 }
 // in radians
@@ -125,7 +131,7 @@ export const testables = {
     // mergeOverlappingPolygons,
 }
 
-export function findPath(startPoint: Vec2, target: Vec2, pathingWalls: LineSegment[]): Vec2[] {
+export function findPath(startPoint: Vec2, target: Vec2, pathingWalls: VertexLineSegment[]): Vec2[] {
     const paths: Path[] = [
         // Start with the first idea path from start to target
         // Note, the distance is calculated inside of tryPaths even if 
@@ -133,12 +139,14 @@ export function findPath(startPoint: Vec2, target: Vec2, pathingWalls: LineSegme
         // to target.
         { done: false, invalid: false, points: [startPoint, target], distance: 0 }
     ];
+    console.log('BEGIN ------------');
     tryPaths(paths, pathingWalls, 0);
     console.log('paths', paths);
     return paths.sort((a, b) => a.distance - b.distance)[0].points
 }
 // Mutates the paths array's objects
-function tryPaths(paths: Path[], pathingWalls: LineSegment[], recursionCount: number) {
+function tryPaths(paths: Path[], pathingWalls: VertexLineSegment[], recursionCount: number) {
+    console.log('try paths', JSON.stringify(paths.map(p => ({ ...p, points: p.points.map(pn => ({ x: pn.x, y: pn.y })) })), null, 2));
     // Protect against infinite recursion
     if (recursionCount > 7) {
         console.error('couldnt find path in few enough steps', recursionCount);
@@ -152,8 +160,6 @@ function tryPaths(paths: Path[], pathingWalls: LineSegment[], recursionCount: nu
 
         }
     }
-    // TODO:
-    // Deal with not drawing a next path line through the inside of an obstacle
 
     for (let path of paths) {
         // Do not continue to process paths that are complete
@@ -168,77 +174,100 @@ function tryPaths(paths: Path[], pathingWalls: LineSegment[], recursionCount: nu
             path.invalid = true;
             continue;
         }
-        const nextStraightLine: LineSegment = { p1: path.points[path.points.length - 2], p2: path.points[path.points.length - 1] };
-        const target = nextStraightLine.p2;
+        const nextStraightLine: LineSegment = getLastLineInPath(path);
 
         // Debug draw nextStraightLine
-        window.underworld.debugGraphics.lineStyle(3, 0x00ff00, 1);
-        window.underworld.debugGraphics.moveTo(nextStraightLine.p1.x, nextStraightLine.p1.y);
-        window.underworld.debugGraphics.lineTo(nextStraightLine.p2.x, nextStraightLine.p2.y);
+        // window.underworld.debugGraphics.lineStyle(3, 0x00ff00, 1);
+        // window.underworld.debugGraphics.moveTo(nextStraightLine.p1.x, nextStraightLine.p1.y);
+        // window.underworld.debugGraphics.lineTo(nextStraightLine.p2.x, nextStraightLine.p2.y);
 
-        let intersectingWall;
-        let closestIntersection;
-        let closestIntersectionDistance;
         // Check for collisions between the last line in the path and pathing walls
-        for (let wall of pathingWalls) {
-            const intersection = lineSegmentIntersection(nextStraightLine, wall);
-            if (intersection) {
-                if (vectorMath.equal(nextStraightLine.p1, intersection)) {
-                    // Exclude collisions at start point of line segment. Don't collide with self
-                    continue;
-                }
-                const dist = distance(nextStraightLine.p1, intersection);
-                // If there is no closest intersection, make this intersection the closest intersection
-                // If there is and this intersection is closer, make it the closest
-                if (!closestIntersection || (closestIntersection && closestIntersectionDistance && closestIntersectionDistance > dist)) {
-                    closestIntersection = intersection;
-                    closestIntersectionDistance = dist;
-                    intersectingWall = wall
-                }
-
-            }
-        }
+        let intersectingWall = getClosestIntersectionWithWalls(nextStraightLine, pathingWalls);
         // If there is an intersection between a straight line path and a pathing wall
         // we have to branch the path to the corners of the wall and try again
-        if (closestIntersection && intersectingWall) {
-            // Debug draw intersection and branch:
-            window.underworld.debugGraphics.lineStyle(1, 0x0000ff, 1);
-            window.underworld.debugGraphics.drawCircle(closestIntersection.x, closestIntersection.y, 3);
-            window.underworld.debugGraphics.moveTo(closestIntersection.x, closestIntersection.y);
-            window.underworld.debugGraphics.lineTo(intersectingWall.p1.x, intersectingWall.p1.y);
-            window.underworld.debugGraphics.moveTo(closestIntersection.x, closestIntersection.y);
-            window.underworld.debugGraphics.lineTo(intersectingWall.p2.x, intersectingWall.p2.y);
+        if (intersectingWall) {
+            let { prev, next } = getPrevAndNextCornersFromIntersectingWall(intersectingWall);
+            console.log('Branch on prev,next', nextStraightLine, prev, next);
+            // Remove the last point in the path as we now need to add intermediate points.
+            // This point will be readded to the path after the intermediate points are added:
+            const target = path.points.splice(-1)[0]
+
             // Branch the path.  The original path will try navigating around p1
             // and the branchedPath will try navigating around p2.
             // Note: branchedPath must be cloned before path's p2 is modified
             const branchedPath = { ...path, points: path.points.map(p => vectorMath.clone(p)) };
             paths.push(branchedPath);
 
-            // Replace the last point with the wall's p1 corner
-            path.points[path.points.length - 1] = intersectingWall.p1;
-            // Add the distance to the wall corner to the path's distance
-            // since the path now traverses to this corner before moving on
-            path.distance += distance(path.points[path.points.length - 2], path.points[path.points.length - 1]);
-            // Re add the last point to the end of the points
+            // Add the wall's "prev" corner as a new point to path to
+            addPointToPath(path, prev);
+            // Now keep iterative in the "prev" direction until we have a path that doesn't intersect with this polygon
+            // and heads right for the target or intersects with another polygon:
+            do {
+                console.log('dive prev')
+                const prevIntersectingWall = getClosestIntersectionWithWalls({ p1: prev, p2: target }, pathingWalls);
+                if (prevIntersectingWall) {
+                    if (verticiesBelongToSamePoly(prev, prevIntersectingWall.p1)) {
+                        addPointToPath(path, prev.prev);
+                        prev = prev.prev;
+                    } else {
+                        break;
+
+                    }
+                } else {
+                    // Stop if there is no intersecting wall
+                    break;
+                }
+                // Stop if we make it all the way around the poly
+            } while (prev != next);
+            console.log('done diving prev')
+            // Re add the last point to the end of the points (without changing the distance because it may be removed
+            // temporarily to add intermediate points)
             path.points.push(target);
 
-            // Replace the last point with the wall's p2 corner
-            branchedPath.points[branchedPath.points.length - 1] = intersectingWall.p2;
-            // Add the distance to the wall corner to the path's distance
-            // since the path now traverses to this corner before moving on
-            path.distance += distance(path.points[path.points.length - 2], path.points[path.points.length - 1]);
-            // Re add the last point to the end of the points
+            // Add the wall's "next" corner as a new point to path to
+            addPointToPath(branchedPath, next);
+            // Now keep iterative in the "next" direction until we have a path that doesn't intersect with this polygon
+            // and heads right for the target or intersects with another polygon:
+            do {
+                console.log('dive next')
+                const nextIntersectingWall = getClosestIntersectionWithWalls({ p1: next, p2: target }, pathingWalls);
+                if (nextIntersectingWall) {
+                    if (verticiesBelongToSamePoly(prev, nextIntersectingWall.p1)) {
+                        addPointToPath(branchedPath, next.next);
+                        next = next.next;
+                    } else {
+                        break;
+
+                    }
+                } else {
+                    // Stop if there is no intersecting wall
+                    break;
+                }
+                // Stop if we make it all the way around the poly
+            } while (prev != next);
+            console.log('done diving next')
+            // Re add the last point to the end of the points (without changing the distance because it may be removed
+            // temporarily to add intermediate points)
             branchedPath.points.push(target);
+
 
             tryPaths(paths, pathingWalls, recursionCount + 1);
 
         } else {
+            console.log('end path');
             // This is the "happy path", a straight line without collisions has been found to the target
             // and the path is complete
 
             // Debug: Draw all the paths:
-            window.underworld.debugGraphics.lineStyle(4, 0xaa0000, 0.3);
-            for (let path of paths) {
+            const colors = [
+                0xff0000,
+                0x00ff00,
+                0x0000ff,
+                0xffffff,
+            ]
+            for (let i = 0; i < paths.length; i++) {
+                const path = paths[i];
+                window.underworld.debugGraphics.lineStyle(4, colors[i], 0.3);
                 window.underworld.debugGraphics.moveTo(path.points[0].x, path.points[0].y);
                 for (let point of path.points) {
                     window.underworld.debugGraphics.lineTo(point.x, point.y);
@@ -250,6 +279,75 @@ function tryPaths(paths: Path[], pathingWalls: LineSegment[], recursionCount: nu
             path.done = true;
         }
     }
+}
+
+// Given a VertexLineSegment, return the vertexes in the orientation of previous and next
+// Vertexes always have a clockwise orientation that determines if the polygon that they make up is
+// an internal polygon or an external polygon.  This function reveals the orientation of the Verticies
+// that make up the VertexLineSegment.
+// Useful for pathing to know which direction to add corners to a path after a collision is detected.
+function getPrevAndNextCornersFromIntersectingWall(wall: VertexLineSegment): { prev: Vertex, next: Vertex } {
+    if (wall.p1.prev == wall.p2) {
+        return { prev: wall.p2, next: wall.p1 }
+    } else {
+        return { prev: wall.p1, next: wall.p2 }
+    }
+}
+function getLastLineInPath(path: Path): LineSegment {
+    return { p1: path.points[path.points.length - 2], p2: path.points[path.points.length - 1] };
+
+}
+// Note: Mutates path
+function addPointToPath(path: Path, newPoint: Vec2) {
+    console.log('addPointToPath', newPoint, JSON.stringify(path.points.map(pn => ({ x: pn.x, y: pn.y })), null, 2));
+    path.points.push(newPoint);
+    path.distance += distance(path.points[path.points.length - 2], path.points[path.points.length - 1]);
+}
+function verticiesBelongToSamePoly(v1: Vertex, v2: Vertex): boolean {
+    const limit = 100;
+    let verticiesIterated = 0;
+    let next = v1.next;
+    while (next != v1) {
+        if (next == v2) {
+            return true
+        }
+        next = next.next;
+        // Protect against infinite loop
+        // This should never happen because all Poly's are closed
+        verticiesIterated++;
+        if (verticiesIterated >= limit) {
+            console.error('Poly limit reached in verticiesBelongToSamePoly');
+            break;
+        }
+    }
+    return false;
+
+}
+function getClosestIntersectionWithWalls(line: LineSegment, walls: VertexLineSegment[]): VertexLineSegment | undefined {
+    let intersectingWall;
+    let closestIntersection;
+    let closestIntersectionDistance;
+    // Check for collisions between the last line in the path and pathing walls
+    for (let wall of walls) {
+        const intersection = lineSegmentIntersection(line, wall);
+        if (intersection) {
+            if (vectorMath.equal(line.p1, intersection)) {
+                // Exclude collisions at start point of line segment. Don't collide with self
+                continue;
+            }
+            const dist = distance(line.p1, intersection);
+            // If there is no closest intersection, make this intersection the closest intersection
+            // If there is and this intersection is closer, make it the closest
+            if (!closestIntersection || (closestIntersection && closestIntersectionDistance && closestIntersectionDistance > dist)) {
+                closestIntersection = intersection;
+                closestIntersectionDistance = dist;
+                intersectingWall = wall
+            }
+
+        }
+    }
+    console.log('intersection', line, closestIntersection);
+    return intersectingWall ? intersectingWall : undefined
 }
 interface Path {
     done: boolean;

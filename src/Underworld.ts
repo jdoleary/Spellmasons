@@ -28,7 +28,7 @@ import { calculateManaCost } from './cards/cardUtils';
 import { moveWithCollisions } from './collision/moveWithCollision';
 import { lineSegmentIntersection, LineSegment } from './collision/collisionMath';
 import { updateCardManaBadges } from './CardUI';
-import { expandPolygon, polygonToLineSegments, polygonToVec2s, vec2sToPolygon } from './PathfindingAttempt2';
+import { expandPolygon, polygonToVertexLineSegments, polygonToVec2s, vec2sToPolygon, VertexLineSegment } from './PathfindingAttempt2';
 
 export enum turn_phase {
   PlayerTurns,
@@ -70,7 +70,7 @@ export default class Underworld {
   walls: LineSegment[] = [];
   // pathingWalls are build using walls but are modified to be grown, so that units with thickness
   // don't clip through walls as they path.  See this.cacheWalls for more
-  pathingWalls: LineSegment[] = [];
+  pathingWalls: VertexLineSegment[] = [];
   secondsLeftForTurn: number = config.SECONDS_PER_TURN;
   turnInterval: any;
   level?: ILevel;
@@ -251,7 +251,7 @@ export default class Underworld {
     }, [])
 
     // Save the pathing walls for the underworld
-    this.pathingWalls = collidablePolygons.map(p => polygonToLineSegments(expandPolygon(p, config.COLLISION_MESH_RADIUS))).flat();
+    this.pathingWalls = collidablePolygons.map(p => polygonToVertexLineSegments(expandPolygon(p, config.COLLISION_MESH_RADIUS))).flat();
   }
 
   initLevel(level: ILevel) {
@@ -373,6 +373,10 @@ export default class Underworld {
       {
         "x": 413,
         "y": 306
+      },
+      {
+        "x": 500,
+        "y": 360
       },
       {
         "x": 700,

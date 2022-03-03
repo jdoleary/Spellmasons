@@ -102,15 +102,15 @@ export function mousemoveHandler(e: MouseEvent) {
   // Test pathing
   if (window.player) {
     window.underworld.debugGraphics.clear()
-    window.underworld.debugGraphics.lineStyle(3, 0xaa00bb, 1);
+    // window.underworld.debugGraphics.lineStyle(3, 0xaa00bb, 1);
     const mouseTarget = window.underworld.getMousePos();
     const path = findPath(window.player.unit, mouseTarget, window.underworld.pathingWalls);
-    window.underworld.debugGraphics.moveTo(path[0].x, path[0].y);
+    // window.underworld.debugGraphics.moveTo(path[0].x, path[0].y);
     // Draw the path
-    for (let point of path) {
-      window.underworld.debugGraphics.drawCircle(point.x, point.y, 4);
-      window.underworld.debugGraphics.lineTo(point.x, point.y);
-    }
+    // for (let point of path) {
+    //   window.underworld.debugGraphics.drawCircle(point.x, point.y, 4);
+    //   window.underworld.debugGraphics.lineTo(point.x, point.y);
+    // }
     // Draw the pathing walls
     window.underworld.debugGraphics.lineStyle(3, 0x00aabb, 0.1);
     for (let lineSegment of window.underworld.pathingWalls) {
