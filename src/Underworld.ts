@@ -20,7 +20,7 @@ import floatingText from './FloatingText';
 import { UnitType, Vec2, Faction, Polygon } from './commonTypes';
 import Events from './Events';
 import { allUnits } from './units';
-import { syncSpellEffectProjection, updatePlanningView, updateTooltipSpellCost } from './ui/PlanningView';
+import { syncSpellEffectProjection, updatePlanningView } from './ui/PlanningView';
 import { ILevel, getEnemiesForAltitude } from './overworld';
 import { setRoute, Route } from './routes';
 import { prng, randInt, SeedrandomState } from './rand';
@@ -28,8 +28,7 @@ import { calculateManaCost } from './cards/cardUtils';
 import { moveWithCollisions } from './collision/moveWithCollision';
 import { lineSegmentIntersection, LineSegment } from './collision/collisionMath';
 import { updateCardManaBadges } from './CardUI';
-import { generateConvexPolygonMesh } from './Pathfinding';
-import { expandPolygon, polygonToVec2s, vec2sToPolygon } from './PathfindingAttempt2';
+import { expandPolygon, polygonToLineSegments, polygonToVec2s, vec2sToPolygon } from './PathfindingAttempt2';
 
 export enum turn_phase {
   PlayerTurns,
@@ -69,6 +68,9 @@ export default class Underworld {
   pickups: Pickup.IPickup[] = [];
   obstacles: Obstacle.IObstacle[] = [];
   walls: LineSegment[] = [];
+  // pathingWalls are build using walls but are modified to be grown, so that units with thickness
+  // don't clip through walls as they path.  See this.cacheWalls for more
+  pathingWalls: LineSegment[] = [];
   secondsLeftForTurn: number = config.SECONDS_PER_TURN;
   turnInterval: any;
   level?: ILevel;
@@ -250,16 +252,10 @@ export default class Underworld {
     }, [])
 
     // Draw path collision polygons
-    const expandedPolygonsPoints = collidablePolygons.map(p => polygonToVec2s(expandPolygon(p, config.COLLISION_MESH_RADIUS)));
-    console.log("jtest", collidablePolygons);
-    for (let polyPoints of expandedPolygonsPoints) {
-      const firstPoint = polyPoints[0];
-      this.debugGraphics.moveTo(firstPoint.x, firstPoint.y);
-      for (let p of polyPoints) {
-        this.debugGraphics.lineTo(p.x, p.y);
-      }
-      // Close the polygon
-      this.debugGraphics.lineTo(firstPoint.x, firstPoint.y);
+    this.pathingWalls = collidablePolygons.map(p => polygonToLineSegments(expandPolygon(p, config.COLLISION_MESH_RADIUS))).flat();
+    for (let lineSegment of this.pathingWalls) {
+      this.debugGraphics.moveTo(lineSegment.p1.x, lineSegment.p1.y);
+      this.debugGraphics.lineTo(lineSegment.p2.x, lineSegment.p2.y);
     }
   }
 

@@ -1,6 +1,7 @@
 import type { Vec2, Polygon, Vertex } from "./commonTypes";
 import * as vectorMath from './collision/vectorMath';
 import { distance, similarTriangles } from "./math";
+import type { LineSegment } from "./collision/collisionMath";
 
 export function vec2sToPolygon(points: Vec2[]): Polygon {
     let startVertex;
@@ -41,6 +42,18 @@ export function getVerticies(polygon: Polygon): Vertex[] {
 }
 export function polygonToVec2s(polygon: Polygon): Vec2[] {
     return getVerticies(polygon).map(({ x, y }) => ({ x, y }));
+}
+export function polygonToLineSegments(polygon: Polygon): LineSegment[] {
+    const points = polygonToVec2s(polygon);
+    let lastPoint = points[0];
+    let lineSegments: LineSegment[] = [];
+    for (let i = 1; i < points.length; i++) {
+        lineSegments.push({ p1: lastPoint, p2: points[i] });
+        lastPoint = points[i];
+    }
+    // Add line from last point to first point:
+    lineSegments.push({ p1: lastPoint, p2: points[0] });
+    return lineSegments;
 }
 // in radians
 function getAngleBetweenVec2s(v1: Vec2, v2: Vec2): number {
