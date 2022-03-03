@@ -59,7 +59,7 @@ function getAngleBetweenAngles(anglePrev: number, angleNext: number): number {
 // along the normal vectors of each vertex.
 // Uses the ordered verticies (from prev to next; running clockwise) to determine what is
 // "inside" and what is "outside"
-function expandPolygon(polygon: Polygon, magnitude: number): Polygon {
+export function expandPolygon(polygon: Polygon, magnitude: number): Polygon {
     const vertices = getVerticies(polygon);
     // Batch adjustedPoints and then adjust them all at once
     const newPoints: Vec2[] = vertices.map(v => projectVertexAlongOutsideNormal(v, magnitude));
@@ -93,16 +93,16 @@ function projectVertexAlongOutsideNormal(vertex: Vertex, magnitude: number): Vec
     const relativeAdjustedPoint = similarTriangles(X, Y, D, d);
     return vectorMath.subtract(vertex, relativeAdjustedPoint);
 }
-function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
-    // TODO: LEFT OFF: implement
+// function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
+//     // TODO: LEFT OFF: implement
 
-}
+// }
 
 export const testables = {
     expandPolygon,
     projectVertexAlongOutsideNormal,
     getAngleBetweenAngles,
-    mergeOverlappingPolygons,
+    // mergeOverlappingPolygons,
 }
 
 // In order to pathfind, I need a non-intersecting convex polygon mesh.
@@ -114,15 +114,15 @@ export const testables = {
 // is spacious and available for movement.  So inverted polygons can be expressed by the direction of prev and next in it's verticies.
 // --
 // Takes an array of Polygons and transforms them into a fully connected convex poly mesh
-export function generateConvexPolygonMesh(polys: Polygon[], expandSize: number): Polygon[] {
-    // 1. Grow the polygons according to `expand`.  Expand is used to give a margin to the pathing mesh so that units with thickness won't clip through walls as they pass by the corners or through a narrow area.
-    const expandedPolygons = polys.map(p => expandPolygon(p, expandSize));
-    // 2. Merge parts of intersecting or overlapping polygons so that none of them intersect or overlap.  This step is important, for example if there is a very thin corridor and the expand is large enough, no space in the corridor will be pathable and this is because the collidable polygons will grow so much (due to the expand) that they will overlap.
-    // TODO: Left off here
-    // 3. Take the world bounds (the inverted polygon I mentioned before) and all the collidable polygons and make more connections between their verticies so that there are no concave polygons. This step will return a new array of polygons (probably 3-sided).
-    // This is currently done inside of split
-    // 4.  Optimize the new array of polygons so that multiple polygons are combined if the unified polygon remains convex.
-    // This is currently done inside of split but should be redone to use polygons instead of Points
-    // 5.  Give polygons references to their neighbors (a neighboring polygon is any polygon that shares an edge
-    // 6. Use this array of polygons and their neighbors via an A* algorithm or something similar to pathfind.
-}
+// export function generateConvexPolygonMesh(polys: Polygon[], expandSize: number): Polygon[] {
+//     // 1. Grow the polygons according to `expand`.  Expand is used to give a margin to the pathing mesh so that units with thickness won't clip through walls as they pass by the corners or through a narrow area.
+//     const expandedPolygons = polys.map(p => expandPolygon(p, expandSize));
+//     // 2. Merge parts of intersecting or overlapping polygons so that none of them intersect or overlap.  This step is important, for example if there is a very thin corridor and the expand is large enough, no space in the corridor will be pathable and this is because the collidable polygons will grow so much (due to the expand) that they will overlap.
+//     // TODO: Left off here
+//     // 3. Take the world bounds (the inverted polygon I mentioned before) and all the collidable polygons and make more connections between their verticies so that there are no concave polygons. This step will return a new array of polygons (probably 3-sided).
+//     // This is currently done inside of split
+//     // 4.  Optimize the new array of polygons so that multiple polygons are combined if the unified polygon remains convex.
+//     // This is currently done inside of split but should be redone to use polygons instead of Points
+//     // 5.  Give polygons references to their neighbors (a neighboring polygon is any polygon that shares an edge
+//     // 6. Use this array of polygons and their neighbors via an A* algorithm or something similar to pathfind.
+// }

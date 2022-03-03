@@ -24,9 +24,9 @@ export function create(x: number, y: number, obstacle: IObstacleSource) {
   const _y = y - height / 2;
   const bounds = vec2sToPolygon([
     { x: _x, y: _y },
-    { x: _x + width, y: _y },
+    { x: _x, y: _y + height },
     { x: _x + width, y: _y + height },
-    { x: _x, y: _y + height }
+    { x: _x + width, y: _y },
   ]);
 
   if (bounds === undefined) {

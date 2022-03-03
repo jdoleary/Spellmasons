@@ -17,7 +17,7 @@ import {
   containerUI,
 } from './PixiUtils';
 import floatingText from './FloatingText';
-import { UnitType, Vec2, Faction } from './commonTypes';
+import { UnitType, Vec2, Faction, Polygon } from './commonTypes';
 import Events from './Events';
 import { allUnits } from './units';
 import { syncSpellEffectProjection, updatePlanningView, updateTooltipSpellCost } from './ui/PlanningView';
@@ -29,7 +29,7 @@ import { moveWithCollisions } from './collision/moveWithCollision';
 import { lineSegmentIntersection, LineSegment } from './collision/collisionMath';
 import { updateCardManaBadges } from './CardUI';
 import { generateConvexPolygonMesh } from './Pathfinding';
-import { polygonToVec2s } from './PathfindingAttempt2';
+import { expandPolygon, polygonToVec2s, vec2sToPolygon } from './PathfindingAttempt2';
 
 export enum turn_phase {
   PlayerTurns,
@@ -226,8 +226,15 @@ export default class Underworld {
   // TODO:  this will need to be called if objects become
   // destructable
   cacheWalls() {
-    this.walls = this.obstacles.reduce<LineSegment[]>((agg, cur) => {
-      const points = polygonToVec2s(cur.bounds);
+    const mapBounds: Polygon = vec2sToPolygon([
+      { x: 0, y: 0 },
+      { x: config.MAP_WIDTH, y: 0 },
+      { x: config.MAP_WIDTH, y: config.MAP_HEIGHT },
+      { x: 0, y: config.MAP_HEIGHT },
+    ]);
+    const collidablePolygons = [...this.obstacles.map(o => o.bounds), mapBounds];
+    this.walls = collidablePolygons.reduce<LineSegment[]>((agg, cur) => {
+      const points = polygonToVec2s(cur);
       let lastPoint: Vec2 | undefined;
       for (let point of points) {
         if (lastPoint) {
@@ -241,19 +248,19 @@ export default class Underworld {
       }
       return agg;
     }, [])
-    this.walls.push({ p1: { x: 0, y: 0 }, p2: { x: config.MAP_WIDTH, y: 0 } });
-    this.walls.push({ p1: { x: 0, y: 0 }, p2: { x: 0, y: config.MAP_HEIGHT } });
-    this.walls.push({ p1: { x: config.MAP_WIDTH, y: config.MAP_HEIGHT }, p2: { x: config.MAP_WIDTH, y: 0 } });
-    this.walls.push({ p1: { x: config.MAP_WIDTH, y: config.MAP_HEIGHT }, p2: { x: 0, y: config.MAP_HEIGHT } });
-    const points = generateConvexPolygonMesh(this.walls, 10);
-    for (let p of points) {
-      const { hub, connections } = p;
-      for (let c of connections) {
-        this.debugGraphics.moveTo(hub.x, hub.y);
-        this.debugGraphics.lineTo(c.x, c.y);
-      }
-    }
 
+    // Draw path collision polygons
+    const expandedPolygonsPoints = collidablePolygons.map(p => polygonToVec2s(expandPolygon(p, config.COLLISION_MESH_RADIUS)));
+    console.log("jtest", collidablePolygons);
+    for (let polyPoints of expandedPolygonsPoints) {
+      const firstPoint = polyPoints[0];
+      this.debugGraphics.moveTo(firstPoint.x, firstPoint.y);
+      for (let p of polyPoints) {
+        this.debugGraphics.lineTo(p.x, p.y);
+      }
+      // Close the polygon
+      this.debugGraphics.lineTo(firstPoint.x, firstPoint.y);
+    }
   }
 
   initLevel(level: ILevel) {
@@ -370,18 +377,19 @@ export default class Underworld {
     //   Obstacle.create(coords.x, coords.y, obstacle);
     //   // TODO: Ensure the players have a path to the portal
     // }
+    // Test obstaclese
     [
       {
         "x": 413,
         "y": 306
       },
       {
-        "x": 500,
+        "x": 700,
         "y": 429
       },
       {
         "x": 722,
-        "y": 559
+        "y": 459
       }
     ].map(({ x, y }) => { Obstacle.create(x, y, Obstacle.obstacleSource[0]) });
     this.cacheWalls();
