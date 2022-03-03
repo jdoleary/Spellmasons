@@ -132,19 +132,10 @@ export function findPath(startPoint: Vec2, target: Vec2, pathingWalls: LineSegme
     return lineSegmentsToVec2s(tryPaths(potentialPaths, pathingWalls, 0));
 }
 function tryPaths(paths: Path[], pathingWalls: LineSegment[], recursionCount: number): Path {
-    console.log("trypaths", recursionCount, paths);
     // Protect against infinite recursion
-    if (recursionCount > 6) {
-        console.error('couldnt find path', recursionCount);
-        // Draw all the paths:
-
-        window.underworld.debugGraphics.lineStyle(3, 0xaa0000, 1);
-        for (let path of paths) {
-            for (let lineSegment of path) {
-                window.underworld.debugGraphics.moveTo(lineSegment.p1.x, lineSegment.p1.y);
-                window.underworld.debugGraphics.lineTo(lineSegment.p2.x, lineSegment.p2.y);
-            }
-        }
+    if (recursionCount > 2) {
+        console.error('couldnt find path in few enough steps', recursionCount);
+        // Default to the first path since a complete path couldn't be found
         return paths[0]
     }
     // TODO:
@@ -159,6 +150,10 @@ function tryPaths(paths: Path[], pathingWalls: LineSegment[], recursionCount: nu
         for (let wall of pathingWalls) {
             const intersection = lineSegmentIntersection(nextStraightLinePath, wall);
             if (intersection) {
+                if (vectorMath.equal(nextStraightLinePath.p1, intersection)) {
+                    // Exclude collisions with start point of line segment. 
+                    continue;
+                }
                 const dist = distance(nextStraightLinePath.p1, intersection);
                 // If there is no closest intersection, make this intersection the closest intersection
                 // If there is and this intersection is closer, make it the closest
@@ -174,22 +169,38 @@ function tryPaths(paths: Path[], pathingWalls: LineSegment[], recursionCount: nu
         // we have to branch the path to the corners of the wall and try again
         if (closestIntersection && intersectingWall) {
             window.underworld.debugGraphics.drawCircle(closestIntersection.x, closestIntersection.y, 7);
-            // nextStraightLinePath.p2 = wall.p1;
-            path[path.length - 1].p2 = intersectingWall.p1;
-            path.push({ p1: nextStraightLinePath.p2, p2: target });
+            // Branch the path.  The original path will try navigating around p1
+            // and the branchedPath will try navigating around p2.
+            // Note: branchedPath must be cloned before path's p2 is modified
+            const branchedPath = deepClonePath(path)
+            paths.push(branchedPath);
 
-            // const branchedPath = deepClonePath(path)
-            // branchedPath[branchedPath.length - 1].p2 = wall.p2;
-            // branchedPath.push({ p1: wall.p2, p2: target });
-            // paths.push(branchedPath);
+            // Add the wall's p1 corner as a point in the path
+            path[path.length - 1].p2 = intersectingWall.p1;
+            path.push({ p1: intersectingWall.p1, p2: target });
+
+            // Start another path with the wall's p2 corner as the next point in the path
+            branchedPath[branchedPath.length - 1].p2 = intersectingWall.p2;
+            branchedPath.push({ p1: intersectingWall.p2, p2: target });
 
             return tryPaths(paths, pathingWalls, ++recursionCount);
 
         } else {
             // If no intersections were found then we have a path to the target, return that path:
+            // Draw all the paths:
+            window.underworld.debugGraphics.lineStyle(8, 0xaa0000, 1);
+            for (let path of paths) {
+                for (let lineSegment of path) {
+                    window.underworld.debugGraphics.moveTo(lineSegment.p1.x, lineSegment.p1.y);
+                    window.underworld.debugGraphics.lineTo(lineSegment.p2.x, lineSegment.p2.y);
+                }
+            }
+            console.log(`Found ${paths.length} valid paths`);
             return path;
         }
     }
+
+    // This should be unreachable since the for loop with return, return path at index 0 as default
     return paths[0];
 }
 type Path = LineSegment[];

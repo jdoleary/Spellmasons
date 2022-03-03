@@ -108,6 +108,7 @@ export function mousemoveHandler(e: MouseEvent) {
     window.underworld.debugGraphics.moveTo(path[0].x, path[0].y);
     // Draw the path
     for (let point of path) {
+      window.underworld.debugGraphics.drawCircle(point.x, point.y, 4);
       window.underworld.debugGraphics.lineTo(point.x, point.y);
     }
     // Draw the pathing walls
