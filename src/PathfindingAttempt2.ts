@@ -127,9 +127,14 @@ export const testables = {
 
 export function findPath(startPoint: Vec2, target: Vec2, pathingWalls: LineSegment[]): Vec2[] {
     const paths: Path[] = [
-        { done: false, bad: false, points: [startPoint, target], distance: 0 }
+        // Start with the first idea path from start to target
+        // Note, the distance is calculated inside of tryPaths even if 
+        // there are no interruptions to the path and it just goes from startPoint
+        // to target.
+        { done: false, invalid: false, points: [startPoint, target], distance: 0 }
     ];
     tryPaths(paths, pathingWalls, 0);
+    console.log('paths', paths);
     return paths.sort((a, b) => a.distance - b.distance)[0].points
 }
 // Mutates the paths array's objects
@@ -137,11 +142,11 @@ function tryPaths(paths: Path[], pathingWalls: LineSegment[], recursionCount: nu
     // Protect against infinite recursion
     if (recursionCount > 7) {
         console.error('couldnt find path in few enough steps', recursionCount);
-        // Mark all unfinished path's as bad because they did not find a valid path
+        // Mark all unfinished path's as invalid because they did not find a valid path
         // in few enough steps
         for (let path of paths) {
             if (!path.done) {
-                path.bad = true;
+                path.invalid = true;
             }
             path.done = true;
 
@@ -155,12 +160,12 @@ function tryPaths(paths: Path[], pathingWalls: LineSegment[], recursionCount: nu
         if (path.done) {
             continue;
         }
-        if (path.bad) {
+        if (path.invalid) {
             continue;
         }
         // A path must have at least 2 points (a start and and end) to be processed
         if (path.points.length < 2) {
-            path.bad = true;
+            path.invalid = true;
             continue;
         }
         const nextStraightLine: LineSegment = { p1: path.points[path.points.length - 2], p2: path.points[path.points.length - 1] };
@@ -248,8 +253,8 @@ function tryPaths(paths: Path[], pathingWalls: LineSegment[], recursionCount: nu
 }
 interface Path {
     done: boolean;
-    // A bad path does not path to the target and can be ignored
-    bad: boolean;
+    // A invalid path does not path to the target and can be ignored
+    invalid: boolean;
     points: Vec2[];
     // The distance that the full path traverses
     distance: number;
