@@ -126,35 +126,63 @@ export const testables = {
 }
 
 export function findPath(startPoint: Vec2, target: Vec2, pathingWalls: LineSegment[]): Vec2[] {
-    const potentialPaths: Path[] = [
-        [{ p1: startPoint, p2: target }]
+    const paths: Path[] = [
+        { done: false, bad: false, points: [startPoint, target], distance: 0 }
     ];
-    return lineSegmentsToVec2s(tryPaths(potentialPaths, pathingWalls, 0));
+    tryPaths(paths, pathingWalls, 0);
+    return paths.sort((a, b) => a.distance - b.distance)[0].points
 }
-function tryPaths(paths: Path[], pathingWalls: LineSegment[], recursionCount: number): Path {
+// Mutates the paths array's objects
+function tryPaths(paths: Path[], pathingWalls: LineSegment[], recursionCount: number) {
     // Protect against infinite recursion
-    if (recursionCount > 2) {
+    if (recursionCount > 7) {
         console.error('couldnt find path in few enough steps', recursionCount);
-        // Default to the first path since a complete path couldn't be found
-        return paths[0]
+        // Mark all unfinished path's as bad because they did not find a valid path
+        // in few enough steps
+        for (let path of paths) {
+            if (!path.done) {
+                path.bad = true;
+            }
+            path.done = true;
+
+        }
     }
     // TODO:
     // Deal with not drawing a next path line through the inside of an obstacle
 
     for (let path of paths) {
-        const nextStraightLinePath = path[path.length - 1];
-        const target = nextStraightLinePath.p2;
+        // Do not continue to process paths that are complete
+        if (path.done) {
+            continue;
+        }
+        if (path.bad) {
+            continue;
+        }
+        // A path must have at least 2 points (a start and and end) to be processed
+        if (path.points.length < 2) {
+            path.bad = true;
+            continue;
+        }
+        const nextStraightLine: LineSegment = { p1: path.points[path.points.length - 2], p2: path.points[path.points.length - 1] };
+        const target = nextStraightLine.p2;
+
+        // Debug draw nextStraightLine
+        window.underworld.debugGraphics.lineStyle(3, 0x00ff00, 1);
+        window.underworld.debugGraphics.moveTo(nextStraightLine.p1.x, nextStraightLine.p1.y);
+        window.underworld.debugGraphics.lineTo(nextStraightLine.p2.x, nextStraightLine.p2.y);
+
         let intersectingWall;
         let closestIntersection;
         let closestIntersectionDistance;
+        // Check for collisions between the last line in the path and pathing walls
         for (let wall of pathingWalls) {
-            const intersection = lineSegmentIntersection(nextStraightLinePath, wall);
+            const intersection = lineSegmentIntersection(nextStraightLine, wall);
             if (intersection) {
-                if (vectorMath.equal(nextStraightLinePath.p1, intersection)) {
-                    // Exclude collisions with start point of line segment. 
+                if (vectorMath.equal(nextStraightLine.p1, intersection)) {
+                    // Exclude collisions at start point of line segment. Don't collide with self
                     continue;
                 }
-                const dist = distance(nextStraightLinePath.p1, intersection);
+                const dist = distance(nextStraightLine.p1, intersection);
                 // If there is no closest intersection, make this intersection the closest intersection
                 // If there is and this intersection is closer, make it the closest
                 if (!closestIntersection || (closestIntersection && closestIntersectionDistance && closestIntersectionDistance > dist)) {
@@ -168,46 +196,65 @@ function tryPaths(paths: Path[], pathingWalls: LineSegment[], recursionCount: nu
         // If there is an intersection between a straight line path and a pathing wall
         // we have to branch the path to the corners of the wall and try again
         if (closestIntersection && intersectingWall) {
-            window.underworld.debugGraphics.drawCircle(closestIntersection.x, closestIntersection.y, 7);
+            // Debug draw intersection and branch:
+            window.underworld.debugGraphics.lineStyle(1, 0x0000ff, 1);
+            window.underworld.debugGraphics.drawCircle(closestIntersection.x, closestIntersection.y, 3);
+            window.underworld.debugGraphics.moveTo(closestIntersection.x, closestIntersection.y);
+            window.underworld.debugGraphics.lineTo(intersectingWall.p1.x, intersectingWall.p1.y);
+            window.underworld.debugGraphics.moveTo(closestIntersection.x, closestIntersection.y);
+            window.underworld.debugGraphics.lineTo(intersectingWall.p2.x, intersectingWall.p2.y);
             // Branch the path.  The original path will try navigating around p1
             // and the branchedPath will try navigating around p2.
             // Note: branchedPath must be cloned before path's p2 is modified
-            const branchedPath = deepClonePath(path)
+            const branchedPath = { ...path, points: path.points.map(p => vectorMath.clone(p)) };
             paths.push(branchedPath);
 
-            // Add the wall's p1 corner as a point in the path
-            path[path.length - 1].p2 = intersectingWall.p1;
-            path.push({ p1: intersectingWall.p1, p2: target });
+            // Replace the last point with the wall's p1 corner
+            path.points[path.points.length - 1] = intersectingWall.p1;
+            // Add the distance to the wall corner to the path's distance
+            // since the path now traverses to this corner before moving on
+            path.distance += distance(path.points[path.points.length - 2], path.points[path.points.length - 1]);
+            // Re add the last point to the end of the points
+            path.points.push(target);
 
-            // Start another path with the wall's p2 corner as the next point in the path
-            branchedPath[branchedPath.length - 1].p2 = intersectingWall.p2;
-            branchedPath.push({ p1: intersectingWall.p2, p2: target });
+            // Replace the last point with the wall's p2 corner
+            branchedPath.points[branchedPath.points.length - 1] = intersectingWall.p2;
+            // Add the distance to the wall corner to the path's distance
+            // since the path now traverses to this corner before moving on
+            path.distance += distance(path.points[path.points.length - 2], path.points[path.points.length - 1]);
+            // Re add the last point to the end of the points
+            branchedPath.points.push(target);
 
-            return tryPaths(paths, pathingWalls, ++recursionCount);
+            tryPaths(paths, pathingWalls, recursionCount + 1);
 
         } else {
-            // If no intersections were found then we have a path to the target, return that path:
-            // Draw all the paths:
-            window.underworld.debugGraphics.lineStyle(8, 0xaa0000, 1);
+            // This is the "happy path", a straight line without collisions has been found to the target
+            // and the path is complete
+
+            // Debug: Draw all the paths:
+            window.underworld.debugGraphics.lineStyle(4, 0xaa0000, 0.3);
             for (let path of paths) {
-                for (let lineSegment of path) {
-                    window.underworld.debugGraphics.moveTo(lineSegment.p1.x, lineSegment.p1.y);
-                    window.underworld.debugGraphics.lineTo(lineSegment.p2.x, lineSegment.p2.y);
+                window.underworld.debugGraphics.moveTo(path.points[0].x, path.points[0].y);
+                for (let point of path.points) {
+                    window.underworld.debugGraphics.lineTo(point.x, point.y);
                 }
             }
-            console.log(`Found ${paths.length} valid paths`);
-            return path;
+            // Finally, add the final distance from the penultimate point to the final point
+            path.distance += distance(path.points[path.points.length - 2], path.points[path.points.length - 1]);
+            // If no intersections were found then we have a path to the target, so stop processing this path:
+            path.done = true;
         }
     }
-
-    // This should be unreachable since the for loop with return, return path at index 0 as default
-    return paths[0];
 }
-type Path = LineSegment[];
-
-function deepClonePath(path: Path): Path {
-    return path.map(l => ({ p1: vectorMath.clone(l.p1), p2: vectorMath.clone(l.p2) }))
+interface Path {
+    done: boolean;
+    // A bad path does not path to the target and can be ignored
+    bad: boolean;
+    points: Vec2[];
+    // The distance that the full path traverses
+    distance: number;
 }
+
 // In order to pathfind, I need a non-intersecting convex polygon mesh.
 
 // The corner cases include walls that overlap, and expands that overlap.
