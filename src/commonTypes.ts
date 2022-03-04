@@ -43,4 +43,5 @@ export type Vertex = Vec2 & { prev: Vertex, next: Vertex };
 // back at the first vertex.
 export interface Polygon {
   startVertex: Vertex;
+  length: number;
 }

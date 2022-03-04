@@ -17,7 +17,6 @@ describe('collisionMath', () => {
     //         const ls2: LineSegment = { p1: { x: 1, y: -1 }, p2: { x: 1, y: 1 } };
     //         const l1 = toStandardForm(ls1);
     //         const l2 = toStandardForm(ls2);
-    //         console.log("jtest ", l2);
     //         const actual = intersectionOfLines(l1, l2);
     //         const expected = { x: 1, y: 0 };
     //         expect(actual).toEqual(expected);

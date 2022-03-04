@@ -1,4 +1,4 @@
-import { polygonToVec2s, vec2sToPolygon, expandPolygon, testables } from "../PathfindingAttempt2";
+import { polygonToVec2s, vec2sToPolygon, expandPolygon, testables, makePolygonIterator } from "../PathfindingAttempt2";
 const { projectVertexAlongOutsideNormal, getAngleBetweenAngles, mergeOverlappingPolygons, isVec2InsidePolygon } = testables;
 import type { Vec2 } from "../commonTypes";
 describe('projectVertexAlongOutsideNormal', () => {
@@ -129,7 +129,7 @@ describe('polygonToVec2s', () => {
     });
 });
 
-describe.only('isVec2InsidePolygon', () => {
+describe('isVec2InsidePolygon', () => {
     it('should return true when the vec is inside the square', () => {
         const p1 = { x: 0, y: 0 }
         const p2 = { x: 0, y: 1 }
@@ -186,20 +186,24 @@ describe.only('isVec2InsidePolygon', () => {
         const expected = true;
         expect(actual).toEqual(expected);
     });
-    // it('should return true when the vec is inside a complex polygon and the vec has the same y value as one of the verticies', () => {
-    //     const p1 = { x: 0, y: 0 }
-    //     const p2 = { x: 0, y: 1 }
-    //     const p3 = { x: 1, y: 1 }
-    //     const p4 = { x: 1, y: 0 }
-    //     const points: Vec2[] = [p1, p2, p3, p4];
-    //     const polygonA = vec2sToPolygon(points);
-    //     const actual = isVec2InsidePolygon({ x: 0.5, y: 0.5 }, polygonA);
-    //     const expected = true;
-    //     expect(actual).toEqual(expected);
-    // });
 
 });
 
+describe.only('makePolygonIterator', () => {
+    it('should iterate all the verticies of a polygon', () => {
+        const p1 = { x: 0, y: 0 }
+        const p2 = { x: 0, y: 1 }
+        const p3 = { x: 1, y: 1 }
+        const p4 = { x: 1, y: 0 }
+        const points: Vec2[] = [p1, p2, p3, p4];
+        const polygon = vec2sToPolygon(points);
+        const iterator = makePolygonIterator(polygon);
+        const actual = Array.from(iterator).map(({ x, y }) => ({ x, y }));
+        const expected = [p1, p2, p3, p4];
+        expect(actual).toEqual(expected);
+    });
+
+});
 describe('mergeOverlappingPolygons', () => {
     describe('given overlapping boxes on one axis', () => {
         it("should remove the overlapping verticies and return a polygon that is one large rectangle", () => {
@@ -216,6 +220,59 @@ describe('mergeOverlappingPolygons', () => {
             const pointsb: Vec2[] = [p1b, p2b, p3b, p4b];
             const polygonB = vec2sToPolygon(pointsb);
             const mergedPolygon = mergeOverlappingPolygons([polygonA, polygonB])[0];
+
+            const actual = polygonToVec2s(mergedPolygon);
+            const expected = [
+                p1,
+                p2b,
+                p3b,
+                p4
+            ];
+            expect(actual).toEqual(expected);
+        });
+    });
+    describe('given overlapping boxes on one side', () => {
+        // LEFT OFF
+        it("should merge the polygons", () => {
+            // In this example one polygon has 2 points inside
+            // of the other but the other has no points inside of it
+            const p1 = { x: 0, y: 0 }
+            const p2 = { x: 0, y: 2 }
+            const p3 = { x: 1, y: 2 }
+            const p4 = { x: 1, y: 0 }
+            const points: Vec2[] = [p1, p2, p3, p4];
+            const polygonA = vec2sToPolygon(points);
+            const p1b = { x: -1, y: 1 }
+            const p2b = { x: -1, y: 3 }
+            const p3b = { x: 2, y: 3 }
+            const p4b = { x: 2, y: 1 }
+            const pointsb: Vec2[] = [p1b, p2b, p3b, p4b];
+            const polygonB = vec2sToPolygon(pointsb);
+            const mergedPolygon = mergeOverlappingPolygons([polygonA, polygonB])[0];
+
+            const actual = polygonToVec2s(mergedPolygon);
+            const expected = [
+                p1,
+                p2b,
+                p3b,
+                p4
+            ];
+            expect(actual).toEqual(expected);
+        });
+        it("should still merge the polygons even if the start polygons are in reverse order", () => {
+            const p1 = { x: 0, y: 0 }
+            const p2 = { x: 0, y: 2 }
+            const p3 = { x: 1, y: 2 }
+            const p4 = { x: 1, y: 0 }
+            const points: Vec2[] = [p1, p2, p3, p4];
+            const polygonA = vec2sToPolygon(points);
+            const p1b = { x: -1, y: 1 }
+            const p2b = { x: -1, y: 3 }
+            const p3b = { x: 2, y: 3 }
+            const p4b = { x: 2, y: 1 }
+            const pointsb: Vec2[] = [p1b, p2b, p3b, p4b];
+            const polygonB = vec2sToPolygon(pointsb);
+            const mergedPolygon = mergeOverlappingPolygons([polygonB, polygonA])[0];
 
             const actual = polygonToVec2s(mergedPolygon);
             const expected = [
