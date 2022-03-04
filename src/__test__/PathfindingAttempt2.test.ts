@@ -1,4 +1,4 @@
-import { polygonToVec2s, vec2sToPolygon, expandPolygon, testables, makePolygonIterator, mergeOverlappingPolygons } from "../PathfindingAttempt2";
+import { polygonToVec2s, vec2sToPolygon, expandPolygon, testables, makePolygonIterator, mergeOverlappingPolygons, makePolygonIteratorFromVertex } from "../PathfindingAttempt2";
 const { projectVertexAlongOutsideNormal, getAngleBetweenAngles, isVec2InsidePolygon } = testables;
 import type { Vec2 } from "../commonTypes";
 describe('projectVertexAlongOutsideNormal', () => {
@@ -215,7 +215,38 @@ describe('makePolygonIterator', () => {
         const expected = [p3, p4, p1, p2];
         expect(actual).toEqual(expected);
     });
+});
+describe.only('makePolygonIteratorFromVertex', () => {
+    it('should iterate all the verticies of a polygon', () => {
+        const p1 = { x: 0, y: 0 }
+        const p2 = { x: 0, y: 1 }
+        const p3 = { x: 1, y: 1 }
+        const p4 = { x: 1, y: 0 }
+        const points: Vec2[] = [p1, p2, p3, p4];
+        const polygon = vec2sToPolygon(points);
+        const iterator = makePolygonIteratorFromVertex(polygon.startVertex.next);
+        const actual = Array.from(iterator).map(({ x, y }) => ({ x, y }));
+        const expected = [p2, p3, p4, p1];
+        expect(actual).toEqual(expected);
+    });
+    it('should prevent infinite loop via iterationLimit', () => {
+        // Silence expected console.error message
+        const consoleError = console.error;
+        console.error = () => { };
 
+        const p1 = { x: 0, y: 0 }
+        const p2 = { x: 0, y: 1 }
+        const p3 = { x: 1, y: 1 }
+        const p4 = { x: 1, y: 0 }
+        const points: Vec2[] = [p1, p2, p3, p4];
+        const polygon = vec2sToPolygon(points);
+        const iterator = makePolygonIteratorFromVertex(polygon.startVertex, 1);
+        const actual = Array.from(iterator).map(({ x, y }) => ({ x, y }));
+        const expected = [p1];
+        // Restore silenced console.error
+        console.error = consoleError;
+        expect(actual).toEqual(expected);
+    });
 });
 describe('mergeOverlappingPolygons', () => {
     describe('given overlapping boxes on one axis', () => {

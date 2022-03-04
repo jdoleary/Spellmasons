@@ -44,6 +44,20 @@ export function* makePolygonIterator(polygon: Polygon, customStartVertex?: Verte
         current = current.next;
     }
 }
+export function* makePolygonIteratorFromVertex(customStartVertex: Vertex, iterationLimit = 1000): Generator<Vertex> {
+    let current = customStartVertex;
+    for (let i = 0; i < iterationLimit; i++) {
+        yield current;
+        current = current.next;
+        if (current == customStartVertex) {
+            // Full polygon iteration complete
+            return
+        }
+    }
+    // This line **should** not be reached
+    console.error(`Polygon has more than ${iterationLimit} verticies as allowable for makePolygonIteratorFromVertex`);
+
+}
 
 export function getVerticies(polygon: Polygon): Vertex[] {
     let currentVertex = polygon.startVertex;
