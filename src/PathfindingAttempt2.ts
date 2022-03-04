@@ -140,13 +140,7 @@ function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
     top:
     for (let pi = 0; pi < polygons.length; pi++) {
         if (excludePolyAtIndex.has(pi)) {
-            console.log('layer 1: skip', pi);
             continue;
-        }
-        console.log('layer 1: test ', pi, 'length:', polygons.length);
-        if (polygons.length > 4) {
-            console.log("TEST EARLY EXIT");
-            break;
         }
         const polygon = polygons[pi];
         const batchReplaceInstructions: { pi?: number, pj?: number, first?: { originalPolyVert: Vertex, intersectionVert: Vertex }, second?: { originalPolyVert: Vertex, intersectionVert: Vertex } } = {};
@@ -154,22 +148,15 @@ function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
         // For all other polygons
         for (let pj = 0; pj < polygons.length; pj++) {
             if (excludePolyAtIndex.has(pj)) {
-                console.log('    layer 2: skip', pj);
                 continue;
             }
             const otherPoly = polygons[pj];
             // for (let otherPoly of polygons) {
             if (otherPoly == polygon) {
-                console.log('    layer 2: skip self', pj);
                 // "other polygons" meaning... don't test for intersections against self
                 continue;
             }
             for (let vls of polygonToVertexLineSegments(polygon)) {
-                console.log('    layer 2: test ', pj, 'length: ', polygons.length);
-                if (polygons.length > 4) {
-                    console.log("    TEST EARLY EXIT 2");
-                    break;
-                }
                 // Test for intersection with all of the other polygon's vertex line segments
                 for (let otherVls of polygonToVertexLineSegments(otherPoly)) {
                     const intersection = lineSegmentIntersection(vls, otherVls);
@@ -234,7 +221,6 @@ function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
                             break;
                         }
                     }
-                    console.log('ADD NEW POLYGON');
                     polygons.push(vec2sToPolygon(vec2s));
                     continue top;
                 }
