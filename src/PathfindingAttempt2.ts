@@ -304,6 +304,45 @@ export function findPath(startPoint: Vec2, target: Vec2, pathingWalls: VertexLin
 }
 // Mutates the paths array's objects
 function tryPaths(paths: Path[], pathingWalls: VertexLineSegment[], recursionCount: number) {
+    function walk(direction: 'prev' | 'next', startVertex: Vertex, target: Vec2, pathingWalls: VertexLineSegment[], path: Path) {
+        // Walk all the way around a poly in "direction" until you have a straight line path to the target, or until the straight line path
+        // to the target intersects another poly
+        // --
+        // Now keep iterative in the "direction" until we have a path that doesn't intersect with this polygon
+        // and heads right for the target or intersects with another polygon:
+        const _verticies = Array.from(makePolygonIteratorFromVertex(startVertex));
+        // If the direction is 'prev', walk in the opposite direction
+        const verticies = direction == 'prev' ? _verticies.reverse() : _verticies;
+        // As we walk,
+        for (let vertex of verticies) {
+            addPointToPath(path, vertex);
+            // Check if a straight line between the new vertex and the target collides with any walls
+            const intersectingWall = getClosestIntersectionWithWalls({ p1: vertex, p2: target }, pathingWalls);
+            // If it does
+            if (intersectingWall) {
+                // and the wall belongs to the current poly
+                if (verticiesBelongToSamePoly(vertex, intersectingWall.p1)) {
+                    // Continue to check the next or previous (depending on direction) vertex for this poly
+                    // we need to keep walking around it to continue the path
+                    continue;
+                } else {
+                    // If it belongs to a different poly, then we can stop walking because
+                    // we've walked the path as far around the current poly as we need to in order
+                    // to continue pathing towards the target by walking a different poly
+                    break;
+                }
+            } else {
+                // Stop if there is no intersecting wall, the path is complete because it has reached the poly
+                break;
+            }
+
+        }
+
+        // Re add the last point to the end of the points (without changing the distance because it may be removed
+        // temporarily to add intermediate points)
+        path.points.push(target);
+
+    }
     console.log('try paths', JSON.stringify(paths.map(p => ({ ...p, points: p.points.map(pn => ({ x: pn.x, y: pn.y })) })), null, 2));
     // Protect against infinite recursion
     if (recursionCount > 7) {
@@ -356,8 +395,10 @@ function tryPaths(paths: Path[], pathingWalls: VertexLineSegment[], recursionCou
             const branchedPath = { ...path, points: path.points.map(p => vectorMath.clone(p)) };
             paths.push(branchedPath);
 
-            dive('prev', prev, next, target, pathingWalls, path);
-            dive('next', next, prev, target, pathingWalls, branchedPath);
+            // Add the wall's "direction" corner as a new point to path to
+            walk('prev', next, target, pathingWalls, path);
+            // Add the wall's "direction" corner as a new point to path to
+            walk('next', next, target, pathingWalls, branchedPath);
 
 
             tryPaths(paths, pathingWalls, recursionCount + 1);
@@ -388,34 +429,6 @@ function tryPaths(paths: Path[], pathingWalls: VertexLineSegment[], recursionCou
             path.done = true;
         }
     }
-}
-function dive(direction: 'prev' | 'next', vertexInDirection: Vertex, vertexInOtherDirection: Vertex, target: Vec2, pathingWalls: VertexLineSegment[], path: Path) {
-    // Add the wall's "direction" corner as a new point to path to
-    addPointToPath(path, vertexInDirection);
-    // Now keep iterative in the "prev" direction until we have a path that doesn't intersect with this polygon
-    // and heads right for the target or intersects with another polygon:
-    do {
-        console.log('dive', direction)
-        const prevIntersectingWall = getClosestIntersectionWithWalls({ p1: vertexInDirection, p2: target }, pathingWalls);
-        if (prevIntersectingWall) {
-            if (verticiesBelongToSamePoly(vertexInDirection, prevIntersectingWall.p1)) {
-                addPointToPath(path, vertexInDirection[direction]);
-                vertexInDirection = vertexInDirection[direction];
-            } else {
-                break;
-
-            }
-        } else {
-            // Stop if there is no intersecting wall
-            break;
-        }
-        // Stop if we make it all the way around the poly
-    } while (vertexInDirection != vertexInOtherDirection);
-    console.log('done diving', direction)
-    // Re add the last point to the end of the points (without changing the distance because it may be removed
-    // temporarily to add intermediate points)
-    path.points.push(target);
-
 }
 
 // Given a VertexLineSegment, return the vertexes in the orientation of previous and next
