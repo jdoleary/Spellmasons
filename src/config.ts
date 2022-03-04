@@ -1,5 +1,5 @@
 export const PLAYER_BASE_HEALTH = 10;
-export const UNIT_BASE_MOVE_DISTANCE = 120;
+export const UNIT_BASE_MOVE_DISTANCE = 1200;
 export const UNIT_BASE_ATTACK_RANGE = 120;
 export const COLLISION_MESH_RADIUS = 32;
 export const LOB_PROJECTILE_SPEED = 600; // in millis
@@ -14,7 +14,7 @@ export const RESOLVE_DONE_MOVING_TIMEOUT_MS = 1000;
 // Note: UNIT_MOVE_SPEED cannot be less than
 // UNIT_STOP_MOVING_MARGIN or else it will assume
 // no movement has happend and invoke resolveDoneMoving
-export const UNIT_MOVE_SPEED = 4;
+export const UNIT_MOVE_SPEED = 40;
 // Stops units from moving when they are close enough
 export const UNIT_STOP_MOVING_MARGIN = 1;
 export const NON_HEAVY_UNIT_SCALE = 0.8;

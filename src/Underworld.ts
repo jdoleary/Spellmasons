@@ -28,7 +28,7 @@ import { calculateManaCost } from './cards/cardUtils';
 import { moveWithCollisions } from './collision/moveWithCollision';
 import { lineSegmentIntersection, LineSegment } from './collision/collisionMath';
 import { updateCardManaBadges } from './CardUI';
-import { expandPolygon, polygonToVertexLineSegments, polygonToVec2s, vec2sToPolygon, VertexLineSegment } from './PathfindingAttempt2';
+import { expandPolygon, polygonToVertexLineSegments, polygonToVec2s, vec2sToPolygon, VertexLineSegment, mergeOverlappingPolygons } from './PathfindingAttempt2';
 
 export enum turn_phase {
   PlayerTurns,
@@ -251,7 +251,8 @@ export default class Underworld {
     }, [])
 
     // Save the pathing walls for the underworld
-    this.pathingWalls = collidablePolygons.map(p => polygonToVertexLineSegments(expandPolygon(p, config.COLLISION_MESH_RADIUS))).flat();
+    const expandedAndMergedPolygons = mergeOverlappingPolygons(collidablePolygons.map(p => expandPolygon(p, config.COLLISION_MESH_RADIUS)));
+    this.pathingWalls = expandedAndMergedPolygons.map(polygonToVertexLineSegments).flat();
   }
 
   initLevel(level: ILevel) {
@@ -383,7 +384,7 @@ export default class Underworld {
         "y": 429
       },
       {
-        "x": 722,
+        "x": 702,
         "y": 459
       }
     ].map(({ x, y }) => { Obstacle.create(x, y, Obstacle.obstacleSource[0]) });
