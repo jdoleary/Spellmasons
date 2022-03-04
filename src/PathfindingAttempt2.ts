@@ -33,8 +33,11 @@ export function vec2sToPolygon(points: Vec2[]): Polygon {
 // Note, if polygon is not updated correctly (it's length is not up to date with the
 // linked list or the last element doesn't next to the first), this function
 // will only return up to the nth == length point.
-export function* makePolygonIterator(polygon: Polygon): Generator<Vertex> {
-    let current = polygon.startVertex;
+// Note: if you use customStartVertex it is imperative that the customStartVertex
+// actually belongs to the polygon, or else it will iterate another polygon starting
+// at customStartVertex for polygon.length iterations which will yield unusual and undesirable results
+export function* makePolygonIterator(polygon: Polygon, customStartVertex?: Vertex): Generator<Vertex> {
+    let current = customStartVertex || polygon.startVertex;
     for (let i = 0; i < polygon.length; i++) {
         yield current;
         current = current.next;
@@ -134,30 +137,38 @@ function projectVertexAlongOutsideNormal(vertex: Vertex, magnitude: number): Vec
 function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
     const resultPolys: Polygon[] = [];
     const excludePolyAtIndex = new Set();
+    top:
     for (let pi = 0; pi < polygons.length; pi++) {
+        if (excludePolyAtIndex.has(pi)) {
+            console.log('layer 1: skip', pi);
+            continue;
+        }
+        console.log('layer 1: test ', pi, 'length:', polygons.length);
         if (polygons.length > 4) {
             console.log("TEST EARLY EXIT");
             break;
         }
-
-
-        if (excludePolyAtIndex.has(pi)) {
-            continue;
-        }
         const polygon = polygons[pi];
-        const batchReplaceInstructions: { pi?: number, pj?: number, first?: { vert: Vertex, next: Vertex }, second?: { vert: Vertex, prev: Vertex } } = {};
-        for (let vls of polygonToVertexLineSegments(polygon)) {
-            // console.log('jtest1', vls);
-            // For all other polygons
-            for (let pj = 0; pj < polygons.length; pj++) {
-                if (excludePolyAtIndex.has(pj)) {
-                    continue;
-                }
-                const otherPoly = polygons[pj];
-                // for (let otherPoly of polygons) {
-                if (otherPoly == polygon) {
-                    // "other polygons" meaning... don't test for intersections against self
-                    continue;
+        const batchReplaceInstructions: { pi?: number, pj?: number, first?: { originalPolyVert: Vertex, intersectionVert: Vertex }, second?: { originalPolyVert: Vertex, intersectionVert: Vertex } } = {};
+        // console.log('jtest1', vls);
+        // For all other polygons
+        for (let pj = 0; pj < polygons.length; pj++) {
+            if (excludePolyAtIndex.has(pj)) {
+                console.log('    layer 2: skip', pj);
+                continue;
+            }
+            const otherPoly = polygons[pj];
+            // for (let otherPoly of polygons) {
+            if (otherPoly == polygon) {
+                console.log('    layer 2: skip self', pj);
+                // "other polygons" meaning... don't test for intersections against self
+                continue;
+            }
+            for (let vls of polygonToVertexLineSegments(polygon)) {
+                console.log('    layer 2: test ', pj, 'length: ', polygons.length);
+                if (polygons.length > 4) {
+                    console.log("    TEST EARLY EXIT 2");
+                    break;
                 }
                 // Test for intersection with all of the other polygon's vertex line segments
                 for (let otherVls of polygonToVertexLineSegments(otherPoly)) {
@@ -177,8 +188,8 @@ function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
                             // merges the two intersecting polys
                             // prev.next = { ...intersection, prev, next: otherVlsNext };
                             batchReplaceInstructions.first = {
-                                vert: prev,
-                                next: { ...intersection, prev, next: otherVlsNext }
+                                originalPolyVert: prev,
+                                intersectionVert: { ...intersection, prev, next: otherVlsNext }
                             }
 
                         } else if (isVec2InsidePolygon(prev, otherPoly)) {
@@ -188,8 +199,8 @@ function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
                             // merges the two intersecting polys
                             // next.prev = { ...intersection, prev: otherVlsPrev, next };
                             batchReplaceInstructions.second = {
-                                vert: next,
-                                prev: { ...intersection, prev: otherVlsPrev, next }
+                                originalPolyVert: next,
+                                intersectionVert: { ...intersection, prev: otherVlsPrev, next }
                             };
                             break;
 
@@ -198,73 +209,34 @@ function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
 
                 }
                 if (batchReplaceInstructions.first && batchReplaceInstructions.second) {
-                    console.log("test; make new poly", batchReplaceInstructions, polygon);
                     // Now that we found 2 intersections, both of these polygons can be
                     // excluded and we now create a new one
                     excludePolyAtIndex.add(batchReplaceInstructions.pi);
                     excludePolyAtIndex.add(batchReplaceInstructions.pj);
                     // Make the new polygon
-                    const vec2s: Vec2[] = [];
+                    const vec2s: Vec2[] = [batchReplaceInstructions.first.intersectionVert];
+                    // Start at batchReplaceInstructions.first and iterate the otherPoly all the way
+                    // then add batchReplaceInstructions.second, and iterate poly
+                    for (let vert of makePolygonIterator(otherPoly, batchReplaceInstructions.first.intersectionVert.next)) {
+                        vec2s.push(vert);
+                        if (vectorMath.equal(vert, batchReplaceInstructions.second.intersectionVert.prev)) {
+                            // Stop if / once we reach the vert right before the second intersection
 
-                    let current = polygon.startVertex
-                    console.log('polystart vertex', polygon.startVertex);
-                    let iLimit = 0;
-                    while (true) {
-                        iLimit++;
-                        if (iLimit > 10) {
-                            console.error('stop while iLimit');
-                            break;
-                        }
-                        const { vert, next } = batchReplaceInstructions.first;
-                        let prevAdded = false;
-                        if (current == vert) {
-                            vec2s.push(vectorMath.clone(next));
-                            console.log("push 2", vec2s[vec2s.length - 1]);
-                            const start = next.next;
-                            let currentOther = start;
-                            let jLimit = 0;
-                            while (true) {
-                                jLimit++;
-                                if (jLimit > 10) {
-                                    console.error('stop while jLimit');
-                                    break;
-                                }
-                                vec2s.push(currentOther);
-                                console.log('push 1', vectorMath.clone(vec2s[vec2s.length - 1]));
-                                currentOther = currentOther.next;
-                                const { vert, prev } = batchReplaceInstructions.second;
-                                if (currentOther == start) {
-                                    // completed the full loop
-                                    vec2s.push(vectorMath.clone(prev));
-                                    prevAdded = true;
-                                    console.log("push 3", vec2s[vec2s.length - 1]);
-                                    // switch back to iterating the other poly
-                                    current = vert.prev;
-                                    break;
-                                }
-
-                            }
-
-
-                        }
-                        if (prevAdded) {
-                            console.log('push 4', current);
-                            vec2s.push(current);
-                        }
-                        current = current.next;
-                        if (vectorMath.equal(current, polygon.startVertex)) {
-                            // completed a full loop, break out of while
                             break;
                         }
                     }
-                    console.log('Finalize new poly: vec2s', vec2s.map(v => vectorMath.clone(v)));
-                    if (vec2s.length) {
-                        polygons.push(vec2sToPolygon(vec2s));
-                    } else {
-                        console.error('something went wrong in processing the new merged polygon');
+                    vec2s.push(batchReplaceInstructions.second.intersectionVert);
+                    for (let vert of makePolygonIterator(polygon, batchReplaceInstructions.second.intersectionVert.next)) {
+                        vec2s.push(vert);
+                        // Stop once we reach the vert right before batchReplaceInstructions.first.next
+                        // This will exclude the polygon verticies that are inside of otherPolygon
+                        if (vectorMath.equal(vert, batchReplaceInstructions.first.originalPolyVert)) {
+                            break;
+                        }
                     }
-
-                    break;
+                    console.log('ADD NEW POLYGON');
+                    polygons.push(vec2sToPolygon(vec2s));
+                    continue top;
                 }
 
             }

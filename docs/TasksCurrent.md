@@ -1,4 +1,5 @@
 ## Current Priorities
+- Make tests ensure that all poly functions handle maleformed polys gracefully
 - Pathfinding via a baked convex poly mesh is turning out to be very involved and not necessary for my needs.  Instead what if I do a kind of localized pathing.  Still start with the inset polygons and try to path a straight line to the target; then if that line collides with a poly, try to route to the left or right corner and tHEN path a straight line and repeat until you get an unobstructed path to the target.  And you could limit it to 10 iterations for example.
 - Resolve not adding next's or prev's from another shape that are inside of the current shape
     - Do this with mergeOverlappingPolygons

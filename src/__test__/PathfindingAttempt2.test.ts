@@ -189,7 +189,7 @@ describe('isVec2InsidePolygon', () => {
 
 });
 
-describe.only('makePolygonIterator', () => {
+describe('makePolygonIterator', () => {
     it('should iterate all the verticies of a polygon', () => {
         const p1 = { x: 0, y: 0 }
         const p2 = { x: 0, y: 1 }
@@ -202,11 +202,25 @@ describe.only('makePolygonIterator', () => {
         const expected = [p1, p2, p3, p4];
         expect(actual).toEqual(expected);
     });
+    it('should support a custom start vertex', () => {
+        const p1 = { x: 0, y: 0 }
+        const p2 = { x: 0, y: 1 }
+        const p3 = { x: 1, y: 1 }
+        const p4 = { x: 1, y: 0 }
+        const points: Vec2[] = [p1, p2, p3, p4];
+        const polygon = vec2sToPolygon(points);
+        // Start at p3
+        const iterator = makePolygonIterator(polygon, polygon.startVertex.next.next);
+        const actual = Array.from(iterator).map(({ x, y }) => ({ x, y }));
+        const expected = [p3, p4, p1, p2];
+        expect(actual).toEqual(expected);
+    });
 
 });
 describe('mergeOverlappingPolygons', () => {
     describe('given overlapping boxes on one axis', () => {
-        it("should remove the overlapping verticies and return a polygon that is one large rectangle", () => {
+        // TODO: Handle perfectly overlapping lines better
+        it.skip("should remove the overlapping verticies and return a polygon that is one large rectangle", () => {
             const p1 = { x: 0, y: 0 }
             const p2 = { x: 0, y: 1 }
             const p3 = { x: 1, y: 1 }
@@ -223,16 +237,17 @@ describe('mergeOverlappingPolygons', () => {
 
             const actual = polygonToVec2s(mergedPolygon);
             const expected = [
-                p1,
+                p1b,
                 p2b,
                 p3b,
-                p4
+                p4b,
+                p4,
+                p1
             ];
             expect(actual).toEqual(expected);
         });
     });
     describe('given overlapping boxes on one side', () => {
-        // LEFT OFF
         it("should merge the polygons", () => {
             // In this example one polygon has 2 points inside
             // of the other but the other has no points inside of it
@@ -252,10 +267,14 @@ describe('mergeOverlappingPolygons', () => {
 
             const actual = polygonToVec2s(mergedPolygon);
             const expected = [
-                p1,
+                { x: 0, y: 1 },
+                p1b,
                 p2b,
                 p3b,
-                p4
+                p4b,
+                { x: 1, y: 1 },
+                p4,
+                p1,
             ];
             expect(actual).toEqual(expected);
         });
@@ -276,10 +295,14 @@ describe('mergeOverlappingPolygons', () => {
 
             const actual = polygonToVec2s(mergedPolygon);
             const expected = [
-                p1,
+                { x: 0, y: 1 },
+                p1b,
                 p2b,
                 p3b,
-                p4
+                p4b,
+                { x: 1, y: 1 },
+                p4,
+                p1,
             ];
             expect(actual).toEqual(expected);
         });
@@ -302,14 +325,14 @@ describe('mergeOverlappingPolygons', () => {
 
             const actual = polygonToVec2s(mergedPolygon);
             const expected = [
-                p1,
-                p2,
                 { x: 1, y: 2 },
                 p2b,
                 p3b,
                 p4b,
                 { x: 2, y: 1 },
-                p4
+                p4,
+                p1,
+                p2,
             ];
             expect(actual).toEqual(expected);
 
