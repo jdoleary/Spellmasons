@@ -372,19 +372,19 @@ export default class Underworld {
     // Test obstaclese
     [
       {
-        "x": 413,
+        "x": 313,
         "y": 306
       },
       {
-        "x": 500,
+        "x": 400,
         "y": 360
       },
       {
-        "x": 700,
+        "x": 600,
         "y": 429
       },
       {
-        "x": 702,
+        "x": 620,
         "y": 459
       }
     ].map(({ x, y }) => { Obstacle.create(x, y, Obstacle.obstacleSource[0]) });
