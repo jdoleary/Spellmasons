@@ -119,16 +119,53 @@ function projectVertexAlongOutsideNormal(vertex: Vertex, magnitude: number): Vec
     const relativeAdjustedPoint = similarTriangles(X, Y, D, d);
     return vectorMath.subtract(vertex, relativeAdjustedPoint);
 }
-// function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
-//     // TODO: LEFT OFF: implement
 
-// }
+// The rule: inside points get removed, intersections become new points
+function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
+    // For all Vertex line segments in a polygon
+    // Test for intersection with all other polygon's vertex line segments
+    // exclude self
+    // If intersection, the polygons will be merged, but not yet
+    // Iterate all walls of that polygon and find all the intersections.
+    // Remove both polygons.
+    // Make a new polygon with the intersections as points, and the points inside the other polygon removed
+    // --
+    // Okay so this is how you determine the points to remove.  There will always be at least 2 intersections if
+    // the polys intersect:
+    return []
+
+}
+
+function isVec2InsidePolygon(point: Vec2, polygon: Polygon): boolean {
+    // From geeksforgeeks.com: 
+    // 1) Draw a horizontal line to the right of each point and extend it to infinity 
+    // 2) Count the number of times the line intersects with polygon edges. 
+    // 3) A point is inside the polygon if either count of intersections is odd or point lies on an edge of polygon. 
+    // If none of the conditions is true, then point lies outside
+    const testLine: LineSegment = { p1: point, p2: { x: Number.MAX_SAFE_INTEGER, y: point.y } };
+    const intersections: Vec2[] = [];
+    for (let vertexLineSegment of polygonToVertexLineSegments(polygon)) {
+        const intersection = lineSegmentIntersection(testLine, vertexLineSegment)
+        if (intersection) {
+            // Exclude intersections that have already been found
+            // This can happen if the "point" shares the same "y" value as
+            // a vertex in the polygon because the vertex belongs to 2 of the 
+            // VertexLineSegments
+            if (!intersections.find(i => vectorMath.equal(i, intersection))) {
+                intersections.push(intersection);
+            }
+        }
+    }
+    return intersections.length % 2 != 0;
+
+}
 
 export const testables = {
     expandPolygon,
     projectVertexAlongOutsideNormal,
     getAngleBetweenAngles,
-    // mergeOverlappingPolygons,
+    mergeOverlappingPolygons,
+    isVec2InsidePolygon,
 }
 
 export function findPath(startPoint: Vec2, target: Vec2, pathingWalls: VertexLineSegment[]): Vec2[] {

@@ -1,5 +1,5 @@
 import { polygonToVec2s, vec2sToPolygon, expandPolygon, testables } from "../PathfindingAttempt2";
-const { projectVertexAlongOutsideNormal, getAngleBetweenAngles } = testables;
+const { projectVertexAlongOutsideNormal, getAngleBetweenAngles, mergeOverlappingPolygons, isVec2InsidePolygon } = testables;
 import type { Vec2 } from "../commonTypes";
 describe('projectVertexAlongOutsideNormal', () => {
     it('should find the point "magnitude" distance away from p2 along the normal', () => {
@@ -129,79 +129,149 @@ describe('polygonToVec2s', () => {
     });
 });
 
-// Not yet implemented, may not be needed
-// describe.skip('mergeOverlappingPolygons', () => {
-//     describe('given overlapping boxes on one axis', () => {
-//         it("should remove the overlapping verticies and return a polygon that is one large rectangle", () => {
-//             const p1 = { x: 0, y: 0 }
-//             const p2 = { x: 0, y: 1 }
-//             const p3 = { x: 1, y: 1 }
-//             const p4 = { x: 1, y: 0 }
-//             const points: Vec2[] = [p1, p2, p3, p4];
-//             const polygonA = vec2sToPolygon(points);
-//             const p1b = { x: 0, y: 1 }
-//             const p2b = { x: 0, y: 2 }
-//             const p3b = { x: 1, y: 2 }
-//             const p4b = { x: 1, y: 1 }
-//             const pointsb: Vec2[] = [p1b, p2b, p3b, p4b];
-//             const polygonB = vec2sToPolygon(pointsb);
-//             const mergedPolygon = mergeOverlappingPolygons([polygonA, polygonB])[0];
+describe.only('isVec2InsidePolygon', () => {
+    it('should return true when the vec is inside the square', () => {
+        const p1 = { x: 0, y: 0 }
+        const p2 = { x: 0, y: 1 }
+        const p3 = { x: 1, y: 1 }
+        const p4 = { x: 1, y: 0 }
+        const points: Vec2[] = [p1, p2, p3, p4];
+        const polygonA = vec2sToPolygon(points);
+        const actual = isVec2InsidePolygon({ x: 0.5, y: 0.5 }, polygonA);
+        const expected = true;
+        expect(actual).toEqual(expected);
+    });
+    it('should return false when the vec is OUTSIDE the square', () => {
+        const p1 = { x: 0, y: 0 }
+        const p2 = { x: 0, y: 1 }
+        const p3 = { x: 1, y: 1 }
+        const p4 = { x: 1, y: 0 }
+        const points: Vec2[] = [p1, p2, p3, p4];
+        const polygonA = vec2sToPolygon(points);
+        const actual = isVec2InsidePolygon({ x: -100, y: 0.5 }, polygonA);
+        const expected = false;
+        expect(actual).toEqual(expected);
+    });
+    it('should return false when the vec is OUTSIDE the square 2', () => {
+        const p1 = { x: 0, y: 0 }
+        const p2 = { x: 0, y: 1 }
+        const p3 = { x: 1, y: 1 }
+        const p4 = { x: 1, y: 0 }
+        const points: Vec2[] = [p1, p2, p3, p4];
+        const polygonA = vec2sToPolygon(points);
+        const actual = isVec2InsidePolygon({ x: -100, y: -100 }, polygonA);
+        const expected = false;
+        expect(actual).toEqual(expected);
+    });
+    it('should return true when the vec is inside a complex polygon', () => {
+        const p1 = { x: 1, y: 0 }
+        const p2 = { x: 0, y: 1 }
+        const p3 = { x: 1, y: 2 }
+        const p4 = { x: 1, y: 3 }
+        const p5 = { x: 3, y: 3 }
+        const p6 = { x: 3, y: 2 }
+        const p7 = { x: 2, y: 1 }
+        const p8 = { x: 3, y: 0 }
+        const points: Vec2[] = [p1, p2, p3, p4, p5, p6, p7, p8];
+        const polygonA = vec2sToPolygon(points);
+        // Note, the y value of this point aligns with the y value
+        // of a vertex of the polygon to it's right
+        // (p7).  Because of the internal implementation of 
+        // isVec2InsidePolygon, it tests a straight line to the right
+        // which means it'll come up with 2 intersections for that vert
+        // since that vert belongs to 2 of the vetexLineSegments of the
+        // poly.  There is special handling inside of isVec2InsidePolygon
+        // to account for this edge case
+        const actual = isVec2InsidePolygon({ x: 1, y: 1 }, polygonA);
+        const expected = true;
+        expect(actual).toEqual(expected);
+    });
+    // it('should return true when the vec is inside a complex polygon and the vec has the same y value as one of the verticies', () => {
+    //     const p1 = { x: 0, y: 0 }
+    //     const p2 = { x: 0, y: 1 }
+    //     const p3 = { x: 1, y: 1 }
+    //     const p4 = { x: 1, y: 0 }
+    //     const points: Vec2[] = [p1, p2, p3, p4];
+    //     const polygonA = vec2sToPolygon(points);
+    //     const actual = isVec2InsidePolygon({ x: 0.5, y: 0.5 }, polygonA);
+    //     const expected = true;
+    //     expect(actual).toEqual(expected);
+    // });
 
-//             const actual = polygonToVec2s(mergedPolygon);
-//             const expected = [
-//                 p1,
-//                 p2b,
-//                 p3b,
-//                 p4
-//             ];
-//             expect(actual).toEqual(expected);
-//         });
-//     });
-//     describe('given boxes that each share 1 vertex inside of the other', () => {
-//         it("should remove inside verticies and make a polygon that is the spacial addition of the two boxes", () => {
-//             const p1 = { x: 0, y: 0 }
-//             const p2 = { x: 0, y: 2 }
-//             const p3 = { x: 2, y: 2 }
-//             const p4 = { x: 2, y: 0 }
-//             const points: Vec2[] = [p1, p2, p3, p4];
-//             const polygonA = vec2sToPolygon(points);
-//             const p1b = { x: 1, y: 1 }
-//             const p2b = { x: 1, y: 3 }
-//             const p3b = { x: 3, y: 3 }
-//             const p4b = { x: 3, y: 1 }
-//             const pointsb: Vec2[] = [p1b, p2b, p3b, p4b];
-//             const polygonB = vec2sToPolygon(pointsb);
-//             const mergedPolygon = mergeOverlappingPolygons([polygonA, polygonB])[0];
+});
 
-//             const actual = polygonToVec2s(mergedPolygon);
-//             const expected = [
-//                 p1,
-//                 p2,
-//                 { x: 1, y: 2 },
-//                 p2b,
-//                 p3b,
-//                 p4b,
-//                 { x: 2, y: 1 },
-//                 p4
-//             ];
-//             expect(actual).toEqual(expected);
+describe('mergeOverlappingPolygons', () => {
+    describe('given overlapping boxes on one axis', () => {
+        it("should remove the overlapping verticies and return a polygon that is one large rectangle", () => {
+            const p1 = { x: 0, y: 0 }
+            const p2 = { x: 0, y: 1 }
+            const p3 = { x: 1, y: 1 }
+            const p4 = { x: 1, y: 0 }
+            const points: Vec2[] = [p1, p2, p3, p4];
+            const polygonA = vec2sToPolygon(points);
+            const p1b = { x: 0, y: 1 }
+            const p2b = { x: 0, y: 2 }
+            const p3b = { x: 1, y: 2 }
+            const p4b = { x: 1, y: 1 }
+            const pointsb: Vec2[] = [p1b, p2b, p3b, p4b];
+            const polygonB = vec2sToPolygon(pointsb);
+            const mergedPolygon = mergeOverlappingPolygons([polygonA, polygonB])[0];
 
-//         });
-//     });
-//     describe('given boxes that are identical', () => {
-//         it("should remove one box entirely", () => {
-//             const p1 = { x: 0, y: 0 }
-//             const p2 = { x: 0, y: 2 }
-//             const p3 = { x: 2, y: 2 }
-//             const p4 = { x: 2, y: 0 }
-//             const points: Vec2[] = [p1, p2, p3, p4];
-//             const polygonA = vec2sToPolygon(points);
-//             const polygonB = vec2sToPolygon(points);
-//             const mergedPolygons = mergeOverlappingPolygons([polygonA, polygonB]);
-//             const actual = mergedPolygons.length;
-//             const expected = 1;
-//             expect(actual).toEqual(expected);
-//         });
-//     });
+            const actual = polygonToVec2s(mergedPolygon);
+            const expected = [
+                p1,
+                p2b,
+                p3b,
+                p4
+            ];
+            expect(actual).toEqual(expected);
+        });
+    });
+    describe('given boxes that each share 1 vertex inside of the other', () => {
+        it("should remove inside verticies and make a polygon that is the spacial addition of the two boxes", () => {
+            const p1 = { x: 0, y: 0 }
+            const p2 = { x: 0, y: 2 }
+            const p3 = { x: 2, y: 2 }
+            const p4 = { x: 2, y: 0 }
+            const points: Vec2[] = [p1, p2, p3, p4];
+            const polygonA = vec2sToPolygon(points);
+            const p1b = { x: 1, y: 1 }
+            const p2b = { x: 1, y: 3 }
+            const p3b = { x: 3, y: 3 }
+            const p4b = { x: 3, y: 1 }
+            const pointsb: Vec2[] = [p1b, p2b, p3b, p4b];
+            const polygonB = vec2sToPolygon(pointsb);
+            const mergedPolygon = mergeOverlappingPolygons([polygonA, polygonB])[0];
 
-// });
+            const actual = polygonToVec2s(mergedPolygon);
+            const expected = [
+                p1,
+                p2,
+                { x: 1, y: 2 },
+                p2b,
+                p3b,
+                p4b,
+                { x: 2, y: 1 },
+                p4
+            ];
+            expect(actual).toEqual(expected);
+
+        });
+    });
+    describe('given boxes that are identical', () => {
+        it("should remove one box entirely", () => {
+            const p1 = { x: 0, y: 0 }
+            const p2 = { x: 0, y: 2 }
+            const p3 = { x: 2, y: 2 }
+            const p4 = { x: 2, y: 0 }
+            const points: Vec2[] = [p1, p2, p3, p4];
+            const polygonA = vec2sToPolygon(points);
+            const polygonB = vec2sToPolygon(points);
+            const mergedPolygons = mergeOverlappingPolygons([polygonA, polygonB]);
+            const actual = mergedPolygons.length;
+            const expected = 1;
+            expect(actual).toEqual(expected);
+        });
+    });
+
+});
