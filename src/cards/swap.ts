@@ -1,7 +1,7 @@
 import * as Unit from '../Unit';
 import * as Pickup from '../Pickup';
 import type { Spell } from '.';
-import type { Vec2 } from '../commonTypes';
+import type { Vec2 } from '../Vec';
 import { drawSwapLine } from '../ui/PlanningView';
 import { CardType, cardTypeToProbability } from './cardUtils';
 

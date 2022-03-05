@@ -1,5 +1,5 @@
 const { performance } = require('perf_hooks');
-import type { Vec2 } from '../../commonTypes';
+import type { Vec2 } from '../../Vec';
 import type { LineSegment } from '../collisionMath';
 import {
     Circle,

@@ -1,7 +1,6 @@
 import type * as Player from '../Player';
 import type * as Unit from '../Unit';
-import * as config from '../config';
-import type { Vec2 } from '../commonTypes';
+import type { Vec2 } from '../Vec';
 import Events, {
   onDamage,
   onDeath,

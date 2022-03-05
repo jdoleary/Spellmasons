@@ -1,4 +1,4 @@
-import type { Vec2 } from "../commonTypes";
+import type { Vec2 } from '../Vec';
 import { distance } from "../math";
 import { findWherePointIntersectLineSegmentAtRightAngle, LineSegment } from "./collisionMath";
 

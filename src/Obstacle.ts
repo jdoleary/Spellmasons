@@ -1,5 +1,5 @@
 import * as Image from './Image';
-import { vec2sToPolygon, Polygon } from './PathfindingAttempt2';
+import type { Polygon } from './PathfindingAttempt3';
 import { containerBoard } from './PixiUtils';
 export interface IObstacle {
   x: number;
@@ -21,12 +21,14 @@ export function create(x: number, y: number, obstacle: IObstacleSource) {
   const height = image.sprite.height;
   const _x = x - width / 2;
   const _y = y - height / 2;
-  const bounds = vec2sToPolygon([
-    { x: _x, y: _y },
-    { x: _x, y: _y + height },
-    { x: _x + width, y: _y + height },
-    { x: _x + width, y: _y },
-  ]);
+  const bounds = {
+    points: [
+      { x: _x, y: _y },
+      { x: _x, y: _y + height },
+      { x: _x + width, y: _y + height },
+      { x: _x + width, y: _y },
+    ], inverted: false
+  };
 
   if (bounds === undefined) {
     console.error("Cannot create Obstacle, points do not make up a valid polygon");

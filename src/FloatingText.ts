@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import type { Vec2 } from './commonTypes';
+import type { Vec2 } from './Vec';
 import { containerFloatingText } from './PixiUtils';
 interface FText {
   x: number;

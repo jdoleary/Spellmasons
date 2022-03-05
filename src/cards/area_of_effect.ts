@@ -1,4 +1,4 @@
-import type { Vec2 } from '../commonTypes';
+import type { Vec2 } from '../Vec';
 import type { Spell } from '.';
 import { drawDryRunCircle } from '../ui/PlanningView';
 import { CardType, cardTypeToProbability } from './cardUtils';

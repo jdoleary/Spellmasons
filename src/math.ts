@@ -1,4 +1,4 @@
-import type { Vec2 } from './commonTypes';
+import type { Vec2 } from './Vec';
 import { randInt } from './rand';
 // https://webdva.github.io/how-i-implemented-client-side-linear-interpolation/
 export function lerp(start: number, end: number, time: number) {

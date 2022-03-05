@@ -1,6 +1,6 @@
 import { drawDryRunLine } from '../ui/PlanningView';
 import type { Spell } from '.';
-import type { Vec2 } from '../commonTypes';
+import type { Vec2 } from '../Vec';
 import type * as Unit from '../Unit';
 import * as config from '../config';
 import { CardType, cardTypeToProbability } from './cardUtils';

@@ -1,4 +1,4 @@
-import type { Vec2 } from 'src/commonTypes';
+import type { Vec2 } from '../Vec';
 import type { Spell } from '.';
 import { CardType, cardTypeToProbability } from './cardUtils';
 
