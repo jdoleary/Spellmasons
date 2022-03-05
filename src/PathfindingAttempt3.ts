@@ -30,9 +30,19 @@ export function* makePolygonIterator(polygon: Polygon, startPoint?: Vec2): Gener
         // Then startPoint does not belong to polygon;
         return
     }
-    for (let i = startIndex; i < startIndex + polygon.points.length; i++) {
-        yield getElementAtLoopableIndex(i, polygon.points);
+    if (polygon.inverted) {
+        // Note: This unusual for loop is intentional, see the tests
+        // If invereted, it will iterate the polygon in reverse order
+        // STARTING with the point at start index
+        for (let i = startIndex + polygon.points.length; i > startIndex; i--) {
+            yield getElementAtLoopableIndex(i, polygon.points);
 
+        }
+    } else {
+        for (let i = startIndex; i < startIndex + polygon.points.length; i++) {
+            yield getElementAtLoopableIndex(i, polygon.points);
+
+        }
     }
 }
 

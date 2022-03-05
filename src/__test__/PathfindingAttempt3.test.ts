@@ -33,8 +33,8 @@ describe('testables', () => {
 });
 
 
-describe('makePolygonIteratorFromVertex', () => {
-    it('should iterate all the verticies of a polygon', () => {
+describe('makePolygonIterator', () => {
+    it('should iterate all the points of a polygon starting from the startPoint and looping back to the beginning until each points is iterated', () => {
         const p1 = { x: 0, y: 0 }
         const p2 = { x: 0, y: 1 }
         const p3 = { x: 1, y: 1 }
@@ -45,6 +45,20 @@ describe('makePolygonIteratorFromVertex', () => {
         const actual = Array.from(iterator).map(({ x, y }) => ({ x, y }));
         const expected = [p2, p3, p4, p1];
         expect(actual).toEqual(expected);
+    });
+    describe('given an inverted polygon', () => {
+        it('should iterate all the points of a polygon IN REVERSE ORDER starting from the startPoint and looping back to the END until each points is iterated', () => {
+            const p1 = { x: 0, y: 0 }
+            const p2 = { x: 0, y: 1 }
+            const p3 = { x: 1, y: 1 }
+            const p4 = { x: 1, y: 0 }
+            const points: Vec2[] = [p1, p2, p3, p4];
+            const polygon: Polygon = { points, inverted: true }
+            const iterator = makePolygonIterator(polygon, p2);
+            const actual = Array.from(iterator).map(({ x, y }) => ({ x, y }));
+            const expected = [p2, p1, p4, p3];
+            expect(actual).toEqual(expected);
+        });
     });
 });
 // describe('expandPolygon', () => {
