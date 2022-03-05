@@ -85,6 +85,31 @@ describe('testables', () => {
             const expected = true;
             expect(actual).toEqual(expected);
         });
+        describe('given an inverted polygon', () => {
+            it('should return FALSE when the vec is inside the inverted square', () => {
+                const p1 = { x: 0, y: 0 }
+                const p2 = { x: 0, y: 1 }
+                const p3 = { x: 1, y: 1 }
+                const p4 = { x: 1, y: 0 }
+                const points: Vec2[] = [p1, p2, p3, p4];
+                const polygon: Polygon = { points, inverted: true };
+                const actual = isVec2InsidePolygon({ x: 0.5, y: 0.5 }, polygon);
+                const expected = false;
+                expect(actual).toEqual(expected);
+            });
+            it('should return TRUE when the vec is OUTSIDE the inverted square', () => {
+                const p1 = { x: 0, y: 0 }
+                const p2 = { x: 0, y: 1 }
+                const p3 = { x: 1, y: 1 }
+                const p4 = { x: 1, y: 0 }
+                const points: Vec2[] = [p1, p2, p3, p4];
+                const polygon: Polygon = { points, inverted: true };
+                const actual = isVec2InsidePolygon({ x: -100, y: 0.5 }, polygon);
+                const expected = true;
+                expect(actual).toEqual(expected);
+            });
+
+        });
 
     });
 

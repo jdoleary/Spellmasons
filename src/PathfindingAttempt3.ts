@@ -108,7 +108,10 @@ function isVec2InsidePolygon(point: Vec2, polygon: Polygon): boolean {
             }
         }
     }
-    return intersections.length % 2 != 0;
+    const isInside = intersections.length % 2 != 0;
+    // If the poly is inverted, return the opposite because
+    // inverted poly's have their inside and outside flipped
+    return polygon.inverted ? !isInside : isInside;
 
 }
 export const testables = {
