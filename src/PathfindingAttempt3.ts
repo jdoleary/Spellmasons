@@ -83,9 +83,9 @@ function getClosestIntersectionWithWalls(line: PolygonLineSegment, walls: Polygo
         }
     }
     // Debug: print
-    // if (intersectingWall) {
-    //     console.log('found intersection for line', line, closestIntersection);
-    // }
+    if (intersectingWall) {
+        console.log('found intersection for line', line, closestIntersection);
+    }
     return { intersectingWall, closestIntersection };
 }
 
@@ -133,7 +133,9 @@ function projectPointAlongNormalVector(polygon: Polygon, pointIndex: number, mag
     const D = distance(projectToPoint, point);
     const d = polygon.inverted ? -magnitude : magnitude;
     const relativeAdjustedPoint = similarTriangles(X, Y, D, d);
-    return vectorMath.subtract(point, relativeAdjustedPoint);
+    // Round to the nearest whole number to avoid floating point inequalities later
+    // when processing these points
+    return vectorMath.round(vectorMath.subtract(point, relativeAdjustedPoint));
 }
 
 // TODO account for points that exist exactly on the line of another polygon
@@ -193,6 +195,7 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
     const excludePoly = new Set();
     // Step 1. Loop through all polys to see if they need to merge
     for (let polygon of polygons) {
+        console.log('start with poly', polygon);
         if (excludePoly.has(polygon)) {
             continue;
         }

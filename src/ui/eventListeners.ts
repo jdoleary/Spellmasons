@@ -104,6 +104,7 @@ export function mousemoveHandler(e: MouseEvent) {
     window.underworld.debugGraphics.clear()
     // window.underworld.debugGraphics.lineStyle(3, 0xaa00bb, 1);
     const mouseTarget = window.underworld.getMousePos();
+    (document.getElementById('debug-info') as HTMLElement).innerText = `x:${Math.round(mouseTarget.x)}, y:${Math.round(mouseTarget.y)}`;
     // const path = findPath(window.player.unit, mouseTarget, window.underworld.pathingWalls);
     // window.underworld.debugGraphics.moveTo(path[0].x, path[0].y);
     // Draw the path

@@ -241,6 +241,7 @@ export default class Underworld {
 
     // Save the pathing walls for the underworld
     const expandedAndMergedPolygons = mergeOverlappingPolygons(collidablePolygons.map(p => expandPolygon(p, config.COLLISION_MESH_RADIUS)));
+    console.log('Number of polys', expandedAndMergedPolygons.length, expandedAndMergedPolygons)
     this.pathingWalls = expandedAndMergedPolygons.map(polygonToPolygonLineSegments).flat();
   }
 
@@ -361,16 +362,8 @@ export default class Underworld {
     // Test obstaclese
 
     [
-      // { "x": 162, "y": 328 },
       { "x": 722, "y": 61 },
-      // { "x": 651, "y": 117 },
-      // { "x": 481, "y": 378 },
-      // { "x": 571, "y": 549 },
-      // { "x": 131, "y": 214 },
-      // { "x": 425, "y": 146 },
       { "x": 187, "y": 54 },
-      // { "x": 651, "y": 397 },
-      // { "x": 192, "y": 398 }
     ].map(({ x, y }) => { Obstacle.create(x, y, Obstacle.obstacleSource[0]) });
     this.cacheWalls();
 
