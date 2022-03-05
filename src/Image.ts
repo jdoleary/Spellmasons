@@ -46,8 +46,6 @@ export function create(
     subSpriteInstances: {},
     subSprites: [],
   };
-  // For testing
-  image.sprite.alpha = 0.5;
   setPosition(image, x, y);
   return image;
 }

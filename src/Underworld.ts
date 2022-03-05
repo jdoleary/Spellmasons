@@ -29,7 +29,7 @@ import { calculateManaCost } from './cards/cardUtils';
 import { moveWithCollisions } from './collision/moveWithCollision';
 import { lineSegmentIntersection, LineSegment } from './collision/collisionMath';
 import { updateCardManaBadges } from './CardUI';
-import { expandPolygon, polygonToVertexLineSegments, polygonToVec2s, vec2sToPolygon, VertexLineSegment, mergeOverlappingPolygons, Polygon } from './PathfindingAttempt2';
+import { expandPolygon, mergeOverlappingPolygons, Polygon, PolygonLineSegment, polygonToPolygonLineSegments } from './PathfindingAttempt3';
 
 export enum turn_phase {
   PlayerTurns,
@@ -71,7 +71,7 @@ export default class Underworld {
   walls: LineSegment[] = [];
   // pathingWalls are build using walls but are modified to be grown, so that units with thickness
   // don't clip through walls as they path.  See this.cacheWalls for more
-  pathingWalls: VertexLineSegment[] = [];
+  pathingWalls: PolygonLineSegment[] = [];
   secondsLeftForTurn: number = config.SECONDS_PER_TURN;
   turnInterval: any;
   level?: ILevel;
@@ -228,32 +228,20 @@ export default class Underworld {
   // TODO:  this will need to be called if objects become
   // destructable
   cacheWalls() {
-    const mapBounds: Polygon = vec2sToPolygon([
-      { x: 0, y: 0 },
-      { x: config.MAP_WIDTH, y: 0 },
-      { x: config.MAP_WIDTH, y: config.MAP_HEIGHT },
-      { x: 0, y: config.MAP_HEIGHT },
-    ]);
+    const mapBounds: Polygon = {
+      points: [
+        { x: 0, y: 0 },
+        { x: 0, y: config.MAP_HEIGHT },
+        { x: config.MAP_WIDTH, y: config.MAP_HEIGHT },
+        { x: config.MAP_WIDTH, y: 0 },
+      ], inverted: true
+    };
     const collidablePolygons = [...this.obstacles.map(o => o.bounds), mapBounds];
-    this.walls = collidablePolygons.reduce<LineSegment[]>((agg, cur) => {
-      const points = polygonToVec2s(cur);
-      let lastPoint: Vec2 | undefined;
-      for (let point of points) {
-        if (lastPoint) {
-          agg.push({ p1: lastPoint, p2: point });
-        }
-        lastPoint = point;
-      }
-      // Close the shape:
-      if (lastPoint) {
-        agg.push({ p1: lastPoint, p2: points[0] });
-      }
-      return agg;
-    }, [])
+    this.walls = collidablePolygons.map(polygonToPolygonLineSegments).flat()
 
     // Save the pathing walls for the underworld
     const expandedAndMergedPolygons = mergeOverlappingPolygons(collidablePolygons.map(p => expandPolygon(p, config.COLLISION_MESH_RADIUS)));
-    this.pathingWalls = expandedAndMergedPolygons.map(polygonToVertexLineSegments).flat();
+    this.pathingWalls = expandedAndMergedPolygons.map(polygonToPolygonLineSegments).flat();
   }
 
   initLevel(level: ILevel) {
@@ -337,66 +325,52 @@ export default class Underworld {
       }
     }
 
-    // for (let i = 0; i < config.NUM_OBSTACLES_PER_LEVEL; i++) {
-    //   let badLocation = false;
-    //   // Ensure obstacles don't spawn in the column that spawns players:
-    //   const coords = this.getRandomCoordsWithinBounds({ xMin: 2 * config.UNIT_SIZE, yMin: config.COLLISION_MESH_RADIUS, xMax: config.MAP_WIDTH - config.COLLISION_MESH_RADIUS, yMax: config.MAP_HEIGHT - config.COLLISION_MESH_RADIUS });
-    //   for (let u of this.units) {
-    //     if (math.distance(u, coords) < config.COLLISION_MESH_RADIUS * 2) {
-    //       // Abort spawning the obstacle if it collides with a unit
-    //       badLocation = true;
-    //       break;
-    //     }
-    //   }
-    //   for (let p of this.pickups) {
-    //     if (math.distance(p, coords) < config.COLLISION_MESH_RADIUS * 2) {
-    //       // Abort spawning the obstacle if it collides with a pickup
-    //       badLocation = true;
-    //       break;
-    //     }
-    //   }
-    //   // Do not create if it didn't choose a good location
-    //   // For now, to prevent obstacles from trapping units when they
-    //   // spawn, just skip making one if the coordinates collide with
-    //   // a unit
-    //   if (badLocation) {
-    //     continue;
-    //   }
-    //   const randomIndex = randInt(this.random,
-    //     0,
-    //     Obstacle.obstacleSource.length - 1,
-    //   );
-    //   const obstacle = Obstacle.obstacleSource[randomIndex];
-    //   Obstacle.create(coords.x, coords.y, obstacle);
-    //   // TODO: Ensure the players have a path to the portal
-    // }
+    for (let i = 0; i < config.NUM_OBSTACLES_PER_LEVEL; i++) {
+      let badLocation = false;
+      // Ensure obstacles don't spawn in the column that spawns players:
+      const coords = this.getRandomCoordsWithinBounds({ xMin: 2 * config.UNIT_SIZE, yMin: config.COLLISION_MESH_RADIUS, xMax: config.MAP_WIDTH - config.COLLISION_MESH_RADIUS, yMax: config.MAP_HEIGHT - config.COLLISION_MESH_RADIUS });
+      for (let u of this.units) {
+        if (math.distance(u, coords) < config.COLLISION_MESH_RADIUS * 2) {
+          // Abort spawning the obstacle if it collides with a unit
+          badLocation = true;
+          break;
+        }
+      }
+      for (let p of this.pickups) {
+        if (math.distance(p, coords) < config.COLLISION_MESH_RADIUS * 2) {
+          // Abort spawning the obstacle if it collides with a pickup
+          badLocation = true;
+          break;
+        }
+      }
+      // Do not create if it didn't choose a good location
+      // For now, to prevent obstacles from trapping units when they
+      // spawn, just skip making one if the coordinates collide with
+      // a unit
+      if (badLocation) {
+        continue;
+      }
+      const randomIndex = randInt(this.random,
+        0,
+        Obstacle.obstacleSource.length - 1,
+      );
+      const obstacle = Obstacle.obstacleSource[randomIndex];
+      // Obstacle.create(coords.x, coords.y, obstacle);
+      // TODO: Ensure the players have a path to the portal
+    }
     // Test obstaclese
 
     [
-      {
-        "x": 233,
-        "y": 531
-      },
-      {
-        "x": 270,
-        "y": 279
-      },
-      {
-        "x": 293,
-        "y": 171
-      },
-      {
-        "x": 269,
-        "y": 356
-      },
-      {
-        "x": 349,
-        "y": 255
-      },
-      {
-        "x": 222,
-        "y": 364
-      }
+      // { "x": 162, "y": 328 },
+      { "x": 722, "y": 61 },
+      // { "x": 651, "y": 117 },
+      // { "x": 481, "y": 378 },
+      // { "x": 571, "y": 549 },
+      // { "x": 131, "y": 214 },
+      // { "x": 425, "y": 146 },
+      { "x": 187, "y": 54 },
+      // { "x": 651, "y": 397 },
+      // { "x": 192, "y": 398 }
     ].map(({ x, y }) => { Obstacle.create(x, y, Obstacle.obstacleSource[0]) });
     this.cacheWalls();
 
