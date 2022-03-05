@@ -100,6 +100,19 @@ export function findWherePointIntersectLineSegmentAtRightAngle(point: Vec2, line
     }
 
 }
+export function isPointOnLineSegment(point: Vec2, lineSegment: LineSegment): boolean {
+    const segmentSlope = slope(lineSegment);
+    const slopeFromPointToEndOfSegment = slope({ p1: point, p2: lineSegment.p2 })
+    if (segmentSlope == slopeFromPointToEndOfSegment) {
+        const pointIsInBoundingBoxOfSegment = point.x >= Math.min(lineSegment.p1.x, lineSegment.p2.x)
+            && point.x <= Math.max(lineSegment.p1.x, lineSegment.p2.x)
+            && point.y >= Math.min(lineSegment.p1.y, lineSegment.p2.y)
+            && point.y <= Math.max(lineSegment.p1.y, lineSegment.p2.y);
+        return pointIsInBoundingBoxOfSegment;
+    }
+    return false;
+
+}
 
 // Adapted from https://stackoverflow.com/a/565282
 // Resources https://www.math.usm.edu/lambers/mat169/fall09/lecture25.pdf
@@ -118,6 +131,7 @@ export function lineSegmentIntersection(l1: LineSegment, l2: LineSegment): Vec2 
     const rCrossS = crossproduct(r, s);
     // If r × s = 0 and (q − p) × r = 0, then the two lines are collinear.
     if (rCrossS == 0 && crossproduct(qMinusP, r) == 0) {
+        console.log('colinear', qMinusP, r);
         return
     }
     // If r × s = 0 and (q − p) × r ≠ 0, then the two lines are parallel and non-intersecting.

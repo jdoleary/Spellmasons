@@ -1,5 +1,6 @@
-import { LineSegment, findWherePointIntersectLineSegmentAtRightAngle, lineSegmentIntersection, testables } from '../collisionMath';
-const { slope, toStandardForm, intersectionOfLines } = testables;
+import { LineSegment, findWherePointIntersectLineSegmentAtRightAngle, lineSegmentIntersection, testables, isPointOnLineSegment } from '../collisionMath';
+import type { Vec2 } from '../../Vec';
+const { slope, toStandardForm } = testables;
 describe('collisionMath', () => {
     // describe('intersectionOfLines', () => {
     //     it('should return the point of intersection for 2 lines', () => {
@@ -25,7 +26,55 @@ describe('collisionMath', () => {
     //     it('should handle 2 vertical lines', () => { });
     //     it('should handle overlapping lines', () => { });
     // });
+    describe('isPointOnLineSegment', () => {
+        it('should return true if the point is on the line segment', () => {
+            const ls1: LineSegment = { p1: { x: 0, y: 0 }, p2: { x: 2, y: 2 } };
+            const point: Vec2 = { x: 1, y: 1 };
+            const actual = isPointOnLineSegment(point, ls1);
+            const expected = true;
+            expect(actual).toEqual(expected);
+        });
+        it('should return false if the point is NOT on the line segment', () => {
+            const ls1: LineSegment = { p1: { x: 0, y: 0 }, p2: { x: 200, y: 200 } };
+            const point: Vec2 = { x: 2, y: 1 };
+            const actual = isPointOnLineSegment(point, ls1);
+            const expected = false;
+            expect(actual).toEqual(expected);
+        });
+
+    });
     describe('intersectionOfLineSegments', () => {
+        // TODO; how to find colinear intersections
+        describe.skip('colinear', () => {
+            it('test co-linear non-overlapping lines', () => {
+                const ls1: LineSegment = { p1: { x: 0, y: 0 }, p2: { x: 1, y: 1 } };
+                const ls2: LineSegment = { p1: { x: 2, y: 2 }, p2: { x: 3, y: 3 } };
+                //     values 0 { x: 2, y: 2 } { x: 1, y: 1 }
+                const actual = lineSegmentIntersection(ls1, ls2);
+                const expected = 'dunno,lets see';
+                expect(actual).toEqual(expected);
+
+            });
+
+            it('test overlapping co-linear vertical lines', () => {
+                const ls1: LineSegment = { p1: { x: 0, y: 0 }, p2: { x: 0, y: 3 } };
+                const ls2: LineSegment = { p1: { x: 0, y: 1 }, p2: { x: 0, y: 4 } };
+                // values 0 { x: 0, y: 1 } { x: 0, y: 3 }
+                const actual = lineSegmentIntersection(ls1, ls2);
+                const expected = 'dunno,lets see';
+                expect(actual).toEqual(expected);
+
+            });
+            it('test overlapping co-linear lines', () => {
+                const ls1: LineSegment = { p1: { x: 0, y: 0 }, p2: { x: 3, y: 0 } };
+                const ls2: LineSegment = { p1: { x: 1, y: 0 }, p2: { x: 4, y: 0 } };
+                // values 0 { x: 1, y: 0 } { x: 3, y: 0 }
+                const actual = lineSegmentIntersection(ls1, ls2);
+                const expected = 'dunno,lets see';
+                expect(actual).toEqual(expected);
+
+            });
+        });
         it('should return the point of intersection for 2 lines', () => {
             const ls1: LineSegment = { p1: { x: -1, y: -1 }, p2: { x: 1, y: 1 } };
             const ls2: LineSegment = { p1: { x: -1, y: 1 }, p2: { x: 1, y: -1 } };
