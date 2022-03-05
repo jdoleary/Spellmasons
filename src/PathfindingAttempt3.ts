@@ -237,13 +237,29 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
                     // newPoly.points.push(closestIntersection)
                     // LEFT OFF: TODO: test for intersection between intersection and next point (this is needed for double intersections on the same wall
                     // const otherPolyIteratable = makePolygonIndexIterator(intersectingWall.polygon, intersectingWall.polygon.points.findIndex(p => p == intersectingWall.p2));
-                    const otherPolyPoints = getPointsFromPolygonStartingAt(intersectingWall.polygon, intersectingWall.p2);
+
+                    // Use "next" point when iterating the other poly clockwise
+                    let otherPolyStartPoint = intersectingWall.p2;
+                    if (intersectingWall.polygon.inverted) {
+                        // Switch newPoly to inverted
+                        newPoly.inverted = true;
+                        // but if the other poly is inverted, use the "prev" point (for iterating counter clockwise)
+                        otherPolyStartPoint = intersectingWall.p1;
+
+                    }
+                    const otherPolyPoints = getPointsFromPolygonStartingAt(intersectingWall.polygon, otherPolyStartPoint);
                     limit++;
                     if (limit > 12) {
                         console.log('exit due to infinite loop');
                         return [];
                     }
-                    iterateQueue.push({ iteratingPolygon: intersectingWall.polygon, points: [closestIntersection, ...otherPolyPoints] });
+                    const nextPoints = otherPolyPoints;
+                    // So long as the intersecting point isn't exactly the same as the otherPolygon's first point,
+                    // add it to the nextPoints array so it will be added into the new polygon
+                    if (!vectorMath.equal(nextPoints[0], closestIntersection)) {
+                        nextPoints.unshift(closestIntersection);
+                    }
+                    iterateQueue.push({ iteratingPolygon: intersectingWall.polygon, points: nextPoints });
                     break;
                 }
 
@@ -254,6 +270,12 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
         // add the finished newPoly to the resultPolys
         // so long as it is a poly with points in it
         if (newPoly.points.length) {
+            // Since inverted poly's still store their points clockwise, and just have the inverted flag set to true,
+            // the newPoly's points must be reset to clockwise order since they will have been iterated counter clockwise.
+            // Potential future refactor: somehow ensure that the inverted flag is tied directly to the order of the points
+            if (newPoly.inverted) {
+                newPoly.points = newPoly.points.reverse();
+            }
             resultPolys.push(newPoly);
         }
 

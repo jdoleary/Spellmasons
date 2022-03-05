@@ -282,10 +282,39 @@ describe('expandPolygon', () => {
 
 });
 describe('mergeOverlappingPolygons', () => {
-    // TODO: handle merging with inverted polygons
+    describe('given a regular polygon and an inverted polygon', () => {
+        it('should successfully merge them and (out of necessity) turn the regular polygon into an inverted polygon', () => {
+            const p1 = { x: 0, y: 0 }
+            const p2 = { x: 0, y: 2 }
+            const p3 = { x: 2, y: 2 }
+            const p4 = { x: 2, y: 0 }
+            const points: Vec2[] = [p1, p2, p3, p4];
+            const polygonA: Polygon = { points, inverted: false };
+            const p1b = { x: -1, y: -1 }
+            const p2b = { x: -1, y: 1 }
+            const p3b = { x: 1, y: 1 }
+            const p4b = { x: 1, y: -1 }
+            const pointsb: Vec2[] = [p1b, p2b, p3b, p4b];
+            // NOTE: polygonB is inverted, so everything OUTSIDE of it
+            // is solid matter
+            const polygonB: Polygon = { points: pointsb, inverted: true };
+            const mergedPolygon = mergeOverlappingPolygons([polygonA, polygonB])[0];
+            const actual = mergedPolygon.points;
+            const expected = [
+                { x: 1, y: 0 },
+                p4b,
+                p1b,
+                p2b,
+                { x: 0, y: 1 },
+                p1,
+            ]
+            expect(actual).toEqual(expected);
+
+        });
+
+    });
     describe('given overlapping boxes on one axis', () => {
-        // LEFT OFF: TODO: Handle perfectly overlapping lines better
-        it.only("should remove the overlapping verticies and return a polygon that is one large rectangle", () => {
+        it("should remove the overlapping verticies and return a polygon that is one large rectangle", () => {
             const p1 = { x: 0, y: 0 }
             const p2 = { x: 0, y: 1 }
             const p3 = { x: 1, y: 1 }
@@ -301,14 +330,13 @@ describe('mergeOverlappingPolygons', () => {
             const mergedPolygon = mergeOverlappingPolygons([polygonA, polygonB])[0];
 
             const actual = mergedPolygon.points;
-            console.log('actual', actual)
             const expected = [
+                p1,
                 p1b,
                 p2b,
                 p3b,
                 p4b,
                 p4,
-                p1
             ];
             expect(actual).toEqual(expected);
         });
