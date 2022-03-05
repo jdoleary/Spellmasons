@@ -282,9 +282,10 @@ describe('expandPolygon', () => {
 
 });
 describe('mergeOverlappingPolygons', () => {
+    // TODO: handle merging with inverted polygons
     describe('given overlapping boxes on one axis', () => {
-        // TODO: Handle perfectly overlapping lines better
-        it.skip("should remove the overlapping verticies and return a polygon that is one large rectangle", () => {
+        // LEFT OFF: TODO: Handle perfectly overlapping lines better
+        it.only("should remove the overlapping verticies and return a polygon that is one large rectangle", () => {
             const p1 = { x: 0, y: 0 }
             const p2 = { x: 0, y: 1 }
             const p3 = { x: 1, y: 1 }
@@ -300,6 +301,7 @@ describe('mergeOverlappingPolygons', () => {
             const mergedPolygon = mergeOverlappingPolygons([polygonA, polygonB])[0];
 
             const actual = mergedPolygon.points;
+            console.log('actual', actual)
             const expected = [
                 p1b,
                 p2b,
@@ -464,7 +466,7 @@ describe('mergeOverlappingPolygons', () => {
         });
     });
     describe('given 3 boxes, one that overlaps 2', () => {
-        it.only('should return a single correctly merged polygon', () => {
+        it('should return a single correctly merged polygon', () => {
             const largePoly: Polygon = {
                 points: [
                     { x: 0, y: 0 },
@@ -494,7 +496,6 @@ describe('mergeOverlappingPolygons', () => {
             };
             const mergedPolygons = mergeOverlappingPolygons([largePoly, smallPoly1, smallPoly2]);
             const actual = mergedPolygons[0].points;
-            console.log('actual', actual);
             const expected = [
                 { x: 0, y: 0 },
                 // intersection between largePoly and smallPoly1
