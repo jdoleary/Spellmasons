@@ -17,7 +17,7 @@ function getLoopableIndex(index: number, array: any[]) {
     }
     return adjusted;
 }
-export function* makePolygonIndexIterator(polygon: Polygon, startIndex: number = 0): Generator<number> {
+export function* makePolygonIndexIterator(polygon: Polygon, startIndex: number = 0): Generator<number, undefined> {
 
     if (polygon.inverted) {
         // Note: This unusual for loop is intentional, see the tests
@@ -33,6 +33,7 @@ export function* makePolygonIndexIterator(polygon: Polygon, startIndex: number =
 
         }
     }
+    return
 }
 
 // A line segment that contains a reference to the polygon that it belongs to
@@ -114,7 +115,81 @@ function isVec2InsidePolygon(point: Vec2, polygon: Polygon): boolean {
     return polygon.inverted ? !isInside : isInside;
 
 }
+function findFirstPointNotInsideAnotherPoly(polygon: Polygon, polygons: Polygon[]): Vec2 | undefined {
+    check_points:
+    for (let point of polygon.points) {
+        for (let otherPolygon of polygons) {
+            if (otherPolygon == polygon) {
+                // don't test self
+                continue;
+            }
+            // If the point is inside the polygon, the entire point isn't a 
+            // candidate.  Continue checking other points
+            if (isVec2InsidePolygon(point, otherPolygon)) {
+                continue check_points;
+            }
+        }
+        return point;
+    }
+}
+// The rule: inside points get removed, intersections become new points
+// export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
+//     const resultPolys: Polygon[] = [];
+//     const excludePolyAtIndex = new Set();
+//     // Loop through all polys to see if they need to merge:
+//     for (let pi = 0; pi < polygons.length; pi++) {
+//         if (excludePolyAtIndex.has(pi)) {
+//             continue;
+//         }
+//         const polygon = polygons[pi];
+//         // Now that this poly has begun looping, don't loop it again
+//         excludePolyAtIndex.add(pi);
+
+//         // Start with the first point on this polygon that is NOT inside
+//         // ANY other polygons.
+//         let firstPoint = findFirstPointNotInsideAnotherPoly();
+//         if (!firstPoint) {
+//             // If a polygon is ENTIRELY inside of other polygons, do not process it
+//             // it can be fully omitted
+//             continue;
+//         }
+
+//         // As we iterate it's points we begin to make a new polygon...
+//         const newPoly = { points: [], inverted: false };
+//         const iterateQueue = [originalPolyIteratable];
+//         for (let iteratable of iterateQueue) {
+//             for (let point of iteratable) {
+//                 if (vectorMath.equal(point, firstPoint)) {
+//                     // Polygon is closed and is finished processing
+//                     resultPolys.push(newPoly);
+
+
+//                     break;
+//                 }
+//                 newPoly.points.push(point)
+//                 const intersection = interse
+//                 // When we detect an intersection we branch into off into iterating
+//                 // that polygon, still adding the points to the new polygon.  Every time
+//                 // we find an intersection we branch.  We stop when we reach the initial point again
+//                 if (intersection) {
+//                     // Now that we're beginning to loop the other poly, don't loop it again
+//                     excludePolyAtIndex.add(otherPolyIndex);
+//                     newPoly.points.push(intersection)
+//                     iterateQueue.push(otherPolyIteratable, intersection.next);
+//                     break;
+//                 }
+
+//             }
+
+//         }
+
+//         // TODO, protect against unusual infinite loops
+
+//     }
+//     return resultPolys;
+// }
 export const testables = {
     getLoopableIndex,
-    isVec2InsidePolygon
+    isVec2InsidePolygon,
+    findFirstPointNotInsideAnotherPoly
 }

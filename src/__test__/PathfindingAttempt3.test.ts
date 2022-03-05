@@ -1,8 +1,110 @@
 
 import type { Vec2 } from "../Vec";
 import { testables, makePolygonIndexIterator, Polygon, expandPolygon } from '../PathfindingAttempt3';
-const { getLoopableIndex, isVec2InsidePolygon } = testables;
+const { getLoopableIndex, isVec2InsidePolygon, findFirstPointNotInsideAnotherPoly } = testables;
 describe('testables', () => {
+    describe('findFirstPointNotInsideAnotherPoly', () => {
+        it('should return a point that is not inside any other polygons', () => {
+            const firstOutsidePoint = { x: 2, y: 2 };
+            const testPoly = {
+                points: [
+                    { x: 0, y: 0 },
+                    { x: 0, y: 2 },
+                    firstOutsidePoint,
+                    { x: 2, y: 0 }
+                ],
+                inverted: false
+            }
+            const polys = [testPoly,
+                // Surrounds point at 0,0
+                {
+                    points: [
+                        { x: -1, y: -1 },
+                        { x: -1, y: 1 },
+                        { x: 1, y: 1 },
+                        { x: 1, y: -1 }
+                    ],
+                    inverted: false
+                },
+                // Surrounds point at 0,2
+                {
+                    points: [
+                        { x: -1, y: 1 },
+                        { x: -1, y: 3 },
+                        { x: 1, y: 3 },
+                        { x: 1, y: 1 }
+                    ],
+                    inverted: false
+                },
+                // Surrounds point at 2,0
+                {
+                    points: [
+                        { x: 1, y: -1 },
+                        { x: 1, y: 1 },
+                        { x: 3, y: 1 },
+                        { x: 3, y: -1 }
+                    ],
+                    inverted: false
+                },
+            ]
+            const actual = findFirstPointNotInsideAnotherPoly(testPoly, polys);
+            const expected = firstOutsidePoint;
+            expect(actual).toEqual(expected);
+
+        });
+
+        describe('given one of the polygons is inverted', () => {
+
+            it('should return a point that is not inside any other polygons', () => {
+                const firstOutsidePoint = { x: 2, y: 0 };
+                const testPoly = {
+                    points: [
+                        { x: 0, y: 0 },
+                        { x: 0, y: 2 },
+                        { x: 2, y: 2 },
+                        firstOutsidePoint
+                    ],
+                    inverted: false
+                }
+                const polys = [testPoly,
+                    // Surrounds point at 0,0
+                    {
+                        points: [
+                            { x: -1, y: -1 },
+                            { x: -1, y: 1 },
+                            { x: 1, y: 1 },
+                            { x: 1, y: -1 }
+                        ],
+                        inverted: false
+                    },
+                    // Surrounds point at 0,2
+                    {
+                        points: [
+                            { x: -1, y: 1 },
+                            { x: -1, y: 3 },
+                            { x: 1, y: 3 },
+                            { x: 1, y: 1 }
+                        ],
+                        inverted: false
+                    },
+                    // Surrounds all points EXCEPT 2,0 (because it is inverted)
+                    {
+                        points: [
+                            { x: 1, y: -1 },
+                            { x: 1, y: 1 },
+                            { x: 3, y: 1 },
+                            { x: 3, y: -1 }
+                        ],
+                        inverted: true
+                    },
+                ]
+                const actual = findFirstPointNotInsideAnotherPoly(testPoly, polys);
+                const expected = firstOutsidePoint;
+                expect(actual).toEqual(expected);
+
+            });
+        });
+    });
     describe('getLoopableIndex', () => {
         it('should return array[n] if n is within the limit of the array', () => {
             const array = [0, 1, 2, 3];
@@ -179,3 +281,225 @@ describe('expandPolygon', () => {
     });
 
 });
+// describe('mergeOverlappingPolygons', () => {
+//     describe('given overlapping boxes on one axis', () => {
+//         // TODO: Handle perfectly overlapping lines better
+//         it.skip("should remove the overlapping verticies and return a polygon that is one large rectangle", () => {
+//             const p1 = { x: 0, y: 0 }
+//             const p2 = { x: 0, y: 1 }
+//             const p3 = { x: 1, y: 1 }
+//             const p4 = { x: 1, y: 0 }
+//             const points: Vec2[] = [p1, p2, p3, p4];
+//             const polygonA: Polygon = { points, inverted: false };
+//             const p1b = { x: 0, y: 1 }
+//             const p2b = { x: 0, y: 2 }
+//             const p3b = { x: 1, y: 2 }
+//             const p4b = { x: 1, y: 1 }
+//             const pointsb: Vec2[] = [p1b, p2b, p3b, p4b];
+//             const polygonB: Polygon = { points: pointsb, inverted: false };
+//             const mergedPolygon = mergeOverlappingPolygons([polygonA, polygonB])[0];
+
+//             const actual = mergedPolygon.points;
+//             const expected = [
+//                 p1b,
+//                 p2b,
+//                 p3b,
+//                 p4b,
+//                 p4,
+//                 p1
+//             ];
+//             expect(actual).toEqual(expected);
+//         });
+//     });
+//     describe('given overlapping boxes on one side', () => {
+//         it("should merge the polygons", () => {
+//             // In this example one polygon has 2 points inside
+//             // of the other but the other has no points inside of it
+//             const p1 = { x: 0, y: 0 }
+//             const p2 = { x: 0, y: 2 }
+//             const p3 = { x: 1, y: 2 }
+//             const p4 = { x: 1, y: 0 }
+//             const points: Vec2[] = [p1, p2, p3, p4];
+//             const polygonA: Polygon = { points: points, inverted: false };
+//             const p1b = { x: -1, y: 1 }
+//             const p2b = { x: -1, y: 3 }
+//             const p3b = { x: 2, y: 3 }
+//             const p4b = { x: 2, y: 1 }
+//             const pointsb: Vec2[] = [p1b, p2b, p3b, p4b];
+//             const polygonB: Polygon = { points: pointsb, inverted: false };
+//             const mergedPolygon = mergeOverlappingPolygons([polygonA, polygonB])[0];
+
+//             const actual = mergedPolygon.points;
+//             const expected = [
+//                 { x: 0, y: 1 },
+//                 p1b,
+//                 p2b,
+//                 p3b,
+//                 p4b,
+//                 { x: 1, y: 1 },
+//                 p4,
+//                 p1,
+//             ];
+//             expect(actual).toEqual(expected);
+//         });
+//         it("should still merge the polygons even if the start polygons are in reverse order", () => {
+//             const p1 = { x: 0, y: 0 }
+//             const p2 = { x: 0, y: 2 }
+//             const p3 = { x: 1, y: 2 }
+//             const p4 = { x: 1, y: 0 }
+//             const points: Vec2[] = [p1, p2, p3, p4];
+//             const polygonA: Polygon = { points: points, inverted: false };
+//             const p1b = { x: -1, y: 1 }
+//             const p2b = { x: -1, y: 3 }
+//             const p3b = { x: 2, y: 3 }
+//             const p4b = { x: 2, y: 1 }
+//             const pointsb: Vec2[] = [p1b, p2b, p3b, p4b];
+//             const polygonB: Polygon = { points: pointsb, inverted: false };
+//             const mergedPolygon = mergeOverlappingPolygons([polygonB, polygonA])[0];
+
+//             const actual = mergedPolygon.points;
+//             const expected = [
+//                 { x: 0, y: 1 },
+//                 p1b,
+//                 p2b,
+//                 p3b,
+//                 p4b,
+//                 { x: 1, y: 1 },
+//                 p4,
+//                 p1,
+//             ];
+//             expect(actual).toEqual(expected);
+//         });
+//     });
+//     describe('given boxes that each share 1 vertex inside of the other', () => {
+//         it("should remove inside verticies and make a polygon that is the spacial addition of the two boxes", () => {
+//             const p1 = { x: 0, y: 0 }
+//             const p2 = { x: 0, y: 2 }
+//             const p3 = { x: 2, y: 2 }
+//             const p4 = { x: 2, y: 0 }
+//             const points: Vec2[] = [p1, p2, p3, p4];
+//             const polygonA: Polygon = { points, inverted: false };
+//             const p1b = { x: 1, y: 1 }
+//             const p2b = { x: 1, y: 3 }
+//             const p3b = { x: 3, y: 3 }
+//             const p4b = { x: 3, y: 1 }
+//             const pointsb: Vec2[] = [p1b, p2b, p3b, p4b];
+//             const polygonB: Polygon = { points: pointsb, inverted: false };
+//             const mergedPolygon = mergeOverlappingPolygons([polygonA, polygonB])[0];
+
+//             const actual = mergedPolygon.points;
+//             const expected = [
+//                 { x: 1, y: 2 },
+//                 p2b,
+//                 p3b,
+//                 p4b,
+//                 { x: 2, y: 1 },
+//                 p4,
+//                 p1,
+//                 p2,
+//             ];
+//             expect(actual).toEqual(expected);
+
+//         });
+//     });
+//     describe('given boxes that are identical', () => {
+//         it("should remove one box entirely", () => {
+//             const p1 = { x: 0, y: 0 }
+//             const p2 = { x: 0, y: 2 }
+//             const p3 = { x: 2, y: 2 }
+//             const p4 = { x: 2, y: 0 }
+//             const points: Vec2[] = [p1, p2, p3, p4];
+//             const polygonA: Polygon = { points, inverted: false };
+//             const polygonB: Polygon = { points, inverted: false };
+//             const mergedPolygons = mergeOverlappingPolygons([polygonA, polygonB]);
+//             const actual = mergedPolygons.length;
+//             const expected = 1;
+//             expect(actual).toEqual(expected);
+//         });
+//     });
+//     describe('given one box fully inside the other', () => {
+//         const polygonOutside: Polygon = {
+//             points: [
+//                 { x: 0, y: 0 },
+//                 { x: 0, y: 4 },
+//                 { x: 4, y: 4 },
+//                 { x: 4, y: 0 }
+//             ], inverted: false
+//         };
+//         const polygonInside: Polygon = {
+//             points: [
+//                 { x: 1, y: 1 },
+//                 { x: 1, y: 2 },
+//                 { x: 2, y: 2 },
+//                 { x: 2, y: 1 }
+//             ], inverted: false
+//         };
+//         it("should remove the inside box entirely", () => {
+//             const mergedPolygons = mergeOverlappingPolygons([polygonOutside, polygonInside]);
+//             const actual = JSON.stringify(mergedPolygons[0].points);
+//             const expected = JSON.stringify(polygonOutside.points);
+//             expect(actual).toEqual(expected);
+//         });
+//         it("should still remove the inside box even if the order of the boxes is reversed when passed into mergeOverlappingPolygons", () => {
+//             const mergedPolygons = mergeOverlappingPolygons([polygonInside, polygonOutside]);
+//             const actual = JSON.stringify(mergedPolygons[0].points);
+//             const expected = JSON.stringify(polygonOutside.points);
+//             expect(actual).toEqual(expected);
+//         });
+//     });
+//     describe('given 3 boxes, one that overlaps 2', () => {
+//         it('should return a single correctly merged polygon', () => {
+//             const largePoly: Polygon = {
+//                 points: [
+//                     { x: 0, y: 0 },
+//                     { x: 0, y: 10 },
+//                     { x: 4, y: 10 },
+//                     { x: 4, y: 0 }
+//                 ],
+//                 inverted: false
+//             };
+//             const smallPoly1: Polygon = {
+//                 points: [
+//                     { x: -1, y: 2 },
+//                     { x: -1, y: 3 },
+//                     { x: 1, y: 3 },
+//                     { x: 1, y: 2 }
+//                 ],
+//                 inverted: false
+//             };
+//             const smallPoly2: Polygon = {
+//                 points: [
+//                     { x: -1, y: 7 },
+//                     { x: -1, y: 8 },
+//                     { x: 1, y: 8 },
+//                     { x: 1, y: 7 }
+//                 ],
+//                 inverted: false
+//             };
+//             const mergedPolygons = mergeOverlappingPolygons([largePoly, smallPoly1, smallPoly2]);
+//             const actual = JSON.stringify(mergedPolygons[0].points);
+//             const expected = JSON.stringify([
+//                 { x: 0, y: 0 },
+//                 // intersection between largePoly and smallPoly1
+//                 { x: 0, y: 2 },
+//                 // Some of smallPoly1's points
+//                 { x: -1, y: 2 },
+//                 { x: -1, y: 3 },
+//                 // intersection between largePoly and smallPoly1
+//                 { x: 0, y: 3 },
+//                 // back to iterating largePoly
+//                 // intersection between largePoly and smallPoly2
+//                 { x: 0, y: 7 },
+//                 // Some of smallPoly2's points
+//                 { x: -1, y: 2 },
+//                 { x: -1, y: 3 },
+//                 // back to iterating largePoly
+//                 { x: 4, y: 10 },
+//                 { x: 4, y: 0 }
+//             ]);
+//             expect(actual).toEqual(expected);
+
+//         });
+//     });
+
+// });
