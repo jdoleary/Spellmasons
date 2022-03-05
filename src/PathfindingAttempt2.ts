@@ -498,20 +498,20 @@ function tryPaths(paths: Path[], pathingWalls: VertexLineSegment[], recursionCou
     });
     console.log('found paths', optimizedPaths, 'done', optimizedPaths.filter(p => p.done).length, 'invalid', optimizedPaths.filter(p => p.invalid).length);
     // Debug: Draw all the optimizedPaths:
-    // const colors = [
-    //     0xff0000,
-    //     0x00ff00,
-    //     0x0000ff,
-    //     0xffffff,
-    // ]
-    // for (let i = 0; i < optimizedPaths.length; i++) {
-    //     const path = optimizedPaths[i];
-    //     window.underworld.debugGraphics.lineStyle(4, colors[i], 0.3);
-    //     window.underworld.debugGraphics.moveTo(path.points[0].x, path.points[0].y);
-    //     for (let point of path.points) {
-    //         window.underworld.debugGraphics.lineTo(point.x, point.y);
-    //     }
-    // }
+    const colors = [
+        0xff0000,
+        0x00ff00,
+        0x0000ff,
+        0xffffff,
+    ]
+    for (let i = 0; i < optimizedPaths.length; i++) {
+        const path = optimizedPaths[i];
+        window.underworld.debugGraphics.lineStyle(4, colors[i], 0.3);
+        window.underworld.debugGraphics.moveTo(path.points[0].x, path.points[0].y);
+        for (let point of path.points) {
+            window.underworld.debugGraphics.lineTo(point.x, point.y);
+        }
+    }
     return optimizedPaths.reduce<Path | undefined>((shortest, contender) => {
         if (shortest === undefined) {
             return contender
@@ -607,14 +607,13 @@ interface Path {
 // --
 // Takes an array of Polygons and transforms them into a fully connected convex poly mesh
 // export function generateConvexPolygonMesh(polys: Polygon[], expandSize: number): Polygon[] {
-//     // 1. Grow the polygons according to `expand`.  Expand is used to give a margin to the pathing mesh so that units with thickness won't clip through walls as they pass by the corners or through a narrow area.
+//     // DONE 1. Grow the polygons according to `expand`.  Expand is used to give a margin to the pathing mesh so that units with thickness won't clip through walls as they pass by the corners or through a narrow area.
 //     const expandedPolygons = polys.map(p => expandPolygon(p, expandSize));
-//     // 2. Merge parts of intersecting or overlapping polygons so that none of them intersect or overlap.  This step is important, for example if there is a very thin corridor and the expand is large enough, no space in the corridor will be pathable and this is because the collidable polygons will grow so much (due to the expand) that they will overlap.
-//     // TODO: Left off here
+//     // DONE 2. Merge parts of intersecting or overlapping polygons so that none of them intersect or overlap.  This step is important, for example if there is a very thin corridor and the expand is large enough, no space in the corridor will be pathable and this is because the collidable polygons will grow so much (due to the expand) that they will overlap.
 //     // 3. Take the world bounds (the inverted polygon I mentioned before) and all the collidable polygons and make more connections between their verticies so that there are no concave polygons. This step will return a new array of polygons (probably 3-sided).
-//     // This is currently done inside of split
-//     // 4.  Optimize the new array of polygons so that multiple polygons are combined if the unified polygon remains convex.
-//     // This is currently done inside of split but should be redone to use polygons instead of Points
+//          // This is currently done inside of split
+//     // DONE 4.  Optimize the new array of polygons so that multiple polygons are combined if the unified polygon remains convex.
+//          // This is currently done inside of split but should be redone to use polygons instead of Points
 //     // 5.  Give polygons references to their neighbors (a neighboring polygon is any polygon that shares an edge
 //     // 6. Use this array of polygons and their neighbors via an A* algorithm or something similar to pathfind.
 // }

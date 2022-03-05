@@ -370,22 +370,31 @@ export default class Underworld {
     //   // TODO: Ensure the players have a path to the portal
     // }
     // Test obstaclese
+
     [
       {
-        "x": 313,
-        "y": 306
+        "x": 233,
+        "y": 531
       },
       {
-        "x": 400,
-        "y": 360
+        "x": 270,
+        "y": 279
       },
       {
-        "x": 600,
-        "y": 429
+        "x": 293,
+        "y": 171
       },
       {
-        "x": 620,
-        "y": 459
+        "x": 269,
+        "y": 356
+      },
+      {
+        "x": 349,
+        "y": 255
+      },
+      {
+        "x": 222,
+        "y": 364
       }
     ].map(({ x, y }) => { Obstacle.create(x, y, Obstacle.obstacleSource[0]) });
     this.cacheWalls();

@@ -112,7 +112,7 @@ export function mousemoveHandler(e: MouseEvent) {
     //   window.underworld.debugGraphics.lineTo(point.x, point.y);
     // }
     // Draw the pathing walls
-    window.underworld.debugGraphics.lineStyle(3, 0x00aabb, 0.1);
+    window.underworld.debugGraphics.lineStyle(3, 0x00aabb, 0.3);
     for (let lineSegment of window.underworld.pathingWalls) {
       window.underworld.debugGraphics.moveTo(lineSegment.p1.x, lineSegment.p1.y);
       window.underworld.debugGraphics.lineTo(lineSegment.p2.x, lineSegment.p2.y);
