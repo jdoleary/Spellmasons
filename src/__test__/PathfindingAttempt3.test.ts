@@ -418,7 +418,7 @@ describe('mergeOverlappingPolygons', () => {
         });
     });
     describe('given boxes that are mostly identical', () => {
-        it.only("should keep the larger one", () => {
+        it("should keep the larger one", () => {
             const p1 = { x: 0, y: 0 }
             const p2 = { x: 0, y: 2 }
             const p3 = { x: 2, y: 2 }
@@ -464,7 +464,7 @@ describe('mergeOverlappingPolygons', () => {
         });
     });
     describe('given 3 boxes, one that overlaps 2', () => {
-        it('should return a single correctly merged polygon', () => {
+        it.only('should return a single correctly merged polygon', () => {
             const largePoly: Polygon = {
                 points: [
                     { x: 0, y: 0 },
@@ -493,8 +493,9 @@ describe('mergeOverlappingPolygons', () => {
                 inverted: false
             };
             const mergedPolygons = mergeOverlappingPolygons([largePoly, smallPoly1, smallPoly2]);
-            const actual = JSON.stringify(mergedPolygons[0].points);
-            const expected = JSON.stringify([
+            const actual = mergedPolygons[0].points;
+            console.log('actual', actual);
+            const expected = [
                 { x: 0, y: 0 },
                 // intersection between largePoly and smallPoly1
                 { x: 0, y: 2 },
@@ -507,12 +508,15 @@ describe('mergeOverlappingPolygons', () => {
                 // intersection between largePoly and smallPoly2
                 { x: 0, y: 7 },
                 // Some of smallPoly2's points
-                { x: -1, y: 2 },
-                { x: -1, y: 3 },
+                { x: -1, y: 7 },
+                { x: -1, y: 8 },
+                // intersection between largePoly and smallPoly2
+                { x: 0, y: 8 },
                 // back to iterating largePoly
+                { x: 0, y: 10 },
                 { x: 4, y: 10 },
                 { x: 4, y: 0 }
-            ]);
+            ];
             expect(actual).toEqual(expected);
 
         });
