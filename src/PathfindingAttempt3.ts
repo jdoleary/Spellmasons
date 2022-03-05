@@ -1,7 +1,7 @@
 import type { Vec2 } from "./Vec";
 import * as vectorMath from './collision/vectorMath';
 import { distance, similarTriangles } from "./math";
-// import { LineSegment, lineSegmentIntersection } from "./collision/collisionMath";
+import { LineSegment, lineSegmentIntersection } from "./collision/collisionMath";
 
 export interface Polygon {
     points: Vec2[];
@@ -16,9 +16,6 @@ function getLoopableIndex(index: number, array: any[]) {
         adjusted = array.length + adjusted;
     }
     return adjusted;
-}
-export const testables = {
-    getLoopableIndex
 }
 export function* makePolygonIndexIterator(polygon: Polygon, startIndex: number = 0): Generator<number> {
 
@@ -42,8 +39,20 @@ export function* makePolygonIndexIterator(polygon: Polygon, startIndex: number =
 export interface PolygonLineSegment {
     p1: Vec2;
     p2: Vec2;
-    parentPolygon: Polygon;
+    // The polygon that these points belong to
+    polygon: Polygon;
 
+}
+export function polygonToPolygonLineSegments(polygon: Polygon): PolygonLineSegment[] {
+    let lastPoint = polygon.points[0];
+    let lineSegments: PolygonLineSegment[] = [];
+    for (let i = 1; i < polygon.points.length; i++) {
+        lineSegments.push({ p1: lastPoint, p2: polygon.points[i], polygon });
+        lastPoint = polygon.points[i];
+    }
+    // Add line from last point to first point:
+    lineSegments.push({ p1: lastPoint, p2: polygon.points[0], polygon });
+    return lineSegments;
 }
 // Expand polygon: Grows a polygon into it's "outside" by the distance of magnitude
 // along the normal vectors of each vertex.
@@ -77,4 +86,32 @@ function projectPointAlongNormalVector(polygon: Polygon, pointIndex: number, mag
     const d = polygon.inverted ? -magnitude : magnitude;
     const relativeAdjustedPoint = similarTriangles(X, Y, D, d);
     return vectorMath.subtract(point, relativeAdjustedPoint);
+}
+
+function isVec2InsidePolygon(point: Vec2, polygon: Polygon): boolean {
+    // From geeksforgeeks.com: 
+    // 1) Draw a horizontal line to the right of each point and extend it to infinity 
+    // 2) Count the number of times the line intersects with polygon edges. 
+    // 3) A point is inside the polygon if either count of intersections is odd or point lies on an edge of polygon. 
+    // If none of the conditions is true, then point lies outside
+    const testLine: LineSegment = { p1: point, p2: { x: Number.MAX_SAFE_INTEGER, y: point.y } };
+    const intersections: Vec2[] = [];
+    for (let polygonLineSegment of polygonToPolygonLineSegments(polygon)) {
+        const intersection = lineSegmentIntersection(testLine, polygonLineSegment)
+        if (intersection) {
+            // Exclude intersections that have already been found
+            // This can happen if the "point" shares the same "y" value as
+            // a vertex in the polygon because the vertex belongs to 2 of the 
+            // VertexLineSegments
+            if (!intersections.find(i => vectorMath.equal(i, intersection))) {
+                intersections.push(intersection);
+            }
+        }
+    }
+    return intersections.length % 2 != 0;
+
+}
+export const testables = {
+    getLoopableIndex,
+    isVec2InsidePolygon
 }

@@ -1,8 +1,7 @@
 
 import type { Vec2 } from "../Vec";
 import { testables, makePolygonIndexIterator, Polygon, expandPolygon } from '../PathfindingAttempt3';
-
-const { getLoopableIndex } = testables;
+const { getLoopableIndex, isVec2InsidePolygon } = testables;
 describe('testables', () => {
     describe('getLoopableIndex', () => {
         it('should return array[n] if n is within the limit of the array', () => {
@@ -28,6 +27,65 @@ describe('testables', () => {
             const expected = 3;
             expect(actual).toEqual(expected);
         });
+    });
+    describe('isVec2InsidePolygon', () => {
+        it('should return true when the vec is inside the square', () => {
+            const p1 = { x: 0, y: 0 }
+            const p2 = { x: 0, y: 1 }
+            const p3 = { x: 1, y: 1 }
+            const p4 = { x: 1, y: 0 }
+            const points: Vec2[] = [p1, p2, p3, p4];
+            const polygon: Polygon = { points, inverted: false };
+            const actual = isVec2InsidePolygon({ x: 0.5, y: 0.5 }, polygon);
+            const expected = true;
+            expect(actual).toEqual(expected);
+        });
+        it('should return false when the vec is OUTSIDE the square', () => {
+            const p1 = { x: 0, y: 0 }
+            const p2 = { x: 0, y: 1 }
+            const p3 = { x: 1, y: 1 }
+            const p4 = { x: 1, y: 0 }
+            const points: Vec2[] = [p1, p2, p3, p4];
+            const polygon: Polygon = { points, inverted: false };
+            const actual = isVec2InsidePolygon({ x: -100, y: 0.5 }, polygon);
+            const expected = false;
+            expect(actual).toEqual(expected);
+        });
+        it('should return false when the vec is OUTSIDE the square 2', () => {
+            const p1 = { x: 0, y: 0 }
+            const p2 = { x: 0, y: 1 }
+            const p3 = { x: 1, y: 1 }
+            const p4 = { x: 1, y: 0 }
+            const points: Vec2[] = [p1, p2, p3, p4];
+            const polygon: Polygon = { points, inverted: false };
+            const actual = isVec2InsidePolygon({ x: -100, y: -100 }, polygon);
+            const expected = false;
+            expect(actual).toEqual(expected);
+        });
+        it('should return true when the vec is inside a complex polygon', () => {
+            const p1 = { x: 1, y: 0 }
+            const p2 = { x: 0, y: 1 }
+            const p3 = { x: 1, y: 2 }
+            const p4 = { x: 1, y: 3 }
+            const p5 = { x: 3, y: 3 }
+            const p6 = { x: 3, y: 2 }
+            const p7 = { x: 2, y: 1 }
+            const p8 = { x: 3, y: 0 }
+            const points: Vec2[] = [p1, p2, p3, p4, p5, p6, p7, p8];
+            const polygon: Polygon = { points, inverted: false };
+            // Note, the y value of this point aligns with the y value
+            // of a vertex of the polygon to it's right
+            // (p7).  Because of the internal implementation of 
+            // isVec2InsidePolygon, it tests a straight line to the right
+            // which means it'll come up with 2 intersections for that vert
+            // since that vert belongs to 2 of the vetexLineSegments of the
+            // poly.  There is special handling inside of isVec2InsidePolygon
+            // to account for this edge case
+            const actual = isVec2InsidePolygon({ x: 1, y: 1 }, polygon);
+            const expected = true;
+            expect(actual).toEqual(expected);
+        });
+
     });
 
 });
