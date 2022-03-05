@@ -119,6 +119,7 @@ function projectPointAlongNormalVector(polygon: Polygon, pointIndex: number, mag
     return vectorMath.subtract(point, relativeAdjustedPoint);
 }
 
+// TODO account for points that exist exactly on the line of another polygon
 function isVec2InsidePolygon(point: Vec2, polygon: Polygon): boolean {
     // From geeksforgeeks.com: 
     // 1) Draw a horizontal line to the right of each point and extend it to infinity 
@@ -215,7 +216,7 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
                 // we find an intersection we change which polygon we're iterating.  
                 if (intersectingWall && closestIntersection) {
                     // Now that we're beginning to loop the other poly, don't loop it again
-                    console.log('branch');
+                    console.log('-------------branch');
                     excludePoly.add(intersectingWall.polygon);
                     console.log('new intersection', closestIntersection);
                     newPoly.points.push(closestIntersection)
@@ -231,14 +232,13 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
                 }
 
             }
-            // When either an iterator completes or exits early due to completing the polygon,
-            // add the finished newPoly to the resultPolys
-            // so long as it is a poly with points in it
-            if (newPoly.points.length) {
-                console.log('jtest poly:', newPoly);
-                resultPolys.push(newPoly);
-            }
 
+        }
+        // When either an iterator completes or exits early due to completing the polygon,
+        // add the finished newPoly to the resultPolys
+        // so long as it is a poly with points in it
+        if (newPoly.points.length) {
+            resultPolys.push(newPoly);
         }
 
         // TODO, protect against unusual infinite loops
