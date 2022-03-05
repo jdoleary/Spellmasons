@@ -1,6 +1,6 @@
 
 import type { Vec2 } from "../Vec";
-import { testables, makePolygonIndexIterator, Polygon } from '../PathfindingAttempt3';
+import { testables, makePolygonIndexIterator, Polygon, expandPolygon } from '../PathfindingAttempt3';
 
 const { getLoopableIndex } = testables;
 describe('testables', () => {
@@ -61,38 +61,38 @@ describe('makePolygonIterator', () => {
         });
     });
 });
-// describe('expandPolygon', () => {
-//     it('should return a new polygon with all of its points grown by magnitude', () => {
-//         const p1 = { x: 0, y: 0 }
-//         const p2 = { x: 0, y: 1 }
-//         const p3 = { x: 1, y: 1 }
-//         const p4 = { x: 1, y: 0 }
-//         const points: Vec2[] = [p1, p2, p3, p4];
-//         const polygon: Polygon = { points, inverted: false };
+describe('expandPolygon', () => {
+    it('should return a new polygon with all of its points grown by magnitude', () => {
+        const p1 = { x: 0, y: 0 }
+        const p2 = { x: 0, y: 1 }
+        const p3 = { x: 1, y: 1 }
+        const p4 = { x: 1, y: 0 }
+        const points: Vec2[] = [p1, p2, p3, p4];
+        const polygon: Polygon = { points, inverted: false };
 
-//         const newPolygon = expandPolygon(polygon, Math.sqrt(2));
-//         expect(newPolygon.points).toEqual([
-//             { x: -1, y: -1 },
-//             { x: -1, y: 2 },
-//             { x: 2, y: 2 },
-//             { x: 2, y: -1 },
-//         ]);
-//     });
-//     it('should expand in the opposite direction for inverted polygons where the inside and outside are flipped', () => {
-//         const p1 = { x: 0, y: 0 }
-//         const p2 = { x: 0, y: 2 }
-//         const p3 = { x: 2, y: 2 }
-//         const p4 = { x: 2, y: 0 }
-//         const points: Vec2[] = [p1, p2, p3, p4];
-//         const polygon: Polygon = { points, inverted: true };
+        const newPolygon = expandPolygon(polygon, Math.sqrt(2));
+        expect(newPolygon.points).toEqual([
+            { x: -1, y: -1 },
+            { x: -1, y: 2 },
+            { x: 2, y: 2 },
+            { x: 2, y: -1 },
+        ]);
+    });
+    it('should expand in the opposite direction for inverted polygons where the inside and outside are flipped', () => {
+        const p1 = { x: 0, y: 0 }
+        const p2 = { x: 0, y: 2 }
+        const p3 = { x: 2, y: 2 }
+        const p4 = { x: 2, y: 0 }
+        const points: Vec2[] = [p1, p2, p3, p4];
+        const polygon: Polygon = { points, inverted: true };
 
-//         const newPolygon = expandPolygon(polygon, Math.sqrt(2));
-//         expect(newPolygon.points).toEqual([
-//             { x: 1, y: 1 },
-//             { x: 1, y: 1 },
-//             { x: 1, y: 1 },
-//             { x: 1, y: 1 },
-//         ]);
-//     });
+        const newPolygon = expandPolygon(polygon, Math.sqrt(2));
+        expect(newPolygon.points).toEqual([
+            { x: 1, y: 1 },
+            { x: 1, y: 1 },
+            { x: 1, y: 1 },
+            { x: 1, y: 1 },
+        ]);
+    });
 
-// });
+});
