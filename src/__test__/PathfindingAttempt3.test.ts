@@ -355,6 +355,35 @@ describe('mergeOverlappingPolygons', () => {
             ];
             expect(actual).toEqual(expected);
         });
+        describe('that do not share any verticies', () => {
+            it.only("should merge the two polys to return one large rectangle", () => {
+                const p1 = { x: 0, y: 0 }
+                const p2 = { x: 0, y: 3 }
+                const p3 = { x: 1, y: 3 }
+                const p4 = { x: 1, y: 0 }
+                const points: Vec2[] = [p1, p2, p3, p4];
+                const polygonA: Polygon = { points, inverted: false };
+                const p1b = { x: 0, y: 1 }
+                const p2b = { x: 0, y: 4 }
+                const p3b = { x: 1, y: 4 }
+                const p4b = { x: 1, y: 1 }
+                const pointsb: Vec2[] = [p1b, p2b, p3b, p4b];
+                const polygonB: Polygon = { points: pointsb, inverted: false };
+                const mergedPolygon = mergeOverlappingPolygons([polygonA, polygonB])[0];
+
+                const actual = mergedPolygon.points;
+                const expected = [
+                    p1,
+                    p1b,
+                    p2b,
+                    p3b,
+                    p3,
+                    p4,
+                ];
+                console.log('actual', actual);
+                expect(actual).toEqual(expected);
+            });
+        });
     });
     describe('given overlapping boxes on one side', () => {
         it("should merge the polygons", () => {
