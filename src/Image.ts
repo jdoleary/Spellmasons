@@ -3,7 +3,7 @@ import type * as PIXI from 'pixi.js';
 import { addPixiSprite } from './PixiUtils';
 import Subsprites from './Subsprites';
 import { animateIndependent } from './AnimationTimeline';
-import type { Vec2 } from './commonTypes';
+import type { Vec2 } from "./Vec";
 
 // The serialized version of the interface changes the interface to allow only the data
 // that can be serialized in JSON.  It may exclude data that is not neccessary to

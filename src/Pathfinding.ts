@@ -1,5 +1,5 @@
 import { LineSegment, lineSegmentIntersection } from "./collision/collisionMath";
-import type { Vec2 } from "./commonTypes";
+import { Vec2, getAngleBetweenVec2s } from "./Vec";
 import * as vectorMath from './collision/vectorMath';
 import { distance, similarTriangles } from "./math";
 
@@ -75,12 +75,6 @@ function lineSegmentsToPoints(_lineSegments: LineSegment[]): Point[] {
         }
     }
     return points;
-}
-// in radians
-function getAngleBetweenVec2s(v1: Vec2, v2: Vec2): number {
-    const dy = v2.y - v1.y;
-    const dx = v2.x - v1.x;
-    return Math.atan2(dy, dx);
 }
 
 // returns the angle between (-Math.PI, Math.PI]
@@ -221,7 +215,6 @@ function counterClockwiseAngle(rad1: number, rad2: number): number {
 export const testables = {
     split,
     lineSegmentsToPoints,
-    getAngleBetweenVec2s,
     isAngleBetweenAngles,
     normalizeAngle,
     counterClockwiseAngle

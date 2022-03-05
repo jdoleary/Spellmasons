@@ -1,15 +1,27 @@
-import type { Vec2, Polygon, Vertex } from "./commonTypes";
+import { Vec2, getAngleBetweenVec2s } from "./Vec";
 import * as vectorMath from './collision/vectorMath';
 import { distance, similarTriangles } from "./math";
 import { LineSegment, lineSegmentIntersection } from "./collision/collisionMath";
-import { drawDryRunCircle } from "./ui/PlanningView";
 
-export function lineSegmentsToVec2s(lineSegments: LineSegment[]): Vec2[] {
-    return [lineSegments[0].p1, ...lineSegments.reduce<Vec2[]>((agg, cur) => {
-        agg.push(cur.p2)
-        return agg
-    }, [])]
 
+// The order of the verticies (which is prev and which is next)
+// is important because that determines what is INSIDE the polygon and OUTSIDE.
+// For example, given the pseudo vertex:
+// {prev: {x:0, y:1}, x:0,y:0, next: {x:1,y:0}}
+// This vertex has an INSIDE angle of 45 degrees and an OUTSIDE angle of 
+// 315.  This can be determined by taking the angle of the edge from 
+// the vertex's Vec2 to prev and finding the angle to the edge from the Vec2 to next.
+// The ordering of these is important so that a Polygon made up of Vertexes maintains
+// a sense of inside and outside
+export type Vertex = Vec2 & { prev: Vertex, next: Vertex };
+
+// For the purposes of this usage, Polygons are closed, non self-intersecting,
+// made up of verts which act like a doubly-linked list.  The polygon can be traced
+// by starting from the startVertex and walking .next.next.next until you arrive
+// back at the first vertex.
+export interface Polygon {
+    startVertex: Vertex;
+    length: number;
 }
 export function vec2sToPolygon(points: Vec2[]): Polygon {
     let startVertex;
@@ -95,12 +107,6 @@ export function polygonToVertexLineSegments(polygon: Polygon): VertexLineSegment
     // Add line from last point to first point:
     lineSegments.push({ p1: lastPoint, p2: verticies[0] });
     return lineSegments;
-}
-// in radians
-function getAngleBetweenVec2s(v1: Vec2, v2: Vec2): number {
-    const dy = v2.y - v1.y;
-    const dx = v2.x - v1.x;
-    return Math.atan2(dy, dx);
 }
 // order matters
 // angles are in radians

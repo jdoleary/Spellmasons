@@ -1,4 +1,4 @@
-import type { Vec2 } from "../commonTypes";
+import type { Vec2 } from "../Vec";
 
 export function multiply(scalar: number, p2: Vec2): Vec2 {
     return {

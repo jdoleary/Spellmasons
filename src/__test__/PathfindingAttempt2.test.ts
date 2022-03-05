@@ -1,6 +1,6 @@
 import { polygonToVec2s, vec2sToPolygon, expandPolygon, testables, makePolygonIterator, mergeOverlappingPolygons, makePolygonIteratorFromVertex } from "../PathfindingAttempt2";
 const { projectVertexAlongOutsideNormal, getAngleBetweenAngles, isVec2InsidePolygon } = testables;
-import type { Vec2 } from "../commonTypes";
+import type { Vec2 } from "../Vec";
 describe('projectVertexAlongOutsideNormal', () => {
     it('should find the point "magnitude" distance away from p2 along the normal', () => {
         // These points represent a corner, where the inside is down and to the right

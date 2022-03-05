@@ -1,7 +1,7 @@
 import type { LineSegment } from '../collision/collisionMath';
-import type { Vec2 } from '../commonTypes';
+import type { Vec2 } from '../Vec';
 import { generateConvexPolygonMesh, findPath, testables, Point } from '../Pathfinding';
-const { split, lineSegmentsToPoints, getAngleBetweenVec2s, isAngleBetweenAngles, normalizeAngle, counterClockwiseAngle } = testables;
+const { split, lineSegmentsToPoints, isAngleBetweenAngles, normalizeAngle, counterClockwiseAngle } = testables;
 
 describe("Pathfinding", () => {
     describe("generateConvexPolygonMesh", () => {
@@ -70,15 +70,6 @@ describe("Pathfinding", () => {
                 expect(actual).toEqual(expected);
             });
         }
-    });
-    describe("getAngleBetweenVec2s", () => {
-        it('should find the angle in radians between 2 Vec2s', () => {
-            const p1 = { x: 1, y: 1 };
-            const p2 = { x: 1, y: 2 };
-            const actual = getAngleBetweenVec2s(p1, p2);
-            const expected = Math.PI / 2;
-            expect(actual).toEqual(expected);
-        });
     });
     describe("normalizeAngle", () => {
         it("should return an angle between -Math.PI and Math.PI (positive example)", () => {

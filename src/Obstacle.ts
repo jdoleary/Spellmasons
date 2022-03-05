@@ -1,6 +1,5 @@
-import type { Polygon } from './commonTypes';
 import * as Image from './Image';
-import { vec2sToPolygon } from './PathfindingAttempt2';
+import { vec2sToPolygon, Polygon } from './PathfindingAttempt2';
 import { containerBoard } from './PixiUtils';
 export interface IObstacle {
   x: number;

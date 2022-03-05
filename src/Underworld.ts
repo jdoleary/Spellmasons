@@ -17,7 +17,8 @@ import {
   containerUI,
 } from './PixiUtils';
 import floatingText from './FloatingText';
-import { UnitType, Vec2, Faction, Polygon } from './commonTypes';
+import { UnitType, Faction } from './commonTypes';
+import type { Vec2 } from "./Vec";
 import Events from './Events';
 import { allUnits } from './units';
 import { syncSpellEffectProjection, updatePlanningView } from './ui/PlanningView';
@@ -28,7 +29,7 @@ import { calculateManaCost } from './cards/cardUtils';
 import { moveWithCollisions } from './collision/moveWithCollision';
 import { lineSegmentIntersection, LineSegment } from './collision/collisionMath';
 import { updateCardManaBadges } from './CardUI';
-import { expandPolygon, polygonToVertexLineSegments, polygonToVec2s, vec2sToPolygon, VertexLineSegment, mergeOverlappingPolygons } from './PathfindingAttempt2';
+import { expandPolygon, polygonToVertexLineSegments, polygonToVec2s, vec2sToPolygon, VertexLineSegment, mergeOverlappingPolygons, Polygon } from './PathfindingAttempt2';
 
 export enum turn_phase {
   PlayerTurns,
