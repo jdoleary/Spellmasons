@@ -220,10 +220,10 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
                 const point = points[index];
                 // if point is already in newPoly, the polygon is now closed, exit the loop successfully
                 if (newPoly.points.find(p => vectorMath.equal(p, point))) {
-                    // exit successfully,  due to point in newpoly already
-                    // console.log('exit successfully,  due to point in newpoly already', point);
+                    console.log('exit successfully,  due to point in newpoly already', point);
                     break;
                 }
+                console.log('new point', point);
                 newPoly.points.push(point)
                 const { intersectingWall, closestIntersection } = getClosestIntersectionWithWalls({ p1: point, p2: points[getLoopableIndex(index + 1, points)], polygon: iteratingPolygon }, polygonLineSegments);
                 // Step 4. When we detect an intersection we branch into off into iterating
@@ -231,7 +231,12 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
                 // we find an intersection we change which polygon we're iterating.  
                 if (intersectingWall && closestIntersection) {
                     // Now that we're beginning to loop the other poly, don't loop it again
+                    console.log('-------------branch at', closestIntersection, 'to poly', intersectingWall.polygon);
                     excludePoly.add(intersectingWall.polygon);
+                    // console.log('new intersection', closestIntersection);
+                    // newPoly.points.push(closestIntersection)
+                    // LEFT OFF: TODO: test for intersection between intersection and next point (this is needed for double intersections on the same wall
+                    // const otherPolyIteratable = makePolygonIndexIterator(intersectingWall.polygon, intersectingWall.polygon.points.findIndex(p => p == intersectingWall.p2));
 
                     // Use "next" point when iterating the other poly clockwise
                     let otherPolyStartPoint = intersectingWall.p2;
@@ -244,9 +249,8 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
                     }
                     const otherPolyPoints = getPointsFromPolygonStartingAt(intersectingWall.polygon, otherPolyStartPoint);
                     limit++;
-                    if (limit > 500) {
-                        // TODO, protect against unusual infinite loops
-                        console.error('exit due to infinite loop');
+                    if (limit > 12) {
+                        console.log('exit due to infinite loop');
                         return [];
                     }
                     const nextPoints = otherPolyPoints;
@@ -275,6 +279,7 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
             resultPolys.push(newPoly);
         }
 
+        // TODO, protect against unusual infinite loops
 
     }
     return resultPolys;
