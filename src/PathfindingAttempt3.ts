@@ -10,37 +10,29 @@ export interface Polygon {
 }
 // Allows accessing an array without going out of bounds.  So getBoundedIndex(array.length+1)
 // will be index of 1 instead of beyond the limit of the array
-function getElementAtLoopableIndex(index: number, array: any[]) {
+function getLoopableIndex(index: number, array: any[]) {
     let adjusted = index % array.length;
     if (adjusted < 0) {
         adjusted = array.length + adjusted;
     }
-    return array[adjusted];
+    return adjusted;
 }
 export const testables = {
-    getElementAtLoopableIndex
+    getLoopableIndex
 }
-export function* makePolygonIterator(polygon: Polygon, startPoint?: Vec2): Generator<Vec2> {
+export function* makePolygonIndexIterator(polygon: Polygon, startIndex: number = 0): Generator<number> {
 
-    let startIndex = startPoint
-        ? polygon.points.findIndex(p => vectorMath.equal(p, startPoint))
-        // Default to index 0 if no startPoint is provided
-        : 0;
-    if (startIndex == -1) {
-        // Then startPoint does not belong to polygon;
-        return
-    }
     if (polygon.inverted) {
         // Note: This unusual for loop is intentional, see the tests
         // If invereted, it will iterate the polygon in reverse order
         // STARTING with the point at start index
         for (let i = startIndex + polygon.points.length; i > startIndex; i--) {
-            yield getElementAtLoopableIndex(i, polygon.points);
+            yield getLoopableIndex(i, polygon.points);
 
         }
     } else {
         for (let i = startIndex; i < startIndex + polygon.points.length; i++) {
-            yield getElementAtLoopableIndex(i, polygon.points);
+            yield getLoopableIndex(i, polygon.points);
 
         }
     }
