@@ -360,11 +360,12 @@ export default class Underworld {
       // TODO: Ensure the players have a path to the portal
     }
     // Test obstaclese
-
     [
-      { "x": 722, "y": 61 },
-      { "x": 187, "y": 54 },
+      { "x": 671, "y": 340 },
+      { "x": 671, "y": 389 },
     ].map(({ x, y }) => { Obstacle.create(x, y, Obstacle.obstacleSource[0]) });
+
+
     this.cacheWalls();
 
     // Since a new level changes the existing units, redraw the planningView in
