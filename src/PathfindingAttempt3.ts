@@ -44,6 +44,36 @@ export interface PolygonLineSegment {
     polygon: Polygon;
 
 }
+// Given an array of PolygonLineSegment[], of all the intersections between line and the walls,
+// find the closest intersection to line.p1
+function getClosestIntersectionWithWalls(line: PolygonLineSegment, walls: PolygonLineSegment[]): { intersectingWall?: PolygonLineSegment, closestIntersection?: Vec2 } {
+    let intersectingWall;
+    let closestIntersection;
+    let closestIntersectionDistance;
+    // Check for collisions between the last line in the path and pathing walls
+    for (let wall of walls) {
+        if (wall.polygon == line.polygon) {
+            // Exclude collisions at start point or end point of line segment. Don't collide with self
+            continue;
+        }
+        const intersection = lineSegmentIntersection(line, wall);
+        if (intersection) {
+            const dist = distance(line.p1, intersection);
+            // If there is no closest intersection, make this intersection the closest intersection
+            // If there is and this intersection is closer, make it the closest
+            if (!closestIntersection || (closestIntersection && closestIntersectionDistance && closestIntersectionDistance > dist)) {
+                closestIntersection = intersection;
+                closestIntersectionDistance = dist;
+                intersectingWall = wall
+            }
+
+        }
+    }
+    return { intersectingWall, closestIntersection };
+}
+
+// Note: p2 is always the "next" point in terms of the index being greater than
+// the index of p1
 export function polygonToPolygonLineSegments(polygon: Polygon): PolygonLineSegment[] {
     let lastPoint = polygon.points[0];
     let lineSegments: PolygonLineSegment[] = [];
@@ -134,18 +164,24 @@ function findFirstPointNotInsideAnotherPoly(polygon: Polygon, polygons: Polygon[
 }
 // The rule: inside points get removed, intersections become new points
 export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
+    let limit = 0;
     const resultPolys: Polygon[] = [];
-    const excludePolyAtIndex = new Set();
-    // Loop through all polys to see if they need to merge:
-    for (let pi = 0; pi < polygons.length; pi++) {
-        if (excludePolyAtIndex.has(pi)) {
+    // Convert all polygons into polygon line segments for processing:
+    const polygonLineSegments = polygons.map(polygonToPolygonLineSegments).flat();
+    // excludedPoly is used to ensure that polys are not processed more than once
+    // especially because they may be processed in an inner loop.  newPolys added to
+    // resultPolys do not need to be processed because as they are created they are
+    // merged with ALL other polys that they are in contact with
+    const excludePoly = new Set();
+    // Step 1. Loop through all polys to see if they need to merge
+    for (let polygon of polygons) {
+        if (excludePoly.has(polygon)) {
             continue;
         }
-        const polygon = polygons[pi];
-        // Now that this poly has begun looping, don't loop it again
-        excludePolyAtIndex.add(pi);
+        // Now that this poly has begun processing, mark it as excluded so it won't be processed again
+        excludePoly.add(polygon);
 
-        // Start with the first point on this polygon that is NOT inside
+        // Step 2. Start with the first point on this polygon that is NOT inside
         // ANY other polygons.
         let firstPoint = findFirstPointNotInsideAnotherPoly(polygon, polygons);
         if (!firstPoint) {
@@ -155,33 +191,52 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
             continue;
         }
 
-        // As we iterate it's points we begin to make a new polygon...
-        const newPoly = { points: [], inverted: false };
-        const originalPolyIteratable = makePolygonIndexIterator(polygon, polygon.points.findIndex(p => p == firstPoint))
-        const iterateQueue = [originalPolyIteratable];
-        for (let iteratable of iterateQueue) {
-            for (let pointIndex of iteratable) {
-
-                if (vectorMath.equal(point, firstPoint)) {
-                    // Polygon is closed and is finished processing
-                    resultPolys.push(newPoly);
-
-
+        // Step 3. Iterate the original polygon starting at first point
+        // and add the points that are being iterated to a new polygon which
+        // will eventually be added to resultPolys
+        const newPoly: Polygon = { points: [], inverted: false };
+        const originalPolyPoints = makePolygonIndexIterator(polygon, polygon.points.findIndex(p => p == firstPoint))
+        const iterateQueue: { iteratingPolygon: Polygon, iterator: Generator<number, undefined, unknown> }[] = [{ iteratingPolygon: polygon, iterator: originalPolyPoints }];
+        for (let { iteratingPolygon, iterator } of iterateQueue) {
+            for (let index of iterator) {
+                const point = iteratingPolygon.points[index];
+                // if point is already in newPoly, the polygon is now closed, exit the loop successfully
+                console.log('try', newPoly.points, point);
+                if (newPoly.points.find(p => vectorMath.equal(p, point))) {
+                    console.log('exit successfully,  due to point in newpoly already', point);
                     break;
                 }
+                console.log('new point', point);
                 newPoly.points.push(point)
-                const intersection = interse
-                // When we detect an intersection we branch into off into iterating
-                // that polygon, still adding the points to the new polygon.  Every time
-                // we find an intersection we branch.  We stop when we reach the initial point again
-                if (intersection) {
+
+                const { intersectingWall, closestIntersection } = getClosestIntersectionWithWalls({ p1: point, p2: iteratingPolygon.points[getLoopableIndex(index + 1, iteratingPolygon.points)], polygon: iteratingPolygon }, polygonLineSegments);
+                // Step 4. When we detect an intersection we branch into off into iterating
+                // the intersecting polygon, still adding the points to the new polygon.  Every time
+                // we find an intersection we change which polygon we're iterating.  
+                if (intersectingWall && closestIntersection) {
                     // Now that we're beginning to loop the other poly, don't loop it again
-                    excludePolyAtIndex.add(otherPolyIndex);
-                    newPoly.points.push(intersection)
-                    iterateQueue.push(otherPolyIteratable, intersection.next);
+                    console.log('branch');
+                    excludePoly.add(intersectingWall.polygon);
+                    console.log('new intersection', closestIntersection);
+                    newPoly.points.push(closestIntersection)
+                    const otherPolyIteratable = makePolygonIndexIterator(intersectingWall.polygon, intersectingWall.polygon.points.findIndex(p => p == intersectingWall.p2));
+                    limit++;
+                    if (limit > 12) {
+                        console.log('exit due to infinite loop');
+                        return [];
+                    }
+                    iterateQueue.push({ iteratingPolygon: intersectingWall.polygon, iterator: otherPolyIteratable });
                     break;
+
                 }
 
+            }
+            // When either an iterator completes or exits early due to completing the polygon,
+            // add the finished newPoly to the resultPolys
+            // so long as it is a poly with points in it
+            if (newPoly.points.length) {
+                console.log('jtest poly:', newPoly);
+                resultPolys.push(newPoly);
             }
 
         }

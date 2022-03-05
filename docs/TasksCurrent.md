@@ -7,6 +7,7 @@
 - Resolve not adding next's or prev's from another shape that are inside of the current shape
     - Do this with mergeOverlappingPolygons
 - Setup Buffer with social medias and start a following
+- TODO: Even with Attempt3, I think the order of the points still matters, so if the points are going counter clockwise but the poly is not inverted=true you'll get weird behavior
 ---
 Finish Content:
 - More spells:
