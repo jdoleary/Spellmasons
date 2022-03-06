@@ -221,9 +221,9 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
         for (let { points, iteratingPolygon } of iterateQueue) {
             for (let index = 0; index < points.length; index++) {
                 const point = points[index];
-                // if point is already in newPoly, the polygon is now closed, exit the loop successfully
-                if (newPoly.points.find(p => vectorMath.equal(p, point))) {
-                    console.log('exit successfully,  due to point in newpoly already', point);
+                // if point the first point in newpoly, the polygon is now closed, exit the loop successfully
+                if (newPoly.points[0] && vectorMath.equal(newPoly.points[0], point)) {
+                    console.log('exit successfully,  polygon is closed', point);
                     break;
                 }
                 console.log('new point', point);
@@ -252,7 +252,7 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
                     }
                     const otherPolyPoints = getPointsFromPolygonStartingAt(intersectingWall.polygon, otherPolyStartPoint);
                     limit++;
-                    if (limit > 12) {
+                    if (limit > 200) {
                         console.log('exit due to infinite loop');
                         return [];
                     }
