@@ -583,6 +583,7 @@ describe('mergeOverlappingPolygons', () => {
             const polygonDiamond: Polygon = { points: pointsDiamond, inverted: false };
             //  They will intersect directly on p3/p1b, which means it will be in the merged poly twice
             const actual = mergeOverlappingPolygons([polygonA, polygonDiamond])[0].points
+            console.log('actual', actual)
             const expected = [p1, p2, p1b, p2b, p3b, p4b, p1b, p4];
             expect(actual).toEqual(expected);
 

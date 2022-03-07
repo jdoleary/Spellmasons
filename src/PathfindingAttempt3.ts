@@ -37,6 +37,7 @@ export function* makePolygonIndexIterator(polygon: Polygon, startIndex: number =
     return
 }
 function getPointsFromPolygonStartingAt(polygon: Polygon, startPoint: Vec2): Vec2[] {
+    console.log('jtest', startPoint, polygon.points);
     const startPointIndex = polygon.points.findIndex(p => vectorMath.equal(p, startPoint))
     if (startPointIndex == -1) {
         // startPoint is not on polygon
@@ -339,7 +340,7 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
         let loop = 0
         for (let index = 0; index < points.length; index++) {
             loop++;
-            if (loop > 10) {
+            if (loop > 200) {
                 console.log('exit due to infinite loop', newPoly);
                 return []
 
@@ -360,11 +361,6 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
                     return []
                 }
             }
-            // Note, "point" may be a new intersection point
-            // const nextIteratingPolyPoint = iteratingPolygon.inverted
-            //     ? points[getLoopableIndex(index - 1, points)]
-            //     : points[getLoopableIndex(index + 1, points)]
-            // const iteratingPolyCurrentWall = { p1: point, p2: nextIteratingPolyPoint, polygon: iteratingPolygon };
             const iteratingPolyNextPoint = points[getLoopableIndex(index + 1, points)];
             const iteratingPolyCurrentWall = { p1: point, p2: iteratingPolyNextPoint, polygon: iteratingPolygon };
             // console.log('!!!!!poly line segments', polygonLineSegments, iteratingPolyCurrentWall);
@@ -379,12 +375,18 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
                     lastLineAngle = getAngleBetweenVec2s(closestIntersection, newPoly.points[newPoly.points.length - 1]);
                     console.log('last line angle', lastLineAngle * 180 / Math.PI, closestIntersection, newPoly.points[newPoly.points.length - 1]);
                 }
-                console.log('  intersection', closestIntersection, 'lastLineAngle', lastLineAngle * 180 / Math.PI);
+                console.log('new intersection', closestIntersection, 'lastLineAngle', lastLineAngle * 180 / Math.PI);
+                // If not a duplicate of the last newPoly point, add the intersection
+                if (!(newPoly.points.length && vectorMath.equal(newPoly.points[newPoly.points.length - 1], closestIntersection))) {
+                    newPoly.points.push(closestIntersection);
+                }
+
                 // For the current poly wall and all intersecting walls, get information for all possible
                 // branches
                 // Note: iteratingPolygonVerticies is different from "points" because "points" may contain intersection points
                 // that are not explicitly verticies
                 const iteratingPolygonVerticies = getPointsFromPolygonStartingAt(iteratingPolygon, iteratingPolyNextPoint)
+                console.log('VERTS', iteratingPolygonVerticies, iteratingPolyNextPoint, 'points', points, 'index', index);
                 // The different between iteratingPolyLastWall and iteratingPolyCurrentWall is that iteratingPolyCurrentWall
                 // may be from an intersection point to a vertex while iteratingPolyLastWall is from the last actual vertex
                 // to the next vertex.
@@ -400,20 +402,14 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
                         otherPolyStartPoint = wall.p1;
                     }
                     // console.log('WALL', wall, 'start point', otherPolyStartPoint);
-                    const otherPolyPoints = getPointsFromPolygonStartingAt(wall.polygon, otherPolyStartPoint);
-                    let nextPoints = otherPolyPoints;
-                    // So long as the intersecting point isn't exactly the same as the otherPolygon's first point,
-                    // add it to the nextPoints array so it will be added into the new polygon
-                    // console.log('jtest', wall.polygon.points, 'wall', wall, 'startpoint', otherPolyStartPoint, 'nextPoints', nextPoints, 'intersection', closestIntersection);
-                    if (!vectorMath.equal(nextPoints[0], closestIntersection)) {
-                        nextPoints.unshift(closestIntersection);
-                    }
-                    const nextLineAngle = getAngleBetweenVec2s(closestIntersection, nextPoints[1]);
+                    const otherPolyNextPoints = getPointsFromPolygonStartingAt(wall.polygon, otherPolyStartPoint);
+                    const nextPoint = vectorMath.equal(otherPolyNextPoints[0], closestIntersection) ? otherPolyNextPoints[1] : otherPolyNextPoints[0];
+                    const nextLineAngle = getAngleBetweenVec2s(closestIntersection, nextPoint);
 
                     return {
                         // and angle from the last line to the next line if this branch were to be taken
                         branchAngle: clockwiseAngle(lastLineAngle, nextLineAngle),
-                        nextPoints,
+                        nextPoints: otherPolyNextPoints,
                         polygon: wall.polygon
                     }
                 }).sort((a, b) => {
