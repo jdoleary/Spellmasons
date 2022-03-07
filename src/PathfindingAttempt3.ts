@@ -320,7 +320,15 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
         let iteratingPolygon = polygon;
         let points = originalPolyPoints;
         let lastLineAngle: number = 0;
+        let loop = 0
         for (let index = 0; index < points.length; index++) {
+            loop++;
+            if (loop > 30) {
+
+                console.log('exit due to infinite loop', newPoly);
+                return []
+
+            }
             const point = points[index];
             // if point the first point in newpoly, the polygon is now closed, exit the loop successfully
             if (newPoly.points[0] && vectorMath.equal(newPoly.points[0], point)) {
@@ -359,11 +367,12 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
                         otherPolyStartPoint = wall.p1;
                     }
                     const otherPolyPoints = getPointsFromPolygonStartingAt(wall.polygon, otherPolyStartPoint);
-                    const nextPoints = otherPolyPoints;
-                    // So long as the intersecting point isn't exactly the same as the otherPolygon's first point,
-                    // add it to the nextPoints array so it will be added into the new polygon
-                    if (!vectorMath.equal(nextPoints[0], closestIntersection)) {
-                        nextPoints.unshift(closestIntersection);
+                    let nextPoints = otherPolyPoints;
+                    // Since the intersecting point is always added to the newPoly, ensure that
+                    // it doesn't get re-processed when we branch by removing it from nextPoints
+                    // if it is the first point of next points
+                    if (vectorMath.equal(nextPoints[0], closestIntersection)) {
+                        nextPoints = nextPoints.slice(1)
                     }
                     const nextLineAngle = getAngleBetweenVec2s(closestIntersection, nextPoints[1]);
 
@@ -377,7 +386,7 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
                     return a.branchAngle - b.branchAngle;
                 });
                 console.log('branches', branches.map(b =>
-                    ({ polygon: polygons.findIndex(o => o == b.polygon), branchAngle: b.branchAngle, nextPoints: b.nextPoints })));
+                    ({ polygon: polygons.findIndex(o => o == b.polygon), branchAngle: b.branchAngle * 180 / Math.PI, nextPoints: JSON.stringify(b.nextPoints) })));
 
 
                 // Take the branch with the smallest clockwise angle:
@@ -394,9 +403,17 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
                     console.log('  branch at', closestIntersection, 'to poly', polygons.findIndex(p => p == branchToTake.polygon));
                 }
                 excludePoly.add(branchToTake.polygon);
+                // Reset loop
                 iteratingPolygon = branchToTake.polygon;
                 points = branchToTake.nextPoints;
-                index = 0;
+                // index will be ++'d before the loop continues, so set it to -1 so
+                // it will start at 0
+                index = -1;
+                console.log('new point', point, 'currentPoly', polygons.findIndex(p => p == iteratingPolygon), 'newPoly', newPoly.points);
+                // Add the intersection point to the newPoly (so long as it's not a duplicate)
+                if (!(newPoly.points.length && vectorMath.equal(newPoly.points[newPoly.points.length - 1], closestIntersection))) {
+                    newPoly.points.push(closestIntersection);
+                }
             }
 
         }

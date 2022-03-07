@@ -408,47 +408,49 @@ describe('mergeOverlappingPolygons', () => {
 
     });
     describe('given multiple polygons that intersect at the same vertex on all of them', () => {
-        // LEFT OFF HERE
-        // it.only('should merge them in the correct order', () => {
-        //     // This example uses 4 diamonds that intersect at 0,0
+        it('should merge them in the correct order', () => {
+            // This example uses 4 diamonds that intersect at 0,0
 
-        //     // Diamond left
-        //     const p1 = { x: 0, y: 0 }
-        //     const p2 = { x: -2, y: -1 }
-        //     const p3 = { x: -3, y: 0 }
-        //     const p4 = { x: -2, y: 1 }
-        //     const points: Vec2[] = [p1, p2, p3, p4];
-        //     const polygonA: Polygon = { points, inverted: false };
-        //     // Diamond top
-        //     const p1b = { x: 0, y: 0 }
-        //     const p2b = { x: -1, y: 2 }
-        //     const p3b = { x: 0, y: 3 }
-        //     const p4b = { x: 1, y: 2 }
-        //     const pointsb: Vec2[] = [p1b, p2b, p3b, p4b];
-        //     const polygonB: Polygon = { points: pointsb, inverted: false };
-        //     // Diamond right
-        //     const p1c = { x: 0, y: 0 }
-        //     const p2c = { x: 2, y: 1 }
-        //     const p3c = { x: 3, y: 0 }
-        //     const p4c = { x: 2, y: -1 }
-        //     const pointsc: Vec2[] = [p1c, p2c, p3c, p4c];
-        //     const polygonC: Polygon = { points: pointsc, inverted: false };
-        //     // Diamond bottom
-        //     const p1d = { x: 0, y: 0 }
-        //     const p2d = { x: 1, y: -2 }
-        //     const p3d = { x: 0, y: -3 }
-        //     const p4d = { x: -1, y: -2 }
-        //     const pointsd: Vec2[] = [p1d, p2d, p3d, p4d];
-        //     const polygonD: Polygon = { points: pointsd, inverted: false };
-        //     const mergedPolygon = mergeOverlappingPolygons([polygonA, polygonB, polygonD, polygonC])[0];
-        //     const actual = mergedPolygon.points;
-        //     const expected: Vec2[] = [
+            // Diamond left
+            const p1 = { x: 0, y: 0 }
+            const p2 = { x: -2, y: -1 }
+            const p3 = { x: -3, y: 0 }
+            const p4 = { x: -2, y: 1 }
+            const points: Vec2[] = [p1, p2, p3, p4];
+            const polygonA: Polygon = { points, inverted: false };
+            // Diamond top
+            const p1b = { x: 0, y: 0 }
+            const p2b = { x: -1, y: 2 }
+            const p3b = { x: 0, y: 3 }
+            const p4b = { x: 1, y: 2 }
+            const pointsb: Vec2[] = [p1b, p2b, p3b, p4b];
+            const polygonB: Polygon = { points: pointsb, inverted: false };
+            // Diamond right
+            const p1c = { x: 0, y: 0 }
+            const p2c = { x: 2, y: 1 }
+            const p3c = { x: 3, y: 0 }
+            const p4c = { x: 2, y: -1 }
+            const pointsc: Vec2[] = [p1c, p2c, p3c, p4c];
+            const polygonC: Polygon = { points: pointsc, inverted: false };
+            // Diamond bottom
+            const p1d = { x: 0, y: 0 }
+            const p2d = { x: 1, y: -2 }
+            const p3d = { x: 0, y: -3 }
+            const p4d = { x: -1, y: -2 }
+            const pointsd: Vec2[] = [p1d, p2d, p3d, p4d];
+            const polygonD: Polygon = { points: pointsd, inverted: false };
+            const mergedPolygon = mergeOverlappingPolygons([polygonA, polygonB, polygonD, polygonC])[0];
+            const actual = mergedPolygon.points;
+            const expected: Vec2[] = [
+                p2, p3, p4,
+                p1b, p2b, p3b, p4b,
+                p1c, p2c, p3c, p4c,
+                p1d, p2d, p3d, p4d,
+                p1
+            ]
+            expect(actual).toEqual(expected);
 
-        //     ]
-        //     console.log('actual', actual);
-        //     expect(actual).toEqual(expected);
-
-        // });
+        });
     });
     describe('given polygons that intersect at exactly a point of one of the verticies of a polygon', () => {
         it('should merge the polygons', () => {
