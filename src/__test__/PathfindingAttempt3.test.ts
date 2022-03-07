@@ -616,35 +616,35 @@ describe('mergeOverlappingPolygons', () => {
             ];
             expect(actual).toEqual(expected);
         });
-        describe('that do not share any verticies', () => {
-            it("should ignore branching off in a direction that goes INSIDE of the current polygon", () => {
-                // If a vertex lies on a line of a poly, but it branches off inside the poly, ignore it
-                const p1 = { x: 0, y: 0 }
-                const p2 = { x: 0, y: 3 }
-                const p3 = { x: 1, y: 3 }
-                const p4 = { x: 1, y: 0 }
-                const points: Vec2[] = [p1, p2, p3, p4];
-                const polygonA: Polygon = { points, inverted: false };
-                const p1b = { x: 0, y: 1 }
-                const p2b = { x: 0, y: 4 }
-                const p3b = { x: 1, y: 4 }
-                const p4b = { x: 1, y: 1 }
-                const pointsb: Vec2[] = [p1b, p2b, p3b, p4b];
-                const polygonB: Polygon = { points: pointsb, inverted: false };
-                const mergedPolygon = mergeOverlappingPolygons([polygonA, polygonB])[0];
+    });
+    it("should ignore branching off in a direction that goes INSIDE of the current polygon", () => {
+        // If a vertex lies on a line of a poly, but it branches off inside the poly, ignore it
+        const p1 = { x: 0, y: 0 }
+        const p2 = { x: 0, y: 3 }
+        const p3 = { x: 2, y: 3 }
+        const p4 = { x: 2, y: 0 }
+        const points: Vec2[] = [p1, p2, p3, p4];
+        const polygonA: Polygon = { points, inverted: false };
+        // It won't take any of the branches that go inside
+        const p1b = { x: 0, y: 1 }
+        const p2b = { x: 1, y: 2 }
+        const p3b = { x: 2, y: 1 }
+        const p4b = { x: 1, y: 0 }
+        const pointsb: Vec2[] = [p1b, p2b, p3b, p4b];
+        const polygonB: Polygon = { points: pointsb, inverted: false };
+        const mergedPolygon = mergeOverlappingPolygons([polygonA, polygonB])[0];
 
-                const actual = mergedPolygon.points;
-                const expected = [
-                    p1,
-                    p2,
-                    p2b,
-                    p3b,
-                    p4b,
-                    p4,
-                ];
-                expect(actual).toEqual(expected);
-            });
-        });
+        const actual = mergedPolygon.points;
+        const expected = [
+            p1,
+            p1b,
+            p2,
+            p3,
+            p3b,
+            p4,
+            p4b
+        ];
+        expect(actual).toEqual(expected);
     });
     describe('given overlapping boxes on one side', () => {
         it("should merge the polygons", () => {
@@ -747,6 +747,7 @@ describe('mergeOverlappingPolygons', () => {
             const polygonA: Polygon = { points, inverted: false };
             const polygonB: Polygon = { points, inverted: false };
             const mergedPolygons = mergeOverlappingPolygons([polygonA, polygonB]);
+            console.log('merged Polygons', mergedPolygons[0], mergedPolygons[1]);
             const actual = mergedPolygons.length;
             const expected = 1;
             expect(actual).toEqual(expected);

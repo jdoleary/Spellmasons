@@ -320,7 +320,11 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
 
         // Step 2. Start with the first point on this polygon that is NOT inside
         // ANY other polygons.
-        let firstPoint = findFirstPointNotInsideAnotherPoly(polygon, polygons);
+        // Note: only consider polygons that have yet to be processed because since a processed polygon
+        // will absorb ALL touching polygons, the next polygon to be processed can't be touching / inside
+        // an already processed polygon.  This filter also allows identical polygons to be processed
+        // because without it, none of them would have any points outside of all other polygons.
+        let firstPoint = findFirstPointNotInsideAnotherPoly(polygon, polygons.filter(p => !excludePoly.has(p)));
         if (!firstPoint) {
             console.log('no outside point found, do not process');
             // If there are no points outside of all other polys because 
