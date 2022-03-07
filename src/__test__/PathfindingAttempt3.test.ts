@@ -166,6 +166,95 @@ describe('testables', () => {
         });
     });
     describe('isVec2InsidePolygon', () => {
+        describe('corner cases', () => {
+            describe('1. point is the same location as a vertex of hte polygon', () => {
+                it('should return true because it is inside (this is up to my discretion if I want points on verticies to be determined as inside)', () => {
+                    const p1 = { x: 0, y: 0 }
+                    const p2 = { x: 1, y: 1 }
+                    const p3 = { x: 2, y: 0 }
+                    const points: Vec2[] = [p1, p2, p3];
+                    const polygon: Polygon = { points, inverted: false };
+                    const actual = isVec2InsidePolygon(p2, polygon);
+                    const expected = true;
+                    expect(actual).toEqual(expected);
+                });
+            });
+            describe('2a. point is horizontal to vertex and is outside', () => {
+                it('should return false because it is outside', () => {
+                    const p1 = { x: 0, y: 0 }
+                    const p2 = { x: 1, y: 1 }
+                    const p3 = { x: 2, y: 0 }
+                    const points: Vec2[] = [p1, p2, p3];
+                    const polygon: Polygon = { points, inverted: false };
+                    // horizontal to p2
+                    const actual = isVec2InsidePolygon({ x: -5, y: 1 }, polygon);
+                    const expected = false;
+                    expect(actual).toEqual(expected);
+                });
+            });
+            describe('2b. point is horizontal to vertex and is inside', () => {
+                it('should return true because it is inside', () => {
+                    const p1 = { x: 0, y: 0 }
+                    const p2 = { x: 0, y: 2 }
+                    const p3 = { x: 3, y: 2 }
+                    const p4 = { x: 2, y: 1 }
+                    const p5 = { x: 3, y: 0 }
+                    const points: Vec2[] = [p1, p2, p3, p4, p5];
+                    const polygon: Polygon = { points, inverted: false };
+                    // Horizontal to 1,1
+                    const actual = isVec2InsidePolygon({ x: 1, y: 1 }, polygon);
+                    const expected = true;
+                    expect(actual).toEqual(expected);
+                });
+            });
+            describe('3a. point is colinear with, but not on, a horizontal edge of the polygon and is outside', () => {
+                it('should return false because it is outside', () => {
+                    const p1 = { x: 0, y: 0 }
+                    const p2 = { x: 0, y: 1 }
+                    const p3 = { x: 1, y: 1 }
+                    const p4 = { x: 1, y: 0 }
+                    const points: Vec2[] = [p1, p2, p3, p4];
+                    const polygon: Polygon = { points, inverted: false };
+                    // Horizontal to edge: 0,1 to 1,1
+                    const actual = isVec2InsidePolygon({ x: -10, y: 1 }, polygon);
+                    const expected = false;
+                    expect(actual).toEqual(expected);
+                });
+            });
+            describe('3b. point is colinear with, but not on, a horizontal edge of the polygon and is inside', () => {
+                it('should return true because it is inside', () => {
+                    const p1 = { x: 0, y: 0 }
+                    const p2 = { x: 0, y: 3 }
+                    const p3 = { x: 3, y: 3 }
+                    const p4 = { x: 3, y: 2 }
+                    const p5 = { x: 4, y: 2 }
+                    const p6 = { x: 4, y: 1 }
+                    const p7 = { x: 3, y: 1 }
+                    const p8 = { x: 3, y: 0 }
+                    const points: Vec2[] = [p1, p2, p3, p4, p5, p6, p7, p8];
+                    const polygon: Polygon = { points, inverted: false };
+                    // Horizontal to edge: 3,2 to 4,2
+                    const actual = isVec2InsidePolygon({ x: 2, y: 2 }, polygon);
+                    const expected = true;
+                    expect(actual).toEqual(expected);
+                });
+            });
+            describe('4. point is on a horizontal edge of the polygon', () => {
+                it('should return true because it is inside (this is up to my discretion if I want points on edges to be determined as inside)', () => {
+                    const p1 = { x: 0, y: 0 }
+                    const p2 = { x: 0, y: 2 }
+                    const p3 = { x: 2, y: 2 }
+                    const p4 = { x: 2, y: 0 }
+                    const points: Vec2[] = [p1, p2, p3, p4];
+                    const polygon: Polygon = { points, inverted: false };
+                    // horizontal to edge 0,2 to 2,2
+                    const actual = isVec2InsidePolygon({ x: 1, y: 2 }, polygon);
+                    const expected = true;
+                    expect(actual).toEqual(expected);
+                });
+            });
+
+        });
         describe('given that the point is on the same y as a vertex of another polygon but not inside', () => {
             it('should return false', () => {
                 // diamond
@@ -551,7 +640,6 @@ describe('mergeOverlappingPolygons', () => {
                     p4b,
                     p4,
                 ];
-                console.log('actual', actual);
                 expect(actual).toEqual(expected);
             });
         });

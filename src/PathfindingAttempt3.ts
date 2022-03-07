@@ -230,33 +230,49 @@ function isVec2InsidePolygon(point: Vec2, polygon: Polygon): boolean {
     // Note: we must test both a horizontal line and a vertical line in order to
     // account for corner cases such as the horizontal line intersecting directly with a vertex of a 
     // poly (which would be 1 intersection, but the point could still be outside);
+    // Corner cases include when the test line intersects directly with a vertex or perfectly with an
+    // edge.  Intersecting with multiple points on the same edge should be reduced to 1 intersection
+    // We do two lines to account for the corner case of intersecting directly with a vertex.
+
     const horizontalLine: LineSegment = { p1: point, p2: { x: Number.MAX_SAFE_INTEGER, y: point.y } };
-    const verticalLine: LineSegment = { p1: point, p2: { x: point.x, y: Number.MAX_SAFE_INTEGER } };
-    const horizontalIntersections: Vec2[] = [];
-    const verticalIntersections: Vec2[] = [];
-    for (let polygonLineSegment of polygonToPolygonLineSegments(polygon)) {
-        const horizontalIntersection = lineSegmentIntersection(horizontalLine, polygonLineSegment)
-        if (horizontalIntersection) {
-            // Exclude intersections that have already been found
-            // This can happen if the "point" shares the same "y" value as
-            // a vertex in the polygon because the vertex belongs to 2 of the 
-            // VertexLineSegments
-            if (!horizontalIntersections.find(i => vectorMath.equal(i, horizontalIntersection))) {
-                horizontalIntersections.push(horizontalIntersection);
-            }
-        }
-        const verticalIntersection = lineSegmentIntersection(verticalLine, polygonLineSegment)
-        if (verticalIntersection) {
-            // Exclude intersections that have already been found
-            // This can happen if the "point" shares the same "x" value as
-            // a vertex in the polygon because the vertex belongs to 2 of the 
-            // VertexLineSegments
-            if (!verticalIntersections.find(i => vectorMath.equal(i, verticalIntersection))) {
-                verticalIntersections.push(verticalIntersection);
+    // Start outside, so each odd number of flips will determine it to be inside
+    let isInside = false;
+    const intersections: Vec2[] = [];
+    for (let wall of polygonToPolygonLineSegments(polygon)) {
+        const intersection = lineSegmentIntersection(horizontalLine, wall)
+
+        //  Don't process the same intersection more than once
+        if (intersection && !intersections.find(i => vectorMath.equal(i, intersection))) {
+            intersections.push(intersection);
+            // If the intersection is at a vertex of the polygon, this is a special case and must be handled by checking the
+            // angles of what happens when the line goes through the intersection
+            // This logic solves these corner cases:
+            // 1. point is same location as a vertex of the polygon (inside)
+            // 2. point is horizontal to a vertex of the polygon (possibly inside or outside)
+            // 3. point is colinear with, but not on, a horizontal edge of the polygon (possibly inside or outside)
+            // 4. point is on a horizontal edge of the polygon (inside)
+            if (vectorMath.equal(intersection, wall.p1) || vectorMath.equal(intersection, wall.p2)) {
+                // Get the INSIDE angle of the vertex (relative to it's polygon)
+                const indexOfVertex = polygon.points.findIndex(p => vectorMath.equal(p, intersection));
+                const startClockwiseAngle = getAngleBetweenVec2s(intersection, polygon.points[getLoopableIndex(indexOfVertex + 1, polygon.points)]);
+                const endClockwiseAngle = getAngleBetweenVec2s(intersection, polygon.points[getLoopableIndex(indexOfVertex - 1, polygon.points)]);
+                // Take the vectors: line.p1 (the point) to vertex/intersection and vertex/intersection to line.p2
+                const v1Angle = getAngleBetweenVec2s(intersection, horizontalLine.p1);
+                const v2Angle = getAngleBetweenVec2s(intersection, horizontalLine.p2);
+                const allowableAngle = clockwiseAngle(startClockwiseAngle, endClockwiseAngle);
+                const v1AngleInside = vectorMath.equal(intersection, point) || clockwiseAngle(startClockwiseAngle, v1Angle) <= allowableAngle;
+                const v2AngleInside = clockwiseAngle(startClockwiseAngle, v2Angle) <= allowableAngle;
+                // Only flip if v1AngleInside XOR v2AngleInside
+                if (v1AngleInside !== v2AngleInside) {
+                    isInside = !isInside;
+
+                }
+            } else {
+                // If it intersects with a wall, flip the bool
+                isInside = !isInside
             }
         }
     }
-    const isInside = horizontalIntersections.length % 2 != 0 && verticalIntersections.length % 2 != 0;
     // If the poly is inverted, return the opposite because
     // inverted poly's have their inside and outside flipped
     return polygon.inverted ? !isInside : isInside;
@@ -324,7 +340,6 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
         for (let index = 0; index < points.length; index++) {
             loop++;
             if (loop > 30) {
-
                 console.log('exit due to infinite loop', newPoly);
                 return []
 
@@ -368,11 +383,10 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
                     }
                     const otherPolyPoints = getPointsFromPolygonStartingAt(wall.polygon, otherPolyStartPoint);
                     let nextPoints = otherPolyPoints;
-                    // Since the intersecting point is always added to the newPoly, ensure that
-                    // it doesn't get re-processed when we branch by removing it from nextPoints
-                    // if it is the first point of next points
-                    if (vectorMath.equal(nextPoints[0], closestIntersection)) {
-                        nextPoints = nextPoints.slice(1)
+                    // So long as the intersecting point isn't exactly the same as the otherPolygon's first point,
+                    // add it to the nextPoints array so it will be added into the new polygon
+                    if (!vectorMath.equal(nextPoints[0], closestIntersection)) {
+                        nextPoints.unshift(closestIntersection);
                     }
                     const nextLineAngle = getAngleBetweenVec2s(closestIntersection, nextPoints[1]);
 
@@ -398,10 +412,22 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
                     // Switch newPoly to inverted
                     newPoly.inverted = true;
                 }
-                // Now that we're beginning to loop the other poly, don't loop it again
+                if (iteratingPolygon == branchToTake.polygon) {
+                    // Don't reset the loop if it should carry on iterating on the polygon it
+                    // already is iterating on
+                    console.log('skip intersection, don\'t reset loop.  Carry on');
+                    continue;
+                }
+                // if (closestIntersection && vectorMath.equal(closestIntersection, point)) {
+                // If the closest intersection is self, carry on processing, do not test branches again
+                // or else it will enter an infinite loop
+                // continue;
+                // }
+                // Debug log
                 if (branchToTake.polygon !== iteratingPolygon) {
                     console.log('  branch at', closestIntersection, 'to poly', polygons.findIndex(p => p == branchToTake.polygon));
                 }
+                // Now that we're beginning to loop the other poly, don't loop it again
                 excludePoly.add(branchToTake.polygon);
                 // Reset loop
                 iteratingPolygon = branchToTake.polygon;
@@ -409,11 +435,6 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
                 // index will be ++'d before the loop continues, so set it to -1 so
                 // it will start at 0
                 index = -1;
-                console.log('new point', point, 'currentPoly', polygons.findIndex(p => p == iteratingPolygon), 'newPoly', newPoly.points);
-                // Add the intersection point to the newPoly (so long as it's not a duplicate)
-                if (!(newPoly.points.length && vectorMath.equal(newPoly.points[newPoly.points.length - 1], closestIntersection))) {
-                    newPoly.points.push(closestIntersection);
-                }
             }
 
         }
