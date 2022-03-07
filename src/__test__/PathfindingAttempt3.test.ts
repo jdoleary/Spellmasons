@@ -356,7 +356,7 @@ describe('testables', () => {
             expect(actual).toEqual(expected);
         });
         describe('given an inverted polygon', () => {
-            it('should return FALSE when the vec is inside the inverted square', () => {
+            it('should return FALSE when the vec is inside the square', () => {
                 const p1 = { x: 0, y: 0 }
                 const p2 = { x: 0, y: 1 }
                 const p3 = { x: 1, y: 1 }
@@ -367,7 +367,7 @@ describe('testables', () => {
                 const expected = false;
                 expect(actual).toEqual(expected);
             });
-            it('should return TRUE when the vec is OUTSIDE the inverted square', () => {
+            it('should return TRUE when the vec is OUTSIDE the square', () => {
                 const p1 = { x: 0, y: 0 }
                 const p2 = { x: 0, y: 1 }
                 const p3 = { x: 1, y: 1 }
@@ -476,6 +476,7 @@ describe('mergeOverlappingPolygons', () => {
                 { x: 0, y: 1 },
                 p1,
             ]
+            console.log('actual', actual);
             expect(actual).toEqual(expected);
 
         });

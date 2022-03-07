@@ -14,4 +14,4 @@ const util = require('util')
 // Simplify logs
 console.log = function () { process.stdout.write(util.format.apply(this, arguments) + '\n'); }
 // Silence logs
-// console.log = () => {}
+console.log = () => {}
