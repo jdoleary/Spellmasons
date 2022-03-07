@@ -166,20 +166,50 @@ describe('testables', () => {
         });
     });
     describe('isVec2InsidePolygon', () => {
-        // describe('given the point lies on a line of the polygon', () => {
+        describe('given that the point is on the same y as a vertex of another polygon but not inside', () => {
+            it('should return false', () => {
+                // diamond
+                const p1 = { x: 0, y: 0 }
+                const p2 = { x: -1, y: -1 }
+                const p3 = { x: -2, y: 0 }
+                const p4 = { x: -1, y: 1 }
+                const points: Vec2[] = [p1, p2, p3, p4];
+                const polygon: Polygon = { points, inverted: false };
+                // The horizontal will intersect with -1,-1 so the vertical must be tested
+                // as well to prevent a false positive
+                const actual = isVec2InsidePolygon({ x: -20, y: -1 }, polygon);
+                const expected = false;
+                expect(actual).toEqual(expected);
 
-        //     it.only(' ', () => {
-        //         const p1 = { x: 0, y: 0 }
-        //         const p2 = { x: 0, y: 2 }
-        //         const p3 = { x: 2, y: 2 }
-        //         const p4 = { x: 2, y: 0 }
-        //         const points: Vec2[] = [p1, p2, p3, p4];
-        //         const polygon: Polygon = { points, inverted: false };
-        //         const actual = isVec2InsidePolygon({ x: 2, y: 1 }, polygon);
-        //         const expected = false;
-        //         expect(actual).toEqual(expected);
-        //     });
-        // });
+            });
+        });
+        describe('given the point lies directly on a line of the polygon', () => {
+            it('should return true', () => {
+                const p1 = { x: 0, y: 0 }
+                const p2 = { x: 0, y: 2 }
+                const p3 = { x: 2, y: 2 }
+                const p4 = { x: 2, y: 0 }
+                const points: Vec2[] = [p1, p2, p3, p4];
+                const polygon: Polygon = { points, inverted: false };
+                // The point is between p2 and p3
+                const actual = isVec2InsidePolygon({ x: 1, y: 2 }, polygon);
+                const expected = true;
+                expect(actual).toEqual(expected);
+            });
+        });
+        describe('given the point is on the same y value as a line of the polygon but is outside of the polygon', () => {
+            it('should return false', () => {
+                const p1 = { x: 0, y: 0 }
+                const p2 = { x: 0, y: 2 }
+                const p3 = { x: 2, y: 2 }
+                const p4 = { x: 2, y: 0 }
+                const points: Vec2[] = [p1, p2, p3, p4];
+                const polygon: Polygon = { points, inverted: false };
+                const actual = isVec2InsidePolygon({ x: -20, y: 2 }, polygon);
+                const expected = false;
+                expect(actual).toEqual(expected);
+            });
+        });
         it('should return true when the vec is inside the square', () => {
             const p1 = { x: 0, y: 0 }
             const p2 = { x: 0, y: 1 }
@@ -377,8 +407,51 @@ describe('mergeOverlappingPolygons', () => {
         });
 
     });
+    describe('given multiple polygons that intersect at the same vertex on all of them', () => {
+        // LEFT OFF HERE
+        // it.only('should merge them in the correct order', () => {
+        //     // This example uses 4 diamonds that intersect at 0,0
+
+        //     // Diamond left
+        //     const p1 = { x: 0, y: 0 }
+        //     const p2 = { x: -2, y: -1 }
+        //     const p3 = { x: -3, y: 0 }
+        //     const p4 = { x: -2, y: 1 }
+        //     const points: Vec2[] = [p1, p2, p3, p4];
+        //     const polygonA: Polygon = { points, inverted: false };
+        //     // Diamond top
+        //     const p1b = { x: 0, y: 0 }
+        //     const p2b = { x: -1, y: 2 }
+        //     const p3b = { x: 0, y: 3 }
+        //     const p4b = { x: 1, y: 2 }
+        //     const pointsb: Vec2[] = [p1b, p2b, p3b, p4b];
+        //     const polygonB: Polygon = { points: pointsb, inverted: false };
+        //     // Diamond right
+        //     const p1c = { x: 0, y: 0 }
+        //     const p2c = { x: 2, y: 1 }
+        //     const p3c = { x: 3, y: 0 }
+        //     const p4c = { x: 2, y: -1 }
+        //     const pointsc: Vec2[] = [p1c, p2c, p3c, p4c];
+        //     const polygonC: Polygon = { points: pointsc, inverted: false };
+        //     // Diamond bottom
+        //     const p1d = { x: 0, y: 0 }
+        //     const p2d = { x: 1, y: -2 }
+        //     const p3d = { x: 0, y: -3 }
+        //     const p4d = { x: -1, y: -2 }
+        //     const pointsd: Vec2[] = [p1d, p2d, p3d, p4d];
+        //     const polygonD: Polygon = { points: pointsd, inverted: false };
+        //     const mergedPolygon = mergeOverlappingPolygons([polygonA, polygonB, polygonD, polygonC])[0];
+        //     const actual = mergedPolygon.points;
+        //     const expected: Vec2[] = [
+
+        //     ]
+        //     console.log('actual', actual);
+        //     expect(actual).toEqual(expected);
+
+        // });
+    });
     describe('given polygons that intersect at exactly a point of one of the verticies of a polygon', () => {
-        it.only('should merge the polygons', () => {
+        it('should merge the polygons', () => {
             //square
             const p1 = { x: 0, y: 0 }
             const p2 = { x: 0, y: 1 }
