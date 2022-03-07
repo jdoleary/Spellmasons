@@ -747,7 +747,6 @@ describe('mergeOverlappingPolygons', () => {
             const polygonA: Polygon = { points, inverted: false };
             const polygonB: Polygon = { points, inverted: false };
             const mergedPolygons = mergeOverlappingPolygons([polygonA, polygonB]);
-            console.log('merged Polygons', mergedPolygons[0], mergedPolygons[1]);
             const actual = mergedPolygons.length;
             const expected = 1;
             expect(actual).toEqual(expected);
@@ -760,13 +759,21 @@ describe('mergeOverlappingPolygons', () => {
             const p3 = { x: 2, y: 2 }
             const p4 = { x: 2, y: 0 }
             const points: Vec2[] = [p1, p2, p3, p4];
+            const p5 = { x: 1, y: -1 };
             const polygonA: Polygon = { points, inverted: false };
-            const polygonB: Polygon = { points: [...points, { x: 1, y: -1 }], inverted: false };
+            const polygonB: Polygon = { points: [...points, p5], inverted: false };
             const mergedPolygons = mergeOverlappingPolygons([polygonA, polygonB]);
-            const actual = mergedPolygons.length;
-            const expected = 1;
+            expect(mergedPolygons.length).toEqual(1);
+            const actual = mergedPolygons[0].points;
+            console.log('actual', actual);
+            const expected = [
+                p1,
+                p2,
+                p3,
+                p4,
+                p5
+            ];
             expect(actual).toEqual(expected);
-            expect(JSON.stringify(mergedPolygons[0].points)).toEqual(JSON.stringify(polygonB.points));
         });
     });
     describe('given one box fully inside the other', () => {

@@ -298,6 +298,18 @@ function findFirstPointNotInsideAnotherPoly(polygon: Polygon, polygons: Polygon[
 }
 // The rule: inside points get removed, intersections become new points
 export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
+    // Remove all polygons that have NO points outside of all other polygons
+    let flagForRemoval: Polygon[] = [];
+    for (let polygon of polygons) {
+        let firstPoint = findFirstPointNotInsideAnotherPoly(polygon, polygons.filter(p => !flagForRemoval.includes(p)));
+        if (!firstPoint) {
+            flagForRemoval.push(polygon);
+        }
+    }
+    polygons = polygons.filter(p => {
+        return !flagForRemoval.includes(p);
+    });
+
     const limit = 2 * polygons.reduce((verticiesCount, poly) => verticiesCount + poly.points.length, 0);
     console.log('Running with iteration limit', limit);
     const resultPolys: Polygon[] = [];
@@ -324,7 +336,7 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
         // will absorb ALL touching polygons, the next polygon to be processed can't be touching / inside
         // an already processed polygon.  This filter also allows identical polygons to be processed
         // because without it, none of them would have any points outside of all other polygons.
-        let firstPoint = findFirstPointNotInsideAnotherPoly(polygon, polygons.filter(p => !excludePoly.has(p)));
+        let firstPoint = findFirstPointNotInsideAnotherPoly(polygon, polygons);
         if (!firstPoint) {
             console.log('no outside point found, do not process');
             // If there are no points outside of all other polys because 
@@ -380,6 +392,10 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
                     console.log('last line angle', lastLineAngle * 180 / Math.PI, closestIntersection, newPoly.points[newPoly.points.length - 1]);
                 }
                 console.log('new intersection', closestIntersection, 'lastLineAngle', lastLineAngle * 180 / Math.PI);
+                if (newPoly.points[0] && vectorMath.equal(newPoly.points[0], closestIntersection)) {
+                    console.log('exit successfully,  polygon is closed', closestIntersection);
+                    break;
+                }
                 // If not a duplicate of the last newPoly point, add the intersection
                 if (!(newPoly.points.length && vectorMath.equal(newPoly.points[newPoly.points.length - 1], closestIntersection))) {
                     newPoly.points.push(closestIntersection);
