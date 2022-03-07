@@ -203,7 +203,7 @@ function split(point: Point, allPoints: Point[]) {
 }
 // Find the angle between two angles going counter-clockwise around the angle circle
 // So 135deg to -135deg is 45deg because -135deg == 225deg
-function counterClockwiseAngle(rad1: number, rad2: number): number {
+export function counterClockwiseAngle(rad1: number, rad2: number): number {
     const shouldInvert = rad1 > rad2;
     // Convert rad2 into an identical angle that is larger than rad1
     const adjustedRad2 = shouldInvert ? rad2 + Math.PI * 2 : rad2;
@@ -217,7 +217,6 @@ export const testables = {
     lineSegmentsToPoints,
     isAngleBetweenAngles,
     normalizeAngle,
-    counterClockwiseAngle
 }
 // Takes an array of points and turns them into an array of convex polygons for pathfinding.
 // insetSize is the distance that the points of the mesh should be away from the "points".

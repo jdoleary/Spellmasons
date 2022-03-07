@@ -1,8 +1,42 @@
 
 import type { Vec2 } from "../Vec";
 import { testables, makePolygonIndexIterator, Polygon, expandPolygon, mergeOverlappingPolygons } from '../PathfindingAttempt3';
-const { getLoopableIndex, isVec2InsidePolygon, findFirstPointNotInsideAnotherPoly } = testables;
+import type { LineSegment } from "../collision/collisionMath";
+const { getLoopableIndex, isVec2InsidePolygon, findFirstPointNotInsideAnotherPoly, getNormalVectorOfLineSegment } = testables;
 describe('testables', () => {
+    describe('getNormalVectorOfLineSegment', () => {
+        it('should return a Vec2 representing the normal vector of the lineSegment', () => {
+            const line: LineSegment = {
+                p1: {
+                    x: 10,
+                    y: 10
+                },
+                p2: {
+                    x: 10,
+                    y: 12
+                },
+            }
+            const actual = getNormalVectorOfLineSegment(line);
+            const expected = { x: -2, y: 0 }
+            expect(actual).toEqual(expected);
+        });
+        it('should return a Vec2 representing the normal vector of the lineSegment', () => {
+            const line: LineSegment = {
+                p1: {
+                    x: 1,
+                    y: 1
+                },
+                p2: {
+                    x: 2,
+                    y: 2
+                },
+            }
+            const actual = getNormalVectorOfLineSegment(line);
+            const expected = { x: -1, y: -1 }
+            expect(actual).toEqual(expected);
+        });
+
+    });
     describe('findFirstPointNotInsideAnotherPoly', () => {
         it('should return a point that is not inside any other polygons', () => {
             const firstOutsidePoint = { x: 2, y: 2 };
@@ -131,6 +165,20 @@ describe('testables', () => {
         });
     });
     describe('isVec2InsidePolygon', () => {
+        // describe('given the point lies on a line of the polygon', () => {
+
+        //     it.only(' ', () => {
+        //         const p1 = { x: 0, y: 0 }
+        //         const p2 = { x: 0, y: 2 }
+        //         const p3 = { x: 2, y: 2 }
+        //         const p4 = { x: 2, y: 0 }
+        //         const points: Vec2[] = [p1, p2, p3, p4];
+        //         const polygon: Polygon = { points, inverted: false };
+        //         const actual = isVec2InsidePolygon({ x: 2, y: 1 }, polygon);
+        //         const expected = false;
+        //         expect(actual).toEqual(expected);
+        //     });
+        // });
         it('should return true when the vec is inside the square', () => {
             const p1 = { x: 0, y: 0 }
             const p2 = { x: 0, y: 1 }
@@ -402,35 +450,33 @@ describe('mergeOverlappingPolygons', () => {
             expect(actual).toEqual(expected);
         });
         describe('that do not share any verticies', () => {
-            // LEFT OFF
-            // it.only("should merge the two polys to return one large rectangle", () => {
-            //     // it.only('should ignore points that branch off twords this inside of the current poly', () => {
-            //     const p1 = { x: 0, y: 0 }
-            //     const p2 = { x: 0, y: 3 }
-            //     const p3 = { x: 1, y: 3 }
-            //     const p4 = { x: 1, y: 0 }
-            //     const points: Vec2[] = [p1, p2, p3, p4];
-            //     const polygonA: Polygon = { points, inverted: false };
-            //     const p1b = { x: 0, y: 1 }
-            //     const p2b = { x: 0, y: 4 }
-            //     const p3b = { x: 1, y: 4 }
-            //     const p4b = { x: 1, y: 1 }
-            //     const pointsb: Vec2[] = [p1b, p2b, p3b, p4b];
-            //     const polygonB: Polygon = { points: pointsb, inverted: false };
-            //     const mergedPolygon = mergeOverlappingPolygons([polygonA, polygonB])[0];
+            // This can be solved using the "normal" of the line.  The normal will always point outside the poly (if non-inverted)
+            it.only("should ignore branching off in a direction that goes INSIDE of the current polygon", () => {
+                // If a vertex lies on a line of a poly, but it branches off inside the poly, ignore it
+                const p1 = { x: 0, y: 0 }
+                const p2 = { x: 0, y: 3 }
+                const p3 = { x: 1, y: 3 }
+                const p4 = { x: 1, y: 0 }
+                const points: Vec2[] = [p1, p2, p3, p4];
+                const polygonA: Polygon = { points, inverted: false };
+                const p1b = { x: 0, y: 1 }
+                const p2b = { x: 0, y: 4 }
+                const p3b = { x: 1, y: 4 }
+                const p4b = { x: 1, y: 1 }
+                const pointsb: Vec2[] = [p1b, p2b, p3b, p4b];
+                const polygonB: Polygon = { points: pointsb, inverted: false };
+                const mergedPolygon = mergeOverlappingPolygons([polygonA, polygonB])[0];
 
-            //     const actual = mergedPolygon.points;
-            //     const expected = [
-            //         p1,
-            //         p1b,
-            //         p2b,
-            //         p3b,
-            //         p3,
-            //         p4,
-            //     ];
-            //     console.log('actual', actual);
-            //     expect(actual).toEqual(expected);
-            // });
+                const actual = mergedPolygon.points;
+                const expected = [
+                    p1,
+                    p2b,
+                    p3b,
+                    p4,
+                ];
+                console.log('actual', actual);
+                expect(actual).toEqual(expected);
+            });
         });
     });
     describe('given overlapping boxes on one side', () => {

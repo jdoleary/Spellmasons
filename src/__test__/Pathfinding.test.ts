@@ -1,7 +1,7 @@
 import type { LineSegment } from '../collision/collisionMath';
 import type { Vec2 } from '../Vec';
-import { generateConvexPolygonMesh, findPath, testables, Point } from '../Pathfinding';
-const { split, lineSegmentsToPoints, isAngleBetweenAngles, normalizeAngle, counterClockwiseAngle } = testables;
+import { generateConvexPolygonMesh, testables, Point, counterClockwiseAngle } from '../Pathfinding';
+const { split, lineSegmentsToPoints, isAngleBetweenAngles, normalizeAngle } = testables;
 
 describe("Pathfinding", () => {
     describe("generateConvexPolygonMesh", () => {

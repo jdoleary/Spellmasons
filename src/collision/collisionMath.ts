@@ -131,7 +131,6 @@ export function lineSegmentIntersection(l1: LineSegment, l2: LineSegment): Vec2 
     const rCrossS = crossproduct(r, s);
     // If r × s = 0 and (q − p) × r = 0, then the two lines are collinear.
     if (rCrossS == 0 && crossproduct(qMinusP, r) == 0) {
-        console.log('colinear', qMinusP, r);
         return
     }
     // If r × s = 0 and (q − p) × r ≠ 0, then the two lines are parallel and non-intersecting.

@@ -1,7 +1,8 @@
-import type { Vec2 } from "./Vec";
+import { getAngleBetweenVec2s, Vec2 } from "./Vec";
 import * as vectorMath from './collision/vectorMath';
 import { distance, similarTriangles } from "./math";
 import { LineSegment, lineSegmentIntersection } from "./collision/collisionMath";
+import { counterClockwiseAngle } from "./Pathfinding";
 
 export interface Polygon {
     points: Vec2[];
@@ -52,6 +53,37 @@ export interface PolygonLineSegment {
     // The polygon that these points belong to
     polygon: Polygon;
 
+}
+// Given an array of PolygonLineSegment[], of all the intersections between line and the walls,
+// find the closest intersection to line.p1
+function getClosestIntersectionWithWallsIncludingStartPoint(line: PolygonLineSegment, walls: PolygonLineSegment[]): { intersectingWall?: PolygonLineSegment, closestIntersection?: Vec2 } {
+    let intersectingWall;
+    let closestIntersection;
+    let closestIntersectionDistance;
+    // Check for collisions between the last line in the path and pathing walls
+    for (let wall of walls) {
+        if (wall.polygon == line.polygon) {
+            // Don't collide with self
+            continue;
+        }
+        const intersection = lineSegmentIntersection(line, wall);
+        if (intersection) {
+            const dist = distance(line.p1, intersection);
+            // If there is no closest intersection, make this intersection the closest intersection
+            // If there is and this intersection is closer, make it the closest
+            if (!closestIntersection || (closestIntersection && closestIntersectionDistance && closestIntersectionDistance > dist)) {
+                closestIntersection = intersection;
+                closestIntersectionDistance = dist;
+                intersectingWall = wall
+            }
+
+        }
+    }
+    // Debug: print
+    // if (intersectingWall) {
+    //     console.log('found intersection for line', line, closestIntersection);
+    // }
+    return { intersectingWall, closestIntersection };
 }
 // Given an array of PolygonLineSegment[], of all the intersections between line and the walls,
 // find the closest intersection to line.p1
@@ -112,6 +144,21 @@ export function expandPolygon(polygon: Polygon, magnitude: number): Polygon {
     }
 }
 
+// Returns a normal vector of a line segment, assuming
+// that the p1 is the previous point and p2 is the next point (this
+// is relevant when dealing with polygons)
+// Note: Gamespace is upsidedown but I think in regular cartesian coordinate
+// plane where y is up and in that mindset, polygons are expressed clockwise.
+function getNormalVectorOfLineSegment(lineSegment: LineSegment): Vec2 {
+    // Note: This is in the context of polygons, so p1 is the first point ("prev")
+    // and p2 is the "next" point.  So the normal vector will point OUTSIDE
+    // the polygon so long as the polygon isn't inverted
+    return {
+        x: lineSegment.p1.y - lineSegment.p2.y,
+        y: lineSegment.p1.x - lineSegment.p2.x
+    }
+}
+
 function projectPointAlongNormalVector(polygon: Polygon, pointIndex: number, magnitude: number): Vec2 {
     const point = polygon.points[pointIndex];
     const nextPoint = polygon.points[getLoopableIndex(pointIndex + (polygon.inverted ? -1 : 1), polygon.points)];
@@ -138,7 +185,8 @@ function projectPointAlongNormalVector(polygon: Polygon, pointIndex: number, mag
     return vectorMath.round(vectorMath.subtract(point, relativeAdjustedPoint));
 }
 
-// TODO account for points that exist exactly on the line of another polygon
+// Note: There is a slight flaw in this algorithm in that if the point lies
+// directly on a line of the poly on the left side, it will yield a false negative
 function isVec2InsidePolygon(point: Vec2, polygon: Polygon): boolean {
     // From geeksforgeeks.com: 
     // 1) Draw a horizontal line to the right of each point and extend it to infinity 
@@ -159,6 +207,7 @@ function isVec2InsidePolygon(point: Vec2, polygon: Polygon): boolean {
             }
         }
     }
+    console.log('intersections', intersections);
     const isInside = intersections.length % 2 != 0;
     // If the poly is inverted, return the opposite because
     // inverted poly's have their inside and outside flipped
@@ -227,34 +276,37 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
                     break;
                 }
                 console.log('new point', point);
-                newPoly.points.push(point)
-                const { intersectingWall, closestIntersection } = getClosestIntersectionWithWalls({ p1: point, p2: points[getLoopableIndex(index + 1, points)], polygon: iteratingPolygon }, polygonLineSegments);
+                newPoly.points.push(point);
+                const iteratingPolyCurrentWall = { p1: point, p2: points[getLoopableIndex(index + 1, points)], polygon: iteratingPolygon };
+                const { intersectingWall, closestIntersection } = getClosestIntersectionWithWallsIncludingStartPoint(iteratingPolyCurrentWall, polygonLineSegments);
                 // Step 4. When we detect an intersection we branch into off into iterating
                 // the intersecting polygon, still adding the points to the new polygon.  Every time
-                // we find an intersection we change which polygon we're iterating.  
+                // we find an intersection we change which polygon we're iterating IF the branch does not
+                // take us inside of the polygon we were just iterating.
                 if (intersectingWall && closestIntersection) {
-                    // Now that we're beginning to loop the other poly, don't loop it again
-                    console.log('-------------branch at', closestIntersection, 'to poly', intersectingWall.polygon);
-                    excludePoly.add(intersectingWall.polygon);
-                    // console.log('new intersection', closestIntersection);
-                    // newPoly.points.push(closestIntersection)
-                    // LEFT OFF: TODO: test for intersection between intersection and next point (this is needed for double intersections on the same wall
-                    // const otherPolyIteratable = makePolygonIndexIterator(intersectingWall.polygon, intersectingWall.polygon.points.findIndex(p => p == intersectingWall.p2));
-
                     // Use "next" point when iterating the other poly clockwise
                     let otherPolyStartPoint = intersectingWall.p2;
                     if (intersectingWall.polygon.inverted) {
-                        // Switch newPoly to inverted
-                        newPoly.inverted = true;
                         // but if the other poly is inverted, use the "prev" point (for iterating counter clockwise)
                         otherPolyStartPoint = intersectingWall.p1;
 
                     }
+                    // LEFT OFF 2022-03-06 at 7:30pm
+                    // If the next potential line is between the lines [prev to intersection] and [intersection to next on iteratingPoly]
+                    // then disregard it, because that line will take it INSIDE of the iteratingPoly
+
+                    // console.log('new intersection', closestIntersection);
+                    // newPoly.points.push(closestIntersection)
+                    // is this still needed?? LEFT OFF: TODO: test for intersection between intersection and next point (this is needed for double intersections on the same wall
+                    // const otherPolyIteratable = makePolygonIndexIterator(intersectingWall.polygon, intersectingWall.polygon.points.findIndex(p => p == intersectingWall.p2));
+
                     const otherPolyPoints = getPointsFromPolygonStartingAt(intersectingWall.polygon, otherPolyStartPoint);
                     limit++;
-                    if (limit > 200) {
+                    if (limit > 8) {
                         console.log('exit due to infinite loop');
-                        return [];
+                        // return []
+                        // TODO Temp
+                        return [newPoly];
                     }
                     const nextPoints = otherPolyPoints;
                     // So long as the intersecting point isn't exactly the same as the otherPolygon's first point,
@@ -262,6 +314,38 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
                     if (!vectorMath.equal(nextPoints[0], closestIntersection)) {
                         nextPoints.unshift(closestIntersection);
                     }
+                    // Ensure that the "next" point of the intersecting wall is in the direction of OUTSIDE
+                    // the iteratingPolygon, if it is in the direction of INSIDE, it must be ignored.
+                    const delta = vectorMath.subtract(nextPoints[1], nextPoints[0])
+                    const D = distance(nextPoints[1], nextPoints[0])
+                    const inch = similarTriangles(delta.x, delta.y, D, 0.1);
+                    if (isVec2InsidePolygon(inch, iteratingPolygon)) {
+                        console.log('inside skip');
+                        continue;
+                    }
+                    // const normal = getNormalVectorOfLineSegment(iteratingPolyCurrentWall);
+                    // const angleToOtherPolyStartPoint = getAngleBetweenVec2s(otherPolyStartPoint, closestIntersection);
+                    // const angleOfIntersectionInDirectionOfNormalOfWall = getAngleBetweenVec2s(vectorMath.add(normal, closestIntersection), closestIntersection)
+                    // console.log('angle', closestIntersection, 'otherStartPoint', otherPolyStartPoint, 'normal', normal, 'angle between',
+                    //     counterClockwiseAngle(angleToOtherPolyStartPoint, angleOfIntersectionInDirectionOfNormalOfWall), ';',
+                    //     angleToOtherPolyStartPoint, angleOfIntersectionInDirectionOfNormalOfWall);
+                    // // if (counterClockwiseAngle(angleToOtherPolyStartPoint, angleOfIntersectionInDirectionOfNormalOfWall) >= Math.PI / 2) {
+                    // if (angleToOtherPolyStartPoint < angleOfIntersectionInDirectionOfNormalOfWall - Math.PI / 2 || angleToOtherPolyStartPoint > angleOfIntersectionInDirectionOfNormalOfWall + Math.PI / 2) {
+                    //     console.log('continue');
+                    //     // Ignore the intersection as it's next point passes through the inside of iteratingPoly
+                    //     continue;
+
+                    // }
+
+                    // If the intersecting poly is inverted, the new poly must become inverted.
+                    // Any poly that merged with an inverted poly becomes an inverted poly
+                    if (intersectingWall.polygon.inverted) {
+                        // Switch newPoly to inverted
+                        newPoly.inverted = true;
+                    }
+                    // Now that we're beginning to loop the other poly, don't loop it again
+                    console.log('-------------branch at', closestIntersection, 'to poly', intersectingWall.polygon);
+                    excludePoly.add(intersectingWall.polygon);
                     iterateQueue.push({ iteratingPolygon: intersectingWall.polygon, points: nextPoints });
                     break;
                 }
@@ -290,5 +374,6 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
 export const testables = {
     getLoopableIndex,
     isVec2InsidePolygon,
-    findFirstPointNotInsideAnotherPoly
+    findFirstPointNotInsideAnotherPoly,
+    getNormalVectorOfLineSegment
 }
