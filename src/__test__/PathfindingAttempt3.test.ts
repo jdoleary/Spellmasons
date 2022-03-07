@@ -3,6 +3,7 @@ import type { Vec2 } from "../Vec";
 import { testables, makePolygonIndexIterator, Polygon, expandPolygon, mergeOverlappingPolygons } from '../PathfindingAttempt3';
 import type { LineSegment } from "../collision/collisionMath";
 const { getLoopableIndex, isVec2InsidePolygon, findFirstPointNotInsideAnotherPoly, getNormalVectorOfLineSegment } = testables;
+
 describe('testables', () => {
     describe('getNormalVectorOfLineSegment', () => {
         it('should return a Vec2 representing the normal vector of the lineSegment', () => {
@@ -377,7 +378,7 @@ describe('mergeOverlappingPolygons', () => {
 
     });
     describe('given polygons that intersect at exactly a point of one of the verticies of a polygon', () => {
-        it('should merge the polygons', () => {
+        it.only('should merge the polygons', () => {
             //square
             const p1 = { x: 0, y: 0 }
             const p2 = { x: 0, y: 1 }
@@ -450,8 +451,7 @@ describe('mergeOverlappingPolygons', () => {
             expect(actual).toEqual(expected);
         });
         describe('that do not share any verticies', () => {
-            // This can be solved using the "normal" of the line.  The normal will always point outside the poly (if non-inverted)
-            it.only("should ignore branching off in a direction that goes INSIDE of the current polygon", () => {
+            it("should ignore branching off in a direction that goes INSIDE of the current polygon", () => {
                 // If a vertex lies on a line of a poly, but it branches off inside the poly, ignore it
                 const p1 = { x: 0, y: 0 }
                 const p2 = { x: 0, y: 3 }
@@ -470,8 +470,10 @@ describe('mergeOverlappingPolygons', () => {
                 const actual = mergedPolygon.points;
                 const expected = [
                     p1,
+                    p2,
                     p2b,
                     p3b,
+                    p4b,
                     p4,
                 ];
                 console.log('actual', actual);

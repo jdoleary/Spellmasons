@@ -212,6 +212,9 @@ export function counterClockwiseAngle(rad1: number, rad2: number): number {
     const normalizedResult = result > Math.PI * 2 ? result % (Math.PI * 2) : result;
     return normalizedResult;
 }
+export function clockwiseAngle(rad1: number, rad2: number): number {
+    return counterClockwiseAngle(rad2, rad1);
+}
 export const testables = {
     split,
     lineSegmentsToPoints,
