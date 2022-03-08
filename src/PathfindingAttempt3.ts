@@ -37,7 +37,6 @@ export function* makePolygonIndexIterator(polygon: Polygon, startIndex: number =
     return
 }
 function getPointsFromPolygonStartingAt(polygon: Polygon, startPoint: Vec2): Vec2[] {
-    console.log('jtest', startPoint, polygon.points);
     const startPointIndex = polygon.points.findIndex(p => vectorMath.equal(p, startPoint))
     if (startPointIndex == -1) {
         // startPoint is not on polygon
@@ -455,6 +454,8 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
                 }
 
             }
+            // It should exit by finding the start point, not by running out of points to process
+            return false
 
         }
         iteratePolygon(polygon, originalPolyPoints, { polygons, excludePoly, polygonLineSegments }, 0, newPoly);
