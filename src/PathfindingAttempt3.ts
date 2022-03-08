@@ -327,8 +327,6 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
             console.log('polygon is excluded, do not process');
             continue;
         }
-        // Now that this poly has begun processing, mark it as excluded so it won't be processed again
-        excludePoly.add(polygon);
 
         // Step 2. Start with the first point on this polygon that is NOT inside
         // ANY other polygons.
@@ -353,33 +351,34 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
         // Return status signifies success
         function iteratePolygon(iteratingPolygon: Polygon, points: Vec2[], env: { polygons: Polygon[], excludePoly: Set<Polygon>, polygonLineSegments: PolygonLineSegment[] }, lastLineAngle: number, newPoly: Polygon): boolean {
             const { polygons, polygonLineSegments, excludePoly } = env;
+            // Now that this poly has begun processing, mark it as excluded so it won't be processed again
+            excludePoly.add(polygon);
             let loop = 0;
             for (let index = 0; index < points.length; index++) {
                 loop++;
-                if (loop > 200) {
+                if (loop > 200 || newPoly.points.length > limit) {
                     console.log('exit due to infinite loop', newPoly);
+                    // TODO handle this unexpected situation better without just returning no polys, maybe keep the good ones?
                     return false;
 
                 }
                 const point = points[index];
-                // If current point the first point in newpoly, the polygon is now closed, exit successfully
+                // Success condition: If current point the first point in newpoly, the polygon is now closed, exit successfully
                 if (newPoly.points[0] && vectorMath.equal(newPoly.points[0], point)) {
                     console.log('exit successfully,  polygon is closed', point);
                     return true;
                 }
+
                 console.log('new point', point, 'currentPoly', polygons.findIndex(p => p == iteratingPolygon), 'newPoly', newPoly.points);
+
                 // Add the point to the newPoly (so long as it's not a duplicate)
                 if (!(newPoly.points.length && vectorMath.equal(newPoly.points[newPoly.points.length - 1], point))) {
                     newPoly.points.push(point);
-                    if (newPoly.points.length > limit) {
-                        console.log('exit due to infinite loop', newPoly);
-                        // TODO handle this unexpected situation better without just returning no polys, maybe keep the good ones?
-                        return false;
-                    }
                 }
+
                 const iteratingPolyNextPoint = points[getLoopableIndex(index + 1, points)];
-                const iteratingPolyCurrentWall = { p1: point, p2: iteratingPolyNextPoint, polygon: iteratingPolygon };
-                // console.log('!!!!!poly line segments', polygonLineSegments, iteratingPolyCurrentWall);
+                let iteratingPolyCurrentWall = { p1: point, p2: iteratingPolyNextPoint, polygon: iteratingPolygon };
+
                 const { intersectingWalls, closestIntersection } = getClosestIntersectionsWithWalls(iteratingPolyCurrentWall, polygonLineSegments);
                 // Step 4. When we detect an intersection we test all the branch angles.
                 // If there is one that is a smaller clockwise angle from the last angle, take the branch
@@ -389,9 +388,8 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
                     // the intersection and the last (different) point of the new poly
                     if (!vectorMath.equal(closestIntersection, newPoly.points[newPoly.points.length - 1])) {
                         lastLineAngle = getAngleBetweenVec2s(closestIntersection, newPoly.points[newPoly.points.length - 1]);
-                        console.log('last line angle', lastLineAngle * 180 / Math.PI, closestIntersection, newPoly.points[newPoly.points.length - 1]);
                     }
-                    console.log('new intersection', closestIntersection, 'lastLineAngle', lastLineAngle * 180 / Math.PI);
+                    // console.log('new intersection', closestIntersection, 'lastLineAngle', lastLineAngle * 180 / Math.PI);
                     if (newPoly.points[0] && vectorMath.equal(newPoly.points[0], closestIntersection)) {
                         console.log('exit successfully,  polygon is closed', closestIntersection);
                         break;
@@ -401,20 +399,12 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
                         newPoly.points.push(closestIntersection);
                     }
 
-                    // For the current poly wall and all intersecting walls, get information for all possible
-                    // branches
-                    // Note: iteratingPolygonVerticies is different from "points" because "points" may contain intersection points
-                    // that are not explicitly verticies
-                    const iteratingPolygonVerticies = getPointsFromPolygonStartingAt(iteratingPolygon, iteratingPolyNextPoint)
-                    console.log('VERTS', iteratingPolygonVerticies, iteratingPolyNextPoint, 'points', points, 'index', index);
-                    // The different between iteratingPolyLastWall and iteratingPolyCurrentWall is that iteratingPolyCurrentWall
-                    // may be from an intersection point to a vertex while iteratingPolyLastWall is from the last actual vertex
-                    // to the next vertex.
-                    let iteratingPolyLastWall = { p1: iteratingPolygonVerticies[getLoopableIndex(-1, iteratingPolygonVerticies)], p2: iteratingPolygonVerticies[0], polygon: iteratingPolygon };
+                    // For the current poly wall and all walls intersecting the closestIntersection point, get information for all possible
+                    // branches so we can determine which poly to iterate next (it may remain the same poly)
                     if (iteratingPolygon.inverted) {
-                        iteratingPolyLastWall = { p1: iteratingPolyLastWall.p2, p2: iteratingPolyLastWall.p1, polygon: iteratingPolyLastWall.polygon };
+                        iteratingPolyCurrentWall = { p1: iteratingPolyCurrentWall.p2, p2: iteratingPolyCurrentWall.p1, polygon: iteratingPolyCurrentWall.polygon };
                     }
-                    const branches = [iteratingPolyLastWall, ...intersectingWalls].map(wall => {
+                    const branches = [iteratingPolyCurrentWall, ...intersectingWalls].map(wall => {
                         // Use "next" point when iterating the other poly clockwise
                         let otherPolyStartPoint = wall.p2;
                         if (wall.polygon.inverted) {
@@ -435,6 +425,7 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
                     }).sort((a, b) => {
                         return a.branchAngle - b.branchAngle;
                     });
+
                     console.log('branches', branches.map(b =>
                         ({ polygon: polygons.findIndex(o => o == b.polygon), branchAngle: b.branchAngle * 180 / Math.PI, nextPoints: JSON.stringify(b.nextPoints) })));
 
@@ -449,23 +440,16 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
                         newPoly.inverted = true;
                     }
                     if (iteratingPolygon == branchToTake.polygon) {
-                        // Don't reset the loop if it should carry on iterating on the polygon it
+                        // Don't recurse if it should carry on iterating on the polygon it
                         // already is iterating on
                         console.log('skip intersection, don\'t reset loop.  Carry on');
                         continue;
                     }
-                    // if (closestIntersection && vectorMath.equal(closestIntersection, point)) {
-                    // If the closest intersection is self, carry on processing, do not test branches again
-                    // or else it will enter an infinite loop
-                    // continue;
-                    // }
-                    // Debug log
+
                     if (branchToTake.polygon !== iteratingPolygon) {
                         console.log('  branch at', closestIntersection, 'to poly', polygons.findIndex(p => p == branchToTake.polygon));
                     }
-                    // Now that we're beginning to loop the other poly, don't loop it again
-                    excludePoly.add(branchToTake.polygon);
-                    // Reset loop
+                    // Recurse, to start iterating on the branching polygon
                     iteratePolygon(branchToTake.polygon, branchToTake.nextPoints, env, lastLineAngle, newPoly);
                     return true;
                 }
