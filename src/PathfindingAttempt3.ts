@@ -70,6 +70,10 @@ function getClosestIntersectionsWithWalls(line: PolygonLineSegment, walls: Polyg
         const intersection = lineSegmentIntersection(line, wall);
         if (intersection) {
             const dist = distance(line.p1, intersection);
+            // don't detect collisions with p1
+            if (dist == 0) {
+                continue;
+            }
             // If there is no closest intersection, make this intersection the closest intersection
             if (!closestIntersection || closestIntersectionDistance == undefined) {
                 closestIntersection = intersection;
@@ -87,72 +91,6 @@ function getClosestIntersectionsWithWalls(line: PolygonLineSegment, walls: Polyg
         }
     }
     return { intersectingWalls, closestIntersection };
-}
-// Given an array of PolygonLineSegment[], of all the intersections between line and the walls,
-// find the closest intersection to line.p1
-function getClosestIntersectionWithWallsIncludingStartPoint(line: PolygonLineSegment, walls: PolygonLineSegment[]): { intersectingWall?: PolygonLineSegment, closestIntersection?: Vec2 } {
-    let intersectingWall;
-    let closestIntersection;
-    let closestIntersectionDistance;
-    // Check for collisions between the last line in the path and pathing walls
-    for (let wall of walls) {
-        if (wall.polygon == line.polygon) {
-            // Don't collide with self
-            continue;
-        }
-        const intersection = lineSegmentIntersection(line, wall);
-        if (intersection) {
-            const dist = distance(line.p1, intersection);
-            // If there is no closest intersection, make this intersection the closest intersection
-            // If there is and this intersection is closer, make it the closest
-            if (!closestIntersection || (closestIntersection && closestIntersectionDistance && closestIntersectionDistance > dist)) {
-                closestIntersection = intersection;
-                closestIntersectionDistance = dist;
-                intersectingWall = wall
-            }
-
-        }
-    }
-    // Debug: print
-    // if (intersectingWall) {
-    //     console.log('found intersection for line', line, closestIntersection);
-    // }
-    return { intersectingWall, closestIntersection };
-}
-// Given an array of PolygonLineSegment[], of all the intersections between line and the walls,
-// find the closest intersection to line.p1
-function getClosestIntersectionWithWalls(line: PolygonLineSegment, walls: PolygonLineSegment[]): { intersectingWall?: PolygonLineSegment, closestIntersection?: Vec2 } {
-    let intersectingWall;
-    let closestIntersection;
-    let closestIntersectionDistance;
-    // Check for collisions between the last line in the path and pathing walls
-    for (let wall of walls) {
-        if (wall.polygon == line.polygon) {
-            // Don't collide with self
-            continue;
-        }
-        const intersection = lineSegmentIntersection(line, wall);
-        if (intersection) {
-            if (vectorMath.equal(intersection, line.p1)) {
-                // Exclude collisions at start point of line segment. 
-                continue;
-            }
-            const dist = distance(line.p1, intersection);
-            // If there is no closest intersection, make this intersection the closest intersection
-            // If there is and this intersection is closer, make it the closest
-            if (!closestIntersection || (closestIntersection && closestIntersectionDistance && closestIntersectionDistance > dist)) {
-                closestIntersection = intersection;
-                closestIntersectionDistance = dist;
-                intersectingWall = wall
-            }
-
-        }
-    }
-    // Debug: print
-    if (intersectingWall) {
-        // console.log('found intersection for line', line, closestIntersection);
-    }
-    return { intersectingWall, closestIntersection };
 }
 
 // Note: p2 is always the "next" point in terms of the index being greater than
@@ -374,7 +312,7 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
                     return true;
                 }
 
-                console.log('new point', point, 'currentPoly', polygons.findIndex(p => p == iteratingPolygon), 'newPoly', newPoly.points);
+                console.log('new point', point, 'newPoly', newPoly.points);
 
                 // Add the point to the newPoly (so long as it's not a duplicate)
                 if (!(newPoly.points.length && vectorMath.equal(newPoly.points[newPoly.points.length - 1], point))) {
@@ -388,6 +326,7 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
                     // Step 4. When we detect an intersection we test all the branch angles.
                     // If there is one that is a smaller clockwise angle from the last angle, take the branch
                     if (intersectingWalls && intersectingWalls.length && closestIntersection) {
+                        // console.log('closestIntersection', closestIntersection, 'walls', intersectingWalls);
                         // Update the lastLineAngle only if the intersection and the last point are not identical
                         // because that would incorrectly return an angle of 0 when what we want is the angle between
                         // the intersection and the last (different) point of the new poly
@@ -398,10 +337,6 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
                         if (newPoly.points[0] && vectorMath.equal(newPoly.points[0], closestIntersection)) {
                             console.log('exit successfully,  polygon is closed', closestIntersection);
                             return;
-                        }
-                        // If not a duplicate of the last newPoly point, add the intersection
-                        if (!(newPoly.points.length && vectorMath.equal(newPoly.points[newPoly.points.length - 1], closestIntersection))) {
-                            newPoly.points.push(closestIntersection);
                         }
 
                         // For the current poly wall and all walls intersecting the closestIntersection point, get information for all possible
@@ -437,6 +372,15 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
 
                         // Take the branch with the smallest clockwise angle:
                         const branchToTake = branches[0];
+                        // If not a duplicate of the last newPoly point, add the intersection
+                        if (!(newPoly.points.length && vectorMath.equal(newPoly.points[newPoly.points.length - 1], closestIntersection))) {
+                            newPoly.points.push(closestIntersection);
+                            console.log('new point: intersection push', closestIntersection, newPoly.points);
+                            const otherBranch = testWall({ p1: closestIntersection, p2: branchToTake.nextPoints[0], polygon: branchToTake.polygon }, polygonLineSegments);
+                            if (otherBranch) {
+                                return otherBranch
+                            }
+                        }
 
                         // If the intersecting poly is inverted, the new poly must become inverted.
                         // Any poly that merged with an inverted poly becomes an inverted poly
@@ -450,14 +394,15 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
                             console.log('skip intersection, don\'t reset loop.  Carry on');
                             return;
                         }
-                        console.log('  branch at', closestIntersection, 'to poly', polygons.findIndex(p => p == branchToTake.polygon));
                         return branchToTake;
                     }
+                    console.log('no intersections');
                     return;
 
                 }
                 const branchToTake = testWall(iteratingPolyCurrentWall, polygonLineSegments);
                 if (branchToTake) {
+                    console.log('  branch to poly', polygons.findIndex(p => p == branchToTake.polygon), branchToTake.nextPoints[0]);
                     // Recurse, to start iterating on the branching polygon
                     iteratePolygon(branchToTake.polygon, branchToTake.nextPoints, env, lastLineAngle, newPoly);
                     return true
