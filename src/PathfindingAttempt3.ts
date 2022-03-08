@@ -350,21 +350,22 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
         // will eventually be added to resultPolys
         const newPoly: Polygon = { points: [], inverted: false };
         const originalPolyPoints = getPointsFromPolygonStartingAt(polygon, firstPoint);
-        function iteratePolygon(iteratingPolygon: Polygon, points: Vec2[], env: { polygons: Polygon[], excludePoly: Set<Polygon>, polygonLineSegments: PolygonLineSegment[] }, lastLineAngle: number, newPoly: Polygon) {
+        // Return status signifies success
+        function iteratePolygon(iteratingPolygon: Polygon, points: Vec2[], env: { polygons: Polygon[], excludePoly: Set<Polygon>, polygonLineSegments: PolygonLineSegment[] }, lastLineAngle: number, newPoly: Polygon): boolean {
             const { polygons, polygonLineSegments, excludePoly } = env;
             let loop = 0;
             for (let index = 0; index < points.length; index++) {
                 loop++;
                 if (loop > 200) {
                     console.log('exit due to infinite loop', newPoly);
-                    return []
+                    return false;
 
                 }
                 const point = points[index];
-                // if point the first point in newpoly, the polygon is now closed, exit the loop successfully
+                // If current point the first point in newpoly, the polygon is now closed, exit successfully
                 if (newPoly.points[0] && vectorMath.equal(newPoly.points[0], point)) {
                     console.log('exit successfully,  polygon is closed', point);
-                    break;
+                    return true;
                 }
                 console.log('new point', point, 'currentPoly', polygons.findIndex(p => p == iteratingPolygon), 'newPoly', newPoly.points);
                 // Add the point to the newPoly (so long as it's not a duplicate)
@@ -373,7 +374,7 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
                     if (newPoly.points.length > limit) {
                         console.log('exit due to infinite loop', newPoly);
                         // TODO handle this unexpected situation better without just returning no polys, maybe keep the good ones?
-                        return []
+                        return false;
                     }
                 }
                 const iteratingPolyNextPoint = points[getLoopableIndex(index + 1, points)];
@@ -466,7 +467,7 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
                     excludePoly.add(branchToTake.polygon);
                     // Reset loop
                     iteratePolygon(branchToTake.polygon, branchToTake.nextPoints, env, lastLineAngle, newPoly);
-                    break;
+                    return true;
                 }
 
             }
