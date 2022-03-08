@@ -859,6 +859,7 @@ describe('mergeOverlappingPolygons', () => {
                 { x: 4, y: 10 },
                 { x: 4, y: 0 }
             ];
+            console.log('actual', actual);
             expect(actual).toEqual(expected);
 
         });

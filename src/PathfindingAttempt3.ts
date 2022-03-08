@@ -295,6 +295,12 @@ function findFirstPointNotInsideAnotherPoly(polygon: Polygon, polygons: Polygon[
         return point;
     }
 }
+interface BranchInfo {
+    // in rads
+    branchAngle: number;
+    nextPoints: Vec2[];
+    polygon: Polygon
+}
 // The rule: inside points get removed, intersections become new points
 export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
     // Remove all polygons that have NO points outside of all other polygons
@@ -376,82 +382,87 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
                 }
 
                 const iteratingPolyNextPoint = points[getLoopableIndex(index + 1, points)];
-                let iteratingPolyCurrentWall = { p1: point, p2: iteratingPolyNextPoint, polygon: iteratingPolygon };
-
-                const { intersectingWalls, closestIntersection } = getClosestIntersectionsWithWalls(iteratingPolyCurrentWall, polygonLineSegments);
-                // Step 4. When we detect an intersection we test all the branch angles.
-                // If there is one that is a smaller clockwise angle from the last angle, take the branch
-                if (intersectingWalls && intersectingWalls.length && closestIntersection) {
-                    // Update the lastLineAngle only if the intersection and the last point are not identical
-                    // because that would incorrectly return an angle of 0 when what we want is the angle between
-                    // the intersection and the last (different) point of the new poly
-                    if (!vectorMath.equal(closestIntersection, newPoly.points[newPoly.points.length - 1])) {
-                        lastLineAngle = getAngleBetweenVec2s(closestIntersection, newPoly.points[newPoly.points.length - 1]);
-                    }
-                    // console.log('new intersection', closestIntersection, 'lastLineAngle', lastLineAngle * 180 / Math.PI);
-                    if (newPoly.points[0] && vectorMath.equal(newPoly.points[0], closestIntersection)) {
-                        console.log('exit successfully,  polygon is closed', closestIntersection);
-                        break;
-                    }
-                    // If not a duplicate of the last newPoly point, add the intersection
-                    if (!(newPoly.points.length && vectorMath.equal(newPoly.points[newPoly.points.length - 1], closestIntersection))) {
-                        newPoly.points.push(closestIntersection);
-                    }
-
-                    // For the current poly wall and all walls intersecting the closestIntersection point, get information for all possible
-                    // branches so we can determine which poly to iterate next (it may remain the same poly)
-                    if (iteratingPolygon.inverted) {
-                        iteratingPolyCurrentWall = { p1: iteratingPolyCurrentWall.p2, p2: iteratingPolyCurrentWall.p1, polygon: iteratingPolyCurrentWall.polygon };
-                    }
-                    const branches = [iteratingPolyCurrentWall, ...intersectingWalls].map(wall => {
-                        // Use "next" point when iterating the other poly clockwise
-                        let otherPolyStartPoint = wall.p2;
-                        if (wall.polygon.inverted) {
-                            // but if the other poly is inverted, use the "prev" point (for iterating counter clockwise)
-                            otherPolyStartPoint = wall.p1;
+                let iteratingPolyCurrentWall: PolygonLineSegment = { p1: point, p2: iteratingPolyNextPoint, polygon: iteratingPolygon };
+                function testWall(wall: PolygonLineSegment, polygonLineSegments: PolygonLineSegment[]): BranchInfo | undefined {
+                    const { intersectingWalls, closestIntersection } = getClosestIntersectionsWithWalls(wall, polygonLineSegments);
+                    // Step 4. When we detect an intersection we test all the branch angles.
+                    // If there is one that is a smaller clockwise angle from the last angle, take the branch
+                    if (intersectingWalls && intersectingWalls.length && closestIntersection) {
+                        // Update the lastLineAngle only if the intersection and the last point are not identical
+                        // because that would incorrectly return an angle of 0 when what we want is the angle between
+                        // the intersection and the last (different) point of the new poly
+                        if (!vectorMath.equal(closestIntersection, newPoly.points[newPoly.points.length - 1])) {
+                            lastLineAngle = getAngleBetweenVec2s(closestIntersection, newPoly.points[newPoly.points.length - 1]);
                         }
-                        // console.log('WALL', wall, 'start point', otherPolyStartPoint);
-                        const otherPolyNextPoints = getPointsFromPolygonStartingAt(wall.polygon, otherPolyStartPoint);
-                        const nextPoint = vectorMath.equal(otherPolyNextPoints[0], closestIntersection) ? otherPolyNextPoints[1] : otherPolyNextPoints[0];
-                        const nextLineAngle = getAngleBetweenVec2s(closestIntersection, nextPoint);
-
-                        return {
-                            // and angle from the last line to the next line if this branch were to be taken
-                            branchAngle: clockwiseAngle(lastLineAngle, nextLineAngle),
-                            nextPoints: otherPolyNextPoints,
-                            polygon: wall.polygon
+                        // console.log('new intersection', closestIntersection, 'lastLineAngle', lastLineAngle * 180 / Math.PI);
+                        if (newPoly.points[0] && vectorMath.equal(newPoly.points[0], closestIntersection)) {
+                            console.log('exit successfully,  polygon is closed', closestIntersection);
+                            return;
                         }
-                    }).sort((a, b) => {
-                        return a.branchAngle - b.branchAngle;
-                    });
+                        // If not a duplicate of the last newPoly point, add the intersection
+                        if (!(newPoly.points.length && vectorMath.equal(newPoly.points[newPoly.points.length - 1], closestIntersection))) {
+                            newPoly.points.push(closestIntersection);
+                        }
 
-                    console.log('branches', branches.map(b =>
-                        ({ polygon: polygons.findIndex(o => o == b.polygon), branchAngle: b.branchAngle * 180 / Math.PI, nextPoints: JSON.stringify(b.nextPoints) })));
+                        // For the current poly wall and all walls intersecting the closestIntersection point, get information for all possible
+                        // branches so we can determine which poly to iterate next (it may remain the same poly)
+                        if (iteratingPolygon.inverted) {
+                            wall = { p1: wall.p2, p2: wall.p1, polygon: wall.polygon };
+                        }
+                        const branches = [wall, ...intersectingWalls].map<BranchInfo>(wall => {
+                            // Use "next" point when iterating the other poly clockwise
+                            let otherPolyStartPoint = wall.p2;
+                            if (wall.polygon.inverted) {
+                                // but if the other poly is inverted, use the "prev" point (for iterating counter clockwise)
+                                otherPolyStartPoint = wall.p1;
+                            }
+                            // console.log('WALL', wall, 'start point', otherPolyStartPoint);
+                            const otherPolyNextPoints = getPointsFromPolygonStartingAt(wall.polygon, otherPolyStartPoint);
+                            const nextPoint = vectorMath.equal(otherPolyNextPoints[0], closestIntersection) ? otherPolyNextPoints[1] : otherPolyNextPoints[0];
+                            const nextLineAngle = getAngleBetweenVec2s(closestIntersection, nextPoint);
+
+                            return {
+                                // and angle from the last line to the next line if this branch were to be taken
+                                branchAngle: clockwiseAngle(lastLineAngle, nextLineAngle),
+                                nextPoints: otherPolyNextPoints,
+                                polygon: wall.polygon
+                            }
+                        }).sort((a, b) => {
+                            return a.branchAngle - b.branchAngle;
+                        });
+
+                        console.log('branches', branches.map(b =>
+                            ({ polygon: polygons.findIndex(o => o == b.polygon), branchAngle: b.branchAngle * 180 / Math.PI, nextPoints: JSON.stringify(b.nextPoints) })));
 
 
-                    // Take the branch with the smallest clockwise angle:
-                    const branchToTake = branches[0];
+                        // Take the branch with the smallest clockwise angle:
+                        const branchToTake = branches[0];
 
-                    // If the intersecting poly is inverted, the new poly must become inverted.
-                    // Any poly that merged with an inverted poly becomes an inverted poly
-                    if (branchToTake.polygon.inverted) {
-                        // Switch newPoly to inverted
-                        newPoly.inverted = true;
-                    }
-                    if (iteratingPolygon == branchToTake.polygon) {
-                        // Don't recurse if it should carry on iterating on the polygon it
-                        // already is iterating on
-                        console.log('skip intersection, don\'t reset loop.  Carry on');
-                        continue;
-                    }
-
-                    if (branchToTake.polygon !== iteratingPolygon) {
+                        // If the intersecting poly is inverted, the new poly must become inverted.
+                        // Any poly that merged with an inverted poly becomes an inverted poly
+                        if (branchToTake.polygon.inverted) {
+                            // Switch newPoly to inverted
+                            newPoly.inverted = true;
+                        }
+                        if (iteratingPolygon == branchToTake.polygon) {
+                            // Don't recurse if it should carry on iterating on the polygon it
+                            // already is iterating on
+                            console.log('skip intersection, don\'t reset loop.  Carry on');
+                            return;
+                        }
                         console.log('  branch at', closestIntersection, 'to poly', polygons.findIndex(p => p == branchToTake.polygon));
+                        return branchToTake;
                     }
+                    return;
+
+                }
+                const branchToTake = testWall(iteratingPolyCurrentWall, polygonLineSegments);
+                if (branchToTake) {
                     // Recurse, to start iterating on the branching polygon
                     iteratePolygon(branchToTake.polygon, branchToTake.nextPoints, env, lastLineAngle, newPoly);
-                    return true;
+                    return true
                 }
+
 
             }
             // It should exit by finding the start point, not by running out of points to process
