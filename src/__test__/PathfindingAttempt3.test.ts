@@ -415,20 +415,6 @@ describe('testables', () => {
                     expect(actual).toEqual(expected);
                 });
             });
-            describe.only('4. point is on a horizontal edge of the polygon', () => {
-                it('should return true because it is inside (this is up to my discretion if I want points on edges to be determined as inside)', () => {
-                    const p1 = { x: 0, y: 0 }
-                    const p2 = { x: 0, y: 2 }
-                    const p3 = { x: 2, y: 2 }
-                    const p4 = { x: 2, y: 0 }
-                    const points: Vec2[] = [p1, p2, p3, p4];
-                    const polygon: Polygon = { points, inverted: false };
-                    // horizontal to edge 0,2 to 2,2
-                    const actual = isVec2InsidePolygon({ x: 1, y: 2 }, polygon);
-                    const expected = true;
-                    expect(actual).toEqual(expected);
-                });
-            });
 
         });
         describe('given that the point is on the same y as a vertex of another polygon but not inside', () => {
@@ -448,7 +434,7 @@ describe('testables', () => {
 
             });
         });
-        describe.only('given the point lies directly on a line of the polygon', () => {
+        describe('given the point lies directly on a line of the polygon', () => {
             it('should return true', () => {
                 const p1 = { x: 0, y: 0 }
                 const p2 = { x: 0, y: 2 }
@@ -824,12 +810,9 @@ describe('mergeOverlappingPolygons', () => {
         const actual = mergedPolygon.points;
         const expected = [
             p1,
-            p1b,
             p2,
             p3,
-            p3b,
             p4,
-            p4b
         ];
         expect(actual).toEqual(expected);
     });

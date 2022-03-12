@@ -94,7 +94,7 @@ function growOverlappingCollinearLinesInDirectionOfP2(line: LineSegment, walls: 
 }
 function getClosestBranch(line: LineSegment, walls: PolygonLineSegment[]): Branch {
     line = growOverlappingCollinearLinesInDirectionOfP2(line, walls);
-    console.log('line', line);
+    // console.log('line', line);
 
     let branches: Branch[] = [];
     // Check for collisions between the last line in the path and pathing walls
@@ -143,7 +143,7 @@ function getClosestBranch(line: LineSegment, walls: PolygonLineSegment[]): Branc
     // if there are none, find the furthest with a branchAngle of 180 exactly (this is the farthest point
     // along a straight line)
 
-    console.log('branches', branches.map(b => `${b.branchAngle * 180 / Math.PI} ${b.nextLine.p1.x},${b.nextLine.p1.y} ${b.nextLine.p2.x},${b.nextLine.p2.y}`));
+    // console.log('branches', branches.map(b => `${b.branchAngle * 180 / Math.PI} ${b.nextLine.p1.x},${b.nextLine.p1.y} ${b.nextLine.p2.x},${b.nextLine.p2.y}`));
 
     // Return the closest branch with an angle < 180 degrees
     for (let branch of branches) {
@@ -262,7 +262,6 @@ function isVec2InsidePolygon(point: Vec2, polygon: Polygon): boolean {
             // 1. point is same location as a vertex of the polygon (inside)
             // 2. point is horizontal to a vertex of the polygon (possibly inside or outside)
             // 3. point is colinear with, but not on, a horizontal edge of the polygon (possibly inside or outside)
-            // 4. point is on a horizontal edge of the polygon (inside)
             if (Vec.equal(intersection, wall.p1) || Vec.equal(intersection, wall.p2)) {
                 // Get the INSIDE angle of the vertex (relative to it's polygon)
                 const indexOfVertex = polygon.points.findIndex(p => Vec.equal(p, intersection));
@@ -277,7 +276,15 @@ function isVec2InsidePolygon(point: Vec2, polygon: Polygon): boolean {
                 // Only flip if v1AngleInside XOR v2AngleInside
                 if (v1AngleInside !== v2AngleInside) {
                     isInside = !isInside;
-
+                }
+            } else if (Vec.equal(intersection, point)) {
+                // The point itself is an intersection point, meaning the point lies directly on one of the walls of the polygon
+                if (!polygon.inverted) {
+                    // then it obviously is inside of the polygon (this implementation includes ON the walls as inside)
+                    return true
+                } else {
+                    // Note: Inverted poly always flips the result
+                    return false
                 }
             } else {
                 // If it intersects with a wall, flip the bool
@@ -300,7 +307,9 @@ function findFirstPointNotInsideAnotherPoly(polygon: Polygon, polygons: Polygon[
             }
             // If the point is inside the polygon, the entire point isn't a 
             // candidate.  Continue checking other points
+            console.log('check', point, otherPolygon);
             if (isVec2InsidePolygon(point, otherPolygon)) {
+                console.log('nope');
                 continue check_points;
             }
         }
@@ -323,6 +332,7 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
     let flagForRemoval: Polygon[] = [];
     for (let polygon of polygons) {
         let firstPoint = findFirstPointNotInsideAnotherPoly(polygon, polygons.filter(p => !flagForRemoval.includes(p)));
+        console.log('first point', firstPoint);
         if (!firstPoint) {
             flagForRemoval.push(polygon);
         }
@@ -346,6 +356,7 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
     const excludePoly: Set<Polygon> = new Set();
 
     function processPolygon(processingPolygon: Polygon): boolean {
+        console.log('||||||||||||process', processingPolygon);
         if (excludePoly.has(processingPolygon)) {
             // Polygon is excluded from processing because it has already been processed
             return true;
@@ -378,7 +389,7 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
         newPoly.points.push(originalPolyPoints[0]);
         // console.log('startPoint', originalPolyPoints[0]);
         // TODO update loop limit to something not just for testing
-        const loopLimit = 20
+        const loopLimit = 8
         let i = 0;
         do {
             if (++i > loopLimit) {
@@ -398,6 +409,7 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
                 break;
             }
             newPoly.points.push(currentLine.p1);
+            console.log('new point', currentLine.p1, i, newPoly.points);
             // If the intersecting poly is inverted, the new poly must become inverted.
             // Any poly that merged with an inverted poly becomes an inverted poly
             if (branch.nextLine.polygon.inverted) {
