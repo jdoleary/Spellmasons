@@ -381,11 +381,13 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
         // The first point to iterate is also the firstPoint of the new poly
         newPoly.points.push(originalPolyPoints[0]);
         // TODO update loop limit to something not just for testing
-        const loopLimit = 20
+        const loopLimit = 100
+        // TODO handle bad polys in a more sustainable way
         let i = 0;
         do {
             if (++i > loopLimit) {
                 console.log('infinite loop');
+                throw new Error("infinite loop");
                 return false;
 
             }
