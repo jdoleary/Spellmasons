@@ -94,7 +94,6 @@ function growOverlappingCollinearLinesInDirectionOfP2(line: LineSegment, walls: 
 }
 function getClosestBranch(line: LineSegment, walls: PolygonLineSegment[]): Branch {
     line = growOverlappingCollinearLinesInDirectionOfP2(line, walls);
-    // console.log('line', line);
 
     let branches: Branch[] = [];
     // Check for collisions between the last line in the path and pathing walls
@@ -143,12 +142,10 @@ function getClosestBranch(line: LineSegment, walls: PolygonLineSegment[]): Branc
     // if there are none, find the furthest with a branchAngle of 180 exactly (this is the farthest point
     // along a straight line)
 
-    // console.log('branches', branches.map(b => `${b.branchAngle * 180 / Math.PI} ${b.nextLine.p1.x},${b.nextLine.p1.y} ${b.nextLine.p2.x},${b.nextLine.p2.y}`));
 
     // Return the closest branch with an angle < 180 degrees
     for (let branch of branches) {
         if (branch.branchAngle < Math.PI) {
-            // console.log('choose branch with small angle', branch)
             return branch;
         }
     }
@@ -307,9 +304,7 @@ function findFirstPointNotInsideAnotherPoly(polygon: Polygon, polygons: Polygon[
             }
             // If the point is inside the polygon, the entire point isn't a 
             // candidate.  Continue checking other points
-            console.log('check', point, otherPolygon);
             if (isVec2InsidePolygon(point, otherPolygon)) {
-                console.log('nope');
                 continue check_points;
             }
         }
@@ -332,7 +327,6 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
     let flagForRemoval: Polygon[] = [];
     for (let polygon of polygons) {
         let firstPoint = findFirstPointNotInsideAnotherPoly(polygon, polygons.filter(p => !flagForRemoval.includes(p)));
-        console.log('first point', firstPoint);
         if (!firstPoint) {
             flagForRemoval.push(polygon);
         }
@@ -356,7 +350,6 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
     const excludePoly: Set<Polygon> = new Set();
 
     function processPolygon(processingPolygon: Polygon): boolean {
-        console.log('||||||||||||process', processingPolygon);
         if (excludePoly.has(processingPolygon)) {
             // Polygon is excluded from processing because it has already been processed
             return true;
@@ -387,9 +380,8 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
         const newPoly: Polygon = { points: [], inverted: false };
         // The first point to iterate is also the firstPoint of the new poly
         newPoly.points.push(originalPolyPoints[0]);
-        // console.log('startPoint', originalPolyPoints[0]);
         // TODO update loop limit to something not just for testing
-        const loopLimit = 8
+        const loopLimit = 20
         let i = 0;
         do {
             if (++i > loopLimit) {
@@ -399,17 +391,14 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
             }
             // This poly is processing, mark it as excluded so it won't start processing from the beginning
             excludePoly.add(currentLine.polygon);
-            // console.log('excludePoly', polygons.findIndex(p => p == currentLine.polygon));
             const branch = getClosestBranch(currentLine, polygonLineSegments);
             currentLine = branch.nextLine;
-            // console.log('branch', branch, 'new point', currentLine.p1, 'current line', currentLine)
             // Closes when the point about to be added is the same as the first point
             if (Vec.equal(currentLine.p1, firstPoint)) {
                 // The poly is successfully closed and done processing
                 break;
             }
             newPoly.points.push(currentLine.p1);
-            console.log('new point', currentLine.p1, i, newPoly.points);
             // If the intersecting poly is inverted, the new poly must become inverted.
             // Any poly that merged with an inverted poly becomes an inverted poly
             if (branch.nextLine.polygon.inverted) {
