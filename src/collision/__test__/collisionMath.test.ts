@@ -24,6 +24,44 @@ describe('collisionMath', () => {
                 expected: true
             },
             {
+                description: 'Horizontal lines that are collinear and one is large',
+                l1: {
+                    p1: {
+                        x: 0, y: 0
+                    },
+                    p2: {
+                        x: 2, y: 0
+                    }
+                },
+                l2: {
+                    p1: {
+                        x: -10, y: 0
+                    }, p2: {
+                        x: 10, y: 0
+                    }
+                },
+                expected: true
+            },
+            {
+                description: 'Horizontal lines that are collinear and one is large and they point in opposite directions',
+                l1: {
+                    p1: {
+                        x: 0, y: 0
+                    },
+                    p2: {
+                        x: 2, y: 0
+                    }
+                },
+                l2: {
+                    p1: {
+                        x: 10, y: 0
+                    }, p2: {
+                        x: -10, y: 0
+                    }
+                },
+                expected: true
+            },
+            {
                 description: 'Horizontal lines that are collinear but NOT touching because they have a gap inbetween',
                 l1: {
                     p1: {
