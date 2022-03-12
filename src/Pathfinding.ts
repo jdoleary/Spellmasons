@@ -1,6 +1,6 @@
 import { LineSegment, lineSegmentIntersection } from "./collision/collisionMath";
-import { Vec2, getAngleBetweenVec2s } from "./Vec";
-import * as vectorMath from './collision/vectorMath';
+import type { Vec2 } from "./Vec";
+import * as Vec from './Vec';
 import { distance, similarTriangles } from "./math";
 
 const TO_DEG = 180 / Math.PI;
@@ -29,7 +29,7 @@ export interface Point {
 
 // Called by lineSegmentToPoints
 function findConnectionsToHub(hub: Vec2, lineSegmentEnd: Vec2, lineSegments: LineSegment[]): Point {
-    const point: Point = { hub, connections: [vectorMath.clone(lineSegmentEnd)] };
+    const point: Point = { hub, connections: [Vec.clone(lineSegmentEnd)] };
     for (let otherSegment of lineSegments) {
         if ((hub == otherSegment.p1 && lineSegmentEnd == otherSegment.p2) || (hub == otherSegment.p2 && lineSegmentEnd == otherSegment.p1)) {
             // Do not process the same segment or else you'll get bad results
@@ -38,13 +38,13 @@ function findConnectionsToHub(hub: Vec2, lineSegmentEnd: Vec2, lineSegments: Lin
             continue;
         }
         // Find connections to p1:
-        if (vectorMath.equal(otherSegment.p1, hub)) {
+        if (Vec.equal(otherSegment.p1, hub)) {
             // If p1 is the same as hub, then p2 is a connection
-            point.connections.push(vectorMath.clone(otherSegment.p2));
+            point.connections.push(Vec.clone(otherSegment.p2));
         }
-        if (vectorMath.equal(otherSegment.p2, hub)) {
+        if (Vec.equal(otherSegment.p2, hub)) {
             // If p2 is the same as hub, then p1 is a connection
-            point.connections.push(vectorMath.clone(otherSegment.p1));
+            point.connections.push(Vec.clone(otherSegment.p1));
         }
 
     }
@@ -56,21 +56,21 @@ function findConnectionsToHub(hub: Vec2, lineSegmentEnd: Vec2, lineSegments: Lin
 // Note: Angles must be normalized
 // mutates point
 function sortConnectionsByAngle(point: Point) {
-    point.connections = point.connections.sort((a, b) => { return normalizeAngle(getAngleBetweenVec2s(point.hub, a)) - normalizeAngle(getAngleBetweenVec2s(point.hub, b)) })
+    point.connections = point.connections.sort((a, b) => { return normalizeAngle(Vec.getAngleBetweenVec2s(point.hub, a)) - normalizeAngle(Vec.getAngleBetweenVec2s(point.hub, b)) })
 }
 
 
 function lineSegmentsToPoints(_lineSegments: LineSegment[]): Point[] {
     // Clone points to prevent mutating the args
-    const lineSegments = _lineSegments.map(({ p1, p2 }) => ({ p1: vectorMath.clone(p1), p2: vectorMath.clone(p2) }));
+    const lineSegments = _lineSegments.map(({ p1, p2 }) => ({ p1: Vec.clone(p1), p2: Vec.clone(p2) }));
     const points: Point[] = [];
     for (let segment of lineSegments) {
         const { p1, p2 } = segment;
         // Do not generate a point for a hub that has already been processed
-        if (!points.find(p => vectorMath.equal(p.hub, p1))) {
+        if (!points.find(p => Vec.equal(p.hub, p1))) {
             points.push(findConnectionsToHub(p1, p2, lineSegments));
         }
-        if (!points.find(p => vectorMath.equal(p.hub, p2))) {
+        if (!points.find(p => Vec.equal(p.hub, p2))) {
             points.push(findConnectionsToHub(p2, p1, lineSegments));
         }
     }
@@ -108,8 +108,8 @@ function split(point: Point, allPoints: Point[]) {
         const currentVec2 = connections[i];
         const nextVec2Index = i + 1 >= connections.length ? 0 : i + 1;
         const nextVec2 = connections[nextVec2Index];
-        const angle1 = getAngleBetweenVec2s(hub, currentVec2);
-        const angle2 = getAngleBetweenVec2s(hub, nextVec2);
+        const angle1 = Vec.getAngleBetweenVec2s(hub, currentVec2);
+        const angle2 = Vec.getAngleBetweenVec2s(hub, nextVec2);
         // To find the angle between connections the order matters
         // The angle between 45 degrees and 135 degrees is 90 degrees; while
         // the angle between 135 degrees and 45 degrees (going all the way around the angle circle)
@@ -121,15 +121,15 @@ function split(point: Point, allPoints: Point[]) {
             // Connections must be split
             // an intersection and take the biggest angle
             for (let otherPoint of allPoints) {
-                if (vectorMath.equal(otherPoint.hub, hub)) {
+                if (Vec.equal(otherPoint.hub, hub)) {
                     // Do not run on self
                     continue;
                 }
-                if (connections.find(c => vectorMath.equal(c, otherPoint.hub)) || newConnections.find(c => vectorMath.equal(c, otherPoint.hub))) {
+                if (connections.find(c => Vec.equal(c, otherPoint.hub)) || newConnections.find(c => Vec.equal(c, otherPoint.hub))) {
                     // Do not run on hub that already exists as a connection:
                     continue
                 }
-                const angle = getAngleBetweenVec2s(hub, otherPoint.hub);
+                const angle = Vec.getAngleBetweenVec2s(hub, otherPoint.hub);
                 // Only consider otherPoints that are between the angles that we are splitting; because if it
                 // wasn't than adding it as a connection wouldn't split the angle that we need to split
                 if (isAngleBetweenAngles(angle, angle1, angle2)) {
@@ -152,7 +152,7 @@ function split(point: Point, allPoints: Point[]) {
                                 const l2 = { p1: hub, p2: otherPoint.hub }
                                 const intersection = lineSegmentIntersection(l1, l2);
                                 // Ignore intersections with the linesegment we are trying to find a connection to
-                                if (intersection == undefined || vectorMath.equal(intersection, l1.p1) || vectorMath.equal(intersection, l1.p2)) {
+                                if (intersection == undefined || Vec.equal(intersection, l1.p1) || Vec.equal(intersection, l1.p2)) {
                                     return false
                                 } else {
                                     // Skip if the new connection intersects with a line segment other than
@@ -183,17 +183,17 @@ function split(point: Point, allPoints: Point[]) {
             const prevVec2Index = i - 1 < 0 ? point.connections.length - 1 : i - 1;
             const prevVec2 = point.connections[prevVec2Index];
             const currentVec2 = point.connections[i];
-            if (originalConnections.some(p => vectorMath.equal(currentVec2, p))) {
+            if (originalConnections.some(p => Vec.equal(currentVec2, p))) {
                 // Do not remove original connections.  The original connections are walls
                 // and should not be "optimized" away since they MUST remain connections.
                 continue;
             }
             const nextVec2Index = i + 1 >= point.connections.length ? 0 : i + 1;
             const nextVec2 = point.connections[nextVec2Index];
-            const angle1 = getAngleBetweenVec2s(hub, prevVec2);
-            const middlePointAngle = getAngleBetweenVec2s(hub, currentVec2)
+            const angle1 = Vec.getAngleBetweenVec2s(hub, prevVec2);
+            const middlePointAngle = Vec.getAngleBetweenVec2s(hub, currentVec2)
             const angle2 = counterClockwiseAngle(angle1, middlePointAngle);
-            const angle3 = counterClockwiseAngle(middlePointAngle, getAngleBetweenVec2s(hub, nextVec2));
+            const angle3 = counterClockwiseAngle(middlePointAngle, Vec.getAngleBetweenVec2s(hub, nextVec2));
             if (angle2 + angle3 <= Math.PI) {
                 // Merge angles by removing currentVec2 from connections
                 point.connections.splice(i, 1);
@@ -240,7 +240,7 @@ export function generateConvexPolygonMesh(lineSegments: LineSegment[], insetSize
     // Batch adjustedPoints and then adjust them all at once
     const adjustedPointPairs: [Point, Vec2][] = [];
     for (let point of points) {
-        const projectToPoint = vectorMath.clone(point.hub);
+        const projectToPoint = Vec.clone(point.hub);
         for (let connection of point.connections) {
             const dx = point.hub.x - connection.x;
             const dy = point.hub.y - connection.y;
@@ -252,7 +252,7 @@ export function generateConvexPolygonMesh(lineSegments: LineSegment[], insetSize
         const D = distance(projectToPoint, point.hub);
         const d = insetSize;
         const relativeAdjustedPoint = similarTriangles(X, Y, D, d);
-        const _adjustedPoint = vectorMath.subtract(point.hub, relativeAdjustedPoint);
+        const _adjustedPoint = Vec.subtract(point.hub, relativeAdjustedPoint);
         const adjustedPoint = { x: Math.round(_adjustedPoint.x), y: Math.round(_adjustedPoint.y) };
         adjustedPointPairs.push([point, adjustedPoint]);
 
@@ -262,11 +262,11 @@ export function generateConvexPolygonMesh(lineSegments: LineSegment[], insetSize
         // Update connections to the hub that's about to change:
         for (let otherPoint of points) {
             // Exclude self
-            if (vectorMath.equal(otherPoint.hub, point.hub)) {
+            if (Vec.equal(otherPoint.hub, point.hub)) {
                 continue;
             }
             for (let connection of otherPoint.connections) {
-                if (vectorMath.equal(connection, point.hub)) {
+                if (Vec.equal(connection, point.hub)) {
                     connection.x = adjustedPoint.x;
                     connection.y = adjustedPoint.y;
                 }

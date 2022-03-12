@@ -1,5 +1,5 @@
-import { Vec2, getAngleBetweenVec2s } from "./Vec";
-import * as vectorMath from './collision/vectorMath';
+import type { Vec2 } from "./Vec";
+import * as Vec from './Vec';
 import { distance, similarTriangles } from "./math";
 import { LineSegment, lineSegmentIntersection } from "./collision/collisionMath";
 
@@ -141,8 +141,8 @@ function projectVertexAlongOutsideNormal(vertex: Vertex, magnitude: number): Vec
     projectToPoint.y -= dyNext;
 
     // Find out if the angle is inverted based on the order of prev and next verticiees
-    const anglePrev = getAngleBetweenVec2s(vertex, vertex.prev);
-    const angleNext = getAngleBetweenVec2s(vertex, vertex.next);
+    const anglePrev = Vec.getAngleBetweenVec2s(vertex, vertex.prev);
+    const angleNext = Vec.getAngleBetweenVec2s(vertex, vertex.next);
     const angleBetween = getAngleBetweenAngles(anglePrev, angleNext);
     const isInverted = angleBetween <= Math.PI / 2;
     // Find the point magnitude away from vertex along the normal
@@ -151,7 +151,7 @@ function projectVertexAlongOutsideNormal(vertex: Vertex, magnitude: number): Vec
     const D = distance(projectToPoint, vertex);
     const d = isInverted ? -magnitude : magnitude;
     const relativeAdjustedPoint = similarTriangles(X, Y, D, d);
-    return vectorMath.subtract(vertex, relativeAdjustedPoint);
+    return Vec.subtract(vertex, relativeAdjustedPoint);
 }
 
 // The rule: inside points get removed, intersections become new points
@@ -226,7 +226,7 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
                     // then add batchReplaceInstructions.second, and iterate poly
                     for (let vert of makePolygonIterator(otherPoly, batchReplaceInstructions.first.intersectionVert.next)) {
                         vec2s.push(vert);
-                        if (vectorMath.equal(vert, batchReplaceInstructions.second.intersectionVert.prev)) {
+                        if (Vec.equal(vert, batchReplaceInstructions.second.intersectionVert.prev)) {
                             // Stop if / once we reach the vert right before the second intersection
 
                             break;
@@ -237,7 +237,7 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
                         vec2s.push(vert);
                         // Stop once we reach the vert right before batchReplaceInstructions.first.next
                         // This will exclude the polygon verticies that are inside of otherPolygon
-                        if (vectorMath.equal(vert, batchReplaceInstructions.first.originalPolyVert)) {
+                        if (Vec.equal(vert, batchReplaceInstructions.first.originalPolyVert)) {
                             break;
                         }
                     }
@@ -278,7 +278,7 @@ function isVec2InsidePolygon(point: Vec2, polygon: Polygon): boolean {
             // This can happen if the "point" shares the same "y" value as
             // a vertex in the polygon because the vertex belongs to 2 of the 
             // VertexLineSegments
-            if (!intersections.find(i => vectorMath.equal(i, intersection))) {
+            if (!intersections.find(i => Vec.equal(i, intersection))) {
                 intersections.push(intersection);
             }
         }
@@ -391,7 +391,7 @@ function tryPaths(paths: Path[], pathingWalls: VertexLineSegment[], recursionCou
         }
         // A path must have at least 2 points (a start and and end) to be processed
         if (path.points.length < 2) {
-            console.error("Path is too short to try", JSON.stringify(path.points.map(p => vectorMath.clone(p))));
+            console.error("Path is too short to try", JSON.stringify(path.points.map(p => Vec.clone(p))));
             path.invalid = true;
             continue;
         }
@@ -422,7 +422,7 @@ function tryPaths(paths: Path[], pathingWalls: VertexLineSegment[], recursionCou
             // Branch the path.  The original path will try navigating around p1
             // and the branchedPath will try navigating around p2.
             // Note: branchedPath must be cloned before path's p2 is modified
-            const branchedPath = { ...path, points: path.points.map(p => vectorMath.clone(p)) };
+            const branchedPath = { ...path, points: path.points.map(p => Vec.clone(p)) };
             paths.push(branchedPath);
 
 
@@ -577,7 +577,7 @@ function getClosestIntersectionWithWalls(line: LineSegment, walls: VertexLineSeg
     for (let wall of walls) {
         const intersection = lineSegmentIntersection(line, wall);
         if (intersection) {
-            if (vectorMath.equal(line.p1, intersection)) {
+            if (Vec.equal(line.p1, intersection)) {
                 // Exclude collisions at start point of line segment. Don't collide with self
                 continue;
             }

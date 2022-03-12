@@ -1,5 +1,4 @@
-import type { Vec2 } from "../Vec";
-import { add, subtract, multiply, crossproduct, dotProduct, isBetween } from "./vectorMath";
+import { add, subtract, multiply, crossproduct, dotProduct, isBetween, Vec2 } from "../Vec";
 export interface LineSegment {
     p1: Vec2;
     p2: Vec2;
