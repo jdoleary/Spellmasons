@@ -2,7 +2,7 @@ import type { Vec2 } from "./Vec";
 import * as Vec from './Vec';
 import { distance, similarTriangles } from "./math";
 import { isCollinearAndOverlapping, isCollinearAndPointInSameDirection, LineSegment, lineSegmentIntersection } from "./collision/collisionMath";
-import { clockwiseAngle, counterClockwiseAngle } from "./Pathfinding";
+import { clockwiseAngle } from "./Angle";
 
 export interface Polygon {
     points: Vec2[];

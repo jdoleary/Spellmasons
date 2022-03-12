@@ -1,6 +1,5 @@
 import { MESSAGE_TYPES } from '../MessageTypes';
 import * as CardUI from '../CardUI';
-import * as config from '../config';
 import type * as Player from '../Player';
 import floatingText from '../FloatingText';
 import {
@@ -14,7 +13,6 @@ import { distance } from '../math';
 import { View } from '../views';
 import { calculateManaCost } from '../cards/cardUtils';
 import * as math from '../math';
-import { findPath } from '../PathfindingAttempt2';
 
 export function keydownListener(event: KeyboardEvent) {
   // Only handle hotkeys when viewing the Game

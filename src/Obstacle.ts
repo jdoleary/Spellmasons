@@ -1,5 +1,5 @@
 import * as Image from './Image';
-import type { Polygon } from './PathfindingAttempt3';
+import type { Polygon } from './Polygon';
 import { containerBoard } from './PixiUtils';
 export interface IObstacle {
   x: number;

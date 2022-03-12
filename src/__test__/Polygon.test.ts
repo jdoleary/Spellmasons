@@ -1,6 +1,6 @@
 
 import type { Vec2 } from "../Vec";
-import { testables, Branch, makePolygonIndexIterator, Polygon, expandPolygon, mergeOverlappingPolygons, polygonToPolygonLineSegments } from '../PathfindingAttempt3';
+import { testables, Branch, makePolygonIndexIterator, Polygon, expandPolygon, mergeOverlappingPolygons, polygonToPolygonLineSegments } from '../Polygon';
 import type { LineSegment } from "../collision/collisionMath";
 const { getLoopableIndex, isVec2InsidePolygon, findFirstPointNotInsideAnotherPoly, getNormalVectorOfLineSegment,
     getClosestBranch, growOverlappingCollinearLinesInDirectionOfP2 } = testables;
@@ -1053,6 +1053,100 @@ describe('mergeOverlappingPolygons', () => {
             };
             const mergedPolygons = mergeOverlappingPolygons([poly1, poly2]);
             const actual = mergedPolygons.length;
+            const expected = 1;
+            expect(actual).toEqual(expected);
+
+        });
+        it.skip('issue with inverted?', () => {
+            const polygons: Polygon[] = [
+                {
+                    "points": [
+                        {
+                            "x": 380,
+                            "y": 516
+                        },
+                        {
+                            "x": 380,
+                            "y": 580
+                        },
+                        {
+                            "x": 444,
+                            "y": 580
+                        },
+                        {
+                            "x": 444,
+                            "y": 516
+                        }
+                    ],
+                    "inverted": false
+                },
+                {
+                    "points": [
+                        {
+                            "x": 446,
+                            "y": 442
+                        },
+                        {
+                            "x": 446,
+                            "y": 506
+                        },
+                        {
+                            "x": 510,
+                            "y": 506
+                        },
+                        {
+                            "x": 510,
+                            "y": 442
+                        }
+                    ],
+                    "inverted": false
+                },
+                {
+                    "points": [
+                        {
+                            "x": 336,
+                            "y": 440
+                        },
+                        {
+                            "x": 336,
+                            "y": 504
+                        },
+                        {
+                            "x": 400,
+                            "y": 504
+                        },
+                        {
+                            "x": 400,
+                            "y": 440
+                        }
+                    ],
+                    "inverted": false
+                },
+                {
+                    "points": [
+                        {
+                            "x": 0,
+                            "y": 0
+                        },
+                        {
+                            "x": 0,
+                            "y": 600
+                        },
+                        {
+                            "x": 800,
+                            "y": 600
+                        },
+                        {
+                            "x": 800,
+                            "y": 0
+                        }
+                    ],
+                    "inverted": true
+                }
+            ];
+            const mergedPolygons = mergeOverlappingPolygons(polygons.map(p => expandPolygon(p, 32)));
+            const actual = mergedPolygons.length;
+            console.log('actual', mergedPolygons);
             const expected = 1;
             expect(actual).toEqual(expected);
 
