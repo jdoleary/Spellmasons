@@ -1,10 +1,98 @@
 
 import type { Vec2 } from "../Vec";
-import { testables, makePolygonIndexIterator, Polygon, expandPolygon, mergeOverlappingPolygons } from '../PathfindingAttempt3';
+import { testables, Branch, makePolygonIndexIterator, Polygon, expandPolygon, mergeOverlappingPolygons, polygonToPolygonLineSegments } from '../PathfindingAttempt3';
 import type { LineSegment } from "../collision/collisionMath";
-const { getLoopableIndex, isVec2InsidePolygon, findFirstPointNotInsideAnotherPoly, getNormalVectorOfLineSegment } = testables;
+const { getLoopableIndex, isVec2InsidePolygon, findFirstPointNotInsideAnotherPoly, getNormalVectorOfLineSegment,
+    getClosestBranch } = testables;
 
 describe('testables', () => {
+    describe.skip('getClosestBranch', () => {
+        it('should return the closest branch with a branch angle of <= 180 degrees', () => {
+            const poly1 = {
+                points: [
+                    { "x": 0, "y": 0 },
+                    { "x": 0, "y": 2 },
+                    { "x": 1, "y": 2 },
+                    { "x": 1, "y": 0 }
+                ], inverted: false
+            };
+            const line = {
+                p1: { x: 0, y: 0 },
+                p2: { x: 0, y: 2 },
+                // polygon: poly1
+            }
+            const poly2 = {
+                points: [
+                    { "x": 0, "y": 1 },
+                    { "x": 0, "y": 3 },
+                    { "x": 1, "y": 3 },
+                    { "x": 1, "y": 1 }
+                ], inverted: false
+            };
+            const polygons = [poly1, poly2];
+            const polygonLineSegments = polygons.map(polygonToPolygonLineSegments).flat();
+            const actual = getClosestBranch(line, polygonLineSegments);
+            const expected: Branch = {
+                branchAngle: Math.PI,
+                distance: 1,
+                nextLine: {
+                    p1: poly2.points[0],
+                    p2: poly2.points[1],
+                    polygon: poly2
+                }
+            }
+            expect(actual).toEqual(expected);
+        });
+        it('should return the closest branch with a branch angle of <= 180 degrees', () => {
+            const poly1 = {
+                points: [
+                    { "x": 0, "y": 0 },
+                    { "x": 0, "y": 2 },
+                    { "x": 1, "y": 2 },
+                    { "x": 1, "y": 0 }
+                ], inverted: false
+            };
+            const line = {
+                p1: { x: 0, y: 0 },
+                p2: { x: 0, y: 2 },
+                // polygon: poly1
+            }
+            const poly2 = {
+                points: [
+                    { "x": 0, "y": 1 },
+                    { "x": 0, "y": 3 },
+                    { "x": 1, "y": 3 },
+                    { "x": 1, "y": 1 }
+                ], inverted: false
+            };
+            const poly3 = {
+                points: [
+                    { "x": 0, "y": 1 },
+                    { "x": 0, "y": 4 },
+                    { "x": 1, "y": 4 },
+                    { "x": 1, "y": 1 }
+                ], inverted: false
+            };
+            const polygons = [poly1, poly2, poly3];
+            const polygonLineSegments = polygons.map(polygonToPolygonLineSegments).flat();
+            const actual = getClosestBranch(line, polygonLineSegments);
+            const expected: Branch = {
+                branchAngle: Math.PI,
+                distance: 1,
+                nextLine: {
+                    p1: poly3.points[0],
+                    p2: poly3.points[1],
+                    polygon: poly3
+                }
+            }
+            expect(actual).toEqual(expected);
+        });
+
+        describe('given that there are no branches with a branch angle of 180 degrees', () => {
+            it('should return the farthest branch because all of the intersections are along a straight line and all but the last can be excluded', () => { });
+        });
+
+    });
     describe('getNormalVectorOfLineSegment', () => {
         it('should return a Vec2 representing the normal vector of the lineSegment', () => {
             const line: LineSegment = {
@@ -881,7 +969,7 @@ describe('mergeOverlappingPolygons', () => {
     });
     describe("generated tests", () => {
 
-        it('should reduce overlapping polys to a single poly', () => {
+        it.only('should reduce overlapping polys to a single poly', () => {
             const poly1 = {
                 points: [
                     { "x": 0, "y": 0 },
