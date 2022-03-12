@@ -1,7 +1,188 @@
-import { LineSegment, findWherePointIntersectLineSegmentAtRightAngle, lineSegmentIntersection, testables, isPointOnLineSegment } from '../collisionMath';
+import { LineSegment, findWherePointIntersectLineSegmentAtRightAngle, lineSegmentIntersection, testables, isPointOnLineSegment, isCollinearAndTouching } from '../collisionMath';
 import type { Vec2 } from '../../Vec';
 const { slope, toStandardForm } = testables;
 describe('collisionMath', () => {
+    describe('isCollinearAndTouching', () => {
+        [
+            {
+                description: 'Horizontal lines that are collinear',
+                l1: {
+                    p1: {
+                        x: 0, y: 0
+                    },
+                    p2: {
+                        x: 2, y: 0
+                    }
+                },
+                l2: {
+                    p1: {
+                        x: 1, y: 0
+                    }, p2: {
+                        x: 3, y: 0
+                    }
+                },
+                expected: true
+            },
+            {
+                description: 'Horizontal lines that are collinear but NOT touching because they have a gap inbetween',
+                l1: {
+                    p1: {
+                        x: 0, y: 0
+                    },
+                    p2: {
+                        x: 2, y: 0
+                    }
+                },
+                l2: {
+                    p1: {
+                        x: 3, y: 0
+                    }, p2: {
+                        x: 4, y: 0
+                    }
+                },
+                expected: false
+            },
+            {
+                description: 'Non parallel lines',
+                l1: {
+                    p1: {
+                        x: 0, y: 0
+                    },
+                    p2: {
+                        x: 2, y: 0
+                    }
+                },
+                l2: {
+                    p1: {
+                        x: 0, y: 0
+                    }, p2: {
+                        x: 0, y: 1
+                    }
+                },
+                expected: false
+            },
+            {
+                description: 'Vertical lines that are collinear',
+                l1: {
+                    p1: {
+                        x: 0, y: 0
+                    },
+                    p2: {
+                        x: 0, y: 2
+                    }
+                },
+                l2: {
+                    p1: {
+                        x: 0, y: 1
+                    }, p2: {
+                        x: 0, y: 3
+                    }
+                },
+                expected: true
+            },
+            {
+                description: 'Vertical lines that are collinear but NOT touching because they have a gap inbetween',
+                l1: {
+                    p1: {
+                        x: 0, y: 0
+                    },
+                    p2: {
+                        x: 0, y: 2
+                    }
+                },
+                l2: {
+                    p1: {
+                        x: 0, y: 3
+                    }, p2: {
+                        x: 0, y: 4
+                    }
+                },
+                expected: false
+            },
+            {
+                description: 'lines that are collinear and touching',
+                l1: {
+                    p1: {
+                        x: 0, y: 0
+                    },
+                    p2: {
+                        x: 2, y: 2
+                    }
+                },
+                l2: {
+                    p1: {
+                        x: 1, y: 1
+                    }, p2: {
+                        x: 3, y: 3
+                    }
+                },
+                expected: true
+            },
+            {
+                description: 'lines that are parallel but not collinear nor touching',
+                l1: {
+                    p1: {
+                        x: 0, y: 0
+                    },
+                    p2: {
+                        x: 5, y: 5
+                    }
+                },
+                l2: {
+                    p1: {
+                        x: 1, y: 0
+                    }, p2: {
+                        x: 6, y: 3
+                    }
+                },
+                expected: false
+            },
+            {
+                description: 'lines that are overlapping but are pointing away from each other',
+                l1: {
+                    p1: {
+                        x: 0, y: 0
+                    },
+                    p2: {
+                        x: 2, y: 0
+                    }
+                },
+                l2: {
+                    p1: {
+                        x: 1, y: 0
+                    }, p2: {
+                        x: -1, y: 0
+                    }
+                },
+                expected: true
+            },
+            {
+                description: 'lines that are NOT overlapping and are pointing away from each other',
+                l1: {
+                    p1: {
+                        x: 0, y: 0
+                    },
+                    p2: {
+                        x: 2, y: 0
+                    }
+                },
+                l2: {
+                    p1: {
+                        x: -1, y: 0
+                    }, p2: {
+                        x: -2, y: 0
+                    }
+                },
+                expected: false
+            },
+        ].forEach(({ l1, l2, expected, description }) => {
+            it(`should return ${expected} when lines are touching and collinear for "${description}"`, () => {
+                console.log(expected, 'description', description, ';', expected);
+                const actual = isCollinearAndTouching(l1, l2);
+                expect(actual).toEqual(expected);
+            });
+        });
+    });
     // describe('intersectionOfLines', () => {
     //     it('should return the point of intersection for 2 lines', () => {
     //         const ls1: LineSegment = { p1: { x: -1, y: -1 }, p2: { x: 1, y: 1 } };
