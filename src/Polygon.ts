@@ -323,25 +323,35 @@ function findFirstPointNotInsideAnotherPoly(polygon: Polygon, polygons: Polygon[
 // When found, set the intersection to "current" and that lineSegment's "next" point to next and start
 // the process over.  When an intersection is equal to the original current point, the polygon is complete.
 export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
+    // Convert all polygons into polygon line segments for processing:
+    const polygonLineSegments = polygons.map(polygonToPolygonLineSegments).flat();
+
     // Remove all polygons that have NO points outside of all other polygons
-    let flagForRemoval: Polygon[] = [];
-    for (let polygon of polygons) {
-        let firstPoint = findFirstPointNotInsideAnotherPoly(polygon, polygons.filter(p => !flagForRemoval.includes(p)));
-        if (!firstPoint) {
-            flagForRemoval.push(polygon);
-        }
-    }
-    polygons = polygons.filter(p => {
-        return !flagForRemoval.includes(p);
-    });
+    // Note: it is critical that polygonLineSegments recieves it's value BEFORE
+    // any polygons are removed because even polygons that shouldn't be processed
+    // as origin polys (because each of their verticies are inside other polys)
+    // may still have edges (walls) that should be considered. To understand this
+    // situation imagine one box with two horizontal rectangles, one rec covering its
+    // top two verts and the other covering the bottom two.  This box shouldn't be
+    // processed but it's walls should still be considered as it will ensure that
+    // all 3 are merged.
+
+    // let flagForRemoval: Polygon[] = [];
+    // for (let polygon of polygons) {
+    //     let firstPoint = findFirstPointNotInsideAnotherPoly(polygon, polygons.filter(p => !flagForRemoval.includes(p)));
+    //     if (!firstPoint) {
+    //         flagForRemoval.push(polygon);
+    //     }
+    // }
+    // polygons = polygons.filter(p => {
+    //     return !flagForRemoval.includes(p);
+    // });
 
     // resultPolys stores the merged polygons:
     const resultPolys: Polygon[] = [];
     // Polygons that failed to process
     const badPolys: Polygon[] = [];
 
-    // Convert all polygons into polygon line segments for processing:
-    const polygonLineSegments = polygons.map(polygonToPolygonLineSegments).flat();
 
     // excludedPoly is used to ensure that polys are not processed more than once
     // especially because they may be processed in an inner loop.  newPolys added to

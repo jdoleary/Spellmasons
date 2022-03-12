@@ -1057,7 +1057,7 @@ describe('mergeOverlappingPolygons', () => {
             expect(actual).toEqual(expected);
 
         });
-        it.skip('issue with inverted?', () => {
+        it.only('issue with inverted?', () => {
             const polygons: Polygon[] = [
                 {
                     "points": [
