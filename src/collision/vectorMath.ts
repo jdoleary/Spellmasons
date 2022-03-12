@@ -45,3 +45,13 @@ export function clone(p: Vec2): Vec2 {
 export function round(v: Vec2): Vec2 {
     return { x: Math.round(v.x), y: Math.round(v.y) };
 }
+
+// Returns true if testPoint is within a bounding box drawn between the two bounding points
+export function isBetween(testPoint: Vec2, boundingPoint: Vec2, boundingPoint2: Vec2): boolean {
+    const minY = Math.min(boundingPoint.y, boundingPoint2.y);
+    const minX = Math.min(boundingPoint.x, boundingPoint2.x);
+    const maxY = Math.max(boundingPoint.y, boundingPoint2.y);
+    const maxX = Math.max(boundingPoint.x, boundingPoint2.x);
+    return minX <= testPoint.x && testPoint.x <= maxX &&
+        minY <= testPoint.y && testPoint.y <= maxY;
+}

@@ -1,5 +1,5 @@
 import type { Vec2 } from "../Vec";
-import { add, subtract, multiply, crossproduct } from "./vectorMath";
+import { add, subtract, multiply, crossproduct, dotProduct, isBetween } from "./vectorMath";
 export interface LineSegment {
     p1: Vec2;
     p2: Vec2;
@@ -113,6 +113,38 @@ export function isPointOnLineSegment(point: Vec2, lineSegment: LineSegment): boo
     return false;
 
 }
+// A slice of logic from lineSegmentIntersection
+// returns true if two line segmenst are both collinear and overlapping
+export function isCollinearAndOverlapping(l1: LineSegment, l2: LineSegment): boolean {
+    // l1 expressed as p to p+r
+    const p = l1.p1;
+    const r = subtract(l1.p2, l1.p1);
+    // l2 expressed as q to q+s
+    const q = l2.p1;
+    const s = subtract(l2.p2, l2.p1);
+    // The two lines intersect if we can find t and u such that: p + t r = q + u s
+    // And therefore, solving for t: t = (q − p) × s / (r × s)
+    // In the same way, we can solve for u: u = (q − p) × r / (r × s)
+    const qMinusP = subtract(q, p);
+    const rCrossS = crossproduct(r, s);
+    // If r × s = 0 and (q − p) × r = 0, then the two lines are collinear.
+    const collinear = rCrossS == 0 && crossproduct(qMinusP, r) == 0;
+    //     In this case, express the endpoints of the second segment (q and q + s) in terms of the equation of the first line segment (p + t r):
+    //     t0 = (q − p) · r / (r · r)
+    //     t1 = (q + s − p) · r / (r · r) = t0 + s · r / (r · r)
+    if (collinear) {
+        const dotRR = dotProduct(r, r);
+        const t0 = dotProduct(subtract(q, p), r) / dotRR;
+        const t1 = t0 + dotProduct(s, r) / dotRR;
+        // If the interval between t0 and t1 intersects the interval [0, 1] then the line segments are collinear and overlapping; otherwise they are collinear and disjoint.
+        // Note that if s and r point in opposite directions, then s · r < 0 and so the interval to be checked is [t1, t0] rather than [t0, t1].
+        const overlapping = (0 <= t0 && t0 <= 1) || (0 <= t1 && t1 <= 1);
+        return overlapping;
+    } else {
+        return false
+    }
+
+}
 
 // Adapted from https://stackoverflow.com/a/565282
 // Resources https://www.math.usm.edu/lambers/mat169/fall09/lecture25.pdf
@@ -131,7 +163,32 @@ export function lineSegmentIntersection(l1: LineSegment, l2: LineSegment): Vec2 
     const rCrossS = crossproduct(r, s);
     // If r × s = 0 and (q − p) × r = 0, then the two lines are collinear.
     if (rCrossS == 0 && crossproduct(qMinusP, r) == 0) {
-        return
+        //     In this case, express the endpoints of the second segment (q and q + s) in terms of the equation of the first line segment (p + t r):
+        //     t0 = (q − p) · r / (r · r)
+        //     t1 = (q + s − p) · r / (r · r) = t0 + s · r / (r · r)
+        const dotRR = dotProduct(r, r);
+        const t0 = dotProduct(subtract(q, p), r) / dotRR;
+        const t1 = t0 + dotProduct(s, r) / dotRR;
+        // If the interval between t0 and t1 intersects the interval [0, 1] then the line segments are collinear and overlapping; otherwise they are collinear and disjoint.
+        // Note that if s and r point in opposite directions, then s · r < 0 and so the interval to be checked is [t1, t0] rather than [t0, t1].
+        const overlapping = (0 <= t0 && t0 <= 1) || (0 <= t1 && t1 <= 1);
+        if (overlapping) {
+            // Since the line segments are collinear and overlapping, there are infinite intersection points,
+            // but since this function only returns 1 intersection point, I, personally, am opting to prefer
+            // an endpoing on l1 over l2 and the p2 point over the p1 point
+            if (isBetween(l1.p2, l2.p1, l2.p2)) {
+                return l1.p2;
+            } else if (isBetween(l1.p1, l2.p1, l2.p2)) {
+                return l1.p1;
+            } else {
+                // In this case, all of l2 is inside of l1, so just
+                // choose to return l2.p2;
+                return l2.p2;
+            }
+
+        } else {
+            return
+        }
     }
     // If r × s = 0 and (q − p) × r ≠ 0, then the two lines are parallel and non-intersecting.
     if (rCrossS == 0 && crossproduct(qMinusP, r) != 0) {
