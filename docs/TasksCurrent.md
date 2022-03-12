@@ -1,4 +1,8 @@
 ## Current Priorities
+
+- Then finish pathfindingAttempt3.test.ts
+
+
 - How to merge a regular polygon with an inverted polygon?
     - The regular poly must change to be inverted
 - How to handle shortcuts?

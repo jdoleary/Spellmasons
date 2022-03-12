@@ -54,79 +54,41 @@ describe('testables', () => {
             });
         });
     });
-    describe.only('getClosestBranch', () => {
-        it('should return the closest branch with a branch angle of <= 180 degrees', () => {
+    describe('getClosestBranch', () => {
+        it('should return the first branch with a branch angle of < 180 degrees', () => {
             const poly1 = {
                 points: [
                     { "x": 0, "y": 0 },
-                    { "x": 0, "y": 2 },
-                    { "x": 1, "y": 2 },
+                    { "x": 0, "y": 10 },
+                    { "x": 1, "y": 10 },
                     { "x": 1, "y": 0 }
                 ], inverted: false
             };
-            const line = {
+            const testLine = {
                 p1: { x: 0, y: 0 },
-                p2: { x: 0, y: 2 },
-                // polygon: poly1
+                p2: { x: 0, y: 10 },
             }
             const poly2 = {
                 points: [
-                    { "x": 0, "y": 1 },
-                    { "x": 0, "y": 3 },
-                    { "x": 1, "y": 3 },
-                    { "x": 1, "y": 1 }
-                ], inverted: false
-            };
-            const polygons = [poly1, poly2];
-            const polygonLineSegments = polygons.map(polygonToPolygonLineSegments).flat();
-            const actual = getClosestBranch(line, polygonLineSegments);
-            const expected: Branch = {
-                branchAngle: Math.PI,
-                distance: 1,
-                nextLine: {
-                    p1: poly2.points[0],
-                    p2: poly2.points[1],
-                    polygon: poly2
-                }
-            }
-            expect(actual).toEqual(expected);
-        });
-        it('should return the closest branch with a branch angle of <= 180 degrees', () => {
-            const poly1 = {
-                points: [
-                    { "x": 0, "y": 0 },
-                    { "x": 0, "y": 2 },
-                    { "x": 1, "y": 2 },
-                    { "x": 1, "y": 0 }
-                ], inverted: false
-            };
-            const line = {
-                p1: { x: 0, y: 0 },
-                p2: { x: 0, y: 2 },
-                // polygon: poly1
-            }
-            const poly2 = {
-                points: [
-                    { "x": 0, "y": 1 },
-                    { "x": 0, "y": 3 },
-                    { "x": 1, "y": 3 },
-                    { "x": 1, "y": 1 }
+                    { "x": 0, "y": 6 },
+                    { "x": -1, "y": 5 },
+                    { "x": -1, "y": 7 },
+                    { "x": 0, "y": 7 }
                 ], inverted: false
             };
             const poly3 = {
                 points: [
-                    { "x": 0, "y": 1 },
-                    { "x": 0, "y": 4 },
-                    { "x": 1, "y": 4 },
-                    { "x": 1, "y": 1 }
+                    { "x": 0, "y": 2 },
+                    { "x": -1, "y": 3 },
+                    { "x": 0, "y": 3 }
                 ], inverted: false
             };
             const polygons = [poly1, poly2, poly3];
             const polygonLineSegments = polygons.map(polygonToPolygonLineSegments).flat();
-            const actual = getClosestBranch(line, polygonLineSegments);
+            const actual = getClosestBranch(testLine, polygonLineSegments);
             const expected: Branch = {
-                branchAngle: Math.PI,
-                distance: 1,
+                branchAngle: 3 * Math.PI / 4,
+                distance: 2,
                 nextLine: {
                     p1: poly3.points[0],
                     p2: poly3.points[1],
@@ -134,11 +96,89 @@ describe('testables', () => {
                 }
             }
             expect(actual).toEqual(expected);
+
+        });
+        describe('given that there is no branch with a branch angle of < 180 degrees', () => {
+            it('should return the branch that starts at the end of the expanded test line', () => {
+                const poly1 = {
+                    points: [
+                        { "x": 0, "y": 0 },
+                        { "x": 0, "y": 2 },
+                        { "x": 1, "y": 2 },
+                        { "x": 1, "y": 0 }
+                    ], inverted: false
+                };
+                const testLine = {
+                    p1: { x: 0, y: 0 },
+                    p2: { x: 0, y: 2 },
+                }
+                const poly2 = {
+                    points: [
+                        { "x": 0, "y": 1 },
+                        { "x": 0, "y": 3 },
+                        { "x": 1, "y": 3 },
+                        { "x": 1, "y": 1 }
+                    ], inverted: false
+                };
+                const polygons = [poly1, poly2];
+                const polygonLineSegments = polygons.map(polygonToPolygonLineSegments).flat();
+                const actual = getClosestBranch(testLine, polygonLineSegments);
+                const expected: Branch = {
+                    branchAngle: 3 * Math.PI / 2,
+                    distance: 3,
+                    nextLine: {
+                        p1: poly2.points[1],
+                        p2: poly2.points[2],
+                        polygon: poly2
+                    }
+                }
+                expect(actual).toEqual(expected);
+            });
+            it('should return the branch that starts at the end of the expanded test line 2', () => {
+                const poly1 = {
+                    points: [
+                        { "x": 0, "y": 0 },
+                        { "x": 0, "y": 2 },
+                        { "x": 1, "y": 2 },
+                        { "x": 1, "y": 0 }
+                    ], inverted: false
+                };
+                const testLine = {
+                    p1: { x: 0, y: 0 },
+                    p2: { x: 0, y: 2 },
+                }
+                const poly2 = {
+                    points: [
+                        { "x": 0, "y": 1 },
+                        { "x": 0, "y": 3 },
+                        { "x": 1, "y": 3 },
+                        { "x": 1, "y": 1 }
+                    ], inverted: false
+                };
+                const poly3 = {
+                    points: [
+                        { "x": 0, "y": 3 },
+                        { "x": 0, "y": 4 },
+                        { "x": 1, "y": 4 },
+                        { "x": 1, "y": 3 }
+                    ], inverted: false
+                };
+                const polygons = [poly1, poly2, poly3];
+                const polygonLineSegments = polygons.map(polygonToPolygonLineSegments).flat();
+                const actual = getClosestBranch(testLine, polygonLineSegments);
+                const expected: Branch = {
+                    branchAngle: 3 * Math.PI / 2,
+                    distance: 4,
+                    nextLine: {
+                        p1: poly3.points[1],
+                        p2: poly3.points[2],
+                        polygon: poly3
+                    }
+                }
+                expect(actual).toEqual(expected);
+            });
         });
 
-        describe('given that there are no branches with a branch angle of 180 degrees', () => {
-            it('should return the farthest branch because all of the intersections are along a straight line and all but the last can be excluded', () => { });
-        });
 
     });
     describe('getNormalVectorOfLineSegment', () => {
@@ -303,7 +343,7 @@ describe('testables', () => {
     });
     describe('isVec2InsidePolygon', () => {
         describe('corner cases', () => {
-            describe('1. point is the same location as a vertex of hte polygon', () => {
+            describe('1. point is the same location as a vertex of the polygon', () => {
                 it('should return true because it is inside (this is up to my discretion if I want points on verticies to be determined as inside)', () => {
                     const p1 = { x: 0, y: 0 }
                     const p2 = { x: 1, y: 1 }
@@ -375,7 +415,7 @@ describe('testables', () => {
                     expect(actual).toEqual(expected);
                 });
             });
-            describe('4. point is on a horizontal edge of the polygon', () => {
+            describe.only('4. point is on a horizontal edge of the polygon', () => {
                 it('should return true because it is inside (this is up to my discretion if I want points on edges to be determined as inside)', () => {
                     const p1 = { x: 0, y: 0 }
                     const p2 = { x: 0, y: 2 }
@@ -408,7 +448,7 @@ describe('testables', () => {
 
             });
         });
-        describe('given the point lies directly on a line of the polygon', () => {
+        describe.only('given the point lies directly on a line of the polygon', () => {
             it('should return true', () => {
                 const p1 = { x: 0, y: 0 }
                 const p2 = { x: 0, y: 2 }
@@ -612,7 +652,6 @@ describe('mergeOverlappingPolygons', () => {
                 { x: 0, y: 1 },
                 p1,
             ]
-            console.log('actual', actual);
             expect(actual).toEqual(expected);
 
         });
@@ -627,7 +666,6 @@ describe('mergeOverlappingPolygons', () => {
                 p4b,
                 p1b,
             ]
-            console.log('actual', actual);
             expect(actual).toEqual(expected);
 
         });
@@ -719,7 +757,6 @@ describe('mergeOverlappingPolygons', () => {
             const polygonDiamond: Polygon = { points: pointsDiamond, inverted: false };
             //  They will intersect directly on p3/p1b, which means it will be in the merged poly twice
             const actual = mergeOverlappingPolygons([polygonA, polygonDiamond])[0].points
-            console.log('actual', actual)
             const expected = [p1, p2, p1b, p2b, p3b, p4b, p1b, p4];
             expect(actual).toEqual(expected);
 
@@ -744,10 +781,8 @@ describe('mergeOverlappingPolygons', () => {
             const actual = mergedPolygons[0].points;
             const expected = [
                 p1,
-                p1b,
                 p2b,
                 p3b,
-                p4b,
                 p4,
             ];
             expect(actual).toEqual(expected);
@@ -917,7 +952,6 @@ describe('mergeOverlappingPolygons', () => {
             const mergedPolygons = mergeOverlappingPolygons([polygonA, polygonB]);
             expect(mergedPolygons.length).toEqual(1);
             const actual = mergedPolygons[0].points;
-            console.log('actual', actual);
             const expected = [
                 p1,
                 p2,
@@ -1015,37 +1049,31 @@ describe('mergeOverlappingPolygons', () => {
 
         });
     });
-    // describe("generated tests", () => {
+    describe("generated tests from runtime issues", () => {
 
-    //     it.only('should reduce overlapping polys to a single poly', () => {
-    //         const poly1 = {
-    //             points: [
-    //                 { "x": 0, "y": 0 },
-    //                 { "x": 0, "y": 2 },
-    //                 { "x": 1, "y": 2 },
-    //                 { "x": 1, "y": 0 }
-    //             ], inverted: false
-    //         };
-    //         const poly2 = {
-    //             points: [
-    //                 { "x": 0, "y": 1 },
-    //                 { "x": 0, "y": 3 },
-    //                 { "x": 1, "y": 3 },
-    //                 { "x": 1, "y": 1 }
-    //             ], inverted: false
-    //         };
-    //         const mergedPolygons = mergeOverlappingPolygons([poly1, poly2]);
-    //         const actual = mergedPolygons.length;
-    //         console.log('mewrged', mergedPolygons[0].points, mergedPolygons[1].points);
-    //         const expected = 1;
-    //         expect(actual).toEqual(expected);
+        it('should reduce overlapping polys to a single poly', () => {
+            const poly1 = {
+                points: [
+                    { "x": 0, "y": 0 },
+                    { "x": 0, "y": 2 },
+                    { "x": 1, "y": 2 },
+                    { "x": 1, "y": 0 }
+                ], inverted: false
+            };
+            const poly2 = {
+                points: [
+                    { "x": 0, "y": 1 },
+                    { "x": 0, "y": 3 },
+                    { "x": 1, "y": 3 },
+                    { "x": 1, "y": 1 }
+                ], inverted: false
+            };
+            const mergedPolygons = mergeOverlappingPolygons([poly1, poly2]);
+            const actual = mergedPolygons.length;
+            const expected = 1;
+            expect(actual).toEqual(expected);
 
-    //     });
-    //     it.skip('should merge overlapping polys without producing an error', () => {
-    //         const polygons: Polygon[] = [{ "points": [{ "x": 399, "y": 109 }, { "x": 399, "y": 173 }, { "x": 463, "y": 173 }, { "x": 463, "y": 109 }], "inverted": false }, { "points": [{ "x": 667, "y": 357 }, { "x": 667, "y": 421 }, { "x": 731, "y": 421 }, { "x": 731, "y": 357 }], "inverted": false }, { "points": [{ "x": 598, "y": 82 }, { "x": 598, "y": 146 }, { "x": 662, "y": 146 }, { "x": 662, "y": 82 }], "inverted": false }, { "points": [{ "x": 721, "y": 42 }, { "x": 721, "y": 106 }, { "x": 785, "y": 106 }, { "x": 785, "y": 42 }], "inverted": false }, { "points": [{ "x": 385, "y": 434 }, { "x": 385, "y": 498 }, { "x": 449, "y": 498 }, { "x": 449, "y": 434 }], "inverted": false }, { "points": [{ "x": 543, "y": 194 }, { "x": 543, "y": 258 }, { "x": 607, "y": 258 }, { "x": 607, "y": 194 }], "inverted": false }, { "points": [{ "x": 713, "y": 124 }, { "x": 713, "y": 188 }, { "x": 777, "y": 188 }, { "x": 777, "y": 124 }], "inverted": false }, { "points": [{ "x": 568, "y": 61 }, { "x": 568, "y": 125 }, { "x": 632, "y": 125 }, { "x": 632, "y": 61 }], "inverted": false }, { "points": [{ "x": 108, "y": 73 }, { "x": 108, "y": 137 }, { "x": 172, "y": 137 }, { "x": 172, "y": 73 }], "inverted": false }, { "points": [{ "x": 196, "y": 239 }, { "x": 196, "y": 303 }, { "x": 260, "y": 303 }, { "x": 260, "y": 239 }], "inverted": false }, { "points": [{ "x": 0, "y": 0 }, { "x": 0, "y": 600 }, { "x": 800, "y": 600 }, { "x": 800, "y": 0 }], "inverted": true }]
-    //         const mergedPolygons = mergeOverlappingPolygons(polygons);
-    //         expect(mergedPolygons.length).toEqual("i don't know yet");
-    //     });
-    // });
+        });
+    });
 
 });
