@@ -215,7 +215,6 @@ describe('collisionMath', () => {
             },
         ].forEach(({ l1, l2, expected, description }) => {
             it(`should return ${expected} when lines are touching and collinear for "${description}"`, () => {
-                console.log(expected, 'description', description, ';', expected);
                 const actual = isCollinearAndOverlapping(l1, l2);
                 expect(actual).toEqual(expected);
             });
