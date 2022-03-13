@@ -32,6 +32,7 @@
     - Publish on Steamworks
     - Social Media stuff
 ## Backburner Tasks
+- Make tests ensure that all poly functions handle maleformed polys gracefully
 - Should I send a pie message everytime i need to end a players turn so we never end up with desynced turn state? rather than f3c23e59c99362c6fc9229cfc19499c3789439a6
 - Optional: (M) Interactive terrain (grass spreads fire, water can be frozen to walk on, boulders can be destroyed)
 - Potential bug: This may not be a bug once overworld is replaced with Cauldron but currently voteForLevel waits until all clients have voted to move on, however, if a client disconnects without voting, the other clients will be stuck until another client votes
