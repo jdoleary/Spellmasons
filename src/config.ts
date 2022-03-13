@@ -1,5 +1,5 @@
 export const PLAYER_BASE_HEALTH = 10;
-export const UNIT_BASE_MOVE_DISTANCE = 1200;
+export const UNIT_BASE_MOVE_DISTANCE = 120;
 export const UNIT_BASE_ATTACK_RANGE = 120;
 export const COLLISION_MESH_RADIUS = 32;
 export const LOB_PROJECTILE_SPEED = 600; // in millis
@@ -14,7 +14,7 @@ export const RESOLVE_DONE_MOVING_TIMEOUT_MS = 1000;
 // Note: UNIT_MOVE_SPEED cannot be less than
 // UNIT_STOP_MOVING_MARGIN or else it will assume
 // no movement has happend and invoke resolveDoneMoving
-export const UNIT_MOVE_SPEED = 40;
+export const UNIT_MOVE_SPEED = 4;
 // Stops units from moving when they are close enough
 export const UNIT_STOP_MOVING_MARGIN = 1;
 export const NON_HEAVY_UNIT_SCALE = 0.8;
@@ -22,8 +22,8 @@ export const MAP_WIDTH = 800;
 export const MAP_HEIGHT = 600;
 export const SECONDS_PER_TURN = 100;
 export const START_CARDS_COUNT = 60;
-export const NUM_PICKUPS_PER_LEVEL = 0;
-export const NUM_OBSTACLES_PER_LEVEL = 30;
+export const NUM_PICKUPS_PER_LEVEL = 2;
+export const NUM_OBSTACLES_PER_LEVEL = 10;
 export const MILLIS_PER_ANIMATION = 200;
 export const MILLIS_PER_SPELL_ANIMATION = 400;
 export const PERCENT_CHANCE_OF_HEAVY_UNIT = 10;
