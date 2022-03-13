@@ -3,9 +3,118 @@ import type { Vec2 } from "../Vec";
 import { testables, Branch, makePolygonIndexIterator, Polygon, expandPolygon, mergeOverlappingPolygons, polygonToPolygonLineSegments } from '../Polygon';
 import type { LineSegment } from "../collision/collisionMath";
 const { getLoopableIndex, isVec2InsidePolygon, findFirstPointNotInsideAnotherPoly, getNormalVectorOfLineSegment,
-    getClosestBranch, growOverlappingCollinearLinesInDirectionOfP2 } = testables;
+    getClosestBranch, growOverlappingCollinearLinesInDirectionOfP2, arePolygonsEquivalent } = testables;
 
 describe('testables', () => {
+    describe('arePolygonsEquivalent', () => {
+        it('should return false if polygons have different inverted flags', () => {
+            const poly1 = {
+                points: [
+                    { "x": 0, "y": 0 },
+                    { "x": 0, "y": 1 },
+                    { "x": 1, "y": 1 },
+                    { "x": 1, "y": 0 }
+                ], inverted: false
+            };
+            const poly2 = {
+                points: [
+                    { "x": 0, "y": 0 },
+                    { "x": 0, "y": 1 },
+                    { "x": 1, "y": 1 },
+                    { "x": 1, "y": 0 }
+                ], inverted: true
+            };
+            const actual = arePolygonsEquivalent(poly1, poly2);
+            const expected = false;
+            expect(actual).toEqual(expected);
+        });
+        it('should return false if polygons have different points', () => {
+            const poly1 = {
+                points: [
+                    { "x": 0, "y": 0 },
+                    { "x": 0, "y": 1 },
+                    { "x": 1, "y": 1 },
+                    { "x": 1, "y": 0 }
+                ], inverted: false
+            };
+            const poly2 = {
+                points: [
+                    { "x": 0, "y": 0 },
+                    { "x": 9990, "y": 1 },
+                    { "x": 1, "y": 1 },
+                    { "x": 1, "y": 0 }
+                ], inverted: false
+            };
+            const actual = arePolygonsEquivalent(poly1, poly2);
+            const expected = false;
+            expect(actual).toEqual(expected);
+        });
+        it('should return false if polygons have different number of points, even if it shares the same points until then', () => {
+            const poly1 = {
+                points: [
+                    { "x": 0, "y": 0 },
+                    { "x": 0, "y": 1 },
+                    { "x": 1, "y": 1 },
+                    { "x": 1, "y": 0 }
+                ], inverted: false
+            };
+            const poly2 = {
+                points: [
+                    { "x": 0, "y": 0 },
+                    { "x": 0, "y": 1 },
+                    { "x": 1, "y": 1 },
+                    { "x": 1, "y": 0 },
+                    { "x": 1, "y": -1 }
+                ], inverted: false
+            };
+            const actual = arePolygonsEquivalent(poly1, poly2);
+            const expected = false;
+            expect(actual).toEqual(expected);
+        });
+        it('should return true if polygons have the same points and same inverted status', () => {
+            const poly1 = {
+                points: [
+                    { "x": 0, "y": 0 },
+                    { "x": 0, "y": 1 },
+                    { "x": 1, "y": 1 },
+                    { "x": 1, "y": 0 }
+                ], inverted: false
+            };
+            const poly2 = {
+                points: [
+                    { "x": 0, "y": 0 },
+                    { "x": 0, "y": 1 },
+                    { "x": 1, "y": 1 },
+                    { "x": 1, "y": 0 },
+                ], inverted: false
+            };
+            const actual = arePolygonsEquivalent(poly1, poly2);
+            const expected = true;
+            expect(actual).toEqual(expected);
+        });
+        it('should return true if polygons have the same points and same inverted status even if points don\'t start at the same index so long as they are in the same order', () => {
+            const poly1 = {
+                points: [
+                    { "x": 0, "y": 0 },
+                    { "x": 0, "y": 1 },
+                    { "x": 1, "y": 1 },
+                    { "x": 1, "y": 0 }
+                ], inverted: false
+            };
+            const poly2 = {
+                points: [
+                    { "x": 0, "y": 1 },
+                    { "x": 1, "y": 1 },
+                    { "x": 1, "y": 0 },
+                    { "x": 0, "y": 0 },
+                ], inverted: false
+            };
+            const actual = arePolygonsEquivalent(poly1, poly2);
+            const expected = true;
+            expect(actual).toEqual(expected);
+        });
+
+    });
     describe('growOverlappingCollinearLinesInDirectionOfP2', () => {
         describe('should expand line\'s p2 to the farthest point of overlapping collinear lines', () => {
             [
@@ -936,11 +1045,11 @@ describe('mergeOverlappingPolygons', () => {
             expect(mergedPolygons.length).toEqual(1);
             const actual = mergedPolygons[0].points;
             const expected = [
+                p5,
                 p1,
                 p2,
                 p3,
                 p4,
-                p5
             ];
             expect(actual).toEqual(expected);
         });
@@ -1032,6 +1141,54 @@ describe('mergeOverlappingPolygons', () => {
 
         });
     });
+    it('should properly merge 3 polys when one of them has all of it\'s verts within the other two but it\'s walls will still affect the final merged polygon', () => {
+        const polyBridge = {
+            points: [
+                { "x": 0, "y": 0 },
+                { "x": 0, "y": 3 },
+                { "x": 3, "y": 3 },
+                { "x": 3, "y": 0 }
+            ], inverted: false
+        };
+        // Covers polyBridge's top 2 points
+        const polyTop = {
+            points: [
+                { "x": -1, "y": 2 },
+                { "x": -1, "y": 4 },
+                { "x": 4, "y": 4 },
+                { "x": 4, "y": 2 }
+            ], inverted: false
+        };
+        // Covers polyBridge's bottom 2 points
+        const polyBottom = {
+            points: [
+                { "x": -1, "y": -1 },
+                { "x": -1, "y": 1 },
+                { "x": 4, "y": 1 },
+                { "x": 4, "y": -1 }
+            ], inverted: false
+        };
+
+        const mergedPolygons = mergeOverlappingPolygons([polyBridge, polyTop, polyBottom]);
+        const actual = mergedPolygons[0].points;
+        const expected = [
+            polyTop.points[0],
+            polyTop.points[1],
+            polyTop.points[2],
+            polyTop.points[3],
+            { x: 3, y: 2 },
+            { x: 3, y: 1 },
+            polyBottom.points[2],
+            polyBottom.points[3],
+            polyBottom.points[0],
+            polyBottom.points[1],
+            { x: 0, y: 1 },
+            { x: 0, y: 2 },
+
+        ];
+        expect(actual).toEqual(expected);
+
+    });
     describe("generated tests from runtime issues", () => {
 
         it('should reduce overlapping polys to a single poly', () => {
@@ -1057,100 +1214,100 @@ describe('mergeOverlappingPolygons', () => {
             expect(actual).toEqual(expected);
 
         });
-        it.only('issue with inverted?', () => {
-            const polygons: Polygon[] = [
-                {
-                    "points": [
-                        {
-                            "x": 380,
-                            "y": 516
-                        },
-                        {
-                            "x": 380,
-                            "y": 580
-                        },
-                        {
-                            "x": 444,
-                            "y": 580
-                        },
-                        {
-                            "x": 444,
-                            "y": 516
-                        }
-                    ],
-                    "inverted": false
-                },
-                {
-                    "points": [
-                        {
-                            "x": 446,
-                            "y": 442
-                        },
-                        {
-                            "x": 446,
-                            "y": 506
-                        },
-                        {
-                            "x": 510,
-                            "y": 506
-                        },
-                        {
-                            "x": 510,
-                            "y": 442
-                        }
-                    ],
-                    "inverted": false
-                },
-                {
-                    "points": [
-                        {
-                            "x": 336,
-                            "y": 440
-                        },
-                        {
-                            "x": 336,
-                            "y": 504
-                        },
-                        {
-                            "x": 400,
-                            "y": 504
-                        },
-                        {
-                            "x": 400,
-                            "y": 440
-                        }
-                    ],
-                    "inverted": false
-                },
-                {
-                    "points": [
-                        {
-                            "x": 0,
-                            "y": 0
-                        },
-                        {
-                            "x": 0,
-                            "y": 600
-                        },
-                        {
-                            "x": 800,
-                            "y": 600
-                        },
-                        {
-                            "x": 800,
-                            "y": 0
-                        }
-                    ],
-                    "inverted": true
-                }
-            ];
-            const mergedPolygons = mergeOverlappingPolygons(polygons.map(p => expandPolygon(p, 32)));
-            const actual = mergedPolygons.length;
-            console.log('actual', mergedPolygons);
-            const expected = 1;
-            expect(actual).toEqual(expected);
+        // it.only('issue with inverted?', () => {
+        //     const polygons: Polygon[] = [
+        //         {
+        //             "points": [
+        //                 {
+        //                     "x": 380,
+        //                     "y": 516
+        //                 },
+        //                 {
+        //                     "x": 380,
+        //                     "y": 580
+        //                 },
+        //                 {
+        //                     "x": 444,
+        //                     "y": 580
+        //                 },
+        //                 {
+        //                     "x": 444,
+        //                     "y": 516
+        //                 }
+        //             ],
+        //             "inverted": false
+        //         },
+        //         {
+        //             "points": [
+        //                 {
+        //                     "x": 446,
+        //                     "y": 442
+        //                 },
+        //                 {
+        //                     "x": 446,
+        //                     "y": 506
+        //                 },
+        //                 {
+        //                     "x": 510,
+        //                     "y": 506
+        //                 },
+        //                 {
+        //                     "x": 510,
+        //                     "y": 442
+        //                 }
+        //             ],
+        //             "inverted": false
+        //         },
+        //         {
+        //             "points": [
+        //                 {
+        //                     "x": 336,
+        //                     "y": 440
+        //                 },
+        //                 {
+        //                     "x": 336,
+        //                     "y": 504
+        //                 },
+        //                 {
+        //                     "x": 400,
+        //                     "y": 504
+        //                 },
+        //                 {
+        //                     "x": 400,
+        //                     "y": 440
+        //                 }
+        //             ],
+        //             "inverted": false
+        //         },
+        //         {
+        //             "points": [
+        //                 {
+        //                     "x": 0,
+        //                     "y": 0
+        //                 },
+        //                 {
+        //                     "x": 0,
+        //                     "y": 600
+        //                 },
+        //                 {
+        //                     "x": 800,
+        //                     "y": 600
+        //                 },
+        //                 {
+        //                     "x": 800,
+        //                     "y": 0
+        //                 }
+        //             ],
+        //             "inverted": true
+        //         }
+        //     ];
+        //     const mergedPolygons = mergeOverlappingPolygons(polygons.map(p => expandPolygon(p, 32)));
+        //     const actual = mergedPolygons.length;
+        //     console.log('actual', mergedPolygons);
+        //     const expected = 1;
+        //     expect(actual).toEqual(expected);
 
-        });
+        // });
     });
 
 });

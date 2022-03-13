@@ -187,6 +187,26 @@ export function expandPolygon(polygon: Polygon, magnitude: number): Polygon {
     }
 }
 
+function arePolygonsEquivalent(p1: Polygon, p2: Polygon): boolean {
+    if (p1.inverted != p2.inverted) {
+        return false;
+    }
+    if (p1.points.length != p2.points.length) {
+        return false;
+    }
+    const otherPolyIterator = getPointsFromPolygonStartingAt(p2, p1.points[0]);
+    const otherPolyPointsOrderedAsP1Points = Array.from(otherPolyIterator);
+    if (otherPolyIterator.length == 0) {
+        return false;
+    }
+    for (let i = 0; i < p1.points.length; i++) {
+        if (!Vec.equal(p1.points[i], otherPolyPointsOrderedAsP1Points[i])) {
+            return false;
+        }
+    }
+    return true;
+}
+
 // Returns a normal vector of a line segment, assuming
 // that the p1 is the previous point and p2 is the next point (this
 // is relevant when dealing with polygons)
@@ -323,29 +343,25 @@ function findFirstPointNotInsideAnotherPoly(polygon: Polygon, polygons: Polygon[
 // When found, set the intersection to "current" and that lineSegment's "next" point to next and start
 // the process over.  When an intersection is equal to the original current point, the polygon is complete.
 export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
+    // Remove fully identical polygons or else 2 identical polygons not touching any others
+    // will cancel each other out because there will be no start point to begin processing.
+    for (let i = polygons.length - 1; i >= 0; i--) {
+        const polygon = polygons[i];
+        for (let otherPoly of polygons) {
+            // Don't test against self
+            if (polygon == otherPoly) {
+                continue;
+            }
+            if (arePolygonsEquivalent(polygon, otherPoly)) {
+                polygons.splice(i, 1);
+                break;
+            }
+
+        }
+    }
+
     // Convert all polygons into polygon line segments for processing:
     const polygonLineSegments = polygons.map(polygonToPolygonLineSegments).flat();
-
-    // Remove all polygons that have NO points outside of all other polygons
-    // Note: it is critical that polygonLineSegments recieves it's value BEFORE
-    // any polygons are removed because even polygons that shouldn't be processed
-    // as origin polys (because each of their verticies are inside other polys)
-    // may still have edges (walls) that should be considered. To understand this
-    // situation imagine one box with two horizontal rectangles, one rec covering its
-    // top two verts and the other covering the bottom two.  This box shouldn't be
-    // processed but it's walls should still be considered as it will ensure that
-    // all 3 are merged.
-
-    // let flagForRemoval: Polygon[] = [];
-    // for (let polygon of polygons) {
-    //     let firstPoint = findFirstPointNotInsideAnotherPoly(polygon, polygons.filter(p => !flagForRemoval.includes(p)));
-    //     if (!firstPoint) {
-    //         flagForRemoval.push(polygon);
-    //     }
-    // }
-    // polygons = polygons.filter(p => {
-    //     return !flagForRemoval.includes(p);
-    // });
 
     // resultPolys stores the merged polygons:
     const resultPolys: Polygon[] = [];
@@ -447,5 +463,6 @@ export const testables = {
     findFirstPointNotInsideAnotherPoly,
     getNormalVectorOfLineSegment,
     getClosestBranch,
-    growOverlappingCollinearLinesInDirectionOfP2
+    growOverlappingCollinearLinesInDirectionOfP2,
+    arePolygonsEquivalent
 }
