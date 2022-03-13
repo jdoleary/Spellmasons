@@ -6,6 +6,7 @@ import { CardType, cardTypeToProbability } from './cardUtils';
 
 const id = 'mana_steal';
 const mana_stolen = 8;
+const health_burn = Math.max(mana_stolen / 10, 1)
 const type = CardType.Special;
 const spell: Spell = {
   card: {
@@ -14,7 +15,7 @@ const spell: Spell = {
     probability: cardTypeToProbability(type),
     thumbnail: 'mana_steal.png',
     description: `
-Sacrifice ${mana_stolen} of your own health to steal ${mana_stolen} from each target.
+Sacrifice ${health_burn} of your own health to steal ${mana_stolen} from each target.
     `,
     effect: async (state, dryRun) => {
       if (dryRun) {
@@ -22,7 +23,7 @@ Sacrifice ${mana_stolen} of your own health to steal ${mana_stolen} from each ta
       }
       const caster = state.casterUnit;
       // Take damage for to cast the steal
-      let promises = [Unit.takeDamage(caster, mana_stolen)];
+      let promises = [Unit.takeDamage(caster, health_burn)];
       for (let target of state.targets) {
         const unit = window.underworld.getUnitAt(target);
         if (unit) {
