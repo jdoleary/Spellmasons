@@ -13,6 +13,7 @@ import { distance } from '../math';
 import { View } from '../views';
 import { calculateManaCost } from '../cards/cardUtils';
 import * as math from '../math';
+import { findPath } from '../Pathfinding';
 
 export function keydownListener(event: KeyboardEvent) {
   // Only handle hotkeys when viewing the Game
@@ -103,13 +104,16 @@ export function mousemoveHandler(e: MouseEvent) {
     // window.underworld.debugGraphics.lineStyle(3, 0xaa00bb, 1);
     const mouseTarget = window.underworld.getMousePos();
     (document.getElementById('debug-info') as HTMLElement).innerText = `x:${Math.round(mouseTarget.x)}, y:${Math.round(mouseTarget.y)}`;
-    // const path = findPath(window.player.unit, mouseTarget, window.underworld.pathingWalls);
-    // window.underworld.debugGraphics.moveTo(path[0].x, path[0].y);
-    // Draw the path
-    // for (let point of path) {
-    //   window.underworld.debugGraphics.drawCircle(point.x, point.y, 4);
-    //   window.underworld.debugGraphics.lineTo(point.x, point.y);
-    // }
+    const path = findPath(window.player.unit, mouseTarget, window.underworld.pathingWalls);
+    if (path.length) {
+      window.underworld.debugGraphics.lineStyle(3, 0xffffff, 1.0);
+      window.underworld.debugGraphics.moveTo(path[0].x, path[0].y);
+      // Draw the path
+      for (let point of path) {
+        window.underworld.debugGraphics.drawCircle(point.x, point.y, 4);
+        window.underworld.debugGraphics.lineTo(point.x, point.y);
+      }
+    }
     // Draw the pathing walls
     window.underworld.debugGraphics.lineStyle(3, 0x00aabb, 0.3);
     for (let lineSegment of window.underworld.pathingWalls) {
