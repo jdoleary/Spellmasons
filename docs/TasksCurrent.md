@@ -1,6 +1,8 @@
 ## Current Priorities
 
-- When a poly is inverted, the findPath misses the first point
+- Limit pathfinding movement by distance traveled
+- Handle invalid paths so unit x,y doesn't get set to NaN.
+- Shift path when collision occurs so we don't get units orbiting each other?
 
 - red flash of damage taken doesn't last.
 - ownCharacterMarker disappears after movement? or after sync?
