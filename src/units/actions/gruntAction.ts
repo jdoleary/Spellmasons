@@ -17,11 +17,7 @@ export async function action(unit: Unit.IUnit) {
     unit.image.sprite.scale.x = -Math.abs(unit.image.sprite.scale.x);
   }
   // Movement
-  // ---
-  // Prevent unit from moving inside of target closestEnemy
-  const moveDist = Math.min(math.distance(unit, closestEnemy) - COLLISION_MESH_RADIUS * 2, unit.moveDistance)
-  const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestEnemy, moveDist);
-  await Unit.moveTowards(unit, moveTo);
+  await Unit.moveTowards(unit, closestEnemy);
 
   // Attack closest enemy
   if (canInteractWithTarget(unit, closestEnemy.x, closestEnemy.y)) {
