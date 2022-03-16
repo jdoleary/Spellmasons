@@ -8,6 +8,7 @@ import type { Vec2 } from './Vec';
 import Events from './Events';
 import makeAllRedShader from './shaders/selected';
 import { addLerpable } from './lerpList';
+import { findPath } from './Pathfinding';
 const elHealthBar: HTMLElement = document.querySelector('#health .fill') as HTMLElement;
 const elHealthLabel: HTMLElement = document.querySelector('#health .label') as HTMLElement;
 const elManaBar: HTMLElement = document.querySelector('#mana .fill:nth-child(1)') as HTMLElement;
@@ -38,7 +39,7 @@ export interface IUnit {
   // identical)
   lastX: number;
   lastY: number;
-  moveTarget?: Vec2;
+  path: Vec2[];
   moveSpeed: number;
   // A resolve callback for when a unit is done moving
   resolveDoneMoving: () => void;
@@ -93,7 +94,7 @@ export function create(
     lastX: x,
     lastY: y,
     radius: UNIT_BASE_RADIUS,
-    moveTarget: undefined,
+    path: [],
     moveSpeed: config.UNIT_MOVE_SPEED,
     resolveDoneMoving: () => { },
     resolveDoneMovingTimeout: undefined,
@@ -374,7 +375,8 @@ export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
     }
   }
   unit.thisTurnMoved = true;
-  unit.moveTarget = coordinates
+  // Set path which will be used in the game loop to actually move the unit
+  unit.path = findPath(unit, target, window.underworld.pathingWalls);
   return new Promise((resolve) => {
     // Clear previous timeout
     if (unit.resolveDoneMovingTimeout !== undefined) {
@@ -392,7 +394,7 @@ export function setLocation(unit: IUnit, coordinates: Vec2): Promise<void> {
   // Set state instantly to new position
   unit.x = coordinates.x;
   unit.y = coordinates.y;
-  unit.moveTarget = undefined;
+  unit.path = [];
   // Animate movement visually
   return Image.move(unit.image, unit.x, unit.y);
 }
