@@ -1,10 +1,10 @@
-# Critical Path (2nd revision)
-- March 3 - March 5: Pathfinding (this is core to difficulty so you cant hide and get mana)
+# Critical Path (3nd revision)
+- March 16: Pathfinding (this is core to difficulty so you cant hide and get mana)
 - Anytime: Playtest with Brad and Jake
-- March 6: Youtube Alpha version video / Setup Social Media system
-- March 7 - March 11: Finish Content / Endgame
-- March 14, March 15: Improve spell animations so it's obvious what's happening. (Add juice)
-- March 16: Revisit SYNCing.  Make it happen on a regular interval to protect against desyncs
+- March 17: Youtube Alpha version video / Setup Social Media system
+- March 18, March 19: Improve spell animations so it's obvious what's happening. (Add juice)
+- March 26: Finish Content / Endgame
+- March 27: Revisit SYNCing.  Make it happen on a regular interval to protect against desyncs
 - Menus / Options
 - Electron Security Evaluation
 - Art in Blender / Shaders / Juice
@@ -17,9 +17,11 @@
     - Update game tags (is card game still appropriate?)
 
 ## Deadlines
-- My part (gameplay) should be finished end of Feb 2022
-- Entire game should be ready to ship end of March 2022
-    - Keeping to a hard deadline will ensure that I iterate and keep making more games and improving
+- ~~My part (gameplay) should be finished end of Feb 2022~~
+- ~~Entire game should be ready to ship end of March 2022~~
+- My part (gameplay) should be finished end of March 2022
+- Entire game should be ready to ship end of April 2022
+- Keeping to a hard deadline will ensure that I iterate and keep making more games and improving
 ## Thoughts
 Don't get stuck on feature creep.  Finish the game and get it out so you can move on
 

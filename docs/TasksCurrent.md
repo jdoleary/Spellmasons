@@ -1,6 +1,9 @@
 ## Current Priorities
 
+- When a poly is inverted, the findPath misses the first point
 
+- red flash of damage taken doesn't last.
+- ownCharacterMarker disappears after movement? or after sync?
 - Setup Buffer with social medias and start a following
 ---
 Finish Content:
