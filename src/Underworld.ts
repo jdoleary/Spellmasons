@@ -833,6 +833,12 @@ export default class Underworld {
         animationPromises.push(Promise.all([animations]).then(() => { }));
         const { targets: previousTargets } = effectState;
         effectState = await card.effect(effectState, dryRun, index);
+        // Delay animation between spells so players can understand what's going on
+        if (!dryRun) {
+          await new Promise<void>((resolve) => {
+            setTimeout(resolve, config.MILLIS_PER_SPELL_ANIMATION);
+          })
+        }
         // Clear images from previous card before drawing the images from the new card
         containerSpells.removeChildren();
         // Animate target additions:
