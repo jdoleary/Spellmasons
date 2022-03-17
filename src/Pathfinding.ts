@@ -1,6 +1,6 @@
 import { LineSegment, lineSegmentIntersection } from "./collision/collisionMath";
 import { distance } from "./math";
-import { getPointsFromPolygonStartingAt, isPointInPolygon, Polygon, PolygonLineSegment } from "./Polygon";
+import { getPointsFromPolygonStartingAt, doesVertexBelongToPolygon, Polygon, PolygonLineSegment } from "./Polygon";
 import type { Vec2 } from './Vec';
 import * as Vec from './Vec';
 
@@ -65,7 +65,7 @@ function tryPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCo
             // If it does
             if (intersectingWall) {
                 // and the wall belongs to the current poly
-                if (isPointInPolygon(vertex, intersectingWall.polygon) && isPointInPolygon(intersectingWall.p1, intersectingWall.polygon)) {
+                if (doesVertexBelongToPolygon(vertex, intersectingWall.polygon) && doesVertexBelongToPolygon(intersectingWall.p1, intersectingWall.polygon)) {
                     // Continue to check the next or previous (depending on direction) vertex for this poly
                     // we need to keep walking around it to continue the path
                     continue;

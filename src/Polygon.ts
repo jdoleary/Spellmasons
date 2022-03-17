@@ -206,7 +206,7 @@ function arePolygonsEquivalent(p1: Polygon, p2: Polygon): boolean {
     }
     return true;
 }
-export function isPointInPolygon(p: Vec2, poly: Polygon): boolean {
+export function doesVertexBelongToPolygon(p: Vec2, poly: Polygon): boolean {
     return !!poly.points.find(x => Vec.equal(x, p));
 }
 
