@@ -1,5 +1,4 @@
 # Critical Path (3nd revision)
-- March 18, March 19: Improve spell animations so it's obvious what's happening. (Add juice)
 - Anytime: Playtest with Brad and Jake
 - March 17: Youtube Alpha version video / Setup Social Media system
 - March 26: Finish Content / Endgame
@@ -9,7 +8,8 @@
     - Maybe don't use electron, maybe just publish as a website??  Could I link to the site in places like itch.io??
 - Art in Blender / Shaders / Juice
 - Music
-- SFX
+- [SFX](https://www.asoundeffect.com/sound-library/metamorphosis/)
+    - Adobe? https://www.adobe.com/products/audition/offers/AdobeAuditionDLCSFX.html
 - [Tutorial](https://www.youtube.com/watch?v=-GV814cWiAw)
 - Monitoring (Sentry.io?)
 - Publicity: https://buffer.com/pricing?cta=bufferSite-homepage-hero-selectAPlan-1#compare      
