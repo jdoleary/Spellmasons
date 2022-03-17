@@ -1,8 +1,7 @@
 # Critical Path (3nd revision)
-- March 16: Pathfinding (this is core to difficulty so you cant hide and get mana)
+- March 18, March 19: Improve spell animations so it's obvious what's happening. (Add juice)
 - Anytime: Playtest with Brad and Jake
 - March 17: Youtube Alpha version video / Setup Social Media system
-- March 18, March 19: Improve spell animations so it's obvious what's happening. (Add juice)
 - March 26: Finish Content / Endgame
 - March 27: Revisit SYNCing.  Make it happen on a regular interval to protect against desyncs
 - Menus / Options

@@ -1,3 +1,4 @@
+- Does pathing information persist after save/load?
 - Potential problem where I killed snowpack and left 2 tabs open (and left wsPie open) and my browser was really struggling to load homedepot.com
 - Mana steal shows that it costs 20 mana when it should be free
 - Rachels screen was too small and the cards overlapped the grid
