@@ -11,7 +11,7 @@ export interface Polygon {
 }
 // Allows accessing an array without going out of bounds.  So getBoundedIndex(array.length+1)
 // will be index of 1 instead of beyond the limit of the array
-function getLoopableIndex(index: number, array: any[]) {
+export function getLoopableIndex(index: number, array: any[]) {
     let adjusted = index % array.length;
     if (adjusted < 0) {
         adjusted = array.length + adjusted;
