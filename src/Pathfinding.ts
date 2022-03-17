@@ -132,10 +132,6 @@ function tryPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCo
             // This point will be readded to the path after the intermediate points are added:
             const target = path.points.splice(-1)[0]
             if (closestIntersection) {
-                window.underworld.debugGraphics.lineStyle(1, 0xff00ff, 1);
-                window.underworld.debugGraphics.drawCircle(closestIntersection.x, closestIntersection.y, 4);
-                // LEFT OFF, added intersection point to resolve clipping through polys from origin to corner
-                // when the origin to intersection doesn't cause another intersection but origint to corner does.
                 path.points.push(closestIntersection);
             }
             let { next, prev } = polygonLineSegmentToPrevAndNext(intersectingWall);
@@ -207,20 +203,20 @@ function tryPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCo
         }
 
     }
-    console.log('found valid paths paths', paths, 'done', paths.filter(p => p.done).length);
-    // Debug: Draw the paths:
-    for (let i = 0; i < paths.length; i++) {
-        const path = paths[i];
-        if (path.invalid) {
-            window.underworld.debugGraphics.lineStyle(4, 0xff0000, 0.3);
-        } else {
-            window.underworld.debugGraphics.lineStyle(4, 0x00ff00, 0.3);
-        }
-        window.underworld.debugGraphics.moveTo(path.points[0].x, path.points[0].y);
-        for (let point of path.points) {
-            window.underworld.debugGraphics.lineTo(point.x, point.y);
-        }
-    }
+    // console.log('found valid paths paths', paths, 'done', paths.filter(p => p.done).length);
+    // // Debug: Draw the paths:
+    // for (let i = 0; i < paths.length; i++) {
+    //     const path = paths[i];
+    //     if (path.invalid) {
+    //         window.underworld.debugGraphics.lineStyle(4, 0xff0000, 0.3);
+    //     } else {
+    //         window.underworld.debugGraphics.lineStyle(4, 0x00ff00, 0.3);
+    //     }
+    //     window.underworld.debugGraphics.moveTo(path.points[0].x, path.points[0].y);
+    //     for (let point of path.points) {
+    //         window.underworld.debugGraphics.lineTo(point.x, point.y);
+    //     }
+    // }
     // Remove invalid paths
     paths = paths.filter(p => !p.invalid);
     return paths.reduce<Path | undefined>((shortest, contender) => {

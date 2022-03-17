@@ -245,7 +245,6 @@ export default class Underworld {
 
     // Save the pathing walls for the underworld
     const expandedAndMergedPolygons = mergeOverlappingPolygons(collidablePolygons.map(p => expandPolygon(p, config.COLLISION_MESH_RADIUS)));
-    console.log('Number of polys', expandedAndMergedPolygons.length, expandedAndMergedPolygons)
     this.pathingWalls = expandedAndMergedPolygons.map(polygonToPolygonLineSegments).flat();
   }
 
@@ -653,6 +652,8 @@ export default class Underworld {
     return { x, y };
   }
   setTurnPhase(p: turn_phase) {
+    // Clear debug graphics
+    window.underworld.debugGraphics.clear()
     // Before the turn phase changes, check if the game should transition to game over
     if (this.checkForGameOver()) {
       return;
