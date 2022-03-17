@@ -36,5 +36,7 @@ declare global {
     view: View;
     // For development use
     giveMeCard: (cardId: string, quantity: number) => void;
+    // Set to true in developer console to see debug information
+    showDebug: boolean;
   }
 }
