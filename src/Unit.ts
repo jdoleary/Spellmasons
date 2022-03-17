@@ -376,7 +376,7 @@ export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
   }
   unit.thisTurnMoved = true;
   // Set path which will be used in the game loop to actually move the unit
-  unit.path = findPath(unit, target, window.underworld.pathingWalls);
+  unit.path = findPath(unit, target, window.underworld.pathingPolygons);
   return new Promise((resolve) => {
     // Clear previous timeout
     if (unit.resolveDoneMovingTimeout !== undefined) {

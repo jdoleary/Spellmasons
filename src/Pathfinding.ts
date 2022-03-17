@@ -1,6 +1,6 @@
 import { LineSegment, lineSegmentIntersection } from "./collision/collisionMath";
 import { distance } from "./math";
-import { getPointsFromPolygonStartingAt, doesVertexBelongToPolygon, Polygon, PolygonLineSegment } from "./Polygon";
+import { getPointsFromPolygonStartingAt, doesVertexBelongToPolygon, Polygon, PolygonLineSegment, polygonToPolygonLineSegments, isVec2InsidePolygon } from "./Polygon";
 import type { Vec2 } from './Vec';
 import * as Vec from './Vec';
 
@@ -14,7 +14,8 @@ interface Path {
     distance: number;
 }
 
-export function findPath(startPoint: Vec2, target: Vec2, pathingWalls: PolygonLineSegment[]): Vec2[] {
+export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): Vec2[] {
+    const pathingWalls = polygons.map(polygonToPolygonLineSegments).flat();
     const paths: Path[] = [
         // Start with the first idea path from start to target
         // Note, the distance is calculated inside of tryPaths even if 
@@ -29,6 +30,12 @@ export function findPath(startPoint: Vec2, target: Vec2, pathingWalls: PolygonLi
         window.underworld.debugGraphics.moveTo(shortestPath.points[0].x, shortestPath.points[0].y);
         for (let point of shortestPath.points) {
             window.underworld.debugGraphics.lineTo(point.x, point.y);
+        }
+        // Remove the start point, since the unit doing the pathing is already at the start point:
+        shortestPath.points.shift();
+        // IF the last point is inside of a polygon remove it, and so the unit pathing will move as close as they can
+        if (polygons.some(p => isVec2InsidePolygon(shortestPath.points[shortestPath.points.length - 1], p))) {
+            shortestPath.points.pop();
         }
     }
     return shortestPath ? shortestPath.points : [];

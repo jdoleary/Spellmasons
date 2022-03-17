@@ -70,9 +70,7 @@ export default class Underworld {
   pickups: Pickup.IPickup[] = [];
   obstacles: Obstacle.IObstacle[] = [];
   walls: LineSegment[] = [];
-  // pathingWalls are build using walls but are modified to be grown, so that units with thickness
-  // don't clip through walls as they path.  See this.cacheWalls for more
-  pathingWalls: PolygonLineSegment[] = [];
+  pathingPolygons: Polygon[] = [];
   secondsLeftForTurn: number = config.SECONDS_PER_TURN;
   turnInterval: any;
   level?: ILevel;
@@ -245,7 +243,7 @@ export default class Underworld {
 
     // Save the pathing walls for the underworld
     const expandedAndMergedPolygons = mergeOverlappingPolygons(collidablePolygons.map(p => expandPolygon(p, config.COLLISION_MESH_RADIUS)));
-    this.pathingWalls = expandedAndMergedPolygons.map(polygonToPolygonLineSegments).flat();
+    this.pathingPolygons = expandedAndMergedPolygons
   }
 
   initLevel(level: ILevel) {

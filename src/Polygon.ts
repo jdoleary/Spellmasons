@@ -253,7 +253,7 @@ function projectPointAlongNormalVector(polygon: Polygon, pointIndex: number, mag
 
 // Note: There is a slight flaw in this algorithm in that if the point lies
 // directly on a line of the poly on the left side, it will yield a false negative
-function isVec2InsidePolygon(point: Vec2, polygon: Polygon): boolean {
+export function isVec2InsidePolygon(point: Vec2, polygon: Polygon): boolean {
     // From geeksforgeeks.com: 
     // 1) Draw a horizontal line to the right of each point and extend it to infinity 
     // 2) Count the number of times the line intersects with polygon edges. 
