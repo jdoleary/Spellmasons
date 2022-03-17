@@ -11,12 +11,7 @@ export const UNIT_BASE_DAMAGE = 1;
 // This ensures that the game doesn't get stuck if, say, the collision system bugs
 // out and a unit never comes to rest
 export const RESOLVE_DONE_MOVING_TIMEOUT_MS = 1000;
-// Note: UNIT_MOVE_SPEED cannot be less than
-// UNIT_STOP_MOVING_MARGIN or else it will assume
-// no movement has happend and invoke resolveDoneMoving
 export const UNIT_MOVE_SPEED = 4;
-// Stops units from moving when they are close enough
-export const UNIT_STOP_MOVING_MARGIN = 1;
 export const NON_HEAVY_UNIT_SCALE = 0.8;
 export const MAP_WIDTH = 800;
 export const MAP_HEIGHT = 600;

@@ -47,6 +47,8 @@ export interface IUnit {
   resolveDoneMovingTimeout?: number;
   radius: number;
   moveDistance: number;
+  // A counter to keep track of how far a unit has moved this turn
+  distanceMovedThisTurn: number;
   attackRange: number;
   name?: string;
   faction: number;
@@ -100,6 +102,7 @@ export function create(
     resolveDoneMoving: () => { },
     resolveDoneMovingTimeout: undefined,
     moveDistance: config.UNIT_BASE_MOVE_DISTANCE,
+    distanceMovedThisTurn: 0,
     attackRange: config.UNIT_BASE_ATTACK_RANGE,
     faction,
     thisTurnMoved: false,

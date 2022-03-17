@@ -154,22 +154,29 @@ export default class Underworld {
       if (u.path && u.path.length) {
         // Move towards target
         const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.path[0], u.moveSpeed)
-        if (Vec.equal(stepTowardsTarget, u.path[0])) {
+        const moveDist = math.distance(u, stepTowardsTarget);
+        u.x = stepTowardsTarget.x;
+        u.y = stepTowardsTarget.y;
+        u.distanceMovedThisTurn += moveDist;
+        if (Vec.equal(u, u.path[0])) {
           // Once the unit reaches the target, shift so the next point in the path is the next target
           u.path.shift();
         }
-        moveWithCollisions(u, stepTowardsTarget, aliveUnits, this.walls)
+        // Stop moving if you've moved as far as you can based on the move distance
+        if (u.distanceMovedThisTurn >= u.moveDistance) {
+          u.path = [];
+          // reset
+          u.distanceMovedThisTurn = 0;
+        }
         // check for collisions with pickups in new location
         this.checkPickupCollisions(u);
       }
       // Sync Image even for non moving units since they may be moved by forces other than themselves
       Unit.syncImage(u)
-      // UNIT_STOP_MOVING_MARGIN ensures that units wont continue to move imperceptibly while
-      // players wait for the seemingly non-moving unit's turn to end (which ends when it's done moving via resolveDoneMoving)
-      // --
-      // Also stops moving if path has a length of 0 in the event that some other code clears the path, we
-      // want to make sure this promise resolves so the game doesn't get stuck
-      if (u.path.length === 0 || Math.abs(u.x - u.lastX) < config.UNIT_STOP_MOVING_MARGIN && Math.abs(u.y - u.lastY) < config.UNIT_STOP_MOVING_MARGIN) {
+      // Ensure that resolveDoneMoving is invoked when there are no points left in the path
+      // This is necessary to end the moving units turn because elsewhere we are awaiting the fulfillment of that promise
+      // to know they are done moving
+      if (u.path.length === 0) {
         u.resolveDoneMoving();
       }
     }
