@@ -5,6 +5,7 @@ import { distance } from './math';
 import { addPixiSprite, containerUnits } from './PixiUtils';
 import { UnitSubType, UnitType, Faction } from './commonTypes';
 import type { Vec2 } from './Vec';
+import * as Vec from './Vec';
 import Events from './Events';
 import makeAllRedShader from './shaders/selected';
 import { addLerpable } from './lerpList';
@@ -376,7 +377,7 @@ export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
   }
   unit.thisTurnMoved = true;
   // Set path which will be used in the game loop to actually move the unit
-  unit.path = findPath(unit, target, window.underworld.pathingPolygons);
+  unit.path = findPath(unit, Vec.clone(target), window.underworld.pathingPolygons);
   return new Promise((resolve) => {
     // Clear previous timeout
     if (unit.resolveDoneMovingTimeout !== undefined) {
