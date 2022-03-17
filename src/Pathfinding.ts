@@ -123,15 +123,11 @@ function tryPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCo
             path.done = true;
             continue;
         }
+
         const nextStraightLine: LineSegment = getLastLineInPath(path);
 
-        // Debug draw nextStraightLine
-        // window.underworld.debugGraphics.lineStyle(3, 0x00ff00, 1);
-        // window.underworld.debugGraphics.moveTo(nextStraightLine.p1.x, nextStraightLine.p1.y);
-        // window.underworld.debugGraphics.lineTo(nextStraightLine.p2.x, nextStraightLine.p2.y);
-
         // Check for collisions between the last line in the path and pathing walls
-        let { intersectingWall, closestIntersection } = getClosestIntersectionWithWalls(nextStraightLine, pathingWalls);
+        let { intersectingWall, closestIntersection } = getClosestIntersectionWithWalls(nextStraightLine, pathingWalls, path.points.length == 2);
         // If there is an intersection between a straight line path and a pathing wall
         // we have to branch the path to the corners of the wall and try again
         if (intersectingWall) {
@@ -254,7 +250,15 @@ function getLastLineInPath(path: Path): LineSegment {
 }
 // Given an array of PolygonLineSegment[], of all the intersections between line and the walls,
 // find the closest intersection to line.p1
-function getClosestIntersectionWithWalls(line: LineSegment, walls: PolygonLineSegment[]): { intersectingWall?: PolygonLineSegment, closestIntersection?: Vec2 } {
+// --
+// Most of the time, we want to ignore if there is a collision at line.p1, because
+// any point on an edge of a poly will register as a collision with that poly even
+// if we are drawing the line AWAY from the poly.  However, there is one case when we
+// do want to allow the closestIntersection to be p1 and that is when we are starting
+// a new path because if the unit's start point is already on an edge of a poly, if we 
+// don't allow for collisions with line.p1, they will path right through the poly that
+// they are already on the edge of.
+function getClosestIntersectionWithWalls(line: LineSegment, walls: PolygonLineSegment[], includeStartPoint: boolean = false): { intersectingWall?: PolygonLineSegment, closestIntersection?: Vec2 } {
     let intersectingWall;
     let closestIntersection;
     let closestIntersectionDistance;
@@ -262,7 +266,7 @@ function getClosestIntersectionWithWalls(line: LineSegment, walls: PolygonLineSe
     for (let wall of walls) {
         const intersection = lineSegmentIntersection(line, wall);
         if (intersection) {
-            if (Vec.equal(line.p1, intersection)) {
+            if (!includeStartPoint && Vec.equal(line.p1, intersection)) {
                 // Exclude collisions at start point of line segment. Don't collide with self
                 continue;
             }
