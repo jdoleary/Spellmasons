@@ -6,6 +6,7 @@
 - March 27: Revisit SYNCing.  Make it happen on a regular interval to protect against desyncs
 - Menus / Options
 - Electron Security Evaluation
+    - Maybe don't use electron, maybe just publish as a website??  Could I link to the site in places like itch.io??
 - Art in Blender / Shaders / Juice
 - Music
 - SFX
