@@ -1,9 +1,11 @@
 ## Current Priorities
 - Fix turn taking / Pathfinding
-    - // TODO: Fix resolvedone moving so that it only resolved when the unit is FINISHED moving
-    - // TODO: Enforce max move distance (with pathing in mind)
+    - **bug** Units right on an edge may path through obstacles
+        - Handle start point that lies on edge of polygon
     - Handle invalid paths so unit x,y doesn't get set to NaN.
-    - Shift path when collision occurs so we don't get units orbiting each other?
+    - Resolve collisions?
+        - Prevent units from moving inside of each other without the orbiting effect if their target destination is inside of the other unit
+    - If you click to move inside of the expanded poly, it won't move you to that side of the obstacle (which isn't expanded, becuase it omits the last point that isn't in the poly)
 - Make what's happening more obvious
 
 - ownCharacterMarker disappears after movement? or after sync?
