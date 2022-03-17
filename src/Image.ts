@@ -62,6 +62,7 @@ export function cleanup(image: IImage) {
 // because it has built in protections for returning to the correct  
 // default sprite
 export function changeSprite(image: IImage, sprite: PIXI.Sprite) {
+  const filters = image.sprite.filters;
   sprite.x = image.sprite.x;
   sprite.y = image.sprite.y;
   sprite.scale.x = image.sprite.scale.x;
@@ -70,6 +71,8 @@ export function changeSprite(image: IImage, sprite: PIXI.Sprite) {
   sprite.anchor.y = image.sprite.anchor.y;
   cleanup(image);
   image.sprite = sprite;
+  // Keep filters from previous sprite
+  image.sprite.filters = filters;
   restoreSubsprites(image);
 }
 // Converts an Image entity into a serialized form

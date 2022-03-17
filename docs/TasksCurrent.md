@@ -4,7 +4,6 @@
 - Handle invalid paths so unit x,y doesn't get set to NaN.
 - Shift path when collision occurs so we don't get units orbiting each other?
 
-- red flash of damage taken doesn't last.
 - ownCharacterMarker disappears after movement? or after sync?
 - Setup Buffer with social medias and start a following
 ---
