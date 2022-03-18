@@ -78,7 +78,6 @@ export default class Underworld {
   // know when they've desynced.  Only used for syncronous message processing
   // since only the syncronous messages affect gamestate.
   processedMessageCount: number = 0;
-  debugGraphics: PIXI.Graphics;
 
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
     window.underworld = this;
@@ -92,10 +91,6 @@ export default class Underworld {
     mapGraphics.beginFill(0x795644, 1);
     mapGraphics.drawRect(0, 0, config.MAP_WIDTH, config.MAP_HEIGHT);
     mapGraphics.endFill();
-
-    this.debugGraphics = new PIXI.Graphics();
-    containerBoard.addChild(this.debugGraphics);
-
 
     // TODO: these probably shouldn't get initialized here
     this.startTurnTimer();
@@ -652,7 +647,7 @@ export default class Underworld {
   }
   setTurnPhase(p: turn_phase) {
     // Clear debug graphics
-    window.underworld.debugGraphics.clear()
+    window.debugGraphics.clear()
     // Before the turn phase changes, check if the game should transition to game over
     if (this.checkForGameOver()) {
       return;
@@ -951,7 +946,7 @@ export default class Underworld {
     Object.assign(this, serialized);
   }
   serializeForSyncronize(): IUnderworldSerializedForSyncronize {
-    const { debugGraphics, secondsLeftForTurn, players, units, pickups, obstacles, random, turnInterval, processedMessageCount, ...rest } = this;
+    const { secondsLeftForTurn, players, units, pickups, obstacles, random, turnInterval, processedMessageCount, ...rest } = this;
     const serialized: IUnderworldSerializedForSyncronize = {
       ...rest,
       // the state of the Random Number Generator

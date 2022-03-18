@@ -37,5 +37,9 @@ declare global {
     giveMeCard: (cardId: string, quantity: number) => void;
     // Set to true in developer console to see debug information
     showDebug: boolean;
+    // Graphics for drawing debug information, use window.showDebug = true
+    // to show at runtime
+    debugGraphics: PIXI.Graphics;
+
   }
 }

@@ -33,8 +33,8 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
         for (let wall of polygonToPolygonLineSegments(targetInsideOfPoly)) {
             const intersection = findWherePointIntersectLineSegmentAtRightAngle(target, wall);
             if (intersection) {
-                window.underworld.debugGraphics.lineStyle(3, 0xff0000, 1.0);
-                window.underworld.debugGraphics.drawCircle(intersection.x, intersection.y, 3);
+                window.debugGraphics.lineStyle(3, 0xff0000, 1.0);
+                window.debugGraphics.drawCircle(intersection.x, intersection.y, 3);
                 rightAngleIntersections.push(intersection);
             }
 
@@ -50,8 +50,8 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
                 }
 
             }, { intersection: rightAngleIntersections[0], dist: Number.MAX_SAFE_INTEGER })
-            window.underworld.debugGraphics.lineStyle(3, 0x0000ff, 1.0);
-            window.underworld.debugGraphics.drawCircle(closest.intersection.x, closest.intersection.y, 4);
+            window.debugGraphics.lineStyle(3, 0x0000ff, 1.0);
+            window.debugGraphics.drawCircle(closest.intersection.x, closest.intersection.y, 4);
             // Override target with a location that the unit can actually fit in:
             target = closest.intersection;
         } else {
@@ -66,8 +66,8 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
                 }
 
             }, { vertex: targetInsideOfPoly.points[0], dist: Number.MAX_SAFE_INTEGER }).vertex;
-            window.underworld.debugGraphics.lineStyle(3, 0x0000ff, 1.0);
-            window.underworld.debugGraphics.drawCircle(target.x, target.y, 4);
+            window.debugGraphics.lineStyle(3, 0x0000ff, 1.0);
+            window.debugGraphics.drawCircle(target.x, target.y, 4);
 
         }
     }
@@ -83,10 +83,10 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
     const shortestPath = tryPaths(paths, pathingWalls, 0);
     if (shortestPath) {
         // Debug: Draw path
-        window.underworld.debugGraphics.lineStyle(4, 0xffffff, 0.3);
-        window.underworld.debugGraphics.moveTo(shortestPath.points[0].x, shortestPath.points[0].y);
+        window.debugGraphics.lineStyle(4, 0xffffff, 0.3);
+        window.debugGraphics.moveTo(shortestPath.points[0].x, shortestPath.points[0].y);
         for (let point of shortestPath.points) {
-            window.underworld.debugGraphics.lineTo(point.x, point.y);
+            window.debugGraphics.lineTo(point.x, point.y);
         }
         // Remove the start point, since the unit doing the pathing is already at the start point:
         shortestPath.points.shift();
@@ -237,10 +237,10 @@ function tryPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCo
     //         for (let j = path.points.length - 1; j > i + 1; j--) {
     //             let { intersectingWall } = getClosestIntersectionWithWalls({ p1: path.points[i], p2: path.points[j] }, pathingWalls);
     //             if (!intersectingWall) {
-    //                 window.underworld.debugGraphics.lineStyle(1, 0xff0000, 1);
-    //                 window.underworld.debugGraphics.drawCircle(path.points[i].x, path.points[i].y, 4);
-    //                 window.underworld.debugGraphics.lineStyle(1, 0x0000ff, 1);
-    //                 window.underworld.debugGraphics.drawCircle(path.points[j].x, path.points[j].y, 4);
+    //                 window.debugGraphics.lineStyle(1, 0xff0000, 1);
+    //                 window.debugGraphics.drawCircle(path.points[i].x, path.points[i].y, 4);
+    //                 window.debugGraphics.lineStyle(1, 0x0000ff, 1);
+    //                 window.debugGraphics.drawCircle(path.points[j].x, path.points[j].y, 4);
     //                 console.log('remove', i, ' to', j, 'from', path.points.length);
     //                 path.points = removeBetweenIndexAtoB(path.points, i, j);
     //                 return false
@@ -272,13 +272,13 @@ function tryPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCo
     // for (let i = 0; i < paths.length; i++) {
     //     const path = paths[i];
     //     if (path.invalid) {
-    //         window.underworld.debugGraphics.lineStyle(4, 0xff0000, 0.3);
+    //         window.debugGraphics.lineStyle(4, 0xff0000, 0.3);
     //     } else {
-    //         window.underworld.debugGraphics.lineStyle(4, 0x00ff00, 0.3);
+    //         window.debugGraphics.lineStyle(4, 0x00ff00, 0.3);
     //     }
-    //     window.underworld.debugGraphics.moveTo(path.points[0].x, path.points[0].y);
+    //     window.debugGraphics.moveTo(path.points[0].x, path.points[0].y);
     //     for (let point of path.points) {
-    //         window.underworld.debugGraphics.lineTo(point.x, point.y);
+    //         window.debugGraphics.lineTo(point.x, point.y);
     //     }
     // }
     // Remove invalid paths
