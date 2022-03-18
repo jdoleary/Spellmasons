@@ -190,15 +190,6 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       break;
     case MESSAGE_TYPES.SYNC:
       const { players, units, underworldPartial } = payload;
-      for (let i = 0; i < underworld.players.length; i++) {
-        const syncPlayer = players[i]
-        if (!syncPlayer) {
-          console.error("Something is wrong, underworld has different length players than sync players")
-          // Client incurred major desync, resolve via DESYNC message
-          window.pie.sendData({ type: MESSAGE_TYPES.DESYNC });
-        }
-        Player.syncronize(syncPlayer, underworld.players[i]);
-      }
       for (let i = 0; i < underworld.units.length; i++) {
         const syncUnit = units[i]
         if (!syncUnit) {
@@ -208,6 +199,16 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
         }
         Unit.syncronize(syncUnit, underworld.units[i]);
       }
+      for (let i = 0; i < underworld.players.length; i++) {
+        const syncPlayer = players[i]
+        if (!syncPlayer) {
+          console.error("Something is wrong, underworld has different length players than sync players")
+          // Client incurred major desync, resolve via DESYNC message
+          window.pie.sendData({ type: MESSAGE_TYPES.DESYNC });
+        }
+        Player.syncronize(syncPlayer, underworld.players[i]);
+      }
+
       underworld.syncronize(underworldPartial);
       break;
     case MESSAGE_TYPES.LOAD_GAME_STATE:
