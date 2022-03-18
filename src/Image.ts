@@ -136,6 +136,7 @@ export function restoreSubsprites(image: IImage) {
   // Re-add subsprites
   const subSprites = [...image.subSprites];
   image.sprite.removeChildren();
+  image.subSpriteInstances = {};
   image.subSprites = [];
   for (let subSprite of subSprites) {
     addSubSprite(image, subSprite);
