@@ -1,21 +1,17 @@
 import { addPixiContainersForRoute, recenterStage } from './PixiUtils';
 import {
   clickHandler,
-  clickHandlerOverworld,
   contextmenuHandler,
   endTurnBtnListener,
   keydownListener,
   keyupListener,
   mousemoveHandler,
 } from './ui/eventListeners';
-import * as Overworld from './overworld';
 import { turn_phase } from './Underworld';
 import { createUpgradeElement, generateUpgrades } from './Upgrade';
 import { View } from './views';
 
 export enum Route {
-  // Overworld is where players, as a team, decide which level to tackle next
-  Overworld,
   // Underworld contains the grid with levels and casting
   Underworld,
   // Post combat
@@ -25,6 +21,10 @@ export enum Route {
 window.setRoute = setRoute;
 
 export function setRoute(r: Route) {
+  if (r === undefined) {
+    console.error('Could not set route to undefined route');
+    return
+  }
   console.log('setRoute(', Route[r], ')');
   for (let route of Object.keys(Route)) {
     document.body.classList.remove(`route-${route}`);
@@ -36,17 +36,8 @@ export function setRoute(r: Route) {
   }
 
   // Remove previous event listeners:
-  removeOverworldEventListeners();
   removeUnderworldEventListeners();
   switch (r) {
-    case Route.Overworld:
-      // Picking a level brings players to Underworld from Overworld
-      const overworld = Overworld.generate();
-      window.overworld = overworld;
-      Overworld.draw(overworld);
-      addOverworldEventListeners();
-
-      break;
     case Route.Underworld:
       // Set the first turn phase
       window.underworld.setTurnPhase(turn_phase.PlayerTurns);
@@ -80,8 +71,6 @@ export function setRoute(r: Route) {
       break;
   }
   // Recentering should happen after stage setup
-  // because, for example, route Overworld requires up-to-date knowledge
-  // of the overworld to center the camera
   recenterStage();
 }
 const elEndTurnBtn: HTMLButtonElement = document.getElementById(
@@ -89,13 +78,6 @@ const elEndTurnBtn: HTMLButtonElement = document.getElementById(
 ) as HTMLButtonElement;
 elEndTurnBtn.addEventListener('click', endTurnBtnListener);
 
-function addOverworldEventListeners() {
-  // Add keyboard shortcuts
-  document.body.addEventListener('click', clickHandlerOverworld);
-}
-function removeOverworldEventListeners() {
-  document.body.removeEventListener('click', clickHandlerOverworld);
-}
 function addUnderworldEventListeners() {
   // Add keyboard shortcuts
   window.addEventListener('keydown', keydownListener);

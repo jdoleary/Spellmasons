@@ -28,11 +28,6 @@ export const PORTAL_COORDINATES = {
   y: MAP_HEIGHT / 2,
 };
 
-// Overworld
-export const OVERWORLD_HEIGHT = 9;
-export const OVERWORLD_MAX_WIDTH = 9;
-export const OVERWORLD_SPACING = 100;
-
 // Mana
 export const MANA_GET_PER_TURN = 5;
 export const DISTANCE_FAR = 300;

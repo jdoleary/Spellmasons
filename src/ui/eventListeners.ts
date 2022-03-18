@@ -163,29 +163,6 @@ export function contextmenuHandler(e: MouseEvent) {
   }
   return false;
 }
-export function clickHandlerOverworld(e: MouseEvent) {
-  // Only handle overworld clicks when viewing the Game
-  if (window.view !== View.Game) {
-    return;
-  }
-  const mousePos = app.stage.toLocal(
-    app.renderer.plugins.interaction.mouse.global,
-  );
-  let closestDist = Number.MAX_SAFE_INTEGER;
-  let levelIndex;
-  for (let i = 0; i < window.overworld.levels.length; i++) {
-    const level = window.overworld.levels[i];
-    const dist = distance(mousePos, level.location);
-    if (dist < closestDist) {
-      closestDist = dist;
-      levelIndex = i;
-    }
-  }
-  window.pie.sendData({
-    type: MESSAGE_TYPES.VOTE_FOR_LEVEL,
-    levelIndex,
-  });
-}
 // Handle clicks on the game board
 export function clickHandler(e: MouseEvent) {
   // Only handle clicks when viewing the Game

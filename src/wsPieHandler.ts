@@ -10,8 +10,7 @@ import * as Unit from './Unit';
 import * as Pickup from './Pickup';
 import * as Obstacle from './Obstacle';
 import { syncSpellEffectProjection } from './ui/PlanningView';
-import { voteForLevel } from './overworld';
-import { setRoute, Route } from './routes';
+import { setRoute } from './routes';
 import { setView, View } from './views';
 import * as readyState from './readyState';
 import * as messageQueue from './messageQueue';
@@ -21,9 +20,6 @@ let clients: string[] = [];
 let underworld: Underworld;
 export function initializeUnderworld() {
   underworld = new Underworld(Math.random().toString());
-  // Since the game was just created,
-  // move the game to the Overworld
-  setRoute(Route.Overworld);
   // Mark the underworld as "ready"
   readyState.set('underworld', true);
 }
@@ -149,9 +145,6 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
     //     });
     //   }
     //   break;
-    case MESSAGE_TYPES.VOTE_FOR_LEVEL:
-      voteForLevel(fromClient, payload.levelIndex);
-      break;
     case MESSAGE_TYPES.JOIN_GAME:
       // JOIN_GAME is meant to be handled by everyone except the client that 
       // send the message so that they can add the new client as a player instance
@@ -181,6 +174,8 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
             fromClient
           );
         }
+        // Now that the player is created, initialize the level:
+        underworld.initLevel(underworld.levelIndex);
 
         // Send the lastest gamestate to that client so they can be up-to-date:
         // Note: It is important that this occurs AFTER the player instance is created for the
@@ -261,7 +256,7 @@ function handleLoadGameState(payload: any) {
   const loadedGameState: Underworld = { ...payload.underworld };
   underworld = new Underworld(loadedGameState.seed, loadedGameState.RNGState);
   underworld.playerTurnIndex = loadedGameState.playerTurnIndex;
-  underworld.level = loadedGameState.level;
+  underworld.levelIndex = loadedGameState.levelIndex;
   underworld.secondsLeftForTurn = loadedGameState.secondsLeftForTurn;
   // Load all units that are not player's, those will be loaded indepentently
   underworld.units = loadedGameState.units
@@ -274,6 +269,7 @@ function handleLoadGameState(payload: any) {
   underworld.obstacles = loadedGameState.obstacles.map(Obstacle.load).filter(o => !!o) as Obstacle.IObstacle[];
   // Mark the underworld as "ready"
   readyState.set('underworld', true);
+  underworld.initLevel(underworld.levelIndex);
 
   // Load route
   setRoute(payload.route);

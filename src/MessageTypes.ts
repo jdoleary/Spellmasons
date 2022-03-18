@@ -19,8 +19,6 @@ export enum MESSAGE_TYPES {
   LOAD_GAME_STATE,
   // Ping a location on the map
   PING,
-  // Vote for a level to go to in the overworld
-  VOTE_FOR_LEVEL,
   // Sent from a client that has detected a major desync from the host
   // TODO: Is this unused now that I'm syncing things independently with the below 3 messages?
   DESYNC,

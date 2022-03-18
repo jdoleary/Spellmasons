@@ -25,10 +25,6 @@ const underworldPixiContainers = [
   containerUI,
   containerFloatingText,
 ];
-export const containerOverworld = new PIXI.Container();
-export const overworldGraphics = new PIXI.Graphics();
-containerOverworld.addChild(overworldGraphics);
-const overworldPixiContainers = [containerOverworld];
 
 export const containerCharacterSelect = new PIXI.Container();
 const characterSelectContainers = [containerCharacterSelect];
@@ -68,10 +64,6 @@ export function recenterStage() {
       break;
     case View.Game:
       switch (window.route) {
-        case Route.Overworld:
-          app.stage.x = window.innerWidth / 2 - window.overworld.levels[0].location.x;
-          app.stage.y = window.innerHeight;
-          break;
         case Route.Underworld:
           // Align Camera: center the app in the middle of the map 
           app.stage.x = app.renderer.width / 2 - (MAP_WIDTH) / 2 * app.stage.scale.x;
@@ -98,12 +90,8 @@ export function setupPixi(): Promise<void> {
   return loadTextures();
 }
 export function addPixiContainersForRoute(route: Route) {
-  removeContainers(overworldPixiContainers);
   removeContainers(underworldPixiContainers);
   switch (route) {
-    case Route.Overworld:
-      addContainers(overworldPixiContainers);
-      break;
     case Route.Underworld:
       addContainers(underworldPixiContainers);
       break;

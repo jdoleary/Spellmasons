@@ -19,7 +19,7 @@ export function generateUpgrades(player: IPlayer): IUpgrade[] {
   }
   let upgrades: IUpgrade[] = [];
   // Upgrade selection is unique to each client and each level
-  const random = seedrandom(`${window.clientId}-${window.underworld.level}`);
+  const random = seedrandom(`${window.clientId}-${window.underworld.levelIndex}`);
   // Clone upgrades for later mutation
   const clonedUpgradeSource = [...upgradeSource].filter((u) =>
     (u.maxCopies === undefined

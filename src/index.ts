@@ -1,8 +1,8 @@
+import type * as PIXI from 'pixi.js';
 import type { Route } from './routes';
 import AnimationTimeline from './AnimationTimeline';
 import type * as Player from './Player';
 import type Underworld from './Underworld';
-import type { IOverworld } from './overworld';
 import { setView, View } from './views';
 
 window.animationTimeline = new AnimationTimeline();
@@ -13,7 +13,6 @@ declare global {
     latencyPanel: Stats.Panel;
     animationTimeline: AnimationTimeline;
     underworld: Underworld;
-    overworld: IOverworld;
     // A reference to the player instance of the client playing on this instance
     player: Player.IPlayer | undefined;
     pie: any;

@@ -7,15 +7,12 @@ import * as config from './config';
 import { Faction, UnitType } from './commonTypes';
 import { allUnits } from './units';
 import { getClients } from './wsPieHandler';
-import { containerOverworld } from './PixiUtils';
-import { currentOverworldLocation } from './overworld';
-import * as readyState from './readyState';
 import { allCards } from './cards';
 
 // The serialized version of the interface changes the interface to allow only the data
 // that can be serialized in JSON.  It may exclude data that is not neccessary to
 // rehydrate the JSON into an entity
-export type IPlayerSerialized = Omit<IPlayer, "unit" | "overworldImage"> & { unit: Unit.IUnitSerialized } & { overworldImage: Image.IImageSerialized };
+export type IPlayerSerialized = Omit<IPlayer, "unit"> & { unit: Unit.IUnitSerialized };
 export interface IPlayer {
   // wsPie id
   clientId: string;
@@ -26,7 +23,6 @@ export interface IPlayer {
   // The number of cards a player's hand is populated with at the start of a level
   cardsAmount: number;
   upgrades: Upgrade.IUpgrade[];
-  overworldImage: Image.IImage;
   // Note: call updateCardManaBadges() any time you modify cardUsageCounts so it will
   // be reflected in the UI
   cardUsageCounts: { [cardId: string]: number };
@@ -54,20 +50,9 @@ export function create(clientId: string, unitId: string): IPlayer | undefined {
     cardUsageCounts: {},
     cardsAmount: config.START_CARDS_COUNT,
     upgrades: [],
-    overworldImage: Image.create(
-      0,
-      0,
-      userSource.info.image,
-      containerOverworld,
-    ),
   };
   player.inPortal = true;
   player.unit.alive = false;
-  // Set position for player overworld image
-  // offset between player images:
-  const offset = window.underworld.players.length * 10;
-  player.overworldImage.sprite.x = currentOverworldLocation.x + offset;
-  player.overworldImage.sprite.y = currentOverworldLocation.y + offset;
 
   updateGlobalRefToCurrentClientPlayer(player);
   // Add initial cards to hand
@@ -124,11 +109,10 @@ function addHighlighIfPlayerBelongsToCurrentClient(player: IPlayer) {
 // a full player entity 
 // This is the opposite of load
 export function serialize(player: IPlayer): IPlayerSerialized {
-  const { unit, overworldImage, ...rest } = player;
+  const { unit, ...rest } = player;
   return {
     ...rest,
     unit: Unit.serialize(unit),
-    overworldImage: Image.serialize(overworldImage)
   }
 }
 // load rehydrates a player entity from IPlayerSerialized
@@ -136,7 +120,6 @@ export function load(player: IPlayerSerialized) {
   const playerLoaded: IPlayer = {
     ...player,
     unit: Unit.load(player.unit),
-    overworldImage: Image.load(player.overworldImage, containerOverworld),
   };
   const clients = getClients();
   setClientConnected(playerLoaded, clients.includes(player.clientId));
@@ -149,10 +132,9 @@ export function load(player: IPlayerSerialized) {
 // entity with properties from a player (in JSON)
 // mutates originalUnit
 export function syncronize(playerSerialized: IPlayerSerialized, originalPlayer: IPlayer): void {
-  const { unit, overworldImage, ...rest } = playerSerialized;
+  const { unit, ...rest } = playerSerialized;
   Object.assign(originalPlayer, rest);
   Unit.syncronize(unit, originalPlayer.unit);
-  Image.syncronize(overworldImage, originalPlayer.overworldImage);
   addHighlighIfPlayerBelongsToCurrentClient(originalPlayer);
 }
 // Sets boolean and substring denoting if the player has a pie-client client associated with it

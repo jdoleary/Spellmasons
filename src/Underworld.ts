@@ -23,11 +23,9 @@ import * as Vec from "./Vec";
 import Events from './Events';
 import { allUnits } from './units';
 import { syncSpellEffectProjection, updatePlanningView } from './ui/PlanningView';
-import { ILevel, getEnemiesForAltitude } from './overworld';
 import { setRoute, Route } from './routes';
 import { prng, randInt, SeedrandomState } from './rand';
 import { calculateManaCost } from './cards/cardUtils';
-import { moveWithCollisions } from './collision/moveWithCollision';
 import { lineSegmentIntersection, LineSegment } from './collision/collisionMath';
 import { updateCardManaBadges } from './CardUI';
 import { expandPolygon, mergeOverlappingPolygons, Polygon, PolygonLineSegment, polygonToPolygonLineSegments } from './Polygon';
@@ -52,6 +50,8 @@ const elLevelIndicator = document.getElementById('level-indicator');
 export default class Underworld {
   seed: string;
   random: prng;
+  // The index of the level the players are on
+  levelIndex: number = 0;
   // for serializing random: prng
   RNGState?: SeedrandomState;
   turn_phase: turn_phase = turn_phase.PlayerTurns;
@@ -73,7 +73,6 @@ export default class Underworld {
   pathingPolygons: Polygon[] = [];
   secondsLeftForTurn: number = config.SECONDS_PER_TURN;
   turnInterval: any;
-  level?: ILevel;
   playersWhoHaveChosenUpgrade = new Set<string>();
   // Keeps track of how many messages have been processed so that clients can
   // know when they've desynced.  Only used for syncronous message processing
@@ -192,11 +191,7 @@ export default class Underworld {
   // if an object stops being used.  It does not empty the underworld arrays, by design.
   cleanup() {
     clearInterval(this.turnInterval);
-    for (let p of this.players) {
-      // Note: Player's unit image is cleaned up below where it also has a reference in this.units
-      // Clean up overworldImage
-      Image.cleanup(p.overworldImage);
-    }
+    // Note: Player's unit image is cleaned up below where it also has a reference in this.units
     for (let u of this.units) {
       Image.cleanup(u.image);
     }
@@ -206,28 +201,6 @@ export default class Underworld {
     for (let x of this.obstacles) {
       Image.cleanup(x.image);
     }
-  }
-  moveToNextLevel(level: ILevel) {
-    for (let i = this.units.length - 1; i >= 0; i--) {
-      const u = this.units[i];
-      // Clear all remaining AI units
-      if (u.unitType === UnitType.AI) {
-        Unit.cleanup(u);
-        this.units.splice(i, 1);
-      }
-    }
-    for (let p of this.players) {
-      Player.resetPlayerForNextLevel(p);
-    }
-    // Clear all pickups
-    for (let p of this.pickups) {
-      Pickup.removePickup(p);
-    }
-    // Clear all obstacles
-    for (let o of this.obstacles) {
-      Obstacle.remove(o);
-    }
-    this.initLevel(level);
   }
   // cacheWalls updates underworld.walls array
   // with the walls for the edge of the map
@@ -251,15 +224,38 @@ export default class Underworld {
     this.pathingPolygons = expandedAndMergedPolygons
   }
 
-  initLevel(level: ILevel) {
-    this.level = level;
+  initLevel(levelIndex: number) {
+    // Clean previous level info
+    for (let i = this.units.length - 1; i >= 0; i--) {
+      const u = this.units[i];
+      // Clear all remaining AI units
+      if (u.unitType === UnitType.AI) {
+        Unit.cleanup(u);
+        this.units.splice(i, 1);
+      }
+    }
+    if (this.players.length == 0) {
+      console.error('Attempting to initialize level without any players');
+
+    }
+    for (let p of this.players) {
+      Player.resetPlayerForNextLevel(p);
+    }
+    // Clear all pickups
+    for (let p of this.pickups) {
+      Pickup.removePickup(p);
+    }
+    // Clear all obstacles
+    for (let o of this.obstacles) {
+      Obstacle.remove(o);
+    }
     // Show text in center of screen for the new level
     floatingText({
       coords: {
         x: config.MAP_WIDTH / 2,
         y: config.MAP_HEIGHT / 2,
       },
-      text: `Altitude ${this.level.altitude}`,
+      text: `Altitude ${this.levelIndex}`,
       style: {
         fill: 'white',
         fontSize: '60px',
@@ -279,7 +275,7 @@ export default class Underworld {
     );
     // Update level indicator UI at top of screen
     if (elLevelIndicator) {
-      elLevelIndicator.innerText = `Altitude ${this.level.altitude}`;
+      elLevelIndicator.innerText = `Altitude ${this.levelIndex}`;
     } else {
       console.error('elLevelIndicator is null');
     }
@@ -302,7 +298,7 @@ export default class Underworld {
       );
     }
     // Spawn units at the start of the level
-    const enemyIndexes = getEnemiesForAltitude(level.altitude);
+    const enemyIndexes = getEnemiesForAltitude(levelIndex);
     for (let index of enemyIndexes) {
       const coords = this.getRandomCoordsWithinBounds({ xMin: 2 * config.UNIT_SIZE, yMin: config.COLLISION_MESH_RADIUS, xMax: config.MAP_WIDTH - config.COLLISION_MESH_RADIUS, yMax: config.MAP_HEIGHT - config.COLLISION_MESH_RADIUS });
       const sourceUnit = Object.values(allUnits)[index];
@@ -608,8 +604,8 @@ export default class Underworld {
       if (elUpgradePickerLabel) {
         elUpgradePickerLabel.innerText = '';
       }
-      // Go to overworld now that upgrade is chosen
-      setRoute(Route.Overworld);
+      // Now that upgrades are chosen, go to next level
+      window.underworld.initLevel(++this.levelIndex);
     } else {
       if (elUpgradePickerLabel) {
         elUpgradePickerLabel.innerText = `${numberOfPlayersWhoNeedToChooseUpgradesTotal - this.playersWhoHaveChosenUpgrade.size
@@ -983,3 +979,25 @@ type IUnderworldSerialized = Omit<typeof Underworld, "prototype" | "players" | "
 type NonFunctionPropertyNames<T> = { [K in keyof T]: T[K] extends Function ? never : K }[keyof T];
 type UnderworldNonFunctionProperties = Exclude<NonFunctionPropertyNames<Underworld>, null | undefined>;
 type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFunctionProperties>, "secondsLeftForTurn" | "debugGraphics" | "players" | "units" | "pickups" | "obstacles" | "random" | "turnInterval" | "processedMessageCount">;
+
+
+function getEnemiesForAltitude(levelIndex: number) {
+
+  const hardCodedLevelEnemies = [
+    // [],
+    // [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 1, 2],
+    [0, 4],
+    [0, 0, 0, 6],
+    [0, 0, 0, 1, 7],
+    [0, 0, 1, 1, 1],
+    [0, 0, 0, 1, 3, 6],
+    [0, 0, 0, 0, 3, 3, 4],
+    [0, 1, 1, 1, 3, 3, 3, 2],
+    [0, 0, 0, 0, 0, 0, 0, 4],
+    [0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 5, 6],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 3, 3],
+    [0, 0, 0, 0, 0, 0, 1, 1, 1, 4, 5],
+  ];
+  return hardCodedLevelEnemies[levelIndex];
+}
