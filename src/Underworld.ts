@@ -165,8 +165,6 @@ export default class Underworld {
         // Stop moving if you've moved as far as you can based on the move distance
         if (u.distanceMovedThisTurn >= u.moveDistance) {
           u.path = [];
-          // reset
-          u.distanceMovedThisTurn = 0;
         }
         // check for collisions with pickups in new location
         this.checkPickupCollisions(u);
@@ -690,6 +688,8 @@ export default class Underworld {
           // Reset thisTurnMoved flag now that it is a new turn
           // Because no units have moved yet this turn
           u.thisTurnMoved = false;
+          // Reset distanceMovedThisTurn so units can move again
+          u.distanceMovedThisTurn = 0;
         }
         // Lastly, initialize the player turns.
         // Note, it is possible that calling this will immediately end
