@@ -1,3 +1,5 @@
+- Stress test upping limit for "couldn't find path in enough steps".  If it's not high enough, some units will just not move when they attempt to move to a target that is too complex to path to.
+  - Maybe find a way to remove bad paths before the correct one is found?
 - Ask for audio permissions from FF?
   - May have to trigger it by clicking on a button
 - Does pathing information persist after save/load?
