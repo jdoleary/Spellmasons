@@ -42,7 +42,7 @@ export function registerUnits() {
   register(grunt);
   register(archer);
   register(sandGolem);
-  register(rook);
+  // register(rook);
   register(summoner);
   register(demon);
   register(priest);

@@ -96,10 +96,10 @@ export function registerCards() {
   register(purify);
   register(swap);
   register(vulnerable);
-  register(lance);
-  register(stomp);
+  // register(lance);
+  // register(stomp);
   register(protection);
-  register(charge);
+  // register(charge);
   register(obliterate);
   register(clone);
   register(mana_burn);
