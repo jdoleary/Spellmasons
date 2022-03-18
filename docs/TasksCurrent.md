@@ -1,5 +1,4 @@
 ## Current Priorities
-- bug: after portal sprite filter stops working??
 - Fix turn taking / Pathfinding
     - Handle invalid paths so unit x,y doesn't get set to NaN.
     - Resolve collisions?
