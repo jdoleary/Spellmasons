@@ -974,7 +974,7 @@ function drawTarget(x: number, y: number, animate: boolean): Promise<void> {
     return Promise.resolve();
   }
 }
-type IUnderworldSerialized = Omit<Underworld, "players" | "units" | "pickups" | "obstacles" | "random" | "turnInterval"> & {
+type IUnderworldSerialized = Omit<typeof Underworld, "prototype" | "players" | "units" | "pickups" | "obstacles" | "random" | "turnInterval"> & {
   players: Player.IPlayerSerialized[],
   units: Unit.IUnitSerialized[],
   pickups: Pickup.IPickupSerialized[],
