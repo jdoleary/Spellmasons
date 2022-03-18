@@ -220,6 +220,7 @@ export default class Underworld {
   }
 
   initLevel(levelIndex: number) {
+    console.log('Setup: initLevel', levelIndex);
     // Clean previous level info
     for (let i = this.units.length - 1; i >= 0; i--) {
       const u = this.units[i];
@@ -646,6 +647,7 @@ export default class Underworld {
     return { x, y };
   }
   setTurnPhase(p: turn_phase) {
+    console.log('setTurnPhase(', turn_phase[p], ')');
     // Clear debug graphics
     window.debugGraphics.clear()
     // Before the turn phase changes, check if the game should transition to game over
