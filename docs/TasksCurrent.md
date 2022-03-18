@@ -1,4 +1,11 @@
 ## Current Priorities
+- Remove overworld, make level initialization work for multi players
+    - TODO: Fix level loading, make more stable
+    - bug: if the not host chooses a character they get sent into the game and enemy units are invisible and then the sprites duplicate whenever they move
+    - Handle
+        - client joins before host has made game
+        - client joins after host has made game
+
 - Bug: Got insufficient mana when trying to cast on a unit at the edge of my range even though the tooltip showed that I had enough
 - Bug: I got poisoned when I cast contageous poison but wasn't close
 - Bug: Units that died of poison didn't leave behind skelletons
@@ -9,7 +16,6 @@
 - todo: Make "mana cost" icon on cards allow for health cost (for spells such as mana steal)
 - Todo: Increase damage from mana burn to make it worth it's cost
 - Ensure that casting spends mana immediately so that you can mana burn AOE and it won't hurt you if invoking the burn spent the mana before you could burn your own mana
-- Remove overworld, make level initialization work for multi players
 - Setup Buffer with social medias and start a following
 ---
 Finish Content:
