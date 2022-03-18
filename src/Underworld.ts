@@ -828,7 +828,7 @@ export default class Underworld {
                   Image.hide(image).then(() => {
                     Image.cleanup(image);
                   })
-                }, config.MILLIS_PER_SPELL_ANIMATION * .8)
+                }, config.MILLIS_PER_SPELL_ANIMATION * .8);
               })
             ]);
             animations.push(scaleAnimation);
