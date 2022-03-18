@@ -1,5 +1,5 @@
-import { findWherePointIntersectLineSegmentAtRightAngle, LineSegment, lineSegmentIntersection } from "./collision/collisionMath";
-import { distance } from "./math";
+import { findWherePointIntersectLineSegmentAtRightAngle, isPointOnLineSegment, LineSegment, lineSegmentIntersection } from "./collision/collisionMath";
+import { distance, similarTriangles } from "./math";
 import { getPointsFromPolygonStartingAt, doesVertexBelongToPolygon, Polygon, PolygonLineSegment, polygonToPolygonLineSegments, isVec2InsidePolygon } from "./Polygon";
 import type { Vec2 } from './Vec';
 import * as Vec from './Vec';
@@ -90,22 +90,30 @@ function tryPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCo
         const verticies = direction == 'prev' ? _verticies.reverse() : _verticies;
         // As we walk,
         for (let vertex of verticies) {
-            const penultimatePoint = path.points[path.points.length - 2];
+            // const penultimatePoint = path.points[path.points.length - 2];
             // If this next vertex is closer to the penultimatePoint than the ultimatePoint, remove the ultimate point,
             // because there is a shorter path to the vertex than there is from the ultimatePoint to the vertex
-            if (penultimatePoint
-                // if distance to the new vertex is shorter than the distance to the ultimate vertex
-                && distance(penultimatePoint, path.points[path.points.length - 1]) > distance(penultimatePoint, vertex)
-                // and if the line from the penultimatePoint to the new vertex is unobstructed...
-                && getClosestIntersectionWithWalls({ p1: penultimatePoint, p2: vertex }, pathingWalls).closestIntersection == vertex) {
-                // remove last point, because "vertex" has an unobstructed shorter path from the penultimate point
-                path.points.splice(-1);
+            // if (penultimatePoint
+            //     // if distance to the new vertex is shorter than the distance to the ultimate vertex
+            //     && distance(penultimatePoint, path.points[path.points.length - 1]) > distance(penultimatePoint, vertex)
+            //     // and if the line from the penultimatePoint to the new vertex is unobstructed...
+            //     && getClosestIntersectionWithWalls({ p1: penultimatePoint, p2: vertex }, pathingWalls).closestIntersection == vertex) {
+            //     // remove last point, because "vertex" has an unobstructed shorter path from the penultimate point
+            //     path.points.splice(-1);
+            // }
+
+            // If the target point is on the line between the last point and this point, we've found the path and can exit.
+            // This occurs if the target point lies directly on an edge of the current polygon
+            if (isPointOnLineSegment(target, { p1: path.points[path.points.length - 1], p2: vertex })) {
+                path.done = true
+                break;
             }
+
             path.points.push(vertex);
             // Check if a straight line between the new vertex and the target collides with any walls
-            const { intersectingWall } = getClosestIntersectionWithWalls({ p1: vertex, p2: target }, pathingWalls);
+            const { intersectingWall, closestIntersection } = getClosestIntersectionWithWalls({ p1: vertex, p2: target }, pathingWalls);
             // If it does
-            if (intersectingWall) {
+            if (intersectingWall && closestIntersection) {
                 // and the wall belongs to the current poly
                 if (doesVertexBelongToPolygon(vertex, intersectingWall.polygon) && doesVertexBelongToPolygon(intersectingWall.p1, intersectingWall.polygon)) {
                     // Continue to check the next or previous (depending on direction) vertex for this poly
@@ -130,7 +138,7 @@ function tryPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCo
 
     }
     // Protect against infinite recursion
-    if (recursionCount > 7) {
+    if (recursionCount > 12) {
         console.error('couldnt find path in few enough steps', recursionCount);
         // Mark all unfinished path's as invalid because they did not find a valid path
         // in few enough steps

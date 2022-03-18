@@ -4,7 +4,6 @@
     - Handle invalid paths so unit x,y doesn't get set to NaN.
     - Resolve collisions?
         - Prevent units from moving inside of each other without the orbiting effect if their target destination is inside of the other unit
-    - If you click to move inside of the expanded poly, it won't move you to that side of the obstacle (which isn't expanded, becuase it omits the last point that isn't in the poly)
 - Make `chain` search depth first
 
 - ownCharacterMarker disappears after movement? or after sync?
