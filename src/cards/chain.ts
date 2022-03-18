@@ -1,6 +1,7 @@
 import { drawDryRunLine } from '../ui/PlanningView';
 import type { Spell } from '.';
 import type { Vec2 } from '../Vec';
+import * as Vec from '../Vec';
 import type * as Unit from '../Unit';
 import * as config from '../config';
 import { CardType, cardTypeToProbability } from './cardUtils';
@@ -63,7 +64,7 @@ function getTouchingUnitsRecursive(
       !ignore.find((i) => i.x == u.x && i.y == u.y)
     );
   });
-  ignore = ignore.concat(touching.map((u) => ({ x: u.x, y: u.y })));
+  ignore.push(...touching.map(Vec.clone));
   // Draw dryrun lines so user can see how it chains
   touching.forEach(chained_unit => {
     drawDryRunLine({ x, y }, chained_unit);

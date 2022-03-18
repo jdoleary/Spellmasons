@@ -4,7 +4,6 @@
     - Handle invalid paths so unit x,y doesn't get set to NaN.
     - Resolve collisions?
         - Prevent units from moving inside of each other without the orbiting effect if their target destination is inside of the other unit
-- Make `chain` search depth first
 
 - ownCharacterMarker disappears after movement? or after sync?
 - Setup Buffer with social medias and start a following
