@@ -22,6 +22,11 @@ export function initializeUnderworld() {
   underworld = new Underworld(Math.random().toString());
   // Mark the underworld as "ready"
   readyState.set('underworld', true);
+  if (window.hostClientId == window.clientId) {
+    // Now that the host player is created, initialize the level:
+    console.log('host init level');
+    underworld.initLevel(underworld.levelIndex);
+  }
 }
 export function onData(d: OnDataArgs) {
   console.log("onData:", MESSAGE_TYPES[d.payload.type], d)
@@ -146,41 +151,62 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
     //   }
     //   break;
     case MESSAGE_TYPES.JOIN_GAME:
-      // JOIN_GAME is meant to be handled by everyone except the client that 
-      // send the message so that they can add the new client as a player instance
-      // Also, if the client recieving this message is the host, they will send
-      // the latest gamestate to the newly joining client
-      // Exception: The host should handle their own player creation
-      if (readyState.isReady() && (window.hostClientId == window.clientId || fromClient !== window.clientId)) {
-        // Create Player entity for the client that just joined:
-        // If player doesn't already exist, make them
-        if (!underworld.players.find((p) => p.clientId === fromClient)) {
-          console.log(`Setup: Create a Player instance for ${fromClient}`)
-          const p = Player.create(fromClient, payload.unitId);
-          if (p) {
-            underworld.players.push(p);
-            // Sort underworld.players according to client order so that all
-            // instances of the game have a underworld.players array in the same
-            // order
-            // --
-            // (the .filter removes possible undefined players so that underworld.players doesn't contain any undefined values)
-            underworld.players = clients.map(c => underworld.players.find(p => p.clientId == c)).filter(x => !!x) as Player.IPlayer[];
-          } else {
-            console.error("Failed to SelectCharacter because Player.create did not return a player object")
-          }
-        } else {
-          console.error(
-            'Client is already associated with a Player instance, so a new one cannot be created.',
-            fromClient
-          );
-        }
-        // Now that the player is created, initialize the level:
-        underworld.initLevel(underworld.levelIndex);
+      if (readyState.isReady()) {
+        const currentClientIsHost = window.hostClientId == window.clientId;
+        const hostIsJoining = window.hostClientId == fromClient;
+        // If the host has a player, then the game has already started
+        const gameAlreadyStarted = underworld.players.find(p => p.clientId == window.hostClientId);
+        // JOIN_GAME is meant to be handled by everyone except the client that 
+        // send the message so that they can add the new client as a player instance
+        // Exception: The host should handle their own player creation
+        // If current client is the host or this message is from a different client then self
+        if (currentClientIsHost || fromClient !== window.clientId) {
+          // Create Player entity for the client that just joined:
+          // If player doesn't already exist, make them
+          if (!underworld.players.find((p) => p.clientId === fromClient)) {
+            console.log(`Setup: Create a Player instance for ${fromClient}`)
+            const p = Player.create(fromClient, payload.unitId);
+            if (p) {
+              underworld.players.push(p);
+              // Initialize the player for the level
+              Player.resetPlayerForNextLevel(p);
+              const cachedPlayerActiveTurn = underworld.players[underworld.playerTurnIndex];
+              // Sort underworld.players according to client order so that all
+              // instances of the game have a underworld.players array in the same
+              // order
+              // --
+              // (the .filter removes possible undefined players so that underworld.players doesn't contain any undefined values)
+              underworld.players = clients.map(c => underworld.players.find(p => p.clientId == c)).filter(x => !!x) as Player.IPlayer[];
+              // Restore playerTurnIndex after mutating the players array
+              underworld.playerTurnIndex = underworld.players.findIndex(p => p == cachedPlayerActiveTurn);
 
-        // Send the lastest gamestate to that client so they can be up-to-date:
-        // Note: It is important that this occurs AFTER the player instance is created for the
-        // client who just joined
-        giveClientGameStateForInitialLoad(fromClient);
+              if (gameAlreadyStarted) {
+                // Send the lastest gamestate to that client so they can be up-to-date:
+                // Note: It is important that this occurs AFTER the player instance is created for the
+                // client who just joined
+                // If the game has already started (e.g. the host has already joined), send the initial state to the new 
+                // client only so they can load
+                giveClientGameStateForInitialLoad(fromClient);
+              } else if (currentClientIsHost && hostIsJoining) {
+                // If the host is the one joining, start the game for all clients (even ones who have already chosen a character).
+                console.log('Host: Send all clients game state for initial load');
+                clients.forEach(clientId => {
+                  giveClientGameStateForInitialLoad(clientId);
+                });
+              }
+            } else {
+              console.error("Failed to SelectCharacter because Player.create did not return a player object")
+            }
+          } else {
+            console.error(
+              'Client is already associated with a Player instance, so a new one cannot be created.',
+              fromClient
+            );
+          }
+
+        }
+      } else {
+        console.error('Attempted to JOIN_GAME before readState.isReady()');
       }
       break;
     case MESSAGE_TYPES.SYNC:
@@ -269,7 +295,6 @@ function handleLoadGameState(payload: any) {
   underworld.obstacles = loadedGameState.obstacles.map(Obstacle.load).filter(o => !!o) as Obstacle.IObstacle[];
   // Mark the underworld as "ready"
   readyState.set('underworld', true);
-  underworld.initLevel(underworld.levelIndex);
 
   // Load route
   setRoute(payload.route);
@@ -332,6 +357,7 @@ function giveClientGameStateForInitialLoad(clientId: string) {
   // Only the host should be sending INIT_GAME_STATE messages
   // because the host has the canonical game state
   if (window.hostClientId === window.clientId) {
+    console.log(`Host: Send ${clientId} game state for initial load`);
     // Do not send this message to self
     if (window.clientId !== clientId) {
       window.pie.sendData({
