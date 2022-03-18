@@ -1,4 +1,4 @@
-import { LineSegment, lineSegmentIntersection } from "./collision/collisionMath";
+import { findWherePointIntersectLineSegmentAtRightAngle, LineSegment, lineSegmentIntersection } from "./collision/collisionMath";
 import { distance } from "./math";
 import { getPointsFromPolygonStartingAt, doesVertexBelongToPolygon, Polygon, PolygonLineSegment, polygonToPolygonLineSegments, isVec2InsidePolygon } from "./Polygon";
 import type { Vec2 } from './Vec';
@@ -15,6 +15,45 @@ interface Path {
 }
 
 export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): Vec2[] {
+    // If the target is inside of a polygon, move it to the closest edge so that
+    // the unit can path to the closest pathable point near where they are attempting to go.
+    // This is important if, for example, a player clicks in empty space which is inside
+    // of the poly but not inside an obstacle.  The pathing should take the unit
+    // as close as it can go without intersecting the polygon
+    const closestIntersections = [];
+    for (let poly of window.underworld.pathingPolygons) {
+        if (isVec2InsidePolygon(target, poly)) {
+            for (let wall of polygonToPolygonLineSegments(poly)) {
+                const intersection = findWherePointIntersectLineSegmentAtRightAngle(target, wall);
+                if (intersection) {
+                    window.underworld.debugGraphics.lineStyle(3, 0xff0000, 1.0);
+                    window.underworld.debugGraphics.drawCircle(intersection.x, intersection.y, 3);
+                    closestIntersections.push(intersection);
+                }
+
+            }
+            break;
+        }
+
+    }
+    // Find the closest of the intersections
+    if (closestIntersections.length) {
+        const closest = closestIntersections.reduce<{ intersection: Vec2, dist: number }>((acc, cur) => {
+            const dist = distance(cur, target)
+            if (dist <= acc.dist) {
+                return { intersection: cur, dist };
+            } else {
+                return acc;
+            }
+
+        }, { intersection: closestIntersections[0], dist: Number.MAX_SAFE_INTEGER })
+        window.underworld.debugGraphics.lineStyle(3, 0x0000ff, 1.0);
+        window.underworld.debugGraphics.drawCircle(closest.intersection.x, closest.intersection.y, 4);
+        // Override target with a location that the unit can actually fit in:
+        target = closest.intersection;
+    }
+
+
     const pathingWalls = polygons.map(polygonToPolygonLineSegments).flat();
     const paths: Path[] = [
         // Start with the first idea path from start to target
@@ -33,10 +72,6 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
         }
         // Remove the start point, since the unit doing the pathing is already at the start point:
         shortestPath.points.shift();
-        // IF the last point is inside of a polygon remove it, and so the unit pathing will move as close as they can
-        if (polygons.some(p => isVec2InsidePolygon(shortestPath.points[shortestPath.points.length - 1], p))) {
-            shortestPath.points.pop();
-        }
     }
     return shortestPath ? shortestPath.points : [];
 }
