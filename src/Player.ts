@@ -87,7 +87,6 @@ export function resetPlayerForNextLevel(player: IPlayer) {
   // Return to a spawn location
   // limit spawn to the leftmost column
   const coords = window.underworld.getRandomCoordsWithinBounds({ xMin: config.COLLISION_MESH_RADIUS, yMin: config.COLLISION_MESH_RADIUS, xMax: config.COLLISION_MESH_RADIUS, yMax: config.MAP_HEIGHT - config.COLLISION_MESH_RADIUS });
-  console.log('coords', coords);
   Unit.setLocation(player.unit, coords);
 }
 // Keep a global reference to the current client's player
