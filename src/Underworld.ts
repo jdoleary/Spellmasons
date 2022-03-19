@@ -940,6 +940,7 @@ export default class Underworld {
       this.syncronizeRNG(serialized.RNGState);
     }
     Object.assign(this, serialized);
+    this.cacheWalls();
   }
   serializeForSyncronize(): IUnderworldSerializedForSyncronize {
     const { secondsLeftForTurn, players, units, pickups, obstacles, random, turnInterval, processedMessageCount, ...rest } = this;

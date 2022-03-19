@@ -305,6 +305,9 @@ function handleLoadGameState(payload: any) {
   underworld.pickups = loadedGameState.pickups.map(Pickup.load);
   // Filtering out the undefined ensures that this is an array of IObstacle
   underworld.obstacles = loadedGameState.obstacles.map(Obstacle.load).filter(o => !!o) as Obstacle.IObstacle[];
+
+  underworld.cacheWalls();
+
   // Mark the underworld as "ready"
   readyState.set('underworld', true);
 
