@@ -294,27 +294,33 @@ export default class Underworld {
       );
     }
     // Spawn units at the start of the level
-    const enemyIndexes = getEnemiesForAltitude(levelIndex);
-    for (let index of enemyIndexes) {
-      const coords = this.getRandomCoordsWithinBounds({ xMin: 2 * config.UNIT_SIZE, yMin: config.COLLISION_MESH_RADIUS, xMax: config.MAP_WIDTH - config.COLLISION_MESH_RADIUS, yMax: config.MAP_HEIGHT - config.COLLISION_MESH_RADIUS });
-      const sourceUnit = Object.values(allUnits)[index];
-      let unit: Unit.IUnit = Unit.create(
-        sourceUnit.id,
-        coords.x,
-        coords.y,
-        Faction.ENEMY,
-        sourceUnit.info.image,
-        UnitType.AI,
-        sourceUnit.info.subtype,
-        sourceUnit.unitProps
-      );
+    const enemys = getEnemiesForAltitude(levelIndex);
+    for (let [id, count] of Object.entries(enemys)) {
+      for (let i = 0; i < count; i++) {
+        const coords = this.getRandomCoordsWithinBounds({ xMin: 2 * config.UNIT_SIZE, yMin: config.COLLISION_MESH_RADIUS, xMax: config.MAP_WIDTH - config.COLLISION_MESH_RADIUS, yMax: config.MAP_HEIGHT - config.COLLISION_MESH_RADIUS });
+        const sourceUnit = allUnits[id];
+        if (!sourceUnit) {
+          console.error('Unit with id', id, 'does not exist');
 
-      const roll = randInt(this.random, 0, 100);
-      if (roll <= config.PERCENT_CHANCE_OF_HEAVY_UNIT) {
-        unit.healthMax = config.UNIT_BASE_HEALTH * 2;
-        unit.health = unit.healthMax;
-        unit.damage = config.UNIT_BASE_DAMAGE * 2;
-        unit.radius = config.COLLISION_MESH_RADIUS;
+        }
+        let unit: Unit.IUnit = Unit.create(
+          sourceUnit.id,
+          coords.x,
+          coords.y,
+          Faction.ENEMY,
+          sourceUnit.info.image,
+          UnitType.AI,
+          sourceUnit.info.subtype,
+          sourceUnit.unitProps
+        );
+
+        const roll = randInt(this.random, 0, 100);
+        if (roll <= config.PERCENT_CHANCE_OF_HEAVY_UNIT) {
+          unit.healthMax = config.UNIT_BASE_HEALTH * 2;
+          unit.health = unit.healthMax;
+          unit.damage = config.UNIT_BASE_DAMAGE * 2;
+          unit.radius = config.COLLISION_MESH_RADIUS;
+        }
       }
     }
 
@@ -980,20 +986,54 @@ type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFun
 function getEnemiesForAltitude(levelIndex: number) {
 
   const hardCodedLevelEnemies = [
-    // [],
-    // [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 1, 2],
-    [0, 4],
-    [0, 0, 0, 6],
-    [0, 0, 0, 1, 7],
-    [0, 0, 1, 1, 1],
-    [0, 0, 0, 1, 3, 6],
-    [0, 0, 0, 0, 3, 3, 4],
-    [0, 1, 1, 1, 3, 3, 3, 2],
-    [0, 0, 0, 0, 0, 0, 0, 4],
-    [0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 5, 6],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 3, 3],
-    [0, 0, 0, 0, 0, 0, 1, 1, 1, 4, 5],
+    { 'grunt': 5 },
+    {
+      'grunt': 4,
+      'archer': 1
+    },
+    {
+      'grunt': 3,
+      'archer': 2,
+      'Sand Golem': 1,
+    },
+    {
+      'grunt': 7,
+      'archer': 3,
+      'Sand Golem': 2,
+    },
+    {
+      'grunt': 2,
+      'archer': 2,
+      'Summoner': 1,
+    },
+    {
+      'Summoner': 3,
+    },
+    {
+      'grunt': 3,
+      'archer': 2,
+      'Sand Golem': 1,
+      'priest': 2,
+    },
+    {
+      'grunt': 3,
+      'archer': 2,
+      'Sand Golem': 1,
+      'priest': 2,
+      'Poisoner': 1
+    },
+    {
+      'grunt': 12,
+      'demon': 1
+    }
+    {
+      'grunt': 5,
+      'archer': 3,
+      'Sand Golem': 2,
+      'priest': 2,
+      'Poisoner': 1,
+      'demon': 1
+    },
   ];
   return hardCodedLevelEnemies[levelIndex];
 }

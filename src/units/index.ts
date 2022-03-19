@@ -29,7 +29,6 @@ import jester from './jester';
 import grunt from './grunt';
 import archer from './archer';
 import sandGolem from './sandGolem';
-import rook from './rook';
 import summoner from './summoner';
 import demon from './demon';
 import priest from './priest';
