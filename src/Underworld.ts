@@ -418,7 +418,9 @@ export default class Underworld {
     for (let p of this.players) {
       for (let cardId of p.cards) {
         // Decrement, cap at 0
-        p.cardUsageCounts[cardId] = Math.max(0, p.cardUsageCounts[cardId] - 1);
+        if (p.cardUsageCounts[cardId] !== undefined) {
+          p.cardUsageCounts[cardId] = Math.max(0, p.cardUsageCounts[cardId] - 1);
+        }
       }
     }
     updateCardManaBadges();
