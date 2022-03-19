@@ -1,7 +1,6 @@
 ## Current Priorities
 
 - Upgrade ws for pieServer
-- Repair how join game works so it's more reliable
 
 - Bug: Got insufficient mana when trying to cast on a unit at the edge of my range even though the tooltip showed that I had enough
 - Bug: I got poisoned when I cast contageous poison but wasn't close
@@ -9,10 +8,7 @@
 - Bug: When I was on edge of inverted poly, the pathfinding moved me to the vertex instead of away from the wall where i clicked
 - Bug: Mana steal costs mana, it shouldn't!!
 - Bug: I don't think priest AI works
-- Bug: desync, when a second player joins AFTEr the first is already in, somehow the first recieves an INIT_GAME_STATE and there is a desync
 - todo: Make "mana cost" icon on cards allow for health cost (for spells such as mana steal)
-- Todo: Increase damage from mana burn to make it worth it's cost
-- Ensure that casting spends mana immediately so that you can mana burn AOE and it won't hurt you if invoking the burn spent the mana before you could burn your own mana
 - Setup Buffer with social medias and start a following
 ---
 Finish Content:

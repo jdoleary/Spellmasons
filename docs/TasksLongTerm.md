@@ -1,5 +1,6 @@
 
 ## Feature Creep Ideas
+- What if cards could cost you things other than mana, like health, or even speed?? 0.o
 - Make pickups destructable (even portal - which could spawn in at another location if you destroy it - aim to plesantly suprise players)
 - (L) Rather than an overworld, what if you and your team have to mix potions in a cauldron to create a portal that leads you to a unique level? (The cauldron makes the portal)
   - This adds another tradeoff, the more dangerous the portal, the greater the reward for surviving it.
