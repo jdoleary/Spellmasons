@@ -787,6 +787,14 @@ export default class Underworld {
       return effectState;
     }
     const cards = Cards.getCardsFromIds(cardIds);
+    const manaCost = calculateManaCost(cards, math.distance(casterPlayer.unit, target), casterPlayer);
+    if (!dryRun) {
+      // Apply mana cost to caster
+      // Note: it is important that this is done BEFORE the cards are actually cast because
+      // the cards may affect the caster's mana
+      casterPlayer.unit.mana -= manaCost;
+      Unit.syncPlayerHealthManaUI();
+    }
 
     for (let index = 0; index < cards.length; index++) {
       const card = cards[index];
@@ -849,12 +857,6 @@ export default class Underworld {
 
         await Promise.all(animationPromises);
       }
-    }
-    const manaCost = calculateManaCost(cards, math.distance(casterPlayer.unit, target), casterPlayer);
-    if (!dryRun) {
-      // Apply mana cost to caster
-      casterPlayer.unit.mana -= manaCost;
-      Unit.syncPlayerHealthManaUI();
     }
     if (!dryRun) {
       // Now that the caster has used the card, increment usage count
