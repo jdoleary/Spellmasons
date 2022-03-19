@@ -290,9 +290,12 @@ export async function takeDamage(unit: IUnit, amount: number) {
   unit.health -= alteredAmount;
   // Prevent health from going over maximum or under 0
   unit.health = Math.max(0, Math.min(unit.health, unit.healthMax));
-  // Update the shader to reflect health level
-  unit.shaderUniforms.all_red.alpha = 1;
-  addLerpable(unit.shaderUniforms.all_red, "alpha", 0, 200);
+  // If the unit is actually taking damage (not taking 0 damage or being healed - (negative damage))
+  if (alteredAmount > 0) {
+    // Use all_red shader to flash the unit to show they are taking damage
+    unit.shaderUniforms.all_red.alpha = 1;
+    addLerpable(unit.shaderUniforms.all_red, "alpha", 0, 200);
+  }
 
   // If taking damage (not healing) and health is 0 or less...
   if (amount > 0 && unit.health <= 0) {
