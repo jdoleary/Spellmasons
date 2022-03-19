@@ -19,14 +19,10 @@ const messageLog: any[] = [];
 let clients: string[] = [];
 let underworld: Underworld;
 export function initializeUnderworld() {
+  console.log('Setup: Initialize Underworld');
   underworld = new Underworld(Math.random().toString());
   // Mark the underworld as "ready"
   readyState.set('underworld', true);
-  if (window.hostClientId == window.clientId) {
-    // Now that the host player is created, initialize the level:
-    console.log('host init level');
-    underworld.initLevel(underworld.levelIndex);
-  }
 }
 export function onData(d: OnDataArgs) {
   console.log("onData:", MESSAGE_TYPES[d.payload.type], d)
@@ -57,8 +53,6 @@ export function onData(d: OnDataArgs) {
         // load the game state
         // INIT_GAME_STATE is only to be handled by clients who just
         // connected to the room and need the first transfer of game state
-        // This is why it is okay that updating the game state happens 
-      // This is why it is okay that updating the game state happens 
         // This is why it is okay that updating the game state happens 
         // asynchronously.
         if (!readyState.get("underworld")) {
@@ -206,6 +200,7 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
                 giveClientGameStateForInitialLoad(fromClient);
               } else if (currentClientIsHost && hostIsJoining) {
                 // If the host is the one joining, start the game for all clients (even ones who have already chosen a character).
+                underworld.initLevel(underworld.levelIndex);
                 console.log('Host: Send all clients game state for initial load');
                 clients.forEach(clientId => {
                   giveClientGameStateForInitialLoad(clientId);
