@@ -190,7 +190,12 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
               // (the .filter removes possible undefined players so that underworld.players doesn't contain any undefined values)
               underworld.players = clients.map(c => underworld.players.find(p => p.clientId == c)).filter(x => !!x) as Player.IPlayer[];
               // Restore playerTurnIndex after mutating the players array
-              underworld.playerTurnIndex = underworld.players.findIndex(p => p == cachedPlayerActiveTurn);
+              const restorePlayerTurnIndex = underworld.players.findIndex(p => p == cachedPlayerActiveTurn);
+              if (restorePlayerTurnIndex !== undefined) {
+                underworld.playerTurnIndex = restorePlayerTurnIndex;
+
+              }
+
 
               if (gameAlreadyStarted) {
                 // Send the lastest gamestate to that client so they can be up-to-date:
