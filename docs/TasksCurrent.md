@@ -1,10 +1,5 @@
 ## Current Priorities
-- Remove overworld, make level initialization work for multi players
-    - TODO: Fix level loading, make more stable
-    - bug: if the not host chooses a character they get sent into the game and enemy units are invisible and then the sprites duplicate whenever they move
-    - Handle
-        - client joins before host has made game
-        - client joins after host has made game
+- Bug: SYNC seems to leave behind duplicate images for non-host
 
 - Bug: Got insufficient mana when trying to cast on a unit at the edge of my range even though the tooltip showed that I had enough
 - Bug: I got poisoned when I cast contageous poison but wasn't close
