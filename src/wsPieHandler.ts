@@ -358,15 +358,16 @@ function giveClientGameStateForInitialLoad(clientId: string) {
   // Only the host should be sending INIT_GAME_STATE messages
   // because the host has the canonical game state
   if (window.hostClientId === window.clientId) {
-    console.log(`Host: Send ${clientId} game state for initial load`);
     // Do not send this message to self
     if (window.clientId !== clientId) {
+      console.log(`Host: Send ${clientId} game state for initial load`);
       window.pie.sendData({
         type: MESSAGE_TYPES.INIT_GAME_STATE,
-        subType: "Whisper",
-        whisperClientIds: [clientId],
         route: window.route,
         underworld: underworld.serializeForSaving(),
+      }, {
+        subType: "Whisper",
+        whisperClientIds: [clientId],
       });
     }
   }
