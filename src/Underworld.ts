@@ -1013,13 +1013,13 @@ function getEnemiesForAltitude(levelIndex: number) {
       'grunt': 3,
       'archer': 2,
       'Sand Golem': 1,
-      'priest': 2,
+      'Priest': 2,
     },
     {
       'grunt': 3,
       'archer': 2,
       'Sand Golem': 1,
-      'priest': 2,
+      'Priest': 2,
       'Poisoner': 1
     },
     {
@@ -1030,7 +1030,7 @@ function getEnemiesForAltitude(levelIndex: number) {
       'grunt': 5,
       'archer': 3,
       'Sand Golem': 2,
-      'priest': 2,
+      'Priest': 2,
       'Poisoner': 1,
       'demon': 1
     },
