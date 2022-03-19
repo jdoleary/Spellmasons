@@ -225,7 +225,7 @@ export function syncronize(unitSerialized: IUnitSerialized, originalUnit: IUnit)
   // I'm choosing just to omit shaderUniforms from syncronize
   const { image, shaderUniforms, ...rest } = unitSerialized;
   Object.assign(originalUnit, rest);
-  Image.syncronize(image, originalUnit.image);
+  originalUnit.image = Image.syncronize(image, originalUnit.image);
 }
 
 // It is important to use this function when returning a unit to the previous
