@@ -32,6 +32,9 @@ const UNIT_BASE_RADIUS = 0.7 * config.COLLISION_MESH_RADIUS * config.NON_HEAVY_U
 // rehydrate the JSON into an entity
 export type IUnitSerialized = Omit<IUnit, "resolveDoneMoving" | "resolveDoneMovingTimeout" | "image"> & { image: Image.IImageSerialized };
 export interface IUnit {
+  // A unique id so that units can be identified
+  // across the network
+  id: number;
   unitSourceId: string;
   x: number;
   y: number;
@@ -80,6 +83,7 @@ export interface IUnit {
     };
   };
 }
+let lastUnitId = -1;
 export function create(
   unitSourceId: string,
   x: number,
@@ -91,6 +95,7 @@ export function create(
   sourceUnitProps: Partial<IUnit> = {}
 ): IUnit {
   const unit: IUnit = Object.assign({
+    id: ++lastUnitId,
     unitSourceId,
     x,
     y,

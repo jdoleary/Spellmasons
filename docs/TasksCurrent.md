@@ -1,7 +1,7 @@
 ## Current Priorities
+
 - Upgrade ws for pieServer
 - Repair how join game works so it's more reliable
-- Bug: SYNC seems to leave behind duplicate images for non-host
 
 - Bug: Got insufficient mana when trying to cast on a unit at the edge of my range even though the tooltip showed that I had enough
 - Bug: I got poisoned when I cast contageous poison but wasn't close

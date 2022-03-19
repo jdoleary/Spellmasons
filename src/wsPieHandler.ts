@@ -229,8 +229,15 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
           console.error("Something is wrong, underworld has different length unit than sync units")
           // Client incurred major desync, resolve via DESYNC message
           window.pie.sendData({ type: MESSAGE_TYPES.DESYNC });
+        } else {
+          console.log('sync unit', syncUnit, 'and current unit', underworld.units[i]);
+          const sourceUnit = underworld.units[i];
+          if (syncUnit.id == sourceUnit.id) {
+            Unit.syncronize(syncUnit, underworld.units[i]);
+          } else {
+            console.error('Sync failure, units are out of order');
+          }
         }
-        Unit.syncronize(syncUnit, underworld.units[i]);
       }
       for (let i = 0; i < underworld.players.length; i++) {
         const syncPlayer = players[i]
@@ -302,6 +309,8 @@ function handleLoadGameState(payload: any) {
     .filter((u) => u.unitType !== UnitType.PLAYER_CONTROLLED)
     .map(Unit.load);
   underworld.players = loadedGameState.players.map(Player.load);
+  // Resort units by id since player units are loaded last
+  underworld.units.sort((a, b) => a.id - b.id);
   underworld.pickups = loadedGameState.pickups.map(Pickup.load);
   // Filtering out the undefined ensures that this is an array of IObstacle
   underworld.obstacles = loadedGameState.obstacles.map(Obstacle.load).filter(o => !!o) as Obstacle.IObstacle[];
