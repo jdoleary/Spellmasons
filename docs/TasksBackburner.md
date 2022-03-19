@@ -1,3 +1,4 @@
+- wspie: https://github.com/websockets/ws#how-to-detect-and-close-broken-connections
 - Stress test upping limit for "couldn't find path in enough steps".  If it's not high enough, some units will just not move when they attempt to move to a target that is too complex to path to.
   - Maybe find a way to remove bad paths before the correct one is found?
 - Ask for audio permissions from FF?
