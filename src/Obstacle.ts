@@ -46,8 +46,6 @@ export function create(x: number, y: number, obstacle: IObstacleSource) {
   };
 
 
-  self.image.sprite.scale.set(0.0);
-  Image.scale(self.image, 1.0);
   window.underworld.addObstacleToArray(self);
   return self;
 }

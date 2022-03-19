@@ -52,9 +52,6 @@ export function create(
     effect,
   };
 
-  // Start images small and make them grow when they spawn in
-  self.image.sprite.scale.set(0.0);
-  Image.scale(self.image, 1.0);
   window.underworld.addPickupToArray(self);
 
   return self;
