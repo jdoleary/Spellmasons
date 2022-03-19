@@ -157,7 +157,8 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
         // If the host has a player, then the game has already started
         const gameAlreadyStarted = underworld.players.find(p => p.clientId == window.hostClientId);
         // JOIN_GAME is meant to be handled by everyone except the client that 
-        // send the message so that they can add the new client as a player instance
+        // send the message because the client that just joined will get a whole
+        // gamestate dump from the host.
         // Exception: The host should handle their own player creation
         // If current client is the host or this message is from a different client then self
         if (currentClientIsHost || fromClient !== window.clientId) {
@@ -384,8 +385,12 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
       setView(View.CharacterSelect);
     }
     // The host is always the first client
-    window.hostClientId = clients[0]
-    console.log(`Setup: Setting Host client to ${window.hostClientId}. ${window.hostClientId === window.clientId ? 'you are the host.' : ''}`);
+    window.hostClientId = clients[0];
+    if (window.hostClientId === window.clientId) {
+      console.log(`Setup: Setting Host client to ${window.hostClientId}. %c You are the host. `, 'background: #222; color: #bada55');
+    } else {
+      console.log(`Setup: Setting Host client to ${window.hostClientId}.`);
+    }
   } else {
     // client left
 
@@ -409,7 +414,11 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
     if (o.clientThatChanged === window.hostClientId) {
       // Set host to the 0th client that is still connected
       window.hostClientId = clients[0];
-      console.log(`Setup: Host client left, reassigning host to ${window.hostClientId}. ${window.hostClientId === window.clientId ? 'you are the host.' : ''}`);
+      if (window.hostClientId === window.clientId) {
+        console.log(`Setup: Host client left, reassigning host to ${window.hostClientId}. %c You are the host. `, 'background: #222; color: #bada55');
+      } else {
+        console.log(`Setup: Host client left, reassigning host to ${window.hostClientId}.`);
+      }
     }
   }
   // If the underworld doesn't exist, have the host setup the underworld
