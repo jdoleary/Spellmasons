@@ -3,8 +3,8 @@ import type { Spell } from '.';
 import { CardType, cardTypeToProbability } from './cardUtils';
 
 const id = 'mana_burn';
-const mana_burnt = 8;
-const health_burn = Math.max(mana_burnt / 10, 1)
+const mana_burnt = 30;
+const health_burn_ratio = .1;
 const type = CardType.Special;
 const spell: Spell = {
   card: {
@@ -13,7 +13,7 @@ const spell: Spell = {
     probability: cardTypeToProbability(type),
     thumbnail: 'mana_burn.png',
     description: `
-Burn ${mana_burnt} of the targets' mana, causing the target take ${health_burn} damage and lose the mana.
+Burn up to ${mana_burnt} of the targets' mana, causing the target take ${health_burn_ratio} damage per mana burnt.
     `,
     effect: async (state, dryRun) => {
       if (dryRun) {
@@ -25,9 +25,10 @@ Burn ${mana_burnt} of the targets' mana, causing the target take ${health_burn} 
         if (unit) {
           const unitManaBurnt = Math.min(unit.mana, mana_burnt);
           unit.mana -= unitManaBurnt;
-          promises.push(Unit.takeDamage(unit, health_burn));
+          const damage = unitManaBurnt * health_burn_ratio
+          promises.push(Unit.takeDamage(unit, damage));
           state.aggregator.damageDealt =
-            (state.aggregator.damageDealt || 0) + health_burn;
+            (state.aggregator.damageDealt || 0) + damage;
         }
       }
       await Promise.all(promises);
