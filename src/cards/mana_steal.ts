@@ -2,10 +2,10 @@ import * as Unit from '../Unit';
 import type { Spell } from '.';
 import { createVisualLobbingProjectile } from '../Projectile';
 import floatingText from '../FloatingText';
-import { CardType, cardTypeToProbability } from './cardUtils';
+import { CardType, cardTypeToManaCost, cardTypeToProbability } from './cardUtils';
 
 const id = 'mana_steal';
-const mana_stolen = 8;
+const mana_stolen = 20;
 const health_burn = Math.max(mana_stolen / 10, 1)
 const type = CardType.Special;
 const spell: Spell = {
@@ -15,7 +15,7 @@ const spell: Spell = {
     probability: cardTypeToProbability(type),
     thumbnail: 'mana_steal.png',
     description: `
-Sacrifice ${health_burn} of your own health to steal ${mana_stolen} from each target.
+Sacrifice ${health_burn} of your own health to steal up to ${mana_stolen} from each target.
     `,
     effect: async (state, dryRun) => {
       if (dryRun) {
@@ -29,7 +29,8 @@ Sacrifice ${health_burn} of your own health to steal ${mana_stolen} from each ta
         if (unit) {
           const unitManaBurnt = Math.min(unit.mana, mana_stolen);
           unit.mana -= unitManaBurnt;
-          state.casterUnit.mana += unitManaBurnt;
+          // Duct-tape: + cardTypeToManaCost(type) negates the built in mana cost of this card
+          state.casterUnit.mana += unitManaBurnt + cardTypeToManaCost(type);
           promises.push(createVisualLobbingProjectile(unit, caster.x, caster.y, 'blue-projectile.png').then(() => {
             floatingText({
               coords: caster,
