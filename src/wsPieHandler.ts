@@ -50,14 +50,25 @@ export function onData(d: OnDataArgs) {
       forceSyncClients();
       break;
     case MESSAGE_TYPES.INIT_GAME_STATE:
-      // If the underworld is not yet setup for this client then
-      // load the game state
-      // INIT_GAME_STATE is only to be handled by clients who just
-      // connected to the room and need the first transfer of game state
+      // Only accept INIT_GAME_STATE message if it contains own player information to prevent
+      // loading into a game where you as a player don't exist
+      if (payload.underworld.players.find((p: Player.IPlayer) => p.clientId === window.clientId)) {
+        // If the underworld is not yet setup for this client then
+        // load the game state
+        // INIT_GAME_STATE is only to be handled by clients who just
+        // connected to the room and need the first transfer of game state
+        // This is why it is okay that updating the game state happens 
       // This is why it is okay that updating the game state happens 
-      // asynchronously.
-      if (!readyState.get("underworld")) {
-        handleLoadGameState(payload);
+        // This is why it is okay that updating the game state happens 
+        // asynchronously.
+        if (!readyState.get("underworld")) {
+          handleLoadGameState(payload);
+        } else {
+          console.log('Ignoring INIT_GAME_STATE because underworld has already been initialized.');
+        }
+      } else {
+        console.log('Ignoring INIT_GAME_STATE because it does not contain own client as a player yet');
+
       }
       break;
     case MESSAGE_TYPES.LOAD_GAME_STATE:
