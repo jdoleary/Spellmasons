@@ -1025,7 +1025,7 @@ function getEnemiesForAltitude(levelIndex: number) {
     {
       'grunt': 12,
       'demon': 1
-    }
+    },
     {
       'grunt': 5,
       'archer': 3,
