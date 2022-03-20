@@ -1,6 +1,9 @@
 ## Current Priorities
 
 - Upgrade ws for pieServer
+- Host frontend on static site with every push
+    - https://vercel.com/dashboard
+- Figure out how to host server locally to be reached via the internet
 
 - Bug: Got insufficient mana when trying to cast on a unit at the edge of my range even though the tooltip showed that I had enough
 - Bug: I got poisoned when I cast contageous poison but wasn't close
@@ -21,3 +24,9 @@ Finish Content:
         - Movement spells could help you cast farther than you should be able to and move a far unit into another group and chain them, cause it should keep the target after they move
     - A card that changes mana cost of spells to health cost (vampire)
     - soul swap (swap bodies with another unit, until they die, then you return to your own body - and you get their abilities as cards)
+    - Jake Ideas:
+        - Magnetize (pull enemies together)
+        - Reflect
+        - Putting spells on the ground. DOTs, AOE fields
+        - Debuffs
+        - Explosive on an enemy and when he dies it procs

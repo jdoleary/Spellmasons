@@ -1,11 +1,12 @@
 # Critical Path (3nd revision)
-- Anytime: Playtest with Brad and Jake
+- Get remote playtesting working
+    - Anytime: Playtest with Brad and Jake
 - March 17: Youtube Alpha version video / Setup Social Media system
 - March 26: Finish Content / Endgame
-- March 27: Revisit SYNCing.  Make it happen on a regular interval to protect against desyncs
 - Menus / Options
-- Electron Security Evaluation
-    - Maybe don't use electron, maybe just publish as a website??  Could I link to the site in places like itch.io??
+    - Prereq: get a following first
+    - Homepage with news and stuff (Sveltekit?)
+    - subdomain static site hosts the game
 - Art in Blender / Shaders / Juice
 - Music
 - [SFX](https://www.asoundeffect.com/sound-library/metamorphosis/)
@@ -13,8 +14,9 @@
 - [Tutorial](https://www.youtube.com/watch?v=-GV814cWiAw)
 - Monitoring (Sentry.io?)
 - Publicity: https://buffer.com/pricing?cta=bufferSite-homepage-hero-selectAPlan-1#compare      
-- March 31: Publish on Steamworks
-    - Update game tags (is card game still appropriate?)
+- March 31: Release
+- Open Source
+- Engage community in making new spells
 
 ## Deadlines
 - ~~My part (gameplay) should be finished end of Feb 2022~~
