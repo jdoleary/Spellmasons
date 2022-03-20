@@ -296,7 +296,7 @@ export default class Underworld {
     // Spawn units at the start of the level
     const enemys = getEnemiesForAltitude(levelIndex);
     for (let [id, count] of Object.entries(enemys)) {
-      for (let i = 0; i < count; i++) {
+      for (let i = 0; i < (count || 0); i++) {
         const coords = this.getRandomCoordsWithinBounds({ xMin: 2 * config.UNIT_SIZE, yMin: config.COLLISION_MESH_RADIUS, xMax: config.MAP_WIDTH - config.COLLISION_MESH_RADIUS, yMax: config.MAP_HEIGHT - config.COLLISION_MESH_RADIUS });
         const sourceUnit = allUnits[id];
         if (!sourceUnit) {
