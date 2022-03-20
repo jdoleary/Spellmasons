@@ -199,9 +199,7 @@ export function clickHandler(e: MouseEvent) {
       // If the player casting is the current client player
       if (selfPlayer) {
         // cast the spell
-        // getUnitAt corrects to the nearest Unit if there is one, otherwise
-        // allow casting right on the mouseTarget
-        const target = window.underworld.getUnitAt(mousePos) || mousePos;
+        const target = mousePos;
         const cardIds = CardUI.getSelectedCardIds();
         const cards = CardUI.getSelectedCards();
 

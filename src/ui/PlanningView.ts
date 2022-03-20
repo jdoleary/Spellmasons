@@ -107,9 +107,7 @@ export async function syncSpellEffectProjection() {
         Image.create(mousePos.x, mousePos.y, 'deny.png', containerSpells);
       } else {
         // Dry run cast so the user can see what effect it's going to have
-        // getUnitAt corrects to the nearest Unit if there is one, otherwise
-        // allow casting right on the mouseTarget
-        const target = window.underworld.getUnitAt(mousePos) || mousePos;
+        const target = mousePos;
         await window.underworld.castCards(
           currentPlayer,
           CardUI.getSelectedCardIds(),

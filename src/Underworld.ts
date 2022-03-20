@@ -781,13 +781,16 @@ export default class Underworld {
   async castCards(
     casterPlayer: Player.IPlayer,
     cardIds: string[],
-    target: Vec2,
+    castLocation: Vec2,
     dryRun: boolean,
   ): Promise<Cards.EffectState> {
+    // Set the targets to any units overlapping the castLocation, this is done by getting all units
+    // within their COLLISION_MESH_RADIUS of the castLocation because units are COLLISION_MESH_RADIUS*2 wide
+    const targets = window.underworld.getCoordsForUnitsWithinDistanceOfTarget(castLocation, config.COLLISION_MESH_RADIUS);
     let effectState: Cards.EffectState = {
       casterPlayer,
       casterUnit: casterPlayer.unit,
-      targets: [target],
+      targets,
       aggregator: {},
     };
     if (!casterPlayer.unit.alive) {
@@ -795,7 +798,7 @@ export default class Underworld {
       return effectState;
     }
     const cards = Cards.getCardsFromIds(cardIds);
-    const manaCost = calculateManaCost(cards, math.distance(casterPlayer.unit, target), casterPlayer);
+    const manaCost = calculateManaCost(cards, math.distance(casterPlayer.unit, castLocation), casterPlayer);
     if (!dryRun) {
       // Apply mana cost to caster
       // Note: it is important that this is done BEFORE the cards are actually cast because

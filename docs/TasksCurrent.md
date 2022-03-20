@@ -5,8 +5,6 @@
     - https://vercel.com/dashboard
 - Figure out how to host server locally to be reached via the internet
 
-- Bug: Got insufficient mana when trying to cast on a unit at the edge of my range even though the tooltip showed that I had enough
-    - To fix: Don't make targeting snap to units, make all spells "AOE" with just a super small radius
 - Bug: I got poisoned when I cast contageous poison but wasn't close
 - Bug: Units that died of poison didn't leave behind skelletons
 - Bug: When I was on edge of inverted poly, the pathfinding moved me to the vertex instead of away from the wall where i clicked
