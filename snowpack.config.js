@@ -1,4 +1,7 @@
 /** @type {import("snowpack").SnowpackUserConfig } */
+// snowpack.config.js
+const pkg = require('./package.json');
+process.env.SNOWPACK_PUBLIC_PACKAGE_VERSION = pkg.version;
 module.exports = {
   mount: {
     public: { url: '/', static: true },
