@@ -73,6 +73,15 @@ export function setView(v: View) {
             if (quickloadName) {
               console.log('ADMIN: quickload:', quickloadName);
               window.load(quickloadName);
+            } else {
+              // All clients should join at the CharacterSelect screen so they can
+              // choose their character.  Once they choose their character their
+              // Player entity is created and then the messageQueue can begin processing
+              // including LOAD_GAME_STATE.
+              // --
+              // Note: This must occur AFTER PIXI assets are done being loaded
+              // or else the characters to select wont display
+              setView(View.CharacterSelect);
             }
           })
           .catch((err: string) => console.error('Failed to join room', err));

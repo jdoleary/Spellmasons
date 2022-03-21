@@ -1,9 +1,10 @@
 ## Current Priorities
+- todo wait till pixi assets are done being loaded to go to character select
 
-- Upgrade ws for pieServer
-- Host frontend on static site with every push
-    - https://vercel.com/dashboard
+- Make single player possible with pieClient solo mode
+- Make UI for choosing server
 - Figure out how to host server locally to be reached via the internet
+    - [dedicated server](https://help.steampowered.com/en/faqs/view/6F46-9698-9682-8DB8)
 
 - Bug: I got poisoned when I cast contageous poison but wasn't close
 - Bug: Units that died of poison didn't leave behind skelletons

@@ -401,13 +401,6 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
   clients = o.clients;
   // Client joined
   if (o.present) {
-    if (o.clientThatChanged === window.clientId) {
-      // All clients should join at the CharacterSelect screen so they can
-      // choose their character.  Once they choose their character their
-      // Player entity is created and then the messageQueue can begin processing
-      // including LOAD_GAME_STATE.
-      setView(View.CharacterSelect);
-    }
     // The host is always the first client
     window.hostClientId = clients[0];
     if (window.hostClientId === window.clientId) {

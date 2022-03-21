@@ -14,8 +14,6 @@ export function connect_to_wsPie_server(): Promise<void> {
     const storedClientId = sessionStorage.getItem('pie-clientId');
     window.pie = pie = new PieClient({
       env: import.meta.env.MODE,
-      wsUri: wsUri + (storedClientId ? `?clientId=${storedClientId}` : ''),
-      useStats: true,
     });
     addHandlers(pie);
     pie.onConnectInfo = (o) => {
@@ -26,6 +24,8 @@ export function connect_to_wsPie_server(): Promise<void> {
         reject();
       }
     };
+    pie.connectSolo();
+    // pie.connect(wsUri + (storedClientId ? `?clientId=${storedClientId}` : ''), true);
   });
 }
 let maxClients = 8;
