@@ -3,7 +3,7 @@ import type { Spell } from '.';
 import { CardType, cardTypeToProbability } from './cardUtils';
 
 const id = 'damage';
-const damageDone = 3;
+const damageDone = 2;
 const type = CardType.Common;
 const spell: Spell = {
   card: {
