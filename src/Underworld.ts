@@ -786,7 +786,10 @@ export default class Underworld {
   ): Promise<Cards.EffectState> {
     // Set the targets to any units overlapping the castLocation, this is done by getting all units
     // within their COLLISION_MESH_RADIUS of the castLocation because units are COLLISION_MESH_RADIUS*2 wide
-    const targets = window.underworld.getCoordsForUnitsWithinDistanceOfTarget(castLocation, config.COLLISION_MESH_RADIUS);
+    let targets = window.underworld.getCoordsForUnitsWithinDistanceOfTarget(castLocation, config.COLLISION_MESH_RADIUS);
+    if (!targets.find(t => Vec.equal(t, castLocation))) {
+      targets.push(castLocation);
+    }
     let effectState: Cards.EffectState = {
       casterPlayer,
       casterUnit: casterPlayer.unit,
