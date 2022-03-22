@@ -11,7 +11,6 @@
 
 <body>
   <noscript>You need to enable JavaScript to run this app.</noscript>
-  <div id="websocket-pie-connection-status"></div>
   <pre id="ready-state"></pre>
   <div id="vote-level-label"></div>
   <div id="PIXI-holder"></div>
@@ -62,6 +61,30 @@
     <br />
     <div style="font-size:small" id="version-info"></div>
     <div id="debug-info"></div>
+  </div>
+  <div id="menu" class="hidden">
+    <div id="menu-inner">
+      <div id="websocket-pie-connection-status"></div>
+      <button id="singleplayer">Singleplayer</button>
+      <button id="multiplayer">Multiplayer</button>
+      <form id="server-chooser" class="hidden">
+        Server Url
+        <div>
+          <input name="wsUrl">
+          <button type="submit">Connect</button>
+        </div>
+      </form>
+      <form id="game-chooser" class="hidden">
+        Game name
+        <input required name="gameName" />
+        Password (optional)
+        <input name="password" type="password" />
+        <div style="display:flex;">
+          <button type="submit">Host</button>
+          <button type="submit">Join</button>
+        </div>
+      </form>
+    </div>
   </div>
   <script type="module" src="/dist/index.js"></script>
 </body>

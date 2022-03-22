@@ -1,18 +1,12 @@
 import {
-  setupPixi,
   containerCharacterSelect,
   addPixiContainersForView,
   recenterStage,
 } from './PixiUtils';
-import * as Cards from './cards';
 import * as Units from './units';
-import { connect_to_wsPie_server, joinRoom } from './wsPieSetup';
-import { setupMonitoring } from './monitoring';
 import { UnitSubType } from './commonTypes';
 import { MESSAGE_TYPES } from './MessageTypes';
 import * as Image from './Image';
-import { initPlanningView } from './ui/PlanningView';
-import * as readyState from './readyState';
 
 // A view is not shared between players in the same game, a player could choose any view at any time
 export enum View {
@@ -27,65 +21,13 @@ export function setView(v: View) {
   window.view = v;
   addPixiContainersForView(v);
   recenterStage();
+  const elMenu = document.getElementById('menu') as HTMLElement;
+  elMenu.classList.add('hidden');
   switch (v) {
     case View.Menu:
-      // TODO: implement menu
-      break;
-    case View.Setup:
-      // Start monitoring with development overlay
-      // setupMonitoring();
+      elMenu.classList.remove('hidden');
 
-      // Initialize Assets
-      console.log("Setup: Loading Pixi assets...")
-      let setupPixiPromise = setupPixi().then(() => {
-        readyState.set('pixiAssets', true);
-        console.log("Setup: Done loading Pixi assets.")
-      }).catch(e => {
-        console.error('Setup: Failed to setup pixi', e);
-      });
-      // Initialize Network
-      console.log("Pie: Connecting to server...")
-      let connectToPieServerPromise = connect_to_wsPie_server().then(() => {
-        readyState.set('wsPieConnection', true);
-        console.log("Pie: Successfully connected to PieServer.")
-      }).catch(() => {
-        console.error('Unable to connect to server.  Please check the wsURI.');
-        alert('Unable to connect to server.  Please check the wsURI.');
-      });
-      Promise.all([setupPixiPromise, connectToPieServerPromise]).then(() => {
-        console.log("Setup: Loading complete.. initialize game")
-        // Now that we are both connected to the pieServer and assets are loaded,
-        // we can host or join a game
-        // --
-        // Initialize content
-        Cards.registerCards();
-        Units.registerUnits();
-        initPlanningView();
-        readyState.set("content", true);
 
-        // TODO: TEMP temporarily default to just entering a generic game for speed of development
-        joinRoom({})
-          .then(() => {
-            readyState.set('wsPieRoomJoined', true);
-            console.log('Pie: You are now in the room');
-            // Useful for development to get into the game quickly
-            let quickloadName = localStorage.getItem('quickload')
-            if (quickloadName) {
-              console.log('ADMIN: quickload:', quickloadName);
-              window.load(quickloadName);
-            } else {
-              // All clients should join at the CharacterSelect screen so they can
-              // choose their character.  Once they choose their character their
-              // Player entity is created and then the messageQueue can begin processing
-              // including LOAD_GAME_STATE.
-              // --
-              // Note: This must occur AFTER PIXI assets are done being loaded
-              // or else the characters to select wont display
-              setView(View.CharacterSelect);
-            }
-          })
-          .catch((err: string) => console.error('Failed to join room', err));
-      });
       break;
     case View.CharacterSelect:
       // Host or join a game brings client to Character select

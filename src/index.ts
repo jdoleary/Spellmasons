@@ -4,15 +4,46 @@ import AnimationTimeline from './AnimationTimeline';
 import type * as Player from './Player';
 import type Underworld from './Underworld';
 import { setView, View } from './views';
+import addMenuEventListeners from './menu';
+import * as readyState from './readyState';
+import { setupPixi } from './PixiUtils';
+import * as Cards from './cards';
+import * as Units from './units';
+import { initPlanningView } from './ui/PlanningView';
 
-window.animationTimeline = new AnimationTimeline();
-setView(View.Setup);
+// Setup:
+setupAll();
 
-const elVersionInfo = document.getElementById('version-info')
-if (elVersionInfo && import.meta.env.SNOWPACK_PUBLIC_PACKAGE_VERSION) {
-  elVersionInfo.innerText = `v${import.meta.env.SNOWPACK_PUBLIC_PACKAGE_VERSION}`;
+function setupAll() {
+  // Start monitoring with development overlay
+  // import { setupMonitoring } from './monitoring';
+  // setupMonitoring();
 
+  // Initialize Assets
+  console.log("Setup: Loading Pixi assets...")
+  const setupPixiPromise = setupPixi().then(() => {
+    readyState.set('pixiAssets', true);
+    console.log("Setup: Done loading Pixi assets.")
+    // Initialize content
+    Cards.registerCards();
+    Units.registerUnits();
+    initPlanningView();
+    readyState.set("content", true);
+  }).catch(e => {
+    console.error('Setup: Failed to setup pixi', e);
+  });
+  addMenuEventListeners(setupPixiPromise);
+
+  window.animationTimeline = new AnimationTimeline();
+  setView(View.Menu);
+
+  // Set UI version info
+  const elVersionInfo = document.getElementById('version-info')
+  if (elVersionInfo && import.meta.env.SNOWPACK_PUBLIC_PACKAGE_VERSION) {
+    elVersionInfo.innerText = `v${import.meta.env.SNOWPACK_PUBLIC_PACKAGE_VERSION}`;
+  }
 }
+
 declare global {
   interface Window {
     latencyPanel: Stats.Panel;
