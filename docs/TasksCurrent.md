@@ -1,17 +1,17 @@
 ## Current Priorities
+- Improve closing connections to previous servers
 - Make UI for choosing server
 - Figure out how to host server locally to be reached via the internet
     - [dedicated server](https://help.steampowered.com/en/faqs/view/6F46-9698-9682-8DB8)
 
-- Bug: AOE cast area doesn't show if you're not directly on a target
 - Bug: Movement still stops early sometimes
 - Bug: I got poisoned when I cast contageous poison but wasn't close
 - Bug: Units that died of poison didn't leave behind skelletons (because they took damage again that destroyed the skelleton)
     - Task: Add bone dust pile that dead bodies turn into when hit.  No longer a unit (that can be interacted with), but still visible
 - Bug: When I was on edge of inverted poly, the pathfinding moved me to the vertex instead of away from the wall where i clicked
-- Bug: Mana steal costs mana, it shouldn't!!
 - Bug: I don't think priest AI works
 - todo: Make "mana cost" icon on cards allow for health cost (for spells such as mana steal)
+    - Bug: Mana steal costs mana, it shouldn't!!
 ---
 Finish Content:
 - More spells:
