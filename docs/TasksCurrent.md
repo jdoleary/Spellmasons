@@ -1,6 +1,6 @@
 ## Current Priorities
+- Figure out how to reinit a game if you go to the menu and start a new one
 - Improve closing connections to previous servers
-- Make UI for choosing server
 - Figure out how to host server locally to be reached via the internet
     - [dedicated server](https://help.steampowered.com/en/faqs/view/6F46-9698-9682-8DB8)
 

@@ -16,13 +16,34 @@ export enum View {
   // Game view shows all the routes, the overworld, upgrade screen, underworld, etc
   Game,
 }
+let lastNonMenuView: View | undefined;
+export function toggleMenu() {
+  const elMenu = document.getElementById('menu') as HTMLElement;
+  const menuClosed = elMenu.classList.contains('hidden');
+  if (menuClosed) {
+    // Open it
+    setView(View.Menu);
+  } else {
+    // Change to the last non menu view
+    if (lastNonMenuView) {
+      setView(lastNonMenuView);
+    } else {
+      console.log('Cannot close menu yet, no previous view to change to.');
+    }
+  }
+
+}
 export function setView(v: View) {
   console.log('setView(', View[v], ')');
   window.view = v;
   addPixiContainersForView(v);
   recenterStage();
   const elMenu = document.getElementById('menu') as HTMLElement;
-  elMenu.classList.add('hidden');
+  if (v !== View.Menu) {
+    elMenu.classList.add('hidden');
+    lastNonMenuView = v;
+  }
+
   switch (v) {
     case View.Menu:
       elMenu.classList.remove('hidden');

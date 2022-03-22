@@ -8,9 +8,7 @@ import {
   updatePlanningView,
   updateTooltipSelection,
 } from './PlanningView';
-import { app } from '../PixiUtils';
-import { distance } from '../math';
-import { View } from '../views';
+import { toggleMenu, View } from '../views';
 import { calculateManaCost } from '../cards/cardUtils';
 import * as math from '../math';
 import { findPath } from '../Pathfinding';
@@ -72,6 +70,10 @@ export function keydownListener(event: KeyboardEvent) {
 }
 
 export function keyupListener(event: KeyboardEvent) {
+  if (event.code == 'Escape') {
+    toggleMenu();
+    return
+  }
   // Only handle hotkeys when viewing the Game
   if (window.view !== View.Game) {
     return;
