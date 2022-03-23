@@ -35,7 +35,7 @@
     "typescript": "^4.0.0"
   },
   "dependencies": {
-    "pie-client": "^0.10.0",
+    "pie-client": "^0.12.0",
     "pixi.js": "^6.2.1",
     "seedrandom": "^3.0.5",
     "stats.js": "^0.17.0"

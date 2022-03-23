@@ -10,40 +10,35 @@ const wsUri = 'ws://localhost:8080';
 // const wsUri = 'ws://68.48.199.138:7337';
 // Current digital ocean wsPie app:
 // const wsUri = 'wss://websocket-pie-6ggew.ondigitalocean.app';
-let pie: PieClient | undefined;
+export const pie: PieClient = window.pie = new PieClient({
+  env: import.meta.env.MODE,
+});
+addHandlers(pie);
 export function connect_to_wsPie_server(wsUri?: string): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     const storedClientId = sessionStorage.getItem('pie-clientId');
-    window.pie = pie = new PieClient({
-      env: import.meta.env.MODE,
-    });
-    addHandlers(pie);
     pie.onConnectInfo = (o) => {
       console.log('onConnectInfo', o);
       if (o.connected) {
+        readyState.set('wsPieConnection', true);
+        console.log("Pie: Successfully connected to PieServer.")
         resolve();
-      } else {
-        reject();
       }
     };
     if (wsUri) {
-      pie.connect('ws://' + wsUri + (storedClientId ? `?clientId=${storedClientId}` : ''), true);
+      pie.connect('ws://' + wsUri + (storedClientId ? `?clientId=${storedClientId}` : ''), true).catch(() => {
+        console.error('Unable to connect to server.  Please check the wsURI.');
+        // TODO: remove alert for prod
+        alert('Unable to connect to server.  Please check the wsURI.');
+
+      });
     } else {
       pie.connectSolo();
     }
-  }).then(() => {
-    readyState.set('wsPieConnection', true);
-    console.log("Pie: Successfully connected to PieServer.")
-  }).catch(() => {
-    console.error('Unable to connect to server.  Please check the wsURI.');
-    alert('Unable to connect to server.  Please check the wsURI.');
   });
 
 }
 
-export function isConnected(): boolean {
-  return !!pie?.connected;
-}
 let maxClients = 8;
 function defaultRoomInfo(_room_info = {}): Room {
   const room_info = Object.assign({

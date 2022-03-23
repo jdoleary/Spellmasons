@@ -1,4 +1,4 @@
-import { connect_to_wsPie_server, isConnected, joinRoom } from './wsPieSetup';
+import { connect_to_wsPie_server, pie, joinRoom } from './wsPieSetup';
 
 export default function addMenuEventListeners(setupPixiPromise: Promise<void>) {
     if (
@@ -34,7 +34,7 @@ export default function addMenuEventListeners(setupPixiPromise: Promise<void>) {
                 const formData = new FormData(elGameChooser);
                 const { gameName } = Object.fromEntries(formData);
 
-                if (isConnected()) {
+                if (pie.isConnected()) {
                     // Must not join a room until pixi is setup
                     setupPixiPromise.then(() => {
                         console.log("Setup: Loading complete.. initialize game")
