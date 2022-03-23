@@ -14,7 +14,7 @@ export const pie: PieClient = window.pie = new PieClient({
   env: import.meta.env.MODE,
 });
 addHandlers(pie);
-export function connect_to_wsPie_server(wsUri?: string): Promise<void> {
+window.connect_to_wsPie_server = function connect_to_wsPie_server(wsUri?: string): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     const storedClientId = sessionStorage.getItem('pie-clientId');
     pie.onConnectInfo = (o) => {
@@ -30,10 +30,12 @@ export function connect_to_wsPie_server(wsUri?: string): Promise<void> {
         console.error('Unable to connect to server.  Please check the wsURI.');
         // TODO: remove alert for prod
         alert('Unable to connect to server.  Please check the wsURI.');
+        reject();
 
       });
     } else {
       pie.connectSolo();
+      resolve();
     }
   });
 
@@ -51,7 +53,7 @@ function defaultRoomInfo(_room_info = {}): Room {
   return room_info;
 }
 
-export function joinRoom(_room_info = {}): Promise<unknown> {
+window.joinRoom = function joinRoom(_room_info = {}): Promise<unknown> {
   if (!pie) {
     return Promise.reject();
   }

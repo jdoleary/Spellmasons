@@ -446,7 +446,8 @@ button {
   min-width: 80px;
 }
 #menu {
-  display: flex;
+  /* menu starts out hidden until it is ready (due to it's dependencies) */
+  display: none;
   justify-content: center;
   align-items: center;
   position: absolute;
@@ -455,14 +456,15 @@ button {
   right: 0;
   bottom: 0;
 }
-#menu.hidden {
-  display:none;
+#menu.ready {
+  display: flex;
 }
+#menu.hidden {
+  display: none;
+}
+
 #menu-inner {
   background-color: cadetblue;
   padding: 16px;
   border-radius: 10px;
-}
-.hidden {
-  display:none;
 }

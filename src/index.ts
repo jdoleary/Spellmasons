@@ -4,14 +4,17 @@ import AnimationTimeline from './AnimationTimeline';
 import type * as Player from './Player';
 import type Underworld from './Underworld';
 import { setView, View } from './views';
-import addMenuEventListeners from './menu';
 import * as readyState from './readyState';
 import { setupPixi } from './PixiUtils';
 import * as Cards from './cards';
 import * as Units from './units';
 import { initPlanningView } from './ui/PlanningView';
+import type PieClient from 'pie-client';
 
-// Setup:
+// This import is critical so that the svelte menu has access to
+// the pie globals
+import './wsPieSetup';
+
 setupAll();
 
 function setupAll() {
@@ -21,7 +24,7 @@ function setupAll() {
 
   // Initialize Assets
   console.log("Setup: Loading Pixi assets...")
-  const setupPixiPromise = setupPixi().then(() => {
+  window.setupPixiPromise = setupPixi().then(() => {
     readyState.set('pixiAssets', true);
     console.log("Setup: Done loading Pixi assets.")
     // Initialize content
@@ -32,7 +35,16 @@ function setupAll() {
   }).catch(e => {
     console.error('Setup: Failed to setup pixi', e);
   });
-  addMenuEventListeners(setupPixiPromise);
+
+  const elMenu = document.getElementById('menu');
+  if (elMenu) {
+    // Reveal the menu now that the global variables needed by svelte are set.
+    elMenu.classList.add('ready');
+
+  } else {
+    // This should never happen
+    console.error('Cannot find "menu" element in DOM');
+  }
 
   window.animationTimeline = new AnimationTimeline();
   setView(View.Menu);
@@ -51,7 +63,12 @@ declare global {
     underworld: Underworld;
     // A reference to the player instance of the client playing on this instance
     player: Player.IPlayer | undefined;
-    pie: any;
+    // Globals needed for Golems-menu
+    pie: PieClient;
+    connect_to_wsPie_server: (wsUri?: string) => Promise<void>;
+    joinRoom: (_room_info: any) => Promise<unknown>;
+    setupPixiPromise: Promise<void>;
+
     save: (title: string) => void;
     load: (title: string) => void;
     // Save pie messages for later replay
