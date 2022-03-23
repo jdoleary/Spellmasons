@@ -34,8 +34,9 @@ window.connect_to_wsPie_server = function connect_to_wsPie_server(wsUri?: string
 
       });
     } else {
-      pie.connectSolo();
-      resolve();
+      pie.connectSolo().then(() => {
+        resolve();
+      });
     }
   });
 
