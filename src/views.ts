@@ -33,6 +33,12 @@ export function toggleMenu() {
   }
 
 }
+window.addEventListener('keydown', event => {
+  if (event.code == 'Escape') {
+    toggleMenu();
+    return
+  }
+});
 export function setView(v: View) {
   console.log('setView(', View[v], ')');
   window.view = v;
