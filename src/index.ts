@@ -68,6 +68,7 @@ declare global {
     connect_to_wsPie_server: (wsUri?: string) => Promise<void>;
     joinRoom: (_room_info: any) => Promise<unknown>;
     setupPixiPromise: Promise<void>;
+    exitCurrentGame: () => void;
 
     save: (title: string) => void;
     load: (title: string) => void;

@@ -14,6 +14,9 @@ body.route-Underworld #underworld-container {
   justify-content: space-between;
 }
 #game-content-holder {
+  display:none;
+}
+#game-content-holder.route-Underworld {
   display: flex;
   align-items: flex-start;
   flex-direction: column;
@@ -439,12 +442,6 @@ form {
   font-family: sans-serif;
 }
 
-button {
-  -webkit-padding: 0.4em 0;
-  padding: 0.4em;
-  margin: 0 0 0.5em 0;
-  min-width: 80px;
-}
 #menu {
   /* menu starts out hidden until it is ready (due to it's dependencies) */
   display: none;

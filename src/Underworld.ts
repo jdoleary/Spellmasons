@@ -185,6 +185,16 @@ export default class Underworld {
   // cleanup cleans up all assets that must be manually removed (for now `Image`s)
   // if an object stops being used.  It does not empty the underworld arrays, by design.
   cleanup() {
+    // Clean up body classes
+    document.body.classList.remove(`route-${Route[window.route]}`);
+    // Remove all phase classes from body
+    for (let phaseClass of document.body.classList.values()) {
+      if (phaseClass.includes('phase-')) {
+        document.body.classList.remove(phaseClass);
+      }
+    }
+    document.body.classList.remove('your-turn');
+
     clearInterval(this.turnInterval);
     // Note: Player's unit image is cleaned up below where it also has a reference in this.units
     for (let u of this.units) {

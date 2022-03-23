@@ -24,6 +24,14 @@ export function initializeUnderworld() {
   // Mark the underworld as "ready"
   readyState.set('underworld', true);
 }
+window.exitCurrentGame = function exitCurrentGame() {
+  if (underworld) {
+    underworld.cleanup();
+  }
+  // @ts-ignore
+  underworld = undefined;
+  readyState.set('underworld', false);
+}
 export function onData(d: OnDataArgs) {
   console.log("onData:", MESSAGE_TYPES[d.payload.type], d)
   // Temporarily for development
