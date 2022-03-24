@@ -16,7 +16,7 @@ body.route-Underworld #underworld-container {
 #game-content-holder {
   display:none;
 }
-#game-content-holder.route-Underworld {
+body.route-Underworld #game-content-holder {
   display: flex;
   align-items: flex-start;
   flex-direction: column;
