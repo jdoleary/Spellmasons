@@ -1,5 +1,4 @@
 ## Current Priorities
-- Make youtube demo of websocket pie
 - Bug: Movement still stops early sometimes
 - Fix casting so it doesn't AOE incorrectly
 - todo: Make "mana cost" icon on cards allow for health cost (for spells such as mana steal)
