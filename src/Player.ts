@@ -137,7 +137,7 @@ export function syncronize(playerSerialized: IPlayerSerialized, originalPlayer: 
   Unit.syncronize(unit, originalPlayer.unit);
   addHighlighIfPlayerBelongsToCurrentClient(originalPlayer);
 }
-// Sets boolean and substring denoting if the player has a pie-client client associated with it
+// Sets boolean and substring denoting if the player has a @websocketpie/client client associated with it
 export function setClientConnected(player: IPlayer, connected: boolean) {
   player.clientConnected = connected;
   if (connected) {

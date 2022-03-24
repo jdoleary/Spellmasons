@@ -1,4 +1,4 @@
-import type { ClientPresenceChangedArgs, OnDataArgs } from 'pie-client';
+import type { ClientPresenceChangedArgs, OnDataArgs } from '@websocketpie/client';
 
 import { MESSAGE_TYPES } from './MessageTypes';
 import { UnitType } from './commonTypes';

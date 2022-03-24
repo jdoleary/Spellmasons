@@ -1,4 +1,4 @@
-import PieClient, { Room } from 'pie-client';
+import PieClient, { Room } from '@websocketpie/client';
 import { onData, onClientPresenceChanged } from './wsPieHandler';
 import * as readyState from './readyState';
 import { setView, View } from './views';
@@ -26,7 +26,7 @@ window.connect_to_wsPie_server = function connect_to_wsPie_server(wsUri?: string
       }
     };
     if (wsUri) {
-      pie.connect('ws://' + wsUri + (storedClientId ? `?clientId=${storedClientId}` : ''), true).catch(() => {
+      pie.connect('wss://' + wsUri + (storedClientId ? `?clientId=${storedClientId}` : ''), true).catch(() => {
         console.error('Unable to connect to server.  Please check the wsURI.');
         // TODO: remove alert for prod
         alert('Unable to connect to server.  Please check the wsURI.');

@@ -9,7 +9,7 @@ import { setupPixi } from './PixiUtils';
 import * as Cards from './cards';
 import * as Units from './units';
 import { initPlanningView } from './ui/PlanningView';
-import type PieClient from 'pie-client';
+import type PieClient from '@websocketpie/client';
 
 // This import is critical so that the svelte menu has access to
 // the pie globals
