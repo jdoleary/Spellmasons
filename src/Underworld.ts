@@ -22,7 +22,7 @@ import type { Vec2 } from "./Vec";
 import * as Vec from "./Vec";
 import Events from './Events';
 import { allUnits } from './units';
-import { syncSpellEffectProjection, updatePlanningView } from './ui/PlanningView';
+import { drawDryRunCircle, syncSpellEffectProjection, updatePlanningView } from './ui/PlanningView';
 import { setRoute, Route } from './routes';
 import { prng, randInt, SeedrandomState } from './rand';
 import { calculateManaCost } from './cards/cardUtils';
@@ -794,16 +794,10 @@ export default class Underworld {
     castLocation: Vec2,
     dryRun: boolean,
   ): Promise<Cards.EffectState> {
-    // Set the targets to any units overlapping the castLocation, this is done by getting all units
-    // within their COLLISION_MESH_RADIUS of the castLocation because units are COLLISION_MESH_RADIUS*2 wide
-    let targets = window.underworld.getCoordsForUnitsWithinDistanceOfTarget(castLocation, config.COLLISION_MESH_RADIUS);
-    if (!targets.find(t => Vec.equal(t, castLocation))) {
-      targets.push(castLocation);
-    }
     let effectState: Cards.EffectState = {
       casterPlayer,
       casterUnit: casterPlayer.unit,
-      targets,
+      targets: [castLocation],
       aggregator: {},
     };
     if (!casterPlayer.unit.alive) {
@@ -871,8 +865,15 @@ export default class Underworld {
           if (
             previousTargets.find((t) => t.x === target.x && t.y === target.y)
           ) {
-            // Don't animate previous targets, they should be drawn full, immediately
-            animationPromises.push(drawTarget(target.x, target.y, false));
+            let targetedUnit = this.getUnitAt(target)
+            // If the target is over a unit, draw a target on the unit
+            if (targetedUnit) {
+              // Don't animate previous targets, they should be drawn full, immediately
+              animationPromises.push(drawTarget(targetedUnit.x, targetedUnit.y, false));
+            } else {
+              // otherwise draw a small target circle where it will be cast on the ground
+              drawDryRunCircle(target, 4);
+            }
           } else {
             // If a new target, animate it in
             animationPromises.push(drawTarget(target.x, target.y, !dryRun));

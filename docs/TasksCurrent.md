@@ -1,9 +1,9 @@
 ## Current Priorities
 - Bug: Movement still stops early sometimes
-- Fix casting so it doesn't AOE incorrectly
 - todo: Make "mana cost" icon on cards allow for health cost (for spells such as mana steal)
     - Bug: Mana steal costs mana, it shouldn't!!
 - Start making social posts
+- Fix: escape is used for both clear spells and menuz
 
 ---
 - wsPie: bug: what happens when you call sendData before joining a room???
