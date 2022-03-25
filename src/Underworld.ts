@@ -182,6 +182,45 @@ export default class Underworld {
     const expandedAndMergedPolygons = mergeOverlappingPolygons(collidablePolygons.map(p => expandPolygon(p, config.COLLISION_MESH_RADIUS)));
     this.pathingPolygons = expandedAndMergedPolygons
   }
+  spawnPickup(index: string, coords: Vec2) {
+    const pickup = Pickup.pickups[index];
+    Pickup.create(
+      coords.x,
+      coords.y,
+      pickup.name,
+      pickup.description,
+      true,
+      pickup.imagePath,
+      true,
+      pickup.effect,
+    );
+  }
+  spawnEnemy(id: string, coords: Vec2) {
+    const sourceUnit = allUnits[id];
+    if (!sourceUnit) {
+      console.error('Unit with id', id, 'does not exist');
+
+    }
+    let unit: Unit.IUnit = Unit.create(
+      sourceUnit.id,
+      coords.x,
+      coords.y,
+      Faction.ENEMY,
+      sourceUnit.info.image,
+      UnitType.AI,
+      sourceUnit.info.subtype,
+      sourceUnit.unitProps
+    );
+
+    const roll = randInt(this.random, 0, 100);
+    if (roll <= config.PERCENT_CHANCE_OF_HEAVY_UNIT) {
+      unit.healthMax = config.UNIT_BASE_HEALTH * 2;
+      unit.health = unit.healthMax;
+      unit.damage = config.UNIT_BASE_DAMAGE * 2;
+      unit.radius = config.COLLISION_MESH_RADIUS;
+    }
+
+  }
 
   initLevel(levelIndex: number) {
     console.log('Setup: initLevel', levelIndex);
@@ -221,71 +260,34 @@ export default class Underworld {
         fontSize: '60px',
       },
     });
-    // Spawn portal
-    const portalPickup = Pickup.specialPickups['portal.png'];
-    Pickup.create(
-      config.PORTAL_COORDINATES.x,
-      config.PORTAL_COORDINATES.y,
-      portalPickup.name,
-      portalPickup.description,
-      false,
-      portalPickup.imagePath,
-      true,
-      portalPickup.effect,
-    );
     // Update level indicator UI at top of screen
     if (elLevelIndicator) {
       elLevelIndicator.innerText = `Altitude ${this.levelIndex}`;
     } else {
       console.error('elLevelIndicator is null');
     }
+    // Keeps track of things that need to be spawned
+    const spawnList: {
+      type: 'player' | 'unit' | 'pickup' | 'portal',
+      id: string,
+    }[] = [];
+    spawnList.push({ type: 'portal', id: 'n/a' });
     for (let i = 0; i < config.NUM_PICKUPS_PER_LEVEL; i++) {
-      const coords = this.getRandomCoordsWithinBounds({ xMin: 2 * config.UNIT_SIZE, yMin: config.COLLISION_MESH_RADIUS, xMax: config.MAP_WIDTH - config.COLLISION_MESH_RADIUS, yMax: config.MAP_HEIGHT - config.COLLISION_MESH_RADIUS });
       const randomPickupIndex = randInt(this.random,
         0,
         Object.values(Pickup.pickups).length - 1,
       );
-      const pickup = Pickup.pickups[randomPickupIndex];
-      Pickup.create(
-        coords.x,
-        coords.y,
-        pickup.name,
-        pickup.description,
-        true,
-        pickup.imagePath,
-        true,
-        pickup.effect,
-      );
+      spawnList.push({ type: 'pickup', id: randomPickupIndex.toString() });
     }
     // Spawn units at the start of the level
     const enemys = getEnemiesForAltitude(levelIndex);
     for (let [id, count] of Object.entries(enemys)) {
       for (let i = 0; i < (count || 0); i++) {
-        const coords = this.getRandomCoordsWithinBounds({ xMin: 2 * config.UNIT_SIZE, yMin: config.COLLISION_MESH_RADIUS, xMax: config.MAP_WIDTH - config.COLLISION_MESH_RADIUS, yMax: config.MAP_HEIGHT - config.COLLISION_MESH_RADIUS });
-        const sourceUnit = allUnits[id];
-        if (!sourceUnit) {
-          console.error('Unit with id', id, 'does not exist');
-
-        }
-        let unit: Unit.IUnit = Unit.create(
-          sourceUnit.id,
-          coords.x,
-          coords.y,
-          Faction.ENEMY,
-          sourceUnit.info.image,
-          UnitType.AI,
-          sourceUnit.info.subtype,
-          sourceUnit.unitProps
-        );
-
-        const roll = randInt(this.random, 0, 100);
-        if (roll <= config.PERCENT_CHANCE_OF_HEAVY_UNIT) {
-          unit.healthMax = config.UNIT_BASE_HEALTH * 2;
-          unit.health = unit.healthMax;
-          unit.damage = config.UNIT_BASE_DAMAGE * 2;
-          unit.radius = config.COLLISION_MESH_RADIUS;
-        }
+        spawnList.push({ type: 'unit', id });
       }
+    }
+    for (let player of this.players) {
+      spawnList.push({ type: 'player', id: player.clientId });
     }
 
     // The map is made of obstacle sectors
@@ -302,7 +304,40 @@ export default class Underworld {
             const coordY = config.OBSTACLE_SIZE * config.OBSTACLES_PER_SECTOR_WIDE * j + config.OBSTACLE_SIZE * Y + config.COLLISION_MESH_RADIUS;
             const obstacleIndex = rowOfObstacles[X];
             if (obstacleIndex == 0) {
-              // Empty, no obstacle
+              // Empty, no obstacle, take this opportunity to spawn something from the spawn list, since
+              // we know it is a safe place to spawn
+              if (spawnList.length) {
+                const spawnListRandIndex = randInt(this.random, 0, spawnList.length - 1);
+                const { type, id } = spawnList.splice(spawnListRandIndex, 1)[0];
+                const coords = { x: coordX, y: coordY }
+                if (type == 'unit') {
+                  this.spawnEnemy(id, coords);
+                } else if (type == 'pickup') {
+                  this.spawnPickup(id, coords);
+                } else if (type == 'portal') {
+                  // Spawn portal
+                  const portalPickup = Pickup.specialPickups['portal.png'];
+                  Pickup.create(
+                    coords.x,
+                    coords.y,
+                    portalPickup.name,
+                    portalPickup.description,
+                    false,
+                    portalPickup.imagePath,
+                    true,
+                    portalPickup.effect,
+                  );
+
+                } else if (type == 'player') {
+                  const player = this.players.find(p => p.clientId == id);
+                  if (player) {
+                    Unit.setLocation(player.unit, coords);
+                  } else {
+                    console.error('Cannot reset player location, player not found with id', id);
+                  }
+
+                }
+              }
               continue
             }
             // -1 to let 0 be empty (no obstacle) and 1 will be index 0 of
