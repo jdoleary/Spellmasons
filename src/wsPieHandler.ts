@@ -238,7 +238,6 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
           // Client incurred major desync, resolve via DESYNC message
           window.pie.sendData({ type: MESSAGE_TYPES.DESYNC });
         } else {
-          console.log('sync unit', syncUnit, 'and current unit', underworld.units[i]);
           const sourceUnit = underworld.units[i];
           if (syncUnit.id == sourceUnit.id) {
             Unit.syncronize(syncUnit, underworld.units[i]);
