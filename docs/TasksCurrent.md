@@ -4,14 +4,11 @@
 - Brad:
     - How to disinsentivize skipping the level with swap
     - How to communicatge the extra cost that distance adds to mana
-    - Feedback
-        - Actually FUN
-- Move health and mana down  to by spells and show mana cost near the spells
-- Bug: Movement still stops early sometimes
+- Bug: Movement still stops early sometimes (this is due to the movement timeout
 - todo: Make "mana cost" icon on cards allow for health cost (for spells such as mana steal)
     - Bug: Mana steal costs mana, it shouldn't!!
-- Start making social posts
 - Fix: escape is used for both clear spells and menuz
+- Notify when waiting for other players to pick a character, just like "x players left to pick upgrade
 
 ---
 - wsPie: bug: what happens when you call sendData before joining a room???
