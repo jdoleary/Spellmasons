@@ -60,7 +60,7 @@
         <key>jxrCompressionLevel</key>
         <uint>0</uint>
         <key>ditherType</key>
-        <enum type="SettingsBase::DitherType">NearestNeighbour</enum>
+        <enum type="SettingsBase::DitherType">PngQuantLow</enum>
         <key>backgroundColor</key>
         <uint>0</uint>
         <key>libGdx</key>
@@ -86,7 +86,7 @@
         <key>atfFormats</key>
         <string></string>
         <key>textureFormat</key>
-        <enum type="SettingsBase::TextureFormat">png</enum>
+        <enum type="SettingsBase::TextureFormat">png8</enum>
         <key>borderPadding</key>
         <uint>0</uint>
         <key>maxTextureSize</key>
@@ -136,7 +136,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename></filename>
+                <filename>public/sheet1.json</filename>
             </struct>
         </map>
         <key>multiPack</key>
@@ -220,6 +220,7 @@
                 <false/>
             </struct>
             <key type="filename">images/egg.png</key>
+            <key type="filename">images/pickups/health-potion.png</key>
             <key type="filename">images/pickups/mana-potion_1.png</key>
             <key type="filename">images/pickups/mana-potion_2.png</key>
             <key type="filename">images/pickups/mana-potion_3.png</key>
@@ -245,6 +246,8 @@
             <key type="filename">public/images/spell/freeze.png</key>
             <key type="filename">public/images/spell/heal.png</key>
             <key type="filename">public/images/spell/lance.png</key>
+            <key type="filename">public/images/spell/mana_burn.png</key>
+            <key type="filename">public/images/spell/mana_steal.png</key>
             <key type="filename">public/images/spell/obliterate.png</key>
             <key type="filename">public/images/spell/poison.png</key>
             <key type="filename">public/images/spell/protection.png</key>
@@ -276,6 +279,7 @@
             <key type="filename">images/relics/fire.png</key>
             <key type="filename">images/relics/poison.png</key>
             <key type="filename">public/images/spell/arrow.png</key>
+            <key type="filename">public/images/spell/blue-projectile.png</key>
             <key type="filename">public/images/spell/green-thing.png</key>
             <key type="filename">public/images/spell/holy-projectile.png</key>
             <struct type="IndividualSpriteSettings">
