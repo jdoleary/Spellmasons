@@ -401,7 +401,8 @@ export function updateCardManaBadges() {
     // Update cards in hand
     const cards = Cards.getCardsFromIds(window.player.cards);
     for (let card of cards) {
-      const manaCost = calculateManaCostForSingleCard(card, (window.player.cardUsageCounts[card.id] || 0));
+      const selectedCardElementsOfSameId = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"]`);
+      const manaCost = calculateManaCostForSingleCard(card, (window.player.cardUsageCounts[card.id] || 0) + selectedCardElementsOfSameId.length);
       const elBadge = document.querySelector(`#card-hand .card[data-card-id="${card.id}"] .card-mana-badge`);
       updateManaBadge(elBadge, manaCost, card);
     }
