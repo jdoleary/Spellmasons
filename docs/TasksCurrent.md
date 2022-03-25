@@ -5,7 +5,6 @@
     - How to communicatge the extra cost that distance adds to mana
 - todo: Make "mana cost" icon on cards allow for health cost (for spells such as mana steal)
     - Bug: Mana steal costs mana, it shouldn't!!
-- Fix: escape is used for both clear spells and menuz
 - Notify when waiting for other players to pick a character, just like "x players left to pick upgrade
 
 ---

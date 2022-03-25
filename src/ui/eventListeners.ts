@@ -26,9 +26,6 @@ export function keydownListener(event: KeyboardEvent) {
     case 'Space':
       window.underworld.endMyTurn();
       break;
-    case 'Escape':
-      CardUI.clearSelectedCards();
-      break;
     case 'ShiftLeft':
     case 'ShiftRight':
       CardUI.toggleInspectMode(true);
