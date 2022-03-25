@@ -129,6 +129,8 @@ export const specialPickups: { [image: string]: IPickupSource } = {
     },
   },
 };
+const manaPotionRestoreAmount = 40;
+const healthPotionRestoreAmount = 10;
 export const pickups: IPickupSource[] = [
   {
     imagePath: 'pickups/card',
@@ -158,10 +160,22 @@ export const pickups: IPickupSource[] = [
   {
     imagePath: 'pickups/mana-potion',
     name: 'Mana Potion',
-    description: 'Grants the player more mana',
+    description: `Restores ${manaPotionRestoreAmount} mana`,
     effect: ({ unit, player }) => {
       if (player) {
-        player.unit.mana += 40;
+        player.unit.mana += manaPotionRestoreAmount;
+        // Sync UI immediately when mana changes
+        syncPlayerHealthManaUI();
+      }
+    },
+  },
+  {
+    imagePath: 'pickups/health-potion',
+    name: 'Health Potion',
+    description: `Restores ${healthPotionRestoreAmount} health`,
+    effect: ({ unit, player }) => {
+      if (player) {
+        player.unit.health += healthPotionRestoreAmount;
         // Sync UI immediately when mana changes
         syncPlayerHealthManaUI();
       }
