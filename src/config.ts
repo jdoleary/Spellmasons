@@ -5,7 +5,7 @@ export const COLLISION_MESH_RADIUS = 32;
 export const LOB_PROJECTILE_SPEED = 600; // in millis
 export const UNIT_SIZE = COLLISION_MESH_RADIUS * 2;
 export const UNIT_BASE_HEALTH = 3;
-export const UNIT_BASE_MANA = 100;
+export const UNIT_BASE_MANA = 60;
 export const UNIT_BASE_DAMAGE = 1;
 // Ensures that the resolveDoneMoving callback will timeout if it never gets called.
 // This ensures that the game doesn't get stuck if, say, the collision system bugs
@@ -29,6 +29,6 @@ export const PORTAL_COORDINATES = {
 };
 
 // Mana
-export const MANA_GET_PER_TURN = 5;
+export const MANA_GET_PER_TURN = 10;
 export const DISTANCE_FAR = 300;
 export const DISTANCE_VERY_FAR = 600;
