@@ -15,6 +15,7 @@ import * as Image from '../Image';
 import * as math from '../math';
 import { targetBlue } from './colors';
 import { calculateManaCost } from '../cards/cardUtils';
+import unit from '../units/manBlue';
 
 let planningViewGraphics: PIXI.Graphics;
 let dryRunGraphics: PIXI.Graphics;
@@ -32,12 +33,19 @@ export function updatePlanningView() {
       if (
         selectedUnit.alive
       ) {
-        const color = Unit.getPlanningViewColor(selectedUnit);
-        planningViewGraphics.lineStyle(8, color, 0.9);
+        planningViewGraphics.lineStyle(8, 0xffffff, 0.9);
+        // Only draw attack range for non player units
+        if (selectedUnit.unitType != UnitType.PLAYER_CONTROLLED) {
+          planningViewGraphics.drawCircle(
+            selectedUnit.x,
+            selectedUnit.y,
+            selectedUnit.attackRange
+          );
+        }
         planningViewGraphics.drawCircle(
           selectedUnit.x,
           selectedUnit.y,
-          selectedUnit.attackRange
+          selectedUnit.moveDistance
         );
         planningViewGraphics.endFill();
       }

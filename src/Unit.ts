@@ -17,12 +17,6 @@ const elManaBar2: HTMLElement = document.querySelector('#mana .fill:nth-child(2)
 const elManaBar3: HTMLElement = document.querySelector('#mana .fill:nth-child(3)') as HTMLElement;
 const elManaLabel: HTMLElement = document.querySelector('#mana .label') as HTMLElement;
 
-export function getPlanningViewColor(unit: IUnit) {
-  if (unit.unitType === UnitType.PLAYER_CONTROLLED) {
-    return 0x00ff00;
-  }
-  return 0xff0000;
-}
 // Make the UNIT_BASE_RADIUS a little smaller than the actual size of the image
 // so that moving units can overlap with each other a bit so "crowding" looks more
 // organic
@@ -108,7 +102,7 @@ export function create(
     resolveDoneMovingTimeout: undefined,
     moveDistance: config.UNIT_BASE_MOVE_DISTANCE,
     distanceMovedThisTurn: 0,
-    attackRange: config.UNIT_BASE_ATTACK_RANGE,
+    attackRange: 10 + config.COLLISION_MESH_RADIUS * 2,
     faction,
     thisTurnMoved: false,
     image: Image.create(x, y, defaultImagePath, containerUnits),
