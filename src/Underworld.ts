@@ -471,6 +471,21 @@ export default class Underworld {
       console.error("Attempted to initialize turn for a non existant player index")
       return
     }
+    // This overlapps with the altitude announcement, make floatingText queued?
+    // if (player == window.player) {
+    //   // Notify the current player that their turn is starting
+    //   floatingText({
+    //     coords: {
+    //       x: config.MAP_WIDTH / 2,
+    //       y: config.MAP_HEIGHT / 2,
+    //     },
+    //     text: `Your Turn`,
+    //     style: {
+    //       fill: 'white',
+    //       fontSize: '60px',
+    //     },
+    //   });
+    // }
     // Give mana at the start of turn
     const manaTillFull = player.unit.manaMax - player.unit.mana;
     // Give the player their mana per turn but don't let it go beyond manaMax
