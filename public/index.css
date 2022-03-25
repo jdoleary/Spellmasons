@@ -135,6 +135,10 @@ body.inspect-mode #card-inspect {
   display: flex;
   flex-direction: column-reverse;
 }
+#selected-cards {
+  position: relative;
+  bottom:90px;
+}
 #card-holders #selected-cards,
 #card-holders #card-hand {
   display: flex;
@@ -336,6 +340,10 @@ body.your-turn #player-turn-indicator {
   flex-direction: column;
   /* Display above pixi */
   z-index: 1;
+  position: absolute;
+  bottom: 140px;
+  left: 0;
+  right: 0;
 }
 .health-mana-bar {
   width: 200px;
