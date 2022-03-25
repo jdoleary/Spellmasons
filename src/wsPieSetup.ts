@@ -26,8 +26,8 @@ window.connect_to_wsPie_server = function connect_to_wsPie_server(wsUri?: string
       }
     };
     if (wsUri) {
-      pie.connect('wss://' + wsUri + (storedClientId ? `?clientId=${storedClientId}` : ''), true).catch(() => {
-        console.error('Unable to connect to server.  Please check the wsURI.');
+      pie.connect(wsUri + (storedClientId ? `?clientId=${storedClientId}` : ''), true).catch(() => {
+        console.error('Unable to connect to server.  Please check the wsURI. The protocol should be wss:// or ws://');
         // TODO: remove alert for prod
         alert('Unable to connect to server.  Please check the wsURI.');
         reject();
