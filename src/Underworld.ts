@@ -43,7 +43,6 @@ const elPlayerTurnIndicatorHolder = document.getElementById(
   'player-turn-indicator-holder',
 );
 const elPlayerTurnIndicator = document.getElementById('player-turn-indicator');
-const elTurnTimeRemaining = document.getElementById('turn-time-remaining');
 const elLevelIndicator = document.getElementById('level-indicator');
 
 export default class Underworld {
@@ -70,8 +69,6 @@ export default class Underworld {
   obstacles: Obstacle.IObstacle[] = [];
   walls: LineSegment[] = [];
   pathingPolygons: Polygon[] = [];
-  secondsLeftForTurn: number = config.SECONDS_PER_TURN;
-  turnInterval: any;
   playersWhoHaveChosenUpgrade = new Set<string>();
   // Keeps track of how many messages have been processed so that clients can
   // know when they've desynced.  Only used for syncronous message processing
@@ -92,7 +89,6 @@ export default class Underworld {
     mapGraphics.endFill();
 
     // TODO: these probably shouldn't get initialized here
-    this.startTurnTimer();
     this.gameLoopUnits();
   }
   syncronizeRNG(RNGState: SeedrandomState | boolean) {
@@ -100,46 +96,6 @@ export default class Underworld {
     // state of a state object, rehydrates the RNG to a particular state
     this.random = seedrandom(this.seed, { state: RNGState })
     return this.random;
-  }
-  startTurnTimer() {
-    // Limit turn duration
-    if (elPlayerTurnIndicatorHolder) {
-      elPlayerTurnIndicatorHolder.classList.remove('low-time');
-    }
-    // Reset the seconds left
-    this.secondsLeftForTurn = config.SECONDS_PER_TURN;
-    clearInterval(this.turnInterval);
-    // Start the interval which will end the player's turn when secondsLeftForTurn is <= 0
-    this.turnInterval = setInterval(() => {
-      if (
-        window.route === Route.Underworld &&
-        this.turn_phase === turn_phase.PlayerTurns
-      ) {
-        this.secondsLeftForTurn--;
-        if (this.secondsLeftForTurn <= 10) {
-          elPlayerTurnIndicatorHolder &&
-            elPlayerTurnIndicatorHolder.classList.add('low-time');
-        }
-        if (elTurnTimeRemaining) {
-          elTurnTimeRemaining.innerText = `0:${this.secondsLeftForTurn < 10
-            ? '0' + this.secondsLeftForTurn
-            : this.secondsLeftForTurn
-            }`;
-        } else {
-          console.error('elTurnTimeRemaining is null');
-        }
-        // Skip player turn if they run out of time
-        if (this.secondsLeftForTurn <= 0) {
-          console.log('Out of time, turn ended');
-          this.endMyTurn();
-          clearInterval(this.turnInterval);
-        }
-      } else {
-        if (elTurnTimeRemaining) {
-          elTurnTimeRemaining.innerText = '';
-        }
-      }
-    }, 1000);
   }
   gameLoopUnits() {
     const aliveUnits = this.units.filter(u => u.alive);
@@ -194,7 +150,6 @@ export default class Underworld {
     }
     document.body.classList.remove('your-turn');
 
-    clearInterval(this.turnInterval);
     // Note: Player's unit image is cleaned up below where it also has a reference in this.units
     for (let u of this.units) {
       Image.cleanup(u.image);
@@ -531,9 +486,6 @@ export default class Underworld {
     } else {
       this.setTurnMessage(false, `Player ${playerIndex + 1}'s turn`);
     }
-
-    // Finally initialize their turn
-    this.startTurnTimer();
   }
   // Sends a network message to end turn
   endMyTurn() {
@@ -932,10 +884,7 @@ export default class Underworld {
     const serializedState: any = this.serializeForSaving();
     // Remove variables that would cause the hash to change second to second.
     // The hash is meant to show if clients have roughly identical game state
-    // but it will take time to communicate the hash. and since secondsLeftForTurn
-    // changes second to second, it isn't useful for determining if clients have
-    // desynced
-    delete serializedState.secondsLeftForTurn;
+    // but it will take time to communicate the hash. 
     return serializedState;
   }
 
@@ -943,7 +892,7 @@ export default class Underworld {
   // callbacks and complicated objects such as PIXI.Sprites
   // are removed
   serializeForSaving(): IUnderworldSerialized {
-    const { random, turnInterval, players, units, pickups, obstacles, ...rest } = this;
+    const { random, players, units, pickups, obstacles, ...rest } = this;
     return {
       ...rest,
       players: this.players.map(Player.serialize),
@@ -969,7 +918,7 @@ export default class Underworld {
     this.cacheWalls();
   }
   serializeForSyncronize(): IUnderworldSerializedForSyncronize {
-    const { secondsLeftForTurn, players, units, pickups, obstacles, random, turnInterval, processedMessageCount, ...rest } = this;
+    const { players, units, pickups, obstacles, random, processedMessageCount, ...rest } = this;
     const serialized: IUnderworldSerializedForSyncronize = {
       ...rest,
       // the state of the Random Number Generator
@@ -996,13 +945,12 @@ type IUnderworldSerialized = Omit<typeof Underworld, "prototype" | "players" | "
 };
 type NonFunctionPropertyNames<T> = { [K in keyof T]: T[K] extends Function ? never : K }[keyof T];
 type UnderworldNonFunctionProperties = Exclude<NonFunctionPropertyNames<Underworld>, null | undefined>;
-type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFunctionProperties>, "secondsLeftForTurn" | "debugGraphics" | "players" | "units" | "pickups" | "obstacles" | "random" | "turnInterval" | "processedMessageCount">;
+type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFunctionProperties>, "debugGraphics" | "players" | "units" | "pickups" | "obstacles" | "random" | "processedMessageCount">;
 
 
 function getEnemiesForAltitude(levelIndex: number) {
 
   const hardCodedLevelEnemies = [
-    {},
     { 'grunt': 5 },
     {
       'grunt': 4,

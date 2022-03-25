@@ -286,13 +286,6 @@ body.your-turn #endTurn {
 body.your-turn #player-turn-indicator {
   display: none;
 }
-/* Change turn indicator to red if you're low on time */
-body.your-turn #player-turn-indicator-holder.low-time {
-  background-color: red;
-  font-size: large;
-  font-weight: bold;
-  color: white;
-}
 
 #inspector-tooltip {
   display: flex;

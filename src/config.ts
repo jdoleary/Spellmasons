@@ -15,7 +15,6 @@ export const UNIT_MOVE_SPEED = 4;
 export const NON_HEAVY_UNIT_SCALE = 0.8;
 export const MAP_WIDTH = 800;
 export const MAP_HEIGHT = 600;
-export const SECONDS_PER_TURN = 100;
 export const START_CARDS_COUNT = 60;
 export const NUM_PICKUPS_PER_LEVEL = 2;
 export const NUM_OBSTACLES_PER_LEVEL = 10;

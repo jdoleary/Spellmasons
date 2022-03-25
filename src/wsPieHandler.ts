@@ -310,7 +310,6 @@ function handleLoadGameState(payload: any) {
   underworld = new Underworld(loadedGameState.seed, loadedGameState.RNGState);
   underworld.playerTurnIndex = loadedGameState.playerTurnIndex;
   underworld.levelIndex = loadedGameState.levelIndex;
-  underworld.secondsLeftForTurn = loadedGameState.secondsLeftForTurn;
   // Load all units that are not player's, those will be loaded indepentently
   underworld.units = loadedGameState.units
     // Player controlled units are loaded within the players array
