@@ -1,4 +1,6 @@
 ## Current Priorities
+- Draw circle around feet of current players turn
+- Make sure there is always a path to the portal (or make obstacles destroyable)
 - Allow for restoring mana mid cast with something like mana steal
 - Brad:
     - How to disinsentivize skipping the level with swap
