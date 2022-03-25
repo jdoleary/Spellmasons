@@ -288,39 +288,34 @@ export default class Underworld {
       }
     }
 
-    for (let i = 0; i < config.NUM_OBSTACLES_PER_LEVEL; i++) {
-      let badLocation = false;
-      // Ensure obstacles don't spawn in the column that spawns players:
-      const coords = this.getRandomCoordsWithinBounds({ xMin: 2 * config.UNIT_SIZE, yMin: config.COLLISION_MESH_RADIUS, xMax: config.MAP_WIDTH - config.COLLISION_MESH_RADIUS, yMax: config.MAP_HEIGHT - config.COLLISION_MESH_RADIUS });
-      for (let u of this.units) {
-        if (math.distance(u, coords) < config.COLLISION_MESH_RADIUS * 2) {
-          // Abort spawning the obstacle if it collides with a unit
-          badLocation = true;
-          break;
+    // The map is made of obstacle sectors
+    for (let i = 0; i < config.OBSTACLE_SECTORS_COUNT_HORIZONTAL; i++) {
+      for (let j = 0; j < config.OBSTACLE_SECTORS_COUNT_VERTICAL; j++) {
+        const randomSectorIndex = randInt(this.random,
+          0,
+          Obstacle.obstacleSectors.length - 1,
+        );
+        for (let Y = 0; Y < Obstacle.obstacleSectors[randomSectorIndex].length; Y++) {
+          const rowOfObstacles = Obstacle.obstacleSectors[randomSectorIndex][Y];
+          for (let X = 0; X < rowOfObstacles.length; X++) {
+            const coordX = config.OBSTACLE_SIZE * config.OBSTACLES_PER_SECTOR_WIDE * i + config.OBSTACLE_SIZE * X + config.COLLISION_MESH_RADIUS;
+            const coordY = config.OBSTACLE_SIZE * config.OBSTACLES_PER_SECTOR_WIDE * j + config.OBSTACLE_SIZE * Y + config.COLLISION_MESH_RADIUS;
+            const obstacleIndex = rowOfObstacles[X];
+            if (obstacleIndex == 0) {
+              // Empty, no obstacle
+              continue
+            }
+            // -1 to let 0 be empty (no obstacle) and 1 will be index 0 of
+            // obstacleSource
+            const obstacle = Obstacle.obstacleSource[obstacleIndex - 1];
+            Obstacle.create(coordX, coordY, obstacle);
+
+          }
+
         }
       }
-      for (let p of this.pickups) {
-        if (math.distance(p, coords) < config.COLLISION_MESH_RADIUS * 2) {
-          // Abort spawning the obstacle if it collides with a pickup
-          badLocation = true;
-          break;
-        }
-      }
-      // Do not create if it didn't choose a good location
-      // For now, to prevent obstacles from trapping units when they
-      // spawn, just skip making one if the coordinates collide with
-      // a unit
-      if (badLocation) {
-        continue;
-      }
-      const randomIndex = randInt(this.random,
-        0,
-        Obstacle.obstacleSource.length - 1,
-      );
-      const obstacle = Obstacle.obstacleSource[randomIndex];
-      Obstacle.create(coords.x, coords.y, obstacle);
-      // TODO: Ensure the players have a path to the portal
     }
+    // TODO: Ensure the players have a path to the portal
     // Test obstaclese
     // [
     //   {
