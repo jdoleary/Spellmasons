@@ -160,7 +160,7 @@ export const pickups: IPickupSource[] = [
   {
     imagePath: 'pickups/mana-potion',
     name: 'Mana Potion',
-    description: `Restores ${manaPotionRestoreAmount} mana`,
+    description: `Restores ${manaPotionRestoreAmount} mana.  May overfill mana.`,
     effect: ({ unit, player }) => {
       if (player) {
         player.unit.mana += manaPotionRestoreAmount;
@@ -170,12 +170,14 @@ export const pickups: IPickupSource[] = [
     },
   },
   {
-    imagePath: 'pickups/health-potion',
+    imagePath: 'pickups/health-potion.png',
     name: 'Health Potion',
-    description: `Restores ${healthPotionRestoreAmount} health`,
+    description: `Restores ${healthPotionRestoreAmount} health.`,
     effect: ({ unit, player }) => {
       if (player) {
         player.unit.health += healthPotionRestoreAmount;
+        // Cap health at max
+        player.unit.health = Math.min(player.unit.health, player.unit.healthMax);
         // Sync UI immediately when mana changes
         syncPlayerHealthManaUI();
       }
