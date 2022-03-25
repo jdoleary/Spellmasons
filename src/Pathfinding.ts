@@ -33,8 +33,8 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
         for (let wall of polygonToPolygonLineSegments(targetInsideOfPoly)) {
             const intersection = findWherePointIntersectLineSegmentAtRightAngle(target, wall);
             if (intersection) {
-                window.debugGraphics.lineStyle(3, 0xff0000, 1.0);
-                window.debugGraphics.drawCircle(intersection.x, intersection.y, 3);
+                // window.debugGraphics.lineStyle(3, 0xff0000, 1.0);
+                // window.debugGraphics.drawCircle(intersection.x, intersection.y, 3);
                 rightAngleIntersections.push(intersection);
             }
 
@@ -50,8 +50,8 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
                 }
 
             }, { intersection: rightAngleIntersections[0], dist: Number.MAX_SAFE_INTEGER })
-            window.debugGraphics.lineStyle(3, 0x0000ff, 1.0);
-            window.debugGraphics.drawCircle(closest.intersection.x, closest.intersection.y, 4);
+            // window.debugGraphics.lineStyle(3, 0x0000ff, 1.0);
+            // window.debugGraphics.drawCircle(closest.intersection.x, closest.intersection.y, 4);
             // Override target with a location that the unit can actually fit in:
             target = closest.intersection;
         } else {
@@ -66,8 +66,8 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
                 }
 
             }, { vertex: targetInsideOfPoly.points[0], dist: Number.MAX_SAFE_INTEGER }).vertex;
-            window.debugGraphics.lineStyle(3, 0x0000ff, 1.0);
-            window.debugGraphics.drawCircle(target.x, target.y, 4);
+            // window.debugGraphics.lineStyle(3, 0x0000ff, 1.0);
+            // window.debugGraphics.drawCircle(target.x, target.y, 4);
 
         }
     }
@@ -83,11 +83,11 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
     const shortestPath = tryPaths(paths, pathingWalls, 0);
     if (shortestPath) {
         // Debug: Draw path
-        window.debugGraphics.lineStyle(4, 0xffffff, 0.3);
-        window.debugGraphics.moveTo(shortestPath.points[0].x, shortestPath.points[0].y);
-        for (let point of shortestPath.points) {
-            window.debugGraphics.lineTo(point.x, point.y);
-        }
+        // window.debugGraphics.lineStyle(4, 0xffffff, 0.3);
+        // window.debugGraphics.moveTo(shortestPath.points[0].x, shortestPath.points[0].y);
+        // for (let point of shortestPath.points) {
+        //     window.debugGraphics.lineTo(point.x, point.y);
+        // }
         // Remove the start point, since the unit doing the pathing is already at the start point:
         shortestPath.points.shift();
     }
