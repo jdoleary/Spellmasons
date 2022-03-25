@@ -1,6 +1,7 @@
 import type { UnitSource } from './index';
 import { UnitSubType } from '../commonTypes';
 import { canInteractWithTarget, action } from './actions/gruntAction';
+import * as config from '../config'
 
 const unit: UnitSource = {
   id: 'grunt',
@@ -10,7 +11,10 @@ const unit: UnitSource = {
     subtype: UnitSubType.AI_melee,
     probability: 100,
   },
-  unitProps: {},
+  unitProps: {
+    moveDistance: config.UNIT_BASE_MOVE_DISTANCE,
+    attackRange: 10 + config.COLLISION_MESH_RADIUS * 2
+  },
   action,
   canInteractWithTarget,
 };

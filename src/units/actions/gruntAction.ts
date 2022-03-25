@@ -34,7 +34,6 @@ export async function action(unit: Unit.IUnit) {
   }
 }
 
-const range = 10;
 export function canInteractWithTarget(
   unit: Unit.IUnit,
   x: number,
@@ -48,6 +47,6 @@ export function canInteractWithTarget(
   // + COLLISION_MESH_RADIUS*2 ensures that grunt can attack if it can reach the edge of a unit,
   // rather than their center
   return (
-    math.distance(unit, { x, y }) <= range + COLLISION_MESH_RADIUS * 2
+    math.distance(unit, { x, y }) <= unit.attackRange
   );
 }
