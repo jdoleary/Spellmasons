@@ -4,7 +4,7 @@ import { allUnits } from '../units';
 import { containerSpells, containerUI } from '../PixiUtils';
 import { containerPlanningView } from '../PixiUtils';
 import { Faction, UnitSubType, UnitType } from '../commonTypes';
-import type { Vec2 } from '../Vec';
+import { clone, equal, Vec2 } from '../Vec';
 import { turn_phase } from '../Underworld';
 import * as CardUI from '../CardUI';
 import * as config from '../config';
@@ -15,7 +15,6 @@ import * as Image from '../Image';
 import * as math from '../math';
 import { targetBlue } from './colors';
 import { calculateManaCost } from '../cards/cardUtils';
-import unit from '../units/manBlue';
 
 let planningViewGraphics: PIXI.Graphics;
 let dryRunGraphics: PIXI.Graphics;
@@ -25,6 +24,7 @@ export function initPlanningView() {
   dryRunGraphics = new PIXI.Graphics();
   containerUI.addChild(dryRunGraphics);
 }
+let lastSpotCurrentPlayerTurnCircle: Vec2 = { x: 0, y: 0 };
 export function updatePlanningView() {
   if (planningViewGraphics) {
     planningViewGraphics.clear();
@@ -51,6 +51,26 @@ export function updatePlanningView() {
       }
     }
     planningViewGraphics.endFill();
+    // Draw a circle under the feet of the player whos current turn it is
+    if (window.underworld) {
+      const currentTurnPlayer = window.underworld.players[window.underworld.playerTurnIndex];
+      if (currentTurnPlayer) {
+        // Only draw circle if player isn't moving to avoid UI thrashing
+        if (equal(lastSpotCurrentPlayerTurnCircle, currentTurnPlayer.unit)) {
+          if (window.player == currentTurnPlayer) {
+            // Yellow if it's you
+            planningViewGraphics.lineStyle(4, 0xffde5e);
+            planningViewGraphics.beginFill(0xffde5e, 0.3);
+          } else {
+            // Grey if it's other player
+            planningViewGraphics.lineStyle(4, 0xdddddd);
+            planningViewGraphics.beginFill(0xdddddd, 0.3);
+          }
+          planningViewGraphics.drawEllipse(currentTurnPlayer.unit.x, currentTurnPlayer.unit.y + config.COLLISION_MESH_RADIUS / 2 + 3, config.COLLISION_MESH_RADIUS, config.COLLISION_MESH_RADIUS / 3);
+        }
+        lastSpotCurrentPlayerTurnCircle = clone(currentTurnPlayer.unit);
+      }
+    }
   }
   updateTooltipContent();
 }

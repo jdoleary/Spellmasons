@@ -127,6 +127,8 @@ export default class Underworld {
         u.resolveDoneMoving();
       }
     }
+
+    // Invoke gameLoopUnits again next loop
     requestAnimationFrame(this.gameLoopUnits.bind(this))
   }
   // Returns true if it is the current players turn
