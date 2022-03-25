@@ -80,9 +80,10 @@ export function resetPlayerForNextLevel(player: IPlayer) {
     Unit.resurrect(player.unit);
   }
 
-  // Reset mana - otherwise players are incentivized to bum around after killing all enemies
+  // Reset mana and health - otherwise players are incentivized to bum around after killing all enemies
   // to get their mana back to full
   player.unit.mana = player.unit.manaMax;
+  player.unit.health = player.unit.healthMax;
 
   // Return to a spawn location
   // limit spawn to the leftmost column

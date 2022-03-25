@@ -1,7 +1,5 @@
 ## Current Priorities
 - Brad:
-    - ~~Bug: you don't keep overshield mana after levels~~
-        - Reset health and mana every level
     - How to disinsentivize skipping the level with swap
     - How to communicatge the extra cost that distance adds to mana
     - Copy: mana steal "to steal 20 MANA from each target"
