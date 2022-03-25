@@ -41,7 +41,7 @@ export interface IUnit {
   moveSpeed: number;
   // A resolve callback for when a unit is done moving
   resolveDoneMoving: () => void;
-  resolveDoneMovingTimeout?: number;
+  resolveDoneMovingTimeout?: NodeJS.Timeout;
   radius: number;
   moveDistance: number;
   // A counter to keep track of how far a unit has moved this turn
@@ -387,13 +387,20 @@ export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
   unit.thisTurnMoved = true;
   // Set path which will be used in the game loop to actually move the unit
   unit.path = findPath(unit, Vec.clone(target), window.underworld.pathingPolygons);
-  return new Promise((resolve) => {
+  return new Promise<void>((resolve) => {
     // Clear previous timeout
     if (unit.resolveDoneMovingTimeout !== undefined) {
       clearTimeout(unit.resolveDoneMovingTimeout);
     }
     unit.resolveDoneMoving = resolve;
-    unit.resolveDoneMovingTimeout = setTimeout(resolve, config.RESOLVE_DONE_MOVING_TIMEOUT_MS);
+    unit.resolveDoneMovingTimeout = setTimeout(() => {
+      console.log('Turn ended due to RESOLVE_DONE_MOVING_TIMEOUT_MS');
+      resolve()
+    }, config.RESOLVE_DONE_MOVING_TIMEOUT_MS);
+  }).then(() => {
+    if (unit.resolveDoneMovingTimeout !== undefined) {
+      clearTimeout(unit.resolveDoneMovingTimeout);
+    }
   });
 }
 

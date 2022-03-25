@@ -9,7 +9,7 @@ export const UNIT_BASE_DAMAGE = 1;
 // Ensures that the resolveDoneMoving callback will timeout if it never gets called.
 // This ensures that the game doesn't get stuck if, say, the collision system bugs
 // out and a unit never comes to rest
-export const RESOLVE_DONE_MOVING_TIMEOUT_MS = 1000;
+export const RESOLVE_DONE_MOVING_TIMEOUT_MS = 2000;
 export const UNIT_MOVE_SPEED = 4;
 export const NON_HEAVY_UNIT_SCALE = 0.8;
 export const START_CARDS_COUNT = 60;

@@ -4,7 +4,6 @@
 - Brad:
     - How to disinsentivize skipping the level with swap
     - How to communicatge the extra cost that distance adds to mana
-- Bug: Movement still stops early sometimes (this is due to the movement timeout
 - todo: Make "mana cost" icon on cards allow for health cost (for spells such as mana steal)
     - Bug: Mana steal costs mana, it shouldn't!!
 - Fix: escape is used for both clear spells and menuz
