@@ -1,4 +1,5 @@
 ## Current Priorities
+- Allow for restoring mana mid cast with something like mana steal
 - Brad:
     - How to disinsentivize skipping the level with swap
     - How to communicatge the extra cost that distance adds to mana
