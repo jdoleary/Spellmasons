@@ -5,6 +5,8 @@ const sfx = {
 };
 const music = [
     './sound/music/ChainingSpells.m4a',
+    './sound/music/FirstSteps.mp3',
+    './sound/music/DeepWandering.mp3',
 ]
 
 // Preload all sounds
@@ -15,7 +17,9 @@ Object.values(sfx).forEach(path => {
 let songIndex = 0;
 function playNextSong() {
     // Loops through songs
-    const musicInstance = new Audio(music[getLoopableIndex(songIndex++, music)]);
+    const index = getLoopableIndex(songIndex++, music)
+    console.log('Play song', index);
+    const musicInstance = new Audio(music[index]);
     musicInstance.play();
     musicInstance.addEventListener("ended", function () {
         playNextSong();
