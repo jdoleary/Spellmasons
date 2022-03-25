@@ -182,7 +182,7 @@ export default class Underworld {
     const expandedAndMergedPolygons = mergeOverlappingPolygons(collidablePolygons.map(p => expandPolygon(p, config.COLLISION_MESH_RADIUS)));
     this.pathingPolygons = expandedAndMergedPolygons
   }
-  spawnPickup(index: string, coords: Vec2) {
+  spawnPickup(index: number, coords: Vec2) {
     const pickup = Pickup.pickups[index];
     Pickup.create(
       coords.x,
@@ -266,30 +266,10 @@ export default class Underworld {
     } else {
       console.error('elLevelIndicator is null');
     }
-    // Keeps track of things that need to be spawned
-    const spawnList: {
-      type: 'player' | 'unit' | 'pickup' | 'portal',
-      id: string,
-    }[] = [];
-    spawnList.push({ type: 'portal', id: 'n/a' });
-    for (let i = 0; i < config.NUM_PICKUPS_PER_LEVEL; i++) {
-      const randomPickupIndex = randInt(this.random,
-        0,
-        Object.values(Pickup.pickups).length - 1,
-      );
-      spawnList.push({ type: 'pickup', id: randomPickupIndex.toString() });
-    }
-    // Spawn units at the start of the level
-    const enemys = getEnemiesForAltitude(levelIndex);
-    for (let [id, count] of Object.entries(enemys)) {
-      for (let i = 0; i < (count || 0); i++) {
-        spawnList.push({ type: 'unit', id });
-      }
-    }
-    for (let player of this.players) {
-      spawnList.push({ type: 'player', id: player.clientId });
-    }
 
+    const validSpawnCoords: Vec2[] = [];
+    const validPlayerSpawnCoords: Vec2[] = [];
+    const validPortalSpawnCoords: Vec2[] = [];
     // The map is made of obstacle sectors
     for (let i = 0; i < config.OBSTACLE_SECTORS_COUNT_HORIZONTAL; i++) {
       for (let j = 0; j < config.OBSTACLE_SECTORS_COUNT_VERTICAL; j++) {
@@ -306,37 +286,12 @@ export default class Underworld {
             if (obstacleIndex == 0) {
               // Empty, no obstacle, take this opportunity to spawn something from the spawn list, since
               // we know it is a safe place to spawn
-              if (spawnList.length) {
-                const spawnListRandIndex = randInt(this.random, 0, spawnList.length - 1);
-                const { type, id } = spawnList.splice(spawnListRandIndex, 1)[0];
-                const coords = { x: coordX, y: coordY }
-                if (type == 'unit') {
-                  this.spawnEnemy(id, coords);
-                } else if (type == 'pickup') {
-                  this.spawnPickup(id, coords);
-                } else if (type == 'portal') {
-                  // Spawn portal
-                  const portalPickup = Pickup.specialPickups['portal.png'];
-                  Pickup.create(
-                    coords.x,
-                    coords.y,
-                    portalPickup.name,
-                    portalPickup.description,
-                    false,
-                    portalPickup.imagePath,
-                    true,
-                    portalPickup.effect,
-                  );
-
-                } else if (type == 'player') {
-                  const player = this.players.find(p => p.clientId == id);
-                  if (player) {
-                    Unit.setLocation(player.unit, coords);
-                  } else {
-                    console.error('Cannot reset player location, player not found with id', id);
-                  }
-
-                }
+              if (i == 0 && X == 0) {
+                validPlayerSpawnCoords.push({ x: coordX, y: coordY });
+              } else if (i == config.OBSTACLE_SECTORS_COUNT_HORIZONTAL - 1 && X == rowOfObstacles.length - 1) {
+                validPortalSpawnCoords.push({ x: coordX, y: coordY });
+              } else {
+                validSpawnCoords.push({ x: coordX, y: coordY });
               }
               continue
             }
@@ -367,9 +322,45 @@ export default class Underworld {
     //   },
     // ]
     //   .map(({ x, y }) => { Obstacle.create(x, y, Obstacle.obstacleSource[0]) });
-
-
     this.cacheWalls();
+
+    for (let i = 0; i < config.NUM_PICKUPS_PER_LEVEL; i++) {
+      const randomPickupIndex = randInt(this.random,
+        0,
+        Object.values(Pickup.pickups).length - 1,
+      );
+      const validSpawnCoordsIndex = randInt(this.random, 0, validSpawnCoords.length - 1);
+      const coords = validSpawnCoords.splice(validSpawnCoordsIndex, 1)[0];
+      this.spawnPickup(randomPickupIndex, coords);
+    }
+    // Spawn units at the start of the level
+    const enemys = getEnemiesForAltitude(levelIndex);
+    for (let [id, count] of Object.entries(enemys)) {
+      for (let i = 0; i < (count || 0); i++) {
+        const validSpawnCoordsIndex = randInt(this.random, 0, validSpawnCoords.length - 1);
+        const coords = validSpawnCoords.splice(validSpawnCoordsIndex, 1)[0];
+        this.spawnEnemy(id, coords);
+      }
+    }
+    for (let player of this.players) {
+      const index = randInt(this.random, 0, validPlayerSpawnCoords.length - 1);
+      const coords = validPlayerSpawnCoords.splice(index, 1)[0];
+      Unit.setLocation(player.unit, coords);
+    }
+    // Spawn portal
+    const index = randInt(this.random, 0, validPortalSpawnCoords.length - 1);
+    const coords = validPortalSpawnCoords.splice(index, 1)[0];
+    const portalPickup = Pickup.specialPickups['portal.png'];
+    Pickup.create(
+      coords.x,
+      coords.y,
+      portalPickup.name,
+      portalPickup.description,
+      false,
+      portalPickup.imagePath,
+      true,
+      portalPickup.effect,
+    );
 
     // Since a new level changes the existing units, redraw the planningView in
     // the event that the planningView is active
