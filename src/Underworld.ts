@@ -69,7 +69,7 @@ export default class Underworld {
   obstacles: Obstacle.IObstacle[] = [];
   walls: LineSegment[] = [];
   pathingPolygons: Polygon[] = [];
-  playersWhoHaveChosenUpgrade = new Set<string>();
+  playersWhoHaveChosenUpgrade: string[] = [];
   // Keeps track of how many messages have been processed so that clients can
   // know when they've desynced.  Only used for syncronous message processing
   // since only the syncronous messages affect gamestate.
@@ -546,7 +546,7 @@ export default class Underworld {
     );
     upgrade.effect(player);
     player.upgrades.push(upgrade);
-    this.playersWhoHaveChosenUpgrade.add(player.clientId);
+    this.playersWhoHaveChosenUpgrade.push(player.clientId);
     // Clear upgrade choices once one is chosen
     if (player.clientId === window.clientId) {
       if (elUpgradePickerContent) {
@@ -558,8 +558,8 @@ export default class Underworld {
       (p) => p.clientConnected,
     ).length;
     // TODO, this code may be vulnerable to mid-game disconnections, same as VOTE_FOR_LEVEL
-    if (this.playersWhoHaveChosenUpgrade.size >= numberOfPlayersWhoNeedToChooseUpgradesTotal) {
-      this.playersWhoHaveChosenUpgrade.clear();
+    if (this.playersWhoHaveChosenUpgrade.length >= numberOfPlayersWhoNeedToChooseUpgradesTotal) {
+      this.playersWhoHaveChosenUpgrade = [];
       if (elUpgradePickerLabel) {
         elUpgradePickerLabel.innerText = '';
       }
@@ -567,7 +567,7 @@ export default class Underworld {
       window.underworld.initLevel(++this.levelIndex);
     } else {
       if (elUpgradePickerLabel) {
-        elUpgradePickerLabel.innerText = `${numberOfPlayersWhoNeedToChooseUpgradesTotal - this.playersWhoHaveChosenUpgrade.size
+        elUpgradePickerLabel.innerText = `${numberOfPlayersWhoNeedToChooseUpgradesTotal - this.playersWhoHaveChosenUpgrade.length
           } players left to pick upgrades`;
       }
     }

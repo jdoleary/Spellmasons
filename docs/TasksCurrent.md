@@ -1,6 +1,5 @@
 ## Current Priorities
 - Brad:
-    - Brad got stuck after first level, he clicked upgrade and it put me in but he was still on upgrade screen
     - ~~Bug: you don't keep overshield mana after levels~~
         - Reset health and mana every level
     - How to disinsentivize skipping the level with swap
