@@ -22,12 +22,11 @@ import type { Vec2 } from "./Vec";
 import * as Vec from "./Vec";
 import Events from './Events';
 import { allUnits } from './units';
-import { drawDryRunCircle, syncSpellEffectProjection, updatePlanningView } from './ui/PlanningView';
+import { drawDryRunCircle, syncSpellEffectProjection, updateManaCostUI, updatePlanningView } from './ui/PlanningView';
 import { setRoute, Route } from './routes';
 import { prng, randInt, SeedrandomState } from './rand';
 import { calculateManaCost } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment } from './collision/collisionMath';
-import { updateCardManaBadges } from './CardUI';
 import { expandPolygon, mergeOverlappingPolygons, Polygon, PolygonLineSegment, polygonToPolygonLineSegments } from './Polygon';
 
 export enum turn_phase {
@@ -439,7 +438,7 @@ export default class Underworld {
         }
       }
     }
-    updateCardManaBadges();
+    updateManaCostUI();
   }
   hostSendSync() {
     // Only the host should send sync data to clients
@@ -872,7 +871,7 @@ export default class Underworld {
               animationPromises.push(drawTarget(targetedUnit.x, targetedUnit.y, false));
             } else {
               // otherwise draw a small target circle where it will be cast on the ground
-              drawDryRunCircle(target, 4);
+              drawDryRunCircle(target, 2);
             }
           } else {
             // If a new target, animate it in
@@ -891,7 +890,7 @@ export default class Underworld {
         }
         casterPlayer.cardUsageCounts[cardId]++;
       }
-      updateCardManaBadges();
+      updateManaCostUI();
 
     }
     if (!dryRun) {
@@ -1003,6 +1002,7 @@ type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFun
 function getEnemiesForAltitude(levelIndex: number) {
 
   const hardCodedLevelEnemies = [
+    {},
     { 'grunt': 5 },
     {
       'grunt': 4,

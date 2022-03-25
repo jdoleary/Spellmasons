@@ -54,6 +54,8 @@ export function updatePlanningView() {
 }
 export function updateManaCostUI(): number {
   if (window.player) {
+    // Update the UI that shows how much cards cost
+    CardUI.updateCardManaBadges();
     // Updates the mana cost
     const cards = CardUI.getSelectedCards();
     const mousePos = window.underworld.getMousePos();
