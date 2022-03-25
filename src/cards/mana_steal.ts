@@ -15,7 +15,7 @@ const spell: Spell = {
     probability: cardTypeToProbability(type),
     thumbnail: 'mana_steal.png',
     description: `
-Sacrifice ${health_burn} of your own health to steal up to ${mana_stolen} from each target.
+Sacrifice ${health_burn} of your own health to steal up to ${mana_stolen} mana from each target.
     `,
     effect: async (state, dryRun) => {
       if (dryRun) {

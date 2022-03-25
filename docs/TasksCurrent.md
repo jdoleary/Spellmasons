@@ -2,7 +2,6 @@
 - Brad:
     - How to disinsentivize skipping the level with swap
     - How to communicatge the extra cost that distance adds to mana
-    - Copy: mana steal "to steal 20 MANA from each target"
     - Feedback
         - Actually FUN
 - Move health and mana down  to by spells and show mana cost near the spells
