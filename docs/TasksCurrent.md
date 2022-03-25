@@ -1,4 +1,14 @@
 ## Current Priorities
+- Brad:
+    - Brad got stuck after first level, he clicked upgrade and it put me in but he was still on upgrade screen
+    - ~~Bug: you don't keep overshield mana after levels~~
+        - Reset health and mana every level
+    - How to disinsentivize skipping the level with swap
+    - How to communicatge the extra cost that distance adds to mana
+    - Copy: mana steal "to steal 20 MANA from each target"
+    - Feedback
+        - Actually FUN
+- Move health and mana down  to by spells and show mana cost near the spells
 - Bug: Movement still stops early sometimes
 - todo: Make "mana cost" icon on cards allow for health cost (for spells such as mana steal)
     - Bug: Mana steal costs mana, it shouldn't!!
