@@ -270,13 +270,15 @@ export default class Underworld {
     const validSpawnCoords: Vec2[] = [];
     const validPlayerSpawnCoords: Vec2[] = [];
     const validPortalSpawnCoords: Vec2[] = [];
-    // The map is made of obstacle sectors
+    // The map is made of a matrix of obstacle sectors
     for (let i = 0; i < config.OBSTACLE_SECTORS_COUNT_HORIZONTAL; i++) {
       for (let j = 0; j < config.OBSTACLE_SECTORS_COUNT_VERTICAL; j++) {
         const randomSectorIndex = randInt(this.random,
           0,
           Obstacle.obstacleSectors.length - 1,
         );
+        // Now that we have the obstacle sector's horizontal index (i) and vertical index (j),
+        // choose a pre-defined sector and spawn the obstacles
         for (let Y = 0; Y < Obstacle.obstacleSectors[randomSectorIndex].length; Y++) {
           const rowOfObstacles = Obstacle.obstacleSectors[randomSectorIndex][Y];
           for (let X = 0; X < rowOfObstacles.length; X++) {
@@ -287,10 +289,13 @@ export default class Underworld {
               // Empty, no obstacle, take this opportunity to spawn something from the spawn list, since
               // we know it is a safe place to spawn
               if (i == 0 && X == 0) {
+                // Only spawn players in the left most index (X == 0) of the left most obstacle (i==0)
                 validPlayerSpawnCoords.push({ x: coordX, y: coordY });
               } else if (i == config.OBSTACLE_SECTORS_COUNT_HORIZONTAL - 1 && X == rowOfObstacles.length - 1) {
+                // Only spawn the portal in the right most index of the right most obstacle
                 validPortalSpawnCoords.push({ x: coordX, y: coordY });
               } else {
+                // Spawn pickups or units in any validSpawnCoord
                 validSpawnCoords.push({ x: coordX, y: coordY });
               }
               continue
