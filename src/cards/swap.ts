@@ -46,6 +46,12 @@ Swaps the caster with the source target.
           swapPickups.push([pickupAtSwap, target]);
         }
       }
+      // Don't swap if there is nothing to swap with
+      // comparing to <=1 because the caster will always
+      // be added to swapUnits
+      if (swapPickups.length + swapUnits.length <= 1) {
+        return state;
+      }
       for (let [pickup, newLocation] of swapPickups) {
         if (dryRun) {
           drawSwapLine(pickup, newLocation);
