@@ -39,12 +39,6 @@ export function updatePlanningView() {
           selectedUnit.y,
           selectedUnit.attackRange
         );
-        planningViewGraphics.beginFill(color);
-        planningViewGraphics.drawCircle(
-          selectedUnit.x,
-          selectedUnit.y,
-          selectedUnit.moveDistance
-        );
         planningViewGraphics.endFill();
       }
     }
