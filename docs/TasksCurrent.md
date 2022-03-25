@@ -9,8 +9,6 @@
 
 ---
 - wsPie: bug: what happens when you call sendData before joining a room???
-- Figure out how to host server locally to be reached via the internet
-    - [dedicated server](https://help.steampowered.com/en/faqs/view/6F46-9698-9682-8DB8)
 ---
 - Bug: I got poisoned when I cast contageous poison but wasn't close
 - Bug: Units that died of poison didn't leave behind skelletons (because they took damage again that destroyed the skelleton)

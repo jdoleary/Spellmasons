@@ -1,13 +1,10 @@
 # Critical Path (3nd revision)
-- Get remote playtesting working
-    - Anytime: Playtest with Brad and Jake
 - March 17: Youtube Alpha version video / Setup Social Media system
 - March 26: Finish Content / Endgame
 - Menus / Options
     - Prereq: get a following first
     - Homepage with news and stuff (Sveltekit?)
 - Art in Blender / Shaders / Juice
-- Music
 - [SFX](https://www.asoundeffect.com/sound-library/metamorphosis/)
     - Adobe? https://www.adobe.com/products/audition/offers/AdobeAuditionDLCSFX.html
 - [Tutorial](https://www.youtube.com/watch?v=-GV814cWiAw)
