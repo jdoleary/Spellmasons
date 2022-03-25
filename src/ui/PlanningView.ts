@@ -8,7 +8,7 @@ import type { Vec2 } from '../Vec';
 import { turn_phase } from '../Underworld';
 import * as CardUI from '../CardUI';
 import * as config from '../config';
-import * as Unit from '../Unit';
+import type * as Unit from '../Unit';
 import type * as Obstacle from '../Obstacle';
 import type * as Pickup from '../Pickup';
 import * as Image from '../Image';
@@ -71,11 +71,8 @@ export function updateManaCostUI(): number {
 function _updateManaCostUI(manaCost: number) {
   if (window.player) {
 
-    if (manaCost <= window.player.unit.mana) {
-      updateTooltipSpellCost(manaCost.toString())
-    } else {
-      updateTooltipSpellCost(`${manaCost} - Insufficient mana`)
-    }
+    updateTooltipSpellCost(manaCost)
+    elSpellManaCost?.classList.toggle('insufficient', manaCost > window.player.unit.mana);
   }
 
 }
@@ -174,12 +171,16 @@ const elSpellManaCost = document.getElementById(
 export function clearTooltipSpellCost() {
   if (elSpellManaCost) {
     elSpellManaCost.innerHTML = '';
+    elSpellManaCost?.classList.add('hidden');
   }
 
 }
-export function updateTooltipSpellCost(manaCost: string) {
-  if (elSpellManaCost && parseInt(manaCost) !== 0) {
+export function updateTooltipSpellCost(manaCost: number) {
+  if (elSpellManaCost && manaCost !== 0) {
     elSpellManaCost.innerHTML = `${manaCost}`
+    elSpellManaCost?.classList.remove('hidden');
+  } else {
+    elSpellManaCost?.classList.add('hidden');
   }
 }
 

@@ -131,13 +131,11 @@ body.inspect-mode #card-inspect {
   left: 80px;
   right: 80px;
   z-index: 1;
-  height: 100px;
   display: flex;
   flex-direction: column-reverse;
 }
-#selected-cards {
-  position: relative;
-  bottom:90px;
+#card-holders > div {
+  margin-top:8px;
 }
 #card-holders #selected-cards,
 #card-holders #card-hand {
@@ -205,7 +203,7 @@ the face of the last card in the group is seen*/
   text-align: center;
 }
 .card-mana-badge.modified-by-usage {
-  border : 2px solid red;
+  border : 2px solid #434380;
 }
 .card-inner {
   width: 70px;
@@ -320,13 +318,26 @@ body.your-turn #player-turn-indicator {
   width: 300px;
   white-space: pre-wrap;
 }
-#inspector-tooltip-spell-cost {
-  font-size: xx-large;
-}
-#inspector-tooltip-spell-cost #spell-mana-cost {
-  color:blue;
-}
 
+#spell-mana-cost {
+  font-size: xx-large;
+  background-color: #5656d5;
+  border: 4px solid #5656d5;
+  color:white;
+  margin: 0 auto;
+  border-radius: 100% 100%;
+  width: 80px;
+  height: 80px;
+  text-align: center;
+  line-height: 80px;
+}
+/* For insufficient mana */
+#spell-mana-cost.insufficient {
+  border: 4px solid #ff0000;
+}
+#spell-mana-cost.hidden {
+  display:none;
+}
 #ready-state {
   position: absolute;
   bottom: 10px;
@@ -340,10 +351,6 @@ body.your-turn #player-turn-indicator {
   flex-direction: column;
   /* Display above pixi */
   z-index: 1;
-  position: absolute;
-  bottom: 140px;
-  left: 0;
-  right: 0;
 }
 .health-mana-bar {
   width: 200px;
