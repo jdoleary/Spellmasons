@@ -1,4 +1,19 @@
 ## Current Priorities
+- Fix pathing off of inverted polygons
+- Dad:
+    - Little health and mana bars above all units
+    - Prevent from casting if the last card is a modifier
+    - Refrase "add another card" to communicate
+    - Missing spell projection overlay
+    - Attempting to cast while client id is unassociated with existing players
+        - Happened after a sync
+    - bug: somehow it cast damage more than once on a single target
+    - He got right click and left click mixed up
+    - Heavy units aren't big anymore? or after sync?
+    - Wants to know how far he's able to walk in one turn
+    - Doesn't know what the circle means when clicking on enemies
+    - Don't let me put more cards down than i can afford
+- Make walls destructable
 - Make sure there is always a path to the portal (or make obstacles destroyable)
 - Allow for restoring mana mid cast with something like mana steal
 - Brad:
