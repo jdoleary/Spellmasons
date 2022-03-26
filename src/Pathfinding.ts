@@ -95,6 +95,23 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
 }
 // Mutates the paths array's objects
 function tryPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCount: number): Path | undefined {
+    calculateDistanceOfPaths(paths);
+    const shortestFinishedPaths = paths.filter(p => p.done && !p.invalid).sort((a, b) => a.distance - b.distance);
+    if (shortestFinishedPaths.length) {
+        const shortestFinishedDistance = shortestFinishedPaths[0].distance;
+        console.log('shortest finished distance', shortestFinishedDistance);
+        // Make all paths that are longer invalid:
+        for (let path of paths) {
+            if (!path.done && path.distance > shortestFinishedDistance) {
+                console.log('end path early')
+                path.invalid = true;
+                path.done = true;
+            }
+
+        }
+    }
+
+    console.log('tryPaths, distances', paths.map(p => Math.floor(p.distance)).sort());
     function walkAroundAPoly(direction: 'prev' | 'next', startVertex: Vec2, poly: Polygon, target: Vec2, pathingWalls: PolygonLineSegment[], path: Path) {
         // Walk all the way around a poly in "direction" until you have a straight line path to the target, or until the straight line path
         // to the target intersects another poly
@@ -157,11 +174,13 @@ function tryPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCo
     }
     // Protect against infinite recursion
     if (recursionCount > 12) {
-        console.error('couldnt find path in few enough steps', recursionCount);
+        console.error('couldnt find path in few enough steps', recursionCount, paths.map(p => p.points.length).sort());
         // Mark all unfinished path's as invalid because they did not find a valid path
         // in few enough steps
         for (let path of paths) {
             if (!path.done) {
+                // Remove the target to visually show it couldn't complete
+                path.points.pop();
                 path.invalid = true;
             }
             path.done = true;
@@ -258,29 +277,21 @@ function tryPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCo
     // }
     // If there is an unobstructed straight line between two points, you can remove all the points in-between
 
-    // Calculate the distance for all paths
-    for (let path of paths) {
-        path.distance = 0;
-        // Finally, calculate the distance for the path 
-        for (let i = 0; i < path.points.length - 2; i++) {
-            path.distance += distance(path.points[i], path.points[i + 1]);
-        }
-
-    }
+    calculateDistanceOfPaths(paths);
     // console.log('found valid paths paths', paths, 'done', paths.filter(p => p.done).length);
-    // // Debug: Draw the paths:
-    // for (let i = 0; i < paths.length; i++) {
-    //     const path = paths[i];
-    //     if (path.invalid) {
-    //         window.debugGraphics.lineStyle(4, 0xff0000, 0.3);
-    //     } else {
-    //         window.debugGraphics.lineStyle(4, 0x00ff00, 0.3);
-    //     }
-    //     window.debugGraphics.moveTo(path.points[0].x, path.points[0].y);
-    //     for (let point of path.points) {
-    //         window.debugGraphics.lineTo(point.x, point.y);
-    //     }
-    // }
+    // Debug: Draw the paths:
+    for (let i = 0; i < paths.length; i++) {
+        const path = paths[i];
+        if (path.invalid) {
+            window.debugGraphics.lineStyle(4, 0xff0000, 0.3);
+        } else {
+            window.debugGraphics.lineStyle(4, 0x00ff00, 0.3);
+        }
+        window.debugGraphics.moveTo(path.points[0].x, path.points[0].y);
+        for (let point of path.points) {
+            window.debugGraphics.lineTo(point.x, point.y);
+        }
+    }
     // Remove invalid paths
     paths = paths.filter(p => !p.invalid);
     return paths.reduce<Path | undefined>((shortest, contender) => {
@@ -301,6 +312,17 @@ export function removeBetweenIndexAtoB(array: any[], indexA: number, indexB: num
         return [...array];
     }
     return [...array.slice(0, indexA + 1), ...array.slice(indexB)]
+}
+function calculateDistanceOfPaths(paths: Path[]) {
+    // Calculate the distance for all paths
+    for (let path of paths) {
+        path.distance = 0;
+        // Finally, calculate the distance for the path 
+        for (let i = 0; i < path.points.length - 2; i++) {
+            path.distance += distance(path.points[i], path.points[i + 1]);
+        }
+
+    }
 }
 function polygonLineSegmentToPrevAndNext(wall: PolygonLineSegment): { prev: Vec2, next: Vec2 } {
     return { prev: wall.p1, next: wall.p2 };
