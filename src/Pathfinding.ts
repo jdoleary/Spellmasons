@@ -327,6 +327,13 @@ function getClosestIntersectionWithWalls(line: LineSegment, walls: PolygonLineSe
     for (let wall of walls) {
         const intersection = lineSegmentIntersection(line, wall);
         if (intersection) {
+            // Since non-inverted polygons' walls count as INSIDE, inverted polygons' walls count as OUTSIDE
+            // the polygon, so when the wall belongs to an inverted polygon, always ignore collisions at the
+            // start of the line segment
+            if (wall.polygon.inverted && Vec.equal(line.p1, intersection)) {
+                // Exclude collisions at start point of line segment. Don't collide with self
+                continue;
+            }
             if (!includeStartPoint && Vec.equal(line.p1, intersection)) {
                 // Exclude collisions at start point of line segment. Don't collide with self
                 continue;
