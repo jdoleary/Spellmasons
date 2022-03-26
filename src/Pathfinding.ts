@@ -84,7 +84,7 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
         } else {
             // If there are no right angle intersections (which can happen if the point is "inside" an inverted poly at an angle)
             // find the closest vertex and reassign the target so that units don't move inside the inverted poly
-            target = targetInsideOfPoly.points.reduce<{ vertex: Vec2, dist: number }>((acc, cur) => {
+            target = targetInsideOfPolys.map(p => p.points).flat().reduce<{ vertex: Vec2, dist: number }>((acc, cur) => {
                 const dist = distance(cur, target)
                 if (dist <= acc.dist) {
                     return { vertex: cur, dist };
@@ -92,7 +92,7 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
                     return acc;
                 }
 
-            }, { vertex: targetInsideOfPoly.points[0], dist: Number.MAX_SAFE_INTEGER }).vertex;
+            }, { vertex: targetInsideOfPolys[0].points[0], dist: Number.MAX_SAFE_INTEGER }).vertex;
             // window.debugGraphics.lineStyle(3, 0x0000ff, 1.0);
             // window.debugGraphics.drawCircle(target.x, target.y, 4);
 
