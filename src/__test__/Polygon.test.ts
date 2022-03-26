@@ -1,6 +1,6 @@
 
 import type { Vec2 } from "../Vec";
-import { testables, Branch, makePolygonIndexIterator, Polygon, expandPolygon, mergeOverlappingPolygons, polygonToPolygonLineSegments } from '../Polygon';
+import { testables, Branch, makePolygonIndexIterator, Polygon, expandPolygon, mergeOverlappingPolygons, polygonToPolygonLineSegments, getInsideAnglesOfPoint } from '../Polygon';
 import type { LineSegment } from "../collision/collisionMath";
 const { getLoopableIndex, isVec2InsidePolygon, findFirstPointNotInsideAnotherPoly, getNormalVectorOfLineSegment,
     getClosestBranch, growOverlappingCollinearLinesInDirectionOfP2, arePolygonsEquivalent } = testables;
@@ -654,6 +654,31 @@ describe('testables', () => {
 
     });
 
+});
+
+describe('getInsideAnglesOfPoint', () => {
+    it('should return the inside angles of a point on a polygon', () => {
+        const p0 = { x: 0, y: 0 }
+        const p1 = { x: 0, y: 1 }
+        const p2 = { x: 1, y: 1 }
+        const p3 = { x: 1, y: 0 }
+        const points: Vec2[] = [p0, p1, p2, p3];
+        const polygon: Polygon = { points, inverted: false }
+        const actual = getInsideAnglesOfPoint(polygon, 1)
+        const expected = { start: -Math.PI / 2, end: 0 };
+        expect(actual).toEqual(expected);
+    });
+    it('should return the inside angles of a point on a polygon; inverted', () => {
+        const p0 = { x: 0, y: 0 }
+        const p1 = { x: 0, y: 1 }
+        const p2 = { x: 1, y: 1 }
+        const p3 = { x: 1, y: 0 }
+        const points: Vec2[] = [p0, p1, p2, p3];
+        const polygon: Polygon = { points, inverted: true }
+        const actual = getInsideAnglesOfPoint(polygon, 1)
+        const expected = { start: 0, end: -Math.PI / 2 };
+        expect(actual).toEqual(expected);
+    });
 });
 
 

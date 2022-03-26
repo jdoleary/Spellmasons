@@ -2,7 +2,7 @@ import type { Vec2 } from "./Vec";
 import * as Vec from './Vec';
 import { distance, similarTriangles } from "./math";
 import { isCollinearAndOverlapping, isCollinearAndPointInSameDirection, LineSegment, lineSegmentIntersection } from "./collision/collisionMath";
-import { clockwiseAngle } from "./Angle";
+import { clockwiseAngle, counterClockwiseAngle } from "./Angle";
 
 export interface Polygon {
     points: Vec2[];
@@ -249,6 +249,16 @@ function projectPointAlongNormalVector(polygon: Polygon, pointIndex: number, mag
     // Round to the nearest whole number to avoid floating point inequalities later
     // when processing these points
     return Vec.round(Vec.subtract(point, relativeAdjustedPoint));
+}
+
+// In radians
+export function getInsideAnglesOfPoint(polygon: Polygon, pointIndex: number): { start: number, end: number } {
+    const point = polygon.points[pointIndex];
+    const nextPoint = polygon.points[getLoopableIndex(pointIndex + (polygon.inverted ? -1 : 1), polygon.points)];
+    const prevPoint = polygon.points[getLoopableIndex(pointIndex + (polygon.inverted ? 1 : -1), polygon.points)];
+    const angleToPrevPoint = Vec.getAngleBetweenVec2s(point, prevPoint);
+    const angleToNextPoint = Vec.getAngleBetweenVec2s(point, nextPoint);
+    return { start: angleToPrevPoint, end: angleToNextPoint };
 }
 
 // Note: There is a slight flaw in this algorithm in that if the point lies

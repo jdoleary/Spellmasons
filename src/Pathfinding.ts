@@ -122,7 +122,7 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
 }
 // Mutates the paths array's objects
 function tryPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCount: number): Path | undefined {
-    console.log('tryPaths', recursionCount, paths.map(p => p.points.length).sort());
+    // console.log('tryPaths', recursionCount, paths.map(p => p.points.length).sort());
     calculateDistanceOfPaths(paths);
     const shortestFinishedPaths = paths.filter(p => p.done && !p.invalid).sort((a, b) => a.distance - b.distance);
     if (shortestFinishedPaths.length) {
@@ -207,7 +207,16 @@ function tryPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCo
                 if (doesVertexBelongToPolygon(vertex, intersectingWall.polygon) && doesVertexBelongToPolygon(intersectingWall.p1, intersectingWall.polygon)) {
                     // Continue to check the next or previous (depending on direction) vertex for this poly
                     // we need to keep walking around it to continue the path
-                    continue;
+
+                    // continue;
+                    // Prevent casting a line on the inside
+                    if (lineCastOnInside) {
+                        continue;
+                    } else {
+                        // A straight line from vertex to target intersects the same polygon again but is probably closer,
+                        // so we'll branch off the new intersection point
+                        break;
+                    }
                 } else {
                     // If it belongs to a different poly, then we can stop walking because
                     // we've walked the path as far around the current poly as we need to in order
