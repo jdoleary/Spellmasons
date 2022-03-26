@@ -337,7 +337,9 @@ function tryPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCo
         const path = paths[i];
         if (path.invalid) {
             // Remove the target (the last point) to visually show it couldn't complete
-            path.points.pop();
+            if (path.points.length > 2) {
+                path.points.pop();
+            }
             window.debugGraphics.lineStyle(4, 0xff0000, 0.1);
         } else {
             window.debugGraphics.lineStyle(4, 0x00ff00, 0.3);
