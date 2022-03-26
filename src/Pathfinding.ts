@@ -14,12 +14,12 @@ interface Path {
     distance: number;
 }
 export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): Vec2[] {
-    // If the target is inside of a polygon, move it to the closest edge so that
+    // If the target is inside of a non-inverted polygon, move it to the closest edge so that
     // the unit can path to the closest pathable point near where they are attempting to go.
     // This is important if, for example, a player clicks in empty space which is inside
     // of the poly but not inside an obstacle.  The pathing should take the unit
     // as close as it can go without intersecting the polygon
-    let targetInsideOfPoly: Polygon | undefined;
+    let targetInsideOfPolys: Polygon[] = [];
     for (let poly of window.underworld.pathingPolygons) {
         // Exclude inverted polygons because if there is more than 1
         // inverted polygon, and since inverted polygons' "insides"
@@ -30,22 +30,41 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
         // when there is only one single inverted polygon
         if (!poly.inverted) {
             if (isVec2InsidePolygon(target, poly)) {
-                targetInsideOfPoly = poly;
+                targetInsideOfPolys = [poly];
                 break;
             }
         }
 
     }
-    if (targetInsideOfPoly) {
-        const rightAngleIntersections = [];
-        for (let wall of polygonToPolygonLineSegments(targetInsideOfPoly)) {
-            const intersection = findWherePointIntersectLineSegmentAtRightAngle(target, wall);
-            if (intersection) {
-                // window.debugGraphics.lineStyle(3, 0xff0000, 1.0);
-                // window.debugGraphics.drawCircle(intersection.x, intersection.y, 3);
-                rightAngleIntersections.push(intersection);
+    // If the target is NOT inside any non-inverted polygons
+    // Check if it's "inside" (outside) ALL inverted polys
+    // If it is outside of ALL inverted polygons, that means that the
+    // target is invalid so we have to find the closest valid target to path to
+    if (targetInsideOfPolys.length == 0) {
+        for (let poly of window.underworld.pathingPolygons) {
+            if (poly.inverted) {
+                if (isVec2InsidePolygon(target, poly)) {
+                    targetInsideOfPolys.push(poly);
+                } else {
+                    targetInsideOfPolys = [];
+                    break;
+                }
             }
+        }
+    }
+    // Find the closest valid target to path to
+    if (targetInsideOfPolys.length) {
+        const rightAngleIntersections = [];
+        for (let poly of targetInsideOfPolys) {
+            for (let wall of polygonToPolygonLineSegments(poly)) {
+                const intersection = findWherePointIntersectLineSegmentAtRightAngle(target, wall);
+                if (intersection) {
+                    // window.debugGraphics.lineStyle(3, 0xff0000, 1.0);
+                    // window.debugGraphics.drawCircle(intersection.x, intersection.y, 3);
+                    rightAngleIntersections.push(intersection);
+                }
 
+            }
         }
         // Find the closest of the intersections
         if (rightAngleIntersections.length) {
