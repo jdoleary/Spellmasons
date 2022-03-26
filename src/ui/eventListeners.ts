@@ -102,7 +102,7 @@ export function mousemoveHandler(e: MouseEvent) {
     const path = findPath(window.player.unit, mouseTarget, window.underworld.pathingPolygons);
     if (path.length) {
       window.debugGraphics.lineStyle(3, 0xffffff, 1.0);
-      window.debugGraphics.moveTo(path[0].x, path[0].y);
+      window.debugGraphics.moveTo(window.player.unit.x, window.player.unit.y);
       // Draw the path
       for (let point of path) {
         window.debugGraphics.drawCircle(point.x, point.y, 4);
