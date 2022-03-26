@@ -22,9 +22,18 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
     // as close as it can go without intersecting the polygon
     let targetInsideOfPoly: Polygon | undefined;
     for (let poly of window.underworld.pathingPolygons) {
-        if (isVec2InsidePolygon(target, poly)) {
-            targetInsideOfPoly = poly;
-            break;
+        // Exclude inverted polygons because if there is more than 1
+        // inverted polygon, and since inverted polygons' "insides"
+        // are actually on the outside; there'll be a false positive
+        // where a target in a valid location, will get flagged as
+        // "inside" an inverted polygon.  Maybe this calls for the concept
+        // of inverted polygons to be rethought, since it really only works
+        // when there is only one single inverted polygon
+        if (!poly.inverted) {
+            if (isVec2InsidePolygon(target, poly)) {
+                targetInsideOfPoly = poly;
+                break;
+            }
         }
 
     }
@@ -99,11 +108,9 @@ function tryPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCo
     const shortestFinishedPaths = paths.filter(p => p.done && !p.invalid).sort((a, b) => a.distance - b.distance);
     if (shortestFinishedPaths.length) {
         const shortestFinishedDistance = shortestFinishedPaths[0].distance;
-        console.log('shortest finished distance', shortestFinishedDistance);
         // Make all paths that are longer invalid:
         for (let path of paths) {
             if (!path.done && path.distance > shortestFinishedDistance) {
-                console.log('end path early')
                 path.invalid = true;
                 path.done = true;
             }
@@ -111,7 +118,6 @@ function tryPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCo
         }
     }
 
-    console.log('tryPaths, distances', paths.map(p => Math.floor(p.distance)).sort());
     function walkAroundAPoly(direction: 'prev' | 'next', startVertex: Vec2, poly: Polygon, target: Vec2, pathingWalls: PolygonLineSegment[], path: Path) {
         // Walk all the way around a poly in "direction" until you have a straight line path to the target, or until the straight line path
         // to the target intersects another poly
