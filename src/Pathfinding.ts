@@ -111,6 +111,8 @@ function tryPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCo
         // Make all paths that are longer invalid:
         for (let path of paths) {
             if (!path.done && path.distance > shortestFinishedDistance) {
+                // Remove the target to visually show it couldn't complete
+                path.points.pop();
                 path.invalid = true;
                 path.done = true;
             }
@@ -185,7 +187,7 @@ function tryPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCo
         // in few enough steps
         for (let path of paths) {
             if (!path.done) {
-                // Remove the target to visually show it couldn't complete
+                // Remove the target (the last point) to visually show it couldn't complete
                 path.points.pop();
                 path.invalid = true;
             }
