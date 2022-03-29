@@ -63,7 +63,7 @@ window.joinRoom = function joinRoom(_room_info = {}): Promise<unknown> {
     readyState.set('wsPieRoomJoined', true);
     console.log('Pie: You are now in the room');
     // Useful for development to get into the game quickly
-    let quickloadName = localStorage.getItem('quickload')
+    let quickloadName = window.allowCookies && localStorage.getItem('quickload');
     if (quickloadName) {
       console.log('ADMIN: quickload:', quickloadName);
       window.load(quickloadName);

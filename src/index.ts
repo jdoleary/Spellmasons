@@ -10,6 +10,8 @@ import * as Cards from './cards';
 import * as Units from './units';
 import { initPlanningView } from './ui/PlanningView';
 import type PieClient from '@websocketpie/client';
+import cookieConsentPopup from './cookieConsent';
+cookieConsentPopup();
 
 // This import is critical so that the svelte menu has access to
 // the pie globals
@@ -96,6 +98,7 @@ declare global {
     debugGraphics: PIXI.Graphics;
     // Graphics for drawing unit health and mana bars
     unitOverlayGraphics: PIXI.Graphics;
+    allowCookies: boolean;
 
   }
 }

@@ -186,11 +186,7 @@ export function clickHandler(e: MouseEvent) {
     // Only allow casting in the proper phase and on player's turn only
     if (window.underworld.isMyTurn()) {
       // Get current client's player
-      const selfPlayer:
-        | Player.IPlayer
-        | undefined = window.underworld.players.find(
-          (p) => p.clientId === window.clientId,
-        );
+      const selfPlayer = window.player;
       // If the player casting is the current client player
       if (selfPlayer) {
         // cast the spell
@@ -240,7 +236,7 @@ export function clickHandler(e: MouseEvent) {
           });
         }
       } else {
-        console.error("Attempting to cast while clientId is unassociated with existing players");
+        console.error("Attempting to cast while window.player is undefined");
       }
     } else {
       floatingText({

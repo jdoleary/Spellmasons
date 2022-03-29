@@ -456,37 +456,53 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
 }
 
 window.save = (title) => {
-  localStorage.setItem(
-    'golems-save-' + title,
-    JSON.stringify({
-      underworld: window.underworld.serializeForSaving(),
-      route: window.route,
-    }),
-  );
+  if (window.allowCookies) {
+    localStorage.setItem(
+      'golems-save-' + title,
+      JSON.stringify({
+        underworld: window.underworld.serializeForSaving(),
+        route: window.route,
+      }),
+    );
+  } else {
+    console.error('May not use this feature without accepting the cookie policy.');
+  }
 };
 window.load = (title) => {
-  const savedGameString = localStorage.getItem('golems-save-' + title);
-  if (savedGameString) {
-    const { underworld, route } = JSON.parse(savedGameString);
-    window.pie.sendData({
-      type: MESSAGE_TYPES.LOAD_GAME_STATE,
-      route,
-      underworld,
-    });
+  if (window.allowCookies) {
+    const savedGameString = localStorage.getItem('golems-save-' + title);
+    if (savedGameString) {
+      const { underworld, route } = JSON.parse(savedGameString);
+      window.pie.sendData({
+        type: MESSAGE_TYPES.LOAD_GAME_STATE,
+        route,
+        underworld,
+      });
+    } else {
+      console.error('no save game found with title', title);
+    }
   } else {
-    console.error('no save game found with title', title);
+    console.error('May not use this feature without accepting the cookie policy.');
   }
 };
 
 window.saveReplay = (title: string) => {
-  localStorage.setItem('golems-' + title, JSON.stringify(messageLog));
+  if (window.allowCookies) {
+    localStorage.setItem('golems-' + title, JSON.stringify(messageLog));
+  } else {
+    console.error('May not use this feature without accepting the cookie policy.');
+  }
 };
 // Note, replay is currently broken
 window.replay = (title: string) => {
-  const messages = JSON.parse(localStorage.getItem('golems-' + title) || '');
-  for (let i = 0; i < messages.length; i++) {
-    const message = messages[i];
-    message.fromClient = underworld.players[0].clientId;
-    onData(message);
+  if (window.allowCookies) {
+    const messages = JSON.parse(localStorage.getItem('golems-' + title) || '');
+    for (let i = 0; i < messages.length; i++) {
+      const message = messages[i];
+      message.fromClient = underworld.players[0].clientId;
+      onData(message);
+    }
+  } else {
+    console.error('May not use this feature without accepting the cookie policy.');
   }
 };
