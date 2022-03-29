@@ -51,7 +51,7 @@ export function onData(d: OnDataArgs) {
     case MESSAGE_TYPES.DESYNC:
       console.warn(`Client ${fromClient} detected desync from host`)
       // When a desync is detected, sync the clients 
-      forceSyncClients();
+      forceSyncClient(fromClient);
       break;
     case MESSAGE_TYPES.INIT_GAME_STATE:
       // Only accept INIT_GAME_STATE message if it contains own player information to prevent
@@ -372,7 +372,7 @@ async function handleSpell(caster: Player.IPlayer, payload: any) {
 export function getClients(): string[] {
   return clients;
 }
-function forceSyncClients() {
+function forceSyncClient(syncClientId: string) {
   // Only the host should be sending LOAD_GAME_STATE messages
   // because the host has the canonical game state
   if (window.hostClientId === window.clientId) {
@@ -380,6 +380,9 @@ function forceSyncClients() {
       type: MESSAGE_TYPES.LOAD_GAME_STATE,
       route: window.route,
       underworld: underworld.serializeForSaving(),
+    }, {
+      subType: "Whisper",
+      whisperClientIds: [syncClientId],
     });
   }
 }
