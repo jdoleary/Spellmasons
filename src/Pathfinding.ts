@@ -217,7 +217,15 @@ function tryPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCo
                     if (lineToTargetDoesNotPassThroughOwnPolygon) {
                         // A straight line from vertex to target intersects the same polygon again but is probably closer,
                         // so we'll branch off the new intersection point
-                        break;
+
+                        // Exception: Don't branch off if it's branching into a polygonlinesegment that THIS path already contains
+                        if (path.points.find(p => p == intersectingWall.p1) && path.points.find(p => p == intersectingWall.p2)) {
+                            // Continue walking polygon
+                            continue;
+                        } else {
+                            // Allowing jumping to intersecting wall
+                            break;
+                        }
                     } else {
                         // line cast to target DOES pass through the inside of this vertex's angle so it is invalid to branch.
                         // Thus, keep walking around the polygon
