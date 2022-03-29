@@ -263,6 +263,14 @@ export function getInsideAnglesOfPoint(polygon: Polygon, pointIndex: number): { 
     const angleToNextPoint = Vec.getAngleBetweenVec2s(point, nextPoint);
     return { start: angleToNextPoint, end: angleToPrevPoint };
 }
+export function getInsideAnglesOfWall(p: PolygonLineSegment): { start: number, end: number } {
+    const A = Vec.getAngleBetweenVec2s(p.p1, p.p2);
+    if (p.polygon.inverted) {
+        return { start: A - Math.PI, end: A };
+    } else {
+        return { start: A, end: A - Math.PI };
+    }
+}
 
 // Returns true if casting a line from point (a vertex on a polygon) to a target Vec2 passes through the
 // inside of point's polygon

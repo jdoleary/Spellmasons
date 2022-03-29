@@ -1,6 +1,6 @@
 
 import type { Vec2 } from "../Vec";
-import { testables, Branch, makePolygonIndexIterator, Polygon, expandPolygon, mergeOverlappingPolygons, polygonToPolygonLineSegments, getInsideAnglesOfPoint, doesLineFromPointToTargetProjectAwayFromOwnPolygon } from '../Polygon';
+import { testables, Branch, makePolygonIndexIterator, Polygon, expandPolygon, mergeOverlappingPolygons, polygonToPolygonLineSegments, getInsideAnglesOfPoint, doesLineFromPointToTargetProjectAwayFromOwnPolygon, getInsideAnglesOfWall } from '../Polygon';
 import type { LineSegment } from "../collision/collisionMath";
 const { getLoopableIndex, isVec2InsidePolygon, findFirstPointNotInsideAnotherPoly, getNormalVectorOfLineSegment,
     getClosestBranch, growOverlappingCollinearLinesInDirectionOfP2, arePolygonsEquivalent } = testables;
@@ -753,6 +753,58 @@ describe('doesLineFromPointToTargetProjectAwayFromOwnPolygon', () => {
         const expected = false;
         expect(actual).toEqual(expected);
     });
+});
+describe.only('getInsideAnglesOfWall (from start clockwise to end)', () => {
+    [
+        {
+            p0: { x: 0, y: 0 },
+            p1: { x: 0, y: 1 },
+            p2: { x: 1, y: 1 },
+            p3: { x: 1, y: 0 },
+            inverted: false,
+            expected: { start: Math.PI / 2, end: -Math.PI / 2 }
+        },
+        {
+            p0: { x: 0, y: 0 },
+            p1: { x: 0, y: 1 },
+            p2: { x: 1, y: 1 },
+            p3: { x: 1, y: 0 },
+            inverted: true,
+            expected: { start: -Math.PI / 2, end: Math.PI / 2 }
+        },
+        {
+            p3: { x: 0, y: 0 },
+            p0: { x: 0, y: 1 },
+            p1: { x: 1, y: 1 },
+            p2: { x: 1, y: 0 },
+            inverted: false,
+            expected: { start: 0, end: -Math.PI }
+        },
+        {
+            p3: { x: 0, y: 0 },
+            p0: { x: 0, y: 1 },
+            p1: { x: 1, y: 1 },
+            p2: { x: 1, y: 0 },
+            inverted: true,
+            expected: { start: -Math.PI, end: 0 }
+        },
+        {
+            p3: { x: 0, y: 0 },
+            p0: { x: 0, y: 1 },
+            p1: { x: 1, y: 2 },
+            p2: { x: 1, y: 0 },
+            inverted: false,
+            expected: { start: Math.PI / 4, end: -3 * Math.PI / 4 }
+        },
+    ].map(({ p0, p1, p2, p3, inverted, expected }) => {
+        it(`should return ${expected.start * 180 / Math.PI}, ${expected.end * 180 / Math.PI} for ${p0.x},${p0.y} to ${p1.x},${p1.y}`, () => {
+            const points: Vec2[] = [p0, p1, p2, p3];
+            const polygon: Polygon = { points, inverted }
+            const actual = getInsideAnglesOfWall({ p1: p0, p2: p1, polygon });
+            expect(actual).toEqual(expected);
+        });
+    });
+
 });
 
 
