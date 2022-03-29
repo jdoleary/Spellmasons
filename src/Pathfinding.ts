@@ -1,6 +1,7 @@
+import { isAngleBetweenAngles } from "./Angle";
 import { findWherePointIntersectLineSegmentAtRightAngle, isPointOnLineSegment, LineSegment, lineSegmentIntersection } from "./collision/collisionMath";
 import { distance } from "./math";
-import { getPointsFromPolygonStartingAt, doesVertexBelongToPolygon, Polygon, PolygonLineSegment, polygonToPolygonLineSegments, isVec2InsidePolygon, getInsideAnglesOfPoint, doesLineFromPointToTargetProjectAwayFromOwnPolygon } from "./Polygon";
+import { getPointsFromPolygonStartingAt, doesVertexBelongToPolygon, Polygon, PolygonLineSegment, polygonToPolygonLineSegments, isVec2InsidePolygon, getInsideAnglesOfPoint, doesLineFromPointToTargetProjectAwayFromOwnPolygon, getInsideAnglesOfWall } from "./Polygon";
 import type { Vec2 } from './Vec';
 import * as Vec from './Vec';
 
@@ -453,8 +454,16 @@ function getClosestIntersectionWithWalls(line: LineSegment, walls: PolygonLineSe
             // the polygon, so when the wall belongs to an inverted polygon, always ignore collisions at the
             // start of the line segment
             if (wall.polygon.inverted && Vec.equal(line.p1, intersection)) {
-                // Exclude collisions at start point of line segment. Don't collide with self
-                continue;
+                // If the polygon is inverted, and the line is cast towards the inside (outside) from the 
+                // inverted polygon, allow it
+                const insideAngleOfWall = getInsideAnglesOfWall(wall);
+                const lineIsCastIntoNoWalkZone = isAngleBetweenAngles(
+                    Vec.getAngleBetweenVec2s(line.p1, line.p2), insideAngleOfWall.start, insideAngleOfWall.end
+                );
+                if (!lineIsCastIntoNoWalkZone) {
+                    // Ignore the collision
+                    continue
+                }
             }
             if (!includeStartPoint && Vec.equal(line.p1, intersection)) {
                 // Exclude collisions at start point of line segment. Don't collide with self
