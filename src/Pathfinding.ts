@@ -200,21 +200,28 @@ function tryPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCo
 
 
             path.points.push(vertex);
-            // Check if a straight line between the new vertex and the target collides with any walls
-            const { intersectingWall, closestIntersection } = getClosestIntersectionWithWalls({ p1: vertex, p2: target }, pathingWalls);
-            // If it does
-            if (intersectingWall && closestIntersection) {
-                // and the wall belongs to the current poly
-                if (doesVertexBelongToPolygon(vertex, intersectingWall.polygon) && doesVertexBelongToPolygon(intersectingWall.p1, intersectingWall.polygon)) {
-                    const indexOfVertex = intersectingWall.polygon.points.findIndex(p => Vec.equal(p, vertex));
-                    // true if line to target doesn't pass through own polygon
-                    let lineToTargetDoesNotPassThroughOwnPolygon = false;
-                    if (indexOfVertex >= 0) {
-                        lineToTargetDoesNotPassThroughOwnPolygon = doesLineFromPointToTargetProjectAwayFromOwnPolygon(intersectingWall.polygon, indexOfVertex, target);
-                    }
-                    // Line from vertex to the target is not cast through the inside angle of vertex and thus it is valid
-                    // to branch
-                    if (lineToTargetDoesNotPassThroughOwnPolygon) {
+            // Check if a straight line between the new vertex and the target passes through the current polygon
+            const indexOfVertex = poly.points.findIndex(p => Vec.equal(p, vertex));
+            // true if line to target doesn't pass through own polygon
+            let lineToTargetDoesNotPassThroughOwnPolygon = false;
+            if (indexOfVertex >= 0) {
+                lineToTargetDoesNotPassThroughOwnPolygon = doesLineFromPointToTargetProjectAwayFromOwnPolygon(poly, indexOfVertex, target);
+            }
+            if (!lineToTargetDoesNotPassThroughOwnPolygon) {
+                // line cast to target DOES pass through the inside of this vertex's angle so it is invalid to branch.
+                // Thus, keep walking around the polygon
+                // Continue to check the next or previous (depending on direction) vertex for this poly
+                // we need to keep walking around it to continue the path
+                continue;
+            } else {
+                // Line from vertex to the target is not cast through the inside angle of vertex and thus it is valid
+                // to branch
+                // Check if a straight line between the new vertex and the target collides with any walls
+                const { intersectingWall, closestIntersection } = getClosestIntersectionWithWalls({ p1: vertex, p2: target }, pathingWalls);
+                // If it does
+                if (intersectingWall && closestIntersection) {
+                    // and the wall belongs to the current poly
+                    if (doesVertexBelongToPolygon(vertex, intersectingWall.polygon) && doesVertexBelongToPolygon(intersectingWall.p1, intersectingWall.polygon)) {
                         // A straight line from vertex to target intersects the same polygon again but is probably closer,
                         // so we'll branch off the new intersection point
 
@@ -227,21 +234,15 @@ function tryPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCo
                             break;
                         }
                     } else {
-                        // line cast to target DOES pass through the inside of this vertex's angle so it is invalid to branch.
-                        // Thus, keep walking around the polygon
-                        // Continue to check the next or previous (depending on direction) vertex for this poly
-                        // we need to keep walking around it to continue the path
-                        continue;
+                        // If it belongs to a different poly, then we can stop walking because
+                        // we've walked the path as far around the current poly as we need to in order
+                        // to continue pathing towards the target by walking a different poly
+                        break;
                     }
                 } else {
-                    // If it belongs to a different poly, then we can stop walking because
-                    // we've walked the path as far around the current poly as we need to in order
-                    // to continue pathing towards the target by walking a different poly
+                    // Stop if there is no intersecting wall, the path is complete because it has reached the poly
                     break;
                 }
-            } else {
-                // Stop if there is no intersecting wall, the path is complete because it has reached the poly
-                break;
             }
 
         }
