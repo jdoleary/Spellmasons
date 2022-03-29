@@ -1,7 +1,9 @@
 import type { Vec2 } from '../Vec';
-import type { Spell } from '.';
+import { deduplicateTargets, Spell } from '.';
 import { drawDryRunCircle } from '../ui/PlanningView';
 import { CardType, cardTypeToProbability } from './cardUtils';
+import { distance } from '../math';
+import * as config from '../config';
 
 const id = 'AOE';
 const range = 200;
@@ -27,18 +29,9 @@ Adds targets for the following cards to effect by "growing" existing targets
         drawDryRunCircle(target, range);
         newTargets = newTargets.concat(withinRadius);
       }
-      let updatedTargets = [...state.targets, ...newTargets];
-      // deduplicate
-      updatedTargets = updatedTargets.filter((coord, index) => {
-        return (
-          updatedTargets.findIndex(
-            (findCoords) => findCoords.x == coord.x && findCoords.y === coord.y,
-          ) === index
-        );
-      });
-
       // Update targets
-      state.targets = updatedTargets;
+      state.targets = [...state.targets, ...newTargets];
+      deduplicateTargets(state);
 
       return state;
     },

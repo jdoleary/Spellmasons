@@ -1,6 +1,5 @@
 ## Current Priorities
-- bug: somehow it cast damage more than once on a single target
-    - AOE then damage since there will be 2 targets on 1 unit
+- bug: while messing with forcing desync, player got stuck with red shader on
 - Client joins network with id of "1" if they've been playing singleplayer and have that id saved
 - Fix sycronize bugs. Make it more reliable
 - Bug: You can swap into obstacles

@@ -1,5 +1,5 @@
 import { drawDryRunLine } from '../ui/PlanningView';
-import type { Spell } from '.';
+import { deduplicateTargets, Spell } from '.';
 import type { Vec2 } from '../Vec';
 import * as Vec from '../Vec';
 import type * as Unit from '../Unit';
@@ -33,17 +33,9 @@ off of all existing targeted units to units touching them.
           newTargets = newTargets.concat(chained_units);
         }
       }
-      let updatedTargets = [...state.targets, ...newTargets];
-      // deduplicate
-      updatedTargets = updatedTargets.filter((coord, index) => {
-        return (
-          updatedTargets.findIndex(
-            (findCoords) => findCoords.x == coord.x && findCoords.y === coord.y,
-          ) === index
-        );
-      });
       // Update targets
-      state.targets = updatedTargets;
+      state.targets = [...state.targets, ...newTargets];
+      deduplicateTargets(state);
 
       return state;
     },

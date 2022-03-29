@@ -33,6 +33,8 @@ import mana_steal from './mana_steal';
 import { IUpgrade, upgradeSource } from '../Upgrade';
 import { CardType, _getCardsFromIds } from './cardUtils';
 import { addCardToHand } from '../CardUI';
+import { distance } from '../math';
+import * as config from '../config';
 export interface Spell {
   card: ICard;
   // modifiers keep track of additional state on an individual unit basis
@@ -156,4 +158,14 @@ export const allCards: { [cardId: string]: ICard } = {};
 
 export function getCardsFromIds(cardIds: string[]): ICard[] {
   return _getCardsFromIds(cardIds, allCards);
+}
+
+// Removes targets that would overlap the same unit twice
+export function deduplicateTargets(state: EffectState) {
+  state.targets = state.targets.filter((coord, index) => {
+    return (
+      state.targets.findIndex(otherCoord => distance(coord, otherCoord) <= config.COLLISION_MESH_RADIUS) === index
+    );
+  });
+
 }
