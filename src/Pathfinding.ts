@@ -211,8 +211,8 @@ function tryPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCo
                                 // Stop the current path, it is invalid since the other path has
                                 // a shorter route to this vertex
                                 // Draw where path stopped
-                                window.debugGraphics.lineStyle(1, 0x0000ff, 1);
-                                window.debugGraphics.drawCircle(vertex.x, vertex.y, 4);
+                                // window.debugGraphics.lineStyle(1, 0x0000ff, 1);
+                                // window.debugGraphics.drawCircle(vertex.x, vertex.y, 4);
                                 path.invalid = true;
                                 path.done = true;
                                 break;
@@ -390,14 +390,14 @@ function tryPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCo
             if (path.points.length > 2) {
                 path.points.pop();
             }
-            window.debugGraphics.lineStyle(4, 0xff0000, 0.1);
+            // window.debugGraphics.lineStyle(4, 0xff0000, 0.1);
         } else {
-            window.debugGraphics.lineStyle(4, 0x00ff00, 0.3);
+            // window.debugGraphics.lineStyle(4, 0x00ff00, 0.3);
         }
-        window.debugGraphics.moveTo(path.points[0].x + visualOffset, path.points[0].y + visualOffset);
-        for (let point of path.points) {
-            window.debugGraphics.lineTo(point.x + visualOffset, point.y + visualOffset);
-        }
+        // window.debugGraphics.moveTo(path.points[0].x + visualOffset, path.points[0].y + visualOffset);
+        // for (let point of path.points) {
+        //     window.debugGraphics.lineTo(point.x + visualOffset, point.y + visualOffset);
+        // }
     }
     // Remove invalid paths
     paths = paths.filter(p => !p.invalid);
