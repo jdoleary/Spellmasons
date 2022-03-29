@@ -231,32 +231,39 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       break;
     case MESSAGE_TYPES.SYNC:
       const { players, units, underworldPartial } = payload;
+
+      underworld.syncronize(underworldPartial);
       for (let i = 0; i < underworld.units.length; i++) {
         const syncUnit = units[i]
         if (!syncUnit) {
           console.error("Something is wrong, underworld has different length unit than sync units")
           // Client incurred major desync, resolve via DESYNC message
           window.pie.sendData({ type: MESSAGE_TYPES.DESYNC });
+          return;
         } else {
           const sourceUnit = underworld.units[i];
-          if (syncUnit.id == sourceUnit.id) {
-            Unit.syncronize(syncUnit, underworld.units[i]);
+          if (syncUnit.id !== sourceUnit.id) {
+            console.error('Sync failure, units are out of order', syncUnit.id, sourceUnit.id);
+            // Client incurred major desync, resolve via DESYNC message
+            window.pie.sendData({ type: MESSAGE_TYPES.DESYNC });
+            return;
           } else {
-            console.error('Sync failure, units are out of order');
+            Unit.syncronize(syncUnit, underworld.units[i]);
           }
         }
       }
       for (let i = 0; i < underworld.players.length; i++) {
         const syncPlayer = players[i]
-        if (!syncPlayer) {
-          console.error("Something is wrong, underworld has different length players than sync players")
+        if (!syncPlayer || syncPlayer.clientId !== underworld.players[i].clientId) {
+          console.error("Something is wrong, underworld has different players than sync players")
           // Client incurred major desync, resolve via DESYNC message
           window.pie.sendData({ type: MESSAGE_TYPES.DESYNC });
+          return;
+        } else {
+          Player.syncronize(syncPlayer, underworld.players[i]);
         }
-        Player.syncronize(syncPlayer, underworld.players[i]);
       }
 
-      underworld.syncronize(underworldPartial);
       break;
     case MESSAGE_TYPES.LOAD_GAME_STATE:
       // Clean up old game state

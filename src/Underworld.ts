@@ -963,7 +963,17 @@ export default class Underworld {
     if (serialized.RNGState) {
       this.syncronizeRNG(serialized.RNGState);
     }
-    Object.assign(this, serialized);
+    this.levelIndex = serialized.levelIndex;
+    this.turn_phase = serialized.turn_phase;
+    this.playerTurnIndex = serialized.playerTurnIndex;
+    this.turn_number = serialized.turn_number;
+    this.height = serialized.height;
+    this.width = serialized.width;
+    // Note: obstacles are not serialized since they are unchanging between levels
+    this.walls = serialized.walls;
+    this.pathingPolygons = serialized.pathingPolygons;
+    this.playersWhoHaveChosenUpgrade = serialized.playersWhoHaveChosenUpgrade;
+    this.processedMessageCount = this.processedMessageCount;
     this.cacheWalls();
   }
   serializeForSyncronize(): IUnderworldSerializedForSyncronize {
@@ -1000,7 +1010,7 @@ type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFun
 function getEnemiesForAltitude(levelIndex: number) {
 
   const hardCodedLevelEnemies = [
-    { 'grunt': 5 },
+    { 'grunt': 1, 'Priest': 1 },
     {
       'grunt': 4,
       'archer': 1

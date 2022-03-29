@@ -133,10 +133,14 @@ export function load(player: IPlayerSerialized) {
 // entity with properties from a player (in JSON)
 // mutates originalUnit
 export function syncronize(playerSerialized: IPlayerSerialized, originalPlayer: IPlayer): void {
-  const { unit, ...rest } = playerSerialized;
-  Object.assign(originalPlayer, rest);
-  Unit.syncronize(unit, originalPlayer.unit);
-  addHighlighIfPlayerBelongsToCurrentClient(originalPlayer);
+  if (playerSerialized.clientId == originalPlayer.clientId) {
+    const { unit, ...rest } = playerSerialized;
+    Object.assign(originalPlayer, rest);
+    Unit.syncronize(unit, originalPlayer.unit);
+    addHighlighIfPlayerBelongsToCurrentClient(originalPlayer);
+  } else {
+    console.error('Attempting to syncronize a player with the wrong client id', playerSerialized.clientId, originalPlayer.clientId);
+  }
 }
 // Sets boolean and substring denoting if the player has a @websocketpie/client client associated with it
 export function setClientConnected(player: IPlayer, connected: boolean) {

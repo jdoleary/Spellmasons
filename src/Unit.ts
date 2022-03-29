@@ -218,13 +218,17 @@ export function load(unit: IUnitSerialized): IUnit {
 // entity with properties from a unit (in JSON)
 // mutates originalUnit
 export function syncronize(unitSerialized: IUnitSerialized, originalUnit: IUnit): void {
-  // Note: shaderUniforms should not just be "assign"ed into the object because 
-  // it requires special handling to have a valid link to the shader
-  // and since syncronize is mainly meant to keep things like health and position in sync,
-  // I'm choosing just to omit shaderUniforms from syncronize
-  const { image, shaderUniforms, ...rest } = unitSerialized;
-  Object.assign(originalUnit, rest);
-  originalUnit.image = Image.syncronize(image, originalUnit.image);
+  if (unitSerialized.id === originalUnit.id) {
+    // Note: shaderUniforms should not just be "assign"ed into the object because 
+    // it requires special handling to have a valid link to the shader
+    // and since syncronize is mainly meant to keep things like health and position in sync,
+    // I'm choosing just to omit shaderUniforms from syncronize
+    const { image, shaderUniforms, ...rest } = unitSerialized;
+    Object.assign(originalUnit, rest);
+    originalUnit.image = Image.syncronize(image, originalUnit.image);
+  } else {
+    console.error('Attempting to syncronize a unit with the wrong id', unitSerialized.id, originalUnit.id);
+  }
 }
 
 // It is important to use this function when returning a unit to the previous
