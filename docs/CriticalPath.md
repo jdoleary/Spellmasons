@@ -1,23 +1,26 @@
-# Critical Path (3nd revision)
-- March 17: Youtube Alpha version video / Setup Social Media system
-- March 26: Finish Content / Endgame
-- Menus / Options
-    - Prereq: get a following first
-    - Homepage with news and stuff (Sveltekit?)
+# Critical Path (4st deadline revision)
+- Finish Content / Endgame
+    - More Spells
+    - More enemies
+    - "Fruit wave"
+- Youtube Alpha version video / Setup Social Media system
+- Menus / Options / homepage
 - Art in Blender / Shaders / Juice
 - [SFX](https://www.asoundeffect.com/sound-library/metamorphosis/)
     - Adobe? https://www.adobe.com/products/audition/offers/AdobeAuditionDLCSFX.html
 - [Tutorial](https://www.youtube.com/watch?v=-GV814cWiAw)
 - Monitoring (Sentry.io?)
-- March 31: Release
+- April 30: Release
 - Open Source
 - Engage community in making new spells
 
 ## Deadlines
 - ~~My part (gameplay) should be finished end of Feb 2022~~
 - ~~Entire game should be ready to ship end of March 2022~~
-- My part (gameplay) should be finished end of March 2022
-- Entire game should be ready to ship end of April 2022
+- ~~My part (gameplay) should be finished end of March 2022~~
+- My part (gameplay) should be finished end of April 2022
+- ~~Entire game should be ready to ship end of April 2022~~
+- Entire game should be ready to ship end of May 2022
 - Keeping to a hard deadline will ensure that I iterate and keep making more games and improving
 ## Thoughts
 Don't get stuck on feature creep.  Finish the game and get it out so you can move on

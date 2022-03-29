@@ -1,10 +1,11 @@
 ## Current Priorities
+- bug: somehow it cast damage more than once on a single target
+    - AOE then damage since there will be 2 targets on 1 unit
+- Client joins network with id of "1" if they've been playing singleplayer and have that id saved
+- Fix sycronize bugs. Make it more reliable
 - Bug: You can swap into obstacles
 - Dad:
     - Missing spell projection overlay
-    - Attempting to cast while client id is unassociated with existing players
-        - Happened after a sync
-    - bug: somehow it cast damage more than once on a single target
     - He got right click and left click mixed up
     - Heavy units aren't big anymore? or after sync?
     - Wants to know how far he's able to walk in one turn
@@ -17,14 +18,14 @@
 - todo: Make "mana cost" icon on cards allow for health cost (for spells such as mana steal)
     - Bug: Mana steal costs mana, it shouldn't!!
 - Notify when waiting for other players to pick a character, just like "x players left to pick upgrade
+- Fix UI so it never covers the gameboard
 
 ---
 - wsPie: bug: what happens when you call sendData before joining a room???
 ---
 - Bug: I got poisoned when I cast contageous poison but wasn't close
-- Bug: Units that died of poison didn't leave behind skelletons (because they took damage again that destroyed the skelleton)
-    - Task: Add bone dust pile that dead bodies turn into when hit.  No longer a unit (that can be interacted with), but still visible
-- Bug: When I was on edge of inverted poly, the pathfinding moved me to the vertex instead of away from the wall where i clicked
+    - Task: Make contageous spread more obvious
+- Task: Add bone dust pile that dead bodies turn into when hit.  No longer a unit (that can be interacted with), but still visible
 - Bug: I don't think priest AI works
 ---
 Finish Content:
