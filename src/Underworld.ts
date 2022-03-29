@@ -133,19 +133,18 @@ export default class Underworld {
       if (u.x !== null && u.y !== null) {
         // Draw health bar
         window.unitOverlayGraphics.beginFill(0xd55656, 1.0);
-        const barWidth = config.COLLISION_MESH_RADIUS * 2;
         window.unitOverlayGraphics.drawRect(
-          u.x - config.COLLISION_MESH_RADIUS,
+          u.x - config.UNIT_UI_BAR_WIDTH / 2,
           u.y - config.COLLISION_MESH_RADIUS - config.UNIT_UI_BAR_HEIGHT,
-          barWidth * u.health / u.healthMax,
+          config.UNIT_UI_BAR_WIDTH * u.health / u.healthMax,
           config.UNIT_UI_BAR_HEIGHT);
         // Draw mana bar
         if (u.manaMax != 0) {
           window.unitOverlayGraphics.beginFill(0x5656d5, 1.0);
           window.unitOverlayGraphics.drawRect(
-            u.x - config.COLLISION_MESH_RADIUS,
+            u.x - config.UNIT_UI_BAR_WIDTH / 2,
             u.y - config.COLLISION_MESH_RADIUS,
-            barWidth * Math.min(1, u.mana / u.manaMax),
+            config.UNIT_UI_BAR_WIDTH * Math.min(1, u.mana / u.manaMax),
             config.UNIT_UI_BAR_HEIGHT);
         }
         window.unitOverlayGraphics.endFill();

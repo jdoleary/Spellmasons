@@ -7,6 +7,7 @@ export const UNIT_BASE_HEALTH = 3;
 export const UNIT_BASE_MANA = 60;
 export const UNIT_BASE_DAMAGE = 1;
 export const UNIT_UI_BAR_HEIGHT = 3;
+export const UNIT_UI_BAR_WIDTH = 28;
 // Ensures that the resolveDoneMoving callback will timeout if it never gets called.
 // This ensures that the game doesn't get stuck if, say, the collision system bugs
 // out and a unit never comes to rest
