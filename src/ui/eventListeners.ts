@@ -1,7 +1,7 @@
 import { MESSAGE_TYPES } from '../MessageTypes';
 import * as CardUI from '../CardUI';
 import type * as Player from '../Player';
-import floatingText from '../FloatingText';
+import floatingText, { orderedFloatingText } from '../FloatingText';
 import {
   isOutOfBounds,
   syncSpellEffectProjection,
@@ -200,6 +200,29 @@ export function clickHandler(e: MouseEvent) {
 
         const manaCost = calculateManaCost(cards, math.distance(selfPlayer.unit, target), selfPlayer);
         if (manaCost <= selfPlayer.unit.mana) {
+
+          // Ensure that last card doesn't require a following card
+          // If it does, warn the player that their card order won't do what
+          // they are expecting it to do
+          if (cards[cards.length - 1].requiresFollowingCard) {
+            floatingText({
+              coords: target,
+              text: `${cards[cards.length - 1].id} only modifies cards on its right`,
+              style: { fill: 'red' }
+            });
+            const elHint = document.querySelector('.requires-following-card');
+            // Remove then add 'blink' class to the "hint" outline so that
+            // it will restart the animation to grab the user's attention.
+            if (elHint) {
+              elHint.classList.remove('blink');
+              setTimeout(() => {
+                elHint.classList.add('blink');
+              }, 10);
+
+            }
+            // Then cancel casting:
+            return
+          }
           window.pie.sendData({
             type: MESSAGE_TYPES.SPELL,
             x: target.x,
@@ -211,6 +234,9 @@ export function clickHandler(e: MouseEvent) {
           floatingText({
             coords: target,
             text: 'Insufficient mana!',
+            style: {
+              fill: '#5656d5'
+            }
           });
         }
       } else {

@@ -1,7 +1,5 @@
 ## Current Priorities
 - Dad:
-    - Prevent from casting if the last card is a modifier
-    - Refrase "add another card" to communicate
     - Missing spell projection overlay
     - Attempting to cast while client id is unassociated with existing players
         - Happened after a sync

@@ -396,11 +396,12 @@ body.your-turn #player-turn-indicator {
 #selected-cards .card {
   position: relative;
 }
-#selected-cards .card.requires-following-card:last-child:after {
-  content: "Add another card";
+#selected-cards .card.requires-following-card:last-child:before {
+  content: "Requires another spell";
   color: white;
   background-color:rgba(253, 98, 98, 0.596);
-  height: 92%;
+  height: 85%;
+  margin-top:5%;
   width: 90%;
   border: 4px red dotted;
   border-left:0;
@@ -411,6 +412,33 @@ body.your-turn #player-turn-indicator {
   justify-content: center;
   flex-direction: column;
   text-align: center; 
+  transform: translate3d(0, 0, 0);
+}
+#selected-cards .card.requires-following-card.blink:last-child:before {
+  animation: blink-animation 0.5s steps(5, start) infinite, shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+}
+@keyframes blink-animation {
+  to {
+    border:4px red solid;
+    border-left:0;
+  }
+}
+@keyframes shake {
+  10%, 90% {
+    transform: translate3d(0, -1px, 0);
+  }
+  
+  20%, 80% {
+    transform: translate3d(0, 2px, 0);
+  }
+
+  30%, 50%, 70% {
+    transform: translate3d(0, -4px, 0);
+  }
+
+  40%, 60% {
+    transform: translate3d(0, 4px, 0);
+  }
 }
 #version {
   color: white;
