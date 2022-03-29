@@ -2,7 +2,7 @@ import type { Vec2 } from "./Vec";
 import * as Vec from './Vec';
 import { distance, similarTriangles } from "./math";
 import { isCollinearAndOverlapping, isCollinearAndPointInSameDirection, LineSegment, lineSegmentIntersection } from "./collision/collisionMath";
-import { clockwiseAngle } from "./Angle";
+import { clockwiseAngle, isAngleBetweenAngles } from "./Angle";
 
 export interface Polygon {
     points: Vec2[];
@@ -252,13 +252,30 @@ function projectPointAlongNormalVector(polygon: Polygon, pointIndex: number, mag
 }
 
 // In radians
+// Returns the inside angle of a point from start clockwise to end
+// The "inside angle" is the angle that points towards the inside ("non-walkable")
+// part of the polygon
 export function getInsideAnglesOfPoint(polygon: Polygon, pointIndex: number): { start: number, end: number } {
     const point = polygon.points[pointIndex];
     const nextPoint = polygon.points[getLoopableIndex(pointIndex + (polygon.inverted ? -1 : 1), polygon.points)];
     const prevPoint = polygon.points[getLoopableIndex(pointIndex + (polygon.inverted ? 1 : -1), polygon.points)];
     const angleToPrevPoint = Vec.getAngleBetweenVec2s(point, prevPoint);
     const angleToNextPoint = Vec.getAngleBetweenVec2s(point, nextPoint);
-    return { start: angleToPrevPoint, end: angleToNextPoint };
+    return { start: angleToNextPoint, end: angleToPrevPoint };
+}
+
+// Returns true if casting a line from point (a vertex on a polygon) to a target Vec2 passes through the
+// inside of point's polygon
+export function doesLineFromPointToTargetProjectAwayFromOwnPolygon(polygon: Polygon, pointIndex: number, target: Vec2): boolean {
+
+    if (pointIndex >= polygon.points.length) {
+        console.error("Invalid pointIndex");
+        return false;
+    }
+    const { start, end } = getInsideAnglesOfPoint(polygon, pointIndex);
+    const angleToTarget = Vec.getAngleBetweenVec2s(polygon.points[pointIndex], target);
+    return !isAngleBetweenAngles(angleToTarget, start, end);
+
 }
 
 // Note: There is a slight flaw in this algorithm in that if the point lies

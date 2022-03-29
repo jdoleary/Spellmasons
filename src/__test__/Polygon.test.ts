@@ -1,6 +1,6 @@
 
 import type { Vec2 } from "../Vec";
-import { testables, Branch, makePolygonIndexIterator, Polygon, expandPolygon, mergeOverlappingPolygons, polygonToPolygonLineSegments, getInsideAnglesOfPoint } from '../Polygon';
+import { testables, Branch, makePolygonIndexIterator, Polygon, expandPolygon, mergeOverlappingPolygons, polygonToPolygonLineSegments, getInsideAnglesOfPoint, doesLineFromPointToTargetProjectAwayFromOwnPolygon } from '../Polygon';
 import type { LineSegment } from "../collision/collisionMath";
 const { getLoopableIndex, isVec2InsidePolygon, findFirstPointNotInsideAnotherPoly, getNormalVectorOfLineSegment,
     getClosestBranch, growOverlappingCollinearLinesInDirectionOfP2, arePolygonsEquivalent } = testables;
@@ -657,7 +657,7 @@ describe('testables', () => {
 });
 
 describe('getInsideAnglesOfPoint', () => {
-    it('should return the inside angles of a point on a polygon', () => {
+    it('should return the inside angles (from start clockwise to end) of a point on a polygon', () => {
         const p0 = { x: 0, y: 0 }
         const p1 = { x: 0, y: 1 }
         const p2 = { x: 1, y: 1 }
@@ -665,7 +665,7 @@ describe('getInsideAnglesOfPoint', () => {
         const points: Vec2[] = [p0, p1, p2, p3];
         const polygon: Polygon = { points, inverted: false }
         const actual = getInsideAnglesOfPoint(polygon, 1)
-        const expected = { start: -Math.PI / 2, end: 0 };
+        const expected = { start: 0, end: -Math.PI / 2 };
         expect(actual).toEqual(expected);
     });
     it('should return the inside angles of a point on a polygon; inverted', () => {
@@ -676,7 +676,81 @@ describe('getInsideAnglesOfPoint', () => {
         const points: Vec2[] = [p0, p1, p2, p3];
         const polygon: Polygon = { points, inverted: true }
         const actual = getInsideAnglesOfPoint(polygon, 1)
-        const expected = { start: 0, end: -Math.PI / 2 };
+        const expected = { start: -Math.PI / 2, end: 0 };
+        expect(actual).toEqual(expected);
+    });
+});
+describe('doesLineFromPointToTargetProjectAwayFromOwnPolygon', () => {
+    it('should return true if the line segment does NOT intersect the polygon', () => {
+        const p0 = { x: 0, y: 0 }
+        const p1 = { x: 0, y: 1 }
+        const p2 = { x: 1, y: 1 }
+        const p3 = { x: 1, y: 0 }
+        const points: Vec2[] = [p0, p1, p2, p3];
+        const polygon: Polygon = { points, inverted: false };
+        // Line will NOT pass through the inside of the polygon
+        const target = { x: -1, y: 2 };
+        const actual = doesLineFromPointToTargetProjectAwayFromOwnPolygon(polygon, 1, target);
+        const expected = true;
+        expect(actual).toEqual(expected);
+    });
+    it('should return false if the line segment does intersect the polygon', () => {
+        const p0 = { x: 0, y: 0 }
+        const p1 = { x: 0, y: 1 }
+        const p2 = { x: 1, y: 1 }
+        const p3 = { x: 1, y: 0 }
+        const points: Vec2[] = [p0, p1, p2, p3];
+        const polygon: Polygon = { points, inverted: false }
+        // Line will pass through inside of the polygon
+        const target = { x: 1, y: 0 };
+        const actual = doesLineFromPointToTargetProjectAwayFromOwnPolygon(polygon, 1, target);
+        const expected = false;
+        expect(actual).toEqual(expected);
+    });
+    describe('given an inverted polygon', () => {
+        it('should return true if the line segment does NOT intersect the polygon', () => {
+            const p0 = { x: 0, y: 0 }
+            const p1 = { x: 0, y: 1 }
+            const p2 = { x: 1, y: 1 }
+            const p3 = { x: 1, y: 0 }
+            const points: Vec2[] = [p0, p1, p2, p3];
+            const polygon: Polygon = { points, inverted: true };
+            // Line will NOT pass through the inside of the polygon
+            const target = { x: 1, y: 0 };
+            const actual = doesLineFromPointToTargetProjectAwayFromOwnPolygon(polygon, 1, target);
+            const expected = true;
+            expect(actual).toEqual(expected);
+        });
+        it('should return false if the line segment does intersect the polygon', () => {
+            const p0 = { x: 0, y: 0 }
+            const p1 = { x: 0, y: 1 }
+            const p2 = { x: 1, y: 1 }
+            const p3 = { x: 1, y: 0 }
+            const points: Vec2[] = [p0, p1, p2, p3];
+            const polygon: Polygon = { points, inverted: true }
+            // Line will pass through inside of the polygon
+            const target = { x: -1, y: 2 };
+            const actual = doesLineFromPointToTargetProjectAwayFromOwnPolygon(polygon, 1, target);
+            const expected = false;
+            expect(actual).toEqual(expected);
+        });
+
+    });
+    it('should return false if the index is invalid for the given polygon', () => {
+        const p0 = { x: 0, y: 0 }
+        const p1 = { x: 0, y: 1 }
+        const p2 = { x: 1, y: 1 }
+        const p3 = { x: 1, y: 0 }
+        const points: Vec2[] = [p0, p1, p2, p3];
+        const polygon: Polygon = { points, inverted: true }
+        // Target is irrelevant for this text
+        const target = { x: 0, y: 0 };
+        // Squelch expected error
+        const consoleErrorMock = jest.spyOn(console, 'error').mockImplementation();
+        const actual = doesLineFromPointToTargetProjectAwayFromOwnPolygon(polygon, 100, target);
+        // Restore console.error
+        consoleErrorMock.mockRestore();
+        const expected = false;
         expect(actual).toEqual(expected);
     });
 });
