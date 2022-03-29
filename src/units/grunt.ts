@@ -13,7 +13,9 @@ const unit: UnitSource = {
   },
   unitProps: {
     moveDistance: config.UNIT_BASE_MOVE_DISTANCE,
-    attackRange: 10 + config.COLLISION_MESH_RADIUS * 2
+    attackRange: 10 + config.COLLISION_MESH_RADIUS * 2,
+    manaMax: 0,
+    mana: 0
   },
   action,
   canInteractWithTarget,
