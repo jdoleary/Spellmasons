@@ -2,12 +2,18 @@ import { getAngleBetweenVec2s, dotProduct, isBetween, magnitude } from '../Vec';
 
 describe('vectorMath', () => {
     describe("getAngleBetweenVec2s", () => {
-        it('should find the angle in radians between 2 Vec2s', () => {
-            const p1 = { x: 1, y: 1 };
-            const p2 = { x: 1, y: 2 };
-            const actual = getAngleBetweenVec2s(p1, p2);
-            const expected = Math.PI / 2;
-            expect(actual).toEqual(expected);
+        [
+            { p1: { x: 0, y: 0 }, p2: { x: 0, y: 0 }, expected: 0 },
+            { p1: { x: 0, y: 0 }, p2: { x: 1, y: 1 }, expected: Math.PI / 4 },
+            { p1: { x: 0, y: 0 }, p2: { x: 0, y: 1 }, expected: Math.PI / 2 },
+            { p1: { x: 0, y: 0 }, p2: { x: -1, y: 1 }, expected: 3 * Math.PI / 4 },
+            { p1: { x: 0, y: 0 }, p2: { x: -1, y: -1 }, expected: -3 * Math.PI / 4 },
+            { p1: { x: 0, y: 0 }, p2: { x: -1, y: 0 }, expected: Math.PI },
+        ].map(({ p1, p2, expected }) => {
+            it(`expect angle between ${p1.x},${p1.y} and ${p2.x},${p2.y} to be ${expected} radians (${expected * 180 / Math.PI} degrees)`, () => {
+                const actual = getAngleBetweenVec2s(p1, p2);
+                expect(actual).toEqual(expected);
+            });
         });
     });
 
