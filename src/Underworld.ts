@@ -16,7 +16,7 @@ import {
   containerSpells,
   containerUI,
 } from './PixiUtils';
-import floatingText from './FloatingText';
+import { orderedFloatingText } from './FloatingText';
 import { UnitType, Faction } from './commonTypes';
 import type { Vec2 } from "./Vec";
 import * as Vec from "./Vec";
@@ -271,17 +271,10 @@ export default class Underworld {
       Obstacle.remove(o);
     }
     // Show text in center of screen for the new level
-    floatingText({
-      coords: {
-        x: config.MAP_WIDTH / 2,
-        y: config.MAP_HEIGHT / 2,
-      },
-      text: `Altitude ${this.levelIndex}`,
-      style: {
-        fill: 'white',
-        fontSize: '60px',
-      },
-    });
+    orderedFloatingText(
+      `Altitude ${this.levelIndex}`,
+      'white',
+    );
     // Update level indicator UI at top of screen
     if (elLevelIndicator) {
       elLevelIndicator.innerText = `Altitude ${this.levelIndex}`;
@@ -491,21 +484,10 @@ export default class Underworld {
       console.error("Attempted to initialize turn for a non existant player index")
       return
     }
-    // This overlapps with the altitude announcement, make floatingText queued?
-    // if (player == window.player) {
-    //   // Notify the current player that their turn is starting
-    //   floatingText({
-    //     coords: {
-    //       x: config.MAP_WIDTH / 2,
-    //       y: config.MAP_HEIGHT / 2,
-    //     },
-    //     text: `Your Turn`,
-    //     style: {
-    //       fill: 'white',
-    //       fontSize: '60px',
-    //     },
-    //   });
-    // }
+    if (player == window.player) {
+      // Notify the current player that their turn is starting
+      orderedFloatingText(`Your Turn`);
+    }
     // Give mana at the start of turn
     const manaTillFull = player.unit.manaMax - player.unit.mana;
     // Give the player their mana per turn but don't let it go beyond manaMax

@@ -1,6 +1,8 @@
 import * as PIXI from 'pixi.js';
 import type { Vec2 } from './Vec';
 import { containerFloatingText } from './PixiUtils';
+import * as config from './config';
+
 interface FText {
   x: number;
   y: number;
@@ -10,15 +12,16 @@ interface FText {
   valpha: number;
   pixiText: PIXI.Text;
 }
+interface FloatingTextInsructions {
+  coords: Vec2;
+  text: string;
+  style?: Partial<PIXI.ITextStyle>;
+}
 export default function floatingText({
   coords,
   text,
   style = { fill: 'black' },
-}: {
-  coords: Vec2;
-  text: string;
-  style?: Partial<PIXI.ITextStyle>;
-}) {
+}: FloatingTextInsructions) {
   const pixiText = new PIXI.Text(text, style);
   pixiText.x = coords.x;
   pixiText.y = coords.y;
@@ -33,9 +36,11 @@ export default function floatingText({
     valpha: -0.2,
   };
   containerFloatingText.addChild(pixiText);
-  requestAnimationFrame(() => floatAway(instance));
+  return new Promise<void>((resolve) => {
+    requestAnimationFrame(() => floatAway(instance, resolve));
+  })
 }
-function floatAway(instance: FText) {
+function floatAway(instance: FText, resolve: (value: void) => void) {
   if (instance.alpha > 0) {
     instance.y -= instance.vy;
     instance.vy = instance.vy * 0.97;
@@ -50,8 +55,39 @@ function floatAway(instance: FText) {
       if (instance.pixiText.parent) {
         instance.pixiText.parent.removeChild(instance.pixiText);
       }
+      resolve();
     } else {
-      requestAnimationFrame(() => floatAway(instance));
+      requestAnimationFrame(() => floatAway(instance, resolve));
     }
   }
+}
+// Always shows the text in the middle of the screen, only one can appear at a time,
+// it is queued:
+const orderedFloatingTextQueue: FloatingTextInsructions[] = [];
+let playingOrderedFloatingText = false;
+function playNextOrderedFloatingTextInQueue() {
+  const floatingTextInsructions = orderedFloatingTextQueue.pop();
+  if (floatingTextInsructions) {
+    playingOrderedFloatingText = true;
+    floatingText(floatingTextInsructions).then(() => {
+      playingOrderedFloatingText = false;
+    }).then(playNextOrderedFloatingTextInQueue);
+  }
+}
+export function orderedFloatingText(text: string, fill = 'white') {
+  orderedFloatingTextQueue.push({
+    coords: {
+      x: config.MAP_WIDTH / 2,
+      y: config.MAP_HEIGHT / 2,
+    },
+    text,
+    style: {
+      fill,
+      fontSize: '60px'
+    }
+  });
+  if (!playingOrderedFloatingText) {
+    playNextOrderedFloatingTextInQueue();
+  }
+
 }
