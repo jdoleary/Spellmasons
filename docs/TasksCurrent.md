@@ -1,4 +1,6 @@
 ## Current Priorities
+- Optimize pathing:
+    - Allow walkingpolys to try to cast another line on a target and branch again even on the same polygon
 - Dad:
     - Little health and mana bars above all units
     - Prevent from casting if the last card is a modifier
