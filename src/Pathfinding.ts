@@ -183,16 +183,40 @@ function tryPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCo
             // }
 
             // Prevent paths from overlapping already existing paths:
+            checkPaths:
             for (let otherPath of paths) {
+                if (otherPath.invalid) {
+                    continue;
+                }
                 if (otherPath !== path) {
-                    for (let point of otherPath.points) {
+                    for (let i = 0; i < otherPath.points.length; i++) {
+                        const point = otherPath.points[i];
+                        // If the current vertex is the same as a point from another path
+                        // invalidate the longer path, since whichever path is shorter is
+                        // a quicker route to that point
                         if (Vec.equal(vertex, point)) {
-                            // Draw where path stopped
-                            window.debugGraphics.lineStyle(1, 0x0000ff, 1);
-                            window.debugGraphics.drawCircle(vertex.x, vertex.y, 4);
-                            path.invalid = true;
-                            path.done = true;
-                            break;
+                            const lengthOfCurrentPathToThisVertex = calculateDistanceOfVec2Array([...path.points, vertex]);
+                            const lengthOfOtherPathToThisVertex = calculateDistanceOfVec2Array(otherPath.points.slice(0, i + 1));
+                            if (lengthOfCurrentPathToThisVertex < lengthOfOtherPathToThisVertex) {
+                                // Stop the other path, it is invalid since the current path
+                                // has a shorter route to this vertex
+                                // Note: This might be a misuse of invalid since the path technically isn't
+                                // invalid, but I will allow it since we want to exclude this path
+                                // because the shorter path will certainly be a better route
+                                otherPath.invalid = true;
+                                otherPath.done = true;
+                                continue checkPaths;
+
+                            } else {
+                                // Stop the current path, it is invalid since the other path has
+                                // a shorter route to this vertex
+                                // Draw where path stopped
+                                window.debugGraphics.lineStyle(1, 0x0000ff, 1);
+                                window.debugGraphics.drawCircle(vertex.x, vertex.y, 4);
+                                path.invalid = true;
+                                path.done = true;
+                                break;
+                            }
                         }
                     }
                 }
@@ -426,13 +450,16 @@ export function removeBetweenIndexAtoB(array: any[], indexA: number, indexB: num
 function calculateDistanceOfPaths(paths: Path[]) {
     // Calculate the distance for all paths
     for (let path of paths) {
-        path.distance = 0;
-        // Finally, calculate the distance for the path 
-        for (let i = 0; i < path.points.length - 2; i++) {
-            path.distance += distance(path.points[i], path.points[i + 1]);
-        }
-
+        path.distance = calculateDistanceOfVec2Array(path.points);
     }
+}
+function calculateDistanceOfVec2Array(points: Vec2[]) {
+    let totalDistance = 0;
+    // Finally, calculate the distance for the path 
+    for (let i = 0; i < points.length - 2; i++) {
+        totalDistance += distance(points[i], points[i + 1]);
+    }
+    return totalDistance;
 }
 function polygonLineSegmentToPrevAndNext(wall: PolygonLineSegment): { prev: Vec2, next: Vec2 } {
     return { prev: wall.p1, next: wall.p2 };
