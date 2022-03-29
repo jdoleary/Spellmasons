@@ -1,8 +1,5 @@
 ## Current Priorities
-- Pathfinding:
-    - Prevent moving through a polygon if you start on it's edge
 - Dad:
-    - Little health and mana bars above all units
     - Prevent from casting if the last card is a modifier
     - Refrase "add another card" to communicate
     - Missing spell projection overlay

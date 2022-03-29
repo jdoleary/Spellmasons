@@ -94,6 +94,8 @@ declare global {
     // Graphics for drawing debug information, use window.showDebug = true
     // to show at runtime
     debugGraphics: PIXI.Graphics;
+    // Graphics for drawing unit health and mana bars
+    unitOverlayGraphics: PIXI.Graphics;
 
   }
 }

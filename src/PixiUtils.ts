@@ -28,6 +28,8 @@ const underworldPixiContainers = [
 
 window.debugGraphics = new PIXI.Graphics();
 containerUI.addChild(window.debugGraphics);
+window.unitOverlayGraphics = new PIXI.Graphics();
+containerUI.addChild(window.unitOverlayGraphics);
 
 export const containerCharacterSelect = new PIXI.Container();
 const characterSelectContainers = [containerCharacterSelect];
