@@ -1,4 +1,5 @@
 ## Current Priorities
+- Bug: You can swap into obstacles
 - Dad:
     - Missing spell projection overlay
     - Attempting to cast while client id is unassociated with existing players
@@ -9,8 +10,7 @@
     - Wants to know how far he's able to walk in one turn
     - Doesn't know what the circle means when clicking on enemies
     - Don't let me put more cards down than i can afford
-- Make walls destructable
-- Make sure there is always a path to the portal (or make obstacles destroyable)
+- Make sure there is always a path to the portal
 - Allow for restoring mana mid cast with something like mana steal
 - Brad:
     - How to communicatge the extra cost that distance adds to mana
