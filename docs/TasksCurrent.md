@@ -26,7 +26,6 @@
 - Bug: I got poisoned when I cast contageous poison but wasn't close
     - Task: Make contageous spread more obvious
 - Task: Add bone dust pile that dead bodies turn into when hit.  No longer a unit (that can be interacted with), but still visible
-- Bug: I don't think priest AI works
 ---
 Finish Content:
 - More spells:

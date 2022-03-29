@@ -3,10 +3,10 @@ import type { UnitSource } from './index';
 import { UnitSubType } from '../commonTypes';
 import type { Vec2 } from '../Vec';
 import * as math from '../math';
-import { createVisualFlyingProjectile, createVisualLobbingProjectile } from '../Projectile';
+import { createVisualLobbingProjectile } from '../Projectile';
 import { allCards } from '../cards';
+import * as config from '../config';
 
-const range = 3;
 const unit: UnitSource = {
   id: 'Priest',
   info: {
@@ -15,7 +15,10 @@ const unit: UnitSource = {
     subtype: UnitSubType.AI_priest,
     probability: 30,
   },
-  unitProps: {},
+  unitProps: {
+    // Set priest's range to his move distance
+    attackRange: config.UNIT_BASE_MOVE_DISTANCE
+  },
   action: async (unit: Unit.IUnit) => {
     // Move to closest ally
     const closestAlly = Unit.findClosestUnitInSameFaction(unit);
@@ -38,11 +41,11 @@ const unit: UnitSource = {
       for (let ally of damagedAllys) {
         if (inRange(unit, ally)) {
           const chosenUnit = damagedAllys[0];
-          await createVisualFlyingProjectile(
+          await createVisualLobbingProjectile(
             unit,
             chosenUnit.x,
             chosenUnit.y,
-            'green-thing.png',
+            'holy-projectile.png',
           );
           // Heal for 2
           await Unit.takeDamage(chosenUnit, -2);
@@ -52,13 +55,15 @@ const unit: UnitSource = {
     } else {
       // if there are no damaged allies cast shield on the closest:
       if (closestAlly) {
-        await createVisualLobbingProjectile(
-          unit,
-          closestAlly.x,
-          closestAlly.y,
-          'holy-projectile.png',
-        );
-        allCards['shield'].effect({ casterUnit: unit, targets: [closestAlly], aggregator: {} }, false, 0);
+        if (inRange(unit, closestAlly)) {
+          await createVisualLobbingProjectile(
+            unit,
+            closestAlly.x,
+            closestAlly.y,
+            'holy-projectile.png',
+          );
+          allCards['shield'].effect({ casterUnit: unit, targets: [closestAlly], aggregator: {} }, false, 0);
+        }
       }
     }
   },
@@ -67,7 +72,7 @@ const unit: UnitSource = {
   },
 };
 function inRange(unit: Unit.IUnit, coords: Vec2): boolean {
-  return math.distance(unit, coords) <= range;
+  return math.distance(unit, coords) <= unit.attackRange;
 }
 
 export default unit;
