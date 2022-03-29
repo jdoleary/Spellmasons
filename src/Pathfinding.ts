@@ -1,6 +1,6 @@
 import { findWherePointIntersectLineSegmentAtRightAngle, isPointOnLineSegment, LineSegment, lineSegmentIntersection } from "./collision/collisionMath";
-import { distance, similarTriangles } from "./math";
-import { getPointsFromPolygonStartingAt, doesVertexBelongToPolygon, Polygon, PolygonLineSegment, polygonToPolygonLineSegments, isVec2InsidePolygon } from "./Polygon";
+import { distance } from "./math";
+import { getPointsFromPolygonStartingAt, doesVertexBelongToPolygon, Polygon, PolygonLineSegment, polygonToPolygonLineSegments, isVec2InsidePolygon, getInsideAnglesOfPoint, doesLineFromPointToTargetProjectAwayFromOwnPolygon } from "./Polygon";
 import type { Vec2 } from './Vec';
 import * as Vec from './Vec';
 
@@ -205,17 +205,24 @@ function tryPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCo
             if (intersectingWall && closestIntersection) {
                 // and the wall belongs to the current poly
                 if (doesVertexBelongToPolygon(vertex, intersectingWall.polygon) && doesVertexBelongToPolygon(intersectingWall.p1, intersectingWall.polygon)) {
-                    // Continue to check the next or previous (depending on direction) vertex for this poly
-                    // we need to keep walking around it to continue the path
-
-                    // continue;
-                    // Prevent casting a line on the inside
-                    if (lineCastOnInside) {
-                        continue;
-                    } else {
+                    const indexOfVertex = intersectingWall.polygon.points.findIndex(p => Vec.equal(p, vertex));
+                    // true if line to target doesn't pass through own polygon
+                    let lineToTargetDoesNotPassThroughOwnPolygon = false;
+                    if (indexOfVertex >= 0) {
+                        lineToTargetDoesNotPassThroughOwnPolygon = doesLineFromPointToTargetProjectAwayFromOwnPolygon(intersectingWall.polygon, indexOfVertex, target);
+                    }
+                    // Line from vertex to the target is not cast through the inside angle of vertex and thus it is valid
+                    // to branch
+                    if (lineToTargetDoesNotPassThroughOwnPolygon) {
                         // A straight line from vertex to target intersects the same polygon again but is probably closer,
                         // so we'll branch off the new intersection point
                         break;
+                    } else {
+                        // line cast to target DOES pass through the inside of this vertex's angle so it is invalid to branch.
+                        // Thus, keep walking around the polygon
+                        // Continue to check the next or previous (depending on direction) vertex for this poly
+                        // we need to keep walking around it to continue the path
+                        continue;
                     }
                 } else {
                     // If it belongs to a different poly, then we can stop walking because
