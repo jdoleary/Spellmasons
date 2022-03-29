@@ -1,7 +1,9 @@
+## Critical Tasks
+- Allow for restoring mana mid cast with something like mana steal
+- Fix sycronize bugs. Make it more reliable
 ## Current Priorities
 - bug: while messing with forcing desync, player got stuck with red shader on
 - Client joins network with id of "1" if they've been playing singleplayer and have that id saved
-- Fix sycronize bugs. Make it more reliable
 - Bug: You can swap into obstacles
 - Dad:
     - Missing spell projection overlay
@@ -10,7 +12,6 @@
     - Doesn't know what the circle means when clicking on enemies
     - Don't let me put more cards down than i can afford
 - Make sure there is always a path to the portal
-- Allow for restoring mana mid cast with something like mana steal
 - Brad:
     - How to communicatge the extra cost that distance adds to mana
 - todo: Make "mana cost" icon on cards allow for health cost (for spells such as mana steal)
