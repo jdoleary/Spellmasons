@@ -6,7 +6,6 @@
 - Dad:
     - Missing spell projection overlay
     - He got right click and left click mixed up
-    - Heavy units aren't big anymore? or after sync?
     - Wants to know how far he's able to walk in one turn
     - Doesn't know what the circle means when clicking on enemies
     - Don't let me put more cards down than i can afford

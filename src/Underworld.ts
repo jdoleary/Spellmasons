@@ -244,6 +244,8 @@ export default class Underworld {
       unit.health = unit.healthMax;
       unit.damage = config.UNIT_BASE_DAMAGE * 2;
       unit.radius = config.COLLISION_MESH_RADIUS;
+      // Set image to "heavy" size
+      unit.image.sprite.scale.set(1.0);
     }
 
   }
