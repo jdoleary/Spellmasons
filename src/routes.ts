@@ -16,6 +16,7 @@ export enum Route {
   Underworld,
   // Post combat
   Upgrade,
+  GameOver
 }
 // temp for testing
 window.setRoute = setRoute;

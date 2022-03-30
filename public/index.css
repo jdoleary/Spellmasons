@@ -542,3 +542,17 @@ form {
   padding: 16px;
   border-radius: 10px;
 }
+
+#game-over{
+  display:none;
+  margin:0 auto;
+  position: absolute;
+  width:200px;
+  height:200px;
+  background-color: pink;
+  left: 0;
+  right: 0;
+}
+body.route-GameOver #game-over {
+  display:block;
+}
