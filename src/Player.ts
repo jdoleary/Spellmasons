@@ -84,11 +84,6 @@ export function resetPlayerForNextLevel(player: IPlayer) {
   // to get their mana back to full
   player.unit.mana = player.unit.manaMax;
   player.unit.health = player.unit.healthMax;
-
-  // Return to a spawn location
-  // limit spawn to the leftmost column
-  const coords = window.underworld.getRandomCoordsWithinBounds({ xMin: config.COLLISION_MESH_RADIUS, yMin: config.COLLISION_MESH_RADIUS, xMax: config.COLLISION_MESH_RADIUS, yMax: config.MAP_HEIGHT - config.COLLISION_MESH_RADIUS });
-  Unit.setLocation(player.unit, coords);
 }
 // Keep a global reference to the current client's player
 function updateGlobalRefToCurrentClientPlayer(player: IPlayer) {

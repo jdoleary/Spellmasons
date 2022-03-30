@@ -5,7 +5,46 @@ import { getPointsFromPolygonStartingAt, doesVertexBelongToPolygon, Polygon, Pol
 import type { Vec2 } from './Vec';
 import * as Vec from './Vec';
 
+// Will return either an array with 1 normal polygon or an array with potentially multiple
+// inverted polygons 
+export function findPolygonsThatVec2IsInsideOf(point: Vec2, testPolygons: Polygon[]): Polygon[] {
+    let insideOfPolys: Polygon[] = [];
+    for (let poly of testPolygons) {
+        // Exclude inverted polygons because if there is more than 1
+        // inverted polygon, and since inverted polygons' "insides"
+        // are actually on the outside; there'll be a false positive
+        // where a target in a valid location, will get flagged as
+        // "inside" an inverted polygon.  Maybe this calls for the concept
+        // of inverted polygons to be rethought, since it really only works
+        // when there is only one single inverted polygon
+        if (!poly.inverted) {
+            if (isVec2InsidePolygon(point, poly)) {
+                insideOfPolys = [poly];
+                break;
+            }
+        }
 
+    }
+    // If the target is NOT inside any non-inverted polygons
+    // Check if it's "inside" (outside) ALL inverted polys
+    // If it is outside of ALL inverted polygons, that means that the
+    // target is invalid so we have to find the closest valid target to path to
+    if (insideOfPolys.length == 0) {
+        for (let poly of testPolygons) {
+            if (poly.inverted) {
+                if (isVec2InsidePolygon(point, poly)) {
+                    insideOfPolys.push(poly);
+                } else {
+                    // If the target is outside (in valid walk space) any single
+                    // inverted polygon then the location is valid
+                    insideOfPolys = [];
+                    break;
+                }
+            }
+        }
+    }
+    return insideOfPolys;
+}
 interface Path {
     done: boolean;
     // A invalid path does not path to the target and can be ignored
@@ -20,39 +59,8 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
     // This is important if, for example, a player clicks in empty space which is inside
     // of the poly but not inside an obstacle.  The pathing should take the unit
     // as close as it can go without intersecting the polygon
-    let targetInsideOfPolys: Polygon[] = [];
-    for (let poly of window.underworld.pathingPolygons) {
-        // Exclude inverted polygons because if there is more than 1
-        // inverted polygon, and since inverted polygons' "insides"
-        // are actually on the outside; there'll be a false positive
-        // where a target in a valid location, will get flagged as
-        // "inside" an inverted polygon.  Maybe this calls for the concept
-        // of inverted polygons to be rethought, since it really only works
-        // when there is only one single inverted polygon
-        if (!poly.inverted) {
-            if (isVec2InsidePolygon(target, poly)) {
-                targetInsideOfPolys = [poly];
-                break;
-            }
-        }
+    const targetInsideOfPolys: Polygon[] = findPolygonsThatVec2IsInsideOf(target, polygons);
 
-    }
-    // If the target is NOT inside any non-inverted polygons
-    // Check if it's "inside" (outside) ALL inverted polys
-    // If it is outside of ALL inverted polygons, that means that the
-    // target is invalid so we have to find the closest valid target to path to
-    if (targetInsideOfPolys.length == 0) {
-        for (let poly of window.underworld.pathingPolygons) {
-            if (poly.inverted) {
-                if (isVec2InsidePolygon(target, poly)) {
-                    targetInsideOfPolys.push(poly);
-                } else {
-                    targetInsideOfPolys = [];
-                    break;
-                }
-            }
-        }
-    }
     // Find the closest valid target to path to
     if (targetInsideOfPolys.length) {
         const rightAngleIntersections = [];
@@ -277,8 +285,8 @@ function tryPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCo
 
     }
     // Protect against infinite recursion
-    if (recursionCount > 12) {
-        console.error('couldnt find path in few enough steps', recursionCount, paths.map(p => p.points.length).sort());
+    if (recursionCount > 30) {
+        console.log('couldnt find path in few enough steps', recursionCount, paths.map(p => p.points.length).sort());
         // Mark all unfinished path's as invalid because they did not find a valid path
         // in few enough steps
         for (let path of paths) {
@@ -286,7 +294,6 @@ function tryPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCo
                 path.invalid = true;
             }
             path.done = true;
-
         }
     }
 

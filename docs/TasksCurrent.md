@@ -1,6 +1,5 @@
 ## Critical Tasks
 - Fix sycronize bugs. Make it more reliable
-- Make sure there is always a path to the portal
 - Fix UI so it never covers the gameboard, see stash "camera tests"
 ## Current Priorities
 - Task: Make contageous spread more obvious

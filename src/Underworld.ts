@@ -29,6 +29,7 @@ import { prng, randInt, SeedrandomState } from './rand';
 import { calculateCost } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment } from './collision/collisionMath';
 import { expandPolygon, mergeOverlappingPolygons, Polygon, PolygonLineSegment, polygonToPolygonLineSegments } from './Polygon';
+import { findPath, findPolygonsThatVec2IsInsideOf } from './Pathfinding';
 
 export enum turn_phase {
   PlayerTurns,
@@ -40,9 +41,6 @@ interface Bounds {
   yMin?: number;
   yMax?: number;
 }
-const elPlayerTurnIndicatorHolder = document.getElementById(
-  'player-turn-indicator-holder',
-);
 const elPlayerTurnIndicator = document.getElementById('player-turn-indicator');
 const elLevelIndicator = document.getElementById('level-indicator');
 
@@ -268,9 +266,6 @@ export default class Underworld {
       console.error('Attempting to initialize level without any players');
 
     }
-    for (let p of this.players) {
-      Player.resetPlayerForNextLevel(p);
-    }
     // Clear all pickups
     for (let p of this.pickups) {
       Pickup.removePickup(p);
@@ -291,9 +286,9 @@ export default class Underworld {
       console.error('elLevelIndicator is null');
     }
 
-    const validSpawnCoords: Vec2[] = [];
-    const validPlayerSpawnCoords: Vec2[] = [];
-    const validPortalSpawnCoords: Vec2[] = [];
+    let validSpawnCoords: Vec2[] = [];
+    let validPlayerSpawnCoords: Vec2[] = [];
+    let validPortalSpawnCoords: Vec2[] = [];
     // The map is made of a matrix of obstacle sectors
     for (let i = 0; i < config.OBSTACLE_SECTORS_COUNT_HORIZONTAL; i++) {
       for (let j = 0; j < config.OBSTACLE_SECTORS_COUNT_VERTICAL; j++) {
@@ -314,7 +309,8 @@ export default class Underworld {
               // we know it is a safe place to spawn
               if (i == 0 && X == 0) {
                 // Only spawn players in the left most index (X == 0) of the left most obstacle (i==0)
-                validPlayerSpawnCoords.push({ x: coordX, y: coordY });
+                const margin = 5;
+                validPlayerSpawnCoords.push({ x: coordX + margin, y: coordY });
               } else if (i == config.OBSTACLE_SECTORS_COUNT_HORIZONTAL - 1 && X == rowOfObstacles.length - 1) {
                 // Only spawn the portal in the right most index of the right most obstacle
                 validPortalSpawnCoords.push({ x: coordX, y: coordY });
@@ -334,24 +330,20 @@ export default class Underworld {
         }
       }
     }
-    // TODO: Ensure the players have a path to the portal
-    // Test obstaclese
-    // [
-    //   {
-    //     "x": 412,
-    //     "y": 548
-    //   },
-    //   {
-    //     "x": 478,
-    //     "y": 474
-    //   },
-    //   {
-    //     "x": 368,
-    //     "y": 472
-    //   },
-    // ]
-    //   .map(({ x, y }) => { Obstacle.create(x, y, Obstacle.obstacleSource[0]) });
+    // Now that obstacles have been generated, we must cache the walls so pathfinding will work
     this.cacheWalls();
+
+    // Remove bad spawns.  This can happen if an empty space is right next to the border of the map with obstacles
+    // all around it.  There is no obstacle there, but there is also no room to move because the spawn location 
+    // is inside of an inverted polygon.
+    validPlayerSpawnCoords = validPlayerSpawnCoords.filter(c => findPolygonsThatVec2IsInsideOf(c, this.pathingPolygons).length === 0);
+    validPortalSpawnCoords = validPortalSpawnCoords.filter(c => findPolygonsThatVec2IsInsideOf(c, this.pathingPolygons).length === 0);
+    validSpawnCoords = validSpawnCoords.filter(c => findPolygonsThatVec2IsInsideOf(c, this.pathingPolygons).length === 0);
+    if (validPlayerSpawnCoords.length === 0) {
+      console.error('Bad level seed, no place to spawn portal, regenerating');
+      this.initLevel(this.levelIndex);
+      return
+    }
 
     for (let i = 0; i < config.NUM_PICKUPS_PER_LEVEL; i++) {
       const randomPickupIndex = randInt(this.random,
@@ -371,18 +363,13 @@ export default class Underworld {
         this.spawnEnemy(id, coords);
       }
     }
-    for (let player of this.players) {
-      const index = randInt(this.random, 0, validPlayerSpawnCoords.length - 1);
-      const coords = validPlayerSpawnCoords.splice(index, 1)[0];
-      Unit.setLocation(player.unit, coords);
-    }
     // Spawn portal
     const index = randInt(this.random, 0, validPortalSpawnCoords.length - 1);
-    const coords = validPortalSpawnCoords.splice(index, 1)[0];
+    const portalCoords = validPortalSpawnCoords.splice(index, 1)[0];
     const portalPickup = Pickup.specialPickups['portal.png'];
     Pickup.create(
-      coords.x,
-      coords.y,
+      portalCoords.x,
+      portalCoords.y,
       portalPickup.name,
       portalPickup.description,
       false,
@@ -390,6 +377,27 @@ export default class Underworld {
       true,
       portalPickup.effect,
     );
+    if (validPlayerSpawnCoords.length >= this.players.length) {
+      for (let player of this.players) {
+        Player.resetPlayerForNextLevel(player);
+        const index = randInt(this.random, 0, validPlayerSpawnCoords.length - 1);
+        const coords = validPlayerSpawnCoords.splice(index, 1)[0];
+        Unit.setLocation(player.unit, coords);
+        // Make sure player can reach portal
+        const path = findPath(coords, portalCoords, this.pathingPolygons);
+        if (path.length == 0 || !Vec.equal(path[path.length - 1], portalCoords)) {
+          console.error('Bad level seed: no path to portal, regenerating');
+          this.initLevel(this.levelIndex);
+          return
+
+        }
+      }
+    } else {
+      console.error('Bad level seed, not enough valid spawns for players, regenerating', validPlayerSpawnCoords.length, this.players.length);
+      this.initLevel(this.levelIndex);
+      return
+
+    }
 
     // Since a new level changes the existing units, redraw the planningView in
     // the event that the planningView is active
