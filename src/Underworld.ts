@@ -362,6 +362,10 @@ export default class Underworld {
     // Spawn portal
     const index = randInt(this.random, 0, validPortalSpawnCoords.length - 1);
     const portalCoords = validPortalSpawnCoords.splice(index, 1)[0];
+    if (!portalCoords) {
+      console.error('Bad level seed, not enough valid spawns for portal, regenerating');
+      return this.initLevel(this.levelIndex);
+    }
     const portalPickup = Pickup.specialPickups['portal.png'];
     Pickup.create(
       portalCoords.x,
@@ -373,6 +377,7 @@ export default class Underworld {
       true,
       portalPickup.effect,
     );
+
     if (validPlayerSpawnCoords.length >= this.players.length) {
       for (let player of this.players) {
         Player.resetPlayerForNextLevel(player);
@@ -384,13 +389,11 @@ export default class Underworld {
         if (path.length == 0 || !Vec.equal(path[path.length - 1], portalCoords)) {
           console.error('Bad level seed: no path to portal, regenerating');
           return this.initLevel(this.levelIndex);
-
         }
       }
     } else {
       console.error('Bad level seed, not enough valid spawns for players, regenerating', validPlayerSpawnCoords.length, this.players.length);
       return this.initLevel(this.levelIndex);
-
     }
 
     // Since a new level changes the existing units, redraw the planningView in
