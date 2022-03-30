@@ -1,6 +1,9 @@
 ## Critical Tasks
 ## Current Priorities
-- Pathing
+- Bug: rejoining a game totally breaks it
+- Bug: "Cannot add client, client alreaedy in room" (maybe I was clicking too quickly??)
+    - This is because both players are trying to join with the single player id of 1.
+- Pathing, see stash "pathfinding"
     - Somehow duplicate points are getting added to path
     - Fix optimize to consider P1 inside angle too
     - Short circuit when branching paths, not when adding verticies
