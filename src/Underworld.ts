@@ -340,6 +340,7 @@ export default class Underworld {
     }
 
     for (let i = 0; i < config.NUM_PICKUPS_PER_LEVEL; i++) {
+      if (validSpawnCoords.length == 0) { break; }
       const randomPickupIndex = randInt(this.random,
         0,
         Object.values(Pickup.pickups).length - 1,
@@ -352,6 +353,7 @@ export default class Underworld {
     const enemys = getEnemiesForAltitude(levelIndex);
     for (let [id, count] of Object.entries(enemys)) {
       for (let i = 0; i < (count || 0); i++) {
+        if (validSpawnCoords.length == 0) { break; }
         const validSpawnCoordsIndex = randInt(this.random, 0, validSpawnCoords.length - 1);
         const coords = validSpawnCoords.splice(validSpawnCoordsIndex, 1)[0];
         this.spawnEnemy(id, coords);
