@@ -1,7 +1,9 @@
 ## Critical Tasks
 - Fix sycronize bugs. Make it more reliable
 ## Current Priorities
+- Bug: AOE deduping removes a valid target if two units are too close to each other
 - Task: Make contageous spread more obvious
+---
 - Client joins network with id of "1" if they've been playing singleplayer and have that id saved
 - Bug: You can swap into obstacles
 - Dad:
