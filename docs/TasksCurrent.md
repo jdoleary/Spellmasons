@@ -3,8 +3,8 @@
 - Make sure there is always a path to the portal
 - Fix UI so it never covers the gameboard, see stash "camera tests"
 ## Current Priorities
+- Task: Make contageous spread more obvious
 - Allow for restoring mana mid cast with something like mana steal
-- bug: while messing with forcing desync, player got stuck with red shader on
 - Client joins network with id of "1" if they've been playing singleplayer and have that id saved
 - Bug: You can swap into obstacles
 - Dad:
@@ -19,11 +19,6 @@
     - Bug: Mana steal costs mana, it shouldn't!!
 - Notify when waiting for other players to pick a character, just like "x players left to pick upgrade
 
----
-- Bug: I got poisoned when I cast contageous poison but wasn't close
-    - Task: Make contageous spread more obvious
-- Task: Add bone dust pile that dead bodies turn into when hit.  No longer a unit (that can be interacted with), but still visible
----
 Finish Content:
 - More spells:
     - Haste modifier lets you move farther and slow

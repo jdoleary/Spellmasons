@@ -9,6 +9,7 @@ export const app = new PIXI.Application();
 export const containerBoard = new PIXI.Container();
 export const containerPlanningView = new PIXI.Container();
 containerPlanningView.alpha = 0.5;
+export const containerDodads = new PIXI.Container();
 export const containerUnits = new PIXI.Container();
 export const containerPickup = new PIXI.Container();
 export const containerSpells = new PIXI.Container();
@@ -18,6 +19,7 @@ export const containerFloatingText = new PIXI.Container();
 const underworldPixiContainers = [
   containerBoard,
   containerPlanningView,
+  containerDodads,
   containerUnits,
   containerPickup,
   containerSpells,

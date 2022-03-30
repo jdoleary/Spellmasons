@@ -13,6 +13,7 @@ import { MESSAGE_TYPES } from './MessageTypes';
 import {
   app,
   containerBoard,
+  containerDodads,
   containerSpells,
   containerUI,
 } from './PixiUtils';
@@ -250,6 +251,9 @@ export default class Underworld {
   }
 
   initLevel(levelIndex: number) {
+    // Now that it's a new level clear out the level's dodads such as
+    // bone dust left behind from destroyed corpses
+    containerDodads.removeChildren();
     console.log('Setup: initLevel', levelIndex);
     // Clean previous level info
     for (let i = this.units.length - 1; i >= 0; i--) {
