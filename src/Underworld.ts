@@ -274,11 +274,6 @@ export default class Underworld {
     for (let o of this.obstacles) {
       Obstacle.remove(o);
     }
-    // Show text in center of screen for the new level
-    orderedFloatingText(
-      `Altitude ${this.levelIndex}`,
-      'white',
-    );
     // Update level indicator UI at top of screen
     if (elLevelIndicator) {
       elLevelIndicator.innerText = `Altitude ${this.levelIndex}`;
@@ -405,6 +400,12 @@ export default class Underworld {
 
     // Go to underworld, now that level is ready
     setRoute(Route.Underworld);
+
+    // Show text in center of screen for the new level
+    orderedFloatingText(
+      `Altitude ${this.levelIndex}`,
+      'white',
+    );
   }
   checkPickupCollisions(unit: Unit.IUnit) {
     for (let pu of this.pickups) {
