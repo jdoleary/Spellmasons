@@ -1032,7 +1032,7 @@ type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFun
 
 
 function getEnemiesForAltitude(levelIndex: number): { [unitid: string]: number } {
-  const hardCodedLevelEnemies = [
+  const hardCodedLevelEnemies: { [unitid: string]: number }[] = [
     { 'grunt': 5 },
     {
       'grunt': 4,
