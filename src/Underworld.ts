@@ -86,9 +86,6 @@ export default class Underworld {
     mapGraphics.beginFill(0x795644, 1);
     mapGraphics.drawRect(0, 0, config.MAP_WIDTH, config.MAP_HEIGHT);
     mapGraphics.endFill();
-
-    // TODO: these probably shouldn't get initialized here
-    this.gameLoopUnits();
   }
   syncronizeRNG(RNGState: SeedrandomState | boolean) {
     // state of "true" initializes the RNG with the ability to save it's state,
@@ -97,6 +94,9 @@ export default class Underworld {
     return this.random;
   }
   gameLoopUnits() {
+    if (window.route !== Route.Underworld) {
+      return;
+    }
     window.unitOverlayGraphics.clear();
     const aliveUnits = this.units.filter(u => u.alive);
     for (let u of aliveUnits) {

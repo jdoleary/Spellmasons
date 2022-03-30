@@ -43,6 +43,8 @@ export function setRoute(r: Route) {
       // Set the first turn phase
       window.underworld.setTurnPhase(turn_phase.PlayerTurns);
       addUnderworldEventListeners();
+      // Start the gameloop
+      window.underworld.gameLoopUnits();
       // Beating a level takes players from Underworld to Upgrade
       break;
     case Route.Upgrade:
