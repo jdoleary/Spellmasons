@@ -1,3 +1,4 @@
+- bug: while messing with forcing desync, player got stuck with red shader on
 - Figure out how to host server locally to be reached via the internet
     - [dedicated server](https://help.steampowered.com/en/faqs/view/6F46-9698-9682-8DB8)
 - wspie: https://github.com/websockets/ws#how-to-detect-and-close-broken-connections

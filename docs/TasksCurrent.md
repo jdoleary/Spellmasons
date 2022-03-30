@@ -3,6 +3,7 @@
 - Make sure there is always a path to the portal
 - Fix UI so it never covers the gameboard, see stash "camera tests"
 ## Current Priorities
+- Content: Add vampire modifier which reverses the effects of health and damage
 - Task: Make contageous spread more obvious
 - Allow for restoring mana mid cast with something like mana steal
 - Client joins network with id of "1" if they've been playing singleplayer and have that id saved
