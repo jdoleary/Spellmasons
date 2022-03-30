@@ -419,31 +419,54 @@ function tryPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCo
             }
         }
     }, undefined);
-    // if (shortestPath) {
-    //     // returns true if fully optimized
-    //     function tryOptimizePath(path: Path): boolean {
-    //         for (let i = 0; i < path.points.length; i++) {
-    //             for (let j = path.points.length - 1; j > i + 1; j--) {
-    //                 let { intersectingWall } = getClosestIntersectionWithWalls({ p1: path.points[i], p2: path.points[j] }, pathingWalls);
-    //                 if (!intersectingWall) {
-    //                     window.debugGraphics.lineStyle(1, 0xff0000, 1);
-    //                     window.debugGraphics.drawCircle(path.points[i].x, path.points[i].y, 4);
-    //                     window.debugGraphics.lineStyle(1, 0x0000ff, 1);
-    //                     window.debugGraphics.drawCircle(path.points[j].x, path.points[j].y, 4);
-    //                     console.log('remove', i, ' to', j, 'from', path.points.length);
-    //                     path.points = removeBetweenIndexAtoB(path.points, i, j);
-    //                     return false
+    // Optimize path by removing unnecessary points
+    if (shortestPath) {
+        // returns true if fully optimized
+        function tryOptimizePath(path: Path): boolean {
+            for (let i = 0; i < path.points.length; i++) {
+                for (let j = path.points.length - 1; j > i + 1; j--) {
+                    const nextLine = { p1: path.points[i], p2: path.points[j] }
+                    let { intersectingWall, closestIntersection } = getClosestIntersectionWithWalls(nextLine, pathingWalls);
+                    if (intersectingWall) {
+                        const intersectingPoly = intersectingWall.polygon;
 
-    //                 }
-    //             }
-    //         }
-    //         return true;
-    //     }
-    //     let fullyOptimized = false;
-    //     do {
-    //         fullyOptimized = tryOptimizePath(shortestPath);
-    //     } while (!fullyOptimized);
-    // }
+                        const indexIfP2IsOnVertex = intersectingPoly.points.findIndex(p => Vec.equal(p, nextLine.p2));
+                        if (indexIfP2IsOnVertex !== -1) {
+                            const lineToTargetDoesNotPassThroughOwnPolygon =
+                                doesLineFromPointToTargetProjectAwayFromOwnPolygon(intersectingPoly, indexIfP2IsOnVertex, nextLine.p1);
+                            if (!lineToTargetDoesNotPassThroughOwnPolygon) {
+                                // Skip, this optimization is invalid because it would cut through a polygon
+                                continue;
+                            }
+                        } else {
+                            // Then p2 is on a wall
+                            const insideAngleOfWall = getInsideAnglesOfWall(intersectingWall);
+                            const lineIsCastIntoNoWalkZone = isAngleBetweenAngles(
+                                Vec.getAngleBetweenVec2s(nextLine.p2, nextLine.p1), insideAngleOfWall.start, insideAngleOfWall.end
+                            );
+                            if (lineIsCastIntoNoWalkZone) {
+                                // Skip, this optimization is invalid because it would cut through a polygon
+                                continue;
+                            }
+                        }
+                        if (!closestIntersection || Vec.equal(closestIntersection, path.points[j])) {
+                            window.debugGraphics.lineStyle(1, 0xff0000, 1);
+                            window.debugGraphics.drawCircle(path.points[i].x, path.points[i].y, 4);
+                            window.debugGraphics.lineStyle(1, 0x0000ff, 1);
+                            window.debugGraphics.drawCircle(path.points[j].x, path.points[j].y, 4);
+                            path.points = removeBetweenIndexAtoB(path.points, i, j);
+                            return false
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+        let fullyOptimized = false;
+        do {
+            fullyOptimized = tryOptimizePath(shortestPath);
+        } while (!fullyOptimized);
+    }
     // If there is an unobstructed straight line between two points, you can remove all the points in-between
     return shortestPath;
 }
