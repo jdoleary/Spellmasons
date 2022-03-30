@@ -13,6 +13,9 @@
 - April 30: Release
 - Open Source
 - Engage community in making new spells
+## Gameplay complete standard
+- No Pathfinding bugs
+- No sync bugs
 
 ## Deadlines
 - ~~My part (gameplay) should be finished end of Feb 2022~~

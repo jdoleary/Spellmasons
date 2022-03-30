@@ -1,6 +1,7 @@
 ## Critical Tasks
 - Fix sycronize bugs. Make it more reliable
 ## Current Priorities
+- Somehow duplicate points are getting added to path
 - Bug: AOE deduping removes a valid target if two units are too close to each other
 - Task: Make contageous spread more obvious
 ---
