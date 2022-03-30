@@ -184,6 +184,8 @@ export default class Underworld {
     for (let x of this.obstacles) {
       Image.cleanup(x.image);
     }
+    // Prevent requestAnimationFrame from calling this method next time
+    this.gameLoopUnits = () => { };
   }
   // cacheWalls updates underworld.walls array
   // with the walls for the edge of the map
