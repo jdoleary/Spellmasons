@@ -1,5 +1,5 @@
 - bug: while messing with forcing desync, player got stuck with red shader on
-- regenerate level if there are not enough valid player spawns for the number of players
+- I saw deny.png on target when i did in fact have enough mana
 - Figure out how to host server locally to be reached via the internet
     - [dedicated server](https://help.steampowered.com/en/faqs/view/6F46-9698-9682-8DB8)
 - wspie: https://github.com/websockets/ws#how-to-detect-and-close-broken-connections

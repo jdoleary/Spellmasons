@@ -1,6 +1,6 @@
 ## Critical Tasks
+- Don't prevent insufficient mana if using cards that restore mana
 - Fix sycronize bugs. Make it more reliable
-- Fix UI so it never covers the gameboard, see stash "camera tests"
 ## Current Priorities
 - Task: Make contageous spread more obvious
 - Allow for restoring mana mid cast with something like mana steal
