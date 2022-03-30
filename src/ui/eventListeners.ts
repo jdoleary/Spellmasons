@@ -194,47 +194,36 @@ export function clickHandler(e: MouseEvent) {
         const cardIds = CardUI.getSelectedCardIds();
         const cards = CardUI.getSelectedCards();
 
-        const cost = calculateCost(cards, math.distance(selfPlayer.unit, target), selfPlayer);
-        if (cost.manaCost <= selfPlayer.unit.mana) {
 
-          // Ensure that last card doesn't require a following card
-          // If it does, warn the player that their card order won't do what
-          // they are expecting it to do
-          if (cards[cards.length - 1].requiresFollowingCard) {
-            floatingText({
-              coords: target,
-              text: `${cards[cards.length - 1].id} only modifies cards on its right`,
-              style: { fill: 'red' }
-            });
-            const elHint = document.querySelector('.requires-following-card');
-            // Remove then add 'blink' class to the "hint" outline so that
-            // it will restart the animation to grab the user's attention.
-            if (elHint) {
-              elHint.classList.remove('blink');
-              setTimeout(() => {
-                elHint.classList.add('blink');
-              }, 10);
-
-            }
-            // Then cancel casting:
-            return
-          }
-          window.pie.sendData({
-            type: MESSAGE_TYPES.SPELL,
-            x: target.x,
-            y: target.y,
-            cards: cardIds,
-          });
-          CardUI.clearSelectedCards();
-        } else {
+        // Ensure that last card doesn't require a following card
+        // If it does, warn the player that their card order won't do what
+        // they are expecting it to do
+        if (cards[cards.length - 1].requiresFollowingCard) {
           floatingText({
             coords: target,
-            text: 'Insufficient mana!',
-            style: {
-              fill: '#5656d5'
-            }
+            text: `${cards[cards.length - 1].id} only modifies cards on its right`,
+            style: { fill: 'red' }
           });
+          const elHint = document.querySelector('.requires-following-card');
+          // Remove then add 'blink' class to the "hint" outline so that
+          // it will restart the animation to grab the user's attention.
+          if (elHint) {
+            elHint.classList.remove('blink');
+            setTimeout(() => {
+              elHint.classList.add('blink');
+            }, 10);
+
+          }
+          // Then cancel casting:
+          return
         }
+        window.pie.sendData({
+          type: MESSAGE_TYPES.SPELL,
+          x: target.x,
+          y: target.y,
+          cards: cardIds,
+        });
+        CardUI.clearSelectedCards();
       } else {
         console.error("Attempting to cast while window.player is undefined");
       }

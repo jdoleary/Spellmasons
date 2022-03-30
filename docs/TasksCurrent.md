@@ -1,10 +1,7 @@
 ## Critical Tasks
-- Don't prevent insufficient mana if using cards that restore mana
 - Fix sycronize bugs. Make it more reliable
 ## Current Priorities
 - Task: Make contageous spread more obvious
-- Allow for restoring mana mid cast with something like mana steal
-    - Take mana as each card is cast, not all at the beginning
 - Client joins network with id of "1" if they've been playing singleplayer and have that id saved
 - Bug: You can swap into obstacles
 - Dad:

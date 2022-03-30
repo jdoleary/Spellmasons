@@ -122,20 +122,15 @@ export async function syncSpellEffectProjection() {
       (p) => p.clientId === window.clientId,
     );
     if (currentPlayer) {
-      const cost = updateManaCostUI();
-      if (cost.manaCost > currentPlayer.unit.mana || cost.healthCost > currentPlayer.unit.health) {
-        // Draw deny icon to show the player they are out of range
-        Image.create(mousePos.x, mousePos.y, 'deny.png', containerSpells);
-      } else {
-        // Dry run cast so the user can see what effect it's going to have
-        const target = mousePos;
-        await window.underworld.castCards(
-          currentPlayer,
-          CardUI.getSelectedCardIds(),
-          target,
-          true,
-        );
-      }
+      updateManaCostUI();
+      // Dry run cast so the user can see what effect it's going to have
+      const target = mousePos;
+      await window.underworld.castCards(
+        currentPlayer,
+        CardUI.getSelectedCardIds(),
+        target,
+        true,
+      );
     }
   }
 }

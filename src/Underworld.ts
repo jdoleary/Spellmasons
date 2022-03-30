@@ -17,7 +17,7 @@ import {
   containerSpells,
   containerUI,
 } from './PixiUtils';
-import { orderedFloatingText } from './FloatingText';
+import floatingText, { orderedFloatingText } from './FloatingText';
 import { UnitType, Faction } from './commonTypes';
 import type { Vec2 } from "./Vec";
 import * as Vec from "./Vec";
@@ -816,22 +816,34 @@ export default class Underworld {
       return effectState;
     }
     const cards = Cards.getCardsFromIds(cardIds);
-    const cost = calculateCost(cards, math.distance(casterPlayer.unit, castLocation), casterPlayer);
-    if (!dryRun) {
-      // Apply mana cost to caster
-      // Note: it is important that this is done BEFORE the cards are actually cast because
-      // the cards may affect the caster's mana
-      casterPlayer.unit.mana -= cost.manaCost;
-      Unit.takeDamage(casterPlayer.unit, cost.healthCost);
-      Unit.syncPlayerHealthManaUI();
-    }
-
+    card:
     for (let index = 0; index < cards.length; index++) {
       const card = cards[index];
       const animationPromises: Promise<void>[] = [];
       if (card) {
         const animations = []
         for (let target of effectState.targets) {
+          if (!dryRun) {
+            const singleCardCost = calculateCost([card], math.distance(casterPlayer.unit, castLocation), casterPlayer);
+            // Prevent casting if over cost:
+            if (singleCardCost.manaCost >= casterPlayer.unit.mana) {
+              floatingText({
+                coords: target,
+                text: 'Insufficient mana!',
+                style: {
+                  fill: '#5656d5'
+                }
+              });
+              // There is not enough mana to cast this, go to the next card
+              continue card;
+            }
+            // Apply mana and health cost to caster
+            // Note: it is important that this is done BEFORE a card is actually cast because
+            // the card may affect the caster's mana
+            casterPlayer.unit.mana -= singleCardCost.manaCost;
+            Unit.takeDamage(casterPlayer.unit, singleCardCost.healthCost);
+            Unit.syncPlayerHealthManaUI();
+          }
 
           // Show the card that's being cast:
           if (!dryRun) {
@@ -893,18 +905,16 @@ export default class Underworld {
         }
 
         await Promise.all(animationPromises);
-      }
-    }
-    if (!dryRun) {
-      // Now that the caster has used the card, increment usage count
-      for (let cardId of cardIds) {
-        if (casterPlayer.cardUsageCounts[cardId] === undefined) {
-          casterPlayer.cardUsageCounts[cardId] = 0;
-        }
-        casterPlayer.cardUsageCounts[cardId]++;
-      }
-      updateManaCostUI();
+        if (!dryRun) {
+          // Now that the caster is using the card, increment usage count
+          if (casterPlayer.cardUsageCounts[card.id] === undefined) {
+            casterPlayer.cardUsageCounts[card.id] = 0;
+          }
+          casterPlayer.cardUsageCounts[card.id]++;
+          updateManaCostUI();
 
+        }
+      }
     }
     if (!dryRun) {
       // Clear spell animations once all cards are done playing their animations
