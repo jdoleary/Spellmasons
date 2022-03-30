@@ -1,4 +1,5 @@
 ## Critical Tasks
+- **Bug**: something is messed up, I host, have the host pick player first, he jumps into the game.  Then the guest picks a player but they don't spawn right
 ## Current Priorities
 - Bug: rejoining a game totally breaks it
 - Bug: "Cannot add client, client alreaedy in room" (maybe I was clicking too quickly??)
