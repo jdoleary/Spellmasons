@@ -140,7 +140,6 @@ body.inspect-mode #card-inspect {
 #card-holders #selected-cards,
 #card-holders #card-hand {
   display: flex;
-  width: 100%;
   justify-content: center;
 }
 #card-hand {
@@ -335,6 +334,13 @@ body.your-turn #player-turn-indicator {
   white-space: pre-wrap;
 }
 
+#health-mana-and-spell-cost-holder {
+  display: flex;
+  justify-content: center;
+}
+#spell-cost {
+  display:flex;
+}
 #spell-mana-cost {
   font-size: xx-large;
   background-color: #5656d5;
