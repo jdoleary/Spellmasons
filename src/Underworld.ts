@@ -1029,8 +1029,7 @@ type UnderworldNonFunctionProperties = Exclude<NonFunctionPropertyNames<Underwor
 type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFunctionProperties>, "debugGraphics" | "players" | "units" | "pickups" | "obstacles" | "random" | "processedMessageCount">;
 
 
-function getEnemiesForAltitude(levelIndex: number) {
-
+function getEnemiesForAltitude(levelIndex: number): { [unitid: string]: number } {
   const hardCodedLevelEnemies = [
     { 'grunt': 5 },
     {
@@ -1081,5 +1080,20 @@ function getEnemiesForAltitude(levelIndex: number) {
       'demon': 1
     },
   ];
-  return hardCodedLevelEnemies[levelIndex];
+  // Loop allows users to continue playing after the final level, it will 
+  // multiply the previous levels by the loop number
+  // Default loop at 1
+  const loop = 1 + Math.floor(levelIndex / hardCodedLevelEnemies.length);
+  if (levelIndex >= hardCodedLevelEnemies.length) {
+    levelIndex = levelIndex % hardCodedLevelEnemies.length;
+  }
+
+  const enemies = hardCodedLevelEnemies[levelIndex];
+  if (enemies) {
+    return Object.fromEntries(Object.entries(enemies).map(([unitId, quantity]) => [unitId, quantity * loop]));
+  } else {
+    // This should never happen
+    console.error('getEnemiesForAltitude could not find enemy information for levelIndex', levelIndex);
+    return {};
+  }
 }
