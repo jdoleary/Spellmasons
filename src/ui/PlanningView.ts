@@ -14,7 +14,7 @@ import type * as Pickup from '../Pickup';
 import * as Image from '../Image';
 import * as math from '../math';
 import { targetBlue } from './colors';
-import { calculateManaCost } from '../cards/cardUtils';
+import { calculateCost, CardCost } from '../cards/cardUtils';
 
 let planningViewGraphics: PIXI.Graphics;
 let dryRunGraphics: PIXI.Graphics;
@@ -74,25 +74,25 @@ export function updatePlanningView() {
   }
   updateTooltipContent();
 }
-export function updateManaCostUI(): number {
+export function updateManaCostUI(): CardCost {
   if (window.player) {
     // Update the UI that shows how much cards cost
-    CardUI.updateCardManaBadges();
+    CardUI.updateCardBadges();
     // Updates the mana cost
     const cards = CardUI.getSelectedCards();
     const mousePos = window.underworld.getMousePos();
     const castDistance = isOutOfBounds(mousePos) ? 0 : math.distance(mousePos, window.player.unit)
-    const manaCost = calculateManaCost(cards, castDistance, window.player)
-    _updateManaCostUI(manaCost);
-    return manaCost;
+    const cost = calculateCost(cards, castDistance, window.player)
+    _updateManaCostUI(cost);
+    return cost;
   }
-  return 0;
+  return { manaCost: 0, healthCost: 0 };
 }
-function _updateManaCostUI(manaCost: number) {
+function _updateManaCostUI(cost: CardCost) {
   if (window.player) {
-
-    updateTooltipSpellCost(manaCost)
-    elSpellManaCost?.classList.toggle('insufficient', manaCost > window.player.unit.mana);
+    updateTooltipSpellCost(cost)
+    elSpellManaCost?.classList.toggle('insufficient', cost.manaCost > window.player.unit.mana);
+    elSpellHealthCost?.classList.toggle('insufficient', cost.healthCost > window.player.unit.health);
   }
 
 }
@@ -122,8 +122,8 @@ export async function syncSpellEffectProjection() {
       (p) => p.clientId === window.clientId,
     );
     if (currentPlayer) {
-      const manaCost = updateManaCostUI();
-      if (manaCost > currentPlayer.unit.mana) {
+      const cost = updateManaCostUI();
+      if (cost.manaCost > currentPlayer.unit.mana || cost.healthCost > currentPlayer.unit.health) {
         // Draw deny icon to show the player they are out of range
         Image.create(mousePos.x, mousePos.y, 'deny.png', containerSpells);
       } else {
@@ -188,6 +188,9 @@ const elInspectorTooltipContent = document.getElementById(
 const elSpellManaCost = document.getElementById(
   'spell-mana-cost',
 );
+const elSpellHealthCost = document.getElementById(
+  'spell-health-cost',
+);
 export function clearTooltipSpellCost() {
   if (elSpellManaCost) {
     elSpellManaCost.innerHTML = '';
@@ -195,12 +198,19 @@ export function clearTooltipSpellCost() {
   }
 
 }
-export function updateTooltipSpellCost(manaCost: number) {
-  if (elSpellManaCost && manaCost !== 0) {
-    elSpellManaCost.innerHTML = `${manaCost}`
+export function updateTooltipSpellCost(cost: CardCost) {
+  if (elSpellManaCost && cost.manaCost !== 0) {
+    elSpellManaCost.innerHTML = `${cost.manaCost}`
     elSpellManaCost?.classList.remove('hidden');
   } else {
     elSpellManaCost?.classList.add('hidden');
+  }
+
+  if (elSpellHealthCost && cost.healthCost !== 0) {
+    elSpellHealthCost.innerHTML = `${cost.healthCost}`
+    elSpellHealthCost?.classList.remove('hidden');
+  } else {
+    elSpellHealthCost?.classList.add('hidden');
   }
 }
 

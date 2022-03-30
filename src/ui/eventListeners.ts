@@ -9,7 +9,7 @@ import {
   updateTooltipSelection,
 } from './PlanningView';
 import { View } from '../views';
-import { calculateManaCost } from '../cards/cardUtils';
+import { calculateCost } from '../cards/cardUtils';
 import * as math from '../math';
 import { findPath } from '../Pathfinding';
 import { polygonToPolygonLineSegments } from '../Polygon';
@@ -194,8 +194,8 @@ export function clickHandler(e: MouseEvent) {
         const cardIds = CardUI.getSelectedCardIds();
         const cards = CardUI.getSelectedCards();
 
-        const manaCost = calculateManaCost(cards, math.distance(selfPlayer.unit, target), selfPlayer);
-        if (manaCost <= selfPlayer.unit.mana) {
+        const cost = calculateCost(cards, math.distance(selfPlayer.unit, target), selfPlayer);
+        if (cost.manaCost <= selfPlayer.unit.mana) {
 
           // Ensure that last card doesn't require a following card
           // If it does, warn the player that their card order won't do what

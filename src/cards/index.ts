@@ -22,16 +22,13 @@ import swap from './swap';
 import purify from './purify';
 import poison from './poison';
 import vulnerable from './vulnerable';
-import lance from './lance';
-import stomp from './stomp';
 import protection from './protection';
-import charge from './charge';
 import obliterate from './obliterate';
 import clone from './clone';
 import mana_burn from './mana_burn';
 import mana_steal from './mana_steal';
 import { IUpgrade, upgradeSource } from '../Upgrade';
-import { CardType, _getCardsFromIds } from './cardUtils';
+import { _getCardsFromIds } from './cardUtils';
 import { addCardToHand } from '../CardUI';
 import { distance } from '../math';
 import * as config from '../config';
@@ -144,9 +141,10 @@ export type EffectFn = {
 
 export interface ICard {
   id: string;
-  type: CardType;
-  thumbnail: string;
+  manaCost: number;
+  healthCost: number;
   probability: number;
+  thumbnail: string;
   effect: EffectFn;
   description: string;
   // requiresFollowingCard is for cards like chain or AOE that need another

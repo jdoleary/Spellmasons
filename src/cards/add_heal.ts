@@ -1,16 +1,15 @@
 import * as Unit from '../Unit';
 import type { Spell } from '.';
-import { CardType, cardTypeToProbability } from './cardUtils';
 
 const id = 'heal';
 const healAmount = 3;
-const type = CardType.Common;
 
 const spell: Spell = {
   card: {
     id,
-    type,
-    probability: cardTypeToProbability(type),
+    manaCost: 10,
+    healthCost: 0,
+    probability: 50,
     thumbnail: 'heal.png',
     description: `
 Heals all targets ${healAmount} HP.

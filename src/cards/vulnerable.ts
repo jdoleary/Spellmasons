@@ -1,15 +1,14 @@
 import type * as Unit from '../Unit';
 import * as Image from '../Image';
 import type { Spell } from '.';
-import { CardType, cardTypeToProbability } from './cardUtils';
 
 const id = 'vulnerable';
-const type = CardType.Special;
 const spell: Spell = {
   card: {
     id,
-    type,
-    probability: cardTypeToProbability(type),
+    manaCost: 20,
+    healthCost: 0,
+    probability: 10,
     thumbnail: 'vulnerable.png',
     description: `
 Makes the target(s) take double damage whenever they receive damage

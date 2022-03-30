@@ -7,7 +7,7 @@ import {
   updateManaCostUI,
   updatePlanningView,
 } from './ui/PlanningView';
-import { calculateManaCostForSingleCard, cardTypeToManaCost } from './cards/cardUtils';
+import { calculateCostForSingleCard } from './cards/cardUtils';
 const elCardHolders = document.getElementById('card-holders');
 // Where the non-selected cards are displayed
 const elCardHand = document.getElementById('card-hand');
@@ -350,10 +350,17 @@ function createCardElement(content: Cards.ICard) {
   elCardInner.classList.add('card-inner');
   elCardInner.style.borderColor = getCardRarityColor(content);
   element.appendChild(elCardInner);
+  const elCardBadgeHolder = document.createElement('div');
+  elCardBadgeHolder.classList.add('card-badge-holder');
+  element.appendChild(elCardBadgeHolder);
   const elCardManaBadge = document.createElement('div');
-  elCardManaBadge.innerText = cardTypeToManaCost(content.type).toString();
-  elCardManaBadge.classList.add('card-mana-badge');
-  element.appendChild(elCardManaBadge);
+  elCardManaBadge.innerText = content.manaCost.toString();
+  elCardManaBadge.classList.add('card-mana-badge', 'card-badge');
+  elCardBadgeHolder.appendChild(elCardManaBadge);
+  const elCardHealthBadge = document.createElement('div');
+  elCardHealthBadge.innerText = content.healthCost.toString();
+  elCardHealthBadge.classList.add('card-health-badge', 'card-badge');
+  elCardBadgeHolder.appendChild(elCardHealthBadge);
   const thumbHolder = document.createElement('div');
   const thumbnail = document.createElement('img');
   thumbnail.src = 'images/spell/' + content.thumbnail;
@@ -374,11 +381,27 @@ function createCardElement(content: Cards.ICard) {
 }
 // Updates the UI mana badge for cards in hand.  To be invoked whenever a player's
 // cardUsageCounts object is modified in order to sync the UI
-export function updateCardManaBadges() {
+export function updateCardBadges() {
   function updateManaBadge(elBadge: Element | null, manaCost: number, card: Cards.ICard) {
     if (elBadge) {
+      // Hide badge if no cost
+      elBadge.classList.toggle('hidden', manaCost === 0);
       elBadge.innerHTML = manaCost.toString();
-      if (manaCost > cardTypeToManaCost(card.type)) {
+      if (manaCost > card.manaCost) {
+        elBadge.classList.add('modified-by-usage')
+      } else {
+        elBadge.classList.remove('modified-by-usage')
+      }
+    } else {
+      console.warn("Err UI: Found card, but could not find associated mana badge element to update mana cost");
+    }
+  }
+  function updateHealthBadge(elBadge: Element | null, healthCost: number, card: Cards.ICard) {
+    if (elBadge) {
+      // Hide badge if no cost
+      elBadge.classList.toggle('hidden', healthCost === 0);
+      elBadge.innerHTML = healthCost.toString();
+      if (healthCost > card.healthCost) {
         elBadge.classList.add('modified-by-usage')
       } else {
         elBadge.classList.remove('modified-by-usage')
@@ -393,18 +416,23 @@ export function updateCardManaBadges() {
     for (let i = 0; i < selectedCards.length; i++) {
       const card = selectedCards[i];
       const sliceOfCardsOfSameIdUntilCurrent = selectedCards.slice(0, i).filter(c => c.id == card.id);
-      const manaCost = calculateManaCostForSingleCard(card, (window.player.cardUsageCounts[card.id] || 0) + sliceOfCardsOfSameIdUntilCurrent.length);
+      const cost = calculateCostForSingleCard(card, (window.player.cardUsageCounts[card.id] || 0) + sliceOfCardsOfSameIdUntilCurrent.length);
       const elBadges = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"] .card-mana-badge`);
       const elBadge = Array.from(elBadges.values())[sliceOfCardsOfSameIdUntilCurrent.length];
-      updateManaBadge(elBadge, manaCost, card);
+      updateManaBadge(elBadge, cost.manaCost, card);
+      const elBadgesH = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"] .card-health-badge`);
+      const elBadgeH = Array.from(elBadgesH.values())[sliceOfCardsOfSameIdUntilCurrent.length];
+      updateHealthBadge(elBadgeH, cost.healthCost, card);
     }
     // Update cards in hand
     const cards = Cards.getCardsFromIds(window.player.cards);
     for (let card of cards) {
       const selectedCardElementsOfSameId = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"]`);
-      const manaCost = calculateManaCostForSingleCard(card, (window.player.cardUsageCounts[card.id] || 0) + selectedCardElementsOfSameId.length);
+      const cost = calculateCostForSingleCard(card, (window.player.cardUsageCounts[card.id] || 0) + selectedCardElementsOfSameId.length);
       const elBadge = document.querySelector(`#card-hand .card[data-card-id="${card.id}"] .card-mana-badge`);
-      updateManaBadge(elBadge, manaCost, card);
+      updateManaBadge(elBadge, cost.manaCost, card);
+      const elBadgeHealth = document.querySelector(`#card-hand .card[data-card-id="${card.id}"] .card-health-badge`);
+      updateHealthBadge(elBadgeHealth, cost.healthCost, card);
     }
 
   }

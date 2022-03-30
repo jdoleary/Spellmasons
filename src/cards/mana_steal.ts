@@ -2,17 +2,16 @@ import * as Unit from '../Unit';
 import type { Spell } from '.';
 import { createVisualLobbingProjectile } from '../Projectile';
 import floatingText from '../FloatingText';
-import { CardType, cardTypeToManaCost, cardTypeToProbability } from './cardUtils';
 
 const id = 'mana_steal';
 const mana_stolen = 20;
 const health_burn = Math.max(mana_stolen / 10, 1)
-const type = CardType.Special;
 const spell: Spell = {
   card: {
     id,
-    type,
-    probability: cardTypeToProbability(type),
+    manaCost: 0,
+    healthCost: health_burn,
+    probability: 20,
     thumbnail: 'mana_steal.png',
     description: `
 Sacrifice ${health_burn} of your own health to steal up to ${mana_stolen} mana from each target.
@@ -22,16 +21,15 @@ Sacrifice ${health_burn} of your own health to steal up to ${mana_stolen} mana f
         return state;
       }
       const caster = state.casterUnit;
-      // Take damage for to cast the steal
-      let promises = [Unit.takeDamage(caster, health_burn)];
+      let promises = [];
       for (let target of state.targets) {
         const unit = window.underworld.getUnitAt(target);
         if (unit) {
           const unitManaBurnt = Math.min(unit.mana, mana_stolen);
           unit.mana -= unitManaBurnt;
-          // Duct-tape: + cardTypeToManaCost(type) negates the built in mana cost of this card
-          state.casterUnit.mana += unitManaBurnt + cardTypeToManaCost(type);
           promises.push(createVisualLobbingProjectile(unit, caster.x, caster.y, 'blue-projectile.png').then(() => {
+            state.casterUnit.mana += unitManaBurnt;
+            Unit.syncPlayerHealthManaUI();
             floatingText({
               coords: caster,
               text: `+ ${unitManaBurnt} Mana`,

@@ -3,15 +3,14 @@ import type { Spell } from '.';
 import { removePickup } from '../Pickup';
 import { remove } from '../Obstacle';
 import { UnitType } from '../commonTypes';
-import { CardType, cardTypeToProbability } from './cardUtils';
 
 const id = 'obliterate';
-const type = CardType.Forbidden;
 const spell: Spell = {
   card: {
     id,
-    type,
-    probability: cardTypeToProbability(type),
+    manaCost: 80,
+    healthCost: 0,
+    probability: 1,
     thumbnail: 'obliterate.png',
     description: `
 Completely obliterates all targets.

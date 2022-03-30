@@ -26,7 +26,7 @@ import { allUnits } from './units';
 import { drawDryRunCircle, syncSpellEffectProjection, updateManaCostUI, updatePlanningView } from './ui/PlanningView';
 import { setRoute, Route } from './routes';
 import { prng, randInt, SeedrandomState } from './rand';
-import { calculateManaCost } from './cards/cardUtils';
+import { calculateCost } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment } from './collision/collisionMath';
 import { expandPolygon, mergeOverlappingPolygons, Polygon, PolygonLineSegment, polygonToPolygonLineSegments } from './Polygon';
 
@@ -810,12 +810,13 @@ export default class Underworld {
       return effectState;
     }
     const cards = Cards.getCardsFromIds(cardIds);
-    const manaCost = calculateManaCost(cards, math.distance(casterPlayer.unit, castLocation), casterPlayer);
+    const cost = calculateCost(cards, math.distance(casterPlayer.unit, castLocation), casterPlayer);
     if (!dryRun) {
       // Apply mana cost to caster
       // Note: it is important that this is done BEFORE the cards are actually cast because
       // the cards may affect the caster's mana
-      casterPlayer.unit.mana -= manaCost;
+      casterPlayer.unit.mana -= cost.manaCost;
+      Unit.takeDamage(casterPlayer.unit, cost.healthCost);
       Unit.syncPlayerHealthManaUI();
     }
 

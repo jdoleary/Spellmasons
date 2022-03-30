@@ -1,14 +1,13 @@
 import * as Unit from '../Unit';
 import type { Spell } from '.';
-import { CardType, cardTypeToProbability } from './cardUtils';
 
 const id = 'resurrect';
-const type = CardType.Powerful;
 const spell: Spell = {
   card: {
     id,
-    type,
-    probability: cardTypeToProbability(type),
+    manaCost: 50,
+    healthCost: 0,
+    probability: 5,
     thumbnail: 'raise_dead.png',
     description: `
 Resurrects a dead unit and converts them to the caster's faction.

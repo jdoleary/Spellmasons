@@ -6,15 +6,14 @@ import { UnitSubType, UnitType } from '../commonTypes';
 import type { Vec2 } from '../Vec';
 import { removeSubSprite } from '../Image';
 import { COLLISION_MESH_RADIUS } from '../config';
-import { CardType, cardTypeToProbability } from './cardUtils';
 
 const id = 'clone';
-const type = CardType.Forbidden;
 const spell: Spell = {
   card: {
     id,
-    type,
-    probability: cardTypeToProbability(type),
+    manaCost: 80,
+    healthCost: 0,
+    probability: 1,
     thumbnail: 'clone.png',
     description: `
 Clones each target

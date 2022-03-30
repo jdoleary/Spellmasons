@@ -3,15 +3,14 @@ import * as Pickup from '../Pickup';
 import type { Spell } from '.';
 import type { Vec2 } from '../Vec';
 import { drawSwapLine } from '../ui/PlanningView';
-import { CardType, cardTypeToProbability } from './cardUtils';
 
 const id = 'swap';
-const type = CardType.Powerful;
 const spell: Spell = {
   card: {
     id,
-    type,
-    probability: cardTypeToProbability(type),
+    manaCost: 50,
+    healthCost: 0,
+    probability: 5,
     thumbnail: 'swap.png',
     description: `
 Swaps the caster with the source target.

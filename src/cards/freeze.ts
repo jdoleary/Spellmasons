@@ -2,15 +2,14 @@ import * as Unit from '../Unit';
 import * as Image from '../Image';
 import type { Spell } from '.';
 import { UnitType } from '../commonTypes';
-import { CardType, cardTypeToProbability } from './cardUtils';
 
 const id = 'freeze';
-const type = CardType.Common;
 const spell: Spell = {
   card: {
     id,
-    type,
-    probability: cardTypeToProbability(type),
+    manaCost: 10,
+    healthCost: 0,
+    probability: 50,
     thumbnail: 'freeze.png',
     description: `
 Freezes the target(s) for 1 turn, preventing them from moving or acting.

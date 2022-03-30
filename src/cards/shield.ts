@@ -2,15 +2,14 @@ import * as Unit from '../Unit';
 import * as Image from '../Image';
 import type { Spell } from '.';
 import floatingText from '../FloatingText';
-import { CardType, cardTypeToProbability } from './cardUtils';
 
-const type = CardType.Powerful;
 const id = 'shield';
 const spell: Spell = {
   card: {
     id,
-    type,
-    probability: cardTypeToProbability(type),
+    manaCost: 50,
+    healthCost: 0,
+    probability: 5,
     thumbnail: 'shield.png',
     description: `
 Protects the target(s) from the next time they would take damage.

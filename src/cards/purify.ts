@@ -1,15 +1,14 @@
 import { removeModifier } from '../Unit';
 import type { Spell } from '.';
-import { CardType, cardTypeToProbability } from './cardUtils';
 
 const id = 'purify';
-const type = CardType.Special;
 // Removes all curse modifiers
 const spell: Spell = {
   card: {
     id,
-    type,
-    probability: cardTypeToProbability(type),
+    manaCost: 20,
+    healthCost: 0,
+    probability: 10,
     thumbnail: 'purify.png',
     description: `
 Removes all curses from the target(s).

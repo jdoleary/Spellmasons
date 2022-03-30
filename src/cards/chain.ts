@@ -4,15 +4,14 @@ import type { Vec2 } from '../Vec';
 import * as Vec from '../Vec';
 import type * as Unit from '../Unit';
 import * as config from '../config';
-import { CardType, cardTypeToProbability } from './cardUtils';
 
 const id = 'chain';
-const type = CardType.Special;
 const spell: Spell = {
   card: {
     id,
-    type,
-    probability: cardTypeToProbability(type),
+    manaCost: 20,
+    healthCost: 0,
+    probability: 10,
     thumbnail: 'chain.png',
     requiresFollowingCard: true,
     description: `

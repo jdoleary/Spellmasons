@@ -1,16 +1,15 @@
 import * as Unit from '../Unit';
 import type { Spell } from '.';
-import { CardType, cardTypeToProbability } from './cardUtils';
 
 const id = 'mana_burn';
 const mana_burnt = 30;
 const health_burn_ratio = .1;
-const type = CardType.Special;
 const spell: Spell = {
   card: {
     id,
-    type,
-    probability: cardTypeToProbability(type),
+    manaCost: 20,
+    healthCost: 0,
+    probability: 10,
     thumbnail: 'mana_burn.png',
     description: `
 Burn up to ${mana_burnt} of the targets' mana, causing the target take ${health_burn_ratio} damage per mana burnt.

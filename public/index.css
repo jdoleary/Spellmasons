@@ -189,21 +189,37 @@ the face of the last card in the group is seen*/
   pointer-events: all;
   display: flex;
 }
-.card-mana-badge {
+.card-badge-holder{
+  display: flex;
+  position: absolute;
+  top: -8px;
+  left: -8px;
+}
+.card-badge {
   width: 24px;
   height: 24px;
   line-height: 24px;
   border-radius: 24px;
   color: white;
-  position: absolute;
-  top: -4px;
-  left: -4px;
+  text-align: center;
+}
+.card-badge.hidden {
+  display:none;
+}
+.card-mana-badge {
+
   background-color: #5656d5;
   border : 2px solid #5656d5;
-  text-align: center;
 }
 .card-mana-badge.modified-by-usage {
   border : 2px solid #434380;
+}
+.card-health-badge {
+  background-color: #d55656;
+  border : 2px solid #d55656;
+}
+.card-health-badge.modified-by-usage {
+  border : 2px solid #863e3e;
 }
 .card-inner {
   width: 70px;
@@ -336,6 +352,25 @@ body.your-turn #player-turn-indicator {
   border: 4px solid #ff0000;
 }
 #spell-mana-cost.hidden {
+  display:none;
+}
+#spell-health-cost {
+  font-size: xx-large;
+  background-color: #d55656;
+  border: 4px solid #d55656;
+  color:white;
+  margin: 0 auto;
+  border-radius: 100% 100%;
+  width: 80px;
+  height: 80px;
+  text-align: center;
+  line-height: 80px;
+}
+/* For insufficient health */
+#spell-health-cost.insufficient {
+  border: 4px solid #ff0000;
+}
+#spell-health-cost.hidden {
   display:none;
 }
 #ready-state {
