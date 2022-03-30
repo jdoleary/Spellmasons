@@ -248,7 +248,7 @@ export default class Underworld {
 
   }
 
-  initLevel(levelIndex: number) {
+  initLevel(levelIndex: number): void {
     // Now that it's a new level clear out the level's dodads such as
     // bone dust left behind from destroyed corpses
     containerDodads.removeChildren();
@@ -336,8 +336,7 @@ export default class Underworld {
     validSpawnCoords = validSpawnCoords.filter(c => findPolygonsThatVec2IsInsideOf(c, this.pathingPolygons).length === 0);
     if (validPlayerSpawnCoords.length === 0) {
       console.error('Bad level seed, no place to spawn portal, regenerating');
-      this.initLevel(this.levelIndex);
-      return
+      return this.initLevel(this.levelIndex);
     }
 
     for (let i = 0; i < config.NUM_PICKUPS_PER_LEVEL; i++) {
@@ -382,15 +381,13 @@ export default class Underworld {
         const path = findPath(coords, portalCoords, this.pathingPolygons);
         if (path.length == 0 || !Vec.equal(path[path.length - 1], portalCoords)) {
           console.error('Bad level seed: no path to portal, regenerating');
-          this.initLevel(this.levelIndex);
-          return
+          return this.initLevel(this.levelIndex);
 
         }
       }
     } else {
       console.error('Bad level seed, not enough valid spawns for players, regenerating', validPlayerSpawnCoords.length, this.players.length);
-      this.initLevel(this.levelIndex);
-      return
+      return this.initLevel(this.levelIndex);
 
     }
 
