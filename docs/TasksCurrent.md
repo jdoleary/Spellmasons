@@ -6,6 +6,7 @@
 - Content: Add vampire modifier which reverses the effects of health and damage
 - Task: Make contageous spread more obvious
 - Allow for restoring mana mid cast with something like mana steal
+    - Take mana as each card is cast, not all at the beginning
 - Client joins network with id of "1" if they've been playing singleplayer and have that id saved
 - Bug: You can swap into obstacles
 - Dad:
@@ -16,8 +17,6 @@
     - Don't let me put more cards down than i can afford
 - Brad:
     - How to communicatge the extra cost that distance adds to mana
-- todo: Make "mana cost" icon on cards allow for health cost (for spells such as mana steal)
-    - Bug: Mana steal costs mana, it shouldn't!!
 - Notify when waiting for other players to pick a character, just like "x players left to pick upgrade
 
 Finish Content:
