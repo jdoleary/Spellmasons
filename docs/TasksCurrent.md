@@ -1,7 +1,9 @@
 ## Critical Tasks
-- Fix sycronize bugs. Make it more reliable
 ## Current Priorities
-- Somehow duplicate points are getting added to path
+- Pathing
+    - Somehow duplicate points are getting added to path
+    - Fix optimize to consider P1 inside angle too
+    - Short circuit when branching paths, not when adding verticies
 - Bug: AOE deduping removes a valid target if two units are too close to each other
 - Task: Make contageous spread more obvious
 ---
