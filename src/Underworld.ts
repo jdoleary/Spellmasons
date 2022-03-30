@@ -824,28 +824,28 @@ export default class Underworld {
       const animationPromises: Promise<void>[] = [];
       if (card) {
         const animations = []
-        for (let target of effectState.targets) {
-          if (!dryRun) {
-            const singleCardCost = calculateCost([card], math.distance(casterPlayer.unit, castLocation), casterPlayer);
-            // Prevent casting if over cost:
-            if (singleCardCost.manaCost >= casterPlayer.unit.mana) {
-              floatingText({
-                coords: target,
-                text: 'Insufficient mana!',
-                style: {
-                  fill: '#5656d5'
-                }
-              });
-              // There is not enough mana to cast this, go to the next card
-              continue card;
-            }
-            // Apply mana and health cost to caster
-            // Note: it is important that this is done BEFORE a card is actually cast because
-            // the card may affect the caster's mana
-            casterPlayer.unit.mana -= singleCardCost.manaCost;
-            Unit.takeDamage(casterPlayer.unit, singleCardCost.healthCost);
-            Unit.syncPlayerHealthManaUI();
+        if (!dryRun) {
+          const singleCardCost = calculateCost([card], math.distance(casterPlayer.unit, castLocation), casterPlayer);
+          // Prevent casting if over cost:
+          if (singleCardCost.manaCost >= casterPlayer.unit.mana) {
+            floatingText({
+              coords: castLocation,
+              text: 'Insufficient mana!',
+              style: {
+                fill: '#5656d5'
+              }
+            });
+            // There is not enough mana to cast this, go to the next card
+            continue card;
           }
+          // Apply mana and health cost to caster
+          // Note: it is important that this is done BEFORE a card is actually cast because
+          // the card may affect the caster's mana
+          casterPlayer.unit.mana -= singleCardCost.manaCost;
+          Unit.takeDamage(casterPlayer.unit, singleCardCost.healthCost);
+          Unit.syncPlayerHealthManaUI();
+        }
+        for (let target of effectState.targets) {
 
           // Show the card that's being cast:
           if (!dryRun) {
