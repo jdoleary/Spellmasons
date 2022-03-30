@@ -3,7 +3,6 @@
 - Make sure there is always a path to the portal
 - Fix UI so it never covers the gameboard, see stash "camera tests"
 ## Current Priorities
-- Content: Add vampire modifier which reverses the effects of health and damage
 - Task: Make contageous spread more obvious
 - Allow for restoring mana mid cast with something like mana steal
     - Take mana as each card is cast, not all at the beginning
@@ -21,6 +20,7 @@
 
 Finish Content:
 - More spells:
+    - Content: Add vampire modifier which reverses the effects of health and damage
     - Haste modifier lets you move farther and slow
     - Spells that summon walls or pillars to prevent enemy movement (maybe to trap them)
     - Push spells (requires collisions)
