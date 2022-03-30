@@ -27,8 +27,11 @@ Sacrifice ${health_burn} of your own health to steal up to ${mana_stolen} mana f
         if (unit) {
           const unitManaBurnt = Math.min(unit.mana, mana_stolen);
           unit.mana -= unitManaBurnt;
+          // Sync UI in case mana is stolen from the player
+          Unit.syncPlayerHealthManaUI();
           promises.push(createVisualLobbingProjectile(unit, caster.x, caster.y, 'blue-projectile.png').then(() => {
             state.casterUnit.mana += unitManaBurnt;
+            // Sync UI in case the casterUnit IS the player and is getting this mana
             Unit.syncPlayerHealthManaUI();
             floatingText({
               coords: caster,
