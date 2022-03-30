@@ -1,7 +1,9 @@
 ## Critical Tasks
-- Allow for restoring mana mid cast with something like mana steal
 - Fix sycronize bugs. Make it more reliable
+- Make sure there is always a path to the portal
+- Fix UI so it never covers the gameboard, see stash "camera tests"
 ## Current Priorities
+- Allow for restoring mana mid cast with something like mana steal
 - bug: while messing with forcing desync, player got stuck with red shader on
 - Client joins network with id of "1" if they've been playing singleplayer and have that id saved
 - Bug: You can swap into obstacles
@@ -11,16 +13,12 @@
     - Wants to know how far he's able to walk in one turn
     - Doesn't know what the circle means when clicking on enemies
     - Don't let me put more cards down than i can afford
-- Make sure there is always a path to the portal
 - Brad:
     - How to communicatge the extra cost that distance adds to mana
 - todo: Make "mana cost" icon on cards allow for health cost (for spells such as mana steal)
     - Bug: Mana steal costs mana, it shouldn't!!
 - Notify when waiting for other players to pick a character, just like "x players left to pick upgrade
-- Fix UI so it never covers the gameboard
 
----
-- wsPie: bug: what happens when you call sendData before joining a room???
 ---
 - Bug: I got poisoned when I cast contageous poison but wasn't close
     - Task: Make contageous spread more obvious
