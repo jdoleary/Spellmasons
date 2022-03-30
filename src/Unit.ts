@@ -413,13 +413,11 @@ export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
 // setLocation, unlike moveTo, simply sets a unit to a coordinate without
 // considering in-game blockers or changing any unit flags
 // Note: NOT TO BE USED FOR in-game collision-based movement
-export function setLocation(unit: IUnit, coordinates: Vec2): Promise<void> {
+export function setLocation(unit: IUnit, coordinates: Vec2) {
   // Set state instantly to new position
   unit.x = coordinates.x;
   unit.y = coordinates.y;
   unit.path = [];
-  // Animate movement visually
-  return Image.move(unit.image, unit.x, unit.y);
 }
 export function changeFaction(unit: IUnit, faction: Faction) {
   unit.faction = faction;
