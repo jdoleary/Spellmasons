@@ -126,6 +126,23 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
     // Look for paths to the target
     paths = processPaths(paths, pathingWalls, 0);
 
+    // Debug: Draw the paths:
+    for (let i = 0; i < paths.length; i++) {
+        // Visual offset is useful for representing overlapping paths in a way where you can see
+        // all of them
+        const visualOffset = i * 3;
+        const path = paths[i];
+        if (path.invalid) {
+            window.debugGraphics.lineStyle(4, 0xff0000, 0.1);
+        } else {
+            window.debugGraphics.lineStyle(4, 0x00ff00, 1);
+        }
+        window.debugGraphics.moveTo(path.points[0].x + visualOffset, path.points[0].y + visualOffset);
+        for (let point of path.points) {
+            window.debugGraphics.lineTo(point.x + visualOffset, point.y + visualOffset);
+        }
+    }
+
     console.log('found', paths.filter(p => !p.invalid).length, 'valid paths of', paths.length, paths.filter(p => !p.invalid));
 
     // Remove invalid paths
@@ -426,6 +443,7 @@ function processPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursi
                 walkAroundAPoly('next', nextWalkPoint, intersectingWall.polygon, target, pathingWalls, branchedPath);
 
 
+                // Resurse, now that new paths have been added, they need to be processed to
                 processPaths(paths, pathingWalls, recursionCount + 1);
             }
 
@@ -436,23 +454,6 @@ function processPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursi
 
             // Mark the path as "done"
             path.done = true;
-        }
-    }
-
-    // Debug: Draw the paths:
-    for (let i = 0; i < paths.length; i++) {
-        // Visual offset is useful for representing overlapping paths in a way where you can see
-        // all of them
-        const visualOffset = i * 3;
-        const path = paths[i];
-        if (path.invalid) {
-            window.debugGraphics.lineStyle(4, 0xff0000, 0.1);
-        } else {
-            window.debugGraphics.lineStyle(4, 0x00ff00, 1);
-        }
-        window.debugGraphics.moveTo(path.points[0].x + visualOffset, path.points[0].y + visualOffset);
-        for (let point of path.points) {
-            window.debugGraphics.lineTo(point.x + visualOffset, point.y + visualOffset);
         }
     }
 
