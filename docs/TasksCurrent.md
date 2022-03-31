@@ -1,10 +1,4 @@
 ### 2022-03-31
-- Pathing, see stash "pathfinding"
-    - Somehow duplicate points are getting added to path
-    - Fix optimize to consider P1 inside angle too
-    - Optimization: Process paths with a queue instead of recursively so that they all evolve one point at a time rather than depth first
-        - This will allow shorter paths to find their way first instead of having a really long invalid path branch all over the place and take up a lot of memory
-        - Right now it takes 18 paths to find the portal and 20 to find the sticky spot
 - **Bug**: something is messed up, I host, have the host pick player first, he jumps into the game.  Then the guest picks a player but they don't spawn right
 - Support rejoining an existing game via pie
 - Quick copy link

@@ -1,3 +1,7 @@
+- Maybe solved already? Pathing, see stash "pathfinding"
+    - this.seed = '0.9408533248276452';
+    - Somehow duplicate points are getting added to path
+    - Fix optimize to consider P1 inside angle too
 - bug: while messing with forcing desync, player got stuck with red shader on
 - I saw deny.png on target when i did in fact have enough mana
 - Figure out how to host server locally to be reached via the internet
