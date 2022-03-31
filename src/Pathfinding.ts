@@ -65,7 +65,6 @@ interface Path {
     };
 }
 export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): Vec2[] {
-    // target = Vec.round(target);
     // If the target is inside of a non-inverted polygon, move it to the closest edge so that
     // the unit can path to the closest pathable point near where they are attempting to go.
     // This is important if, for example, a player clicks in empty space which is inside
@@ -254,10 +253,10 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
                             }
                         }
                         if (!closestIntersection || Vec.equal(closestIntersection, path.points[j])) {
-                            window.debugGraphics.lineStyle(1, 0xff0000, 1);
-                            window.debugGraphics.drawCircle(path.points[i].x, path.points[i].y, 4);
-                            window.debugGraphics.lineStyle(1, 0x0000ff, 1);
-                            window.debugGraphics.drawCircle(path.points[j].x, path.points[j].y, 4);
+                            // window.debugGraphics.lineStyle(1, 0xff0000, 1);
+                            // window.debugGraphics.drawCircle(path.points[i].x, path.points[i].y, 4);
+                            // window.debugGraphics.lineStyle(1, 0x0000ff, 1);
+                            // window.debugGraphics.drawCircle(path.points[j].x, path.points[j].y, 4);
                             path.points = removeBetweenIndexAtoB(path.points, i, j);
                             return false
                         }
