@@ -1,7 +1,7 @@
 import { isAngleBetweenAngles } from "./Angle";
 import { findWherePointIntersectLineSegmentAtRightAngle, isPointOnLineSegment, LineSegment, lineSegmentIntersection } from "./collision/collisionMath";
 import { distance } from "./math";
-import { getPointsFromPolygonStartingAt, doesVertexBelongToPolygon, Polygon, PolygonLineSegment, polygonToPolygonLineSegments, isVec2InsidePolygon, getInsideAnglesOfPoint, doesLineFromPointToTargetProjectAwayFromOwnPolygon, getInsideAnglesOfWall } from "./Polygon";
+import { getPointsFromPolygonStartingAt, doesVertexBelongToPolygon, Polygon, PolygonLineSegment, polygonToPolygonLineSegments, isVec2InsidePolygon, doesLineFromPointToTargetProjectAwayFromOwnPolygon, getInsideAnglesOfWall } from "./Polygon";
 import type { Vec2 } from './Vec';
 import * as Vec from './Vec';
 
@@ -52,6 +52,8 @@ interface Path {
     // A invalid path does not path to the target and can be ignored
     invalid: boolean;
     points: Vec2[];
+    // The end of the path
+    target: Vec2;
     // The distance that the full path traverses
     distance: number;
     walkAroundPolyInfo?: {
@@ -127,7 +129,7 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
         // Note, the distance is calculated inside of processPaths even if 
         // there are no interruptions to the path and it just goes from startPoint
         // to target.
-        { done: false, invalid: false, points: [startPoint, target], distance: 0 }
+        { done: false, invalid: false, points: [startPoint], target, distance: 0 }
     ];
 
     // There is a processingLimit to prevent infinite processing.
@@ -191,6 +193,12 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
                 break;
             }
             window.debugGraphics.lineTo(point.x + visualOffset, point.y + visualOffset);
+        }
+
+        // Finally, draw to the target, unless the path is invalid (in which case it didn't make
+        // it to the target); 
+        if (!path.invalid) {
+            window.debugGraphics.lineTo(path.target.x + visualOffset, path.target.y + visualOffset);
         }
     }
 
@@ -271,7 +279,7 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
         // Remove the start point, since the unit doing the pathing is already at the start point:
         shortestPath.points.shift();
     }
-    return shortestPath ? shortestPath.points : [];
+    return shortestPath ? [...shortestPath.points, shortestPath.target] : [];
 }
 // Note: Mutates Path
 function addWalkAroundPolyInfoToPath(path: Path, direction: 'prev' | 'next', startVertex: Vec2, poly: Polygon) {
@@ -286,7 +294,6 @@ function addWalkAroundPolyInfoToPath(path: Path, direction: 'prev' | 'next', sta
     const _verticies = getPointsFromPolygonStartingAt(poly, startVertex);
     // If the direction is 'prev', walk in the opposite direction
     const verticies = direction == 'prev' ? _verticies.reverse() : _verticies;
-    console.log('add walk info', JSON.stringify(verticies.map(Vec.round)));
     path.walkAroundPolyInfo = {
         verticies,
         poly
@@ -305,16 +312,11 @@ function walkAroundAPoly(path: Path, pathingWalls: PolygonLineSegment[]) {
         console.log('no verticies left to be processed');
         return;
     }
-    // Remove the last point in the path as we now need to add intermediate points.
-    // This point will be readded to the path after the intermediate points are added:
-    const target = path.points.splice(-1)[0]
     // If the target point is on the line between the last point and this point, we've found the path and can exit.
     // This occurs if the target point lies directly on an edge of the current polygon
-    if (isPointOnLineSegment(target, { p1: path.points[path.points.length - 1], p2: vertex })) {
+    if (isPointOnLineSegment(path.target, { p1: path.points[path.points.length - 1], p2: vertex })) {
         console.log('finish walking, finsih path; target is on edge of current poly');
         path.done = true
-        // Readd target
-        path.points.push(target);
         return;
     }
 
@@ -323,9 +325,8 @@ function walkAroundAPoly(path: Path, pathingWalls: PolygonLineSegment[]) {
     const indexOfVertex = path.walkAroundPolyInfo.poly.points.findIndex(p => Vec.equal(p, vertex));
     // true if line to target doesn't pass through own polygon
     let lineToTargetDoesNotPassThroughOwnPolygon = false;
-    console.log('jtest', indexOfVertex, target);
     if (indexOfVertex >= 0) {
-        lineToTargetDoesNotPassThroughOwnPolygon = doesLineFromPointToTargetProjectAwayFromOwnPolygon(path.walkAroundPolyInfo.poly, indexOfVertex, target);
+        lineToTargetDoesNotPassThroughOwnPolygon = doesLineFromPointToTargetProjectAwayFromOwnPolygon(path.walkAroundPolyInfo.poly, indexOfVertex, path.target);
     }
     // if !lineToTargetDoesNotPassThroughOwnPolygon then
     // line cast to target DOES pass through the inside of this vertex's angle so it is invalid to branch.
@@ -337,7 +338,7 @@ function walkAroundAPoly(path: Path, pathingWalls: PolygonLineSegment[]) {
     // be valid to jump of the poly / branch
     if (lineToTargetDoesNotPassThroughOwnPolygon) {
         // Check if a straight line between the new vertex and the target collides with any walls
-        const { intersectingWall, closestIntersection } = getClosestIntersectionWithWalls({ p1: vertex, p2: target }, pathingWalls);
+        const { intersectingWall, closestIntersection } = getClosestIntersectionWithWalls({ p1: vertex, p2: path.target }, pathingWalls);
         // If it does
         if (intersectingWall && closestIntersection) {
             // and the wall belongs to the current poly
@@ -371,10 +372,6 @@ function walkAroundAPoly(path: Path, pathingWalls: PolygonLineSegment[]) {
             path.done = true;
         }
     }
-
-
-    // Re add the last point to the end of the points
-    path.points.push(target);
 }
 // Processes each path by ensuring that there is a valid line between each of the paths points,
 // and if there is not it will add points until either the path is invalid or the path is complete
@@ -389,9 +386,9 @@ function processPaths(paths: Path[], pathingWalls: PolygonLineSegment[]): Path[]
         if (path.done) {
             continue;
         }
-        // A path must have at least 2 points (a start and and end) to be processed
-        if (path.points.length < 2) {
-            console.error("Path is too short to try", JSON.stringify(path.points.map(p => Vec.clone(p))));
+        // A path must have at least 1 point (a start and path.target is the end) to be processed
+        if (path.points.length < 1) {
+            console.error("Path is too short to process");
             path.invalid = true;
             path.done = true;
             continue;
@@ -412,7 +409,9 @@ function processPaths(paths: Path[], pathingWalls: PolygonLineSegment[]): Path[]
             console.log('target', nextStraightLine.p2);
 
             // Check for collisions between the last line in the path and pathing walls
-            let { intersectingWall, closestIntersection } = getClosestIntersectionWithWalls(nextStraightLine, pathingWalls, path.points.length == 2);
+            // path.points.length === 1 because includeStartPoint should be true if this is the very beginning of the path in case
+            // the unit is already on an edge of a polygon
+            let { intersectingWall, closestIntersection } = getClosestIntersectionWithWalls(nextStraightLine, pathingWalls, path.points.length == 1);
             // If there is an intersection between a straight line path and a pathing wall
             // we have to branch the path to the corners of the wall and try again
             if (intersectingWall && closestIntersection) {
@@ -425,9 +424,6 @@ function processPaths(paths: Path[], pathingWalls: PolygonLineSegment[]): Path[]
                     console.log('happy path, done');
 
                 } else {
-                    // Remove the last point in the path as we now need to add intermediate points.
-                    // This point will be readded to the path after the intermediate points are added:
-                    const target = path.points.splice(-1)[0]
                     path.points.push(closestIntersection);
                     window.debugGraphics.lineStyle(2, 0xff00ff, 1);
                     window.debugGraphics.drawCircle(closestIntersection.x, closestIntersection.y, 10);
@@ -486,9 +482,6 @@ function processPaths(paths: Path[], pathingWalls: PolygonLineSegment[]): Path[]
                     console.log('branch path at', closestIntersection.x, closestIntersection.y);
                     let { next, prev } = polygonLineSegmentToPrevAndNext(intersectingWall);
 
-                    // Readd path, TODO, needs refactoring
-                    path.points.push(target);
-
                     // Branch the path.  The original path will try navigating around p1
                     // and the branchedPath will try navigating around p2.
                     // Note: branchedPath must be cloned before path's p2 is modified
@@ -532,7 +525,7 @@ export function removeBetweenIndexAtoB(array: any[], indexA: number, indexB: num
 function calculateDistanceOfPaths(paths: Path[]) {
     // Calculate the distance for all paths
     for (let path of paths) {
-        path.distance = calculateDistanceOfVec2Array(path.points);
+        path.distance = calculateDistanceOfVec2Array([...path.points, path.target]);
     }
 }
 function calculateDistanceOfVec2Array(points: Vec2[]) {
@@ -547,7 +540,7 @@ function polygonLineSegmentToPrevAndNext(wall: PolygonLineSegment): { prev: Vec2
     return { prev: wall.p1, next: wall.p2 };
 }
 function getLastLineInPath(path: Path): LineSegment {
-    return { p1: path.points[path.points.length - 2], p2: path.points[path.points.length - 1] };
+    return { p1: path.points[path.points.length - 1], p2: path.target };
 
 }
 // Given an array of PolygonLineSegment[], of all the intersections between line and the walls,
