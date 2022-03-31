@@ -65,7 +65,6 @@ interface Path {
     };
 }
 export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): Vec2[] {
-    console.log('----------------findPath-------------');
     // If the target is inside of a non-inverted polygon, move it to the closest edge so that
     // the unit can path to the closest pathable point near where they are attempting to go.
     // This is important if, for example, a player clicks in empty space which is inside
@@ -81,8 +80,8 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
             for (let wall of polygonToPolygonLineSegments(poly)) {
                 const intersection = findWherePointIntersectLineSegmentAtRightAngle(target, wall);
                 if (intersection) {
-                    window.debugGraphics.lineStyle(3, 0xff0000, 1.0);
-                    window.debugGraphics.drawCircle(intersection.x, intersection.y, 3);
+                    // window.debugGraphics.lineStyle(3, 0xff0000, 1.0);
+                    // window.debugGraphics.drawCircle(intersection.x, intersection.y, 3);
                     rightAngleIntersections.push(intersection);
                 }
 
@@ -99,8 +98,8 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
                 }
 
             }, { intersection: rightAngleIntersections[0], dist: Number.MAX_SAFE_INTEGER })
-            window.debugGraphics.lineStyle(3, 0x0000ff, 1.0);
-            window.debugGraphics.drawCircle(closest.intersection.x, closest.intersection.y, 4);
+            // window.debugGraphics.lineStyle(3, 0x0000ff, 1.0);
+            // window.debugGraphics.drawCircle(closest.intersection.x, closest.intersection.y, 4);
             // Override target with a location that the unit can actually fit in:
             target = closest.intersection;
         } else {
@@ -115,8 +114,8 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
                 }
 
             }, { vertex: targetInsideOfPolys[0].points[0], dist: Number.MAX_SAFE_INTEGER }).vertex;
-            window.debugGraphics.lineStyle(3, 0xf000ff, 1.0);
-            window.debugGraphics.drawCircle(target.x, target.y, 4);
+            // window.debugGraphics.lineStyle(3, 0xf000ff, 1.0);
+            // window.debugGraphics.drawCircle(target.x, target.y, 4);
 
         }
     }
@@ -153,7 +152,6 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
             // longer than the current shortest, valid path; and thus, not a path we'd choose
             for (let path of paths) {
                 if (!path.done && path.distance > shortestFinishedDistance) {
-                    console.log('invalid due to shorter path existing', path.distance, shortestFinishedDistance);
                     path.invalid = true;
                     path.done = true;
                 }
@@ -176,33 +174,31 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
     })
 
     // Debug: Draw the paths:
-    for (let i = 0; i < paths.length; i++) {
-        // Visual offset is useful for representing overlapping paths in a way where you can see
-        // all of them
-        const visualOffset = i * 5;
-        const path = paths[i];
-        if (path.invalid) {
-            window.debugGraphics.lineStyle(4, 0xff0000, 0.3);
-        } else {
-            window.debugGraphics.lineStyle(4, 0x00ff00, 0.4);
-        }
-        window.debugGraphics.moveTo(path.points[0].x + visualOffset, path.points[0].y + visualOffset);
-        for (let point of path.points) {
-            if (path.invalid && point == path.points[path.points.length - 1]) {
-                // Don't draw last point since the path didn't finish
-                break;
-            }
-            window.debugGraphics.lineTo(point.x + visualOffset, point.y + visualOffset);
-        }
+    // for (let i = 0; i < paths.length; i++) {
+    //     // Visual offset is useful for representing overlapping paths in a way where you can see
+    //     // all of them
+    //     const visualOffset = i * 5;
+    //     const path = paths[i];
+    //     if (path.invalid) {
+    //         window.debugGraphics.lineStyle(4, 0xff0000, 0.3);
+    //     } else {
+    //         window.debugGraphics.lineStyle(4, 0x00ff00, 0.4);
+    //     }
+    //     window.debugGraphics.moveTo(path.points[0].x + visualOffset, path.points[0].y + visualOffset);
+    //     for (let point of path.points) {
+    //         if (path.invalid && point == path.points[path.points.length - 1]) {
+    //             // Don't draw last point since the path didn't finish
+    //             break;
+    //         }
+    //         window.debugGraphics.lineTo(point.x + visualOffset, point.y + visualOffset);
+    //     }
 
-        // Finally, draw to the target, unless the path is invalid (in which case it didn't make
-        // it to the target); 
-        if (!path.invalid) {
-            window.debugGraphics.lineTo(path.target.x + visualOffset, path.target.y + visualOffset);
-        }
-    }
-
-    console.log('found', paths.filter(p => !p.invalid).length, 'valid paths of', paths.length, paths.filter(p => !p.invalid));
+    //     // Finally, draw to the target, unless the path is invalid (in which case it didn't make
+    //     // it to the target); 
+    //     if (!path.invalid) {
+    //         window.debugGraphics.lineTo(path.target.x + visualOffset, path.target.y + visualOffset);
+    //     }
+    // }
 
     // Remove invalid paths
     paths = paths.filter(p => !p.invalid);
@@ -303,19 +299,16 @@ function addWalkAroundPolyInfoToPath(path: Path, direction: 'prev' | 'next', sta
 function walkAroundAPoly(path: Path, pathingWalls: PolygonLineSegment[]) {
     if (!path.walkAroundPolyInfo) {
         // Cannot walk if there is no walk info
-        console.log('cannot walk if there is no walk info');
         return;
     }
     const vertex = path.walkAroundPolyInfo.verticies.shift();
     if (!vertex) {
         // No verticies left to be processed
-        console.log('no verticies left to be processed');
         return;
     }
     // If the target point is on the line between the last point and this point, we've found the path and can exit.
     // This occurs if the target point lies directly on an edge of the current polygon
     if (isPointOnLineSegment(path.target, { p1: path.points[path.points.length - 1], p2: vertex })) {
-        console.log('finish walking, finsih path; target is on edge of current poly');
         path.done = true
         return;
     }
@@ -349,11 +342,9 @@ function walkAroundAPoly(path: Path, pathingWalls: PolygonLineSegment[]) {
                 // Exception: Don't branch off if it's branching into a polygonlinesegment that THIS path already contains
                 if (path.points.find(p => p == intersectingWall.p1) && path.points.find(p => p == intersectingWall.p2)) {
                     // Continue walking polygon
-                    console.log('continue walking');
                 } else {
                     // Allowing jumping to intersecting wall
                     // so, clear walking info so it will stop walking and jump
-                    console.log('allow jumping');
                     path.walkAroundPolyInfo = undefined;
                 }
             } else {
@@ -361,12 +352,10 @@ function walkAroundAPoly(path: Path, pathingWalls: PolygonLineSegment[]) {
                 // we've walked the path as far around the current poly as we need to in order
                 // to continue pathing towards the target by walking a different poly
                 // so, clear walking info so it will stop walking and jump
-                console.log('allow jumping to different poly');
                 path.walkAroundPolyInfo = undefined;
             }
         } else {
             // Stop if there is no intersecting wall, the path is complete because it has reached the poly
-            console.log('stop walking, path complete');
             // so, clear walking info because it is done
             path.walkAroundPolyInfo = undefined;
             path.done = true;
@@ -378,7 +367,6 @@ function walkAroundAPoly(path: Path, pathingWalls: PolygonLineSegment[]) {
 // --
 // Note: Mutates the paths array's objects
 function processPaths(paths: Path[], pathingWalls: PolygonLineSegment[]): Path[] {
-    console.log('processPaths, #', paths.length);
     // Continue to process paths that are incomplete
     tryAllPaths:
     for (let path of paths) {
@@ -406,7 +394,6 @@ function processPaths(paths: Path[], pathingWalls: PolygonLineSegment[]): Path[]
             walkAroundAPoly(path, pathingWalls);
         } else {
             const nextStraightLine: LineSegment = getLastLineInPath(path);
-            console.log('target', nextStraightLine.p2);
 
             // Check for collisions between the last line in the path and pathing walls
             // path.points.length === 1 because includeStartPoint should be true if this is the very beginning of the path in case
@@ -421,12 +408,11 @@ function processPaths(paths: Path[], pathingWalls: PolygonLineSegment[]): Path[]
 
                     // Mark the path as "done"
                     path.done = true;
-                    console.log('happy path, done');
 
                 } else {
                     path.points.push(closestIntersection);
-                    window.debugGraphics.lineStyle(2, 0xff00ff, 1);
-                    window.debugGraphics.drawCircle(closestIntersection.x, closestIntersection.y, 10);
+                    // window.debugGraphics.lineStyle(2, 0xff00ff, 1);
+                    // window.debugGraphics.drawCircle(closestIntersection.x, closestIntersection.y, 10);
 
                     // Prevent paths from overlapping already existing paths:
                     // This is very important because it prevents infinitely
@@ -454,7 +440,6 @@ function processPaths(paths: Path[], pathingWalls: PolygonLineSegment[]): Path[]
                                         // Note: This might be a misuse of invalid since the path technically isn't
                                         // invalid, but I will allow it since we want to exclude this path
                                         // because the shorter path will certainly be a better route
-                                        console.log('invalid due to overlap 1', path.done, path.invalid, otherPath.done, otherPath.invalid);
                                         otherPath.invalid = true;
                                         otherPath.done = true;
                                         continue checkPaths;
@@ -466,7 +451,6 @@ function processPaths(paths: Path[], pathingWalls: PolygonLineSegment[]): Path[]
                                         // Draw where path stopped
                                         // window.debugGraphics.lineStyle(1, 0x00ffff, 1);
                                         // window.debugGraphics.drawCircle(vertex.x, vertex.y, 10);
-                                        console.log('invalid due to overlap 2', lengthOfCurrentPathToThisVertex, lengthOfOtherPathToThisVertex);
 
                                         path.invalid = true;
                                         path.done = true;
@@ -479,7 +463,6 @@ function processPaths(paths: Path[], pathingWalls: PolygonLineSegment[]): Path[]
                         }
                     }
 
-                    console.log('branch path at', closestIntersection.x, closestIntersection.y);
                     let { next, prev } = polygonLineSegmentToPrevAndNext(intersectingWall);
 
                     // Branch the path.  The original path will try navigating around p1
@@ -502,7 +485,6 @@ function processPaths(paths: Path[], pathingWalls: PolygonLineSegment[]): Path[]
                 }
 
             } else {
-                console.log('happy path 2, done');
                 // If no intersections were found then we have a path to the target, so stop processing this path.
                 // This is the "happy path", a straight line without collisions has been found to the target
                 // and the path is complete
