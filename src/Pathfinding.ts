@@ -132,12 +132,39 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
     // as they get closer and closer to finding their way to the target.
     for (let i = 0; i < processingLimit; i++) {
         // Look for paths to the target
-        paths = processPaths(paths, pathingWalls, 0);
+        paths = processPaths(paths, pathingWalls);
+
+        // Optimization
+        calculateDistanceOfPaths(paths);
+        const shortestFinishedPaths = paths.filter(p => p.done && !p.invalid).sort((a, b) => a.distance - b.distance);
+        if (shortestFinishedPaths.length) {
+            const shortestFinishedDistance = shortestFinishedPaths[0].distance;
+            // Make all paths that are already longer than the shortest, finished path invalid.
+            // even if they are not done processing, because even if they'd be valid, they would be
+            // longer than the current shortest, valid path; and thus, not a path we'd choose
+            for (let path of paths) {
+                if (!path.done && path.distance > shortestFinishedDistance) {
+                    console.log('invalid due to shorter path existing', path.distance, shortestFinishedDistance);
+                    path.invalid = true;
+                    path.done = true;
+                }
+
+            }
+        }
+
         // Once all paths are "done", stop processing
         if (paths.every(p => p.done)) {
             break;
         }
     }
+
+    // Now that processing is over, mark all paths that aren't done as invalid:
+    paths.forEach(path => {
+        if (!path.done) {
+            path.invalid = true;
+            path.done = true;
+        }
+    })
 
     // Debug: Draw the paths:
     for (let i = 0; i < paths.length; i++) {
@@ -163,9 +190,9 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
 
     // Find the shortest Path
     // --
-    // Must recalculate the distance of the paths
-    // before finding the shortest path
-    calculateDistanceOfPaths(paths);
+    // Note: Must recalculate the distance of the paths
+    // before finding the shortest path.  This currently happens
+    // right after processPaths is invoked
     const shortestPath = paths.reduce<Path | undefined>((shortest, contender) => {
         if (shortest === undefined) {
             return contender
@@ -239,26 +266,8 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
 // and if there is not it will add points until either the path is invalid or the path is complete
 // --
 // Note: Mutates the paths array's objects
-function processPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCount: number): Path[] {
+function processPaths(paths: Path[], pathingWalls: PolygonLineSegment[]): Path[] {
     // console.log('processPaths', recursionCount, paths.map(p => p.points.length).sort());
-
-    // Optimization
-    calculateDistanceOfPaths(paths);
-    const shortestFinishedPaths = paths.filter(p => p.done && !p.invalid).sort((a, b) => a.distance - b.distance);
-    if (shortestFinishedPaths.length) {
-        const shortestFinishedDistance = shortestFinishedPaths[0].distance;
-        // Make all paths that are already longer than the shortest, finished path invalid.
-        // even if they are not done processing, because even if they'd be valid, they would be
-        // longer than the current shortest, valid path; and thus, not a path we'd choose
-        for (let path of paths) {
-            if (!path.done && path.distance > shortestFinishedDistance) {
-                console.log('invalid due to shorter path existing', path.distance, shortestFinishedDistance);
-                path.invalid = true;
-                path.done = true;
-            }
-
-        }
-    }
 
     function walkAroundAPoly(direction: 'prev' | 'next', startVertex: Vec2, poly: Polygon, target: Vec2, pathingWalls: PolygonLineSegment[], path: Path) {
         // Walk all the way around a poly in "direction" (clockwise/next or counterclockwise/prev) until you have 
@@ -331,19 +340,6 @@ function processPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursi
 
         // Re add the last point to the end of the points
         path.points.push(target);
-    }
-    // Protect against infinite recursion
-    if (recursionCount > 30) {
-        console.log('couldnt find path in few enough steps', recursionCount, paths.map(p => p.points.length).sort());
-        // Mark all unfinished path's as invalid because they did not find a valid path
-        // in few enough steps
-        for (let path of paths) {
-            if (!path.done) {
-                console.log('invalid because recursion limit');
-                path.invalid = true;
-            }
-            path.done = true;
-        }
     }
 
     // Continue to process paths that are incomplete
