@@ -2,7 +2,6 @@
 - Finish Content / Endgame
     - More Spells
     - More enemies
-    - "Fruit wave"
 - Youtube Alpha version video / Setup Social Media system
 - Menus / Options / homepage
 - Art in Blender / Shaders / Juice

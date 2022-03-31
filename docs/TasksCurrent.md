@@ -1,13 +1,20 @@
-## Critical Tasks
-- **Bug**: something is messed up, I host, have the host pick player first, he jumps into the game.  Then the guest picks a player but they don't spawn right
-## Current Priorities
-- Bug: rejoining a game totally breaks it
-- Bug: "Cannot add client, client alreaedy in room" (maybe I was clicking too quickly??)
-    - This is because both players are trying to join with the single player id of 1.
+### 2022-03-31
 - Pathing, see stash "pathfinding"
     - Somehow duplicate points are getting added to path
     - Fix optimize to consider P1 inside angle too
     - Short circuit when branching paths, not when adding verticies
+- **Bug**: something is messed up, I host, have the host pick player first, he jumps into the game.  Then the guest picks a player but they don't spawn right
+- Support rejoining an existing game via pie
+- Quick copy link
+- Bug: leaving rejoining a game totally breaks it
+
+## Critical Tasks
+-
+## Tasks
+- Character select: "waiting  for other players"
+- Better organization of function of routes and views and what happens when you change them, with docs
+- Bug: "Cannot add client, client alreaedy in room" (maybe I was clicking too quickly??)
+    - This is because both players are trying to join with the single player id of 1.
 - Bug: AOE deduping removes a valid target if two units are too close to each other
 - Task: Make contageous spread more obvious
 ---
