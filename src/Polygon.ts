@@ -122,7 +122,7 @@ function getClosestBranch(line: LineSegment, walls: PolygonLineSegment[]): Branc
             branches.push({
                 branchAngle,
                 distance: dist,
-                nextLine: { p1: intersection, p2: nextPoint, polygon: wall.polygon },
+                nextLine: { p1: Vec.round(intersection), p2: nextPoint, polygon: wall.polygon },
             });
         }
     }

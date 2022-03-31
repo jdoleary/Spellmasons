@@ -65,6 +65,7 @@ interface Path {
     };
 }
 export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): Vec2[] {
+    // target = Vec.round(target);
     // If the target is inside of a non-inverted polygon, move it to the closest edge so that
     // the unit can path to the closest pathable point near where they are attempting to go.
     // This is important if, for example, a player clicks in empty space which is inside
@@ -405,7 +406,7 @@ function processPaths(paths: Path[], pathingWalls: PolygonLineSegment[]): Path[]
             // If there is an intersection between a straight line path and a pathing wall
             // we have to branch the path to the corners of the wall and try again
             if (intersectingWall && closestIntersection) {
-                if (Vec.equal(Vec.round(closestIntersection), Vec.round(nextStraightLine.p2))) {
+                if (Vec.equal(closestIntersection, nextStraightLine.p2)) {
                     // This is the "happy path", a straight line without collisions has been found to the target
                     // and the path is complete
 
