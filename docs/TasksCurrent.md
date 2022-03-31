@@ -5,7 +5,6 @@
     - Optimization: Process paths with a queue instead of recursively so that they all evolve one point at a time rather than depth first
         - This will allow shorter paths to find their way first instead of having a really long invalid path branch all over the place and take up a lot of memory
         - Right now it takes 18 paths to find the portal and 9 to find the sticky spot
-    - Inverted poly bug, when I try to path right to the left and up of my current spawn point ( in the wall) it moves more than I need to
 - **Bug**: something is messed up, I host, have the host pick player first, he jumps into the game.  Then the guest picks a player but they don't spawn right
 - Support rejoining an existing game via pie
 - Quick copy link

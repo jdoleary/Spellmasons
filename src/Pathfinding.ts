@@ -365,7 +365,7 @@ function processPaths(paths: Path[], pathingWalls: PolygonLineSegment[]): Path[]
         // If there is an intersection between a straight line path and a pathing wall
         // we have to branch the path to the corners of the wall and try again
         if (intersectingWall && closestIntersection) {
-            if (Vec.equal(closestIntersection, nextStraightLine.p2)) {
+            if (Vec.equal(Vec.round(closestIntersection), Vec.round(nextStraightLine.p2))) {
                 // This is the "happy path", a straight line without collisions has been found to the target
                 // and the path is complete
 
