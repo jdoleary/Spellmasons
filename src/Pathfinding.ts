@@ -199,6 +199,7 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
     //         window.debugGraphics.lineTo(path.target.x + visualOffset, path.target.y + visualOffset);
     //     }
     // }
+    // console.log('paths', paths.filter(p => !p.invalid).length, '/', paths.length);
 
     // Remove invalid paths
     paths = paths.filter(p => !p.invalid);
@@ -222,54 +223,56 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
 
     // Optimize path by removing unnecessary points
     // If there is an unobstructed straight line between two points, you can remove all the points in-between
-    // if (shortestPath) {
-    //     // returns true if fully optimized
-    //     function tryOptimizePath(path: Path): boolean {
-    //         for (let i = 0; i < path.points.length; i++) {
-    //             for (let j = path.points.length - 1; j > i + 1; j--) {
-    //                 const nextLine = { p1: path.points[i], p2: path.points[j] }
-    //                 let { intersectingWall, closestIntersection } = getClosestIntersectionWithWalls(nextLine, pathingWalls);
-    //                 if (intersectingWall) {
-    //                     const intersectingPoly = intersectingWall.polygon;
+    if (shortestPath) {
+        // returns true if fully optimized
+        function tryOptimizePath(path: Path): boolean {
+            for (let i = 0; i < path.points.length; i++) {
+                for (let j = path.points.length - 1; j > i + 1; j--) {
+                    const nextLine = { p1: path.points[i], p2: path.points[j] }
+                    let { intersectingWall, closestIntersection } = getClosestIntersectionWithWalls(nextLine, pathingWalls);
+                    if (intersectingWall) {
+                        const intersectingPoly = intersectingWall.polygon;
 
-    //                     const indexIfP2IsOnVertex = intersectingPoly.points.findIndex(p => Vec.equal(p, nextLine.p2));
-    //                     if (indexIfP2IsOnVertex !== -1) {
-    //                         const lineToTargetDoesNotPassThroughOwnPolygon =
-    //                             doesLineFromPointToTargetProjectAwayFromOwnPolygon(intersectingPoly, indexIfP2IsOnVertex, nextLine.p1);
-    //                         if (!lineToTargetDoesNotPassThroughOwnPolygon) {
-    //                             // Skip, this optimization is invalid because it would cut through a polygon
-    //                             continue;
-    //                         }
-    //                     } else {
-    //                         // Then p2 is on a wall
-    //                         const insideAngleOfWall = getInsideAnglesOfWall(intersectingWall);
-    //                         const lineIsCastIntoNoWalkZone = isAngleBetweenAngles(
-    //                             Vec.getAngleBetweenVec2s(nextLine.p2, nextLine.p1), insideAngleOfWall.start, insideAngleOfWall.end
-    //                         );
-    //                         if (lineIsCastIntoNoWalkZone) {
-    //                             // Skip, this optimization is invalid because it would cut through a polygon
-    //                             continue;
-    //                         }
-    //                     }
-    //                     if (!closestIntersection || Vec.equal(closestIntersection, path.points[j])) {
-    //                         window.debugGraphics.lineStyle(1, 0xff0000, 1);
-    //                         window.debugGraphics.drawCircle(path.points[i].x, path.points[i].y, 4);
-    //                         window.debugGraphics.lineStyle(1, 0x0000ff, 1);
-    //                         window.debugGraphics.drawCircle(path.points[j].x, path.points[j].y, 4);
-    //                         path.points = removeBetweenIndexAtoB(path.points, i, j);
-    //                         return false
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //         return true;
-    //     }
-    //     tryOptimizePath(shortestPath);
-    //     // let fullyOptimized = false;
-    //     // do {
-    //     //     fullyOptimized = tryOptimizePath(shortestPath);
-    //     // } while (!fullyOptimized);
-    // }
+                        const indexIfP2IsOnVertex = intersectingPoly.points.findIndex(p => Vec.equal(p, nextLine.p2));
+                        if (indexIfP2IsOnVertex !== -1) {
+                            const lineToTargetDoesNotPassThroughOwnPolygon =
+                                doesLineFromPointToTargetProjectAwayFromOwnPolygon(intersectingPoly, indexIfP2IsOnVertex, nextLine.p1);
+                            if (!lineToTargetDoesNotPassThroughOwnPolygon) {
+                                // Skip, this optimization is invalid because it would cut through a polygon
+                                continue;
+                            }
+                        } else {
+                            // Then p2 is on a wall
+                            const insideAngleOfWall = getInsideAnglesOfWall(intersectingWall);
+                            const lineIsCastIntoNoWalkZone = isAngleBetweenAngles(
+                                Vec.getAngleBetweenVec2s(nextLine.p2, nextLine.p1), insideAngleOfWall.start, insideAngleOfWall.end
+                            );
+                            if (lineIsCastIntoNoWalkZone) {
+                                // Skip, this optimization is invalid because it would cut through a polygon
+                                continue;
+                            }
+                        }
+                        if (!closestIntersection || Vec.equal(closestIntersection, path.points[j])) {
+                            window.debugGraphics.lineStyle(1, 0xff0000, 1);
+                            window.debugGraphics.drawCircle(path.points[i].x, path.points[i].y, 4);
+                            window.debugGraphics.lineStyle(1, 0x0000ff, 1);
+                            window.debugGraphics.drawCircle(path.points[j].x, path.points[j].y, 4);
+                            path.points = removeBetweenIndexAtoB(path.points, i, j);
+                            return false
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+        // Run optimization twice
+        tryOptimizePath(shortestPath);
+        tryOptimizePath(shortestPath);
+        // let fullyOptimized = false;
+        // do {
+        //     fullyOptimized = tryOptimizePath(shortestPath);
+        // } while (!fullyOptimized);
+    }
 
     if (shortestPath) {
         // Remove the start point, since the unit doing the pathing is already at the start point:
