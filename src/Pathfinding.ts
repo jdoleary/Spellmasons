@@ -64,7 +64,8 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
     // as close as it can go without intersecting the polygon
     const targetInsideOfPolys: Polygon[] = findPolygonsThatVec2IsInsideOf(target, polygons);
 
-    // Find the closest valid target to path to
+    // If the real target is in an invalid location,
+    // find the closest valid target to represent the endpoint of the path
     if (targetInsideOfPolys.length) {
         const rightAngleIntersections = [];
         for (let poly of targetInsideOfPolys) {
@@ -111,30 +112,105 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
         }
     }
 
+    // Process the polygons into pathingwalls for use in tryPath
     const pathingWalls = polygons.map(polygonToPolygonLineSegments).flat();
-    const paths: Path[] = [
+
+    let paths: Path[] = [
         // Start with the first idea path from start to target
-        // Note, the distance is calculated inside of tryPaths even if 
+        // Note, the distance is calculated inside of processPaths even if 
         // there are no interruptions to the path and it just goes from startPoint
         // to target.
         { done: false, invalid: false, points: [startPoint, target], distance: 0 }
     ];
-    const shortestPath = tryPaths(paths, pathingWalls, 0);
+
+    // Look for paths to the target
+    paths = processPaths(paths, pathingWalls, 0);
+
+    console.log('found', paths.filter(p => !p.invalid).length, 'valid paths of', paths.length, paths.filter(p => !p.invalid));
+
+    // Remove invalid paths
+    paths = paths.filter(p => !p.invalid);
+
+    // Find the shortest Path
+    // --
+    // Must recalculate the distance of the paths
+    // before finding the shortest path
+    calculateDistanceOfPaths(paths);
+    const shortestPath = paths.reduce<Path | undefined>((shortest, contender) => {
+        if (shortest === undefined) {
+            return contender
+        } else {
+            if (shortest.distance > contender.distance) {
+                return contender;
+            } else {
+                return shortest
+            }
+        }
+    }, undefined);
+
+    // Optimize path by removing unnecessary points
+    // If there is an unobstructed straight line between two points, you can remove all the points in-between
+    // if (shortestPath) {
+    //     // returns true if fully optimized
+    //     function tryOptimizePath(path: Path): boolean {
+    //         for (let i = 0; i < path.points.length; i++) {
+    //             for (let j = path.points.length - 1; j > i + 1; j--) {
+    //                 const nextLine = { p1: path.points[i], p2: path.points[j] }
+    //                 let { intersectingWall, closestIntersection } = getClosestIntersectionWithWalls(nextLine, pathingWalls);
+    //                 if (intersectingWall) {
+    //                     const intersectingPoly = intersectingWall.polygon;
+
+    //                     const indexIfP2IsOnVertex = intersectingPoly.points.findIndex(p => Vec.equal(p, nextLine.p2));
+    //                     if (indexIfP2IsOnVertex !== -1) {
+    //                         const lineToTargetDoesNotPassThroughOwnPolygon =
+    //                             doesLineFromPointToTargetProjectAwayFromOwnPolygon(intersectingPoly, indexIfP2IsOnVertex, nextLine.p1);
+    //                         if (!lineToTargetDoesNotPassThroughOwnPolygon) {
+    //                             // Skip, this optimization is invalid because it would cut through a polygon
+    //                             continue;
+    //                         }
+    //                     } else {
+    //                         // Then p2 is on a wall
+    //                         const insideAngleOfWall = getInsideAnglesOfWall(intersectingWall);
+    //                         const lineIsCastIntoNoWalkZone = isAngleBetweenAngles(
+    //                             Vec.getAngleBetweenVec2s(nextLine.p2, nextLine.p1), insideAngleOfWall.start, insideAngleOfWall.end
+    //                         );
+    //                         if (lineIsCastIntoNoWalkZone) {
+    //                             // Skip, this optimization is invalid because it would cut through a polygon
+    //                             continue;
+    //                         }
+    //                     }
+    //                     if (!closestIntersection || Vec.equal(closestIntersection, path.points[j])) {
+    //                         window.debugGraphics.lineStyle(1, 0xff0000, 1);
+    //                         window.debugGraphics.drawCircle(path.points[i].x, path.points[i].y, 4);
+    //                         window.debugGraphics.lineStyle(1, 0x0000ff, 1);
+    //                         window.debugGraphics.drawCircle(path.points[j].x, path.points[j].y, 4);
+    //                         path.points = removeBetweenIndexAtoB(path.points, i, j);
+    //                         return false
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //         return true;
+    //     }
+    //     tryOptimizePath(shortestPath);
+    //     // let fullyOptimized = false;
+    //     // do {
+    //     //     fullyOptimized = tryOptimizePath(shortestPath);
+    //     // } while (!fullyOptimized);
+    // }
+
     if (shortestPath) {
-        // Debug: Draw path
-        // window.debugGraphics.lineStyle(4, 0xffffff, 0.3);
-        // window.debugGraphics.moveTo(shortestPath.points[0].x, shortestPath.points[0].y);
-        // for (let point of shortestPath.points) {
-        //     window.debugGraphics.lineTo(point.x, point.y);
-        // }
         // Remove the start point, since the unit doing the pathing is already at the start point:
         shortestPath.points.shift();
     }
     return shortestPath ? shortestPath.points : [];
 }
-// Mutates the paths array's objects
-function tryPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCount: number): Path | undefined {
-    // console.log('tryPaths', recursionCount, paths.map(p => p.points.length).sort());
+// Processes each path by ensuring that there is a valid line between each of the paths points,
+// and if there is not it will add points until either the path is invalid or the path is complete
+// --
+// Note: Mutates the paths array's objects
+function processPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCount: number): Path[] {
+    // console.log('processPaths', recursionCount, paths.map(p => p.points.length).sort());
 
     // Optimization
     calculateDistanceOfPaths(paths);
@@ -143,7 +219,7 @@ function tryPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCo
         const shortestFinishedDistance = shortestFinishedPaths[0].distance;
         // Make all paths that are already longer than the shortest, finished path invalid.
         // even if they are not done processing, because even if they'd be valid, they would be
-        // longer than the current shortest, valid path
+        // longer than the current shortest, valid path; and thus, not a path we'd choose
         for (let path of paths) {
             if (!path.done && path.distance > shortestFinishedDistance) {
                 console.log('invalid due to shorter path existing', path.distance, shortestFinishedDistance);
@@ -155,10 +231,11 @@ function tryPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCo
     }
 
     function walkAroundAPoly(direction: 'prev' | 'next', startVertex: Vec2, poly: Polygon, target: Vec2, pathingWalls: PolygonLineSegment[], path: Path) {
-        // Walk all the way around a poly in "direction" until you have a straight line path to the target, or until the straight line path
-        // to the target intersects another poly
+        // Walk all the way around a poly in "direction" (clockwise/next or counterclockwise/prev) until you have 
+        // a straight line path to the target, or until the straight line path
+        // to the target intersects another PolygonLineSegment
         // --
-        // Note: walkAroundAPoly adds target to the end of the path when it is finished
+        // Note: walkAroundAPoly adds "target" to the end of the path when it is finished
         // --
         // Now keep iterative in the "direction" until we have a path that doesn't intersect with this polygon
         // and heads right for the target or intersects with another polygon:
@@ -173,8 +250,6 @@ function tryPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCo
                 path.done = true
                 break;
             }
-
-
 
             path.points.push(vertex);
             // Check if a straight line between the new vertex and the target passes through the current polygon
@@ -224,10 +299,8 @@ function tryPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCo
 
         }
 
-        // Re add the last point to the end of the points (without changing the distance because it may be removed
-        // temporarily to add intermediate points)
+        // Re add the last point to the end of the points
         path.points.push(target);
-
     }
     // Protect against infinite recursion
     if (recursionCount > 30) {
@@ -314,12 +387,12 @@ function tryPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCo
                                 } else {
                                     // Stop the current path, it is invalid since the other path has
                                     // a shorter route to this vertex
+
                                     // Draw where path stopped
                                     // window.debugGraphics.lineStyle(1, 0x00ffff, 1);
                                     // window.debugGraphics.drawCircle(vertex.x, vertex.y, 10);
                                     console.log('invalid due to overlap 2', lengthOfCurrentPathToThisVertex, lengthOfOtherPathToThisVertex);
-                                    // console.log('jtest', path.points.map(p => `${Math.round(p.x)},${Math.round(p.y)}`), 'vertex', JSON.stringify(vertex), 'length', lengthOfCurrentPathToThisVertex);
-                                    // console.log('jtest2', otherPath.points.slice(0, i + 1).map(p => `${Math.round(p.x)},${Math.round(p.y)}`), 'length', lengthOfOtherPathToThisVertex);
+
                                     path.invalid = true;
                                     path.done = true;
                                     // Since the current path is found to be invalid, don't
@@ -353,7 +426,7 @@ function tryPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCo
                 walkAroundAPoly('next', nextWalkPoint, intersectingWall.polygon, target, pathingWalls, branchedPath);
 
 
-                tryPaths(paths, pathingWalls, recursionCount + 1);
+                processPaths(paths, pathingWalls, recursionCount + 1);
             }
 
         } else {
@@ -366,8 +439,6 @@ function tryPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCo
         }
     }
 
-    calculateDistanceOfPaths(paths);
-    console.log('found valid paths paths', paths.filter(p => !p.invalid).length, 'of', paths.length, paths.filter(p => !p.invalid));
     // Debug: Draw the paths:
     for (let i = 0; i < paths.length; i++) {
         // Visual offset is useful for representing overlapping paths in a way where you can see
@@ -385,72 +456,7 @@ function tryPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursionCo
         }
     }
 
-    // Remove invalid paths
-    paths = paths.filter(p => !p.invalid);
-
-    // Find the shortest Path
-    const shortestPath = paths.reduce<Path | undefined>((shortest, contender) => {
-        if (shortest === undefined) {
-            return contender
-        } else {
-            if (shortest.distance > contender.distance) {
-                return contender;
-            } else {
-                return shortest
-            }
-        }
-    }, undefined);
-    // Optimize path by removing unnecessary points
-    // if (shortestPath) {
-    //     // returns true if fully optimized
-    //     function tryOptimizePath(path: Path): boolean {
-    //         for (let i = 0; i < path.points.length; i++) {
-    //             for (let j = path.points.length - 1; j > i + 1; j--) {
-    //                 const nextLine = { p1: path.points[i], p2: path.points[j] }
-    //                 let { intersectingWall, closestIntersection } = getClosestIntersectionWithWalls(nextLine, pathingWalls);
-    //                 if (intersectingWall) {
-    //                     const intersectingPoly = intersectingWall.polygon;
-
-    //                     const indexIfP2IsOnVertex = intersectingPoly.points.findIndex(p => Vec.equal(p, nextLine.p2));
-    //                     if (indexIfP2IsOnVertex !== -1) {
-    //                         const lineToTargetDoesNotPassThroughOwnPolygon =
-    //                             doesLineFromPointToTargetProjectAwayFromOwnPolygon(intersectingPoly, indexIfP2IsOnVertex, nextLine.p1);
-    //                         if (!lineToTargetDoesNotPassThroughOwnPolygon) {
-    //                             // Skip, this optimization is invalid because it would cut through a polygon
-    //                             continue;
-    //                         }
-    //                     } else {
-    //                         // Then p2 is on a wall
-    //                         const insideAngleOfWall = getInsideAnglesOfWall(intersectingWall);
-    //                         const lineIsCastIntoNoWalkZone = isAngleBetweenAngles(
-    //                             Vec.getAngleBetweenVec2s(nextLine.p2, nextLine.p1), insideAngleOfWall.start, insideAngleOfWall.end
-    //                         );
-    //                         if (lineIsCastIntoNoWalkZone) {
-    //                             // Skip, this optimization is invalid because it would cut through a polygon
-    //                             continue;
-    //                         }
-    //                     }
-    //                     if (!closestIntersection || Vec.equal(closestIntersection, path.points[j])) {
-    //                         window.debugGraphics.lineStyle(1, 0xff0000, 1);
-    //                         window.debugGraphics.drawCircle(path.points[i].x, path.points[i].y, 4);
-    //                         window.debugGraphics.lineStyle(1, 0x0000ff, 1);
-    //                         window.debugGraphics.drawCircle(path.points[j].x, path.points[j].y, 4);
-    //                         path.points = removeBetweenIndexAtoB(path.points, i, j);
-    //                         return false
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //         return true;
-    //     }
-    //     tryOptimizePath(shortestPath);
-    //     // let fullyOptimized = false;
-    //     // do {
-    //     //     fullyOptimized = tryOptimizePath(shortestPath);
-    //     // } while (!fullyOptimized);
-    // }
-    // If there is an unobstructed straight line between two points, you can remove all the points in-between
-    return shortestPath;
+    return paths
 }
 export function removeBetweenIndexAtoB(array: any[], indexA: number, indexB: number): any[] {
     // indexA must be < indexB, if invalid args are passed in, return the values of the array
