@@ -754,7 +754,7 @@ describe('doesLineFromPointToTargetProjectAwayFromOwnPolygon', () => {
         expect(actual).toEqual(expected);
     });
 });
-describe.only('getInsideAnglesOfWall (from start clockwise to end)', () => {
+describe('getInsideAnglesOfWall (from start clockwise to end)', () => {
     [
         {
             p0: { x: 0, y: 0 },
