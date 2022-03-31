@@ -123,8 +123,21 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
         { done: false, invalid: false, points: [startPoint, target], distance: 0 }
     ];
 
-    // Look for paths to the target
-    paths = processPaths(paths, pathingWalls, 0);
+    // There is a processingLimit to prevent infinite processing.
+    // But this particular number is arbitrary.
+    const processingLimit = 30;
+    // Allow processing up to "processingLimit" times.
+    // Paths often need to be processed multiple times since
+    // one invokation of processPaths only changes the paths slightly
+    // as they get closer and closer to finding their way to the target.
+    for (let i = 0; i < processingLimit; i++) {
+        // Look for paths to the target
+        paths = processPaths(paths, pathingWalls, 0);
+        // Once all paths are "done", stop processing
+        if (paths.every(p => p.done)) {
+            break;
+        }
+    }
 
     // Debug: Draw the paths:
     for (let i = 0; i < paths.length; i++) {
@@ -133,9 +146,9 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
         const visualOffset = i * 3;
         const path = paths[i];
         if (path.invalid) {
-            window.debugGraphics.lineStyle(4, 0xff0000, 0.1);
+            window.debugGraphics.lineStyle(4, 0xff0000, 0.2);
         } else {
-            window.debugGraphics.lineStyle(4, 0x00ff00, 1);
+            window.debugGraphics.lineStyle(4, 0x00ff00, 0.4);
         }
         window.debugGraphics.moveTo(path.points[0].x + visualOffset, path.points[0].y + visualOffset);
         for (let point of path.points) {
@@ -441,10 +454,6 @@ function processPaths(paths: Path[], pathingWalls: PolygonLineSegment[], recursi
                 // Starting from the "next" corner, walk around the poly until you can make a 
                 // straight line to the target that doesn't intersect with this same poly
                 walkAroundAPoly('next', nextWalkPoint, intersectingWall.polygon, target, pathingWalls, branchedPath);
-
-
-                // Resurse, now that new paths have been added, they need to be processed to
-                processPaths(paths, pathingWalls, recursionCount + 1);
             }
 
         } else {
