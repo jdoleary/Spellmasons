@@ -84,7 +84,13 @@ function addHandlers(pie: PieClient) {
   pie.onServerAssignedData = (o) => {
     // console.log('serverAssignedData', o);
     window.clientId = o.clientId;
-    sessionStorage.setItem('pie-clientId', o.clientId);
+    if (window.allowCookies) {
+      // Only store clientId if it is from a multiplayer session
+      // 'solomode_client_id' comes from pieclient's solo mode
+      if (o.clientId !== 'solomode_client_id') {
+        sessionStorage.setItem('pie-clientId', o.clientId);
+      }
+    }
   };
   pie.onData = onData;
   // TODO: remove alert for production
