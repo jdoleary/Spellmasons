@@ -2,7 +2,6 @@
 - Pathing, see stash "pathfinding"
     - Somehow duplicate points are getting added to path
     - Fix optimize to consider P1 inside angle too
-    - Short circuit when branching paths, not when adding verticies
 - **Bug**: something is messed up, I host, have the host pick player first, he jumps into the game.  Then the guest picks a player but they don't spawn right
 - Support rejoining an existing game via pie
 - Quick copy link
