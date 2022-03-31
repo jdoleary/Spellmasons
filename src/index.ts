@@ -24,6 +24,12 @@ function setupAll() {
   // import { setupMonitoring } from './monitoring';
   // setupMonitoring();
 
+  // Start up menu script now that the window globals are assigned
+  var script = document.createElement('script');
+  script.src = 'svelte-bundle.js';
+  script.async = false;
+  document.body.appendChild(script);
+
   // Initialize Assets
   console.log("Setup: Loading Pixi assets...")
   window.setupPixiPromise = setupPixi().then(() => {
