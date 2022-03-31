@@ -131,7 +131,7 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
     // one invokation of processPaths only changes the paths slightly
     // as they get closer and closer to finding their way to the target.
     for (let i = 0; i < processingLimit; i++) {
-        // Look for paths to the target
+        // Takes 1 step closer to finishing paths
         paths = processPaths(paths, pathingWalls);
 
         // Optimization
@@ -179,6 +179,10 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
         }
         window.debugGraphics.moveTo(path.points[0].x + visualOffset, path.points[0].y + visualOffset);
         for (let point of path.points) {
+            if (path.invalid && point == path.points[path.points.length - 1]) {
+                // Don't draw last point since the path didn't finish
+                break;
+            }
             window.debugGraphics.lineTo(point.x + visualOffset, point.y + visualOffset);
         }
     }
@@ -262,86 +266,83 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
     }
     return shortestPath ? shortestPath.points : [];
 }
+function walkAroundAPoly(direction: 'prev' | 'next', startVertex: Vec2, poly: Polygon, target: Vec2, pathingWalls: PolygonLineSegment[], path: Path) {
+    // Walk all the way around a poly in "direction" (clockwise/next or counterclockwise/prev) until you have 
+    // a straight line path to the target, or until the straight line path
+    // to the target intersects another PolygonLineSegment
+    // --
+    // Note: walkAroundAPoly adds "target" to the end of the path when it is finished
+    // --
+    // Now keep iterative in the "direction" until we have a path that doesn't intersect with this polygon
+    // and heads right for the target or intersects with another polygon:
+    const _verticies = getPointsFromPolygonStartingAt(poly, startVertex);
+    // If the direction is 'prev', walk in the opposite direction
+    const verticies = direction == 'prev' ? _verticies.reverse() : _verticies;
+    // As we walk,
+    for (let vertex of verticies) {
+        // If the target point is on the line between the last point and this point, we've found the path and can exit.
+        // This occurs if the target point lies directly on an edge of the current polygon
+        if (isPointOnLineSegment(target, { p1: path.points[path.points.length - 1], p2: vertex })) {
+            path.done = true
+            break;
+        }
+
+        path.points.push(vertex);
+        // Check if a straight line between the new vertex and the target passes through the current polygon
+        const indexOfVertex = poly.points.findIndex(p => Vec.equal(p, vertex));
+        // true if line to target doesn't pass through own polygon
+        let lineToTargetDoesNotPassThroughOwnPolygon = false;
+        if (indexOfVertex >= 0) {
+            lineToTargetDoesNotPassThroughOwnPolygon = doesLineFromPointToTargetProjectAwayFromOwnPolygon(poly, indexOfVertex, target);
+        }
+        if (!lineToTargetDoesNotPassThroughOwnPolygon) {
+            // line cast to target DOES pass through the inside of this vertex's angle so it is invalid to branch.
+            // Thus, keep walking around the polygon
+            // Continue to check the next or previous (depending on direction) vertex for this poly
+            // we need to keep walking around it to continue the path
+            continue;
+        } else {
+            // Line from vertex to the target is not cast through the inside angle of vertex and thus it is valid
+            // to branch
+            // Check if a straight line between the new vertex and the target collides with any walls
+            const { intersectingWall, closestIntersection } = getClosestIntersectionWithWalls({ p1: vertex, p2: target }, pathingWalls);
+            // If it does
+            if (intersectingWall && closestIntersection) {
+                // and the wall belongs to the current poly
+                if (doesVertexBelongToPolygon(vertex, intersectingWall.polygon) && doesVertexBelongToPolygon(intersectingWall.p1, intersectingWall.polygon)) {
+                    // A straight line from vertex to target intersects the same polygon again but is probably closer,
+                    // so we'll branch off the new intersection point
+
+                    // Exception: Don't branch off if it's branching into a polygonlinesegment that THIS path already contains
+                    if (path.points.find(p => p == intersectingWall.p1) && path.points.find(p => p == intersectingWall.p2)) {
+                        // Continue walking polygon
+                        continue;
+                    } else {
+                        // Allowing jumping to intersecting wall
+                        break;
+                    }
+                } else {
+                    // If it belongs to a different poly, then we can stop walking because
+                    // we've walked the path as far around the current poly as we need to in order
+                    // to continue pathing towards the target by walking a different poly
+                    break;
+                }
+            } else {
+                // Stop if there is no intersecting wall, the path is complete because it has reached the poly
+                break;
+            }
+        }
+
+    }
+
+    // Re add the last point to the end of the points
+    path.points.push(target);
+}
 // Processes each path by ensuring that there is a valid line between each of the paths points,
 // and if there is not it will add points until either the path is invalid or the path is complete
 // --
 // Note: Mutates the paths array's objects
 function processPaths(paths: Path[], pathingWalls: PolygonLineSegment[]): Path[] {
-    // console.log('processPaths', recursionCount, paths.map(p => p.points.length).sort());
-
-    function walkAroundAPoly(direction: 'prev' | 'next', startVertex: Vec2, poly: Polygon, target: Vec2, pathingWalls: PolygonLineSegment[], path: Path) {
-        // Walk all the way around a poly in "direction" (clockwise/next or counterclockwise/prev) until you have 
-        // a straight line path to the target, or until the straight line path
-        // to the target intersects another PolygonLineSegment
-        // --
-        // Note: walkAroundAPoly adds "target" to the end of the path when it is finished
-        // --
-        // Now keep iterative in the "direction" until we have a path that doesn't intersect with this polygon
-        // and heads right for the target or intersects with another polygon:
-        const _verticies = getPointsFromPolygonStartingAt(poly, startVertex);
-        // If the direction is 'prev', walk in the opposite direction
-        const verticies = direction == 'prev' ? _verticies.reverse() : _verticies;
-        // As we walk,
-        for (let vertex of verticies) {
-            // If the target point is on the line between the last point and this point, we've found the path and can exit.
-            // This occurs if the target point lies directly on an edge of the current polygon
-            if (isPointOnLineSegment(target, { p1: path.points[path.points.length - 1], p2: vertex })) {
-                path.done = true
-                break;
-            }
-
-            path.points.push(vertex);
-            // Check if a straight line between the new vertex and the target passes through the current polygon
-            const indexOfVertex = poly.points.findIndex(p => Vec.equal(p, vertex));
-            // true if line to target doesn't pass through own polygon
-            let lineToTargetDoesNotPassThroughOwnPolygon = false;
-            if (indexOfVertex >= 0) {
-                lineToTargetDoesNotPassThroughOwnPolygon = doesLineFromPointToTargetProjectAwayFromOwnPolygon(poly, indexOfVertex, target);
-            }
-            if (!lineToTargetDoesNotPassThroughOwnPolygon) {
-                // line cast to target DOES pass through the inside of this vertex's angle so it is invalid to branch.
-                // Thus, keep walking around the polygon
-                // Continue to check the next or previous (depending on direction) vertex for this poly
-                // we need to keep walking around it to continue the path
-                continue;
-            } else {
-                // Line from vertex to the target is not cast through the inside angle of vertex and thus it is valid
-                // to branch
-                // Check if a straight line between the new vertex and the target collides with any walls
-                const { intersectingWall, closestIntersection } = getClosestIntersectionWithWalls({ p1: vertex, p2: target }, pathingWalls);
-                // If it does
-                if (intersectingWall && closestIntersection) {
-                    // and the wall belongs to the current poly
-                    if (doesVertexBelongToPolygon(vertex, intersectingWall.polygon) && doesVertexBelongToPolygon(intersectingWall.p1, intersectingWall.polygon)) {
-                        // A straight line from vertex to target intersects the same polygon again but is probably closer,
-                        // so we'll branch off the new intersection point
-
-                        // Exception: Don't branch off if it's branching into a polygonlinesegment that THIS path already contains
-                        if (path.points.find(p => p == intersectingWall.p1) && path.points.find(p => p == intersectingWall.p2)) {
-                            // Continue walking polygon
-                            continue;
-                        } else {
-                            // Allowing jumping to intersecting wall
-                            break;
-                        }
-                    } else {
-                        // If it belongs to a different poly, then we can stop walking because
-                        // we've walked the path as far around the current poly as we need to in order
-                        // to continue pathing towards the target by walking a different poly
-                        break;
-                    }
-                } else {
-                    // Stop if there is no intersecting wall, the path is complete because it has reached the poly
-                    break;
-                }
-            }
-
-        }
-
-        // Re add the last point to the end of the points
-        path.points.push(target);
-    }
-
     // Continue to process paths that are incomplete
     tryAllPaths:
     for (let path of paths) {
