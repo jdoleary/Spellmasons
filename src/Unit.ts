@@ -282,19 +282,19 @@ export function die(unit: IUnit) {
   }
 }
 export async function takeDamage(unit: IUnit, amount: number) {
-  let alteredAmount = amount;
   // Compose onDamageEvents
   for (let eventName of unit.onDamageEvents) {
     const fn = Events.onDamageSource[eventName];
     if (fn) {
-      alteredAmount = fn(unit, alteredAmount);
+      // onDamage events can alter the amount of damage taken
+      amount = fn(unit, amount);
     }
   }
-  unit.health -= alteredAmount;
+  unit.health -= amount;
   // Prevent health from going over maximum or under 0
   unit.health = Math.max(0, Math.min(unit.health, unit.healthMax));
   // If the unit is actually taking damage (not taking 0 damage or being healed - (negative damage))
-  if (alteredAmount > 0) {
+  if (amount > 0) {
     // Use all_red shader to flash the unit to show they are taking damage
     unit.shaderUniforms.all_red.alpha = 1;
     addLerpable(unit.shaderUniforms.all_red, "alpha", 0, 200);

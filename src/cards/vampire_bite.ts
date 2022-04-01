@@ -1,31 +1,31 @@
-import { IUnit, takeDamage } from '../Unit';
+import type { IUnit } from '../Unit';
 import * as Image from '../Image';
 import { Spell, targetsToUnits } from '.';
 
-const id = 'poison';
+const id = 'bite';
 export function add(unit: IUnit) {
   // Note: Curse can stack multiple times but doesn't keep any state
   // so it doesn't need a first time setup like freeze does
 
   unit.modifiers[id] = { isCurse: true };
   // Add event
-  unit.onTurnStartEvents.push(id);
+  unit.onDamageEvents.push(id);
   // Add subsprite image
   Image.addSubSprite(unit.image, id);
 }
 
 const spell: Spell = {
   subsprites: {
-    poison: {
-      imageName: 'poison.png',
+    bite: {
+      imageName: 'units/vampire_eyes.png',
       alpha: 1.0,
       anchor: {
-        x: 0,
-        y: 0,
-      },
-      scale: {
         x: 0.5,
         y: 0.5,
+      },
+      scale: {
+        x: 1,
+        y: 1,
       },
     },
   },
@@ -34,10 +34,8 @@ const spell: Spell = {
     manaCost: 20,
     healthCost: 0,
     probability: 10,
-    thumbnail: 'poison.png',
-    description: `
-Poisons all target(s).  Poison will deal 1 base damage every turn
-at the start of the unit's turn.
+    thumbnail: 'bite.png',
+    description: `Turns the victim into a Vampire.
     `,
     effect: async (state, dryRun) => {
       if (dryRun) {
@@ -50,9 +48,15 @@ at the start of the unit's turn.
     },
   },
   events: {
-    onTurnStart: async (unit: IUnit) => {
-      takeDamage(unit, 1);
-      return false;
+    onDamage: (unit: IUnit, amount: number, damageDealer?: IUnit) => {
+      // Takes healing as damage
+      if (amount < 0) {
+        return -1 * amount;
+      } else {
+        // Takes regular damage at half
+        return Math.round(amount / 2);
+
+      }
     },
   },
 };

@@ -27,11 +27,10 @@ import obliterate from './obliterate';
 import clone from './clone';
 import mana_burn from './mana_burn';
 import mana_steal from './mana_steal';
+import vampire_bite from './vampire_bite';
 import { IUpgrade, upgradeSource } from '../Upgrade';
 import { _getCardsFromIds } from './cardUtils';
 import { addCardToHand } from '../CardUI';
-import { distance } from '../math';
-import * as config from '../config';
 export interface Spell {
   card: ICard;
   // modifiers keep track of additional state on an individual unit basis
@@ -103,6 +102,7 @@ export function registerCards() {
   register(clone);
   register(mana_burn);
   register(mana_steal);
+  register(vampire_bite);
 }
 function cardToUpgrade(c: ICard): IUpgrade {
   return {

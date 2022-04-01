@@ -33,7 +33,7 @@ Freezes the target(s) for 1 turn, preventing them from moving or acting.
     },
   },
   events: {
-    onTurnStart: (unit: Unit.IUnit) => {
+    onTurnStart: async (unit: Unit.IUnit) => {
       // Decrement how many turns left the unit is frozen
       unit.modifiers[id] && unit.modifiers[id].turnsLeft--;
       if (unit.modifiers[id] && unit.modifiers[id].turnsLeft <= 0) {
