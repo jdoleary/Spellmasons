@@ -1,4 +1,5 @@
 import { getLoopableIndex } from "./Polygon";
+import { randInt } from "./rand";
 
 const sfx = {
     whoosh: './sound/sfx/whoosh.m4a'
@@ -14,7 +15,7 @@ Object.values(sfx).forEach(path => {
     new Audio(path);
 });
 
-let songIndex = 0;
+let songIndex = Math.round(Math.random() * music.length - 1);
 let musicInstance: HTMLAudioElement;
 export function playNextSong() {
     if (musicInstance) {
