@@ -308,7 +308,7 @@ export default class Underworld {
               // we know it is a safe place to spawn
               if (i == 0 && X == 0) {
                 // Only spawn players in the left most index (X == 0) of the left most obstacle (i==0)
-                const margin = 5;
+                const margin = 0;
                 this.validPlayerSpawnCoords.push({ x: coordX + margin, y: coordY });
               } else if (i == config.OBSTACLE_SECTORS_COUNT_HORIZONTAL - 1 && X == rowOfObstacles.length - 1) {
                 // Only spawn the portal in the right most index of the right most obstacle

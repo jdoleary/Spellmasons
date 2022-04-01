@@ -6,7 +6,6 @@
 ## Critical Tasks
 -
 ## Tasks
-- Fix player spawning mid game, ensure there are enough spawn spaces
 - Bug: When movement happens while spell effect is up, it leaves the target circles behind
 - Bug: You can still select enemies and things with a spell up if the spell's left click doesn't cast the spell (such as AOE then nothing)
 - Bug: Removing cards should retrigger dryRun castCards even without moving the mouse

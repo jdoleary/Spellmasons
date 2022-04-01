@@ -88,7 +88,7 @@ export function resetPlayerForNextLevel(player: IPlayer) {
   if (window.underworld.validPlayerSpawnCoords.length > 0) {
     const index = randInt(window.underworld.random, 0, window.underworld.validPlayerSpawnCoords.length - 1);
     console.log('Choose spawn', index, 'of', window.underworld.validPlayerSpawnCoords.length);
-    const spawnCoords = window.underworld.validPlayerSpawnCoords.splice(index, 1)[0];
+    const spawnCoords = window.underworld.validPlayerSpawnCoords[index];
     Unit.setLocation(player.unit, spawnCoords);
   } else {
     console.error('cannot find valid spawn for player unit');
