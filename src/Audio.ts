@@ -15,22 +15,33 @@ Object.values(sfx).forEach(path => {
 });
 
 let songIndex = 0;
-function playNextSong() {
+let musicInstance: HTMLAudioElement;
+export function playNextSong() {
     // Loops through songs
     const index = getLoopableIndex(songIndex++, music)
     console.log('Play song', index);
-    const musicInstance = new Audio(music[index]);
+    musicInstance = new Audio(music[index]);
     musicInstance.play();
     musicInstance.addEventListener("ended", function () {
         playNextSong();
     });
 }
-playNextSong();
 
 export function playSFX(name: keyof typeof sfx) {
     // In order to allow sounds to overlap, they must be 
     // fully instantiated each time they are played
     const sfxInstance = new Audio(sfx[name]);
+    sfxInstance.volume = window.volume;
     sfxInstance.play();
 
+}
+
+export function setupAudio() {
+    window.playMusic = playNextSong;
+    window.changeVolume = (volume) => {
+        window.volume = volume / 100;
+        if (musicInstance) {
+            musicInstance.volume = window.volume;
+        }
+    };
 }

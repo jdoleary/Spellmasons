@@ -6,6 +6,7 @@
 ## Critical Tasks
 -
 ## Tasks
+- When 'vampire' modifier is removed, it should remove the card 'bite' too.
 - Bug: You can still select enemies and things with a spell up if the spell's left click doesn't cast the spell (such as AOE then nothing)
 - Character select: "waiting  for other players"
 ---

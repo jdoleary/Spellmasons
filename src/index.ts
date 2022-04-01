@@ -10,6 +10,7 @@ import * as Cards from './cards';
 import * as Units from './units';
 import { initPlanningView } from './ui/PlanningView';
 import type PieClient from '@websocketpie/client';
+import { setupAudio } from './Audio';
 import cookieConsentPopup from './cookieConsent';
 cookieConsentPopup();
 
@@ -23,6 +24,8 @@ function setupAll() {
   // Start monitoring with development overlay
   // import { setupMonitoring } from './monitoring';
   // setupMonitoring();
+
+  setupAudio();
 
   // Start up menu script now that the window globals are assigned
   var script = document.createElement('script');
@@ -105,6 +108,11 @@ declare global {
     // Graphics for drawing unit health and mana bars
     unitOverlayGraphics: PIXI.Graphics;
     allowCookies: boolean;
+    playMusic: () => void;
+    changeVolume: (volume: number) => void;
+    volume: number;
 
   }
 }
+
+window.volume = 1.0;
