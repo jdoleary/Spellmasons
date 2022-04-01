@@ -721,6 +721,8 @@ export default class Underworld {
         this.initializePlayerTurn(this.playerTurnIndex);
         break;
       case 'NPC':
+        // Clears spell effect on NPC turn
+        syncSpellEffectProjection();
         this.setTurnMessage(false, "NPC's Turn");
         let animationPromises: Promise<void>[] = [];
         // Move units
