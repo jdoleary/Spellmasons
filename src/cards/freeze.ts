@@ -1,6 +1,6 @@
 import * as Unit from '../Unit';
 import * as Image from '../Image';
-import type { Spell } from '.';
+import { Spell, targetsToUnits } from '.';
 import { UnitType } from '../commonTypes';
 
 const id = 'freeze';
@@ -18,17 +18,14 @@ Freezes the target(s) for 1 turn, preventing them from moving or acting.
       if (dryRun) {
         return state;
       }
-      for (let target of state.targets) {
-        const unit = window.underworld.getUnitAt(target);
-        if (unit) {
-          addTo(unit);
-          if (unit.unitType === UnitType.PLAYER_CONTROLLED) {
-            const player = window.underworld.players.find(
-              (p) => p.unit === unit,
-            );
-            if (player) {
-              window.underworld.endPlayerTurn(player.clientId);
-            }
+      for (let unit of targetsToUnits(state.targets)) {
+        addTo(unit);
+        if (unit.unitType === UnitType.PLAYER_CONTROLLED) {
+          const player = window.underworld.players.find(
+            (p) => p.unit === unit,
+          );
+          if (player) {
+            window.underworld.endPlayerTurn(player.clientId);
           }
         }
       }

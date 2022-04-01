@@ -1,5 +1,5 @@
 import type { Vec2 } from '../Vec';
-import { deduplicateTargets, Spell } from '.';
+import type { Spell } from '.';
 import { drawDryRunCircle } from '../ui/PlanningView';
 
 const id = 'AOE';
@@ -28,7 +28,6 @@ Adds targets for the following cards to effect by "growing" existing targets
       }
       // Update targets
       state.targets = [...state.targets, ...newTargets];
-      deduplicateTargets(state);
 
       return state;
     },

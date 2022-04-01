@@ -1,7 +1,7 @@
-import type { Spell } from '.';
+import { Spell, targetsToUnits } from '.';
 import * as Unit from '../Unit'
 import { UnitType } from '../commonTypes';
-import type { Vec2 } from '../Vec';
+import { Vec2, equal } from '../Vec';
 
 const id = 'protection';
 const spell: Spell = {
@@ -26,9 +26,9 @@ const spell: Spell = {
       // For all the allies, find the first ally that matches a target
       allyLoop: {
         for (let ally of allies) {
-          for (let target of state.targets) {
-            if (target.x == ally.x && target.y == ally.y) {
-              excludeTarget = target;
+          for (let unit of targetsToUnits(state.targets)) {
+            if (unit == ally) {
+              excludeTarget = unit;
               // Only remove 1 target per use of this card
               break allyLoop;
             }
@@ -36,7 +36,7 @@ const spell: Spell = {
         }
       }
       // Update targets
-      state.targets = state.targets.filter(t => t.x !== excludeTarget.x && t.y !== excludeTarget.y);
+      state.targets = state.targets.filter(t => equal(t, excludeTarget));
 
       return state;
     },

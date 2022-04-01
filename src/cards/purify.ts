@@ -1,5 +1,5 @@
 import { removeModifier } from '../Unit';
-import type { Spell } from '.';
+import { Spell, targetsToUnits } from '.';
 
 const id = 'purify';
 // Removes all curse modifiers
@@ -17,15 +17,12 @@ Removes all curses from the target(s).
       if (dryRun) {
         return state;
       }
-      for (let target of state.targets) {
-        const unit = window.underworld.getUnitAt(target);
-        if (unit) {
-          for (let [modifier, modifierProperties] of Object.entries(
-            unit.modifiers,
-          )) {
-            if (modifierProperties.isCurse) {
-              removeModifier(unit, modifier);
-            }
+      for (let unit of targetsToUnits(state.targets)) {
+        for (let [modifier, modifierProperties] of Object.entries(
+          unit.modifiers,
+        )) {
+          if (modifierProperties.isCurse) {
+            removeModifier(unit, modifier);
           }
         }
       }

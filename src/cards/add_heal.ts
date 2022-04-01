@@ -1,5 +1,5 @@
 import * as Unit from '../Unit';
-import type { Spell } from '.';
+import { Spell, targetsToUnits } from '.';
 
 const id = 'heal';
 const healAmount = 3;
@@ -19,14 +19,11 @@ Will not heal beyond maximum health.
       if (dryRun) {
         return state;
       }
-      for (let target of state.targets) {
-        const unit = window.underworld.getUnitAt(target);
-        if (unit) {
-          const damage = -healAmount;
-          Unit.takeDamage(unit, damage);
-          state.aggregator.damageDealt =
-            (state.aggregator.damageDealt || 0) + damage;
-        }
+      for (let unit of targetsToUnits(state.targets)) {
+        const damage = -healAmount;
+        Unit.takeDamage(unit, damage);
+        state.aggregator.damageDealt =
+          (state.aggregator.damageDealt || 0) + damage;
       }
       return state;
     },

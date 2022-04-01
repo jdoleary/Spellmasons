@@ -1,5 +1,5 @@
 import { drawDryRunLine } from '../ui/PlanningView';
-import { deduplicateTargets, Spell } from '.';
+import { Spell, targetsToUnits } from '.';
 import type { Vec2 } from '../Vec';
 import * as Vec from '../Vec';
 import type * as Unit from '../Unit';
@@ -20,21 +20,18 @@ off of all existing targeted units to units touching them.
     `,
     effect: async (state, dryRun) => {
       let newTargets: Vec2[] = [];
-      for (let target of state.targets) {
-        const unit = window.underworld.getUnitAt(target);
-        if (unit) {
-          // Find all units touching the spell origin
-          const chained_units = getTouchingUnitsRecursive(
-            target.x,
-            target.y,
-            [...state.targets, ...newTargets],
-          );
-          newTargets = newTargets.concat(chained_units);
-        }
+      for (let unit of targetsToUnits(state.targets)) {
+        // Find all units touching the spell origin
+        const chained_units = getTouchingUnitsRecursive(
+          unit.x,
+          unit.y,
+          [...state.targets, ...newTargets],
+        );
+        newTargets = newTargets.concat(chained_units);
+
       }
       // Update targets
       state.targets = [...state.targets, ...newTargets];
-      deduplicateTargets(state);
 
       return state;
     },

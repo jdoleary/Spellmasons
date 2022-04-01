@@ -1,5 +1,5 @@
 import * as Unit from '../Unit';
-import type { Spell } from '.';
+import { Spell, targetsToUnits } from '.';
 import { removePickup } from '../Pickup';
 import { remove } from '../Obstacle';
 import { UnitType } from '../commonTypes';
@@ -19,17 +19,16 @@ Completely obliterates all targets.
       if (dryRun) {
         return state;
       }
-      for (let target of state.targets) {
-        const unit = window.underworld.getUnitAt(target);
-        if (unit) {
-          Unit.die(unit);
-          if (unit.unitType === UnitType.PLAYER_CONTROLLED) {
-            // Image.setPosition(unit.image, -10000, -10000);
-            Unit.setLocation(unit, { x: NaN, y: NaN });
-          } else {
-            Unit.cleanup(unit);
-          }
+      for (let unit of targetsToUnits(state.targets)) {
+        Unit.die(unit);
+        if (unit.unitType === UnitType.PLAYER_CONTROLLED) {
+          // Image.setPosition(unit.image, -10000, -10000);
+          Unit.setLocation(unit, { x: NaN, y: NaN });
+        } else {
+          Unit.cleanup(unit);
         }
+      }
+      for (let target of state.targets) {
         const pickup = window.underworld.getPickupAt(target);
         if (pickup) {
           // TODO don't remove portal, or go to game over if the portal is destroyed because then the players are stuck

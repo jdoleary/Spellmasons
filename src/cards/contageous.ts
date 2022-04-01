@@ -1,7 +1,7 @@
 
 import type { IUnit } from '../Unit';
 import * as Image from '../Image';
-import { allCards, ICard, Spell } from './index';
+import { allCards, ICard, Spell, targetsToUnits } from './index';
 import { COLLISION_MESH_RADIUS } from '../config';
 
 const id = 'contageous';
@@ -44,11 +44,8 @@ Makes this unit's curses contageous to other nearby units
       if (dryRun) {
         return state;
       }
-      for (let target of state.targets) {
-        const unit = window.underworld.getUnitAt(target);
-        if (unit) {
-          add(unit);
-        }
+      for (let unit of targetsToUnits(state.targets)) {
+        add(unit);
       }
       return state;
     },

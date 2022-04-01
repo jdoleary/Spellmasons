@@ -1,5 +1,5 @@
 import * as Unit from '../Unit';
-import type { Spell } from '.';
+import { Spell, targetsToUnits } from '.';
 import { createVisualLobbingProjectile } from '../Projectile';
 import floatingText from '../FloatingText';
 
@@ -22,24 +22,21 @@ Sacrifice ${health_burn} of your own health to steal up to ${mana_stolen} mana f
       }
       const caster = state.casterUnit;
       let promises = [];
-      for (let target of state.targets) {
-        const unit = window.underworld.getUnitAt(target);
-        if (unit) {
-          const unitManaBurnt = Math.min(unit.mana, mana_stolen);
-          unit.mana -= unitManaBurnt;
-          // Sync UI in case mana is stolen from the player
+      for (let unit of targetsToUnits(state.targets)) {
+        const unitManaBurnt = Math.min(unit.mana, mana_stolen);
+        unit.mana -= unitManaBurnt;
+        // Sync UI in case mana is stolen from the player
+        Unit.syncPlayerHealthManaUI();
+        promises.push(createVisualLobbingProjectile(unit, caster.x, caster.y, 'blue-projectile.png').then(() => {
+          state.casterUnit.mana += unitManaBurnt;
+          // Sync UI in case the casterUnit IS the player and is getting this mana
           Unit.syncPlayerHealthManaUI();
-          promises.push(createVisualLobbingProjectile(unit, caster.x, caster.y, 'blue-projectile.png').then(() => {
-            state.casterUnit.mana += unitManaBurnt;
-            // Sync UI in case the casterUnit IS the player and is getting this mana
-            Unit.syncPlayerHealthManaUI();
-            floatingText({
-              coords: caster,
-              text: `+ ${unitManaBurnt} Mana`,
-              style: { fill: 'blue' }
-            })
-          }));
-        }
+          floatingText({
+            coords: caster,
+            text: `+ ${unitManaBurnt} Mana`,
+            style: { fill: 'blue' }
+          })
+        }));
       }
       await Promise.all(promises);
       return state;

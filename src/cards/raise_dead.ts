@@ -1,5 +1,5 @@
 import * as Unit from '../Unit';
-import type { Spell } from '.';
+import { Spell, targetsToUnits } from '.';
 
 const id = 'resurrect';
 const spell: Spell = {
@@ -16,14 +16,11 @@ Resurrects a dead unit and converts them to the caster's faction.
       if (dryRun) {
         return state;
       }
-      for (let target of state.targets) {
-        const dead_unit = window.underworld.units.find(
-          (u) => !u.alive && u.x === target.x && u.y === target.y,
-        );
-        if (dead_unit) {
-          Unit.resurrect(dead_unit);
-          dead_unit.health = 1;
-          Unit.changeFaction(dead_unit, state.casterUnit.faction);
+      for (let unit of targetsToUnits(state.targets)) {
+        if (!unit.alive) {
+          Unit.resurrect(unit);
+          unit.health = 1;
+          Unit.changeFaction(unit, state.casterUnit.faction);
         }
       }
       return state;

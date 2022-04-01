@@ -1,6 +1,6 @@
 import * as Unit from '../Unit';
 import * as Image from '../Image';
-import type { Spell } from '.';
+import { Spell, targetsToUnits } from '.';
 import floatingText from '../FloatingText';
 
 const id = 'shield';
@@ -18,11 +18,8 @@ Protects the target(s) from the next time they would take damage.
       if (dryRun) {
         return state;
       }
-      for (let target of state.targets) {
-        const unit = window.underworld.getUnitAt(target);
-        if (unit) {
-          addTo(unit);
-        }
+      for (let unit of targetsToUnits(state.targets)) {
+        addTo(unit);
       }
       return state;
     },

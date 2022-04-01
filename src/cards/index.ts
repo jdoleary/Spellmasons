@@ -158,12 +158,14 @@ export function getCardsFromIds(cardIds: string[]): ICard[] {
   return _getCardsFromIds(cardIds, allCards);
 }
 
-// Removes targets that would overlap the same unit twice
-export function deduplicateTargets(state: EffectState) {
-  state.targets = state.targets.filter((coord, index) => {
-    return (
-      state.targets.findIndex(otherCoord => distance(coord, otherCoord) <= config.COLLISION_MESH_RADIUS) === index
-    );
-  });
+// Takes the array of targets and returns a (deduplicated) array of units
+export function targetsToUnits(targets: Vec2[]): Unit.IUnit[] {
+  // Get units at coordinates
+  const unitsAndUndefined = targets.map(t => window.underworld.getUnitAt(t));
+  // remove undefined
+  const units = unitsAndUndefined.flatMap(u => !!u ? [u] : []);
+  const dedupedUnits = units.filter((unit, index) => units.indexOf(unit) === index);
+  return dedupedUnits;
+
 
 }
