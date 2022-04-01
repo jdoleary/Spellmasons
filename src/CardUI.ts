@@ -181,6 +181,11 @@ function deselectCard(element: HTMLElement) {
   element.remove();
   // Update the mana cost UI AFTER the card is removed
   updateManaCostUI();
+  // Since a new card has been deselected, we must sync the spell
+  // effect projection so it will be up to date in the event
+  // that the user is hovering over a unit while deselecting this card
+  // but hadn't moved the mouse since selecting it
+  syncSpellEffectProjection();
 }
 export function deselectLastCard() {
   if (elSelectedCards) {
