@@ -71,7 +71,7 @@ export function normalizeRadians(degrees: number) {
 interface objectWithProbability {
   probability: number;
 }
-export function _chooseObjectWithProbability<T extends objectWithProbability>(roll: number, source: T[]): T {
+export function _chooseObjectWithProbability<T extends objectWithProbability>(roll: number, source: T[]): T | undefined {
   let rollingLowerBound = 0;
   // Iterate each object and check if the roll is between the lower bound and the upper bound
   // which means that the current object would have been rolled
@@ -85,8 +85,7 @@ export function _chooseObjectWithProbability<T extends objectWithProbability>(ro
       rollingLowerBound += x.probability;
     }
   }
-  // Logically it should never reach this point
-  return source[0];
+  return undefined;
 
 }
 export function chooseObjectWithProbability<T extends objectWithProbability>(

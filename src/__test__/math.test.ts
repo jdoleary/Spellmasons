@@ -33,25 +33,25 @@ describe('math', () => {
     describe('should never choose an object with probability of 0', () => {
       it("should choose id 2 for roll of 1", () => {
         const choice = _chooseObjectWithProbability(1, objects);
-        expect(choice.id).toEqual(2);
+        expect(choice?.id).toEqual(2);
       });
       it("should choose id 3 for roll of 2-6", () => {
         let choice = _chooseObjectWithProbability(2, objects);
-        expect(choice.id).toEqual(3);
+        expect(choice?.id).toEqual(3);
         choice = _chooseObjectWithProbability(3, objects);
-        expect(choice.id).toEqual(3);
+        expect(choice?.id).toEqual(3);
         choice = _chooseObjectWithProbability(4, objects);
-        expect(choice.id).toEqual(3);
+        expect(choice?.id).toEqual(3);
         choice = _chooseObjectWithProbability(5, objects);
-        expect(choice.id).toEqual(3);
+        expect(choice?.id).toEqual(3);
         choice = _chooseObjectWithProbability(6, objects);
-        expect(choice.id).toEqual(3);
+        expect(choice?.id).toEqual(3);
       });
       it("should choose id 5 for roll of 7-8 because it skips id 4 with a probability of 0", () => {
         let choice = _chooseObjectWithProbability(7, objects);
-        expect(choice.id).toEqual(5);
+        expect(choice?.id).toEqual(5);
         choice = _chooseObjectWithProbability(8, objects);
-        expect(choice.id).toEqual(5);
+        expect(choice?.id).toEqual(5);
       });
     });
 
