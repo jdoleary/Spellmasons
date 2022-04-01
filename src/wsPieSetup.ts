@@ -10,9 +10,7 @@ const wsUri = 'ws://localhost:8080';
 // const wsUri = 'ws://68.48.199.138:7337';
 // Current digital ocean wsPie app:
 // const wsUri = 'wss://websocket-pie-6ggew.ondigitalocean.app';
-export const pie: PieClient = window.pie = new PieClient({
-  env: import.meta.env.MODE,
-});
+export const pie: PieClient = window.pie = new PieClient();
 addHandlers(pie);
 window.connect_to_wsPie_server = function connect_to_wsPie_server(wsUri?: string): Promise<void> {
   return new Promise<void>((resolve, reject) => {
