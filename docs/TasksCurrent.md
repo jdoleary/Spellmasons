@@ -6,14 +6,15 @@
 ## Critical Tasks
 -
 ## Tasks
+- Fix player spawning mid game, ensure there are enough spawn spaces
+- Bug: When movement happens while spell effect is up, it leaves the target circles behind
+- Bug: You can still select enemies and things with a spell up if the spell's left click doesn't cast the spell (such as AOE then nothing)
+- Bug: Removing cards should retrigger dryRun castCards even without moving the mouse
 - Character select: "waiting  for other players"
 - Better organization of function of routes and views and what happens when you change them, with docs
-- Bug: "Cannot add client, client alreaedy in room" (maybe I was clicking too quickly??)
-    - This is because both players are trying to join with the single player id of 1.
 - Bug: AOE deduping removes a valid target if two units are too close to each other
 - Task: Make contageous spread more obvious
 ---
-- Client joins network with id of "1" if they've been playing singleplayer and have that id saved
 - Bug: You can swap into obstacles
 - Dad:
     - Missing spell projection overlay
@@ -23,7 +24,6 @@
     - Don't let me put more cards down than i can afford
 - Brad:
     - How to communicatge the extra cost that distance adds to mana
-- Notify when waiting for other players to pick a character, just like "x players left to pick upgrade
 
 Finish Content:
 - More spells:

@@ -1,4 +1,6 @@
 # Critical Path (4st deadline revision)
+- Opt-outable Tutorial
+    - 
 - Finish Content / Endgame
     - More Spells
     - More enemies
