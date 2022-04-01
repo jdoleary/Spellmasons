@@ -1,3 +1,4 @@
+- When players rejoin in progress game, skip character pick screen
 - Maybe solved already? Pathing, see stash "pathfinding"
     - this.seed = '0.9408533248276452';
     - Somehow duplicate points are getting added to path

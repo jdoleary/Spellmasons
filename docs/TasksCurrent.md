@@ -1,7 +1,7 @@
 ### 2022-03-31
 - Solve for spawning mid game, including cloning (how to prevent spawning in a no walk zone)
-    - Support rejoining an existing game via pie
-    - How to init players that join mid game?
+    - Handle when there aren't enough spaces to spawn for players more gracefully
+    - ~~How to init players that join mid game?~~
     - Why can't a player that joins mid game see disconnected players?
 ## Critical Tasks
 -
