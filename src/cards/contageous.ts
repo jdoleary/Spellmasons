@@ -3,6 +3,8 @@ import type { IUnit } from '../Unit';
 import * as Image from '../Image';
 import { allCards, ICard, Spell, targetsToUnits } from './index';
 import { COLLISION_MESH_RADIUS } from '../config';
+import { createVisualLobbingProjectile } from '../Projectile';
+import floatingText from '../FloatingText';
 
 const id = 'contageous';
 export function add(unit: IUnit) {
@@ -45,21 +47,41 @@ Makes this unit's curses contageous to other nearby units
         return state;
       }
       for (let unit of targetsToUnits(state.targets)) {
-        add(unit);
+        // Don't add contageous more than once
+        if (!unit.onTurnStartEvents.includes(id)) {
+          add(unit);
+        }
       }
       return state;
     },
   },
   events: {
-    onTurnStart: (unit: IUnit) => {
+    onTurnStart: async (unit: IUnit) => {
       const coords = window.underworld.getCoordsForUnitsWithinDistanceOfTarget(unit, COLLISION_MESH_RADIUS * 4);
-      // Filter out undefineds, filter out self
-      const touchingUnits: IUnit[] = coords.map((coord) => window.underworld.getUnitAt(coord)).filter(x => x !== undefined).filter(x => x !== unit) as IUnit[];
+      const nearByUnits: IUnit[] = coords.map((coord) => window.underworld.getUnitAt(coord))
+        // Filter out undefineds
+        .filter(x => x !== undefined)
+        // Do not spread to dead units
+        .filter(x => x?.alive)
+        // Filter out self
+        .filter(x => x !== unit) as IUnit[];
       const curseCards: ICard[] = Object.entries(unit.modifiers).filter(([_id, modValue]) => modValue.isCurse).map(([id, _mod]) => allCards[id]).filter(x => x !== undefined) as ICard[];
       for (let card of curseCards) {
+        const promises = [];
+        // Filter out units that already have this curse
+        for (let touchingUnit of nearByUnits.filter(u => !Object.keys(u.modifiers).includes(card.id))) {
+          promises.push(createVisualLobbingProjectile(
+            unit,
+            touchingUnit.x,
+            touchingUnit.y,
+            'green-thing.png',
+          ).then(() => {
+            floatingText({ coords: touchingUnit, text: card.id, style: { fill: 'white' } });
+          }));
+        }
+        await Promise.all(promises);
 
-
-        card?.effect({ casterUnit: unit, targets: touchingUnits, aggregator: {} }, false, 0);
+        card.effect({ casterUnit: unit, targets: nearByUnits, aggregator: {} }, false, 0);
       }
 
       return false;

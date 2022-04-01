@@ -501,7 +501,7 @@ export default class Underworld {
     }
     document.body.classList.toggle('your-turn', yourTurn);
   }
-  initializePlayerTurn(playerIndex: number) {
+  async initializePlayerTurn(playerIndex: number) {
     const player = this.players[playerIndex];
     if (!player) {
       console.error("Attempted to initialize turn for a non existant player index")
@@ -532,12 +532,12 @@ export default class Underworld {
       return;
     }
     // Trigger onTurnStart Events
-    const onTurnStartEventResults: boolean[] = player.unit.onTurnStartEvents.map(
-      (eventName) => {
+    const onTurnStartEventResults: boolean[] = await Promise.all(player.unit.onTurnStartEvents.map(
+      async (eventName) => {
         const fn = Events.onTurnSource[eventName];
-        return fn ? fn(player.unit) : false;
+        return fn ? await fn(player.unit) : false;
       },
-    );
+    ));
     if (onTurnStartEventResults.some((b) => b)) {
       // If any onTurnStartEvents return true, skip the player
       this.endPlayerTurn(player.clientId);
@@ -725,42 +725,43 @@ export default class Underworld {
         syncSpellEffectProjection();
         this.setTurnMessage(false, "NPC's Turn");
         let animationPromises: Promise<void>[] = [];
-        // Move units
-        unitloop: for (let u of this.units.filter(
-          (u) => u.unitType === UnitType.AI && u.alive,
-        )) {
-          // Trigger onTurnStart Events
-          for (let eventName of u.onTurnStartEvents) {
-            const fn = Events.onTurnSource[eventName];
-            if (fn) {
-              const abortTurn = fn(u);
-              if (abortTurn) {
-                continue unitloop;
+        (async () => {
+          // Move units
+          unitloop: for (let u of this.units.filter(
+            (u) => u.unitType === UnitType.AI && u.alive,
+          )) {
+            // Trigger onTurnStart Events
+            for (let eventName of u.onTurnStartEvents) {
+              const fn = Events.onTurnSource[eventName];
+              if (fn) {
+                const abortTurn = await fn(u);
+                if (abortTurn) {
+                  continue unitloop;
+                }
               }
             }
+            const unitSource = allUnits[u.unitSourceId];
+            if (unitSource) {
+              // Add unit action to the array of promises to wait for
+              let promise = unitSource.action(u);
+              animationPromises.push(promise);
+            } else {
+              console.error(
+                'Could not find unit source data for',
+                u.unitSourceId,
+              );
+            }
           }
-          const unitSource = allUnits[u.unitSourceId];
-          if (unitSource) {
-            // Add unit action to the array of promises to wait for
-            let promise = unitSource.action(u);
-            animationPromises.push(promise);
-          } else {
-            console.error(
-              'Could not find unit source data for',
-              u.unitSourceId,
-            );
-          }
-        }
-        // When all animations are done, set turn phase to player turn
-        Promise.all(animationPromises).then(() => {
-          this.endNPCTurnPhase();
-        });
+          // When all animations are done, set turn phase to player turn
+          Promise.all(animationPromises).then(() => {
+            this.endNPCTurnPhase();
+          });
 
-        // Since NPC turn is over, update the planningView
-        // They may have moved or unfrozen which would update
-        // where they can attack next turn
-        updatePlanningView();
-        console.log('end switch to NPC turn');
+          // Since NPC turn is over, update the planningView
+          // They may have moved or unfrozen which would update
+          // where they can attack next turn
+          updatePlanningView();
+        })();
         break;
       default:
         break;

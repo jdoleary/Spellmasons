@@ -8,7 +8,6 @@
 ## Tasks
 - Bug: You can still select enemies and things with a spell up if the spell's left click doesn't cast the spell (such as AOE then nothing)
 - Character select: "waiting  for other players"
-- Task: Make contageous spread more obvious
 ---
 - Bug: You can swap into obstacles
 - Dad:
