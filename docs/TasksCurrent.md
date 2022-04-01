@@ -1,3 +1,59 @@
+
+### 2022-04-01 Brad playtest
+- Songs should all be same volume
+- Bug: Quick link keeps adding url over and over if you keep clicking it
+    - it's also confusing for brad.  Needs much help
+- Bug: Music volume keeps resetting itself
+    - Everytime song changes
+- Add resume button
+- Jake suggests 'q' instead of backsspace to remove a card
+- Add Line of sight with spells
+- Bouncing spells
+- Continuing in the direction you clicked to move (automove)
+- Bug: if you are selected when you go through portal your move outline snaps to 0,0
+- Bug: Bite is available in upgrade screen
+- Mana bug: Jake cast aoe then damage from far, it said it cost 60 but he ran into "insufficient mana"
+- Brad: escape desect all 
+- Desync occurred while I was alt tabbed
+- Desync caused turns to get messed up (it just didn't update the top bar)
+- Jake wants to right click to cancel spell chains
+- Somehow Jake started the game while Brad was still looking at upgrades and it showed the game behind
+    - AND it went back to the previous level with the dead mobs still there
+- Jake: visual indicator to remind him that he can move. His mouse doesn't have presence
+- "auto next level" if there's nothing left to do
+- 1 player left to pick upgrades is showing while their in the level
+- Hover shift should work for units too
+- **Jake: Either line of sight for preset range for spells.  Don't increase mana with distance**
+- For walking, white dots along the path show you how many dots it'll take you to get there
+- Jake: "Feels like mouse isn't in the game"
+- pathing: If click inside poly try nearest corner as well as horizontal and vertical
+- **Jake: Enter to end turn.  Allow move and cast in any order**
+- In spell projection, if you're doing enough damage to kill, show it visually
+    - also show if it will "dust" someone
+- Clone disconnected units can move around as AI but still show as disconnected
+- Easier way to recognize friendly and enemy (green health bar, red health bar)
+- Jake: needs unit collision
+- Brad: Lots of "could not find player corresponding to player controlled unit" on mouse move
+    - coming from updateTooltipcontent
+- die(), addPixiSprite, cannot read properties of null reaeding "addChild"
+- Show in UI how much mana you get per turn
+- Jake: 'yoink' takes a card from another unit
+- Jake: What if there's a random encounter on some levels where it's a card forge
+    - In between levels choose "get a new card" or "upgrade a card"
+- Brad: opportunity to make spells more powerful
+- Brad: I wish you could take goons with you
+- Brad: Hard to tell who is you and who are your teammates
+- Explain how vampires work on the card
+- Brad: Alternate who goes first
+- Jake overall thoughts:
+    - I like it, good bones
+    - Cards should cost crystals, not numbers
+    - Let players pick from 3 starting cards so run is always different
+    - Different ways of doing damage
+- Brad: Was moving super fast somehow (after swapping?); everyone is fast
+    - enjoys the movement speed being faster
+- Brad: Boss levels needed
+
 ### 2022-03-31
 - Solve for spawning mid game, including cloning (how to prevent spawning in a no walk zone)
     - Handle when there aren't enough spaces to spawn for players more gracefully
