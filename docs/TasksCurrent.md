@@ -1,8 +1,8 @@
 ### 2022-03-31
-- **Bug**: something is messed up, I host, have the host pick player first, he jumps into the game.  Then the guest picks a player but they don't spawn right
-- Support rejoining an existing game via pie
-- Bug: leaving rejoining a game totally breaks it
-
+- Solve for spawning mid game, including cloning (how to prevent spawning in a no walk zone)
+    - Support rejoining an existing game via pie
+    - How to init players that join mid game?
+    - Why can't a player that joins mid game see disconnected players?
 ## Critical Tasks
 -
 ## Tasks
