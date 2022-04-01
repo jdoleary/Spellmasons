@@ -21,6 +21,8 @@ export enum Route {
 // temp for testing
 window.setRoute = setRoute;
 
+// The "Route" is a game state that determines what in-game
+// screen the user is viewing. setRoute may contain setup logic.
 export function setRoute(r: Route) {
   if (r === undefined) {
     console.error('Could not set route to undefined route');

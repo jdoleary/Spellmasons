@@ -39,6 +39,9 @@ window.addEventListener('keydown', event => {
     return
   }
 });
+// The "View" is what the client is looking at
+// No gamelogic should be executed inside setView
+// including setup.
 export function setView(v: View) {
   console.log('setView(', View[v], ')');
   window.view = v;
@@ -49,12 +52,9 @@ export function setView(v: View) {
     elMenu.classList.add('hidden');
     lastNonMenuView = v;
   }
-
   switch (v) {
     case View.Menu:
       elMenu.classList.remove('hidden');
-
-
       break;
     case View.CharacterSelect:
       // Host or join a game brings client to Character select
@@ -76,22 +76,7 @@ export function setView(v: View) {
             // Timeout prevents click from propagating into overworld listener
             // for some reason e.stopPropagation doesn't work :/
             setTimeout(() => {
-              // Cleanup container
-              containerCharacterSelect.removeChildren();
-
-              // Queue asking for the gamestate
-              // from the other players.
-              // The reason sending game state is queued and not sent immediately
-              // is that if there's a game in progress you don't want to send the
-              // state in the middle of an action (which could cause desyncs for
-              // code that depends on promises such as resolveDoneMoving)
-              console.log("Setup: JOIN_GAME: Ask for latest gamestate from other players")
-              window.pie.sendData({
-                type: MESSAGE_TYPES.JOIN_GAME,
-                unitId: unitSource.id
-              })
-              // Now that user has selected a character, they can enter the game
-              setView(View.Game);
+              clientChooseUnit(unitSource.id);
             }, 0);
           });
         });
@@ -102,4 +87,24 @@ export function setView(v: View) {
       console.error('Cannot set view to', v, 'no such view exists');
       break;
   }
+}
+
+function clientChooseUnit(unitId: string) {
+  // Cleanup container
+  containerCharacterSelect.removeChildren();
+
+  // Queue asking for the gamestate
+  // from the other players.
+  // The reason sending game state is queued and not sent immediately
+  // is that if there's a game in progress you don't want to send the
+  // state in the middle of an action (which could cause desyncs for
+  // code that depends on promises such as resolveDoneMoving)
+  console.log("Setup: JOIN_GAME: Ask for latest gamestate from other players")
+  window.pie.sendData({
+    type: MESSAGE_TYPES.JOIN_GAME,
+    unitId
+  });
+  // Now that user has selected a character, they can enter the game
+  setView(View.Game);
+
 }
