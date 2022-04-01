@@ -17,6 +17,9 @@ Object.values(sfx).forEach(path => {
 let songIndex = 0;
 let musicInstance: HTMLAudioElement;
 export function playNextSong() {
+    if (musicInstance) {
+        musicInstance.remove();
+    }
     // Loops through songs
     const index = getLoopableIndex(songIndex++, music)
     console.log('Play song', index);
