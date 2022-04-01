@@ -80,7 +80,7 @@ window.joinRoom = function joinRoom(_room_info = {}): Promise<unknown> {
 }
 function addHandlers(pie: PieClient) {
   pie.onServerAssignedData = (o) => {
-    // console.log('serverAssignedData', o);
+    console.log('Pie: set window.clientId:', o.clientId);
     window.clientId = o.clientId;
     if (window.allowCookies) {
       // Only store clientId if it is from a multiplayer session

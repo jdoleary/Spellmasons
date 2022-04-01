@@ -192,7 +192,11 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
         if (currentClientIsHost || fromClient !== window.clientId) {
           // Create Player entity for the client that just joined:
           // If player doesn't already exist, make them
-          if (!underworld.players.find((p) => p.clientId === fromClient)) {
+          const alreadyAssociatedPlayer = underworld.players.find((p) => p.clientId === fromClient);
+          if (alreadyAssociatedPlayer) {
+            console.log('Client is already associated with a Player instance, so they will rejoin as that player rather than creating a new one', fromClient);
+            Player.setClientConnected(alreadyAssociatedPlayer, true);
+          } else {
             console.log(`Setup: Create a Player instance for ${fromClient}`)
             const p = Player.create(fromClient, payload.unitId);
             if (p) {
@@ -211,24 +215,21 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
               if (restorePlayerTurnIndex !== undefined) {
                 underworld.playerTurnIndex = restorePlayerTurnIndex;
               }
-
-              const gameAlreadyStarted = underworld.levelIndex >= 0;
-              if (gameAlreadyStarted) {
-                // Send the lastest gamestate to that client so they can be up-to-date:
-                // Note: It is important that this occurs AFTER the player instance is created for the
-                // client who just joined
-                // If the game has already started (e.g. the host has already joined), send the initial state to the new 
-                // client only so they can load
-                giveClientGameStateForInitialLoad(fromClient);
-              }
             } else {
               console.error("Failed to SelectCharacter because Player.create did not return a player object")
             }
-          } else {
-            console.error(
-              'Client is already associated with a Player instance, so a new one cannot be created.',
-              fromClient
-            );
+          }
+
+          // Note: Allow the client to recieve gamestate even if a new player cannot be created because they may
+          // be rejoining as an already existing character
+          const gameAlreadyStarted = underworld.levelIndex >= 0;
+          if (gameAlreadyStarted) {
+            // Send the lastest gamestate to that client so they can be up-to-date:
+            // Note: It is important that this occurs AFTER the player instance is created for the
+            // client who just joined
+            // If the game has already started (e.g. the host has already joined), send the initial state to the new 
+            // client only so they can load
+            giveClientGameStateForInitialLoad(fromClient);
           }
 
         }
@@ -343,14 +344,6 @@ function handleLoadGameState(payload: any) {
 
   // Load route
   setRoute(payload.route);
-  // If current client already has a player... (meaning they disconnected and rejoined)
-  if (underworld.players.find((p) => p.clientId === window.clientId)) {
-    // go to game view
-    setView(View.Game);
-  } else {
-    // otherwise, go to character select
-    setView(View.CharacterSelect);
-  }
 
 }
 async function handleSpell(caster: Player.IPlayer, payload: any) {
