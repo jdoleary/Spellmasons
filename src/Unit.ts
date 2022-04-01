@@ -11,6 +11,7 @@ import makeAllRedShader from './shaders/selected';
 import { addLerpable } from './lerpList';
 import { findPath } from './Pathfinding';
 import { Route, setRoute } from './routes';
+import { allUnits } from './units';
 const elHealthBar: HTMLElement = document.querySelector('#health .fill') as HTMLElement;
 const elHealthLabel: HTMLElement = document.querySelector('#health .label') as HTMLElement;
 const elManaBar: HTMLElement = document.querySelector('#mana .fill:nth-child(1)') as HTMLElement;
@@ -125,6 +126,17 @@ export function create(
     onTurnStartEvents: [],
     modifiers: {},
   }, sourceUnitProps);
+
+  const sourceUnit = allUnits[unitSourceId];
+  if (sourceUnit) {
+    if (sourceUnit.init) {
+      // Initialize unit IF unit contains initialization function
+      sourceUnit.init(unit);
+    }
+  } else {
+    console.error('Source unit with id', unitSourceId, 'does not exist');
+
+  }
 
   setupShaders(unit);
 

@@ -16,6 +16,7 @@ export type canInteractWithTarget = {
 export interface UnitSource {
   id: string;
   info: ConstructorInfo;
+  init?: (unit: Unit.IUnit) => void;
   action: UnitAction;
   canInteractWithTarget?: canInteractWithTarget;
   unitProps: Partial<Unit.IUnit>
@@ -33,6 +34,7 @@ import summoner from './summoner';
 import demon from './demon';
 import priest from './priest';
 import poisoner from './poisoner';
+import vampire from './vampire';
 
 function register(unit: UnitSource) {
   allUnits[unit.id] = unit;
@@ -46,6 +48,8 @@ export function registerUnits() {
   register(demon);
   register(priest);
   register(poisoner);
+  register(vampire);
+
   register(manBlue);
   register(ladyBlue);
   register(manMohawk);

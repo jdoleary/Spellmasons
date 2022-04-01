@@ -1,6 +1,7 @@
 import type { IUnit } from '../Unit';
 import * as Image from '../Image';
-import { Spell, targetsToUnits } from '.';
+import { allCards, Spell, targetsToUnits } from '.';
+import { addCardToHand } from '../CardUI';
 
 const id = 'bite';
 export function add(unit: IUnit) {
@@ -12,6 +13,12 @@ export function add(unit: IUnit) {
   unit.onDamageEvents.push(id);
   // Add subsprite image
   Image.addSubSprite(unit.image, id);
+
+  // If unit belongs to player
+  const player = window.underworld.players.find(p => p.unit == unit)
+  if (player) {
+    addCardToHand(allCards[id], player);
+  }
 }
 
 const spell: Spell = {
@@ -33,7 +40,7 @@ const spell: Spell = {
     id,
     manaCost: 20,
     healthCost: 0,
-    probability: 10,
+    probability: 0,
     thumbnail: 'bite.png',
     description: `Turns the victim into a Vampire.
     `,
