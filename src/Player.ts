@@ -8,6 +8,7 @@ import { Faction, UnitType } from './commonTypes';
 import { allUnits } from './units';
 import { getClients } from './wsPieHandler';
 import { allCards } from './cards';
+import { randInt } from './rand';
 
 // The serialized version of the interface changes the interface to allow only the data
 // that can be serialized in JSON.  It may exclude data that is not neccessary to
@@ -84,6 +85,14 @@ export function resetPlayerForNextLevel(player: IPlayer) {
   // to get their mana back to full
   player.unit.mana = player.unit.manaMax;
   player.unit.health = player.unit.healthMax;
+  if (window.underworld.validPlayerSpawnCoords.length > 0) {
+    const index = randInt(window.underworld.random, 0, window.underworld.validPlayerSpawnCoords.length - 1);
+    console.log('Choose spawn', index, 'of', window.underworld.validPlayerSpawnCoords.length);
+    const spawnCoords = window.underworld.validPlayerSpawnCoords.splice(index, 1)[0];
+    Unit.setLocation(player.unit, spawnCoords);
+  } else {
+    console.error('cannot find valid spawn for player unit');
+  }
 }
 // Keep a global reference to the current client's player
 function updateGlobalRefToCurrentClientPlayer(player: IPlayer) {

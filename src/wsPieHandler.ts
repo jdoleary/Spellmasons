@@ -123,6 +123,24 @@ export function processNextInQueueIfReady() {
     messageQueue.processNextInQueue(onDataQueueContainer, handleOnDataMessage);
   }
 }
+function tryStartGame() {
+  const gameAlreadyStarted = underworld.levelIndex >= 0;
+  const currentClientIsHost = window.hostClientId == window.clientId;
+  const clientsLeftToChooseCharacters = clients.length - underworld.players.length;
+  // Starts a new game if all clients have chosen characters, THIS client is the host, and 
+  // if the game hasn't already been started
+  if (currentClientIsHost && clientsLeftToChooseCharacters <= 0 && !gameAlreadyStarted) {
+    console.log('Host: Start game');
+    underworld.initLevel(0);
+    console.log('Host: Send all clients game state for initial load');
+    clients.forEach(clientId => {
+      giveClientGameStateForInitialLoad(clientId);
+    });
+  } else {
+    console.log('Users left to choose a character: ', clientsLeftToChooseCharacters);
+  }
+
+}
 async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
   underworld.processedMessageCount++;
   currentlyProcessingOnDataMessage = d;
@@ -166,9 +184,6 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
     case MESSAGE_TYPES.JOIN_GAME:
       if (readyState.isReady()) {
         const currentClientIsHost = window.hostClientId == window.clientId;
-        const hostIsJoining = window.hostClientId == fromClient;
-        // If the host has a player, then the game has already started
-        const gameAlreadyStarted = underworld.players.find(p => p.clientId == window.hostClientId);
         // JOIN_GAME is meant to be handled by everyone except the client that 
         // send the message because the client that just joined will get a whole
         // gamestate dump from the host.
@@ -195,10 +210,9 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
               const restorePlayerTurnIndex = underworld.players.findIndex(p => p == cachedPlayerActiveTurn);
               if (restorePlayerTurnIndex !== undefined) {
                 underworld.playerTurnIndex = restorePlayerTurnIndex;
-
               }
 
-
+              const gameAlreadyStarted = underworld.levelIndex >= 0;
               if (gameAlreadyStarted) {
                 // Send the lastest gamestate to that client so they can be up-to-date:
                 // Note: It is important that this occurs AFTER the player instance is created for the
@@ -206,13 +220,6 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
                 // If the game has already started (e.g. the host has already joined), send the initial state to the new 
                 // client only so they can load
                 giveClientGameStateForInitialLoad(fromClient);
-              } else if (currentClientIsHost && hostIsJoining) {
-                // If the host is the one joining, start the game for all clients (even ones who have already chosen a character).
-                underworld.initLevel(underworld.levelIndex);
-                console.log('Host: Send all clients game state for initial load');
-                clients.forEach(clientId => {
-                  giveClientGameStateForInitialLoad(clientId);
-                });
               }
             } else {
               console.error("Failed to SelectCharacter because Player.create did not return a player object")
@@ -228,6 +235,7 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       } else {
         console.error('Attempted to JOIN_GAME before readState.isReady()');
       }
+      tryStartGame();
       break;
     case MESSAGE_TYPES.SYNC:
       const { players, units, underworldPartial } = payload;

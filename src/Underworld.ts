@@ -48,7 +48,7 @@ export default class Underworld {
   seed: string;
   random: prng;
   // The index of the level the players are on
-  levelIndex: number = 0;
+  levelIndex: number = -1;
   // for serializing random: prng
   RNGState?: SeedrandomState;
   turn_phase: turn_phase = turn_phase.PlayerTurns;
@@ -73,6 +73,7 @@ export default class Underworld {
   // know when they've desynced.  Only used for syncronous message processing
   // since only the syncronous messages affect gamestate.
   processedMessageCount: number = 0;
+  validPlayerSpawnCoords: Vec2[] = [];
 
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
     window.underworld = this;
@@ -251,6 +252,7 @@ export default class Underworld {
   }
 
   initLevel(levelIndex: number): void {
+    this.levelIndex = levelIndex;
     // Now that it's a new level clear out the level's dodads such as
     // bone dust left behind from destroyed corpses
     containerDodads.removeChildren();
@@ -284,7 +286,7 @@ export default class Underworld {
     }
 
     let validSpawnCoords: Vec2[] = [];
-    let validPlayerSpawnCoords: Vec2[] = [];
+    this.validPlayerSpawnCoords = [];
     let validPortalSpawnCoords: Vec2[] = [];
     // The map is made of a matrix of obstacle sectors
     for (let i = 0; i < config.OBSTACLE_SECTORS_COUNT_HORIZONTAL; i++) {
@@ -307,7 +309,7 @@ export default class Underworld {
               if (i == 0 && X == 0) {
                 // Only spawn players in the left most index (X == 0) of the left most obstacle (i==0)
                 const margin = 5;
-                validPlayerSpawnCoords.push({ x: coordX + margin, y: coordY });
+                this.validPlayerSpawnCoords.push({ x: coordX + margin, y: coordY });
               } else if (i == config.OBSTACLE_SECTORS_COUNT_HORIZONTAL - 1 && X == rowOfObstacles.length - 1) {
                 // Only spawn the portal in the right most index of the right most obstacle
                 validPortalSpawnCoords.push({ x: coordX, y: coordY });
@@ -333,10 +335,36 @@ export default class Underworld {
     // Remove bad spawns.  This can happen if an empty space is right next to the border of the map with obstacles
     // all around it.  There is no obstacle there, but there is also no room to move because the spawn location 
     // is inside of an inverted polygon.
-    validPlayerSpawnCoords = validPlayerSpawnCoords.filter(c => findPolygonsThatVec2IsInsideOf(c, this.pathingPolygons).length === 0);
+    this.validPlayerSpawnCoords = this.validPlayerSpawnCoords.filter(c => findPolygonsThatVec2IsInsideOf(c, this.pathingPolygons).length === 0);
     validPortalSpawnCoords = validPortalSpawnCoords.filter(c => findPolygonsThatVec2IsInsideOf(c, this.pathingPolygons).length === 0);
     validSpawnCoords = validSpawnCoords.filter(c => findPolygonsThatVec2IsInsideOf(c, this.pathingPolygons).length === 0);
-    if (validPlayerSpawnCoords.length === 0) {
+
+    // Spawn portal
+    const index = randInt(this.random, 0, validPortalSpawnCoords.length - 1);
+    const portalCoords = validPortalSpawnCoords.splice(index, 1)[0];
+    if (!portalCoords) {
+      console.error('Bad level seed, not enough valid spawns for portal, regenerating');
+      return this.initLevel(this.levelIndex);
+    }
+    const portalPickup = Pickup.specialPickups['portal.png'];
+    Pickup.create(
+      portalCoords.x,
+      portalCoords.y,
+      portalPickup.name,
+      portalPickup.description,
+      false,
+      portalPickup.imagePath,
+      true,
+      portalPickup.effect,
+    );
+
+    // Exclude player spawn coords that cannot path to the portal
+    this.validPlayerSpawnCoords = this.validPlayerSpawnCoords.filter(spawn => {
+      const path = findPath(spawn, portalCoords, this.pathingPolygons);
+      return path.length != 0 && Vec.equal(path[path.length - 1], portalCoords);
+    });
+
+    if (this.validPlayerSpawnCoords.length === 0) {
       console.error('Bad level seed, no place to spawn portal, regenerating');
       return this.initLevel(this.levelIndex);
     }
@@ -361,40 +389,13 @@ export default class Underworld {
         this.spawnEnemy(id, coords);
       }
     }
-    // Spawn portal
-    const index = randInt(this.random, 0, validPortalSpawnCoords.length - 1);
-    const portalCoords = validPortalSpawnCoords.splice(index, 1)[0];
-    if (!portalCoords) {
-      console.error('Bad level seed, not enough valid spawns for portal, regenerating');
-      return this.initLevel(this.levelIndex);
-    }
-    const portalPickup = Pickup.specialPickups['portal.png'];
-    Pickup.create(
-      portalCoords.x,
-      portalCoords.y,
-      portalPickup.name,
-      portalPickup.description,
-      false,
-      portalPickup.imagePath,
-      true,
-      portalPickup.effect,
-    );
 
-    if (validPlayerSpawnCoords.length >= this.players.length) {
+    if (this.validPlayerSpawnCoords.length >= this.players.length) {
       for (let player of this.players) {
         Player.resetPlayerForNextLevel(player);
-        const index = randInt(this.random, 0, validPlayerSpawnCoords.length - 1);
-        const coords = validPlayerSpawnCoords.splice(index, 1)[0];
-        Unit.setLocation(player.unit, coords);
-        // Make sure player can reach portal
-        const path = findPath(coords, portalCoords, this.pathingPolygons);
-        if (path.length == 0 || !Vec.equal(path[path.length - 1], portalCoords)) {
-          console.error('Bad level seed: no path to portal, regenerating');
-          return this.initLevel(this.levelIndex);
-        }
       }
     } else {
-      console.error('Bad level seed, not enough valid spawns for players, regenerating', validPlayerSpawnCoords.length, this.players.length);
+      console.error('Bad level seed, not enough valid spawns for players, regenerating', this.validPlayerSpawnCoords.length, this.players.length);
       return this.initLevel(this.levelIndex);
     }
 
@@ -999,6 +1000,8 @@ export default class Underworld {
     this.height = serialized.height;
     this.width = serialized.width;
     // Note: obstacles are not serialized since they are unchanging between levels
+    // TODO, remove walls and pathingPolygons here, they are set in cacheWalls, so this is redundant
+    // make sure obstacles come over when serialized
     this.walls = serialized.walls;
     this.pathingPolygons = serialized.pathingPolygons;
     this.playersWhoHaveChosenUpgrade = serialized.playersWhoHaveChosenUpgrade;
