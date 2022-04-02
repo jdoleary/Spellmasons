@@ -14,7 +14,6 @@
 - pathing: If click inside poly try nearest corner as well as horizontal and vertical
 - In spell projection, if you're doing enough damage to kill, show it visually
     - also show if it will "dust" someone
-- Easier way to recognize friendly and enemy (green health bar, red health bar)
 ---
 - Songs should all be same volume
 - Bouncing spells?
