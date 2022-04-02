@@ -4,9 +4,11 @@ import { BrowserTracing } from "@sentry/tracing";
 
 export function setupMonitoring() {
 
-  console.log('Setup: Monitoring with Sentry');
+  const release = `spellmasons@${import.meta.env.SNOWPACK_PUBLIC_PACKAGE_VERSION}`;
+  console.log('Setup: Monitoring with Sentry', release);
   Sentry.init({
     dsn: "https://4162d0e2c0a34b1aa44744ce94b4b21b@o1186256.ingest.sentry.io/6306205",
+    release,
     integrations: [new BrowserTracing()],
 
     // Set tracesSampleRate to 1.0 to capture 100%
