@@ -18,6 +18,7 @@ cookieConsentPopup();
 // This import is critical so that the svelte menu has access to
 // the pie globals
 import './wsPieSetup';
+import type { Vec2 } from './Vec';
 
 setupAll();
 
@@ -112,8 +113,11 @@ declare global {
     changeVolume: (volume: number) => void;
     volume: number;
     closeMenu: () => void;
+    // Used to show the current player where they will move to if they click
+    currentPlayerPath: Vec2[];
 
   }
 }
 
 window.volume = 1.0;
+window.currentPlayerPath = [];

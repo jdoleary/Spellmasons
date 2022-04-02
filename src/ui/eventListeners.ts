@@ -95,21 +95,17 @@ export function mousemoveHandler(e: MouseEvent) {
   // Show target hover
   syncSpellEffectProjection();
 
+  // Show walk path:
+  if (window.player) {
+    const mouseTarget = window.underworld.getMousePos();
+    window.currentPlayerPath = findPath(window.player.unit, mouseTarget, window.underworld.pathingPolygons);
+  }
+
   // Test pathing
   window.debugGraphics.clear()
   if (window.showDebug && window.player) {
     const mouseTarget = window.underworld.getMousePos();
     (document.getElementById('debug-info') as HTMLElement).innerText = `x:${Math.round(mouseTarget.x)}, y:${Math.round(mouseTarget.y)}`;
-    const path = findPath(window.player.unit, mouseTarget, window.underworld.pathingPolygons);
-    if (path.length) {
-      window.debugGraphics.lineStyle(3, 0xffffff, 1.0);
-      window.debugGraphics.moveTo(window.player.unit.x, window.player.unit.y);
-      // Draw the path
-      for (let point of path) {
-        window.debugGraphics.drawCircle(point.x, point.y, 4);
-        window.debugGraphics.lineTo(point.x, point.y);
-      }
-    }
     // Draw the pathing walls
     window.debugGraphics.lineStyle(3, 0x00aabb, 0.3);
     const pathingWalls = window.underworld.pathingPolygons.map(polygonToPolygonLineSegments).flat();

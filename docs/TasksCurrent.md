@@ -7,7 +7,7 @@
 - **Jake: Either line of sight for preset range for spells.**
     - Add Line of sight with spells
 - pathing: If click inside poly try nearest corner as well as horizontal and vertical
-- In spell projection, if you're doing enough damage to kill, show it visually
+- **In spell projection, if you're doing enough damage to kill, show it visually**
     - also show if it will "dust" someone
 ---
 - Songs should all be same volume
@@ -34,12 +34,12 @@
     - In between levels choose "get a new card" or "upgrade a card"
 - Brad: opportunity to make spells more powerful
 - Brad: I wish you could take goons with you
+    - What if allies just come with you to next level
+        - would have to disable summoner after all mobs die
 - Brad: Hard to tell who is you and who are your teammates
 - Explain how vampires work on the card
 - Brad: Alternate who goes first
 - Jake overall thoughts:
-    - I like it, good bones
-    - Cards should cost crystals, not numbers
     - Let players pick from 3 starting cards so run is always different
     - Different ways of doing damage
 - Brad: Was moving super fast somehow (after swapping?); everyone is fast

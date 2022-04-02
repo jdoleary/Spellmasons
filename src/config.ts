@@ -12,7 +12,7 @@ export const UNIT_UI_BAR_WIDTH = 28;
 // This ensures that the game doesn't get stuck if, say, the collision system bugs
 // out and a unit never comes to rest
 export const RESOLVE_DONE_MOVING_TIMEOUT_MS = 2000;
-export const UNIT_MOVE_SPEED = 4;
+export const UNIT_MOVE_SPEED = 40;
 export const NON_HEAVY_UNIT_SCALE = 0.8;
 export const START_CARDS_COUNT = 60;
 export const NUM_PICKUPS_PER_LEVEL = 2;

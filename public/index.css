@@ -61,6 +61,9 @@ body.route-Underworld #game-content-holder {
   z-index: 1;
   /* default to hidden */
   display: none;
+  /* This parent disallows clicks so that if it is empty and covers
+  the screen clicks will pass through it */
+  pointer-events: none;
 }
 #upgrade-picker.active {
   display: block;
@@ -69,6 +72,7 @@ body.route-Underworld #game-content-holder {
   justify-content: center;
   align-items: center;
   display: flex;
+  pointer-events: all;
 }
 #upgrade-picker-label {
   text-align: center;
