@@ -1,12 +1,15 @@
 
 ### 2022-04-01 Brad playtest
-- **Jake: Either line of sight for preset range for spells.**
+- Bug: Cannot access menu in upgrade screen via the escape key
+- Bug: Upgrade picker remained active with no cards in it, preventing me from clicking on the menu button which was behind it
 - Bug: Quick link keeps adding url over and over if you keep clicking it
     - it's also confusing for brad.  Needs much help
+- Bug: you can end your turn while you're still moving
 - Add resume button
+
 - Brad: escape desect all / change menu to a button at the top
-- Add Line of sight with spells
-- Bug: if you are selected when you go through portal your move outline snaps to 0,0
+- **Jake: Either line of sight for preset range for spells.**
+    - Add Line of sight with spells
 - Bug: Bite is available in upgrade screen
 - Hover shift should work for units too
 - pathing: If click inside poly try nearest corner as well as horizontal and vertical

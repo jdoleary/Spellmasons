@@ -11,8 +11,6 @@ import * as config from '../config';
 import type * as Unit from '../Unit';
 import type * as Obstacle from '../Obstacle';
 import type * as Pickup from '../Pickup';
-import * as Image from '../Image';
-import * as math from '../math';
 import { targetBlue } from './colors';
 import { calculateCost, CardCost } from '../cards/cardUtils';
 
@@ -33,7 +31,7 @@ export function updatePlanningView() {
       if (
         selectedUnit.alive
       ) {
-        planningViewGraphics.lineStyle(8, 0xffffff, 0.9);
+        planningViewGraphics.lineStyle(8, 0x0fffff, 0.9);
         // Only draw attack range for non player units
         if (selectedUnit.unitType != UnitType.PLAYER_CONTROLLED) {
           planningViewGraphics.drawCircle(
@@ -281,6 +279,12 @@ ${selectedObstacle.description}
     elInspectorTooltipContent.style.visibility = "visible";
 
   }
+}
+export function clearSelection() {
+  selectedUnit = undefined;
+  selectedPickup = undefined;
+  selectedObstacle = undefined;
+  selectedType = null;
 }
 export function updateTooltipSelection(mousePos: Vec2) {
 
