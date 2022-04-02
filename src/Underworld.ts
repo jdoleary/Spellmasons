@@ -834,7 +834,7 @@ export default class Underworld {
       if (card) {
         const animations = []
         if (!dryRun) {
-          const singleCardCost = calculateCost([card], math.distance(casterPlayer.unit, castLocation), casterPlayer);
+          const singleCardCost = calculateCost([card], casterPlayer);
           // Prevent casting if over cost:
           if (singleCardCost.manaCost > casterPlayer.unit.mana) {
             floatingText({

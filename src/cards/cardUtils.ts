@@ -24,7 +24,7 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
     cardCost.healthCost = Math.floor(cardCost.healthCost);
     return cardCost
 }
-export function calculateCost(cards: ICard[], distance: number, caster: IPlayer): CardCost {
+export function calculateCost(cards: ICard[], caster: IPlayer): CardCost {
     let cost: CardCost = { manaCost: 0, healthCost: 0 };
     // Tallys how many times a card has been used as the cards array is iterated
     // this is necessary so that if you cast 3 consecutive spells of the same id
@@ -39,11 +39,6 @@ export function calculateCost(cards: ICard[], distance: number, caster: IPlayer)
         cost.healthCost += singleCardCost.healthCost;
         thisCalculationUsage[card.id] += 1;
     }
-    // Distance multiplier may not be less than 1
-    // because it would be undesireable for spells cast on or close to one's self to be cheaper.
-    const distanceMultiplier = distanceToManaMultiplier(distance);
-    cost.manaCost *= distanceMultiplier;
-    cost.healthCost *= distanceMultiplier;
     // cost should be a whole number for the sake of the player experience
     cost.manaCost = Math.floor(cost.manaCost);
     cost.healthCost = Math.floor(cost.healthCost);

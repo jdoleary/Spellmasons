@@ -9,8 +9,6 @@ import {
   updateTooltipSelection,
 } from './PlanningView';
 import { View } from '../views';
-import { calculateCost } from '../cards/cardUtils';
-import * as math from '../math';
 import { findPath } from '../Pathfinding';
 import { polygonToPolygonLineSegments } from '../Polygon';
 

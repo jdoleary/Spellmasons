@@ -80,9 +80,7 @@ export function updateManaCostUI(): CardCost {
     CardUI.updateCardBadges();
     // Updates the mana cost
     const cards = CardUI.getSelectedCards();
-    const mousePos = window.underworld.getMousePos();
-    const castDistance = isOutOfBounds(mousePos) ? 0 : math.distance(mousePos, window.player.unit)
-    const cost = calculateCost(cards, castDistance, window.player)
+    const cost = calculateCost(cards, window.player)
     _updateManaCostUI(cost);
     return cost;
   }
