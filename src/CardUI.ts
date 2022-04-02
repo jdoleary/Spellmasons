@@ -305,7 +305,7 @@ export function toggleInspectMode(active: boolean) {
 // is kept up to date as the gameplay changes
 setInterval(() => {
   updatePlanningView();
-}, 30);
+}, 16.6);
 export function clearSelectedCards() {
   // Remove the board highlight
   clearSpellEffectProjection();
