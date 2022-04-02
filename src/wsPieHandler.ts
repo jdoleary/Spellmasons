@@ -283,9 +283,7 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       break;
     case MESSAGE_TYPES.MOVE_PLAYER:
       if (caster) {
-        await Unit.moveTowards(caster.unit, payload).then(() => {
-          underworld.endPlayerTurn(caster.clientId);
-        });
+        await Unit.moveTowards(caster.unit, payload);
       } else {
         console.error('Cannot move player, caster does not exist');
       }

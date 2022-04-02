@@ -1,7 +1,6 @@
 
 ### 2022-04-01 Brad playtest
 - **Jake: Either line of sight for preset range for spells.**
-- **Jake: Enter to end turn.  Allow move and cast in any order**
 - Bug: Music volume keeps resetting itself
     - Everytime song changes
 - Bug: Quick link keeps adding url over and over if you keep clicking it
