@@ -51,6 +51,13 @@ export function updatePlanningView() {
     planningViewGraphics.endFill();
     // Draw a circle under the feet of the player whos current turn it is
     if (window.underworld) {
+      // Update tooltip for whatever is being hovered
+      if (document.body.classList.contains('inspect-mode')) {
+        const mousePos = window.underworld.getMousePos();
+        updateTooltipSelection(mousePos);
+      }
+      updateTooltipContent();
+
       const currentTurnPlayer = window.underworld.players[window.underworld.playerTurnIndex];
       if (currentTurnPlayer) {
         // Only draw circle if player isn't moving to avoid UI thrashing
@@ -70,7 +77,6 @@ export function updatePlanningView() {
       }
     }
   }
-  updateTooltipContent();
 }
 export function updateManaCostUI(): CardCost {
   if (window.player) {

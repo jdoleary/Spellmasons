@@ -11,7 +11,6 @@
 - **Jake: Either line of sight for preset range for spells.**
     - Add Line of sight with spells
 - Bug: Bite is available in upgrade screen
-- Hover shift should work for units too
 - pathing: If click inside poly try nearest corner as well as horizontal and vertical
 - In spell projection, if you're doing enough damage to kill, show it visually
     - also show if it will "dust" someone
