@@ -836,7 +836,7 @@ export default class Underworld {
         if (!dryRun) {
           const singleCardCost = calculateCost([card], math.distance(casterPlayer.unit, castLocation), casterPlayer);
           // Prevent casting if over cost:
-          if (singleCardCost.manaCost >= casterPlayer.unit.mana) {
+          if (singleCardCost.manaCost > casterPlayer.unit.mana) {
             floatingText({
               coords: castLocation,
               text: 'Insufficient mana!',
