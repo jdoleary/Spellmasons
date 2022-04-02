@@ -1,5 +1,4 @@
 import { getLoopableIndex } from "./Polygon";
-import { randInt } from "./rand";
 
 const sfx = {
     whoosh: './sound/sfx/whoosh.m4a'
@@ -18,26 +17,28 @@ Object.values(sfx).forEach(path => {
 let songIndex = Math.round(Math.random() * music.length - 1);
 let musicInstance: HTMLAudioElement;
 export function playNextSong() {
+    // If there is currently a song playing, stop it
     if (musicInstance) {
         musicInstance.remove();
     }
     // Loops through songs
     const index = getLoopableIndex(songIndex++, music)
-    console.log('Play song', index);
     musicInstance = new Audio(music[index]);
-    musicInstance.play();
     musicInstance.addEventListener("ended", function () {
         playNextSong();
     });
+    playAudio(musicInstance);
 }
 
 export function playSFX(name: keyof typeof sfx) {
     // In order to allow sounds to overlap, they must be 
     // fully instantiated each time they are played
-    const sfxInstance = new Audio(sfx[name]);
-    sfxInstance.volume = window.volume;
-    sfxInstance.play();
+    playAudio(new Audio(sfx[name]));
 
+}
+function playAudio(audioInstance: HTMLAudioElement) {
+    audioInstance.volume = window.volume;
+    audioInstance.play();
 }
 
 export function setupAudio() {

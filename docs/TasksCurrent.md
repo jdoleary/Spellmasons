@@ -1,8 +1,6 @@
 
 ### 2022-04-01 Brad playtest
 - **Jake: Either line of sight for preset range for spells.**
-- Bug: Music volume keeps resetting itself
-    - Everytime song changes
 - Bug: Quick link keeps adding url over and over if you keep clicking it
     - it's also confusing for brad.  Needs much help
 - Add resume button
