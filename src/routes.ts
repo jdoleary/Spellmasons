@@ -9,7 +9,7 @@ import {
 } from './ui/eventListeners';
 import { turn_phase } from './Underworld';
 import { createUpgradeElement, generateUpgrades } from './Upgrade';
-import { View } from './views';
+import { View, toggleMenu } from './views';
 
 export enum Route {
   // Underworld contains the grid with levels and casting
@@ -78,11 +78,8 @@ export function setRoute(r: Route) {
   // Recentering should happen after stage setup
   recenterStage();
 }
-const elEndTurnBtn: HTMLButtonElement = document.getElementById(
-  'endTurn',
-) as HTMLButtonElement;
-elEndTurnBtn.addEventListener('click', endTurnBtnListener);
-
+const menuBtnId = 'menuBtn';
+const endTurnBtnId = 'endTurn';
 function addUnderworldEventListeners() {
   // Add keyboard shortcuts
   window.addEventListener('keydown', keydownListener);
@@ -90,6 +87,16 @@ function addUnderworldEventListeners() {
   document.body.addEventListener('contextmenu', contextmenuHandler);
   document.body.addEventListener('click', clickHandler);
   document.body.addEventListener('mousemove', mousemoveHandler);
+  // Add button listeners
+  const elEndTurnBtn: HTMLButtonElement = document.getElementById(
+    endTurnBtnId,
+  ) as HTMLButtonElement;
+  elEndTurnBtn.addEventListener('click', endTurnBtnListener);
+  const elMenuBtn: HTMLButtonElement = document.getElementById(
+    menuBtnId,
+  ) as HTMLButtonElement;
+  elMenuBtn.addEventListener('click', toggleMenu);
+  console.log('add event listeners', elMenuBtn);
 }
 
 function removeUnderworldEventListeners() {
@@ -100,4 +107,13 @@ function removeUnderworldEventListeners() {
   document.body.removeEventListener('contextmenu', contextmenuHandler);
   document.body.removeEventListener('click', clickHandler);
   document.body.removeEventListener('mousemove', mousemoveHandler);
+  // Remove button listeners
+  const elEndTurnBtn: HTMLButtonElement = document.getElementById(
+    endTurnBtnId,
+  ) as HTMLButtonElement;
+  elEndTurnBtn.removeEventListener('click', endTurnBtnListener);
+  const elMenuBtn: HTMLButtonElement = document.getElementById(
+    menuBtnId,
+  ) as HTMLButtonElement;
+  elMenuBtn.removeEventListener('click', toggleMenu);
 }

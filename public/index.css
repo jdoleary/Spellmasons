@@ -278,7 +278,6 @@ the face of the last card in the group is seen*/
   text-align: center;
   display: flex;
   justify-content: center;
-  pointer-events: none;
   background-color: grey;
   user-select: none;
 }
@@ -541,6 +540,8 @@ form {
   background-color: cadetblue;
   padding: 16px;
   border-radius: 10px;
+  /* Display above card hand */
+  z-index: 1;
 }
 
 #game-over{

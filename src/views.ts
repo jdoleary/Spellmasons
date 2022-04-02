@@ -17,28 +17,29 @@ export enum View {
   Game,
 }
 let lastNonMenuView: View | undefined;
+function closeMenu() {
+  // Change to the last non menu view
+  if (lastNonMenuView) {
+    setView(lastNonMenuView);
+  } else {
+    console.log('Cannot close menu yet, no previous view to change to.');
+  }
+
+}
+// Make 'closeMenu' available to the svelte menu
+window.closeMenu = closeMenu;
 export function toggleMenu() {
+  console.log('toggle menu');
   const elMenu = document.getElementById('menu') as HTMLElement;
   const menuClosed = elMenu.classList.contains('hidden');
   if (menuClosed) {
     // Open it
     setView(View.Menu);
   } else {
-    // Change to the last non menu view
-    if (lastNonMenuView) {
-      setView(lastNonMenuView);
-    } else {
-      console.log('Cannot close menu yet, no previous view to change to.');
-    }
+    closeMenu();
   }
 
 }
-window.addEventListener('keydown', event => {
-  if (event.code == 'Escape') {
-    toggleMenu();
-    return
-  }
-});
 // The "View" is what the client is looking at
 // No gamelogic should be executed inside setView
 // including setup.

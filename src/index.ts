@@ -111,6 +111,7 @@ declare global {
     playMusic: () => void;
     changeVolume: (volume: number) => void;
     volume: number;
+    closeMenu: () => void;
 
   }
 }

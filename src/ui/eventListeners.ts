@@ -18,6 +18,9 @@ export function keydownListener(event: KeyboardEvent) {
     return;
   }
   switch (event.code) {
+    case 'Escape':
+      CardUI.clearSelectedCards();
+      break;
     case 'AltLeft':
       window.altDown = true;
       break;
