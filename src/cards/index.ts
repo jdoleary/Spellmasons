@@ -113,7 +113,8 @@ function cardToUpgrade(c: ICard): IUpgrade {
     maxCopies: 1,
     effect: (player) => {
       addCardToHand(c, player);
-    }
+    },
+    probability: c.probability
   };
 }
 

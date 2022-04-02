@@ -1,16 +1,16 @@
 
-### 2022-04-01 Brad playtest
-- Bug: Cannot access menu in upgrade screen via the escape key
+### 2022-04-01 Brad/Jake playtest
+- Menu: 
+    - Bug: Cannot access menu in upgrade screen via the escape key
+    - Bug: Quick link keeps adding url over and over if you keep clicking it
+        - it's also confusing for brad.  Needs much help
+    - Bug: you can end your turn while you're still moving
+    - Add resume button
 - Bug: Upgrade picker remained active with no cards in it, preventing me from clicking on the menu button which was behind it
-- Bug: Quick link keeps adding url over and over if you keep clicking it
-    - it's also confusing for brad.  Needs much help
-- Bug: you can end your turn while you're still moving
-- Add resume button
 
 - Brad: escape desect all / change menu to a button at the top
 - **Jake: Either line of sight for preset range for spells.**
     - Add Line of sight with spells
-- Bug: Bite is available in upgrade screen
 - pathing: If click inside poly try nearest corner as well as horizontal and vertical
 - In spell projection, if you're doing enough damage to kill, show it visually
     - also show if it will "dust" someone

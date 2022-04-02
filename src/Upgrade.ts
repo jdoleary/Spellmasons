@@ -1,8 +1,7 @@
-import seedrandom from 'seedrandom';
 import { NUMBER_OF_UPGRADES_TO_CHOOSE_FROM } from './config';
+import { chooseObjectWithProbability } from './math';
 import { MESSAGE_TYPES } from './MessageTypes';
 import type { IPlayer } from './Player';
-import { randInt } from './rand';
 export interface IUpgrade {
   title: string;
   description: (player: IPlayer) => string;
@@ -10,6 +9,8 @@ export interface IUpgrade {
   // The maximum number of copies a player can have of this upgrade
   maxCopies?: number;
   effect: (player: IPlayer) => void;
+  // The probability of getting this as an upgrade
+  probability: number;
 }
 // Chooses a random card based on the card's probabilities
 export function generateUpgrades(player: IPlayer): IUpgrade[] {
@@ -18,8 +19,6 @@ export function generateUpgrades(player: IPlayer): IUpgrade[] {
     return [...upgradeSourceWhenDead];
   }
   let upgrades: IUpgrade[] = [];
-  // Upgrade selection is unique to each client and each level
-  const random = seedrandom(`${window.clientId}-${window.underworld.levelIndex}`);
   // Clone upgrades for later mutation
   const clonedUpgradeSource = [...upgradeSource].filter((u) =>
     (u.maxCopies === undefined
@@ -44,8 +43,13 @@ export function generateUpgrades(player: IPlayer): IUpgrade[] {
     i < numberOfCardsToChoose;
     i++
   ) {
-    const randomIndex = randInt(random, 0, clonedUpgradeSource.length - 1);
-    upgrades = upgrades.concat(clonedUpgradeSource.splice(randomIndex, 1));
+    const upgrade = chooseObjectWithProbability(clonedUpgradeSource)
+    if (upgrade) {
+      const index = clonedUpgradeSource.indexOf(upgrade);
+      upgrades = upgrades.concat(clonedUpgradeSource.splice(index, 1));
+    } else {
+      console.error('could not choose upgrade with probability', clonedUpgradeSource);
+    }
   }
   return upgrades;
 }
@@ -90,6 +94,7 @@ export const upgradeSourceWhenDead: IUpgrade[] = [
     thumbnail: 'images/upgrades/resurrect.png',
     // Resurrection happens automatically at the start of each level
     effect: () => { },
+    probability: 30,
   },
 ];
 export const upgradeSource: IUpgrade[] = [
@@ -103,6 +108,7 @@ export const upgradeSource: IUpgrade[] = [
       player.unit.healthMax += maxHealthIncreaseAmount;
       player.unit.health += maxHealthIncreaseAmount;
     },
+    probability: 30,
   },
   {
     title: '+ Max Mana',
@@ -114,6 +120,7 @@ export const upgradeSource: IUpgrade[] = [
       player.unit.manaMax += maxManaIncreaseAmount;
       player.unit.mana += maxManaIncreaseAmount;
     },
+    probability: 30,
   },
   {
     title: '+ Mana per turn',
@@ -124,6 +131,7 @@ export const upgradeSource: IUpgrade[] = [
     effect: (player) => {
       player.unit.manaPerTurn += maxManaIncreaseAmount;
     },
+    probability: 30,
   },
 ];
 const maxManaIncreaseAmount = 10;
