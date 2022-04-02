@@ -12,6 +12,7 @@ import { initPlanningView } from './ui/PlanningView';
 import type PieClient from '@websocketpie/client';
 import { setupAudio } from './Audio';
 import cookieConsentPopup from './cookieConsent';
+import { setupMonitoring } from './monitoring';
 cookieConsentPopup();
 
 // This import is critical so that the svelte menu has access to
@@ -22,8 +23,7 @@ setupAll();
 
 function setupAll() {
   // Start monitoring with development overlay
-  // import { setupMonitoring } from './monitoring';
-  // setupMonitoring();
+  setupMonitoring();
 
   setupAudio();
 

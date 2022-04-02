@@ -35,6 +35,8 @@
     "typescript": "^4.0.0"
   },
   "dependencies": {
+    "@sentry/browser": "^6.19.3",
+    "@sentry/tracing": "^6.19.3",
     "@websocketpie/client": "^0.13.7",
     "pixi.js": "^6.2.1",
     "seedrandom": "^3.0.5",
