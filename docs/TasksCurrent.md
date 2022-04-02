@@ -1,19 +1,26 @@
 
 ### 2022-04-01 Brad playtest
-- Songs should all be same volume
-- Bug: Quick link keeps adding url over and over if you keep clicking it
-    - it's also confusing for brad.  Needs much help
+- **Jake: Either line of sight for preset range for spells.  Don't increase mana with distance**
+- **Jake: Enter to end turn.  Allow move and cast in any order**
+- Mana bug: Jake cast aoe then damage from far, it said it cost 60 but he ran into "insufficient mana"
 - Bug: Music volume keeps resetting itself
     - Everytime song changes
+- Bug: Quick link keeps adding url over and over if you keep clicking it
+    - it's also confusing for brad.  Needs much help
 - Add resume button
-- Jake suggests 'q' instead of backsspace to remove a card
+- Brad: escape desect all / change menu to a button at the top
 - Add Line of sight with spells
-- Bouncing spells
-- Continuing in the direction you clicked to move (automove)
 - Bug: if you are selected when you go through portal your move outline snaps to 0,0
 - Bug: Bite is available in upgrade screen
-- Mana bug: Jake cast aoe then damage from far, it said it cost 60 but he ran into "insufficient mana"
-- Brad: escape desect all 
+- Hover shift should work for units too
+- pathing: If click inside poly try nearest corner as well as horizontal and vertical
+- In spell projection, if you're doing enough damage to kill, show it visually
+    - also show if it will "dust" someone
+- Easier way to recognize friendly and enemy (green health bar, red health bar)
+---
+- Songs should all be same volume
+- Bouncing spells?
+- Continuing in the direction you clicked to move (automove)
 - Desync occurred while I was alt tabbed
 - Desync caused turns to get messed up (it just didn't update the top bar)
 - Jake wants to right click to cancel spell chains
@@ -22,16 +29,9 @@
 - Jake: visual indicator to remind him that he can move. His mouse doesn't have presence
 - "auto next level" if there's nothing left to do
 - 1 player left to pick upgrades is showing while their in the level
-- Hover shift should work for units too
-- **Jake: Either line of sight for preset range for spells.  Don't increase mana with distance**
 - For walking, white dots along the path show you how many dots it'll take you to get there
 - Jake: "Feels like mouse isn't in the game"
-- pathing: If click inside poly try nearest corner as well as horizontal and vertical
-- **Jake: Enter to end turn.  Allow move and cast in any order**
-- In spell projection, if you're doing enough damage to kill, show it visually
-    - also show if it will "dust" someone
 - Clone disconnected units can move around as AI but still show as disconnected
-- Easier way to recognize friendly and enemy (green health bar, red health bar)
 - Jake: needs unit collision
 - Brad: Lots of "could not find player corresponding to player controlled unit" on mouse move
     - coming from updateTooltipcontent
