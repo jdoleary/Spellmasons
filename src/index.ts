@@ -18,7 +18,6 @@ cookieConsentPopup();
 // This import is critical so that the svelte menu has access to
 // the pie globals
 import './wsPieSetup';
-import type { Vec2 } from './Vec';
 
 setupAll();
 
@@ -115,8 +114,16 @@ declare global {
     changeVolume: (volume: number) => void;
     volume: number;
     closeMenu: () => void;
+    // Used to ensure that the current client's turn doesn't end while they are still walking
+    // If they invoke endMyTurn() while they are walking, it will wait until they are done
+    // walking to end their turn.  If they are not walking, it will end immediately.
+    // This property will always be a promise, since it is set immediately below as a resolved
+    // promise.  This is so that the promise is always resolved UNLESS the player is currently
+    // walking.
+    playerWalkingPromise: Promise<void>;
 
   }
 }
 
 window.volume = 1.0;
+window.playerWalkingPromise = Promise.resolve();

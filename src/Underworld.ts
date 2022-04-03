@@ -565,7 +565,13 @@ export default class Underworld {
   endMyTurn() {
     // Turns can only be manually ended during the PlayerTurns phase
     if (this.turn_phase === turn_phase.PlayerTurns) {
-      window.pie.sendData({ type: MESSAGE_TYPES.END_TURN });
+      if (window.player) {
+        console.log('waiting to end my turn');
+        window.playerWalkingPromise.then(() => {
+          console.log('end my turn');
+          window.pie.sendData({ type: MESSAGE_TYPES.END_TURN });
+        });
+      }
     }
   }
   endPlayerTurn(clientId: string) {

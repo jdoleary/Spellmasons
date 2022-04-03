@@ -1,7 +1,5 @@
 
 ### 2022-04-01 Brad/Jake playtest
-- Menu: 
-    - Bug: you can end your turn while you're still moving
 - Bug: Upgrade picker remained active with no cards in it, preventing me from clicking on the menu button which was behind it
 - !Jake: Either line of sight for preset range for spells.
 - !In spell projection, if you're doing enough damage to kill, show it visually

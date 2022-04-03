@@ -47,7 +47,11 @@ Wizards walk one foot in front of the other just like the rest of us.
       }
       window.dryRunGraphics.clear();
       if (!state.casterUnit.thisTurnMoved) {
-        await Unit.moveTowards(state.casterUnit, originalTarget);
+        const movePromise = Unit.moveTowards(state.casterUnit, originalTarget);
+        if (state.casterPlayer == window.player) {
+          window.playerWalkingPromise = movePromise;
+        }
+        await movePromise;
       } else {
         floatingText({
           coords: originalTarget,

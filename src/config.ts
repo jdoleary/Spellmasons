@@ -1,5 +1,6 @@
 export const PLAYER_BASE_HEALTH = 10;
 export const UNIT_BASE_MOVE_DISTANCE = 200;
+export const UNIT_MOVE_SPEED = 4;
 export const COLLISION_MESH_RADIUS = 32;
 export const LOB_PROJECTILE_SPEED = 600; // in millis
 export const UNIT_SIZE = COLLISION_MESH_RADIUS * 2;
@@ -12,7 +13,6 @@ export const UNIT_UI_BAR_WIDTH = 28;
 // This ensures that the game doesn't get stuck if, say, the collision system bugs
 // out and a unit never comes to rest
 export const RESOLVE_DONE_MOVING_TIMEOUT_MS = 2000;
-export const UNIT_MOVE_SPEED = 40;
 export const NON_HEAVY_UNIT_SCALE = 0.8;
 export const START_CARDS_COUNT = 60;
 export const NUM_PICKUPS_PER_LEVEL = 2;
