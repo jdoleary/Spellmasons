@@ -10,8 +10,8 @@ import Events from './Events';
 import makeAllRedShader from './shaders/selected';
 import { addLerpable } from './lerpList';
 import { findPath } from './Pathfinding';
-import { Route, setRoute } from './routes';
 import { allUnits } from './units';
+import { setView, View } from './views';
 const elHealthBar: HTMLElement = document.querySelector('#health .fill') as HTMLElement;
 const elHealthLabel: HTMLElement = document.querySelector('#health .label') as HTMLElement;
 const elManaBar: HTMLElement = document.querySelector('#mana .fill:nth-child(1)') as HTMLElement;
@@ -290,7 +290,7 @@ export function die(unit: IUnit) {
   }
   // Check for game over
   if (window.underworld.players.every(p => !p.unit.alive)) {
-    setRoute(Route.GameOver);
+    setView(View.GameOver);
   }
 }
 export async function takeDamage(unit: IUnit, amount: number) {

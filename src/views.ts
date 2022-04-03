@@ -7,14 +7,24 @@ import * as Units from './units';
 import { UnitSubType } from './commonTypes';
 import { MESSAGE_TYPES } from './MessageTypes';
 import * as Image from './Image';
+import { createUpgradeElement, generateUpgrades } from './Upgrade';
+import {
+  clickHandler,
+  contextmenuHandler,
+  endTurnBtnListener,
+  keydownListener,
+  keyupListener,
+  mousemoveHandler,
+} from './ui/eventListeners';
 
 // A view is not shared between players in the same game, a player could choose any view at any time
 export enum View {
   Menu,
   Setup,
   CharacterSelect,
-  // Game view shows all the routes, the overworld, upgrade screen, underworld, etc
   Game,
+  Upgrade,
+  GameOver,
 }
 let lastNonMenuView: View | undefined;
 function closeMenu() {
@@ -45,6 +55,10 @@ export function toggleMenu() {
 // including setup.
 export function setView(v: View) {
   console.log('setView(', View[v], ')');
+  for (let view of Object.keys(View)) {
+    document.body.classList.remove(`view-${view}`);
+  }
+  document.body.classList.add(`view-${View[v]}`);
   window.view = v;
   addPixiContainersForView(v);
   recenterStage();
@@ -53,6 +67,9 @@ export function setView(v: View) {
     elMenu.classList.add('hidden');
     lastNonMenuView = v;
   }
+  const elUpgradePicker = document.getElementById('upgrade-picker');
+  // Hide the upgrade picker when the view changes
+  elUpgradePicker && elUpgradePicker.classList.remove('active');
   switch (v) {
     case View.Menu:
       elMenu.classList.remove('hidden');
@@ -82,7 +99,35 @@ export function setView(v: View) {
           });
         });
       break;
+    case View.Upgrade:
+      const elUpgradePickerContent = document.getElementById(
+        'upgrade-picker-content',
+      );
+      if (!elUpgradePicker || !elUpgradePickerContent) {
+        console.error('elUpgradePicker or elUpgradePickerContent are undefined.');
+      }
+      // Reveal the upgrade picker
+      elUpgradePicker && elUpgradePicker.classList.add('active');
+      const player = window.underworld.players.find(
+        (p) => p.clientId === window.clientId,
+      );
+      if (player) {
+        const upgrades = generateUpgrades(player);
+        const elUpgrades = upgrades.map((upgrade) =>
+          createUpgradeElement(upgrade, player),
+        );
+        if (elUpgradePickerContent) {
+          elUpgradePickerContent.innerHTML = '';
+          for (let elUpgrade of elUpgrades) {
+            elUpgradePickerContent.appendChild(elUpgrade);
+          }
+        }
+      } else {
+        console.error('Upgrades cannot be generated, player not found');
+      }
+      break;
     case View.Game:
+      addUnderworldEventListeners();
       break;
     default:
       console.error('Cannot set view to', v, 'no such view exists');
@@ -107,5 +152,44 @@ function clientChooseUnit(unitId: string) {
   });
   // Now that user has selected a character, they can enter the game
   setView(View.Game);
+}
 
+const menuBtnId = 'menuBtn';
+const endTurnBtnId = 'endTurn';
+function addUnderworldEventListeners() {
+  // Add keyboard shortcuts
+  window.addEventListener('keydown', keydownListener);
+  window.addEventListener('keyup', keyupListener);
+  document.body.addEventListener('contextmenu', contextmenuHandler);
+  document.body.addEventListener('click', clickHandler);
+  document.body.addEventListener('mousemove', mousemoveHandler);
+  // Add button listeners
+  const elEndTurnBtn: HTMLButtonElement = document.getElementById(
+    endTurnBtnId,
+  ) as HTMLButtonElement;
+  elEndTurnBtn.addEventListener('click', endTurnBtnListener);
+  const elMenuBtn: HTMLButtonElement = document.getElementById(
+    menuBtnId,
+  ) as HTMLButtonElement;
+  elMenuBtn.addEventListener('click', toggleMenu);
+  console.log('add event listeners', elMenuBtn);
+}
+
+function removeUnderworldEventListeners() {
+  // Remove keyboard shortcuts
+  window.removeEventListener('keydown', keydownListener);
+  window.removeEventListener('keyup', keyupListener);
+  // Remove mouse and click listeners
+  document.body.removeEventListener('contextmenu', contextmenuHandler);
+  document.body.removeEventListener('click', clickHandler);
+  document.body.removeEventListener('mousemove', mousemoveHandler);
+  // Remove button listeners
+  const elEndTurnBtn: HTMLButtonElement = document.getElementById(
+    endTurnBtnId,
+  ) as HTMLButtonElement;
+  elEndTurnBtn.removeEventListener('click', endTurnBtnListener);
+  const elMenuBtn: HTMLButtonElement = document.getElementById(
+    menuBtnId,
+  ) as HTMLButtonElement;
+  elMenuBtn.removeEventListener('click', toggleMenu);
 }

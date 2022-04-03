@@ -1,6 +1,5 @@
 import * as PIXI from 'pixi.js';
 import { MAP_HEIGHT, MAP_WIDTH } from './config';
-import { Route } from './routes';
 import { View } from './views';
 // if PIXI is finished setting up
 let isReady = false;
@@ -72,13 +71,9 @@ export function recenterStage() {
       app.stage.y = window.innerHeight / 2;
       break;
     case View.Game:
-      switch (window.route) {
-        case Route.Underworld:
-          // Align Camera: center the app in the middle of the map 
-          app.stage.x = app.renderer.width / 2 - (MAP_WIDTH) / 2 * app.stage.scale.x;
-          app.stage.y = app.renderer.height / 2 - (MAP_HEIGHT) / 2 * app.stage.scale.y;
-          break;
-      }
+      // Align Camera: center the app in the middle of the map 
+      app.stage.x = app.renderer.width / 2 - (MAP_WIDTH) / 2 * app.stage.scale.x;
+      app.stage.y = app.renderer.height / 2 - (MAP_HEIGHT) / 2 * app.stage.scale.y;
       break;
   }
 
@@ -98,22 +93,15 @@ export function setupPixi(): Promise<void> {
 
   return loadTextures();
 }
-export function addPixiContainersForRoute(route: Route) {
-  removeContainers(underworldPixiContainers);
-  switch (route) {
-    case Route.Underworld:
-      addContainers(underworldPixiContainers);
-      break;
-  }
-}
 export function addPixiContainersForView(view: View) {
   app.stage.removeChildren();
+  removeContainers(underworldPixiContainers);
   switch (view) {
     case View.CharacterSelect:
       addContainers(characterSelectContainers);
       break;
     case View.Game:
-      addPixiContainersForRoute(window.route);
+      addContainers(underworldPixiContainers);
       break;
   }
 }

@@ -4,7 +4,7 @@ body {
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
     'Lucida Sans', Arial, sans-serif;
 }
-body.route-Underworld #underworld-container {
+body.view-Game #underworld-container {
   display: flex;
 }
 #underworld-container {
@@ -16,7 +16,7 @@ body.route-Underworld #underworld-container {
 #game-content-holder {
   display:none;
 }
-body.route-Underworld #game-content-holder {
+body.view-Game #game-content-holder {
   display: flex;
   align-items: flex-start;
   flex-direction: column;
@@ -558,6 +558,6 @@ form {
   left: 0;
   right: 0;
 }
-body.route-GameOver #game-over {
+body.view-GameOver #game-over {
   display:block;
 }

@@ -16,6 +16,7 @@ import {
   containerDodads,
   containerSpells,
   containerUI,
+  recenterStage,
 } from './PixiUtils';
 import floatingText, { orderedFloatingText } from './FloatingText';
 import { UnitType, Faction } from './commonTypes';
@@ -24,12 +25,12 @@ import * as Vec from "./Vec";
 import Events from './Events';
 import { allUnits } from './units';
 import { drawDryRunCircle, syncSpellEffectProjection, updateManaCostUI, updatePlanningView } from './ui/PlanningView';
-import { setRoute, Route } from './routes';
 import { prng, randInt, SeedrandomState } from './rand';
 import { calculateCost } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment } from './collision/collisionMath';
 import { expandPolygon, mergeOverlappingPolygons, Polygon, PolygonLineSegment, polygonToPolygonLineSegments } from './Polygon';
 import { findPath, findPolygonsThatVec2IsInsideOf } from './Pathfinding';
+import { setView, View } from './views';
 
 export enum turn_phase {
   PlayerTurns,
@@ -96,9 +97,6 @@ export default class Underworld {
     return this.random;
   }
   gameLoopUnits() {
-    if (window.route !== Route.Underworld) {
-      return;
-    }
     window.unitOverlayGraphics.clear();
 
 
@@ -169,8 +167,6 @@ export default class Underworld {
   // cleanup cleans up all assets that must be manually removed (for now `Image`s)
   // if an object stops being used.  It does not empty the underworld arrays, by design.
   cleanup() {
-    // Clean up body classes
-    document.body.classList.remove(`route-${Route[window.route]}`);
     // Remove all phase classes from body
     for (let phaseClass of document.body.classList.values()) {
       if (phaseClass.includes('phase-')) {
@@ -407,8 +403,12 @@ export default class Underworld {
     // the event that the planningView is active
     updatePlanningView();
 
-    // Go to underworld, now that level is ready
-    setRoute(Route.Underworld);
+    // Set the first turn phase
+    window.underworld.setTurnPhase(turn_phase.PlayerTurns);
+    // Start the gameloop
+    window.underworld.gameLoopUnits();
+    // Recentering should happen after stage setup
+    recenterStage();
 
     // Show text in center of screen for the new level
     orderedFloatingText(
@@ -588,34 +588,28 @@ export default class Underworld {
       console.info('Cannot end the turn of a player when it isn\'t currently their turn')
       return
     }
-    // Turns can only be ended when the route is the Underworld
-    // and not, for example, Upgrade
-    if (window.route === Route.Underworld) {
-      // Ensure players can only end the turn when it IS their turn
-      if (this.turn_phase === turn_phase.PlayerTurns) {
-        // Incrememt the playerTurnIndex
-        // This must happen before goToNextPhaseIfAppropriate
-        // which checks if the playerTurnIndex is >= the number of players
-        // to see if it should go to the next phase
-        this.playerTurnIndex = playerIndex + 1;
-        if (clientId === window.clientId) {
-          this.setTurnMessage(false, 'Waiting on others');
-        }
-        const wentToNextLevel = this.checkForEndOfLevel();
-        if (wentToNextLevel) {
-          return;
-        }
-        const wentToNextPhase = this.goToNextPhaseIfAppropriate();
-        if (wentToNextPhase) {
-          return;
-        }
-        // Go to next players' turn
-        this.initializePlayerTurn(this.playerTurnIndex)
-      } else {
-        console.error("turn_phase must be PlayerTurns to end turn.  Cannot be ", this.turn_phase);
+    // Ensure players can only end the turn when it IS their turn
+    if (this.turn_phase === turn_phase.PlayerTurns) {
+      // Incrememt the playerTurnIndex
+      // This must happen before goToNextPhaseIfAppropriate
+      // which checks if the playerTurnIndex is >= the number of players
+      // to see if it should go to the next phase
+      this.playerTurnIndex = playerIndex + 1;
+      if (clientId === window.clientId) {
+        this.setTurnMessage(false, 'Waiting on others');
       }
+      const wentToNextLevel = this.checkForEndOfLevel();
+      if (wentToNextLevel) {
+        return;
+      }
+      const wentToNextPhase = this.goToNextPhaseIfAppropriate();
+      if (wentToNextPhase) {
+        return;
+      }
+      // Go to next players' turn
+      this.initializePlayerTurn(this.playerTurnIndex)
     } else {
-      console.error("Route must be Underworld to end turn. Cannot end turn when the route is ", window.route);
+      console.error("turn_phase must be PlayerTurns to end turn.  Cannot be ", this.turn_phase);
     }
   }
   chooseUpgrade(player: Player.IPlayer, upgrade: Upgrade.IUpgrade) {
@@ -675,9 +669,9 @@ export default class Underworld {
       livingPlayers.filter((p) => p.inPortal).length === livingPlayers.length;
     // Advance the level if there are living players and they all are in the portal:
     if (livingPlayers.length && areAllLivingPlayersInPortal) {
-      // Now that level is complete, move to the Upgrade gamestate where players can choose upgrades
+      // Now that level is complete, move to the Upgrade view where players can choose upgrades
       // before moving on to the next level
-      setRoute(Route.Upgrade);
+      setView(View.Upgrade);
       // Reset the playerTurnIndex
       this.playerTurnIndex = 0;
       // Return of true signifies it went to the next level
@@ -1128,3 +1122,4 @@ function getEnemiesForAltitude(levelIndex: number): { [unitid: string]: number }
     return {};
   }
 }
+

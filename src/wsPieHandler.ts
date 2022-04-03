@@ -10,8 +10,6 @@ import * as Unit from './Unit';
 import * as Pickup from './Pickup';
 import * as Obstacle from './Obstacle';
 import { syncSpellEffectProjection } from './ui/PlanningView';
-import { setRoute } from './routes';
-import { setView, View } from './views';
 import * as readyState from './readyState';
 import * as messageQueue from './messageQueue';
 
@@ -333,9 +331,6 @@ function handleLoadGameState(payload: any) {
   // Mark the underworld as "ready"
   readyState.set('underworld', true);
 
-  // Load route
-  setRoute(payload.route);
-
 }
 async function handleSpell(caster: Player.IPlayer, payload: any) {
   if (typeof payload.x !== 'number' || typeof payload.y !== 'number') {
@@ -377,7 +372,6 @@ function forceSyncClient(syncClientId: string) {
   if (window.hostClientId === window.clientId) {
     window.pie.sendData({
       type: MESSAGE_TYPES.LOAD_GAME_STATE,
-      route: window.route,
       underworld: underworld.serializeForSaving(),
     }, {
       subType: "Whisper",
@@ -394,7 +388,6 @@ function giveClientGameStateForInitialLoad(clientId: string) {
       console.log(`Host: Send ${clientId} game state for initial load`);
       window.pie.sendData({
         type: MESSAGE_TYPES.INIT_GAME_STATE,
-        route: window.route,
         underworld: underworld.serializeForSaving(),
       }, {
         subType: "Whisper",
@@ -463,7 +456,6 @@ window.save = (title) => {
       'golems-save-' + title,
       JSON.stringify({
         underworld: window.underworld.serializeForSaving(),
-        route: window.route,
       }),
     );
   } else {
@@ -474,10 +466,9 @@ window.load = (title) => {
   if (window.allowCookies) {
     const savedGameString = localStorage.getItem('golems-save-' + title);
     if (savedGameString) {
-      const { underworld, route } = JSON.parse(savedGameString);
+      const { underworld } = JSON.parse(savedGameString);
       window.pie.sendData({
         type: MESSAGE_TYPES.LOAD_GAME_STATE,
-        route,
         underworld,
       });
     } else {

@@ -1,14 +1,19 @@
 # Critical Path (4st deadline revision)
 - Core:
     - Resolve desync
+        - Write code that looks for desyncs but doesn't try to resolve them.
     - ✔ Resolve pathing
     - Ending your turn shouldn't feel like a chore
-    - If no one else is alive, it should end your turn automatically
-- Opt-outable Tutorial
-    - Movement
-    - Casting
-    - Chaining Spells
-    - Order of spells
+        - If no one else is alive, it should end your turn automatically
+- Opt-outable Tutorial 
+    - Button in the menu: "Skip tutorial"
+    - Use doodads to communicate
+    - What it teaches:
+        - Movement
+        - The Portal
+        - Casting
+        - Chaining Spells
+        - Order of spells
 - Finish Content / Endgame
     - More Spells
     - More enemies
@@ -23,6 +28,8 @@
     - Embedded video
     - News
 - Art in Blender / Shaders / Juice
+    - Tiles: https://opengameart.org/content/dungeon-tileset
+    - https://opengameart.org/content/rogue-dungeon
 - [SFX](https://www.asoundeffect.com/sound-library/metamorphosis/)
     - Adobe? https://www.adobe.com/products/audition/offers/AdobeAuditionDLCSFX.html
 - [Tutorial](https://www.youtube.com/watch?v=-GV814cWiAw)
@@ -51,3 +58,7 @@ If I make the art myself (blender) and the music, I will both save my "runway" (
 3. Simplify or optimize.  Note: It's the third step for a reason. Possibly the most common error of a smart engineer is to optimize a thing that should not exist.
 4. Accelerate cycle time.  You're moving too slowly, go faster.
 5. Automate
+
+## Advice from GMTK:
+- Players must be rewarded or forced to do something risky and fun or they'll do something easy and boring.
+- If something is at the heart of your game, it needs to shine through in every aspect.
