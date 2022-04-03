@@ -228,8 +228,8 @@ export default class Underworld {
   spawnEnemy(id: string, coords: Vec2) {
     const sourceUnit = allUnits[id];
     if (!sourceUnit) {
-      console.error('Unit with id', id, 'does not exist');
-
+      console.error('Unit with id', id, 'does not exist.  Have you registered it in src/units/index.ts?');
+      return;
     }
     let unit: Unit.IUnit = Unit.create(
       sourceUnit.id,
@@ -1050,6 +1050,7 @@ type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFun
 
 function getEnemiesForAltitude(levelIndex: number): { [unitid: string]: number } {
   const hardCodedLevelEnemies: { [unitid: string]: number }[] = [
+    { 'dummy': 1 },
     { 'grunt': 5 },
     {
       'grunt': 4,

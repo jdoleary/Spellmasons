@@ -35,11 +35,13 @@ import demon from './demon';
 import priest from './priest';
 import poisoner from './poisoner';
 import vampire from './vampire';
+import dummy from './dummy';
 
 function register(unit: UnitSource) {
   allUnits[unit.id] = unit;
 }
 export function registerUnits() {
+  register(dummy);
   register(grunt);
   register(archer);
   register(sandGolem);
