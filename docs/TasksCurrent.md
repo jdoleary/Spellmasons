@@ -1,6 +1,5 @@
 
 ### 2022-04-01 Brad/Jake playtest
-- Bug: Upgrade picker remained active with no cards in it, preventing me from clicking on the menu button which was behind it
 - !Jake: Either line of sight for preset range for spells.
 - !In spell projection, if you're doing enough damage to kill, show it visually
     - also show if it will "dust" someone
@@ -11,9 +10,9 @@
 - Desync caused turns to get messed up (it just didn't update the top bar)
 - Somehow Jake started the game while Brad was still looking at upgrades and it showed the game behind
     - AND it went back to the previous level with the dead mobs still there
+    - could this be due to desync messages? Since the route is part of underworld, it may have overridden the other client
 - Jake: visual indicator to remind him that he can move. His mouse doesn't have presence
 - "auto next level" if there's nothing left to do
-- 1 player left to pick upgrades is showing while their in the level
 - Jake: "Feels like mouse isn't in the game"
 - Clone disconnected units can move around as AI but still show as disconnected
 - Jake: needs unit collision
