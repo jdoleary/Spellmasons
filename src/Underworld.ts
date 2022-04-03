@@ -77,7 +77,7 @@ export default class Underworld {
 
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
     window.underworld = this;
-    this.seed = seed;
+    this.seed = '0.9603138187060837';
     console.log("RNG create with seed:", seed, ", state: ", RNGState);
     this.random = this.syncronizeRNG(RNGState);
 
@@ -100,39 +100,6 @@ export default class Underworld {
     }
     window.unitOverlayGraphics.clear();
 
-    // Draw the current player path
-    if (window.player && window.currentPlayerPath.length) {
-      window.unitOverlayGraphics.lineStyle(4, 0xffffff, 1.0);
-      window.unitOverlayGraphics.moveTo(window.player.unit.x, window.player.unit.y);
-      const moveInIncrementsOf = window.player.unit.moveDistance;
-      let movedSoFar = 0;
-      let lastPoint: Vec2 = window.player.unit;
-      // Draw the path, placing circles at each location that the player will stop every turn
-      for (let point of window.currentPlayerPath) {
-        const distanceToPoint = math.distance(lastPoint, point);
-        const distanceLeftToMove = moveInIncrementsOf - movedSoFar;
-        console.log('dist', distanceToPoint, distanceLeftToMove);
-        if (distanceToPoint < distanceLeftToMove) {
-          movedSoFar += distanceToPoint;
-        } else {
-          const willMoveToPointInATurn = math.getCoordsAtDistanceTowardsTarget(
-            lastPoint,
-            point,
-            distanceLeftToMove
-          );
-          window.unitOverlayGraphics.drawCircle(willMoveToPointInATurn.x, willMoveToPointInATurn.y, 3);
-          console.log('jtest', willMoveToPointInATurn);
-          // Reset moved so far for showing movement that will occur in the next turn
-          movedSoFar = 0;
-        }
-        window.unitOverlayGraphics.lineTo(point.x, point.y);
-        lastPoint = point;
-      }
-      // Always draw a stop circle at the end
-      window.unitOverlayGraphics.drawCircle(lastPoint.x, lastPoint.y, 3);
-    }
-    // Reset line style
-    window.unitOverlayGraphics.lineStyle(0);
 
     const aliveUnits = this.units.filter(u => u.alive);
     for (let u of aliveUnits) {

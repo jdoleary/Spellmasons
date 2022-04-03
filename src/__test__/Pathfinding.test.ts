@@ -1,4 +1,5 @@
-import { removeBetweenIndexAtoB } from '../Pathfinding';
+import { removeBetweenIndexAtoB, pointsEveryXDistanceAlongPath } from '../Pathfinding';
+import type { Vec2 } from '../Vec';
 describe('Pathfinding', () => {
     describe('removeBetweenIndexAtoB', () => {
         it('should remove all the indices between A and B', () => {
@@ -39,5 +40,93 @@ describe('Pathfinding', () => {
                 expect(actual).toEqual(expected);
             });
         });
+    });
+});
+describe('pointsEveryXDistanceAlongPath', () => {
+    it('should return an array of points every X distance along a straight path', () => {
+        const startPoint = { x: -1, y: 0 };
+        const path: Vec2[] = [
+            { x: 5, y: 0 },
+        ]
+        const actual = pointsEveryXDistanceAlongPath(startPoint, path, 2);
+        const expected = [
+            { x: 1, y: 0 },
+            { x: 3, y: 0 },
+            { x: 5, y: 0 },
+        ];
+        expect(actual).toEqual(expected);
+    });
+    it('should return an array of points every X distance along a non-straight path', () => {
+        const startPoint = { x: -1, y: 0 };
+        const path: Vec2[] = [
+            { x: 3, y: 0 },
+            { x: 3, y: 2 },
+        ]
+        const actual = pointsEveryXDistanceAlongPath(startPoint, path, 2);
+        const expected = [
+            { x: 1, y: 0 },
+            { x: 3, y: 0 },
+            { x: 3, y: 2 },
+        ];
+        expect(actual).toEqual(expected);
+    });
+    it('should handle non-straight paths', () => {
+        const startPoint = { x: -1, y: 0 };
+        const path: Vec2[] = [
+            { x: 2, y: 0 },
+            { x: 2, y: 2 },
+        ]
+        const actual = pointsEveryXDistanceAlongPath(startPoint, path, 2);
+        const expected = [
+            { x: 1, y: 0 },
+            { x: 2, y: 1 },
+        ];
+        console.log('actual', actual);
+        expect(actual).toEqual(expected);
+    });
+    it('should handle distances between points that are many times greater than the distanceOfIncrements', () => {
+        const startPoint = { x: 0, y: 0 };
+        const path: Vec2[] = [
+            { x: 10, y: 0 },
+        ]
+        const actual = pointsEveryXDistanceAlongPath(startPoint, path, 2);
+        const expected = [
+            { x: 2, y: 0 },
+            { x: 4, y: 0 },
+            { x: 6, y: 0 },
+            { x: 8, y: 0 },
+            { x: 10, y: 0 },
+        ];
+        expect(actual).toEqual(expected);
+    });
+    it('should return an array of points every X distance along a path', () => {
+        const startPoint = { x: 0, y: 0 };
+        const path: Vec2[] = [
+            { x: 2, y: 0 },
+            { x: 5, y: 0 },
+            { x: 5.5, y: 0 },
+            { x: 6.5, y: 0 },
+            { x: 8, y: 0 },
+            { x: 14, y: 0 },
+            { x: 14, y: 2 },
+            { x: 14, y: 3 },
+            { x: 14, y: 3.5 },
+            { x: 14, y: 5 },
+            { x: 14, y: 6 },
+        ]
+        const actual = pointsEveryXDistanceAlongPath(startPoint, path, 2);
+        const expected = [
+            { x: 2, y: 0 },
+            { x: 4, y: 0 },
+            { x: 6, y: 0 },
+            { x: 8, y: 0 },
+            { x: 10, y: 0 },
+            { x: 12, y: 0 },
+            { x: 14, y: 0 },
+            { x: 14, y: 2 },
+            { x: 14, y: 4 },
+            { x: 14, y: 6 },
+        ];
+        expect(actual).toEqual(expected);
     });
 });

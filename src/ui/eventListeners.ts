@@ -9,8 +9,10 @@ import {
   updateTooltipSelection,
 } from './PlanningView';
 import { View } from '../views';
-import { findPath } from '../Pathfinding';
+import { findPath, pointsEveryXDistanceAlongPath } from '../Pathfinding';
 import { polygonToPolygonLineSegments } from '../Polygon';
+import { Vec2, add } from '../Vec';
+import * as math from '../math';
 
 export function keydownListener(event: KeyboardEvent) {
   // Only handle hotkeys when viewing the Game
@@ -96,10 +98,26 @@ export function mousemoveHandler(e: MouseEvent) {
   syncSpellEffectProjection();
 
   // Show walk path:
+  window.unitUnderlayGraphics.clear();
   if (window.player) {
     const mouseTarget = window.underworld.getMousePos();
-    window.currentPlayerPath = findPath(window.player.unit, mouseTarget, window.underworld.pathingPolygons);
+    const currentPlayerPath = findPath(window.player.unit, mouseTarget, window.underworld.pathingPolygons);
+    if (currentPlayerPath.length) {
+      window.unitUnderlayGraphics.lineStyle(4, 0xffffff, 1.0);
+      window.unitUnderlayGraphics.moveTo(window.player.unit.x, window.player.unit.y);
+      for (let point of currentPlayerPath) {
+        window.unitUnderlayGraphics.lineTo(point.x, point.y);
+      }
+      const turnStopPoints = pointsEveryXDistanceAlongPath(window.player.unit, currentPlayerPath, window.player.unit.moveDistance);
+      for (let point of turnStopPoints) {
+        window.unitUnderlayGraphics.drawCircle(point.x, point.y, 3);
+      }
+      // Always draw a stop circle at the end
+      const lastPointInPath = currentPlayerPath[currentPlayerPath.length - 1]
+      window.unitUnderlayGraphics.drawCircle(lastPointInPath.x, lastPointInPath.y, 3);
+    }
   }
+
 
   // Test pathing
   window.debugGraphics.clear()

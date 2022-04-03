@@ -4,6 +4,7 @@ import { distance } from "./math";
 import { getPointsFromPolygonStartingAt, doesVertexBelongToPolygon, Polygon, PolygonLineSegment, polygonToPolygonLineSegments, isVec2InsidePolygon, doesLineFromPointToTargetProjectAwayFromOwnPolygon, getInsideAnglesOfWall } from "./Polygon";
 import type { Vec2 } from './Vec';
 import * as Vec from './Vec';
+import * as math from './math';
 
 // Will return either an array with 1 normal polygon or an array with potentially multiple
 // inverted polygons 
@@ -577,4 +578,52 @@ function getClosestIntersectionWithWalls(line: LineSegment, walls: PolygonLineSe
         }
     }
     return { intersectingWall, closestIntersection };
+}
+
+// If you walked a path dropping a marker every X distance travelled, this function
+// returns the locations of the marker.
+export function pointsEveryXDistanceAlongPath(startPoint: Vec2, path: Vec2[], distanceOfIncrements: number): Vec2[] {
+    // 0. if "distance" > remaining distance to next point, set next distance to "distance" - remaining distance and go next point
+    // 1. else move "distance" along a line and place a marker
+
+    // Rules:
+    // Always project new points from the last point in the path
+    // If the distance to a point is < the remaining distance to go for the next point, subtrace from the remaining distance to go and continue
+
+    // 3 possibilities:
+    // 1. Finish right on a point
+    // 2. new point before a point with some left over
+    // 3. new point after a point with some left over, 3 turns into 1 or 2
+    const points: Vec2[] = [];
+    let lastPoint = startPoint;
+    let nextDistance = distanceOfIncrements;
+    for (let point of path) {
+        const distanceToPoint = math.distance(lastPoint, point);
+        if (nextDistance > distanceToPoint) {
+            nextDistance -= distanceToPoint;
+        } else {
+            let newPoint: Vec2 = lastPoint;
+            // Always place at least one point.  In the event that nextDistance is < distanceOfIncrements AND
+            // less that distanceToPoint, it still needs a point, so make the for loop execute at least once
+            const numberOfPointsOnThisLine = Math.ceil(distanceToPoint / distanceOfIncrements);
+            for (let i = 0; i < numberOfPointsOnThisLine; i++) {
+                if (nextDistance > distanceToPoint) {
+                    break;
+                }
+                newPoint = math.getCoordsAtDistanceTowardsTarget(
+                    lastPoint,
+                    point,
+                    nextDistance
+                )
+                points.push(newPoint);
+                nextDistance += distanceOfIncrements;
+            }
+            const leftOver = Math.abs(distance(point, newPoint));
+            nextDistance = distanceOfIncrements - leftOver;
+        }
+        // Always update the lastPoint with the point that was just processed,
+        // becauses this is where we will project from to find intermediate points
+        lastPoint = point;
+    }
+    return points
 }

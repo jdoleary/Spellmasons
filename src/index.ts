@@ -108,13 +108,13 @@ declare global {
     debugGraphics: PIXI.Graphics;
     // Graphics for drawing unit health and mana bars
     unitOverlayGraphics: PIXI.Graphics;
+    // Graphics for drawing the player visible path
+    unitUnderlayGraphics: PIXI.Graphics;
     allowCookies: boolean;
     playMusic: () => void;
     changeVolume: (volume: number) => void;
     volume: number;
     closeMenu: () => void;
-    // Used to show the current player where they will move to if they click
-    currentPlayerPath: Vec2[];
 
   }
 }
