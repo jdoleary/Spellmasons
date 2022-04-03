@@ -40,6 +40,10 @@ export function setRoute(r: Route) {
 
   // Remove previous event listeners:
   removeUnderworldEventListeners();
+
+  const elUpgradePicker = document.getElementById('upgrade-picker');
+  // Hide the upgrade picker when the route changes
+  elUpgradePicker && elUpgradePicker.classList.remove('active');
   switch (r) {
     case Route.Underworld:
       // Set the first turn phase
@@ -50,11 +54,13 @@ export function setRoute(r: Route) {
       // Beating a level takes players from Underworld to Upgrade
       break;
     case Route.Upgrade:
-      const elUpgradePicker = document.getElementById('upgrade-picker');
       const elUpgradePickerContent = document.getElementById(
         'upgrade-picker-content',
       );
-      elUpgradePicker && elUpgradePicker.classList.remove('active');
+      if (!elUpgradePicker || !elUpgradePickerContent) {
+        console.error('elUpgradePicker or elUpgradePickerContent are undefined.');
+      }
+      // Reveal the upgrade picker
       elUpgradePicker && elUpgradePicker.classList.add('active');
       const player = window.underworld.players.find(
         (p) => p.clientId === window.clientId,
