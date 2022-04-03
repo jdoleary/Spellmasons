@@ -496,7 +496,10 @@ export default class Underworld {
     this.setTurnPhase(turn_phase.PlayerTurns);
 
     // Have the host send out syncronization messages so all clients are sync'd
-    this.hostSendSync();
+    // -- I believe the sync message itself has been causing desyncs, so we'll try with
+    // hostSendSync disabled (major desyncs will still cause a sync) and we'll see if that
+    // fixes the desync issues
+    // this.hostSendSync();
   }
   setTurnMessage(yourTurn: boolean, message: string) {
     if (elPlayerTurnIndicator) {
