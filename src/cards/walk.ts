@@ -3,6 +3,8 @@ import type { Spell } from '.';
 import floatingText from '../FloatingText';
 import { findPath, pointsEveryXDistanceAlongPath } from '../Pathfinding';
 import { isOutOfBounds } from '../ui/PlanningView';
+import * as math from '../math';
+import * as config from '../config';
 
 const id = 'walk';
 const spell: Spell = {
@@ -29,7 +31,10 @@ Wizards walk one foot in front of the other just like the rest of us.
           const currentPlayerPath = findPath(window.player.unit, originalTarget, window.underworld.pathingPolygons);
           if (currentPlayerPath.length) {
             window.dryRunGraphics.lineStyle(4, 0xffffff, 1.0);
-            window.dryRunGraphics.moveTo(window.player.unit.x, window.player.unit.y);
+            // firstPoint in path is essentially the player units exact locaiton, but for the
+            // dryRunGraphics, it should be a little beyond the player just for aesthetics
+            const firstPointInPath = math.getCoordsAtDistanceTowardsTarget(window.player.unit, currentPlayerPath[0], config.COLLISION_MESH_RADIUS);
+            window.dryRunGraphics.moveTo(firstPointInPath.x, firstPointInPath.y);
             for (let point of currentPlayerPath) {
               window.dryRunGraphics.lineTo(point.x, point.y);
             }
