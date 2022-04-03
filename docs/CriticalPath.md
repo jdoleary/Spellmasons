@@ -1,22 +1,28 @@
 # Critical Path (4st deadline revision)
+- Core:
+    - Resolve desync
+    - ✔ Resolve pathing
 - Opt-outable Tutorial
-    - 
 - Finish Content / Endgame
     - More Spells
     - More enemies
-- Youtube Alpha version video / Setup Social Media system
-- Menus / Options / homepage
+- Youtube Alpha version video / Post on social
+- Menus
+    - Save / Load
+- Options
+    - ✔ Volume
+    - ✔ Cookies
+- Homepage
+    - Embedded video
+    - News
 - Art in Blender / Shaders / Juice
 - [SFX](https://www.asoundeffect.com/sound-library/metamorphosis/)
     - Adobe? https://www.adobe.com/products/audition/offers/AdobeAuditionDLCSFX.html
 - [Tutorial](https://www.youtube.com/watch?v=-GV814cWiAw)
-- Monitoring (Sentry.io?)
+- ✔ Monitoring: Sentry.io
 - April 30: Release
 - Open Source
 - Engage community in making new spells
-## Gameplay complete standard
-- No Pathfinding bugs
-- No sync bugs
 
 ## Deadlines
 - ~~My part (gameplay) should be finished end of Feb 2022~~

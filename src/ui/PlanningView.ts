@@ -242,9 +242,9 @@ export function updateTooltipContent() {
               'Cards: ' +
               player.cards.join(', ');
           } else {
-            console.error(
-              'Could not find player corresponding to player controlled unit',
-            );
+            console.error('Tooltip: selectedUnit is player controlled but does not exist in underworld.players array.');
+            selectedUnit = undefined;
+            break;
           }
         }
         text += `\

@@ -3,10 +3,8 @@
 - Menu: 
     - Bug: you can end your turn while you're still moving
 - Bug: Upgrade picker remained active with no cards in it, preventing me from clicking on the menu button which was behind it
-
-- **Jake: Either line of sight for preset range for spells.**
-    - Add Line of sight with spells
-- **In spell projection, if you're doing enough damage to kill, show it visually**
+- !Jake: Either line of sight for preset range for spells.
+- !In spell projection, if you're doing enough damage to kill, show it visually
     - also show if it will "dust" someone
 ---
 - Songs should all be same volume
@@ -21,8 +19,6 @@
 - Jake: "Feels like mouse isn't in the game"
 - Clone disconnected units can move around as AI but still show as disconnected
 - Jake: needs unit collision
-- Brad: Lots of "could not find player corresponding to player controlled unit" on mouse move
-    - coming from updateTooltipcontent
 - die(), addPixiSprite, cannot read properties of null reaeding "addChild"
 - Show in UI how much mana you get per turn
 - Jake: 'yoink' takes a card from another unit
