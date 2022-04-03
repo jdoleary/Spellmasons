@@ -3,9 +3,14 @@
     - Resolve desync
     - ✔ Resolve pathing
 - Opt-outable Tutorial
+    - Movement
+    - Casting
+    - Chaining Spells
+    - Order of spells
 - Finish Content / Endgame
     - More Spells
     - More enemies
+    - Bosses
 - Youtube Alpha version video / Post on social
 - Menus
     - Save / Load

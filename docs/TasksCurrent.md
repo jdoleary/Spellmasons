@@ -1,5 +1,6 @@
 
 ### 2022-04-01 Brad/Jake playtest
+- bug: fix player getting stuck on wall for pathing on current seed.
 - !Jake: Either line of sight for preset range for spells.
 - !In spell projection, if you're doing enough damage to kill, show it visually
     - also show if it will "dust" someone
@@ -32,17 +33,14 @@
     - Different ways of doing damage
 - Brad: Was moving super fast somehow (after swapping?); everyone is fast
     - enjoys the movement speed being faster
-- Brad: Boss levels needed
 
 ### 2022-03-31
 - Solve for spawning mid game, including cloning (how to prevent spawning in a no walk zone)
     - Handle when there aren't enough spaces to spawn for players more gracefully
     - ~~How to init players that join mid game?~~
     - Why can't a player that joins mid game see disconnected players?
-## Critical Tasks
--
 ## Tasks
-- When 'vampire' modifier is removed, it should remove the card 'bite' too.
+- Refactor modifiers so their 'add' and 'remove' happen automatically because they get registered, not because they're imported and invoked manually.  When 'vampire' modifier is removed, it should remove the card 'bite' too.
     - Make adding and removing modifiers automatic, kind of like allUnits or source units.  When they are registered, their
     add and remove functions should be kept
 - Bug: You can still select enemies and things with a spell up if the spell's left click doesn't cast the spell (such as AOE then nothing)
@@ -52,7 +50,6 @@
 - Dad:
     - Missing spell projection overlay
     - He got right click and left click mixed up
-    - Wants to know how far he's able to walk in one turn
     - Doesn't know what the circle means when clicking on enemies
     - Don't let me put more cards down than i can afford
 - Brad:
