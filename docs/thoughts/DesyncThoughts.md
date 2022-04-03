@@ -6,7 +6,6 @@ When a new client needs to fully sync the current game state:
 
 ## 2022-02-01
 - Messages to Sync
-  - MOVE_PLAYER
   - SPELL
   - CHOOSE_UPGRADE
 - State to Sync

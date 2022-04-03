@@ -20,6 +20,7 @@ export function initPlanningView() {
   planningViewGraphics = new PIXI.Graphics();
   containerPlanningView.addChild(planningViewGraphics);
   dryRunGraphics = new PIXI.Graphics();
+  window.dryRunGraphics = dryRunGraphics;
   containerUI.addChild(dryRunGraphics);
 }
 let lastSpotCurrentPlayerTurnCircle: Vec2 = { x: 0, y: 0 };

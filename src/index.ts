@@ -108,8 +108,8 @@ declare global {
     debugGraphics: PIXI.Graphics;
     // Graphics for drawing unit health and mana bars
     unitOverlayGraphics: PIXI.Graphics;
-    // Graphics for drawing the player visible path
-    unitUnderlayGraphics: PIXI.Graphics;
+    // Graphics for drawing the spell effects during the dry run phase
+    dryRunGraphics: PIXI.Graphics;
     allowCookies: boolean;
     playMusic: () => void;
     changeVolume: (volume: number) => void;
@@ -120,4 +120,3 @@ declare global {
 }
 
 window.volume = 1.0;
-window.currentPlayerPath = [];

@@ -97,27 +97,6 @@ export function mousemoveHandler(e: MouseEvent) {
   // Show target hover
   syncSpellEffectProjection();
 
-  // Show walk path:
-  window.unitUnderlayGraphics.clear();
-  if (window.player) {
-    const mouseTarget = window.underworld.getMousePos();
-    const currentPlayerPath = findPath(window.player.unit, mouseTarget, window.underworld.pathingPolygons);
-    if (currentPlayerPath.length) {
-      window.unitUnderlayGraphics.lineStyle(4, 0xffffff, 1.0);
-      window.unitUnderlayGraphics.moveTo(window.player.unit.x, window.player.unit.y);
-      for (let point of currentPlayerPath) {
-        window.unitUnderlayGraphics.lineTo(point.x, point.y);
-      }
-      const turnStopPoints = pointsEveryXDistanceAlongPath(window.player.unit, currentPlayerPath, window.player.unit.moveDistance);
-      for (let point of turnStopPoints) {
-        window.unitUnderlayGraphics.drawCircle(point.x, point.y, 3);
-      }
-      // Always draw a stop circle at the end
-      const lastPointInPath = currentPlayerPath[currentPlayerPath.length - 1]
-      window.unitUnderlayGraphics.drawCircle(lastPointInPath.x, lastPointInPath.y, 3);
-    }
-  }
-
 
   // Test pathing
   if (window.showDebug && window.player) {
@@ -139,37 +118,6 @@ export function contextmenuHandler(e: MouseEvent) {
     return;
   }
   e.preventDefault();
-  const mouseTarget = window.underworld.getMousePos();
-  if (isOutOfBounds(mouseTarget)) {
-    // Disallow click out of bounds
-    return;
-  }
-  if (window.underworld.isMyTurn()) {
-    // Get current client's player
-    const selfPlayer:
-      | Player.IPlayer
-      | undefined = window.underworld.players.find(
-        (p) => p.clientId === window.clientId,
-      );
-    // If player hasn't already moved this turn...
-    if (selfPlayer && !selfPlayer.unit.thisTurnMoved) {
-      window.pie.sendData({
-        type: MESSAGE_TYPES.MOVE_PLAYER,
-        ...mouseTarget,
-      });
-    } else {
-      floatingText({
-        coords: mouseTarget,
-        text: 'You cannot move more than once per turn.',
-      });
-    }
-  } else {
-    floatingText({
-      coords: mouseTarget,
-      text: 'You must wait for your turn to move',
-    });
-
-  }
   return false;
 }
 // Handle clicks on the game board
