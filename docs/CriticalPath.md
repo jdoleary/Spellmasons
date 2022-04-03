@@ -2,6 +2,8 @@
 - Core:
     - Resolve desync
     - ✔ Resolve pathing
+    - Ending your turn shouldn't feel like a chore
+    - If no one else is alive, it should end your turn automatically
 - Opt-outable Tutorial
     - Movement
     - Casting

@@ -1,36 +1,25 @@
 
 ### 2022-04-01 Brad/Jake playtest
 - bug: fix player getting stuck on wall for pathing on current seed.
-- !Jake: Either line of sight for preset range for spells.
-- !In spell projection, if you're doing enough damage to kill, show it visually
+- Jake: Either line of sight for preset range for spells.
+- In spell projection, if you're doing enough damage to kill, show it visually
     - also show if it will "dust" someone
----
 - Songs should all be same volume
 - Continuing in the direction you clicked to move (automove)
-- Desync occurred while I was alt tabbed
-- Desync caused turns to get messed up (it just didn't update the top bar)
-- Somehow Jake started the game while Brad was still looking at upgrades and it showed the game behind
-    - AND it went back to the previous level with the dead mobs still there
-    - could this be due to desync messages? Since the route is part of underworld, it may have overridden the other client
+- Desyncs:
+    - Desync occurred while I was alt tabbed
+    - Desync caused turns to get messed up (it just didn't update the top bar)
+    - Somehow Jake started the game while Brad was still looking at upgrades and it showed the game behind
+        - AND it went back to the previous level with the dead mobs still there
+        - could this be due to desync messages? Since the route is part of underworld, it may have overridden the other client
 - Jake: visual indicator to remind him that he can move. His mouse doesn't have presence
 - "auto next level" if there's nothing left to do
 - Jake: "Feels like mouse isn't in the game"
 - Clone disconnected units can move around as AI but still show as disconnected
 - Jake: needs unit collision
-- die(), addPixiSprite, cannot read properties of null reaeding "addChild"
 - Show in UI how much mana you get per turn
-- Jake: 'yoink' takes a card from another unit
-- Jake: What if there's a random encounter on some levels where it's a card forge
-    - In between levels choose "get a new card" or "upgrade a card"
-- Brad: opportunity to make spells more powerful
-- Brad: I wish you could take goons with you
-    - What if allies just come with you to next level
-        - would have to disable summoner after all mobs die
 - Explain how vampires work on the card
 - Brad: Alternate who goes first
-- Jake overall thoughts:
-    - Let players pick from 3 starting cards so run is always different
-    - Different ways of doing damage
 - Brad: Was moving super fast somehow (after swapping?); everyone is fast
     - enjoys the movement speed being faster
 
@@ -52,8 +41,6 @@
     - He got right click and left click mixed up
     - Doesn't know what the circle means when clicking on enemies
     - Don't let me put more cards down than i can afford
-- Brad:
-    - How to communicatge the extra cost that distance adds to mana
 
 Finish Content:
 - More spells:
@@ -72,3 +59,13 @@ Finish Content:
         - Putting spells on the ground. DOTs, AOE fields
         - Debuffs
         - Explosive on an enemy and when he dies it procs
+        - Jake: 'yoink' takes a card from another unit
+- Jake overall thoughts:
+    - Let players pick from 3 starting cards so run is always different
+    - Different ways of doing damage
+- Jake: What if there's a random encounter on some levels where it's a card forge
+    - In between levels choose "get a new card" or "upgrade a card"
+- Brad: opportunity to make spells more powerful
+- Brad: I wish you could take goons with you
+    - What if allies just come with you to next level
+        - would have to disable summoner after all mobs die
