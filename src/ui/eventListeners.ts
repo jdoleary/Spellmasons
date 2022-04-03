@@ -120,7 +120,6 @@ export function mousemoveHandler(e: MouseEvent) {
 
 
   // Test pathing
-  window.debugGraphics.clear()
   if (window.showDebug && window.player) {
     const mouseTarget = window.underworld.getMousePos();
     (document.getElementById('debug-info') as HTMLElement).innerText = `x:${Math.round(mouseTarget.x)}, y:${Math.round(mouseTarget.y)}`;

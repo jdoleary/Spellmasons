@@ -73,24 +73,30 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
     // as close as it can go without intersecting the polygon
     const targetInsideOfPolys: Polygon[] = findPolygonsThatVec2IsInsideOf(target, polygons);
 
+    window.debugGraphics.clear();
     // If the real target is in an invalid location,
     // find the closest valid target to represent the endpoint of the path
     if (targetInsideOfPolys.length) {
-        const rightAngleIntersections = [];
+        const nearPointsOnWalls = [];
         for (let poly of targetInsideOfPolys) {
             for (let wall of polygonToPolygonLineSegments(poly)) {
                 const intersection = findWherePointIntersectLineSegmentAtRightAngle(target, wall);
                 if (intersection) {
                     // window.debugGraphics.lineStyle(3, 0xff0000, 1.0);
                     // window.debugGraphics.drawCircle(intersection.x, intersection.y, 3);
-                    rightAngleIntersections.push(intersection);
+                    nearPointsOnWalls.push(intersection);
                 }
 
             }
+            targetInsideOfPolys.map(p => p.points).flat().forEach(point => {
+                // window.debugGraphics.lineStyle(3, 0x00ff00, 1.0);
+                // window.debugGraphics.drawCircle(point.x, point.y, 3);
+                nearPointsOnWalls.push(point);
+            });
         }
-        // Find the closest of the intersections
-        if (rightAngleIntersections.length) {
-            const closest = rightAngleIntersections.reduce<{ intersection: Vec2, dist: number }>((acc, cur) => {
+        // Find the closest of the nearPointsOnWalls 
+        if (nearPointsOnWalls.length) {
+            const closest = nearPointsOnWalls.reduce<{ intersection: Vec2, dist: number }>((acc, cur) => {
                 const dist = distance(cur, target)
                 if (dist <= acc.dist) {
                     return { intersection: cur, dist };
@@ -98,26 +104,11 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
                     return acc;
                 }
 
-            }, { intersection: rightAngleIntersections[0], dist: Number.MAX_SAFE_INTEGER })
+            }, { intersection: nearPointsOnWalls[0], dist: Number.MAX_SAFE_INTEGER })
             // window.debugGraphics.lineStyle(3, 0x0000ff, 1.0);
             // window.debugGraphics.drawCircle(closest.intersection.x, closest.intersection.y, 4);
             // Override target with a location that the unit can actually fit in:
             target = closest.intersection;
-        } else {
-            // If there are no right angle intersections (which can happen if the point is "inside" an inverted poly at an angle)
-            // find the closest vertex and reassign the target so that units don't move inside the inverted poly
-            target = targetInsideOfPolys.map(p => p.points).flat().reduce<{ vertex: Vec2, dist: number }>((acc, cur) => {
-                const dist = distance(cur, target)
-                if (dist <= acc.dist) {
-                    return { vertex: cur, dist };
-                } else {
-                    return acc;
-                }
-
-            }, { vertex: targetInsideOfPolys[0].points[0], dist: Number.MAX_SAFE_INTEGER }).vertex;
-            // window.debugGraphics.lineStyle(3, 0xf000ff, 1.0);
-            // window.debugGraphics.drawCircle(target.x, target.y, 4);
-
         }
     }
 
