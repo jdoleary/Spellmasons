@@ -17,8 +17,10 @@ Object.values(sfx).forEach(path => {
 let songIndex = Math.round(Math.random() * music.length - 1);
 let musicInstance: HTMLAudioElement;
 export function playNextSong() {
+    console.log('playNextSong', musicInstance);
     // If there is currently a song playing, stop it
     if (musicInstance) {
+        musicInstance.pause();
         musicInstance.remove();
     }
     // Loops through songs
