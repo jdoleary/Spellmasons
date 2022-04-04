@@ -393,7 +393,7 @@ function processPaths(paths: Path[], pathingWalls: PolygonLineSegment[]): Path[]
             // Check for collisions between the last line in the path and pathing walls
             // path.points.length === 1 because includeStartPoint should be true if this is the very beginning of the path in case
             // the unit is already on an edge of a polygon
-            let { intersectingWall, closestIntersection } = getClosestIntersectionWithWalls(nextStraightLine, pathingWalls, path.points.length == 1);
+            let { intersectingWall, closestIntersection } = getClosestIntersectionWithWalls(nextStraightLine, pathingWalls);
             // If there is an intersection between a straight line path and a pathing wall
             // we have to branch the path to the corners of the wall and try again
             if (intersectingWall && closestIntersection) {
@@ -530,7 +530,7 @@ function getLastLineInPath(path: Path): LineSegment {
 // a new path because if the unit's start point is already on an edge of a poly, if we 
 // don't allow for collisions with line.p1, they will path right through the poly that
 // they are already on the edge of.
-function getClosestIntersectionWithWalls(line: LineSegment, walls: PolygonLineSegment[], includeStartPoint: boolean = false): { intersectingWall?: PolygonLineSegment, closestIntersection?: Vec2 } {
+function getClosestIntersectionWithWalls(line: LineSegment, walls: PolygonLineSegment[]): { intersectingWall?: PolygonLineSegment, closestIntersection?: Vec2 } {
     let intersectingWall;
     let closestIntersection;
     let closestIntersectionDistance;
@@ -538,12 +538,12 @@ function getClosestIntersectionWithWalls(line: LineSegment, walls: PolygonLineSe
     for (let wall of walls) {
         const intersection = lineSegmentIntersection(line, wall);
         if (intersection) {
-            // Since non-inverted polygons' walls count as INSIDE, inverted polygons' walls count as OUTSIDE
-            // the polygon, so when the wall belongs to an inverted polygon, always ignore collisions at the
-            // start of the line segment
-            if (wall.polygon.inverted && Vec.equal(line.p1, intersection)) {
-                // If the polygon is inverted, and the line is cast towards the inside (outside) from the 
-                // inverted polygon, allow it
+            // If the intersection is at the start point of the line...
+            if (Vec.equal(line.p1, intersection)) {
+                // If the line is cast towards the walkable side from the 
+                // polygon, allow it.  Whereas if the line is cast toward the non-walkable
+                // portion of the poly (for normal polys, the inside; for inverted polys, the outside),
+                // it will be considered as an intersection and returned if it is the closest intersection
                 const insideAngleOfWall = getInsideAnglesOfWall(wall);
                 const lineIsCastIntoNoWalkZone = isAngleBetweenAngles(
                     Vec.getAngleBetweenVec2s(line.p1, line.p2), insideAngleOfWall.start, insideAngleOfWall.end
@@ -552,10 +552,6 @@ function getClosestIntersectionWithWalls(line: LineSegment, walls: PolygonLineSe
                     // Ignore the collision
                     continue
                 }
-            }
-            if (!includeStartPoint && Vec.equal(line.p1, intersection)) {
-                // Exclude collisions at start point of line segment. Don't collide with self
-                continue;
             }
             const dist = distance(line.p1, intersection);
             // If there is no closest intersection, make this intersection the closest intersection
