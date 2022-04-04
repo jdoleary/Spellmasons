@@ -501,7 +501,21 @@ export default class Underworld {
     // fixes the desync issues
     // this.hostSendSync();
   }
-  setTurnMessage(yourTurn: boolean, message: string) {
+  syncTurnMessage() {
+    const currentPlayerTurn = this.players[this.playerTurnIndex];
+    let message = '';
+    let yourTurn = false;
+    if (turn_phase[this.turn_phase] === 'NPC') {
+      message = "Enemys' Turn";
+      yourTurn = false;
+    } else if (currentPlayerTurn === window.player) {
+      message = 'Your Turn'
+      yourTurn = true;
+    } else {
+      message = `Player ${this.playerTurnIndex + 1}'s turn`
+      yourTurn = false;
+
+    }
     if (elPlayerTurnIndicator) {
       elPlayerTurnIndicator.innerText = message;
     }
@@ -555,11 +569,7 @@ export default class Underworld {
     if (!player.unit.alive) {
       this.endPlayerTurn(player.clientId);
     }
-    if (player === window.player) {
-      this.setTurnMessage(true, 'Your Turn');
-    } else {
-      this.setTurnMessage(false, `Player ${playerIndex + 1}'s turn`);
-    }
+    this.syncTurnMessage();
   }
   // Sends a network message to end turn
   endMyTurn() {
@@ -594,9 +604,7 @@ export default class Underworld {
       // which checks if the playerTurnIndex is >= the number of players
       // to see if it should go to the next phase
       this.playerTurnIndex = playerIndex + 1;
-      if (clientId === window.clientId) {
-        this.setTurnMessage(false, 'Waiting on others');
-      }
+      this.syncTurnMessage();
       const wentToNextLevel = this.checkForEndOfLevel();
       if (wentToNextLevel) {
         return;
@@ -729,7 +737,6 @@ export default class Underworld {
       case 'NPC':
         // Clears spell effect on NPC turn
         syncSpellEffectProjection();
-        this.setTurnMessage(false, "NPC's Turn");
         let animationPromises: Promise<void>[] = [];
         (async () => {
           // Move units
@@ -772,6 +779,7 @@ export default class Underworld {
       default:
         break;
     }
+    this.syncTurnMessage();
   }
 
   getCoordsForUnitsWithinDistanceOfTarget(
