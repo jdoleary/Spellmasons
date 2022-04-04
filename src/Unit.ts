@@ -2,7 +2,7 @@ import * as config from './config';
 import * as Image from './Image';
 import * as math from './math';
 import { distance } from './math';
-import { addPixiSprite, containerDodads, containerUnits } from './PixiUtils';
+import { addPixiSprite, containerDoodads, containerUnits } from './PixiUtils';
 import { UnitSubType, UnitType, Faction } from './commonTypes';
 import type { Vec2 } from './Vec';
 import * as Vec from './Vec';
@@ -319,7 +319,7 @@ export async function takeDamage(unit: IUnit, amount: number) {
       die(unit);
     } else {
       // leave behind bone dust
-      Image.create(unit.x, unit.y, "units/bone_dust.png", containerDodads);
+      Image.create(unit.x, unit.y, "units/bone_dust.png", containerDoodads);
       // unit is already dead, fully destroy:
       cleanup(unit);
     }
