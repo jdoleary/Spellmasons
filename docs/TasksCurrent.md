@@ -1,7 +1,13 @@
+### 2022-04-04
+- Add doodads
+- Add tutorial
+- Fix save and load
+    - Add it to the menu
+- Refactor modifiers so their 'add' and 'remove' happen automatically because they get registered, not because they're imported and invoked manually.  When 'vampire' modifier is removed, it should remove the card 'bite' too.
+    - Make adding and removing modifiers automatic, kind of like allUnits or source units.  When they are registered, their
+    add and remove functions should be kept
 
-# Tasks
 ### 2022-04-01 Brad/Jake playtest
-- bug: fix player getting stuck on wall for pathing on current seed.
 - Jake: Either line of sight for preset range for spells.
 - In spell projection, if you're doing enough damage to kill, show it visually
     - also show if it will "dust" someone
@@ -30,9 +36,6 @@
     - ~~How to init players that join mid game?~~
     - Why can't a player that joins mid game see disconnected players?
 ## Tasks
-- Refactor modifiers so their 'add' and 'remove' happen automatically because they get registered, not because they're imported and invoked manually.  When 'vampire' modifier is removed, it should remove the card 'bite' too.
-    - Make adding and removing modifiers automatic, kind of like allUnits or source units.  When they are registered, their
-    add and remove functions should be kept
 - Bug: You can still select enemies and things with a spell up if the spell's left click doesn't cast the spell (such as AOE then nothing)
 - Character select: "waiting  for other players"
 ---
@@ -45,14 +48,14 @@
 
 Finish Content:
 - More spells:
-    - Content: Add vampire modifier which reverses the effects of health and damage
+    - More types of damage cards, maybe with more synergies
+        - Like ones that interact with freeze
     - Haste modifier lets you move farther and slow
     - Spells that summon walls or pillars to prevent enemy movement (maybe to trap them)
     - Push spells (requires collisions)
         - If you push a unit into a portal they appear in the next level
     - Fix charge, stomp, lance
         - Movement spells could help you cast farther than you should be able to and move a far unit into another group and chain them, cause it should keep the target after they move
-    - A card that changes mana cost of spells to health cost (vampire)
     - soul swap (swap bodies with another unit, until they die, then you return to your own body - and you get their abilities as cards)
     - Jake Ideas:
         - Magnetize (pull enemies together)

@@ -12,6 +12,7 @@
     - Use doodads to communicate
     - What it teaches:
         - Movement
+        - Pickups
         - The Portal
         - Casting
         - Chaining Spells
