@@ -81,7 +81,6 @@ describe('pointsEveryXDistanceAlongPath', () => {
             { x: 1, y: 0 },
             { x: 2, y: 1 },
         ];
-        console.log('actual', actual);
         expect(actual).toEqual(expected);
     });
     it('should handle distances between points that are many times greater than the distanceOfIncrements', () => {
