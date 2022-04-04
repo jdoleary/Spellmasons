@@ -1,11 +1,11 @@
 import * as Unit from '../Unit';
 import type { UnitSource } from './index';
 import { UnitSubType } from '../commonTypes';
-import { add as turnVampire } from '../cards/vampire_bite'
 import * as Vec from '../Vec';
 import { canInteractWithTarget } from './actions/gruntAction';
 import * as math from '../math';
 import * as config from '../config';
+import * as vampire_bite from '../cards/vampire_bite';
 
 const unit: UnitSource = {
   id: 'vampire',
@@ -19,7 +19,7 @@ const unit: UnitSource = {
     manaMax: 60
   },
   init: (unit: Unit.IUnit) => {
-    turnVampire(unit);
+    Unit.addModifier(unit, vampire_bite.id);
   },
   action: async (unit: Unit.IUnit) => {
     if (!Unit.canMove(unit)) {
@@ -48,7 +48,7 @@ const unit: UnitSource = {
     if (canInteractWithTarget(unit, closestEnemy.x, closestEnemy.y)) {
       await Unit.playAnimation(unit, 'units/golem_eat');
       await Unit.takeDamage(closestEnemy, unit.damage);
-      turnVampire(closestEnemy);
+      Unit.addModifier(closestEnemy, vampire_bite.id);
     }
   }
 };

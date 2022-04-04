@@ -19,11 +19,12 @@ Protects the target(s) from the next time they would take damage.
         return state;
       }
       for (let unit of targetsToUnits(state.targets)) {
-        addTo(unit);
+        Unit.addModifier(unit, id);
       }
       return state;
     },
   },
+  modifiers: { add },
   events: {
     onDamage: (unit, amount, damageDealer) => {
       // Only block damage, not heals
@@ -64,7 +65,7 @@ Protects the target(s) from the next time they would take damage.
   },
 };
 
-function addTo(unit: Unit.IUnit) {
+function add(unit: Unit.IUnit) {
   // First time setup
   if (!unit.modifiers[id]) {
     unit.modifiers[id] = {

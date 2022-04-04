@@ -5,9 +5,10 @@ import { allCards, ICard, Spell, targetsToUnits } from './index';
 import { COLLISION_MESH_RADIUS } from '../config';
 import { createVisualLobbingProjectile } from '../Projectile';
 import floatingText from '../FloatingText';
+import * as Unit from '../Unit';
 
 const id = 'contageous';
-export function add(unit: IUnit) {
+function add(unit: IUnit) {
   // Note: Curse can stack multiple times but doesn't keep any state
   // so it doesn't need a first time setup like freeze does
 
@@ -49,11 +50,14 @@ Makes this unit's curses contageous to other nearby units
       for (let unit of targetsToUnits(state.targets)) {
         // Don't add contageous more than once
         if (!unit.onTurnStartEvents.includes(id)) {
-          add(unit);
+          Unit.addModifier(unit, id);
         }
       }
       return state;
     },
+  },
+  modifiers: {
+    add
   },
   events: {
     onTurnStart: async (unit: IUnit) => {

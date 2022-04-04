@@ -32,13 +32,14 @@ import vampire_bite from './vampire_bite';
 import { IUpgrade, upgradeSource } from '../Upgrade';
 import { _getCardsFromIds } from './cardUtils';
 import { addCardToHand } from '../CardUI';
+export interface Modifiers {
+  add?: (unit: Unit.IUnit) => void;
+  remove?: (unit: Unit.IUnit) => void;
+}
 export interface Spell {
   card: ICard;
   // modifiers keep track of additional state on an individual unit basis
-  modifiers?: {
-    add: (unit: Unit.IUnit) => void;
-    remove: (unit: Unit.IUnit) => void;
-  };
+  modifiers?: Modifiers;
   // events trigger custom behavior when some event occurs
   events?: {
     onDamage?: onDamage;
@@ -55,6 +56,10 @@ function register(spell: Spell) {
   const { id } = card;
   // Add card to cards pool
   allCards[id] = card;
+  // Add modifiers to allModifiers
+  if (spell.modifiers) {
+    allModifiers[id] = spell.modifiers;
+  }
   // Add card as upgrade:
   upgradeSource.push(cardToUpgrade(card));
   // Add subsprites
@@ -156,6 +161,7 @@ export interface ICard {
 }
 
 export const allCards: { [cardId: string]: ICard } = {};
+export const allModifiers: { [id: string]: Modifiers } = {};
 
 export function getCardsFromIds(cardIds: string[]): ICard[] {
   return _getCardsFromIds(cardIds, allCards);

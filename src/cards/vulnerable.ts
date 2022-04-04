@@ -1,4 +1,4 @@
-import type * as Unit from '../Unit';
+import * as Unit from '../Unit';
 import * as Image from '../Image';
 import { Spell, targetsToUnits } from '.';
 
@@ -19,10 +19,13 @@ in the future.
         return state;
       }
       for (let unit of targetsToUnits(state.targets)) {
-        addTo(unit);
+        Unit.addModifier(unit, id);
       }
       return state;
     },
+  },
+  modifiers: {
+    add
   },
   events: {
     onDamage: (unit, amount, damageDealer) => {
@@ -50,7 +53,7 @@ in the future.
   },
 };
 
-function addTo(unit: Unit.IUnit) {
+function add(unit: Unit.IUnit) {
   // Add event
   unit.onDamageEvents.push(id);
 

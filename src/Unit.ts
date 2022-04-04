@@ -12,6 +12,7 @@ import { addLerpable } from './lerpList';
 import { findPath } from './Pathfinding';
 import { allUnits } from './units';
 import { setView, View } from './views';
+import { allModifiers } from './cards';
 const elHealthBar: HTMLElement = document.querySelector('#health .fill') as HTMLElement;
 const elHealthLabel: HTMLElement = document.querySelector('#health .label') as HTMLElement;
 const elManaBar: HTMLElement = document.querySelector('#mana .fill:nth-child(1)') as HTMLElement;
@@ -155,6 +156,21 @@ function setupShaders(unit: IUnit) {
   unit.image.sprite.filters = [all_red.filter];
 }
 
+export function addModifier(unit: IUnit, key: string) {
+  // Call custom modifier's add function
+  const modifier = allModifiers[key];
+  if (modifier) {
+    if (modifier.add) {
+      modifier.add(unit);
+    } else {
+      console.error('No "add" modifier for ', key);
+    }
+
+  } else {
+    console.error('Modifier ', key, 'never registered.');
+  }
+}
+
 export function removeModifier(unit: IUnit, key: string) {
   Image.removeSubSprite(unit.image, key);
   unit.onDamageEvents = unit.onDamageEvents.filter((e) => e !== key);
@@ -163,6 +179,13 @@ export function removeModifier(unit: IUnit, key: string) {
   unit.onAgroEvents = unit.onAgroEvents.filter((e) => e !== key);
   unit.onTurnStartEvents = unit.onTurnStartEvents.filter((e) => e !== key);
   delete unit.modifiers[key];
+
+  // Call custom modifier's remove function
+  const customRemoveFn = allModifiers[key]?.remove;
+  if (customRemoveFn) {
+    customRemoveFn(unit);
+  }
+
 }
 
 export function cleanup(unit: IUnit) {

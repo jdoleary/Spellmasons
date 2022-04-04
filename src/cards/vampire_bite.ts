@@ -1,10 +1,11 @@
 import type { IUnit } from '../Unit';
 import * as Image from '../Image';
 import { allCards, Spell, targetsToUnits } from '.';
-import { addCardToHand } from '../CardUI';
+import { addCardToHand, removeCardsFromHand } from '../CardUI';
+import * as Unit from '../Unit';
 
-const id = 'bite';
-export function add(unit: IUnit) {
+export const id = 'bite';
+function add(unit: IUnit) {
   // Note: Curse can stack multiple times but doesn't keep any state
   // so it doesn't need a first time setup like freeze does
 
@@ -19,6 +20,20 @@ export function add(unit: IUnit) {
   if (player) {
     addCardToHand(allCards[id], player);
   }
+}
+function remove(unit: IUnit) {
+  delete unit.modifiers[id]
+  // remove event
+  unit.onDamageEvents.filter(e => e !== id);
+  // remove subsprite image
+  Image.removeSubSprite(unit.image, id);
+
+  // If unit belongs to player
+  const player = window.underworld.players.find(p => p.unit == unit)
+  if (player) {
+    removeCardsFromHand(player, [id]);
+  }
+
 }
 
 const spell: Spell = {
@@ -49,10 +64,14 @@ const spell: Spell = {
         return state;
       }
       for (let unit of targetsToUnits(state.targets)) {
-        add(unit);
+        Unit.addModifier(unit, id);
       }
       return state;
     },
+  },
+  modifiers: {
+    add,
+    remove
   },
   events: {
     onDamage: (unit: IUnit, amount: number, damageDealer?: IUnit) => {

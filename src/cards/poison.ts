@@ -1,9 +1,10 @@
 import { IUnit, takeDamage } from '../Unit';
 import * as Image from '../Image';
 import { Spell, targetsToUnits } from '.';
+import * as Unit from '../Unit';
 
-const id = 'poison';
-export function add(unit: IUnit) {
+export const id = 'poison';
+function add(unit: IUnit) {
   // Note: Curse can stack multiple times but doesn't keep any state
   // so it doesn't need a first time setup like freeze does
 
@@ -44,10 +45,13 @@ at the start of the unit's turn.
         return state;
       }
       for (let unit of targetsToUnits(state.targets)) {
-        add(unit);
+        Unit.addModifier(unit, id);
       }
       return state;
     },
+  },
+  modifiers: {
+    add
   },
   events: {
     onTurnStart: async (unit: IUnit) => {

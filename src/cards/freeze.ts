@@ -19,7 +19,7 @@ Freezes the target(s) for 1 turn, preventing them from moving or acting.
         return state;
       }
       for (let unit of targetsToUnits(state.targets)) {
-        addTo(unit);
+        Unit.addModifier(unit, id);
         if (unit.unitType === UnitType.PLAYER_CONTROLLED) {
           const player = window.underworld.players.find(
             (p) => p.unit === unit,
@@ -31,6 +31,9 @@ Freezes the target(s) for 1 turn, preventing them from moving or acting.
       }
       return state;
     },
+  },
+  modifiers: {
+    add
   },
   events: {
     onTurnStart: async (unit: Unit.IUnit) => {
@@ -65,7 +68,7 @@ Freezes the target(s) for 1 turn, preventing them from moving or acting.
   },
 };
 
-function addTo(unit: Unit.IUnit) {
+function add(unit: Unit.IUnit) {
   // First time setup
   if (!unit.modifiers[id]) {
     unit.modifiers[id] = { isCurse: true };

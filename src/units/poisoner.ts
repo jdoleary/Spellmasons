@@ -35,7 +35,7 @@ const unit: UnitSource = {
           chosenUnit.y,
           'green-thing.png',
         );
-        poison.add(chosenUnit);
+        Unit.addModifier(chosenUnit, poison.id);
       }
     }
   },
