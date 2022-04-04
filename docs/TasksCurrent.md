@@ -1,8 +1,8 @@
 ### 2022-04-04
+- reimplement save and load
+    - How to load when not connected via single player or multiplayer
 - Add doodads
 - Add tutorial
-- Fix save and load
-    - Add it to the menu
 - Refactor modifiers so their 'add' and 'remove' happen automatically because they get registered, not because they're imported and invoked manually.  When 'vampire' modifier is removed, it should remove the card 'bite' too.
     - Make adding and removing modifiers automatic, kind of like allUnits or source units.  When they are registered, their
     add and remove functions should be kept
