@@ -326,7 +326,12 @@ function handleLoadGameState(payload: any) {
   // Filtering out the undefined ensures that this is an array of IObstacle
   underworld.obstacles = loadedGameState.obstacles.map(Obstacle.load).filter(o => !!o) as Obstacle.IObstacle[];
 
+  underworld.setTurnPhase(underworld.turn_phase);
+
   underworld.cacheWalls();
+
+  // Start the gameloop
+  window.underworld.gameLoopUnits();
 
   // Mark the underworld as "ready"
   readyState.set('underworld', true);
