@@ -82,6 +82,7 @@ declare global {
 
     save: (title: string) => void;
     load: (title: string) => void;
+    getAllSaveFiles: () => string[];
     // Save pie messages for later replay
     saveReplay: (title: string) => void;
     // Used to replay onData messages for development

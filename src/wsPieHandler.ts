@@ -455,10 +455,13 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
   }
 }
 
+const savePrefix = 'spellmasons-save-';
+window.getAllSaveFiles = () => Object.keys(localStorage).filter(x => x.startsWith(savePrefix)).map(x => x.substring(savePrefix.length));
+
 window.save = (title) => {
   if (window.allowCookies) {
     localStorage.setItem(
-      'golems-save-' + title,
+      savePrefix + title,
       JSON.stringify({
         underworld: window.underworld.serializeForSaving(),
       }),
@@ -469,7 +472,7 @@ window.save = (title) => {
 };
 window.load = (title) => {
   if (window.allowCookies) {
-    const savedGameString = localStorage.getItem('golems-save-' + title);
+    const savedGameString = localStorage.getItem(savePrefix + title);
     if (savedGameString) {
       const { underworld } = JSON.parse(savedGameString);
       window.pie.sendData({
