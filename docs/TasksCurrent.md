@@ -1,6 +1,5 @@
 
 # Tasks
-- Remove the idea of route.  Only View, which is not synced between clients should exist.  What one client "is looking at" (the view) doesn't matter to the other clients.
 ### 2022-04-01 Brad/Jake playtest
 - bug: fix player getting stuck on wall for pathing on current seed.
 - Jake: Either line of sight for preset range for spells.

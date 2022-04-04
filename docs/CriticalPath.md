@@ -5,6 +5,8 @@
     - ✔ Resolve pathing
     - Ending your turn shouldn't feel like a chore
         - If no one else is alive, it should end your turn automatically
+    - More random generation.  This isn't a rogue-like without the random element
+        - Take queues from slay the spire
 - Opt-outable Tutorial 
     - Button in the menu: "Skip tutorial"
     - Use doodads to communicate
