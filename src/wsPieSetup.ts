@@ -91,8 +91,7 @@ function addHandlers(pie: PieClient) {
     }
   };
   pie.onData = onData;
-  // TODO: remove alert for production
-  pie.onError = ({ message }: { message: any }) => window.alert(message);
+  pie.onError = ({ message }: { message: any }) => console.error('wsPie Error:', message);
   pie.onClientPresenceChanged = onClientPresenceChanged;
   pie.onLatency = (l) => {
     if (window.latencyPanel) {
