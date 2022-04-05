@@ -363,12 +363,12 @@ function createCardElement(content: Cards.ICard) {
   elCardBadgeHolder.classList.add('card-badge-holder');
   element.appendChild(elCardBadgeHolder);
   const elCardManaBadge = document.createElement('div');
-  elCardManaBadge.innerText = content.manaCost.toString();
   elCardManaBadge.classList.add('card-mana-badge', 'card-badge');
+  updateManaBadge(elCardManaBadge, content.manaCost, content);
   elCardBadgeHolder.appendChild(elCardManaBadge);
   const elCardHealthBadge = document.createElement('div');
-  elCardHealthBadge.innerText = content.healthCost.toString();
   elCardHealthBadge.classList.add('card-health-badge', 'card-badge');
+  updateHealthBadge(elCardHealthBadge, content.healthCost, content);
   elCardBadgeHolder.appendChild(elCardHealthBadge);
   const thumbHolder = document.createElement('div');
   const thumbnail = document.createElement('img');
@@ -388,37 +388,37 @@ function createCardElement(content: Cards.ICard) {
   elCardInner.appendChild(desc);
   return element;
 }
+function updateManaBadge(elBadge: Element | null, manaCost: number, card: Cards.ICard) {
+  if (elBadge) {
+    // Hide badge if no cost
+    elBadge.classList.toggle('hidden', manaCost === 0);
+    elBadge.innerHTML = manaCost.toString();
+    if (manaCost > card.manaCost) {
+      elBadge.classList.add('modified-by-usage')
+    } else {
+      elBadge.classList.remove('modified-by-usage')
+    }
+  } else {
+    console.warn("Err UI: Found card, but could not find associated mana badge element to update mana cost");
+  }
+}
+function updateHealthBadge(elBadge: Element | null, healthCost: number, card: Cards.ICard) {
+  if (elBadge) {
+    // Hide badge if no cost
+    elBadge.classList.toggle('hidden', healthCost === 0);
+    elBadge.innerHTML = healthCost.toString();
+    if (healthCost > card.healthCost) {
+      elBadge.classList.add('modified-by-usage')
+    } else {
+      elBadge.classList.remove('modified-by-usage')
+    }
+  } else {
+    console.warn("Err UI: Found card, but could not find associated mana badge element to update mana cost");
+  }
+}
 // Updates the UI mana badge for cards in hand.  To be invoked whenever a player's
 // cardUsageCounts object is modified in order to sync the UI
 export function updateCardBadges() {
-  function updateManaBadge(elBadge: Element | null, manaCost: number, card: Cards.ICard) {
-    if (elBadge) {
-      // Hide badge if no cost
-      elBadge.classList.toggle('hidden', manaCost === 0);
-      elBadge.innerHTML = manaCost.toString();
-      if (manaCost > card.manaCost) {
-        elBadge.classList.add('modified-by-usage')
-      } else {
-        elBadge.classList.remove('modified-by-usage')
-      }
-    } else {
-      console.warn("Err UI: Found card, but could not find associated mana badge element to update mana cost");
-    }
-  }
-  function updateHealthBadge(elBadge: Element | null, healthCost: number, card: Cards.ICard) {
-    if (elBadge) {
-      // Hide badge if no cost
-      elBadge.classList.toggle('hidden', healthCost === 0);
-      elBadge.innerHTML = healthCost.toString();
-      if (healthCost > card.healthCost) {
-        elBadge.classList.add('modified-by-usage')
-      } else {
-        elBadge.classList.remove('modified-by-usage')
-      }
-    } else {
-      console.warn("Err UI: Found card, but could not find associated mana badge element to update mana cost");
-    }
-  }
   if (window.player) {
     // Update selected cards
     const selectedCards = getSelectedCards();
