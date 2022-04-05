@@ -219,6 +219,7 @@ export default class Underworld {
       pickup.description,
       true,
       pickup.imagePath,
+      0.1,
       true,
       pickup.effect,
     );
@@ -347,7 +348,7 @@ export default class Underworld {
       console.error('Bad level seed, not enough valid spawns for portal, regenerating');
       return this.initLevel(this.levelIndex);
     }
-    const portalPickup = Pickup.specialPickups['portal.png'];
+    const portalPickup = Pickup.specialPickups['portal'];
     Pickup.create(
       portalCoords.x,
       portalCoords.y,
@@ -355,6 +356,7 @@ export default class Underworld {
       portalPickup.description,
       false,
       portalPickup.imagePath,
+      portalPickup.animationSpeed,
       true,
       portalPickup.effect,
     );

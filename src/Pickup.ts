@@ -26,6 +26,7 @@ interface IPickupSource {
   name: string;
   description: string;
   imagePath: string;
+  animationSpeed?: number;
   playerOnly?: boolean;
   effect: ({ unit, player }: { unit?: IUnit; player?: Player.IPlayer }) => void;
 }
@@ -37,6 +38,7 @@ export function create(
   description: string,
   singleUse: boolean,
   imagePath: string,
+  animationSpeed: number = 0.1,
   playerOnly: boolean,
   effect: ({ unit, player }: { unit?: IUnit; player?: Player.IPlayer }) => void,
 ): IPickup {
@@ -46,7 +48,7 @@ export function create(
     name,
     description,
     imagePath,
-    image: Image.create(x, y, imagePath, containerPickup),
+    image: Image.create(x, y, imagePath, containerPickup, { animationSpeed, loop: true }),
     singleUse,
     playerOnly,
     effect,
@@ -89,6 +91,7 @@ export function load(pickup: IPickup) {
       pickup.description,
       pickup.singleUse,
       pickup.imagePath,
+      0.1,
       pickup.playerOnly,
       foundPickup.effect,
     );
@@ -116,8 +119,9 @@ export function triggerPickup(pickup: IPickup, unit: IUnit) {
 // Special pickups are not stored in the pickups array because they shouldn't be
 // randomly selected when adding pickups to a generated level.
 export const specialPickups: { [image: string]: IPickupSource } = {
-  'portal.png': {
-    imagePath: 'portal.png',
+  'portal': {
+    imagePath: 'portal',
+    animationSpeed: -0.5,
     playerOnly: true,
     name: 'Portal',
     description:

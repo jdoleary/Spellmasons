@@ -164,15 +164,17 @@ export function addAnimatedPixiSprite(
 
   return sprite;
 }
+export interface PixiSpriteOptions {
+  onComplete?: () => void,
+  loop: boolean,
+  animationSpeed?: number
+}
 export function addPixiSprite(
   imagePath: string,
   parent: PIXI.Container,
-  options: {
-    onComplete?: () => void,
-    loop: boolean
-  } = {
-      loop: true
-    }
+  options: PixiSpriteOptions = {
+    loop: true
+  }
 ): PIXI.Sprite {
   if (!isReady) {
     throw new Error(
@@ -183,7 +185,7 @@ export function addPixiSprite(
   let texture = sheet.animations[imagePath];
   if (texture) {
     const animatedSprite = new PIXI.AnimatedSprite(sheet.animations[imagePath]);
-    animatedSprite.animationSpeed = 0.1;
+    animatedSprite.animationSpeed = options.animationSpeed || 0.1;
     if (options.onComplete) {
       animatedSprite.onComplete = options.onComplete;
     }

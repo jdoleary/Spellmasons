@@ -1,6 +1,6 @@
 import type * as PIXI from 'pixi.js';
 
-import { addPixiSprite } from './PixiUtils';
+import { addPixiSprite, PixiSpriteOptions } from './PixiUtils';
 import Subsprites from './Subsprites';
 import { animateIndependent } from './AnimationTimeline';
 import type { Vec2 } from "./Vec";
@@ -33,8 +33,9 @@ export function create(
   y: number,
   spritesheetId: string,
   parent: PIXI.Container,
+  pixiSpriteOptions?: PixiSpriteOptions
 ): IImage {
-  const sprite = addPixiSprite(spritesheetId, parent);
+  const sprite = addPixiSprite(spritesheetId, parent, pixiSpriteOptions);
   sprite.anchor.x = 0.5;
   sprite.anchor.y = 0.5;
   sprite.rotation = 0;
