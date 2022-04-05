@@ -345,7 +345,7 @@ export default class Underworld {
     const index = randInt(this.random, 0, validPortalSpawnCoords.length - 1);
     const portalCoords = validPortalSpawnCoords.splice(index, 1)[0];
     if (!portalCoords) {
-      console.error('Bad level seed, not enough valid spawns for portal, regenerating');
+      console.log('Bad level seed, not enough valid spawns for portal, regenerating');
       return this.initLevel(this.levelIndex);
     }
     const portalPickup = Pickup.specialPickups['portal'];
@@ -368,7 +368,7 @@ export default class Underworld {
     });
 
     if (this.validPlayerSpawnCoords.length === 0) {
-      console.error('Bad level seed, no place to spawn portal, regenerating');
+      console.log('Bad level seed, no place to spawn portal, regenerating');
       return this.initLevel(this.levelIndex);
     }
 
@@ -398,7 +398,7 @@ export default class Underworld {
         Player.resetPlayerForNextLevel(player);
       }
     } else {
-      console.error('Bad level seed, not enough valid spawns for players, regenerating', this.validPlayerSpawnCoords.length, this.players.length);
+      console.log('Bad level seed, not enough valid spawns for players, regenerating', this.validPlayerSpawnCoords.length, this.players.length);
       return this.initLevel(this.levelIndex);
     }
 
