@@ -3,7 +3,7 @@ import { onData, onClientPresenceChanged } from './wsPieHandler';
 import * as readyState from './readyState';
 import { setView, View } from './views';
 // Locally hosted, locally accessed
-const wsUri = 'ws://localhost:8080';
+// const wsUri = 'ws://localhost:8080';
 // Locally hosted, available to LAN (use your own IP)
 //const wsUri = 'ws://192.168.0.19:8080';
 // Locally hosted, externally accessed (use your own IP)
@@ -12,7 +12,7 @@ const wsUri = 'ws://localhost:8080';
 // const wsUri = 'wss://websocket-pie-6ggew.ondigitalocean.app';
 export const pie: PieClient = window.pie = new PieClient();
 addHandlers(pie);
-window.connect_to_wsPie_server = function connect_to_wsPie_server(wsUri?: string): Promise<void> {
+function connect_to_wsPie_server(wsUri?: string): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     const storedClientId = sessionStorage.getItem('pie-clientId');
     pie.onConnectInfo = (o) => {
@@ -37,8 +37,8 @@ window.connect_to_wsPie_server = function connect_to_wsPie_server(wsUri?: string
       });
     }
   });
-
 }
+window.connect_to_wsPie_server = connect_to_wsPie_server;
 
 let maxClients = 8;
 function defaultRoomInfo(_room_info = {}): Room {
@@ -52,7 +52,7 @@ function defaultRoomInfo(_room_info = {}): Room {
   return room_info;
 }
 
-window.joinRoom = function joinRoom(_room_info = {}): Promise<unknown> {
+function joinRoom(_room_info = {}): Promise<unknown> {
   if (!pie) {
     return Promise.reject();
   }
@@ -76,8 +76,9 @@ window.joinRoom = function joinRoom(_room_info = {}): Promise<unknown> {
       setView(View.CharacterSelect);
     }
   }).catch((err: string) => console.error('Failed to join room', err));
-
 }
+window.joinRoom = joinRoom;
+
 function addHandlers(pie: PieClient) {
   pie.onServerAssignedData = (o) => {
     console.log('Pie: set window.clientId:', o.clientId);
@@ -98,4 +99,10 @@ function addHandlers(pie: PieClient) {
       window.latencyPanel.update(l.average, l.max);
     }
   };
+}
+
+window.startSingleplayer = function startSingleplayer() {
+  return connect_to_wsPie_server().then(() => {
+    joinRoom()
+  });
 }

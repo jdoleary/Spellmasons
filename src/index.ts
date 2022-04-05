@@ -112,6 +112,8 @@ declare global {
     changeVolume: (volume: number) => void;
     volume: number;
     closeMenu: () => void;
+    startSingleplayer: () => Promise<void>;
+    startMultiplayer: (wsPieUrl: string) => Promise<void>;
     // Used to ensure that the current client's turn doesn't end while they are still walking
     // If they invoke endMyTurn() while they are walking, it will wait until they are done
     // walking to end their turn.  If they are not walking, it will end immediately.

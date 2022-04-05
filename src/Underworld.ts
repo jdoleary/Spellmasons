@@ -31,6 +31,7 @@ import { lineSegmentIntersection, LineSegment } from './collision/collisionMath'
 import { expandPolygon, mergeOverlappingPolygons, Polygon, PolygonLineSegment, polygonToPolygonLineSegments } from './Polygon';
 import { findPath, findPolygonsThatVec2IsInsideOf } from './Pathfinding';
 import { setView, View } from './views';
+import * as readyState from './readyState';
 
 export enum turn_phase {
   PlayerTurns,
@@ -166,6 +167,7 @@ export default class Underworld {
   // cleanup cleans up all assets that must be manually removed (for now `Image`s)
   // if an object stops being used.  It does not empty the underworld arrays, by design.
   cleanup() {
+    readyState.set('underworld', false);
     // Remove all phase classes from body
     for (let phaseClass of document.body.classList.values()) {
       if (phaseClass.includes('phase-')) {
@@ -988,7 +990,7 @@ export default class Underworld {
   // callbacks and complicated objects such as PIXI.Sprites
   // are removed
   serializeForSaving(): IUnderworldSerialized {
-    const { random, players, units, pickups, obstacles, ...rest } = this;
+    const { random, players, units, pickups, obstacles, walls, pathingPolygons, ...rest } = this;
     return {
       ...rest,
       players: this.players.map(Player.serialize),
@@ -1045,12 +1047,14 @@ function drawTarget(x: number, y: number, animate: boolean): Promise<void> {
     return Promise.resolve();
   }
 }
-type IUnderworldSerialized = Omit<typeof Underworld, "prototype" | "players" | "units" | "pickups" | "obstacles" | "random" | "turnInterval"> & {
-  players: Player.IPlayerSerialized[],
-  units: Unit.IUnitSerialized[],
-  pickups: Pickup.IPickupSerialized[],
-  obstacles: Obstacle.IObstacleSerialized[],
-};
+type IUnderworldSerialized = Omit<typeof Underworld, "prototype" | "players" | "units" | "pickups" | "obstacles" | "random" | "turnInterval"
+  // walls and pathingPolygons are omitted because they are derived from obstacles when cacheWalls() in invoked
+  | "walls" | "pathingPolygons"> & {
+    players: Player.IPlayerSerialized[],
+    units: Unit.IUnitSerialized[],
+    pickups: Pickup.IPickupSerialized[],
+    obstacles: Obstacle.IObstacleSerialized[],
+  };
 type NonFunctionPropertyNames<T> = { [K in keyof T]: T[K] extends Function ? never : K }[keyof T];
 type UnderworldNonFunctionProperties = Exclude<NonFunctionPropertyNames<Underworld>, null | undefined>;
 type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFunctionProperties>, "debugGraphics" | "players" | "units" | "pickups" | "obstacles" | "random" | "processedMessageCount">;

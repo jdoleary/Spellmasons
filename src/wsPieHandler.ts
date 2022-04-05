@@ -12,6 +12,7 @@ import * as Obstacle from './Obstacle';
 import { syncSpellEffectProjection } from './ui/PlanningView';
 import * as readyState from './readyState';
 import * as messageQueue from './messageQueue';
+import { setView, View } from './views';
 
 const messageLog: any[] = [];
 let clients: string[] = [];
@@ -470,15 +471,22 @@ window.save = (title) => {
     console.error('May not use this feature without accepting the cookie policy.');
   }
 };
-window.load = (title) => {
+window.load = async (title) => {
   if (window.allowCookies) {
     const savedGameString = localStorage.getItem(savePrefix + title);
     if (savedGameString) {
+
+      if (!readyState.get('underworld')) {
+        await window.startSingleplayer();
+      }
+
       const { underworld } = JSON.parse(savedGameString);
       window.pie.sendData({
         type: MESSAGE_TYPES.LOAD_GAME_STATE,
         underworld,
       });
+      setView(View.Game);
+
     } else {
       console.error('no save game found with title', title);
     }
