@@ -2,6 +2,7 @@
 - Core:
     - Resolve desync
         - Write code that looks for desyncs but doesn't try to resolve them.
+        - The trouble with my desync code until now is that it doesn't check what step of the game it was sent and received.  Is it turn 4 playerIndex 2?  IF it gets sent at that time but as it's going over the wire player 2 takes their turn, it will think there's a desync.
     - ✔ Resolve pathing
     - Ending your turn shouldn't feel like a chore
         - If no one else is alive, it should end your turn automatically
@@ -11,22 +12,27 @@
     - Button in the menu: "Skip tutorial"
     - Use doodads to communicate
     - What it teaches:
-        - Movement
-        - Pickups
-        - The Portal
-        - Casting
-        - Chaining Spells
-        - Order of spells
+        - Level 1
+            - Movement
+            - The Portal
+        - Level 2
+            - Pickups
+            - "hold shift to inspect"
+            - Casting
+        - Level 3
+            - Chaining Spells
+        - Level 4
+            - Order of spells
 - Finish Content / Endgame
     - More Spells
     - More enemies
     - Bosses
 - Youtube Alpha version video / Post on social
 - Menus
-    - Save / Load
 - Options
     - ✔ Volume
     - ✔ Cookies
+    - If they didn't accept cookies, allow them to reaccept in options
 - Homepage
     - Embedded video
     - News

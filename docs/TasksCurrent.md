@@ -1,8 +1,8 @@
 ### 2022-04-04
-- reimplement save and load
-    - How to load when not connected via single player or multiplayer
+- Hide save and load as a feature
 - Add doodads
 - Add tutorial
+    - Add button for tutorial and button for skip tutorial
 
 ### 2022-04-01 Brad/Jake playtest
 - Jake: Either line of sight for preset range for spells.
