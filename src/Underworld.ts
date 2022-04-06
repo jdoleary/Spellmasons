@@ -79,6 +79,9 @@ export default class Underworld {
   // since only the syncronous messages affect gamestate.
   processedMessageCount: number = 0;
   validPlayerSpawnCoords: Vec2[] = [];
+  // Instead of moving to the upgrade screen at the end of the level,
+  // if this is set it will take players to a handcrafted level
+  nextHandCraftedLevel?: string;
 
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
     window.underworld = this;
@@ -441,13 +444,19 @@ export default class Underworld {
   initHandcraftedLevel(name: string) {
     console.log('Setup: initHandcraftedLevel', name);
     const h: HandcraftedLevel = levels[name];
+    if (!h) {
+      console.error('Handcrafted level', name, 'does not exist');
+      return;
+    }
+    // Set valid player spawns before cleaning up the previous level
+    this.validPlayerSpawnCoords = h.playerSpawnLocations;
 
     // Clean up the previous level
     this.cleanUpLevel();
 
-    // Spawn players
-    this.validPlayerSpawnCoords = h.playerSpawnLocations;
+    // Setup players
     for (let player of this.players) {
+      console.log('setup players', player);
       Player.resetPlayerForNextLevel(player);
       if (h.startingCards.length) {
         // Clear all player cards
@@ -501,7 +510,12 @@ export default class Underworld {
 
     // Spawn doodads
     for (let d of h.doodads) {
-      // TODO spawn doodads
+      const pixiText = new PIXI.Text(d.text, Object.assign({ fill: 'white' }, d.style));
+      pixiText.x = d.location.x;
+      pixiText.y = d.location.y;
+      pixiText.anchor.x = 0.5;
+      pixiText.anchor.y = 0.5;
+      containerDoodads.addChild(pixiText);
     }
 
     // Spawn units
@@ -782,11 +796,18 @@ export default class Underworld {
       livingPlayers.filter((p) => p.inPortal).length === livingPlayers.length;
     // Advance the level if there are living players and they all are in the portal:
     if (livingPlayers.length && areAllLivingPlayersInPortal) {
-      // Now that level is complete, move to the Upgrade view where players can choose upgrades
-      // before moving on to the next level
-      setView(View.Upgrade);
       // Reset the playerTurnIndex
       this.playerTurnIndex = 0;
+      if (this.nextHandCraftedLevel) {
+        const levelName = this.nextHandCraftedLevel;
+        // Clear it out so it doesn't keep sending users to the same level
+        this.nextHandCraftedLevel = undefined;
+        this.initHandcraftedLevel(levelName);
+      } else {
+        // Now that level is complete, move to the Upgrade view where players can choose upgrades
+        // before moving on to the next level
+        setView(View.Upgrade);
+      }
       // Return of true signifies it went to the next level
       return true;
     }

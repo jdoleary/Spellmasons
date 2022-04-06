@@ -13,6 +13,7 @@ import { syncSpellEffectProjection } from './ui/PlanningView';
 import * as readyState from './readyState';
 import * as messageQueue from './messageQueue';
 import { setView, View } from './views';
+import { tutorialLevels } from './HandcraftedLevels';
 
 const messageLog: any[] = [];
 let clients: string[] = [];
@@ -130,8 +131,7 @@ function tryStartGame() {
   // if the game hasn't already been started
   if (currentClientIsHost && clientsLeftToChooseCharacters <= 0 && !gameAlreadyStarted) {
     console.log('Host: Start game');
-    // underworld.initHandcraftedLevel('Tutorial');
-    underworld.initHandcraftedLevel('Pickups and Casting Spells');
+    underworld.initHandcraftedLevel(tutorialLevels[0]);
     // underworld.initLevel(0);
     underworld.gameStarted = true;
     console.log('Host: Send all clients game state for initial load');
