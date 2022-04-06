@@ -8,6 +8,7 @@
         - If no one else is alive, it should end your turn automatically
     - More random generation.  This isn't a rogue-like without the random element
         - Take queues from slay the spire
+    - Add user metrics
 - Opt-outable Tutorial 
     - Button in the menu: "Skip tutorial"
     - Use doodads to communicate
@@ -37,6 +38,22 @@
     - Embedded video
     - News
 - Art in Blender / Shaders / Juice
+    - Assets needed:
+        - 8 Wizards, color change in shader
+        - Pickup
+            - Potion
+            - Spellbook
+            - ~~Portal~~
+        - Enemies
+            - Grunt
+            - Archer
+            - Demon
+            - Lobber
+            - Priest
+        - Tiles
+            - Wall
+            - Floor
+    - Inspiration: https://vryell.itch.io/tiny-biomes-pack
     - Tiles: https://opengameart.org/content/dungeon-tileset
     - https://opengameart.org/content/rogue-dungeon
 - [SFX](https://www.asoundeffect.com/sound-library/metamorphosis/)

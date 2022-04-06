@@ -1,8 +1,9 @@
-### 2022-04-04
-- Hide save and load as a feature
+### 2022-04-05
 - Add doodads
 - Add tutorial
     - Add button for tutorial and button for skip tutorial
+- Help them understand insufficient mana better
+- Add end turn "card"
 
 ### 2022-04-01 Brad/Jake playtest
 - Jake: Either line of sight for preset range for spells.
