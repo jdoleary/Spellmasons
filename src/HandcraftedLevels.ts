@@ -24,6 +24,7 @@ export interface HandcraftedLevel {
     units: SpawnInfo[];
     startingCards: string[];
     init?: (underworld: Underworld) => void;
+    allowHeavyUnits: boolean;
 }
 export const tutorialLevels = [
     'Tutorial',
@@ -34,6 +35,7 @@ export const tutorialLevels = [
 
 export const levels: { [name: string]: HandcraftedLevel } = {
     [tutorialLevels[0]]: {
+        allowHeavyUnits: false,
         playerSpawnLocations: [{ x: config.MAP_WIDTH / 4, y: config.MAP_HEIGHT / 2 }],
         portalSpawnLocation: { x: 3 * config.MAP_WIDTH / 4, y: config.MAP_HEIGHT / 2 },
         specialPickups: [],
@@ -52,8 +54,8 @@ export const levels: { [name: string]: HandcraftedLevel } = {
         }
     },
     [tutorialLevels[1]]: {
+        allowHeavyUnits: false,
         playerSpawnLocations: [{ x: config.COLLISION_MESH_RADIUS, y: config.MAP_HEIGHT / 2 }],
-        // portalSpawnLocation: { x: 3 * config.MAP_WIDTH / 4, y: config.MAP_HEIGHT / 2 },
         specialPickups: [
             {
                 id: 'damage-card-pickup',

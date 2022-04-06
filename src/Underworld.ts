@@ -233,7 +233,7 @@ export default class Underworld {
       pickup.effect,
     );
   }
-  spawnEnemy(id: string, coords: Vec2) {
+  spawnEnemy(id: string, coords: Vec2, allowHeavy: boolean) {
     const sourceUnit = allUnits[id];
     if (!sourceUnit) {
       console.error('Unit with id', id, 'does not exist.  Have you registered it in src/units/index.ts?');
@@ -250,14 +250,16 @@ export default class Underworld {
       sourceUnit.unitProps
     );
 
-    const roll = randInt(this.random, 0, 100);
-    if (roll <= config.PERCENT_CHANCE_OF_HEAVY_UNIT) {
-      unit.healthMax = config.UNIT_BASE_HEALTH * 2;
-      unit.health = unit.healthMax;
-      unit.damage = config.UNIT_BASE_DAMAGE * 2;
-      unit.radius = config.COLLISION_MESH_RADIUS;
-      // Set image to "heavy" size
-      unit.image.sprite.scale.set(1.0);
+    if (allowHeavy) {
+      const roll = randInt(this.random, 0, 100);
+      if (roll <= config.PERCENT_CHANCE_OF_HEAVY_UNIT) {
+        unit.healthMax = config.UNIT_BASE_HEALTH * 2;
+        unit.health = unit.healthMax;
+        unit.damage = config.UNIT_BASE_DAMAGE * 2;
+        unit.radius = config.COLLISION_MESH_RADIUS;
+        // Set image to "heavy" size
+        unit.image.sprite.scale.set(1.0);
+      }
     }
 
   }
@@ -366,7 +368,7 @@ export default class Underworld {
         if (validSpawnCoords.length == 0) { break; }
         const validSpawnCoordsIndex = randInt(this.random, 0, validSpawnCoords.length - 1);
         const coords = validSpawnCoords.splice(validSpawnCoordsIndex, 1)[0];
-        this.spawnEnemy(id, coords);
+        this.spawnEnemy(id, coords, true);
       }
     }
 
@@ -527,7 +529,7 @@ export default class Underworld {
 
     // Spawn units
     for (let u of h.units) {
-      this.spawnEnemy(u.id, u.location);
+      this.spawnEnemy(u.id, u.location, h.allowHeavyUnits);
     }
 
     if (h.init) {
