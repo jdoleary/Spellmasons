@@ -153,7 +153,14 @@ function addClickListenerToCardElement(
       const index = cardsSelected.findIndex((c) => c === cardId);
       if (index !== -1) {
         cardsSelected.splice(index, 1);
-        deselectCard(element);
+        element.remove();
+        // Update the mana cost UI AFTER the card is removed
+        updateManaCostUI();
+        // Since a new card has been deselected, we must sync the spell
+        // effect projection so it will be up to date in the event
+        // that the user is hovering over a unit while deselecting this card
+        // but hadn't moved the mouse since selecting it
+        syncSpellEffectProjection();
       } else {
         console.log(
           'Attempted to remove card',
@@ -177,16 +184,6 @@ function makeCardTypeGroup(cardId: string): HTMLDivElement {
     console.error('elCardHand is null');
   }
   return elCardTypeGroup;
-}
-function deselectCard(element: HTMLElement) {
-  element.remove();
-  // Update the mana cost UI AFTER the card is removed
-  updateManaCostUI();
-  // Since a new card has been deselected, we must sync the spell
-  // effect projection so it will be up to date in the event
-  // that the user is hovering over a unit while deselecting this card
-  // but hadn't moved the mouse since selecting it
-  syncSpellEffectProjection();
 }
 export function deselectLastCard() {
   if (elSelectedCards) {
@@ -233,22 +230,15 @@ export function areAnyCardsSelected() {
   return !!getSelectedCardIds().length;
 }
 
-// TODO: Keep this around for when we have one-use cards
-// This function fully deletes the cards that are 'selected' in the player's hand
+// This function fully deletes the cards from the player's hand
 export function removeCardsFromHand(player: Player.IPlayer, cards: string[]) {
-  cardLoop: for (let cardToRemove of cards) {
-    for (let i = cardsSelected.length - 1; i >= 0; i--) {
-      if (cardsSelected[i] === cardToRemove) {
-        cardsSelected.splice(i, 1);
-        continue cardLoop;
-      }
-    }
-    for (let i = player.cards.length - 1; i >= 0; i--) {
-      if (player.cards[i] === cardToRemove) {
-        player.cards.splice(i, 1);
-        continue cardLoop;
-      }
-    }
+  player.cards = player.cards.filter(c => !cards.includes(c));
+  // Remove any selected cards with a name in the cards array of this function
+  for (let card of cards) {
+    document.querySelectorAll(`#selected-cards .card[data-card-id="${card}"]`).forEach(el => {
+      // clicking a selected card, deselects it
+      (el as HTMLElement).click();
+    });
   }
   recalcPositionForCards(window.player);
 }
