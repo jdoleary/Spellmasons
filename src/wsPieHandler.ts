@@ -133,6 +133,7 @@ function tryStartGame() {
     // underworld.initHandcraftedLevel('Tutorial');
     underworld.initHandcraftedLevel('Pickups and Casting Spells');
     // underworld.initLevel(0);
+    underworld.gameStarted = true;
     console.log('Host: Send all clients game state for initial load');
     clients.forEach(clientId => {
       giveClientGameStateForInitialLoad(clientId);
@@ -202,8 +203,10 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
             const p = Player.create(fromClient, payload.unitId);
             if (p) {
               underworld.players.push(p);
-              // Initialize the player for the level
-              Player.resetPlayerForNextLevel(p);
+              if (underworld.gameStarted) {
+                // Initialize the player for the level
+                Player.resetPlayerForNextLevel(p);
+              }
               const cachedPlayerActiveTurn = underworld.players[underworld.playerTurnIndex];
               // Sort underworld.players according to client order so that all
               // instances of the game have a underworld.players array in the same
