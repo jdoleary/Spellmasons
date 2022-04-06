@@ -396,7 +396,6 @@ export default class Underworld {
     }
     if (this.players.length == 0) {
       console.error('Attempting to initialize level without any players');
-
     }
     // Clear all pickups
     for (let p of this.pickups) {
@@ -406,6 +405,14 @@ export default class Underworld {
     for (let o of this.obstacles) {
       Obstacle.remove(o);
     }
+
+    // Clear card usage counts, otherwise players will be
+    // incentivied to bum around after a level to clear it themselves
+    // which would be a bad player experience
+    for (let p of this.players) {
+      p.cardUsageCounts = {};
+    }
+
     // Update level indicator UI at top of screen
     if (elLevelIndicator) {
       elLevelIndicator.innerText = `Altitude ${this.levelIndex}`;
