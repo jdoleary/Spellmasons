@@ -6,6 +6,7 @@ import * as Player from './Player';
 import { containerPickup } from './PixiUtils';
 import { IUnit, syncPlayerHealthManaUI } from './Unit';
 import floatingText from './FloatingText';
+import * as AddDamageCard from './cards/add_damage';
 
 export const PICKUP_RADIUS = 64;
 export interface IPickup {
@@ -132,6 +133,25 @@ export const specialPickups: { [image: string]: IPickupSource } = {
       }
     },
   },
+  'damage-card-pickup': {
+    imagePath: 'pickups/card',
+    name: 'Cards',
+    description: 'Grants the player a new spell',
+    effect: ({ unit, player }) => {
+      if (player) {
+        const numCardsToGive = 1;
+        for (let i = 0; i < numCardsToGive; i++) {
+          const card = CardUI.generateCard([Cards.allCards[AddDamageCard.id]]);
+          if (card) {
+            CardUI.addCardToHand(card, player);
+          } else {
+            console.error('Could not give player damage card.');
+          }
+        }
+      }
+    },
+
+  }
 };
 const manaPotionRestoreAmount = 40;
 const healthPotionRestoreAmount = 10;

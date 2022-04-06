@@ -1,7 +1,7 @@
 import * as Unit from '../Unit';
 import { Spell, targetsToUnits } from '.';
 
-const id = 'hurt';
+export const id = 'hurt';
 const damageDone = 2;
 const spell: Spell = {
   card: {

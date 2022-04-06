@@ -130,7 +130,9 @@ function tryStartGame() {
   // if the game hasn't already been started
   if (currentClientIsHost && clientsLeftToChooseCharacters <= 0 && !gameAlreadyStarted) {
     console.log('Host: Start game');
-    underworld.initLevel(0);
+    // underworld.initHandcraftedLevel('Tutorial');
+    underworld.initHandcraftedLevel('Pickups and Casting Spells');
+    // underworld.initLevel(0);
     console.log('Host: Send all clients game state for initial load');
     clients.forEach(clientId => {
       giveClientGameStateForInitialLoad(clientId);

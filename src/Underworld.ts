@@ -32,6 +32,8 @@ import { expandPolygon, mergeOverlappingPolygons, Polygon, PolygonLineSegment, p
 import { findPath, findPolygonsThatVec2IsInsideOf } from './Pathfinding';
 import { setView, View } from './views';
 import * as readyState from './readyState';
+import { HandcraftedLevel, levels } from './HandcraftedLevels';
+import { addCardToHand, removeCardsFromHand } from './CardUI';
 
 export enum turn_phase {
   PlayerTurns,
@@ -253,40 +255,8 @@ export default class Underworld {
 
   }
 
-  initLevel(levelIndex: number): void {
-    this.levelIndex = levelIndex;
-    // Now that it's a new level clear out the level's dodads such as
-    // bone dust left behind from destroyed corpses
-    containerDoodads.removeChildren();
-    console.log('Setup: initLevel', levelIndex);
-    // Clean previous level info
-    for (let i = this.units.length - 1; i >= 0; i--) {
-      const u = this.units[i];
-      // Clear all remaining AI units
-      if (u.unitType === UnitType.AI) {
-        Unit.cleanup(u);
-        this.units.splice(i, 1);
-      }
-    }
-    if (this.players.length == 0) {
-      console.error('Attempting to initialize level without any players');
-
-    }
-    // Clear all pickups
-    for (let p of this.pickups) {
-      Pickup.removePickup(p);
-    }
-    // Clear all obstacles
-    for (let o of this.obstacles) {
-      Obstacle.remove(o);
-    }
-    // Update level indicator UI at top of screen
-    if (elLevelIndicator) {
-      elLevelIndicator.innerText = `Altitude ${this.levelIndex}`;
-    } else {
-      console.error('elLevelIndicator is null');
-    }
-
+  // boolean in return represents if generating the level succeeded
+  generateRandomLevel(levelIndex: number): boolean {
     let validSpawnCoords: Vec2[] = [];
     this.validPlayerSpawnCoords = [];
     let validPortalSpawnCoords: Vec2[] = [];
@@ -346,7 +316,7 @@ export default class Underworld {
     const portalCoords = validPortalSpawnCoords.splice(index, 1)[0];
     if (!portalCoords) {
       console.log('Bad level seed, not enough valid spawns for portal, regenerating');
-      return this.initLevel(this.levelIndex);
+      return false;
     }
     const portalPickup = Pickup.specialPickups['portal'];
     Pickup.create(
@@ -369,7 +339,7 @@ export default class Underworld {
 
     if (this.validPlayerSpawnCoords.length === 0) {
       console.log('Bad level seed, no place to spawn portal, regenerating');
-      return this.initLevel(this.levelIndex);
+      return false;
     }
 
     for (let i = 0; i < config.NUM_PICKUPS_PER_LEVEL; i++) {
@@ -399,9 +369,44 @@ export default class Underworld {
       }
     } else {
       console.log('Bad level seed, not enough valid spawns for players, regenerating', this.validPlayerSpawnCoords.length, this.players.length);
-      return this.initLevel(this.levelIndex);
+      return false;
     }
+    return true;
 
+  }
+  cleanUpLevel() {
+    // Now that it's a new level clear out the level's dodads such as
+    // bone dust left behind from destroyed corpses
+    containerDoodads.removeChildren();
+    // Clean previous level info
+    for (let i = this.units.length - 1; i >= 0; i--) {
+      const u = this.units[i];
+      // Clear all remaining AI units
+      if (u.unitType === UnitType.AI) {
+        Unit.cleanup(u);
+        this.units.splice(i, 1);
+      }
+    }
+    if (this.players.length == 0) {
+      console.error('Attempting to initialize level without any players');
+
+    }
+    // Clear all pickups
+    for (let p of this.pickups) {
+      Pickup.removePickup(p);
+    }
+    // Clear all obstacles
+    for (let o of this.obstacles) {
+      Obstacle.remove(o);
+    }
+    // Update level indicator UI at top of screen
+    if (elLevelIndicator) {
+      elLevelIndicator.innerText = `Altitude ${this.levelIndex}`;
+    } else {
+      console.error('elLevelIndicator is null');
+    }
+  }
+  postSetupLevel() {
     // Since a new level changes the existing units, redraw the planningView in
     // the event that the planningView is active
     updatePlanningView();
@@ -412,12 +417,105 @@ export default class Underworld {
     window.underworld.gameLoopUnits();
     // Recentering should happen after stage setup
     recenterStage();
-
+  }
+  initLevel(levelIndex: number): void {
+    console.log('Setup: initLevel', levelIndex);
+    this.levelIndex = levelIndex;
+    this.cleanUpLevel();
+    const succeeded = this.generateRandomLevel(levelIndex);
+    if (!succeeded) {
+      // Invoke init level again until generateRandomLevel succeeds
+      return this.initLevel(this.levelIndex);
+    }
+    this.postSetupLevel();
     // Show text in center of screen for the new level
     orderedFloatingText(
       `Altitude ${this.levelIndex}`,
       'white',
     );
+  }
+  initHandcraftedLevel(name: string) {
+    console.log('Setup: initHandcraftedLevel', name);
+    const h: HandcraftedLevel = levels[name];
+
+    // Clean up the previous level
+    this.cleanUpLevel();
+
+    // Spawn players
+    this.validPlayerSpawnCoords = h.playerSpawnLocations;
+    for (let player of this.players) {
+      Player.resetPlayerForNextLevel(player);
+      if (h.startingCards.length) {
+        // Clear all player cards
+        removeCardsFromHand(player, player.cards);
+        for (let card of h.startingCards) {
+          addCardToHand(Cards.allCards[card], player);
+        }
+      }
+    }
+    // Spawn portal
+    const portalPickup = Pickup.specialPickups['portal'];
+    if (h.portalSpawnLocation) {
+      Pickup.create(
+        h.portalSpawnLocation.x,
+        h.portalSpawnLocation.y,
+        portalPickup.name,
+        portalPickup.description,
+        false,
+        portalPickup.imagePath,
+        portalPickup.animationSpeed,
+        true,
+        portalPickup.effect,
+      );
+    }
+
+    // Spawn pickups
+    for (let p of h.specialPickups) {
+      const pickup = Pickup.specialPickups[p.id];
+      Pickup.create(
+        p.location.x,
+        p.location.y,
+        pickup.name,
+        pickup.description,
+        true,
+        pickup.imagePath,
+        0.1,
+        true,
+        pickup.effect,
+      );
+
+    }
+
+    // Spawn obstacles
+    for (let o of h.obstacles) {
+      // -1 to let 0 be empty (no obstacle) and 1 will be index 0 of
+      // obstacleSource
+      const obstacle = Obstacle.obstacleSource[parseInt(o.id) - 1];
+      Obstacle.create(o.location.x, o.location.y, obstacle);
+    }
+    this.cacheWalls();
+
+    // Spawn doodads
+    for (let d of h.doodads) {
+      // TODO spawn doodads
+    }
+
+    // Spawn units
+    for (let u of h.units) {
+      this.spawnEnemy(u.id, u.location);
+    }
+
+    if (h.init) {
+      h.init(this);
+    }
+
+    this.postSetupLevel();
+    // Show text in center of screen for the new level
+    orderedFloatingText(
+      name,
+      'white',
+    );
+
   }
   checkPickupCollisions(unit: Unit.IUnit) {
     for (let pu of this.pickups) {

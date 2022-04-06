@@ -9,7 +9,7 @@ export type onDamage = {
 const onDamageSource: { [name: string]: onDamage } = {};
 
 export type onDeath = {
-  (unit: IUnit, damageDealer?: IUnit): void;
+  (unit: IUnit): void;
 };
 const onDeathSource: { [name: string]: onDeath } = {};
 

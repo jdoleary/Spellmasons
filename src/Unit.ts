@@ -299,6 +299,13 @@ export function resurrect(unit: IUnit) {
   returnToDefaultSprite(unit);
 }
 export function die(unit: IUnit) {
+  // Compose onDeathEvents
+  for (let eventName of unit.onDeathEvents) {
+    const fn = Events.onDeathSource[eventName];
+    if (fn) {
+      fn(unit);
+    }
+  }
   Image.changeSprite(
     unit.image,
     addPixiSprite('units/corpse.png', unit.image.sprite.parent),
