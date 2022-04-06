@@ -1,4 +1,7 @@
 ### 2022-04-05
+- Had an interesting observation where units persisted between reset.  Killing self with one health left when I had cast two damage.
+    It reset the level  as soon as i died but the spell continued to fire
+- Handle restart tutorial if you die in tutorial
 - Help them understand insufficient mana better
 - Add end turn "card"
 - revisit: 2e6c3218dd1608d45ad8a4551c13eda2ac2e3f2e 

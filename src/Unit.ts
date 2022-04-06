@@ -299,13 +299,6 @@ export function resurrect(unit: IUnit) {
   returnToDefaultSprite(unit);
 }
 export function die(unit: IUnit) {
-  // Compose onDeathEvents
-  for (let eventName of unit.onDeathEvents) {
-    const fn = Events.onDeathSource[eventName];
-    if (fn) {
-      fn(unit);
-    }
-  }
   Image.changeSprite(
     unit.image,
     addPixiSprite('units/corpse.png', unit.image.sprite.parent),
@@ -321,6 +314,14 @@ export function die(unit: IUnit) {
   // Check for game over
   if (window.underworld.players.every(p => !p.unit.alive)) {
     setView(View.GameOver);
+  }
+
+  for (let i = 0; i < unit.onDeathEvents.length; i++) {
+    const eventName = unit.onDeathEvents[i];
+    const fn = Events.onDeathSource[eventName];
+    if (fn) {
+      fn(unit);
+    }
   }
 }
 export async function takeDamage(unit: IUnit, amount: number) {

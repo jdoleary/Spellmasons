@@ -129,8 +129,10 @@ export function setView(v: View) {
     case View.Game:
       addUnderworldEventListeners();
       break;
+    case View.GameOver:
+      break;
     default:
-      console.error('Cannot set view to', v, 'no such view exists');
+      console.error('Cannot set view to', v, 'no such view exists or is not configured');
       break;
   }
 }

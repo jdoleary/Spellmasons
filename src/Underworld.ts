@@ -451,6 +451,7 @@ export default class Underworld {
     );
   }
   initHandcraftedLevel(name: string) {
+    setView(View.Game);
     console.log('Setup: initHandcraftedLevel', name);
     const h: HandcraftedLevel = levels[name];
     if (!h) {

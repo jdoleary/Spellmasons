@@ -52,6 +52,16 @@ export const levels: { [name: string]: HandcraftedLevel } = {
         units: [],
         startingCards: ['walk'],
         init: (underworld) => {
+
+            // Restart if you die
+            const restartIfYouDieEventName = 'restartIfYouDie';
+            Events.onDeathSource[restartIfYouDieEventName] = () => {
+                underworld.initHandcraftedLevel(tutorialLevels[0]);
+            }
+            if (window.player) {
+                window.player.unit.onDeathEvents = [restartIfYouDieEventName];
+            }
+            // Queue up the next level
             underworld.nextHandCraftedLevel = tutorialLevels[1];
         }
     },
@@ -104,6 +114,15 @@ export const levels: { [name: string]: HandcraftedLevel } = {
                 u.onDeathEvents.push(spawnPortalOnDeathEventName);
             });
 
+            // Restart if you die
+            const restartIfYouDieEventName = 'restartIfYouDie';
+            Events.onDeathSource[restartIfYouDieEventName] = () => {
+                underworld.initHandcraftedLevel(tutorialLevels[1]);
+            }
+            if (window.player) {
+                window.player.unit.onDeathEvents = [restartIfYouDieEventName];
+            }
+            // Queue up the next level
             underworld.nextHandCraftedLevel = tutorialLevels[2];
         }
     },
@@ -180,6 +199,16 @@ export const levels: { [name: string]: HandcraftedLevel } = {
             enemies.map(u => {
                 u.onDeathEvents.push(spawnPortalOnAllDeathEventName);
             });
+
+            // Restart if you die
+            const restartIfYouDieEventName = 'restartIfYouDie';
+            Events.onDeathSource[restartIfYouDieEventName] = () => {
+                underworld.initHandcraftedLevel(tutorialLevels[2]);
+            }
+            if (window.player) {
+                window.player.unit.onDeathEvents = [restartIfYouDieEventName];
+            }
+            // Queue up the next level
             underworld.nextHandCraftedLevel = tutorialLevels[3];
 
         }
@@ -264,6 +293,14 @@ export const levels: { [name: string]: HandcraftedLevel } = {
             enemies.map(u => {
                 u.onDeathEvents.push(spawnPortalOnAllDeathEventName);
             });
+            // Restart if you die
+            const restartIfYouDieEventName = 'restartIfYouDie';
+            Events.onDeathSource[restartIfYouDieEventName] = () => {
+                underworld.initHandcraftedLevel(tutorialLevels[3]);
+            }
+            if (window.player) {
+                window.player.unit.onDeathEvents = [restartIfYouDieEventName];
+            }
 
         }
     }

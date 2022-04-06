@@ -148,7 +148,6 @@ function tryStartGame() {
 export async function startTutorial() {
   console.log('Game: Start Tutorial');
   await window.startSingleplayer();
-  setView(View.Game);
   const p = Player.create(window.clientId, manBlue.id);
   if (p) {
     underworld.players.push(p);
