@@ -109,7 +109,7 @@ export default class AnimationTimeline {
 let independentAnimations: AnimationGroup[] = [];
 export function animateIndependent(animations: Animation[]) {
   return new Promise<void>((resolve) => {
-    independentAnimations.push({
+    independentAnimations.unshift({
       startTime: 0,
       animations,
       resolvePromise: resolve,
