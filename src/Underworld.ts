@@ -188,6 +188,8 @@ export default class Underworld {
     for (let x of this.obstacles) {
       Image.cleanup(x.image);
     }
+    // Clean up doodads
+    containerDoodads.removeChildren();
     // Prevent requestAnimationFrame from calling this method next time
     this.gameLoopUnits = () => { };
   }
