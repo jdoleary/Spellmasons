@@ -96,6 +96,8 @@ export default class Underworld {
     mapGraphics.beginFill(0x795644, 1);
     mapGraphics.drawRect(0, 0, config.MAP_WIDTH, config.MAP_HEIGHT);
     mapGraphics.endFill();
+    // Start the gameloop
+    this.gameLoopUnits();
   }
   syncronizeRNG(RNGState: SeedrandomState | boolean) {
     // state of "true" initializes the RNG with the ability to save it's state,
@@ -105,7 +107,6 @@ export default class Underworld {
   }
   gameLoopUnits() {
     window.unitOverlayGraphics.clear();
-
 
     const aliveUnits = this.units.filter(u => u.alive);
     for (let u of aliveUnits) {
@@ -195,7 +196,8 @@ export default class Underworld {
     }
     // Clean up doodads
     containerDoodads.removeChildren();
-    // Prevent requestAnimationFrame from calling this method next time
+    // Prevent requestAnimationFrame from calling this method next time, since this underworld
+    // instance is being cleaned up
     this.gameLoopUnits = () => { };
   }
   // cacheWalls updates underworld.walls array
@@ -429,8 +431,6 @@ export default class Underworld {
 
     // Set the first turn phase
     window.underworld.setTurnPhase(turn_phase.PlayerTurns);
-    // Start the gameloop
-    window.underworld.gameLoopUnits();
     // Recentering should happen after stage setup
     recenterStage();
   }

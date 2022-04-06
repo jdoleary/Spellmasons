@@ -25,6 +25,7 @@
 - Explain how vampires work on the card
 - Brad: Alternate who goes first
 - Brad: Was moving super fast somehow (after swapping?); everyone is fast
+- I bet gameloopUnits is being called more than once per frame
     - enjoys the movement speed being faster
 
 ### 2022-03-31

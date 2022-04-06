@@ -365,9 +365,6 @@ function handleLoadGameState(payload: any) {
 
   underworld.cacheWalls();
 
-  // Start the gameloop
-  window.underworld.gameLoopUnits();
-
   // Mark the underworld as "ready"
   readyState.set('underworld', true);
 
