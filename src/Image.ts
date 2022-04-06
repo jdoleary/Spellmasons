@@ -201,7 +201,7 @@ export function move(image: IImage, x: number, y: number) {
   ]);
 }
 export function show(image: IImage) {
-  window.animationTimeline.addAnimation([
+  return animateIndependent([
     {
       sprite: image.sprite,
       target: { alpha: 1 },
