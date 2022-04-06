@@ -1,9 +1,8 @@
 ### 2022-04-05
-- Add doodads
-- Add tutorial
-    - Add button for tutorial and button for skip tutorial
 - Help them understand insufficient mana better
 - Add end turn "card"
+- revisit: 2e6c3218dd1608d45ad8a4551c13eda2ac2e3f2e 
+    - maybe there's a better way to do it
 
 ### 2022-04-01 Brad/Jake playtest
 - Jake: Either line of sight for preset range for spells.

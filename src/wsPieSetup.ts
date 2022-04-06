@@ -52,7 +52,7 @@ function defaultRoomInfo(_room_info = {}): Room {
   return room_info;
 }
 
-function joinRoom(_room_info = {}): Promise<unknown> {
+function joinRoom(_room_info = {}): Promise<void> {
   if (!pie) {
     return Promise.reject();
   }
@@ -103,6 +103,6 @@ function addHandlers(pie: PieClient) {
 
 window.startSingleplayer = function startSingleplayer() {
   return connect_to_wsPie_server().then(() => {
-    joinRoom()
+    return joinRoom();
   });
 }

@@ -12,12 +12,15 @@ import type PieClient from '@websocketpie/client';
 import { setupAudio } from './Audio';
 import cookieConsentPopup from './cookieConsent';
 import { setupMonitoring } from './monitoring';
+import { startTutorial } from './wsPieHandler';
 cookieConsentPopup();
 
 // This import is critical so that the svelte menu has access to
 // the pie globals
 import './wsPieSetup';
 
+const YES = 'yes'
+const SKIP_TUTORIAL = 'skipTutorial';
 setupAll();
 
 function setupAll() {
@@ -42,6 +45,13 @@ function setupAll() {
     Units.registerUnits();
     initPlanningView();
     readyState.set("content", true);
+    if (window.allowCookies && localStorage.getItem(SKIP_TUTORIAL) === YES) {
+      window.setMenu('PLAY');
+      setView(View.Menu);
+    } else {
+      window.setMenu('TUTORIAL');
+      startTutorial();
+    }
   }).catch(e => {
     console.error('Setup: Failed to setup pixi', e);
   });
@@ -57,7 +67,6 @@ function setupAll() {
   }
 
   window.animationTimeline = new AnimationTimeline();
-  setView(View.Menu);
 
   // Set UI version info
   const elVersionInfo = document.getElementById('version-info')
@@ -78,7 +87,14 @@ declare global {
     connect_to_wsPie_server: (wsUri?: string) => Promise<void>;
     joinRoom: (_room_info: any) => Promise<unknown>;
     setupPixiPromise: Promise<void>;
+    // Svelte menu handles
     exitCurrentGame: () => void;
+    closeMenu: () => void;
+    // Sets which route of the menu is available; note, the view must also
+    // be set to Menu in order to SEE the menu
+    setMenu: (route: string) => void;
+    // The menu will call this if the user chooses to skip the tutorial
+    skipTutorial: () => void;
 
     save: (title: string) => void;
     load: (title: string) => void;
@@ -111,7 +127,6 @@ declare global {
     playMusic: () => void;
     changeVolume: (volume: number) => void;
     volume: number;
-    closeMenu: () => void;
     startSingleplayer: () => Promise<void>;
     startMultiplayer: (wsPieUrl: string) => Promise<void>;
     // Used to ensure that the current client's turn doesn't end while they are still walking
@@ -124,6 +139,13 @@ declare global {
 
   }
 }
-
 window.volume = 1.0;
 window.playerWalkingPromise = Promise.resolve();
+window.skipTutorial = () => {
+  if (window.allowCookies) {
+    console.log(`Setting ${SKIP_TUTORIAL} in localStorage...`);
+    localStorage.setItem(SKIP_TUTORIAL, YES);
+  } else {
+    console.log('Cannot save choice to skip tutorial since cookies are not consented to');
+  }
+}

@@ -14,6 +14,7 @@ import * as readyState from './readyState';
 import * as messageQueue from './messageQueue';
 import { setView, View } from './views';
 import { tutorialLevels } from './HandcraftedLevels';
+import manBlue from './units/manBlue';
 
 const messageLog: any[] = [];
 let clients: string[] = [];
@@ -25,6 +26,8 @@ export function initializeUnderworld() {
   readyState.set('underworld', true);
 }
 window.exitCurrentGame = function exitCurrentGame() {
+  // Go back to the main PLAY menu
+  window.setMenu('PLAY');
   if (underworld) {
     underworld.cleanup();
   }
@@ -124,6 +127,7 @@ export function processNextInQueueIfReady() {
   }
 }
 function tryStartGame() {
+  console.log('Game: tryStartGame...');
   const gameAlreadyStarted = underworld.levelIndex >= 0;
   const currentClientIsHost = window.hostClientId == window.clientId;
   const clientsLeftToChooseCharacters = clients.length - underworld.players.length;
@@ -131,17 +135,42 @@ function tryStartGame() {
   // if the game hasn't already been started
   if (currentClientIsHost && clientsLeftToChooseCharacters <= 0 && !gameAlreadyStarted) {
     console.log('Host: Start game');
-    underworld.initHandcraftedLevel(tutorialLevels[0]);
-    // underworld.initLevel(0);
+    underworld.initLevel(0);
     underworld.gameStarted = true;
     console.log('Host: Send all clients game state for initial load');
     clients.forEach(clientId => {
       giveClientGameStateForInitialLoad(clientId);
     });
   } else {
+    console.log('Before game can begin, users left to choose a character: ', clientsLeftToChooseCharacters);
+  }
+}
+export async function startTutorial() {
+  console.log('Game: Start Tutorial');
+  await window.startSingleplayer();
+  setView(View.Game);
+  const p = Player.create(window.clientId, manBlue.id);
+  if (p) {
+    underworld.players.push(p);
+    if (underworld.gameStarted) {
+      // Initialize the player for the level
+      Player.resetPlayerForNextLevel(p);
+    }
+  } else {
+    console.error('Could not create player character for tutorial');
+  }
+  const gameAlreadyStarted = underworld.levelIndex >= 0;
+  const currentClientIsHost = window.hostClientId == window.clientId;
+  const clientsLeftToChooseCharacters = clients.length - underworld.players.length;
+  // Starts a new game if all clients have chosen characters, THIS client is the host, and 
+  // if the game hasn't already been started
+  if (currentClientIsHost && clientsLeftToChooseCharacters <= 0 && !gameAlreadyStarted) {
+    console.log('Host: Start tutorial');
+    underworld.initHandcraftedLevel(tutorialLevels[0]);
+    underworld.gameStarted = true;
+  } else {
     console.log('Users left to choose a character: ', clientsLeftToChooseCharacters);
   }
-
 }
 async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
   underworld.processedMessageCount++;
