@@ -58,10 +58,16 @@ Wizards walk one foot in front of the other just like the rest of us.
         }
         await movePromise;
       } else {
-        floatingText({
-          coords: originalTarget,
-          text: 'You cannot move more than once per turn.',
-        });
+        const elEndTurnBtn = document.querySelector('#end-turn-btn');
+        // Remove then add 'shakeFy' class to the end turn button
+        // it will restart the animation to grab the user's attention.
+        if (elEndTurnBtn) {
+          elEndTurnBtn.classList.remove('shake');
+          setTimeout(() => {
+            elEndTurnBtn.classList.add('shake');
+          }, 10);
+
+        }
 
       }
       return state;

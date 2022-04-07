@@ -1,6 +1,8 @@
 ## Start marketing and new playtest after
 - Fix insufficient mana
 - Fix input for movement
+    - right click to move
+    - left click to move if not casting
 ---
 - Start marketing
 ---

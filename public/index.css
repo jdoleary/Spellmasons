@@ -382,6 +382,7 @@ body.your-turn #end-turn-btn {
   opacity: 1.0;
 }
 
+
 #player-turn-indicator {
   display: block;
 }
@@ -567,6 +568,10 @@ body.your-turn #player-turn-indicator {
 
 #selected-cards .card.requires-following-card.blink:last-child:before {
   animation: blink-animation 0.5s steps(5, start) infinite, shake 0.82s cubic-bezier(.36, .07, .19, .97) both;
+}
+
+.shake {
+  animation: shake 0.82s cubic-bezier(.36, .07, .19, .97) both;
 }
 
 @keyframes blink-animation {
