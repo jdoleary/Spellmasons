@@ -166,7 +166,8 @@ export function clickHandler(e: MouseEvent) {
             text: `${cards[cards.length - 1].id} only modifies cards on its right`,
             style: { fill: 'red' }
           });
-          const elHint = document.querySelector('.requires-following-card');
+          const elHints = document.querySelectorAll('.requires-following-card');
+          const elHint = elHints.length ? elHints[elHints.length - 1] : undefined;
           // Remove then add 'blink' class to the "hint" outline so that
           // it will restart the animation to grab the user's attention.
           if (elHint) {
