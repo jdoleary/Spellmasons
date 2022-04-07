@@ -1,9 +1,16 @@
+## Start marketing and new playtest after
+- Fix insufficient mana
+- Fix input for movement
+- Add more obvious "End Turn" Button
+
+- Add hotkeys as bubbles under cards and buttons
+- Animation for getting new card
+    - Huzzah! you got a new spell! Visually show the card showing up and going to your inventory
+## notes with bard 2022-04-06
+- tut level 2, reinforce going through portal
 ### 2022-04-05
 - Had an interesting observation where units persisted between reset.  Killing self with one health left when I had cast two damage.
     It reset the level  as soon as i died but the spell continued to fire
-- Handle restart tutorial if you die in tutorial
-- Help them understand insufficient mana better
-- Add end turn "card"
 - revisit: 2e6c3218dd1608d45ad8a4551c13eda2ac2e3f2e 
     - maybe there's a better way to do it
 
@@ -19,17 +26,12 @@
     - Somehow Jake started the game while Brad was still looking at upgrades and it showed the game behind
         - AND it went back to the previous level with the dead mobs still there
         - could this be due to desync messages? Since the route is part of underworld, it may have overridden the other client
-- Jake: visual indicator to remind him that he can move. His mouse doesn't have presence
 - "auto next level" if there's nothing left to do
-- Jake: "Feels like mouse isn't in the game"
 - Clone disconnected units can move around as AI but still show as disconnected
 - Jake: needs unit collision
 - Show in UI how much mana you get per turn
 - Explain how vampires work on the card
 - Brad: Alternate who goes first
-- Brad: Was moving super fast somehow (after swapping?); everyone is fast
-- I bet gameloopUnits is being called more than once per frame
-    - enjoys the movement speed being faster
 
 ### 2022-03-31
 - Solve for spawning mid game, including cloning (how to prevent spawning in a no walk zone)
