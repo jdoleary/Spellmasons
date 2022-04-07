@@ -2,8 +2,10 @@
 - Fix insufficient mana
 - Fix input for movement
 - Add more obvious "End Turn" Button
+---
+- Start marketing
+---
 
-- Add hotkeys as bubbles under cards and buttons
 - Animation for getting new card
     - Huzzah! you got a new spell! Visually show the card showing up and going to your inventory
 ## notes with bard 2022-04-06

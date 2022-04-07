@@ -4,23 +4,27 @@ body {
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
     'Lucida Sans', Arial, sans-serif;
 }
+
 body.view-Game #underworld-container {
   display: flex;
 }
+
 #underworld-container {
   min-height: 100vh;
   display: none;
   flex-direction: column;
   justify-content: space-between;
 }
+
 #game-content-holder {
-  display:none;
+  display: none;
 }
+
 body.view-Game #game-content-holder {
   display: flex;
   align-items: flex-start;
   flex-direction: column;
-  height:100vh;
+  height: 100vh;
   pointer-events: none;
   margin: 65px 0 0 8px;
 }
@@ -37,6 +41,7 @@ body.view-Game #game-content-holder {
   pointer-events: none;
   user-select: none;
 }
+
 #vote-level-label {
   text-align: center;
   color: white;
@@ -65,43 +70,53 @@ body.view-Game #game-content-holder {
   the screen clicks will pass through it */
   pointer-events: none;
 }
+
 #upgrade-picker.active {
   display: block;
 }
+
 #upgrade-picker-content {
   justify-content: center;
   align-items: center;
   display: flex;
   pointer-events: all;
 }
+
 #upgrade-picker-label {
   text-align: center;
   color: white;
   font-weight: bold;
   font-size: 24px;
 }
+
 #upgrade-picker .card {
   width: 100%;
   max-width: 300px;
   margin: 8px;
 }
+
 #upgrade-picker .card-inner {
   height: 500px;
   width: 100%;
 }
+
 #upgrade-picker .card-title {
   text-align: center;
   color: white;
 }
+
 #upgrade-picker .card-thumb {
   height: 180px;
 }
+
 body.inspect-mode {
   cursor: help;
 }
+
 body.inspect-mode #card-inspect {
   display: flex;
 }
+
 #card-inspect {
   /*Hidden until inspect-mode reveals it*/
   display: none;
@@ -115,19 +130,23 @@ body.inspect-mode #card-inspect {
   pointer-events: none;
   flex-direction: column;
 }
+
 #card-inspect .card-inner {
   width: 300px;
   height: 400px;
   border-width: 6px;
 }
+
 #card-inspect .card-quantity {
   color: white;
   text-align: center;
   font-weight: bold;
 }
+
 #card-inspect .card-inner .card-thumb {
   height: 150px;
 }
+
 #card-holders {
   user-select: none;
   position: fixed;
@@ -138,23 +157,22 @@ body.inspect-mode #card-inspect {
   display: flex;
   flex-direction: column-reverse;
 }
-#card-holders > div {
-  margin-top:8px;
+
+#card-holders>div {
+  margin-top: 8px;
 }
+
 #card-holders #selected-cards,
 #card-holders #card-hand {
   display: flex;
   justify-content: center;
 }
+
 #card-hand {
   /* This prevents the card-hand from disappearing when all cards are selected */
   min-height: 103px;
 }
-/* The "card" width is very thin to allow them to stack.  The card-inner is what
-actually contains the full width of the card. */
-#card-hand .card {
-  width: 3px;
-}
+
 #card-hand .card img {
   -webkit-user-drag: none;
   -khtml-user-drag: none;
@@ -162,26 +180,30 @@ actually contains the full width of the card. */
   -o-user-drag: none;
   user-drag: none;
 }
+
 #selected-cards.hide {
   filter: grayscale(50%);
   opacity: 50%;
 }
+
 /* The group of similar cards has a padding the same size as the width of a card inner so that
 the face of the last card in the group is seen*/
 .card-type-group {
   display: flex;
   flex-direction: row-reverse;
-  padding-right: 70px;
   margin-right: 3px;
 }
+
 .card-type-group:empty {
   padding-right: 0;
   margin-right: 0;
 }
+
 .card {
   cursor: pointer;
   position: relative;
 }
+
 #card-holder .card {
   padding: 8px;
   margin: 8px;
@@ -192,12 +214,14 @@ the face of the last card in the group is seen*/
   pointer-events: all;
   display: flex;
 }
-.card-badge-holder{
+
+.card-badge-holder {
   display: flex;
   position: absolute;
   top: -8px;
   left: -8px;
 }
+
 .card-badge {
   width: 24px;
   height: 24px;
@@ -206,24 +230,50 @@ the face of the last card in the group is seen*/
   color: white;
   text-align: center;
 }
-.card-badge.hidden {
-  display:none;
-}
-.card-mana-badge {
 
+.card-badge.hidden {
+  display: none;
+}
+
+.card-mana-badge {
   background-color: #5656d5;
-  border : 2px solid #5656d5;
+  border: 2px solid #5656d5;
 }
+
 .card-mana-badge.modified-by-usage {
-  border : 2px solid #434380;
+  border: 2px solid #434380;
 }
+
 .card-health-badge {
   background-color: #d55656;
-  border : 2px solid #d55656;
+  border: 2px solid #d55656;
 }
+
 .card-health-badge.modified-by-usage {
-  border : 2px solid #863e3e;
+  border: 2px solid #863e3e;
 }
+
+.hotkey-badge-holder {
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+}
+
+.hotkey-badge {
+  height: 16px;
+  width: 16px;
+  line-height: 16px;
+  margin: 0 auto;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 16px 16px;
+  padding: 2px;
+  font-size: 12px;
+  text-align: center;
+}
+
 .card-inner {
   width: 70px;
   border-width: 1px;
@@ -233,6 +283,7 @@ the face of the last card in the group is seen*/
   flex-grow: 1;
   background-color: #68c668;
 }
+
 .card-thumb {
   background-color: white;
   flex-grow: 2;
@@ -240,15 +291,18 @@ the face of the last card in the group is seen*/
   justify-content: center;
   align-items: center;
 }
+
 .card-thumb img {
   width: 64px;
   height: 64px;
 }
+
 #card-inspect .card-thumb img {
   width: 128px;
   height: 128px;
   image-rendering: pixelated;
 }
+
 .card-title {
   font-size: 12px;
   flex-grow: 3;
@@ -256,10 +310,12 @@ the face of the last card in the group is seen*/
   color: white;
   text-align: center;
 }
+
 #card-inspect .card-title {
   font-size: 30px;
   font-weight: bold;
 }
+
 .card-description {
   /* Only shows within card-inspect*/
   display: none;
@@ -268,6 +324,7 @@ the face of the last card in the group is seen*/
   color: white;
   text-align: center;
 }
+
 #upgrade-picker-content .card-description,
 #card-inspect .card-description {
   display: block;
@@ -285,7 +342,8 @@ the face of the last card in the group is seen*/
   background-color: grey;
   user-select: none;
 }
-#player-turn-indicator-holder > div {
+
+#player-turn-indicator-holder>div {
   padding: 8px;
   width: 140px;
 }
@@ -293,16 +351,20 @@ the face of the last card in the group is seen*/
 body.your-turn #player-turn-indicator-holder {
   background-color: gold;
 }
+
 #endTurn {
   pointer-events: auto;
   display: none;
 }
+
 body.your-turn #endTurn {
   display: block;
 }
+
 #player-turn-indicator {
   display: block;
 }
+
 body.your-turn #player-turn-indicator {
   display: none;
 }
@@ -316,19 +378,24 @@ body.your-turn #player-turn-indicator {
   z-index: 1;
   display: block;
 }
+
 /* Transform position is determined on hover*/
 #inspector-tooltip-container.top {
   top: 64px;
 }
+
 #inspector-tooltip-container.bottom {
   bottom: 0;
 }
+
 #inspector-tooltip-container.left {
   left: 64px;
 }
+
 #inspector-tooltip-container.right {
   right: 0;
 }
+
 #inspector-tooltip-content {
   border-radius: 10px 10px;
   background-color: rgba(255, 255, 255, 0.7);
@@ -341,14 +408,16 @@ body.your-turn #player-turn-indicator {
   display: flex;
   justify-content: center;
 }
+
 #spell-cost {
-  display:flex;
+  display: flex;
 }
+
 #spell-mana-cost {
   font-size: xx-large;
   background-color: #5656d5;
   border: 4px solid #5656d5;
-  color:white;
+  color: white;
   margin: 0 auto;
   border-radius: 100% 100%;
   width: 80px;
@@ -356,18 +425,21 @@ body.your-turn #player-turn-indicator {
   text-align: center;
   line-height: 80px;
 }
+
 /* For insufficient mana */
 #spell-mana-cost.insufficient {
   border: 4px solid #ff0000;
 }
+
 #spell-mana-cost.hidden {
-  display:none;
+  display: none;
 }
+
 #spell-health-cost {
   font-size: xx-large;
   background-color: #d55656;
   border: 4px solid #d55656;
-  color:white;
+  color: white;
   margin: 0 auto;
   border-radius: 100% 100%;
   width: 80px;
@@ -375,13 +447,16 @@ body.your-turn #player-turn-indicator {
   text-align: center;
   line-height: 80px;
 }
+
 /* For insufficient health */
 #spell-health-cost.insufficient {
   border: 4px solid #ff0000;
 }
+
 #spell-health-cost.hidden {
-  display:none;
+  display: none;
 }
+
 #ready-state {
   position: absolute;
   bottom: 10px;
@@ -396,35 +471,44 @@ body.your-turn #player-turn-indicator {
   /* Display above pixi */
   z-index: 1;
 }
+
 .health-mana-bar {
   width: 200px;
   height: 32px;
   border-radius: 10px;
   border: 2px solid black;
-  margin:2px auto;
+  margin: 2px auto;
 }
-#health, #mana {
+
+#health,
+#mana {
   overflow: hidden;
   position: relative;
 }
+
 #health .fill {
   background-color: #d55656;
 }
+
 #mana .fill {
   background-color: #5656d5;
   position: absolute;
 }
+
 #mana .fill:nth-child(2) {
   background-color: #8d56d5;
 }
+
 #mana .fill:nth-child(3) {
   background-color: #4e1172;
 }
+
 #health-mana .fill {
   height: 100%;
   width: 100%;
   transition: width 0.5s ease;
 }
+
 #health-mana .label {
   position: absolute;
   margin: 0 auto;
@@ -440,50 +524,61 @@ body.your-turn #player-turn-indicator {
 #selected-cards .card {
   position: relative;
 }
+
 #selected-cards .card.requires-following-card:last-child:before {
   content: "Requires another spell";
   color: white;
-  background-color:rgba(253, 98, 98, 0.596);
+  background-color: rgba(253, 98, 98, 0.596);
   height: 85%;
-  margin-top:5%;
+  margin-top: 5%;
   width: 90%;
   border: 4px red dotted;
-  border-left:0;
+  border-left: 0;
   position: absolute;
   left: 70px;
   top: 0;
   display: flex;
   justify-content: center;
   flex-direction: column;
-  text-align: center; 
+  text-align: center;
   transform: translate3d(0, 0, 0);
 }
+
 #selected-cards .card.requires-following-card.blink:last-child:before {
-  animation: blink-animation 0.5s steps(5, start) infinite, shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+  animation: blink-animation 0.5s steps(5, start) infinite, shake 0.82s cubic-bezier(.36, .07, .19, .97) both;
 }
+
 @keyframes blink-animation {
   to {
-    border:4px red solid;
-    border-left:0;
+    border: 4px red solid;
+    border-left: 0;
   }
 }
+
 @keyframes shake {
-  10%, 90% {
+
+  10%,
+  90% {
     transform: translate3d(0, -1px, 0);
   }
-  
-  20%, 80% {
+
+  20%,
+  80% {
     transform: translate3d(0, 2px, 0);
   }
 
-  30%, 50%, 70% {
+  30%,
+  50%,
+  70% {
     transform: translate3d(0, -4px, 0);
   }
 
-  40%, 60% {
+  40%,
+  60% {
     transform: translate3d(0, 4px, 0);
   }
 }
+
 #version {
   color: white;
   position: absolute;
@@ -499,9 +594,10 @@ body.your-turn #player-turn-indicator {
   /* Render the connection status inside of the #menu instead of
   it's default absolute positioning */
   position: relative !important;
-  top:0 !important;
-  left:0 !important;
+  top: 0 !important;
+  left: 0 !important;
 }
+
 #menu input {
   font-family: inherit;
   font-size: inherit;
@@ -511,7 +607,7 @@ body.your-turn #player-turn-indicator {
   box-sizing: border-box;
   border: 1px solid #ccc;
   border-radius: 2px;
-  width:100%;
+  width: 100%;
 }
 
 form {
@@ -533,9 +629,11 @@ form {
   right: 0;
   bottom: 0;
 }
+
 #menu.ready {
   display: flex;
 }
+
 #menu.hidden {
   display: none;
 }
@@ -548,16 +646,17 @@ form {
   z-index: 1;
 }
 
-#game-over{
-  display:none;
-  margin:0 auto;
+#game-over {
+  display: none;
+  margin: 0 auto;
   position: absolute;
-  width:200px;
-  height:200px;
+  width: 200px;
+  height: 200px;
   background-color: pink;
   left: 0;
   right: 0;
 }
+
 body.view-GameOver #game-over {
-  display:block;
+  display: block;
 }

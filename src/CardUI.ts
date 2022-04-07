@@ -349,6 +349,12 @@ function createCardElement(content: Cards.ICard) {
   elCardInner.classList.add('card-inner');
   elCardInner.style.borderColor = getCardRarityColor(content);
   element.appendChild(elCardInner);
+  const elCardHotkeyBadgeHolder = document.createElement('div');
+  elCardHotkeyBadgeHolder.classList.add('hotkey-badge-holder');
+  element.appendChild(elCardHotkeyBadgeHolder);
+  const elCardHotkeyBadge = document.createElement('div');
+  elCardHotkeyBadge.classList.add('hotkey-badge');
+  elCardHotkeyBadgeHolder.appendChild(elCardHotkeyBadge);
   const elCardBadgeHolder = document.createElement('div');
   elCardBadgeHolder.classList.add('card-badge-holder');
   element.appendChild(elCardBadgeHolder);
@@ -432,6 +438,22 @@ export function updateCardBadges() {
       updateManaBadge(elBadge, cost.manaCost, card);
       const elBadgeHealth = document.querySelector(`#card-hand .card[data-card-id="${card.id}"] .card-health-badge`);
       updateHealthBadge(elBadgeHealth, cost.healthCost, card);
+    }
+
+    // Update hotkey badges
+    if (elCardHand) {
+      for (let x = 0; x < elCardHand.children.length && x < 10; x++) {
+        // Card hotkeys start being indexed by 1 not 0
+        // and the 9th card is accessible by hotkey 0 on the keyboard
+        const key = x == 9 ? 0 : x + 1;
+        const card = elCardHand.children.item(x) as HTMLElement;
+        if (card) {
+          const elHotkeyBadge = card.querySelector('.hotkey-badge');
+          if (elHotkeyBadge) {
+            elHotkeyBadge.innerHTML = `${key}`;
+          }
+        }
+      }
     }
 
   }
