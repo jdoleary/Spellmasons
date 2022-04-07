@@ -157,7 +157,7 @@ function clientChooseUnit(unitId: string) {
 }
 
 const menuBtnId = 'menuBtn';
-const endTurnBtnId = 'endTurn';
+const endTurnBtnId = 'end-turn-btn';
 function addUnderworldEventListeners() {
   // Add keyboard shortcuts
   window.addEventListener('keydown', keydownListener);

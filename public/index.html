@@ -45,7 +45,12 @@
       <div id="card-inspect"></div>
       <div id="card-hand"></div>
       <div id="health-mana-and-spell-cost-holder">
-
+        <button type="button" id="end-turn-btn">
+          End Turn
+          <div class="hotkey-badge-holder">
+            <div class="hotkey-badge wide">Spacebar</div>
+          </div>
+        </button>
         <div id="health-mana">
           <div id="health" class="health-mana-bar">
             <div class="fill"></div>
@@ -65,13 +70,10 @@
       </div>
       <div id="selected-cards"> </div>
     </div>
+    <button id="menuBtn">⚙️ Menu</button>
     <div id="player-turn-indicator-holder">
-      <button id="menuBtn">Menu</button>
       <div id="level-indicator"></div>
-      <div>
-        <button id="endTurn">End Turn (spacebar)</button>
-        <div id="player-turn-indicator">Waiting for players</div>
-      </div>
+      <div id="player-turn-indicator">Waiting for players</div>
     </div>
   </div>
   <div id="version">

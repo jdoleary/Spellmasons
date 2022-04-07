@@ -1,7 +1,6 @@
 ## Start marketing and new playtest after
 - Fix insufficient mana
 - Fix input for movement
-- Add more obvious "End Turn" Button
 ---
 - Start marketing
 ---

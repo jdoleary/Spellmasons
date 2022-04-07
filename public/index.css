@@ -274,6 +274,12 @@ the face of the last card in the group is seen*/
   text-align: center;
 }
 
+.hotkey-badge.wide {
+  width: auto;
+  margin: 0 15px;
+  padding: 0 4px;
+}
+
 .card-inner {
   width: 70px;
   border-width: 1px;
@@ -352,13 +358,28 @@ body.your-turn #player-turn-indicator-holder {
   background-color: gold;
 }
 
-#endTurn {
-  pointer-events: auto;
-  display: none;
+#menuBtn {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  z-index: 1;
 }
 
-body.your-turn #endTurn {
-  display: block;
+#end-turn-btn {
+  width: 120px;
+  height: 60px;
+  line-height: 40px;
+  font-size: 18px;
+  border-radius: 8px 8px;
+  border: 1px solid black;
+  text-align: center;
+  position: relative;
+  margin: 12px 8px;
+  opacity: 0.5;
+}
+
+body.your-turn #end-turn-btn {
+  opacity: 1.0;
 }
 
 #player-turn-indicator {
