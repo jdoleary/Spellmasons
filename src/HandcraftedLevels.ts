@@ -44,13 +44,13 @@ export const levels: { [name: string]: HandcraftedLevel } = {
         obstacles: [],
         doodads: [
             {
-                text: 'Left click on the "walk" card in your inventory and click on the ground to move.\nPress "spacebar" to end your turn.\nEntering the portal will take you to the next level.',
+                text: 'Left click to move.\nPress "spacebar" to end your turn.\nEntering the portal will take you to the next level.',
                 location: { x: config.MAP_WIDTH / 2, y: 100 },
                 style: { align: 'center' },
             }
         ],
         units: [],
-        startingCards: ['walk'],
+        startingCards: [],
         init: (underworld) => {
 
             // Restart if you die
@@ -93,7 +93,7 @@ export const levels: { [name: string]: HandcraftedLevel } = {
                 location: { x: config.MAP_WIDTH / 2, y: config.MAP_HEIGHT / 2 }
             }
         ],
-        startingCards: ['walk'],
+        startingCards: [],
         init: (underworld: Underworld) => {
             const spawnPortalOnDeathEventName = 'spawnPortalOnDeath';
             Events.onDeathSource[spawnPortalOnDeathEventName] = () => {
@@ -160,7 +160,7 @@ export const levels: { [name: string]: HandcraftedLevel } = {
                 location: { x: config.MAP_WIDTH / 2 + config.COLLISION_MESH_RADIUS * 5, y: config.MAP_HEIGHT / 2 + config.COLLISION_MESH_RADIUS * 4 }
             },
         ],
-        startingCards: ['walk', 'hurt', 'chain'],
+        startingCards: ['hurt', 'chain'],
         init: (underworld: Underworld) => {
             const spawnPortalOnAllDeathEventName = 'spawnPortalOnAllDeath';
             const enemies = underworld.units.filter(u => u.faction == Faction.ENEMY)
@@ -247,7 +247,7 @@ export const levels: { [name: string]: HandcraftedLevel } = {
                 location: { x: config.MAP_WIDTH / 2 + config.COLLISION_MESH_RADIUS * 9, y: config.MAP_HEIGHT / 2 }
             },
         ],
-        startingCards: ['walk', 'hurt', 'AOE', 'chain'],
+        startingCards: ['hurt', 'AOE', 'chain'],
         init: (underworld: Underworld) => {
             underworld.players.forEach(p => {
                 p.unit.manaMax = 100;

@@ -119,6 +119,8 @@ declare global {
     // Graphics for drawing debug information, use window.showDebug = true
     // to show at runtime
     debugGraphics: PIXI.Graphics;
+    // Graphics for drawing the player visible path
+    unitUnderlayGraphics: PIXI.Graphics;
     // Graphics for drawing unit health and mana bars
     unitOverlayGraphics: PIXI.Graphics;
     // Graphics for drawing the spell effects during the dry run phase

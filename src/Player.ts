@@ -58,7 +58,6 @@ export function create(clientId: string, unitId: string): IPlayer | undefined {
 
   updateGlobalRefToCurrentClientPlayer(player);
   // Add initial cards to hand
-  CardUI.addCardToHand(allCards['walk'], player);
   CardUI.addCardToHand(allCards['hurt'], player);
   CardUI.addCardToHand(allCards['heal'], player);
   CardUI.addCardToHand(allCards['AOE'], player);

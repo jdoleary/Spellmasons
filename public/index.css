@@ -378,6 +378,10 @@ body.your-turn #player-turn-indicator-holder {
   opacity: 0.5;
 }
 
+#end-turn-btn.highlight {
+  background-color: gold;
+}
+
 body.your-turn #end-turn-btn {
   opacity: 1.0;
 }

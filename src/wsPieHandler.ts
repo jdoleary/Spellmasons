@@ -313,6 +313,18 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       }
       handleLoadGameState(payload);
       break;
+    case MESSAGE_TYPES.MOVE_PLAYER:
+      if (caster) {
+        if (caster == window.player) {
+          // Now that the current player has moved, highlight the "end-turn-btn" to
+          // remind them that they need to end their turn before they can move again
+          document.querySelector('#end-turn-btn')?.classList.add('highlight');
+        }
+        await Unit.moveTowards(caster.unit, payload);
+      } else {
+        console.error('Cannot move player, caster does not exist');
+      }
+      break;
     case MESSAGE_TYPES.SPELL:
       if (caster) {
         await handleSpell(caster, payload);

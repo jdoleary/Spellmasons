@@ -10,7 +10,6 @@ import Events, {
 } from '../Events';
 import Subsprites, { ISubsprites } from '../Subsprites';
 // Register spells:
-import walk from './walk';
 import add_damage from './add_damage';
 import add_heal from './add_heal';
 import area_of_effect from './area_of_effect';
@@ -88,7 +87,6 @@ function register(spell: Spell) {
   }
 }
 export function registerCards() {
-  register(walk);
   register(add_damage);
   register(add_heal);
   register(area_of_effect);

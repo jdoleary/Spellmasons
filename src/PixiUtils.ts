@@ -33,6 +33,8 @@ window.debugGraphics = new PIXI.Graphics();
 containerUI.addChild(window.debugGraphics);
 window.unitOverlayGraphics = new PIXI.Graphics();
 containerUI.addChild(window.unitOverlayGraphics);
+window.unitUnderlayGraphics = new PIXI.Graphics();
+containerUnitUnderlay.addChild(window.unitUnderlayGraphics);
 
 export const containerCharacterSelect = new PIXI.Container();
 const characterSelectContainers = [containerCharacterSelect];
