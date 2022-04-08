@@ -3,18 +3,12 @@
     - Resolve desync
         - Write code that looks for desyncs but doesn't try to resolve them.
         - The trouble with my desync code until now is that it doesn't check what step of the game it was sent and received.  Is it turn 4 playerIndex 2?  IF it gets sent at that time but as it's going over the wire player 2 takes their turn, it will think there's a desync.
-    - ✔ Resolve pathing
     - Ending your turn shouldn't feel like a chore
         - If no one else is alive, it should end your turn automatically
     - More random generation.  This isn't a rogue-like without the random element
         - Take queues from slay the spire
-    - Add user metrics
-- Finish Content / Endgame
-    - More Spells
-    - More enemies
-    - Bosses
+    - ✔ Resolve pathing
 - Youtube Alpha version video / Post on social
-- Menus
 - Options
     - ✔ Volume
     - ✔ Cookies
@@ -22,7 +16,8 @@
 - Homepage
     - Embedded video
     - News
-- Art in Blender / Shaders / Juice
+- Art / Shaders / Juice
+    - Come up with palette first
     - Assets needed:
         - 8 Wizards, color change in shader
         - Pickup
@@ -45,8 +40,6 @@
     - Adobe? https://www.adobe.com/products/audition/offers/AdobeAuditionDLCSFX.html
 - [Tutorial](https://www.youtube.com/watch?v=-GV814cWiAw)
 - ✔ Monitoring: Sentry.io
-- April 30: Release
-- Open Source
 - Engage community in making new spells
 
 ## Deadlines
