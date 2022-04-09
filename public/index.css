@@ -199,9 +199,15 @@ the face of the last card in the group is seen*/
   margin-right: 0;
 }
 
+.card:hover {
+  transform: translate(0, -8px);
+}
+
 .card {
   cursor: pointer;
   position: relative;
+  transition: all 0.1s;
+
 }
 
 #card-holder .card {
