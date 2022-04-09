@@ -1,8 +1,6 @@
 ## Tasks from playtest with Brad 2022-04-09
 - **!** line of sight casting
 - **!** Balance: Make enemies scale in strength over time too
-- Make stamina upgradable
-- bug: he has aoe and chain and more in tut 2
 - auto exit level
 - tab or shift to allow path view
 - archers should path to line of sight
@@ -18,7 +16,6 @@
 - levels should be bigger
 - sequential fireballs should be one big fireball!
 - add gaps as well as walls (different)
-- remove spell card pickups, too simple
 - show rarity of cards, adorn
 ## Start marketing and new playtest after
 - Write code that looks for desyncs and reports them but doesn't try to correct them

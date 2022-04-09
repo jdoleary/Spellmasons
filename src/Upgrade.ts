@@ -133,8 +133,20 @@ export const upgradeSource: IUpgrade[] = [
     },
     probability: 30,
   },
+  {
+    title: '+ Max Stamina',
+    description: (player) =>
+      `Increases your stamina from ${player.unit.moveDistance} to ${player.unit.moveDistance + maxStaminaIncreaseAmount
+      }`,
+    thumbnail: 'images/spell/walk.png',
+    effect: (player) => {
+      player.unit.moveDistance += maxStaminaIncreaseAmount;
+    },
+    probability: 30,
+  },
 ];
 const maxManaIncreaseAmount = 10;
+const maxStaminaIncreaseAmount = 50;
 const maxHealthIncreaseAmount = 5;
 const manaPerTurnIncreaseAmount = 2;
 
