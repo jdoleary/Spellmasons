@@ -367,7 +367,7 @@ export function syncPlayerHealthManaUI() {
   elManaLabel.innerHTML = `${unit.mana}/${unit.manaMax}`;
 
   elStaminaBar.style["width"] = `${100 * (unit.moveDistance - unit.distanceMovedThisTurn) / unit.moveDistance}%`;
-  elStaminaBarLabel.innerHTML = `${Math.round(unit.moveDistance - unit.distanceMovedThisTurn)}`;
+  elStaminaBarLabel.innerHTML = `${Math.max(0, Math.round(unit.moveDistance - unit.distanceMovedThisTurn))}`;
 }
 export function canMove(unit: IUnit): boolean {
   // Do not move if dead
