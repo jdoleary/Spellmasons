@@ -261,6 +261,8 @@ export default class Underworld {
         unit.radius = config.COLLISION_MESH_RADIUS;
         // Set image to "heavy" size
         unit.image.sprite.scale.set(1.0);
+        // Add subsprite to show they are armored:
+        Image.addSubSprite(unit.image, 'heavy_armor');
       }
     }
 
