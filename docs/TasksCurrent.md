@@ -8,7 +8,6 @@
 - archers should path to line of sight
 - note: mana is moot if you can 1 shot everything
 - Balance: Make mana steal cost more
-- spells in hand shouldn't overlap the map, move map up
 - remove hotkey badge for >0
 - hotkeys don't work for numpad
 - maybe portal appears when final enemy is killed

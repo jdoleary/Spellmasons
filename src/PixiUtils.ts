@@ -51,16 +51,15 @@ function resizePixi() {
     console.error('Cannot resize pixi, elPIXIHolder is null')
     return;
   }
-  app.renderer.resize(elPIXIHolder.offsetWidth, elPIXIHolder.offsetHeight);
+  app.renderer.resize(elPIXIHolder.clientWidth, elPIXIHolder.clientHeight);
   // Set the scale of the stage based on the available window pixel space
   // so that players with smaller screens can see the whole board
-  const hardCodedCardHeight = 120;
-  const margin = 256;
-  const requiredRenderWidth = MAP_WIDTH + margin;
-  const requiredRenderHeight = MAP_HEIGHT + hardCodedCardHeight + margin;
-  const widthRatio = window.innerWidth / requiredRenderWidth;
+  const heightMargin = 20;
+  const requiredRenderWidth = MAP_WIDTH;
+  const requiredRenderHeight = MAP_HEIGHT + heightMargin;
+  const widthRatio = elPIXIHolder.clientWidth / requiredRenderWidth;
   // window height shouldn't consider the card height, since the card height doesn't scale
-  const heightRatio = (window.innerHeight - hardCodedCardHeight) / requiredRenderHeight;
+  const heightRatio = (elPIXIHolder.clientHeight - heightMargin) / requiredRenderHeight;
   // Use the smaller ratio for scaling the camera:
   const smallerRatio = widthRatio < heightRatio ? widthRatio : heightRatio;
   app.stage.scale.x = smallerRatio;
@@ -76,8 +75,8 @@ export function recenterStage() {
 
   switch (window.view) {
     case View.CharacterSelect:
-      app.stage.x = elPIXIHolder.offsetWidth / 2;
-      app.stage.y = elPIXIHolder.offsetHeight / 2;
+      app.stage.x = elPIXIHolder.clientWidth / 2;
+      app.stage.y = elPIXIHolder.clientHeight / 2;
       break;
     case View.Game:
       // Align Camera: center the app in the middle of the map 

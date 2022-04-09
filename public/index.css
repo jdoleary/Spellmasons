@@ -6,7 +6,13 @@ body {
 }
 
 #PIXI-holder {
-  flex-grow: 1;
+  flex: 1 1 auto;
+}
+
+#PIXI-holder canvas {
+  display: block;
+  /* This allows the parent to shrink when the window is resized */
+  position: absolute;
 }
 
 #underworld-container {
@@ -352,10 +358,6 @@ these badges only belong on cards in the hand */
 
 /* Hide end turn button until it is your turn */
 #player-turn-indicator-holder {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
   text-align: center;
   display: flex;
   justify-content: center;
@@ -369,7 +371,8 @@ these badges only belong on cards in the hand */
 }
 
 body {
-  background-color: #3ea8ec;
+  /* Match app.renderer.backgroundColor*/
+  background-color: #45b6fe;
 }
 
 body.your-turn #player-turn-indicator-holder {
