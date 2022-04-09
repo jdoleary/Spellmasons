@@ -383,7 +383,7 @@ body.your-turn #player-turn-indicator-holder {
   line-height: 40px;
   font-size: 18px;
   border-radius: 8px 8px;
-  border: 1px solid black;
+  border: 2px solid black;
   text-align: center;
   position: relative;
   margin: 12px 8px;
@@ -391,7 +391,22 @@ body.your-turn #player-turn-indicator-holder {
 }
 
 #end-turn-btn.highlight {
-  background-color: gold;
+  animation: blink-end-turn-animation 1.0s steps(5, start) infinite;
+}
+
+
+@keyframes blink-end-turn-animation {
+
+  0%,
+  100% {
+    color: black;
+    border: 2px black solid;
+  }
+
+  50% {
+    color: red;
+    border: 2px red solid;
+  }
 }
 
 body.your-turn #end-turn-btn {
