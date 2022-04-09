@@ -488,6 +488,10 @@ body.your-turn #player-turn-indicator {
   display: none;
 }
 
+#spell-mana-cost:empty {
+  display: none;
+}
+
 #spell-health-cost {
   font-size: xx-large;
   background-color: #d55656;
@@ -499,6 +503,10 @@ body.your-turn #player-turn-indicator {
   height: 80px;
   text-align: center;
   line-height: 80px;
+}
+
+#spell-health-cost:empty {
+  display: none;
 }
 
 /* For insufficient health */
