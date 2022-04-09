@@ -1,3 +1,30 @@
+## Tasks from playtest with Brad 2022-04-09
+- **!** line of sight casting
+- **!** Balance: Make enemies scale in strength over time too
+- Make stamina upgradable
+- bug: he has aoe and chain and more in tut 2
+- auto exit level
+- tab or shift to allow path view
+- archers should path to line of sight
+- note: mana is moot if you can 1 shot everything
+- Balance: Make mana steal cost more
+- spells in hand shouldn't overlap the map, move map up
+- remove hotkey badge for >0
+- hotkeys don't work for numpad
+- maybe portal appears when final enemy is killed
+- some levels are hard cause there's no one to steal mana from
+- mana gain per turn should be in your mana bar
+- improve bone dust image
+- archers shouldn't have mana
+- explain vampires (and all units) when you first encounter them
+- don't make "your turn" floating text ordered, it gets clogged up
+- 5 AOE causes perf issues
+    - test on worse computers
+- levels should be bigger
+- sequential fireballs should be one big fireball!
+- add gaps as well as walls (different)
+- remove spell card pickups, too simple
+- show rarity of cards, adorn
 ## Start marketing and new playtest after
 - Write code that looks for desyncs and reports them but doesn't try to correct them
 - Fix insufficient mana
