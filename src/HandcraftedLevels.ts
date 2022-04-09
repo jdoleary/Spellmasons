@@ -72,7 +72,7 @@ export const levels: { [name: string]: HandcraftedLevel } = {
         obstacles: [],
         doodads: [
             {
-                text: '↑\nDestroy the practice dummy with your new "hurt" spell.\nNote: You can queue up multiple spells to cast at once',
+                text: '↑\nDestroy the practice dummy with the "hurt" spell at the bottom of your screen.\nNote: You can queue up multiple spells to cast at once',
                 location: { x: 485, y: 378 },
                 style: { align: 'center' },
             }
@@ -123,7 +123,7 @@ export const levels: { [name: string]: HandcraftedLevel } = {
         obstacles: [],
         doodads: [
             {
-                text: 'Destroy all the practice dummies with one spell.',
+                text: 'Destroy all the practice dummies with one cast.\nThe order of the spells matters.',
                 location: { x: 485, y: 500 },
                 style: { align: 'center' },
             }
