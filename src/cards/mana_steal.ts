@@ -5,7 +5,7 @@ import floatingText from '../FloatingText';
 
 const id = 'mana_steal';
 const mana_stolen = 20;
-const health_burn = Math.max(mana_stolen / 10, 1)
+const health_burn = 3;
 const spell: Spell = {
   card: {
     id,
