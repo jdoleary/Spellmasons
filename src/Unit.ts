@@ -358,7 +358,7 @@ export function syncPlayerHealthManaUI() {
   elManaBar.style["width"] = `${100 * unit.mana / unit.manaMax}%`;
   elManaBar2.style["width"] = `${100 * (Math.max(0, unit.mana - unit.manaMax)) / unit.manaMax}%`;
   elManaBar3.style["width"] = `${100 * (Math.max(0, unit.mana - unit.manaMax * 2)) / unit.manaMax}%`;
-  elManaLabel.innerHTML = `${unit.mana}/${unit.manaMax}`;
+  elManaLabel.innerHTML = `${unit.mana}/${unit.manaMax} &nbsp;+${unit.manaPerTurn} / Turn`;
 
   const staminaLeft = Math.max(0, Math.round(unit.moveDistance - unit.distanceMovedThisTurn));
   elStaminaBar.style["width"] = `${100 * (unit.moveDistance - unit.distanceMovedThisTurn) / unit.moveDistance}%`;
