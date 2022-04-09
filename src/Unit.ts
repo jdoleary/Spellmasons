@@ -19,6 +19,8 @@ const elManaBar: HTMLElement = document.querySelector('#mana .fill:nth-child(1)'
 const elManaBar2: HTMLElement = document.querySelector('#mana .fill:nth-child(2)') as HTMLElement;
 const elManaBar3: HTMLElement = document.querySelector('#mana .fill:nth-child(3)') as HTMLElement;
 const elManaLabel: HTMLElement = document.querySelector('#mana .label') as HTMLElement;
+const elStaminaBar: HTMLElement = document.querySelector('#stamina .fill') as HTMLElement;
+const elStaminaBarLabel: HTMLElement = document.querySelector('#stamina .label') as HTMLElement;
 
 // Make the UNIT_BASE_RADIUS a little smaller than the actual size of the image
 // so that moving units can overlap with each other a bit so "crowding" looks more
@@ -52,8 +54,6 @@ export interface IUnit {
   attackRange: number;
   name?: string;
   faction: number;
-  // If the unit moved this turn
-  thisTurnMoved: boolean;
   image: Image.IImage;
   defaultImagePath: string;
   shaderUniforms: { [key: string]: any };
@@ -107,7 +107,6 @@ export function create(
     distanceMovedThisTurn: 0,
     attackRange: 10 + config.COLLISION_MESH_RADIUS * 2,
     faction,
-    thisTurnMoved: false,
     image: Image.create(x, y, defaultImagePath, containerUnits),
     defaultImagePath,
     shaderUniforms: {},
@@ -352,22 +351,23 @@ export async function takeDamage(unit: IUnit, amount: number) {
     }
   }
 
-  if ((window.player && unit === window.player.unit) && elHealthBar && elHealthLabel) {
-    syncPlayerHealthManaUI();
-  }
 }
 export function syncPlayerHealthManaUI() {
-  if (!window.player) {
+  if (!(window.player && elHealthBar && elManaBar && elStaminaBar && elHealthLabel && elManaLabel && elStaminaBarLabel)) {
+    console.error('Cannot syncPlayerHealthManaUI')
     return
   }
   const unit = window.player.unit;
   elHealthBar.style["width"] = `${100 * unit.health / unit.healthMax}%`;
   elHealthLabel.innerHTML = `${unit.health}/${unit.healthMax}`;
+
   elManaBar.style["width"] = `${100 * unit.mana / unit.manaMax}%`;
   elManaBar2.style["width"] = `${100 * (Math.max(0, unit.mana - unit.manaMax)) / unit.manaMax}%`;
   elManaBar3.style["width"] = `${100 * (Math.max(0, unit.mana - unit.manaMax * 2)) / unit.manaMax}%`;
-
   elManaLabel.innerHTML = `${unit.mana}/${unit.manaMax}`;
+
+  elStaminaBar.style["width"] = `${100 * (unit.moveDistance - unit.distanceMovedThisTurn) / unit.moveDistance}%`;
+  elStaminaBarLabel.innerHTML = `${Math.round(unit.moveDistance - unit.distanceMovedThisTurn)}`;
 }
 export function canMove(unit: IUnit): boolean {
   // Do not move if dead
@@ -376,8 +376,8 @@ export function canMove(unit: IUnit): boolean {
     return false;
   }
   // Do not move if already moved
-  if (unit.thisTurnMoved) {
-    console.log("canMove: false - unit has already moved this turn")
+  if (unit.distanceMovedThisTurn >= unit.moveDistance) {
+    console.log("canMove: false - unit has already used all their stamina this turn")
     return false;
   }
   return true;
@@ -416,8 +416,7 @@ export function findClosestUnitInDifferentFaction(
 export function findClosestUnitInSameFaction(unit: IUnit): IUnit | undefined {
   return closestInListOfUnits(unit, livingUnitsInSameFaction(unit));
 }
-// moveTo moves a unit, considering all the in-game blockers and flags
-// the units property thisTurnMoved
+// moveTo moves a unit, considering all the in-game blockers
 export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
   if (!canMove(unit)) {
     return Promise.resolve();
@@ -434,7 +433,6 @@ export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
       coordinates = fn(unit, coordinates);
     }
   }
-  unit.thisTurnMoved = true;
   // Set path which will be used in the game loop to actually move the unit
   unit.path = findPath(unit, Vec.clone(target), window.underworld.pathingPolygons);
   return new Promise<void>((resolve) => {

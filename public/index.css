@@ -519,13 +519,18 @@ body.your-turn #player-turn-indicator {
 }
 
 #health,
-#mana {
+#mana,
+#stamina {
   overflow: hidden;
   position: relative;
 }
 
 #health .fill {
   background-color: #d55656;
+}
+
+#stamina .fill {
+  background-color: #d5b356;
 }
 
 #mana .fill {

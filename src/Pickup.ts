@@ -4,7 +4,7 @@ import * as Cards from './cards';
 import * as config from './config';
 import * as Player from './Player';
 import { containerPickup } from './PixiUtils';
-import { IUnit, syncPlayerHealthManaUI } from './Unit';
+import type { IUnit } from './Unit';
 import floatingText from './FloatingText';
 import * as AddDamageCard from './cards/add_damage';
 
@@ -188,8 +188,6 @@ export const pickups: IPickupSource[] = [
     effect: ({ unit, player }) => {
       if (player) {
         player.unit.mana += manaPotionRestoreAmount;
-        // Sync UI immediately when mana changes
-        syncPlayerHealthManaUI();
       }
     },
   },
@@ -202,8 +200,6 @@ export const pickups: IPickupSource[] = [
         player.unit.health += healthPotionRestoreAmount;
         // Cap health at max
         player.unit.health = Math.min(player.unit.health, player.unit.healthMax);
-        // Sync UI immediately when mana changes
-        syncPlayerHealthManaUI();
       }
     },
   },

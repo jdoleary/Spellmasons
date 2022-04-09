@@ -66,16 +66,12 @@ export function create(clientId: string, unitId: string): IPlayer | undefined {
   addHighlighIfPlayerBelongsToCurrentClient(player);
   player.unit.health = PLAYER_BASE_HEALTH;
   player.unit.healthMax = PLAYER_BASE_HEALTH;
-  Unit.syncPlayerHealthManaUI();
 
   return player;
 }
 export function resetPlayerForNextLevel(player: IPlayer) {
   // Player is no longer in portal
   player.inPortal = false;
-
-  // Reset action limitations
-  player.unit.thisTurnMoved = false;
 
   // Make unit visible
   Image.show(player.unit.image);
@@ -100,8 +96,6 @@ export function resetPlayerForNextLevel(player: IPlayer) {
 function updateGlobalRefToCurrentClientPlayer(player: IPlayer) {
   if (window.clientId === player.clientId) {
     window.player = player;
-    // When the player is first created or loaded, sync the health-mana UI
-    Unit.syncPlayerHealthManaUI();
   }
 }
 function addHighlighIfPlayerBelongsToCurrentClient(player: IPlayer) {

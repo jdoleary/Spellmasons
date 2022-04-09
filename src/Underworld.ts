@@ -106,6 +106,7 @@ export default class Underworld {
     return this.random;
   }
   gameLoopUnits() {
+    Unit.syncPlayerHealthManaUI();
     window.unitOverlayGraphics.clear();
 
     const aliveUnits = this.units.filter(u => u.alive);
@@ -671,7 +672,6 @@ export default class Underworld {
     // mana CAN go beyond max for other reasons (like mana potions), by design
     player.unit.mana += Math.max(0, Math.min(player.unit.manaPerTurn, manaTillFull));
 
-    Unit.syncPlayerHealthManaUI();
     // Sync spell effect projection in the event that the player has a
     // spell queued up, it should show it in the HUD when it becomes their turn again
     // even if they don't move the mouse
@@ -865,9 +865,6 @@ export default class Underworld {
     switch (phase) {
       case 'PlayerTurns':
         for (let u of this.units) {
-          // Reset thisTurnMoved flag now that it is a new turn
-          // Because no units have moved yet this turn
-          u.thisTurnMoved = false;
           // Reset distanceMovedThisTurn so units can move again
           u.distanceMovedThisTurn = 0;
         }
@@ -1015,7 +1012,6 @@ export default class Underworld {
           // the card may affect the caster's mana
           casterPlayer.unit.mana -= singleCardCost.manaCost;
           Unit.takeDamage(casterPlayer.unit, singleCardCost.healthCost);
-          Unit.syncPlayerHealthManaUI();
         }
         for (let target of effectState.targets) {
 

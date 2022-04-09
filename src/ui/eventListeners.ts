@@ -163,7 +163,7 @@ export function contextmenuHandler(e: MouseEvent) {
         (p) => p.clientId === window.clientId,
       );
     // If player hasn't already moved this turn...
-    if (selfPlayer && !selfPlayer.unit.thisTurnMoved) {
+    if (selfPlayer && selfPlayer.unit.distanceMovedThisTurn < selfPlayer.unit.moveDistance) {
       window.unitUnderlayGraphics.clear();
       window.pie.sendData({
         type: MESSAGE_TYPES.MOVE_PLAYER,
@@ -172,7 +172,7 @@ export function contextmenuHandler(e: MouseEvent) {
     } else {
       floatingText({
         coords: mouseTarget,
-        text: 'You cannot move more than once per turn.',
+        text: 'You are out of stamina. You must end your turn before moving farther.',
       });
     }
   } else {
