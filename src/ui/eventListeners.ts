@@ -144,6 +144,41 @@ export function contextmenuHandler(e: MouseEvent) {
     return;
   }
   e.preventDefault();
+  // Right click to move
+  const mouseTarget = window.underworld.getMousePos();
+  if (isOutOfBounds(mouseTarget)) {
+    // Disallow click out of bounds
+    return;
+  }
+  if (window.underworld.isMyTurn()) {
+    // Get current client's player
+    const selfPlayer:
+      | Player.IPlayer
+      | undefined = window.underworld.players.find(
+        (p) => p.clientId === window.clientId,
+      );
+    // If player hasn't already moved this turn...
+    if (selfPlayer && !selfPlayer.unit.thisTurnMoved) {
+      window.unitUnderlayGraphics.clear();
+      window.pie.sendData({
+        type: MESSAGE_TYPES.MOVE_PLAYER,
+        ...mouseTarget,
+      });
+    } else {
+      floatingText({
+        coords: mouseTarget,
+        text: 'You cannot move more than once per turn.',
+      });
+    }
+  } else {
+    floatingText({
+      coords: mouseTarget,
+      text: 'You must wait for your turn to move',
+    });
+
+  }
+
+
   return false;
 }
 // Handle clicks on the game board
@@ -222,40 +257,5 @@ export function clickHandler(e: MouseEvent) {
         text: 'You must wait for your turn to cast',
       });
     }
-  } else {
-    const mouseTarget = window.underworld.getMousePos();
-    if (isOutOfBounds(mouseTarget)) {
-      // Disallow click out of bounds
-      return;
-    }
-    if (window.underworld.isMyTurn()) {
-      // Get current client's player
-      const selfPlayer:
-        | Player.IPlayer
-        | undefined = window.underworld.players.find(
-          (p) => p.clientId === window.clientId,
-        );
-      // If player hasn't already moved this turn...
-      if (selfPlayer && !selfPlayer.unit.thisTurnMoved) {
-        window.unitUnderlayGraphics.clear();
-        window.pie.sendData({
-          type: MESSAGE_TYPES.MOVE_PLAYER,
-          ...mouseTarget,
-        });
-      } else {
-        floatingText({
-          coords: mouseTarget,
-          text: 'You cannot move more than once per turn.',
-        });
-      }
-    } else {
-      floatingText({
-        coords: mouseTarget,
-        text: 'You must wait for your turn to move',
-      });
-
-    }
-
-
   }
 }

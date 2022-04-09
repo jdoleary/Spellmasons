@@ -44,7 +44,7 @@ export const levels: { [name: string]: HandcraftedLevel } = {
         obstacles: [],
         doodads: [
             {
-                text: 'Left click to move.\nPress "spacebar" to end your turn.\nEntering the portal will take you to the next level.',
+                text: 'Right click with your mouse to move.\nPress "spacebar" to end your turn.\nEntering the portal will take you to the next level.',
                 location: { x: config.MAP_WIDTH / 2, y: 100 },
                 style: { align: 'center' },
             }
