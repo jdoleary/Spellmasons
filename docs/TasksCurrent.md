@@ -18,7 +18,6 @@
 ## Start marketing and new playtest after
 - Write code that looks for desyncs and reports them but doesn't try to correct them
 - Fix insufficient mana
-- If they didn't accept cookies, allow them to reaccept in options
 ---
 - Start marketing
 ---

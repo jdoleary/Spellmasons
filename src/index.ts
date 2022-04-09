@@ -138,6 +138,8 @@ declare global {
     // promise.  This is so that the promise is always resolved UNLESS the player is currently
     // walking.
     playerWalkingPromise: Promise<void>;
+    // makes a pop up prompting the user to accept cookies
+    cookieConsentPopup: (forcePopup: boolean) => void;
 
   }
 }
