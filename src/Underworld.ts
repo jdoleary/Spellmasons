@@ -437,6 +437,7 @@ export default class Underworld {
     recenterStage();
   }
   initLevel(levelIndex: number): void {
+    setView(View.Game);
     console.log('Setup: initLevel', levelIndex);
     this.levelIndex = levelIndex;
     this.cleanUpLevel();
