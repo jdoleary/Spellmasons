@@ -343,11 +343,6 @@ export async function takeDamage(unit: IUnit, amount: number) {
     // if unit is alive, die
     if (unit.alive) {
       die(unit);
-    } else {
-      // leave behind bone dust
-      Image.create(unit.x, unit.y, "units/bone_dust.png", containerDoodads);
-      // unit is already dead, fully destroy:
-      cleanup(unit);
     }
   }
 

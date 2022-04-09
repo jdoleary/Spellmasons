@@ -14,7 +14,6 @@
 - maybe portal appears when final enemy is killed
 - some levels are hard cause there's no one to steal mana from
 - mana gain per turn should be in your mana bar
-- improve bone dust image
 - archers shouldn't have mana
 - explain vampires (and all units) when you first encounter them
 - don't make "your turn" floating text ordered, it gets clogged up
@@ -46,7 +45,6 @@
 ### 2022-04-01 Brad/Jake playtest
 - Jake: Either line of sight for preset range for spells.
 - In spell projection, if you're doing enough damage to kill, show it visually
-    - also show if it will "dust" someone
 - Songs should all be same volume
 - Continuing in the direction you clicked to move (automove)
 - Desyncs:
