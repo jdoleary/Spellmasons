@@ -3,6 +3,7 @@ import * as CardUI from '../CardUI';
 import type * as Player from '../Player';
 import floatingText, { orderedFloatingText } from '../FloatingText';
 import {
+  drawOnHoverCircle,
   isOutOfBounds,
   syncSpellEffectProjection,
   updatePlanningView,
@@ -97,13 +98,17 @@ export function mousemoveHandler(e: MouseEvent) {
   // Show target hover
   syncSpellEffectProjection();
 
+  const mouseTarget = window.underworld.getMousePos();
+  // Show faint circle on clickable entities on hover:
+  drawOnHoverCircle(mouseTarget);
+
+
   // Show walk path:
   window.unitUnderlayGraphics.clear();
   // Only show walk path if there are no cards selected
   // because if there are cards selected, left clicking will cast, not walk
   if (!CardUI.areAnyCardsSelected()) {
     if (window.player) {
-      const mouseTarget = window.underworld.getMousePos();
       if (!isOutOfBounds(mouseTarget)) {
         const currentPlayerPath = findPath(window.player.unit, mouseTarget, window.underworld.pathingPolygons);
         if (currentPlayerPath.length) {

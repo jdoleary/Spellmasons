@@ -324,3 +324,14 @@ export function updateTooltipSelection(mousePos: Vec2) {
   // deselect
   selectedType = null;
 }
+
+// Draws a faint circle over things that can be clicked on
+export function drawOnHoverCircle(mousePos: Vec2) {
+  const unit = window.underworld.getUnitAt(mousePos);
+  if (unit) {
+    dryRunGraphics.lineStyle(3, targetBlue, 0.4);
+    dryRunGraphics.beginFill(0x000000, 0);
+    dryRunGraphics.drawCircle(unit.x, unit.y, config.COLLISION_MESH_RADIUS);
+    dryRunGraphics.endFill();
+  }
+}
