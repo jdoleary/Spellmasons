@@ -472,9 +472,9 @@ export default class Underworld {
     for (let player of this.players) {
       console.log('setup players', player);
       Player.resetPlayerForNextLevel(player);
+      // Clear all player cards
+      removeCardsFromHand(player, player.cards);
       if (h.startingCards.length) {
-        // Clear all player cards
-        removeCardsFromHand(player, player.cards);
         for (let card of h.startingCards) {
           addCardToHand(Cards.allCards[card], player);
         }

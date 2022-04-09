@@ -133,54 +133,10 @@ export const specialPickups: { [image: string]: IPickupSource } = {
       }
     },
   },
-  'damage-card-pickup': {
-    imagePath: 'pickups/card',
-    name: 'Cards',
-    description: 'Grants the player a new spell',
-    effect: ({ unit, player }) => {
-      if (player) {
-        const numCardsToGive = 1;
-        for (let i = 0; i < numCardsToGive; i++) {
-          const card = CardUI.generateCard([Cards.allCards[AddDamageCard.id]]);
-          if (card) {
-            CardUI.addCardToHand(card, player);
-          } else {
-            console.error('Could not give player damage card.');
-          }
-        }
-      }
-    },
-
-  }
 };
 const manaPotionRestoreAmount = 40;
 const healthPotionRestoreAmount = 10;
 export const pickups: IPickupSource[] = [
-  {
-    imagePath: 'pickups/card',
-    name: 'Cards',
-    description: 'Grants the player a new spell',
-    effect: ({ unit, player }) => {
-      if (player) {
-        const numCardsToGive = 1;
-        for (let i = 0; i < numCardsToGive; i++) {
-          const cardsToChooseFrom = Object.values(Cards.allCards).filter(card => !player.cards.includes(card.id));
-          const card = CardUI.generateCard(cardsToChooseFrom);
-          if (card) {
-            CardUI.addCardToHand(card, player);
-          } else {
-            floatingText({
-              coords: {
-                x: config.MAP_WIDTH / 2,
-                y: config.MAP_HEIGHT / 2,
-              },
-              text: `You have all of the cards already!`
-            });
-          }
-        }
-      }
-    },
-  },
   {
     imagePath: 'pickups/mana-potion',
     name: 'Mana Potion',

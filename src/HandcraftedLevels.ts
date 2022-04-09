@@ -68,21 +68,11 @@ export const levels: { [name: string]: HandcraftedLevel } = {
     [tutorialLevels[1]]: {
         allowHeavyUnits: false,
         playerSpawnLocations: [{ x: config.COLLISION_MESH_RADIUS, y: config.MAP_HEIGHT / 2 }],
-        specialPickups: [
-            {
-                id: 'damage-card-pickup',
-                location: { x: config.MAP_WIDTH / 4, y: config.MAP_HEIGHT / 2 },
-            }
-        ],
+        specialPickups: [],
         obstacles: [],
         doodads: [
             {
-                text: 'Move to the spellbook \nto pick it up and aquire a new spell\n↓',
-                location: { x: config.MAP_WIDTH / 4, y: 197 },
-                style: { align: 'center' },
-            },
-            {
-                text: '↑\nDestroy the practice dummy with your new spell.',
+                text: '↑\nDestroy the practice dummy with your new "hurt" spell.\nNote: You can queue up multiple spells to cast at once',
                 location: { x: 485, y: 378 },
                 style: { align: 'center' },
             }
@@ -93,7 +83,7 @@ export const levels: { [name: string]: HandcraftedLevel } = {
                 location: { x: config.MAP_WIDTH / 2, y: config.MAP_HEIGHT / 2 }
             }
         ],
-        startingCards: [],
+        startingCards: ['hurt'],
         init: (underworld: Underworld) => {
             const spawnPortalOnDeathEventName = 'spawnPortalOnDeath';
             Events.onDeathSource[spawnPortalOnDeathEventName] = () => {
@@ -220,7 +210,7 @@ export const levels: { [name: string]: HandcraftedLevel } = {
         obstacles: [],
         doodads: [
             {
-                text: 'Cast multiple spells together at the same time in a specific order\n to destroy all the practice dummies with one spell.',
+                text: 'Cast multiple spells together at the same time in a specific order\n to destroy the practice dummies all at once.',
                 location: { x: 485, y: 100 },
                 style: { align: 'center' },
             }
