@@ -46,6 +46,7 @@ export function create(clientId: string, unitId: string): IPlayer | undefined {
       userSource.info.image,
       UnitType.PLAYER_CONTROLLED,
       userSource.info.subtype,
+      1
     ),
     inPortal: false,
     cards: [],

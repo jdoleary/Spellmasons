@@ -39,6 +39,7 @@ const unit: UnitSource = {
           sourceUnit.info.image,
           UnitType.AI,
           sourceUnit.info.subtype,
+          unit.strength,
           sourceUnit.unitProps
         );
         await Unit.moveTowards(summonedUnit, coords);

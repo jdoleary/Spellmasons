@@ -1,6 +1,5 @@
 ## Tasks from playtest with Brad 2022-04-09
 - **!** line of sight casting
-- **!** Balance: Make enemies scale in strength over time too
 - auto exit level
 - tab or shift to allow path view
 - archers should path to line of sight

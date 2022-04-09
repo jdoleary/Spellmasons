@@ -53,6 +53,8 @@ export interface IUnit {
   distanceMovedThisTurn: number;
   attackRange: number;
   name?: string;
+  // Strength is a modifier which affects base stats used for scaling difficulty
+  strength: number;
   faction: number;
   image: Image.IImage;
   defaultImagePath: string;
@@ -89,8 +91,11 @@ export function create(
   defaultImagePath: string,
   unitType: UnitType,
   unitSubType: UnitSubType,
+  strength: number,
   sourceUnitProps: Partial<IUnit> = {}
 ): IUnit {
+  const health = Math.round(config.UNIT_BASE_HEALTH * strength);
+  const mana = Math.round(config.UNIT_BASE_MANA * strength);
   const unit: IUnit = Object.assign({
     id: ++lastUnitId,
     unitSourceId,
@@ -98,6 +103,7 @@ export function create(
     y,
     lastX: x,
     lastY: y,
+    strength,
     radius: UNIT_BASE_RADIUS,
     path: [],
     moveSpeed: config.UNIT_MOVE_SPEED,
@@ -110,12 +116,12 @@ export function create(
     image: Image.create(x, y, defaultImagePath, containerUnits),
     defaultImagePath,
     shaderUniforms: {},
-    damage: config.UNIT_BASE_DAMAGE,
-    health: config.UNIT_BASE_HEALTH,
-    healthMax: config.UNIT_BASE_HEALTH,
-    mana: config.UNIT_BASE_MANA,
-    manaMax: config.UNIT_BASE_MANA,
-    manaPerTurn: config.MANA_GET_PER_TURN,
+    damage: Math.round(config.UNIT_BASE_DAMAGE * strength),
+    health,
+    healthMax: health,
+    mana,
+    manaMax: mana,
+    manaPerTurn: Math.round(config.MANA_GET_PER_TURN * strength),
     alive: true,
     unitType,
     unitSubType,
