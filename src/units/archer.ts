@@ -14,7 +14,8 @@ const unit: UnitSource = {
     probability: 50,
   },
   unitProps: {
-    attackRange: 300
+    attackRange: 300,
+    mana: 0,
   },
   action: async (unit: Unit.IUnit) => {
     action(unit, canInteractWithTarget, (target: Unit.IUnit) => {

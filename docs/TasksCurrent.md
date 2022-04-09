@@ -11,7 +11,6 @@
 - hotkeys don't work for numpad
 - maybe portal appears when final enemy is killed
 - some levels are hard cause there's no one to steal mana from
-- archers shouldn't have mana
 - explain vampires (and all units) when you first encounter them
 - don't make "your turn" floating text ordered, it gets clogged up
 - 5 AOE causes perf issues
