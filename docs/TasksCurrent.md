@@ -8,7 +8,6 @@
 - archers should path to line of sight
 - note: mana is moot if you can 1 shot everything
 - Balance: Make mana steal cost more
-- remove hotkey badge for >0
 - hotkeys don't work for numpad
 - maybe portal appears when final enemy is killed
 - some levels are hard cause there's no one to steal mana from
