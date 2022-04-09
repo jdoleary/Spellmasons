@@ -937,9 +937,16 @@ export default class Underworld {
     return coords;
   }
   getUnitAt(coords: Vec2): Unit.IUnit | undefined {
-    const sortedByProximityToCoords = this.units.filter(u => !u.flaggedForRemoval && !isNaN(u.x) && !isNaN(u.y)).sort((a, b) => math.distance(a, coords) - math.distance(b, coords));
-    const closest = sortedByProximityToCoords[0]
-    return closest && math.distance(closest, coords) <= config.COLLISION_MESH_RADIUS ? closest : undefined;
+    const sortedByProximityToCoords = this.units
+      // Filter for only valid units, not units with NaN location or waiting to be removed
+      .filter(u => !u.flaggedForRemoval && !isNaN(u.x) && !isNaN(u.y))
+      // Filter for units within COLLISION_MESH_RADIUS of coordinates
+      .filter(u => math.distance(u, coords) <= config.COLLISION_MESH_RADIUS)
+      // Order by closest to coords
+      .sort((a, b) => math.distance(a, coords) - math.distance(b, coords))
+      // Sort dead units to the back, prefer selecting living units
+      .sort((a, b) => a.alive && b.alive ? 0 : a.alive ? -1 : 1);
+    return sortedByProximityToCoords[0]
   }
   getPickupAt(coords: Vec2): Pickup.IPickup | undefined {
     const sortedByProximityToCoords = this.pickups.filter(p => !isNaN(p.x) && !isNaN(p.y)).sort((a, b) => math.distance(a, coords) - math.distance(b, coords));
