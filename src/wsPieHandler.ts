@@ -315,11 +315,6 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       break;
     case MESSAGE_TYPES.MOVE_PLAYER:
       if (caster) {
-        if (caster == window.player) {
-          // Now that the current player has moved, highlight the "end-turn-btn" to
-          // remind them that they need to end their turn before they can move again
-          document.querySelector('#end-turn-btn')?.classList.add('highlight');
-        }
         await Unit.moveTowards(caster.unit, payload);
       } else {
         console.error('Cannot move player, caster does not exist');
@@ -347,6 +342,10 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
     case MESSAGE_TYPES.END_TURN:
       if (caster) {
         underworld.endPlayerTurn(caster.clientId);
+        // Reset distanceMovedThisTurn immediately on endTurn so that the end-turn-btn highlight goes away
+        if (caster == window.player) {
+          window.player.unit.distanceMovedThisTurn = 0;
+        }
       } else {
         console.error('Unable to end turn because caster is undefined');
       }

@@ -354,7 +354,6 @@ export async function takeDamage(unit: IUnit, amount: number) {
 }
 export function syncPlayerHealthManaUI() {
   if (!(window.player && elHealthBar && elManaBar && elStaminaBar && elHealthLabel && elManaLabel && elStaminaBarLabel)) {
-    console.error('Cannot syncPlayerHealthManaUI')
     return
   }
   const unit = window.player.unit;
@@ -366,8 +365,17 @@ export function syncPlayerHealthManaUI() {
   elManaBar3.style["width"] = `${100 * (Math.max(0, unit.mana - unit.manaMax * 2)) / unit.manaMax}%`;
   elManaLabel.innerHTML = `${unit.mana}/${unit.manaMax}`;
 
+  const staminaLeft = Math.max(0, Math.round(unit.moveDistance - unit.distanceMovedThisTurn));
   elStaminaBar.style["width"] = `${100 * (unit.moveDistance - unit.distanceMovedThisTurn) / unit.moveDistance}%`;
-  elStaminaBarLabel.innerHTML = `${Math.max(0, Math.round(unit.moveDistance - unit.distanceMovedThisTurn))}`;
+  elStaminaBarLabel.innerHTML = `${staminaLeft}`;
+  if (staminaLeft <= 0) {
+    // Now that the current player has moved, highlight the "end-turn-btn" to
+    // remind them that they need to end their turn before they can move again
+    document.querySelector('#end-turn-btn')?.classList.add('highlight');
+  } else {
+    document.querySelector('#end-turn-btn')?.classList.remove('highlight');
+
+  }
 }
 export function canMove(unit: IUnit): boolean {
   // Do not move if dead

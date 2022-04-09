@@ -709,8 +709,6 @@ export default class Underworld {
     // Turns can only be manually ended during the PlayerTurns phase
     if (this.turn_phase === turn_phase.PlayerTurns) {
       if (window.player) {
-        // Now that the player has ended their turn, remove the end-turn-button highlight
-        document.querySelector('#end-turn-btn')?.classList.remove('highlight');
         console.log('waiting to end my turn');
         window.playerWalkingPromise.then(() => {
           console.log('end my turn');
