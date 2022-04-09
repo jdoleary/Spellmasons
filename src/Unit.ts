@@ -311,10 +311,6 @@ export function die(unit: IUnit) {
   for (let [modifier, _modifierProperties] of Object.entries(unit.modifiers)) {
     removeModifier(unit, modifier);
   }
-  // Check for game over
-  if (window.underworld.players.every(p => !p.unit.alive)) {
-    setView(View.GameOver);
-  }
 
   for (let i = 0; i < unit.onDeathEvents.length; i++) {
     const eventName = unit.onDeathEvents[i];

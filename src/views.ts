@@ -24,7 +24,6 @@ export enum View {
   CharacterSelect,
   Game,
   Upgrade,
-  GameOver,
 }
 let lastNonMenuView: View | undefined;
 function closeMenu() {
@@ -128,8 +127,6 @@ export function setView(v: View) {
       break;
     case View.Game:
       addUnderworldEventListeners();
-      break;
-    case View.GameOver:
       break;
     default:
       console.error('Cannot set view to', v, 'no such view exists or is not configured');
