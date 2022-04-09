@@ -117,7 +117,7 @@ export function mousemoveHandler(e: MouseEvent) {
           for (let point of currentPlayerPath) {
             window.unitUnderlayGraphics.lineTo(point.x, point.y);
           }
-          const turnStopPoints = pointsEveryXDistanceAlongPath(window.player.unit, currentPlayerPath, window.player.unit.moveDistance);
+          const turnStopPoints = pointsEveryXDistanceAlongPath(window.player.unit, currentPlayerPath, window.player.unit.moveDistance, window.player.unit.distanceMovedThisTurn);
           for (let point of turnStopPoints) {
             window.unitUnderlayGraphics.drawCircle(point.x, point.y, 3);
           }
