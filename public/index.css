@@ -261,6 +261,12 @@ the face of the last card in the group is seen*/
   margin: 0 auto;
 }
 
+/* Do not show hotkey badges on already selected cards,
+these badges only belong on cards in the hand */
+#selected-cards .hotkey-badge {
+  display: none;
+}
+
 .hotkey-badge {
   height: 16px;
   width: 16px;
