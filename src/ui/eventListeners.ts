@@ -82,6 +82,8 @@ export function keyupListener(event: KeyboardEvent) {
     case 'ShiftLeft':
     case 'ShiftRight':
       CardUI.toggleInspectMode(false);
+      // Clear walk path on inspect mode off
+      window.unitUnderlayGraphics.clear();
       break;
   }
 }
@@ -103,28 +105,24 @@ export function mousemoveHandler(e: MouseEvent) {
   drawOnHoverCircle(mouseTarget);
 
 
-  // Show walk path:
+  // Show walk path if in inspect-mode (when holding shift):
   window.unitUnderlayGraphics.clear();
-  // Only show walk path if there are no cards selected
-  // because if there are cards selected, left clicking will cast, not walk
-  if (!CardUI.areAnyCardsSelected()) {
-    if (window.player) {
-      if (!isOutOfBounds(mouseTarget)) {
-        const currentPlayerPath = findPath(window.player.unit, mouseTarget, window.underworld.pathingPolygons);
-        if (currentPlayerPath.length) {
-          window.unitUnderlayGraphics.lineStyle(4, 0xffffff, 1.0);
-          window.unitUnderlayGraphics.moveTo(window.player.unit.x, window.player.unit.y);
-          for (let point of currentPlayerPath) {
-            window.unitUnderlayGraphics.lineTo(point.x, point.y);
-          }
-          const turnStopPoints = pointsEveryXDistanceAlongPath(window.player.unit, currentPlayerPath, window.player.unit.moveDistance, window.player.unit.distanceMovedThisTurn);
-          for (let point of turnStopPoints) {
-            window.unitUnderlayGraphics.drawCircle(point.x, point.y, 3);
-          }
-          // Always draw a stop circle at the end
-          const lastPointInPath = currentPlayerPath[currentPlayerPath.length - 1]
-          window.unitUnderlayGraphics.drawCircle(lastPointInPath.x, lastPointInPath.y, 3);
+  if (window.player && document.body.classList.contains('inspect-mode')) {
+    if (!isOutOfBounds(mouseTarget)) {
+      const currentPlayerPath = findPath(window.player.unit, mouseTarget, window.underworld.pathingPolygons);
+      if (currentPlayerPath.length) {
+        window.unitUnderlayGraphics.lineStyle(4, 0xffffff, 1.0);
+        window.unitUnderlayGraphics.moveTo(window.player.unit.x, window.player.unit.y);
+        for (let point of currentPlayerPath) {
+          window.unitUnderlayGraphics.lineTo(point.x, point.y);
         }
+        const turnStopPoints = pointsEveryXDistanceAlongPath(window.player.unit, currentPlayerPath, window.player.unit.moveDistance, window.player.unit.distanceMovedThisTurn);
+        for (let point of turnStopPoints) {
+          window.unitUnderlayGraphics.drawCircle(point.x, point.y, 3);
+        }
+        // Always draw a stop circle at the end
+        const lastPointInPath = currentPlayerPath[currentPlayerPath.length - 1]
+        window.unitUnderlayGraphics.drawCircle(lastPointInPath.x, lastPointInPath.y, 3);
       }
     }
   }
