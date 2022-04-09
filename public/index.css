@@ -5,15 +5,18 @@ body {
     'Lucida Sans', Arial, sans-serif;
 }
 
-body.view-Game #underworld-container {
-  display: flex;
+#PIXI-holder {
+  flex-grow: 1;
 }
 
 #underworld-container {
   min-height: 100vh;
-  display: none;
+  min-width: 100vw;
+  display: flex;
   flex-direction: column;
   justify-content: space-between;
+  position: fixed;
+  top: 0;
 }
 
 #game-content-holder {
@@ -149,11 +152,6 @@ body.inspect-mode #card-inspect {
 
 #card-holders {
   user-select: none;
-  position: fixed;
-  bottom: 30px;
-  left: 80px;
-  right: 80px;
-  z-index: 1;
   display: flex;
   flex-direction: column-reverse;
 }
@@ -166,11 +164,15 @@ body.inspect-mode #card-inspect {
 #card-holders #card-hand {
   display: flex;
   justify-content: center;
+  /* High enough for cards even if there are no cards inside */
+  min-height: 100px;
 }
 
 #card-hand {
   /* This prevents the card-hand from disappearing when all cards are selected */
   min-height: 103px;
+  /* Leaves enough room at the bottom to show the hotkey badge */
+  margin-bottom: 20px;
 }
 
 #card-hand .card img {
@@ -364,6 +366,10 @@ these badges only belong on cards in the hand */
 #player-turn-indicator-holder>div {
   padding: 8px;
   width: 140px;
+}
+
+body {
+  background-color: #3ea8ec;
 }
 
 body.your-turn #player-turn-indicator-holder {

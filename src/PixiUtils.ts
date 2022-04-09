@@ -40,16 +40,18 @@ export const containerCharacterSelect = new PIXI.Container();
 const characterSelectContainers = [containerCharacterSelect];
 
 app.renderer.backgroundColor = 0x45b6fe;
-app.renderer.view.style.position = 'absolute';
-app.renderer.view.style.top = '0';
-app.renderer.view.style.display = 'block';
 
 window.addEventListener('resize', resizePixi);
 window.addEventListener('load', () => {
   resizePixi();
 })
 function resizePixi() {
-  app.renderer.resize(window.innerWidth, window.innerHeight);
+  const elPIXIHolder = document.getElementById('PIXI-holder');
+  if (!elPIXIHolder) {
+    console.error('Cannot resize pixi, elPIXIHolder is null')
+    return;
+  }
+  app.renderer.resize(elPIXIHolder.offsetWidth, elPIXIHolder.offsetHeight);
   // Set the scale of the stage based on the available window pixel space
   // so that players with smaller screens can see the whole board
   const hardCodedCardHeight = 120;
@@ -66,11 +68,16 @@ function resizePixi() {
   recenterStage();
 }
 export function recenterStage() {
+  const elPIXIHolder = document.getElementById('PIXI-holder');
+  if (!elPIXIHolder) {
+    console.error('Cannot recenter camera, elPIXIHolder is null')
+    return;
+  }
 
   switch (window.view) {
     case View.CharacterSelect:
-      app.stage.x = window.innerWidth / 2;
-      app.stage.y = window.innerHeight / 2;
+      app.stage.x = elPIXIHolder.offsetWidth / 2;
+      app.stage.y = elPIXIHolder.offsetHeight / 2;
       break;
     case View.Game:
       // Align Camera: center the app in the middle of the map 
