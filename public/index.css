@@ -559,7 +559,7 @@ body.your-turn #player-turn-indicator {
 .health-mana-bar {
   width: 200px;
   height: 32px;
-  border-radius: 10px;
+  border-radius: 6px;
   border: 2px solid black;
   margin: 2px auto;
 }
