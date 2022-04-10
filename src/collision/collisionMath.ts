@@ -1,3 +1,4 @@
+import { distance } from "../math";
 import { add, subtract, multiply, crossproduct, dotProduct, isBetween, Vec2 } from "../Vec";
 export interface LineSegment {
     p1: Vec2;
@@ -166,6 +167,27 @@ export function isCollinearAndOverlapping(l1: LineSegment, l2: LineSegment): boo
         return false
     }
 
+}
+
+// Test l1 for intersections with each of otherLines; of all the intersections return the closest intersection
+export function closestLineSegmentIntersection(l1: LineSegment, otherLines: LineSegment[]): Vec2 | undefined {
+    let shortestDistance = Number.MAX_SAFE_INTEGER;
+    let closestIntersection = undefined;
+    for (let line of otherLines) {
+        // Don't test against self
+        if (line == l1) {
+            continue;
+        }
+        const intersection = lineSegmentIntersection(l1, line);
+        if (intersection) {
+            const distanceToIntersection = distance(l1.p1, intersection);
+            if (!closestIntersection || distanceToIntersection < shortestDistance) {
+                shortestDistance = distanceToIntersection;
+                closestIntersection = intersection;
+            }
+        }
+    }
+    return closestIntersection;
 }
 
 // Adapted from https://stackoverflow.com/a/565282

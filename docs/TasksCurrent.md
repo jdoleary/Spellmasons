@@ -1,5 +1,4 @@
 ## Tasks from playtest with Brad 2022-04-09
-- **!** line of sight casting
 - **!** portal appears when last unit is killed
 - **!** allow levels to be different sizes
 - auto exit level

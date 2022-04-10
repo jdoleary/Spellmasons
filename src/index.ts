@@ -13,7 +13,7 @@ import { setupAudio } from './Audio';
 import cookieConsentPopup from './cookieConsent';
 import { setupMonitoring } from './monitoring';
 import { startTutorial } from './wsPieHandler';
-cookieConsentPopup();
+cookieConsentPopup(false);
 
 // This import is critical so that the svelte menu has access to
 // the pie globals

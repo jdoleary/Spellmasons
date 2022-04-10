@@ -1063,9 +1063,6 @@ export default class Underworld {
             if (targetedUnit) {
               // Don't animate previous targets, they should be drawn full, immediately
               animationPromises.push(drawTarget(targetedUnit.x, targetedUnit.y, false));
-            } else {
-              // otherwise draw a small target circle where it will be cast on the ground
-              drawDryRunCircle(target, 2);
             }
           } else {
             // If a new target, animate it in
