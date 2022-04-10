@@ -365,10 +365,15 @@ these badges only belong on cards in the hand */
   display: block;
 }
 
+/* only show when in game view */
+body.view-Game #player-turn-indicator-holder {
+  display: flex;
+}
+
 /* Hide end turn button until it is your turn */
 #player-turn-indicator-holder {
   text-align: center;
-  display: flex;
+  display: none;
   justify-content: center;
   background-color: grey;
   user-select: none;
@@ -432,14 +437,8 @@ body.your-turn #end-turn-btn {
 }
 
 
-/* Only show player-turn-indicator (top bar)
-when in game view */
-body.view-Game #player-turn-indicator {
-  display: block;
-}
-
 #player-turn-indicator {
-  display: none;
+  display: block;
 }
 
 body.your-turn #player-turn-indicator {
