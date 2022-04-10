@@ -1,38 +1,36 @@
-## Tasks from playtest with Brad 2022-04-09
+- **!** Fix insufficient mana
+    - Prevent casting if the queued up spells have insufficient mana
+    - Calculate it so it supports mana steal
 - **!** portal appears when last unit is killed
 - **!** allow levels to be different sizes
+- **!**In spell projection, if you're doing enough damage to kill, show it visually
+- Fix: Make pressing control immediately render the move path even if you don't move the mouse
+- add gaps as well as walls (different)
+- Marketing
+    - Gameplay video for homepage
+    - Start tweeting releases
+    - Add timeline to homepage
+- Introduce: explain info about new units when you first encounter them
+
+---
 - auto exit level
 - archers should path to line of sight
 - note: mana is moot if you can 1 shot everything
 - hotkeys don't work for numpad
+    - Proof?
 - some levels are hard cause there's no one to steal mana from
-- explain vampires (and all units) when you first encounter them
 - don't make "your turn" floating text ordered, it gets clogged up
 - 5 AOE causes perf issues
     - test on worse computers
 - sequential fireballs should be one big fireball!
-- add gaps as well as walls (different)
 - show rarity of cards, adorn
-## Start marketing and new playtest after
 - Write code that looks for desyncs and reports them but doesn't try to correct them
-- Fix insufficient mana
----
-- Start marketing
----
-
-- Animation for getting new card
-    - Huzzah! you got a new spell! Visually show the card showing up and going to your inventory
-## notes with bard 2022-04-06
-- tut level 2, reinforce going through portal
 ### 2022-04-05
 - Had an interesting observation where units persisted between reset.  Killing self with one health left when I had cast two damage.
     It reset the level  as soon as i died but the spell continued to fire
 - revisit: 2e6c3218dd1608d45ad8a4551c13eda2ac2e3f2e 
     - maybe there's a better way to do it
-
 ### 2022-04-01 Brad/Jake playtest
-- Jake: Either line of sight for preset range for spells.
-- In spell projection, if you're doing enough damage to kill, show it visually
 - Songs should all be same volume
 - Continuing in the direction you clicked to move (automove)
 - Desyncs:
@@ -44,8 +42,6 @@
 - "auto next level" if there's nothing left to do
 - Clone disconnected units can move around as AI but still show as disconnected
 - Jake: needs unit collision
-- Show in UI how much mana you get per turn
-- Explain how vampires work on the card
 - Brad: Alternate who goes first
 
 ### 2022-03-31
@@ -60,7 +56,6 @@
 - Bug: You can swap into obstacles
 - Dad:
     - Missing spell projection overlay
-    - He got right click and left click mixed up
     - Doesn't know what the circle means when clicking on enemies
     - Don't let me put more cards down than i can afford
 
