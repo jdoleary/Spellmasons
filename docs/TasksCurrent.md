@@ -1,17 +1,16 @@
 ## Tasks from playtest with Brad 2022-04-09
 - **!** line of sight casting
+- **!** portal appears when last unit is killed
+- **!** allow levels to be different sizes
 - auto exit level
-- tab or shift to allow path view
 - archers should path to line of sight
 - note: mana is moot if you can 1 shot everything
 - hotkeys don't work for numpad
-- maybe portal appears when final enemy is killed
 - some levels are hard cause there's no one to steal mana from
 - explain vampires (and all units) when you first encounter them
 - don't make "your turn" floating text ordered, it gets clogged up
 - 5 AOE causes perf issues
     - test on worse computers
-- levels should be bigger
 - sequential fireballs should be one big fireball!
 - add gaps as well as walls (different)
 - show rarity of cards, adorn
