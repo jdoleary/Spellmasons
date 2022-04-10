@@ -14,7 +14,7 @@ const elCardHolders = document.getElementById('card-holders');
 const elCardHand = document.getElementById('card-hand');
 // Where the selected cards are displayed
 const elSelectedCards = document.getElementById('selected-cards');
-// Displays a full card with info on shift+hover of card
+// Displays a full card with info on control key + hover of card
 const elCardInspect = document.getElementById('card-inspect');
 if (elCardHolders) {
   // Show full card on hover

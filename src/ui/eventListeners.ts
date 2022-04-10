@@ -30,8 +30,8 @@ export function keydownListener(event: KeyboardEvent) {
     case 'Space':
       window.underworld.endMyTurn();
       break;
-    case 'ShiftLeft':
-    case 'ShiftRight':
+    case 'ControlLeft':
+    case 'ControlRight':
       CardUI.toggleInspectMode(true);
       break;
     case 'Backspace':
@@ -79,8 +79,8 @@ export function keyupListener(event: KeyboardEvent) {
     case 'AltLeft':
       window.altDown = false;
       break;
-    case 'ShiftLeft':
-    case 'ShiftRight':
+    case 'ControlLeft':
+    case 'ControlRight':
       CardUI.toggleInspectMode(false);
       // Clear walk path on inspect mode off
       window.unitUnderlayGraphics.clear();
@@ -105,7 +105,7 @@ export function mousemoveHandler(e: MouseEvent) {
   drawOnHoverCircle(mouseTarget);
 
 
-  // Show walk path if in inspect-mode (when holding shift):
+  // Show walk path if in inspect-mode (when holding control key):
   window.unitUnderlayGraphics.clear();
   if (!isOutOfBounds(mouseTarget)) {
     if (window.player) {
@@ -175,6 +175,7 @@ export function contextmenuHandler(e: MouseEvent) {
     return;
   }
   e.preventDefault();
+  e.stopPropagation();
   // Right click to move
   const mouseTarget = window.underworld.getMousePos();
   if (isOutOfBounds(mouseTarget)) {

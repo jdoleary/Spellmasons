@@ -5,7 +5,7 @@
 - Alt click to ping on the board to other players
 - Use window.save and window.load to persist the game state
 - Left click to select or cast, right-click to move
-- Hold 'Shift' to temporarily hide selected cards to allow for click inspecting
+- Hold 'Control' to temporarily hide selected cards to allow for click inspecting
 
 ## Getting Started
 
