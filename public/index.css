@@ -156,9 +156,14 @@ body.inspect-mode #card-inspect {
   height: 150px;
 }
 
+/* Hide cards unless you're in the game view */
+body.view-Game #card-holders {
+  display: flex;
+}
+
 #card-holders {
   user-select: none;
-  display: flex;
+  display: none;
   flex-direction: column-reverse;
 }
 
@@ -427,8 +432,14 @@ body.your-turn #end-turn-btn {
 }
 
 
-#player-turn-indicator {
+/* Only show player-turn-indicator (top bar)
+when in game view */
+body.view-Game #player-turn-indicator {
   display: block;
+}
+
+#player-turn-indicator {
+  display: none;
 }
 
 body.your-turn #player-turn-indicator {
