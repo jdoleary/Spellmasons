@@ -571,6 +571,14 @@ body.your-turn #player-turn-indicator {
   position: relative;
 }
 
+#stamina {
+  height: 16px;
+}
+
+#health-mana #stamina .label {
+  line-height: 16px;
+}
+
 #health .fill {
   background-color: #d55656;
 }
