@@ -199,13 +199,13 @@ export function contextmenuHandler(e: MouseEvent) {
     } else {
       floatingText({
         coords: mouseTarget,
-        text: 'You are out of stamina. You must end your turn before moving farther.',
+        text: 'You are out of stamina.\nYou must end your turn before moving farther.',
       });
     }
   } else {
     floatingText({
       coords: mouseTarget,
-      text: 'You must wait for your turn to move',
+      text: 'You must wait for your turn\nto move',
     });
 
   }
@@ -256,7 +256,7 @@ export function clickHandler(e: MouseEvent) {
         if (cards[cards.length - 1].requiresFollowingCard) {
           floatingText({
             coords: target,
-            text: `${cards[cards.length - 1].id} only modifies cards on its right`,
+            text: `${cards[cards.length - 1].id} only modifies\ncards on its right`,
             style: { fill: 'red' }
           });
           const elHints = document.querySelectorAll('.requires-following-card');
@@ -277,7 +277,7 @@ export function clickHandler(e: MouseEvent) {
         if (!window.underworld.hasLineOfSight(selfPlayer.unit, target)) {
           floatingText({
             coords: target,
-            text: `You must have line of sight in order to cast.`,
+            text: `You must have line of sight\nin order to cast.`,
             style: { fill: 'red' }
           });
           // Cancel Casting
@@ -296,7 +296,7 @@ export function clickHandler(e: MouseEvent) {
     } else {
       floatingText({
         coords: mousePos,
-        text: 'You must wait for your turn to cast',
+        text: 'You must wait for your turntnto cast',
       });
     }
   }
