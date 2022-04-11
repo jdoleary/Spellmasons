@@ -54,12 +54,12 @@ export function resizePixi() {
   app.renderer.resize(elPIXIHolder.clientWidth, elPIXIHolder.clientHeight);
   // Set the scale of the stage based on the available window pixel space
   // so that players with smaller screens can see the whole board
-  const heightMargin = 20;
-  const requiredRenderWidth = MAP_WIDTH;
-  const requiredRenderHeight = MAP_HEIGHT + heightMargin;
-  const widthRatio = elPIXIHolder.clientWidth / requiredRenderWidth;
+  const margin = 20;
+  const requiredRenderWidth = MAP_WIDTH + margin;
+  const requiredRenderHeight = MAP_HEIGHT + margin;
+  const widthRatio = (elPIXIHolder.clientWidth - margin) / requiredRenderWidth;
   // window height shouldn't consider the card height, since the card height doesn't scale
-  const heightRatio = (elPIXIHolder.clientHeight - heightMargin) / requiredRenderHeight;
+  const heightRatio = (elPIXIHolder.clientHeight - margin) / requiredRenderHeight;
   // Use the smaller ratio for scaling the camera:
   const smallerRatio = widthRatio < heightRatio ? widthRatio : heightRatio;
   app.stage.scale.x = smallerRatio;
