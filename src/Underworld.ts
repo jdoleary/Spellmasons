@@ -19,13 +19,13 @@ import {
   containerUI,
   recenterStage,
 } from './PixiUtils';
-import floatingText, { orderedFloatingText } from './FloatingText';
+import { orderedFloatingText } from './FloatingText';
 import { UnitType, Faction } from './commonTypes';
 import type { Vec2 } from "./Vec";
 import * as Vec from "./Vec";
 import Events from './Events';
 import { allUnits } from './units';
-import { drawDryRunCircle, syncSpellEffectProjection, updateManaCostUI, updatePlanningView } from './ui/PlanningView';
+import { syncSpellEffectProjection, updateManaCostUI, updatePlanningView } from './ui/PlanningView';
 import { prng, randInt, SeedrandomState } from './rand';
 import { calculateCost } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment } from './collision/collisionMath';
