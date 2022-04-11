@@ -1,8 +1,16 @@
 import * as Unit from '../Unit';
-import { Spell, targetsToUnits } from '.';
+import { Spell, tallyUnitDamage, targetsToUnits } from '.';
 
 export const id = 'hurt';
 const damageDone = 2;
+export interface UnitDamage {
+  id: number;
+  x: number;
+  y: number;
+  health: number;
+  damageTaken: number;
+
+}
 const spell: Spell = {
   card: {
     id,
@@ -14,16 +22,9 @@ const spell: Spell = {
 Deals ${damageDone} damage to all targets.    
     `,
     effect: async (state, dryRun) => {
-      if (dryRun) {
-        return state;
-      }
-      let promises = [];
       for (let unit of targetsToUnits(state.targets)) {
-        promises.push(Unit.takeDamage(unit, damageDone));
-        state.aggregator.damageDealt =
-          (state.aggregator.damageDealt || 0) + damageDone;
+        Unit.takeDamage(unit, damageDone, dryRun, state);
       }
-      await Promise.all(promises);
       return state;
     },
   },

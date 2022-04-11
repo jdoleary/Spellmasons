@@ -126,12 +126,19 @@ export async function syncSpellEffectProjection() {
       updateManaCostUI();
       // Dry run cast so the user can see what effect it's going to have
       const target = mousePos;
-      await window.underworld.castCards(
+      const effectState = await window.underworld.castCards(
         currentPlayer,
         CardUI.getSelectedCardIds(),
         target,
         true,
       );
+      // Draw red circle if spell will kill a unit:
+      for (let unitStats of effectState.aggregator.unitDamage) {
+        if (unitStats.damageTaken >= unitStats.health) {
+          dryRunGraphics.lineStyle(4, 0xff0000, 1.0);
+          dryRunGraphics.drawCircle(unitStats.x, unitStats.y, config.COLLISION_MESH_RADIUS);
+        }
+      }
     }
   }
 }

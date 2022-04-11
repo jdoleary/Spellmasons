@@ -25,7 +25,7 @@ const unit: UnitSource = {
         target.y,
         'arrow.png',
       ).then(() => {
-        Unit.takeDamage(target, unit.damage);
+        Unit.takeDamage(target, unit.damage, false, undefined);
       })
     });
   },

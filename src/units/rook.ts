@@ -29,7 +29,7 @@ const unit: UnitSource = {
         targetEnemy.y,
         'arrow.png',
       );
-      await Unit.takeDamage(targetEnemy, unit.damage);
+      Unit.takeDamage(targetEnemy, unit.damage, false, undefined);
     } else {
       // Move opposite to enemy
       const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit);

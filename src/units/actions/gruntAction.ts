@@ -29,8 +29,7 @@ export async function action(unit: Unit.IUnit) {
   // Attack closest enemy
   if (canInteractWithTarget(unit, closestEnemy.x, closestEnemy.y)) {
     await Unit.playAnimation(unit, 'units/golem_eat');
-
-    await Unit.takeDamage(closestEnemy, unit.damage);
+    Unit.takeDamage(closestEnemy, unit.damage, false, undefined);
   }
 }
 

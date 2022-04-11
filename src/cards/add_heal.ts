@@ -16,14 +16,9 @@ Heals all targets ${healAmount} HP.
 Will not heal beyond maximum health.
     `,
     effect: async (state, dryRun) => {
-      if (dryRun) {
-        return state;
-      }
       for (let unit of targetsToUnits(state.targets)) {
         const damage = -healAmount;
-        Unit.takeDamage(unit, damage);
-        state.aggregator.damageDealt =
-          (state.aggregator.damageDealt || 0) + damage;
+        Unit.takeDamage(unit, damage, dryRun, state);
       }
       return state;
     },

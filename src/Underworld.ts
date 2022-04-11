@@ -991,7 +991,11 @@ export default class Underworld {
       casterPlayer,
       casterUnit: casterPlayer.unit,
       targets: [castLocation],
-      aggregator: {},
+      aggregator: {
+        unitDamage: [],
+        damageDealt: 0,
+        healingDealt: 0
+      },
     };
     if (!casterPlayer.unit.alive) {
       // Prevent dead players from casting
@@ -1010,7 +1014,7 @@ export default class Underworld {
           // Note: it is important that this is done BEFORE a card is actually cast because
           // the card may affect the caster's mana
           casterPlayer.unit.mana -= singleCardCost.manaCost;
-          Unit.takeDamage(casterPlayer.unit, singleCardCost.healthCost);
+          Unit.takeDamage(casterPlayer.unit, singleCardCost.healthCost, dryRun, effectState);
         }
         for (let target of effectState.targets) {
 
@@ -1201,7 +1205,9 @@ type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFun
 
 function getEnemiesForAltitude(levelIndex: number): { enemies: { [unitid: string]: number }, strength: number } {
   const hardCodedLevelEnemies: { [unitid: string]: number }[] = [
-    { 'grunt': 5 },
+    {
+      'grunt': 5
+    },
     {
       'grunt': 4,
       'archer': 1

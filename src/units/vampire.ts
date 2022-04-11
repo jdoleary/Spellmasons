@@ -47,7 +47,7 @@ const unit: UnitSource = {
     // Attack closest enemy
     if (canInteractWithTarget(unit, closestEnemy.x, closestEnemy.y)) {
       await Unit.playAnimation(unit, 'units/golem_eat');
-      await Unit.takeDamage(closestEnemy, unit.damage);
+      Unit.takeDamage(closestEnemy, unit.damage, false, undefined);
       Unit.addModifier(closestEnemy, vampire_bite.id);
     }
   }

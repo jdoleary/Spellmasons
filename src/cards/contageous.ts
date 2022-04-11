@@ -85,7 +85,9 @@ Makes this unit's curses contageous to other nearby units
         }
         await Promise.all(promises);
 
-        card.effect({ casterUnit: unit, targets: nearByUnits, aggregator: {} }, false, 0);
+        for (let target of nearByUnits) {
+          Unit.addModifier(target, card.id);
+        }
       }
 
       return false;

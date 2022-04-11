@@ -1,8 +1,11 @@
-- **!** portal appears when last unit is killed
-- **!** allow levels to be different sizes
-- **!**In spell projection, if you're doing enough damage to kill, show it visually
-- Fix: Make pressing control immediately render the move path even if you don't move the mouse
+# Tasks
+- In spell projection, if you're doing enough damage to kill, show it visually
+    - Prediction won't calculate vulnerable, or protection
 - add gaps as well as walls (different)
+---
+
+- portal appears when last unit is killed
+- Fix: Make pressing control immediately render the move path even if you don't move the mouse
 - Marketing
     - Gameplay video for homepage
     - Start tweeting releases

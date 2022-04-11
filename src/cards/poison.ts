@@ -55,7 +55,7 @@ at the start of the unit's turn.
   },
   events: {
     onTurnStart: async (unit: IUnit) => {
-      takeDamage(unit, 1);
+      takeDamage(unit, 1, false, undefined);
       return false;
     },
   },

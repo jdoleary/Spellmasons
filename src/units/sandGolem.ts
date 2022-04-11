@@ -25,7 +25,7 @@ const unit: UnitSource = {
         'green-thing.png',
       ).then(() => {
         if (target) {
-          Unit.takeDamage(target, unit.damage);
+          Unit.takeDamage(target, unit.damage, false, undefined);
         }
       });
     });

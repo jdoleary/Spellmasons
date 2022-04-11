@@ -3,7 +3,7 @@ import type { IUnit } from './Unit';
 
 export type onDamage = {
   // Returns a possibly modified damage
-  (unit: IUnit, amount: number, damageDealer?: IUnit): number;
+  (unit: IUnit, amount: number, dryRun: boolean, damageDealer?: IUnit): number;
 };
 
 const onDamageSource: { [name: string]: onDamage } = {};

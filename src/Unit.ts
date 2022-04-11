@@ -12,7 +12,7 @@ import { addLerpable } from './lerpList';
 import { findPath } from './Pathfinding';
 import { allUnits } from './units';
 import { setView, View } from './views';
-import { allModifiers } from './cards';
+import { allModifiers, EffectState, tallyUnitDamage } from './cards';
 const elHealthBar: HTMLElement = document.querySelector('#health .fill') as HTMLElement;
 const elHealthLabel: HTMLElement = document.querySelector('#health .label') as HTMLElement;
 const elManaBar: HTMLElement = document.querySelector('#mana .fill:nth-child(1)') as HTMLElement;
@@ -325,32 +325,36 @@ export function die(unit: IUnit) {
     }
   }
 }
-export async function takeDamage(unit: IUnit, amount: number) {
+export function takeDamage(unit: IUnit, amount: number, dryRun: boolean, state?: EffectState) {
   // Compose onDamageEvents
   for (let eventName of unit.onDamageEvents) {
     const fn = Events.onDamageSource[eventName];
     if (fn) {
       // onDamage events can alter the amount of damage taken
-      amount = fn(unit, amount);
+      amount = fn(unit, amount, dryRun);
     }
   }
-  unit.health -= amount;
-  // Prevent health from going over maximum or under 0
-  unit.health = Math.max(0, Math.min(unit.health, unit.healthMax));
-  // If the unit is actually taking damage (not taking 0 damage or being healed - (negative damage))
-  if (amount > 0) {
-    // Use all_red shader to flash the unit to show they are taking damage
-    unit.shaderUniforms.all_red.alpha = 1;
-    addLerpable(unit.shaderUniforms.all_red, "alpha", 0, 200);
+  if (!dryRun) {
+    unit.health -= amount;
+    // Prevent health from going over maximum or under 0
+    unit.health = Math.max(0, Math.min(unit.health, unit.healthMax));
+    // If the unit is actually taking damage (not taking 0 damage or being healed - (negative damage))
+    if (amount > 0) {
+      // Use all_red shader to flash the unit to show they are taking damage
+      unit.shaderUniforms.all_red.alpha = 1;
+      addLerpable(unit.shaderUniforms.all_red, "alpha", 0, 200);
+    }
+
+    // If taking damage (not healing) and health is 0 or less...
+    if (amount > 0 && unit.health <= 0) {
+      // if unit is alive, die
+      if (unit.alive) {
+        die(unit);
+      }
+    }
   }
 
-  // If taking damage (not healing) and health is 0 or less...
-  if (amount > 0 && unit.health <= 0) {
-    // if unit is alive, die
-    if (unit.alive) {
-      die(unit);
-    }
-  }
+  tallyUnitDamage(state, amount, unit);
 
 }
 export function syncPlayerHealthManaUI() {

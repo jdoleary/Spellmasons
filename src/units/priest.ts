@@ -4,8 +4,8 @@ import { UnitSubType } from '../commonTypes';
 import type { Vec2 } from '../Vec';
 import * as math from '../math';
 import { createVisualLobbingProjectile } from '../Projectile';
-import { allCards } from '../cards';
 import * as config from '../config';
+import Shield from '../cards/shield'
 
 const unit: UnitSource = {
   id: 'Priest',
@@ -48,7 +48,7 @@ const unit: UnitSource = {
             'holy-projectile.png',
           );
           // Heal for 2
-          await Unit.takeDamage(chosenUnit, -2);
+          Unit.takeDamage(chosenUnit, -2, false, undefined);
           break;
         }
       }
@@ -62,7 +62,7 @@ const unit: UnitSource = {
             closestAlly.y,
             'holy-projectile.png',
           );
-          allCards['shield'].effect({ casterUnit: unit, targets: [closestAlly], aggregator: {} }, false, 0);
+          Unit.addModifier(closestAlly, Shield.card.id);
         }
       }
     }

@@ -15,19 +15,14 @@ const spell: Spell = {
 Burn up to ${mana_burnt} of the targets' mana, causing the target take ${health_burn_ratio} damage per mana burnt.
     `,
     effect: async (state, dryRun) => {
-      if (dryRun) {
-        return state;
-      }
-      let promises = [];
       for (let unit of targetsToUnits(state.targets)) {
         const unitManaBurnt = Math.min(unit.mana, mana_burnt);
-        unit.mana -= unitManaBurnt;
+        if (!dryRun) {
+          unit.mana -= unitManaBurnt;
+        }
         const damage = unitManaBurnt * health_burn_ratio
-        promises.push(Unit.takeDamage(unit, damage));
-        state.aggregator.damageDealt =
-          (state.aggregator.damageDealt || 0) + damage;
+        Unit.takeDamage(unit, damage, dryRun, state);
       }
-      await Promise.all(promises);
       return state;
     },
   },

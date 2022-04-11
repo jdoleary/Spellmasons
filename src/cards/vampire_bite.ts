@@ -74,7 +74,7 @@ const spell: Spell = {
     remove
   },
   events: {
-    onDamage: (unit: IUnit, amount: number, damageDealer?: IUnit) => {
+    onDamage: (unit: IUnit, amount: number, dryRun: boolean, damageDealer?: IUnit) => {
       // Takes healing as damage
       if (amount < 0) {
         return -1 * amount;
