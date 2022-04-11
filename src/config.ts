@@ -1,3 +1,5 @@
+import obstacleSectors from "./ObstacleSectors";
+
 export const PLAYER_BASE_HEALTH = 10;
 export const UNIT_BASE_MOVE_DISTANCE = 200;
 export const UNIT_MOVE_SPEED = 4;
@@ -24,8 +26,10 @@ export const NUMBER_OF_UPGRADES_TO_CHOOSE_FROM = 5;
 export const OBSTACLE_SECTORS_COUNT_HORIZONTAL = 5;
 export const OBSTACLE_SECTORS_COUNT_VERTICAL = 3;
 // Obstacle sectors must be squares
-export const OBSTACLES_PER_SECTOR_WIDE = 3;
-export const OBSTACLES_PER_SECTOR_TALL = OBSTACLES_PER_SECTOR_WIDE;
+// Obstacle sector makeup is hard-coded as 3x3 but can be changed if
+// all of the Sectors are changed in ObstacleSectors.ts
+export const OBSTACLES_PER_SECTOR_WIDE = obstacleSectors[0][0].length;
+export const OBSTACLES_PER_SECTOR_TALL = obstacleSectors[0].length;
 export const OBSTACLE_SIZE = COLLISION_MESH_RADIUS * 2;
 export const MAP_WIDTH = OBSTACLE_SIZE * OBSTACLE_SECTORS_COUNT_HORIZONTAL * OBSTACLES_PER_SECTOR_WIDE;
 export const MAP_HEIGHT = OBSTACLE_SIZE * OBSTACLE_SECTORS_COUNT_VERTICAL * OBSTACLES_PER_SECTOR_TALL;

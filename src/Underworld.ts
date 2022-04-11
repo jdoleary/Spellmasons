@@ -9,6 +9,7 @@ import type * as Upgrade from './Upgrade';
 import * as math from './math';
 import * as Cards from './cards';
 import * as Image from './Image';
+import obstacleSectors from './ObstacleSectors';
 import { MESSAGE_TYPES } from './MessageTypes';
 import {
   app,
@@ -280,12 +281,12 @@ export default class Underworld {
       for (let j = 0; j < config.OBSTACLE_SECTORS_COUNT_VERTICAL; j++) {
         const randomSectorIndex = randInt(this.random,
           0,
-          Obstacle.obstacleSectors.length - 1,
+          obstacleSectors.length - 1,
         );
         // Now that we have the obstacle sector's horizontal index (i) and vertical index (j),
         // choose a pre-defined sector and spawn the obstacles
-        for (let Y = 0; Y < Obstacle.obstacleSectors[randomSectorIndex].length; Y++) {
-          const rowOfObstacles = Obstacle.obstacleSectors[randomSectorIndex][Y];
+        for (let Y = 0; Y < obstacleSectors[randomSectorIndex].length; Y++) {
+          const rowOfObstacles = obstacleSectors[randomSectorIndex][Y];
           for (let X = 0; X < rowOfObstacles.length; X++) {
             const coordX = config.OBSTACLE_SIZE * config.OBSTACLES_PER_SECTOR_WIDE * i + config.OBSTACLE_SIZE * X + config.COLLISION_MESH_RADIUS;
             const coordY = config.OBSTACLE_SIZE * config.OBSTACLES_PER_SECTOR_WIDE * j + config.OBSTACLE_SIZE * Y + config.COLLISION_MESH_RADIUS;
