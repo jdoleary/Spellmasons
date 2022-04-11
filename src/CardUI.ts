@@ -11,6 +11,7 @@ import {
 import { calculateCostForSingleCard } from './cards/cardUtils';
 import floatingText from './FloatingText';
 import * as config from './config';
+import { mousemoveHandler } from './ui/eventListeners';
 
 const elCardHolders = document.getElementById('card-holders');
 // Where the non-selected cards are displayed
@@ -316,6 +317,13 @@ export function toggleInspectMode(active: boolean) {
   document.body.classList.toggle('inspect-mode', active);
   elSelectedCards && elSelectedCards.classList.toggle('hide', active);
   syncSpellEffectProjection();
+  // Trigger the mouseMoveHandler even tho the mouse didn't move
+  // so that inspect mode functions that would be called when the mouse moves
+  // are invoked when inspect mode active status is changed 
+  // Note: has to invoke with setTimeout of 0 so that the DOM will update
+  // the inspect-mode class which is used inside of mouseMoveHandler to determine
+  // if we are in inspect-mode or not
+  setTimeout(() => { mousemoveHandler() }, 0);
   if (!active) {
     clearSelection();
   }

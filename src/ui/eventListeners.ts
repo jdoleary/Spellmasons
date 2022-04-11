@@ -92,7 +92,7 @@ export function endTurnBtnListener() {
   window.underworld.endMyTurn();
 }
 
-export function mousemoveHandler(e: MouseEvent) {
+export function mousemoveHandler() {
   // Only handle clicks when viewing the Game
   if (window.view !== View.Game) {
     return;

@@ -5,7 +5,6 @@
 ---
 
 - portal appears when last unit is killed
-- Fix: Make pressing control immediately render the move path even if you don't move the mouse
 - Marketing
     - Gameplay video for homepage
     - Start tweeting releases
