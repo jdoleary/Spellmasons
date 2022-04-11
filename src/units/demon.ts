@@ -38,7 +38,7 @@ const unit: UnitSource = {
       }
     }
     // Move randomly
-    const moveCoords = window.underworld.getRandomCoordsWithinBounds({ xMin: config.UNIT_SIZE, yMin: config.COLLISION_MESH_RADIUS, xMax: config.MAP_WIDTH - config.COLLISION_MESH_RADIUS, yMax: config.MAP_HEIGHT - config.COLLISION_MESH_RADIUS });
+    const moveCoords = window.underworld.getRandomCoordsWithinBounds({ xMin: config.UNIT_SIZE, yMin: config.COLLISION_MESH_RADIUS, xMax: window.underworld.width - config.COLLISION_MESH_RADIUS, yMax: window.underworld.height - config.COLLISION_MESH_RADIUS });
     await Unit.moveTowards(unit, moveCoords);
   },
 };

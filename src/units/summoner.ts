@@ -28,7 +28,7 @@ const unit: UnitSource = {
       unit.mana -= SUMMON_MANA_COST;
       const sourceUnit = allUnits.grunt;
       if (sourceUnit) {
-        const coords = window.underworld.getRandomCoordsWithinBounds({ xMin: config.UNIT_SIZE, yMin: config.COLLISION_MESH_RADIUS, xMax: config.MAP_WIDTH - config.COLLISION_MESH_RADIUS, yMax: config.MAP_HEIGHT - config.COLLISION_MESH_RADIUS });
+        const coords = window.underworld.getRandomCoordsWithinBounds({ xMin: config.UNIT_SIZE, yMin: config.COLLISION_MESH_RADIUS, xMax: window.underworld.width - config.COLLISION_MESH_RADIUS, yMax: window.underworld.height - config.COLLISION_MESH_RADIUS });
         const summonedUnit = Unit.create(
           sourceUnit.id,
           // Start the unit at the summoners location

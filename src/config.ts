@@ -22,17 +22,12 @@ export const MILLIS_PER_ANIMATION = 200;
 export const MILLIS_PER_SPELL_ANIMATION = 400;
 export const PERCENT_CHANCE_OF_HEAVY_UNIT = 10;
 export const NUMBER_OF_UPGRADES_TO_CHOOSE_FROM = 5;
-// Map
-export const OBSTACLE_SECTORS_COUNT_HORIZONTAL = 5;
-export const OBSTACLE_SECTORS_COUNT_VERTICAL = 3;
 // Obstacle sectors must be squares
 // Obstacle sector makeup is hard-coded as 3x3 but can be changed if
 // all of the Sectors are changed in ObstacleSectors.ts
 export const OBSTACLES_PER_SECTOR_WIDE = obstacleSectors[0][0].length;
 export const OBSTACLES_PER_SECTOR_TALL = obstacleSectors[0].length;
 export const OBSTACLE_SIZE = COLLISION_MESH_RADIUS * 2;
-export const MAP_WIDTH = OBSTACLE_SIZE * OBSTACLE_SECTORS_COUNT_HORIZONTAL * OBSTACLES_PER_SECTOR_WIDE;
-export const MAP_HEIGHT = OBSTACLE_SIZE * OBSTACLE_SECTORS_COUNT_VERTICAL * OBSTACLES_PER_SECTOR_TALL;
 
 // Mana
 export const MANA_GET_PER_TURN = 10;

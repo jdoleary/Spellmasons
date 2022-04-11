@@ -77,8 +77,8 @@ function playNextOrderedFloatingTextInQueue() {
 export function orderedFloatingText(text: string, fill = 'white') {
   orderedFloatingTextQueue.push({
     coords: {
-      x: config.MAP_WIDTH / 2,
-      y: config.MAP_HEIGHT / 2,
+      x: window.underworld.width / 2,
+      y: window.underworld.height / 2,
     },
     text,
     style: {

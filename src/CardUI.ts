@@ -224,8 +224,8 @@ function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string
       if (cost.manaCost > window.player.unit.mana) {
         floatingText({
           coords: {
-            x: config.MAP_WIDTH / 2,
-            y: config.MAP_HEIGHT,
+            x: window.underworld.width / 2,
+            y: window.underworld.height,
           },
           text: 'Insufficient Mana',
           style: { fill: '#5656d5', fontSize: '50px', dropShadow: true, dropShadowDistance: 1 }
@@ -236,8 +236,8 @@ function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string
       if (cost.healthCost > window.player.unit.health) {
         floatingText({
           coords: {
-            x: config.MAP_WIDTH / 2,
-            y: config.MAP_HEIGHT,
+            x: window.underworld.width / 2,
+            y: window.underworld.height,
           },
           text: 'Insufficient Health',
           style: { fill: '#d55656', fontSize: '50px', dropShadow: true, dropShadowDistance: 1 }

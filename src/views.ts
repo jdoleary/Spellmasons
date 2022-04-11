@@ -173,7 +173,6 @@ function addUnderworldEventListeners() {
     menuBtnId,
   ) as HTMLButtonElement;
   elMenuBtn.addEventListener('click', toggleMenu);
-  console.log('add event listeners', elMenuBtn);
 }
 
 function removeUnderworldEventListeners() {

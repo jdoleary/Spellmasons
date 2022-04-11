@@ -170,7 +170,7 @@ export function drawDryRunCircle(target: Vec2, radius: number) {
 
 export function isOutOfBounds(target: Vec2) {
   return (
-    target.x < 0 || target.x >= config.MAP_WIDTH || target.y < 0 || target.y >= config.MAP_HEIGHT
+    target.x < 0 || target.x >= window.underworld.width || target.y < 0 || target.y >= window.underworld.height
   );
 }
 

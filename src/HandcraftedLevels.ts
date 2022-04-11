@@ -5,12 +5,12 @@ import Events from './Events';
 import * as Pickup from './Pickup';
 import { Faction } from "./commonTypes";
 import { orderedFloatingText } from "./FloatingText";
-import { setView, View } from "./views";
 
 interface SpawnInfo {
     id: string;
     location: Vec2;
 }
+type HandcraftedLevelMaker = (underworld: Underworld) => HandcraftedLevel;
 export interface HandcraftedLevel {
     // mapWidth: number;
     // mapHeight: number;
@@ -35,17 +35,17 @@ export const tutorialLevels = [
     'Spells in Order',
 ]
 
-export const levels: { [name: string]: HandcraftedLevel } = {
-    [tutorialLevels[0]]: {
+export const levels: { [name: string]: HandcraftedLevelMaker } = {
+    [tutorialLevels[0]]: underworld => ({
         allowHeavyUnits: false,
-        playerSpawnLocations: [{ x: config.MAP_WIDTH / 4, y: config.MAP_HEIGHT / 2 }],
-        portalSpawnLocation: { x: 3 * config.MAP_WIDTH / 4, y: config.MAP_HEIGHT / 2 },
+        playerSpawnLocations: [{ x: underworld.width / 4, y: underworld.height / 2 }],
+        portalSpawnLocation: { x: 3 * underworld.width / 4, y: underworld.height / 2 },
         specialPickups: [],
         obstacles: [],
         doodads: [
             {
                 text: 'Right click with your mouse to move.\nPress "spacebar" to end your turn.\nEntering the portal will take you to the next level.',
-                location: { x: config.MAP_WIDTH / 2, y: 100 },
+                location: { x: underworld.width / 2, y: 100 },
                 style: { align: 'center' },
             }
         ],
@@ -64,10 +64,10 @@ export const levels: { [name: string]: HandcraftedLevel } = {
             // Queue up the next level
             underworld.nextHandCraftedLevel = tutorialLevels[1];
         }
-    },
-    [tutorialLevels[1]]: {
+    }),
+    [tutorialLevels[1]]: underworld => ({
         allowHeavyUnits: false,
-        playerSpawnLocations: [{ x: config.COLLISION_MESH_RADIUS, y: config.MAP_HEIGHT / 2 }],
+        playerSpawnLocations: [{ x: config.COLLISION_MESH_RADIUS, y: underworld.height / 2 }],
         specialPickups: [],
         obstacles: [],
         doodads: [
@@ -80,7 +80,7 @@ export const levels: { [name: string]: HandcraftedLevel } = {
         units: [
             {
                 id: 'dummy',
-                location: { x: config.MAP_WIDTH / 2, y: config.MAP_HEIGHT / 2 }
+                location: { x: underworld.width / 2, y: underworld.height / 2 }
             }
         ],
         startingCards: ['hurt'],
@@ -89,8 +89,8 @@ export const levels: { [name: string]: HandcraftedLevel } = {
             Events.onDeathSource[spawnPortalOnDeathEventName] = () => {
                 const portalPickup = Pickup.specialPickups['portal'];
                 Pickup.create(
-                    3 * config.MAP_WIDTH / 4,
-                    config.MAP_HEIGHT / 2,
+                    3 * underworld.width / 4,
+                    underworld.height / 2,
                     portalPickup.name,
                     portalPickup.description,
                     false,
@@ -115,10 +115,10 @@ export const levels: { [name: string]: HandcraftedLevel } = {
             // Queue up the next level
             underworld.nextHandCraftedLevel = tutorialLevels[2];
         }
-    },
-    [tutorialLevels[2]]: {
+    }),
+    [tutorialLevels[2]]: underworld => ({
         allowHeavyUnits: false,
-        playerSpawnLocations: [{ x: config.COLLISION_MESH_RADIUS, y: config.MAP_HEIGHT / 2 }],
+        playerSpawnLocations: [{ x: config.COLLISION_MESH_RADIUS, y: underworld.height / 2 }],
         specialPickups: [],
         obstacles: [],
         doodads: [
@@ -131,23 +131,23 @@ export const levels: { [name: string]: HandcraftedLevel } = {
         units: [
             {
                 id: 'dummy',
-                location: { x: config.MAP_WIDTH / 2, y: config.MAP_HEIGHT / 2 }
+                location: { x: underworld.width / 2, y: underworld.height / 2 }
             },
             {
                 id: 'dummy',
-                location: { x: config.MAP_WIDTH / 2 + config.COLLISION_MESH_RADIUS * 2, y: config.MAP_HEIGHT / 2 }
+                location: { x: underworld.width / 2 + config.COLLISION_MESH_RADIUS * 2, y: underworld.height / 2 }
             },
             {
                 id: 'dummy',
-                location: { x: config.MAP_WIDTH / 2 + config.COLLISION_MESH_RADIUS * 2, y: config.MAP_HEIGHT / 2 - config.COLLISION_MESH_RADIUS * 2 }
+                location: { x: underworld.width / 2 + config.COLLISION_MESH_RADIUS * 2, y: underworld.height / 2 - config.COLLISION_MESH_RADIUS * 2 }
             },
             {
                 id: 'dummy',
-                location: { x: config.MAP_WIDTH / 2 + config.COLLISION_MESH_RADIUS * 2, y: config.MAP_HEIGHT / 2 + config.COLLISION_MESH_RADIUS * 2 }
+                location: { x: underworld.width / 2 + config.COLLISION_MESH_RADIUS * 2, y: underworld.height / 2 + config.COLLISION_MESH_RADIUS * 2 }
             },
             {
                 id: 'dummy',
-                location: { x: config.MAP_WIDTH / 2 + config.COLLISION_MESH_RADIUS * 5, y: config.MAP_HEIGHT / 2 + config.COLLISION_MESH_RADIUS * 4 }
+                location: { x: underworld.width / 2 + config.COLLISION_MESH_RADIUS * 5, y: underworld.height / 2 + config.COLLISION_MESH_RADIUS * 4 }
             },
         ],
         startingCards: ['hurt', 'chain'],
@@ -159,8 +159,8 @@ export const levels: { [name: string]: HandcraftedLevel } = {
                 if (allDestroyedAtOnce) {
                     const portalPickup = Pickup.specialPickups['portal'];
                     Pickup.create(
-                        1.5 * config.MAP_WIDTH / 4,
-                        config.MAP_HEIGHT / 2,
+                        1.5 * underworld.width / 4,
+                        underworld.height / 2,
                         portalPickup.name,
                         portalPickup.description,
                         false,
@@ -202,10 +202,10 @@ export const levels: { [name: string]: HandcraftedLevel } = {
             underworld.nextHandCraftedLevel = tutorialLevels[3];
 
         }
-    },
-    [tutorialLevels[3]]: {
+    }),
+    [tutorialLevels[3]]: underworld => ({
         allowHeavyUnits: false,
-        playerSpawnLocations: [{ x: config.COLLISION_MESH_RADIUS, y: config.MAP_HEIGHT / 2 }],
+        playerSpawnLocations: [{ x: config.COLLISION_MESH_RADIUS, y: underworld.height / 2 }],
         specialPickups: [],
         obstacles: [],
         doodads: [
@@ -218,23 +218,23 @@ export const levels: { [name: string]: HandcraftedLevel } = {
         units: [
             {
                 id: 'dummy',
-                location: { x: config.MAP_WIDTH / 2 - config.COLLISION_MESH_RADIUS * 4, y: config.MAP_HEIGHT / 2 }
+                location: { x: underworld.width / 2 - config.COLLISION_MESH_RADIUS * 4, y: underworld.height / 2 }
             },
             {
                 id: 'dummy',
-                location: { x: config.MAP_WIDTH / 2 + config.COLLISION_MESH_RADIUS * 2, y: config.MAP_HEIGHT / 2 }
+                location: { x: underworld.width / 2 + config.COLLISION_MESH_RADIUS * 2, y: underworld.height / 2 }
             },
             {
                 id: 'dummy',
-                location: { x: config.MAP_WIDTH / 2 + config.COLLISION_MESH_RADIUS * 4, y: config.MAP_HEIGHT / 2 - config.COLLISION_MESH_RADIUS * 2 }
+                location: { x: underworld.width / 2 + config.COLLISION_MESH_RADIUS * 4, y: underworld.height / 2 - config.COLLISION_MESH_RADIUS * 2 }
             },
             {
                 id: 'dummy',
-                location: { x: config.MAP_WIDTH / 2 + config.COLLISION_MESH_RADIUS * 2, y: config.MAP_HEIGHT / 2 + config.COLLISION_MESH_RADIUS * 4 }
+                location: { x: underworld.width / 2 + config.COLLISION_MESH_RADIUS * 2, y: underworld.height / 2 + config.COLLISION_MESH_RADIUS * 4 }
             },
             {
                 id: 'dummy',
-                location: { x: config.MAP_WIDTH / 2 + config.COLLISION_MESH_RADIUS * 9, y: config.MAP_HEIGHT / 2 }
+                location: { x: underworld.width / 2 + config.COLLISION_MESH_RADIUS * 9, y: underworld.height / 2 }
             },
         ],
         startingCards: ['hurt', 'AOE', 'chain'],
@@ -250,8 +250,8 @@ export const levels: { [name: string]: HandcraftedLevel } = {
                 if (allDestroyedAtOnce) {
                     const portalPickup = Pickup.specialPickups['portal'];
                     Pickup.create(
-                        1.5 * config.MAP_WIDTH / 4,
-                        config.MAP_HEIGHT / 2,
+                        1.5 * underworld.width / 4,
+                        underworld.height / 2,
                         portalPickup.name,
                         portalPickup.description,
                         false,
@@ -293,5 +293,5 @@ export const levels: { [name: string]: HandcraftedLevel } = {
             }
 
         }
-    }
+    })
 }

@@ -66,8 +66,8 @@ export default class Underworld {
   // meaning, players take their turn, npcs take their
   // turn, then it resets to player turn, that is a full "turn"
   turn_number: number = -1;
-  height: number = config.MAP_HEIGHT;
-  width: number = config.MAP_WIDTH;
+  height: number = 500;
+  width: number = 800;
   players: Player.IPlayer[] = [];
   units: Unit.IUnit[] = [];
   pickups: Pickup.IPickup[] = [];
@@ -91,12 +91,6 @@ export default class Underworld {
     console.log("RNG create with seed:", seed, ", state: ", RNGState);
     this.random = this.syncronizeRNG(RNGState);
 
-    const mapGraphics = new PIXI.Graphics();
-    containerBoard.addChild(mapGraphics);
-    mapGraphics.lineStyle(3, 0x000000, 1);
-    mapGraphics.beginFill(0x795644, 1);
-    mapGraphics.drawRect(0, 0, config.MAP_WIDTH, config.MAP_HEIGHT);
-    mapGraphics.endFill();
     // Start the gameloop
     this.gameLoopUnits();
   }
@@ -208,12 +202,13 @@ export default class Underworld {
   // TODO:  this will need to be called if objects become
   // destructable
   cacheWalls() {
+    console.log('jtest', window.underworld.width, window.underworld.height)
     const mapBounds: Polygon = {
       points: [
         { x: 0, y: 0 },
-        { x: 0, y: config.MAP_HEIGHT },
-        { x: config.MAP_WIDTH, y: config.MAP_HEIGHT },
-        { x: config.MAP_WIDTH, y: 0 },
+        { x: 0, y: window.underworld.height },
+        { x: window.underworld.width, y: window.underworld.height },
+        { x: window.underworld.width, y: 0 },
       ], inverted: true
     };
     const collidablePolygons = [...this.obstacles.map(o => o.bounds), mapBounds];
@@ -272,13 +267,17 @@ export default class Underworld {
   }
 
   // boolean in return represents if generating the level succeeded
-  generateRandomLevel(levelIndex: number): boolean {
+  generateRandomLevel(levelIndex: number, sectorsWide: number, sectorsTall: number): boolean {
+    // Width and height should be set immediately so that other level-building functions
+    // (such as cacheWalls) have access to the new width and height
+    this.width = config.OBSTACLE_SIZE * sectorsWide * config.OBSTACLES_PER_SECTOR_WIDE;
+    this.height = config.OBSTACLE_SIZE * sectorsTall * config.OBSTACLES_PER_SECTOR_TALL;
     let validSpawnCoords: Vec2[] = [];
     this.validPlayerSpawnCoords = [];
     let validPortalSpawnCoords: Vec2[] = [];
     // The map is made of a matrix of obstacle sectors
-    for (let i = 0; i < config.OBSTACLE_SECTORS_COUNT_HORIZONTAL; i++) {
-      for (let j = 0; j < config.OBSTACLE_SECTORS_COUNT_VERTICAL; j++) {
+    for (let i = 0; i < sectorsWide; i++) {
+      for (let j = 0; j < sectorsTall; j++) {
         const randomSectorIndex = randInt(this.random,
           0,
           obstacleSectors.length - 1,
@@ -298,13 +297,15 @@ export default class Underworld {
                 // Only spawn players in the left most index (X == 0) of the left most obstacle (i==0)
                 const margin = 0;
                 this.validPlayerSpawnCoords.push({ x: coordX + margin, y: coordY });
-              } else if (i == config.OBSTACLE_SECTORS_COUNT_HORIZONTAL - 1 && X == rowOfObstacles.length - 1) {
+              } else if (i == sectorsWide - 1 && X == rowOfObstacles.length - 1) {
                 // Only spawn the portal in the right most index of the right most obstacle
                 validPortalSpawnCoords.push({ x: coordX, y: coordY });
               } else {
                 // Spawn pickups or units in any validSpawnCoord
                 validSpawnCoords.push({ x: coordX, y: coordY });
               }
+              // Create ground tile
+              Image.create(coordX, coordY, 'tiles/ground.png', containerBoard);
               continue
             }
             // -1 to let 0 be empty (no obstacle) and 1 will be index 0 of
@@ -394,6 +395,7 @@ export default class Underworld {
     // Now that it's a new level clear out the level's dodads such as
     // bone dust left behind from destroyed corpses
     containerDoodads.removeChildren();
+    containerBoard.removeChildren();
     // Clean previous level info
     for (let i = this.units.length - 1; i >= 0; i--) {
       const u = this.units[i];
@@ -440,11 +442,14 @@ export default class Underworld {
     recenterStage();
   }
   initLevel(levelIndex: number): void {
+    // Level sizes are random but have change to grow bigger as loop continues
+    const sectorsWide = randInt(window.underworld.random, 4, 5 + (Math.round(levelIndex / 3)));
+    const sectorsTall = randInt(window.underworld.random, 2, 5 + (Math.round(levelIndex / 3)));
     setView(View.Game);
-    console.log('Setup: initLevel', levelIndex);
+    console.log('Setup: initLevel', levelIndex, sectorsWide, sectorsTall);
     this.levelIndex = levelIndex;
     this.cleanUpLevel();
-    const succeeded = this.generateRandomLevel(levelIndex);
+    const succeeded = this.generateRandomLevel(levelIndex, sectorsWide, sectorsTall);
     if (!succeeded) {
       // Invoke init level again until generateRandomLevel succeeds
       return this.initLevel(this.levelIndex);
@@ -457,9 +462,15 @@ export default class Underworld {
     );
   }
   initHandcraftedLevel(name: string) {
+    // Width and height should be set immediately so that other level-building functions
+    // (such as cacheWalls) have access to the new width and height
+    const sectorsWide = 4;
+    const sectorsTall = 2;
+    this.width = config.OBSTACLE_SIZE * sectorsWide * config.OBSTACLES_PER_SECTOR_WIDE;
+    this.height = config.OBSTACLE_SIZE * sectorsTall * config.OBSTACLES_PER_SECTOR_TALL;
     setView(View.Game);
     console.log('Setup: initHandcraftedLevel', name);
-    const h: HandcraftedLevel = levels[name];
+    const h: HandcraftedLevel = levels[name](this);
     if (!h) {
       console.error('Handcrafted level', name, 'does not exist');
       return;
@@ -829,8 +840,8 @@ export default class Underworld {
     return false;
   }
   getRandomCoordsWithinBounds(bounds: Bounds): Vec2 {
-    const x = randInt(window.underworld.random, bounds.xMin || 0, bounds.xMax || config.MAP_WIDTH);
-    const y = randInt(window.underworld.random, bounds.yMin || 0, bounds.yMax || config.MAP_HEIGHT);
+    const x = randInt(window.underworld.random, bounds.xMin || 0, bounds.xMax || window.underworld.width);
+    const y = randInt(window.underworld.random, bounds.yMin || 0, bounds.yMax || window.underworld.height);
     return { x, y };
   }
   setTurnPhase(p: turn_phase) {

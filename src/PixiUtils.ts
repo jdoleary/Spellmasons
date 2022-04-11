@@ -1,5 +1,4 @@
 import * as PIXI from 'pixi.js';
-import { MAP_HEIGHT, MAP_WIDTH } from './config';
 import { View } from './views';
 // if PIXI is finished setting up
 let isReady = false;
@@ -46,6 +45,8 @@ window.addEventListener('load', () => {
   resizePixi();
 });
 export function resizePixi() {
+  const underworldWidth = window.underworld ? window.underworld.width : 800;
+  const underworldHeight = window.underworld ? window.underworld.height : 500;
   const elPIXIHolder = document.getElementById('PIXI-holder');
   if (!elPIXIHolder) {
     console.error('Cannot resize pixi, elPIXIHolder is null')
@@ -55,8 +56,8 @@ export function resizePixi() {
   // Set the scale of the stage based on the available window pixel space
   // so that players with smaller screens can see the whole board
   const margin = 20;
-  const requiredRenderWidth = MAP_WIDTH + margin;
-  const requiredRenderHeight = MAP_HEIGHT + margin;
+  const requiredRenderWidth = underworldWidth + margin;
+  const requiredRenderHeight = underworldHeight + margin;
   const widthRatio = (elPIXIHolder.clientWidth - margin) / requiredRenderWidth;
   // window height shouldn't consider the card height, since the card height doesn't scale
   const heightRatio = (elPIXIHolder.clientHeight - margin) / requiredRenderHeight;
@@ -80,8 +81,8 @@ export function recenterStage() {
       break;
     case View.Game:
       // Align Camera: center the app in the middle of the map 
-      app.stage.x = app.renderer.width / 2 - (MAP_WIDTH) / 2 * app.stage.scale.x;
-      app.stage.y = app.renderer.height / 2 - (MAP_HEIGHT) / 2 * app.stage.scale.y;
+      app.stage.x = app.renderer.width / 2 - (window.underworld.width) / 2 * app.stage.scale.x;
+      app.stage.y = app.renderer.height / 2 - (window.underworld.height) / 2 * app.stage.scale.y;
       break;
   }
 
