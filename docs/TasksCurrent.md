@@ -1,6 +1,3 @@
-- **!** Fix insufficient mana
-    - Prevent casting if the queued up spells have insufficient mana
-    - Calculate it so it supports mana steal
 - **!** portal appears when last unit is killed
 - **!** allow levels to be different sizes
 - **!**In spell projection, if you're doing enough damage to kill, show it visually

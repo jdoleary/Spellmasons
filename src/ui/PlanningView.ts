@@ -94,8 +94,6 @@ export function updateManaCostUI(): CardCost {
 function _updateManaCostUI(cost: CardCost) {
   if (window.player) {
     updateTooltipSpellCost(cost)
-    elSpellManaCost?.classList.toggle('insufficient', cost.manaCost > window.player.unit.mana);
-    elSpellHealthCost?.classList.toggle('insufficient', cost.healthCost > window.player.unit.health);
   }
 
 }

@@ -502,11 +502,6 @@ body.your-turn #player-turn-indicator {
   line-height: 80px;
 }
 
-/* For insufficient mana */
-#spell-mana-cost.insufficient {
-  border: 4px solid #ff0000;
-}
-
 #spell-mana-cost.hidden {
   display: none;
 }
@@ -530,11 +525,6 @@ body.your-turn #player-turn-indicator {
 
 #spell-health-cost:empty {
   display: none;
-}
-
-/* For insufficient health */
-#spell-health-cost.insufficient {
-  border: 4px solid #ff0000;
 }
 
 #spell-health-cost.hidden {

@@ -9,6 +9,9 @@ import {
   updatePlanningView,
 } from './ui/PlanningView';
 import { calculateCostForSingleCard } from './cards/cardUtils';
+import floatingText from './FloatingText';
+import * as config from './config';
+
 const elCardHolders = document.getElementById('card-holders');
 // Where the non-selected cards are displayed
 const elCardHand = document.getElementById('card-hand');
@@ -216,7 +219,33 @@ function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string
       clone.classList.add('requires-following-card')
     }
     elSelectedCards.appendChild(clone);
-    updateManaCostUI();
+    const cost = updateManaCostUI();
+    if (window.player) {
+      if (cost.manaCost > window.player.unit.mana) {
+        floatingText({
+          coords: {
+            x: config.MAP_WIDTH / 2,
+            y: config.MAP_HEIGHT,
+          },
+          text: 'Insufficient Mana',
+          style: { fill: '#5656d5', fontSize: '50px', dropShadow: true, dropShadowDistance: 1 }
+        })
+        deselectLastCard();
+
+      }
+      if (cost.healthCost > window.player.unit.health) {
+        floatingText({
+          coords: {
+            x: config.MAP_WIDTH / 2,
+            y: config.MAP_HEIGHT,
+          },
+          text: 'Insufficient Health',
+          style: { fill: '#d55656', fontSize: '50px', dropShadow: true, dropShadowDistance: 1 }
+        })
+        deselectLastCard();
+
+      }
+    }
     // Since a new card has been selected, we must sync the spell
     // effect projection so it will be up to date in the event
     // that the user is hovering over a unit while selecting this card

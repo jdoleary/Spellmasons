@@ -994,18 +994,6 @@ export default class Underworld {
         const animations = []
         if (!dryRun) {
           const singleCardCost = calculateCost([card], casterPlayer);
-          // Prevent casting if over cost:
-          if (singleCardCost.manaCost > casterPlayer.unit.mana) {
-            floatingText({
-              coords: castLocation,
-              text: 'Insufficient mana!',
-              style: {
-                fill: '#5656d5'
-              }
-            });
-            // There is not enough mana to cast this, go to the next card
-            continue card;
-          }
           // Apply mana and health cost to caster
           // Note: it is important that this is done BEFORE a card is actually cast because
           // the card may affect the caster's mana
