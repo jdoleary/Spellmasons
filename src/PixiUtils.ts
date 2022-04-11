@@ -44,8 +44,8 @@ app.renderer.backgroundColor = 0x45b6fe;
 window.addEventListener('resize', resizePixi);
 window.addEventListener('load', () => {
   resizePixi();
-})
-function resizePixi() {
+});
+export function resizePixi() {
   const elPIXIHolder = document.getElementById('PIXI-holder');
   if (!elPIXIHolder) {
     console.error('Cannot resize pixi, elPIXIHolder is null')

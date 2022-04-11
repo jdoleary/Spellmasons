@@ -2,6 +2,7 @@ import {
   containerCharacterSelect,
   addPixiContainersForView,
   recenterStage,
+  resizePixi,
 } from './PixiUtils';
 import * as Units from './units';
 import { UnitSubType } from './commonTypes';
@@ -126,6 +127,7 @@ export function setView(v: View) {
       }
       break;
     case View.Game:
+      resizePixi();
       addUnderworldEventListeners();
       break;
     default:
