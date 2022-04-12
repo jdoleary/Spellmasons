@@ -17,6 +17,7 @@ import {
   containerDoodads,
   containerSpells,
   containerUI,
+  containerUnits,
   recenterStage,
 } from './PixiUtils';
 import { orderedFloatingText } from './FloatingText';
@@ -156,6 +157,8 @@ export default class Underworld {
         window.unitOverlayGraphics.endFill();
       }
     }
+    // Sort unit sprites visually by y position
+    containerUnits.children.sort((a, b) => a.y - b.y)
 
     // Invoke gameLoopUnits again next loop
     requestAnimationFrame(this.gameLoopUnits.bind(this))
