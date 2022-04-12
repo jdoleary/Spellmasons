@@ -1,6 +1,6 @@
 import * as Image from './Image';
 import type { Polygon } from './Polygon';
-import { containerBoard } from './PixiUtils';
+import { containerUnits } from './PixiUtils';
 export interface IObstacle {
   x: number;
   y: number;
@@ -16,7 +16,10 @@ interface IObstacleSource {
   imagePath: string;
 }
 export function create(x: number, y: number, obstacle: IObstacleSource) {
-  const image = Image.create(x, y, obstacle.imagePath, containerBoard);
+  const image = Image.create(x, y, obstacle.imagePath, containerUnits);
+  // TODO: This anchor is a bit arbitrary, for now, it makes "walls" appear to have height,
+  // since the wall sprite is taller than the 64x64 space that it occupies
+  image.sprite.anchor.y = 0.61;
   const width = image.sprite.width;
   const height = image.sprite.height;
   const _x = x - width / 2;
