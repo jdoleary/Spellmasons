@@ -16,6 +16,8 @@ const unit: UnitSource = {
   unitProps: {
     attackRange: 300,
     mana: 0,
+    manaMax: 0,
+    manaPerTurn: 0
   },
   action: async (unit: Unit.IUnit) => {
     action(unit, canInteractWithTarget, (target: Unit.IUnit) => {
