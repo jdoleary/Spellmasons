@@ -9,12 +9,12 @@ import * as Player from './Player';
 import * as Unit from './Unit';
 import * as Pickup from './Pickup';
 import * as Obstacle from './Obstacle';
-import { syncSpellEffectProjection } from './ui/PlanningView';
 import * as readyState from './readyState';
 import * as messageQueue from './messageQueue';
 import { setView, View } from './views';
 import { tutorialLevels } from './HandcraftedLevels';
 import manBlue from './units/manBlue';
+import { updateMouseUI } from './ui/eventListeners';
 
 const messageLog: any[] = [];
 let clients: string[] = [];
@@ -396,7 +396,7 @@ async function handleSpell(caster: Player.IPlayer, payload: any) {
     // When spells are done animating but the mouse hasn't moved,
     // syncSpellEffectProjection needs to be called so that the icon ("footprints" for example)
     // will be shown in the tile that the mouse is hovering over
-    syncSpellEffectProjection();
+    updateMouseUI();
     // Check for dead players to end their turn,
     // this occurs here because spells may have caused their death
     for (let p of underworld.players) {

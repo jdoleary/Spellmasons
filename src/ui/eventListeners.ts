@@ -70,6 +70,10 @@ export function keydownListener(event: KeyboardEvent) {
       CardUI.selectCardByIndex(9);
       break;
   }
+  // Invoke mouse move handler to update spell projections
+  // Lots of UI is updated when the mouse moves, but keys
+  // also change what the UI will
+  updateMouseUI();
 }
 
 export function keyupListener(event: KeyboardEvent) {
@@ -88,13 +92,14 @@ export function keyupListener(event: KeyboardEvent) {
       window.walkPathGraphics.clear();
       break;
   }
+  updateMouseUI();
 }
 
 export function endTurnBtnListener() {
   window.underworld.endMyTurn();
 }
 
-export function mousemoveHandler() {
+export function updateMouseUI() {
   // Only handle clicks when viewing the Game
   if (window.view !== View.Game) {
     return;
@@ -105,7 +110,6 @@ export function mousemoveHandler() {
   const mouseTarget = window.underworld.getMousePos();
   // Show faint circle on clickable entities on hover:
   drawOnHoverCircle(mouseTarget);
-
 
   // Show walk path if in inspect-mode (when holding control key):
   window.walkPathGraphics.clear();

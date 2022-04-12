@@ -36,6 +36,7 @@ import { setView, View } from './views';
 import * as readyState from './readyState';
 import { HandcraftedLevel, levels } from './HandcraftedLevels';
 import { addCardToHand, removeCardsFromHand } from './CardUI';
+import { updateMouseUI } from './ui/eventListeners';
 
 export enum turn_phase {
   PlayerTurns,
@@ -698,7 +699,7 @@ export default class Underworld {
     // Sync spell effect projection in the event that the player has a
     // spell queued up, it should show it in the HUD when it becomes their turn again
     // even if they don't move the mouse
-    syncSpellEffectProjection();
+    updateMouseUI();
 
     // If this current player is NOT able to take their turn...
     if (!Player.ableToTakeTurn(player)) {
@@ -896,7 +897,7 @@ export default class Underworld {
         break;
       case 'NPC':
         // Clears spell effect on NPC turn
-        syncSpellEffectProjection();
+        updateMouseUI();
         let animationPromises: Promise<void>[] = [];
         (async () => {
           // Move units

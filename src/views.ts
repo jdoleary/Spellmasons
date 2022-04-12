@@ -15,8 +15,9 @@ import {
   endTurnBtnListener,
   keydownListener,
   keyupListener,
-  mousemoveHandler,
+  updateMouseUI,
 } from './ui/eventListeners';
+import { toggleInspectMode } from './CardUI';
 
 // A view is not shared between players in the same game, a player could choose any view at any time
 export enum View {
@@ -163,7 +164,11 @@ function addUnderworldEventListeners() {
   window.addEventListener('keyup', keyupListener);
   document.body.addEventListener('contextmenu', contextmenuHandler);
   document.body.addEventListener('click', clickHandler);
-  document.body.addEventListener('mousemove', mousemoveHandler);
+  document.body.addEventListener('mousemove', e => {
+    // Update the inspectMode based on if the ctrl key is down or not
+    toggleInspectMode(e.ctrlKey);
+    updateMouseUI();
+  });
   // Add button listeners
   const elEndTurnBtn: HTMLButtonElement = document.getElementById(
     endTurnBtnId,
@@ -182,7 +187,7 @@ function removeUnderworldEventListeners() {
   // Remove mouse and click listeners
   document.body.removeEventListener('contextmenu', contextmenuHandler);
   document.body.removeEventListener('click', clickHandler);
-  document.body.removeEventListener('mousemove', mousemoveHandler);
+  document.body.removeEventListener('mousemove', updateMouseUI);
   // Remove button listeners
   const elEndTurnBtn: HTMLButtonElement = document.getElementById(
     endTurnBtnId,

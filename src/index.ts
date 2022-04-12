@@ -140,7 +140,6 @@ declare global {
     playerWalkingPromise: Promise<void>;
     // makes a pop up prompting the user to accept cookies
     cookieConsentPopup: (forcePopup: boolean) => void;
-
   }
 }
 window.volume = 1.0;
