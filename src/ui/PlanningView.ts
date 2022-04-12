@@ -132,9 +132,10 @@ export async function syncSpellEffectProjection() {
         target,
         true,
       );
-      // Draw red circle if spell will kill a unit:
       for (let unitStats of effectState.aggregator.unitDamage) {
-        if (unitStats.damageTaken >= unitStats.health) {
+        // If a unit is currently alive and will take fatal damage,
+        // draw red circle.
+        if (unitStats.health > 0 && unitStats.damageTaken >= unitStats.health) {
           dryRunGraphics.lineStyle(4, 0xff0000, 1.0);
           dryRunGraphics.drawCircle(unitStats.x, unitStats.y, config.COLLISION_MESH_RADIUS);
         }
