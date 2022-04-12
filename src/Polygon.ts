@@ -458,6 +458,10 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
             // This poly is processing, mark it as excluded so it won't start processing from the beginning
             excludePoly.add(currentLine.polygon);
             const branch = getClosestBranch(currentLine, polygonLineSegments);
+            if (branch === undefined) {
+                console.error('Branch is undefined')
+                return false;
+            }
             currentLine = branch.nextLine;
             // Closes when the point about to be added is the same as the first point
             if (Vec.equal(currentLine.p1, firstPoint)) {
