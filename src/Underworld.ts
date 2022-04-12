@@ -213,11 +213,13 @@ export default class Underworld {
         { x: window.underworld.width, y: 0 },
       ], inverted: true
     };
-    const collidablePolygons = [...this.obstacles.map(o => o.bounds), mapBounds];
-    this.walls = collidablePolygons.map(polygonToPolygonLineSegments).flat()
+    const obstacleBounds = this.obstacles.map(o => o.bounds);
+    this.walls = [...obstacleBounds.map(polygonToPolygonLineSegments), polygonToPolygonLineSegments(mapBounds)].flat()
 
+    // Expand pathing walls by the size of the regular unit
+    const expandMagnitude = config.COLLISION_MESH_RADIUS * config.NON_HEAVY_UNIT_SCALE
     // Save the pathing walls for the underworld
-    const expandedAndMergedPolygons = mergeOverlappingPolygons(collidablePolygons.map(p => expandPolygon(p, config.COLLISION_MESH_RADIUS)));
+    const expandedAndMergedPolygons = mergeOverlappingPolygons([...obstacleBounds.map(p => expandPolygon(p, expandMagnitude, true)), expandPolygon(mapBounds, expandMagnitude, false)]);
     this.pathingPolygons = expandedAndMergedPolygons
   }
   spawnPickup(index: number, coords: Vec2) {

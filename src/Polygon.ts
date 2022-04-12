@@ -181,10 +181,10 @@ export function polygonToPolygonLineSegments(polygon: Polygon): PolygonLineSegme
 // Expand polygon: Grows a polygon into it's "outside" by the distance of magnitude
 // along the normal vectors of each vertex.
 // Pure: returns a new polygon without mutating the old
-export function expandPolygon(polygon: Polygon, magnitude: number): Polygon {
+export function expandPolygon(polygon: Polygon, magnitude: number, yAxisOnlyUp: boolean): Polygon {
     return {
         // The points are only projected along the X axis so that obstacles have an appearance of "height"
-        points: polygon.points.map((_p, i) => projectPointForPathingMesh(polygon, i, magnitude)),
+        points: polygon.points.map((_p, i) => projectPointForPathingMesh(polygon, i, magnitude, yAxisOnlyUp)),
         inverted: polygon.inverted
     }
 }
@@ -226,28 +226,44 @@ function getNormalVectorOfLineSegment(lineSegment: LineSegment): Vec2 {
         y: lineSegment.p1.x - lineSegment.p2.x
     }
 }
-function projectPointForPathingMesh(polygon: Polygon, pointIndex: number, magnitude: number): Vec2 {
+function projectPointForPathingMesh(polygon: Polygon, pointIndex: number, magnitude: number, yAxisOnlyUp: boolean): Vec2 {
     const point = polygon.points[pointIndex];
     const nextPoint = polygon.points[getLoopableIndex(pointIndex + (polygon.inverted ? -1 : 1), polygon.points)];
     const prevPoint = polygon.points[getLoopableIndex(pointIndex + (polygon.inverted ? 1 : -1), polygon.points)];
     // Find a point along the normal:
-    const projectToPoint = { x: point.x, y: point.y };
+    let projectToPoint = { x: 0, y: 0 };
     const dxPrev = point.x - prevPoint.x;
+    const dyPrev = point.y - prevPoint.y;
     projectToPoint.x -= dxPrev;
+    projectToPoint.y -= dyPrev;
     const dxNext = point.x - nextPoint.x;
+    const dyNext = point.y - nextPoint.y;
     projectToPoint.x -= dxNext;
+    projectToPoint.y -= dyNext;
+    // Normalize projectToPoint so it only carries the + or -
+    if (projectToPoint.x !== 0) {
+        projectToPoint.x /= Math.abs(projectToPoint.x);
+    }
+    if (projectToPoint.y !== 0) {
+        projectToPoint.y /= Math.abs(projectToPoint.y);
+    }
 
-    // Find the point magnitude away from vertex along the normal
-    const X = projectToPoint.x - point.x;
-    // Always project points up to give obstacles a sense of height
-    // this allows units to stand in front of or behind obstacles
-    const Y = config.COLLISION_MESH_RADIUS;
-    const D = distance(projectToPoint, point);
     const d = polygon.inverted ? -magnitude : magnitude;
-    const relativeAdjustedPoint = similarTriangles(X, Y, D, d);
+    projectToPoint.x *= d;
+    projectToPoint.y *= d;
+    if (yAxisOnlyUp) {
+        // yAxisOnlyUp is used for expanding the poly mesh of walls
+        // upwards only to give them the appearance of height, so
+        // units can stand in front of and behind them.
+        // However we are dividing by 2 because we still
+        // want units to have some "depth" thickness so they
+        // don't just look like paper held in front of the wall
+        projectToPoint.y = Math.abs(projectToPoint.y) / 2;
+    }
+
     // Round to the nearest whole number to avoid floating point inequalities later
     // when processing these points
-    return Vec.round(Vec.subtract(point, relativeAdjustedPoint));
+    return Vec.round(Vec.subtract(point, projectToPoint));
 
 }
 
