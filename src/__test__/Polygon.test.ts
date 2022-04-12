@@ -845,7 +845,7 @@ describe('expandPolygon', () => {
         const points: Vec2[] = [p1, p2, p3, p4];
         const polygon: Polygon = { points, inverted: false };
 
-        const newPolygon = expandPolygon(polygon, Math.sqrt(2));
+        const newPolygon = expandPolygon(polygon, Math.sqrt(2), false);
         expect(newPolygon.points).toEqual([
             { x: -1, y: -1 },
             { x: -1, y: 2 },
@@ -861,7 +861,7 @@ describe('expandPolygon', () => {
         const points: Vec2[] = [p1, p2, p3, p4];
         const polygon: Polygon = { points, inverted: true };
 
-        const newPolygon = expandPolygon(polygon, Math.sqrt(2));
+        const newPolygon = expandPolygon(polygon, Math.sqrt(2), false);
         expect(newPolygon.points).toEqual([
             { x: 1, y: 1 },
             { x: 1, y: 1 },
