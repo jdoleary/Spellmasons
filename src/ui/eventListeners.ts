@@ -3,6 +3,7 @@ import * as CardUI from '../CardUI';
 import type * as Player from '../Player';
 import floatingText from '../FloatingText';
 import {
+  clearTooltipSelection,
   drawOnHoverCircle,
   isOutOfBounds,
   syncSpellEffectProjection,
@@ -25,6 +26,7 @@ export function keydownListener(event: KeyboardEvent) {
   switch (event.code) {
     case 'Escape':
       CardUI.clearSelectedCards();
+      clearTooltipSelection();
       break;
     case 'AltLeft':
       window.altDown = true;

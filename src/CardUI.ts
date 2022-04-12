@@ -2,7 +2,7 @@ import type * as Player from './Player';
 import * as Cards from './cards';
 import * as math from './math';
 import {
-  clearSelection,
+  clearTooltipSelection,
   clearSpellEffectProjection,
   updateManaCostUI,
   updatePlanningView,
@@ -314,9 +314,6 @@ export function getSelectedCards(): Cards.ICard[] {
 export function toggleInspectMode(active: boolean) {
   document.body.classList.toggle('inspect-mode', active);
   elSelectedCards && elSelectedCards.classList.toggle('hide', active);
-  if (!active) {
-    clearSelection();
-  }
 }
 // updatePlanningView runs on an interval so that the selected entity
 // is kept up to date as the gameplay changes
