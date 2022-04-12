@@ -182,7 +182,8 @@ export function polygonToPolygonLineSegments(polygon: Polygon): PolygonLineSegme
 // Pure: returns a new polygon without mutating the old
 export function expandPolygon(polygon: Polygon, magnitude: number): Polygon {
     return {
-        points: polygon.points.map((_p, i) => projectPointAlongNormalVector(polygon, i, magnitude)),
+        // The points are only projected along the X axis so that obstacles have an appearance of "height"
+        points: polygon.points.map((_p, i) => projectPointAlongXAxis(polygon, i, magnitude)),
         inverted: polygon.inverted
     }
 }
@@ -223,6 +224,28 @@ function getNormalVectorOfLineSegment(lineSegment: LineSegment): Vec2 {
         x: lineSegment.p1.y - lineSegment.p2.y,
         y: lineSegment.p1.x - lineSegment.p2.x
     }
+}
+function projectPointAlongXAxis(polygon: Polygon, pointIndex: number, magnitude: number): Vec2 {
+    const point = polygon.points[pointIndex];
+    const nextPoint = polygon.points[getLoopableIndex(pointIndex + (polygon.inverted ? -1 : 1), polygon.points)];
+    const prevPoint = polygon.points[getLoopableIndex(pointIndex + (polygon.inverted ? 1 : -1), polygon.points)];
+    // Find a point along the normal:
+    const projectToPoint = { x: point.x, y: point.y };
+    const dxPrev = point.x - prevPoint.x;
+    projectToPoint.x -= dxPrev;
+    const dxNext = point.x - nextPoint.x;
+    projectToPoint.x -= dxNext;
+
+    // Find the point magnitude away from vertex along the normal
+    const X = projectToPoint.x - point.x;
+    const Y = 0;
+    const D = distance(projectToPoint, point);
+    const d = polygon.inverted ? -magnitude : magnitude;
+    const relativeAdjustedPoint = similarTriangles(X, Y, D, d);
+    // Round to the nearest whole number to avoid floating point inequalities later
+    // when processing these points
+    return Vec.round(Vec.subtract(point, relativeAdjustedPoint));
+
 }
 
 function projectPointAlongNormalVector(polygon: Polygon, pointIndex: number, magnitude: number): Vec2 {
