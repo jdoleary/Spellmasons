@@ -450,8 +450,7 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
         let i = 0;
         do {
             if (++i > loopLimit) {
-                console.log('infinite loop', newPoly.points);
-                throw new Error("infinite loop");
+                console.error('infinite loop', newPoly.points);
                 return false;
 
             }
