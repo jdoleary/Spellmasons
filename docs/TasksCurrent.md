@@ -1,4 +1,5 @@
 # Tasks
+- Bug: recenter stage isn't working well for tutorial
 - Introduce: explain info about new units when you first encounter them
 - add gaps as well as walls (different)
     - TODO: Anchor units at their feet, not at their center

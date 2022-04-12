@@ -8,7 +8,6 @@ export const containerBoard = new PIXI.Container();
 export const containerPlanningView = new PIXI.Container();
 containerPlanningView.alpha = 0.5;
 export const containerDoodads = new PIXI.Container();
-export const containerUnitUnderlay = new PIXI.Container();
 export const containerUnits = new PIXI.Container();
 export const containerPickup = new PIXI.Container();
 export const containerSpells = new PIXI.Container();
@@ -19,7 +18,6 @@ const underworldPixiContainers = [
   containerBoard,
   containerPlanningView,
   containerDoodads,
-  containerUnitUnderlay,
   containerUnits,
   containerPickup,
   containerSpells,
@@ -32,8 +30,8 @@ window.debugGraphics = new PIXI.Graphics();
 containerUI.addChild(window.debugGraphics);
 window.unitOverlayGraphics = new PIXI.Graphics();
 containerUI.addChild(window.unitOverlayGraphics);
-window.unitUnderlayGraphics = new PIXI.Graphics();
-containerUnitUnderlay.addChild(window.unitUnderlayGraphics);
+window.walkPathGraphics = new PIXI.Graphics();
+containerUI.addChild(window.walkPathGraphics);
 
 export const containerCharacterSelect = new PIXI.Container();
 const characterSelectContainers = [containerCharacterSelect];

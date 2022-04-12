@@ -83,7 +83,7 @@ export function keyupListener(event: KeyboardEvent) {
     case 'ControlRight':
       CardUI.toggleInspectMode(false);
       // Clear walk path on inspect mode off
-      window.unitUnderlayGraphics.clear();
+      window.walkPathGraphics.clear();
       break;
   }
 }
@@ -106,7 +106,7 @@ export function mousemoveHandler() {
 
 
   // Show walk path if in inspect-mode (when holding control key):
-  window.unitUnderlayGraphics.clear();
+  window.walkPathGraphics.clear();
   if (!isOutOfBounds(mouseTarget)) {
     if (window.player) {
       // If in inspect-mode
@@ -114,39 +114,39 @@ export function mousemoveHandler() {
         // Show the player's current walk path
         const currentPlayerPath = findPath(window.player.unit, mouseTarget, window.underworld.pathingPolygons);
         if (currentPlayerPath.length) {
-          window.unitUnderlayGraphics.lineStyle(4, 0xffffff, 1.0);
-          window.unitUnderlayGraphics.moveTo(window.player.unit.x, window.player.unit.y);
+          window.walkPathGraphics.lineStyle(4, 0xffffff, 1.0);
+          window.walkPathGraphics.moveTo(window.player.unit.x, window.player.unit.y);
           for (let point of currentPlayerPath) {
-            window.unitUnderlayGraphics.lineTo(point.x, point.y);
+            window.walkPathGraphics.lineTo(point.x, point.y);
           }
           const turnStopPoints = pointsEveryXDistanceAlongPath(window.player.unit, currentPlayerPath, window.player.unit.moveDistance, window.player.unit.distanceMovedThisTurn);
           for (let point of turnStopPoints) {
-            window.unitUnderlayGraphics.drawCircle(point.x, point.y, 3);
+            window.walkPathGraphics.drawCircle(point.x, point.y, 3);
           }
           // Always draw a stop circle at the end
           const lastPointInPath = currentPlayerPath[currentPlayerPath.length - 1]
-          window.unitUnderlayGraphics.drawCircle(lastPointInPath.x, lastPointInPath.y, 3);
+          window.walkPathGraphics.drawCircle(lastPointInPath.x, lastPointInPath.y, 3);
         }
       } else if (CardUI.areAnyCardsSelected()) {
         // Show the cast line
         // Players can only cast on what they can see:
         const castLine = { p1: window.player.unit, p2: mouseTarget };
         const intersection = closestLineSegmentIntersection(castLine, window.underworld.walls);
-        window.unitUnderlayGraphics.lineStyle(3, targetBlue, 0.7);
-        window.unitUnderlayGraphics.moveTo(castLine.p1.x, castLine.p1.y);
+        window.walkPathGraphics.lineStyle(3, targetBlue, 0.7);
+        window.walkPathGraphics.moveTo(castLine.p1.x, castLine.p1.y);
         if (intersection) {
-          window.unitUnderlayGraphics.lineTo(intersection.x, intersection.y);
+          window.walkPathGraphics.lineTo(intersection.x, intersection.y);
           // Draw a red line the rest of the way shoing that you cannot cast
-          window.unitUnderlayGraphics.lineStyle(3, 0xff0000, 0.7);
-          window.unitUnderlayGraphics.lineTo(castLine.p2.x, castLine.p2.y);
-          window.unitUnderlayGraphics.drawCircle(castLine.p2.x, castLine.p2.y, 3);
+          window.walkPathGraphics.lineStyle(3, 0xff0000, 0.7);
+          window.walkPathGraphics.lineTo(castLine.p2.x, castLine.p2.y);
+          window.walkPathGraphics.drawCircle(castLine.p2.x, castLine.p2.y, 3);
           // Draw a circle where the cast stops
-          window.unitUnderlayGraphics.moveTo(castLine.p2.x, castLine.p2.y);//test
-          window.unitUnderlayGraphics.lineStyle(3, targetBlue, 0.7);
-          window.unitUnderlayGraphics.drawCircle(intersection.x, intersection.y, 3);
+          window.walkPathGraphics.moveTo(castLine.p2.x, castLine.p2.y);//test
+          window.walkPathGraphics.lineStyle(3, targetBlue, 0.7);
+          window.walkPathGraphics.drawCircle(intersection.x, intersection.y, 3);
         } else {
-          window.unitUnderlayGraphics.lineTo(castLine.p2.x, castLine.p2.y);
-          window.unitUnderlayGraphics.drawCircle(castLine.p2.x, castLine.p2.y, 3);
+          window.walkPathGraphics.lineTo(castLine.p2.x, castLine.p2.y);
+          window.walkPathGraphics.drawCircle(castLine.p2.x, castLine.p2.y, 3);
 
         }
 
@@ -191,7 +191,7 @@ export function contextmenuHandler(e: MouseEvent) {
       );
     // If player hasn't already moved this turn...
     if (selfPlayer && selfPlayer.unit.distanceMovedThisTurn < selfPlayer.unit.moveDistance) {
-      window.unitUnderlayGraphics.clear();
+      window.walkPathGraphics.clear();
       window.pie.sendData({
         type: MESSAGE_TYPES.MOVE_PLAYER,
         ...mouseTarget,
