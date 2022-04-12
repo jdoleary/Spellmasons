@@ -306,7 +306,7 @@ export function resurrect(unit: IUnit) {
 export function die(unit: IUnit) {
   Image.changeSprite(
     unit.image,
-    addPixiSprite('units/corpse.png', unit.image.sprite.parent),
+    addPixiSprite('units/corpse.png', containerDoodads),
   );
   unit.alive = false;
   // Ensure that the unit resolvesDoneMoving when they die in the event that 
