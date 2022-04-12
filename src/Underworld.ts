@@ -205,7 +205,6 @@ export default class Underworld {
   // TODO:  this will need to be called if objects become
   // destructable
   cacheWalls() {
-    console.log('jtest', window.underworld.width, window.underworld.height)
     const mapBounds: Polygon = {
       points: [
         { x: 0, y: 0 },
@@ -527,6 +526,12 @@ export default class Underworld {
         pickup.effect,
       );
 
+    }
+    // Create ground tiles:
+    for (let x = 0; x < this.width / config.OBSTACLE_SIZE; x++) {
+      for (let y = 0; y < this.height / config.OBSTACLE_SIZE; y++) {
+        Image.create(x * config.OBSTACLE_SIZE, y * config.OBSTACLE_SIZE, 'tiles/ground.png', containerBoard);
+      }
     }
 
     // Spawn obstacles
