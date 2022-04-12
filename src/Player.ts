@@ -9,7 +9,7 @@ import { allUnits } from './units';
 import { getClients } from './wsPieHandler';
 import { allCards } from './cards';
 import { randInt } from './rand';
-import { clearSelection } from './ui/PlanningView';
+import { clearTooltipSelection } from './ui/PlanningView';
 
 // The serialized version of the interface changes the interface to allow only the data
 // that can be serialized in JSON.  It may exclude data that is not neccessary to
@@ -170,7 +170,7 @@ export function enterPortal(player: IPlayer) {
   Unit.setLocation(player.unit, { x: NaN, y: NaN });
   // Clear the selection so that it doesn't persist after portalling (which would show
   // your user's move circle in the upper left hand of the map but without the user there)
-  clearSelection();
+  clearTooltipSelection();
   // Entering the portal ends the player's turn
   window.underworld.endPlayerTurn(player.clientId);
 }

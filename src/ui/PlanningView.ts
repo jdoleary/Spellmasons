@@ -293,7 +293,7 @@ ${selectedObstacle.description}
 
   }
 }
-export function clearSelection() {
+export function clearTooltipSelection() {
   selectedUnit = undefined;
   selectedPickup = undefined;
   selectedObstacle = undefined;
