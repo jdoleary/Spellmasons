@@ -56,6 +56,7 @@ export function create(clientId: string, unitId: string): IPlayer | undefined {
   };
   player.inPortal = true;
   player.unit.alive = false;
+  player.unit.attackRange = 500;
 
   updateGlobalRefToCurrentClientPlayer(player);
   // Add initial cards to hand

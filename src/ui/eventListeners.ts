@@ -13,7 +13,6 @@ import {
 import { View } from '../views';
 import { findPath, pointsEveryXDistanceAlongPath } from '../Pathfinding';
 import { polygonToPolygonLineSegments } from '../Polygon';
-import { closestLineSegmentIntersection } from '../collision/collisionMath';
 import * as colors from './colors';
 import type { Vec2 } from 'src/Vec';
 import { distance, getCoordsAtDistanceTowardsTarget } from '../math';
@@ -177,13 +176,14 @@ export function updateMouseUI() {
         }
       } else if (CardUI.areAnyCardsSelected()) {
         // Show the cast line
-        // Players can only cast on what they can see:
+        // Players can only cast within their attack range
         const castLine = { p1: window.player.unit, p2: mouseTarget };
-        const intersection = closestLineSegmentIntersection(castLine, window.underworld.walls);
+
         window.walkPathGraphics.lineStyle(3, colors.targetBlue, 0.7);
         window.walkPathGraphics.moveTo(castLine.p1.x, castLine.p1.y);
-        if (intersection) {
-          window.walkPathGraphics.lineTo(intersection.x, intersection.y);
+        if (distance(castLine.p1, castLine.p2) > window.player.unit.attackRange) {
+          const endOfRange = getCoordsAtDistanceTowardsTarget(castLine.p1, castLine.p2, window.player.unit.attackRange);
+          window.walkPathGraphics.lineTo(endOfRange.x, endOfRange.y);
           // Draw a red line the rest of the way shoing that you cannot cast
           window.walkPathGraphics.lineStyle(3, 0xff0000, 0.7);
           window.walkPathGraphics.lineTo(castLine.p2.x, castLine.p2.y);
@@ -191,14 +191,11 @@ export function updateMouseUI() {
           // Draw a circle where the cast stops
           window.walkPathGraphics.moveTo(castLine.p2.x, castLine.p2.y);//test
           window.walkPathGraphics.lineStyle(3, colors.targetBlue, 0.7);
-          window.walkPathGraphics.drawCircle(intersection.x, intersection.y, 3);
+          window.walkPathGraphics.drawCircle(endOfRange.x, endOfRange.y, 3);
         } else {
           window.walkPathGraphics.lineTo(castLine.p2.x, castLine.p2.y);
           window.walkPathGraphics.drawCircle(castLine.p2.x, castLine.p2.y, 3);
-
         }
-
-
       }
     }
   }
@@ -321,11 +318,11 @@ export function clickHandler(e: MouseEvent) {
           // Then cancel casting:
           return
         }
-        // See if the cast has obstructed line of sight
-        if (!window.underworld.hasLineOfSight(selfPlayer.unit, target)) {
+        // If cast target is out of attack range...
+        if (distance(selfPlayer.unit, target) > selfPlayer.unit.attackRange) {
           floatingText({
             coords: target,
-            text: `You must have line of sight\nin order to cast.`,
+            text: `Target out of range`,
             style: { fill: 'red' }
           });
           // Cancel Casting
