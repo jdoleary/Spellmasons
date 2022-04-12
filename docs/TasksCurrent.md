@@ -1,7 +1,8 @@
 # Tasks
-- In spell projection, if you're doing enough damage to kill, show it visually
-    - Prediction won't calculate vulnerable, or protection
+- Introduce: explain info about new units when you first encounter them
 - add gaps as well as walls (different)
+- sequential fireballs should be one big fireball!
+- show rarity of cards, adorn
 ---
 
 - portal appears when last unit is killed
@@ -9,7 +10,6 @@
     - Gameplay video for homepage
     - Start tweeting releases
     - Add timeline to homepage
-- Introduce: explain info about new units when you first encounter them
 
 ---
 - auto exit level
@@ -21,8 +21,6 @@
 - don't make "your turn" floating text ordered, it gets clogged up
 - 5 AOE causes perf issues
     - test on worse computers
-- sequential fireballs should be one big fireball!
-- show rarity of cards, adorn
 - Write code that looks for desyncs and reports them but doesn't try to correct them
 ### 2022-04-05
 - Had an interesting observation where units persisted between reset.  Killing self with one health left when I had cast two damage.

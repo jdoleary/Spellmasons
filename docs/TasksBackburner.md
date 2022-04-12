@@ -1,3 +1,5 @@
+- In spell projection, if you're doing enough damage to kill, show it visually
+    - Prediction won't calculate vulnerable, or protection
 - When players rejoin in progress game, skip character pick screen
 - Maybe solved already? Pathing, see stash "pathfinding"
     - this.seed = '0.9408533248276452';
