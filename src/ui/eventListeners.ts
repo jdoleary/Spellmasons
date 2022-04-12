@@ -13,7 +13,9 @@ import { View } from '../views';
 import { findPath, pointsEveryXDistanceAlongPath } from '../Pathfinding';
 import { polygonToPolygonLineSegments } from '../Polygon';
 import { closestLineSegmentIntersection } from '../collision/collisionMath';
-import { targetBlue } from './colors';
+import * as colors from './colors';
+import type { Vec2 } from 'src/Vec';
+import { distance, getCoordsAtDistanceTowardsTarget } from '../math';
 
 export function keydownListener(event: KeyboardEvent) {
   // Only handle hotkeys when viewing the Game
@@ -111,19 +113,59 @@ export function mousemoveHandler() {
     if (window.player) {
       // If in inspect-mode
       if (document.body.classList.contains('inspect-mode')) {
+        //
         // Show the player's current walk path
+        //
+        // The distance that the player can cover with their current stamina
+        // is drawn in the stamina color.
+        // There are dots dilineating how far the unit can move each turn.
+        //
         const currentPlayerPath = findPath(window.player.unit, mouseTarget, window.underworld.pathingPolygons);
         if (currentPlayerPath.length) {
+          const turnStopPoints = pointsEveryXDistanceAlongPath(window.player.unit, currentPlayerPath, window.player.unit.moveDistance, window.player.unit.distanceMovedThisTurn);
           window.walkPathGraphics.lineStyle(4, 0xffffff, 1.0);
           window.walkPathGraphics.moveTo(window.player.unit.x, window.player.unit.y);
-          for (let point of currentPlayerPath) {
-            window.walkPathGraphics.lineTo(point.x, point.y);
+          let lastPoint: Vec2 = window.player.unit;
+          let distanceCovered = 0;
+          const distanceLeftToMove = window.player.unit.moveDistance - window.player.unit.distanceMovedThisTurn
+          for (let i = 0; i < currentPlayerPath.length; i++) {
+            const point = currentPlayerPath[i];
+            const thisLineDistance = distance(lastPoint, point);
+            if (distanceCovered > distanceLeftToMove) {
+              window.walkPathGraphics.lineStyle(4, 0xffffff, 1.0);
+              window.walkPathGraphics.lineTo(point.x, point.y);
+            } else {
+              window.walkPathGraphics.lineStyle(4, colors.stamina, 1.0);
+              if (distanceCovered + thisLineDistance > distanceLeftToMove) {
+                // Draw up to the firstStop with the stamina color
+                const pointAtWhichUnitOutOfStamina = getCoordsAtDistanceTowardsTarget(lastPoint, point, distanceLeftToMove - distanceCovered);
+                window.walkPathGraphics.lineTo(pointAtWhichUnitOutOfStamina.x, pointAtWhichUnitOutOfStamina.y);
+                window.walkPathGraphics.lineStyle(4, 0xffffff, 1.0);
+                window.walkPathGraphics.lineTo(point.x, point.y);
+              } else {
+                window.walkPathGraphics.lineTo(point.x, point.y);
+              }
+            }
+            distanceCovered += distance(lastPoint, point);
+            lastPoint = point;
           }
-          const turnStopPoints = pointsEveryXDistanceAlongPath(window.player.unit, currentPlayerPath, window.player.unit.moveDistance, window.player.unit.distanceMovedThisTurn);
-          for (let point of turnStopPoints) {
+
+          // Draw the points along the path at which the unit will stop on each turn
+          for (let i = 0; i < turnStopPoints.length; i++) {
+            if (i == 0 && distanceLeftToMove > 0) {
+              window.walkPathGraphics.lineStyle(4, colors.stamina, 1.0);
+            } else {
+              window.walkPathGraphics.lineStyle(4, 0xffffff, 1.0);
+            }
+            const point = turnStopPoints[i];
             window.walkPathGraphics.drawCircle(point.x, point.y, 3);
           }
-          // Always draw a stop circle at the end
+          if (turnStopPoints.length == 0 && distanceLeftToMove > 0) {
+            window.walkPathGraphics.lineStyle(4, colors.stamina, 1.0);
+          } else {
+            window.walkPathGraphics.lineStyle(4, 0xffffff, 1.0);
+          }
+          // Draw a stop circle at the end
           const lastPointInPath = currentPlayerPath[currentPlayerPath.length - 1]
           window.walkPathGraphics.drawCircle(lastPointInPath.x, lastPointInPath.y, 3);
         }
@@ -132,7 +174,7 @@ export function mousemoveHandler() {
         // Players can only cast on what they can see:
         const castLine = { p1: window.player.unit, p2: mouseTarget };
         const intersection = closestLineSegmentIntersection(castLine, window.underworld.walls);
-        window.walkPathGraphics.lineStyle(3, targetBlue, 0.7);
+        window.walkPathGraphics.lineStyle(3, colors.targetBlue, 0.7);
         window.walkPathGraphics.moveTo(castLine.p1.x, castLine.p1.y);
         if (intersection) {
           window.walkPathGraphics.lineTo(intersection.x, intersection.y);
@@ -142,7 +184,7 @@ export function mousemoveHandler() {
           window.walkPathGraphics.drawCircle(castLine.p2.x, castLine.p2.y, 3);
           // Draw a circle where the cast stops
           window.walkPathGraphics.moveTo(castLine.p2.x, castLine.p2.y);//test
-          window.walkPathGraphics.lineStyle(3, targetBlue, 0.7);
+          window.walkPathGraphics.lineStyle(3, colors.targetBlue, 0.7);
           window.walkPathGraphics.drawCircle(intersection.x, intersection.y, 3);
         } else {
           window.walkPathGraphics.lineTo(castLine.p2.x, castLine.p2.y);
