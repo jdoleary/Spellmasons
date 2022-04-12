@@ -3,6 +3,7 @@ import * as Vec from './Vec';
 import { distance, similarTriangles } from "./math";
 import { isCollinearAndOverlapping, isCollinearAndPointInSameDirection, LineSegment, lineSegmentIntersection } from "./collision/collisionMath";
 import { clockwiseAngle, isAngleBetweenAngles } from "./Angle";
+import * as config from './config'
 
 export interface Polygon {
     points: Vec2[];
@@ -183,7 +184,7 @@ export function polygonToPolygonLineSegments(polygon: Polygon): PolygonLineSegme
 export function expandPolygon(polygon: Polygon, magnitude: number): Polygon {
     return {
         // The points are only projected along the X axis so that obstacles have an appearance of "height"
-        points: polygon.points.map((_p, i) => projectPointAlongXAxis(polygon, i, magnitude)),
+        points: polygon.points.map((_p, i) => projectPointForPathingMesh(polygon, i, magnitude)),
         inverted: polygon.inverted
     }
 }
@@ -225,7 +226,7 @@ function getNormalVectorOfLineSegment(lineSegment: LineSegment): Vec2 {
         y: lineSegment.p1.x - lineSegment.p2.x
     }
 }
-function projectPointAlongXAxis(polygon: Polygon, pointIndex: number, magnitude: number): Vec2 {
+function projectPointForPathingMesh(polygon: Polygon, pointIndex: number, magnitude: number): Vec2 {
     const point = polygon.points[pointIndex];
     const nextPoint = polygon.points[getLoopableIndex(pointIndex + (polygon.inverted ? -1 : 1), polygon.points)];
     const prevPoint = polygon.points[getLoopableIndex(pointIndex + (polygon.inverted ? 1 : -1), polygon.points)];
@@ -238,7 +239,9 @@ function projectPointAlongXAxis(polygon: Polygon, pointIndex: number, magnitude:
 
     // Find the point magnitude away from vertex along the normal
     const X = projectToPoint.x - point.x;
-    const Y = 0;
+    // Always project points up to give obstacles a sense of height
+    // this allows units to stand in front of or behind obstacles
+    const Y = config.COLLISION_MESH_RADIUS;
     const D = distance(projectToPoint, point);
     const d = polygon.inverted ? -magnitude : magnitude;
     const relativeAdjustedPoint = similarTriangles(X, Y, D, d);
