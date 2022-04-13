@@ -94,6 +94,8 @@ declare global {
     // Sets which route of the menu is available; note, the view must also
     // be set to Menu in order to SEE the menu
     setMenu: (route: string) => void;
+    // Used to tell the menu if a game is ongoing or not
+    updateInGameMenuStatus: () => void;
     // The menu will call this if the user chooses to skip the tutorial
     skipTutorial: () => void;
 

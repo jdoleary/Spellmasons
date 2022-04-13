@@ -74,6 +74,7 @@ export function setView(v: View) {
   switch (v) {
     case View.Menu:
       elMenu.classList.remove('hidden');
+      window.updateInGameMenuStatus();
       break;
     case View.CharacterSelect:
       // Host or join a game brings client to Character select
