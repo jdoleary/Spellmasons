@@ -167,17 +167,17 @@ export default class Underworld {
     // and the mouse for a very smooth and movable camera experience
     if (window.player) {
       const mousePos = window.underworld.getMousePos();
+      // Multiplying by 0.3 chooses a point 30% of the way from the unit to the mouse.  This is an arbitrary design decision
       const desiredCamTarget = Vec.add(window.player.unit, Vec.multiply(0.3, Vec.subtract(mousePos, window.player.unit)))
-      window.unitOverlayGraphics.lineStyle(3, 0x000000, 1.0);
-      window.unitOverlayGraphics.drawCircle(desiredCamTarget.x, desiredCamTarget.y, 3);
-
-      const nVector = normalizedVector(window.cameraTarget, desiredCamTarget)
-      if (nVector.vector) {
-        if (nVector.distance < 0.5) {
+      const { vector, distance } = normalizedVector(window.cameraTarget, desiredCamTarget)
+      if (vector) {
+        if (distance < 0.5) {
+          // If close enough, snap to desired position
           window.cameraTarget = desiredCamTarget
         } else {
-          const camMoveSpeed = nVector.distance / 4;
-          const nextCamPos = moveAlongVector(window.cameraTarget, nVector.vector, camMoveSpeed);
+          // Camera moves faster if it is farther away from target
+          const camMoveSpeed = distance / 4;
+          const nextCamPos = moveAlongVector(window.cameraTarget, vector, camMoveSpeed);
           window.cameraTarget = nextCamPos;
         }
       }
