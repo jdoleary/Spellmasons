@@ -118,7 +118,7 @@ export default class Underworld {
         // u.y = stepTowardsTarget.y;
         window.unitOverlayGraphics.lineStyle(4, 0xff0000, 1.0);
         window.unitOverlayGraphics.drawCircle(u.x, u.y, u.radius);
-        moveWithCollisions(u, stepTowardsTarget, aliveUnits, []);
+        moveWithCollisions(u, stepTowardsTarget, aliveUnits, this.walls);
         u.distanceMovedThisTurn += moveDist;
         if (Vec.equal(u, u.path[0])) {
           // Once the unit reaches the target, shift so the next point in the path is the next target
