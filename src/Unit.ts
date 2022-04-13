@@ -11,7 +11,6 @@ import makeAllRedShader from './shaders/selected';
 import { addLerpable } from './lerpList';
 import { findPath } from './Pathfinding';
 import { allUnits } from './units';
-import { setView, View } from './views';
 import { allModifiers, EffectState, tallyUnitDamage } from './cards';
 const elHealthBar: HTMLElement = document.querySelector('#health .fill') as HTMLElement;
 const elHealthLabel: HTMLElement = document.querySelector('#health .label') as HTMLElement;

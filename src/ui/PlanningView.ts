@@ -253,17 +253,20 @@ export function updateTooltipContent() {
             break;
           }
         }
+        const unitSource = allUnits[selectedUnit.unitSourceId]
         text += `\
 Unit
-${allUnits[selectedUnit.unitSourceId].info.description}
+${unitSource.info.description}
 Type ${UnitType[selectedUnit.unitType]}
 SubType ${UnitSubType[selectedUnit.unitSubType]}
 Faction ${Faction[selectedUnit.faction]}
 Health ${selectedUnit.health}/${selectedUnit.healthMax}
 Mana ${selectedUnit.mana}/${selectedUnit.manaMax} + ${selectedUnit.manaPerTurn} per turn
+Attack Damage ${selectedUnit.damage}
 Modifiers ${JSON.stringify(selectedUnit.modifiers, null, 2)}
+${unitSource.extraTooltipInfo && unitSource.extraTooltipInfo()}
 ${cards}
-        `;
+      `;
       }
       break;
     case "pickup":
@@ -271,7 +274,7 @@ ${cards}
         text += `\
 ${selectedPickup.name}
 ${selectedPickup.description}
-        `;
+      `;
       }
       break;
     case "obstacle":
@@ -279,7 +282,7 @@ ${selectedPickup.description}
         text += `\
 ${selectedObstacle.name}
 ${selectedObstacle.description}
-        `;
+      `;
 
       }
       break;

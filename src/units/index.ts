@@ -19,7 +19,8 @@ export interface UnitSource {
   init?: (unit: Unit.IUnit) => void;
   action: UnitAction;
   canInteractWithTarget?: canInteractWithTarget;
-  unitProps: Partial<Unit.IUnit>
+  unitProps: Partial<Unit.IUnit>;
+  extraTooltipInfo?: () => string;
 }
 
 /// Units to register

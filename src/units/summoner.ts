@@ -4,7 +4,7 @@ import { UnitSubType, UnitType } from '../commonTypes';
 import * as math from '../math';
 import * as config from '../config';
 
-const SUMMON_MANA_COST = 10;
+const SUMMON_MANA_COST = 30;
 const unit: UnitSource = {
   id: 'Summoner',
   info: {
@@ -15,6 +15,9 @@ const unit: UnitSource = {
   },
   unitProps: {
     moveDistance: 20,
+  },
+  extraTooltipInfo: () => {
+    return `Mana cost per summon: ${SUMMON_MANA_COST}`;
   },
   action: async (unit: Unit.IUnit) => {
     // Move opposite to closest enemy
