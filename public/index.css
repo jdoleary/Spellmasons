@@ -400,16 +400,12 @@ body.your-turn #player-turn-indicator-holder {
   z-index: 1;
 }
 
+
+body.your-turn #end-turn-btn {
+  opacity: 1.0;
+}
+
 #end-turn-btn {
-  width: 120px;
-  height: 60px;
-  line-height: 40px;
-  font-size: 18px;
-  border-radius: 8px 8px;
-  border: 2px solid black;
-  text-align: center;
-  position: relative;
-  margin: 12px 8px;
   opacity: 0.5;
 }
 
@@ -431,11 +427,6 @@ body.your-turn #player-turn-indicator-holder {
     border: 2px red solid;
   }
 }
-
-body.your-turn #end-turn-btn {
-  opacity: 1.0;
-}
-
 
 #player-turn-indicator {
   display: block;
@@ -750,4 +741,48 @@ form {
 
 body.view-GameOver #game-over {
   display: block;
+}
+
+.prompt {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  font-size: 24px;
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+.prompt-inner {
+  background-color: antiquewhite;
+  padding: 16px;
+  border-radius: 5px;
+  max-width: 400px;
+
+}
+
+.prompt .button-holder {
+  display: flex;
+  justify-content: space-between;
+}
+
+.prompt .text {
+  margin: auto 8px;
+}
+
+.jbutton {
+  width: 120px;
+  height: 60px;
+  line-height: 40px;
+  font-size: 18px;
+  border-radius: 8px 8px;
+  border: 2px solid black;
+  text-align: center;
+  position: relative;
+  margin: 12px 8px;
+  cursor: pointer;
 }

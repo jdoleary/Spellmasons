@@ -37,6 +37,7 @@ import * as readyState from './readyState';
 import { HandcraftedLevel, levels } from './HandcraftedLevels';
 import { addCardToHand, removeCardsFromHand } from './CardUI';
 import { updateMouseUI } from './ui/eventListeners';
+import Jprompt from './Jprompt';
 
 export enum turn_phase {
   PlayerTurns,
@@ -729,15 +730,21 @@ export default class Underworld {
     this.syncTurnMessage();
   }
   // Sends a network message to end turn
-  endMyTurn() {
+  async endMyTurn() {
     // Turns can only be manually ended during the PlayerTurns phase
     if (this.turn_phase === turn_phase.PlayerTurns) {
       if (window.player) {
-        console.log('waiting to end my turn');
-        window.playerWalkingPromise.then(() => {
-          console.log('end my turn');
-          window.pie.sendData({ type: MESSAGE_TYPES.END_TURN });
-        });
+        let affirm = true
+        if (window.player.unit.distanceMovedThisTurn == 0) {
+          affirm = await Jprompt('Are you sure you want to end your turn without moving?', 'Cancel', 'End Turn', 'Space');
+        }
+        if (affirm) {
+          console.log('waiting to end my turn');
+          window.playerWalkingPromise.then(() => {
+            console.log('end my turn');
+            window.pie.sendData({ type: MESSAGE_TYPES.END_TURN });
+          });
+        }
       }
     }
   }

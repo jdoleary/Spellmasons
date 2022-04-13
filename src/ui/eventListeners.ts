@@ -22,6 +22,16 @@ export function keydownListener(event: KeyboardEvent) {
   if (window.view !== View.Game) {
     return;
   }
+
+  // Possibly handle hotkey for Jprompt:
+  const promptYesBtn = document.querySelector(`.prompt .yes[data-key="${event.code}"]`) as HTMLElement;
+  if (promptYesBtn) {
+    promptYesBtn.click();
+    // Return immediately, prompt hotkey overrides other hotkeys
+    return;
+  }
+
+
   switch (event.code) {
     case 'Escape':
       CardUI.clearSelectedCards();
