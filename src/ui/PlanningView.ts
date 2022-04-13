@@ -33,14 +33,11 @@ export function updatePlanningView() {
         selectedUnit.alive
       ) {
         planningViewGraphics.lineStyle(8, 0x0fffff, 0.9);
-        // Only draw attack range for non player units
-        if (selectedUnit.unitType != UnitType.PLAYER_CONTROLLED) {
-          planningViewGraphics.drawCircle(
-            selectedUnit.x,
-            selectedUnit.y,
-            selectedUnit.attackRange
-          );
-        }
+        planningViewGraphics.drawCircle(
+          selectedUnit.x,
+          selectedUnit.y,
+          selectedUnit.attackRange
+        );
         planningViewGraphics.drawCircle(
           selectedUnit.x,
           selectedUnit.y,
