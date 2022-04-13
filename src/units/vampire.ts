@@ -16,7 +16,8 @@ const unit: UnitSource = {
     probability: 30,
   },
   unitProps: {
-    manaMax: 60
+    manaMax: 60,
+    healthMax: 9,
   },
   init: (unit: Unit.IUnit) => {
     Unit.addModifier(unit, vampire_bite.id);
