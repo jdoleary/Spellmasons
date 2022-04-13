@@ -113,9 +113,23 @@ export default class Underworld {
       if (u.path && u.path.length) {
         // Move towards target
         const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.path[0], u.moveSpeed)
-        const originalPosition = Vec.clone(u);
-        moveWithCollisions(u, stepTowardsTarget, aliveUnits, this.walls);
-        u.distanceMovedThisTurn += math.distance(originalPosition, u);
+        let moveDist = 0;
+        // For now, only AI units will collide with each other
+        // This is because the collisions were causing issues with player movement that I don't
+        // have time to solve at the moment.
+        if (u.unitType == UnitType.PLAYER_CONTROLLED) {
+          // Player units don't collide, they just move, and pathfinding keeps
+          // them from moving through walls
+          moveDist = math.distance(u, stepTowardsTarget);
+          u.x = stepTowardsTarget.x;
+          u.y = stepTowardsTarget.y;
+        } else {
+          // AI collide with each other and walls
+          const originalPosition = Vec.clone(u);
+          moveWithCollisions(u, stepTowardsTarget, aliveUnits, this.walls);
+          moveDist = math.distance(originalPosition, u);
+        }
+        u.distanceMovedThisTurn += moveDist;
         if (Vec.equal(u, u.path[0])) {
           // Once the unit reaches the target, shift so the next point in the path is the next target
           u.path.shift();
