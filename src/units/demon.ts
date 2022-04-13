@@ -16,7 +16,11 @@ const unit: UnitSource = {
   unitProps: {
     manaMax: 60
   },
+  extraTooltipInfo: () => {
+    return `Mana cost per cast: ${CAST_MANA_COST}`;
+  },
   action: async (unit: Unit.IUnit) => {
+    // If they have enough mana
     if (unit.mana >= CAST_MANA_COST) {
       unit.mana -= CAST_MANA_COST;
 

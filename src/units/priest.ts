@@ -7,6 +7,7 @@ import { createVisualLobbingProjectile } from '../Projectile';
 import * as config from '../config';
 import Shield from '../cards/shield'
 
+const CAST_MANA_COST = 30;
 const unit: UnitSource = {
   id: 'Priest',
   info: {
@@ -18,6 +19,9 @@ const unit: UnitSource = {
   unitProps: {
     // Set priest's range to his move distance
     attackRange: config.UNIT_BASE_MOVE_DISTANCE
+  },
+  extraTooltipInfo: () => {
+    return `Mana cost per cast: ${CAST_MANA_COST}`;
   },
   action: async (unit: Unit.IUnit) => {
     // Move to closest ally
@@ -33,36 +37,39 @@ const unit: UnitSource = {
         await Unit.moveTowards(unit, moveTo);
       }
     }
-    // Heal an ally
-    const damagedAllys = window.underworld.units.filter(
-      (u) => u.faction === unit.faction && u.alive && u.health < u.healthMax,
-    );
-    if (damagedAllys.length) {
-      for (let ally of damagedAllys) {
-        if (inRange(unit, ally)) {
-          const chosenUnit = damagedAllys[0];
-          await createVisualLobbingProjectile(
-            unit,
-            chosenUnit.x,
-            chosenUnit.y,
-            'holy-projectile.png',
-          );
-          // Heal for 2
-          Unit.takeDamage(chosenUnit, -2, false, undefined);
-          break;
+    // If they have enough mana
+    if (unit.mana >= CAST_MANA_COST) {
+      // Heal an ally
+      const damagedAllys = window.underworld.units.filter(
+        (u) => u.faction === unit.faction && u.alive && u.health < u.healthMax,
+      );
+      if (damagedAllys.length) {
+        for (let ally of damagedAllys) {
+          if (inRange(unit, ally)) {
+            const chosenUnit = damagedAllys[0];
+            await createVisualLobbingProjectile(
+              unit,
+              chosenUnit.x,
+              chosenUnit.y,
+              'holy-projectile.png',
+            );
+            // Heal for 2
+            Unit.takeDamage(chosenUnit, -2, false, undefined);
+            break;
+          }
         }
-      }
-    } else {
-      // if there are no damaged allies cast shield on the closest:
-      if (closestAlly) {
-        if (inRange(unit, closestAlly)) {
-          await createVisualLobbingProjectile(
-            unit,
-            closestAlly.x,
-            closestAlly.y,
-            'holy-projectile.png',
-          );
-          Unit.addModifier(closestAlly, Shield.card.id);
+      } else {
+        // if there are no damaged allies cast shield on the closest:
+        if (closestAlly) {
+          if (inRange(unit, closestAlly)) {
+            await createVisualLobbingProjectile(
+              unit,
+              closestAlly.x,
+              closestAlly.y,
+              'holy-projectile.png',
+            );
+            Unit.addModifier(closestAlly, Shield.card.id);
+          }
         }
       }
     }
