@@ -32,21 +32,20 @@ export function updatePlanningView() {
       if (
         selectedUnit.alive
       ) {
-        planningViewGraphics.lineStyle(8, 0x0fffff, 0.9);
-        planningViewGraphics.drawCircle(
+        window.unitOverlayGraphics.lineStyle(8, 0x0fffff, 0.3);
+        window.unitOverlayGraphics.drawCircle(
           selectedUnit.x,
           selectedUnit.y,
           selectedUnit.attackRange
         );
-        planningViewGraphics.drawCircle(
+        window.unitOverlayGraphics.drawCircle(
           selectedUnit.x,
           selectedUnit.y,
           selectedUnit.moveDistance
         );
-        planningViewGraphics.endFill();
+        window.unitOverlayGraphics.endFill();
       }
     }
-    planningViewGraphics.endFill();
     // Draw a circle under the feet of the player whos current turn it is
     if (window.underworld) {
       // Update tooltip for whatever is being hovered
