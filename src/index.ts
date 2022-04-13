@@ -18,6 +18,7 @@ cookieConsentPopup(false);
 // This import is critical so that the svelte menu has access to
 // the pie globals
 import './wsPieSetup';
+import type { Vec2 } from './Vec';
 
 const YES = 'yes'
 const SKIP_TUTORIAL = 'skipTutorial';
@@ -140,8 +141,10 @@ declare global {
     playerWalkingPromise: Promise<void>;
     // makes a pop up prompting the user to accept cookies
     cookieConsentPopup: (forcePopup: boolean) => void;
+    cameraTarget: Vec2;
   }
 }
+window.cameraTarget = { x: 0, y: 0 };
 window.volume = 1.0;
 window.playerWalkingPromise = Promise.resolve();
 window.skipTutorial = () => {

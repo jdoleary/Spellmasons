@@ -384,11 +384,6 @@ body.view-Game #player-turn-indicator-holder {
   width: 140px;
 }
 
-body {
-  /* Match app.renderer.backgroundColor*/
-  background-color: #45b6fe;
-}
-
 body.your-turn #player-turn-indicator-holder {
   background-color: gold;
 }

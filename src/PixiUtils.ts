@@ -43,32 +43,18 @@ window.addEventListener('load', () => {
   resizePixi();
 });
 export function resizePixi() {
-  const underworldWidth = window.underworld ? window.underworld.width : 800;
-  const underworldHeight = window.underworld ? window.underworld.height : 500;
   const elPIXIHolder = document.getElementById('PIXI-holder');
   if (!elPIXIHolder) {
     console.error('Cannot resize pixi, elPIXIHolder is null')
     return;
   }
-  app.renderer.resize(elPIXIHolder.clientWidth, elPIXIHolder.clientHeight);
-  // Set the scale of the stage based on the available window pixel space
-  // so that players with smaller screens can see the whole board
-  const margin = 20;
-  const requiredRenderWidth = underworldWidth + margin;
-  const requiredRenderHeight = underworldHeight + margin;
-  const widthRatio = (elPIXIHolder.clientWidth - margin) / requiredRenderWidth;
-  // window height shouldn't consider the card height, since the card height doesn't scale
-  const heightRatio = (elPIXIHolder.clientHeight - margin) / requiredRenderHeight;
-  // Use the smaller ratio for scaling the camera:
-  const smallerRatio = widthRatio < heightRatio ? widthRatio : heightRatio;
-  app.stage.scale.x = smallerRatio;
-  app.stage.scale.y = smallerRatio;
+  app.renderer.resize(window.innerWidth, window.innerHeight);
   recenterStage();
 }
+let elPIXIHolder: HTMLElement | null;
 export function recenterStage() {
-  const elPIXIHolder = document.getElementById('PIXI-holder');
   if (!elPIXIHolder) {
-    console.error('Cannot recenter camera, elPIXIHolder is null')
+    elPIXIHolder = document.getElementById('PIXI-holder');
     return;
   }
 
@@ -78,9 +64,12 @@ export function recenterStage() {
       app.stage.y = elPIXIHolder.clientHeight / 2;
       break;
     case View.Game:
-      // Align Camera: center the app in the middle of the map 
-      app.stage.x = app.renderer.width / 2 - (window.underworld.width) / 2 * app.stage.scale.x;
-      app.stage.y = app.renderer.height / 2 - (window.underworld.height) / 2 * app.stage.scale.y;
+      if (window.player) {
+        const centerTarget = window.cameraTarget || window.player.unit;
+        // Relative to the center of elPIXIHolder, center the camera on centerTarget
+        app.stage.x = elPIXIHolder.offsetWidth / 2 - centerTarget.x;
+        app.stage.y = elPIXIHolder.offsetHeight / 2 - centerTarget.y;
+      }
       break;
   }
 

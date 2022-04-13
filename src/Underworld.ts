@@ -26,7 +26,7 @@ import type { Vec2 } from "./Vec";
 import * as Vec from "./Vec";
 import Events from './Events';
 import { allUnits } from './units';
-import { syncSpellEffectProjection, updateManaCostUI, updatePlanningView } from './ui/PlanningView';
+import { updateManaCostUI, updatePlanningView } from './ui/PlanningView';
 import { prng, randInt, SeedrandomState } from './rand';
 import { calculateCost } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment } from './collision/collisionMath';
@@ -38,7 +38,7 @@ import { HandcraftedLevel, levels } from './HandcraftedLevels';
 import { addCardToHand, removeCardsFromHand } from './CardUI';
 import { updateMouseUI } from './ui/eventListeners';
 import Jprompt from './Jprompt';
-import { moveWithCollisions } from './collision/moveWithCollision';
+import { moveAlongVector, moveWithCollisions, normalizedVector } from './collision/moveWithCollision';
 
 export enum turn_phase {
   PlayerTurns,
@@ -162,6 +162,28 @@ export default class Underworld {
     }
     // Sort unit sprites visually by y position
     containerUnits.children.sort((a, b) => a.y - b.y)
+
+    // Move camera target to a point between the player unit
+    // and the mouse for a very smooth and movable camera experience
+    if (window.player) {
+      const mousePos = window.underworld.getMousePos();
+      const desiredCamTarget = Vec.add(window.player.unit, Vec.multiply(0.3, Vec.subtract(mousePos, window.player.unit)))
+      window.unitOverlayGraphics.lineStyle(3, 0x000000, 1.0);
+      window.unitOverlayGraphics.drawCircle(desiredCamTarget.x, desiredCamTarget.y, 3);
+
+      const nVector = normalizedVector(window.cameraTarget, desiredCamTarget)
+      if (nVector.vector) {
+        if (nVector.distance < 0.5) {
+          window.cameraTarget = desiredCamTarget
+        } else {
+          const camMoveSpeed = nVector.distance / 4;
+          const nextCamPos = moveAlongVector(window.cameraTarget, nVector.vector, camMoveSpeed);
+          window.cameraTarget = nextCamPos;
+        }
+      }
+    }
+
+    recenterStage();
 
     // Invoke gameLoopUnits again next loop
     requestAnimationFrame(this.gameLoopUnits.bind(this))
