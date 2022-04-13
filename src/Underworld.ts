@@ -20,7 +20,7 @@ import {
   containerUnits,
   recenterStage,
 } from './PixiUtils';
-import { orderedFloatingText } from './FloatingText';
+import floatingText, { centeredFloatingText } from './FloatingText';
 import { UnitType, Faction } from './commonTypes';
 import type { Vec2 } from "./Vec";
 import * as Vec from "./Vec";
@@ -462,10 +462,17 @@ export default class Underworld {
     }
     this.postSetupLevel();
     // Show text in center of screen for the new level
-    orderedFloatingText(
-      `Altitude ${this.levelIndex}`,
-      'white',
-    );
+    floatingText({
+      coords: {
+        x: window.underworld.width / 2,
+        y: 3 * window.underworld.height / 8,
+      },
+      text: `Altitude ${this.levelIndex}`,
+      style: {
+        fill: 'white',
+        fontSize: '60px'
+      }
+    });
   }
   initHandcraftedLevel(name: string) {
     // Width and height should be set immediately so that other level-building functions
@@ -568,7 +575,7 @@ export default class Underworld {
 
     this.postSetupLevel();
     // Show text in center of screen for the new level
-    orderedFloatingText(
+    centeredFloatingText(
       name,
       'white',
     );
@@ -688,7 +695,7 @@ export default class Underworld {
     }
     if (player == window.player) {
       // Notify the current player that their turn is starting
-      orderedFloatingText(`Your Turn`);
+      centeredFloatingText(`Your Turn`);
     }
     // Give mana at the start of turn
     const manaTillFull = player.unit.manaMax - player.unit.mana;

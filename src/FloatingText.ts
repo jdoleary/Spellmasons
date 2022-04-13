@@ -61,21 +61,8 @@ function floatAway(instance: FText, resolve: (value: void) => void) {
     }
   }
 }
-// Always shows the text in the middle of the screen, only one can appear at a time,
-// it is queued:
-const orderedFloatingTextQueue: FloatingTextInsructions[] = [];
-let playingOrderedFloatingText = false;
-function playNextOrderedFloatingTextInQueue() {
-  const floatingTextInsructions = orderedFloatingTextQueue.pop();
-  if (floatingTextInsructions) {
-    playingOrderedFloatingText = true;
-    floatingText(floatingTextInsructions).then(() => {
-      playingOrderedFloatingText = false;
-    }).then(playNextOrderedFloatingTextInQueue);
-  }
-}
-export function orderedFloatingText(text: string, fill = 'white') {
-  orderedFloatingTextQueue.push({
+export function centeredFloatingText(text: string, fill = 'white') {
+  floatingText({
     coords: {
       x: window.underworld.width / 2,
       y: window.underworld.height / 2,
@@ -86,8 +73,5 @@ export function orderedFloatingText(text: string, fill = 'white') {
       fontSize: '60px'
     }
   });
-  if (!playingOrderedFloatingText) {
-    playNextOrderedFloatingTextInQueue();
-  }
 
 }

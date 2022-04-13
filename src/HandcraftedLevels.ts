@@ -4,7 +4,7 @@ import type Underworld from "./Underworld";
 import Events from './Events';
 import * as Pickup from './Pickup';
 import { Faction } from "./commonTypes";
-import { orderedFloatingText } from "./FloatingText";
+import { centeredFloatingText } from "./FloatingText";
 
 interface SpawnInfo {
     id: string;
@@ -170,7 +170,7 @@ export const levels: { [name: string]: HandcraftedLevelMaker } = {
                         portalPickup.effect,
                     );
                 } else {
-                    orderedFloatingText('Try again');
+                    centeredFloatingText('Try again');
                     setTimeout(() => {
                         // restart
                         underworld.initHandcraftedLevel(tutorialLevels[2]);
@@ -264,7 +264,7 @@ export const levels: { [name: string]: HandcraftedLevelMaker } = {
                         }
                     );
                 } else {
-                    orderedFloatingText('Try again');
+                    centeredFloatingText('Try again');
                     setTimeout(() => {
                         // restart
                         underworld.initHandcraftedLevel(tutorialLevels[3]);
