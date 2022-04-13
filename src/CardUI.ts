@@ -345,7 +345,6 @@ export function generateCard(cards: Cards.ICard[] = Object.values(Cards.allCards
   return math.chooseObjectWithProbability(cards);
 }
 function getCardRarityColor(content: Cards.ICard): string {
-  console.log('jtest prop', content.probability)
   if (content.probability == 1) {
     // Super rare
     return '#241623';
