@@ -21,10 +21,6 @@ const elManaLabel: HTMLElement = document.querySelector('#mana .label') as HTMLE
 const elStaminaBar: HTMLElement = document.querySelector('#stamina .fill') as HTMLElement;
 const elStaminaBarLabel: HTMLElement = document.querySelector('#stamina .label') as HTMLElement;
 
-// Make the UNIT_BASE_RADIUS a little smaller than the actual size of the image
-// so that moving units can overlap with each other a bit so "crowding" looks more
-// organic
-const UNIT_BASE_RADIUS = 0.7 * config.COLLISION_MESH_RADIUS * config.NON_HEAVY_UNIT_SCALE;
 // The serialized version of the interface changes the interface to allow only the data
 // that can be serialized in JSON.  It may exclude data that is not neccessary to
 // rehydrate the JSON into an entity
@@ -103,7 +99,7 @@ export function create(
     lastX: x,
     lastY: y,
     strength,
-    radius: UNIT_BASE_RADIUS,
+    radius: config.UNIT_BASE_RADIUS,
     path: [],
     moveSpeed: config.UNIT_MOVE_SPEED,
     resolveDoneMoving: () => { },

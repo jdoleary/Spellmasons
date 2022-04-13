@@ -38,6 +38,7 @@ import { HandcraftedLevel, levels } from './HandcraftedLevels';
 import { addCardToHand, removeCardsFromHand } from './CardUI';
 import { updateMouseUI } from './ui/eventListeners';
 import Jprompt from './Jprompt';
+import { moveWithCollisions } from './collision/moveWithCollision';
 
 export enum turn_phase {
   PlayerTurns,
@@ -113,8 +114,11 @@ export default class Underworld {
         // Move towards target
         const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.path[0], u.moveSpeed)
         const moveDist = math.distance(u, stepTowardsTarget);
-        u.x = stepTowardsTarget.x;
-        u.y = stepTowardsTarget.y;
+        // u.x = stepTowardsTarget.x;
+        // u.y = stepTowardsTarget.y;
+        window.unitOverlayGraphics.lineStyle(4, 0xff0000, 1.0);
+        window.unitOverlayGraphics.drawCircle(u.x, u.y, u.radius);
+        moveWithCollisions(u, stepTowardsTarget, aliveUnits, []);
         u.distanceMovedThisTurn += moveDist;
         if (Vec.equal(u, u.path[0])) {
           // Once the unit reaches the target, shift so the next point in the path is the next target
@@ -141,6 +145,7 @@ export default class Underworld {
       if (u.x !== null && u.y !== null) {
         // Draw health bar
         const healthBarColor = u.faction == Faction.PLAYER ? 0x40a058 : 0xd55656;
+        window.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
         window.unitOverlayGraphics.beginFill(healthBarColor, 1.0);
         window.unitOverlayGraphics.drawRect(
           u.x - config.UNIT_UI_BAR_WIDTH / 2,
@@ -262,7 +267,7 @@ export default class Underworld {
         unit.healthMax *= 2;
         unit.health = unit.healthMax;
         unit.damage *= 2;
-        unit.radius = config.COLLISION_MESH_RADIUS;
+        unit.radius = config.UNIT_HEAVY_BASE_RADIUS;
         // Set image to "heavy" size
         unit.image.sprite.scale.set(1.0);
         // Add subsprite to show they are armored:
@@ -1234,9 +1239,8 @@ type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFun
 
 function getEnemiesForAltitude(levelIndex: number): { enemies: { [unitid: string]: number }, strength: number } {
   const hardCodedLevelEnemies: { [unitid: string]: number }[] = [
-    { 'Summoner': 1 },
     {
-      'grunt': 5
+      'grunt': 40
     },
     {
       'grunt': 4,
