@@ -1,8 +1,12 @@
 import { getLoopableIndex } from "./Polygon";
 
 const sfx = {
-    whoosh: './sound/sfx/whoosh.m4a'
+    whoosh: './sound/sfx/whoosh.m4a',
 };
+export const sfxPageTurn = [
+    // './sound/sfx/page-turn-1.flac',
+    './sound/sfx/page-turn-2.flac',
+];
 const music = [
     './sound/music/ChainingSpells.m4a',
     './sound/music/FirstSteps.mp3',
@@ -29,17 +33,21 @@ export function playNextSong() {
     musicInstance.addEventListener("ended", function () {
         playNextSong();
     });
+    // Temp; TODO: Base music volume is too loud,
+    // task: Master all audio and sfx
+    // task: Make independent volume sliders for audio and music
+    musicInstance.volume = 0.2;
     playAudio(musicInstance);
 }
 
-export function playSFX(name: keyof typeof sfx) {
+export function playSFX(path: string) {
     // In order to allow sounds to overlap, they must be 
     // fully instantiated each time they are played
-    playAudio(new Audio(sfx[name]));
+    playAudio(new Audio(path));
 
 }
 function playAudio(audioInstance: HTMLAudioElement) {
-    audioInstance.volume = window.volume;
+    // audioInstance.volume = window.volume;
     audioInstance.play();
 }
 

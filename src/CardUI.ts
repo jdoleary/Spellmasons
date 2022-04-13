@@ -9,6 +9,7 @@ import {
 import { calculateCostForSingleCard } from './cards/cardUtils';
 import floatingText from './FloatingText';
 import { updateMouseUI } from './ui/eventListeners';
+import { playSFX, sfxPageTurn } from './Audio';
 
 const elCardHolders = document.getElementById('card-holders');
 // Where the non-selected cards are displayed
@@ -148,6 +149,11 @@ function addClickListenerToCardElement(
   element: HTMLElement,
   cardId: string,
 ) {
+  element.addEventListener('mouseenter', () => {
+    // Play random pageTurn sound
+    playSFX(sfxPageTurn[Math.floor(Math.random() * sfxPageTurn.length)]);
+  });
+
   element.addEventListener('click', (e) => {
     e.stopPropagation();
     if (element.classList.contains('selected')) {
