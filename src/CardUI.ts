@@ -53,9 +53,6 @@ function showFullCard(card: Cards.ICard) {
       // Clear previous
       elCardInspect.innerHTML = '';
       elCardInspect.appendChild(createCardElement(card));
-      const elQuantity = document.createElement('div');
-      elQuantity.classList.add('card-quantity');
-      elCardInspect.appendChild(elQuantity);
     } else {
       console.error('card-inspect div does not exist');
     }
@@ -348,27 +345,25 @@ export function generateCard(cards: Cards.ICard[] = Object.values(Cards.allCards
   return math.chooseObjectWithProbability(cards);
 }
 function getCardRarityColor(content: Cards.ICard): string {
+  console.log('jtest prop', content.probability)
   if (content.probability == 1) {
     // Super rare
-    // Purple
-    return '#9400FF';
+    return '#241623';
   } else if (content.probability < 5) {
     // Rare
-    // Red
-    return '#F00';
+    return '#432534';
   } else if (content.probability < 10) {
     // Uncommon
-    return 'orange';
+    return '#004e64';
   } else if (content.probability < 20) {
     // Special
-    return 'green';
+    return '#19381F';
   } else if (content.probability < 50) {
     // Semi-common
-    return 'blue';
+    return '#3b322c'
   }
   // Highly-common
-  // White
-  return '#FFF';
+  return '#191513';
 }
 function createCardElement(content: Cards.ICard) {
   const element = document.createElement('div');
@@ -377,6 +372,7 @@ function createCardElement(content: Cards.ICard) {
   const elCardInner = document.createElement('div');
   elCardInner.classList.add('card-inner');
   elCardInner.style.borderColor = getCardRarityColor(content);
+  elCardInner.style.backgroundColor = getCardRarityColor(content);
   element.appendChild(elCardInner);
   const elCardHotkeyBadgeHolder = document.createElement('div');
   elCardHotkeyBadgeHolder.classList.add('hotkey-badge-holder');
