@@ -2,6 +2,7 @@ import * as Unit from '../Unit';
 import * as Image from '../Image';
 import { Spell, targetsToUnits } from '.';
 import { UnitType } from '../commonTypes';
+import * as config from '../config'
 
 const id = 'freeze';
 const spell: Spell = {
@@ -33,7 +34,8 @@ Freezes the target(s) for 1 turn, preventing them from moving or acting.
     },
   },
   modifiers: {
-    add
+    add,
+    remove
   },
   events: {
     onTurnStart: async (unit: Unit.IUnit) => {
@@ -72,6 +74,7 @@ Freezes the target(s) for 1 turn, preventing them from moving or acting.
 function add(unit: Unit.IUnit) {
   // First time setup
   if (!unit.modifiers[id]) {
+    unit.radius = config.COLLISION_MESH_RADIUS
     unit.modifiers[id] = { isCurse: true };
     // Add event
     unit.onTurnStartEvents.push(id);
@@ -81,6 +84,13 @@ function add(unit: Unit.IUnit) {
   }
   // Increment the number of turns that freeze is applied (can stack)
   unit.modifiers[id].turnsLeft = (unit.modifiers[id].turnsLeft || 0) + 1;
+}
+function remove(unit: Unit.IUnit) {
+  if (unit.image.subSprites.includes('heavy_armor')) {
+    unit.radius = config.UNIT_HEAVY_BASE_RADIUS;
+  } else {
+    unit.radius = config.UNIT_BASE_RADIUS
+  }
 }
 
 export default spell;
