@@ -2,7 +2,6 @@ import * as Unit from '../Unit';
 import * as Pickup from '../Pickup';
 import type { Spell } from '.';
 import type { Vec2 } from '../Vec';
-import { drawSwapLine } from '../ui/PlanningView';
 
 const id = 'swap';
 const spell: Spell = {
@@ -52,19 +51,14 @@ Swaps the caster with the source target.
         return state;
       }
       for (let [pickup, newLocation] of swapPickups) {
-        if (dryRun) {
-          drawSwapLine(pickup, newLocation);
-        } else {
+        if (!dryRun) {
           // Physically swap
           Pickup.setPosition(pickup, newLocation.x, newLocation.y);
         }
       }
       for (let [unit, newLocation] of swapUnits) {
-        if (dryRun) {
-          drawSwapLine(unit, newLocation);
-        } else {
+        if (!dryRun) {
           // Physically swap
-          // TODO, ensure that multiple units don't appear in exactly the same location
           Unit.setLocation(unit, newLocation);
         }
       }

@@ -149,16 +149,6 @@ export function clearSpellEffectProjection() {
   }
 }
 
-export function drawSwapLine(one: Vec2, two: Vec2) {
-  if (one && two) {
-    dryRunGraphics.beginFill(0xffff0b, 0.5);
-    dryRunGraphics.lineStyle(3, 0x33ff00);
-    dryRunGraphics.moveTo(one.x, one.y);
-    dryRunGraphics.lineTo(two.x, two.y);
-    dryRunGraphics.drawCircle(two.x, two.y, 10);
-    dryRunGraphics.endFill();
-  }
-}
 export function drawDryRunLine(start: Vec2, end: Vec2) {
   dryRunGraphics.beginFill(0xffff0b, 0.5);
   dryRunGraphics.lineStyle(3, 0x33ff00);
