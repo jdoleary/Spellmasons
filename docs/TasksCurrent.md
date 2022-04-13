@@ -1,4 +1,5 @@
 # Tasks
+- Bug: Grunts can attack through walls if they are just beyond a corner
 - Bug: Going to options to change volume and hitting back quit the game
 - BUG: When branch is undefined occurs it should automatically regen the whole level
 - Bug: recenter stage isn't working well for tutorial
