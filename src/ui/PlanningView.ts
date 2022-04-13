@@ -264,7 +264,7 @@ Health ${selectedUnit.health}/${selectedUnit.healthMax}
 Mana ${selectedUnit.mana}/${selectedUnit.manaMax} + ${selectedUnit.manaPerTurn} per turn
 Attack Damage ${selectedUnit.damage}
 Modifiers ${JSON.stringify(selectedUnit.modifiers, null, 2)}
-${unitSource.extraTooltipInfo && unitSource.extraTooltipInfo()}
+${unitSource.extraTooltipInfo ? unitSource.extraTooltipInfo() : ''}
 ${cards}
       `;
       }
