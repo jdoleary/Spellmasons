@@ -58,12 +58,12 @@ Freezes the target(s) for 1 turn, preventing them from moving or acting.
       imageName: 'freeze.png',
       alpha: 1.0,
       anchor: {
-        x: 0,
-        y: 0,
-      },
-      scale: {
         x: 0.5,
         y: 0.5,
+      },
+      scale: {
+        x: 1,
+        y: 1,
       },
     },
   },
