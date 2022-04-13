@@ -1,4 +1,5 @@
 # Tasks
+- Player's path now gets stuck on walls when moving
 - Pathfinding should consider unit radiuses now
 - Bug: Grunts can attack through walls if they are just beyond a corner
 - BUG: When branch is undefined occurs it should automatically regen the whole level
