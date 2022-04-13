@@ -278,11 +278,6 @@ export default class Underworld {
       strength,
       sourceUnit.unitProps
     );
-    // Set unit health and mana to full when they are created
-    // so that only the max has to be set in sourceUnitProps
-    // if a source units needs unique health and mana
-    unit.health = unit.healthMax;
-    unit.mana = unit.manaMax;
 
     if (allowHeavy) {
       const roll = randInt(this.random, 0, 100);
@@ -1263,8 +1258,7 @@ type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFun
 function getEnemiesForAltitude(levelIndex: number): { enemies: { [unitid: string]: number }, strength: number } {
   const hardCodedLevelEnemies: { [unitid: string]: number }[] = [
     {
-      'grunt': 5,
-      'vampire': 1,
+      'grunt': 5
     },
     {
       'grunt': 4,
