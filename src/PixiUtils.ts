@@ -36,7 +36,7 @@ containerUI.addChild(window.walkPathGraphics);
 export const containerCharacterSelect = new PIXI.Container();
 const characterSelectContainers = [containerCharacterSelect];
 
-app.renderer.backgroundColor = 0x45b6fe;
+app.renderer.backgroundColor = 0x111631;
 
 window.addEventListener('resize', resizePixi);
 window.addEventListener('load', () => {
