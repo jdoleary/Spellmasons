@@ -438,6 +438,10 @@ export default class Underworld {
     }
   }
   postSetupLevel() {
+    //Increase all player's max mana:
+    window.underworld.players.forEach(p => {
+      p.unit.manaMax += 5
+    })
     // Since a new level changes the existing units, redraw the planningView in
     // the event that the planningView is active
     updatePlanningView();
