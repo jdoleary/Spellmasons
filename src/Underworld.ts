@@ -113,9 +113,9 @@ export default class Underworld {
       if (u.path && u.path.length) {
         // Move towards target
         const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.path[0], u.moveSpeed)
-        const moveDist = math.distance(u, stepTowardsTarget);
+        const originalPosition = Vec.clone(u);
         moveWithCollisions(u, stepTowardsTarget, aliveUnits, this.walls);
-        u.distanceMovedThisTurn += moveDist;
+        u.distanceMovedThisTurn += math.distance(originalPosition, u);
         if (Vec.equal(u, u.path[0])) {
           // Once the unit reaches the target, shift so the next point in the path is the next target
           u.path.shift();
