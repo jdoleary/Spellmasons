@@ -110,7 +110,7 @@ export function recalcPositionForCards(player: Player.IPlayer | undefined) {
         const element = createCardElement(card);
         element.classList.add(className);
         // When the user clicks on a card
-        addClickListenerToCardElement(player, element, cardId);
+        addListenersToCardElement(player, element, cardId);
         let elCardTypeGroup = document.getElementById(`holder-${cardId}`);
         if (!elCardTypeGroup) {
           elCardTypeGroup = makeCardTypeGroup(cardId);
@@ -144,7 +144,7 @@ export function recalcPositionForCards(player: Player.IPlayer | undefined) {
     }
   }
 }
-function addClickListenerToCardElement(
+function addListenersToCardElement(
   player: Player.IPlayer,
   element: HTMLElement,
   cardId: string,
@@ -217,7 +217,7 @@ export function selectCardByIndex(index: number) {
 function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string) {
   if (elSelectedCards) {
     const clone = element.cloneNode(true) as HTMLElement;
-    addClickListenerToCardElement(player, clone, cardId);
+    addListenersToCardElement(player, clone, cardId);
     clone.classList.add('selected');
     if (Cards.allCards[cardId].requiresFollowingCard) {
       clone.classList.add('requires-following-card')
