@@ -336,6 +336,8 @@ these badges only belong on cards in the hand */
   padding: 8px;
   color: white;
   text-align: center;
+  text-transform: capitalize;
+  white-space: nowrap;
 }
 
 #card-inspect .card-title {

@@ -399,7 +399,7 @@ function createCardElement(content: Cards.ICard) {
   elCardInner.appendChild(thumbHolder);
   const title = document.createElement('div');
   title.classList.add('card-title');
-  title.innerHTML = content.id;
+  title.innerHTML = content.id.split('_').join(' ');
   elCardInner.appendChild(title);
   const desc = document.createElement('div');
   desc.classList.add('card-description');
