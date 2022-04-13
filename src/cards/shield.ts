@@ -26,20 +26,22 @@ Protects the target(s) from the next time they would take damage.
   },
   modifiers: { add },
   events: {
-    onDamage: (unit, amount, damageDealer) => {
+    onDamage: (unit, amount, dryRun, damageDealer) => {
       // Only block damage, not heals
       if (amount > 0) {
-        floatingText({
-          coords: unit,
-          text: 'Shielded from damage!',
-          style: {
-            fill: 'blue',
-          },
-        });
+        if (!dryRun) {
+          floatingText({
+            coords: unit,
+            text: 'Shielded from damage!',
+            style: {
+              fill: 'blue',
+            },
+          });
 
-        unit.modifiers[id] && unit.modifiers[id].stacks--;
-        if (unit.modifiers[id] && unit.modifiers[id].stacks <= 0) {
-          Unit.removeModifier(unit, id);
+          unit.modifiers[id] && unit.modifiers[id].stacks--;
+          if (unit.modifiers[id] && unit.modifiers[id].stacks <= 0) {
+            Unit.removeModifier(unit, id);
+          }
         }
 
         // Take no damage
