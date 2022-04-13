@@ -114,10 +114,6 @@ export default class Underworld {
         // Move towards target
         const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.path[0], u.moveSpeed)
         const moveDist = math.distance(u, stepTowardsTarget);
-        // u.x = stepTowardsTarget.x;
-        // u.y = stepTowardsTarget.y;
-        window.unitOverlayGraphics.lineStyle(4, 0xff0000, 1.0);
-        window.unitOverlayGraphics.drawCircle(u.x, u.y, u.radius);
         moveWithCollisions(u, stepTowardsTarget, aliveUnits, this.walls);
         u.distanceMovedThisTurn += moveDist;
         if (Vec.equal(u, u.path[0])) {
