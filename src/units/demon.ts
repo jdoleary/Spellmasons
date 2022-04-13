@@ -10,7 +10,7 @@ const unit: UnitSource = {
   info: {
     description: 'Raises the dead and teleports!',
     image: 'units/demon.png',
-    subtype: UnitSubType.AI_demon,
+    subtype: UnitSubType.DEMON,
     probability: 30,
   },
   unitProps: {

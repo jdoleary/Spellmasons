@@ -41,7 +41,7 @@ Clones each target
             // If the cloned unit is player controlled, make them be controlled by the AI
             if (clone.unitSubType == UnitSubType.PLAYER_CONTROLLED) {
               clone.unitType = UnitType.AI;
-              clone.unitSubType = UnitSubType.AI_melee;
+              clone.unitSubType = UnitSubType.GOON;
               removeSubSprite(clone.image, 'ownCharacterMarker');
             }
             Unit.setLocation(clone, cloneToCoords);

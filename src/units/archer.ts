@@ -10,7 +10,7 @@ const unit: UnitSource = {
   info: {
     description: 'Will shoot you with an arrow!',
     image: 'units/golem-blue.png',
-    subtype: UnitSubType.AI_bishop,
+    subtype: UnitSubType.ARCHER,
     probability: 50,
   },
   unitProps: {

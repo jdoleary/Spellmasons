@@ -42,7 +42,7 @@ export function create(clientId: string, unitId: string): IPlayer | undefined {
       userSource.id,
       NaN,
       NaN,
-      Faction.PLAYER,
+      Faction.ALLY,
       userSource.info.image,
       UnitType.PLAYER_CONTROLLED,
       userSource.info.subtype,

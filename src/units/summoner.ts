@@ -10,7 +10,7 @@ const unit: UnitSource = {
   info: {
     description: 'Summons allies every few turns',
     image: 'units/golem-summoner.png',
-    subtype: UnitSubType.AI_summoner,
+    subtype: UnitSubType.SUMMONER,
     probability: 30,
   },
   unitProps: {

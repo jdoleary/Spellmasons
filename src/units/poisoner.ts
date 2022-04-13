@@ -11,7 +11,7 @@ const unit: UnitSource = {
   info: {
     description: 'Poisons enemies',
     image: 'units/golem-poison.png',
-    subtype: UnitSubType.AI_poisoner,
+    subtype: UnitSubType.POISONER,
     probability: 30,
   },
   unitProps: {

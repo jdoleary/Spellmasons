@@ -243,8 +243,6 @@ export function updateTooltipContent() {
         text += `\
 Unit
 ${unitSource.info.description}
-Type ${UnitType[selectedUnit.unitType]}
-SubType ${UnitSubType[selectedUnit.unitSubType]}
 Faction ${Faction[selectedUnit.faction]}
 Health ${selectedUnit.health}/${selectedUnit.healthMax}
 Mana ${selectedUnit.mana}/${selectedUnit.manaMax} + ${selectedUnit.manaPerTurn} per turn

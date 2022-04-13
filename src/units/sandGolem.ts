@@ -10,7 +10,7 @@ const unit: UnitSource = {
   info: {
     description: 'A sand golem, runs away if you get too close!',
     image: 'units/golem-sand.png',
-    subtype: UnitSubType.AI_reach,
+    subtype: UnitSubType.LOBBER,
     probability: 30,
   },
   unitProps: {

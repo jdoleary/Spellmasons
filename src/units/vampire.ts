@@ -12,7 +12,7 @@ const unit: UnitSource = {
   info: {
     description: 'Blood sucking fiend!',
     image: 'units/vampire.png',
-    subtype: UnitSubType.AI_demon,
+    subtype: UnitSubType.DEMON,
     probability: 30,
   },
   unitProps: {

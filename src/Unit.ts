@@ -471,7 +471,7 @@ export function setLocation(unit: IUnit, coordinates: Vec2) {
 }
 export function changeFaction(unit: IUnit, faction: Faction) {
   unit.faction = faction;
-  if (unit.faction === Faction.PLAYER) {
+  if (unit.faction === Faction.ALLY) {
     // headband signifies a player ally unit
     Image.addSubSprite(unit.image, 'headband');
   } else {

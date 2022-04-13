@@ -3,18 +3,18 @@ export enum UnitType {
   AI,
 }
 export enum UnitSubType {
-  AI_melee,
-  AI_bishop,
+  GOON,
+  ARCHER,
   AI_rook,
-  AI_reach,
-  AI_summoner,
-  AI_demon,
-  AI_priest,
-  AI_poisoner,
+  LOBBER,
+  SUMMONER,
+  DEMON,
+  PRIEST,
+  POISONER,
   PLAYER_CONTROLLED,
 }
 
 export enum Faction {
-  PLAYER,
+  ALLY,
   ENEMY,
 }

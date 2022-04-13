@@ -13,7 +13,7 @@ const unit: UnitSource = {
   info: {
     description: 'Heals allies',
     image: 'units/priest.png',
-    subtype: UnitSubType.AI_priest,
+    subtype: UnitSubType.PRIEST,
     probability: 30,
   },
   unitProps: {

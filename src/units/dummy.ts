@@ -6,7 +6,7 @@ const unit: UnitSource = {
   info: {
     description: 'A practice dummy',
     image: 'units/dummy.png',
-    subtype: UnitSubType.AI_melee,
+    subtype: UnitSubType.GOON,
     probability: 100,
   },
   unitProps: {
