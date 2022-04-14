@@ -87,7 +87,7 @@ export function recenterCamera() {
         const camCenterXMax = mapRightMostPoint - window.innerWidth / 2 / zoom;
         // If the supposed minimum is more than the maximum, just center the camera:
         if (camCenterXMin > camCenterXMax) {
-          centerTarget.x = (mapRightMostPoint - mapLeftMostPoint) / 2;
+          centerTarget.x = (mapRightMostPoint + mapLeftMostPoint) / 2;
         } else {
           // clamp the camera x between the min and max possible camera targets
           centerTarget.x = Math.min(camCenterXMax, Math.max(camCenterXMin, centerTarget.x));
@@ -99,7 +99,7 @@ export function recenterCamera() {
         const camCenterYMax = mapBottomMostPoint - window.innerHeight / 2 / zoom;
         // If the supposed minimum is more than the maximum, just center the camera:
         if (camCenterYMin > camCenterYMax) {
-          centerTarget.y = (mapBottomMostPoint - mapTopMostPoint) / 2;
+          centerTarget.y = (mapBottomMostPoint + mapTopMostPoint) / 2;
         } else {
           // clamp the camera x between the min and max possible camera targets
           centerTarget.y = Math.min(camCenterYMax, Math.max(camCenterYMin, centerTarget.y));
