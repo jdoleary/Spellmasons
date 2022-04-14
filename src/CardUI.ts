@@ -70,16 +70,6 @@ export function recalcPositionForCards(player: Player.IPlayer | undefined) {
   }
   const cardCountPairs = Object.entries<number>(
     player.cards
-      .sort((a, b) => {
-        const cardA = Cards.allCards[a];
-        const cardB = Cards.allCards[b];
-        if (cardA && cardB) {
-          // Sort cards by probability
-          return cardB.probability - cardA.probability;
-        } else {
-          return 0;
-        }
-      })
       .reduce<{ [cardId: string]: number }>((tally, cardId) => {
         if (!tally[cardId]) {
           tally[cardId] = 0;
@@ -113,6 +103,15 @@ export function recalcPositionForCards(player: Player.IPlayer | undefined) {
           elCardTypeGroup = makeCardTypeGroup(cardId);
         }
         elCardTypeGroup.appendChild(element);
+
+        // Make swap button for rearranging cards
+        const elCardSwapButton = document.createElement('div');
+        elCardSwapButton.classList.add('swap-btn');
+        elCardSwapButton.dataset.cardId = cardId;
+        elCardSwapButton.innerHTML = '<->';
+        elCardSwapButton.addEventListener('click', swapCardOrder);
+        elCardTypeGroup.appendChild(elCardSwapButton);
+
       } else {
         console.log(`No corresponding source card exists for "${cardId}"`);
       }
@@ -140,6 +139,7 @@ export function recalcPositionForCards(player: Player.IPlayer | undefined) {
       console.log(`No corresponding source card exists for "${cardId}"`);
     }
   }
+  updateCardBadges();
 }
 function addListenersToCardElement(
   player: Player.IPlayer,
@@ -363,6 +363,22 @@ function getCardRarityColor(content: Cards.ICard): string {
   }
   // Highly-common
   return '#191513';
+}
+function swapCardOrder(e: MouseEvent) {
+  const cardId = (e.target as HTMLElement).dataset.cardId
+  if (window.player) {
+    const index = window.player.cards.findIndex(x => x == cardId);
+    if (cardId !== undefined && index !== undefined) {
+      const swapWithId = window.player.cards[index - 1];
+      window.player.cards[index] = swapWithId;
+      window.player.cards[index - 1] = cardId;
+      recalcPositionForCards(window.player);
+      e.preventDefault();
+      return false;
+    }
+  } else {
+    console.error('Cannot swap cards, no window.player')
+  }
 }
 function createCardElement(content: Cards.ICard) {
   const element = document.createElement('div');

@@ -199,6 +199,7 @@ the face of the last card in the group is seen*/
   display: flex;
   flex-direction: row-reverse;
   margin-right: 3px;
+  position: relative;
 }
 
 .card-type-group:empty {
@@ -301,6 +302,35 @@ these badges only belong on cards in the hand */
   width: auto;
   margin: 0 15px;
   padding: 0 4px;
+}
+
+body.inspect-mode .swap-btn {
+  display: block;
+}
+
+/* Don't show a swap button for index 0 card because it can't be swapped to the left */
+.card-type-group:first-child .swap-btn {
+  display: none;
+}
+
+.swap-btn {
+  /* Only visible in inspect-mode */
+  display: none;
+  position: absolute;
+  left: -14px;
+  top: 52px;
+  height: 16px;
+  width: 16px;
+  line-height: 16px;
+  margin: 0 auto;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 16px 16px;
+  padding: 2px;
+  font-size: 12px;
+  text-align: center;
+  z-index: 1;
+  cursor: pointer;
 }
 
 .card-inner {
