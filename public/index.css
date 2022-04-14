@@ -537,13 +537,13 @@ body.your-turn #player-turn-indicator {
 #health-mana .cost {
   position: absolute;
   height: 100%;
-  transition: left 0.2s ease;
+  transition: left 0.1s ease;
 }
 
 #health .cost {
   background: repeating-linear-gradient(45deg,
-      #bc6060,
-      #bc6060 10px,
+      rgba(0, 0, 0, 0),
+      rgba(0, 0, 0, 0) 10px,
       #984646 10px,
       #984646 20px) fixed;
 }
@@ -556,31 +556,48 @@ body.your-turn #player-turn-indicator {
   background-color: #d5b356;
 }
 
-#mana .cost {
-  background: repeating-linear-gradient(45deg,
-      #606dbc,
-      #606dbc 10px,
-      #465298 10px,
-      #465298 20px) fixed;
-}
 
 #mana .fill {
   background-color: #5656d5;
   position: absolute;
 }
 
+#mana .fill:nth-child(1) .cost {
+  background: repeating-linear-gradient(45deg,
+      rgba(0, 0, 0, 0.0),
+      rgba(0, 0, 0, 0.0) 10px,
+      rgb(49, 40, 180) 10px,
+      rgb(49, 40, 180) 20px) fixed;
+}
+
 #mana .fill:nth-child(2) {
-  background-color: #8d56d5;
+  background-color: rgb(141, 86, 213);
+}
+
+#mana .fill:nth-child(2) .cost {
+  background: repeating-linear-gradient(45deg,
+      rgba(0, 0, 0, 0.0),
+      rgba(0, 0, 0, 0.0) 10px,
+      rgb(122, 74, 185) 10px,
+      rgb(122, 74, 185) 20px) fixed;
 }
 
 #mana .fill:nth-child(3) {
   background-color: #4e1172;
 }
 
+#mana .fill:nth-child(3) .cost {
+  background: repeating-linear-gradient(45deg,
+      rgba(0, 0, 0, 0.0),
+      rgba(0, 0, 0, 0.0) 10px,
+      rgb(54, 4, 66) 10px,
+      rgb(54, 4, 66) 20px) fixed;
+}
+
 #health-mana .fill {
   height: 100%;
   width: 100%;
-  transition: width 0.1s ease;
+  transition: width 0.1s ease, left 0.1s ease;
 }
 
 #health-mana .label {

@@ -16,8 +16,11 @@ const elHealthBar: HTMLElement = document.querySelector('#health .fill') as HTML
 const elHealthCost: HTMLElement = document.querySelector('#health .cost') as HTMLElement;
 const elHealthLabel: HTMLElement = document.querySelector('#health .label') as HTMLElement;
 const elManaBar: HTMLElement = document.querySelector('#mana .fill:nth-child(1)') as HTMLElement;
+const elManaCost: HTMLElement = document.querySelector('#mana .fill:nth-child(1) .cost') as HTMLElement;
 const elManaBar2: HTMLElement = document.querySelector('#mana .fill:nth-child(2)') as HTMLElement;
+const elManaCost2: HTMLElement = document.querySelector('#mana .fill:nth-child(2) .cost') as HTMLElement;
 const elManaBar3: HTMLElement = document.querySelector('#mana .fill:nth-child(3)') as HTMLElement;
+const elManaCost3: HTMLElement = document.querySelector('#mana .fill:nth-child(3) .cost') as HTMLElement;
 const elManaLabel: HTMLElement = document.querySelector('#mana .label') as HTMLElement;
 const elStaminaBar: HTMLElement = document.querySelector('#stamina .fill') as HTMLElement;
 const elStaminaBarLabel: HTMLElement = document.querySelector('#stamina .label') as HTMLElement;
@@ -369,10 +372,43 @@ export function syncPlayerHealthManaUI() {
     elHealthCost.style['left'] = `100%`;
   }
 
-  elManaBar.style["width"] = `${100 * unit.mana / unit.manaMax}%`;
-  elManaBar2.style["width"] = `${100 * (Math.max(0, unit.mana - unit.manaMax)) / unit.manaMax}%`;
-  elManaBar3.style["width"] = `${100 * (Math.max(0, unit.mana - unit.manaMax * 2)) / unit.manaMax}%`;
+  const manaRatio = unit.mana / unit.manaMax;
+  elManaBar.style["width"] = `${100 * Math.min(manaRatio, 1)}%`;
+  const manaRatio2 = (Math.max(0, unit.mana - unit.manaMax)) / unit.manaMax
+  elManaBar2.style["width"] = `${100 * Math.min(manaRatio2, 1)}%`;
+  const manaRatio3 = (Math.max(0, unit.mana - unit.manaMax * 2)) / unit.manaMax;
+  elManaBar3.style["width"] = `${100 * Math.min(manaRatio3, 1)}%`;
   elManaLabel.innerHTML = `${unit.mana}/${unit.manaMax} &nbsp;+${unit.manaPerTurn} / Turn`;
+  if (window.spellCost.manaCost > 0) {
+    // Show cost bar from current mana location minus whatever it's value is
+    elManaCost.style['left'] = `${100 * (unit.mana - window.spellCost.manaCost) / unit.manaMax}%`;
+    elManaCost.style['width'] = `${100 * Math.min(manaRatio, 1)}%`;
+
+    elManaCost2.style['left'] = `${100 * (unit.mana - window.spellCost.manaCost - unit.manaMax) / unit.manaMax}%`;
+    let cost2Left = 100 * (unit.mana - window.spellCost.manaCost - unit.manaMax) / unit.manaMax;
+    if (cost2Left < 0) {
+      elManaBar2.style['left'] = `${cost2Left}%`;
+      elManaCost2.style['left'] = `0%`;
+    } else {
+      elManaBar2.style['left'] = '0%';
+      elManaCost2.style['left'] = `${cost2Left}%`;
+    }
+    elManaCost2.style['width'] = `${100 * Math.min(manaRatio2, 1)}%`;
+
+    let cost3Left = 100 * (unit.mana - window.spellCost.manaCost - unit.manaMax * 2) / unit.manaMax;
+    if (cost3Left < 0) {
+      elManaBar3.style['left'] = `${cost3Left}%`;
+      elManaCost3.style['left'] = `0%`;
+    } else {
+      elManaBar3.style['left'] = '0%';
+      elManaCost3.style['left'] = `${cost3Left}%`;
+    }
+    elManaCost3.style['width'] = `${100 * Math.min(manaRatio3, 1)}%`;
+  } else if (window.spellCost.manaCost == 0) {
+    elManaCost.style['left'] = `100%`;
+    elManaCost2.style['left'] = `100%`;
+    elManaCost3.style['left'] = `100%`;
+  }
 
   const staminaLeft = Math.max(0, Math.round(unit.moveDistance - unit.distanceMovedThisTurn));
   elStaminaBar.style["width"] = `${100 * (unit.moveDistance - unit.distanceMovedThisTurn) / unit.moveDistance}%`;
