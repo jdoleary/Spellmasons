@@ -1,5 +1,7 @@
 import * as PIXI from 'pixi.js';
+import { clone } from './Vec';
 import { View } from './views';
+import * as config from './config';
 // if PIXI is finished setting up
 let isReady = false;
 // PIXI app
@@ -74,8 +76,31 @@ export function recenterCamera() {
     case View.Game:
       if (window.player) {
 
-        const centerTarget = window.player.unit;
+        const centerTarget = clone(window.player.unit);
         const scale = app.stage.scale.x;
+        // Clamp centerTarget so that there isn't a log of empty space
+        // in the camera
+        const margin = config.COLLISION_MESH_RADIUS * 4;
+        // Clamp camera X
+        const mapLeftMostPoint = 0 - margin;
+        const mapRightMostPoint = window.underworld.width + margin;
+        const camCenterXMin = mapLeftMostPoint + window.innerWidth / 2;
+        const camCenterXMax = mapRightMostPoint - window.innerWidth / 2;
+        if (camCenterXMin > camCenterXMax) {
+          centerTarget.x = (mapRightMostPoint - mapLeftMostPoint) / 2;
+        } else {
+          centerTarget.x = Math.min(camCenterXMax, Math.max(camCenterXMin, centerTarget.x));
+        }
+        //Clamp camera Y
+        const mapTopMostPoint = 0 - margin;
+        const mapBottomMostPoint = window.underworld.height + margin;
+        const camCenterYMin = mapTopMostPoint + window.innerHeight / 2;
+        const camCenterYMax = mapBottomMostPoint - window.innerHeight / 2;
+        if (camCenterYMin > camCenterYMax) {
+          centerTarget.y = (mapBottomMostPoint - mapTopMostPoint) / 2;
+        } else {
+          centerTarget.y = Math.min(camCenterYMax, Math.max(camCenterYMin, centerTarget.y));
+        }
         // Center the camera on centerTarget
         app.stage.x = window.innerWidth / 2 - (centerTarget.x * scale);
         app.stage.y = window.innerHeight / 2 - (centerTarget.y * scale);
