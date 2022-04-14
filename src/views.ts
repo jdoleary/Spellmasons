@@ -57,6 +57,13 @@ export function toggleMenu() {
 // including setup.
 export function setView(v: View) {
   console.log('setView(', View[v], ')');
+  if (window.view == v) {
+    // Prevent setting a view more than once if the view hasn't changed
+    // Since some of these views, (such as upgrade) have
+    // initialization logic
+    console.log('Short circuit: View has already been set to ', View[v], 'so setView has exited without doing anything.');
+    return;
+  }
   for (let view of Object.keys(View)) {
     document.body.classList.remove(`view-${view}`);
   }

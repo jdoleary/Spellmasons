@@ -14,6 +14,7 @@ export const UNIT_UI_BAR_WIDTH = 28;
 // Ensures that the resolveDoneMoving callback will timeout if it never gets called.
 // This ensures that the game doesn't get stuck if, say, the collision system bugs
 // out and a unit never comes to rest
+// TODO: This should be configured relative to the move speed of the unit in question
 export const RESOLVE_DONE_MOVING_TIMEOUT_MS = 2000;
 export const NON_HEAVY_UNIT_SCALE = 0.8;
 export const START_CARDS_COUNT = 60;

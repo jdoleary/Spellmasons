@@ -38,7 +38,7 @@ import { HandcraftedLevel, levels } from './HandcraftedLevels';
 import { addCardToHand, removeCardsFromHand } from './CardUI';
 import { updateMouseUI } from './ui/eventListeners';
 import Jprompt from './Jprompt';
-import { moveAlongVector, moveWithCollisions, normalizedVector } from './collision/moveWithCollision';
+import { moveWithCollisions } from './collision/moveWithCollision';
 
 export enum turn_phase {
   PlayerTurns,
@@ -636,6 +636,7 @@ export default class Underworld {
     return false;
   }
   endPlayerTurnPhase() {
+    console.log('Underworld: TurnPhase: End player turn phase');
     // Move onto next phase
     this.setTurnPhase(turn_phase.NPC);
     // Add mana to AI units
@@ -774,11 +775,8 @@ export default class Underworld {
           affirm = await Jprompt('Are you sure you want to end your turn without moving?', 'Cancel', 'Escape', 'End Turn', 'Space', 'Spacebar');
         }
         if (affirm) {
-          console.log('waiting to end my turn');
-          window.playerWalkingPromise.then(() => {
-            console.log('end my turn');
-            window.pie.sendData({ type: MESSAGE_TYPES.END_TURN });
-          });
+          console.log('endMyTurn: send END_TURN message');
+          window.pie.sendData({ type: MESSAGE_TYPES.END_TURN });
         }
       }
     }

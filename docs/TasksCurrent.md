@@ -1,4 +1,5 @@
 # Tasks
+- Customize RESOLVE_DONE_MOVING_TIMEOUT_MS for each unit depending on their move distance and their move speed
 - Map bounds are off for handcrafted level
 - Bug: Grunts can attack through walls if they are just beyond a corner
 - BUG: When branch is undefined occurs it should automatically regen the whole level
