@@ -180,8 +180,6 @@ function addUnderworldEventListeners() {
   document.body.addEventListener('click', clickHandler);
   document.body.addEventListener('wheel', zoom);
   document.body.addEventListener('mousemove', e => {
-    // Update the inspectMode based on if the ctrl key is down or not
-    toggleInspectMode(e.ctrlKey);
     updateMouseUI();
   });
   // Add button listeners

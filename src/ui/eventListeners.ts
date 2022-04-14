@@ -43,8 +43,7 @@ export function keydownListener(event: KeyboardEvent) {
     case 'Space':
       window.underworld.endMyTurn();
       break;
-    case 'ControlLeft':
-    case 'ControlRight':
+    case 'KeyF':
       CardUI.toggleInspectMode(true);
       break;
     case 'Backspace':
@@ -96,8 +95,7 @@ export function keyupListener(event: KeyboardEvent) {
     case 'AltLeft':
       window.altDown = false;
       break;
-    case 'ControlLeft':
-    case 'ControlRight':
+    case 'KeyF':
       CardUI.toggleInspectMode(false);
       // Clear walk path on inspect mode off
       window.walkPathGraphics.clear();
@@ -122,7 +120,7 @@ export function updateMouseUI() {
   // Show faint circle on clickable entities on hover:
   drawOnHoverCircle(mouseTarget);
 
-  // Show walk path if in inspect-mode (when holding control key):
+  // Show walk path if in inspect-mode:
   window.walkPathGraphics.clear();
   if (!isOutOfBounds(mouseTarget)) {
     if (window.player) {
