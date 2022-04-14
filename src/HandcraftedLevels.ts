@@ -45,7 +45,7 @@ export const levels: { [name: string]: HandcraftedLevelMaker } = {
         doodads: [
             {
                 text: 'Right click with your mouse to move.\nPress "spacebar" to end your turn.\nEntering the portal will take you to the next level.',
-                location: { x: underworld.width / 2, y: 100 },
+                location: { x: underworld.width / 2, y: 400 },
                 style: { align: 'center' },
             }
         ],
@@ -73,7 +73,7 @@ export const levels: { [name: string]: HandcraftedLevelMaker } = {
         doodads: [
             {
                 text: '↑\nDestroy the practice dummy with the "hurt" spell at the bottom of your screen.\nNote: You can queue up multiple spells to cast at once',
-                location: { x: 485, y: 378 },
+                location: { x: 385, y: 252 },
                 style: { align: 'center' },
             }
         ],
@@ -124,7 +124,7 @@ export const levels: { [name: string]: HandcraftedLevelMaker } = {
         doodads: [
             {
                 text: 'Destroy all the practice dummies with one cast.\nThe order of the spells matters.',
-                location: { x: 485, y: 500 },
+                location: { x: 341, y: 381 },
                 style: { align: 'center' },
             }
         ],
@@ -211,7 +211,7 @@ export const levels: { [name: string]: HandcraftedLevelMaker } = {
         doodads: [
             {
                 text: 'Cast multiple spells together at the same time in a specific order\n to destroy the practice dummies all at once.',
-                location: { x: 485, y: 100 },
+                location: { x: 341, y: 400 },
                 style: { align: 'center' },
             }
         ],

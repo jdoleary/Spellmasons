@@ -616,10 +616,17 @@ export default class Underworld {
 
     this.postSetupLevel();
     // Show text in center of screen for the new level
-    centeredFloatingText(
-      name,
-      'white',
-    );
+    floatingText({
+      coords: {
+        x: window.underworld.width / 2,
+        y: 3 * window.underworld.height / 8,
+      },
+      text: name,
+      style: {
+        fill: 'white',
+        fontSize: '60px'
+      }
+    });
 
   }
   checkPickupCollisions(unit: Unit.IUnit) {
