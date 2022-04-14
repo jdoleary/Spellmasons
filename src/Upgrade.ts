@@ -1,3 +1,4 @@
+import { getCardRarityColor } from './CardUI';
 import { NUMBER_OF_UPGRADES_TO_CHOOSE_FROM } from './config';
 import { chooseObjectWithProbability } from './math';
 import { MESSAGE_TYPES } from './MessageTypes';
@@ -58,6 +59,8 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer) {
   element.classList.add('card');
   const elCardInner = document.createElement('div');
   elCardInner.classList.add('card-inner');
+  elCardInner.style.borderColor = getCardRarityColor(upgrade);
+  elCardInner.style.backgroundColor = getCardRarityColor(upgrade);
   element.appendChild(elCardInner);
   const thumbHolder = document.createElement('div');
   const thumbnail = document.createElement('img');

@@ -344,7 +344,7 @@ export function clearSelectedCards() {
 export function generateCard(cards: Cards.ICard[] = Object.values(Cards.allCards)): Cards.ICard | undefined {
   return math.chooseObjectWithProbability(cards);
 }
-function getCardRarityColor(content: Cards.ICard): string {
+export function getCardRarityColor(content: { probability: number }): string {
   if (content.probability == 1) {
     // Super rare
     return '#241623';
