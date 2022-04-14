@@ -3,7 +3,7 @@ import * as PIXI from 'pixi.js';
 import { allUnits } from '../units';
 import { containerSpells, containerUI } from '../PixiUtils';
 import { containerPlanningView } from '../PixiUtils';
-import { Faction, UnitSubType, UnitType } from '../commonTypes';
+import { Faction, UnitType } from '../commonTypes';
 import { clone, equal, Vec2 } from '../Vec';
 import { turn_phase } from '../Underworld';
 import * as CardUI from '../CardUI';
@@ -82,20 +82,13 @@ export function updateManaCostUI(): CardCost {
     // Updates the mana cost
     const cards = CardUI.getSelectedCards();
     const cost = calculateCost(cards, window.player)
-    _updateManaCostUI(cost);
+    window.spellCost = cost;
     return cost;
   }
   return { manaCost: 0, healthCost: 0 };
 }
-function _updateManaCostUI(cost: CardCost) {
-  if (window.player) {
-    updateTooltipSpellCost(cost)
-  }
-
-}
 
 export async function syncSpellEffectProjection() {
-  clearTooltipSpellCost();
   if (window.animatingSpells) {
     // Do not change the hover icons when spells are animating
     return;
@@ -175,34 +168,6 @@ const elInspectorTooltipContainer = document.getElementById(
 const elInspectorTooltipContent = document.getElementById(
   'inspector-tooltip-content',
 );
-const elSpellManaCost = document.getElementById(
-  'spell-mana-cost',
-);
-const elSpellHealthCost = document.getElementById(
-  'spell-health-cost',
-);
-export function clearTooltipSpellCost() {
-  if (elSpellManaCost) {
-    elSpellManaCost.innerHTML = '';
-    elSpellManaCost?.classList.add('hidden');
-  }
-
-}
-export function updateTooltipSpellCost(cost: CardCost) {
-  if (elSpellManaCost && cost.manaCost !== 0) {
-    elSpellManaCost.innerHTML = `${cost.manaCost}`
-    elSpellManaCost?.classList.remove('hidden');
-  } else {
-    elSpellManaCost?.classList.add('hidden');
-  }
-
-  if (elSpellHealthCost && cost.healthCost !== 0) {
-    elSpellHealthCost.innerHTML = `${cost.healthCost}`
-    elSpellHealthCost?.classList.remove('hidden');
-  } else {
-    elSpellHealthCost?.classList.add('hidden');
-  }
-}
 
 let selectedType: "unit" | "pickup" | "obstacle" | null = null;
 let selectedUnit: Unit.IUnit | undefined;

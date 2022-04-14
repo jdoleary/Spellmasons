@@ -18,7 +18,7 @@ cookieConsentPopup(false);
 // This import is critical so that the svelte menu has access to
 // the pie globals
 import './wsPieSetup';
-import type { Vec2 } from './Vec';
+import type { CardCost } from './cards/cardUtils';
 
 const YES = 'yes'
 const SKIP_TUTORIAL = 'skipTutorial';
@@ -149,8 +149,12 @@ declare global {
     cookieConsentPopup: (forcePopup: boolean) => void;
     // A zoom value that the camera zoom will lerp to
     zoomTarget: number;
+    // The costs of the current spell which is shown projected in
+    // the health and mana bars
+    spellCost: CardCost;
   }
 }
+window.spellCost = { healthCost: 0, manaCost: 0 };
 window.zoomTarget = 1;
 window.volume = 1.0;
 window.volumeMusic = 1.0;

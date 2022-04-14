@@ -13,6 +13,7 @@ import { findPath } from './Pathfinding';
 import { allUnits } from './units';
 import { allModifiers, EffectState, tallyUnitDamage } from './cards';
 const elHealthBar: HTMLElement = document.querySelector('#health .fill') as HTMLElement;
+const elHealthCost: HTMLElement = document.querySelector('#health .cost') as HTMLElement;
 const elHealthLabel: HTMLElement = document.querySelector('#health .label') as HTMLElement;
 const elManaBar: HTMLElement = document.querySelector('#mana .fill:nth-child(1)') as HTMLElement;
 const elManaBar2: HTMLElement = document.querySelector('#mana .fill:nth-child(2)') as HTMLElement;
@@ -357,8 +358,16 @@ export function syncPlayerHealthManaUI() {
     return
   }
   const unit = window.player.unit;
-  elHealthBar.style["width"] = `${100 * unit.health / unit.healthMax}%`;
+  const healthRatio = unit.health / unit.healthMax
+  elHealthBar.style["width"] = `${100 * healthRatio}%`;
   elHealthLabel.innerHTML = `${unit.health}/${unit.healthMax}`;
+  if (window.spellCost.healthCost > 0) {
+    // Show cost bar from current health location minus whatever it's value is
+    elHealthCost.style['left'] = `${100 * (unit.health - window.spellCost.healthCost) / unit.healthMax}%`;
+    elHealthCost.style['width'] = `${100 * healthRatio}%`;
+  } else if (window.spellCost.healthCost == 0) {
+    elHealthCost.style['left'] = `100%`;
+  }
 
   elManaBar.style["width"] = `${100 * unit.mana / unit.manaMax}%`;
   elManaBar2.style["width"] = `${100 * (Math.max(0, unit.mana - unit.manaMax)) / unit.manaMax}%`;

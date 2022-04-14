@@ -492,55 +492,9 @@ body.your-turn #player-turn-indicator {
   white-space: pre-wrap;
 }
 
-#health-mana-and-spell-cost-holder {
+#health-mana-holder {
   display: flex;
   justify-content: center;
-}
-
-#spell-cost {
-  display: flex;
-}
-
-#spell-mana-cost {
-  font-size: xx-large;
-  background-color: #5656d5;
-  border: 4px solid #5656d5;
-  color: white;
-  margin: 0 auto;
-  border-radius: 100% 100%;
-  width: 80px;
-  height: 80px;
-  text-align: center;
-  line-height: 80px;
-}
-
-#spell-mana-cost.hidden {
-  display: none;
-}
-
-#spell-mana-cost:empty {
-  display: none;
-}
-
-#spell-health-cost {
-  font-size: xx-large;
-  background-color: #d55656;
-  border: 4px solid #d55656;
-  color: white;
-  margin: 0 auto;
-  border-radius: 100% 100%;
-  width: 80px;
-  height: 80px;
-  text-align: center;
-  line-height: 80px;
-}
-
-#spell-health-cost:empty {
-  display: none;
-}
-
-#spell-health-cost.hidden {
-  display: none;
 }
 
 #ready-state {
@@ -580,12 +534,34 @@ body.your-turn #player-turn-indicator {
   line-height: 16px;
 }
 
+#health-mana .cost {
+  position: absolute;
+  height: 100%;
+  transition: left 0.2s ease;
+}
+
+#health .cost {
+  background: repeating-linear-gradient(45deg,
+      #bc6060,
+      #bc6060 10px,
+      #984646 10px,
+      #984646 20px) fixed;
+}
+
 #health .fill {
   background-color: #d55656;
 }
 
 #stamina .fill {
   background-color: #d5b356;
+}
+
+#mana .cost {
+  background: repeating-linear-gradient(45deg,
+      #606dbc,
+      #606dbc 10px,
+      #465298 10px,
+      #465298 20px) fixed;
 }
 
 #mana .fill {
