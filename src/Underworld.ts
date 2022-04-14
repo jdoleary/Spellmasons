@@ -771,7 +771,7 @@ export default class Underworld {
       if (this.isMyTurn()) {
         let affirm = true
         if (window.player.unit.distanceMovedThisTurn == 0) {
-          affirm = await Jprompt('Are you sure you want to end your turn without moving?', 'Cancel', 'End Turn', 'Space');
+          affirm = await Jprompt('Are you sure you want to end your turn without moving?', 'Cancel', 'End Turn', 'Spacebar');
         }
         if (affirm) {
           console.log('waiting to end my turn');
