@@ -58,6 +58,14 @@ export function recenterStage() {
     return;
   }
 
+  // Lerp zoom to target
+  // Note: This must happen BEFORE the stage x and y is updated
+  // or else it will get jumpy when zooming
+  const zoom = app.stage.scale.x + (window.zoomTarget - app.stage.scale.x) / 8;
+
+  app.stage.scale.x = zoom;
+  app.stage.scale.y = zoom;
+
   switch (window.view) {
     case View.CharacterSelect:
       app.stage.x = elPIXIHolder.clientWidth / 2;

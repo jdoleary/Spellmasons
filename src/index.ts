@@ -147,8 +147,11 @@ declare global {
     playerWalkingPromise: Promise<void>;
     // makes a pop up prompting the user to accept cookies
     cookieConsentPopup: (forcePopup: boolean) => void;
+    // A zoom value that the camera zoom will lerp to
+    zoomTarget: number;
   }
 }
+window.zoomTarget = 1;
 window.volume = 1.0;
 window.volumeMusic = 1.0;
 window.volumeGame = 1.0;

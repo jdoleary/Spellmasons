@@ -164,8 +164,7 @@ function zoom(e: WheelEvent) {
   let newScale = app.stage.scale.x + e.deltaY * -0.005;
   newScale = Math.min(Math.max(0.5, newScale), 3);
 
-  app.stage.scale.x = newScale;
-  app.stage.scale.y = newScale;
+  window.zoomTarget = newScale;
 
   recenterStage();
 
