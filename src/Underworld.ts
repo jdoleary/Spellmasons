@@ -177,26 +177,6 @@ export default class Underworld {
     // Sort unit sprites visually by y position
     containerUnits.children.sort((a, b) => a.y - b.y)
 
-    // Move camera target to a point between the player unit
-    // and the mouse for a very smooth and movable camera experience
-    if (window.player) {
-      const mousePos = window.underworld.getMousePos();
-      // Multiplying by 0.3 chooses a point 30% of the way from the unit to the mouse.  This is an arbitrary design decision
-      const desiredCamTarget = Vec.add(window.player.unit, Vec.multiply(0.3, Vec.subtract(mousePos, window.player.unit)))
-      const { vector, distance } = normalizedVector(window.cameraTarget, desiredCamTarget)
-      if (vector) {
-        if (distance < 0.5) {
-          // If close enough, snap to desired position
-          window.cameraTarget = desiredCamTarget
-        } else {
-          // Camera moves faster if it is farther away from target
-          const camMoveSpeed = distance / 4;
-          const nextCamPos = moveAlongVector(window.cameraTarget, vector, camMoveSpeed);
-          window.cameraTarget = nextCamPos;
-        }
-      }
-    }
-
     recenterStage();
 
     // Invoke gameLoopUnits again next loop

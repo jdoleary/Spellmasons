@@ -66,7 +66,7 @@ export function recenterStage() {
     case View.Game:
       if (window.player) {
 
-        const centerTarget = (window.cameraTarget && !isNaN(window.cameraTarget.x) && !isNaN(window.cameraTarget.y)) ? window.cameraTarget : window.player.unit;
+        const centerTarget = window.player.unit;
         // Relative to the center of elPIXIHolder, center the camera on centerTarget
         app.stage.x = elPIXIHolder.offsetWidth / 2 - centerTarget.x;
         app.stage.y = elPIXIHolder.offsetHeight / 2 - centerTarget.y;
