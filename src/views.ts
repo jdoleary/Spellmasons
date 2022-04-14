@@ -3,6 +3,7 @@ import {
   addPixiContainersForView,
   recenterStage,
   resizePixi,
+  app,
 } from './PixiUtils';
 import * as Units from './units';
 import { UnitSubType } from './commonTypes';
@@ -157,6 +158,19 @@ function clientChooseUnit(unitId: string) {
   setView(View.Game);
 }
 
+// zoom camera
+function zoom(e: WheelEvent) {
+  e.preventDefault();
+  let newScale = app.stage.scale.x + e.deltaY * -0.005;
+  newScale = Math.min(Math.max(0.5, newScale), 3);
+
+  app.stage.scale.x = newScale;
+  app.stage.scale.y = newScale;
+
+  recenterStage();
+
+}
+
 const menuBtnId = 'menuBtn';
 const endTurnBtnId = 'end-turn-btn';
 function addUnderworldEventListeners() {
@@ -165,6 +179,7 @@ function addUnderworldEventListeners() {
   window.addEventListener('keyup', keyupListener);
   document.body.addEventListener('contextmenu', contextmenuHandler);
   document.body.addEventListener('click', clickHandler);
+  document.body.addEventListener('wheel', zoom);
   document.body.addEventListener('mousemove', e => {
     // Update the inspectMode based on if the ctrl key is down or not
     toggleInspectMode(e.ctrlKey);
@@ -188,6 +203,7 @@ function removeUnderworldEventListeners() {
   // Remove mouse and click listeners
   document.body.removeEventListener('contextmenu', contextmenuHandler);
   document.body.removeEventListener('click', clickHandler);
+  document.body.removeEventListener('wheel', zoom);
   document.body.removeEventListener('mousemove', updateMouseUI);
   // Remove button listeners
   const elEndTurnBtn: HTMLButtonElement = document.getElementById(

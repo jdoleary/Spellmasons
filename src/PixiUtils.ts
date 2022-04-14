@@ -67,9 +67,10 @@ export function recenterStage() {
       if (window.player) {
 
         const centerTarget = window.player.unit;
-        // Relative to the center of elPIXIHolder, center the camera on centerTarget
-        app.stage.x = elPIXIHolder.offsetWidth / 2 - centerTarget.x;
-        app.stage.y = elPIXIHolder.offsetHeight / 2 - centerTarget.y;
+        const scale = app.stage.scale.x;
+        // Center the camera on centerTarget
+        app.stage.x = window.innerWidth / 2 - (centerTarget.x * scale);
+        app.stage.y = window.innerHeight / 2 - (centerTarget.y * scale);
       }
       break;
   }
