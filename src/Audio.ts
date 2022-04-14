@@ -37,18 +37,17 @@ export function playNextSong() {
     // task: Master all audio and sfx
     // task: Make independent volume sliders for audio and music
     musicInstance.volume = 0.2;
-    playAudio(musicInstance);
+    musicInstance.volume = window.volume * window.volumeGame;
+    musicInstance.play();
 }
 
 export function playSFX(path: string) {
     // In order to allow sounds to overlap, they must be 
     // fully instantiated each time they are played
-    playAudio(new Audio(path));
-
-}
-function playAudio(audioInstance: HTMLAudioElement) {
-    // audioInstance.volume = window.volume;
+    const audioInstance = new Audio(path);
+    audioInstance.volume = window.volume * window.volumeGame;
     audioInstance.play();
+
 }
 
 export function setupAudio() {
@@ -56,7 +55,16 @@ export function setupAudio() {
     window.changeVolume = (volume) => {
         window.volume = volume / 100;
         if (musicInstance) {
-            musicInstance.volume = window.volume;
+            musicInstance.volume = window.volume * window.volumeMusic;
         }
+    };
+    window.changeVolumeMusic = (volume) => {
+        window.volumeMusic = volume / 100;
+        if (musicInstance) {
+            musicInstance.volume = window.volume * window.volumeMusic;
+        }
+    };
+    window.changeVolumeGame = (volume) => {
+        window.volumeGame = volume / 100;
     };
 }

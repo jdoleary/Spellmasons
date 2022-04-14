@@ -131,7 +131,11 @@ declare global {
     allowCookies: boolean;
     playMusic: () => void;
     changeVolume: (volume: number) => void;
+    changeVolumeMusic: (volume: number) => void;
+    changeVolumeGame: (volume: number) => void;
     volume: number;
+    volumeMusic: number;
+    volumeGame: number;
     startSingleplayer: () => Promise<void>;
     startMultiplayer: (wsPieUrl: string) => Promise<void>;
     // Used to ensure that the current client's turn doesn't end while they are still walking
@@ -148,6 +152,8 @@ declare global {
 }
 window.cameraTarget = { x: 0, y: 0 };
 window.volume = 1.0;
+window.volumeMusic = 1.0;
+window.volumeGame = 1.0;
 window.playerWalkingPromise = Promise.resolve();
 window.skipTutorial = () => {
   if (window.allowCookies) {
