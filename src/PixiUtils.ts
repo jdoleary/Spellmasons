@@ -11,7 +11,6 @@ export const containerPlanningView = new PIXI.Container();
 containerPlanningView.alpha = 0.5;
 export const containerDoodads = new PIXI.Container();
 export const containerUnits = new PIXI.Container();
-export const containerPickup = new PIXI.Container();
 export const containerSpells = new PIXI.Container();
 export const containerProjectiles = new PIXI.Container();
 export const containerUI = new PIXI.Container();
@@ -21,7 +20,6 @@ const underworldPixiContainers = [
   containerPlanningView,
   containerDoodads,
   containerUnits,
-  containerPickup,
   containerSpells,
   containerProjectiles,
   containerUI,

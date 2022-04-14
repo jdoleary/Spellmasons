@@ -1,12 +1,7 @@
 import * as Image from './Image';
-import * as CardUI from './CardUI';
-import * as Cards from './cards';
-import * as config from './config';
 import * as Player from './Player';
-import { containerPickup } from './PixiUtils';
+import { containerUnits } from './PixiUtils';
 import type { IUnit } from './Unit';
-import floatingText from './FloatingText';
-import * as AddDamageCard from './cards/add_damage';
 
 export const PICKUP_RADIUS = 64;
 export interface IPickup {
@@ -49,7 +44,9 @@ export function create(
     name,
     description,
     imagePath,
-    image: Image.create(x, y, imagePath, containerPickup, { animationSpeed, loop: true }),
+    // Pickups are stored in containerUnits so that they
+    // will be automatically z-indexed
+    image: Image.create(x, y, imagePath, containerUnits, { animationSpeed, loop: true }),
     singleUse,
     playerOnly,
     effect,
