@@ -30,6 +30,12 @@ export function keydownListener(event: KeyboardEvent) {
     // Return immediately, prompt hotkey overrides other hotkeys
     return;
   }
+  const promptNoBtn = document.querySelector(`.prompt .no[data-key="${event.code}"]`) as HTMLElement;
+  if (promptNoBtn) {
+    promptNoBtn.click();
+    // Return immediately, prompt hotkey overrides other hotkeys
+    return;
+  }
 
 
   switch (event.code) {
