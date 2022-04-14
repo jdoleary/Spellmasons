@@ -49,10 +49,10 @@ export function resizePixi() {
     return;
   }
   app.renderer.resize(window.innerWidth, window.innerHeight);
-  recenterStage();
+  recenterCamera();
 }
 let elPIXIHolder: HTMLElement | null;
-export function recenterStage() {
+export function recenterCamera() {
   if (!elPIXIHolder) {
     elPIXIHolder = document.getElementById('PIXI-holder');
     return;

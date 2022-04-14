@@ -1,7 +1,7 @@
 import {
   containerCharacterSelect,
   addPixiContainersForView,
-  recenterStage,
+  recenterCamera,
   resizePixi,
   app,
 } from './PixiUtils';
@@ -63,7 +63,7 @@ export function setView(v: View) {
   document.body.classList.add(`view-${View[v]}`);
   window.view = v;
   addPixiContainersForView(v);
-  recenterStage();
+  recenterCamera();
   const elMenu = document.getElementById('menu') as HTMLElement;
   if (v !== View.Menu) {
     elMenu.classList.add('hidden');
@@ -166,7 +166,7 @@ function zoom(e: WheelEvent) {
 
   window.zoomTarget = newScale;
 
-  recenterStage();
+  recenterCamera();
 
 }
 
