@@ -766,9 +766,9 @@ export default class Underworld {
   }
   // Sends a network message to end turn
   async endMyTurn() {
-    // Turns can only be manually ended during the PlayerTurns phase
-    if (this.turn_phase === turn_phase.PlayerTurns) {
-      if (window.player) {
+    if (window.player) {
+      // Turns can only be manually ended during the PlayerTurns phase
+      if (this.isMyTurn()) {
         let affirm = true
         if (window.player.unit.distanceMovedThisTurn == 0) {
           affirm = await Jprompt('Are you sure you want to end your turn without moving?', 'Cancel', 'End Turn', 'Space');
