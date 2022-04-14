@@ -151,7 +151,7 @@ export const upgradeSource: IUpgrade[] = [
 const maxManaIncreaseAmount = 10;
 const maxStaminaIncreaseAmount = 50;
 const maxHealthIncreaseAmount = 5;
-const manaPerTurnIncreaseAmount = 2;
+const manaPerTurnIncreaseAmount = 5;
 
 // Template
 //   {
