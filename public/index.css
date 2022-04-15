@@ -489,7 +489,7 @@ body.your-turn #player-turn-indicator {
   width: 300px;
 }
 
-#inspector-tooltip-image-holder {
+.text-center {
   text-align: center;
 }
 
@@ -786,6 +786,7 @@ body.view-GameOver #game-over {
 
 .prompt .text {
   margin: auto 8px;
+  white-space: pre-line;
 }
 
 .jbutton {

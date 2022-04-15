@@ -265,7 +265,7 @@ export default class Underworld {
     }
     if (!this.enemyEncountered.includes(id)) {
       this.enemyEncountered.push(id);
-      Jprompt({ text: 'Introducing....' + id + '\n' + sourceUnit.info.description, yesText: 'Cool!', yesKey: 'Space', yesKeyText: 'Spacebar' });
+      Jprompt({ imageSrc: Unit.getImagePathForUnitId(id), text: 'This is a ' + id + '\n' + sourceUnit.info.description, yesText: 'Okay!', yesKey: 'Space', yesKeyText: 'Spacebar' });
     }
     let unit: Unit.IUnit = Unit.create(
       sourceUnit.id,
@@ -1301,6 +1301,14 @@ type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFun
 
 function getEnemiesForAltitude(levelIndex: number): { enemies: { [unitid: string]: number }, strength: number } {
   const hardCodedLevelEnemies: { [unitid: string]: number }[] = [
+    {
+      'grunt': 5,
+      'archer': 3,
+      'lobber': 2,
+      'priest': 2,
+      'poisoner': 1,
+      'demon': 1,
+    },
     {
       'grunt': 5
     },

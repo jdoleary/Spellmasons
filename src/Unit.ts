@@ -560,3 +560,6 @@ export function syncImage(unit: IUnit) {
   unit.image.sprite.x = unit.x;
   unit.image.sprite.y = unit.y;
 }
+export function getImagePathForUnitId(id: string): string {
+  return "images/units/" + id + ".png";
+}

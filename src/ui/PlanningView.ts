@@ -8,7 +8,7 @@ import { clone, equal, Vec2 } from '../Vec';
 import { turn_phase } from '../Underworld';
 import * as CardUI from '../CardUI';
 import * as config from '../config';
-import type * as Unit from '../Unit';
+import * as Unit from '../Unit';
 import type * as Obstacle from '../Obstacle';
 import type * as Pickup from '../Pickup';
 import { targetBlue } from './colors';
@@ -225,7 +225,7 @@ ${unitSource.extraTooltipInfo ? unitSource.extraTooltipInfo() : ''}
 ${cards}
       `;
 
-        const imagePath = "images/units/" + unitSource.id + ".png";
+        const imagePath = Unit.getImagePathForUnitId(unitSource.id);
         if (elInspectorTooltipImage.src !== imagePath) {
 
           elInspectorTooltipImage.src = imagePath;
