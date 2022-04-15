@@ -2,6 +2,8 @@ import * as Unit from '../Unit';
 import { Spell, targetsToUnits } from '.';
 
 const id = 'resurrect';
+// Brings stats back to this amount on res
+const resStatAmount = 1.0;
 const spell: Spell = {
   card: {
     id,
@@ -19,7 +21,8 @@ Resurrects a dead unit and converts them to the caster's faction.
       for (let unit of targetsToUnits(state.targets)) {
         if (!unit.alive) {
           Unit.resurrect(unit);
-          unit.health = 1;
+          unit.health = unit.healthMax * resStatAmount;
+          unit.mana = unit.manaMax * resStatAmount;
           Unit.changeFaction(unit, state.casterUnit.faction);
         }
       }
