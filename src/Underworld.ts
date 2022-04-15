@@ -76,6 +76,7 @@ export default class Underworld {
   units: Unit.IUnit[] = [];
   pickups: Pickup.IPickup[] = [];
   obstacles: Obstacle.IObstacle[] = [];
+  groundTiles: Vec2[] = [];
   walls: LineSegment[] = [];
   pathingPolygons: Polygon[] = [];
   playersWhoHaveChosenUpgrade: string[] = [];
@@ -297,7 +298,6 @@ export default class Underworld {
     let validSpawnCoords: Vec2[] = [];
     this.validPlayerSpawnCoords = [];
     let validPortalSpawnCoords: Vec2[] = [];
-    const groundTileCoords: Vec2[] = [];
     // The map is made of a matrix of obstacle sectors
     for (let i = 0; i < sectorsWide; i++) {
       for (let j = 0; j < sectorsTall; j++) {
@@ -329,7 +329,7 @@ export default class Underworld {
                 validSpawnCoords.push({ x: coordX, y: coordY });
               }
               // Create ground tile
-              groundTileCoords.push({ x: coordX, y: coordY });
+              this.groundTiles.push({ x: coordX, y: coordY });
               continue
             } else {
               // obstacleIndex of 1 means non ground, so pick an obstacle at random
@@ -362,7 +362,8 @@ export default class Underworld {
     }
     // Fill in the unreachable areas:
     // Go through all cells again and spawn obstacles anywhere that can't reach the "portal" (or the main walkable area of the map)
-    for (let coord of groundTileCoords) {
+    for (let i = this.groundTiles.length - 1; i > 0; i--) {
+      const coord = this.groundTiles[i]
       const isReachable = findPolygonsThatVec2IsInsideOf(coord, this.pathingPolygons).length === 0
       // If the coordinate is a unreachable area, fill it in with void:
       if (!isReachable) {
@@ -373,14 +374,12 @@ export default class Underworld {
         } else {
           console.error('Could not find "Void" obstacle');
         }
-      } else {
-        // Otherwise, make it a ground tile:
-        const image = Image.create(coord.x, coord.y, 'tiles/ground.png', containerBoard);
-        // Anchor the ground image so that it is centered on it's 32x32 so that the bottom
-        // portion falls off into the abyss below it
-        image.sprite.anchor.y = 0.38;
+        // Remove ground tile since it is now an obstacle
+        this.groundTiles.splice(i, 1);
       }
     }
+    // Now that ground tiles have been pared down to only actual tiles that are empty ground, add the images for them
+    this.addGroundTileImages();
     // Recache walls now that unreachable areas have been filled in
     this.cacheWalls();
 
@@ -443,6 +442,16 @@ export default class Underworld {
     return true;
 
   }
+  addGroundTileImages() {
+    for (let coord of this.groundTiles) {
+      const image = Image.create(coord.x, coord.y, 'tiles/ground.png', containerBoard);
+      // Anchor the ground image so that it is centered on it's 32x32 so that the bottom
+      // portion falls off into the abyss below it
+      image.sprite.anchor.y = 0.38;
+    }
+
+  }
+
   cleanUpLevel() {
     // Now that it's a new level clear out the level's dodads such as
     // bone dust left behind from destroyed corpses
@@ -468,6 +477,7 @@ export default class Underworld {
     for (let o of this.obstacles) {
       Obstacle.remove(o);
     }
+    this.groundTiles = [];
 
     // Clear card usage counts, otherwise players will be
     // incentivied to bum around after a level to clear it themselves

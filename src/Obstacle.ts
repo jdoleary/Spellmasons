@@ -49,11 +49,6 @@ export function create(x: number, y: number, obstacle: IObstacleSource) {
     ], inverted: false
   };
 
-  if (bounds === undefined) {
-    console.error("Cannot create Obstacle, points do not make up a valid polygon");
-    return
-  }
-
   const self: IObstacle = {
     x,
     y,
