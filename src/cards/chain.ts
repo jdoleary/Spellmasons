@@ -37,18 +37,18 @@ off of all existing targeted units to units touching them.
     },
   },
 };
+const range = 160;
 function getTouchingUnitsRecursive(
   x: number,
   y: number,
   ignore: Vec2[] = [],
 ): Unit.IUnit[] {
-  const touchingDistance = config.COLLISION_MESH_RADIUS * 4;
   let touching = window.underworld.units.filter((u) => {
     return (
-      u.x <= x + touchingDistance &&
-      u.x >= x - touchingDistance &&
-      u.y <= y + touchingDistance &&
-      u.y >= y - touchingDistance &&
+      u.x <= x + range &&
+      u.x >= x - range &&
+      u.y <= y + range &&
+      u.y >= y - range &&
       !ignore.find((i) => i.x == u.x && i.y == u.y)
     );
   });
