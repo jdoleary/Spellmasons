@@ -11,6 +11,7 @@ import makeAllRedShader from './shaders/selected';
 import { addLerpable } from './lerpList';
 import { findPath } from './Pathfinding';
 import { allUnits } from './units';
+import * as Pickup from './Pickup';
 import { allModifiers, EffectState, tallyUnitDamage } from './cards';
 const elHealthBar: HTMLElement = document.querySelector('#health .fill') as HTMLElement;
 const elHealthCost: HTMLElement = document.querySelector('#health .cost') as HTMLElement;
@@ -323,6 +324,23 @@ export function die(unit: IUnit) {
       fn(unit);
     }
   }
+
+  // If there are no living enemies left alive
+  if (window.underworld.units.filter(u => u.faction == Faction.ENEMY && u.alive).length == 0) {
+    const portalPickup = Pickup.specialPickups['portal'];
+    Pickup.create(
+      unit.x,
+      unit.y,
+      portalPickup.name,
+      portalPickup.description,
+      false,
+      portalPickup.imagePath,
+      portalPickup.animationSpeed,
+      true,
+      portalPickup.effect,
+    );
+  }
+
 }
 export function takeDamage(unit: IUnit, amount: number, dryRun: boolean, state?: EffectState) {
   // Compose onDamageEvents

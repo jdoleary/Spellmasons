@@ -359,18 +359,24 @@ export default class Underworld {
       console.log('Bad level seed, not enough valid spawns for portal, regenerating');
       return false;
     }
-    const portalPickup = Pickup.specialPickups['portal'];
-    Pickup.create(
-      portalCoords.x,
-      portalCoords.y,
-      portalPickup.name,
-      portalPickup.description,
-      false,
-      portalPickup.imagePath,
-      portalPickup.animationSpeed,
-      true,
-      portalPickup.effect,
-    );
+    // Fill in the unreachable areas:
+    // Go through all cells again and spawn obstacles anywhere that can't reach the "portal" (or the main walkable area of the map)
+
+    // I'm experimenting with having the portal spawn on the 
+    // last enemy killed.  So this is commented out because
+    // it spawns a portal at the beginning of the level
+    // const portalPickup = Pickup.specialPickups['portal'];
+    // Pickup.create(
+    //   portalCoords.x,
+    //   portalCoords.y,
+    //   portalPickup.name,
+    //   portalPickup.description,
+    //   false,
+    //   portalPickup.imagePath,
+    //   portalPickup.animationSpeed,
+    //   true,
+    //   portalPickup.effect,
+    // );
 
     // Exclude player spawn coords that cannot path to the portal
     this.validPlayerSpawnCoords = this.validPlayerSpawnCoords.filter(spawn => {
