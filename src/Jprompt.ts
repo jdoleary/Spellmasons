@@ -1,4 +1,13 @@
-export default async function Jprompt(text: string, noText: string, noKey: string, yesText: string, yesKey: string, yesKeyText: string): Promise<boolean> {
+interface Prompt {
+    text: string;
+    noBtnText?: string;
+    noBtnKey?: string;
+    yesText: string;
+    yesKey: string;
+    yesKeyText: string;
+}
+export default async function Jprompt(prompt: Prompt): Promise<boolean> {
+    const { text, noBtnText, noBtnKey, yesText, yesKey, yesKeyText } = prompt;
     const el = document.createElement('div')
     el.classList.add('prompt');
     el.innerHTML = `
@@ -7,7 +16,7 @@ export default async function Jprompt(text: string, noText: string, noKey: strin
         ${text}
     </div>
     <div class="button-holder">
-        <button class="no jbutton" data-key="${noKey}">${noText}</button>
+        ${noBtnText ? `<button class="no jbutton" data-key="${noBtnKey}">${noBtnText}</button>` : ''}
         <button class="yes jbutton" data-key="${yesKey}">${yesText}
             <div class="hotkey-badge-holder">
                 <div class="hotkey-badge wide">${yesKeyText}</div>

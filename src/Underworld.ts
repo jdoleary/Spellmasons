@@ -88,6 +88,8 @@ export default class Underworld {
   // Instead of moving to the upgrade screen at the end of the level,
   // if this is set it will take players to a handcrafted level
   nextHandCraftedLevel?: string;
+  // A list of enemy ids that have been encountered in this game
+  enemyEncountered: string[] = [];
 
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
     window.underworld = this;
@@ -260,6 +262,10 @@ export default class Underworld {
     if (!sourceUnit) {
       console.error('Unit with id', id, 'does not exist.  Have you registered it in src/units/index.ts?');
       return;
+    }
+    if (!this.enemyEncountered.includes(id)) {
+      this.enemyEncountered.push(id);
+      Jprompt({ text: 'Introducing....' + id + '\n' + sourceUnit.info.description, yesText: 'Cool!', yesKey: 'Space', yesKeyText: 'Spacebar' });
     }
     let unit: Unit.IUnit = Unit.create(
       sourceUnit.id,
@@ -811,7 +817,7 @@ export default class Underworld {
       if (this.isMyTurn()) {
         let affirm = true
         if (window.player.unit.distanceMovedThisTurn == 0) {
-          affirm = await Jprompt('Are you sure you want to end your turn without moving?', 'Cancel', 'Escape', 'End Turn', 'Space', 'Spacebar');
+          affirm = await Jprompt({ text: 'Are you sure you want to end your turn without moving?', noBtnText: 'Cancel', noBtnKey: 'Escape', yesText: 'End Turn', yesKey: 'Space', yesKeyText: 'Spacebar' });
         }
         if (affirm) {
           console.log('endMyTurn: send END_TURN message');

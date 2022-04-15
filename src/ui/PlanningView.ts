@@ -172,6 +172,9 @@ const elInspectorTooltipContainer = document.getElementById(
 const elInspectorTooltipContent = document.getElementById(
   'inspector-tooltip-content',
 );
+const elInspectorTooltipImage: HTMLImageElement = (document.getElementById(
+  'inspector-tooltip-image',
+) as HTMLImageElement);
 
 let selectedType: "unit" | "pickup" | "obstacle" | null = null;
 let selectedUnit: Unit.IUnit | undefined;
@@ -191,6 +194,7 @@ export function updateTooltipContent() {
   // Update information in content
   // show info on unit, pickup, etc clicked
   let text = '';
+  elInspectorTooltipImage.src = '';
   switch (selectedType) {
     case "unit":
       let cards = '';
@@ -220,6 +224,12 @@ Modifiers ${JSON.stringify(selectedUnit.modifiers, null, 2)}
 ${unitSource.extraTooltipInfo ? unitSource.extraTooltipInfo() : ''}
 ${cards}
       `;
+
+        const imagePath = "images/units/" + unitSource.id + ".png";
+        if (elInspectorTooltipImage.src !== imagePath) {
+
+          elInspectorTooltipImage.src = imagePath;
+        }
       }
       break;
     case "pickup":
@@ -243,9 +253,9 @@ ${selectedObstacle.description}
 
   elInspectorTooltipContent.innerText = text;
   if (text == '') {
-    elInspectorTooltipContent.style.visibility = "hidden";
+    elInspectorTooltipContainer.style.visibility = "hidden";
   } else {
-    elInspectorTooltipContent.style.visibility = "visible";
+    elInspectorTooltipContainer.style.visibility = "visible";
 
   }
 }
