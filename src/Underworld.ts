@@ -297,6 +297,7 @@ export default class Underworld {
     let validSpawnCoords: Vec2[] = [];
     this.validPlayerSpawnCoords = [];
     let validPortalSpawnCoords: Vec2[] = [];
+    const groundTileCoords: Vec2[] = [];
     // The map is made of a matrix of obstacle sectors
     for (let i = 0; i < sectorsWide; i++) {
       for (let j = 0; j < sectorsTall; j++) {
@@ -328,7 +329,7 @@ export default class Underworld {
                 validSpawnCoords.push({ x: coordX, y: coordY });
               }
               // Create ground tile
-              Image.create(coordX, coordY, 'tiles/ground.png', containerBoard);
+              groundTileCoords.push({ x: coordX, y: coordY });
               continue
             } else {
               // obstacleIndex of 1 means non ground, so pick an obstacle at random
@@ -361,6 +362,24 @@ export default class Underworld {
     }
     // Fill in the unreachable areas:
     // Go through all cells again and spawn obstacles anywhere that can't reach the "portal" (or the main walkable area of the map)
+    for (let coord of groundTileCoords) {
+      const isReachable = findPolygonsThatVec2IsInsideOf(coord, this.pathingPolygons).length === 0
+      // If the coordinate is a unreachable area, fill it in with void:
+      if (!isReachable) {
+        const obstacle = Obstacle.obstacleSource.find(o => o.name == 'Void');
+        if (obstacle) {
+
+          Obstacle.create(coord.x, coord.y, obstacle);
+        } else {
+          console.error('Could not find "Void" obstacle');
+        }
+      } else {
+        // Otherwise, make it a ground tile:
+        Image.create(coord.x, coord.y, 'tiles/ground.png', containerBoard);
+      }
+    }
+    // Recache walls now that unreachable areas have been filled in
+    this.cacheWalls();
 
     // I'm experimenting with having the portal spawn on the 
     // last enemy killed.  So this is commented out because
@@ -1264,7 +1283,8 @@ type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFun
 function getEnemiesForAltitude(levelIndex: number): { enemies: { [unitid: string]: number }, strength: number } {
   const hardCodedLevelEnemies: { [unitid: string]: number }[] = [
     {
-      'grunt': 5
+      'archer': 5,
+      // 'grunt': 5
     },
     {
       'grunt': 4,
