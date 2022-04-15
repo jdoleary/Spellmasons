@@ -1334,7 +1334,7 @@ function getEnemiesForAltitude(levelIndex: number): { enemies: { [unitid: string
       'archer': 2,
       'Sand Golem': 1,
       'Priest': 2,
-      'Poisoner': 1,
+      'poisoner': 1,
       'vampire': 1,
     },
     {
@@ -1346,7 +1346,7 @@ function getEnemiesForAltitude(levelIndex: number): { enemies: { [unitid: string
       'archer': 3,
       'Sand Golem': 2,
       'Priest': 2,
-      'Poisoner': 1,
+      'poisoner': 1,
       'demon': 1,
     },
   ];

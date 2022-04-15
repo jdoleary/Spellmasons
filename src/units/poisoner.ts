@@ -7,7 +7,7 @@ import * as math from '../math';
 import * as poison from '../cards/poison';
 
 const unit: UnitSource = {
-  id: 'Poisoner',
+  id: 'poisoner',
   info: {
     description: 'Poisons enemies',
     image: 'units/golem-poison.png',
