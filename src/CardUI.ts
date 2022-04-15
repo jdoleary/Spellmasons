@@ -224,10 +224,7 @@ function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string
     if (window.player) {
       if (cost.manaCost > window.player.unit.mana) {
         floatingText({
-          coords: {
-            x: window.underworld.width / 2,
-            y: window.underworld.height,
-          },
+          coords: window.player.unit,
           text: 'Insufficient Mana',
           style: { fill: '#5656d5', fontSize: '50px', dropShadow: true, dropShadowDistance: 1 }
         })
