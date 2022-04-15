@@ -24,13 +24,15 @@ export function keydownListener(event: KeyboardEvent) {
   }
 
   // Possibly handle hotkey for Jprompt:
-  const promptYesBtn = document.querySelector(`.prompt .yes[data-key="${event.code}"]`) as HTMLElement;
+  // note: :last-child targets the top most prompt if there are more than one
+  const promptYesBtn = document.querySelector(`.prompt:last-child .yes[data-key="${event.code}"]`) as HTMLElement;
   if (promptYesBtn) {
     promptYesBtn.click();
     // Return immediately, prompt hotkey overrides other hotkeys
     return;
   }
-  const promptNoBtn = document.querySelector(`.prompt .no[data-key="${event.code}"]`) as HTMLElement;
+  // note: :last-child targets the top most prompt if there are more than one
+  const promptNoBtn = document.querySelector(`.prompt:last-child .no[data-key="${event.code}"]`) as HTMLElement;
   if (promptNoBtn) {
     promptNoBtn.click();
     // Return immediately, prompt hotkey overrides other hotkeys
