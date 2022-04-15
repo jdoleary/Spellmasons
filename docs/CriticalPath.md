@@ -1,19 +1,28 @@
 # Critical Path (4st deadline revision)
 - Core:
+    - Decide if I want to remove spell ordering
+        - Might resolve a lot of confusion
+        - Will need implicit ordering then
+    - Use single target casting
+        - Sending unit ids as targets and vec2s as targets (if not targeting a unit) may resolve multiple issues
+            - The zoom coordinates off issue
+            - The aoe dedupe issue
+            - The unit at the edge of cast range issue
     - Resolve desync
         - Write code that looks for desyncs but doesn't try to resolve them.
         - The trouble with my desync code until now is that it doesn't check what step of the game it was sent and received.  Is it turn 4 playerIndex 2?  IF it gets sent at that time but as it's going over the wire player 2 takes their turn, it will think there's a desync.
     - Ending your turn shouldn't feel like a chore
-        - If no one else is alive, it should end your turn automatically
     - More random generation.  This isn't a rogue-like without the random element
         - Take queues from slay the spire
     - ✔ Resolve pathing
+    - Optimize pathing
 - Youtube Alpha version video / Post on social
 - Options
     - ✔ Volume
     - ✔ Cookies
-    - If they didn't accept cookies, allow them to reaccept in options
+    - ✔ If they didn't accept cookies, allow them to reaccept in options
 - Homepage
+    - Make alpha video
     - Embedded video
     - News
 - Art / Shaders / Juice
