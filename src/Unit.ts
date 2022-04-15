@@ -16,11 +16,11 @@ const elHealthBar: HTMLElement = document.querySelector('#health .fill') as HTML
 const elHealthCost: HTMLElement = document.querySelector('#health .cost') as HTMLElement;
 const elHealthLabel: HTMLElement = document.querySelector('#health .label') as HTMLElement;
 const elManaBar: HTMLElement = document.querySelector('#mana .fill:nth-child(1)') as HTMLElement;
-const elManaCost: HTMLElement = document.querySelector('#mana .fill:nth-child(1) .cost') as HTMLElement;
 const elManaBar2: HTMLElement = document.querySelector('#mana .fill:nth-child(2)') as HTMLElement;
-const elManaCost2: HTMLElement = document.querySelector('#mana .fill:nth-child(2) .cost') as HTMLElement;
 const elManaBar3: HTMLElement = document.querySelector('#mana .fill:nth-child(3)') as HTMLElement;
-const elManaCost3: HTMLElement = document.querySelector('#mana .fill:nth-child(3) .cost') as HTMLElement;
+const elManaCost: HTMLElement = document.querySelector('#mana .cost:nth-child(4)') as HTMLElement;
+const elManaCost2: HTMLElement = document.querySelector('#mana .cost:nth-child(5)') as HTMLElement;
+const elManaCost3: HTMLElement = document.querySelector('#mana .cost:nth-child(6)') as HTMLElement;
 const elManaLabel: HTMLElement = document.querySelector('#mana .label') as HTMLElement;
 const elStaminaBar: HTMLElement = document.querySelector('#stamina .fill') as HTMLElement;
 const elStaminaBarLabel: HTMLElement = document.querySelector('#stamina .label') as HTMLElement;
@@ -362,16 +362,22 @@ export function syncPlayerHealthManaUI() {
   }
   const unit = window.player.unit;
   const healthRatio = unit.health / unit.healthMax
+  // Set the health bar that shows how much health you currently have
   elHealthBar.style["width"] = `${100 * healthRatio}%`;
   elHealthLabel.innerHTML = `${unit.health}/${unit.healthMax}`;
+
+  // Set the health cost bar that shows how much health will be removed if the spell is cast
   if (window.spellCost.healthCost > 0) {
     // Show cost bar from current health location minus whatever it's value is
-    elHealthCost.style['left'] = `${100 * (unit.health - window.spellCost.healthCost) / unit.healthMax}%`;
-    elHealthCost.style['width'] = `${100 * healthRatio}%`;
+    const wouldBeNextHealth = unit.health - window.spellCost.healthCost;
+    elHealthCost.style['left'] = `${100 * wouldBeNextHealth / unit.healthMax}%`;
+    elHealthCost.style['width'] = `${100 * (unit.health - wouldBeNextHealth) / unit.healthMax}%`;
   } else if (window.spellCost.healthCost == 0) {
-    elHealthCost.style['left'] = `100%`;
+    elHealthCost.style['left'] = '100%';
+    elHealthCost.style['width'] = '0';
   }
 
+  // Set the 3 mana bars that show how much mana you currently have
   const manaRatio = unit.mana / unit.manaMax;
   elManaBar.style["width"] = `${100 * Math.min(manaRatio, 1)}%`;
   const manaRatio2 = (Math.max(0, unit.mana - unit.manaMax)) / unit.manaMax
@@ -379,13 +385,16 @@ export function syncPlayerHealthManaUI() {
   const manaRatio3 = (Math.max(0, unit.mana - unit.manaMax * 2)) / unit.manaMax;
   elManaBar3.style["width"] = `${100 * Math.min(manaRatio3, 1)}%`;
   elManaLabel.innerHTML = `${unit.mana}/${unit.manaMax} &nbsp;+${unit.manaPerTurn} / Turn`;
+
+  // Set the 3 mana cost bars that show how much mana will be removed if the spell is cast
   if (window.spellCost.manaCost > 0) {
     // Show cost bar from current mana location minus whatever it's value is
-    elManaCost.style['left'] = `${100 * (unit.mana - window.spellCost.manaCost) / unit.manaMax}%`;
-    elManaCost.style['width'] = `${100 * Math.min(manaRatio, 1)}%`;
+    const wouldBeNextMana = unit.mana - window.spellCost.manaCost
+    elManaCost.style['left'] = `${100 * wouldBeNextMana / unit.manaMax}%`;
+    elManaCost.style['width'] = `${100 * Math.min(((unit.mana - wouldBeNextMana) / unit.manaMax), 1)}%`;
 
-    elManaCost2.style['left'] = `${100 * (unit.mana - window.spellCost.manaCost - unit.manaMax) / unit.manaMax}%`;
-    let cost2Left = 100 * (unit.mana - window.spellCost.manaCost - unit.manaMax) / unit.manaMax;
+    elManaCost2.style['left'] = `${100 * (wouldBeNextMana - unit.manaMax) / unit.manaMax}%`;
+    let cost2Left = 100 * (wouldBeNextMana - unit.manaMax) / unit.manaMax;
     if (cost2Left < 0) {
       elManaBar2.style['left'] = `${cost2Left}%`;
       elManaCost2.style['left'] = `0%`;
@@ -395,7 +404,7 @@ export function syncPlayerHealthManaUI() {
     }
     elManaCost2.style['width'] = `${100 * Math.min(manaRatio2, 1)}%`;
 
-    let cost3Left = 100 * (unit.mana - window.spellCost.manaCost - unit.manaMax * 2) / unit.manaMax;
+    let cost3Left = 100 * (wouldBeNextMana - unit.manaMax * 2) / unit.manaMax;
     if (cost3Left < 0) {
       elManaBar3.style['left'] = `${cost3Left}%`;
       elManaCost3.style['left'] = `0%`;

@@ -534,8 +534,8 @@ body.your-turn #player-turn-indicator {
 
 #health-mana .cost {
   position: absolute;
+  top: 0;
   height: 100%;
-  transition: left 0.1s ease;
 }
 
 #health .cost {
@@ -560,7 +560,7 @@ body.your-turn #player-turn-indicator {
   position: absolute;
 }
 
-#mana .fill:nth-child(1) .cost {
+#mana .cost:nth-child(4) {
   background: repeating-linear-gradient(45deg,
       rgba(0, 0, 0, 0.0),
       rgba(0, 0, 0, 0.0) 10px,
@@ -572,7 +572,7 @@ body.your-turn #player-turn-indicator {
   background-color: rgb(141, 86, 213);
 }
 
-#mana .fill:nth-child(2) .cost {
+#mana .cost:nth-child(5) {
   background: repeating-linear-gradient(45deg,
       #5656d5,
       #5656d5 10px,
@@ -584,7 +584,7 @@ body.your-turn #player-turn-indicator {
   background-color: #4e1172;
 }
 
-#mana .fill:nth-child(3) .cost {
+#mana .cost:nth-child(6) {
   background: repeating-linear-gradient(45deg,
       rgba(0, 0, 0, 0.0),
       rgba(0, 0, 0, 0.0) 10px,
@@ -595,7 +595,7 @@ body.your-turn #player-turn-indicator {
 #health-mana .fill {
   height: 100%;
   width: 100%;
-  transition: width 0.1s ease, left 0.1s ease;
+  transition: width 0.1s ease;
 }
 
 #health-mana .label {
