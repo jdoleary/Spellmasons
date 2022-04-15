@@ -5,16 +5,18 @@ interface Prompt {
     yesText: string;
     yesKey: string;
     yesKeyText: string;
+    imageSrc?: string;
 }
 export default async function Jprompt(prompt: Prompt): Promise<boolean> {
-    const { text, noBtnText, noBtnKey, yesText, yesKey, yesKeyText } = prompt;
+    const { text, noBtnText, noBtnKey, yesText, yesKey, yesKeyText, imageSrc } = prompt;
     const el = document.createElement('div')
     el.classList.add('prompt');
     el.innerHTML = `
 <div class="prompt-inner">
-    <div class="text">
+    ${imageSrc ? `<div class="text-center"><img src="${imageSrc}"/></div>` : ''}
+    <p class="text">
         ${text}
-    </div>
+    </p>
     <div class="button-holder">
         ${noBtnText ? `<button class="no jbutton" data-key="${noBtnKey}">${noBtnText}</button>` : ''}
         <button class="yes jbutton" data-key="${yesKey}">${yesText}
