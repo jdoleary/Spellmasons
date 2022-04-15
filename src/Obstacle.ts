@@ -11,6 +11,7 @@ export interface IObstacle {
   image: Image.IImage;
   bounds: Polygon;
   wall: boolean;
+  walkable: boolean;
 }
 interface IObstacleSource {
   name: string;
@@ -56,7 +57,8 @@ export function create(x: number, y: number, obstacle: IObstacleSource) {
     imagePath: obstacle.imagePath,
     image,
     bounds,
-    wall: obstacle.wall
+    wall: obstacle.wall,
+    walkable: obstacle.walkable
   };
 
 
