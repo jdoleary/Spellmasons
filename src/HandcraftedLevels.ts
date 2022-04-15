@@ -44,7 +44,7 @@ export const levels: { [name: string]: HandcraftedLevelMaker } = {
         obstacles: [],
         doodads: [
             {
-                text: 'Right click with your mouse to move.\nPress "spacebar" to end your turn.\nEntering the portal will take you to the next level.',
+                text: 'Right click with your mouse to move.\nHold "F" to see how far you can move per turn.\nWhen you have exhausted your stamina, press "Spacebar" to end your turn.\nEntering the portal will take you to the next level.',
                 location: { x: underworld.width / 2, y: 400 },
                 style: { align: 'center' },
             }
@@ -85,25 +85,6 @@ export const levels: { [name: string]: HandcraftedLevelMaker } = {
         ],
         startingCards: ['hurt'],
         init: (underworld: Underworld) => {
-            const spawnPortalOnDeathEventName = 'spawnPortalOnDeath';
-            Events.onDeathSource[spawnPortalOnDeathEventName] = () => {
-                const portalPickup = Pickup.specialPickups['portal'];
-                Pickup.create(
-                    3 * underworld.width / 4,
-                    underworld.height / 2,
-                    portalPickup.name,
-                    portalPickup.description,
-                    false,
-                    portalPickup.imagePath,
-                    portalPickup.animationSpeed,
-                    true,
-                    portalPickup.effect,
-                );
-            }
-            underworld.units.filter(u => u.faction == Faction.ENEMY).map(u => {
-                u.onDeathEvents.push(spawnPortalOnDeathEventName);
-            });
-
             // Restart if you die
             const restartIfYouDieEventName = 'restartIfYouDie';
             Events.onDeathSource[restartIfYouDieEventName] = () => {
@@ -152,24 +133,11 @@ export const levels: { [name: string]: HandcraftedLevelMaker } = {
         ],
         startingCards: ['hurt', 'chain'],
         init: (underworld: Underworld) => {
-            const spawnPortalOnAllDeathEventName = 'spawnPortalOnAllDeath';
+            const restartIfNotAllDieAtSameTimeEventName = 'restartIfNotAllDieAtSameTime';
             const enemies = underworld.units.filter(u => u.faction == Faction.ENEMY)
             function checkIfAllDied() {
                 const allDestroyedAtOnce = enemies.every(u => u.alive == false);
-                if (allDestroyedAtOnce) {
-                    const portalPickup = Pickup.specialPickups['portal'];
-                    Pickup.create(
-                        1.5 * underworld.width / 4,
-                        underworld.height / 2,
-                        portalPickup.name,
-                        portalPickup.description,
-                        false,
-                        portalPickup.imagePath,
-                        portalPickup.animationSpeed,
-                        true,
-                        portalPickup.effect,
-                    );
-                } else {
+                if (!allDestroyedAtOnce) {
                     centeredFloatingText('Try again');
                     setTimeout(() => {
                         // restart
@@ -179,7 +147,7 @@ export const levels: { [name: string]: HandcraftedLevelMaker } = {
 
             }
             let checkIfAllDiedTimeout: NodeJS.Timeout;
-            Events.onDeathSource[spawnPortalOnAllDeathEventName] = () => {
+            Events.onDeathSource[restartIfNotAllDieAtSameTimeEventName] = () => {
                 if (checkIfAllDiedTimeout !== undefined) {
                     clearTimeout(checkIfAllDiedTimeout);
                 }
@@ -187,9 +155,8 @@ export const levels: { [name: string]: HandcraftedLevelMaker } = {
                 checkIfAllDiedTimeout = setTimeout(() => { checkIfAllDied() }, 500);
             }
             enemies.map(u => {
-                u.onDeathEvents.push(spawnPortalOnAllDeathEventName);
+                u.onDeathEvents.push(restartIfNotAllDieAtSameTimeEventName);
             });
-
             // Restart if you die
             const restartIfYouDieEventName = 'restartIfYouDie';
             Events.onDeathSource[restartIfYouDieEventName] = () => {
@@ -200,7 +167,6 @@ export const levels: { [name: string]: HandcraftedLevelMaker } = {
             }
             // Queue up the next level
             underworld.nextHandCraftedLevel = tutorialLevels[3];
-
         }
     }),
     [tutorialLevels[3]]: underworld => ({
@@ -218,10 +184,6 @@ export const levels: { [name: string]: HandcraftedLevelMaker } = {
         units: [
             {
                 id: 'dummy',
-                location: { x: underworld.width / 2 - config.COLLISION_MESH_RADIUS * 4, y: underworld.height / 2 }
-            },
-            {
-                id: 'dummy',
                 location: { x: underworld.width / 2 + config.COLLISION_MESH_RADIUS * 2, y: underworld.height / 2 }
             },
             {
@@ -236,6 +198,10 @@ export const levels: { [name: string]: HandcraftedLevelMaker } = {
                 id: 'dummy',
                 location: { x: underworld.width / 2 + config.COLLISION_MESH_RADIUS * 9, y: underworld.height / 2 }
             },
+            {
+                id: 'dummy',
+                location: { x: underworld.width / 2 - config.COLLISION_MESH_RADIUS * 4, y: underworld.height / 2 }
+            },
         ],
         startingCards: ['hurt', 'AOE', 'chain'],
         init: (underworld: Underworld) => {
@@ -243,27 +209,11 @@ export const levels: { [name: string]: HandcraftedLevelMaker } = {
                 p.unit.manaMax = 100;
                 p.unit.mana = p.unit.manaMax;
             });
-            const spawnPortalOnAllDeathEventName = 'spawnPortalOnAllDeath';
+            const restartIfNotAllDieAtSameTimeEventName = 'restartIfNotAllDieAtSameTime';
             const enemies = underworld.units.filter(u => u.faction == Faction.ENEMY)
             function checkIfAllDied() {
                 const allDestroyedAtOnce = enemies.every(u => u.alive == false);
-                if (allDestroyedAtOnce) {
-                    const portalPickup = Pickup.specialPickups['portal'];
-                    Pickup.create(
-                        1.5 * underworld.width / 4,
-                        underworld.height / 2,
-                        portalPickup.name,
-                        portalPickup.description,
-                        false,
-                        portalPickup.imagePath,
-                        portalPickup.animationSpeed,
-                        true,
-                        // Since this is the last level of the tutorial it takes you to the main menu
-                        () => {
-                            underworld.initLevel(0);
-                        }
-                    );
-                } else {
+                if (!allDestroyedAtOnce) {
                     centeredFloatingText('Try again');
                     setTimeout(() => {
                         // restart
@@ -273,7 +223,7 @@ export const levels: { [name: string]: HandcraftedLevelMaker } = {
 
             }
             let checkIfAllDiedTimeout: NodeJS.Timeout;
-            Events.onDeathSource[spawnPortalOnAllDeathEventName] = () => {
+            Events.onDeathSource[restartIfNotAllDieAtSameTimeEventName] = () => {
                 if (checkIfAllDiedTimeout !== undefined) {
                     clearTimeout(checkIfAllDiedTimeout);
                 }
@@ -281,7 +231,7 @@ export const levels: { [name: string]: HandcraftedLevelMaker } = {
                 checkIfAllDiedTimeout = setTimeout(() => { checkIfAllDied() }, 500);
             }
             enemies.map(u => {
-                u.onDeathEvents.push(spawnPortalOnAllDeathEventName);
+                u.onDeathEvents.push(restartIfNotAllDieAtSameTimeEventName);
             });
             // Restart if you die
             const restartIfYouDieEventName = 'restartIfYouDie';
