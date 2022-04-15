@@ -11,7 +11,7 @@ const CAST_MANA_COST = 30;
 const unit: UnitSource = {
   id: 'priest',
   info: {
-    description: 'Heals allies',
+    description: 'The priest heals damaged allies, and if it\'s allies are at full health it will bless them with a Shield.',
     image: 'units/priest.png',
     subtype: UnitSubType.PRIEST,
     probability: 30,

@@ -6,7 +6,7 @@ import * as config from '../config'
 const unit: UnitSource = {
   id: 'grunt',
   info: {
-    description: 'A basic grunt that will pursue enemies and hit them',
+    description: 'A simple but persistant creature that will pursue its enemies and attack them if within arm\'s reach.',
     image: 'units/golem',
     subtype: UnitSubType.GOON,
     probability: 100,

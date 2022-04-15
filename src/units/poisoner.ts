@@ -9,7 +9,7 @@ import * as poison from '../cards/poison';
 const unit: UnitSource = {
   id: 'poisoner',
   info: {
-    description: 'Poisons enemies',
+    description: 'A poisoner will cast a poison curse on it\'s enemies.',
     image: 'units/golem-poison.png',
     subtype: UnitSubType.POISONER,
     probability: 30,

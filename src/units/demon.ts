@@ -8,7 +8,7 @@ const CAST_MANA_COST = 30;
 const unit: UnitSource = {
   id: 'demon',
   info: {
-    description: 'Raises the dead and teleports!',
+    description: 'A demon resurrects its allies.',
     image: 'units/demon.png',
     subtype: UnitSubType.DEMON,
     probability: 30,

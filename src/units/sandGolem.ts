@@ -8,7 +8,7 @@ import { action } from './actions/rangedAction';
 const unit: UnitSource = {
   id: 'lobber',
   info: {
-    description: 'A sand golem, runs away if you get too close!',
+    description: 'This ranged creature will throw magic high up in the air - over walls - to deal damage to it\'s enemies.',
     image: 'units/golem-sand.png',
     subtype: UnitSubType.LOBBER,
     probability: 30,

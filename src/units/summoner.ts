@@ -8,7 +8,7 @@ const SUMMON_MANA_COST = 30;
 const unit: UnitSource = {
   id: 'summoner',
   info: {
-    description: 'Summons allies every few turns',
+    description: 'A summoner uses mana to summon grunts.',
     image: 'units/golem-summoner.png',
     subtype: UnitSubType.SUMMONER,
     probability: 30,

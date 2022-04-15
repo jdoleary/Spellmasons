@@ -10,7 +10,7 @@ import * as vampire_bite from '../cards/vampire_bite';
 const unit: UnitSource = {
   id: 'vampire',
   info: {
-    description: 'Blood sucking fiend!',
+    description: 'A vampire takes half damage when hurt, but takes all heals as pure damage.  Beware that it doesn\'t get close enough to bite you or you too will become a vampire!',
     image: 'units/vampire.png',
     subtype: UnitSubType.DEMON,
     probability: 30,
