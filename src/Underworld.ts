@@ -375,7 +375,10 @@ export default class Underworld {
         }
       } else {
         // Otherwise, make it a ground tile:
-        Image.create(coord.x, coord.y, 'tiles/ground.png', containerBoard);
+        const image = Image.create(coord.x, coord.y, 'tiles/ground.png', containerBoard);
+        // Anchor the ground image so that it is centered on it's 32x32 so that the bottom
+        // portion falls off into the abyss below it
+        image.sprite.anchor.y = 0.38;
       }
     }
     // Recache walls now that unreachable areas have been filled in
