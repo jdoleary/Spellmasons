@@ -28,7 +28,7 @@ import clone from './clone';
 import mana_burn from './mana_burn';
 import mana_steal from './mana_steal';
 import vampire_bite from './vampire_bite';
-import { IUpgrade, upgradeSource } from '../Upgrade';
+import { IUpgrade, upgradeCardsSource } from '../Upgrade';
 import { _getCardsFromIds } from './cardUtils';
 import { addCardToHand } from '../CardUI';
 export interface Modifiers {
@@ -60,7 +60,7 @@ function register(spell: Spell) {
     allModifiers[id] = spell.modifiers;
   }
   // Add card as upgrade:
-  upgradeSource.push(cardToUpgrade(card));
+  upgradeCardsSource.push(cardToUpgrade(card));
   // Add subsprites
   if (subsprites) {
     Object.entries(subsprites).forEach(([key, value]) => {

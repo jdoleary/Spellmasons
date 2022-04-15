@@ -20,8 +20,11 @@ export function generateUpgrades(player: IPlayer): IUpgrade[] {
     return [...upgradeSourceWhenDead];
   }
   let upgrades: IUpgrade[] = [];
+  const isAltitudeEven = window.underworld.levelIndex % 2 == 0;
+  // Every other level, players get to choose from stas upgrades or card upgrades
+  const upgradeList = isAltitudeEven ? upgradeStatsSource : upgradeCardsSource;
   // Clone upgrades for later mutation
-  const clonedUpgradeSource = [...upgradeSource].filter((u) =>
+  const clonedUpgradeSource = [...upgradeList].filter((u) =>
     (u.maxCopies === undefined
       ? // Always include upgrades that don't have a specified maxCopies
       true
@@ -87,7 +90,7 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer) {
   return element;
 }
 export function getUpgradeByTitle(title: string): IUpgrade | undefined {
-  const all_upgrades = upgradeSource.concat(upgradeSourceWhenDead);
+  const all_upgrades = [...upgradeCardsSource, ...upgradeSourceWhenDead, ...upgradeStatsSource];
   return all_upgrades.find((u) => u.title === title);
 }
 export const upgradeSourceWhenDead: IUpgrade[] = [
@@ -100,7 +103,7 @@ export const upgradeSourceWhenDead: IUpgrade[] = [
     probability: 30,
   },
 ];
-export const upgradeSource: IUpgrade[] = [
+export const upgradeStatsSource: IUpgrade[] = [
   {
     title: '+ Max Health',
     description: (player) =>
@@ -152,6 +155,8 @@ const maxManaIncreaseAmount = 10;
 const maxStaminaIncreaseAmount = 50;
 const maxHealthIncreaseAmount = 5;
 const manaPerTurnIncreaseAmount = 5;
+
+export const upgradeCardsSource: IUpgrade[] = []
 
 // Template
 //   {
