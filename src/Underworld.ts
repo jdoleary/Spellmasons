@@ -1305,12 +1305,12 @@ function getEnemiesForAltitude(levelIndex: number): { enemies: { [unitid: string
     {
       'grunt': 3,
       'archer': 2,
-      'Sand Golem': 1,
+      'lobber': 1,
     },
     {
       'grunt': 7,
       'archer': 3,
-      'Sand Golem': 2,
+      'lobber': 2,
     },
     {
       'grunt': 2,
@@ -1326,13 +1326,13 @@ function getEnemiesForAltitude(levelIndex: number): { enemies: { [unitid: string
     {
       'grunt': 3,
       'archer': 2,
-      'Sand Golem': 1,
+      'lobber': 1,
       'priest': 2,
     },
     {
       'grunt': 3,
       'archer': 2,
-      'Sand Golem': 1,
+      'lobber': 1,
       'priest': 2,
       'poisoner': 1,
       'vampire': 1,
@@ -1344,7 +1344,7 @@ function getEnemiesForAltitude(levelIndex: number): { enemies: { [unitid: string
     {
       'grunt': 5,
       'archer': 3,
-      'Sand Golem': 2,
+      'lobber': 2,
       'priest': 2,
       'poisoner': 1,
       'demon': 1,

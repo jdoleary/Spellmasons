@@ -6,7 +6,7 @@ import { createVisualLobbingProjectile } from '../Projectile';
 import { action } from './actions/rangedAction';
 
 const unit: UnitSource = {
-  id: 'Sand Golem',
+  id: 'lobber',
   info: {
     description: 'A sand golem, runs away if you get too close!',
     image: 'units/golem-sand.png',
