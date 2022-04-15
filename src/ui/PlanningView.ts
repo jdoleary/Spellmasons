@@ -94,6 +94,9 @@ export async function syncSpellEffectProjection() {
     // Do not change the hover icons when spells are animating
     return;
   }
+  if (!window.underworld) {
+    return;
+  }
   const mousePos = window.underworld.getMousePos();
   // Clear the spelleffectprojection in preparation for showing the current ones
   clearSpellEffectProjection();

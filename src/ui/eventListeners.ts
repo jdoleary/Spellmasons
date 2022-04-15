@@ -119,6 +119,9 @@ export function updateMouseUI() {
   if (window.view !== View.Game) {
     return;
   }
+  if (!window.underworld) {
+    return
+  }
   // Show target hover
   syncSpellEffectProjection();
 
