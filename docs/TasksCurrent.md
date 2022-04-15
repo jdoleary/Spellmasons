@@ -1,4 +1,7 @@
 # Tasks
+- Bug: After you make it through the tutorial you can still select "skip tutorial" in the menu, which then breaks the game
+    - I see a map but all the unit images are gone
+- Bug: Upgrade screen shows after tutorial
 - Visual: Wall tiles also need to "descent" into the abyss if a void tile is beneath them; see seed '0.8728849452582129';
 - **!**Bug: Different zoom levels resulted in spell miss on one screen but not on another
 
