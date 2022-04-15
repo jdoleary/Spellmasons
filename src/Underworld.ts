@@ -39,6 +39,7 @@ import { addCardToHand, removeCardsFromHand } from './CardUI';
 import { updateMouseUI } from './ui/eventListeners';
 import Jprompt from './Jprompt';
 import { moveWithCollisions } from './collision/moveWithCollision';
+import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './contants';
 
 export enum turn_phase {
   PlayerTurns,
@@ -88,8 +89,6 @@ export default class Underworld {
   // Instead of moving to the upgrade screen at the end of the level,
   // if this is set it will take players to a handcrafted level
   nextHandCraftedLevel?: string;
-  // A list of enemy ids that have been encountered in this game
-  enemyEncountered: string[] = [];
 
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
     window.underworld = this;
@@ -263,8 +262,11 @@ export default class Underworld {
       console.error('Unit with id', id, 'does not exist.  Have you registered it in src/units/index.ts?');
       return;
     }
-    if (!this.enemyEncountered.includes(id)) {
-      this.enemyEncountered.push(id);
+    if (!window.enemyEncountered.includes(id)) {
+      window.enemyEncountered.push(id);
+      if (window.allowCookies) {
+        localStorage.setItem(ENEMY_ENCOUNTERED_STORAGE_KEY, JSON.stringify(window.enemyEncountered));
+      }
       Jprompt({ imageSrc: Unit.getImagePathForUnitId(id), text: 'This is a ' + id + '\n' + sourceUnit.info.description, yesText: 'Okay!', yesKey: 'Space', yesKeyText: 'Spacebar' });
     }
     let unit: Unit.IUnit = Unit.create(
@@ -1301,14 +1303,6 @@ type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFun
 
 function getEnemiesForAltitude(levelIndex: number): { enemies: { [unitid: string]: number }, strength: number } {
   const hardCodedLevelEnemies: { [unitid: string]: number }[] = [
-    {
-      'grunt': 5,
-      'archer': 3,
-      'lobber': 2,
-      'priest': 2,
-      'poisoner': 1,
-      'demon': 1,
-    },
     {
       'grunt': 5
     },

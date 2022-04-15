@@ -19,6 +19,7 @@ cookieConsentPopup(false);
 // the pie globals
 import './wsPieSetup';
 import type { CardCost } from './cards/cardUtils';
+import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './contants';
 
 const YES = 'yes'
 const SKIP_TUTORIAL = 'skipTutorial';
@@ -152,6 +153,9 @@ declare global {
     // The costs of the current spell which is shown projected in
     // the health and mana bars
     spellCost: CardCost;
+    // A list of enemy ids that have been encountered by this client
+    // Used to introduce new enemies
+    enemyEncountered: string[];
   }
 }
 window.spellCost = { healthCost: 0, manaCost: 0 };
@@ -167,4 +171,10 @@ window.skipTutorial = () => {
   } else {
     console.log('Cannot save choice to skip tutorial since cookies are not consented to');
   }
+}
+if (window.allowCookies) {
+  window.enemyEncountered = JSON.parse(localStorage.getItem(ENEMY_ENCOUNTERED_STORAGE_KEY) || '[]');
+  console.log('Setup: initializing enemyEncountered as', window.enemyEncountered);
+} else {
+  window.enemyEncountered = [];
 }
