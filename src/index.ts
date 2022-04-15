@@ -72,7 +72,7 @@ function setupAll() {
   // Set UI version info
   const elVersionInfo = document.getElementById('version-info')
   if (elVersionInfo && import.meta.env.SNOWPACK_PUBLIC_PACKAGE_VERSION) {
-    elVersionInfo.innerText = `Alpha v${import.meta.env.SNOWPACK_PUBLIC_PACKAGE_VERSION}`;
+    elVersionInfo.innerText = `Alpha v${import.meta.env.SNOWPACK_PUBLIC_PACKAGE_VERSION}\nGraphics are not final`;
   }
 }
 
