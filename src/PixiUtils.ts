@@ -74,7 +74,17 @@ export function recenterCamera() {
     case View.Game:
       if (window.player) {
 
-        const centerTarget = clone(window.player.unit);
+        let centerTarget = clone(window.player.unit);
+        // If current client player is in the portal,
+        // set the camera to the ally player whos turn it currently is:
+        if (window.player.inPortal) {
+          const currentTurnPlayer = window.underworld.players[window.underworld.playerTurnIndex]
+          if (currentTurnPlayer) {
+            centerTarget = clone(currentTurnPlayer.unit);
+          } else {
+            console.error('Could not find current turn player for index', window.underworld.playerTurnIndex)
+          }
+        }
         // Clamp centerTarget so that there isn't a log of empty space
         // in the camera
         const margin = config.COLLISION_MESH_RADIUS * 4;
