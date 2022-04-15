@@ -574,10 +574,10 @@ body.your-turn #player-turn-indicator {
 
 #mana .fill:nth-child(2) .cost {
   background: repeating-linear-gradient(45deg,
-      rgba(0, 0, 0, 0.0),
+      #5656d5,
+      #5656d5 10px,
       rgba(0, 0, 0, 0.0) 10px,
-      rgb(122, 74, 185) 10px,
-      rgb(122, 74, 185) 20px) fixed;
+      rgba(0, 0, 0, 0.0) 20px) fixed;
 }
 
 #mana .fill:nth-child(3) {
@@ -588,8 +588,8 @@ body.your-turn #player-turn-indicator {
   background: repeating-linear-gradient(45deg,
       rgba(0, 0, 0, 0.0),
       rgba(0, 0, 0, 0.0) 10px,
-      rgb(54, 4, 66) 10px,
-      rgb(54, 4, 66) 20px) fixed;
+      rgb(141, 86, 213) 10px,
+      rgb(141, 86, 213) 20px) fixed;
 }
 
 #health-mana .fill {
