@@ -357,6 +357,8 @@ function handleLoadGameState(payload: any) {
   // Resume game / load game / rejoin game
   const loadedGameState: Underworld = { ...payload.underworld };
   underworld = new Underworld(loadedGameState.seed, loadedGameState.RNGState);
+  underworld.width = loadedGameState.width;
+  underworld.height = loadedGameState.height;
   underworld.playerTurnIndex = loadedGameState.playerTurnIndex;
   underworld.levelIndex = loadedGameState.levelIndex;
   // Load all units that are not player's, those will be loaded indepentently
