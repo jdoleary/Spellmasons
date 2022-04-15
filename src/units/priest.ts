@@ -9,7 +9,7 @@ import Shield from '../cards/shield'
 
 const CAST_MANA_COST = 30;
 const unit: UnitSource = {
-  id: 'Priest',
+  id: 'priest',
   info: {
     description: 'Heals allies',
     image: 'units/priest.png',
