@@ -6,7 +6,7 @@ import * as config from '../config';
 
 const SUMMON_MANA_COST = 30;
 const unit: UnitSource = {
-  id: 'Summoner',
+  id: 'summoner',
   info: {
     description: 'Summons allies every few turns',
     image: 'units/golem-summoner.png',
@@ -47,7 +47,7 @@ const unit: UnitSource = {
         );
         await Unit.moveTowards(summonedUnit, coords);
       } else {
-        console.error('Summoner could not find unit source to summon from');
+        console.error('summoner could not find unit source to summon from');
       }
     }
   },

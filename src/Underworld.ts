@@ -1315,10 +1315,10 @@ function getEnemiesForAltitude(levelIndex: number): { enemies: { [unitid: string
     {
       'grunt': 2,
       'archer': 2,
-      'Summoner': 1,
+      'summoner': 1,
     },
     {
-      'Summoner': 3,
+      'summoner': 3,
     },
     {
       'vampire': 1,
