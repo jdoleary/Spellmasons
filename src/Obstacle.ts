@@ -10,19 +10,26 @@ export interface IObstacle {
   imagePath: string;
   image: Image.IImage;
   bounds: Polygon;
+  wall: boolean;
 }
 interface IObstacleSource {
   name: string;
   description: string;
   imagePath: string;
+  // blocks line of sight
+  wall: boolean;
+  // blocks movement
+  walkable: boolean;
 }
 export function create(x: number, y: number, obstacle: IObstacleSource) {
   // Obstacles go inside of containerUnits so that they can be z-index sorted
   // along with all the units so units can stand in front of or behind the walls
   const image = Image.create(x, y, obstacle.imagePath, containerUnits);
-  // TODO: This anchor is a bit arbitrary, for now, it makes "walls" appear to have height,
-  // since the wall sprite is taller than the 64x64 space that it occupies
-  image.sprite.anchor.y = 0.61;
+  if (obstacle.wall) {
+    // TODO: This anchor is a bit arbitrary, for now, it makes "walls" appear to have height,
+    // since the wall sprite is taller than the 64x64 space that it occupies
+    image.sprite.anchor.y = 0.61;
+  }
   const width = OBSTACLE_SIZE;
   const height = OBSTACLE_SIZE;
   const _x = x - width / 2;
@@ -49,6 +56,7 @@ export function create(x: number, y: number, obstacle: IObstacleSource) {
     imagePath: obstacle.imagePath,
     image,
     bounds,
+    wall: obstacle.wall
   };
 
 
@@ -76,5 +84,14 @@ export const obstacleSource: IObstacleSource[] = [
     name: 'Wall',
     description: 'This is a wall that will block your way.',
     imagePath: 'tiles/wall.png',
+    wall: true,
+    walkable: false
+  },
+  {
+    name: 'Void',
+    description: 'Empty space.',
+    imagePath: 'tiles/void.png',
+    wall: false,
+    walkable: false
   },
 ];

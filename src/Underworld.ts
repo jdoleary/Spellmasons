@@ -232,13 +232,12 @@ export default class Underworld {
         { x: window.underworld.width, y: 0 },
       ], inverted: true
     };
-    const obstacleBounds = this.obstacles.map(o => o.bounds);
-    this.walls = [...obstacleBounds.map(polygonToPolygonLineSegments), polygonToPolygonLineSegments(mapBounds)].flat()
+    this.walls = [...this.obstacles.filter(o => o.wall).map(o => o.bounds).map(polygonToPolygonLineSegments), polygonToPolygonLineSegments(mapBounds)].flat()
 
     // Expand pathing walls by the size of the regular unit
     const expandMagnitude = config.COLLISION_MESH_RADIUS * config.NON_HEAVY_UNIT_SCALE
     // Save the pathing walls for the underworld
-    const expandedAndMergedPolygons = mergeOverlappingPolygons([...obstacleBounds.map(p => expandPolygon(p, expandMagnitude, true)), expandPolygon(mapBounds, expandMagnitude, false)]);
+    const expandedAndMergedPolygons = mergeOverlappingPolygons([...this.obstacles.map(o => o.bounds).map(p => expandPolygon(p, expandMagnitude, true)), expandPolygon(mapBounds, expandMagnitude, false)]);
     this.pathingPolygons = expandedAndMergedPolygons
   }
   spawnPickup(index: number, coords: Vec2) {
@@ -313,6 +312,7 @@ export default class Underworld {
             const coordX = config.OBSTACLE_SIZE * config.OBSTACLES_PER_SECTOR_WIDE * i + config.OBSTACLE_SIZE * X + config.COLLISION_MESH_RADIUS;
             const coordY = config.OBSTACLE_SIZE * config.OBSTACLES_PER_SECTOR_WIDE * j + config.OBSTACLE_SIZE * Y + config.COLLISION_MESH_RADIUS;
             const obstacleIndex = rowOfObstacles[X];
+            // obstacleIndex of 0 means ground
             if (obstacleIndex == 0) {
               // Empty, no obstacle, take this opportunity to spawn something from the spawn list, since
               // we know it is a safe place to spawn
@@ -330,11 +330,12 @@ export default class Underworld {
               // Create ground tile
               Image.create(coordX, coordY, 'tiles/ground.png', containerBoard);
               continue
+            } else {
+              // obstacleIndex of 1 means non ground, so pick an obstacle at random
+              const obstacleChoice = randInt(this.random, 0, 1)
+              const obstacle = Obstacle.obstacleSource[obstacleChoice];
+              Obstacle.create(coordX, coordY, obstacle);
             }
-            // -1 to let 0 be empty (no obstacle) and 1 will be index 0 of
-            // obstacleSource
-            const obstacle = Obstacle.obstacleSource[obstacleIndex - 1];
-            Obstacle.create(coordX, coordY, obstacle);
 
           }
 
