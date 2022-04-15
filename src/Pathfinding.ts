@@ -6,7 +6,7 @@ import type { Vec2 } from './Vec';
 import * as Vec from './Vec';
 import * as math from './math';
 
-// Will return either an array with 1 normal polygon or an array with potentially multiple
+// Will return either an array with 1 normal polygon or an array with 1 or more 
 // inverted polygons 
 export function findPolygonsThatVec2IsInsideOf(point: Vec2, testPolygons: Polygon[]): Polygon[] {
     let insideOfPolys: Polygon[] = [];
@@ -21,6 +21,9 @@ export function findPolygonsThatVec2IsInsideOf(point: Vec2, testPolygons: Polygo
         if (!poly.inverted) {
             if (isVec2InsidePolygon(point, poly)) {
                 insideOfPolys = [poly];
+                // Exit immediately if the point is inside a non-inverted polygon
+                // since overlapping polygons should be merged, we can assume it
+                // is only inide this one polygon
                 break;
             }
         }
