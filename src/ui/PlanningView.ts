@@ -85,7 +85,8 @@ export function updateManaCostUI(): CardCost {
     window.spellCost = cost;
     return cost;
   }
-  return { manaCost: 0, healthCost: 0 };
+  window.spellCost = { manaCost: 0, healthCost: 0 };
+  return window.spellCost;
 }
 
 export async function syncSpellEffectProjection() {
