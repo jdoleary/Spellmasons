@@ -3,7 +3,6 @@ import * as Vec from './Vec';
 import { distance, similarTriangles } from "./math";
 import { isCollinearAndOverlapping, isCollinearAndPointInSameDirection, LineSegment, lineSegmentIntersection } from "./collision/collisionMath";
 import { clockwiseAngle, isAngleBetweenAngles } from "./Angle";
-import * as config from './config'
 
 export interface Polygon {
     points: Vec2[];
