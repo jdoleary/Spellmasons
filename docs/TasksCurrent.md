@@ -1,4 +1,8 @@
 # Tasks
+- **!**Bug: Different zoom levels resulted in spell miss on one screen but not on another
+- **!**Bug: client at quarter size screen got different results for pathing polygons, seemed to be clipped by the screen
+
+- Bug: If guest chooses character first: 'window.underworld is undefined'
 - Customize RESOLVE_DONE_MOVING_TIMEOUT_MS for each unit depending on their move distance and their move speed
 - Map bounds are off for handcrafted level
 - Bug: Grunts can attack through walls if they are just beyond a corner
