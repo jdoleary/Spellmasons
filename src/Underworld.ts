@@ -98,7 +98,7 @@ export default class Underworld {
     this.random = this.syncronizeRNG(RNGState);
 
     // Start the gameloop
-    this.gameLoopUnits();
+    this.gameLoop();
   }
   syncronizeRNG(RNGState: SeedrandomState | boolean) {
     // state of "true" initializes the RNG with the ability to save it's state,
@@ -106,7 +106,7 @@ export default class Underworld {
     this.random = seedrandom(this.seed, { state: RNGState })
     return this.random;
   }
-  gameLoopUnits() {
+  gameLoop() {
     Unit.syncPlayerHealthManaUI();
     window.unitOverlayGraphics.clear();
 
@@ -182,7 +182,7 @@ export default class Underworld {
     recenterCamera();
 
     // Invoke gameLoopUnits again next loop
-    requestAnimationFrame(this.gameLoopUnits.bind(this))
+    requestAnimationFrame(this.gameLoop.bind(this))
   }
   // Returns true if it is the current players turn
   isMyTurn() {
@@ -218,7 +218,7 @@ export default class Underworld {
     containerDoodads.removeChildren();
     // Prevent requestAnimationFrame from calling this method next time, since this underworld
     // instance is being cleaned up
-    this.gameLoopUnits = () => { };
+    this.gameLoop = () => { };
   }
   // cacheWalls updates underworld.walls array
   // with the walls for the edge of the map
