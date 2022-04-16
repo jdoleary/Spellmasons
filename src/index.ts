@@ -156,6 +156,8 @@ declare global {
     // A list of enemy ids that have been encountered by this client
     // Used to introduce new enemies
     enemyEncountered: string[];
+    // Make me superhuman (used for dev)
+    superMe: () => void;
   }
 }
 window.spellCost = { healthCost: 0, manaCost: 0 };
@@ -177,4 +179,16 @@ if (window.allowCookies) {
   console.log('Setup: initializing enemyEncountered as', window.enemyEncountered);
 } else {
   window.enemyEncountered = [];
+}
+
+window.superMe = () => {
+  if (window.player) {
+
+    window.player.unit.health = 10000;
+    window.player.unit.healthMax = 10000;
+    window.player.unit.mana = 10000;
+    window.player.unit.manaMax = 10000;
+    // Give me all cards
+    Object.keys(Cards.allCards).forEach(window.giveMeCard);
+  }
 }
