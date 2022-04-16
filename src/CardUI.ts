@@ -4,7 +4,6 @@ import * as math from './math';
 import {
   clearSpellEffectProjection,
   updateManaCostUI,
-  updatePlanningView,
 } from './ui/PlanningView';
 import { calculateCostForSingleCard } from './cards/cardUtils';
 import floatingText from './FloatingText';
@@ -314,11 +313,6 @@ export function toggleInspectMode(active: boolean) {
   document.body.classList.toggle('inspect-mode', active);
   elSelectedCards && elSelectedCards.classList.toggle('hide', active);
 }
-// updatePlanningView runs on an interval so that the selected entity
-// is kept up to date as the gameplay changes
-setInterval(() => {
-  updatePlanningView();
-}, 16.6);
 export function clearSelectedCards() {
   // Remove the board highlight
   clearSpellEffectProjection();

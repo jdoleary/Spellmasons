@@ -184,6 +184,7 @@ export default class Underworld {
     containerUnits.children.sort((a, b) => a.y - b.y)
 
     recenterCamera();
+    updatePlanningView();
 
     // Invoke gameLoopUnits again next loop
     requestAnimationFrame(this.gameLoop.bind(this))
@@ -514,14 +515,9 @@ export default class Underworld {
     window.underworld.players.forEach(p => {
       p.unit.manaMax += 5
     })
-    // Since a new level changes the existing units, redraw the planningView in
-    // the event that the planningView is active
-    updatePlanningView();
 
     // Set the first turn phase
     window.underworld.setTurnPhase(turn_phase.PlayerTurns);
-    // Recentering should happen after stage setup
-    recenterCamera();
   }
   initLevel(levelIndex: number): void {
     // Level sizes are random but have change to grow bigger as loop continues
@@ -1000,11 +996,6 @@ export default class Underworld {
           await this.executeNPCTurn(Faction.ENEMY);
           // Set turn phase to player turn
           this.endNPCTurnPhase();
-
-          // Since NPC turn is over, update the planningView
-          // They may have moved or unfrozen which would update
-          // where they can attack next turn
-          updatePlanningView();
         })();
         break;
       default:
@@ -1202,9 +1193,6 @@ export default class Underworld {
       containerSpells.removeChildren();
     }
 
-    // Since units may have moved or become frozen, redraw the planningView which takes these
-    // changes into consideration
-    updatePlanningView();
     return effectState;
   }
   // hasLineOfSight returns true if there are no walls interrupting

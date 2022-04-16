@@ -7,7 +7,6 @@ import {
   drawOnHoverCircle,
   isOutOfBounds,
   syncSpellEffectProjection,
-  updatePlanningView,
   updateTooltipSelection,
 } from './PlanningView';
 import { View } from '../views';
@@ -289,8 +288,6 @@ export function clickHandler(e: MouseEvent) {
     return;
   }
   updateTooltipSelection(mousePos);
-  // Update planning view
-  updatePlanningView();
 
   if (window.altDown) {
     window.pie.sendData({
