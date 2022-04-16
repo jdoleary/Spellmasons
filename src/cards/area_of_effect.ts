@@ -24,7 +24,7 @@ Adds targets for the following cards to effect by "growing" existing targets
         );
         // Draw visual circle for dryRun
         drawDryRunCircle(target, range);
-        newTargets = newTargets.concat(withinRadius);
+        newTargets.push(...withinRadius);
       }
       // Update targets
       state.targets = [...state.targets, ...newTargets];
