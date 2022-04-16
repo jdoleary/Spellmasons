@@ -1,4 +1,5 @@
 # Tasks
+- Bug: Two demons may target the same corpse
 - Bug: "Chain only modifies cards on it's right" shows if you end your turn with chain as a selected card and mouse on the field
 - Bug: left position is messed up for mana bar 2
     - 125/85 + 30 /turn and it only shows a sliver of purple
