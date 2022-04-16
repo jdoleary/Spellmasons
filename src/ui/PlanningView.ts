@@ -3,7 +3,7 @@ import * as PIXI from 'pixi.js';
 import { allUnits } from '../units';
 import { containerSpells, containerUI } from '../PixiUtils';
 import { containerPlanningView } from '../PixiUtils';
-import { Faction, UnitType } from '../commonTypes';
+import { Faction, UnitSubType, UnitType } from '../commonTypes';
 import { clone, equal, Vec2 } from '../Vec';
 import { turn_phase } from '../Underworld';
 import * as CardUI from '../CardUI';
@@ -13,6 +13,9 @@ import type * as Obstacle from '../Obstacle';
 import type * as Pickup from '../Pickup';
 import { targetBlue } from './colors';
 import { calculateCost, CardCost } from '../cards/cardUtils';
+import { closestLineSegmentIntersection } from '../collision/collisionMath';
+import * as colors from './colors';
+import { getBestTarget } from '../units/actions/rangedAction';
 
 let planningViewGraphics: PIXI.Graphics;
 let dryRunGraphics: PIXI.Graphics;
@@ -32,18 +35,47 @@ export function updatePlanningView() {
       if (
         selectedUnit.alive
       ) {
-        window.unitOverlayGraphics.lineStyle(8, 0x0fffff, 0.3);
-        window.unitOverlayGraphics.drawCircle(
-          selectedUnit.x,
-          selectedUnit.y,
-          selectedUnit.attackRange
-        );
-        window.unitOverlayGraphics.drawCircle(
-          selectedUnit.x,
-          selectedUnit.y,
-          selectedUnit.moveDistance
-        );
-        window.unitOverlayGraphics.endFill();
+        // If selectedUnit is an archer, draw LOS attack line
+        //  instead of attack range for them
+        if (selectedUnit.unitSubType == UnitSubType.ARCHER) {
+          let archerTarget = getBestTarget(selectedUnit)
+          // If they don't have a target they can actually attack
+          // draw a line to the closest enemy that they would target if
+          // they had LOS
+          if (!archerTarget) {
+            archerTarget = Unit.findClosestUnitInDifferentFaction(selectedUnit);
+          }
+          if (archerTarget) {
+            const attackLine = { p1: selectedUnit, p2: archerTarget };
+            const closestIntersection = closestLineSegmentIntersection(attackLine, window.underworld.walls);
+
+            planningViewGraphics.lineStyle(3, colors.targetBlue, 0.7);
+            planningViewGraphics.moveTo(attackLine.p1.x, attackLine.p1.y);
+            if (closestIntersection) {
+              planningViewGraphics.lineTo(closestIntersection.x, closestIntersection.y);
+              // Draw a red line the rest of the way shoing that you cannot cast
+              planningViewGraphics.lineStyle(3, 0xff0000, 0.7);
+              planningViewGraphics.lineTo(attackLine.p2.x, attackLine.p2.y);
+              planningViewGraphics.drawCircle(attackLine.p2.x, attackLine.p2.y, 3);
+              // Draw a circle where the cast stops
+              planningViewGraphics.moveTo(attackLine.p2.x, attackLine.p2.y);//test
+              planningViewGraphics.lineStyle(3, colors.targetBlue, 0.7);
+              planningViewGraphics.drawCircle(closestIntersection.x, closestIntersection.y, 3);
+            } else {
+              planningViewGraphics.lineTo(attackLine.p2.x, attackLine.p2.y);
+              planningViewGraphics.drawCircle(attackLine.p2.x, attackLine.p2.y, 3);
+            }
+          }
+        } else {
+
+          window.unitOverlayGraphics.lineStyle(8, 0x0fffff, 0.3);
+          window.unitOverlayGraphics.drawCircle(
+            selectedUnit.x,
+            selectedUnit.y,
+            selectedUnit.moveDistance + selectedUnit.attackRange
+          );
+          window.unitOverlayGraphics.endFill();
+        }
       }
     }
     // Draw a circle under the feet of the player whos current turn it is
