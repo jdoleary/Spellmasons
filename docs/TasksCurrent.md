@@ -1,5 +1,4 @@
 # Tasks
-- Bug: Protection worked on wrong faction
 - Max mana upgrade isn't enough
 - Bug: left position is messed up for mana bar 2
     - 125/85 + 30 /turn and it only shows a sliver of purple
