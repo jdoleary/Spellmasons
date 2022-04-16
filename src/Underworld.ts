@@ -1089,10 +1089,11 @@ export default class Underworld {
     castLocation: Vec2,
     dryRun: boolean,
   ): Promise<Cards.EffectState> {
+    const unitAtCastLocation = this.getUnitAt(castLocation);
     let effectState: Cards.EffectState = {
       casterPlayer,
       casterUnit: casterPlayer.unit,
-      targetedUnits: [],
+      targetedUnits: unitAtCastLocation ? [unitAtCastLocation] : [],
       castLocation,
       aggregator: {
         unitDamage: [],
@@ -1305,7 +1306,7 @@ type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFun
 function getEnemiesForAltitude(levelIndex: number): { enemies: { [unitid: string]: number }, strength: number } {
   const hardCodedLevelEnemies: { [unitid: string]: number }[] = [
     {
-      'grunt': 5
+      'grunt': 50
     },
     {
       'grunt': 4,
