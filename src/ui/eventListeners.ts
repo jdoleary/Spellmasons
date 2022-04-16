@@ -111,8 +111,11 @@ export function keyupListener(event: KeyboardEvent) {
   updateMouseUI();
 }
 
-export function endTurnBtnListener() {
+export function endTurnBtnListener(e: MouseEvent) {
   window.underworld.endMyTurn();
+  e.preventDefault();
+  e.stopPropagation();
+  return false;
 }
 
 export function updateMouseUI() {

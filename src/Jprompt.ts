@@ -33,8 +33,11 @@ export default async function Jprompt(prompt: Prompt): Promise<boolean> {
         const noBtn = el.querySelector('.no') as HTMLElement;
         const yesBtn = el.querySelector('.yes') as HTMLElement;
         if (noBtn) {
-            noBtn.addEventListener('click', () => {
+            noBtn.addEventListener('click', (e) => {
                 res(false);
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
             });
         }
         // Click outside is the same as no
@@ -57,8 +60,11 @@ export default async function Jprompt(prompt: Prompt): Promise<boolean> {
         el.addEventListener('click', cancelFn);
         el.addEventListener('contextmenu', cancelFn);
         if (yesBtn) {
-            yesBtn.addEventListener('click', () => {
+            yesBtn.addEventListener('click', (e) => {
                 res(true);
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
             });
         }
     }).then((result) => {
