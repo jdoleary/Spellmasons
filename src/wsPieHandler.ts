@@ -18,22 +18,18 @@ import { updateMouseUI } from './ui/eventListeners';
 
 const messageLog: any[] = [];
 let clients: string[] = [];
-let underworld: Underworld;
 export function initializeUnderworld() {
   console.log('Setup: Initialize Underworld');
-  underworld = new Underworld(Math.random().toString());
+  window.underworld = new Underworld(Math.random().toString());
   // Mark the underworld as "ready"
   readyState.set('underworld', true);
 }
 window.exitCurrentGame = function exitCurrentGame() {
   // Go back to the main PLAY menu
   window.setMenu('PLAY');
-  if (underworld) {
-    underworld.cleanup();
+  if (window.underworld) {
+    window.underworld.cleanup();
   }
-  // @ts-ignore
-  underworld = undefined;
-  readyState.set('underworld', false);
 }
 export function onData(d: OnDataArgs) {
   console.log("onData:", MESSAGE_TYPES[d.payload.type], d)
@@ -83,7 +79,7 @@ export function onData(d: OnDataArgs) {
       // Reset processedMessageCount since once a client loads a new state
       // it will be synced with all the others and they can all start counting again
       // from 0 to see if they're up to date.
-      underworld.processedMessageCount = 0;
+      window.underworld.processedMessageCount = 0;
       // The LOAD_GAME_STATE message is tricky, it is an 
       // exception to the normal pattern used
       // with the queue, but it should still be processed sequentially to prevent
@@ -128,15 +124,15 @@ export function processNextInQueueIfReady() {
 }
 function tryStartGame() {
   console.log('Game: tryStartGame...');
-  const gameAlreadyStarted = underworld.levelIndex >= 0;
+  const gameAlreadyStarted = window.underworld.levelIndex >= 0;
   const currentClientIsHost = window.hostClientId == window.clientId;
-  const clientsLeftToChooseCharacters = clients.length - underworld.players.length;
+  const clientsLeftToChooseCharacters = clients.length - window.underworld.players.length;
   // Starts a new game if all clients have chosen characters, THIS client is the host, and 
   // if the game hasn't already been started
   if (currentClientIsHost && clientsLeftToChooseCharacters <= 0 && !gameAlreadyStarted) {
     console.log('Host: Start game');
-    underworld.initLevel(0);
-    underworld.gameStarted = true;
+    window.underworld.initLevel(0);
+    window.underworld.gameStarted = true;
     console.log('Host: Send all clients game state for initial load');
     clients.forEach(clientId => {
       giveClientGameStateForInitialLoad(clientId);
@@ -150,35 +146,35 @@ export async function startTutorial() {
   await window.startSingleplayer();
   const p = Player.create(window.clientId, manBlue.id);
   if (p) {
-    underworld.players.push(p);
-    if (underworld.gameStarted) {
+    window.underworld.players.push(p);
+    if (window.underworld.gameStarted) {
       // Initialize the player for the level
       Player.resetPlayerForNextLevel(p);
     }
   } else {
     console.error('Could not create player character for tutorial');
   }
-  const gameAlreadyStarted = underworld.levelIndex >= 0;
+  const gameAlreadyStarted = window.underworld.levelIndex >= 0;
   const currentClientIsHost = window.hostClientId == window.clientId;
-  const clientsLeftToChooseCharacters = clients.length - underworld.players.length;
+  const clientsLeftToChooseCharacters = clients.length - window.underworld.players.length;
   // Starts a new game if all clients have chosen characters, THIS client is the host, and 
   // if the game hasn't already been started
   if (currentClientIsHost && clientsLeftToChooseCharacters <= 0 && !gameAlreadyStarted) {
     console.log('Host: Start tutorial');
-    underworld.initHandcraftedLevel(tutorialLevels[0]);
-    underworld.gameStarted = true;
+    window.underworld.initHandcraftedLevel(tutorialLevels[0]);
+    window.underworld.gameStarted = true;
   } else {
     console.log('Users left to choose a character: ', clientsLeftToChooseCharacters);
   }
 }
 async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
-  underworld.processedMessageCount++;
+  window.underworld.processedMessageCount++;
   currentlyProcessingOnDataMessage = d;
   const { payload, fromClient } = d;
   const type: MESSAGE_TYPES = payload.type;
   console.log("Handle ONDATA", type, payload)
   // Get caster
-  const caster = underworld.players.find((p) => p.clientId === fromClient);
+  const caster = window.underworld.players.find((p) => p.clientId === fromClient);
   switch (type) {
     // Checks to see if desync has occurred between clients
     // It is important that this message is handled syncronously, so we don't get 
@@ -189,14 +185,14 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
     // the same messages.
     // case MESSAGE_TYPES.GAMESTATE_HASH:
     //   const hostClientsHash = payload.hash;
-    //   if (underworld.processedMessageCount != payload.processedMessageCount) {
-    //     console.log('Skip hash comparison as one of the clients is still catching up to the other in the message queue', underworld.processedMessageCount, payload.processedMessageCount)
+    //   if (window.underworld.processedMessageCount != payload.processedMessageCount) {
+    //     console.log('Skip hash comparison as one of the clients is still catching up to the other in the message queue', window.underworld.processedMessageCount, payload.processedMessageCount)
     //     break;
     //   }
-    //   const currentSerializedGameState = underworld.serializeForHash();
+    //   const currentSerializedGameState = window.underworld.serializeForHash();
     //   const currentHash = hash(JSON.stringify(currentSerializedGameState));
     //   if (currentHash != hostClientsHash) {
-    //     console.error(`Desync: ${underworld.processedMessageCount} ${payload.processedMessageCount} Out of sync with host, ${currentHash} ${hostClientsHash} (${hash(payload.state)})`);
+    //     console.error(`Desync: ${window.underworld.processedMessageCount} ${payload.processedMessageCount} Out of sync with host, ${currentHash} ${hostClientsHash} (${hash(payload.state)})`);
     //     // TODO: Remove floating text for production
     //     floatingText({
     //       coords: { x: MAP_WIDTH / 2, y: MAP_HEIGHT / 2 }, text: "Out of sync with host!",
@@ -222,7 +218,7 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
         if (currentClientIsHost || fromClient !== window.clientId) {
           // Create Player entity for the client that just joined:
           // If player doesn't already exist, make them
-          const alreadyAssociatedPlayer = underworld.players.find((p) => p.clientId === fromClient);
+          const alreadyAssociatedPlayer = window.underworld.players.find((p) => p.clientId === fromClient);
           if (alreadyAssociatedPlayer) {
             console.log('Client is already associated with a Player instance, so they will rejoin as that player rather than creating a new one', fromClient);
             Player.setClientConnected(alreadyAssociatedPlayer, true);
@@ -230,22 +226,22 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
             console.log(`Setup: Create a Player instance for ${fromClient}`)
             const p = Player.create(fromClient, payload.unitId);
             if (p) {
-              underworld.players.push(p);
-              if (underworld.gameStarted) {
+              window.underworld.players.push(p);
+              if (window.underworld.gameStarted) {
                 // Initialize the player for the level
                 Player.resetPlayerForNextLevel(p);
               }
-              const cachedPlayerActiveTurn = underworld.players[underworld.playerTurnIndex];
+              const cachedPlayerActiveTurn = window.underworld.players[window.underworld.playerTurnIndex];
               // Sort underworld.players according to client order so that all
               // instances of the game have a underworld.players array in the same
               // order
               // --
               // (the .filter removes possible undefined players so that underworld.players doesn't contain any undefined values)
-              underworld.players = clients.map(c => underworld.players.find(p => p.clientId == c)).filter(x => !!x) as Player.IPlayer[];
+              window.underworld.players = clients.map(c => window.underworld.players.find(p => p.clientId == c)).filter(x => !!x) as Player.IPlayer[];
               // Restore playerTurnIndex after mutating the players array
-              const restorePlayerTurnIndex = underworld.players.findIndex(p => p == cachedPlayerActiveTurn);
+              const restorePlayerTurnIndex = window.underworld.players.findIndex(p => p == cachedPlayerActiveTurn);
               if (restorePlayerTurnIndex !== undefined) {
-                underworld.playerTurnIndex = restorePlayerTurnIndex;
+                window.underworld.playerTurnIndex = restorePlayerTurnIndex;
               }
             } else {
               console.error("Failed to SelectCharacter because Player.create did not return a player object")
@@ -254,7 +250,7 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
 
           // Note: Allow the client to recieve gamestate even if a new player cannot be created because they may
           // be rejoining as an already existing character
-          const gameAlreadyStarted = underworld.levelIndex >= 0;
+          const gameAlreadyStarted = window.underworld.levelIndex >= 0;
           if (gameAlreadyStarted) {
             // Send the lastest gamestate to that client so they can be up-to-date:
             // Note: It is important that this occurs AFTER the player instance is created for the
@@ -273,8 +269,8 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
     case MESSAGE_TYPES.SYNC:
       const { players, units, underworldPartial } = payload;
 
-      underworld.syncronize(underworldPartial);
-      for (let i = 0; i < underworld.units.length; i++) {
+      window.underworld.syncronize(underworldPartial);
+      for (let i = 0; i < window.underworld.units.length; i++) {
         const syncUnit = units[i]
         if (!syncUnit) {
           console.error("Something is wrong, underworld has different length unit than sync units")
@@ -282,34 +278,34 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
           window.pie.sendData({ type: MESSAGE_TYPES.DESYNC });
           return;
         } else {
-          const sourceUnit = underworld.units[i];
+          const sourceUnit = window.underworld.units[i];
           if (syncUnit.id !== sourceUnit.id) {
             console.error('Sync failure, units are out of order', syncUnit.id, sourceUnit.id);
             // Client incurred major desync, resolve via DESYNC message
             window.pie.sendData({ type: MESSAGE_TYPES.DESYNC });
             return;
           } else {
-            Unit.syncronize(syncUnit, underworld.units[i]);
+            Unit.syncronize(syncUnit, window.underworld.units[i]);
           }
         }
       }
-      for (let i = 0; i < underworld.players.length; i++) {
+      for (let i = 0; i < window.underworld.players.length; i++) {
         const syncPlayer = players[i]
-        if (!syncPlayer || syncPlayer.clientId !== underworld.players[i].clientId) {
+        if (!syncPlayer || syncPlayer.clientId !== window.underworld.players[i].clientId) {
           console.error("Something is wrong, underworld has different players than sync players")
           // Client incurred major desync, resolve via DESYNC message
           window.pie.sendData({ type: MESSAGE_TYPES.DESYNC });
           return;
         } else {
-          Player.syncronize(syncPlayer, underworld.players[i]);
+          Player.syncronize(syncPlayer, window.underworld.players[i]);
         }
       }
 
       break;
     case MESSAGE_TYPES.LOAD_GAME_STATE:
       // Clean up old game state
-      if (underworld) {
-        underworld.cleanup();
+      if (window.underworld) {
+        window.underworld.cleanup();
       }
       handleLoadGameState(payload);
       break;
@@ -330,7 +326,7 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
     case MESSAGE_TYPES.CHOOSE_UPGRADE:
       const upgrade = getUpgradeByTitle(payload.upgrade.title);
       if (caster && upgrade) {
-        underworld.chooseUpgrade(caster, upgrade);
+        window.underworld.chooseUpgrade(caster, upgrade);
       } else {
         console.error(
           'Cannot choose upgrade, either the caster or upgrade does not exist',
@@ -341,7 +337,7 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       break;
     case MESSAGE_TYPES.END_TURN:
       if (caster) {
-        underworld.endPlayerTurn(caster.clientId);
+        window.underworld.endPlayerTurn(caster.clientId);
         // Reset distanceMovedThisTurn immediately on endTurn so that the end-turn-btn highlight goes away
         if (caster == window.player) {
           window.player.unit.distanceMovedThisTurn = 0;
@@ -356,28 +352,28 @@ function handleLoadGameState(payload: any) {
   console.log("Setup: Load game state", payload)
   // Resume game / load game / rejoin game
   const loadedGameState: Underworld = { ...payload.underworld };
-  underworld = new Underworld(loadedGameState.seed, loadedGameState.RNGState);
-  underworld.width = loadedGameState.width;
-  underworld.height = loadedGameState.height;
-  underworld.playerTurnIndex = loadedGameState.playerTurnIndex;
-  underworld.levelIndex = loadedGameState.levelIndex;
+  window.underworld = new Underworld(loadedGameState.seed, loadedGameState.RNGState);
+  window.underworld.width = loadedGameState.width;
+  window.underworld.height = loadedGameState.height;
+  window.underworld.playerTurnIndex = loadedGameState.playerTurnIndex;
+  window.underworld.levelIndex = loadedGameState.levelIndex;
   // Load all units that are not player's, those will be loaded indepentently
-  underworld.units = loadedGameState.units
+  window.underworld.units = loadedGameState.units
     // Player controlled units are loaded within the players array
     .filter((u) => u.unitType !== UnitType.PLAYER_CONTROLLED)
     .map(Unit.load);
-  underworld.players = loadedGameState.players.map(Player.load);
+  window.underworld.players = loadedGameState.players.map(Player.load);
   // Resort units by id since player units are loaded last
-  underworld.units.sort((a, b) => a.id - b.id);
-  underworld.pickups = loadedGameState.pickups.map(Pickup.load);
+  window.underworld.units.sort((a, b) => a.id - b.id);
+  window.underworld.pickups = loadedGameState.pickups.map(Pickup.load);
   // Filtering out the undefined ensures that this is an array of IObstacle
-  underworld.obstacles = loadedGameState.obstacles.map(Obstacle.load).filter(o => !!o) as Obstacle.IObstacle[];
-  underworld.groundTiles = loadedGameState.groundTiles;
-  underworld.addGroundTileImages();
+  window.underworld.obstacles = loadedGameState.obstacles.map(Obstacle.load).filter(o => !!o) as Obstacle.IObstacle[];
+  window.underworld.groundTiles = loadedGameState.groundTiles;
+  window.underworld.addGroundTileImages();
 
-  underworld.setTurnPhase(underworld.turn_phase);
+  window.underworld.setTurnPhase(window.underworld.turn_phase);
 
-  underworld.cacheWalls();
+  window.underworld.cacheWalls();
 
   // Mark the underworld as "ready"
   readyState.set('underworld', true);
@@ -393,9 +389,9 @@ async function handleSpell(caster: Player.IPlayer, payload: any) {
   // Card.removeCardsFromHand(caster, payload.cards);
 
   // Only allow casting during the PlayerTurns phase
-  if (underworld.turn_phase === turn_phase.PlayerTurns) {
+  if (window.underworld.turn_phase === turn_phase.PlayerTurns) {
     window.animatingSpells = true;
-    await underworld.castCards(caster, payload.cards, payload, false);
+    await window.underworld.castCards(caster, payload.cards, payload, false);
     window.animatingSpells = false;
     // When spells are done animating but the mouse hasn't moved,
     // syncSpellEffectProjection needs to be called so that the icon ("footprints" for example)
@@ -403,10 +399,10 @@ async function handleSpell(caster: Player.IPlayer, payload: any) {
     updateMouseUI();
     // Check for dead players to end their turn,
     // this occurs here because spells may have caused their death
-    for (let p of underworld.players) {
+    for (let p of window.underworld.players) {
       // If a player's unit is dead, end their turn
       if (!p.unit.alive) {
-        underworld.endPlayerTurn(p.clientId);
+        window.underworld.endPlayerTurn(p.clientId);
       }
     }
   } else {
@@ -423,7 +419,7 @@ function forceSyncClient(syncClientId: string) {
   if (window.hostClientId === window.clientId) {
     window.pie.sendData({
       type: MESSAGE_TYPES.LOAD_GAME_STATE,
-      underworld: underworld.serializeForSaving(),
+      underworld: window.underworld.serializeForSaving(),
     }, {
       subType: "Whisper",
       whisperClientIds: [syncClientId],
@@ -439,7 +435,7 @@ function giveClientGameStateForInitialLoad(clientId: string) {
       console.log(`Host: Send ${clientId} game state for initial load`);
       window.pie.sendData({
         type: MESSAGE_TYPES.INIT_GAME_STATE,
-        underworld: underworld.serializeForSaving(),
+        underworld: window.underworld.serializeForSaving(),
       }, {
         subType: "Whisper",
         whisperClientIds: [clientId],
@@ -464,15 +460,15 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
     // client left
 
     // If the underworld is already setup
-    if (underworld) {
-      const player = underworld.players.find(
+    if (window.underworld) {
+      const player = window.underworld.players.find(
         (p) => p.clientId === o.clientThatChanged,
       );
       // And if the client that left is associated with a player
       if (player) {
         // Disconnect the player and end their turn
         Player.setClientConnected(player, false);
-        underworld.endPlayerTurn(player.clientId);
+        window.underworld.endPlayerTurn(player.clientId);
       } else {
         // this can occur naturally if a client disconnects before choosing
         // a character
@@ -553,7 +549,7 @@ window.replay = (title: string) => {
     const messages = JSON.parse(localStorage.getItem('golems-' + title) || '');
     for (let i = 0; i < messages.length; i++) {
       const message = messages[i];
-      message.fromClient = underworld.players[0].clientId;
+      message.fromClient = window.underworld.players[0].clientId;
       onData(message);
     }
   } else {

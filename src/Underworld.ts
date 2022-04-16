@@ -223,6 +223,10 @@ export default class Underworld {
     // Prevent requestAnimationFrame from calling this method next time, since this underworld
     // instance is being cleaned up
     this.gameLoop = () => { };
+    // @ts-ignore
+    window.underworld = undefined;
+    readyState.set('underworld', false);
+    window.updateInGameMenuStatus()
   }
   // cacheWalls updates underworld.walls array
   // with the walls for the edge of the map
