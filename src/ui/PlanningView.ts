@@ -299,11 +299,11 @@ export function updateTooltipSelection(mousePos: Vec2) {
 
 // Draws a faint circle over things that can be clicked on
 export function drawOnHoverCircle(mousePos: Vec2) {
-  const unit = window.underworld.getUnitAt(mousePos);
-  if (unit) {
+  const target: Vec2 | undefined = window.underworld.getUnitAt(mousePos) || window.underworld.getPickupAt(mousePos);
+  if (target) {
     dryRunGraphics.lineStyle(3, targetBlue, 0.4);
     dryRunGraphics.beginFill(0x000000, 0);
-    dryRunGraphics.drawCircle(unit.x, unit.y, config.COLLISION_MESH_RADIUS);
+    dryRunGraphics.drawCircle(target.x, target.y, config.COLLISION_MESH_RADIUS);
     dryRunGraphics.endFill();
   }
 }
