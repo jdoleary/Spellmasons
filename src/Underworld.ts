@@ -1197,6 +1197,8 @@ export default class Underworld {
   }
   // hasLineOfSight returns true if there are no walls interrupting
   // a line from seer to target
+  // Note: if you want a function like this that returns a Vec2, try
+  // closestLineSegmentIntersection
   hasLineOfSight(seer: Vec2, target: Vec2): boolean {
     const lineOfSight: LineSegment = { p1: seer, p2: target };
     for (let w of this.walls) {
@@ -1305,7 +1307,8 @@ type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFun
 function getEnemiesForAltitude(levelIndex: number): { enemies: { [unitid: string]: number }, strength: number } {
   const hardCodedLevelEnemies: { [unitid: string]: number }[] = [
     {
-      'grunt': 5
+      'grunt': 5,
+      'archer': 1
     },
     {
       'grunt': 4,
