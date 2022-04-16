@@ -529,10 +529,10 @@ export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
       clearTimeout(unit.resolveDoneMovingTimeout);
     }
     unit.resolveDoneMoving = resolve;
+    const timeoutMs = unit.moveDistance / unit.moveSpeed;
     unit.resolveDoneMovingTimeout = setTimeout(() => {
-      console.log('Turn ended due to RESOLVE_DONE_MOVING_TIMEOUT_MS');
       resolve()
-    }, config.RESOLVE_DONE_MOVING_TIMEOUT_MS);
+    }, timeoutMs);
   }).then(() => {
     if (unit.resolveDoneMovingTimeout !== undefined) {
       clearTimeout(unit.resolveDoneMovingTimeout);

@@ -54,6 +54,7 @@ interface Bounds {
 const elPlayerTurnIndicator = document.getElementById('player-turn-indicator');
 const elLevelIndicator = document.getElementById('level-indicator');
 
+let lastTime = 0;
 export default class Underworld {
   seed: string;
   random: prng;
@@ -98,7 +99,7 @@ export default class Underworld {
     this.random = this.syncronizeRNG(RNGState);
 
     // Start the gameloop
-    this.gameLoop();
+    requestAnimationFrame(this.gameLoop.bind(this));
   }
   syncronizeRNG(RNGState: SeedrandomState | boolean) {
     // state of "true" initializes the RNG with the ability to save it's state,
@@ -106,7 +107,10 @@ export default class Underworld {
     this.random = seedrandom(this.seed, { state: RNGState })
     return this.random;
   }
-  gameLoop() {
+  gameLoop(timestamp: number) {
+    const deltaTime = timestamp - lastTime;
+    lastTime = timestamp;
+
     Unit.syncPlayerHealthManaUI();
     window.unitOverlayGraphics.clear();
 
@@ -114,7 +118,7 @@ export default class Underworld {
     for (let u of aliveUnits) {
       if (u.path && u.path.length) {
         // Move towards target
-        const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.path[0], u.moveSpeed)
+        const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.path[0], u.moveSpeed * deltaTime)
         let moveDist = 0;
         // For now, only AI units will collide with each other
         // This is because the collisions were causing issues with player movement that I don't
