@@ -1308,7 +1308,6 @@ function getEnemiesForAltitude(levelIndex: number): { enemies: { [unitid: string
   const hardCodedLevelEnemies: { [unitid: string]: number }[] = [
     {
       'grunt': 5,
-      'archer': 1
     },
     {
       'grunt': 4,
