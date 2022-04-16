@@ -14,7 +14,10 @@ function add(unit: IUnit) {
 
   unit.modifiers[id] = { isCurse: true };
   // Add event
-  unit.onTurnStartEvents.push(id);
+  // Note: contageous should always be the first modifier or else other modifiers may expire before they can spread
+  // for example, freeze then contageous.  This is why it unshifts the contageous eventn
+  // TODO: This may require a pre-turn-start event phase
+  unit.onTurnStartEvents.unshift(id);
   // Add subsprite image
   Image.addSubSprite(unit.image, id);
 }
