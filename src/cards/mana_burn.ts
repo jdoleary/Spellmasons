@@ -1,5 +1,5 @@
 import * as Unit from '../Unit';
-import { Spell, targetsToUnits } from '.';
+import type { Spell } from '.';
 
 const id = 'mana_burn';
 const mana_burnt = 30;
@@ -15,7 +15,7 @@ const spell: Spell = {
 Burn up to ${mana_burnt} of the targets' mana, causing the target take ${health_burn_ratio} damage per mana burnt.
     `,
     effect: async (state, dryRun) => {
-      for (let unit of targetsToUnits(state.targets)) {
+      for (let unit of state.targetedUnits) {
         const unitManaBurnt = Math.min(unit.mana, mana_burnt);
         if (!dryRun) {
           unit.mana -= unitManaBurnt;

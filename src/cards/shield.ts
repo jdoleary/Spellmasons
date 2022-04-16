@@ -1,6 +1,6 @@
 import * as Unit from '../Unit';
 import * as Image from '../Image';
-import { Spell, targetsToUnits } from '.';
+import type { Spell } from '.';
 import floatingText from '../FloatingText';
 
 const id = 'shield';
@@ -18,7 +18,7 @@ Protects the target(s) from the next time they would take damage.
       if (dryRun) {
         return state;
       }
-      for (let unit of targetsToUnits(state.targets)) {
+      for (let unit of state.targetedUnits) {
         Unit.addModifier(unit, id);
       }
       return state;

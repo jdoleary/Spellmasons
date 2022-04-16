@@ -67,7 +67,6 @@ export function create(clientId: string, unitId: string): IPlayer | undefined {
   // CardUI.addCardToHand(allCards['purify'], player);
   // CardUI.addCardToHand(allCards['mana_burn'], player);
   // CardUI.addCardToHand(allCards['mana_steal'], player);
-  // CardUI.addCardToHand(allCards['obliterate'], player);
   // CardUI.addCardToHand(allCards['poison'], player);
   // CardUI.addCardToHand(allCards['protection'], player);
   // CardUI.addCardToHand(allCards['resurrect'], player);

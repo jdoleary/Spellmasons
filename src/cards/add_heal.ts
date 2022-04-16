@@ -1,5 +1,5 @@
 import * as Unit from '../Unit';
-import { Spell, targetsToUnits } from '.';
+import type { Spell } from '.';
 
 const id = 'heal';
 const healAmount = 3;
@@ -16,7 +16,7 @@ Heals all targets ${healAmount} HP.
 Will not heal beyond maximum health.
     `,
     effect: async (state, dryRun) => {
-      for (let unit of targetsToUnits(state.targets)) {
+      for (let unit of state.targetedUnits) {
         const damage = -healAmount;
         Unit.takeDamage(unit, damage, dryRun, state);
       }

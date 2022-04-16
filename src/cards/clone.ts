@@ -1,4 +1,4 @@
-import { Spell, targetsToUnits } from '.';
+import type { Spell } from '.';
 import * as Unit from '../Unit';
 import * as Pickup from '../Pickup';
 import * as Obstacle from '../Obstacle';
@@ -25,7 +25,7 @@ Clones each target
       // Batch find targets that should be cloned
       // Note: They need to be batched so that the new clones don't get cloned
       const clonePairs: Vec2[][] = [];
-      for (let unit of targetsToUnits(state.targets)) {
+      for (let unit of state.targetedUnits) {
         clonePairs.push([unit, { x: unit.x + COLLISION_MESH_RADIUS, y: unit.y + COLLISION_MESH_RADIUS }]);
       }
       // Clone all the batched clone jobs

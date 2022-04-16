@@ -1,4 +1,4 @@
-import { Spell, targetsToUnits } from '.';
+import type { Spell } from '.';
 import * as Unit from '../Unit'
 import { UnitType } from '../commonTypes';
 import { Vec2, equal } from '../Vec';
@@ -22,11 +22,11 @@ const spell: Spell = {
             return a.unitType == UnitType.PLAYER_CONTROLLED && b.unitType == UnitType.PLAYER_CONTROLLED ? 0 :
               a.unitType == UnitType.PLAYER_CONTROLLED ? -1 : 1
           })];
-      let excludeTarget: Vec2 = { x: NaN, y: NaN };
+      let excludeTarget: Unit.IUnit;
       // For all the allies, find the first ally that matches a target
       allyLoop: {
         for (let ally of allies) {
-          for (let unit of targetsToUnits(state.targets)) {
+          for (let unit of state.targetedUnits) {
             if (unit == ally) {
               excludeTarget = unit;
               // Only remove 1 target per use of this card
@@ -35,8 +35,8 @@ const spell: Spell = {
           }
         }
       }
-      // Update targets
-      state.targets = state.targets.filter(t => equal(t, excludeTarget));
+      // Remove target
+      state.targetedUnits = state.targetedUnits.filter(u => u !== excludeTarget);
 
       return state;
     },

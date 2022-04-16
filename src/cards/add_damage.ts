@@ -1,5 +1,5 @@
 import * as Unit from '../Unit';
-import { Spell, tallyUnitDamage, targetsToUnits } from '.';
+import type { Spell } from '.';
 
 export const id = 'hurt';
 const damageDone = 2;
@@ -22,7 +22,7 @@ const spell: Spell = {
 Deals ${damageDone} damage to all targets.    
     `,
     effect: async (state, dryRun) => {
-      for (let unit of targetsToUnits(state.targets)) {
+      for (let unit of state.targetedUnits) {
         Unit.takeDamage(unit, damageDone, dryRun, state);
       }
       return state;

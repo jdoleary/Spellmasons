@@ -1034,17 +1034,17 @@ export default class Underworld {
     this.syncTurnMessage();
   }
 
-  getCoordsForUnitsWithinDistanceOfTarget(
+  getUnitsWithinDistanceOfTarget(
     target: Vec2,
     distance: number,
-  ): Vec2[] {
-    const coords: Vec2[] = [];
+  ): Unit.IUnit[] {
+    const withinDistance: Unit.IUnit[] = [];
     for (let unit of this.units) {
       if (math.distance(unit, target) <= distance) {
-        coords.push({ x: unit.x, y: unit.y });
+        withinDistance.push(unit);
       }
     }
-    return coords;
+    return withinDistance;
   }
   getUnitAt(coords: Vec2): Unit.IUnit | undefined {
     const sortedByProximityToCoords = this.units
@@ -1092,7 +1092,8 @@ export default class Underworld {
     let effectState: Cards.EffectState = {
       casterPlayer,
       casterUnit: casterPlayer.unit,
-      targets: [castLocation],
+      targetedUnits: [],
+      castLocation,
       aggregator: {
         unitDamage: [],
         damageDealt: 0,
@@ -1118,13 +1119,13 @@ export default class Underworld {
           casterPlayer.unit.mana -= singleCardCost.manaCost;
           Unit.takeDamage(casterPlayer.unit, singleCardCost.healthCost, dryRun, effectState);
         }
-        for (let target of effectState.targets) {
+        for (let targetedUnit of effectState.targetedUnits) {
 
           // Show the card that's being cast:
           if (!dryRun) {
             const image = Image.create(
-              target.x,
-              target.y,
+              targetedUnit.x,
+              targetedUnit.y,
               card.thumbnail,
               containerUI,
             );
@@ -1148,7 +1149,7 @@ export default class Underworld {
         }
         // .then is necessary to convert return type of promise.all to just be void
         animationPromises.push(Promise.all([animations]).then(() => { }));
-        const { targets: previousTargets } = effectState;
+        const { targetedUnits: previousTargets } = effectState;
         effectState = await card.effect(effectState, dryRun, index);
         // Delay animation between spells so players can understand what's going on
         if (!dryRun) {
@@ -1159,20 +1160,16 @@ export default class Underworld {
         // Clear images from previous card before drawing the images from the new card
         containerSpells.removeChildren();
         // Animate target additions:
-        for (let target of effectState.targets) {
+        for (let targetedUnit of effectState.targetedUnits) {
           // If already included target:
           if (
-            previousTargets.find((t) => t.x === target.x && t.y === target.y)
+            previousTargets.find((t) => t.x === targetedUnit.x && t.y === targetedUnit.y)
           ) {
-            let targetedUnit = this.getUnitAt(target)
-            // If the target is over a unit, draw a target on the unit
-            if (targetedUnit) {
-              // Don't animate previous targets, they should be drawn full, immediately
-              animationPromises.push(drawTarget(targetedUnit.x, targetedUnit.y, false));
-            }
+            // Don't animate previous targets, they should be drawn full, immediately
+            animationPromises.push(drawTarget(targetedUnit.x, targetedUnit.y, false));
           } else {
             // If a new target, animate it in
-            animationPromises.push(drawTarget(target.x, target.y, !dryRun));
+            animationPromises.push(drawTarget(targetedUnit.x, targetedUnit.y, !dryRun));
           }
         }
 

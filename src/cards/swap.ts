@@ -15,7 +15,7 @@ const spell: Spell = {
 Swaps the caster with the source target.
     `,
     effect: async (state, dryRun) => {
-      const { casterUnit, targets } = state;
+      const { casterUnit, targetedUnits } = state;
       // Loop through all targets and batch swap locations
       const swapUnits: [Unit.IUnit, Vec2][] = [];
       const swapPickups: [Pickup.IPickup, Vec2][] = [];
@@ -23,16 +23,15 @@ Swaps the caster with the source target.
       // The unit at the location that the targetUnit will swap to
       const swapUnit = window.underworld.getUnitAt(swapLocation);
       if (swapUnit) {
-        swapUnits.push([swapUnit, targets[0]]);
+        swapUnits.push([swapUnit, targetedUnits[0]]);
       }
       // The units at the target location
-      for (let target of targets) {
-        const targetUnit = window.underworld.getUnitAt(target);
+      for (let targetUnit of targetedUnits) {
         if (targetUnit) {
           swapUnits.push([targetUnit, swapLocation]);
         }
         // The pickup at the target location
-        const pickupAtTarget = window.underworld.getPickupAt(target);
+        const pickupAtTarget = window.underworld.getPickupAt(state.castLocation);
         // Physically swap with pickups
         if (pickupAtTarget) {
           swapPickups.push([pickupAtTarget, swapLocation]);
@@ -41,7 +40,7 @@ Swaps the caster with the source target.
         const pickupAtSwap = window.underworld.getPickupAt(swapLocation);
 
         if (pickupAtSwap) {
-          swapPickups.push([pickupAtSwap, target]);
+          swapPickups.push([pickupAtSwap, targetUnit]);
         }
       }
       // Don't swap if there is nothing to swap with

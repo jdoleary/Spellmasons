@@ -1,5 +1,4 @@
-import type { Vec2 } from '../Vec';
-import type { Spell } from '.';
+import { addUnitTarget, Spell } from '.';
 import { drawDryRunCircle } from '../ui/PlanningView';
 
 const id = 'AOE';
@@ -16,18 +15,16 @@ const spell: Spell = {
 Adds targets for the following cards to effect by "growing" existing targets
     `,
     effect: async (state, dryRun) => {
-      let newTargets: Vec2[] = [];
-      for (let target of state.targets) {
-        const withinRadius = window.underworld.getCoordsForUnitsWithinDistanceOfTarget(
+      for (let target of [state.castLocation, ...state.targetedUnits]) {
+        const withinRadius = window.underworld.getUnitsWithinDistanceOfTarget(
           target,
           range,
         );
         // Draw visual circle for dryRun
         drawDryRunCircle(target, range);
-        newTargets.push(...withinRadius);
+        // Add units to target
+        withinRadius.forEach(unit => addUnitTarget(unit, state));
       }
-      // Update targets
-      state.targets = [...state.targets, ...newTargets];
 
       return state;
     },

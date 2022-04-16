@@ -1,6 +1,6 @@
 import type { IUnit } from '../Unit';
 import * as Image from '../Image';
-import { allCards, Spell, targetsToUnits } from '.';
+import { allCards, Spell } from '.';
 import { addCardToHand, removeCardsFromHand } from '../CardUI';
 import * as Unit from '../Unit';
 
@@ -63,7 +63,7 @@ const spell: Spell = {
       if (dryRun) {
         return state;
       }
-      for (let unit of targetsToUnits(state.targets)) {
+      for (let unit of state.targetedUnits) {
         Unit.addModifier(unit, id);
       }
       return state;

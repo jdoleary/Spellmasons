@@ -23,7 +23,6 @@ import purify from './purify';
 import poison from './poison';
 import vulnerable from './vulnerable';
 import protection from './protection';
-import obliterate from './obliterate';
 import clone from './clone';
 import mana_burn from './mana_burn';
 import mana_steal from './mana_steal';
@@ -103,7 +102,6 @@ export function registerCards() {
   // register(stomp);
   register(protection);
   // register(charge);
-  register(obliterate);
   register(clone);
   register(mana_burn);
   register(mana_steal);
@@ -132,7 +130,8 @@ function cardToUpgrade(c: ICard): IUpgrade {
 export interface EffectState {
   casterPlayer?: Player.IPlayer;
   casterUnit: Unit.IUnit;
-  targets: Vec2[];
+  targetedUnits: Unit.IUnit[];
+  castLocation: Vec2;
   // aggregator carries extra information that can be passed
   // between card effects.
   aggregator: {
@@ -166,6 +165,12 @@ export function getCardsFromIds(cardIds: string[]): ICard[] {
   return _getCardsFromIds(cardIds, allCards);
 }
 
+export function addUnitTarget(unit: Unit.IUnit, effectState: EffectState) {
+  // Adds a unit's id to effectState.unitTargets IF it is not already in unitTargets
+  if (effectState.targetedUnits.indexOf(unit) === -1) {
+    effectState.targetedUnits.push(unit);
+  }
+}
 // Takes the array of targets and returns a (deduplicated) array of units
 export function targetsToUnits(targets: Vec2[]): Unit.IUnit[] {
   // Get units at coordinates

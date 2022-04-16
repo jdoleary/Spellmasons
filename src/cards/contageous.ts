@@ -1,7 +1,7 @@
 
 import type { IUnit } from '../Unit';
 import * as Image from '../Image';
-import { allCards, ICard, Spell, targetsToUnits } from './index';
+import { allCards, ICard, Spell } from './index';
 import { COLLISION_MESH_RADIUS } from '../config';
 import { createVisualLobbingProjectile } from '../Projectile';
 import floatingText from '../FloatingText';
@@ -47,7 +47,7 @@ Makes this unit's curses contageous to other nearby units
       if (dryRun) {
         return state;
       }
-      for (let unit of targetsToUnits(state.targets)) {
+      for (let unit of state.targetedUnits) {
         // Don't add contageous more than once
         if (!unit.onTurnStartEvents.includes(id)) {
           Unit.addModifier(unit, id);
@@ -61,7 +61,7 @@ Makes this unit's curses contageous to other nearby units
   },
   events: {
     onTurnStart: async (unit: IUnit) => {
-      const coords = window.underworld.getCoordsForUnitsWithinDistanceOfTarget(unit, COLLISION_MESH_RADIUS * 4);
+      const coords = window.underworld.getUnitsWithinDistanceOfTarget(unit, COLLISION_MESH_RADIUS * 4);
       const nearByUnits: IUnit[] = coords.map((coord) => window.underworld.getUnitAt(coord))
         // Filter out undefineds
         .filter(x => x !== undefined)

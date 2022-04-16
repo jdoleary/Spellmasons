@@ -1,6 +1,6 @@
 import * as Unit from '../Unit';
 import * as Image from '../Image';
-import { Spell, targetsToUnits } from '.';
+import type { Spell } from '.';
 
 const id = 'vulnerable';
 const spell: Spell = {
@@ -18,7 +18,7 @@ in the future.
       if (dryRun) {
         return state;
       }
-      for (let unit of targetsToUnits(state.targets)) {
+      for (let unit of state.targetedUnits) {
         Unit.addModifier(unit, id);
       }
       return state;

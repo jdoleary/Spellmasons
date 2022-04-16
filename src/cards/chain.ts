@@ -1,9 +1,7 @@
 import { drawDryRunLine } from '../ui/PlanningView';
-import { Spell, targetsToUnits } from '.';
+import { addUnitTarget, Spell } from '.';
 import type { Vec2 } from '../Vec';
-import * as Vec from '../Vec';
 import type * as Unit from '../Unit';
-import * as config from '../config';
 
 const id = 'chain';
 const spell: Spell = {
@@ -19,19 +17,17 @@ Adds targets for the following cards to effect by "chaining like electricity"
 off of all existing targeted units to units touching them. 
     `,
     effect: async (state, dryRun) => {
-      let newTargets: Vec2[] = [];
-      for (let unit of targetsToUnits(state.targets)) {
+      for (let i = 0; i < state.targetedUnits.length; i++) {
+        const unit = state.targetedUnits[i];
         // Find all units touching the spell origin
         const chained_units = getTouchingUnitsRecursive(
           unit.x,
           unit.y,
-          [...state.targets, ...newTargets],
+          state.targetedUnits
         );
-        newTargets = newTargets.concat(chained_units);
-
+        // Update targetedUnits
+        chained_units.forEach(u => addUnitTarget(u, state))
       }
-      // Update targets
-      state.targets = [...state.targets, ...newTargets];
 
       return state;
     },
@@ -41,7 +37,7 @@ const range = 160;
 function getTouchingUnitsRecursive(
   x: number,
   y: number,
-  ignore: Vec2[] = [],
+  ignore: Unit.IUnit[] = [],
 ): Unit.IUnit[] {
   let touching = window.underworld.units.filter((u) => {
     return (
@@ -52,7 +48,7 @@ function getTouchingUnitsRecursive(
       !ignore.find((i) => i.x == u.x && i.y == u.y)
     );
   });
-  ignore.push(...touching.map(Vec.clone));
+  ignore.push(...touching);
   // Draw dryrun lines so user can see how it chains
   touching.forEach(chained_unit => {
     drawDryRunLine({ x, y }, chained_unit);
