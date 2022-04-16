@@ -133,6 +133,14 @@ export function create(
     modifiers: {},
   }, sourceUnitProps);
 
+  // Since unit stats can be overridden with sourceUnitProps
+  // Ensure that the unit starts will full mana and health
+  unit.mana = unit.manaMax;
+  unit.health = unit.healthMax;
+  if (unit.manaMax === 0) {
+    unit.manaPerTurn = 0;
+  }
+
   const sourceUnit = allUnits[unitSourceId];
   if (sourceUnit) {
     if (sourceUnit.init) {
