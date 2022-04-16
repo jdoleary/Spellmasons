@@ -1,4 +1,5 @@
 # Tasks
+- Bug: Summoners don't move very far when they're running away
 - Bug: Two demons may target the same corpse
 - Bug: "Chain only modifies cards on it's right" shows if you end your turn with chain as a selected card and mouse on the field
 - Bug: left position is messed up for mana bar 2

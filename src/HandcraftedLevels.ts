@@ -2,7 +2,6 @@ import type { Vec2 } from "./Vec";
 import * as config from "./config";
 import type Underworld from "./Underworld";
 import Events from './Events';
-import * as Pickup from './Pickup';
 import { Faction } from "./commonTypes";
 import { centeredFloatingText } from "./FloatingText";
 
