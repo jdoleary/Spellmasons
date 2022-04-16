@@ -3,7 +3,7 @@
 - Bug: "Chain only modifies cards on it's right" shows if you end your turn with chain as a selected card and mouse on the field
 - Bug: left position is messed up for mana bar 2
     - 125/85 + 30 /turn and it only shows a sliver of purple
-- Can't click to dismiss unit intros
+    - Can't reproduces
 - Improve unit movement and collisions
     - If a unit hasn't moved in a while due to collision, it makes the user wait until the timeout
 - Bug: After you make it through the tutorial you can still select "skip tutorial" in the menu, which then breaks the game
