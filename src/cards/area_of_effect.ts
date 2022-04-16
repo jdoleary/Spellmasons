@@ -16,16 +16,14 @@ Adds targets for the following cards to effect by "growing" existing targets
     `,
     effect: async (state, dryRun) => {
       for (let target of [state.castLocation, ...state.targetedUnits]) {
+        // Draw visual circle for dryRun
+        drawDryRunCircle(target, range);
         const withinRadius = window.underworld.getUnitsWithinDistanceOfTarget(
           target,
           range,
         );
         // Add units to target
         withinRadius.forEach(unit => addUnitTarget(unit, state));
-      }
-      for (let unit of state.targetedUnits) {
-        // Draw visual circle for dryRun
-        drawDryRunCircle(unit, range);
       }
 
       return state;
