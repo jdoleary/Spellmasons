@@ -1,9 +1,8 @@
 import * as Unit from '../Unit';
 import type { UnitSource } from './index';
 import { UnitSubType } from '../commonTypes';
-import * as math from '../math';
 import { createVisualFlyingProjectile } from '../Projectile';
-import { action } from './actions/rangedAction';
+import { actionLineOfSight } from './actions/rangedAction';
 
 const unit: UnitSource = {
   id: 'archer',
@@ -18,7 +17,7 @@ const unit: UnitSource = {
     manaMax: 0,
   },
   action: async (unit: Unit.IUnit) => {
-    action(unit, canInteractWithTarget, (target: Unit.IUnit) => {
+    actionLineOfSight(unit, (target: Unit.IUnit) => {
       return createVisualFlyingProjectile(
         unit,
         target.x,
@@ -29,14 +28,5 @@ const unit: UnitSource = {
       })
     });
   },
-  canInteractWithTarget,
 };
-function canInteractWithTarget(unit: Unit.IUnit, x: number, y: number): boolean {
-  // Dead units cannot attack
-  if (!unit.alive) {
-    return false;
-  }
-  // Archers can only attack if they can see enemy and are close enough
-  return window.underworld.hasLineOfSight(unit, { x, y }) && math.distance(unit, { x, y }) <= unit.attackRange;
-}
 export default unit;
