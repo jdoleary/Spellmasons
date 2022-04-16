@@ -20,10 +20,12 @@ Adds targets for the following cards to effect by "growing" existing targets
           target,
           range,
         );
-        // Draw visual circle for dryRun
-        drawDryRunCircle(target, range);
         // Add units to target
         withinRadius.forEach(unit => addUnitTarget(unit, state));
+      }
+      for (let unit of state.targetedUnits) {
+        // Draw visual circle for dryRun
+        drawDryRunCircle(unit, range);
       }
 
       return state;
