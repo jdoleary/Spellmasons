@@ -12,7 +12,7 @@ const spell: Spell = {
     probability: 10,
     thumbnail: 'mana_burn.png',
     description: `
-Burn up to ${mana_burnt} of the targets' mana, causing the target take ${health_burn_ratio} damage per mana burnt.
+Burn up to ${mana_burnt} of the targets' mana, causing the target take ${health_burn_ratio * 10} damage per 10 mana burnt.
     `,
     effect: async (state, dryRun) => {
       for (let unit of state.targetedUnits) {
