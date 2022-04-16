@@ -1,4 +1,11 @@
 # Tasks
+- Bug: Protection worked on wrong faction
+- Max mana upgrade isn't enough
+- Bug: left position is messed up for mana bar 2
+    - 125/85 + 30 /turn and it only shows a sliver of purple
+- Can't click to dismiss unit intros
+- Improve unit movement and collisions
+    - If a unit hasn't moved in a while due to collision, it makes the user wait until the timeout
 - Bug: After you make it through the tutorial you can still select "skip tutorial" in the menu, which then breaks the game
     - I see a map but all the unit images are gone
 - Bug: Upgrade screen shows after tutorial
