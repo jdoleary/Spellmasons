@@ -1120,13 +1120,14 @@ export default class Underworld {
           casterPlayer.unit.mana -= singleCardCost.manaCost;
           Unit.takeDamage(casterPlayer.unit, singleCardCost.healthCost, dryRun, effectState);
         }
-        for (let targetedUnit of effectState.targetedUnits) {
+        const targets = effectState.targetedUnits.length == 0 ? [castLocation] : effectState.targetedUnits
+        for (let target of targets) {
 
           // Show the card that's being cast:
           if (!dryRun) {
             const image = Image.create(
-              targetedUnit.x,
-              targetedUnit.y,
+              target.x,
+              target.y,
               card.thumbnail,
               containerUI,
             );
