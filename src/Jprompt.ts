@@ -31,25 +31,31 @@ export default async function Jprompt(prompt: Prompt): Promise<boolean> {
 
     return new Promise<boolean>((res) => {
         const noBtn = el.querySelector('.no') as HTMLElement;
+        const yesBtn = el.querySelector('.yes') as HTMLElement;
         if (noBtn) {
             noBtn.addEventListener('click', () => {
                 res(false);
             });
-            // Click outside is the same as no
-            const cancelFn = (e: MouseEvent) => {
-                // Ignore clicks on the prompt inner
-                if (!(e.target && (e.target as Element).closest('.prompt-inner'))) {
-                    // Handle clicks outside the prompt the same as if the user clicked the no/cancel button
-                    noBtn.click();
-                    e.preventDefault();
-                    e.stopPropagation();
-                    return false;
-                }
-            }
-            el.addEventListener('click', cancelFn);
-            el.addEventListener('contextmenu', cancelFn);
         }
-        const yesBtn = el.querySelector('.yes')
+        // Click outside is the same as no
+        // unless there is only a yes button, then it clicks yes
+        const cancelFn = (e: MouseEvent) => {
+            // Ignore clicks on the prompt inner
+            if (!(e.target && (e.target as Element).closest('.prompt-inner'))) {
+                // Handle clicks outside the prompt the same as if the user clicked the no/cancel button
+                if (noBtn) {
+                    noBtn.click();
+                } else if (yesBtn) {
+                    // If there is only a yesBtn, then a click outside would represent "Acknoledged"
+                    yesBtn.click();
+                }
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+        }
+        el.addEventListener('click', cancelFn);
+        el.addEventListener('contextmenu', cancelFn);
         if (yesBtn) {
             yesBtn.addEventListener('click', () => {
                 res(true);
