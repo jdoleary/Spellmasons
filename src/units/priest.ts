@@ -39,6 +39,7 @@ const unit: UnitSource = {
     }
     // If they have enough mana
     if (unit.mana >= CAST_MANA_COST) {
+      unit.mana -= CAST_MANA_COST;
       // Heal an ally
       const damagedAllys = window.underworld.units.filter(
         (u) => u.faction === unit.faction && u.alive && u.health < u.healthMax,
