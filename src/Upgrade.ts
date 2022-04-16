@@ -151,7 +151,7 @@ export const upgradeStatsSource: IUpgrade[] = [
     probability: 30,
   },
 ];
-const maxManaIncreaseAmount = 10;
+const maxManaIncreaseAmount = 20;
 const maxStaminaIncreaseAmount = 50;
 const maxHealthIncreaseAmount = 5;
 const manaPerTurnIncreaseAmount = 5;
