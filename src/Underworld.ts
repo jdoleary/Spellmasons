@@ -989,38 +989,13 @@ export default class Underworld {
       case 'NPC':
         // Clears spell effect on NPC turn
         updateMouseUI();
-        let animationPromises: Promise<void>[] = [];
         (async () => {
-          // Move units
-          unitloop: for (let u of this.units.filter(
-            (u) => u.unitType === UnitType.AI && u.alive,
-          )) {
-            // Trigger onTurnStart Events
-            for (let eventName of u.onTurnStartEvents) {
-              const fn = Events.onTurnSource[eventName];
-              if (fn) {
-                const abortTurn = await fn(u);
-                if (abortTurn) {
-                  continue unitloop;
-                }
-              }
-            }
-            const unitSource = allUnits[u.unitSourceId];
-            if (unitSource) {
-              // Add unit action to the array of promises to wait for
-              let promise = unitSource.action(u);
-              animationPromises.push(promise);
-            } else {
-              console.error(
-                'Could not find unit source data for',
-                u.unitSourceId,
-              );
-            }
-          }
-          // When all animations are done, set turn phase to player turn
-          Promise.all(animationPromises).then(() => {
-            this.endNPCTurnPhase();
-          });
+          // Run AI unit actions
+          // Ally NPCs go first
+          await this.executeNPCTurn(Faction.ALLY);
+          await this.executeNPCTurn(Faction.ENEMY);
+          // Set turn phase to player turn
+          this.endNPCTurnPhase();
 
           // Since NPC turn is over, update the planningView
           // They may have moved or unfrozen which would update
@@ -1032,6 +1007,37 @@ export default class Underworld {
         break;
     }
     this.syncTurnMessage();
+  }
+
+  async executeNPCTurn(faction: Faction) {
+    const animationPromises: Promise<void>[] = [];
+    unitloop: for (let u of this.units.filter(
+      (u) => u.unitType === UnitType.AI && u.alive && u.faction == faction,
+    )) {
+      // Trigger onTurnStart Events
+      for (let eventName of u.onTurnStartEvents) {
+        const fn = Events.onTurnSource[eventName];
+        if (fn) {
+          const abortTurn = await fn(u);
+          if (abortTurn) {
+            continue unitloop;
+          }
+        }
+      }
+      const unitSource = allUnits[u.unitSourceId];
+      if (unitSource) {
+        // Add unit action to the array of promises to wait for
+        let promise = unitSource.action(u);
+        animationPromises.push(promise);
+      } else {
+        console.error(
+          'Could not find unit source data for',
+          u.unitSourceId,
+        );
+      }
+    }
+    await Promise.all(animationPromises);
+
   }
 
   getUnitsWithinDistanceOfTarget(
@@ -1307,7 +1313,7 @@ type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFun
 function getEnemiesForAltitude(levelIndex: number): { enemies: { [unitid: string]: number }, strength: number } {
   const hardCodedLevelEnemies: { [unitid: string]: number }[] = [
     {
-      'grunt': 50
+      'grunt': 5
     },
     {
       'grunt': 4,
