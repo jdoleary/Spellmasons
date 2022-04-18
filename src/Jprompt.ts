@@ -18,7 +18,11 @@ export default async function Jprompt(prompt: Prompt): Promise<boolean> {
         ${text}
     </p>
     <div class="button-holder">
-        ${noBtnText ? `<button class="no jbutton" data-key="${noBtnKey}">${noBtnText}</button>` : ''}
+        ${noBtnText ? `<button class="no jbutton" data-key="${noBtnKey}"> ${noBtnText}
+            <div class="hotkey-badge-holder">
+                <div class="hotkey-badge wide">${noBtnKey}</div>
+            </div>
+        </button>` : ''}
         <button class="yes jbutton" data-key="${yesKey}">${yesText}
             <div class="hotkey-badge-holder">
                 <div class="hotkey-badge wide">${yesKeyText}</div>
