@@ -4,6 +4,7 @@ import type { Spell } from '.';
 import floatingText from '../FloatingText';
 
 const id = 'shield';
+const damage_blocked = 6;
 const spell: Spell = {
   card: {
     id,
@@ -12,7 +13,7 @@ const spell: Spell = {
     probability: 5,
     thumbnail: 'shield.png',
     description: `
-Protects the target(s) from the next time they would take damage.
+Protects bearer from the next ${damage_blocked} damage that they would incur.  Shield can be stacked multiple times.
     `,
     effect: async (state, dryRun) => {
       if (dryRun) {
@@ -29,6 +30,7 @@ Protects the target(s) from the next time they would take damage.
     onDamage: (unit, amount, dryRun, damageDealer) => {
       // Only block damage, not heals
       if (amount > 0) {
+        let adjustedAmount = amount;
         if (!dryRun) {
           floatingText({
             coords: unit,
@@ -37,15 +39,15 @@ Protects the target(s) from the next time they would take damage.
               fill: 'blue',
             },
           });
+          adjustedAmount = Math.max(0, amount - unit.modifiers[id].damage_block);
+          unit.modifiers[id].damage_block -= amount - adjustedAmount;
 
-          unit.modifiers[id] && unit.modifiers[id].stacks--;
-          if (unit.modifiers[id] && unit.modifiers[id].stacks <= 0) {
+          if (unit.modifiers[id] && unit.modifiers[id].damage_block <= 0) {
             Unit.removeModifier(unit, id);
           }
         }
 
-        // Take no damage
-        return 0;
+        return adjustedAmount;
       } else {
         return amount;
       }
@@ -78,7 +80,7 @@ function add(unit: Unit.IUnit) {
     // Add subsprite image
     Image.addSubSprite(unit.image, id);
   }
-  // Increment the number of stacks of shield
-  unit.modifiers[id].stacks = (unit.modifiers[id].stacks || 0) + 1;
+  // Increment the number of damage_block on this modifier
+  unit.modifiers[id].damage_block = (unit.modifiers[id].damage_block || 0) + damage_blocked;
 }
 export default spell;
