@@ -17,7 +17,8 @@ const unit: UnitSource = {
   },
   unitProps: {
     manaMax: 60,
-    healthMax: 9,
+    healthMax: 18,
+    damage: 5
   },
   init: (unit: Unit.IUnit) => {
     Unit.addModifier(unit, vampire_bite.id);
