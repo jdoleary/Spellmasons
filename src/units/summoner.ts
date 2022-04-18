@@ -24,7 +24,7 @@ const unit: UnitSource = {
       unit.mana -= SUMMON_MANA_COST;
       const sourceUnit = allUnits.grunt;
       if (sourceUnit) {
-        const coords = window.underworld.findValidSpawn(unit)
+        const coords = window.underworld.findValidSpawn(unit, 3)
         if (coords) {
 
           const summonedUnit = Unit.create(

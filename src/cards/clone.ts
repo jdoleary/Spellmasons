@@ -35,7 +35,7 @@ Clones each target
 
         // If there is are clone coordinates to clone into
         if (cloneSourceCoords) {
-          const validSpawnCoords = window.underworld.findValidSpawn(cloneSourceCoords)
+          const validSpawnCoords = window.underworld.findValidSpawn(cloneSourceCoords, 3)
           if (validSpawnCoords) {
             if (unit) {
               const clone = Unit.load(unit);
