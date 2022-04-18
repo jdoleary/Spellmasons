@@ -168,7 +168,8 @@ function clientChooseUnit(unitId: string) {
 // zoom camera
 function zoom(e: WheelEvent) {
   e.preventDefault();
-  let newScale = app.stage.scale.x + e.deltaY * -0.005;
+  let newScale = app.stage.scale.x + e.deltaY * -0.002;
+  // Limit zoom out and in to sensible limits
   newScale = Math.min(Math.max(0.5, newScale), 3);
 
   window.zoomTarget = newScale;
