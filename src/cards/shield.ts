@@ -4,7 +4,8 @@ import type { Spell } from '.';
 import floatingText from '../FloatingText';
 
 const id = 'shield';
-const damage_blocked = 6;
+const damageBlocked = 6;
+const maxStack = 3;
 const spell: Spell = {
   card: {
     id,
@@ -14,7 +15,7 @@ const spell: Spell = {
     probability: 5,
     thumbnail: 'shield.png',
     description: `
-Protects bearer from the next ${damage_blocked} damage that they would incur.  Shield can be stacked multiple times.
+Protects bearer from the next ${damageBlocked} damage that they would incur.  Shield can be stacked up to ${maxStack} times.
     `,
     effect: async (state, dryRun) => {
       if (dryRun) {
@@ -82,6 +83,12 @@ function add(unit: Unit.IUnit) {
     Image.addSubSprite(unit.image, id);
   }
   // Increment the number of damage_block on this modifier
-  unit.modifiers[id].damage_block = (unit.modifiers[id].damage_block || 0) + damage_blocked;
+  unit.modifiers[id].damage_block = (unit.modifiers[id].damage_block || 0) + damageBlocked;
+  const maxBlock = maxStack * damageBlocked;
+  if (unit.modifiers[id].damage_block > maxBlock) {
+    // Cap how much shield a unit can have
+    unit.modifiers[id].damage_block = maxBlock;
+    floatingText({ coords: unit, text: `Maximum shield`, style: { fill: 'white' } });
+  }
 }
 export default spell;
