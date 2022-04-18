@@ -1,4 +1,4 @@
-import { removeModifier } from '../Unit';
+import * as Unit from '../Unit';
 import type { Spell } from '.';
 
 const id = 'purify';
@@ -18,16 +18,19 @@ Removes all curses from the target(s).
         return state;
       }
       for (let unit of state.targetedUnits) {
-        for (let [modifier, modifierProperties] of Object.entries(
-          unit.modifiers,
-        )) {
-          if (modifierProperties.isCurse) {
-            removeModifier(unit, modifier);
-          }
-        }
+        apply(unit)
       }
       return state;
     },
   },
 };
+export function apply(unit: Unit.IUnit) {
+  for (let [modifier, modifierProperties] of Object.entries(
+    unit.modifiers,
+  )) {
+    if (modifierProperties.isCurse) {
+      Unit.removeModifier(unit, modifier);
+    }
+  }
+}
 export default spell;

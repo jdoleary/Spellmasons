@@ -5,7 +5,8 @@ import type { Vec2 } from '../Vec';
 import * as math from '../math';
 import { createVisualLobbingProjectile } from '../Projectile';
 import * as config from '../config';
-import Shield from '../cards/shield'
+import Shield from '../cards/shield';
+import { apply as purify } from '../cards/purify';
 
 const CAST_MANA_COST = 30;
 const unit: UnitSource = {
@@ -56,6 +57,8 @@ const unit: UnitSource = {
             );
             // Heal for 2
             Unit.takeDamage(chosenUnit, -2, false, undefined);
+            // Purify
+            purify(chosenUnit);
             break;
           }
         }
@@ -70,6 +73,7 @@ const unit: UnitSource = {
               'holy-projectile.png',
             );
             Unit.addModifier(closestAlly, Shield.card.id);
+            purify(closestAlly);
           }
         }
       }
