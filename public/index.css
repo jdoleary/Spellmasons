@@ -255,7 +255,9 @@ the face of the last card in the group is seen*/
 }
 
 .card-mana-badge.modified-by-usage {
-  border: 2px solid #434380;
+  border: 2px solid #04042b;
+  color: #04042b;
+
 }
 
 .card-health-badge {
@@ -264,7 +266,8 @@ the face of the last card in the group is seen*/
 }
 
 .card-health-badge.modified-by-usage {
-  border: 2px solid #863e3e;
+  border: 2px solid #522626;
+  color: #522626;
 }
 
 .hotkey-badge-holder {
