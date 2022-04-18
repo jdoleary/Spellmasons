@@ -11,6 +11,7 @@ const spell: Spell = {
     id,
     manaCost: 0,
     healthCost: health_burn,
+    expenseScaling: 1,
     probability: 20,
     thumbnail: 'mana_steal.png',
     description: `

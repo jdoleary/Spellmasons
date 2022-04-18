@@ -41,6 +41,7 @@ const spell: Spell = {
     id,
     manaCost: 50,
     healthCost: 0,
+    expenseScaling: 1,
     probability: 5,
     thumbnail: 'contageous.png',
     description: `

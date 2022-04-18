@@ -55,6 +55,7 @@ const spell: Spell = {
     id,
     manaCost: 20,
     healthCost: 0,
+    expenseScaling: 1,
     probability: 0,
     thumbnail: 'bite.png',
     description: `Turns the victim into a Vampire.

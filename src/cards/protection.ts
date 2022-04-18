@@ -9,6 +9,7 @@ const spell: Spell = {
     id,
     manaCost: 20,
     healthCost: 0,
+    expenseScaling: 1,
     probability: 10,
     thumbnail: 'protection.png',
     description: 'Removes self or ally from existing spell targets.  Will protect 1 allied unit (including self) per use.  Prioritizes protecting yourself, then ally wizards, then other allies.  You may cast more than one in a single spell to protect multiple allies.',

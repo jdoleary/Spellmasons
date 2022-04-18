@@ -9,6 +9,7 @@ const spell: Spell = {
     id,
     manaCost: 80,
     healthCost: 0,
+    expenseScaling: 2,
     probability: 5,
     thumbnail: 'raise_dead.png',
     description: `

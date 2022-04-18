@@ -10,6 +10,7 @@ const spell: Spell = {
     manaCost: 50,
     healthCost: 0,
     probability: 5,
+    expenseScaling: 1,
     thumbnail: 'swap.png',
     description: `
 Swaps the caster with the source target.

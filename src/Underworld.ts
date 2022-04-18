@@ -1179,7 +1179,7 @@ export default class Underworld {
           if (casterPlayer.cardUsageCounts[card.id] === undefined) {
             casterPlayer.cardUsageCounts[card.id] = 0;
           }
-          casterPlayer.cardUsageCounts[card.id]++;
+          casterPlayer.cardUsageCounts[card.id] += card.expenseScaling;
           updateManaCostUI();
 
         }

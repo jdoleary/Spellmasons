@@ -16,6 +16,7 @@ const spell: Spell = {
     id,
     manaCost: 10,
     healthCost: 0,
+    expenseScaling: 1,
     probability: 50,
     thumbnail: 'damage.png',
     description: `

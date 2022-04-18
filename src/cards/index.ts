@@ -156,6 +156,9 @@ export interface ICard {
   // requiresFollowingCard is for cards like chain or AOE that need another
   // card to follow them in order to have an effect
   requiresFollowingCard?: boolean;
+  // The number of turns it takes after use to return to it's original cost
+  // Default is 1
+  expenseScaling: number;
 }
 
 export const allCards: { [cardId: string]: ICard } = {};

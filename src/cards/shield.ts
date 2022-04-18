@@ -10,6 +10,7 @@ const spell: Spell = {
     id,
     manaCost: 60,
     healthCost: 0,
+    expenseScaling: 1,
     probability: 5,
     thumbnail: 'shield.png',
     description: `
