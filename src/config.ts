@@ -35,4 +35,3 @@ export const DISTANCE_VERY_FAR = 600;
 // so that moving units can overlap with each other a bit so "crowding" looks more
 // organic
 export const UNIT_BASE_RADIUS = 0.5 * COLLISION_MESH_RADIUS * NON_HEAVY_UNIT_SCALE;
-export const UNIT_HEAVY_BASE_RADIUS = 0.5 * COLLISION_MESH_RADIUS;

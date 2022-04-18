@@ -86,11 +86,7 @@ function add(unit: Unit.IUnit) {
   unit.modifiers[id].turnsLeft = (unit.modifiers[id].turnsLeft || 0) + 1;
 }
 function remove(unit: Unit.IUnit) {
-  if (unit.image.subSprites.includes('heavy_armor')) {
-    unit.radius = config.UNIT_HEAVY_BASE_RADIUS;
-  } else {
-    unit.radius = config.UNIT_BASE_RADIUS
-  }
+  unit.radius = config.UNIT_BASE_RADIUS
 }
 
 export default spell;

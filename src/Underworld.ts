@@ -296,9 +296,6 @@ export default class Underworld {
         unit.healthMax *= 2;
         unit.health = unit.healthMax;
         unit.damage *= 2;
-        unit.radius = config.UNIT_HEAVY_BASE_RADIUS;
-        // Set image to "heavy" size
-        unit.image.sprite.scale.set(1.0);
         // Add subsprite to show they are armored:
         Image.addSubSprite(unit.image, 'heavy_armor');
       }
