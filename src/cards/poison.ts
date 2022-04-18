@@ -5,14 +5,18 @@ import * as Unit from '../Unit';
 
 export const id = 'poison';
 function add(unit: IUnit) {
-  // Note: Curse can stack multiple times but doesn't keep any state
-  // so it doesn't need a first time setup like freeze does
-
-  unit.modifiers[id] = { isCurse: true };
-  // Add event
-  unit.onTurnStartEvents.push(id);
-  // Add subsprite image
-  Image.addSubSprite(unit.image, id);
+  // First time setup
+  if (!unit.modifiers[id]) {
+    unit.modifiers[id] = {
+      isCurse: true,
+    };
+    // Add event
+    unit.onTurnStartEvents.push(id);
+    // Add subsprite image
+    Image.addSubSprite(unit.image, id);
+  }
+  // Increment the number of stacks of poison 
+  unit.modifiers[id].stacks = (unit.modifiers[id].stacks || 0) + 1;
 }
 
 const spell: Spell = {
@@ -55,7 +59,7 @@ at the start of the unit's turn.
   },
   events: {
     onTurnStart: async (unit: IUnit) => {
-      takeDamage(unit, 1, false, undefined);
+      takeDamage(unit, unit.modifiers[id].stacks || 1, false, undefined);
       return false;
     },
   },
