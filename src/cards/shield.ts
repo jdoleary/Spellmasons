@@ -8,7 +8,7 @@ const damage_blocked = 6;
 const spell: Spell = {
   card: {
     id,
-    manaCost: 50,
+    manaCost: 60,
     healthCost: 0,
     probability: 5,
     thumbnail: 'shield.png',

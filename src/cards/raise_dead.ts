@@ -7,7 +7,7 @@ const resStatAmount = 1.0;
 const spell: Spell = {
   card: {
     id,
-    manaCost: 50,
+    manaCost: 80,
     healthCost: 0,
     probability: 5,
     thumbnail: 'raise_dead.png',

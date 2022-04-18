@@ -7,7 +7,7 @@ const healAmount = 3;
 const spell: Spell = {
   card: {
     id,
-    manaCost: 10,
+    manaCost: 15,
     healthCost: 0,
     probability: 50,
     thumbnail: 'heal.png',
