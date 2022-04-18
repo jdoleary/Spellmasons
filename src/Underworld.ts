@@ -38,7 +38,7 @@ import { HandcraftedLevel, levels } from './HandcraftedLevels';
 import { addCardToHand, removeCardsFromHand } from './CardUI';
 import { updateMouseUI } from './ui/eventListeners';
 import Jprompt from './Jprompt';
-import { moveWithCollisions } from './collision/moveWithCollision';
+import { isCircleIntersectingCircle, moveWithCollisions } from './collision/moveWithCollision';
 import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './contants';
 
 export enum turn_phase {
@@ -463,6 +463,38 @@ export default class Underworld {
       // portion falls off into the abyss below it
       image.sprite.anchor.y = 0.38;
     }
+  }
+  findValidSpawn(desiredSource: Vec2): Vec2 | undefined {
+    const attemptSpawns = Array.from(math.honeycombGenerator(config.UNIT_BASE_RADIUS, desiredSource, 12));
+    const aliveUnits = this.units.filter(u => u.alive);
+    for (let s of attemptSpawns) {
+      let invalid = false;
+      const attemptSpawn = { ...s, radius: config.UNIT_BASE_RADIUS };
+      for (let unit of aliveUnits) {
+        if (isCircleIntersectingCircle(attemptSpawn, unit)) {
+          invalid = true;
+          break;
+        }
+
+      }
+      // if (invalid) {
+      //   break;
+      // }
+      // Ensure attemptSpawn isn't inside of pathingPolygons
+      if (!invalid && findPolygonsThatVec2IsInsideOf(attemptSpawn, this.pathingPolygons).length === 0) {
+        // return attemptSpawn
+      } else {
+        invalid = true;
+      }
+
+      if (invalid) {
+        window.walkPathGraphics.lineStyle(4, 0xff0000, 0.5);
+      } else {
+        window.walkPathGraphics.lineStyle(4, 0xffffff, 0.3);
+      }
+      window.walkPathGraphics.drawCircle(s.x, s.y, config.UNIT_BASE_RADIUS)
+    }
+    return undefined;
 
   }
 

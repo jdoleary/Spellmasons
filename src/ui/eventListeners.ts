@@ -135,6 +135,7 @@ export function updateMouseUI() {
 
   // Show walk path if in inspect-mode:
   window.walkPathGraphics.clear();
+  window.underworld.findValidSpawn(mouseTarget)
   if (!isOutOfBounds(mouseTarget)) {
     if (window.player) {
       // If in inspect-mode
