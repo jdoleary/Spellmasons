@@ -4,7 +4,7 @@ import type * as Player from '../Player';
 import floatingText from '../FloatingText';
 import {
   clearTooltipSelection,
-  drawOnHoverCircle,
+  drawCircleUnderTarget,
   isOutOfBounds,
   syncSpellEffectProjection,
   updateTooltipSelection,
@@ -131,7 +131,7 @@ export function updateMouseUI() {
 
   const mouseTarget = window.underworld.getMousePos();
   // Show faint circle on clickable entities on hover:
-  drawOnHoverCircle(mouseTarget);
+  drawCircleUnderTarget(mouseTarget, 0.4, window.dryRunGraphics);
 
   // Show walk path if in inspect-mode:
   window.walkPathGraphics.clear();

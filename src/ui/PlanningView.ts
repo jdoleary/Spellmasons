@@ -30,11 +30,17 @@ let lastSpotCurrentPlayerTurnCircle: Vec2 = { x: 0, y: 0 };
 export function updatePlanningView() {
   if (planningViewGraphics) {
     planningViewGraphics.clear();
+    if (selectedPickup) {
+      // Draw circle to show that pickup is selected
+      drawCircleUnderTarget(selectedPickup, 1.0, planningViewGraphics);
+    }
     // Draw UI for the selectedUnit
     if (selectedUnit) {
       if (
         selectedUnit.alive
       ) {
+        // Draw circle to show that unit is selected
+        drawCircleUnderTarget(selectedUnit, 1.0, planningViewGraphics);
         // If selectedUnit is an archer, draw LOS attack line
         //  instead of attack range for them
         if (selectedUnit.unitSubType == UnitSubType.ARCHER) {
@@ -330,12 +336,12 @@ export function updateTooltipSelection(mousePos: Vec2) {
 }
 
 // Draws a faint circle over things that can be clicked on
-export function drawOnHoverCircle(mousePos: Vec2) {
+export function drawCircleUnderTarget(mousePos: Vec2, opacity: number, graphics: PIXI.Graphics) {
   const target: Vec2 | undefined = window.underworld.getUnitAt(mousePos) || window.underworld.getPickupAt(mousePos);
   if (target) {
-    dryRunGraphics.lineStyle(3, targetBlue, 0.4);
-    dryRunGraphics.beginFill(0x000000, 0);
-    dryRunGraphics.drawCircle(target.x, target.y, config.COLLISION_MESH_RADIUS);
-    dryRunGraphics.endFill();
+    graphics.lineStyle(3, 0xFFFFFF, opacity);
+    graphics.beginFill(0x000000, 0);
+    graphics.drawCircle(target.x, target.y, config.COLLISION_MESH_RADIUS);
+    graphics.endFill();
   }
 }
