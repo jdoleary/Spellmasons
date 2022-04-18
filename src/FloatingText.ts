@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import type { Vec2 } from './Vec';
-import { containerFloatingText } from './PixiUtils';
+import { app, containerFloatingText } from './PixiUtils';
 import * as config from './config';
 
 interface FText {
@@ -27,6 +27,9 @@ export default function floatingText({
   pixiText.y = coords.y;
   pixiText.anchor.x = 0.5;
   pixiText.anchor.y = 0.5;
+  // Keep floating text the same size regardless of camera zoom
+  pixiText.scale.x = 1 / app.stage.scale.x;
+  pixiText.scale.y = 1 / app.stage.scale.y;
   const instance = {
     x: pixiText.x,
     y: pixiText.y,
