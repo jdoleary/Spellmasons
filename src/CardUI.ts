@@ -107,7 +107,7 @@ export function recalcPositionForCards(player: Player.IPlayer | undefined) {
         const elCardSwapButton = document.createElement('div');
         elCardSwapButton.classList.add('swap-btn');
         elCardSwapButton.dataset.cardId = cardId;
-        elCardSwapButton.innerHTML = '↔️';
+        elCardSwapButton.innerHTML = '⇄';
         elCardSwapButton.addEventListener('click', swapCardOrder);
         elCardTypeGroup.appendChild(elCardSwapButton);
 

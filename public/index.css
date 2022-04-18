@@ -317,12 +317,15 @@ body.inspect-mode .swap-btn {
   /* Only visible in inspect-mode */
   display: none;
   position: absolute;
+  background: #0078d7;
+  border-radius: 12px;
+  color: white;
   font-size: 20px;
   left: -20px;
   top: 52px;
-  height: 16px;
-  width: 16px;
-  line-height: 16px;
+  height: 20px;
+  width: 20px;
+  line-height: 18px;
   margin: 0 auto;
   padding: 2px;
   text-align: center;
