@@ -103,3 +103,48 @@ export function chooseObjectWithProbability<T extends objectWithProbability>(
   const roll = randInt(window.underworld.random, 1, maxProbability);
   return _chooseObjectWithProbability(roll, source);
 }
+
+// Generates a honeycomb of circles of radius, never intersecting.
+// Used for finding points to test for valid spawn
+// Note, Y is inverted so that +y is "down" because of how pixi draws
+export function* honeycombGenerator(radius: number, start: Vec2, loopLimit: number): Generator<Vec2> {
+  // Starting point for a loop is always down right * 2radius * loop
+
+  // Skip the start point
+  for (let i = 1; i < loopLimit; i++) {
+    let lastPoint = { x: start.x + i * 2 * radius, y: start.y + i * radius }
+    yield lastPoint;
+    // From last point:
+    // Left Down x loop
+    for (let j = 0; j < i; j++) {
+      lastPoint = { x: lastPoint.x - 2 * radius, y: lastPoint.y + radius };
+      yield lastPoint;
+    }
+    // Left Up x loop
+    for (let j = 0; j < i; j++) {
+      lastPoint = { x: lastPoint.x - 2 * radius, y: lastPoint.y - radius };
+      yield lastPoint;
+    }
+    // Up * loop
+    for (let j = 0; j < i; j++) {
+      lastPoint = { x: lastPoint.x, y: lastPoint.y - 2 * radius };
+      yield lastPoint;
+    }
+    // Right Up * loop
+    for (let j = 0; j < i; j++) {
+      lastPoint = { x: lastPoint.x + 2 * radius, y: lastPoint.y - radius };
+      yield lastPoint;
+    }
+    // Right down * loop
+    for (let j = 0; j < i; j++) {
+      lastPoint = { x: lastPoint.x + 2 * radius, y: lastPoint.y + radius };
+      yield lastPoint;
+    }
+    // Down * (loop -1)
+    for (let j = 0; j < i - 1; j++) {
+      lastPoint = { x: lastPoint.x, y: lastPoint.y + 2 * radius };
+      yield lastPoint;
+    }
+  }
+
+}

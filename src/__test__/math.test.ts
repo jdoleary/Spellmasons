@@ -1,6 +1,68 @@
-import { indexToXY, xyToIndex, normalizeRadians, _chooseObjectWithProbability, similarTriangles, getCoordsAtDistanceTowardsTarget } from '../math';
+import { indexToXY, xyToIndex, normalizeRadians, _chooseObjectWithProbability, similarTriangles, getCoordsAtDistanceTowardsTarget, honeycombGenerator } from '../math';
 
 describe('math', () => {
+  describe('honeycombGenerator', () => {
+    it('Returns coordinates for a honeycomb or circles', () => {
+      const radius = 7;
+      const actual = Array.from(honeycombGenerator(radius, { x: 0, y: 0 }, 2));
+      const expected = [
+        // Relative start point (right, down)
+        { x: 2 * radius, y: radius },
+        // left down
+        { x: 0, y: 2 * radius },
+        // left up
+        { x: -2 * radius, y: radius },
+        // up
+        { x: -2 * radius, y: -radius },
+        // Right, up
+        { x: 0, y: -2 * radius },
+        // Right down
+        { x: 2 * radius, y: -radius },
+      ];
+      expect(actual).toEqual(expected);
+    });
+    it.only('Returns the correct coordinates for multiple outward layers of honeycomb', () => {
+      const radius = 1;
+      const actual = Array.from(honeycombGenerator(radius, { x: 0, y: 0 }, 3));
+      const expected = [
+        // Relative start point (right, down)
+        { x: 2 * radius, y: radius },
+        // left down
+        { x: 0, y: 2 * radius },
+        // left up
+        { x: -2 * radius, y: radius },
+        // up
+        { x: -2 * radius, y: -radius },
+        // Right, up
+        { x: 0, y: -2 * radius },
+        // Right down
+        { x: 2 * radius, y: -radius },
+        // Skip down since it's loop-1 for the down part
+        // Next Layer
+        // Relative start point (right, down)
+        { x: 4 * radius, y: 2 * radius },
+        // left down
+        { x: 2 * radius, y: 3 * radius },
+        { x: 0, y: 4 * radius },
+        // left up
+        { x: -2 * radius, y: 3 * radius },
+        { x: -4 * radius, y: 2 * radius },
+        // up
+        { x: -4 * radius, y: 0 },
+        { x: -4 * radius, y: -2 * radius },
+        // Right, up
+        { x: -2 * radius, y: -3 * radius },
+        { x: 0, y: -4 * radius },
+        // Right down
+        { x: 2 * radius, y: -3 * radius },
+        { x: 4 * radius, y: -2 * radius },
+        // Down
+        { x: 4 * radius, y: 0 },
+      ];
+      expect(actual).toEqual(expected);
+    });
+
+  });
   describe('probability', () => {
     const objects = [
       // Won't be selected because roll will never be 0 see chooseObjectWithProbability randome.integer(1...
