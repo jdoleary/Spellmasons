@@ -91,8 +91,8 @@ export function recenterCamera() {
         // Clamp camera X
         const mapLeftMostPoint = 0 - margin;
         const mapRightMostPoint = window.underworld.width + margin;
-        const camCenterXMin = mapLeftMostPoint + window.innerWidth / 2 / zoom;
-        const camCenterXMax = mapRightMostPoint - window.innerWidth / 2 / zoom;
+        const camCenterXMin = mapLeftMostPoint + elPIXIHolder.clientWidth / 2 / zoom;
+        const camCenterXMax = mapRightMostPoint - elPIXIHolder.clientWidth / 2 / zoom;
         // If the supposed minimum is more than the maximum, just center the camera:
         if (camCenterXMin > camCenterXMax) {
           centerTarget.x = (mapRightMostPoint + mapLeftMostPoint) / 2;
@@ -103,8 +103,8 @@ export function recenterCamera() {
         //Clamp camera Y
         const mapTopMostPoint = 0 - margin;
         const mapBottomMostPoint = window.underworld.height + margin;
-        const camCenterYMin = mapTopMostPoint + window.innerHeight / 2 / zoom;
-        const camCenterYMax = mapBottomMostPoint - window.innerHeight / 2 / zoom;
+        const camCenterYMin = mapTopMostPoint + elPIXIHolder.clientHeight / 2 / zoom;
+        const camCenterYMax = mapBottomMostPoint - elPIXIHolder.clientHeight / 2 / zoom;
         // If the supposed minimum is more than the maximum, just center the camera:
         if (camCenterYMin > camCenterYMax) {
           centerTarget.y = (mapBottomMostPoint + mapTopMostPoint) / 2;
@@ -115,8 +115,8 @@ export function recenterCamera() {
 
         // Actuall move the camera to be centered on the centerTarget
         const cameraTarget = {
-          x: window.innerWidth / 2 - (centerTarget.x * zoom),
-          y: window.innerHeight / 2 - (centerTarget.y * zoom)
+          x: elPIXIHolder.clientWidth / 2 - (centerTarget.x * zoom),
+          y: elPIXIHolder.clientHeight / 2 - (centerTarget.y * zoom)
         }
 
         // Option 1 for cam movement: Lerp camera to target
