@@ -1,6 +1,26 @@
-import { indexToXY, xyToIndex, normalizeRadians, _chooseObjectWithProbability, similarTriangles, getCoordsAtDistanceTowardsTarget, honeycombGenerator } from '../math';
+import { indexToXY, xyToIndex, normalizeRadians, _chooseObjectWithProbability, similarTriangles, getCoordsAtDistanceTowardsTarget, honeycombGenerator, clampVector } from '../math';
 
 describe('math', () => {
+  describe.only('clampVector', () => {
+    it('should not modify the vector if it\'s magnitude is less than the clamp magnitude', () => {
+      const vec = { x: 10, y: 0 };
+      const actual = clampVector(vec, 20);
+      const expected = { x: 10, y: 0 };
+      expect(actual).toEqual(expected);
+    });
+    it('should clamp the vector to the max magnitude', () => {
+      const vec = { x: 10, y: 0 };
+      const actual = clampVector(vec, 5);
+      const expected = { x: 5, y: 0 };
+      expect(actual).toEqual(expected);
+    });
+    it('should support clamping the magnitude with angled vectors', () => {
+      const vec = { x: 6, y: 8 };
+      const actual = clampVector(vec, 5);
+      const expected = { x: 3, y: 4 };
+      expect(actual).toEqual(expected);
+    });
+  });
   describe('honeycombGenerator', () => {
     it('Returns coordinates for a honeycomb or circles', () => {
       const radius = 7;

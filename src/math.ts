@@ -1,4 +1,4 @@
-import type { Vec2 } from './Vec';
+import { magnitude, Vec2 } from './Vec';
 import { randInt } from './rand';
 // https://webdva.github.io/how-i-implemented-client-side-linear-interpolation/
 export function lerp(start: number, end: number, time: number) {
@@ -9,6 +9,15 @@ export function lerp(start: number, end: number, time: number) {
     return start;
   }
   return start * (1 - time) + end * time;
+}
+// Clamps a vector to a maximum magnitude
+export function clampVector(vector: Vec2, maxMagnitude: number): Vec2 {
+  const mag = magnitude(vector)
+  if (mag <= maxMagnitude) {
+    return vector;
+  } else {
+    return similarTriangles(vector.x, vector.y, mag, maxMagnitude);
+  }
 }
 
 // For a triangle with sides x,y, and d (desired distance / hypotenuse), find the value
