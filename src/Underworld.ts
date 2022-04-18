@@ -1150,7 +1150,7 @@ export default class Underworld {
         // .then is necessary to convert return type of promise.all to just be void
         animationPromises.push(Promise.all([animations]).then(() => { }));
         const { targetedUnits: previousTargets } = effectState;
-        effectState = await card.effect(effectState, dryRun, index);
+        effectState = await card.effect(effectState, dryRun);
         // Delay animation between spells so players can understand what's going on
         if (!dryRun) {
           await new Promise<void>((resolve) => {
