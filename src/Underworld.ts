@@ -464,10 +464,11 @@ export default class Underworld {
       image.sprite.anchor.y = 0.38;
     }
   }
-  findValidSpawn(desiredSource: Vec2): Vec2 | undefined {
-    const attemptSpawns = Array.from(math.honeycombGenerator(config.UNIT_BASE_RADIUS, desiredSource, 12));
+  findValidSpawn(spawnSource: Vec2): Vec2 | undefined {
     const aliveUnits = this.units.filter(u => u.alive);
-    for (let s of attemptSpawns) {
+    // Enough rings to cover the whole map
+    const honeycombRings = Math.max(this.width / 2 / config.UNIT_BASE_RADIUS, this.height / 2 / config.UNIT_BASE_RADIUS);
+    for (let s of math.honeycombGenerator(config.UNIT_BASE_RADIUS, spawnSource, honeycombRings)) {
       let invalid = false;
       const attemptSpawn = { ...s, radius: config.UNIT_BASE_RADIUS };
       for (let unit of aliveUnits) {
@@ -477,22 +478,13 @@ export default class Underworld {
         }
 
       }
-      // if (invalid) {
-      //   break;
-      // }
       // Ensure attemptSpawn isn't inside of pathingPolygons
       if (!invalid && findPolygonsThatVec2IsInsideOf(attemptSpawn, this.pathingPolygons).length === 0) {
-        // return attemptSpawn
+        // Return the first valid spawn found
+        return attemptSpawn
       } else {
         invalid = true;
       }
-
-      if (invalid) {
-        window.walkPathGraphics.lineStyle(4, 0xff0000, 0.5);
-      } else {
-        window.walkPathGraphics.lineStyle(4, 0xffffff, 0.3);
-      }
-      window.walkPathGraphics.drawCircle(s.x, s.y, config.UNIT_BASE_RADIUS)
     }
     return undefined;
 
@@ -1336,7 +1328,7 @@ type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFun
 function getEnemiesForAltitude(levelIndex: number): { enemies: { [unitid: string]: number }, strength: number } {
   const hardCodedLevelEnemies: { [unitid: string]: number }[] = [
     {
-      'grunt': 5,
+      'summoner': 1,
     },
     {
       'grunt': 4,

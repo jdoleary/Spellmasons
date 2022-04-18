@@ -1,17 +1,16 @@
 import type { Spell } from '.';
 import * as Unit from '../Unit';
 import * as Pickup from '../Pickup';
-import * as Obstacle from '../Obstacle';
 import { UnitSubType, UnitType } from '../commonTypes';
 import type { Vec2 } from '../Vec';
 import { removeSubSprite } from '../Image';
-import { COLLISION_MESH_RADIUS } from '../config';
+import floatingText from '../FloatingText';
 
 const id = 'clone';
 const spell: Spell = {
   card: {
     id,
-    manaCost: 80,
+    manaCost: 0,
     healthCost: 0,
     probability: 1,
     expenseScaling: 1,
@@ -27,33 +26,33 @@ Clones each target
       // Note: They need to be batched so that the new clones don't get cloned
       const clonePairs: Vec2[][] = [];
       for (let unit of state.targetedUnits) {
-        clonePairs.push([unit, { x: unit.x + COLLISION_MESH_RADIUS, y: unit.y + COLLISION_MESH_RADIUS }]);
+        clonePairs.push([unit, { x: unit.x, y: unit.y }]);
       }
       // Clone all the batched clone jobs
-      for (let [target, cloneToCoords] of clonePairs) {
+      for (let [target, cloneSourceCoords] of clonePairs) {
         const unit = window.underworld.getUnitAt(target);
         const pickup = window.underworld.getPickupAt(target);
-        const obstacle = window.underworld.getObstacleAt(target);
 
         // If there is are clone coordinates to clone into
-        if (cloneToCoords) {
-          if (unit) {
-            const clone = Unit.load(unit);
-            // If the cloned unit is player controlled, make them be controlled by the AI
-            if (clone.unitSubType == UnitSubType.PLAYER_CONTROLLED) {
-              clone.unitType = UnitType.AI;
-              clone.unitSubType = UnitSubType.GOON;
-              removeSubSprite(clone.image, 'ownCharacterMarker');
+        if (cloneSourceCoords) {
+          const validSpawnCoords = window.underworld.findValidSpawn(cloneSourceCoords)
+          if (validSpawnCoords) {
+            if (unit) {
+              const clone = Unit.load(unit);
+              // If the cloned unit is player controlled, make them be controlled by the AI
+              if (clone.unitSubType == UnitSubType.PLAYER_CONTROLLED) {
+                clone.unitType = UnitType.AI;
+                clone.unitSubType = UnitSubType.GOON;
+                removeSubSprite(clone.image, 'ownCharacterMarker');
+              }
+              Unit.setLocation(clone, validSpawnCoords);
             }
-            Unit.setLocation(clone, cloneToCoords);
-          }
-          if (pickup) {
-            const clone = Pickup.load(pickup);
-            Pickup.setPosition(clone, cloneToCoords.x, cloneToCoords.y);
-          }
-          if (obstacle) {
-            const targetObstacle = { ...obstacle, ...cloneToCoords };
-            Obstacle.load(targetObstacle);
+            if (pickup) {
+              const clone = Pickup.load(pickup);
+              Pickup.setPosition(clone, validSpawnCoords.x, validSpawnCoords.y);
+            }
+          } else {
+            floatingText({ coords: cloneSourceCoords, text: 'No space to clone into!' });
           }
         }
       }
