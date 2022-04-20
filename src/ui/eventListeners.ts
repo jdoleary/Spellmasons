@@ -13,7 +13,7 @@ import { View } from '../views';
 import { findPath, pointsEveryXDistanceAlongPath } from '../Pathfinding';
 import { polygonToPolygonLineSegments } from '../Polygon';
 import * as colors from './colors';
-import type { Vec2 } from 'src/Vec';
+import type { Vec2 } from '../Vec';
 import { distance, getCoordsAtDistanceTowardsTarget } from '../math';
 
 export function keydownListener(event: KeyboardEvent) {
