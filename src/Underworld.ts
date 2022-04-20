@@ -79,7 +79,10 @@ export default class Underworld {
   pickups: Pickup.IPickup[] = [];
   obstacles: Obstacle.IObstacle[] = [];
   groundTiles: Vec2[] = [];
+  // line segments that prevent sight
   walls: LineSegment[] = [];
+  // line segments that prevent movement
+  bounds: LineSegment[] = [];
   pathingPolygons: Polygon[] = [];
   playersWhoHaveChosenUpgrade: string[] = [];
   // Keeps track of how many messages have been processed so that clients can
@@ -132,7 +135,7 @@ export default class Underworld {
         } else {
           // AI collide with each other and walls
           const originalPosition = Vec.clone(u);
-          moveWithCollisions(u, stepTowardsTarget, aliveUnits, this.walls);
+          moveWithCollisions(u, stepTowardsTarget, aliveUnits, this.bounds);
           moveDist = math.distance(originalPosition, u);
         }
         u.distanceMovedThisTurn += moveDist;
@@ -243,7 +246,8 @@ export default class Underworld {
         { x: window.underworld.width, y: 0 },
       ], inverted: true
     };
-    this.walls = [...this.obstacles.filter(o => o.wall).map(o => o.bounds).map(polygonToPolygonLineSegments), polygonToPolygonLineSegments(mapBounds)].flat()
+    this.walls = [...this.obstacles.filter(o => o.wall).map(o => o.bounds).map(polygonToPolygonLineSegments), polygonToPolygonLineSegments(mapBounds)].flat();
+    this.bounds = [...this.obstacles.map(o => o.bounds).map(polygonToPolygonLineSegments), polygonToPolygonLineSegments(mapBounds)].flat();
 
     // Expand pathing walls by the size of the regular unit
     const expandMagnitude = config.COLLISION_MESH_RADIUS * config.NON_HEAVY_UNIT_SCALE
