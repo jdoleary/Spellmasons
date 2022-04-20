@@ -318,7 +318,22 @@ describe('testables', () => {
                 },
             }
             const actual = getNormalVectorOfLineSegment(line);
-            const expected = { x: -1, y: -1 }
+            const expected = { x: -1, y: 1 }
+            expect(actual).toEqual(expected);
+        });
+        it('should return a Vec2 representing the normal vector of the lineSegment (horizontal line example)', () => {
+            const line: LineSegment = {
+                p1: {
+                    x: 0,
+                    y: 0
+                },
+                p2: {
+                    x: 2,
+                    y: 0
+                },
+            }
+            const actual = getNormalVectorOfLineSegment(line);
+            const expected = { x: 0, y: 2 }
             expect(actual).toEqual(expected);
         });
 

@@ -247,10 +247,10 @@ export default class Underworld {
       ], inverted: true
     };
     this.walls = [...this.obstacles.filter(o => o.wall).map(o => o.bounds).map(polygonToPolygonLineSegments), polygonToPolygonLineSegments(mapBounds)].flat();
-    this.bounds = [...this.obstacles.map(o => o.bounds).map(polygonToPolygonLineSegments), polygonToPolygonLineSegments(mapBounds)].flat();
-
-    // Expand pathing walls by the size of the regular unit
     const expandMagnitude = config.COLLISION_MESH_RADIUS * config.NON_HEAVY_UNIT_SCALE
+    this.bounds = mergeOverlappingPolygons([...this.obstacles.map(o => o.bounds), mapBounds]).map(polygonToPolygonLineSegments).flat();
+    // this.bounds = mergeOverlappingPolygons([...this.obstacles.map(o => o.bounds).map(p => expandPolygon(p, -expandMagnitude, false)), expandPolygon(mapBounds, -expandMagnitude, false)]).map(polygonToPolygonLineSegments).flat();
+    // Expand pathing walls by the size of the regular unit
     // Save the pathing walls for the underworld
     const expandedAndMergedPolygons = mergeOverlappingPolygons([...this.obstacles.map(o => o.bounds).map(p => expandPolygon(p, expandMagnitude, true)), expandPolygon(mapBounds, expandMagnitude, false)]);
     this.pathingPolygons = expandedAndMergedPolygons
@@ -547,8 +547,8 @@ export default class Underworld {
   }
   initLevel(levelIndex: number): void {
     // Level sizes are random but have change to grow bigger as loop continues
-    const sectorsWide = randInt(window.underworld.random, 4, 5 + (Math.round(levelIndex / 3)));
-    const sectorsTall = randInt(window.underworld.random, 2, 5 + (Math.round(levelIndex / 3)));
+    const sectorsWide = randInt(window.underworld.random, 6, 5 + (Math.round(levelIndex / 3)));
+    const sectorsTall = randInt(window.underworld.random, 6, 5 + (Math.round(levelIndex / 3)));
     setView(View.Game);
     console.log('Setup: initLevel', levelIndex, sectorsWide, sectorsTall);
     this.levelIndex = levelIndex;
@@ -1333,7 +1333,7 @@ type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFun
 function getEnemiesForAltitude(levelIndex: number): { enemies: { [unitid: string]: number }, strength: number } {
   const hardCodedLevelEnemies: { [unitid: string]: number }[] = [
     {
-      'grunt': 5,
+      'grunt': 50,
     },
     {
       'grunt': 4,

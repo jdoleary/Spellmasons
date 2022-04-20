@@ -195,3 +195,4 @@ window.superMe = () => {
     window.player.unit.moveSpeed = 2;
   }
 }
+window.showDebug = true;

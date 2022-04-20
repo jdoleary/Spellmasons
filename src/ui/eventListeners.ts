@@ -15,6 +15,7 @@ import { polygonToPolygonLineSegments } from '../Polygon';
 import * as colors from './colors';
 import type { Vec2 } from '../Vec';
 import { distance, getCoordsAtDistanceTowardsTarget } from '../math';
+import { moveWithCollisions } from '../collision/moveWithCollision';
 
 export function keydownListener(event: KeyboardEvent) {
   // Only handle hotkeys when viewing the Game
@@ -137,6 +138,8 @@ export function updateMouseUI() {
   window.walkPathGraphics.clear();
   if (!isOutOfBounds(mouseTarget)) {
     if (window.player) {
+      // Debug: testcollisions
+      moveWithCollisions(window.player.unit, mouseTarget, window.underworld.units, window.underworld.bounds);
       // If in inspect-mode
       if (document.body.classList.contains('inspect-mode')) {
         //
@@ -223,6 +226,7 @@ export function updateMouseUI() {
 
   // Test pathing
   if (window.showDebug && window.player) {
+    window.debugGraphics.clear();
     const mouseTarget = window.underworld.getMousePos();
     (document.getElementById('debug-info') as HTMLElement).innerText = `x:${Math.round(mouseTarget.x)}, y:${Math.round(mouseTarget.y)}`;
     // Draw the pathing walls
@@ -234,13 +238,13 @@ export function updateMouseUI() {
     }
     // Draw bounds that prevent movement
     for (let bound of window.underworld.bounds) {
-      window.debugGraphics.lineStyle(2, 0x0000ff, 1.0);
+      window.debugGraphics.lineStyle(4, 0x0000ff, 1.0);
       window.debugGraphics.moveTo(bound.p1.x, bound.p1.y);
       window.debugGraphics.lineTo(bound.p2.x, bound.p2.y);
     }
     // Draw walls that prevent line of sight 
     for (let wall of window.underworld.walls) {
-      window.debugGraphics.lineStyle(2, 0x00ff00, 1.0);
+      window.debugGraphics.lineStyle(2, 0x00ff00, 0.5);
       window.debugGraphics.moveTo(wall.p1.x, wall.p1.y);
       window.debugGraphics.lineTo(wall.p2.x, wall.p2.y);
     }

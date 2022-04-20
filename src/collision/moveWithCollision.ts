@@ -1,7 +1,8 @@
-import type { Vec2 } from '../Vec';
-import { distance } from "../math";
+import { add, magnitude, multiply, Vec2 } from '../Vec';
+import { distance, similarTriangles } from "../math";
 import { findWherePointIntersectLineSegmentAtRightAngle, LineSegment } from "./collisionMath";
 import * as config from '../config';
+import { getNormalVectorOfLineSegment, PolygonLineSegment } from '../Polygon';
 
 export type Circle = {
     radius: number;
@@ -54,7 +55,7 @@ export function normalizedVector(point1: Vec2, point2: Vec2): { vector: Vec2 | u
 // collisions with circles and eventaully lines.  Collisions may cause
 // both colliders to move
 // mover may not end up at destination if it collides
-export function moveWithCollisions(mover: Circle, destination: Vec2, circles: Circle[], lines: LineSegment[]) {
+export function moveWithCollisions(mover: Circle, destination: Vec2, circles: Circle[], lines: PolygonLineSegment[]) {
     // Determine if the mover intersects with any "circles" as
     // it travels from mover to destination
     // We do this by adding mover.radius to the other circle's radius
@@ -65,21 +66,21 @@ export function moveWithCollisions(mover: Circle, destination: Vec2, circles: Ci
     // Actually move the mover
     mover.x = destination.x;
     mover.y = destination.y;
-    for (let other of circles) {
-        // Do not repel self from self
-        if (mover !== other) {
-            // If the mover now intersects with another circle...
-            if (isCircleIntersectingCircle(mover, other)) {
-                // Prevent the mover from moving through other circles
-                // This turns out to be the best solution to prevent
-                // units from ending up inside walls or out of the level
-                // If, alternatively, movers could "push" other units,
-                // that is when they get pushed through walls. This is better
-                // to just make it so you can't move through other units
-                repelCircles(mover, originalPosition, other, true);
-            }
-        }
-    }
+    // for (let other of circles) {
+    //     // Do not repel self from self
+    //     if (mover !== other) {
+    //         // If the mover now intersects with another circle...
+    //         if (isCircleIntersectingCircle(mover, other)) {
+    //             // Prevent the mover from moving through other circles
+    //             // This turns out to be the best solution to prevent
+    //             // units from ending up inside walls or out of the level
+    //             // If, alternatively, movers could "push" other units,
+    //             // that is when they get pushed through walls. This is better
+    //             // to just make it so you can't move through other units
+    //             repelCircles(mover, originalPosition, other, true);
+    //         }
+    //     }
+    // }
     for (let line of lines) {
         repelCircleFromLine(mover, originalPosition, line);
     }
@@ -133,25 +134,53 @@ function repelCircles(mover: Circle, originalPosition: Vec2, other: Circle, othe
 // Note: this function is only meant to handle small increments of movements, this function
 // will not account for the case where the destination does not intersect
 // a line but the mover would travel through a linesegment on it's way to destination.  This is by design.
-function repelCircleFromLine(mover: Circle, originalPosition: Vec2, line: LineSegment) {
+function repelCircleFromLine(mover: Circle, originalPosition: Vec2, line: PolygonLineSegment) {
     // The radius used for the line points makes up the different between a regular unit collision radius and the units physicsMover's radius
     // The units physicsMover's radius is small so that units can "squeeze" past each other, but I want the full unit size to collide
     // with walls (lines and their verticies).
-    const radius = config.COLLISION_MESH_RADIUS - mover.radius
+    const margin = 0;
+    const totalRepelDistance = config.COLLISION_MESH_RADIUS * config.NON_HEAVY_UNIT_SCALE;
+    const radius = totalRepelDistance - mover.radius;
     // Test for intersection with the line segment
+    const repelVector = multiply(line.polygon.inverted ? -1 : 1, getNormalVectorOfLineSegment(line));
+    window.unitOverlayGraphics.lineStyle(4, 0xff0000, 1);
+    const midPoint = add(line.p1, similarTriangles(line.p2.x - line.p1.x, line.p2.y - line.p1.y, distance(line.p1, line.p2), distance(line.p1, line.p2) / 2))
+    window.unitOverlayGraphics.moveTo(midPoint.x, midPoint.y);
+    window.unitOverlayGraphics.lineTo(midPoint.x + repelVector.x, midPoint.y + repelVector.y);
     const rightAngleIntersectionWithLineFromMoverCenterPoint = findWherePointIntersectLineSegmentAtRightAngle(mover, line);
     if (rightAngleIntersectionWithLineFromMoverCenterPoint
-        && distance(rightAngleIntersectionWithLineFromMoverCenterPoint, mover) <= config.COLLISION_MESH_RADIUS) {
+        && distance(rightAngleIntersectionWithLineFromMoverCenterPoint, mover) <= totalRepelDistance) {
+
+        window.unitOverlayGraphics.moveTo(mover.x, mover.y);
+        const newLocationRelative = similarTriangles(repelVector.x, repelVector.y, magnitude(repelVector), totalRepelDistance);
+        const newLocation = add(rightAngleIntersectionWithLineFromMoverCenterPoint, newLocationRelative);
+        window.unitOverlayGraphics.lineStyle(5, 0xff00ff, 1);
+        window.unitOverlayGraphics.moveTo(mover.x, mover.y);
+        mover.x = newLocation.x;
+        mover.y = newLocation.y;
+        window.unitOverlayGraphics.lineTo(mover.x, mover.y);
+        window.unitOverlayGraphics.drawCircle(mover.x, mover.y, 2);
+        window.unitOverlayGraphics.lineStyle(5, 0xff0000, 1);
+        window.unitOverlayGraphics.drawCircle(line.p1.x, line.p1.y, 2);
+        window.unitOverlayGraphics.lineStyle(5, 0x00ff00, 1);
+        window.unitOverlayGraphics.drawCircle(line.p2.x, line.p2.y, 2);
+
         // circle intersects line
-        repelCircles(mover, originalPosition, { ...rightAngleIntersectionWithLineFromMoverCenterPoint, radius }, true);
+        // repelCircles(mover, originalPosition, { ...rightAngleIntersectionWithLineFromMoverCenterPoint, radius }, true);
+        // window.unitOverlayGraphics.drawCircle(mover.x, mover.y, mover.radius);
+        // window.unitOverlayGraphics.drawCircle(rightAngleIntersectionWithLineFromMoverCenterPoint.x, rightAngleIntersectionWithLineFromMoverCenterPoint.y, radius);
     }
     // Test for intersection with the line segment endpoints
-    if (distance(line.p1, mover) <= mover.radius) {
-        repelCircles(mover, originalPosition, { ...line.p1, radius }, true);
-    }
-    if (distance(line.p2, mover) <= mover.radius) {
-        repelCircles(mover, originalPosition, { ...line.p2, radius }, true);
-    }
+    // if (distance(line.p1, mover) <= totalRepelDistance) {
+    //     repelCircles(mover, originalPosition, { ...line.p1, radius }, true);
+    //     // window.unitOverlayGraphics.lineStyle(2, 0xff0000, 1);
+    //     // window.unitOverlayGraphics.drawCircle(mover.x, mover.y, mover.radius);
+    // }
+    // if (distance(line.p2, mover) <= totalRepelDistance) {
+    //     repelCircles(mover, originalPosition, { ...line.p2, radius }, true);
+    //     // window.unitOverlayGraphics.lineStyle(2, 0x0000ff, 1);
+    //     // window.unitOverlayGraphics.drawCircle(mover.x, mover.y, mover.radius);
+    // }
 }
 export const testables = {
     repelCircles,

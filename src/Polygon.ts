@@ -216,13 +216,17 @@ export function doesVertexBelongToPolygon(p: Vec2, poly: Polygon): boolean {
 // is relevant when dealing with polygons)
 // Note: Gamespace is upsidedown but I think in regular cartesian coordinate
 // plane where y is up and in that mindset, polygons are expressed clockwise.
-function getNormalVectorOfLineSegment(lineSegment: LineSegment): Vec2 {
+// but in this game they are expressed counterclockwise.  I should go back
+// and update this when I have time but I probably wont.
+export function getNormalVectorOfLineSegment(lineSegment: LineSegment): Vec2 {
     // Note: This is in the context of polygons, so p1 is the first point ("prev")
     // and p2 is the "next" point.  So the normal vector will point OUTSIDE
     // the polygon so long as the polygon isn't inverted
+    // Note: If the line segment belongs to an inverted polygon, you'll have to
+    // multiply the vector by -1 to get a normal that points into "walkable" space
     return {
         x: lineSegment.p1.y - lineSegment.p2.y,
-        y: lineSegment.p1.x - lineSegment.p2.x
+        y: lineSegment.p2.x - lineSegment.p1.x
     }
 }
 function projectPointForPathingMesh(polygon: Polygon, pointIndex: number, magnitude: number, yAxisOnlyUp: boolean): Vec2 {
