@@ -232,6 +232,18 @@ export function updateMouseUI() {
       window.debugGraphics.moveTo(lineSegment.p1.x, lineSegment.p1.y);
       window.debugGraphics.lineTo(lineSegment.p2.x, lineSegment.p2.y);
     }
+    // Draw bounds that prevent movement
+    for (let bound of window.underworld.bounds) {
+      window.debugGraphics.lineStyle(2, 0x0000ff, 1.0);
+      window.debugGraphics.moveTo(bound.p1.x, bound.p1.y);
+      window.debugGraphics.lineTo(bound.p2.x, bound.p2.y);
+    }
+    // Draw walls that prevent line of sight 
+    for (let wall of window.underworld.walls) {
+      window.debugGraphics.lineStyle(2, 0x00ff00, 1.0);
+      window.debugGraphics.moveTo(wall.p1.x, wall.p1.y);
+      window.debugGraphics.lineTo(wall.p2.x, wall.p2.y);
+    }
   }
 }
 // Handle right click on game board
