@@ -1,6 +1,7 @@
 import type { Vec2 } from '../Vec';
 import { distance } from "../math";
 import { findWherePointIntersectLineSegmentAtRightAngle, LineSegment } from "./collisionMath";
+import * as config from '../config';
 
 export type Circle = {
     radius: number;
@@ -133,19 +134,23 @@ function repelCircles(mover: Circle, originalPosition: Vec2, other: Circle, othe
 // will not account for the case where the destination does not intersect
 // a line but the mover would travel through a linesegment on it's way to destination.  This is by design.
 function repelCircleFromLine(mover: Circle, originalPosition: Vec2, line: LineSegment) {
+    // The radius used for the line points makes up the different between a regular unit collision radius and the units physicsMover's radius
+    // The units physicsMover's radius is small so that units can "squeeze" past each other, but I want the full unit size to collide
+    // with walls (lines and their verticies).
+    const radius = config.COLLISION_MESH_RADIUS - mover.radius
     // Test for intersection with the line segment
     const rightAngleIntersectionWithLineFromMoverCenterPoint = findWherePointIntersectLineSegmentAtRightAngle(mover, line);
     if (rightAngleIntersectionWithLineFromMoverCenterPoint
-        && distance(rightAngleIntersectionWithLineFromMoverCenterPoint, mover) <= mover.radius) {
+        && distance(rightAngleIntersectionWithLineFromMoverCenterPoint, mover) <= config.COLLISION_MESH_RADIUS) {
         // circle intersects line
-        repelCircles(mover, originalPosition, { ...rightAngleIntersectionWithLineFromMoverCenterPoint, radius: 0 }, true);
+        repelCircles(mover, originalPosition, { ...rightAngleIntersectionWithLineFromMoverCenterPoint, radius }, true);
     }
     // Test for intersection with the line segment endpoints
     if (distance(line.p1, mover) <= mover.radius) {
-        repelCircles(mover, originalPosition, { ...line.p1, radius: 0 }, true);
+        repelCircles(mover, originalPosition, { ...line.p1, radius }, true);
     }
     if (distance(line.p2, mover) <= mover.radius) {
-        repelCircles(mover, originalPosition, { ...line.p2, radius: 0 }, true);
+        repelCircles(mover, originalPosition, { ...line.p2, radius }, true);
     }
 }
 export const testables = {
