@@ -3,6 +3,7 @@ import * as Unit from '../Unit';
 import * as Pickup from '../Pickup';
 import { UnitSubType, UnitType } from '../commonTypes';
 import type { Vec2 } from '../Vec';
+import * as config from '../config';
 import { removeSubSprite } from '../Image';
 import floatingText from '../FloatingText';
 
@@ -10,7 +11,7 @@ const id = 'clone';
 const spell: Spell = {
   card: {
     id,
-    manaCost: 0,
+    manaCost: 80,
     healthCost: 0,
     probability: 1,
     expenseScaling: 1,
@@ -36,26 +37,24 @@ Clones each target
 
         // If there is are clone coordinates to clone into
         if (cloneSourceCoords) {
-          const validSpawnCoords = window.underworld.findValidSpawn(cloneSourceCoords)
-          if (validSpawnCoords) {
-            if (unit) {
-              const clone = Unit.load(unit);
-              // If the cloned unit is player controlled, make them be controlled by the AI
-              if (clone.unitSubType == UnitSubType.PLAYER_CONTROLLED) {
-                clone.unitType = UnitType.AI;
-                clone.unitSubType = UnitSubType.GOON;
-                removeSubSprite(clone.image, 'ownCharacterMarker');
-              }
-              Unit.setLocation(clone, validSpawnCoords);
+          if (unit) {
+            const clone = Unit.load(unit);
+            // If the cloned unit is player controlled, make them be controlled by the AI
+            if (clone.unitSubType == UnitSubType.PLAYER_CONTROLLED) {
+              clone.unitType = UnitType.AI;
+              clone.unitSubType = UnitSubType.GOON;
+              removeSubSprite(clone.image, 'ownCharacterMarker');
             }
-            if (pickup) {
+            await Unit.moveTowards(clone, { x: unit.x + config.COLLISION_MESH_RADIUS, y: unit.y });
+          }
+          if (pickup) {
             const validSpawnCoords = window.underworld.findValidSpawn(cloneSourceCoords)
             if (validSpawnCoords) {
               const clone = Pickup.load(pickup);
               Pickup.setPosition(clone, validSpawnCoords.x, validSpawnCoords.y);
-          } else {
-            floatingText({ coords: cloneSourceCoords, text: 'No space to clone into!' });
-          }
+            } else {
+              floatingText({ coords: cloneSourceCoords, text: 'No space to clone into!' });
+            }
           }
 
         }
