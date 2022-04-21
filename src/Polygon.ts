@@ -243,7 +243,7 @@ function projectPointForPathingMesh(polygon: Polygon, pointIndex: number, magnit
         // However we are dividing by 2 because we still
         // want units to have some "depth" thickness so they
         // don't just look like paper held in front of the wall
-        projectToPoint.y = Math.abs(projectToPoint.y) / 2;
+        projectToPoint.y = -Math.abs(projectToPoint.y) / 2;
     }
 
     // Round to the nearest whole number to avoid floating point inequalities later
