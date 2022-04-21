@@ -51,9 +51,9 @@ export function normalizedVector(point1: Vec2, point2: Vec2): { vector: Vec2 | u
     // Return the normalized vector and the distance between the two points
     return { vector: { x: a, y: b }, distance: bigC };
 }
-export function collideWithWalls(unit: Unit.IUnit) {
+export function collideWithWalls(circle: Circle) {
     for (let line of window.underworld.bounds) {
-        repelCircleFromLine(unit, line, line.polygon.inverted);
+        repelCircleFromLine(circle, line, line.polygon.inverted);
     }
 
 }
@@ -157,11 +157,11 @@ function repelCircleFromLine(mover: Circle, line: LineSegment, inverted?: boolea
         // because units have small radiuses to allow crowding but I want their entire image to be repelled from walls)
         //  touches the line from either side of the line it will repel the mover the entire distance.
         // This is because it is aware of the orientation (the normal vector) of the line
-        const repelVector = multiply(inverted ? -1 : 1, getNormalVectorOfLineSegment(line));
+        // const repelVector = multiply(inverted ? -1 : 1, getNormalVectorOfLineSegment(line));
         // Option 2: This way of calculating the repelVector will repel the circle from either side of the line
         // regardless of the normal vector of the line.  This is less forgiving and may allow units to pass through lines
         // easier if they are moving farther in one physics step.
-        // const repelVector = subtract(mover, rightAngleIntersectionWithLineFromMoverCenterPoint)
+        const repelVector = subtract(mover, rightAngleIntersectionWithLineFromMoverCenterPoint)
 
         const newLocationRelative = similarTriangles(repelVector.x, repelVector.y, magnitude(repelVector), totalRepelDistance);
         const newLocation = add(rightAngleIntersectionWithLineFromMoverCenterPoint, newLocationRelative);
