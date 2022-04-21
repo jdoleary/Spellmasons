@@ -148,7 +148,6 @@ function repelCircleFromLine(mover: Circle, line: PolygonLineSegment) {
     // with walls (lines and their verticies).
     const totalRepelDistance = config.COLLISION_MESH_RADIUS * config.NON_HEAVY_UNIT_SCALE;
     // Test for intersection with the line segment
-    const repelVector = multiply(line.polygon.inverted ? -1 : 1, getNormalVectorOfLineSegment(line));
     // window.unitOverlayGraphics.lineStyle(4, 0xff0000, 1);
     // const midPoint = add(line.p1, similarTriangles(line.p2.x - line.p1.x, line.p2.y - line.p1.y, distance(line.p1, line.p2), distance(line.p1, line.p2) / 2))
     // window.unitOverlayGraphics.moveTo(midPoint.x, midPoint.y);
@@ -156,6 +155,7 @@ function repelCircleFromLine(mover: Circle, line: PolygonLineSegment) {
     const rightAngleIntersectionWithLineFromMoverCenterPoint = findWherePointIntersectLineSegmentAtRightAngle(mover, line);
     if (rightAngleIntersectionWithLineFromMoverCenterPoint
         && distance(rightAngleIntersectionWithLineFromMoverCenterPoint, mover) <= totalRepelDistance) {
+        const repelVector = multiply(line.polygon.inverted ? -1 : 1, getNormalVectorOfLineSegment(line));
 
         // window.unitOverlayGraphics.moveTo(mover.x, mover.y);
         const newLocationRelative = similarTriangles(repelVector.x, repelVector.y, magnitude(repelVector), totalRepelDistance);
