@@ -79,13 +79,10 @@ export function moveWithCollisions(mover: Circle, destination: Vec2, circles: Ci
         if (mover !== other) {
             // If the mover now intersects with another circle...
             if (isCircleIntersectingCircle(mover, other)) {
-                // Prevent the mover from moving through other circles
-                // This turns out to be the best solution to prevent
-                // units from ending up inside walls or out of the level
-                // If, alternatively, movers could "push" other units,
-                // that is when they get pushed through walls. This is better
-                // to just make it so you can't move through other units
                 repelCircles(mover, originalPosition, other, false);
+                // Now that a circle has been repelled, immediately calculate collisions with 
+                // walls so that it doesn't phase through a wall
+                collideWithWalls(other);
             }
         }
     }
