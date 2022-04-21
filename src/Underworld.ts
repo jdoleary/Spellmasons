@@ -562,8 +562,8 @@ export default class Underworld {
   }
   initLevel(levelIndex: number): void {
     // Level sizes are random but have change to grow bigger as loop continues
-    const sectorsWide = randInt(window.underworld.random, 6, 5 + (Math.round(levelIndex / 3)));
-    const sectorsTall = randInt(window.underworld.random, 6, 5 + (Math.round(levelIndex / 3)));
+    const sectorsWide = randInt(window.underworld.random, 2, 3 + (Math.round(levelIndex / 3)));
+    const sectorsTall = randInt(window.underworld.random, 1, 3 + (Math.round(levelIndex / 3)));
     setView(View.Game);
     console.log('Setup: initLevel', levelIndex, sectorsWide, sectorsTall);
     this.levelIndex = levelIndex;
@@ -1348,11 +1348,15 @@ type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFun
 function getEnemiesForAltitude(levelIndex: number): { enemies: { [unitid: string]: number }, strength: number } {
   const hardCodedLevelEnemies: { [unitid: string]: number }[] = [
     {
-      'grunt': 3,
+      'grunt': 2,
     },
     {
-      'grunt': 4,
+      'grunt': 2,
       'archer': 1
+    },
+    {
+      'grunt': 3,
+      'archer': 2
     },
     {
       'grunt': 3,
