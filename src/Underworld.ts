@@ -250,12 +250,13 @@ export default class Underworld {
     };
     this.walls = [...this.obstacles.filter(o => o.wall).map(o => o.bounds).map(polygonToPolygonLineSegments), polygonToPolygonLineSegments(mapBounds)].flat();
     const expandMagnitude = config.COLLISION_MESH_RADIUS * config.NON_HEAVY_UNIT_SCALE
-    this.bounds = mergeOverlappingPolygons([...this.obstacles.map(o => o.bounds), mapBounds]).map(polygonToPolygonLineSegments).flat();
+    // this.bounds = mergeOverlappingPolygons([...this.obstacles.map(o => o.bounds), mapBounds]).map(polygonToPolygonLineSegments).flat();
     // this.bounds = mergeOverlappingPolygons([...this.obstacles.map(o => o.bounds).map(p => expandPolygon(p, -expandMagnitude, false)), expandPolygon(mapBounds, -expandMagnitude, false)]).map(polygonToPolygonLineSegments).flat();
     // Expand pathing walls by the size of the regular unit
     // Save the pathing walls for the underworld
     const expandedAndMergedPolygons = mergeOverlappingPolygons([...this.obstacles.map(o => o.bounds).map(p => expandPolygon(p, expandMagnitude, true)), expandPolygon(mapBounds, expandMagnitude, false)]);
-    this.pathingPolygons = expandedAndMergedPolygons
+    this.pathingPolygons = expandedAndMergedPolygons;
+    this.bounds = this.pathingPolygons.map(p => expandPolygon(p, -expandMagnitude, false)).map(polygonToPolygonLineSegments).flat();
   }
   spawnPickup(index: number, coords: Vec2) {
     const pickup = Pickup.pickups[index];

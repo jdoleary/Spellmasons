@@ -1,4 +1,4 @@
-import { add, magnitude, multiply, Vec2 } from '../Vec';
+import { add, clone, magnitude, multiply, subtract, Vec2 } from '../Vec';
 import { distance, similarTriangles } from "../math";
 import { findWherePointIntersectLineSegmentAtRightAngle, LineSegment } from "./collisionMath";
 import * as config from '../config';
@@ -156,6 +156,7 @@ function repelCircleFromLine(mover: Circle, line: PolygonLineSegment) {
     if (rightAngleIntersectionWithLineFromMoverCenterPoint
         && distance(rightAngleIntersectionWithLineFromMoverCenterPoint, mover) <= totalRepelDistance) {
         const repelVector = multiply(line.polygon.inverted ? -1 : 1, getNormalVectorOfLineSegment(line));
+        // const repelVector = subtract(mover, rightAngleIntersectionWithLineFromMoverCenterPoint)
 
         // window.unitOverlayGraphics.moveTo(mover.x, mover.y);
         const newLocationRelative = similarTriangles(repelVector.x, repelVector.y, magnitude(repelVector), totalRepelDistance);
