@@ -36,7 +36,7 @@ describe('moveWithCollisions', () => {
     it("should travel to it's destination if unobstructed", () => {
         const c1: Circle = { x: 0, y: 0, radius: 2 };
         const destination = { x: 2, y: 2 };
-        moveWithCollisions(c1, destination, [], []);
+        moveWithCollisions(c1, destination, []);
         const actual = { x: c1.x, y: c1.y };
         const expected = destination;
         expect(actual).toEqual(expected);
@@ -47,7 +47,7 @@ describe('moveWithCollisions', () => {
     it("should not make a circle collide with itself", () => {
         const c1: Circle = { x: 0, y: 0, radius: 5 };
         const destination = { x: 1, y: 0 };
-        moveWithCollisions(c1, destination, [c1], []);
+        moveWithCollisions(c1, destination, [c1]);
         const actual = { x: c1.x, y: c1.y };
         const expected = destination;
         expect(actual).toEqual(expected);
@@ -63,7 +63,7 @@ describe('moveWithCollisions', () => {
                     circles.push({ x: 6, y: 0, radius: 5 });
                 }
                 const destination = { x: 0, y: 0 };
-                moveWithCollisions(c1, destination, circles, []);
+                moveWithCollisions(c1, destination, circles);
                 const { duration } = performance.measure(
                     'end',
                     'moveWithCollisions-start',

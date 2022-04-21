@@ -136,7 +136,7 @@ export default class Underworld {
         } else {
           // AI collide with each other and walls
           const originalPosition = Vec.clone(u);
-          moveWithCollisions(u, stepTowardsTarget, aliveUnits, this.bounds);
+          moveWithCollisions(u, stepTowardsTarget, aliveUnits);
           moveDist = math.distance(originalPosition, u);
         }
         u.distanceMovedThisTurn += moveDist;

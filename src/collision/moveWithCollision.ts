@@ -63,7 +63,7 @@ export function collideWithWalls(unit: Unit.IUnit) {
 // collisions with circles and eventaully lines.  Collisions may cause
 // both colliders to move
 // mover may not end up at destination if it collides
-export function moveWithCollisions(mover: Circle, destination: Vec2, circles: Circle[], lines: PolygonLineSegment[]) {
+export function moveWithCollisions(mover: Circle, destination: Vec2, circles: Circle[]) {
     // Determine if the mover intersects with any "circles" as
     // it travels from mover to destination
     // We do this by adding mover.radius to the other circle's radius
@@ -177,16 +177,16 @@ function repelCircleFromLine(mover: Circle, line: PolygonLineSegment) {
         // window.unitOverlayGraphics.drawCircle(rightAngleIntersectionWithLineFromMoverCenterPoint.x, rightAngleIntersectionWithLineFromMoverCenterPoint.y, radius);
     }
     // Test for intersection with the line segment endpoints
-    // if (distance(line.p1, mover) <= totalRepelDistance) {
-    //     repelCircles(mover, originalPosition, { ...line.p1, radius }, true);
-    //     // window.unitOverlayGraphics.lineStyle(2, 0xff0000, 1);
-    //     // window.unitOverlayGraphics.drawCircle(mover.x, mover.y, mover.radius);
-    // }
-    // if (distance(line.p2, mover) <= totalRepelDistance) {
-    //     repelCircles(mover, originalPosition, { ...line.p2, radius }, true);
-    //     // window.unitOverlayGraphics.lineStyle(2, 0x0000ff, 1);
-    //     // window.unitOverlayGraphics.drawCircle(mover.x, mover.y, mover.radius);
-    // }
+    if (distance(line.p1, mover) <= totalRepelDistance) {
+        repelCircles(mover, mover, { ...line.p1, radius: totalRepelDistance }, true);
+        // window.unitOverlayGraphics.lineStyle(2, 0xff0000, 1);
+        // window.unitOverlayGraphics.drawCircle(mover.x, mover.y, mover.radius);
+    }
+    if (distance(line.p2, mover) <= totalRepelDistance) {
+        repelCircles(mover, mover, { ...line.p2, radius: totalRepelDistance }, true);
+        // window.unitOverlayGraphics.lineStyle(2, 0x0000ff, 1);
+        // window.unitOverlayGraphics.drawCircle(mover.x, mover.y, mover.radius);
+    }
 }
 export const testables = {
     repelCircles,
