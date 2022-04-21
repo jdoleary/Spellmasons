@@ -333,6 +333,16 @@ export default class Underworld {
           // @ts-ignore
           sector = math.rotateMatrix(sector);
         }
+        const doInvert = randInt(this.random, 0, 9) <= 2;
+        // Chance of inverting the obstacle sector so ground is wall or void
+        // and vice versa
+        if (doInvert) {
+          // @ts-ignore
+          sector = sector.map(x => x.map(o => o == 0 ? 1 : 0))
+        }
+
+        // obstacleIndex of 1 means non ground, so pick an obstacle at random
+        const obstacleChoice = randInt(this.random, 0, 1)
         // Now that we have the obstacle sector's horizontal index (i) and vertical index (j),
         // choose a pre-defined sector and spawn the obstacles
         for (let Y = 0; Y < sector.length; Y++) {
@@ -360,8 +370,6 @@ export default class Underworld {
               this.groundTiles.push({ x: coordX, y: coordY });
               continue
             } else {
-              // obstacleIndex of 1 means non ground, so pick an obstacle at random
-              const obstacleChoice = randInt(this.random, 0, 1)
               const obstacle = Obstacle.obstacleSource[obstacleChoice];
               Obstacle.create(coordX, coordY, obstacle);
             }
@@ -434,7 +442,7 @@ export default class Underworld {
     });
 
     if (this.validPlayerSpawnCoords.length === 0) {
-      console.log('Bad level seed, no place to spawn portal, regenerating');
+      console.log('Bad level seed, no place to spawn players, regenerating');
       return false;
     }
 
