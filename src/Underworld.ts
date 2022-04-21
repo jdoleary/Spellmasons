@@ -119,6 +119,7 @@ export default class Underworld {
     window.unitOverlayGraphics.clear();
 
     const aliveUnits = this.units.filter(u => u.alive);
+    const aliveNPCUnits = aliveUnits.filter(u => u.unitType == UnitType.AI);
     for (let u of aliveUnits) {
       if (u.path && u.path.length) {
         // Move towards target
@@ -136,7 +137,8 @@ export default class Underworld {
         } else {
           // AI collide with each other and walls
           const originalPosition = Vec.clone(u);
-          moveWithCollisions(u, stepTowardsTarget, aliveUnits);
+          // Only move other NPCs out of the way, never move player units
+          moveWithCollisions(u, stepTowardsTarget, aliveNPCUnits);
           moveDist = math.distance(originalPosition, u);
         }
         u.distanceMovedThisTurn += moveDist;
