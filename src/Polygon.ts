@@ -233,27 +233,9 @@ function projectPointForPathingMesh(polygon: Polygon, pointIndex: number, magnit
     const point = polygon.points[pointIndex];
     const nextPoint = polygon.points[getLoopableIndex(pointIndex + (polygon.inverted ? -1 : 1), polygon.points)];
     const prevPoint = polygon.points[getLoopableIndex(pointIndex + (polygon.inverted ? 1 : -1), polygon.points)];
-    // Find a point along the normal:
-    let projectToPoint = { x: 0, y: 0 };
-    const dxPrev = point.x - prevPoint.x;
-    const dyPrev = point.y - prevPoint.y;
-    projectToPoint.x -= dxPrev;
-    projectToPoint.y -= dyPrev;
-    const dxNext = point.x - nextPoint.x;
-    const dyNext = point.y - nextPoint.y;
-    projectToPoint.x -= dxNext;
-    projectToPoint.y -= dyNext;
-    // Normalize projectToPoint so it only carries the + or -
-    if (projectToPoint.x !== 0) {
-        projectToPoint.x /= Math.abs(projectToPoint.x);
-    }
-    if (projectToPoint.y !== 0) {
-        projectToPoint.y /= Math.abs(projectToPoint.y);
-    }
-
-    const d = polygon.inverted ? -magnitude : magnitude;
-    projectToPoint.x *= d;
-    projectToPoint.y *= d;
+    const projectToPoint = getPointNormalVector(point, prevPoint, nextPoint)
+    projectToPoint.x *= magnitude;
+    projectToPoint.y *= magnitude;
     if (yAxisOnlyUp) {
         // yAxisOnlyUp is used for expanding the poly mesh of walls
         // upwards only to give them the appearance of height, so
@@ -266,34 +248,43 @@ function projectPointForPathingMesh(polygon: Polygon, pointIndex: number, magnit
 
     // Round to the nearest whole number to avoid floating point inequalities later
     // when processing these points
-    return Vec.round(Vec.subtract(point, projectToPoint));
+    return Vec.round(Vec.add(point, projectToPoint));
 
 }
 
-function projectPointAlongNormalVector(polygon: Polygon, pointIndex: number, magnitude: number): Vec2 {
-    const point = polygon.points[pointIndex];
-    const nextPoint = polygon.points[getLoopableIndex(pointIndex + (polygon.inverted ? -1 : 1), polygon.points)];
-    const prevPoint = polygon.points[getLoopableIndex(pointIndex + (polygon.inverted ? 1 : -1), polygon.points)];
+function getPointNormalVector(point: Vec2, prevPoint: Vec2, nextPoint: Vec2): Vec2 {
     // Find a point along the normal:
-    const projectToPoint = { x: point.x, y: point.y };
+    let projectToPoint = { x: 0, y: 0 };
     const dxPrev = point.x - prevPoint.x;
     const dyPrev = point.y - prevPoint.y;
-    projectToPoint.x -= dxPrev;
-    projectToPoint.y -= dyPrev;
+    projectToPoint.x += dxPrev;
+    projectToPoint.y += dyPrev;
     const dxNext = point.x - nextPoint.x;
     const dyNext = point.y - nextPoint.y;
-    projectToPoint.x -= dxNext;
-    projectToPoint.y -= dyNext;
+    projectToPoint.x += dxNext;
+    projectToPoint.y += dyNext;
+    // Now this is tricky, since polygons are expressed in points from prev to point to next,
+    // the normal vector of a point depends on the "direction" of traversal from prev to point to next.
+    // So if the 2 lines from prev to point and from point to next make an obtuse angle, we project
+    // the normal to the outside (in the direction of the obtuse angle), but if they make an acute angle
+    // the normal point will be inside the acute angle.  The orientation of the prev point and the next point
+    // relative to the main point is what determines wether the outside angle is the obtuse or the actue angle.
+    const outsideAngle = getOutsideAngleOfPoint(prevPoint, point, nextPoint);
+    if (outsideAngle <= Math.PI / 2) {
+        // Invert
+        projectToPoint = Vec.multiply(-1, projectToPoint);
+    }
 
-    // Find the point magnitude away from vertex along the normal
-    const X = projectToPoint.x - point.x;
-    const Y = projectToPoint.y - point.y;
-    const D = distance(projectToPoint, point);
-    const d = polygon.inverted ? -magnitude : magnitude;
-    const relativeAdjustedPoint = similarTriangles(X, Y, D, d);
-    // Round to the nearest whole number to avoid floating point inequalities later
-    // when processing these points
-    return Vec.round(Vec.subtract(point, relativeAdjustedPoint));
+    // Normalize projectToPoint so it only carries the + or -
+    if (projectToPoint.x !== 0) {
+        projectToPoint.x /= Math.abs(projectToPoint.x);
+    }
+    if (projectToPoint.y !== 0) {
+        projectToPoint.y /= Math.abs(projectToPoint.y);
+    }
+    return projectToPoint;
+
+
 }
 
 // In radians
@@ -307,6 +298,12 @@ export function getInsideAnglesOfPoint(polygon: Polygon, pointIndex: number): { 
     const angleToPrevPoint = Vec.getAngleBetweenVec2s(point, prevPoint);
     const angleToNextPoint = Vec.getAngleBetweenVec2s(point, nextPoint);
     return { start: angleToNextPoint, end: angleToPrevPoint };
+}
+function getOutsideAngleOfPoint(prevPoint: Vec2, point: Vec2, nextPoint: Vec2): number {
+    const angleToPrevPoint = Vec.getAngleBetweenVec2s(point, prevPoint);
+    const angleToNextPoint = Vec.getAngleBetweenVec2s(point, nextPoint);
+    return clockwiseAngle(angleToPrevPoint, angleToNextPoint);
+
 }
 export function getInsideAnglesOfWall(p: PolygonLineSegment): { start: number, end: number } {
     const A = Vec.getAngleBetweenVec2s(p.p1, p.p2);
@@ -550,5 +547,6 @@ export const testables = {
     getNormalVectorOfLineSegment,
     getClosestBranch,
     growOverlappingCollinearLinesInDirectionOfP2,
-    arePolygonsEquivalent
+    arePolygonsEquivalent,
+    getPointNormalVector
 }

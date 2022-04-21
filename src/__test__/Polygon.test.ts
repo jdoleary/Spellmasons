@@ -3,9 +3,47 @@ import type { Vec2 } from "../Vec";
 import { testables, Branch, makePolygonIndexIterator, Polygon, expandPolygon, mergeOverlappingPolygons, polygonToPolygonLineSegments, getInsideAnglesOfPoint, doesLineFromPointToTargetProjectAwayFromOwnPolygon, getInsideAnglesOfWall } from '../Polygon';
 import type { LineSegment } from "../collision/collisionMath";
 const { getLoopableIndex, isVec2InsidePolygon, findFirstPointNotInsideAnotherPoly, getNormalVectorOfLineSegment,
-    getClosestBranch, growOverlappingCollinearLinesInDirectionOfP2, arePolygonsEquivalent } = testables;
+    getClosestBranch, growOverlappingCollinearLinesInDirectionOfP2, arePolygonsEquivalent, getPointNormalVector } = testables;
 
 describe('testables', () => {
+    describe('getPointNormalVector (assume the direction of the polygon, from previous to next)', () => {
+        [
+            {
+                prev: { x: 0, y: 0 },
+                point: { x: 0, y: 10 },
+                next: { x: 10, y: 10 },
+                expected: { x: -1, y: 1 }
+            },
+            {
+                prev: { x: 0, y: 0 },
+                point: { x: 10, y: 0 },
+                next: { x: 10, y: 10 },
+                expected: { x: -1, y: 1 }
+            },
+            {
+                prev: { x: 10, y: 10 },
+                point: { x: 0, y: 10 },
+                next: { x: 0, y: 0 },
+                expected: { x: 1, y: -1 }
+            },
+            // {
+            //     prev: { x: 0, y: 0 },
+            //     point: { x: 0, y: 0 },
+            //     next: { x: 0, y: 0 },
+            //     expected: { x: 0, y: 0 }
+            // },
+
+        ].map(({ prev, point, next, expected }) => {
+            it(`should find the normal vector of the point given a previous and next point: ${prev.x},${prev.y}; ${point.x},${point.y}; ${next.x},${next.y}`, () => {
+                const actual = getPointNormalVector(point, prev, next);
+                expect(actual).toEqual(expected);
+            });
+
+        })
+
+
+
+    });
     describe('arePolygonsEquivalent', () => {
         it('should return false if polygons have different inverted flags', () => {
             const poly1 = {
