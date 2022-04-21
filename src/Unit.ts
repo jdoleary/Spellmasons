@@ -68,6 +68,8 @@ export interface IUnit {
   alive: boolean;
   unitType: UnitType;
   unitSubType: UnitSubType;
+  // Doesn't let other units push it
+  immovable: boolean;
   flaggedForRemoval?: boolean;
   // A list of names that correspond to Events.ts functions
   onDamageEvents: string[];
@@ -123,6 +125,7 @@ export function create(
     manaMax: mana,
     manaPerTurn: Math.round(config.MANA_GET_PER_TURN * strength),
     alive: true,
+    immovable: false,
     unitType,
     unitSubType,
     onDamageEvents: [],

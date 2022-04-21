@@ -82,12 +82,17 @@ function add(unit: Unit.IUnit) {
 
     // Add subsprite image
     Image.addSubSprite(unit.image, id);
+    // Prevents units from being pushed out of the way and units
+    // act as a blockade
+    unit.immovable = true;
   }
   // Increment the number of turns that freeze is applied (can stack)
   unit.modifiers[id].turnsLeft = (unit.modifiers[id].turnsLeft || 0) + 1;
 }
 function remove(unit: Unit.IUnit) {
   unit.radius = config.UNIT_BASE_RADIUS
+  // Unit can be pushed around again as other units try to move past them
+  unit.immovable = false;
 }
 
 export default spell;

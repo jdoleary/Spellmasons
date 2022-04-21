@@ -55,6 +55,9 @@ export function create(clientId: string, unitId: string): IPlayer | undefined {
     upgrades: [],
   };
   player.inPortal = true;
+  // Player units shouldn't be pushed around
+  // during collisions while other units move
+  player.unit.immovable = true;
   player.unit.alive = false;
   player.unit.attackRange = 500;
 

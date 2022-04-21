@@ -63,7 +63,7 @@ export function collideWithWalls(circle: Circle) {
 // collisions with circles and eventaully lines.  Collisions may cause
 // both colliders to move
 // mover may not end up at destination if it collides
-export function moveWithCollisions(mover: Circle, destination: Vec2, circles: Circle[]) {
+export function moveWithCollisions(mover: Circle, destination: Vec2, circles: Unit.IUnit[]) {
     // Determine if the mover intersects with any "circles" as
     // it travels from mover to destination
     // We do this by adding mover.radius to the other circle's radius
@@ -79,7 +79,7 @@ export function moveWithCollisions(mover: Circle, destination: Vec2, circles: Ci
         if (mover !== other) {
             // If the mover now intersects with another circle...
             if (isCircleIntersectingCircle(mover, other)) {
-                repelCircles(mover, originalPosition, other, false);
+                repelCircles(mover, originalPosition, other, other.immovable);
                 // Now that a circle has been repelled, immediately calculate collisions with 
                 // walls so that it doesn't phase through a wall
                 collideWithWalls(other);
