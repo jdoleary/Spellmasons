@@ -138,8 +138,6 @@ export function updateMouseUI() {
   window.walkPathGraphics.clear();
   if (!isOutOfBounds(mouseTarget)) {
     if (window.player) {
-      // Debug: testcollisions
-      // moveWithCollisions(window.player.unit, mouseTarget, window.underworld.units, window.underworld.bounds);
       // If in inspect-mode
       if (document.body.classList.contains('inspect-mode')) {
         //
