@@ -187,7 +187,7 @@ export default class Underworld {
         window.unitOverlayGraphics.endFill();
       }
     }
-    // Sort unit sprites visually by y position
+    // Sort unit sprites visually by y position (like "z-index")
     containerUnits.children.sort((a, b) => a.y - b.y)
 
     recenterCamera();
