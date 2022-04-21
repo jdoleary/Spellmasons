@@ -3,7 +3,7 @@ import { distance, similarTriangles } from "../math";
 import { findWherePointIntersectLineSegmentAtRightAngle, LineSegment } from "./collisionMath";
 import * as config from '../config';
 import { getNormalVectorOfLineSegment, PolygonLineSegment } from '../Polygon';
-import * as Unit from '../Unit';
+import type * as Unit from '../Unit';
 
 export type Circle = {
     radius: number;
@@ -53,7 +53,7 @@ export function normalizedVector(point1: Vec2, point2: Vec2): { vector: Vec2 | u
 }
 export function collideWithWalls(unit: Unit.IUnit) {
     for (let line of window.underworld.bounds) {
-        repelCircleFromLine(unit, line);
+        repelCircleFromLine(unit, line, line.polygon.inverted);
     }
 
 }
@@ -142,7 +142,7 @@ function repelCircles(mover: Circle, originalPosition: Vec2, other: Circle, othe
 // Note: this function is only meant to handle small increments of movements, this function
 // will not account for the case where the destination does not intersect
 // a line but the mover would travel through a linesegment on it's way to destination.  This is by design.
-function repelCircleFromLine(mover: Circle, line: PolygonLineSegment) {
+function repelCircleFromLine(mover: Circle, line: LineSegment, inverted?: boolean) {
     // The radius used for the line points makes up the different between a regular unit collision radius and the units physicsMover's radius
     // The units physicsMover's radius is small so that units can "squeeze" past each other, but I want the full unit size to collide
     // with walls (lines and their verticies).
@@ -155,7 +155,7 @@ function repelCircleFromLine(mover: Circle, line: PolygonLineSegment) {
     const rightAngleIntersectionWithLineFromMoverCenterPoint = findWherePointIntersectLineSegmentAtRightAngle(mover, line);
     if (rightAngleIntersectionWithLineFromMoverCenterPoint
         && distance(rightAngleIntersectionWithLineFromMoverCenterPoint, mover) <= totalRepelDistance) {
-        const repelVector = multiply(line.polygon.inverted ? -1 : 1, getNormalVectorOfLineSegment(line));
+        const repelVector = multiply(inverted ? -1 : 1, getNormalVectorOfLineSegment(line));
         // const repelVector = subtract(mover, rightAngleIntersectionWithLineFromMoverCenterPoint)
 
         // window.unitOverlayGraphics.moveTo(mover.x, mover.y);

@@ -209,12 +209,11 @@ describe('repelCircleFromLine', () => {
                 );
             }
             const destination = { x: 0, y: 0 };
-            const originalPosition = { x: c1.x, y: c1.y };
             // Actually move the mover
             c1.x = destination.x;
             c1.y = destination.y;
             for (let line of lineSegments) {
-                repelCircleFromLine(c1, originalPosition, line);
+                repelCircleFromLine(c1, line);
             }
             const { duration } = performance.measure(
                 'end',
@@ -229,11 +228,10 @@ describe('repelCircleFromLine', () => {
             { p1: { x: 0, y: 10 }, p2: { x: 0, y: -10 } }
 
         const destination = { x: 0, y: 0 }
-        const originalPosition = { x: c1.x, y: c1.y };
         // Actually move the mover
         c1.x = destination.x;
         c1.y = destination.y;
-        repelCircleFromLine(c1, originalPosition, line);
+        repelCircleFromLine(c1, line);
         expect(c1.x).toEqual(2);
     });
     it('should prevent a circle from moving into intersection with an endpoint of the line', () => {
@@ -242,11 +240,10 @@ describe('repelCircleFromLine', () => {
             { p1: { x: 0, y: 10 }, p2: { x: 0, y: 0 } }
 
         const destination = { x: 0, y: 1 }
-        const originalPosition = { x: c1.x, y: c1.y };
         // Actually move the mover
         c1.x = destination.x;
         c1.y = destination.y;
-        repelCircleFromLine(c1, originalPosition, line);
+        repelCircleFromLine(c1, line);
         expect(c1.x).toEqual(2);
         expect(c1.y).toEqual(1);
     });
@@ -256,11 +253,10 @@ describe('repelCircleFromLine', () => {
             { p1: { x: -10, y: 0 }, p2: { x: 0, y: 0 } }
 
         const destination = { x: 0, y: 0 }
-        const originalPosition = { x: c1.x, y: c1.y };
         // Actually move the mover
         c1.x = destination.x;
         c1.y = destination.y;
-        repelCircleFromLine(c1, originalPosition, line);
+        repelCircleFromLine(c1, line);
         expect(c1.x).toEqual(2);
     });
 });
