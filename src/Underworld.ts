@@ -328,10 +328,17 @@ export default class Underworld {
           0,
           obstacleSectors.length - 1,
         );
+        let sector = obstacleSectors[randomSectorIndex];
+        // Rotate sector 0 to 3 times
+        const rotateTimes = randInt(this.random, 0, 3)
+        for (let x = 0; x < rotateTimes; x++) {
+          // @ts-ignore
+          sector = math.rotateMatrix(sector);
+        }
         // Now that we have the obstacle sector's horizontal index (i) and vertical index (j),
         // choose a pre-defined sector and spawn the obstacles
-        for (let Y = 0; Y < obstacleSectors[randomSectorIndex].length; Y++) {
-          const rowOfObstacles = obstacleSectors[randomSectorIndex][Y];
+        for (let Y = 0; Y < sector.length; Y++) {
+          const rowOfObstacles = sector[Y];
           for (let X = 0; X < rowOfObstacles.length; X++) {
             const coordX = config.OBSTACLE_SIZE * config.OBSTACLES_PER_SECTOR_WIDE * i + config.OBSTACLE_SIZE * X + config.COLLISION_MESH_RADIUS;
             const coordY = config.OBSTACLE_SIZE * config.OBSTACLES_PER_SECTOR_WIDE * j + config.OBSTACLE_SIZE * Y + config.COLLISION_MESH_RADIUS;
