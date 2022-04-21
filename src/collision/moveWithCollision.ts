@@ -155,38 +155,28 @@ function repelCircleFromLine(mover: Circle, line: LineSegment, inverted?: boolea
     const rightAngleIntersectionWithLineFromMoverCenterPoint = findWherePointIntersectLineSegmentAtRightAngle(mover, line);
     if (rightAngleIntersectionWithLineFromMoverCenterPoint
         && distance(rightAngleIntersectionWithLineFromMoverCenterPoint, mover) <= totalRepelDistance) {
+        // Option 1: This way of calculating repelVector supports the greatest distance, where if any part of 
+        // the circle with a radius of totalRepelDistance (instead of the circle's radius, this is overridden on purpose
+        // because units have small radiuses to allow crowding but I want their entire image to be repelled from walls)
+        //  touches the line from either side of the line it will repel the mover the entire distance.
+        // This is because it is aware of the orientation (the normal vector) of the line
         const repelVector = multiply(inverted ? -1 : 1, getNormalVectorOfLineSegment(line));
+        // Option 2: This way of calculating the repelVector will repel the circle from either side of the line
+        // regardless of the normal vector of the line.  This is less forgiving and may allow units to pass through lines
+        // easier if they are moving farther in one physics step.
         // const repelVector = subtract(mover, rightAngleIntersectionWithLineFromMoverCenterPoint)
 
-        // window.unitOverlayGraphics.moveTo(mover.x, mover.y);
         const newLocationRelative = similarTriangles(repelVector.x, repelVector.y, magnitude(repelVector), totalRepelDistance);
         const newLocation = add(rightAngleIntersectionWithLineFromMoverCenterPoint, newLocationRelative);
-        // window.unitOverlayGraphics.lineStyle(5, 0xff00ff, 1);
-        // window.unitOverlayGraphics.moveTo(mover.x, mover.y);
         mover.x = newLocation.x;
         mover.y = newLocation.y;
-        // window.unitOverlayGraphics.lineTo(mover.x, mover.y);
-        // window.unitOverlayGraphics.drawCircle(mover.x, mover.y, 2);
-        // window.unitOverlayGraphics.lineStyle(5, 0xff0000, 1);
-        // window.unitOverlayGraphics.drawCircle(line.p1.x, line.p1.y, 2);
-        // window.unitOverlayGraphics.lineStyle(5, 0x00ff00, 1);
-        // window.unitOverlayGraphics.drawCircle(line.p2.x, line.p2.y, 2);
-
-        // circle intersects line
-        // repelCircles(mover, originalPosition, { ...rightAngleIntersectionWithLineFromMoverCenterPoint, radius }, true);
-        // window.unitOverlayGraphics.drawCircle(mover.x, mover.y, mover.radius);
-        // window.unitOverlayGraphics.drawCircle(rightAngleIntersectionWithLineFromMoverCenterPoint.x, rightAngleIntersectionWithLineFromMoverCenterPoint.y, radius);
     }
     // Test for intersection with the line segment endpoints
     if (distance(line.p1, mover) <= totalRepelDistance) {
         repelCircles(mover, mover, { ...line.p1, radius: totalRepelDistance }, true);
-        // window.unitOverlayGraphics.lineStyle(2, 0xff0000, 1);
-        // window.unitOverlayGraphics.drawCircle(mover.x, mover.y, mover.radius);
     }
     if (distance(line.p2, mover) <= totalRepelDistance) {
         repelCircles(mover, mover, { ...line.p2, radius: totalRepelDistance }, true);
-        // window.unitOverlayGraphics.lineStyle(2, 0x0000ff, 1);
-        // window.unitOverlayGraphics.drawCircle(mover.x, mover.y, mover.radius);
     }
 }
 export const testables = {
