@@ -96,8 +96,7 @@ export default class Underworld {
 
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
     window.underworld = this;
-    // this.seed = seed;
-    this.seed = '0.6728852962869702';
+    this.seed = seed;
     this.gameStarted = false;
     console.log("RNG create with seed:", seed, ", state: ", RNGState);
     this.random = this.syncronizeRNG(RNGState);
@@ -1345,11 +1344,11 @@ type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFun
 function getEnemiesForAltitude(levelIndex: number): { enemies: { [unitid: string]: number }, strength: number } {
   const hardCodedLevelEnemies: { [unitid: string]: number }[] = [
     {
-      'grunt': 50,
+      'grunt': 3,
     },
     {
       'grunt': 4,
-      'archer': 2
+      'archer': 1
     },
     {
       'grunt': 3,
