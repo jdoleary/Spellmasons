@@ -1,4 +1,6 @@
 # Tasks
+- Infinite loops seems to be occurring for "bounds" but not for pathing walls for some reason.
+    - could the expansion be preventing the infinite loop somehow??
 - Bug: Summoners don't move very far when they're running away
 - Bug: Two demons may target the same corpse
 - Bug: left position is messed up for mana bar 2

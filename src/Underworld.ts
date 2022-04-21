@@ -38,7 +38,7 @@ import { HandcraftedLevel, levels } from './HandcraftedLevels';
 import { addCardToHand, removeCardsFromHand } from './CardUI';
 import { updateMouseUI } from './ui/eventListeners';
 import Jprompt from './Jprompt';
-import { isCircleIntersectingCircle, moveWithCollisions } from './collision/moveWithCollision';
+import { collideWithWalls, isCircleIntersectingCircle, moveWithCollisions } from './collision/moveWithCollision';
 import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './contants';
 
 export enum turn_phase {
@@ -82,7 +82,7 @@ export default class Underworld {
   // line segments that prevent sight
   walls: LineSegment[] = [];
   // line segments that prevent movement
-  bounds: LineSegment[] = [];
+  bounds: PolygonLineSegment[] = [];
   pathingPolygons: Polygon[] = [];
   playersWhoHaveChosenUpgrade: string[] = [];
   // Keeps track of how many messages have been processed so that clients can
@@ -96,7 +96,8 @@ export default class Underworld {
 
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
     window.underworld = this;
-    this.seed = seed;
+    // this.seed = seed;
+    this.seed = '0.6728852962869702';
     this.gameStarted = false;
     console.log("RNG create with seed:", seed, ", state: ", RNGState);
     this.random = this.syncronizeRNG(RNGState);
@@ -150,6 +151,7 @@ export default class Underworld {
         // check for collisions with pickups in new location
         this.checkPickupCollisions(u);
       }
+      collideWithWalls(u);
       // Sync Image even for non moving units since they may be moved by forces other than themselves
       Unit.syncImage(u)
       // Ensure that resolveDoneMoving is invoked when there are no points left in the path
