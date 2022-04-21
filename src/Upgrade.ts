@@ -21,10 +21,7 @@ export function generateUpgrades(player: IPlayer): IUpgrade[] {
   }
   let upgrades: IUpgrade[] = [];
   const isAltitudeEven = window.underworld.levelIndex % 2 == 0;
-  // Every other level, players get to choose from stas upgrades or card upgrades
-  const upgradeList = isAltitudeEven ? upgradeStatsSource : upgradeCardsSource;
-  // Clone upgrades for later mutation
-  const clonedUpgradeSource = [...upgradeList].filter((u) =>
+  const filterUpgrades = (u: IUpgrade) =>
     (u.maxCopies === undefined
       ? // Always include upgrades that don't have a specified maxCopies
       true
@@ -34,7 +31,13 @@ export function generateUpgrades(player: IPlayer): IUpgrade[] {
     // Now that upgrades are cards too, make sure it doesn't
     // show upgrades that the player already has as cards
     && !player.cards.includes(u.title)
-  );
+  const filteredUpgradeCardsSource = upgradeCardsSource.filter(filterUpgrades);
+  // Every other level, players get to choose from stas upgrades or card upgrades
+  // Unless Player already has all of the upgrades, in which case they
+  // only have stat upgrades to choose from
+  const upgradeList = filteredUpgradeCardsSource.length === 0 || isAltitudeEven ? upgradeStatsSource.filter(filterUpgrades) : filteredUpgradeCardsSource;
+  // Clone upgrades for later mutation
+  const clonedUpgradeSource = [...upgradeList];
   // Choose from upgrades
   const numberOfCardsToChoose = Math.min(
     NUMBER_OF_UPGRADES_TO_CHOOSE_FROM,
