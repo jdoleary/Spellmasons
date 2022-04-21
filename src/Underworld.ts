@@ -419,21 +419,18 @@ export default class Underworld {
     // Recache walls now that unreachable areas have been filled in
     this.cacheWalls();
 
-    // I'm experimenting with having the portal spawn on the 
-    // last enemy killed.  So this is commented out because
-    // it spawns a portal at the beginning of the level
-    // const portalPickup = Pickup.specialPickups['portal'];
-    // Pickup.create(
-    //   portalCoords.x,
-    //   portalCoords.y,
-    //   portalPickup.name,
-    //   portalPickup.description,
-    //   false,
-    //   portalPickup.imagePath,
-    //   portalPickup.animationSpeed,
-    //   true,
-    //   portalPickup.effect,
-    // );
+    const portalPickup = Pickup.specialPickups['portal'];
+    Pickup.create(
+      portalCoords.x,
+      portalCoords.y,
+      portalPickup.name,
+      portalPickup.description,
+      false,
+      portalPickup.imagePath,
+      portalPickup.animationSpeed,
+      true,
+      portalPickup.effect,
+    );
 
     // Exclude player spawn coords that cannot path to the portal
     this.validPlayerSpawnCoords = this.validPlayerSpawnCoords.filter(spawn => {
