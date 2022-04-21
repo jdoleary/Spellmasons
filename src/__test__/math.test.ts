@@ -1,7 +1,53 @@
-import { indexToXY, xyToIndex, normalizeRadians, _chooseObjectWithProbability, similarTriangles, getCoordsAtDistanceTowardsTarget, honeycombGenerator, clampVector } from '../math';
+import {
+  indexToXY, xyToIndex, normalizeRadians, _chooseObjectWithProbability, similarTriangles,
+  getCoordsAtDistanceTowardsTarget, honeycombGenerator, clampVector, rotateMatrix
+} from '../math';
 
 describe('math', () => {
-  describe.only('clampVector', () => {
+  describe('rotateMatrix', () => {
+    it('should rotate the array clockwise once; wide to long', () => {
+      const matrix = [
+        [0, 1, 2],
+        [3, 4, 5],
+      ]
+      const actual = rotateMatrix(matrix);
+      const expected = [
+        [3, 0],
+        [4, 1],
+        [5, 2]
+      ];
+      expect(actual).toEqual(expected);
+    });
+    it('should rotate the array clockwise once; long to wide', () => {
+      const matrix = [
+        [0, 1],
+        [2, 3],
+        [4, 5]
+      ]
+      const actual = rotateMatrix(matrix);
+      const expected = [
+        [4, 2, 0],
+        [5, 3, 1]
+      ];
+      expect(actual).toEqual(expected);
+    });
+    it('should rotate the array clockwise once; given a 3x3', () => {
+      const matrix = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8]
+      ]
+      const actual = rotateMatrix(matrix);
+      const expected = [
+        [6, 3, 0],
+        [7, 4, 1],
+        [8, 5, 2]
+      ];
+      expect(actual).toEqual(expected);
+    });
+
+  });
+  describe('clampVector', () => {
     it('should not modify the vector if it\'s magnitude is less than the clamp magnitude', () => {
       const vec = { x: 10, y: 0 };
       const actual = clampVector(vec, 20);
@@ -41,7 +87,7 @@ describe('math', () => {
       ];
       expect(actual).toEqual(expected);
     });
-    it.only('Returns the correct coordinates for multiple outward layers of honeycomb', () => {
+    it('Returns the correct coordinates for multiple outward layers of honeycomb', () => {
       const radius = 1;
       const actual = Array.from(honeycombGenerator(radius, { x: 0, y: 0 }, 3));
       const expected = [
