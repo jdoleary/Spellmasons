@@ -145,11 +145,11 @@ export const upgradeStatsSource: IUpgrade[] = [
   {
     title: '+ Max Stamina',
     description: (player) =>
-      `Increases your stamina from ${player.unit.stamina} to ${player.unit.stamina + maxStaminaIncreaseAmount
+      `Increases your stamina from ${player.unit.staminaMax} to ${player.unit.staminaMax + maxStaminaIncreaseAmount
       }`,
     thumbnail: 'images/spell/walk.png',
     effect: (player) => {
-      player.unit.stamina += maxStaminaIncreaseAmount;
+      player.unit.staminaMax += maxStaminaIncreaseAmount;
     },
     probability: 30,
   },
