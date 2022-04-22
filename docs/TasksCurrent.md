@@ -1,4 +1,5 @@
 # Tasks
+- If you cast a spell while another spell is still in progress you can go negative mana
 - Better Pathfinding
 - More spells
     - push / pull
@@ -22,7 +23,14 @@
 - fix protection spell to make it easier to understand 'hoist it?'
 - Spells like resurrect should scale by "n" not "logn"; logn is too cheap, or just do +2 on logn instead of +1
 - simpler rearrange
-- 
+---
+Matt Feedback
+- Trying to join multiplayer for first time puts you in tutorial instead of their game
+- Exclamation mark over AI (or at edge of screen if unit off screen) that can hurt you.
+- Tut 3 is confusing, give more direct instructions don't make it a puzzle
+    - Explain red ring kill blow
+    - Explain how spells get more expensive
+    - Explain how you get more mana
 ---
 - Infinite loops seems to be occurring for "bounds" but not for pathing walls for some reason.
     - could the expansion be preventing the infinite loop somehow??
