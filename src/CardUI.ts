@@ -393,7 +393,7 @@ function createCardElement(content: Cards.ICard) {
   const elCardHotkeyBadgeHolder = document.createElement('div');
   elCardHotkeyBadgeHolder.classList.add('hotkey-badge-holder');
   element.appendChild(elCardHotkeyBadgeHolder);
-  const elCardHotkeyBadge = document.createElement('div');
+  const elCardHotkeyBadge = document.createElement('kbd');
   elCardHotkeyBadge.classList.add('hotkey-badge');
   elCardHotkeyBadgeHolder.appendChild(elCardHotkeyBadge);
   const elCardBadgeHolder = document.createElement('div');

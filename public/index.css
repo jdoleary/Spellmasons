@@ -292,12 +292,17 @@ the face of the last card in the group is seen*/
   color: #522626;
 }
 
+.jbutton .hotkey-badge-holder {
+  bottom: -16px;
+}
+
 .hotkey-badge-holder {
   position: absolute;
   bottom: -8px;
   left: 0;
   right: 0;
   margin: 0 auto;
+  text-align: center;
 }
 
 /* Do not show hotkey badges on already selected cards,
@@ -310,23 +315,18 @@ these badges only belong on cards in the hand */
   display: none;
 }
 
-.hotkey-badge {
-  height: 16px;
-  width: 16px;
-  line-height: 16px;
-  margin: 0 auto;
-  background-color: white;
-  border: 1px solid black;
-  border-radius: 16px 16px;
-  padding: 2px;
-  font-size: 12px;
-  text-align: center;
-}
-
-.hotkey-badge.wide {
-  width: auto;
-  margin: 0 15px;
-  padding: 0 4px;
+kbd {
+  background-color: #eee;
+  border-radius: 3px;
+  border: 1px solid #b4b4b4;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 2px 0 0 rgba(255, 255, 255, .7) inset;
+  color: #333;
+  display: inline-block;
+  font-size: .85em;
+  font-weight: 700;
+  line-height: 1;
+  padding: 2px 4px;
+  white-space: nowrap;
 }
 
 body.inspect-mode .swap-btn {
