@@ -1,7 +1,7 @@
-import * as Unit from '../Unit';
 import type { Spell } from '.';
 import { createVisualLobbingProjectile } from '../Projectile';
 import floatingText from '../FloatingText';
+import { explainManaOverfill } from '../Jprompt';
 
 const id = 'mana_steal';
 const mana_stolen = 20;
@@ -28,6 +28,7 @@ Sacrifice ${health_burn} of your own health to steal up to ${mana_stolen} mana f
         unit.mana -= unitManaBurnt;
         promises.push(createVisualLobbingProjectile(unit, caster.x, caster.y, 'blue-projectile.png').then(() => {
           state.casterUnit.mana += unitManaBurnt;
+          explainManaOverfill();
           floatingText({
             coords: caster,
             text: `+ ${unitManaBurnt} Mana`,

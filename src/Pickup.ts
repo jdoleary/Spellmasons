@@ -3,6 +3,7 @@ import * as Player from './Player';
 import { containerUnits } from './PixiUtils';
 import type { IUnit } from './Unit';
 import { checkIfNeedToClearTooltip } from './ui/PlanningView';
+import { explainManaOverfill } from './Jprompt';
 
 export const PICKUP_RADIUS = 64;
 export interface IPickup {
@@ -143,6 +144,7 @@ export const pickups: IPickupSource[] = [
     effect: ({ unit, player }) => {
       if (player) {
         player.unit.mana += manaPotionRestoreAmount;
+        explainManaOverfill();
       }
     },
   },
