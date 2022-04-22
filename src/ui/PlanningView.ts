@@ -250,7 +250,7 @@ export function updateTooltipContent() {
         }
         const unitSource = allUnits[selectedUnit.unitSourceId]
         text += `\
-Unit
+${unitSource.id}
 ${unitSource.info.description}
 Faction ${Faction[selectedUnit.faction]}
 Health ${selectedUnit.health}/${selectedUnit.healthMax}
