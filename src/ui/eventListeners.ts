@@ -180,7 +180,7 @@ export function updateMouseUI() {
           window.walkPathGraphics.moveTo(window.player.unit.x, window.player.unit.y);
           let lastPoint: Vec2 = window.player.unit;
           let distanceCovered = 0;
-          const distanceLeftToMove = window.player.unit.staminaMax - window.player.unit.stamina
+          const distanceLeftToMove = window.player.unit.stamina;
           for (let i = 0; i < currentPlayerPath.length; i++) {
             const point = currentPlayerPath[i];
             const thisLineDistance = distance(lastPoint, point);
