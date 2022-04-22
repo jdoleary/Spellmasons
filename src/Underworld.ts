@@ -19,6 +19,7 @@ import {
   containerUI,
   containerUnits,
   recenterCamera,
+  setCameraFollow,
 } from './PixiUtils';
 import floatingText, { centeredFloatingText } from './FloatingText';
 import { UnitType, Faction } from './commonTypes';
@@ -818,6 +819,13 @@ export default class Underworld {
     if (player == window.player) {
       // Notify the current player that their turn is starting
       centeredFloatingText(`Your Turn`);
+      // Recenter the camera on yourself
+      setCameraFollow(window.player.unit);
+    } else if (window.player && window.player.inPortal) {
+      // If the current player is portaled,
+      // follow the active player's unit
+      setCameraFollow(player.unit);
+
     }
     // Give mana at the start of turn
     const manaTillFull = player.unit.manaMax - player.unit.mana;

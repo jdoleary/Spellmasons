@@ -1,7 +1,9 @@
 import * as PIXI from 'pixi.js';
-import { clone } from './Vec';
+import { clone, Vec2 } from './Vec';
 import { View } from './views';
+import * as math from './math';
 import * as config from './config';
+
 // if PIXI is finished setting up
 let isReady = false;
 // PIXI app
@@ -38,6 +40,19 @@ const characterSelectContainers = [containerCharacterSelect];
 
 app.renderer.backgroundColor = 0x111631;
 
+const cameraPan = { x: 0, y: 0 };
+export function setCameraPan(x?: number, y?: number) {
+  if (x !== undefined) {
+    cameraPan.x = x;
+    // Detach camera from target now that user is manually moving it
+    setCameraFollow(undefined);
+  }
+  if (y !== undefined) {
+    cameraPan.y = y;
+    // Detach camera from target now that user is manually moving it
+    setCameraFollow(undefined);
+  }
+}
 window.addEventListener('resize', resizePixi);
 window.addEventListener('load', () => {
   resizePixi();
@@ -52,6 +67,11 @@ export function resizePixi() {
   recenterCamera();
 }
 let elPIXIHolder: HTMLElement | null;
+let cameraFollowTarget: Vec2 | undefined;
+let camera: Vec2 = { x: 0, y: 0 };
+export function setCameraFollow(target: Vec2 | undefined) {
+  cameraFollowTarget = target;
+}
 export function recenterCamera() {
   if (!elPIXIHolder) {
     elPIXIHolder = document.getElementById('PIXI-holder');
@@ -73,50 +93,49 @@ export function recenterCamera() {
       break;
     case View.Game:
       if (window.player) {
-
-        let centerTarget = clone(window.player.unit);
-        // If current client player is in the portal,
-        // set the camera to the ally player whos turn it currently is:
-        if (window.player.inPortal) {
-          const currentTurnPlayer = window.underworld.players[window.underworld.playerTurnIndex]
-          if (currentTurnPlayer) {
-            centerTarget = clone(currentTurnPlayer.unit);
-          } else {
-            console.error('Could not find current turn player for index', window.underworld.playerTurnIndex)
-          }
+        if (cameraFollowTarget) {
+          camera = clone(cameraFollowTarget);
         }
+        // Allow some camera movement via WSAD
+        camera.x += cameraPan.x;
+        camera.y += cameraPan.y;
         // Clamp centerTarget so that there isn't a log of empty space
         // in the camera
-        const margin = config.COLLISION_MESH_RADIUS * 4;
+        // Users can move the camera further if they are manually controlling the camera
+        // whereas if the camera is following a target it keeps more of the map on screen
+        const marginY = cameraFollowTarget ? config.COLLISION_MESH_RADIUS * 4 : 0.8 * window.underworld.width;
+        const marginX = cameraFollowTarget ? config.COLLISION_MESH_RADIUS * 4 : 0.8 * window.underworld.height;
         // Clamp camera X
-        const mapLeftMostPoint = 0 - margin;
-        const mapRightMostPoint = window.underworld.width + margin;
+        const mapLeftMostPoint = 0 - marginX;
+        const mapRightMostPoint = window.underworld.width + marginX;
         const camCenterXMin = mapLeftMostPoint + elPIXIHolder.clientWidth / 2 / zoom;
         const camCenterXMax = mapRightMostPoint - elPIXIHolder.clientWidth / 2 / zoom;
         // If the supposed minimum is more than the maximum, just center the camera:
         if (camCenterXMin > camCenterXMax) {
-          centerTarget.x = (mapRightMostPoint + mapLeftMostPoint) / 2;
+          camera.x = (mapRightMostPoint + mapLeftMostPoint) / 2;
         } else {
           // clamp the camera x between the min and max possible camera targets
-          centerTarget.x = Math.min(camCenterXMax, Math.max(camCenterXMin, centerTarget.x));
+          camera.x = Math.min(camCenterXMax, Math.max(camCenterXMin, camera.x));
         }
+
         //Clamp camera Y
-        const mapTopMostPoint = 0 - margin;
-        const mapBottomMostPoint = window.underworld.height + margin;
+        const mapTopMostPoint = 0 - marginY;
+        const mapBottomMostPoint = window.underworld.height + marginY;
         const camCenterYMin = mapTopMostPoint + elPIXIHolder.clientHeight / 2 / zoom;
         const camCenterYMax = mapBottomMostPoint - elPIXIHolder.clientHeight / 2 / zoom;
         // If the supposed minimum is more than the maximum, just center the camera:
         if (camCenterYMin > camCenterYMax) {
-          centerTarget.y = (mapBottomMostPoint + mapTopMostPoint) / 2;
+          camera.y = (mapBottomMostPoint + mapTopMostPoint) / 2;
         } else {
           // clamp the camera x between the min and max possible camera targets
-          centerTarget.y = Math.min(camCenterYMax, Math.max(camCenterYMin, centerTarget.y));
+          camera.y = Math.min(camCenterYMax, Math.max(camCenterYMin, camera.y));
         }
+
 
         // Actuall move the camera to be centered on the centerTarget
         const cameraTarget = {
-          x: elPIXIHolder.clientWidth / 2 - (centerTarget.x * zoom),
-          y: elPIXIHolder.clientHeight / 2 - (centerTarget.y * zoom)
+          x: elPIXIHolder.clientWidth / 2 - (camera.x * zoom),
+          y: elPIXIHolder.clientHeight / 2 - (camera.y * zoom)
         }
 
         // Option 1 for cam movement: Lerp camera to target
@@ -124,8 +143,21 @@ export function recenterCamera() {
         // app.stage.y = app.stage.y + (cameraTarget.y - app.stage.y) / 2;
 
         // Option 2 for cam movement: Set camera to target immediately
-        app.stage.x = cameraTarget.x;
-        app.stage.y = cameraTarget.y;
+        if (cameraFollowTarget) {
+          // If there is a follow target move smoothly
+          const camNextCoordinates = math.getCoordsAtDistanceTowardsTarget(
+            app.stage,
+            cameraTarget,
+            math.distance(app.stage, cameraTarget) / 20
+          );
+          app.stage.x = camNextCoordinates.x;
+          app.stage.y = camNextCoordinates.y;
+        } else {
+          // Otherwise move immediately because the camera is being
+          // controlled manually by the user
+          app.stage.x = cameraTarget.x;
+          app.stage.y = cameraTarget.y;
+        }
 
       }
       break;

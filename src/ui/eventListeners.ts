@@ -15,7 +15,7 @@ import { polygonToPolygonLineSegments } from '../Polygon';
 import * as colors from './colors';
 import type { Vec2 } from '../Vec';
 import { distance, getCoordsAtDistanceTowardsTarget } from '../math';
-import { moveWithCollisions } from '../collision/moveWithCollision';
+import { setCameraPan } from '../PixiUtils';
 
 export function keydownListener(event: KeyboardEvent) {
   // Only handle hotkeys when viewing the Game
@@ -38,7 +38,6 @@ export function keydownListener(event: KeyboardEvent) {
     // Return immediately, prompt hotkey overrides other hotkeys
     return;
   }
-
 
   switch (event.code) {
     case 'Escape':
@@ -87,6 +86,19 @@ export function keydownListener(event: KeyboardEvent) {
     case 'Digit0':
       CardUI.selectCardByIndex(9);
       break;
+    // Camera movement
+    case 'KeyW':
+      setCameraPan(undefined, -10);
+      break;
+    case 'KeyA':
+      setCameraPan(-10, undefined);
+      break;
+    case 'KeyS':
+      setCameraPan(undefined, 10);
+      break;
+    case 'KeyD':
+      setCameraPan(10, undefined);
+      break;
   }
   // Invoke mouse move handler to update spell projections
   // Lots of UI is updated when the mouse moves, but keys
@@ -107,6 +119,19 @@ export function keyupListener(event: KeyboardEvent) {
       CardUI.toggleInspectMode(false);
       // Clear walk path on inspect mode off
       window.walkPathGraphics.clear();
+      break;
+    // Camera movement
+    case 'KeyW':
+      setCameraPan(undefined, 0);
+      break;
+    case 'KeyA':
+      setCameraPan(0, undefined);
+      break;
+    case 'KeyS':
+      setCameraPan(undefined, 0);
+      break;
+    case 'KeyD':
+      setCameraPan(0, undefined);
       break;
   }
   updateMouseUI();
@@ -131,6 +156,7 @@ export function updateMouseUI() {
   syncSpellEffectProjection();
 
   const mouseTarget = window.underworld.getMousePos();
+
   // Show faint circle on clickable entities on hover:
   drawCircleUnderTarget(mouseTarget, 0.4, window.dryRunGraphics);
 
