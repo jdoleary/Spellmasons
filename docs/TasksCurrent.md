@@ -6,6 +6,14 @@ Game breaking bugs
 - Branch is undefined
     - this.seed = '0.02406939508462913';
 ---
+Priorities
+- Show visually when you are in danger of being attacked next turn
+    - maybe exclamation point over enemies head?
+- Redo colors: Red should always mean danger
+    - LOS line from archers for example
+- Show in enemy health bar how much damage they'll take
+    - see: // TODO: Show on health bar how much damage they'll take
+---
 - If you cast a spell while another spell is still in progress you can go negative mana
 - Better Pathfinding
 - More spells
