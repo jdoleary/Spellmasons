@@ -52,8 +52,12 @@ export function normalizedVector(point1: Vec2, point2: Vec2): { vector: Vec2 | u
     return { vector: { x: a, y: b }, distance: bigC };
 }
 export function collideWithWalls(circle: Circle) {
-    for (let line of window.underworld.bounds) {
-        repelCircleFromLine(circle, line, line.polygon.inverted);
+    if (window.underworld && window.underworld.bounds) {
+        for (let line of window.underworld.bounds) {
+            repelCircleFromLine(circle, line, line.polygon.inverted);
+        }
+    } else {
+        console.error('window.underworld or window.underworld.bounds is undefined');
     }
 
 }
