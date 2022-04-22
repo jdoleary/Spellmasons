@@ -84,9 +84,11 @@ function addHandlers(pie: PieClient) {
   pie.onServerAssignedData = (o) => {
     console.log('Pie: set window.clientId:', o.clientId);
     window.clientId = o.clientId;
-    const selfPlayer = window.underworld.players.find(p => p.clientId == window.clientId);
-    if (selfPlayer) {
-      updateGlobalRefToCurrentClientPlayer(selfPlayer);
+    if (window.underworld) {
+      const selfPlayer = window.underworld.players.find(p => p.clientId == window.clientId);
+      if (selfPlayer) {
+        updateGlobalRefToCurrentClientPlayer(selfPlayer);
+      }
     }
     if (window.allowCookies) {
       // Only store clientId if it is from a multiplayer session
