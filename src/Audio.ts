@@ -1,4 +1,5 @@
 import { getLoopableIndex } from "./Polygon";
+import * as storage from "./storage";
 
 const sfx = {
     whoosh: './sound/sfx/whoosh.m4a',
@@ -49,21 +50,40 @@ export function playSFX(path: string) {
 
 }
 
+const STORAGE_OPTIONS = 'OPTIONS';
 export function setupAudio() {
+    console.log('Setup: Audio');
     window.playMusic = playNextSong;
-    window.changeVolume = (volume) => {
-        window.volume = volume / 100;
+    window.changeVolume = (volume: number) => {
+        window.volume = volume;
+        storage.assign(STORAGE_OPTIONS, { volume: window.volume });
         if (musicInstance) {
             musicInstance.volume = window.volume * window.volumeMusic;
         }
     };
-    window.changeVolumeMusic = (volume) => {
-        window.volumeMusic = volume / 100;
+    window.changeVolumeMusic = (volume: number) => {
+        window.volumeMusic = volume;
+        storage.assign(STORAGE_OPTIONS, { volumeMusic: window.volumeMusic });
         if (musicInstance) {
             musicInstance.volume = window.volume * window.volumeMusic;
         }
     };
-    window.changeVolumeGame = (volume) => {
-        window.volumeGame = volume / 100;
+    window.changeVolumeGame = (volume: number) => {
+        window.volumeGame = volume;
+        storage.assign(STORAGE_OPTIONS, { volumeGame: window.volumeGame });
     };
+    // Retrieve audio settings from storage
+    const storedOptions = storage.get(STORAGE_OPTIONS);
+    if (storedOptions !== null) {
+        const options = JSON.parse(storedOptions);
+        if (options.volume) {
+            window.changeVolume(options.volume);
+        }
+        if (options.volumeMusic) {
+            window.changeVolumeMusic(options.volumeMusic);
+        }
+        if (options.volumeGame) {
+            window.changeVolumeGame(options.volumeGame);
+        }
+    }
 }

@@ -23,6 +23,15 @@ import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './contants';
 
 const YES = 'yes'
 const SKIP_TUTORIAL = 'skipTutorial';
+
+// set window defaults, must be called before setupAll()
+window.volume = 1.0;
+window.volumeMusic = 1.0;
+window.volumeGame = 1.0;
+window.spellCost = { healthCost: 0, manaCost: 0 };
+window.zoomTarget = 1;
+window.playerWalkingPromise = Promise.resolve();
+
 setupAll();
 
 function setupAll() {
@@ -160,12 +169,6 @@ declare global {
     superMe: () => void;
   }
 }
-window.spellCost = { healthCost: 0, manaCost: 0 };
-window.zoomTarget = 1;
-window.volume = 1.0;
-window.volumeMusic = 1.0;
-window.volumeGame = 1.0;
-window.playerWalkingPromise = Promise.resolve();
 window.skipTutorial = () => {
   if (window.allowCookies) {
     console.log(`Setting ${SKIP_TUTORIAL} in localStorage...`);
