@@ -2,6 +2,7 @@ import PieClient, { Room } from '@websocketpie/client';
 import { onData, onClientPresenceChanged } from './wsPieHandler';
 import * as readyState from './readyState';
 import { setView, View } from './views';
+import * as storage from './storage';
 import { updateGlobalRefToCurrentClientPlayer } from './Player';
 // Locally hosted, locally accessed
 // const wsUri = 'ws://localhost:8080';
@@ -62,7 +63,7 @@ function joinRoom(_room_info = {}): Promise<void> {
     readyState.set('wsPieRoomJoined', true);
     console.log('Pie: You are now in the room');
     // Useful for development to get into the game quickly
-    let quickloadName = window.allowCookies && localStorage.getItem('quickload');
+    let quickloadName = storage.get('quickload');
     if (quickloadName) {
       console.log('ADMIN: quickload:', quickloadName);
       window.load(quickloadName);

@@ -11,6 +11,7 @@ import * as Pickup from './Pickup';
 import * as Obstacle from './Obstacle';
 import * as readyState from './readyState';
 import * as messageQueue from './messageQueue';
+import * as storage from './storage';
 import { setView, View } from './views';
 import { tutorialLevels } from './HandcraftedLevels';
 import manBlue from './units/manBlue';
@@ -501,58 +502,42 @@ const savePrefix = 'spellmasons-save-';
 window.getAllSaveFiles = () => Object.keys(localStorage).filter(x => x.startsWith(savePrefix)).map(x => x.substring(savePrefix.length));
 
 window.save = (title) => {
-  if (window.allowCookies) {
-    localStorage.setItem(
-      savePrefix + title,
-      JSON.stringify({
-        underworld: window.underworld.serializeForSaving(),
-      }),
-    );
-  } else {
-    console.error('May not use this feature without accepting the cookie policy.');
-  }
+  storage.set(
+    savePrefix + title,
+    JSON.stringify({
+      underworld: window.underworld.serializeForSaving(),
+    }),
+  );
 };
 window.load = async (title) => {
-  if (window.allowCookies) {
-    const savedGameString = localStorage.getItem(savePrefix + title);
-    if (savedGameString) {
+  const savedGameString = storage.get(savePrefix + title);
+  if (savedGameString) {
 
-      if (!readyState.get('underworld')) {
-        await window.startSingleplayer();
-      }
-
-      const { underworld } = JSON.parse(savedGameString);
-      window.pie.sendData({
-        type: MESSAGE_TYPES.LOAD_GAME_STATE,
-        underworld,
-      });
-      setView(View.Game);
-
-    } else {
-      console.error('no save game found with title', title);
+    if (!readyState.get('underworld')) {
+      await window.startSingleplayer();
     }
+
+    const { underworld } = JSON.parse(savedGameString);
+    window.pie.sendData({
+      type: MESSAGE_TYPES.LOAD_GAME_STATE,
+      underworld,
+    });
+    setView(View.Game);
+
   } else {
-    console.error('May not use this feature without accepting the cookie policy.');
+    console.error('no save game found with title', title);
   }
 };
 
 window.saveReplay = (title: string) => {
-  if (window.allowCookies) {
-    localStorage.setItem('golems-' + title, JSON.stringify(messageLog));
-  } else {
-    console.error('May not use this feature without accepting the cookie policy.');
-  }
+  storage.set('golems-' + title, JSON.stringify(messageLog));
 };
-// Note, replay is currently broken
+// TODO, replay is currently broken
 window.replay = (title: string) => {
-  if (window.allowCookies) {
-    const messages = JSON.parse(localStorage.getItem('golems-' + title) || '');
-    for (let i = 0; i < messages.length; i++) {
-      const message = messages[i];
-      message.fromClient = window.underworld.players[0].clientId;
-      onData(message);
-    }
-  } else {
-    console.error('May not use this feature without accepting the cookie policy.');
+  const messages = JSON.parse(storage.get('golems-' + title) || '[]');
+  for (let i = 0; i < messages.length; i++) {
+    const message = messages[i];
+    message.fromClient = window.underworld.players[0].clientId;
+    onData(message);
   }
 };

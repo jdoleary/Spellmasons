@@ -1,3 +1,4 @@
+import * as storage from './storage';
 interface Prompt {
     text: string;
     noBtnText?: string;
@@ -81,9 +82,10 @@ export function explainManaOverfill() {
     if (window.player) {
         if (window.player.unit.mana > window.player.unit.manaMax && window.allowCookies) {
             const MANA_INFO_STORAGE_KEY = 'mana-info';
-            if (localStorage.getItem(MANA_INFO_STORAGE_KEY) != 'y') {
+            const YES = 'y'
+            if (storage.get(MANA_INFO_STORAGE_KEY) != YES) {
                 Jprompt({ imageSrc: 'images/pickups/mana-potion_1.png', text: 'You are able to fill your mana up to 3x its maximum amount using potions or spells.', yesText: 'Cool!', yesKey: 'Space', yesKeyText: 'Spacebar' });
-                localStorage.setItem(MANA_INFO_STORAGE_KEY, 'y');
+                storage.set(MANA_INFO_STORAGE_KEY, YES);
             }
         }
     }

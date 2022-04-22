@@ -9,6 +9,7 @@ import type * as Upgrade from './Upgrade';
 import * as math from './math';
 import * as Cards from './cards';
 import * as Image from './Image';
+import * as storage from './storage';
 import obstacleSectors from './ObstacleSectors';
 import { MESSAGE_TYPES } from './MessageTypes';
 import {
@@ -282,9 +283,7 @@ export default class Underworld {
     }
     if (!window.enemyEncountered.includes(id)) {
       window.enemyEncountered.push(id);
-      if (window.allowCookies) {
-        localStorage.setItem(ENEMY_ENCOUNTERED_STORAGE_KEY, JSON.stringify(window.enemyEncountered));
-      }
+      storage.set(ENEMY_ENCOUNTERED_STORAGE_KEY, JSON.stringify(window.enemyEncountered));
       Jprompt({ imageSrc: Unit.getImagePathForUnitId(id), text: id + '\n' + sourceUnit.info.description, yesText: 'Okay!', yesKey: 'Space', yesKeyText: 'Spacebar' });
     }
     let unit: Unit.IUnit = Unit.create(

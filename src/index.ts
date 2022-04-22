@@ -13,6 +13,7 @@ import { setupAudio } from './Audio';
 import cookieConsentPopup from './cookieConsent';
 import { setupMonitoring } from './monitoring';
 import { startTutorial } from './wsPieHandler';
+import * as storage from './storage';
 cookieConsentPopup(false);
 
 // This import is critical so that the svelte menu has access to
@@ -56,7 +57,7 @@ function setupAll() {
     Units.registerUnits();
     initPlanningView();
     readyState.set("content", true);
-    if (window.allowCookies && localStorage.getItem(SKIP_TUTORIAL) === YES) {
+    if (storage.get(SKIP_TUTORIAL) === YES) {
       window.setMenu('PLAY');
       setView(View.Menu);
     } else {
@@ -170,19 +171,10 @@ declare global {
   }
 }
 window.skipTutorial = () => {
-  if (window.allowCookies) {
-    console.log(`Setting ${SKIP_TUTORIAL} in localStorage...`);
-    localStorage.setItem(SKIP_TUTORIAL, YES);
-  } else {
-    console.log('Cannot save choice to skip tutorial since cookies are not consented to');
-  }
+  storage.set(SKIP_TUTORIAL, YES);
 }
-if (window.allowCookies) {
-  window.enemyEncountered = JSON.parse(localStorage.getItem(ENEMY_ENCOUNTERED_STORAGE_KEY) || '[]');
-  console.log('Setup: initializing enemyEncountered as', window.enemyEncountered);
-} else {
-  window.enemyEncountered = [];
-}
+window.enemyEncountered = JSON.parse(storage.get(ENEMY_ENCOUNTERED_STORAGE_KEY) || '[]');
+console.log('Setup: initializing enemyEncountered as', window.enemyEncountered);
 
 window.superMe = () => {
   if (window.player) {
