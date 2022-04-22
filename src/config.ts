@@ -8,6 +8,7 @@ export const UNIT_SIZE = COLLISION_MESH_RADIUS * 2;
 export const UNIT_BASE_HEALTH = 4;
 export const UNIT_BASE_MANA = 60;
 export const UNIT_BASE_STAMINA = 200;
+export const PLAYER_BASE_STAMINA = UNIT_BASE_STAMINA + 150;
 export const UNIT_BASE_DAMAGE = 3;
 export const UNIT_UI_BAR_HEIGHT = 3;
 export const UNIT_UI_BAR_WIDTH = 28;

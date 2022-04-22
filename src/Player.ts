@@ -60,6 +60,8 @@ export function create(clientId: string, unitId: string): IPlayer | undefined {
   player.unit.immovable = true;
   player.unit.alive = false;
   player.unit.attackRange = 500;
+  player.unit.staminaMax = config.PLAYER_BASE_STAMINA;
+  player.unit.stamina = config.PLAYER_BASE_STAMINA;
 
   updateGlobalRefToCurrentClientPlayer(player);
   // Add initial cards to hand
