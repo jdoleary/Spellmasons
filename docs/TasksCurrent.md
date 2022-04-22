@@ -1,4 +1,29 @@
 # Tasks
+- Better Pathfinding
+- More spells
+    - push / pull
+    - stomp
+    - haste
+    - split: clone & half stats
+    - buf: +mana regen
+    - buf: +health regen
+    - trap
+    - summon
+    - stealth
+    - root: like freeze but allows attack and does DOT
+    - confuse: changes faction for 1 turn
+    - fear: make flee
+    - stone: turn to stone
+    - mute: Prevent casting
+    - barrier: summons a blockade with health
+- More pickups
+    - Antidote
+- Spell upgrades
+- fix protection spell to make it easier to understand 'hoist it?'
+- Spells like resurrect should scale by "n" not "logn"; logn is too cheap, or just do +2 on logn instead of +1
+- simpler rearrange
+- 
+---
 - Infinite loops seems to be occurring for "bounds" but not for pathing walls for some reason.
     - could the expansion be preventing the infinite loop somehow??
 - Bug: Summoners don't move very far when they're running away
@@ -15,11 +40,8 @@
 - **!**Bug: Different zoom levels resulted in spell miss on one screen but not on another
 
 - Map bounds are off for handcrafted level
-- Bug: Grunts can attack through walls if they are just beyond a corner
+- Reverify: Bug: Grunts can attack through walls if they are just beyond a corner
 - BUG: When branch is undefined occurs it should automatically regen the whole level
-- Introduce: explain info about new units when you first encounter them
-- add gaps as well as walls (different)
-    - TODO: Anchor units at their feet, not at their center
 - sequential fireballs should be one big fireball!
 ---
 

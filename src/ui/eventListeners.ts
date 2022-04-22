@@ -263,24 +263,22 @@ export function contextmenuHandler(e: MouseEvent) {
     return;
   }
   if (window.underworld.isMyTurn()) {
-    // Get current client's player
-    const selfPlayer:
-      | Player.IPlayer
-      | undefined = window.underworld.players.find(
-        (p) => p.clientId === window.clientId,
-      );
     // If player hasn't already moved this turn...
-    if (selfPlayer && selfPlayer.unit.distanceMovedThisTurn < selfPlayer.unit.moveDistance) {
-      window.walkPathGraphics.clear();
-      window.pie.sendData({
-        type: MESSAGE_TYPES.MOVE_PLAYER,
-        ...mouseTarget,
-      });
+    if (window.player) {
+      if (window.player.unit.distanceMovedThisTurn < window.player.unit.moveDistance) {
+        window.walkPathGraphics.clear();
+        window.pie.sendData({
+          type: MESSAGE_TYPES.MOVE_PLAYER,
+          ...mouseTarget,
+        });
+      } else {
+        floatingText({
+          coords: mouseTarget,
+          text: 'You are out of stamina.\nYou must end your turn before moving farther.',
+        });
+      }
     } else {
-      floatingText({
-        coords: mouseTarget,
-        text: 'You are out of stamina.\nYou must end your turn before moving farther.',
-      });
+      console.error('Cannot move, window.player = undefined');
     }
   } else {
     floatingText({

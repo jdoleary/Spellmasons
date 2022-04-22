@@ -2,6 +2,7 @@ import PieClient, { Room } from '@websocketpie/client';
 import { onData, onClientPresenceChanged } from './wsPieHandler';
 import * as readyState from './readyState';
 import { setView, View } from './views';
+import { updateGlobalRefToCurrentClientPlayer } from './Player';
 // Locally hosted, locally accessed
 // const wsUri = 'ws://localhost:8080';
 // Locally hosted, available to LAN (use your own IP)
@@ -83,6 +84,10 @@ function addHandlers(pie: PieClient) {
   pie.onServerAssignedData = (o) => {
     console.log('Pie: set window.clientId:', o.clientId);
     window.clientId = o.clientId;
+    const selfPlayer = window.underworld.players.find(p => p.clientId == window.clientId);
+    if (selfPlayer) {
+      updateGlobalRefToCurrentClientPlayer(selfPlayer);
+    }
     if (window.allowCookies) {
       // Only store clientId if it is from a multiplayer session
       // 'solomode_client_id' comes from pieclient's solo mode

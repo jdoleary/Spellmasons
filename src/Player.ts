@@ -105,7 +105,7 @@ export function resetPlayerForNextLevel(player: IPlayer) {
   }
 }
 // Keep a global reference to the current client's player
-function updateGlobalRefToCurrentClientPlayer(player: IPlayer) {
+export function updateGlobalRefToCurrentClientPlayer(player: IPlayer) {
   if (window.clientId === player.clientId) {
     window.player = player;
   }
