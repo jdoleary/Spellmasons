@@ -33,11 +33,10 @@ export function playNextSong() {
     musicInstance.addEventListener("ended", function () {
         playNextSong();
     });
-    // Temp; TODO: Base music volume is too loud,
+    // Temp; TODO: Base music volume is too loud, (remove "* 0.5" when fixed)
     // task: Master all audio and sfx
     // task: Make independent volume sliders for audio and music
-    musicInstance.volume = 0.2;
-    musicInstance.volume = window.volume * window.volumeGame;
+    musicInstance.volume = window.volume * window.volumeMusic * 0.5;
     musicInstance.play();
 }
 
