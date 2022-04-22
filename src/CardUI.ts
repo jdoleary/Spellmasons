@@ -35,13 +35,16 @@ if (elCardHolders) {
     }
   });
   elCardHolders.addEventListener('mouseleave', (e) => {
-    // Clear cardInspect when the mouse leaves elCardHolders so that the large card
-    // doesn't stay in the center of the screen
-    if (elCardInspect) {
-      elCardInspect.innerHTML = '';
-      currentlyShownCardId = '';
-    }
+    clearCurrentlyShownCard();
   });
+}
+export function clearCurrentlyShownCard() {
+  // Clear cardInspect when the mouse leaves elCardHolders so that the large card
+  // doesn't stay in the center of the screen
+  if (elCardInspect) {
+    elCardInspect.innerHTML = '';
+  }
+  currentlyShownCardId = '';
 }
 let currentlyShownCardId = '';
 function showFullCard(card: Cards.ICard) {
@@ -164,6 +167,10 @@ function addListenersToCardElement(
         // that the user is hovering over a unit while deselecting this card
         // but hadn't moved the mouse since selecting it
         updateMouseUI();
+        // When a card is deselected, clear the currently shown card
+        // so that it doesn't continue to hover over the gameboard
+        // for a card that is now deselected
+        clearCurrentlyShownCard();
       } else {
         console.log(
           'Attempted to remove card',
@@ -312,6 +319,9 @@ export function getSelectedCards(): Cards.ICard[] {
 export function toggleInspectMode(active: boolean) {
   document.body.classList.toggle('inspect-mode', active);
   elSelectedCards && elSelectedCards.classList.toggle('hide', active);
+  if (!active) {
+    clearCurrentlyShownCard();
+  }
 }
 export function clearSelectedCards() {
   // Remove the board highlight
