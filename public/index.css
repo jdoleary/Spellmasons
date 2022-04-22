@@ -252,13 +252,34 @@ the face of the last card in the group is seen*/
 
 .card-mana-badge {
   background-color: #5656d5;
-  border: 2px solid #5656d5;
+  border: 2px solid #3c3c94;
+  transform-style: preserve-3d;
 }
 
 .card-mana-badge.modified-by-usage {
   border: 2px solid #04042b;
   color: #04042b;
+  /* Bumping a modified card-mana-badge to the right 5px
+  is a visual trick to make the :before element
+  appear to be the original cost */
+  left: 5px;
+  position: relative;
 
+}
+
+.card-mana-badge.modified-by-usage:before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  border: 2px solid #3c3c94;
+  /* translateZ and transform-style:preserve-3d on .card-mana-badge makes sure
+  the :before renders behind the regular one */
+  transform: translateX(-5px) translateZ(-1px);
+  background-color: #5656d5;
+  display: block;
+  border-radius: 24px;
+  /* Prevents pushing badge label to next line */
+  position: absolute;
 }
 
 .card-health-badge {
