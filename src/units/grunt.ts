@@ -12,7 +12,7 @@ const unit: UnitSource = {
     probability: 100,
   },
   unitProps: {
-    moveDistance: config.UNIT_BASE_MOVE_DISTANCE,
+    staminaMax: config.UNIT_BASE_STAMINA,
     attackRange: 10 + config.COLLISION_MESH_RADIUS * 2,
     manaMax: 0,
   },

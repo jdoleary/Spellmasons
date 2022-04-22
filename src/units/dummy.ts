@@ -10,7 +10,7 @@ const unit: UnitSource = {
     probability: 100,
   },
   unitProps: {
-    moveDistance: 0,
+    staminaMax: 0,
     attackRange: 0,
   },
   action: async () => { },

@@ -191,7 +191,8 @@ window.superMe = () => {
     // Give me all cards
     Object.keys(Cards.allCards).forEach(window.giveMeCard);
     // Run farther! Jump higher!
-    window.player.unit.moveDistance = 10000;
+    window.player.unit.staminaMax = 10000;
+    window.player.unit.stamina = window.player.unit.staminaMax;
     window.player.unit.moveSpeed = 2;
   }
 }

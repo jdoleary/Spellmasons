@@ -78,7 +78,7 @@ export function updatePlanningView() {
           window.unitOverlayGraphics.drawCircle(
             selectedUnit.x,
             selectedUnit.y,
-            selectedUnit.moveDistance + selectedUnit.attackRange
+            selectedUnit.stamina + selectedUnit.attackRange
           );
           window.unitOverlayGraphics.endFill();
         }

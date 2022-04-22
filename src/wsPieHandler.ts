@@ -338,9 +338,9 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
     case MESSAGE_TYPES.END_TURN:
       if (caster) {
         window.underworld.endPlayerTurn(caster.clientId);
-        // Reset distanceMovedThisTurn immediately on endTurn so that the end-turn-btn highlight goes away
+        // Reset stamina immediately on endTurn so that the end-turn-btn highlight goes away
         if (caster == window.player) {
-          window.player.unit.distanceMovedThisTurn = 0;
+          window.player.unit.stamina = window.player.unit.staminaMax;
         }
       } else {
         console.error('Unable to end turn because caster is undefined');

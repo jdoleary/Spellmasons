@@ -26,7 +26,7 @@ const unit: UnitSource = {
     );
     if (nonPoisonedEnemyUnits.length) {
       const chosenUnit = nonPoisonedEnemyUnits[0];
-      const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, chosenUnit, unit.moveDistance);
+      const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, chosenUnit, unit.stamina);
       await Unit.moveTowards(unit, moveTo);
       if (inRange(unit, chosenUnit)) {
         createVisualFlyingProjectile(

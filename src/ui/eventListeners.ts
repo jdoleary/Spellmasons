@@ -149,12 +149,12 @@ export function updateMouseUI() {
         //
         const currentPlayerPath = findPath(window.player.unit, mouseTarget, window.underworld.pathingPolygons);
         if (currentPlayerPath.length) {
-          const turnStopPoints = pointsEveryXDistanceAlongPath(window.player.unit, currentPlayerPath, window.player.unit.moveDistance, window.player.unit.distanceMovedThisTurn);
+          const turnStopPoints = pointsEveryXDistanceAlongPath(window.player.unit, currentPlayerPath, window.player.unit.staminaMax, window.player.unit.staminaMax - window.player.unit.stamina);
           window.walkPathGraphics.lineStyle(4, 0xffffff, 1.0);
           window.walkPathGraphics.moveTo(window.player.unit.x, window.player.unit.y);
           let lastPoint: Vec2 = window.player.unit;
           let distanceCovered = 0;
-          const distanceLeftToMove = window.player.unit.moveDistance - window.player.unit.distanceMovedThisTurn
+          const distanceLeftToMove = window.player.unit.staminaMax - window.player.unit.stamina
           for (let i = 0; i < currentPlayerPath.length; i++) {
             const point = currentPlayerPath[i];
             const thisLineDistance = distance(lastPoint, point);
@@ -263,9 +263,9 @@ export function contextmenuHandler(e: MouseEvent) {
     return;
   }
   if (window.underworld.isMyTurn()) {
-    // If player hasn't already moved this turn...
+    // If player is able to move
     if (window.player) {
-      if (window.player.unit.distanceMovedThisTurn < window.player.unit.moveDistance) {
+      if (window.player.unit.stamina > 0) {
         window.walkPathGraphics.clear();
         window.pie.sendData({
           type: MESSAGE_TYPES.MOVE_PLAYER,

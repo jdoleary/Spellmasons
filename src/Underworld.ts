@@ -139,14 +139,15 @@ export default class Underworld {
           moveWithCollisions(u, stepTowardsTarget, aliveUnits);
           moveDist = math.distance(originalPosition, u);
         }
-        u.distanceMovedThisTurn += moveDist;
+        u.stamina -= moveDist;
         if (Vec.equal(u, u.path[0])) {
           // Once the unit reaches the target, shift so the next point in the path is the next target
           u.path.shift();
         }
         // Stop moving if you've moved as far as you can based on the move distance
-        if (u.distanceMovedThisTurn >= u.moveDistance) {
+        if (u.stamina <= 0) {
           u.path = [];
+          u.stamina = 0;
         }
         // check for collisions with pickups in new location
         this.checkPickupCollisions(u);
@@ -863,7 +864,7 @@ export default class Underworld {
       // Turns can only be manually ended during the PlayerTurns phase
       if (this.isMyTurn()) {
         let affirm = true
-        if (window.player.unit.distanceMovedThisTurn == 0) {
+        if (window.player.unit.stamina == window.player.unit.staminaMax) {
           affirm = await Jprompt({ text: 'Are you sure you want to end your turn without moving?', noBtnText: 'Cancel', noBtnKey: 'Escape', yesText: 'End Turn', yesKey: 'Space', yesKeyText: 'Spacebar' });
         }
         if (affirm) {
@@ -1019,8 +1020,8 @@ export default class Underworld {
     switch (phase) {
       case 'PlayerTurns':
         for (let u of this.units) {
-          // Reset distanceMovedThisTurn so units can move again
-          u.distanceMovedThisTurn = 0;
+          // Reset stamina so units can move again
+          u.stamina = u.staminaMax;
         }
         // Lastly, initialize the player turns.
         // Note, it is possible that calling this will immediately end

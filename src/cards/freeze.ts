@@ -48,10 +48,10 @@ Freezes the target(s) for 1 turn, preventing them from moving or acting.
       // Ensure that the unit cannot move when frozen
       // (even when players' turns are ended they can still act so long
       // as it is underworld.turn_phase === turn_phase.PlayerTurns, this is because all players act simultaneously
-      // during that phase, so setting distanceMovedThisTurn equal to the distance that they can move
+      // during that phase, so setting stamina to 0
       // prevents players from moving when they are frozen)
       // and then returning true also ends their turn.
-      unit.distanceMovedThisTurn = unit.moveDistance;
+      unit.stamina = 0;
       // Abort turn
       return true;
     },

@@ -48,9 +48,8 @@ export interface IUnit {
   resolveDoneMoving: () => void;
   resolveDoneMovingTimeout?: NodeJS.Timeout;
   radius: number;
-  moveDistance: number;
-  // A counter to keep track of how far a unit has moved this turn
-  distanceMovedThisTurn: number;
+  stamina: number;
+  staminaMax: number;
   attackRange: number;
   name?: string;
   // Strength is a modifier which affects base stats used for scaling difficulty
@@ -98,6 +97,7 @@ export function create(
 ): IUnit {
   const health = Math.round(config.UNIT_BASE_HEALTH * strength);
   const mana = Math.round(config.UNIT_BASE_MANA * strength);
+  const staminaMax = config.UNIT_BASE_STAMINA;
   const unit: IUnit = Object.assign({
     id: ++lastUnitId,
     unitSourceId,
@@ -111,8 +111,8 @@ export function create(
     moveSpeed: config.UNIT_MOVE_SPEED,
     resolveDoneMoving: () => { },
     resolveDoneMovingTimeout: undefined,
-    moveDistance: config.UNIT_BASE_MOVE_DISTANCE,
-    distanceMovedThisTurn: 0,
+    stamina: staminaMax,
+    staminaMax,
     attackRange: 10 + config.COLLISION_MESH_RADIUS * 2,
     faction,
     image: Image.create(x, y, defaultImagePath, containerUnits),
@@ -142,6 +142,9 @@ export function create(
   unit.health = unit.healthMax;
   if (unit.manaMax === 0) {
     unit.manaPerTurn = 0;
+  }
+  if (unit.staminaMax === 0) {
+    unit.stamina = 0;
   }
 
   const sourceUnit = allUnits[unitSourceId];
@@ -448,8 +451,8 @@ export function syncPlayerHealthManaUI() {
     elManaCost3.style['left'] = `100%`;
   }
 
-  const staminaLeft = Math.max(0, Math.round(unit.moveDistance - unit.distanceMovedThisTurn));
-  elStaminaBar.style["width"] = `${100 * (unit.moveDistance - unit.distanceMovedThisTurn) / unit.moveDistance}%`;
+  const staminaLeft = Math.max(0, Math.round(unit.stamina));
+  elStaminaBar.style["width"] = `${100 * (unit.stamina) / unit.staminaMax}%`;
   elStaminaBarLabel.innerHTML = `${staminaLeft}`;
   if (staminaLeft <= 0) {
     // Now that the current player has moved, highlight the "end-turn-btn" to
@@ -467,7 +470,7 @@ export function canMove(unit: IUnit): boolean {
     return false;
   }
   // Do not move if already moved
-  if (unit.distanceMovedThisTurn >= unit.moveDistance) {
+  if (unit.stamina <= 0) {
     console.log("canMove: false - unit has already used all their stamina this turn")
     return false;
   }
@@ -515,7 +518,7 @@ export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
   let coordinates = math.getCoordsAtDistanceTowardsTarget(
     unit,
     target,
-    unit.moveDistance
+    unit.stamina
   );
   // Compose onMoveEvents
   for (let eventName of unit.onMoveEvents) {
@@ -532,7 +535,7 @@ export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
       clearTimeout(unit.resolveDoneMovingTimeout);
     }
     unit.resolveDoneMoving = resolve;
-    const timeoutMs = unit.moveDistance / unit.moveSpeed;
+    const timeoutMs = unit.stamina / unit.moveSpeed;
     unit.resolveDoneMovingTimeout = setTimeout(() => {
       resolve()
     }, timeoutMs);

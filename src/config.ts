@@ -1,13 +1,13 @@
 import obstacleSectors from "./ObstacleSectors";
 
 export const PLAYER_BASE_HEALTH = 10;
-export const UNIT_BASE_MOVE_DISTANCE = 200;
 export const UNIT_MOVE_SPEED = 0.25;
 export const COLLISION_MESH_RADIUS = 32;
 export const LOB_PROJECTILE_SPEED = 600; // in millis
 export const UNIT_SIZE = COLLISION_MESH_RADIUS * 2;
 export const UNIT_BASE_HEALTH = 4;
 export const UNIT_BASE_MANA = 60;
+export const UNIT_BASE_STAMINA = 200;
 export const UNIT_BASE_DAMAGE = 3;
 export const UNIT_UI_BAR_HEIGHT = 3;
 export const UNIT_UI_BAR_WIDTH = 28;

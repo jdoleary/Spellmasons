@@ -29,8 +29,8 @@ export async function actionLineOfSight(unit: Unit.IUnit, attackCb: Attack) {
     if (closestEnemy) {
         const distanceToEnemy = math.distance(unit, closestEnemy);
         const moveDistance = distanceToEnemy < unit.attackRange
-            ? -unit.moveDistance // flee as far as it can
-            : Math.min(unit.moveDistance, distanceToEnemy - unit.attackRange) // move in range but no farther
+            ? -unit.stamina // flee as far as it can
+            : Math.min(unit.stamina, distanceToEnemy - unit.attackRange) // move in range but no farther
         const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestEnemy, moveDistance);
         movePromise = Unit.moveTowards(unit, moveTo);
     }
@@ -53,8 +53,8 @@ export async function action(unit: Unit.IUnit, canInteractWithTarget: CanInterac
     if (closestEnemy) {
         const distanceToEnemy = math.distance(unit, closestEnemy);
         const moveDistance = distanceToEnemy < unit.attackRange
-            ? -unit.moveDistance // flee as far as it can
-            : Math.min(unit.moveDistance, distanceToEnemy - unit.attackRange) // move in range but no farther
+            ? -unit.stamina // flee as far as it can
+            : Math.min(unit.stamina, distanceToEnemy - unit.attackRange) // move in range but no farther
         const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestEnemy, moveDistance);
         movePromise = Unit.moveTowards(unit, moveTo);
     }
