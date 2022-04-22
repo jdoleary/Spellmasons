@@ -315,6 +315,7 @@ export function contextmenuHandler(e: MouseEvent) {
     floatingText({
       coords: mouseTarget,
       text: 'You must wait for your turn\nto move',
+      style: { fill: 'white' }
     });
 
   }
@@ -404,6 +405,7 @@ export function clickHandler(e: MouseEvent) {
       floatingText({
         coords: mousePos,
         text: 'You must wait for your turntnto cast',
+        style: { fill: 'white' }
       });
     }
   }
