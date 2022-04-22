@@ -1,4 +1,11 @@
 # Tasks
+---
+Game breaking bugs
+- On level 2 for Lochlan camera did not reset
+- Cannot read properties of bounds of undefined
+- Branch is undefined
+    - this.seed = '0.02406939508462913';
+---
 - If you cast a spell while another spell is still in progress you can go negative mana
 - Better Pathfinding
 - More spells

@@ -1,8 +1,7 @@
-import { add, clone, magnitude, multiply, subtract, Vec2 } from '../Vec';
+import { add, magnitude, subtract, Vec2 } from '../Vec';
 import { distance, similarTriangles } from "../math";
 import { findWherePointIntersectLineSegmentAtRightAngle, LineSegment } from "./collisionMath";
 import * as config from '../config';
-import { getNormalVectorOfLineSegment, PolygonLineSegment } from '../Polygon';
 import type * as Unit from '../Unit';
 
 export type Circle = {
