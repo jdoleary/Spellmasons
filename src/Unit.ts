@@ -65,6 +65,7 @@ export interface IUnit {
   mana: number;
   manaMax: number;
   manaPerTurn: number;
+  predictedHealthLoss: number;
   alive: boolean;
   unitType: UnitType;
   unitSubType: UnitSubType;
@@ -122,6 +123,7 @@ export function create(
     damage: Math.round(config.UNIT_BASE_DAMAGE * strength),
     health,
     healthMax: health,
+    predictedHealthLoss: 0,
     mana,
     manaMax: mana,
     manaPerTurn: Math.round(config.MANA_GET_PER_TURN * strength),

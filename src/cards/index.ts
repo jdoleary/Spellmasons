@@ -204,7 +204,8 @@ export function tallyUnitDamage(state: EffectState | undefined, damage: number, 
       };
       state.aggregator.unitDamage.push(unitDamageInstanceForThisUnit);
     }
-    unitDamageInstanceForThisUnit.damageTaken += damage
+    unitDamageInstanceForThisUnit.damageTaken += damage;
+    unit.predictedDamage += damage;
   }
   if (damage < 0) {
     state.aggregator.healingDealt = -damage;

@@ -169,12 +169,21 @@ export default class Underworld {
       if (u.x !== null && u.y !== null) {
         // Draw health bar
         const healthBarColor = u.faction == Faction.ALLY ? 0x40a058 : 0xd55656;
+        const healthBarHurtColor = u.faction == Faction.ALLY ? 0x235730 : 0x632828;
         window.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
         window.unitOverlayGraphics.beginFill(healthBarColor, 1.0);
         window.unitOverlayGraphics.drawRect(
           u.x - config.UNIT_UI_BAR_WIDTH / 2,
           u.y - config.COLLISION_MESH_RADIUS - config.UNIT_UI_BAR_HEIGHT,
           config.UNIT_UI_BAR_WIDTH * u.health / u.healthMax,
+          config.UNIT_UI_BAR_HEIGHT);
+        // Show how much damage they'll take on their health bar
+        window.unitOverlayGraphics.beginFill(healthBarHurtColor, 1.0);
+        const healthAfterHurt = Math.max(0, u.health - u.predictedDamage);
+        window.unitOverlayGraphics.drawRect(
+          u.x - config.UNIT_UI_BAR_WIDTH / 2 + config.UNIT_UI_BAR_WIDTH * healthAfterHurt / u.healthMax,
+          u.y - config.COLLISION_MESH_RADIUS - config.UNIT_UI_BAR_HEIGHT,
+          config.UNIT_UI_BAR_WIDTH * (u.health - healthAfterHurt) / u.healthMax,
           config.UNIT_UI_BAR_HEIGHT);
         // Draw mana bar
         if (u.manaMax != 0) {
@@ -1131,6 +1140,11 @@ export default class Underworld {
         healingDealt: 0
       },
     };
+    if (dryRun) {
+      for (let u of this.units) {
+        u.predictedDamage = 0;
+      }
+    }
     if (!casterPlayer.unit.alive) {
       // Prevent dead players from casting
       return effectState;
