@@ -266,13 +266,10 @@ export default class Underworld {
     Pickup.create(
       coords.x,
       coords.y,
-      pickup.name,
-      pickup.description,
+      pickup,
       true,
-      pickup.imagePath,
       0.1,
       true,
-      pickup.effect,
     );
   }
   spawnEnemy(id: string, coords: Vec2, allowHeavy: boolean, strength: number) {
@@ -424,13 +421,10 @@ export default class Underworld {
     Pickup.create(
       portalCoords.x,
       portalCoords.y,
-      portalPickup.name,
-      portalPickup.description,
+      portalPickup,
       false,
-      portalPickup.imagePath,
       portalPickup.animationSpeed,
       true,
-      portalPickup.effect,
     );
 
     // Exclude player spawn coords that cannot path to the portal
@@ -626,13 +620,10 @@ export default class Underworld {
       Pickup.create(
         h.portalSpawnLocation.x,
         h.portalSpawnLocation.y,
-        portalPickup.name,
-        portalPickup.description,
+        portalPickup,
         false,
-        portalPickup.imagePath,
         portalPickup.animationSpeed,
         true,
-        portalPickup.effect,
       );
     }
 
@@ -642,13 +633,10 @@ export default class Underworld {
       Pickup.create(
         p.location.x,
         p.location.y,
-        pickup.name,
-        pickup.description,
+        pickup,
         true,
-        pickup.imagePath,
         0.1,
         true,
-        pickup.effect,
       );
 
     }

@@ -5,7 +5,7 @@ import type { IUnit } from './Unit';
 import { checkIfNeedToClearTooltip } from './ui/PlanningView';
 import { explainManaOverfill } from './Jprompt';
 
-export const PICKUP_RADIUS = 64;
+export const PICKUP_RADIUS = 32;
 export interface IPickup {
   x: number;
   y: number;
@@ -26,20 +26,19 @@ interface IPickupSource {
   imagePath: string;
   animationSpeed?: number;
   playerOnly?: boolean;
+  scale: number;
   effect: ({ unit, player }: { unit?: IUnit; player?: Player.IPlayer }) => void;
 }
 
 export function create(
   x: number,
   y: number,
-  name: string,
-  description: string,
+  pickupSource: IPickupSource,
   singleUse: boolean,
-  imagePath: string,
   animationSpeed: number = 0.1,
   playerOnly: boolean,
-  effect: ({ unit, player }: { unit?: IUnit; player?: Player.IPlayer }) => void,
 ): IPickup {
+  const { name, description, imagePath, effect, scale } = pickupSource;
   const self: IPickup = {
     x,
     y,
@@ -53,6 +52,8 @@ export function create(
     playerOnly,
     effect,
   };
+  self.image.sprite.scale.x = scale;
+  self.image.sprite.scale.y = scale;
 
   window.underworld.addPickupToArray(self);
 
@@ -125,6 +126,7 @@ export const specialPickups: { [image: string]: IPickupSource } = {
     animationSpeed: -0.5,
     playerOnly: true,
     name: 'Portal',
+    scale: 1,
     description:
       'Takes you to the next level when all players are either in the portal or dead.',
     effect: ({ unit, player }: { unit?: IUnit; player?: Player.IPlayer }) => {
@@ -141,6 +143,7 @@ export const pickups: IPickupSource[] = [
     imagePath: 'pickups/mana-potion',
     name: 'Mana Potion',
     description: `Restores ${manaPotionRestoreAmount} mana.  May overfill mana.`,
+    scale: 0.5,
     effect: ({ unit, player }) => {
       if (player) {
         player.unit.mana += manaPotionRestoreAmount;
@@ -151,6 +154,7 @@ export const pickups: IPickupSource[] = [
   {
     imagePath: 'pickups/health-potion.png',
     name: 'Health Potion',
+    scale: 0.5,
     description: `Restores ${healthPotionRestoreAmount} health.`,
     effect: ({ unit, player }) => {
       if (player) {
