@@ -27,12 +27,18 @@ export async function actionLineOfSight(unit: Unit.IUnit, attackCb: Attack) {
     // Movement:
     let movePromise;
     if (closestEnemy) {
-        const distanceToEnemy = math.distance(unit, closestEnemy);
-        const moveDistance = distanceToEnemy < unit.attackRange
-            ? -unit.stamina // flee as far as it can
-            : Math.min(unit.stamina, distanceToEnemy - unit.attackRange) // move in range but no farther
-        const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestEnemy, moveDistance);
-        movePromise = Unit.moveTowards(unit, moveTo);
+        if (window.underworld.hasLineOfSight(unit, closestEnemy)) {
+            const distanceToEnemy = math.distance(unit, closestEnemy);
+            const moveDistance = distanceToEnemy < unit.attackRange
+                ? -unit.stamina // flee as far as it can
+                : Math.min(unit.stamina, distanceToEnemy - unit.attackRange) // move in range but no farther
+            const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestEnemy, moveDistance);
+            movePromise = Unit.moveTowards(unit, moveTo);
+        } else {
+            // If they don't have line of sight, move closer
+            const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestEnemy, unit.stamina);
+            movePromise = Unit.moveTowards(unit, moveTo);
+        }
     }
     // Move and attack at the same time, but wait for the slowest to finish before moving on
     await Promise.all([attackPromise, movePromise])
