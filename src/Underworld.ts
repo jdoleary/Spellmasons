@@ -285,7 +285,7 @@ export default class Underworld {
       if (window.allowCookies) {
         localStorage.setItem(ENEMY_ENCOUNTERED_STORAGE_KEY, JSON.stringify(window.enemyEncountered));
       }
-      Jprompt({ imageSrc: Unit.getImagePathForUnitId(id), text: 'This is a ' + id + '\n' + sourceUnit.info.description, yesText: 'Okay!', yesKey: 'Space', yesKeyText: 'Spacebar' });
+      Jprompt({ imageSrc: Unit.getImagePathForUnitId(id), text: id + '\n' + sourceUnit.info.description, yesText: 'Okay!', yesKey: 'Space', yesKeyText: 'Spacebar' });
     }
     let unit: Unit.IUnit = Unit.create(
       sourceUnit.id,
