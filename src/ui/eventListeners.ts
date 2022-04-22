@@ -103,7 +103,7 @@ export function keydownListener(event: KeyboardEvent) {
   // Invoke mouse move handler to update spell projections
   // Lots of UI is updated when the mouse moves, but keys
   // also change what the UI will
-  updateMouseUI();
+  mouseMove();
 }
 
 export function keyupListener(event: KeyboardEvent) {
@@ -134,7 +134,7 @@ export function keyupListener(event: KeyboardEvent) {
       setCameraPan(0, undefined);
       break;
   }
-  updateMouseUI();
+  mouseMove();
 }
 
 export function endTurnBtnListener(e: MouseEvent) {
@@ -144,7 +144,7 @@ export function endTurnBtnListener(e: MouseEvent) {
   return false;
 }
 
-export function updateMouseUI() {
+export function mouseMove() {
   // Only handle clicks when viewing the Game
   if (window.view !== View.Game) {
     return;

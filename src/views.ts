@@ -15,7 +15,7 @@ import {
   endTurnBtnListener,
   keydownListener,
   keyupListener,
-  updateMouseUI,
+  mouseMove,
 } from './ui/eventListeners';
 
 // A view is not shared between players in the same game, a player could choose any view at any time
@@ -180,9 +180,7 @@ function addUnderworldEventListeners() {
   document.body.addEventListener('contextmenu', contextmenuHandler);
   document.body.addEventListener('click', clickHandler);
   document.body.addEventListener('wheel', zoom);
-  document.body.addEventListener('mousemove', e => {
-    updateMouseUI();
-  });
+  document.body.addEventListener('mousemove', mouseMove);
   // Add button listeners
   const elEndTurnBtn: HTMLButtonElement = document.getElementById(
     endTurnBtnId,
@@ -202,7 +200,7 @@ function removeUnderworldEventListeners() {
   document.body.removeEventListener('contextmenu', contextmenuHandler);
   document.body.removeEventListener('click', clickHandler);
   document.body.removeEventListener('wheel', zoom);
-  document.body.removeEventListener('mousemove', updateMouseUI);
+  document.body.removeEventListener('mousemove', mouseMove);
   // Remove button listeners
   const elEndTurnBtn: HTMLButtonElement = document.getElementById(
     endTurnBtnId,

@@ -146,10 +146,6 @@ export async function syncSpellEffectProjection() {
   // only show hover target when it's the correct turn phase
   if (window.underworld.turn_phase == turn_phase.PlayerTurns) {
 
-    if (!CardUI.areAnyCardsSelected()) {
-      // Do not render if there are no cards selected meaning there is no spell
-      return;
-    }
     const currentPlayer = window.underworld.players.find(
       (p) => p.clientId === window.clientId,
     );

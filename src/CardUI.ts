@@ -2,12 +2,12 @@ import type * as Player from './Player';
 import * as Cards from './cards';
 import * as math from './math';
 import {
-  clearSpellEffectProjection,
+  syncSpellEffectProjection,
   updateManaCostUI,
 } from './ui/PlanningView';
 import { calculateCostForSingleCard } from './cards/cardUtils';
 import floatingText from './FloatingText';
-import { updateMouseUI } from './ui/eventListeners';
+import { mouseMove } from './ui/eventListeners';
 import { playSFX, sfxPageTurn } from './Audio';
 
 const elCardHolders = document.getElementById('card-holders');
@@ -160,13 +160,11 @@ function addListenersToCardElement(
       if (index !== -1) {
         cardsSelected.splice(index, 1);
         element.remove();
-        // Update the mana cost UI AFTER the card is removed
-        updateManaCostUI();
         // Since a new card has been deselected, we must sync the spell
         // effect projection so it will be up to date in the event
         // that the user is hovering over a unit while deselecting this card
         // but hadn't moved the mouse since selecting it
-        updateMouseUI();
+        mouseMove();
         // When a card is deselected, clear the currently shown card
         // so that it doesn't continue to hover over the gameboard
         // for a card that is now deselected
@@ -254,7 +252,7 @@ function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string
     // effect projection so it will be up to date in the event
     // that the user is hovering over a unit while selecting this card
     // but hadn't moved the mouse since selecting it
-    updateMouseUI();
+    mouseMove();
   } else {
     console.error('elSelectedCards is null');
   }
@@ -324,8 +322,6 @@ export function toggleInspectMode(active: boolean) {
   }
 }
 export function clearSelectedCards() {
-  // Remove the board highlight
-  clearSpellEffectProjection();
   // Deselect all selected cards
   cardsSelected = []
   document.querySelectorAll('.card.selected').forEach((el) => {
@@ -337,8 +333,8 @@ export function clearSelectedCards() {
       );
     }
   });
-  // Now that there are no more cards, update the mana cost UI
-  updateManaCostUI();
+  // Now that there are no more selected cards, update the spell effect projection
+  syncSpellEffectProjection();
 }
 
 // Chooses a random card based on the card's probabilities
