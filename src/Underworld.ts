@@ -548,7 +548,7 @@ export default class Underworld {
 
     // Update level indicator UI at top of screen
     if (elLevelIndicator) {
-      elLevelIndicator.innerText = `Altitude ${this.levelIndex}`;
+      elLevelIndicator.innerText = `Level ${this.levelIndex + 1}`;
     } else {
       console.error('elLevelIndicator is null');
     }
@@ -582,7 +582,7 @@ export default class Underworld {
         x: window.underworld.width / 2,
         y: 3 * window.underworld.height / 8,
       },
-      text: `Altitude ${this.levelIndex}`,
+      text: `Level ${this.levelIndex + 1}`,
       style: {
         fill: 'white',
         fontSize: '60px'
