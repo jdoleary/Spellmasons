@@ -1,7 +1,6 @@
 import {
   containerCharacterSelect,
   addPixiContainersForView,
-  recenterCamera,
   resizePixi,
   app,
 } from './PixiUtils';
@@ -18,7 +17,6 @@ import {
   keyupListener,
   updateMouseUI,
 } from './ui/eventListeners';
-import { toggleInspectMode } from './CardUI';
 
 // A view is not shared between players in the same game, a player could choose any view at any time
 export enum View {
@@ -70,7 +68,6 @@ export function setView(v: View) {
   document.body.classList.add(`view-${View[v]}`);
   window.view = v;
   addPixiContainersForView(v);
-  recenterCamera();
   const elMenu = document.getElementById('menu') as HTMLElement;
   if (v !== View.Menu) {
     elMenu.classList.add('hidden');
@@ -172,9 +169,6 @@ function zoom(e: WheelEvent) {
   newScale = Math.min(Math.max(0.3, newScale), 3);
 
   window.zoomTarget = newScale;
-
-  recenterCamera();
-
 }
 
 const menuBtnId = 'menuBtn';

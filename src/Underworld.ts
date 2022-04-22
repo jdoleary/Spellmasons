@@ -19,8 +19,8 @@ import {
   containerSpells,
   containerUI,
   containerUnits,
-  recenterCamera,
-  setCameraFollow,
+  updateCameraPosition,
+  setIsPanning,
 } from './PixiUtils';
 import floatingText, { centeredFloatingText } from './FloatingText';
 import { UnitType, Faction } from './commonTypes';
@@ -191,7 +191,7 @@ export default class Underworld {
     // Sort unit sprites visually by y position (like "z-index")
     containerUnits.children.sort((a, b) => a.y - b.y)
 
-    recenterCamera();
+    updateCameraPosition();
     updatePlanningView();
 
     // Invoke gameLoopUnits again next loop
@@ -554,6 +554,7 @@ export default class Underworld {
 
     // Set the first turn phase
     window.underworld.setTurnPhase(turn_phase.PlayerTurns);
+    setIsPanning(false);
   }
   initLevel(levelIndex: number): void {
     // Level sizes are random but have change to grow bigger as loop continues
@@ -807,11 +808,7 @@ export default class Underworld {
       // Notify the current player that their turn is starting
       centeredFloatingText(`Your Turn`);
       // Recenter the camera on yourself
-      setCameraFollow(window.player.unit);
-    } else if (window.player && window.player.inPortal) {
-      // If the current player is portaled,
-      // follow the active player's unit
-      setCameraFollow(player.unit);
+      setIsPanning(false);
 
     }
     // Give mana at the start of turn

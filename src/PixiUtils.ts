@@ -45,12 +45,12 @@ export function setCameraPan(x?: number, y?: number) {
   if (x !== undefined) {
     cameraPan.x = x;
     // Detach camera from target now that user is manually moving it
-    setCameraFollow(undefined);
+    setIsPanning(true);
   }
   if (y !== undefined) {
     cameraPan.y = y;
     // Detach camera from target now that user is manually moving it
-    setCameraFollow(undefined);
+    setIsPanning(true);
   }
 }
 window.addEventListener('resize', resizePixi);
@@ -64,15 +64,14 @@ export function resizePixi() {
     return;
   }
   app.renderer.resize(window.innerWidth, window.innerHeight);
-  recenterCamera();
 }
 let elPIXIHolder: HTMLElement | null;
-let cameraFollowTarget: Vec2 | undefined;
 let camera: Vec2 = { x: 0, y: 0 };
-export function setCameraFollow(target: Vec2 | undefined) {
-  cameraFollowTarget = target;
+let isPanning = false;
+export function setIsPanning(active: boolean) {
+  isPanning = active;
 }
-export function recenterCamera() {
+export function updateCameraPosition() {
   if (!elPIXIHolder) {
     elPIXIHolder = document.getElementById('PIXI-holder');
     return;
@@ -93,8 +92,17 @@ export function recenterCamera() {
       break;
     case View.Game:
       if (window.player) {
-        if (cameraFollowTarget) {
-          camera = clone(cameraFollowTarget);
+        if (!isPanning) {
+          if (!window.player.inPortal && window.player.unit.alive) {
+            // Follow current client player
+            camera = clone(window.player.unit);
+          } else if (window.underworld.players[window.underworld.playerTurnIndex]) {
+            // Follow active turn player
+            camera = clone(window.underworld.players[window.underworld.playerTurnIndex].unit);
+          } else {
+            // Set camera to the center of the map
+            camera = { x: window.underworld.width / 2, y: window.underworld.height / 2 };
+          }
         }
         // Allow some camera movement via WSAD
         camera.x += cameraPan.x;
@@ -103,8 +111,8 @@ export function recenterCamera() {
         // in the camera
         // Users can move the camera further if they are manually controlling the camera
         // whereas if the camera is following a target it keeps more of the map on screen
-        const marginY = cameraFollowTarget ? config.COLLISION_MESH_RADIUS * 4 : 0.8 * window.underworld.width;
-        const marginX = cameraFollowTarget ? config.COLLISION_MESH_RADIUS * 4 : 0.8 * window.underworld.height;
+        const marginY = isPanning ? 0.8 * window.underworld.width : config.COLLISION_MESH_RADIUS * 4;
+        const marginX = isPanning ? 0.8 * window.underworld.height : config.COLLISION_MESH_RADIUS * 4;
         // Clamp camera X
         const mapLeftMostPoint = 0 - marginX;
         const mapRightMostPoint = window.underworld.width + marginX;
@@ -143,8 +151,13 @@ export function recenterCamera() {
         // app.stage.y = app.stage.y + (cameraTarget.y - app.stage.y) / 2;
 
         // Option 2 for cam movement: Set camera to target immediately
-        if (cameraFollowTarget) {
-          // If there is a follow target move smoothly
+        if (isPanning) {
+          // Move camera immediately because the user is panning
+          // the camera manually
+          app.stage.x = cameraTarget.x;
+          app.stage.y = cameraTarget.y;
+        } else {
+          // Otherwise, move smoothly to the cameraTarget
           const camNextCoordinates = math.getCoordsAtDistanceTowardsTarget(
             app.stage,
             cameraTarget,
@@ -152,11 +165,6 @@ export function recenterCamera() {
           );
           app.stage.x = camNextCoordinates.x;
           app.stage.y = camNextCoordinates.y;
-        } else {
-          // Otherwise move immediately because the camera is being
-          // controlled manually by the user
-          app.stage.x = cameraTarget.x;
-          app.stage.y = cameraTarget.y;
         }
 
       }
