@@ -2,6 +2,7 @@ import * as Image from './Image';
 import * as Player from './Player';
 import { containerUnits } from './PixiUtils';
 import type { IUnit } from './Unit';
+import { checkIfNeedToClearTooltip } from './ui/PlanningView';
 
 export const PICKUP_RADIUS = 64;
 export interface IPickup {
@@ -101,6 +102,7 @@ export function load(pickup: IPickup) {
 export function removePickup(pickup: IPickup) {
   Image.cleanup(pickup.image);
   window.underworld.removePickupFromArray(pickup);
+  checkIfNeedToClearTooltip();
 }
 export function triggerPickup(pickup: IPickup, unit: IUnit) {
   const player = window.underworld.players.find((p) => p.unit === unit);

@@ -13,6 +13,7 @@ import { findPath } from './Pathfinding';
 import { allUnits } from './units';
 import * as Pickup from './Pickup';
 import { allModifiers, EffectState, tallyUnitDamage } from './cards';
+import { checkIfNeedToClearTooltip, updateTooltipContent } from './ui/PlanningView';
 const elHealthBar: HTMLElement = document.querySelector('#health .fill') as HTMLElement;
 const elHealthCost: HTMLElement = document.querySelector('#health .cost') as HTMLElement;
 const elHealthLabel: HTMLElement = document.querySelector('#health .label') as HTMLElement;
@@ -354,6 +355,10 @@ export function die(unit: IUnit) {
       portalPickup.effect,
     );
   }
+
+  // In the event that this unit that just died is the selected unit,
+  // this will remove the tooltip:
+  checkIfNeedToClearTooltip();
 
 }
 export function takeDamage(unit: IUnit, amount: number, dryRun: boolean, state?: EffectState) {

@@ -216,7 +216,6 @@ const elInspectorTooltipImage: HTMLImageElement = (document.getElementById(
 
 let selectedType: "unit" | "pickup" | "obstacle" | null = null;
 let selectedUnit: Unit.IUnit | undefined;
-let selectedObstacle: Obstacle.IObstacle | undefined;
 let selectedPickup: Pickup.IPickup | undefined;
 export function updateTooltipContent() {
   if (
@@ -237,7 +236,6 @@ export function updateTooltipContent() {
     case "unit":
       let cards = '';
       if (selectedUnit) {
-
         if (selectedUnit.unitType === UnitType.PLAYER_CONTROLLED) {
           const player = window.underworld.players.find((p) => p.unit === selectedUnit);
           if (player) {
@@ -278,14 +276,6 @@ ${selectedPickup.description}
       `;
       }
       break;
-    case "obstacle":
-      if (selectedObstacle) {
-        text += `\
-${selectedObstacle.name}
-${selectedObstacle.description}
-      `;
-
-      }
       break;
   }
 
@@ -297,10 +287,20 @@ ${selectedObstacle.description}
 
   }
 }
+export function checkIfNeedToClearTooltip() {
+  if (selectedUnit && !selectedUnit.alive) {
+    clearTooltipSelection();
+  }
+  // Quick hack to check if the pickup has been picked up
+  // If so, deselect it
+  if (selectedPickup && selectedPickup.image.sprite.parent === null) {
+    clearTooltipSelection();
+  }
+
+}
 export function clearTooltipSelection() {
   selectedUnit = undefined;
   selectedPickup = undefined;
-  selectedObstacle = undefined;
   selectedType = null;
 }
 export function updateTooltipSelection(mousePos: Vec2) {
@@ -321,14 +321,6 @@ export function updateTooltipSelection(mousePos: Vec2) {
     return
   } else {
     selectedPickup = undefined;
-  }
-  const obstacle = window.underworld.getObstacleAt(mousePos);
-  if (obstacle) {
-    selectedObstacle = obstacle;
-    selectedType = "obstacle";
-    return
-  } else {
-    selectedObstacle = undefined;
   }
   // If nothing was found to select, null-out selectedType
   // deselect
