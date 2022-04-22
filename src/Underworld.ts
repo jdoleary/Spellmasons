@@ -1142,7 +1142,7 @@ export default class Underworld {
     };
     if (dryRun) {
       for (let u of this.units) {
-        u.predictedDamage = 0;
+        u.predictedHealthLoss = 0;
       }
     }
     if (!casterPlayer.unit.alive) {
