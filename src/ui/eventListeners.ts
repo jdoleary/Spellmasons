@@ -305,6 +305,7 @@ export function contextmenuHandler(e: MouseEvent) {
         floatingText({
           coords: mouseTarget,
           text: 'You are out of stamina.\nYou must end your turn before moving farther.',
+          style: { fill: 'white' }
         });
       }
     } else {
