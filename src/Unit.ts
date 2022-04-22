@@ -423,7 +423,7 @@ export function syncPlayerHealthManaUI() {
   elManaBar2.style["width"] = `${100 * Math.min(manaRatio2, 1)}%`;
   const manaRatio3 = (Math.max(0, unit.mana - unit.manaMax * 2)) / unit.manaMax;
   elManaBar3.style["width"] = `${100 * Math.min(manaRatio3, 1)}%`;
-  elManaLabel.innerHTML = `${unit.mana}/${unit.manaMax} &nbsp;+${unit.manaPerTurn} / Turn`;
+  elManaLabel.innerHTML = `${unit.mana}/${unit.manaMax}`;
 
   // Set the 3 mana cost bars that show how much mana will be removed if the spell is cast
   if (window.spellCost.manaCost > 0) {

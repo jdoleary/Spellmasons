@@ -547,11 +547,6 @@ export default class Underworld {
     }
   }
   postSetupLevel() {
-    //Increase all player's max mana:
-    window.underworld.players.forEach(p => {
-      p.unit.manaMax += 5
-    })
-
     // Set the first turn phase
     window.underworld.setTurnPhase(turn_phase.PlayerTurns);
     setIsPanning(false);
