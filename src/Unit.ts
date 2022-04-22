@@ -342,18 +342,20 @@ export function die(unit: IUnit) {
 
   // If there are no living enemies left alive
   if (window.underworld.units.filter(u => u.faction == Faction.ENEMY && u.alive).length == 0) {
-    const portalPickup = Pickup.specialPickups['portal'];
-    Pickup.create(
-      unit.x,
-      unit.y,
-      portalPickup.name,
-      portalPickup.description,
-      false,
-      portalPickup.imagePath,
-      portalPickup.animationSpeed,
-      true,
-      portalPickup.effect,
-    );
+    // const portalPickup = Pickup.specialPickups['portal'];
+    // Pickup.create(
+    //   unit.x,
+    //   unit.y,
+    //   portalPickup.name,
+    //   portalPickup.description,
+    //   false,
+    //   portalPickup.imagePath,
+    //   portalPickup.animationSpeed,
+    //   true,
+    //   portalPickup.effect,
+    // );
+    // Give a lot of stamina after all enemies are dead so they can run to the portal
+    window.underworld.players.forEach(p => { p.unit.stamina = 10000 });
   }
 
   // In the event that this unit that just died is the selected unit,
