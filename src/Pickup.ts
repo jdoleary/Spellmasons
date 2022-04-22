@@ -88,13 +88,10 @@ export function load(pickup: IPickup) {
     const self = create(
       pickup.x,
       pickup.y,
-      pickup.name,
-      pickup.description,
+      foundPickup,
       pickup.singleUse,
-      pickup.imagePath,
       0.1,
       pickup.playerOnly,
-      foundPickup.effect,
     );
     return self;
   } else {
