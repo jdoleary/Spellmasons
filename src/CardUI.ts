@@ -150,7 +150,6 @@ function addListenersToCardElement(
   });
   if (!selectedCard) {
     element.addEventListener('dragstart', ev => {
-      console.log("dragStart", ev.target);
       dragCard = ((ev.target as HTMLElement).closest('.card') as HTMLElement)?.dataset.cardId;
 
     })
@@ -163,10 +162,23 @@ function addListenersToCardElement(
         if (window.player) {
           const dragCardIndex = window.player.cards.findIndex(c => c == dragCard);
           const dropCardIndex = window.player.cards.findIndex(c => c == dropCard);
-          const temp = window.player.cards[dragCardIndex];
-          window.player.cards[dragCardIndex] = window.player.cards[dropCardIndex];
-          window.player.cards[dropCardIndex] = temp;
-          recalcPositionForCards(window.player);
+          if (dragCardIndex > dropCardIndex) {
+            for (let i = dragCardIndex - 1; i >= dropCardIndex; i--) {
+              // Shift all cards over to the right
+              window.player.cards[i + 1] = window.player.cards[i]
+            }
+            window.player.cards[dropCardIndex] = dragCard;
+            recalcPositionForCards(window.player);
+          } else if (dragCardIndex < dropCardIndex) {
+            for (let i = dragCardIndex; i < dropCardIndex; i++) {
+              // Shift all cards over to the left
+              window.player.cards[i] = window.player.cards[i + 1]
+            }
+            window.player.cards[dropCardIndex] = dragCard;
+            recalcPositionForCards(window.player);
+          } else {
+            // Do nothing, dropped on same card as drag
+          }
         }
       }
       ev.preventDefault();
