@@ -7,7 +7,6 @@ Game breaking bugs
     - this.seed = '0.02406939508462913';
 ---
 Priorities
-- Fix camera so it never resets without button
 - Perfect spell prediction (dryrun) with death and heal calculations
 - Show visually when you are in danger of being attacked next turn
     - maybe exclamation point over enemies head?
@@ -16,6 +15,7 @@ Priorities
 - Show in enemy health bar how much damage they'll take
     - see: // TODO: Show on health bar how much damage they'll take
 ---
+- bug: Prevent casting underneath selected cards when click, move, release on selected cards
 - If you cast a spell while another spell is still in progress you can go negative mana
 - Better Pathfinding
 - More spells
