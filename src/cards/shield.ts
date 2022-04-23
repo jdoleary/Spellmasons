@@ -88,7 +88,7 @@ function add(unit: Unit.IUnit) {
   if (unit.modifiers[id].damage_block > maxBlock) {
     // Cap how much shield a unit can have
     unit.modifiers[id].damage_block = maxBlock;
-    floatingText({ coords: unit, text: `Maximum shield`, style: { fill: 'white' } });
+    floatingText({ coords: unit, text: `Maximum shield` });
   }
 }
 export default spell;

@@ -20,7 +20,7 @@ interface FloatingTextInsructions {
 export default function floatingText({
   coords,
   text,
-  style = { fill: 'black' },
+  style = { fill: 'white' },
 }: FloatingTextInsructions) {
   const pixiText = new PIXI.Text(text, style);
   pixiText.x = coords.x;

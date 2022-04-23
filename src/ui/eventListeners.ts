@@ -315,8 +315,7 @@ export function contextmenuHandler(e: MouseEvent) {
       } else {
         floatingText({
           coords: mouseTarget,
-          text: 'You are out of stamina.\nYou must end your turn before moving farther.',
-          style: { fill: 'white' }
+          text: 'You are out of stamina.\nEnd your turn to get more.',
         });
       }
     } else {
@@ -326,7 +325,6 @@ export function contextmenuHandler(e: MouseEvent) {
     floatingText({
       coords: mouseTarget,
       text: 'You must wait for your turn\nto move',
-      style: { fill: 'white' }
     });
 
   }
@@ -430,8 +428,7 @@ export function clickHandler(e: MouseEvent) {
     } else {
       floatingText({
         coords: mousePos,
-        text: 'You must wait for your turntnto cast',
-        style: { fill: 'white' }
+        text: 'You must wait for your turn to cast',
       });
     }
   }

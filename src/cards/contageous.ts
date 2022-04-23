@@ -84,7 +84,7 @@ Makes this unit's curses contageous to other nearby units
             touchingUnit.y,
             'green-thing.png',
           ).then(() => {
-            floatingText({ coords: touchingUnit, text: card.id, style: { fill: 'white' } });
+            floatingText({ coords: touchingUnit, text: card.id });
           }));
         }
         await Promise.all(promises);
