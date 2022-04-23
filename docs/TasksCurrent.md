@@ -1,4 +1,5 @@
 # Tasks
+- drag -n drop should move the dropped on to the right
 ---
 Game breaking bugs
 - On level 2 for Lochlan camera did not reset
@@ -8,6 +9,9 @@ Game breaking bugs
 ---
 Priorities
 - Perfect spell prediction (dryrun) with death and heal calculations
+    - Move unit attributes into object within unit and have a copy
+    that matches the same interface called attributesDryRun and then you can
+    choose which attributes object to run castCards on
 - Show visually when you are in danger of being attacked next turn
     - maybe exclamation point over enemies head?
 - Redo colors: Red should always mean danger
@@ -38,8 +42,6 @@ Priorities
     - Antidote
 - Spell upgrades
 - fix protection spell to make it easier to understand 'hoist it?'
-- Spells like resurrect should scale by "n" not "logn"; logn is too cheap, or just do +2 on logn instead of +1
-- simpler rearrange
 ---
 Matt Feedback
 - Trying to join multiplayer for first time puts you in tutorial instead of their game
