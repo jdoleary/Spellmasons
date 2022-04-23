@@ -179,7 +179,7 @@ export default class Underworld {
           config.UNIT_UI_BAR_HEIGHT);
         // Show how much damage they'll take on their health bar
         window.unitOverlayGraphics.beginFill(healthBarHurtColor, 1.0);
-        const healthAfterHurt = Math.max(0, u.health - u.predictedDamage);
+        const healthAfterHurt = Math.max(0, u.health - u.predictedHealthLoss);
         window.unitOverlayGraphics.drawRect(
           u.x - config.UNIT_UI_BAR_WIDTH / 2 + config.UNIT_UI_BAR_WIDTH * healthAfterHurt / u.healthMax,
           u.y - config.COLLISION_MESH_RADIUS - config.UNIT_UI_BAR_HEIGHT,

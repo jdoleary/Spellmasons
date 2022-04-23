@@ -205,7 +205,7 @@ export function tallyUnitDamage(state: EffectState | undefined, damage: number, 
       state.aggregator.unitDamage.push(unitDamageInstanceForThisUnit);
     }
     unitDamageInstanceForThisUnit.damageTaken += damage;
-    unit.predictedDamage += damage;
+    unit.predictedHealthLoss += damage;
   }
   if (damage < 0) {
     state.aggregator.healingDealt = -damage;
