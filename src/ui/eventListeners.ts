@@ -1,6 +1,5 @@
 import { MESSAGE_TYPES } from '../MessageTypes';
 import * as CardUI from '../CardUI';
-import type * as Player from '../Player';
 import floatingText from '../FloatingText';
 import {
   clearTooltipSelection,
@@ -16,6 +15,7 @@ import * as colors from './colors';
 import type { Vec2 } from '../Vec';
 import { distance, getCoordsAtDistanceTowardsTarget } from '../math';
 import { setCameraPan } from '../PixiUtils';
+import * as config from '../config';
 
 export function keydownListener(event: KeyboardEvent) {
   // Only handle hotkeys when viewing the Game
@@ -88,16 +88,16 @@ export function keydownListener(event: KeyboardEvent) {
       break;
     // Camera movement
     case 'KeyW':
-      setCameraPan(undefined, -10);
+      setCameraPan(undefined, -config.CAMERA_BASE_SPEED);
       break;
     case 'KeyA':
-      setCameraPan(-10, undefined);
+      setCameraPan(-config.CAMERA_BASE_SPEED, undefined);
       break;
     case 'KeyS':
-      setCameraPan(undefined, 10);
+      setCameraPan(undefined, config.CAMERA_BASE_SPEED);
       break;
     case 'KeyD':
-      setCameraPan(10, undefined);
+      setCameraPan(config.CAMERA_BASE_SPEED, undefined);
       break;
   }
   // Invoke mouse move handler to update spell projections

@@ -811,8 +811,6 @@ export default class Underworld {
     if (player == window.player) {
       // Notify the current player that their turn is starting
       centeredFloatingText(`Your Turn`);
-      // Recenter the camera on yourself
-      setIsPanning(false);
 
     }
     // Give mana at the start of turn

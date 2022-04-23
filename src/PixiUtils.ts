@@ -111,8 +111,8 @@ export function updateCameraPosition() {
         // in the camera
         // Users can move the camera further if they are manually controlling the camera
         // whereas if the camera is following a target it keeps more of the map on screen
-        const marginY = isPanning ? 0.8 * window.underworld.width : config.COLLISION_MESH_RADIUS * 4;
-        const marginX = isPanning ? 0.8 * window.underworld.height : config.COLLISION_MESH_RADIUS * 4;
+        const marginY = isPanning ? window.underworld.height * 3 : config.COLLISION_MESH_RADIUS * 4;
+        const marginX = isPanning ? window.underworld.width * 3 : config.COLLISION_MESH_RADIUS * 4;
         // Clamp camera X
         const mapLeftMostPoint = 0 - marginX;
         const mapRightMostPoint = window.underworld.width + marginX;

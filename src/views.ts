@@ -3,6 +3,7 @@ import {
   addPixiContainersForView,
   resizePixi,
   app,
+  setIsPanning,
 } from './PixiUtils';
 import * as Units from './units';
 import { UnitSubType } from './commonTypes';
@@ -173,6 +174,7 @@ function zoom(e: WheelEvent) {
 
 const menuBtnId = 'menuBtn';
 const endTurnBtnId = 'end-turn-btn';
+const centerCamBtnId = 'center-cam-btn';
 function addUnderworldEventListeners() {
   // Add keyboard shortcuts
   window.addEventListener('keydown', keydownListener);
@@ -186,6 +188,13 @@ function addUnderworldEventListeners() {
     endTurnBtnId,
   ) as HTMLButtonElement;
   elEndTurnBtn.addEventListener('click', endTurnBtnListener);
+  const elCenterCamBtn: HTMLButtonElement = document.getElementById(
+    centerCamBtnId,
+  ) as HTMLButtonElement;
+  elCenterCamBtn.addEventListener('click', () => {
+    // Recenter the camera on yourself
+    setIsPanning(false);
+  });
   const elMenuBtn: HTMLButtonElement = document.getElementById(
     menuBtnId,
   ) as HTMLButtonElement;

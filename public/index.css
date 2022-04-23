@@ -122,6 +122,31 @@ body.inspect-mode {
   cursor: help;
 }
 
+#inspect-mode-indicator {
+  color: white;
+  font-size: 20px;
+  text-align: center;
+  pointer-events: none;
+}
+
+#inspect-mode-indicator .hotkey-badge-holder {
+  bottom: -28px;
+}
+
+body.inspect-mode #inspect-mode-indicator .hotkey-badge-holder {
+  bottom: -29px;
+}
+
+body.inspect-mode #inspect-mode-indicator .hotkey-badge {
+  /* Simulate button being depressed */
+  box-shadow: 0 -19px 1px rgba(0, 0, 0, .2) inset, 0 2px 0 0 rgba(255, 255, 255, .7) inset
+}
+
+body.inspect-mode #inspect-mode-indicator {
+  color: #d5b356;
+  font-weight: bold;
+}
+
 body.inspect-mode #card-inspect {
   display: flex;
 }
@@ -818,7 +843,6 @@ body.view-GameOver #game-over {
 }
 
 .jbutton {
-  width: 120px;
   height: 60px;
   line-height: 40px;
   font-size: 18px;
@@ -828,4 +852,18 @@ body.view-GameOver #game-over {
   position: relative;
   margin: 12px 8px;
   cursor: pointer;
+  white-space: nowrap;
+  padding: 0 15px;
+}
+
+body.view-Game #toolbar {
+  display: block;
+}
+
+#toolbar {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  z-index: 1;
 }

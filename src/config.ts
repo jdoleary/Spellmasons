@@ -36,3 +36,5 @@ export const DISTANCE_VERY_FAR = 600;
 // so that moving units can overlap with each other a bit so "crowding" looks more
 // organic
 export const UNIT_BASE_RADIUS = COLLISION_MESH_RADIUS / 4;
+
+export const CAMERA_BASE_SPEED = 20;
