@@ -386,6 +386,8 @@ kbd {
 }
 
 .card-title {
+  /* cursor: grab to clue users in that they can drag and drop cards */
+  cursor: grab;
   font-size: 12px;
   flex-grow: 3;
   padding: 8px;
