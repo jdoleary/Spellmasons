@@ -8,17 +8,25 @@ Game breaking bugs
     - this.seed = '0.02406939508462913';
 ---
 Priorities
-- Perfect spell prediction (dryrun) with death and heal calculations
+- **!**Perfect spell prediction (dryrun) with death and heal calculations
     - Move unit attributes into object within unit and have a copy
     that matches the same interface called attributesDryRun and then you can
     choose which attributes object to run castCards on
-- Show visually when you are in danger of being attacked next turn
+    - Show in enemy health bar how much damage they'll take
+    - 2 options for implementing this
+        - Either I have attributes and dryRun attributes and pass those around
+        based on if I really want to commit or not
+        - OR I actually execute the changes during a dryRun and just revert
+        them after it is done
+            - This one might be more convenient because then I don't have
+            to branch all over the place e.g. unit.attributes.x or
+            unit.dryRunAttributes.x
+- **!**Show visually when you are in danger of being attacked next turn
     - maybe exclamation point over enemies head?
 - Redo colors: Red should always mean danger
     - LOS line from archers for example
-- Show in enemy health bar how much damage they'll take
-    - see: // TODO: Show on health bar how much damage they'll take
 ---
+- clean: remove lastX and lastY
 - bug: Prevent casting underneath selected cards when click, move, release on selected cards
 - If you cast a spell while another spell is still in progress you can go negative mana
 - Better Pathfinding
