@@ -837,6 +837,11 @@ body.view-GameOver #game-over {
   justify-content: space-between;
 }
 
+/* If prompt only has one button, center it */
+.prompt .button-holder .jbutton:first-child:nth-last-child(1) {
+  margin: 12px auto;
+}
+
 .prompt .text {
   margin: auto 8px;
   white-space: pre-line;
