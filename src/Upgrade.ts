@@ -131,17 +131,17 @@ export const upgradeStatsSource: IUpgrade[] = [
     },
     probability: 30,
   },
-  // {
-  //   title: '+ Mana per turn',
-  //   description: (player) =>
-  //     `Increases your mana per turn from ${player.unit.manaPerTurn} per turn to ${player.unit.manaPerTurn + manaPerTurnIncreaseAmount
-  //     } per turn.`,
-  //   thumbnail: 'images/upgrades/todo.png',
-  //   effect: (player) => {
-  //     player.unit.manaPerTurn += maxManaIncreaseAmount;
-  //   },
-  //   probability: 30,
-  // },
+  {
+    title: '+ Mana per turn',
+    description: (player) =>
+      `Increases your mana per turn from ${player.unit.manaPerTurn} per turn to ${player.unit.manaPerTurn + manaPerTurnIncreaseAmount
+      } per turn.`,
+    thumbnail: 'images/upgrades/todo.png',
+    effect: (player) => {
+      player.unit.manaPerTurn += manaPerTurnIncreaseAmount;
+    },
+    probability: 30,
+  },
   {
     title: '+ Max Stamina',
     description: (player) =>
@@ -156,8 +156,8 @@ export const upgradeStatsSource: IUpgrade[] = [
 ];
 const maxManaIncreaseAmount = 20;
 const maxStaminaIncreaseAmount = 50;
-const maxHealthIncreaseAmount = 5;
-// const manaPerTurnIncreaseAmount = 5;
+const maxHealthIncreaseAmount = 4;
+const manaPerTurnIncreaseAmount = 8;
 
 export const upgradeCardsSource: IUpgrade[] = []
 

@@ -96,8 +96,8 @@ export function resetPlayerForNextLevel(player: IPlayer) {
   // Reset mana and health - otherwise players are incentivized to bum around after killing all enemies
   // to get their mana back to full
   player.unit.mana = player.unit.manaMax;
-  // Set player manaPerTurn to max mana
-  player.unit.manaPerTurn = player.unit.manaMax;
+  // Set player manaPerTurn to half max mana
+  player.unit.manaPerTurn = player.unit.manaMax / 2;
   player.unit.health = player.unit.healthMax;
   if (window.underworld.validPlayerSpawnCoords.length > 0) {
     const index = randInt(window.underworld.random, 0, window.underworld.validPlayerSpawnCoords.length - 1);
