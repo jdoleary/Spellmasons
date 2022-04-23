@@ -3,7 +3,7 @@ import {
   addPixiContainersForView,
   resizePixi,
   app,
-  setIsPanning,
+  cameraAutoFollow,
 } from './PixiUtils';
 import * as Units from './units';
 import { UnitSubType } from './commonTypes';
@@ -193,7 +193,7 @@ function addUnderworldEventListeners() {
   ) as HTMLButtonElement;
   elCenterCamBtn.addEventListener('click', () => {
     // Recenter the camera on yourself
-    setIsPanning(false);
+    cameraAutoFollow(true);
   });
   const elMenuBtn: HTMLButtonElement = document.getElementById(
     menuBtnId,

@@ -14,8 +14,15 @@ import { polygonToPolygonLineSegments } from '../Polygon';
 import * as colors from './colors';
 import type { Vec2 } from '../Vec';
 import { distance, getCoordsAtDistanceTowardsTarget } from '../math';
-import { setCameraPan } from '../PixiUtils';
 import * as config from '../config';
+import { cameraAutoFollow } from '../PixiUtils';
+
+export const keyDown = {
+  w: false,
+  a: false,
+  s: false,
+  d: false
+}
 
 export function keydownListener(event: KeyboardEvent) {
   // Only handle hotkeys when viewing the Game
@@ -88,16 +95,20 @@ export function keydownListener(event: KeyboardEvent) {
       break;
     // Camera movement
     case 'KeyW':
-      setCameraPan(undefined, -config.CAMERA_BASE_SPEED);
+      keyDown.w = true;
+      cameraAutoFollow(false);
       break;
     case 'KeyA':
-      setCameraPan(-config.CAMERA_BASE_SPEED, undefined);
+      keyDown.a = true;
+      cameraAutoFollow(false);
       break;
     case 'KeyS':
-      setCameraPan(undefined, config.CAMERA_BASE_SPEED);
+      keyDown.s = true;
+      cameraAutoFollow(false);
       break;
     case 'KeyD':
-      setCameraPan(config.CAMERA_BASE_SPEED, undefined);
+      keyDown.d = true;
+      cameraAutoFollow(false);
       break;
   }
   // Invoke mouse move handler to update spell projections
@@ -122,16 +133,16 @@ export function keyupListener(event: KeyboardEvent) {
       break;
     // Camera movement
     case 'KeyW':
-      setCameraPan(undefined, 0);
+      keyDown.w = false;
       break;
     case 'KeyA':
-      setCameraPan(0, undefined);
+      keyDown.a = false;
       break;
     case 'KeyS':
-      setCameraPan(undefined, 0);
+      keyDown.s = false;
       break;
     case 'KeyD':
-      setCameraPan(0, undefined);
+      keyDown.d = false;
       break;
   }
   mouseMove();

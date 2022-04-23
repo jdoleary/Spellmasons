@@ -20,7 +20,7 @@ import {
   containerUI,
   containerUnits,
   updateCameraPosition,
-  setIsPanning,
+  cameraAutoFollow,
 } from './PixiUtils';
 import floatingText, { centeredFloatingText } from './FloatingText';
 import { UnitType, Faction } from './commonTypes';
@@ -558,7 +558,7 @@ export default class Underworld {
   postSetupLevel() {
     // Set the first turn phase
     window.underworld.setTurnPhase(turn_phase.PlayerTurns);
-    setIsPanning(false);
+    cameraAutoFollow(true);
   }
   initLevel(levelIndex: number): void {
     // Level sizes are random but have change to grow bigger as loop continues

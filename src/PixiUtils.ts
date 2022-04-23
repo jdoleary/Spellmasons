@@ -3,6 +3,7 @@ import { clone, Vec2 } from './Vec';
 import { View } from './views';
 import * as math from './math';
 import * as config from './config';
+import { keyDown } from './ui/eventListeners';
 
 // if PIXI is finished setting up
 let isReady = false;
@@ -40,19 +41,6 @@ const characterSelectContainers = [containerCharacterSelect];
 
 app.renderer.backgroundColor = 0x111631;
 
-const cameraPan = { x: 0, y: 0 };
-export function setCameraPan(x?: number, y?: number) {
-  if (x !== undefined) {
-    cameraPan.x = x;
-    // Detach camera from target now that user is manually moving it
-    setIsPanning(true);
-  }
-  if (y !== undefined) {
-    cameraPan.y = y;
-    // Detach camera from target now that user is manually moving it
-    setIsPanning(true);
-  }
-}
 window.addEventListener('resize', resizePixi);
 window.addEventListener('load', () => {
   resizePixi();
@@ -67,9 +55,10 @@ export function resizePixi() {
 }
 let elPIXIHolder: HTMLElement | null;
 let camera: Vec2 = { x: 0, y: 0 };
-let isPanning = false;
-export function setIsPanning(active: boolean) {
-  isPanning = active;
+// True if camera should auto follow player unit
+let doCameraAutoFollow = true;
+export function cameraAutoFollow(active: boolean) {
+  doCameraAutoFollow = active;
 }
 export function updateCameraPosition() {
   if (!elPIXIHolder) {
@@ -92,7 +81,7 @@ export function updateCameraPosition() {
       break;
     case View.Game:
       if (window.player) {
-        if (!isPanning) {
+        if (doCameraAutoFollow) {
           if (!window.player.inPortal && window.player.unit.alive) {
             // Follow current client player
             camera = clone(window.player.unit);
@@ -104,15 +93,25 @@ export function updateCameraPosition() {
             camera = { x: window.underworld.width / 2, y: window.underworld.height / 2 };
           }
         }
-        // Allow some camera movement via WSAD
-        camera.x += cameraPan.x;
-        camera.y += cameraPan.y;
+        // Allow camera movement via WSAD
+        if (keyDown.w) {
+          camera.y -= config.CAMERA_BASE_SPEED;
+        }
+        if (keyDown.s) {
+          camera.y += config.CAMERA_BASE_SPEED;
+        }
+        if (keyDown.d) {
+          camera.x += config.CAMERA_BASE_SPEED;
+        }
+        if (keyDown.a) {
+          camera.x -= config.CAMERA_BASE_SPEED;
+        }
         // Clamp centerTarget so that there isn't a log of empty space
         // in the camera
         // Users can move the camera further if they are manually controlling the camera
         // whereas if the camera is following a target it keeps more of the map on screen
-        const marginY = isPanning ? window.underworld.height * 3 : config.COLLISION_MESH_RADIUS * 4;
-        const marginX = isPanning ? window.underworld.width * 3 : config.COLLISION_MESH_RADIUS * 4;
+        const marginY = doCameraAutoFollow ? config.COLLISION_MESH_RADIUS * 4 : window.underworld.height * 3;
+        const marginX = doCameraAutoFollow ? config.COLLISION_MESH_RADIUS * 4 : window.underworld.width * 3;
         // Clamp camera X
         const mapLeftMostPoint = 0 - marginX;
         const mapRightMostPoint = window.underworld.width + marginX;
@@ -151,13 +150,8 @@ export function updateCameraPosition() {
         // app.stage.y = app.stage.y + (cameraTarget.y - app.stage.y) / 2;
 
         // Option 2 for cam movement: Set camera to target immediately
-        if (isPanning) {
-          // Move camera immediately because the user is panning
-          // the camera manually
-          app.stage.x = cameraTarget.x;
-          app.stage.y = cameraTarget.y;
-        } else {
-          // Otherwise, move smoothly to the cameraTarget
+        if (doCameraAutoFollow) {
+          // Move smoothly to the cameraTarget
           const camNextCoordinates = math.getCoordsAtDistanceTowardsTarget(
             app.stage,
             cameraTarget,
@@ -165,6 +159,11 @@ export function updateCameraPosition() {
           );
           app.stage.x = camNextCoordinates.x;
           app.stage.y = camNextCoordinates.y;
+        } else {
+          // Move camera immediately because the user is panning
+          // the camera manually
+          app.stage.x = cameraTarget.x;
+          app.stage.y = cameraTarget.y;
         }
 
       }
