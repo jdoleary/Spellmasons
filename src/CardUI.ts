@@ -99,20 +99,12 @@ export function recalcPositionForCards(player: Player.IPlayer | undefined) {
         const element = createCardElement(card);
         element.classList.add(className);
         // When the user clicks on a card
-        addListenersToCardElement(player, element, cardId);
+        addListenersToCardElement(player, element, cardId, false);
         let elCardTypeGroup = document.getElementById(`holder-${cardId}`);
         if (!elCardTypeGroup) {
           elCardTypeGroup = makeCardTypeGroup(cardId);
         }
         elCardTypeGroup.appendChild(element);
-
-        // Make swap button for rearranging cards
-        const elCardSwapButton = document.createElement('div');
-        elCardSwapButton.classList.add('swap-btn');
-        elCardSwapButton.dataset.cardId = cardId;
-        elCardSwapButton.innerHTML = '⇄';
-        elCardSwapButton.addEventListener('click', swapCardOrder);
-        elCardTypeGroup.appendChild(elCardSwapButton);
 
       } else {
         console.log(`No corresponding source card exists for "${cardId}"`);
@@ -143,15 +135,43 @@ export function recalcPositionForCards(player: Player.IPlayer | undefined) {
   }
   updateCardBadges();
 }
+let dragCard: string | undefined;
 function addListenersToCardElement(
   player: Player.IPlayer,
   element: HTMLElement,
   cardId: string,
+  // selectedCards are cards that are not in the card hand but 
+  // are selected and waiting to be cast
+  selectedCard: boolean
 ) {
   element.addEventListener('mouseenter', () => {
     // Play random pageTurn sound
     playSFX(sfxPageTurn[Math.floor(Math.random() * sfxPageTurn.length)]);
   });
+  if (!selectedCard) {
+    element.addEventListener('dragstart', ev => {
+      console.log("dragStart", ev.target);
+      dragCard = ((ev.target as HTMLElement).closest('.card') as HTMLElement)?.dataset.cardId;
+
+    })
+    element.addEventListener('dragover', ev => {
+      ev.preventDefault();
+    })
+    element.addEventListener('drop', ev => {
+      const dropCard = ((ev.target as HTMLElement).closest('.card') as HTMLElement)?.dataset.cardId;
+      if (dragCard && dropCard) {
+        if (window.player) {
+          const dragCardIndex = window.player.cards.findIndex(c => c == dragCard);
+          const dropCardIndex = window.player.cards.findIndex(c => c == dropCard);
+          const temp = window.player.cards[dragCardIndex];
+          window.player.cards[dragCardIndex] = window.player.cards[dropCardIndex];
+          window.player.cards[dropCardIndex] = temp;
+          recalcPositionForCards(window.player);
+        }
+      }
+      ev.preventDefault();
+    })
+  }
 
   element.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -218,7 +238,9 @@ export function selectCardByIndex(index: number) {
 function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string) {
   if (elSelectedCards) {
     const clone = element.cloneNode(true) as HTMLElement;
-    addListenersToCardElement(player, clone, cardId);
+    // Selected cards are not draggable for rearranging
+    clone.draggable = false;
+    addListenersToCardElement(player, clone, cardId, true);
     clone.classList.add('selected');
     if (Cards.allCards[cardId].requiresFollowingCard) {
       clone.classList.add('requires-following-card')
@@ -361,24 +383,9 @@ export function getCardRarityColor(content: { probability: number }): string {
   // Highly-common
   return '#191513';
 }
-function swapCardOrder(e: MouseEvent) {
-  const cardId = (e.target as HTMLElement).dataset.cardId
-  if (window.player) {
-    const index = window.player.cards.findIndex(x => x == cardId);
-    if (cardId !== undefined && index !== undefined) {
-      const swapWithId = window.player.cards[index - 1];
-      window.player.cards[index] = swapWithId;
-      window.player.cards[index - 1] = cardId;
-      recalcPositionForCards(window.player);
-      e.preventDefault();
-      return false;
-    }
-  } else {
-    console.error('Cannot swap cards, no window.player')
-  }
-}
 function createCardElement(content: Cards.ICard) {
   const element = document.createElement('div');
+  element.draggable = true;
   element.classList.add('card');
   element.dataset.cardId = content.id;
   const elCardInner = document.createElement('div');
