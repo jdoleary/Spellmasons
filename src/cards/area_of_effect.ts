@@ -15,6 +15,7 @@ const spell: Spell = {
     description: `
 Adds targets for the following cards to effect by "growing" existing targets
     `,
+    allowNonUnitTarget: true,
     effect: async (state, dryRun) => {
       for (let target of [state.castLocation, ...state.targetedUnits]) {
         // Draw visual circle for dryRun

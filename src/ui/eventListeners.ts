@@ -402,6 +402,21 @@ export function clickHandler(e: MouseEvent) {
           // Cancel Casting
           return
         }
+
+        // Abort casting if there is no unitAtCastLocation
+        // unless the first card (like AOE) specifically allows casting
+        // on non unit targets
+        const unitAtCastLocation = window.underworld.getUnitAt(target);
+        const pickupAtCastLocation = window.underworld.getPickupAt(target);
+        if ((!unitAtCastLocation && !pickupAtCastLocation) && cards.length && !cards[0].allowNonUnitTarget) {
+          floatingText({
+            coords: target,
+            text: 'No Target!'
+          })
+          // Cancel Casting
+          return;
+        }
+
         window.pie.sendData({
           type: MESSAGE_TYPES.SPELL,
           x: target.x,

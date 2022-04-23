@@ -159,6 +159,9 @@ export interface ICard {
   // The number of turns it takes after use to return to it's original cost
   // Default is 1
   expenseScaling: number;
+  // This flag allows casting on the ground and is necessary
+  // for spells like AOE, Trap, etc
+  allowNonUnitTarget?: boolean;
 }
 
 export const allCards: { [cardId: string]: ICard } = {};
