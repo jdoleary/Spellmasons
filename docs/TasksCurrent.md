@@ -7,6 +7,8 @@ Game breaking bugs
     - this.seed = '0.02406939508462913';
 ---
 Priorities
+- Fix camera so it never resets without button
+- Perfect spell prediction (dryrun) with death and heal calculations
 - Show visually when you are in danger of being attacked next turn
     - maybe exclamation point over enemies head?
 - Redo colors: Red should always mean danger
