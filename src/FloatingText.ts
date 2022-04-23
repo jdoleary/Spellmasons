@@ -64,11 +64,12 @@ function floatAway(instance: FText, resolve: (value: void) => void) {
     }
   }
 }
+const elPIXIHolder = document.getElementById('PIXI-holder') as HTMLElement;
 export function centeredFloatingText(text: string, fill = 'white') {
   floatingText({
     coords: {
-      x: window.underworld.width / 2,
-      y: window.underworld.height / 2,
+      x: elPIXIHolder.clientWidth / 2 - app.stage.x,
+      y: elPIXIHolder.clientHeight / 2 - app.stage.y
     },
     text,
     style: {
