@@ -80,6 +80,7 @@ export default class Underworld {
   players: Player.IPlayer[] = [];
   units: Unit.IUnit[] = [];
   dryRunUnits: Unit.IUnit[] = [];
+  attentionMarkers: Vec2[] = [];
   pickups: Pickup.IPickup[] = [];
   obstacles: Obstacle.IObstacle[] = [];
   groundTiles: Vec2[] = [];
@@ -223,10 +224,40 @@ export default class Underworld {
     containerUnits.children.sort((a, b) => a.y - b.y)
 
     updateCameraPosition();
+    this.drawEnemyAttentionMarkers();
     updatePlanningView();
 
     // Invoke gameLoopUnits again next loop
     requestAnimationFrame(this.gameLoop.bind(this))
+  }
+  drawEnemyAttentionMarkers() {
+    // Draw attention markers which show if an NPC will
+    // attack you next turn
+    // Note: this block must come after updating the camera position
+    for (let marker of this.attentionMarkers) {
+      const margin = 50;
+      const left = margin - app.stage.x;
+      const right = window.innerWidth - margin - app.stage.x;
+      const top = margin - app.stage.y;
+      const bottom = window.innerHeight - margin - app.stage.y;
+      // Test unit purple circle
+      window.unitOverlayGraphics.lineStyle(4, 0xcb00f5, 1.0);
+      const exclamationMark = { x: marker.x, y: marker.y }
+      // Keep inside bounds of camera
+      exclamationMark.x = Math.min(Math.max(left, marker.x), right);
+      exclamationMark.y = Math.min(Math.max(top, marker.y), bottom);
+      window.unitOverlayGraphics.drawCircle(exclamationMark.x, exclamationMark.y, 10);
+    }
+
+  }
+  // Displays markers above units heads if they will attack the current client's unit
+  // next turn
+  calculateEnemyAttentionMarkers() {
+    this.attentionMarkers = [];
+    for (let u of this.units) {
+      const exclamationMark = { x: u.x, y: u.y - config.COLLISION_MESH_RADIUS - 10 }
+      this.attentionMarkers.push(exclamationMark);
+    }
   }
   // Returns true if it is the current players turn
   isMyTurn() {
@@ -1095,6 +1126,8 @@ export default class Underworld {
           this.initializePlayerTurn(this.playerTurnIndex);
           break;
         case 'NPC':
+          // Clear enemy attentionMarkers since it's now their turn
+          this.attentionMarkers = [];
           // Clears spell effect on NPC turn
           mouseMove();
           (async () => {

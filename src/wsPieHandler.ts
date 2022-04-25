@@ -322,7 +322,9 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       break;
     case MESSAGE_TYPES.MOVE_PLAYER:
       if (caster) {
-        await Unit.moveTowards(caster.unit, payload);
+        await Unit.moveTowards(caster.unit, payload).then(() => {
+          window.underworld.calculateEnemyAttentionMarkers();
+        });
       } else {
         console.error('Cannot move player, caster does not exist');
       }
