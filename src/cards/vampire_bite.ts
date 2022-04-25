@@ -22,9 +22,6 @@ function add(unit: IUnit) {
   }
 }
 function remove(unit: IUnit) {
-  delete unit.modifiers[id]
-  // remove event
-  unit.onDamageEvents.filter(e => e !== id);
   // remove subsprite image
   Image.removeSubSprite(unit.image, id);
 
