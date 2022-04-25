@@ -65,7 +65,6 @@ export interface IUnit {
   mana: number;
   manaMax: number;
   manaPerTurn: number;
-  predictedHealthLoss: number;
   alive: boolean;
   unitType: UnitType;
   unitSubType: UnitSubType;
@@ -123,7 +122,6 @@ export function create(
     damage: Math.round(config.UNIT_BASE_DAMAGE * strength),
     health,
     healthMax: health,
-    predictedHealthLoss: 0,
     mana,
     manaMax: mana,
     manaPerTurn: Math.round(config.MANA_GET_PER_TURN * strength),
@@ -415,13 +413,13 @@ export function syncPlayerHealthManaUI() {
   elHealthBar.style["width"] = `${100 * healthRatio}%`;
   elHealthLabel.innerHTML = `${unit.health}/${unit.healthMax}`;
 
+  const dryRunPlayerUnit = window.underworld.dryRunUnits.find(u => u.id == window.player?.unit.id) || { health: unit.health, mana: unit.mana };
   // Set the health cost bar that shows how much health will be removed if the spell is cast
-  if (window.spellCost.healthCost > 0) {
+  if (dryRunPlayerUnit.health > 0) {
     // Show cost bar from current health location minus whatever it's value is
-    const wouldBeNextHealth = unit.health - window.spellCost.healthCost;
-    elHealthCost.style['left'] = `${100 * wouldBeNextHealth / unit.healthMax}%`;
-    elHealthCost.style['width'] = `${100 * (unit.health - wouldBeNextHealth) / unit.healthMax}%`;
-  } else if (window.spellCost.healthCost == 0) {
+    elHealthCost.style['left'] = `${100 * dryRunPlayerUnit.health / unit.healthMax}%`;
+    elHealthCost.style['width'] = `${100 * (unit.health - dryRunPlayerUnit.health) / unit.healthMax}%`;
+  } else {
     elHealthCost.style['left'] = '100%';
     elHealthCost.style['width'] = '0';
   }
@@ -433,17 +431,20 @@ export function syncPlayerHealthManaUI() {
   elManaBar2.style["width"] = `${100 * Math.min(manaRatio2, 1)}%`;
   const manaRatio3 = (Math.max(0, unit.mana - unit.manaMax * 2)) / unit.manaMax;
   elManaBar3.style["width"] = `${100 * Math.min(manaRatio3, 1)}%`;
-  elManaLabel.innerHTML = `${unit.mana}/${unit.manaMax} &nbsp;+${unit.manaPerTurn} / Turn`;
+  if (dryRunPlayerUnit.mana !== unit.mana) {
+    elManaLabel.innerHTML = `${dryRunPlayerUnit.mana} Mana Left`;
+  } else {
+    elManaLabel.innerHTML = `${unit.mana}/${unit.manaMax} &nbsp;+${unit.manaPerTurn} / Turn`;
+  }
 
   // Set the 3 mana cost bars that show how much mana will be removed if the spell is cast
-  if (window.spellCost.manaCost > 0) {
+  if (dryRunPlayerUnit.mana > 0) {
     // Show cost bar from current mana location minus whatever it's value is
-    const wouldBeNextMana = unit.mana - window.spellCost.manaCost
-    elManaCost.style['left'] = `${100 * wouldBeNextMana / unit.manaMax}%`;
-    elManaCost.style['width'] = `${100 * Math.min(((unit.mana - wouldBeNextMana) / unit.manaMax), 1)}%`;
+    elManaCost.style['left'] = `${100 * dryRunPlayerUnit.mana / unit.manaMax}%`;
+    elManaCost.style['width'] = `${100 * Math.min(((unit.mana - dryRunPlayerUnit.mana) / unit.manaMax), 1)}%`;
 
-    elManaCost2.style['left'] = `${100 * (wouldBeNextMana - unit.manaMax) / unit.manaMax}%`;
-    let cost2Left = 100 * (wouldBeNextMana - unit.manaMax) / unit.manaMax;
+    elManaCost2.style['left'] = `${100 * (dryRunPlayerUnit.mana - unit.manaMax) / unit.manaMax}%`;
+    let cost2Left = 100 * (dryRunPlayerUnit.mana - unit.manaMax) / unit.manaMax;
     if (cost2Left < 0) {
       elManaBar2.style['left'] = `${cost2Left}%`;
       elManaCost2.style['left'] = `0%`;
@@ -453,7 +454,7 @@ export function syncPlayerHealthManaUI() {
     }
     elManaCost2.style['width'] = `${100 * Math.min(manaRatio2, 1)}%`;
 
-    let cost3Left = 100 * (wouldBeNextMana - unit.manaMax * 2) / unit.manaMax;
+    let cost3Left = 100 * (dryRunPlayerUnit.mana - unit.manaMax * 2) / unit.manaMax;
     if (cost3Left < 0) {
       elManaBar3.style['left'] = `${cost3Left}%`;
       elManaCost3.style['left'] = `0%`;
@@ -462,7 +463,7 @@ export function syncPlayerHealthManaUI() {
       elManaCost3.style['left'] = `${cost3Left}%`;
     }
     elManaCost3.style['width'] = `${100 * Math.min(manaRatio3, 1)}%`;
-  } else if (window.spellCost.manaCost == 0) {
+  } else {
     elManaCost.style['left'] = `100%`;
     elManaCost2.style['left'] = `100%`;
     elManaCost3.style['left'] = `100%`;

@@ -110,9 +110,11 @@ export default class Underworld {
   }
   syncDryRunUnits() {
     this.dryRunUnits = this.units.map(u => {
-      const { image, resolveDoneMoving, ...unit } = u;
+      const { image, resolveDoneMoving, modifiers, ...unit } = u;
       return {
         ...unit,
+        // Deep copy modifiers so it doesn't mutate the unit's actual modifiers object
+        modifiers: JSON.parse(JSON.stringify(modifiers)),
         shaderUniforms: {},
         resolveDoneMoving: () => { }
       };
@@ -132,48 +134,52 @@ export default class Underworld {
     window.unitOverlayGraphics.clear();
 
     const aliveUnits = this.units.filter(u => u.alive);
-    for (let u of aliveUnits) {
-      if (u.path && u.path.length) {
-        // Move towards target
-        const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.path[0], u.moveSpeed * deltaTime)
-        let moveDist = 0;
-        // For now, only AI units will collide with each other
-        // This is because the collisions were causing issues with player movement that I don't
-        // have time to solve at the moment.
-        if (u.unitType == UnitType.PLAYER_CONTROLLED) {
-          // Player units don't collide, they just move, and pathfinding keeps
-          // them from moving through walls
-          moveDist = math.distance(u, stepTowardsTarget);
-          u.x = stepTowardsTarget.x;
-          u.y = stepTowardsTarget.y;
-        } else {
-          // AI collide with each other and walls
-          const originalPosition = Vec.clone(u);
-          // Only move other NPCs out of the way, never move player units
-          moveWithCollisions(u, stepTowardsTarget, aliveUnits);
-          moveDist = math.distance(originalPosition, u);
+    for (let i = 0; i < this.units.length; i++) {
+      const u = this.units[i];
+      const dryRunUnit = this.dryRunUnits[i];
+      if (u.alive) {
+        if (u.path && u.path.length) {
+          // Move towards target
+          const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.path[0], u.moveSpeed * deltaTime)
+          let moveDist = 0;
+          // For now, only AI units will collide with each other
+          // This is because the collisions were causing issues with player movement that I don't
+          // have time to solve at the moment.
+          if (u.unitType == UnitType.PLAYER_CONTROLLED) {
+            // Player units don't collide, they just move, and pathfinding keeps
+            // them from moving through walls
+            moveDist = math.distance(u, stepTowardsTarget);
+            u.x = stepTowardsTarget.x;
+            u.y = stepTowardsTarget.y;
+          } else {
+            // AI collide with each other and walls
+            const originalPosition = Vec.clone(u);
+            // Only move other NPCs out of the way, never move player units
+            moveWithCollisions(u, stepTowardsTarget, aliveUnits);
+            moveDist = math.distance(originalPosition, u);
+          }
+          u.stamina -= moveDist;
+          if (Vec.equal(u, u.path[0])) {
+            // Once the unit reaches the target, shift so the next point in the path is the next target
+            u.path.shift();
+          }
+          // Stop moving if you've moved as far as you can based on the move distance
+          if (u.stamina <= 0) {
+            u.path = [];
+            u.stamina = 0;
+          }
+          // check for collisions with pickups in new location
+          this.checkPickupCollisions(u);
         }
-        u.stamina -= moveDist;
-        if (Vec.equal(u, u.path[0])) {
-          // Once the unit reaches the target, shift so the next point in the path is the next target
-          u.path.shift();
+        collideWithWalls(u);
+        // Sync Image even for non moving units since they may be moved by forces other than themselves
+        Unit.syncImage(u)
+        // Ensure that resolveDoneMoving is invoked when there are no points left in the path
+        // This is necessary to end the moving units turn because elsewhere we are awaiting the fulfillment of that promise
+        // to know they are done moving
+        if (u.path.length === 0) {
+          u.resolveDoneMoving();
         }
-        // Stop moving if you've moved as far as you can based on the move distance
-        if (u.stamina <= 0) {
-          u.path = [];
-          u.stamina = 0;
-        }
-        // check for collisions with pickups in new location
-        this.checkPickupCollisions(u);
-      }
-      collideWithWalls(u);
-      // Sync Image even for non moving units since they may be moved by forces other than themselves
-      Unit.syncImage(u)
-      // Ensure that resolveDoneMoving is invoked when there are no points left in the path
-      // This is necessary to end the moving units turn because elsewhere we are awaiting the fulfillment of that promise
-      // to know they are done moving
-      if (u.path.length === 0) {
-        u.resolveDoneMoving();
       }
       // Draw unit overlay graphics
       //--
@@ -191,12 +197,14 @@ export default class Underworld {
           config.UNIT_UI_BAR_HEIGHT);
         // Show how much damage they'll take on their health bar
         window.unitOverlayGraphics.beginFill(healthBarHurtColor, 1.0);
-        const healthAfterHurt = Math.max(0, u.health - u.predictedHealthLoss);
-        window.unitOverlayGraphics.drawRect(
-          u.x - config.UNIT_UI_BAR_WIDTH / 2 + config.UNIT_UI_BAR_WIDTH * healthAfterHurt / u.healthMax,
-          u.y - config.COLLISION_MESH_RADIUS - config.UNIT_UI_BAR_HEIGHT,
-          config.UNIT_UI_BAR_WIDTH * (u.health - healthAfterHurt) / u.healthMax,
-          config.UNIT_UI_BAR_HEIGHT);
+        if (dryRunUnit) {
+          const healthAfterHurt = dryRunUnit.health;
+          window.unitOverlayGraphics.drawRect(
+            u.x - config.UNIT_UI_BAR_WIDTH / 2 + config.UNIT_UI_BAR_WIDTH * healthAfterHurt / u.healthMax,
+            u.y - config.COLLISION_MESH_RADIUS - config.UNIT_UI_BAR_HEIGHT,
+            config.UNIT_UI_BAR_WIDTH * (u.health - healthAfterHurt) / u.healthMax,
+            config.UNIT_UI_BAR_HEIGHT);
+        }
         // Draw mana bar
         if (u.manaMax != 0) {
           window.unitOverlayGraphics.beginFill(0x5656d5, 1.0);
@@ -1151,11 +1159,6 @@ export default class Underworld {
         healingDealt: 0
       },
     };
-    // if (dryRun) {
-    //   for (let u of this.units) {
-    //     u.predictedHealthLoss = 0;
-    //   }
-    // }
     if (!effectState.casterUnit.alive) {
       // Prevent dead players from casting
       return effectState;

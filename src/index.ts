@@ -29,7 +29,6 @@ const SKIP_TUTORIAL = 'skipTutorial';
 window.volume = 1.0;
 window.volumeMusic = 1.0;
 window.volumeGame = 1.0;
-window.spellCost = { healthCost: 0, manaCost: 0 };
 window.zoomTarget = 1;
 window.playerWalkingPromise = Promise.resolve();
 
@@ -160,9 +159,6 @@ declare global {
     cookieConsentPopup: (forcePopup: boolean) => void;
     // A zoom value that the camera zoom will lerp to
     zoomTarget: number;
-    // The costs of the current spell which is shown projected in
-    // the health and mana bars
-    spellCost: CardCost;
     // A list of enemy ids that have been encountered by this client
     // Used to introduce new enemies
     enemyEncountered: string[];

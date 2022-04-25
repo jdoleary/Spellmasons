@@ -27,26 +27,30 @@ Protects bearer from the next ${damageBlocked} damage that they would incur.  Sh
   modifiers: { add },
   events: {
     onDamage: (unit, amount, dryRun, damageDealer) => {
-      // Only block damage, not heals
-      if (amount > 0) {
-        let adjustedAmount = amount;
-        if (!dryRun) {
-          floatingText({
-            coords: unit,
-            text: 'Shielded from damage!',
-            style: {
-              fill: 'blue',
-            },
-          });
-        }
-        adjustedAmount = Math.max(0, amount - unit.modifiers[id].damage_block);
-        unit.modifiers[id].damage_block -= amount - adjustedAmount;
+      if (unit.modifiers[id]) {
+        // Only block damage, not heals
+        if (amount > 0) {
+          let adjustedAmount = amount;
+          if (!dryRun) {
+            floatingText({
+              coords: unit,
+              text: 'Shielded from damage!',
+              style: {
+                fill: 'blue',
+              },
+            });
+          }
+          adjustedAmount = Math.max(0, amount - unit.modifiers[id].damage_block);
+          unit.modifiers[id].damage_block -= amount - adjustedAmount;
 
-        if (unit.modifiers[id] && unit.modifiers[id].damage_block <= 0) {
-          Unit.removeModifier(unit, id);
-        }
+          if (unit.modifiers[id] && unit.modifiers[id].damage_block <= 0) {
+            Unit.removeModifier(unit, id);
+          }
 
-        return adjustedAmount;
+          return adjustedAmount;
+        } else {
+          return amount;
+        }
       } else {
         return amount;
       }

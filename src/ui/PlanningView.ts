@@ -173,7 +173,6 @@ export async function syncSpellEffectProjection() {
             dryRunGraphics.drawCircle(unitStats.x, unitStats.y, config.COLLISION_MESH_RADIUS);
           }
         }
-        console.log('jtest dryRunUnits', window.underworld.dryRunUnits);
       }
     }
   }
