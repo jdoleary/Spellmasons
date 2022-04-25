@@ -120,11 +120,9 @@ export function updateManaCostUI(): CardCost {
     // Updates the mana cost
     const cards = CardUI.getSelectedCards();
     const cost = calculateCost(cards, window.player.cardUsageCounts)
-    window.spellCost = cost;
     return cost;
   }
-  window.spellCost = { manaCost: 0, healthCost: 0 };
-  return window.spellCost;
+  return { manaCost: 0, healthCost: 0 };
 }
 
 export async function syncSpellEffectProjection() {
