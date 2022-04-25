@@ -35,11 +35,9 @@ const unit: UnitSource = {
     const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit);
     if (closestEnemy) {
       const distanceToEnemy = math.distance(unit, closestEnemy);
-      const moveDistance = distanceToEnemy < unit.attackRange
-        ? -unit.stamina // flee as far as it can
-        : Math.min(unit.stamina, distanceToEnemy - unit.attackRange) // move in range but no farther
-      const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestEnemy, moveDistance);
-      movePromise = Unit.moveTowards(unit, moveTo);
+      // Trick to make the unit only move as far as will put them in range but no closer
+      unit.stamina = distanceToEnemy - unit.attackRange;
+      movePromise = Unit.moveTowards(unit, closestEnemy);
     }
     // Move and attack at the same time, but wait for the slowest to finish before moving on
     await Promise.all([attackPromise, movePromise])
