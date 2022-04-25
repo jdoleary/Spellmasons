@@ -18,7 +18,7 @@ const unit: UnitSource = {
   action: async (unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, canAttackTarget: boolean) => {
     // Attack
     let attackPromise;
-    if (attackTarget) {
+    if (attackTarget && canAttackTarget) {
       attackPromise = createVisualLobbingProjectile(
         unit,
         attackTarget.x,
