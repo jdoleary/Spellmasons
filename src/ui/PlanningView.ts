@@ -143,11 +143,6 @@ export async function syncSpellEffectProjection() {
   const mousePos = window.underworld.getMousePos();
   // Clear the spelleffectprojection in preparation for showing the current ones
   clearSpellEffectProjection();
-  if (isOutOfBounds(mousePos)) {
-    updateManaCostUI();
-    // Mouse is out of bounds, do not show a hover icon
-    return;
-  }
   // only show hover target when it's the correct turn phase
   if (window.underworld.turn_phase == turn_phase.PlayerTurns) {
 
