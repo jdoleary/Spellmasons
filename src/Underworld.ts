@@ -208,8 +208,8 @@ export default class Underworld {
   }
   // Returns true if it is the current players turn
   isMyTurn() {
-    return window.underworld.turn_phase == turn_phase.PlayerTurns
-      && window.underworld.playerTurnIndex === window.underworld.players.findIndex(p => p === window.player)
+    return this.turn_phase == turn_phase.PlayerTurns
+      && this.playerTurnIndex === this.players.findIndex(p => p === window.player)
   }
   // Caution: Be careful when changing clean up code.  There are times when you just want to
   // clean up assets and then there are times when you want to clear and empty the arrays
@@ -255,9 +255,9 @@ export default class Underworld {
     const mapBounds: Polygon = {
       points: [
         { x: 0, y: 0 },
-        { x: 0, y: window.underworld.height },
-        { x: window.underworld.width, y: window.underworld.height },
-        { x: window.underworld.width, y: 0 },
+        { x: 0, y: this.height },
+        { x: this.width, y: this.height },
+        { x: this.width, y: 0 },
       ], inverted: true
     };
     this.walls = [...this.obstacles.filter(o => o.wall).map(o => o.bounds).map(polygonToPolygonLineSegments), polygonToPolygonLineSegments(mapBounds)].flat();
@@ -557,13 +557,13 @@ export default class Underworld {
   }
   postSetupLevel() {
     // Set the first turn phase
-    window.underworld.setTurnPhase(turn_phase.PlayerTurns);
+    this.setTurnPhase(turn_phase.PlayerTurns);
     cameraAutoFollow(true);
   }
   initLevel(levelIndex: number): void {
     // Level sizes are random but have change to grow bigger as loop continues
-    const sectorsWide = randInt(window.underworld.random, 2, 3 + (Math.round(levelIndex / 3)));
-    const sectorsTall = randInt(window.underworld.random, 1, 3 + (Math.round(levelIndex / 3)));
+    const sectorsWide = randInt(this.random, 2, 3 + (Math.round(levelIndex / 3)));
+    const sectorsTall = randInt(this.random, 1, 3 + (Math.round(levelIndex / 3)));
     setView(View.Game);
     console.log('Setup: initLevel', levelIndex, sectorsWide, sectorsTall);
     this.levelIndex = levelIndex;
@@ -577,8 +577,8 @@ export default class Underworld {
     // Show text in center of screen for the new level
     floatingText({
       coords: {
-        x: window.underworld.width / 2,
-        y: 3 * window.underworld.height / 8,
+        x: this.width / 2,
+        y: 3 * this.height / 8,
       },
       text: `Level ${this.levelIndex + 1}`,
       style: {
@@ -684,8 +684,8 @@ export default class Underworld {
     // Show text in center of screen for the new level
     floatingText({
       coords: {
-        x: window.underworld.width / 2,
-        y: 3 * window.underworld.height / 8,
+        x: this.width / 2,
+        y: 3 * this.height / 8,
       },
       text: name,
       style: {
@@ -930,7 +930,7 @@ export default class Underworld {
         elUpgradePickerLabel.innerText = '';
       }
       // Now that upgrades are chosen, go to next level
-      window.underworld.initLevel(++this.levelIndex);
+      this.initLevel(++this.levelIndex);
     } else {
       if (elUpgradePickerLabel) {
         elUpgradePickerLabel.innerText = `${numberOfPlayersWhoNeedToChooseUpgradesTotal - this.playersWhoHaveChosenUpgrade.length
@@ -978,8 +978,8 @@ export default class Underworld {
     return false;
   }
   getRandomCoordsWithinBounds(bounds: Bounds): Vec2 {
-    const x = randInt(window.underworld.random, bounds.xMin || 0, bounds.xMax || window.underworld.width);
-    const y = randInt(window.underworld.random, bounds.yMin || 0, bounds.yMax || window.underworld.height);
+    const x = randInt(this.random, bounds.xMin || 0, bounds.xMax || this.width);
+    const y = randInt(this.random, bounds.yMin || 0, bounds.yMax || this.height);
     return { x, y };
   }
   setTurnPhase(p: turn_phase) {
