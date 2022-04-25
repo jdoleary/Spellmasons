@@ -17,7 +17,7 @@ const spell: Spell = {
 Adds targets for the following cards to effect by "chaining like electricity" 
 off of all existing targeted units to units touching them. 
     `,
-    effect: async (state, dryRun) => {
+    effect: async (state) => {
       for (let i = 0; i < state.targetedUnits.length; i++) {
         const unit = state.targetedUnits[i];
         // Find all units touching the spell origin

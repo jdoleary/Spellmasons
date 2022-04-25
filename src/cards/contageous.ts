@@ -48,9 +48,6 @@ const spell: Spell = {
 Makes this unit's curses contageous to other nearby units
     `,
     effect: async (state, dryRun) => {
-      if (dryRun) {
-        return state;
-      }
       for (let unit of state.targetedUnits) {
         // Don't add contageous more than once
         if (!unit.onTurnStartEvents.includes(id)) {

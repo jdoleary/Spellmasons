@@ -45,10 +45,7 @@ const spell: Spell = {
 Poisons all target(s).  Poison will deal 1 base damage every turn
 at the start of the unit's turn.
     `,
-    effect: async (state, dryRun) => {
-      if (dryRun) {
-        return state;
-      }
+    effect: async (state) => {
       for (let unit of state.targetedUnits) {
         Unit.addModifier(unit, id);
       }

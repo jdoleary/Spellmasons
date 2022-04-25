@@ -18,9 +18,7 @@ Burn up to ${mana_burnt} of the targets' mana, causing the target take ${health_
     effect: async (state, dryRun) => {
       for (let unit of state.targetedUnits) {
         const unitManaBurnt = Math.min(unit.mana, mana_burnt);
-        if (!dryRun) {
-          unit.mana -= unitManaBurnt;
-        }
+        unit.mana -= unitManaBurnt;
         const damage = unitManaBurnt * health_burn_ratio
         Unit.takeDamage(unit, damage, dryRun, state);
       }

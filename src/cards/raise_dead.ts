@@ -15,10 +15,7 @@ const spell: Spell = {
     description: `
 Resurrects a dead unit and converts them to the caster's faction.
     `,
-    effect: async (state, dryRun) => {
-      if (dryRun) {
-        return state;
-      }
+    effect: async (state) => {
       for (let unit of state.targetedUnits) {
         if (!unit.alive) {
           Unit.resurrect(unit);

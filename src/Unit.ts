@@ -382,23 +382,23 @@ export function takeDamage(unit: IUnit, amount: number, dryRun: boolean, state?:
       amount = fn(unit, amount, dryRun);
     }
   }
+  unit.health -= amount;
+  // Prevent health from going over maximum or under 0
+  unit.health = Math.max(0, Math.min(unit.health, unit.healthMax));
+  // If the unit is actually taking damage (not taking 0 damage or being healed - (negative damage))
   if (!dryRun) {
-    unit.health -= amount;
-    // Prevent health from going over maximum or under 0
-    unit.health = Math.max(0, Math.min(unit.health, unit.healthMax));
-    // If the unit is actually taking damage (not taking 0 damage or being healed - (negative damage))
     if (amount > 0) {
       // Use all_red shader to flash the unit to show they are taking damage
       unit.shaderUniforms.all_red.alpha = 1;
       addLerpable(unit.shaderUniforms.all_red, "alpha", 0, 200);
     }
+  }
 
-    // If taking damage (not healing) and health is 0 or less...
-    if (amount > 0 && unit.health <= 0) {
-      // if unit is alive, die
-      if (unit.alive) {
-        die(unit);
-      }
+  // If taking damage (not healing) and health is 0 or less...
+  if (amount > 0 && unit.health <= 0) {
+    // if unit is alive, die
+    if (unit.alive) {
+      die(unit);
     }
   }
 

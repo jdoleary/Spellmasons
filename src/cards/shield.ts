@@ -17,10 +17,7 @@ const spell: Spell = {
     description: `
 Protects bearer from the next ${damageBlocked} damage that they would incur.  Shield can be stacked up to ${maxStack} times.
     `,
-    effect: async (state, dryRun) => {
-      if (dryRun) {
-        return state;
-      }
+    effect: async (state) => {
       for (let unit of state.targetedUnits) {
         Unit.addModifier(unit, id);
       }
@@ -41,12 +38,12 @@ Protects bearer from the next ${damageBlocked} damage that they would incur.  Sh
               fill: 'blue',
             },
           });
-          adjustedAmount = Math.max(0, amount - unit.modifiers[id].damage_block);
-          unit.modifiers[id].damage_block -= amount - adjustedAmount;
+        }
+        adjustedAmount = Math.max(0, amount - unit.modifiers[id].damage_block);
+        unit.modifiers[id].damage_block -= amount - adjustedAmount;
 
-          if (unit.modifiers[id] && unit.modifiers[id].damage_block <= 0) {
-            Unit.removeModifier(unit, id);
-          }
+        if (unit.modifiers[id] && unit.modifiers[id].damage_block <= 0) {
+          Unit.removeModifier(unit, id);
         }
 
         return adjustedAmount;

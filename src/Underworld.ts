@@ -1167,14 +1167,12 @@ export default class Underworld {
       const animationPromises: Promise<void>[] = [];
       if (card) {
         const animations = []
-        if (!dryRun) {
-          const singleCardCost = calculateCost([card], casterCardUsage);
-          // Apply mana and health cost to caster
-          // Note: it is important that this is done BEFORE a card is actually cast because
-          // the card may affect the caster's mana
-          effectState.casterUnit.mana -= singleCardCost.manaCost;
-          Unit.takeDamage(effectState.casterUnit, singleCardCost.healthCost, dryRun, effectState);
-        }
+        const singleCardCost = calculateCost([card], casterCardUsage);
+        // Apply mana and health cost to caster
+        // Note: it is important that this is done BEFORE a card is actually cast because
+        // the card may affect the caster's mana
+        effectState.casterUnit.mana -= singleCardCost.manaCost;
+        Unit.takeDamage(effectState.casterUnit, singleCardCost.healthCost, dryRun, effectState);
         const targets = effectState.targetedUnits.length == 0 ? [castLocation] : effectState.targetedUnits
         for (let target of targets) {
 

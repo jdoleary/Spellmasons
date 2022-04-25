@@ -61,9 +61,6 @@ const spell: Spell = {
     description: `Turns the victim into a Vampire.
     `,
     effect: async (state, dryRun) => {
-      if (dryRun) {
-        return state;
-      }
       for (let unit of state.targetedUnits) {
         Unit.addModifier(unit, id);
       }

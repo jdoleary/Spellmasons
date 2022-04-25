@@ -16,9 +16,6 @@ Makes the target(s) take double damage whenever they receive damage
 in the future.
     `,
     effect: async (state, dryRun) => {
-      if (dryRun) {
-        return state;
-      }
       for (let unit of state.targetedUnits) {
         Unit.addModifier(unit, id);
       }

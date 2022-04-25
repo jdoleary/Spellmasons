@@ -15,9 +15,6 @@ const spell: Spell = {
 Removes all curses from the target(s).
     `,
     effect: async (state, dryRun) => {
-      if (dryRun) {
-        return state;
-      }
       for (let unit of state.targetedUnits) {
         apply(unit)
       }
