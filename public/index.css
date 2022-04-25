@@ -184,6 +184,8 @@ body.view-Game #card-holders {
   user-select: none;
   display: none;
   flex-direction: column-reverse;
+  background-color: #4d3f40;
+  z-index: 1;
 }
 
 #card-holders>div {
@@ -194,8 +196,6 @@ body.view-Game #card-holders {
 #card-holders #card-hand {
   display: flex;
   justify-content: center;
-  /* High enough for cards even if there are no cards inside */
-  min-height: 100px;
   max-width: 100vw;
 }
 

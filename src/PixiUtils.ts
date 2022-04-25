@@ -61,6 +61,16 @@ let doCameraAutoFollow = true;
 export function cameraAutoFollow(active: boolean) {
   doCameraAutoFollow = active;
 }
+export function getCamera() {
+  return {
+    x: -app.stage.x,
+    y: -app.stage.y,
+    zoom: calculateCameraZoom(),
+  }
+}
+function calculateCameraZoom() {
+  return app.stage.scale.x + (window.zoomTarget - app.stage.scale.x) / 8;
+}
 export function updateCameraPosition() {
   if (!elPIXIHolder) {
     elPIXIHolder = document.getElementById('PIXI-holder');
@@ -70,7 +80,7 @@ export function updateCameraPosition() {
   // Lerp zoom to target
   // Note: This must happen BEFORE the stage x and y is updated
   // or else it will get jumpy when zooming
-  const zoom = app.stage.scale.x + (window.zoomTarget - app.stage.scale.x) / 8;
+  const zoom = calculateCameraZoom();
 
   app.stage.scale.x = zoom;
   app.stage.scale.y = zoom;

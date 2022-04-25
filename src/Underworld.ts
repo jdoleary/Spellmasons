@@ -21,8 +21,9 @@ import {
   containerUnits,
   updateCameraPosition,
   cameraAutoFollow,
+  getCamera,
 } from './PixiUtils';
-import floatingText, { centeredFloatingText } from './FloatingText';
+import floatingText, { centeredFloatingText, elPIXIHolder } from './FloatingText';
 import { UnitType, Faction, UnitSubType } from './commonTypes';
 import type { Vec2 } from "./Vec";
 import * as Vec from "./Vec";
@@ -237,18 +238,35 @@ export default class Underworld {
     // Note: this block must come after updating the camera position
     // TODO: Take zoom into account
     for (let marker of this.attentionMarkers) {
-      const margin = 50;
-      const left = margin - app.stage.x;
-      const right = window.innerWidth - margin - app.stage.x;
-      const top = margin - app.stage.y;
-      const bottom = window.innerHeight - margin - app.stage.y;
-      // Test unit purple circle
-      window.unitOverlayGraphics.lineStyle(4, 0xcb00f5, 1.0);
+      const { x: camX, y: camY, zoom } = getCamera();
+      const margin = 30 / zoom;
+      const marginTop = 45 / zoom;
+      const marginBottom = 15 / zoom;
+      const left = margin + camX / zoom;
+      const right = window.innerWidth / zoom - margin + camX / zoom;
+      const top = marginTop + camY / zoom;
+      // const bottomOnlyMarginForCardHeight = CardUI.getSelectedCards().length ? 350 : 250;
+      // const bottom = window.innerHeight / zoom - margin + camY / zoom - bottomOnlyMarginForCardHeight;
+      const bottom = elPIXIHolder.clientHeight / zoom - marginBottom + camY / zoom;
+      // Draw camera limit
+      // window.unitOverlayGraphics.lineStyle(4, 0xcb00f5, 1.0);
+      // window.unitOverlayGraphics.moveTo(left, top);
+      // window.unitOverlayGraphics.lineTo(right, top);
+      // window.unitOverlayGraphics.lineTo(right, bottom);
+      // window.unitOverlayGraphics.lineTo(left, bottom);
+      // window.unitOverlayGraphics.lineTo(left, top);
       const exclamationMark = { x: marker.x, y: marker.y }
       // Keep inside bounds of camera
       exclamationMark.x = Math.min(Math.max(left, marker.x), right);
       exclamationMark.y = Math.min(Math.max(top, marker.y), bottom);
-      window.unitOverlayGraphics.drawCircle(exclamationMark.x, exclamationMark.y, 10);
+
+      // Draw exclamation mark
+      window.unitOverlayGraphics.lineStyle(4, 0xff0000, 1.0);
+      window.unitOverlayGraphics.drawCircle(exclamationMark.x, exclamationMark.y - 8, 1);
+      window.unitOverlayGraphics.moveTo(exclamationMark.x, exclamationMark.y - 16);
+      window.unitOverlayGraphics.lineTo(exclamationMark.x, exclamationMark.y - 30);
+      window.unitOverlayGraphics.lineStyle(2, 0xff0000, 1.0);
+      window.unitOverlayGraphics.drawCircle(exclamationMark.x, exclamationMark.y - 18, 18);
     }
 
   }
