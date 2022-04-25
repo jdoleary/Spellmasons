@@ -38,12 +38,15 @@ const unit: UnitSource = {
     await Unit.moveTowards(unit, adjustedTarget);
 
     // Orient; make the sprite face it's enemy
-    if (closestEnemy.x > unit.x) {
-      // Assuming all units are left facing, if the enemy is to the right, make it right facing
-      unit.image.sprite.scale.x = -Math.abs(unit.image.sprite.scale.x);
-    } else {
-      unit.image.sprite.scale.x = Math.abs(unit.image.sprite.scale.x);
+    if (unit.image) {
 
+      if (closestEnemy.x > unit.x) {
+        // Assuming all units are left facing, if the enemy is to the right, make it right facing
+        unit.image.sprite.scale.x = -Math.abs(unit.image.sprite.scale.x);
+      } else {
+        unit.image.sprite.scale.x = Math.abs(unit.image.sprite.scale.x);
+
+      }
     }
 
     // Attack closest enemy

@@ -42,6 +42,7 @@ import { mouseMove } from './ui/eventListeners';
 import Jprompt from './Jprompt';
 import { collideWithWalls, isCircleIntersectingCircle, moveWithCollisions } from './collision/moveWithCollision';
 import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './contants';
+import unit from './units/manBlue';
 
 export enum turn_phase {
   PlayerTurns,
@@ -78,6 +79,7 @@ export default class Underworld {
   width: number = 800;
   players: Player.IPlayer[] = [];
   units: Unit.IUnit[] = [];
+  dryRunUnits: Unit.IUnit[] = [];
   pickups: Pickup.IPickup[] = [];
   obstacles: Obstacle.IObstacle[] = [];
   groundTiles: Vec2[] = [];
@@ -105,6 +107,16 @@ export default class Underworld {
 
     // Start the gameloop
     requestAnimationFrame(this.gameLoop.bind(this));
+  }
+  syncDryRunUnits() {
+    this.dryRunUnits = this.units.map(u => {
+      const { image, resolveDoneMoving, ...unit } = u;
+      return {
+        ...unit,
+        shaderUniforms: {},
+        resolveDoneMoving: () => { }
+      };
+    })
   }
   syncronizeRNG(RNGState: SeedrandomState | boolean) {
     // state of "true" initializes the RNG with the ability to save it's state,
@@ -1083,8 +1095,8 @@ export default class Underworld {
     }
     return withinDistance;
   }
-  getUnitAt(coords: Vec2): Unit.IUnit | undefined {
-    const sortedByProximityToCoords = this.units
+  getUnitAt(coords: Vec2, dryRun?: boolean): Unit.IUnit | undefined {
+    const sortedByProximityToCoords = (dryRun ? this.dryRunUnits : this.units)
       // Filter for only valid units, not units with NaN location or waiting to be removed
       .filter(u => !u.flaggedForRemoval && !isNaN(u.x) && !isNaN(u.y))
       // Filter for units within COLLISION_MESH_RADIUS of coordinates
@@ -1121,15 +1133,16 @@ export default class Underworld {
     this.obstacles.push(o);
   }
   async castCards(
-    casterPlayer: Player.IPlayer,
+    casterCardUsage: Player.CardUsage,
+    casterUnit: Unit.IUnit,
     cardIds: string[],
     castLocation: Vec2,
     dryRun: boolean,
   ): Promise<Cards.EffectState> {
-    const unitAtCastLocation = this.getUnitAt(castLocation);
+    const unitAtCastLocation = this.getUnitAt(castLocation, dryRun);
     let effectState: Cards.EffectState = {
-      casterPlayer,
-      casterUnit: casterPlayer.unit,
+      casterCardUsage,
+      casterUnit,
       targetedUnits: unitAtCastLocation ? [unitAtCastLocation] : [],
       castLocation,
       aggregator: {
@@ -1138,12 +1151,12 @@ export default class Underworld {
         healingDealt: 0
       },
     };
-    if (dryRun) {
-      for (let u of this.units) {
-        u.predictedHealthLoss = 0;
-      }
-    }
-    if (!casterPlayer.unit.alive) {
+    // if (dryRun) {
+    //   for (let u of this.units) {
+    //     u.predictedHealthLoss = 0;
+    //   }
+    // }
+    if (!effectState.casterUnit.alive) {
       // Prevent dead players from casting
       return effectState;
     }
@@ -1155,12 +1168,12 @@ export default class Underworld {
       if (card) {
         const animations = []
         if (!dryRun) {
-          const singleCardCost = calculateCost([card], casterPlayer);
+          const singleCardCost = calculateCost([card], casterCardUsage);
           // Apply mana and health cost to caster
           // Note: it is important that this is done BEFORE a card is actually cast because
           // the card may affect the caster's mana
-          casterPlayer.unit.mana -= singleCardCost.manaCost;
-          Unit.takeDamage(casterPlayer.unit, singleCardCost.healthCost, dryRun, effectState);
+          effectState.casterUnit.mana -= singleCardCost.manaCost;
+          Unit.takeDamage(effectState.casterUnit, singleCardCost.healthCost, dryRun, effectState);
         }
         const targets = effectState.targetedUnits.length == 0 ? [castLocation] : effectState.targetedUnits
         for (let target of targets) {
@@ -1220,10 +1233,10 @@ export default class Underworld {
         await Promise.all(animationPromises);
         if (!dryRun) {
           // Now that the caster is using the card, increment usage count
-          if (casterPlayer.cardUsageCounts[card.id] === undefined) {
-            casterPlayer.cardUsageCounts[card.id] = 0;
+          if (casterCardUsage[card.id] === undefined) {
+            casterCardUsage[card.id] = 0;
           }
-          casterPlayer.cardUsageCounts[card.id] += card.expenseScaling;
+          casterCardUsage[card.id] += card.expenseScaling;
           updateManaCostUI();
 
         }

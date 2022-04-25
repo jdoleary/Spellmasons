@@ -50,9 +50,9 @@ export function create(
   setPosition(image, x, y);
   return image;
 }
-export function cleanup(image: IImage) {
+export function cleanup(image?: IImage) {
   // Remove PIXI sprite
-  if (image.sprite && image.sprite.parent) {
+  if (image && image.sprite && image.sprite.parent) {
     // Remove subsprites
     image.sprite.removeChildren();
     image.sprite.parent.removeChild(image.sprite);
@@ -62,7 +62,10 @@ export function cleanup(image: IImage) {
 // Note: if playing a temporary animation, opt for Unit.playAnimation
 // because it has built in protections for returning to the correct  
 // default sprite
-export function changeSprite(image: IImage, sprite: PIXI.Sprite) {
+export function changeSprite(image: IImage | undefined, sprite: PIXI.Sprite) {
+  if (!image) {
+    return;
+  }
   const filters = image.sprite.filters;
   sprite.x = image.sprite.x;
   sprite.y = image.sprite.y;
@@ -98,7 +101,10 @@ export function serialize(image: IImage): IImageSerialized {
 // Reinitialize an Image from IImageSerialized JSON
 // this is useful when loading game state after reconnect
 // This is the opposite of serialize
-export function load(image: IImageSerialized, parent: PIXI.Container) {
+export function load(image: IImageSerialized | undefined, parent: PIXI.Container): IImage | undefined {
+  if (!image) {
+    return undefined;
+  }
   const copy = { ...image };
   const { x, y, scale } = copy.sprite;
   // Recreate the sprite using the create function so it initializes it properly
@@ -114,7 +120,10 @@ export function load(image: IImageSerialized, parent: PIXI.Container) {
 // syncronize updates an existing originalImage to match the properties of imageSerialized
 // mutates originalImage
 // TODO test for memory leaks
-export function syncronize(imageSerialized: IImageSerialized, originalImage: IImage): IImage {
+export function syncronize(imageSerialized: IImageSerialized, originalImage?: IImage): IImage | undefined {
+  if (!originalImage) {
+    return undefined;
+  }
   if (imageSerialized.imageName === originalImage.imageName) {
     const { x, y, scale } = imageSerialized.sprite;
     originalImage.sprite.x = x;
@@ -138,7 +147,10 @@ export function syncronize(imageSerialized: IImageSerialized, originalImage: IIm
   }
 
 }
-export function restoreSubsprites(image: IImage) {
+export function restoreSubsprites(image?: IImage) {
+  if (!image) {
+    return;
+  }
   // Re-add subsprites
   const subSprites = [...image.subSprites];
   image.sprite.removeChildren();
@@ -148,11 +160,17 @@ export function restoreSubsprites(image: IImage) {
     addSubSprite(image, subSprite);
   }
 }
-export function setPosition(image: IImage, x: number, y: number) {
+export function setPosition(image: IImage | undefined, x: number, y: number) {
+  if (!image) {
+    return;
+  }
   image.sprite.x = x;
   image.sprite.y = y;
 }
-export function scale(image: IImage, scale: number) {
+export function scale(image: IImage | undefined, scale: number): Promise<void> {
+  if (!image) {
+    return Promise.resolve();
+  }
   // Clamp to a positive value
   scale = Math.max(0, scale);
   return animateIndependent([
@@ -162,7 +180,10 @@ export function scale(image: IImage, scale: number) {
     },
   ]);
 }
-export function addSubSprite(image: IImage, key: string) {
+export function addSubSprite(image: IImage | undefined, key: string) {
+  if (!image) {
+    return;
+  }
   // Don't add more than one copy
   if (!image.subSprites.includes(key)) {
     image.subSprites.push(key);
@@ -174,7 +195,10 @@ export function addSubSprite(image: IImage, key: string) {
     image.subSpriteInstances[key] = sprite;
   }
 }
-export function removeSubSprite(image: IImage, key: string) {
+export function removeSubSprite(image: IImage | undefined, key: string) {
+  if (!image) {
+    return;
+  }
   const subSprite = image.subSpriteInstances[key];
   if (subSprite) {
     // Remove PIXI.Sprite instance
@@ -184,14 +208,6 @@ export function removeSubSprite(image: IImage, key: string) {
     image.subSprites = image.subSprites.filter((k) => k !== key);
   }
 }
-export function moveAbs(image: IImage, target: Vec2) {
-  return animateIndependent([
-    {
-      sprite: image.sprite,
-      target,
-    },
-  ]);
-}
 export function move(image: IImage, x: number, y: number) {
   return animateIndependent([
     {
@@ -200,7 +216,10 @@ export function move(image: IImage, x: number, y: number) {
     },
   ]);
 }
-export function show(image: IImage) {
+export function show(image?: IImage): Promise<void> {
+  if (!image) {
+    return Promise.resolve();
+  }
   return animateIndependent([
     {
       sprite: image.sprite,
@@ -208,7 +227,10 @@ export function show(image: IImage) {
     },
   ]);
 }
-export function hide(image: IImage) {
+export function hide(image?: IImage) {
+  if (!image) {
+    return Promise.resolve();
+  }
   return animateIndependent([
     {
       sprite: image.sprite,

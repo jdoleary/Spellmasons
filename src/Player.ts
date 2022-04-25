@@ -15,6 +15,9 @@ import { clearTooltipSelection } from './ui/PlanningView';
 // that can be serialized in JSON.  It may exclude data that is not neccessary to
 // rehydrate the JSON into an entity
 export type IPlayerSerialized = Omit<IPlayer, "unit"> & { unit: Unit.IUnitSerialized };
+export interface CardUsage {
+  [cardId: string]: number
+}
 export interface IPlayer {
   // wsPie id
   clientId: string;
@@ -27,7 +30,7 @@ export interface IPlayer {
   upgrades: Upgrade.IUpgrade[];
   // Note: call updateCardManaBadges() any time you modify cardUsageCounts so it will
   // be reflected in the UI
-  cardUsageCounts: { [cardId: string]: number };
+  cardUsageCounts: CardUsage;
 }
 export function create(clientId: string, unitId: string): IPlayer | undefined {
   const userSource = allUnits[unitId];

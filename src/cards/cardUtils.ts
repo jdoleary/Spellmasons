@@ -1,6 +1,6 @@
 import type { ICard } from ".";
 import * as config from '../config';
-import type { IPlayer } from "../Player";
+import type { CardUsage, IPlayer } from "../Player";
 export interface CardCost {
     manaCost: number;
     healthCost: number;
@@ -24,7 +24,7 @@ export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number =
     cardCost.healthCost = Math.floor(cardCost.healthCost);
     return cardCost
 }
-export function calculateCost(cards: ICard[], caster: IPlayer): CardCost {
+export function calculateCost(cards: ICard[], casterCardUsage: CardUsage): CardCost {
     let cost: CardCost = { manaCost: 0, healthCost: 0 };
     // Tallys how many times a card has been used as the cards array is iterated
     // this is necessary so that if you cast 3 consecutive spells of the same id
@@ -34,7 +34,7 @@ export function calculateCost(cards: ICard[], caster: IPlayer): CardCost {
         if (!thisCalculationUsage[card.id]) {
             thisCalculationUsage[card.id] = 0;
         }
-        const singleCardCost = calculateCostForSingleCard(card, (caster.cardUsageCounts[card.id] || 0) + thisCalculationUsage[card.id]);
+        const singleCardCost = calculateCostForSingleCard(card, (casterCardUsage[card.id] || 0) + thisCalculationUsage[card.id]);
         cost.manaCost += singleCardCost.manaCost;
         cost.healthCost += singleCardCost.healthCost;
         thisCalculationUsage[card.id] += 1;

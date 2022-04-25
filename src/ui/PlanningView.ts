@@ -119,7 +119,7 @@ export function updateManaCostUI(): CardCost {
     CardUI.updateCardBadges();
     // Updates the mana cost
     const cards = CardUI.getSelectedCards();
-    const cost = calculateCost(cards, window.player)
+    const cost = calculateCost(cards, window.player.cardUsageCounts)
     window.spellCost = cost;
     return cost;
   }
@@ -146,26 +146,34 @@ export async function syncSpellEffectProjection() {
   // only show hover target when it's the correct turn phase
   if (window.underworld.turn_phase == turn_phase.PlayerTurns) {
 
-    const currentPlayer = window.underworld.players.find(
-      (p) => p.clientId === window.clientId,
-    );
-    if (currentPlayer) {
+    if (window.player) {
+      window.underworld.syncDryRunUnits();
       updateManaCostUI();
       // Dry run cast so the user can see what effect it's going to have
       const target = mousePos;
-      const effectState = await window.underworld.castCards(
-        currentPlayer,
-        CardUI.getSelectedCardIds(),
-        target,
-        true,
-      );
-      for (let unitStats of effectState.aggregator.unitDamage) {
-        // If a unit is currently alive and will take fatal damage,
-        // draw red circle.
-        if (unitStats.health > 0 && unitStats.damageTaken >= unitStats.health) {
-          dryRunGraphics.lineStyle(4, 0xff0000, 1.0);
-          dryRunGraphics.drawCircle(unitStats.x, unitStats.y, config.COLLISION_MESH_RADIUS);
+      const casterUnit = window.underworld.dryRunUnits.find(u => u.id == window.player?.unit.id)
+      if (!casterUnit) {
+        console.error('Critical Error, caster unit not found');
+        return;
+      }
+      const cardIds = CardUI.getSelectedCardIds();
+      if (cardIds.length) {
+        const effectState = await window.underworld.castCards(
+          window.player.cardUsageCounts,
+          casterUnit,
+          cardIds,
+          target,
+          true,
+        );
+        for (let unitStats of effectState.aggregator.unitDamage) {
+          // If a unit is currently alive and will take fatal damage,
+          // draw red circle.
+          if (unitStats.health > 0 && unitStats.damageTaken >= unitStats.health) {
+            dryRunGraphics.lineStyle(4, 0xff0000, 1.0);
+            dryRunGraphics.drawCircle(unitStats.x, unitStats.y, config.COLLISION_MESH_RADIUS);
+          }
         }
+        console.log('jtest dryRunUnits', window.underworld.dryRunUnits);
       }
     }
   }

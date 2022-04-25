@@ -30,7 +30,7 @@ const elStaminaBarLabel: HTMLElement = document.querySelector('#stamina .label')
 // The serialized version of the interface changes the interface to allow only the data
 // that can be serialized in JSON.  It may exclude data that is not neccessary to
 // rehydrate the JSON into an entity
-export type IUnitSerialized = Omit<IUnit, "resolveDoneMoving" | "resolveDoneMovingTimeout" | "image"> & { image: Image.IImageSerialized };
+export type IUnitSerialized = Omit<IUnit, "resolveDoneMoving" | "resolveDoneMovingTimeout" | "image"> & { image?: Image.IImageSerialized };
 export interface IUnit {
   // A unique id so that units can be identified
   // across the network
@@ -56,7 +56,7 @@ export interface IUnit {
   // Strength is a modifier which affects base stats used for scaling difficulty
   strength: number;
   faction: number;
-  image: Image.IImage;
+  image?: Image.IImage;
   defaultImagePath: string;
   shaderUniforms: { [key: string]: any };
   damage: number;
@@ -166,16 +166,18 @@ export function create(
   // Ensure all change factions logic applies when a unit is first created
   changeFaction(unit, faction);
 
-  unit.image.sprite.scale.set(config.NON_HEAVY_UNIT_SCALE);
+  unit.image?.sprite.scale.set(config.NON_HEAVY_UNIT_SCALE);
 
   window.underworld.addUnitToArray(unit);
 
   return unit;
 }
 function setupShaders(unit: IUnit) {
-  const all_red = makeAllRedShader()
-  unit.shaderUniforms.all_red = all_red.uniforms;
-  unit.image.sprite.filters = [all_red.filter];
+  if (unit.image) {
+    const all_red = makeAllRedShader()
+    unit.shaderUniforms.all_red = all_red.uniforms;
+    unit.image.sprite.filters = [all_red.filter];
+  }
 }
 
 export function addModifier(unit: IUnit, key: string) {
@@ -231,7 +233,7 @@ export function serialize(unit: IUnit): IUnitSerialized {
   const { resolveDoneMoving, resolveDoneMovingTimeout, ...rest } = unit
   return {
     ...rest,
-    image: Image.serialize(unit.image),
+    image: unit.image ? Image.serialize(unit.image) : undefined,
     // Pick the uniforms needed to rehydrate
     shaderUniforms: Object.entries(unit.shaderUniforms).reduce((obj, cur) => {
       const [key, value] = cur;
@@ -282,6 +284,9 @@ export function syncronize(unitSerialized: IUnitSerialized, originalUnit: IUnit)
     // and since syncronize is mainly meant to keep things like health and position in sync,
     // I'm choosing just to omit shaderUniforms from syncronize
     const { image, shaderUniforms, ...rest } = unitSerialized;
+    if (!image) {
+      return
+    }
     Object.assign(originalUnit, rest);
     originalUnit.image = Image.syncronize(image, originalUnit.image);
   } else {
@@ -304,6 +309,9 @@ export function returnToDefaultSprite(unit: IUnit) {
 export function playAnimation(unit: IUnit, spritePath: string): Promise<void> {
   // Change animation and change back to default
   return new Promise<void>((resolve) => {
+    if (!unit.image) {
+      return resolve();
+    }
     Image.changeSprite(unit.image, addPixiSprite(spritePath, unit.image.sprite.parent, {
       loop: false,
       onComplete: () => {
@@ -578,10 +586,12 @@ export function changeFaction(unit: IUnit, faction: Faction) {
 export function syncImage(unit: IUnit) {
   // TODO does scale syncing need to happen here?  I don't think so cause it's
   // just stored in the sprite so it wont get out of sync
-  unit.lastX = unit.image.sprite.x;
-  unit.lastY = unit.image.sprite.y;
-  unit.image.sprite.x = unit.x;
-  unit.image.sprite.y = unit.y;
+  if (unit.image) {
+    unit.lastX = unit.image.sprite.x;
+    unit.lastY = unit.image.sprite.y;
+    unit.image.sprite.x = unit.x;
+    unit.image.sprite.y = unit.y;
+  }
 }
 export function getImagePathForUnitId(id: string): string {
   return "images/units/" + id + ".png";

@@ -128,7 +128,7 @@ function cardToUpgrade(c: ICard): IUpgrade {
 // Make sure each spell's effect returns the state at the very end
 
 export interface EffectState {
-  casterPlayer?: Player.IPlayer;
+  casterCardUsage?: Player.CardUsage;
   casterUnit: Unit.IUnit;
   targetedUnits: Unit.IUnit[];
   castLocation: Vec2;

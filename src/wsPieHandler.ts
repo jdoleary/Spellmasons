@@ -392,7 +392,7 @@ async function handleSpell(caster: Player.IPlayer, payload: any) {
   // Only allow casting during the PlayerTurns phase
   if (window.underworld.turn_phase === turn_phase.PlayerTurns) {
     window.animatingSpells = true;
-    await window.underworld.castCards(caster, payload.cards, payload, false);
+    await window.underworld.castCards(caster.cardUsageCounts, caster.unit, payload.cards, payload, false);
     window.animatingSpells = false;
     // When spells are done animating but the mouse hasn't moved,
     // syncSpellEffectProjection needs to be called so that the icon ("footprints" for example)
