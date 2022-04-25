@@ -9,13 +9,12 @@ import { turn_phase } from '../Underworld';
 import * as CardUI from '../CardUI';
 import * as config from '../config';
 import * as Unit from '../Unit';
-import type * as Obstacle from '../Obstacle';
 import type * as Pickup from '../Pickup';
 import { targetBlue } from './colors';
 import { calculateCost, CardCost } from '../cards/cardUtils';
 import { closestLineSegmentIntersection } from '../collision/collisionMath';
 import * as colors from './colors';
-import { getBestTarget } from '../units/actions/rangedAction';
+import { getBestRangedLOSTarget } from '../units/actions/rangedAction';
 
 let planningViewGraphics: PIXI.Graphics;
 let dryRunGraphics: PIXI.Graphics;
@@ -43,8 +42,8 @@ export function updatePlanningView() {
         drawCircleUnderTarget(selectedUnit, 1.0, planningViewGraphics);
         // If selectedUnit is an archer, draw LOS attack line
         //  instead of attack range for them
-        if (selectedUnit.unitSubType == UnitSubType.ARCHER) {
-          let archerTarget = getBestTarget(selectedUnit)
+        if (selectedUnit.unitSubType == UnitSubType.RANGED_LOS) {
+          let archerTarget = getBestRangedLOSTarget(selectedUnit)
           // If they don't have a target they can actually attack
           // draw a line to the closest enemy that they would target if
           // they had LOS
@@ -75,11 +74,19 @@ export function updatePlanningView() {
         } else {
 
           window.unitOverlayGraphics.lineStyle(8, 0x0fffff, 0.3);
-          window.unitOverlayGraphics.drawCircle(
-            selectedUnit.x,
-            selectedUnit.y,
-            selectedUnit.stamina + selectedUnit.attackRange
-          );
+          if (selectedUnit.unitSubType === UnitSubType.RANGED_RADIUS) {
+            window.unitOverlayGraphics.drawCircle(
+              selectedUnit.x,
+              selectedUnit.y,
+              selectedUnit.attackRange
+            );
+          } else if (selectedUnit.unitSubType === UnitSubType.MELEE) {
+            window.unitOverlayGraphics.drawCircle(
+              selectedUnit.x,
+              selectedUnit.y,
+              selectedUnit.stamina + selectedUnit.attackRange
+            );
+          }
           window.unitOverlayGraphics.endFill();
         }
       }

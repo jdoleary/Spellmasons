@@ -40,7 +40,7 @@ Clones each target
               // If the cloned unit is player controlled, make them be controlled by the AI
               if (clone.unitSubType == UnitSubType.PLAYER_CONTROLLED) {
                 clone.unitType = UnitType.AI;
-                clone.unitSubType = UnitSubType.GOON;
+                clone.unitSubType = UnitSubType.MELEE;
                 removeSubSprite(clone.image, 'ownCharacterMarker');
               }
               await Unit.moveTowards(clone, { x: unit.x + config.COLLISION_MESH_RADIUS, y: unit.y });

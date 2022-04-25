@@ -1,6 +1,6 @@
 import type { UnitSource } from './index';
 import { UnitSubType } from '../commonTypes';
-import { canInteractWithTarget, action } from './actions/gruntAction';
+import { action } from './actions/gruntAction';
 import * as config from '../config'
 
 const unit: UnitSource = {
@@ -8,7 +8,7 @@ const unit: UnitSource = {
   info: {
     description: 'A simple but persistant creature that will pursue its enemies and attack them if within arm\'s reach.',
     image: 'units/golem',
-    subtype: UnitSubType.GOON,
+    subtype: UnitSubType.MELEE,
     probability: 100,
   },
   unitProps: {
@@ -17,7 +17,6 @@ const unit: UnitSource = {
     manaMax: 0,
   },
   action,
-  canInteractWithTarget,
 };
 
 export default unit;

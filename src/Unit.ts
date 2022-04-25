@@ -596,3 +596,6 @@ export function syncImage(unit: IUnit) {
 export function getImagePathForUnitId(id: string): string {
   return "images/units/" + id + ".png";
 }
+export function inRange(unit: IUnit, coords: Vec2): boolean {
+  return math.distance(unit, coords) <= unit.attackRange;
+}

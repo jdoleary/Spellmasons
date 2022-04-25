@@ -10,7 +10,7 @@ const unit: UnitSource = {
   info: {
     description: 'A summoner uses mana to summon grunts.',
     image: 'units/golem-summoner.png',
-    subtype: UnitSubType.SUMMONER,
+    subtype: UnitSubType.RANGED_RADIUS,
     probability: 30,
   },
   unitProps: {

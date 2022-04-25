@@ -1,6 +1,5 @@
 import type { UnitSource } from './index';
 import { UnitSubType } from '../commonTypes';
-import type { Vec2 } from '../Vec';
 import { createVisualFlyingProjectile } from '../Projectile';
 import * as Unit from '../Unit';
 import * as math from '../math';
@@ -11,7 +10,7 @@ const unit: UnitSource = {
   info: {
     description: 'A poisoner will cast a poison curse on it\'s enemies.',
     image: 'units/golem-poison.png',
-    subtype: UnitSubType.POISONER,
+    subtype: UnitSubType.RANGED_LOS,
     probability: 30,
   },
   unitProps: {
@@ -29,7 +28,7 @@ const unit: UnitSource = {
       if (chosenUnit) {
         const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, chosenUnit, unit.stamina);
         await Unit.moveTowards(unit, moveTo);
-        if (inRange(unit, chosenUnit)) {
+        if (Unit.inRange(unit, chosenUnit)) {
           createVisualFlyingProjectile(
             unit,
             chosenUnit.x,
@@ -41,11 +40,5 @@ const unit: UnitSource = {
       }
     }
   },
-  canInteractWithTarget: (unit, x, y) => {
-    return inRange(unit, { x, y });
-  },
 };
-function inRange(unit: Unit.IUnit, coords: Vec2): boolean {
-  return math.distance(unit, coords) <= unit.attackRange;
-}
 export default unit;

@@ -14,7 +14,7 @@ const unit: UnitSource = {
   info: {
     description: 'The priest heals damaged allies, and if it\'s allies are at full health it will bless them with a Shield.',
     image: 'units/priest.png',
-    subtype: UnitSubType.PRIEST,
+    subtype: UnitSubType.RANGED_RADIUS,
     probability: 30,
   },
   unitProps: {
@@ -45,7 +45,7 @@ const unit: UnitSource = {
       );
       if (damagedAllys.length) {
         for (let ally of damagedAllys) {
-          if (inRange(unit, ally)) {
+          if (Unit.inRange(unit, ally)) {
             const chosenUnit = damagedAllys[0];
             if (chosenUnit) {
               await createVisualLobbingProjectile(
@@ -65,7 +65,7 @@ const unit: UnitSource = {
       } else {
         // if there are no damaged allies cast shield on the closest:
         if (closestAlly) {
-          if (inRange(unit, closestAlly)) {
+          if (Unit.inRange(unit, closestAlly)) {
             await createVisualLobbingProjectile(
               unit,
               closestAlly.x,
@@ -79,12 +79,6 @@ const unit: UnitSource = {
       }
     }
   },
-  canInteractWithTarget: (unit, x, y) => {
-    return inRange(unit, { x, y });
-  },
 };
-function inRange(unit: Unit.IUnit, coords: Vec2): boolean {
-  return math.distance(unit, coords) <= unit.attackRange;
-}
 
 export default unit;

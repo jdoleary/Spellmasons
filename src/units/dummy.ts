@@ -6,7 +6,7 @@ const unit: UnitSource = {
   info: {
     description: 'A practice dummy',
     image: 'units/dummy.png',
-    subtype: UnitSubType.GOON,
+    subtype: UnitSubType.MELEE,
     probability: 100,
   },
   unitProps: {
@@ -14,7 +14,6 @@ const unit: UnitSource = {
     attackRange: 0,
   },
   action: async () => { },
-  canInteractWithTarget: () => false,
 };
 
 export default unit;

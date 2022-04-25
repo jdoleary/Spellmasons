@@ -8,17 +8,13 @@ interface ConstructorInfo {
   probability: number;
 }
 export type UnitAction = {
-  (unit: Unit.IUnit): Promise<void>;
-};
-export type canInteractWithTarget = {
-  (unit: Unit.IUnit, x: number, y: number): boolean;
+  (self: Unit.IUnit, attackTarget: Unit.IUnit | undefined, canAttackTarget: boolean): Promise<void>;
 };
 export interface UnitSource {
   id: string;
   info: ConstructorInfo;
   init?: (unit: Unit.IUnit) => void;
   action: UnitAction;
-  canInteractWithTarget?: canInteractWithTarget;
   unitProps: Partial<Unit.IUnit>;
   extraTooltipInfo?: () => string;
 }

@@ -3,14 +3,9 @@ export enum UnitType {
   AI,
 }
 export enum UnitSubType {
-  GOON,
-  ARCHER,
-  AI_rook,
-  LOBBER,
-  SUMMONER,
-  DEMON,
-  PRIEST,
-  POISONER,
+  MELEE,
+  RANGED_LOS,
+  RANGED_RADIUS,
   PLAYER_CONTROLLED,
 }
 

@@ -10,7 +10,7 @@ const unit: UnitSource = {
   info: {
     description: 'A demon resurrects its allies.',
     image: 'units/demon.png',
-    subtype: UnitSubType.DEMON,
+    subtype: UnitSubType.RANGED_RADIUS,
     probability: 30,
   },
   unitProps: {

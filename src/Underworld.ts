@@ -23,7 +23,7 @@ import {
   cameraAutoFollow,
 } from './PixiUtils';
 import floatingText, { centeredFloatingText } from './FloatingText';
-import { UnitType, Faction } from './commonTypes';
+import { UnitType, Faction, UnitSubType } from './commonTypes';
 import type { Vec2 } from "./Vec";
 import * as Vec from "./Vec";
 import Events from './Events';
@@ -43,6 +43,7 @@ import Jprompt from './Jprompt';
 import { collideWithWalls, isCircleIntersectingCircle, moveWithCollisions } from './collision/moveWithCollision';
 import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './contants';
 import unit from './units/manBlue';
+import { getBestRangedLOSTarget } from './units/actions/rangedAction';
 
 export enum turn_phase {
   PlayerTurns,
@@ -234,6 +235,7 @@ export default class Underworld {
     // Draw attention markers which show if an NPC will
     // attack you next turn
     // Note: this block must come after updating the camera position
+    // TODO: Take zoom into account
     for (let marker of this.attentionMarkers) {
       const margin = 50;
       const left = margin - app.stage.x;
@@ -254,9 +256,14 @@ export default class Underworld {
   // next turn
   calculateEnemyAttentionMarkers() {
     this.attentionMarkers = [];
-    for (let u of this.units) {
-      const exclamationMark = { x: u.x, y: u.y - config.COLLISION_MESH_RADIUS - 10 }
-      this.attentionMarkers.push(exclamationMark);
+    if (window.player) {
+      for (let u of this.units) {
+        const { target, canAttack } = this.getUnitAttackTarget(u);
+        if (canAttack && target === window.player.unit) {
+          const exclamationMark = { x: u.x, y: u.y - config.COLLISION_MESH_RADIUS - 10 }
+          this.attentionMarkers.push(exclamationMark);
+        }
+      }
     }
   }
   // Returns true if it is the current players turn
@@ -637,6 +644,10 @@ export default class Underworld {
     // Set the first turn phase
     this.setTurnPhase(turn_phase.PlayerTurns);
     cameraAutoFollow(true);
+    // Now that all new units have spawned, calculate their
+    // attention markers (during the level this will only
+    // be recalculated after a player moves)
+    this.calculateEnemyAttentionMarkers();
   }
   initLevel(levelIndex: number): void {
     // Level sizes are random but have change to grow bigger as loop continues
@@ -1176,8 +1187,9 @@ export default class Underworld {
       }
       const unitSource = allUnits[u.unitSourceId];
       if (unitSource) {
+        const { target, canAttack } = this.getUnitAttackTarget(u);
         // Add unit action to the array of promises to wait for
-        let promise = unitSource.action(u);
+        let promise = unitSource.action(u, target, canAttack);
         animationPromises.push(promise);
       } else {
         console.error(
@@ -1187,6 +1199,30 @@ export default class Underworld {
       }
     }
     await Promise.all(animationPromises);
+
+  }
+  getUnitAttackTarget(u: Unit.IUnit): { target: Unit.IUnit | undefined, canAttack: boolean } {
+    let attackTarget: Unit.IUnit | undefined;
+    let canAttackTarget = false;
+    switch (u.unitSubType) {
+      case UnitSubType.MELEE:
+        attackTarget = Unit.findClosestUnitInDifferentFaction(u);
+        if (attackTarget) {
+          canAttackTarget = u.alive && math.distance(u, attackTarget) <= u.attackRange + u.stamina
+        }
+        break;
+      case UnitSubType.RANGED_LOS:
+        attackTarget = getBestRangedLOSTarget(u);
+        canAttackTarget = !!attackTarget;
+        break;
+      case UnitSubType.RANGED_RADIUS:
+        attackTarget = Unit.findClosestUnitInDifferentFaction(u);
+        if (attackTarget) {
+          canAttackTarget = u.alive && Unit.inRange(u, attackTarget);
+        }
+        break;
+    }
+    return { target: attackTarget, canAttack: canAttackTarget }
 
   }
 
@@ -1458,6 +1494,11 @@ type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFun
 
 function getEnemiesForAltitude(levelIndex: number): { enemies: { [unitid: string]: number }, strength: number } {
   const hardCodedLevelEnemies: { [unitid: string]: number }[] = [
+    {
+      'grunt': 1,
+      'archer': 1,
+      'lobber': 1,
+    },
     {
       'grunt': 2,
     },
