@@ -326,10 +326,14 @@ export function resurrect(unit: IUnit) {
   returnToDefaultSprite(unit);
 }
 export function die(unit: IUnit) {
-  Image.changeSprite(
-    unit.image,
-    addPixiSprite('units/corpse.png', containerDoodads),
-  );
+  // This check for unit.image prevents creating a corpse image when a dryRunUnit
+  // dies because a dryRun unit won't have an image property
+  if (unit.image) {
+    Image.changeSprite(
+      unit.image,
+      addPixiSprite('units/corpse.png', containerDoodads),
+    );
+  }
   unit.alive = false;
   // Ensure that the unit resolvesDoneMoving when they die in the event that 
   // they die while they are moving.  This prevents turn phase from getting stuck
