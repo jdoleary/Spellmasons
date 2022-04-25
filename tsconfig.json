@@ -25,6 +25,7 @@
     /* Additional Options */
     "strict": true,
     "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
