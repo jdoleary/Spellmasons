@@ -250,7 +250,7 @@ export function mouseMove() {
           const endOfRange = getCoordsAtDistanceTowardsTarget(castLine.p1, castLine.p2, window.player.unit.attackRange);
           window.walkPathGraphics.lineTo(endOfRange.x, endOfRange.y);
           // Draw a red line the rest of the way shoing that you cannot cast
-          window.walkPathGraphics.lineStyle(3, 0xff0000, 0.7);
+          window.walkPathGraphics.lineStyle(3, 0x333333, 0.7);
           window.walkPathGraphics.lineTo(castLine.p2.x, castLine.p2.y);
           window.walkPathGraphics.drawCircle(castLine.p2.x, castLine.p2.y, 3);
           // Draw a circle where the cast stops

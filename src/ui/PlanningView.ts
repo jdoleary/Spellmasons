@@ -54,26 +54,24 @@ export function updatePlanningView() {
             const attackLine = { p1: selectedUnit, p2: archerTarget };
             const closestIntersection = closestLineSegmentIntersection(attackLine, window.underworld.walls);
 
-            planningViewGraphics.lineStyle(3, colors.targetBlue, 0.7);
             planningViewGraphics.moveTo(attackLine.p1.x, attackLine.p1.y);
             if (closestIntersection) {
+              // Draw a grey line  showing that the target is blocked
+              planningViewGraphics.lineStyle(3, 0x333333, 0.7);
               planningViewGraphics.lineTo(closestIntersection.x, closestIntersection.y);
-              // Draw a red line the rest of the way shoing that you cannot cast
-              planningViewGraphics.lineStyle(3, 0xff0000, 0.7);
               planningViewGraphics.lineTo(attackLine.p2.x, attackLine.p2.y);
               planningViewGraphics.drawCircle(attackLine.p2.x, attackLine.p2.y, 3);
-              // Draw a circle where the cast stops
-              planningViewGraphics.moveTo(attackLine.p2.x, attackLine.p2.y);//test
-              planningViewGraphics.lineStyle(3, colors.targetBlue, 0.7);
-              planningViewGraphics.drawCircle(closestIntersection.x, closestIntersection.y, 3);
             } else {
+              // Draw a red line, showing that you are in danger
+              planningViewGraphics.lineStyle(3, 0xff0000, 0.7);
               planningViewGraphics.lineTo(attackLine.p2.x, attackLine.p2.y);
               planningViewGraphics.drawCircle(attackLine.p2.x, attackLine.p2.y, 3);
             }
           }
         } else {
 
-          window.unitOverlayGraphics.lineStyle(8, 0x0fffff, 0.3);
+          const rangeCircleColor = selectedUnit.faction == Faction.ALLY ? 0x40a058 : 0xd55656;
+          window.unitOverlayGraphics.lineStyle(8, rangeCircleColor, 0.3);
           if (selectedUnit.unitSubType === UnitSubType.RANGED_RADIUS) {
             window.unitOverlayGraphics.drawCircle(
               selectedUnit.x,
