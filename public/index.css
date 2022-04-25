@@ -186,7 +186,6 @@ body.view-Game #card-holders {
   flex-direction: column-reverse;
   background-color: #4d3f40;
   z-index: 1;
-  gap: 8px;
 }
 
 #selected-cards,

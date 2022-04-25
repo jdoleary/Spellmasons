@@ -39,6 +39,7 @@ containerUI.addChild(window.walkPathGraphics);
 
 export const containerCharacterSelect = new PIXI.Container();
 const characterSelectContainers = [containerCharacterSelect];
+const elSelectedCards = document.getElementById('selected-cards') as HTMLElement;
 
 app.renderer.backgroundColor = 0x111631;
 
@@ -140,8 +141,12 @@ export function updateCameraPosition() {
         //Clamp camera Y
         const mapTopMostPoint = 0 - marginY;
         const mapBottomMostPoint = window.underworld.height + marginY;
-        const camCenterYMin = mapTopMostPoint + elPIXIHolder.clientHeight / 2 / zoom;
-        const camCenterYMax = mapBottomMostPoint - elPIXIHolder.clientHeight / 2 / zoom;
+        // elSelectedCards height is taken into account when determining the view height
+        // so that the camera doesn't move when the elSelectedCards div appears and disappears
+        // when cards are selected and deselected
+        const viewHeight = elPIXIHolder.clientHeight + elSelectedCards.offsetHeight;
+        const camCenterYMin = mapTopMostPoint + viewHeight / 2 / zoom;
+        const camCenterYMax = mapBottomMostPoint - viewHeight / 2 / zoom;
         // If the supposed minimum is more than the maximum, just center the camera:
         if (camCenterYMin > camCenterYMax) {
           camera.y = (mapBottomMostPoint + mapTopMostPoint) / 2;
@@ -150,11 +155,10 @@ export function updateCameraPosition() {
           camera.y = Math.min(camCenterYMax, Math.max(camCenterYMin, camera.y));
         }
 
-
         // Actuall move the camera to be centered on the centerTarget
         const cameraTarget = {
           x: elPIXIHolder.clientWidth / 2 - (camera.x * zoom),
-          y: elPIXIHolder.clientHeight / 2 - (camera.y * zoom)
+          y: viewHeight / 2 - (camera.y * zoom)
         }
 
         // Option 1 for cam movement: Lerp camera to target
