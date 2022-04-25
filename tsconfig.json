@@ -1,5 +1,8 @@
 {
-  "include": ["src", "types"],
+  "include": [
+    "src",
+    "types"
+  ],
   "compilerOptions": {
     "module": "esnext",
     "target": "esnext",
@@ -21,6 +24,7 @@
     "noEmit": true,
     /* Additional Options */
     "strict": true,
+    "strictNullChecks": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
