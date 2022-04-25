@@ -1140,13 +1140,14 @@ export default class Underworld {
       document.body.classList.add('phase-' + phase.toLowerCase());
       switch (phase) {
         case 'PlayerTurns':
-          // Now that new NPC bunits have moved or spawned, calculate their
-          // attention markers 
-          this.calculateEnemyAttentionMarkers();
           for (let u of this.units) {
             // Reset stamina so units can move again
             u.stamina = u.staminaMax;
           }
+          // Now that new NPC bunits have moved or spawned, calculate their
+          // attention markers 
+          // Note: This must occur after stamina is recalculated
+          this.calculateEnemyAttentionMarkers();
           // Lastly, initialize the player turns.
           // Note, it is possible that calling this will immediately end
           // the player phase (if there are no players to take turns)
