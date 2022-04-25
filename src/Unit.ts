@@ -296,11 +296,15 @@ export function syncronize(unitSerialized: IUnitSerialized, originalUnit: IUnit)
 // dies mid-animation and this function is not used, it would return to the default
 // LIVING sprite, instead of the dead sprite.
 export function returnToDefaultSprite(unit: IUnit) {
-  const defaultImageString = unit.alive ? unit.defaultImagePath : 'units/corpse.png'
-  Image.changeSprite(
-    unit.image,
-    addPixiSprite(defaultImageString, containerUnits),
-  );
+  // This check for unit.image prevents creating a corpse image when a dryRunUnit
+  // dies because a dryRun unit won't have an image property
+  if (unit.image) {
+    const defaultImageString = unit.alive ? unit.defaultImagePath : 'units/corpse.png'
+    Image.changeSprite(
+      unit.image,
+      addPixiSprite(defaultImageString, containerUnits),
+    );
+  }
 }
 
 export function playAnimation(unit: IUnit, spritePath: string): Promise<void> {
