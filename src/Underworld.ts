@@ -236,7 +236,6 @@ export default class Underworld {
     // Draw attention markers which show if an NPC will
     // attack you next turn
     // Note: this block must come after updating the camera position
-    // TODO: Take zoom into account
     for (let marker of this.attentionMarkers) {
       const { x: camX, y: camY, zoom } = getCamera();
       const margin = 30 / zoom;
@@ -248,17 +247,18 @@ export default class Underworld {
       // const bottomOnlyMarginForCardHeight = CardUI.getSelectedCards().length ? 350 : 250;
       // const bottom = window.innerHeight / zoom - margin + camY / zoom - bottomOnlyMarginForCardHeight;
       const bottom = elPIXIHolder.clientHeight / zoom - marginBottom + camY / zoom;
-      // Draw camera limit
+      // Debug draw camera limit
       // window.unitOverlayGraphics.lineStyle(4, 0xcb00f5, 1.0);
       // window.unitOverlayGraphics.moveTo(left, top);
       // window.unitOverlayGraphics.lineTo(right, top);
       // window.unitOverlayGraphics.lineTo(right, bottom);
       // window.unitOverlayGraphics.lineTo(left, bottom);
       // window.unitOverlayGraphics.lineTo(left, top);
-      const exclamationMark = { x: marker.x, y: marker.y }
+      // Offset exclamation mark just above the head of the unit "- config.COLLISION_MESH_RADIUS - 10"
+      const exclamationMark = { x: marker.x, y: marker.y - config.COLLISION_MESH_RADIUS - 7 }
       // Keep inside bounds of camera
-      exclamationMark.x = Math.min(Math.max(left, marker.x), right);
-      exclamationMark.y = Math.min(Math.max(top, marker.y), bottom);
+      exclamationMark.x = Math.min(Math.max(left, exclamationMark.x), right);
+      exclamationMark.y = Math.min(Math.max(top, exclamationMark.y), bottom);
 
       // Draw exclamation mark
       window.unitOverlayGraphics.lineStyle(4, 0xff0000, 1.0);
@@ -278,8 +278,7 @@ export default class Underworld {
       for (let u of this.units) {
         const { target, canAttack } = this.getUnitAttackTarget(u);
         if (canAttack && target === window.player.unit) {
-          const exclamationMark = { x: u.x, y: u.y - config.COLLISION_MESH_RADIUS - 10 }
-          this.attentionMarkers.push(exclamationMark);
+          this.attentionMarkers.push(u);
         }
       }
     }
@@ -662,10 +661,6 @@ export default class Underworld {
     // Set the first turn phase
     this.setTurnPhase(turn_phase.PlayerTurns);
     cameraAutoFollow(true);
-    // Now that all new units have spawned, calculate their
-    // attention markers (during the level this will only
-    // be recalculated after a player moves)
-    this.calculateEnemyAttentionMarkers();
   }
   initLevel(levelIndex: number): void {
     // Level sizes are random but have change to grow bigger as loop continues
@@ -1145,6 +1140,9 @@ export default class Underworld {
       document.body.classList.add('phase-' + phase.toLowerCase());
       switch (phase) {
         case 'PlayerTurns':
+          // Now that new NPC bunits have moved or spawned, calculate their
+          // attention markers 
+          this.calculateEnemyAttentionMarkers();
           for (let u of this.units) {
             // Reset stamina so units can move again
             u.stamina = u.staminaMax;
