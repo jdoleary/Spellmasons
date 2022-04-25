@@ -1066,13 +1066,24 @@ export default class Underworld {
       (u) => u.unitType === UnitType.AI && u.alive && u.faction == faction,
     )) {
       // Trigger onTurnStart Events
-      for (let eventName of u.onTurnStartEvents) {
-        const fn = Events.onTurnSource[eventName];
-        if (fn) {
-          const abortTurn = await fn(u);
-          if (abortTurn) {
-            continue unitloop;
+      // Note: This must be a for loop instead of a for..of loop
+      // so that if one of the onTurnStartEvents modifies the
+      // unit's onTurnStartEvents array (for example, after death)
+      // this loop will take that into account.
+      for (let i = 0; i < u.onTurnStartEvents.length; i++) {
+        const eventName = u.onTurnStartEvents[i];
+        if (eventName) {
+          const fn = Events.onTurnSource[eventName];
+          if (fn) {
+            const abortTurn = await fn(u);
+            if (abortTurn) {
+              continue unitloop;
+            }
+          } else {
+            console.error('No function associated with turn start event', eventName);
           }
+        } else {
+          console.error('No turn start event at index', i)
         }
       }
       const unitSource = allUnits[u.unitSourceId];

@@ -57,7 +57,6 @@ at the start of the unit's turn.
   },
   events: {
     onTurnStart: async (unit: IUnit) => {
-      // TODO: There was a bug here where somehow modifiers['poison'] was undefined after i did chain, vulx10, poisonx10
       takeDamage(unit, unit.modifiers[id].stacks || 1, false, undefined);
       return false;
     },
