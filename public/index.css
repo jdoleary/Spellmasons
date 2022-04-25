@@ -186,17 +186,28 @@ body.view-Game #card-holders {
   flex-direction: column-reverse;
   background-color: #4d3f40;
   z-index: 1;
+  gap: 8px;
 }
 
-#card-holders>div {
-  margin-top: 8px;
-}
-
-#card-holders #selected-cards,
+#selected-cards,
 #card-holders #card-hand {
   display: flex;
   justify-content: center;
   max-width: 100vw;
+  gap: 4px;
+  /* leave room for the mana badges at the top */
+  padding-top: 15px;
+}
+
+#selected-cards {
+  background: #5e5e5e;
+  padding: 10px;
+  /* leave room for the mana badges at the top */
+  padding-top: 15px;
+}
+
+#selected-cards:empty {
+  display: none;
 }
 
 #card-hand {
@@ -224,7 +235,6 @@ the face of the last card in the group is seen*/
 .card-type-group {
   display: flex;
   flex-direction: row-reverse;
-  margin-right: 3px;
   position: relative;
 }
 
@@ -298,12 +308,12 @@ the face of the last card in the group is seen*/
 
 .card-mana-badge.modified-by-usage:before {
   content: "";
-  width: 20px;
-  height: 20px;
-  border: 2px solid #3c3c94;
+  width: 24px;
+  height: 24px;
+  border: 2px solid #04042b;
   /* translateZ and transform-style:preserve-3d on .card-mana-badge makes sure
   the :before renders behind the regular one */
-  transform: translateX(-5px) translateZ(-1px);
+  transform: translateX(-5px) translateY(0px) translateZ(-1px);
   background-color: #5656d5;
   display: block;
   border-radius: 24px;
@@ -525,6 +535,7 @@ body.your-turn #player-turn-indicator {
 #health-mana-holder {
   display: flex;
   justify-content: center;
+  margin-top: 8px;
 }
 
 #ready-state {
