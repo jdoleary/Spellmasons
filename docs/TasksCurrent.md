@@ -1,4 +1,5 @@
 # Tasks
+- Fix attention markers for frozen units, they shouldn't have them
 - Shield and vulnerable combine in weird ways, shield is only aware of the predamage damage
 - Make all units properly orient to face their enemy
     - Don't handle this logic in unique unit action fns

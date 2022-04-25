@@ -275,7 +275,7 @@ export default class Underworld {
   calculateEnemyAttentionMarkers() {
     this.attentionMarkers = [];
     if (window.player) {
-      for (let u of this.units) {
+      for (let u of this.units.filter(u => u.alive)) {
         const { target, canAttack } = this.getUnitAttackTarget(u);
         if (canAttack && target === window.player.unit) {
           this.attentionMarkers.push(u);

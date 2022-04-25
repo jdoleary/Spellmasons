@@ -405,6 +405,8 @@ async function handleSpell(caster: Player.IPlayer, payload: any) {
   if (window.underworld.turn_phase === turn_phase.PlayerTurns) {
     window.animatingSpells = true;
     await window.underworld.castCards(caster.cardUsageCounts, caster.unit, payload.cards, payload, false);
+    // Now that units may have died or be frozen, calculate their attention markers
+    window.underworld.calculateEnemyAttentionMarkers();
     window.animatingSpells = false;
     // When spells are done animating but the mouse hasn't moved,
     // syncSpellEffectProjection needs to be called so that the icon ("footprints" for example)
