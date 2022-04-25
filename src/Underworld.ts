@@ -1224,6 +1224,7 @@ export default class Underworld {
       case UnitSubType.MELEE:
         attackTarget = Unit.findClosestUnitInDifferentFaction(u);
         if (attackTarget) {
+          // TODO: This needs to be revised to consider the actual path they will take, not just the range
           canAttackTarget = u.alive && math.distance(u, attackTarget) <= u.attackRange + u.stamina
         }
         break;
