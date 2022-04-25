@@ -250,7 +250,8 @@ export function updateTooltipContent() {
           }
         }
         const unitSource = allUnits[selectedUnit.unitSourceId]
-        text += `\
+        if (unitSource) {
+          text += `\
 ${unitSource.id}
 ${unitSource.info.description}
 Faction ${Faction[selectedUnit.faction]}
@@ -262,10 +263,11 @@ ${unitSource.extraTooltipInfo ? unitSource.extraTooltipInfo() : ''}
 ${cards}
       `;
 
-        const imagePath = Unit.getImagePathForUnitId(unitSource.id);
-        if (elInspectorTooltipImage.src !== imagePath) {
+          const imagePath = Unit.getImagePathForUnitId(unitSource.id);
+          if (elInspectorTooltipImage.src !== imagePath) {
 
-          elInspectorTooltipImage.src = imagePath;
+            elInspectorTooltipImage.src = imagePath;
+          }
         }
       }
       break;

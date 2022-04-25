@@ -20,14 +20,16 @@ off of all existing targeted units to units touching them.
     effect: async (state) => {
       for (let i = 0; i < state.targetedUnits.length; i++) {
         const unit = state.targetedUnits[i];
-        // Find all units touching the spell origin
-        const chained_units = getTouchingUnitsRecursive(
-          unit.x,
-          unit.y,
-          state.targetedUnits
-        );
-        // Update targetedUnits
-        chained_units.forEach(u => addUnitTarget(u, state))
+        if (unit) {
+          // Find all units touching the spell origin
+          const chained_units = getTouchingUnitsRecursive(
+            unit.x,
+            unit.y,
+            state.targetedUnits
+          );
+          // Update targetedUnits
+          chained_units.forEach(u => addUnitTarget(u, state))
+        }
       }
 
       return state;

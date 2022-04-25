@@ -12,6 +12,7 @@ describe('Angle', () => {
         ];
         for (let [from, to, expected] of testPairs) {
             it(`should return the angle ${expected} going counterclockwise between the angles ${from} and ${to}`, () => {
+                // @ts-expect-error ts(2532) from & to are possibly undefined
                 const actual = clockwiseAngle(from * Math.PI / 180, to * Math.PI / 180) * 180 / Math.PI;
                 expect(actual).toEqual(expected);
             });

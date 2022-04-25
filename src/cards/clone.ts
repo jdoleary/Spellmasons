@@ -29,31 +29,32 @@ Clones each target
       }
       // Clone all the batched clone jobs
       for (let [target, cloneSourceCoords] of clonePairs) {
-        const unit = window.underworld.getUnitAt(target);
-        const pickup = window.underworld.getPickupAt(target);
+        if (target) {
+          const unit = window.underworld.getUnitAt(target);
+          const pickup = window.underworld.getPickupAt(target);
 
-        // If there is are clone coordinates to clone into
-        if (cloneSourceCoords) {
-          if (unit) {
-            const clone = Unit.load(unit);
-            // If the cloned unit is player controlled, make them be controlled by the AI
-            if (clone.unitSubType == UnitSubType.PLAYER_CONTROLLED) {
-              clone.unitType = UnitType.AI;
-              clone.unitSubType = UnitSubType.GOON;
-              removeSubSprite(clone.image, 'ownCharacterMarker');
+          // If there is are clone coordinates to clone into
+          if (cloneSourceCoords) {
+            if (unit) {
+              const clone = Unit.load(unit);
+              // If the cloned unit is player controlled, make them be controlled by the AI
+              if (clone.unitSubType == UnitSubType.PLAYER_CONTROLLED) {
+                clone.unitType = UnitType.AI;
+                clone.unitSubType = UnitSubType.GOON;
+                removeSubSprite(clone.image, 'ownCharacterMarker');
+              }
+              await Unit.moveTowards(clone, { x: unit.x + config.COLLISION_MESH_RADIUS, y: unit.y });
             }
-            await Unit.moveTowards(clone, { x: unit.x + config.COLLISION_MESH_RADIUS, y: unit.y });
-          }
-          if (pickup) {
-            const validSpawnCoords = window.underworld.findValidSpawn(cloneSourceCoords)
-            if (validSpawnCoords) {
-              const clone = Pickup.load(pickup);
-              Pickup.setPosition(clone, validSpawnCoords.x, validSpawnCoords.y);
-            } else {
-              floatingText({ coords: cloneSourceCoords, text: 'No space to clone into!' });
+            if (pickup) {
+              const validSpawnCoords = window.underworld.findValidSpawn(cloneSourceCoords)
+              if (validSpawnCoords) {
+                const clone = Pickup.load(pickup);
+                Pickup.setPosition(clone, validSpawnCoords.x, validSpawnCoords.y);
+              } else {
+                floatingText({ coords: cloneSourceCoords, text: 'No space to clone into!' });
+              }
             }
           }
-
         }
       }
       return state;

@@ -18,11 +18,16 @@ interface Lerpable {
 // unit flash white when it takes damage
 function processLerpList(currentTime: number, lerpQueue: Lerpable[]) {
     for (let i = lerpQueue.length - 1; i >= 0; i--) {
-        const { mutatable, key, startVal, endVal, duration } = lerpQueue[i];
-        mutatable[key] = lerp(startVal, endVal, (currentTime - lerpQueue[i].startTime) / duration);
-        // Remove from the queue when the lerp is finished
-        if (currentTime - lerpQueue[i].startTime >= duration) {
-            lerpQueue.splice(i, 1);
+        const lerpInstance = lerpQueue[i];
+        if (lerpInstance) {
+            const { mutatable, key, startVal, endVal, duration } = lerpInstance;
+            mutatable[key] = lerp(startVal, endVal, (currentTime - lerpInstance.startTime) / duration);
+            // Remove from the queue when the lerp is finished
+            if (currentTime - lerpInstance.startTime >= duration) {
+                lerpQueue.splice(i, 1);
+            }
+        } else {
+            console.error('Lerp queue loop is malformed')
         }
     }
 

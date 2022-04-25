@@ -39,10 +39,26 @@ export function* makePolygonIndexIterator(polygon: Polygon, startIndex: number =
 export function getPointsFromPolygonStartingAt(polygon: Polygon, startPoint: Vec2): Vec2[] {
     const startPointIndex = polygon.points.findIndex(p => Vec.equal(p, startPoint))
     if (startPointIndex == -1) {
-        // startPoint is not on polygon
+        // startPoint is not on polygon;
+        // Note sometimes this function is used to determine if two polygons are equivalent
+        // so it is within the relm of regular usage to pass a startPoint that pay not
+        // exist on polygon.points
         return []
     } else {
-        return Array.from(makePolygonIndexIterator(polygon, startPointIndex)).map(i => polygon.points[i])
+        const polygonIndicies = Array.from(makePolygonIndexIterator(polygon, startPointIndex))
+        const vec2s = polygonIndicies.map(i => {
+            if (polygon.points[i]) {
+                return polygon.points[i];
+            } else {
+                return undefined
+            }
+        })
+        // Typeguard
+        if (vec2s.some(v => v == undefined)) {
+            console.error('One or more polygonIndicies are undefined')
+            return [];
+        }
+        return vec2s as Vec2[];
     }
 }
 
@@ -92,7 +108,7 @@ function growOverlappingCollinearLinesInDirectionOfP2(line: LineSegment, walls: 
     return line;
 
 }
-function getClosestBranch(line: LineSegment, walls: PolygonLineSegment[]): Branch {
+function getClosestBranch(line: LineSegment, walls: PolygonLineSegment[]): Branch | undefined {
     line = growOverlappingCollinearLinesInDirectionOfP2(line, walls);
 
     let branches: Branch[] = [];
@@ -114,16 +130,26 @@ function getClosestBranch(line: LineSegment, walls: PolygonLineSegment[]): Branc
                 otherPolyStartPoint = wall.p1;
             }
             const otherPolyNextPoints = getPointsFromPolygonStartingAt(wall.polygon, otherPolyStartPoint);
-            // If the intersection is the first vertex then the next point is the second vertex
-            // but if the intersection is just an intersection along the line, then the next point is the first vertex
-            const nextPoint = Vec.equal(otherPolyNextPoints[0], intersection) ? otherPolyNextPoints[1] : otherPolyNextPoints[0];
-            const nextLineAngle = Vec.getAngleBetweenVec2s(intersection, nextPoint);
-            const branchAngle = clockwiseAngle(lastLineAngle, nextLineAngle);
-            branches.push({
-                branchAngle,
-                distance: dist,
-                nextLine: { p1: Vec.round(intersection), p2: nextPoint, polygon: wall.polygon },
-            });
+            const otherPolyFirstPoint = otherPolyNextPoints[0];
+            const otherPolySecondPoint = otherPolyNextPoints[1];
+            if (otherPolyFirstPoint) {
+                const nextPoint = Vec.equal(otherPolyFirstPoint, intersection) ? otherPolySecondPoint : otherPolyFirstPoint;
+                if (nextPoint) {
+                    // If the intersection is the first vertex then the next point is the second vertex
+                    // but if the intersection is just an intersection along the line, then the next point is the first vertex
+                    const nextLineAngle = Vec.getAngleBetweenVec2s(intersection, nextPoint);
+                    const branchAngle = clockwiseAngle(lastLineAngle, nextLineAngle);
+                    branches.push({
+                        branchAngle,
+                        distance: dist,
+                        nextLine: { p1: Vec.round(intersection), p2: nextPoint, polygon: wall.polygon },
+                    });
+                } else {
+                    console.error('nextPoint is unexpectedly missing.')
+                }
+            } else {
+                console.error('otherPolyFirstPoint is unexpectedly missing.')
+            }
         }
     }
     // Sort branches by distance (then by angle)
@@ -167,11 +193,19 @@ function getClosestBranch(line: LineSegment, walls: PolygonLineSegment[]): Branc
 // Note: p2 is always the "next" point in terms of the index being greater than
 // the index of p1
 export function polygonToPolygonLineSegments(polygon: Polygon): PolygonLineSegment[] {
+    if (!polygon.points[0]) {
+        return [];
+    }
     let lastPoint = polygon.points[0];
     let lineSegments: PolygonLineSegment[] = [];
     for (let i = 1; i < polygon.points.length; i++) {
-        lineSegments.push({ p1: lastPoint, p2: polygon.points[i], polygon });
-        lastPoint = polygon.points[i];
+        const point = polygon.points[i];
+        if (point) {
+            lineSegments.push({ p1: lastPoint, p2: point, polygon });
+            lastPoint = point;
+        } else {
+            console.error('Something went wrong in the for loop of polygonToPolygonLineSements.  points[i] is undefined');
+        }
     }
     // Add line from last point to first point:
     lineSegments.push({ p1: lastPoint, p2: polygon.points[0], polygon });
@@ -195,14 +229,25 @@ function arePolygonsEquivalent(p1: Polygon, p2: Polygon): boolean {
     if (p1.points.length != p2.points.length) {
         return false;
     }
-    const otherPolyIterator = getPointsFromPolygonStartingAt(p2, p1.points[0]);
+    const p1StartPoint = p1.points[0];
+    if (!p1StartPoint) {
+        // p1 polygon has no points
+        return false;
+    }
+    const otherPolyIterator = getPointsFromPolygonStartingAt(p2, p1StartPoint);
     const otherPolyPointsOrderedAsP1Points = Array.from(otherPolyIterator);
     if (otherPolyIterator.length == 0) {
         return false;
     }
     for (let i = 0; i < p1.points.length; i++) {
-        if (!Vec.equal(p1.points[i], otherPolyPointsOrderedAsP1Points[i])) {
-            return false;
+        const p = p1.points[i];
+        const otherP = otherPolyPointsOrderedAsP1Points[i];
+        if (p && otherP) {
+            if (!Vec.equal(p, otherP)) {
+                return false;
+            }
+        } else {
+            console.error('arePolygonsEquivalent: p or otherP are undefined. This error should never happen.')
         }
     }
     return true;
@@ -231,24 +276,34 @@ export function getNormalVectorOfLineSegment(lineSegment: LineSegment): Vec2 {
 }
 function projectPointForPathingMesh(polygon: Polygon, pointIndex: number, magnitude: number, yAxisOnlyUp: boolean): Vec2 {
     const point = polygon.points[pointIndex];
-    const nextPoint = polygon.points[getLoopableIndex(pointIndex + (polygon.inverted ? -1 : 1), polygon.points)];
-    const prevPoint = polygon.points[getLoopableIndex(pointIndex + (polygon.inverted ? 1 : -1), polygon.points)];
-    const projectToPoint = getPointNormalVector(point, prevPoint, nextPoint)
-    projectToPoint.x *= magnitude;
-    projectToPoint.y *= magnitude;
-    if (yAxisOnlyUp) {
-        // yAxisOnlyUp is used for expanding the poly mesh of walls
-        // upwards only to give them the appearance of height, so
-        // units can stand in front of and behind them.
-        // However we are dividing by 2 because we still
-        // want units to have some "depth" thickness so they
-        // don't just look like paper held in front of the wall
-        projectToPoint.y = -Math.abs(projectToPoint.y) / 2;
-    }
+    if (point) {
+        const nextPoint = polygon.points[getLoopableIndex(pointIndex + (polygon.inverted ? -1 : 1), polygon.points)];
+        const prevPoint = polygon.points[getLoopableIndex(pointIndex + (polygon.inverted ? 1 : -1), polygon.points)];
+        if (nextPoint && prevPoint) {
+            const projectToPoint = getPointNormalVector(point, prevPoint, nextPoint)
+            projectToPoint.x *= magnitude;
+            projectToPoint.y *= magnitude;
+            if (yAxisOnlyUp) {
+                // yAxisOnlyUp is used for expanding the poly mesh of walls
+                // upwards only to give them the appearance of height, so
+                // units can stand in front of and behind them.
+                // However we are dividing by 2 because we still
+                // want units to have some "depth" thickness so they
+                // don't just look like paper held in front of the wall
+                projectToPoint.y = -Math.abs(projectToPoint.y) / 2;
+            }
 
-    // Round to the nearest whole number to avoid floating point inequalities later
-    // when processing these points
-    return Vec.round(Vec.add(point, projectToPoint));
+            // Round to the nearest whole number to avoid floating point inequalities later
+            // when processing these points
+            return Vec.round(Vec.add(point, projectToPoint));
+        } else {
+            console.error('projectPointForPathingMesh: nextPoint or prevPoint is undefined.  This error should never happen.');
+            return { x: 0, y: 0 };
+        }
+    } else {
+        console.error('projectPointForPathingMesh: point is undefined.  This error should never happen.');
+        return { x: 0, y: 0 };
+    }
 
 }
 
@@ -293,11 +348,21 @@ function getPointNormalVector(point: Vec2, prevPoint: Vec2, nextPoint: Vec2): Ve
 // part of the polygon
 export function getInsideAnglesOfPoint(polygon: Polygon, pointIndex: number): { start: number, end: number } {
     const point = polygon.points[pointIndex];
-    const nextPoint = polygon.points[getLoopableIndex(pointIndex + (polygon.inverted ? -1 : 1), polygon.points)];
-    const prevPoint = polygon.points[getLoopableIndex(pointIndex + (polygon.inverted ? 1 : -1), polygon.points)];
-    const angleToPrevPoint = Vec.getAngleBetweenVec2s(point, prevPoint);
-    const angleToNextPoint = Vec.getAngleBetweenVec2s(point, nextPoint);
-    return { start: angleToNextPoint, end: angleToPrevPoint };
+    if (point) {
+        const nextPoint = polygon.points[getLoopableIndex(pointIndex + (polygon.inverted ? -1 : 1), polygon.points)];
+        const prevPoint = polygon.points[getLoopableIndex(pointIndex + (polygon.inverted ? 1 : -1), polygon.points)];
+        if (nextPoint && prevPoint) {
+            const angleToPrevPoint = Vec.getAngleBetweenVec2s(point, prevPoint);
+            const angleToNextPoint = Vec.getAngleBetweenVec2s(point, nextPoint);
+            return { start: angleToNextPoint, end: angleToPrevPoint };
+        } else {
+            console.error('getInsideAnglesOfPoint: nextPoint or prevPoint is undefined. This error should never happen.');
+            return { start: 0, end: 0 };
+        }
+    } else {
+        console.error('getInsideAnglesOfPoint: point is undefined. This error should never happen.');
+        return { start: 0, end: 0 };
+    }
 }
 function getOutsideAngleOfPoint(prevPoint: Vec2, point: Vec2, nextPoint: Vec2): number {
     const angleToPrevPoint = Vec.getAngleBetweenVec2s(point, prevPoint);
@@ -317,15 +382,15 @@ export function getInsideAnglesOfWall(p: PolygonLineSegment): { start: number, e
 // Returns true if casting a line from point (a vertex on a polygon) to a target Vec2 passes through the
 // inside of point's polygon
 export function doesLineFromPointToTargetProjectAwayFromOwnPolygon(polygon: Polygon, pointIndex: number, target: Vec2): boolean {
-
-    if (pointIndex >= polygon.points.length) {
+    const point = polygon.points[pointIndex];
+    if (point !== undefined) {
+        const { start, end } = getInsideAnglesOfPoint(polygon, pointIndex);
+        const angleToTarget = Vec.getAngleBetweenVec2s(point, target);
+        return !isAngleBetweenAngles(angleToTarget, start, end);
+    } else {
         console.error("Invalid pointIndex");
         return false;
     }
-    const { start, end } = getInsideAnglesOfPoint(polygon, pointIndex);
-    const angleToTarget = Vec.getAngleBetweenVec2s(polygon.points[pointIndex], target);
-    return !isAngleBetweenAngles(angleToTarget, start, end);
-
 }
 
 // Note: There is a slight flaw in this algorithm in that if the point lies
@@ -362,17 +427,24 @@ export function isVec2InsidePolygon(point: Vec2, polygon: Polygon): boolean {
             if (Vec.equal(intersection, wall.p1) || Vec.equal(intersection, wall.p2)) {
                 // Get the INSIDE angle of the vertex (relative to it's polygon)
                 const indexOfVertex = polygon.points.findIndex(p => Vec.equal(p, intersection));
-                const startClockwiseAngle = Vec.getAngleBetweenVec2s(intersection, polygon.points[getLoopableIndex(indexOfVertex + 1, polygon.points)]);
-                const endClockwiseAngle = Vec.getAngleBetweenVec2s(intersection, polygon.points[getLoopableIndex(indexOfVertex - 1, polygon.points)]);
-                // Take the vectors: line.p1 (the point) to vertex/intersection and vertex/intersection to line.p2
-                const v1Angle = Vec.getAngleBetweenVec2s(intersection, horizontalLine.p1);
-                const v2Angle = Vec.getAngleBetweenVec2s(intersection, horizontalLine.p2);
-                const allowableAngle = clockwiseAngle(startClockwiseAngle, endClockwiseAngle);
-                const v1AngleInside = Vec.equal(intersection, point) || clockwiseAngle(startClockwiseAngle, v1Angle) <= allowableAngle;
-                const v2AngleInside = clockwiseAngle(startClockwiseAngle, v2Angle) <= allowableAngle;
-                // Only flip if v1AngleInside XOR v2AngleInside
-                if (v1AngleInside !== v2AngleInside) {
-                    isInside = !isInside;
+                const nextPoint = polygon.points[getLoopableIndex(indexOfVertex + 1, polygon.points)];
+                const prevPoint = polygon.points[getLoopableIndex(indexOfVertex - 1, polygon.points)];
+                if (nextPoint && prevPoint) {
+
+                    const startClockwiseAngle = Vec.getAngleBetweenVec2s(intersection, nextPoint);
+                    const endClockwiseAngle = Vec.getAngleBetweenVec2s(intersection, prevPoint);
+                    // Take the vectors: line.p1 (the point) to vertex/intersection and vertex/intersection to line.p2
+                    const v1Angle = Vec.getAngleBetweenVec2s(intersection, horizontalLine.p1);
+                    const v2Angle = Vec.getAngleBetweenVec2s(intersection, horizontalLine.p2);
+                    const allowableAngle = clockwiseAngle(startClockwiseAngle, endClockwiseAngle);
+                    const v1AngleInside = Vec.equal(intersection, point) || clockwiseAngle(startClockwiseAngle, v1Angle) <= allowableAngle;
+                    const v2AngleInside = clockwiseAngle(startClockwiseAngle, v2Angle) <= allowableAngle;
+                    // Only flip if v1AngleInside XOR v2AngleInside
+                    if (v1AngleInside !== v2AngleInside) {
+                        isInside = !isInside;
+                    }
+                } else {
+                    console.error('Next point or prev point is undefined. This error should never occur.');
                 }
             } else if (Vec.equal(intersection, point)) {
                 // The point itself is an intersection point, meaning the point lies directly on one of the walls of the polygon
@@ -427,16 +499,18 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
     // will cancel each other out because there will be no start point to begin processing.
     for (let i = polygons.length - 1; i >= 0; i--) {
         const polygon = polygons[i];
-        for (let otherPoly of polygons) {
-            // Don't test against self
-            if (polygon == otherPoly) {
-                continue;
-            }
-            if (arePolygonsEquivalent(polygon, otherPoly)) {
-                polygons.splice(i, 1);
-                break;
-            }
+        if (polygon) {
+            for (let otherPoly of polygons) {
+                // Don't test against self
+                if (polygon == otherPoly) {
+                    continue;
+                }
+                if (arePolygonsEquivalent(polygon, otherPoly)) {
+                    polygons.splice(i, 1);
+                    break;
+                }
 
+            }
         }
     }
 
@@ -476,16 +550,18 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
         }
 
         const originalPolyPoints = getPointsFromPolygonStartingAt(processingPolygon, firstPoint);
-        if (originalPolyPoints.length < 2) {
+        const originalFirstPoint = originalPolyPoints[0];
+        const originalSecondPoint = originalPolyPoints[1];
+        if (!originalFirstPoint || !originalSecondPoint) {
             // Polygon cannot be processed because we can't find it's array of points starting from firstPoint
             badPolys.push(processingPolygon);
             return false;
         }
         // p1 represents the last intersection, and p2 is where it INTENDS to go to next
-        let currentLine: PolygonLineSegment = { p1: originalPolyPoints[0], p2: originalPolyPoints[1], polygon: processingPolygon };
+        let currentLine: PolygonLineSegment = { p1: originalFirstPoint, p2: originalSecondPoint, polygon: processingPolygon };
         const newPoly: Polygon = { points: [], inverted: false };
         // The first point to iterate is also the firstPoint of the new poly
-        newPoly.points.push(originalPolyPoints[0]);
+        newPoly.points.push(originalFirstPoint);
         // TODO update loop limit to something not just for testing
         const loopLimit = 200
         // TODO handle bad polys in a more sustainable way

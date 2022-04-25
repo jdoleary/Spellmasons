@@ -160,7 +160,7 @@ export async function startTutorial() {
   const clientsLeftToChooseCharacters = clients.length - window.underworld.players.length;
   // Starts a new game if all clients have chosen characters, THIS client is the host, and 
   // if the game hasn't already been started
-  if (currentClientIsHost && clientsLeftToChooseCharacters <= 0 && !gameAlreadyStarted) {
+  if (tutorialLevels[0] && currentClientIsHost && clientsLeftToChooseCharacters <= 0 && !gameAlreadyStarted) {
     console.log('Host: Start tutorial');
     window.underworld.initHandcraftedLevel(tutorialLevels[0]);
     window.underworld.gameStarted = true;
@@ -280,25 +280,35 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
           return;
         } else {
           const sourceUnit = window.underworld.units[i];
-          if (syncUnit.id !== sourceUnit.id) {
+          if (sourceUnit && syncUnit.id !== sourceUnit.id) {
             console.error('Sync failure, units are out of order', syncUnit.id, sourceUnit.id);
             // Client incurred major desync, resolve via DESYNC message
             window.pie.sendData({ type: MESSAGE_TYPES.DESYNC });
             return;
           } else {
-            Unit.syncronize(syncUnit, window.underworld.units[i]);
+            const originalUnit = window.underworld.units[i]
+            if (originalUnit !== undefined) {
+              Unit.syncronize(syncUnit, originalUnit);
+            } else {
+              console.error('Cannot SYNC, originalUnit is undefined')
+            }
           }
         }
       }
       for (let i = 0; i < window.underworld.players.length; i++) {
         const syncPlayer = players[i]
-        if (!syncPlayer || syncPlayer.clientId !== window.underworld.players[i].clientId) {
+        const originalPlayer = window.underworld.players[i]
+        if (!syncPlayer || (originalPlayer && syncPlayer.clientId !== originalPlayer.clientId)) {
           console.error("Something is wrong, underworld has different players than sync players")
           // Client incurred major desync, resolve via DESYNC message
           window.pie.sendData({ type: MESSAGE_TYPES.DESYNC });
           return;
         } else {
-          Player.syncronize(syncPlayer, window.underworld.players[i]);
+          if (originalPlayer) {
+            Player.syncronize(syncPlayer, originalPlayer);
+          } else {
+            console.error('Cannot SYNC, original player is undefined')
+          }
         }
       }
 
@@ -449,7 +459,7 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
   console.log('clientPresenceChanged', o);
   clients = o.clients;
   // Client joined
-  if (o.present) {
+  if (o.present && clients[0] !== undefined) {
     // The host is always the first client
     window.hostClientId = clients[0];
     if (window.hostClientId === window.clientId) {
@@ -477,7 +487,7 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
     }
 
     // if host left
-    if (o.clientThatChanged === window.hostClientId) {
+    if (o.clientThatChanged === window.hostClientId && clients[0] !== undefined) {
       // Set host to the 0th client that is still connected
       window.hostClientId = clients[0];
       if (window.hostClientId === window.clientId) {
@@ -533,11 +543,11 @@ window.saveReplay = (title: string) => {
   storage.set('golems-' + title, JSON.stringify(messageLog));
 };
 // TODO, replay is currently broken
-window.replay = (title: string) => {
-  const messages = JSON.parse(storage.get('golems-' + title) || '[]');
-  for (let i = 0; i < messages.length; i++) {
-    const message = messages[i];
-    message.fromClient = window.underworld.players[0].clientId;
-    onData(message);
-  }
-};
+// window.replay = (title: string) => {
+//   const messages = JSON.parse(storage.get('golems-' + title) || '[]');
+//   for (let i = 0; i < messages.length; i++) {
+//     const message = messages[i];
+//     message.fromClient = window.underworld.players[0].clientId;
+//     onData(message);
+//   }
+// };

@@ -187,7 +187,6 @@ export function addModifier(unit: IUnit, key: string) {
     } else {
       console.error('No "add" modifier for ', key);
     }
-
   } else {
     console.error('Modifier ', key, 'never registered.');
   }
@@ -342,9 +341,11 @@ export function die(unit: IUnit) {
 
   for (let i = 0; i < unit.onDeathEvents.length; i++) {
     const eventName = unit.onDeathEvents[i];
-    const fn = Events.onDeathSource[eventName];
-    if (fn) {
-      fn(unit);
+    if (eventName) {
+      const fn = Events.onDeathSource[eventName];
+      if (fn) {
+        fn(unit);
+      }
     }
   }
 

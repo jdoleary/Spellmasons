@@ -22,8 +22,12 @@ export const NUMBER_OF_UPGRADES_TO_CHOOSE_FROM = 5;
 // Obstacle sectors must be squares
 // Obstacle sector makeup is hard-coded as 3x3 but can be changed if
 // all of the Sectors are changed in ObstacleSectors.ts
-export const OBSTACLES_PER_SECTOR_WIDE = obstacleSectors[0][0].length;
-export const OBSTACLES_PER_SECTOR_TALL = obstacleSectors[0].length;
+const firstRowOfSectors = obstacleSectors[0]
+export const OBSTACLES_PER_SECTOR_WIDE = firstRowOfSectors ? firstRowOfSectors[0].length : 0;
+export const OBSTACLES_PER_SECTOR_TALL = firstRowOfSectors ? firstRowOfSectors.length : 0;
+if (OBSTACLES_PER_SECTOR_WIDE === 0 || OBSTACLES_PER_SECTOR_TALL === 0) {
+    console.error('Obstacle sector data missing');
+}
 export const OBSTACLE_SIZE = COLLISION_MESH_RADIUS * 2;
 
 // Mana

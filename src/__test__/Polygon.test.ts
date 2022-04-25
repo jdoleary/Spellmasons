@@ -1,4 +1,4 @@
-
+// @ts-nocheck
 import type { Vec2 } from "../Vec";
 import { testables, Branch, makePolygonIndexIterator, Polygon, expandPolygon, mergeOverlappingPolygons, polygonToPolygonLineSegments, getInsideAnglesOfPoint, doesLineFromPointToTargetProjectAwayFromOwnPolygon, getInsideAnglesOfWall } from '../Polygon';
 import type { LineSegment } from "../collision/collisionMath";

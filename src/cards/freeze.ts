@@ -38,9 +38,12 @@ Freezes the target(s) for 1 turn, preventing them from moving or acting.
   events: {
     onTurnStart: async (unit: Unit.IUnit) => {
       // Decrement how many turns left the unit is frozen
-      unit.modifiers[id] && unit.modifiers[id].turnsLeft--;
-      if (unit.modifiers[id] && unit.modifiers[id].turnsLeft <= 0) {
-        Unit.removeModifier(unit, id);
+      const modifier = unit.modifiers[id];
+      if (modifier) {
+        modifier.turnsLeft--;
+        if (modifier.turnsLeft <= 0) {
+          Unit.removeModifier(unit, id);
+        }
       }
       // Ensure that the unit cannot move when frozen
       // (even when players' turns are ended they can still act so long
@@ -75,7 +78,9 @@ function add(unit: Unit.IUnit) {
     unit.radius = config.COLLISION_MESH_RADIUS
     unit.modifiers[id] = { isCurse: true };
     // Add event
-    unit.onTurnStartEvents.push(id);
+    if (!unit.onTurnStartEvents.includes(id)) {
+      unit.onTurnStartEvents.push(id);
+    }
 
     // Add subsprite image
     Image.addSubSprite(unit.image, id);
@@ -83,8 +88,13 @@ function add(unit: Unit.IUnit) {
     // act as a blockade
     unit.immovable = true;
   }
-  // Increment the number of turns that freeze is applied (can stack)
-  unit.modifiers[id].turnsLeft = (unit.modifiers[id].turnsLeft || 0) + 1;
+  const modifier = unit.modifiers[id];
+  if (modifier) {
+    // Increment the number of turns that freeze is applied (can stack)
+    modifier.turnsLeft = (modifier.turnsLeft || 0) + 1;
+  } else {
+    console.error('Freeze modifier does not exist')
+  }
 }
 function remove(unit: Unit.IUnit) {
   unit.radius = config.UNIT_BASE_RADIUS

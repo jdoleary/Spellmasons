@@ -98,7 +98,7 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
             });
         }
         // Find the closest of the nearPointsOnWalls 
-        if (nearPointsOnWalls.length) {
+        if (nearPointsOnWalls[0]) {
             const closest = nearPointsOnWalls.reduce<{ intersection: Vec2, dist: number }>((acc, cur) => {
                 const dist = distance(cur, target)
                 if (dist <= acc.dist) {
@@ -140,7 +140,7 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
         // Optimization
         calculateDistanceOfPaths(paths);
         const shortestFinishedPaths = paths.filter(p => p.done && !p.invalid).sort((a, b) => a.distance - b.distance);
-        if (shortestFinishedPaths.length) {
+        if (shortestFinishedPaths[0]) {
             const shortestFinishedDistance = shortestFinishedPaths[0].distance;
             // Make all paths that are already longer than the shortest, finished path invalid.
             // even if they are not done processing, because even if they'd be valid, they would be
@@ -223,7 +223,13 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
         function tryOptimizePath(path: Path): boolean {
             for (let i = 0; i < path.points.length; i++) {
                 for (let j = path.points.length - 1; j > i + 1; j--) {
-                    const nextLine = { p1: path.points[i], p2: path.points[j] }
+                    const p1 = path.points[i];
+                    const p2 = path.points[j];
+                    if (!(p1 && p2)) {
+                        console.error('Loop malformed. p1 or p2 is undefined')
+                        continue;
+                    }
+                    const nextLine = { p1, p2 }
                     let { intersectingWall, closestIntersection } = getClosestIntersectionWithWalls(nextLine, pathingWalls);
                     if (intersectingWall) {
                         const intersectingPoly = intersectingWall.polygon;
@@ -247,7 +253,7 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
                                 continue;
                             }
                         }
-                        if (!closestIntersection || Vec.equal(closestIntersection, path.points[j])) {
+                        if (!closestIntersection || Vec.equal(closestIntersection, p2)) {
                             // window.debugGraphics.lineStyle(1, 0xff0000, 1);
                             // window.debugGraphics.drawCircle(path.points[i].x, path.points[i].y, 4);
                             // window.debugGraphics.lineStyle(1, 0x0000ff, 1);
@@ -306,7 +312,8 @@ function walkAroundAPoly(path: Path, pathingWalls: PolygonLineSegment[]) {
     }
     // If the target point is on the line between the last point and this point, we've found the path and can exit.
     // This occurs if the target point lies directly on an edge of the current polygon
-    if (isPointOnLineSegment(path.target, { p1: path.points[path.points.length - 1], p2: vertex })) {
+    const endPoint = path.points[path.points.length - 1]
+    if (endPoint && isPointOnLineSegment(path.target, { p1: endPoint, p2: vertex })) {
         path.done = true
         return;
     }
@@ -429,7 +436,7 @@ function processPaths(paths: Path[], pathingWalls: PolygonLineSegment[]): Path[]
                                 // If the closestIntersection is the same as a point from another path
                                 // invalidate the longer path, since whichever path is shorter is
                                 // a quicker route to that point
-                                if (Vec.equal(closestIntersection, point)) {
+                                if (point && Vec.equal(closestIntersection, point)) {
                                     const lengthOfCurrentPathToThisVertex = calculateDistanceOfVec2Array([...path.points, closestIntersection]);
                                     const lengthOfOtherPathToThisVertex = calculateDistanceOfVec2Array(otherPath.points.slice(0, i + 1));
                                     if (lengthOfCurrentPathToThisVertex < lengthOfOtherPathToThisVertex) {
@@ -512,7 +519,13 @@ function calculateDistanceOfVec2Array(points: Vec2[]) {
     let totalDistance = 0;
     // Finally, calculate the distance for the path 
     for (let i = 0; i < points.length - 2; i++) {
-        totalDistance += distance(points[i], points[i + 1]);
+        const point = points[i];
+        const nextPoint = points[i + 1];
+        if (point !== undefined && nextPoint !== undefined) {
+            totalDistance += distance(point, nextPoint);
+        } else {
+            console.error('loop is malformed')
+        }
     }
     return totalDistance;
 }
@@ -520,7 +533,13 @@ function polygonLineSegmentToPrevAndNext(wall: PolygonLineSegment): { prev: Vec2
     return { prev: wall.p1, next: wall.p2 };
 }
 function getLastLineInPath(path: Path): LineSegment {
-    return { p1: path.points[path.points.length - 1], p2: path.target };
+    const lastPoint = path.points[path.points.length - 1]
+    if (lastPoint) {
+        return { p1: lastPoint, p2: path.target };
+    } else {
+        console.error("Path contains no points");
+        return { p1: path.target, p2: path.target };
+    }
 
 }
 // Given an array of PolygonLineSegment[], of all the intersections between line and the walls,

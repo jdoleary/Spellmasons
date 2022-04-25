@@ -4,6 +4,7 @@ import { View } from './views';
 import * as math from './math';
 import * as config from './config';
 import { keyDown } from './ui/eventListeners';
+import type { LoaderResource } from 'pixi.js';
 
 // if PIXI is finished setting up
 let isReady = false;
@@ -82,12 +83,13 @@ export function updateCameraPosition() {
     case View.Game:
       if (window.player) {
         if (doCameraAutoFollow) {
+          const activeTurnPlayer = window.underworld.players[window.underworld.playerTurnIndex];
           if (!window.player.inPortal && window.player.unit.alive) {
             // Follow current client player
             camera = clone(window.player.unit);
-          } else if (window.underworld.players[window.underworld.playerTurnIndex]) {
+          } else if (activeTurnPlayer) {
             // Follow active turn player
-            camera = clone(window.underworld.players[window.underworld.playerTurnIndex].unit);
+            camera = clone(activeTurnPlayer.unit);
           } else {
             // Set camera to the center of the map
             camera = { x: window.underworld.width / 2, y: window.underworld.height / 2 };
@@ -221,8 +223,9 @@ function loadTextures(): Promise<void> {
     loader.add(sheetPath);
     loader.load((_loader, resources) => {
       resources = resources;
-      if (resources[sheetPath] && resources[sheetPath].spritesheet) {
-        sheet = resources[sheetPath].spritesheet as PIXI.Spritesheet;
+      const resource = resources[sheetPath]
+      if (resource && resource.spritesheet) {
+        sheet = resource.spritesheet as PIXI.Spritesheet;
         isReady = true;
         resolve();
       } else {
@@ -243,7 +246,7 @@ export function addAnimatedPixiSprite(
   }
   const textures = [];
   for (let path of imagePaths) {
-    const resource: PIXI.ILoaderResource = resources[path];
+    const resource: PIXI.ILoaderResource = resources[path] as LoaderResource;
     if (resource && resource.texture) {
       textures.push(resource.texture);
     } else {
@@ -277,7 +280,7 @@ export function addPixiSprite(
   let sprite: PIXI.Sprite;
   let texture = sheet.animations[imagePath];
   if (texture) {
-    const animatedSprite = new PIXI.AnimatedSprite(sheet.animations[imagePath]);
+    const animatedSprite = new PIXI.AnimatedSprite(texture);
     animatedSprite.animationSpeed = options.animationSpeed || 0.1;
     if (options.onComplete) {
       animatedSprite.onComplete = options.onComplete;

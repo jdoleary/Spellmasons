@@ -188,11 +188,15 @@ export function addSubSprite(image: IImage | undefined, key: string) {
   if (!image.subSprites.includes(key)) {
     image.subSprites.push(key);
     const subSpriteData = Subsprites[key];
-    const sprite = addPixiSprite(subSpriteData.imageName, image.sprite);
-    sprite.alpha = subSpriteData.alpha;
-    sprite.anchor.set(subSpriteData.anchor.x, subSpriteData.anchor.y);
-    sprite.scale.set(subSpriteData.scale.x, subSpriteData.scale.y);
-    image.subSpriteInstances[key] = sprite;
+    if (subSpriteData) {
+      const sprite = addPixiSprite(subSpriteData.imageName, image.sprite);
+      sprite.alpha = subSpriteData.alpha;
+      sprite.anchor.set(subSpriteData.anchor.x, subSpriteData.anchor.y);
+      sprite.scale.set(subSpriteData.scale.x, subSpriteData.scale.y);
+      image.subSpriteInstances[key] = sprite;
+    } else {
+      console.error("Missing subsprite data")
+    }
   }
 }
 export function removeSubSprite(image: IImage | undefined, key: string) {

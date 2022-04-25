@@ -1,4 +1,7 @@
 # Tasks
+- Shield and vulnerable combine in weird ways, shield is only aware of the predamage damage
+- Make all units properly orient to face their enemy
+    - Don't handle this logic in unique unit action fns
 - drag -n drop should move the dropped on to the right
 ---
 Game breaking bugs

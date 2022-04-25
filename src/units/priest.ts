@@ -47,16 +47,18 @@ const unit: UnitSource = {
         for (let ally of damagedAllys) {
           if (inRange(unit, ally)) {
             const chosenUnit = damagedAllys[0];
-            await createVisualLobbingProjectile(
-              unit,
-              chosenUnit.x,
-              chosenUnit.y,
-              'holy-projectile.png',
-            );
-            // Heal for 2
-            Unit.takeDamage(chosenUnit, -2, false, undefined);
-            // Purify
-            purify(chosenUnit);
+            if (chosenUnit) {
+              await createVisualLobbingProjectile(
+                unit,
+                chosenUnit.x,
+                chosenUnit.y,
+                'holy-projectile.png',
+              );
+              // Heal for 2
+              Unit.takeDamage(chosenUnit, -2, false, undefined);
+              // Purify
+              purify(chosenUnit);
+            }
             break;
           }
         }
