@@ -34,7 +34,7 @@ export function calculateCost(cards: ICard[], casterCardUsage: CardUsage): CardC
         if (!thisCalculationUsage[card.id]) {
             thisCalculationUsage[card.id] = 0;
         }
-        const singleCardCost = calculateCostForSingleCard(card, (casterCardUsage[card.id] || 0) + thisCalculationUsage[card.id]);
+        const singleCardCost = calculateCostForSingleCard(card, (casterCardUsage[card.id] || 0) + (thisCalculationUsage[card.id] || 0));
         cost.manaCost += singleCardCost.manaCost;
         cost.healthCost += singleCardCost.healthCost;
         thisCalculationUsage[card.id] += 1;
@@ -49,7 +49,10 @@ export function _getCardsFromIds(cardIds: string[], cards: { [cardId: string]: I
     // Note: it is important that this function be able to return multiple copies of the same card
     // or else players wont be able to combine spells with multiple instances of the same card
     for (let id of cardIds) {
-        result.push(cards[id]);
+        const card = cards[id];
+        if (card) {
+            result.push(card);
+        }
     }
     return result;
 }

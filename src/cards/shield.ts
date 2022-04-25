@@ -27,7 +27,8 @@ Protects bearer from the next ${damageBlocked} damage that they would incur.  Sh
   modifiers: { add },
   events: {
     onDamage: (unit, amount, dryRun, damageDealer) => {
-      if (unit.modifiers[id]) {
+      const modifier = unit.modifiers[id];
+      if (modifier) {
         // Only block damage, not heals
         if (amount > 0) {
           let adjustedAmount = amount;
@@ -40,10 +41,10 @@ Protects bearer from the next ${damageBlocked} damage that they would incur.  Sh
               },
             });
           }
-          adjustedAmount = Math.max(0, amount - unit.modifiers[id].damage_block);
-          unit.modifiers[id].damage_block -= amount - adjustedAmount;
+          adjustedAmount = Math.max(0, amount - modifier.damage_block);
+          modifier.damage_block -= amount - adjustedAmount;
 
-          if (unit.modifiers[id] && unit.modifiers[id].damage_block <= 0) {
+          if (modifier && modifier.damage_block <= 0) {
             Unit.removeModifier(unit, id);
           }
 
@@ -74,7 +75,8 @@ Protects bearer from the next ${damageBlocked} damage that they would incur.  Sh
 
 function add(unit: Unit.IUnit) {
   // First time setup
-  if (!unit.modifiers[id]) {
+  let modifier = unit.modifiers[id];
+  if (!modifier) {
     unit.modifiers[id] = {
       isCurse: false,
     };
@@ -83,13 +85,17 @@ function add(unit: Unit.IUnit) {
     // Add subsprite image
     Image.addSubSprite(unit.image, id);
   }
-  // Increment the number of damage_block on this modifier
-  unit.modifiers[id].damage_block = (unit.modifiers[id].damage_block || 0) + damageBlocked;
-  const maxBlock = maxStack * damageBlocked;
-  if (unit.modifiers[id].damage_block > maxBlock) {
-    // Cap how much shield a unit can have
-    unit.modifiers[id].damage_block = maxBlock;
-    floatingText({ coords: unit, text: `Maximum shield` });
+  modifier = unit.modifiers[id];
+  if (modifier) {
+
+    // Increment the number of damage_block on this modifier
+    modifier.damage_block = (modifier.damage_block || 0) + damageBlocked;
+    const maxBlock = maxStack * damageBlocked;
+    if (modifier.damage_block > maxBlock) {
+      // Cap how much shield a unit can have
+      modifier.damage_block = maxBlock;
+      floatingText({ coords: unit, text: `Maximum shield` });
+    }
   }
 }
 export default spell;

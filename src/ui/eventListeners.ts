@@ -194,24 +194,26 @@ export function mouseMove() {
           const distanceLeftToMove = window.player.unit.stamina;
           for (let i = 0; i < currentPlayerPath.length; i++) {
             const point = currentPlayerPath[i];
-            const thisLineDistance = distance(lastPoint, point);
-            if (distanceCovered > distanceLeftToMove) {
-              window.walkPathGraphics.lineStyle(4, 0xffffff, 1.0);
-              window.walkPathGraphics.lineTo(point.x, point.y);
-            } else {
-              window.walkPathGraphics.lineStyle(4, colors.stamina, 1.0);
-              if (distanceCovered + thisLineDistance > distanceLeftToMove) {
-                // Draw up to the firstStop with the stamina color
-                const pointAtWhichUnitOutOfStamina = getCoordsAtDistanceTowardsTarget(lastPoint, point, distanceLeftToMove - distanceCovered);
-                window.walkPathGraphics.lineTo(pointAtWhichUnitOutOfStamina.x, pointAtWhichUnitOutOfStamina.y);
+            if (point) {
+              const thisLineDistance = distance(lastPoint, point);
+              if (distanceCovered > distanceLeftToMove) {
                 window.walkPathGraphics.lineStyle(4, 0xffffff, 1.0);
                 window.walkPathGraphics.lineTo(point.x, point.y);
               } else {
-                window.walkPathGraphics.lineTo(point.x, point.y);
+                window.walkPathGraphics.lineStyle(4, colors.stamina, 1.0);
+                if (distanceCovered + thisLineDistance > distanceLeftToMove) {
+                  // Draw up to the firstStop with the stamina color
+                  const pointAtWhichUnitOutOfStamina = getCoordsAtDistanceTowardsTarget(lastPoint, point, distanceLeftToMove - distanceCovered);
+                  window.walkPathGraphics.lineTo(pointAtWhichUnitOutOfStamina.x, pointAtWhichUnitOutOfStamina.y);
+                  window.walkPathGraphics.lineStyle(4, 0xffffff, 1.0);
+                  window.walkPathGraphics.lineTo(point.x, point.y);
+                } else {
+                  window.walkPathGraphics.lineTo(point.x, point.y);
+                }
               }
+              distanceCovered += distance(lastPoint, point);
+              lastPoint = point;
             }
-            distanceCovered += distance(lastPoint, point);
-            lastPoint = point;
           }
 
           // Draw the points along the path at which the unit will stop on each turn
@@ -222,7 +224,9 @@ export function mouseMove() {
               window.walkPathGraphics.lineStyle(4, 0xffffff, 1.0);
             }
             const point = turnStopPoints[i];
-            window.walkPathGraphics.drawCircle(point.x, point.y, 3);
+            if (point) {
+              window.walkPathGraphics.drawCircle(point.x, point.y, 3);
+            }
           }
           if (turnStopPoints.length == 0 && distanceLeftToMove > 0) {
             window.walkPathGraphics.lineStyle(4, colors.stamina, 1.0);
@@ -231,7 +235,9 @@ export function mouseMove() {
           }
           // Draw a stop circle at the end
           const lastPointInPath = currentPlayerPath[currentPlayerPath.length - 1]
-          window.walkPathGraphics.drawCircle(lastPointInPath.x, lastPointInPath.y, 3);
+          if (lastPointInPath) {
+            window.walkPathGraphics.drawCircle(lastPointInPath.x, lastPointInPath.y, 3);
+          }
         }
       } else if (CardUI.areAnyCardsSelected()) {
         // Show the cast line
@@ -370,10 +376,11 @@ export function clickHandler(e: MouseEvent) {
         // Ensure that last card doesn't require a following card
         // If it does, warn the player that their card order won't do what
         // they are expecting it to do
-        if (cards[cards.length - 1].requiresFollowingCard) {
+        const lastCard = cards[cards.length - 1];
+        if (lastCard && lastCard.requiresFollowingCard) {
           floatingText({
             coords: target,
-            text: `${cards[cards.length - 1].id} only modifies\ncards on its right`,
+            text: `${lastCard.id} only modifies\ncards on its right`,
             style: { fill: 'red' }
           });
           const elHints = document.querySelectorAll('.requires-following-card');
@@ -406,7 +413,7 @@ export function clickHandler(e: MouseEvent) {
         // on non unit targets
         const unitAtCastLocation = window.underworld.getUnitAt(target);
         const pickupAtCastLocation = window.underworld.getPickupAt(target);
-        if ((!unitAtCastLocation && !pickupAtCastLocation) && cards.length && !cards[0].allowNonUnitTarget) {
+        if ((!unitAtCastLocation && !pickupAtCastLocation) && cards.length && cards[0] && !cards[0].allowNonUnitTarget) {
           floatingText({
             coords: target,
             text: 'No Target!'

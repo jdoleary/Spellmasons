@@ -163,13 +163,15 @@ export function* honeycombGenerator(radius: number, start: Vec2, loopLimit: numb
 export function rotateMatrix(array: any[][]): any[][] {
   const rotated: typeof array = [];
   for (let i = 0; i < array.length; i++) {
-    for (let j = 0; j < array[i].length; j++) {
-      const rj = array.length - 1 - i;
-      const ri = j;
-      if (!rotated[ri]) {
-        rotated[ri] = []
+    const row = array[i];
+    if (row) {
+      for (let j = 0; j < row.length; j++) {
+        const rj = array.length - 1 - i;
+        const ri = j;
+        const Rri = rotated[ri];
+        const rotatedRow = Rri ? Rri : [];
+        rotatedRow[rj] = row[j];
       }
-      rotated[ri][rj] = array[i][j];
     }
   }
   return rotated;

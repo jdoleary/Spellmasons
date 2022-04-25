@@ -26,16 +26,18 @@ const unit: UnitSource = {
     );
     if (nonPoisonedEnemyUnits.length) {
       const chosenUnit = nonPoisonedEnemyUnits[0];
-      const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, chosenUnit, unit.stamina);
-      await Unit.moveTowards(unit, moveTo);
-      if (inRange(unit, chosenUnit)) {
-        createVisualFlyingProjectile(
-          unit,
-          chosenUnit.x,
-          chosenUnit.y,
-          'green-thing.png',
-        );
-        Unit.addModifier(chosenUnit, poison.id);
+      if (chosenUnit) {
+        const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, chosenUnit, unit.stamina);
+        await Unit.moveTowards(unit, moveTo);
+        if (inRange(unit, chosenUnit)) {
+          createVisualFlyingProjectile(
+            unit,
+            chosenUnit.x,
+            chosenUnit.y,
+            'green-thing.png',
+          );
+          Unit.addModifier(chosenUnit, poison.id);
+        }
       }
     }
   },

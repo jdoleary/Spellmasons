@@ -146,7 +146,8 @@ function addListenersToCardElement(
 ) {
   element.addEventListener('mouseenter', () => {
     // Play random pageTurn sound
-    playSFX(sfxPageTurn[Math.floor(Math.random() * sfxPageTurn.length)]);
+    const sfxInst = sfxPageTurn[Math.floor(Math.random() * sfxPageTurn.length)]
+    sfxInst && playSFX(sfxInst);
   });
   if (!selectedCard) {
     element.addEventListener('dragstart', ev => {
@@ -165,14 +166,20 @@ function addListenersToCardElement(
           if (dragCardIndex > dropCardIndex) {
             for (let i = dragCardIndex - 1; i >= dropCardIndex; i--) {
               // Shift all cards over to the right
-              window.player.cards[i + 1] = window.player.cards[i]
+              const currentCard = window.player.cards[i];
+              if (currentCard) {
+                window.player.cards[i + 1] = currentCard;
+              }
             }
             window.player.cards[dropCardIndex] = dragCard;
             recalcPositionForCards(window.player);
           } else if (dragCardIndex < dropCardIndex) {
             for (let i = dragCardIndex; i < dropCardIndex; i++) {
               // Shift all cards over to the left
-              window.player.cards[i] = window.player.cards[i + 1]
+              const nextCard = window.player.cards[i + 1]
+              if (nextCard) {
+                window.player.cards[i] = nextCard
+              }
             }
             window.player.cards[dropCardIndex] = dragCard;
             recalcPositionForCards(window.player);
@@ -254,7 +261,8 @@ function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string
     clone.draggable = false;
     addListenersToCardElement(player, clone, cardId, true);
     clone.classList.add('selected');
-    if (Cards.allCards[cardId].requiresFollowingCard) {
+    const card = Cards.allCards[cardId]
+    if (card?.requiresFollowingCard) {
       clone.classList.add('requires-following-card')
     }
     elSelectedCards.appendChild(clone);
@@ -319,7 +327,11 @@ window.giveMeCard = (cardId: string, quantity: number = 1) => {
     console.log('card', card, 'not found');
   }
 };
-export function addCardToHand(card: Cards.ICard, player: Player.IPlayer | undefined) {
+export function addCardToHand(card: Cards.ICard | undefined, player: Player.IPlayer | undefined) {
+  if (!card) {
+    console.error('Attempting to add undefined card to hand');
+    return
+  }
   if (!player) {
     console.warn("Attempted to add cards to a non-existant player's hand")
     return
@@ -476,14 +488,20 @@ export function updateCardBadges() {
     const selectedCards = getSelectedCards();
     for (let i = 0; i < selectedCards.length; i++) {
       const card = selectedCards[i];
-      const sliceOfCardsOfSameIdUntilCurrent = selectedCards.slice(0, i).filter(c => c.id == card.id);
-      const cost = calculateCostForSingleCard(card, (window.player.cardUsageCounts[card.id] || 0) + sliceOfCardsOfSameIdUntilCurrent.length);
-      const elBadges = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"] .card-mana-badge`);
-      const elBadge = Array.from(elBadges.values())[sliceOfCardsOfSameIdUntilCurrent.length];
-      updateManaBadge(elBadge, cost.manaCost, card);
-      const elBadgesH = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"] .card-health-badge`);
-      const elBadgeH = Array.from(elBadgesH.values())[sliceOfCardsOfSameIdUntilCurrent.length];
-      updateHealthBadge(elBadgeH, cost.healthCost, card);
+      if (card) {
+        const sliceOfCardsOfSameIdUntilCurrent = selectedCards.slice(0, i).filter(c => c.id == card.id);
+        const cost = calculateCostForSingleCard(card, (window.player.cardUsageCounts[card.id] || 0) + sliceOfCardsOfSameIdUntilCurrent.length);
+        const elBadges = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"] .card-mana-badge`);
+        const elBadge = Array.from(elBadges.values())[sliceOfCardsOfSameIdUntilCurrent.length];
+        if (elBadge) {
+          updateManaBadge(elBadge, cost.manaCost, card);
+        }
+        const elBadgesH = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"] .card-health-badge`);
+        const elBadgeH = Array.from(elBadgesH.values())[sliceOfCardsOfSameIdUntilCurrent.length];
+        if (elBadgeH) {
+          updateHealthBadge(elBadgeH, cost.healthCost, card);
+        }
+      }
     }
     // Update cards in hand
     const cards = Cards.getCardsFromIds(window.player.cards);

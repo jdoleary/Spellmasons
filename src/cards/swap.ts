@@ -23,7 +23,7 @@ Swaps the caster with the source target.
       const swapLocation = { x: casterUnit.x, y: casterUnit.y };
       // The unit at the location that the targetUnit will swap to
       const swapUnit = window.underworld.getUnitAt(swapLocation);
-      if (swapUnit) {
+      if (swapUnit && targetedUnits[0]) {
         swapUnits.push([swapUnit, targetedUnits[0]]);
       }
       // The units at the target location

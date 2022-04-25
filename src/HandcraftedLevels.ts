@@ -27,15 +27,16 @@ export interface HandcraftedLevel {
     init?: (underworld: Underworld) => void;
     allowHeavyUnits: boolean;
 }
-export const tutorialLevels = [
+export const tutorialLevels = Object.freeze([
     'Tutorial',
     'Pickups and Spell Casting',
     'Spells Work Together',
     'Spells in Order',
-]
+]);
 
 export const levels: { [name: string]: HandcraftedLevelMaker } = {
-    [tutorialLevels[0]]: underworld => ({
+    // @ts-ignore
+    [tutorialLevels[0]]: (underworld: Underworld) => ({
         allowHeavyUnits: false,
         playerSpawnLocations: [{ x: underworld.width / 4, y: underworld.height / 2 }],
         portalSpawnLocation: { x: 3 * underworld.width / 4, y: underworld.height / 2 },
@@ -50,11 +51,12 @@ export const levels: { [name: string]: HandcraftedLevelMaker } = {
         ],
         units: [],
         startingCards: [],
-        init: (underworld) => {
+        init: (underworld: Underworld) => {
 
             // Restart if you die
             const restartIfYouDieEventName = 'restartIfYouDie';
             Events.onDeathSource[restartIfYouDieEventName] = () => {
+                // @ts-ignore
                 underworld.initHandcraftedLevel(tutorialLevels[0]);
             }
             if (window.player) {
@@ -64,7 +66,8 @@ export const levels: { [name: string]: HandcraftedLevelMaker } = {
             underworld.nextHandCraftedLevel = tutorialLevels[1];
         }
     }),
-    [tutorialLevels[1]]: underworld => ({
+    // @ts-ignore
+    [tutorialLevels[1]]: (underworld: Underworld) => ({
         allowHeavyUnits: false,
         playerSpawnLocations: [{ x: config.COLLISION_MESH_RADIUS, y: underworld.height / 2 }],
         specialPickups: [],
@@ -87,6 +90,7 @@ export const levels: { [name: string]: HandcraftedLevelMaker } = {
             // Restart if you die
             const restartIfYouDieEventName = 'restartIfYouDie';
             Events.onDeathSource[restartIfYouDieEventName] = () => {
+                // @ts-ignore
                 underworld.initHandcraftedLevel(tutorialLevels[1]);
             }
             if (window.player) {
@@ -96,7 +100,8 @@ export const levels: { [name: string]: HandcraftedLevelMaker } = {
             underworld.nextHandCraftedLevel = tutorialLevels[2];
         }
     }),
-    [tutorialLevels[2]]: underworld => ({
+    // @ts-ignore
+    [tutorialLevels[2]]: (underworld: Underworld) => ({
         allowHeavyUnits: false,
         playerSpawnLocations: [{ x: config.COLLISION_MESH_RADIUS, y: underworld.height / 2 }],
         specialPickups: [],
@@ -140,6 +145,7 @@ export const levels: { [name: string]: HandcraftedLevelMaker } = {
                     centeredFloatingText('Try again');
                     setTimeout(() => {
                         // restart
+                        // @ts-ignore
                         underworld.initHandcraftedLevel(tutorialLevels[2]);
                     }, 500)
                 }
@@ -159,6 +165,7 @@ export const levels: { [name: string]: HandcraftedLevelMaker } = {
             // Restart if you die
             const restartIfYouDieEventName = 'restartIfYouDie';
             Events.onDeathSource[restartIfYouDieEventName] = () => {
+                // @ts-ignore
                 underworld.initHandcraftedLevel(tutorialLevels[2]);
             }
             if (window.player) {
@@ -168,7 +175,8 @@ export const levels: { [name: string]: HandcraftedLevelMaker } = {
             underworld.nextHandCraftedLevel = tutorialLevels[3];
         }
     }),
-    [tutorialLevels[3]]: underworld => ({
+    // @ts-ignore
+    [tutorialLevels[3]]: (underworld: Underworld) => ({
         allowHeavyUnits: false,
         playerSpawnLocations: [{ x: config.COLLISION_MESH_RADIUS, y: underworld.height / 2 }],
         specialPickups: [],
@@ -216,6 +224,7 @@ export const levels: { [name: string]: HandcraftedLevelMaker } = {
                     centeredFloatingText('Try again');
                     setTimeout(() => {
                         // restart
+                        // @ts-ignore
                         underworld.initHandcraftedLevel(tutorialLevels[3]);
                     }, 500)
                 }
@@ -235,6 +244,7 @@ export const levels: { [name: string]: HandcraftedLevelMaker } = {
             // Restart if you die
             const restartIfYouDieEventName = 'restartIfYouDie';
             Events.onDeathSource[restartIfYouDieEventName] = () => {
+                // @ts-ignore
                 underworld.initHandcraftedLevel(tutorialLevels[3]);
             }
             if (window.player) {

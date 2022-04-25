@@ -136,85 +136,87 @@ export default class Underworld {
     const aliveUnits = this.units.filter(u => u.alive);
     for (let i = 0; i < this.units.length; i++) {
       const u = this.units[i];
-      const dryRunUnit = this.dryRunUnits[i];
-      if (u.alive) {
-        if (u.path && u.path.length) {
-          // Move towards target
-          const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.path[0], u.moveSpeed * deltaTime)
-          let moveDist = 0;
-          // For now, only AI units will collide with each other
-          // This is because the collisions were causing issues with player movement that I don't
-          // have time to solve at the moment.
-          if (u.unitType == UnitType.PLAYER_CONTROLLED) {
-            // Player units don't collide, they just move, and pathfinding keeps
-            // them from moving through walls
-            moveDist = math.distance(u, stepTowardsTarget);
-            u.x = stepTowardsTarget.x;
-            u.y = stepTowardsTarget.y;
-          } else {
-            // AI collide with each other and walls
-            const originalPosition = Vec.clone(u);
-            // Only move other NPCs out of the way, never move player units
-            moveWithCollisions(u, stepTowardsTarget, aliveUnits);
-            moveDist = math.distance(originalPosition, u);
+      if (u) {
+        const dryRunUnit = this.dryRunUnits[i];
+        if (u.alive) {
+          if (u.path && u.path[0]) {
+            // Move towards target
+            const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.path[0], u.moveSpeed * deltaTime)
+            let moveDist = 0;
+            // For now, only AI units will collide with each other
+            // This is because the collisions were causing issues with player movement that I don't
+            // have time to solve at the moment.
+            if (u.unitType == UnitType.PLAYER_CONTROLLED) {
+              // Player units don't collide, they just move, and pathfinding keeps
+              // them from moving through walls
+              moveDist = math.distance(u, stepTowardsTarget);
+              u.x = stepTowardsTarget.x;
+              u.y = stepTowardsTarget.y;
+            } else {
+              // AI collide with each other and walls
+              const originalPosition = Vec.clone(u);
+              // Only move other NPCs out of the way, never move player units
+              moveWithCollisions(u, stepTowardsTarget, aliveUnits);
+              moveDist = math.distance(originalPosition, u);
+            }
+            u.stamina -= moveDist;
+            if (u.path[0] && Vec.equal(u, u.path[0])) {
+              // Once the unit reaches the target, shift so the next point in the path is the next target
+              u.path.shift();
+            }
+            // Stop moving if you've moved as far as you can based on the move distance
+            if (u.stamina <= 0) {
+              u.path = [];
+              u.stamina = 0;
+            }
+            // check for collisions with pickups in new location
+            this.checkPickupCollisions(u);
           }
-          u.stamina -= moveDist;
-          if (Vec.equal(u, u.path[0])) {
-            // Once the unit reaches the target, shift so the next point in the path is the next target
-            u.path.shift();
+          collideWithWalls(u);
+          // Sync Image even for non moving units since they may be moved by forces other than themselves
+          Unit.syncImage(u)
+          // Ensure that resolveDoneMoving is invoked when there are no points left in the path
+          // This is necessary to end the moving units turn because elsewhere we are awaiting the fulfillment of that promise
+          // to know they are done moving
+          if (u.path.length === 0) {
+            u.resolveDoneMoving();
           }
-          // Stop moving if you've moved as far as you can based on the move distance
-          if (u.stamina <= 0) {
-            u.path = [];
-            u.stamina = 0;
-          }
-          // check for collisions with pickups in new location
-          this.checkPickupCollisions(u);
         }
-        collideWithWalls(u);
-        // Sync Image even for non moving units since they may be moved by forces other than themselves
-        Unit.syncImage(u)
-        // Ensure that resolveDoneMoving is invoked when there are no points left in the path
-        // This is necessary to end the moving units turn because elsewhere we are awaiting the fulfillment of that promise
-        // to know they are done moving
-        if (u.path.length === 0) {
-          u.resolveDoneMoving();
-        }
-      }
-      // Draw unit overlay graphics
-      //--
-      // Prevent drawing unit overlay graphics when a unit is in the portal
-      if (u.x !== null && u.y !== null) {
-        // Draw health bar
-        const healthBarColor = u.faction == Faction.ALLY ? 0x40a058 : 0xd55656;
-        const healthBarHurtColor = u.faction == Faction.ALLY ? 0x235730 : 0x632828;
-        window.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
-        window.unitOverlayGraphics.beginFill(healthBarColor, 1.0);
-        window.unitOverlayGraphics.drawRect(
-          u.x - config.UNIT_UI_BAR_WIDTH / 2,
-          u.y - config.COLLISION_MESH_RADIUS - config.UNIT_UI_BAR_HEIGHT,
-          config.UNIT_UI_BAR_WIDTH * u.health / u.healthMax,
-          config.UNIT_UI_BAR_HEIGHT);
-        // Show how much damage they'll take on their health bar
-        window.unitOverlayGraphics.beginFill(healthBarHurtColor, 1.0);
-        if (dryRunUnit) {
-          const healthAfterHurt = dryRunUnit.health;
-          window.unitOverlayGraphics.drawRect(
-            u.x - config.UNIT_UI_BAR_WIDTH / 2 + config.UNIT_UI_BAR_WIDTH * healthAfterHurt / u.healthMax,
-            u.y - config.COLLISION_MESH_RADIUS - config.UNIT_UI_BAR_HEIGHT,
-            config.UNIT_UI_BAR_WIDTH * (u.health - healthAfterHurt) / u.healthMax,
-            config.UNIT_UI_BAR_HEIGHT);
-        }
-        // Draw mana bar
-        if (u.manaMax != 0) {
-          window.unitOverlayGraphics.beginFill(0x5656d5, 1.0);
+        // Draw unit overlay graphics
+        //--
+        // Prevent drawing unit overlay graphics when a unit is in the portal
+        if (u.x !== null && u.y !== null) {
+          // Draw health bar
+          const healthBarColor = u.faction == Faction.ALLY ? 0x40a058 : 0xd55656;
+          const healthBarHurtColor = u.faction == Faction.ALLY ? 0x235730 : 0x632828;
+          window.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
+          window.unitOverlayGraphics.beginFill(healthBarColor, 1.0);
           window.unitOverlayGraphics.drawRect(
             u.x - config.UNIT_UI_BAR_WIDTH / 2,
-            u.y - config.COLLISION_MESH_RADIUS,
-            config.UNIT_UI_BAR_WIDTH * Math.min(1, u.mana / u.manaMax),
+            u.y - config.COLLISION_MESH_RADIUS - config.UNIT_UI_BAR_HEIGHT,
+            config.UNIT_UI_BAR_WIDTH * u.health / u.healthMax,
             config.UNIT_UI_BAR_HEIGHT);
+          // Show how much damage they'll take on their health bar
+          window.unitOverlayGraphics.beginFill(healthBarHurtColor, 1.0);
+          if (dryRunUnit) {
+            const healthAfterHurt = dryRunUnit.health;
+            window.unitOverlayGraphics.drawRect(
+              u.x - config.UNIT_UI_BAR_WIDTH / 2 + config.UNIT_UI_BAR_WIDTH * healthAfterHurt / u.healthMax,
+              u.y - config.COLLISION_MESH_RADIUS - config.UNIT_UI_BAR_HEIGHT,
+              config.UNIT_UI_BAR_WIDTH * (u.health - healthAfterHurt) / u.healthMax,
+              config.UNIT_UI_BAR_HEIGHT);
+          }
+          // Draw mana bar
+          if (u.manaMax != 0) {
+            window.unitOverlayGraphics.beginFill(0x5656d5, 1.0);
+            window.unitOverlayGraphics.drawRect(
+              u.x - config.UNIT_UI_BAR_WIDTH / 2,
+              u.y - config.COLLISION_MESH_RADIUS,
+              config.UNIT_UI_BAR_WIDTH * Math.min(1, u.mana / u.manaMax),
+              config.UNIT_UI_BAR_HEIGHT);
+          }
+          window.unitOverlayGraphics.endFill();
         }
-        window.unitOverlayGraphics.endFill();
       }
     }
     // Sort unit sprites visually by y position (like "z-index")
@@ -292,14 +294,18 @@ export default class Underworld {
   }
   spawnPickup(index: number, coords: Vec2) {
     const pickup = Pickup.pickups[index];
-    Pickup.create(
-      coords.x,
-      coords.y,
-      pickup,
-      true,
-      0.1,
-      true,
-    );
+    if (pickup) {
+      Pickup.create(
+        coords.x,
+        coords.y,
+        pickup,
+        true,
+        0.1,
+        true,
+      );
+    } else {
+      console.error('Could not find pickup with index', index);
+    }
   }
   spawnEnemy(id: string, coords: Vec2, allowHeavy: boolean, strength: number) {
     const sourceUnit = allUnits[id];
@@ -372,37 +378,44 @@ export default class Underworld {
         const obstacleChoice = randInt(this.random, 0, 1)
         // Now that we have the obstacle sector's horizontal index (i) and vertical index (j),
         // choose a pre-defined sector and spawn the obstacles
-        for (let Y = 0; Y < sector.length; Y++) {
-          const rowOfObstacles = sector[Y];
-          for (let X = 0; X < rowOfObstacles.length; X++) {
-            const coordX = config.OBSTACLE_SIZE * config.OBSTACLES_PER_SECTOR_WIDE * i + config.OBSTACLE_SIZE * X + config.COLLISION_MESH_RADIUS;
-            const coordY = config.OBSTACLE_SIZE * config.OBSTACLES_PER_SECTOR_WIDE * j + config.OBSTACLE_SIZE * Y + config.COLLISION_MESH_RADIUS;
-            const obstacleIndex = rowOfObstacles[X];
-            // obstacleIndex of 0 means ground
-            if (obstacleIndex == 0) {
-              // Empty, no obstacle, take this opportunity to spawn something from the spawn list, since
-              // we know it is a safe place to spawn
-              if (i == 0 && X == 0) {
-                // Only spawn players in the left most index (X == 0) of the left most obstacle (i==0)
-                const margin = 0;
-                this.validPlayerSpawnCoords.push({ x: coordX + margin, y: coordY });
-              } else if (i == sectorsWide - 1 && X == rowOfObstacles.length - 1) {
-                // Only spawn the portal in the right most index of the right most obstacle
-                validPortalSpawnCoords.push({ x: coordX, y: coordY });
-              } else {
-                // Spawn pickups or units in any validSpawnCoord
-                validSpawnCoords.push({ x: coordX, y: coordY });
+        if (sector) {
+          for (let Y = 0; Y < sector.length; Y++) {
+            const rowOfObstacles = sector[Y];
+            if (rowOfObstacles) {
+              for (let X = 0; X < rowOfObstacles.length; X++) {
+                const coordX = config.OBSTACLE_SIZE * config.OBSTACLES_PER_SECTOR_WIDE * i + config.OBSTACLE_SIZE * X + config.COLLISION_MESH_RADIUS;
+                const coordY = config.OBSTACLE_SIZE * config.OBSTACLES_PER_SECTOR_WIDE * j + config.OBSTACLE_SIZE * Y + config.COLLISION_MESH_RADIUS;
+                const obstacleIndex = rowOfObstacles[X];
+                // obstacleIndex of 0 means ground
+                if (obstacleIndex == 0) {
+                  // Empty, no obstacle, take this opportunity to spawn something from the spawn list, since
+                  // we know it is a safe place to spawn
+                  if (i == 0 && X == 0) {
+                    // Only spawn players in the left most index (X == 0) of the left most obstacle (i==0)
+                    const margin = 0;
+                    this.validPlayerSpawnCoords.push({ x: coordX + margin, y: coordY });
+                  } else if (i == sectorsWide - 1 && X == rowOfObstacles.length - 1) {
+                    // Only spawn the portal in the right most index of the right most obstacle
+                    validPortalSpawnCoords.push({ x: coordX, y: coordY });
+                  } else {
+                    // Spawn pickups or units in any validSpawnCoord
+                    validSpawnCoords.push({ x: coordX, y: coordY });
+                  }
+                  // Create ground tile
+                  this.groundTiles.push({ x: coordX, y: coordY });
+                  continue
+                } else {
+                  const obstacle = Obstacle.obstacleSource[obstacleChoice];
+                  if (obstacle) {
+                    Obstacle.create(coordX, coordY, obstacle);
+                  } else {
+                    console.error('Could not find obstacle from', obstacleChoice)
+                  }
+                }
+
               }
-              // Create ground tile
-              this.groundTiles.push({ x: coordX, y: coordY });
-              continue
-            } else {
-              const obstacle = Obstacle.obstacleSource[obstacleChoice];
-              Obstacle.create(coordX, coordY, obstacle);
             }
-
           }
-
         }
       }
     }
@@ -427,18 +440,19 @@ export default class Underworld {
     // Go through all cells again and spawn obstacles anywhere that can't reach the "portal" (or the main walkable area of the map)
     for (let i = this.groundTiles.length - 1; i > 0; i--) {
       const coord = this.groundTiles[i]
-      const isReachable = findPolygonsThatVec2IsInsideOf(coord, this.pathingPolygons).length === 0
-      // If the coordinate is a unreachable area, fill it in with void:
-      if (!isReachable) {
-        const obstacle = Obstacle.obstacleSource.find(o => o.name == 'Void');
-        if (obstacle) {
-
-          Obstacle.create(coord.x, coord.y, obstacle);
-        } else {
-          console.error('Could not find "Void" obstacle');
+      if (coord) {
+        const isReachable = findPolygonsThatVec2IsInsideOf(coord, this.pathingPolygons).length === 0
+        // If the coordinate is a unreachable area, fill it in with void:
+        if (!isReachable) {
+          const obstacle = Obstacle.obstacleSource.find(o => o.name == 'Void');
+          if (obstacle) {
+            Obstacle.create(coord.x, coord.y, obstacle);
+          } else {
+            console.error('Could not find "Void" obstacle');
+          }
+          // Remove ground tile since it is now an obstacle
+          this.groundTiles.splice(i, 1);
         }
-        // Remove ground tile since it is now an obstacle
-        this.groundTiles.splice(i, 1);
       }
     }
     // Now that ground tiles have been pared down to only actual tiles that are empty ground, add the images for them
@@ -447,19 +461,24 @@ export default class Underworld {
     this.cacheWalls();
 
     const portalPickup = Pickup.specialPickups['portal'];
-    Pickup.create(
-      portalCoords.x,
-      portalCoords.y,
-      portalPickup,
-      false,
-      portalPickup.animationSpeed,
-      true,
-    );
+    if (portalPickup) {
+      Pickup.create(
+        portalCoords.x,
+        portalCoords.y,
+        portalPickup,
+        false,
+        portalPickup.animationSpeed,
+        true,
+      );
+    } else {
+      console.error('Could not find portal pickup');
+    }
 
     // Exclude player spawn coords that cannot path to the portal
     this.validPlayerSpawnCoords = this.validPlayerSpawnCoords.filter(spawn => {
       const path = findPath(spawn, portalCoords, this.pathingPolygons);
-      return path.length != 0 && Vec.equal(path[path.length - 1], portalCoords);
+      const lastPointInPath = path[path.length - 1]
+      return path.length != 0 && (lastPointInPath && Vec.equal(lastPointInPath, portalCoords));
     });
 
     if (this.validPlayerSpawnCoords.length === 0) {
@@ -475,7 +494,9 @@ export default class Underworld {
       );
       const validSpawnCoordsIndex = randInt(this.random, 0, validSpawnCoords.length - 1);
       const coords = validSpawnCoords.splice(validSpawnCoordsIndex, 1)[0];
-      this.spawnPickup(randomPickupIndex, coords);
+      if (coords) {
+        this.spawnPickup(randomPickupIndex, coords);
+      }
     }
     // Spawn units at the start of the level
     const { enemies, strength } = getEnemiesForAltitude(levelIndex);
@@ -484,7 +505,9 @@ export default class Underworld {
         if (validSpawnCoords.length == 0) { break; }
         const validSpawnCoordsIndex = randInt(this.random, 0, validSpawnCoords.length - 1);
         const coords = validSpawnCoords.splice(validSpawnCoordsIndex, 1)[0];
-        this.spawnEnemy(id, coords, true, strength);
+        if (coords) {
+          this.spawnEnemy(id, coords, true, strength);
+        }
       }
     }
 
@@ -543,7 +566,7 @@ export default class Underworld {
     for (let i = this.units.length - 1; i >= 0; i--) {
       const u = this.units[i];
       // Clear all remaining AI units
-      if (u.unitType === UnitType.AI) {
+      if (u && u.unitType === UnitType.AI) {
         Unit.cleanup(u);
         this.units.splice(i, 1);
       }
@@ -616,7 +639,12 @@ export default class Underworld {
     this.height = config.OBSTACLE_SIZE * sectorsTall * config.OBSTACLES_PER_SECTOR_TALL;
     setView(View.Game);
     console.log('Setup: initHandcraftedLevel', name);
-    const h: HandcraftedLevel = levels[name](this);
+    const level = levels[name];
+    if (!level) {
+      console.error('Handcrafted level', name, 'does not exist');
+      return;
+    }
+    const h: HandcraftedLevel = level(this);
     if (!h) {
       console.error('Handcrafted level', name, 'does not exist');
       return;
@@ -635,34 +663,47 @@ export default class Underworld {
       removeCardsFromHand(player, player.cards);
       if (h.startingCards.length) {
         for (let card of h.startingCards) {
-          addCardToHand(Cards.allCards[card], player);
+          const cardInstance = Cards.allCards[card];
+          if (cardInstance) {
+            addCardToHand(cardInstance, player);
+          } else {
+            console.error('Card instance for', card, 'not found');
+          }
         }
       }
     }
     // Spawn portal
     const portalPickup = Pickup.specialPickups['portal'];
-    if (h.portalSpawnLocation) {
-      Pickup.create(
-        h.portalSpawnLocation.x,
-        h.portalSpawnLocation.y,
-        portalPickup,
-        false,
-        portalPickup.animationSpeed,
-        true,
-      );
+    if (portalPickup) {
+      if (h.portalSpawnLocation) {
+        Pickup.create(
+          h.portalSpawnLocation.x,
+          h.portalSpawnLocation.y,
+          portalPickup,
+          false,
+          portalPickup.animationSpeed,
+          true,
+        );
+      }
+    } else {
+      console.error('Portal pickup not found')
     }
 
     // Spawn pickups
     for (let p of h.specialPickups) {
       const pickup = Pickup.specialPickups[p.id];
-      Pickup.create(
-        p.location.x,
-        p.location.y,
-        pickup,
-        true,
-        0.1,
-        true,
-      );
+      if (pickup) {
+        Pickup.create(
+          p.location.x,
+          p.location.y,
+          pickup,
+          true,
+          0.1,
+          true,
+        );
+      } else {
+        console.error('Pickup', p.id, 'not found in special pickups')
+      }
 
     }
     // Create ground tiles:
@@ -676,8 +717,13 @@ export default class Underworld {
     for (let o of h.obstacles) {
       // -1 to let 0 be empty (no obstacle) and 1 will be index 0 of
       // obstacleSource
-      const obstacle = Obstacle.obstacleSource[parseInt(o.id) - 1];
-      Obstacle.create(o.location.x, o.location.y, obstacle);
+      const obstacleIndex = parseInt(o.id) - 1
+      const obstacle = Obstacle.obstacleSource[obstacleIndex];
+      if (obstacle) {
+        Obstacle.create(o.location.x, o.location.y, obstacle);
+      } else {
+        console.error('Obstacle not found in source for index', obstacleIndex);
+      }
     }
     this.cacheWalls();
 
@@ -756,8 +802,9 @@ export default class Underworld {
     for (let p of this.players) {
       for (let cardId of p.cards) {
         // Decrement, cap at 0
-        if (p.cardUsageCounts[cardId] !== undefined) {
-          p.cardUsageCounts[cardId] = Math.max(0, p.cardUsageCounts[cardId] - 1);
+        const cardUsage = p.cardUsageCounts[cardId];
+        if (cardUsage !== undefined) {
+          p.cardUsageCounts[cardId] = Math.max(0, cardUsage - 1);
         }
       }
     }
@@ -1029,33 +1076,37 @@ export default class Underworld {
     this.units = keepUnits;
 
     const phase = turn_phase[this.turn_phase];
-    // Add current phase class to body
-    document.body.classList.add('phase-' + phase.toLowerCase());
-    switch (phase) {
-      case 'PlayerTurns':
-        for (let u of this.units) {
-          // Reset stamina so units can move again
-          u.stamina = u.staminaMax;
-        }
-        // Lastly, initialize the player turns.
-        // Note, it is possible that calling this will immediately end
-        // the player phase (if there are no players to take turns)
-        this.initializePlayerTurn(this.playerTurnIndex);
-        break;
-      case 'NPC':
-        // Clears spell effect on NPC turn
-        mouseMove();
-        (async () => {
-          // Run AI unit actions
-          // Ally NPCs go first
-          await this.executeNPCTurn(Faction.ALLY);
-          await this.executeNPCTurn(Faction.ENEMY);
-          // Set turn phase to player turn
-          this.endNPCTurnPhase();
-        })();
-        break;
-      default:
-        break;
+    if (phase) {
+      // Add current phase class to body
+      document.body.classList.add('phase-' + phase.toLowerCase());
+      switch (phase) {
+        case 'PlayerTurns':
+          for (let u of this.units) {
+            // Reset stamina so units can move again
+            u.stamina = u.staminaMax;
+          }
+          // Lastly, initialize the player turns.
+          // Note, it is possible that calling this will immediately end
+          // the player phase (if there are no players to take turns)
+          this.initializePlayerTurn(this.playerTurnIndex);
+          break;
+        case 'NPC':
+          // Clears spell effect on NPC turn
+          mouseMove();
+          (async () => {
+            // Run AI unit actions
+            // Ally NPCs go first
+            await this.executeNPCTurn(Faction.ALLY);
+            await this.executeNPCTurn(Faction.ENEMY);
+            // Set turn phase to player turn
+            this.endNPCTurnPhase();
+          })();
+          break;
+        default:
+          break;
+      }
+    } else {
+      console.error('Invalid turn phase', this.turn_phase)
     }
     this.syncTurnMessage();
   }

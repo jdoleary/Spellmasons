@@ -44,7 +44,7 @@ export default class AnimationTimeline {
     });
   }
   animate(timestamp: number) {
-    const currentAnimationGroup: AnimationGroup = this.animationGroups[0];
+    const currentAnimationGroup = this.animationGroups[0];
     if (currentAnimationGroup) {
       // Initialize startTime for group and start object for animations
       if (currentAnimationGroup.startTime == 0) {
@@ -123,9 +123,11 @@ function animateIndependents(timestamp: number) {
     groupIndex--
   ) {
     const group = independentAnimations[groupIndex];
-    const doRemove = animateGroup(group, timestamp);
-    if (doRemove) {
-      independentAnimations.splice(groupIndex, 1);
+    if (group) {
+      const doRemove = animateGroup(group, timestamp);
+      if (doRemove) {
+        independentAnimations.splice(groupIndex, 1);
+      }
     }
   }
 
