@@ -12,7 +12,7 @@ import { addLerpable } from './lerpList';
 import { findPath } from './Pathfinding';
 import { allUnits } from './units';
 import * as Pickup from './Pickup';
-import { allModifiers, EffectState, tallyUnitDamage } from './cards';
+import { allModifiers, EffectState } from './cards';
 import { checkIfNeedToClearTooltip, updateTooltipContent } from './ui/PlanningView';
 const elHealthBar: HTMLElement = document.querySelector('#health .fill') as HTMLElement;
 const elHealthCost: HTMLElement = document.querySelector('#health .cost') as HTMLElement;
@@ -399,8 +399,6 @@ export function takeDamage(unit: IUnit, amount: number, dryRun: boolean, state?:
       die(unit);
     }
   }
-
-  tallyUnitDamage(state, amount, unit);
 
 }
 export function syncPlayerHealthManaUI() {

@@ -1155,8 +1155,6 @@ export default class Underworld {
       castLocation,
       aggregator: {
         unitDamage: [],
-        damageDealt: 0,
-        healingDealt: 0
       },
     };
     if (!effectState.casterUnit.alive) {

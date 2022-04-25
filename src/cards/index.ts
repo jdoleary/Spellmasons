@@ -136,8 +136,6 @@ export interface EffectState {
   // between card effects.
   aggregator: {
     unitDamage: UnitDamage[],
-    damageDealt: number,
-    healingDealt: number
   };
 }
 export type EffectFn = {
@@ -185,35 +183,4 @@ export function targetsToUnits(targets: Vec2[]): Unit.IUnit[] {
   const units = unitsAndUndefined.flatMap(u => !!u ? [u] : []);
   const dedupedUnits = units.filter((unit, index) => units.indexOf(unit) === index);
   return dedupedUnits;
-}
-
-export function tallyUnitDamage(state: EffectState | undefined, damage: number, unit?: Unit.IUnit) {
-  // If there is no effect state, for instance, if damage is done during onTurnStart or during an AI turn
-  // (not during) a card effect, then just return immediately, there is no work for this function to do
-  if (!state) {
-    return
-  }
-  if (unit) {
-    // Save damage statistics so that planning view can determine if 
-    // this damage will kill the target
-    let unitDamageInstanceForThisUnit: UnitDamage | undefined = state.aggregator.unitDamage.find(ud => ud.id === unit.id)
-    if (!unitDamageInstanceForThisUnit) {
-      unitDamageInstanceForThisUnit = {
-        id: unit.id,
-        x: unit.x,
-        y: unit.y,
-        health: unit.health,
-        damageTaken: 0
-      };
-      state.aggregator.unitDamage.push(unitDamageInstanceForThisUnit);
-    }
-    unitDamageInstanceForThisUnit.damageTaken += damage;
-    unit.predictedHealthLoss += damage;
-  }
-  if (damage < 0) {
-    state.aggregator.healingDealt = -damage;
-  } else {
-    state.aggregator.damageDealt = damage;
-  }
-
 }
