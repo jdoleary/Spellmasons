@@ -339,6 +339,7 @@ export function die(unit: IUnit) {
     );
   }
   unit.alive = false;
+  unit.mana = 0;
   // Ensure that the unit resolvesDoneMoving when they die in the event that 
   // they die while they are moving.  This prevents turn phase from getting stuck
   unit.resolveDoneMoving();

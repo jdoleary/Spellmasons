@@ -8,7 +8,6 @@
 
 # Tasks
 - Unfreeze at end of turn, not beginning
-- Remove mana from units when they die
 - Make selected cards background transparent
 - Improved level design with Wave Function Collapse
 - Make freeze block pathing
