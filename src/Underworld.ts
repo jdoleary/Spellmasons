@@ -191,6 +191,7 @@ export default class Underworld {
           // Draw health bar
           const healthBarColor = u.faction == Faction.ALLY ? 0x40a058 : 0xd55656;
           const healthBarHurtColor = u.faction == Faction.ALLY ? 0x235730 : 0x632828;
+          const healthBarHealColor = u.faction == Faction.ALLY ? 0x23ff30 : 0xff2828;
           window.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
           window.unitOverlayGraphics.beginFill(healthBarColor, 1.0);
           window.unitOverlayGraphics.drawRect(
@@ -198,20 +199,28 @@ export default class Underworld {
             u.y - config.COLLISION_MESH_RADIUS - config.UNIT_UI_BAR_HEIGHT,
             config.UNIT_UI_BAR_WIDTH * u.health / u.healthMax,
             config.UNIT_UI_BAR_HEIGHT);
-          // Show how much damage they'll take on their health bar
-          window.unitOverlayGraphics.beginFill(healthBarHurtColor, 1.0);
-          if (dryRunUnit) {
-            const healthAfterHurt = dryRunUnit.health;
-            window.unitOverlayGraphics.drawRect(
-              u.x - config.UNIT_UI_BAR_WIDTH / 2 + config.UNIT_UI_BAR_WIDTH * healthAfterHurt / u.healthMax,
-              u.y - config.COLLISION_MESH_RADIUS - config.UNIT_UI_BAR_HEIGHT,
-              config.UNIT_UI_BAR_WIDTH * (u.health - healthAfterHurt) / u.healthMax,
-              config.UNIT_UI_BAR_HEIGHT);
-            // Draw red death circle
-            if (healthAfterHurt === 0) {
-              window.unitOverlayGraphics.endFill();
-              window.unitOverlayGraphics.lineStyle(10, healthBarHurtColor, 1.0);
-              window.unitOverlayGraphics.drawCircle(u.x, u.y, config.COLLISION_MESH_RADIUS);
+
+          // Only show health bar predictions on PlayerTurns, while players are able
+          // to cast, otherwise it will show out of sync when NPCs do damage
+          if (window.underworld.turn_phase == turn_phase.PlayerTurns) {
+            // Show how much damage they'll take on their health bar
+            window.unitOverlayGraphics.beginFill(healthBarHurtColor, 1.0);
+            if (dryRunUnit) {
+              const healthAfterHurt = dryRunUnit.health;
+              if (healthAfterHurt > u.health) {
+                window.unitOverlayGraphics.beginFill(healthBarHealColor, 1.0);
+              }
+              window.unitOverlayGraphics.drawRect(
+                u.x - config.UNIT_UI_BAR_WIDTH / 2 + config.UNIT_UI_BAR_WIDTH * healthAfterHurt / u.healthMax,
+                u.y - config.COLLISION_MESH_RADIUS - config.UNIT_UI_BAR_HEIGHT,
+                config.UNIT_UI_BAR_WIDTH * (u.health - healthAfterHurt) / u.healthMax,
+                config.UNIT_UI_BAR_HEIGHT);
+              // Draw red death circle
+              if (healthAfterHurt === 0) {
+                window.unitOverlayGraphics.endFill();
+                window.unitOverlayGraphics.lineStyle(10, healthBarHurtColor, 1.0);
+                window.unitOverlayGraphics.drawCircle(u.x, u.y, config.COLLISION_MESH_RADIUS);
+              }
             }
           }
           // Draw mana bar
