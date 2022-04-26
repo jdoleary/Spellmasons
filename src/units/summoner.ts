@@ -24,22 +24,25 @@ const unit: UnitSource = {
       unit.mana -= SUMMON_MANA_COST;
       const sourceUnit = allUnits.grunt;
       if (sourceUnit) {
-        // const coords = window.underworld.findValidSpawn(unit)
-
-        const summonedUnit = Unit.create(
-          sourceUnit.id,
-          // Start the unit at the summoners location
-          unit.x,
-          unit.y,
-          // A unit always summons units in their own faction
-          unit.faction,
-          sourceUnit.info.image,
-          UnitType.AI,
-          sourceUnit.info.subtype,
-          unit.strength,
-          sourceUnit.unitProps
-        );
-        await Unit.moveTowards(summonedUnit, unit);
+        const coords = window.underworld.findValidSpawn(unit)
+        if (coords) {
+          const summonedUnit = Unit.create(
+            sourceUnit.id,
+            // Start the unit at the summoners location
+            coords.x,
+            coords.y,
+            // A unit always summons units in their own faction
+            unit.faction,
+            sourceUnit.info.image,
+            UnitType.AI,
+            sourceUnit.info.subtype,
+            unit.strength,
+            sourceUnit.unitProps
+          );
+          await Unit.moveTowards(summonedUnit, unit);
+        } else {
+          console.log("Summoner could not find valid spawn");
+        }
         // Unit.setLocation(summonedUnit, coords);
       } else {
         console.error('summoner could not find unit source to summon from');
