@@ -117,7 +117,8 @@ function cardToUpgrade(c: ICard): IUpgrade {
     effect: (player) => {
       addCardToHand(c, player);
     },
-    probability: c.probability
+    probability: c.probability,
+    cost: { healthCost: c.healthCost, manaCost: c.manaCost }
   };
 }
 

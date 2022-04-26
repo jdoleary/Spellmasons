@@ -1,3 +1,4 @@
+import type { CardCost } from './cards/cardUtils';
 import { getCardRarityColor } from './CardUI';
 import { NUMBER_OF_UPGRADES_TO_CHOOSE_FROM } from './config';
 import { chooseObjectWithProbability } from './math';
@@ -12,6 +13,7 @@ export interface IUpgrade {
   effect: (player: IPlayer) => void;
   // The probability of getting this as an upgrade
   probability: number;
+  cost: CardCost;
 }
 // Chooses a random card based on the card's probabilities
 export function generateUpgrades(player: IPlayer): IUpgrade[] {
@@ -68,6 +70,23 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer) {
   elCardInner.style.borderColor = getCardRarityColor(upgrade);
   elCardInner.style.backgroundColor = getCardRarityColor(upgrade);
   element.appendChild(elCardInner);
+  // Card costs
+  const elCardBadgeHolder = document.createElement('div');
+  elCardBadgeHolder.classList.add('card-badge-holder');
+  element.appendChild(elCardBadgeHolder);
+  if (upgrade.cost.manaCost) {
+    const elCardManaBadge = document.createElement('div');
+    elCardManaBadge.classList.add('card-mana-badge', 'card-badge');
+    elCardManaBadge.innerHTML = upgrade.cost.manaCost.toString();
+    elCardBadgeHolder.appendChild(elCardManaBadge);
+  }
+  if (upgrade.cost.healthCost) {
+    const elCardHealthBadge = document.createElement('div');
+    elCardHealthBadge.classList.add('card-health-badge', 'card-badge');
+    elCardHealthBadge.innerHTML = upgrade.cost.healthCost.toString();
+    elCardBadgeHolder.appendChild(elCardHealthBadge);
+  }
+
   const thumbHolder = document.createElement('div');
   const thumbnail = document.createElement('img');
   thumbnail.src = upgrade.thumbnail;
@@ -104,6 +123,7 @@ export const upgradeSourceWhenDead: IUpgrade[] = [
     // Resurrection happens automatically at the start of each level
     effect: () => { },
     probability: 30,
+    cost: { healthCost: 0, manaCost: 0 },
   },
 ];
 export const upgradeStatsSource: IUpgrade[] = [
@@ -118,6 +138,7 @@ export const upgradeStatsSource: IUpgrade[] = [
       player.unit.health += maxHealthIncreaseAmount;
     },
     probability: 30,
+    cost: { healthCost: 0, manaCost: 0 },
   },
   {
     title: '+ Max Mana',
@@ -130,6 +151,7 @@ export const upgradeStatsSource: IUpgrade[] = [
       player.unit.mana += maxManaIncreaseAmount;
     },
     probability: 30,
+    cost: { healthCost: 0, manaCost: 0 },
   },
   {
     title: '+ Mana per turn',
@@ -141,6 +163,7 @@ export const upgradeStatsSource: IUpgrade[] = [
       player.unit.manaPerTurn += manaPerTurnIncreaseAmount;
     },
     probability: 30,
+    cost: { healthCost: 0, manaCost: 0 },
   },
   {
     title: '+ Max Stamina',
@@ -152,6 +175,7 @@ export const upgradeStatsSource: IUpgrade[] = [
       player.unit.staminaMax += maxStaminaIncreaseAmount;
     },
     probability: 30,
+    cost: { healthCost: 0, manaCost: 0 },
   },
 ];
 const maxManaIncreaseAmount = 20;

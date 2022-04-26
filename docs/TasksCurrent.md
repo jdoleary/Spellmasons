@@ -12,7 +12,6 @@
 - Allow drag and drop between cards and far left or far right.
 - Fix infinite stamina when you end level
 - Bug: Is healing prediction bar still broken?
-- Cards in upgrade screen should show mana cost
 - Lerp in and out when WASD camera
 - Prevent skipping levels by running to portal or swapping there
 - Add labels to screens (upgrade, char select)
