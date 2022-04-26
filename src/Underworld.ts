@@ -59,6 +59,7 @@ const elPlayerTurnIndicator = document.getElementById('player-turn-indicator');
 const elLevelIndicator = document.getElementById('level-indicator');
 
 let lastTime = 0;
+let requestAnimationFrameGameLoopId: number;
 export default class Underworld {
   seed: string;
   random: prng;
@@ -108,7 +109,7 @@ export default class Underworld {
     this.random = this.syncronizeRNG(RNGState);
 
     // Start the gameloop
-    requestAnimationFrame(this.gameLoop.bind(this));
+    requestAnimationFrameGameLoopId = requestAnimationFrame(this.gameLoop.bind(this));
   }
   syncDryRunUnits() {
     this.dryRunUnits = this.units.map(u => {
@@ -245,7 +246,7 @@ export default class Underworld {
     updatePlanningView();
 
     // Invoke gameLoopUnits again next loop
-    requestAnimationFrame(this.gameLoop.bind(this))
+    requestAnimationFrameGameLoopId = requestAnimationFrame(this.gameLoop.bind(this))
   }
   drawEnemyAttentionMarkers() {
     // Draw attention markers which show if an NPC will
@@ -332,7 +333,9 @@ export default class Underworld {
     containerDoodads.removeChildren();
     // Prevent requestAnimationFrame from calling this method next time, since this underworld
     // instance is being cleaned up
-    this.gameLoop = () => { };
+    if (requestAnimationFrameGameLoopId !== undefined) {
+      cancelAnimationFrame(requestAnimationFrameGameLoopId);
+    }
     // @ts-ignore
     window.underworld = undefined;
     readyState.set('underworld', false);
