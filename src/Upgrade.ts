@@ -55,7 +55,7 @@ export function generateUpgrades(player: IPlayer): IUpgrade[] {
       const index = clonedUpgradeSource.indexOf(upgrade);
       upgrades = upgrades.concat(clonedUpgradeSource.splice(index, 1));
     } else {
-      console.error('could not choose upgrade with probability', clonedUpgradeSource);
+      console.log('No upgrades to choose from', clonedUpgradeSource);
     }
   }
   return upgrades;
