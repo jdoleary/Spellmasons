@@ -21,8 +21,7 @@ const unit: UnitSource = {
     if (attackTarget && canAttackTarget) {
       attackPromise = createVisualLobbingProjectile(
         unit,
-        attackTarget.x,
-        attackTarget.y,
+        attackTarget,
         'green-thing.png',
       ).then(() => {
         if (attackTarget) {

@@ -77,8 +77,7 @@ Makes this unit's curses contageous to other nearby units
         for (let touchingUnit of nearByUnits.filter(u => !Object.keys(u.modifiers).includes(card.id))) {
           promises.push(createVisualLobbingProjectile(
             unit,
-            touchingUnit.x,
-            touchingUnit.y,
+            touchingUnit,
             'green-thing.png',
           ).then(() => {
             floatingText({ coords: touchingUnit, text: card.id });

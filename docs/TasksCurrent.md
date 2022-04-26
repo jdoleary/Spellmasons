@@ -14,7 +14,6 @@
 - Improve unit MELEE attack prediction so it will only show exclamation if they will actually hit you
 - Allow drag and drop between cards and far left or far right.
 - Fix infinite stamina when you end level
-- Fix projectiles missing moving targets
 - Fix summoner summoning goons right in front of them
 - Bug: Is healing prediction bar still broken?
 - Cards in upgrade screen should show mana cost

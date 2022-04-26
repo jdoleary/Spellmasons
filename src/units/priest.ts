@@ -50,8 +50,7 @@ const unit: UnitSource = {
             if (chosenUnit) {
               await createVisualLobbingProjectile(
                 unit,
-                chosenUnit.x,
-                chosenUnit.y,
+                chosenUnit,
                 'holy-projectile.png',
               );
               // Heal for 2
@@ -68,8 +67,7 @@ const unit: UnitSource = {
           if (Unit.inRange(unit, closestAlly)) {
             await createVisualLobbingProjectile(
               unit,
-              closestAlly.x,
-              closestAlly.y,
+              closestAlly,
               'holy-projectile.png',
             );
             Unit.addModifier(closestAlly, Shield.card.id);

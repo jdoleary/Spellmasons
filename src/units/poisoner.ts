@@ -31,8 +31,7 @@ const unit: UnitSource = {
         if (Unit.inRange(unit, chosenUnit)) {
           createVisualFlyingProjectile(
             unit,
-            chosenUnit.x,
-            chosenUnit.y,
+            chosenUnit,
             'green-thing.png',
           );
           Unit.addModifier(chosenUnit, poison.id);

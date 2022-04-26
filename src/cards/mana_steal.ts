@@ -23,7 +23,7 @@ Sacrifice ${health_burn} of your own health to steal up to ${mana_stolen} mana f
       for (let unit of state.targetedUnits) {
         const unitManaBurnt = Math.min(unit.mana, mana_stolen);
         unit.mana -= unitManaBurnt;
-        promises.push((dryRun ? Promise.resolve() : createVisualLobbingProjectile(unit, caster.x, caster.y, 'blue-projectile.png')).then(() => {
+        promises.push((dryRun ? Promise.resolve() : createVisualLobbingProjectile(unit, caster, 'blue-projectile.png')).then(() => {
           state.casterUnit.mana += unitManaBurnt;
           if (!dryRun) {
             explainManaOverfill();

@@ -33,8 +33,7 @@ const unit: UnitSource = {
         if (deadUnit) {
           await createVisualFlyingProjectile(
             unit,
-            deadUnit.x,
-            deadUnit.y,
+            deadUnit,
             'green-thing.png',
           );
           Unit.resurrect(deadUnit);

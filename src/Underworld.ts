@@ -43,7 +43,6 @@ import { mouseMove } from './ui/eventListeners';
 import Jprompt from './Jprompt';
 import { collideWithWalls, isCircleIntersectingCircle, moveWithCollisions } from './collision/moveWithCollision';
 import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './contants';
-import unit from './units/manBlue';
 import { getBestRangedLOSTarget } from './units/actions/rangedAction';
 
 export enum turn_phase {

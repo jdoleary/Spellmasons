@@ -11,14 +11,12 @@ interface Projectile {
   startY: number;
   startTime: number;
   endTime: number;
-  toX: number;
-  toY: number;
+  target: Vec2;
   sprite: PIXI.Sprite;
 }
 function createProjectile(
   coords: Vec2,
-  toX: number,
-  toY: number,
+  target: Vec2,
   imagePath: string,
 ): Projectile {
   const sprite = addPixiSprite(imagePath, containerProjectiles);
@@ -29,7 +27,7 @@ function createProjectile(
   sprite.x = coords.x;
   sprite.y = coords.y;
 
-  sprite.rotation = Math.atan2(toY - coords.y, toX - coords.x);
+  sprite.rotation = Math.atan2(target.y - coords.y, target.x - coords.x);
 
   return {
     x: coords.x,
@@ -38,8 +36,7 @@ function createProjectile(
     startY: coords.y,
     startTime: 0,
     endTime: 0,
-    toX,
-    toY,
+    target,
     sprite,
   };
 
@@ -47,11 +44,10 @@ function createProjectile(
 const SPEED_PER_MILLI = 0.7;
 export function createVisualFlyingProjectile(
   coords: Vec2,
-  toX: number,
-  toY: number,
+  target: Vec2,
   imagePath: string,
 ): Promise<void> {
-  const instance = createProjectile(coords, toX, toY, imagePath);
+  const instance = createProjectile(coords, target, imagePath);
   return new Promise((resolve) => {
     requestAnimationFrame((time) => fly(instance, time, resolve));
   });
@@ -65,7 +61,7 @@ function fly(
   if (instance.startTime == 0) {
     instance.startTime = time;
     const time_in_flight =
-      distance(instance, { x: instance.toX, y: instance.toY }) /
+      distance(instance, instance.target) /
       SPEED_PER_MILLI;
     instance.endTime = time + time_in_flight;
   }
@@ -73,8 +69,8 @@ function fly(
   instance.sprite.y = instance.y;
   const t =
     (time - instance.startTime) / (instance.endTime - instance.startTime);
-  instance.x = lerp(instance.startX, instance.toX, t);
-  instance.y = lerp(instance.startY, instance.toY, t);
+  instance.x = lerp(instance.startX, instance.target.x, t);
+  instance.y = lerp(instance.startY, instance.target.y, t);
   // Once it's fully done animating
   if (time >= instance.endTime) {
     // Clean up the element
@@ -88,11 +84,10 @@ function fly(
 }
 export function createVisualLobbingProjectile(
   coords: Vec2,
-  toX: number,
-  toY: number,
+  target: Vec2,
   imagePath: string,
 ): Promise<void> {
-  const instance = createProjectile(coords, toX, toY, imagePath);
+  const instance = createProjectile(coords, target, imagePath);
   return new Promise((resolve) => {
     requestAnimationFrame((time) => lob(instance, time, resolve));
   });
@@ -115,10 +110,10 @@ function lob(
   instance.sprite.rotation += 0.2;
   const t =
     (time - instance.startTime) / (instance.endTime - instance.startTime);
-  instance.x = lerp(instance.startX, instance.toX, t);
+  instance.x = lerp(instance.startX, instance.target.x, t);
   // y goes from startY to toY but is offset Math.sin(Math.PI/2)*lobHeight in the middle
   const yOffset = Math.sin(t * Math.PI) * lobHeight;
-  instance.y = lerp(instance.startY, instance.toY, t) + yOffset;
+  instance.y = lerp(instance.startY, instance.target.y, t) + yOffset;
   // Once it's fully done animating
   if (time >= instance.endTime) {
     // Clean up the element

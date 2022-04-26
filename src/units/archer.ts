@@ -23,8 +23,7 @@ const unit: UnitSource = {
     if (attackTarget) {
       attackPromise = createVisualFlyingProjectile(
         unit,
-        attackTarget.x,
-        attackTarget.y,
+        attackTarget,
         'arrow.png',
       ).then(() => {
         Unit.takeDamage(attackTarget, unit.damage, false, undefined);
