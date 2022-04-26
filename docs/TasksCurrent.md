@@ -3,7 +3,6 @@
     - Add a loading scrren
     - only allow one click
 - Chain and AOE use real units array not dryRunUnits array on prediction cast
-- Mana per turn upgrade doesn't work at all
 - Death circle is gone
 
 # Tasks
