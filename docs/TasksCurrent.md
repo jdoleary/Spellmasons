@@ -2,7 +2,6 @@
 - Upgrade bug where you click more than once and it triggers many levels to generate
     - Add a loading scrren
     - only allow one click
-- Chain and AOE use real units array not dryRunUnits array on prediction cast
 
 # Tasks
 - Unfreeze at end of turn, not beginning

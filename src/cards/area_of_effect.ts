@@ -23,6 +23,7 @@ Adds targets for the following cards to effect by "growing" existing targets
         const withinRadius = window.underworld.getUnitsWithinDistanceOfTarget(
           target,
           range,
+          dryRun
         );
         // Add units to target
         withinRadius.forEach(unit => addUnitTarget(unit, state));

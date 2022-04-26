@@ -1253,9 +1253,11 @@ export default class Underworld {
   getUnitsWithinDistanceOfTarget(
     target: Vec2,
     distance: number,
+    dryRun: boolean,
   ): Unit.IUnit[] {
     const withinDistance: Unit.IUnit[] = [];
-    for (let unit of this.units) {
+    const units = dryRun ? window.underworld.dryRunUnits : window.underworld.units;
+    for (let unit of units) {
       if (math.distance(unit, target) <= distance) {
         withinDistance.push(unit);
       }

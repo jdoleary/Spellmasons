@@ -40,9 +40,11 @@ const range = 160;
 function getTouchingUnitsRecursive(
   x: number,
   y: number,
+  dryRun: boolean,
   ignore: Unit.IUnit[] = [],
 ): Unit.IUnit[] {
-  let touching = window.underworld.units.filter((u) => {
+  const units = dryRun ? window.underworld.dryRunUnits : window.underworld.units;
+  let touching = units.filter((u) => {
     return (
       u.x <= x + range &&
       u.x >= x - range &&
@@ -58,7 +60,7 @@ function getTouchingUnitsRecursive(
   })
   for (let u of touching) {
     touching = touching.concat(
-      getTouchingUnitsRecursive(u.x, u.y, ignore),
+      getTouchingUnitsRecursive(u.x, u.y, dryRun, ignore),
     );
   }
   return touching;

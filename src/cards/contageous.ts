@@ -62,7 +62,7 @@ Makes this unit's curses contageous to other nearby units
   },
   events: {
     onTurnStart: async (unit: IUnit) => {
-      const coords = window.underworld.getUnitsWithinDistanceOfTarget(unit, COLLISION_MESH_RADIUS * 4);
+      const coords = window.underworld.getUnitsWithinDistanceOfTarget(unit, COLLISION_MESH_RADIUS * 4, false);
       const nearByUnits: IUnit[] = coords.map((coord) => window.underworld.getUnitAt(coord))
         // Filter out undefineds
         .filter(x => x !== undefined)
