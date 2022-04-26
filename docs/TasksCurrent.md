@@ -3,7 +3,6 @@
     - Add a loading scrren
     - only allow one click
 - Chain and AOE use real units array not dryRunUnits array on prediction cast
-- Death circle is gone
 
 # Tasks
 - Unfreeze at end of turn, not beginning

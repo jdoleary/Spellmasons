@@ -207,9 +207,16 @@ export default class Underworld {
               u.y - config.COLLISION_MESH_RADIUS - config.UNIT_UI_BAR_HEIGHT,
               config.UNIT_UI_BAR_WIDTH * (u.health - healthAfterHurt) / u.healthMax,
               config.UNIT_UI_BAR_HEIGHT);
+            // Draw red death circle
+            if (healthAfterHurt === 0) {
+              window.unitOverlayGraphics.endFill();
+              window.unitOverlayGraphics.lineStyle(10, healthBarHurtColor, 1.0);
+              window.unitOverlayGraphics.drawCircle(u.x, u.y, config.COLLISION_MESH_RADIUS);
+            }
           }
           // Draw mana bar
           if (u.manaMax != 0) {
+            window.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
             window.unitOverlayGraphics.beginFill(0x5656d5, 1.0);
             window.unitOverlayGraphics.drawRect(
               u.x - config.UNIT_UI_BAR_WIDTH / 2,
