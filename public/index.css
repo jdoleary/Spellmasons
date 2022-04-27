@@ -487,10 +487,6 @@ body.your-turn #end-turn-btn {
   display: block;
 }
 
-body.your-turn #player-turn-indicator {
-  display: none;
-}
-
 #inspector-tooltip {
   display: flex;
   flex-direction: column;
