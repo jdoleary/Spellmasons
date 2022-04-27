@@ -4,6 +4,7 @@ import {
   resizePixi,
   app,
   cameraAutoFollow,
+  updateCameraPosition,
 } from './PixiUtils';
 import * as Units from './units';
 import { UnitSubType } from './commonTypes';
@@ -142,6 +143,9 @@ export function setView(v: View) {
       console.error('Cannot set view to', v, 'no such view exists or is not configured');
       break;
   }
+  // Update the camera position when the view changes because gameLoop might not be
+  // running yet (and gameLoop is what usually updates the camera position)
+  updateCameraPosition();
 }
 
 function clientChooseUnit(unitId: string) {
