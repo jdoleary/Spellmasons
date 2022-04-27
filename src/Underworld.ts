@@ -646,6 +646,9 @@ export default class Underworld {
         this.units.splice(i, 1);
       }
     }
+    // Now that the units have been cleaned up syncDryRunUnits
+    // so they are not out of sync with the underworld units array
+    window.underworld.syncDryRunUnits();
     if (this.players.length == 0) {
       console.error('Attempting to initialize level without any players');
     }
