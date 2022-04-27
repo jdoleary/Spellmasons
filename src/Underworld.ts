@@ -214,8 +214,8 @@ export default class Underworld {
                 u.y - config.COLLISION_MESH_RADIUS - config.UNIT_UI_BAR_HEIGHT,
                 config.UNIT_UI_BAR_WIDTH * (u.health - healthAfterHurt) / u.healthMax,
                 config.UNIT_UI_BAR_HEIGHT);
-              // Draw red death circle
-              if (healthAfterHurt === 0) {
+              // Draw red death circle if a unit is currently alive, but wont be after cast
+              if (u.alive && !dryRunUnit.alive) {
                 window.unitOverlayGraphics.endFill();
                 window.unitOverlayGraphics.lineStyle(10, healthBarHurtColor, 1.0);
                 window.unitOverlayGraphics.drawCircle(u.x, u.y, config.COLLISION_MESH_RADIUS);
