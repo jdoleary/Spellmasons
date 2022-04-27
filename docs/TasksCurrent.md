@@ -1,5 +1,7 @@
 # Game Breaking Priorities
 - Fix multiplayer
+    - Experienced a bug where one player portaled on one screen but not on the other
+    - Bug where one unit got into the game and the other is left looking at blank screen
 - Upgrade bug where you click more than once and it triggers many levels to generate
     - Add a loading scrren
     - only allow one click
