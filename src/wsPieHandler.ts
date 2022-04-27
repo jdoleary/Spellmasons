@@ -124,7 +124,6 @@ export function processNextInQueueIfReady() {
   }
 }
 function tryStartGame() {
-  console.log('Game: tryStartGame...');
   const gameAlreadyStarted = window.underworld.levelIndex >= 0;
   const currentClientIsHost = window.hostClientId == window.clientId;
   const clientsLeftToChooseCharacters = clients.length - window.underworld.players.length;
