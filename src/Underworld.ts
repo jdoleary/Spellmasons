@@ -1403,14 +1403,13 @@ export default class Underworld {
         }
 
         await Promise.all(animationPromises);
+        // Now that the caster is using the card, increment usage count
+        if (casterCardUsage[card.id] === undefined) {
+          casterCardUsage[card.id] = 0;
+        }
+        casterCardUsage[card.id] += card.expenseScaling;
         if (!dryRun) {
-          // Now that the caster is using the card, increment usage count
-          if (casterCardUsage[card.id] === undefined) {
-            casterCardUsage[card.id] = 0;
-          }
-          casterCardUsage[card.id] += card.expenseScaling;
           updateManaCostUI();
-
         }
       }
     }

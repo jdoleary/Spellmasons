@@ -4,8 +4,6 @@
     - only allow one click
 
 # Tasks
-- Prediction mana is wrong for first two damage casts
-- Hide prediction mana on spell cast
 - Change portal to just a "go to upgrade" button
     - ~~Fix infinite stamina when you end level~~
 - Unfreeze at end of turn, not beginning

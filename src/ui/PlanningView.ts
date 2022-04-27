@@ -157,7 +157,9 @@ export async function syncSpellEffectProjection() {
       const cardIds = CardUI.getSelectedCardIds();
       if (cardIds.length) {
         const effectState = await window.underworld.castCards(
-          window.player.cardUsageCounts,
+          // Make a copy of cardUsageCounts for dryrun so it can accurately
+          // calculate mana for multiple copies of one spell in one cast
+          JSON.parse(JSON.stringify(window.player.cardUsageCounts)),
           casterUnit,
           cardIds,
           target,
