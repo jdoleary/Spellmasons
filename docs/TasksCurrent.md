@@ -1,4 +1,5 @@
 # Game Breaking Priorities
+- Fix multiplayer
 - Upgrade bug where you click more than once and it triggers many levels to generate
     - Add a loading scrren
     - only allow one click
@@ -12,7 +13,6 @@
 - Make freeze block pathing
 - Improve unit MELEE attack prediction so it will only show exclamation if they will actually hit you
 - Allow drag and drop between cards and far left or far right.
-- Bug: Is healing prediction bar still broken?
 - Lerp in and out when WASD camera
 - Prevent skipping levels by running to portal or swapping there
 - Add labels to screens (upgrade, char select)
