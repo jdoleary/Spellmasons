@@ -131,6 +131,7 @@ function tryStartGame() {
   // if the game hasn't already been started
   if (currentClientIsHost && clientsLeftToChooseCharacters <= 0 && !gameAlreadyStarted) {
     console.log('Host: Start game');
+    setView(View.Game);
     window.underworld.initLevel(0);
     window.underworld.gameStarted = true;
     console.log('Host: Send all clients game state for initial load');

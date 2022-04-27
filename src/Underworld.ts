@@ -678,7 +678,6 @@ export default class Underworld {
     // Level sizes are random but have change to grow bigger as loop continues
     const sectorsWide = randInt(this.random, 2, 3 + (Math.round(levelIndex / 3)));
     const sectorsTall = randInt(this.random, 1, 3 + (Math.round(levelIndex / 3)));
-    setView(View.Game);
     console.log('Setup: initLevel', levelIndex, sectorsWide, sectorsTall);
     this.levelIndex = levelIndex;
     this.cleanUpLevel();
@@ -1060,9 +1059,11 @@ export default class Underworld {
     this.playersWhoHaveChosenUpgrade.push(player.clientId);
     // Clear upgrade choices once one is chosen
     if (player.clientId === window.clientId) {
-      if (elUpgradePickerContent) {
-        elUpgradePickerContent.innerHTML = '';
-      }
+      // Now that you've chosen an upgrade, view the game screen
+      setView(View.Game);
+      // if (elUpgradePickerContent) {
+      //   elUpgradePickerContent.innerHTML = '';
+      // }
     }
 
     const numberOfPlayersWhoNeedToChooseUpgradesTotal = this.players.filter(
@@ -1074,8 +1075,6 @@ export default class Underworld {
       if (elUpgradePickerLabel) {
         elUpgradePickerLabel.innerText = 'Choose a card';
       }
-      // Now that upgrades are chosen, go to next level
-      this.initLevel(++this.levelIndex);
     } else {
       if (elUpgradePickerLabel) {
         elUpgradePickerLabel.innerText = `${numberOfPlayersWhoNeedToChooseUpgradesTotal - this.playersWhoHaveChosenUpgrade.length
@@ -1116,6 +1115,8 @@ export default class Underworld {
         // Now that level is complete, move to the Upgrade view where players can choose upgrades
         // before moving on to the next level
         setView(View.Upgrade);
+        // Prepare the next level
+        this.initLevel(++this.levelIndex);
       }
       // Return of true signifies it went to the next level
       return true;
