@@ -173,13 +173,17 @@ export function updateCameraPosition() {
             cameraTarget,
             math.distance(app.stage, cameraTarget) / 20
           );
-          app.stage.x = camNextCoordinates.x;
-          app.stage.y = camNextCoordinates.y;
+          if (!isNaN(camNextCoordinates.x) && !isNaN(camNextCoordinates.y)) {
+            app.stage.x = camNextCoordinates.x;
+            app.stage.y = camNextCoordinates.y;
+          }
         } else {
           // Move camera immediately because the user is panning
           // the camera manually
-          app.stage.x = cameraTarget.x;
-          app.stage.y = cameraTarget.y;
+          if (!isNaN(cameraTarget.x) && !isNaN(cameraTarget.y)) {
+            app.stage.x = cameraTarget.x;
+            app.stage.y = cameraTarget.y;
+          }
         }
 
       }
