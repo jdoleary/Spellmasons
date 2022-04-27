@@ -6,10 +6,12 @@ import {
   cameraAutoFollow,
   updateCameraPosition,
 } from './PixiUtils';
+import * as PIXI from 'pixi.js';
 import * as Units from './units';
 import { UnitSubType } from './commonTypes';
 import { MESSAGE_TYPES } from './MessageTypes';
 import * as Image from './Image';
+import * as config from './config';
 import { createUpgradeElement, generateUpgrades } from './Upgrade';
 import {
   clickHandler,
@@ -85,28 +87,38 @@ export function setView(v: View) {
       break;
     case View.CharacterSelect:
       // Host or join a game brings client to Character select
-      Object.values(Units.allUnits)
-        .filter(
-          (unitSource) =>
-            unitSource.info.subtype === UnitSubType.PLAYER_CONTROLLED,
-        )
-        .forEach((unitSource, index) => {
-          const image = Image.create(
-            0,
-            0,
-            unitSource.info.image,
-            containerCharacterSelect,
+      const playerControlledUnits =
+        Object.values(Units.allUnits)
+          .filter(
+            (unitSource) =>
+              unitSource.info.subtype === UnitSubType.PLAYER_CONTROLLED,
           );
-          Image.setPosition(image, index * image.sprite.width, 0)
-          image.sprite.interactive = true;
-          image.sprite.on('click', () => {
-            // Timeout prevents click from propagating into overworld listener
-            // for some reason e.stopPropagation doesn't work :/
-            setTimeout(() => {
-              clientChooseUnit(unitSource.id);
-            }, 0);
-          });
+
+      playerControlledUnits.forEach((unitSource, index) => {
+        const image = Image.create(
+          0,
+          0,
+          unitSource.info.image,
+          containerCharacterSelect,
+        );
+        Image.setPosition(image, (index - playerControlledUnits.length / 2) * image.sprite.width + image.sprite.width / 2, 0)
+        image.sprite.interactive = true;
+        image.sprite.on('click', () => {
+          // Timeout prevents click from propagating into overworld listener
+          // for some reason e.stopPropagation doesn't work :/
+          setTimeout(() => {
+            clientChooseUnit(unitSource.id);
+          }, 0);
         });
+      });
+      // Add title:
+      const pixiText = new PIXI.Text("Select a Character", { fill: 'white', align: 'center' });
+      pixiText.x = 0;
+      pixiText.y = -config.COLLISION_MESH_RADIUS * 2;
+      pixiText.anchor.x = 0.5;
+      pixiText.anchor.y = 0.5;
+      containerCharacterSelect.addChild(pixiText);
+
       break;
     case View.Upgrade:
       const elUpgradePickerContent = document.getElementById(

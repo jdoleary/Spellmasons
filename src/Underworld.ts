@@ -1072,7 +1072,7 @@ export default class Underworld {
     if (this.playersWhoHaveChosenUpgrade.length >= numberOfPlayersWhoNeedToChooseUpgradesTotal) {
       this.playersWhoHaveChosenUpgrade = [];
       if (elUpgradePickerLabel) {
-        elUpgradePickerLabel.innerText = '';
+        elUpgradePickerLabel.innerText = 'Choose a card';
       }
       // Now that upgrades are chosen, go to next level
       this.initLevel(++this.levelIndex);
