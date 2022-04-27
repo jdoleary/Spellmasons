@@ -98,22 +98,21 @@ export function updatePlanningView() {
       }
       updateTooltipContent();
 
-      const currentTurnPlayer = window.underworld.players[window.underworld.playerTurnIndex];
-      if (currentTurnPlayer) {
+      if (window.player) {
         // Only draw circle if player isn't moving to avoid UI thrashing
-        if (equal(lastSpotCurrentPlayerTurnCircle, currentTurnPlayer.unit)) {
-          if (window.player == currentTurnPlayer) {
+        if (equal(lastSpotCurrentPlayerTurnCircle, window.player.unit)) {
+          if (window.underworld.isMyTurn()) {
             // Yellow if it's you
             planningViewGraphics.lineStyle(4, 0xffde5e);
             planningViewGraphics.beginFill(0xffde5e, 0.3);
           } else {
-            // Grey if it's other player
+            // Grey if it's other player's turn
             planningViewGraphics.lineStyle(4, 0xdddddd);
             planningViewGraphics.beginFill(0xdddddd, 0.3);
           }
-          planningViewGraphics.drawEllipse(currentTurnPlayer.unit.x, currentTurnPlayer.unit.y + config.COLLISION_MESH_RADIUS / 2 + 3, config.COLLISION_MESH_RADIUS, config.COLLISION_MESH_RADIUS / 3);
+          planningViewGraphics.drawEllipse(window.player.unit.x, window.player.unit.y + config.COLLISION_MESH_RADIUS / 2 + 3, config.COLLISION_MESH_RADIUS, config.COLLISION_MESH_RADIUS / 3);
         }
-        lastSpotCurrentPlayerTurnCircle = clone(currentTurnPlayer.unit);
+        lastSpotCurrentPlayerTurnCircle = clone(window.player.unit);
       }
     }
   }
