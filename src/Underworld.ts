@@ -667,13 +667,6 @@ export default class Underworld {
     for (let p of this.players) {
       p.cardUsageCounts = {};
     }
-
-    // Update level indicator UI at top of screen
-    if (elLevelIndicator) {
-      elLevelIndicator.innerText = `Level ${this.levelIndex + 1}`;
-    } else {
-      console.error('elLevelIndicator is null');
-    }
   }
   postSetupLevel() {
     // Set the first turn phase
@@ -945,6 +938,13 @@ export default class Underworld {
       elPlayerTurnIndicator.innerText = message;
     }
     document.body.classList.toggle('your-turn', yourTurn);
+
+    // Update level indicator UI at top of screen
+    if (elLevelIndicator) {
+      elLevelIndicator.innerText = `Level ${this.levelIndex}`;
+    } else {
+      console.error('elLevelIndicator is null');
+    }
   }
   async initializePlayerTurn(playerIndex: number) {
     const player = this.players[playerIndex];
