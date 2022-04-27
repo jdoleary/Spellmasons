@@ -1,6 +1,7 @@
 import type * as PIXI from 'pixi.js';
 import AnimationTimeline from './AnimationTimeline';
 import type * as Player from './Player';
+import type * as Unit from './Unit';
 import type Underworld from './Underworld';
 import { setView, View } from './views';
 import * as readyState from './readyState';
@@ -19,8 +20,8 @@ cookieConsentPopup(false);
 // This import is critical so that the svelte menu has access to
 // the pie globals
 import './wsPieSetup';
-import type { CardCost } from './cards/cardUtils';
 import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './contants';
+import type { Vec2 } from './Vec';
 
 const YES = 'yes'
 const SKIP_TUTORIAL = 'skipTutorial';
@@ -31,6 +32,8 @@ window.volumeMusic = 1.0;
 window.volumeGame = 1.0;
 window.zoomTarget = 1;
 window.playerWalkingPromise = Promise.resolve();
+window.dryRunUnits = [];
+window.attentionMarkers = [];
 
 setupAll();
 
@@ -164,6 +167,10 @@ declare global {
     enemyEncountered: string[];
     // Make me superhuman (used for dev)
     superMe: () => void;
+    // A local copy of underworld.units used to predict damage and mana use from casting a spell
+    dryRunUnits: Unit.IUnit[];
+    // Shows icons above the heads of enemies who will damage you next turn
+    attentionMarkers: Vec2[];
   }
 }
 window.skipTutorial = () => {

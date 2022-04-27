@@ -81,8 +81,6 @@ export default class Underworld {
   width: number = 800;
   players: Player.IPlayer[] = [];
   units: Unit.IUnit[] = [];
-  dryRunUnits: Unit.IUnit[] = [];
-  attentionMarkers: Vec2[] = [];
   pickups: Pickup.IPickup[] = [];
   obstacles: Obstacle.IObstacle[] = [];
   groundTiles: Vec2[] = [];
@@ -112,7 +110,7 @@ export default class Underworld {
     requestAnimationFrameGameLoopId = requestAnimationFrame(this.gameLoop.bind(this));
   }
   syncDryRunUnits() {
-    this.dryRunUnits = this.units.map(u => {
+    window.dryRunUnits = this.units.map(u => {
       const { image, resolveDoneMoving, modifiers, ...unit } = u;
       return {
         ...unit,
@@ -140,7 +138,7 @@ export default class Underworld {
     for (let i = 0; i < this.units.length; i++) {
       const u = this.units[i];
       if (u) {
-        const dryRunUnit = this.dryRunUnits[i];
+        const dryRunUnit = window.dryRunUnits[i];
         if (u.alive) {
           if (u.path && u.path[0]) {
             // Move towards target
@@ -252,7 +250,7 @@ export default class Underworld {
     // Draw attention markers which show if an NPC will
     // attack you next turn
     // Note: this block must come after updating the camera position
-    for (let marker of this.attentionMarkers) {
+    for (let marker of window.attentionMarkers) {
       const { x: camX, y: camY, zoom } = getCamera();
       const margin = 30 / zoom;
       const marginTop = 45 / zoom;
@@ -289,12 +287,12 @@ export default class Underworld {
   // Displays markers above units heads if they will attack the current client's unit
   // next turn
   calculateEnemyAttentionMarkers() {
-    this.attentionMarkers = [];
+    window.attentionMarkers = [];
     if (window.player) {
       for (let u of this.units.filter(u => u.alive)) {
         const { target, canAttack } = this.getUnitAttackTarget(u);
         if (canAttack && target === window.player.unit) {
-          this.attentionMarkers.push(u);
+          window.attentionMarkers.push(u);
         }
       }
     }
@@ -1173,7 +1171,7 @@ export default class Underworld {
           break;
         case 'NPC':
           // Clear enemy attentionMarkers since it's now their turn
-          this.attentionMarkers = [];
+          window.attentionMarkers = [];
           // Clears spell effect on NPC turn
           mouseMove();
           (async () => {
@@ -1268,7 +1266,7 @@ export default class Underworld {
     dryRun: boolean,
   ): Unit.IUnit[] {
     const withinDistance: Unit.IUnit[] = [];
-    const units = dryRun ? window.underworld.dryRunUnits : window.underworld.units;
+    const units = dryRun ? window.dryRunUnits : window.underworld.units;
     for (let unit of units) {
       if (math.distance(unit, target) <= distance) {
         withinDistance.push(unit);
@@ -1277,7 +1275,7 @@ export default class Underworld {
     return withinDistance;
   }
   getUnitAt(coords: Vec2, dryRun?: boolean): Unit.IUnit | undefined {
-    const sortedByProximityToCoords = (dryRun ? this.dryRunUnits : this.units)
+    const sortedByProximityToCoords = (dryRun ? window.dryRunUnits : this.units)
       // Filter for only valid units, not units with NaN location or waiting to be removed
       .filter(u => !u.flaggedForRemoval && !isNaN(u.x) && !isNaN(u.y))
       // Filter for units within COLLISION_MESH_RADIUS of coordinates

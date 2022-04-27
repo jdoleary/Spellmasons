@@ -421,7 +421,7 @@ export function syncPlayerHealthManaUI() {
   elHealthBar.style["width"] = `${100 * healthRatio}%`;
   elHealthLabel.innerHTML = `${unit.health}/${unit.healthMax}`;
 
-  const dryRunPlayerUnit = window.underworld.dryRunUnits.find(u => u.id == window.player?.unit.id) || { health: unit.health, mana: unit.mana };
+  const dryRunPlayerUnit = window.dryRunUnits.find(u => u.id == window.player?.unit.id) || { health: unit.health, mana: unit.mana };
   // Set the health cost bar that shows how much health will be removed if the spell is cast
   if (dryRunPlayerUnit.health > 0) {
     // Show cost bar from current health location minus whatever it's value is

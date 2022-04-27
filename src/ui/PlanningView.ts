@@ -148,7 +148,7 @@ export async function syncSpellEffectProjection() {
       updateManaCostUI();
       // Dry run cast so the user can see what effect it's going to have
       const target = mousePos;
-      const casterUnit = window.underworld.dryRunUnits.find(u => u.id == window.player?.unit.id)
+      const casterUnit = window.dryRunUnits.find(u => u.id == window.player?.unit.id)
       if (!casterUnit) {
         console.error('Critical Error, caster unit not found');
         return;

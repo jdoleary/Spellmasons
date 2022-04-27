@@ -44,7 +44,7 @@ function getTouchingUnitsRecursive(
   dryRun: boolean,
   ignore: Unit.IUnit[] = [],
 ): Unit.IUnit[] {
-  const units = dryRun ? window.underworld.dryRunUnits : window.underworld.units;
+  const units = dryRun ? window.dryRunUnits : window.underworld.units;
   let touching = units.filter((u) => {
     return (
       u.x <= x + range &&
