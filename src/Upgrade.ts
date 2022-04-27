@@ -4,6 +4,7 @@ import { NUMBER_OF_UPGRADES_TO_CHOOSE_FROM } from './config';
 import { chooseObjectWithProbability } from './math';
 import { MESSAGE_TYPES } from './MessageTypes';
 import type { IPlayer } from './Player';
+import { setView, View } from './views';
 export interface IUpgrade {
   title: string;
   description: (player: IPlayer) => string;
@@ -108,6 +109,18 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer) {
       type: MESSAGE_TYPES.CHOOSE_UPGRADE,
       upgrade,
     });
+    // This is handled outside of wsPie because it is local to a client
+    // (though the upgrade information still is sent over wsPie, the changing
+    // of the view is local only)
+    // Clear upgrade choices once one is chosen
+    const elUpgradePickerContent = document.getElementById(
+      'upgrade-picker-content',
+    );
+    if (elUpgradePickerContent) {
+      elUpgradePickerContent.innerHTML = '';
+    }
+    // Now that you've chosen an upgrade, view the game screen
+    setView(View.Game);
   });
   return element;
 }

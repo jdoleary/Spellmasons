@@ -89,7 +89,6 @@ export default class Underworld {
   // line segments that prevent movement
   bounds: PolygonLineSegment[] = [];
   pathingPolygons: Polygon[] = [];
-  playersWhoHaveChosenUpgrade: string[] = [];
   // Keeps track of how many messages have been processed so that clients can
   // know when they've desynced.  Only used for syncronous message processing
   // since only the syncronous messages affect gamestate.
@@ -1048,39 +1047,8 @@ export default class Underworld {
     }
   }
   chooseUpgrade(player: Player.IPlayer, upgrade: Upgrade.IUpgrade) {
-    const elUpgradePickerLabel = document.getElementById(
-      'upgrade-picker-label',
-    );
-    const elUpgradePickerContent = document.getElementById(
-      'upgrade-picker-content',
-    );
     upgrade.effect(player);
     player.upgrades.push(upgrade);
-    this.playersWhoHaveChosenUpgrade.push(player.clientId);
-    // Clear upgrade choices once one is chosen
-    if (player.clientId === window.clientId) {
-      // Now that you've chosen an upgrade, view the game screen
-      setView(View.Game);
-      // if (elUpgradePickerContent) {
-      //   elUpgradePickerContent.innerHTML = '';
-      // }
-    }
-
-    const numberOfPlayersWhoNeedToChooseUpgradesTotal = this.players.filter(
-      (p) => p.clientConnected,
-    ).length;
-    // TODO, this code may be vulnerable to mid-game disconnections, same as VOTE_FOR_LEVEL
-    if (this.playersWhoHaveChosenUpgrade.length >= numberOfPlayersWhoNeedToChooseUpgradesTotal) {
-      this.playersWhoHaveChosenUpgrade = [];
-      if (elUpgradePickerLabel) {
-        elUpgradePickerLabel.innerText = 'Choose a card';
-      }
-    } else {
-      if (elUpgradePickerLabel) {
-        elUpgradePickerLabel.innerText = `${numberOfPlayersWhoNeedToChooseUpgradesTotal - this.playersWhoHaveChosenUpgrade.length
-          } players left to pick upgrades`;
-      }
-    }
   }
   // Returns true if game is over
   checkForGameOver(): boolean {
@@ -1494,7 +1462,6 @@ export default class Underworld {
     // make sure obstacles come over when serialized
     this.walls = serialized.walls;
     this.pathingPolygons = serialized.pathingPolygons;
-    this.playersWhoHaveChosenUpgrade = serialized.playersWhoHaveChosenUpgrade;
     this.processedMessageCount = this.processedMessageCount;
     this.cacheWalls();
   }
