@@ -108,26 +108,14 @@ export default class Underworld {
     // Start the gameloop
     requestAnimationFrameGameLoopId = requestAnimationFrame(this.gameLoop.bind(this));
   }
+  syncPlayerDryRunUnitOnly() {
+    if (window.player !== undefined) {
+      const dryRunUnitIndex = window.dryRunUnits.findIndex(u => u.id == window.player?.unit.id);
+      window.dryRunUnits[dryRunUnitIndex] = Unit.copyForDryRunUnit(window.player.unit);
+    }
+  }
   syncDryRunUnits() {
-    window.dryRunUnits = this.units.map(u => {
-      const { image, resolveDoneMoving, modifiers, ...unit } = u;
-      return {
-        ...unit,
-        // Copy all arrays so they don't share a reference with
-        // the original unit
-        path: [...unit.path],
-        onDamageEvents: [...unit.onDamageEvents],
-        onDeathEvents: [...unit.onDeathEvents],
-        onMoveEvents: [...unit.onMoveEvents],
-        onAgroEvents: [...unit.onAgroEvents],
-        onTurnStartEvents: [...unit.onTurnStartEvents],
-        onTurnEndEvents: [...unit.onTurnEndEvents],
-        // Deep copy modifiers so it doesn't mutate the unit's actual modifiers object
-        modifiers: JSON.parse(JSON.stringify(modifiers)),
-        shaderUniforms: {},
-        resolveDoneMoving: () => { }
-      };
-    })
+    window.dryRunUnits = this.units.map(Unit.copyForDryRunUnit);
   }
   syncronizeRNG(RNGState: SeedrandomState | boolean) {
     // state of "true" initializes the RNG with the ability to save it's state,

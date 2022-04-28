@@ -611,3 +611,25 @@ export function getImagePathForUnitId(id: string): string {
 export function inRange(unit: IUnit, coords: Vec2): boolean {
   return math.distance(unit, coords) <= unit.attackRange;
 }
+// Makes a copy of the unit's data suitable for 
+// a dryRunUnit
+export function copyForDryRunUnit(u: IUnit): IUnit {
+  const { image, resolveDoneMoving, modifiers, ...unit } = u;
+  return {
+    ...unit,
+    // Copy all arrays so they don't share a reference with
+    // the original unit
+    path: [...unit.path],
+    onDamageEvents: [...unit.onDamageEvents],
+    onDeathEvents: [...unit.onDeathEvents],
+    onMoveEvents: [...unit.onMoveEvents],
+    onAgroEvents: [...unit.onAgroEvents],
+    onTurnStartEvents: [...unit.onTurnStartEvents],
+    onTurnEndEvents: [...unit.onTurnEndEvents],
+    // Deep copy modifiers so it doesn't mutate the unit's actual modifiers object
+    modifiers: JSON.parse(JSON.stringify(modifiers)),
+    shaderUniforms: {},
+    resolveDoneMoving: () => { }
+  };
+
+}

@@ -192,6 +192,10 @@ window.superMe = () => {
     window.player.unit.staminaMax = 10000;
     window.player.unit.stamina = window.player.unit.staminaMax;
     window.player.unit.moveSpeed = 2;
+    // Now that player's health and mana has changed we must sync
+    // dryRunUnits so that the player's dryRun copy
+    // has the same mana and health
+    window.underworld.syncDryRunUnits();
   }
 }
 // window.showDebug = true;

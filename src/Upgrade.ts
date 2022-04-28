@@ -150,6 +150,11 @@ export const upgradeStatsSource: IUpgrade[] = [
     effect: (player) => {
       player.unit.healthMax += maxHealthIncreaseAmount;
       player.unit.health += maxHealthIncreaseAmount;
+      // Now that the player unit's mana has increased,sync the new
+      // mana state with the player's dryRunUnit so it is properly
+      // refelcted in the health bar
+      // (note: this would be auto corrected on the next mouse move anyway)
+      window.underworld.syncPlayerDryRunUnitOnly();
     },
     probability: 30,
     cost: { healthCost: 0, manaCost: 0 },
@@ -163,6 +168,11 @@ export const upgradeStatsSource: IUpgrade[] = [
     effect: (player) => {
       player.unit.manaMax += maxManaIncreaseAmount;
       player.unit.mana += maxManaIncreaseAmount;
+      // Now that the player unit's mana has increased,sync the new
+      // mana state with the player's dryRunUnit so it is properly
+      // refelcted in the health bar
+      // (note: this would be auto corrected on the next mouse move anyway)
+      window.underworld.syncPlayerDryRunUnitOnly();
     },
     probability: 30,
     cost: { healthCost: 0, manaCost: 0 },
