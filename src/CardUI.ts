@@ -383,10 +383,6 @@ export function clearSelectedCards() {
   syncSpellEffectProjection();
 }
 
-// Chooses a random card based on the card's probabilities
-export function generateCard(cards: Cards.ICard[] = Object.values(Cards.allCards)): Cards.ICard | undefined {
-  return math.chooseObjectWithProbability(cards);
-}
 export function getCardRarityColor(content: { probability: number }): string {
   if (content.probability == 1) {
     // Super rare

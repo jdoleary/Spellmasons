@@ -1,5 +1,5 @@
 import { magnitude, Vec2 } from './Vec';
-import { randInt } from './rand';
+import { prng, randInt } from './rand';
 // https://webdva.github.io/how-i-implemented-client-side-linear-interpolation/
 export function lerp(start: number, end: number, time: number) {
   if (time >= 1) {
@@ -99,6 +99,7 @@ export function _chooseObjectWithProbability<T extends objectWithProbability>(ro
 }
 export function chooseObjectWithProbability<T extends objectWithProbability>(
   source: T[],
+  seedRandomInstance: prng
 ): T | undefined {
   if (source.length == 0) {
     return undefined;
@@ -109,7 +110,7 @@ export function chooseObjectWithProbability<T extends objectWithProbability>(
     0,
   );
   // Choose random integer within the sum of all the probabilities
-  const roll = randInt(window.underworld.random, 1, maxProbability);
+  const roll = randInt(seedRandomInstance, 1, maxProbability);
   return _chooseObjectWithProbability(roll, source);
 }
 

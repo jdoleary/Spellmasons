@@ -6,7 +6,6 @@
     - after client 2 died on level 3, and both chose upgrades
         - client 1 experienced a "bad seed - no place to spawn players" but client 2 did not, and so they had different looking levels
 # Tasks
-- Both clients are getting offered hte exact same upgrades
 - Change portal to just a "go to upgrade" button
     - ~~Fix infinite stamina when you end level~~
 - Make selected cards background transparent

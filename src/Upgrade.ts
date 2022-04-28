@@ -1,3 +1,4 @@
+import seedrandom from 'seedrandom';
 import type { CardCost } from './cards/cardUtils';
 import { getCardRarityColor } from './CardUI';
 import { NUMBER_OF_UPGRADES_TO_CHOOSE_FROM } from './config';
@@ -53,7 +54,7 @@ export function generateUpgrades(player: IPlayer): IUpgrade[] {
     i < numberOfCardsToChoose;
     i++
   ) {
-    const upgrade = chooseObjectWithProbability(clonedUpgradeSource)
+    const upgrade = chooseObjectWithProbability(clonedUpgradeSource, seedrandom());
     if (upgrade) {
       const index = clonedUpgradeSource.indexOf(upgrade);
       upgrades = upgrades.concat(clonedUpgradeSource.splice(index, 1));
