@@ -890,7 +890,7 @@ export default class Underworld {
       })
     }
   }
-  endNPCTurnPhase() {
+  async endNPCTurnPhase() {
     // Move onto next phase
     // --
     // Note: The reason this logic happens here instead of in setTurnPhase
@@ -903,6 +903,15 @@ export default class Underworld {
     // so that clients CAN reconnect mid player turn and the playerTurnIndex is 
     // maintained
     // --
+    // Trigger onTurnEnd Events
+    for (let unit of this.units.filter(u => u.unitType === UnitType.AI)) {
+      await Promise.all(unit.onTurnEndEvents.map(
+        async (eventName) => {
+          const fn = Events.onTurnEndSource[eventName];
+          return fn ? await fn(unit) : false;
+        },
+      ));
+    }
     // Reset to first player's turn
     this.playerTurnIndex = 0;
     // Increment the turn number now that it's starting over at the first phase
@@ -1011,7 +1020,7 @@ export default class Underworld {
       }
     }
   }
-  endPlayerTurn(clientId: string) {
+  async endPlayerTurn(clientId: string) {
     const playerIndex = this.players.findIndex((p) => p.clientId === clientId);
     const player = this.players[playerIndex];
     if (!player) {
@@ -1026,6 +1035,13 @@ export default class Underworld {
     }
     // Ensure players can only end the turn when it IS their turn
     if (this.turn_phase === turn_phase.PlayerTurns) {
+      // Trigger onTurnEnd Events
+      await Promise.all(player.unit.onTurnEndEvents.map(
+        async (eventName) => {
+          const fn = Events.onTurnEndSource[eventName];
+          return fn ? await fn(player.unit) : false;
+        },
+      ));
       // Incrememt the playerTurnIndex
       // This must happen before goToNextPhaseIfAppropriate
       // which checks if the playerTurnIndex is >= the number of players

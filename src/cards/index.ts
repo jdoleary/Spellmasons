@@ -7,6 +7,7 @@ import Events, {
   onMove,
   onAgro,
   onTurnStart,
+  onTurnEnd,
 } from '../Events';
 import Subsprites, { ISubsprites } from '../Subsprites';
 // Register spells:
@@ -45,6 +46,7 @@ export interface Spell {
     onMove?: onMove;
     onAgro?: onAgro;
     onTurnStart?: onTurnStart;
+    onTurnEnd?: onTurnEnd;
   };
   subsprites?: ISubsprites;
 }
@@ -82,6 +84,9 @@ function register(spell: Spell) {
     }
     if (events.onTurnStart) {
       Events.onTurnSource[id] = events.onTurnStart;
+    }
+    if (events.onTurnEnd) {
+      Events.onTurnEndSource[id] = events.onTurnEnd;
     }
   }
 }

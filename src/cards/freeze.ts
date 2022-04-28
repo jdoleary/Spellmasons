@@ -37,6 +37,17 @@ Freezes the target(s) for 1 turn, preventing them from moving or acting.
   },
   events: {
     onTurnStart: async (unit: Unit.IUnit) => {
+      // Ensure that the unit cannot move when frozen
+      // (even when players' turns are ended they can still act so long
+      // as it is underworld.turn_phase === turn_phase.PlayerTurns, this is because all players act simultaneously
+      // during that phase, so setting stamina to 0
+      // prevents players from moving when they are frozen)
+      // and then returning true also ends their turn.
+      unit.stamina = 0;
+      // Skip turn
+      return true;
+    },
+    onTurnEnd: async (unit: Unit.IUnit) => {
       // Decrement how many turns left the unit is frozen
       const modifier = unit.modifiers[id];
       if (modifier) {
@@ -45,15 +56,6 @@ Freezes the target(s) for 1 turn, preventing them from moving or acting.
           Unit.removeModifier(unit, id);
         }
       }
-      // Ensure that the unit cannot move when frozen
-      // (even when players' turns are ended they can still act so long
-      // as it is underworld.turn_phase === turn_phase.PlayerTurns, this is because all players act simultaneously
-      // during that phase, so setting stamina to 0
-      // prevents players from moving when they are frozen)
-      // and then returning true also ends their turn.
-      unit.stamina = 0;
-      // Abort turn
-      return true;
     },
   },
   subsprites: {
@@ -80,6 +82,9 @@ function add(unit: Unit.IUnit) {
     // Add event
     if (!unit.onTurnStartEvents.includes(id)) {
       unit.onTurnStartEvents.push(id);
+    }
+    if (!unit.onTurnEndEvents.includes(id)) {
+      unit.onTurnEndEvents.push(id);
     }
 
     // Add subsprite image

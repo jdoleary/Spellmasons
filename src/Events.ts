@@ -30,6 +30,8 @@ export type onTurnStart = {
   (unit: IUnit): Promise<boolean>;
 };
 const onTurnSource: { [name: string]: onTurnStart } = {};
+export type onTurnEnd = { (unit: IUnit): Promise<void>; }
+const onTurnEndSource: { [name: string]: onTurnEnd } = {};
 
 export default {
   onAgroSource,
@@ -37,4 +39,5 @@ export default {
   onDeathSource,
   onMoveSource,
   onTurnSource,
+  onTurnEndSource
 };

@@ -77,6 +77,7 @@ export interface IUnit {
   onMoveEvents: string[];
   onAgroEvents: string[];
   onTurnStartEvents: string[];
+  onTurnEndEvents: string[];
   modifiers: {
     [name: string]: {
       isCurse: boolean;
@@ -134,6 +135,7 @@ export function create(
     onMoveEvents: [],
     onAgroEvents: [],
     onTurnStartEvents: [],
+    onTurnEndEvents: [],
     modifiers: {},
   }, sourceUnitProps);
 
@@ -199,6 +201,7 @@ export function removeModifier(unit: IUnit, key: string) {
   unit.onMoveEvents = unit.onMoveEvents.filter((e) => e !== key);
   unit.onAgroEvents = unit.onAgroEvents.filter((e) => e !== key);
   unit.onTurnStartEvents = unit.onTurnStartEvents.filter((e) => e !== key);
+  unit.onTurnEndEvents = unit.onTurnEndEvents.filter((e) => e !== key);
   delete unit.modifiers[key];
 
   // Call custom modifier's remove function
