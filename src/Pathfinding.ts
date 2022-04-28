@@ -515,7 +515,7 @@ function calculateDistanceOfPaths(paths: Path[]) {
         path.distance = calculateDistanceOfVec2Array([...path.points, path.target]);
     }
 }
-function calculateDistanceOfVec2Array(points: Vec2[]) {
+export function calculateDistanceOfVec2Array(points: Vec2[]) {
     let totalDistance = 0;
     // Finally, calculate the distance for the path 
     for (let i = 0; i < points.length - 2; i++) {

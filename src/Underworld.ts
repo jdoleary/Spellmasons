@@ -34,7 +34,7 @@ import { prng, randInt, SeedrandomState } from './rand';
 import { calculateCost } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment } from './collision/collisionMath';
 import { expandPolygon, mergeOverlappingPolygons, Polygon, PolygonLineSegment, polygonToPolygonLineSegments } from './Polygon';
-import { findPath, findPolygonsThatVec2IsInsideOf } from './Pathfinding';
+import { calculateDistanceOfVec2Array, findPath, findPolygonsThatVec2IsInsideOf } from './Pathfinding';
 import { setView, View } from './views';
 import * as readyState from './readyState';
 import { HandcraftedLevel, levels } from './HandcraftedLevels';
@@ -101,6 +101,7 @@ export default class Underworld {
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
     window.underworld = this;
     this.seed = seed;
+    this.seed = '0.28265742274339634';
     this.gameStarted = false;
     console.log("RNG create with seed:", seed, ", state: ", RNGState);
     this.random = this.syncronizeRNG(RNGState);
@@ -1226,8 +1227,11 @@ export default class Underworld {
       case UnitSubType.MELEE:
         attackTarget = Unit.findClosestUnitInDifferentFaction(u);
         if (attackTarget) {
-          // TODO: This needs to be revised to consider the actual path they will take, not just the range
-          canAttackTarget = u.alive && math.distance(u, attackTarget) <= u.attackRange + u.stamina
+          const maxPathDistance = u.attackRange + u.stamina;
+          const path = findPath(u, attackTarget, window.underworld.pathingPolygons);
+          // Add the units current point to the start of the path
+          const dist = calculateDistanceOfVec2Array([u, ...path]);
+          canAttackTarget = !!path.length && dist <= maxPathDistance;
         }
         break;
       case UnitSubType.RANGED_LOS:

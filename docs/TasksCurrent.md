@@ -11,7 +11,6 @@
 - Make selected cards background transparent
 - Improved level design with Wave Function Collapse
 - Make freeze block pathing
-- Improve unit MELEE attack prediction so it will only show exclamation if they will actually hit you
 - Allow drag and drop between cards and far left or far right.
 - Lerp in and out when WASD camera
 - Prevent skipping levels by running to portal or swapping there
