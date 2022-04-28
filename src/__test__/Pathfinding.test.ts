@@ -1,6 +1,25 @@
-import { removeBetweenIndexAtoB, pointsEveryXDistanceAlongPath } from '../Pathfinding';
+import { removeBetweenIndexAtoB, pointsEveryXDistanceAlongPath, calculateDistanceOfVec2Array } from '../Pathfinding';
 import type { Vec2 } from '../Vec';
 describe('Pathfinding', () => {
+    describe('calculateDistanceOfVec2Array', () => {
+        it('should return the sum of the distances between all points in order', () => {
+            const points: Vec2[] = [
+                { x: 0, y: 0 },
+                { x: 100, y: 0 },
+                { x: 0, y: 0 },
+            ]
+            const actual = calculateDistanceOfVec2Array(points);
+            const expected = 200;
+            expect(actual).toEqual(expected);
+        })
+        it('should return 0 if there are no points in the array', () => {
+            const points: Vec2[] = []
+            const actual = calculateDistanceOfVec2Array(points);
+            const expected = 0;
+            expect(actual).toEqual(expected);
+        })
+    });
+
     describe('removeBetweenIndexAtoB', () => {
         it('should remove all the indices between A and B', () => {
             const array = [0, 1, 2, 3, 4, 5]
