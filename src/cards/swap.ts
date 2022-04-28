@@ -57,8 +57,10 @@ Swaps the caster with the source target.
         }
       }
       for (let [unit, newLocation] of swapUnits) {
-        // Physically swap
-        Unit.setLocation(unit, newLocation);
+        if (!dryRun) {
+          // Physically swap
+          Unit.setLocation(unit, newLocation);
+        }
       }
       return state;
     },
