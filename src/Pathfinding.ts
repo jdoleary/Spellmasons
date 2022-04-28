@@ -515,17 +515,21 @@ function calculateDistanceOfPaths(paths: Path[]) {
         path.distance = calculateDistanceOfVec2Array([...path.points, path.target]);
     }
 }
-export function calculateDistanceOfVec2Array(points: Vec2[]) {
+export function calculateDistanceOfVec2Array(points: Vec2[]): number {
+    if (!points[0]) {
+        return 0;
+    }
     let totalDistance = 0;
+    let lastPoint = points[0];
     // Finally, calculate the distance for the path 
-    for (let i = 0; i < points.length - 1; i++) {
-        const point = points[i];
-        const nextPoint = points[i + 1];
-        if (point !== undefined && nextPoint !== undefined) {
-            totalDistance += distance(point, nextPoint);
-        } else {
-            console.error('loop is malformed')
+    for (let point of points) {
+        // Optimization: Don't calculate the distance between the first point and itself
+        if (point == lastPoint) {
+            continue;
         }
+        // Sum the distances
+        totalDistance += distance(point, lastPoint);
+        lastPoint = point;
     }
     return totalDistance;
 }
