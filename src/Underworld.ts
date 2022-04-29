@@ -101,7 +101,6 @@ export default class Underworld {
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
     window.underworld = this;
     this.seed = seed;
-    this.seed = '0.28265742274339634';
     this.gameStarted = false;
     console.log("RNG create with seed:", seed, ", state: ", RNGState);
     this.random = this.syncronizeRNG(RNGState);
@@ -531,20 +530,6 @@ export default class Underworld {
     this.addGroundTileImages();
     // Recache walls now that unreachable areas have been filled in
     this.cacheWalls();
-
-    const portalPickup = Pickup.specialPickups['portal'];
-    if (portalPickup) {
-      Pickup.create(
-        portalCoords.x,
-        portalCoords.y,
-        portalPickup,
-        false,
-        portalPickup.animationSpeed,
-        true,
-      );
-    } else {
-      console.error('Could not find portal pickup');
-    }
 
     // Exclude player spawn coords that cannot path to the portal
     this.validPlayerSpawnCoords = this.validPlayerSpawnCoords.filter(spawn => {
@@ -1403,10 +1388,34 @@ export default class Underworld {
     if (!dryRun) {
       // Clear spell animations once all cards are done playing their animations
       containerSpells.removeChildren();
+      this.checkIfShouldSpawnPortal();
     }
 
     return effectState;
   }
+  checkIfShouldSpawnPortal() {
+    if (this.units.filter(u => u.faction == Faction.ENEMY).every(u => !u.alive)) {
+      // Spawn portal near each player
+      const portalPickup = Pickup.specialPickups['portal'];
+      if (portalPickup) {
+        for (let playerUnit of this.units.filter(u => u.unitType == UnitType.PLAYER_CONTROLLED && u.alive)) {
+          const portalSpawnLocation = Array.from(math.honeycombGenerator(config.COLLISION_MESH_RADIUS, playerUnit, 2))[0] || playerUnit;
+          Pickup.create(
+            portalSpawnLocation.x,
+            portalSpawnLocation.y,
+            portalPickup,
+            false,
+            portalPickup.animationSpeed,
+            true,
+          );
+        }
+      } else {
+        console.error('Portal pickup not found')
+      }
+    }
+
+  }
+
   // hasLineOfSight returns true if there are no walls interrupting
   // a line from seer to target
   // Note: if you want a function like this that returns a Vec2, try
