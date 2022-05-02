@@ -135,6 +135,11 @@ export const specialPickups: { [image: string]: IPickupSource } = {
         pie.sendData({
           type: MESSAGE_TYPES.ENTER_PORTAL
         });
+        // Move the player unit so they don't continue to trigger the pickup more than once
+        if (player.unit) {
+          player.unit.x = NaN;
+          player.unit.y = NaN;
+        }
       }
     },
   },
