@@ -2,11 +2,11 @@
 - TODO: Change obstacles to tiles
     - Since i'll be using wave function collapse obstacles will have different bounds
     - A tile will be an image and bounds (maybe multiple)
-- Tiles made up of
-    - ground
-    - wall
-    - water
-    - void
+    - Tiles made up of
+        - ground
+        - wall
+        - water
+        - void
 
 
 - Improve sending castCards with targeting based on id not position

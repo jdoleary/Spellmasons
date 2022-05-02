@@ -8,7 +8,6 @@ import Underworld, { SyncInformation, turn_phase } from './Underworld';
 import * as Player from './Player';
 import * as Unit from './Unit';
 import * as Pickup from './Pickup';
-import * as Obstacle from './Obstacle';
 import * as readyState from './readyState';
 import * as messageQueue from './messageQueue';
 import * as storage from './storage';

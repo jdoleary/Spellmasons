@@ -1,7 +1,7 @@
 import * as Image from './Image';
 import type { Polygon } from './Polygon';
 import { containerUnits } from './PixiUtils';
-import { OBSTACLE_SIZE } from './config';
+import { TILE_SIZE } from './config';
 import type { Vec2 } from './Vec';
 export interface IObstacle {
   x: number;
@@ -26,8 +26,8 @@ export function create(coord: Vec2, obstacleSourceIndex: number) {
   const obstacle = obstacleSource[obstacleSourceIndex];
   if (obstacle) {
 
-    const width = OBSTACLE_SIZE;
-    const height = OBSTACLE_SIZE;
+    const width = TILE_SIZE;
+    const height = TILE_SIZE;
     const _x = coord.x - width / 2;
     const _y = coord.y - height / 2;
     const bounds = {

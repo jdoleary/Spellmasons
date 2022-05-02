@@ -216,7 +216,7 @@ const elInspectorTooltipImage: HTMLImageElement = (document.getElementById(
   'inspector-tooltip-image',
 ) as HTMLImageElement);
 
-let selectedType: "unit" | "pickup" | "obstacle" | null = null;
+let selectedType: "unit" | "pickup" | null = null;
 let selectedUnit: Unit.IUnit | undefined;
 let selectedPickup: Pickup.IPickup | undefined;
 export function updateTooltipContent() {

@@ -11,7 +11,6 @@ import * as Cards from './cards';
 import * as Image from './Image';
 import * as storage from './storage';
 import * as GlobalPromises from './GlobalPromises';
-import obstacleSectors from './ObstacleSectors';
 import { MESSAGE_TYPES } from './MessageTypes';
 import {
   app,
@@ -421,8 +420,8 @@ export default class Underworld {
     };
     // Width and height should be set immediately so that other level-building functions
     // (such as cacheWalls) have access to the new width and height
-    this.width = config.OBSTACLE_SIZE * sectorsWide * config.OBSTACLES_PER_SECTOR_WIDE;
-    this.height = config.OBSTACLE_SIZE * sectorsTall * config.OBSTACLES_PER_SECTOR_TALL;
+    this.width = config.TILE_SIZE * sectorsWide * config.OBSTACLES_PER_SECTOR_WIDE;
+    this.height = config.TILE_SIZE * sectorsTall * config.OBSTACLES_PER_SECTOR_TALL;
     let validSpawnCoords: Vec2[] = [];
     let validPortalSpawnCoords: Vec2[] = [];
     // The map is made of a matrix of obstacle sectors
@@ -456,8 +455,8 @@ export default class Underworld {
             const rowOfObstacles = sector[Y];
             if (rowOfObstacles) {
               for (let X = 0; X < rowOfObstacles.length; X++) {
-                const coordX = config.OBSTACLE_SIZE * config.OBSTACLES_PER_SECTOR_WIDE * i + config.OBSTACLE_SIZE * X + config.COLLISION_MESH_RADIUS;
-                const coordY = config.OBSTACLE_SIZE * config.OBSTACLES_PER_SECTOR_WIDE * j + config.OBSTACLE_SIZE * Y + config.COLLISION_MESH_RADIUS;
+                const coordX = config.TILE_SIZE * config.OBSTACLES_PER_SECTOR_WIDE * i + config.TILE_SIZE * X + config.COLLISION_MESH_RADIUS;
+                const coordY = config.TILE_SIZE * config.OBSTACLES_PER_SECTOR_WIDE * j + config.TILE_SIZE * Y + config.COLLISION_MESH_RADIUS;
                 const obstacleIndex = rowOfObstacles[X];
                 // obstacleIndex of 0 means ground
                 if (obstacleIndex == 0) {
@@ -701,8 +700,8 @@ export default class Underworld {
     // (such as cacheWalls) have access to the new width and height
     const sectorsWide = 4;
     const sectorsTall = 2;
-    this.width = config.OBSTACLE_SIZE * sectorsWide * config.OBSTACLES_PER_SECTOR_WIDE;
-    this.height = config.OBSTACLE_SIZE * sectorsTall * config.OBSTACLES_PER_SECTOR_TALL;
+    this.width = config.TILE_SIZE * sectorsWide * config.OBSTACLES_PER_SECTOR_WIDE;
+    this.height = config.TILE_SIZE * sectorsTall * config.OBSTACLES_PER_SECTOR_TALL;
     setView(View.Game);
     console.log('Setup: initHandcraftedLevel', name);
     const level = levels[name];
@@ -773,9 +772,9 @@ export default class Underworld {
 
     }
     // Create ground tiles:
-    for (let x = 0; x < this.width / config.OBSTACLE_SIZE; x++) {
-      for (let y = 0; y < this.height / config.OBSTACLE_SIZE; y++) {
-        Image.create({ x: x * config.OBSTACLE_SIZE, y: y * config.OBSTACLE_SIZE }, 'tiles/ground.png', containerBoard);
+    for (let x = 0; x < this.width / config.TILE_SIZE; x++) {
+      for (let y = 0; y < this.height / config.TILE_SIZE; y++) {
+        Image.create({ x: x * config.TILE_SIZE, y: y * config.TILE_SIZE }, 'tiles/ground.png', containerBoard);
       }
     }
 
