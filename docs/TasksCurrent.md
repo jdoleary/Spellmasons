@@ -1,4 +1,14 @@
 # Game Breaking Priorities
+- TODO: Change obstacles to tiles
+    - Since i'll be using wave function collapse obstacles will have different bounds
+    - A tile will be an image and bounds (maybe multiple)
+- Tiles made up of
+    - ground
+    - wall
+    - water
+    - void
+
+
 - Improve sending castCards with targeting based on id not position
 - Separate level data generation with level image generation
 
