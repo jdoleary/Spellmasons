@@ -272,7 +272,7 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       const { players, units, level } = payload as SyncInformation;
 
       if (players) {
-        console.log('sync: Syncing players...');
+        console.log('sync: Syncing players');
         for (let originalPlayer of window.underworld.players) {
           const syncPlayer = players.find(p => p.clientId == originalPlayer?.clientId)
           if (!syncPlayer) {
@@ -287,7 +287,7 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
 
       }
       if (units) {
-        console.log('sync: Syncing units...');
+        console.log('sync: Syncing units');
         for (let originalUnit of window.underworld.units) {
           // TODO: optimize if needed
           const syncUnit = units.find(u => u.id === originalUnit.id);
@@ -304,7 +304,7 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
 
       }
       if (level) {
-        console.log('sync: Syncing level...');
+        console.log('sync: Syncing level');
         if (window.underworld) {
           window.underworld.createLevel(level);
         } else {
