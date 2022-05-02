@@ -1,6 +1,15 @@
 # Game Breaking Priorities
+- Improve sending castCards with targeting based on id not position
+- Separate level data generation with level image generation
+
+- Make an overlay screen that blocks interaction while waiting for sync
+- Bug: You can go into negative mana if you fire off spells quickly
+- Bug: If active turn player disconnects and reconnects immediately there will be a playerTurnIndex desync
+    - Reconnecting client should request new game state
 - turn message is not synced after wsPie disconnect
 - disconnect image is not synced after reconnect
+- Unit movement desync occurred between clients when one client has CPU throttled, the non throttled client has the unit move much farther
+- Honeycomb didn't work for not putting portal through wall
 - Fix multiplayer
     - Experienced a bug where one player portaled on one screen but not on the other
     - I throttled cpu on one client and saw a unit position desync where the non throttled client moved way farther
