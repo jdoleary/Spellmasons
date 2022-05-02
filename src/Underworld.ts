@@ -1431,7 +1431,7 @@ export default class Underworld {
       const portalPickup = Pickup.specialPickups['portal'];
       if (portalPickup) {
         for (let playerUnit of this.units.filter(u => u.unitType == UnitType.PLAYER_CONTROLLED && u.alive)) {
-          const portalSpawnLocation = Array.from(math.honeycombGenerator(config.COLLISION_MESH_RADIUS, playerUnit, 2))[0] || playerUnit;
+          const portalSpawnLocation = this.findValidSpawn(playerUnit, 2) || playerUnit;
           Pickup.create(
             portalSpawnLocation.x,
             portalSpawnLocation.y,
