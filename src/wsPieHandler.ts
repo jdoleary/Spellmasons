@@ -175,8 +175,8 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
   const { payload, fromClient } = d;
   const type: MESSAGE_TYPES = payload.type;
   console.log("Handle ONDATA", type, payload)
-  // Get caster
-  const caster = window.underworld.players.find((p) => p.clientId === fromClient);
+  // Get player of the client that sent the message 
+  const fromPlayer = window.underworld.players.find((p) => p.clientId === fromClient);
   switch (type) {
     // Checks to see if desync has occurred between clients
     // It is important that this message is handled syncronously, so we don't get 
@@ -323,9 +323,16 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       }
       handleLoadGameState(payload);
       break;
+    case MESSAGE_TYPES.ENTER_PORTAL:
+      if (fromPlayer) {
+        Player.enterPortal(fromPlayer);
+      } else {
+        console.error('Recieved ENTER_PORTAL message but "caster" is undefined')
+      }
+      break;
     case MESSAGE_TYPES.MOVE_PLAYER:
-      if (caster) {
-        await Unit.moveTowards(caster.unit, payload).then(() => {
+      if (fromPlayer) {
+        await Unit.moveTowards(fromPlayer.unit, payload).then(() => {
           window.underworld.calculateEnemyAttentionMarkers();
         });
       } else {
@@ -333,29 +340,29 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       }
       break;
     case MESSAGE_TYPES.SPELL:
-      if (caster) {
-        await handleSpell(caster, payload);
+      if (fromPlayer) {
+        await handleSpell(fromPlayer, payload);
       } else {
         console.error('Cannot cast, caster does not exist');
       }
       break;
     case MESSAGE_TYPES.CHOOSE_UPGRADE:
       const upgrade = getUpgradeByTitle(payload.upgrade.title);
-      if (caster && upgrade) {
-        window.underworld.chooseUpgrade(caster, upgrade);
+      if (fromPlayer && upgrade) {
+        window.underworld.chooseUpgrade(fromPlayer, upgrade);
       } else {
         console.error(
           'Cannot choose upgrade, either the caster or upgrade does not exist',
-          caster,
+          fromPlayer,
           upgrade,
         );
       }
       break;
     case MESSAGE_TYPES.END_TURN:
-      if (caster) {
-        window.underworld.endPlayerTurn(caster.clientId);
+      if (fromPlayer) {
+        window.underworld.endPlayerTurn(fromPlayer.clientId);
         // Reset stamina immediately on endTurn so that the end-turn-btn highlight goes away
-        if (caster == window.player) {
+        if (fromPlayer == window.player) {
           window.player.unit.stamina = window.player.unit.staminaMax;
         }
       } else {

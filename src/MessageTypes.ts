@@ -1,6 +1,7 @@
 export enum MESSAGE_TYPES {
   SPELL,
   MOVE_PLAYER,
+  ENTER_PORTAL,
   CHOOSE_UPGRADE,
   END_TURN,
   // INIT_GAME_STATE is very similar to LOAD_GAME_STATE, in fact, they run identical code

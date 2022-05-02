@@ -4,6 +4,8 @@ import { containerUnits } from './PixiUtils';
 import type { IUnit } from './Unit';
 import { checkIfNeedToClearTooltip } from './ui/PlanningView';
 import { explainManaOverfill } from './Jprompt';
+import { pie } from './wsPieSetup';
+import { MESSAGE_TYPES } from './MessageTypes';
 
 export const PICKUP_RADIUS = 32;
 export interface IPickup {
@@ -127,8 +129,12 @@ export const specialPickups: { [image: string]: IPickupSource } = {
     description:
       'Takes you to the next level when all players are either in the portal or dead.',
     effect: ({ unit, player }: { unit?: IUnit; player?: Player.IPlayer }) => {
-      if (player) {
-        Player.enterPortal(player);
+      // Only send the ENTER_PORTAL message from
+      // the client of the player that entered the portal
+      if (player && player == window.player) {
+        pie.sendData({
+          type: MESSAGE_TYPES.ENTER_PORTAL
+        });
       }
     },
   },
