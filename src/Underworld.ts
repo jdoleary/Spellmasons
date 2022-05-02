@@ -599,19 +599,11 @@ export default class Underworld {
   }
   // ringLimit limits how far away from the spawnSource it will check for valid spawn locations
   findValidSpawn(spawnSource: Vec2, ringLimit?: number): Vec2 | undefined {
-    const aliveUnits = this.units.filter(u => u.alive);
     // Enough rings to cover the whole map
-    const honeycombRings = ringLimit || Math.max(this.width / 2 / config.UNIT_BASE_RADIUS, this.height / 2 / config.UNIT_BASE_RADIUS);
-    for (let s of math.honeycombGenerator(config.UNIT_BASE_RADIUS, spawnSource, honeycombRings)) {
+    const honeycombRings = ringLimit || Math.max(this.width / 2 / config.COLLISION_MESH_RADIUS, this.height / 2 / config.COLLISION_MESH_RADIUS);
+    for (let s of math.honeycombGenerator(config.COLLISION_MESH_RADIUS, spawnSource, honeycombRings)) {
       let invalid = false;
-      const attemptSpawn = { ...s, radius: config.UNIT_BASE_RADIUS };
-      for (let unit of aliveUnits) {
-        if (isCircleIntersectingCircle(attemptSpawn, unit)) {
-          invalid = true;
-          break;
-        }
-
-      }
+      const attemptSpawn = { ...s, radius: config.COLLISION_MESH_RADIUS };
       // Ensure attemptSpawn isn't inside of pathingPolygons
       if (!invalid && findPolygonsThatVec2IsInsideOf(attemptSpawn, this.pathingPolygons).length === 0) {
         // Return the first valid spawn found
