@@ -896,7 +896,9 @@ export default class Underworld {
     const syncKey = syncTypeToPromiseKey(syncType)
     console.log('sync: Waiting for ', syncKey);
     // TODO: If host disconnects, retrigger a sync
-    await GlobalPromises.create(syncKey);
+    await GlobalPromises.create(syncKey).catch(() => {
+      console.error(`sync: ERROR, failed ${syncKey}`)
+    });
     console.log(`sync: ${syncKey} succeeded`)
 
 
