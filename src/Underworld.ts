@@ -666,18 +666,23 @@ export default class Underworld {
     this.setTurnPhase(turn_phase.PlayerTurns);
     cameraAutoFollow(true);
   }
-  initLevel(levelIndex: number): void {
-    // Level sizes are random but have change to grow bigger as loop continues
-    const sectorsWide = randInt(this.random, 2, 3 + (Math.round(levelIndex / 3)));
-    const sectorsTall = randInt(this.random, 1, 3 + (Math.round(levelIndex / 3)));
-    console.log('Setup: initLevel', levelIndex, sectorsWide, sectorsTall);
-    this.levelIndex = levelIndex;
-    this.cleanUpLevel();
-    const succeeded = this.generateRandomLevel(levelIndex, sectorsWide, sectorsTall);
-    if (!succeeded) {
-      // Invoke init level again until generateRandomLevel succeeds
-      return this.initLevel(this.levelIndex);
+  async initLevel(levelIndex: number) {
+    // If host, send sync; if non-host, wait for sync
+    if (window.hostClientId === window.clientId) {
+      // Level sizes are random but have change to grow bigger as loop continues
+      const sectorsWide = randInt(this.random, 2, 3 + (Math.round(levelIndex / 3)));
+      const sectorsTall = randInt(this.random, 1, 3 + (Math.round(levelIndex / 3)));
+      console.log('Setup: initLevel', levelIndex, sectorsWide, sectorsTall);
+      this.levelIndex = levelIndex;
+      this.cleanUpLevel();
+      const succeeded = this.generateRandomLevel(levelIndex, sectorsWide, sectorsTall);
+      if (!succeeded) {
+        // Invoke init level again until generateRandomLevel succeeds
+        this.initLevel(this.levelIndex);
+        return
+      }
     }
+    await this.sync(sync_type.Level);
     this.postSetupLevel();
     // Show text in center of screen for the new level
     floatingText({
@@ -691,6 +696,7 @@ export default class Underworld {
         fontSize: '60px'
       }
     });
+
   }
   initHandcraftedLevel(name: string) {
     // Width and height should be set immediately so that other level-building functions
