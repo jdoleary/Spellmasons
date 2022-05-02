@@ -72,6 +72,8 @@ export default class Underworld {
   turn_phase: turn_phase = turn_phase.PlayerTurns;
   // Index of the player whose turn it is
   playerTurnIndex: number = 0;
+  // An id incrementor to make sure no 2 units share the same id
+  lastUnitId: number = -1;
   // A count of which turn it is, this is useful for
   // governing AI actions that occur every few turns
   // instead of every turn.  A "turn" is a full cycle,

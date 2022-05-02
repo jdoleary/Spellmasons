@@ -85,7 +85,6 @@ export interface IUnit {
     };
   };
 }
-let lastUnitId = -1;
 export function create(
   unitSourceId: string,
   x: number,
@@ -101,7 +100,7 @@ export function create(
   const mana = Math.round(config.UNIT_BASE_MANA * strength);
   const staminaMax = config.UNIT_BASE_STAMINA;
   const unit: IUnit = Object.assign({
-    id: ++lastUnitId,
+    id: ++window.underworld.lastUnitId,
     unitSourceId,
     x,
     y,
