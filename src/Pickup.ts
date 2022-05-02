@@ -1,10 +1,9 @@
 import * as Image from './Image';
-import * as Player from './Player';
+import type * as Player from './Player';
 import { containerUnits } from './PixiUtils';
 import type { IUnit } from './Unit';
 import { checkIfNeedToClearTooltip } from './ui/PlanningView';
 import { explainManaOverfill } from './Jprompt';
-import { pie } from './wsPieSetup';
 import { MESSAGE_TYPES } from './MessageTypes';
 
 export const PICKUP_RADIUS = 32;
@@ -132,7 +131,7 @@ export const specialPickups: { [image: string]: IPickupSource } = {
       // Only send the ENTER_PORTAL message from
       // the client of the player that entered the portal
       if (player && player == window.player) {
-        pie.sendData({
+        window.pie.sendData({
           type: MESSAGE_TYPES.ENTER_PORTAL
         });
         // Move the player unit so they don't continue to trigger the pickup more than once
