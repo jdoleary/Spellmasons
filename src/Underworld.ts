@@ -659,6 +659,7 @@ export default class Underworld {
     cameraAutoFollow(true);
   }
   async initLevel(levelIndex: number) {
+    this.cleanUpLevel();
     // If host, send sync; if non-host, wait for sync
     if (window.hostClientId === window.clientId) {
       // Level sizes are random but have change to grow bigger as loop continues
@@ -666,7 +667,6 @@ export default class Underworld {
       const sectorsTall = randInt(this.random, 1, 3 + (Math.round(levelIndex / 3)));
       console.log('Setup: initLevel', levelIndex, sectorsWide, sectorsTall);
       this.levelIndex = levelIndex;
-      this.cleanUpLevel();
       const succeeded = this.generateRandomLevel(levelIndex, sectorsWide, sectorsTall);
       if (!succeeded) {
         // Invoke init level again until generateRandomLevel succeeds
