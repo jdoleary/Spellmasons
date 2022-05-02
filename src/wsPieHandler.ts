@@ -379,13 +379,14 @@ function handleLoadGameState(payload: any) {
   window.underworld.height = loadedGameState.height;
   window.underworld.playerTurnIndex = loadedGameState.playerTurnIndex;
   window.underworld.levelIndex = loadedGameState.levelIndex;
-  // Load all units that are not player's, those will be loaded indepentently
-  window.underworld.units = loadedGameState.units
-    // Player controlled units are loaded within the players array
-    .filter((u) => u.unitType !== UnitType.PLAYER_CONTROLLED)
-    .map(Unit.load);
+  window.underworld.lastUnitId = loadedGameState.lastUnitId;
+  // Load all units
+  window.underworld.units = loadedGameState.units.map(Unit.load);
+  // Load players
+  // Note: Must come after units are loaded so that Player.load can reassociate
+  // unit that belongs to player
   window.underworld.players = loadedGameState.players.map(Player.load);
-  // Resort units by id since player units are loaded last
+  // Resort units by id 
   window.underworld.units.sort((a, b) => a.id - b.id);
   window.underworld.pickups = loadedGameState.pickups.map(Pickup.load);
   window.underworld.groundTiles = loadedGameState.groundTiles;

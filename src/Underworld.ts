@@ -1467,10 +1467,7 @@ export default class Underworld {
     return {
       ...rest,
       players: this.players.map(Player.serialize),
-      units: this.units
-        // Player controlled units are serialized within the players object
-        .filter((u) => u.unitType !== UnitType.PLAYER_CONTROLLED)
-        .map(Unit.serialize),
+      units: this.units.map(Unit.serialize),
       pickups: this.pickups.map(Pickup.serialize),
       // the state of the Random Number Generator
       RNGState: this.random.state(),

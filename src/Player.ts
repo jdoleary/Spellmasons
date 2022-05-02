@@ -14,7 +14,7 @@ import { clearTooltipSelection } from './ui/PlanningView';
 // The serialized version of the interface changes the interface to allow only the data
 // that can be serialized in JSON.  It may exclude data that is not neccessary to
 // rehydrate the JSON into an entity
-export type IPlayerSerialized = Omit<IPlayer, "unit"> & { unit: Unit.IUnitSerialized };
+export type IPlayerSerialized = Omit<IPlayer, "unit"> & { unit: { id: number } };
 export interface CardUsage {
   [cardId: string]: number
 }
@@ -134,14 +134,19 @@ export function serialize(player: IPlayer): IPlayerSerialized {
   const { unit, ...rest } = player;
   return {
     ...rest,
-    unit: Unit.serialize(unit),
+    unit: { id: unit.id },
   }
 }
 // load rehydrates a player entity from IPlayerSerialized
 export function load(player: IPlayerSerialized) {
+  const reassignedUnit = window.underworld.units.find(u => u.id == player.unit.id);
+  if (!reassignedUnit) {
+    console.error('Failed to load player because cannot find associated unit with ID', player.unit.id);
+    throw new Error('Failed to load player due to not being able to find associated unit')
+  }
   const playerLoaded: IPlayer = {
     ...player,
-    unit: Unit.load(player.unit),
+    unit: reassignedUnit,
   };
   const clients = getClients();
   setClientConnected(playerLoaded, clients.includes(player.clientId));
@@ -156,8 +161,13 @@ export function load(player: IPlayerSerialized) {
 export function syncronize(playerSerialized: IPlayerSerialized, originalPlayer: IPlayer): void {
   if (playerSerialized.clientId == originalPlayer.clientId) {
     const { unit, ...rest } = playerSerialized;
+    const reassignedUnit = window.underworld.units.find(u => u.id == unit.id);
+    if (!reassignedUnit) {
+      console.error('Failed to syncronize player because cannot find associated unit with ID', unit.id);
+      return
+    }
     Object.assign(originalPlayer, rest);
-    Unit.syncronize(unit, originalPlayer.unit);
+    originalPlayer.unit = reassignedUnit;
     addHighlighIfPlayerBelongsToCurrentClient(originalPlayer);
   } else {
     console.error('Attempting to syncronize a player with the wrong client id', playerSerialized.clientId, originalPlayer.clientId);
