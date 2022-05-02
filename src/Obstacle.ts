@@ -2,6 +2,7 @@ import * as Image from './Image';
 import type { Polygon } from './Polygon';
 import { containerUnits } from './PixiUtils';
 import { OBSTACLE_SIZE } from './config';
+import type { Vec2 } from './Vec';
 export interface IObstacle {
   x: number;
   y: number;
@@ -22,10 +23,10 @@ interface IObstacleSource {
   // blocks movement
   walkable: boolean;
 }
-export function create(x: number, y: number, obstacle: IObstacleSource) {
+export function create(coord: Vec2, obstacle: IObstacleSource) {
   // Obstacles go inside of containerUnits so that they can be z-index sorted
   // along with all the units so units can stand in front of or behind the walls
-  const image = Image.create(x, y, obstacle.imagePath, containerUnits);
+  const image = Image.create(coord, obstacle.imagePath, containerUnits);
   if (obstacle.imagePath === 'tiles/void.png') {
     // Make void invisible so that you can see the ground above it
     // descending into the abyss
@@ -38,8 +39,8 @@ export function create(x: number, y: number, obstacle: IObstacleSource) {
   }
   const width = OBSTACLE_SIZE;
   const height = OBSTACLE_SIZE;
-  const _x = x - width / 2;
-  const _y = y - height / 2;
+  const _x = coord.x - width / 2;
+  const _y = coord.y - height / 2;
   const bounds = {
     points: [
       { x: _x, y: _y },
@@ -50,8 +51,8 @@ export function create(x: number, y: number, obstacle: IObstacleSource) {
   };
 
   const self: IObstacle = {
-    x,
-    y,
+    x: coord.x,
+    y: coord.y,
     name: obstacle.name,
     description: obstacle.description,
     imagePath: obstacle.imagePath,
@@ -67,7 +68,7 @@ export function create(x: number, y: number, obstacle: IObstacleSource) {
 }
 // Reinitialize an obstacle from another obstacle object, this is used in loading game state after reconnect
 export function load(o: IObstacle) {
-  return create(o.x, o.y, o);
+  return create(o, o);
 }
 export function remove(o: IObstacle) {
   Image.cleanup(o.image);

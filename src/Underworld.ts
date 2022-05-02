@@ -50,14 +50,6 @@ export enum turn_phase {
   PlayerTurns,
   NPC,
 }
-export enum sync_type {
-  Level,
-  Players,
-  Units,
-}
-export function syncTypeToPromiseKey(syncType: sync_type): string {
-  return `sync_${sync_type[syncType]}`;
-}
 interface Bounds {
   xMin?: number;
   xMax?: number;
@@ -359,6 +351,7 @@ export default class Underworld {
         { x: this.width, y: 0 },
       ], inverted: true
     };
+    // LEFT OFF HERE, have to use level data's obstacles
     this.walls = [...this.obstacles.filter(o => o.wall).map(o => o.bounds).map(polygonToPolygonLineSegments), polygonToPolygonLineSegments(mapBounds)].flat();
     const expandMagnitude = config.COLLISION_MESH_RADIUS * config.NON_HEAVY_UNIT_SCALE
     // this.bounds = mergeOverlappingPolygons([...this.obstacles.map(o => o.bounds), mapBounds]).map(polygonToPolygonLineSegments).flat();
@@ -420,8 +413,18 @@ export default class Underworld {
 
   }
 
-  // boolean in return represents if generating the level succeeded
-  generateRandomLevel(levelIndex: number, sectorsWide: number, sectorsTall: number): boolean {
+  // Returns undefined if it fails to make valid LevelData
+  generateRandomLevelData(levelIndex: number): LevelData | undefined {
+    // Level sizes are random but have change to grow bigger as loop continues
+    const sectorsWide = randInt(this.random, 2, 3 + (Math.round(levelIndex / 3)));
+    const sectorsTall = randInt(this.random, 1, 3 + (Math.round(levelIndex / 3)));
+    console.log('Setup: generateRandomLevel', levelIndex, sectorsWide, sectorsTall);
+    const levelData: LevelData = {
+      obstacles: [],
+      groundTiles: [],
+      pickups: [],
+      enemies: []
+    };
     // Width and height should be set immediately so that other level-building functions
     // (such as cacheWalls) have access to the new width and height
     this.width = config.OBSTACLE_SIZE * sectorsWide * config.OBSTACLES_PER_SECTOR_WIDE;
@@ -479,15 +482,10 @@ export default class Underworld {
                     validSpawnCoords.push({ x: coordX, y: coordY });
                   }
                   // Create ground tile
-                  this.groundTiles.push({ x: coordX, y: coordY });
+                  levelData.groundTiles.push({ x: coordX, y: coordY });
                   continue
                 } else {
-                  const obstacle = Obstacle.obstacleSource[obstacleChoice];
-                  if (obstacle) {
-                    Obstacle.create(coordX, coordY, obstacle);
-                  } else {
-                    console.error('Could not find obstacle from', obstacleChoice)
-                  }
+                  levelData.obstacles.push({ sourceIndex: obstacleChoice, coord: { x: coordX, y: coordY } });
                 }
 
               }
@@ -515,29 +513,27 @@ export default class Underworld {
     const portalCoords = validPortalSpawnCoords.splice(index, 1)[0];
     if (!portalCoords) {
       console.log('Bad level seed, not enough valid spawns for portal, regenerating');
-      return false;
+      return;
     }
     // Fill in the unreachable areas:
     // Go through all cells again and spawn obstacles anywhere that can't reach the "portal" (or the main walkable area of the map)
-    for (let i = this.groundTiles.length - 1; i > 0; i--) {
-      const coord = this.groundTiles[i]
+    for (let i = levelData.groundTiles.length - 1; i > 0; i--) {
+      const coord = levelData.groundTiles[i]
       if (coord) {
         const isReachable = findPolygonsThatVec2IsInsideOf(coord, this.pathingPolygons).length === 0
         // If the coordinate is a unreachable area, fill it in with void:
         if (!isReachable) {
-          const obstacle = Obstacle.obstacleSource.find(o => o.name == 'Void');
-          if (obstacle) {
-            Obstacle.create(coord.x, coord.y, obstacle);
+          const voidIndex = Obstacle.obstacleSource.findIndex(o => o.name == 'Void');
+          if (voidIndex) {
+            levelData.obstacles.push({ sourceIndex: voidIndex, coord })
           } else {
             console.error('Could not find "Void" obstacle');
           }
           // Remove ground tile since it is now an obstacle
-          this.groundTiles.splice(i, 1);
+          levelData.groundTiles.splice(i, 1);
         }
       }
     }
-    // Now that ground tiles have been pared down to only actual tiles that are empty ground, add the images for them
-    this.addGroundTileImages();
     // Recache walls now that unreachable areas have been filled in
     this.cacheWalls();
 
@@ -550,7 +546,7 @@ export default class Underworld {
 
     if (this.validPlayerSpawnCoords.length === 0) {
       console.log('Bad level seed, no place to spawn players, regenerating');
-      return false;
+      return;
     }
 
     for (let i = 0; i < config.NUM_PICKUPS_PER_LEVEL; i++) {
@@ -560,9 +556,9 @@ export default class Underworld {
         Object.values(Pickup.pickups).length - 1,
       );
       const validSpawnCoordsIndex = randInt(this.random, 0, validSpawnCoords.length - 1);
-      const coords = validSpawnCoords.splice(validSpawnCoordsIndex, 1)[0];
-      if (coords) {
-        this.spawnPickup(randomPickupIndex, coords);
+      const coord = validSpawnCoords.splice(validSpawnCoordsIndex, 1)[0];
+      if (coord) {
+        levelData.pickups.push({ index: randomPickupIndex, coord })
       }
     }
     // Spawn units at the start of the level
@@ -571,27 +567,23 @@ export default class Underworld {
       for (let i = 0; i < (count || 0); i++) {
         if (validSpawnCoords.length == 0) { break; }
         const validSpawnCoordsIndex = randInt(this.random, 0, validSpawnCoords.length - 1);
-        const coords = validSpawnCoords.splice(validSpawnCoordsIndex, 1)[0];
-        if (coords) {
-          this.spawnEnemy(id, coords, true, strength);
+        const coord = validSpawnCoords.splice(validSpawnCoordsIndex, 1)[0];
+        if (coord) {
+          levelData.enemies.push({ id, coord, strength })
         }
       }
     }
 
-    if (this.validPlayerSpawnCoords.length >= this.players.length) {
-      for (let player of this.players) {
-        Player.resetPlayerForNextLevel(player);
-      }
-    } else {
+    if (this.validPlayerSpawnCoords.length < this.players.length) {
       console.log('Bad level seed, not enough valid spawns for players, regenerating', this.validPlayerSpawnCoords.length, this.players.length);
-      return false;
+      return;
     }
-    return true;
+    return levelData;
 
   }
   addGroundTileImages() {
     for (let coord of this.groundTiles) {
-      const image = Image.create(coord.x, coord.y, 'tiles/ground.png', containerBoard);
+      const image = Image.create(coord, 'tiles/ground.png', containerBoard);
       // Anchor the ground image so that it is centered on it's 32x32 so that the bottom
       // portion falls off into the abyss below it
       image.sprite.anchor.y = 0.38;
@@ -658,23 +650,42 @@ export default class Underworld {
     this.setTurnPhase(turn_phase.PlayerTurns);
     cameraAutoFollow(true);
   }
-  async initLevel(levelIndex: number) {
-    this.cleanUpLevel();
-    // If host, send sync; if non-host, wait for sync
-    if (window.hostClientId === window.clientId) {
-      // Level sizes are random but have change to grow bigger as loop continues
-      const sectorsWide = randInt(this.random, 2, 3 + (Math.round(levelIndex / 3)));
-      const sectorsTall = randInt(this.random, 1, 3 + (Math.round(levelIndex / 3)));
-      console.log('Setup: initLevel', levelIndex, sectorsWide, sectorsTall);
-      this.levelIndex = levelIndex;
-      const succeeded = this.generateRandomLevel(levelIndex, sectorsWide, sectorsTall);
-      if (!succeeded) {
-        // Invoke init level again until generateRandomLevel succeeds
-        this.initLevel(this.levelIndex);
-        return
+  // creates a level from levelData
+  createLevel(levelData: LevelData) {
+    console.log('Setup: createLevel', levelData);
+    const { obstacles, groundTiles, pickups, enemies } = levelData;
+    for (let o of obstacles) {
+      const obstacle = Obstacle.obstacleSource[o.sourceIndex];
+      if (obstacle) {
+        Obstacle.create(o.coord, obstacle);
+      } else {
+        console.error('Could not find obstacle from', o.sourceIndex)
       }
     }
-    await this.sync(sync_type.Level);
+    this.groundTiles = groundTiles;
+    this.addGroundTileImages();
+    for (let p of pickups) {
+      this.spawnPickup(p.index, p.coord);
+    }
+    for (let e of enemies) {
+      this.spawnEnemy(e.id, e.coord, true, e.strength);
+    }
+    for (let player of this.players) {
+      Player.resetPlayerForNextLevel(player);
+    }
+  }
+  async initLevel(levelIndex: number) {
+    console.log('Setup: initLevel', levelIndex);
+    this.levelIndex = levelIndex;
+    this.cleanUpLevel();
+    await this.sync('level', () => {
+      let level;
+      do {
+        // Invoke generateRandomLevel again until it succeeds
+        level = this.generateRandomLevelData(levelIndex);
+      } while (level === undefined);
+      return { level }
+    });
     this.postSetupLevel();
     // Show text in center of screen for the new level
     floatingText({
@@ -769,7 +780,7 @@ export default class Underworld {
     // Create ground tiles:
     for (let x = 0; x < this.width / config.OBSTACLE_SIZE; x++) {
       for (let y = 0; y < this.height / config.OBSTACLE_SIZE; y++) {
-        Image.create(x * config.OBSTACLE_SIZE, y * config.OBSTACLE_SIZE, 'tiles/ground.png', containerBoard);
+        Image.create({ x: x * config.OBSTACLE_SIZE, y: y * config.OBSTACLE_SIZE }, 'tiles/ground.png', containerBoard);
       }
     }
 
@@ -780,7 +791,7 @@ export default class Underworld {
       const obstacleIndex = parseInt(o.id) - 1
       const obstacle = Obstacle.obstacleSource[obstacleIndex];
       if (obstacle) {
-        Obstacle.create(o.location.x, o.location.y, obstacle);
+        Obstacle.create(o.location, obstacle);
       } else {
         console.error('Obstacle not found in source for index', obstacleIndex);
       }
@@ -873,35 +884,21 @@ export default class Underworld {
   // Syncs one of sync_type between all clients
   // Host will send the sync information as source of truth
   // All clients, including host, will wait for sync message
-  async sync(syncType: sync_type) {
-    // If host, send sync; if non-host, wait for sync
+  async sync(label: string, hostMakeSyncInformation: () => SyncInformation) {
+    // If host, send sync; if non-host, ignore 
     if (window.hostClientId === window.clientId) {
       const syncData: any = {
         type: MESSAGE_TYPES.SYNC,
-        syncType,
-      }
-      switch (syncType) {
-        case sync_type.Level:
-          syncData.underworldPartial = this.serializeForSyncronize();
-          break;
-        case sync_type.Players:
-          syncData.players = this.players.map(Player.serialize);
-          break;
-        case sync_type.Units:
-          syncData.units = this.units.map(Unit.serialize);
-          break;
+        ...hostMakeSyncInformation
       }
       window.pie.sendData(syncData);
     }
-    const syncKey = syncTypeToPromiseKey(syncType)
-    console.log('sync: Waiting for ', syncKey);
+    console.log('sync: Waiting for ', label);
     // TODO: If host disconnects, retrigger a sync
-    await GlobalPromises.create(syncKey).catch(() => {
-      console.error(`sync: ERROR, failed ${syncKey}`)
+    await GlobalPromises.create('sync').catch(() => {
+      console.error(`sync: ERROR, failed ${label}`)
     });
-    console.log(`sync: ${syncKey} succeeded`)
-
-
+    console.log(`sync: ${label} succeeded`)
   }
   async endNPCTurnPhase() {
     // Move onto next phase
@@ -1151,7 +1148,9 @@ export default class Underworld {
       document.body.classList.add('phase-' + phase.toLowerCase());
       switch (phase) {
         case 'PlayerTurns':
-          await this.sync(sync_type.Players);
+          await this.sync('units', () => ({ units: this.units.map(Unit.serialize) }));
+          await this.sync('players', () => ({ players: this.players.map(Player.serialize) }));
+
           for (let u of this.units) {
             // Reset stamina so units can move again
             u.stamina = u.staminaMax;
@@ -1166,7 +1165,7 @@ export default class Underworld {
           this.initializePlayerTurn(this.playerTurnIndex);
           break;
         case 'NPC':
-          await this.sync(sync_type.Units);
+          await this.sync('units', () => ({ units: this.units.map(Unit.serialize) }));
           // Clear enemy attentionMarkers since it's now their turn
           window.attentionMarkers = [];
           // Clears spell effect on NPC turn
@@ -1351,8 +1350,7 @@ export default class Underworld {
           // Show the card that's being cast:
           if (!dryRun) {
             const image = Image.create(
-              target.x,
-              target.y,
+              target,
               card.thumbnail,
               containerUI,
             );
@@ -1515,6 +1513,7 @@ export default class Underworld {
     this.walls = serialized.walls;
     this.pathingPolygons = serialized.pathingPolygons;
     this.processedMessageCount = this.processedMessageCount;
+    this.addGroundTileImages();
     this.cacheWalls();
   }
   serializeForSyncronize(): IUnderworldSerializedForSyncronize {
@@ -1529,7 +1528,7 @@ export default class Underworld {
 }
 
 function drawTarget(x: number, y: number, animate: boolean): Promise<void> {
-  const image = Image.create(x, y, 'target.png', containerSpells);
+  const image = Image.create({ x, y }, 'target.png', containerSpells);
   if (animate) {
     image.sprite.scale.set(0.0);
     return Image.scale(image, 1.0);
@@ -1632,3 +1631,25 @@ function getEnemiesForAltitude(levelIndex: number): { enemies: { [unitid: string
   }
 }
 
+export interface SyncInformation {
+  players?: Player.IPlayerSerialized[],
+  units?: Unit.IUnitSerialized[],
+  level?: LevelData
+};
+
+export interface LevelData {
+  obstacles: {
+    sourceIndex: number;
+    coord: Vec2;
+  }[];
+  groundTiles: Vec2[];
+  pickups: {
+    index: number;
+    coord: Vec2;
+  }[];
+  enemies: {
+    id: string,
+    coord: Vec2,
+    strength: number
+  }[]
+}

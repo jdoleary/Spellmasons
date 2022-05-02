@@ -29,8 +29,7 @@ export interface IImage {
   subSprites: string[];
 }
 export function create(
-  x: number,
-  y: number,
+  coords: Vec2,
   spritesheetId: string,
   parent: PIXI.Container,
   pixiSpriteOptions?: PixiSpriteOptions
@@ -47,7 +46,7 @@ export function create(
     subSpriteInstances: {},
     subSprites: [],
   };
-  setPosition(image, x, y);
+  setPosition(image, coords);
   return image;
 }
 export function cleanup(image?: IImage) {
@@ -106,9 +105,9 @@ export function load(image: IImageSerialized | undefined, parent: PIXI.Container
     return undefined;
   }
   const copy = { ...image };
-  const { x, y, scale } = copy.sprite;
+  const { scale } = copy.sprite;
   // Recreate the sprite using the create function so it initializes it properly
-  const newImage = create(x, y, copy.imageName, parent);
+  const newImage = create(copy.sprite, copy.imageName, parent);
   newImage.sprite.scale.set(scale.x, scale.y);
   // copy over the subsprite array (list of strings)
   newImage.subSprites = [...copy.subSprites];
@@ -160,12 +159,12 @@ export function restoreSubsprites(image?: IImage) {
     addSubSprite(image, subSprite);
   }
 }
-export function setPosition(image: IImage | undefined, x: number, y: number) {
+export function setPosition(image: IImage | undefined, pos: Vec2) {
   if (!image) {
     return;
   }
-  image.sprite.x = x;
-  image.sprite.y = y;
+  image.sprite.x = pos.x;
+  image.sprite.y = pos.y;
 }
 export function scale(image: IImage | undefined, scale: number): Promise<void> {
   if (!image) {

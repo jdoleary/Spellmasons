@@ -96,12 +96,11 @@ export function setView(v: View) {
 
       playerControlledUnits.forEach((unitSource, index) => {
         const image = Image.create(
-          0,
-          0,
+          { x: 0, y: 0 },
           unitSource.info.image,
           containerCharacterSelect,
         );
-        Image.setPosition(image, (index - playerControlledUnits.length / 2) * image.sprite.width + image.sprite.width / 2, 0)
+        Image.setPosition(image, { x: (index - playerControlledUnits.length / 2) * image.sprite.width + image.sprite.width / 2, y: 0 })
         image.sprite.interactive = true;
         image.sprite.on('click', () => {
           // Timeout prevents click from propagating into overworld listener

@@ -4,7 +4,7 @@ import { MESSAGE_TYPES } from './MessageTypes';
 import { UnitType } from './commonTypes';
 import floatingText from './FloatingText';
 import { getUpgradeByTitle } from './Upgrade';
-import Underworld, { IUnderworldSerializedForSyncronize, syncTypeToPromiseKey, sync_type, turn_phase } from './Underworld';
+import Underworld, { SyncInformation, turn_phase } from './Underworld';
 import * as Player from './Player';
 import * as Unit from './Unit';
 import * as Pickup from './Pickup';
@@ -269,12 +269,7 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       tryStartGame();
       break;
     case MESSAGE_TYPES.SYNC:
-      const { players, units, underworldPartial, syncType } = payload as {
-        syncType: sync_type,
-        players: Player.IPlayerSerialized[],
-        units: Unit.IUnitSerialized[],
-        underworldPartial: IUnderworldSerializedForSyncronize
-      };
+      const { players, units, level } = payload as SyncInformation;
 
       if (players) {
         console.log('sync: Syncing players...');
@@ -308,12 +303,16 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
         }
 
       }
-      if (underworldPartial) {
-        console.log('sync: Syncing underworldPartial...');
-        window.underworld.syncronize(underworldPartial);
+      if (level) {
+        console.log('sync: Syncing level...');
+        if (window.underworld) {
+          window.underworld.createLevel(level);
+        } else {
+          console.error('Cannot sync level, no window.underworld exists')
+        }
       }
 
-      GlobalPromises.resolve(syncTypeToPromiseKey(syncType));
+      GlobalPromises.resolve('sync');
 
       break;
     case MESSAGE_TYPES.LOAD_GAME_STATE:

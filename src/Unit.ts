@@ -117,7 +117,7 @@ export function create(
     staminaMax,
     attackRange: 10 + config.COLLISION_MESH_RADIUS * 2,
     faction,
-    image: Image.create(x, y, defaultImagePath, containerUnits),
+    image: Image.create({ x, y }, defaultImagePath, containerUnits),
     defaultImagePath,
     shaderUniforms: {},
     damage: Math.round(config.UNIT_BASE_DAMAGE * strength),

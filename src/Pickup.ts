@@ -48,7 +48,7 @@ export function create(
     imagePath,
     // Pickups are stored in containerUnits so that they
     // will be automatically z-indexed
-    image: Image.create(x, y, imagePath, containerUnits, { animationSpeed, loop: true }),
+    image: Image.create({ x, y }, imagePath, containerUnits, { animationSpeed, loop: true }),
     singleUse,
     playerOnly,
     effect,
@@ -63,7 +63,7 @@ export function create(
 export function setPosition(pickup: IPickup, x: number, y: number) {
   pickup.x = x;
   pickup.y = y;
-  Image.setPosition(pickup.image, x, y);
+  Image.setPosition(pickup.image, { x, y });
 }
 export type IPickupSerialized = Omit<IPickup, "image" | "effect"> & {
   image: Image.IImageSerialized
