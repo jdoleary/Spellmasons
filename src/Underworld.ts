@@ -83,7 +83,6 @@ export default class Underworld {
   players: Player.IPlayer[] = [];
   units: Unit.IUnit[] = [];
   pickups: Pickup.IPickup[] = [];
-  obstacles: Obstacle.IObstacle[] = [];
   groundTiles: Vec2[] = [];
   // line segments that prevent sight
   walls: LineSegment[] = [];
@@ -322,9 +321,6 @@ export default class Underworld {
     for (let x of this.pickups) {
       Image.cleanup(x.image);
     }
-    for (let x of this.obstacles) {
-      Image.cleanup(x.image);
-    }
     // Clean up doodads
     containerDoodads.removeChildren();
     // Prevent requestAnimationFrame from calling this method next time, since this underworld
@@ -342,7 +338,7 @@ export default class Underworld {
   // and the walls from the current obstacles
   // TODO:  this will need to be called if objects become
   // destructable
-  cacheWalls() {
+  cacheWalls(obstacles: Obstacle.IObstacle[]) {
     const mapBounds: Polygon = {
       points: [
         { x: 0, y: 0 },
@@ -351,14 +347,11 @@ export default class Underworld {
         { x: this.width, y: 0 },
       ], inverted: true
     };
-    // LEFT OFF HERE, have to use level data's obstacles
-    this.walls = [...this.obstacles.filter(o => o.wall).map(o => o.bounds).map(polygonToPolygonLineSegments), polygonToPolygonLineSegments(mapBounds)].flat();
+    this.walls = [...obstacles.filter(o => o.wall).map(o => o.bounds).map(polygonToPolygonLineSegments), polygonToPolygonLineSegments(mapBounds)].flat();
     const expandMagnitude = config.COLLISION_MESH_RADIUS * config.NON_HEAVY_UNIT_SCALE
-    // this.bounds = mergeOverlappingPolygons([...this.obstacles.map(o => o.bounds), mapBounds]).map(polygonToPolygonLineSegments).flat();
-    // this.bounds = mergeOverlappingPolygons([...this.obstacles.map(o => o.bounds).map(p => expandPolygon(p, -expandMagnitude, false)), expandPolygon(mapBounds, -expandMagnitude, false)]).map(polygonToPolygonLineSegments).flat();
     // Expand pathing walls by the size of the regular unit
     // Save the pathing walls for the underworld
-    const expandedAndMergedPolygons = mergeOverlappingPolygons([...this.obstacles.map(o => o.bounds).map(p => expandPolygon(p, expandMagnitude, true)), expandPolygon(mapBounds, expandMagnitude, false)]);
+    const expandedAndMergedPolygons = mergeOverlappingPolygons([...obstacles.map(o => o.bounds).map(p => expandPolygon(p, expandMagnitude, true)), expandPolygon(mapBounds, expandMagnitude, false)]);
     this.pathingPolygons = expandedAndMergedPolygons;
     this.bounds = this.pathingPolygons.map(p => expandPolygon(p, -expandMagnitude, false)).map(polygonToPolygonLineSegments).flat();
   }
@@ -423,14 +416,14 @@ export default class Underworld {
       obstacles: [],
       groundTiles: [],
       pickups: [],
-      enemies: []
+      enemies: [],
+      validPlayerSpawnCoords: []
     };
     // Width and height should be set immediately so that other level-building functions
     // (such as cacheWalls) have access to the new width and height
     this.width = config.OBSTACLE_SIZE * sectorsWide * config.OBSTACLES_PER_SECTOR_WIDE;
     this.height = config.OBSTACLE_SIZE * sectorsTall * config.OBSTACLES_PER_SECTOR_TALL;
     let validSpawnCoords: Vec2[] = [];
-    this.validPlayerSpawnCoords = [];
     let validPortalSpawnCoords: Vec2[] = [];
     // The map is made of a matrix of obstacle sectors
     for (let i = 0; i < sectorsWide; i++) {
@@ -473,7 +466,7 @@ export default class Underworld {
                   if (i == 0 && X == 0) {
                     // Only spawn players in the left most index (X == 0) of the left most obstacle (i==0)
                     const margin = 0;
-                    this.validPlayerSpawnCoords.push({ x: coordX + margin, y: coordY });
+                    levelData.validPlayerSpawnCoords.push({ x: coordX + margin, y: coordY });
                   } else if (i == sectorsWide - 1 && X == rowOfObstacles.length - 1) {
                     // Only spawn the portal in the right most index of the right most obstacle
                     validPortalSpawnCoords.push({ x: coordX, y: coordY });
@@ -499,12 +492,12 @@ export default class Underworld {
       }
     }
     // Now that obstacles have been generated, we must cache the walls so pathfinding will work
-    this.cacheWalls();
+    this.cacheWalls(levelData.obstacles.map(o => Obstacle.create(o.coord, o.sourceIndex)));
 
     // Remove bad spawns.  This can happen if an empty space is right next to the border of the map with obstacles
     // all around it.  There is no obstacle there, but there is also no room to move because the spawn location 
     // is inside of an inverted polygon.
-    this.validPlayerSpawnCoords = this.validPlayerSpawnCoords.filter(c => findPolygonsThatVec2IsInsideOf(c, this.pathingPolygons).length === 0);
+    levelData.validPlayerSpawnCoords = levelData.validPlayerSpawnCoords.filter(c => findPolygonsThatVec2IsInsideOf(c, this.pathingPolygons).length === 0);
     validPortalSpawnCoords = validPortalSpawnCoords.filter(c => findPolygonsThatVec2IsInsideOf(c, this.pathingPolygons).length === 0);
     validSpawnCoords = validSpawnCoords.filter(c => findPolygonsThatVec2IsInsideOf(c, this.pathingPolygons).length === 0);
 
@@ -535,16 +528,16 @@ export default class Underworld {
       }
     }
     // Recache walls now that unreachable areas have been filled in
-    this.cacheWalls();
+    this.cacheWalls(levelData.obstacles.map(o => Obstacle.create(o.coord, o.sourceIndex)));
 
     // Exclude player spawn coords that cannot path to the portal
-    this.validPlayerSpawnCoords = this.validPlayerSpawnCoords.filter(spawn => {
+    levelData.validPlayerSpawnCoords = levelData.validPlayerSpawnCoords.filter(spawn => {
       const path = findPath(spawn, portalCoords, this.pathingPolygons);
       const lastPointInPath = path[path.length - 1]
       return path.length != 0 && (lastPointInPath && Vec.equal(lastPointInPath, portalCoords));
     });
 
-    if (this.validPlayerSpawnCoords.length === 0) {
+    if (levelData.validPlayerSpawnCoords.length === 0) {
       console.log('Bad level seed, no place to spawn players, regenerating');
       return;
     }
@@ -574,8 +567,8 @@ export default class Underworld {
       }
     }
 
-    if (this.validPlayerSpawnCoords.length < this.players.length) {
-      console.log('Bad level seed, not enough valid spawns for players, regenerating', this.validPlayerSpawnCoords.length, this.players.length);
+    if (levelData.validPlayerSpawnCoords.length < this.players.length) {
+      console.log('Bad level seed, not enough valid spawns for players, regenerating', levelData.validPlayerSpawnCoords.length, this.players.length);
       return;
     }
     return levelData;
@@ -612,7 +605,6 @@ export default class Underworld {
     // Now that it's a new level clear out the level's dodads such as
     // bone dust left behind from destroyed corpses
     containerDoodads.removeChildren();
-    containerBoard.removeChildren();
     // Clean previous level info
     for (let i = this.units.length - 1; i >= 0; i--) {
       const u = this.units[i];
@@ -632,10 +624,14 @@ export default class Underworld {
     for (let p of this.pickups) {
       Pickup.removePickup(p);
     }
-    // Clear all obstacles
-    for (let o of this.obstacles) {
-      Obstacle.remove(o);
-    }
+    // Clear all wall images:
+    // Note: walls are stored in container Units so they can be sorted z-index
+    // along with units
+    // so this removes all unit images too.
+    containerUnits.removeChildren();
+
+    // Clear all floor images
+    containerBoard.removeChildren();
     this.groundTiles = [];
 
     // Clear card usage counts, otherwise players will be
@@ -653,14 +649,10 @@ export default class Underworld {
   // creates a level from levelData
   createLevel(levelData: LevelData) {
     console.log('Setup: createLevel', levelData);
-    const { obstacles, groundTiles, pickups, enemies } = levelData;
+    const { obstacles, groundTiles, pickups, enemies, validPlayerSpawnCoords } = levelData;
     for (let o of obstacles) {
-      const obstacle = Obstacle.obstacleSource[o.sourceIndex];
-      if (obstacle) {
-        Obstacle.create(o.coord, obstacle);
-      } else {
-        console.error('Could not find obstacle from', o.sourceIndex)
-      }
+      const obstacleInst = Obstacle.create(o.coord, o.sourceIndex);
+      Obstacle.addImageForObstacle(obstacleInst);
     }
     this.groundTiles = groundTiles;
     this.addGroundTileImages();
@@ -670,6 +662,9 @@ export default class Underworld {
     for (let e of enemies) {
       this.spawnEnemy(e.id, e.coord, true, e.strength);
     }
+    // validPlayerSpawnCoords must be set before resetting the player
+    // so the player has coords to spawn into
+    this.validPlayerSpawnCoords = validPlayerSpawnCoords;
     for (let player of this.players) {
       Player.resetPlayerForNextLevel(player);
     }
@@ -785,18 +780,16 @@ export default class Underworld {
     }
 
     // Spawn obstacles
+    const obstacles = [];
     for (let o of h.obstacles) {
       // -1 to let 0 be empty (no obstacle) and 1 will be index 0 of
       // obstacleSource
       const obstacleIndex = parseInt(o.id) - 1
-      const obstacle = Obstacle.obstacleSource[obstacleIndex];
-      if (obstacle) {
-        Obstacle.create(o.location, obstacle);
-      } else {
-        console.error('Obstacle not found in source for index', obstacleIndex);
-      }
+      const obstacleInst = Obstacle.create(o.location, obstacleIndex);
+      obstacles.push(obstacleInst);
+      Obstacle.addImageForObstacle(obstacleInst);
     }
-    this.cacheWalls();
+    this.cacheWalls(obstacles);
 
     // Spawn doodads
     for (let d of h.doodads) {
@@ -889,7 +882,7 @@ export default class Underworld {
     if (window.hostClientId === window.clientId) {
       const syncData: any = {
         type: MESSAGE_TYPES.SYNC,
-        ...hostMakeSyncInformation
+        ...hostMakeSyncInformation()
       }
       window.pie.sendData(syncData);
     }
@@ -1290,11 +1283,6 @@ export default class Underworld {
     const closest = sortedByProximityToCoords[0]
     return closest && math.distance(closest, coords) <= config.COLLISION_MESH_RADIUS ? closest : undefined;
   }
-  getObstacleAt(coords: Vec2): Obstacle.IObstacle | undefined {
-    const sortedByProximityToCoords = this.obstacles.filter(o => !isNaN(o.x) && !isNaN(o.y)).sort((a, b) => math.distance(a, coords) - math.distance(b, coords));
-    const closest = sortedByProximityToCoords[0]
-    return closest && math.distance(closest, coords) <= config.COLLISION_MESH_RADIUS ? closest : undefined;
-  }
   addUnitToArray(unit: Unit.IUnit) {
     this.units.push(unit);
   }
@@ -1303,12 +1291,6 @@ export default class Underworld {
   }
   addPickupToArray(pickup: Pickup.IPickup) {
     this.pickups.push(pickup);
-  }
-  removeObstacleFromArray(obstacle: Obstacle.IObstacle) {
-    this.obstacles = this.obstacles.filter((o) => o !== obstacle);
-  }
-  addObstacleToArray(o: Obstacle.IObstacle) {
-    this.obstacles.push(o);
   }
   async castCards(
     casterCardUsage: Player.CardUsage,
@@ -1479,7 +1461,7 @@ export default class Underworld {
   // callbacks and complicated objects such as PIXI.Sprites
   // are removed
   serializeForSaving(): IUnderworldSerialized {
-    const { random, players, units, pickups, obstacles, walls, pathingPolygons, ...rest } = this;
+    const { random, players, units, pickups, walls, pathingPolygons, ...rest } = this;
     return {
       ...rest,
       players: this.players.map(Player.serialize),
@@ -1488,7 +1470,6 @@ export default class Underworld {
         .filter((u) => u.unitType !== UnitType.PLAYER_CONTROLLED)
         .map(Unit.serialize),
       pickups: this.pickups.map(Pickup.serialize),
-      obstacles: this.obstacles.map(Obstacle.serialize),
       // the state of the Random Number Generator
       RNGState: this.random.state(),
     };
@@ -1497,27 +1478,27 @@ export default class Underworld {
   // Mutates current object
   // The purpose of this function is to keep underworld in sync
   // between clients
-  syncronize(serialized: IUnderworldSerializedForSyncronize) {
-    if (serialized.RNGState) {
-      this.syncronizeRNG(serialized.RNGState);
-    }
-    this.levelIndex = serialized.levelIndex;
-    this.turn_phase = serialized.turn_phase;
-    this.playerTurnIndex = serialized.playerTurnIndex;
-    this.turn_number = serialized.turn_number;
-    this.height = serialized.height;
-    this.width = serialized.width;
-    // Note: obstacles are not serialized since they are unchanging between levels
-    // TODO, remove walls and pathingPolygons here, they are set in cacheWalls, so this is redundant
-    // make sure obstacles come over when serialized
-    this.walls = serialized.walls;
-    this.pathingPolygons = serialized.pathingPolygons;
-    this.processedMessageCount = this.processedMessageCount;
-    this.addGroundTileImages();
-    this.cacheWalls();
-  }
+  // syncronize(serialized: IUnderworldSerializedForSyncronize) {
+  //   if (serialized.RNGState) {
+  //     this.syncronizeRNG(serialized.RNGState);
+  //   }
+  //   this.levelIndex = serialized.levelIndex;
+  //   this.turn_phase = serialized.turn_phase;
+  //   this.playerTurnIndex = serialized.playerTurnIndex;
+  //   this.turn_number = serialized.turn_number;
+  //   this.height = serialized.height;
+  //   this.width = serialized.width;
+  //   // Note: obstacles are not serialized since they are unchanging between levels
+  //   // TODO, remove walls and pathingPolygons here, they are set in cacheWalls, so this is redundant
+  //   // make sure obstacles come over when serialized
+  //   this.walls = serialized.walls;
+  //   this.pathingPolygons = serialized.pathingPolygons;
+  //   this.processedMessageCount = this.processedMessageCount;
+  //   this.addGroundTileImages();
+  //   this.cacheWalls();
+  // }
   serializeForSyncronize(): IUnderworldSerializedForSyncronize {
-    const { players, units, pickups, obstacles, random, processedMessageCount, ...rest } = this;
+    const { players, units, pickups, random, processedMessageCount, ...rest } = this;
     const serialized: IUnderworldSerializedForSyncronize = {
       ...rest,
       // the state of the Random Number Generator
@@ -1536,13 +1517,12 @@ function drawTarget(x: number, y: number, animate: boolean): Promise<void> {
     return Promise.resolve();
   }
 }
-type IUnderworldSerialized = Omit<typeof Underworld, "prototype" | "players" | "units" | "pickups" | "obstacles" | "random" | "turnInterval"
+type IUnderworldSerialized = Omit<typeof Underworld, "prototype" | "players" | "units" | "pickups" | "random" | "turnInterval"
   // walls and pathingPolygons are omitted because they are derived from obstacles when cacheWalls() in invoked
   | "walls" | "pathingPolygons"> & {
     players: Player.IPlayerSerialized[],
     units: Unit.IUnitSerialized[],
     pickups: Pickup.IPickupSerialized[],
-    obstacles: Obstacle.IObstacleSerialized[],
   };
 type NonFunctionPropertyNames<T> = { [K in keyof T]: T[K] extends Function ? never : K }[keyof T];
 type UnderworldNonFunctionProperties = Exclude<NonFunctionPropertyNames<Underworld>, null | undefined>;
@@ -1651,5 +1631,6 @@ export interface LevelData {
     id: string,
     coord: Vec2,
     strength: number
-  }[]
+  }[];
+  validPlayerSpawnCoords: Vec2[]
 }

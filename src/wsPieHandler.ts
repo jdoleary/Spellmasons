@@ -388,14 +388,14 @@ function handleLoadGameState(payload: any) {
   // Resort units by id since player units are loaded last
   window.underworld.units.sort((a, b) => a.id - b.id);
   window.underworld.pickups = loadedGameState.pickups.map(Pickup.load);
-  // Filtering out the undefined ensures that this is an array of IObstacle
-  window.underworld.obstacles = loadedGameState.obstacles.map(Obstacle.load).filter(o => !!o) as Obstacle.IObstacle[];
   window.underworld.groundTiles = loadedGameState.groundTiles;
   window.underworld.addGroundTileImages();
 
   window.underworld.setTurnPhase(window.underworld.turn_phase);
 
-  window.underworld.cacheWalls();
+  // TODO are bounds, pathingPolygons, and walls in loadstate?
+  // Maybe use levelData to recreate level on load
+  // window.underworld.cacheWalls();
 
   // Mark the underworld as "ready"
   readyState.set('underworld', true);
