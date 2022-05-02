@@ -288,7 +288,7 @@ export function syncronize(unitSerialized: IUnitSerialized, originalUnit: IUnit)
       return
     }
     Object.assign(originalUnit, rest);
-    originalUnit.image = Image.syncronize(image, originalUnit.image);
+    returnToDefaultSprite(originalUnit);
   } else {
     console.error('Attempting to syncronize a unit with the wrong id', unitSerialized.id, originalUnit.id);
   }
@@ -385,6 +385,9 @@ export function die(unit: IUnit) {
 
 }
 export function takeDamage(unit: IUnit, amount: number, dryRun: boolean, state?: EffectState) {
+  if (!dryRun) {
+    console.log(`takeDamage: unit ${unit.id}; amount: ${amount}`);
+  }
   // Compose onDamageEvents
   for (let eventName of unit.onDamageEvents) {
     const fn = Events.onDamageSource[eventName];

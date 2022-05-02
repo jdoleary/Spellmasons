@@ -1,15 +1,30 @@
 # Game Breaking Priorities
+- turn message is not synced after wsPie disconnect
+- disconnect image is not synced after reconnect
 - Fix multiplayer
     - Experienced a bug where one player portaled on one screen but not on the other
     - I throttled cpu on one client and saw a unit position desync where the non throttled client moved way farther
     - then once their positions were desynced, I tried casting on the desynced unit and it hit on one screen and missed on the other because there positions were different
     - after client 2 died on level 3, and both chose upgrades
         - client 1 experienced a "bad seed - no place to spawn players" but client 2 did not, and so they had different looking levels
+    - Unit attributes that need syncing:
+        - x,y
+        - health/mana; max and current
+        - alive
+        - faction
+    - ALTERNATIVELY, should all actions just be calculated on the host and sent to all clients:
+        - e.g. grunt 1 moves to x,y and does z damage to unit3
+        - e.g. summoner summones 1 grunt at x,y
+    - What about if host disconnects mid step?
+    - Things and times to SYNC from host to all clients
+        - Sync level after level generation
+        - Sync NPCs/units before NPC turn
+        - Sync player after portaling
 # Tasks
 - Change portal to just a "go to upgrade" button
     - ~~Fix infinite stamina when you end level~~
 - Make selected cards background transparent
-- Improved level design with Wave Function Collapse
+- **Important** Improved level design with Wave Function Collapse
 - Make freeze block pathing
 - Allow drag and drop between cards and far left or far right.
 - Lerp in and out when WASD camera

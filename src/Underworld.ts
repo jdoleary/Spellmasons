@@ -10,6 +10,7 @@ import * as math from './math';
 import * as Cards from './cards';
 import * as Image from './Image';
 import * as storage from './storage';
+import * as GlobalPromises from './GlobalPromises';
 import obstacleSectors from './ObstacleSectors';
 import { MESSAGE_TYPES } from './MessageTypes';
 import {
@@ -48,6 +49,14 @@ import { getBestRangedLOSTarget } from './units/actions/rangedAction';
 export enum turn_phase {
   PlayerTurns,
   NPC,
+}
+export enum sync_type {
+  Level,
+  Players,
+  Units,
+}
+export function syncTypeToPromiseKey(syncType: sync_type): string {
+  return `sync_${sync_type[syncType]}`;
 }
 interface Bounds {
   xMin?: number;
@@ -100,7 +109,8 @@ export default class Underworld {
 
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
     window.underworld = this;
-    this.seed = seed;
+    // this.seed = seed;
+    this.seed = '0.47240238862781536';
     this.gameStarted = false;
     console.log("RNG create with seed:", seed, ", state: ", RNGState);
     this.random = this.syncronizeRNG(RNGState);
@@ -862,16 +872,36 @@ export default class Underworld {
     }
     updateManaCostUI();
   }
-  hostSendSync() {
-    // Only the host should send sync data to clients
+  // Syncs one of sync_type between all clients
+  // Host will send the sync information as source of truth
+  // All clients, including host, will wait for sync message
+  async sync(syncType: sync_type) {
+    // If host, send sync; if non-host, wait for sync
     if (window.hostClientId === window.clientId) {
-      window.pie.sendData({
+      const syncData: any = {
         type: MESSAGE_TYPES.SYNC,
-        players: this.players.map(Player.serialize),
-        units: this.units.map(Unit.serialize),
-        underworldPartial: this.serializeForSyncronize()
-      })
+        syncType,
+      }
+      switch (syncType) {
+        case sync_type.Level:
+          syncData.underworldPartial = this.serializeForSyncronize();
+          break;
+        case sync_type.Players:
+          syncData.players = this.players.map(Player.serialize);
+          break;
+        case sync_type.Units:
+          syncData.units = this.units.map(Unit.serialize);
+          break;
+      }
+      window.pie.sendData(syncData);
     }
+    const syncKey = syncTypeToPromiseKey(syncType)
+    console.log('sync: Waiting for ', syncKey);
+    // TODO: If host disconnects, retrigger a sync
+    await GlobalPromises.create(syncKey);
+    console.log(`sync: ${syncKey} succeeded`)
+
+
   }
   async endNPCTurnPhase() {
     // Move onto next phase
@@ -900,18 +930,11 @@ export default class Underworld {
     // Increment the turn number now that it's starting over at the first phase
     this.turn_number++;
 
-    // Actually update the turn_phase, note, this must occur before hostSendSync
-    // or else it will cause all clients to sync to the previous turn_phase
     this.setTurnPhase(turn_phase.PlayerTurns);
-
-    // Have the host send out syncronization messages so all clients are sync'd
-    // -- I believe the sync message itself has been causing desyncs, so we'll try with
-    // hostSendSync disabled (major desyncs will still cause a sync) and we'll see if that
-    // fixes the desync issues
-    // this.hostSendSync();
   }
   syncTurnMessage() {
     const currentPlayerTurn = this.players[this.playerTurnIndex];
+    console.log('syncTurnMessage: phase:', turn_phase[this.turn_phase], '; player:', this.playerTurnIndex)
     let message = '';
     let yourTurn = false;
     if (turn_phase[this.turn_phase] === 'NPC') {
@@ -940,7 +963,8 @@ export default class Underworld {
   async initializePlayerTurn(playerIndex: number) {
     const player = this.players[playerIndex];
     if (!player) {
-      console.error("Attempted to initialize turn for a non existant player index")
+      console.error("Attempted to initialize turn for a non existant player index", playerIndex)
+      console.trace('Attempted to initialize nonexistant player trace')
       return
     }
     if (player == window.player) {
@@ -1095,7 +1119,7 @@ export default class Underworld {
     const y = randInt(this.random, bounds.yMin || 0, bounds.yMax || this.height);
     return { x, y };
   }
-  setTurnPhase(p: turn_phase) {
+  async setTurnPhase(p: turn_phase) {
     console.log('setTurnPhase(', turn_phase[p], ')');
     // Clear debug graphics
     window.debugGraphics.clear()
@@ -1127,6 +1151,7 @@ export default class Underworld {
       document.body.classList.add('phase-' + phase.toLowerCase());
       switch (phase) {
         case 'PlayerTurns':
+          await this.sync(sync_type.Players);
           for (let u of this.units) {
             // Reset stamina so units can move again
             u.stamina = u.staminaMax;
@@ -1141,6 +1166,7 @@ export default class Underworld {
           this.initializePlayerTurn(this.playerTurnIndex);
           break;
         case 'NPC':
+          await this.sync(sync_type.Units);
           // Clear enemy attentionMarkers since it's now their turn
           window.attentionMarkers = [];
           // Clears spell effect on NPC turn
@@ -1521,7 +1547,7 @@ type IUnderworldSerialized = Omit<typeof Underworld, "prototype" | "players" | "
   };
 type NonFunctionPropertyNames<T> = { [K in keyof T]: T[K] extends Function ? never : K }[keyof T];
 type UnderworldNonFunctionProperties = Exclude<NonFunctionPropertyNames<Underworld>, null | undefined>;
-type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFunctionProperties>, "debugGraphics" | "players" | "units" | "pickups" | "obstacles" | "random" | "processedMessageCount">;
+export type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFunctionProperties>, "debugGraphics" | "players" | "units" | "pickups" | "obstacles" | "random" | "processedMessageCount">;
 
 
 function getEnemiesForAltitude(levelIndex: number): { enemies: { [unitid: string]: number }, strength: number } {

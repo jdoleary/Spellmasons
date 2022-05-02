@@ -7,6 +7,7 @@
         - Take queues from slay the spire
     - ✔ Resolve pathing
     - Optimize pathing
+    - Wave Function Collapse for more interesting Levels
 - Youtube Alpha version video / Post on social
 - Homepage
     - Homepage

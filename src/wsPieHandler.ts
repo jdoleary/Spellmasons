@@ -4,7 +4,7 @@ import { MESSAGE_TYPES } from './MessageTypes';
 import { UnitType } from './commonTypes';
 import floatingText from './FloatingText';
 import { getUpgradeByTitle } from './Upgrade';
-import Underworld, { turn_phase } from './Underworld';
+import Underworld, { IUnderworldSerializedForSyncronize, syncTypeToPromiseKey, sync_type, turn_phase } from './Underworld';
 import * as Player from './Player';
 import * as Unit from './Unit';
 import * as Pickup from './Pickup';
@@ -12,6 +12,7 @@ import * as Obstacle from './Obstacle';
 import * as readyState from './readyState';
 import * as messageQueue from './messageQueue';
 import * as storage from './storage';
+import * as GlobalPromises from './GlobalPromises';
 import { setView, View } from './views';
 import { tutorialLevels } from './HandcraftedLevels';
 import manBlue from './units/manBlue';
@@ -268,49 +269,51 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       tryStartGame();
       break;
     case MESSAGE_TYPES.SYNC:
-      const { players, units, underworldPartial } = payload;
+      const { players, units, underworldPartial, syncType } = payload as {
+        syncType: sync_type,
+        players: Player.IPlayerSerialized[],
+        units: Unit.IUnitSerialized[],
+        underworldPartial: IUnderworldSerializedForSyncronize
+      };
 
-      window.underworld.syncronize(underworldPartial);
-      for (let i = 0; i < window.underworld.units.length; i++) {
-        const syncUnit = units[i]
-        if (!syncUnit) {
-          console.error("Something is wrong, underworld has different length unit than sync units")
-          // Client incurred major desync, resolve via DESYNC message
-          window.pie.sendData({ type: MESSAGE_TYPES.DESYNC });
-          return;
-        } else {
-          const sourceUnit = window.underworld.units[i];
-          if (sourceUnit && syncUnit.id !== sourceUnit.id) {
-            console.error('Sync failure, units are out of order', syncUnit.id, sourceUnit.id);
+      if (players) {
+        console.log('sync: Syncing players...');
+        for (let originalPlayer of window.underworld.players) {
+          const syncPlayer = players.find(p => p.clientId == originalPlayer?.clientId)
+          if (!syncPlayer) {
+            console.error("Something is wrong, underworld has different players than sync players")
             // Client incurred major desync, resolve via DESYNC message
             window.pie.sendData({ type: MESSAGE_TYPES.DESYNC });
             return;
           } else {
-            const originalUnit = window.underworld.units[i]
-            if (originalUnit !== undefined) {
-              Unit.syncronize(syncUnit, originalUnit);
-            } else {
-              console.error('Cannot SYNC, originalUnit is undefined')
-            }
-          }
-        }
-      }
-      for (let i = 0; i < window.underworld.players.length; i++) {
-        const syncPlayer = players[i]
-        const originalPlayer = window.underworld.players[i]
-        if (!syncPlayer || (originalPlayer && syncPlayer.clientId !== originalPlayer.clientId)) {
-          console.error("Something is wrong, underworld has different players than sync players")
-          // Client incurred major desync, resolve via DESYNC message
-          window.pie.sendData({ type: MESSAGE_TYPES.DESYNC });
-          return;
-        } else {
-          if (originalPlayer) {
             Player.syncronize(syncPlayer, originalPlayer);
-          } else {
-            console.error('Cannot SYNC, original player is undefined')
           }
         }
+
       }
+      if (units) {
+        console.log('sync: Syncing units...');
+        for (let originalUnit of window.underworld.units) {
+          // TODO: optimize if needed
+          const syncUnit = units.find(u => u.id === originalUnit.id);
+          if (!syncUnit) {
+            console.error("Something is wrong, underworld has different length unit than sync units")
+            // Client incurred major desync, resolve via DESYNC message
+            window.pie.sendData({ type: MESSAGE_TYPES.DESYNC });
+            return;
+          } else {
+            // Note: Unit.syncronize will currently maintain the player.unit reference
+            Unit.syncronize(syncUnit, originalUnit);
+          }
+        }
+
+      }
+      if (underworldPartial) {
+        console.log('sync: Syncing underworldPartial...');
+        window.underworld.syncronize(underworldPartial);
+      }
+
+      GlobalPromises.resolve(syncTypeToPromiseKey(syncType));
 
       break;
     case MESSAGE_TYPES.LOAD_GAME_STATE:
@@ -432,6 +435,7 @@ function forceSyncClient(syncClientId: string) {
   // Only the host should be sending LOAD_GAME_STATE messages
   // because the host has the canonical game state
   if (window.hostClientId === window.clientId) {
+    console.error('forceSyncClient occurred')
     window.pie.sendData({
       type: MESSAGE_TYPES.LOAD_GAME_STATE,
       underworld: window.underworld.serializeForSaving(),
@@ -462,6 +466,9 @@ function giveClientGameStateForInitialLoad(clientId: string) {
 export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
   console.log('clientPresenceChanged', o);
   clients = o.clients;
+  const playerOfClientThatChanged = window.underworld && window.underworld.players.find(
+    (p) => p.clientId === o.clientThatChanged,
+  );
   // Client joined
   if (o.present && clients[0] !== undefined) {
     // The host is always the first client
@@ -471,23 +478,22 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
     } else {
       console.log(`Setup: Setting Host client to ${window.hostClientId}.`);
     }
+    // And if the client that joined is associated with a player
+    if (playerOfClientThatChanged) {
+      // set their connected status
+      Player.setClientConnected(playerOfClientThatChanged, o.present);
+    }
   } else {
-    // client left
+    // Client left
 
-    // If the underworld is already setup
-    if (window.underworld) {
-      const player = window.underworld.players.find(
-        (p) => p.clientId === o.clientThatChanged,
-      );
-      // And if the client that left is associated with a player
-      if (player) {
-        // Disconnect the player and end their turn
-        Player.setClientConnected(player, false);
-        window.underworld.endPlayerTurn(player.clientId);
-      } else {
-        // this can occur naturally if a client disconnects before choosing
-        // a character
-      }
+    // If the client that left is associated with a player
+    if (playerOfClientThatChanged) {
+      // Disconnect the player and end their turn
+      Player.setClientConnected(playerOfClientThatChanged, false);
+      window.underworld.endPlayerTurn(playerOfClientThatChanged.clientId);
+    } else {
+      // this can occur naturally if a client disconnects before choosing
+      // a character
     }
 
     // if host left
