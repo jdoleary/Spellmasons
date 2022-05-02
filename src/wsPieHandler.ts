@@ -489,6 +489,14 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
     if (playerOfClientThatChanged) {
       // set their connected status
       Player.setClientConnected(playerOfClientThatChanged, o.present);
+      // If the rejoining client is the current client and they already have a player
+      // that means they suffered a mid game disconnection and should ask for the
+      // entire gamestate
+      if (playerOfClientThatChanged.clientId == window.clientId) {
+        window.pie.sendData({
+          type: MESSAGE_TYPES.DESYNC
+        })
+      }
     }
   } else {
     // Client left
