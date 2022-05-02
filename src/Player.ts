@@ -84,6 +84,7 @@ export function create(clientId: string, unitId: string): IPlayer | undefined {
   player.unit.health = PLAYER_BASE_HEALTH;
   player.unit.healthMax = PLAYER_BASE_HEALTH;
 
+  window.underworld.players.push(player);
   return player;
 }
 export function resetPlayerForNextLevel(player: IPlayer) {
@@ -153,26 +154,10 @@ export function load(player: IPlayerSerialized) {
   addHighlighIfPlayerBelongsToCurrentClient(playerLoaded);
   updateGlobalRefToCurrentClientPlayer(playerLoaded);
   CardUI.recalcPositionForCards(playerLoaded);
+  window.underworld.players.push(playerLoaded);
   return playerLoaded;
 }
-// Similar but not the same as `load`, syncronize updates (mutates) a player 
-// entity with properties from a player (in JSON)
-// mutates originalUnit
-export function syncronize(playerSerialized: IPlayerSerialized, originalPlayer: IPlayer): void {
-  if (playerSerialized.clientId == originalPlayer.clientId) {
-    const { unit, ...rest } = playerSerialized;
-    const reassignedUnit = window.underworld.units.find(u => u.id == unit.id);
-    if (!reassignedUnit) {
-      console.error('Failed to syncronize player because cannot find associated unit with ID', unit.id);
-      return
-    }
-    Object.assign(originalPlayer, rest);
-    originalPlayer.unit = reassignedUnit;
-    addHighlighIfPlayerBelongsToCurrentClient(originalPlayer);
-  } else {
-    console.error('Attempting to syncronize a player with the wrong client id', playerSerialized.clientId, originalPlayer.clientId);
-  }
-}
+
 // Sets boolean and substring denoting if the player has a @websocketpie/client client associated with it
 export function setClientConnected(player: IPlayer, connected: boolean) {
   player.clientConnected = connected;

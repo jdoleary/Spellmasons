@@ -148,7 +148,6 @@ export async function startTutorial() {
   await window.startSingleplayer();
   const p = Player.create(window.clientId, manBlue.id);
   if (p) {
-    window.underworld.players.push(p);
     if (window.underworld.gameStarted) {
       // Initialize the player for the level
       Player.resetPlayerForNextLevel(p);
@@ -228,7 +227,6 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
             console.log(`Setup: Create a Player instance for ${fromClient}`)
             const p = Player.create(fromClient, payload.unitId);
             if (p) {
-              window.underworld.players.push(p);
               if (window.underworld.gameStarted) {
                 // Initialize the player for the level
                 Player.resetPlayerForNextLevel(p);
@@ -273,32 +271,21 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
 
       if (players) {
         console.log('sync: Syncing players');
-        for (let originalPlayer of window.underworld.players) {
-          const syncPlayer = players.find(p => p.clientId == originalPlayer?.clientId)
-          if (!syncPlayer) {
-            console.error("Something is wrong, underworld has different players than sync players")
-            // Client incurred major desync, resolve via DESYNC message
-            window.pie.sendData({ type: MESSAGE_TYPES.DESYNC });
-            return;
-          } else {
-            Player.syncronize(syncPlayer, originalPlayer);
-          }
-        }
-
+        // Clear previous players array
+        window.underworld.players = [];
+        players.map(Player.load);
       }
       if (units) {
         console.log('sync: Syncing units');
-        for (let originalUnit of window.underworld.units) {
+        for (let syncUnit of units) {
           // TODO: optimize if needed
-          const syncUnit = units.find(u => u.id === originalUnit.id);
-          if (!syncUnit) {
-            console.error("Something is wrong, underworld has different length unit than sync units")
-            // Client incurred major desync, resolve via DESYNC message
-            window.pie.sendData({ type: MESSAGE_TYPES.DESYNC });
-            return;
-          } else {
-            // Note: Unit.syncronize will currently maintain the player.unit reference
+          const originalUnit = window.underworld.units.find(u => u.id === syncUnit.id);
+          if (originalUnit) {
+            // Note: Unit.syncronize maintains the player.unit reference
             Unit.syncronize(syncUnit, originalUnit);
+          } else {
+            const newUnit = Unit.create(syncUnit.unitSourceId, syncUnit.x, syncUnit.y, syncUnit.faction, syncUnit.defaultImagePath, syncUnit.unitType, syncUnit.unitSubType, syncUnit.strength);
+            Unit.syncronize(syncUnit, newUnit);
           }
         }
 
