@@ -11,7 +11,6 @@ import makeAllRedShader from './shaders/selected';
 import { addLerpable } from './lerpList';
 import { findPath } from './Pathfinding';
 import { allUnits } from './units';
-import * as Pickup from './Pickup';
 import { allModifiers, EffectState } from './cards';
 import { checkIfNeedToClearTooltip, updateTooltipContent } from './ui/PlanningView';
 const elHealthBar: HTMLElement = document.querySelector('#health .fill') as HTMLElement;
