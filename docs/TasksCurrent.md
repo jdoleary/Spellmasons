@@ -1,4 +1,6 @@
 # Game Breaking Priorities
+- bug: Heavy unit armor doesn't sync
+- bug: on seed 0.69912309726149 , second player doesn't get any wall information
 - TODO: Change obstacles to tiles
     - Since i'll be using wave function collapse obstacles will have different bounds
     - A tile will be an image and bounds (maybe multiple)
