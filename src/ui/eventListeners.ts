@@ -8,7 +8,7 @@ import {
   syncSpellEffectProjection,
   updateTooltipSelection,
 } from './PlanningView';
-import { View } from '../views';
+import { toggleMenu, View } from '../views';
 import { findPath, pointsEveryXDistanceAlongPath } from '../Pathfinding';
 import { polygonToPolygonLineSegments } from '../Polygon';
 import * as colors from './colors';
@@ -25,6 +25,10 @@ export const keyDown = {
 }
 
 export function keydownListener(event: KeyboardEvent) {
+  if (window.view == View.Menu && event.code === 'Escape') {
+    window.closeMenu();
+    return
+  }
   // Only handle hotkeys when viewing the Game
   if (window.view !== View.Game) {
     return;
@@ -48,8 +52,12 @@ export function keydownListener(event: KeyboardEvent) {
 
   switch (event.code) {
     case 'Escape':
-      CardUI.clearSelectedCards();
       clearTooltipSelection();
+      if (CardUI.areAnyCardsSelected()) {
+        CardUI.clearSelectedCards();
+      } else {
+        toggleMenu();
+      }
       break;
     case 'AltLeft':
       window.altDown = true;
