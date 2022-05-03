@@ -10,7 +10,6 @@ import * as math from './math';
 import * as Cards from './cards';
 import * as Image from './Image';
 import * as storage from './storage';
-import * as GlobalPromises from './GlobalPromises';
 import obstacleSectors from './ObstacleSectors';
 import { MESSAGE_TYPES } from './MessageTypes';
 import {
@@ -102,8 +101,7 @@ export default class Underworld {
 
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
     window.underworld = this;
-    // this.seed = seed;
-    this.seed = '0.47240238862781536';
+    this.seed = seed;
     this.gameStarted = false;
     console.log("RNG create with seed:", seed, ", state: ", RNGState);
     this.random = this.syncronizeRNG(RNGState);
@@ -670,19 +668,6 @@ export default class Underworld {
     for (let player of this.players) {
       Player.resetPlayerForNextLevel(player);
     }
-  }
-  async initLevel(levelIndex: number) {
-    console.log('Setup: initLevel', levelIndex);
-    this.levelIndex = levelIndex;
-    this.cleanUpLevel();
-    await this.sync('level', () => {
-      let level;
-      do {
-        // Invoke generateRandomLevel again until it succeeds
-        level = this.generateRandomLevelData(levelIndex);
-      } while (level === undefined);
-      return { level }
-    });
     this.postSetupLevel();
     // Show text in center of screen for the new level
     floatingText({
@@ -696,7 +681,24 @@ export default class Underworld {
         fontSize: '60px'
       }
     });
-
+  }
+  async initLevel(levelIndex: number) {
+    console.log('Setup: initLevel', levelIndex);
+    this.levelIndex = levelIndex;
+    this.cleanUpLevel();
+    if (window.hostClientId === window.clientId) {
+      console.log(`initLevel as host`);
+      // Generate level
+      let level;
+      do {
+        // Invoke generateRandomLevel again until it succeeds
+        level = this.generateRandomLevelData(levelIndex);
+      } while (level === undefined);
+      window.pie.sendData({
+        type: MESSAGE_TYPES.CREATE_LEVEL,
+        level
+      });
+    }
   }
   initHandcraftedLevel(name: string) {
     // Width and height should be set immediately so that other level-building functions
@@ -876,25 +878,7 @@ export default class Underworld {
     }
     updateManaCostUI();
   }
-  // Syncs one of sync_type between all clients
-  // Host will send the sync information as source of truth
-  // All clients, including host, will wait for sync message
-  async sync(label: string, hostMakeSyncInformation: () => SyncInformation) {
-    // If host, send sync; if non-host, ignore 
-    if (window.hostClientId === window.clientId) {
-      const syncData: any = {
-        type: MESSAGE_TYPES.SYNC,
-        ...hostMakeSyncInformation()
-      }
-      window.pie.sendData(syncData);
-    }
-    console.log('sync: Waiting for ', label);
-    // TODO: If host disconnects, retrigger a sync
-    await GlobalPromises.create('sync').catch(() => {
-      console.error(`sync: ERROR, failed ${label}`)
-    });
-    console.log(`sync: ${label} succeeded`)
-  }
+
   async endNPCTurnPhase() {
     // Move onto next phase
     // --
@@ -1065,18 +1049,7 @@ export default class Underworld {
     upgrade.effect(player);
     player.upgrades.push(upgrade);
   }
-  // Returns true if game is over
-  checkForGameOver(): boolean {
-    const areAllPlayersDead =
-      this.players.filter((p) => p.unit.alive && p.clientConnected).length ===
-      0;
-    if (areAllPlayersDead) {
-      // TODO handle game over
-      return true;
-    } else {
-      return false;
-    }
-  }
+
   // Returns true if it goes to the next level
   checkForEndOfLevel(): boolean {
     // All living (and client connected) players
@@ -1112,13 +1085,23 @@ export default class Underworld {
     return { x, y };
   }
   async setTurnPhase(p: turn_phase) {
+    console.trace('setTurnPhase')
+    // If host, send sync; if non-host, ignore 
+    if (window.hostClientId === window.clientId) {
+      window.pie.sendData({
+        type: MESSAGE_TYPES.SET_PHASE,
+        phase: p,
+        units: this.units.map(Unit.serialize),
+        players: this.players.map(Player.serialize)
+      });
+    }
+  }
+  // Invoked only through wsPie
+  async _setTurnPhase(p: turn_phase) {
     console.log('setTurnPhase(', turn_phase[p], ')');
     // Clear debug graphics
     window.debugGraphics.clear()
-    // Before the turn phase changes, check if the game should transition to game over
-    if (this.checkForGameOver()) {
-      return;
-    }
+
     this.turn_phase = p;
 
     // Remove all phase classes from body
@@ -1127,7 +1110,6 @@ export default class Underworld {
         document.body.classList.remove(phaseClass);
       }
     }
-
     // Clean up invalid units
     const keepUnits = [];
     for (let u of this.units) {
@@ -1143,8 +1125,6 @@ export default class Underworld {
       document.body.classList.add('phase-' + phase.toLowerCase());
       switch (phase) {
         case 'PlayerTurns':
-          await this.sync('units', () => ({ units: this.units.map(Unit.serialize) }));
-          await this.sync('players', () => ({ players: this.players.map(Player.serialize) }));
 
           for (let u of this.units) {
             // Reset stamina so units can move again
@@ -1160,7 +1140,6 @@ export default class Underworld {
           this.initializePlayerTurn(this.playerTurnIndex);
           break;
         case 'NPC':
-          await this.sync('units', () => ({ units: this.units.map(Unit.serialize) }));
           // Clear enemy attentionMarkers since it's now their turn
           window.attentionMarkers = [];
           // Clears spell effect on NPC turn
@@ -1170,6 +1149,7 @@ export default class Underworld {
             // Ally NPCs go first
             await this.executeNPCTurn(Faction.ALLY);
             await this.executeNPCTurn(Faction.ENEMY);
+            console.log('end npc turn')
             // Set turn phase to player turn
             this.endNPCTurnPhase();
           })();
@@ -1184,6 +1164,7 @@ export default class Underworld {
   }
 
   async executeNPCTurn(faction: Faction) {
+    console.log('game: executeNPCTurn', Faction[faction]);
     const animationPromises: Promise<void>[] = [];
     unitloop: for (let u of this.units.filter(
       (u) => u.unitType === UnitType.AI && u.alive && u.faction == faction,
@@ -1610,11 +1591,6 @@ function getEnemiesForAltitude(levelIndex: number): { enemies: { [unitid: string
   }
 }
 
-export interface SyncInformation {
-  players?: Player.IPlayerSerialized[],
-  units?: Unit.IUnitSerialized[],
-  level?: LevelData
-};
 
 export interface LevelData {
   obstacles: {

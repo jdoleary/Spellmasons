@@ -1,18 +1,15 @@
 import type { ClientPresenceChangedArgs, OnDataArgs } from '@websocketpie/client';
 
 import { MESSAGE_TYPES } from './MessageTypes';
-import { UnitType } from './commonTypes';
 import floatingText from './FloatingText';
 import { getUpgradeByTitle } from './Upgrade';
-import Underworld, { SyncInformation, turn_phase } from './Underworld';
+import Underworld, { LevelData, turn_phase } from './Underworld';
 import * as Player from './Player';
 import * as Unit from './Unit';
 import * as Pickup from './Pickup';
-import * as Obstacle from './Obstacle';
 import * as readyState from './readyState';
 import * as messageQueue from './messageQueue';
 import * as storage from './storage';
-import * as GlobalPromises from './GlobalPromises';
 import { setView, View } from './views';
 import { tutorialLevels } from './HandcraftedLevels';
 import manBlue from './units/manBlue';
@@ -266,8 +263,14 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       }
       tryStartGame();
       break;
-    case MESSAGE_TYPES.SYNC:
-      const { players, units, level } = payload as SyncInformation;
+    case MESSAGE_TYPES.SET_PHASE:
+      const { phase, units, players } = payload as {
+        phase: turn_phase,
+        // Sync data for players
+        players?: Player.IPlayerSerialized[],
+        // Sync data for units
+        units?: Unit.IUnitSerialized[],
+      }
 
       if (players) {
         console.log('sync: Syncing players');
@@ -290,16 +293,20 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
         }
 
       }
-      if (level) {
-        console.log('sync: Syncing level');
-        if (window.underworld) {
-          window.underworld.createLevel(level);
-        } else {
-          console.error('Cannot sync level, no window.underworld exists')
-        }
+      // Use the internal setTurnPhrase now that the desired phase has been sent
+      // via the public setTurnPhase
+      window.underworld._setTurnPhase(phase);
+      break;
+    case MESSAGE_TYPES.CREATE_LEVEL:
+      const { level } = payload as {
+        level: LevelData
       }
-
-      GlobalPromises.resolve('sync');
+      console.log('sync: Syncing level');
+      if (window.underworld) {
+        window.underworld.createLevel(level);
+      } else {
+        console.error('Cannot sync level, no window.underworld exists')
+      }
 
       break;
     case MESSAGE_TYPES.LOAD_GAME_STATE:
@@ -468,7 +475,7 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
     // The host is always the first client
     window.hostClientId = clients[0];
     if (window.hostClientId === window.clientId) {
-      console.log(`Setup: Setting Host client to ${window.hostClientId}. %c You are the host. `, 'background: #222; color: #bada55');
+      console.log(`Setup: Setting Host client to ${window.hostClientId}. % c You are the host. `, 'background: #222; color: #bada55');
     } else {
       console.log(`Setup: Setting Host client to ${window.hostClientId}.`);
     }
@@ -503,7 +510,7 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
       // Set host to the 0th client that is still connected
       window.hostClientId = clients[0];
       if (window.hostClientId === window.clientId) {
-        console.log(`Setup: Host client left, reassigning host to ${window.hostClientId}. %c You are the host. `, 'background: #222; color: #bada55');
+        console.log(`Setup: Host client left, reassigning host to ${window.hostClientId}. % c You are the host. `, 'background: #222; color: #bada55');
       } else {
         console.log(`Setup: Host client left, reassigning host to ${window.hostClientId}.`);
       }

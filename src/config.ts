@@ -1,7 +1,7 @@
 import obstacleSectors from "./ObstacleSectors";
 
 export const PLAYER_BASE_HEALTH = 10;
-export const UNIT_MOVE_SPEED = 0.25;
+export const UNIT_MOVE_SPEED = 0.05;
 export const COLLISION_MESH_RADIUS = 32;
 export const LOB_PROJECTILE_SPEED = 600; // in millis
 export const UNIT_SIZE = COLLISION_MESH_RADIUS * 2;
