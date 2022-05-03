@@ -497,6 +497,9 @@ body.your-turn #end-turn-btn {
   user-select: none;
   z-index: 1;
   display: block;
+  position: absolute;
+  right: 8px;
+  top: 110px;
 }
 
 /* Transform position is determined on hover*/
