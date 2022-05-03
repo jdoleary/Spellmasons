@@ -44,57 +44,76 @@
     <div id="upgrade-picker-content"></div>
   </div>
   <div id="underworld-container">
-    <div id="toolbar">
-      <div id="center-cam-info">Free Look
-        <kbd class="hotkey-badge">W</kbd>
-        <kbd class="hotkey-badge">A</kbd>
-        <kbd class="hotkey-badge">S</kbd>
-        <kbd class="hotkey-badge">D</kbd>
-      </div>
-      <button type="button" id="center-cam-btn">Recenter Camera</button>
-      <div id="inspect-mode-indicator">Inspect
-        <kbd class="hotkey-badge">Hold F</kbd>
-      </div>
-    </div>
-    <div id="player-turn-indicator-holder">
-      <button id="menuBtn">⚙️ Menu</button>
-      <div id="level-indicator"></div>
-      <div id="player-turn-indicator">Waiting for players</div>
-    </div>
-    <div id="PIXI-holder"></div>
-    <div id="card-holders">
-      <div id="card-inspect"></div>
-      <div id="card-hand" draggable="true"></div>
-      <div id="health-mana-holder">
-        <button type="button" id="end-turn-btn" class="jbutton">
-          End Turn
-          <div class="hotkey-badge-holder">
-            <kbd class="hotkey-badge">Spacebar</kbd>
-          </div>
-        </button>
-        <div id="health-mana">
-          <div id="health" class="health-mana-bar">
-            <div class="fill"> </div>
-            <div class="cost"></div>
-            <div class="label"></div>
-          </div>
-          <div id="mana" class="health-mana-bar">
-            <div class="fill"> </div>
-            <div class="fill"> </div>
-            <div class="fill"> </div>
-            <div class="cost"></div>
-            <div class="cost"></div>
-            <div class="cost"></div>
-            <div class="label"></div>
-          </div>
-          <div id="stamina" class="health-mana-bar">
-            <div class="fill"></div>
-            <div class="label"></div>
-          </div>
+    <table id="toolbar">
+      <tr id="center-cam-info">
+        <td>
+          Free Look
+        </td>
+        <td>
+          <kbd class="hotkey-badge">W</kbd>
+          <kbd class="hotkey-badge">A</kbd>
+          <kbd class="hotkey-badge">S</kbd>
+          <kbd class="hotkey-badge">D</kbd>
+        </td>
+      </tr>
+      <tr id="center-cam-btn">
+        <td>
+          <button type="button" id="center-cam-btn">Recenter Camera</button>
+        </td>
+      </tr>
+      <tr>
+        <td id="inspect-mode-indicator">
+          Inspect
+        </td>
+        <td>
+          Hold <kbd class="hotkey-badge">F</kbd>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <button type="button" id="end-turn-btn">
+            End Turn
+          </button>
+        </td>
+        <td>
+          <kbd class="hotkey-badge">Spacebar</kbd>
+        </td>
+      </tr>
+  </div>
+  </table>
+  <div id="player-turn-indicator-holder">
+    <button id="menuBtn">⚙️ Menu</button>
+    <div id="level-indicator"></div>
+    <div id="player-turn-indicator">Waiting for players</div>
+  </div>
+  <div id="PIXI-holder"></div>
+  <div id="card-holders">
+    <div id="card-inspect"></div>
+    <div id="card-hand" draggable="true"></div>
+    <div id="health-mana-holder">
+      <div id="health-mana">
+        <div id="health" class="health-mana-bar">
+          <div class="fill"> </div>
+          <div class="cost"></div>
+          <div class="label"></div>
+        </div>
+        <div id="mana" class="health-mana-bar">
+          <div class="fill"> </div>
+          <div class="fill"> </div>
+          <div class="fill"> </div>
+          <div class="cost"></div>
+          <div class="cost"></div>
+          <div class="cost"></div>
+          <div class="label"></div>
+        </div>
+        <div id="stamina" class="health-mana-bar">
+          <div class="fill"></div>
+          <div class="label"></div>
         </div>
       </div>
-      <div id="selected-cards"> </div>
     </div>
+    <div id="selected-cards"> </div>
+  </div>
   </div>
   <div id="version">
     spellmasons.com

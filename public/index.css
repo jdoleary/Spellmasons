@@ -214,6 +214,8 @@ body.view-Game #card-holders {
   min-height: 103px;
   /* Leaves enough room at the bottom to show the hotkey badge */
   margin-bottom: 20px;
+  /* Leave room to drag and drop cards to the right */
+  padding-right: 300px;
 }
 
 #card-hand .card img {
@@ -852,22 +854,18 @@ body.view-Game #toolbar {
   left: 8px;
   top: 50px;
   z-index: 1;
+  color: white;
 }
 
 body.auto-camera #center-cam-btn {
   display: none;
 }
 
-body.auto-camera #center-cam-info {
-  display: block;
-}
-
 #center-cam-info {
   color: white;
   font-size: 20px;
-  display: none;
 }
 
-#center-cam-btn {
-  display: block;
+body:not(.auto-camera) #center-cam-info {
+  display: none;
 }

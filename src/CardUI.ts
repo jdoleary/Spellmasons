@@ -30,6 +30,8 @@ elCardHand.addEventListener('dragstart', ev => {
 elCardHand.addEventListener('dragover', ev => {
   ev.preventDefault();
 })
+const cardHandPaddingLeft = 10;
+elCardHand.style['paddingLeft'] = `${cardHandPaddingLeft}px`;
 elCardHand.addEventListener('drop', ev => {
   // const dropCard = ((ev.target as HTMLElement).closest('.card') as HTMLElement)?.dataset.cardId;
   const elCard = document.querySelector('#card-hand .card') as HTMLElement;
@@ -38,15 +40,9 @@ elCardHand.addEventListener('drop', ev => {
       // Since cards are centered, we can determine which card the dropped card is replacing
       // by only using the size of the cards, the screenWidth, and the drop location on the x axis:
       const cardSize = gapBetweenCards + elCard.clientWidth;
-      const screenWidth = document.body.clientWidth;
-      // If there is an even number of cards, the next calculation must shift by cardSize/2
-      const accountForEvenCards = (window.player.cards.length % 2 === 0 ? cardSize / 2 : 0);
-      // Get a card index from the center of the screen.  e.g.: -2,-1,0,1,2
-      const positiveOrNegativeIndexFromCenter = Math.floor((ev.clientX - screenWidth / 2 + accountForEvenCards) / cardSize);
-      // Shift the aboveIndex so it's zero indexed. e.g.: -2,-1,0,1,2 to 0,1,2,3,4
-      const zeroIndexedCardIndex = positiveOrNegativeIndexFromCenter + Math.ceil(window.player?.cards.length / 2);
+      const cardIndex = Math.floor((ev.clientX - cardHandPaddingLeft + cardSize / 2) / cardSize);
       // Clamp the value to 0 or the maximum length of cards because we will use the index to set the new index of the dragged card
-      const clampedIndex = Math.max(0, Math.min(zeroIndexedCardIndex, window.player.cards.length));
+      const clampedIndex = Math.max(0, Math.min(cardIndex, window.player.cards.length));
       const dragCardIndex = window.player.cards.findIndex(c => c == dragCard);
       let dropCardIndex = clampedIndex;
       // If dragCard is to the left of the drop location, must subtract one from the dropCardIndex
