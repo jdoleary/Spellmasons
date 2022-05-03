@@ -185,7 +185,10 @@ body.view-Game #card-holders {
   display: none;
   flex-direction: column-reverse;
   z-index: 1;
+  position: fixed;
+  bottom: 0;
 }
+
 
 #selected-cards,
 #card-holders #card-hand {
@@ -526,7 +529,6 @@ body.your-turn #end-turn-btn {
 
 #health-mana-holder {
   display: flex;
-  justify-content: center;
   margin-top: 8px;
 }
 
