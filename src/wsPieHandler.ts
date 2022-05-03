@@ -386,7 +386,7 @@ function handleLoadGameState(payload: any) {
   window.underworld.groundTiles = loadedGameState.groundTiles;
   window.underworld.addGroundTileImages();
 
-  window.underworld.setTurnPhase(window.underworld.turn_phase);
+  window.underworld.broadcastTurnPhase(window.underworld.turn_phase);
 
   // TODO are bounds, pathingPolygons, and walls in loadstate?
   // Maybe use levelData to recreate level on load
