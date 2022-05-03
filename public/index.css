@@ -873,10 +873,8 @@ body:not(.auto-camera) #center-cam-info {
   display: none;
 }
 
-#toolbar table {
-  border-spacing: 2px;
-}
-
 td:first-child {
   text-align: right;
+  border-right: 1px solid white;
+  padding-right: 4px;
 }
