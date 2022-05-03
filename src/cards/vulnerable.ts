@@ -52,6 +52,10 @@ in the future.
 };
 
 function add(unit: Unit.IUnit) {
+  // First time setup
+  if (!unit.modifiers[id]) {
+    unit.modifiers[id] = { isCurse: true };
+  }
   // Add event
   unit.onDamageEvents.push(id);
 
