@@ -41,7 +41,7 @@ export const containerCharacterSelect = new PIXI.Container();
 const characterSelectContainers = [containerCharacterSelect];
 const elSelectedCards = document.getElementById('selected-cards') as HTMLElement;
 
-app.renderer.backgroundColor = 0x111631;
+app.renderer.backgroundColor = 0x86919b;
 
 window.addEventListener('resize', resizePixi);
 window.addEventListener('load', () => {
