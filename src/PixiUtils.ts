@@ -48,14 +48,9 @@ window.addEventListener('load', () => {
   resizePixi();
 });
 export function resizePixi() {
-  const elPIXIHolder = document.getElementById('PIXI-holder');
-  if (!elPIXIHolder) {
-    console.error('Cannot resize pixi, elPIXIHolder is null')
-    return;
-  }
   app.renderer.resize(window.innerWidth, window.innerHeight);
 }
-let elPIXIHolder: HTMLElement | null;
+const elPIXIHolder: HTMLElement = document.getElementById('PIXI-holder') as HTMLElement;
 let camera: Vec2 = { x: 0, y: 0 };
 // True if camera should auto follow player unit
 let doCameraAutoFollow = true;
@@ -72,11 +67,8 @@ export function getCamera() {
 function calculateCameraZoom() {
   return app.stage.scale.x + (window.zoomTarget - app.stage.scale.x) / 8;
 }
+let lastZoom = window.zoomTarget;
 export function updateCameraPosition() {
-  if (!elPIXIHolder) {
-    elPIXIHolder = document.getElementById('PIXI-holder');
-    return;
-  }
 
   // Lerp zoom to target
   // Note: This must happen BEFORE the stage x and y is updated
@@ -160,13 +152,17 @@ export function updateCameraPosition() {
           x: elPIXIHolder.clientWidth / 2 - (camera.x * zoom),
           y: viewHeight / 2 - (camera.y * zoom)
         }
-
-        // Option 1 for cam movement: Lerp camera to target
-        // app.stage.x = app.stage.x + (cameraTarget.x - app.stage.x) / 2;
-        // app.stage.y = app.stage.y + (cameraTarget.y - app.stage.y) / 2;
-
-        // Option 2 for cam movement: Set camera to target immediately
-        if (doCameraAutoFollow) {
+        // If zoom has changed, move the camera instantly
+        // this eliminates odd camera movement when zoom occurs
+        if (lastZoom !== zoom) {
+          // Move camera immediately because the user is panning
+          // the camera manually
+          if (!isNaN(cameraTarget.x) && !isNaN(cameraTarget.y)) {
+            // Actuall move the camera to be centered on the centerTarget
+            app.stage.x = cameraTarget.x;
+            app.stage.y = cameraTarget.y;
+          }
+        } else if (doCameraAutoFollow) {
           // Move smoothly to the cameraTarget
           const camNextCoordinates = math.getCoordsAtDistanceTowardsTarget(
             app.stage,
@@ -174,6 +170,7 @@ export function updateCameraPosition() {
             math.distance(app.stage, cameraTarget) / 20
           );
           if (!isNaN(camNextCoordinates.x) && !isNaN(camNextCoordinates.y)) {
+            // Actuall move the camera to be centered on the centerTarget
             app.stage.x = camNextCoordinates.x;
             app.stage.y = camNextCoordinates.y;
           }
@@ -181,10 +178,12 @@ export function updateCameraPosition() {
           // Move camera immediately because the user is panning
           // the camera manually
           if (!isNaN(cameraTarget.x) && !isNaN(cameraTarget.y)) {
+            // Actuall move the camera to be centered on the centerTarget
             app.stage.x = cameraTarget.x;
             app.stage.y = cameraTarget.y;
           }
         }
+        lastZoom = zoom;
 
       }
       break;
@@ -197,12 +196,7 @@ let sheet: PIXI.Spritesheet;
 export function setupPixi(): Promise<void> {
   // The application will create a canvas element for you that you
   // can then insert into the DOM
-  const elPIXIHolder = document.getElementById('PIXI-holder');
-  if (elPIXIHolder) {
-    elPIXIHolder.appendChild(app.view);
-  } else {
-    throw new Error('element PIXI-holder does not exist');
-  }
+  elPIXIHolder.appendChild(app.view);
 
   return loadTextures();
 }
