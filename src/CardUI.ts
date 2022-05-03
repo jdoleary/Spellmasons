@@ -30,8 +30,8 @@ elCardHand.addEventListener('dragstart', ev => {
 elCardHand.addEventListener('dragover', ev => {
   ev.preventDefault();
 })
-const cardHandPaddingLeft = 10;
-elCardHand.style['paddingLeft'] = `${cardHandPaddingLeft}px`;
+const cardHoldersPaddingLeft = 10;
+elCardHolders.style['paddingLeft'] = `${cardHoldersPaddingLeft}px`;
 elCardHand.addEventListener('drop', ev => {
   // const dropCard = ((ev.target as HTMLElement).closest('.card') as HTMLElement)?.dataset.cardId;
   const elCard = document.querySelector('#card-hand .card') as HTMLElement;
@@ -40,7 +40,7 @@ elCardHand.addEventListener('drop', ev => {
       // Since cards are centered, we can determine which card the dropped card is replacing
       // by only using the size of the cards, the screenWidth, and the drop location on the x axis:
       const cardSize = gapBetweenCards + elCard.clientWidth;
-      const cardIndex = Math.floor((ev.clientX - cardHandPaddingLeft + cardSize / 2) / cardSize);
+      const cardIndex = Math.floor((ev.clientX - cardHoldersPaddingLeft + cardSize / 2) / cardSize);
       // Clamp the value to 0 or the maximum length of cards because we will use the index to set the new index of the dragged card
       const clampedIndex = Math.max(0, Math.min(cardIndex, window.player.cards.length));
       const dragCardIndex = window.player.cards.findIndex(c => c == dragCard);
