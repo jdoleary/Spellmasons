@@ -12,9 +12,72 @@ import { playSFX, sfxPageTurn } from './Audio';
 
 const elCardHolders = document.getElementById('card-holders');
 // Where the non-selected cards are displayed
-const elCardHand = document.getElementById('card-hand');
+const elCardHand = document.getElementById('card-hand') as HTMLElement;
 // Where the selected cards are displayed
-const elSelectedCards = document.getElementById('selected-cards');
+const elSelectedCards = document.getElementById('selected-cards') as HTMLElement;
+// Gap amount must be available programatically (not in css) so it can be
+// taken into account in drag-n-drop
+const gapBetweenCards = 4;
+elCardHand.style['gap'] = `${gapBetweenCards}px`;
+elSelectedCards.style['gap'] = `${gapBetweenCards}px`;
+elCardHand.addEventListener('dragstart', ev => {
+  dragCard = ((ev.target as HTMLElement).closest('.card') as HTMLElement)?.dataset.cardId;
+
+})
+elCardHand.addEventListener('dragover', ev => {
+  ev.preventDefault();
+})
+elCardHand.addEventListener('drop', ev => {
+  // const dropCard = ((ev.target as HTMLElement).closest('.card') as HTMLElement)?.dataset.cardId;
+  const elCard = document.querySelector('#card-hand .card') as HTMLElement;
+  if (dragCard) {
+    if (window.player) {
+      // Since cards are centered, we can determine which card the dropped card is replacing
+      // by only using the size of the cards, the screenWidth, and the drop location on the x axis:
+      const cardSize = gapBetweenCards + elCard.clientWidth;
+      const screenWidth = document.body.clientWidth;
+      // If there is an even number of cards, the next calculation must shift by cardSize/2
+      const accountForEvenCards = (window.player.cards.length % 2 === 0 ? cardSize / 2 : 0);
+      // Get a card index from the center of the screen.  e.g.: -2,-1,0,1,2
+      const positiveOrNegativeIndexFromCenter = Math.floor((ev.clientX - screenWidth / 2 + accountForEvenCards) / cardSize);
+      // Shift the aboveIndex so it's zero indexed. e.g.: -2,-1,0,1,2 to 0,1,2,3,4
+      const zeroIndexedCardIndex = positiveOrNegativeIndexFromCenter + Math.ceil(window.player?.cards.length / 2);
+      // Clamp the value to 0 or the maximum length of cards because we will use the index to set the new index of the dragged card
+      const clampedIndex = Math.max(0, Math.min(zeroIndexedCardIndex, window.player.cards.length));
+      const dragCardIndex = window.player.cards.findIndex(c => c == dragCard);
+      let dropCardIndex = clampedIndex;
+      // If dragCard is to the left of the drop location, must subtract one from the dropCardIndex
+      // to get the proper final index since moving the dragCard will shift all cards to the left
+      if (dragCardIndex < clampedIndex) {
+        dropCardIndex -= 1;
+      }
+      if (dragCardIndex > dropCardIndex) {
+        for (let i = dragCardIndex - 1; i >= dropCardIndex; i--) {
+          // Shift all cards over to the right
+          const currentCard = window.player.cards[i];
+          if (currentCard) {
+            window.player.cards[i + 1] = currentCard;
+          }
+        }
+        window.player.cards[dropCardIndex] = dragCard;
+        recalcPositionForCards(window.player);
+      } else if (dragCardIndex < dropCardIndex) {
+        for (let i = dragCardIndex; i < dropCardIndex; i++) {
+          // Shift all cards over to the left
+          const nextCard = window.player.cards[i + 1]
+          if (nextCard) {
+            window.player.cards[i] = nextCard
+          }
+        }
+        window.player.cards[dropCardIndex] = dragCard;
+        recalcPositionForCards(window.player);
+      } else {
+        // Do nothing, dropped on same card as drag
+      }
+    }
+  }
+  ev.preventDefault();
+})
 // Displays a full card with info on inspect-mode + hover of card
 const elCardInspect = document.getElementById('card-inspect');
 if (elCardHolders) {
@@ -99,7 +162,7 @@ export function recalcPositionForCards(player: Player.IPlayer | undefined) {
         const element = createCardElement(card);
         element.classList.add(className);
         // When the user clicks on a card
-        addListenersToCardElement(player, element, cardId, false);
+        addListenersToCardElement(player, element, cardId);
         let elCardTypeGroup = document.getElementById(`holder-${cardId}`);
         if (!elCardTypeGroup) {
           elCardTypeGroup = makeCardTypeGroup(cardId);
@@ -140,57 +203,12 @@ function addListenersToCardElement(
   player: Player.IPlayer,
   element: HTMLElement,
   cardId: string,
-  // selectedCards are cards that are not in the card hand but 
-  // are selected and waiting to be cast
-  selectedCard: boolean
 ) {
   element.addEventListener('mouseenter', () => {
     // Play random pageTurn sound
     const sfxInst = sfxPageTurn[Math.floor(Math.random() * sfxPageTurn.length)]
     sfxInst && playSFX(sfxInst);
   });
-  if (!selectedCard) {
-    element.addEventListener('dragstart', ev => {
-      dragCard = ((ev.target as HTMLElement).closest('.card') as HTMLElement)?.dataset.cardId;
-
-    })
-    element.addEventListener('dragover', ev => {
-      ev.preventDefault();
-    })
-    element.addEventListener('drop', ev => {
-      const dropCard = ((ev.target as HTMLElement).closest('.card') as HTMLElement)?.dataset.cardId;
-      if (dragCard && dropCard) {
-        if (window.player) {
-          const dragCardIndex = window.player.cards.findIndex(c => c == dragCard);
-          const dropCardIndex = window.player.cards.findIndex(c => c == dropCard);
-          if (dragCardIndex > dropCardIndex) {
-            for (let i = dragCardIndex - 1; i >= dropCardIndex; i--) {
-              // Shift all cards over to the right
-              const currentCard = window.player.cards[i];
-              if (currentCard) {
-                window.player.cards[i + 1] = currentCard;
-              }
-            }
-            window.player.cards[dropCardIndex] = dragCard;
-            recalcPositionForCards(window.player);
-          } else if (dragCardIndex < dropCardIndex) {
-            for (let i = dragCardIndex; i < dropCardIndex; i++) {
-              // Shift all cards over to the left
-              const nextCard = window.player.cards[i + 1]
-              if (nextCard) {
-                window.player.cards[i] = nextCard
-              }
-            }
-            window.player.cards[dropCardIndex] = dragCard;
-            recalcPositionForCards(window.player);
-          } else {
-            // Do nothing, dropped on same card as drag
-          }
-        }
-      }
-      ev.preventDefault();
-    })
-  }
 
   element.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -259,7 +277,7 @@ function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string
     const clone = element.cloneNode(true) as HTMLElement;
     // Selected cards are not draggable for rearranging
     clone.draggable = false;
-    addListenersToCardElement(player, clone, cardId, true);
+    addListenersToCardElement(player, clone, cardId);
     clone.classList.add('selected');
     const card = Cards.allCards[cardId]
     if (card?.requiresFollowingCard) {
