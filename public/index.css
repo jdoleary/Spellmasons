@@ -163,6 +163,8 @@ body.inspect-mode #card-inspect {
   align-items: center;
   pointer-events: none;
   flex-direction: column;
+  /* Render over top of card hand */
+  z-index: 2;
 }
 
 #card-inspect .card-inner {
