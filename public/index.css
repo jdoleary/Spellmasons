@@ -125,7 +125,6 @@ body.inspect-mode {
 #inspect-mode-indicator {
   color: white;
   font-size: 20px;
-  text-align: center;
   pointer-events: none;
 }
 
@@ -144,7 +143,6 @@ body.inspect-mode #inspect-mode-indicator .hotkey-badge {
 
 body.inspect-mode #inspect-mode-indicator {
   color: #d5b356;
-  font-weight: bold;
 }
 
 body.inspect-mode #card-inspect {
@@ -850,7 +848,25 @@ body.view-Game #toolbar {
 #toolbar {
   display: none;
   position: absolute;
-  left: 0;
-  top: 50%;
+  left: 8px;
+  top: 50px;
   z-index: 1;
+}
+
+body.auto-camera #center-cam-btn {
+  display: none;
+}
+
+body.auto-camera #center-cam-info {
+  display: block;
+}
+
+#center-cam-info {
+  color: white;
+  font-size: 20px;
+  display: none;
+}
+
+#center-cam-btn {
+  display: block;
 }

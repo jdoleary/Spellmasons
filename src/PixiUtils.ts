@@ -53,9 +53,11 @@ export function resizePixi() {
 const elPIXIHolder: HTMLElement = document.getElementById('PIXI-holder') as HTMLElement;
 let camera: Vec2 = { x: 0, y: 0 };
 // True if camera should auto follow player unit
-let doCameraAutoFollow = true;
-export function cameraAutoFollow(active: boolean) {
+let doCameraAutoFollow = cameraAutoFollow(true);
+export function cameraAutoFollow(active: boolean): boolean {
   doCameraAutoFollow = active;
+  document.body.classList.toggle('auto-camera', active);
+  return active;
 }
 export function getCamera() {
   return {
