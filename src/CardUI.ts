@@ -10,7 +10,10 @@ import floatingText from './FloatingText';
 import { mouseMove } from './ui/eventListeners';
 import { playSFX, sfxPageTurn } from './Audio';
 
-const elCardHolders = document.getElementById('card-holders');
+const elCardHolders = document.getElementById('card-holders') as HTMLElement;
+elCardHolders.addEventListener('contextmenu', e => {
+  e.preventDefault();
+})
 // Where the non-selected cards are displayed
 const elCardHand = document.getElementById('card-hand') as HTMLElement;
 // Where the selected cards are displayed
