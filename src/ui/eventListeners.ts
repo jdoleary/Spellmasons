@@ -52,10 +52,10 @@ export function keydownListener(event: KeyboardEvent) {
 
   switch (event.code) {
     case 'Escape':
-      clearTooltipSelection();
-      if (CardUI.areAnyCardsSelected()) {
-        CardUI.clearSelectedCards();
-      } else {
+      const thereWasTooltipActive = clearTooltipSelection();
+      const thereWereCardsSelected = CardUI.areAnyCardsSelected();
+      CardUI.clearSelectedCards();
+      if (!thereWasTooltipActive && !thereWereCardsSelected) {
         toggleMenu();
       }
       break;

@@ -302,10 +302,16 @@ export function checkIfNeedToClearTooltip() {
   }
 
 }
-export function clearTooltipSelection() {
-  selectedUnit = undefined;
-  selectedPickup = undefined;
-  selectedType = null;
+// return boolean represents if there was a tooltip to clear
+export function clearTooltipSelection(): boolean {
+  if (selectedType) {
+    selectedUnit = undefined;
+    selectedPickup = undefined;
+    selectedType = null;
+    return true
+  } else {
+    return false;
+  }
 }
 export function updateTooltipSelection(mousePos: Vec2) {
 
