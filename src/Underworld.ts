@@ -101,7 +101,8 @@ export default class Underworld {
 
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
     window.underworld = this;
-    this.seed = seed;
+    // this.seed = seed;
+    this.seed = '0.69912309726149';
     this.gameStarted = false;
     console.log("RNG create with seed:", seed, ", state: ", RNGState);
     this.random = this.syncronizeRNG(RNGState);
@@ -643,7 +644,7 @@ export default class Underworld {
   }
   postSetupLevel() {
     // Set the first turn phase
-    this.setTurnPhase(turn_phase.PlayerTurns);
+    this.broadcastTurnPhase(turn_phase.PlayerTurns);
     cameraAutoFollow(true);
   }
   // creates a level from levelData
@@ -858,7 +859,7 @@ export default class Underworld {
   endPlayerTurnPhase() {
     console.log('Underworld: TurnPhase: End player turn phase');
     // Move onto next phase
-    this.setTurnPhase(turn_phase.NPC);
+    this.broadcastTurnPhase(turn_phase.NPC);
     // Add mana to AI units
     for (let unit of this.units.filter((u) => u.unitType === UnitType.AI && u.alive)) {
       unit.mana += unit.manaPerTurn;
@@ -906,7 +907,7 @@ export default class Underworld {
     // Increment the turn number now that it's starting over at the first phase
     this.turn_number++;
 
-    this.setTurnPhase(turn_phase.PlayerTurns);
+    this.broadcastTurnPhase(turn_phase.PlayerTurns);
   }
   syncTurnMessage() {
     const currentPlayerTurn = this.players[this.playerTurnIndex];
@@ -1084,8 +1085,7 @@ export default class Underworld {
     const y = randInt(this.random, bounds.yMin || 0, bounds.yMax || this.height);
     return { x, y };
   }
-  async setTurnPhase(p: turn_phase) {
-    console.trace('setTurnPhase')
+  async broadcastTurnPhase(p: turn_phase) {
     // If host, send sync; if non-host, ignore 
     if (window.hostClientId === window.clientId) {
       window.pie.sendData({
@@ -1096,7 +1096,8 @@ export default class Underworld {
       });
     }
   }
-  // Invoked only through wsPie
+  // Invoked only through wsPie, use broadcastTurnPhase in game logic
+  // when you want to set the turn phase
   async _setTurnPhase(p: turn_phase) {
     console.log('setTurnPhase(', turn_phase[p], ')');
     // Clear debug graphics
