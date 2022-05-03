@@ -184,7 +184,6 @@ body.view-Game #card-holders {
   user-select: none;
   display: none;
   flex-direction: column-reverse;
-  background-color: #4d3f40;
   z-index: 1;
 }
 
@@ -199,7 +198,6 @@ body.view-Game #card-holders {
 }
 
 #selected-cards {
-  background: #5e5e5e;
   padding: 10px;
   /* leave room for the mana badges at the top */
   padding-top: 15px;
