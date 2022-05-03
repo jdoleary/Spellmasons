@@ -101,8 +101,7 @@ export default class Underworld {
 
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
     window.underworld = this;
-    // this.seed = seed;
-    this.seed = '0.69912309726149';
+    this.seed = seed;
     this.gameStarted = false;
     console.log("RNG create with seed:", seed, ", state: ", RNGState);
     this.random = this.syncronizeRNG(RNGState);
@@ -651,10 +650,13 @@ export default class Underworld {
   createLevel(levelData: LevelData) {
     console.log('Setup: createLevel', levelData);
     const { obstacles, groundTiles, pickups, enemies, validPlayerSpawnCoords } = levelData;
+    const obstacleInsts = [];
     for (let o of obstacles) {
       const obstacleInst = Obstacle.create(o.coord, o.sourceIndex);
       Obstacle.addImageForObstacle(obstacleInst);
+      obstacleInsts.push(obstacleInst);
     }
+    this.cacheWalls(obstacleInsts);
     this.groundTiles = groundTiles;
     this.addGroundTileImages();
     for (let p of pickups) {
