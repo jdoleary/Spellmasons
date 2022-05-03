@@ -305,7 +305,7 @@ export function contextmenuHandler(e: MouseEvent) {
   if (window.view !== View.Game) {
     return;
   }
-  if ((e.target as HTMLElement).closest('.card') !== undefined) {
+  if ((e.target as HTMLElement).closest('.card')) {
     console.log('ignoring right click on card element')
     return;
   }
