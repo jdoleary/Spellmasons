@@ -370,7 +370,7 @@ export default class Underworld {
       console.error('Could not find pickup with index', index);
     }
   }
-  spawnEnemy(id: string, coords: Vec2, allowHeavy: boolean, strength: number) {
+  spawnEnemy(id: string, coords: Vec2, isArmored: boolean, strength: number) {
     const sourceUnit = allUnits[id];
     if (!sourceUnit) {
       console.error('Unit with id', id, 'does not exist.  Have you registered it in src/units/index.ts?');
@@ -393,15 +393,13 @@ export default class Underworld {
       sourceUnit.unitProps
     );
 
-    if (allowHeavy) {
-      const roll = randInt(this.random, 0, 100);
-      if (roll <= config.PERCENT_CHANCE_OF_HEAVY_UNIT) {
-        unit.healthMax *= 2;
-        unit.health = unit.healthMax;
-        unit.damage *= 2;
-        // Add subsprite to show they are armored:
-        Image.addSubSprite(unit.image, 'heavy_armor');
-      }
+    if (isArmored) {
+      unit.healthMax *= 2;
+      unit.health = unit.healthMax;
+      unit.damage *= 2;
+      // Add subsprite to show they are armored:
+      Image.addSubSprite(unit.image, 'heavy_armor');
+
     }
 
   }
@@ -562,7 +560,9 @@ export default class Underworld {
         const validSpawnCoordsIndex = randInt(this.random, 0, validSpawnCoords.length - 1);
         const coord = validSpawnCoords.splice(validSpawnCoordsIndex, 1)[0];
         if (coord) {
-          levelData.enemies.push({ id, coord, strength })
+          const roll = randInt(this.random, 0, 100);
+          const isArmored = (roll <= config.PERCENT_CHANCE_OF_HEAVY_UNIT);
+          levelData.enemies.push({ id, coord, strength, isArmored })
         }
       }
     }
@@ -810,7 +810,7 @@ export default class Underworld {
 
     // Spawn units
     for (let u of h.units) {
-      this.spawnEnemy(u.id, u.location, h.allowHeavyUnits, 1);
+      this.spawnEnemy(u.id, u.location, false, 1);
     }
 
     if (h.init) {
@@ -1608,7 +1608,8 @@ export interface LevelData {
   enemies: {
     id: string,
     coord: Vec2,
-    strength: number
+    strength: number,
+    isArmored: boolean
   }[];
   validPlayerSpawnCoords: Vec2[]
 }
