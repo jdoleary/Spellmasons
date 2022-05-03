@@ -663,7 +663,7 @@ export default class Underworld {
       this.spawnPickup(p.index, p.coord);
     }
     for (let e of enemies) {
-      this.spawnEnemy(e.id, e.coord, true, e.strength);
+      this.spawnEnemy(e.id, e.coord, e.isArmored, e.strength);
     }
     // validPlayerSpawnCoords must be set before resetting the player
     // so the player has coords to spawn into
