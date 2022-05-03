@@ -357,7 +357,6 @@ export function clickHandler(e: MouseEvent) {
     // Disallow click out of bounds
     return;
   }
-  updateTooltipSelection(mousePos);
 
   if (window.altDown) {
     window.pie.sendData({
@@ -446,5 +445,7 @@ export function clickHandler(e: MouseEvent) {
         text: 'You must wait for your turn to cast',
       });
     }
+  } else {
+    updateTooltipSelection(mousePos);
   }
 }
