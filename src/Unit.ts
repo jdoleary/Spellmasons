@@ -286,6 +286,7 @@ export function syncronize(unitSerialized: IUnitSerialized, originalUnit: IUnit)
       return
     }
     Object.assign(originalUnit, rest);
+    // TODO: Syncronize modifier images like frozen or heavy_armor
     returnToDefaultSprite(originalUnit);
   } else {
     console.error('Attempting to syncronize a unit with the wrong id', unitSerialized.id, originalUnit.id);

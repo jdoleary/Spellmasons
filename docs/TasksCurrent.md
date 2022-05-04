@@ -1,3 +1,5 @@
+- BUG: underworld is undefined when rejoining after disconnection
+- TODO: Unit.syncronize should sync modifier images such as frozen or heavy armor
 - TODO: Change obstacles to tiles
     - Since i'll be using wave function collapse obstacles will have different bounds
     - A tile will be an image and bounds (maybe multiple)
