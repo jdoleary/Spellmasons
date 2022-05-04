@@ -209,10 +209,9 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
           console.error('User unit source file not registered, cannot create player');
           return undefined;
         }
-        Image.changeSprite(
-          player.unit.image,
-          addPixiSprite(userSource.info.image, containerUnits),
-        );
+        // Update the player image
+        player.unit.defaultImagePath = userSource.info.image;
+        Unit.returnToDefaultSprite(player.unit);
       } else {
         console.error('Cannot change character, player not found with id', fromClient);
       }
