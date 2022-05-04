@@ -1,5 +1,3 @@
-# Game Breaking Priorities
-- bug: Heavy unit armor doesn't sync
 - TODO: Change obstacles to tiles
     - Since i'll be using wave function collapse obstacles will have different bounds
     - A tile will be an image and bounds (maybe multiple)
@@ -20,7 +18,6 @@
 - turn message is not synced after wsPie disconnect
 - disconnect image is not synced after reconnect
 - Unit movement desync occurred between clients when one client has CPU throttled, the non throttled client has the unit move much farther
-- Honeycomb didn't work for not putting portal through wall
 - Fix multiplayer
     - Experienced a bug where one player portaled on one screen but not on the other
     - I throttled cpu on one client and saw a unit position desync where the non throttled client moved way farther
@@ -41,14 +38,9 @@
         - Sync NPCs/units before NPC turn
         - Sync player after portaling
 # Tasks
-- Change portal to just a "go to upgrade" button
-    - ~~Fix infinite stamina when you end level~~
-- Make selected cards background transparent
 - **Important** Improved level design with Wave Function Collapse
 - Make freeze block pathing
-- Allow drag and drop between cards and far left or far right.
 - Lerp in and out when WASD camera
-- Prevent skipping levels by running to portal or swapping there
 
 # Stale, but important bugs
 
