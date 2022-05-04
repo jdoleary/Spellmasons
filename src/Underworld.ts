@@ -64,7 +64,6 @@ let requestAnimationFrameGameLoopId: number;
 export default class Underworld {
   seed: string;
   random: prng;
-  gameStarted: boolean;
   // The index of the level the players are on
   levelIndex: number = -1;
   // for serializing random: prng
@@ -102,8 +101,8 @@ export default class Underworld {
 
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
     window.underworld = this;
-    this.seed = seed;
-    this.gameStarted = false;
+    // this.seed = seed;
+    this.seed = '0.2987518451807356';
     console.log("RNG create with seed:", seed, ", state: ", RNGState);
     this.random = this.syncronizeRNG(RNGState);
 

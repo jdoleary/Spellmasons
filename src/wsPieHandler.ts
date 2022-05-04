@@ -42,11 +42,6 @@ export function onData(d: OnDataArgs) {
         text: '🎈',
       });
       break;
-    case MESSAGE_TYPES.DESYNC:
-      console.warn(`Client ${fromClient} detected desync from host`)
-      // When a desync is detected, sync the clients 
-      forceSyncClient(fromClient);
-      break;
     case MESSAGE_TYPES.INIT_GAME_STATE:
       // If the underworld is not yet setup for this client then
       // load the game state
@@ -124,7 +119,6 @@ function tryStartGame() {
       readyState.set('underworld', true);
       setView(View.Game);
       window.underworld.initLevel(0);
-      window.underworld.gameStarted = true;
       console.log('Host: Send all clients game state for initial load');
       clients.forEach(clientId => {
         giveClientGameStateForInitialLoad(clientId);
@@ -141,10 +135,8 @@ export async function startTutorial() {
   await window.startSingleplayer();
   const p = Player.create(window.clientId, manBlue.id);
   if (p) {
-    if (window.underworld.gameStarted) {
-      // Initialize the player for the level
-      Player.resetPlayerForNextLevel(p);
-    }
+    // Initialize the player for the level
+    Player.resetPlayerForNextLevel(p);
   } else {
     console.error('Could not create player character for tutorial');
   }
@@ -156,7 +148,6 @@ export async function startTutorial() {
   if (tutorialLevels[0] && currentClientIsHost && clientsLeftToChooseCharacters <= 0 && !gameAlreadyStarted) {
     console.log('Host: Start tutorial');
     window.underworld.initHandcraftedLevel(tutorialLevels[0]);
-    window.underworld.gameStarted = true;
   } else {
     console.log('Users left to choose a character: ', clientsLeftToChooseCharacters);
   }
@@ -375,24 +366,6 @@ async function handleSpell(caster: Player.IPlayer, payload: any) {
 export function getClients(): string[] {
   return clients;
 }
-function forceSyncClient(syncClientId: string) {
-  // Only the host should be sending LOAD_GAME_STATE messages
-  // because the host has the canonical game state
-  if (window.hostClientId === window.clientId) {
-    console.error('forceSyncClient occurred')
-    window.pie.sendData({
-      type: MESSAGE_TYPES.LOAD_GAME_STATE,
-      level: window.lastLevelCreated,
-      underworld: window.underworld.serializeForSyncronize(),
-      phase: window.underworld.turn_phase,
-      units: window.underworld.units.map(Unit.serialize),
-      players: window.underworld.players.map(Player.serialize)
-    }, {
-      subType: "Whisper",
-      whisperClientIds: [syncClientId],
-    });
-  }
-}
 function giveClientGameStateForInitialLoad(clientId: string) {
   // Only the host should be sending INIT_GAME_STATE messages
   // because the host has the canonical game state
@@ -435,34 +408,27 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
     } else {
       console.log(`Setup: Setting Host client to ${window.hostClientId}.`);
     }
-    // And if the client that joined is associated with a player
-    if (playerOfClientThatChanged) {
-      // set their connected status
-      Player.setClientConnected(playerOfClientThatChanged, o.present);
-      // If the rejoining client is the current client and they already have a player
-      // that means they suffered a mid game disconnection and should ask for the
-      // entire gamestate
-      if (playerOfClientThatChanged.clientId == window.clientId) {
-        window.pie.sendData({
-          type: MESSAGE_TYPES.DESYNC
-        })
-      }
-    } else if (window.underworld) {
-      // If the client that joined does not have a player yet, make them one immediately
-      // since all clients should always have a player associated
-      console.log(`Setup: Create a Player instance for ${o.clientThatChanged}`)
-      const p = Player.create(o.clientThatChanged, 'jester');
-      if (p) {
-        Player.resetPlayerForNextLevel(p);
-        if (window.underworld.gameStarted) {
-          // Send the lastest gamestate to that client so they can be up-to-date:
-          // Note: It is important that this occurs AFTER the player instance is created for the
-          // client who just joined
-          // If the game has already started (e.g. the host has already joined), send the initial state to the new 
-          // client only so they can load
-          giveClientGameStateForInitialLoad(o.clientThatChanged);
+    if (window.underworld) {
+
+      // And if the client that joined is associated with a player
+      if (playerOfClientThatChanged) {
+        // set their connected status
+        Player.setClientConnected(playerOfClientThatChanged, o.present);
+      } else {
+        // If the client that joined does not have a player yet, make them one immediately
+        // since all clients should always have a player associated
+        console.log(`Setup: Create a Player instance for ${o.clientThatChanged}`)
+        const p = Player.create(o.clientThatChanged, 'jester');
+        if (p) {
+          Player.resetPlayerForNextLevel(p);
         }
       }
+      // Send the lastest gamestate to that client so they can be up-to-date:
+      // Note: It is important that this occurs AFTER the player instance is created for the
+      // client who just joined
+      // If the game has already started (e.g. the host has already joined), send the initial state to the new 
+      // client only so they can load
+      giveClientGameStateForInitialLoad(o.clientThatChanged);
     }
   } else {
     // Client left
