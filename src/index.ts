@@ -175,6 +175,9 @@ declare global {
     // Keep track of the LevelData from the last level that was created in
     // case it needs to be sent to another client
     lastLevelCreated: LevelData;
+    // True if client player has casted this turn;
+    // Used to prompt before ending turn without taking any action
+    castThisTurn: boolean;
   }
 }
 window.skipTutorial = () => {

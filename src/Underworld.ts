@@ -994,8 +994,8 @@ export default class Underworld {
       // Turns can only be manually ended during the PlayerTurns phase
       if (this.isMyTurn()) {
         let affirm = true
-        if (window.player.unit.stamina == window.player.unit.staminaMax) {
-          affirm = await Jprompt({ text: 'Are you sure you want to end your turn without moving?', noBtnText: 'Cancel', noBtnKey: 'Escape', yesText: 'End Turn', yesKey: 'Space', yesKeyText: 'Spacebar' });
+        if (window.player.unit.stamina == window.player.unit.staminaMax && !window.castThisTurn) {
+          affirm = await Jprompt({ text: 'Are you sure you want to end your turn without moving or casting?', noBtnText: 'Cancel', noBtnKey: 'Escape', yesText: 'End Turn', yesKey: 'Space', yesKeyText: 'Spacebar' });
         }
         if (affirm) {
           console.log('endMyTurn: send END_TURN message');
@@ -1100,6 +1100,10 @@ export default class Underworld {
   // when you want to set the turn phase
   async _setTurnPhase(p: turn_phase) {
     console.log('setTurnPhase(', turn_phase[p], ')');
+
+    // Clear cast this turn
+    window.castThisTurn = false;
+
     // Clear debug graphics
     window.debugGraphics.clear()
 
@@ -1283,6 +1287,9 @@ export default class Underworld {
     castLocation: Vec2,
     dryRun: boolean,
   ): Promise<Cards.EffectState> {
+    if (!dryRun && casterUnit == (window.player && window.player.unit)) {
+      window.castThisTurn = true;
+    }
     const unitAtCastLocation = this.getUnitAt(castLocation, dryRun);
     let effectState: Cards.EffectState = {
       casterCardUsage,
