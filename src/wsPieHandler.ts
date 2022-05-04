@@ -3,7 +3,7 @@ import type { ClientPresenceChangedArgs, OnDataArgs } from '@websocketpie/client
 import { MESSAGE_TYPES } from './MessageTypes';
 import floatingText from './FloatingText';
 import { getUpgradeByTitle } from './Upgrade';
-import Underworld, { LevelData, turn_phase } from './Underworld';
+import Underworld, { IUnderworldSerializedForSyncronize, LevelData, turn_phase } from './Underworld';
 import * as Player from './Player';
 import * as Unit from './Unit';
 import * as Pickup from './Pickup';
@@ -125,9 +125,9 @@ function tryStartGame() {
   const gameAlreadyStarted = window.underworld.levelIndex >= 0;
   const currentClientIsHost = window.hostClientId == window.clientId;
   const clientsLeftToChooseCharacters = clients.length - window.underworld.players.length;
-  // Starts a new game if all clients have chosen characters, THIS client is the host, and 
+  // Starts a new game if THIS client is the host, and 
   // if the game hasn't already been started
-  if (currentClientIsHost && clientsLeftToChooseCharacters <= 0 && !gameAlreadyStarted) {
+  if (currentClientIsHost && !gameAlreadyStarted) {
     console.log('Host: Start game');
     setView(View.Game);
     window.underworld.initLevel(0);
@@ -273,25 +273,10 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       }
 
       if (players) {
-        console.log('sync: Syncing players');
-        // Clear previous players array
-        window.underworld.players = [];
-        players.map(Player.load);
+        window.underworld.syncPlayers(players);
       }
       if (units) {
-        console.log('sync: Syncing units');
-        for (let syncUnit of units) {
-          // TODO: optimize if needed
-          const originalUnit = window.underworld.units.find(u => u.id === syncUnit.id);
-          if (originalUnit) {
-            // Note: Unit.syncronize maintains the player.unit reference
-            Unit.syncronize(syncUnit, originalUnit);
-          } else {
-            const newUnit = Unit.create(syncUnit.unitSourceId, syncUnit.x, syncUnit.y, syncUnit.faction, syncUnit.defaultImagePath, syncUnit.unitType, syncUnit.unitSubType, syncUnit.strength);
-            Unit.syncronize(syncUnit, newUnit);
-          }
-        }
-
+        window.underworld.syncUnits(units);
       }
       // Use the internal setTurnPhrase now that the desired phase has been sent
       // via the public setTurnPhase
@@ -364,33 +349,36 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       break;
   }
 }
-function handleLoadGameState(payload: any) {
+function handleLoadGameState(payload: {
+  level: LevelData,
+  underworld: IUnderworldSerializedForSyncronize,
+  phase: turn_phase,
+  units: Unit.IUnitSerialized[],
+  players: Player.IPlayerSerialized[]
+}) {
   console.log("Setup: Load game state", payload)
-  // Resume game / load game / rejoin game
-  const loadedGameState: Underworld = { ...payload.underworld };
+  const { level, underworld, phase, units, players } = payload
+  // Sync underworld properties
+  const loadedGameState: IUnderworldSerializedForSyncronize = { ...underworld };
   window.underworld = new Underworld(loadedGameState.seed, loadedGameState.RNGState);
   window.underworld.width = loadedGameState.width;
   window.underworld.height = loadedGameState.height;
   window.underworld.playerTurnIndex = loadedGameState.playerTurnIndex;
   window.underworld.levelIndex = loadedGameState.levelIndex;
   window.underworld.lastUnitId = loadedGameState.lastUnitId;
-  // Load all units
-  window.underworld.units = loadedGameState.units.map(Unit.load);
-  // Load players
-  // Note: Must come after units are loaded so that Player.load can reassociate
-  // unit that belongs to player
-  window.underworld.players = loadedGameState.players.map(Player.load);
-  // Resort units by id 
-  window.underworld.units.sort((a, b) => a.id - b.id);
-  window.underworld.pickups = loadedGameState.pickups.map(Pickup.load);
-  window.underworld.groundTiles = loadedGameState.groundTiles;
-  window.underworld.addGroundTileImages();
+  // Sync Level
+  window.underworld.createLevel(level);
 
-  window.underworld.broadcastTurnPhase(window.underworld.turn_phase);
-
-  // TODO are bounds, pathingPolygons, and walls in loadstate?
-  // Maybe use levelData to recreate level on load
-  // window.underworld.cacheWalls();
+  // Sync units, players, and turn_phase
+  if (players) {
+    window.underworld.syncPlayers(players);
+  }
+  if (units) {
+    window.underworld.syncUnits(units);
+  }
+  // Use the internal setTurnPhrase now that the desired phase has been sent
+  // via the public setTurnPhase
+  window.underworld._setTurnPhase(phase);
 
   // Mark the underworld as "ready"
   readyState.set('underworld', true);
@@ -439,7 +427,11 @@ function forceSyncClient(syncClientId: string) {
     console.error('forceSyncClient occurred')
     window.pie.sendData({
       type: MESSAGE_TYPES.LOAD_GAME_STATE,
-      underworld: window.underworld.serializeForSaving(),
+      level: window.lastLevelCreated,
+      underworld: window.underworld.serializeForSyncronize(),
+      phase: window.underworld.turn_phase,
+      units: window.underworld.units.map(Unit.serialize),
+      players: window.underworld.players.map(Player.serialize)
     }, {
       subType: "Whisper",
       whisperClientIds: [syncClientId],
@@ -453,13 +445,21 @@ function giveClientGameStateForInitialLoad(clientId: string) {
     // Do not send this message to self
     if (window.clientId !== clientId) {
       console.log(`Host: Send ${clientId} game state for initial load`);
-      window.pie.sendData({
-        type: MESSAGE_TYPES.INIT_GAME_STATE,
-        underworld: window.underworld.serializeForSaving(),
-      }, {
-        subType: "Whisper",
-        whisperClientIds: [clientId],
-      });
+      if (window.lastLevelCreated) {
+        window.pie.sendData({
+          type: MESSAGE_TYPES.INIT_GAME_STATE,
+          level: window.lastLevelCreated,
+          underworld: window.underworld.serializeForSyncronize(),
+          phase: window.underworld.turn_phase,
+          units: window.underworld.units.map(Unit.serialize),
+          players: window.underworld.players.map(Player.serialize)
+        }, {
+          subType: "Whisper",
+          whisperClientIds: [clientId],
+        });
+      } else {
+        console.error('Could not send INIT_GAME_STATE, window.lastLevelCreated is undefined');
+      }
     }
   }
 }
@@ -534,7 +534,11 @@ window.save = (title) => {
   storage.set(
     savePrefix + title,
     JSON.stringify({
-      underworld: window.underworld.serializeForSaving(),
+      level: window.lastLevelCreated,
+      underworld: window.underworld.serializeForSyncronize(),
+      phase: window.underworld.turn_phase,
+      units: window.underworld.units.map(Unit.serialize),
+      players: window.underworld.players.map(Player.serialize)
     }),
   );
 };
@@ -546,10 +550,14 @@ window.load = async (title) => {
       await window.startSingleplayer();
     }
 
-    const { underworld } = JSON.parse(savedGameString);
+    const { level, underworld, phase, units, players } = JSON.parse(savedGameString);
     window.pie.sendData({
       type: MESSAGE_TYPES.LOAD_GAME_STATE,
+      level,
       underworld,
+      phase,
+      units,
+      players
     });
     setView(View.Game);
 

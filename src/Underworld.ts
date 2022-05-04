@@ -648,6 +648,8 @@ export default class Underworld {
   // creates a level from levelData
   createLevel(levelData: LevelData) {
     console.log('Setup: createLevel', levelData);
+    window.lastLevelCreated = levelData;
+
     const { obstacles, groundTiles, pickups, enemies, validPlayerSpawnCoords } = levelData;
     const obstacleInsts = [];
     for (let o of obstacles) {
@@ -1419,6 +1421,27 @@ export default class Underworld {
       }
     }
     return true
+  }
+  syncUnits(units: Unit.IUnitSerialized[]) {
+    console.log('sync: Syncing units');
+    for (let syncUnit of units) {
+      // TODO: optimize if needed
+      const originalUnit = window.underworld.units.find(u => u.id === syncUnit.id);
+      if (originalUnit) {
+        // Note: Unit.syncronize maintains the player.unit reference
+        Unit.syncronize(syncUnit, originalUnit);
+      } else {
+        const newUnit = Unit.create(syncUnit.unitSourceId, syncUnit.x, syncUnit.y, syncUnit.faction, syncUnit.defaultImagePath, syncUnit.unitType, syncUnit.unitSubType, syncUnit.strength);
+        Unit.syncronize(syncUnit, newUnit);
+      }
+    }
+
+  }
+  syncPlayers(players: Player.IPlayerSerialized[]) {
+    console.log('sync: Syncing players');
+    // Clear previous players array
+    window.underworld.players = [];
+    players.map(Player.load);
   }
 
   // Create a hash from the gamestate.  Useful for determining if

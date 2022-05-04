@@ -22,6 +22,7 @@ cookieConsentPopup(false);
 import './wsPieSetup';
 import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './contants';
 import type { Vec2 } from './Vec';
+import type { LevelData } from './Underworld';
 
 const YES = 'yes'
 const SKIP_TUTORIAL = 'skipTutorial';
@@ -171,6 +172,9 @@ declare global {
     dryRunUnits: Unit.IUnit[];
     // Shows icons above the heads of enemies who will damage you next turn
     attentionMarkers: Vec2[];
+    // Keep track of the LevelData from the last level that was created in
+    // case it needs to be sent to another client
+    lastLevelCreated: LevelData;
   }
 }
 window.skipTutorial = () => {
