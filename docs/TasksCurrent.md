@@ -4,7 +4,6 @@ and 2nd client got `Cannot change character, player not found with id 8c502be8-6
     - maybe in this case, re-request player sync??
 - Bug: Stamina doesn't fill up to new max after upgrade on first turn
 - Bug: Spell range line stays fixed if unit is moving and mouse doesn't move
-- Bug: After portaling, player 2 showed up at 0x0
 - TODO: Unit.syncronize should sync modifier images such as frozen or heavy armor
 - TODO: Change obstacles to tiles
     - Since i'll be using wave function collapse obstacles will have different bounds

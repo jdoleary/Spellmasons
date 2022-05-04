@@ -217,11 +217,11 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
         units?: Unit.IUnitSerialized[],
       }
 
-      if (players) {
-        window.underworld.syncPlayers(players);
-      }
       if (units) {
         window.underworld.syncUnits(units);
+      }
+      if (players) {
+        window.underworld.syncPlayers(players);
       }
       // Use the internal setTurnPhrase now that the desired phase has been sent
       // via the public setTurnPhase

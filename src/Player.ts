@@ -149,6 +149,11 @@ export function load(player: IPlayerSerialized) {
     ...player,
     unit: reassignedUnit,
   };
+  // Make sure player unit stays hidden if they are in a portal
+  if (playerLoaded.inPortal) {
+    playerLoaded.unit.x = NaN;
+    playerLoaded.unit.y = NaN;
+  }
   const clients = getClients();
   setClientConnected(playerLoaded, clients.includes(player.clientId));
   addHighlighIfPlayerBelongsToCurrentClient(playerLoaded);
