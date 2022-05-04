@@ -149,7 +149,7 @@ export const upgradeStatsSource: IUpgrade[] = [
     thumbnail: 'images/upgrades/plus_max_health.png',
     effect: (player) => {
       player.unit.healthMax += maxHealthIncreaseAmount;
-      player.unit.health += maxHealthIncreaseAmount;
+      player.unit.health = player.unit.healthMax;
       // Now that the player unit's mana has increased,sync the new
       // mana state with the player's dryRunUnit so it is properly
       // refelcted in the health bar
@@ -167,7 +167,7 @@ export const upgradeStatsSource: IUpgrade[] = [
     thumbnail: 'images/upgrades/todo.png',
     effect: (player) => {
       player.unit.manaMax += maxManaIncreaseAmount;
-      player.unit.mana += maxManaIncreaseAmount;
+      player.unit.mana = player.unit.manaMax;
       // Now that the player unit's mana has increased,sync the new
       // mana state with the player's dryRunUnit so it is properly
       // refelcted in the health bar
@@ -197,6 +197,7 @@ export const upgradeStatsSource: IUpgrade[] = [
     thumbnail: 'images/spell/walk.png',
     effect: (player) => {
       player.unit.staminaMax += maxStaminaIncreaseAmount;
+      player.unit.stamina = player.unit.staminaMax;
     },
     probability: 30,
     cost: { healthCost: 0, manaCost: 0 },

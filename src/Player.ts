@@ -101,6 +101,7 @@ export function resetPlayerForNextLevel(player: IPlayer) {
   // to get their mana back to full
   player.unit.mana = player.unit.manaMax;
   player.unit.health = player.unit.healthMax;
+  player.unit.stamina = player.unit.staminaMax;
   if (window.underworld.validPlayerSpawnCoords.length > 0) {
     const index = randInt(window.underworld.random, 0, window.underworld.validPlayerSpawnCoords.length - 1);
     console.log('Choose spawn', index, 'of', window.underworld.validPlayerSpawnCoords.length);
