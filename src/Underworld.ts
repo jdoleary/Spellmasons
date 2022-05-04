@@ -616,9 +616,6 @@ export default class Underworld {
     // Now that the units have been cleaned up syncDryRunUnits
     // so they are not out of sync with the underworld units array
     window.underworld.syncDryRunUnits();
-    if (this.players.length == 0) {
-      console.error('Attempting to initialize level without any players');
-    }
     // Clear all pickups
     for (let p of this.pickups) {
       Pickup.removePickup(p);

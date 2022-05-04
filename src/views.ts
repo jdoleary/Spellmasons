@@ -163,15 +163,8 @@ function clientChooseUnit(unitId: string) {
   // Cleanup container
   containerCharacterSelect.removeChildren();
 
-  // Queue asking for the gamestate
-  // from the other players.
-  // The reason sending game state is queued and not sent immediately
-  // is that if there's a game in progress you don't want to send the
-  // state in the middle of an action (which could cause desyncs for
-  // code that depends on promises such as resolveDoneMoving)
-  console.log("Setup: JOIN_GAME: Ask for latest gamestate from other players")
   window.pie.sendData({
-    type: MESSAGE_TYPES.JOIN_GAME,
+    type: MESSAGE_TYPES.CHANGE_CHARACTER,
     unitId
   });
   // Now that user has selected a character, they can enter the game
