@@ -200,6 +200,7 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
           console.error('User unit source file not registered, cannot create player');
           return undefined;
         }
+        player.unit.unitSourceId = payload.unitId;
         // Update the player image
         player.unit.defaultImagePath = userSource.info.image;
         Unit.returnToDefaultSprite(player.unit);
