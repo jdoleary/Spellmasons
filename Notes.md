@@ -54,7 +54,7 @@ It's not fun to be out of cards, but it's not fun to have infinite damage (there
 ---
 ## Message order
 In order to join a game a client needs a fully readyState (pie connection, pixi assets, pie room joined, underworld setup, player setup)
-The underworld setup and player setup need to occur via pie messages: underworld from the LOAD_GAME_STATE message and player from the CHOOSE_CHARACTER and they should happen in that order
+The underworld setup and player setup need to occur via pie messages: underworld from the LOAD_GAME_STATE message and player from the CHANGE_CHARACTER and they should happen in that order
 
 ## Brad feedback 2022-02-04
 - I can't tell who i am

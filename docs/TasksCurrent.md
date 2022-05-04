@@ -1,5 +1,9 @@
+- Bug: Can go negative mana if you cast too quickly
+- Bug: Had a scenario where i had a debugger on enterPortal and on image.show
+and 2nd client got `Cannot change character, player not found with id 8c502be8-631c-482a-9398-40155f77c21f`
+    - maybe in this case, re-request player sync??
 - Bug: Stamina doesn't fill up to new max after upgrade on first turn
-- Bug: Change character doesn't update the id as seen in tooltip
+- Bug: Spell range line stays fixed if unit is moving and mouse doesn't move
 - Bug: After portaling, player 2 showed up at 0x0
 - TODO: Unit.syncronize should sync modifier images such as frozen or heavy armor
 - TODO: Change obstacles to tiles
