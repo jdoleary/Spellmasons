@@ -101,7 +101,8 @@ export default class Underworld {
 
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
     window.underworld = this;
-    this.seed = seed;
+    // this.seed = seed;
+    this.seed = '0.7515716568409228';
     console.log("RNG create with seed:", seed, ", state: ", RNGState);
     this.random = this.syncronizeRNG(RNGState);
 
@@ -407,17 +408,19 @@ export default class Underworld {
     const sectorsWide = randInt(this.random, 2, 3 + (Math.round(levelIndex / 3)));
     const sectorsTall = randInt(this.random, 1, 3 + (Math.round(levelIndex / 3)));
     console.log('Setup: generateRandomLevel', levelIndex, sectorsWide, sectorsTall);
+    // Width and height should be set immediately so that other level-building functions
+    // (such as cacheWalls) have access to the new width and height
+    this.width = config.OBSTACLE_SIZE * sectorsWide * config.OBSTACLES_PER_SECTOR_WIDE;
+    this.height = config.OBSTACLE_SIZE * sectorsTall * config.OBSTACLES_PER_SECTOR_TALL;
     const levelData: LevelData = {
+      width: this.width,
+      height: this.height,
       obstacles: [],
       groundTiles: [],
       pickups: [],
       enemies: [],
       validPlayerSpawnCoords: []
     };
-    // Width and height should be set immediately so that other level-building functions
-    // (such as cacheWalls) have access to the new width and height
-    this.width = config.OBSTACLE_SIZE * sectorsWide * config.OBSTACLES_PER_SECTOR_WIDE;
-    this.height = config.OBSTACLE_SIZE * sectorsTall * config.OBSTACLES_PER_SECTOR_TALL;
     let validSpawnCoords: Vec2[] = [];
     let validPortalSpawnCoords: Vec2[] = [];
     // The map is made of a matrix of obstacle sectors
@@ -645,7 +648,9 @@ export default class Underworld {
     console.log('Setup: createLevel', levelData);
     window.lastLevelCreated = levelData;
 
-    const { obstacles, groundTiles, pickups, enemies, validPlayerSpawnCoords } = levelData;
+    const { width, height, obstacles, groundTiles, pickups, enemies, validPlayerSpawnCoords } = levelData;
+    window.underworld.width = width;
+    window.underworld.height = height;
     const obstacleInsts = [];
     for (let o of obstacles) {
       const obstacleInst = Obstacle.create(o.coord, o.sourceIndex);
@@ -1620,6 +1625,8 @@ function getEnemiesForAltitude(levelIndex: number): { enemies: { [unitid: string
 
 
 export interface LevelData {
+  width: number,
+  height: number,
   obstacles: {
     sourceIndex: number;
     coord: Vec2;
