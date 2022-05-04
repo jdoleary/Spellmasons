@@ -193,7 +193,6 @@ body.view-Game #card-holders {
 #selected-cards,
 #card-holders #card-hand {
   display: flex;
-  justify-content: center;
   max-width: 100vw;
   /* leave room for the mana badges at the top */
   padding-top: 15px;
