@@ -1,3 +1,7 @@
+- Bug: Stamina doesn't fill up to new max after upgrade on first turn
+- Bug: Change character doesn't update the id as seen in tooltip
+- Bug: After portaling, player 2 showed up at 0x0
+- **critical** Bug: Sync needs to update underworld width and height or else other clients will always be limited to 800x600
 - TODO: Unit.syncronize should sync modifier images such as frozen or heavy armor
 - TODO: Change obstacles to tiles
     - Since i'll be using wave function collapse obstacles will have different bounds
