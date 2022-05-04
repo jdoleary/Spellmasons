@@ -10,6 +10,7 @@ import * as math from './math';
 import * as Cards from './cards';
 import * as Image from './Image';
 import * as storage from './storage';
+import * as ImmediateMode from './ImmediateModeSprites';
 import obstacleSectors from './ObstacleSectors';
 import { MESSAGE_TYPES } from './MessageTypes';
 import {
@@ -127,6 +128,8 @@ export default class Underworld {
   gameLoop(timestamp: number) {
     const deltaTime = timestamp - lastTime;
     lastTime = timestamp;
+
+    ImmediateMode.loop();
 
     Unit.syncPlayerHealthManaUI();
     window.unitOverlayGraphics.clear();
@@ -265,19 +268,15 @@ export default class Underworld {
       // window.unitOverlayGraphics.lineTo(right, bottom);
       // window.unitOverlayGraphics.lineTo(left, bottom);
       // window.unitOverlayGraphics.lineTo(left, top);
+
       // Offset exclamation mark just above the head of the unit "- config.COLLISION_MESH_RADIUS - 10"
-      const exclamationMark = { x: marker.x, y: marker.y - config.COLLISION_MESH_RADIUS - 7 }
+      const exclamationMark = { x: marker.x, y: marker.y - config.COLLISION_MESH_RADIUS * 2 + 8 }
       // Keep inside bounds of camera
       exclamationMark.x = Math.min(Math.max(left, exclamationMark.x), right);
       exclamationMark.y = Math.min(Math.max(top, exclamationMark.y), bottom);
 
-      // Draw exclamation mark
-      window.unitOverlayGraphics.lineStyle(4, 0xff0000, 1.0);
-      window.unitOverlayGraphics.drawCircle(exclamationMark.x, exclamationMark.y - 8, 1);
-      window.unitOverlayGraphics.moveTo(exclamationMark.x, exclamationMark.y - 16);
-      window.unitOverlayGraphics.lineTo(exclamationMark.x, exclamationMark.y - 30);
-      window.unitOverlayGraphics.lineStyle(2, 0xff0000, 1.0);
-      window.unitOverlayGraphics.drawCircle(exclamationMark.x, exclamationMark.y - 18, 18);
+      // Draw Attention Icon to show the enemy will hurt you next turn
+      ImmediateMode.draw('attention_sword.png', exclamationMark, 1 / zoom);
     }
 
   }
