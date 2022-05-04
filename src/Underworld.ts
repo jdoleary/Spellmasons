@@ -101,8 +101,7 @@ export default class Underworld {
 
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
     window.underworld = this;
-    // this.seed = seed;
-    this.seed = '0.2987518451807356';
+    this.seed = seed;
     console.log("RNG create with seed:", seed, ", state: ", RNGState);
     this.random = this.syncronizeRNG(RNGState);
 
