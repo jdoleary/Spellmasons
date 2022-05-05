@@ -27,7 +27,11 @@ export const keyDown = {
 export function keydownListener(event: KeyboardEvent) {
   if (window.view == View.Menu && event.code === 'Escape') {
     window.closeMenu();
-    return
+    return;
+  }
+  if (window.view == View.Upgrade && event.code === 'Escape') {
+    toggleMenu();
+    return;
   }
   // Only handle hotkeys when viewing the Game
   if (window.view !== View.Game) {

@@ -89,7 +89,7 @@ body.view-CharacterSelect #card-holders {
   background-color: rgba(255, 255, 255, 0.5);
 }
 
-#upgrade-picker.active {
+body.view-Upgrade #upgrade-picker {
   display: flex;
 }
 
