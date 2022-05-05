@@ -429,15 +429,9 @@ kbd {
   display: block;
 }
 
-/* only show when in game view */
-body.view-Game #player-turn-indicator-holder {
-  display: flex;
-}
-
-/* Hide end turn button until it is your turn */
 #player-turn-indicator-holder {
   text-align: center;
-  display: none;
+  display: flex;
   justify-content: center;
   background-color: grey;
   user-select: none;
