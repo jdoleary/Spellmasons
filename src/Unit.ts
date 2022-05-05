@@ -429,7 +429,7 @@ export function syncPlayerHealthManaUI() {
   if (dryRunPlayerUnit.mana !== unit.mana) {
     elManaLabel.innerHTML = `${dryRunPlayerUnit.mana} Mana Left`;
   } else {
-    elManaLabel.innerHTML = `${unit.mana}/${unit.manaMax} &nbsp;+${unit.manaPerTurn} / Turn`;
+    elManaLabel.innerHTML = `${unit.mana}/${unit.manaMax}`;
   }
 
   // Set the 3 mana cost bars that show how much mana will be removed if the spell is cast

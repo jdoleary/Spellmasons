@@ -168,6 +168,7 @@ export const upgradeStatsSource: IUpgrade[] = [
     effect: (player) => {
       player.unit.manaMax += maxManaIncreaseAmount;
       player.unit.mana = player.unit.manaMax;
+      player.unit.manaPerTurn = player.unit.manaMax;
       // Now that the player unit's mana has increased,sync the new
       // mana state with the player's dryRunUnit so it is properly
       // refelcted in the health bar
@@ -177,18 +178,18 @@ export const upgradeStatsSource: IUpgrade[] = [
     probability: 30,
     cost: { healthCost: 0, manaCost: 0 },
   },
-  {
-    title: '+ Mana per turn',
-    description: (player) =>
-      `Increases your mana per turn from ${player.unit.manaPerTurn} per turn to ${player.unit.manaPerTurn + manaPerTurnIncreaseAmount
-      } per turn.`,
-    thumbnail: 'images/upgrades/todo.png',
-    effect: (player) => {
-      player.unit.manaPerTurn += manaPerTurnIncreaseAmount;
-    },
-    probability: 30,
-    cost: { healthCost: 0, manaCost: 0 },
-  },
+  // {
+  //   title: '+ Mana per turn',
+  //   description: (player) =>
+  //     `Increases your mana per turn from ${player.unit.manaPerTurn} per turn to ${player.unit.manaPerTurn + manaPerTurnIncreaseAmount
+  //     } per turn.`,
+  //   thumbnail: 'images/upgrades/todo.png',
+  //   effect: (player) => {
+  //     player.unit.manaPerTurn += manaPerTurnIncreaseAmount;
+  //   },
+  //   probability: 30,
+  //   cost: { healthCost: 0, manaCost: 0 },
+  // },
   {
     title: '+ Max Stamina',
     description: (player) =>
@@ -203,10 +204,10 @@ export const upgradeStatsSource: IUpgrade[] = [
     cost: { healthCost: 0, manaCost: 0 },
   },
 ];
-const maxManaIncreaseAmount = 20;
+const maxManaIncreaseAmount = 10;
 const maxStaminaIncreaseAmount = 50;
 const maxHealthIncreaseAmount = 4;
-const manaPerTurnIncreaseAmount = 8;
+// const manaPerTurnIncreaseAmount = 8;
 
 export const upgradeCardsSource: IUpgrade[] = []
 

@@ -57,6 +57,8 @@ export function create(clientId: string, unitId: string): IPlayer | undefined {
     cardsAmount: config.START_CARDS_COUNT,
     upgrades: [],
   };
+  // Player units get full mana every turn
+  player.unit.manaPerTurn = player.unit.manaMax;
   player.inPortal = true;
   // Player units shouldn't be pushed around
   // during collisions while other units move
