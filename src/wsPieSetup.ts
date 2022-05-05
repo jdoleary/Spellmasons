@@ -54,11 +54,15 @@ function defaultRoomInfo(_room_info = {}): Room {
   return room_info;
 }
 
-function joinRoom(_room_info = {}): Promise<void> {
+export function joinRoom(_room_info = {}): Promise<void> {
   if (!pie) {
+    console.error('Could not join room, pie instance is undefined');
     return Promise.reject();
   }
   const room_info = defaultRoomInfo(_room_info);
+  // Lowercase room name so capitalization won't cause confusion
+  // when people are trying to join each other's games
+  room_info.name = room_info.name.toLowerCase();
   return pie.joinRoom(room_info, true).then(() => {
     readyState.set('wsPieRoomJoined', true);
     console.log('Pie: You are now in the room');

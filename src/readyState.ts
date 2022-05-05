@@ -1,4 +1,5 @@
 import { processNextInQueueIfReady } from "./wsPieHandler";
+import { joinRoom } from "./wsPieSetup";
 
 const readyState = {
     wsPieConnection: false,
@@ -10,8 +11,20 @@ const readyState = {
 }
 let is_fully_ready = false;
 const elReadyState = document.getElementById('ready-state');
+let hasAutoJoined = false;
 export function set(key: keyof typeof readyState, value: boolean) {
+    console.log('Ready State: ', key, value);
     readyState[key] = value;
+    if (!hasAutoJoined && readyState.wsPieConnection && readyState.pixiAssets && readyState.content) {
+        // Prevent autojoining more than once
+        hasAutoJoined = true;
+        // Auto join game if specified in url
+        let urlSearchParams = new URLSearchParams(location.search);
+        let gameName = urlSearchParams.get("game");
+        if (gameName) {
+            joinRoom({ name: gameName })
+        }
+    }
     // If all values in readyState are true, then everything is ready
     is_fully_ready = Object.values(readyState).every(x => !!x)
     if (elReadyState) {

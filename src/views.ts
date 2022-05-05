@@ -47,7 +47,6 @@ function closeMenu() {
 // Make 'closeMenu' available to the svelte menu
 window.closeMenu = closeMenu;
 export function toggleMenu() {
-  console.log('toggle menu');
   const elMenu = document.getElementById('menu') as HTMLElement;
   const menuClosed = elMenu.classList.contains('hidden');
   if (menuClosed) {
