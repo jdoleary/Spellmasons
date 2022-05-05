@@ -1407,6 +1407,9 @@ export default class Underworld {
             portalPickup.animationSpeed,
             true,
           );
+          // Give all player units max stamina for convenience:
+          playerUnit.stamina = playerUnit.staminaMax;
+
         }
       } else {
         console.error('Portal pickup not found')
