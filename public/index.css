@@ -25,11 +25,19 @@ body {
   top: 0;
 }
 
-#game-content-holder {
+/* Hide game content and underworld when the menu is open */
+body.view-Menu #game-content-holder,
+body.view-Menu #underworld-container {
   display: none;
 }
 
-body.view-Game #game-content-holder {
+/* Hide when the character select screen is open */
+body.view-CharacterSelect #game-content-holder,
+body.view-CharacterSelect #card-holders {
+  display: none;
+}
+
+#game-content-holder {
   display: flex;
   align-items: flex-start;
   flex-direction: column;
@@ -68,20 +76,21 @@ body.view-Game #game-content-holder {
 
 #upgrade-picker {
   position: fixed;
-  top: 80px;
-  bottom: 80px;
-  left: 80px;
-  right: 80px;
+  justify-content: center;
+  flex-direction: column;
+  /* Leave room at the top for the menu button */
+  top: 35px;
+  bottom: 0;
+  left: 0;
+  right: 0;
   z-index: 1;
   /* default to hidden */
   display: none;
-  /* This parent disallows clicks so that if it is empty and covers
-  the screen clicks will pass through it */
-  pointer-events: none;
+  background-color: rgba(255, 255, 255, 0.5);
 }
 
 #upgrade-picker.active {
-  display: block;
+  display: flex;
 }
 
 #upgrade-picker-content {
@@ -174,14 +183,9 @@ body.inspect-mode #card-inspect {
   height: 150px;
 }
 
-/* Hide cards unless you're in the game view */
-body.view-Game #card-holders {
-  display: flex;
-}
-
 #card-holders {
   user-select: none;
-  display: none;
+  display: flex;
   flex-direction: column-reverse;
   z-index: 1;
   position: fixed;

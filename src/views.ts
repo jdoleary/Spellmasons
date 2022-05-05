@@ -30,6 +30,7 @@ export enum View {
   Game,
   Upgrade,
 }
+const elUpgradePicker = document.getElementById('upgrade-picker') as HTMLElement;
 let lastNonMenuView: View | undefined;
 function closeMenu() {
   // Change to the last non menu view
@@ -77,9 +78,8 @@ export function setView(v: View) {
     elMenu.classList.add('hidden');
     lastNonMenuView = v;
   }
-  const elUpgradePicker = document.getElementById('upgrade-picker');
   // Hide the upgrade picker when the view changes
-  elUpgradePicker && elUpgradePicker.classList.remove('active');
+  elUpgradePicker.classList.remove('active');
   switch (v) {
     case View.Menu:
       elMenu.classList.remove('hidden');
