@@ -1156,7 +1156,8 @@ export default class Underworld {
             // Ally NPCs go first
             await this.executeNPCTurn(Faction.ALLY);
             await this.executeNPCTurn(Faction.ENEMY);
-            console.log('end npc turn')
+            // Check if portal should spawn after NPC turns in case all enemies die during NPC turn
+            this.checkIfShouldSpawnPortal();
             // Set turn phase to player turn
             this.endNPCTurnPhase();
           })();
