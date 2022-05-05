@@ -36,6 +36,9 @@ function closeMenu() {
   // Change to the last non menu view
   if (lastNonMenuView) {
     setView(lastNonMenuView);
+    // When the menu closes, set the menu back
+    // to the main menu route
+    window.setMenu('PLAY');
   } else {
     console.log('Cannot close menu yet, no previous view to change to.');
   }
