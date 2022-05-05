@@ -442,7 +442,7 @@ kbd {
   width: 140px;
 }
 
-body.your-turn #player-turn-indicator-holder {
+body.your-turn:not(.view-Upgrade) #player-turn-indicator-holder {
   background-color: gold;
 }
 
@@ -479,6 +479,13 @@ body.your-turn #end-turn-btn {
     color: red;
     border: 2px red solid;
   }
+}
+
+
+/* Hide player turn indicator when viewing upgrades
+because a user shouldn't see "Your Turn" when looking at upgrades */
+body.view-Upgrade #player-turn-indicator {
+  display: none;
 }
 
 #player-turn-indicator {
