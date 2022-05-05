@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import type { Vec2 } from './Vec';
-import { app, containerFloatingText } from './PixiUtils';
+import { app, containerFloatingText, containerUIFixed } from './PixiUtils';
 import * as config from './config';
 
 interface FText {
@@ -15,11 +15,13 @@ interface FText {
 interface FloatingTextInsructions {
   coords: Vec2;
   text: string;
+  container?: PIXI.Container;
   style?: Partial<PIXI.ITextStyle>;
 }
 export default function floatingText({
   coords,
   text,
+  container = containerFloatingText,
   style = { fill: 'white' },
 }: FloatingTextInsructions) {
   const pixiText = new PIXI.Text(text, style);
@@ -38,7 +40,7 @@ export default function floatingText({
     alpha: 1,
     valpha: -0.2,
   };
-  containerFloatingText.addChild(pixiText);
+  container.addChild(pixiText);
   return new Promise<void>((resolve) => {
     requestAnimationFrame(() => floatAway(instance, resolve));
   })
@@ -68,13 +70,14 @@ export const elPIXIHolder = document.getElementById('PIXI-holder') as HTMLElemen
 export function centeredFloatingText(text: string, fill = 'white') {
   floatingText({
     coords: {
-      x: elPIXIHolder.clientWidth / 2 - app.stage.x,
-      y: elPIXIHolder.clientHeight / 2 - app.stage.y
+      x: elPIXIHolder.clientWidth / 2,
+      y: elPIXIHolder.clientHeight / 2
     },
     text,
+    container: containerUIFixed,
     style: {
       fill,
-      fontSize: '60px'
+      fontSize: '140px'
     }
   });
 

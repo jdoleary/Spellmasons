@@ -18,6 +18,7 @@ export const containerUnits = new PIXI.Container();
 export const containerSpells = new PIXI.Container();
 export const containerProjectiles = new PIXI.Container();
 export const containerUI = new PIXI.Container();
+export const containerUIFixed = new PIXI.Container();
 export const containerFloatingText = new PIXI.Container();
 const underworldPixiContainers = [
   containerBoard,
@@ -27,6 +28,7 @@ const underworldPixiContainers = [
   containerSpells,
   containerProjectiles,
   containerUI,
+  containerUIFixed,
   containerFloatingText,
 ];
 
@@ -186,6 +188,10 @@ export function updateCameraPosition() {
           }
         }
         lastZoom = zoom;
+
+        // Keep containerUIFixed fixed in the center of the screen
+        containerUIFixed.x = -app.stage.x;
+        containerUIFixed.y = -app.stage.y;
 
       }
       break;
