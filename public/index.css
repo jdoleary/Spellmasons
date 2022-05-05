@@ -124,7 +124,6 @@ body.inspect-mode {
 
 #inspect-mode-indicator {
   color: white;
-  font-size: 20px;
   pointer-events: none;
 }
 
@@ -861,11 +860,6 @@ body.view-Game #toolbar {
 
 body.auto-camera #center-cam-btn {
   display: none;
-}
-
-#center-cam-info {
-  color: white;
-  font-size: 20px;
 }
 
 body:not(.auto-camera) #center-cam-info {
