@@ -122,31 +122,6 @@ export function setView(v: View) {
 
       break;
     case View.Upgrade:
-      const elUpgradePickerContent = document.getElementById(
-        'upgrade-picker-content',
-      );
-      if (!elUpgradePicker || !elUpgradePickerContent) {
-        console.error('elUpgradePicker or elUpgradePickerContent are undefined.');
-      }
-      // Reveal the upgrade picker
-      elUpgradePicker && elUpgradePicker.classList.add('active');
-      const player = window.underworld.players.find(
-        (p) => p.clientId === window.clientId,
-      );
-      if (player) {
-        const upgrades = generateUpgrades(player);
-        const elUpgrades = upgrades.map((upgrade) =>
-          createUpgradeElement(upgrade, player),
-        );
-        if (elUpgradePickerContent) {
-          elUpgradePickerContent.innerHTML = '';
-          for (let elUpgrade of elUpgrades) {
-            elUpgradePickerContent.appendChild(elUpgrade);
-          }
-        }
-      } else {
-        console.error('Upgrades cannot be generated, player not found');
-      }
       break;
     case View.Game:
       resizePixi();

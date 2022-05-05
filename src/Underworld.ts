@@ -5,7 +5,7 @@ import * as Unit from './Unit';
 import * as Pickup from './Pickup';
 import * as Obstacle from './Obstacle';
 import * as Player from './Player';
-import type * as Upgrade from './Upgrade';
+import * as Upgrade from './Upgrade';
 import * as math from './math';
 import * as Cards from './cards';
 import * as Image from './Image';
@@ -58,6 +58,8 @@ interface Bounds {
 }
 const elPlayerTurnIndicator = document.getElementById('player-turn-indicator');
 const elLevelIndicator = document.getElementById('level-indicator');
+const elUpgradePicker = document.getElementById('upgrade-picker') as HTMLElement;
+const elUpgradePickerContent = document.getElementById('upgrade-picker-content') as HTMLElement;
 
 let lastTime = 0;
 let requestAnimationFrameGameLoopId: number;
@@ -1073,7 +1075,30 @@ export default class Underworld {
       } else {
         // Now that level is complete, move to the Upgrade view where players can choose upgrades
         // before moving on to the next level
+        // Generate Upgrades
+        if (!elUpgradePicker || !elUpgradePickerContent) {
+          console.error('elUpgradePicker or elUpgradePickerContent are undefined.');
+        }
+        const player = window.underworld.players.find(
+          (p) => p.clientId === window.clientId,
+        );
+        if (player) {
+          const upgrades = Upgrade.generateUpgrades(player);
+          const elUpgrades = upgrades.map((upgrade) =>
+            Upgrade.createUpgradeElement(upgrade, player),
+          );
+          if (elUpgradePickerContent) {
+            elUpgradePickerContent.innerHTML = '';
+            for (let elUpgrade of elUpgrades) {
+              elUpgradePickerContent.appendChild(elUpgrade);
+            }
+          }
+        } else {
+          console.error('Upgrades cannot be generated, player not found');
+        }
+        // Make upgrades visible
         setView(View.Upgrade);
+
         // Prepare the next level
         this.initLevel(++this.levelIndex);
       }
