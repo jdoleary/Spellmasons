@@ -119,36 +119,38 @@ export function updateCameraPosition() {
         if (keyDown.a) {
           camera.x -= config.CAMERA_BASE_SPEED;
         }
-        // Clamp centerTarget so that there isn't a log of empty space
-        // in the camera
-        // Users can move the camera further if they are manually controlling the camera
-        // whereas if the camera is following a target it keeps more of the map on screen
-        const marginY = doCameraAutoFollow ? config.COLLISION_MESH_RADIUS * 4 : window.underworld.height * 3;
-        const marginX = doCameraAutoFollow ? config.COLLISION_MESH_RADIUS * 4 : window.underworld.width * 3;
-        // Clamp camera X
-        const mapLeftMostPoint = 0 - marginX;
-        const mapRightMostPoint = window.underworld.width + marginX;
-        const camCenterXMin = mapLeftMostPoint + elPIXIHolder.clientWidth / 2 / zoom;
-        const camCenterXMax = mapRightMostPoint - elPIXIHolder.clientWidth / 2 / zoom;
-        // If the supposed minimum is more than the maximum, just center the camera:
-        if (camCenterXMin > camCenterXMax) {
-          camera.x = (mapRightMostPoint + mapLeftMostPoint) / 2;
-        } else {
-          // clamp the camera x between the min and max possible camera targets
-          camera.x = Math.min(camCenterXMax, Math.max(camCenterXMin, camera.x));
-        }
+        // Clamp centerTarget so that there isn't a lot of empty space
+        // in the camera if the camera is in auto follow mode
+        if (doCameraAutoFollow) {
+          // Users can move the camera further if they are manually controlling the camera
+          // whereas if the camera is following a target it keeps more of the map on screen
+          const marginY = config.COLLISION_MESH_RADIUS * 4;
+          const marginX = config.COLLISION_MESH_RADIUS * 4;
+          // Clamp camera X
+          const mapLeftMostPoint = 0 - marginX;
+          const mapRightMostPoint = window.underworld.width + marginX;
+          const camCenterXMin = mapLeftMostPoint + elPIXIHolder.clientWidth / 2 / zoom;
+          const camCenterXMax = mapRightMostPoint - elPIXIHolder.clientWidth / 2 / zoom;
+          // If the supposed minimum is more than the maximum, just center the camera:
+          if (camCenterXMin > camCenterXMax) {
+            camera.x = (mapRightMostPoint + mapLeftMostPoint) / 2;
+          } else {
+            // clamp the camera x between the min and max possible camera targets
+            camera.x = Math.min(camCenterXMax, Math.max(camCenterXMin, camera.x));
+          }
 
-        //Clamp camera Y
-        const mapTopMostPoint = 0 - marginY;
-        const mapBottomMostPoint = window.underworld.height + marginY;
-        const camCenterYMin = mapTopMostPoint + elPIXIHolder.clientHeight / 2 / zoom;
-        const camCenterYMax = mapBottomMostPoint - elPIXIHolder.clientHeight / 2 / zoom;
-        // If the supposed minimum is more than the maximum, just center the camera:
-        if (camCenterYMin > camCenterYMax) {
-          camera.y = (mapBottomMostPoint + mapTopMostPoint) / 2;
-        } else {
-          // clamp the camera x between the min and max possible camera targets
-          camera.y = Math.min(camCenterYMax, Math.max(camCenterYMin, camera.y));
+          //Clamp camera Y
+          const mapTopMostPoint = 0 - marginY;
+          const mapBottomMostPoint = window.underworld.height + marginY;
+          const camCenterYMin = mapTopMostPoint + elPIXIHolder.clientHeight / 2 / zoom;
+          const camCenterYMax = mapBottomMostPoint - elPIXIHolder.clientHeight / 2 / zoom;
+          // If the supposed minimum is more than the maximum, just center the camera:
+          if (camCenterYMin > camCenterYMax) {
+            camera.y = (mapBottomMostPoint + mapTopMostPoint) / 2;
+          } else {
+            // clamp the camera x between the min and max possible camera targets
+            camera.y = Math.min(camCenterYMax, Math.max(camCenterYMin, camera.y));
+          }
         }
 
         // Actuall move the camera to be centered on the centerTarget
