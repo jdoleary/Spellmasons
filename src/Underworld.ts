@@ -865,8 +865,6 @@ export default class Underworld {
   }
   endPlayerTurnPhase() {
     console.log('Underworld: TurnPhase: End player turn phase');
-    // Move onto next phase
-    this.broadcastTurnPhase(turn_phase.NPC);
     // Add mana to AI units
     for (let unit of this.units.filter((u) => u.unitType === UnitType.AI && u.alive)) {
       unit.mana += unit.manaPerTurn;
@@ -885,6 +883,12 @@ export default class Underworld {
       }
     }
     updateManaCostUI();
+    // Move onto next phase
+    // Note: BroadcastTurnPhase should happen last because it
+    // queues up a unitsync, so if changes to the units
+    // were to happen AFTER broadcastTurnPhase they would be
+    // overwritten when the sync occurred
+    this.broadcastTurnPhase(turn_phase.NPC);
   }
 
   async endNPCTurnPhase() {
