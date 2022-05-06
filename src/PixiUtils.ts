@@ -61,6 +61,9 @@ let doCameraAutoFollow = true;
 // in cameraAutoFollow so that the body's class can change with it.
 cameraAutoFollow(true);
 
+export function isCameraAutoFollowing(): boolean {
+  return doCameraAutoFollow;
+}
 export function cameraAutoFollow(active: boolean) {
   doCameraAutoFollow = active;
   document.body.classList.toggle('auto-camera', active);

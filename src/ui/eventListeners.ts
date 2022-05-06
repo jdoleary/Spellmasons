@@ -15,7 +15,7 @@ import * as colors from './colors';
 import { add, Vec2 } from '../Vec';
 import { distance, getCoordsAtDistanceTowardsTarget } from '../math';
 import * as config from '../config';
-import { cameraAutoFollow } from '../PixiUtils';
+import { cameraAutoFollow, isCameraAutoFollowing } from '../PixiUtils';
 
 export const keyDown = {
   w: false,
@@ -60,7 +60,13 @@ export function keydownListener(event: KeyboardEvent) {
       const thereWereCardsSelected = CardUI.areAnyCardsSelected();
       CardUI.clearSelectedCards();
       if (!thereWasTooltipActive && !thereWereCardsSelected) {
-        toggleMenu();
+        if (!isCameraAutoFollowing()) {
+          // If camera is not auto following make it auto follow
+          cameraAutoFollow(true)
+        } else {
+          // Otherwise finally toggle menu
+          toggleMenu();
+        }
       }
       break;
     case 'AltLeft':
