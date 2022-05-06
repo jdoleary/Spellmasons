@@ -1,3 +1,4 @@
+- bug: players array is empty when switching from a multiplayer game to a singleplayer game
 - Lochlan feedback
     - Not enough cover to stay out of LOS of archer
     - Damage dropoff for range
