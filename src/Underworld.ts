@@ -50,6 +50,7 @@ import { healthAllyGreen, healthHurtRed, healthRed } from './ui/colors';
 import objectHash from 'object-hash';
 import { withinMeleeRange } from './units/actions/gruntAction';
 import * as TimeRelease from './TimeRelease';
+import { generateMap, oneDimentionIndexToVec2 } from './WaveFunctionCollapse';
 
 export enum turn_phase {
   PlayerTurns,
@@ -812,6 +813,19 @@ export default class Underworld {
     }
     this.cacheWalls(obstacleInsts);
     this.groundTiles = groundTiles;
+
+    // TEST|
+    const map = generateMap(30);
+    for (let i = 0; i < map.cells.length; i++) {
+      const cell = map.cells[i];
+      if (cell) {
+        const position = Vec.multiply(config.COLLISION_MESH_RADIUS * 2, oneDimentionIndexToVec2(i, map.width));
+        const image = Image.create(position, cell.image, containerUI);
+        image.sprite.rotation = cell.rotation;
+      }
+
+    }
+    // TEST|
     this.addGroundTileImages();
     for (let p of pickups) {
       this.spawnPickup(p.index, p.coord);
@@ -849,6 +863,7 @@ export default class Underworld {
         // Invoke generateRandomLevel again until it succeeds
         level = this.generateRandomLevelData(levelIndex);
       } while (level === undefined);
+
       window.pie.sendData({
         type: MESSAGE_TYPES.CREATE_LEVEL,
         level

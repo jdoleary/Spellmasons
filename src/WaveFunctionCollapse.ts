@@ -1,5 +1,5 @@
 import { randInt } from "./rand";
-import { equal, subtract, Vec2 } from "./Vec"
+import { add, equal, subtract, Vec2 } from "./Vec"
 
 export enum Material {
     WATER,
@@ -18,8 +18,9 @@ north size is 0,1,2,
 etc
 */
 interface Cell {
-    materials: Material[]
-    image: string
+    materials: Material[];
+    image: string;
+    rotation: number;
 }
 interface Map {
     cells: (Cell | undefined)[];
@@ -38,7 +39,7 @@ export function vec2ToOneDimentionIndex(pos: Vec2, width: number): number {
     return pos.y * width + pos.x
 
 }
-const void_cell = {
+const void_cell: Cell = {
     image: 'tiles/8.png',
     materials: [
         Material.WATER,
@@ -49,7 +50,8 @@ const void_cell = {
         Material.WATER,
         Material.WATER,
         Material.WATER,
-    ]
+    ],
+    rotation: 0
 };
 const sourceCells: Cell[] = [
     {
@@ -63,7 +65,8 @@ const sourceCells: Cell[] = [
             Material.GROUND,
             Material.GROUND,
             Material.GROUND,
-        ]
+        ],
+        rotation: 0
     },
     {
         image: 'tiles/2.png',
@@ -76,7 +79,8 @@ const sourceCells: Cell[] = [
             Material.GROUND,
             Material.GROUND,
             Material.GROUND,
-        ]
+        ],
+        rotation: 0
     },
     {
         image: 'tiles/3.png',
@@ -89,7 +93,8 @@ const sourceCells: Cell[] = [
             Material.GROUND,
             Material.GROUND,
             Material.GROUND,
-        ]
+        ],
+        rotation: 0
     },
     {
         image: 'tiles/4.png',
@@ -102,7 +107,8 @@ const sourceCells: Cell[] = [
             Material.WALL,
             Material.GROUND,
             Material.GROUND,
-        ]
+        ],
+        rotation: 0
     },
     {
         image: 'tiles/5.png',
@@ -115,7 +121,8 @@ const sourceCells: Cell[] = [
             Material.WALL,
             Material.GROUND,
             Material.WALL,
-        ]
+        ],
+        rotation: 0
     },
     {
         image: 'tiles/6.png',
@@ -128,7 +135,8 @@ const sourceCells: Cell[] = [
             Material.WALL,
             Material.WATER,
             Material.WATER,
-        ]
+        ],
+        rotation: 0
     },
     {
         image: 'tiles/7.png',
@@ -141,7 +149,8 @@ const sourceCells: Cell[] = [
             Material.GROUND,
             Material.GROUND,
             Material.GROUND,
-        ]
+        ],
+        rotation: 0
     },
     void_cell,
     {
@@ -155,7 +164,8 @@ const sourceCells: Cell[] = [
             Material.WATER,
             Material.WATER,
             Material.WATER,
-        ]
+        ],
+        rotation: 0
     },
     {
         image: 'tiles/10.png',
@@ -168,7 +178,8 @@ const sourceCells: Cell[] = [
             Material.WALL,
             Material.GROUND,
             Material.GROUND,
-        ]
+        ],
+        rotation: 0
     },
     {
         image: 'tiles/11.png',
@@ -181,7 +192,8 @@ const sourceCells: Cell[] = [
             Material.WALL,
             Material.GROUND,
             Material.GROUND,
-        ]
+        ],
+        rotation: 0
     },
     {
         image: 'tiles/12.png',
@@ -194,7 +206,22 @@ const sourceCells: Cell[] = [
             Material.GROUND,
             Material.GROUND,
             Material.GROUND,
-        ]
+        ],
+        rotation: 0
+    },
+    {
+        image: 'tiles/13.png',
+        materials: [
+            Material.WATER,
+            Material.WALL,
+            Material.GROUND,
+            Material.WALL,
+            Material.GROUND,
+            Material.WALL,
+            Material.WATER,
+            Material.WATER,
+        ],
+        rotation: 0
     },
     // {
     //     image: 'tiles/SAMPLE.png',
@@ -207,9 +234,62 @@ const sourceCells: Cell[] = [
     //         Material.BOTTOM,
     //         Material.BOTLEFT,
     //         Material.LEFT,
-    //     ]
+    //     ],
+    //     rotation: 0
     // },
-];
+].map(c => {
+    // Return 4 copies, each rotated 90 degrees
+    const rotatedOnce = rotateCell(c);
+    const rotatedTwice = rotateCell(rotatedOnce);
+    const rotatedThrice = rotateCell(rotatedTwice);
+    return [
+        c,
+        rotatedOnce,
+        rotatedTwice,
+        rotatedThrice,
+    ].filter(x => {
+        // Remove perfect duplicates where rotating it does nothing to
+        // change it's constraints.
+        // Note: x==c always keep the unrotated copy
+        return x == c || JSON.stringify(x.materials) != JSON.stringify(c.materials)
+    })
+}).flat();
+console.log('source cells', sourceCells)
+
+function rotateCell(c: Cell): Cell {
+    const quarterRotation = Math.PI / 2;
+    let rotation = c.rotation + quarterRotation;
+    const materials: Material[] = [];
+    // @ts-ignore we know that all cells have 8 materials
+    // so we don't need to index check
+    materials[0] = c.materials[6];
+    // @ts-ignore we know that all cells have 8 materials
+    // so we don't need to index check
+    materials[1] = c.materials[7];
+    // @ts-ignore we know that all cells have 8 materials
+    // so we don't need to index check
+    materials[2] = c.materials[0];
+    // @ts-ignore we know that all cells have 8 materials
+    // so we don't need to index check
+    materials[3] = c.materials[1];
+    // @ts-ignore we know that all cells have 8 materials
+    // so we don't need to index check
+    materials[4] = c.materials[2];
+    // @ts-ignore we know that all cells have 8 materials
+    // so we don't need to index check
+    materials[5] = c.materials[3];
+    // @ts-ignore we know that all cells have 8 materials
+    // so we don't need to index check
+    materials[6] = c.materials[4];
+    // @ts-ignore we know that all cells have 8 materials
+    // so we don't need to index check
+    materials[7] = c.materials[5];
+    return {
+        image: c.image,
+        materials,
+        rotation
+    }
+}
 
 const LEFT_SIDE: Vec2 = { x: -1, y: 0 };
 const RIGHT_SIDE: Vec2 = { x: 1, y: 0 };
@@ -217,7 +297,7 @@ const TOP_SIDE: Vec2 = { x: 0, y: -1 };
 const BOTTOM_SIDE: Vec2 = { x: 0, y: 1 };
 const SIDES = [LEFT_SIDE, RIGHT_SIDE, TOP_SIDE, BOTTOM_SIDE];
 
-function opposideSide(side: Vec2): Vec2 {
+function oppositeSide(side: Vec2): Vec2 {
     if (equal(LEFT_SIDE, side)) {
         return RIGHT_SIDE;
     }
@@ -235,11 +315,11 @@ function pickCell(map: Map, position: Vec2): Cell | undefined {
     let possibleCells = [...sourceCells];
     // Limit via side constraints
     for (let side of SIDES) {
-        const cellOnSide = getCell(map, subtract(position, side));
+        const cellOnSide = getCell(map, add(position, side));
         // If there is another cell adjacent to current possible cell...
         if (cellOnSide) {
             // Limit the current possible cells via it's constraint
-            const otherCellConstraint = getCellConstraintsForSide(cellOnSide, opposideSide(side));
+            const otherCellConstraint = getCellConstraintsForSide(cellOnSide, oppositeSide(side));
             possibleCells = possibleCells.filter(c => {
                 const currentCellConstraint = getCellConstraintsForSide(c, side);
                 return doConstraintsMatch(otherCellConstraint, currentCellConstraint)
@@ -247,8 +327,8 @@ function pickCell(map: Map, position: Vec2): Cell | undefined {
         }
     }
     // Of the possible cells remaining, choose an random one
-    const randomChoiseIndex = randInt(window.underworld.random, 0, possibleCells.length - 1);
-    return possibleCells[randomChoiseIndex];
+    const randomChoiceIndex = randInt(window.underworld.random, 0, possibleCells.length - 1);
+    return possibleCells[randomChoiceIndex];
 }
 
 function getCell(map: Map, position: Vec2): Cell | undefined {
@@ -297,7 +377,7 @@ function getCellConstraintsForSide(cell: Cell, side: Vec2): Material[] {
     }
 }
 
-function generateNewMap(width: number): Map {
+export function generateMap(width: number): Map {
     const map: Map = {
         width,
         cells: []
@@ -316,7 +396,10 @@ function generateNewMap(width: number): Map {
     for (let i = 0; i < width * width; i++) {
         const pos = oneDimentionIndexToVec2(i, width);
         const cell = pickCell(map, pos)
-        if (cell) {
+        if (pos.x == 0 || pos.x == width - 1 || pos.y == 0 || pos.y == width - 1) {
+            // This is a border cell and is already void
+            continue;
+        } else if (cell) {
             map.cells[i] = cell;
         } else {
             console.error('Cell could not be chosen for', pos.x, pos.y);
