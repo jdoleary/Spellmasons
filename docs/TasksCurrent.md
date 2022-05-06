@@ -1,3 +1,14 @@
+- Lochlan feedback
+    - Not enough cover to stay out of LOS of archer
+    - Damage dropoff for range
+    - Better archer AI, move to LOS but out of range of attack; optimal distance from character
+    - Archers could have a minimal range so they can't "hip fire"
+    - Special unit "marksman archers"
+    - Spell to deflect projectiles to hostile targets nearby
+    - Damage reduction, negation, absorbtion (anti-archer defense spells)
+        - Think of faster than light or into the breach
+
+- Bug: An archer with their center inside a wall cannot attack you
 - Bug: Can go negative mana if you cast too quickly
 - Bug: Had a scenario where i had a debugger on enterPortal and on image.show
 and 2nd client got `Cannot change character, player not found with id 8c502be8-631c-482a-9398-40155f77c21f`
