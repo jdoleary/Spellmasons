@@ -114,8 +114,11 @@ function getClosestBranch(line: LineSegment, walls: PolygonLineSegment[]): Branc
     let branches: Branch[] = [];
     // Check for collisions between the last line in the path and pathing walls
     for (let wall of walls) {
-        const intersection = lineSegmentIntersection(line, wall);
+        let intersection = lineSegmentIntersection(line, wall);
         if (intersection) {
+            // Round the intersection since points that are of by 0.00000000001 (roughly) should be considered idential
+            // (the lineSegment intersection function isn't perfect)
+            intersection = Vec.round(intersection);
             const dist = distance(line.p1, intersection);
             // don't consider lines that intersect with p1
             if (dist == 0) {
@@ -142,7 +145,7 @@ function getClosestBranch(line: LineSegment, walls: PolygonLineSegment[]): Branc
                     branches.push({
                         branchAngle,
                         distance: dist,
-                        nextLine: { p1: Vec.round(intersection), p2: nextPoint, polygon: wall.polygon },
+                        nextLine: { p1: intersection, p2: nextPoint, polygon: wall.polygon },
                     });
                 } else {
                     console.error('nextPoint is unexpectedly missing.')
@@ -529,6 +532,7 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
     // merged with ALL other polys that they are in contact with
     const excludePoly: Set<Polygon> = new Set();
 
+    // Returns true if polygon processes successfully
     function processPolygon(processingPolygon: Polygon): boolean {
         if (excludePoly.has(processingPolygon)) {
             // Polygon is excluded from processing because it has already been processed
@@ -611,7 +615,7 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
     }
     // Loop through all polys to see if they need to merge
     for (let startProcessingPolygon of polygons) {
-        const isBadPolygon = processPolygon(startProcessingPolygon);
+        const processedSuccessfully = processPolygon(startProcessingPolygon);
         // TODO: how to handle if a polygon failed to process
     }
     return resultPolys;
