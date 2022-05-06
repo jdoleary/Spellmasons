@@ -6,7 +6,6 @@ import { getUpgradeByTitle } from './Upgrade';
 import Underworld, { IUnderworldSerializedForSyncronize, LevelData, turn_phase } from './Underworld';
 import * as Player from './Player';
 import * as Unit from './Unit';
-import * as Image from './Image';
 import * as readyState from './readyState';
 import * as messageQueue from './messageQueue';
 import * as storage from './storage';
@@ -14,8 +13,8 @@ import { setView, View } from './views';
 import { tutorialLevels } from './HandcraftedLevels';
 import manBlue from './units/manBlue';
 import { mouseMove } from './ui/eventListeners';
-import { addPixiSprite, containerUnits } from './PixiUtils';
 import { allUnits } from './units';
+import { pie } from './wsPieSetup';
 
 const messageLog: any[] = [];
 let clients: string[] = [];
@@ -25,6 +24,7 @@ window.exitCurrentGame = function exitCurrentGame() {
   if (window.underworld) {
     window.underworld.cleanup();
   }
+  pie.disconnect();
 }
 export function onData(d: OnDataArgs) {
   console.log("onData:", MESSAGE_TYPES[d.payload.type], d)
