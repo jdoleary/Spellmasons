@@ -111,10 +111,10 @@ export function resetPlayerForNextLevel(player: IPlayer) {
     if (spawnCoords) {
       Unit.setLocation(player.unit, spawnCoords);
     } else {
-      console.error('cannot find valid spawn for player unit');
+      console.log('Level: cannot find valid spawn for player unit');
     }
   } else {
-    console.error('cannot find valid spawn for player unit');
+    console.log('Level: cannot find valid spawn for player unit');
   }
 }
 // Keep a global reference to the current client's player
