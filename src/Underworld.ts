@@ -409,8 +409,8 @@ export default class Underworld {
   // Returns undefined if it fails to make valid LevelData
   generateRandomLevelData(levelIndex: number): LevelData | undefined {
     // Level sizes are random but have change to grow bigger as loop continues
-    const sectorsWide = randInt(this.random, 2, 3 + (Math.round(levelIndex / 3)));
-    const sectorsTall = randInt(this.random, 1, 3 + (Math.round(levelIndex / 3)));
+    const sectorsWide = randInt(this.random, 2 + (Math.round(levelIndex / 5)), 4 + (Math.round(levelIndex / 3)));
+    const sectorsTall = randInt(this.random, 2 + Math.round(levelIndex / 5), 4 + (Math.round(levelIndex / 3)));
     console.log('Setup: generateRandomLevel', levelIndex, sectorsWide, sectorsTall);
     // Width and height should be set immediately so that other level-building functions
     // (such as cacheWalls) have access to the new width and height
