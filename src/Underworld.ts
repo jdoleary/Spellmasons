@@ -46,6 +46,7 @@ import { collideWithWalls, moveWithCollisions } from './collision/moveWithCollis
 import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './contants';
 import { getBestRangedLOSTarget } from './units/actions/rangedAction';
 import { getClients } from './wsPieHandler';
+import { healthHurtRed, healthRed } from './ui/colors';
 
 export enum turn_phase {
   PlayerTurns,
@@ -190,8 +191,8 @@ export default class Underworld {
         // Prevent drawing unit overlay graphics when a unit is in the portal
         if (u.x !== null && u.y !== null) {
           // Draw health bar
-          const healthBarColor = u.faction == Faction.ALLY ? 0x40a058 : 0xd55656;
-          const healthBarHurtColor = u.faction == Faction.ALLY ? 0x235730 : 0x632828;
+          const healthBarColor = u.faction == Faction.ALLY ? 0x40a058 : healthRed;
+          const healthBarHurtColor = u.faction == Faction.ALLY ? 0x235730 : healthHurtRed;
           const healthBarHealColor = u.faction == Faction.ALLY ? 0x23ff30 : 0xff2828;
           window.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
           window.unitOverlayGraphics.beginFill(healthBarColor, 1.0);
@@ -219,7 +220,7 @@ export default class Underworld {
               // Draw red death circle if a unit is currently alive, but wont be after cast
               if (u.alive && !dryRunUnit.alive) {
                 window.unitOverlayGraphics.endFill();
-                window.unitOverlayGraphics.lineStyle(10, healthBarHurtColor, 1.0);
+                window.unitOverlayGraphics.lineStyle(10, healthHurtRed, 1.0);
                 window.unitOverlayGraphics.drawCircle(u.x, u.y, config.COLLISION_MESH_RADIUS);
               }
             }
