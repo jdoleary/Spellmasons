@@ -948,11 +948,6 @@ export default class Underworld {
       console.trace('Attempted to initialize nonexistant player trace')
       return
     }
-    if (player == window.player) {
-      // Notify the current player that their turn is starting
-      centeredFloatingText(`Your Turn`);
-
-    }
     // Give mana at the start of turn
     const manaTillFull = player.unit.manaMax - player.unit.mana;
     // Give the player their mana per turn but don't let it go beyond manaMax
@@ -971,6 +966,11 @@ export default class Underworld {
       this.endPlayerTurn(player.clientId);
       // Do not continue with initialization
       return;
+    }
+    if (player == window.player) {
+      // Notify the current player that their turn is starting
+      centeredFloatingText(`Your Turn`);
+
     }
     // Trigger onTurnStart Events
     const onTurnStartEventResults: boolean[] = await Promise.all(player.unit.onTurnStartEvents.map(
