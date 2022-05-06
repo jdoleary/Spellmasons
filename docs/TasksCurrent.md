@@ -1,5 +1,3 @@
-- Fix issue where mobs can continue to move after their turn has ended
-    - When this happens it can also fail to show the attention sword icon
 
 - Lochlan feedback
     - Not enough cover to stay out of LOS of archer

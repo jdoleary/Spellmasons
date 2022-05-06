@@ -553,6 +553,9 @@ export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
       resolve()
     }, timeoutMs);
   }).then(() => {
+    // Clear the units move path once they are done moving
+    unit.path = [];
+
     if (unit.resolveDoneMovingTimeout !== undefined) {
       clearTimeout(unit.resolveDoneMovingTimeout);
     }
