@@ -6,23 +6,27 @@ import { BrowserTracing } from "@sentry/tracing";
 export function setupMonitoring() {
 
   const release = `spellmasons@${import.meta.env.SNOWPACK_PUBLIC_PACKAGE_VERSION}`;
-  console.log('Setup: Monitoring with Sentry', release);
-  Sentry.init({
-    dsn: "https://4162d0e2c0a34b1aa44744ce94b4b21b@o1186256.ingest.sentry.io/6306205",
-    release,
-    integrations: [new BrowserTracing(), new CaptureConsoleIntegration(
-      {
-        // array of methods that should be captured
-        // defaults to ['log', 'info', 'warn', 'error', 'debug', 'assert']
-        levels: ['error']
-      }
-    )],
+  if (!location.href.includes('http://localhost')) {
+    console.log('Setup: Monitoring with Sentry', release);
+    Sentry.init({
+      dsn: "https://4162d0e2c0a34b1aa44744ce94b4b21b@o1186256.ingest.sentry.io/6306205",
+      release,
+      integrations: [new BrowserTracing(), new CaptureConsoleIntegration(
+        {
+          // array of methods that should be captured
+          // defaults to ['log', 'info', 'warn', 'error', 'debug', 'assert']
+          levels: ['error']
+        }
+      )],
 
-    // Set tracesSampleRate to 1.0 to capture 100%
-    // of transactions for performance monitoring.
-    // We recommend adjusting this value in production
-    tracesSampleRate: 1.0,
-  });
+      // Set tracesSampleRate to 1.0 to capture 100%
+      // of transactions for performance monitoring.
+      // We recommend adjusting this value in production
+      tracesSampleRate: 1.0,
+    });
+  } else {
+    console.log('Setup: Monitoring with Sentry disabled due to localhost')
+  }
   // const stats = new Stats();
   // // Add fps stats
   // function monitorFPS() {
