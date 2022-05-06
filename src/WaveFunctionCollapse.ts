@@ -1,5 +1,5 @@
-import { randInt } from "./rand";
-import { add, equal, subtract, Vec2 } from "./Vec"
+import { chooseObjectWithProbability } from "./math";
+import { add, equal, Vec2 } from "./Vec"
 
 export enum Material {
     WATER,
@@ -21,6 +21,7 @@ interface Cell {
     materials: Material[];
     image: string;
     rotation: number;
+    probability: number;
 }
 interface Map {
     cells: (Cell | undefined)[];
@@ -51,7 +52,8 @@ const void_cell: Cell = {
         Material.WATER,
         Material.WATER,
     ],
-    rotation: 0
+    rotation: 0,
+    probability: 10,
 };
 const sourceCells: Cell[] = [
     {
@@ -66,6 +68,7 @@ const sourceCells: Cell[] = [
             Material.GROUND,
             Material.GROUND,
         ],
+        probability: 10,
         rotation: 0
     },
     {
@@ -80,6 +83,7 @@ const sourceCells: Cell[] = [
             Material.GROUND,
             Material.GROUND,
         ],
+        probability: 10,
         rotation: 0
     },
     {
@@ -94,6 +98,7 @@ const sourceCells: Cell[] = [
             Material.GROUND,
             Material.GROUND,
         ],
+        probability: 10,
         rotation: 0
     },
     {
@@ -108,6 +113,7 @@ const sourceCells: Cell[] = [
             Material.GROUND,
             Material.GROUND,
         ],
+        probability: 10,
         rotation: 0
     },
     {
@@ -122,6 +128,7 @@ const sourceCells: Cell[] = [
             Material.GROUND,
             Material.WALL,
         ],
+        probability: 10,
         rotation: 0
     },
     {
@@ -136,6 +143,7 @@ const sourceCells: Cell[] = [
             Material.WATER,
             Material.WATER,
         ],
+        probability: 10,
         rotation: 0
     },
     {
@@ -150,6 +158,7 @@ const sourceCells: Cell[] = [
             Material.GROUND,
             Material.GROUND,
         ],
+        probability: 500,
         rotation: 0
     },
     void_cell,
@@ -165,6 +174,7 @@ const sourceCells: Cell[] = [
             Material.WATER,
             Material.WATER,
         ],
+        probability: 10,
         rotation: 0
     },
     {
@@ -179,6 +189,7 @@ const sourceCells: Cell[] = [
             Material.GROUND,
             Material.GROUND,
         ],
+        probability: 10,
         rotation: 0
     },
     {
@@ -193,6 +204,7 @@ const sourceCells: Cell[] = [
             Material.GROUND,
             Material.GROUND,
         ],
+        probability: 10,
         rotation: 0
     },
     {
@@ -207,6 +219,7 @@ const sourceCells: Cell[] = [
             Material.GROUND,
             Material.GROUND,
         ],
+        probability: 10,
         rotation: 0
     },
     {
@@ -221,8 +234,39 @@ const sourceCells: Cell[] = [
             Material.WATER,
             Material.WATER,
         ],
+        probability: 10,
         rotation: 0
     },
+    // {
+    //     image: 'tiles/14.png',
+    //     materials: [
+    //         Material.WATER,
+    //         Material.GROUND,
+    //         Material.GROUND,
+    //         Material.GROUND,
+    //         Material.GROUND,
+    //         Material.GROUND,
+    //         Material.WATER,
+    //         Material.WATER,
+    //     ],
+    //     probability: 10,
+    //     rotation: 0
+    // },
+    // {
+    //     image: 'tiles/15.png',
+    //     materials: [
+    //         Material.WATER,
+    //         Material.GROUND,
+    //         Material.GROUND,
+    //         Material.GROUND,
+    //         Material.WATER,
+    //         Material.WATER,
+    //         Material.WATER,
+    //         Material.WATER,
+    //     ],
+    //     probability: 10,
+    //     rotation: 0
+    // },
     // {
     //     image: 'tiles/SAMPLE.png',
     //     materials: [
@@ -235,6 +279,7 @@ const sourceCells: Cell[] = [
     //         Material.BOTLEFT,
     //         Material.LEFT,
     //     ],
+    //     probability: 10,
     //     rotation: 0
     // },
 ].map(c => {
@@ -287,7 +332,8 @@ function rotateCell(c: Cell): Cell {
     return {
         image: c.image,
         materials,
-        rotation
+        rotation,
+        probability: c.probability
     }
 }
 
@@ -327,8 +373,9 @@ function pickCell(map: Map, position: Vec2): Cell | undefined {
         }
     }
     // Of the possible cells remaining, choose an random one
-    const randomChoiceIndex = randInt(window.underworld.random, 0, possibleCells.length - 1);
-    return possibleCells[randomChoiceIndex];
+    // const randomChoiceIndex = randInt(window.underworld.random, 0, possibleCells.length - 1);
+    return chooseObjectWithProbability(possibleCells, window.underworld.random)
+    // return possibleCells[randomChoiceIndex];
 }
 
 function getCell(map: Map, position: Vec2): Cell | undefined {
