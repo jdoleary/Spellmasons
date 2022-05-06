@@ -403,26 +403,14 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
   if (o.present && clients[0] !== undefined) {
     // The host is always the first client
     window.hostClientId = clients[0];
-    if (window.hostClientId === window.clientId) {
-      console.log(`Setup: Setting Host client to ${window.hostClientId}. You are the host. `);
-      tryStartGame();
-    } else {
-      console.log(`Setup: Setting Host client to ${window.hostClientId}.`);
-    }
+    // If game is already started
     if (window.underworld) {
-
+      // Ensure each client corresponds with a Player instance
+      window.underworld.ensureAllClientsHaveAssociatedPlayers(clients);
       // And if the client that joined is associated with a player
       if (playerOfClientThatChanged) {
         // set their connected status
         Player.setClientConnected(playerOfClientThatChanged, o.present);
-      } else {
-        // If the client that joined does not have a player yet, make them one immediately
-        // since all clients should always have a player associated
-        console.log(`Setup: Create a Player instance for ${o.clientThatChanged}`)
-        const p = Player.create(o.clientThatChanged, 'jester');
-        if (p) {
-          Player.resetPlayerForNextLevel(p);
-        }
       }
       // Send the lastest gamestate to that client so they can be up-to-date:
       // Note: It is important that this occurs AFTER the player instance is created for the
@@ -430,6 +418,13 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
       // If the game has already started (e.g. the host has already joined), send the initial state to the new 
       // client only so they can load
       giveClientGameStateForInitialLoad(o.clientThatChanged);
+    } else {
+      if (window.hostClientId === window.clientId) {
+        console.log(`Setup: Setting Host client to ${window.hostClientId}. You are the host. `);
+        tryStartGame();
+      } else {
+        console.log(`Setup: Setting Host client to ${window.hostClientId}.`);
+      }
     }
   } else {
     // Client left

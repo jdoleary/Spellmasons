@@ -42,9 +42,10 @@ import { HandcraftedLevel, levels } from './HandcraftedLevels';
 import { addCardToHand, removeCardsFromHand } from './CardUI';
 import { mouseMove } from './ui/eventListeners';
 import Jprompt from './Jprompt';
-import { collideWithWalls, isCircleIntersectingCircle, moveWithCollisions } from './collision/moveWithCollision';
+import { collideWithWalls, moveWithCollisions } from './collision/moveWithCollision';
 import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './contants';
 import { getBestRangedLOSTarget } from './units/actions/rangedAction';
+import { getClients } from './wsPieHandler';
 
 export enum turn_phase {
   PlayerTurns,
@@ -106,6 +107,7 @@ export default class Underworld {
     this.seed = seed;
     console.log("RNG create with seed:", seed, ", state: ", RNGState);
     this.random = this.syncronizeRNG(RNGState);
+    this.ensureAllClientsHaveAssociatedPlayers(getClients());
 
     // Start the gameloop
     requestAnimationFrameGameLoopId = requestAnimationFrame(this.gameLoop.bind(this));
@@ -1471,6 +1473,20 @@ export default class Underworld {
       }
     }
 
+  }
+  ensureAllClientsHaveAssociatedPlayers(clients: string[]) {
+    for (let clientId of clients) {
+      const player = this.players.find(p => p.clientId == clientId);
+      if (!player) {
+        // If the client that joined does not have a player yet, make them one immediately
+        // since all clients should always have a player associated
+        console.log(`Setup: Create a Player instance for ${clientId}`)
+        const p = Player.create(clientId, 'jester');
+        if (p) {
+          Player.resetPlayerForNextLevel(p);
+        }
+      }
+    }
   }
   syncPlayers(players: Player.IPlayerSerialized[]) {
     console.log('sync: Syncing players');
