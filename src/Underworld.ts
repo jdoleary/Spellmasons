@@ -248,10 +248,18 @@ export default class Underworld {
 
     updateCameraPosition();
     this.drawEnemyAttentionMarkers();
+    this.drawResMarkers();
     updatePlanningView();
 
     // Invoke gameLoopUnits again next loop
     requestAnimationFrameGameLoopId = requestAnimationFrame(this.gameLoop.bind(this))
+  }
+  drawResMarkers() {
+    for (let marker of window.resMarkers) {
+      const { zoom } = getCamera();
+      ImmediateMode.draw('raise_dead.png', marker, 1 / zoom);
+    }
+
   }
   drawEnemyAttentionMarkers() {
     // Draw attention markers which show if an NPC will

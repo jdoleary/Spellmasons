@@ -35,6 +35,7 @@ window.zoomTarget = 1;
 window.playerWalkingPromise = Promise.resolve();
 window.dryRunUnits = [];
 window.attentionMarkers = [];
+window.resMarkers = [];
 
 setupAll();
 
@@ -170,6 +171,8 @@ declare global {
     dryRunUnits: Unit.IUnit[];
     // Shows icons above the heads of enemies who will damage you next turn
     attentionMarkers: Vec2[];
+    // Shows icon for units that will be successfully resurrected
+    resMarkers: Vec2[];
     // Keep track of the LevelData from the last level that was created in
     // case it needs to be sent to another client
     lastLevelCreated: LevelData;

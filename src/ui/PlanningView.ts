@@ -193,6 +193,18 @@ export async function runPredictions() {
           }
         }
       }
+      // Show if unit will be resurrected
+      window.resMarkers = [];
+      if (cardIds.includes('resurrect')) {
+        window.dryRunUnits.filter(u => u.faction == Faction.ALLY).forEach(u => {
+          // Check if their non-dryRun counterpart is of the other faction:
+          const realUnit = window.underworld.units.find(x => x.id == u.id)
+          if (realUnit && realUnit.faction == Faction.ENEMY) {
+            window.resMarkers.push(clone(realUnit));
+          }
+        })
+      }
+
     }
   }
 }
