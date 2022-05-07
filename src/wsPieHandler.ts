@@ -344,7 +344,7 @@ async function handleSpell(caster: Player.IPlayer, payload: any) {
     await window.underworld.castCards(caster.cardUsageCounts, caster.unit, payload.cards, payload, false);
     window.animatingSpells = false;
     // When spells are done animating but the mouse hasn't moved,
-    // syncSpellEffectProjection needs to be called so that the icon ("footprints" for example)
+    // runPredictions needs to be called so that the icon ("footprints" for example)
     // will be shown in the tile that the mouse is hovering over
     mouseMove();
     // Check for dead players to end their turn,

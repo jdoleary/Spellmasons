@@ -1,8 +1,7 @@
 import type * as Player from './Player';
 import * as Cards from './cards';
-import * as math from './math';
 import {
-  syncSpellEffectProjection,
+  runPredictions,
   updateManaCostUI,
 } from './ui/PlanningView';
 import { calculateCostForSingleCard } from './cards/cardUtils';
@@ -397,7 +396,7 @@ export function clearSelectedCards() {
     }
   });
   // Now that there are no more selected cards, update the spell effect projection
-  syncSpellEffectProjection();
+  runPredictions();
 }
 
 export function getCardRarityColor(content: { probability: number }): string {

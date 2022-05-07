@@ -5,7 +5,7 @@ import {
   clearTooltipSelection,
   drawCircleUnderTarget,
   isOutOfBounds,
-  syncSpellEffectProjection,
+  runPredictions,
   updateTooltipSelection,
 } from './PlanningView';
 import { toggleMenu, View } from '../views';
@@ -186,8 +186,8 @@ export function mouseMove() {
   if (!window.underworld) {
     return
   }
-  // Show target hover
-  syncSpellEffectProjection();
+
+  runPredictions();
 
   const mouseTarget = window.underworld.getMousePos();
 

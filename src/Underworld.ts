@@ -287,23 +287,6 @@ export default class Underworld {
     }
 
   }
-  // Displays markers above units heads if they will attack the current client's unit
-  // next turn
-  async calculateEnemyAttentionMarkers() {
-    window.attentionMarkers = [];
-    if (window.player) {
-      for (let u of window.dryRunUnits) {
-        const skipTurn = await Unit.runTurnStartEvents(u);
-        if (skipTurn) {
-          continue;
-        }
-        const { target, canAttack } = this.getUnitAttackTarget(u);
-        if (u.alive && canAttack && target === window.player.unit) {
-          window.attentionMarkers.push(u);
-        }
-      }
-    }
-  }
   // Returns true if it is the current players turn
   isMyTurn() {
     return this.turn_phase == turn_phase.PlayerTurns

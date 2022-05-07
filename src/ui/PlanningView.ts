@@ -129,7 +129,11 @@ export function updateManaCostUI(): CardCost {
   return { manaCost: 0, healthCost: 0 };
 }
 
-export async function syncSpellEffectProjection() {
+// predicts what will happen next turn
+// via enemy attention markers (showing if they will hurt you)
+// your health and mana bar (the stripes)
+// and enemy health and mana bars
+export async function runPredictions() {
   if (window.animatingSpells) {
     // Do not change the hover icons when spells are animating
     return;
@@ -174,7 +178,21 @@ export async function syncSpellEffectProjection() {
         }
       }
       // Run onTurnStartEvents on dryRunUnits:
-      await window.underworld.calculateEnemyAttentionMarkers();
+      // Displays markers above units heads if they will attack the current client's unit
+      // next turn
+      window.attentionMarkers = [];
+      if (window.player) {
+        for (let u of window.dryRunUnits) {
+          const skipTurn = await Unit.runTurnStartEvents(u);
+          if (skipTurn) {
+            continue;
+          }
+          const { target, canAttack } = window.underworld.getUnitAttackTarget(u);
+          if (u.alive && canAttack && target === window.player.unit) {
+            window.attentionMarkers.push(u);
+          }
+        }
+      }
     }
   }
 }
