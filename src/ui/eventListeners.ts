@@ -12,7 +12,7 @@ import { toggleMenu, View } from '../views';
 import { findPath, pointsEveryXDistanceAlongPath } from '../Pathfinding';
 import { polygonToPolygonLineSegments } from '../Polygon';
 import * as colors from './colors';
-import { add, Vec2 } from '../Vec';
+import type { Vec2 } from '../Vec';
 import { distance, getCoordsAtDistanceTowardsTarget } from '../math';
 import * as config from '../config';
 import { cameraAutoFollow, isCameraAutoFollowing } from '../PixiUtils';
@@ -175,9 +175,6 @@ export function endTurnBtnListener(e: MouseEvent) {
   return false;
 }
 
-// yAxisWalkRopeOffset moves the pathing points down so they track along the unit's feet instead of their centerline
-// (because their centerline is the actual unit x,y but their tracking along feet makes sense to the user for pathing)
-const yAxisWalkRopeOffset = config.COLLISION_MESH_RADIUS * config.NON_HEAVY_UNIT_SCALE
 export function mouseMove() {
   // Only handle clicks when viewing the Game
   if (window.view !== View.Game) {
@@ -201,22 +198,18 @@ export function mouseMove() {
       // If in inspect-mode
       if (document.body.classList.contains('inspect-mode')) {
         //
-        // Show the player's current walk path (walk "rope")
+        // Show the player's current walk path (walk rope)
         //
         // The distance that the player can cover with their current stamina
         // is drawn in the stamina color.
         // There are dots dilineating how far the unit can move each turn.
         //
-        let currentPlayerPath = findPath(window.player.unit, add(mouseTarget, { x: 0, y: -yAxisWalkRopeOffset }), window.underworld.pathingPolygons);
-        // Adjust point to be at unit's feet instead of center (regarding "yAxisWalkRopeOffset")
-        currentPlayerPath = currentPlayerPath.map(v => ({ x: v.x, y: v.y + yAxisWalkRopeOffset }));
-        // Adjust point to be at unit's feet instead of center (regarding "yAxisWalkRopeOffset")
-        const unitFeetLocation = add(window.player.unit, { x: 0, y: yAxisWalkRopeOffset })
+        let currentPlayerPath = findPath(window.player.unit, mouseTarget, window.underworld.pathingPolygons);
         if (currentPlayerPath.length) {
-          const turnStopPoints = pointsEveryXDistanceAlongPath(unitFeetLocation, currentPlayerPath, window.player.unit.staminaMax, window.player.unit.staminaMax - window.player.unit.stamina);
+          const turnStopPoints = pointsEveryXDistanceAlongPath(window.player.unit, currentPlayerPath, window.player.unit.staminaMax, window.player.unit.staminaMax - window.player.unit.stamina);
           window.walkPathGraphics.lineStyle(4, 0xffffff, 1.0);
-          window.walkPathGraphics.moveTo(unitFeetLocation.x, unitFeetLocation.y);
-          let lastPoint: Vec2 = unitFeetLocation;
+          window.walkPathGraphics.moveTo(window.player.unit.x, window.player.unit.y);
+          let lastPoint: Vec2 = window.player.unit;
           let distanceCovered = 0;
           const distanceLeftToMove = window.player.unit.stamina;
           for (let i = 0; i < currentPlayerPath.length; i++) {
@@ -343,7 +336,7 @@ export function contextmenuHandler(e: MouseEvent) {
         window.walkPathGraphics.clear();
         window.pie.sendData({
           type: MESSAGE_TYPES.MOVE_PLAYER,
-          ...add(mouseTarget, { x: 0, y: -yAxisWalkRopeOffset }),
+          ...mouseTarget,
         });
       } else {
         floatingText({

@@ -76,7 +76,7 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
     // as close as it can go without intersecting the polygon
     const targetInsideOfPolys: Polygon[] = findPolygonsThatVec2IsInsideOf(target, polygons);
 
-    window.debugGraphics.clear();
+    // window.debugGraphics.clear();
     // If the real target is in an invalid location,
     // find the closest valid target to represent the endpoint of the path
     if (targetInsideOfPolys.length) {
