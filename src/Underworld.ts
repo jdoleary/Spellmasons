@@ -227,9 +227,7 @@ export default class Underworld {
                 config.UNIT_UI_BAR_HEIGHT);
               // Draw red death circle if a unit is currently alive, but wont be after cast
               if (u.alive && !dryRunUnit.alive) {
-                window.unitOverlayGraphics.endFill();
-                window.unitOverlayGraphics.lineStyle(10, healthHurtRed, 1.0);
-                window.unitOverlayGraphics.drawCircle(u.x, u.y, config.COLLISION_MESH_RADIUS);
+                ImmediateMode.draw('skull.png', u, 1);
               }
             }
           }
