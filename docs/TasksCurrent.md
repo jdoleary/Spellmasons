@@ -2,6 +2,7 @@
 - Upgradable spells like hurt2
 - Fix player turn index on multiplayer
 - Better map generation
+- Spells that move units around
 ---
 - Make damage that they WILL take different from damage that they HAVE taken.  IT's confusing
 - Lochlan feedback
