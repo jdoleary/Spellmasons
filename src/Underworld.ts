@@ -352,9 +352,9 @@ export default class Underworld {
     const expandMagnitude = config.COLLISION_MESH_RADIUS * config.NON_HEAVY_UNIT_SCALE
     // Expand pathing walls by the size of the regular unit
     // Save the pathing walls for the underworld
-    const expandedAndMergedPolygons = mergeOverlappingPolygons([...obstacles.map(o => o.bounds).map(p => expandPolygon(p, expandMagnitude, true)), expandPolygon(mapBounds, expandMagnitude, false)]);
+    const expandedAndMergedPolygons = mergeOverlappingPolygons([...obstacles.map(o => o.bounds).map(p => expandPolygon(p, expandMagnitude)), expandPolygon(mapBounds, expandMagnitude)]);
     this.pathingPolygons = expandedAndMergedPolygons;
-    this.bounds = this.pathingPolygons.map(p => expandPolygon(p, -expandMagnitude, false)).map(polygonToPolygonLineSegments).flat();
+    this.bounds = this.pathingPolygons.map(p => expandPolygon(p, -expandMagnitude)).map(polygonToPolygonLineSegments).flat();
   }
   spawnPickup(index: number, coords: Vec2) {
     const pickup = Pickup.pickups[index];
@@ -579,10 +579,7 @@ export default class Underworld {
   }
   addGroundTileImages() {
     for (let coord of this.groundTiles) {
-      const image = Image.create(coord, 'tiles/ground.png', containerBoard);
-      // Anchor the ground image so that it is centered on it's 32x32 so that the bottom
-      // portion falls off into the abyss below it
-      image.sprite.anchor.y = 0.38;
+      Image.create(coord, 'tiles/ground.png', containerBoard);
     }
   }
   // ringLimit limits how far away from the spawnSource it will check for valid spawn locations

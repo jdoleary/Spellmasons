@@ -217,10 +217,9 @@ export function polygonToPolygonLineSegments(polygon: Polygon): PolygonLineSegme
 // Expand polygon: Grows a polygon into it's "outside" by the distance of magnitude
 // along the normal vectors of each vertex.
 // Pure: returns a new polygon without mutating the old
-export function expandPolygon(polygon: Polygon, magnitude: number, yAxisOnlyUp: boolean): Polygon {
+export function expandPolygon(polygon: Polygon, magnitude: number): Polygon {
     return {
-        // The points are only projected along the X axis so that obstacles have an appearance of "height"
-        points: polygon.points.map((_p, i) => projectPointForPathingMesh(polygon, i, magnitude, yAxisOnlyUp)),
+        points: polygon.points.map((_p, i) => projectPointForPathingMesh(polygon, i, magnitude)),
         inverted: polygon.inverted
     }
 }
@@ -277,7 +276,7 @@ export function getNormalVectorOfLineSegment(lineSegment: LineSegment): Vec2 {
         y: lineSegment.p2.x - lineSegment.p1.x
     }
 }
-function projectPointForPathingMesh(polygon: Polygon, pointIndex: number, magnitude: number, yAxisOnlyUp: boolean): Vec2 {
+function projectPointForPathingMesh(polygon: Polygon, pointIndex: number, magnitude: number): Vec2 {
     const point = polygon.points[pointIndex];
     if (point) {
         const nextPoint = polygon.points[getLoopableIndex(pointIndex + (polygon.inverted ? -1 : 1), polygon.points)];
@@ -286,16 +285,6 @@ function projectPointForPathingMesh(polygon: Polygon, pointIndex: number, magnit
             const projectToPoint = getPointNormalVector(point, prevPoint, nextPoint)
             projectToPoint.x *= magnitude;
             projectToPoint.y *= magnitude;
-            if (yAxisOnlyUp) {
-                // yAxisOnlyUp is used for expanding the poly mesh of walls
-                // upwards only to give them the appearance of height, so
-                // units can stand in front of and behind them.
-                // However we are dividing by 2 because we still
-                // want units to have some "depth" thickness so they
-                // don't just look like paper held in front of the wall
-                projectToPoint.y = -Math.abs(projectToPoint.y) / 2;
-            }
-
             // Round to the nearest whole number to avoid floating point inequalities later
             // when processing these points
             return Vec.round(Vec.add(point, projectToPoint));

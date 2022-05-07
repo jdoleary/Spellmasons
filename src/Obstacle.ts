@@ -65,11 +65,6 @@ export function addImageForObstacle(obstacle: IObstacle) {
     // descending into the abyss
     image.sprite.alpha = 0.0;
   }
-  if (obstacle.wall) {
-    // TODO: This anchor is a bit arbitrary, for now, it makes "walls" appear to have height,
-    // since the wall sprite is taller than the 64x64 space that it occupies
-    image.sprite.anchor.y = 0.61;
-  }
 
 }
 
