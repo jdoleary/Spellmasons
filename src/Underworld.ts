@@ -589,21 +589,37 @@ export default class Underworld {
     }
   }
   // ringLimit limits how far away from the spawnSource it will check for valid spawn locations
+  // same as below "findValidSpanws", but shortcircuits at the first valid spawn found and returns that
   findValidSpawn(spawnSource: Vec2, ringLimit?: number): Vec2 | undefined {
     // Enough rings to cover the whole map
     const honeycombRings = ringLimit || Math.max(this.width / 2 / config.COLLISION_MESH_RADIUS, this.height / 2 / config.COLLISION_MESH_RADIUS);
     for (let s of math.honeycombGenerator(config.COLLISION_MESH_RADIUS, spawnSource, honeycombRings)) {
-      let invalid = false;
       const attemptSpawn = { ...s, radius: config.COLLISION_MESH_RADIUS };
       // Ensure attemptSpawn isn't inside of pathingPolygons
-      if (!invalid && findPolygonsThatVec2IsInsideOf(attemptSpawn, this.pathingPolygons).length === 0) {
+      if (findPolygonsThatVec2IsInsideOf(attemptSpawn, this.pathingPolygons).length === 0) {
         // Return the first valid spawn found
         return attemptSpawn
-      } else {
-        invalid = true;
       }
     }
     return undefined;
+  }
+  // Same as above "findValidSpawn", but returns an array of valid spawns
+  findValidSpawns(spawnSource: Vec2, radius: number = config.COLLISION_MESH_RADIUS / 4, ringLimit?: number): Vec2[] {
+    const validSpawns: Vec2[] = [];
+    // Enough rings to cover the whole map
+    const honeycombRings = ringLimit || Math.max(this.width / 2 / config.COLLISION_MESH_RADIUS, this.height / 2 / config.COLLISION_MESH_RADIUS);
+    // The radius passed into honeycombGenerator is how far between vec2s each honeycomb cell is
+    for (let s of math.honeycombGenerator(radius, spawnSource, honeycombRings)) {
+      // attemptSpawns radius must be the full config.COLLISION_MESH_RADIUS to ensure
+      // that the spawning unit wont intersect something it shouldn't
+      const attemptSpawn = { ...s, radius: config.COLLISION_MESH_RADIUS };
+      // Ensure attemptSpawn isn't inside of pathingPolygons
+      if (findPolygonsThatVec2IsInsideOf(attemptSpawn, this.pathingPolygons).length === 0) {
+        // Return the first valid spawn found
+        validSpawns.push(attemptSpawn);
+      }
+    }
+    return validSpawns;
 
   }
 

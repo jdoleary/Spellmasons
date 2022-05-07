@@ -2,6 +2,7 @@ import * as Unit from '../Unit';
 import * as Pickup from '../Pickup';
 import type { Spell } from '.';
 import type { Vec2 } from '../Vec';
+import * as config from '../config';
 
 const id = 'swap';
 const spell: Spell = {
@@ -26,10 +27,11 @@ Swaps the caster with the source target.
       if (swapUnit && targetedUnits[0]) {
         swapUnits.push([swapUnit, targetedUnits[0]]);
       }
+      const swapLocations = [swapLocation, ...window.underworld.findValidSpawns(swapLocation, config.COLLISION_MESH_RADIUS / 4, 4)];
       // The units at the target location
       for (let targetUnit of targetedUnits) {
         if (targetUnit) {
-          swapUnits.push([targetUnit, swapLocation]);
+          swapUnits.push([targetUnit, swapLocations.shift() || swapLocation]);
         }
         // The pickup at the target location
         const pickupAtTarget = window.underworld.getPickupAt(state.castLocation);
