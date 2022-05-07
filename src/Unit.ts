@@ -598,6 +598,38 @@ export function getImagePathForUnitId(id: string): string {
 export function inRange(unit: IUnit, coords: Vec2): boolean {
   return math.distance(unit, coords) <= unit.attackRange;
 }
+
+// return boolean signifies if unit should abort their turn
+export async function runTurnStartEvents(unit: IUnit): Promise<boolean> {
+  // Note: This must be a for loop instead of a for..of loop
+  // so that if one of the onTurnStartEvents modifies the
+  // unit's onTurnStartEvents array (for example, after death)
+  // this loop will take that into account.
+  let abortTurn = false;
+  for (let i = 0; i < unit.onTurnStartEvents.length; i++) {
+    const eventName = unit.onTurnStartEvents[i];
+    if (eventName) {
+      const fn = Events.onTurnSource[eventName];
+      if (fn) {
+        const shouldAbortTurn = await fn(unit);
+        // Only change abort turn from false to true,
+        // never from turn to false because if any one
+        // of the turn start events needs the unit to abort
+        // their turn, the turn should abort, regardless of
+        // the other events
+        if (shouldAbortTurn) {
+          abortTurn = true;
+        }
+      } else {
+        console.error('No function associated with turn start event', eventName);
+      }
+    } else {
+      console.error('No turn start event at index', i)
+    }
+  }
+  return abortTurn
+
+}
 // Makes a copy of the unit's data suitable for 
 // a dryRunUnit
 export function copyForDryRunUnit(u: IUnit): IUnit {

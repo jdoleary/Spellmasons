@@ -173,6 +173,8 @@ export async function syncSpellEffectProjection() {
           }
         }
       }
+      // Run onTurnStartEvents on dryRunUnits:
+      await window.underworld.calculateEnemyAttentionMarkers();
     }
   }
 }

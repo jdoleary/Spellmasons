@@ -121,6 +121,8 @@ export default class Underworld {
       window.dryRunUnits[dryRunUnitIndex] = Unit.copyForDryRunUnit(window.player.unit);
     }
   }
+  // Assigns window.dryRunUnits a copy of this.units
+  // for the sake of prediction
   syncDryRunUnits() {
     window.dryRunUnits = this.units.map(Unit.copyForDryRunUnit);
   }
@@ -287,12 +289,16 @@ export default class Underworld {
   }
   // Displays markers above units heads if they will attack the current client's unit
   // next turn
-  calculateEnemyAttentionMarkers() {
+  async calculateEnemyAttentionMarkers() {
     window.attentionMarkers = [];
     if (window.player) {
-      for (let u of this.units.filter(u => u.alive)) {
+      for (let u of window.dryRunUnits) {
+        const skipTurn = await Unit.runTurnStartEvents(u);
+        if (skipTurn) {
+          continue;
+        }
         const { target, canAttack } = this.getUnitAttackTarget(u);
-        if (canAttack && target === window.player.unit) {
+        if (u.alive && canAttack && target === window.player.unit) {
           window.attentionMarkers.push(u);
         }
       }
@@ -1187,10 +1193,6 @@ export default class Underworld {
             // Reset stamina so units can move again
             u.stamina = u.staminaMax;
           }
-          // Now that new NPC bunits have moved or spawned, calculate their
-          // attention markers 
-          // Note: This must occur after stamina is recalculated
-          this.calculateEnemyAttentionMarkers();
           // Lastly, initialize the player turns.
           // Note, it is possible that calling this will immediately end
           // the player phase (if there are no players to take turns)
@@ -1228,25 +1230,9 @@ export default class Underworld {
       (u) => u.unitType === UnitType.AI && u.alive && u.faction == faction,
     )) {
       // Trigger onTurnStart Events
-      // Note: This must be a for loop instead of a for..of loop
-      // so that if one of the onTurnStartEvents modifies the
-      // unit's onTurnStartEvents array (for example, after death)
-      // this loop will take that into account.
-      for (let i = 0; i < u.onTurnStartEvents.length; i++) {
-        const eventName = u.onTurnStartEvents[i];
-        if (eventName) {
-          const fn = Events.onTurnSource[eventName];
-          if (fn) {
-            const abortTurn = await fn(u);
-            if (abortTurn) {
-              continue unitloop;
-            }
-          } else {
-            console.error('No function associated with turn start event', eventName);
-          }
-        } else {
-          console.error('No turn start event at index', i)
-        }
+      const abortTurn = await Unit.runTurnStartEvents(u);
+      if (abortTurn) {
+        continue unitloop;
       }
       const unitSource = allUnits[u.unitSourceId];
       if (unitSource) {
