@@ -202,10 +202,11 @@ export default class Underworld {
           const healthBarHealColor = u.faction == Faction.ALLY ? 0x23ff30 : 0xff2828;
           window.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
           window.unitOverlayGraphics.beginFill(healthBarColor, 1.0);
+          const healthBarWidth = Math.max(0, config.UNIT_UI_BAR_WIDTH * u.health / u.healthMax);
           window.unitOverlayGraphics.drawRect(
             u.x - config.UNIT_UI_BAR_WIDTH / 2,
             u.y - config.COLLISION_MESH_RADIUS - config.UNIT_UI_BAR_HEIGHT,
-            config.UNIT_UI_BAR_WIDTH * u.health / u.healthMax,
+            healthBarWidth,
             config.UNIT_UI_BAR_HEIGHT);
 
           // Only show health bar predictions on PlayerTurns, while players are able
@@ -218,10 +219,11 @@ export default class Underworld {
               if (healthAfterHurt > u.health) {
                 window.unitOverlayGraphics.beginFill(healthBarHealColor, 1.0);
               }
+              const manaBarWidth = Math.max(0, config.UNIT_UI_BAR_WIDTH * (u.health - healthAfterHurt) / u.healthMax);
               window.unitOverlayGraphics.drawRect(
                 u.x - config.UNIT_UI_BAR_WIDTH / 2 + config.UNIT_UI_BAR_WIDTH * healthAfterHurt / u.healthMax,
                 u.y - config.COLLISION_MESH_RADIUS - config.UNIT_UI_BAR_HEIGHT,
-                config.UNIT_UI_BAR_WIDTH * (u.health - healthAfterHurt) / u.healthMax,
+                manaBarWidth,
                 config.UNIT_UI_BAR_HEIGHT);
               // Draw red death circle if a unit is currently alive, but wont be after cast
               if (u.alive && !dryRunUnit.alive) {
