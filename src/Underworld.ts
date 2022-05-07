@@ -62,6 +62,7 @@ const elPlayerTurnIndicator = document.getElementById('player-turn-indicator');
 const elLevelIndicator = document.getElementById('level-indicator');
 const elUpgradePicker = document.getElementById('upgrade-picker') as HTMLElement;
 const elUpgradePickerContent = document.getElementById('upgrade-picker-content') as HTMLElement;
+const elSeed = document.getElementById('seed') as HTMLElement;
 
 let lastTime = 0;
 let requestAnimationFrameGameLoopId: number;
@@ -106,6 +107,7 @@ export default class Underworld {
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
     window.underworld = this;
     this.seed = seed;
+    elSeed.innerText = `Seed: ${seed}`;
     console.log("RNG create with seed:", seed, ", state: ", RNGState);
     this.random = this.syncronizeRNG(RNGState);
     this.ensureAllClientsHaveAssociatedPlayers(getClients());

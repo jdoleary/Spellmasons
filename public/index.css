@@ -876,3 +876,8 @@ td:first-child {
   border-right: 1px solid white;
   padding-right: 4px;
 }
+
+#version-info,
+#seed {
+  font-size: small;
+}
