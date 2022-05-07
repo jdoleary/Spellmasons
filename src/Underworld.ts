@@ -1204,8 +1204,6 @@ export default class Underworld {
             // Ally NPCs go first
             await this.executeNPCTurn(Faction.ALLY);
             await this.executeNPCTurn(Faction.ENEMY);
-            // Check if portal should spawn after NPC turns in case all enemies die during NPC turn
-            this.checkIfShouldSpawnPortal();
             // Set turn phase to player turn
             this.endNPCTurnPhase();
           })();
@@ -1420,7 +1418,6 @@ export default class Underworld {
     if (!dryRun) {
       // Clear spell animations once all cards are done playing their animations
       containerSpells.removeChildren();
-      this.checkIfShouldSpawnPortal();
     }
 
     return effectState;

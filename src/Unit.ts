@@ -363,6 +363,7 @@ export function die(unit: IUnit) {
   // In the event that this unit that just died is the selected unit,
   // this will remove the tooltip:
   checkIfNeedToClearTooltip();
+  window.underworld.checkIfShouldSpawnPortal();
 
 }
 export function takeDamage(unit: IUnit, amount: number, dryRun: boolean, state?: EffectState) {
