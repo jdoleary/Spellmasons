@@ -455,13 +455,6 @@ export default class Underworld {
           // @ts-ignore
           sector = math.rotateMatrix(sector);
         }
-        const doInvert = randInt(this.random, 0, 9) <= 2;
-        // Chance of inverting the obstacle sector so ground is wall or void
-        // and vice versa
-        if (doInvert) {
-          // @ts-ignore
-          sector = sector.map(x => x.map(o => o == 0 ? 1 : 0))
-        }
 
         // obstacleIndex of 1 means non ground, so pick an obstacle at random
         const obstacleChoice = randInt(this.random, 0, 1)
