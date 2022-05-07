@@ -270,7 +270,7 @@ export default class Underworld {
       const { x: camX, y: camY, zoom } = getCamera();
       const margin = 30 / zoom;
       const marginTop = 45 / zoom;
-      const marginBottom = 15 / zoom;
+      const marginBottom = 45 / zoom;
       const left = margin + camX / zoom;
       const right = window.innerWidth / zoom - margin + camX / zoom;
       const top = marginTop + camY / zoom;
@@ -292,7 +292,10 @@ export default class Underworld {
       exclamationMark.y = Math.min(Math.max(top, exclamationMark.y), bottom);
 
       // Draw Attention Icon to show the enemy will hurt you next turn
-      ImmediateMode.draw('attention_sword.png', exclamationMark, 1 / zoom);
+      // 1/zoom keeps the attention marker the same size regardless of the level of zoom
+      // Math.sin... makes the attention marker swell and shink so it grabs the player's attention so they
+      // know that they're in danger
+      ImmediateMode.draw('attention_sword.png', exclamationMark, (1 / zoom) + (Math.sin(Date.now() / 500) + 1) / 3);
     }
 
   }
