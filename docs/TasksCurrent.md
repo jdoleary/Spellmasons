@@ -1,5 +1,7 @@
 
+- Swap aoe moves corpse locations but not their images
 - Lochlan feedback
+    - Have to communicate cards getting more expensive better
     - Not enough cover to stay out of LOS of archer
     - Damage dropoff for range
     - Better archer AI, move to LOS but out of range of attack; optimal distance from character
