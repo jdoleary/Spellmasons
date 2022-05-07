@@ -1,4 +1,5 @@
 
+- Make damage that they WILL take different from damage that they HAVE taken.  IT's confusing
 - Swap aoe moves corpse locations but not their images
 - Lochlan feedback
     - Have to communicate cards getting more expensive better
