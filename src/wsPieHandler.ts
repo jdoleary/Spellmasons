@@ -255,7 +255,10 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       break;
     case MESSAGE_TYPES.MOVE_PLAYER:
       if (fromPlayer) {
-        await Unit.moveTowards(fromPlayer.unit, payload);
+        await Unit.moveTowards(fromPlayer.unit, payload).then(() => {
+          // Trigger mouse move when player is done moving so it recalculates predictions
+          mouseMove();
+        });
       } else {
         console.error('Cannot move player, caster does not exist');
       }
