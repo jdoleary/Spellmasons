@@ -159,10 +159,6 @@ function zoom(e: WheelEvent) {
 
 const menuBtnId = 'menuBtn';
 const endTurnBtnId = 'end-turn-btn';
-const centerCamBtnId = 'center-cam-btn';
-const elCenterCamBtn: HTMLButtonElement = document.getElementById(
-  centerCamBtnId,
-) as HTMLButtonElement;
 function addUnderworldEventListeners() {
   // Add keyboard shortcuts
   window.addEventListener('keydown', keydownListener);
@@ -177,10 +173,6 @@ function addUnderworldEventListeners() {
   ) as HTMLButtonElement;
   elEndTurnBtn.addEventListener('click', endTurnBtnListener);
 
-  elCenterCamBtn.addEventListener('click', () => {
-    // Recenter the camera on yourself
-    cameraAutoFollow(true);
-  });
   const elMenuBtn: HTMLButtonElement = document.getElementById(
     menuBtnId,
   ) as HTMLButtonElement;

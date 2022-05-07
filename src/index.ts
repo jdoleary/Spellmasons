@@ -125,8 +125,6 @@ declare global {
     hostClientId: string;
     // Current client's id
     clientId: string;
-    // allows for left clicking to ping to other players
-    altDown: boolean;
     animatingSpells: boolean;
     view: View;
     // For development use

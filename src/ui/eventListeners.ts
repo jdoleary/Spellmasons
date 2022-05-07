@@ -60,17 +60,9 @@ export function keydownListener(event: KeyboardEvent) {
       const thereWereCardsSelected = CardUI.areAnyCardsSelected();
       CardUI.clearSelectedCards();
       if (!thereWasTooltipActive && !thereWereCardsSelected) {
-        if (!isCameraAutoFollowing()) {
-          // If camera is not auto following make it auto follow
-          cameraAutoFollow(true)
-        } else {
-          // Otherwise finally toggle menu
-          toggleMenu();
-        }
+        // Otherwise finally toggle menu
+        toggleMenu();
       }
-      break;
-    case 'AltLeft':
-      window.altDown = true;
       break;
     case 'Space':
       window.underworld.endMyTurn();
@@ -128,6 +120,19 @@ export function keydownListener(event: KeyboardEvent) {
       keyDown.d = true;
       cameraAutoFollow(false);
       break;
+    case 'KeyC':
+      const mouseTarget = window.underworld.getMousePos();
+      window.pie.sendData({
+        type: MESSAGE_TYPES.PING,
+        x: mouseTarget.x,
+        y: mouseTarget.y
+      });
+      break;
+    case 'KeyZ':
+      // Make camera follow player unit 
+      cameraAutoFollow(true)
+      break;
+
   }
   // Invoke mouse move handler to update spell projections
   // Lots of UI is updated when the mouse moves, but keys
@@ -141,9 +146,6 @@ export function keyupListener(event: KeyboardEvent) {
     return;
   }
   switch (event.code) {
-    case 'AltLeft':
-      window.altDown = false;
-      break;
     case 'KeyF':
       CardUI.toggleInspectMode(false);
       // Clear walk path on inspect mode off
@@ -375,14 +377,6 @@ export function clickHandler(e: MouseEvent) {
     return;
   }
 
-  if (window.altDown) {
-    window.pie.sendData({
-      type: MESSAGE_TYPES.PING,
-      x: mousePos.x,
-      y: mousePos.y,
-    });
-    return;
-  }
   // If a spell exists (based on the combination of cards selected)...
   if (CardUI.areAnyCardsSelected()) {
     // Only allow casting in the proper phase and on player's turn only

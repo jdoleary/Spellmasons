@@ -863,7 +863,7 @@ body.view-Game #toolbar {
   color: white;
 }
 
-body.auto-camera #center-cam-btn {
+body.auto-camera #center-cam-tooltip {
   display: none;
 }
 
