@@ -1,4 +1,5 @@
 - Make damage that they WILL take different from damage that they HAVE taken.  IT's confusing
+- Trigger mouse move when player unit is done moving so it will render attention markers
 - Lochlan feedback
     - Have to communicate cards getting more expensive better
     - Not enough cover to stay out of LOS of archer
