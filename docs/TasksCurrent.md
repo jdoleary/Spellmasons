@@ -1,3 +1,8 @@
+## High level tasks
+- Upgradable spells like hurt2
+- Fix player turn index on multiplayer
+- Better map generation
+---
 - Make damage that they WILL take different from damage that they HAVE taken.  IT's confusing
 - Lochlan feedback
     - Have to communicate cards getting more expensive better
@@ -10,8 +15,6 @@
     - Damage reduction, negation, absorbtion (anti-archer defense spells)
         - Think of faster than light or into the breach
 
-- Bug: An archer with their center inside a wall cannot attack you
-    - I may be getting rid of height anyway when I do map creation so this may not matter
 - Bug: Can go negative mana if you cast too quickly
 - Bug: Had a scenario where i had a debugger on enterPortal and on image.show
 and 2nd client got `Cannot change character, player not found with id 8c502be8-631c-482a-9398-40155f77c21f`
