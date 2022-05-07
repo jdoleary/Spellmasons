@@ -8,7 +8,7 @@ const id = 'freeze';
 const spell: Spell = {
   card: {
     id,
-    manaCost: 10,
+    manaCost: 25,
     healthCost: 0,
     expenseScaling: 2,
     probability: 50,
