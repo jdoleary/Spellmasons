@@ -63,6 +63,7 @@ const elLevelIndicator = document.getElementById('level-indicator');
 const elUpgradePicker = document.getElementById('upgrade-picker') as HTMLElement;
 const elUpgradePickerContent = document.getElementById('upgrade-picker-content') as HTMLElement;
 const elSeed = document.getElementById('seed') as HTMLElement;
+const elCardHolders = document.getElementById('card-holders') as HTMLElement;
 
 let lastTime = 0;
 let requestAnimationFrameGameLoopId: number;
@@ -263,6 +264,11 @@ export default class Underworld {
 
   }
   drawEnemyAttentionMarkers() {
+    const cardHoldersRect = elCardHolders.getBoundingClientRect();
+    // cardHand has padding of 300px to allow for a far right drop zone,
+    // this should be taken into account when keeping the attention marker
+    // outside of the cardHoldersRect bounds
+    const cardHandPaddingRight = 300;
     // Draw attention markers which show if an NPC will
     // attack you next turn
     // Note: this block must come after updating the camera position
@@ -290,6 +296,11 @@ export default class Underworld {
       // Keep inside bounds of camera
       exclamationMark.x = Math.min(Math.max(left, exclamationMark.x), right);
       exclamationMark.y = Math.min(Math.max(top, exclamationMark.y), bottom);
+      // Don't let the attention marker get obscured by the cardHolders element
+      if (exclamationMark.x < cardHoldersRect.width + camX - cardHandPaddingRight && exclamationMark.y > cardHoldersRect.top + camY) {
+        // 64 is arbitrary extra padding for the height of the marker
+        exclamationMark.y = cardHoldersRect.top + camY - 64;
+      }
 
       // Draw Attention Icon to show the enemy will hurt you next turn
       // 1/zoom keeps the attention marker the same size regardless of the level of zoom
