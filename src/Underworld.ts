@@ -181,8 +181,6 @@ export default class Underworld {
             this.checkPickupCollisions(u);
           }
           collideWithWalls(u);
-          // Sync Image even for non moving units since they may be moved by forces other than themselves
-          Unit.syncImage(u)
           // Ensure that resolveDoneMoving is invoked when there are no points left in the path
           // This is necessary to end the moving units turn because elsewhere we are awaiting the fulfillment of that promise
           // to know they are done moving
@@ -190,6 +188,9 @@ export default class Underworld {
             u.resolveDoneMoving();
           }
         }
+        // Sync Image even for non moving units since they may be moved by forces other than themselves
+        // This keeps the unit.image in the same place as unit.x, unit.y
+        Unit.syncImage(u)
         // Draw unit overlay graphics
         //--
         // Prevent drawing unit overlay graphics when a unit is in the portal
