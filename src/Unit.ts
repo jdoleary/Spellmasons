@@ -384,8 +384,10 @@ export function takeDamage(unit: IUnit, amount: number, dryRun: boolean, state?:
   if (!dryRun) {
     if (amount > 0) {
       // Use all_red shader to flash the unit to show they are taking damage
-      unit.shaderUniforms.all_red.alpha = 1;
-      addLerpable(unit.shaderUniforms.all_red, "alpha", 0, 200);
+      if (unit.shaderUniforms.all_red) {
+        unit.shaderUniforms.all_red.alpha = 1;
+        addLerpable(unit.shaderUniforms.all_red, "alpha", 0, 200);
+      }
     }
   }
 
