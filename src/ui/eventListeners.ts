@@ -408,8 +408,19 @@ export function clickHandler(e: MouseEvent) {
           // Then cancel casting:
           return
         }
-        // If cast target is out of attack range...
-        if (distance(selfPlayer.unit, target) > selfPlayer.unit.attackRange) {
+
+        const unitAtCastLocation = window.underworld.getUnitAt(target);
+        // If cast target is out of attack range, disallow cast
+        let targetOutOfRange = false;
+        if (unitAtCastLocation) {
+          // If any part of the targeted unit is within range allow the cast
+          // This is why this adds +config.COLLISION_MESH_RADIUS to the range check
+          targetOutOfRange = distance(selfPlayer.unit, unitAtCastLocation) > selfPlayer.unit.attackRange + config.COLLISION_MESH_RADIUS;
+        } else if (distance(selfPlayer.unit, target) > selfPlayer.unit.attackRange) {
+          targetOutOfRange = true;
+        }
+
+        if (targetOutOfRange) {
           floatingText({
             coords: target,
             text: `Target out of range`,
@@ -417,12 +428,12 @@ export function clickHandler(e: MouseEvent) {
           });
           // Cancel Casting
           return
+
         }
 
         // Abort casting if there is no unitAtCastLocation
         // unless the first card (like AOE) specifically allows casting
         // on non unit targets
-        const unitAtCastLocation = window.underworld.getUnitAt(target);
         const pickupAtCastLocation = window.underworld.getPickupAt(target);
         if ((!unitAtCastLocation && !pickupAtCastLocation) && cards.length && cards[0] && !cards[0].allowNonUnitTarget) {
           floatingText({
