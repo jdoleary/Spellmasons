@@ -29,7 +29,10 @@ export function keydownListener(event: KeyboardEvent) {
     window.closeMenu();
     return;
   }
-  if (window.view == View.Upgrade && event.code === 'Escape') {
+  // Allow escape toggling menu on any view OTHER than View.Game
+  // (View.Game will support toggling the menu but it has more complex
+  // logic)
+  if (window.view != View.Game && event.code === 'Escape') {
     toggleMenu();
     return;
   }
