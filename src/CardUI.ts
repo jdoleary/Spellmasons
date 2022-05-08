@@ -215,11 +215,6 @@ function addListenersToCardElement(
       if (index !== -1) {
         cardsSelected.splice(index, 1);
         element.remove();
-        // Since a new card has been deselected, we must sync the spell
-        // effect projection so it will be up to date in the event
-        // that the user is hovering over a unit while deselecting this card
-        // but hadn't moved the mouse since selecting it
-        mouseMove();
         // When a card is deselected, clear the currently shown card
         // so that it doesn't continue to hover over the gameboard
         // for a card that is now deselected
@@ -306,11 +301,6 @@ function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string
 
       }
     }
-    // Since a new card has been selected, we must sync the spell
-    // effect projection so it will be up to date in the event
-    // that the user is hovering over a unit while selecting this card
-    // but hadn't moved the mouse since selecting it
-    mouseMove();
   } else {
     console.error('elSelectedCards is null');
   }

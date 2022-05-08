@@ -137,10 +137,6 @@ export function keydownListener(event: KeyboardEvent) {
       break;
 
   }
-  // Invoke mouse move handler to update spell projections
-  // Lots of UI is updated when the mouse moves, but keys
-  // also change what the UI will
-  mouseMove();
 }
 
 export function keyupListener(event: KeyboardEvent) {
@@ -168,7 +164,6 @@ export function keyupListener(event: KeyboardEvent) {
       keyDown.d = false;
       break;
   }
-  mouseMove();
 }
 
 export function endTurnBtnListener(e: MouseEvent) {
@@ -190,6 +185,8 @@ export function mouseMove() {
   runPredictions();
 
   const mouseTarget = window.underworld.getMousePos();
+  // TODO: optimize this function by not rerunning parts if mouse & player.unit position
+  // havent changed since last call.
 
   // Show faint circle on clickable entities on hover:
   drawCircleUnderTarget(mouseTarget, 0.4, window.dryRunGraphics);

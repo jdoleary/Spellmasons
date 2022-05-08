@@ -252,6 +252,7 @@ export default class Underworld {
     this.drawEnemyAttentionMarkers();
     this.drawResMarkers();
     updatePlanningView();
+    mouseMove();
 
     // Invoke gameLoopUnits again next loop
     requestAnimationFrameGameLoopId = requestAnimationFrame(this.gameLoop.bind(this))
@@ -982,11 +983,6 @@ export default class Underworld {
     // mana CAN go beyond max for other reasons (like mana potions), by design
     player.unit.mana += Math.max(0, Math.min(player.unit.manaPerTurn, manaTillFull));
 
-    // Sync spell effect projection in the event that the player has a
-    // spell queued up, it should show it in the HUD when it becomes their turn again
-    // even if they don't move the mouse
-    mouseMove();
-
     // If this current player is NOT able to take their turn...
     if (!Player.ableToTakeTurn(player)) {
       // Skip them
@@ -1219,8 +1215,6 @@ export default class Underworld {
         case 'NPC':
           // Clear enemy attentionMarkers since it's now their turn
           window.attentionMarkers = [];
-          // Clears spell effect on NPC turn
-          mouseMove();
           (async () => {
             // Run AI unit actions
             // Ally NPCs go first
