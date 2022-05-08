@@ -1,6 +1,9 @@
 ## Critical tasks
 - Optimize run predictions which is slowing the game to a crawl on level 10
 - Better map generation
+- Lots of infinite loop errors when generating maps from processPolygon
+    - 0.9864260595839807
+    - Make a function to print out these points in order to i can visualize it
 ## High level tasks
 
 - Upgradable spells like hurt2
@@ -8,7 +11,6 @@
 - Fix infinite loop when all players die
 ---
 - Use middle mouse button drag to move camera
-- Lots of infinite loop errors when generating maps from processPolygon
 - Make damage that they WILL take different from damage that they HAVE taken.  It's confusing
 - Lochlan feedback
     - Have to communicate cards getting more expensive better
