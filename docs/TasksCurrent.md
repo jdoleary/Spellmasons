@@ -4,7 +4,7 @@
 - Better map generation
 - Spells that move units around
 ---
-- Make damage that they WILL take different from damage that they HAVE taken.  IT's confusing
+- Make damage that they WILL take different from damage that they HAVE taken.  It's confusing
 - Lochlan feedback
     - Have to communicate cards getting more expensive better
     - Not enough cover to stay out of LOS of archer

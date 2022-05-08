@@ -879,6 +879,8 @@ export default class Underworld {
       ) {
         this.endPlayerTurnPhase();
         return true;
+      } else {
+        console.log('Player Turn: Check end player turn phase', this.playerTurnIndex, this.players.length);
       }
     }
     return false;
@@ -1062,6 +1064,7 @@ export default class Underworld {
       // which checks if the playerTurnIndex is >= the number of players
       // to see if it should go to the next phase
       this.playerTurnIndex = playerIndex + 1;
+      console.log('PlayerTurn: End player turn', clientId, '; Increment player turn to', this.playerTurnIndex);
       this.syncTurnMessage();
       const wentToNextLevel = this.checkForEndOfLevel();
       if (wentToNextLevel) {
@@ -1192,6 +1195,7 @@ export default class Underworld {
           // Lastly, initialize the player turns.
           // Note, it is possible that calling this will immediately end
           // the player phase (if there are no players to take turns)
+          console.log('PlayerTurn: Change to PlayerTurns phase and initialize player with index', this.playerTurnIndex);
           this.initializePlayerTurn(this.playerTurnIndex);
           break;
         case 'NPC':
