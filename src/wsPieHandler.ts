@@ -18,13 +18,13 @@ import { pie } from './wsPieSetup';
 
 const messageLog: any[] = [];
 let clients: string[] = [];
-window.exitCurrentGame = function exitCurrentGame() {
+window.exitCurrentGame = function exitCurrentGame(): Promise<void> {
   // Go back to the main PLAY menu
   window.setMenu('PLAY');
   if (window.underworld) {
     window.underworld.cleanup();
   }
-  pie.disconnect();
+  return pie.disconnect();
 }
 export function onData(d: OnDataArgs) {
   console.log("onData:", MESSAGE_TYPES[d.payload.type], d)
