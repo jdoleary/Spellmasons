@@ -24,6 +24,7 @@
     "@jest/globals": "^26.6.2",
     "@snowpack/plugin-typescript": "^1.2.1",
     "@types/jest": "^26.0.20",
+    "@types/lodash.throttle": "^4.1.7",
     "@types/object-hash": "^2.2.1",
     "@types/seedrandom": "^3.0.1",
     "@types/snowpack-env": "^2.3.2",
@@ -39,6 +40,7 @@
     "@sentry/integrations": "^6.19.3",
     "@sentry/tracing": "^6.19.3",
     "@websocketpie/client": "^0.13.7",
+    "lodash.throttle": "^4.1.1",
     "pixi.js": "^6.2.1",
     "seedrandom": "^3.0.5",
     "stats.js": "^0.17.0"

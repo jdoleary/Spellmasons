@@ -141,6 +141,7 @@ export async function runPredictions() {
   if (!window.underworld) {
     return;
   }
+  const startTime = Date.now();
   const mousePos = window.underworld.getMousePos();
   // Clear the spelleffectprojection in preparation for showing the current ones
   clearSpellEffectProjection();
@@ -207,6 +208,7 @@ export async function runPredictions() {
 
     }
   }
+  console.log(`Predictions ran in ${Date.now() - startTime} ms`);
 }
 
 // SpellEffectProjection are images to denote some information, such as the spell or action about to be cast/taken when clicked

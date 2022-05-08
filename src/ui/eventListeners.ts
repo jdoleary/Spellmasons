@@ -1,3 +1,4 @@
+import throttle from 'lodash.throttle';
 import { MESSAGE_TYPES } from '../MessageTypes';
 import * as CardUI from '../CardUI';
 import floatingText from '../FloatingText';
@@ -173,7 +174,8 @@ export function endTurnBtnListener(e: MouseEvent) {
   return false;
 }
 
-export function mouseMove() {
+export const mouseMove = throttle(_mouseMove, 100);
+function _mouseMove() {
   // Only handle clicks when viewing the Game
   if (window.view !== View.Game) {
     return;
