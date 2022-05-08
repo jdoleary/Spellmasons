@@ -225,7 +225,7 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       }
       // Use the internal setTurnPhrase now that the desired phase has been sent
       // via the public setTurnPhase
-      window.underworld._setTurnPhase(phase);
+      window.underworld.initializeTurnPhase(phase);
       break;
     case MESSAGE_TYPES.CREATE_LEVEL:
       const { level } = payload as {
@@ -324,9 +324,10 @@ function handleLoadGameState(payload: {
   // lastUnitId must be synced AFTER all of the units are synced since the synced
   // units are id aware
   window.underworld.lastUnitId = loadedGameState.lastUnitId;
-  // Use the internal setTurnPhrase now that the desired phase has been sent
-  // via the public setTurnPhase
-  window.underworld._setTurnPhase(phase);
+  // Set the turn_phase; do not use initializeTurnPhase
+  // because that function runs initialization logic that would
+  // make the loaded underworld desync from the host's underworld
+  window.underworld.setTurnPhase(phase);
 
   // Mark the underworld as "ready"
   readyState.set('underworld', true);

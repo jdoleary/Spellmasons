@@ -25,9 +25,6 @@ and 2nd client got `Cannot change character, player not found with id 8c502be8-6
 - Improve sending castCards with targeting based on id not position
 - Make loading screen
 - Make an overlay screen that blocks interaction while waiting for sync
-- Bug: If active turn player disconnects and reconnects immediately there will be a playerTurnIndex desync
-    - Reconnecting client should request new game state
-- turn message is not synced after wsPie disconnect
 - Unit movement desync occurred between clients when one client has CPU throttled, the non throttled client has the unit move much farther
 - Fix multiplayer
     - Experienced a bug where one player portaled on one screen but not on the other

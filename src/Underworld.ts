@@ -916,11 +916,11 @@ export default class Underworld {
   async endNPCTurnPhase() {
     // Move onto next phase
     // --
-    // Note: The reason this logic happens here instead of in setTurnPhase
-    // is because setTurnPhase needs to be called on game load to put everything
+    // Note: The reason this logic happens here instead of in initializeTurnPhase
+    // is because initializeTurnPhase needs to be called on game load to put everything
     // in a good state when updating to the canonical client's game state. (this 
     // happens when one client disconnects and rejoins).  If playerTurnIndex were
-    // reset in setTurnPhase, a client reconnecting would also reset the 
+    // reset in initializeTurnPhase, a client reconnecting would also reset the 
     // playerTurnIndex (which is not desireable because it's trying to LOAD the
     // game state).  Instead, it's handled here, when the NPC turn phase ends
     // so that clients CAN reconnect mid player turn and the playerTurnIndex is 
@@ -1150,10 +1150,34 @@ export default class Underworld {
       });
     }
   }
-  // Invoked only through wsPie, use broadcastTurnPhase in game logic
-  // when you want to set the turn phase
-  async _setTurnPhase(p: turn_phase) {
+  // sets underworld.turn_phase variable and syncs related html classes
+  // Do not confuse with initializeTurnPhase which runs initialization
+  // logic when the turn phase changes.  Note: initializeTurnPhase
+  // calls this function
+  setTurnPhase(p: turn_phase) {
     console.log('setTurnPhase(', turn_phase[p], ')');
+    this.turn_phase = p;
+
+    // Remove all phase classes from body
+    for (let phaseClass of document.body.classList.values()) {
+      if (phaseClass.includes('phase-')) {
+        document.body.classList.remove(phaseClass);
+      }
+    }
+    const phase = turn_phase[this.turn_phase];
+    if (phase) {
+      // Add current phase class to body
+      document.body.classList.add('phase-' + phase.toLowerCase());
+    } else {
+      console.error('Invalid turn phase', this.turn_phase)
+    }
+
+  }
+  // Initialization logic that runs to setup a change of turn_phase
+  // Invoked only through wsPie, use broadcastTurnPhase in game logic
+  // when you want to set the turn_phase
+  async initializeTurnPhase(p: turn_phase) {
+    console.log('initializeTurnPhase(', turn_phase[p], ')');
     // Reset to first player's turn
     this.playerTurnIndex = 0;
 
@@ -1163,14 +1187,11 @@ export default class Underworld {
     // Clear debug graphics
     window.debugGraphics.clear()
 
-    this.turn_phase = p;
+    // Change the underworld.turn_phase variable and
+    // related html classes that are used by the UI to
+    // know what turn phase it is
+    this.setTurnPhase(p);
 
-    // Remove all phase classes from body
-    for (let phaseClass of document.body.classList.values()) {
-      if (phaseClass.includes('phase-')) {
-        document.body.classList.remove(phaseClass);
-      }
-    }
     // Clean up invalid units
     const keepUnits = [];
     for (let u of this.units) {
@@ -1182,8 +1203,6 @@ export default class Underworld {
 
     const phase = turn_phase[this.turn_phase];
     if (phase) {
-      // Add current phase class to body
-      document.body.classList.add('phase-' + phase.toLowerCase());
       switch (phase) {
         case 'PlayerTurns':
 
