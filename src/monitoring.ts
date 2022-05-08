@@ -1,7 +1,7 @@
 import * as Sentry from "@sentry/browser";
 import { CaptureConsole as CaptureConsoleIntegration } from "@sentry/integrations";
 import { BrowserTracing } from "@sentry/tracing";
-// import Stats from 'stats.js';
+import Stats from 'stats.js';
 
 export function setupMonitoring() {
 
@@ -27,21 +27,30 @@ export function setupMonitoring() {
   } else {
     console.log('Setup: Monitoring with Sentry disabled due to localhost')
   }
-  // const stats = new Stats();
-  // // Add fps stats
-  // function monitorFPS() {
-  //   stats.end();
-  //   stats.begin();
-  //   requestAnimationFrame(monitorFPS);
-  // }
-  // stats.begin();
-  // monitorFPS();
+}
 
-  // // Add latency stats
-  // stats.showPanel(3);
-  // window.latencyPanel = stats.addPanel(
-  //   new Stats.Panel('latency', '#ff8', '#221'),
-  // );
-  // stats.dom.classList.add('doob-stats');
-  // document.body.appendChild(stats.dom);
+window.monitorFPS = () => {
+  const stats = new Stats();
+  // Add fps stats
+  function monitorFPS() {
+    stats.end();
+    stats.begin();
+    requestAnimationFrame(monitorFPS);
+  }
+  stats.begin();
+  monitorFPS();
+
+  // Add latency stats
+  stats.showPanel(3);
+  window.latencyPanel = stats.addPanel(
+    new Stats.Panel('latency', '#ff8', '#221'),
+  );
+  // Add ms tracker for runPredictions function
+  stats.showPanel(4);
+  window.runPredictionsPanel = stats.addPanel(
+    new Stats.Panel('runPredictions', '#ff8', '#221'),
+  );
+  stats.dom.classList.add('doob-stats');
+  document.body.appendChild(stats.dom);
+
 }

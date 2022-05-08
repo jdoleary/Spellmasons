@@ -94,6 +94,7 @@ function setupAll() {
 declare global {
   interface Window {
     latencyPanel: Stats.Panel;
+    runPredictionsPanel: Stats.Panel;
     animationTimeline: AnimationTimeline;
     underworld: Underworld;
     // A reference to the player instance of the client playing on this instance
@@ -179,6 +180,9 @@ declare global {
     // True if client player has casted this turn;
     // Used to prompt before ending turn without taking any action
     castThisTurn: boolean;
+    // Turns on fps monitoring
+    monitorFPS: () => void;
+
   }
 }
 window.skipTutorial = () => {

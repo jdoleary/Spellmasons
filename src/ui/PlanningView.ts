@@ -208,7 +208,9 @@ export async function runPredictions() {
 
     }
   }
-  console.log(`Predictions ran in ${Date.now() - startTime} ms`);
+  if (window.runPredictionsPanel) {
+    window.runPredictionsPanel.update(Date.now() - startTime, 300);
+  }
 }
 
 // SpellEffectProjection are images to denote some information, such as the spell or action about to be cast/taken when clicked
