@@ -1,8 +1,8 @@
 ## High level tasks
 - Upgradable spells like hurt2
-- Fix player turn index on multiplayer
 - Better map generation
 - Spells that move units around
+- Fix infinite loop when all players die
 ---
 - Make damage that they WILL take different from damage that they HAVE taken.  It's confusing
 - Lochlan feedback

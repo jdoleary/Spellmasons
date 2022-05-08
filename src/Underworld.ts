@@ -880,7 +880,7 @@ export default class Underworld {
         this.endPlayerTurnPhase();
         return true;
       } else {
-        console.log('Player Turn: Check end player turn phase', this.playerTurnIndex, this.players.length);
+        console.log('PlayerTurn: Check end player turn phase', this.playerTurnIndex, this.players.length);
       }
     }
     return false;
@@ -935,8 +935,6 @@ export default class Underworld {
         },
       ));
     }
-    // Reset to first player's turn
-    this.playerTurnIndex = 0;
     // Increment the turn number now that it's starting over at the first phase
     this.turn_number++;
 
@@ -1038,6 +1036,7 @@ export default class Underworld {
     }
   }
   async endPlayerTurn(clientId: string) {
+    console.log('endPlayerTurn', clientId)
     const playerIndex = this.players.findIndex((p) => p.clientId === clientId);
     const player = this.players[playerIndex];
     if (!player) {
@@ -1095,8 +1094,6 @@ export default class Underworld {
       livingPlayers.filter((p) => p.inPortal).length === livingPlayers.length;
     // Advance the level if there are living players and they all are in the portal:
     if (livingPlayers.length && areAllLivingPlayersInPortal) {
-      // Reset the playerTurnIndex
-      this.playerTurnIndex = 0;
       if (this.nextHandCraftedLevel) {
         const levelName = this.nextHandCraftedLevel;
         // Clear it out so it doesn't keep sending users to the same level
@@ -1157,6 +1154,8 @@ export default class Underworld {
   // when you want to set the turn phase
   async _setTurnPhase(p: turn_phase) {
     console.log('setTurnPhase(', turn_phase[p], ')');
+    // Reset to first player's turn
+    this.playerTurnIndex = 0;
 
     // Clear cast this turn
     window.castThisTurn = false;
