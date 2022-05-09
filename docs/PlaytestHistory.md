@@ -1,3 +1,13 @@
+## Lochlan feedback
+    - Have to communicate cards getting more expensive better
+    - Not enough cover to stay out of LOS of archer
+    - Damage dropoff for range
+    - Better archer AI, move to LOS but out of range of attack; optimal distance from character
+    - Archers could have a minimal range so they can't "hip fire"
+    - Special unit "marksman archers"
+    - Spell to deflect projectiles to hostile targets nearby
+    - Damage reduction, negation, absorbtion (anti-archer defense spells)
+        - Think of faster than light or into the breach
 ## 2022.02.08 Brad
 - If i have someone selected and click off it should deselect
 - Brad pickuped cards and kept playing and was later suprised at his new cards. Make it obvious

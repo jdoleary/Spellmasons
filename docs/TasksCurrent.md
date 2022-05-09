@@ -5,19 +5,10 @@
 
 - Upgradable spells like hurt2
 - Spells that move units around
+- Spell that summons blocker
 ---
 - Use middle mouse button drag to move camera
 - Make damage that they WILL take different from damage that they HAVE taken.  It's confusing
-- Lochlan feedback
-    - Have to communicate cards getting more expensive better
-    - Not enough cover to stay out of LOS of archer
-    - Damage dropoff for range
-    - Better archer AI, move to LOS but out of range of attack; optimal distance from character
-    - Archers could have a minimal range so they can't "hip fire"
-    - Special unit "marksman archers"
-    - Spell to deflect projectiles to hostile targets nearby
-    - Damage reduction, negation, absorbtion (anti-archer defense spells)
-        - Think of faster than light or into the breach
 
 - Bug: Can go negative mana if you cast too quickly
 - Bug: Had a scenario where i had a debugger on enterPortal and on image.show
