@@ -83,7 +83,9 @@ export function joinRoom(_room_info = {}): Promise<void> {
       // or else the characters to select wont display
       setView(View.CharacterSelect);
     }
-  }).catch((err: string) => console.error('Failed to join room', err));
+  }).catch((err: string) => {
+    console.error(err);
+  });
 }
 window.joinRoom = joinRoom;
 
