@@ -519,25 +519,7 @@ export default class Underworld {
       console.log('Bad level seed, not enough valid spawns for portal, regenerating');
       return;
     }
-    // Fill in the unreachable areas:
-    // Go through all cells again and spawn obstacles anywhere that can't reach the "portal" (or the main walkable area of the map)
-    for (let i = levelData.groundTiles.length - 1; i > 0; i--) {
-      const coord = levelData.groundTiles[i]
-      if (coord) {
-        const isReachable = findPolygonsThatVec2IsInsideOf(coord, this.pathingPolygons).length === 0
-        // If the coordinate is a unreachable area, fill it in with void:
-        if (!isReachable) {
-          const voidIndex = Obstacle.obstacleSource.findIndex(o => o.name == 'Void');
-          if (voidIndex) {
-            levelData.obstacles.push({ sourceIndex: voidIndex, coord })
-          } else {
-            console.error('Could not find "Void" obstacle');
-          }
-          // Remove ground tile since it is now an obstacle
-          levelData.groundTiles.splice(i, 1);
-        }
-      }
-    }
+
     // Recache walls now that unreachable areas have been filled in
     this.cacheWalls(levelData.obstacles.map(o => Obstacle.create(o.coord, o.sourceIndex)));
 
