@@ -2,9 +2,11 @@
 - Fix multiplayer auto join
 - Better map generation
 - Rename 'dryRun' to prediction, since it will actually execute logic (on a copy of units - dryRunUnits), it just doesn't want anything to show on screen.
+- Undo movement button
 
 ## Tasks
 
+- "maximum shield" shows a bunch of times on hover if casting the spell would give them map
 - Upgradable spells like hurt2
 - Spells that move units around
 - Spell that summons blocker
