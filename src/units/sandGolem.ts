@@ -35,7 +35,7 @@ const unit: UnitSource = {
     if (closestEnemy) {
       const distanceToEnemy = math.distance(unit, closestEnemy);
       // Trick to make the unit only move as far as will put them in range but no closer
-      unit.stamina = distanceToEnemy - unit.attackRange;
+      unit.stamina = Math.min(unit.stamina, distanceToEnemy - unit.attackRange);
       movePromise = Unit.moveTowards(unit, closestEnemy);
     }
     // Move and attack at the same time, but wait for the slowest to finish before moving on
