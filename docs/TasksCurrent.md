@@ -1,9 +1,6 @@
 ## Critical tasks
-- Optimize run predictions which is slowing the game to a crawl on level 10
 - Better map generation
-- Lots of infinite loop errors when generating maps from processPolygon
-    - 0.9864260595839807
-    - Make a function to print out these points in order to i can visualize it
+
 ## High level tasks
 
 - Upgradable spells like hurt2
