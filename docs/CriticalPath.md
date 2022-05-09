@@ -1,29 +1,19 @@
 # Critical Path (4st deadline revision)
 - Core:
     - Resolve desync
-        - Write code that looks for desyncs but doesn't try to resolve them.
-        - The trouble with my desync code until now is that it doesn't check what step of the game it was sent and received.  Is it turn 4 playerIndex 2?  IF it gets sent at that time but as it's going over the wire player 2 takes their turn, it will think there's a desync.
-    - More random generation.  This isn't a rogue-like without the random element
+    - More random generation / better maps.  This isn't a rogue-like without the random element
         - Take queues from slay the spire
+        - Sectors could have optional elements
+        - Sectors could fit together using WFC instead of just being picked by random
     - ✔ Resolve pathing
-    - Optimize pathing
-    - Wave Function Collapse for more interesting Levels
 - Youtube Alpha version video / Post on social
-- Homepage
-    - Homepage
-        - Trailer
-        - Email signup
-        - Steam page
-    - Progress
-        - Twitter Feed
+- Homepage / Marketing / Steam Page / Email Signup
 - Art / Shaders / Juice
     - Come up with palette first
     - Assets needed:
         - 8 Wizards, color change in shader
         - Pickup
             - Potion
-            - Spellbook
-            - ~~Portal~~
         - Enemies
             - Grunt
             - Archer
@@ -33,6 +23,7 @@
         - Tiles
             - Wall
             - Floor
+            - Void / Water?
     - Inspiration: https://vryell.itch.io/tiny-biomes-pack
     - Tiles: https://opengameart.org/content/dungeon-tileset
     - https://opengameart.org/content/rogue-dungeon
@@ -40,8 +31,14 @@
 - [SFX](https://www.asoundeffect.com/sound-library/metamorphosis/)
     - Adobe? https://www.adobe.com/products/audition/offers/AdobeAuditionDLCSFX.html
 - [Tutorial](https://www.youtube.com/watch?v=-GV814cWiAw)
+- Optimize
+    - Optimize runPredictions
+    - Optimize pathing
+    - Look for `TODO optimize:`
 - More content
     - Engage community in making new spells
+    - Specific barriers or walls that can't be cast threw
+    - Summonable barriers (with health) to protect you from arrows or mobs' pathing
 
 ## Deadlines
 - ~~My part (gameplay) should be finished end of Feb 2022~~
