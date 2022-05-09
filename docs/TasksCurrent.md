@@ -1,4 +1,6 @@
 ## Critical tasks
+- 'contageous' is now broken due to running spells ondryRunUnits every frame
+- Fix multiplayer auto join
 - Better map generation
 
 ## Tasks

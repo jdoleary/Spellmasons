@@ -505,6 +505,10 @@ body.view-Upgrade #player-turn-indicator {
   top: 110px;
 }
 
+#inspector-tooltip-content {
+  white-space: pre-wrap;
+}
+
 /* Transform position is determined on hover*/
 #inspector-tooltip-container.top {
   top: 64px;

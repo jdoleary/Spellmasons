@@ -291,11 +291,11 @@ export function updateTooltipContent() {
           text += `\
 ${unitSource.id}
 ${unitSource.info.description}
-Faction ${Faction[selectedUnit.faction]}
-Health ${selectedUnit.health}/${selectedUnit.healthMax}
-Mana ${selectedUnit.mana}/${selectedUnit.manaMax} + ${selectedUnit.manaPerTurn} per turn
-Attack Damage ${selectedUnit.damage}
-Modifiers ${JSON.stringify(selectedUnit.modifiers, null, 2)}
+${selectedUnit.faction == Faction.ALLY ? '🤝' : '⚔️️'} ${Faction[selectedUnit.faction]}
+🗡️ ${selectedUnit.damage}
+❤️ ${selectedUnit.health}/${selectedUnit.healthMax}
+🔵 Mana ${selectedUnit.mana}/${selectedUnit.manaMax} + ${selectedUnit.manaPerTurn} per turn
+Modifiers ${modifiersToText(selectedUnit.modifiers)}
 ${unitSource.extraTooltipInfo ? unitSource.extraTooltipInfo() : ''}
 ${cards}
       `;
@@ -316,7 +316,6 @@ ${selectedPickup.description}
       `;
       }
       break;
-      break;
   }
 
   elInspectorTooltipContent.innerText = text;
@@ -326,6 +325,16 @@ ${selectedPickup.description}
     elInspectorTooltipContainer.style.visibility = "visible";
 
   }
+}
+function modifiersToText(modifiers: object): string {
+  let message = '';
+  for (let [key, value] of Object.entries(modifiers)) {
+    message += `
+${key}${JSON.stringify(value, null, 2).split('"').join('').split('{').join('').split('}').join('')}`
+
+  }
+  return message;
+
 }
 export function checkIfNeedToClearTooltip() {
   if (selectedUnit && !selectedUnit.alive) {
