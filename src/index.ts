@@ -61,13 +61,13 @@ function setupAll() {
     Units.registerUnits();
     initPlanningView();
     readyState.set("content", true);
-    if (storage.get(SKIP_TUTORIAL) === YES) {
-      window.setMenu('PLAY');
-      setView(View.Menu);
-    } else {
-      window.setMenu('TUTORIAL');
-      startTutorial();
-    }
+    // if (storage.get(SKIP_TUTORIAL) === YES) {
+    window.setMenu('PLAY');
+    setView(View.Menu);
+    // } else {
+    //   window.setMenu('TUTORIAL');
+    //   startTutorial();
+    // }
   }).catch(e => {
     console.error('Setup: Failed to setup pixi', e);
   });
