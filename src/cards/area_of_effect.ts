@@ -13,7 +13,7 @@ const spell: Spell = {
     thumbnail: 'aoe.png',
     requiresFollowingCard: true,
     description: `
-Adds targets for the following cards to effect by "growing" existing targets
+Adds a radius to the spell so it can affect more targets
     `,
     allowNonUnitTarget: true,
     effect: async (state, dryRun) => {
