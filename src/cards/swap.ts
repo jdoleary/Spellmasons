@@ -23,7 +23,7 @@ Swaps the caster with the source target.
       const swapPickups: [Pickup.IPickup, Vec2][] = [];
       const swapLocation = { x: casterUnit.x, y: casterUnit.y };
       // The unit at the location that the targetUnit will swap to
-      const swapUnit = window.underworld.getUnitAt(swapLocation);
+      const swapUnit = window.underworld.getUnitAt(swapLocation, dryRun);
       if (swapUnit && targetedUnits[0]) {
         swapUnits.push([swapUnit, targetedUnits[0]]);
       }

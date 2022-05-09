@@ -988,8 +988,8 @@ export default class Underworld {
     // Trigger onTurnStart Events
     const onTurnStartEventResults: boolean[] = await Promise.all(player.unit.onTurnStartEvents.map(
       async (eventName) => {
-        const fn = Events.onTurnSource[eventName];
-        return fn ? await fn(player.unit) : false;
+        const fn = Events.onTurnStartSource[eventName];
+        return fn ? await fn(player.unit, false) : false;
       },
     ));
     if (onTurnStartEventResults.some((b) => b)) {

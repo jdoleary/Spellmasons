@@ -612,7 +612,7 @@ export async function runTurnStartEvents(unit: IUnit, dryRun: boolean = false): 
   for (let i = 0; i < unit.onTurnStartEvents.length; i++) {
     const eventName = unit.onTurnStartEvents[i];
     if (eventName) {
-      const fn = Events.onTurnSource[eventName];
+      const fn = Events.onTurnStartSource[eventName];
       if (fn) {
         const shouldAbortTurn = await fn(unit, dryRun);
         // Only change abort turn from false to true,

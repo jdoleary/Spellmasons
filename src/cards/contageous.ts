@@ -61,33 +61,38 @@ Makes this unit's curses contageous to other nearby units
     add
   },
   events: {
-    onTurnStart: async (unit: IUnit) => {
-      const coords = window.underworld.getUnitsWithinDistanceOfTarget(unit, COLLISION_MESH_RADIUS * 4, false);
-      const nearByUnits: IUnit[] = coords.map((coord) => window.underworld.getUnitAt(coord))
+    onTurnStart: async (unit: IUnit, dryRun: boolean) => {
+      const nearByUnits = window.underworld.getUnitsWithinDistanceOfTarget(unit, COLLISION_MESH_RADIUS * 4, dryRun)
         // Filter out undefineds
         .filter(x => x !== undefined)
         // Do not spread to dead units
         .filter(x => x?.alive)
         // Filter out self
         .filter(x => x !== unit) as IUnit[];
-      const curseCards: ICard[] = Object.entries(unit.modifiers).filter(([_id, modValue]) => modValue.isCurse).map(([id, _mod]) => allCards[id]).filter(x => x !== undefined) as ICard[];
+      const curseCards: ICard[] = Object.entries(unit.modifiers)
+        // Only curses are contageous
+        // Do not make contageous itself contageous
+        .filter(([cardId, modValue]) => modValue.isCurse && cardId !== id)
+        .map(([id, _mod]) => allCards[id])
+        .filter(x => x !== undefined) as ICard[];
       for (let card of curseCards) {
         const promises = [];
         // Filter out units that already have this curse
         for (let touchingUnit of nearByUnits.filter(u => !Object.keys(u.modifiers).includes(card.id))) {
-          promises.push(createVisualLobbingProjectile(
-            unit,
-            touchingUnit,
-            'green-thing.png',
-          ).then(() => {
-            floatingText({ coords: touchingUnit, text: card.id });
-          }));
+          if (!dryRun) {
+            // Visually show the contageon
+            promises.push(createVisualLobbingProjectile(
+              unit,
+              touchingUnit,
+              'green-thing.png',
+            ).then(() => {
+              floatingText({ coords: touchingUnit, text: card.id });
+            }));
+          }
+          Unit.addModifier(touchingUnit, card.id);
         }
         await Promise.all(promises);
 
-        for (let target of nearByUnits) {
-          Unit.addModifier(target, card.id);
-        }
       }
 
       return false;

@@ -29,7 +29,7 @@ export type onTurnStart = {
   // Return boolean skips the turn if true
   (unit: IUnit, dryRun: boolean): Promise<boolean>;
 };
-const onTurnSource: { [name: string]: onTurnStart } = {};
+const onTurnStartSource: { [name: string]: onTurnStart } = {};
 export type onTurnEnd = { (unit: IUnit): Promise<void>; }
 const onTurnEndSource: { [name: string]: onTurnEnd } = {};
 
@@ -38,6 +38,6 @@ export default {
   onDamageSource,
   onDeathSource,
   onMoveSource,
-  onTurnSource,
+  onTurnStartSource,
   onTurnEndSource
 };

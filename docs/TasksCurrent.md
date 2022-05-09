@@ -1,6 +1,4 @@
 ## Critical tasks
-- 'contageous' is now broken due to running spells ondryRunUnits every frame
-    - You can see this in action if you cast 'shield' AND 'poison' on one unit
 - Fix multiplayer auto join
 - Better map generation
 - Rename 'dryRun' to prediction, since it will actually execute logic (on a copy of units - dryRunUnits), it just doesn't want anything to show on screen.

@@ -83,7 +83,7 @@ function register(spell: Spell) {
       Events.onMoveSource[id] = events.onMove;
     }
     if (events.onTurnStart) {
-      Events.onTurnSource[id] = events.onTurnStart;
+      Events.onTurnStartSource[id] = events.onTurnStart;
     }
     if (events.onTurnEnd) {
       Events.onTurnEndSource[id] = events.onTurnEnd;
@@ -180,13 +180,4 @@ export function addUnitTarget(unit: Unit.IUnit, effectState: EffectState) {
   if (effectState.targetedUnits.indexOf(unit) === -1) {
     effectState.targetedUnits.push(unit);
   }
-}
-// Takes the array of targets and returns a (deduplicated) array of units
-export function targetsToUnits(targets: Vec2[]): Unit.IUnit[] {
-  // Get units at coordinates
-  const unitsAndUndefined = targets.map(t => window.underworld.getUnitAt(t));
-  // remove undefined
-  const units = unitsAndUndefined.flatMap(u => !!u ? [u] : []);
-  const dedupedUnits = units.filter((unit, index) => units.indexOf(unit) === index);
-  return dedupedUnits;
 }
