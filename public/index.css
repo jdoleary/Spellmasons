@@ -885,3 +885,20 @@ td:first-child {
 #seed {
   font-size: small;
 }
+
+#cookie-consent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.2);
+  height: 100vh;
+}
+
+#cookie-consent-inner {
+  border: 1px solid black;
+  padding: 4px;
+  background-color: white;
+  z-index: 1;
+  max-width: 600px;
+
+}
