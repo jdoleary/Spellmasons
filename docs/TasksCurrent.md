@@ -1,11 +1,10 @@
 ## Critical tasks
 - Better map generation
 
-## High level tasks
+## Tasks
 
 - Upgradable spells like hurt2
 - Spells that move units around
-- Fix infinite loop when all players die
 ---
 - Use middle mouse button drag to move camera
 - Make damage that they WILL take different from damage that they HAVE taken.  It's confusing
@@ -30,16 +29,8 @@ and 2nd client got `Cannot change character, player not found with id 8c502be8-6
 - Make an overlay screen that blocks interaction while waiting for sync
 - Unit movement desync occurred between clients when one client has CPU throttled, the non throttled client has the unit move much farther
 - Fix multiplayer
-    - Experienced a bug where one player portaled on one screen but not on the other
-    - I throttled cpu on one client and saw a unit position desync where the non throttled client moved way farther
-    - then once their positions were desynced, I tried casting on the desynced unit and it hit on one screen and missed on the other because there positions were different
-    - after client 2 died on level 3, and both chose upgrades
-        - client 1 experienced a "bad seed - no place to spawn players" but client 2 did not, and so they had different looking levels
     - What about if host disconnects mid step?
-# Tasks
-- **Important** Improved level design with Wave Function Collapse
 - Make freeze block pathing
-- Lerp in and out when WASD camera
 
 # Stale, but important bugs
 

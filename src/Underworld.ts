@@ -855,6 +855,9 @@ export default class Underworld {
     );
     return { x, y };
   }
+  isGameOver(): boolean {
+    return !this.players.some(p => p.unit.alive);
+  }
   goToNextPhaseIfAppropriate(): boolean {
     if (this.turn_phase === turn_phase.PlayerTurns) {
       // If all players that have taken turns, then...
@@ -936,10 +939,12 @@ export default class Underworld {
     } else if (currentPlayerTurn === window.player) {
       message = 'Your Turn'
       yourTurn = true;
+    } else if (this.isGameOver()) {
+      message = 'Game Over';
+      yourTurn = false;
     } else {
       message = `Player ${this.playerTurnIndex + 1}'s turn`
       yourTurn = false;
-
     }
     if (elPlayerTurnIndicator) {
       elPlayerTurnIndicator.innerText = message;
@@ -1047,6 +1052,13 @@ export default class Underworld {
       this.syncTurnMessage();
       const wentToNextLevel = this.checkForEndOfLevel();
       if (wentToNextLevel) {
+        return;
+      }
+      const gameIsOver = this.isGameOver();
+      if (gameIsOver) {
+        // Prevent infinite loop since there are no players
+        // alive it would continue to loop endlessly and freeze up
+        // the game if it didn't early return here
         return;
       }
       const wentToNextPhase = this.goToNextPhaseIfAppropriate();
