@@ -122,6 +122,7 @@ export function setView(v: View) {
 
       break;
     case View.Upgrade:
+      // Intentionally left blank - this view is handled in css
       break;
     case View.Game:
       resizePixi();

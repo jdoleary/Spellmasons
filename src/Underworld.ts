@@ -1106,8 +1106,13 @@ export default class Underworld {
         // Make upgrades visible
         setView(View.Upgrade);
 
-        // Prepare the next level
-        this.initLevel(++this.levelIndex);
+        // Invoke initLevel within a timeout so that this function
+        // doesn't have to wait for level generation to complete before
+        // returning
+        setTimeout(() => {
+          // Prepare the next level
+          this.initLevel(++this.levelIndex);
+        }, 0)
       }
       // Return of true signifies it went to the next level
       return true;
