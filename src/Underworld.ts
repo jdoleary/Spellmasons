@@ -1269,6 +1269,7 @@ export default class Underworld {
         attackTarget = Unit.findClosestUnitInDifferentFaction(u);
         if (attackTarget) {
           const maxPathDistance = u.attackRange + u.stamina;
+          // TODO: Optimize this when checking if the unit can attack the player, it could short circuit
           const path = findPath(u, attackTarget, window.underworld.pathingPolygons);
           // Add the units current point to the start of the path
           const dist = calculateDistanceOfVec2Array([u, ...path]);
