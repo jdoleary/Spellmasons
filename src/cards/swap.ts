@@ -8,7 +8,7 @@ const id = 'swap';
 const spell: Spell = {
   card: {
     id,
-    manaCost: 50,
+    manaCost: 15,
     healthCost: 0,
     probability: 5,
     expenseScaling: 1,
