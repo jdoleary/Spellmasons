@@ -32,6 +32,8 @@ function connect_to_wsPie_server(wsUri?: string): Promise<void> {
         alert('Unable to connect to server.  Please check the wsURI.');
         reject();
 
+      }).then(() => {
+        console.log(`Pie: Connection to server ${wsUri} succeeded`)
       });
     } else {
       pie.connectSolo().then(() => {
@@ -65,7 +67,7 @@ export function joinRoom(_room_info = {}): Promise<void> {
   room_info.name = room_info.name.toLowerCase();
   return pie.joinRoom(room_info, true).then(() => {
     readyState.set('wsPieRoomJoined', true);
-    console.log('Pie: You are now in the room');
+    console.log('Pie: You are now in the room', JSON.stringify(room_info, null, 2));
     // Useful for development to get into the game quickly
     let quickloadName = storage.get('quickload');
     if (quickloadName) {
