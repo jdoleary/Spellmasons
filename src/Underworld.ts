@@ -366,12 +366,13 @@ export default class Underworld {
     };
     // walls block sight
     this.walls = mergeOverlappingPolygons([...obstacles.filter(o => o.wall).map(o => o.bounds), mapBounds]).map(polygonToPolygonLineSegments).flat();
-    const expandMagnitude = config.COLLISION_MESH_RADIUS * config.NON_HEAVY_UNIT_SCALE
     // Expand pathing walls by the size of the regular unit
     // bounds block movement
     this.bounds = mergeOverlappingPolygons([...obstacles.map(o => o.bounds), mapBounds]).map(polygonToPolygonLineSegments).flat();
+
+    const expandMagnitude = config.COLLISION_MESH_RADIUS * config.NON_HEAVY_UNIT_SCALE
     // pathing polygons determines the area that units can move within
-    this.pathingPolygons = mergeOverlappingPolygons([...obstacles.map(o => o.bounds).map(p => expandPolygon(p, expandMagnitude)), expandPolygon(mapBounds, expandMagnitude)]);
+    this.pathingPolygons = mergeOverlappingPolygons([...obstacles.map(o => o.bounds), mapBounds]).map(p => expandPolygon(p, expandMagnitude));
   }
   spawnPickup(index: number, coords: Vec2) {
     const pickup = Pickup.pickups[index];

@@ -293,7 +293,7 @@ function _mouseMove() {
     const mouseTarget = window.underworld.getMousePos();
     (document.getElementById('debug-info') as HTMLElement).innerText = `x:${Math.round(mouseTarget.x)}, y:${Math.round(mouseTarget.y)}`;
     // Draw the pathing walls
-    window.debugGraphics.lineStyle(3, 0x00aabb, 0.3);
+    window.debugGraphics.lineStyle(2, 0xffaabb, 1.0);
     const pathingWalls = window.underworld.pathingPolygons.map(polygonToPolygonLineSegments).flat();
     for (let lineSegment of pathingWalls) {
       window.debugGraphics.moveTo(lineSegment.p1.x, lineSegment.p1.y);
