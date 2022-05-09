@@ -63,11 +63,11 @@ at the start of the unit's turn.
     add
   },
   events: {
-    onTurnStart: async (unit: IUnit) => {
+    onTurnStart: async (unit: IUnit, dryRun: boolean) => {
       // TODO: There was a bug here where somehow modifiers['poison'] was undefined after i did chain, vulx10, poisonx10
       const modifier = unit.modifiers[id];
       if (modifier) {
-        takeDamage(unit, modifier.stacks || 1, false, undefined);
+        takeDamage(unit, modifier.stacks || 1, dryRun, undefined);
       } else {
         console.error('Should have poison modifier on unit but it is missing')
       }

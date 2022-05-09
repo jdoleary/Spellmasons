@@ -184,7 +184,7 @@ export async function runPredictions() {
       window.attentionMarkers = [];
       if (window.player) {
         for (let u of window.dryRunUnits) {
-          const skipTurn = await Unit.runTurnStartEvents(u);
+          const skipTurn = await Unit.runTurnStartEvents(u, true);
           if (skipTurn) {
             continue;
           }

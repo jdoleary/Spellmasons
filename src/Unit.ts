@@ -603,7 +603,7 @@ export function inRange(unit: IUnit, coords: Vec2): boolean {
 }
 
 // return boolean signifies if unit should abort their turn
-export async function runTurnStartEvents(unit: IUnit): Promise<boolean> {
+export async function runTurnStartEvents(unit: IUnit, dryRun: boolean = false): Promise<boolean> {
   // Note: This must be a for loop instead of a for..of loop
   // so that if one of the onTurnStartEvents modifies the
   // unit's onTurnStartEvents array (for example, after death)
@@ -614,7 +614,7 @@ export async function runTurnStartEvents(unit: IUnit): Promise<boolean> {
     if (eventName) {
       const fn = Events.onTurnSource[eventName];
       if (fn) {
-        const shouldAbortTurn = await fn(unit);
+        const shouldAbortTurn = await fn(unit, dryRun);
         // Only change abort turn from false to true,
         // never from turn to false because if any one
         // of the turn start events needs the unit to abort

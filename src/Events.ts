@@ -27,7 +27,7 @@ const onAgroSource: { [name: string]: onAgro } = {};
 
 export type onTurnStart = {
   // Return boolean skips the turn if true
-  (unit: IUnit): Promise<boolean>;
+  (unit: IUnit, dryRun: boolean): Promise<boolean>;
 };
 const onTurnSource: { [name: string]: onTurnStart } = {};
 export type onTurnEnd = { (unit: IUnit): Promise<void>; }
