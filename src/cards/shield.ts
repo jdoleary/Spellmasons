@@ -32,6 +32,15 @@ Protects bearer from the next ${damageBlocked} damage that they would incur.  Sh
         // Only block damage, not heals
         if (amount > 0) {
           let adjustedAmount = amount;
+          if (!dryRun) {
+            floatingText({
+              coords: unit,
+              text: 'Shielded from damage!',
+              style: {
+                fill: 'blue',
+              },
+            });
+          }
           adjustedAmount = Math.max(0, amount - modifier.damage_block);
           modifier.damage_block -= amount - adjustedAmount;
 
