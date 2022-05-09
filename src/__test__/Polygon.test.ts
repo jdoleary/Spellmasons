@@ -680,6 +680,17 @@ describe('testables', () => {
             expect(actual).toEqual(expected);
         });
         describe('given an inverted polygon', () => {
+            it('should return TRUE when the vec is on a vertex of the inverted polygon', () => {
+                const p1 = { x: 0, y: 0 }
+                const p2 = { x: 0, y: 1 }
+                const p3 = { x: 1, y: 1 }
+                const p4 = { x: 1, y: 0 }
+                const points: Vec2[] = [p1, p2, p3, p4];
+                const polygon: Polygon = { points, inverted: true };
+                const actual = isVec2InsidePolygon({ x: 0, y: 0 }, polygon);
+                const expected = true;
+                expect(actual).toEqual(expected);
+            });
             it('should return FALSE when the vec is inside the square', () => {
                 const p1 = { x: 0, y: 0 }
                 const p2 = { x: 0, y: 1 }
@@ -925,18 +936,53 @@ describe('expandPolygon', () => {
 
 });
 describe('mergeOverlappingPolygons', () => {
+    it.skip('should handle merging 4 polygons that make a donut of rectancles (with a hole in the middle)', () => {
+        // NOTE: This is currently not supported.
+        // There is no way to express polygons with a hole in the middle
+        const p1 = { x: 0, y: 0 }
+        const p2 = { x: 0, y: 10 }
+        const p3 = { x: 1, y: 10 }
+        const p4 = { x: 1, y: 0 }
+        const points: Vec2[] = [p1, p2, p3, p4];
+        const polygonA: Polygon = { points, inverted: false };
+        const p1b = { x: 0, y: 10 }
+        const p2b = { x: 10, y: 10 }
+        const p3b = { x: 10, y: 9 }
+        const p4b = { x: 0, y: 9 }
+        const pointsb: Vec2[] = [p1b, p2b, p3b, p4b];
+        const polygonB: Polygon = { points: pointsb, inverted: false };
+        const p1c = { x: 10, y: 10 }
+        const p2c = { x: 10, y: 0 }
+        const p3c = { x: 9, y: 0 }
+        const p4c = { x: 9, y: 10 }
+        const pointsc: Vec2[] = [p1c, p2c, p3c, p4c];
+        const polygonC: Polygon = { points: pointsc, inverted: false };
+        const p1d = { x: 10, y: 0 }
+        const p2d = { x: 0, y: 0 }
+        const p3d = { x: 0, y: 1 }
+        const p4d = { x: 10, y: 1 }
+        const pointsd: Vec2[] = [p1d, p2d, p3d, p4d];
+        const polygonD: Polygon = { points: pointsd, inverted: false };
+        const mergedPolygon = mergeOverlappingPolygons([polygonA, polygonB, polygonC, polygonD])[0];
+        const actual = mergedPolygon.points;
+        const expected = [
+            // TODO
+        ]
+        expect(actual).toEqual(expected);
+
+    })
     describe('given a regular polygon sharing one of it\'s entire walls with a larger inverted polygon', () => {
         it('should merge them without entering an infinite loop', () => {
             const p1 = { x: 0, y: 0 }
-            const p2 = { x: 0, y: 64 }
-            const p3 = { x: 64, y: 64 }
-            const p4 = { x: 64, y: 0 }
+            const p2 = { x: 0, y: 1 }
+            const p3 = { x: 1, y: 1 }
+            const p4 = { x: 1, y: 0 }
             const points: Vec2[] = [p1, p2, p3, p4];
             const polygonA: Polygon = { points, inverted: false };
             const p1b = { x: 0, y: 0 }
-            const p2b = { x: 0, y: 320 }
-            const p3b = { x: 640, y: 320 }
-            const p4b = { x: 640, y: 0 }
+            const p2b = { x: 0, y: 5 }
+            const p3b = { x: 10, y: 5 }
+            const p4b = { x: 10, y: 0 }
             const pointsb: Vec2[] = [p1b, p2b, p3b, p4b];
             // NOTE: polygonB is inverted, so everything OUTSIDE of it
             // is solid matter
@@ -944,8 +990,30 @@ describe('mergeOverlappingPolygons', () => {
             const mergedPolygon = mergeOverlappingPolygons([polygonA, polygonB])[0];
             const actual = mergedPolygon.points;
             const expected = [
-                // TODO
-                { x: 1, y: 0 },
+                {
+                    "x": 0,
+                    "y": 1,
+                },
+                {
+                    "x": 0,
+                    "y": 5,
+                },
+                {
+                    "x": 10,
+                    "y": 5,
+                },
+                {
+                    "x": 10,
+                    "y": 0,
+                },
+                {
+                    "x": 1,
+                    "y": 0,
+                },
+                {
+                    "x": 1,
+                    "y": 1,
+                },
             ]
             expect(actual).toEqual(expected);
         });

@@ -416,7 +416,12 @@ export function isVec2InsidePolygon(point: Vec2, polygon: Polygon): boolean {
             // 1. point is same location as a vertex of the polygon (inside)
             // 2. point is horizontal to a vertex of the polygon (possibly inside or outside)
             // 3. point is colinear with, but not on, a horizontal edge of the polygon (possibly inside or outside)
-            if (Vec.equal(intersection, wall.p1) || Vec.equal(intersection, wall.p2)) {
+            if (Vec.equal(intersection, point)) {
+                // The point itself is an intersection point, meaning the point lies directly on one of the walls of the polygon
+                // then it obviously is inside of the polygon (this implementation includes ON the walls as inside)
+                // Note: This is so for inverted polygons too.
+                return true
+            } else if (Vec.equal(intersection, wall.p1) || Vec.equal(intersection, wall.p2)) {
                 // Get the INSIDE angle of the vertex (relative to it's polygon)
                 const indexOfVertex = polygon.points.findIndex(p => Vec.equal(p, intersection));
                 const nextPoint = polygon.points[getLoopableIndex(indexOfVertex + 1, polygon.points)];
@@ -437,15 +442,6 @@ export function isVec2InsidePolygon(point: Vec2, polygon: Polygon): boolean {
                     }
                 } else {
                     console.error('Next point or prev point is undefined. This error should never occur.');
-                }
-            } else if (Vec.equal(intersection, point)) {
-                // The point itself is an intersection point, meaning the point lies directly on one of the walls of the polygon
-                if (!polygon.inverted) {
-                    // then it obviously is inside of the polygon (this implementation includes ON the walls as inside)
-                    return true
-                } else {
-                    // Note: Inverted poly always flips the result
-                    return false
                 }
             } else {
                 // If it intersects with a wall, flip the bool
