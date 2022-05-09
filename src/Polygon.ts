@@ -552,12 +552,12 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
         // The first point to iterate is also the firstPoint of the new poly
         newPoly.points.push(originalFirstPoint);
         // TODO update loop limit to something not just for testing
-        const loopLimit = 200
+        const loopLimit = 200;
         // TODO handle bad polys in a more sustainable way
         let i = 0;
         do {
             if (++i > loopLimit) {
-                console.error('infinite loop', newPoly.points);
+                console.error('Hit loopLimit for polygon processing.  May be an infinite loop or the polygon may just be too big.', newPoly.points);
                 return false;
 
             }
