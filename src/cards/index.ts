@@ -23,7 +23,7 @@ import swap from './swap';
 import purify from './purify';
 import poison from './poison';
 import vulnerable from './vulnerable';
-import protection from './protection';
+// import protection from './protection';
 import clone from './clone';
 import mana_burn from './mana_burn';
 import mana_steal from './mana_steal';
@@ -105,7 +105,7 @@ export function registerCards() {
   register(vulnerable);
   // register(lance);
   // register(stomp);
-  register(protection);
+  // register(protection);
   // register(charge);
   register(clone);
   register(mana_burn);
