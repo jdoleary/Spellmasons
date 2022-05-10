@@ -5,11 +5,11 @@ import type * as Upgrade from './Upgrade';
 import * as CardUI from './CardUI';
 import * as config from './config';
 import { Faction, UnitType } from './commonTypes';
-import { allUnits } from './units';
 import { getClients } from './wsPieHandler';
 import { allCards } from './cards';
 import { randInt } from './rand';
 import { clearTooltipSelection } from './ui/PlanningView';
+import defaultPlayerUnit from './units/jester';
 
 // The serialized version of the interface changes the interface to allow only the data
 // that can be serialized in JSON.  It may exclude data that is not neccessary to
@@ -32,12 +32,8 @@ export interface IPlayer {
   // be reflected in the UI
   cardUsageCounts: CardUsage;
 }
-export function create(clientId: string, unitId: string): IPlayer | undefined {
-  const userSource = allUnits[unitId];
-  if (!userSource) {
-    console.error('User unit source file not registered, cannot create player');
-    return undefined;
-  }
+export function create(clientId: string): IPlayer {
+  const userSource = defaultPlayerUnit;
   const player: IPlayer = {
     clientId,
     clientConnected: true,
@@ -180,6 +176,8 @@ export function setClientConnected(player: IPlayer, connected: boolean) {
     Image.removeSubSprite(player.unit.image, 'disconnected');
   } else {
     Image.addSubSprite(player.unit.image, 'disconnected');
+    // If they disconnect, end their turn
+    window.underworld.endPlayerTurn(player.clientId);
   }
 }
 export function enterPortal(player: IPlayer) {

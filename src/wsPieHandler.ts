@@ -133,7 +133,7 @@ function tryStartGame() {
 export async function startTutorial() {
   console.log('Game: Start Tutorial');
   await window.startSingleplayer();
-  const p = Player.create(window.clientId, manBlue.id);
+  const p = Player.create(window.clientId);
   if (p) {
     // Initialize the player for the level
     Player.resetPlayerForNextLevel(p);
@@ -389,28 +389,22 @@ function giveClientGameStateForInitialLoad(clientId: string) {
 export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
   console.log('clientPresenceChanged', o);
   clients = o.clients;
-  const playerOfClientThatChanged = window.underworld && window.underworld.players.find(
-    (p) => p.clientId === o.clientThatChanged,
-  );
   // Client joined
-  if (o.present && clients[0] !== undefined) {
+  if (clients[0] !== undefined) {
     // The host is always the first client
     window.hostClientId = clients[0];
     // If game is already started
     if (window.underworld) {
       // Ensure each client corresponds with a Player instance
-      window.underworld.ensureAllClientsHaveAssociatedPlayers(clients);
-      // And if the client that joined is associated with a player
-      if (playerOfClientThatChanged) {
-        // set their connected status
-        Player.setClientConnected(playerOfClientThatChanged, o.present);
-      }
+      const newPlayers = window.underworld.ensureAllClientsHaveAssociatedPlayers(clients);
       // Send the lastest gamestate to that client so they can be up-to-date:
       // Note: It is important that this occurs AFTER the player instance is created for the
       // client who just joined
       // If the game has already started (e.g. the host has already joined), send the initial state to the new 
       // client only so they can load
-      giveClientGameStateForInitialLoad(o.clientThatChanged);
+      for (let player of newPlayers) {
+        giveClientGameStateForInitialLoad(player.clientId);
+      }
     } else {
       if (window.hostClientId === window.clientId) {
         console.log(`Setup: Setting Host client to ${window.hostClientId}. You are the host. `);
@@ -420,28 +414,7 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
       }
     }
   } else {
-    // Client left
 
-    // If the client that left is associated with a player
-    if (playerOfClientThatChanged) {
-      // Disconnect the player and end their turn
-      Player.setClientConnected(playerOfClientThatChanged, false);
-      window.underworld.endPlayerTurn(playerOfClientThatChanged.clientId);
-    } else {
-      // this can occur naturally if a client disconnects before choosing
-      // a character
-    }
-
-    // if host left
-    if (o.clientThatChanged === window.hostClientId && clients[0] !== undefined) {
-      // Set host to the 0th client that is still connected
-      window.hostClientId = clients[0];
-      if (window.hostClientId === window.clientId) {
-        console.log(`Setup: Host client left, reassigning host to ${window.hostClientId}. % c You are the host. `, 'background: #222; color: #bada55');
-      } else {
-        console.log(`Setup: Host client left, reassigning host to ${window.hostClientId}.`);
-      }
-    }
   }
 }
 

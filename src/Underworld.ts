@@ -1501,7 +1501,9 @@ export default class Underworld {
     }
 
   }
-  ensureAllClientsHaveAssociatedPlayers(clients: string[]) {
+  // Returns an array of newly created players
+  ensureAllClientsHaveAssociatedPlayers(clients: string[]): Player.IPlayer[] {
+    let newlyCreatedPlayers: Player.IPlayer[] = [];
     // Ensure all clients have players
     for (let clientId of clients) {
       const player = this.players.find(p => p.clientId == clientId);
@@ -1509,10 +1511,9 @@ export default class Underworld {
         // If the client that joined does not have a player yet, make them one immediately
         // since all clients should always have a player associated
         console.log(`Setup: Create a Player instance for ${clientId}`)
-        const p = Player.create(clientId, 'jester');
-        if (p) {
-          Player.resetPlayerForNextLevel(p);
-        }
+        const p = Player.create(clientId);
+        Player.resetPlayerForNextLevel(p);
+        newlyCreatedPlayers.push(p);
       }
     }
     // Sync all players' connection statuses with the clients list
@@ -1521,6 +1522,18 @@ export default class Underworld {
     for (let player of this.players) {
       Player.setClientConnected(player, clients.includes(player.clientId));
     }
+    // if host left, reassign host
+    const hostPlayer = this.players.find(p => p.clientId == window.hostClientId);
+    if (!(hostPlayer && hostPlayer.clientConnected) && clients[0] !== undefined) {
+      // Set host to the 0th client that is still connected
+      window.hostClientId = clients[0];
+      if (window.hostClientId === window.clientId) {
+        console.log(`Setup: Host client left, reassigning host to ${window.hostClientId}. % c You are the host. `, 'background: #222; color: #bada55');
+      } else {
+        console.log(`Setup: Host client left, reassigning host to ${window.hostClientId}.`);
+      }
+    }
+    return newlyCreatedPlayers;
   }
   syncPlayers(players: Player.IPlayerSerialized[]) {
     console.log('sync: Syncing players');
