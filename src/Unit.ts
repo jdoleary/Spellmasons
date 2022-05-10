@@ -302,9 +302,10 @@ export function returnToDefaultSprite(unit: IUnit) {
   // dies because a dryRun unit won't have an image property
   if (unit.image) {
     const defaultImageString = unit.alive ? unit.defaultImagePath : 'units/corpse.png'
+    const container = unit.alive ? containerUnits : containerDoodads;
     Image.changeSprite(
       unit.image,
-      addPixiSprite(defaultImageString, containerUnits),
+      addPixiSprite(defaultImageString, container),
     );
   }
 }

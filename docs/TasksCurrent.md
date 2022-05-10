@@ -19,7 +19,6 @@ Brad Playtest:
 ## Tasks
 
 - Allys shouldn't push player units
-- Player units are rendering under skeleton
 - Update mana steal tooltip (remove cost portion since it updates when you cast)
 - Dead units don't lose poison
 - "maximum shield" shows a bunch of times on hover if casting the spell would give them map
@@ -45,6 +44,7 @@ and 2nd client got `Cannot change character, player not found with id 8c502be8-6
 - The zoom coordinates off issue between multiplayer sessions when casting
     - hit on one screen, miss on another
 - Optimize pathing
+- How to resurrect units you are standing on top of (blocking?)
 
 # Juice
 - Cards flip as you drag-n-drop over them
