@@ -1502,6 +1502,7 @@ export default class Underworld {
 
   }
   ensureAllClientsHaveAssociatedPlayers(clients: string[]) {
+    // Ensure all clients have players
     for (let clientId of clients) {
       const player = this.players.find(p => p.clientId == clientId);
       if (!player) {
@@ -1513,6 +1514,12 @@ export default class Underworld {
           Player.resetPlayerForNextLevel(p);
         }
       }
+    }
+    // Sync all players' connection statuses with the clients list
+    // This ensures that there are no players left that think they're connected
+    // but are not a part of the clients list
+    for (let player of this.players) {
+      Player.setClientConnected(player, clients.includes(player.clientId));
     }
   }
   syncPlayers(players: Player.IPlayerSerialized[]) {
