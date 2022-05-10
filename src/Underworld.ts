@@ -136,6 +136,7 @@ export default class Underworld {
   gameLoop(timestamp: number) {
     const deltaTime = timestamp - lastTime;
     lastTime = timestamp;
+    const { zoom } = getCamera();
 
     ImmediateMode.loop();
 
@@ -227,7 +228,7 @@ export default class Underworld {
                 config.UNIT_UI_BAR_HEIGHT);
               // Draw red death circle if a unit is currently alive, but wont be after cast
               if (u.alive && !dryRunUnit.alive) {
-                ImmediateMode.draw('skull.png', u, 1);
+                ImmediateMode.draw('skull.png', { x: u.x, y: u.y - (32 / zoom) }, 1 / zoom);
               }
             }
           }
