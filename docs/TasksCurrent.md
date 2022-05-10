@@ -1,4 +1,8 @@
 ## Critical tasks
+- Bug: A change character message from a second player joining skips the change character screen for the first player
+- Bug: silent disconnect and reconnect allowed playerTurnIndex to desync
+- Since pie-clientId isn't received until we've already connected via PieClient, PieClient doesn't have it saved in the connection string and so when it tries to reconnect
+    - it doesn't know the user has already stored an id
 - Websocket pie should try to reconnect after "pull the plug"
 - Issue where after a reconnect, the top bar still says "your turn" but it's not my turn in the underworld and won't let me act because playerTurnIndex is not me
 - You may be obscured by card hand if you spawn in lower left corner
@@ -14,29 +18,6 @@
             - This can happen if you "miss" a clientPresenseChanged message, it should always be kept in
             sync with the clients array
         - "pulling the plug" resulted in a connection failure where it didn't try to reconnect:
-            - Promise undefined:
-```
-syncTurnMessage: phase: PlayerTurns ; player: 1 hub-83e7007f.js:354:43
-The connection to wss://websocketpie-3oyno.ondigitalocean.app/?clientId=35dd4c36-fd0a-4596-ab13-e0a5e50f2fcb was interrupted while the page was loading. client.js:235:35
-websocket🥧: 
-error { target: WebSocket, isTrusted: true, srcElement: WebSocket, currentTarget: WebSocket, eventPhase: 2, bubbles: false, cancelable: false, returnValue: true, defaultPrevented: false, composed: false, … }
-hub-83e7007f.js:354:43
-websocket🥧: connection closed. hub-83e7007f.js:354:43
-onConnectInfo 
-Object { type: "ConnectInfo", connected: false, msg: "Connection to wss://websocketpie-3oyno.ondigitalocean.app/?clientId=35dd4c36-fd0a-4596-ab13-e0a5e50f2fcb closed." }
-hub-83e7007f.js:354:43
-websocket🥧: Reconnect attempt 1; will try to reconnect automatically in 100 milliseconds. hub-83e7007f.js:354:43
-websocket🥧: connecting to wss://websocketpie-3oyno.ondigitalocean.app/?clientId=35dd4c36-fd0a-4596-ab13-e0a5e50f2fcb... hub-83e7007f.js:354:43
-Firefox can’t establish a connection to the server at wss://websocketpie-3oyno.ondigitalocean.app/?clientId=35dd4c36-fd0a-4596-ab13-e0a5e50f2fcb. client.js:235:35
-websocket🥧: 
-error { target: WebSocket, isTrusted: true, srcElement: WebSocket, currentTarget: WebSocket, eventPhase: 2, bubbles: false, cancelable: false, returnValue: true, defaultPrevented: false, composed: false, … }
-hub-83e7007f.js:354:43
-websocket🥧: connection closed. hub-83e7007f.js:354:43
-onConnectInfo 
-Object { type: "ConnectInfo", connected: false, msg: "Connection to wss://websocketpie-3oyno.ondigitalocean.app/?clientId=35dd4c36-fd0a-4596-ab13-e0a5e50f2fcb closed." }
-hub-83e7007f.js:354:43
-Uncaught (in promise) undefined 
-```
 - Need to **Optimize**, it got very laggy for him
     - Re running findPath for each unit each loop is not good
     - Sync dryRun units every loop is a waste too if nothing changes
