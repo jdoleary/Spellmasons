@@ -1,12 +1,8 @@
 # Critical Path (4st deadline revision)
-- Core:
-    - Resolve desync
-    - More random generation / better maps.  This isn't a rogue-like without the random element
-        - Take queues from slay the spire
-        - Sectors could have optional elements
-        - Sectors could fit together using WFC instead of just being picked by random
-    - ✔ Resolve pathing
+- Optimize GameLoop
+- Stable Multiplayer
 - Youtube Alpha version video / Post on social
+- Game Scale Difficulty
 - Homepage / Marketing / Steam Page / Email Signup
 - Art / Shaders / Juice
     - Come up with palette first
