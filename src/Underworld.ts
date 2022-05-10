@@ -537,7 +537,8 @@ export default class Underworld {
       return;
     }
 
-    for (let i = 0; i < config.NUM_PICKUPS_PER_LEVEL; i++) {
+    const numberOfPickups = sectorsWide * sectorsTall / 2;
+    for (let i = 0; i < numberOfPickups; i++) {
       if (validSpawnCoords.length == 0) { break; }
       const randomPickupIndex = randInt(this.random,
         0,

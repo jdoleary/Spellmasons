@@ -14,7 +14,6 @@ export const UNIT_UI_BAR_HEIGHT = 3;
 export const UNIT_UI_BAR_WIDTH = 28;
 export const NON_HEAVY_UNIT_SCALE = 0.8;
 export const START_CARDS_COUNT = 60;
-export const NUM_PICKUPS_PER_LEVEL = 2;
 export const MILLIS_PER_ANIMATION = 200;
 export const MILLIS_PER_SPELL_ANIMATION = 400;
 export const PERCENT_CHANCE_OF_HEAVY_UNIT = 10;
