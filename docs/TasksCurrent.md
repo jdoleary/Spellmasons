@@ -2,8 +2,6 @@
 Brad Playtest:
 - Brad somehow disconnected and rejoined as a new user without the old user disconnecting.
     - [Maybe try to associate IP address with clientId?](https://stackoverflow.com/questions/14822708/how-to-get-client-ip-address-with-websocket-websockets-ws-library-in-node-js)
-- Clone fires on hover
-    - Clone self is invisible
 - Number of pickups should increase per number of sectors
 - Portal didn't appear once (honeycomb seems broken if you have walls above and below you)
 - Goons spawned outside of map when summoner was stuffed in upper left corner of map

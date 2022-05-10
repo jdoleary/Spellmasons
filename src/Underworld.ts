@@ -1323,8 +1323,12 @@ export default class Underworld {
     const closest = sortedByProximityToCoords[0]
     return closest && math.distance(closest, coords) <= config.COLLISION_MESH_RADIUS ? closest : undefined;
   }
-  addUnitToArray(unit: Unit.IUnit) {
-    this.units.push(unit);
+  addUnitToArray(unit: Unit.IUnit, dryRun: boolean) {
+    if (dryRun) {
+      window.dryRunUnits.push(unit);
+    } else {
+      this.units.push(unit);
+    }
   }
   removePickupFromArray(pickup: Pickup.IPickup) {
     this.pickups = this.pickups.filter((p) => p !== pickup);

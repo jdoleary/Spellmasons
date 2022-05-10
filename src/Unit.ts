@@ -166,7 +166,7 @@ export function create(
 
   unit.image?.sprite.scale.set(config.NON_HEAVY_UNIT_SCALE);
 
-  window.underworld.addUnitToArray(unit);
+  window.underworld.addUnitToArray(unit, false);
 
   return unit;
 }
@@ -246,7 +246,7 @@ export function serialize(unit: IUnit): IUnitSerialized {
 // Reinitialize a unit from another unit object
 // this is useful when loading game state after reconnect
 // This is the opposite of serialize
-export function load(unit: IUnitSerialized): IUnit {
+export function load(unit: IUnitSerialized, dryRun: boolean): IUnit {
   const { shaderUniforms, ...restUnit } = unit
   // Since resolveDoneMoving is about to be overwritten,
   // call it, just in case there is a pending promise (there shouldn't be)
@@ -266,7 +266,7 @@ export function load(unit: IUnitSerialized): IUnit {
       loadedunit.shaderUniforms[key][keyUniform] = value;
     }
   }
-  window.underworld.addUnitToArray(loadedunit);
+  window.underworld.addUnitToArray(loadedunit, dryRun);
   if (!loadedunit.alive) {
     die(loadedunit);
   }
