@@ -730,14 +730,11 @@ body.view-Upgrade #player-turn-indicator {
   text-align: right;
 }
 
-/* For server picker */
-#menu #websocket-pie-connection-status {
+#websocketpie-connection-status {
   z-index: 1;
-  /* Render the connection status inside of the #menu instead of
-  it's default absolute positioning */
-  position: relative !important;
-  top: 0 !important;
-  left: 0 !important;
+  position: absolute;
+  top: 5px;
+  right: 5px;
 }
 
 #menu input {
