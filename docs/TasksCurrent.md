@@ -1,18 +1,20 @@
 ## Critical tasks
 Brad Playtest:
-- Brad somehow disconnected and rejoined as a new user without the old user disconnecting.
+- Brad somehow disconnected and **rejoined** as a new user without the old user disconnecting.
     - [Maybe try to associate IP address with clientId?](https://stackoverflow.com/questions/14822708/how-to-get-client-ip-address-with-websocket-websockets-ws-library-in-node-js)
-- Portal didn't appear once (honeycomb seems broken if you have walls above and below you)
-- Goons spawned outside of map when summoner was stuffed in upper left corner of map
-- Need to Optimize, it got very laggy for him
-- TODO: Unit.syncronize should sync modifier images such as frozen or heavy armor
+    - What happens if a user joins with multiple tabs
+    - Add pinging to wsPie to make sure clients remain connected??
+- Need to **Optimize**, it got very laggy for him
+- Rename 'dryRun' to prediction, since it will actually execute logic (on a copy of units - dryRunUnits), it just doesn't want anything to show on screen.
 
 ---
 - More random generation / better maps.  This isn't a rogue-like without the random element
     - Take queues from slay the spire
     - Sectors could have optional elements
     - Sectors could fit together using WFC instead of just being picked by random
-- Rename 'dryRun' to prediction, since it will actually execute logic (on a copy of units - dryRunUnits), it just doesn't want anything to show on screen.
+- TODO: Unit.syncronize should sync modifier images such as frozen or heavy armor
+- Portal didn't appear once (honeycomb seems broken if you have walls above and below you)
+- Goons spawned outside of map when summoner was stuffed in upper left corner of map
 
 ## Tasks
 
