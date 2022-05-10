@@ -1,10 +1,14 @@
 ## Critical tasks
+- Websocket pie should try to reconnect after "pull the plug"
+- Issue where after a reconnect, the top bar still says "your turn" but it's not my turn in the underworld and won't let me act because playerTurnIndex is not me
 - You may be obscured by card hand if you spawn in lower left corner
     - seed Seed: 0.420159076165335
 - Brad somehow disconnected and **rejoined** as a new user without the old user disconnecting.
     - [Maybe try to associate IP address with clientId?](https://stackoverflow.com/questions/14822708/how-to-get-client-ip-address-with-websocket-websockets-ws-library-in-node-js)
     - What happens if a user joins with multiple tabs
-    - Add pinging to wsPie to make sure clients remain connected??
+    - Task: Refactor clientPresenceChanged to only show the list of clients
+    - Task: Add pinging to wsPie to make sure clients remain connected??
+        - This will ensure that clients don't try to send messages while they're not connected, it should display that they got disconnected
         - https://github.com/websockets/ws#how-to-detect-and-close-broken-connections
         - "pulling the plug" caused a bunch of players to spawn and somehow even though there were only 2 clients,  there were more players that still reported as connected
             - This can happen if you "miss" a clientPresenseChanged message, it should always be kept in

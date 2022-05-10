@@ -31,6 +31,9 @@
     - Optimize runPredictions
     - Optimize pathing
     - Look for `TODO optimize:`
+- Package as Electron App
+    - [Storage and Persistence](https://cameronnokes.com/blog/how-to-store-user-data-in-electron/)
+    - [AutoUpdate](https://github.com/vercel/hazel)
 - More content
     - Engage community in making new spells
     - Specific barriers or walls that can't be cast threw
