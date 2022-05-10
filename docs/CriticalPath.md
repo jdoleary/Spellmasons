@@ -2,7 +2,7 @@
 - Optimize GameLoop
 - Stable Multiplayer
 - Youtube Alpha version video / Post on social
-- Game Scale Difficulty
+- Game Scale Difficulty for endgame
 - Homepage / Marketing / Steam Page / Email Signup
 - Art / Shaders / Juice
     - Come up with palette first

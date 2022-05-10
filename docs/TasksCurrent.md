@@ -1,11 +1,43 @@
 ## Critical tasks
-Brad Playtest:
+- You may be obscured by card hand if you spawn in lower left corner
+    - seed Seed: 0.420159076165335
 - Brad somehow disconnected and **rejoined** as a new user without the old user disconnecting.
     - [Maybe try to associate IP address with clientId?](https://stackoverflow.com/questions/14822708/how-to-get-client-ip-address-with-websocket-websockets-ws-library-in-node-js)
     - What happens if a user joins with multiple tabs
     - Add pinging to wsPie to make sure clients remain connected??
+        - https://github.com/websockets/ws#how-to-detect-and-close-broken-connections
+        - "pulling the plug" caused a bunch of players to spawn and somehow even though there were only 2 clients,  there were more players that still reported as connected
+            - This can happen if you "miss" a clientPresenseChanged message, it should always be kept in
+            sync with the clients array
+        - "pulling the plug" resulted in a connection failure where it didn't try to reconnect:
+            - Promise undefined:
+```
+syncTurnMessage: phase: PlayerTurns ; player: 1 hub-83e7007f.js:354:43
+The connection to wss://websocketpie-3oyno.ondigitalocean.app/?clientId=35dd4c36-fd0a-4596-ab13-e0a5e50f2fcb was interrupted while the page was loading. client.js:235:35
+websocket🥧: 
+error { target: WebSocket, isTrusted: true, srcElement: WebSocket, currentTarget: WebSocket, eventPhase: 2, bubbles: false, cancelable: false, returnValue: true, defaultPrevented: false, composed: false, … }
+hub-83e7007f.js:354:43
+websocket🥧: connection closed. hub-83e7007f.js:354:43
+onConnectInfo 
+Object { type: "ConnectInfo", connected: false, msg: "Connection to wss://websocketpie-3oyno.ondigitalocean.app/?clientId=35dd4c36-fd0a-4596-ab13-e0a5e50f2fcb closed." }
+hub-83e7007f.js:354:43
+websocket🥧: Reconnect attempt 1; will try to reconnect automatically in 100 milliseconds. hub-83e7007f.js:354:43
+websocket🥧: connecting to wss://websocketpie-3oyno.ondigitalocean.app/?clientId=35dd4c36-fd0a-4596-ab13-e0a5e50f2fcb... hub-83e7007f.js:354:43
+Firefox can’t establish a connection to the server at wss://websocketpie-3oyno.ondigitalocean.app/?clientId=35dd4c36-fd0a-4596-ab13-e0a5e50f2fcb. client.js:235:35
+websocket🥧: 
+error { target: WebSocket, isTrusted: true, srcElement: WebSocket, currentTarget: WebSocket, eventPhase: 2, bubbles: false, cancelable: false, returnValue: true, defaultPrevented: false, composed: false, … }
+hub-83e7007f.js:354:43
+websocket🥧: connection closed. hub-83e7007f.js:354:43
+onConnectInfo 
+Object { type: "ConnectInfo", connected: false, msg: "Connection to wss://websocketpie-3oyno.ondigitalocean.app/?clientId=35dd4c36-fd0a-4596-ab13-e0a5e50f2fcb closed." }
+hub-83e7007f.js:354:43
+Uncaught (in promise) undefined 
+```
 - Need to **Optimize**, it got very laggy for him
-- Rename 'dryRun' to prediction, since it will actually execute logic (on a copy of units - dryRunUnits), it just doesn't want anything to show on screen.
+    - Re running findPath for each unit each loop is not good
+    - Sync dryRun units every loop is a waste too if nothing changes
+        - This could be optimized so it only recalcs if a unit moves or if the cast target or cast cards change
+    - Rename 'dryRun' to prediction, since it will actually execute logic (on a copy of units - dryRunUnits), it just doesn't want anything to show on screen.
 
 ---
 - More random generation / better maps.  This isn't a rogue-like without the random element
