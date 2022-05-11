@@ -9,12 +9,17 @@ import * as Unit from './Unit';
 import * as readyState from './readyState';
 import * as messageQueue from './messageQueue';
 import * as storage from './storage';
+import * as Image from './Image';
+import * as config from './config';
+import * as colors from './ui/colors';
 import { setView, View } from './views';
 import { tutorialLevels } from './HandcraftedLevels';
-import manBlue from './units/manBlue';
-import { mouseMove } from './ui/eventListeners';
 import { allUnits } from './units';
 import { pie } from './wsPieSetup';
+import { allCards } from './cards';
+import { containerPlayerThinking } from './PixiUtils';
+import { distance, similarTriangles } from './math';
+import { subtract } from './Vec';
 
 const messageLog: any[] = [];
 let clients: string[] = [];
@@ -192,6 +197,40 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
     //     });
     //   }
     //   break;
+    case MESSAGE_TYPES.PLAYER_THINKING:
+      const thinkingPlayer = window.underworld.players.find(p => p.clientId === fromClient)
+      if (thinkingPlayer != window.player) {
+        // Only display player thoughts if they are not the current client's player
+        window.thinkingPlayerGraphics.clear();
+        containerPlayerThinking.removeChildren();
+        if (thinkingPlayer) {
+          const { target, cardIds } = payload;
+          const spaceBetweenIcons = 20;
+          for (let i = 0; i < cardIds.length; i++) {
+            const cardId = cardIds[i];
+            const card = allCards[cardId];
+            if (card) {
+              const image = Image.create(
+                { x: thinkingPlayer.unit.x + (0.5 + i - cardIds.length / 2) * spaceBetweenIcons, y: thinkingPlayer.unit.y - config.COLLISION_MESH_RADIUS * 2 },
+                card.thumbnail,
+                containerPlayerThinking,
+              );
+              image.sprite.scale.set(0.3);
+            }
+          }
+          if (target && cardIds.length) {
+            // Draw a line to show where they're aiming:
+            window.thinkingPlayerGraphics.lineStyle(3, colors.healthAllyGreen, 0.7);
+            // Use this similarTriangles calculation to make the line pretty so it doesn't originate from the exact center of the
+            // other player but from the edge instead
+            const startPoint = subtract(thinkingPlayer.unit, similarTriangles(thinkingPlayer.unit.x - target.x, thinkingPlayer.unit.y - target.y, distance(thinkingPlayer.unit, target), config.COLLISION_MESH_RADIUS));
+            window.thinkingPlayerGraphics.moveTo(startPoint.x, startPoint.y);
+            window.thinkingPlayerGraphics.lineTo(target.x, target.y);
+            window.thinkingPlayerGraphics.drawCircle(target.x, target.y, 4);
+          }
+        }
+      }
+      break;
     case MESSAGE_TYPES.CHANGE_CHARACTER:
       const player = window.underworld.players.find(p => p.clientId === fromClient)
       if (player) {

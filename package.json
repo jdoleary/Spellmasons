@@ -41,6 +41,7 @@
     "@sentry/tracing": "^6.19.3",
     "@websocketpie/client": "^0.14.3",
     "lodash.throttle": "^4.1.1",
+    "object-hash": "^3.0.0",
     "pixi.js": "^6.2.1",
     "seedrandom": "^3.0.5",
     "stats.js": "^0.17.0"

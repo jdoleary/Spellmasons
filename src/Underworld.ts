@@ -46,7 +46,8 @@ import { collideWithWalls, moveWithCollisions } from './collision/moveWithCollis
 import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './contants';
 import { getBestRangedLOSTarget } from './units/actions/rangedAction';
 import { getClients, hostGiveClientGameStateForInitialLoad } from './wsPieHandler';
-import { healthHurtRed, healthRed } from './ui/colors';
+import { healthAllyGreen, healthHurtRed, healthRed } from './ui/colors';
+import objectHash from 'object-hash';
 
 export enum turn_phase {
   PlayerTurns,
@@ -198,7 +199,7 @@ export default class Underworld {
         // Prevent drawing unit overlay graphics when a unit is in the portal
         if (u.x !== null && u.y !== null) {
           // Draw health bar
-          const healthBarColor = u.faction == Faction.ALLY ? 0x40a058 : healthRed;
+          const healthBarColor = u.faction == Faction.ALLY ? healthAllyGreen : healthRed;
           const healthBarHurtColor = u.faction == Faction.ALLY ? 0x235730 : healthHurtRed;
           const healthBarHealColor = u.faction == Faction.ALLY ? 0x23ff30 : 0xff2828;
           window.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
@@ -1505,6 +1506,30 @@ export default class Underworld {
       } else {
         const newUnit = Unit.create(syncUnit.unitSourceId, syncUnit.x, syncUnit.y, syncUnit.faction, syncUnit.defaultImagePath, syncUnit.unitType, syncUnit.unitSubType, syncUnit.strength);
         Unit.syncronize(syncUnit, newUnit);
+      }
+    }
+
+  }
+  // Sends what this player is thinking to other clients
+  // Optimized to only send if message has changed
+  sendPlayerThinking(thoughts: { target?: Vec2, cardIds: string[] }) {
+    // Only send your thoughts on your turn
+    if (this.isMyTurn()) {
+      let { target, cardIds } = thoughts;
+      // Since it takes a hash, best to round target
+      // to whole numbers so floating point changes
+      // don't create a different hash
+      if (target) {
+        target = Vec.round(target);
+      }
+      const hash = objectHash({ target, cardIds });
+      if (hash !== window.lastThoughtsHash) {
+        window.lastThoughtsHash = hash;
+        window.pie.sendData({
+          type: MESSAGE_TYPES.PLAYER_THINKING,
+          target,
+          cardIds
+        });
       }
     }
 

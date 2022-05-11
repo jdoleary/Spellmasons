@@ -36,6 +36,7 @@ window.playerWalkingPromise = Promise.resolve();
 window.dryRunUnits = [];
 window.attentionMarkers = [];
 window.resMarkers = [];
+window.lastThoughtsHash = '';
 
 setupAll();
 
@@ -138,6 +139,8 @@ declare global {
     debugGraphics: PIXI.Graphics;
     // Graphics for drawing the player visible path
     walkPathGraphics: PIXI.Graphics;
+    // Graphics to show what other players are thinking
+    thinkingPlayerGraphics: PIXI.Graphics;
     // Graphics for drawing unit health and mana bars
     unitOverlayGraphics: PIXI.Graphics;
     // Graphics for drawing the spell effects during the dry run phase
@@ -182,6 +185,11 @@ declare global {
     castThisTurn: boolean;
     // Turns on fps monitoring
     monitorFPS: () => void;
+    // A hash of the last thing this client was thinking
+    // Used with MESSAGE_TYPES.PLAYER_THINKING so other clients 
+    // can see what another client is planning.
+    // The hash is used to prevent sending the same data more than once
+    lastThoughtsHash: string;
 
   }
 }

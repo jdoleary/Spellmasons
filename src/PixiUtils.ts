@@ -18,6 +18,7 @@ export const containerUnits = new PIXI.Container();
 export const containerSpells = new PIXI.Container();
 export const containerProjectiles = new PIXI.Container();
 export const containerUI = new PIXI.Container();
+export const containerPlayerThinking = new PIXI.Container();
 export const containerUIFixed = new PIXI.Container();
 export const containerFloatingText = new PIXI.Container();
 const underworldPixiContainers = [
@@ -27,6 +28,7 @@ const underworldPixiContainers = [
   containerUnits,
   containerSpells,
   containerProjectiles,
+  containerPlayerThinking,
   containerUI,
   containerUIFixed,
   containerFloatingText,
@@ -39,6 +41,8 @@ window.unitOverlayGraphics = new PIXI.Graphics();
 containerUI.addChild(window.unitOverlayGraphics);
 window.walkPathGraphics = new PIXI.Graphics();
 containerUI.addChild(window.walkPathGraphics);
+window.thinkingPlayerGraphics = new PIXI.Graphics();
+containerUI.addChild(window.thinkingPlayerGraphics);
 
 export const containerCharacterSelect = new PIXI.Container();
 const characterSelectContainers = [containerCharacterSelect];

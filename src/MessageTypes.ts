@@ -16,6 +16,8 @@ export enum MESSAGE_TYPES {
   PING,
   CREATE_LEVEL,
   SET_PHASE,
+  // Shows other players what another player is up to
+  PLAYER_THINKING,
 
 
 }

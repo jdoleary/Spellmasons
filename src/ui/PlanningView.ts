@@ -178,6 +178,9 @@ export async function runPredictions() {
           }
         }
       }
+      // Send this client's intentions to the other clients so they can see what they're thinking
+      window.underworld.sendPlayerThinking({ target, cardIds })
+
       // Run onTurnStartEvents on dryRunUnits:
       // Displays markers above units heads if they will attack the current client's unit
       // next turn
