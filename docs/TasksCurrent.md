@@ -1,6 +1,4 @@
 ## Critical tasks
-- Fix issue where reconnect doesn't use currently saved pie-clientId because it's not saved in the url on first connection because it's not passed into pie.connect()
-    - until a second pie.connect while there is already a session-storage pie-clientId saved
 - Bug: A change character message from a second player joining skips the change character screen for the first player
 - Bug: silent disconnect and reconnect allowed playerTurnIndex to desync
 - Since pie-clientId isn't received until we've already connected via PieClient, PieClient doesn't have it saved in the connection string and so when it tries to reconnect
