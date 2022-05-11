@@ -1,4 +1,12 @@
 ## Critical tasks
+- Make void blue like water
+- Fix difficulty scaling for multiplayer
+- Dead player doesn't lose mana
+- Looks like dragndrop is keeping him from selecting a spell cause he moves the mouse before lifting it upn
+- TODO: Unit.syncronize should sync modifier images such as frozen or heavy armor
+- Portal didn't appear once (honeycomb seems broken if you have walls above and below you)
+- Goons spawned outside of map when summoner was stuffed in upper left corner of map
+---
 - Need to **Optimize**, it got very laggy for him
     - Re running findPath for each unit each loop is not good
     - Sync dryRun units every loop is a waste too if nothing changes
@@ -10,9 +18,6 @@
     - Take queues from slay the spire
     - Sectors could have optional elements
     - Sectors could fit together using WFC instead of just being picked by random
-- TODO: Unit.syncronize should sync modifier images such as frozen or heavy armor
-- Portal didn't appear once (honeycomb seems broken if you have walls above and below you)
-- Goons spawned outside of map when summoner was stuffed in upper left corner of map
 
 ## Tasks
 
