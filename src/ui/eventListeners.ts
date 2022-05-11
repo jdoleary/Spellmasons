@@ -25,18 +25,19 @@ export const keyDown = {
   d: false
 }
 
+window.addEventListener('keydown', nonUnderworldKeydownListener);
+function nonUnderworldKeydownListener(event: KeyboardEvent) {
+  // Only handle hotkeys when NOT viewing the Game
+  if (window.view == View.Game) {
+    return;
+  }
+  switch (event.code) {
+    case 'Escape':
+      toggleMenu();
+      break;
+  }
+}
 export function keydownListener(event: KeyboardEvent) {
-  if (window.view == View.Menu && event.code === 'Escape') {
-    window.closeMenu();
-    return;
-  }
-  // Allow escape toggling menu on any view OTHER than View.Game
-  // (View.Game will support toggling the menu but it has more complex
-  // logic)
-  if (window.view != View.Game && event.code === 'Escape') {
-    toggleMenu();
-    return;
-  }
   // Only handle hotkeys when viewing the Game
   if (window.view !== View.Game) {
     return;
