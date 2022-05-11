@@ -32,7 +32,9 @@ window.exitCurrentGame = function exitCurrentGame(): Promise<void> {
   return pie.disconnect();
 }
 export function onData(d: OnDataArgs) {
-  console.log("onData:", MESSAGE_TYPES[d.payload.type], d)
+  if (![MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING].includes(d.payload.type)) {
+    console.log("onData:", MESSAGE_TYPES[d.payload.type], d)
+  }
   // Temporarily for development
   // TODO: Remove for production, messageLog will take
   // up a lot of memory for real games
@@ -162,7 +164,9 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
   currentlyProcessingOnDataMessage = d;
   const { payload, fromClient } = d;
   const type: MESSAGE_TYPES = payload.type;
-  console.log("Handle ONDATA", type, payload)
+  if (![MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING].includes(type)) {
+    console.log("Handle ONDATA", type, payload)
+  }
   // Get player of the client that sent the message 
   const fromPlayer = window.underworld.players.find((p) => p.clientId === fromClient);
   switch (type) {
