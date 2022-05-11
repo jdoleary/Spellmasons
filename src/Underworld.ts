@@ -442,6 +442,7 @@ export default class Underworld {
     this.width = config.OBSTACLE_SIZE * sectorsWide * config.OBSTACLES_PER_SECTOR_WIDE;
     this.height = config.OBSTACLE_SIZE * sectorsTall * config.OBSTACLES_PER_SECTOR_TALL;
     const levelData: LevelData = {
+      levelIndex,
       width: this.width,
       height: this.height,
       obstacles: [],
@@ -665,8 +666,11 @@ export default class Underworld {
   createLevel(levelData: LevelData) {
     console.log('Setup: createLevel', levelData);
     window.lastLevelCreated = levelData;
+    // Clean up the previous level
+    this.cleanUpLevel();
 
-    const { width, height, obstacles, groundTiles, pickups, enemies, validPlayerSpawnCoords } = levelData;
+    const { levelIndex, width, height, obstacles, groundTiles, pickups, enemies, validPlayerSpawnCoords } = levelData;
+    this.levelIndex = levelIndex;
     window.underworld.width = width;
     window.underworld.height = height;
     const obstacleInsts = [];
@@ -705,11 +709,9 @@ export default class Underworld {
     });
   }
   async initLevel(levelIndex: number) {
-    console.log('Setup: initLevel', levelIndex);
-    this.levelIndex = levelIndex;
-    this.cleanUpLevel();
     if (window.hostClientId === window.clientId) {
-      console.log(`initLevel as host`);
+      console.log('Setup: initLevel as host', levelIndex);
+      this.levelIndex = levelIndex;
       // Generate level
       let level;
       do {
@@ -1651,7 +1653,7 @@ export type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, Underworl
 function getEnemiesForAltitude(levelIndex: number): { enemies: { [unitid: string]: number }, strength: number } {
   const hardCodedLevelEnemies: { [unitid: string]: number }[] = [
     {
-      'grunt': 2,
+      'grunt': 1,
     },
     {
       'grunt': 2,
@@ -1736,6 +1738,7 @@ function getEnemiesForAltitude(levelIndex: number): { enemies: { [unitid: string
 
 
 export interface LevelData {
+  levelIndex: number,
   width: number,
   height: number,
   obstacles: {

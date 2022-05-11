@@ -1,9 +1,5 @@
 ## Critical tasks
 - Should sync portal when syncing units if all enemies are dead
-- If one client is both dead and alt-tabbed when the last player enters the portal, they will return will all images missing
-    - discovered that unit.image.sprite.parent is null
-    - Note this only works if it's not the host who was alt tabbed
-    - Also it doesn't matter if the client is dead, they just have to be portaled
 - Dead player doesn't lose mana
 - Looks like dragndrop is keeping him from selecting a spell cause he moves the mouse before lifting it upn
 - TODO: Unit.syncronize should sync modifier images such as frozen or heavy armor
