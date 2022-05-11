@@ -332,6 +332,8 @@ function handleLoadGameState(payload: {
   // Mark the underworld as "ready"
   readyState.set('underworld', true);
 
+  window.underworld.syncTurnMessage();
+
   // If the client is recieving the game state because
   // they WERE in a game but got disconnected, automatically
   // set the view back to View.Game once now that the gamestate
