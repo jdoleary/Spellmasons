@@ -1,6 +1,5 @@
 ## Critical tasks
 - Bug: A change character message from a second player joining skips the change character screen for the first player
-- Bug: silent disconnect and reconnect allowed playerTurnIndex to desync
 ---
 - You may be obscured by card hand if you spawn in lower left corner
     - seed Seed: 0.420159076165335

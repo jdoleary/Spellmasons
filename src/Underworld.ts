@@ -36,7 +36,7 @@ import { calculateCost } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment } from './collision/collisionMath';
 import { expandPolygon, mergeOverlappingPolygons, Polygon, PolygonLineSegment, polygonToPolygonLineSegments } from './Polygon';
 import { calculateDistanceOfVec2Array, findPath, findPolygonsThatVec2IsInsideOf } from './Pathfinding';
-import { setView, View } from './views';
+import { removeUnderworldEventListeners, setView, View } from './views';
 import * as readyState from './readyState';
 import { HandcraftedLevel, levels } from './HandcraftedLevels';
 import { addCardToHand, removeCardsFromHand } from './CardUI';
@@ -45,7 +45,7 @@ import Jprompt from './Jprompt';
 import { collideWithWalls, moveWithCollisions } from './collision/moveWithCollision';
 import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './contants';
 import { getBestRangedLOSTarget } from './units/actions/rangedAction';
-import { getClients } from './wsPieHandler';
+import { getClients, hostGiveClientGameStateForInitialLoad } from './wsPieHandler';
 import { healthHurtRed, healthRed } from './ui/colors';
 
 export enum turn_phase {
@@ -324,6 +324,9 @@ export default class Underworld {
   // if an object stops being used.  It does not empty the underworld arrays, by design.
   cleanup() {
     readyState.set('underworld', false);
+
+    removeUnderworldEventListeners();
+
     // Remove all phase classes from body
     for (let phaseClass of document.body.classList.values()) {
       if (phaseClass.includes('phase-')) {
@@ -341,6 +344,8 @@ export default class Underworld {
     }
     // Clean up doodads
     containerDoodads.removeChildren();
+    // Clean up board
+    containerBoard.removeChildren();
     // Prevent requestAnimationFrame from calling this method next time, since this underworld
     // instance is being cleaned up
     if (requestAnimationFrameGameLoopId !== undefined) {
@@ -350,6 +355,7 @@ export default class Underworld {
     window.underworld = undefined;
     readyState.set('underworld', false);
     window.updateInGameMenuStatus()
+
   }
   // cacheWalls updates underworld.walls array
   // with the walls for the edge of the map
@@ -1520,7 +1526,17 @@ export default class Underworld {
     // This ensures that there are no players left that think they're connected
     // but are not a part of the clients list
     for (let player of this.players) {
-      Player.setClientConnected(player, clients.includes(player.clientId));
+      const wasConnected = player.clientConnected;
+      const isConnected = clients.includes(player.clientId);
+      Player.setClientConnected(player, isConnected);
+      if (!wasConnected && isConnected) {
+        // Send the lastest gamestate to that client so they can be up-to-date:
+        // Note: It is important that this occurs AFTER the player instance is created for the
+        // client who just joined
+        // If the game has already started (e.g. the host has already joined), send the initial state to the new 
+        // client only so they can load
+        hostGiveClientGameStateForInitialLoad(player.clientId);
+      }
     }
     // if host left, reassign host
     const hostPlayer = this.players.find(p => p.clientId == window.hostClientId);

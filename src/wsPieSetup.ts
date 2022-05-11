@@ -23,6 +23,12 @@ function connect_to_wsPie_server(wsUri?: string): Promise<void> {
         readyState.set('wsPieConnection', true);
         console.log("Pie: Successfully connected to PieServer.")
         resolve();
+      } else {
+        if (window.underworld) {
+          window.underworld.cleanup();
+          readyState.set('underworld', false);
+          setView(View.Disconnected);
+        }
       }
     };
     if (wsUri) {

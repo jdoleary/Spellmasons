@@ -36,7 +36,10 @@ export function create(clientId: string): IPlayer {
   const userSource = defaultPlayerUnit;
   const player: IPlayer = {
     clientId,
-    clientConnected: true,
+    // init players as not connected.  clientConnected status
+    // should only be handled in one place and tied directly
+    // to pie.clients
+    clientConnected: false,
     unit: Unit.create(
       userSource.id,
       NaN,

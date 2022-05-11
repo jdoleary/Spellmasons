@@ -730,12 +730,6 @@ body.view-Upgrade #player-turn-indicator {
   text-align: right;
 }
 
-#websocketpie-connection-status {
-  z-index: 1;
-  position: absolute;
-  top: 5px;
-  right: 5px;
-}
 
 #menu input {
   font-family: inherit;
@@ -898,4 +892,39 @@ td:first-child {
   z-index: 1;
   max-width: 600px;
 
+}
+
+#pie-disconnected {
+  display: none;
+}
+
+body.view-Disconnected #pie-disconnected {
+  display: flex;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(37, 0, 0);
+  z-index: 2;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+body.view-Disconnected #websocketpie-connection-status {
+  z-index: 1;
+  position: absolute;
+  top: 52%;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  text-align: center;
+}
+
+#websocketpie-connection-status {
+  z-index: 1;
+  position: absolute;
+  top: 5px;
+  right: 5px;
 }

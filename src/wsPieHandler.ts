@@ -121,7 +121,7 @@ function tryStartGame() {
       window.underworld.initLevel(0);
       console.log('Host: Send all clients game state for initial load');
       clients.forEach(clientId => {
-        giveClientGameStateForInitialLoad(clientId);
+        hostGiveClientGameStateForInitialLoad(clientId);
       });
     } else {
       console.log('Start Game: Won\'t, game has already been started');
@@ -300,6 +300,9 @@ function handleLoadGameState(payload: {
   players: Player.IPlayerSerialized[]
 }) {
   console.log("Setup: Load game state", payload)
+  if (window.underworld) {
+    window.underworld.cleanup();
+  }
   const { level, underworld, phase, units, players } = payload
   // Sync underworld properties
   const loadedGameState: IUnderworldSerializedForSyncronize = { ...underworld };
@@ -328,6 +331,14 @@ function handleLoadGameState(payload: {
 
   // Mark the underworld as "ready"
   readyState.set('underworld', true);
+
+  // If the client is recieving the game state because
+  // they WERE in a game but got disconnected, automatically
+  // set the view back to View.Game once now that the gamestate
+  // has been received
+  if (window.view == View.Disconnected) {
+    setView(View.Game);
+  }
 
 }
 async function handleSpell(caster: Player.IPlayer, payload: any) {
@@ -360,7 +371,7 @@ async function handleSpell(caster: Player.IPlayer, payload: any) {
 export function getClients(): string[] {
   return clients;
 }
-function giveClientGameStateForInitialLoad(clientId: string) {
+export function hostGiveClientGameStateForInitialLoad(clientId: string) {
   // Only the host should be sending INIT_GAME_STATE messages
   // because the host has the canonical game state
   if (window.hostClientId === window.clientId) {
@@ -397,14 +408,6 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
     if (window.underworld) {
       // Ensure each client corresponds with a Player instance
       const newPlayers = window.underworld.ensureAllClientsHaveAssociatedPlayers(clients);
-      // Send the lastest gamestate to that client so they can be up-to-date:
-      // Note: It is important that this occurs AFTER the player instance is created for the
-      // client who just joined
-      // If the game has already started (e.g. the host has already joined), send the initial state to the new 
-      // client only so they can load
-      for (let player of newPlayers) {
-        giveClientGameStateForInitialLoad(player.clientId);
-      }
     } else {
       if (window.hostClientId === window.clientId) {
         console.log(`Setup: Setting Host client to ${window.hostClientId}. You are the host. `);

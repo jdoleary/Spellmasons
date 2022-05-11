@@ -29,6 +29,7 @@ export enum View {
   CharacterSelect,
   Game,
   Upgrade,
+  Disconnected
 }
 const elUpgradePicker = document.getElementById('upgrade-picker') as HTMLElement;
 let lastNonMenuView: View | undefined;
@@ -80,6 +81,7 @@ export function setView(v: View) {
     elMenu.classList.add('hidden');
     lastNonMenuView = v;
   }
+  removeUnderworldEventListeners();
   // Hide the upgrade picker when the view changes
   elUpgradePicker.classList.remove('active');
   switch (v) {
@@ -180,7 +182,7 @@ function addUnderworldEventListeners() {
   elMenuBtn.addEventListener('click', toggleMenu);
 }
 
-function removeUnderworldEventListeners() {
+export function removeUnderworldEventListeners() {
   // Remove keyboard shortcuts
   window.removeEventListener('keydown', keydownListener);
   window.removeEventListener('keyup', keyupListener);
