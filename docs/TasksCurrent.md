@@ -1,5 +1,4 @@
 ## Critical tasks
-- Fix difficulty scaling for multiplayer
 - Dead player doesn't lose mana
 - Looks like dragndrop is keeping him from selecting a spell cause he moves the mouse before lifting it upn
 - TODO: Unit.syncronize should sync modifier images such as frozen or heavy armor

@@ -1714,17 +1714,18 @@ function getEnemiesForAltitude(levelIndex: number): { enemies: { [unitid: string
   // Loop allows users to continue playing after the final level, it will 
   // multiply the previous levels by the loop number
   // Default loop at 1
-  const loop = Math.max(1, Math.floor(levelIndex / hardCodedLevelEnemies.length) + window.underworld.players.length);
+  const loop = Math.max(1, Math.floor(levelIndex / hardCodedLevelEnemies.length))
+  const strength = loop + window.underworld.players.length - 1;
   if (levelIndex >= hardCodedLevelEnemies.length) {
     levelIndex = levelIndex % hardCodedLevelEnemies.length;
   }
 
   const enemies = hardCodedLevelEnemies[levelIndex];
-  console.log('Level: Creating enemies with strength', loop)
+  console.log('Level: Creating enemies with strength', strength)
   if (enemies) {
     return {
       enemies: Object.fromEntries(Object.entries(enemies).map(([unitId, quantity]) => [unitId, quantity * loop])),
-      strength: loop
+      strength
     };
   } else {
     // This should never happen
