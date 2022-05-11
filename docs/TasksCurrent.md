@@ -1,8 +1,4 @@
 ## Critical tasks
-- Bug: A change character message from a second player joining skips the change character screen for the first player
----
-- You may be obscured by card hand if you spawn in lower left corner
-    - seed Seed: 0.420159076165335
 - Need to **Optimize**, it got very laggy for him
     - Re running findPath for each unit each loop is not good
     - Sync dryRun units every loop is a waste too if nothing changes

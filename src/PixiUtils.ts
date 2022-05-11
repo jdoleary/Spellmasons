@@ -32,6 +32,7 @@ const underworldPixiContainers = [
   containerFloatingText,
 ];
 
+const elCardHolders = document.getElementById('card-holders') as HTMLElement;
 window.debugGraphics = new PIXI.Graphics();
 containerUI.addChild(window.debugGraphics);
 window.unitOverlayGraphics = new PIXI.Graphics();
@@ -144,7 +145,10 @@ export function updateCameraPosition() {
 
           //Clamp camera Y
           const mapTopMostPoint = 0 - marginY;
-          const mapBottomMostPoint = window.underworld.height + marginY;
+          // Ensure the mapBottomMostPoint takes the cardHolder's height into consideration
+          // so that units don't get hidden under the card UI
+          const cardHoldersRect = elCardHolders.getBoundingClientRect();
+          const mapBottomMostPoint = window.underworld.height + marginY + cardHoldersRect.height;
           const camCenterYMin = mapTopMostPoint + elPIXIHolder.clientHeight / 2 / zoom;
           const camCenterYMax = mapBottomMostPoint - elPIXIHolder.clientHeight / 2 / zoom;
           // If the supposed minimum is more than the maximum, just center the camera:
