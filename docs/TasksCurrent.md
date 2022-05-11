@@ -1,17 +1,20 @@
 ## Critical tasks
-- Should sync portal when syncing units if all enemies are dead
-- Dead player doesn't lose mana
-- Looks like dragndrop is keeping him from selecting a spell cause he moves the mouse before lifting it upn
+- Bug: Should sync portals when syncing units if all enemies are dead
+- Bug: Dead player doesn't lose mana
+- Enh: Looks like dragndrop is keeping dad from selecting a spell sometimes cause he moves the mouse before lifting it upn
 - TODO: Unit.syncronize should sync modifier images such as frozen or heavy armor
-- Portal didn't appear once (honeycomb seems broken if you have walls above and below you)
-- Goons spawned outside of map when summoner was stuffed in upper left corner of map
+- Bug: Portal didn't appear once (honeycomb seems broken if you have walls above and below you)
+- Bug: Goons spawned outside of map when summoner was stuffed in upper left corner of map
 ---
 - Need to **Optimize**, it got very laggy for him
     - Re running findPath for each unit each loop is not good
     - Sync dryRun units every loop is a waste too if nothing changes
         - This could be optimized so it only recalcs if a unit moves or if the cast target or cast cards change
     - Rename 'dryRun' to prediction, since it will actually execute logic (on a copy of units - dryRunUnits), it just doesn't want anything to show on screen.
-
+---
+- Logic to avoid fizzle spells
+    - Don't cast res on no dead
+    - do this by hoising and checking pre-cast
 ---
 - More random generation / better maps.  This isn't a rogue-like without the random element
     - Take queues from slay the spire
@@ -21,7 +24,6 @@
 ## Tasks
 
 - Allys shouldn't push player units
-- Update mana steal tooltip (remove cost portion since it updates when you cast)
 - Dead units don't lose poison
 - "maximum shield" shows a bunch of times on hover if casting the spell would give them map
 ---
