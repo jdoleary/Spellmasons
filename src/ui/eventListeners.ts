@@ -175,8 +175,7 @@ export function endTurnBtnListener(e: MouseEvent) {
   return false;
 }
 
-export const mouseMove = throttle(_mouseMove, 100);
-function _mouseMove() {
+export function mouseMove() {
   // Only handle clicks when viewing the Game
   if (window.view !== View.Game) {
     return;
