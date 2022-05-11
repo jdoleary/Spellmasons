@@ -13,6 +13,7 @@ import { findPath } from './Pathfinding';
 import { allUnits } from './units';
 import { allModifiers, EffectState } from './cards';
 import { checkIfNeedToClearTooltip, updateTooltipContent } from './ui/PlanningView';
+import { centeredFloatingText } from './FloatingText';
 const elHealthBar: HTMLElement = document.querySelector('#health .fill') as HTMLElement;
 const elHealthCost: HTMLElement = document.querySelector('#health .cost') as HTMLElement;
 const elHealthLabel: HTMLElement = document.querySelector('#health .label') as HTMLElement;
@@ -359,6 +360,9 @@ export function die(unit: IUnit) {
         fn(unit);
       }
     }
+  }
+  if (window.player && window.player.unit == unit) {
+    centeredFloatingText(`💀 You Died 💀`, 'red');
   }
 
   // In the event that this unit that just died is the selected unit,
