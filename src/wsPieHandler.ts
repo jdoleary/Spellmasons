@@ -245,6 +245,7 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
         Unit.returnToDefaultSprite(player.unit);
       } else {
         console.error('Cannot change character, player not found with id', fromClient);
+        // TODO: This should request a unit and player sync
       }
       break;
     case MESSAGE_TYPES.SET_PHASE:
