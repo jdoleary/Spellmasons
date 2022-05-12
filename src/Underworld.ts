@@ -1517,7 +1517,7 @@ export default class Underworld {
     return this.units;
   }
   syncUnits(units: Unit.IUnitSerialized[]) {
-    console.log('sync: Syncing units', units, this.units);
+    console.log('sync: Syncing units', units.map(u => u.id), this.units.map(u => u.id));
     // Remove excess units if local copy of units has more units than the units it
     // should be syncing with
     if (this.units.length > units.length) {
@@ -1614,7 +1614,7 @@ export default class Underworld {
     return newlyCreatedPlayers;
   }
   syncPlayers(players: Player.IPlayerSerialized[]) {
-    console.log('sync: Syncing players');
+    console.log('sync: Syncing players', JSON.stringify(players.map(p => p.clientId)));
     // Clear previous players array
     this.players = [];
     players.map(Player.load);
