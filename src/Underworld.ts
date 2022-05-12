@@ -184,10 +184,10 @@ export default class Underworld {
             this.checkPickupCollisions(u);
           }
           collideWithWalls(u);
-          // Ensure that resolveDoneMoving is invoked when there are no points left in the path
+          // Ensure that resolveDoneMoving is invoked when unit is out of stamina (and thus, done moving)
           // This is necessary to end the moving units turn because elsewhere we are awaiting the fulfillment of that promise
           // to know they are done moving
-          if (u.path.length === 0) {
+          if (u.stamina <= 0) {
             u.resolveDoneMoving();
           }
         }
