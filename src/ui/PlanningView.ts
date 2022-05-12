@@ -190,7 +190,8 @@ export async function runPredictions() {
           if (skipTurn) {
             continue;
           }
-          if (u.alive) {
+          // Only check for threats if the threat is alive and AI controlled
+          if (u.alive && u.unitType == UnitType.AI) {
             const target = window.underworld.getUnitAttackTarget(u);
             // Only bother determining if the unit can attack the target 
             // if the target is the current player, because that's the only
