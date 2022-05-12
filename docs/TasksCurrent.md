@@ -1,4 +1,5 @@
 ## Critical tasks
+- `Cannot change character, player not found with id 3df4235d-8f2f-4961-b507-ab591b3dd47b` should call for a resync of players
 - Bug: Refreshing 2nd client browser while units were dead caused them to spawn alive
 - Bug: Should sync portals when syncing units if all enemies are dead
 - Bug: Dead player doesn't lose mana
