@@ -636,18 +636,24 @@ export async function runTurnStartEvents(unit: IUnit, prediction: boolean = fals
 // Makes a copy of the unit's data suitable for 
 // a predictionUnit
 export function copyForPredictionUnit(u: IUnit): IUnit {
+  // Ensure that units have a path before they are copied
+  // so that the prediction unit will have a reference to
+  // a real path object
+  if (!u.path) {
+    const target = window.underworld.getUnitAttackTarget(u);
+    if (target) {
+      window.underworld.setPath(u, target);
+    }
+  }
   const { image, resolveDoneMoving, modifiers, ...unit } = u;
   return {
     ...unit,
-    // Copy all arrays so they don't share a reference with
-    // the original unit
-    path: unit.path
-      ? {
-        points: [...unit.path.points],
-        lastOwnPosition: Vec.clone(unit.path.lastOwnPosition),
-        targetPosition: Vec.clone(unit.path.targetPosition)
-      }
-      : undefined,
+    // prediction units INTENTIONALLY share a reference to the original
+    // unit's path so that we can get the efficiency gains of
+    // cached paths per unit.  If we made a deep copy instead, the
+    // prediction unit would cache-miss each time it was recreated
+    // and needed a path
+    path: unit.path,
     onDamageEvents: [...unit.onDamageEvents],
     onDeathEvents: [...unit.onDeathEvents],
     onMoveEvents: [...unit.onMoveEvents],

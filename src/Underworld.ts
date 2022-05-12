@@ -276,7 +276,18 @@ export default class Underworld {
   // setPath finds a path to the target
   // and sets that to the unit's path
   setPath(unit: Unit.IUnit, target: Vec2) {
-    unit.path = this.calculatePath(unit.path, unit, target)
+    const path = this.calculatePath(unit.path, unit, target)
+    if (unit.path) {
+      // If there is a pre-existing path, intentionally mutate it.
+      // This is so that predictionUnits can mutate the path's of 
+      // their actual unit counterparts so we get the optimization gains
+      // of cached paths.
+      unit.path.lastOwnPosition = path.lastOwnPosition;
+      unit.path.points = path.points;
+      unit.path.targetPosition = path.targetPosition;
+    } else {
+      unit.path = path;
+    }
   }
   // calculatePath will find a UnitPath from startPoint to target.
   // If preExistingPath exists, it may slightly modify
