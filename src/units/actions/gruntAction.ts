@@ -11,10 +11,8 @@ export async function action(unit: Unit.IUnit, attackTarget: Unit.IUnit | undefi
     // Do not move if they don't have a target
     return;
   }
-  // Move to the edge of the enemy, not to their center
-  const adjustedTarget = Vec.subtract(attackTarget, math.similarTriangles(attackTarget.x - unit.x, attackTarget.y - unit.y, math.distance(attackTarget, unit), COLLISION_MESH_RADIUS * 2));
   // Movement
-  await Unit.moveTowards(unit, adjustedTarget);
+  await Unit.moveTowards(unit, attackTarget);
 
   // Orient; make the sprite face it's enemy
   if (unit.image) {
