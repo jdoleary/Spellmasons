@@ -14,7 +14,6 @@ import { targetBlue } from './colors';
 import { calculateCost, CardCost } from '../cards/cardUtils';
 import { closestLineSegmentIntersection } from '../collision/collisionMath';
 import { getBestRangedLOSTarget } from '../units/actions/rangedAction';
-import throttle from 'lodash.throttle';
 
 let planningViewGraphics: PIXI.Graphics;
 let dryRunGraphics: PIXI.Graphics;
@@ -133,8 +132,7 @@ export function updateManaCostUI(): CardCost {
 // via enemy attention markers (showing if they will hurt you)
 // your health and mana bar (the stripes)
 // and enemy health and mana bars
-export const runPredictions = throttle(_runPredictions, 250);
-export async function _runPredictions() {
+export async function runPredictions() {
   if (window.animatingSpells) {
     // Do not change the hover icons when spells are animating
     return;

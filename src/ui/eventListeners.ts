@@ -1,4 +1,3 @@
-import throttle from 'lodash.throttle';
 import { MESSAGE_TYPES } from '../MessageTypes';
 import * as CardUI from '../CardUI';
 import floatingText from '../FloatingText';
@@ -16,7 +15,7 @@ import * as colors from './colors';
 import type { Vec2 } from '../Vec';
 import { distance, getCoordsAtDistanceTowardsTarget } from '../math';
 import * as config from '../config';
-import { cameraAutoFollow, isCameraAutoFollowing } from '../PixiUtils';
+import { cameraAutoFollow } from '../PixiUtils';
 
 export const keyDown = {
   w: false,
