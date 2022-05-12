@@ -10,6 +10,7 @@ import { allCards } from './cards';
 import { randInt } from './rand';
 import { clearTooltipSelection } from './ui/PlanningView';
 import defaultPlayerUnit from './units/jester';
+import { MESSAGE_TYPES } from './MessageTypes';
 
 // The serialized version of the interface changes the interface to allow only the data
 // that can be serialized in JSON.  It may exclude data that is not neccessary to
@@ -151,8 +152,12 @@ export function serialize(player: IPlayer): IPlayerSerialized {
 export function load(player: IPlayerSerialized) {
   const reassignedUnit = window.underworld.units.find(u => u.id == player.unit.id);
   if (!reassignedUnit) {
-    console.error('Failed to load player because cannot find associated unit with ID', player.unit.id);
-    throw new Error('Failed to load player due to not being able to find associated unit')
+    console.warn('Failed to load player because cannot find associated unit with ID', player.unit.id);
+    console.log('Requesting SYNC_PLAYERS from host')
+    window.pie.sendData({
+      type: MESSAGE_TYPES.REQUEST_SYNC_PLAYERS
+    })
+    return
   }
   const playerLoaded: IPlayer = {
     ...player,

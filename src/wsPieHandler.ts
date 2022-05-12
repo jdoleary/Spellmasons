@@ -252,6 +252,27 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
         // TODO: This should request a unit and player sync
       }
       break;
+    case MESSAGE_TYPES.REQUEST_SYNC_PLAYERS:
+      console.log('Host: Sending SYNC_PLAYERS')
+      // If host, send sync; if non-host, ignore 
+      if (window.hostClientId === window.clientId) {
+        window.pie.sendData({
+          type: MESSAGE_TYPES.SYNC_PLAYERS,
+          players: window.underworld.players.map(Player.serialize)
+        });
+      }
+      break;
+    case MESSAGE_TYPES.SYNC_PLAYERS:
+      {
+        const { players } = payload as {
+          // Sync data for players
+          players?: Player.IPlayerSerialized[],
+        }
+        if (players) {
+          window.underworld.syncPlayers(players);
+        }
+      }
+      break;
     case MESSAGE_TYPES.SET_PHASE:
       const { phase, units, players } = payload as {
         phase: turn_phase,
