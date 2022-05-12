@@ -290,94 +290,24 @@ export default class Underworld {
       const targetMoved = !Vec.equal(target, preExistingPath.targetPosition);
       const selfMoved = !Vec.equal(startPoint, preExistingPath.lastOwnPosition);
       if (targetMoved) {
-        const secondToLastPoint = preExistingPath.points[preExistingPath.points.length - 2]
-        if (preExistingPath && secondToLastPoint) {
-          const lastStepOfPath = { p1: secondToLastPoint, p2: target };
-          // If there are no intersections between the secondToLastPoint of the existing path and the target
-          const canNotModifyExistingPath = this.pathingLineSegments.some(l => {
-            const intersection = lineSegmentIntersection(lastStepOfPath, l);
-            // Exclude start point, which will certainly be on a wall already since it's a point
-            // along the path.  Find if the last line of the path can reach straight to the target,
-            // if it cannot, return true because there is something in the way
-            return intersection ? !Vec.equal(intersection, secondToLastPoint) : false
-          })
-          if (canNotModifyExistingPath) {
-            console.count('jtest, targetMoved2: reclaculate path')
             // Fully recalculate
             return this.calculatePathNoCache(startPoint, target);
-          } else {
-            // BUG: This is broken cause it doesn't check if the final point is inside a wall
-            // Then we can just replace the last point with the new target and keep the same path
-            preExistingPath.points[preExistingPath.points.length - 1] = target;
-            console.count('jtest, Reuse path and modify target')
-            // Update target position
-            preExistingPath.targetPosition = target;
-            return preExistingPath;
-          }
-        } else {
-          console.count('jtest, targetMoved: reclaculate path')
-          // Fully recalculate
-          return this.calculatePathNoCache(startPoint, target);
-        }
       } else if (selfMoved) {
-        const firstPointOnPath = preExistingPath.points[0];
-        const secondPointOnPath = preExistingPath.points[1];
-        if (secondPointOnPath) {
-          const secondPointShortcut = { p1: startPoint, p2: secondPointOnPath };
-          // Try to modify existing path to see if we can keep all but the start point
-          const canNotModifyExistingPath = this.pathingLineSegments.some(l => {
-            const intersection = lineSegmentIntersection(secondPointShortcut, l);
-            // Exclude secondPointOnPath, which may be on a wall already since it's a point
-            // along the path.
-            return intersection ? !Vec.equal(intersection, secondPointOnPath) : false
-          })
-          if (!canNotModifyExistingPath) {
-            // Remove first point because start point can map directly to second point
-            preExistingPath.points.shift()
-            console.count('jtest, reuse path and remove first point due to shortcut');
-            return preExistingPath;
-          }
-        }
-        if (firstPointOnPath) {
-          const firstStepOfPath = { p1: startPoint, p2: firstPointOnPath };
-          // Try to modify existing path to see if we can keep all but the start point
-          const canNotModifyExistingPath = this.pathingLineSegments.some(l => {
-            const intersection = lineSegmentIntersection(firstStepOfPath, l);
-            // Exclude firstPointOnPath, which may be on a wall already since it's a point
-            // along the path.
-            return intersection ? !Vec.equal(intersection, firstPointOnPath) : false
-          })
-          if (canNotModifyExistingPath) {
-            console.count('jtest, selfMoved2, recalculatePath')
-            // Fully recalculate
-            return this.calculatePathNoCache(startPoint, target);
-          } else {
-            console.count('jtest, reuse path, it works with modified start point');
-            // Update start point
-            preExistingPath.lastOwnPosition = startPoint;
-            return preExistingPath;
-          }
-        } else {
           // Fully recalculate
           return this.calculatePathNoCache(startPoint, target);
-
-        }
       } else {
-        // console.log('jtest, keep same path', preExistingPath.points)
         // Do nothing, keep the same path.  This is the most optimal result because
         // it requires the least additional computation
         return preExistingPath;
       }
     } else {
       // If there is no preexisting path, recalculate path
-      console.count('jtest, noPreexisting calculate path')
       return this.calculatePathNoCache(startPoint, target);
     }
   }
   // calculatePathNoCache calculates a path without checking if an old path can be 
   // reused like 'calculatePath()' does.
   calculatePathNoCache(startPoint: Vec2, target: Vec2): Unit.UnitPath {
-    console.count('jtest, FULLY RECALC')
     return {
       points: findPath(startPoint, target, this.pathingPolygons, this.pathingLineSegments),
       lastOwnPosition: Vec.clone(startPoint),
