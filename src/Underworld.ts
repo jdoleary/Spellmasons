@@ -221,11 +221,11 @@ export default class Underworld {
               if (healthAfterHurt > u.health) {
                 window.unitOverlayGraphics.beginFill(healthBarHealColor, 1.0);
               }
-              const manaBarWidth = Math.max(0, config.UNIT_UI_BAR_WIDTH * (u.health - healthAfterHurt) / u.healthMax);
+              const healthBarHurtWidth = Math.max(0, config.UNIT_UI_BAR_WIDTH * (u.health - healthAfterHurt) / u.healthMax);
               window.unitOverlayGraphics.drawRect(
                 u.x - config.UNIT_UI_BAR_WIDTH / 2 + config.UNIT_UI_BAR_WIDTH * healthAfterHurt / u.healthMax,
                 u.y - config.COLLISION_MESH_RADIUS - config.UNIT_UI_BAR_HEIGHT,
-                manaBarWidth,
+                healthBarHurtWidth,
                 config.UNIT_UI_BAR_HEIGHT);
               // Draw red death circle if a unit is currently alive, but wont be after cast
               if (u.alive && !dryRunUnit.alive) {
@@ -235,12 +235,13 @@ export default class Underworld {
           }
           // Draw mana bar
           if (u.manaMax != 0) {
+            const manaBarWidth = Math.max(0, config.UNIT_UI_BAR_WIDTH * Math.min(1, u.mana / u.manaMax));
             window.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
             window.unitOverlayGraphics.beginFill(0x5656d5, 1.0);
             window.unitOverlayGraphics.drawRect(
               u.x - config.UNIT_UI_BAR_WIDTH / 2,
               u.y - config.COLLISION_MESH_RADIUS,
-              config.UNIT_UI_BAR_WIDTH * Math.min(1, u.mana / u.manaMax),
+              manaBarWidth,
               config.UNIT_UI_BAR_HEIGHT);
           }
           window.unitOverlayGraphics.endFill();
