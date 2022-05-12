@@ -277,9 +277,10 @@ export default class Underworld {
   // If preExistingPath exists, it may slightly modify
   // the preExistingPath as an optimization
   calculatePath(preExistingPath: Unit.UnitPath | undefined, startPoint: Vec2, target: Vec2): Unit.UnitPath {
-    // Cached path finding, if start point and target are the same
+    // Cached path finding, if start point and target are the same (or close)
     // do not recalculate path.  start point being the same includes if units has only moved
-    // along path but not moved under other forces.
+    // along path but not moved under other forces (for this case: preExistingPath.lastOwnPosition 
+    // is updated elsewhere).
     if (preExistingPath) {
       // If there is a preexisting path, see if it can be reused
       const targetMoved = !Vec.equal(target, preExistingPath.targetPosition);
@@ -297,21 +298,42 @@ export default class Underworld {
             return intersection ? !Vec.equal(intersection, secondToLastPoint) : false
           })
           if (canNotModifyExistingPath) {
-            console.log('jtest, targetMoved2: reclaculate path', target, preExistingPath.targetPosition)
+            console.count('jtest, targetMoved2: reclaculate path')
+            // Fully recalculate
+            return this.calculatePathNoCache(startPoint, target);
           } else {
             // Then we can just replace the last point with the new target and keep the same path
             preExistingPath.points[preExistingPath.points.length - 1] = target;
-            console.log('jtest, Reuse path and modify target')
+            console.count('jtest, Reuse path and modify target')
+            // Update target position
+            preExistingPath.targetPosition = target;
             return preExistingPath;
           }
         } else {
-          console.log('jtest, targetMoved: reclaculate path', target, preExistingPath.targetPosition)
+          console.count('jtest, targetMoved: reclaculate path')
+          // Fully recalculate
+          return this.calculatePathNoCache(startPoint, target);
         }
       } else if (selfMoved) {
-        console.log('jtest, selfMOved')
-        const firstPointOnPath = preExistingPath.points[0]
+        const firstPointOnPath = preExistingPath.points[0];
+        const secondPointOnPath = preExistingPath.points[1];
+        if (secondPointOnPath) {
+          const secondPointShortcut = { p1: startPoint, p2: secondPointOnPath };
+          // Try to modify existing path to see if we can keep all but the start point
+          const canNotModifyExistingPath = this.pathingLineSegments.some(l => {
+            const intersection = lineSegmentIntersection(secondPointShortcut, l);
+            // Exclude secondPointOnPath, which may be on a wall already since it's a point
+            // along the path.
+            return intersection ? !Vec.equal(intersection, secondPointOnPath) : false
+          })
+          if (!canNotModifyExistingPath) {
+            // Remove first point because start point can map directly to second point
+            preExistingPath.points.shift()
+            console.count('jtest, reuse path and remove first point due to shortcut');
+            return preExistingPath;
+          }
+        }
         if (firstPointOnPath) {
-
           const firstStepOfPath = { p1: startPoint, p2: firstPointOnPath };
           // Try to modify existing path to see if we can keep all but the start point
           const canNotModifyExistingPath = this.pathingLineSegments.some(l => {
@@ -321,12 +343,19 @@ export default class Underworld {
             return intersection ? !Vec.equal(intersection, firstPointOnPath) : false
           })
           if (canNotModifyExistingPath) {
-            console.log('jtest, selfMOved2, recalculatePath')
+            console.count('jtest, selfMoved2, recalculatePath')
+            // Fully recalculate
+            return this.calculatePathNoCache(startPoint, target);
           } else {
-            preExistingPath.points[0] = startPoint;
-            console.log('jtest, reuse path and modify startpoint');
+            console.count('jtest, reuse path, it works with modified start point');
+            // Update start point
+            preExistingPath.lastOwnPosition = startPoint;
             return preExistingPath;
           }
+        } else {
+          // Fully recalculate
+          return this.calculatePathNoCache(startPoint, target);
+
         }
       } else {
         // console.log('jtest, keep same path', preExistingPath.points)
@@ -336,47 +365,19 @@ export default class Underworld {
       }
     } else {
       // If there is no preexisting path, recalculate path
-      console.log('jtest, no current path, calculate path')
+      console.count('jtest, noPreexisting calculate path')
+      return this.calculatePathNoCache(startPoint, target);
     }
+  }
+  // calculatePathNoCache calculates a path without checking if an old path can be 
+  // reused like 'calculatePath()' does.
+  calculatePathNoCache(startPoint: Vec2, target: Vec2): Unit.UnitPath {
+    console.count('jtest, FULLY RECALC')
     return {
       points: findPath(startPoint, target, this.pathingPolygons, this.pathingLineSegments),
       lastOwnPosition: Vec.clone(startPoint),
       targetPosition: Vec.clone(target)
     }
-
-
-    // if (selfMoved) {
-    //   // Self may have moved marginally due to physics
-    //   // Try to just reconnect the new start point to the
-    //   // 2nd point on the path
-    //   const canJustAdjustStartPointOfPath = false;
-    //   // TODO: Try to modify path
-    //   if (!canJustAdjustStartPointOfPath) {
-    //     // If that doesn't work, remake the whole path
-    //     unit.path = findPath(unit, target, window.underworld.pathingPolygons);
-    //     return
-    //   }
-    // } else {
-    //   if (targetMoved) {
-    //     // If target has moved first try to just adjust the end point
-    //     // of that path
-    //     const canJustAdjustEndpointOfPath = false;
-    //     // TODO: Try to modify path
-    //     if (!canJustAdjustEndpointOfPath) {
-    //       // If the existing path can't be adjusted, remake the whole path
-    //       unit.path = findPath(unit, target, window.underworld.pathingPolygons);
-    //       return
-    //     }
-    //   } else {
-    //     // No action needed since neither self nor target have moved from
-    //     // previous positions
-    //     return;
-    //   }
-
-    // }
-
-    // const path = findPath(unit, target, this.pathingPolygons);
-
   }
   drawResMarkers() {
     for (let marker of window.resMarkers) {
