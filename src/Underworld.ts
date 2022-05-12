@@ -1422,8 +1422,10 @@ export default class Underworld {
           // TODO: Optimize
           const path = findPath(u, attackTarget, this.pathingPolygons, this.pathingLineSegments);
           // Add the units current point to the start of the path
-          const dist = calculateDistanceOfVec2Array([u, ...path]);
-          canAttackTarget = !!path.length && dist <= maxPathDistance;
+          if (u.path) {
+            const dist = calculateDistanceOfVec2Array([u, ...u.path.points]);
+            canAttackTarget = !!u.path.points.length && dist <= maxPathDistance;
+          }
         }
         break;
       case UnitSubType.RANGED_LOS:
