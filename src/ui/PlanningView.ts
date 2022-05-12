@@ -190,9 +190,16 @@ export async function runPredictions() {
           if (skipTurn) {
             continue;
           }
-          const { target, canAttack } = window.underworld.getUnitAttackTarget(u);
-          if (u.alive && canAttack && target === window.player.unit) {
-            window.attentionMarkers.push(u);
+          if (u.alive) {
+            const target = window.underworld.getUnitAttackTarget(u);
+            // Only bother determining if the unit can attack the target 
+            // if the target is the current player, because that's the only
+            // player this function has to warn with an attention marker
+            if (target === window.player.unit) {
+              if (window.underworld.canUnitAttackTarget(u, target)) {
+                window.attentionMarkers.push(u);
+              }
+            }
           }
         }
       }

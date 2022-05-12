@@ -111,7 +111,8 @@ export default class Underworld {
 
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
     window.underworld = this;
-    this.seed = seed;
+    // this.seed = seed;
+    this.seed = '0.3215365235044486'
     elSeed.innerText = `Seed: ${this.seed}`;
     console.log("RNG create with seed:", this.seed, ", state: ", RNGState);
     this.random = this.syncronizeRNG(RNGState);
@@ -290,11 +291,11 @@ export default class Underworld {
       const targetMoved = !Vec.equal(target, preExistingPath.targetPosition);
       const selfMoved = !Vec.equal(startPoint, preExistingPath.lastOwnPosition);
       if (targetMoved) {
-            // Fully recalculate
-            return this.calculatePathNoCache(startPoint, target);
+        // Fully recalculate
+        return this.calculatePathNoCache(startPoint, target);
       } else if (selfMoved) {
-          // Fully recalculate
-          return this.calculatePathNoCache(startPoint, target);
+        // Fully recalculate
+        return this.calculatePathNoCache(startPoint, target);
       } else {
         // Do nothing, keep the same path.  This is the most optimal result because
         // it requires the least additional computation
@@ -1325,11 +1326,11 @@ export default class Underworld {
       }
       const unitSource = allUnits[u.unitSourceId];
       if (unitSource) {
-        const { target, canAttack } = this.getUnitAttackTarget(u);
+        const target = this.getUnitAttackTarget(u);
         // Add unit action to the array of promises to wait for
         // TODO: Prevent grunts from attacking if they are out of range
         // like when they are around a corner
-        let promise = unitSource.action(u, target, canAttack);
+        let promise = unitSource.action(u, target, this.canUnitAttackTarget(u, target));
         animationPromises.push(promise);
       } else {
         console.error(
@@ -1341,37 +1342,45 @@ export default class Underworld {
     await Promise.all(animationPromises);
 
   }
-  getUnitAttackTarget(u: Unit.IUnit): { target: Unit.IUnit | undefined, canAttack: boolean } {
-    let attackTarget: Unit.IUnit | undefined;
-    let canAttackTarget = false;
+  canUnitAttackTarget(u: Unit.IUnit, attackTarget?: Unit.IUnit): boolean {
+    if (!attackTarget) {
+      return false;
+    }
     switch (u.unitSubType) {
       case UnitSubType.MELEE:
-        attackTarget = Unit.findClosestUnitInDifferentFaction(u);
-        if (attackTarget) {
+        this.setPath(u, attackTarget);
+        if (u.path) {
           const maxPathDistance = u.attackRange + u.stamina;
-          // TODO: Optimize this when checking if the unit can attack the player, it could short circuit
-          // TODO: Optimize
-          const path = findPath(u, attackTarget, this.pathingPolygons, this.pathingLineSegments);
-          // Add the units current point to the start of the path
-          if (u.path) {
-            const dist = calculateDistanceOfVec2Array([u, ...u.path.points]);
-            canAttackTarget = !!u.path.points.length && dist <= maxPathDistance;
-          }
+          const dist = calculateDistanceOfVec2Array([u, ...u.path.points]);
+          return !!u.path.points.length && dist <= maxPathDistance;
+        } else {
+          return false;
         }
+      case UnitSubType.RANGED_LOS:
+        return window.underworld.hasLineOfSight(u, attackTarget)
+      case UnitSubType.RANGED_RADIUS:
+        return u.alive && Unit.inRange(u, attackTarget);
+      default:
+        console.error('Cannot determine canUnitAttackTarget, unit sub type is unaccounted for', u.unitSubType)
+        return false;
+    }
+
+  }
+  getUnitAttackTarget(u: Unit.IUnit): Unit.IUnit | undefined {
+    switch (u.unitSubType) {
+      case UnitSubType.MELEE:
+        return Unit.findClosestUnitInDifferentFaction(u);
         break;
       case UnitSubType.RANGED_LOS:
-        attackTarget = getBestRangedLOSTarget(u);
-        canAttackTarget = !!attackTarget;
+        return getBestRangedLOSTarget(u);
         break;
       case UnitSubType.RANGED_RADIUS:
-        attackTarget = Unit.findClosestUnitInDifferentFaction(u);
-        if (attackTarget) {
-          canAttackTarget = u.alive && Unit.inRange(u, attackTarget);
-        }
+        return Unit.findClosestUnitInDifferentFaction(u);
         break;
+      default:
+        console.error('Cannot determine attackTarget, unit sub type is unaccounted for', u.unitSubType)
+        return undefined;
     }
-    return { target: attackTarget, canAttack: canAttackTarget }
-
   }
 
   getUnitsWithinDistanceOfTarget(
