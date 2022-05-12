@@ -42,7 +42,6 @@ containerUI.addChild(window.unitOverlayGraphics);
 window.walkPathGraphics = new PIXI.Graphics();
 containerUI.addChild(window.walkPathGraphics);
 window.thinkingPlayerGraphics = new PIXI.Graphics();
-containerUI.addChild(window.thinkingPlayerGraphics);
 
 export const containerCharacterSelect = new PIXI.Container();
 const characterSelectContainers = [containerCharacterSelect];

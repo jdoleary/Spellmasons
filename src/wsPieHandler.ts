@@ -204,18 +204,33 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
     case MESSAGE_TYPES.PLAYER_THINKING:
       const thinkingPlayer = window.underworld.players.find(p => p.clientId === fromClient)
       if (thinkingPlayer != window.player) {
+        const spaceBetweenIcons = 20;
+        function getXLocationOfImageForThoughtBubble(originX: number, index: number, totalNumberOfSpells: number) {
+          return originX + (0.5 + index - totalNumberOfSpells / 2) * spaceBetweenIcons
+        }
         // Only display player thoughts if they are not the current client's player
         window.thinkingPlayerGraphics.clear();
         containerPlayerThinking.removeChildren();
-        if (thinkingPlayer) {
           const { target, cardIds } = payload;
-          const spaceBetweenIcons = 20;
+        if (thinkingPlayer) {
+          // Render thought bubble around spell icons
+          if (cardIds.length) {
+            containerPlayerThinking.addChild(window.thinkingPlayerGraphics);
+            const thoughtBubbleMargin = 20;
+            const thoughtBubbleRight = getXLocationOfImageForThoughtBubble(thinkingPlayer.unit.x, cardIds.length, cardIds.length);
+            const thoughtBubbleLeft = getXLocationOfImageForThoughtBubble(thinkingPlayer.unit.x, 0, cardIds.length) - thoughtBubbleMargin;
+            window.thinkingPlayerGraphics.lineStyle(3, 0xffffff, 1.0);
+            window.thinkingPlayerGraphics.beginFill(0xffffff, 0.7);
+            window.thinkingPlayerGraphics.drawRoundedRect(thoughtBubbleLeft, thinkingPlayer.unit.y - config.COLLISION_MESH_RADIUS * 2 - thoughtBubbleMargin, thoughtBubbleRight - thoughtBubbleLeft, thoughtBubbleMargin * 2, 5);
+            window.thinkingPlayerGraphics.endFill();
+          }
           for (let i = 0; i < cardIds.length; i++) {
             const cardId = cardIds[i];
             const card = allCards[cardId];
             if (card) {
+              const x = getXLocationOfImageForThoughtBubble(thinkingPlayer.unit.x, i, cardIds.length);
               const image = Image.create(
-                { x: thinkingPlayer.unit.x + (0.5 + i - cardIds.length / 2) * spaceBetweenIcons, y: thinkingPlayer.unit.y - config.COLLISION_MESH_RADIUS * 2 },
+                { x, y: thinkingPlayer.unit.y - config.COLLISION_MESH_RADIUS * 2 },
                 card.thumbnail,
                 containerPlayerThinking,
               );
