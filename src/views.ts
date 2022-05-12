@@ -130,6 +130,9 @@ export function setView(v: View) {
       resizePixi();
       addUnderworldEventListeners();
       break;
+    case View.Disconnected:
+      // Intentionally left blank - this view is handled in css
+      break;
     default:
       console.error('Cannot set view to', v, 'no such view exists or is not configured');
       break;
