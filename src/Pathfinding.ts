@@ -165,30 +165,33 @@ export function findPath(startPoint: Vec2, target: Vec2, pathingPolygons: Polygo
         }
     })
 
-    // Debug: Draw the paths:
+    // // Debug: Draw the paths:
     // for (let i = 0; i < paths.length; i++) {
     //     // Visual offset is useful for representing overlapping paths in a way where you can see
     //     // all of them
     //     const visualOffset = i * 5;
     //     const path = paths[i];
-    //     if (path.invalid) {
-    //         window.debugGraphics.lineStyle(4, 0xff0000, 0.3);
-    //     } else {
-    //         window.debugGraphics.lineStyle(4, 0x00ff00, 0.4);
-    //     }
-    //     window.debugGraphics.moveTo(path.points[0].x + visualOffset, path.points[0].y + visualOffset);
-    //     for (let point of path.points) {
-    //         if (path.invalid && point == path.points[path.points.length - 1]) {
-    //             // Don't draw last point since the path didn't finish
-    //             break;
-    //         }
-    //         window.debugGraphics.lineTo(point.x + visualOffset, point.y + visualOffset);
-    //     }
+    //     if (path && path.points[0]) {
 
-    //     // Finally, draw to the target, unless the path is invalid (in which case it didn't make
-    //     // it to the target); 
-    //     if (!path.invalid) {
-    //         window.debugGraphics.lineTo(path.target.x + visualOffset, path.target.y + visualOffset);
+    //         if (path.invalid) {
+    //             window.debugGraphics.lineStyle(4, 0xff0000, 0.3);
+    //         } else {
+    //             window.debugGraphics.lineStyle(4, 0x00ff00, 0.4);
+    //         }
+    //         window.debugGraphics.moveTo(path.points[0].x + visualOffset, path.points[0].y + visualOffset);
+    //         for (let point of path.points) {
+    //             if (path.invalid && point == path.points[path.points.length - 1]) {
+    //                 // Don't draw last point since the path didn't finish
+    //                 break;
+    //             }
+    //             window.debugGraphics.lineTo(point.x + visualOffset, point.y + visualOffset);
+    //         }
+
+    //         // Finally, draw to the target, unless the path is invalid (in which case it didn't make
+    //         // it to the target); 
+    //         if (!path.invalid) {
+    //             window.debugGraphics.lineTo(path.target.x + visualOffset, path.target.y + visualOffset);
+    //         }
     //     }
     // }
     // console.log('paths', paths.filter(p => !p.invalid).length, '/', paths.length);
