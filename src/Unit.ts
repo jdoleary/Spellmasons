@@ -110,7 +110,7 @@ export function create(
     moveSpeed: config.UNIT_MOVE_SPEED,
     resolveDoneMoving: () => { },
     resolveDoneMovingTimeout: undefined,
-    stamina: staminaMax,
+    stamina: 0,
     staminaMax,
     attackRange: 10 + config.COLLISION_MESH_RADIUS * 2,
     faction,

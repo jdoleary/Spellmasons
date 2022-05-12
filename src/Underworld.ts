@@ -151,14 +151,6 @@ export default class Underworld {
     for (let i = 0; i < this.units.length; i++) {
       const u = this.units[i];
       if (u) {
-        // Prevent gameLoop from controlling units when it isn't their turn phase
-        if (this.turn_phase == turn_phase.NPC && u.unitType != UnitType.AI) {
-          continue;
-        }
-        // Prevent gameLoop from controlling units when it isn't their turn phase
-        if (this.turn_phase == turn_phase.PlayerTurns && u.unitType != UnitType.PLAYER_CONTROLLED) {
-          continue;
-        }
         const predictionUnit = window.predictionUnits[i];
         if (u.alive) {
           // Only allow movement if the unit has stamina
