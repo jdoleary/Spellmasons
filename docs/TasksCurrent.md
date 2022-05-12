@@ -5,6 +5,7 @@
 - TODO: Unit.syncronize should sync modifier images such as frozen or heavy armor
 - Bug: Portal didn't appear once (honeycomb seems broken if you have walls above and below you)
 - Bug: Goons spawned outside of map when summoner was stuffed in upper left corner of map
+- Bug: Zoom makes attention markers that would be overlapped by card hand go way too far up
 ---
 - Need to **Optimize**, it got very laggy for him
     - Re running findPath for each unit each loop is not good
