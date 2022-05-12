@@ -43,8 +43,6 @@
 - Swapping should only work with a target, not an empty spell
 - quality of life: If you click on the portal and no enemies remain, then auto move there
 - Refactor, card UI reconciliation algorithm is slow
-- corpse image doesn't save when a game is loaded and a unit is dead
-  - textures should be saved using pixi sprite texture cache instead of this.imageName
 - Swap can have unexpected effects if the aoe swap targets overlap with the caster original location, units may end up in an unexpected position, need batching to solve this
 - How do players know what their upgrades are
 - why do we keep accidentally ending our turns (force of habit with spacebar being used in auto chess?)

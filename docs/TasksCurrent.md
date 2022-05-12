@@ -1,4 +1,5 @@
 ## Critical tasks
+- Bug: Refreshing 2nd client browser while units were dead caused them to spawn alive
 - Bug: Should sync portals when syncing units if all enemies are dead
 - Bug: Dead player doesn't lose mana
 - Enh: Looks like dragndrop is keeping dad from selecting a spell sometimes cause he moves the mouse before lifting it upn

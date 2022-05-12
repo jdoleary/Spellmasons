@@ -12,16 +12,14 @@ export type IImageSerialized = {
   sprite: {
     x: number,
     y: number,
-    scale: { x: number, y: number }
+    scale: { x: number, y: number },
+    textureCacheIds: string[]
   },
   subSprites: string[],
-  imageName: string
 };
 export interface IImage {
   // Not to be serialized
   sprite: PIXI.Sprite;
-  // image IS serializable and is used to create sprite
-  imageName: string;
   // Not to be serialized
   subSpriteInstances: { [key: string]: PIXI.Sprite };
   // image IS serializable, it is a list of the keys corresponding to subSprite
@@ -40,8 +38,6 @@ export function create(
   sprite.rotation = 0;
 
   const image: IImage = {
-    // Save image path in unit so it's accessible when loading gamestate
-    imageName: spritesheetId,
     sprite,
     subSpriteInstances: {},
     subSprites: [],
@@ -89,12 +85,13 @@ export function serialize(image: IImage): IImageSerialized {
     sprite: {
       x: image.sprite.x,
       y: image.sprite.y,
-      scale: { x: image.sprite.scale.x, y: image.sprite.scale.y }
+      scale: { x: image.sprite.scale.x, y: image.sprite.scale.y },
+      textureCacheIds: image.sprite._texture.textureCacheIds,
+
     },
     // serialize all subsprites other than "ownCharacterMarker", which is the only one that isn't synced
     // between clients
     subSprites: image.subSprites.filter(s => s != "ownCharacterMarker"),
-    imageName: image.imageName,
   };
 }
 // Reinitialize an Image from IImageSerialized JSON
@@ -105,9 +102,14 @@ export function load(image: IImageSerialized | undefined, parent: PIXI.Container
     return undefined;
   }
   const copy = { ...image };
-  const { scale } = copy.sprite;
+  const { scale, textureCacheIds } = copy.sprite;
+  if (!textureCacheIds[0]) {
+    // Missing image path
+    console.error('Cannot load image, missing image path in textureCacheIds')
+    return;
+  }
   // Recreate the sprite using the create function so it initializes it properly
-  const newImage = create(copy.sprite, copy.imageName, parent);
+  const newImage = create(copy.sprite, textureCacheIds[0], parent);
   newImage.sprite.scale.set(scale.x, scale.y);
   // copy over the subsprite array (list of strings)
   newImage.subSprites = [...copy.subSprites];
@@ -123,7 +125,7 @@ export function syncronize(imageSerialized: IImageSerialized, originalImage?: II
   if (!originalImage) {
     return undefined;
   }
-  if (imageSerialized.imageName === originalImage.imageName) {
+  if (imageSerialized.sprite.textureCacheIds[0] === originalImage.sprite._texture.textureCacheIds[0]) {
     // then we only need to update properties:
     const { x, y, scale } = imageSerialized.sprite;
     originalImage.sprite.x = x;
@@ -136,7 +138,7 @@ export function syncronize(imageSerialized: IImageSerialized, originalImage?: II
     }
     return originalImage;
   } else {
-    // if the imageNames do not match, then the sprite is majorly out of sync and it's
+    // if the textures do not match, then the sprite is majorly out of sync and it's
     // best to just load()
     // --
     // Clean up old image and completely replace

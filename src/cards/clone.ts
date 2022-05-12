@@ -39,7 +39,7 @@ Clones each target
           // If there is are clone coordinates to clone into
           if (cloneSourceCoords) {
             if (unit) {
-              const clone = Unit.load(unit, dryRun);
+              const clone = Unit.load(Unit.serialize(unit), dryRun);
               // If the cloned unit is player controlled, make them be controlled by the AI
               if (clone.unitSubType == UnitSubType.PLAYER_CONTROLLED) {
                 clone.unitType = UnitType.AI;
