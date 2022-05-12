@@ -306,6 +306,7 @@ export default class Underworld {
             // Fully recalculate
             return this.calculatePathNoCache(startPoint, target);
           } else {
+            // BUG: This is broken cause it doesn't check if the final point is inside a wall
             // Then we can just replace the last point with the new target and keep the same path
             preExistingPath.points[preExistingPath.points.length - 1] = target;
             console.count('jtest, Reuse path and modify target')
