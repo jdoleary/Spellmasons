@@ -213,7 +213,7 @@ export default class Underworld {
 
           // Only show health bar predictions on PlayerTurns, while players are able
           // to cast, otherwise it will show out of sync when NPCs do damage
-          if (window.underworld.turn_phase == turn_phase.PlayerTurns) {
+          if (this.turn_phase == turn_phase.PlayerTurns) {
             // Show how much damage they'll take on their health bar
             window.unitOverlayGraphics.beginFill(healthBarHurtColor, 1.0);
             if (dryRunUnit) {
@@ -636,7 +636,7 @@ export default class Underworld {
     }
     // Now that the units have been cleaned up syncDryRunUnits
     // so they are not out of sync with the underworld units array
-    window.underworld.syncDryRunUnits();
+    this.syncDryRunUnits();
     // Clear all pickups
     for (let p of this.pickups) {
       Pickup.removePickup(p);
@@ -672,8 +672,8 @@ export default class Underworld {
 
     const { levelIndex, width, height, obstacles, groundTiles, pickups, enemies, validPlayerSpawnCoords } = levelData;
     this.levelIndex = levelIndex;
-    window.underworld.width = width;
-    window.underworld.height = height;
+    this.width = width;
+    this.height = height;
     const obstacleInsts = [];
     for (let o of obstacles) {
       const obstacleInst = Obstacle.create(o.coord, o.sourceIndex);
@@ -1110,7 +1110,7 @@ export default class Underworld {
         if (!elUpgradePicker || !elUpgradePickerContent) {
           console.error('elUpgradePicker or elUpgradePickerContent are undefined.');
         }
-        const player = window.underworld.players.find(
+        const player = this.players.find(
           (p) => p.clientId === window.clientId,
         );
         if (player) {
@@ -1282,7 +1282,7 @@ export default class Underworld {
         if (attackTarget) {
           const maxPathDistance = u.attackRange + u.stamina;
           // TODO: Optimize this when checking if the unit can attack the player, it could short circuit
-          const path = findPath(u, attackTarget, window.underworld.pathingPolygons);
+          const path = findPath(u, attackTarget, this.pathingPolygons);
           // Add the units current point to the start of the path
           const dist = calculateDistanceOfVec2Array([u, ...path]);
           canAttackTarget = !!path.length && dist <= maxPathDistance;
@@ -1309,7 +1309,7 @@ export default class Underworld {
     dryRun: boolean,
   ): Unit.IUnit[] {
     const withinDistance: Unit.IUnit[] = [];
-    const units = dryRun ? window.dryRunUnits : window.underworld.units;
+    const units = dryRun ? window.dryRunUnits : this.units;
     for (let unit of units) {
       if (math.distance(unit, target) <= distance) {
         withinDistance.push(unit);
@@ -1496,10 +1496,10 @@ export default class Underworld {
     return true
   }
   syncUnits(units: Unit.IUnitSerialized[]) {
-    console.log('sync: Syncing units', units, window.underworld.units);
+    console.log('sync: Syncing units', units, this.units);
     for (let syncUnit of units) {
       // TODO: optimize if needed
-      const originalUnit = window.underworld.units.find(u => u.id === syncUnit.id);
+      const originalUnit = this.units.find(u => u.id === syncUnit.id);
       if (originalUnit) {
         // Note: Unit.syncronize maintains the player.unit reference
         Unit.syncronize(syncUnit, originalUnit);
@@ -1581,7 +1581,7 @@ export default class Underworld {
   syncPlayers(players: Player.IPlayerSerialized[]) {
     console.log('sync: Syncing players');
     // Clear previous players array
-    window.underworld.players = [];
+    this.players = [];
     players.map(Player.load);
   }
 
