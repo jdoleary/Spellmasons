@@ -211,7 +211,7 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
         // Only display player thoughts if they are not the current client's player
         window.thinkingPlayerGraphics.clear();
         containerPlayerThinking.removeChildren();
-          const { target, cardIds } = payload;
+        const { target, cardIds } = payload;
         if (thinkingPlayer) {
           // Render thought bubble around spell icons
           if (cardIds.length) {
@@ -300,6 +300,9 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       if (units) {
         window.underworld.syncUnits(units);
       }
+      // Note: Players should sync after units so
+      // that the player.unit reference is synced
+      // with up to date units
       if (players) {
         window.underworld.syncPlayers(players);
       }
@@ -398,6 +401,9 @@ function handleLoadGameState(payload: {
   if (units) {
     window.underworld.syncUnits(units);
   }
+  // Note: Players should sync after units so
+  // that the player.unit reference is synced
+  // with up to date units
   if (players) {
     window.underworld.syncPlayers(players);
   }

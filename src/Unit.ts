@@ -277,24 +277,23 @@ export function load(unit: IUnitSerialized, dryRun: boolean): IUnit {
 // entity with properties from a unit (in JSON)
 // mutates originalUnit
 export function syncronize(unitSerialized: IUnitSerialized, originalUnit: IUnit): void {
-  if (unitSerialized.id === originalUnit.id) {
-    // Note: shaderUniforms should not just be "assign"ed into the object because 
-    // it requires special handling to have a valid link to the shader
-    // and since syncronize is mainly meant to keep things like health and position in sync,
-    // I'm choosing just to omit shaderUniforms from syncronize
-    const { image, shaderUniforms, ...rest } = unitSerialized;
-    if (!image) {
-      return
-    }
-    Object.assign(originalUnit, rest);
-    // Note: returnToDefaultSprite must be called BEFORE Image.syncronize
-    // to ensure that the originalUnit.image.sprite has a parent because
-    // the parent could have been cleared previously.
-    returnToDefaultSprite(originalUnit);
-    originalUnit.image = Image.syncronize(image, originalUnit.image);
-  } else {
-    console.error('Attempting to syncronize a unit with the wrong id', unitSerialized.id, originalUnit.id);
+  if (unitSerialized.id !== originalUnit.id) {
+    console.warn('Units array is out of order with canonical record. A full unit.sync should correct this issue.')
   }
+  // Note: shaderUniforms should not just be "assign"ed into the object because 
+  // it requires special handling to have a valid link to the shader
+  // and since syncronize is mainly meant to keep things like health and position in sync,
+  // I'm choosing just to omit shaderUniforms from syncronize
+  const { image, shaderUniforms, ...rest } = unitSerialized;
+  if (!image) {
+    return
+  }
+  Object.assign(originalUnit, rest);
+  // Note: returnToDefaultSprite must be called BEFORE Image.syncronize
+  // to ensure that the originalUnit.image.sprite has a parent because
+  // the parent could have been cleared previously.
+  returnToDefaultSprite(originalUnit);
+  originalUnit.image = Image.syncronize(image, originalUnit.image);
 }
 
 // It is important to use this function when returning a unit to the previous

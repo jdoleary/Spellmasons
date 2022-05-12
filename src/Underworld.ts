@@ -1496,17 +1496,51 @@ export default class Underworld {
     }
     return true
   }
+  // shuffleUnits adapted from https://stackoverflow.com/a/2450976/4418836
+  // Used for validating the efficacy of syncUnits
+  dev_shuffleUnits() {
+    let currentIndex = this.units.length, randomIndex;
+
+    // While there remain elements to shuffle.
+    while (currentIndex != 0) {
+
+      // Pick a remaining element.
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+
+      // And swap it with the current element.
+      // @ts-ignore
+      [this.units[currentIndex], this.units[randomIndex]] = [
+        this.units[randomIndex], this.units[currentIndex]];
+    }
+
+    return this.units;
+  }
   syncUnits(units: Unit.IUnitSerialized[]) {
     console.log('sync: Syncing units', units, this.units);
-    for (let syncUnit of units) {
-      // TODO: optimize if needed
-      const originalUnit = this.units.find(u => u.id === syncUnit.id);
-      if (originalUnit) {
-        // Note: Unit.syncronize maintains the player.unit reference
-        Unit.syncronize(syncUnit, originalUnit);
-      } else {
-        const newUnit = Unit.create(syncUnit.unitSourceId, syncUnit.x, syncUnit.y, syncUnit.faction, syncUnit.defaultImagePath, syncUnit.unitType, syncUnit.unitSubType, syncUnit.strength);
-        Unit.syncronize(syncUnit, newUnit);
+    // Remove excess units if local copy of units has more units than the units it
+    // should be syncing with
+    if (this.units.length > units.length) {
+      console.log('sync: Remove excess units')
+      for (let i = units.length; i < this.units.length; i++) {
+        const unit = this.units[i];
+        if (unit) {
+          Unit.cleanup(unit);
+        }
+      }
+      this.units.splice(units.length);
+    }
+    for (let i = 0; i < units.length; i++) {
+      const syncUnit = units[i];
+      const currentUnit = this.units[i];
+      if (syncUnit) {
+        if (currentUnit) {
+          // Note: Unit.syncronize maintains the player.unit reference
+          Unit.syncronize(syncUnit, currentUnit);
+        } else {
+          const newUnit = Unit.create(syncUnit.unitSourceId, syncUnit.x, syncUnit.y, syncUnit.faction, syncUnit.defaultImagePath, syncUnit.unitType, syncUnit.unitSubType, syncUnit.strength);
+          Unit.syncronize(syncUnit, newUnit);
+        }
       }
     }
 
