@@ -374,9 +374,6 @@ export function die(unit: IUnit) {
 
 }
 export function takeDamage(unit: IUnit, amount: number, dryRun: boolean, state?: EffectState) {
-  if (!dryRun) {
-    console.log(`takeDamage: unit ${unit.id}; amount: ${amount}`);
-  }
   // Compose onDamageEvents
   for (let eventName of unit.onDamageEvents) {
     const fn = Events.onDamageSource[eventName];
@@ -384,6 +381,9 @@ export function takeDamage(unit: IUnit, amount: number, dryRun: boolean, state?:
       // onDamage events can alter the amount of damage taken
       amount = fn(unit, amount, dryRun);
     }
+  }
+  if (!dryRun) {
+    console.log(`takeDamage: unit ${unit.id}; amount: ${amount}; events:`, unit.onDamageEvents);
   }
   unit.health -= amount;
   // Prevent health from going over maximum or under 0
