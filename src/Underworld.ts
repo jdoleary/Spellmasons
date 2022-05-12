@@ -118,7 +118,7 @@ export default class Underworld {
     this.ensureAllClientsHaveAssociatedPlayers(getClients());
 
     // Start the gameloop
-    requestAnimationFrameGameLoopId = requestAnimationFrame(this.gameLoop.bind(this));
+    requestAnimationFrameGameLoopId = requestAnimationFrame(this.gameLoop);
   }
   syncPlayerPredictionUnitOnly() {
     if (window.player !== undefined) {
@@ -137,7 +137,7 @@ export default class Underworld {
     this.random = seedrandom(this.seed, { state: RNGState })
     return this.random;
   }
-  gameLoop(timestamp: number) {
+  gameLoop = (timestamp: number) => {
     const deltaTime = timestamp - lastTime;
     lastTime = timestamp;
     const { zoom } = getCamera();
@@ -270,7 +270,7 @@ export default class Underworld {
     mouseMove();
 
     // Invoke gameLoopUnits again next loop
-    requestAnimationFrameGameLoopId = requestAnimationFrame(this.gameLoop.bind(this))
+    requestAnimationFrameGameLoopId = requestAnimationFrame(this.gameLoop)
   }
   // setPath finds a path to the target
   // and sets that to the unit's path
