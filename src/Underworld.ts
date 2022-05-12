@@ -1377,6 +1377,11 @@ export default class Underworld {
       case UnitSubType.RANGED_RADIUS:
         return Unit.findClosestUnitInDifferentFaction(u);
         break;
+      case UnitSubType.PLAYER_CONTROLLED:
+        // Ignore player controlled units, they don't get an attack target assigned by
+        // the game, they choose their own.
+        return undefined;
+        break;
       default:
         console.error('Cannot determine attackTarget, unit sub type is unaccounted for', u.unitSubType)
         return undefined;
