@@ -177,8 +177,8 @@ export default class Underworld {
             u.stamina -= moveDist;
             if (u.path.points[0] && (
               Vec.equal(u, u.path.points[0]) ||
-              // If unit is MELEE, stop when it gets close enough to target
-              (u.unitSubType == UnitSubType.MELEE && math.distance(u, u.path.points[0]) <= config.COLLISION_MESH_RADIUS * 2)
+              // If unit is MELEE and only has the final target left in the path, stop when it gets close enough
+              (u.path.points.length == 1 && u.unitSubType == UnitSubType.MELEE && math.distance(u, u.path.points[0]) <= config.COLLISION_MESH_RADIUS * 2)
             )) {
               // Once the unit reaches the target, shift so the next point in the path is the next target
               u.path.points.shift();
