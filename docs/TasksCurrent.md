@@ -1,11 +1,9 @@
 ## Critical tasks
-- Bug: Refreshing 2nd client browser while units were dead caused them to spawn alive
 - Bug: Should sync portals when syncing units if all enemies are dead
 - Bug: Dead player doesn't lose mana
 - Enh: Looks like dragndrop is keeping dad from selecting a spell sometimes cause he moves the mouse before lifting it upn
 - Bug: Portal didn't appear once (honeycomb seems broken if you have walls above and below you)
 - Bug: Goons spawned outside of map when summoner was stuffed in upper left corner of map
-- Bug: Zoom makes attention markers that would be overlapped by card hand go way too far up
 ---
 - Need to **Optimize**, it got very laggy for him
     - Re running findPath for each unit each loop is not good

@@ -300,10 +300,14 @@ export default class Underworld {
       // Keep inside bounds of camera
       exclamationMark.x = Math.min(Math.max(left, exclamationMark.x), right);
       exclamationMark.y = Math.min(Math.max(top, exclamationMark.y), bottom);
+      const cardHandRight = (cardHoldersRect.width + (camX - cardHandPaddingRight)) / zoom;
+      const cardHandTop = (cardHoldersRect.top + camY) / zoom;
+      // window.unitOverlayGraphics.drawCircle(camX / zoom, camY / zoom, 4);
+      // window.unitOverlayGraphics.drawCircle(cardHandRight, cardHandTop, 8);
       // Don't let the attention marker get obscured by the cardHolders element
-      if (exclamationMark.x < cardHoldersRect.width + camX - cardHandPaddingRight && exclamationMark.y > cardHoldersRect.top + camY) {
-        // 64 is arbitrary extra padding for the height of the marker
-        exclamationMark.y = cardHoldersRect.top + camY - 64;
+      if (exclamationMark.x < cardHandRight && exclamationMark.y > cardHandTop) {
+        // 32 is arbitrary extra padding for the height of the marker
+        exclamationMark.y = cardHandTop - 32;
       }
 
       // Draw Attention Icon to show the enemy will hurt you next turn
