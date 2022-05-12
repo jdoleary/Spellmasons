@@ -150,7 +150,8 @@ export default class Underworld {
       if (u) {
         const predictionUnit = window.predictionUnits[i];
         if (u.alive) {
-          if (u.path && u.path[0]) {
+          // Disallow movement if the unit is out of stamina
+          if (u.path && u.path[0] && u.stamina > 0) {
             // Move towards target
             const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.path[0], u.moveSpeed * deltaTime)
             let moveDist = 0;
@@ -177,7 +178,6 @@ export default class Underworld {
             }
             // Stop moving if you've moved as far as you can based on the move distance
             if (u.stamina <= 0) {
-              u.path = [];
               u.stamina = 0;
             }
             // check for collisions with pickups in new location
