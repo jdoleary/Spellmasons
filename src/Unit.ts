@@ -38,11 +38,6 @@ export interface IUnit {
   unitSourceId: string;
   x: number;
   y: number;
-  // lastX and lastY are used to determine when a unit has finished
-  // moving (because then their current x,y and lastX,lastY will be 
-  // identical)
-  lastX: number;
-  lastY: number;
   path: Vec2[];
   moveSpeed: number;
   // A resolve callback for when a unit is done moving
@@ -104,8 +99,6 @@ export function create(
     unitSourceId,
     x,
     y,
-    lastX: x,
-    lastY: y,
     strength,
     radius: config.UNIT_BASE_RADIUS,
     path: [],
@@ -596,8 +589,6 @@ export function syncImage(unit: IUnit) {
   // TODO does scale syncing need to happen here?  I don't think so cause it's
   // just stored in the sprite so it wont get out of sync
   if (unit.image) {
-    unit.lastX = unit.image.sprite.x;
-    unit.lastY = unit.image.sprite.y;
     unit.image.sprite.x = unit.x;
     unit.image.sprite.y = unit.y;
   }

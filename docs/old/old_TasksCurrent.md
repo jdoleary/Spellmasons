@@ -13,7 +13,6 @@ Priorities
 - Redo colors: Red should always mean danger
     - LOS line from archers for example
 ---
-- clean: remove lastX and lastY
 - bug: Prevent casting underneath selected cards when click, move, release on selected cards
 - If you cast a spell while another spell is still in progress you can go negative mana
 - Better Pathfinding
