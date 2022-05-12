@@ -57,6 +57,10 @@ export function onData(d: OnDataArgs) {
       // This is why it is okay that updating the game state happens 
       // asynchronously.
       if (!readyState.get("underworld")) {
+        // If a client loads a full game state, they should be fully synced
+        // so clear the onDataQueue to prevent old messages from being processed
+        // after the full gamestate sync
+        onDataQueueContainer.queue = [d];
         handleLoadGameState(payload);
       } else {
         console.log('Ignoring INIT_GAME_STATE because underworld has already been initialized.');
