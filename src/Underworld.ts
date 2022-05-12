@@ -1496,7 +1496,7 @@ export default class Underworld {
     return true
   }
   syncUnits(units: Unit.IUnitSerialized[]) {
-    console.log('sync: Syncing units');
+    console.log('sync: Syncing units', units, window.underworld.units);
     for (let syncUnit of units) {
       // TODO: optimize if needed
       const originalUnit = window.underworld.units.find(u => u.id === syncUnit.id);
