@@ -47,7 +47,7 @@ const spell: Spell = {
     description: `
 Makes this unit's curses contageous to other nearby units
     `,
-    effect: async (state, dryRun) => {
+    effect: async (state, prediction) => {
       for (let unit of state.targetedUnits) {
         // Don't add contageous more than once
         if (!unit.onTurnStartEvents.includes(id)) {
@@ -61,8 +61,8 @@ Makes this unit's curses contageous to other nearby units
     add
   },
   events: {
-    onTurnStart: async (unit: IUnit, dryRun: boolean) => {
-      const nearByUnits = window.underworld.getUnitsWithinDistanceOfTarget(unit, COLLISION_MESH_RADIUS * 4, dryRun)
+    onTurnStart: async (unit: IUnit, prediction: boolean) => {
+      const nearByUnits = window.underworld.getUnitsWithinDistanceOfTarget(unit, COLLISION_MESH_RADIUS * 4, prediction)
         // Filter out undefineds
         .filter(x => x !== undefined)
         // Do not spread to dead units
@@ -79,7 +79,7 @@ Makes this unit's curses contageous to other nearby units
         const promises = [];
         // Filter out units that already have this curse
         for (let touchingUnit of nearByUnits.filter(u => !Object.keys(u.modifiers).includes(card.id))) {
-          if (!dryRun) {
+          if (!prediction) {
             // Visually show the contageon
             promises.push(createVisualLobbingProjectile(
               unit,

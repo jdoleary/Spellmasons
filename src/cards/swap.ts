@@ -16,14 +16,14 @@ const spell: Spell = {
     description: `
 Swaps the caster with the source target.
     `,
-    effect: async (state, dryRun) => {
+    effect: async (state, prediction) => {
       const { casterUnit, targetedUnits } = state;
       // Loop through all targets and batch swap locations
       const swapUnits: [Unit.IUnit, Vec2][] = [];
       const swapPickups: [Pickup.IPickup, Vec2][] = [];
       const swapLocation = { x: casterUnit.x, y: casterUnit.y };
       // The unit at the location that the targetUnit will swap to
-      const swapUnit = window.underworld.getUnitAt(swapLocation, dryRun);
+      const swapUnit = window.underworld.getUnitAt(swapLocation, prediction);
       if (swapUnit && targetedUnits[0]) {
         swapUnits.push([swapUnit, targetedUnits[0]]);
       }
@@ -53,13 +53,13 @@ Swaps the caster with the source target.
         return state;
       }
       for (let [pickup, newLocation] of swapPickups) {
-        if (!dryRun) {
+        if (!prediction) {
           // Physically swap
           Pickup.setPosition(pickup, newLocation.x, newLocation.y);
         }
       }
       for (let [unit, newLocation] of swapUnits) {
-        if (!dryRun) {
+        if (!prediction) {
           // Physically swap
           Unit.setLocation(unit, newLocation);
         }

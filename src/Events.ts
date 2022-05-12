@@ -3,7 +3,7 @@ import type { IUnit } from './Unit';
 
 export type onDamage = {
   // Returns a possibly modified damage
-  (unit: IUnit, amount: number, dryRun: boolean, damageDealer?: IUnit): number;
+  (unit: IUnit, amount: number, prediction: boolean, damageDealer?: IUnit): number;
 };
 
 const onDamageSource: { [name: string]: onDamage } = {};
@@ -27,7 +27,7 @@ const onAgroSource: { [name: string]: onAgro } = {};
 
 export type onTurnStart = {
   // Return boolean skips the turn if true
-  (unit: IUnit, dryRun: boolean): Promise<boolean>;
+  (unit: IUnit, prediction: boolean): Promise<boolean>;
 };
 const onTurnStartSource: { [name: string]: onTurnStart } = {};
 export type onTurnEnd = { (unit: IUnit): Promise<void>; }

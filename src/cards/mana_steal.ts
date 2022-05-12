@@ -17,15 +17,15 @@ const spell: Spell = {
     description: `
 Sacrifice some of own health to steal up to ${mana_stolen} mana from each target.
     `,
-    effect: async (state, dryRun) => {
+    effect: async (state, prediction) => {
       const caster = state.casterUnit;
       let promises = [];
       for (let unit of state.targetedUnits) {
         const unitManaBurnt = Math.min(unit.mana, mana_stolen);
         unit.mana -= unitManaBurnt;
-        promises.push((dryRun ? Promise.resolve() : createVisualLobbingProjectile(unit, caster, 'blue-projectile.png')).then(() => {
+        promises.push((prediction ? Promise.resolve() : createVisualLobbingProjectile(unit, caster, 'blue-projectile.png')).then(() => {
           state.casterUnit.mana += unitManaBurnt;
-          if (!dryRun) {
+          if (!prediction) {
             explainManaOverfill();
             floatingText({
               coords: caster,

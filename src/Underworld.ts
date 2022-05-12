@@ -117,16 +117,16 @@ export default class Underworld {
     // Start the gameloop
     requestAnimationFrameGameLoopId = requestAnimationFrame(this.gameLoop.bind(this));
   }
-  syncPlayerDryRunUnitOnly() {
+  syncPlayerPredictionUnitOnly() {
     if (window.player !== undefined) {
-      const dryRunUnitIndex = window.dryRunUnits.findIndex(u => u.id == window.player?.unit.id);
-      window.dryRunUnits[dryRunUnitIndex] = Unit.copyForDryRunUnit(window.player.unit);
+      const predictionUnitIndex = window.predictionUnits.findIndex(u => u.id == window.player?.unit.id);
+      window.predictionUnits[predictionUnitIndex] = Unit.copyForPredictionUnit(window.player.unit);
     }
   }
-  // Assigns window.dryRunUnits a copy of this.units
+  // Assigns window.predictionUnits a copy of this.units
   // for the sake of prediction
-  syncDryRunUnits() {
-    window.dryRunUnits = this.units.map(Unit.copyForDryRunUnit);
+  syncPredictionUnits() {
+    window.predictionUnits = this.units.map(Unit.copyForPredictionUnit);
   }
   syncronizeRNG(RNGState: SeedrandomState | boolean) {
     // state of "true" initializes the RNG with the ability to save it's state,
@@ -148,7 +148,7 @@ export default class Underworld {
     for (let i = 0; i < this.units.length; i++) {
       const u = this.units[i];
       if (u) {
-        const dryRunUnit = window.dryRunUnits[i];
+        const predictionUnit = window.predictionUnits[i];
         if (u.alive) {
           if (u.path && u.path[0]) {
             // Move towards target
@@ -216,8 +216,8 @@ export default class Underworld {
           if (this.turn_phase == turn_phase.PlayerTurns) {
             // Show how much damage they'll take on their health bar
             window.unitOverlayGraphics.beginFill(healthBarHurtColor, 1.0);
-            if (dryRunUnit) {
-              const healthAfterHurt = dryRunUnit.health;
+            if (predictionUnit) {
+              const healthAfterHurt = predictionUnit.health;
               if (healthAfterHurt > u.health) {
                 window.unitOverlayGraphics.beginFill(healthBarHealColor, 1.0);
               }
@@ -228,7 +228,7 @@ export default class Underworld {
                 healthBarHurtWidth,
                 config.UNIT_UI_BAR_HEIGHT);
               // Draw red death circle if a unit is currently alive, but wont be after cast
-              if (u.alive && !dryRunUnit.alive) {
+              if (u.alive && !predictionUnit.alive) {
                 ImmediateMode.draw('skull.png', { x: u.x, y: u.y - (32 / zoom) }, 1 / zoom);
               }
             }
@@ -639,9 +639,9 @@ export default class Underworld {
         this.units.splice(i, 1);
       }
     }
-    // Now that the units have been cleaned up syncDryRunUnits
+    // Now that the units have been cleaned up syncPredictionUnits
     // so they are not out of sync with the underworld units array
-    this.syncDryRunUnits();
+    this.syncPredictionUnits();
     // Clear all pickups
     for (let p of this.pickups) {
       Pickup.removePickup(p);
@@ -1311,10 +1311,10 @@ export default class Underworld {
   getUnitsWithinDistanceOfTarget(
     target: Vec2,
     distance: number,
-    dryRun: boolean,
+    prediction: boolean,
   ): Unit.IUnit[] {
     const withinDistance: Unit.IUnit[] = [];
-    const units = dryRun ? window.dryRunUnits : this.units;
+    const units = prediction ? window.predictionUnits : this.units;
     for (let unit of units) {
       if (math.distance(unit, target) <= distance) {
         withinDistance.push(unit);
@@ -1322,8 +1322,8 @@ export default class Underworld {
     }
     return withinDistance;
   }
-  getUnitAt(coords: Vec2, dryRun?: boolean): Unit.IUnit | undefined {
-    const sortedByProximityToCoords = (dryRun ? window.dryRunUnits : this.units)
+  getUnitAt(coords: Vec2, prediction?: boolean): Unit.IUnit | undefined {
+    const sortedByProximityToCoords = (prediction ? window.predictionUnits : this.units)
       // Filter for only valid units, not units with NaN location or waiting to be removed
       .filter(u => !u.flaggedForRemoval && !isNaN(u.x) && !isNaN(u.y))
       // Filter for units within COLLISION_MESH_RADIUS of coordinates
@@ -1339,9 +1339,9 @@ export default class Underworld {
     const closest = sortedByProximityToCoords[0]
     return closest && math.distance(closest, coords) <= config.COLLISION_MESH_RADIUS ? closest : undefined;
   }
-  addUnitToArray(unit: Unit.IUnit, dryRun: boolean) {
-    if (dryRun) {
-      window.dryRunUnits.push(unit);
+  addUnitToArray(unit: Unit.IUnit, prediction: boolean) {
+    if (prediction) {
+      window.predictionUnits.push(unit);
     } else {
       this.units.push(unit);
     }
@@ -1357,12 +1357,12 @@ export default class Underworld {
     casterUnit: Unit.IUnit,
     cardIds: string[],
     castLocation: Vec2,
-    dryRun: boolean,
+    prediction: boolean,
   ): Promise<Cards.EffectState> {
-    if (!dryRun && casterUnit == (window.player && window.player.unit)) {
+    if (!prediction && casterUnit == (window.player && window.player.unit)) {
       window.castThisTurn = true;
     }
-    const unitAtCastLocation = this.getUnitAt(castLocation, dryRun);
+    const unitAtCastLocation = this.getUnitAt(castLocation, prediction);
     let effectState: Cards.EffectState = {
       casterCardUsage,
       casterUnit,
@@ -1388,12 +1388,12 @@ export default class Underworld {
         // Note: it is important that this is done BEFORE a card is actually cast because
         // the card may affect the caster's mana
         effectState.casterUnit.mana -= singleCardCost.manaCost;
-        Unit.takeDamage(effectState.casterUnit, singleCardCost.healthCost, dryRun, effectState);
+        Unit.takeDamage(effectState.casterUnit, singleCardCost.healthCost, prediction, effectState);
         const targets = effectState.targetedUnits.length == 0 ? [castLocation] : effectState.targetedUnits
         for (let target of targets) {
 
           // Show the card that's being cast:
-          if (!dryRun) {
+          if (!prediction) {
             const image = Image.create(
               target,
               card.thumbnail,
@@ -1420,9 +1420,9 @@ export default class Underworld {
         // .then is necessary to convert return type of promise.all to just be void
         animationPromises.push(Promise.all([animations]).then(() => { }));
         const { targetedUnits: previousTargets } = effectState;
-        effectState = await card.effect(effectState, dryRun);
+        effectState = await card.effect(effectState, prediction);
         // Delay animation between spells so players can understand what's going on
-        if (!dryRun) {
+        if (!prediction) {
           await new Promise<void>((resolve) => {
             setTimeout(resolve, config.MILLIS_PER_SPELL_ANIMATION);
           })
@@ -1439,7 +1439,7 @@ export default class Underworld {
             animationPromises.push(drawTarget(targetedUnit.x, targetedUnit.y, false));
           } else {
             // If a new target, animate it in
-            animationPromises.push(drawTarget(targetedUnit.x, targetedUnit.y, !dryRun));
+            animationPromises.push(drawTarget(targetedUnit.x, targetedUnit.y, !prediction));
           }
         }
 
@@ -1449,12 +1449,12 @@ export default class Underworld {
           casterCardUsage[card.id] = 0;
         }
         casterCardUsage[card.id] += card.expenseScaling;
-        if (!dryRun) {
+        if (!prediction) {
           updateManaCostUI();
         }
       }
     }
-    if (!dryRun) {
+    if (!prediction) {
       // Clear spell animations once all cards are done playing their animations
       containerSpells.removeChildren();
     }

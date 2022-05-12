@@ -157,10 +157,10 @@ export const pickups: IPickupSource[] = [
         player.unit.mana += manaPotionRestoreAmount;
         explainManaOverfill();
         // Now that the player unit's mana has increased,sync the new
-        // mana state with the player's dryRunUnit so it is properly
+        // mana state with the player's predictionUnit so it is properly
         // refelcted in the mana bar
         // (note: this would be auto corrected on the next mouse move anyway)
-        window.underworld.syncPlayerDryRunUnitOnly();
+        window.underworld.syncPlayerPredictionUnitOnly();
       }
     },
   },
@@ -175,10 +175,10 @@ export const pickups: IPickupSource[] = [
         // Cap health at max
         player.unit.health = Math.min(player.unit.health, player.unit.healthMax);
         // Now that the player unit's mana has increased,sync the new
-        // mana state with the player's dryRunUnit so it is properly
+        // mana state with the player's predictionUnit so it is properly
         // refelcted in the health bar
         // (note: this would be auto corrected on the next mouse move anyway)
-        window.underworld.syncPlayerDryRunUnitOnly();
+        window.underworld.syncPlayerPredictionUnitOnly();
       }
     },
   },

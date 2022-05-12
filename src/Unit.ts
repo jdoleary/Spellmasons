@@ -247,7 +247,7 @@ export function serialize(unit: IUnit): IUnitSerialized {
 // Reinitialize a unit from another unit object
 // this is useful when loading game state after reconnect
 // This is the opposite of serialize
-export function load(unit: IUnitSerialized, dryRun: boolean): IUnit {
+export function load(unit: IUnitSerialized, prediction: boolean): IUnit {
   const { shaderUniforms, ...restUnit } = unit
   // Since resolveDoneMoving is about to be overwritten,
   // call it, just in case there is a pending promise (there shouldn't be)
@@ -267,7 +267,7 @@ export function load(unit: IUnitSerialized, dryRun: boolean): IUnit {
       loadedunit.shaderUniforms[key][keyUniform] = value;
     }
   }
-  window.underworld.addUnitToArray(loadedunit, dryRun);
+  window.underworld.addUnitToArray(loadedunit, prediction);
   if (!loadedunit.alive) {
     die(loadedunit);
   }
@@ -301,8 +301,8 @@ export function syncronize(unitSerialized: IUnitSerialized, originalUnit: IUnit)
 // dies mid-animation and this function is not used, it would return to the default
 // LIVING sprite, instead of the dead sprite.
 export function returnToDefaultSprite(unit: IUnit) {
-  // This check for unit.image prevents creating a corpse image when a dryRunUnit
-  // dies because a dryRun unit won't have an image property
+  // This check for unit.image prevents creating a corpse image when a predictionUnit
+  // dies because a prediction unit won't have an image property
   if (unit.image) {
     const defaultImageString = unit.alive ? unit.defaultImagePath : 'units/corpse.png'
     const container = unit.alive ? containerUnits : containerDoodads;
@@ -336,8 +336,8 @@ export function resurrect(unit: IUnit) {
   returnToDefaultSprite(unit);
 }
 export function die(unit: IUnit) {
-  // This check for unit.image prevents creating a corpse image when a dryRunUnit
-  // dies because a dryRun unit won't have an image property
+  // This check for unit.image prevents creating a corpse image when a predictionUnit
+  // dies because a prediction unit won't have an image property
   if (unit.image) {
     Image.changeSprite(
       unit.image,
@@ -373,23 +373,23 @@ export function die(unit: IUnit) {
   window.underworld.checkIfShouldSpawnPortal();
 
 }
-export function takeDamage(unit: IUnit, amount: number, dryRun: boolean, state?: EffectState) {
+export function takeDamage(unit: IUnit, amount: number, prediction: boolean, state?: EffectState) {
   // Compose onDamageEvents
   for (let eventName of unit.onDamageEvents) {
     const fn = Events.onDamageSource[eventName];
     if (fn) {
       // onDamage events can alter the amount of damage taken
-      amount = fn(unit, amount, dryRun);
+      amount = fn(unit, amount, prediction);
     }
   }
-  if (!dryRun) {
+  if (!prediction) {
     console.log(`takeDamage: unit ${unit.id}; amount: ${amount}; events:`, unit.onDamageEvents);
   }
   unit.health -= amount;
   // Prevent health from going over maximum or under 0
   unit.health = Math.max(0, Math.min(unit.health, unit.healthMax));
   // If the unit is actually taking damage (not taking 0 damage or being healed - (negative damage))
-  if (!dryRun) {
+  if (!prediction) {
     if (amount > 0) {
       // Use all_red shader to flash the unit to show they are taking damage
       if (unit.shaderUniforms.all_red) {
@@ -418,12 +418,12 @@ export function syncPlayerHealthManaUI() {
   elHealthBar.style["width"] = `${100 * healthRatio}%`;
   elHealthLabel.innerHTML = `${unit.health}/${unit.healthMax}`;
 
-  const dryRunPlayerUnit = window.dryRunUnits.find(u => u.id == window.player?.unit.id) || { health: unit.health, mana: unit.mana };
+  const predictionPlayerUnit = window.predictionUnits.find(u => u.id == window.player?.unit.id) || { health: unit.health, mana: unit.mana };
   // Set the health cost bar that shows how much health will be removed if the spell is cast
-  if (dryRunPlayerUnit.health > 0) {
+  if (predictionPlayerUnit.health > 0) {
     // Show cost bar from current health location minus whatever it's value is
-    elHealthCost.style['left'] = `${100 * dryRunPlayerUnit.health / unit.healthMax}%`;
-    elHealthCost.style['width'] = `${100 * (unit.health - dryRunPlayerUnit.health) / unit.healthMax}%`;
+    elHealthCost.style['left'] = `${100 * predictionPlayerUnit.health / unit.healthMax}%`;
+    elHealthCost.style['width'] = `${100 * (unit.health - predictionPlayerUnit.health) / unit.healthMax}%`;
   } else {
     elHealthCost.style['left'] = '100%';
     elHealthCost.style['width'] = '0';
@@ -436,20 +436,20 @@ export function syncPlayerHealthManaUI() {
   elManaBar2.style["width"] = `${100 * Math.min(manaRatio2, 1)}%`;
   const manaRatio3 = (Math.max(0, unit.mana - unit.manaMax * 2)) / unit.manaMax;
   elManaBar3.style["width"] = `${100 * Math.min(manaRatio3, 1)}%`;
-  if (dryRunPlayerUnit.mana !== unit.mana) {
-    elManaLabel.innerHTML = `${dryRunPlayerUnit.mana} Mana Left`;
+  if (predictionPlayerUnit.mana !== unit.mana) {
+    elManaLabel.innerHTML = `${predictionPlayerUnit.mana} Mana Left`;
   } else {
     elManaLabel.innerHTML = `${unit.mana}/${unit.manaMax}`;
   }
 
   // Set the 3 mana cost bars that show how much mana will be removed if the spell is cast
-  if (dryRunPlayerUnit.mana > 0) {
+  if (predictionPlayerUnit.mana > 0) {
     // Show cost bar from current mana location minus whatever it's value is
-    elManaCost.style['left'] = `${100 * dryRunPlayerUnit.mana / unit.manaMax}%`;
-    elManaCost.style['width'] = `${100 * Math.min(((unit.mana - dryRunPlayerUnit.mana) / unit.manaMax), 1)}%`;
+    elManaCost.style['left'] = `${100 * predictionPlayerUnit.mana / unit.manaMax}%`;
+    elManaCost.style['width'] = `${100 * Math.min(((unit.mana - predictionPlayerUnit.mana) / unit.manaMax), 1)}%`;
 
-    elManaCost2.style['left'] = `${100 * (dryRunPlayerUnit.mana - unit.manaMax) / unit.manaMax}%`;
-    let cost2Left = 100 * (dryRunPlayerUnit.mana - unit.manaMax) / unit.manaMax;
+    elManaCost2.style['left'] = `${100 * (predictionPlayerUnit.mana - unit.manaMax) / unit.manaMax}%`;
+    let cost2Left = 100 * (predictionPlayerUnit.mana - unit.manaMax) / unit.manaMax;
     if (cost2Left < 0) {
       elManaBar2.style['left'] = `${cost2Left}%`;
       elManaCost2.style['left'] = `0%`;
@@ -459,7 +459,7 @@ export function syncPlayerHealthManaUI() {
     }
     elManaCost2.style['width'] = `${100 * Math.min(manaRatio2, 1)}%`;
 
-    let cost3Left = 100 * (dryRunPlayerUnit.mana - unit.manaMax * 2) / unit.manaMax;
+    let cost3Left = 100 * (predictionPlayerUnit.mana - unit.manaMax * 2) / unit.manaMax;
     if (cost3Left < 0) {
       elManaBar3.style['left'] = `${cost3Left}%`;
       elManaCost3.style['left'] = `0%`;
@@ -610,7 +610,7 @@ export function inRange(unit: IUnit, coords: Vec2): boolean {
 }
 
 // return boolean signifies if unit should abort their turn
-export async function runTurnStartEvents(unit: IUnit, dryRun: boolean = false): Promise<boolean> {
+export async function runTurnStartEvents(unit: IUnit, prediction: boolean = false): Promise<boolean> {
   // Note: This must be a for loop instead of a for..of loop
   // so that if one of the onTurnStartEvents modifies the
   // unit's onTurnStartEvents array (for example, after death)
@@ -621,7 +621,7 @@ export async function runTurnStartEvents(unit: IUnit, dryRun: boolean = false): 
     if (eventName) {
       const fn = Events.onTurnStartSource[eventName];
       if (fn) {
-        const shouldAbortTurn = await fn(unit, dryRun);
+        const shouldAbortTurn = await fn(unit, prediction);
         // Only change abort turn from false to true,
         // never from turn to false because if any one
         // of the turn start events needs the unit to abort
@@ -641,8 +641,8 @@ export async function runTurnStartEvents(unit: IUnit, dryRun: boolean = false): 
 
 }
 // Makes a copy of the unit's data suitable for 
-// a dryRunUnit
-export function copyForDryRunUnit(u: IUnit): IUnit {
+// a predictionUnit
+export function copyForPredictionUnit(u: IUnit): IUnit {
   const { image, resolveDoneMoving, modifiers, ...unit } = u;
   return {
     ...unit,

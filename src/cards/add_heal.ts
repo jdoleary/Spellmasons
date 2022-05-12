@@ -16,10 +16,10 @@ const spell: Spell = {
 Heals all targets ${healAmount} HP.
 Will not heal beyond maximum health.
     `,
-    effect: async (state, dryRun) => {
+    effect: async (state, prediction) => {
       for (let unit of state.targetedUnits) {
         const damage = -healAmount;
-        Unit.takeDamage(unit, damage, dryRun, state);
+        Unit.takeDamage(unit, damage, prediction, state);
       }
       return state;
     },

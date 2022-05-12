@@ -22,9 +22,9 @@ const spell: Spell = {
     description: `
 Deals ${damageDone} damage to all targets.    
     `,
-    effect: async (state, dryRun) => {
+    effect: async (state, prediction) => {
       for (let unit of state.targetedUnits) {
-        Unit.takeDamage(unit, damageDone, dryRun, state);
+        Unit.takeDamage(unit, damageDone, prediction, state);
       }
       return state;
     },

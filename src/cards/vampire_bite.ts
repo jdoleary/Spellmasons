@@ -57,7 +57,7 @@ const spell: Spell = {
     thumbnail: 'bite.png',
     description: `Turns the victim into a Vampire.
     `,
-    effect: async (state, dryRun) => {
+    effect: async (state, prediction) => {
       for (let unit of state.targetedUnits) {
         Unit.addModifier(unit, id);
       }
@@ -69,7 +69,7 @@ const spell: Spell = {
     remove
   },
   events: {
-    onDamage: (unit: IUnit, amount: number, dryRun: boolean, damageDealer?: IUnit) => {
+    onDamage: (unit: IUnit, amount: number, prediction: boolean, damageDealer?: IUnit) => {
       // Takes healing as damage
       if (amount < 0) {
         return -1 * amount;

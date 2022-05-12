@@ -33,7 +33,7 @@ window.volumeMusic = 1.0;
 window.volumeGame = 1.0;
 window.zoomTarget = 1;
 window.playerWalkingPromise = Promise.resolve();
-window.dryRunUnits = [];
+window.predictionUnits = [];
 window.attentionMarkers = [];
 window.resMarkers = [];
 window.lastThoughtsHash = '';
@@ -144,7 +144,7 @@ declare global {
     // Graphics for drawing unit health and mana bars
     unitOverlayGraphics: PIXI.Graphics;
     // Graphics for drawing the spell effects during the dry run phase
-    dryRunGraphics: PIXI.Graphics;
+    predictionGraphics: PIXI.Graphics;
     allowCookies: boolean;
     playMusic: () => void;
     changeVolume: (volume: number) => void;
@@ -172,7 +172,7 @@ declare global {
     // Make me superhuman (used for dev)
     superMe: () => void;
     // A local copy of underworld.units used to predict damage and mana use from casting a spell
-    dryRunUnits: Unit.IUnit[];
+    predictionUnits: Unit.IUnit[];
     // Shows icons above the heads of enemies who will damage you next turn
     attentionMarkers: Vec2[];
     // Shows icon for units that will be successfully resurrected
@@ -213,9 +213,9 @@ window.superMe = () => {
     window.player.unit.stamina = window.player.unit.staminaMax;
     window.player.unit.moveSpeed = 2;
     // Now that player's health and mana has changed we must sync
-    // dryRunUnits so that the player's dryRun copy
+    // predictionUnits so that the player's prediction copy
     // has the same mana and health
-    window.underworld.syncDryRunUnits();
+    window.underworld.syncPredictionUnits();
   }
 }
 // window.showDebug = true;

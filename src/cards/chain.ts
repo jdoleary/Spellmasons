@@ -1,4 +1,4 @@
-import { drawDryRunLine } from '../ui/PlanningView';
+import { drawPredictionLine } from '../ui/PlanningView';
 import { addUnitTarget, Spell } from '.';
 import type { Vec2 } from '../Vec';
 import type * as Unit from '../Unit';
@@ -17,7 +17,7 @@ const spell: Spell = {
 Adds targets for the following cards to effect by "chaining like electricity" 
 off of all existing targeted units to units touching them. 
     `,
-    effect: async (state, dryRun) => {
+    effect: async (state, prediction) => {
       for (let i = 0; i < state.targetedUnits.length; i++) {
         const unit = state.targetedUnits[i];
         if (unit) {
@@ -25,7 +25,7 @@ off of all existing targeted units to units touching them.
           const chained_units = getTouchingUnitsRecursive(
             unit.x,
             unit.y,
-            dryRun,
+            prediction,
             state.targetedUnits
           );
           // Update targetedUnits
@@ -41,10 +41,10 @@ const range = 160;
 function getTouchingUnitsRecursive(
   x: number,
   y: number,
-  dryRun: boolean,
+  prediction: boolean,
   ignore: Unit.IUnit[] = [],
 ): Unit.IUnit[] {
-  const units = dryRun ? window.dryRunUnits : window.underworld.units;
+  const units = prediction ? window.predictionUnits : window.underworld.units;
   let touching = units.filter((u) => {
     return (
       u.x <= x + range &&
@@ -55,13 +55,13 @@ function getTouchingUnitsRecursive(
     );
   });
   ignore.push(...touching);
-  // Draw dryrun lines so user can see how it chains
+  // Draw prediction lines so user can see how it chains
   touching.forEach(chained_unit => {
-    drawDryRunLine({ x, y }, chained_unit);
+    drawPredictionLine({ x, y }, chained_unit);
   })
   for (let u of touching) {
     touching = touching.concat(
-      getTouchingUnitsRecursive(u.x, u.y, dryRun, ignore),
+      getTouchingUnitsRecursive(u.x, u.y, prediction, ignore),
     );
   }
   return touching;

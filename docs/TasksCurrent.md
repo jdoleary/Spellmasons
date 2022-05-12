@@ -1,15 +1,9 @@
 ## Critical tasks
-- Bug: Should sync portals when syncing units if all enemies are dead
-- Bug: Dead player doesn't lose mana
-- Enh: Looks like dragndrop is keeping dad from selecting a spell sometimes cause he moves the mouse before lifting it upn
-- Bug: Portal didn't appear once (honeycomb seems broken if you have walls above and below you)
-- Bug: Goons spawned outside of map when summoner was stuffed in upper left corner of map
 ---
 - Need to **Optimize**, it got very laggy for him
     - Re running findPath for each unit each loop is not good
-    - Sync dryRun units every loop is a waste too if nothing changes
+    - Sync prediction units every loop is a waste too if nothing changes
         - This could be optimized so it only recalcs if a unit moves or if the cast target or cast cards change
-    - Rename 'dryRun' to prediction, since it will actually execute logic (on a copy of units - dryRunUnits), it just doesn't want anything to show on screen.
 ---
 - Logic to avoid fizzle spells
     - Don't cast res on no dead
@@ -21,6 +15,11 @@
     - Sectors could fit together using WFC instead of just being picked by random
 
 ## Tasks
+- Bug: Should sync portals when syncing units if all enemies are dead
+- Bug: Dead player doesn't lose mana
+- Enh: Looks like dragndrop is keeping dad from selecting a spell sometimes cause he moves the mouse before lifting it upn
+- Bug: Portal didn't appear once (honeycomb seems broken if you have walls above and below you)
+- Bug: Goons spawned outside of map when summoner was stuffed in upper left corner of map
 
 - Allys shouldn't push player units
 - Dead units don't lose poison

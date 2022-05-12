@@ -26,13 +26,13 @@ Protects bearer from the next ${damageBlocked} damage that they would incur.  Sh
   },
   modifiers: { add },
   events: {
-    onDamage: (unit, amount, dryRun, damageDealer) => {
+    onDamage: (unit, amount, prediction, damageDealer) => {
       const modifier = unit.modifiers[id];
       if (modifier) {
         // Only block damage, not heals
         if (amount > 0) {
           let adjustedAmount = amount;
-          if (!dryRun) {
+          if (!prediction) {
             floatingText({
               coords: unit,
               text: 'Shielded from damage!',

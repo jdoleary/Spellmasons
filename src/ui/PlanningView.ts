@@ -16,13 +16,13 @@ import { closestLineSegmentIntersection } from '../collision/collisionMath';
 import { getBestRangedLOSTarget } from '../units/actions/rangedAction';
 
 let planningViewGraphics: PIXI.Graphics;
-let dryRunGraphics: PIXI.Graphics;
+let predictionGraphics: PIXI.Graphics;
 export function initPlanningView() {
   planningViewGraphics = new PIXI.Graphics();
   containerPlanningView.addChild(planningViewGraphics);
-  dryRunGraphics = new PIXI.Graphics();
-  window.dryRunGraphics = dryRunGraphics;
-  containerUI.addChild(dryRunGraphics);
+  predictionGraphics = new PIXI.Graphics();
+  window.predictionGraphics = predictionGraphics;
+  containerUI.addChild(predictionGraphics);
 }
 let lastSpotCurrentPlayerTurnCircle: Vec2 = { x: 0, y: 0 };
 export function updatePlanningView() {
@@ -148,11 +148,11 @@ export async function runPredictions() {
   if (window.underworld.turn_phase == turn_phase.PlayerTurns) {
 
     if (window.player) {
-      window.underworld.syncDryRunUnits();
+      window.underworld.syncPredictionUnits();
       updateManaCostUI();
       // Dry run cast so the user can see what effect it's going to have
       const target = mousePos;
-      const casterUnit = window.dryRunUnits.find(u => u.id == window.player?.unit.id)
+      const casterUnit = window.predictionUnits.find(u => u.id == window.player?.unit.id)
       if (!casterUnit) {
         console.error('Critical Error, caster unit not found');
         return;
@@ -160,7 +160,7 @@ export async function runPredictions() {
       const cardIds = CardUI.getSelectedCardIds();
       if (cardIds.length) {
         const effectState = await window.underworld.castCards(
-          // Make a copy of cardUsageCounts for dryrun so it can accurately
+          // Make a copy of cardUsageCounts for prediction so it can accurately
           // calculate mana for multiple copies of one spell in one cast
           JSON.parse(JSON.stringify(window.player.cardUsageCounts)),
           casterUnit,
@@ -172,20 +172,20 @@ export async function runPredictions() {
           // If a unit is currently alive and will take fatal damage,
           // draw red circle.
           if (unitStats.health > 0 && unitStats.damageTaken >= unitStats.health) {
-            dryRunGraphics.lineStyle(4, 0xff0000, 1.0);
-            dryRunGraphics.drawCircle(unitStats.x, unitStats.y, config.COLLISION_MESH_RADIUS);
+            predictionGraphics.lineStyle(4, 0xff0000, 1.0);
+            predictionGraphics.drawCircle(unitStats.x, unitStats.y, config.COLLISION_MESH_RADIUS);
           }
         }
       }
       // Send this client's intentions to the other clients so they can see what they're thinking
       window.underworld.sendPlayerThinking({ target, cardIds })
 
-      // Run onTurnStartEvents on dryRunUnits:
+      // Run onTurnStartEvents on predictionUnits:
       // Displays markers above units heads if they will attack the current client's unit
       // next turn
       window.attentionMarkers = [];
       if (window.player) {
-        for (let u of window.dryRunUnits) {
+        for (let u of window.predictionUnits) {
           const skipTurn = await Unit.runTurnStartEvents(u, true);
           if (skipTurn) {
             continue;
@@ -199,8 +199,8 @@ export async function runPredictions() {
       // Show if unit will be resurrected
       window.resMarkers = [];
       if (cardIds.includes('resurrect')) {
-        window.dryRunUnits.filter(u => u.faction == Faction.ALLY).forEach(u => {
-          // Check if their non-dryRun counterpart is of the other faction:
+        window.predictionUnits.filter(u => u.faction == Faction.ALLY).forEach(u => {
+          // Check if their non-prediction counterpart is of the other faction:
           const realUnit = window.underworld.units.find(x => x.id == u.id)
           if (realUnit && realUnit.faction == Faction.ENEMY) {
             window.resMarkers.push(clone(realUnit));
@@ -218,23 +218,23 @@ export async function runPredictions() {
 // SpellEffectProjection are images to denote some information, such as the spell or action about to be cast/taken when clicked
 export function clearSpellEffectProjection() {
   if (!window.animatingSpells) {
-    dryRunGraphics.clear();
+    predictionGraphics.clear();
     containerSpells.removeChildren();
   }
 }
 
-export function drawDryRunLine(start: Vec2, end: Vec2) {
-  dryRunGraphics.beginFill(0xffff0b, 0.5);
-  dryRunGraphics.lineStyle(3, 0x33ff00);
-  dryRunGraphics.moveTo(start.x, start.y);
-  dryRunGraphics.lineTo(end.x, end.y);
-  dryRunGraphics.endFill();
+export function drawPredictionLine(start: Vec2, end: Vec2) {
+  predictionGraphics.beginFill(0xffff0b, 0.5);
+  predictionGraphics.lineStyle(3, 0x33ff00);
+  predictionGraphics.moveTo(start.x, start.y);
+  predictionGraphics.lineTo(end.x, end.y);
+  predictionGraphics.endFill();
 }
-export function drawDryRunCircle(target: Vec2, radius: number) {
-  dryRunGraphics.lineStyle(3, targetBlue, 0.5);
-  dryRunGraphics.beginFill(0x000000, 0);
-  dryRunGraphics.drawCircle(target.x, target.y, radius);
-  dryRunGraphics.endFill();
+export function drawPredictionCircle(target: Vec2, radius: number) {
+  predictionGraphics.lineStyle(3, targetBlue, 0.5);
+  predictionGraphics.beginFill(0x000000, 0);
+  predictionGraphics.drawCircle(target.x, target.y, radius);
+  predictionGraphics.endFill();
 }
 
 export function isOutOfBounds(target: Vec2) {

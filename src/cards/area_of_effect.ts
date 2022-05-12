@@ -1,5 +1,5 @@
 import { addUnitTarget, Spell } from '.';
-import { drawDryRunCircle } from '../ui/PlanningView';
+import { drawPredictionCircle } from '../ui/PlanningView';
 
 const id = 'AOE';
 const range = 200;
@@ -16,14 +16,14 @@ const spell: Spell = {
 Adds a radius to the spell so it can affect more targets
     `,
     allowNonUnitTarget: true,
-    effect: async (state, dryRun) => {
+    effect: async (state, prediction) => {
       for (let target of [state.castLocation, ...state.targetedUnits]) {
-        // Draw visual circle for dryRun
-        drawDryRunCircle(target, range);
+        // Draw visual circle for prediction
+        drawPredictionCircle(target, range);
         const withinRadius = window.underworld.getUnitsWithinDistanceOfTarget(
           target,
           range,
-          dryRun
+          prediction
         );
         // Add units to target
         withinRadius.forEach(unit => addUnitTarget(unit, state));

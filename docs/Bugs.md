@@ -2,7 +2,7 @@
 - mana and health cost of spell overlay offset when map is zoomed out
 - Bug: I clicked on a mob that was slightly overlapping me but it somehow cast on me instead even though the target was on the mob
   - This should be fixed once I implement "Collision" task
-- Bug: Spell chain still draws dryRun lines for ignored units
+- Bug: Spell chain still draws prediction lines for ignored units
 - Pixi loader sometimes hangs
   - happens in my second tab
   - sheet1.json is returning 304 not modified

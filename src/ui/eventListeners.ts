@@ -190,7 +190,7 @@ export function mouseMove() {
   // havent changed since last call.
 
   // Show faint circle on clickable entities on hover:
-  drawCircleUnderTarget(mouseTarget, 0.4, window.dryRunGraphics);
+  drawCircleUnderTarget(mouseTarget, 0.4, window.predictionGraphics);
 
   // Show walk path if in inspect-mode:
   window.walkPathGraphics.clear();
