@@ -1,4 +1,5 @@
 ## Critical tasks
+- TODO: Split up runPredictions so that it only checks canAttackTarget after units have moved, not every loop
 ---
 - Need to **Optimize**, it got very laggy for him
     - Re running findPath for each unit each loop is not good
