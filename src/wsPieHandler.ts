@@ -31,8 +31,12 @@ window.exitCurrentGame = function exitCurrentGame(): Promise<void> {
   }
   return pie.disconnect();
 }
+const NO_LOG_LIST = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
+// Any message types in this list will be dropped if in the queue and an additional message of this type
+// comes through
+const ONLY_KEEP_LATEST = [MESSAGE_TYPES.PLAYER_THINKING];
 export function onData(d: OnDataArgs) {
-  if (![MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING].includes(d.payload.type)) {
+  if (!NO_LOG_LIST.includes(d.payload.type)) {
     console.log("onData:", MESSAGE_TYPES[d.payload.type], d)
   }
   // Temporarily for development
@@ -96,12 +100,23 @@ let onDataQueueContainer = messageQueue.makeContainer<OnDataArgs>();
 // Waits until a message is done before it will continue to process more messages that come through
 // This ensures that players can't move in the middle of when spell effects are occurring for example.
 function handleOnDataMessageSyncronously(d: OnDataArgs) {
+  // If message type is in the ONLY_KEEP_LATEST list, drop any currently queued messages of the
+  // same message type from the same client before adding this one to the queue
+  if (d.payload && ONLY_KEEP_LATEST.includes(d.payload.type)) {
+    const oldQueueLength = onDataQueueContainer.queue.length;
+    onDataQueueContainer.queue = onDataQueueContainer.queue.filter(x => x.payload.type != d.payload.type && d.fromClient == x.fromClient);
+    const newQueueLength = onDataQueueContainer.queue.length;
+    const numberOfMessagesDiscarded = oldQueueLength - newQueueLength;
+    if (numberOfMessagesDiscarded > 0) {
+      console.log(`ONLY_KEEP_LATEST: Discarded ${numberOfMessagesDiscarded} old messages in queue of type ${MESSAGE_TYPES[d.payload.type]}`)
+    }
+  }
   // Queue message for processing one at a time
   onDataQueueContainer.queue.push(d);
   // 10 is an arbitrary limit which will report that something may be wrong
   // because it's unusual for the queue to get this large
   if (onDataQueueContainer.queue.length > 10) {
-    console.warn("onData queue is growing unusually large: ", onDataQueueContainer.queue.length, "stuck on message: ", currentlyProcessingOnDataMessage);
+    console.warn("onData queue is growing unusually large: ", onDataQueueContainer.queue.length, "stuck on message: ", currentlyProcessingOnDataMessage, 'Payload Types:', onDataQueueContainer.queue.map(x => MESSAGE_TYPES[x.payload.type]));
   }
   // process the "next" (the one that was just added) immediately
   processNextInQueueIfReady();
@@ -168,7 +183,7 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
   currentlyProcessingOnDataMessage = d;
   const { payload, fromClient } = d;
   const type: MESSAGE_TYPES = payload.type;
-  if (![MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING].includes(type)) {
+  if (!NO_LOG_LIST.includes(type)) {
     console.log("Handle ONDATA", type, payload)
   }
   // Get player of the client that sent the message 
