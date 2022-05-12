@@ -357,7 +357,18 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       break;
     case MESSAGE_TYPES.MOVE_PLAYER:
       if (fromPlayer) {
-        await Unit.moveTowards(fromPlayer.unit, payload);
+        await Unit.moveTowards(fromPlayer.unit, payload).then(() => {
+          if (fromPlayer.unit.path?.points.length && fromPlayer.unit.stamina == 0) {
+            // If they do not reach their destination, notify that they are out of stamina
+            floatingText({
+              coords: fromPlayer.unit,
+              text: 'Out of Stamina!'
+            });
+          }
+          // Clear player unit path when they are done moving so they get
+          // to choose a new path next turn
+          fromPlayer.unit.path = undefined;
+        });
       } else {
         console.error('Cannot move player, caster does not exist');
       }

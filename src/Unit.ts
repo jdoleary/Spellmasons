@@ -27,6 +27,11 @@ const elManaLabel: HTMLElement = document.querySelector('#mana .label') as HTMLE
 const elStaminaBar: HTMLElement = document.querySelector('#stamina .fill') as HTMLElement;
 const elStaminaBarLabel: HTMLElement = document.querySelector('#stamina .label') as HTMLElement;
 
+export interface UnitPath {
+  points: Vec2[];
+  lastOwnPosition: Vec2;
+  targetPosition: Vec2;
+}
 // The serialized version of the interface changes the interface to allow only the data
 // that can be serialized in JSON.  It may exclude data that is not neccessary to
 // rehydrate the JSON into an entity
@@ -38,7 +43,7 @@ export interface IUnit {
   unitSourceId: string;
   x: number;
   y: number;
-  path: Vec2[];
+  path?: UnitPath;
   moveSpeed: number;
   // A resolve callback for when a unit is done moving
   resolveDoneMoving: () => void;
@@ -101,7 +106,7 @@ export function create(
     y,
     strength,
     radius: config.UNIT_BASE_RADIUS,
-    path: [],
+    path: undefined,
     moveSpeed: config.UNIT_MOVE_SPEED,
     resolveDoneMoving: () => { },
     resolveDoneMovingTimeout: undefined,
@@ -544,7 +549,7 @@ export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
     }
   }
   // Set path which will be used in the game loop to actually move the unit
-  unit.path = findPath(unit, Vec.clone(target), window.underworld.pathingPolygons);
+  window.underworld.setPath(unit, Vec.clone(target));
   return new Promise<void>((resolve) => {
     // Clear previous timeout
     if (unit.resolveDoneMovingTimeout !== undefined) {
@@ -556,9 +561,6 @@ export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
       resolve()
     }, timeoutMs);
   }).then(() => {
-    // Clear the units move path once they are done moving
-    unit.path = [];
-
     if (unit.resolveDoneMovingTimeout !== undefined) {
       clearTimeout(unit.resolveDoneMovingTimeout);
     }
@@ -572,7 +574,7 @@ export function setLocation(unit: IUnit, coordinates: Vec2) {
   // Set state instantly to new position
   unit.x = coordinates.x;
   unit.y = coordinates.y;
-  unit.path = [];
+  unit.path = undefined;
 }
 export function changeFaction(unit: IUnit, faction: Faction) {
   unit.faction = faction;
@@ -639,7 +641,13 @@ export function copyForPredictionUnit(u: IUnit): IUnit {
     ...unit,
     // Copy all arrays so they don't share a reference with
     // the original unit
-    path: [...unit.path],
+    path: unit.path
+      ? {
+        points: [...unit.path.points],
+        lastOwnPosition: Vec.clone(unit.path.lastOwnPosition),
+        targetPosition: Vec.clone(unit.path.targetPosition)
+      }
+      : undefined,
     onDamageEvents: [...unit.onDamageEvents],
     onDeathEvents: [...unit.onDeathEvents],
     onMoveEvents: [...unit.onMoveEvents],

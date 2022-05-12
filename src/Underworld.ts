@@ -97,6 +97,9 @@ export default class Underworld {
   // line segments that prevent movement
   bounds: PolygonLineSegment[] = [];
   pathingPolygons: Polygon[] = [];
+  // pathingLineSegments shall always be exactly pathingPolygons converted to PolygonLineSegments.
+  // It is kept up to date whenever pathingPolygons changes in cachedWalls
+  pathingLineSegments: PolygonLineSegment[] = [];
   // Keeps track of how many messages have been processed so that clients can
   // know when they've desynced.  Only used for syncronous message processing
   // since only the syncronous messages affect gamestate.
@@ -150,10 +153,10 @@ export default class Underworld {
       if (u) {
         const predictionUnit = window.predictionUnits[i];
         if (u.alive) {
-          // Disallow movement if the unit is out of stamina
-          if (u.path && u.path[0] && u.stamina > 0) {
+          // Only allow movement if the unit has stamina
+          if (u.path && u.path.points[0] && u.stamina > 0) {
             // Move towards target
-            const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.path[0], u.moveSpeed * deltaTime)
+            const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.path.points[0], u.moveSpeed * deltaTime)
             let moveDist = 0;
             // For now, only AI units will collide with each other
             // This is because the collisions were causing issues with player movement that I don't
@@ -172,9 +175,9 @@ export default class Underworld {
               moveDist = math.distance(originalPosition, u);
             }
             u.stamina -= moveDist;
-            if (u.path[0] && Vec.equal(u, u.path[0])) {
+            if (u.path.points[0] && Vec.equal(u, u.path.points[0])) {
               // Once the unit reaches the target, shift so the next point in the path is the next target
-              u.path.shift();
+              u.path.points.shift();
             }
             // Stop moving if you've moved as far as you can based on the move distance
             if (u.stamina <= 0) {
@@ -185,10 +188,15 @@ export default class Underworld {
           }
           collideWithWalls(u);
           // Ensure that resolveDoneMoving is invoked when unit is out of stamina (and thus, done moving)
+          // or when find point in the path has been reached.
           // This is necessary to end the moving units turn because elsewhere we are awaiting the fulfillment of that promise
           // to know they are done moving
-          if (u.stamina <= 0) {
+          if (u.stamina <= 0 || !u.path || u.path.points.length === 0) {
             u.resolveDoneMoving();
+            if (u.path) {
+              // Update last position that changed via own movement
+              u.path.lastOwnPosition = Vec.clone(u);
+            }
           }
         }
         // Sync Image even for non moving units since they may be moved by forces other than themselves
@@ -259,6 +267,116 @@ export default class Underworld {
 
     // Invoke gameLoopUnits again next loop
     requestAnimationFrameGameLoopId = requestAnimationFrame(this.gameLoop.bind(this))
+  }
+  // setPath finds a path to the target
+  // and sets that to the unit's path
+  setPath(unit: Unit.IUnit, target: Vec2) {
+    unit.path = this.calculatePath(unit.path, unit, target)
+  }
+  // calculatePath will find a UnitPath from startPoint to target.
+  // If preExistingPath exists, it may slightly modify
+  // the preExistingPath as an optimization
+  calculatePath(preExistingPath: Unit.UnitPath | undefined, startPoint: Vec2, target: Vec2): Unit.UnitPath {
+    // Cached path finding, if start point and target are the same
+    // do not recalculate path.  start point being the same includes if units has only moved
+    // along path but not moved under other forces.
+    if (preExistingPath) {
+      // If there is a preexisting path, see if it can be reused
+      const targetMoved = !Vec.equal(target, preExistingPath.targetPosition);
+      const selfMoved = !Vec.equal(startPoint, preExistingPath.lastOwnPosition);
+      if (targetMoved) {
+        const secondToLastPoint = preExistingPath.points[preExistingPath.points.length - 2]
+        if (preExistingPath && secondToLastPoint) {
+          const lastStepOfPath = { p1: secondToLastPoint, p2: target };
+          // If there are no intersections between the secondToLastPoint of the existing path and the target
+          const canNotModifyExistingPath = this.pathingLineSegments.some(l => {
+            const intersection = lineSegmentIntersection(lastStepOfPath, l);
+            // Exclude start point, which will certainly be on a wall already since it's a point
+            // along the path.  Find if the last line of the path can reach straight to the target,
+            // if it cannot, return true because there is something in the way
+            return intersection ? !Vec.equal(intersection, secondToLastPoint) : false
+          })
+          if (canNotModifyExistingPath) {
+            console.log('jtest, targetMoved2: reclaculate path', target, preExistingPath.targetPosition)
+          } else {
+            // Then we can just replace the last point with the new target and keep the same path
+            preExistingPath.points[preExistingPath.points.length - 1] = target;
+            console.log('jtest, Reuse path and modify target')
+            return preExistingPath;
+          }
+        } else {
+          console.log('jtest, targetMoved: reclaculate path', target, preExistingPath.targetPosition)
+        }
+      } else if (selfMoved) {
+        console.log('jtest, selfMOved')
+        const firstPointOnPath = preExistingPath.points[0]
+        if (firstPointOnPath) {
+
+          const firstStepOfPath = { p1: startPoint, p2: firstPointOnPath };
+          // Try to modify existing path to see if we can keep all but the start point
+          const canNotModifyExistingPath = this.pathingLineSegments.some(l => {
+            const intersection = lineSegmentIntersection(firstStepOfPath, l);
+            // Exclude firstPointOnPath, which may be on a wall already since it's a point
+            // along the path.
+            return intersection ? !Vec.equal(intersection, firstPointOnPath) : false
+          })
+          if (canNotModifyExistingPath) {
+            console.log('jtest, selfMOved2, recalculatePath')
+          } else {
+            preExistingPath.points[0] = startPoint;
+            console.log('jtest, reuse path and modify startpoint');
+            return preExistingPath;
+          }
+        }
+      } else {
+        // console.log('jtest, keep same path', preExistingPath.points)
+        // Do nothing, keep the same path.  This is the most optimal result because
+        // it requires the least additional computation
+        return preExistingPath;
+      }
+    } else {
+      // If there is no preexisting path, recalculate path
+      console.log('jtest, no current path, calculate path')
+    }
+    return {
+      points: findPath(startPoint, target, this.pathingPolygons, this.pathingLineSegments),
+      lastOwnPosition: Vec.clone(startPoint),
+      targetPosition: Vec.clone(target)
+    }
+
+
+    // if (selfMoved) {
+    //   // Self may have moved marginally due to physics
+    //   // Try to just reconnect the new start point to the
+    //   // 2nd point on the path
+    //   const canJustAdjustStartPointOfPath = false;
+    //   // TODO: Try to modify path
+    //   if (!canJustAdjustStartPointOfPath) {
+    //     // If that doesn't work, remake the whole path
+    //     unit.path = findPath(unit, target, window.underworld.pathingPolygons);
+    //     return
+    //   }
+    // } else {
+    //   if (targetMoved) {
+    //     // If target has moved first try to just adjust the end point
+    //     // of that path
+    //     const canJustAdjustEndpointOfPath = false;
+    //     // TODO: Try to modify path
+    //     if (!canJustAdjustEndpointOfPath) {
+    //       // If the existing path can't be adjusted, remake the whole path
+    //       unit.path = findPath(unit, target, window.underworld.pathingPolygons);
+    //       return
+    //     }
+    //   } else {
+    //     // No action needed since neither self nor target have moved from
+    //     // previous positions
+    //     return;
+    //   }
+
+    // }
+
+    // const path = findPath(unit, target, this.pathingPolygons);
+
   }
   drawResMarkers() {
     for (let marker of window.resMarkers) {
@@ -386,6 +504,9 @@ export default class Underworld {
     const expandMagnitude = config.COLLISION_MESH_RADIUS * config.NON_HEAVY_UNIT_SCALE
     // pathing polygons determines the area that units can move within
     this.pathingPolygons = mergeOverlappingPolygons([...obstacles.map(o => o.bounds), mapBounds]).map(p => expandPolygon(p, expandMagnitude));
+
+    // Process the polygons into pathingwalls for use in tryPath
+    this.pathingLineSegments = this.pathingPolygons.map(polygonToPolygonLineSegments).flat();
   }
   spawnPickup(index: number, coords: Vec2) {
     const pickup = Pickup.pickups[index];
@@ -541,7 +662,7 @@ export default class Underworld {
 
     // Exclude player spawn coords that cannot path to the portal
     levelData.validPlayerSpawnCoords = levelData.validPlayerSpawnCoords.filter(spawn => {
-      const path = findPath(spawn, portalCoords, this.pathingPolygons);
+      const path = findPath(spawn, portalCoords, this.pathingPolygons, this.pathingLineSegments);
       const lastPointInPath = path[path.length - 1]
       return path.length != 0 && (lastPointInPath && Vec.equal(lastPointInPath, portalCoords));
     });
@@ -1220,8 +1341,8 @@ export default class Underworld {
       switch (phase) {
         case 'PlayerTurns':
 
-          for (let u of this.units) {
-            // Reset stamina so units can move again
+          for (let u of this.units.filter(u => u.unitType == UnitType.PLAYER_CONTROLLED)) {
+            // Reset stamina for player units so they can move again
             u.stamina = u.staminaMax;
           }
           // Lastly, initialize the player turns.
@@ -1231,6 +1352,10 @@ export default class Underworld {
           this.initializePlayerTurn(this.playerTurnIndex);
           break;
         case 'NPC':
+          for (let u of this.units.filter(u => u.unitType == UnitType.AI)) {
+            // Reset stamina for non-player units so they can move again
+            u.stamina = u.staminaMax;
+          }
           // Clear enemy attentionMarkers since it's now their turn
           window.attentionMarkers = [];
           (async () => {
@@ -1266,6 +1391,8 @@ export default class Underworld {
       if (unitSource) {
         const { target, canAttack } = this.getUnitAttackTarget(u);
         // Add unit action to the array of promises to wait for
+        // TODO: Prevent grunts from attacking if they are out of range
+        // like when they are around a corner
         let promise = unitSource.action(u, target, canAttack);
         animationPromises.push(promise);
       } else {
@@ -1287,7 +1414,8 @@ export default class Underworld {
         if (attackTarget) {
           const maxPathDistance = u.attackRange + u.stamina;
           // TODO: Optimize this when checking if the unit can attack the player, it could short circuit
-          const path = findPath(u, attackTarget, this.pathingPolygons);
+          // TODO: Optimize
+          const path = findPath(u, attackTarget, this.pathingPolygons, this.pathingLineSegments);
           // Add the units current point to the start of the path
           const dist = calculateDistanceOfVec2Array([u, ...path]);
           canAttackTarget = !!path.length && dist <= maxPathDistance;

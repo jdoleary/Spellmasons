@@ -68,13 +68,13 @@ interface Path {
         poly: Polygon;
     };
 }
-export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): Vec2[] {
+export function findPath(startPoint: Vec2, target: Vec2, pathingPolygons: Polygon[], pathingLineSegments: PolygonLineSegment[]): Vec2[] {
     // If the target is inside of a non-inverted polygon, move it to the closest edge so that
     // the unit can path to the closest pathable point near where they are attempting to go.
     // This is important if, for example, a player clicks in empty space which is inside
     // of the poly but not inside an obstacle.  The pathing should take the unit
     // as close as it can go without intersecting the polygon
-    const targetInsideOfPolys: Polygon[] = findPolygonsThatVec2IsInsideOf(target, polygons);
+    const targetInsideOfPolys: Polygon[] = findPolygonsThatVec2IsInsideOf(target, pathingPolygons);
 
     // window.debugGraphics.clear();
     // If the real target is in an invalid location,
@@ -115,9 +115,6 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
         }
     }
 
-    // Process the polygons into pathingwalls for use in tryPath
-    const pathingWalls = polygons.map(polygonToPolygonLineSegments).flat();
-
     let paths: Path[] = [
         // Start with the first idea path from start to target
         // Note, the distance is calculated inside of processPaths even if 
@@ -135,7 +132,7 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
     // as they get closer and closer to finding their way to the target.
     for (let i = 0; i < processingLimit; i++) {
         // Takes 1 step closer to finishing paths
-        paths = processPaths(paths, pathingWalls);
+        paths = processPaths(paths, pathingLineSegments);
 
         // Optimization
         calculateDistanceOfPaths(paths);
@@ -230,7 +227,7 @@ export function findPath(startPoint: Vec2, target: Vec2, polygons: Polygon[]): V
                         continue;
                     }
                     const nextLine = { p1, p2 }
-                    let { intersectingWall, closestIntersection } = getClosestIntersectionWithWalls(nextLine, pathingWalls);
+                    let { intersectingWall, closestIntersection } = getClosestIntersectionWithWalls(nextLine, pathingLineSegments);
                     if (intersectingWall) {
                         const intersectingPoly = intersectingWall.polygon;
 

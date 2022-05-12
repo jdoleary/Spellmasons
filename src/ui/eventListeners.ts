@@ -1,5 +1,7 @@
 import { MESSAGE_TYPES } from '../MessageTypes';
 import * as CardUI from '../CardUI';
+import type * as Unit from '../Unit';
+import * as Vec from '../Vec';
 import floatingText from '../FloatingText';
 import {
   clearTooltipSelection,
@@ -9,7 +11,7 @@ import {
   updateTooltipSelection,
 } from './PlanningView';
 import { toggleMenu, View } from '../views';
-import { findPath, pointsEveryXDistanceAlongPath } from '../Pathfinding';
+import { pointsEveryXDistanceAlongPath } from '../Pathfinding';
 import { polygonToPolygonLineSegments } from '../Polygon';
 import * as colors from './colors';
 import type { Vec2 } from '../Vec';
@@ -23,6 +25,10 @@ export const keyDown = {
   s: false,
   d: false
 }
+// a UnitPath that is used to display the player's "walk rope"
+// which shows the path that they will travel if they were
+// to move towards the mouse cursor
+let walkRopePath: Unit.UnitPath | undefined = undefined;
 
 window.addEventListener('keydown', nonUnderworldKeydownListener);
 function nonUnderworldKeydownListener(event: KeyboardEvent) {
@@ -205,7 +211,8 @@ export function mouseMove() {
         // is drawn in the stamina color.
         // There are dots dilineating how far the unit can move each turn.
         //
-        let currentPlayerPath = findPath(window.player.unit, mouseTarget, window.underworld.pathingPolygons);
+        walkRopePath = window.underworld.calculatePath(walkRopePath, Vec.round(window.player.unit), Vec.round(mouseTarget));
+        const { points: currentPlayerPath } = walkRopePath;
         if (currentPlayerPath.length) {
           const turnStopPoints = pointsEveryXDistanceAlongPath(window.player.unit, currentPlayerPath, window.player.unit.staminaMax, window.player.unit.staminaMax - window.player.unit.stamina);
           window.walkPathGraphics.lineStyle(4, 0xffffff, 1.0);
