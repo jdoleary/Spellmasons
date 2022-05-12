@@ -2,7 +2,6 @@
 - Bug: Should sync portals when syncing units if all enemies are dead
 - Bug: Dead player doesn't lose mana
 - Enh: Looks like dragndrop is keeping dad from selecting a spell sometimes cause he moves the mouse before lifting it upn
-- TODO: Unit.syncronize should sync modifier images such as frozen or heavy armor
 - Bug: Portal didn't appear once (honeycomb seems broken if you have walls above and below you)
 - Bug: Goons spawned outside of map when summoner was stuffed in upper left corner of map
 - Bug: Zoom makes attention markers that would be overlapped by card hand go way too far up

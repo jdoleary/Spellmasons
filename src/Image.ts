@@ -124,12 +124,12 @@ export function syncronize(imageSerialized: IImageSerialized, originalImage?: II
     return undefined;
   }
   if (imageSerialized.imageName === originalImage.imageName) {
+    // then we only need to update properties:
     const { x, y, scale } = imageSerialized.sprite;
     originalImage.sprite.x = x;
     originalImage.sprite.y = y;
     originalImage.sprite.scale.x = scale.x
     originalImage.sprite.scale.y = scale.y;
-    // then we only need to update properties:
     if (JSON.stringify(imageSerialized.subSprites.filter(s => s != 'ownCharacterMarker')) != JSON.stringify(originalImage.subSprites)) {
       originalImage.subSprites = imageSerialized.subSprites;
       restoreSubsprites(originalImage);

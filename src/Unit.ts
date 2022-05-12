@@ -287,8 +287,11 @@ export function syncronize(unitSerialized: IUnitSerialized, originalUnit: IUnit)
       return
     }
     Object.assign(originalUnit, rest);
-    // TODO: Syncronize modifier images like frozen or heavy_armor
+    // Note: returnToDefaultSprite must be called BEFORE Image.syncronize
+    // to ensure that the originalUnit.image.sprite has a parent because
+    // the parent could have been cleared previously.
     returnToDefaultSprite(originalUnit);
+    originalUnit.image = Image.syncronize(image, originalUnit.image);
   } else {
     console.error('Attempting to syncronize a unit with the wrong id', unitSerialized.id, originalUnit.id);
   }
