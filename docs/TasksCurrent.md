@@ -1,8 +1,5 @@
 ## Critical tasks
 - TODO: Split up runPredictions so that it only checks canAttackTarget after units have moved, not every loop
----
-- Need to **Optimize**, it got very laggy for him
-    - Re running findPath for each unit each loop is not good
     - Sync prediction units every loop is a waste too if nothing changes
         - This could be optimized so it only recalcs if a unit moves or if the cast target or cast cards change
 ---
@@ -16,6 +13,9 @@
     - Sectors could fit together using WFC instead of just being picked by random
 
 ## Tasks
+- Bug: Pathing broken on seed 0.5727148663470687 
+    - it ran into `Hit loopLimit for polygon processing.  May be an infinite loop or the polygon may just be too big.`
+    - In this case it should just abort that level and try a new one
 - Bug: Should sync portals when syncing units if all enemies are dead
 - Bug: Dead player doesn't lose mana
 - Enh: Looks like dragndrop is keeping dad from selecting a spell sometimes cause he moves the mouse before lifting it upn
