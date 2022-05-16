@@ -200,10 +200,11 @@ export default class Underworld {
             )) {
               // Once the unit reaches the target, shift so the next point in the path is the next target
               u.path.points.shift();
-            }
-            // Stop moving if you've moved as far as you can based on the move distance
-            if (u.stamina <= 0) {
-              u.stamina = 0;
+              // Clear AI stamina after they reach the end of their path so they don't
+              // keep moving when it's not their turn when their target starts moving
+              if (u.unitType == UnitType.AI && u.path.points.length === 0) {
+                u.stamina = 0;
+              }
             }
           }
           // check for collisions with pickups in new location
