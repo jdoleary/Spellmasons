@@ -149,6 +149,23 @@ export default class Underworld {
     window.unitOverlayGraphics.clear();
 
     const aliveUnits = this.units.filter(u => u.alive);
+    // Run all forces in window.forceMove
+    for (let i = window.forceMove.length - 1; i >= 0; i--) {
+      const forceMoveInst = window.forceMove[i];
+      if (forceMoveInst) {
+        const { unit, endPos } = forceMoveInst;
+        const distanceLeft = math.distance(unit, endPos);
+        const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(unit, endPos, distanceLeft / forceMoveInst.iterationsLeft)
+        moveWithCollisions(unit, stepTowardsTarget, aliveUnits);
+        collideWithWalls(unit);
+        forceMoveInst.iterationsLeft--;
+        // Remove it from forceMove array
+        if (forceMoveInst.iterationsLeft <= 0) {
+          window.forceMove.splice(i, 1);
+        }
+      }
+    }
+
     for (let i = 0; i < this.units.length; i++) {
       const u = this.units[i];
       if (u) {

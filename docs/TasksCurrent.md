@@ -16,6 +16,8 @@
         - traps that trigger things
 
 ## Tasks
+- Bug: You can push units inside of a wall
+     - seed: 0.20950042153769977 
 - Make void like water and outside like cave wall
 - Content: Night king boss
 - Content: Time crystal releases something when it breaks

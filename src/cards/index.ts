@@ -28,6 +28,7 @@ import clone from './clone';
 import mana_burn from './mana_burn';
 import mana_steal from './mana_steal';
 import vampire_bite from './vampire_bite';
+import push from './push';
 import { IUpgrade, upgradeCardsSource } from '../Upgrade';
 import { _getCardsFromIds } from './cardUtils';
 import { addCardToHand } from '../CardUI';
@@ -111,6 +112,7 @@ export function registerCards() {
   register(mana_burn);
   register(mana_steal);
   register(vampire_bite);
+  register(push);
 }
 function cardToUpgrade(c: ICard): IUpgrade {
   return {

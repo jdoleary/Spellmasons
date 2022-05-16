@@ -37,6 +37,7 @@ window.predictionUnits = [];
 window.attentionMarkers = [];
 window.resMarkers = [];
 window.lastThoughtsHash = '';
+window.forceMove = [];
 
 setupAll();
 
@@ -190,6 +191,9 @@ declare global {
     // can see what another client is planning.
     // The hash is used to prevent sending the same data more than once
     lastThoughtsHash: string;
+    // A list of units and an endPosition that they are moved to via a "force",
+    // like a push or pull or explosion.
+    forceMove: { unit: Unit.IUnit, endPos: Vec2, iterationsLeft: number }[];
 
   }
 }
