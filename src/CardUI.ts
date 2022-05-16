@@ -480,7 +480,7 @@ function updateHealthBadge(elBadge: Element | null, healthCost: number, card: Ca
       elBadge.classList.remove('modified-by-usage')
     }
   } else {
-    console.warn("Err UI: Found card, but could not find associated mana badge element to update mana cost");
+    console.warn("Err UI: Found card, but could not find associated health badge element to update mana cost");
   }
 }
 // Updates the UI mana badge for cards in hand.  To be invoked whenever a player's
