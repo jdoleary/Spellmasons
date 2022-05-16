@@ -188,9 +188,9 @@ export default class Underworld {
             if (u.stamina <= 0) {
               u.stamina = 0;
             }
+          }
             // check for collisions with pickups in new location
             this.checkPickupCollisions(u);
-          }
           collideWithWalls(u);
           // Ensure that resolveDoneMoving is invoked when unit is out of stamina (and thus, done moving)
           // or when find point in the path has been reached.
