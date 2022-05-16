@@ -256,6 +256,31 @@ the face of the last card in the group is seen*/
   transition: all 0.1s;
 }
 
+
+/* CSS to manage drag and drop affordance */
+.card .hotkey-badge-holder {
+  /* cursor: grab to clue users in that they can drag and drop cards */
+  cursor: grab;
+}
+
+.card .hotkey-badge svg {
+  display: none;
+}
+
+.card:hover .hotkey-badge .key {
+  display: none;
+}
+
+.card:hover .hotkey-badge-holder {
+  bottom: -14px;
+}
+
+.card:hover .hotkey-badge svg {
+  display: block;
+}
+
+/* END CSS to manage drag and drop affordance */
+
 /* Disable dragging for card thumbnails */
 .card img {
   pointer-events: none;
@@ -399,8 +424,6 @@ kbd {
 }
 
 .card-title {
-  /* cursor: grab to clue users in that they can drag and drop cards */
-  cursor: grab;
   font-size: 12px;
   flex-grow: 3;
   padding: 8px;

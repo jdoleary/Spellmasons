@@ -6,7 +6,6 @@ import {
 } from './ui/PlanningView';
 import { calculateCostForSingleCard } from './cards/cardUtils';
 import floatingText from './FloatingText';
-import { mouseMove } from './ui/eventListeners';
 import { playSFX, sfxPageTurn } from './Audio';
 
 const elCardHolders = document.getElementById('card-holders') as HTMLElement;
@@ -22,8 +21,19 @@ const elSelectedCards = document.getElementById('selected-cards') as HTMLElement
 const gapBetweenCards = 4;
 elCardHand.style['gap'] = `${gapBetweenCards}px`;
 elSelectedCards.style['gap'] = `${gapBetweenCards}px`;
+// drag target is a work around to allow .dragHandle to act as the handle for dragging
+// while the card itself is the element with draggable=true.
+// See https://stackoverflow.com/a/31004218/4418836
+let dragTarget: HTMLElement;
+elCardHand.onmousedown = function (e) {
+  dragTarget = e.target as HTMLElement;
+};
 elCardHand.addEventListener('dragstart', ev => {
-  dragCard = ((ev.target as HTMLElement).closest('.card') as HTMLElement)?.dataset.cardId;
+  if (dragTarget.closest('.dragHandle')) {
+    dragCard = ((ev.target as HTMLElement).closest('.card') as HTMLElement)?.dataset.cardId;
+  } else {
+    ev.preventDefault();
+  }
 
 })
 elCardHand.addEventListener('dragover', ev => {
@@ -424,6 +434,14 @@ function createCardElement(content: Cards.ICard) {
   element.appendChild(elCardHotkeyBadgeHolder);
   const elCardHotkeyBadge = document.createElement('kbd');
   elCardHotkeyBadge.classList.add('hotkey-badge');
+  elCardHotkeyBadge.innerHTML = `
+<div class="key"></div>
+<svg class="dragHandle" viewBox="0 0 15 15" width="15" height="15">
+  <rect y="1" width="15" height="2"></rect>
+  <rect y="6" width="15" height="2"></rect>
+  <rect y="11" width="15" height="2"></rect>
+</svg>`;
+
   elCardHotkeyBadgeHolder.appendChild(elCardHotkeyBadge);
   // Card costs
   const elCardBadgeHolder = document.createElement('div');
@@ -525,9 +543,12 @@ export function updateCardBadges() {
         const key = x == 9 ? 0 : x + 1;
         const card = elCardHand.children.item(x) as HTMLElement;
         if (card) {
-          const elHotkeyBadge = card.querySelector('.hotkey-badge');
+          const elHotkeyBadge = card.querySelector('.hotkey-badge') as HTMLElement;
           if (elHotkeyBadge) {
-            elHotkeyBadge.innerHTML = `${key}`;
+            const elKey = elHotkeyBadge.querySelector('.key') as HTMLElement;
+            if (elKey) {
+              elKey.innerHTML = `${key}`;
+            }
           }
         }
       }
