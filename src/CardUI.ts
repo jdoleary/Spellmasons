@@ -436,11 +436,7 @@ function createCardElement(content: Cards.ICard) {
   elCardHotkeyBadge.classList.add('hotkey-badge');
   elCardHotkeyBadge.innerHTML = `
 <div class="key"></div>
-<svg class="dragHandle" viewBox="0 0 15 15" width="15" height="15">
-  <rect y="1" width="15" height="2"></rect>
-  <rect y="6" width="15" height="2"></rect>
-  <rect y="11" width="15" height="2"></rect>
-</svg>`;
+<div class="dragHandle">←→</div>`;
 
   elCardHotkeyBadgeHolder.appendChild(elCardHotkeyBadge);
   // Card costs
