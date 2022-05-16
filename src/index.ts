@@ -193,7 +193,7 @@ declare global {
     lastThoughtsHash: string;
     // A list of units and an endPosition that they are moved to via a "force",
     // like a push or pull or explosion.
-    forceMove: { unit: Unit.IUnit, endPos: Vec2, iterationsLeft: number }[];
+    forceMove: { unit: Unit.IUnit, step: Vec2, distance: number }[];
 
   }
 }

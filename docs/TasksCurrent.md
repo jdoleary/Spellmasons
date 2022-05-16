@@ -1,6 +1,4 @@
 ## Critical tasks
-- Fix rock having mana bar
----
 - Hoist spells
     - Allow spells like trap to change spells in cast
     - Allow spells like trap to change mana cost
@@ -20,8 +18,6 @@
         - traps that trigger things
 
 ## Tasks
-- Bug: You can push units inside of a wall
-     - seed: 0.20950042153769977 
 - Make void like water and outside like cave wall
 - Content: Night king boss
 - Content: Explode on death curse
