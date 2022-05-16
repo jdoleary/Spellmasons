@@ -47,6 +47,9 @@ export function keydownListener(event: KeyboardEvent) {
   if (window.view !== View.Game) {
     return;
   }
+  if (!window.underworld) {
+    return
+  }
 
   // Possibly handle hotkey for Jprompt:
   // note: :last-child targets the top most prompt if there are more than one
@@ -370,6 +373,9 @@ export function contextmenuHandler(e: MouseEvent) {
 export function clickHandler(e: MouseEvent) {
   // Only handle clicks when viewing the Game
   if (window.view !== View.Game) {
+    return;
+  }
+  if (!window.underworld) {
     return;
   }
   const mousePos = window.underworld.getMousePos();
