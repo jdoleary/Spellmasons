@@ -179,16 +179,20 @@ function setupShaders(unit: IUnit) {
 }
 
 export function addModifier(unit: IUnit, key: string) {
-  // Call custom modifier's add function
-  const modifier = allModifiers[key];
-  if (modifier) {
-    if (modifier.add) {
-      modifier.add(unit);
+  if (unit.alive) {
+    // Call custom modifier's add function
+    const modifier = allModifiers[key];
+    if (modifier) {
+      if (modifier.add) {
+        modifier.add(unit);
+      } else {
+        console.error('No "add" modifier for ', key);
+      }
     } else {
-      console.error('No "add" modifier for ', key);
+      console.error('Modifier ', key, 'never registered.');
     }
   } else {
-    console.error('Modifier ', key, 'never registered.');
+    console.log(`Ignoring addModifier ${key} for dead unit.  Dead units cannot receive modifiers`);
   }
 }
 
