@@ -189,8 +189,8 @@ export default class Underworld {
               u.stamina = 0;
             }
           }
-            // check for collisions with pickups in new location
-            this.checkPickupCollisions(u);
+          // check for collisions with pickups in new location
+          this.checkPickupCollisions(u);
           collideWithWalls(u);
           // Ensure that resolveDoneMoving is invoked when unit is out of stamina (and thus, done moving)
           // or when find point in the path has been reached.
@@ -1776,7 +1776,7 @@ export type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, Underworl
 function getEnemiesForAltitude(levelIndex: number): { enemies: { [unitid: string]: number }, strength: number } {
   const hardCodedLevelEnemies: { [unitid: string]: number }[] = [
     {
-      'grunt': 1,
+      'grunt': 2,
     },
     {
       'grunt': 2,

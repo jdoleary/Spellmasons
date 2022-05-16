@@ -1,7 +1,4 @@
 ## Critical tasks
-- TODO: Split up runPredictions so that it only checks canAttackTarget after units have moved, not every loop
-    - Sync prediction units every loop is a waste too if nothing changes
-        - This could be optimized so it only recalcs if a unit moves or if the cast target or cast cards change
 ---
 - Logic to avoid fizzle spells
     - Don't cast res on no dead
@@ -20,7 +17,6 @@
 
 ## Tasks
 - Make void like water and outside like cave wall
-- Fix attention marker for melee
 - Content: Night king boss
 - Content: Time crystal releases something when it breaks
 - Content: Summonable blockades
@@ -33,7 +29,6 @@
     - In this case it should just abort that level and try a new one
 - Bug: Should sync portals when syncing units if all enemies are dead
 - Bug: Dead player doesn't lose mana
-- Enh: Looks like dragndrop is keeping dad from selecting a spell sometimes cause he moves the mouse before lifting it upn
 - Bug: Portal didn't appear once (honeycomb seems broken if you have walls above and below you)
 - Bug: Goons spawned outside of map when summoner was stuffed in upper left corner of map
 

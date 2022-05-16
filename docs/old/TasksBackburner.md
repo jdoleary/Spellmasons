@@ -1,5 +1,6 @@
-- In spell projection, if you're doing enough damage to kill, show it visually
-    - Prediction won't calculate vulnerable, or protection
+- TODO: Split up runPredictions so that it only checks canAttackTarget after units have moved, not every loop
+    - Sync prediction units every loop is a waste too if nothing changes
+        - This could be optimized so it only recalcs if a unit moves or if the cast target or cast cards change
 - When players rejoin in progress game, skip character pick screen
 - Maybe solved already? Pathing, see stash "pathfinding"
     - this.seed = '0.9408533248276452';
