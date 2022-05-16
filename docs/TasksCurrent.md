@@ -20,14 +20,12 @@
 
 ## Tasks
 - Make void like water and outside like cave wall
-- show drag handle on hover so it's not entire card (replace hotkey icon)
 - Fix attention marker for melee
 - Content: Night king boss
 - Content: Time crystal releases something when it breaks
 - Content: Summonable blockades
 - Content: Trap card, reduces mana cost of spell
 - Content: A spell to destroy corpses
-- Bug: Resurrection icon doesn't show if you are resurrecting corpses that are already on your faction
 - Bug: Grunt moved towards me on not his turn after I swapped with a guy near him. (they move after resurrect too, i think cause they get stamina)
 - Bug: Due to stamina changes for AI, prediction is wrong with melee
 - Bug: Pathing broken on seed 0.5727148663470687 

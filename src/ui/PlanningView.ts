@@ -208,9 +208,9 @@ export async function runPredictions() {
       window.resMarkers = [];
       if (cardIds.includes('resurrect')) {
         window.predictionUnits.filter(u => u.faction == Faction.ALLY).forEach(u => {
-          // Check if their non-prediction counterpart is of the other faction:
+          // Check if their non-prediction counterpart is dead to see if they will be resurrected:
           const realUnit = window.underworld.units.find(x => x.id == u.id)
-          if (realUnit && realUnit.faction == Faction.ENEMY) {
+          if (realUnit && !realUnit.alive) {
             window.resMarkers.push(clone(realUnit));
           }
         })
