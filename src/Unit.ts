@@ -9,10 +9,9 @@ import * as Vec from './Vec';
 import Events from './Events';
 import makeAllRedShader from './shaders/selected';
 import { addLerpable } from './lerpList';
-import { findPath } from './Pathfinding';
 import { allUnits } from './units';
 import { allModifiers, EffectState } from './cards';
-import { checkIfNeedToClearTooltip, updateTooltipContent } from './ui/PlanningView';
+import { checkIfNeedToClearTooltip } from './ui/PlanningView';
 import { centeredFloatingText } from './FloatingText';
 const elHealthBar: HTMLElement = document.querySelector('#health .fill') as HTMLElement;
 const elHealthCost: HTMLElement = document.querySelector('#health .cost') as HTMLElement;
@@ -55,7 +54,7 @@ export interface IUnit {
   name?: string;
   // Strength is a modifier which affects base stats used for scaling difficulty
   strength: number;
-  faction: number;
+  faction: Faction;
   image?: Image.IImage;
   defaultImagePath: string;
   shaderUniforms: { [key: string]: any };
