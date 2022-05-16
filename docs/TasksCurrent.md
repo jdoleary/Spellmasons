@@ -2,6 +2,7 @@
 - Hoist spells
     - Allow spells like trap to change spells in cast
     - Allow spells like trap to change mana cost
+    - Content: Trap card, reduces mana cost of spell
     - Logic to avoid fizzle spells
         - Don't cast res on no dead
         - do this by hoisting and checking pre-cast
@@ -22,8 +23,6 @@
 - Content: Night king boss
 - Content: Explode on death curse
 - Content: Time crystal releases something when it breaks
-- Content: Summonable blockades
-- Content: Trap card, reduces mana cost of spell
 - Content: A spell to destroy corpses
 - Bug: Grunt moved towards me on not his turn after I swapped with a guy near him. (they move after resurrect too, i think cause they get stamina)
 - Bug: Due to stamina changes for AI, prediction is wrong with melee
