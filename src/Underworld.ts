@@ -150,14 +150,14 @@ export default class Underworld {
     Unit.syncPlayerHealthManaUI();
     window.unitOverlayGraphics.clear();
 
-    const aliveUnits = this.units.filter(u => u.alive);
+    const aliveNPCs = this.units.filter(u => u.alive && u.unitType == UnitType.AI);
     // Run all forces in window.forceMove
     for (let i = window.forceMove.length - 1; i >= 0; i--) {
       const forceMoveInst = window.forceMove[i];
       if (forceMoveInst) {
         const { unit, step } = forceMoveInst;
         forceMoveInst.distance -= Vec.magnitude(step);
-        moveWithCollisions(unit, Vec.add(unit, step), aliveUnits);
+        moveWithCollisions(unit, Vec.add(unit, step), aliveNPCs);
         collideWithWalls(unit);
         // Remove it from forceMove array once the distance has been covers
         // This works even if collisions prevent the unit from moving since
@@ -191,7 +191,7 @@ export default class Underworld {
               // AI collide with each other and walls
               const originalPosition = Vec.clone(u);
               // Only move other NPCs out of the way, never move player units
-              moveWithCollisions(u, stepTowardsTarget, aliveUnits);
+              moveWithCollisions(u, stepTowardsTarget, aliveNPCs);
               moveDist = math.distance(originalPosition, u);
             }
             u.stamina -= moveDist;
