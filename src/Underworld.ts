@@ -1041,7 +1041,9 @@ export default class Underworld {
     // Give the player their mana per turn but don't let it go beyond manaMax
     // It's implemented this way instead of an actual capping in a setter so that
     // mana CAN go beyond max for other reasons (like mana potions), by design
-    player.unit.mana += Math.max(0, Math.min(player.unit.manaPerTurn, manaTillFull));
+    if (player.unit.alive) {
+      player.unit.mana += Math.max(0, Math.min(player.unit.manaPerTurn, manaTillFull));
+    }
 
     // If this current player is NOT able to take their turn...
     if (!Player.ableToTakeTurn(player)) {

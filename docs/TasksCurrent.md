@@ -31,7 +31,6 @@
     - it ran into `Hit loopLimit for polygon processing.  May be an infinite loop or the polygon may just be too big.`
     - In this case it should just abort that level and try a new one
 - Bug: Should sync portals when syncing units if all enemies are dead
-- Bug: Dead player doesn't lose mana
 - Bug: Portal didn't appear once (honeycomb seems broken if you have walls above and below you)
 - Bug: Goons spawned outside of map when summoner was stuffed in upper left corner of map
 
