@@ -258,15 +258,12 @@ the face of the last card in the group is seen*/
 
 
 /* CSS to manage drag and drop affordance */
-.card .hotkey-badge-holder {
-  /* cursor: grab to clue users in that they can drag and drop cards */
-  cursor: grab;
-}
-
 .card .hotkey-badge .dragHandle {
   display: none;
   font-size: 18px;
   font-weight: bold;
+  /* cursor: grab to clue users in that they can drag and drop cards */
+  cursor: grab;
 }
 
 .card:hover .hotkey-badge .key {

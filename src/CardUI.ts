@@ -219,6 +219,12 @@ function addListenersToCardElement(
   });
 
   element.addEventListener('click', (e) => {
+    if ((e.target as HTMLElement).classList.contains('dragHandle')) {
+      // Prevent click on drag handle from selecting card.
+      // Drag handle is for drag and drop only
+      e.preventDefault();
+      return false;
+    }
     e.stopPropagation();
     if (element.classList.contains('selected')) {
       const index = cardsSelected.findIndex((c) => c === cardId);
