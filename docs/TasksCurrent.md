@@ -6,6 +6,7 @@
     - Logic to avoid fizzle spells
         - Don't cast res on no dead
         - do this by hoisting and checking pre-cast
+        - How to resurrect units you are standing on top of (blocking?)
 ---
 - More random generation / better maps.  This isn't a rogue-like without the random element
     - Take queues from slay the spire
@@ -23,8 +24,7 @@
 - Content: Explode on death curse
 - Content: Time crystal releases something when it breaks
 - Content: A spell to destroy corpses
-- Bug: Grunt moved towards me on not his turn after I swapped with a guy near him. (they move after resurrect too, i think cause they get stamina)
-- Bug: Due to stamina changes for AI, prediction is wrong with melee
+- Content: "Orge" enemies that get stronger for every ally of theirs that dies
 - Bug: Pathing broken on seed 0.5727148663470687 
     - it ran into `Hit loopLimit for polygon processing.  May be an infinite loop or the polygon may just be too big.`
     - In this case it should just abort that level and try a new one
@@ -46,17 +46,11 @@ and 2nd client got `Cannot change character, player not found with id 8c502be8-6
 - Make loading screen
 - Make an overlay screen that blocks interaction while waiting for sync
 - Unit movement desync occurred between clients when one client has CPU throttled, the non throttled client has the unit move much farther
-- Fix multiplayer
-    - What about if host disconnects mid step?
-- Make freeze block pathing
-    - Bug: Guy blocked by frozen unit still takes a bite out of me without moving closer
 
 # Stale, but important bugs
 
 - The zoom coordinates off issue between multiplayer sessions when casting
     - hit on one screen, miss on another
-- Optimize pathing
-- How to resurrect units you are standing on top of (blocking?)
 
 # Juice
 - Cards flip as you drag-n-drop over them
@@ -64,8 +58,6 @@ and 2nd client got `Cannot change character, player not found with id 8c502be8-6
 
 ## More content
 - Upgradable spells like hurt2
-- Spells that move units around
-- Spell that summons blocker
 - Disincentivise hiding and casting
     - Maybe a spawn crystal that if you don't kill it, it'll spawn a bunch of bad guys
 - An enemy that consumes allies to get stronger
