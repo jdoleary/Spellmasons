@@ -47,7 +47,7 @@ window.thinkingPlayerGraphics = new PIXI.Graphics();
 export const containerCharacterSelect = new PIXI.Container();
 const characterSelectContainers = [containerCharacterSelect];
 
-app.renderer.backgroundColor = 0x5c75b5;
+app.renderer.backgroundColor = 0x27272f;
 
 window.addEventListener('resize', resizePixi);
 window.addEventListener('load', () => {

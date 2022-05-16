@@ -1016,14 +1016,6 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
 	"sourceSize": {"w":64,"h":64}
 },
-"tiles/void.png":
-{
-	"frame": {"x":996,"y":189,"w":3,"h":3},
-	"rotated": false,
-	"trimmed": true,
-	"spriteSourceSize": {"x":0,"y":0,"w":3,"h":3},
-	"sourceSize": {"w":1,"h":1}
-},
 "tiles/wall.png":
 {
 	"frame": {"x":529,"y":67,"w":64,"h":64},
@@ -1278,6 +1270,6 @@
 	"format": "RGBA8888",
 	"size": {"w":1558,"h":256},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:f90a60c4ef7b3f212a1a7848adc8d8c7:b1031aa54a17958778accc1f11d02dfc:81b8455959c6df0a71f2d78f10f487eb$"
+	"smartupdate": "$TexturePacker:SmartUpdate:02727006cb7a1fa6aac282430b3df1c8:5c7aea826ca163b86f84f6f5b583382c:81b8455959c6df0a71f2d78f10f487eb$"
 }
 }

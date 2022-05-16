@@ -19,7 +19,6 @@
         - traps that trigger things
 
 ## Tasks
-- Make void like water and outside like cave wall
 - Content: Night king boss
 - Content: Explode on death curse
 - Content: Time crystal releases something when it breaks
