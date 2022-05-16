@@ -6,7 +6,7 @@ import { checkIfNeedToClearTooltip } from './ui/PlanningView';
 import { explainManaOverfill } from './Jprompt';
 import { MESSAGE_TYPES } from './MessageTypes';
 
-export const PICKUP_RADIUS = 32;
+export const PICKUP_RADIUS = 45;
 export interface IPickup {
   x: number;
   y: number;
