@@ -1343,10 +1343,9 @@ export default class Underworld {
     }
     switch (u.unitSubType) {
       case UnitSubType.MELEE:
-        // TODO: How to only check this when units move, not every gameloop?
         this.setPath(u, attackTarget);
         if (u.path) {
-          const maxPathDistance = u.attackRange + u.stamina;
+          const maxPathDistance = u.attackRange + u.staminaMax;
           const dist = calculateDistanceOfVec2Array([u, ...u.path.points]);
           return !!u.path.points.length && dist <= maxPathDistance;
         } else {

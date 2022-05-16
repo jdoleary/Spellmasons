@@ -1,7 +1,5 @@
+import { distance } from '../../math';
 import * as Unit from '../../Unit';
-import * as math from '../../math';
-import * as Vec from '../../Vec';
-import { COLLISION_MESH_RADIUS } from '../../config';
 
 export async function action(unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, canAttackTarget: boolean) {
   if (!Unit.canMove(unit)) {
@@ -25,7 +23,12 @@ export async function action(unit: Unit.IUnit, attackTarget: Unit.IUnit | undefi
   }
 
   // Attack closest enemy
-  if (canAttackTarget) {
+  // Note: Special case: don't use canAttackEnemy for melee units
+  // because pathing doesn't take immovable units into account yet
+  // so it might think it can attack but will be blocked.
+  // Instead, just check that the distance is within the attack range
+  // and let canAttackEnemy be used for just the attention markers
+  if (distance(unit, attackTarget) <= unit.attackRange) {
     await Unit.playAnimation(unit, 'units/golem_eat');
     Unit.takeDamage(attackTarget, unit.damage, false, undefined);
   }
