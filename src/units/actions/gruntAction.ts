@@ -1,3 +1,4 @@
+import type { Vec2 } from 'src/Vec';
 import { distance } from '../../math';
 import * as Unit from '../../Unit';
 
@@ -28,8 +29,11 @@ export async function action(unit: Unit.IUnit, attackTarget: Unit.IUnit | undefi
   // so it might think it can attack but will be blocked.
   // Instead, just check that the distance is within the attack range
   // and let canAttackEnemy be used for just the attention markers
-  if (distance(unit, attackTarget) <= unit.attackRange) {
+  if (withinMeleeRange(unit, attackTarget)) {
     await Unit.playAnimation(unit, 'units/golem_eat');
     Unit.takeDamage(attackTarget, unit.damage, false, undefined);
   }
+}
+export function withinMeleeRange(unit: Unit.IUnit, target: Vec2): boolean {
+  return distance(unit, target) <= unit.attackRange;
 }

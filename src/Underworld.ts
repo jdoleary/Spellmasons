@@ -49,6 +49,7 @@ import { getBestRangedLOSTarget } from './units/actions/rangedAction';
 import { getClients, hostGiveClientGameStateForInitialLoad } from './wsPieHandler';
 import { healthAllyGreen, healthHurtRed, healthRed } from './ui/colors';
 import objectHash from 'object-hash';
+import { withinMeleeRange } from './units/actions/gruntAction';
 
 export enum turn_phase {
   PlayerTurns,
@@ -1347,12 +1348,15 @@ export default class Underworld {
     switch (u.unitSubType) {
       case UnitSubType.MELEE:
         this.setPath(u, attackTarget);
-        if (u.path) {
+        if (u.path && u.path.points.length) {
+          // Returns true if melee unit WILL be within range once their done moving
+          // (Note: Does not take into account dynamic obstacles)
           const maxPathDistance = u.attackRange + u.staminaMax;
           const dist = calculateDistanceOfVec2Array([u, ...u.path.points]);
           return !!u.path.points.length && dist <= maxPathDistance;
         } else {
-          return false;
+          // Returns true if melee unit is ALREADY within range
+          return withinMeleeRange(u, attackTarget)
         }
       case UnitSubType.RANGED_LOS:
         return window.underworld.hasLineOfSight(u, attackTarget)
