@@ -53,7 +53,8 @@ import { withinMeleeRange } from './units/actions/gruntAction';
 
 export enum turn_phase {
   PlayerTurns,
-  NPC,
+  NPC_ALLY,
+  NPC_ENEMY,
 }
 interface Bounds {
   xMin?: number;
@@ -173,7 +174,7 @@ export default class Underworld {
         const predictionUnit = window.predictionUnits[i];
         if (u.alive) {
           // Only allow movement if the unit has stamina
-          if (u.path && u.path.points[0] && u.stamina > 0) {
+          if (u.path && u.path.points[0] && u.stamina > 0 && Unit.isUnitsTurnPhase(u)) {
             // Move towards target
             const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.path.points[0], u.moveSpeed * deltaTime)
             let moveDist = 0;
@@ -201,11 +202,6 @@ export default class Underworld {
             )) {
               // Once the unit reaches the target, shift so the next point in the path is the next target
               u.path.points.shift();
-              // Clear AI stamina after they reach the end of their path so they don't
-              // keep moving when it's not their turn when their target starts moving
-              if (u.unitType == UnitType.AI && u.path.points.length === 0) {
-                u.stamina = 0;
-              }
             }
           }
           // check for collisions with pickups in new location
@@ -970,7 +966,7 @@ export default class Underworld {
     // queues up a unitsync, so if changes to the units
     // were to happen AFTER broadcastTurnPhase they would be
     // overwritten when the sync occurred
-    this.broadcastTurnPhase(turn_phase.NPC);
+    this.broadcastTurnPhase(turn_phase.NPC_ALLY);
   }
 
   async endNPCTurnPhase() {
@@ -1005,8 +1001,11 @@ export default class Underworld {
     console.log('syncTurnMessage: phase:', turn_phase[this.turn_phase], '; player:', this.playerTurnIndex)
     let message = '';
     let yourTurn = false;
-    if (turn_phase[this.turn_phase] === 'NPC') {
-      message = "Enemys' Turn";
+    if (this.turn_phase === turn_phase.NPC_ALLY) {
+      message = "Ally Turn";
+      yourTurn = false;
+    } else if (this.turn_phase === turn_phase.NPC_ENEMY) {
+      message = "Enemy Turn";
       yourTurn = false;
     } else if (currentPlayerTurn === window.player) {
       message = 'Your Turn'
@@ -1228,6 +1227,7 @@ export default class Underworld {
   setTurnPhase(p: turn_phase) {
     console.log('setTurnPhase(', turn_phase[p], ')');
     this.turn_phase = p;
+    this.syncTurnMessage();
 
     // Remove all phase classes from body
     for (let phaseClass of document.body.classList.values()) {
@@ -1275,7 +1275,7 @@ export default class Underworld {
     const phase = turn_phase[this.turn_phase];
     if (phase) {
       switch (phase) {
-        case 'PlayerTurns':
+        case turn_phase[turn_phase.PlayerTurns]:
 
           for (let u of this.units.filter(u => u.unitType == UnitType.PLAYER_CONTROLLED)) {
             // Reset stamina for player units so they can move again
@@ -1287,21 +1287,29 @@ export default class Underworld {
           console.log('PlayerTurn: Change to PlayerTurns phase and initialize player with index', this.playerTurnIndex);
           this.initializePlayerTurn(this.playerTurnIndex);
           break;
-        case 'NPC':
-          for (let u of this.units.filter(u => u.unitType == UnitType.AI)) {
+        case turn_phase[turn_phase.NPC_ALLY]:
+          for (let u of this.units.filter(u => u.unitType == UnitType.AI && u.faction == Faction.ALLY)) {
             // Reset stamina for non-player units so they can move again
             u.stamina = u.staminaMax;
           }
           // Clear enemy attentionMarkers since it's now their turn
           window.attentionMarkers = [];
-          (async () => {
-            // Run AI unit actions
-            // Ally NPCs go first
-            await this.executeNPCTurn(Faction.ALLY);
-            await this.executeNPCTurn(Faction.ENEMY);
-            // Set turn phase to player turn
-            this.endNPCTurnPhase();
-          })();
+          // Run AI unit actions
+          await this.executeNPCTurn(Faction.ALLY);
+          // Now that allies are done taking their turn, change to NPC Enemy turn phase
+          this.broadcastTurnPhase(turn_phase.NPC_ENEMY)
+          break;
+        case turn_phase[turn_phase.NPC_ENEMY]:
+          for (let u of this.units.filter(u => u.unitType == UnitType.AI && u.faction == Faction.ENEMY)) {
+            // Reset stamina for non-player units so they can move again
+            u.stamina = u.staminaMax;
+          }
+          // Clear enemy attentionMarkers since it's now their turn
+          window.attentionMarkers = [];
+          // Run AI unit actions
+          await this.executeNPCTurn(Faction.ENEMY);
+          // Set turn phase to player turn
+          this.endNPCTurnPhase();
           break;
         default:
           break;
@@ -1309,7 +1317,6 @@ export default class Underworld {
     } else {
       console.error('Invalid turn phase', this.turn_phase)
     }
-    this.syncTurnMessage();
   }
 
   async executeNPCTurn(faction: Faction) {

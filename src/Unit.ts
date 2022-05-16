@@ -13,6 +13,7 @@ import { allUnits } from './units';
 import { allModifiers, EffectState } from './cards';
 import { checkIfNeedToClearTooltip } from './ui/PlanningView';
 import { centeredFloatingText } from './FloatingText';
+import { turn_phase } from './Underworld';
 const elHealthBar: HTMLElement = document.querySelector('#health .fill') as HTMLElement;
 const elHealthCost: HTMLElement = document.querySelector('#health .cost') as HTMLElement;
 const elHealthLabel: HTMLElement = document.querySelector('#health .label') as HTMLElement;
@@ -678,4 +679,18 @@ export function copyForPredictionUnit(u: IUnit): IUnit {
     resolveDoneMoving: () => { }
   };
 
+}
+
+// Returns true if it is currently this unit's turn phase
+export function isUnitsTurnPhase(unit: IUnit): boolean {
+  const { turn_phase: phase } = window.underworld;
+  if (unit.unitType == UnitType.PLAYER_CONTROLLED) {
+    return phase == turn_phase.PlayerTurns;
+  } else {
+    if (unit.faction == Faction.ALLY) {
+      return phase == turn_phase.NPC_ALLY;
+    } else {
+      return phase == turn_phase.NPC_ENEMY;
+    }
+  }
 }
