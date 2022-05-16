@@ -5,14 +5,33 @@
 ---
 - Logic to avoid fizzle spells
     - Don't cast res on no dead
-    - do this by hoising and checking pre-cast
+    - do this by hoisting and checking pre-cast
 ---
 - More random generation / better maps.  This isn't a rogue-like without the random element
     - Take queues from slay the spire
     - Sectors could have optional elements
     - Sectors could fit together using WFC instead of just being picked by random
+    - Interesting Parts of levels
+        - choke points
+        - pickups
+        - hiding places
+        - 2 ways to get somewhere
+        - traps that trigger things
 
 ## Tasks
+- Enh: Pings should always be on screen like attention markers
+- Pickup radius should be bigger
+- Make void like water and outside like cave wall
+- show drag handle on hover so it's not entire card (replace hotkey icon)
+- Fix attention marker for melee
+- Content: Night king boss
+- Content: Time crystal releases something when it breaks
+- Content: Summonable blockades
+- Content: Trap card, reduces mana cost of spell
+- Content: A spell to destroy corpses
+- Bug: Resurrection icon doesn't show if you are resurrecting corpses that are already on your faction
+- Bug: Grunt moved towards me on not his turn after I swapped with a guy near him. (they move after resurrect too, i think cause they get stamina)
+- Bug: Due to stamina changes for AI, prediction is wrong with melee
 - Bug: Pathing broken on seed 0.5727148663470687 
     - it ran into `Hit loopLimit for polygon processing.  May be an infinite loop or the polygon may just be too big.`
     - In this case it should just abort that level and try a new one
