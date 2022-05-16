@@ -1,4 +1,5 @@
 ## Critical tasks
+- Fix rock having mana bar
 ---
 - Hoist spells
     - Allow spells like trap to change spells in cast
@@ -23,6 +24,7 @@
      - seed: 0.20950042153769977 
 - Make void like water and outside like cave wall
 - Content: Night king boss
+- Content: Explode on death curse
 - Content: Time crystal releases something when it breaks
 - Content: Summonable blockades
 - Content: Trap card, reduces mana cost of spell

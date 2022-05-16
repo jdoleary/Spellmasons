@@ -88,6 +88,14 @@
 	"spriteSourceSize": {"x":8,"y":0,"w":51,"h":63},
 	"sourceSize": {"w":64,"h":64}
 },
+"decoy.png":
+{
+	"frame": {"x":963,"y":194,"w":57,"h":61},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":3,"w":57,"h":61},
+	"sourceSize": {"w":64,"h":64}
+},
 "deny.png":
 {
 	"frame": {"x":1,"y":133,"w":64,"h":64},
@@ -1048,6 +1056,14 @@
 	"spriteSourceSize": {"x":2,"y":3,"w":60,"h":58},
 	"sourceSize": {"w":64,"h":64}
 },
+"units/decoy.png":
+{
+	"frame": {"x":963,"y":194,"w":57,"h":61},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":3,"w":57,"h":61},
+	"sourceSize": {"w":64,"h":64}
+},
 "units/demon.png":
 {
 	"frame": {"x":1,"y":199,"w":64,"h":56},
@@ -1055,14 +1071,6 @@
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":56},
 	"sourceSize": {"w":64,"h":56}
-},
-"units/dummy.png":
-{
-	"frame": {"x":963,"y":194,"w":57,"h":61},
-	"rotated": false,
-	"trimmed": true,
-	"spriteSourceSize": {"x":6,"y":3,"w":57,"h":61},
-	"sourceSize": {"w":64,"h":64}
 },
 "units/golem-blue.png":
 {
@@ -1270,6 +1278,6 @@
 	"format": "RGBA8888",
 	"size": {"w":1558,"h":256},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:93631feb91d2ba8187de65953f1f4190:498bffe67acbab5725d8edf699045f70:81b8455959c6df0a71f2d78f10f487eb$"
+	"smartupdate": "$TexturePacker:SmartUpdate:f90a60c4ef7b3f212a1a7848adc8d8c7:b1031aa54a17958778accc1f11d02dfc:81b8455959c6df0a71f2d78f10f487eb$"
 }
 }

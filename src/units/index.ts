@@ -33,6 +33,7 @@ import priest from './priest';
 import poisoner from './poisoner';
 import vampire from './vampire';
 import dummy from './dummy';
+import decoy from './decoy';
 
 function register(unit: UnitSource) {
   allUnits[unit.id] = unit;
@@ -53,6 +54,8 @@ export function registerUnits() {
   register(ladyBlue);
   register(manMohawk);
   register(jester);
+  register(decoy);
 }
+
 
 export const allUnits: { [id: string]: UnitSource } = {};
