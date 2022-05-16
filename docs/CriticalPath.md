@@ -1,8 +1,8 @@
 # Critical Path (4st deadline revision)
-- Optimize GameLoop
 - Stable Multiplayer
 - Youtube Alpha version video / Post on social
 - Game Scale Difficulty for endgame
+    - With better content: "night king", "ogre"
 - Homepage / Marketing / Steam Page / Email Signup
 - Art / Shaders / Juice
     - Come up with palette first
@@ -28,7 +28,6 @@
     - Adobe? https://www.adobe.com/products/audition/offers/AdobeAuditionDLCSFX.html
 - [Tutorial](https://www.youtube.com/watch?v=-GV814cWiAw)
 - Optimize
-    - Optimize runPredictions
     - Optimize pathing
     - Look for `TODO optimize:`
 - Package as Electron App
@@ -36,8 +35,7 @@
     - [AutoUpdate](https://github.com/vercel/hazel)
 - More content
     - Engage community in making new spells
-    - Specific barriers or walls that can't be cast threw
-    - Summonable barriers (with health) to protect you from arrows or mobs' pathing
+    - Specific barriers or walls that can't be cast through
 
 ## Deadlines
 - ~~My part (gameplay) should be finished end of Feb 2022~~

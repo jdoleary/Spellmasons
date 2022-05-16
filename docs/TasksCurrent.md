@@ -32,7 +32,6 @@
 - Bug: Portal didn't appear once (honeycomb seems broken if you have walls above and below you)
 - Bug: Goons spawned outside of map when summoner was stuffed in upper left corner of map
 
-- Dead units don't lose poison
 - "maximum shield" shows a bunch of times on hover if casting the spell would give them map
 ---
 - Use middle mouse button drag to move camera
