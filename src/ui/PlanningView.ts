@@ -207,7 +207,7 @@ export async function runPredictions() {
       // Show if unit will be resurrected
       window.resMarkers = [];
       if (cardIds.includes('resurrect')) {
-        window.predictionUnits.filter(u => u.faction == Faction.ALLY).forEach(u => {
+        window.predictionUnits.filter(u => u.faction == Faction.ALLY && u.alive).forEach(u => {
           // Check if their non-prediction counterpart is dead to see if they will be resurrected:
           const realUnit = window.underworld.units.find(x => x.id == u.id)
           if (realUnit && !realUnit.alive) {
