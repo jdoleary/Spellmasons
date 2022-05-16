@@ -86,12 +86,12 @@ export function withinCameraBounds(position: Vec2): Vec2 {
   const bottom = elPIXIHolder.clientHeight / zoom - marginBottom + camY / zoom;
 
   // Debug draw camera limit
-  window.unitOverlayGraphics.lineStyle(4, 0xcb00f5, 1.0);
-  window.unitOverlayGraphics.moveTo(left, top);
-  window.unitOverlayGraphics.lineTo(right, top);
-  window.unitOverlayGraphics.lineTo(right, bottom);
-  window.unitOverlayGraphics.lineTo(left, bottom);
-  window.unitOverlayGraphics.lineTo(left, top);
+  // window.unitOverlayGraphics.lineStyle(4, 0xcb00f5, 1.0);
+  // window.unitOverlayGraphics.moveTo(left, top);
+  // window.unitOverlayGraphics.lineTo(right, top);
+  // window.unitOverlayGraphics.lineTo(right, bottom);
+  // window.unitOverlayGraphics.lineTo(left, bottom);
+  // window.unitOverlayGraphics.lineTo(left, top);
 
   // Keep inside bounds of camera
   const withinBoundsPos: Vec2 = {
@@ -100,8 +100,8 @@ export function withinCameraBounds(position: Vec2): Vec2 {
   }
   const cardHandRight = (cardHoldersRect.width + (camX - cardHandPaddingRight)) / zoom;
   const cardHandTop = (cardHoldersRect.top - pixiHolderRect.top + camY) / zoom;
-  window.unitOverlayGraphics.drawCircle(camX / zoom, camY / zoom, 4);
-  window.unitOverlayGraphics.drawCircle(cardHandRight, cardHandTop, 8);
+  // window.unitOverlayGraphics.drawCircle(camX / zoom, camY / zoom, 4);
+  // window.unitOverlayGraphics.drawCircle(cardHandRight, cardHandTop, 8);
 
   // Don't let the attention marker get obscured by the cardHolders element
   if (withinBoundsPos.x < cardHandRight && withinBoundsPos.y > cardHandTop) {
