@@ -205,6 +205,10 @@ body.inspect-mode #card-inspect {
   padding: 10px;
   /* leave room for the mana badges at the top */
   padding-top: 15px;
+  /* Put selected cards next to health and mana */
+  position: absolute;
+  top: -22px;
+  left: 222px;
 }
 
 #selected-cards:empty {
