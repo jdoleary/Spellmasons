@@ -654,6 +654,9 @@ export function copyForPredictionUnit(u: IUnit): IUnit {
     // prediction unit would cache-miss each time it was recreated
     // and needed a path
     path: unit.path,
+    // Prediction units should have full stamina because they will
+    // when it is their turn
+    stamina: unit.staminaMax,
     onDamageEvents: [...unit.onDamageEvents],
     onDeathEvents: [...unit.onDeathEvents],
     onMoveEvents: [...unit.onMoveEvents],

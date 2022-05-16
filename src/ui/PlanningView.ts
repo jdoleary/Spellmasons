@@ -81,7 +81,7 @@ export function updatePlanningView() {
             window.unitOverlayGraphics.drawCircle(
               selectedUnit.x,
               selectedUnit.y,
-              selectedUnit.stamina + selectedUnit.attackRange
+              selectedUnit.staminaMax + selectedUnit.attackRange
             );
           }
           window.unitOverlayGraphics.endFill();
