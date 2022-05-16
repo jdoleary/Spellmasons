@@ -579,9 +579,9 @@ export function changeFaction(unit: IUnit, faction: Faction) {
   unit.faction = faction;
   if (unit.faction === Faction.ALLY) {
     // headband signifies a player ally unit
-    Image.addSubSprite(unit.image, 'headband');
+    // Image.addSubSprite(unit.image, 'headband');
   } else {
-    Image.removeSubSprite(unit.image, 'headband');
+    // Image.removeSubSprite(unit.image, 'headband');
   }
 }
 

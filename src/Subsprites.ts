@@ -38,18 +38,6 @@ const Subsprites: ISubsprites = {
       y: 1,
     },
   },
-  headband: {
-    imageName: 'headband.png',
-    alpha: 1.0,
-    anchor: {
-      x: 0.5,
-      y: 0.5,
-    },
-    scale: {
-      x: 1,
-      y: 1,
-    },
-  },
   ownCharacterMarker: {
     imageName: 'units/unit-underline.png',
     alpha: 1.0,
