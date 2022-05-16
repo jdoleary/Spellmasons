@@ -69,6 +69,7 @@ export interface IUnit {
   unitSubType: UnitSubType;
   // Doesn't let other units push it
   immovable: boolean;
+  // Note: flaggedForRemoval should ONLY be changed in Unit.cleanup
   flaggedForRemoval?: boolean;
   // A list of names that correspond to Events.ts functions
   onDamageEvents: string[];
@@ -332,38 +333,47 @@ export function resurrect(unit: IUnit) {
   unit.alive = true;
   returnToDefaultSprite(unit);
 }
+// A list of unit source ids that will produce no corpse when killed
+// Useful for decoy (and maybe bosses in the future??)
+const noCorpseIds = ['decoy'];
 export function die(unit: IUnit) {
-  // This check for unit.image prevents creating a corpse image when a predictionUnit
-  // dies because a prediction unit won't have an image property
-  if (unit.image) {
-    Image.changeSprite(
-      unit.image,
-      addPixiSprite('units/corpse.png', containerDoodads),
-    );
-  }
-  unit.alive = false;
-  unit.mana = 0;
-  // Ensure that the unit resolvesDoneMoving when they die in the event that 
-  // they die while they are moving.  This prevents turn phase from getting stuck
-  unit.resolveDoneMoving();
-  // Remove all modifiers:
-  for (let [modifier, _modifierProperties] of Object.entries(unit.modifiers)) {
-    removeModifier(unit, modifier);
-  }
+  if (noCorpseIds.includes(unit.unitSourceId)) {
+    // Remove the unit entirely
+    cleanup(unit);
+    return;
+  } else {
+    // This check for unit.image prevents creating a corpse image when a predictionUnit
+    // dies because a prediction unit won't have an image property
+    if (unit.image) {
+      Image.changeSprite(
+        unit.image,
+        addPixiSprite('units/corpse.png', containerDoodads),
+      );
+    }
+    unit.alive = false;
+    unit.mana = 0;
+    // Ensure that the unit resolvesDoneMoving when they die in the event that 
+    // they die while they are moving.  This prevents turn phase from getting stuck
+    unit.resolveDoneMoving();
+    // Remove all modifiers:
+    for (let [modifier, _modifierProperties] of Object.entries(unit.modifiers)) {
+      removeModifier(unit, modifier);
+    }
 
-  for (let i = 0; i < unit.onDeathEvents.length; i++) {
-    const eventName = unit.onDeathEvents[i];
-    if (eventName) {
-      const fn = Events.onDeathSource[eventName];
-      if (fn) {
-        fn(unit);
+    for (let i = 0; i < unit.onDeathEvents.length; i++) {
+      const eventName = unit.onDeathEvents[i];
+      if (eventName) {
+        const fn = Events.onDeathSource[eventName];
+        if (fn) {
+          fn(unit);
+        }
       }
     }
   }
+
   if (window.player && window.player.unit == unit) {
     centeredFloatingText(`💀 You Died 💀`, 'red');
   }
-
   // In the event that this unit that just died is the selected unit,
   // this will remove the tooltip:
   checkIfNeedToClearTooltip();
