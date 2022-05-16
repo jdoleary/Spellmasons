@@ -1,8 +1,11 @@
 ## Critical tasks
 ---
-- Logic to avoid fizzle spells
-    - Don't cast res on no dead
-    - do this by hoisting and checking pre-cast
+- Hoist spells
+    - Allow spells like trap to change spells in cast
+    - Allow spells like trap to change mana cost
+    - Logic to avoid fizzle spells
+        - Don't cast res on no dead
+        - do this by hoisting and checking pre-cast
 ---
 - More random generation / better maps.  This isn't a rogue-like without the random element
     - Take queues from slay the spire
