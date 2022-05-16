@@ -45,6 +45,11 @@ function closeMenu() {
   }
 
 }
+const menuBtnId = 'menuBtn';
+const elMenuBtn: HTMLButtonElement = document.getElementById(
+  menuBtnId,
+) as HTMLButtonElement;
+elMenuBtn.addEventListener('click', toggleMenu);
 // Make 'closeMenu' available to the svelte menu
 window.closeMenu = closeMenu;
 export function toggleMenu() {
@@ -163,7 +168,7 @@ function zoom(e: WheelEvent) {
   window.zoomTarget = newScale;
 }
 
-const menuBtnId = 'menuBtn';
+
 const endTurnBtnId = 'end-turn-btn';
 function addUnderworldEventListeners() {
   // Add keyboard shortcuts
@@ -179,10 +184,6 @@ function addUnderworldEventListeners() {
   ) as HTMLButtonElement;
   elEndTurnBtn.addEventListener('click', endTurnBtnListener);
 
-  const elMenuBtn: HTMLButtonElement = document.getElementById(
-    menuBtnId,
-  ) as HTMLButtonElement;
-  elMenuBtn.addEventListener('click', toggleMenu);
 }
 
 export function removeUnderworldEventListeners() {
@@ -199,8 +200,4 @@ export function removeUnderworldEventListeners() {
     endTurnBtnId,
   ) as HTMLButtonElement;
   elEndTurnBtn.removeEventListener('click', endTurnBtnListener);
-  const elMenuBtn: HTMLButtonElement = document.getElementById(
-    menuBtnId,
-  ) as HTMLButtonElement;
-  elMenuBtn.removeEventListener('click', toggleMenu);
 }
