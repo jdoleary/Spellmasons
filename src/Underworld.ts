@@ -1793,11 +1793,7 @@ export type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, Underworl
 function getEnemiesForAltitude(levelIndex: number): { enemies: { [unitid: string]: number }, strength: number } {
   const hardCodedLevelEnemies: { [unitid: string]: number }[] = [
     {
-      'grunt': 2,
-    },
-    {
-      'grunt': 2,
-      'archer': 1
+      'grunt': 4,
     },
     {
       'grunt': 3,
