@@ -19,7 +19,6 @@
         - traps that trigger things
 
 ## Tasks
-- Enh: Pings should always be on screen like attention markers
 - Pickup radius should be bigger
 - Make void like water and outside like cave wall
 - show drag handle on hover so it's not entire card (replace hotkey icon)

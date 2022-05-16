@@ -34,6 +34,7 @@ const underworldPixiContainers = [
   containerFloatingText,
 ];
 
+const elPIXIHolder: HTMLElement = document.getElementById('PIXI-holder') as HTMLElement;
 const elCardHolders = document.getElementById('card-holders') as HTMLElement;
 window.debugGraphics = new PIXI.Graphics();
 containerUI.addChild(window.debugGraphics);
@@ -55,7 +56,6 @@ window.addEventListener('load', () => {
 export function resizePixi() {
   app.renderer.resize(window.innerWidth, window.innerHeight);
 }
-const elPIXIHolder: HTMLElement = document.getElementById('PIXI-holder') as HTMLElement;
 let camera: Vec2 = { x: 0, y: 0 };
 // True if camera should auto follow player unit
 let doCameraAutoFollow = true;
@@ -63,6 +63,53 @@ let doCameraAutoFollow = true;
 // It is important that doCameraAutoFollow is changed only
 // in cameraAutoFollow so that the body's class can change with it.
 cameraAutoFollow(true);
+
+// withinCameraBounds takes a Vec2 (in game space) and returns a 
+// Vec2 that is within the bounds of the camera so that it will 
+// surely be seen by a user even if they have panned away.
+// Used for attention markers and pings
+export function withinCameraBounds(position: Vec2): Vec2 {
+  const cardHoldersRect = elCardHolders.getBoundingClientRect();
+  const pixiHolderRect = elPIXIHolder.getBoundingClientRect();
+  // cardHand has padding of 300px to allow for a far right drop zone,
+  // this should be taken into account when keeping the attention marker
+  // outside of the cardHoldersRect bounds
+  const cardHandPaddingRight = 300;
+  const { x: camX, y: camY, zoom } = getCamera();
+  // Determine bounds
+  const margin = 30 / zoom;
+  const marginTop = 45 / zoom;
+  const marginBottom = 45 / zoom;
+  const left = margin + camX / zoom;
+  const right = window.innerWidth / zoom - margin + camX / zoom;
+  const top = marginTop + camY / zoom;
+  const bottom = elPIXIHolder.clientHeight / zoom - marginBottom + camY / zoom;
+
+  // Debug draw camera limit
+  window.unitOverlayGraphics.lineStyle(4, 0xcb00f5, 1.0);
+  window.unitOverlayGraphics.moveTo(left, top);
+  window.unitOverlayGraphics.lineTo(right, top);
+  window.unitOverlayGraphics.lineTo(right, bottom);
+  window.unitOverlayGraphics.lineTo(left, bottom);
+  window.unitOverlayGraphics.lineTo(left, top);
+
+  // Keep inside bounds of camera
+  const withinBoundsPos: Vec2 = {
+    x: Math.min(Math.max(left, position.x), right),
+    y: Math.min(Math.max(top, position.y), bottom)
+  }
+  const cardHandRight = (cardHoldersRect.width + (camX - cardHandPaddingRight)) / zoom;
+  const cardHandTop = (cardHoldersRect.top - pixiHolderRect.top + camY) / zoom;
+  window.unitOverlayGraphics.drawCircle(camX / zoom, camY / zoom, 4);
+  window.unitOverlayGraphics.drawCircle(cardHandRight, cardHandTop, 8);
+
+  // Don't let the attention marker get obscured by the cardHolders element
+  if (withinBoundsPos.x < cardHandRight && withinBoundsPos.y > cardHandTop) {
+    // 32 is arbitrary extra padding for the height of the marker
+    withinBoundsPos.y = cardHandTop - 32;
+  }
+  return withinBoundsPos;
+}
 
 export function isCameraAutoFollowing(): boolean {
   return doCameraAutoFollow;

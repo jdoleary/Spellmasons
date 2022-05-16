@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import type { Vec2 } from './Vec';
-import { app, containerFloatingText, containerUIFixed } from './PixiUtils';
+import { app, containerFloatingText, containerUIFixed, withinCameraBounds } from './PixiUtils';
 import * as config from './config';
 
 interface FText {
@@ -11,6 +11,7 @@ interface FText {
   alpha: number;
   valpha: number;
   pixiText: PIXI.Text;
+  keepWithinCameraBounds: boolean;
 }
 interface FloatingTextInsructions {
   coords: Vec2;
@@ -39,6 +40,7 @@ export default function floatingText({
     vy: 1,
     alpha: 1,
     valpha: -0.2,
+    keepWithinCameraBounds: true,
   };
   container.addChild(pixiText);
   return new Promise<void>((resolve) => {
@@ -51,8 +53,14 @@ function floatAway(instance: FText, resolve: (value: void) => void) {
     instance.vy = instance.vy * 0.97;
     instance.alpha -= Math.max(instance.valpha, 0);
     instance.valpha += 0.004;
-    instance.pixiText.y = instance.y;
-    instance.pixiText.x = instance.x;
+    if (instance.keepWithinCameraBounds) {
+      const pos = withinCameraBounds(instance);
+      instance.pixiText.y = pos.y;
+      instance.pixiText.x = pos.x;
+    } else {
+      instance.pixiText.y = instance.y;
+      instance.pixiText.x = instance.x;
+    }
     instance.pixiText.alpha = instance.alpha;
     // Once it's fully hidden / done animating
     if (instance.alpha <= 0) {

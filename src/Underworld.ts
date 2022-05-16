@@ -23,6 +23,7 @@ import {
   updateCameraPosition,
   cameraAutoFollow,
   getCamera,
+  withinCameraBounds,
 } from './PixiUtils';
 import floatingText, { centeredFloatingText, elPIXIHolder } from './FloatingText';
 import { UnitType, Faction, UnitSubType } from './commonTypes';
@@ -333,47 +334,14 @@ export default class Underworld {
 
   }
   drawEnemyAttentionMarkers() {
-    const cardHoldersRect = elCardHolders.getBoundingClientRect();
-    // cardHand has padding of 300px to allow for a far right drop zone,
-    // this should be taken into account when keeping the attention marker
-    // outside of the cardHoldersRect bounds
-    const cardHandPaddingRight = 300;
     // Draw attention markers which show if an NPC will
     // attack you next turn
     // Note: this block must come after updating the camera position
     for (let marker of window.attentionMarkers) {
-      const { x: camX, y: camY, zoom } = getCamera();
-      const margin = 30 / zoom;
-      const marginTop = 45 / zoom;
-      const marginBottom = 45 / zoom;
-      const left = margin + camX / zoom;
-      const right = window.innerWidth / zoom - margin + camX / zoom;
-      const top = marginTop + camY / zoom;
-      // const bottomOnlyMarginForCardHeight = CardUI.getSelectedCards().length ? 350 : 250;
-      // const bottom = window.innerHeight / zoom - margin + camY / zoom - bottomOnlyMarginForCardHeight;
-      const bottom = elPIXIHolder.clientHeight / zoom - marginBottom + camY / zoom;
-      // Debug draw camera limit
-      // window.unitOverlayGraphics.lineStyle(4, 0xcb00f5, 1.0);
-      // window.unitOverlayGraphics.moveTo(left, top);
-      // window.unitOverlayGraphics.lineTo(right, top);
-      // window.unitOverlayGraphics.lineTo(right, bottom);
-      // window.unitOverlayGraphics.lineTo(left, bottom);
-      // window.unitOverlayGraphics.lineTo(left, top);
+      const { zoom } = getCamera();
 
       // Offset exclamation mark just above the head of the unit "- config.COLLISION_MESH_RADIUS - 10"
-      const exclamationMark = { x: marker.x, y: marker.y - config.COLLISION_MESH_RADIUS * 2 + 8 }
-      // Keep inside bounds of camera
-      exclamationMark.x = Math.min(Math.max(left, exclamationMark.x), right);
-      exclamationMark.y = Math.min(Math.max(top, exclamationMark.y), bottom);
-      const cardHandRight = (cardHoldersRect.width + (camX - cardHandPaddingRight)) / zoom;
-      const cardHandTop = (cardHoldersRect.top + camY) / zoom;
-      // window.unitOverlayGraphics.drawCircle(camX / zoom, camY / zoom, 4);
-      // window.unitOverlayGraphics.drawCircle(cardHandRight, cardHandTop, 8);
-      // Don't let the attention marker get obscured by the cardHolders element
-      if (exclamationMark.x < cardHandRight && exclamationMark.y > cardHandTop) {
-        // 32 is arbitrary extra padding for the height of the marker
-        exclamationMark.y = cardHandTop - 32;
-      }
+      const exclamationMark = withinCameraBounds({ x: marker.x, y: marker.y - config.COLLISION_MESH_RADIUS * 2 + 8 });
 
       // Draw Attention Icon to show the enemy will hurt you next turn
       // 1/zoom keeps the attention marker the same size regardless of the level of zoom
