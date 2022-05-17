@@ -1,5 +1,4 @@
 ## Urgent Tasks
-- Bug: It went to player 3 again when there was only 2 of us
 - Make first trailer
     - Add it to homepage
 - Homepage / Email Signup
