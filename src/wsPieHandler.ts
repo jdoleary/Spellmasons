@@ -233,6 +233,7 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
         const { target, cardIds } = payload;
         if (thinkingPlayer) {
           // Render thought bubble around spell icons
+          // TODO thought bubble stays put while player moves, it should follow them
           if (cardIds.length) {
             containerPlayerThinking.addChild(window.thinkingPlayerGraphics);
             const thoughtBubbleMargin = 20;
