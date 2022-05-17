@@ -1,35 +1,51 @@
 # Critical Path (4st deadline revision)
-- Stable Multiplayer
 - Youtube Alpha version video / Post on social
+    - Due: 2022-05-19 (Thursday)
+- Homepage / Marketing / Steam Page / Email Signup
+    - Marketing (Tell a story)
+        - "Plan. Build. Unleash. Spellmasons!"
+        - "Coorindate. Strategize. Invent. Spellmasons!"
+        - Synonyms:
+            - Plan / Plot / Conspire / Devise
+            - Unleash / Execute
+            - Invent / Envision / Formulate
 - Game Scale Difficulty for endgame
     - With better content: "night king", "ogre"
-- Homepage / Marketing / Steam Page / Email Signup
+- Better maps
 - Art / Shaders / Juice
-    - Come up with palette first
-    - Assets needed:
-        - 8 Wizards, color change in shader
-        - Pickup
-            - Potion
-        - Enemies
-            - Grunt
-            - Archer
-            - Demon
-            - Lobber
-            - Priest
-        - Tiles
-            - Wall
-            - Floor
-            - Void / Water?
-    - Inspiration: https://vryell.itch.io/tiny-biomes-pack
-    - Tiles: https://opengameart.org/content/dungeon-tileset
-    - https://opengameart.org/content/rogue-dungeon
-    - [Polyhaven - Free Assets](https://polyhaven.com/)
+    - Juice
+        - Cards move from hand to selected
+        - Cards flip as you drag-n-drop over them
+        - Improved unit tooltip
+        - Unique animations for each spell
+        - Unique timing for each spell's animations
+        - Multiple of the same card fire off quickly?
+    - Shaders
+    - Art
+        - Come up with palette first
+        - Assets needed:
+            - 8 Wizards, color change in shader
+            - Pickup
+                - Potion
+            - Enemies
+                - Grunt
+                - Archer
+                - Demon
+                - Lobber
+                - Priest
+            - Tiles
+                - Wall
+                - Floor
+                - Void / Water?
+        - Inspiration: https://vryell.itch.io/tiny-biomes-pack
+        - Tiles: https://opengameart.org/content/dungeon-tileset
+        - https://opengameart.org/content/rogue-dungeon
+        - [Polyhaven - Free Assets](https://polyhaven.com/)
 - [SFX](https://www.asoundeffect.com/sound-library/metamorphosis/)
     - Adobe? https://www.adobe.com/products/audition/offers/AdobeAuditionDLCSFX.html
 - [Tutorial](https://www.youtube.com/watch?v=-GV814cWiAw)
 - Optimize
-    - Optimize pathing
-    - Look for `TODO optimize:`
+    - Optimize pathing (on some large maps there are points you can't reach, but maybe I'll limit map size to smaller anyway)
 - Package as Electron App
     - [Storage and Persistence](https://cameronnokes.com/blog/how-to-store-user-data-in-electron/)
     - [AutoUpdate](https://github.com/vercel/hazel)

@@ -1,3 +1,13 @@
+## Urgent Tasks
+- Bug: Bounds has too many inverted polys with the same points seed: 0.14580517839212104,
+    - try deduping before sending in hostGiveClientGameStateForInitialLoad
+    - so does (pathingLineSegment)
+- Bug: 2nd client doesn't get underworld unless they both get to the character select screen at the same time.
+- Bug: It went to player 3 again when there was only 2 of us
+- Make first trailer
+    - Add it to homepage
+- Homepage / Email Signup
+
 ## Critical tasks
 - Hoist spells
     - Allow spells like trap to change spells in cast
@@ -51,9 +61,6 @@ and 2nd client got `Cannot change character, player not found with id 8c502be8-6
 - The zoom coordinates off issue between multiplayer sessions when casting
     - hit on one screen, miss on another
 
-# Juice
-- Cards flip as you drag-n-drop over them
-- Improved unit tooltip
 
 ## More content
 - Upgradable spells like hurt2
