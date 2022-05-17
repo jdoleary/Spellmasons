@@ -2,7 +2,7 @@ import { isAngleBetweenAngles } from "./Angle";
 import { findWherePointIntersectLineSegmentAtRightAngle, isPointOnLineSegment, LineSegment, lineSegmentIntersection } from "./collision/collisionMath";
 import { distance } from "./math";
 import { getPointsFromPolygonStartingAt, doesVertexBelongToPolygon, Polygon, PolygonLineSegment, polygonToPolygonLineSegments, isVec2InsidePolygon, doesLineFromPointToTargetProjectAwayFromOwnPolygon, getInsideAnglesOfWall } from "./Polygon";
-import type { Vec2 } from './Vec';
+import { Vec2, clone } from './Vec';
 import * as Vec from './Vec';
 import * as math from './math';
 
@@ -69,6 +69,10 @@ interface Path {
     };
 }
 export function findPath(startPoint: Vec2, target: Vec2, pathingPolygons: Polygon[], pathingLineSegments: PolygonLineSegment[]): Vec2[] {
+    // Ensure that startPoint and target are ONLY Vec2s and are not duck-typed
+    // This is important for serialization to prevent circular references
+    startPoint = clone(startPoint);
+    target = clone(target)
     // If the target is inside of a non-inverted polygon, move it to the closest edge so that
     // the unit can path to the closest pathable point near where they are attempting to go.
     // This is important if, for example, a player clicks in empty space which is inside
