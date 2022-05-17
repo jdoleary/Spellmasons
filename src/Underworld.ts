@@ -1772,7 +1772,7 @@ export default class Underworld {
   //   this.cacheWalls();
   // }
   serializeForSyncronize(): IUnderworldSerializedForSyncronize {
-    const { players, units, pickups, random, processedMessageCount, ...rest } = this;
+    const { players, units, pickups, random, processedMessageCount, gameLoop, ...rest } = this;
     const serialized: IUnderworldSerializedForSyncronize = {
       ...rest,
       // the state of the Random Number Generator
@@ -1800,7 +1800,7 @@ type IUnderworldSerialized = Omit<typeof Underworld, "prototype" | "players" | "
   };
 type NonFunctionPropertyNames<T> = { [K in keyof T]: T[K] extends Function ? never : K }[keyof T];
 type UnderworldNonFunctionProperties = Exclude<NonFunctionPropertyNames<Underworld>, null | undefined>;
-export type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFunctionProperties>, "debugGraphics" | "players" | "units" | "pickups" | "obstacles" | "random" | "processedMessageCount">;
+export type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFunctionProperties>, "debugGraphics" | "players" | "units" | "pickups" | "obstacles" | "random" | "processedMessageCount" | "gameLoop">;
 
 
 function getEnemiesForAltitude(levelIndex: number): { enemies: { [unitid: string]: number }, strength: number } {
