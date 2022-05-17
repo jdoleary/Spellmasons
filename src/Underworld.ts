@@ -35,7 +35,7 @@ import { updateManaCostUI, updatePlanningView } from './ui/PlanningView';
 import { prng, randInt, SeedrandomState } from './rand';
 import { calculateCost } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment } from './collision/collisionMath';
-import { expandPolygon, mergeOverlappingPolygons, Polygon, PolygonLineSegment, polygonToPolygonLineSegments } from './Polygon';
+import { expandPolygon, mergeOverlappingPolygons, Polygon, PolygonLineSegment, polygonLineSegmentToLineSegment, polygonToPolygonLineSegments } from './Polygon';
 import { calculateDistanceOfVec2Array, findPath, findPolygonsThatVec2IsInsideOf } from './Pathfinding';
 import { removeUnderworldEventListeners, setView, View } from './views';
 import * as readyState from './readyState';
@@ -98,7 +98,7 @@ export default class Underworld {
   // line segments that prevent sight
   walls: LineSegment[] = [];
   // line segments that prevent movement
-  bounds: PolygonLineSegment[] = [];
+  bounds: LineSegment[] = [];
   pathingPolygons: Polygon[] = [];
   // pathingLineSegments shall always be exactly pathingPolygons converted to PolygonLineSegments.
   // It is kept up to date whenever pathingPolygons changes in cachedWalls
@@ -429,13 +429,16 @@ export default class Underworld {
     this.walls = mergeOverlappingPolygons([...obstacles.filter(o => o.wall).map(o => o.bounds), mapBounds]).map(polygonToPolygonLineSegments).flat();
     // Expand pathing walls by the size of the regular unit
     // bounds block movement
-    this.bounds = mergeOverlappingPolygons([...obstacles.map(o => o.bounds), mapBounds]).map(polygonToPolygonLineSegments).flat();
+    this.bounds = mergeOverlappingPolygons([...obstacles.map(o => o.bounds), mapBounds]).map(polygonToPolygonLineSegments).flat().map(polygonLineSegmentToLineSegment);
 
     const expandMagnitude = config.COLLISION_MESH_RADIUS * config.NON_HEAVY_UNIT_SCALE
     // pathing polygons determines the area that units can move within
     this.pathingPolygons = mergeOverlappingPolygons([...obstacles.map(o => o.bounds), mapBounds]).map(p => expandPolygon(p, expandMagnitude));
 
     // Process the polygons into pathingwalls for use in tryPath
+    // TODO: Optimize if needed: When this.pathingLineSegments gets serialized to send over the network
+    // it has an excess of serialized polygons with many points  because lots of the linesegments have a ref to the
+    // same polygon.  This is a lot of extra data that is repeated.  Optimize if needed
     this.pathingLineSegments = this.pathingPolygons.map(polygonToPolygonLineSegments).flat();
   }
   spawnPickup(index: number, coords: Vec2) {

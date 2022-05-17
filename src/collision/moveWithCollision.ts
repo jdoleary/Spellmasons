@@ -53,7 +53,7 @@ export function normalizedVector(point1: Vec2, point2: Vec2): { vector: Vec2 | u
 export function collideWithWalls(circle: Circle) {
     if (window.underworld && window.underworld.bounds) {
         for (let line of window.underworld.bounds) {
-            repelCircleFromLine(circle, line, line.polygon.inverted);
+            repelCircleFromLine(circle, line);
         }
     } else {
         console.error('window.underworld or window.underworld.bounds is undefined');
@@ -142,7 +142,7 @@ function repelCircles(mover: Circle, originalPosition: Vec2, other: Circle, othe
 // Note: this function is only meant to handle small increments of movements, this function
 // will not account for the case where the destination does not intersect
 // a line but the mover would travel through a linesegment on it's way to destination.  This is by design.
-function repelCircleFromLine(mover: Circle, line: LineSegment, inverted?: boolean) {
+function repelCircleFromLine(mover: Circle, line: LineSegment) {
     // The radius used for the line points makes up the different between a regular unit collision radius and the units physicsMover's radius
     // The units physicsMover's radius is small so that units can "squeeze" past each other, but I want the full unit size to collide
     // with walls (lines and their verticies).
@@ -160,6 +160,9 @@ function repelCircleFromLine(mover: Circle, line: LineSegment, inverted?: boolea
         // because units have small radiuses to allow crowding but I want their entire image to be repelled from walls)
         //  touches the line from either side of the line it will repel the mover the entire distance.
         // This is because it is aware of the orientation (the normal vector) of the line
+        // However, then it needs to know if the line is inverted or not.  And it is a waste of resources to send the whole polygon over
+        // for each PolygonLineSegment in underworld.bounds; so either I could store the inverted property without the polygon
+        // or just reverse p1 and p2 or inverted PolygonLineSegments, thus converting them to line segments.
         // const repelVector = multiply(inverted ? -1 : 1, getNormalVectorOfLineSegment(line));
         // Option 2: This way of calculating the repelVector will repel the circle from either side of the line
         // regardless of the normal vector of the line.  This is less forgiving and may allow units to pass through lines

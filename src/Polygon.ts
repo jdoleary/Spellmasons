@@ -214,6 +214,9 @@ export function polygonToPolygonLineSegments(polygon: Polygon): PolygonLineSegme
     lineSegments.push({ p1: lastPoint, p2: polygon.points[0], polygon });
     return lineSegments;
 }
+export function polygonLineSegmentToLineSegment(polygonLineSegment: PolygonLineSegment): LineSegment {
+    return { p1: polygonLineSegment.p1, p2: polygonLineSegment.p2 };
+}
 // Expand polygon: Grows a polygon into it's "outside" by the distance of magnitude
 // along the normal vectors of each vertex.
 // Pure: returns a new polygon without mutating the old

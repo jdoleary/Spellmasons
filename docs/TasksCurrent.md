@@ -1,7 +1,4 @@
 ## Urgent Tasks
-- Bug: Bounds has too many inverted polys with the same points seed: 0.14580517839212104,
-    - try deduping before sending in hostGiveClientGameStateForInitialLoad
-    - so does (pathingLineSegment)
 - Bug: It went to player 3 again when there was only 2 of us
 - Make first trailer
     - Add it to homepage
