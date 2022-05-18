@@ -1,5 +1,6 @@
 ## Urgent Tasks
 - Make first trailer
+    - good seed for trailer: 0.9763243944757743
     - Add it to homepage
     - Reach out to artists
 - Homepage / Email Signup
@@ -7,6 +8,7 @@
 
 ## Critical tasks
 - Fix: Decoy image doesn't always disappear when decoy dies
+    - This may be fixed by d69a8a2
 - Fix: Brad cast a spell out of range, but it still triggered on my screen
 ## Tasks
 - Hoist spells
