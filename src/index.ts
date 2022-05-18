@@ -201,6 +201,8 @@ declare global {
     readonly MMBDown: boolean;
     // Used to set MMBDown so it will affect CSS too
     setMMBDown: (isDown: boolean) => void;
+    // Allows manually overriding the underworld seed via the JS console
+    seedOverride: string | undefined;
   }
 }
 window.setMMBDown = (isDown: boolean) => {

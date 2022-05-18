@@ -116,7 +116,7 @@ export default class Underworld {
 
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
     window.underworld = this;
-    this.seed = seed;
+    this.seed = window.seedOverride || seed;
     elSeed.innerText = `Seed: ${this.seed}`;
     console.log("RNG create with seed:", this.seed, ", state: ", RNGState);
     this.random = this.syncronizeRNG(RNGState);
