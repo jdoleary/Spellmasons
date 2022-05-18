@@ -6,8 +6,6 @@
     - https://mailchimp.com/pricing/marketing/
 
 ## Critical tasks
-- Bug: Archer did double damage again
-    - I think this is due to a unit sync race condition and the flying arrow dealing damage
 - Fix: Decoy image doesn't always disappear when decoy dies
 - Fix: Brad cast a spell out of range, but it still triggered on my screen
 ## Tasks

@@ -277,7 +277,7 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       }
       // Use the internal setTurnPhrase now that the desired phase has been sent
       // via the public setTurnPhase
-      window.underworld.initializeTurnPhase(phase);
+      await window.underworld.initializeTurnPhase(phase);
       break;
     case MESSAGE_TYPES.CREATE_LEVEL:
       const { level } = payload as {
