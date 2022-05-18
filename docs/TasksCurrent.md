@@ -1,9 +1,17 @@
 ## Urgent Tasks
 - Make first trailer
     - Add it to homepage
+    - Reach out to artists
 - Homepage / Email Signup
+    - https://mailchimp.com/pricing/marketing/
 
 ## Critical tasks
+- Bug: Archer did double damage again
+    - I think this is due to a unit sync race condition and the flying arrow dealing damage
+- Fix: Player Thought not moving with player
+- Fix: Decoy image doesn't always disappear when decoy dies
+- Fix: Brad cast a spell out of range, but it still triggered on my screen
+## Tasks
 - Hoist spells
     - Allow spells like trap to change spells in cast
     - Allow spells like trap to change mana cost
@@ -24,10 +32,10 @@
         - 2 ways to get somewhere
         - traps that trigger things
 
-## Tasks
 - Content: Night king boss
 - Content: Explode on death curse
 - Content: Time crystal releases something when it breaks
+- Content: Time limited pickups (like card pickups)
 - Content: A spell to destroy corpses
 - Content: "Orge" enemies that get stronger for every ally of theirs that dies
 - Bug: Pathing broken on seed 0.5727148663470687 
