@@ -9,17 +9,10 @@ import * as Unit from './Unit';
 import * as readyState from './readyState';
 import * as messageQueue from './messageQueue';
 import * as storage from './storage';
-import * as Image from './Image';
-import * as config from './config';
-import * as colors from './ui/colors';
 import { setView, View } from './views';
 import { tutorialLevels } from './HandcraftedLevels';
 import { allUnits } from './units';
 import { pie } from './wsPieSetup';
-import { allCards } from './cards';
-import { containerPlayerThinking } from './PixiUtils';
-import { distance, similarTriangles } from './math';
-import { subtract } from './Vec';
 
 const messageLog: any[] = [];
 let clients: string[] = [];
@@ -222,52 +215,8 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
     //   break;
     case MESSAGE_TYPES.PLAYER_THINKING:
       const thinkingPlayer = window.underworld.players.find(p => p.clientId === fromClient)
-      if (thinkingPlayer != window.player) {
-        const spaceBetweenIcons = 20;
-        function getXLocationOfImageForThoughtBubble(originX: number, index: number, totalNumberOfSpells: number) {
-          return originX + (0.5 + index - totalNumberOfSpells / 2) * spaceBetweenIcons
-        }
-        // Only display player thoughts if they are not the current client's player
-        window.thinkingPlayerGraphics.clear();
-        containerPlayerThinking.removeChildren();
-        const { target, cardIds } = payload;
-        if (thinkingPlayer) {
-          // Render thought bubble around spell icons
-          // TODO thought bubble stays put while player moves, it should follow them
-          if (cardIds.length) {
-            containerPlayerThinking.addChild(window.thinkingPlayerGraphics);
-            const thoughtBubbleMargin = 20;
-            const thoughtBubbleRight = getXLocationOfImageForThoughtBubble(thinkingPlayer.unit.x, cardIds.length, cardIds.length);
-            const thoughtBubbleLeft = getXLocationOfImageForThoughtBubble(thinkingPlayer.unit.x, 0, cardIds.length) - thoughtBubbleMargin;
-            window.thinkingPlayerGraphics.lineStyle(3, 0xffffff, 1.0);
-            window.thinkingPlayerGraphics.beginFill(0xffffff, 0.7);
-            window.thinkingPlayerGraphics.drawRoundedRect(thoughtBubbleLeft, thinkingPlayer.unit.y - config.COLLISION_MESH_RADIUS * 2 - thoughtBubbleMargin, thoughtBubbleRight - thoughtBubbleLeft, thoughtBubbleMargin * 2, 5);
-            window.thinkingPlayerGraphics.endFill();
-          }
-          for (let i = 0; i < cardIds.length; i++) {
-            const cardId = cardIds[i];
-            const card = allCards[cardId];
-            if (card) {
-              const x = getXLocationOfImageForThoughtBubble(thinkingPlayer.unit.x, i, cardIds.length);
-              const image = Image.create(
-                { x, y: thinkingPlayer.unit.y - config.COLLISION_MESH_RADIUS * 2 },
-                card.thumbnail,
-                containerPlayerThinking,
-              );
-              image.sprite.scale.set(0.3);
-            }
-          }
-          if (target && cardIds.length) {
-            // Draw a line to show where they're aiming:
-            window.thinkingPlayerGraphics.lineStyle(3, colors.healthAllyGreen, 0.7);
-            // Use this similarTriangles calculation to make the line pretty so it doesn't originate from the exact center of the
-            // other player but from the edge instead
-            const startPoint = subtract(thinkingPlayer.unit, similarTriangles(thinkingPlayer.unit.x - target.x, thinkingPlayer.unit.y - target.y, distance(thinkingPlayer.unit, target), config.COLLISION_MESH_RADIUS));
-            window.thinkingPlayerGraphics.moveTo(startPoint.x, startPoint.y);
-            window.thinkingPlayerGraphics.lineTo(target.x, target.y);
-            window.thinkingPlayerGraphics.drawCircle(target.x, target.y, 4);
-          }
-        }
+      if (thinkingPlayer && thinkingPlayer != window.player) {
+        window.playerThoughts[thinkingPlayer.clientId] = payload;
       }
       break;
     case MESSAGE_TYPES.CHANGE_CHARACTER:

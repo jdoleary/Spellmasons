@@ -11,6 +11,7 @@ import * as Cards from './cards';
 import * as Image from './Image';
 import * as storage from './storage';
 import * as ImmediateMode from './ImmediateModeSprites';
+import * as colors from './ui/colors';
 import obstacleSectors from './ObstacleSectors';
 import { MESSAGE_TYPES } from './MessageTypes';
 import {
@@ -24,6 +25,7 @@ import {
   cameraAutoFollow,
   getCamera,
   withinCameraBounds,
+  containerPlayerThinking,
 } from './PixiUtils';
 import floatingText, { centeredFloatingText, elPIXIHolder } from './FloatingText';
 import { UnitType, Faction, UnitSubType } from './commonTypes';
@@ -282,6 +284,7 @@ export default class Underworld {
     updateCameraPosition();
     this.drawEnemyAttentionMarkers();
     this.drawResMarkers();
+    this.drawPlayerThoughts();
     updatePlanningView();
     mouseMove();
 
@@ -363,6 +366,59 @@ export default class Underworld {
       // Math.sin... makes the attention marker swell and shink so it grabs the player's attention so they
       // know that they're in danger
       ImmediateMode.draw('attention_sword.png', exclamationMark, (1 / zoom) + (Math.sin(Date.now() / 500) + 1) / 3);
+    }
+  }
+  drawPlayerThoughts() {
+
+    const spaceBetweenIcons = 20;
+    function getXLocationOfImageForThoughtBubble(originX: number, index: number, totalNumberOfSpells: number) {
+      return originX + (0.5 + index - totalNumberOfSpells / 2) * spaceBetweenIcons
+    }
+    // Only display player thoughts if they are not the current client's player
+    window.thinkingPlayerGraphics.clear();
+    containerPlayerThinking.removeChildren();
+    for (let [thinkerClientId, thought] of Object.entries(window.playerThoughts)) {
+      const { target, cardIds } = thought;
+      const thinkingPlayer = this.players.find(p => p.clientId == thinkerClientId);
+      if (thinkingPlayer) {
+        // Render thought bubble around spell icons
+        if (cardIds.length) {
+          containerPlayerThinking.addChild(window.thinkingPlayerGraphics);
+          const thoughtBubbleMargin = 20;
+          const thoughtBubbleRight = getXLocationOfImageForThoughtBubble(thinkingPlayer.unit.x, cardIds.length, cardIds.length);
+          const thoughtBubbleLeft = getXLocationOfImageForThoughtBubble(thinkingPlayer.unit.x, 0, cardIds.length) - thoughtBubbleMargin;
+          window.thinkingPlayerGraphics.lineStyle(3, 0xffffff, 1.0);
+          window.thinkingPlayerGraphics.beginFill(0xffffff, 0.7);
+          window.thinkingPlayerGraphics.drawRoundedRect(thoughtBubbleLeft, thinkingPlayer.unit.y - config.COLLISION_MESH_RADIUS * 2 - thoughtBubbleMargin, thoughtBubbleRight - thoughtBubbleLeft, thoughtBubbleMargin * 2, 5);
+          window.thinkingPlayerGraphics.endFill();
+        }
+        for (let i = 0; i < cardIds.length; i++) {
+          const cardId = cardIds[i];
+          if (!cardId) {
+            continue;
+          }
+          const card = Cards.allCards[cardId];
+          if (card) {
+            const x = getXLocationOfImageForThoughtBubble(thinkingPlayer.unit.x, i, cardIds.length);
+            const image = Image.create(
+              { x, y: thinkingPlayer.unit.y - config.COLLISION_MESH_RADIUS * 2 },
+              card.thumbnail,
+              containerPlayerThinking,
+            );
+            image.sprite.scale.set(0.3);
+          }
+        }
+        if (target && cardIds.length) {
+          // Draw a line to show where they're aiming:
+          window.thinkingPlayerGraphics.lineStyle(3, colors.healthAllyGreen, 0.7);
+          // Use this similarTriangles calculation to make the line pretty so it doesn't originate from the exact center of the
+          // other player but from the edge instead
+          const startPoint = Vec.subtract(thinkingPlayer.unit, math.similarTriangles(thinkingPlayer.unit.x - target.x, thinkingPlayer.unit.y - target.y, math.distance(thinkingPlayer.unit, target), config.COLLISION_MESH_RADIUS));
+          window.thinkingPlayerGraphics.moveTo(startPoint.x, startPoint.y);
+          window.thinkingPlayerGraphics.lineTo(target.x, target.y);
+          window.thinkingPlayerGraphics.drawCircle(target.x, target.y, 4);
+        }
+      }
     }
 
   }
