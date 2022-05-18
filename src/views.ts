@@ -3,7 +3,6 @@ import {
   addPixiContainersForView,
   resizePixi,
   app,
-  cameraAutoFollow,
   updateCameraPosition,
 } from './PixiUtils';
 import * as PIXI from 'pixi.js';
@@ -12,14 +11,16 @@ import { UnitSubType } from './commonTypes';
 import { MESSAGE_TYPES } from './MessageTypes';
 import * as Image from './Image';
 import * as config from './config';
-import { createUpgradeElement, generateUpgrades } from './Upgrade';
 import {
   clickHandler,
   contextmenuHandler,
   endTurnBtnListener,
   keydownListener,
   keyupListener,
+  mouseDownHandler,
+  mouseUpHandler,
   mouseMove,
+  onWindowBlur,
 } from './ui/eventListeners';
 
 // A view is not shared between players in the same game, a player could choose any view at any time
@@ -176,6 +177,9 @@ function addUnderworldEventListeners() {
   window.addEventListener('keyup', keyupListener);
   document.body.addEventListener('contextmenu', contextmenuHandler);
   document.body.addEventListener('click', clickHandler);
+  window.addEventListener('mousedown', mouseDownHandler);
+  window.addEventListener('mouseup', mouseUpHandler);
+  window.addEventListener('blur', onWindowBlur);
   document.body.addEventListener('wheel', zoom);
   document.body.addEventListener('mousemove', mouseMove);
   // Add button listeners

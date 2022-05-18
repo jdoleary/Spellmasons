@@ -194,8 +194,18 @@ declare global {
     // A list of units and an endPosition that they are moved to via a "force",
     // like a push or pull or explosion.
     forceMove: { unit: Unit.IUnit, step: Vec2, distance: number }[];
-
+    // Middle Mouse Button Down
+    // Note: do NOT set directly, use setMMBDown instead
+    readonly MMBDown: boolean;
+    // Used to set MMBDown so it will affect CSS too
+    setMMBDown: (isDown: boolean) => void;
   }
+}
+window.setMMBDown = (isDown: boolean) => {
+  // I want it to show a compile error anywhere else
+  // @ts-expect-error Override "readyonly" error.  This is the ONLY place that MMBDown should be mutated.
+  window.MMBDown = isDown;
+  document.body.classList.toggle('draggingCamera', window.MMBDown);
 }
 window.skipTutorial = () => {
   storage.set(SKIP_TUTORIAL, YES);

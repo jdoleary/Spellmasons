@@ -111,6 +111,12 @@ export function withinCameraBounds(position: Vec2): Vec2 {
   return withinBoundsPos;
 }
 
+// Used for moving the camera with middle mouse button (like in Dota2)
+export function moveCamera(x: number, y: number) {
+  camera.x += x;
+  camera.y += y;
+}
+
 export function isCameraAutoFollowing(): boolean {
   return doCameraAutoFollow;
 }

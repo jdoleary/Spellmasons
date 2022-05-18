@@ -954,3 +954,8 @@ body.view-Disconnected #websocketpie-connection-status {
   top: 5px;
   right: 5px;
 }
+
+/* Show that camera is being dragged with the mouse */
+body.draggingCamera {
+  cursor: grabbing;
+}

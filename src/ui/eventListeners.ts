@@ -17,7 +17,7 @@ import * as colors from './colors';
 import type { Vec2 } from '../Vec';
 import { distance, getCoordsAtDistanceTowardsTarget } from '../math';
 import * as config from '../config';
-import { cameraAutoFollow } from '../PixiUtils';
+import { cameraAutoFollow, getCamera, moveCamera } from '../PixiUtils';
 
 export const keyDown = {
   w: false,
@@ -183,13 +183,20 @@ export function endTurnBtnListener(e: MouseEvent) {
   return false;
 }
 
-export function mouseMove() {
+export function mouseMove(e?: MouseEvent) {
   // Only handle clicks when viewing the Game
   if (window.view !== View.Game) {
     return;
   }
   if (!window.underworld) {
     return
+  }
+
+  if (window.MMBDown && e) {
+    const { movementX, movementY } = e;
+    const { zoom } = getCamera();
+    cameraAutoFollow(false);
+    moveCamera(-movementX / zoom, -movementY / zoom);
   }
 
   runPredictions();
@@ -368,6 +375,27 @@ export function contextmenuHandler(e: MouseEvent) {
 
 
   return false;
+}
+export function mouseDownHandler(e: MouseEvent) {
+  if (e.button == 1) {
+    // setMMBDown so camera will be dragged around
+    window.setMMBDown(true);
+    e.preventDefault();
+    return false;
+  }
+}
+export function mouseUpHandler(e: MouseEvent) {
+  // Turn MMBDown off for any click to protect against it getting stuck
+  // as flagged "down"
+  window.setMMBDown(false);
+}
+export function onWindowBlur() {
+  // Turn off keyboard and mouse flags when the document loses focus
+  // To protect against the case where a user has middle mouse down
+  // while they alt tab, which - without the following line -
+  // would mean that it's stuck "up" when they return to the game
+  // if they were to release it when this document wasn't focused
+  window.setMMBDown(false);
 }
 // Handle clicks on the game board
 export function clickHandler(e: MouseEvent) {

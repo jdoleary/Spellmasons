@@ -47,7 +47,6 @@
 
 - "maximum shield" shows a bunch of times on hover if casting the spell would give them map
 ---
-- Use middle mouse button drag to move camera
 - Make damage that they WILL take different from damage that they HAVE taken.  It's confusing
 
 - Bug: Can go negative mana if you cast too quickly
