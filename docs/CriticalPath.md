@@ -1,10 +1,14 @@
 # Critical Path (4st deadline revision)
 - Youtube Alpha version video / Post on social
+    - Introduce game: "A magical multiplayer rougelike"
+    -
     - Due: 2022-05-19 (Thursday)
 - Homepage / Marketing / Steam Page / Email Signup
     - Marketing (Tell a story)
         - "Plan. Build. Unleash. Spellmasons!"
         - "Coorindate. Strategize. Invent. Spellmasons!"
+        - "Invent magic together.  Spellmasons!"
+        - "Magic with friends! Spellmasons"
         - Synonyms:
             - Plan / Plot / Conspire / Devise
             - Unleash / Execute
