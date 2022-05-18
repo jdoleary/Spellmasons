@@ -7,9 +7,9 @@ export const id = 'summon_decoy';
 const spell: Spell = {
   card: {
     id,
-    manaCost: 20,
+    manaCost: 60,
     healthCost: 0,
-    expenseScaling: 2,
+    expenseScaling: 1,
     probability: 50,
     thumbnail: 'decoy.png',
     description: `
