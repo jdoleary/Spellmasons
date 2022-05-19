@@ -1,6 +1,6 @@
 import * as Image from './Image';
 import type { Polygon } from './Polygon';
-import { containerUnits } from './PixiUtils';
+import { containerBoard, containerUnits } from './PixiUtils';
 import { OBSTACLE_SIZE } from './config';
 import type { Vec2 } from './Vec';
 export interface IObstacle {
@@ -57,9 +57,7 @@ export function create(coord: Vec2, obstacleSourceIndex: number) {
   }
 }
 export function addImageForObstacle(obstacle: IObstacle) {
-  // Obstacles go inside of containerUnits so that they can be z-index sorted
-  // along with all the units so units can stand in front of or behind the walls
-  Image.create(obstacle, obstacle.imagePath, containerUnits);
+  Image.create(obstacle, obstacle.imagePath, containerBoard);
 
 }
 
