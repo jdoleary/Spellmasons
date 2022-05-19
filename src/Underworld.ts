@@ -1541,6 +1541,13 @@ export default class Underworld {
       return effectState;
     }
     const cards = Cards.getCardsFromIds(cardIds);
+    const spellCost = calculateCost(cards, casterCardUsage);
+    // Apply mana and health cost to caster
+    // Note: it is important that this is done BEFORE a card is actually cast because
+    // the card may affect the caster's mana
+    effectState.casterUnit.mana -= spellCost.manaCost;
+    Unit.takeDamage(effectState.casterUnit, spellCost.healthCost, prediction, effectState);
+
     for (let index = 0; index < effectState.cardIds.length; index++) {
       const cardId = effectState.cardIds[index];
       if (!cardId) {
@@ -1551,12 +1558,6 @@ export default class Underworld {
       const animationPromises: Promise<void>[] = [];
       if (card) {
         const animations = []
-        const singleCardCost = calculateCost([card], casterCardUsage);
-        // Apply mana and health cost to caster
-        // Note: it is important that this is done BEFORE a card is actually cast because
-        // the card may affect the caster's mana
-        effectState.casterUnit.mana -= singleCardCost.manaCost;
-        Unit.takeDamage(effectState.casterUnit, singleCardCost.healthCost, prediction, effectState);
         const targets = effectState.targetedUnits.length == 0 ? [castLocation] : effectState.targetedUnits
         for (let target of targets) {
 

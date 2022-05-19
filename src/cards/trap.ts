@@ -4,17 +4,19 @@ import * as Image from '../Image';
 import { containerUnits } from '../PixiUtils';
 
 export const id = 'trap';
+const manaCostMultiplier = 0.8;
 const spell: Spell = {
   card: {
     id,
     manaCost: 0,
+    manaCostMultiplier,
     healthCost: 0,
     expenseScaling: 0,
     probability: 50,
     requiresFollowingCard: true,
     thumbnail: 'trap.png',
     description: `
-Sets a spell as a trap, to be triggered when stepped on.
+Sets a spell as a trap, to be triggered when stepped on.  Wrapping a spell in a trap reduces its mana cost.
     `,
     allowNonUnitTarget: true,
     effect: async (state, prediction) => {

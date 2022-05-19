@@ -169,6 +169,8 @@ export interface ICard {
   id: string;
   // type: CardType;
   manaCost: number;
+  // Used in trap to reduce the cost of the spell by a percentage
+  manaCostMultiplier?: number;
   healthCost: number;
   probability: number;
   thumbnail: string;

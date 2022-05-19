@@ -39,6 +39,13 @@ export function calculateCost(cards: ICard[], casterCardUsage: CardUsage): CardC
         cost.healthCost += singleCardCost.healthCost;
         thisCalculationUsage[card.id] += 1;
     }
+    // Now that all the base costs have been calculated, multiply by any cost multipliers
+    // (currently used in "trap" card)
+    for (let card of cards) {
+        if (card.manaCostMultiplier !== undefined) {
+            cost.manaCost *= card.manaCostMultiplier;
+        }
+    }
     // cost should be a whole number for the sake of the player experience
     cost.manaCost = Math.floor(cost.manaCost);
     cost.healthCost = Math.floor(cost.healthCost);
