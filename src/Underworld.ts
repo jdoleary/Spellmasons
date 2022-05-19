@@ -1521,6 +1521,8 @@ export default class Underworld {
     cardIds: string[],
     castLocation: Vec2,
     prediction: boolean,
+    // If true, prevents removing mana when spell is cast.  This is used for "trap" card
+    costPrepaid: boolean,
   ): Promise<Cards.EffectState> {
     if (!prediction && casterUnit == (window.player && window.player.unit)) {
       window.castThisTurn = true;
@@ -1540,13 +1542,15 @@ export default class Underworld {
       // Prevent dead players from casting
       return effectState;
     }
-    const cards = Cards.getCardsFromIds(cardIds);
-    const spellCost = calculateCost(cards, casterCardUsage);
-    // Apply mana and health cost to caster
-    // Note: it is important that this is done BEFORE a card is actually cast because
-    // the card may affect the caster's mana
-    effectState.casterUnit.mana -= spellCost.manaCost;
-    Unit.takeDamage(effectState.casterUnit, spellCost.healthCost, prediction, effectState);
+    if (!costPrepaid) {
+      const cards = Cards.getCardsFromIds(cardIds);
+      const spellCost = calculateCost(cards, casterCardUsage);
+      // Apply mana and health cost to caster
+      // Note: it is important that this is done BEFORE a card is actually cast because
+      // the card may affect the caster's mana
+      effectState.casterUnit.mana -= spellCost.manaCost;
+      Unit.takeDamage(effectState.casterUnit, spellCost.healthCost, prediction, effectState);
+    }
 
     for (let index = 0; index < effectState.cardIds.length; index++) {
       const cardId = effectState.cardIds[index];

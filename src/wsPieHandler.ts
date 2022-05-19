@@ -421,7 +421,7 @@ async function handleSpell(caster: Player.IPlayer, payload: any) {
   // Only allow casting during the PlayerTurns phase
   if (window.underworld.turn_phase === turn_phase.PlayerTurns) {
     window.animatingSpells = true;
-    await window.underworld.castCards(caster.cardUsageCounts, caster.unit, payload.cards, payload, false);
+    await window.underworld.castCards(caster.cardUsageCounts, caster.unit, payload.cards, payload, false, false);
     window.animatingSpells = false;
     // Check for dead players to end their turn,
     // this occurs here because spells may have caused their death

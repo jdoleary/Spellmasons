@@ -1,6 +1,4 @@
 ## Today Tasks
-- Task: Add trap card and allow it to change global mana cost of card and cards that are cast
----
 ## Stretch Tasks for Today
 - Pulling or pushing units into lava could "burn" them and bounce them back
 - Task: Better shaders for lava?

@@ -167,6 +167,7 @@ export async function runPredictions() {
           cardIds,
           target,
           true,
+          false
         );
         for (let unitStats of effectState.aggregator.unitDamage) {
           // If a unit is currently alive and will take fatal damage,
