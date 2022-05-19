@@ -504,9 +504,9 @@ export default class Underworld {
         coords.x,
         coords.y,
         pickup,
-        true,
+        pickup.singleUse,
         0.1,
-        true,
+        pickup.playerOnly || false,
         pickup.turnsLeftToGrab
       );
     } else {

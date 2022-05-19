@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js';
 import * as Image from './Image';
 import type * as Player from './Player';
 import { addPixiSprite, containerUnits } from './PixiUtils';
-import type { IUnit } from './Unit';
+import { IUnit, takeDamage } from './Unit';
 import { checkIfNeedToClearTooltip } from './ui/PlanningView';
 import { explainManaOverfill } from './Jprompt';
 import { MESSAGE_TYPES } from './MessageTypes';
@@ -36,6 +36,7 @@ interface IPickupSource {
   description: string;
   imagePath: string;
   animationSpeed?: number;
+  singleUse: boolean;
   playerOnly?: boolean;
   turnsLeftToGrab?: number;
   scale: number;
@@ -141,11 +142,28 @@ export function triggerPickup(pickup: IPickup, unit: IUnit) {
 
 const manaPotionRestoreAmount = 40;
 const healthPotionRestoreAmount = 10;
+const spike_damage = 6;
 export const pickups: IPickupSource[] = [
+  {
+    imagePath: 'pickups/spikes.png',
+    animationSpeed: -0.5,
+    playerOnly: false,
+    singleUse: true,
+    name: 'Spike Pit',
+    probability: 70,
+    scale: 1,
+    description: `Deals ${spike_damage} to any unit (including NPCs) that touches it`,
+    effect: ({ unit, player }: { unit?: IUnit; player?: Player.IPlayer }) => {
+      if (unit) {
+        takeDamage(unit, spike_damage, false)
+      }
+    }
+  },
   {
     imagePath: 'portal',
     animationSpeed: -0.5,
     playerOnly: true,
+    singleUse: false,
     name: 'Portal',
     probability: 0,
     scale: 1,
@@ -172,6 +190,7 @@ export const pickups: IPickupSource[] = [
     name: 'Cards',
     description: 'Grants the player a new spell',
     probability: 10,
+    singleUse: true,
     scale: 0.5,
     turnsLeftToGrab: 4,
     playerOnly: true,
@@ -201,6 +220,7 @@ export const pickups: IPickupSource[] = [
     name: 'Mana Potion',
     description: `Restores ${manaPotionRestoreAmount} mana.  May overfill mana.`,
     probability: 80,
+    singleUse: true,
     scale: 0.5,
     playerOnly: true,
     effect: ({ unit, player }) => {
@@ -221,6 +241,7 @@ export const pickups: IPickupSource[] = [
     probability: 80,
     scale: 0.5,
     playerOnly: true,
+    singleUse: true,
     description: `Restores ${healthPotionRestoreAmount} health.`,
     effect: ({ unit, player }) => {
       if (player) {

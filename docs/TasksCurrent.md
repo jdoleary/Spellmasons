@@ -1,7 +1,5 @@
 ## Today Tasks
-- Content: Time crystal releases something when it breaks
 - Task: Add trap card and allow it to change global mana cost of card and cards that are cast
-    - Bug: Fix playerOnly pickups so  that non playerOnly pickups are triggered by units
 ---
 ## Stretch Tasks for Today
 - Pulling or pushing units into lava could "burn" them and bounce them back
@@ -10,6 +8,7 @@
 - Content: A spell to destroy corpses
 
 ## Tasks
+- Content: Time crystal releases something when it breaks
 - Fix: Decoy image doesn't always disappear when decoy dies
     - This may be fixed by d69a8a2
 - Fix: Brad cast a spell out of range, but it still triggered on my screen
