@@ -97,6 +97,7 @@ export default class Underworld {
   units: Unit.IUnit[] = [];
   pickups: Pickup.IPickup[] = [];
   groundTiles: Vec2[] = [];
+  lavaObstacles: Obstacle.IObstacle[] = [];
   // line segments that prevent sight
   walls: LineSegment[] = [];
   // line segments that prevent movement
@@ -482,6 +483,11 @@ export default class Underworld {
         { x: this.width, y: 0 },
       ], inverted: true
     };
+    for (let o of obstacles) {
+      if (o.name == 'Lava') {
+        this.lavaObstacles.push(o);
+      }
+    }
     // walls block sight
     this.walls = mergeOverlappingPolygons([...obstacles.filter(o => o.wall).map(o => o.bounds), mapBounds]).map(polygonToPolygonLineSegments).flat();
     // Expand pathing walls by the size of the regular unit
@@ -1568,27 +1574,7 @@ export default class Underworld {
 
           // Show the card that's being cast:
           if (!prediction) {
-            const image = Image.create(
-              target,
-              card.thumbnail,
-              containerUI,
-            );
-            // Animate icons of spell cards as they are cast:
-            image.sprite.scale.set(1.0);
-            const scaleAnimation = Promise.all([
-              Image.scale(image, 1.4),
-              Image.move(image, image.sprite.x, image.sprite.y - 50),
-              new Promise<void>((resolve) => {
-                // Make the image fade out after a delay
-                setTimeout(() => {
-                  resolve();
-                  Image.hide(image).then(() => {
-                    Image.cleanup(image);
-                  })
-                }, config.MILLIS_PER_SPELL_ANIMATION * .8);
-              })
-            ]);
-            animations.push(scaleAnimation);
+            animations.push(this.animateSpell(target, card.thumbnail));
           }
         }
         // .then is necessary to convert return type of promise.all to just be void
@@ -1634,6 +1620,31 @@ export default class Underworld {
     }
 
     return effectState;
+  }
+  async animateSpell(target: Vec2, imagePath: string) {
+    const image = Image.create(
+      target,
+      imagePath,
+      containerUI,
+    );
+    // Animate icons of spell cards as they are cast:
+    image.sprite.scale.set(1.0);
+    const scaleAnimation = Promise.all([
+      Image.scale(image, 1.4),
+      Image.move(image, image.sprite.x, image.sprite.y - 50),
+      new Promise<void>((resolve) => {
+        // Make the image fade out after a delay
+        setTimeout(() => {
+          resolve();
+          Image.hide(image).then(() => {
+            Image.cleanup(image);
+          })
+        }, config.MILLIS_PER_SPELL_ANIMATION * .8);
+      })
+    ]);
+    return scaleAnimation;
+
+
   }
   checkIfShouldSpawnPortal() {
     if (this.units.filter(u => u.faction == Faction.ENEMY).every(u => !u.alive)) {

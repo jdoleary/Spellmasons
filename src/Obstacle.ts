@@ -1,8 +1,10 @@
 import * as Image from './Image';
-import type { Polygon } from './Polygon';
+import { Polygon, polygonToPolygonLineSegments } from './Polygon';
 import { containerBoard, containerUnits } from './PixiUtils';
 import { OBSTACLE_SIZE } from './config';
 import type { Vec2 } from './Vec';
+import { IUnit, takeDamage } from './Unit';
+import { lineSegmentIntersection } from './collision/collisionMath';
 export interface IObstacle {
   x: number;
   y: number;
@@ -70,6 +72,8 @@ export const obstacleSource: IObstacleSource[] = [
     walkable: false
   },
   {
+    // Note: The exact name 'Lava" is used in underworld.cacheWalls to store obstacles
+    // that cause damage is units are pushed or pulled into them.
     name: 'Lava',
     description: 'Blocks movement, not sight.',
     imagePath: 'tiles/lava.png',
@@ -77,3 +81,39 @@ export const obstacleSource: IObstacleSource[] = [
     walkable: false
   },
 ];
+export const lavaDamage = 2;
+export function checkLavaDamageDueToMovement(unit: IUnit, endPos: Vec2, prediction: boolean) {
+  // Check intersections with lava:
+  let hitLava = false;
+  for (let o of window.underworld.lavaObstacles) {
+    const walls = polygonToPolygonLineSegments(o.bounds);
+    for (let wall of walls) {
+      if (lineSegmentIntersection({ p1: unit, p2: endPos }, wall)) {
+        hitLava = true;
+        break;
+      }
+    }
+    if (hitLava) {
+      break;
+    }
+  }
+  const predictionColor = hitLava ? 0xff0000 : 0x0000ff;
+  window.predictionGraphics.lineStyle(4, predictionColor, 1.0)
+  window.predictionGraphics.moveTo(unit.x, unit.y);
+  window.predictionGraphics.lineTo(endPos.x, endPos.y);
+  window.predictionGraphics.drawCircle(endPos.x, endPos.y, 4);
+  if (hitLava) {
+    if (!prediction) {
+      // Add a timeout because the pull happens over time and this executes
+      // immediately. This is kindof a cheat way to wait to show the lava icon
+      // until the unit collides with the lava obstacle; however it doesn't actually
+      // wait for the collision, it just knows it will happen so it shows the effect 
+      // after a delay
+      setTimeout(() => {
+        window.underworld.animateSpell(unit, 'tiles/lava.png');
+      }, 500);
+    }
+    takeDamage(unit, lavaDamage, prediction);
+  }
+
+}

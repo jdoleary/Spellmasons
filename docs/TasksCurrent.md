@@ -1,6 +1,5 @@
 ## Today Tasks
 ## Stretch Tasks for Today
-- Pulling or pushing units into lava could "burn" them and bounce them back
 - Task: Better shaders for lava?
 - Content: Explode on death curse
 - Content: A spell to destroy corpses
