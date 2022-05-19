@@ -6,6 +6,7 @@ export enum UnitSubType {
   MELEE,
   RANGED_LOS,
   RANGED_RADIUS,
+  SUPPORT_CLASS,
   PLAYER_CONTROLLED,
 }
 

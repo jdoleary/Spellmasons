@@ -1428,6 +1428,9 @@ export default class Underworld {
         return window.underworld.hasLineOfSight(u, attackTarget)
       case UnitSubType.RANGED_RADIUS:
         return u.alive && Unit.inRange(u, attackTarget);
+      case UnitSubType.SUPPORT_CLASS:
+        // Support classes (such as priests) dont attack
+        return false;
       default:
         console.error('Cannot determine canUnitAttackTarget, unit sub type is unaccounted for', u.unitSubType)
         return false;
@@ -1438,20 +1441,19 @@ export default class Underworld {
     switch (u.unitSubType) {
       case UnitSubType.MELEE:
         return Unit.findClosestUnitInDifferentFaction(u);
-        break;
       case UnitSubType.RANGED_LOS:
         return getBestRangedLOSTarget(u);
-        break;
       case UnitSubType.RANGED_RADIUS:
         return Unit.findClosestUnitInDifferentFaction(u);
-        break;
       case UnitSubType.PLAYER_CONTROLLED:
         // Ignore player controlled units, they don't get an attack target assigned by
         // the game, they choose their own.
         return undefined;
-        break;
+      case UnitSubType.SUPPORT_CLASS:
+        // Support class units don't have attack targets
+        return undefined;
       default:
-        console.error('Cannot determine attackTarget, unit sub type is unaccounted for', u.unitSubType)
+        console.error('Cannot determine attackTarget, unit sub type is unaccounted for', UnitSubType[u.unitSubType], u.unitSubType)
         return undefined;
     }
   }

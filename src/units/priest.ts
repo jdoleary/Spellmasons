@@ -14,10 +14,11 @@ const unit: UnitSource = {
   info: {
     description: 'The priest heals damaged allies, and if it\'s allies are at full health it will bless them with a Shield.',
     image: 'units/priest.png',
-    subtype: UnitSubType.RANGED_RADIUS,
+    subtype: UnitSubType.SUPPORT_CLASS,
     probability: 30,
   },
   unitProps: {
+    attackRange: 400
   },
   extraTooltipInfo: () => {
     return `Mana cost per cast: ${CAST_MANA_COST}`;
@@ -38,7 +39,6 @@ const unit: UnitSource = {
     }
     // If they have enough mana
     if (unit.mana >= CAST_MANA_COST) {
-      unit.mana -= CAST_MANA_COST;
       // Heal an ally
       const damagedAllys = window.underworld.units.filter(
         (u) => u.faction === unit.faction && u.alive && u.health < u.healthMax,
@@ -57,6 +57,8 @@ const unit: UnitSource = {
               Unit.takeDamage(chosenUnit, -2, false, undefined);
               // Purify
               purify(chosenUnit);
+              // Remove mana once the cast occurs
+              unit.mana -= CAST_MANA_COST;
             }
             break;
           }
@@ -72,6 +74,8 @@ const unit: UnitSource = {
             );
             Unit.addModifier(closestAlly, Shield.card.id);
             purify(closestAlly);
+            // Remove mana once the cast occurs
+            unit.mana -= CAST_MANA_COST;
           }
         }
       }
