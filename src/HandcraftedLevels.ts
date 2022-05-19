@@ -15,7 +15,6 @@ export interface HandcraftedLevel {
     // mapHeight: number;
     playerSpawnLocations: Vec2[];
     portalSpawnLocation?: Vec2;
-    specialPickups: SpawnInfo[];
     obstacles: SpawnInfo[];
     doodads: {
         location: Vec2,
@@ -40,7 +39,6 @@ export const levels: { [name: string]: HandcraftedLevelMaker } = {
         allowHeavyUnits: false,
         playerSpawnLocations: [{ x: underworld.width / 4, y: underworld.height / 2 }],
         portalSpawnLocation: { x: 3 * underworld.width / 4, y: underworld.height / 2 },
-        specialPickups: [],
         obstacles: [],
         doodads: [
             {
@@ -70,7 +68,6 @@ export const levels: { [name: string]: HandcraftedLevelMaker } = {
     [tutorialLevels[1]]: (underworld: Underworld) => ({
         allowHeavyUnits: false,
         playerSpawnLocations: [{ x: config.COLLISION_MESH_RADIUS, y: underworld.height / 2 }],
-        specialPickups: [],
         obstacles: [],
         doodads: [
             {
@@ -104,7 +101,6 @@ export const levels: { [name: string]: HandcraftedLevelMaker } = {
     [tutorialLevels[2]]: (underworld: Underworld) => ({
         allowHeavyUnits: false,
         playerSpawnLocations: [{ x: config.COLLISION_MESH_RADIUS, y: underworld.height / 2 }],
-        specialPickups: [],
         obstacles: [],
         doodads: [
             {
@@ -179,7 +175,6 @@ export const levels: { [name: string]: HandcraftedLevelMaker } = {
     [tutorialLevels[3]]: (underworld: Underworld) => ({
         allowHeavyUnits: false,
         playerSpawnLocations: [{ x: config.COLLISION_MESH_RADIUS, y: underworld.height / 2 }],
-        specialPickups: [],
         obstacles: [],
         doodads: [
             {

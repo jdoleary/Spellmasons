@@ -39,6 +39,7 @@ interface IPickupSource {
   playerOnly?: boolean;
   turnsLeftToGrab?: number;
   scale: number;
+  probability: number;
   effect: ({ unit, player }: { unit?: IUnit; player?: Player.IPlayer }) => void;
 }
 
@@ -107,10 +108,6 @@ export function serialize(p: IPickup): IPickupSerialized {
 export function load(pickup: IPickup) {
   // Get the pickup object
   let foundPickup = pickups.find((p) => p.imagePath == pickup.imagePath);
-  // If it does not exist, perhaps it is a special pickup such as a portal
-  if (!foundPickup) {
-    foundPickup = specialPickups[pickup.imagePath];
-  }
   if (foundPickup) {
     const self = create(
       pickup.x,
@@ -142,14 +139,15 @@ export function triggerPickup(pickup: IPickup, unit: IUnit) {
   }
 }
 
-// Special pickups are not stored in the pickups array because they shouldn't be
-// randomly selected when adding pickups to a generated level.
-export const specialPickups: { [image: string]: IPickupSource } = {
-  'portal': {
+const manaPotionRestoreAmount = 40;
+const healthPotionRestoreAmount = 10;
+export const pickups: IPickupSource[] = [
+  {
     imagePath: 'portal',
     animationSpeed: -0.5,
     playerOnly: true,
     name: 'Portal',
+    probability: 0,
     scale: 1,
     description:
       'Takes you to the next level when all players are either in the portal or dead.',
@@ -169,14 +167,11 @@ export const specialPickups: { [image: string]: IPickupSource } = {
       }
     },
   },
-};
-const manaPotionRestoreAmount = 40;
-const healthPotionRestoreAmount = 10;
-export const pickups: IPickupSource[] = [
   {
     imagePath: 'pickups/card',
     name: 'Cards',
     description: 'Grants the player a new spell',
+    probability: 10,
     scale: 0.5,
     turnsLeftToGrab: 4,
     playerOnly: true,
@@ -205,6 +200,7 @@ export const pickups: IPickupSource[] = [
     imagePath: 'pickups/mana-potion',
     name: 'Mana Potion',
     description: `Restores ${manaPotionRestoreAmount} mana.  May overfill mana.`,
+    probability: 80,
     scale: 0.5,
     playerOnly: true,
     effect: ({ unit, player }) => {
@@ -222,6 +218,7 @@ export const pickups: IPickupSource[] = [
   {
     imagePath: 'pickups/health-potion.png',
     name: 'Health Potion',
+    probability: 80,
     scale: 0.5,
     playerOnly: true,
     description: `Restores ${healthPotionRestoreAmount} health.`,

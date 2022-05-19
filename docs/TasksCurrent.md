@@ -1,6 +1,4 @@
 ## Today Tasks
-- Task: Time sesitive pickups
-    - Content: Time limited pickups (like card pickups)
 - Content: Time crystal releases something when it breaks
 - Task: Add trap card and allow it to change global mana cost of card and cards that are cast
     - Bug: Fix playerOnly pickups so  that non playerOnly pickups are triggered by units

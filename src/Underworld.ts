@@ -665,14 +665,14 @@ export default class Underworld {
     const numberOfPickups = sectorsWide * sectorsTall / 2;
     for (let i = 0; i < numberOfPickups; i++) {
       if (validSpawnCoords.length == 0) { break; }
-      const randomPickupIndex = randInt(this.random,
-        0,
-        Object.values(Pickup.pickups).length - 1,
-      );
-      const validSpawnCoordsIndex = randInt(this.random, 0, validSpawnCoords.length - 1);
-      const coord = validSpawnCoords.splice(validSpawnCoordsIndex, 1)[0];
-      if (coord) {
-        levelData.pickups.push({ index: randomPickupIndex, coord })
+      const choice = math.chooseObjectWithProbability(Pickup.pickups.map((p, i) => ({ index: i, probability: p.probability })), this.random);
+      if (choice) {
+        const { index } = choice;
+        const validSpawnCoordsIndex = randInt(this.random, 0, validSpawnCoords.length - 1);
+        const coord = validSpawnCoords.splice(validSpawnCoordsIndex, 1)[0];
+        if (coord) {
+          levelData.pickups.push({ index, coord })
+        }
       }
     }
     // Spawn units at the start of the level
@@ -884,7 +884,7 @@ export default class Underworld {
       }
     }
     // Spawn portal
-    const portalPickup = Pickup.specialPickups['portal'];
+    const portalPickup = Pickup.pickups.find(p => p.imagePath == 'portal');
     if (portalPickup) {
       if (h.portalSpawnLocation) {
         Pickup.create(
@@ -901,22 +901,22 @@ export default class Underworld {
     }
 
     // Spawn pickups
-    for (let p of h.specialPickups) {
-      const pickup = Pickup.specialPickups[p.id];
-      if (pickup) {
-        Pickup.create(
-          p.location.x,
-          p.location.y,
-          pickup,
-          true,
-          0.1,
-          true,
-        );
-      } else {
-        console.error('Pickup', p.id, 'not found in special pickups')
-      }
+    // for (let p of h.specialPickups) {
+    //   const pickup = Pickup.specialPickups[p.id];
+    //   if (pickup) {
+    //     Pickup.create(
+    //       p.location.x,
+    //       p.location.y,
+    //       pickup,
+    //       true,
+    //       0.1,
+    //       true,
+    //     );
+    //   } else {
+    //     console.error('Pickup', p.id, 'not found in special pickups')
+    //   }
 
-    }
+    // }
     // Create ground tiles:
     for (let x = 0; x < this.width / config.OBSTACLE_SIZE; x++) {
       for (let y = 0; y < this.height / config.OBSTACLE_SIZE; y++) {
@@ -1627,7 +1627,7 @@ export default class Underworld {
   checkIfShouldSpawnPortal() {
     if (this.units.filter(u => u.faction == Faction.ENEMY).every(u => !u.alive)) {
       // Spawn portal near each player
-      const portalPickup = Pickup.specialPickups['portal'];
+      const portalPickup = Pickup.pickups.find(p => p.imagePath == 'portal');
       if (portalPickup) {
         for (let playerUnit of this.units.filter(u => u.unitType == UnitType.PLAYER_CONTROLLED && u.alive)) {
           const portalSpawnLocation = this.findValidSpawn(playerUnit, 2) || playerUnit;
