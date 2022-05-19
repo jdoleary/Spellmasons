@@ -1,18 +1,4 @@
 # Critical Path (4st deadline revision)
-- Youtube Alpha version video / Post on social
-    - Introduce game: "A magical multiplayer rougelike"
-    -
-    - Due: 2022-05-19 (Thursday)
-- Homepage / Marketing / Steam Page / Email Signup
-    - Marketing (Tell a story)
-        - "Plan. Build. Unleash. Spellmasons!"
-        - "Coorindate. Strategize. Invent. Spellmasons!"
-        - "Invent magic together.  Spellmasons!"
-        - "Magic with friends! Spellmasons"
-        - Synonyms:
-            - Plan / Plot / Conspire / Devise
-            - Unleash / Execute
-            - Invent / Envision / Formulate
 - Game Scale Difficulty for endgame
     - With better content: "night king", "ogre"
 - Better maps
@@ -25,6 +11,8 @@
         - Unique timing for each spell's animations
         - Multiple of the same card fire off quickly?
     - Shaders
+        - Water / Void
+        - See Shaders.md
     - Art
         - Come up with palette first
         - Assets needed:

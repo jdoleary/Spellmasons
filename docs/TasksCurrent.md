@@ -1,11 +1,22 @@
-## Urgent Tasks
+## Today Tasks
+- Task: Archer LOS should be visible over obstacles
+- Task: Chain range should be shown in dry run
+- Task: Time sesitive pickups
+    - Content: Time crystal releases something when it breaks
+    - Content: Time limited pickups (like card pickups)
+- Task: Add trap card and allow it to change global mana cost of card and cards that are cast
+---
+## Stretch Tasks for Today
+- Pulling or pushing units into lava could "burn" them and bounce them back
+- Bug: Priests shouldn't show attention markers
+- Task: Better shaders for lava?
+- Content: Explode on death curse
+- Content: A spell to destroy corpses
 
-## Critical tasks
+## Tasks
 - Fix: Decoy image doesn't always disappear when decoy dies
     - This may be fixed by d69a8a2
 - Fix: Brad cast a spell out of range, but it still triggered on my screen
-## Tasks
-- Bug: Priests are stacking too many shields on grunts
 - Hoist spells
     - Allow spells like trap to change spells in cast
     - Allow spells like trap to change mana cost
@@ -27,10 +38,6 @@
         - traps that trigger things
 
 - Content: Night king boss
-- Content: Explode on death curse
-- Content: Time crystal releases something when it breaks
-- Content: Time limited pickups (like card pickups)
-- Content: A spell to destroy corpses
 - Content: "Orge" enemies that get stronger for every ally of theirs that dies
 - Bug: Pathing broken on seed 0.5727148663470687 
     - it ran into `Hit loopLimit for polygon processing.  May be an infinite loop or the polygon may just be too big.`

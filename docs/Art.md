@@ -35,5 +35,11 @@
 - https://www.reddit.com/r/gameDevClassifieds/comments/uixj35/for_hire_illustrator_and_character_designer/
 - https://twitter.com/saltandpixeldev/status/1199175644283838464
 
+## Finalists
+- [Cover Art](https://www.instagram.com/stories/nefeli_katerinaki/2840939215605844179/)
+- [Game Art](https://www.chegameart.com/)
+## Via Twitter
+- @Designs7V
+
 # Hashtags
 #indiegamedev #roguelike #roguelikegames #multiplayer #turnbased #turnbasedgame 

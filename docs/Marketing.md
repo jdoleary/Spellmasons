@@ -1,0 +1,10 @@
+- Homepage / Marketing / Steam Page / Email Signup
+    - Marketing (Tell a story)
+        - "Plan. Build. Unleash. Spellmasons!"
+        - "Coorindate. Strategize. Invent. Spellmasons!"
+        - "Invent magic together.  Spellmasons!"
+        - "Magic with friends! Spellmasons"
+        - Synonyms:
+            - Plan / Plot / Conspire / Devise
+            - Unleash / Execute
+            - Invent / Envision / Formulate
