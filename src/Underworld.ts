@@ -379,8 +379,9 @@ export default class Underworld {
     containerPlayerThinking.removeChildren();
     for (let [thinkerClientId, thought] of Object.entries(window.playerThoughts)) {
       const { target, cardIds } = thought;
-      const thinkingPlayer = this.players.find(p => p.clientId == thinkerClientId);
-      if (thinkingPlayer) {
+      const thinkingPlayerIndex = this.players.findIndex(p => p.clientId == thinkerClientId);
+      const thinkingPlayer = this.players[thinkingPlayerIndex];
+      if (thinkingPlayer && thinkingPlayerIndex == this.playerTurnIndex) {
         // Render thought bubble around spell icons
         if (cardIds.length) {
           containerPlayerThinking.addChild(window.thinkingPlayerGraphics);
