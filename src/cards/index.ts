@@ -39,6 +39,13 @@ export interface Modifiers {
   add?: (unit: Unit.IUnit) => void;
   remove?: (unit: Unit.IUnit) => void;
 }
+// TODO: If I decide to hoist cards, do it here
+export enum CardType {
+  CardsModifier,
+  Target,
+  DirectEffect,
+  PostCast
+}
 export interface Spell {
   card: ICard;
   // modifiers keep track of additional state on an individual unit basis
@@ -142,6 +149,7 @@ function cardToUpgrade(c: ICard): IUpgrade {
 // Make sure each spell's effect returns the state at the very end
 
 export interface EffectState {
+  cardIds: string[];
   casterCardUsage?: Player.CardUsage;
   casterUnit: Unit.IUnit;
   targetedUnits: Unit.IUnit[];
@@ -159,6 +167,7 @@ export type EffectFn = {
 
 export interface ICard {
   id: string;
+  // type: CardType;
   manaCost: number;
   healthCost: number;
   probability: number;

@@ -1527,6 +1527,7 @@ export default class Underworld {
     }
     const unitAtCastLocation = this.getUnitAt(castLocation, prediction);
     let effectState: Cards.EffectState = {
+      cardIds,
       casterCardUsage,
       casterUnit,
       targetedUnits: unitAtCastLocation ? [unitAtCastLocation] : [],
@@ -1540,9 +1541,13 @@ export default class Underworld {
       return effectState;
     }
     const cards = Cards.getCardsFromIds(cardIds);
-    card:
-    for (let index = 0; index < cards.length; index++) {
-      const card = cards[index];
+    for (let index = 0; index < effectState.cardIds.length; index++) {
+      const cardId = effectState.cardIds[index];
+      if (!cardId) {
+        console.error('card id is undefined in loop', index, effectState.cardIds);
+        continue;
+      }
+      const card = Cards.allCards[cardId];
       const animationPromises: Promise<void>[] = [];
       if (card) {
         const animations = []
