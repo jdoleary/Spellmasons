@@ -20,6 +20,7 @@ import freeze from './freeze';
 import raise_dead from './raise_dead';
 import shield from './shield';
 import swap from './swap';
+import stomp from './stomp';
 import purify from './purify';
 import poison from './poison';
 import vulnerable from './vulnerable';
@@ -116,7 +117,7 @@ export function registerCards() {
   register(swap);
   register(vulnerable);
   // register(lance);
-  // register(stomp);
+  register(stomp);
   // register(protection);
   // register(charge);
   register(clone);
