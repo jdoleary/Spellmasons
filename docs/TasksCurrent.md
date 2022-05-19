@@ -2,7 +2,6 @@
 - Movement spells should work on pickups
 - More movement spells that cause burn when they touch lava
     - stomp
-    - explode on death
 ## Stretch Tasks for Today
 - Task: Better shaders for lava?
 - Content: A spell to destroy corpses

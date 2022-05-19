@@ -3,6 +3,7 @@ import * as Unit from '../Unit';
 import * as Image from '../Image';
 import type { Spell } from '.';
 import { drawPredictionCircle } from '../ui/PlanningView';
+import { push } from './push';
 
 const id = 'explode';
 const damage = 3;
@@ -67,6 +68,9 @@ const spell: Spell = {
         if (!prediction) {
           window.underworld.animateSpell(u, 'explode-on-death.png');
         }
+        // Push units away from exploding unit
+        push(u, unit, prediction);
+        // Deal damage to units
         takeDamage(u, damage, prediction);
       });
     }
