@@ -38,6 +38,8 @@
 ## Finalists
 - [Cover Art](https://www.instagram.com/stories/nefeli_katerinaki/2840939215605844179/)
 - [Game Art](https://www.chegameart.com/)
+- [Cartoony game art](https://www.reddit.com/chat/channel/16304400_4f8c602c63976403e626aae8568531d21f6d4752) GrouchyDrummer5616
+- [SFX](https://www.reddit.com/chat/channel/16304400_23a02bd5fd80a91e3ba376930a15c4473488cc50) Demimark
 ## Via Twitter
 - @Designs7V
 
