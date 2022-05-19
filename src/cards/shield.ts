@@ -5,7 +5,7 @@ import floatingText from '../FloatingText';
 
 const id = 'shield';
 const damageBlocked = 6;
-const maxStack = 3;
+const maxStack = 1;
 const spell: Spell = {
   card: {
     id,
@@ -15,7 +15,7 @@ const spell: Spell = {
     probability: 5,
     thumbnail: 'shield.png',
     description: `
-Protects bearer from the next ${damageBlocked} damage that they would incur.  Shield can be stacked up to ${maxStack} times.
+Protects bearer from the next ${damageBlocked} damage that they would incur.
     `,
     effect: async (state) => {
       for (let unit of state.targetedUnits) {
