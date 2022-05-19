@@ -1,4 +1,4 @@
-import { drawPredictionLine } from '../ui/PlanningView';
+import { drawPredictionCircle, drawPredictionLine } from '../ui/PlanningView';
 import { addUnitTarget, Spell } from '.';
 import type { Vec2 } from '../Vec';
 import type * as Unit from '../Unit';
@@ -21,6 +21,8 @@ off of all existing targeted units to units touching them.
       for (let i = 0; i < state.targetedUnits.length; i++) {
         const unit = state.targetedUnits[i];
         if (unit) {
+          // Draw visual circle for prediction
+          drawPredictionCircle(unit, range);
           // Find all units touching the spell origin
           const chained_units = getTouchingUnitsRecursive(
             unit.x,

@@ -1,5 +1,4 @@
 ## Today Tasks
-- Task: Chain range should be shown in dry run
 - Task: Time sesitive pickups
     - Content: Time crystal releases something when it breaks
     - Content: Time limited pickups (like card pickups)
