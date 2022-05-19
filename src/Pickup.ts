@@ -1,10 +1,17 @@
+import * as PIXI from 'pixi.js';
 import * as Image from './Image';
 import type * as Player from './Player';
-import { containerUnits } from './PixiUtils';
+import { addPixiSprite, containerUnits } from './PixiUtils';
 import type { IUnit } from './Unit';
 import { checkIfNeedToClearTooltip } from './ui/PlanningView';
 import { explainManaOverfill } from './Jprompt';
 import { MESSAGE_TYPES } from './MessageTypes';
+import floatingText from './FloatingText';
+import * as CardUI from './CardUI';
+import * as Cards from './cards';
+import * as config from './config';
+import { chooseObjectWithProbability } from './math';
+import seedrandom from 'seedrandom';
 
 export const PICKUP_RADIUS = 45;
 export interface IPickup {
@@ -18,6 +25,9 @@ export interface IPickup {
   singleUse: boolean;
   // Only can be picked up by players
   playerOnly: boolean;
+  // Pickups optionally have a "time limit" and will disappear after this many turns
+  turnsLeftToGrab?: number;
+  text?: PIXI.Text;
   // effect is ONLY to be called within triggerPickup
   effect: ({ unit, player }: { unit?: IUnit; player?: Player.IPlayer }) => void;
 }
@@ -27,6 +37,7 @@ interface IPickupSource {
   imagePath: string;
   animationSpeed?: number;
   playerOnly?: boolean;
+  turnsLeftToGrab?: number;
   scale: number;
   effect: ({ unit, player }: { unit?: IUnit; player?: Player.IPlayer }) => void;
 }
@@ -38,6 +49,7 @@ export function create(
   singleUse: boolean,
   animationSpeed: number = 0.1,
   playerOnly: boolean,
+  turnsLeftToGrab?: number
 ): IPickup {
   const { name, description, imagePath, effect, scale } = pickupSource;
   const self: IPickup = {
@@ -55,6 +67,20 @@ export function create(
   };
   self.image.sprite.scale.x = scale;
   self.image.sprite.scale.y = scale;
+  if (turnsLeftToGrab) {
+    self.turnsLeftToGrab = turnsLeftToGrab;
+
+    const timeCircle = addPixiSprite('time-circle.png', self.image.sprite);
+    timeCircle.anchor.x = 0;
+    timeCircle.anchor.y = 0;
+
+    self.text = new PIXI.Text(`${turnsLeftToGrab}`, { fill: 'white', align: 'center' });
+    self.text.anchor.x = 0;
+    self.text.anchor.y = 0;
+    // Center the text in the timeCircle
+    self.text.x = 8;
+    self.image.sprite.addChild(self.text);
+  }
 
   window.underworld.addPickupToArray(self);
 
@@ -148,10 +174,39 @@ const manaPotionRestoreAmount = 40;
 const healthPotionRestoreAmount = 10;
 export const pickups: IPickupSource[] = [
   {
+    imagePath: 'pickups/card',
+    name: 'Cards',
+    description: 'Grants the player a new spell',
+    scale: 0.5,
+    turnsLeftToGrab: 4,
+    playerOnly: true,
+    effect: ({ unit, player }) => {
+      if (player) {
+        const numCardsToGive = 1;
+        for (let i = 0; i < numCardsToGive; i++) {
+          const cardsToChooseFrom = Object.values(Cards.allCards).filter(card => !player.cards.includes(card.id));
+          const card = chooseObjectWithProbability(cardsToChooseFrom, seedrandom());
+          if (card) {
+            CardUI.addCardToHand(card, player);
+          } else {
+            floatingText({
+              coords: {
+                x: player.unit.x,
+                y: player.unit.y
+              },
+              text: `You have all of the cards already!`
+            });
+          }
+        }
+      }
+    },
+  },
+  {
     imagePath: 'pickups/mana-potion',
     name: 'Mana Potion',
     description: `Restores ${manaPotionRestoreAmount} mana.  May overfill mana.`,
     scale: 0.5,
+    playerOnly: true,
     effect: ({ unit, player }) => {
       if (player) {
         player.unit.mana += manaPotionRestoreAmount;
@@ -168,6 +223,7 @@ export const pickups: IPickupSource[] = [
     imagePath: 'pickups/health-potion.png',
     name: 'Health Potion',
     scale: 0.5,
+    playerOnly: true,
     description: `Restores ${healthPotionRestoreAmount} health.`,
     effect: ({ unit, player }) => {
       if (player) {

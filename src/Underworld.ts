@@ -507,6 +507,7 @@ export default class Underworld {
         true,
         0.1,
         true,
+        pickup.turnsLeftToGrab
       );
     } else {
       console.error('Could not find pickup with index', index);
@@ -1052,6 +1053,18 @@ export default class Underworld {
     }
     // Increment the turn number now that it's starting over at the first phase
     this.turn_number++;
+
+    for (let p of this.pickups) {
+      if (p.turnsLeftToGrab) {
+        p.turnsLeftToGrab--;
+        if (p.text) {
+          p.text.text = `${p.turnsLeftToGrab}`;
+        }
+      }
+      if (p.turnsLeftToGrab == 0) {
+        Pickup.removePickup(p);
+      }
+    }
 
     this.broadcastTurnPhase(turn_phase.PlayerTurns);
   }

@@ -1,8 +1,9 @@
 ## Today Tasks
 - Task: Time sesitive pickups
-    - Content: Time crystal releases something when it breaks
     - Content: Time limited pickups (like card pickups)
+- Content: Time crystal releases something when it breaks
 - Task: Add trap card and allow it to change global mana cost of card and cards that are cast
+    - Bug: Fix playerOnly pickups so  that non playerOnly pickups are triggered by units
 ---
 ## Stretch Tasks for Today
 - Pulling or pushing units into lava could "burn" them and bounce them back
