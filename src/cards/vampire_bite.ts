@@ -35,7 +35,7 @@ function remove(unit: IUnit) {
 
 const spell: Spell = {
   subsprites: {
-    bite: {
+    [id]: {
       imageName: 'units/vampire_eyes.png',
       alpha: 1.0,
       anchor: {

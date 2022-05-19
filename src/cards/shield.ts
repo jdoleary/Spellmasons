@@ -58,7 +58,7 @@ Protects bearer from the next ${damageBlocked} damage that they would incur.
     },
   },
   subsprites: {
-    shield: {
+    [id]: {
       imageName: 'shield.png',
       alpha: 1.0,
       anchor: {

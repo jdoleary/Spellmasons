@@ -36,7 +36,7 @@ in the future.
     },
   },
   subsprites: {
-    vulnerable: {
+    [id]: {
       imageName: 'vulnerable.png',
       alpha: 1.0,
       anchor: {

@@ -28,7 +28,7 @@ function add(unit: IUnit) {
 
 const spell: Spell = {
   subsprites: {
-    poison: {
+    [id]: {
       imageName: 'poison.png',
       alpha: 1.0,
       anchor: {

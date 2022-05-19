@@ -24,7 +24,7 @@ function add(unit: IUnit) {
 
 const spell: Spell = {
   subsprites: {
-    contageous: {
+    [id]: {
       imageName: 'contageous.png',
       alpha: 1.0,
       anchor: {

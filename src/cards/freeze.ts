@@ -59,7 +59,7 @@ Freezes the target(s) for 1 turn, preventing them from moving or acting.
     },
   },
   subsprites: {
-    freeze: {
+    [id]: {
       imageName: 'freeze.png',
       alpha: 1.0,
       anchor: {
