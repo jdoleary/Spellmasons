@@ -31,6 +31,7 @@ import vampire_bite from './vampire_bite';
 import push from './push';
 import pull from './pull';
 import decoy from './summon_decoy';
+import trap from './trap';
 import { IUpgrade, upgradeCardsSource } from '../Upgrade';
 import { _getCardsFromIds } from './cardUtils';
 import { addCardToHand } from '../CardUI';
@@ -117,6 +118,7 @@ export function registerCards() {
   register(push);
   register(pull);
   register(decoy);
+  register(trap);
 }
 function cardToUpgrade(c: ICard): IUpgrade {
   return {
