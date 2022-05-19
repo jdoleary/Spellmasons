@@ -9,7 +9,7 @@ export type onDamage = {
 const onDamageSource: { [name: string]: onDamage } = {};
 
 export type onDeath = {
-  (unit: IUnit): void;
+  (unit: IUnit, prediction: boolean): Promise<void>;
 };
 const onDeathSource: { [name: string]: onDeath } = {};
 

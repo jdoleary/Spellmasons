@@ -32,6 +32,7 @@ import push from './push';
 import pull from './pull';
 import decoy from './summon_decoy';
 import trap from './trap';
+import explode from './explode_on_death';
 import { IUpgrade, upgradeCardsSource } from '../Upgrade';
 import { _getCardsFromIds } from './cardUtils';
 import { addCardToHand } from '../CardUI';
@@ -126,6 +127,7 @@ export function registerCards() {
   register(pull);
   register(decoy);
   register(trap);
+  register(explode);
 }
 function cardToUpgrade(c: ICard): IUpgrade {
   return {

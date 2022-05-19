@@ -272,7 +272,7 @@ export function load(unit: IUnitSerialized, prediction: boolean): IUnit {
   }
   window.underworld.addUnitToArray(loadedunit, prediction);
   if (!loadedunit.alive) {
-    die(loadedunit);
+    die(loadedunit, prediction);
   }
   return loadedunit;
 }
@@ -341,7 +341,7 @@ export function resurrect(unit: IUnit) {
 // A list of unit source ids that will produce no corpse when killed
 // Useful for decoy (and maybe bosses in the future??)
 const noCorpseIds = ['decoy'];
-export function die(unit: IUnit) {
+export function die(unit: IUnit, prediction: boolean) {
   if (noCorpseIds.includes(unit.unitSourceId)) {
     // Remove the unit entirely
     cleanup(unit);
@@ -360,19 +360,22 @@ export function die(unit: IUnit) {
     // Ensure that the unit resolvesDoneMoving when they die in the event that 
     // they die while they are moving.  This prevents turn phase from getting stuck
     unit.resolveDoneMoving();
-    // Remove all modifiers:
-    for (let [modifier, _modifierProperties] of Object.entries(unit.modifiers)) {
-      removeModifier(unit, modifier);
-    }
 
     for (let i = 0; i < unit.onDeathEvents.length; i++) {
       const eventName = unit.onDeathEvents[i];
       if (eventName) {
         const fn = Events.onDeathSource[eventName];
         if (fn) {
-          fn(unit);
+          fn(unit, prediction);
         }
       }
+    }
+
+    // Remove all modifiers
+    // Note: This must come AFTER onDeathEvents or else it will remove the modifier
+    // that added the onDeathEvent and the onDeathEvent won't trigger
+    for (let [modifier, _modifierProperties] of Object.entries(unit.modifiers)) {
+      removeModifier(unit, modifier);
     }
   }
 
@@ -415,7 +418,7 @@ export function takeDamage(unit: IUnit, amount: number, prediction: boolean, sta
   if (amount > 0 && unit.health <= 0) {
     // if unit is alive, die
     if (unit.alive) {
-      die(unit);
+      die(unit, prediction);
     }
   }
 
