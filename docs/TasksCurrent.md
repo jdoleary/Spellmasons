@@ -1,8 +1,18 @@
 ## Today Tasks
+- Bug: Brad didn't get to choose upgrade
+- Bug: Push no longer shows where they will go
+- Bug: Trap keeps spells from getting more expensive
+- Bug: NPCs should take poison damage BEFORE attacking
+    - If poison damage would kill them, they shouldn't get to attack
+- Bug: When you pull a guy and he actually gets to you, and then you move, you "carry" him
+- Try to make death skull circle red
+- bug: Poisoner didn't attack brad
+- When you are a vampire healing potions should do damage to you and mana steal should have reduced health costn
+- Chain is information overload
+- Content: A spell to destroy corpses
 - Movement spells should work on pickups
 ## Stretch Tasks for Today
 - Task: Better shaders for lava?
-- Content: A spell to destroy corpses
 
 ## Tasks
 - Content: Time crystal releases something when it breaks
