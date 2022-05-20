@@ -1,22 +1,24 @@
+## Today Tasks
+- Movement spells should work on pickups
+- Traps should be inactive for 1 turn
+- "maximum shield" shows a bunch of times on hover if casting the spell would give them map
+- Res should work if the click is on a living unit standing over a dead unit
+## Stretch Tasks for Today
+
 ## Tasks
+- Bug: Sometimes grunt animations just stop
+- Task: An ally that has died at all (even if ressed) should lose their upgrade priviledge
+- Task: Better shaders for lava?
 - **!**Fix host alt-tabbing issue
 - Bug: Brad didn't get to choose upgrade
 - Bug: When you pull a guy and he actually gets to you, and then you move, you "carry" him
 - Chain is information overload
 - Content: A spell to destroy corpses
-- Movement spells should work on pickups
-## Stretch Tasks for Today
-- Task: Better shaders for lava?
-
-## Tasks
 - Content: Time crystal releases something when it breaks
 - Fix: Decoy image doesn't always disappear when decoy dies
     - This may be fixed by d69a8a2
 - Fix: Brad cast a spell out of range, but it still triggered on my screen
 - Hoist spells
-    - Allow spells like trap to change spells in cast
-    - Allow spells like trap to change mana cost
-    - Content: Trap card, reduces mana cost of spell
     - Logic to avoid fizzle spells
         - Don't cast res on no dead
         - do this by hoisting and checking pre-cast
@@ -42,11 +44,9 @@
 - Bug: Portal didn't appear once (honeycomb seems broken if you have walls above and below you)
 - Bug: Goons spawned outside of map when summoner was stuffed in upper left corner of map
 
-- "maximum shield" shows a bunch of times on hover if casting the spell would give them map
 ---
 - Make damage that they WILL take different from damage that they HAVE taken.  It's confusing
 
-- Bug: Can go negative mana if you cast too quickly
 - Bug: Had a scenario where i had a debugger on enterPortal and on image.show
 and 2nd client got `Cannot change character, player not found with id 8c502be8-631c-482a-9398-40155f77c21f`
     - maybe in this case, re-request player sync??
