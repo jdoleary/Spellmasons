@@ -1118,11 +1118,15 @@ export default class Underworld {
   }
 
   showUpgrades() {
+    if (!window.player) {
+      console.error('Cannot show upgrades, no window.player');
+      return
+    }
     let minimumProbability = 0;
     if (this.levelIndex == 0) {
       // Limit starting cards to a probability of 10 or more
       minimumProbability = 10;
-      elUpgradePickerLabel.innerHTML = `Pick ${config.STARTING_CARD_COUNT} starting cards.`;
+      elUpgradePickerLabel.innerHTML = `Pick ${config.STARTING_CARD_COUNT - window.player.cards.length} starting cards.`;
     } else {
       elUpgradePickerLabel.innerHTML = 'Pick an upgrade.';
     }
