@@ -849,7 +849,11 @@ export default class Underworld {
   }
   checkPickupCollisions(unit: Unit.IUnit) {
     for (let pu of this.pickups) {
-      if (math.distance(unit, pu) <= pu.radius) {
+      // Note, units' radius is rather small (to allow for crowding), so
+      // this distance calculation uses neither the radius of the pickup
+      // nor the radius of the unit.  It is hard coded to 2 COLLISION_MESH_RADIUSES
+      // which is currently 64 px (or the average size of a unit);
+      if (math.distance(unit, pu) <= config.COLLISION_MESH_RADIUS * 2) {
         Pickup.triggerPickup(pu, unit);
       }
     }
@@ -1389,9 +1393,9 @@ export default class Underworld {
     return this.getUnitsAt(coords, prediction)[0];
   }
   getPickupAt(coords: Vec2): Pickup.IPickup | undefined {
-    const sortedByProximityToCoords = this.pickups.filter(p => !isNaN(p.x) && !isNaN(p.y)).sort((a, b) => math.distance(a, coords) - math.distance(b, coords));
+    const sortedByProximityToCoords = this.pickups.filter(p => !isNaN(p.x) && !isNaN(p.y) && math.distance(coords, p) <= p.radius).sort((a, b) => math.distance(a, coords) - math.distance(b, coords));
     const closest = sortedByProximityToCoords[0]
-    return closest && math.distance(closest, coords) <= config.COLLISION_MESH_RADIUS ? closest : undefined;
+    return closest;
   }
   addUnitToArray(unit: Unit.IUnit, prediction: boolean) {
     if (prediction) {

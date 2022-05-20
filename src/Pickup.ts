@@ -13,7 +13,7 @@ import * as config from './config';
 import { chooseObjectWithProbability } from './math';
 import seedrandom from 'seedrandom';
 
-export const PICKUP_RADIUS = 45;
+export const PICKUP_RADIUS = config.COLLISION_MESH_RADIUS;
 export interface IPickup {
   x: number;
   y: number;
@@ -30,7 +30,10 @@ export interface IPickup {
   turnsLeftToGrab?: number;
   text?: PIXI.Text;
   // effect is ONLY to be called within triggerPickup
-  effect: ({ unit, player }: { unit?: IUnit; player?: Player.IPlayer }) => void;
+  // returns true if the pickup did in fact trigger - this is useful
+  // for preventing one use health potions from triggering if the unit
+  // already has max health
+  effect: ({ unit, player }: { unit?: IUnit; player?: Player.IPlayer }) => boolean;
 }
 interface IPickupSource {
   name: string;
@@ -42,7 +45,7 @@ interface IPickupSource {
   turnsLeftToGrab?: number;
   scale: number;
   probability: number;
-  effect: ({ unit, player }: { unit?: IUnit; player?: Player.IPlayer }) => void;
+  effect: ({ unit, player }: { unit?: IUnit; player?: Player.IPlayer }) => boolean;
 }
 
 export function create(
@@ -142,8 +145,9 @@ export function triggerPickup(pickup: IPickup, unit: IUnit) {
     // If pickup is playerOnly, do not trigger if a player is not the one triggering it
     return;
   }
-  pickup.effect({ unit, player });
-  if (pickup.singleUse) {
+  const didTrigger = pickup.effect({ unit, player });
+  // Only remove pickup if it triggered AND is a singleUse pickup
+  if (pickup.singleUse && didTrigger) {
     removePickup(pickup);
   }
 }
@@ -164,6 +168,7 @@ export const pickups: IPickupSource[] = [
     effect: ({ unit, player }: { unit?: IUnit; player?: Player.IPlayer }) => {
       if (unit) {
         takeDamage(unit, spike_damage, false)
+        return true;
       }
     }
   },
@@ -191,6 +196,7 @@ export const pickups: IPickupSource[] = [
         player.unit.x = NaN;
         player.unit.y = NaN;
       }
+      return true;
     },
   },
   {
@@ -220,6 +226,7 @@ export const pickups: IPickupSource[] = [
             });
           }
         }
+        return true;
       }
     },
   },
@@ -240,6 +247,7 @@ export const pickups: IPickupSource[] = [
         // refelcted in the mana bar
         // (note: this would be auto corrected on the next mouse move anyway)
         window.underworld.syncPlayerPredictionUnitOnly();
+        return true;
       }
     },
   },
@@ -261,6 +269,7 @@ export const pickups: IPickupSource[] = [
         // refelcted in the health bar
         // (note: this would be auto corrected on the next mouse move anyway)
         window.underworld.syncPlayerPredictionUnitOnly();
+        return true;
       }
     },
   },
