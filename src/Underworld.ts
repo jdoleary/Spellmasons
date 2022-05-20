@@ -41,7 +41,6 @@ import { expandPolygon, mergeOverlappingPolygons, Polygon, PolygonLineSegment, p
 import { calculateDistanceOfVec2Array, findPath, findPolygonsThatVec2IsInsideOf } from './Pathfinding';
 import { removeUnderworldEventListeners, setView, View } from './views';
 import * as readyState from './readyState';
-import { HandcraftedLevel, levels } from './HandcraftedLevels';
 import { addCardToHand, removeCardsFromHand } from './CardUI';
 import { mouseMove } from './ui/eventListeners';
 import Jprompt from './Jprompt';
@@ -111,9 +110,6 @@ export default class Underworld {
   // since only the syncronous messages affect gamestate.
   processedMessageCount: number = 0;
   validPlayerSpawnCoords: Vec2[] = [];
-  // Instead of moving to the upgrade screen at the end of the level,
-  // if this is set it will take players to a handcrafted level
-  nextHandCraftedLevel?: string;
 
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
     window.underworld = this;
@@ -848,135 +844,6 @@ export default class Underworld {
       });
     }
   }
-  initHandcraftedLevel(name: string) {
-    // Width and height should be set immediately so that other level-building functions
-    // (such as cacheWalls) have access to the new width and height
-    const sectorsWide = 4;
-    const sectorsTall = 2;
-    this.width = config.OBSTACLE_SIZE * sectorsWide * config.OBSTACLES_PER_SECTOR_WIDE;
-    this.height = config.OBSTACLE_SIZE * sectorsTall * config.OBSTACLES_PER_SECTOR_TALL;
-    setView(View.Game);
-    console.log('Setup: initHandcraftedLevel', name);
-    const level = levels[name];
-    if (!level) {
-      console.error('Handcrafted level', name, 'does not exist');
-      return;
-    }
-    const h: HandcraftedLevel = level(this);
-    if (!h) {
-      console.error('Handcrafted level', name, 'does not exist');
-      return;
-    }
-    // Set valid player spawns before cleaning up the previous level
-    this.validPlayerSpawnCoords = h.playerSpawnLocations;
-
-    // Clean up the previous level
-    this.cleanUpLevel();
-
-    // Setup players
-    for (let player of this.players) {
-      console.log('setup players', player);
-      Player.resetPlayerForNextLevel(player);
-      // Clear all player cards
-      removeCardsFromHand(player, player.cards);
-      if (h.startingCards.length) {
-        for (let card of h.startingCards) {
-          const cardInstance = Cards.allCards[card];
-          if (cardInstance) {
-            addCardToHand(cardInstance, player);
-          } else {
-            console.error('Card instance for', card, 'not found');
-          }
-        }
-      }
-    }
-    // Spawn portal
-    const portalPickup = Pickup.pickups.find(p => p.imagePath == 'portal');
-    if (portalPickup) {
-      if (h.portalSpawnLocation) {
-        Pickup.create(
-          h.portalSpawnLocation.x,
-          h.portalSpawnLocation.y,
-          portalPickup,
-          false,
-          portalPickup.animationSpeed,
-          true,
-        );
-      }
-    } else {
-      console.error('Portal pickup not found')
-    }
-
-    // Spawn pickups
-    // for (let p of h.specialPickups) {
-    //   const pickup = Pickup.specialPickups[p.id];
-    //   if (pickup) {
-    //     Pickup.create(
-    //       p.location.x,
-    //       p.location.y,
-    //       pickup,
-    //       true,
-    //       0.1,
-    //       true,
-    //     );
-    //   } else {
-    //     console.error('Pickup', p.id, 'not found in special pickups')
-    //   }
-
-    // }
-    // Create ground tiles:
-    for (let x = 0; x < this.width / config.OBSTACLE_SIZE; x++) {
-      for (let y = 0; y < this.height / config.OBSTACLE_SIZE; y++) {
-        Image.create({ x: x * config.OBSTACLE_SIZE, y: y * config.OBSTACLE_SIZE }, 'tiles/ground.png', containerBoard);
-      }
-    }
-
-    // Spawn obstacles
-    const obstacles = [];
-    for (let o of h.obstacles) {
-      // -1 to let 0 be empty (no obstacle) and 1 will be index 0 of
-      // obstacleSource
-      const obstacleIndex = parseInt(o.id) - 1
-      const obstacleInst = Obstacle.create(o.location, obstacleIndex);
-      obstacles.push(obstacleInst);
-      Obstacle.addImageForObstacle(obstacleInst);
-    }
-    this.cacheWalls(obstacles);
-
-    // Spawn doodads
-    for (let d of h.doodads) {
-      const pixiText = new PIXI.Text(d.text, Object.assign({ fill: 'white' }, d.style));
-      pixiText.x = d.location.x;
-      pixiText.y = d.location.y;
-      pixiText.anchor.x = 0.5;
-      pixiText.anchor.y = 0.5;
-      containerDoodads.addChild(pixiText);
-    }
-
-    // Spawn units
-    for (let u of h.units) {
-      this.spawnEnemy(u.id, u.location, false, 1);
-    }
-
-    if (h.init) {
-      h.init(this);
-    }
-
-    this.postSetupLevel();
-    // Show text in center of screen for the new level
-    floatingText({
-      coords: {
-        x: this.width / 2,
-        y: 3 * this.height / 8,
-      },
-      text: name,
-      style: {
-        fill: 'white',
-        fontSize: '60px'
-      }
-    });
-
-  }
   checkPickupCollisions(unit: Unit.IUnit) {
     for (let pu of this.pickups) {
       if (math.distance(unit, pu) <= Pickup.PICKUP_RADIUS) {
@@ -1238,46 +1105,39 @@ export default class Underworld {
       livingPlayers.filter((p) => p.inPortal).length === livingPlayers.length;
     // Advance the level if there are living players and they all are in the portal:
     if (livingPlayers.length && areAllLivingPlayersInPortal) {
-      if (this.nextHandCraftedLevel) {
-        const levelName = this.nextHandCraftedLevel;
-        // Clear it out so it doesn't keep sending users to the same level
-        this.nextHandCraftedLevel = undefined;
-        this.initHandcraftedLevel(levelName);
-      } else {
-        // Now that level is complete, move to the Upgrade view where players can choose upgrades
-        // before moving on to the next level
-        // Generate Upgrades
-        if (!elUpgradePicker || !elUpgradePickerContent) {
-          console.error('elUpgradePicker or elUpgradePickerContent are undefined.');
-        }
-        const player = this.players.find(
-          (p) => p.clientId === window.clientId,
-        );
-        if (player) {
-          const upgrades = Upgrade.generateUpgrades(player);
-          const elUpgrades = upgrades.map((upgrade) =>
-            Upgrade.createUpgradeElement(upgrade, player),
-          );
-          if (elUpgradePickerContent) {
-            elUpgradePickerContent.innerHTML = '';
-            for (let elUpgrade of elUpgrades) {
-              elUpgradePickerContent.appendChild(elUpgrade);
-            }
-          }
-        } else {
-          console.error('Upgrades cannot be generated, player not found');
-        }
-        // Make upgrades visible
-        setView(View.Upgrade);
-
-        // Invoke initLevel within a timeout so that this function
-        // doesn't have to wait for level generation to complete before
-        // returning
-        setTimeout(() => {
-          // Prepare the next level
-          this.initLevel(++this.levelIndex);
-        }, 0)
+      // Now that level is complete, move to the Upgrade view where players can choose upgrades
+      // before moving on to the next level
+      // Generate Upgrades
+      if (!elUpgradePicker || !elUpgradePickerContent) {
+        console.error('elUpgradePicker or elUpgradePickerContent are undefined.');
       }
+      const player = this.players.find(
+        (p) => p.clientId === window.clientId,
+      );
+      if (player) {
+        const upgrades = Upgrade.generateUpgrades(player);
+        const elUpgrades = upgrades.map((upgrade) =>
+          Upgrade.createUpgradeElement(upgrade, player),
+        );
+        if (elUpgradePickerContent) {
+          elUpgradePickerContent.innerHTML = '';
+          for (let elUpgrade of elUpgrades) {
+            elUpgradePickerContent.appendChild(elUpgrade);
+          }
+        }
+      } else {
+        console.error('Upgrades cannot be generated, player not found');
+      }
+      // Make upgrades visible
+      setView(View.Upgrade);
+
+      // Invoke initLevel within a timeout so that this function
+      // doesn't have to wait for level generation to complete before
+      // returning
+      setTimeout(() => {
+        // Prepare the next level
+        this.initLevel(++this.levelIndex);
+      }, 0)
       // Return of true signifies it went to the next level
       return true;
     }

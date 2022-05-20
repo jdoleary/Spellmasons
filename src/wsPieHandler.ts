@@ -10,7 +10,6 @@ import * as readyState from './readyState';
 import * as messageQueue from './messageQueue';
 import * as storage from './storage';
 import { setView, View } from './views';
-import { tutorialLevels } from './HandcraftedLevels';
 import { allUnits } from './units';
 import { pie } from './wsPieSetup';
 
@@ -147,28 +146,6 @@ function tryStartGame() {
     }
   } else {
     console.log('Start Game: Won\'t, client must be host to start the game.')
-  }
-}
-export async function startTutorial() {
-  console.log('Game: Start Tutorial');
-  await window.startSingleplayer();
-  const p = Player.create(window.clientId);
-  if (p) {
-    // Initialize the player for the level
-    Player.resetPlayerForNextLevel(p);
-  } else {
-    console.error('Could not create player character for tutorial');
-  }
-  const gameAlreadyStarted = window.underworld.levelIndex >= 0;
-  const currentClientIsHost = window.hostClientId == window.clientId;
-  const clientsLeftToChooseCharacters = clients.length - window.underworld.players.length;
-  // Starts a new game if all clients have chosen characters, THIS client is the host, and 
-  // if the game hasn't already been started
-  if (tutorialLevels[0] && currentClientIsHost && clientsLeftToChooseCharacters <= 0 && !gameAlreadyStarted) {
-    console.log('Host: Start tutorial');
-    window.underworld.initHandcraftedLevel(tutorialLevels[0]);
-  } else {
-    console.log('Users left to choose a character: ', clientsLeftToChooseCharacters);
   }
 }
 async function handleOnDataMessage(d: OnDataArgs): Promise<any> {

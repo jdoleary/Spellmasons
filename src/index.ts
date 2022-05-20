@@ -13,7 +13,6 @@ import type PieClient from '@websocketpie/client';
 import { setupAudio } from './Audio';
 import cookieConsentPopup from './cookieConsent';
 import { setupMonitoring } from './monitoring';
-import { startTutorial } from './wsPieHandler';
 import * as storage from './storage';
 cookieConsentPopup(false);
 
