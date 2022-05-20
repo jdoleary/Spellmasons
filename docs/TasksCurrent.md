@@ -1,7 +1,7 @@
 ## Today Tasks
 
 - Traps should be inactive for 1 turn
-- "maximum shield" shows a bunch of times on hover if casting the spell would give them map
+    - Similar to "time crystal's" time release feature
 ## Stretch Tasks for Today
 
 ## Tasks

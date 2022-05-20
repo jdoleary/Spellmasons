@@ -1,3 +1,4 @@
+- "maximum shield" shows a bunch of times on hover if casting the spell would give them map
 - TODO: Split up runPredictions so that it only checks canAttackTarget after units have moved, not every loop
     - Sync prediction units every loop is a waste too if nothing changes
         - This could be optimized so it only recalcs if a unit moves or if the cast target or cast cards change
