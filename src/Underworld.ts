@@ -39,9 +39,8 @@ import { calculateCost } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment } from './collision/collisionMath';
 import { expandPolygon, mergeOverlappingPolygons, Polygon, PolygonLineSegment, polygonLineSegmentToLineSegment, polygonToPolygonLineSegments } from './Polygon';
 import { calculateDistanceOfVec2Array, findPath, findPolygonsThatVec2IsInsideOf } from './Pathfinding';
-import { removeUnderworldEventListeners, setView, View } from './views';
+import { removeUnderworldEventListeners } from './views';
 import * as readyState from './readyState';
-import { addCardToHand, removeCardsFromHand } from './CardUI';
 import { mouseMove } from './ui/eventListeners';
 import Jprompt from './Jprompt';
 import { collideWithWalls, moveWithCollisions } from './collision/moveWithCollision';
@@ -51,6 +50,7 @@ import { getClients, hostGiveClientGameStateForInitialLoad } from './wsPieHandle
 import { healthAllyGreen, healthHurtRed, healthRed } from './ui/colors';
 import objectHash from 'object-hash';
 import { withinMeleeRange } from './units/actions/gruntAction';
+import * as TimeRelease from './TimeRelease';
 
 export enum turn_phase {
   PlayerTurns,
@@ -96,6 +96,7 @@ export default class Underworld {
   players: Player.IPlayer[] = [];
   units: Unit.IUnit[] = [];
   pickups: Pickup.IPickup[] = [];
+  timeReleases: TimeRelease.ITimeRelease[] = [];
   groundTiles: Vec2[] = [];
   lavaObstacles: Obstacle.IObstacle[] = [];
   // line segments that prevent sight
@@ -952,6 +953,18 @@ export default class Underworld {
       }
       if (p.turnsLeftToGrab == 0) {
         Pickup.removePickup(p);
+      }
+    }
+
+    for (let t of this.timeReleases) {
+      t.turnsLeft--;
+      if (t.text) {
+        t.text.text = `${t.turnsLeft}`;
+      }
+      if (t.turnsLeft <= 0) {
+        await t.onRelease();
+        // Remove it
+        TimeRelease.cleanup(t);
       }
     }
 
