@@ -1417,6 +1417,23 @@ export default class Underworld {
       // the card may affect the caster's mana
       effectState.casterUnit.mana -= spellCost.manaCost;
       Unit.takeDamage(effectState.casterUnit, spellCost.healthCost, prediction, effectState);
+      // Add expense scaling BEFORE card effects are invoked
+      // This is important because of 'trap' since trap removes
+      // the cards after it in the spell, it is important
+      // that they still get expense scaling
+      for (let cardId of effectState.cardIds) {
+        const card = Cards.allCards[cardId];
+        if (card) {
+          // Now that the caster is using the card, increment usage count
+          if (casterCardUsage[cardId] === undefined) {
+            casterCardUsage[cardId] = 0;
+          }
+          casterCardUsage[cardId] += card.expenseScaling;
+          if (!prediction) {
+            updateManaCostUI();
+          }
+        }
+      }
     }
 
     for (let index = 0; index < effectState.cardIds.length; index++) {
@@ -1464,14 +1481,6 @@ export default class Underworld {
         }
 
         await Promise.all(animationPromises);
-        // Now that the caster is using the card, increment usage count
-        if (casterCardUsage[card.id] === undefined) {
-          casterCardUsage[card.id] = 0;
-        }
-        casterCardUsage[card.id] += card.expenseScaling;
-        if (!prediction) {
-          updateManaCostUI();
-        }
       }
     }
     if (!prediction) {

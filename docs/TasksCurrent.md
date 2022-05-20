@@ -1,8 +1,6 @@
 ## Tasks
 - **!**Fix host alt-tabbing issue
 - Bug: Brad didn't get to choose upgrade
-- Bug: Push no longer shows where they will go
-- Bug: Trap keeps spells from getting more expensive
 - Bug: NPCs should take poison damage BEFORE attacking
     - If poison damage would kill them, they shouldn't get to attack
 - Bug: When you pull a guy and he actually gets to you, and then you move, you "carry" him
