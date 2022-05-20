@@ -1,4 +1,6 @@
 ## Today Tasks
+- bug: You can spawn on a pickup such as spikes
+- Content: A spell to destroy corpses
 
 - Traps should be inactive for 1 turn
     - Similar to "time crystal's" time release feature
@@ -10,11 +12,7 @@
 - Task: Better shaders for lava?
 - **!**Fix host alt-tabbing issue
 - Bug: When you pull a guy and he actually gets to you, and then you move, you "carry" him
-- Chain is information overload
-- Content: A spell to destroy corpses
 - Content: Time crystal releases something when it breaks
-- Fix: Decoy image doesn't always disappear when decoy dies
-    - This may be fixed by d69a8a2
 - Fix: Brad cast a spell out of range, but it still triggered on my screen
 - Hoist spells
     - Logic to avoid fizzle spells

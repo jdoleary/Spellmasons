@@ -228,22 +228,29 @@ export async function runPredictions() {
 export function clearSpellEffectProjection() {
   if (!window.animatingSpells) {
     predictionGraphics.clear();
+    window.radiusGraphics.clear();
     containerSpells.removeChildren();
   }
 }
 
 export function drawPredictionLine(start: Vec2, end: Vec2) {
-  predictionGraphics.beginFill(0xffff0b, 0.5);
-  predictionGraphics.lineStyle(3, 0x33ff00);
+  // predictionGraphics.beginFill(0xffff0b, 0.5);
+  predictionGraphics.lineStyle(3, 0x33ff00, 1.0);
   predictionGraphics.moveTo(start.x, start.y);
   predictionGraphics.lineTo(end.x, end.y);
-  predictionGraphics.endFill();
+  // predictionGraphics.endFill();
 }
 export function drawPredictionCircle(target: Vec2, radius: number) {
   predictionGraphics.lineStyle(3, targetBlue, 0.5);
   predictionGraphics.beginFill(0x000000, 0);
   predictionGraphics.drawCircle(target.x, target.y, radius);
   predictionGraphics.endFill();
+}
+export function drawPredictionCircleFill(target: Vec2, radius: number) {
+  window.radiusGraphics.lineStyle(1, 0x000000, 0.0);
+  window.radiusGraphics.beginFill(0xFFFFFF, 1.0);
+  window.radiusGraphics.drawCircle(target.x, target.y, radius);
+  window.radiusGraphics.endFill();
 }
 
 export function isOutOfBounds(target: Vec2) {

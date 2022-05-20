@@ -11,6 +11,8 @@ let isReady = false;
 // PIXI app
 export const app = new PIXI.Application();
 export const containerBoard = new PIXI.Container();
+export const containerBetweenBoardAndWalls = new PIXI.Container();
+export const containerWalls = new PIXI.Container();
 export const containerPlanningView = new PIXI.Container();
 containerPlanningView.alpha = 0.5;
 export const containerDoodads = new PIXI.Container();
@@ -23,6 +25,8 @@ export const containerUIFixed = new PIXI.Container();
 export const containerFloatingText = new PIXI.Container();
 const underworldPixiContainers = [
   containerBoard,
+  containerBetweenBoardAndWalls,
+  containerWalls,
   containerPlanningView,
   containerDoodads,
   containerUnits,
@@ -43,6 +47,11 @@ containerUI.addChild(window.unitOverlayGraphics);
 window.walkPathGraphics = new PIXI.Graphics();
 containerUI.addChild(window.walkPathGraphics);
 window.thinkingPlayerGraphics = new PIXI.Graphics();
+window.radiusGraphics = new PIXI.Graphics();
+const colorMatrix = new PIXI.filters.AlphaFilter();
+colorMatrix.alpha = 0.2;
+window.radiusGraphics.filters = [colorMatrix];
+containerBetweenBoardAndWalls.addChild(window.radiusGraphics);
 
 export const containerCharacterSelect = new PIXI.Container();
 const characterSelectContainers = [containerCharacterSelect];

@@ -1,4 +1,4 @@
-import { drawPredictionCircle, drawPredictionLine } from '../ui/PlanningView';
+import { drawPredictionCircle, drawPredictionCircleFill, drawPredictionLine } from '../ui/PlanningView';
 import { addUnitTarget, Spell } from '.';
 import type { Vec2 } from '../Vec';
 import type * as Unit from '../Unit';
@@ -18,11 +18,13 @@ Adds targets for the following cards to effect by "chaining like electricity"
 off of all existing targeted units to units touching them. 
     `,
     effect: async (state, prediction) => {
+      // Note: This loop must NOT be a for..of because it
+      // mutates state.targetedUnits as it iterates.
       for (let i = 0; i < state.targetedUnits.length; i++) {
         const unit = state.targetedUnits[i];
         if (unit) {
           // Draw visual circle for prediction
-          drawPredictionCircle(unit, range);
+          drawPredictionCircleFill(unit, range);
           // Find all units touching the spell origin
           const chained_units = getTouchingUnitsRecursive(
             unit.x,

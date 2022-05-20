@@ -1,6 +1,6 @@
 import * as Image from './Image';
 import { Polygon, polygonToPolygonLineSegments } from './Polygon';
-import { containerBoard, containerUnits } from './PixiUtils';
+import { containerWalls } from './PixiUtils';
 import { OBSTACLE_SIZE } from './config';
 import type { Vec2 } from './Vec';
 import { IUnit, takeDamage } from './Unit';
@@ -59,7 +59,7 @@ export function create(coord: Vec2, obstacleSourceIndex: number) {
   }
 }
 export function addImageForObstacle(obstacle: IObstacle) {
-  Image.create(obstacle, obstacle.imagePath, containerBoard);
+  Image.create(obstacle, obstacle.imagePath, containerWalls);
 
 }
 

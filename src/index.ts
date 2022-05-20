@@ -139,6 +139,8 @@ declare global {
     // Graphics for drawing debug information, use window.showDebug = true
     // to show at runtime
     debugGraphics: PIXI.Graphics;
+    // Shows radiuses for spells
+    radiusGraphics: PIXI.Graphics;
     // Graphics for drawing the player visible path
     walkPathGraphics: PIXI.Graphics;
     // Graphics to show what other players are thinking
