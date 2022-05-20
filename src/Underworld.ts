@@ -154,10 +154,10 @@ export default class Underworld {
     for (let i = window.forceMove.length - 1; i >= 0; i--) {
       const forceMoveInst = window.forceMove[i];
       if (forceMoveInst) {
-        const { unit, step } = forceMoveInst;
+        const { pushedObject, step } = forceMoveInst;
         forceMoveInst.distance -= Vec.magnitude(step);
-        moveWithCollisions(unit, Vec.add(unit, step), aliveNPCs);
-        collideWithWalls(unit);
+        moveWithCollisions(pushedObject, Vec.add(pushedObject, step), aliveNPCs);
+        collideWithWalls(pushedObject);
         // Remove it from forceMove array once the distance has been covers
         // This works even if collisions prevent the unit from moving since
         // distance is modified even if the unit doesn't move each loop
@@ -217,6 +217,9 @@ export default class Underworld {
               u.path.lastOwnPosition = Vec.clone(u);
             }
           }
+        }
+        for (let p of this.pickups) {
+          Pickup.syncImage(p);
         }
         // Sync Image even for non moving units since they may be moved by forces other than themselves
         // This keeps the unit.image in the same place as unit.x, unit.y
@@ -846,7 +849,7 @@ export default class Underworld {
   }
   checkPickupCollisions(unit: Unit.IUnit) {
     for (let pu of this.pickups) {
-      if (math.distance(unit, pu) <= Pickup.PICKUP_RADIUS) {
+      if (math.distance(unit, pu) <= pu.radius) {
         Pickup.triggerPickup(pu, unit);
       }
     }
@@ -1343,6 +1346,19 @@ export default class Underworld {
     }
   }
 
+  getPickupsWithinDistanceOfTarget(
+    target: Vec2,
+    distance: number,
+  ): Pickup.IPickup[] {
+    const withinDistance: Pickup.IPickup[] = [];
+    const pickups = this.pickups;
+    for (let pickup of pickups) {
+      if (math.distance(pickup, target) <= distance) {
+        withinDistance.push(pickup);
+      }
+    }
+    return withinDistance;
+  }
   getUnitsWithinDistanceOfTarget(
     target: Vec2,
     distance: number,
@@ -1403,11 +1419,13 @@ export default class Underworld {
       window.castThisTurn = true;
     }
     const unitAtCastLocation = this.getUnitAt(castLocation, prediction);
+    const pickupAtCastLocation = this.getPickupAt(castLocation);
     let effectState: Cards.EffectState = {
       cardIds,
       casterCardUsage,
       casterUnit,
       targetedUnits: unitAtCastLocation ? [unitAtCastLocation] : [],
+      targetedPickups: pickupAtCastLocation ? [pickupAtCastLocation] : [],
       castLocation,
       aggregator: {
         unitDamage: [],

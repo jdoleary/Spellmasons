@@ -609,8 +609,6 @@ export function changeFaction(unit: IUnit, faction: Faction) {
 
 // syncImage updates a unit's Image to match it's game state
 export function syncImage(unit: IUnit) {
-  // TODO does scale syncing need to happen here?  I don't think so cause it's
-  // just stored in the sprite so it wont get out of sync
   if (unit.image) {
     unit.image.sprite.x = unit.x;
     unit.image.sprite.y = unit.y;

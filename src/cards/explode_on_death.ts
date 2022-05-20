@@ -60,19 +60,26 @@ const spell: Spell = {
   events: {
     onDeath: async (unit: IUnit, prediction: boolean) => {
       drawPredictionCircle(unit, range);
+      if (!prediction) {
+        window.underworld.animateSpell(unit, 'explode-on-death.png');
+      }
       window.underworld.getUnitsWithinDistanceOfTarget(
         unit,
         range,
         prediction
       ).forEach(u => {
-        if (!prediction) {
-          window.underworld.animateSpell(u, 'explode-on-death.png');
-        }
         // Push units away from exploding unit
         push(u, unit, prediction);
         // Deal damage to units
         takeDamage(u, damage, prediction);
       });
+      window.underworld.getPickupsWithinDistanceOfTarget(
+        unit,
+        range
+      ).forEach(p => {
+        // Push pickups away
+        push(p, unit, prediction);
+      })
     }
   }
 };

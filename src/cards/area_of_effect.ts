@@ -1,4 +1,4 @@
-import { addUnitTarget, Spell } from '.';
+import { addPickupTarget, addUnitTarget, Spell } from '.';
 import { drawPredictionCircle } from '../ui/PlanningView';
 
 const id = 'AOE';
@@ -27,6 +27,13 @@ Adds a radius to the spell so it can affect more targets
         );
         // Add units to target
         withinRadius.forEach(unit => addUnitTarget(unit, state));
+
+        const pickupsWithinRadius = window.underworld.getPickupsWithinDistanceOfTarget(
+          target,
+          range
+        );
+        // Add pickups to target
+        pickupsWithinRadius.forEach(unit => addPickupTarget(unit, state));
       }
 
       return state;

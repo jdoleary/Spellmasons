@@ -3,6 +3,7 @@ import type { Spell } from '.';
 import { distance, similarTriangles, getCoordsAtDistanceTowardsTarget } from '../math';
 import { checkLavaDamageDueToMovement, lavaDamage } from '../Obstacle';
 import type { IUnit } from 'src/Unit';
+import type { Circle } from 'src/collision/moveWithCollision';
 
 export const id = 'push';
 const pushDistance = 100;
@@ -20,19 +21,23 @@ Pushes the target(s) away from the caster
     `,
     effect: async (state, prediction) => {
       for (let unit of state.targetedUnits) {
-        push(unit, state.casterUnit, prediction);
+        const endPos = push(unit, state.casterUnit, prediction);
+        checkLavaDamageDueToMovement(unit, endPos, prediction);
+      }
+      for (let pickup of state.targetedPickups) {
+        push(pickup, state.casterUnit, prediction);
       }
       return state;
     },
   },
 };
-export function push(unit: IUnit, awayFrom: Vec2, prediction: boolean) {
-  const endPos = add(unit, similarTriangles(unit.x - awayFrom.x, unit.y - awayFrom.y, distance(unit, awayFrom), pushDistance));
+export function push(pushedObject: Circle, awayFrom: Vec2, prediction: boolean): Vec2 {
+  const endPos = add(pushedObject, similarTriangles(pushedObject.x - awayFrom.x, pushedObject.y - awayFrom.y, distance(pushedObject, awayFrom), pushDistance));
   if (!prediction) {
-    const step = subtract(getCoordsAtDistanceTowardsTarget(unit, endPos, speed), unit);
-    window.forceMove.push({ unit, step, distance: pushDistance });
+    const step = subtract(getCoordsAtDistanceTowardsTarget(pushedObject, endPos, speed), pushedObject);
+    window.forceMove.push({ pushedObject, step, distance: pushDistance });
   }
-  checkLavaDamageDueToMovement(unit, endPos, prediction);
+  return endPos;
 
 }
 export default spell;

@@ -22,6 +22,7 @@ import './wsPieSetup';
 import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './contants';
 import type { Vec2 } from './Vec';
 import type { LevelData } from './Underworld';
+import type { Circle } from './collision/moveWithCollision';
 
 const YES = 'yes'
 const SKIP_TUTORIAL = 'skipTutorial';
@@ -192,9 +193,9 @@ declare global {
     // The hash is used to prevent sending the same data more than once
     lastThoughtsHash: string;
     playerThoughts: { [clientId: string]: { target: Vec2, cardIds: string[] } };
-    // A list of units and an endPosition that they are moved to via a "force",
+    // A list of units and pickups and an endPosition that they are moved to via a "force",
     // like a push or pull or explosion.
-    forceMove: { unit: Unit.IUnit, step: Vec2, distance: number }[];
+    forceMove: { pushedObject: Circle, step: Vec2, distance: number }[];
     // Middle Mouse Button Down
     // Note: do NOT set directly, use setMMBDown instead
     readonly MMBDown: boolean;

@@ -15,17 +15,22 @@ const spell: Spell = {
     description: `Pushes units away from caster`,
     allowNonUnitTarget: true,
     effect: async (state, prediction) => {
-      for (let _ of [state.castLocation, ...state.targetedUnits]) {
-        // Draw visual circle for prediction
-        drawPredictionCircle(state.casterUnit, range);
-        const withinRadius = window.underworld.getUnitsWithinDistanceOfTarget(
-          state.casterUnit,
-          range,
-          prediction
-        );
-        // Add units to target
-        withinRadius.forEach(unit => push(unit, state.casterUnit, prediction));
-      }
+      // Draw visual circle for prediction
+      drawPredictionCircle(state.casterUnit, range);
+      // Push units away
+      window.underworld.getUnitsWithinDistanceOfTarget(
+        state.casterUnit,
+        range,
+        prediction
+      ).forEach(unit => push(unit, state.casterUnit, prediction));
+
+      window.underworld.getPickupsWithinDistanceOfTarget(
+        state.casterUnit,
+        range
+      ).forEach(p => {
+        // Push pickups away
+        push(p, state.casterUnit, prediction);
+      })
 
       return state;
     },

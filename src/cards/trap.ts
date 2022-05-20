@@ -1,5 +1,5 @@
 import type { Spell } from '.';
-import type * as Pickup from '../Pickup';
+import * as Pickup from '../Pickup';
 import * as Image from '../Image';
 import { containerUnits } from '../PixiUtils';
 
@@ -30,6 +30,7 @@ Sets a spell as a trap, to be triggered when stepped on.  Wrapping a spell in a 
         const self: Pickup.IPickup = {
           x,
           y,
+          radius: Pickup.PICKUP_RADIUS,
           name: 'Trap',
           description: `Triggers a spell when stepped on.  This trap contains: ${cardsInTrap.join(', ')}.`,
           imagePath,

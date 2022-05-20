@@ -1,5 +1,6 @@
 import type * as Player from '../Player';
 import type * as Unit from '../Unit';
+import type * as Pickup from '../Pickup';
 import type { Vec2 } from '../Vec';
 import Events, {
   onDamage,
@@ -156,6 +157,7 @@ export interface EffectState {
   casterCardUsage?: Player.CardUsage;
   casterUnit: Unit.IUnit;
   targetedUnits: Unit.IUnit[];
+  targetedPickups: Pickup.IPickup[];
   castLocation: Vec2;
   // aggregator carries extra information that can be passed
   // between card effects.
@@ -198,8 +200,14 @@ export function getCardsFromIds(cardIds: string[]): ICard[] {
 }
 
 export function addUnitTarget(unit: Unit.IUnit, effectState: EffectState) {
-  // Adds a unit's id to effectState.unitTargets IF it is not already in unitTargets
+  // Adds a unit to effectState.targetedUnits IF it is not already in unitTargets
   if (effectState.targetedUnits.indexOf(unit) === -1) {
     effectState.targetedUnits.push(unit);
+  }
+}
+export function addPickupTarget(pickup: Pickup.IPickup, effectState: EffectState) {
+  // Adds a pickup to effectState.targetedPickups IF it is not already in targetedPickups
+  if (effectState.targetedPickups.indexOf(pickup) === -1) {
+    effectState.targetedPickups.push(pickup);
   }
 }

@@ -17,6 +17,7 @@ export const PICKUP_RADIUS = 45;
 export interface IPickup {
   x: number;
   y: number;
+  radius: number;
   name: string;
   description: string;
   imagePath: string;
@@ -57,6 +58,7 @@ export function create(
   const self: IPickup = {
     x,
     y,
+    radius: PICKUP_RADIUS,
     name,
     description,
     imagePath,
@@ -87,6 +89,12 @@ export function create(
   window.underworld.addPickupToArray(self);
 
   return self;
+}
+export function syncImage(pickup: IPickup) {
+  if (pickup.image) {
+    pickup.image.sprite.x = pickup.x;
+    pickup.image.sprite.y = pickup.y;
+  }
 }
 export function setPosition(pickup: IPickup, x: number, y: number) {
   pickup.x = x;
