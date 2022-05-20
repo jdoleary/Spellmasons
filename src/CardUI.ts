@@ -480,7 +480,7 @@ function updateManaBadge(elBadge: Element | null, manaCost: number, card: Cards.
     // Hide badge if no cost
     elBadge.classList.toggle('hidden', manaCost === 0);
     elBadge.innerHTML = manaCost.toString();
-    if (manaCost > card.manaCost) {
+    if (manaCost !== card.manaCost) {
       elBadge.classList.add('modified-by-usage')
     } else {
       elBadge.classList.remove('modified-by-usage')
@@ -494,7 +494,7 @@ function updateHealthBadge(elBadge: Element | null, healthCost: number, card: Ca
     // Hide badge if no cost
     elBadge.classList.toggle('hidden', healthCost === 0);
     elBadge.innerHTML = healthCost.toString();
-    if (healthCost > card.healthCost) {
+    if (healthCost !== card.healthCost) {
       elBadge.classList.add('modified-by-usage')
     } else {
       elBadge.classList.remove('modified-by-usage')
