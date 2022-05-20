@@ -244,7 +244,7 @@ export const pickups: IPickupSource[] = [
     singleUse: true,
     description: `Restores ${healthPotionRestoreAmount} health.`,
     effect: ({ unit, player }) => {
-      if (player) {
+      if (player && player.unit.health < player.unit.healthMax) {
         takeDamage(player.unit, -healthPotionRestoreAmount, false);
         // Cap health at max
         player.unit.health = Math.min(player.unit.health, player.unit.healthMax);
