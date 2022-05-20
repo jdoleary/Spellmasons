@@ -7,6 +7,7 @@ import {
 import { calculateCostForSingleCard } from './cards/cardUtils';
 import floatingText from './FloatingText';
 import { playSFX, sfxPageTurn } from './Audio';
+import { composeOnDamageEvents, copyForPredictionUnit } from './Unit';
 
 const elCardHolders = document.getElementById('card-holders') as HTMLElement;
 elCardHolders.addEventListener('contextmenu', e => {
@@ -507,6 +508,10 @@ function updateHealthBadge(elBadge: Element | null, healthCost: number, card: Ca
 // cardUsageCounts object is modified in order to sync the UI
 export function updateCardBadges() {
   if (window.player) {
+    // Using a prediction unit here so that composeOnDamageEvents
+    // used to determine the modified health cost of
+    // spells that cost health will not affect the real player unit
+    const predictionPlayerUnit = copyForPredictionUnit(window.player.unit);
     // Update selected cards
     const selectedCards = getSelectedCards();
     for (let i = 0; i < selectedCards.length; i++) {
@@ -522,7 +527,9 @@ export function updateCardBadges() {
         const elBadgesH = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"] .card-health-badge`);
         const elBadgeH = Array.from(elBadgesH.values())[sliceOfCardsOfSameIdUntilCurrent.length];
         if (elBadgeH) {
-          updateHealthBadge(elBadgeH, cost.healthCost, card);
+          // onDamageEvents alter the healthCost of cards that cost health to cast
+          // such as 'bite', 'vulnerable', or 'shield'
+          updateHealthBadge(elBadgeH, composeOnDamageEvents(predictionPlayerUnit, cost.healthCost, true), card);
         }
       }
     }
@@ -534,7 +541,9 @@ export function updateCardBadges() {
       const elBadge = document.querySelector(`#card-hand .card[data-card-id="${card.id}"] .card-mana-badge`);
       updateManaBadge(elBadge, cost.manaCost, card);
       const elBadgeHealth = document.querySelector(`#card-hand .card[data-card-id="${card.id}"] .card-health-badge`);
-      updateHealthBadge(elBadgeHealth, cost.healthCost, card);
+      // onDamageEvents alter the healthCost of cards that cost health to cast
+      // such as 'bite', 'vulnerable', or 'shield'
+      updateHealthBadge(elBadgeHealth, composeOnDamageEvents(predictionPlayerUnit, cost.healthCost, true), card);
     }
 
     // Update hotkey badges

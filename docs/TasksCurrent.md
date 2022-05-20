@@ -2,7 +2,6 @@
 - **!**Fix host alt-tabbing issue
 - Bug: Brad didn't get to choose upgrade
 - Bug: When you pull a guy and he actually gets to you, and then you move, you "carry" him
-- When you are a vampire healing potions should do damage to you and mana steal should have reduced health costn
 - Chain is information overload
 - Content: A spell to destroy corpses
 - Movement spells should work on pickups

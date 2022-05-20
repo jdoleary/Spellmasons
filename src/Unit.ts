@@ -386,17 +386,21 @@ export function die(unit: IUnit, prediction: boolean) {
   // this will remove the tooltip:
   checkIfNeedToClearTooltip();
   window.underworld.checkIfShouldSpawnPortal();
-
 }
-export function takeDamage(unit: IUnit, amount: number, prediction: boolean, state?: EffectState) {
+export function composeOnDamageEvents(unit: IUnit, damage: number, prediction: boolean): number {
   // Compose onDamageEvents
   for (let eventName of unit.onDamageEvents) {
     const fn = Events.onDamageSource[eventName];
     if (fn) {
       // onDamage events can alter the amount of damage taken
-      amount = fn(unit, amount, prediction);
+      damage = fn(unit, damage, prediction);
     }
   }
+  return damage
+
+}
+export function takeDamage(unit: IUnit, amount: number, prediction: boolean, state?: EffectState) {
+  amount = composeOnDamageEvents(unit, amount, prediction);
   if (!prediction) {
     console.log(`takeDamage: unit ${unit.id}; amount: ${amount}; events:`, unit.onDamageEvents);
   }
