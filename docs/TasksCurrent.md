@@ -2,7 +2,6 @@
 - Movement spells should work on pickups
 - Traps should be inactive for 1 turn
 - "maximum shield" shows a bunch of times on hover if casting the spell would give them map
-- Res should work if the click is on a living unit standing over a dead unit
 ## Stretch Tasks for Today
 
 ## Tasks

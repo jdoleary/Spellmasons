@@ -1357,7 +1357,7 @@ export default class Underworld {
     }
     return withinDistance;
   }
-  getUnitAt(coords: Vec2, prediction?: boolean): Unit.IUnit | undefined {
+  getUnitsAt(coords: Vec2, prediction?: boolean): Unit.IUnit[] {
     const sortedByProximityToCoords = (prediction ? window.predictionUnits : this.units)
       // Filter for only valid units, not units with NaN location or waiting to be removed
       .filter(u => !u.flaggedForRemoval && !isNaN(u.x) && !isNaN(u.y))
@@ -1367,7 +1367,10 @@ export default class Underworld {
       .sort((a, b) => math.distance(a, coords) - math.distance(b, coords))
       // Sort dead units to the back, prefer selecting living units
       .sort((a, b) => a.alive && b.alive ? 0 : a.alive ? -1 : 1);
-    return sortedByProximityToCoords[0]
+    return sortedByProximityToCoords;
+  }
+  getUnitAt(coords: Vec2, prediction?: boolean): Unit.IUnit | undefined {
+    return this.getUnitsAt(coords, prediction)[0];
   }
   getPickupAt(coords: Vec2): Pickup.IPickup | undefined {
     const sortedByProximityToCoords = this.pickups.filter(p => !isNaN(p.x) && !isNaN(p.y)).sort((a, b) => math.distance(a, coords) - math.distance(b, coords));
