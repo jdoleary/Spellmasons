@@ -1269,6 +1269,11 @@ export default class Underworld {
       if (abortTurn) {
         continue unitloop;
       }
+      // If unit is now dead (due to turnStartEvents)
+      // abort their turn
+      if (!u.alive) {
+        continue unitloop;
+      }
       const unitSource = allUnits[u.unitSourceId];
       if (unitSource) {
         const target = this.getUnitAttackTarget(u);
