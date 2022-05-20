@@ -1,7 +1,7 @@
 import seedrandom from 'seedrandom';
 import type { CardCost } from './cards/cardUtils';
 import { getCardRarityColor } from './CardUI';
-import { chooseObjectWithProbability } from './math';
+import { chooseObjectWithProbability, probabilityToRarity } from './math';
 import { MESSAGE_TYPES } from './MessageTypes';
 import type { IPlayer } from './Player';
 export interface IUpgrade {
@@ -102,9 +102,16 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer) {
   title.classList.add('card-title');
   title.innerText = upgrade.title;
   elCardInner.appendChild(title);
+
   const desc = document.createElement('div');
   desc.classList.add('card-description');
-  desc.innerText = upgrade.description(player);
+  const descriptionText = document.createElement('div');
+  descriptionText.innerHTML = upgrade.description(player);
+  desc.appendChild(descriptionText);
+  const rarityText = document.createElement('div');
+  rarityText.innerHTML = `Rarity: ${probabilityToRarity(upgrade.probability)}`;
+  desc.appendChild(rarityText);
+
   elCardInner.appendChild(desc);
   element.addEventListener('click', (e) => {
     // Prevent click from "falling through" upgrade and propagating to vote for overworld level

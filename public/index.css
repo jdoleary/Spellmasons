@@ -125,7 +125,7 @@ body.view-Game.showUpgrades #upgrade-picker {
 }
 
 #upgrade-picker .card-thumb {
-  height: 180px;
+  min-height: 180px;
 }
 
 body.inspect-mode {
@@ -401,6 +401,7 @@ kbd {
 }
 
 .card-inner {
+  display: flex;
   width: 70px;
   border-width: 4px;
   border-style: solid;
@@ -435,6 +436,7 @@ kbd {
   text-align: center;
   text-transform: capitalize;
   white-space: nowrap;
+  max-height: 30px;
 }
 
 #card-inspect .card-title {
@@ -448,12 +450,14 @@ kbd {
   flex-grow: 3;
   padding: 8px;
   color: white;
-  text-align: center;
+  justify-content: space-between;
+  flex-direction: column;
+  height: 100%;
 }
 
 #upgrade-picker-content .card-description,
 #card-inspect .card-description {
-  display: block;
+  display: flex;
 }
 
 #player-turn-indicator-holder {

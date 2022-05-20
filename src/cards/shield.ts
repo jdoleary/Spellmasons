@@ -12,7 +12,7 @@ const spell: Spell = {
     manaCost: 60,
     healthCost: 0,
     expenseScaling: 1,
-    probability: 5,
+    probability: 20,
     thumbnail: 'shield.png',
     description: `
 Protects bearer from the next ${damageBlocked} damage that they would incur.

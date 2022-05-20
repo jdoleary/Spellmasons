@@ -10,7 +10,7 @@ const spell: Spell = {
     manaCost: 20,
     healthCost: 0,
     expenseScaling: 1,
-    probability: 10,
+    probability: 20,
     thumbnail: 'stomp.png',
     description: `Pushes units away from caster`,
     allowNonUnitTarget: true,
