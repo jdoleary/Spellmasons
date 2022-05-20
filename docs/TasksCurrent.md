@@ -1,6 +1,4 @@
 ## Today Tasks
-- bug: You can spawn on a pickup such as spikes
-- Content: A spell to destroy corpses
 
 - Traps should be inactive for 1 turn
     - Similar to "time crystal's" time release feature
@@ -64,3 +62,4 @@ and 2nd client got `Cannot change character, player not found with id 8c502be8-6
     - Maybe a spawn crystal that if you don't kill it, it'll spawn a bunch of bad guys
 - An enemy that consumes allies to get stronger
 - Specific barriers or walls that can't be cast through
+- Content: A spell to destroy corpses

@@ -1,3 +1,5 @@
+- bug: You can spawn on a pickup such as spikes
+  - couldn't reproduce
 - "maximum shield" shows a bunch of times on hover if casting the spell would give them map
 - TODO: Split up runPredictions so that it only checks canAttackTarget after units have moved, not every loop
     - Sync prediction units every loop is a waste too if nothing changes
