@@ -2,12 +2,12 @@ import * as Image from './Image';
 import * as PIXI from 'pixi.js';
 import * as config from './config';
 import { addPixiSprite, containerUnits } from './PixiUtils';
+import type { Vec2 } from './Vec';
+// TODO: need to sync timerelease??
 export interface ITimeRelease {
-    // A unique id so that units can be identified
-    // across the network
-    id: number;
     x: number;
     y: number;
+    description: string;
     radius: number;
     image: Image.IImage;
     text: PIXI.Text;
@@ -20,19 +20,16 @@ export function cleanup(t: ITimeRelease) {
     window.underworld.timeReleases = window.underworld.timeReleases.filter(x => x !== t);
 }
 
-export function create() {
-    const turnsLeft = 2;
+export function create({ pos, description, imagePath, turnsLeft, onRelease }: { pos: Vec2, description: string, imagePath: string, turnsLeft: number, onRelease: () => Promise<void> }) {
     const t: ITimeRelease = {
-        id: 1,
-        x: 64,
-        y: 64,
+        x: pos.x,
+        y: pos.y,
+        description,
         radius: config.COLLISION_MESH_RADIUS,
-        image: Image.create({ x: 64, y: 64, }, 'time-crystal.png', containerUnits),
+        image: Image.create(pos, imagePath, containerUnits),
         text: new PIXI.Text(`${turnsLeft}`, { fill: 'white', align: 'center' }),
         turnsLeft,
-        onRelease: async () => {
-            window.underworld.spawnEnemy('demon', { x: 64, y: 64 }, false, 1)
-        }
+        onRelease
     }
     window.underworld.timeReleases.push(t);
 

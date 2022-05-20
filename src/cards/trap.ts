@@ -2,9 +2,11 @@ import type { Spell } from '.';
 import * as Pickup from '../Pickup';
 import * as Image from '../Image';
 import { containerUnits } from '../PixiUtils';
+import * as TimeRelease from '../TimeRelease';
 
 export const id = 'trap';
 const manaCostMultiplier = 0.8;
+const turnsItTakesTrapToWindUp = 2;
 const spell: Spell = {
   card: {
     id,
@@ -16,7 +18,7 @@ const spell: Spell = {
     requiresFollowingCard: true,
     thumbnail: 'trap.png',
     description: `
-Sets a spell as a trap, to be triggered when stepped on.  Wrapping a spell in a trap reduces its mana cost.
+Sets a spell as a trap, to be triggered when stepped on.  Wrapping a spell in a trap reduces its mana cost.  The trap will be ready to be sprung after ${turnsItTakesTrapToWindUp} turns.
     `,
     allowNonUnitTarget: true,
     effect: async (state, prediction) => {
@@ -24,32 +26,39 @@ Sets a spell as a trap, to be triggered when stepped on.  Wrapping a spell in a 
       const cardsInTrap = state.cardIds.filter(x => x !== id);
       state.cardIds = [];
       if (!prediction) {
-        const imagePath = 'pickups/trap.png';
-        const x = state.castLocation.x;
-        const y = state.castLocation.y;
-        const self: Pickup.IPickup = {
-          x,
-          y,
-          radius: Pickup.PICKUP_RADIUS,
-          name: 'Trap',
-          description: `Triggers a spell when stepped on.  This trap contains: ${cardsInTrap.join(', ')}.`,
-          imagePath,
-          // Pickups are stored in containerUnits so that they
-          // will be automatically z-indexed
-          image: Image.create({ x, y }, imagePath, containerUnits),
-          singleUse: true,
-          playerOnly: false,
-          effect: ({ unit }) => {
-            if (unit) {
-              window.underworld.castCards({}, state.casterUnit, cardsInTrap, unit, false, true);
-              return true;
-            } else {
-              console.error('Tried to trigger trap, but unit was undefined')
-            }
-          },
-        };
+        TimeRelease.create({
+          pos: state.castLocation,
+          description: 'The trap is winding...',
+          imagePath: 'pickups/trap-closed.png', turnsLeft: turnsItTakesTrapToWindUp, onRelease: async () => {
+            const x = state.castLocation.x;
+            const y = state.castLocation.y;
+            const imagePath = 'pickups/trap.png';
+            const self: Pickup.IPickup = {
+              x,
+              y,
+              radius: Pickup.PICKUP_RADIUS,
+              name: 'Trap',
+              description: `Triggers a spell when stepped on.  This trap contains: ${cardsInTrap.join(', ')}.`,
+              imagePath,
+              // Pickups are stored in containerUnits so that they
+              // will be automatically z-indexed
+              image: Image.create({ x, y }, imagePath, containerUnits),
+              singleUse: true,
+              playerOnly: false,
+              effect: ({ unit }) => {
+                if (unit) {
+                  window.underworld.castCards({}, state.casterUnit, cardsInTrap, unit, false, true);
+                  return true;
+                } else {
+                  console.error('Tried to trigger trap, but unit was undefined')
+                }
+              },
+            };
+            window.underworld.addPickupToArray(self);
 
-        window.underworld.addPickupToArray(self);
+          }
+        })
+
       }
       return state;
     },

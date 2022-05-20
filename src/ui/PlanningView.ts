@@ -9,6 +9,7 @@ import { turn_phase } from '../Underworld';
 import * as CardUI from '../CardUI';
 import * as config from '../config';
 import * as Unit from '../Unit';
+import type * as TimeRelease from '../TimeRelease';
 import type * as Pickup from '../Pickup';
 import { targetBlue } from './colors';
 import { calculateCost, CardCost } from '../cards/cardUtils';
@@ -270,9 +271,10 @@ const elInspectorTooltipImage: HTMLImageElement = (document.getElementById(
   'inspector-tooltip-image',
 ) as HTMLImageElement);
 
-let selectedType: "unit" | "pickup" | "obstacle" | null = null;
+let selectedType: "unit" | "pickup" | "obstacle" | "timeRelease" | null = null;
 let selectedUnit: Unit.IUnit | undefined;
 let selectedPickup: Pickup.IPickup | undefined;
+let selectedTimeRelease: TimeRelease.ITimeRelease | undefined;
 export function updateTooltipContent() {
   if (
     !(
@@ -331,6 +333,13 @@ ${cards}
         text += `\
 ${selectedPickup.name}
 ${selectedPickup.description}
+      `;
+      }
+      break;
+    case "timeRelease":
+      if (selectedTimeRelease) {
+        text += `\
+${selectedTimeRelease.description}
       `;
       }
       break;
@@ -395,6 +404,14 @@ export function updateTooltipSelection(mousePos: Vec2) {
   } else {
     selectedPickup = undefined;
   }
+  const timeRelease = window.underworld.getTimeReleaseAt(mousePos);
+  if (timeRelease) {
+    selectedTimeRelease = timeRelease;
+    selectedType = "timeRelease";
+    return
+  } else {
+    selectedTimeRelease = undefined;
+  }
   // If nothing was found to select, null-out selectedType
   // deselect
   selectedType = null;
@@ -402,7 +419,7 @@ export function updateTooltipSelection(mousePos: Vec2) {
 
 // Draws a faint circle over things that can be clicked on
 export function drawCircleUnderTarget(mousePos: Vec2, opacity: number, graphics: PIXI.Graphics) {
-  const target: Vec2 | undefined = window.underworld.getUnitAt(mousePos) || window.underworld.getPickupAt(mousePos);
+  const target: Vec2 | undefined = window.underworld.getUnitAt(mousePos) || window.underworld.getPickupAt(mousePos) || window.underworld.getTimeReleaseAt(mousePos);
   if (target) {
     graphics.lineStyle(3, 0xFFFFFF, opacity);
     graphics.beginFill(0x000000, 0);

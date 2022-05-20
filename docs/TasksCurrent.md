@@ -1,9 +1,3 @@
-## Today Tasks
-
-- Traps should be inactive for 1 turn
-    - Similar to "time crystal's" time release feature
-## Stretch Tasks for Today
-
 ## Tasks
 - Bug: Sometimes grunt animations just stop
 - Task: An ally that has died at all (even if ressed) should lose their upgrade priviledge

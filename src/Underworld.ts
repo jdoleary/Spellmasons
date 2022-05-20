@@ -1,4 +1,3 @@
-import * as PIXI from 'pixi.js';
 import seedrandom from 'seedrandom';
 import * as config from './config';
 import * as Unit from './Unit';
@@ -27,7 +26,7 @@ import {
   withinCameraBounds,
   containerPlayerThinking,
 } from './PixiUtils';
-import floatingText, { centeredFloatingText, elPIXIHolder } from './FloatingText';
+import floatingText, { centeredFloatingText } from './FloatingText';
 import { UnitType, Faction, UnitSubType } from './commonTypes';
 import type { Vec2 } from "./Vec";
 import * as Vec from "./Vec";
@@ -1435,6 +1434,11 @@ export default class Underworld {
   }
   getPickupAt(coords: Vec2): Pickup.IPickup | undefined {
     const sortedByProximityToCoords = this.pickups.filter(p => !isNaN(p.x) && !isNaN(p.y) && math.distance(coords, p) <= p.radius).sort((a, b) => math.distance(a, coords) - math.distance(b, coords));
+    const closest = sortedByProximityToCoords[0]
+    return closest;
+  }
+  getTimeReleaseAt(coords: Vec2): TimeRelease.ITimeRelease | undefined {
+    const sortedByProximityToCoords = this.timeReleases.filter(p => !isNaN(p.x) && !isNaN(p.y) && math.distance(coords, p) <= p.radius).sort((a, b) => math.distance(a, coords) - math.distance(b, coords));
     const closest = sortedByProximityToCoords[0]
     return closest;
   }
