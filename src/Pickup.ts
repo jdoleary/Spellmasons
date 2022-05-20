@@ -141,7 +141,7 @@ export function triggerPickup(pickup: IPickup, unit: IUnit) {
 }
 
 const manaPotionRestoreAmount = 40;
-const healthPotionRestoreAmount = 10;
+const healthPotionRestoreAmount = 5;
 const spike_damage = 6;
 export const pickups: IPickupSource[] = [
   {
@@ -245,7 +245,7 @@ export const pickups: IPickupSource[] = [
     description: `Restores ${healthPotionRestoreAmount} health.`,
     effect: ({ unit, player }) => {
       if (player) {
-        player.unit.health += healthPotionRestoreAmount;
+        takeDamage(player.unit, -healthPotionRestoreAmount, false);
         // Cap health at max
         player.unit.health = Math.min(player.unit.health, player.unit.healthMax);
         // Now that the player unit's mana has increased,sync the new
