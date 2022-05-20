@@ -33,7 +33,7 @@ export interface IPickup {
   // returns true if the pickup did in fact trigger - this is useful
   // for preventing one use health potions from triggering if the unit
   // already has max health
-  effect: ({ unit, player }: { unit?: IUnit; player?: Player.IPlayer }) => boolean;
+  effect: ({ unit, player }: { unit?: IUnit; player?: Player.IPlayer }) => boolean | undefined;
 }
 interface IPickupSource {
   name: string;
@@ -45,7 +45,7 @@ interface IPickupSource {
   turnsLeftToGrab?: number;
   scale: number;
   probability: number;
-  effect: ({ unit, player }: { unit?: IUnit; player?: Player.IPlayer }) => boolean;
+  effect: ({ unit, player }: { unit?: IUnit; player?: Player.IPlayer }) => boolean | undefined;
 }
 
 export function create(

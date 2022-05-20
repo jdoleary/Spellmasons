@@ -42,6 +42,7 @@ Sets a spell as a trap, to be triggered when stepped on.  Wrapping a spell in a 
           effect: ({ unit }) => {
             if (unit) {
               window.underworld.castCards({}, state.casterUnit, cardsInTrap, unit, false, true);
+              return true;
             } else {
               console.error('Tried to trigger trap, but unit was undefined')
             }
