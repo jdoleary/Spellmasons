@@ -3,7 +3,7 @@ import * as Unit from '../Unit';
 import * as Image from '../Image';
 import type { Spell } from '.';
 import { drawPredictionCircle } from '../ui/PlanningView';
-import { push } from './push';
+import { forcePush } from './push';
 
 const id = 'explode';
 const damage = 3;
@@ -69,7 +69,7 @@ const spell: Spell = {
         prediction
       ).forEach(u => {
         // Push units away from exploding unit
-        push(u, unit, prediction);
+        forcePush(u, unit, prediction);
         // Deal damage to units
         takeDamage(u, damage, prediction);
       });
@@ -78,7 +78,7 @@ const spell: Spell = {
         range
       ).forEach(p => {
         // Push pickups away
-        push(p, unit, prediction);
+        forcePush(p, unit, prediction);
       })
     }
   }

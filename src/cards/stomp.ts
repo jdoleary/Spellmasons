@@ -1,6 +1,6 @@
 import type { Spell } from '.';
 import { drawPredictionCircle } from '../ui/PlanningView';
-import { push } from './push';
+import { forcePush } from './push';
 
 const id = 'stomp';
 const range = 200;
@@ -22,14 +22,14 @@ const spell: Spell = {
         state.casterUnit,
         range,
         prediction
-      ).forEach(unit => push(unit, state.casterUnit, prediction));
+      ).forEach(unit => forcePush(unit, state.casterUnit, prediction));
 
       window.underworld.getPickupsWithinDistanceOfTarget(
         state.casterUnit,
         range
       ).forEach(p => {
         // Push pickups away
-        push(p, state.casterUnit, prediction);
+        forcePush(p, state.casterUnit, prediction);
       })
 
       return state;
