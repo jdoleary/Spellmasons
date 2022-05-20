@@ -1,49 +1,20 @@
 # Critical Path (4st deadline revision)
 - Game Scale Difficulty for endgame
     - With better content: "night king", "ogre"
+    - More intelligent looping, like nuclear throne
 - Better maps
-- Art / Shaders / Juice
-    - Juice
-        - Cards move from hand to selected
-        - Cards flip as you drag-n-drop over them
-        - Improved unit tooltip
-        - Unique animations for each spell
-        - Unique timing for each spell's animations
-        - Multiple of the same card fire off quickly?
-    - Shaders
-        - Water / Void
-        - See Shaders.md
-    - Art
-        - Come up with palette first
-        - Assets needed:
-            - 8 Wizards, color change in shader
-            - Pickup
-                - Potion
-            - Enemies
-                - Grunt
-                - Archer
-                - Demon
-                - Lobber
-                - Priest
-            - Tiles
-                - Wall
-                - Floor
-                - Void / Water?
-        - Inspiration: https://vryell.itch.io/tiny-biomes-pack
-        - Tiles: https://opengameart.org/content/dungeon-tileset
-        - https://opengameart.org/content/rogue-dungeon
-        - [Polyhaven - Free Assets](https://polyhaven.com/)
-- [SFX](https://www.asoundeffect.com/sound-library/metamorphosis/)
-    - Adobe? https://www.adobe.com/products/audition/offers/AdobeAuditionDLCSFX.html
-- [Tutorial](https://www.youtube.com/watch?v=-GV814cWiAw)
-- Optimize
-    - Optimize pathing (on some large maps there are points you can't reach, but maybe I'll limit map size to smaller anyway)
-- Package as Electron App
-    - [Storage and Persistence](https://cameronnokes.com/blog/how-to-store-user-data-in-electron/)
-    - [AutoUpdate](https://github.com/vercel/hazel)
-- More content
-    - Engage community in making new spells
-    - Specific barriers or walls that can't be cast through
+- Aesthetic
+    - Art / Shaders / Juice / SFX / Music
+- Final Steps
+    - [Tutorial](https://www.youtube.com/watch?v=-GV814cWiAw)
+    - Optimize
+        - Optimize pathing (on some large maps there are points you can't reach, but maybe I'll limit map size to smaller anyway)
+    - Package as Electron App
+        - [Storage and Persistence](https://cameronnokes.com/blog/how-to-store-user-data-in-electron/)
+        - [AutoUpdate](https://github.com/vercel/hazel)
+    - Multiplayer Community Servers
+        - Stress test droplets to see how many users they can support
+    - More content
 
 ## Deadlines
 - ~~My part (gameplay) should be finished end of Feb 2022~~

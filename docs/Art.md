@@ -1,3 +1,5 @@
+- Come up with palette first
+
 - Units
     - Player Wizards
     - grunt
@@ -45,3 +47,9 @@
 
 # Hashtags
 #indiegamedev #roguelike #roguelikegames #multiplayer #turnbased #turnbasedgame 
+
+# Inspo
+- Inspiration: https://vryell.itch.io/tiny-biomes-pack
+- Tiles: https://opengameart.org/content/dungeon-tileset
+- https://opengameart.org/content/rogue-dungeon
+- [Polyhaven - Free Assets](https://polyhaven.com/)

@@ -1,4 +1,5 @@
-## Today Tasks
+## Tasks
+- **!**Fix host alt-tabbing issue
 - Bug: Brad didn't get to choose upgrade
 - Bug: Push no longer shows where they will go
 - Bug: Trap keeps spells from getting more expensive
@@ -68,7 +69,9 @@ and 2nd client got `Cannot change character, player not found with id 8c502be8-6
 
 
 ## More content
+- Get to choose first 3 spells
 - Upgradable spells like hurt2
 - Disincentivise hiding and casting
     - Maybe a spawn crystal that if you don't kill it, it'll spawn a bunch of bad guys
 - An enemy that consumes allies to get stronger
+- Specific barriers or walls that can't be cast through
