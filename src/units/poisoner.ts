@@ -1,6 +1,6 @@
 import type { UnitSource } from './index';
 import { UnitSubType } from '../commonTypes';
-import { createVisualFlyingProjectile } from '../Projectile';
+import { createVisualLobbingProjectile } from '../Projectile';
 import * as Unit from '../Unit';
 import * as math from '../math';
 import * as poison from '../cards/poison';
@@ -10,11 +10,11 @@ const unit: UnitSource = {
   info: {
     description: 'A poisoner will cast a poison curse on it\'s enemies.',
     image: 'units/golem-poison.png',
-    subtype: UnitSubType.RANGED_LOS,
+    subtype: UnitSubType.RANGED_RADIUS,
     probability: 30,
   },
   unitProps: {
-    attackRange: 150
+    attackRange: 300
   },
   action: async (unit: Unit.IUnit) => {
     const nonPoisonedEnemyUnits = window.underworld.units.filter(
@@ -26,16 +26,16 @@ const unit: UnitSource = {
     if (nonPoisonedEnemyUnits.length) {
       const chosenUnit = nonPoisonedEnemyUnits[0];
       if (chosenUnit) {
-        const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, chosenUnit, unit.stamina);
-        await Unit.moveTowards(unit, moveTo);
         if (Unit.inRange(unit, chosenUnit)) {
-          createVisualFlyingProjectile(
+          createVisualLobbingProjectile(
             unit,
             chosenUnit,
             'green-thing.png',
           );
           Unit.addModifier(chosenUnit, poison.id);
         }
+        const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, chosenUnit, unit.stamina);
+        await Unit.moveTowards(unit, moveTo);
       }
     }
   },
