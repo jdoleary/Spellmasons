@@ -11,6 +11,7 @@ import { randInt } from './rand';
 import { clearTooltipSelection } from './ui/PlanningView';
 import defaultPlayerUnit from './units/jester';
 import { MESSAGE_TYPES } from './MessageTypes';
+import { jitter } from './Vec';
 
 // The serialized version of the interface changes the interface to allow only the data
 // that can be serialized in JSON.  It may exclude data that is not neccessary to
@@ -116,7 +117,8 @@ export function resetPlayerForNextLevel(player: IPlayer) {
     console.log('Choose spawn', index, 'of', window.underworld.validPlayerSpawnCoords.length);
     const spawnCoords = window.underworld.validPlayerSpawnCoords[index];
     if (spawnCoords) {
-      Unit.setLocation(player.unit, spawnCoords);
+      // jitter ensures that units don't perfectly overlap
+      Unit.setLocation(player.unit, jitter(spawnCoords, player.unit.radius));
     } else {
       console.log('Level: cannot find valid spawn for player unit');
     }
