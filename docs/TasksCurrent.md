@@ -9,7 +9,6 @@
 - Task: An ally that has died at all (even if ressed) should lose their upgrade priviledge
 - Task: Better shaders for lava?
 - **!**Fix host alt-tabbing issue
-- Bug: Brad didn't get to choose upgrade
 - Bug: When you pull a guy and he actually gets to you, and then you move, you "carry" him
 - Chain is information overload
 - Content: A spell to destroy corpses

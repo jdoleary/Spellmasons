@@ -1,11 +1,9 @@
 import seedrandom from 'seedrandom';
 import type { CardCost } from './cards/cardUtils';
 import { getCardRarityColor } from './CardUI';
-import { NUMBER_OF_UPGRADES_TO_CHOOSE_FROM } from './config';
 import { chooseObjectWithProbability } from './math';
 import { MESSAGE_TYPES } from './MessageTypes';
 import type { IPlayer } from './Player';
-import { setView, View } from './views';
 export interface IUpgrade {
   title: string;
   description: (player: IPlayer) => string;
@@ -18,7 +16,8 @@ export interface IUpgrade {
   cost: CardCost;
 }
 // Chooses a random card based on the card's probabilities
-export function generateUpgrades(player: IPlayer): IUpgrade[] {
+// minimumProbability ensures that super rare cards won't be presented too early on
+export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, minimumProbability: number): IUpgrade[] {
   // Dead players choose special upgrades
   if (!player.unit.alive) {
     return [...upgradeSourceWhenDead];
@@ -39,12 +38,15 @@ export function generateUpgrades(player: IPlayer): IUpgrade[] {
   // Every other level, players get to choose from stas upgrades or card upgrades
   // Unless Player already has all of the upgrades, in which case they
   // only have stat upgrades to choose from
-  const upgradeList = filteredUpgradeCardsSource.length === 0 || isAltitudeEven ? upgradeStatsSource.filter(filterUpgrades) : filteredUpgradeCardsSource;
+  let upgradeList = filteredUpgradeCardsSource.length === 0 || !isAltitudeEven ? upgradeStatsSource.filter(filterUpgrades) : filteredUpgradeCardsSource;
+  // Limit the rarity of cards that are possible to attain
+  upgradeList = upgradeList.filter(u => u.probability >= minimumProbability);
+
   // Clone upgrades for later mutation
   const clonedUpgradeSource = [...upgradeList];
   // Choose from upgrades
   const numberOfCardsToChoose = Math.min(
-    NUMBER_OF_UPGRADES_TO_CHOOSE_FROM,
+    numberOfUpgrades,
     clonedUpgradeSource.length,
   );
   for (
@@ -66,7 +68,8 @@ export function generateUpgrades(player: IPlayer): IUpgrade[] {
 }
 export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer) {
   const element = document.createElement('div');
-  element.classList.add('card');
+  element.classList.add('card', 'upgrade');
+  element.dataset.upgrade = upgrade.title;
   const elCardInner = document.createElement('div');
   elCardInner.classList.add('card-inner');
   elCardInner.style.borderColor = getCardRarityColor(upgrade);
@@ -110,8 +113,6 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer) {
       type: MESSAGE_TYPES.CHOOSE_UPGRADE,
       upgrade,
     });
-    // Now that you've chosen an upgrade, view the game screen
-    setView(View.Game);
   });
   return element;
 }

@@ -17,7 +17,7 @@ export const START_CARDS_COUNT = 60;
 export const MILLIS_PER_ANIMATION = 200;
 export const MILLIS_PER_SPELL_ANIMATION = 400;
 export const PERCENT_CHANCE_OF_HEAVY_UNIT = 10;
-export const NUMBER_OF_UPGRADES_TO_CHOOSE_FROM = 5;
+export const STARTING_CARD_COUNT = 3;
 // Obstacle sectors must be squares
 // Obstacle sector makeup is hard-coded as 3x3 but can be changed if
 // all of the Sectors are changed in ObstacleSectors.ts

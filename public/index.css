@@ -89,7 +89,7 @@ body.view-CharacterSelect #card-holders {
   background-color: rgba(255, 255, 255, 0.5);
 }
 
-body.view-Upgrade #upgrade-picker {
+body.view-Game.showUpgrades #upgrade-picker {
   display: flex;
 }
 
@@ -104,7 +104,8 @@ body.view-Upgrade #upgrade-picker {
   text-align: center;
   color: white;
   font-weight: bold;
-  font-size: 24px;
+  font-size: 54px;
+  margin-bottom: 12px;
 }
 
 #upgrade-picker .card {
@@ -468,7 +469,7 @@ kbd {
   width: 140px;
 }
 
-body.your-turn:not(.view-Upgrade) #player-turn-indicator-holder {
+body.your-turn:not(.showUpgrades) #player-turn-indicator-holder {
   background-color: gold;
 }
 
@@ -510,7 +511,7 @@ body.your-turn #end-turn-btn {
 
 /* Hide player turn indicator when viewing upgrades
 because a user shouldn't see "Your Turn" when looking at upgrades */
-body.view-Upgrade #player-turn-indicator {
+body.showUpgrades #player-turn-indicator {
   display: none;
 }
 
@@ -958,4 +959,8 @@ body.view-Disconnected #websocketpie-connection-status {
 /* Show that camera is being dragged with the mouse */
 body.draggingCamera {
   cursor: grabbing;
+}
+
+.card.upgrade.chosen {
+  opacity: 0.5;
 }

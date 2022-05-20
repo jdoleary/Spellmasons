@@ -71,9 +71,9 @@ export function create(clientId: string): IPlayer {
   updateGlobalRefToCurrentClientPlayer(player);
   // Add initial cards to hand
   CardUI.addCardToHand(allCards['hurt'], player);
-  CardUI.addCardToHand(allCards['heal'], player);
+  // CardUI.addCardToHand(allCards['heal'], player);
   // CardUI.addCardToHand(allCards['AOE'], player);
-  CardUI.addCardToHand(allCards['chain'], player);
+  // CardUI.addCardToHand(allCards['chain'], player);
   // CardUI.addCardToHand(allCards['purify'], player);
   // CardUI.addCardToHand(allCards['mana_burn'], player);
   // CardUI.addCardToHand(allCards['mana_steal'], player);

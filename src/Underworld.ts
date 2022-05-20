@@ -69,6 +69,7 @@ const elUpgradePicker = document.getElementById('upgrade-picker') as HTMLElement
 const elUpgradePickerContent = document.getElementById('upgrade-picker-content') as HTMLElement;
 const elSeed = document.getElementById('seed') as HTMLElement;
 const elCardHolders = document.getElementById('card-holders') as HTMLElement;
+const elUpgradePickerLabel = document.getElementById('upgrade-picker-label') as HTMLElement;
 
 let lastTime = 0;
 let requestAnimationFrameGameLoopId: number;
@@ -787,6 +788,13 @@ export default class Underworld {
   }
   // creates a level from levelData
   createLevel(levelData: LevelData) {
+    // showUpgrades is invoked by createLevel which is called from a wsPie message
+    // rather than from checkForEndOfLevel() because all players are guarunteed to receive
+    // the CREATE_LEVEL message whereas, checkForEndOfLevel could be subject to a race condition
+    // that might prevent the upgrade screen from showing for some users in rare circumstances.
+    // Better to have the upgrade screen tied to the network message.
+    this.showUpgrades();
+
     console.log('Setup: createLevel', levelData);
     window.lastLevelCreated = levelData;
     // Clean up the previous level
@@ -1100,6 +1108,48 @@ export default class Underworld {
   chooseUpgrade(player: Player.IPlayer, upgrade: Upgrade.IUpgrade) {
     upgrade.effect(player);
     player.upgrades.push(upgrade);
+    if (player == window.player) {
+      document.body.querySelector(`.card[data-upgrade="${upgrade.title}"]`)?.classList.toggle('chosen', true);
+      // Clear upgrades when current player has picked one
+      if (player.cards.length >= config.STARTING_CARD_COUNT) {
+        document.body.classList.toggle('showUpgrades', false);
+      }
+    }
+  }
+
+  showUpgrades() {
+    let minimumProbability = 0;
+    if (this.levelIndex == 0) {
+      // Limit starting cards to a probability of 10 or more
+      minimumProbability = 10;
+      elUpgradePickerLabel.innerHTML = `Pick ${config.STARTING_CARD_COUNT} starting cards.`;
+    } else {
+      elUpgradePickerLabel.innerHTML = 'Pick an upgrade.';
+    }
+    // Now that level is complete, move to the Upgrade view where players can choose upgrades
+    // before moving on to the next level
+    // Generate Upgrades
+    document.body.classList.toggle('showUpgrades', true);
+    if (!elUpgradePicker || !elUpgradePickerContent) {
+      console.error('elUpgradePicker or elUpgradePickerContent are undefined.');
+    }
+    const player = this.players.find(
+      (p) => p.clientId === window.clientId,
+    );
+    if (player) {
+      const upgrades = Upgrade.generateUpgrades(player, 5, minimumProbability);
+      const elUpgrades = upgrades.map((upgrade) =>
+        Upgrade.createUpgradeElement(upgrade, player),
+      );
+      if (elUpgradePickerContent) {
+        elUpgradePickerContent.innerHTML = '';
+        for (let elUpgrade of elUpgrades) {
+          elUpgradePickerContent.appendChild(elUpgrade);
+        }
+      }
+    } else {
+      console.error('Upgrades cannot be generated, player not found');
+    }
   }
 
   // Returns true if it goes to the next level
@@ -1112,32 +1162,6 @@ export default class Underworld {
       livingPlayers.filter((p) => p.inPortal).length === livingPlayers.length;
     // Advance the level if there are living players and they all are in the portal:
     if (livingPlayers.length && areAllLivingPlayersInPortal) {
-      // Now that level is complete, move to the Upgrade view where players can choose upgrades
-      // before moving on to the next level
-      // Generate Upgrades
-      if (!elUpgradePicker || !elUpgradePickerContent) {
-        console.error('elUpgradePicker or elUpgradePickerContent are undefined.');
-      }
-      const player = this.players.find(
-        (p) => p.clientId === window.clientId,
-      );
-      if (player) {
-        const upgrades = Upgrade.generateUpgrades(player);
-        const elUpgrades = upgrades.map((upgrade) =>
-          Upgrade.createUpgradeElement(upgrade, player),
-        );
-        if (elUpgradePickerContent) {
-          elUpgradePickerContent.innerHTML = '';
-          for (let elUpgrade of elUpgrades) {
-            elUpgradePickerContent.appendChild(elUpgrade);
-          }
-        }
-      } else {
-        console.error('Upgrades cannot be generated, player not found');
-      }
-      // Make upgrades visible
-      setView(View.Upgrade);
-
       // Invoke initLevel within a timeout so that this function
       // doesn't have to wait for level generation to complete before
       // returning

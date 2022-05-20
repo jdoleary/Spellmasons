@@ -29,7 +29,6 @@ export enum View {
   Setup,
   CharacterSelect,
   Game,
-  Upgrade,
   Disconnected
 }
 const elUpgradePicker = document.getElementById('upgrade-picker') as HTMLElement;
