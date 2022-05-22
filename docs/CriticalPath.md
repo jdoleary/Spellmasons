@@ -15,6 +15,7 @@
     - Multiplayer Community Servers
         - Stress test droplets to see how many users they can support
     - More content
+        - Spell packs!
 
 ## Deadlines
 - ~~My part (gameplay) should be finished end of Feb 2022~~

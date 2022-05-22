@@ -25,6 +25,7 @@ import {
   getCamera,
   withinCameraBounds,
   containerPlayerThinking,
+  containerWalls,
 } from './PixiUtils';
 import floatingText, { centeredFloatingText } from './FloatingText';
 import { UnitType, Faction, UnitSubType } from './commonTypes';
@@ -772,6 +773,7 @@ export default class Underworld {
 
     // Clear all floor images
     containerBoard.removeChildren();
+    containerWalls.removeChildren();
     this.groundTiles = [];
 
     // Clear card usage counts, otherwise players will be
