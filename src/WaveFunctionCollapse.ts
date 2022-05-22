@@ -193,21 +193,6 @@ const sourceCells: Cell[] = [
         rotation: 0
     },
     {
-        image: 'tiles/11.png',
-        materials: [
-            Material.GROUND,
-            Material.WALL,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-            Material.WALL,
-            Material.GROUND,
-            Material.GROUND,
-        ],
-        probability: 10,
-        rotation: 0
-    },
-    {
         image: 'tiles/12.png',
         materials: [
             Material.GROUND,
