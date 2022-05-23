@@ -2,7 +2,7 @@ import { chooseObjectWithProbability } from "./math";
 import { add, equal, Vec2 } from "./Vec"
 
 export enum Material {
-    WATER,
+    FLUID,
     GROUND,
     WALL,
     VOID
@@ -18,7 +18,20 @@ north size is 0,1,2,
 etc
 */
 interface Cell {
-    materials: Material[];
+    materials: {
+        top_left: Material,
+        top_center: Material,
+        top_right: Material,
+        right_top: Material,
+        right_center: Material,
+        right_bottom: Material,
+        bottom_right: Material,
+        bottom_center: Material,
+        bottom_left: Material,
+        left_bottom: Material,
+        left_center: Material,
+        left_top: Material,
+    };
     image: string;
     rotation: number;
     probability: number;
@@ -42,230 +55,365 @@ export function vec2ToOneDimentionIndex(pos: Vec2, width: number): number {
 }
 const void_cell: Cell = {
     image: 'tiles/8.png',
-    materials: [
-        Material.WATER,
-        Material.WATER,
-        Material.WATER,
-        Material.WATER,
-        Material.WATER,
-        Material.WATER,
-        Material.WATER,
-        Material.WATER,
-    ],
+    materials: {
+        top_left: Material.FLUID,
+        top_center: Material.FLUID,
+        top_right: Material.FLUID,
+        right_top: Material.FLUID,
+        right_center: Material.FLUID,
+        right_bottom: Material.FLUID,
+        bottom_right: Material.FLUID,
+        bottom_center: Material.FLUID,
+        bottom_left: Material.FLUID,
+        left_bottom: Material.FLUID,
+        left_center: Material.FLUID,
+        left_top: Material.FLUID,
+    },
     rotation: 0,
     probability: 10,
 };
 const sourceCells: Cell[] = [
     {
-        image: 'tiles/1.png',
-        materials: [
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-        ],
+        image: 'tiles/all_wall.png',
+        materials: {
+            top_left: Material.WALL,
+            top_center: Material.WALL,
+            top_right: Material.WALL,
+            right_top: Material.WALL,
+            right_center: Material.WALL,
+            right_bottom: Material.WALL,
+            bottom_right: Material.WALL,
+            bottom_center: Material.WALL,
+            bottom_left: Material.WALL,
+            left_bottom: Material.WALL,
+            left_center: Material.WALL,
+            left_top: Material.WALL,
+        },
+        rotation: 0,
         probability: 10,
-        rotation: 0
     },
     {
-        image: 'tiles/2.png',
-        materials: [
-            Material.GROUND,
-            Material.WALL,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-        ],
+        image: 'tiles/b1.png',
+        materials: {
+            top_left: Material.WALL,
+            top_center: Material.WALL,
+            top_right: Material.WALL,
+            right_top: Material.FLUID,
+            right_center: Material.FLUID,
+            right_bottom: Material.FLUID,
+            bottom_right: Material.FLUID,
+            bottom_center: Material.FLUID,
+            bottom_left: Material.FLUID,
+            left_bottom: Material.FLUID,
+            left_center: Material.FLUID,
+            left_top: Material.FLUID,
+        },
+        rotation: 0,
         probability: 10,
-        rotation: 0
     },
     {
-        image: 'tiles/3.png',
-        materials: [
-            Material.GROUND,
-            Material.WALL,
-            Material.GROUND,
-            Material.WALL,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-        ],
+        image: 'tiles/b2.png',
+        materials: {
+            top_left: Material.WALL,
+            top_center: Material.WALL,
+            top_right: Material.WALL,
+            right_top: Material.WALL,
+            right_center: Material.FLUID,
+            right_bottom: Material.FLUID,
+            bottom_right: Material.FLUID,
+            bottom_center: Material.FLUID,
+            bottom_left: Material.FLUID,
+            left_bottom: Material.FLUID,
+            left_center: Material.FLUID,
+            left_top: Material.FLUID,
+        },
+        rotation: 0,
         probability: 10,
-        rotation: 0
     },
     {
-        image: 'tiles/4.png',
-        materials: [
-            Material.GROUND,
-            Material.WALL,
-            Material.GROUND,
-            Material.WALL,
-            Material.GROUND,
-            Material.WALL,
-            Material.GROUND,
-            Material.GROUND,
-        ],
+        image: 'tiles/b3.png',
+        materials: {
+            top_left: Material.WALL,
+            top_center: Material.WALL,
+            top_right: Material.WALL,
+            right_top: Material.WALL,
+            right_center: Material.WALL,
+            right_bottom: Material.FLUID,
+            bottom_right: Material.FLUID,
+            bottom_center: Material.FLUID,
+            bottom_left: Material.FLUID,
+            left_bottom: Material.FLUID,
+            left_center: Material.FLUID,
+            left_top: Material.FLUID,
+        },
+        rotation: 0,
         probability: 10,
-        rotation: 0
     },
     {
-        image: 'tiles/5.png',
-        materials: [
-            Material.GROUND,
-            Material.WALL,
-            Material.GROUND,
-            Material.WALL,
-            Material.GROUND,
-            Material.WALL,
-            Material.GROUND,
-            Material.WALL,
-        ],
+        image: 'tiles/b4.png',
+        materials: {
+            top_left: Material.WALL,
+            top_center: Material.WALL,
+            top_right: Material.WALL,
+            right_top: Material.WALL,
+            right_center: Material.WALL,
+            right_bottom: Material.WALL,
+            bottom_right: Material.FLUID,
+            bottom_center: Material.FLUID,
+            bottom_left: Material.FLUID,
+            left_bottom: Material.FLUID,
+            left_center: Material.FLUID,
+            left_top: Material.FLUID,
+        },
+        rotation: 0,
         probability: 10,
-        rotation: 0
     },
     {
-        image: 'tiles/6.png',
-        materials: [
-            Material.WATER,
-            Material.WALL,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-            Material.WALL,
-            Material.WATER,
-            Material.WATER,
-        ],
+        image: 'tiles/b5.png',
+        materials: {
+            top_left: Material.WALL,
+            top_center: Material.WALL,
+            top_right: Material.WALL,
+            right_top: Material.WALL,
+            right_center: Material.WALL,
+            right_bottom: Material.WALL,
+            bottom_right: Material.WALL,
+            bottom_center: Material.FLUID,
+            bottom_left: Material.FLUID,
+            left_bottom: Material.FLUID,
+            left_center: Material.FLUID,
+            left_top: Material.FLUID,
+        },
+        rotation: 0,
         probability: 10,
-        rotation: 0
     },
     {
-        image: 'tiles/7.png',
-        materials: [
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-        ],
-        probability: 500,
-        rotation: 0
-    },
-    void_cell,
-    {
-        image: 'tiles/9.png',
-        materials: [
-            Material.WATER,
-            Material.WALL,
-            Material.GROUND,
-            Material.WALL,
-            Material.WATER,
-            Material.WATER,
-            Material.WATER,
-            Material.WATER,
-        ],
+        image: 'tiles/b6.png',
+        materials: {
+            top_left: Material.WALL,
+            top_center: Material.WALL,
+            top_right: Material.WALL,
+            right_top: Material.WALL,
+            right_center: Material.WALL,
+            right_bottom: Material.WALL,
+            bottom_right: Material.WALL,
+            bottom_center: Material.WALL,
+            bottom_left: Material.FLUID,
+            left_bottom: Material.FLUID,
+            left_center: Material.FLUID,
+            left_top: Material.FLUID,
+        },
+        rotation: 0,
         probability: 10,
-        rotation: 0
     },
     {
-        image: 'tiles/10.png',
-        materials: [
-            Material.GROUND,
-            Material.WALL,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-            Material.WALL,
-            Material.GROUND,
-            Material.GROUND,
-        ],
+        image: 'tiles/b7.png',
+        materials: {
+            top_left: Material.WALL,
+            top_center: Material.WALL,
+            top_right: Material.WALL,
+            right_top: Material.WALL,
+            right_center: Material.WALL,
+            right_bottom: Material.WALL,
+            bottom_right: Material.WALL,
+            bottom_center: Material.WALL,
+            bottom_left: Material.WALL,
+            left_bottom: Material.FLUID,
+            left_center: Material.FLUID,
+            left_top: Material.FLUID,
+        },
+        rotation: 0,
         probability: 10,
-        rotation: 0
     },
     {
-        image: 'tiles/12.png',
-        materials: [
-            Material.GROUND,
-            Material.WALL,
-            Material.WATER,
-            Material.WALL,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-        ],
+        image: 'tiles/b8.png',
+        materials: {
+            top_left: Material.FLUID,
+            top_center: Material.WALL,
+            top_right: Material.WALL,
+            right_top: Material.FLUID,
+            right_center: Material.FLUID,
+            right_bottom: Material.FLUID,
+            bottom_right: Material.FLUID,
+            bottom_center: Material.FLUID,
+            bottom_left: Material.FLUID,
+            left_bottom: Material.FLUID,
+            left_center: Material.FLUID,
+            left_top: Material.FLUID,
+        },
+        rotation: 0,
         probability: 10,
-        rotation: 0
     },
     {
-        image: 'tiles/13.png',
-        materials: [
-            Material.WATER,
-            Material.WALL,
-            Material.GROUND,
-            Material.WALL,
-            Material.GROUND,
-            Material.WALL,
-            Material.WATER,
-            Material.WATER,
-        ],
+        image: 'tiles/b9.png',
+        materials: {
+            top_left: Material.FLUID,
+            top_center: Material.WALL,
+            top_right: Material.WALL,
+            right_top: Material.WALL,
+            right_center: Material.FLUID,
+            right_bottom: Material.FLUID,
+            bottom_right: Material.FLUID,
+            bottom_center: Material.FLUID,
+            bottom_left: Material.FLUID,
+            left_bottom: Material.FLUID,
+            left_center: Material.FLUID,
+            left_top: Material.FLUID,
+        },
+        rotation: 0,
         probability: 10,
-        rotation: 0
+    },
+    {
+        image: 'tiles/b10.png',
+        materials: {
+            top_left: Material.FLUID,
+            top_center: Material.WALL,
+            top_right: Material.WALL,
+            right_top: Material.WALL,
+            right_center: Material.WALL,
+            right_bottom: Material.FLUID,
+            bottom_right: Material.FLUID,
+            bottom_center: Material.FLUID,
+            bottom_left: Material.FLUID,
+            left_bottom: Material.FLUID,
+            left_center: Material.FLUID,
+            left_top: Material.FLUID,
+        },
+        rotation: 0,
+        probability: 10,
+    },
+    {
+        image: 'tiles/b11.png',
+        materials: {
+            top_left: Material.FLUID,
+            top_center: Material.WALL,
+            top_right: Material.WALL,
+            right_top: Material.WALL,
+            right_center: Material.WALL,
+            right_bottom: Material.WALL,
+            bottom_right: Material.FLUID,
+            bottom_center: Material.FLUID,
+            bottom_left: Material.FLUID,
+            left_bottom: Material.FLUID,
+            left_center: Material.FLUID,
+            left_top: Material.FLUID,
+        },
+        rotation: 0,
+        probability: 10,
+    },
+    {
+        image: 'tiles/b12.png',
+        materials: {
+            top_left: Material.FLUID,
+            top_center: Material.WALL,
+            top_right: Material.WALL,
+            right_top: Material.WALL,
+            right_center: Material.WALL,
+            right_bottom: Material.WALL,
+            bottom_right: Material.WALL,
+            bottom_center: Material.FLUID,
+            bottom_left: Material.FLUID,
+            left_bottom: Material.FLUID,
+            left_center: Material.FLUID,
+            left_top: Material.FLUID,
+        },
+        rotation: 0,
+        probability: 10,
+    },
+    {
+        image: 'tiles/b13.png',
+        materials: {
+            top_left: Material.FLUID,
+            top_center: Material.WALL,
+            top_right: Material.WALL,
+            right_top: Material.WALL,
+            right_center: Material.WALL,
+            right_bottom: Material.WALL,
+            bottom_right: Material.WALL,
+            bottom_center: Material.WALL,
+            bottom_left: Material.FLUID,
+            left_bottom: Material.FLUID,
+            left_center: Material.FLUID,
+            left_top: Material.FLUID,
+        },
+        rotation: 0,
+        probability: 10,
+    },
+    {
+        image: 'tiles/b14.png',
+        materials: {
+            top_left: Material.FLUID,
+            top_center: Material.WALL,
+            top_right: Material.WALL,
+            right_top: Material.WALL,
+            right_center: Material.WALL,
+            right_bottom: Material.WALL,
+            bottom_right: Material.WALL,
+            bottom_center: Material.WALL,
+            bottom_left: Material.WALL,
+            left_bottom: Material.FLUID,
+            left_center: Material.FLUID,
+            left_top: Material.FLUID,
+        },
+        rotation: 0,
+        probability: 10,
+    },
+    {
+        image: 'tiles/b15.png',
+        materials: {
+            top_left: Material.FLUID,
+            top_center: Material.WALL,
+            top_right: Material.WALL,
+            right_top: Material.WALL,
+            right_center: Material.WALL,
+            right_bottom: Material.WALL,
+            bottom_right: Material.WALL,
+            bottom_center: Material.WALL,
+            bottom_left: Material.WALL,
+            left_bottom: Material.WALL,
+            left_center: Material.FLUID,
+            left_top: Material.FLUID,
+        },
+        rotation: 0,
+        probability: 10,
+    },
+    {
+        image: 'tiles/b16.png',
+        materials: {
+            top_left: Material.FLUID,
+            top_center: Material.WALL,
+            top_right: Material.WALL,
+            right_top: Material.WALL,
+            right_center: Material.WALL,
+            right_bottom: Material.WALL,
+            bottom_right: Material.WALL,
+            bottom_center: Material.WALL,
+            bottom_left: Material.WALL,
+            left_bottom: Material.WALL,
+            left_center: Material.WALL,
+            left_top: Material.FLUID,
+        },
+        rotation: 0,
+        probability: 10,
     },
     // {
-    //     image: 'tiles/14.png',
-    //     materials: [
-    //         Material.WATER,
-    //         Material.GROUND,
-    //         Material.GROUND,
-    //         Material.GROUND,
-    //         Material.GROUND,
-    //         Material.GROUND,
-    //         Material.WATER,
-    //         Material.WATER,
-    //     ],
+    //     image: 'tiles/8.png',
+    //     materials: {
+    //         top_left: Material.FLUID,
+    //         top_center: Material.FLUID,
+    //         top_right: Material.FLUID,
+    //         right_top: Material.FLUID,
+    //         right_center: Material.FLUID,
+    //         right_bottom: Material.FLUID,
+    //         bottom_right: Material.FLUID,
+    //         bottom_center: Material.FLUID,
+    //         bottom_left: Material.FLUID,
+    //         left_bottom: Material.FLUID,
+    //         left_center: Material.FLUID,
+    //         left_top: Material.FLUID,
+    //     },
+    //     rotation: 0,
     //     probability: 10,
-    //     rotation: 0
-    // },
-    // {
-    //     image: 'tiles/15.png',
-    //     materials: [
-    //         Material.WATER,
-    //         Material.GROUND,
-    //         Material.GROUND,
-    //         Material.GROUND,
-    //         Material.WATER,
-    //         Material.WATER,
-    //         Material.WATER,
-    //         Material.WATER,
-    //     ],
-    //     probability: 10,
-    //     rotation: 0
-    // },
-    // {
-    //     image: 'tiles/SAMPLE.png',
-    //     materials: [
-    //         Material.UPLEFT,
-    //         Material.TOP,
-    //         Material.UPRIGHT,
-    //         Material.RIGHT,
-    //         Material.BOTRIGHT,
-    //         Material.BOTTOM,
-    //         Material.BOTLEFT,
-    //         Material.LEFT,
-    //     ],
-    //     probability: 10,
-    //     rotation: 0
     // },
 ].map(c => {
     // Return 4 copies, each rotated 90 degrees
@@ -286,34 +434,24 @@ const sourceCells: Cell[] = [
 }).flat();
 console.log('source cells', sourceCells)
 
+// Rotates a cell a quarter rotation clockwise
 function rotateCell(c: Cell): Cell {
     const quarterRotation = Math.PI / 2;
     let rotation = c.rotation + quarterRotation;
-    const materials: Material[] = [];
-    // @ts-ignore we know that all cells have 8 materials
-    // so we don't need to index check
-    materials[0] = c.materials[6];
-    // @ts-ignore we know that all cells have 8 materials
-    // so we don't need to index check
-    materials[1] = c.materials[7];
-    // @ts-ignore we know that all cells have 8 materials
-    // so we don't need to index check
-    materials[2] = c.materials[0];
-    // @ts-ignore we know that all cells have 8 materials
-    // so we don't need to index check
-    materials[3] = c.materials[1];
-    // @ts-ignore we know that all cells have 8 materials
-    // so we don't need to index check
-    materials[4] = c.materials[2];
-    // @ts-ignore we know that all cells have 8 materials
-    // so we don't need to index check
-    materials[5] = c.materials[3];
-    // @ts-ignore we know that all cells have 8 materials
-    // so we don't need to index check
-    materials[6] = c.materials[4];
-    // @ts-ignore we know that all cells have 8 materials
-    // so we don't need to index check
-    materials[7] = c.materials[5];
+    const materials = {
+        top_left: c.materials.left_bottom,
+        top_center: c.materials.left_center,
+        top_right: c.materials.left_top,
+        right_top: c.materials.top_left,
+        right_center: c.materials.top_center,
+        right_bottom: c.materials.top_right,
+        bottom_right: c.materials.right_top,
+        bottom_center: c.materials.right_center,
+        bottom_left: c.materials.right_bottom,
+        left_bottom: c.materials.bottom_right,
+        left_center: c.materials.bottom_center,
+        left_top: c.materials.bottom_left,
+    };
     return {
         image: c.image,
         materials,
@@ -385,26 +523,18 @@ function getCellConstraintsForSide(cell: Cell, side: Vec2): Material[] {
     if (side.y == 0) {
         if (side.x == -1) {
             // Left Side
-            // @ts-expect-error All cells will have the same length array of materials
-            // so this index validation needs not be verified by typescript
-            return [cell.materials[0], cell.materials[7], cell.materials[6]];
+            return [cell.materials.left_top, cell.materials.left_center, cell.materials.left_bottom];
         } else {
             // Right Side
-            // @ts-expect-error All cells will have the same length array of materials
-            // so this index validation needs not be verified by typescript
-            return [cell.materials[2], cell.materials[3], cell.materials[4]];
+            return [cell.materials.right_top, cell.materials.right_center, cell.materials.right_bottom];
         }
     } else {
         if (side.y == -1) {
             // Top Side
-            // @ts-expect-error All cells will have the same length array of materials
-            // so this index validation needs not be verified by typescript
-            return [cell.materials[0], cell.materials[1], cell.materials[2]];
+            return [cell.materials.top_left, cell.materials.top_center, cell.materials.top_right];
         } else {
             // BottomSide
-            // @ts-expect-error All cells will have the same length array of materials
-            // so this index validation needs not be verified by typescript
-            return [cell.materials[6], cell.materials[5], cell.materials[4]];
+            return [cell.materials.bottom_left, cell.materials.bottom_center, cell.materials.bottom_right];
         }
     }
 }
