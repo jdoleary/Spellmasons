@@ -41,6 +41,10 @@ const underworldPixiContainers = [
 const elPIXIHolder: HTMLElement = document.getElementById('PIXI-holder') as HTMLElement;
 const elCardHolders = document.getElementById('card-holders') as HTMLElement;
 window.debugGraphics = new PIXI.Graphics();
+// TEST
+window.t = new PIXI.Graphics();
+containerFloatingText.addChild(window.t);
+//TEST 
 containerUI.addChild(window.debugGraphics);
 window.unitOverlayGraphics = new PIXI.Graphics();
 containerUI.addChild(window.unitOverlayGraphics);

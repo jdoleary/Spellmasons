@@ -51,6 +51,7 @@ import objectHash from 'object-hash';
 import { withinMeleeRange } from './units/actions/gruntAction';
 import * as TimeRelease from './TimeRelease';
 import { generateMap, oneDimentionIndexToVec2 } from './WaveFunctionCollapse';
+import { generateCave } from './MapOrganicCave';
 
 export enum turn_phase {
   PlayerTurns,
@@ -115,7 +116,8 @@ export default class Underworld {
 
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
     window.underworld = this;
-    this.seed = window.seedOverride || seed;
+    // this.seed = window.seedOverride || seed;
+    this.seed = '0.5897818138111177'
     elSeed.innerText = `Seed: ${this.seed}`;
     console.log("RNG create with seed:", this.seed, ", state: ", RNGState);
     this.random = this.syncronizeRNG(RNGState);
@@ -815,16 +817,51 @@ export default class Underworld {
     this.groundTiles = groundTiles;
 
     // TEST|
-    const map = generateMap(30);
-    for (let i = 0; i < map.cells.length; i++) {
-      const cell = map.cells[i];
-      if (cell) {
-        const position = Vec.multiply(config.COLLISION_MESH_RADIUS * 2, oneDimentionIndexToVec2(i, map.width));
-        const image = Image.create(position, cell.image, containerUI);
-        image.sprite.rotation = cell.rotation;
+    // const map = generateMap(30);
+    // for (let i = 0; i < map.cells.length; i++) {
+    //   const cell = map.cells[i];
+    //   if (cell) {
+    //     const position = Vec.multiply(config.COLLISION_MESH_RADIUS * 2, oneDimentionIndexToVec2(i, map.width));
+    //     const image = Image.create(position, cell.image, containerUI);
+    //     image.sprite.rotation = cell.rotation;
+    //   }
+    const cave = generateCave();
+
+    const styles = [0x00ff00, 0xff0000, 0x0000ff];
+    for (let crawler of cave) {
+      console.log('jtest c', crawler)
+      drawPathWithStyle(crawler.path, styles[0] as number);
+      drawPathWithStyle(crawler.left, styles[1] as number);
+      drawPathWithStyle(crawler.right, styles[2] as number);
+    }
+    function drawPathWithStyle(path: Vec2[], style: number) {
+      window.t.lineStyle(4, style, 1.0);
+      if (path[0]) {
+        window.t.moveTo(path[0].x, path[0].y);
+        for (let point of path) {
+          window.t.lineTo(point.x, point.y);
+          window.t.drawCircle(point.x, point.y, 10);
+        }
       }
 
     }
+    // const offsets = [-40, 40];
+    // for (let i = 0; i < styles.length; i++) {
+    //   const style = styles[i];
+    //   const offset = offsets[i];
+    //   window.t.lineStyle(4, style, 1.0);
+    //   for (let path of cave) {
+    //     if (path[0]) {
+    //       window.t.moveTo(path[0].x + offset, path[0].y + offset);
+    //       for (let point of path) {
+    //         window.t.lineTo(point.x + offset, point.y + offset);
+    //         window.t.drawCircle(point.x + offset, point.y + offset, 10);
+    //       }
+    //     }
+    //   }
+    // }
+
+    // }
     // TEST|
     this.addGroundTileImages();
     for (let p of pickups) {

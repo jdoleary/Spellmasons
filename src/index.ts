@@ -147,6 +147,7 @@ declare global {
     thinkingPlayerGraphics: PIXI.Graphics;
     // Graphics for drawing unit health and mana bars
     unitOverlayGraphics: PIXI.Graphics;
+    t: PIXI.Graphics;
     // Graphics for drawing the spell effects during the dry run phase
     predictionGraphics: PIXI.Graphics;
     allowCookies: boolean;
