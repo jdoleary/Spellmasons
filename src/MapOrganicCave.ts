@@ -6,19 +6,19 @@ const minThickness = 40;
 export function generateCave(): CaveCrawler[] {
     const minDirection = randFloat(window.underworld.random, Math.PI, Math.PI / 2);
     const maxDirection = 0;
-    const crawlers = Array(2).fill(0).map<CaveCrawler>(x => {
+    const crawlers = Array(1n).fill(0).map<CaveCrawler>(x => {
         const position = { x: 0, y: 0 };
         return {
             direction: randFloat(window.underworld.random, minDirection, maxDirection),
-            thickness: 80,
+            thickness: 400,
             position,
             path: [],
             left: [],
             right: [],
         }
     })
-    const iterations = 20;
-    const velocity = 80;
+    const iterations = 30;
+    const velocity = 200;
     const directionRandomAmount = Math.PI / 3;
     for (let cc of crawlers) {
         // Generate path
@@ -53,7 +53,7 @@ export function generateCave(): CaveCrawler[] {
                 const left = { x: p.x + Math.cos(direction + Math.PI / 2), y: p.y + Math.sin(direction + Math.PI / 2) };
                 const right = { x: p.x + Math.cos(direction - Math.PI / 2), y: p.y + Math.sin(direction - Math.PI / 2) };
                 const tangentDist = distance(p, left);
-                cc.thickness += randInt(window.underworld.random, -20, 30);
+                cc.thickness += randInt(window.underworld.random, -40, 5);
                 // Don't let thickness be lessthan minThickness 
                 cc.thickness = Math.max(minThickness, cc.thickness);
                 cc.left.push(Vec.add(p, similarTriangles(left.x - p.x, left.y - p.y, tangentDist, cc.thickness)))

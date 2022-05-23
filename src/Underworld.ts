@@ -835,12 +835,12 @@ export default class Underworld {
     for (let i = 0; i < cave.length; i++) {
       const crawler = cave[i];
       if (crawler) {
-        drawPathWithStyle(crawler.path, 0x00ff00, 0.2);
         // drawPathWithStyle(crawler.left, styles[i % 2] as number, 1.0);
         // drawPathWithStyle(crawler.right, styles[i % 2] as number, 1.0);
         window.t.beginFill(styles[i % 2], 0.5);
         window.t.drawPolygon([...crawler.left, ...crawler.right.reverse()]);
         window.t.endFill();
+        drawPathWithStyle(crawler.path, 0x00ff00, 1.0);
         // polygons.push([...crawler.left, ...crawler.right.reverse()])
       }
     }
