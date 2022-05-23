@@ -264,18 +264,58 @@ window.cave = () => {
     }
 
   }
-  // const polygons = [];
+  // Get bounds
+  let bounds = {
+    xMin: NaN,
+    xMax: NaN,
+    yMin: NaN,
+    yMax: NaN
+  }
+  bounds = cave.reduce((b, crawler) => {
+    for (let p of crawler.poly) {
+      if (Number.isNaN(b.xMin) || p.x < b.xMin) {
+        b.xMin = p.x;
+      }
+      if (Number.isNaN(b.yMin) || p.y < b.yMin) {
+        b.yMin = p.y;
+      }
+      if (Number.isNaN(b.xMax) || p.x > b.xMax) {
+        b.xMax = p.x;
+      }
+      if (Number.isNaN(b.yMax) || p.y > b.yMax) {
+        b.yMax = p.y;
+      }
+    }
+    return b
+  }, bounds);
+  // Draw bounds
+  window.t.lineStyle(2, 0xff0000, 1.0);
+  window.t.moveTo(bounds.xMin, bounds.yMin);
+  window.t.lineTo(bounds.xMin, bounds.yMax);
+  window.t.lineTo(bounds.xMax, bounds.yMax);
+  window.t.lineTo(bounds.xMax, bounds.yMin);
+  window.t.lineTo(bounds.xMin, bounds.yMin);
+  console.log('jtest', bounds);
+
+  // Fill
   for (let i = 0; i < cave.length; i++) {
     const crawler = cave[i];
     if (crawler) {
-      // drawPathWithStyle(crawler.left, styles[i % 2] as number, 1.0);
-      // drawPathWithStyle(crawler.right, styles[i % 2] as number, 1.0);
-      window.t.lineStyle(1, 0x000000, 0.0);
-      window.t.beginFill(styles[i % styles.length], 0.5);
-      window.t.drawPolygon([...crawler.left, ...crawler.right.reverse()]);
+      window.t.beginFill(0xffffff, 1.0);
+      // @ts-expect-error
+      window.t.drawPolygon(crawler.poly);
       window.t.endFill();
-      drawPathWithStyle(crawler.path, 0x00ff00, 0.5);
-      // polygons.push([...crawler.left, ...crawler.right.reverse()])
+    }
+  }
+  // Lines
+  for (let i = 0; i < cave.length; i++) {
+    const crawler = cave[i];
+    if (crawler) {
+      drawPathWithStyle(crawler.poly, styles[i % styles.length] as number, 1.0);
+      window.t.lineStyle(1, 0x000000, 0.0);
+      // window.t.beginFill(styles[i % styles.length], 1.0);
+      // window.t.drawPolygon(poly);
+      // window.t.endFill();
     }
   }
   // const polys = mergeOverlappingPolygons(polygons.map(p => ({ points: p, inverted: true })));

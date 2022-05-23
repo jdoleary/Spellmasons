@@ -50,8 +50,6 @@ import { healthAllyGreen, healthHurtRed, healthRed } from './ui/colors';
 import objectHash from 'object-hash';
 import { withinMeleeRange } from './units/actions/gruntAction';
 import * as TimeRelease from './TimeRelease';
-import { generateMap, oneDimentionIndexToVec2 } from './WaveFunctionCollapse';
-import { generateCave } from './MapOrganicCave';
 
 export enum turn_phase {
   PlayerTurns,
