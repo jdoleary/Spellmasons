@@ -1,3 +1,4 @@
+import { lineSegmentIntersection } from "./collision/collisionMath";
 import { distance, lerp, similarTriangles } from "./math";
 import { randFloat, randInt } from "./rand";
 import * as Vec from "./Vec";
@@ -18,13 +19,13 @@ export function generateCave(): CaveCrawler[] {
         const cc: CaveCrawler = {
             direction: randFloat(window.underworld.random, minDirection, maxDirection),
             thickness: startThickness,
-            position: Vec.random(-startpointjitter, startpointjitter),
+            position: Vec.round(Vec.random(-startpointjitter, startpointjitter)),
             path: [],
             left: [],
             right: [],
             rectagles: []
         }
-        crawl(cc, previousCrawler ? previousCrawler.path[1] as Vec.Vec2 : Vec.random(-startpointjitter, startpointjitter));
+        crawl(cc, previousCrawler ? previousCrawler.path[1] as Vec.Vec2 : Vec.round(Vec.random(-startpointjitter, startpointjitter)));
         crawlers.push(cc);
     }
 
@@ -65,7 +66,7 @@ function movePointInDirection(cc: CaveCrawler, turnRadians: number, velocity: nu
     const nextPointDirection = { x: cc.position.x + Math.cos(cc.direction), y: cc.position.y + Math.sin(cc.direction) };
     const dist = distance(cc.position, nextPointDirection);
     cc.path.push(cc.position);
-    cc.position = Vec.add(cc.position, similarTriangles(nextPointDirection.x - cc.position.x, nextPointDirection.y - cc.position.y, dist, velocity));
+    cc.position = Vec.round(Vec.add(cc.position, similarTriangles(nextPointDirection.x - cc.position.x, nextPointDirection.y - cc.position.y, dist, velocity)));
 
 }
 function crawl(cc: CaveCrawler, endPosition: Vec.Vec2) {
@@ -84,8 +85,8 @@ function crawl(cc: CaveCrawler, endPosition: Vec.Vec2) {
     if (endPosition) {
         // At the end make it return to origin
         while (distance(cc.position, endPosition) > velocity + velocity * .25) {
-            cc.position = Vec.add(cc.position, similarTriangles(endPosition.x - cc.position.x, endPosition.y - cc.position.y, distance(cc.position, endPosition), velocity));
-            cc.position = Vec.jitter(cc.position, velocity / 2);
+            cc.position = Vec.round(Vec.add(cc.position, similarTriangles(endPosition.x - cc.position.x, endPosition.y - cc.position.y, distance(cc.position, endPosition), velocity)));
+            cc.position = Vec.round(Vec.jitter(cc.position, velocity / 2));
             cc.path.push(cc.position);
         }
         cc.path.push(endPosition);
@@ -112,14 +113,21 @@ function crawl(cc: CaveCrawler, endPosition: Vec.Vec2) {
             cc.thickness = Math.max(minThickness, cc.thickness);
             let newLeft = Vec.add(p, similarTriangles(left.x - p.x, left.y - p.y, tangentDist, cc.thickness));
             // Jitter the left and right sides so they are not perfectly parallel
-            newLeft = Vec.jitter(newLeft, cc.thickness / 4);
+            newLeft = Vec.round(Vec.jitter(newLeft, cc.thickness / 4));
             cc.left.push(newLeft);
             let newRight = Vec.add(p, similarTriangles(right.x - p.x, right.y - p.y, tangentDist, cc.thickness));
             // Jitter the left and right sides so they are not perfectly parallel
-            newRight = Vec.jitter(newRight, cc.thickness / 4);
+            newRight = Vec.round(Vec.jitter(newRight, cc.thickness / 4));
             cc.right.push(newRight);
             if (lastLeft && lastRight) {
-                cc.rectagles.push([lastLeft, newLeft, newRight, lastRight])
+                let points = [lastLeft, newLeft, newRight, lastRight];
+                // Ensure rectangle isn't twisted like a bowtie which will result in weird isVec2Inside resultsn:
+                if (lineSegmentIntersection({ p1: lastLeft, p2: newLeft }, { p1: newRight, p2: lastRight })
+                    || lineSegmentIntersection({ p1: newLeft, p2: newRight }, { p1: lastLeft, p2: lastRight })) {
+                    points = [lastLeft, newLeft, lastRight, newRight];
+                }
+
+                cc.rectagles.push(points)
             }
         }
     }

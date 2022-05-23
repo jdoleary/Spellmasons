@@ -78,6 +78,12 @@ export function clone(p: Vec2): Vec2 {
 export function round(v: Vec2): Vec2 {
     return { x: Math.round(v.x), y: Math.round(v.y) };
 }
+// CAUTION: NOT YET TESTED
+export function average_mean(vs: Vec2[]) {
+    return multiply(1 / vs.length, vs.reduce((acc, cur) => {
+        return add(acc, cur)
+    }, { x: 0, y: 0 }))
+}
 
 // Returns true if testPoint is within a bounding box drawn between the two bounding points
 export function isBetween(testPoint: Vec2, boundingPoint: Vec2, boundingPoint2: Vec2): boolean {

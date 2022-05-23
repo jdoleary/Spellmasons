@@ -290,16 +290,6 @@ window.cave = () => {
     }
     return b
   }, bounds);
-  // // Fill
-  // for (let i = 0; i < cave.length; i++) {
-  //   const crawler = cave[i];
-  //   if (crawler) {
-  //     window.t.beginFill(0xffffff, 0.2);
-  //     // @ts-expect-error
-  //     window.t.drawPolygon(crawler.poly);
-  //     window.t.endFill();
-  //   }
-  // }
 
   // Draw bounds
   window.t.lineStyle(2, 0xff0000, 1.0);
@@ -310,7 +300,6 @@ window.cave = () => {
   window.t.lineTo(bounds.xMin, bounds.yMin);
   //  Draw dot grid
   const dotSize = 64;
-  console.log('jtest', bounds);
   for (let x = bounds.xMin; x < bounds.xMax; x += dotSize) {
     for (let y = bounds.yMin; y < bounds.yMax; y += dotSize) {
       let isInside = false;
@@ -336,24 +325,28 @@ window.cave = () => {
     }
   }
 
-  // Lines
+  // Fill
   for (let i = 0; i < cave.length; i++) {
     const crawler = cave[i];
     if (crawler) {
-      drawPathWithStyle(crawler.path, styles[i % styles.length] as number, 1.0);
-      window.t.lineStyle(1, 0x000000, 0.0);
-      // window.t.beginFill(styles[i % styles.length], 1.0);
-      // window.t.drawPolygon(poly);
+      drawPathWithStyle(crawler.path, 0x000000, 1.0);
+      // window.t.beginFill(styles[i % styles.length], 0.2);
+      // for (let rect of crawler.rectagles) {
+      //   window.t.drawPolygon(rect);
+      // }
       // window.t.endFill();
     }
   }
-  // const polys = mergeOverlappingPolygons(polygons.map(p => ({ points: p, inverted: true })));
-  // for (let p of polys) {
-  //   // Draw polygon
-  //   console.log('jtest', p);
-  //   window.t.beginFill(0xf0f0f0, 0.5);
-  //   window.t.drawPolygon(p.points)
-  //   window.t.endFill();
+
+  // // Lines
+  // for (let i = 0; i < cave.length; i++) {
+  //   const crawler = cave[i];
+  //   if (crawler) {
+  //     drawPathWithStyle(crawler.path, styles[i % styles.length] as number, 1.0);
+  //     window.t.lineStyle(1, 0x000000, 0.0);
+  //     // window.t.beginFill(styles[i % styles.length], 1.0);
+  //     // window.t.drawPolygon(poly);
+  //     // window.t.endFill();
+  //   }
   // }
-  // TEST|
 }
