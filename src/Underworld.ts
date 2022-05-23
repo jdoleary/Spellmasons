@@ -817,25 +817,11 @@ export default class Underworld {
     this.groundTiles = groundTiles;
 
     // TEST|
-    // const map = generateMap(30);
-    // for (let i = 0; i < map.cells.length; i++) {
-    //   const cell = map.cells[i];
-    //   if (cell) {
-    //     const position = Vec.multiply(config.COLLISION_MESH_RADIUS * 2, oneDimentionIndexToVec2(i, map.width));
-    //     const image = Image.create(position, cell.image, containerUI);
-    //     image.sprite.rotation = cell.rotation;
-    //   }
     const cave = generateCave();
 
-    const styles = [0x00ff00, 0xff0000, 0x0000ff];
-    for (let crawler of cave) {
-      console.log('jtest c', crawler)
-      drawPathWithStyle(crawler.path, styles[0] as number);
-      drawPathWithStyle(crawler.left, styles[1] as number);
-      drawPathWithStyle(crawler.right, styles[2] as number);
-    }
-    function drawPathWithStyle(path: Vec2[], style: number) {
-      window.t.lineStyle(4, style, 1.0);
+    const styles = [0xff0000, 0x0000ff];
+    function drawPathWithStyle(path: Vec2[], style: number, opacity: number) {
+      window.t.lineStyle(4, style, opacity);
       if (path[0]) {
         window.t.moveTo(path[0].x, path[0].y);
         for (let point of path) {
@@ -845,24 +831,29 @@ export default class Underworld {
       }
 
     }
-    // const offsets = [-40, 40];
-    // for (let i = 0; i < styles.length; i++) {
-    //   const style = styles[i];
-    //   const offset = offsets[i];
-    //   window.t.lineStyle(4, style, 1.0);
-    //   for (let path of cave) {
-    //     if (path[0]) {
-    //       window.t.moveTo(path[0].x + offset, path[0].y + offset);
-    //       for (let point of path) {
-    //         window.t.lineTo(point.x + offset, point.y + offset);
-    //         window.t.drawCircle(point.x + offset, point.y + offset, 10);
-    //       }
-    //     }
-    //   }
-    // }
-
+    const polygons = [];
+    for (let i = 0; i < cave.length; i++) {
+      const crawler = cave[i];
+      if (crawler) {
+        drawPathWithStyle(crawler.path, 0x00ff00, 0.2);
+        // drawPathWithStyle(crawler.left, styles[i % 2] as number, 1.0);
+        // drawPathWithStyle(crawler.right, styles[i % 2] as number, 1.0);
+        window.t.beginFill(styles[i % 2], 0.5);
+        window.t.drawPolygon([...crawler.left, ...crawler.right.reverse()]);
+        window.t.endFill();
+        // polygons.push([...crawler.left, ...crawler.right.reverse()])
+      }
+    }
+    // const polys = mergeOverlappingPolygons(polygons.map(p => ({ points: p, inverted: true })));
+    // for (let p of polys) {
+    //   // Draw polygon
+    //   console.log('jtest', p);
+    //   window.t.beginFill(0xf0f0f0, 0.5);
+    //   window.t.drawPolygon(p.points)
+    //   window.t.endFill();
     // }
     // TEST|
+
     this.addGroundTileImages();
     for (let p of pickups) {
       this.spawnPickup(p.index, p.coord);
