@@ -24,6 +24,7 @@ import type { Vec2 } from './Vec';
 import type { LevelData } from './Underworld';
 import type { Circle } from './collision/moveWithCollision';
 import { generateCave } from './MapOrganicCave';
+import { isVec2InsidePolygon } from './Polygon';
 
 const YES = 'yes'
 const SKIP_TUTORIAL = 'skipTutorial';
@@ -295,13 +296,11 @@ window.cave = () => {
   window.t.lineTo(bounds.xMax, bounds.yMax);
   window.t.lineTo(bounds.xMax, bounds.yMin);
   window.t.lineTo(bounds.xMin, bounds.yMin);
-  console.log('jtest', bounds);
-
   // Fill
   for (let i = 0; i < cave.length; i++) {
     const crawler = cave[i];
     if (crawler) {
-      window.t.beginFill(0xffffff, 1.0);
+      window.t.beginFill(0xffffff, 0.2);
       // @ts-expect-error
       window.t.drawPolygon(crawler.poly);
       window.t.endFill();
@@ -318,6 +317,25 @@ window.cave = () => {
       // window.t.endFill();
     }
   }
+
+  // Draw dot grid
+  const dotSize = 64;
+  console.log('jtest', bounds);
+  for (let x = bounds.xMin; x < bounds.xMax; x += dotSize) {
+    for (let y = bounds.yMin; y < bounds.yMax; y += dotSize) {
+      let isInside = false;
+      for (let crawler of cave) {
+        if (isVec2InsidePolygon({ x, y }, { points: crawler.poly, inverted: false })) {
+          isInside = true;
+          break;
+        }
+      }
+      window.t.lineStyle(2, isInside ? 0x00ff00 : 0xff0000, 1.0);
+
+      window.t.drawCircle(x, y, 4);
+    }
+  }
+
   // const polys = mergeOverlappingPolygons(polygons.map(p => ({ points: p, inverted: true })));
   // for (let p of polys) {
   //   // Draw polygon

@@ -1,5 +1,5 @@
 import { distance, lerp, similarTriangles } from "./math";
-import { randFloat, randInt } from "./rand";
+import { randFloat } from "./rand";
 import * as Vec from "./Vec";
 
 const minThickness = 50;
@@ -13,7 +13,7 @@ export function generateCave(): ProcessedCrawler[] {
     const maxDirection = 0;
     const crawlers = [];
     const processedCrawlers: ProcessedCrawler[] = []
-    const NUMBER_OF_CRAWLERS = randInt(window.underworld.random, 2, 4);
+    const NUMBER_OF_CRAWLERS = 2;//randInt(window.underworld.random, 2, 4);
     for (let c = 0; c < NUMBER_OF_CRAWLERS - 1; c++) {
         const previousCrawler = crawlers[c - 1];
         const cc: CaveCrawler = {
@@ -118,8 +118,9 @@ function crawl(cc: CaveCrawler, endPosition: Vec.Vec2): ProcessedCrawler {
             cc.right.push(newRight);
         }
     }
+    const poly = [...cc.left, ...cc.right.reverse(), cc.left[0] as Vec.Vec2].map(point => Vec.round(point))
     return {
-        poly: [...cc.left, ...cc.right.reverse(), cc.left[0] as Vec.Vec2]
+        poly
     }
 
 }
