@@ -24,18 +24,19 @@ export const containerPlayerThinking = new PIXI.Container();
 export const containerUIFixed = new PIXI.Container();
 export const containerFloatingText = new PIXI.Container();
 const underworldPixiContainers = [
-  containerBoard,
-  containerBetweenBoardAndWalls,
-  containerWalls,
-  containerPlanningView,
-  containerDoodads,
-  containerUnits,
-  containerSpells,
-  containerProjectiles,
-  containerPlayerThinking,
-  containerUI,
-  containerUIFixed,
+  // containerBoard,
+  // containerBetweenBoardAndWalls,
+  // containerWalls,
+  // containerPlanningView,
+  // containerDoodads,
+  // containerUnits,
+  // containerSpells,
+  // containerProjectiles,
+  // containerPlayerThinking,
+  // containerUI,
+  // containerUIFixed,
   containerFloatingText,
+
 ];
 
 const elPIXIHolder: HTMLElement = document.getElementById('PIXI-holder') as HTMLElement;

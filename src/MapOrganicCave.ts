@@ -2,12 +2,12 @@ import { distance, lerp, similarTriangles } from "./math";
 import { randFloat, randInt } from "./rand";
 import * as Vec from "./Vec";
 
-const minThickness = 40;
-const startThickness = 200;
-const NUMBER_OF_CRAWLERS = 3;
-const startpointjitter = 1000;
+const minThickness = 16;
+const startThickness = 100;
+const NUMBER_OF_CRAWLERS = 4;
+const startpointjitter = 500;
 const iterations = 50;
-const velocity = 200;
+const velocity = 50;
 const directionRandomAmount = Math.PI / 2;
 export function generateCave(): CaveCrawler[] {
     const minDirection = randFloat(window.underworld.random, Math.PI, Math.PI / 2);
