@@ -3,8 +3,8 @@ import { randFloat, randInt } from "./rand";
 import * as Vec from "./Vec";
 
 const minThickness = 16;
-const startThickness = 100;
-const NUMBER_OF_CRAWLERS = 4;
+const startThickness = 30;
+const NUMBER_OF_CRAWLERS = 3;
 const startpointjitter = 500;
 const iterations = 50;
 const velocity = 50;
@@ -12,25 +12,36 @@ const directionRandomAmount = Math.PI / 2;
 export function generateCave(): CaveCrawler[] {
     const minDirection = randFloat(window.underworld.random, Math.PI, Math.PI / 2);
     const maxDirection = 0;
-    let endPosition = Vec.random(-startpointjitter, startpointjitter);
     const crawlers = [];
-    for (let c = 0; c < NUMBER_OF_CRAWLERS; c++) {
+    for (let c = 0; c < NUMBER_OF_CRAWLERS - 1; c++) {
         const previousCrawler = crawlers[c - 1];
         const cc: CaveCrawler = {
             direction: randFloat(window.underworld.random, minDirection, maxDirection),
             thickness: startThickness,
-            position: previousCrawler ? previousCrawler.path[previousCrawler.path.length - 1] as Vec.Vec2 : Vec.random(-startpointjitter, startpointjitter),
+            position: Vec.random(-startpointjitter, startpointjitter),
             path: [],
             left: [],
             right: [],
         }
-        // Return to the start of the first crawler
-        if (c == NUMBER_OF_CRAWLERS - 1 && crawlers[0]) {
-            endPosition = crawlers[0].path[1] as Vec.Vec2;
-        }
-        crawl(cc, endPosition);
+        crawl(cc, previousCrawler ? previousCrawler.path[1] as Vec.Vec2 : Vec.random(-startpointjitter, startpointjitter));
         crawlers.push(cc);
+    }
 
+    const previousCrawler = crawlers[crawlers.length - 1];
+    const firstCrawler = crawlers[0];
+    if (previousCrawler && firstCrawler) {
+
+        // Connect first crawler and last crawler:
+        const cc: CaveCrawler = {
+            direction: randFloat(window.underworld.random, minDirection, maxDirection),
+            thickness: startThickness,
+            position: firstCrawler.path[firstCrawler.path.length - 1] as Vec.Vec2,
+            path: [],
+            left: [],
+            right: [],
+        }
+        crawl(cc, previousCrawler.path[1] as Vec.Vec2);
+        crawlers.push(cc);
     }
     return crawlers
 
