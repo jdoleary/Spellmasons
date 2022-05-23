@@ -505,6 +505,20 @@ describe('testables', () => {
     });
     describe('isVec2InsidePolygon', () => {
         describe('corner cases', () => {
+            it('should return false for this real world example', () => {
+                const testPoint = { x: -2145, y: 1016 };
+                const poly = {
+                    points: [
+                        { x: -486, y: 697 },
+                        { x: -713, y: 719 },
+                        { x: -318, y: 1017 }],
+                    inverted: false
+                }
+                const actual = isVec2InsidePolygon(testPoint, poly);
+                const expected = false;
+                expect(actual).toEqual(expected);
+
+            });
             describe('1. point is the same location as a vertex of the polygon', () => {
                 it('should return true because it is inside (this is up to my discretion if I want points on verticies to be determined as inside)', () => {
                     const p1 = { x: 0, y: 0 }
