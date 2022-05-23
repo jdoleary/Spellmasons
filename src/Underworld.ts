@@ -816,44 +816,6 @@ export default class Underworld {
     this.cacheWalls(obstacleInsts);
     this.groundTiles = groundTiles;
 
-    // TEST|
-    const cave = generateCave();
-
-    const styles = [0xff0000, 0x0000ff];
-    function drawPathWithStyle(path: Vec2[], style: number, opacity: number) {
-      window.t.lineStyle(4, style, opacity);
-      if (path[0]) {
-        window.t.moveTo(path[0].x, path[0].y);
-        for (let point of path) {
-          window.t.lineTo(point.x, point.y);
-          window.t.drawCircle(point.x, point.y, 10);
-        }
-      }
-
-    }
-    const polygons = [];
-    for (let i = 0; i < cave.length; i++) {
-      const crawler = cave[i];
-      if (crawler) {
-        // drawPathWithStyle(crawler.left, styles[i % 2] as number, 1.0);
-        // drawPathWithStyle(crawler.right, styles[i % 2] as number, 1.0);
-        window.t.beginFill(styles[i % 2], 0.5);
-        window.t.drawPolygon([...crawler.left, ...crawler.right.reverse()]);
-        window.t.endFill();
-        drawPathWithStyle(crawler.path, 0x00ff00, 1.0);
-        // polygons.push([...crawler.left, ...crawler.right.reverse()])
-      }
-    }
-    // const polys = mergeOverlappingPolygons(polygons.map(p => ({ points: p, inverted: true })));
-    // for (let p of polys) {
-    //   // Draw polygon
-    //   console.log('jtest', p);
-    //   window.t.beginFill(0xf0f0f0, 0.5);
-    //   window.t.drawPolygon(p.points)
-    //   window.t.endFill();
-    // }
-    // TEST|
-
     this.addGroundTileImages();
     for (let p of pickups) {
       this.spawnPickup(p.index, p.coord);

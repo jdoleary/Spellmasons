@@ -23,6 +23,7 @@ import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './contants';
 import type { Vec2 } from './Vec';
 import type { LevelData } from './Underworld';
 import type { Circle } from './collision/moveWithCollision';
+import { generateCave } from './MapOrganicCave';
 
 const YES = 'yes'
 const SKIP_TUTORIAL = 'skipTutorial';
@@ -147,7 +148,12 @@ declare global {
     thinkingPlayerGraphics: PIXI.Graphics;
     // Graphics for drawing unit health and mana bars
     unitOverlayGraphics: PIXI.Graphics;
+
+    // Test cave generation
     t: PIXI.Graphics;
+    cave: () => void;
+    // Test cave generation
+
     // Graphics for drawing the spell effects during the dry run phase
     predictionGraphics: PIXI.Graphics;
     allowCookies: boolean;
@@ -242,3 +248,43 @@ window.superMe = () => {
 // window.showDebug = true;
 
 window.onbeforeunload = function () { return "Are you sure you want to quit?"; };
+window.cave = () => {
+  window.t.clear();
+  const cave = generateCave();
+
+  const styles = [0xff0000, 0x0000ff, 0xff00ff, 0x00ffff, 0xffff00];
+  function drawPathWithStyle(path: Vec2[], style: number, opacity: number) {
+    window.t.lineStyle(4, style, opacity);
+    if (path[0]) {
+      window.t.moveTo(path[0].x, path[0].y);
+      window.t.drawCircle(path[1].x, path[1].y, 25);
+      for (let point of path) {
+        window.t.lineTo(point.x, point.y);
+      }
+    }
+
+  }
+  // const polygons = [];
+  for (let i = 0; i < cave.length; i++) {
+    const crawler = cave[i];
+    if (crawler) {
+      // drawPathWithStyle(crawler.left, styles[i % 2] as number, 1.0);
+      // drawPathWithStyle(crawler.right, styles[i % 2] as number, 1.0);
+      window.t.lineStyle(1, 0x000000, 0.0);
+      window.t.beginFill(styles[i % styles.length], 0.5);
+      window.t.drawPolygon([...crawler.left, ...crawler.right.reverse()]);
+      window.t.endFill();
+      drawPathWithStyle(crawler.path, 0x00ff00, 0.5);
+      // polygons.push([...crawler.left, ...crawler.right.reverse()])
+    }
+  }
+  // const polys = mergeOverlappingPolygons(polygons.map(p => ({ points: p, inverted: true })));
+  // for (let p of polys) {
+  //   // Draw polygon
+  //   console.log('jtest', p);
+  //   window.t.beginFill(0xf0f0f0, 0.5);
+  //   window.t.drawPolygon(p.points)
+  //   window.t.endFill();
+  // }
+  // TEST|
+}
