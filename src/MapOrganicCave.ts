@@ -1,5 +1,5 @@
 import { distance, lerp, similarTriangles } from "./math";
-import { randFloat } from "./rand";
+import { randFloat, randInt } from "./rand";
 import * as Vec from "./Vec";
 
 const minThickness = 50;
@@ -8,12 +8,11 @@ const startpointjitter = 700;
 const iterations = 10;
 const velocity = 300;
 const directionRandomAmount = Math.PI / 2;
-export function generateCave(): ProcessedCrawler[] {
+export function generateCave(): CaveCrawler[] {
     const minDirection = randFloat(window.underworld.random, Math.PI, Math.PI / 2);
     const maxDirection = 0;
     const crawlers = [];
-    const processedCrawlers: ProcessedCrawler[] = []
-    const NUMBER_OF_CRAWLERS = 2;//randInt(window.underworld.random, 2, 4);
+    const NUMBER_OF_CRAWLERS = randInt(window.underworld.random, 2, 4);
     for (let c = 0; c < NUMBER_OF_CRAWLERS - 1; c++) {
         const previousCrawler = crawlers[c - 1];
         const cc: CaveCrawler = {
@@ -23,8 +22,9 @@ export function generateCave(): ProcessedCrawler[] {
             path: [],
             left: [],
             right: [],
+            rectagles: []
         }
-        processedCrawlers.push(crawl(cc, previousCrawler ? previousCrawler.path[1] as Vec.Vec2 : Vec.random(-startpointjitter, startpointjitter)));
+        crawl(cc, previousCrawler ? previousCrawler.path[1] as Vec.Vec2 : Vec.random(-startpointjitter, startpointjitter));
         crawlers.push(cc);
     }
 
@@ -40,11 +40,12 @@ export function generateCave(): ProcessedCrawler[] {
             path: [],
             left: [],
             right: [],
+            rectagles: []
         }
-        processedCrawlers.push(crawl(cc, previousCrawler.path[1] as Vec.Vec2));
+        crawl(cc, previousCrawler.path[1] as Vec.Vec2);
         crawlers.push(cc);
     }
-    return processedCrawlers
+    return crawlers
 
 }
 
@@ -55,10 +56,9 @@ interface CaveCrawler {
     position: Vec.Vec2,
     path: Vec.Vec2[],
     left: Vec.Vec2[],
-    right: Vec.Vec2[]
-}
-interface ProcessedCrawler {
-    poly: Vec.Vec2[];
+    right: Vec.Vec2[],
+    // Final form used to check if a cell is inside the cave
+    rectagles: Vec.Vec2[][],
 }
 function movePointInDirection(cc: CaveCrawler, turnRadians: number, velocity: number) {
     cc.direction += turnRadians;
@@ -68,7 +68,7 @@ function movePointInDirection(cc: CaveCrawler, turnRadians: number, velocity: nu
     cc.position = Vec.add(cc.position, similarTriangles(nextPointDirection.x - cc.position.x, nextPointDirection.y - cc.position.y, dist, velocity));
 
 }
-function crawl(cc: CaveCrawler, endPosition: Vec.Vec2): ProcessedCrawler {
+function crawl(cc: CaveCrawler, endPosition: Vec.Vec2) {
     // Start the path with a circle so that the biggest part of the cave is 
     // like an octogon or someing, not just a flat line
     const eachTurnRadians = Math.PI / 4
@@ -100,6 +100,8 @@ function crawl(cc: CaveCrawler, endPosition: Vec.Vec2): ProcessedCrawler {
             if (!prevPoint || !p || !nextPoint) {
                 continue;
             }
+            const lastLeft = cc.left[cc.left.length - 1]
+            const lastRight = cc.right[cc.right.length - 1]
             const direction = Vec.getAngleBetweenVec2s(prevPoint, nextPoint)
             const left = { x: p.x + Math.cos(direction + Math.PI / 2), y: p.y + Math.sin(direction + Math.PI / 2) };
             const right = { x: p.x + Math.cos(direction - Math.PI / 2), y: p.y + Math.sin(direction - Math.PI / 2) };
@@ -116,11 +118,10 @@ function crawl(cc: CaveCrawler, endPosition: Vec.Vec2): ProcessedCrawler {
             // Jitter the left and right sides so they are not perfectly parallel
             newRight = Vec.jitter(newRight, cc.thickness / 4);
             cc.right.push(newRight);
+            if (lastLeft && lastRight) {
+                cc.rectagles.push([lastLeft, newLeft, newRight, lastRight])
+            }
         }
-    }
-    const poly = [...cc.left, ...cc.right.reverse(), cc.left[0] as Vec.Vec2].map(point => Vec.round(point))
-    return {
-        poly
     }
 
 }

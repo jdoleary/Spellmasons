@@ -258,6 +258,7 @@ window.cave = () => {
     window.t.lineStyle(4, style, opacity);
     if (path[0]) {
       window.t.moveTo(path[0].x, path[0].y);
+      // @ts-expect-error
       window.t.drawCircle(path[1].x, path[1].y, 25);
       for (let point of path) {
         window.t.lineTo(point.x, point.y);
@@ -273,7 +274,7 @@ window.cave = () => {
     yMax: NaN
   }
   bounds = cave.reduce((b, crawler) => {
-    for (let p of crawler.poly) {
+    for (let p of [...crawler.left, ...crawler.right]) {
       if (Number.isNaN(b.xMin) || p.x < b.xMin) {
         b.xMin = p.x;
       }
@@ -289,6 +290,17 @@ window.cave = () => {
     }
     return b
   }, bounds);
+  // // Fill
+  // for (let i = 0; i < cave.length; i++) {
+  //   const crawler = cave[i];
+  //   if (crawler) {
+  //     window.t.beginFill(0xffffff, 0.2);
+  //     // @ts-expect-error
+  //     window.t.drawPolygon(crawler.poly);
+  //     window.t.endFill();
+  //   }
+  // }
+
   // Draw bounds
   window.t.lineStyle(2, 0xff0000, 1.0);
   window.t.moveTo(bounds.xMin, bounds.yMin);
@@ -296,46 +308,45 @@ window.cave = () => {
   window.t.lineTo(bounds.xMax, bounds.yMax);
   window.t.lineTo(bounds.xMax, bounds.yMin);
   window.t.lineTo(bounds.xMin, bounds.yMin);
-  // Fill
-  for (let i = 0; i < cave.length; i++) {
-    const crawler = cave[i];
-    if (crawler) {
-      window.t.beginFill(0xffffff, 0.2);
-      // @ts-expect-error
-      window.t.drawPolygon(crawler.poly);
-      window.t.endFill();
-    }
-  }
-  // Lines
-  for (let i = 0; i < cave.length; i++) {
-    const crawler = cave[i];
-    if (crawler) {
-      drawPathWithStyle(crawler.poly, styles[i % styles.length] as number, 1.0);
-      window.t.lineStyle(1, 0x000000, 0.0);
-      // window.t.beginFill(styles[i % styles.length], 1.0);
-      // window.t.drawPolygon(poly);
-      // window.t.endFill();
-    }
-  }
-
-  // Draw dot grid
+  //  Draw dot grid
   const dotSize = 64;
   console.log('jtest', bounds);
   for (let x = bounds.xMin; x < bounds.xMax; x += dotSize) {
     for (let y = bounds.yMin; y < bounds.yMax; y += dotSize) {
       let isInside = false;
       for (let crawler of cave) {
-        if (isVec2InsidePolygon({ x, y }, { points: crawler.poly, inverted: false })) {
-          isInside = true;
+        for (let rect of crawler.rectagles) {
+          if (isVec2InsidePolygon({ x, y }, { points: rect, inverted: false })) {
+            isInside = true;
+            break;
+          }
+        }
+        if (isInside) {
           break;
         }
       }
       window.t.lineStyle(2, isInside ? 0x00ff00 : 0xff0000, 1.0);
-
-      window.t.drawCircle(x, y, 4);
+      if (isInside) {
+        window.t.beginFill(0x00ff00, 0.5);
+        window.t.drawRect(x, y, dotSize, dotSize);
+        window.t.endFill();
+      } else {
+        window.t.drawCircle(x, y, 4);
+      }
     }
   }
 
+  // Lines
+  for (let i = 0; i < cave.length; i++) {
+    const crawler = cave[i];
+    if (crawler) {
+      drawPathWithStyle(crawler.path, styles[i % styles.length] as number, 1.0);
+      window.t.lineStyle(1, 0x000000, 0.0);
+      // window.t.beginFill(styles[i % styles.length], 1.0);
+      // window.t.drawPolygon(poly);
+      // window.t.endFill();
+    }
+  }
   // const polys = mergeOverlappingPolygons(polygons.map(p => ({ points: p, inverted: true })));
   // for (let p of polys) {
   //   // Draw polygon
