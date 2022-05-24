@@ -85,8 +85,7 @@ export default class Underworld {
   // meaning, players take their turn, npcs take their
   // turn, then it resets to player turn, that is a full "turn"
   turn_number: number = -1;
-  height: number = 500;
-  width: number = 800;
+  bounds: Bounds;
   players: Player.IPlayer[] = [];
   units: Unit.IUnit[] = [];
   pickups: Pickup.IPickup[] = [];
@@ -552,19 +551,11 @@ export default class Underworld {
   // Returns undefined if it fails to make valid LevelData
   generateRandomLevelData(levelIndex: number): LevelData | undefined {
     console.log('Setup: generateRandomLevel', levelIndex);
-    const { groundTiles, bounds } = generateCave();
-    // Width and height should be set immediately so that other level-building functions
-    // (such as cacheWalls) have access to the new width and height
-    this.width = (bounds.xMax - bounds.xMin) / config.OBSTACLE_SIZE;
-    this.height = (bounds.yMax - bounds.yMin) / config.OBSTACLE_SIZE;
-    console.log('bounds', bounds)
-    console.log('jtest', this.width, this.height);
+    const { groundTiles, wallTiles, bounds } = generateCave();
     const levelData: LevelData = {
       levelIndex,
-      width: this.width,
-      height: this.height,
       bounds: bounds,
-      obstacles: [],
+      obstacles: wallTiles.map(x => ({ sourceIndex: 0, coord: x })),
       groundTiles: [],
       pickups: [],
       enemies: [],
@@ -574,6 +565,7 @@ export default class Underworld {
     validSpawnCoords.push({ x: 0, y: 0 });
     levelData.validPlayerSpawnCoords.push({ x: 1, y: 1 })
     levelData.groundTiles = groundTiles;
+
     // Now that obstacles have been generated, we must cache the walls so pathfinding will work
     this.cacheWalls(levelData.obstacles.map(o => Obstacle.create(o.coord, o.sourceIndex)), bounds);
 
@@ -732,10 +724,9 @@ export default class Underworld {
     // Clean up the previous level
     this.cleanUpLevel();
 
-    const { levelIndex, width, height, obstacles, groundTiles, pickups, enemies, validPlayerSpawnCoords } = levelData;
+    const { levelIndex, bounds, obstacles, groundTiles, pickups, enemies, validPlayerSpawnCoords } = levelData;
     this.levelIndex = levelIndex;
-    this.width = width;
-    this.height = height;
+    this.bounds = bounds;
     const obstacleInsts = [];
     for (let o of obstacles) {
       const obstacleInst = Obstacle.create(o.coord, o.sourceIndex);
@@ -1732,8 +1723,6 @@ export default class Underworld {
   //   this.turn_phase = serialized.turn_phase;
   //   this.playerTurnIndex = serialized.playerTurnIndex;
   //   this.turn_number = serialized.turn_number;
-  //   this.height = serialized.height;
-  //   this.width = serialized.width;
   //   // Note: obstacles are not serialized since they are unchanging between levels
   //   // TODO, remove walls and pathingPolygons here, they are set in cacheWalls, so this is redundant
   //   // make sure obstacles come over when serialized
@@ -1860,8 +1849,6 @@ function getEnemiesForAltitude(levelIndex: number): { enemies: { [unitid: string
 
 export interface LevelData {
   levelIndex: number,
-  width: number,
-  height: number,
   bounds: Bounds,
   obstacles: {
     sourceIndex: number;

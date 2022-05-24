@@ -256,7 +256,7 @@ export function drawPredictionCircleFill(target: Vec2, radius: number) {
 
 export function isOutOfBounds(target: Vec2) {
   return (
-    target.x < 0 || target.x >= window.underworld.width || target.y < 0 || target.y >= window.underworld.height
+    target.x < window.underworld.bounds.xMin || target.x >= window.underworld.bounds.xMax || target.y < window.underworld.bounds.yMin || target.y >= window.underworld.bounds.yMax
   );
 }
 
