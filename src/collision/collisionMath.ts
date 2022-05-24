@@ -193,6 +193,7 @@ export function closestLineSegmentIntersection(l1: LineSegment, otherLines: Line
 // Adapted from https://stackoverflow.com/a/565282
 // Resources https://www.math.usm.edu/lambers/mat169/fall09/lecture25.pdf
 // Example points: "Converting your example into my notation, I get p=(11,11), r=(-12,-12), q=(0,0), s=(0,10), r×s=-120, t=11/12, u=0. Since r×s is non-zero, the segments are not parallel."
+window.lsi = lineSegmentIntersection;
 export function lineSegmentIntersection(l1: LineSegment, l2: LineSegment): Vec2 | undefined {
     // l1 expressed as p to p+r
     const p = l1.p1;

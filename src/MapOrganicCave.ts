@@ -1,5 +1,6 @@
 import { lineSegmentIntersection } from "./collision/collisionMath";
 import { distance, lerp, similarTriangles } from "./math";
+import { isVec2InsidePolygon } from "./Polygon";
 import { randFloat, randInt } from "./rand";
 import * as Vec from "./Vec";
 
@@ -70,6 +71,7 @@ function movePointInDirection(cc: CaveCrawler, turnRadians: number, velocity: nu
 
 }
 function crawl(cc: CaveCrawler, endPosition: Vec.Vec2) {
+    window.bowties = [];
     // Start the path with a circle so that the biggest part of the cave is 
     // like an octogon or someing, not just a flat line
     const eachTurnRadians = Math.PI / 4
@@ -121,10 +123,22 @@ function crawl(cc: CaveCrawler, endPosition: Vec.Vec2) {
             cc.right.push(newRight);
             if (lastLeft && lastRight) {
                 let points = [lastLeft, newLeft, newRight, lastRight];
-                // Ensure rectangle isn't twisted like a bowtie which will result in weird isVec2Inside resultsn:
-                if (lineSegmentIntersection({ p1: lastLeft, p2: newLeft }, { p1: newRight, p2: lastRight })
-                    || lineSegmentIntersection({ p1: newLeft, p2: newRight }, { p1: lastLeft, p2: lastRight })) {
+                // Ensure rectangle isn't twisted like a bowtie which will result in weird isVec2Inside results:
+
+                if (lineSegmentIntersection({ p1: lastLeft, p2: newLeft }, { p1: newRight, p2: lastRight })) {
+                    // if 1 to 2 crosses 3 to 4, flip 2 and 3
+                    points = [lastLeft, newRight, newLeft, lastRight];
+                } else if (lineSegmentIntersection({ p1: newLeft, p2: newRight }, { p1: lastLeft, p2: lastRight })) {
+                    // If 2 and 3 crosses 1 and 4, flip 3 and 4
                     points = [lastLeft, newLeft, lastRight, newRight];
+                }
+                // Protect against chevron shaped rectangles:
+                for (let p of points) {
+                    const withoutP = { points: points.filter(x => x !== p), inverted: false };
+                    if (isVec2InsidePolygon(p, withoutP)) {
+                        points = withoutP.points;
+                        break;
+                    }
                 }
 
                 cc.rectagles.push(points)
