@@ -71,7 +71,6 @@ function movePointInDirection(cc: CaveCrawler, turnRadians: number, velocity: nu
 
 }
 function crawl(cc: CaveCrawler, endPosition: Vec.Vec2) {
-    window.bowties = [];
     // Start the path with a circle so that the biggest part of the cave is 
     // like an octogon or someing, not just a flat line
     const eachTurnRadians = Math.PI / 4

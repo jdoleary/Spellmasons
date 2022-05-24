@@ -249,7 +249,6 @@ window.superMe = () => {
 // window.showDebug = true;
 
 window.onbeforeunload = function () { return "Are you sure you want to quit?"; };
-window.bowties = [];
 window.cave = () => {
   window.t.clear();
   const cave = generateCave();
@@ -308,10 +307,6 @@ window.cave = () => {
         for (let rect of crawler.rectagles) {
           if (isVec2InsidePolygon({ x, y }, { points: rect, inverted: false })) {
             isInside = true;
-            if (x == bounds.xMin) {
-              console.log('jtest RECT', x, y, rect);
-              window.bowties.push(rect);
-            }
             break;
           }
         }
@@ -341,13 +336,6 @@ window.cave = () => {
       // }
       // window.t.endFill();
     }
-  }
-  for (let bowtie of window.bowties) {
-    window.t.beginFill(0xff0000, 0.9);
-    window.t.drawPolygon(bowtie);
-    window.t.endFill();
-    drawPathWithStyle(bowtie, 0x0000ff, 1.0);
-
   }
 
   // // Lines
