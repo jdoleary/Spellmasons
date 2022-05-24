@@ -50,6 +50,7 @@ import { healthAllyGreen, healthHurtRed, healthRed } from './ui/colors';
 import objectHash from 'object-hash';
 import { withinMeleeRange } from './units/actions/gruntAction';
 import * as TimeRelease from './TimeRelease';
+import { generateCave } from './MapOrganicCave';
 
 export enum turn_phase {
   PlayerTurns,
@@ -114,8 +115,7 @@ export default class Underworld {
 
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
     window.underworld = this;
-    // this.seed = window.seedOverride || seed;
-    this.seed = '0.5897818138111177'
+    this.seed = window.seedOverride || seed;
     elSeed.innerText = `Seed: ${this.seed}`;
     console.log("RNG create with seed:", this.seed, ", state: ", RNGState);
     this.random = this.syncronizeRNG(RNGState);
@@ -577,98 +577,92 @@ export default class Underworld {
       validPlayerSpawnCoords: []
     };
     let validSpawnCoords: Vec2[] = [];
-    let validPortalSpawnCoords: Vec2[] = [];
     // The map is made of a matrix of obstacle sectors
-    for (let i = 0; i < sectorsWide; i++) {
-      for (let j = 0; j < sectorsTall; j++) {
-        const randomSectorIndex = randInt(this.random,
-          0,
-          obstacleSectors.length - 1,
-        );
-        let sector = obstacleSectors[randomSectorIndex];
-        // Rotate sector 0 to 3 times
-        const rotateTimes = randInt(this.random, 0, 3)
-        for (let x = 0; x < rotateTimes; x++) {
-          // @ts-ignore
-          sector = math.rotateMatrix(sector);
-        }
+    // for (let i = 0; i < sectorsWide; i++) {
+    //   for (let j = 0; j < sectorsTall; j++) {
+    //     const randomSectorIndex = randInt(this.random,
+    //       0,
+    //       obstacleSectors.length - 1,
+    //     );
+    //     let sector = obstacleSectors[randomSectorIndex];
+    //     // Rotate sector 0 to 3 times
+    //     const rotateTimes = randInt(this.random, 0, 3)
+    //     for (let x = 0; x < rotateTimes; x++) {
+    //       // @ts-ignore
+    //       sector = math.rotateMatrix(sector);
+    //     }
 
-        // obstacleIndex of 1 means non ground, so pick an obstacle at random
-        const obstacleChoice = randInt(this.random, 0, 1)
-        // Now that we have the obstacle sector's horizontal index (i) and vertical index (j),
-        // choose a pre-defined sector and spawn the obstacles
-        if (sector) {
-          for (let Y = 0; Y < sector.length; Y++) {
-            const rowOfObstacles = sector[Y];
-            if (rowOfObstacles) {
-              for (let X = 0; X < rowOfObstacles.length; X++) {
-                const coordX = config.OBSTACLE_SIZE * config.OBSTACLES_PER_SECTOR_WIDE * i + config.OBSTACLE_SIZE * X + config.COLLISION_MESH_RADIUS;
-                const coordY = config.OBSTACLE_SIZE * config.OBSTACLES_PER_SECTOR_WIDE * j + config.OBSTACLE_SIZE * Y + config.COLLISION_MESH_RADIUS;
-                const obstacleIndex = rowOfObstacles[X];
-                // obstacleIndex of 0 means ground
-                if (obstacleIndex == 0) {
-                  // Empty, no obstacle, take this opportunity to spawn something from the spawn list, since
-                  // we know it is a safe place to spawn
-                  if (i == 0 && X == 0) {
-                    // Only spawn players in the left most index (X == 0) of the left most obstacle (i==0)
-                    const margin = 0;
-                    levelData.validPlayerSpawnCoords.push({ x: coordX + margin, y: coordY });
-                  } else if (i == sectorsWide - 1 && X == rowOfObstacles.length - 1) {
-                    // Only spawn the portal in the right most index of the right most obstacle
-                    validPortalSpawnCoords.push({ x: coordX, y: coordY });
-                  } else {
-                    // Spawn pickups or units in any validSpawnCoord
-                    validSpawnCoords.push({ x: coordX, y: coordY });
-                  }
-                  // Create ground tile
-                  levelData.groundTiles.push({ x: coordX, y: coordY });
-                  continue
-                } else {
-                  levelData.obstacles.push({ sourceIndex: obstacleChoice, coord: { x: coordX, y: coordY } });
-                }
+    //     // obstacleIndex of 1 means non ground, so pick an obstacle at random
+    //     const obstacleChoice = randInt(this.random, 0, 1)
+    //     // Now that we have the obstacle sector's horizontal index (i) and vertical index (j),
+    //     // choose a pre-defined sector and spawn the obstacles
+    //     if (sector) {
+    //       for (let Y = 0; Y < sector.length; Y++) {
+    //         const rowOfObstacles = sector[Y];
+    //         if (rowOfObstacles) {
+    //           for (let X = 0; X < rowOfObstacles.length; X++) {
+    //             const coordX = config.OBSTACLE_SIZE * config.OBSTACLES_PER_SECTOR_WIDE * i + config.OBSTACLE_SIZE * X + config.COLLISION_MESH_RADIUS;
+    //             const coordY = config.OBSTACLE_SIZE * config.OBSTACLES_PER_SECTOR_WIDE * j + config.OBSTACLE_SIZE * Y + config.COLLISION_MESH_RADIUS;
+    //             const obstacleIndex = rowOfObstacles[X];
+    //             // obstacleIndex of 0 means ground
+    //             if (obstacleIndex == 0) {
+    //               // Empty, no obstacle, take this opportunity to spawn something from the spawn list, since
+    //               // we know it is a safe place to spawn
+    //               if (i == 0 && X == 0) {
+    //                 // Only spawn players in the left most index (X == 0) of the left most obstacle (i==0)
+    //                 const margin = 0;
+    //                 levelData.validPlayerSpawnCoords.push({ x: coordX + margin, y: coordY });
+    //               } else if (i == sectorsWide - 1 && X == rowOfObstacles.length - 1) {
+    //                 // Only spawn the portal in the right most index of the right most obstacle
+    //                 validPortalSpawnCoords.push({ x: coordX, y: coordY });
+    //               } else {
+    //                 // Spawn pickups or units in any validSpawnCoord
+    //                 validSpawnCoords.push({ x: coordX, y: coordY });
+    //               }
+    //               // Create ground tile
+    //               levelData.groundTiles.push({ x: coordX, y: coordY });
+    //               continue
+    //             } else {
+    //               levelData.obstacles.push({ sourceIndex: obstacleChoice, coord: { x: coordX, y: coordY } });
+    //             }
 
-              }
-            } else {
-              console.error('row of obstacles is unexpectedly undefined')
-            }
-          }
-        } else {
-          console.error('sector is unexpectedly undefined')
-        }
-      }
-    }
+    //           }
+    //         } else {
+    //           console.error('row of obstacles is unexpectedly undefined')
+    //         }
+    //       }
+    //     } else {
+    //       console.error('sector is unexpectedly undefined')
+    //     }
+    //   }
+    // }
+    validSpawnCoords.push({ x: 0, y: 0 });
+    levelData.validPlayerSpawnCoords.push({ x: 1, y: 1 })
+    // const { groundTiles } = generateCave();
+    // levelData.groundTiles = groundTiles;
     // Now that obstacles have been generated, we must cache the walls so pathfinding will work
     this.cacheWalls(levelData.obstacles.map(o => Obstacle.create(o.coord, o.sourceIndex)));
 
     // Remove bad spawns.  This can happen if an empty space is right next to the border of the map with obstacles
     // all around it.  There is no obstacle there, but there is also no room to move because the spawn location 
     // is inside of an inverted polygon.
-    levelData.validPlayerSpawnCoords = levelData.validPlayerSpawnCoords.filter(c => findPolygonsThatVec2IsInsideOf(c, this.pathingPolygons).length === 0);
-    validPortalSpawnCoords = validPortalSpawnCoords.filter(c => findPolygonsThatVec2IsInsideOf(c, this.pathingPolygons).length === 0);
+    // levelData.validPlayerSpawnCoords = levelData.validPlayerSpawnCoords.filter(c => findPolygonsThatVec2IsInsideOf(c, this.pathingPolygons).length === 0);
     validSpawnCoords = validSpawnCoords.filter(c => findPolygonsThatVec2IsInsideOf(c, this.pathingPolygons).length === 0);
-
-    // Spawn portal
-    const index = randInt(this.random, 0, validPortalSpawnCoords.length - 1);
-    const portalCoords = validPortalSpawnCoords.splice(index, 1)[0];
-    if (!portalCoords) {
-      console.log('Bad level seed, not enough valid spawns for portal, regenerating');
-      return;
-    }
 
     // Recache walls now that unreachable areas have been filled in
     this.cacheWalls(levelData.obstacles.map(o => Obstacle.create(o.coord, o.sourceIndex)));
 
     // Exclude player spawn coords that cannot path to the portal
-    levelData.validPlayerSpawnCoords = levelData.validPlayerSpawnCoords.filter(spawn => {
-      const path = findPath(spawn, portalCoords, this.pathingPolygons, this.pathingLineSegments);
-      const lastPointInPath = path[path.length - 1]
-      return path.length != 0 && (lastPointInPath && Vec.equal(lastPointInPath, portalCoords));
-    });
+    // levelData.validPlayerSpawnCoords = levelData.validPlayerSpawnCoords.filter(spawn => {
+    //   const path = findPath(spawn, portalCoords, this.pathingPolygons, this.pathingLineSegments);
+    //   const lastPointInPath = path[path.length - 1]
+    //   return path.length != 0 && (lastPointInPath && Vec.equal(lastPointInPath, portalCoords));
+    // });
 
-    if (levelData.validPlayerSpawnCoords.length === 0) {
-      console.log('Bad level seed, no place to spawn players, regenerating');
-      return;
-    }
+    // if (levelData.validPlayerSpawnCoords.length === 0) {
+    //   console.log('Bad level seed, no place to spawn players, regenerating');
+    //   return;
+    // }
 
     const numberOfPickups = sectorsWide * sectorsTall / 2;
     for (let i = 0; i < numberOfPickups; i++) {

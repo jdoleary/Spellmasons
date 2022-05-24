@@ -10,7 +10,8 @@ const startpointjitter = 700;
 const iterations = 10;
 const velocity = 300;
 const directionRandomAmount = Math.PI / 2;
-export function generateCave(): CaveCrawler[] {
+window.c = generateCave;
+export function generateCave(): { groundTiles: Vec.Vec2[] } {
     const minDirection = randFloat(window.underworld.random, Math.PI, Math.PI / 2);
     const maxDirection = 0;
     const crawlers = [];
@@ -47,7 +48,108 @@ export function generateCave(): CaveCrawler[] {
         crawl(cc, previousCrawler.path[1] as Vec.Vec2);
         crawlers.push(cc);
     }
-    return crawlers
+    // Get bounds
+    let bounds = {
+        xMin: NaN,
+        xMax: NaN,
+        yMin: NaN,
+        yMax: NaN
+    }
+    bounds = crawlers.reduce((b, crawler) => {
+        for (let p of [...crawler.left, ...crawler.right]) {
+            if (Number.isNaN(b.xMin) || p.x < b.xMin) {
+                b.xMin = p.x;
+            }
+            if (Number.isNaN(b.yMin) || p.y < b.yMin) {
+                b.yMin = p.y;
+            }
+            if (Number.isNaN(b.xMax) || p.x > b.xMax) {
+                b.xMax = p.x;
+            }
+            if (Number.isNaN(b.yMax) || p.y > b.yMax) {
+                b.yMax = p.y;
+            }
+        }
+        return b
+    }, bounds);
+
+    // Debug Draw bounds
+    // window.t.lineStyle(2, 0xff0000, 1.0);
+    // window.t.moveTo(bounds.xMin, bounds.yMin);
+    // window.t.lineTo(bounds.xMin, bounds.yMax);
+    // window.t.lineTo(bounds.xMax, bounds.yMax);
+    // window.t.lineTo(bounds.xMax, bounds.yMin);
+    // window.t.lineTo(bounds.xMin, bounds.yMin);
+
+    const groundTiles = [];
+    const dotSize = 64;
+    for (let x = bounds.xMin; x < bounds.xMax; x += dotSize) {
+        for (let y = bounds.yMin; y < bounds.yMax; y += dotSize) {
+            let isInside = false;
+            for (let crawler of crawlers) {
+                for (let rect of crawler.rectagles) {
+                    if (isVec2InsidePolygon({ x, y }, { points: rect, inverted: false })) {
+                        isInside = true;
+                        break;
+                    }
+                }
+                if (isInside) {
+                    break;
+                }
+            }
+            if (isInside) {
+                groundTiles.push({ x, y });
+            }
+            // Debug Draw dot grid
+            // window.t.lineStyle(2, isInside ? 0x00ff00 : 0xff0000, 1.0);
+            // if (isInside) {
+            //     window.t.beginFill(0x00ff00, 0.5);
+            //     window.t.drawRect(x, y, dotSize, dotSize);
+            //     window.t.endFill();
+            // } else {
+            //     window.t.drawCircle(x, y, 4);
+            // }
+        }
+    }
+
+    //   const styles = [0xff0000, 0x0000ff, 0xff00ff, 0x00ffff, 0xffff00];
+    //   function drawPathWithStyle(path: Vec2[], style: number, opacity: number) {
+    //     window.t.lineStyle(4, style, opacity);
+    //     if (path[0]) {
+    //       window.t.moveTo(path[0].x, path[0].y);
+    //       // @ts-expect-error
+    //       window.t.drawCircle(path[1].x, path[1].y, 25);
+    //       for (let point of path) {
+    //         window.t.lineTo(point.x, point.y);
+    //       }
+    //     }
+
+    //   }
+    // Debug Fill
+    // for (let i = 0; i < crawlers.length; i++) {
+    //     const crawler = crawlers[i];
+    //     if (crawler) {
+    //         drawPathWithStyle(crawler.path, 0x000000, 1.0);
+    //         // window.t.beginFill(styles[i % styles.length], 0.2);
+    //         // for (let rect of crawler.rectagles) {
+    //         //   window.t.drawPolygon(rect);
+    //         // }
+    //         // window.t.endFill();
+    //     }
+    // }
+
+    // // Lines
+    // for (let i = 0; i < cave.length; i++) {
+    //   const crawler = cave[i];
+    //   if (crawler) {
+    //     drawPathWithStyle(crawler.path, styles[i % styles.length] as number, 1.0);
+    //     window.t.lineStyle(1, 0x000000, 0.0);
+    //     // window.t.beginFill(styles[i % styles.length], 1.0);
+    //     // window.t.drawPolygon(poly);
+    //     // window.t.endFill();
+    //   }
+    // }
+    return { groundTiles };
 
 }
 
