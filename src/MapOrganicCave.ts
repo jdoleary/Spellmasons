@@ -3,6 +3,7 @@ import { distance, lerp, similarTriangles } from "./math";
 import { isVec2InsidePolygon } from "./Polygon";
 import { randFloat, randInt } from "./rand";
 import * as Vec from "./Vec";
+import * as config from './config';
 
 const minThickness = 50;
 const startThickness = 300;
@@ -10,7 +11,8 @@ const startpointjitter = 700;
 const iterations = 10;
 const velocity = 300;
 const directionRandomAmount = Math.PI / 2;
-export function generateCave(): { groundTiles: Vec.Vec2[] } {
+export interface Bounds { xMin: number, xMax: number, yMin: number, yMax: number };
+export function generateCave(): { groundTiles: Vec.Vec2[], bounds: Bounds } {
     const minDirection = randFloat(window.underworld.random, Math.PI, Math.PI / 2);
     const maxDirection = 0;
     const crawlers = [];
@@ -48,29 +50,7 @@ export function generateCave(): { groundTiles: Vec.Vec2[] } {
         crawlers.push(cc);
     }
     // Get bounds
-    let bounds = {
-        xMin: NaN,
-        xMax: NaN,
-        yMin: NaN,
-        yMax: NaN
-    }
-    bounds = crawlers.reduce((b, crawler) => {
-        for (let p of [...crawler.left, ...crawler.right]) {
-            if (Number.isNaN(b.xMin) || p.x < b.xMin) {
-                b.xMin = p.x;
-            }
-            if (Number.isNaN(b.yMin) || p.y < b.yMin) {
-                b.yMin = p.y;
-            }
-            if (Number.isNaN(b.xMax) || p.x > b.xMax) {
-                b.xMax = p.x;
-            }
-            if (Number.isNaN(b.yMax) || p.y > b.yMax) {
-                b.yMax = p.y;
-            }
-        }
-        return b
-    }, bounds);
+    const crawlerBounds = getBounds(crawlers.map(c => [...c.left, ...c.right]).flat());
 
     // Debug Draw bounds
     // window.t.lineStyle(2, 0xff0000, 1.0);
@@ -82,8 +62,8 @@ export function generateCave(): { groundTiles: Vec.Vec2[] } {
 
     const groundTiles = [];
     const dotSize = 64;
-    for (let x = bounds.xMin; x < bounds.xMax; x += dotSize) {
-        for (let y = bounds.yMin; y < bounds.yMax; y += dotSize) {
+    for (let x = crawlerBounds.xMin; x < crawlerBounds.xMax; x += dotSize) {
+        for (let y = crawlerBounds.yMin; y < crawlerBounds.yMax; y += dotSize) {
             let isInside = false;
             for (let crawler of crawlers) {
                 for (let rect of crawler.rectagles) {
@@ -148,7 +128,12 @@ export function generateCave(): { groundTiles: Vec.Vec2[] } {
     //     // window.t.endFill();
     //   }
     // }
-    return { groundTiles };
+    const bounds = getBounds(groundTiles);
+    bounds.xMin -= config.OBSTACLE_SIZE / 2;
+    bounds.yMin -= config.OBSTACLE_SIZE / 2;
+    bounds.xMax += config.OBSTACLE_SIZE / 2;
+    bounds.yMax += config.OBSTACLE_SIZE / 2;
+    return { groundTiles, bounds };
 
 }
 
@@ -245,5 +230,31 @@ function crawl(cc: CaveCrawler, endPosition: Vec.Vec2) {
             }
         }
     }
+
+}
+
+function getBounds(points: Vec.Vec2[]): Bounds {
+    // Get bounds
+    let bounds: Bounds = {
+        xMin: Number.MAX_SAFE_INTEGER,
+        xMax: Number.MIN_SAFE_INTEGER,
+        yMin: Number.MAX_SAFE_INTEGER,
+        yMax: Number.MIN_SAFE_INTEGER
+    }
+    for (let p of points) {
+        if (Number.isNaN(bounds.xMin) || p.x < bounds.xMin) {
+            bounds.xMin = Math.floor(p.x);
+        }
+        if (Number.isNaN(bounds.yMin) || p.y < bounds.yMin) {
+            bounds.yMin = Math.floor(p.y);
+        }
+        if (Number.isNaN(bounds.xMax) || p.x > bounds.xMax) {
+            bounds.xMax = Math.ceil(p.x);
+        }
+        if (Number.isNaN(bounds.yMax) || p.y > bounds.yMax) {
+            bounds.yMax = Math.ceil(p.y);
+        }
+    }
+    return bounds;
 
 }

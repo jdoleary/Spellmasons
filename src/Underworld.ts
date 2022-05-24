@@ -11,7 +11,6 @@ import * as Image from './Image';
 import * as storage from './storage';
 import * as ImmediateMode from './ImmediateModeSprites';
 import * as colors from './ui/colors';
-import obstacleSectors from './ObstacleSectors';
 import { MESSAGE_TYPES } from './MessageTypes';
 import {
   app,
@@ -51,18 +50,12 @@ import { healthAllyGreen, healthHurtRed, healthRed } from './ui/colors';
 import objectHash from 'object-hash';
 import { withinMeleeRange } from './units/actions/gruntAction';
 import * as TimeRelease from './TimeRelease';
-import { generateCave } from './MapOrganicCave';
+import { generateCave, Bounds } from './MapOrganicCave';
 
 export enum turn_phase {
   PlayerTurns,
   NPC_ALLY,
   NPC_ENEMY,
-}
-interface Bounds {
-  xMin?: number;
-  xMax?: number;
-  yMin?: number;
-  yMax?: number;
 }
 const elPlayerTurnIndicator = document.getElementById('player-turn-indicator');
 const elLevelIndicator = document.getElementById('level-indicator');
@@ -476,13 +469,13 @@ export default class Underworld {
   // and the walls from the current obstacles
   // TODO:  this will need to be called if objects become
   // destructable
-  cacheWalls(obstacles: Obstacle.IObstacle[]) {
+  cacheWalls(obstacles: Obstacle.IObstacle[], bounds: Bounds) {
     const mapBounds: Polygon = {
       points: [
-        { x: 0, y: 0 },
-        { x: 0, y: this.height },
-        { x: this.width, y: this.height },
-        { x: this.width, y: 0 },
+        { x: bounds.xMin, y: bounds.yMin },
+        { x: bounds.xMin, y: bounds.yMax },
+        { x: bounds.xMax, y: bounds.yMax },
+        { x: bounds.xMax, y: bounds.yMin },
       ], inverted: true
     };
     for (let o of obstacles) {
@@ -558,19 +551,19 @@ export default class Underworld {
 
   // Returns undefined if it fails to make valid LevelData
   generateRandomLevelData(levelIndex: number): LevelData | undefined {
-    // Level sizes are random but have change to grow bigger as loop continues
-    const maximumSize = 7;
-    const sectorsWide = randInt(this.random, Math.min(maximumSize, 2 + Math.round(levelIndex / 8)), Math.min(maximumSize, 4 + (Math.round(levelIndex / 3))));
-    const sectorsTall = randInt(this.random, Math.min(maximumSize, 2 + Math.round(levelIndex / 8)), Math.min(maximumSize, 4 + (Math.round(levelIndex / 3))));
-    console.log('Setup: generateRandomLevel', levelIndex, sectorsWide, sectorsTall);
+    console.log('Setup: generateRandomLevel', levelIndex);
+    const { groundTiles, bounds } = generateCave();
     // Width and height should be set immediately so that other level-building functions
     // (such as cacheWalls) have access to the new width and height
-    this.width = config.OBSTACLE_SIZE * sectorsWide * config.OBSTACLES_PER_SECTOR_WIDE;
-    this.height = config.OBSTACLE_SIZE * sectorsTall * config.OBSTACLES_PER_SECTOR_TALL;
+    this.width = (bounds.xMax - bounds.xMin) / config.OBSTACLE_SIZE;
+    this.height = (bounds.yMax - bounds.yMin) / config.OBSTACLE_SIZE;
+    console.log('bounds', bounds)
+    console.log('jtest', this.width, this.height);
     const levelData: LevelData = {
       levelIndex,
       width: this.width,
       height: this.height,
+      bounds: bounds,
       obstacles: [],
       groundTiles: [],
       pickups: [],
@@ -578,71 +571,11 @@ export default class Underworld {
       validPlayerSpawnCoords: []
     };
     let validSpawnCoords: Vec2[] = [];
-    // The map is made of a matrix of obstacle sectors
-    // for (let i = 0; i < sectorsWide; i++) {
-    //   for (let j = 0; j < sectorsTall; j++) {
-    //     const randomSectorIndex = randInt(this.random,
-    //       0,
-    //       obstacleSectors.length - 1,
-    //     );
-    //     let sector = obstacleSectors[randomSectorIndex];
-    //     // Rotate sector 0 to 3 times
-    //     const rotateTimes = randInt(this.random, 0, 3)
-    //     for (let x = 0; x < rotateTimes; x++) {
-    //       // @ts-ignore
-    //       sector = math.rotateMatrix(sector);
-    //     }
-
-    //     // obstacleIndex of 1 means non ground, so pick an obstacle at random
-    //     const obstacleChoice = randInt(this.random, 0, 1)
-    //     // Now that we have the obstacle sector's horizontal index (i) and vertical index (j),
-    //     // choose a pre-defined sector and spawn the obstacles
-    //     if (sector) {
-    //       for (let Y = 0; Y < sector.length; Y++) {
-    //         const rowOfObstacles = sector[Y];
-    //         if (rowOfObstacles) {
-    //           for (let X = 0; X < rowOfObstacles.length; X++) {
-    //             const coordX = config.OBSTACLE_SIZE * config.OBSTACLES_PER_SECTOR_WIDE * i + config.OBSTACLE_SIZE * X + config.COLLISION_MESH_RADIUS;
-    //             const coordY = config.OBSTACLE_SIZE * config.OBSTACLES_PER_SECTOR_WIDE * j + config.OBSTACLE_SIZE * Y + config.COLLISION_MESH_RADIUS;
-    //             const obstacleIndex = rowOfObstacles[X];
-    //             // obstacleIndex of 0 means ground
-    //             if (obstacleIndex == 0) {
-    //               // Empty, no obstacle, take this opportunity to spawn something from the spawn list, since
-    //               // we know it is a safe place to spawn
-    //               if (i == 0 && X == 0) {
-    //                 // Only spawn players in the left most index (X == 0) of the left most obstacle (i==0)
-    //                 const margin = 0;
-    //                 levelData.validPlayerSpawnCoords.push({ x: coordX + margin, y: coordY });
-    //               } else if (i == sectorsWide - 1 && X == rowOfObstacles.length - 1) {
-    //                 // Only spawn the portal in the right most index of the right most obstacle
-    //                 validPortalSpawnCoords.push({ x: coordX, y: coordY });
-    //               } else {
-    //                 // Spawn pickups or units in any validSpawnCoord
-    //                 validSpawnCoords.push({ x: coordX, y: coordY });
-    //               }
-    //               // Create ground tile
-    //               levelData.groundTiles.push({ x: coordX, y: coordY });
-    //               continue
-    //             } else {
-    //               levelData.obstacles.push({ sourceIndex: obstacleChoice, coord: { x: coordX, y: coordY } });
-    //             }
-
-    //           }
-    //         } else {
-    //           console.error('row of obstacles is unexpectedly undefined')
-    //         }
-    //       }
-    //     } else {
-    //       console.error('sector is unexpectedly undefined')
-    //     }
-    //   }
-    // }
     validSpawnCoords.push({ x: 0, y: 0 });
     levelData.validPlayerSpawnCoords.push({ x: 1, y: 1 })
-    const { groundTiles } = generateCave();
     levelData.groundTiles = groundTiles;
     // Now that obstacles have been generated, we must cache the walls so pathfinding will work
-    this.cacheWalls(levelData.obstacles.map(o => Obstacle.create(o.coord, o.sourceIndex)));
+    this.cacheWalls(levelData.obstacles.map(o => Obstacle.create(o.coord, o.sourceIndex)), bounds);
 
     // Remove bad spawns.  This can happen if an empty space is right next to the border of the map with obstacles
     // all around it.  There is no obstacle there, but there is also no room to move because the spawn location 
@@ -651,7 +584,8 @@ export default class Underworld {
     validSpawnCoords = validSpawnCoords.filter(c => findPolygonsThatVec2IsInsideOf(c, this.pathingPolygons).length === 0);
 
     // Recache walls now that unreachable areas have been filled in
-    this.cacheWalls(levelData.obstacles.map(o => Obstacle.create(o.coord, o.sourceIndex)));
+    // TODO: This may not be needed anymore after cave refactor
+    this.cacheWalls(levelData.obstacles.map(o => Obstacle.create(o.coord, o.sourceIndex)), bounds);
 
     // Exclude player spawn coords that cannot path to the portal
     // levelData.validPlayerSpawnCoords = levelData.validPlayerSpawnCoords.filter(spawn => {
@@ -665,7 +599,8 @@ export default class Underworld {
     //   return;
     // }
 
-    const numberOfPickups = sectorsWide * sectorsTall / 2;
+    // TODO numberOfPickups should scale with level size
+    const numberOfPickups = 4;
     for (let i = 0; i < numberOfPickups; i++) {
       if (validSpawnCoords.length == 0) { break; }
       const choice = math.chooseObjectWithProbability(Pickup.pickups.map((p, i) => ({ index: i, probability: p.probability })), this.random);
@@ -807,7 +742,7 @@ export default class Underworld {
       Obstacle.addImageForObstacle(obstacleInst);
       obstacleInsts.push(obstacleInst);
     }
-    this.cacheWalls(obstacleInsts);
+    this.cacheWalls(obstacleInsts, levelData.bounds);
     this.groundTiles = groundTiles;
     this.addGroundTileImages();
     for (let p of pickups) {
@@ -1927,6 +1862,7 @@ export interface LevelData {
   levelIndex: number,
   width: number,
   height: number,
+  bounds: Bounds,
   obstacles: {
     sourceIndex: number;
     coord: Vec2;
