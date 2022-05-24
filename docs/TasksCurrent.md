@@ -1,4 +1,5 @@
 ## Tasks
+- Content: Spell that increases cast range, or upgrade
 - Bug: Sometimes grunt animations just stop
 - Task: An ally that has died at all (even if ressed) should lose their upgrade priviledge
 - Task: Better shaders for lava?
