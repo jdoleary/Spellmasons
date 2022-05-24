@@ -505,6 +505,40 @@ describe('testables', () => {
     });
     describe('isVec2InsidePolygon', () => {
         describe('corner cases', () => {
+            it('should return false for this real world example', () => {
+                const testPoint = { x: -2145, y: 1016 };
+                const poly = {
+                    points: [
+                        { x: -486, y: 697 },
+                        { x: -713, y: 719 },
+                        { x: -318, y: 1017 }],
+                    inverted: false
+                }
+                const actual = isVec2InsidePolygon(testPoint, poly);
+                const expected = false;
+                expect(actual).toEqual(expected);
+            });
+            it('should return false for this real world example which would incur a floating point error without the current form of the function', () => {
+                // This test ensures that the intersection gets rounded to 2 decimal places.
+                // Under certain circumstances, (like this test provides), there will be 2 intersections,
+                // one directly on a vertex and one JUUUUUUUST off of the vertex: { x: 192.00000000000023, y: 224 }
+                // In this case, the one that's just off causes isInside to flip but the one that's perfectly
+                // on it does not because the angle logic correctly determines that the line from the point to the horizon
+                // goes through the vertex but not into the polygon.
+                const testPoint = { x: -1203, y: 224 };
+                const poly = {
+                    points: [
+                        { x: -228, y: 256 },
+                        { x: -100, y: 576 },
+                        { x: 252, y: 495 },
+                        { x: 192, y: 224 }],
+                    inverted: false
+                }
+                const actual = isVec2InsidePolygon(testPoint, poly);
+                const expected = false;
+                expect(actual).toEqual(expected);
+
+            });
             describe('1. point is the same location as a vertex of the polygon', () => {
                 it('should return true because it is inside (this is up to my discretion if I want points on verticies to be determined as inside)', () => {
                     const p1 = { x: 0, y: 0 }

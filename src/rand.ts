@@ -18,3 +18,7 @@ export function randInt(seedrandomInstance: prng, minInclusive: number, maxInclu
   const x: number = seedrandomInstance.quick();
   return Math.round(x * (maxInclusive - minInclusive) + minInclusive);
 }
+export function randFloat(seedrandomInstance: prng, minInclusive: number, maxInclusive: number) {
+  const x: number = seedrandomInstance.quick();
+  return x * (maxInclusive - minInclusive) + minInclusive;
+}

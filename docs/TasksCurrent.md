@@ -1,3 +1,5 @@
+
+
 ## Tasks
 - Bug: Sometimes grunt animations just stop
 - Task: An ally that has died at all (even if ressed) should lose their upgrade priviledge

@@ -48,6 +48,10 @@ export function jitter(pos: Vec2, maxJitter: number): Vec2 {
     const jitterY = randInt(window.underworld.random, -maxJitter, maxJitter);
     return add(pos, { x: jitterX, y: jitterY });
 }
+// returns a random Vec2 with x and y capped between min and max inclusive
+export function random(min: number, max: number): Vec2 {
+    return { x: randInt(window.underworld.random, min, max), y: randInt(window.underworld.random, min, max) };
+}
 // Returns a scalar
 export function crossproduct(p1: Vec2, p2: Vec2): number {
     return p1.x * p2.y - p1.y * p2.x;
@@ -73,6 +77,12 @@ export function clone(p: Vec2): Vec2 {
 
 export function round(v: Vec2): Vec2 {
     return { x: Math.round(v.x), y: Math.round(v.y) };
+}
+// CAUTION: NOT YET TESTED
+export function average_mean(vs: Vec2[]) {
+    return multiply(1 / vs.length, vs.reduce((acc, cur) => {
+        return add(acc, cur)
+    }, { x: 0, y: 0 }))
 }
 
 // Returns true if testPoint is within a bounding box drawn between the two bounding points
