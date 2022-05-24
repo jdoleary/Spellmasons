@@ -390,6 +390,7 @@ export function doesLineFromPointToTargetProjectAwayFromOwnPolygon(polygon: Poly
 
 // Note: There is a slight flaw in this algorithm in that if the point lies
 // directly on a line of the poly on the left side, it will yield a false negative
+window.isVecIn = isVec2InsidePolygon;
 export function isVec2InsidePolygon(point: Vec2, polygon: Polygon): boolean {
     // From geeksforgeeks.com: 
     // 1) Draw a horizontal line to the right of each point and extend it to infinity 
@@ -424,7 +425,7 @@ export function isVec2InsidePolygon(point: Vec2, polygon: Polygon): boolean {
             // 1. point is same location as a vertex of the polygon (inside)
             // 2. point is horizontal to a vertex of the polygon (possibly inside or outside)
             // 3. point is colinear with, but not on, a horizontal edge of the polygon (possibly inside or outside)
-            if (Vec.equal(intersection, point)) {
+            if (Vec.equal(Vec.round(intersection), Vec.round(point))) {
                 // The point itself is an intersection point, meaning the point lies directly on one of the walls of the polygon
                 // then it obviously is inside of the polygon (this implementation includes ON the walls as inside)
                 // Note: This is so for inverted polygons too.
