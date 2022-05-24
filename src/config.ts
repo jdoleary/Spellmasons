@@ -1,5 +1,3 @@
-import obstacleSectors from "./ObstacleSectors";
-
 export const PLAYER_BASE_HEALTH = 10;
 export const UNIT_MOVE_SPEED = 0.25;
 export const COLLISION_MESH_RADIUS = 32;
@@ -18,15 +16,6 @@ export const MILLIS_PER_ANIMATION = 200;
 export const MILLIS_PER_SPELL_ANIMATION = 400;
 export const PERCENT_CHANCE_OF_HEAVY_UNIT = 10;
 export const STARTING_CARD_COUNT = 3;
-// Obstacle sectors must be squares
-// Obstacle sector makeup is hard-coded as 3x3 but can be changed if
-// all of the Sectors are changed in ObstacleSectors.ts
-const firstRowOfSectors = obstacleSectors[0]
-export const OBSTACLES_PER_SECTOR_WIDE = firstRowOfSectors ? firstRowOfSectors[0].length : 0;
-export const OBSTACLES_PER_SECTOR_TALL = firstRowOfSectors ? firstRowOfSectors.length : 0;
-if (OBSTACLES_PER_SECTOR_WIDE === 0 || OBSTACLES_PER_SECTOR_TALL === 0) {
-    console.error('Obstacle sector data missing');
-}
 export const OBSTACLE_SIZE = COLLISION_MESH_RADIUS * 2;
 
 // Mana
