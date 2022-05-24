@@ -408,7 +408,12 @@ export function isVec2InsidePolygon(point: Vec2, polygon: Polygon): boolean {
     let isInside = false;
     const intersections: Vec2[] = [];
     for (let wall of polygonToPolygonLineSegments(polygon)) {
-        const intersection = lineSegmentIntersection(horizontalLine, wall)
+        const _intersection = lineSegmentIntersection(horizontalLine, wall)
+        // Rounding and removing extra zeros: https://stackoverflow.com/a/12830454/4418836
+        // See test
+        // 'should return false for this real world example which would incur a floating point error without the current form of the function'
+        // for explanation
+        const intersection = _intersection ? { x: +_intersection.x.toFixed(2), y: +_intersection.y.toFixed(2) } : undefined
 
         //  Don't process the same intersection more than once
         if (intersection && !intersections.find(i => Vec.equal(i, intersection))) {

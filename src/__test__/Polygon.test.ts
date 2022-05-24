@@ -517,6 +517,26 @@ describe('testables', () => {
                 const actual = isVec2InsidePolygon(testPoint, poly);
                 const expected = false;
                 expect(actual).toEqual(expected);
+            });
+            it('should return false for this real world example which would incur a floating point error without the current form of the function', () => {
+                // This test ensures that the intersection gets rounded to 2 decimal places.
+                // Under certain circumstances, (like this test provides), there will be 2 intersections,
+                // one directly on a vertex and one JUUUUUUUST off of the vertex: { x: 192.00000000000023, y: 224 }
+                // In this case, the one that's just off causes isInside to flip but the one that's perfectly
+                // on it does not because the angle logic correctly determines that the line from the point to the horizon
+                // goes through the vertex but not into the polygon.
+                const testPoint = { x: -1203, y: 224 };
+                const poly = {
+                    points: [
+                        { x: -228, y: 256 },
+                        { x: -100, y: 576 },
+                        { x: 252, y: 495 },
+                        { x: 192, y: 224 }],
+                    inverted: false
+                }
+                const actual = isVec2InsidePolygon(testPoint, poly);
+                const expected = false;
+                expect(actual).toEqual(expected);
 
             });
             describe('1. point is the same location as a vertex of the polygon', () => {
