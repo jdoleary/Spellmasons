@@ -1,6 +1,7 @@
 
 
 ## Tasks
+- Bug: Camera is broken
 - Bug: Sometimes grunt animations just stop
 - Task: An ally that has died at all (even if ressed) should lose their upgrade priviledge
 - Task: Better shaders for lava?
@@ -25,6 +26,7 @@
         - 2 ways to get somewhere
         - traps that trigger things
 
+- Content: An enemy that pulls you into danger
 - Content: Night king boss
 - Content: "Orge" enemies that get stronger for every ally of theirs that dies
 - Bug: Pathing broken on seed 0.5727148663470687 

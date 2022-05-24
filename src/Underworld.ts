@@ -50,7 +50,7 @@ import { healthAllyGreen, healthHurtRed, healthRed } from './ui/colors';
 import objectHash from 'object-hash';
 import { withinMeleeRange } from './units/actions/gruntAction';
 import * as TimeRelease from './TimeRelease';
-import { generateCave, Bounds } from './MapOrganicCave';
+import { generateCave, Limits as Limits } from './MapOrganicCave';
 
 export enum turn_phase {
   PlayerTurns,
@@ -85,7 +85,7 @@ export default class Underworld {
   // meaning, players take their turn, npcs take their
   // turn, then it resets to player turn, that is a full "turn"
   turn_number: number = -1;
-  bounds: Bounds;
+  limits: Limits = { xMin: 0, xMax: 0, yMin: 0, yMax: 0 };
   players: Player.IPlayer[] = [];
   units: Unit.IUnit[] = [];
   pickups: Pickup.IPickup[] = [];
@@ -468,13 +468,13 @@ export default class Underworld {
   // and the walls from the current obstacles
   // TODO:  this will need to be called if objects become
   // destructable
-  cacheWalls(obstacles: Obstacle.IObstacle[], bounds: Bounds) {
+  cacheWalls(obstacles: Obstacle.IObstacle[], limits: Limits) {
     const mapBounds: Polygon = {
       points: [
-        { x: bounds.xMin, y: bounds.yMin },
-        { x: bounds.xMin, y: bounds.yMax },
-        { x: bounds.xMax, y: bounds.yMax },
-        { x: bounds.xMax, y: bounds.yMin },
+        { x: limits.xMin, y: limits.yMin },
+        { x: limits.xMin, y: limits.yMax },
+        { x: limits.xMax, y: limits.yMax },
+        { x: limits.xMax, y: limits.yMin },
       ], inverted: true
     };
     for (let o of obstacles) {
@@ -551,10 +551,10 @@ export default class Underworld {
   // Returns undefined if it fails to make valid LevelData
   generateRandomLevelData(levelIndex: number): LevelData | undefined {
     console.log('Setup: generateRandomLevel', levelIndex);
-    const { groundTiles, wallTiles, bounds } = generateCave();
+    const { groundTiles, wallTiles, limits } = generateCave();
     const levelData: LevelData = {
       levelIndex,
-      bounds: bounds,
+      limits,
       obstacles: wallTiles.map(x => ({ sourceIndex: 0, coord: x })),
       groundTiles: [],
       pickups: [],
@@ -567,7 +567,7 @@ export default class Underworld {
     levelData.groundTiles = groundTiles;
 
     // Now that obstacles have been generated, we must cache the walls so pathfinding will work
-    this.cacheWalls(levelData.obstacles.map(o => Obstacle.create(o.coord, o.sourceIndex)), bounds);
+    this.cacheWalls(levelData.obstacles.map(o => Obstacle.create(o.coord, o.sourceIndex)), limits);
 
     // Remove bad spawns.  This can happen if an empty space is right next to the border of the map with obstacles
     // all around it.  There is no obstacle there, but there is also no room to move because the spawn location 
@@ -577,7 +577,7 @@ export default class Underworld {
 
     // Recache walls now that unreachable areas have been filled in
     // TODO: This may not be needed anymore after cave refactor
-    this.cacheWalls(levelData.obstacles.map(o => Obstacle.create(o.coord, o.sourceIndex)), bounds);
+    this.cacheWalls(levelData.obstacles.map(o => Obstacle.create(o.coord, o.sourceIndex)), limits);
 
     // Exclude player spawn coords that cannot path to the portal
     // levelData.validPlayerSpawnCoords = levelData.validPlayerSpawnCoords.filter(spawn => {
@@ -634,9 +634,8 @@ export default class Underworld {
   }
   // ringLimit limits how far away from the spawnSource it will check for valid spawn locations
   // same as below "findValidSpanws", but shortcircuits at the first valid spawn found and returns that
-  findValidSpawn(spawnSource: Vec2, ringLimit?: number): Vec2 | undefined {
-    // Enough rings to cover the whole map
-    const honeycombRings = ringLimit || Math.max(this.width / 2 / config.COLLISION_MESH_RADIUS, this.height / 2 / config.COLLISION_MESH_RADIUS);
+  findValidSpawn(spawnSource: Vec2, ringLimit: number): Vec2 | undefined {
+    const honeycombRings = ringLimit;
     for (let s of math.honeycombGenerator(config.COLLISION_MESH_RADIUS, spawnSource, honeycombRings)) {
       const attemptSpawn = { ...s, radius: config.COLLISION_MESH_RADIUS };
       // Ensure attemptSpawn isn't inside of pathingPolygons
@@ -648,10 +647,9 @@ export default class Underworld {
     return undefined;
   }
   // Same as above "findValidSpawn", but returns an array of valid spawns
-  findValidSpawns(spawnSource: Vec2, radius: number = config.COLLISION_MESH_RADIUS / 4, ringLimit?: number): Vec2[] {
+  findValidSpawns(spawnSource: Vec2, radius: number = config.COLLISION_MESH_RADIUS / 4, ringLimit: number): Vec2[] {
     const validSpawns: Vec2[] = [];
-    // Enough rings to cover the whole map
-    const honeycombRings = ringLimit || Math.max(this.width / 2 / config.COLLISION_MESH_RADIUS, this.height / 2 / config.COLLISION_MESH_RADIUS);
+    const honeycombRings = ringLimit;
     // The radius passed into honeycombGenerator is how far between vec2s each honeycomb cell is
     for (let s of math.honeycombGenerator(radius, spawnSource, honeycombRings)) {
       // attemptSpawns radius must be the full config.COLLISION_MESH_RADIUS to ensure
@@ -724,16 +722,16 @@ export default class Underworld {
     // Clean up the previous level
     this.cleanUpLevel();
 
-    const { levelIndex, bounds, obstacles, groundTiles, pickups, enemies, validPlayerSpawnCoords } = levelData;
+    const { levelIndex, limits, obstacles, groundTiles, pickups, enemies, validPlayerSpawnCoords } = levelData;
     this.levelIndex = levelIndex;
-    this.bounds = bounds;
+    this.limits = limits;
     const obstacleInsts = [];
     for (let o of obstacles) {
       const obstacleInst = Obstacle.create(o.coord, o.sourceIndex);
       Obstacle.addImageForObstacle(obstacleInst);
       obstacleInsts.push(obstacleInst);
     }
-    this.cacheWalls(obstacleInsts, levelData.bounds);
+    this.cacheWalls(obstacleInsts, levelData.limits);
     this.groundTiles = groundTiles;
     this.addGroundTileImages();
     for (let p of pickups) {
@@ -750,17 +748,10 @@ export default class Underworld {
     }
     this.postSetupLevel();
     // Show text in center of screen for the new level
-    floatingText({
-      coords: {
-        x: this.width / 2,
-        y: 3 * this.height / 8,
-      },
-      text: `Level ${this.levelIndex + 1}`,
-      style: {
-        fill: 'white',
-        fontSize: '60px'
-      }
-    });
+    centeredFloatingText(
+      `Level ${this.levelIndex + 1}`,
+      'white'
+    );
   }
   async initLevel(levelIndex: number) {
     if (window.hostClientId === window.clientId) {
@@ -1113,9 +1104,9 @@ export default class Underworld {
     }
     return false;
   }
-  getRandomCoordsWithinBounds(bounds: Bounds): Vec2 {
-    const x = randInt(this.random, bounds.xMin || 0, bounds.xMax || this.width);
-    const y = randInt(this.random, bounds.yMin || 0, bounds.yMax || this.height);
+  getRandomCoordsWithinBounds(bounds: Limits): Vec2 {
+    const x = randInt(this.random, bounds.xMin || 0, bounds.xMax || 0);
+    const y = randInt(this.random, bounds.yMin || 0, bounds.yMax || 0);
     return { x, y };
   }
   async broadcastTurnPhase(p: turn_phase) {
@@ -1849,7 +1840,7 @@ function getEnemiesForAltitude(levelIndex: number): { enemies: { [unitid: string
 
 export interface LevelData {
   levelIndex: number,
-  bounds: Bounds,
+  limits: Limits,
   obstacles: {
     sourceIndex: number;
     coord: Vec2;

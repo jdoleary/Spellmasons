@@ -49,7 +49,7 @@ Clones each target
               await Unit.moveTowards(clone, { x: unit.x + config.COLLISION_MESH_RADIUS, y: unit.y });
             }
             if (pickup) {
-              const validSpawnCoords = window.underworld.findValidSpawn(cloneSourceCoords)
+              const validSpawnCoords = window.underworld.findValidSpawn(cloneSourceCoords, 5)
               if (validSpawnCoords) {
                 const clone = Pickup.load(pickup);
                 Pickup.setPosition(clone, validSpawnCoords.x, validSpawnCoords.y);

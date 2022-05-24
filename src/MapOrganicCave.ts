@@ -11,8 +11,8 @@ const startpointjitter = 700;
 const iterations = 10;
 const velocity = 300;
 const directionRandomAmount = Math.PI / 2;
-export interface Bounds { xMin: number, xMax: number, yMin: number, yMax: number };
-export function generateCave(): { groundTiles: Vec.Vec2[], bounds: Bounds } {
+export interface Limits { xMin: number, xMax: number, yMin: number, yMax: number };
+export function generateCave(): { groundTiles: Vec.Vec2[], wallTiles: Vec.Vec2[], limits: Limits } {
     const minDirection = randFloat(window.underworld.random, Math.PI, Math.PI / 2);
     const maxDirection = 0;
     const crawlers = [];
@@ -50,7 +50,7 @@ export function generateCave(): { groundTiles: Vec.Vec2[], bounds: Bounds } {
         crawlers.push(cc);
     }
     // Get bounds
-    const crawlerBounds = getBounds(crawlers.map(c => [...c.left, ...c.right]).flat());
+    const crawlerBounds = getLimits(crawlers.map(c => [...c.left, ...c.right]).flat());
 
     // Debug Draw bounds
     // window.t.lineStyle(2, 0xff0000, 1.0);
@@ -60,9 +60,11 @@ export function generateCave(): { groundTiles: Vec.Vec2[], bounds: Bounds } {
     // window.t.lineTo(bounds.xMax, bounds.yMin);
     // window.t.lineTo(bounds.xMin, bounds.yMin);
 
-    const groundTiles = [];
+    const groundTiles: Vec.Vec2[] = [];
+    const wallTiles: Vec.Vec2[] = [];
     const dotSize = 64;
     for (let x = crawlerBounds.xMin; x < crawlerBounds.xMax; x += dotSize) {
+        let lastCellWasGround = false;
         for (let y = crawlerBounds.yMin; y < crawlerBounds.yMax; y += dotSize) {
             let isInside = false;
             for (let crawler of crawlers) {
@@ -77,7 +79,17 @@ export function generateCave(): { groundTiles: Vec.Vec2[], bounds: Bounds } {
                 }
             }
             if (isInside) {
+                if (!lastCellWasGround) {
+                    // Put a wall on top of the first ground
+                    wallTiles.push({ x, y: y - 1 });
+                }
+                lastCellWasGround = true;
                 groundTiles.push({ x, y });
+            } else {
+                if (lastCellWasGround) {
+                    wallTiles.push({ x, y });
+                }
+                lastCellWasGround = false;
             }
             // Debug Draw dot grid
             // window.t.lineStyle(2, isInside ? 0x00ff00 : 0xff0000, 1.0);
@@ -128,12 +140,12 @@ export function generateCave(): { groundTiles: Vec.Vec2[], bounds: Bounds } {
     //     // window.t.endFill();
     //   }
     // }
-    const bounds = getBounds(groundTiles);
+    const bounds = getLimits(groundTiles);
     bounds.xMin -= config.OBSTACLE_SIZE / 2;
     bounds.yMin -= config.OBSTACLE_SIZE / 2;
     bounds.xMax += config.OBSTACLE_SIZE / 2;
     bounds.yMax += config.OBSTACLE_SIZE / 2;
-    return { groundTiles, bounds };
+    return { groundTiles, limits: bounds, wallTiles };
 
 }
 
@@ -233,28 +245,27 @@ function crawl(cc: CaveCrawler, endPosition: Vec.Vec2) {
 
 }
 
-function getBounds(points: Vec.Vec2[]): Bounds {
-    // Get bounds
-    let bounds: Bounds = {
+function getLimits(points: Vec.Vec2[]): Limits {
+    let limits: Limits = {
         xMin: Number.MAX_SAFE_INTEGER,
         xMax: Number.MIN_SAFE_INTEGER,
         yMin: Number.MAX_SAFE_INTEGER,
         yMax: Number.MIN_SAFE_INTEGER
     }
     for (let p of points) {
-        if (Number.isNaN(bounds.xMin) || p.x < bounds.xMin) {
-            bounds.xMin = Math.floor(p.x);
+        if (Number.isNaN(limits.xMin) || p.x < limits.xMin) {
+            limits.xMin = Math.floor(p.x);
         }
-        if (Number.isNaN(bounds.yMin) || p.y < bounds.yMin) {
-            bounds.yMin = Math.floor(p.y);
+        if (Number.isNaN(limits.yMin) || p.y < limits.yMin) {
+            limits.yMin = Math.floor(p.y);
         }
-        if (Number.isNaN(bounds.xMax) || p.x > bounds.xMax) {
-            bounds.xMax = Math.ceil(p.x);
+        if (Number.isNaN(limits.xMax) || p.x > limits.xMax) {
+            limits.xMax = Math.ceil(p.x);
         }
-        if (Number.isNaN(bounds.yMax) || p.y > bounds.yMax) {
-            bounds.yMax = Math.ceil(p.y);
+        if (Number.isNaN(limits.yMax) || p.y > limits.yMax) {
+            limits.yMax = Math.ceil(p.y);
         }
     }
-    return bounds;
+    return limits;
 
 }

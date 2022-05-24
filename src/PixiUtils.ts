@@ -171,7 +171,7 @@ export function updateCameraPosition() {
             camera = clone(activeTurnPlayer.unit);
           } else {
             // Set camera to the center of the map
-            camera = { x: window.underworld.width / 2, y: window.underworld.height / 2 };
+            camera = { x: (window.underworld.limits.xMax - window.underworld.limits.xMin) / 2, y: (window.underworld.limits.yMax - window.underworld.limits.yMin) / 2 };
           }
         }
         // Allow camera movement via WSAD
@@ -196,7 +196,7 @@ export function updateCameraPosition() {
           const marginX = config.COLLISION_MESH_RADIUS * 4;
           // Clamp camera X
           const mapLeftMostPoint = 0 - marginX;
-          const mapRightMostPoint = window.underworld.width + marginX;
+          const mapRightMostPoint = window.underworld.limits.xMax + marginX;
           const camCenterXMin = mapLeftMostPoint + elPIXIHolder.clientWidth / 2 / zoom;
           const camCenterXMax = mapRightMostPoint - elPIXIHolder.clientWidth / 2 / zoom;
           // If the supposed minimum is more than the maximum, just center the camera:
@@ -212,7 +212,7 @@ export function updateCameraPosition() {
           // Ensure the mapBottomMostPoint takes the cardHolder's height into consideration
           // so that units don't get hidden under the card UI
           const cardHoldersRect = elCardHolders.getBoundingClientRect();
-          const mapBottomMostPoint = window.underworld.height + marginY + cardHoldersRect.height;
+          const mapBottomMostPoint = window.underworld.limits.yMax + marginY + cardHoldersRect.height;
           const camCenterYMin = mapTopMostPoint + elPIXIHolder.clientHeight / 2 / zoom;
           const camCenterYMax = mapBottomMostPoint - elPIXIHolder.clientHeight / 2 / zoom;
           // If the supposed minimum is more than the maximum, just center the camera:
