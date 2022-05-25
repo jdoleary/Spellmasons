@@ -31,7 +31,6 @@ const SKIP_TUTORIAL = 'skipTutorial';
 window.volume = 1.0;
 window.volumeMusic = 1.0;
 window.volumeGame = 1.0;
-window.zoomTarget = 1;
 window.playerWalkingPromise = Promise.resolve();
 window.predictionUnits = [];
 window.attentionMarkers = [];
@@ -40,7 +39,9 @@ window.lastThoughtsHash = '';
 window.playerThoughts = {};
 window.forceMove = [];
 window.devMode = location.href.includes('localhost');
+window.zoomTarget = 1;
 if (window.devMode) {
+  window.zoomTarget = 0.5;
   console.log('ADMIN: devMode = true! Character and upgrades will be picked automatically.');
 }
 
