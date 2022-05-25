@@ -7,11 +7,11 @@ import * as config from './config';
 import { oneDimentionIndexToVec2, vec2ToOneDimentionIndex } from "./WaveFunctionCollapse";
 import { conway } from "./Conway";
 
-const minThickness = 50;
-const startThickness = 300;
+const minThickness = config.OBSTACLE_SIZE;
+const startThickness = 150;
 const startpointjitter = 700;
-const iterations = 10;
-const velocity = 300;
+const iterations = 20;
+const velocity = 100;
 const directionRandomAmount = Math.PI / 2;
 export interface Limits { xMin: number, xMax: number, yMin: number, yMax: number };
 export type CaveTile = ({ material: Materials } & Vec.Vec2)
