@@ -48,9 +48,6 @@ export function conway(tiles: CaveTile[], widthOf2DArray: number) {
                 tiles[vec2ToOneDimentionIndexPreventWrap({ x: x - 1, y: y }, widthOf2DArray)],
             ];
             tiles[i] = mutateViaRules(tile, neighbors);
-            if (tiles[i]?.material == Materials.SemiWall && y == 0) {
-                console.log('jtest', x, y, neighbors)
-            }
         }
     }
 }
