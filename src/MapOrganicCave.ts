@@ -105,40 +105,40 @@ export function generateCave(): { tiles: ({ tile: Tiles } & Vec.Vec2)[], tiles2D
         }
     }
 
-    const styles = [0xff0000, 0x0000ff, 0xff00ff, 0x00ffff, 0xffff00];
-    function drawPathWithStyle(path: Vec.Vec2[], style: number, opacity: number) {
-        window.t.lineStyle(4, style, opacity);
-        if (path[0]) {
-            window.t.moveTo(path[0].x, path[0].y);
-            // @ts-expect-error
-            window.t.drawCircle(path[1].x, path[1].y, 25);
-            for (let point of path) {
-                window.t.lineTo(point.x, point.y);
-            }
-        }
+    // const styles = [0xff0000, 0x0000ff, 0xff00ff, 0x00ffff, 0xffff00];
+    // function drawPathWithStyle(path: Vec.Vec2[], style: number, opacity: number) {
+    //     window.t.lineStyle(4, style, opacity);
+    //     if (path[0]) {
+    //         window.t.moveTo(path[0].x, path[0].y);
+    //         // @ts-expect-error
+    //         window.t.drawCircle(path[1].x, path[1].y, 25);
+    //         for (let point of path) {
+    //             window.t.lineTo(point.x, point.y);
+    //         }
+    //     }
 
-    }
-    // Debug Fill
-    for (let i = 0; i < crawlers.length; i++) {
-        const crawler = crawlers[i];
-        if (crawler) {
-            drawPathWithStyle(crawler.path, 0x000000, 1.0);
-            window.t.beginFill(styles[i % styles.length], 0.2);
-            for (let rect of crawler.rectangles) {
-                window.t.drawPolygon(rect);
-            }
-            window.t.endFill();
-        }
-    }
+    // }
+    // // Debug Fill
+    // for (let i = 0; i < crawlers.length; i++) {
+    //     const crawler = crawlers[i];
+    //     if (crawler) {
+    //         drawPathWithStyle(crawler.path, 0x000000, 1.0);
+    //         window.t.beginFill(styles[i % styles.length], 0.2);
+    //         for (let rect of crawler.rectangles) {
+    //             window.t.drawPolygon(rect);
+    //         }
+    //         window.t.endFill();
+    //     }
+    // }
 
-    // Lines
-    for (let i = 0; i < crawlers.length; i++) {
-        const crawler = crawlers[i];
-        if (crawler) {
-            drawPathWithStyle(crawler.path, styles[i % styles.length] as number, 1.0);
-            window.t.lineStyle(1, 0x000000, 0.0);
-        }
-    }
+    // // Lines
+    // for (let i = 0; i < crawlers.length; i++) {
+    //     const crawler = crawlers[i];
+    //     if (crawler) {
+    //         drawPathWithStyle(crawler.path, styles[i % styles.length] as number, 1.0);
+    //         window.t.lineStyle(1, 0x000000, 0.0);
+    //     }
+    // }
     const tilesWithCoord = tiles.map((t, i) => {
         const dimentions = oneDimentionIndexToVec2(i, width);
         return { tile: t, x: dimentions.x * config.OBSTACLE_SIZE, y: dimentions.y * config.OBSTACLE_SIZE }
