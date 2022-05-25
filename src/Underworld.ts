@@ -26,7 +26,7 @@ import {
   containerPlayerThinking,
   containerWalls,
 } from './PixiUtils';
-import floatingText, { centeredFloatingText } from './FloatingText';
+import { queueCenteredFloatingText } from './FloatingText';
 import { UnitType, Faction, UnitSubType } from './commonTypes';
 import type { Vec2 } from "./Vec";
 import * as Vec from "./Vec";
@@ -729,6 +729,11 @@ export default class Underworld {
     for (let e of enemies) {
       this.spawnEnemy(e.id, e.coord, e.isArmored, e.strength);
     }
+    // Show text in center of screen for the new level
+    queueCenteredFloatingText(
+      `Level ${this.levelIndex + 1}`,
+      'white'
+    );
     // validPlayerSpawnCoords must be set before resetting the player
     // so the player has coords to spawn into
     this.validPlayerSpawnCoords = validPlayerSpawnCoords;
@@ -736,11 +741,6 @@ export default class Underworld {
       Player.resetPlayerForNextLevel(player);
     }
     this.postSetupLevel();
-    // Show text in center of screen for the new level
-    centeredFloatingText(
-      `Level ${this.levelIndex + 1}`,
-      'white'
-    );
   }
   async initLevel(levelIndex: number) {
     if (window.hostClientId === window.clientId) {
@@ -930,7 +930,7 @@ export default class Underworld {
     }
     if (player == window.player) {
       // Notify the current player that their turn is starting
-      centeredFloatingText(`Your Turn`);
+      queueCenteredFloatingText(`Your Turn`);
 
     }
     // Trigger onTurnStart Events

@@ -77,7 +77,18 @@ function floatAway(instance: FText, resolve: (value: void) => void) {
   }
 }
 export const elPIXIHolder = document.getElementById('PIXI-holder') as HTMLElement;
+
+let centeredTextAnimating = false;
+let centeredTextQueue: { text: string, fill: string | number }[] = [];
+export function queueCenteredFloatingText(text: string, fill: string | number = 'white') {
+  if (!centeredTextAnimating) {
+    centeredFloatingText(text, fill);
+  } else {
+    centeredTextQueue.push({ text, fill });
+  }
+}
 export function centeredFloatingText(text: string, fill: string | number = 'white') {
+  centeredTextAnimating = true;
   floatingText({
     coords: {
       x: elPIXIHolder.clientWidth / 2,
@@ -92,6 +103,16 @@ export function centeredFloatingText(text: string, fill: string | number = 'whit
     // centered text is FIXED to the center, so it shouldn't be adjusted based on the camera
     // position or else it will leave the center under certain camera positions
     keepWithinCameraBounds: false
+  }).then(() => {
+    if (centeredTextQueue.length) {
+      const nextInQueue = centeredTextQueue.shift();
+      if (nextInQueue) {
+        const { text, fill } = nextInQueue
+        return centeredFloatingText(text, fill)
+      }
+    }
+  }).then(() => {
+    centeredTextAnimating = false;
   });
 
 }
