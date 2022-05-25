@@ -18,12 +18,14 @@ interface FloatingTextInsructions {
   text: string;
   container?: PIXI.Container;
   style?: Partial<PIXI.ITextStyle>;
+  keepWithinCameraBounds: boolean;
 }
 export default function floatingText({
   coords,
   text,
   container = containerFloatingText,
   style = { fill: 'white' },
+  keepWithinCameraBounds = true
 }: FloatingTextInsructions) {
   const pixiText = new PIXI.Text(text, style);
   pixiText.x = coords.x;
@@ -40,7 +42,7 @@ export default function floatingText({
     vy: 1,
     alpha: 1,
     valpha: -0.2,
-    keepWithinCameraBounds: true,
+    keepWithinCameraBounds,
   };
   container.addChild(pixiText);
   return new Promise<void>((resolve) => {
@@ -86,7 +88,10 @@ export function centeredFloatingText(text: string, fill: string | number = 'whit
     style: {
       fill,
       fontSize: '140px'
-    }
+    },
+    // centered text is FIXED to the center, so it shouldn't be adjusted based on the camera
+    // position or else it will leave the center under certain camera positions
+    keepWithinCameraBounds: false
   });
 
 }

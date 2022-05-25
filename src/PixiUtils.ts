@@ -265,8 +265,10 @@ export function updateCameraPosition() {
         lastZoom = zoom;
 
         // Keep containerUIFixed fixed in the center of the screen
-        containerUIFixed.x = -app.stage.x;
-        containerUIFixed.y = -app.stage.y;
+        containerUIFixed.x = -app.stage.x / zoom;
+        containerUIFixed.y = -app.stage.y / zoom;
+        containerUIFixed.scale.x = 1 / zoom;
+        containerUIFixed.scale.y = 1 / zoom;
 
       }
       break;
