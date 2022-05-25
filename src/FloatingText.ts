@@ -81,6 +81,10 @@ export const elPIXIHolder = document.getElementById('PIXI-holder') as HTMLElemen
 let centeredTextAnimating = false;
 let centeredTextQueue: { text: string, fill: string | number }[] = [];
 export function queueCenteredFloatingText(text: string, fill: string | number = 'white') {
+  if (window.devMode) {
+    // skip floating text in dev mode for sake of time
+    return;
+  }
   if (!centeredTextAnimating) {
     centeredFloatingText(text, fill);
   } else {
@@ -98,7 +102,7 @@ export function centeredFloatingText(text: string, fill: string | number = 'whit
     container: containerUIFixed,
     style: {
       fill,
-      fontSize: '140px'
+      fontSize: '120px'
     },
     // centered text is FIXED to the center, so it shouldn't be adjusted based on the camera
     // position or else it will leave the center under certain camera positions
