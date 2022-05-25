@@ -1,4 +1,6 @@
 - Add forking rivers and bridges
+- Bug: 0.18681629134827027 I spawned half inside a wall
+- Protect against hit looplimit, if it happens, it's a bad map and must be regenerated
 
 ## Tasks
 - Content: Night king boss
