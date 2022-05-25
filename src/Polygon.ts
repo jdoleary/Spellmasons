@@ -560,7 +560,7 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
         // The first point to iterate is also the firstPoint of the new poly
         newPoly.points.push(originalFirstPoint);
         // TODO update loop limit to something not just for testing
-        const loopLimit = 200;
+        const loopLimit = 500;
         // TODO handle bad polys in a more sustainable way
         let i = 0;
         do {
