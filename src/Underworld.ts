@@ -50,7 +50,7 @@ import { healthAllyGreen, healthHurtRed, healthRed } from './ui/colors';
 import objectHash from 'object-hash';
 import { withinMeleeRange } from './units/actions/gruntAction';
 import * as TimeRelease from './TimeRelease';
-import { generateCave, Limits as Limits } from './MapOrganicCave';
+import { generateCave, Limits as Limits, Tiles } from './MapOrganicCave';
 
 export enum turn_phase {
   PlayerTurns,
@@ -109,6 +109,7 @@ export default class Underworld {
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
     window.underworld = this;
     this.seed = window.seedOverride || seed;
+    this.seed = '0.6811612865655032';
     elSeed.innerText = `Seed: ${this.seed}`;
     console.log("RNG create with seed:", this.seed, ", state: ", RNGState);
     this.random = this.syncronizeRNG(RNGState);
@@ -551,11 +552,12 @@ export default class Underworld {
   // Returns undefined if it fails to make valid LevelData
   generateRandomLevelData(levelIndex: number): LevelData | undefined {
     console.log('Setup: generateRandomLevel', levelIndex);
-    const { groundTiles, wallTiles, limits } = generateCave();
+    const { tiles, tiles2DArrayWidth, limits } = generateCave();
+    console.log('Setup: Done generating cave', tiles);
     const levelData: LevelData = {
       levelIndex,
       limits,
-      obstacles: wallTiles.map(x => ({ sourceIndex: 0, coord: x })),
+      obstacles: tiles.filter(t => t.tile == Tiles.Wall).map(t => ({ sourceIndex: 0, coord: Vec.clone(t) })),
       groundTiles: [],
       pickups: [],
       enemies: [],
@@ -564,7 +566,8 @@ export default class Underworld {
     let validSpawnCoords: Vec2[] = [];
     validSpawnCoords.push({ x: 0, y: 0 });
     levelData.validPlayerSpawnCoords.push({ x: 1, y: 1 })
-    levelData.groundTiles = groundTiles;
+    levelData.groundTiles = tiles.filter(t => t.tile == Tiles.Ground);
+    console.log('jtest', levelData.groundTiles)
 
     // Now that obstacles have been generated, we must cache the walls so pathfinding will work
     this.cacheWalls(levelData.obstacles.map(o => Obstacle.create(o.coord, o.sourceIndex)), limits);
