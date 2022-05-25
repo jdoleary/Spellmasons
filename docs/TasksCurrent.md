@@ -1,8 +1,8 @@
 - Add forking rivers and bridges
 - Bug: 0.18681629134827027 I spawned half inside a wall
-- Protect against hit looplimit, if it happens, it's a bad map and must be regenerated
 
 ## Tasks
+- Critical, polish, robustness: Protect against hit looplimit, if it happens, it's a bad map and must be regenerated
 - Bug: There was a bug that ended my game though. I got shield buffed by a resurrected priest, and my character disappeared. this all happened on the turn when the portal appeared (finished the level). Now I cant walk through the portal
 I'm getting the empty stamina message when I try to move my (invisible) player
 i can still cast spells during my turn; as well as end turns
