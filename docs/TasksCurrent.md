@@ -1,7 +1,9 @@
 
+- Use WFC to get walls and semi walls filled in
+- Add forking rivers and bridges
 
 ## Tasks
-- Bug: Camera is broken
+- Content: Night king boss
 - Bug: Sometimes grunt animations just stop
 - Task: An ally that has died at all (even if ressed) should lose their upgrade priviledge
 - Task: Better shaders for lava?
@@ -27,7 +29,6 @@
         - traps that trigger things
 
 - Content: An enemy that pulls you into danger
-- Content: Night king boss
 - Content: "Orge" enemies that get stronger for every ally of theirs that dies
 - Bug: Pathing broken on seed 0.5727148663470687 
     - it ran into `Hit loopLimit for polygon processing.  May be an infinite loop or the polygon may just be too big.`
@@ -54,7 +55,6 @@ and 2nd client got `Cannot change character, player not found with id 8c502be8-6
 
 
 ## More content
-- Get to choose first 3 spells
 - Upgradable spells like hurt2
 - Disincentivise hiding and casting
     - Maybe a spawn crystal that if you don't kill it, it'll spawn a bunch of bad guys
