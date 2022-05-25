@@ -16,6 +16,8 @@ const directionRandomAmount = Math.PI / 2;
 export interface Limits { xMin: number, xMax: number, yMin: number, yMax: number };
 export type CaveTile = ({ material: Materials } & Vec.Vec2)
 export function generateCave(): { tiles: CaveTile[], tiles2DArrayWidth: number, limits: Limits } {
+    // Debug: Draw caves
+    // window.debugCave.clear();
     const minDirection = randFloat(window.underworld.random, Math.PI, Math.PI / 2);
     const maxDirection = 0;
     let crawlers = [];
@@ -56,12 +58,12 @@ export function generateCave(): { tiles: CaveTile[], tiles2DArrayWidth: number, 
     const crawlerBounds = getLimits(crawlers.map(c => [...c.left, ...c.right]).flat());
 
     // Debug Draw bounds
-    // window.t.lineStyle(2, 0xff0000, 1.0);
-    // window.t.moveTo(bounds.xMin, bounds.yMin);
-    // window.t.lineTo(bounds.xMin, bounds.yMax);
-    // window.t.lineTo(bounds.xMax, bounds.yMax);
-    // window.t.lineTo(bounds.xMax, bounds.yMin);
-    // window.t.lineTo(bounds.xMin, bounds.yMin);
+    // window.debugCave.lineStyle(2, 0xff0000, 1.0);
+    // window.debugCave.moveTo(bounds.xMin, bounds.yMin);
+    // window.debugCave.lineTo(bounds.xMin, bounds.yMax);
+    // window.debugCave.lineTo(bounds.xMax, bounds.yMax);
+    // window.debugCave.lineTo(bounds.xMax, bounds.yMin);
+    // window.debugCave.lineTo(bounds.xMin, bounds.yMin);
 
     // + 2 leaves room on the right side and bottom side for surrounding walls
     const width = Math.ceil((crawlerBounds.xMax - crawlerBounds.xMin) / config.OBSTACLE_SIZE) + 2;
@@ -97,26 +99,27 @@ export function generateCave(): { tiles: CaveTile[], tiles2DArrayWidth: number, 
                 materials[index] = Materials.Ground;
             }
             // Debug Draw dot grid
-            // window.t.lineStyle(2, isInside ? 0x00ff00 : 0xff0000, 1.0);
+            // window.debugCave.lineStyle(2, isInside ? 0x00ff00 : 0xff0000, 1.0);
             // if (isInside) {
-            //     window.t.beginFill(0x00ff00, 0.5);
-            //     window.t.drawRect(x, y, dotSize, dotSize);
-            //     window.t.endFill();
+            //     window.debugCave.beginFill(0x00ff00, 0.5);
+            //     window.debugCave.drawRect(x, y, dotSize, dotSize);
+            //     window.debugCave.endFill();
             // } else {
-            //     window.t.drawCircle(x, y, 4);
+            //     window.debugCave.drawCircle(x, y, 4);
             // }
         }
     }
 
+    // Debug draw caves
     // const styles = [0xff0000, 0x0000ff, 0xff00ff, 0x00ffff, 0xffff00];
     // function drawPathWithStyle(path: Vec.Vec2[], style: number, opacity: number) {
-    //     window.t.lineStyle(4, style, opacity);
+    //     window.debugCave.lineStyle(4, style, opacity);
     //     if (path[0]) {
-    //         window.t.moveTo(path[0].x, path[0].y);
+    //         window.debugCave.moveTo(path[0].x, path[0].y);
     //         // @ts-expect-error
-    //         window.t.drawCircle(path[1].x, path[1].y, 25);
+    //         window.debugCave.drawCircle(path[1].x, path[1].y, 25);
     //         for (let point of path) {
-    //             window.t.lineTo(point.x, point.y);
+    //             window.debugCave.lineTo(point.x, point.y);
     //         }
     //     }
 
@@ -125,12 +128,13 @@ export function generateCave(): { tiles: CaveTile[], tiles2DArrayWidth: number, 
     // for (let i = 0; i < crawlers.length; i++) {
     //     const crawler = crawlers[i];
     //     if (crawler) {
-    //         drawPathWithStyle(crawler.path, 0x000000, 1.0);
-    //         window.t.beginFill(styles[i % styles.length], 0.2);
+    //         drawPathWithStyle(crawler.path, 0x000000, 0.1);
+    //         window.debugCave.beginFill(styles[i % styles.length], 0.1);
     //         for (let rect of crawler.rectangles) {
-    //             window.t.drawPolygon(rect);
+    //             // @ts-expect-error
+    //             window.debugCave.drawPolygon(rect);
     //         }
-    //         window.t.endFill();
+    //         window.debugCave.endFill();
     //     }
     // }
 
@@ -138,8 +142,8 @@ export function generateCave(): { tiles: CaveTile[], tiles2DArrayWidth: number, 
     // for (let i = 0; i < crawlers.length; i++) {
     //     const crawler = crawlers[i];
     //     if (crawler) {
-    //         drawPathWithStyle(crawler.path, styles[i % styles.length] as number, 1.0);
-    //         window.t.lineStyle(1, 0x000000, 0.0);
+    //         drawPathWithStyle(crawler.path, styles[i % styles.length] as number, 0.1);
+    //         window.debugCave.lineStyle(1, 0x000000, 0.0);
     //     }
     // }
     const tiles = materials.map((t, i) => {
