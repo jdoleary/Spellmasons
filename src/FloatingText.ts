@@ -18,12 +18,14 @@ interface FloatingTextInsructions {
   text: string;
   container?: PIXI.Container;
   style?: Partial<PIXI.ITextStyle>;
+  keepWithinCameraBounds: boolean;
 }
 export default function floatingText({
   coords,
   text,
   container = containerFloatingText,
   style = { fill: 'white' },
+  keepWithinCameraBounds = true
 }: FloatingTextInsructions) {
   const pixiText = new PIXI.Text(text, style);
   pixiText.x = coords.x;
@@ -40,7 +42,7 @@ export default function floatingText({
     vy: 1,
     alpha: 1,
     valpha: -0.2,
-    keepWithinCameraBounds: true,
+    keepWithinCameraBounds,
   };
   container.addChild(pixiText);
   return new Promise<void>((resolve) => {
@@ -75,7 +77,22 @@ function floatAway(instance: FText, resolve: (value: void) => void) {
   }
 }
 export const elPIXIHolder = document.getElementById('PIXI-holder') as HTMLElement;
-export function centeredFloatingText(text: string, fill = 'white') {
+
+let centeredTextAnimating = false;
+let centeredTextQueue: { text: string, fill: string | number }[] = [];
+export function queueCenteredFloatingText(text: string, fill: string | number = 'white') {
+  if (window.devMode) {
+    // skip floating text in dev mode for sake of time
+    return;
+  }
+  if (!centeredTextAnimating) {
+    centeredFloatingText(text, fill);
+  } else {
+    centeredTextQueue.push({ text, fill });
+  }
+}
+export function centeredFloatingText(text: string, fill: string | number = 'white') {
+  centeredTextAnimating = true;
   floatingText({
     coords: {
       x: elPIXIHolder.clientWidth / 2,
@@ -85,8 +102,21 @@ export function centeredFloatingText(text: string, fill = 'white') {
     container: containerUIFixed,
     style: {
       fill,
-      fontSize: '140px'
+      fontSize: '120px'
+    },
+    // centered text is FIXED to the center, so it shouldn't be adjusted based on the camera
+    // position or else it will leave the center under certain camera positions
+    keepWithinCameraBounds: false
+  }).then(() => {
+    if (centeredTextQueue.length) {
+      const nextInQueue = centeredTextQueue.shift();
+      if (nextInQueue) {
+        const { text, fill } = nextInQueue
+        return centeredFloatingText(text, fill)
+      }
     }
+  }).then(() => {
+    centeredTextAnimating = false;
   });
 
 }

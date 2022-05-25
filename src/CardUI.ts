@@ -1,11 +1,12 @@
 import type * as Player from './Player';
+import * as colors from './ui/colors';
 import * as Cards from './cards';
 import {
   runPredictions,
   updateManaCostUI,
 } from './ui/PlanningView';
 import { calculateCostForSingleCard } from './cards/cardUtils';
-import floatingText from './FloatingText';
+import floatingText, { centeredFloatingText } from './FloatingText';
 import { playSFX, sfxPageTurn } from './Audio';
 import { composeOnDamageEvents, copyForPredictionUnit } from './Unit';
 
@@ -306,14 +307,7 @@ function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string
 
       }
       if (cost.healthCost > window.player.unit.health) {
-        floatingText({
-          coords: {
-            x: window.underworld.width / 2,
-            y: window.underworld.height,
-          },
-          text: 'Insufficient Health',
-          style: { fill: '#d55656', fontSize: '50px', dropShadow: true, dropShadowDistance: 1 }
-        })
+        centeredFloatingText('Insufficient Health', colors.healthRed);
         deselectLastCard();
 
       }

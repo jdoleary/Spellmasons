@@ -43,7 +43,7 @@ const unit: UnitSource = {
       }
     }
     // Move randomly
-    const moveCoords = window.underworld.getRandomCoordsWithinBounds({ xMin: config.UNIT_SIZE, yMin: config.COLLISION_MESH_RADIUS, xMax: window.underworld.width - config.COLLISION_MESH_RADIUS, yMax: window.underworld.height - config.COLLISION_MESH_RADIUS });
+    const moveCoords = window.underworld.getRandomCoordsWithinBounds(window.underworld.limits);
     await Unit.moveTowards(unit, moveCoords);
   },
 };

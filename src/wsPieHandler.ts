@@ -347,8 +347,6 @@ function handleLoadGameState(payload: {
   // Sync underworld properties
   const loadedGameState: IUnderworldSerializedForSyncronize = { ...underworld };
   window.underworld = new Underworld(loadedGameState.seed, loadedGameState.RNGState);
-  window.underworld.width = loadedGameState.width;
-  window.underworld.height = loadedGameState.height;
   window.underworld.playerTurnIndex = loadedGameState.playerTurnIndex;
   window.underworld.levelIndex = loadedGameState.levelIndex;
   // Sync Level

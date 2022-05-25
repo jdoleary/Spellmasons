@@ -1,8 +1,13 @@
+- Add forking rivers and bridges
+- Bug: 0.18681629134827027 I spawned half inside a wall
+- Protect against hit looplimit, if it happens, it's a bad map and must be regenerated
+
 ## Tasks
 - Bug: There was a bug that ended my game though. I got shield buffed by a resurrected priest, and my character disappeared. this all happened on the turn when the portal appeared (finished the level). Now I cant walk through the portal
 I'm getting the empty stamina message when I try to move my (invisible) player
 i can still cast spells during my turn; as well as end turns
 - Content: Spell that increases cast range, or upgrade
+- Content: Night king boss
 - Bug: Sometimes grunt animations just stop
 - Task: An ally that has died at all (even if ressed) should lose their upgrade priviledge
 - Task: Better shaders for lava?
@@ -27,7 +32,7 @@ i can still cast spells during my turn; as well as end turns
         - 2 ways to get somewhere
         - traps that trigger things
 
-- Content: Night king boss
+- Content: An enemy that pulls you into danger
 - Content: "Orge" enemies that get stronger for every ally of theirs that dies
 - Bug: Pathing broken on seed 0.5727148663470687 
     - it ran into `Hit loopLimit for polygon processing.  May be an infinite loop or the polygon may just be too big.`
@@ -54,7 +59,6 @@ and 2nd client got `Cannot change character, player not found with id 8c502be8-6
 
 
 ## More content
-- Get to choose first 3 spells
 - Upgradable spells like hurt2
 - Disincentivise hiding and casting
     - Maybe a spawn crystal that if you don't kill it, it'll spawn a bunch of bad guys

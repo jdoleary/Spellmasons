@@ -11,7 +11,6 @@ import * as Image from './Image';
 import * as storage from './storage';
 import * as ImmediateMode from './ImmediateModeSprites';
 import * as colors from './ui/colors';
-import obstacleSectors from './ObstacleSectors';
 import { MESSAGE_TYPES } from './MessageTypes';
 import {
   app,
@@ -27,7 +26,7 @@ import {
   containerPlayerThinking,
   containerWalls,
 } from './PixiUtils';
-import floatingText, { centeredFloatingText } from './FloatingText';
+import { queueCenteredFloatingText } from './FloatingText';
 import { UnitType, Faction, UnitSubType } from './commonTypes';
 import type { Vec2 } from "./Vec";
 import * as Vec from "./Vec";
@@ -51,17 +50,12 @@ import { healthAllyGreen, healthHurtRed, healthRed } from './ui/colors';
 import objectHash from 'object-hash';
 import { withinMeleeRange } from './units/actions/gruntAction';
 import * as TimeRelease from './TimeRelease';
+import { CaveTile, generateCave, getLimits, Limits as Limits, Materials } from './MapOrganicCave';
 
 export enum turn_phase {
   PlayerTurns,
   NPC_ALLY,
   NPC_ENEMY,
-}
-interface Bounds {
-  xMin?: number;
-  xMax?: number;
-  yMin?: number;
-  yMax?: number;
 }
 const elPlayerTurnIndicator = document.getElementById('player-turn-indicator');
 const elLevelIndicator = document.getElementById('level-indicator');
@@ -91,13 +85,12 @@ export default class Underworld {
   // meaning, players take their turn, npcs take their
   // turn, then it resets to player turn, that is a full "turn"
   turn_number: number = -1;
-  height: number = 500;
-  width: number = 800;
+  limits: Limits = { xMin: 0, xMax: 0, yMin: 0, yMax: 0 };
   players: Player.IPlayer[] = [];
   units: Unit.IUnit[] = [];
   pickups: Pickup.IPickup[] = [];
   timeReleases: TimeRelease.ITimeRelease[] = [];
-  groundTiles: Vec2[] = [];
+  imageOnlyTiles: CaveTile[] = [];
   lavaObstacles: Obstacle.IObstacle[] = [];
   // line segments that prevent sight
   walls: LineSegment[] = [];
@@ -475,20 +468,23 @@ export default class Underworld {
   // and the walls from the current obstacles
   // TODO:  this will need to be called if objects become
   // destructable
-  cacheWalls(obstacles: Obstacle.IObstacle[]) {
+  cacheWalls(obstacles: Obstacle.IObstacle[], groundTiles: CaveTile[]) {
+    const limits = getLimits(groundTiles);
     const mapBounds: Polygon = {
       points: [
-        { x: 0, y: 0 },
-        { x: 0, y: this.height },
-        { x: this.width, y: this.height },
-        { x: this.width, y: 0 },
+        { x: limits.xMin, y: limits.yMin },
+        { x: limits.xMin, y: limits.yMax },
+        { x: limits.xMax, y: limits.yMax },
+        { x: limits.xMax, y: limits.yMin },
       ], inverted: true
     };
-    for (let o of obstacles) {
-      if (o.name == 'Lava') {
-        this.lavaObstacles.push(o);
-      }
-    }
+
+    // TODO: For fluid cave generation
+    // for (let o of obstacles) {
+    //   if (o.name == 'Lava') {
+    //     this.lavaObstacles.push(o);
+    //   }
+    // }
     // walls block sight
     this.walls = mergeOverlappingPolygons([...obstacles.filter(o => o.wall).map(o => o.bounds), mapBounds]).map(polygonToPolygonLineSegments).flat();
     // Expand pathing walls by the size of the regular unit
@@ -557,120 +553,24 @@ export default class Underworld {
 
   // Returns undefined if it fails to make valid LevelData
   generateRandomLevelData(levelIndex: number): LevelData | undefined {
-    // Level sizes are random but have change to grow bigger as loop continues
-    const maximumSize = 7;
-    const sectorsWide = randInt(this.random, Math.min(maximumSize, 2 + Math.round(levelIndex / 8)), Math.min(maximumSize, 4 + (Math.round(levelIndex / 3))));
-    const sectorsTall = randInt(this.random, Math.min(maximumSize, 2 + Math.round(levelIndex / 8)), Math.min(maximumSize, 4 + (Math.round(levelIndex / 3))));
-    console.log('Setup: generateRandomLevel', levelIndex, sectorsWide, sectorsTall);
-    // Width and height should be set immediately so that other level-building functions
-    // (such as cacheWalls) have access to the new width and height
-    this.width = config.OBSTACLE_SIZE * sectorsWide * config.OBSTACLES_PER_SECTOR_WIDE;
-    this.height = config.OBSTACLE_SIZE * sectorsTall * config.OBSTACLES_PER_SECTOR_TALL;
+    console.log('Setup: generateRandomLevel', levelIndex);
+    const { tiles, tiles2DArrayWidth, limits } = generateCave();
     const levelData: LevelData = {
       levelIndex,
-      width: this.width,
-      height: this.height,
-      obstacles: [],
-      groundTiles: [],
+      limits,
+      obstacles: tiles.filter(t => t.material == Materials.Wall).map(t => ({ sourceIndex: 0, coord: Vec.clone(t) })),
+      imageOnlyTiles: [],
       pickups: [],
       enemies: [],
       validPlayerSpawnCoords: []
     };
-    let validSpawnCoords: Vec2[] = [];
-    let validPortalSpawnCoords: Vec2[] = [];
-    // The map is made of a matrix of obstacle sectors
-    for (let i = 0; i < sectorsWide; i++) {
-      for (let j = 0; j < sectorsTall; j++) {
-        const randomSectorIndex = randInt(this.random,
-          0,
-          obstacleSectors.length - 1,
-        );
-        let sector = obstacleSectors[randomSectorIndex];
-        // Rotate sector 0 to 3 times
-        const rotateTimes = randInt(this.random, 0, 3)
-        for (let x = 0; x < rotateTimes; x++) {
-          // @ts-ignore
-          sector = math.rotateMatrix(sector);
-        }
+    let validSpawnCoords: Vec2[] = tiles.filter(t => t.material == Materials.Ground);
+    levelData.imageOnlyTiles = tiles;
 
-        // obstacleIndex of 1 means non ground, so pick an obstacle at random
-        const obstacleChoice = randInt(this.random, 0, 1)
-        // Now that we have the obstacle sector's horizontal index (i) and vertical index (j),
-        // choose a pre-defined sector and spawn the obstacles
-        if (sector) {
-          for (let Y = 0; Y < sector.length; Y++) {
-            const rowOfObstacles = sector[Y];
-            if (rowOfObstacles) {
-              for (let X = 0; X < rowOfObstacles.length; X++) {
-                const coordX = config.OBSTACLE_SIZE * config.OBSTACLES_PER_SECTOR_WIDE * i + config.OBSTACLE_SIZE * X + config.COLLISION_MESH_RADIUS;
-                const coordY = config.OBSTACLE_SIZE * config.OBSTACLES_PER_SECTOR_WIDE * j + config.OBSTACLE_SIZE * Y + config.COLLISION_MESH_RADIUS;
-                const obstacleIndex = rowOfObstacles[X];
-                // obstacleIndex of 0 means ground
-                if (obstacleIndex == 0) {
-                  // Empty, no obstacle, take this opportunity to spawn something from the spawn list, since
-                  // we know it is a safe place to spawn
-                  if (i == 0 && X == 0) {
-                    // Only spawn players in the left most index (X == 0) of the left most obstacle (i==0)
-                    const margin = 0;
-                    levelData.validPlayerSpawnCoords.push({ x: coordX + margin, y: coordY });
-                  } else if (i == sectorsWide - 1 && X == rowOfObstacles.length - 1) {
-                    // Only spawn the portal in the right most index of the right most obstacle
-                    validPortalSpawnCoords.push({ x: coordX, y: coordY });
-                  } else {
-                    // Spawn pickups or units in any validSpawnCoord
-                    validSpawnCoords.push({ x: coordX, y: coordY });
-                  }
-                  // Create ground tile
-                  levelData.groundTiles.push({ x: coordX, y: coordY });
-                  continue
-                } else {
-                  levelData.obstacles.push({ sourceIndex: obstacleChoice, coord: { x: coordX, y: coordY } });
-                }
+    levelData.validPlayerSpawnCoords = validSpawnCoords.filter(c => c.x <= config.OBSTACLE_SIZE * 2);
 
-              }
-            } else {
-              console.error('row of obstacles is unexpectedly undefined')
-            }
-          }
-        } else {
-          console.error('sector is unexpectedly undefined')
-        }
-      }
-    }
-    // Now that obstacles have been generated, we must cache the walls so pathfinding will work
-    this.cacheWalls(levelData.obstacles.map(o => Obstacle.create(o.coord, o.sourceIndex)));
-
-    // Remove bad spawns.  This can happen if an empty space is right next to the border of the map with obstacles
-    // all around it.  There is no obstacle there, but there is also no room to move because the spawn location 
-    // is inside of an inverted polygon.
-    levelData.validPlayerSpawnCoords = levelData.validPlayerSpawnCoords.filter(c => findPolygonsThatVec2IsInsideOf(c, this.pathingPolygons).length === 0);
-    validPortalSpawnCoords = validPortalSpawnCoords.filter(c => findPolygonsThatVec2IsInsideOf(c, this.pathingPolygons).length === 0);
-    validSpawnCoords = validSpawnCoords.filter(c => findPolygonsThatVec2IsInsideOf(c, this.pathingPolygons).length === 0);
-
-    // Spawn portal
-    const index = randInt(this.random, 0, validPortalSpawnCoords.length - 1);
-    const portalCoords = validPortalSpawnCoords.splice(index, 1)[0];
-    if (!portalCoords) {
-      console.log('Bad level seed, not enough valid spawns for portal, regenerating');
-      return;
-    }
-
-    // Recache walls now that unreachable areas have been filled in
-    this.cacheWalls(levelData.obstacles.map(o => Obstacle.create(o.coord, o.sourceIndex)));
-
-    // Exclude player spawn coords that cannot path to the portal
-    levelData.validPlayerSpawnCoords = levelData.validPlayerSpawnCoords.filter(spawn => {
-      const path = findPath(spawn, portalCoords, this.pathingPolygons, this.pathingLineSegments);
-      const lastPointInPath = path[path.length - 1]
-      return path.length != 0 && (lastPointInPath && Vec.equal(lastPointInPath, portalCoords));
-    });
-
-    if (levelData.validPlayerSpawnCoords.length === 0) {
-      console.log('Bad level seed, no place to spawn players, regenerating');
-      return;
-    }
-
-    const numberOfPickups = sectorsWide * sectorsTall / 2;
+    // TODO numberOfPickups should scale with level size
+    const numberOfPickups = 4;
     for (let i = 0; i < numberOfPickups; i++) {
       if (validSpawnCoords.length == 0) { break; }
       const choice = math.chooseObjectWithProbability(Pickup.pickups.map((p, i) => ({ index: i, probability: p.probability })), this.random);
@@ -706,15 +606,25 @@ export default class Underworld {
 
   }
   addGroundTileImages() {
-    for (let coord of this.groundTiles) {
-      Image.create(coord, 'tiles/ground.png', containerBoard);
+    for (let tile of this.imageOnlyTiles) {
+      let imagePath = '';
+      switch (tile.material) {
+        case Materials.Ground:
+          imagePath = 'tiles/ground.png';
+          break;
+        case Materials.SemiWall:
+          imagePath = 'tiles/semiWall.png';
+          break;
+      }
+      if (imagePath) {
+        Image.create(tile, imagePath, containerBoard);
+      }
     }
   }
   // ringLimit limits how far away from the spawnSource it will check for valid spawn locations
   // same as below "findValidSpanws", but shortcircuits at the first valid spawn found and returns that
-  findValidSpawn(spawnSource: Vec2, ringLimit?: number): Vec2 | undefined {
-    // Enough rings to cover the whole map
-    const honeycombRings = ringLimit || Math.max(this.width / 2 / config.COLLISION_MESH_RADIUS, this.height / 2 / config.COLLISION_MESH_RADIUS);
+  findValidSpawn(spawnSource: Vec2, ringLimit: number): Vec2 | undefined {
+    const honeycombRings = ringLimit;
     for (let s of math.honeycombGenerator(config.COLLISION_MESH_RADIUS, spawnSource, honeycombRings)) {
       const attemptSpawn = { ...s, radius: config.COLLISION_MESH_RADIUS };
       // Ensure attemptSpawn isn't inside of pathingPolygons
@@ -726,10 +636,9 @@ export default class Underworld {
     return undefined;
   }
   // Same as above "findValidSpawn", but returns an array of valid spawns
-  findValidSpawns(spawnSource: Vec2, radius: number = config.COLLISION_MESH_RADIUS / 4, ringLimit?: number): Vec2[] {
+  findValidSpawns(spawnSource: Vec2, radius: number = config.COLLISION_MESH_RADIUS / 4, ringLimit: number): Vec2[] {
     const validSpawns: Vec2[] = [];
-    // Enough rings to cover the whole map
-    const honeycombRings = ringLimit || Math.max(this.width / 2 / config.COLLISION_MESH_RADIUS, this.height / 2 / config.COLLISION_MESH_RADIUS);
+    const honeycombRings = ringLimit;
     // The radius passed into honeycombGenerator is how far between vec2s each honeycomb cell is
     for (let s of math.honeycombGenerator(radius, spawnSource, honeycombRings)) {
       // attemptSpawns radius must be the full config.COLLISION_MESH_RADIUS to ensure
@@ -774,7 +683,7 @@ export default class Underworld {
     // Clear all floor images
     containerBoard.removeChildren();
     containerWalls.removeChildren();
-    this.groundTiles = [];
+    this.imageOnlyTiles = [];
 
     // Clear card usage counts, otherwise players will be
     // incentivied to bum around after a level to clear it themselves
@@ -802,18 +711,17 @@ export default class Underworld {
     // Clean up the previous level
     this.cleanUpLevel();
 
-    const { levelIndex, width, height, obstacles, groundTiles, pickups, enemies, validPlayerSpawnCoords } = levelData;
+    const { levelIndex, limits, obstacles, imageOnlyTiles, pickups, enemies, validPlayerSpawnCoords } = levelData;
     this.levelIndex = levelIndex;
-    this.width = width;
-    this.height = height;
+    this.limits = limits;
     const obstacleInsts = [];
     for (let o of obstacles) {
       const obstacleInst = Obstacle.create(o.coord, o.sourceIndex);
       Obstacle.addImageForObstacle(obstacleInst);
       obstacleInsts.push(obstacleInst);
     }
-    this.cacheWalls(obstacleInsts);
-    this.groundTiles = groundTiles;
+    this.cacheWalls(obstacleInsts, imageOnlyTiles.filter(x => x.material == Materials.Ground));
+    this.imageOnlyTiles = imageOnlyTiles;
     this.addGroundTileImages();
     for (let p of pickups) {
       this.spawnPickup(p.index, p.coord);
@@ -821,6 +729,11 @@ export default class Underworld {
     for (let e of enemies) {
       this.spawnEnemy(e.id, e.coord, e.isArmored, e.strength);
     }
+    // Show text in center of screen for the new level
+    queueCenteredFloatingText(
+      `Level ${this.levelIndex + 1}`,
+      'white'
+    );
     // validPlayerSpawnCoords must be set before resetting the player
     // so the player has coords to spawn into
     this.validPlayerSpawnCoords = validPlayerSpawnCoords;
@@ -828,18 +741,6 @@ export default class Underworld {
       Player.resetPlayerForNextLevel(player);
     }
     this.postSetupLevel();
-    // Show text in center of screen for the new level
-    floatingText({
-      coords: {
-        x: this.width / 2,
-        y: 3 * this.height / 8,
-      },
-      text: `Level ${this.levelIndex + 1}`,
-      style: {
-        fill: 'white',
-        fontSize: '60px'
-      }
-    });
   }
   async initLevel(levelIndex: number) {
     if (window.hostClientId === window.clientId) {
@@ -1029,7 +930,7 @@ export default class Underworld {
     }
     if (player == window.player) {
       // Notify the current player that their turn is starting
-      centeredFloatingText(`Your Turn`);
+      queueCenteredFloatingText(`Your Turn`);
 
     }
     // Trigger onTurnStart Events
@@ -1163,6 +1064,9 @@ export default class Underworld {
         elUpgradePickerContent.innerHTML = '';
         for (let elUpgrade of elUpgrades) {
           elUpgradePickerContent.appendChild(elUpgrade);
+          if (window.devMode) {
+            elUpgrade.click();
+          }
         }
       }
     } else {
@@ -1192,9 +1096,9 @@ export default class Underworld {
     }
     return false;
   }
-  getRandomCoordsWithinBounds(bounds: Bounds): Vec2 {
-    const x = randInt(this.random, bounds.xMin || 0, bounds.xMax || this.width);
-    const y = randInt(this.random, bounds.yMin || 0, bounds.yMax || this.height);
+  getRandomCoordsWithinBounds(bounds: Limits): Vec2 {
+    const x = randInt(this.random, bounds.xMin || 0, bounds.xMax || 0);
+    const y = randInt(this.random, bounds.yMin || 0, bounds.yMax || 0);
     return { x, y };
   }
   async broadcastTurnPhase(p: turn_phase) {
@@ -1802,8 +1706,6 @@ export default class Underworld {
   //   this.turn_phase = serialized.turn_phase;
   //   this.playerTurnIndex = serialized.playerTurnIndex;
   //   this.turn_number = serialized.turn_number;
-  //   this.height = serialized.height;
-  //   this.width = serialized.width;
   //   // Note: obstacles are not serialized since they are unchanging between levels
   //   // TODO, remove walls and pathingPolygons here, they are set in cacheWalls, so this is redundant
   //   // make sure obstacles come over when serialized
@@ -1930,13 +1832,12 @@ function getEnemiesForAltitude(levelIndex: number): { enemies: { [unitid: string
 
 export interface LevelData {
   levelIndex: number,
-  width: number,
-  height: number,
+  limits: Limits,
   obstacles: {
     sourceIndex: number;
     coord: Vec2;
   }[];
-  groundTiles: Vec2[];
+  imageOnlyTiles: CaveTile[];
   pickups: {
     index: number;
     coord: Vec2;

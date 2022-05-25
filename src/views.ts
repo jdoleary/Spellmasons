@@ -118,6 +118,10 @@ export function setView(v: View) {
             clientChooseUnit(unitSource.id);
           }, 0);
         });
+        // If devMode is true, automatically choose the first character
+        if (index == 0 && window.devMode) {
+          clientChooseUnit(unitSource.id);
+        }
       });
       // Add title:
       const pixiText = new PIXI.Text("Select a Character", { fill: 'white', align: 'center' });

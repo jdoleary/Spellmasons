@@ -1,8 +1,8 @@
 # Critical Path (4st deadline revision)
-- Game Scale Difficulty for endgame
+- Better maps (Due 5/26)
+- Game Scale Difficulty for endgame (Due 5/30)
     - With better content: "night king", "ogre"
     - More intelligent looping, like nuclear throne
-- Better maps
 - Aesthetic
     - Art / Shaders / Juice / SFX / Music
 - Final Steps
