@@ -18,7 +18,7 @@ interface FloatingTextInsructions {
   text: string;
   container?: PIXI.Container;
   style?: Partial<PIXI.ITextStyle>;
-  keepWithinCameraBounds: boolean;
+  keepWithinCameraBounds?: boolean;
 }
 export default function floatingText({
   coords,
