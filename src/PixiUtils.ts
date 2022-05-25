@@ -58,7 +58,7 @@ containerBetweenBoardAndWalls.addChild(window.radiusGraphics);
 export const containerCharacterSelect = new PIXI.Container();
 const characterSelectContainers = [containerCharacterSelect];
 
-app.renderer.backgroundColor = 0x27272f;
+app.renderer.backgroundColor = 0x888a90;
 
 window.addEventListener('resize', resizePixi);
 window.addEventListener('load', () => {

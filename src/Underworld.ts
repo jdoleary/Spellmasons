@@ -50,7 +50,7 @@ import { healthAllyGreen, healthHurtRed, healthRed } from './ui/colors';
 import objectHash from 'object-hash';
 import { withinMeleeRange } from './units/actions/gruntAction';
 import * as TimeRelease from './TimeRelease';
-import { generateCave, Limits as Limits, Materials } from './MapOrganicCave';
+import { CaveTile, generateCave, Limits as Limits, Materials } from './MapOrganicCave';
 
 export enum turn_phase {
   PlayerTurns,
@@ -90,7 +90,7 @@ export default class Underworld {
   units: Unit.IUnit[] = [];
   pickups: Pickup.IPickup[] = [];
   timeReleases: TimeRelease.ITimeRelease[] = [];
-  groundTiles: Vec2[] = [];
+  imageOnlyTiles: CaveTile[] = [];
   lavaObstacles: Obstacle.IObstacle[] = [];
   // line segments that prevent sight
   walls: LineSegment[] = [];
@@ -553,12 +553,11 @@ export default class Underworld {
   generateRandomLevelData(levelIndex: number): LevelData | undefined {
     console.log('Setup: generateRandomLevel', levelIndex);
     const { tiles, tiles2DArrayWidth, limits } = generateCave();
-    console.log('Setup: Done generating cave', tiles);
     const levelData: LevelData = {
       levelIndex,
       limits,
       obstacles: tiles.filter(t => t.material == Materials.Wall).map(t => ({ sourceIndex: 0, coord: Vec.clone(t) })),
-      groundTiles: [],
+      imageOnlyTiles: [],
       pickups: [],
       enemies: [],
       validPlayerSpawnCoords: []
@@ -566,7 +565,7 @@ export default class Underworld {
     let validSpawnCoords: Vec2[] = [];
     validSpawnCoords.push({ x: 0, y: 0 });
     levelData.validPlayerSpawnCoords.push({ x: 1, y: 1 })
-    levelData.groundTiles = tiles.filter(t => t.material == Materials.Ground);
+    levelData.imageOnlyTiles = tiles;
 
     // Now that obstacles have been generated, we must cache the walls so pathfinding will work
     this.cacheWalls(levelData.obstacles.map(o => Obstacle.create(o.coord, o.sourceIndex)), limits);
@@ -630,8 +629,19 @@ export default class Underworld {
 
   }
   addGroundTileImages() {
-    for (let coord of this.groundTiles) {
-      Image.create(coord, 'tiles/ground.png', containerBoard);
+    for (let tile of this.imageOnlyTiles) {
+      let imagePath = '';
+      switch (tile.material) {
+        case Materials.Ground:
+          imagePath = 'tiles/ground.png';
+          break;
+        case Materials.SemiWall:
+          imagePath = 'tiles/semiWall.png';
+          break;
+      }
+      if (imagePath) {
+        Image.create(tile, imagePath, containerBoard);
+      }
     }
   }
   // ringLimit limits how far away from the spawnSource it will check for valid spawn locations
@@ -696,7 +706,7 @@ export default class Underworld {
     // Clear all floor images
     containerBoard.removeChildren();
     containerWalls.removeChildren();
-    this.groundTiles = [];
+    this.imageOnlyTiles = [];
 
     // Clear card usage counts, otherwise players will be
     // incentivied to bum around after a level to clear it themselves
@@ -724,7 +734,7 @@ export default class Underworld {
     // Clean up the previous level
     this.cleanUpLevel();
 
-    const { levelIndex, limits, obstacles, groundTiles, pickups, enemies, validPlayerSpawnCoords } = levelData;
+    const { levelIndex, limits, obstacles, imageOnlyTiles, pickups, enemies, validPlayerSpawnCoords } = levelData;
     this.levelIndex = levelIndex;
     this.limits = limits;
     const obstacleInsts = [];
@@ -734,7 +744,7 @@ export default class Underworld {
       obstacleInsts.push(obstacleInst);
     }
     this.cacheWalls(obstacleInsts, levelData.limits);
-    this.groundTiles = groundTiles;
+    this.imageOnlyTiles = imageOnlyTiles;
     this.addGroundTileImages();
     for (let p of pickups) {
       this.spawnPickup(p.index, p.coord);
@@ -1847,7 +1857,7 @@ export interface LevelData {
     sourceIndex: number;
     coord: Vec2;
   }[];
-  groundTiles: Vec2[];
+  imageOnlyTiles: CaveTile[];
   pickups: {
     index: number;
     coord: Vec2;

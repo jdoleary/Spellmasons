@@ -1,11 +1,7 @@
 import { CaveTile, Materials } from "./MapOrganicCave";
-import { randInt } from "./rand";
-import { equal, subtract, Vec2 } from "./Vec"
-import { oneDimentionIndexToVec2, vec2ToOneDimentionIndex } from "./WaveFunctionCollapse";
+import type { Vec2 } from "./Vec"
+import { oneDimentionIndexToVec2 } from "./WaveFunctionCollapse";
 
-interface Constraint {
-
-}
 // Neighbors
 // 0,1,2
 // 7   3
@@ -25,22 +21,36 @@ function mutateViaRules(tile: CaveTile, neighbors: (CaveTile | undefined)[]): Ca
 
 }
 
-// Mutates tiles
+// Disallows negative x or x > last column which would "wrap" and return a valid index that isn't a true neighbor
+function vec2ToOneDimentionIndexPreventWrap(pos: Vec2, width: number): number {
+    if (pos.x < 0 || pos.x > width - 1) {
+        return -1;
+    }
+    return pos.y * width + pos.x
+
+}
+
+// Mutates tiles based on what the tile's neighbors are
+// Probably will need multiple passes to completely satisfy rules
 export function conway(tiles: CaveTile[], widthOf2DArray: number) {
     for (let i = 0; i < tiles.length; i++) {
         const tile = tiles[i];
         if (tile) {
             const { x, y } = oneDimentionIndexToVec2(i, widthOf2DArray);
-            tiles[i] = mutateViaRules(tile, [
-                tiles[vec2ToOneDimentionIndex({ x: x - 1, y: y - 1 }, widthOf2DArray)],
-                tiles[vec2ToOneDimentionIndex({ x: x, y: y - 1 }, widthOf2DArray)],
-                tiles[vec2ToOneDimentionIndex({ x: x + 1, y: y - 1 }, widthOf2DArray)],
-                tiles[vec2ToOneDimentionIndex({ x: x + 1, y: y }, widthOf2DArray)],
-                tiles[vec2ToOneDimentionIndex({ x: x + 1, y: y + 1 }, widthOf2DArray)],
-                tiles[vec2ToOneDimentionIndex({ x: x, y: y + 1 }, widthOf2DArray)],
-                tiles[vec2ToOneDimentionIndex({ x: x - 1, y: y + 1 }, widthOf2DArray)],
-                tiles[vec2ToOneDimentionIndex({ x: x - 1, y: y }, widthOf2DArray)],
-            ]);
+            const neighbors = [
+                tiles[vec2ToOneDimentionIndexPreventWrap({ x: x - 1, y: y - 1 }, widthOf2DArray)],
+                tiles[vec2ToOneDimentionIndexPreventWrap({ x: x, y: y - 1 }, widthOf2DArray)],
+                tiles[vec2ToOneDimentionIndexPreventWrap({ x: x + 1, y: y - 1 }, widthOf2DArray)],
+                tiles[vec2ToOneDimentionIndexPreventWrap({ x: x + 1, y: y }, widthOf2DArray)],
+                tiles[vec2ToOneDimentionIndexPreventWrap({ x: x + 1, y: y + 1 }, widthOf2DArray)],
+                tiles[vec2ToOneDimentionIndexPreventWrap({ x: x, y: y + 1 }, widthOf2DArray)],
+                tiles[vec2ToOneDimentionIndexPreventWrap({ x: x - 1, y: y + 1 }, widthOf2DArray)],
+                tiles[vec2ToOneDimentionIndexPreventWrap({ x: x - 1, y: y }, widthOf2DArray)],
+            ];
+            tiles[i] = mutateViaRules(tile, neighbors);
+            if (tiles[i]?.material == Materials.SemiWall && y == 0) {
+                console.log('jtest', x, y, neighbors)
+            }
         }
     }
 }

@@ -63,9 +63,9 @@ export function generateCave(): { tiles: CaveTile[], tiles2DArrayWidth: number, 
     // window.t.lineTo(bounds.xMax, bounds.yMin);
     // window.t.lineTo(bounds.xMin, bounds.yMin);
 
-    // + 1 leaves room on the right side and bottom side for surrounding walls
-    const width = Math.ceil((crawlerBounds.xMax - crawlerBounds.xMin) / config.OBSTACLE_SIZE) + 1;
-    const height = Math.ceil((crawlerBounds.yMax - crawlerBounds.yMin) / config.OBSTACLE_SIZE) + 1;
+    // + 2 leaves room on the right side and bottom side for surrounding walls
+    const width = Math.ceil((crawlerBounds.xMax - crawlerBounds.xMin) / config.OBSTACLE_SIZE) + 2;
+    const height = Math.ceil((crawlerBounds.yMax - crawlerBounds.yMin) / config.OBSTACLE_SIZE) + 2;
     const materials: Materials[] = Array(width * height).fill(Materials.Empty);
     // Normalize crawlers to 0,0 in upper left corner
     function normalizeTo00(points: Vec.Vec2[]): Vec.Vec2[] {
@@ -152,7 +152,10 @@ export function generateCave(): { tiles: CaveTile[], tiles2DArrayWidth: number, 
     bounds.xMax += config.OBSTACLE_SIZE / 2;
     bounds.yMax += config.OBSTACLE_SIZE / 2;
 
-    conway(tiles, width)
+    // 1st pass for walls
+    conway(tiles, width);
+    // 2nd pass for semi-walls
+    conway(tiles, width);
     return { tiles, tiles2DArrayWidth: width, limits: bounds };
 
 }
