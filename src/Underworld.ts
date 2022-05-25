@@ -562,35 +562,13 @@ export default class Underworld {
       enemies: [],
       validPlayerSpawnCoords: []
     };
-    let validSpawnCoords: Vec2[] = [];
-    validSpawnCoords.push({ x: 0, y: 0 });
-    levelData.validPlayerSpawnCoords.push({ x: 1, y: 1 })
+    let validSpawnCoords: Vec2[] = tiles.filter(t => t.material == Materials.Ground);
     levelData.imageOnlyTiles = tiles;
 
     // Now that obstacles have been generated, we must cache the walls so pathfinding will work
     this.cacheWalls(levelData.obstacles.map(o => Obstacle.create(o.coord, o.sourceIndex)), limits);
 
-    // Remove bad spawns.  This can happen if an empty space is right next to the border of the map with obstacles
-    // all around it.  There is no obstacle there, but there is also no room to move because the spawn location 
-    // is inside of an inverted polygon.
-    // levelData.validPlayerSpawnCoords = levelData.validPlayerSpawnCoords.filter(c => findPolygonsThatVec2IsInsideOf(c, this.pathingPolygons).length === 0);
-    validSpawnCoords = validSpawnCoords.filter(c => findPolygonsThatVec2IsInsideOf(c, this.pathingPolygons).length === 0);
-
-    // Recache walls now that unreachable areas have been filled in
-    // TODO: This may not be needed anymore after cave refactor
-    this.cacheWalls(levelData.obstacles.map(o => Obstacle.create(o.coord, o.sourceIndex)), limits);
-
-    // Exclude player spawn coords that cannot path to the portal
-    // levelData.validPlayerSpawnCoords = levelData.validPlayerSpawnCoords.filter(spawn => {
-    //   const path = findPath(spawn, portalCoords, this.pathingPolygons, this.pathingLineSegments);
-    //   const lastPointInPath = path[path.length - 1]
-    //   return path.length != 0 && (lastPointInPath && Vec.equal(lastPointInPath, portalCoords));
-    // });
-
-    // if (levelData.validPlayerSpawnCoords.length === 0) {
-    //   console.log('Bad level seed, no place to spawn players, regenerating');
-    //   return;
-    // }
+    levelData.validPlayerSpawnCoords = validSpawnCoords.filter(c => c.x <= config.OBSTACLE_SIZE * 2);
 
     // TODO numberOfPickups should scale with level size
     const numberOfPickups = 4;
