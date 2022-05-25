@@ -309,9 +309,14 @@ export function mouseMove(e?: MouseEvent) {
     const mouseTarget = window.underworld.getMousePos();
     (document.getElementById('debug-info') as HTMLElement).innerText = `x:${Math.round(mouseTarget.x)}, y:${Math.round(mouseTarget.y)}`;
     // Draw the pathing walls
-    window.debugGraphics.lineStyle(2, 0xffaabb, 1.0);
     const pathingWalls = window.underworld.pathingPolygons.map(polygonToPolygonLineSegments).flat();
     for (let lineSegment of pathingWalls) {
+      if (lineSegment.polygon.inverted) {
+        // Show inverted polys as black
+        window.debugGraphics.lineStyle(2, 0x000, 1.0);
+      } else {
+        window.debugGraphics.lineStyle(2, 0xffaabb, 1.0);
+      }
       window.debugGraphics.moveTo(lineSegment.p1.x, lineSegment.p1.y);
       window.debugGraphics.lineTo(lineSegment.p2.x, lineSegment.p2.y);
     }
