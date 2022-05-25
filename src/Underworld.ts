@@ -1064,6 +1064,9 @@ export default class Underworld {
         elUpgradePickerContent.innerHTML = '';
         for (let elUpgrade of elUpgrades) {
           elUpgradePickerContent.appendChild(elUpgrade);
+          if (window.devMode) {
+            elUpgrade.click();
+          }
         }
       }
     } else {

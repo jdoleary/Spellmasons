@@ -39,6 +39,10 @@ window.resMarkers = [];
 window.lastThoughtsHash = '';
 window.playerThoughts = {};
 window.forceMove = [];
+window.devMode = location.href.includes('localhost');
+if (window.devMode) {
+  console.log('ADMIN: devMode = true! Character and upgrades will be picked automatically.');
+}
 
 setupAll();
 
@@ -205,6 +209,8 @@ declare global {
     setMMBDown: (isDown: boolean) => void;
     // Allows manually overriding the underworld seed via the JS console
     seedOverride: string | undefined;
+    // devMode: auto picks character and upgrades
+    devMode: boolean;
   }
 }
 window.setMMBDown = (isDown: boolean) => {
