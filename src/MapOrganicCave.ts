@@ -5,6 +5,7 @@ import { randFloat, randInt } from "./rand";
 import * as Vec from "./Vec";
 import * as config from './config';
 import { oneDimentionIndexToVec2, vec2ToOneDimentionIndex } from "./WaveFunctionCollapse";
+import { conway } from "./Conway";
 
 const minThickness = 50;
 const startThickness = 300;
@@ -13,7 +14,8 @@ const iterations = 10;
 const velocity = 300;
 const directionRandomAmount = Math.PI / 2;
 export interface Limits { xMin: number, xMax: number, yMin: number, yMax: number };
-export function generateCave(): { tiles: ({ tile: Tiles } & Vec.Vec2)[], tiles2DArrayWidth: number, limits: Limits } {
+export type CaveTile = ({ material: Materials } & Vec.Vec2)
+export function generateCave(): { tiles: CaveTile[], tiles2DArrayWidth: number, limits: Limits } {
     const minDirection = randFloat(window.underworld.random, Math.PI, Math.PI / 2);
     const maxDirection = 0;
     let crawlers = [];
@@ -61,9 +63,10 @@ export function generateCave(): { tiles: ({ tile: Tiles } & Vec.Vec2)[], tiles2D
     // window.t.lineTo(bounds.xMax, bounds.yMin);
     // window.t.lineTo(bounds.xMin, bounds.yMin);
 
-    const width = Math.floor((crawlerBounds.xMax - crawlerBounds.xMin) / config.OBSTACLE_SIZE);
-    const height = Math.floor((crawlerBounds.yMax - crawlerBounds.yMin) / config.OBSTACLE_SIZE);
-    const tiles: Tiles[] = Array(width * height).fill({ tile: Tiles.Empty });
+    // + 1 leaves room on the right side and bottom side for surrounding walls
+    const width = Math.ceil((crawlerBounds.xMax - crawlerBounds.xMin) / config.OBSTACLE_SIZE) + 1;
+    const height = Math.ceil((crawlerBounds.yMax - crawlerBounds.yMin) / config.OBSTACLE_SIZE) + 1;
+    const materials: Materials[] = Array(width * height).fill(Materials.Empty);
     // Normalize crawlers to 0,0 in upper left corner
     function normalizeTo00(points: Vec.Vec2[]): Vec.Vec2[] {
         return points.map(p => ({ x: p.x - crawlerBounds.xMin, y: p.y - crawlerBounds.yMin }))
@@ -91,7 +94,7 @@ export function generateCave(): { tiles: ({ tile: Tiles } & Vec.Vec2)[], tiles2D
             }
             if (isInside) {
                 const index = vec2ToOneDimentionIndex({ x, y }, width)
-                tiles[index] = Tiles.Ground;
+                materials[index] = Materials.Ground;
             }
             // Debug Draw dot grid
             // window.t.lineStyle(2, isInside ? 0x00ff00 : 0xff0000, 1.0);
@@ -139,20 +142,22 @@ export function generateCave(): { tiles: ({ tile: Tiles } & Vec.Vec2)[], tiles2D
     //         window.t.lineStyle(1, 0x000000, 0.0);
     //     }
     // }
-    const tilesWithCoord = tiles.map((t, i) => {
+    const tiles = materials.map((t, i) => {
         const dimentions = oneDimentionIndexToVec2(i, width);
-        return { tile: t, x: dimentions.x * config.OBSTACLE_SIZE, y: dimentions.y * config.OBSTACLE_SIZE }
+        return { material: t, x: dimentions.x * config.OBSTACLE_SIZE, y: dimentions.y * config.OBSTACLE_SIZE }
     });
-    const bounds = getLimits(tilesWithCoord);
+    const bounds = getLimits(tiles);
     bounds.xMin -= config.OBSTACLE_SIZE / 2;
     bounds.yMin -= config.OBSTACLE_SIZE / 2;
     bounds.xMax += config.OBSTACLE_SIZE / 2;
     bounds.yMax += config.OBSTACLE_SIZE / 2;
-    return { tiles: tilesWithCoord, tiles2DArrayWidth: width, limits: bounds };
+
+    conway(tiles, width)
+    return { tiles, tiles2DArrayWidth: width, limits: bounds };
 
 }
 
-export enum Tiles {
+export enum Materials {
     Empty,
     Ground,
     Liquid,

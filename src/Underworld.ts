@@ -50,7 +50,7 @@ import { healthAllyGreen, healthHurtRed, healthRed } from './ui/colors';
 import objectHash from 'object-hash';
 import { withinMeleeRange } from './units/actions/gruntAction';
 import * as TimeRelease from './TimeRelease';
-import { generateCave, Limits as Limits, Tiles } from './MapOrganicCave';
+import { generateCave, Limits as Limits, Materials } from './MapOrganicCave';
 
 export enum turn_phase {
   PlayerTurns,
@@ -557,7 +557,7 @@ export default class Underworld {
     const levelData: LevelData = {
       levelIndex,
       limits,
-      obstacles: tiles.filter(t => t.tile == Tiles.Wall).map(t => ({ sourceIndex: 0, coord: Vec.clone(t) })),
+      obstacles: tiles.filter(t => t.material == Materials.Wall).map(t => ({ sourceIndex: 0, coord: Vec.clone(t) })),
       groundTiles: [],
       pickups: [],
       enemies: [],
@@ -566,8 +566,7 @@ export default class Underworld {
     let validSpawnCoords: Vec2[] = [];
     validSpawnCoords.push({ x: 0, y: 0 });
     levelData.validPlayerSpawnCoords.push({ x: 1, y: 1 })
-    levelData.groundTiles = tiles.filter(t => t.tile == Tiles.Ground);
-    console.log('jtest', levelData.groundTiles)
+    levelData.groundTiles = tiles.filter(t => t.material == Materials.Ground);
 
     // Now that obstacles have been generated, we must cache the walls so pathfinding will work
     this.cacheWalls(levelData.obstacles.map(o => Obstacle.create(o.coord, o.sourceIndex)), limits);
