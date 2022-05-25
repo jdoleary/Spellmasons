@@ -24,22 +24,26 @@ interface IObstacleSource {
   // blocks movement
   walkable: boolean;
 }
+export function coordToPoly(coord: Vec2, inverted: boolean = false): Polygon {
+  const width = OBSTACLE_SIZE;
+  const height = OBSTACLE_SIZE;
+  const _x = coord.x - width / 2;
+  const _y = coord.y - height / 2;
+  const bounds = {
+    points: [
+      { x: _x, y: _y },
+      { x: _x, y: _y + height },
+      { x: _x + width, y: _y + height },
+      { x: _x + width, y: _y },
+    ], inverted
+  };
+  return bounds;
+}
 export function create(coord: Vec2, obstacleSourceIndex: number) {
   const obstacle = obstacleSource[obstacleSourceIndex];
   if (obstacle) {
 
-    const width = OBSTACLE_SIZE;
-    const height = OBSTACLE_SIZE;
-    const _x = coord.x - width / 2;
-    const _y = coord.y - height / 2;
-    const bounds = {
-      points: [
-        { x: _x, y: _y },
-        { x: _x, y: _y + height },
-        { x: _x + width, y: _y + height },
-        { x: _x + width, y: _y },
-      ], inverted: false
-    };
+    const bounds = coordToPoly(coord);
 
     const self: IObstacle = {
       x: coord.x,

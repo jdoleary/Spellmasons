@@ -50,7 +50,7 @@ import { healthAllyGreen, healthHurtRed, healthRed } from './ui/colors';
 import objectHash from 'object-hash';
 import { withinMeleeRange } from './units/actions/gruntAction';
 import * as TimeRelease from './TimeRelease';
-import { CaveTile, generateCave, Limits as Limits, Materials } from './MapOrganicCave';
+import { CaveTile, generateCave, getLimits, Limits as Limits, Materials } from './MapOrganicCave';
 
 export enum turn_phase {
   PlayerTurns,
@@ -468,7 +468,8 @@ export default class Underworld {
   // and the walls from the current obstacles
   // TODO:  this will need to be called if objects become
   // destructable
-  cacheWalls(obstacles: Obstacle.IObstacle[], limits: Limits) {
+  cacheWalls(obstacles: Obstacle.IObstacle[], groundTiles: CaveTile[]) {
+    const limits = getLimits(groundTiles);
     const mapBounds: Polygon = {
       points: [
         { x: limits.xMin, y: limits.yMin },
@@ -477,11 +478,13 @@ export default class Underworld {
         { x: limits.xMax, y: limits.yMin },
       ], inverted: true
     };
-    for (let o of obstacles) {
-      if (o.name == 'Lava') {
-        this.lavaObstacles.push(o);
-      }
-    }
+
+    // TODO: For fluid cave generation
+    // for (let o of obstacles) {
+    //   if (o.name == 'Lava') {
+    //     this.lavaObstacles.push(o);
+    //   }
+    // }
     // walls block sight
     this.walls = mergeOverlappingPolygons([...obstacles.filter(o => o.wall).map(o => o.bounds), mapBounds]).map(polygonToPolygonLineSegments).flat();
     // Expand pathing walls by the size of the regular unit
@@ -563,9 +566,6 @@ export default class Underworld {
     };
     let validSpawnCoords: Vec2[] = tiles.filter(t => t.material == Materials.Ground);
     levelData.imageOnlyTiles = tiles;
-
-    // Now that obstacles have been generated, we must cache the walls so pathfinding will work
-    this.cacheWalls(levelData.obstacles.map(o => Obstacle.create(o.coord, o.sourceIndex)), limits);
 
     levelData.validPlayerSpawnCoords = validSpawnCoords.filter(c => c.x <= config.OBSTACLE_SIZE * 2);
 
@@ -720,7 +720,7 @@ export default class Underworld {
       Obstacle.addImageForObstacle(obstacleInst);
       obstacleInsts.push(obstacleInst);
     }
-    this.cacheWalls(obstacleInsts, levelData.limits);
+    this.cacheWalls(obstacleInsts, imageOnlyTiles.filter(x => x.material == Materials.Ground));
     this.imageOnlyTiles = imageOnlyTiles;
     this.addGroundTileImages();
     for (let p of pickups) {

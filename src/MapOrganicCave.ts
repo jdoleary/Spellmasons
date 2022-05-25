@@ -263,7 +263,7 @@ function crawl(cc: CaveCrawler, endPosition: Vec.Vec2) {
 
 }
 
-function getLimits(points: Vec.Vec2[]): Limits {
+export function getLimits(points: Vec.Vec2[]): Limits {
     let limits: Limits = {
         xMin: Number.MAX_SAFE_INTEGER,
         xMax: Number.MIN_SAFE_INTEGER,

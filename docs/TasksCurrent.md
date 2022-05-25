@@ -1,5 +1,3 @@
-
-- Use WFC to get walls and semi walls filled in
 - Add forking rivers and bridges
 
 ## Tasks
