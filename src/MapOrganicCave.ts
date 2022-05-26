@@ -313,3 +313,16 @@ export function getLimits(points: Vec.Vec2[]): Limits {
     return limits;
 
 }
+// Used to "grow" a limits object.  This is necessary because map
+// generation uses getLimits to find the bounds of the walkable
+// ground tiles, however, it's only considering their center points,
+// whereas the truebounds would take their outer edges into account
+// and so this function is used to expand the limits object to consider
+// the walkable tiles' outer edges
+export function expandLimits(limits: Limits, magnitude: number): Limits {
+    limits.xMin -= magnitude;
+    limits.xMax += magnitude;
+    limits.yMin -= magnitude;
+    limits.yMax += magnitude;
+    return limits;
+}

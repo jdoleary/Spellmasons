@@ -50,7 +50,7 @@ import { healthAllyGreen, healthHurtRed, healthRed } from './ui/colors';
 import objectHash from 'object-hash';
 import { withinMeleeRange } from './units/actions/gruntAction';
 import * as TimeRelease from './TimeRelease';
-import { caveSizes, CaveTile, generateCave, getLimits, Limits as Limits, Materials } from './MapOrganicCave';
+import { caveSizes, CaveTile, expandLimits, generateCave, getLimits, Limits as Limits, Materials } from './MapOrganicCave';
 
 export enum turn_phase {
   PlayerTurns,
@@ -108,7 +108,8 @@ export default class Underworld {
 
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
     window.underworld = this;
-    this.seed = window.seedOverride || seed;
+    // this.seed = window.seedOverride || seed;
+    this.seed = '0.6148365911387541';
     elSeed.innerText = `Seed: ${this.seed}`;
     console.log("RNG create with seed:", this.seed, ", state: ", RNGState);
     this.random = this.syncronizeRNG(RNGState);
@@ -469,7 +470,7 @@ export default class Underworld {
   // TODO:  this will need to be called if objects become
   // destructable
   cacheWalls(obstacles: Obstacle.IObstacle[], groundTiles: CaveTile[]) {
-    const limits = getLimits(groundTiles);
+    const limits = expandLimits(getLimits(groundTiles), config.OBSTACLE_SIZE / 2);
     const mapBounds: Polygon = {
       points: [
         { x: limits.xMin, y: limits.yMin },
@@ -572,6 +573,7 @@ export default class Underworld {
     levelData.imageOnlyTiles = tiles;
 
     levelData.validPlayerSpawnCoords = validSpawnCoords.filter(c => c.x <= config.OBSTACLE_SIZE * 2);
+    console.log('jtest', levelData.validPlayerSpawnCoords)
 
     // TODO numberOfPickups should scale with level size
     const numberOfPickups = 4;
