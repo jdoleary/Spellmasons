@@ -34,6 +34,7 @@ import poisoner from './poisoner';
 import vampire from './vampire';
 import dummy from './dummy';
 import decoy from './decoy';
+import nightqueen from './nightqueen';
 
 function register(unit: UnitSource) {
   allUnits[unit.id] = unit;
@@ -55,6 +56,7 @@ export function registerUnits() {
   register(manMohawk);
   register(jester);
   register(decoy);
+  register(nightqueen);
 }
 
 

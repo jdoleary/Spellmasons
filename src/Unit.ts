@@ -147,6 +147,7 @@ export function create(
   if (unit.staminaMax === 0) {
     unit.stamina = 0;
   }
+  unit.image?.sprite.scale.set(config.NON_HEAVY_UNIT_SCALE);
 
   const sourceUnit = allUnits[unitSourceId];
   if (sourceUnit) {
@@ -164,7 +165,6 @@ export function create(
   // Ensure all change factions logic applies when a unit is first created
   changeFaction(unit, faction);
 
-  unit.image?.sprite.scale.set(config.NON_HEAVY_UNIT_SCALE);
 
   window.underworld.addUnitToArray(unit, false);
 

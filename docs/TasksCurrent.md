@@ -2,12 +2,12 @@
 - Prevent pickups or enemies from spawning too close to player
 
 ## Tasks
+- Show modifiers in UI somehow, not just on player, especially when you have the modifier on you
 - Critical, polish, robustness: Protect against hit looplimit, if it happens, it's a bad map and must be regenerated
 - Bug: There was a bug that ended my game though. I got shield buffed by a resurrected priest, and my character disappeared. this all happened on the turn when the portal appeared (finished the level). Now I cant walk through the portal
 I'm getting the empty stamina message when I try to move my (invisible) player
 i can still cast spells during my turn; as well as end turns
 - Content: Spell that increases cast range, or upgrade
-- Content: Night king boss
 - Bug: Sometimes grunt animations just stop
 - Task: An ally that has died at all (even if ressed) should lose their upgrade priviledge
 - Task: Better shaders for lava?

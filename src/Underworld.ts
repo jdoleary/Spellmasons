@@ -108,8 +108,7 @@ export default class Underworld {
 
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
     window.underworld = this;
-    // this.seed = window.seedOverride || seed;
-    this.seed = '0.6148365911387541';
+    this.seed = window.seedOverride || seed;
     elSeed.innerText = `Seed: ${this.seed}`;
     console.log("RNG create with seed:", this.seed, ", state: ", RNGState);
     this.random = this.syncronizeRNG(RNGState);
@@ -1778,7 +1777,7 @@ export type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, Underworl
 function getEnemiesForAltitude(levelIndex: number): { enemies: { [unitid: string]: number }, strength: number } {
   const hardCodedLevelEnemies: { [unitid: string]: number }[] = [
     {
-      'grunt': 4,
+      'grunt': 3,
     },
     {
       'grunt': 3,
@@ -1833,6 +1832,11 @@ function getEnemiesForAltitude(levelIndex: number): { enemies: { [unitid: string
       'poisoner': 1,
       'demon': 1,
     },
+    {
+      'grunt': 30,
+      'summoner': 2,
+      'Night Queen': 1,
+    }
   ];
   // Loop allows users to continue playing after the final level, it will 
   // multiply the previous levels by the loop number
