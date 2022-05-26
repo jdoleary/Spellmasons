@@ -1,11 +1,5 @@
-- Optimize polys for seed: 0.5784768382167597 so that it removes lines that will never be used (on the outside of the whole map or on the inside of solid polys)
 - Add forking rivers and bridges
 - Prevent pickups or enemies from spawning too close to player
-- Pathing broken for seed: 0.24131287903147836
-    - Options:
-        - Invert any polygon with walkable tiles inside it
-            - optimize: Remove any inverted polygon with NO walkable tiles inside it
-        - Remove the idea of inverted polygons
 
 ## Tasks
 - Critical, polish, robustness: Protect against hit looplimit, if it happens, it's a bad map and must be regenerated
