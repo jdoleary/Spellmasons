@@ -4,10 +4,12 @@ import { View } from './views';
 import * as math from './math';
 import * as config from './config';
 import { keyDown } from './ui/eventListeners';
-import type { LoaderResource } from 'pixi.js';
+import { LoaderResource, MIPMAP_MODES, SCALE_MODES } from 'pixi.js';
 
 // if PIXI is finished setting up
 let isReady = false;
+// Ensure textures stay pixelated when scaled:
+PIXI.settings.SCALE_MODE = SCALE_MODES.NEAREST;
 // PIXI app
 export const app = new PIXI.Application();
 export const containerBoard = new PIXI.Container();
