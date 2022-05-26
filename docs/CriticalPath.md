@@ -1,35 +1,43 @@
-# Critical Path (4st deadline revision)
-- Better maps (Due 5/26)
-- Game Scale Difficulty for endgame (Due 5/30)
-    - With better content: "night king", "ogre"
-    - More intelligent looping, like nuclear throne
-- Aesthetic
-    - Art / Shaders / Juice / SFX / Music
+# Critical Path
+- Core Gameplay (Due 5/30)
+    - Better maps
+        - Rivers and bridges
+        - Prefab rooms and buildings
+    - Liquid interactions
+        - Allow mobs to "fall in" to liquids
+    - Game Scale Difficulty for endgame / Balancing
+        - More intelligent looping, like nuclear throne
 - Final Steps
     - [Tutorial](https://www.youtube.com/watch?v=-GV814cWiAw)
     - Optimize
-        - Optimize pathing (on some large maps there are points you can't reach, but maybe I'll limit map size to smaller anyway)
-    - Package as Electron App
-        - [Storage and Persistence](https://cameronnokes.com/blog/how-to-store-user-data-in-electron/)
-        - [AutoUpdate](https://github.com/vercel/hazel)
+        - Support large maps
+        - Support huge numbers of mobs (100? 500? 1000?)
+            - Profile and figure out where the weak points are
     - Multiplayer Community Servers
         - Stress test droplets to see how many users they can support
-    - More content
-        - Spell packs!
+    - Convert from wsPie to standalone server
+        - Enable simultaneous turn taking for players
+    - Improved Menu
+    - Aesthetic
+        - Art / Shaders / Juice / SFX / Music
+    - (Lastly) Package as Electron App
+        - [Storage and Persistence](https://cameronnokes.com/blog/how-to-store-user-data-in-electron/)
+        - [AutoUpdate](https://github.com/vercel/hazel)
+    - Stretch Goals
+        - Pvp mode
+        - More content
 
 ## Deadlines
+Keeping to a hard deadline will ensure that I iterate and keep making more games and improving
+
 - ~~My part (gameplay) should be finished end of Feb 2022~~
-- ~~Entire game should be ready to ship end of March 2022~~
 - ~~My part (gameplay) should be finished end of March 2022~~
-- My part (gameplay) should be finished end of April 2022
-- ~~Entire game should be ready to ship end of April 2022~~
-- Entire game should be ready to ship end of May 2022
-- Keeping to a hard deadline will ensure that I iterate and keep making more games and improving
+- ~~My part (gameplay) should be finished end of April 2022~~
+- Core Gameplay done by 5/30
 ## Thoughts
 Don't get stuck on feature creep.  Finish the game and get it out so you can move on
 
 I will succeed with iterating on making many games similar to each other because I will continue to get better at them.  I must prioritize shipping and use hard deadlines to cut features so I don't get stuck with a forever project.
-If I make the art myself (blender) and the music, I will both save my "runway" (dangerous game funds) and incrementally improve at those things too making me faster and more effective AND I will have assets that I can reuse.
 
 ## Advice from Elon:
 1. Make your requirements less dumb.  Everyone is wrong sometimes even smart people, and your requirements are definitely dumb

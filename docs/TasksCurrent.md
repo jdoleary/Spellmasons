@@ -1,5 +1,9 @@
+## Friday
 - Add forking rivers and bridges
-- Prevent pickups or enemies from spawning too close to player
+- Liquid Interactions
+- Game difficulty Scale / looping
+## Saturday
+- Prefab rooms and buildings
 
 ## Tasks
 - Show modifiers in UI somehow, not just on player, especially when you have the modifier on you
