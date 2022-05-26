@@ -220,7 +220,7 @@ body.inspect-mode #card-inspect {
   /* This prevents the card-hand from disappearing when all cards are selected */
   min-height: 103px;
   /* Leaves enough room at the bottom to show the hotkey badge */
-  margin-bottom: 20px;
+  padding-bottom: 20px;
   /* Leave room to drag and drop cards to the right */
   padding-right: 300px;
 }
