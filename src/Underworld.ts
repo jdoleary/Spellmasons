@@ -467,18 +467,19 @@ export default class Underworld {
   // cacheWalls updates underworld.walls array
   // with the walls for the edge of the map
   // and the walls from the current obstacles
-  // TODO:  this will need to be called if objects become
-  // destructable
   cacheWalls(obstacles: Obstacle.IObstacle[], groundTiles: CaveTile[]) {
-    const limits = expandLimits(getLimits(groundTiles), config.OBSTACLE_SIZE / 2);
-    const mapBounds: Polygon = {
-      points: [
-        { x: limits.xMin, y: limits.yMin },
-        { x: limits.xMin, y: limits.yMax },
-        { x: limits.xMax, y: limits.yMax },
-        { x: limits.xMax, y: limits.yMin },
-      ], inverted: true
-    };
+
+    // TODO remove expandLimits??
+
+    // const limits = expandLimits(getLimits(groundTiles), config.OBSTACLE_SIZE / 2);
+    // const mapBounds: Polygon = {
+    //   points: [
+    //     { x: limits.xMin, y: limits.yMin },
+    //     { x: limits.xMin, y: limits.yMax },
+    //     { x: limits.xMax, y: limits.yMax },
+    //     { x: limits.xMax, y: limits.yMin },
+    //   ], inverted: true
+    // };
 
     // TODO: For fluid cave generation
     // for (let o of obstacles) {
@@ -486,15 +487,47 @@ export default class Underworld {
     //     this.lavaObstacles.push(o);
     //   }
     // }
+    const distanceFromGroundCenterWhenAdjacent = 1 + Math.sqrt(2) * config.OBSTACLE_SIZE / 2;
+    // Optimization: Removes linesegments that are not adjacent to walkable ground to prevent
+    // having to process linesegments that will never be used
+    function filterRemoveNonGroundAdjacent(ls: LineSegment): boolean {
+      return groundTiles.some(gt => math.distance(gt, ls.p1) <= distanceFromGroundCenterWhenAdjacent)
+    }
+    // Optimization: Removes polygons that are not adjacent to walkable ground to prevent
+    // having to process polygons that will never be used
+    function filterRemoveNonGroundAdjacentPoly(poly: Polygon): boolean {
+      return groundTiles.some(gt => poly.points.some(p => math.distance(gt, p) <= distanceFromGroundCenterWhenAdjacent))
+    }
     // walls block sight
-    this.walls = mergeOverlappingPolygons([...obstacles.filter(o => o.wall).map(o => o.bounds), mapBounds]).map(polygonToPolygonLineSegments).flat();
+    this.walls = mergeOverlappingPolygons([...obstacles.filter(o => o.wall).map(o => o.bounds)]).map(polygonToPolygonLineSegments).flat().filter(filterRemoveNonGroundAdjacent);
     // Expand pathing walls by the size of the regular unit
     // bounds block movement
-    this.bounds = mergeOverlappingPolygons([...obstacles.map(o => o.bounds), mapBounds]).map(polygonToPolygonLineSegments).flat().map(polygonLineSegmentToLineSegment);
+    this.bounds = mergeOverlappingPolygons([...obstacles.map(o => o.bounds)]).map(polygonToPolygonLineSegments).flat().map(polygonLineSegmentToLineSegment).filter(filterRemoveNonGroundAdjacent);
 
     const expandMagnitude = config.COLLISION_MESH_RADIUS * config.NON_HEAVY_UNIT_SCALE
     // pathing polygons determines the area that units can move within
-    this.pathingPolygons = mergeOverlappingPolygons([...obstacles.map(o => o.bounds), mapBounds]).map(p => expandPolygon(p, expandMagnitude));
+    this.pathingPolygons = mergeOverlappingPolygons([...obstacles.map(o => o.bounds)]).filter(filterRemoveNonGroundAdjacentPoly).map(p => expandPolygon(p, expandMagnitude));
+    const biggestPoly = this.pathingPolygons.reduce((biggestPoly, poly) => {
+      const limit = getLimits(poly.points);
+      const size = (limit.xMax - limit.xMin) * (limit.yMax - limit.yMin);
+      if (size > biggestPoly.size) {
+        biggestPoly.poly = poly;
+        biggestPoly.size = size;
+      }
+      return biggestPoly;
+    }, { poly: this.pathingPolygons[0], size: 0 }).poly;
+
+    if (biggestPoly) {
+      biggestPoly.inverted = true;
+      // If a polygon needs to be manually inverted its points also have to be in
+      // REVERSE order.  This is very important or else if won't be iterated
+      // correctly.  This is an unfortunate consequence of my earlier decision for
+      // how I designed inverted and non-inverted polygons where one is iterated in
+      // the clockwise direction and the other counter-clockwise
+      biggestPoly.points.reverse();
+    } else {
+      console.error('No biggest poly found for making inverted border')
+    }
 
     // Process the polygons into pathingwalls for use in tryPath
     // TODO: Optimize if needed: When this.pathingLineSegments gets serialized to send over the network
