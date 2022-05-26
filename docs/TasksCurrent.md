@@ -1,4 +1,5 @@
 - Add forking rivers and bridges
+- Prevent pickups or enemies from spawning too close to player
 - Bug: 0.18681629134827027 I spawned half inside a wall
 
 ## Tasks
