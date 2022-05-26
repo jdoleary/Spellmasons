@@ -29,6 +29,20 @@ function vec2ToOneDimentionIndexPreventWrap(pos: Vec2, width: number): number {
     return pos.y * width + pos.x
 
 }
+export function getNeighbors(tileIndex: number, tiles: CaveTile[], widthOf2DArray: number): (CaveTile | undefined)[] {
+    const { x, y } = oneDimentionIndexToVec2(tileIndex, widthOf2DArray);
+    const neighbors = [
+        tiles[vec2ToOneDimentionIndexPreventWrap({ x: x - 1, y: y - 1 }, widthOf2DArray)],
+        tiles[vec2ToOneDimentionIndexPreventWrap({ x: x, y: y - 1 }, widthOf2DArray)],
+        tiles[vec2ToOneDimentionIndexPreventWrap({ x: x + 1, y: y - 1 }, widthOf2DArray)],
+        tiles[vec2ToOneDimentionIndexPreventWrap({ x: x + 1, y: y }, widthOf2DArray)],
+        tiles[vec2ToOneDimentionIndexPreventWrap({ x: x + 1, y: y + 1 }, widthOf2DArray)],
+        tiles[vec2ToOneDimentionIndexPreventWrap({ x: x, y: y + 1 }, widthOf2DArray)],
+        tiles[vec2ToOneDimentionIndexPreventWrap({ x: x - 1, y: y + 1 }, widthOf2DArray)],
+        tiles[vec2ToOneDimentionIndexPreventWrap({ x: x - 1, y: y }, widthOf2DArray)],
+    ];
+    return neighbors;
+}
 
 // Mutates tiles based on what the tile's neighbors are
 // Probably will need multiple passes to completely satisfy rules
@@ -36,17 +50,7 @@ export function conway(tiles: CaveTile[], widthOf2DArray: number) {
     for (let i = 0; i < tiles.length; i++) {
         const tile = tiles[i];
         if (tile) {
-            const { x, y } = oneDimentionIndexToVec2(i, widthOf2DArray);
-            const neighbors = [
-                tiles[vec2ToOneDimentionIndexPreventWrap({ x: x - 1, y: y - 1 }, widthOf2DArray)],
-                tiles[vec2ToOneDimentionIndexPreventWrap({ x: x, y: y - 1 }, widthOf2DArray)],
-                tiles[vec2ToOneDimentionIndexPreventWrap({ x: x + 1, y: y - 1 }, widthOf2DArray)],
-                tiles[vec2ToOneDimentionIndexPreventWrap({ x: x + 1, y: y }, widthOf2DArray)],
-                tiles[vec2ToOneDimentionIndexPreventWrap({ x: x + 1, y: y + 1 }, widthOf2DArray)],
-                tiles[vec2ToOneDimentionIndexPreventWrap({ x: x, y: y + 1 }, widthOf2DArray)],
-                tiles[vec2ToOneDimentionIndexPreventWrap({ x: x - 1, y: y + 1 }, widthOf2DArray)],
-                tiles[vec2ToOneDimentionIndexPreventWrap({ x: x - 1, y: y }, widthOf2DArray)],
-            ];
+            const neighbors = getNeighbors(i, tiles, widthOf2DArray);
             tiles[i] = mutateViaRules(tile, neighbors);
         }
     }
