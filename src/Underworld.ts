@@ -50,7 +50,7 @@ import { healthAllyGreen, healthHurtRed, healthRed } from './ui/colors';
 import objectHash from 'object-hash';
 import { withinMeleeRange } from './units/actions/gruntAction';
 import * as TimeRelease from './TimeRelease';
-import { caveSizes, CaveTile, expandLimits, generateCave, getLimits, Limits as Limits, Materials } from './MapOrganicCave';
+import { caveSizes, CaveTile, generateCave, getLimits, Limits as Limits, Materials } from './MapOrganicCave';
 
 export enum turn_phase {
   PlayerTurns,
@@ -468,18 +468,6 @@ export default class Underworld {
   // with the walls for the edge of the map
   // and the walls from the current obstacles
   cacheWalls(obstacles: Obstacle.IObstacle[], groundTiles: CaveTile[]) {
-
-    // TODO remove expandLimits??
-
-    // const limits = expandLimits(getLimits(groundTiles), config.OBSTACLE_SIZE / 2);
-    // const mapBounds: Polygon = {
-    //   points: [
-    //     { x: limits.xMin, y: limits.yMin },
-    //     { x: limits.xMin, y: limits.yMax },
-    //     { x: limits.xMax, y: limits.yMax },
-    //     { x: limits.xMax, y: limits.yMin },
-    //   ], inverted: true
-    // };
 
     // TODO: For fluid cave generation
     // for (let o of obstacles) {
