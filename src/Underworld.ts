@@ -50,7 +50,7 @@ import { healthAllyGreen, healthHurtRed, healthRed } from './ui/colors';
 import objectHash from 'object-hash';
 import { withinMeleeRange } from './units/actions/gruntAction';
 import * as TimeRelease from './TimeRelease';
-import { CaveTile, generateCave, getLimits, Limits as Limits, Materials } from './MapOrganicCave';
+import { caveSizes, CaveTile, generateCave, getLimits, Limits as Limits, Materials } from './MapOrganicCave';
 
 export enum turn_phase {
   PlayerTurns,
@@ -554,7 +554,11 @@ export default class Underworld {
   // Returns undefined if it fails to make valid LevelData
   generateRandomLevelData(levelIndex: number): LevelData | undefined {
     console.log('Setup: generateRandomLevel', levelIndex);
-    const { tiles, tiles2DArrayWidth, limits } = generateCave();
+    if (!caveSizes.small) {
+      console.error('Missing caveSizes.small')
+      return;
+    }
+    const { tiles, tiles2DArrayWidth, limits } = generateCave(caveSizes.small);
     const levelData: LevelData = {
       levelIndex,
       limits,

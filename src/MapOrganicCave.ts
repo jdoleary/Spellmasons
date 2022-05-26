@@ -7,15 +7,30 @@ import * as config from './config';
 import { oneDimentionIndexToVec2, vec2ToOneDimentionIndex } from "./WaveFunctionCollapse";
 import { conway } from "./Conway";
 
-const minThickness = config.OBSTACLE_SIZE;
-const startThickness = 150;
-const startpointjitter = 700;
-const iterations = 20;
-const velocity = 100;
+export const caveSizes: { [size: string]: CaveParams } = {
+    'small': {
+        minThickness: config.OBSTACLE_SIZE,
+        startThickness: 150,
+        startPointJitter: 700,
+        iterations: 20,
+        velocity: 100
+    }
+}
+interface CaveParams {
+    minThickness: number;
+    startThickness: number;
+    // How far apart the starting points of the cave
+    // crawlers could be from the center
+    startPointJitter: number;
+    // How many steps the cave crawlers take,
+    iterations: number;
+    velocity: number;
+    // How far each cave crawler step is
+}
 const directionRandomAmount = Math.PI / 2;
 export interface Limits { xMin: number, xMax: number, yMin: number, yMax: number };
 export type CaveTile = ({ material: Materials } & Vec.Vec2)
-export function generateCave(): { tiles: CaveTile[], tiles2DArrayWidth: number, limits: Limits } {
+export function generateCave(params: CaveParams): { tiles: CaveTile[], tiles2DArrayWidth: number, limits: Limits } {
     // Debug: Draw caves
     // window.debugCave.clear();
     const minDirection = randFloat(window.underworld.random, Math.PI, Math.PI / 2);
@@ -26,14 +41,14 @@ export function generateCave(): { tiles: CaveTile[], tiles2DArrayWidth: number, 
         const previousCrawler = crawlers[c - 1];
         const cc: CaveCrawler = {
             direction: randFloat(window.underworld.random, minDirection, maxDirection),
-            thickness: startThickness,
-            position: Vec.round(Vec.random(-startpointjitter, startpointjitter)),
+            thickness: params.startThickness,
+            position: Vec.round(Vec.random(-params.startPointJitter, params.startPointJitter)),
             path: [],
             left: [],
             right: [],
             rectangles: []
         }
-        crawl(cc, previousCrawler ? previousCrawler.path[1] as Vec.Vec2 : Vec.round(Vec.random(-startpointjitter, startpointjitter)));
+        crawl(cc, previousCrawler ? previousCrawler.path[1] as Vec.Vec2 : Vec.round(Vec.random(-params.startPointJitter, params.startPointJitter)), params);
         crawlers.push(cc);
     }
 
@@ -44,14 +59,14 @@ export function generateCave(): { tiles: CaveTile[], tiles2DArrayWidth: number, 
         // Connect first crawler and last crawler:
         const cc: CaveCrawler = {
             direction: randFloat(window.underworld.random, minDirection, maxDirection),
-            thickness: startThickness,
+            thickness: params.startThickness,
             position: firstCrawler.path[firstCrawler.path.length - 1] as Vec.Vec2,
             path: [],
             left: [],
             right: [],
             rectangles: []
         }
-        crawl(cc, previousCrawler.path[1] as Vec.Vec2);
+        crawl(cc, previousCrawler.path[1] as Vec.Vec2, params);
         crawlers.push(cc);
     }
     // Get bounds
@@ -190,7 +205,7 @@ function movePointInDirection(cc: CaveCrawler, turnRadians: number, velocity: nu
     cc.position = Vec.round(Vec.add(cc.position, similarTriangles(nextPointDirection.x - cc.position.x, nextPointDirection.y - cc.position.y, dist, velocity)));
 
 }
-function crawl(cc: CaveCrawler, endPosition: Vec.Vec2) {
+function crawl(cc: CaveCrawler, endPosition: Vec.Vec2, params: CaveParams) {
     // Start the path with a circle so that the biggest part of the cave is 
     // like an octogon or someing, not just a flat line
     const eachTurnRadians = Math.PI / 4
@@ -199,15 +214,15 @@ function crawl(cc: CaveCrawler, endPosition: Vec.Vec2) {
     }
 
     // Generate path
-    for (let i = 0; i < iterations; i++) {
+    for (let i = 0; i < params.iterations; i++) {
         const turnRadians = randFloat(window.underworld.random, -directionRandomAmount, directionRandomAmount);
-        movePointInDirection(cc, turnRadians, velocity);
+        movePointInDirection(cc, turnRadians, params.velocity);
     }
     if (endPosition) {
         // At the end make it return to origin
-        while (distance(cc.position, endPosition) > velocity + velocity * .25) {
-            cc.position = Vec.round(Vec.add(cc.position, similarTriangles(endPosition.x - cc.position.x, endPosition.y - cc.position.y, distance(cc.position, endPosition), velocity)));
-            cc.position = Vec.round(Vec.jitter(cc.position, velocity / 2));
+        while (distance(cc.position, endPosition) > params.velocity + params.velocity * .25) {
+            cc.position = Vec.round(Vec.add(cc.position, similarTriangles(endPosition.x - cc.position.x, endPosition.y - cc.position.y, distance(cc.position, endPosition), params.velocity)));
+            cc.position = Vec.round(Vec.jitter(cc.position, params.velocity / 2));
             cc.path.push(cc.position);
         }
         cc.path.push(endPosition);
@@ -229,9 +244,9 @@ function crawl(cc: CaveCrawler, endPosition: Vec.Vec2) {
             const right = { x: p.x + Math.cos(direction - Math.PI / 2), y: p.y + Math.sin(direction - Math.PI / 2) };
             const tangentDist = distance(p, left);
             // cc.thickness += randInt(window.underworld.random, -40, 5);
-            cc.thickness = lerp(startThickness, minThickness, i / cc.path.length);
+            cc.thickness = lerp(params.startThickness, params.minThickness, i / cc.path.length);
             // Don't let thickness be lessthan minThickness 
-            cc.thickness = Math.max(minThickness, cc.thickness);
+            cc.thickness = Math.max(params.minThickness, cc.thickness);
             let newLeft = Vec.add(p, similarTriangles(left.x - p.x, left.y - p.y, tangentDist, cc.thickness));
             // Jitter the left and right sides so they are not perfectly parallel
             newLeft = Vec.round(Vec.jitter(newLeft, cc.thickness / 4));
