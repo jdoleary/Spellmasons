@@ -572,8 +572,9 @@ export default class Underworld {
     let validSpawnCoords: Vec2[] = tiles.filter(t => t.material == Materials.Ground);
     levelData.imageOnlyTiles = tiles;
 
-    levelData.validPlayerSpawnCoords = validSpawnCoords.filter(c => c.x <= config.OBSTACLE_SIZE * 2);
-    console.log('jtest', levelData.validPlayerSpawnCoords)
+    levelData.validPlayerSpawnCoords = validSpawnCoords.filter(c => c.x <= config.OBSTACLE_SIZE * 2).slice(0, 8);
+    // Remove spawns that are too close to player spawns
+    validSpawnCoords = validSpawnCoords.filter(spawn => levelData.validPlayerSpawnCoords.every(ps => math.distance(spawn, ps) >= config.SAFETY_DISTANCE_FROM_PLAYER_SPAWN));
 
     // TODO numberOfPickups should scale with level size
     const numberOfPickups = 4;
