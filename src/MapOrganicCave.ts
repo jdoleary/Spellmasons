@@ -81,11 +81,11 @@ export function generateCave(params: CaveParams): { tiles: CaveTile[], tiles2DAr
 
     // Debug Draw bounds
     // window.debugCave.lineStyle(2, 0xff0000, 1.0);
-    // window.debugCave.moveTo(bounds.xMin, bounds.yMin);
-    // window.debugCave.lineTo(bounds.xMin, bounds.yMax);
-    // window.debugCave.lineTo(bounds.xMax, bounds.yMax);
-    // window.debugCave.lineTo(bounds.xMax, bounds.yMin);
-    // window.debugCave.lineTo(bounds.xMin, bounds.yMin);
+    // window.debugCave.moveTo(crawlerBounds.xMin, crawlerBounds.yMin);
+    // window.debugCave.lineTo(crawlerBounds.xMin, crawlerBounds.yMax);
+    // window.debugCave.lineTo(crawlerBounds.xMax, crawlerBounds.yMax);
+    // window.debugCave.lineTo(crawlerBounds.xMax, crawlerBounds.yMin);
+    // window.debugCave.lineTo(crawlerBounds.xMin, crawlerBounds.yMin);
 
     // + 2 leaves room on the right side and bottom side for surrounding walls
     const width = Math.ceil((crawlerBounds.xMax - crawlerBounds.xMin) / config.OBSTACLE_SIZE) + 2;
@@ -146,28 +146,28 @@ export function generateCave(params: CaveParams): { tiles: CaveTile[], tiles2DAr
         }
 
     }
-    // Debug Fill
-    for (let i = 0; i < crawlers.length; i++) {
-        const crawler = crawlers[i];
-        if (crawler) {
-            drawPathWithStyle(crawler.path, 0x000000, 0.1);
-            window.debugCave.beginFill(styles[i % styles.length], 0.1);
-            for (let rect of crawler.rectangles) {
-                // @ts-expect-error
-                window.debugCave.drawPolygon(rect);
-            }
-            window.debugCave.endFill();
-        }
-    }
+    // // Debug Fill
+    // for (let i = 0; i < crawlers.length; i++) {
+    //     const crawler = crawlers[i];
+    //     if (crawler) {
+    //         drawPathWithStyle(crawler.path, 0x000000, 0.1);
+    //         window.debugCave.beginFill(styles[i % styles.length], 0.1);
+    //         for (let rect of crawler.rectangles) {
+    //             // @ts-expect-error
+    //             window.debugCave.drawPolygon(rect);
+    //         }
+    //         window.debugCave.endFill();
+    //     }
+    // }
 
-    // Lines
-    for (let i = 0; i < crawlers.length; i++) {
-        const crawler = crawlers[i];
-        if (crawler) {
-            drawPathWithStyle(crawler.path, styles[i % styles.length] as number, 0.1);
-            window.debugCave.lineStyle(1, 0x000000, 0.0);
-        }
-    }
+    // // Debug Lines
+    // for (let i = 0; i < crawlers.length; i++) {
+    //     const crawler = crawlers[i];
+    //     if (crawler) {
+    //         drawPathWithStyle(crawler.path, styles[i % styles.length] as number, 0.1);
+    //         window.debugCave.lineStyle(1, 0x000000, 0.0);
+    //     }
+    // }
     const tiles = materials.map((t, i) => {
         const dimentions = oneDimentionIndexToVec2(i, width);
         return { material: t, x: dimentions.x * config.OBSTACLE_SIZE, y: dimentions.y * config.OBSTACLE_SIZE }
@@ -186,9 +186,9 @@ export function generateCave(params: CaveParams): { tiles: CaveTile[], tiles2DAr
     // Generate rivers:
     const randAngle = randFloat(window.underworld.random, -2 * Math.PI, 2 * Math.PI);
     const center = { x: (bounds.xMax - bounds.xMin) / 2, y: (bounds.yMax - bounds.yMin) / 2 }
-    console.log('jtest randAngle', randAngle * 180 / Math.PI);
-    const riverStartPoint = Vec.getEndpointOfMagnitudeAlongVector(center, randAngle, params.startPointJitter + 100);
-    console.log('jtest startPoint', riverStartPoint);
+    // Projecting the river start point the magnitude of the center of the bounds away from the center ensures
+    // it will start outside of the bounds
+    const riverStartPoint = Vec.getEndpointOfMagnitudeAlongVector(center, randAngle, Vec.magnitude(center));
     window.debugCave.lineStyle(10, 0xff0000, 1.0);
     window.debugCave.moveTo(center.x, center.y);
     window.debugCave.lineTo(riverStartPoint.x, riverStartPoint.y);
