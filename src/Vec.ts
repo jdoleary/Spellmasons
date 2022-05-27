@@ -1,5 +1,6 @@
 
 import { clockwiseAngle } from "./Angle";
+import { distance, similarTriangles } from "./math";
 import { randInt } from "./rand";
 export interface Vec2 {
     x: number;
@@ -83,6 +84,16 @@ export function average_mean(vs: Vec2[]) {
     return multiply(1 / vs.length, vs.reduce((acc, cur) => {
         return add(acc, cur)
     }, { x: 0, y: 0 }))
+}
+// CAUTION: NOT YET TESTED
+// Given a position and an angle return the point 
+// that results from projecting the position along the angle
+// a given magnitude
+export function getEndpointOfMagnitudeAlongVector(pos: Vec2, angle: number, magnitude: number): Vec2 {
+    const nextPointDirection = { x: pos.x + Math.cos(angle), y: pos.y + Math.sin(angle) };
+    const dist = distance(pos, nextPointDirection);
+    return add(pos, similarTriangles(nextPointDirection.x - pos.x, nextPointDirection.y - pos.y, dist, magnitude));
+
 }
 
 // Returns true if testPoint is within a bounding box drawn between the two bounding points

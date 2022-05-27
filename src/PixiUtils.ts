@@ -27,8 +27,8 @@ export const containerUIFixed = new PIXI.Container();
 export const containerFloatingText = new PIXI.Container();
 
 // debug: Draw caves
-// window.debugCave = new PIXI.Graphics();
-// containerUI.addChild(window.debugCave);
+window.debugCave = new PIXI.Graphics();
+containerUI.addChild(window.debugCave);
 
 const underworldPixiContainers = [
   containerBoard,

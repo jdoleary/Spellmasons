@@ -108,7 +108,8 @@ export default class Underworld {
 
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
     window.underworld = this;
-    this.seed = window.seedOverride || seed;
+    // this.seed = window.seedOverride || seed;
+    this.seed = '0.04025183905246754'
     elSeed.innerText = `Seed: ${this.seed}`;
     console.log("RNG create with seed:", this.seed, ", state: ", RNGState);
     this.random = this.syncronizeRNG(RNGState);
@@ -583,7 +584,7 @@ export default class Underworld {
     const levelData: LevelData = {
       levelIndex,
       limits,
-      obstacles: tiles.filter(t => t.material == Materials.Wall).map(t => ({ sourceIndex: 0, coord: Vec.clone(t) })),
+      obstacles: tiles.filter(t => t.material == Materials.Wall || t.material == Materials.Liquid).map(t => ({ sourceIndex: t.material == Materials.Wall ? 0 : 1, coord: Vec.clone(t) })),
       imageOnlyTiles: [],
       pickups: [],
       enemies: [],

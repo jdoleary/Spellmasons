@@ -411,12 +411,15 @@ export function isVec2InsidePolygon(point: Vec2, polygon: Polygon): boolean {
         const intersection = lineSegmentIntersection(horizontalLine, wall)
 
         //  Only process intersections at verticies once
-        if (intersection && !intersections.find(i =>
-            // intersection already processed
-            Vec.equal(i, intersection) &&
-            // intersection equals a vertex of the poly
-            polygon.points.some(p => Vec.equal(intersection, p))
-        )) {
+        // if (intersection && !intersections.find(i =>
+        //     // intersection already processed
+        //     Vec.equal(i, intersection) &&
+        //     // intersection equals a vertex of the poly
+        //     polygon.points.some(p => Vec.equal(intersection, p))
+        // )) {
+        //  Don't process the same intersection more than once
+        console.log('intersection', intersection)
+        if (intersection && !intersections.find(i => Vec.equal(i, intersection))) {
             intersections.push(intersection);
             // If the intersection is at a vertex of the polygon, this is a special case and must be handled by checking the
             // angles of what happens when the line goes through the intersection
@@ -428,6 +431,7 @@ export function isVec2InsidePolygon(point: Vec2, polygon: Polygon): boolean {
                 // The point itself is an intersection point, meaning the point lies directly on one of the walls of the polygon
                 // then it obviously is inside of the polygon (this implementation includes ON the walls as inside)
                 // Note: This is so for inverted polygons too.
+                console.log(4)
                 return true
             } else if (Vec.equal(intersection, wall.p1) || Vec.equal(intersection, wall.p2)) {
                 // Get the INSIDE angle of the vertex (relative to it's polygon)
@@ -447,6 +451,7 @@ export function isVec2InsidePolygon(point: Vec2, polygon: Polygon): boolean {
                     // Only flip if v1AngleInside XOR v2AngleInside
                     if (v1AngleInside !== v2AngleInside) {
                         isInside = !isInside;
+                        console.log(2, isInside)
                     } else if (isInside && !v2AngleInside) {
                         // This handles a very rare corner case
                         // See test
@@ -460,17 +465,20 @@ export function isVec2InsidePolygon(point: Vec2, polygon: Polygon): boolean {
                         // 0.00000000002 just above the vertex.  So this logic block checks that if it is already flagged as inside
                         // and it exits the polygon (shown by v2AngleInside == false) then switch isInside to false
                         isInside = false;
+                        console.log(1)
+                    } else {
+                        // Debug logging
+                        console.log('start/end', Math.round(startClockwiseAngle * 180 / Math.PI), Math.round(endClockwiseAngle * 180 / Math.PI));
+                        console.log('v1angle/v2angle', Math.round(v1Angle * 180 / Math.PI), Math.round(v2Angle * 180 / Math.PI));
+                        console.log('not inside angle:', Math.round(clockwiseAngle(startClockwiseAngle, v1Angle) * 180 / Math.PI), Math.round(clockwiseAngle(startClockwiseAngle, v2Angle) * 180 / Math.PI), Math.round(allowableAngle * 180 / Math.PI), v1AngleInside, v2AngleInside)
                     }
-                    // Debug logging
-                    // console.log('start/end', Math.round(startClockwiseAngle * 180 / Math.PI), Math.round(endClockwiseAngle * 180 / Math.PI));
-                    // console.log('v1angle/v2angle', Math.round(v1Angle * 180 / Math.PI), Math.round(v2Angle * 180 / Math.PI));
-                    // console.log('not inside angle:', Math.round(clockwiseAngle(startClockwiseAngle, v1Angle) * 180 / Math.PI), Math.round(clockwiseAngle(startClockwiseAngle, v2Angle) * 180 / Math.PI), Math.round(allowableAngle * 180 / Math.PI), v1AngleInside, v2AngleInside)
                 } else {
                     console.error('Next point or prev point is undefined. This error should never occur.');
                 }
             } else {
                 // If it intersects with a wall, flip the bool
                 isInside = !isInside
+                console.log(3, isInside)
             }
         }
     }

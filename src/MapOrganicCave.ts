@@ -39,7 +39,7 @@ export interface Limits { xMin: number, xMax: number, yMin: number, yMax: number
 export type CaveTile = ({ material: Materials } & Vec.Vec2)
 export function generateCave(params: CaveParams): { tiles: CaveTile[], tiles2DArrayWidth: number, limits: Limits } {
     // Debug: Draw caves
-    // window.debugCave.clear();
+    window.debugCave.clear();
     const minDirection = randFloat(window.underworld.random, Math.PI, Math.PI / 2);
     const maxDirection = 0;
     let crawlers = [];
@@ -109,6 +109,9 @@ export function generateCave(params: CaveParams): { tiles: CaveTile[], tiles2DAr
                 for (let rect of crawler.rectangles) {
                     if (isVec2InsidePolygon({ x: x * config.OBSTACLE_SIZE, y: y * config.OBSTACLE_SIZE }, { points: rect, inverted: false })) {
                         isInside = true;
+                        if (x == 1) {
+                            debugger;
+                        }
                         break;
                     }
                 }
@@ -133,41 +136,41 @@ export function generateCave(params: CaveParams): { tiles: CaveTile[], tiles2DAr
     }
 
     // Debug draw caves
-    // const styles = [0xff0000, 0x0000ff, 0xff00ff, 0x00ffff, 0xffff00];
-    // function drawPathWithStyle(path: Vec.Vec2[], style: number, opacity: number) {
-    //     window.debugCave.lineStyle(4, style, opacity);
-    //     if (path[0]) {
-    //         window.debugCave.moveTo(path[0].x, path[0].y);
-    //         // @ts-expect-error
-    //         window.debugCave.drawCircle(path[1].x, path[1].y, 25);
-    //         for (let point of path) {
-    //             window.debugCave.lineTo(point.x, point.y);
-    //         }
-    //     }
+    const styles = [0xff0000, 0x0000ff, 0xff00ff, 0x00ffff, 0xffff00];
+    function drawPathWithStyle(path: Vec.Vec2[], style: number, opacity: number) {
+        window.debugCave.lineStyle(4, style, opacity);
+        if (path[0]) {
+            window.debugCave.moveTo(path[0].x, path[0].y);
+            // @ts-expect-error
+            window.debugCave.drawCircle(path[1].x, path[1].y, 25);
+            for (let point of path) {
+                window.debugCave.lineTo(point.x, point.y);
+            }
+        }
 
-    // }
-    // // Debug Fill
-    // for (let i = 0; i < crawlers.length; i++) {
-    //     const crawler = crawlers[i];
-    //     if (crawler) {
-    //         drawPathWithStyle(crawler.path, 0x000000, 0.1);
-    //         window.debugCave.beginFill(styles[i % styles.length], 0.1);
-    //         for (let rect of crawler.rectangles) {
-    //             // @ts-expect-error
-    //             window.debugCave.drawPolygon(rect);
-    //         }
-    //         window.debugCave.endFill();
-    //     }
-    // }
+    }
+    // Debug Fill
+    for (let i = 0; i < crawlers.length; i++) {
+        const crawler = crawlers[i];
+        if (crawler) {
+            drawPathWithStyle(crawler.path, 0x000000, 0.1);
+            window.debugCave.beginFill(styles[i % styles.length], 0.1);
+            for (let rect of crawler.rectangles) {
+                // @ts-expect-error
+                window.debugCave.drawPolygon(rect);
+            }
+            window.debugCave.endFill();
+        }
+    }
 
-    // // Lines
-    // for (let i = 0; i < crawlers.length; i++) {
-    //     const crawler = crawlers[i];
-    //     if (crawler) {
-    //         drawPathWithStyle(crawler.path, styles[i % styles.length] as number, 0.1);
-    //         window.debugCave.lineStyle(1, 0x000000, 0.0);
-    //     }
-    // }
+    // Lines
+    for (let i = 0; i < crawlers.length; i++) {
+        const crawler = crawlers[i];
+        if (crawler) {
+            drawPathWithStyle(crawler.path, styles[i % styles.length] as number, 0.1);
+            window.debugCave.lineStyle(1, 0x000000, 0.0);
+        }
+    }
     const tiles = materials.map((t, i) => {
         const dimentions = oneDimentionIndexToVec2(i, width);
         return { material: t, x: dimentions.x * config.OBSTACLE_SIZE, y: dimentions.y * config.OBSTACLE_SIZE }
@@ -182,6 +185,19 @@ export function generateCave(params: CaveParams): { tiles: CaveTile[], tiles2DAr
     conway(tiles, width);
     // 2nd pass for semi-walls
     conway(tiles, width);
+
+    // Generate rivers:
+    const randAngle = randFloat(window.underworld.random, -2 * Math.PI, 2 * Math.PI);
+    const center = { x: (bounds.xMax - bounds.xMin) / 2, y: (bounds.yMax - bounds.yMin) / 2 }
+    console.log('jtest randAngle', randAngle * 180 / Math.PI);
+    const riverStartPoint = Vec.getEndpointOfMagnitudeAlongVector(center, randAngle, params.startPointJitter + 100);
+    console.log('jtest startPoint', riverStartPoint);
+    window.debugCave.lineStyle(10, 0xff0000, 1.0);
+    window.debugCave.moveTo(center.x, center.y);
+    window.debugCave.lineTo(riverStartPoint.x, riverStartPoint.y);
+    window.debugCave.drawCircle(riverStartPoint.x, riverStartPoint.y, 10);
+
+
     return { tiles, tiles2DArrayWidth: width, limits: bounds };
 
 }
@@ -206,11 +222,8 @@ interface CaveCrawler {
 }
 function movePointInDirection(cc: CaveCrawler, turnRadians: number, velocity: number) {
     cc.direction += turnRadians;
-    const nextPointDirection = { x: cc.position.x + Math.cos(cc.direction), y: cc.position.y + Math.sin(cc.direction) };
-    const dist = distance(cc.position, nextPointDirection);
     cc.path.push(cc.position);
-    cc.position = Vec.round(Vec.add(cc.position, similarTriangles(nextPointDirection.x - cc.position.x, nextPointDirection.y - cc.position.y, dist, velocity)));
-
+    cc.position = Vec.round(Vec.getEndpointOfMagnitudeAlongVector(cc.position, cc.direction, velocity));
 }
 function crawl(cc: CaveCrawler, endPosition: Vec.Vec2, params: CaveParams) {
     // Start the path with a circle so that the biggest part of the cave is 
