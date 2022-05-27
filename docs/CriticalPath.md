@@ -7,10 +7,15 @@
         - Allow mobs to "fall in" to liquids
     - Game Scale Difficulty for endgame / Balancing
         - More intelligent looping, like nuclear throne
+            - Maybe make "groups" and have it continue to select from groups as the levels increase and sometimes combine them?
+            - Could to max and min quantities based on the levelIndex
+            - Could change percentage of armored
 - Final Steps
     - [Tutorial](https://www.youtube.com/watch?v=-GV814cWiAw)
     - Optimize
         - Support large maps
+        - Round of wall corners so it doesn't stair step??
+            - May depend on art, but would help with optimization
         - Support huge numbers of mobs (100? 500? 1000?)
             - Profile and figure out where the weak points are
     - Multiplayer Community Servers
@@ -26,6 +31,15 @@
     - Stretch Goals
         - Pvp mode
         - More content
+
+## Definition of Done
+- DONE Stable Multiplayer
+- Supports extra large maps with 1000 units
+- Complete Menu with options
+- Bug Reporting built in (e.g. Save game state and send it to me)
+- Packaged in Electron App
+- Able to loop the game indefinitely with satisfying difficulty curve
+- Enough random elements that different playthroughs feel somewhat unique
 
 ## Deadlines
 Keeping to a hard deadline will ensure that I iterate and keep making more games and improving
