@@ -1,7 +1,7 @@
 // @ts-nocheck
 import type { Vec2 } from "../Vec";
 import { testables, Branch, makePolygonIndexIterator, Polygon, expandPolygon, mergeOverlappingPolygons, polygonToPolygonLineSegments, getInsideAnglesOfPoint, doesLineFromPointToTargetProjectAwayFromOwnPolygon, getInsideAnglesOfWall } from '../Polygon';
-import type { LineSegment } from "../collision/collisionMath";
+import { LineSegment, toStandardForm } from "../collision/collisionMath";
 const { getLoopableIndex, isVec2InsidePolygon, findFirstPointNotInsideAnotherPoly, getNormalVectorOfLineSegment,
     getClosestBranch, growOverlappingCollinearLinesInDirectionOfP2, arePolygonsEquivalent, getPointNormalVector } = testables;
 
@@ -518,13 +518,27 @@ describe('testables', () => {
                 const expected = false;
                 expect(actual).toEqual(expected);
             });
+            it('should return false when test point is outside a polygon that is so thin it is almost a flat line', () => {
+                // This test is relevant because the horizontal line crosses the polygon line segments NOT at a vertex,
+                // BUT at SUCH a shallow angle that when the intersection is rounded it appears to have already been tested
+                // and so the current design of the isVec2InsidePolygon algorithm throws the 2nd intersection out because
+                // it thinks it's already been processed
+                const testPoint = { x: 0, y: 768 };
+                const poly = {
+                    points: [
+                        { x: 783, y: 977 },
+                        { x: 716, y: 761 },
+                        { x: 707, y: 732 }
+                    ],
+                    inverted: false
+                }
+                const actual = isVec2InsidePolygon(testPoint, poly);
+                const expected = false;
+                expect(actual).toEqual(expected);
+            });
             it('should return false for this real world example which would incur a floating point error without the current form of the function', () => {
-                // This test ensures that the intersection gets rounded to 2 decimal places.
                 // Under certain circumstances, (like this test provides), there will be 2 intersections,
-                // one directly on a vertex and one JUUUUUUUST off of the vertex: { x: 192.00000000000023, y: 224 }
-                // In this case, the one that's just off causes isInside to flip but the one that's perfectly
-                // on it does not because the angle logic correctly determines that the line from the point to the horizon
-                // goes through the vertex but not into the polygon.
+                // one directly on a vertex {x:192, y: 224} and one JUUUUUUUST off of the vertex: { x: 192.00000000000023, y: 224 }
                 const testPoint = { x: -1203, y: 224 };
                 const poly = {
                     points: [
@@ -532,6 +546,26 @@ describe('testables', () => {
                         { x: -100, y: 576 },
                         { x: 252, y: 495 },
                         { x: 192, y: 224 }],
+                    inverted: false
+                }
+                const actual = isVec2InsidePolygon(testPoint, poly);
+                const expected = false;
+                expect(actual).toEqual(expected);
+
+            });
+            it.only('should return false when point is outside of a non-inverted poly with it\'s points in the wrong order.', () => {
+                // This one fails because the points are in counter-clockwise
+                // (like an inverted polygon)
+                // instead of clockwise (like a non-inverted polygon)
+                // isVec2InsidePolygon assumes that the points are in clockwise order
+                // which helps determine what is the inside and what is the outside of the polygon
+                const testPoint = { x: 64, y: 0 };
+                const poly = {
+                    points: [
+                        { x: 362, y: 5 },
+                        { x: 475, y: 0 },
+                        { x: 517, y: 239 },
+                        { x: 455, y: 309 }],
                     inverted: false
                 }
                 const actual = isVec2InsidePolygon(testPoint, poly);
@@ -573,7 +607,7 @@ describe('testables', () => {
                     const p5 = { x: 3, y: 0 }
                     const points: Vec2[] = [p1, p2, p3, p4, p5];
                     const polygon: Polygon = { points, inverted: false };
-                    // Horizontal to 1,1
+                    // Horizontal to 2,1
                     const actual = isVec2InsidePolygon({ x: 1, y: 1 }, polygon);
                     const expected = true;
                     expect(actual).toEqual(expected);

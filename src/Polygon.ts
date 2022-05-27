@@ -408,15 +408,15 @@ export function isVec2InsidePolygon(point: Vec2, polygon: Polygon): boolean {
     let isInside = false;
     const intersections: Vec2[] = [];
     for (let wall of polygonToPolygonLineSegments(polygon)) {
-        const _intersection = lineSegmentIntersection(horizontalLine, wall)
-        // Rounding and removing extra zeros: https://stackoverflow.com/a/12830454/4418836
-        // See test
-        // 'should return false for this real world example which would incur a floating point error without the current form of the function'
-        // for explanation
-        const intersection = _intersection ? { x: +_intersection.x.toFixed(2), y: +_intersection.y.toFixed(2) } : undefined
+        const intersection = lineSegmentIntersection(horizontalLine, wall)
 
-        //  Don't process the same intersection more than once
-        if (intersection && !intersections.find(i => Vec.equal(i, intersection))) {
+        //  Only process intersections at verticies once
+        if (intersection && !intersections.find(i =>
+            // intersection already processed
+            Vec.equal(i, intersection) &&
+            // intersection equals a vertex of the poly
+            polygon.points.some(p => Vec.equal(intersection, p))
+        )) {
             intersections.push(intersection);
             // If the intersection is at a vertex of the polygon, this is a special case and must be handled by checking the
             // angles of what happens when the line goes through the intersection
@@ -447,7 +447,24 @@ export function isVec2InsidePolygon(point: Vec2, polygon: Polygon): boolean {
                     // Only flip if v1AngleInside XOR v2AngleInside
                     if (v1AngleInside !== v2AngleInside) {
                         isInside = !isInside;
+                    } else if (isInside && !v2AngleInside) {
+                        // This handles a very rare corner case
+                        // See test
+                        // 'should return false for this real world example which would incur a floating point error without the current form of the function'
+                        // for explanation
+                        // This is necessary when the test line intersects twice, once directly on a vertex and once
+                        // just off of the vertex by a very small amount.
+                        // In this case, the one that's just off causes isInside to flip because it's just a regular wall intersection but
+                        //  the one that's perfectly on the vertex determines that v1AngleInside is false and so is v2AngleInside so
+                        // it thinks that it goes right through the vertex without entering the polygon; however, it just did enter
+                        // 0.00000000002 just above the vertex.  So this logic block checks that if it is already flagged as inside
+                        // and it exits the polygon (shown by v2AngleInside == false) then switch isInside to false
+                        isInside = false;
                     }
+                    // Debug logging
+                    // console.log('start/end', Math.round(startClockwiseAngle * 180 / Math.PI), Math.round(endClockwiseAngle * 180 / Math.PI));
+                    // console.log('v1angle/v2angle', Math.round(v1Angle * 180 / Math.PI), Math.round(v2Angle * 180 / Math.PI));
+                    // console.log('not inside angle:', Math.round(clockwiseAngle(startClockwiseAngle, v1Angle) * 180 / Math.PI), Math.round(clockwiseAngle(startClockwiseAngle, v2Angle) * 180 / Math.PI), Math.round(allowableAngle * 180 / Math.PI), v1AngleInside, v2AngleInside)
                 } else {
                     console.error('Next point or prev point is undefined. This error should never occur.');
                 }
