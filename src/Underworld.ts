@@ -1777,7 +1777,6 @@ type NonFunctionPropertyNames<T> = { [K in keyof T]: T[K] extends Function ? nev
 type UnderworldNonFunctionProperties = Exclude<NonFunctionPropertyNames<Underworld>, null | undefined>;
 export type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFunctionProperties>, "debugGraphics" | "players" | "units" | "pickups" | "obstacles" | "random" | "processedMessageCount" | "gameLoop">;
 
-}
 // TODO: enforce max units at level index
 // Idea: Higher probability of tougher units at certain levels
 const startingNumberOfUnits = 3;

@@ -6,6 +6,9 @@
 - Prefab rooms and buildings
 
 ## Tasks
+- Content: AOE clone should work for pickups
+- Bug: Clone doesn't show cloned units until they move cause they spawn right on top of each other
+- Bug: clear tooltip on enter portal?? not sure if necessary, tooltip remained while I was manually calling initLevel
 - Show modifiers in UI somehow, not just on player, especially when you have the modifier on you
 - Critical, polish, robustness: Protect against hit looplimit, if it happens, it's a bad map and must be regenerated
 - Bug: There was a bug that ended my game though. I got shield buffed by a resurrected priest, and my character disappeared. this all happened on the turn when the portal appeared (finished the level). Now I cant walk through the portal
