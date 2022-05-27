@@ -26,7 +26,7 @@ import manMohawk from './manMohawk';
 import jester from './jester';
 import grunt from './grunt';
 import archer from './archer';
-import sandGolem from './sandGolem';
+import lobber from './lobber';
 import summoner from './summoner';
 import demon from './demon';
 import priest from './priest';
@@ -43,7 +43,7 @@ export function registerUnits() {
   register(dummy);
   register(grunt);
   register(archer);
-  register(sandGolem);
+  register(lobber);
   // register(rook);
   register(summoner);
   register(demon);
