@@ -1,4 +1,5 @@
 ## Friday
+- Bug: Weird level gen on level 3 for 0.04025183905246754
 - Add forking rivers and bridges
 - Liquid Interactions
 - Game difficulty Scale / looping
