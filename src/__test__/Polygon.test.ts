@@ -553,7 +553,7 @@ describe('testables', () => {
                 expect(actual).toEqual(expected);
 
             });
-            it.only('should return false when point is outside of a non-inverted poly with it\'s points in the wrong order.', () => {
+            it('should return false when point is outside of a non-inverted poly with it\'s points in the wrong order.', () => {
                 // This one fails because the points are in counter-clockwise
                 // (like an inverted polygon)
                 // instead of clockwise (like a non-inverted polygon)
@@ -566,6 +566,21 @@ describe('testables', () => {
                         { x: 475, y: 0 },
                         { x: 517, y: 239 },
                         { x: 455, y: 309 }],
+                    inverted: false
+                }
+                const actual = isVec2InsidePolygon(testPoint, poly);
+                const expected = false;
+                expect(actual).toEqual(expected);
+
+            });
+            it('should still return false when the previous test\'s points are reversed', () => {
+                const testPoint = { x: 64, y: 0 };
+                const poly = {
+                    points: [
+                        { x: 362, y: 5 },
+                        { x: 475, y: 0 },
+                        { x: 517, y: 239 },
+                        { x: 455, y: 309 }].reverse(),
                     inverted: false
                 }
                 const actual = isVec2InsidePolygon(testPoint, poly);
