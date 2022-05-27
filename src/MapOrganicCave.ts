@@ -102,35 +102,8 @@ export function generateCave(params: CaveParams): { tiles: CaveTile[], tiles2DAr
         rectangles: c.rectangles.map(normalizeTo00)
     }));
 
-    for (let x = 0; x < width; x++) {
-        for (let y = 0; y < height; y++) {
-            let isInside = false;
-            for (let crawler of crawlers) {
-                for (let rect of crawler.rectangles) {
-                    if (isVec2InsidePolygon({ x: x * config.OBSTACLE_SIZE, y: y * config.OBSTACLE_SIZE }, { points: rect, inverted: false })) {
-                        isInside = true;
-                        break;
-                    }
-                }
-                if (isInside) {
-                    break;
-                }
-            }
-            if (isInside) {
-                const index = vec2ToOneDimentionIndex({ x, y }, width)
-                materials[index] = Materials.Ground;
-            }
-            // Debug Draw dot grid
-            // window.debugCave.lineStyle(2, isInside ? 0x00ff00 : 0xff0000, 1.0);
-            // if (isInside) {
-            //     window.debugCave.beginFill(0x00ff00, 0.5);
-            //     window.debugCave.drawRect(x, y, dotSize, dotSize);
-            //     window.debugCave.endFill();
-            // } else {
-            //     window.debugCave.drawCircle(x, y, 4);
-            // }
-        }
-    }
+    crawlersChangeTilesToMaterial(crawlers, Materials.Ground, width, height, materials);
+
 
     // Debug draw caves
     const styles = [0xff0000, 0x0000ff, 0xff00ff, 0x00ffff, 0xffff00];
@@ -168,7 +141,7 @@ export function generateCave(params: CaveParams): { tiles: CaveTile[], tiles2DAr
     //         window.debugCave.lineStyle(1, 0x000000, 0.0);
     //     }
     // }
-    const tiles = materials.map((t, i) => {
+    let tiles = materials.map((t, i) => {
         const dimentions = oneDimentionIndexToVec2(i, width);
         return { material: t, x: dimentions.x * config.OBSTACLE_SIZE, y: dimentions.y * config.OBSTACLE_SIZE }
     });
@@ -184,21 +157,81 @@ export function generateCave(params: CaveParams): { tiles: CaveTile[], tiles2DAr
     conway(tiles, width);
 
     // Generate rivers:
-    const randAngle = randFloat(window.underworld.random, -2 * Math.PI, 2 * Math.PI);
+    const riverDirection = randFloat(window.underworld.random, -2 * Math.PI, 2 * Math.PI);
     const center = { x: (bounds.xMax - bounds.xMin) / 2, y: (bounds.yMax - bounds.yMin) / 2 }
     // Projecting the river start point the magnitude of the center of the bounds away from the center ensures
     // it will start outside of the bounds
-    const riverStartPoint = Vec.getEndpointOfMagnitudeAlongVector(center, randAngle, Vec.magnitude(center));
+    const riverStartPoint = Vec.getEndpointOfMagnitudeAlongVector(center, riverDirection, Vec.magnitude(center));
+    const riverEndPoint = Vec.getEndpointOfMagnitudeAlongVector(center, riverDirection, -Vec.magnitude(center));
     window.debugCave.lineStyle(10, 0xff0000, 1.0);
-    window.debugCave.moveTo(center.x, center.y);
-    window.debugCave.lineTo(riverStartPoint.x, riverStartPoint.y);
     window.debugCave.drawCircle(riverStartPoint.x, riverStartPoint.y, 10);
+    window.debugCave.drawCircle(riverEndPoint.x, riverEndPoint.y, 10);
+    const riverThickness = config.OBSTACLE_SIZE * 0.7;
+    const riverCrawler: CaveCrawler = {
+        direction: riverDirection,
+        thickness: riverThickness,
+        position: riverStartPoint,
+        path: [],
+        left: [],
+        right: [],
+        rectangles: []
+    }
+    crawl(riverCrawler, riverEndPoint, { minThickness: riverThickness, startThickness: riverThickness, startPointJitter: 0, iterations: params.iterations, velocity: params.velocity })
+    drawPathWithStyle(riverCrawler.path, 0x000000, 0.1);
+    // Debug draw river crawler
+    window.debugCave.beginFill(styles[0], 0.1);
+    for (let rect of riverCrawler.rectangles) {
+        // @ts-expect-error
+        window.debugCave.drawPolygon(rect);
+    }
+    window.debugCave.endFill();
+    crawlersChangeTilesToMaterial([riverCrawler], Materials.Liquid, width, height, materials);
 
+    // Add liquid materials to tiles:
+    for (let i = 0; i < tiles.length; i++) {
+        const material = materials[i];
+        const tile = tiles[i];
+        if (material && tile && tile.material == Materials.Ground && material == Materials.Liquid) {
+            tile.material = material;
+        }
+
+    }
 
     return { tiles, tiles2DArrayWidth: width, limits: bounds };
 
 }
 
+function crawlersChangeTilesToMaterial(crawlers: CaveCrawler[], material: Materials, caveWidth: number, caveHeight: number, caveMaterialsArray: Materials[]) {
+    for (let x = 0; x < caveWidth; x++) {
+        for (let y = 0; y < caveHeight; y++) {
+            let isInside = false;
+            for (let crawler of crawlers) {
+                for (let rect of crawler.rectangles) {
+                    if (isVec2InsidePolygon({ x: x * config.OBSTACLE_SIZE, y: y * config.OBSTACLE_SIZE }, { points: rect, inverted: false })) {
+                        isInside = true;
+                        break;
+                    }
+                }
+                if (isInside) {
+                    break;
+                }
+            }
+            if (isInside) {
+                const index = vec2ToOneDimentionIndex({ x, y }, caveWidth)
+                caveMaterialsArray[index] = material;
+            }
+            // Debug Draw dot grid
+            // window.debugCave.lineStyle(2, isInside ? 0x00ff00 : 0xff0000, 1.0);
+            // if (isInside) {
+            //     window.debugCave.beginFill(0x00ff00, 0.5);
+            //     window.debugCave.drawRect(x, y, dotSize, dotSize);
+            //     window.debugCave.endFill();
+            // } else {
+            //     window.debugCave.drawCircle(x, y, 4);
+            // }
+        }
+    }
+}
 export enum Materials {
     Empty,
     Ground,
