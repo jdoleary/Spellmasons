@@ -583,7 +583,7 @@ export default class Underworld {
     const levelData: LevelData = {
       levelIndex,
       limits,
-      obstacles: tiles.filter(t => t.material == Materials.Wall).map(t => ({ sourceIndex: 0, coord: Vec.clone(t) })),
+      obstacles: tiles.filter(t => t.material == Materials.Wall || t.material == Materials.Liquid).map(t => ({ sourceIndex: t.material == Materials.Wall ? 0 : 1, coord: Vec.clone(t) })),
       imageOnlyTiles: [],
       pickups: [],
       enemies: [],

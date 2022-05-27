@@ -1,4 +1,6 @@
 ## Friday
+- TODO: Ensure all rects passed into isVec2InPolygon are in clockwise order
+- Bug: Weird level gen on level 3 for 0.04025183905246754
 - Add forking rivers and bridges
 - Liquid Interactions
 - Game difficulty Scale / looping

@@ -416,7 +416,13 @@ export function isVec2InsidePolygon(point: Vec2, polygon: Polygon): boolean {
         const intersection = _intersection ? { x: +_intersection.x.toFixed(2), y: +_intersection.y.toFixed(2) } : undefined
 
         //  Don't process the same intersection more than once
-        if (intersection && !intersections.find(i => Vec.equal(i, intersection))) {
+        //  Only process intersections at verticies once
+        if (intersection && !intersections.find(i =>
+            // intersection already processed
+            Vec.equal(i, intersection) &&
+            // intersection equals a vertex of the poly
+            polygon.points.some(p => Vec.equal(intersection, p))
+        )) {
             intersections.push(intersection);
             // If the intersection is at a vertex of the polygon, this is a special case and must be handled by checking the
             // angles of what happens when the line goes through the intersection
@@ -448,6 +454,10 @@ export function isVec2InsidePolygon(point: Vec2, polygon: Polygon): boolean {
                     if (v1AngleInside !== v2AngleInside) {
                         isInside = !isInside;
                     }
+                    // Debug logging
+                    // console.log(' start/end', Math.round(startClockwiseAngle * 180 / Math.PI), Math.round(endClockwiseAngle * 180 / Math.PI));
+                    // console.log(' v1angle/v2angle', Math.round(v1Angle * 180 / Math.PI), Math.round(v2Angle * 180 / Math.PI));
+                    // console.log(' not inside angle:', Math.round(clockwiseAngle(startClockwiseAngle, v1Angle) * 180 / Math.PI), Math.round(clockwiseAngle(startClockwiseAngle, v2Angle) * 180 / Math.PI), Math.round(allowableAngle * 180 / Math.PI), v1AngleInside, v2AngleInside)
                 } else {
                     console.error('Next point or prev point is undefined. This error should never occur.');
                 }

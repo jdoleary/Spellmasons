@@ -21,7 +21,7 @@ interface LineInStandardForm {
     c: number
 }
 // Converts a LineSegment to a LineInStandardForm
-function toStandardForm(line: LineSegment): LineInStandardForm | undefined {
+export function toStandardForm(line: LineSegment): LineInStandardForm | undefined {
     const M = slope(line);
     if (M !== undefined) {
         const c = -(line.p1.y - M * line.p1.x)
