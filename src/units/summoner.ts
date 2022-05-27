@@ -11,9 +11,12 @@ const unit: UnitSource = {
     description: 'A summoner uses mana to summon grunts.',
     image: 'units/golem-summoner.png',
     subtype: UnitSubType.RANGED_RADIUS,
-    probability: 30,
   },
   unitProps: {
+  },
+  spawnParams: {
+    probability: 20,
+    unavailableUntilLevelIndex: 7,
   },
   extraTooltipInfo: () => {
     return `Mana cost per summon: ${SUMMON_MANA_COST}`;

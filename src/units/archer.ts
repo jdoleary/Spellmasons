@@ -10,11 +10,14 @@ const unit: UnitSource = {
     description: 'An archer will try to get close enough to shoot you but not much closer.  It can only shoot you if there aren\'t any walls between you both.',
     image: 'units/golem-blue.png',
     subtype: UnitSubType.RANGED_LOS,
-    probability: 50,
   },
   unitProps: {
     attackRange: 10000,
     manaMax: 0,
+  },
+  spawnParams: {
+    probability: 50,
+    unavailableUntilLevelIndex: 1,
   },
   action: async (unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, canAttackTarget: boolean) => {
     const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit);

@@ -15,10 +15,13 @@ const unit: UnitSource = {
     description: 'The priest heals damaged allies, and if it\'s allies are at full health it will bless them with a Shield.',
     image: 'units/priest.png',
     subtype: UnitSubType.SUPPORT_CLASS,
-    probability: 30,
   },
   unitProps: {
     attackRange: 400
+  },
+  spawnParams: {
+    probability: 20,
+    unavailableUntilLevelIndex: 5,
   },
   extraTooltipInfo: () => {
     return `Mana cost per cast: ${CAST_MANA_COST}`;

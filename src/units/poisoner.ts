@@ -11,10 +11,13 @@ const unit: UnitSource = {
     description: 'A poisoner will cast a poison curse on it\'s enemies.',
     image: 'units/golem-poison.png',
     subtype: UnitSubType.RANGED_RADIUS,
-    probability: 30,
   },
   unitProps: {
     attackRange: 300
+  },
+  spawnParams: {
+    probability: 20,
+    unavailableUntilLevelIndex: 7,
   },
   action: async (unit: Unit.IUnit) => {
     const nonPoisonedEnemyUnits = window.underworld.units.filter(

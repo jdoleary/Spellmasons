@@ -12,12 +12,15 @@ const unit: UnitSource = {
     description: 'A vampire takes half damage when hurt, but takes all heals as pure damage.  Beware that it doesn\'t get close enough to bite you or you too will become a vampire!',
     image: 'units/vampire.png',
     subtype: UnitSubType.MELEE,
-    probability: 30,
   },
   unitProps: {
     manaMax: 60,
     healthMax: 18,
     damage: 5
+  },
+  spawnParams: {
+    probability: 15,
+    unavailableUntilLevelIndex: 5,
   },
   init: (unit: Unit.IUnit) => {
     Unit.addModifier(unit, vampire_bite.id);

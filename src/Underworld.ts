@@ -611,17 +611,15 @@ export default class Underworld {
       }
     }
     // Spawn units at the start of the level
-    const { enemies, strength } = getEnemiesForAltitude(levelIndex);
-    for (let [id, count] of Object.entries(enemies)) {
-      for (let i = 0; i < (count || 0); i++) {
-        if (validSpawnCoords.length == 0) { break; }
-        const validSpawnCoordsIndex = randInt(this.random, 0, validSpawnCoords.length - 1);
-        const coord = validSpawnCoords.splice(validSpawnCoordsIndex, 1)[0];
-        if (coord) {
-          const roll = randInt(this.random, 0, 100);
-          const isArmored = (roll <= config.PERCENT_CHANCE_OF_HEAVY_UNIT);
-          levelData.enemies.push({ id, coord, strength, isArmored })
-        }
+    const { unitIds, strength } = getEnemiesForAltitude(levelIndex);
+    for (let id of unitIds) {
+      if (validSpawnCoords.length == 0) { break; }
+      const validSpawnCoordsIndex = randInt(this.random, 0, validSpawnCoords.length - 1);
+      const coord = validSpawnCoords.splice(validSpawnCoordsIndex, 1)[0];
+      if (coord) {
+        const roll = randInt(this.random, 0, 100);
+        const isArmored = (roll <= config.PERCENT_CHANCE_OF_HEAVY_UNIT);
+        levelData.enemies.push({ id, coord, strength, isArmored })
       }
     }
 
@@ -1084,15 +1082,21 @@ export default class Underworld {
     );
     if (player) {
       const upgrades = Upgrade.generateUpgrades(player, 5, minimumProbability);
-      const elUpgrades = upgrades.map((upgrade) =>
-        Upgrade.createUpgradeElement(upgrade, player),
-      );
-      if (elUpgradePickerContent) {
-        elUpgradePickerContent.innerHTML = '';
-        for (let elUpgrade of elUpgrades) {
-          elUpgradePickerContent.appendChild(elUpgrade);
-          if (window.devMode) {
-            elUpgrade.click();
+      if (!upgrades.length) {
+        // Player already has all the upgrades
+        document.body.classList.toggle('showUpgrades', false);
+        queueCenteredFloatingText('No more spell upgrades to pick from.');
+      } else {
+        const elUpgrades = upgrades.map((upgrade) =>
+          Upgrade.createUpgradeElement(upgrade, player),
+        );
+        if (elUpgradePickerContent) {
+          elUpgradePickerContent.innerHTML = '';
+          for (let elUpgrade of elUpgrades) {
+            elUpgradePickerContent.appendChild(elUpgrade);
+            if (window.devMode) {
+              elUpgrade.click();
+            }
           }
         }
       }
@@ -1773,92 +1777,29 @@ type NonFunctionPropertyNames<T> = { [K in keyof T]: T[K] extends Function ? nev
 type UnderworldNonFunctionProperties = Exclude<NonFunctionPropertyNames<Underworld>, null | undefined>;
 export type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFunctionProperties>, "debugGraphics" | "players" | "units" | "pickups" | "obstacles" | "random" | "processedMessageCount" | "gameLoop">;
 
+}
+// TODO: enforce max units at level index
+// Idea: Higher probability of tougher units at certain levels
+const startingNumberOfUnits = 3;
+const bossEveryXLevels = 15;
 
-function getEnemiesForAltitude(levelIndex: number): { enemies: { [unitid: string]: number }, strength: number } {
-  const hardCodedLevelEnemies: { [unitid: string]: number }[] = [
-    {
-      'grunt': 3,
-    },
-    {
-      'grunt': 3,
-      'archer': 2
-    },
-    {
-      'grunt': 3,
-      'archer': 2,
-      'lobber': 1,
-    },
-    {
-      'grunt': 7,
-      'archer': 3,
-      'lobber': 2,
-    },
-    {
-      'grunt': 2,
-      'archer': 2,
-      'summoner': 1,
-    },
-    {
-      'summoner': 3,
-      'archer': 3
-    },
-    {
-      'grunt': 9,
-      'vampire': 1,
-    },
-    {
-      'grunt': 3,
-      'archer': 4,
-      'lobber': 1,
-      'priest': 2,
-    },
-    {
-      'grunt': 3,
-      'archer': 2,
-      'lobber': 1,
-      'priest': 2,
-      'poisoner': 1,
-      'vampire': 1,
-    },
-    {
-      'grunt': 12,
-      'demon': 1
-    },
-    {
-      'grunt': 5,
-      'archer': 3,
-      'lobber': 2,
-      'priest': 2,
-      'poisoner': 1,
-      'demon': 1,
-    },
-    {
-      'grunt': 30,
-      'summoner': 2,
-      'Night Queen': 1,
-    }
-  ];
-  // Loop allows users to continue playing after the final level, it will 
-  // multiply the previous levels by the loop number
-  // Default loop at 1
-  const loop = Math.max(1, Math.floor(levelIndex / hardCodedLevelEnemies.length))
-  const strength = loop + window.underworld.players.length - 1;
-  if (levelIndex >= hardCodedLevelEnemies.length) {
-    levelIndex = levelIndex % hardCodedLevelEnemies.length;
+function getEnemiesForAltitude(levelIndex: number): { unitIds: string[], strength: number } {
+  const possibleUnitsToChoose = Object.values(allUnits)
+    .filter(u => u.spawnParams && u.spawnParams.unavailableUntilLevelIndex <= levelIndex)
+    .map(u => ({ id: u.id, probability: u.spawnParams ? u.spawnParams.probability : 0 }))
+  const unitIds = Array(startingNumberOfUnits + levelIndex).fill(null)
+    // flatMap is used to remove any undefineds
+    .flatMap(() => {
+      const chosenUnit = math.chooseObjectWithProbability(possibleUnitsToChoose, window.underworld.random)
+      return chosenUnit ? [chosenUnit.id] : []
+    })
+  const strength = (levelIndex / 10) + window.underworld.players.length / 2;
+  // Add bosses
+  if (levelIndex !== 0 && levelIndex % bossEveryXLevels == 0) {
+    unitIds.push('Night Queen');
   }
-
-  const enemies = hardCodedLevelEnemies[levelIndex];
-  console.log('Level: Creating enemies with strength', strength)
-  if (enemies) {
-    return {
-      enemies: Object.fromEntries(Object.entries(enemies).map(([unitId, quantity]) => [unitId, quantity * loop])),
-      strength
-    };
-  } else {
-    // This should never happen
-    console.error('getEnemiesForAltitude could not find enemy information for levelIndex', levelIndex);
-    return { enemies: {}, strength: 1 };
-  }
+  console.log('Level strength: ', strength, 'enemies:', unitIds);
+  return { unitIds, strength };
 }
 
 

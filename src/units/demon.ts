@@ -11,10 +11,13 @@ const unit: UnitSource = {
     description: 'A demon resurrects its allies.',
     image: 'units/demon.png',
     subtype: UnitSubType.RANGED_RADIUS,
-    probability: 30,
   },
   unitProps: {
     manaMax: 60
+  },
+  spawnParams: {
+    probability: 10,
+    unavailableUntilLevelIndex: 8,
   },
   extraTooltipInfo: () => {
     return `Mana cost per cast: ${CAST_MANA_COST}`;

@@ -9,7 +9,6 @@ const unit: UnitSource = {
     description: 'A decoy to distract enemies',
     image: 'units/decoy.png',
     subtype: UnitSubType.MELEE,
-    probability: 0,
   },
   unitProps: {
     staminaMax: 0,

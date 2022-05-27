@@ -5,7 +5,6 @@ interface ConstructorInfo {
   description: string;
   image: string;
   subtype: UnitSubType;
-  probability: number;
 }
 export type UnitAction = {
   (self: Unit.IUnit, attackTarget: Unit.IUnit | undefined, canAttackTarget: boolean): Promise<void>;
@@ -17,6 +16,12 @@ export interface UnitSource {
   action: UnitAction;
   unitProps: Partial<Unit.IUnit>;
   extraTooltipInfo?: () => string;
+  spawnParams?: SpawnParams;
+}
+
+interface SpawnParams {
+  probability: number;
+  unavailableUntilLevelIndex: number;
 }
 
 /// Units to register

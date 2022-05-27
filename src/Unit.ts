@@ -123,7 +123,7 @@ export function create(
     healthMax: health,
     mana,
     manaMax: mana,
-    manaPerTurn: Math.round(config.MANA_GET_PER_TURN * strength),
+    manaPerTurn: config.MANA_GET_PER_TURN,
     alive: true,
     immovable: false,
     unitType,

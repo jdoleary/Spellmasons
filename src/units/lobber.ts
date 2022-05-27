@@ -10,10 +10,13 @@ const unit: UnitSource = {
     description: 'This ranged creature will throw magic high up in the air - over walls - to deal damage to it\'s enemies.',
     image: 'units/golem-sand.png',
     subtype: UnitSubType.RANGED_RADIUS,
-    probability: 30,
   },
   unitProps: {
     attackRange: 300
+  },
+  spawnParams: {
+    probability: 40,
+    unavailableUntilLevelIndex: 2,
   },
   action: async (unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, canAttackTarget: boolean) => {
     // Attack

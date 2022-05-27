@@ -7,7 +7,6 @@ const unit: UnitSource = {
     description: 'A practice dummy',
     image: 'units/dummy.png',
     subtype: UnitSubType.MELEE,
-    probability: 100,
   },
   unitProps: {
     staminaMax: 0,

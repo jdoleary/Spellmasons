@@ -2,7 +2,6 @@ import * as Unit from '../Unit';
 import type { UnitSource } from './index';
 import { UnitSubType, UnitType } from '../commonTypes';
 import { createVisualFlyingProjectile } from '../Projectile';
-import * as config from '../config';
 
 const CAST_MANA_COST = 100;
 const unit: UnitSource = {
@@ -11,7 +10,6 @@ const unit: UnitSource = {
     description: 'The Night Queen resurrects all of her allies when she has full mana and can attack multiple enemies at once.',
     image: 'units/nightqueen.png',
     subtype: UnitSubType.RANGED_RADIUS,
-    probability: 0,
   },
   unitProps: {
     manaMax: 100,
