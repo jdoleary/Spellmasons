@@ -1,4 +1,5 @@
 import { CaveTile, Materials } from "./MapOrganicCave";
+import { randInt } from "./rand";
 import type { Vec2 } from "./Vec"
 import { oneDimentionIndexToVec2 } from "./WaveFunctionCollapse";
 
@@ -6,7 +7,7 @@ import { oneDimentionIndexToVec2 } from "./WaveFunctionCollapse";
 // 0,1,2
 // 7   3
 // 6,5,4
-function mutateViaRules(tile: CaveTile, neighbors: (CaveTile | undefined)[]): CaveTile {
+function mutateViaRules(tile: CaveTile, neighbors: (CaveTile | undefined)[], state: ConwayState): CaveTile {
     // Replace empty tiles
     if (tile.material == Materials.Empty) {
         if (neighbors.some(t => t && t.material == Materials.Ground)) {
@@ -17,8 +18,33 @@ function mutateViaRules(tile: CaveTile, neighbors: (CaveTile | undefined)[]): Ca
             return { ...tile, material: Materials.SemiWall }
         }
     }
-    return tile;
+    // Given a ground tile
+    if (tile.material == Materials.Ground) {
+        if (state.currentNumberOfLiquidPools < state.desiredNumberOfLiquidPools) {
+            // If all of it's neighbors are ground it is a candidate for liquid pool
+            if (neighbors.every(t => t && t.material == Materials.Ground)) {
+                state.currentNumberOfLiquidPools++;
+                return { ...tile, material: Materials.Liquid }
+            }
+        }
 
+        // Grow liquid pools
+        // If at least one neighbor is liquid
+        if (neighbors.some(t => t && t.material == Materials.Liquid)) {
+            // and all other neighbors are ground (so liquid doesn't butt up against walls and block pathing)
+            if (neighbors.every(t => t && t.material == Materials.Ground || t?.material == Materials.Liquid)) {
+                const roll = randInt(window.underworld.random, 0, 1)
+                // chance of changing it to liquid and growing the pool
+                if (roll == 0) {
+                    return { ...tile, material: Materials.Liquid }
+                }
+
+            }
+
+        }
+    }
+
+    return tile;
 }
 
 // Disallows negative x or x > last column which would "wrap" and return a valid index that isn't a true neighbor
@@ -46,12 +72,16 @@ export function getNeighbors(tileIndex: number, tiles: CaveTile[], widthOf2DArra
 
 // Mutates tiles based on what the tile's neighbors are
 // Probably will need multiple passes to completely satisfy rules
-export function conway(tiles: CaveTile[], widthOf2DArray: number) {
+export interface ConwayState {
+    currentNumberOfLiquidPools: number;
+    desiredNumberOfLiquidPools: number;
+}
+export function conway(tiles: CaveTile[], widthOf2DArray: number, state: ConwayState) {
     for (let i = 0; i < tiles.length; i++) {
         const tile = tiles[i];
         if (tile) {
             const neighbors = getNeighbors(i, tiles, widthOf2DArray);
-            tiles[i] = mutateViaRules(tile, neighbors);
+            tiles[i] = mutateViaRules(tile, neighbors, state);
         }
     }
 }

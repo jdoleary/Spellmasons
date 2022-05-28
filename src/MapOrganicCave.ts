@@ -5,7 +5,7 @@ import { randFloat, randInt } from "./rand";
 import * as Vec from "./Vec";
 import * as config from './config';
 import { oneDimentionIndexToVec2, vec2ToOneDimentionIndex } from "./WaveFunctionCollapse";
-import { conway } from "./Conway";
+import { conway, ConwayState } from "./Conway";
 
 export const caveSizes: { [size: string]: CaveParams } = {
     'small': {
@@ -152,50 +152,14 @@ export function generateCave(params: CaveParams): { tiles: CaveTile[], tiles2DAr
     bounds.yMax += config.OBSTACLE_SIZE / 2;
 
     // 1st pass for walls
-    conway(tiles, width);
+    let conwayState: ConwayState = {
+        currentNumberOfLiquidPools: 0,
+        desiredNumberOfLiquidPools: 2,
+    }
+    conway(tiles, width, conwayState);
     // 2nd pass for semi-walls
-    conway(tiles, width);
+    conway(tiles, width, conwayState);
 
-    // Generate rivers:
-    const riverDirection = randFloat(window.underworld.random, -2 * Math.PI, 2 * Math.PI);
-    const center = { x: (bounds.xMax - bounds.xMin) / 2, y: (bounds.yMax - bounds.yMin) / 2 }
-    // Projecting the river start point the magnitude of the center of the bounds away from the center ensures
-    // it will start outside of the bounds
-    const riverStartPoint = Vec.getEndpointOfMagnitudeAlongVector(center, riverDirection, Vec.magnitude(center));
-    const riverEndPoint = Vec.getEndpointOfMagnitudeAlongVector(center, riverDirection, -Vec.magnitude(center));
-    window.debugCave.lineStyle(10, 0xff0000, 1.0);
-    window.debugCave.drawCircle(riverStartPoint.x, riverStartPoint.y, 10);
-    window.debugCave.drawCircle(riverEndPoint.x, riverEndPoint.y, 10);
-    const riverThickness = config.OBSTACLE_SIZE * 0.7;
-    const riverCrawler: CaveCrawler = {
-        direction: riverDirection,
-        thickness: riverThickness,
-        position: riverStartPoint,
-        path: [],
-        left: [],
-        right: [],
-        rectangles: []
-    }
-    crawl(riverCrawler, riverEndPoint, { minThickness: riverThickness, startThickness: riverThickness, startPointJitter: 0, iterations: params.iterations, velocity: params.velocity })
-    drawPathWithStyle(riverCrawler.path, 0x000000, 0.1);
-    // Debug draw river crawler
-    window.debugCave.beginFill(styles[0], 0.1);
-    for (let rect of riverCrawler.rectangles) {
-        // @ts-expect-error
-        window.debugCave.drawPolygon(rect);
-    }
-    window.debugCave.endFill();
-    crawlersChangeTilesToMaterial([riverCrawler], Materials.Liquid, width, height, materials);
-
-    // Add liquid materials to tiles:
-    for (let i = 0; i < tiles.length; i++) {
-        const material = materials[i];
-        const tile = tiles[i];
-        if (material && tile && tile.material == Materials.Ground && material == Materials.Liquid) {
-            tile.material = material;
-        }
-
-    }
 
     return { tiles, tiles2DArrayWidth: width, limits: bounds };
 
