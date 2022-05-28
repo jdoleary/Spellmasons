@@ -468,12 +468,11 @@ export default class Underworld {
   // and the walls from the current obstacles
   cacheWalls(obstacles: Obstacle.IObstacle[], groundTiles: CaveTile[]) {
 
-    // TODO: For fluid cave generation
-    // for (let o of obstacles) {
-    //   if (o.name == 'Lava') {
-    //     this.lavaObstacles.push(o);
-    //   }
-    // }
+    for (let o of obstacles) {
+      if (o.name == 'Lava') {
+        this.lavaObstacles.push(o);
+      }
+    }
     const distanceFromGroundCenterWhenAdjacent = 1 + Math.sqrt(2) * config.OBSTACLE_SIZE / 2;
     // Optimization: Removes linesegments that are not adjacent to walkable ground to prevent
     // having to process linesegments that will never be used
@@ -485,11 +484,12 @@ export default class Underworld {
     function filterRemoveNonGroundAdjacentPoly(poly: Polygon): boolean {
       return groundTiles.some(gt => poly.points.some(p => math.distance(gt, p) <= distanceFromGroundCenterWhenAdjacent))
     }
+    const walls = obstacles.filter(o => o.material == Materials.Wall).map(o => o.bounds)
     // walls block sight
-    this.walls = mergeOverlappingPolygons([...obstacles.filter(o => o.wall).map(o => o.bounds)]).map(polygonToPolygonLineSegments).flat().filter(filterRemoveNonGroundAdjacent);
+    this.walls = mergeOverlappingPolygons(walls).map(polygonToPolygonLineSegments).flat().filter(filterRemoveNonGroundAdjacent);
     // Expand pathing walls by the size of the regular unit
     // bounds block movement
-    this.bounds = mergeOverlappingPolygons([...obstacles.map(o => o.bounds)]).map(polygonToPolygonLineSegments).flat().map(polygonLineSegmentToLineSegment).filter(filterRemoveNonGroundAdjacent);
+    this.bounds = mergeOverlappingPolygons(walls).map(polygonToPolygonLineSegments).flat().map(polygonLineSegmentToLineSegment).filter(filterRemoveNonGroundAdjacent);
 
     const expandMagnitude = config.COLLISION_MESH_RADIUS * config.NON_HEAVY_UNIT_SCALE
     // pathing polygons determines the area that units can move within
@@ -583,7 +583,7 @@ export default class Underworld {
     const levelData: LevelData = {
       levelIndex,
       limits,
-      obstacles: tiles.filter(t => t.material == Materials.Wall || t.material == Materials.Liquid).map(t => ({ sourceIndex: t.material == Materials.Wall ? 0 : 1, coord: Vec.clone(t) })),
+      obstacles: tiles.filter(t => t.material == Materials.Wall || t.material == Materials.Liquid).map(t => ({ material: t.material, coord: Vec.clone(t) })),
       imageOnlyTiles: [],
       pickups: [],
       enemies: [],
@@ -740,12 +740,17 @@ export default class Underworld {
     this.levelIndex = levelIndex;
     this.limits = limits;
     const obstacleInsts = [];
-    for (let o of obstacles) {
-      const obstacleInst = Obstacle.create(o.coord, o.sourceIndex);
-      Obstacle.addImageForObstacle(obstacleInst);
-      obstacleInsts.push(obstacleInst);
+    const biome = Obstacle.biomes[0];
+    if (biome) {
+      for (let o of obstacles) {
+        const obstacleInst = Obstacle.create(o.coord, biome, o.material);
+        Obstacle.addImageForObstacle(obstacleInst);
+        obstacleInsts.push(obstacleInst);
+      }
+      this.cacheWalls(obstacleInsts, imageOnlyTiles.filter(x => x.material == Materials.Ground));
+    } else {
+      console.error('biome not found')
     }
-    this.cacheWalls(obstacleInsts, imageOnlyTiles.filter(x => x.material == Materials.Ground));
     this.imageOnlyTiles = imageOnlyTiles;
     this.addGroundTileImages();
     for (let p of pickups) {
@@ -1806,8 +1811,8 @@ export interface LevelData {
   levelIndex: number,
   limits: Limits,
   obstacles: {
-    sourceIndex: number;
     coord: Vec2;
+    material: Materials;
   }[];
   imageOnlyTiles: CaveTile[];
   pickups: {

@@ -5,6 +5,7 @@ import { OBSTACLE_SIZE } from './config';
 import type { Vec2 } from './Vec';
 import { IUnit, takeDamage } from './Unit';
 import { lineSegmentIntersection } from './collision/collisionMath';
+import { Materials } from './MapOrganicCave';
 export interface IObstacle {
   x: number;
   y: number;
@@ -12,17 +13,12 @@ export interface IObstacle {
   description: string;
   imagePath: string;
   bounds: Polygon;
-  wall: boolean;
-  walkable: boolean;
+  material: Materials;
 }
 interface IObstacleSource {
   name: string;
   description: string;
   imagePath: string;
-  // blocks line of sight
-  wall: boolean;
-  // blocks movement
-  walkable: boolean;
 }
 export function coordToPoly(coord: Vec2, inverted: boolean = false): Polygon {
   const width = OBSTACLE_SIZE;
@@ -39,51 +35,55 @@ export function coordToPoly(coord: Vec2, inverted: boolean = false): Polygon {
   };
   return bounds;
 }
-export function create(coord: Vec2, obstacleSourceIndex: number) {
-  const obstacle = obstacleSource[obstacleSourceIndex];
-  if (obstacle) {
-
-    const bounds = coordToPoly(coord);
-
-    const self: IObstacle = {
-      x: coord.x,
-      y: coord.y,
-      name: obstacle.name,
-      description: obstacle.description,
-      imagePath: obstacle.imagePath,
-      bounds,
-      wall: obstacle.wall,
-      walkable: obstacle.walkable
-    };
-
-
-    return self;
+export function create(coord: Vec2, biome: Biome, material: Materials) {
+  if (material == Materials.Wall || material == Materials.Liquid) {
+    const obstacle = biome[material];
+    if (obstacle) {
+      const bounds = coordToPoly(coord);
+      const self: IObstacle = {
+        x: coord.x,
+        y: coord.y,
+        name: obstacle.name,
+        description: obstacle.description,
+        imagePath: obstacle.imagePath,
+        bounds,
+        material
+      };
+      return self;
+    } else {
+      throw new Error(`No obstacle found at material ${material}`)
+    }
   } else {
-    throw new Error(`No obstacle at index ${obstacleSourceIndex} of obstacleSource`)
+    throw new Error(`Material ${material} cannot be used to create an obstacle`);
   }
 }
 export function addImageForObstacle(obstacle: IObstacle) {
   Image.create(obstacle, obstacle.imagePath, containerWalls);
 
 }
+interface Biome {
+  [Materials.Wall]: IObstacleSource,
+  [Materials.Liquid]: IObstacleSource,
+}
+export const biomes: Biome[] = [
+  {
+    [Materials.Wall]: {
+      name: 'Wall',
+      description: 'This is a wall that will block your way.',
+      imagePath: 'tiles/wall.png',
+    },
+    [Materials.Liquid]: {
+      // Note: The exact name 'Lava" is used in underworld.cacheWalls to store obstacles
+      // that cause damage is units are pushed or pulled into them.
+      name: 'Lava',
+      description: 'Blocks movement, not sight.',
+      imagePath: 'tiles/lava.png',
+    },
+
+  }
+];
 
 export const obstacleSource: IObstacleSource[] = [
-  {
-    name: 'Wall',
-    description: 'This is a wall that will block your way.',
-    imagePath: 'tiles/wall.png',
-    wall: true,
-    walkable: false
-  },
-  {
-    // Note: The exact name 'Lava" is used in underworld.cacheWalls to store obstacles
-    // that cause damage is units are pushed or pulled into them.
-    name: 'Lava',
-    description: 'Blocks movement, not sight.',
-    imagePath: 'tiles/lava.png',
-    wall: false,
-    walkable: false
-  },
 ];
 export const lavaDamage = 2;
 export function checkLavaDamageDueToMovement(unit: IUnit, endPos: Vec2, prediction: boolean) {
