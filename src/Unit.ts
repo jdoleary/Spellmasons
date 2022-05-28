@@ -235,6 +235,8 @@ export function serialize(unit: IUnit): IUnitSerialized {
   const { resolveDoneMoving, resolveDoneMovingTimeout, ...rest } = unit
   return {
     ...rest,
+    // Deep copy path so that the serialized object doesn't share the path object
+    path: unit.path ? JSON.parse(JSON.stringify(unit.path)) : undefined,
     image: unit.image ? Image.serialize(unit.image) : undefined,
     // Pick the uniforms needed to rehydrate
     shaderUniforms: Object.entries(unit.shaderUniforms).reduce((obj, cur) => {

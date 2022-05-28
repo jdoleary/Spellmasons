@@ -2,7 +2,7 @@ import type { Spell } from '.';
 import * as Unit from '../Unit';
 import * as Pickup from '../Pickup';
 import { UnitSubType, UnitType } from '../commonTypes';
-import type { Vec2 } from '../Vec';
+import { jitter, Vec2 } from '../Vec';
 import * as config from '../config';
 import { removeSubSprite } from '../Image';
 import floatingText from '../FloatingText';
@@ -39,14 +39,24 @@ Clones each target
           // If there is are clone coordinates to clone into
           if (cloneSourceCoords) {
             if (unit) {
-              const clone = Unit.load(Unit.serialize(unit), prediction);
-              // If the cloned unit is player controlled, make them be controlled by the AI
-              if (clone.unitSubType == UnitSubType.PLAYER_CONTROLLED) {
-                clone.unitType = UnitType.AI;
-                clone.unitSubType = UnitSubType.MELEE;
-                removeSubSprite(clone.image, 'ownCharacterMarker');
+              // Jitter prevents multiple clones from spawning on top of each other
+              const validSpawnCoords = window.underworld.findValidSpawn(jitter(cloneSourceCoords, config.COLLISION_MESH_RADIUS / 2), 5);
+              if (validSpawnCoords) {
+                const clone = Unit.load(Unit.serialize(unit), prediction);
+                if (!prediction) {
+                  // Change id of the clone so that it doesn't share the same
+                  // 'supposed-to-be-unique' id of the original
+                  clone.id = ++window.underworld.lastUnitId;
+                }
+                // If the cloned unit is player controlled, make them be controlled by the AI
+                if (clone.unitSubType == UnitSubType.PLAYER_CONTROLLED) {
+                  clone.unitType = UnitType.AI;
+                  clone.unitSubType = UnitSubType.MELEE;
+                  removeSubSprite(clone.image, 'ownCharacterMarker');
+                }
+                clone.x = validSpawnCoords.x;
+                clone.y = validSpawnCoords.y;
               }
-              await Unit.moveTowards(clone, { x: unit.x + config.COLLISION_MESH_RADIUS, y: unit.y });
             }
             if (pickup) {
               const validSpawnCoords = window.underworld.findValidSpawn(cloneSourceCoords, 5)
