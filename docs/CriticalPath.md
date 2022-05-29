@@ -1,5 +1,6 @@
 # Critical Path
-- Big Tasks
+- Big Tasks (Due 6/3, end of this week)
+    - Implement new tile "sewing" with Che's assets
     - Restore unit "crowding" once all linesegments (pathing, liquid, walls) are finalized with Che's tileset
     - Liquid "magnets": if you get close enough to the edge you "fall in"
 - Final Steps

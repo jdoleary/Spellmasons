@@ -1,12 +1,11 @@
-## Saturday
-- Pathing failed on 0.6293476198767105.  They moved through lava
-    - Clustered units collide with each other pushing each other around, and if it pushes one out of the pathing mesh, they will then be able to move through the lava
-    - Units pushing each other as they move should make the other repel from "walls" and "liquid"
-    - Forces push units should only make them repel from liquid
-- Solving unit collisions:
-    - What if just the unit images were moved (not the unit's objective position) when crowding? This might make targeting them with a spell buggy
 ## Tasks
-- Prefab rooms and buildings
+1. Figure out WFC walls, floor and liquid with linesegments and bounds
+    - Send examples to Che with appropriate sizes
+2. Liquid interactions
+    - Apply liquid impact and submerge shader when units "fall in"
+3. Rework unit crowding
+- Figure out better way to keep track of priorities with Che
+------
 - Content: AOE clone should work for pickups
 - Bug: Clone doesn't show cloned units until they move cause they spawn right on top of each other
 - Bug: clear tooltip on enter portal?? not sure if necessary, tooltip remained while I was manually calling initLevel
