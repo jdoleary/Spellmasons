@@ -68,22 +68,26 @@ export function moveWithCollisions(mover: Circle, destination: Vec2, circles: Un
     // and testing for intersection between that circle at the line segment
     // of mover's movement
 
-    const originalPosition = { x: mover.x, y: mover.y };
     // Actually move the mover
     mover.x = destination.x;
     mover.y = destination.y;
-    for (let other of circles) {
-        // Do not repel self from self
-        if (mover !== other) {
-            // If the mover now intersects with another circle...
-            if (isCircleIntersectingCircle(mover, other)) {
-                repelCircles(mover, originalPosition, other, other.immovable);
-                // Now that a circle has been repelled, immediately calculate collisions with 
-                // walls so that it doesn't phase through a wall
-                collideWithLineSegments(other, [...window.underworld.walls, ...window.underworld.liquidBounds]);
-            }
-        }
-    }
+
+    // DEV NOTE: Unit to unit repulsion temporarily disabled until
+    // underworld lineSegments (pathing, wall, liquid), get finalized
+    // \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ 
+    // const originalPosition = { x: mover.x, y: mover.y };
+    // for (let other of circles) {
+    //     // Do not repel self from self
+    //     if (mover !== other) {
+    //         // If the mover now intersects with another circle...
+    //         if (isCircleIntersectingCircle(mover, other)) {
+    //             repelCircles(mover, originalPosition, other, other.immovable);
+    //             // Now that a circle has been repelled, immediately calculate collisions with 
+    //             // walls so that it doesn't phase through a wall
+    //             collideWithLineSegments(other, [...window.underworld.walls, ...window.underworld.liquidBounds]);
+    //         }
+    //     }
+    // }
 }
 // repelCircles moves two intersecting circles away from each other
 // relative to their distance from each other and radius.
