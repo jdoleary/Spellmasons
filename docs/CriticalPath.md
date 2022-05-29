@@ -1,10 +1,7 @@
 # Critical Path
-- Core Gameplay (Due 5/30)
-    - Better maps
-        - Rivers and bridges
-        - Prefab rooms and buildings
-    - Liquid interactions
-        - Allow mobs to "fall in" to liquids
+- Big Tasks
+    - Restore unit "crowding" once all linesegments (pathing, liquid, walls) are finalized with Che's tileset
+    - Liquid "magnets": if you get close enough to the edge you "fall in"
 - Final Steps
     - [Tutorial](https://www.youtube.com/watch?v=-GV814cWiAw)
     - Optimize

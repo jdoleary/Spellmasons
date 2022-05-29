@@ -3,8 +3,8 @@
     - Clustered units collide with each other pushing each other around, and if it pushes one out of the pathing mesh, they will then be able to move through the lava
     - Units pushing each other as they move should make the other repel from "walls" and "liquid"
     - Forces push units should only make them repel from liquid
-- Cloned units are moving through pathing walls. Thiss is because they serialize the path object and cloned units are "jittered" so their path becomes invalid but it doesn't know that it is
-    - After clone selfMoved  keeps triggering over and over
+- Solving unit collisions:
+    - What if just the unit images were moved (not the unit's objective position) when crowding? This might make targeting them with a spell buggy
 ## Tasks
 - Prefab rooms and buildings
 - Content: AOE clone should work for pickups
