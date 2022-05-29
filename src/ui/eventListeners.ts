@@ -321,7 +321,7 @@ export function mouseMove(e?: MouseEvent) {
       window.debugGraphics.lineTo(lineSegment.p2.x, lineSegment.p2.y);
     }
     // Draw bounds that prevent movement
-    for (let bound of window.underworld.bounds) {
+    for (let bound of window.underworld.liquidBounds) {
       window.debugGraphics.lineStyle(6, 0x0000ff, 1.0);
       window.debugGraphics.moveTo(bound.p1.x, bound.p1.y);
       window.debugGraphics.lineTo(bound.p2.x, bound.p2.y);

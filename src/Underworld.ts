@@ -43,7 +43,7 @@ import { removeUnderworldEventListeners } from './views';
 import * as readyState from './readyState';
 import { mouseMove } from './ui/eventListeners';
 import Jprompt from './Jprompt';
-import { collideWithWalls, moveWithCollisions } from './collision/moveWithCollision';
+import { collideWithLineSegments, moveWithCollisions } from './collision/moveWithCollision';
 import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './contants';
 import { getBestRangedLOSTarget } from './units/actions/rangedAction';
 import { getClients, hostGiveClientGameStateForInitialLoad } from './wsPieHandler';
@@ -93,10 +93,10 @@ export default class Underworld {
   timeReleases: TimeRelease.ITimeRelease[] = [];
   imageOnlyTiles: CaveTile[] = [];
   lavaObstacles: Obstacle.IObstacle[] = [];
-  // line segments that prevent sight
+  // line segments that prevent sight and movement
   walls: LineSegment[] = [];
-  // line segments that prevent movement
-  bounds: LineSegment[] = [];
+  // line segments that prevent movement under certain circumstances
+  liquidBounds: LineSegment[] = [];
   pathingPolygons: Polygon[] = [];
   // pathingLineSegments shall always be exactly pathingPolygons converted to PolygonLineSegments.
   // It is kept up to date whenever pathingPolygons changes in cachedWalls
@@ -157,7 +157,7 @@ export default class Underworld {
         const { pushedObject, step } = forceMoveInst;
         forceMoveInst.distance -= Vec.magnitude(step);
         moveWithCollisions(pushedObject, Vec.add(pushedObject, step), aliveNPCs);
-        collideWithWalls(pushedObject);
+        collideWithLineSegments(pushedObject, this.walls);
         // Remove it from forceMove array once the distance has been covers
         // This works even if collisions prevent the unit from moving since
         // distance is modified even if the unit doesn't move each loop
@@ -205,7 +205,6 @@ export default class Underworld {
           }
           // check for collisions with pickups in new location
           this.checkPickupCollisions(u);
-          collideWithWalls(u);
           // Ensure that resolveDoneMoving is invoked when unit is out of stamina (and thus, done moving)
           // or when find point in the path has been reached.
           // This is necessary to end the moving units turn because elsewhere we are awaiting the fulfillment of that promise
@@ -489,14 +488,13 @@ export default class Underworld {
     function filterRemoveNonGroundAdjacentPoly(poly: Polygon): boolean {
       return groundTiles.some(gt => poly.points.some(p => math.distance(gt, p) <= distanceFromGroundCenterWhenAdjacent))
     }
-    const walls = obstacles.filter(o => o.material == Materials.Wall).map(o => o.bounds)
-    // walls block sight
-    this.walls = mergeOverlappingPolygons(walls).map(polygonToPolygonLineSegments).flat().filter(filterRemoveNonGroundAdjacent);
-    // Expand pathing walls by the size of the regular unit
-    // bounds block movement
-    this.bounds = mergeOverlappingPolygons(walls).map(polygonToPolygonLineSegments).flat().map(polygonLineSegmentToLineSegment).filter(filterRemoveNonGroundAdjacent);
+    // walls block sight and movement
+    this.walls = mergeOverlappingPolygons(obstacles.filter(o => o.material == Materials.Wall).map(o => o.bounds)).map(polygonToPolygonLineSegments).flat().filter(filterRemoveNonGroundAdjacent);
+    // liquid bounds block movement only under certain circumstances
+    this.liquidBounds = mergeOverlappingPolygons(obstacles.filter(o => o.material == Materials.Liquid).map(o => o.bounds)).map(polygonToPolygonLineSegments).flat().map(polygonLineSegmentToLineSegment).filter(filterRemoveNonGroundAdjacent);
 
     const expandMagnitude = config.COLLISION_MESH_RADIUS * config.NON_HEAVY_UNIT_SCALE
+    // Expand pathing walls by the size of the regular unit
     // pathing polygons determines the area that units can move within
     this.pathingPolygons = mergeOverlappingPolygons([...obstacles.map(o => o.bounds)]).filter(filterRemoveNonGroundAdjacentPoly).map(p => expandPolygon(p, expandMagnitude));
     const biggestPoly = this.pathingPolygons.reduce((biggestPoly, poly) => {

@@ -50,15 +50,10 @@ export function normalizedVector(point1: Vec2, point2: Vec2): { vector: Vec2 | u
     // Return the normalized vector and the distance between the two points
     return { vector: { x: a, y: b }, distance: bigC };
 }
-export function collideWithWalls(circle: Circle) {
-    if (window.underworld && window.underworld.bounds) {
-        for (let line of window.underworld.bounds) {
-            repelCircleFromLine(circle, line);
-        }
-    } else {
-        console.error('window.underworld or window.underworld.bounds is undefined');
+export function collideWithLineSegments(circle: Circle, lineSegments: LineSegment[]) {
+    for (let line of lineSegments) {
+        repelCircleFromLine(circle, line);
     }
-
 }
 
 
@@ -85,7 +80,7 @@ export function moveWithCollisions(mover: Circle, destination: Vec2, circles: Un
                 repelCircles(mover, originalPosition, other, other.immovable);
                 // Now that a circle has been repelled, immediately calculate collisions with 
                 // walls so that it doesn't phase through a wall
-                collideWithWalls(other);
+                collideWithLineSegments(other, [...window.underworld.walls, ...window.underworld.liquidBounds]);
             }
         }
     }
