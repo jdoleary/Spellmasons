@@ -14,6 +14,7 @@ import { allModifiers, EffectState } from './cards';
 import { checkIfNeedToClearTooltip } from './ui/PlanningView';
 import { centeredFloatingText } from './FloatingText';
 import { turn_phase } from './Underworld';
+import submerged from './shaders/submerged';
 const elHealthBar: HTMLElement = document.querySelector('#health .fill') as HTMLElement;
 const elHealthCost: HTMLElement = document.querySelector('#health .cost') as HTMLElement;
 const elHealthLabel: HTMLElement = document.querySelector('#health .label') as HTMLElement;
@@ -175,6 +176,8 @@ function setupShaders(unit: IUnit) {
     const all_red = makeAllRedShader()
     unit.shaderUniforms.all_red = all_red.uniforms;
     unit.image.sprite.filters = [all_red.filter];
+    // Set up submerged uniforms
+    unit.shaderUniforms.submerged = submerged.uniforms;
   }
 }
 
@@ -269,6 +272,7 @@ export function load(unit: IUnitSerialized, prediction: boolean): IUnit {
   // or else the shader won't render
   for (let [key, uniformObject] of Object.entries(shaderUniforms)) {
     for (let [keyUniform, value] of Object.entries(uniformObject)) {
+      // TODO: for global shaders like submerged, do not override the value
       loadedunit.shaderUniforms[key][keyUniform] = value;
     }
   }

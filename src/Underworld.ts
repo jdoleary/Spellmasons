@@ -11,6 +11,7 @@ import * as Image from './Image';
 import * as storage from './storage';
 import * as ImmediateMode from './ImmediateModeSprites';
 import * as colors from './ui/colors';
+import submerged from './shaders/submerged';
 import { MESSAGE_TYPES } from './MessageTypes';
 import {
   app,
@@ -137,6 +138,10 @@ export default class Underworld {
   gameLoop = (timestamp: number) => {
     const deltaTime = timestamp - lastTime;
     lastTime = timestamp;
+    // Update singleton shader uniforms
+    if (submerged.uniforms) {
+      submerged.uniforms.time += deltaTime;
+    }
     const { zoom } = getCamera();
 
     ImmediateMode.loop();
