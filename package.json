@@ -4,8 +4,9 @@
   "description": "",
   "private": true,
   "scripts": {
-    "start": "snowpack dev",
-    "build": "snowpack build --polyfill-node",
+    "start": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
     "test": "jest",
     "format": "prettier --write \"src/**/*.{ts,js}\"",
     "lint": "prettier --check \"src/**/*.{ts,js}\"",
@@ -33,7 +34,8 @@
     "jest": "^26.6.3",
     "prettier": "^2.0.5",
     "snowpack": "^3.8.8",
-    "typescript": "^4.0.0"
+    "typescript": "^4.5.4",
+    "vite": "^2.9.9"
   },
   "dependencies": {
     "@sentry/browser": "^6.19.3",

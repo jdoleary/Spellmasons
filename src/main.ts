@@ -14,7 +14,11 @@ import { setupAudio } from './Audio';
 import cookieConsentPopup from './cookieConsent';
 import { setupMonitoring } from './monitoring';
 import * as storage from './storage';
+import { version } from '../package.json';
+window.SPELLMASONS_PACKAGE_VERSION = version;
+import './style.css';
 cookieConsentPopup(false);
+
 
 // This import is critical so that the svelte menu has access to
 // the pie globals
@@ -94,13 +98,14 @@ function setupAll() {
 
   // Set UI version info
   const elVersionInfo = document.getElementById('version-info')
-  if (elVersionInfo && import.meta.env.SNOWPACK_PUBLIC_PACKAGE_VERSION) {
-    elVersionInfo.innerText = `Alpha v${import.meta.env.SNOWPACK_PUBLIC_PACKAGE_VERSION}\nGraphics are not final`;
+  if (elVersionInfo && window.SPELLMASONS_PACKAGE_VERSION) {
+    elVersionInfo.innerText = `Alpha v${window.SPELLMASONS_PACKAGE_VERSION}\nGraphics are not final`;
   }
 }
 
 declare global {
   interface Window {
+    SPELLMASONS_PACKAGE_VERSION: string;
     latencyPanel: Stats.Panel;
     runPredictionsPanel: Stats.Panel;
     animationTimeline: AnimationTimeline;

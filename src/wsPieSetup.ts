@@ -56,7 +56,7 @@ function defaultRoomInfo(_room_info = {}): Room {
   const room_info = Object.assign({
     name: 'Golems Lobby 1',
     app: 'Golems',
-    version: import.meta.env.SNOWPACK_PUBLIC_PACKAGE_VERSION,
+    version: window.SPELLMASONS_PACKAGE_VERSION,
     maxClients,
   }, _room_info);
   maxClients = room_info.maxClients;

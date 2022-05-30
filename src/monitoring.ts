@@ -5,7 +5,7 @@ import Stats from 'stats.js';
 
 export function setupMonitoring() {
 
-  const release = `spellmasons@${import.meta.env.SNOWPACK_PUBLIC_PACKAGE_VERSION}`;
+  const release = `spellmasons@${window.SPELLMASONS_PACKAGE_VERSION}`;
   if (!location.href.includes('http://localhost')) {
     console.log('Setup: Monitoring with Sentry', release);
     Sentry.init({

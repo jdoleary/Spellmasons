@@ -5,8 +5,6 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="A game of Golems and Wizards" />
-  <link rel="stylesheet" type="text/css" href="/index.css" />
-  <link rel='stylesheet' href='svelte-bundle.css'>
 
   <title>Spellmasons</title>
   <!-- Re-enable once you set up cookie consent https://support.google.com/analytics/answer/9976101?hl=en-->
@@ -107,46 +105,45 @@
           <kbd class="hotkey-badge">Spacebar</kbd>
         </td>
       </tr>
-  </div>
-  <div id="pie-disconnected">
-    <div>
-      Network Disconnected - Please Wait
-    </div>
-  </div>
-  </table>
-  <div id="player-turn-indicator-holder">
-    <button id="menuBtn">⚙️ Menu</button>
-    <div id="level-indicator"></div>
-    <div id="player-turn-indicator">Waiting for players</div>
-  </div>
-  <div id="PIXI-holder"></div>
-  <div id="card-holders">
-    <div id="card-inspect"></div>
-    <div id="card-hand"></div>
-    <div id="health-mana-holder">
-      <div id="health-mana">
-        <div id="health" class="health-mana-bar">
-          <div class="fill"> </div>
-          <div class="cost"></div>
-          <div class="label"></div>
-        </div>
-        <div id="mana" class="health-mana-bar">
-          <div class="fill"> </div>
-          <div class="fill"> </div>
-          <div class="fill"> </div>
-          <div class="cost"></div>
-          <div class="cost"></div>
-          <div class="cost"></div>
-          <div class="label"></div>
-        </div>
-        <div id="stamina" class="health-mana-bar">
-          <div class="fill"></div>
-          <div class="label"></div>
-        </div>
+    </table>
+    <div id="pie-disconnected">
+      <div>
+        Network Disconnected - Please Wait
       </div>
     </div>
-    <div id="selected-cards"> </div>
-  </div>
+    <div id="player-turn-indicator-holder">
+      <button id="menuBtn">⚙️ Menu</button>
+      <div id="level-indicator"></div>
+      <div id="player-turn-indicator">Waiting for players</div>
+    </div>
+    <div id="PIXI-holder"></div>
+    <div id="card-holders">
+      <div id="card-inspect"></div>
+      <div id="card-hand"></div>
+      <div id="health-mana-holder">
+        <div id="health-mana">
+          <div id="health" class="health-mana-bar">
+            <div class="fill"> </div>
+            <div class="cost"></div>
+            <div class="label"></div>
+          </div>
+          <div id="mana" class="health-mana-bar">
+            <div class="fill"> </div>
+            <div class="fill"> </div>
+            <div class="fill"> </div>
+            <div class="cost"></div>
+            <div class="cost"></div>
+            <div class="cost"></div>
+            <div class="label"></div>
+          </div>
+          <div id="stamina" class="health-mana-bar">
+            <div class="fill"></div>
+            <div class="label"></div>
+          </div>
+        </div>
+      </div>
+      <div id="selected-cards"> </div>
+    </div>
   </div>
   <div id="version">
     spellmasons.com
@@ -159,7 +156,7 @@
     <div id="menu-inner">
     </div>
   </div>
-  <script type="module" src="/dist/index.js"></script>
+  <script type="module" src="/src/main.ts"></script>
 </body>
 
 </html>
