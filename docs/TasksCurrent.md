@@ -4,7 +4,6 @@
 2. Liquid interactions
     - Apply liquid impact and submerge shader when units "fall in"
 3. Rework unit crowding
-- Figure out better way to keep track of priorities with Che
 ------
 - Content: AOE clone should work for pickups
 - Bug: Clone doesn't show cloned units until they move cause they spawn right on top of each other

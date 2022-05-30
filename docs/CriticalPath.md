@@ -17,7 +17,7 @@
         - Enable simultaneous turn taking for players
     - Improved Menu
     - Aesthetic
-        - Art / Shaders / Juice / SFX / Music
+        - Juice / SFX / Music
     - (Lastly) Package as Electron App
         - [Storage and Persistence](https://cameronnokes.com/blog/how-to-store-user-data-in-electron/)
         - [AutoUpdate](https://github.com/vercel/hazel)
