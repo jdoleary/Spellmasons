@@ -1,1 +1,1 @@
-- Immortal: prevents a unit from dying, Interesting for contageous units
+- Immortal: prevents a unit from dying, Interesting for contagious units

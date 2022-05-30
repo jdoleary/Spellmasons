@@ -239,7 +239,7 @@
             <key type="filename">public/images/spell/chain.png</key>
             <key type="filename">public/images/spell/charge.png</key>
             <key type="filename">public/images/spell/clone.png</key>
-            <key type="filename">public/images/spell/contageous.png</key>
+            <key type="filename">public/images/spell/contagious.png</key>
             <key type="filename">public/images/spell/damage.png</key>
             <key type="filename">public/images/spell/deny.png</key>
             <key type="filename">public/images/spell/feet.png</key>

@@ -1,10 +1,37 @@
 window.t = testShader;
 window.x = submerged.filter;
 function testShader() {
-  for (let unit of window.underworld.units) {
-    if (unit && unit.image) {
-      unit.shaderUniforms.submerged = submerged.uniforms;
-      unit.image.sprite.filters = [submerged.filter];
+    for (let unit of window.underworld.units) {
+        if (unit && unit.image) {
+            unit.shaderUniforms.submerged = submerged.uniforms;
+            unit.image.sprite.filters = [submerged.filter];
+        }
     }
-  }
 }
+
+
+add_damage
+add_heal
+area_of_effect
+chain
+contagious
+freeze
+raise_dead
+shield
+poison
+purify
+swap
+vulnerable
+// lance
+stomp
+// protection
+// charge
+clone
+mana_burn
+mana_steal
+vampire_bite
+push
+pull
+decoy
+trap
+explode
