@@ -298,6 +298,58 @@ const sourceCells: Cell[] = [
             Material.GROUND,
         ]
     },
+    {
+        image: 'tiles/bloodInsideCornerNW.png',
+        materials: [
+            Material.GROUND,
+            Material.LIQUID,
+            Material.LIQUID,
+            Material.LIQUID,
+            Material.LIQUID,
+            Material.LIQUID,
+            Material.LIQUID,
+            Material.LIQUID,
+        ]
+    },
+    {
+        image: 'tiles/bloodInsideCornerNE.png',
+        materials: [
+            Material.LIQUID,
+            Material.LIQUID,
+            Material.GROUND,
+            Material.LIQUID,
+            Material.LIQUID,
+            Material.LIQUID,
+            Material.LIQUID,
+            Material.LIQUID,
+        ]
+    },
+    {
+        image: 'tiles/bloodInsideCornerSE.png',
+        materials: [
+            Material.LIQUID,
+            Material.LIQUID,
+            Material.LIQUID,
+            Material.LIQUID,
+            Material.GROUND,
+            Material.LIQUID,
+            Material.LIQUID,
+            Material.LIQUID,
+        ]
+    },
+    {
+        image: 'tiles/bloodInsideCornerSW.png',
+        materials: [
+            Material.LIQUID,
+            Material.LIQUID,
+            Material.LIQUID,
+            Material.LIQUID,
+            Material.LIQUID,
+            Material.LIQUID,
+            Material.GROUND,
+            Material.LIQUID,
+        ]
+    },
 
     // {
     //     image: 'tiles/SAMPLE.png',
@@ -515,7 +567,34 @@ export function resolveConflicts(map: Map) {
             }
         }
     }
-    // 4: All ground tiles with 4 ground neighbors become ground
+    // LEFT OFF
+    return
+    // 4: All wall tiles with >= 1 ground neighbors pick via constraints
+    for (let i = 0; i < width * width; i++) {
+        const position = oneDimentionIndexToVec2(i, width);
+        const cell = getCell(map, position);
+        if (cell?.image == baseCells.wall.image) {
+            const neighbors = SIDES.flatMap(side => {
+                const cell = getCell(map, add(position, side));
+                // Checking for cell.image intentionally excludes the "empty" cell
+                return cell && cell.image ? [{ cell, side }] : [];
+            });
+            if (neighbors.filter(n => n.cell.materials.some(m => m == Material.GROUND)).length >= 1) {
+                const possibleCells = sourceCells.filter(c => c.materials.some(m => m == Material.GROUND || m == Material.WALL)).filter(c => c != all_ground && c.materials.every(m => m != Material.LIQUID))
+                const cell = pickCell(map, position, possibleCells);
+                const tile = map.tiles[i];
+                if (tile) {
+                    if (cell) {
+                        tile.materials = cell.materials;
+                        tile.image = cell.image;
+                    }
+                }
+
+
+            }
+        }
+    }
+    // 5: All ground tiles with 4 ground neighbors become ground
     for (let i = 0; i < width * width; i++) {
         const position = oneDimentionIndexToVec2(i, width);
         const cell = getCell(map, position);
@@ -537,7 +616,6 @@ export function resolveConflicts(map: Map) {
             }
         }
     }
-    // 5: 
 
 
     ///////
