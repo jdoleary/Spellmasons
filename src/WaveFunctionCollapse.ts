@@ -2,10 +2,9 @@ import { randInt } from "./rand";
 import { equal, subtract, Vec2 } from "./Vec"
 
 export enum Material {
-    WATER,
+    LIQUID,
     GROUND,
-    WALL,
-    VOID
+    WALL
 }
 
 /*
@@ -38,22 +37,36 @@ export function vec2ToOneDimentionIndex(pos: Vec2, width: number): number {
     return pos.y * width + pos.x
 
 }
-const void_cell = {
-    image: 'tiles/8.png',
+const all_liquid = {
+    image: 'tiles/blood.png',
     materials: [
-        Material.WATER,
-        Material.WATER,
-        Material.WATER,
-        Material.WATER,
-        Material.WATER,
-        Material.WATER,
-        Material.WATER,
-        Material.WATER,
+        Material.LIQUID,
+        Material.LIQUID,
+        Material.LIQUID,
+        Material.LIQUID,
+        Material.LIQUID,
+        Material.LIQUID,
+        Material.LIQUID,
+        Material.LIQUID,
     ]
 };
 const sourceCells: Cell[] = [
+    all_liquid,
     {
-        image: 'tiles/1.png',
+        image: 'tiles/bloodSideRight.png',
+        materials: [
+            Material.LIQUID,
+            Material.GROUND,
+            Material.GROUND,
+            Material.GROUND,
+            Material.GROUND,
+            Material.GROUND,
+            Material.LIQUID,
+            Material.LIQUID,
+        ]
+    },
+    {
+        image: 'tiles/bloodFloor.png',
         materials: [
             Material.GROUND,
             Material.GROUND,
@@ -66,11 +79,180 @@ const sourceCells: Cell[] = [
         ]
     },
     {
-        image: 'tiles/2.png',
+        image: 'tiles/bloodSideBottom.png',
+        materials: [
+            Material.LIQUID,
+            Material.LIQUID,
+            Material.LIQUID,
+            Material.LIQUID,
+            Material.GROUND,
+            Material.GROUND,
+            Material.GROUND,
+            Material.LIQUID,
+        ]
+    },
+    {
+        image: 'tiles/bloodSideBottomLeft.png',
         materials: [
             Material.GROUND,
+            Material.LIQUID,
+            Material.LIQUID,
+            Material.LIQUID,
+            Material.GROUND,
+            Material.GROUND,
+            Material.GROUND,
+            Material.GROUND,
+        ]
+    },
+    {
+        image: 'tiles/bloodSideBottomRight.png',
+        materials: [
+            Material.LIQUID,
+            Material.LIQUID,
+            Material.GROUND,
+            Material.GROUND,
+            Material.GROUND,
+            Material.GROUND,
+            Material.GROUND,
+            Material.LIQUID,
+        ]
+    },
+    {
+        image: 'tiles/bloodSideLeft.png',
+        materials: [
+            Material.GROUND,
+            Material.LIQUID,
+            Material.LIQUID,
+            Material.LIQUID,
+            Material.LIQUID,
+            Material.LIQUID,
+            Material.GROUND,
+            Material.GROUND,
+        ]
+    },
+    {
+        image: 'tiles/bloodSideRight.png',
+        materials: [
+            Material.LIQUID,
+            Material.LIQUID,
+            Material.GROUND,
+            Material.GROUND,
+            Material.GROUND,
+            Material.LIQUID,
+            Material.LIQUID,
+            Material.LIQUID,
+        ]
+    },
+    {
+        image: 'tiles/bloodSideTop.png',
+        materials: [
+            Material.GROUND,
+            Material.GROUND,
+            Material.GROUND,
+            Material.LIQUID,
+            Material.LIQUID,
+            Material.LIQUID,
+            Material.LIQUID,
+            Material.LIQUID,
+        ]
+    },
+    {
+        image: 'tiles/bloodSideTopLeft.png',
+        materials: [
+            Material.GROUND,
+            Material.GROUND,
+            Material.GROUND,
+            Material.LIQUID,
+            Material.LIQUID,
+            Material.LIQUID,
+            Material.GROUND,
+            Material.GROUND,
+        ]
+    },
+    {
+        image: 'tiles/bloodSideTopRight.png',
+        materials: [
+            Material.GROUND,
+            Material.GROUND,
+            Material.GROUND,
+            Material.GROUND,
+            Material.GROUND,
+            Material.LIQUID,
+            Material.LIQUID,
+            Material.LIQUID,
+        ]
+    },
+    {
+        image: 'tiles/bloodWallBtm.png',
+        materials: [
+            Material.GROUND,
+            Material.GROUND,
+            Material.GROUND,
+            Material.GROUND,
+            Material.WALL,
+            Material.WALL,
             Material.WALL,
             Material.GROUND,
+        ]
+    },
+    {
+        image: 'tiles/bloodWallBtmLeft.png',
+        materials: [
+            Material.WALL,
+            Material.GROUND,
+            Material.GROUND,
+            Material.GROUND,
+            Material.WALL,
+            Material.WALL,
+            Material.WALL,
+            Material.WALL,
+        ]
+    },
+    {
+        image: 'tiles/bloodWallBtmRight.png',
+        materials: [
+            Material.GROUND,
+            Material.GROUND,
+            Material.WALL,
+            Material.WALL,
+            Material.WALL,
+            Material.WALL,
+            Material.WALL,
+            Material.GROUND,
+        ]
+    },
+    {
+        image: 'tiles/bloodWallLeft.png',
+        materials: [
+            Material.WALL,
+            Material.GROUND,
+            Material.GROUND,
+            Material.GROUND,
+            Material.GROUND,
+            Material.GROUND,
+            Material.WALL,
+            Material.WALL,
+        ]
+    },
+    {
+        image: 'tiles/bloodWallBtmRight.png',
+        materials: [
+            Material.GROUND,
+            Material.GROUND,
+            Material.WALL,
+            Material.WALL,
+            Material.WALL,
+            Material.GROUND,
+            Material.GROUND,
+            Material.GROUND,
+        ]
+    },
+    {
+        image: 'tiles/bloodWallTop.png',
+        materials: [
+            Material.WALL,
+            Material.WALL,
+            Material.WALL,
             Material.GROUND,
             Material.GROUND,
             Material.GROUND,
@@ -79,123 +261,32 @@ const sourceCells: Cell[] = [
         ]
     },
     {
-        image: 'tiles/3.png',
+        image: 'tiles/bloodWallTopLeft.png',
         materials: [
-            Material.GROUND,
             Material.WALL,
-            Material.GROUND,
             Material.WALL,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-        ]
-    },
-    {
-        image: 'tiles/4.png',
-        materials: [
-            Material.GROUND,
-            Material.WALL,
-            Material.GROUND,
-            Material.WALL,
-            Material.GROUND,
             Material.WALL,
             Material.GROUND,
             Material.GROUND,
-        ]
-    },
-    {
-        image: 'tiles/5.png',
-        materials: [
             Material.GROUND,
             Material.WALL,
-            Material.GROUND,
-            Material.WALL,
-            Material.GROUND,
-            Material.WALL,
-            Material.GROUND,
             Material.WALL,
         ]
     },
     {
-        image: 'tiles/6.png',
+        image: 'tiles/bloodWallTopRight.png',
         materials: [
-            Material.WATER,
             Material.WALL,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
             Material.WALL,
-            Material.WATER,
-            Material.WATER,
-        ]
-    },
-    {
-        image: 'tiles/7.png',
-        materials: [
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
+            Material.WALL,
+            Material.WALL,
+            Material.WALL,
             Material.GROUND,
             Material.GROUND,
             Material.GROUND,
         ]
     },
-    void_cell,
-    {
-        image: 'tiles/9.png',
-        materials: [
-            Material.WATER,
-            Material.WALL,
-            Material.GROUND,
-            Material.WALL,
-            Material.WATER,
-            Material.WATER,
-            Material.WATER,
-            Material.WATER,
-        ]
-    },
-    {
-        image: 'tiles/10.png',
-        materials: [
-            Material.GROUND,
-            Material.WALL,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-            Material.WALL,
-            Material.GROUND,
-            Material.GROUND,
-        ]
-    },
-    {
-        image: 'tiles/11.png',
-        materials: [
-            Material.GROUND,
-            Material.WALL,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-            Material.WALL,
-            Material.GROUND,
-            Material.GROUND,
-        ]
-    },
-    {
-        image: 'tiles/12.png',
-        materials: [
-            Material.GROUND,
-            Material.WALL,
-            Material.WATER,
-            Material.WALL,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-        ]
-    },
+
     // {
     //     image: 'tiles/SAMPLE.png',
     //     materials: [
@@ -306,7 +397,7 @@ function generateNewMap(width: number): Map {
     for (let i = 0; i < width * width; i++) {
         const pos = oneDimentionIndexToVec2(i, width);
         if (pos.x == 0 || pos.x == width - 1 || pos.y == 0 || pos.y == width - 1) {
-            map.cells.push(void_cell);
+            map.cells.push(all_liquid);
         } else {
             map.cells.push(undefined);
         }
