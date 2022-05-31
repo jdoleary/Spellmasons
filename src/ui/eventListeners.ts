@@ -307,7 +307,7 @@ export function mouseMove(e?: MouseEvent) {
   if (window.showDebug && window.player) {
     window.debugGraphics.clear();
     const mouseTarget = window.underworld.getMousePos();
-    (document.getElementById('debug-info') as HTMLElement).innerText = `x:${Math.round(mouseTarget.x)}, y:${Math.round(mouseTarget.y)}`;
+    (document.getElementById('debug-info') as HTMLElement).innerText = `x:${Math.round(mouseTarget.x) / 64}, y:${Math.round(mouseTarget.y) / 64}`;
     // Draw the pathing walls
     const pathingWalls = window.underworld.pathingPolygons.map(polygonToPolygonLineSegments).flat();
     for (let lineSegment of pathingWalls) {

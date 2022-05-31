@@ -1,12 +1,11 @@
 import { randInt } from "./rand";
-import { equal, subtract, Vec2 } from "./Vec"
+import { add, equal, subtract, Vec2 } from "./Vec"
 
 export enum Material {
     EMPTY,
     LIQUID,
     GROUND,
     WALL,
-    SEMIWALL,
 }
 
 /*
@@ -40,7 +39,7 @@ export function vec2ToOneDimentionIndex(pos: Vec2, width: number): number {
     return pos.y * width + pos.x
 
 }
-const all_liquid: Cell = {
+export const all_liquid: Cell = {
     image: 'tiles/blood.png',
     materials: [
         Material.LIQUID,
@@ -63,8 +62,8 @@ export const baseCells = {
         materials: Array(8).fill(Material.WALL)
     },
     semiWall: {
-        image: 'tiles/semiWall.png',
-        materials: Array(8).fill(Material.SEMIWALL)
+        image: 'tiles/wall.png',
+        materials: Array(8).fill(Material.WALL)
     },
     liquid: {
         image: 'tiles/lava.png',
@@ -75,34 +74,22 @@ export const baseCells = {
         materials: Array(8).fill(Material.GROUND)
     },
 }
+export const all_ground = {
+    image: 'tiles/bloodFloor.png',
+    materials: [
+        Material.GROUND,
+        Material.GROUND,
+        Material.GROUND,
+        Material.GROUND,
+        Material.GROUND,
+        Material.GROUND,
+        Material.GROUND,
+        Material.GROUND,
+    ]
+};
 const sourceCells: Cell[] = [
     all_liquid,
-    {
-        image: 'tiles/bloodSideRight.png',
-        materials: [
-            Material.LIQUID,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-            Material.LIQUID,
-            Material.LIQUID,
-        ]
-    },
-    {
-        image: 'tiles/bloodFloor.png',
-        materials: [
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-            Material.GROUND,
-        ]
-    },
+    all_ground,
     {
         image: 'tiles/bloodSideBottom.png',
         materials: [
@@ -346,25 +333,80 @@ function opposideSide(side: Vec2): Vec2 {
     return TOP_SIDE;
 }
 // Of all the possible cells for a position, pick one
-function pickCell(map: Map, position: Vec2): Cell | undefined {
-    // Get all possible cells and limit them via constraints
-    let possibleCells = [...sourceCells];
+function pickCell(map: Map, position: Vec2, possibleCells: Cell[]): Cell | undefined {
+    console.log('jtest -----------pickCell for position', position);
+
+    const currentCell = getCell(map, position);
+    // if (currentCell?.image == baseCells.wall.image) {
+    //     console.log('jtest filter on wall')
+    //     possibleCells = possibleCells.filter(c => c.materials.includes(Material.WALL));
+    // }
     // Limit via side constraints
-    for (let side of SIDES) {
-        const cellOnSide = getCell(map, subtract(position, side));
-        // If there is another cell adjacent to current possible cell...
-        if (cellOnSide) {
-            // Limit the current possible cells via it's constraint
-            const otherCellConstraint = getCellConstraintsForSide(cellOnSide, opposideSide(side));
-            possibleCells = possibleCells.filter(c => {
-                const currentCellConstraint = getCellConstraintsForSide(c, side);
-                return doConstraintsMatch(otherCellConstraint, currentCellConstraint)
-            });
+    let neighbors = SIDES.flatMap(side => {
+        const cell = getCell(map, add(position, side));
+        // Checking for cell.image intentionally excludes the "empty" cell
+        return cell && cell.image ? [{ cell, side }] : [];
+    });
+    if (currentCell?.image == baseCells.ground.image) {
+        // Don't consider neighbors that have walls when tile is a ground tile
+        // TODO explain
+        neighbors = neighbors.filter(n => n.cell.materials.every(m => m != Material.WALL))
+    }
+    // if(neighbors.some(n => n.cell.materials.includes(Material.LIQUID))){
+    //     console.log('jtest filter on liquid');
+    //     possibleCells = pos
+    // }
+    // If there are no neighbors, it remains undefined
+    if (!neighbors.length) {
+        return undefined;
+    }
+    // const baseCellImages = Object.values(baseCells).map(x => x.image);
+    for (let { side, cell: cellOnSide } of neighbors) {
+        // Skip base cells, base cells do not provide constraints:
+        if (currentCell?.image == cellOnSide.image) {
+            // console.log('jtest skip', cellOnSide.image);
+            continue;
         }
+        // console.log('jtest check', 'side', side, 'cellONside', cellOnSide);
+        // console.log('jtest side ----', side, cellOnSide, position)
+        // if (equal(position, { x: 7, y: 0 }) && equal(side, { x: 0, y: 1 })) {
+        //     debugger;
+        // }
+        // Limit the current possible cells via it's constraint
+        const otherCellConstraint = getCellConstraintsForSide(cellOnSide, opposideSide(side));
+        if (otherCellConstraint.length == 0) {
+            // Each side MUST provide a constraint
+            return undefined;
+        }
+        possibleCells = possibleCells.filter(c => {
+            const currentCellConstraint = getCellConstraintsForSide(c, side);
+            return doConstraintsMatch(otherCellConstraint, currentCellConstraint)
+        });
+        // Log constraints
+        // possibleCells.forEach(c => {
+        //     const currentCellConstraint = getCellConstraintsForSide(c, side);
+        //     console.log('jtest constraint', otherCellConstraint, side, currentCellConstraint, doConstraintsMatch(otherCellConstraint, currentCellConstraint), c);
+        // })
     }
     // Of the possible cells remaining, choose an random one
-    const randomChoiseIndex = randInt(window.underworld.random, 0, possibleCells.length - 1);
-    return possibleCells[randomChoiseIndex];
+    const randomChoiceIndex = randInt(window.underworld.random, 0, possibleCells.length - 1);
+    if (possibleCells.length == 0) {
+        console.error('Could not find cell for neighbors', SIDES.flatMap(side => {
+            const cell = getCell(map, subtract(position, side));
+            return cell && cell.image ? [`${cell.image}: ${side.x}, ${side.y}`] : [];
+        }))
+    } else if (possibleCells.length == 1) {
+        console.log('jtest picked cell', possibleCells[randomChoiceIndex], 'of options', possibleCells)
+        return possibleCells[0]
+    } else {
+        console.log('jtest too many to pick from', possibleCells)
+        return undefined
+    }
+    // console.log('jtest: neighbors', SIDES.flatMap(side => {
+    //     const cell = getCell(map, subtract(position, side));
+    //     return cell && cell.image ? [`${cell.image}: ${side.x}, ${side.y}`] : [];
+    // }), possibleCells)
+    return possibleCells[randomChoiceIndex];
 }
 
 function getCell(map: Map, position: Vec2): Cell | undefined {
@@ -414,17 +456,171 @@ function getCellConstraintsForSide(cell: Cell, side: Vec2): Material[] {
 }
 export function resolveConflicts(map: Map) {
     const { width } = map;
-    // Step2, Iterate and fill remaining cells:
+    // 1: All lava tiles turn to blood
     for (let i = 0; i < width * width; i++) {
-        const pos = oneDimentionIndexToVec2(i, width);
-        const cell = pickCell(map, pos)
-        const tile = map.tiles[i];
-        if (cell && tile) {
-            tile.materials = cell.materials;
-            tile.image = cell.image;
-        } else {
-            console.error('Cell could not be chosen for', pos.x, pos.y, cell, tile);
+        const position = oneDimentionIndexToVec2(i, width);
+        const cell = getCell(map, position);
+        if (cell?.image == baseCells.liquid.image) {
+            const tile = map.tiles[i];
+            if (tile) {
+                tile.materials = all_liquid.materials;
+                tile.image = all_liquid.image;
+            } else {
+                console.error('tile not found at ', i, width)
+            }
+
         }
     }
+    // 2: All tiles with >= 3 lava tile neighbors turn to blood
+    for (let i = 0; i < width * width; i++) {
+        const position = oneDimentionIndexToVec2(i, width);
+        const neighbors = SIDES.flatMap(side => {
+            const cell = getCell(map, add(position, side));
+            // Checking for cell.image intentionally excludes the "empty" cell
+            return cell && cell.image ? [{ cell, side }] : [];
+        });
+        if (neighbors.filter(n => n.cell.image == all_liquid.image).length >= 3) {
+            const tile = map.tiles[i];
+            if (tile) {
+                tile.materials = all_liquid.materials;
+                tile.image = all_liquid.image;
+            } else {
+                console.error('tile not found at ', i, width)
+            }
+
+        }
+    }
+    // 3: All ground tiles with >= 1 lava neighbor change based on constraints
+    for (let i = 0; i < width * width; i++) {
+        const position = oneDimentionIndexToVec2(i, width);
+        const cell = getCell(map, position);
+        if (cell?.image == baseCells.ground.image) {
+            const neighbors = SIDES.flatMap(side => {
+                const cell = getCell(map, add(position, side));
+                // Checking for cell.image intentionally excludes the "empty" cell
+                return cell && cell.image ? [{ cell, side }] : [];
+            });
+            if (neighbors.filter(n => n.cell.image == all_liquid.image).length >= 1) {
+                const possibleCells = sourceCells.filter(c => c.materials.some(m => m == Material.GROUND || m == Material.LIQUID)).filter(c => c != all_liquid)
+                const cell = pickCell(map, position, possibleCells);
+                const tile = map.tiles[i];
+                if (tile) {
+                    if (cell) {
+                        tile.materials = cell.materials;
+                        tile.image = cell.image;
+                    }
+                }
+
+
+            }
+        }
+    }
+    // 4: All ground tiles with 4 ground neighbors become ground
+    for (let i = 0; i < width * width; i++) {
+        const position = oneDimentionIndexToVec2(i, width);
+        const cell = getCell(map, position);
+        if (cell?.image == baseCells.ground.image) {
+            const neighbors = SIDES.flatMap(side => {
+                const cell = getCell(map, add(position, side));
+                // Checking for cell.image intentionally excludes the "empty" cell
+                return cell && cell.image ? [{ cell, side }] : [];
+            });
+            if (neighbors.filter(n => n.cell.materials.some(m => m == Material.GROUND)).length == 4) {
+                const tile = map.tiles[i];
+                if (tile) {
+                    tile.materials = all_ground.materials;
+                    tile.image = all_ground.image;
+                } else {
+                    console.error('tile not found at ', i, width)
+                }
+
+            }
+        }
+    }
+    // 5: 
+
+
+    ///////
+    // Step1: Find all ground tiles with liquid neighbors and change them:
+    // for (let i = 0; i < width * width; i++) {
+    //     const position = oneDimentionIndexToVec2(i, width);
+    //     const cell = getCell(map, position);
+    //     if (cell?.image == baseCells.ground.image) {
+    //         // Ensure it stays a cell with ground in it 
+    //         // and without walls in it (ground tiles need to stay walkable)
+    //         const possibleCells = sourceCells.filter(c => c.materials.some(m => m == Material.GROUND || m == Material.LIQUID))
+    //         const cell = pickCell(map, position, possibleCells);
+    //         const tile = map.tiles[i];
+    //         if (tile) {
+    //             if (cell) {
+    //                 tile.materials = cell.materials;
+    //                 tile.image = cell.image;
+    //             }
+    //         }
+
+    //     }
+    // }
+    // // StepX: Find all ground tiles with wall neighbors and change them:
+    // for (let i = 0; i < width * width; i++) {
+    //     const position = oneDimentionIndexToVec2(i, width);
+    //     const cell = getCell(map, position);
+    //     if (cell?.image == baseCells.ground.image) {
+    //         const possibleCells = sourceCells.filter(c => c.materials.some(m => m == Material.GROUND)).filter(c => c.materials.every(m => m != Material.LIQUID))
+    //         const cell = pickCell(map, position, possibleCells);
+    //         const tile = map.tiles[i];
+    //         if (tile) {
+    //             if (cell) {
+    //                 tile.materials = cell.materials;
+    //                 tile.image = cell.image;
+    //             }
+    //         }
+
+    //     }
+    // }
+    // // Step2: Process walls next to ground tiles
+    // // TODO explain
+    // for (let i = 0; i < width * width; i++) {
+    //     const position = oneDimentionIndexToVec2(i, width);
+    //     const cell = getCell(map, position);
+    //     if (cell?.image == baseCells.wall.image) {
+    //         // Ensure it stays a cell with ground in it 
+    //         // and without walls in it (ground tiles need to stay walkable)
+    //         const possibleCells = sourceCells.filter(c => c.materials.some(m => m == Material.WALL));
+    //         const cell = pickCell(map, position, possibleCells);
+    //         const tile = map.tiles[i];
+    //         if (tile) {
+    //             if (cell) {
+    //                 tile.materials = cell.materials;
+    //                 tile.image = cell.image;
+    //             }
+    //         }
+
+    //     }
+    // }
+    // Step2, Iterate and fill remaining cells:
+    // for (let i = 0; i < width * width; i++) {
+    //     // test
+    //     // if (i > 7) {
+    //     //     break;
+    //     // }
+    //     const pos = oneDimentionIndexToVec2(i, width);
+    //     const cell = pickCell(map, pos)
+    //     const tile = map.tiles[i];
+    //     if (tile) {
+    //         if (cell) {
+    //             tile.materials = cell.materials;
+    //             tile.image = cell.image;
+    //         } else {
+    //             if (tile.image == "") {
+    //                 // Ignore, empty on purpose
+    //             } else {
+    //                 // console.error('Cell could not be chosen for', pos.x, pos.y, tile.image);
+    //             }
+    //         }
+    //     } else {
+    //         // console.error('Tile not found at index', i, width, map.tiles.length);
+    //     }
+    // }
+    console.log('jtest map', map);
 
 }

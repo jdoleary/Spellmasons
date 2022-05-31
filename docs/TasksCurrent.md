@@ -1,5 +1,8 @@
 ## Tuesday
 - Figure out WFC walls, floor and liquid with linesegments and bounds
+    - Rules:
+        - Ground tile with lava neighbor is always a groundtile with lava in it
+        
     - Send examples to Che with appropriate sizes
 ## Tasks
 2. Liquid interactions

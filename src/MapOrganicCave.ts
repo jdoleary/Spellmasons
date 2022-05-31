@@ -176,12 +176,15 @@ export function generateCave(params: CaveParams): { map: Map, limits: Limits } {
     bounds.xMax += config.OBSTACLE_SIZE / 2;
     bounds.yMax += config.OBSTACLE_SIZE / 2;
 
+    console.log('jtest check', tiles[7]);
 
     const map = {
         tiles,
         width
     };
     resolveConflicts(map);
+    resolveConflicts(map);
+    // resolveConflicts(map);
     return { map, limits: bounds };
 
 }
