@@ -2,9 +2,11 @@ import { randInt } from "./rand";
 import { equal, subtract, Vec2 } from "./Vec"
 
 export enum Material {
+    EMPTY,
     LIQUID,
     GROUND,
-    WALL
+    WALL,
+    SEMIWALL,
 }
 
 /*
@@ -17,11 +19,12 @@ north size is 0,1,2,
 etc
 */
 interface Cell {
-    materials: Material[]
-    image: string
+    materials: Material[];
+    image: string;
 }
-interface Map {
-    cells: (Cell | undefined)[];
+export type Tile = Cell & Vec2;
+export interface Map {
+    tiles: (Tile | undefined)[];
     width: number;
 }
 // Convert a 1d array index to a 2d array index
@@ -37,7 +40,7 @@ export function vec2ToOneDimentionIndex(pos: Vec2, width: number): number {
     return pos.y * width + pos.x
 
 }
-const all_liquid = {
+const all_liquid: Cell = {
     image: 'tiles/blood.png',
     materials: [
         Material.LIQUID,
@@ -50,6 +53,28 @@ const all_liquid = {
         Material.LIQUID,
     ]
 };
+export const baseCells = {
+    empty: {
+        image: '',
+        materials: Array(8).fill(Material.EMPTY)
+    },
+    wall: {
+        image: 'tiles/wall.png',
+        materials: Array(8).fill(Material.WALL)
+    },
+    semiWall: {
+        image: 'tiles/semiWall.png',
+        materials: Array(8).fill(Material.SEMIWALL)
+    },
+    liquid: {
+        image: 'tiles/lava.png',
+        materials: Array(8).fill(Material.LIQUID)
+    },
+    ground: {
+        image: 'tiles/ground.png',
+        materials: Array(8).fill(Material.GROUND)
+    },
+}
 const sourceCells: Cell[] = [
     all_liquid,
     {
@@ -343,7 +368,7 @@ function pickCell(map: Map, position: Vec2): Cell | undefined {
 }
 
 function getCell(map: Map, position: Vec2): Cell | undefined {
-    return map.cells[vec2ToOneDimentionIndex(position, map.width)];
+    return map.tiles[vec2ToOneDimentionIndex(position, map.width)];
 }
 
 function doConstraintsMatch(constraint1: Material[], constraint2: Material[]): boolean {
@@ -387,33 +412,19 @@ function getCellConstraintsForSide(cell: Cell, side: Vec2): Material[] {
         }
     }
 }
-
-function generateNewMap(width: number): Map {
-    const map: Map = {
-        width,
-        cells: []
-    }
-    // Step 1, fill the border:
-    for (let i = 0; i < width * width; i++) {
-        const pos = oneDimentionIndexToVec2(i, width);
-        if (pos.x == 0 || pos.x == width - 1 || pos.y == 0 || pos.y == width - 1) {
-            map.cells.push(all_liquid);
-        } else {
-            map.cells.push(undefined);
-        }
-    }
-
+export function resolveConflicts(map: Map) {
+    const { width } = map;
     // Step2, Iterate and fill remaining cells:
     for (let i = 0; i < width * width; i++) {
         const pos = oneDimentionIndexToVec2(i, width);
         const cell = pickCell(map, pos)
-        if (cell) {
-            map.cells[i] = cell;
+        const tile = map.tiles[i];
+        if (cell && tile) {
+            tile.materials = cell.materials;
+            tile.image = cell.image;
         } else {
-            console.error('Cell could not be chosen for', pos.x, pos.y);
+            console.error('Cell could not be chosen for', pos.x, pos.y, cell, tile);
         }
     }
-
-    return map;
 
 }

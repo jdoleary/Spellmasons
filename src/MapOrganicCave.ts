@@ -4,7 +4,7 @@ import { isVec2InsidePolygon } from "./Polygon";
 import { randFloat, randInt } from "./rand";
 import * as Vec from "./Vec";
 import * as config from './config';
-import { oneDimentionIndexToVec2, vec2ToOneDimentionIndex } from "./WaveFunctionCollapse";
+import { baseCells, Map, Material, oneDimentionIndexToVec2, resolveConflicts, Tile, vec2ToOneDimentionIndex } from "./WaveFunctionCollapse";
 import { conway, ConwayState } from "./Conway";
 
 export const caveSizes: { [size: string]: CaveParams } = {
@@ -36,8 +36,7 @@ interface CaveParams {
 }
 const directionRandomAmount = Math.PI / 2;
 export interface Limits { xMin: number, xMax: number, yMin: number, yMax: number };
-export type CaveTile = ({ material: Materials } & Vec.Vec2)
-export function generateCave(params: CaveParams): { tiles: CaveTile[], tiles2DArrayWidth: number, limits: Limits } {
+export function generateCave(params: CaveParams): { map: Map, limits: Limits } {
     // Debug: Draw caves
     window.debugCave.clear();
     const minDirection = randFloat(window.underworld.random, Math.PI, Math.PI / 2);
@@ -90,7 +89,7 @@ export function generateCave(params: CaveParams): { tiles: CaveTile[], tiles2DAr
     // + 2 leaves room on the right side and bottom side for surrounding walls
     const width = Math.ceil((crawlerBounds.xMax - crawlerBounds.xMin) / config.OBSTACLE_SIZE) + 2;
     const height = Math.ceil((crawlerBounds.yMax - crawlerBounds.yMin) / config.OBSTACLE_SIZE) + 2;
-    const materials: Materials[] = Array(width * height).fill(Materials.Empty);
+    const materials: Material[] = Array(width * height).fill(Material.EMPTY);
     // Normalize crawlers to 0,0 in upper left corner
     function normalizeTo00(points: Vec.Vec2[]): Vec.Vec2[] {
         return points.map(p => ({ x: p.x - crawlerBounds.xMin, y: p.y - crawlerBounds.yMin }))
@@ -102,23 +101,23 @@ export function generateCave(params: CaveParams): { tiles: CaveTile[], tiles2DAr
         rectangles: c.rectangles.map(normalizeTo00)
     }));
 
-    crawlersChangeTilesToMaterial(crawlers, Materials.Ground, width, height, materials);
+    crawlersChangeTilesToMaterial(crawlers, Material.GROUND, width, height, materials);
 
 
     // Debug draw caves
-    const styles = [0xff0000, 0x0000ff, 0xff00ff, 0x00ffff, 0xffff00];
-    function drawPathWithStyle(path: Vec.Vec2[], style: number, opacity: number) {
-        window.debugCave.lineStyle(4, style, opacity);
-        if (path[0]) {
-            window.debugCave.moveTo(path[0].x, path[0].y);
-            // @ts-expect-error
-            window.debugCave.drawCircle(path[1].x, path[1].y, 25);
-            for (let point of path) {
-                window.debugCave.lineTo(point.x, point.y);
-            }
-        }
+    // const styles = [0xff0000, 0x0000ff, 0xff00ff, 0x00ffff, 0xffff00];
+    // function drawPathWithStyle(path: Vec.Vec2[], style: number, opacity: number) {
+    //     window.debugCave.lineStyle(4, style, opacity);
+    //     if (path[0]) {
+    //         window.debugCave.moveTo(path[0].x, path[0].y);
+    //         // @ts-expect-error
+    //         window.debugCave.drawCircle(path[1].x, path[1].y, 25);
+    //         for (let point of path) {
+    //             window.debugCave.lineTo(point.x, point.y);
+    //         }
+    //     }
 
-    }
+    // }
     // // Debug Fill
     // for (let i = 0; i < crawlers.length; i++) {
     //     const crawler = crawlers[i];
@@ -141,9 +140,35 @@ export function generateCave(params: CaveParams): { tiles: CaveTile[], tiles2DAr
     //         window.debugCave.lineStyle(1, 0x000000, 0.0);
     //     }
     // }
-    let tiles = materials.map((t, i) => {
+    // 1st pass for walls
+    let conwayState: ConwayState = {
+        currentNumberOfLiquidPools: 0,
+        desiredNumberOfLiquidPools: 2,
+    }
+    conway(materials, width, conwayState);
+    // 2nd pass for semi-walls
+    conway(materials, width, conwayState);
+
+
+    // Convert array of materials into tiles for use by WFC
+    let tiles: Tile[] = materials.map((m, i) => {
         const dimentions = oneDimentionIndexToVec2(i, width);
-        return { material: t, x: dimentions.x * config.OBSTACLE_SIZE, y: dimentions.y * config.OBSTACLE_SIZE }
+        let cell = baseCells.empty;
+        switch (m) {
+            case Material.GROUND:
+                cell = baseCells.ground;
+                break;
+            case Material.LIQUID:
+                cell = baseCells.liquid;
+                break;
+            case Material.SEMIWALL:
+                cell = baseCells.semiWall;
+                break;
+            case Material.WALL:
+                cell = baseCells.wall;
+                break;
+        }
+        return { ...cell, x: dimentions.x * config.OBSTACLE_SIZE, y: dimentions.y * config.OBSTACLE_SIZE }
     });
     const bounds = getLimits(tiles);
     bounds.xMin -= config.OBSTACLE_SIZE / 2;
@@ -151,21 +176,17 @@ export function generateCave(params: CaveParams): { tiles: CaveTile[], tiles2DAr
     bounds.xMax += config.OBSTACLE_SIZE / 2;
     bounds.yMax += config.OBSTACLE_SIZE / 2;
 
-    // 1st pass for walls
-    let conwayState: ConwayState = {
-        currentNumberOfLiquidPools: 0,
-        desiredNumberOfLiquidPools: 2,
-    }
-    conway(tiles, width, conwayState);
-    // 2nd pass for semi-walls
-    conway(tiles, width, conwayState);
 
-
-    return { tiles, tiles2DArrayWidth: width, limits: bounds };
+    const map = {
+        tiles,
+        width
+    };
+    resolveConflicts(map);
+    return { map, limits: bounds };
 
 }
 
-function crawlersChangeTilesToMaterial(crawlers: CaveCrawler[], material: Materials, caveWidth: number, caveHeight: number, caveMaterialsArray: Materials[]) {
+function crawlersChangeTilesToMaterial(crawlers: CaveCrawler[], material: Material, caveWidth: number, caveHeight: number, caveMaterialsArray: Material[]) {
     for (let x = 0; x < caveWidth; x++) {
         for (let y = 0; y < caveHeight; y++) {
             let isInside = false;
@@ -195,13 +216,6 @@ function crawlersChangeTilesToMaterial(crawlers: CaveCrawler[], material: Materi
             // }
         }
     }
-}
-export enum Materials {
-    Empty,
-    Ground,
-    Liquid,
-    Wall,
-    SemiWall,
 }
 interface CaveCrawler {
     // In radians
