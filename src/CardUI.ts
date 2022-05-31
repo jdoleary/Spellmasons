@@ -428,7 +428,7 @@ function createCardElement(content: Cards.ICard) {
   const elCardInner = document.createElement('div');
   elCardInner.classList.add('card-inner');
   elCardInner.style.borderColor = getCardRarityColor(content);
-  elCardInner.style.backgroundColor = getCardRarityColor(content);
+  // elCardInner.style.backgroundColor = getCardRarityColor(content);
   element.appendChild(elCardInner);
   const elCardHotkeyBadgeHolder = document.createElement('div');
   elCardHotkeyBadgeHolder.classList.add('hotkey-badge-holder');
