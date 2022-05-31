@@ -83,7 +83,6 @@ export function create(clientId: string): IPlayer {
   // CardUI.addCardToHand(allCards['resurrect'], player);
   // CardUI.addCardToHand(allCards['shield'], player);
   // CardUI.addCardToHand(allCards['vulnerable'], player);
-  addHighlighIfPlayerBelongsToCurrentClient(player);
   player.unit.health = PLAYER_BASE_HEALTH;
   player.unit.healthMax = PLAYER_BASE_HEALTH;
 
@@ -132,13 +131,6 @@ export function updateGlobalRefToCurrentClientPlayer(player: IPlayer) {
     window.player = player;
   }
 }
-function addHighlighIfPlayerBelongsToCurrentClient(player: IPlayer) {
-  if (player.clientId === window.clientId) {
-    Image.addSubSprite(player.unit.image, 'ownCharacterMarker');
-  } else {
-    Image.removeSubSprite(player.unit.image, 'ownCharacterMarker');
-  }
-}
 // Converts a player entity into a serialized form
 // that can be saved as JSON and rehydrated later into
 // a full player entity 
@@ -172,7 +164,6 @@ export function load(player: IPlayerSerialized) {
   }
   const clients = getClients();
   setClientConnected(playerLoaded, clients.includes(player.clientId));
-  addHighlighIfPlayerBelongsToCurrentClient(playerLoaded);
   updateGlobalRefToCurrentClientPlayer(playerLoaded);
   CardUI.recalcPositionForCards(playerLoaded);
   window.underworld.players.push(playerLoaded);

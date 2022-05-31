@@ -89,9 +89,7 @@ export function serialize(image: IImage): IImageSerialized {
       textureCacheIds: image.sprite._texture.textureCacheIds,
 
     },
-    // serialize all subsprites other than "ownCharacterMarker", which is the only one that isn't synced
-    // between clients
-    subSprites: image.subSprites.filter(s => s != "ownCharacterMarker"),
+    subSprites: image.subSprites,
   };
 }
 // Reinitialize an Image from IImageSerialized JSON
@@ -132,7 +130,7 @@ export function syncronize(imageSerialized: IImageSerialized, originalImage?: II
     originalImage.sprite.y = y;
     originalImage.sprite.scale.x = scale.x
     originalImage.sprite.scale.y = scale.y;
-    if (JSON.stringify(imageSerialized.subSprites.filter(s => s != 'ownCharacterMarker')) != JSON.stringify(originalImage.subSprites)) {
+    if (JSON.stringify(imageSerialized.subSprites) != JSON.stringify(originalImage.subSprites)) {
       originalImage.subSprites = imageSerialized.subSprites;
       restoreSubsprites(originalImage);
     }

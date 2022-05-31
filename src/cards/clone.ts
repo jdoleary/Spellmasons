@@ -4,7 +4,6 @@ import * as Pickup from '../Pickup';
 import { UnitSubType, UnitType } from '../commonTypes';
 import { jitter, Vec2 } from '../Vec';
 import * as config from '../config';
-import { removeSubSprite } from '../Image';
 import floatingText from '../FloatingText';
 
 const id = 'clone';
@@ -52,7 +51,6 @@ Clones each target
                 if (clone.unitSubType == UnitSubType.PLAYER_CONTROLLED) {
                   clone.unitType = UnitType.AI;
                   clone.unitSubType = UnitSubType.MELEE;
-                  removeSubSprite(clone.image, 'ownCharacterMarker');
                 }
                 clone.x = validSpawnCoords.x;
                 clone.y = validSpawnCoords.y;
