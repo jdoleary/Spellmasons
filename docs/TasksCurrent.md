@@ -1,10 +1,12 @@
-## Tasks
-1. Figure out WFC walls, floor and liquid with linesegments and bounds
+## Tuesday
+- Figure out WFC walls, floor and liquid with linesegments and bounds
     - Send examples to Che with appropriate sizes
+## Tasks
 2. Liquid interactions
     - Apply liquid impact and submerge shader when units "fall in"
 3. Rework unit crowding
 ------
+- Bug: unit animation stops after unit nsync?
 - Content: AOE clone should work for pickups
 - Bug: Clone doesn't show cloned units until they move cause they spawn right on top of each other
 - Bug: clear tooltip on enter portal?? not sure if necessary, tooltip remained while I was manually calling initLevel
