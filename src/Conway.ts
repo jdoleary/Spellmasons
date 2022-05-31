@@ -78,7 +78,7 @@ export interface ConwayState {
 export function conway(tiles: Material[], widthOf2DArray: number, state: ConwayState) {
     for (let i = 0; i < tiles.length; i++) {
         const tile = tiles[i];
-        if (tile) {
+        if (tile !== undefined) {
             const neighbors = getNeighbors(i, tiles, widthOf2DArray);
             tiles[i] = mutateViaRules(tile, neighbors, state);
         }
