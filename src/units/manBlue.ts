@@ -6,7 +6,7 @@ const unit: UnitSource = {
   id: 'manBlue',
   info: {
     description: '',
-    image: 'units/man-blue.png',
+    image: 'units/playerIdle',
     subtype: UnitSubType.PLAYER_CONTROLLED,
   },
   unitProps: {},
