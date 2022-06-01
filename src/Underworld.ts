@@ -37,7 +37,7 @@ import { updateManaCostUI, updatePlanningView } from './ui/PlanningView';
 import { prng, randInt, SeedrandomState } from './rand';
 import { calculateCost } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment } from './collision/collisionMath';
-import { expandPolygon, mergeOverlappingPolygons, Polygon, PolygonLineSegment, polygonToPolygonLineSegments } from './Polygon';
+import { expandPolygon, mergeOverlappingPolygons, Polygon, PolygonLineSegment, polygonLineSegmentToLineSegment, polygonToPolygonLineSegments } from './Polygon';
 import { calculateDistanceOfVec2Array, findPath, findPolygonsThatVec2IsInsideOf } from './Pathfinding';
 import { removeUnderworldEventListeners } from './views';
 import * as readyState from './readyState';
@@ -51,7 +51,8 @@ import { healthAllyGreen, healthHurtRed, healthRed } from './ui/colors';
 import objectHash from 'object-hash';
 import { withinMeleeRange } from './units/actions/gruntAction';
 import * as TimeRelease from './TimeRelease';
-import { caveSizes, generateCave, getLimits, Limits as Limits, Tile } from './MapOrganicCave';
+import { all_ground, caveSizes, generateCave, getLimits, Limits as Limits, Tile, toObstacle } from './MapOrganicCave';
+import { Material } from './Conway';
 
 export enum turn_phase {
   PlayerTurns,
@@ -473,27 +474,27 @@ export default class Underworld {
   // and the walls from the current obstacles
   cacheWalls(obstacles: Obstacle.IObstacle[], groundTiles: Tile[]) {
 
-    for (let o of obstacles) {
-      if (o.name == 'Lava') {
-        this.lavaObstacles.push(o);
-      }
-    }
+    // TODO: Restore
+    // for (let o of obstacles) {
+    //   if (o.name == 'Lava') {
+    //     this.lavaObstacles.push(o);
+    //   }
+    // }
     const distanceFromGroundCenterWhenAdjacent = 1 + Math.sqrt(2) * config.OBSTACLE_SIZE / 2;
     // Optimization: Removes linesegments that are not adjacent to walkable ground to prevent
     // having to process linesegments that will never be used
-    // TODO: restore once I add linesegments to WFC tiles
-    // function filterRemoveNonGroundAdjacent(ls: LineSegment): boolean {
-    //   return groundTiles.some(gt => math.distance(gt, ls.p1) <= distanceFromGroundCenterWhenAdjacent)
-    // }
+    function filterRemoveNonGroundAdjacent(ls: LineSegment): boolean {
+      return groundTiles.some(gt => math.distance(gt, ls.p1) <= distanceFromGroundCenterWhenAdjacent)
+    }
     // Optimization: Removes polygons that are not adjacent to walkable ground to prevent
     // having to process polygons that will never be used
     function filterRemoveNonGroundAdjacentPoly(poly: Polygon): boolean {
       return groundTiles.some(gt => poly.points.some(p => math.distance(gt, p) <= distanceFromGroundCenterWhenAdjacent))
     }
     // walls block sight and movement
-    this.walls = [];//mergeOverlappingPolygons(obstacles.filter(o => o.material == Materials.Wall).map(o => o.bounds)).map(polygonToPolygonLineSegments).flat().filter(filterRemoveNonGroundAdjacent);
+    this.walls = mergeOverlappingPolygons(obstacles.filter(o => o.material == Material.WALL).map(o => o.bounds)).map(polygonToPolygonLineSegments).flat()//.filter(filterRemoveNonGroundAdjacent);
     // liquid bounds block movement only under certain circumstances
-    this.liquidBounds = [];// mergeOverlappingPolygons(obstacles.filter(o => o.material == Materials.Liquid).map(o => o.bounds)).map(polygonToPolygonLineSegments).flat().map(polygonLineSegmentToLineSegment).filter(filterRemoveNonGroundAdjacent);
+    this.liquidBounds = mergeOverlappingPolygons(obstacles.filter(o => o.material == Material.LIQUID).map(o => o.bounds)).map(polygonToPolygonLineSegments).flat().map(polygonLineSegmentToLineSegment).filter(filterRemoveNonGroundAdjacent);
 
     const expandMagnitude = config.COLLISION_MESH_RADIUS * config.NON_HEAVY_UNIT_SCALE
     // Expand pathing walls by the size of the regular unit
@@ -589,13 +590,16 @@ export default class Underworld {
     const levelData: LevelData = {
       levelIndex,
       limits,
-      obstacles: [], // empty for now until I figure out how to store lineSegment information in tiles
+      obstacles: tiles.flatMap(t => {
+        const obstacle = t && toObstacle(t);
+        return obstacle ? [obstacle] : [];
+      }),
       imageOnlyTiles: [],
       pickups: [],
       enemies: [],
       validPlayerSpawnCoords: []
     };
-    let validSpawnCoords: Vec2[] = [{ x: 0, y: 0 }];//tiles.filter(t => t.material == Materials.Ground);
+    let validSpawnCoords: Vec2[] = tiles.flatMap(t => t && t.image == all_ground ? [t] : []);
     // flatMap removes undefineds
     levelData.imageOnlyTiles = tiles.flatMap(x => x == undefined ? [] : [x]);
 
@@ -734,23 +738,10 @@ export default class Underworld {
     // Clean up the previous level
     this.cleanUpLevel();
 
-    const { levelIndex, limits, imageOnlyTiles, pickups, enemies, validPlayerSpawnCoords } = levelData;
+    const { levelIndex, limits, imageOnlyTiles, pickups, enemies, obstacles, validPlayerSpawnCoords } = levelData;
     this.levelIndex = levelIndex;
     this.limits = limits;
-    // const obstacleInsts = [];
-    const biome = Obstacle.biomes[0];
-    if (biome) {
-      // TODO: restore once I add linesegments to WFC tiles
-      // for (let o of obstacles) {
-      //   const obstacleInst = Obstacle.create(o.coord, biome, o.material);
-      //   Obstacle.addImageForObstacle(obstacleInst);
-      //   obstacleInsts.push(obstacleInst);
-      // }
-      // TODO: restore once I add linesegments to WFC tiles
-      // this.cacheWalls(obstacleInsts, imageOnlyTiles.filter(x => x.material == Materials.Ground));
-    } else {
-      console.error('biome not found')
-    }
+    this.cacheWalls(obstacles, imageOnlyTiles.filter(x => x.image == all_ground));
     this.imageOnlyTiles = imageOnlyTiles;
     this.addGroundTileImages();
     for (let p of pickups) {
@@ -1811,10 +1802,7 @@ function getEnemiesForAltitude(levelIndex: number): { unitIds: string[], strengt
 export interface LevelData {
   levelIndex: number,
   limits: Limits,
-  obstacles: {
-    coord: Vec2;
-    // material: Materials;
-  }[];
+  obstacles: Obstacle.IObstacle[];
   imageOnlyTiles: Tile[];
   pickups: {
     index: number;

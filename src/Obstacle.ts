@@ -9,17 +9,10 @@ import { Material } from './Conway';
 export interface IObstacle {
   x: number;
   y: number;
-  name: string;
-  description: string;
-  imagePath: string;
   bounds: Polygon;
   material: Material;
 }
-interface IObstacleSource {
-  name: string;
-  description: string;
-  imagePath: string;
-}
+
 export function coordToPoly(coord: Vec2, inverted: boolean = false): Polygon {
   const width = OBSTACLE_SIZE;
   const height = OBSTACLE_SIZE;
@@ -35,56 +28,7 @@ export function coordToPoly(coord: Vec2, inverted: boolean = false): Polygon {
   };
   return bounds;
 }
-export function create(coord: Vec2, biome: Biome, material: Material) {
-  if (material == Material.WALL || material == Material.LIQUID) {
-    const obstacle = biome[material];
-    if (obstacle) {
-      const bounds = coordToPoly(coord);
-      const self: IObstacle = {
-        x: coord.x,
-        y: coord.y,
-        name: obstacle.name,
-        description: obstacle.description,
-        imagePath: obstacle.imagePath,
-        bounds,
-        material
-      };
-      return self;
-    } else {
-      throw new Error(`No obstacle found at material ${material}`)
-    }
-  } else {
-    throw new Error(`Material ${material} cannot be used to create an obstacle`);
-  }
-}
-export function addImageForObstacle(obstacle: IObstacle) {
-  Image.create(obstacle, obstacle.imagePath, containerWalls);
 
-}
-interface Biome {
-  [Material.WALL]: IObstacleSource,
-  [Material.LIQUID]: IObstacleSource,
-}
-export const biomes: Biome[] = [
-  {
-    [Material.WALL]: {
-      name: 'Wall',
-      description: 'This is a wall that will block your way.',
-      imagePath: 'tiles/wall.png',
-    },
-    [Material.LIQUID]: {
-      // Note: The exact name 'Lava" is used in underworld.cacheWalls to store obstacles
-      // that cause damage is units are pushed or pulled into them.
-      name: 'Lava',
-      description: 'Blocks movement, not sight.',
-      imagePath: 'tiles/lava.png',
-    },
-
-  }
-];
-
-export const obstacleSource: IObstacleSource[] = [
-];
 export const lavaDamage = 2;
 export function checkLavaDamageDueToMovement(unit: IUnit, endPos: Vec2, prediction: boolean) {
   // Check intersections with lava:

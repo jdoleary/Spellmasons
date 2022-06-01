@@ -6,6 +6,7 @@ import * as Vec from "./Vec";
 import * as config from './config';
 import { oneDimentionIndexToVec2, vec2ToOneDimentionIndex } from "./WaveFunctionCollapse";
 import { conway, ConwayState } from "./Conway";
+import type { IObstacle } from "./Obstacle";
 
 export const caveSizes: { [size: string]: CaveParams } = {
     'small': {
@@ -494,7 +495,7 @@ const baseTiles = {
     ground: 'tiles/ground.png',
 }
 const all_liquid = 'tiles/blood.png';
-const all_ground = 'tiles/bloodFloor.png';
+export const all_ground = 'tiles/bloodFloor.png';
 const finalTileImages = {
     all_liquid,
     all_ground,
@@ -523,3 +524,74 @@ const finalTileImages = {
     wallInsideCornerSE: 'tiles/bloodWallInsideCornerSE.png',
     wallInsideCornerSW: 'tiles/bloodWallInsideCornerSW.png',
 };
+
+export function toObstacle(t: Tile): IObstacle | undefined {
+    //   const width = config.OBSTACLE_SIZE;
+    //   const height = config.OBSTACLE_SIZE;
+    //   const _x = t.x - width / 2;
+    //   const _y = t.y - height / 2;
+    if (t.image == finalTileImages.wallN) {
+        return {
+            x: t.x,
+            y: t.y,
+            material: Material.WALL,
+            bounds: {
+                points: [
+                    { x: 0, y: 0 },
+                    { x: 64, y: 0 },
+                    { x: 64, y: 20 },
+                    { x: 0, y: 20 },
+                ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
+                inverted: false
+            }
+        }
+    } else if (t.image == finalTileImages.wallE) {
+        return {
+            x: t.x,
+            y: t.y,
+            material: Material.WALL,
+            bounds: {
+                points: [
+                    { x: 38, y: 0 },
+                    { x: 64, y: 0 },
+                    { x: 64, y: 64 },
+                    { x: 38, y: 64 },
+                ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
+                inverted: false
+            }
+        }
+    } else if (t.image == finalTileImages.wallW) {
+        return {
+            x: t.x,
+            y: t.y,
+            material: Material.WALL,
+            bounds: {
+                points: [
+                    { x: 0, y: 0 },
+                    { x: 25, y: 0 },
+                    { x: 25, y: 64 },
+                    { x: 0, y: 64 },
+                ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
+                inverted: false
+            }
+        }
+    } else if (t.image == finalTileImages.wallS) {
+        return {
+            x: t.x,
+            y: t.y,
+            material: Material.WALL,
+            bounds: {
+                points: [
+                    { x: 0, y: 39 },
+                    { x: 64, y: 39 },
+                    { x: 64, y: 64 },
+                    { x: 0, y: 64 },
+                ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
+                inverted: false
+            }
+        }
+    } else {
+        return undefined;
+    }
+
+}

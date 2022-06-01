@@ -1,6 +1,5 @@
 ## Tuesday
 - Figure out WFC walls, floor and liquid with linesegments and bounds
-    - LEFT OFF: Integrate inside corner pieces
     - Send examples to Che with appropriate sizes
 ## Tasks
 2. Liquid interactions

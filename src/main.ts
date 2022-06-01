@@ -252,7 +252,7 @@ window.superMe = () => {
     window.underworld.syncPredictionUnits();
   }
 }
-// window.showDebug = true;
+window.showDebug = true;
 
 // Prevent accidental back button only when not in devMode
 // In devMode, lots of refreshing happens so it's annoying when it
