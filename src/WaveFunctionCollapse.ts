@@ -17,7 +17,7 @@ So the west size is 0,7,6,
 north size is 0,1,2,
 etc
 */
-interface Cell {
+export interface Cell {
     materials: Material[];
     image: string;
 }
@@ -87,7 +87,7 @@ export const all_ground = {
         Material.GROUND,
     ]
 };
-const sourceCells: Cell[] = [
+export const sourceCells: Cell[] = [
     all_liquid,
     all_ground,
     {
@@ -384,8 +384,61 @@ function opposideSide(side: Vec2): Vec2 {
     }
     return TOP_SIDE;
 }
+// Considers constraints as inclusive instead of exclusive, so if theres ground tile on top, it'll make sure it picks tiles
+// where at least one of the top constraints is ground. This allows for imperfect WFC building over a map that already
+// has GENERAL materials down.
+function loosePickCell(map: Map, position: Vec2, possibleCells: Cell[], { looseMatchFor, exactMatchFor }: { looseMatchFor: string, exactMatchFor: string }): Cell | undefined {
+    const currentCell = getCell(map, position);
+    // Get neighbors and the sides they are on
+    let neighbors = SIDES.flatMap(side => {
+        const cell = getCell(map, add(position, side));
+        // Checking for cell.image intentionally excludes the "empty" cell
+        return cell && cell.image ? [{ cell, side }] : [];
+    });
+
+    // If there are no neighbors, do nothing
+    if (!neighbors.length) {
+        return undefined;
+    }
+    // const baseCellImages = Object.values(baseCells).map(x => x.image);
+    for (let { side, cell: cellOnSide } of neighbors) {
+        // Limit the current possible cells via it's constraint
+        const otherCellConstraint = getCellConstraintsForSide(cellOnSide, opposideSide(side));
+        if (otherCellConstraint.length == 0) {
+            // Each side MUST provide a constraint for this algorithm to decide to
+            // pick a cell
+            return undefined;
+        }
+        possibleCells = possibleCells.filter(c => {
+            const currentCellConstraint = getCellConstraintsForSide(c, side);
+            if (cellOnSide.image == looseMatchFor) {
+                console.log('jtest loose', cellOnSide.image)
+                return doConstraintsMatchLoose(otherCellConstraint, currentCellConstraint)
+            } else {
+                console.log('jtest strict', cellOnSide.image)
+                return doConstraintsMatch(otherCellConstraint, currentCellConstraint)
+            }
+        });
+    }
+    if (equal(position, { x: 3, y: 6 })) {
+        console.log('jtest position', position, possibleCells);
+        debugger;
+    }
+    if (possibleCells.length == 0) {
+        console.error('Could not find cell for neighbors', SIDES.flatMap(side => {
+            const cell = getCell(map, subtract(position, side));
+            return cell && cell.image ? [`${cell.image}: ${side.x}, ${side.y}`] : [];
+        }))
+    } else if (possibleCells.length == 1) {
+        console.log('jtest picked cell', possibleCells[0]);
+        return possibleCells[0]
+    } else {
+        console.log('jtest too many to pick from', possibleCells)
+        return undefined
+    }
+}
 // Of all the possible cells for a position, pick one
-function pickCell(map: Map, position: Vec2, possibleCells: Cell[]): Cell | undefined {
+function pickCell(map: Map, position: Vec2, possibleCells: Cell[], considerConstraints: Material[]): Cell | undefined {
     console.log('jtest -----------pickCell for position', position);
 
     const currentCell = getCell(map, position);
@@ -417,6 +470,9 @@ function pickCell(map: Map, position: Vec2, possibleCells: Cell[]): Cell | undef
         // Skip base cells, base cells do not provide constraints:
         if (currentCell?.image == cellOnSide.image) {
             // console.log('jtest skip', cellOnSide.image);
+            continue;
+        }
+        if (!cellOnSide.materials.some(m => considerConstraints.includes(m))) {
             continue;
         }
         // console.log('jtest check', 'side', side, 'cellONside', cellOnSide);
@@ -461,10 +517,20 @@ function pickCell(map: Map, position: Vec2, possibleCells: Cell[]): Cell | undef
     return possibleCells[randomChoiceIndex];
 }
 
-function getCell(map: Map, position: Vec2): Cell | undefined {
+export function getCell(map: Map, position: Vec2): Cell | undefined {
     return map.tiles[vec2ToOneDimentionIndex(position, map.width)];
 }
 
+function doConstraintsMatchLoose(constraint1: Material[], constraint2: Material[]): boolean {
+    if (
+        constraint1[0] == constraint2[0] ||
+        constraint1[1] == constraint2[1] ||
+        constraint1[2] == constraint2[2]
+    ) {
+        return true;
+    }
+    return false;
+}
 function doConstraintsMatch(constraint1: Material[], constraint2: Material[]): boolean {
     // Note: Cells are 3x3 so we only check the first 3 indicies of a constraint (they only 
     // have a length of 3)
@@ -542,32 +608,36 @@ export function resolveConflicts(map: Map) {
 
         }
     }
-    // 3: All ground tiles with >= 1 lava neighbor change based on constraints
-    for (let i = 0; i < width * width; i++) {
-        const position = oneDimentionIndexToVec2(i, width);
-        const cell = getCell(map, position);
-        if (cell?.image == baseCells.ground.image) {
-            const neighbors = SIDES.flatMap(side => {
-                const cell = getCell(map, add(position, side));
-                // Checking for cell.image intentionally excludes the "empty" cell
-                return cell && cell.image ? [{ cell, side }] : [];
-            });
-            if (neighbors.filter(n => n.cell.image == all_liquid.image).length >= 1) {
-                const possibleCells = sourceCells.filter(c => c.materials.some(m => m == Material.GROUND || m == Material.LIQUID)).filter(c => c != all_liquid)
-                const cell = pickCell(map, position, possibleCells);
-                const tile = map.tiles[i];
-                if (tile) {
-                    if (cell) {
-                        tile.materials = cell.materials;
-                        tile.image = cell.image;
+
+    return;
+    // 3: All ground tiles with >= 1 liquid neighbor change based on constraints
+    for (let j = 0; j < 2; j++) {
+
+        for (let i = 0; i < width * width; i++) {
+            const position = oneDimentionIndexToVec2(i, width);
+            const cell = getCell(map, position);
+            if (cell?.image == baseCells.ground.image) {
+                const neighbors = SIDES.flatMap(side => {
+                    const cell = getCell(map, add(position, side));
+                    // Checking for cell.image intentionally excludes the "empty" cell
+                    return cell && cell.image ? [{ cell, side }] : [];
+                });
+                if (neighbors.filter(n => n.cell.image == all_liquid.image).length >= 1) {
+                    const possibleCells = sourceCells.filter(c => c.materials.some(m => m == Material.GROUND || m == Material.LIQUID)).filter(c => c != all_liquid)
+                    const cell = loosePickCell(map, position, possibleCells, { looseMatchFor: baseCells.ground.image, exactMatchFor: all_liquid.image });
+                    const tile = map.tiles[i];
+                    if (tile) {
+                        if (cell) {
+                            tile.materials = cell.materials;
+                            tile.image = cell.image;
+                        }
                     }
+
+
                 }
-
-
             }
         }
     }
-    // LEFT OFF
     return
     // 4: All wall tiles with >= 1 ground neighbors pick via constraints
     for (let i = 0; i < width * width; i++) {

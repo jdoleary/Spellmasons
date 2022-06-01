@@ -7,6 +7,7 @@
     - Apply liquid impact and submerge shader when units "fall in"
 3. Rework unit crowding
 ------
+- Idea: Use css blend mode on cards to have a "dark" version and a "light" version depending on if the spell is good or evil.
 - Bug: unit animation stops after unit nsync?
 - Content: AOE clone should work for pickups
 - Bug: Clone doesn't show cloned units until they move cause they spawn right on top of each other

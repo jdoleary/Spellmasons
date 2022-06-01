@@ -4,7 +4,7 @@ import { isVec2InsidePolygon } from "./Polygon";
 import { randFloat, randInt } from "./rand";
 import * as Vec from "./Vec";
 import * as config from './config';
-import { baseCells, Map, Material, oneDimentionIndexToVec2, resolveConflicts, Tile, vec2ToOneDimentionIndex } from "./WaveFunctionCollapse";
+import { oneDimentionIndexToVec2, vec2ToOneDimentionIndex } from "./WaveFunctionCollapse";
 import { conway, ConwayState } from "./Conway";
 
 export const caveSizes: { [size: string]: CaveParams } = {
@@ -153,22 +153,19 @@ export function generateCave(params: CaveParams): { map: Map, limits: Limits } {
     // Convert array of materials into tiles for use by WFC
     let tiles: Tile[] = materials.map((m, i) => {
         const dimentions = oneDimentionIndexToVec2(i, width);
-        let cell = baseCells.empty;
+        let image = baseTiles.empty;
         switch (m) {
             case Material.GROUND:
-                cell = baseCells.ground;
+                image = baseTiles.ground;
                 break;
             case Material.LIQUID:
-                cell = baseCells.liquid;
-                break;
-            case Material.SEMIWALL:
-                cell = baseCells.semiWall;
+                image = baseTiles.liquid;
                 break;
             case Material.WALL:
-                cell = baseCells.wall;
+                image = baseTiles.wall;
                 break;
         }
-        return { ...cell, x: dimentions.x * config.OBSTACLE_SIZE, y: dimentions.y * config.OBSTACLE_SIZE }
+        return { image, x: dimentions.x * config.OBSTACLE_SIZE, y: dimentions.y * config.OBSTACLE_SIZE }
     });
     const bounds = getLimits(tiles);
     bounds.xMin -= config.OBSTACLE_SIZE / 2;
@@ -183,10 +180,119 @@ export function generateCave(params: CaveParams): { map: Map, limits: Limits } {
         width
     };
     resolveConflicts(map);
-    resolveConflicts(map);
-    // resolveConflicts(map);
     return { map, limits: bounds };
 
+}
+const west: Vec.Vec2 = { x: -1, y: 0 };
+const northwest: Vec.Vec2 = { x: -1, y: -1 };
+const southwest: Vec.Vec2 = { x: -1, y: 1 };
+const east: Vec.Vec2 = { x: 1, y: 0 };
+const northeast: Vec.Vec2 = { x: 1, y: -1 };
+const southeast: Vec.Vec2 = { x: 1, y: 1 };
+const north: Vec.Vec2 = { x: 0, y: -1 };
+const south: Vec.Vec2 = { x: 0, y: 1 };
+const SIDES = {
+    north,
+    south,
+    east,
+    west
+}
+type SIDES_WITH_DIAG_KEYS = (keyof typeof SIDES_WITH_DIAG)
+const SIDES_WITH_DIAG = {
+    north,
+    northeast,
+    east,
+    southeast,
+    south,
+    southwest,
+    west,
+    northwest
+}
+export function resolveConflicts(map: Map) {
+    const { width } = map;
+    function changeTile(index: number, image: string) {
+        const tile = map.tiles[index];
+        if (tile) {
+            tile.image = image;
+        } else {
+            console.error('tile not found at ', index, width)
+        }
+    }
+    // All tiles with >= 3 base liquid tile neighbors turn to base liquid
+    for (let i = 0; i < width * width; i++) {
+        const position = oneDimentionIndexToVec2(i, width);
+        const neighbors = Object.values(SIDES).flatMap(side => {
+            const cell = getCell(map, Vec.add(position, side));
+            // Checking for cell.image intentionally excludes the "empty" cell
+            return cell && cell.image ? [{ cell, side }] : [];
+        });
+        if (neighbors.filter(n => n.cell.image == baseTiles.liquid).length >= 3) {
+            changeTile(i, baseTiles.liquid);
+        }
+    }
+    // Outline all base tiles with finalized tiles:
+    for (let i = 0; i < width * width; i++) {
+        const position = oneDimentionIndexToVec2(i, width);
+        const currentCell = getCell(map, position);
+        const neighbors = (Object.keys(SIDES_WITH_DIAG) as SIDES_WITH_DIAG_KEYS[]).reduce<Record<SIDES_WITH_DIAG_KEYS, string>>((neighbors, side) => {
+            const sidePosition = SIDES_WITH_DIAG[side];
+            if (sidePosition) {
+                const cell = getCell(map, Vec.add(position, sidePosition));
+                // Checking for cell.image intentionally excludes the "empty" cell
+                if (cell && cell.image) {
+                    neighbors[side] = cell.image;
+
+                }
+            }
+            return neighbors;
+        }, {
+            north: baseTiles.empty,
+            northeast: baseTiles.empty,
+            east: baseTiles.empty,
+            southeast: baseTiles.empty,
+            south: baseTiles.empty,
+            southwest: baseTiles.empty,
+            west: baseTiles.empty,
+            northwest: baseTiles.empty,
+        });
+        // Change ground tiles
+        if (currentCell?.image == baseTiles.ground) {
+            if (neighbors.west == baseTiles.liquid && neighbors.south == baseTiles.liquid) {
+                changeTile(i, finalTileImages.liquidInsideCornerNE);
+            } else if (neighbors.east == baseTiles.liquid && neighbors.south == baseTiles.liquid) {
+                changeTile(i, finalTileImages.liquidInsideCornerNW);
+            } else if (neighbors.east == baseTiles.liquid && neighbors.north == baseTiles.liquid) {
+                changeTile(i, finalTileImages.liquidInsideCornerSW);
+            } else if (neighbors.west == baseTiles.liquid && neighbors.north == baseTiles.liquid) {
+                changeTile(i, finalTileImages.liquidInsideCornerSE);
+            } else if (neighbors.north == baseTiles.liquid) {
+                changeTile(i, finalTileImages.liquidNGroundS);
+            } else if (neighbors.east == baseTiles.liquid) {
+                changeTile(i, finalTileImages.liquidEGroundW);
+            } else if (neighbors.west == baseTiles.liquid) {
+                changeTile(i, finalTileImages.liquidWGroundE);
+            } else if (neighbors.south == baseTiles.liquid) {
+                changeTile(i, finalTileImages.liquidSGroundN);
+            } else if (neighbors.northeast == baseTiles.liquid) {
+                changeTile(i, finalTileImages.liquidCornerNE);
+            } else if (neighbors.northwest == baseTiles.liquid) {
+                changeTile(i, finalTileImages.liquidCornerNW);
+            } else if (neighbors.southeast == baseTiles.liquid) {
+                changeTile(i, finalTileImages.liquidCornerSE);
+            } else if (neighbors.southwest == baseTiles.liquid) {
+                changeTile(i, finalTileImages.liquidCornerSW);
+            }
+        }
+    }
+
+    // All lava tiles turn to blood
+    // for (let i = 0; i < width * width; i++) {
+    //     const position = oneDimentionIndexToVec2(i, width);
+    //     const cell = getCell(map, position);
+    //     if (cell?.image == baseTiles.liquid) {
+    //         changeTile(i, all_liquid);
+    //     }
+    // }
 }
 
 function crawlersChangeTilesToMaterial(crawlers: CaveCrawler[], material: Material, caveWidth: number, caveHeight: number, caveMaterialsArray: Material[]) {
@@ -337,3 +443,50 @@ export function getLimits(points: Vec.Vec2[]): Limits {
     return limits;
 
 }
+type Tile = { image: string } & Vec.Vec2;
+interface Map {
+    tiles: (Tile | undefined)[];
+    width: number;
+}
+function getCell(map: Map, position: Vec.Vec2): Tile | undefined {
+    return map.tiles[vec2ToOneDimentionIndex(position, map.width)];
+}
+enum Material {
+    EMPTY,
+    LIQUID,
+    GROUND,
+    WALL,
+}
+const baseTiles = {
+    empty: '',
+    wall: 'tiles/wall.png',
+    semiWall: 'tiles/wall.png',
+    liquid: 'tiles/lava.png',
+    ground: 'tiles/ground.png',
+}
+const all_liquid = 'tiles/blood.png';
+const all_ground = 'tiles/bloodFloor.png';
+const finalTileImages = {
+    all_liquid,
+    all_ground,
+    liquidInsideCornerNE: 'tiles/bloodInsideCornerNE.png',
+    liquidInsideCornerNW: 'tiles/bloodInsideCornerNW.png',
+    liquidInsideCornerSE: 'tiles/bloodInsideCornerSE.png',
+    liquidInsideCornerSW: 'tiles/bloodInsideCornerSW.png',
+    liquidNGroundS: 'tiles/bloodSideBottom.png',
+    liquidCornerNE: 'tiles/bloodSideBottomLeft.png',
+    liquidCornerNW: 'tiles/bloodSideBottomRight.png',
+    liquidEGroundW: 'tiles/bloodSideLeft.png',
+    liquidWGroundE: 'tiles/bloodSideRight.png',
+    liquidSGroundN: 'tiles/bloodSideTop.png',
+    liquidCornerSE: 'tiles/bloodSideTopLeft.png',
+    liquidCornerSW: 'tiles/bloodSideTopRight.png',
+    wallS: 'tiles/bloodWallBtm.png',
+    wallCornerSW: 'tiles/bloodWallBtmLeft.png',
+    wallCornerSE: 'tiles/bloodWallBtmRight.png',
+    wallE: 'tiles/bloodWallRight.png',
+    wallW: 'tiles/bloodWallLeft.png',
+    wallN: 'tiles/bloodWallTop.png',
+    wallCornerNW: 'tiles/bloodWallTopLeft.png',
+    wallCornerNE: 'tiles/bloodWallTopRight.png',
+};
