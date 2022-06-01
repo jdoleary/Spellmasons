@@ -283,16 +283,46 @@ export function resolveConflicts(map: Map) {
                 changeTile(i, finalTileImages.liquidCornerSW);
             }
         }
+        // change wall tiles
+        if (currentCell?.image == baseTiles.wall) {
+            if (neighbors.west == baseTiles.ground && neighbors.south == baseTiles.ground) {
+                changeTile(i, finalTileImages.wallInsideCornerNE);
+            } else if (neighbors.east == baseTiles.ground && neighbors.south == baseTiles.ground) {
+                changeTile(i, finalTileImages.wallInsideCornerNW);
+            } else if (neighbors.east == baseTiles.ground && neighbors.north == baseTiles.ground) {
+                changeTile(i, finalTileImages.wallInsideCornerSW);
+            } else if (neighbors.west == baseTiles.ground && neighbors.north == baseTiles.ground) {
+                changeTile(i, finalTileImages.wallInsideCornerSE);
+            } else if (neighbors.north == baseTiles.ground) {
+                changeTile(i, finalTileImages.wallS);
+            } else if (neighbors.east == baseTiles.ground) {
+                changeTile(i, finalTileImages.wallW);
+            } else if (neighbors.west == baseTiles.ground) {
+                changeTile(i, finalTileImages.wallE);
+            } else if (neighbors.south == baseTiles.ground) {
+                changeTile(i, finalTileImages.wallN);
+            } else if (neighbors.northeast == baseTiles.ground) {
+                changeTile(i, finalTileImages.wallCornerSW);
+            } else if (neighbors.northwest == baseTiles.ground) {
+                changeTile(i, finalTileImages.wallCornerSE);
+            } else if (neighbors.southeast == baseTiles.ground) {
+                changeTile(i, finalTileImages.wallCornerNW);
+            } else if (neighbors.southwest == baseTiles.ground) {
+                changeTile(i, finalTileImages.wallCornerNE);
+            }
+        }
     }
 
-    // All lava tiles turn to blood
-    // for (let i = 0; i < width * width; i++) {
-    //     const position = oneDimentionIndexToVec2(i, width);
-    //     const cell = getCell(map, position);
-    //     if (cell?.image == baseTiles.liquid) {
-    //         changeTile(i, all_liquid);
-    //     }
-    // }
+    // Change all remaining base tiles to final tiles
+    for (let i = 0; i < width * width; i++) {
+        const position = oneDimentionIndexToVec2(i, width);
+        const cell = getCell(map, position);
+        if (cell?.image == baseTiles.liquid) {
+            changeTile(i, all_liquid);
+        } else if (cell?.image == baseTiles.ground) {
+            changeTile(i, all_ground);
+        }
+    }
 }
 
 function crawlersChangeTilesToMaterial(crawlers: CaveCrawler[], material: Material, caveWidth: number, caveHeight: number, caveMaterialsArray: Material[]) {
@@ -489,4 +519,8 @@ const finalTileImages = {
     wallN: 'tiles/bloodWallTop.png',
     wallCornerNW: 'tiles/bloodWallTopLeft.png',
     wallCornerNE: 'tiles/bloodWallTopRight.png',
+    wallInsideCornerNE: 'tiles/bloodWallInsideCornerNE.png',
+    wallInsideCornerNW: 'tiles/bloodWallInsideCornerNW.png',
+    wallInsideCornerSE: 'tiles/bloodWallInsideCornerSE.png',
+    wallInsideCornerSW: 'tiles/bloodWallInsideCornerSW.png',
 };
