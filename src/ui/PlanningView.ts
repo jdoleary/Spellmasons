@@ -110,7 +110,7 @@ export function updatePlanningView() {
             planningViewGraphics.lineStyle(4, 0xdddddd);
             planningViewGraphics.beginFill(0xdddddd, 0.3);
           }
-          planningViewGraphics.drawEllipse(window.player.unit.x, window.player.unit.y + config.COLLISION_MESH_RADIUS / 2 + 3, config.COLLISION_MESH_RADIUS, config.COLLISION_MESH_RADIUS / 3);
+          planningViewGraphics.drawEllipse(window.player.unit.x, window.player.unit.y + config.COLLISION_MESH_RADIUS / 2 + 3, config.COLLISION_MESH_RADIUS / 2, config.COLLISION_MESH_RADIUS / 3);
         }
         lastSpotCurrentPlayerTurnCircle = clone(window.player.unit);
       }
