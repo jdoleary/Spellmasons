@@ -37,7 +37,7 @@ import { updateManaCostUI, updatePlanningView } from './ui/PlanningView';
 import { prng, randInt, SeedrandomState } from './rand';
 import { calculateCost } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment } from './collision/collisionMath';
-import { expandPolygon, mergeOverlappingPolygons, Polygon, PolygonLineSegment, polygonLineSegmentToLineSegment, polygonToPolygonLineSegments } from './Polygon';
+import { expandPolygon, mergeOverlappingPolygons, Polygon, PolygonLineSegment, polygonToPolygonLineSegments } from './Polygon';
 import { calculateDistanceOfVec2Array, findPath, findPolygonsThatVec2IsInsideOf } from './Pathfinding';
 import { removeUnderworldEventListeners } from './views';
 import * as readyState from './readyState';
@@ -51,7 +51,7 @@ import { healthAllyGreen, healthHurtRed, healthRed } from './ui/colors';
 import objectHash from 'object-hash';
 import { withinMeleeRange } from './units/actions/gruntAction';
 import * as TimeRelease from './TimeRelease';
-import { caveSizes, CaveTile, generateCave, getLimits, Limits as Limits, Materials } from './MapOrganicCave';
+import { caveSizes, generateCave, getLimits, Limits as Limits, Tile } from './MapOrganicCave';
 
 export enum turn_phase {
   PlayerTurns,
@@ -63,7 +63,6 @@ const elLevelIndicator = document.getElementById('level-indicator');
 const elUpgradePicker = document.getElementById('upgrade-picker') as HTMLElement;
 const elUpgradePickerContent = document.getElementById('upgrade-picker-content') as HTMLElement;
 const elSeed = document.getElementById('seed') as HTMLElement;
-const elCardHolders = document.getElementById('card-holders') as HTMLElement;
 const elUpgradePickerLabel = document.getElementById('upgrade-picker-label') as HTMLElement;
 
 let lastTime = 0;
@@ -91,7 +90,7 @@ export default class Underworld {
   units: Unit.IUnit[] = [];
   pickups: Pickup.IPickup[] = [];
   timeReleases: TimeRelease.ITimeRelease[] = [];
-  imageOnlyTiles: CaveTile[] = [];
+  imageOnlyTiles: Tile[] = [];
   lavaObstacles: Obstacle.IObstacle[] = [];
   // line segments that prevent sight and movement
   walls: LineSegment[] = [];
@@ -109,7 +108,8 @@ export default class Underworld {
 
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
     window.underworld = this;
-    this.seed = window.seedOverride || seed;
+    // this.seed = window.seedOverride || seed;
+    this.seed = '0.5756590009392133';
     elSeed.innerText = `Seed: ${this.seed}`;
     console.log("RNG create with seed:", this.seed, ", state: ", RNGState);
     this.random = this.syncronizeRNG(RNGState);
@@ -438,6 +438,7 @@ export default class Underworld {
     removeUnderworldEventListeners();
 
     // Remove all phase classes from body
+    // @ts-expect-error Property 'values' does not exist on type 'DOMTokenList'
     for (let phaseClass of document.body.classList.values()) {
       if (phaseClass.includes('phase-')) {
         document.body.classList.remove(phaseClass);
@@ -470,7 +471,7 @@ export default class Underworld {
   // cacheWalls updates underworld.walls array
   // with the walls for the edge of the map
   // and the walls from the current obstacles
-  cacheWalls(obstacles: Obstacle.IObstacle[], groundTiles: CaveTile[]) {
+  cacheWalls(obstacles: Obstacle.IObstacle[], groundTiles: Tile[]) {
 
     for (let o of obstacles) {
       if (o.name == 'Lava') {
@@ -480,18 +481,19 @@ export default class Underworld {
     const distanceFromGroundCenterWhenAdjacent = 1 + Math.sqrt(2) * config.OBSTACLE_SIZE / 2;
     // Optimization: Removes linesegments that are not adjacent to walkable ground to prevent
     // having to process linesegments that will never be used
-    function filterRemoveNonGroundAdjacent(ls: LineSegment): boolean {
-      return groundTiles.some(gt => math.distance(gt, ls.p1) <= distanceFromGroundCenterWhenAdjacent)
-    }
+    // TODO: restore once I add linesegments to WFC tiles
+    // function filterRemoveNonGroundAdjacent(ls: LineSegment): boolean {
+    //   return groundTiles.some(gt => math.distance(gt, ls.p1) <= distanceFromGroundCenterWhenAdjacent)
+    // }
     // Optimization: Removes polygons that are not adjacent to walkable ground to prevent
     // having to process polygons that will never be used
     function filterRemoveNonGroundAdjacentPoly(poly: Polygon): boolean {
       return groundTiles.some(gt => poly.points.some(p => math.distance(gt, p) <= distanceFromGroundCenterWhenAdjacent))
     }
     // walls block sight and movement
-    this.walls = mergeOverlappingPolygons(obstacles.filter(o => o.material == Materials.Wall).map(o => o.bounds)).map(polygonToPolygonLineSegments).flat().filter(filterRemoveNonGroundAdjacent);
+    this.walls = [];//mergeOverlappingPolygons(obstacles.filter(o => o.material == Materials.Wall).map(o => o.bounds)).map(polygonToPolygonLineSegments).flat().filter(filterRemoveNonGroundAdjacent);
     // liquid bounds block movement only under certain circumstances
-    this.liquidBounds = mergeOverlappingPolygons(obstacles.filter(o => o.material == Materials.Liquid).map(o => o.bounds)).map(polygonToPolygonLineSegments).flat().map(polygonLineSegmentToLineSegment).filter(filterRemoveNonGroundAdjacent);
+    this.liquidBounds = [];// mergeOverlappingPolygons(obstacles.filter(o => o.material == Materials.Liquid).map(o => o.bounds)).map(polygonToPolygonLineSegments).flat().map(polygonLineSegmentToLineSegment).filter(filterRemoveNonGroundAdjacent);
 
     const expandMagnitude = config.COLLISION_MESH_RADIUS * config.NON_HEAVY_UNIT_SCALE
     // Expand pathing walls by the size of the regular unit
@@ -582,18 +584,20 @@ export default class Underworld {
       console.error('Missing caveSizes.small')
       return;
     }
-    const { tiles, tiles2DArrayWidth, limits } = generateCave(caveSizes.medium);
+    const { map, limits } = generateCave(caveSizes.medium);
+    const { tiles } = map;
     const levelData: LevelData = {
       levelIndex,
       limits,
-      obstacles: tiles.filter(t => t.material == Materials.Wall || t.material == Materials.Liquid).map(t => ({ material: t.material, coord: Vec.clone(t) })),
+      obstacles: [], // empty for now until I figure out how to store lineSegment information in tiles
       imageOnlyTiles: [],
       pickups: [],
       enemies: [],
       validPlayerSpawnCoords: []
     };
-    let validSpawnCoords: Vec2[] = tiles.filter(t => t.material == Materials.Ground);
-    levelData.imageOnlyTiles = tiles;
+    let validSpawnCoords: Vec2[] = [{ x: 0, y: 0 }];//tiles.filter(t => t.material == Materials.Ground);
+    // flatMap removes undefineds
+    levelData.imageOnlyTiles = tiles.flatMap(x => x == undefined ? [] : [x]);
 
     levelData.validPlayerSpawnCoords = validSpawnCoords.filter(c => c.x <= config.OBSTACLE_SIZE * 2).slice(0, 8);
     // Remove spawns that are too close to player spawns
@@ -635,17 +639,8 @@ export default class Underworld {
   }
   addGroundTileImages() {
     for (let tile of this.imageOnlyTiles) {
-      let imagePath = '';
-      switch (tile.material) {
-        case Materials.Ground:
-          imagePath = 'tiles/ground.png';
-          break;
-        case Materials.SemiWall:
-          imagePath = 'tiles/semiWall.png';
-          break;
-      }
-      if (imagePath) {
-        Image.create(tile, imagePath, containerBoard);
+      if (tile.image) {
+        Image.create(tile, tile.image, containerBoard);
       }
     }
   }
@@ -739,18 +734,20 @@ export default class Underworld {
     // Clean up the previous level
     this.cleanUpLevel();
 
-    const { levelIndex, limits, obstacles, imageOnlyTiles, pickups, enemies, validPlayerSpawnCoords } = levelData;
+    const { levelIndex, limits, imageOnlyTiles, pickups, enemies, validPlayerSpawnCoords } = levelData;
     this.levelIndex = levelIndex;
     this.limits = limits;
-    const obstacleInsts = [];
+    // const obstacleInsts = [];
     const biome = Obstacle.biomes[0];
     if (biome) {
-      for (let o of obstacles) {
-        const obstacleInst = Obstacle.create(o.coord, biome, o.material);
-        Obstacle.addImageForObstacle(obstacleInst);
-        obstacleInsts.push(obstacleInst);
-      }
-      this.cacheWalls(obstacleInsts, imageOnlyTiles.filter(x => x.material == Materials.Ground));
+      // TODO: restore once I add linesegments to WFC tiles
+      // for (let o of obstacles) {
+      //   const obstacleInst = Obstacle.create(o.coord, biome, o.material);
+      //   Obstacle.addImageForObstacle(obstacleInst);
+      //   obstacleInsts.push(obstacleInst);
+      // }
+      // TODO: restore once I add linesegments to WFC tiles
+      // this.cacheWalls(obstacleInsts, imageOnlyTiles.filter(x => x.material == Materials.Ground));
     } else {
       console.error('biome not found')
     }
@@ -1161,6 +1158,7 @@ export default class Underworld {
     this.syncTurnMessage();
 
     // Remove all phase classes from body
+    // @ts-expect-error Property 'values' does not exist on type 'DOMTokenList'
     for (let phaseClass of document.body.classList.values()) {
       if (phaseClass.includes('phase-')) {
         document.body.classList.remove(phaseClass);
@@ -1815,9 +1813,9 @@ export interface LevelData {
   limits: Limits,
   obstacles: {
     coord: Vec2;
-    material: Materials;
+    // material: Materials;
   }[];
-  imageOnlyTiles: CaveTile[];
+  imageOnlyTiles: Tile[];
   pickups: {
     index: number;
     coord: Vec2;

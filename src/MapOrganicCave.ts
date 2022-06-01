@@ -36,8 +36,7 @@ interface CaveParams {
 }
 const directionRandomAmount = Math.PI / 2;
 export interface Limits { xMin: number, xMax: number, yMin: number, yMax: number };
-export type CaveTile = ({ material: Materials } & Vec.Vec2)
-export function generateCave(params: CaveParams): { tiles: CaveTile[], tiles2DArrayWidth: number, limits: Limits } {
+export function generateCave(params: CaveParams): { map: Map, limits: Limits } {
     // Debug: Draw caves
     window.debugCave.clear();
     const minDirection = randFloat(window.underworld.random, Math.PI, Math.PI / 2);
@@ -90,7 +89,7 @@ export function generateCave(params: CaveParams): { tiles: CaveTile[], tiles2DAr
     // + 2 leaves room on the right side and bottom side for surrounding walls
     const width = Math.ceil((crawlerBounds.xMax - crawlerBounds.xMin) / config.OBSTACLE_SIZE) + 2;
     const height = Math.ceil((crawlerBounds.yMax - crawlerBounds.yMin) / config.OBSTACLE_SIZE) + 2;
-    const materials: Materials[] = Array(width * height).fill(Materials.Empty);
+    const materials: Material[] = Array(width * height).fill(Material.EMPTY);
     // Normalize crawlers to 0,0 in upper left corner
     function normalizeTo00(points: Vec.Vec2[]): Vec.Vec2[] {
         return points.map(p => ({ x: p.x - crawlerBounds.xMin, y: p.y - crawlerBounds.yMin }))
@@ -102,23 +101,23 @@ export function generateCave(params: CaveParams): { tiles: CaveTile[], tiles2DAr
         rectangles: c.rectangles.map(normalizeTo00)
     }));
 
-    crawlersChangeTilesToMaterial(crawlers, Materials.Ground, width, height, materials);
+    crawlersChangeTilesToMaterial(crawlers, Material.GROUND, width, height, materials);
 
 
     // Debug draw caves
-    const styles = [0xff0000, 0x0000ff, 0xff00ff, 0x00ffff, 0xffff00];
-    function drawPathWithStyle(path: Vec.Vec2[], style: number, opacity: number) {
-        window.debugCave.lineStyle(4, style, opacity);
-        if (path[0]) {
-            window.debugCave.moveTo(path[0].x, path[0].y);
-            // @ts-expect-error
-            window.debugCave.drawCircle(path[1].x, path[1].y, 25);
-            for (let point of path) {
-                window.debugCave.lineTo(point.x, point.y);
-            }
-        }
+    // const styles = [0xff0000, 0x0000ff, 0xff00ff, 0x00ffff, 0xffff00];
+    // function drawPathWithStyle(path: Vec.Vec2[], style: number, opacity: number) {
+    //     window.debugCave.lineStyle(4, style, opacity);
+    //     if (path[0]) {
+    //         window.debugCave.moveTo(path[0].x, path[0].y);
+    //         // @ts-expect-error
+    //         window.debugCave.drawCircle(path[1].x, path[1].y, 25);
+    //         for (let point of path) {
+    //             window.debugCave.lineTo(point.x, point.y);
+    //         }
+    //     }
 
-    }
+    // }
     // // Debug Fill
     // for (let i = 0; i < crawlers.length; i++) {
     //     const crawler = crawlers[i];
@@ -141,9 +140,32 @@ export function generateCave(params: CaveParams): { tiles: CaveTile[], tiles2DAr
     //         window.debugCave.lineStyle(1, 0x000000, 0.0);
     //     }
     // }
-    let tiles = materials.map((t, i) => {
+    // 1st pass for walls
+    let conwayState: ConwayState = {
+        currentNumberOfLiquidPools: 0,
+        desiredNumberOfLiquidPools: 2,
+    }
+    conway(materials, width, conwayState);
+    // 2nd pass for semi-walls
+    conway(materials, width, conwayState);
+
+
+    // Convert array of materials into tiles for use by WFC
+    let tiles: Tile[] = materials.map((m, i) => {
         const dimentions = oneDimentionIndexToVec2(i, width);
-        return { material: t, x: dimentions.x * config.OBSTACLE_SIZE, y: dimentions.y * config.OBSTACLE_SIZE }
+        let image = baseTiles.empty;
+        switch (m) {
+            case Material.GROUND:
+                image = baseTiles.ground;
+                break;
+            case Material.LIQUID:
+                image = baseTiles.liquid;
+                break;
+            case Material.WALL:
+                image = baseTiles.wall;
+                break;
+        }
+        return { image, x: dimentions.x * config.OBSTACLE_SIZE, y: dimentions.y * config.OBSTACLE_SIZE }
     });
     const bounds = getLimits(tiles);
     bounds.xMin -= config.OBSTACLE_SIZE / 2;
@@ -151,21 +173,158 @@ export function generateCave(params: CaveParams): { tiles: CaveTile[], tiles2DAr
     bounds.xMax += config.OBSTACLE_SIZE / 2;
     bounds.yMax += config.OBSTACLE_SIZE / 2;
 
-    // 1st pass for walls
-    let conwayState: ConwayState = {
-        currentNumberOfLiquidPools: 0,
-        desiredNumberOfLiquidPools: 2,
-    }
-    conway(tiles, width, conwayState);
-    // 2nd pass for semi-walls
-    conway(tiles, width, conwayState);
 
-
-    return { tiles, tiles2DArrayWidth: width, limits: bounds };
+    const map = {
+        tiles,
+        width
+    };
+    convertBaseTilesToFinalTiles(map);
+    return { map, limits: bounds };
 
 }
+const west: Vec.Vec2 = { x: -1, y: 0 };
+const northwest: Vec.Vec2 = { x: -1, y: -1 };
+const southwest: Vec.Vec2 = { x: -1, y: 1 };
+const east: Vec.Vec2 = { x: 1, y: 0 };
+const northeast: Vec.Vec2 = { x: 1, y: -1 };
+const southeast: Vec.Vec2 = { x: 1, y: 1 };
+const north: Vec.Vec2 = { x: 0, y: -1 };
+const south: Vec.Vec2 = { x: 0, y: 1 };
+const SIDES = {
+    north,
+    south,
+    east,
+    west
+}
+type SIDES_WITH_DIAG_KEYS = (keyof typeof SIDES_WITH_DIAG)
+const SIDES_WITH_DIAG = {
+    north,
+    northeast,
+    east,
+    southeast,
+    south,
+    southwest,
+    west,
+    northwest
+}
+export function convertBaseTilesToFinalTiles(map: Map) {
+    const { width } = map;
+    function changeTile(index: number, image: string) {
+        const tile = map.tiles[index];
+        if (tile) {
+            tile.image = image;
+        } else {
+            console.error('tile not found at ', index, width)
+        }
+    }
+    // All tiles with >= 3 base liquid tile neighbors turn to base liquid
+    for (let i = 0; i < width * width; i++) {
+        const position = oneDimentionIndexToVec2(i, width);
+        const neighbors = Object.values(SIDES).flatMap(side => {
+            const cell = getCell(map, Vec.add(position, side));
+            // Checking for cell.image intentionally excludes the "empty" cell
+            return cell && cell.image ? [{ cell, side }] : [];
+        });
+        if (neighbors.filter(n => n.cell.image == baseTiles.liquid).length >= 3) {
+            changeTile(i, baseTiles.liquid);
+        }
+    }
+    // Outline all base tiles with finalized tiles:
+    for (let i = 0; i < width * width; i++) {
+        const position = oneDimentionIndexToVec2(i, width);
+        const currentCell = getCell(map, position);
+        const neighbors = (Object.keys(SIDES_WITH_DIAG) as SIDES_WITH_DIAG_KEYS[]).reduce<Record<SIDES_WITH_DIAG_KEYS, string>>((neighbors, side) => {
+            const sidePosition = SIDES_WITH_DIAG[side];
+            if (sidePosition) {
+                const cell = getCell(map, Vec.add(position, sidePosition));
+                // Checking for cell.image intentionally excludes the "empty" cell
+                if (cell && cell.image) {
+                    neighbors[side] = cell.image;
 
-function crawlersChangeTilesToMaterial(crawlers: CaveCrawler[], material: Materials, caveWidth: number, caveHeight: number, caveMaterialsArray: Materials[]) {
+                }
+            }
+            return neighbors;
+        }, {
+            north: baseTiles.empty,
+            northeast: baseTiles.empty,
+            east: baseTiles.empty,
+            southeast: baseTiles.empty,
+            south: baseTiles.empty,
+            southwest: baseTiles.empty,
+            west: baseTiles.empty,
+            northwest: baseTiles.empty,
+        });
+        // Change ground tiles
+        if (currentCell?.image == baseTiles.ground) {
+            if (neighbors.west == baseTiles.liquid && neighbors.south == baseTiles.liquid) {
+                changeTile(i, finalTileImages.liquidInsideCornerNE);
+            } else if (neighbors.east == baseTiles.liquid && neighbors.south == baseTiles.liquid) {
+                changeTile(i, finalTileImages.liquidInsideCornerNW);
+            } else if (neighbors.east == baseTiles.liquid && neighbors.north == baseTiles.liquid) {
+                changeTile(i, finalTileImages.liquidInsideCornerSW);
+            } else if (neighbors.west == baseTiles.liquid && neighbors.north == baseTiles.liquid) {
+                changeTile(i, finalTileImages.liquidInsideCornerSE);
+            } else if (neighbors.north == baseTiles.liquid) {
+                changeTile(i, finalTileImages.liquidNGroundS);
+            } else if (neighbors.east == baseTiles.liquid) {
+                changeTile(i, finalTileImages.liquidEGroundW);
+            } else if (neighbors.west == baseTiles.liquid) {
+                changeTile(i, finalTileImages.liquidWGroundE);
+            } else if (neighbors.south == baseTiles.liquid) {
+                changeTile(i, finalTileImages.liquidSGroundN);
+            } else if (neighbors.northeast == baseTiles.liquid) {
+                changeTile(i, finalTileImages.liquidCornerNE);
+            } else if (neighbors.northwest == baseTiles.liquid) {
+                changeTile(i, finalTileImages.liquidCornerNW);
+            } else if (neighbors.southeast == baseTiles.liquid) {
+                changeTile(i, finalTileImages.liquidCornerSE);
+            } else if (neighbors.southwest == baseTiles.liquid) {
+                changeTile(i, finalTileImages.liquidCornerSW);
+            }
+        }
+        // change wall tiles
+        if (currentCell?.image == baseTiles.wall) {
+            if (neighbors.west == baseTiles.ground && neighbors.south == baseTiles.ground) {
+                changeTile(i, finalTileImages.wallInsideCornerNE);
+            } else if (neighbors.east == baseTiles.ground && neighbors.south == baseTiles.ground) {
+                changeTile(i, finalTileImages.wallInsideCornerNW);
+            } else if (neighbors.east == baseTiles.ground && neighbors.north == baseTiles.ground) {
+                changeTile(i, finalTileImages.wallInsideCornerSW);
+            } else if (neighbors.west == baseTiles.ground && neighbors.north == baseTiles.ground) {
+                changeTile(i, finalTileImages.wallInsideCornerSE);
+            } else if (neighbors.north == baseTiles.ground) {
+                changeTile(i, finalTileImages.wallS);
+            } else if (neighbors.east == baseTiles.ground) {
+                changeTile(i, finalTileImages.wallW);
+            } else if (neighbors.west == baseTiles.ground) {
+                changeTile(i, finalTileImages.wallE);
+            } else if (neighbors.south == baseTiles.ground) {
+                changeTile(i, finalTileImages.wallN);
+            } else if (neighbors.northeast == baseTiles.ground) {
+                changeTile(i, finalTileImages.wallCornerSW);
+            } else if (neighbors.northwest == baseTiles.ground) {
+                changeTile(i, finalTileImages.wallCornerSE);
+            } else if (neighbors.southeast == baseTiles.ground) {
+                changeTile(i, finalTileImages.wallCornerNW);
+            } else if (neighbors.southwest == baseTiles.ground) {
+                changeTile(i, finalTileImages.wallCornerNE);
+            }
+        }
+    }
+
+    // Change all remaining base tiles to final tiles
+    for (let i = 0; i < width * width; i++) {
+        const position = oneDimentionIndexToVec2(i, width);
+        const cell = getCell(map, position);
+        if (cell?.image == baseTiles.liquid) {
+            changeTile(i, all_liquid);
+        } else if (cell?.image == baseTiles.ground) {
+            changeTile(i, all_ground);
+        }
+    }
+}
+
+function crawlersChangeTilesToMaterial(crawlers: CaveCrawler[], material: Material, caveWidth: number, caveHeight: number, caveMaterialsArray: Material[]) {
     for (let x = 0; x < caveWidth; x++) {
         for (let y = 0; y < caveHeight; y++) {
             let isInside = false;
@@ -195,13 +354,6 @@ function crawlersChangeTilesToMaterial(crawlers: CaveCrawler[], material: Materi
             // }
         }
     }
-}
-export enum Materials {
-    Empty,
-    Ground,
-    Liquid,
-    Wall,
-    SemiWall,
 }
 interface CaveCrawler {
     // In radians
@@ -320,3 +472,54 @@ export function getLimits(points: Vec.Vec2[]): Limits {
     return limits;
 
 }
+export type Tile = { image: string } & Vec.Vec2;
+interface Map {
+    tiles: (Tile | undefined)[];
+    width: number;
+}
+function getCell(map: Map, position: Vec.Vec2): Tile | undefined {
+    return map.tiles[vec2ToOneDimentionIndex(position, map.width)];
+}
+enum Material {
+    EMPTY,
+    LIQUID,
+    GROUND,
+    WALL,
+}
+const baseTiles = {
+    empty: '',
+    wall: 'tiles/wall.png',
+    semiWall: 'tiles/wall.png',
+    liquid: 'tiles/lava.png',
+    ground: 'tiles/ground.png',
+}
+const all_liquid = 'tiles/blood.png';
+const all_ground = 'tiles/bloodFloor.png';
+const finalTileImages = {
+    all_liquid,
+    all_ground,
+    liquidInsideCornerNE: 'tiles/bloodInsideCornerNE.png',
+    liquidInsideCornerNW: 'tiles/bloodInsideCornerNW.png',
+    liquidInsideCornerSE: 'tiles/bloodInsideCornerSE.png',
+    liquidInsideCornerSW: 'tiles/bloodInsideCornerSW.png',
+    liquidNGroundS: 'tiles/bloodSideBottom.png',
+    liquidCornerNE: 'tiles/bloodSideBottomLeft.png',
+    liquidCornerNW: 'tiles/bloodSideBottomRight.png',
+    liquidEGroundW: 'tiles/bloodSideLeft.png',
+    liquidWGroundE: 'tiles/bloodSideRight.png',
+    liquidSGroundN: 'tiles/bloodSideTop.png',
+    liquidCornerSE: 'tiles/bloodSideTopLeft.png',
+    liquidCornerSW: 'tiles/bloodSideTopRight.png',
+    wallS: 'tiles/bloodWallBtm.png',
+    wallCornerSW: 'tiles/bloodWallBtmLeft.png',
+    wallCornerSE: 'tiles/bloodWallBtmRight.png',
+    wallE: 'tiles/bloodWallRight.png',
+    wallW: 'tiles/bloodWallLeft.png',
+    wallN: 'tiles/bloodWallTop.png',
+    wallCornerNW: 'tiles/bloodWallTopLeft.png',
+    wallCornerNE: 'tiles/bloodWallTopRight.png',
+    wallInsideCornerNE: 'tiles/bloodWallInsideCornerNE.png',
+    wallInsideCornerNW: 'tiles/bloodWallInsideCornerNW.png',
+    wallInsideCornerSE: 'tiles/bloodWallInsideCornerSE.png',
+    wallInsideCornerSW: 'tiles/bloodWallInsideCornerSW.png',
+};

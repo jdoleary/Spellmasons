@@ -5,7 +5,7 @@ import { OBSTACLE_SIZE } from './config';
 import type { Vec2 } from './Vec';
 import { IUnit, takeDamage } from './Unit';
 import { lineSegmentIntersection } from './collision/collisionMath';
-import { Materials } from './MapOrganicCave';
+import { Material } from './Conway';
 export interface IObstacle {
   x: number;
   y: number;
@@ -13,7 +13,7 @@ export interface IObstacle {
   description: string;
   imagePath: string;
   bounds: Polygon;
-  material: Materials;
+  material: Material;
 }
 interface IObstacleSource {
   name: string;
@@ -35,8 +35,8 @@ export function coordToPoly(coord: Vec2, inverted: boolean = false): Polygon {
   };
   return bounds;
 }
-export function create(coord: Vec2, biome: Biome, material: Materials) {
-  if (material == Materials.Wall || material == Materials.Liquid) {
+export function create(coord: Vec2, biome: Biome, material: Material) {
+  if (material == Material.WALL || material == Material.LIQUID) {
     const obstacle = biome[material];
     if (obstacle) {
       const bounds = coordToPoly(coord);
@@ -62,17 +62,17 @@ export function addImageForObstacle(obstacle: IObstacle) {
 
 }
 interface Biome {
-  [Materials.Wall]: IObstacleSource,
-  [Materials.Liquid]: IObstacleSource,
+  [Material.WALL]: IObstacleSource,
+  [Material.LIQUID]: IObstacleSource,
 }
 export const biomes: Biome[] = [
   {
-    [Materials.Wall]: {
+    [Material.WALL]: {
       name: 'Wall',
       description: 'This is a wall that will block your way.',
       imagePath: 'tiles/wall.png',
     },
-    [Materials.Liquid]: {
+    [Material.LIQUID]: {
       // Note: The exact name 'Lava" is used in underworld.cacheWalls to store obstacles
       // that cause damage is units are pushed or pulled into them.
       name: 'Lava',
