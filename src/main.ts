@@ -254,4 +254,9 @@ window.superMe = () => {
 }
 // window.showDebug = true;
 
-window.onbeforeunload = function () { return "Are you sure you want to quit?"; };
+// Prevent accidental back button only when not in devMode
+// In devMode, lots of refreshing happens so it's annoying when it
+// asks "are you sure?" every time
+if (!window.devMode) {
+  window.onbeforeunload = function () { return "Are you sure you want to quit?"; };
+}
