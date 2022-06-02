@@ -1,6 +1,10 @@
-## Tuesday
-- Figure out WFC walls, floor and liquid with linesegments and bounds
-    - Send examples to Che with appropriate sizes
+- A bold new plan for making polygons with holes:
+    - Forget about inverted
+    - Collect all polys as line segments and run the same branching algorithm
+    - When a newPoly takes a branch, remove that linesegment from the array of original line segments
+    - Keep iterating until all the line segments are used up
+    - Line segments that don't find a way back to the original point are discarded
+
 ## Tasks
 2. Liquid interactions
     - Apply liquid impact and submerge shader when units "fall in"
