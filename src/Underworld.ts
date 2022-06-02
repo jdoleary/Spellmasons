@@ -51,8 +51,9 @@ import { healthAllyGreen, healthHurtRed, healthRed } from './ui/colors';
 import objectHash from 'object-hash';
 import { withinMeleeRange } from './units/actions/gruntAction';
 import * as TimeRelease from './TimeRelease';
-import { all_ground, caveSizes, generateCave, getLimits, Limits as Limits, Tile, toObstacle } from './MapOrganicCave';
+import { all_ground, baseTiles, caveSizes, convertBaseTilesToFinalTiles, generateCave, getLimits, Limits as Limits, Tile, toObstacle } from './MapOrganicCave';
 import { Material } from './Conway';
+import { oneDimentionIndexToVec2 } from './WaveFunctionCollapse';
 
 export enum turn_phase {
   PlayerTurns,
@@ -109,8 +110,10 @@ export default class Underworld {
 
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
     window.underworld = this;
-    // this.seed = window.seedOverride || seed;
-    this.seed = '0.5756590009392133';
+    this.seed = window.seedOverride || seed;
+    // this.seed = '0.5756590009392133';
+    // this.seed = '0.7896578078575383';
+
     elSeed.innerText = `Seed: ${this.seed}`;
     console.log("RNG create with seed:", this.seed, ", state: ", RNGState);
     this.random = this.syncronizeRNG(RNGState);
@@ -492,14 +495,22 @@ export default class Underworld {
       return groundTiles.some(gt => poly.points.some(p => math.distance(gt, p) <= distanceFromGroundCenterWhenAdjacent))
     }
     // walls block sight and movement
-    this.walls = mergeOverlappingPolygons(obstacles.filter(o => o.material == Material.WALL).map(o => o.bounds)).map(polygonToPolygonLineSegments).flat()//.filter(filterRemoveNonGroundAdjacent);
+    this.walls = mergeOverlappingPolygons(obstacles.filter(o => o.material == Material.WALL).map(o => o.bounds)).map(polygonToPolygonLineSegments).flat()
+    //.filter(filterRemoveNonGroundAdjacent);
+
     // liquid bounds block movement only under certain circumstances
-    this.liquidBounds = mergeOverlappingPolygons(obstacles.filter(o => o.material == Material.LIQUID).map(o => o.bounds)).map(polygonToPolygonLineSegments).flat().map(polygonLineSegmentToLineSegment).filter(filterRemoveNonGroundAdjacent);
+    this.liquidBounds = mergeOverlappingPolygons(obstacles.filter(o => o.material == Material.LIQUID).map(o => o.bounds)).map(polygonToPolygonLineSegments).flat().map(polygonLineSegmentToLineSegment)
+    //.filter(filterRemoveNonGroundAdjacent);
 
     const expandMagnitude = config.COLLISION_MESH_RADIUS * config.NON_HEAVY_UNIT_SCALE
     // Expand pathing walls by the size of the regular unit
     // pathing polygons determines the area that units can move within
-    this.pathingPolygons = mergeOverlappingPolygons([...obstacles.map(o => o.bounds)]).filter(filterRemoveNonGroundAdjacentPoly).map(p => expandPolygon(p, expandMagnitude));
+    // Note: pathingPolygons need to have overlappingPolygons merged twice now that
+    // walls are rectangles and not perfect squares
+    debugger;
+    this.pathingPolygons = (mergeOverlappingPolygons([...obstacles.map(o => o.bounds)])
+      //.filter(filterRemoveNonGroundAdjacentPoly)
+      .map(p => expandPolygon(p, expandMagnitude)));
     const biggestPoly = this.pathingPolygons.reduce((biggestPoly, poly) => {
       const limit = getLimits(poly.points);
       const size = (limit.xMax - limit.xMin) * (limit.yMax - limit.yMin);
@@ -573,6 +584,50 @@ export default class Underworld {
       unit.damage *= 2;
       // Add subsprite to show they are armored:
       Image.addSubSprite(unit.image, 'heavy_armor');
+
+    }
+
+  }
+  testLevelData(): LevelData {
+    const baseTileValues = Object.values(baseTiles);
+    // Hard coded to match the tiles array below
+    const width = 8;
+    const height = 8;
+    const _tiles: Tile[] = [
+      4, 4, 4, 4, 4, 4, 4, 4,
+      4, 4, 4, 4, 4, 4, 4, 4,
+      4, 1, 1, 4, 4, 4, 4, 4,
+      4, 4, 1, 4, 4, 4, 4, 4,
+      4, 4, 4, 4, 4, 4, 4, 4,
+      4, 4, 4, 4, 4, 4, 4, 4,
+      4, 4, 4, 4, 4, 4, 4, 4,
+      4, 4, 4, 4, 4, 4, 4, 4,
+    ].map((value, i) => {
+      const pos = oneDimentionIndexToVec2(i, width);
+      return {
+        x: pos.x * config.OBSTACLE_SIZE,
+        y: pos.y * config.OBSTACLE_SIZE,
+        image: baseTileValues[value] || ''
+      }
+    });
+    const map = {
+      tiles: _tiles,
+      width,
+      height
+    };
+    convertBaseTilesToFinalTiles(map);
+    const { tiles } = map;
+    return {
+      levelIndex: 1,
+      limits: getLimits(tiles),
+      obstacles: tiles.flatMap(t => {
+        const obstacle = t && toObstacle(t);
+        return obstacle ? [obstacle] : [];
+      }),
+      imageOnlyTiles: tiles.flatMap(x => x == undefined ? [] : [x]),
+      pickups: [],
+      enemies: [],
+      validPlayerSpawnCoords: [{ x: 0, y: 0 }]
 
     }
 
@@ -739,6 +794,7 @@ export default class Underworld {
     this.cleanUpLevel();
 
     const { levelIndex, limits, imageOnlyTiles, pickups, enemies, obstacles, validPlayerSpawnCoords } = levelData;
+    debugger
     this.levelIndex = levelIndex;
     this.limits = limits;
     this.cacheWalls(obstacles, imageOnlyTiles.filter(x => x.image == all_ground));
@@ -769,10 +825,14 @@ export default class Underworld {
       this.levelIndex = levelIndex;
       // Generate level
       let level;
-      do {
-        // Invoke generateRandomLevel again until it succeeds
-        level = this.generateRandomLevelData(levelIndex);
-      } while (level === undefined);
+      if (window.devMode) {
+        level = this.testLevelData();
+      } else {
+        do {
+          // Invoke generateRandomLevel again until it succeeds
+          level = this.generateRandomLevelData(levelIndex);
+        } while (level === undefined);
+      }
       window.pie.sendData({
         type: MESSAGE_TYPES.CREATE_LEVEL,
         level

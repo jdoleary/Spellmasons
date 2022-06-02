@@ -511,7 +511,7 @@ enum Material {
     GROUND,
     WALL,
 }
-const baseTiles = {
+export const baseTiles = {
     empty: '',
     wall: 'tiles/wall.png',
     semiWall: 'tiles/wall.png',
