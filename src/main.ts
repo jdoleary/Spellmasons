@@ -99,7 +99,7 @@ function setupAll() {
   // Set UI version info
   const elVersionInfo = document.getElementById('version-info')
   if (elVersionInfo && window.SPELLMASONS_PACKAGE_VERSION) {
-    elVersionInfo.innerText = `Alpha v${window.SPELLMASONS_PACKAGE_VERSION}\nGraphics are not final`;
+    elVersionInfo.innerText = `Alpha v${window.SPELLMASONS_PACKAGE_VERSION}\nGraphics may not be final`;
   }
 }
 
