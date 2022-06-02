@@ -307,13 +307,13 @@ export function mouseMove(e?: MouseEvent) {
   if (window.showDebug && window.player) {
     window.debugGraphics.clear();
     const mouseTarget = window.underworld.getMousePos();
-    (document.getElementById('debug-info') as HTMLElement).innerText = `x:${Math.round(mouseTarget.x)}, y:${Math.round(mouseTarget.y)}`;
+    (document.getElementById('debug-info') as HTMLElement).innerText = `x:${Math.round(mouseTarget.x)}, y:${Math.round(mouseTarget.y)}; cellX: ${Math.round(mouseTarget.x / config.OBSTACLE_SIZE)}, cellY: ${Math.round(mouseTarget.y / config.OBSTACLE_SIZE)}`;
     // Draw the pathing walls
     const pathingWalls = window.underworld.pathingPolygons.map(polygonToPolygonLineSegments).flat();
     for (let lineSegment of pathingWalls) {
       if (lineSegment.polygon.inverted) {
-        // Show inverted polys as black
-        window.debugGraphics.lineStyle(2, 0x000, 1.0);
+        // Show inverted polys as purple
+        window.debugGraphics.lineStyle(2, 0x6305dc, 1.0);
       } else {
         window.debugGraphics.lineStyle(2, 0xffaabb, 1.0);
       }
