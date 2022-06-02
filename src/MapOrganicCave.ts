@@ -257,6 +257,9 @@ export function convertBaseTilesToFinalTiles(map: Map) {
             west: baseTiles.empty,
             northwest: baseTiles.empty,
         });
+        // if (Vec.equal(position, { x: 2, y: 9 })) {
+        //     debugger;
+        // }
         // Change ground tiles
         if (currentCell?.image == baseTiles.ground) {
             if (neighbors.west == baseTiles.liquid && neighbors.south == baseTiles.liquid) {
@@ -311,6 +314,10 @@ export function convertBaseTilesToFinalTiles(map: Map) {
                 changeTile(i, finalTileImages.wallCornerNW);
             } else if (neighbors.southwest == baseTiles.ground) {
                 changeTile(i, finalTileImages.wallCornerNE);
+            } else if (neighbors.south == baseTiles.empty) {
+                changeTile(i, finalTileImages.wallNOnly);
+            } else if (neighbors.south == baseTiles.wall) {
+                changeTile(i, finalTileImages.wallNOnly);
             }
         }
     }
@@ -520,6 +527,7 @@ const finalTileImages = {
     wallE: 'tiles/bloodWallRight.png',
     wallW: 'tiles/bloodWallLeft.png',
     wallN: 'tiles/bloodWallTop.png',
+    wallNOnly: 'tiles/bloodWallTop-only.png',
     wallCornerNW: 'tiles/bloodWallTopLeft.png',
     wallCornerNE: 'tiles/bloodWallTopRight.png',
     wallInsideCornerNE: 'tiles/bloodCornerTopRight.png',
@@ -533,7 +541,7 @@ export function toObstacle(t: Tile): IObstacle | undefined {
     //   const height = config.OBSTACLE_SIZE;
     //   const _x = t.x - width / 2;
     //   const _y = t.y - height / 2;
-    if (t.image == finalTileImages.wallN) {
+    if (t.image == finalTileImages.wallN || t.image == finalTileImages.wallNOnly) {
         return {
             x: t.x,
             y: t.y,
