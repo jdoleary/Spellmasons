@@ -231,12 +231,13 @@ export const pickups: IPickupSource[] = [
     },
   },
   {
-    imagePath: 'pickups/mana-potion',
+    imagePath: 'pickups/manaPotion',
+    animationSpeed: 0.2,
     name: 'Mana Potion',
     description: `Restores ${manaPotionRestoreAmount} mana.  May overfill mana.`,
     probability: 80,
     singleUse: true,
-    scale: 0.5,
+    scale: 1.0,
     playerOnly: true,
     effect: ({ unit, player }) => {
       if (player) {
@@ -252,10 +253,11 @@ export const pickups: IPickupSource[] = [
     },
   },
   {
-    imagePath: 'pickups/health-potion.png',
+    imagePath: 'pickups/healthPotion',
+    animationSpeed: 0.2,
     name: 'Health Potion',
     probability: 80,
-    scale: 0.5,
+    scale: 1.0,
     playerOnly: true,
     singleUse: true,
     description: `Restores ${healthPotionRestoreAmount} health.`,

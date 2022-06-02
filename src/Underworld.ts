@@ -536,7 +536,7 @@ export default class Underworld {
         coords.y,
         pickup,
         pickup.singleUse,
-        0.1,
+        pickup.animationSpeed,
         pickup.playerOnly || false,
         pickup.turnsLeftToGrab
       );

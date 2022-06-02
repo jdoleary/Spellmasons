@@ -32,7 +32,7 @@ Sets a spell as a trap, to be triggered when stepped on.  Wrapping a spell in a 
           imagePath: 'pickups/trap-closed.png', turnsLeft: turnsItTakesTrapToWindUp, onRelease: async () => {
             const x = state.castLocation.x;
             const y = state.castLocation.y;
-            const imagePath = 'pickups/trap.png';
+            const imagePath = 'pickups/trap';
             const self: Pickup.IPickup = {
               x,
               y,
