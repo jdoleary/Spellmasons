@@ -221,6 +221,9 @@ export function convertBaseTilesToFinalTiles(map: Map) {
     }
     const size = width * height;
     // All tiles with >= 3 base liquid tile neighbors turn to base liquid
+    // Note: Have to run this twice to catch stragglers that become surrounded by
+    // 3 on the first iteration of this "i" loop
+    for (let j = 0; j < 2; j++) {
     for (let i = 0; i < size; i++) {
         const position = oneDimentionIndexToVec2(i, width);
         const neighbors = Object.values(SIDES).flatMap(side => {
@@ -231,6 +234,7 @@ export function convertBaseTilesToFinalTiles(map: Map) {
         if (neighbors.filter(n => n.cell.image == baseTiles.liquid).length >= 3) {
             changeTile(i, baseTiles.liquid);
         }
+    }
     }
     // Outline all base tiles with finalized tiles:
     for (let i = 0; i < size; i++) {
