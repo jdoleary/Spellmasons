@@ -39,9 +39,11 @@ function mutateViaRules(tile: Material, neighbors: (Material | undefined)[], sta
         if (neighbors.some(t => t == Material.LIQUID)) {
             // and all other neighbors are ground (so liquid doesn't butt up against walls and block pathing)
             if (neighbors.every(t => t && t == Material.GROUND || t == Material.LIQUID)) {
-                const roll = randInt(window.underworld.random, 0, 1)
+                const roll = randInt(window.underworld.random, 0, 100)
                 // chance of changing it to liquid and growing the pool
-                if (roll == 0) {
+                if (roll <= state.percentChanceOfLiquidSpread) {
+                    // As liquid spreads decrease the chances of it spreading
+                    state.percentChanceOfLiquidSpread -= state.liquidSpreadChanceFalloff;
                     return Material.LIQUID
                 }
 
@@ -81,6 +83,8 @@ export function getNeighbors(tileIndex: number, tiles: Material[], widthOf2DArra
 export interface ConwayState {
     currentNumberOfLiquidPools: number;
     desiredNumberOfLiquidPools: number;
+    percentChanceOfLiquidSpread: number;
+    liquidSpreadChanceFalloff: number;
 }
 export function conway(tiles: Material[], widthOf2DArray: number, state: ConwayState) {
     for (let i = 0; i < tiles.length; i++) {

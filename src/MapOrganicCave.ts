@@ -145,6 +145,11 @@ export function generateCave(params: CaveParams): { map: Map, limits: Limits } {
     let conwayState: ConwayState = {
         currentNumberOfLiquidPools: 0,
         desiredNumberOfLiquidPools: 2,
+        // 50%
+        percentChanceOfLiquidSpread: 50,
+        // how quickly the percentChanceOfLiquidSpread
+        // will decrease
+        liquidSpreadChanceFalloff: 2
     }
     conway(materials, width, conwayState);
     // 2nd pass for semi-walls
@@ -224,17 +229,17 @@ export function convertBaseTilesToFinalTiles(map: Map) {
     // Note: Have to run this twice to catch stragglers that become surrounded by
     // 3 on the first iteration of this "i" loop
     for (let j = 0; j < 2; j++) {
-    for (let i = 0; i < size; i++) {
-        const position = oneDimentionIndexToVec2(i, width);
-        const neighbors = Object.values(SIDES).flatMap(side => {
-            const cell = getCell(map, Vec.add(position, side));
-            // Checking for cell.image intentionally excludes the "empty" cell
-            return cell && cell.image ? [{ cell, side }] : [];
-        });
-        if (neighbors.filter(n => n.cell.image == baseTiles.liquid).length >= 3) {
-            changeTile(i, baseTiles.liquid);
+        for (let i = 0; i < size; i++) {
+            const position = oneDimentionIndexToVec2(i, width);
+            const neighbors = Object.values(SIDES).flatMap(side => {
+                const cell = getCell(map, Vec.add(position, side));
+                // Checking for cell.image intentionally excludes the "empty" cell
+                return cell && cell.image ? [{ cell, side }] : [];
+            });
+            if (neighbors.filter(n => n.cell.image == baseTiles.liquid).length >= 3) {
+                changeTile(i, baseTiles.liquid);
+            }
         }
-    }
     }
     // Outline all base tiles with finalized tiles:
     for (let i = 0; i < size; i++) {
@@ -261,9 +266,6 @@ export function convertBaseTilesToFinalTiles(map: Map) {
             west: baseTiles.empty,
             northwest: baseTiles.empty,
         });
-        // if (Vec.equal(position, { x: 2, y: 9 })) {
-        //     debugger;
-        // }
         // Change ground tiles
         if (currentCell?.image == baseTiles.ground) {
             if (neighbors.west == baseTiles.liquid && neighbors.south == baseTiles.liquid) {
