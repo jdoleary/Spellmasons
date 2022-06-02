@@ -214,6 +214,9 @@ const SIDES_WITH_DIAG = {
     west,
     northwest
 }
+function cellCoordToIndexPosition(cell: Tile) {
+    return { x: cell.x / config.OBSTACLE_SIZE, y: cell.y / config.OBSTACLE_SIZE }
+}
 export function convertBaseTilesToFinalTiles(map: Map) {
     const { width, height } = map;
     function changeTile(index: number, image: string) {
@@ -225,21 +228,23 @@ export function convertBaseTilesToFinalTiles(map: Map) {
         }
     }
     const size = width * height;
-    // All tiles with >= 3 base liquid tile neighbors turn to base liquid
-    // Note: Have to run this twice to catch stragglers that become surrounded by
-    // 3 on the first iteration of this "i" loop
-    for (let j = 0; j < 2; j++) {
-        for (let i = 0; i < size; i++) {
-            const position = oneDimentionIndexToVec2(i, width);
+    function changeTileToLiquidIf3NeighborsAreLiquid(position: Vec.Vec2) {
             const neighbors = Object.values(SIDES).flatMap(side => {
                 const cell = getCell(map, Vec.add(position, side));
                 // Checking for cell.image intentionally excludes the "empty" cell
                 return cell && cell.image ? [{ cell, side }] : [];
             });
             if (neighbors.filter(n => n.cell.image == baseTiles.liquid).length >= 3) {
-                changeTile(i, baseTiles.liquid);
+            changeTile(vec2ToOneDimentionIndex(position, width), baseTiles.liquid);
+            // Check all neighbors now that one of them might now be surrounded by 3
+            neighbors.filter(n => n.cell.image == baseTiles.ground).forEach(n => changeTileToLiquidIf3NeighborsAreLiquid(cellCoordToIndexPosition(n.cell)));
             }
+
         }
+    // All tiles with >= 3 base liquid tile neighbors turn to base liquid
+    for (let i = 0; i < size; i++) {
+        const position = oneDimentionIndexToVec2(i, width);
+        changeTileToLiquidIf3NeighborsAreLiquid(position);
     }
     // Outline all base tiles with finalized tiles:
     for (let i = 0; i < size; i++) {
