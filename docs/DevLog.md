@@ -9,3 +9,8 @@ It's really coming alone now. Dev Phase "Gameplay Core" is essentially done. Nex
 
 Around 3 weeks of serious development into the project (around 3 montsh total) and I had the first day where I actually had a lot of fun with it!
 Brad and I played for about 20 minutes and had a great time. I think this could really turn into a good game!
+
+## 2022.06.02
+To show original tiles:
+1. ensure at least one player spawn is returned so it doesn't loop forever
+2. Comment out "// Change all remaining base tiles to final tiles" section
