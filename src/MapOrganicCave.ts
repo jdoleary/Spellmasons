@@ -177,7 +177,8 @@ export function generateCave(params: CaveParams): { map: Map, limits: Limits } {
 
     const map = {
         tiles,
-        width
+        width,
+        height
     };
     convertBaseTilesToFinalTiles(map);
     return { map, limits: bounds };
@@ -209,7 +210,7 @@ const SIDES_WITH_DIAG = {
     northwest
 }
 export function convertBaseTilesToFinalTiles(map: Map) {
-    const { width } = map;
+    const { width, height } = map;
     function changeTile(index: number, image: string) {
         const tile = map.tiles[index];
         if (tile) {
@@ -218,8 +219,9 @@ export function convertBaseTilesToFinalTiles(map: Map) {
             console.error('tile not found at ', index, width)
         }
     }
+    const size = width * height;
     // All tiles with >= 3 base liquid tile neighbors turn to base liquid
-    for (let i = 0; i < width * width; i++) {
+    for (let i = 0; i < size; i++) {
         const position = oneDimentionIndexToVec2(i, width);
         const neighbors = Object.values(SIDES).flatMap(side => {
             const cell = getCell(map, Vec.add(position, side));
@@ -231,7 +233,7 @@ export function convertBaseTilesToFinalTiles(map: Map) {
         }
     }
     // Outline all base tiles with finalized tiles:
-    for (let i = 0; i < width * width; i++) {
+    for (let i = 0; i < size; i++) {
         const position = oneDimentionIndexToVec2(i, width);
         const currentCell = getCell(map, position);
         const neighbors = (Object.keys(SIDES_WITH_DIAG) as SIDES_WITH_DIAG_KEYS[]).reduce<Record<SIDES_WITH_DIAG_KEYS, string>>((neighbors, side) => {
@@ -314,7 +316,7 @@ export function convertBaseTilesToFinalTiles(map: Map) {
     }
 
     // Change all remaining base tiles to final tiles
-    for (let i = 0; i < width * width; i++) {
+    for (let i = 0; i < size; i++) {
         const position = oneDimentionIndexToVec2(i, width);
         const cell = getCell(map, position);
         if (cell?.image == baseTiles.liquid) {
@@ -477,6 +479,7 @@ export type Tile = { image: string } & Vec.Vec2;
 interface Map {
     tiles: (Tile | undefined)[];
     width: number;
+    height: number;
 }
 function getCell(map: Map, position: Vec.Vec2): Tile | undefined {
     return map.tiles[vec2ToOneDimentionIndex(position, map.width)];
