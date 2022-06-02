@@ -552,10 +552,10 @@ export function toObstacle(t: Tile): IObstacle | undefined {
             material: Material.WALL,
             bounds: {
                 points: [
-                    { x: 38, y: 0 },
+                    { x: 39, y: 0 },
                     { x: 64, y: 0 },
                     { x: 64, y: 64 },
-                    { x: 38, y: 64 },
+                    { x: 39, y: 64 },
                 ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
                 inverted: false
             }
@@ -598,8 +598,8 @@ export function toObstacle(t: Tile): IObstacle | undefined {
             bounds: {
                 points: [
                     { x: 0, y: 0 },
-                    { x: 24, y: 0 },
-                    { x: 24, y: 39 },
+                    { x: 25, y: 0 },
+                    { x: 25, y: 39 },
                     { x: 64, y: 39 },
                     { x: 64, y: 64 },
                     { x: 0, y: 64 },
@@ -652,6 +652,66 @@ export function toObstacle(t: Tile): IObstacle | undefined {
                     { x: 64, y: 0 },
                     { x: 64, y: 20 },
                     { x: 25, y: 20 },
+                    { x: 25, y: 64 },
+                    { x: 0, y: 64 },
+                ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
+                inverted: false
+            }
+        }
+    } else if (t.image == finalTileImages.wallInsideCornerNE) {
+        return {
+            x: t.x,
+            y: t.y,
+            material: Material.WALL,
+            bounds: {
+                points: [
+                    { x: 39, y: 0 },
+                    { x: 64, y: 0 },
+                    { x: 64, y: 20 },
+                    { x: 39, y: 20 },
+                ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
+                inverted: false
+            }
+        }
+    } else if (t.image == finalTileImages.wallInsideCornerNW) {
+        return {
+            x: t.x,
+            y: t.y,
+            material: Material.WALL,
+            bounds: {
+                points: [
+                    { x: 0, y: 0 },
+                    { x: 25, y: 0 },
+                    { x: 25, y: 20 },
+                    { x: 0, y: 20 },
+                ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
+                inverted: false
+            }
+        }
+    } else if (t.image == finalTileImages.wallInsideCornerSE) {
+        return {
+            x: t.x,
+            y: t.y,
+            material: Material.WALL,
+            bounds: {
+                points: [
+                    { x: 39, y: 39 },
+                    { x: 64, y: 39 },
+                    { x: 64, y: 64 },
+                    { x: 39, y: 64 },
+                ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
+                inverted: false
+            }
+        }
+    } else if (t.image == finalTileImages.wallInsideCornerSW) {
+        return {
+            x: t.x,
+            y: t.y,
+            material: Material.WALL,
+            bounds: {
+                points: [
+                    { x: 0, y: 39 },
+                    { x: 25, y: 39 },
                     { x: 25, y: 64 },
                     { x: 0, y: 64 },
                 ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
