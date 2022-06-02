@@ -505,33 +505,31 @@ export default class Underworld {
     const expandMagnitude = config.COLLISION_MESH_RADIUS * config.NON_HEAVY_UNIT_SCALE
     // Expand pathing walls by the size of the regular unit
     // pathing polygons determines the area that units can move within
-    // Note: pathingPolygons need to have overlappingPolygons merged twice now that
-    // walls are rectangles and not perfect squares
-    debugger;
-    this.pathingPolygons = (mergeOverlappingPolygons([...obstacles.map(o => o.bounds)])
+    this.pathingPolygons = mergeOverlappingPolygons([...obstacles.map(o => o.bounds)]
       //.filter(filterRemoveNonGroundAdjacentPoly)
       .map(p => expandPolygon(p, expandMagnitude)));
-    const biggestPoly = this.pathingPolygons.reduce((biggestPoly, poly) => {
-      const limit = getLimits(poly.points);
-      const size = (limit.xMax - limit.xMin) * (limit.yMax - limit.yMin);
-      if (size > biggestPoly.size) {
-        biggestPoly.poly = poly;
-        biggestPoly.size = size;
-      }
-      return biggestPoly;
-    }, { poly: this.pathingPolygons[0], size: 0 }).poly;
 
-    if (biggestPoly) {
-      biggestPoly.inverted = true;
-      // If a polygon needs to be manually inverted its points also have to be in
-      // REVERSE order.  This is very important or else if won't be iterated
-      // correctly.  This is an unfortunate consequence of my earlier decision for
-      // how I designed inverted and non-inverted polygons where one is iterated in
-      // the clockwise direction and the other counter-clockwise
-      biggestPoly.points.reverse();
-    } else {
-      console.error('No biggest poly found for making inverted border')
-    }
+    // const biggestPoly = this.pathingPolygons.reduce((biggestPoly, poly) => {
+    //   const limit = getLimits(poly.points);
+    //   const size = (limit.xMax - limit.xMin) * (limit.yMax - limit.yMin);
+    //   if (size > biggestPoly.size) {
+    //     biggestPoly.poly = poly;
+    //     biggestPoly.size = size;
+    //   }
+    //   return biggestPoly;
+    // }, { poly: this.pathingPolygons[0], size: 0 }).poly;
+
+    // if (biggestPoly) {
+    //   biggestPoly.inverted = true;
+    //   // If a polygon needs to be manually inverted its points also have to be in
+    //   // REVERSE order.  This is very important or else if won't be iterated
+    //   // correctly.  This is an unfortunate consequence of my earlier decision for
+    //   // how I designed inverted and non-inverted polygons where one is iterated in
+    //   // the clockwise direction and the other counter-clockwise
+    //   biggestPoly.points.reverse();
+    // } else {
+    //   console.error('No biggest poly found for making inverted border')
+    // }
 
     // Process the polygons into pathingwalls for use in tryPath
     // TODO: Optimize if needed: When this.pathingLineSegments gets serialized to send over the network
@@ -593,15 +591,21 @@ export default class Underworld {
     // Hard coded to match the tiles array below
     const width = 8;
     const height = 8;
+    // 0: empty
+    // 1: wall
+    // 2: semiWall
+    // 3: liquid
+    // 4: ground
+
     const _tiles: Tile[] = [
-      4, 4, 4, 4, 4, 4, 4, 4,
-      4, 4, 4, 4, 4, 4, 4, 4,
-      4, 1, 1, 4, 4, 4, 4, 4,
-      4, 4, 1, 4, 4, 4, 4, 4,
-      4, 4, 4, 4, 4, 4, 4, 4,
-      4, 4, 4, 4, 4, 4, 4, 4,
-      4, 4, 4, 4, 4, 4, 4, 4,
-      4, 4, 4, 4, 4, 4, 4, 4,
+      1, 1, 1, 1, 4, 1, 1, 1,
+      1, 4, 4, 1, 4, 1, 4, 1,
+      1, 4, 4, 1, 4, 1, 1, 1,
+      1, 4, 1, 1, 4, 4, 4, 4,
+      1, 4, 4, 1, 4, 4, 4, 4,
+      1, 4, 4, 1, 4, 4, 4, 4,
+      1, 4, 4, 1, 4, 4, 4, 4,
+      1, 4, 1, 1, 4, 4, 4, 4,
     ].map((value, i) => {
       const pos = oneDimentionIndexToVec2(i, width);
       return {
@@ -794,7 +798,6 @@ export default class Underworld {
     this.cleanUpLevel();
 
     const { levelIndex, limits, imageOnlyTiles, pickups, enemies, obstacles, validPlayerSpawnCoords } = levelData;
-    debugger
     this.levelIndex = levelIndex;
     this.limits = limits;
     this.cacheWalls(obstacles, imageOnlyTiles.filter(x => x.image == all_ground));

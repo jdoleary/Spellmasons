@@ -14,3 +14,6 @@ Brad and I played for about 20 minutes and had a great time. I think this could 
 To show original tiles:
 1. ensure at least one player spawn is returned so it doesn't loop forever
 2. Comment out "// Change all remaining base tiles to final tiles" section
+---
+The pathing only requires being inside an inverted poly if there is a single inverted poly anywhere, if there are none, it works fine with just
+regular polys
