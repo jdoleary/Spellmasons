@@ -229,18 +229,18 @@ export function convertBaseTilesToFinalTiles(map: Map) {
     }
     const size = width * height;
     function changeTileToLiquidIf3NeighborsAreLiquid(position: Vec.Vec2) {
-            const neighbors = Object.values(SIDES).flatMap(side => {
-                const cell = getCell(map, Vec.add(position, side));
-                // Checking for cell.image intentionally excludes the "empty" cell
-                return cell && cell.image ? [{ cell, side }] : [];
-            });
-            if (neighbors.filter(n => n.cell.image == baseTiles.liquid).length >= 3) {
+        const neighbors = Object.values(SIDES).flatMap(side => {
+            const cell = getCell(map, Vec.add(position, side));
+            // Checking for cell.image intentionally excludes the "empty" cell
+            return cell && cell.image ? [{ cell, side }] : [];
+        });
+        if (neighbors.filter(n => n.cell.image == baseTiles.liquid).length >= 3) {
             changeTile(vec2ToOneDimentionIndex(position, width), baseTiles.liquid);
             // Check all neighbors now that one of them might now be surrounded by 3
             neighbors.filter(n => n.cell.image == baseTiles.ground).forEach(n => changeTileToLiquidIf3NeighborsAreLiquid(cellCoordToIndexPosition(n.cell)));
-            }
-
         }
+
+    }
     // All tiles with >= 3 base liquid tile neighbors turn to base liquid
     for (let i = 0; i < size; i++) {
         const position = oneDimentionIndexToVec2(i, width);
@@ -271,6 +271,9 @@ export function convertBaseTilesToFinalTiles(map: Map) {
             west: baseTiles.empty,
             northwest: baseTiles.empty,
         });
+        // if (Vec.equal(position, { x: 14, y: 4 })) {
+        //     debugger
+        // }
         // Change ground tiles
         if (currentCell?.image == baseTiles.ground) {
             if (neighbors.west == baseTiles.liquid && neighbors.south == baseTiles.liquid) {
@@ -735,6 +738,130 @@ export function toObstacle(t: Tile): IObstacle | undefined {
                     { x: 0, y: 39 },
                     { x: 25, y: 39 },
                     { x: 25, y: 64 },
+                    { x: 0, y: 64 },
+                ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
+                inverted: false
+            }
+        }
+    } else if (t.image == finalTileImages.liquidNGroundS) {
+        return {
+            x: t.x,
+            y: t.y,
+            material: Material.LIQUID,
+            bounds: {
+                points: [
+                    { x: 0, y: 0 },
+                    { x: 64, y: 0 },
+                    { x: 64, y: 39 },
+                    { x: 0, y: 39 },
+                ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
+                inverted: false
+            }
+        }
+    } else if (t.image == finalTileImages.liquidCornerNE) {
+        return {
+            x: t.x,
+            y: t.y,
+            material: Material.LIQUID,
+            bounds: {
+                points: [
+                    { x: 29, y: 0 },
+                    { x: 64, y: 0 },
+                    { x: 64, y: 39 },
+                    { x: 29, y: 39 },
+                ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
+                inverted: false
+            }
+        }
+    } else if (t.image == finalTileImages.liquidInsideCornerSW) {
+        return {
+            x: t.x,
+            y: t.y,
+            material: Material.LIQUID,
+            bounds: {
+                points: [
+                    { x: 0, y: 0 },
+                    { x: 64, y: 0 },
+                    { x: 64, y: 64 },
+                    { x: 29, y: 64 },
+                    { x: 29, y: 39 },
+                    { x: 0, y: 39 },
+                ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
+                inverted: false
+            }
+        }
+    } else if (t.image == finalTileImages.liquidEGroundW) {
+        return {
+            x: t.x,
+            y: t.y,
+            material: Material.LIQUID,
+            bounds: {
+                points: [
+                    { x: 29, y: 0 },
+                    { x: 64, y: 0 },
+                    { x: 64, y: 64 },
+                    { x: 29, y: 64 },
+                ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
+                inverted: false
+            }
+        }
+    } else if (t.image == finalTileImages.liquidCornerSE) {
+        return {
+            x: t.x,
+            y: t.y,
+            material: Material.LIQUID,
+            bounds: {
+                points: [
+                    { x: 29, y: 32 },
+                    { x: 64, y: 32 },
+                    { x: 64, y: 64 },
+                    { x: 29, y: 64 },
+                ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
+                inverted: false
+            }
+        }
+    } else if (t.image == finalTileImages.liquidInsideCornerNW) {
+        return {
+            x: t.x,
+            y: t.y,
+            material: Material.LIQUID,
+            bounds: {
+                points: [
+                    { x: 29, y: 0 },
+                    { x: 64, y: 0 },
+                    { x: 64, y: 64 },
+                    { x: 0, y: 64 },
+                    { x: 0, y: 32 },
+                    { x: 29, y: 32 },
+                ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
+                inverted: false
+            }
+        }
+    } else if (t.image == finalTileImages.liquidSGroundN) {
+        return {
+            x: t.x,
+            y: t.y,
+            material: Material.LIQUID,
+            bounds: {
+                points: [
+                    { x: 0, y: 32 },
+                    { x: 64, y: 32 },
+                    { x: 64, y: 64 },
+                    { x: 0, y: 64 },
+                ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
+                inverted: false
+            }
+        }
+    } else if (t.image == finalTileImages.liquidCornerSW) {
+        return {
+            x: t.x,
+            y: t.y,
+            material: Material.LIQUID,
+            bounds: {
+                points: [
+                    { x: 0, y: 32 },
+                    { x: 34, y: 32 },
+                    { x: 34, y: 64 },
                     { x: 0, y: 64 },
                 ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
                 inverted: false
