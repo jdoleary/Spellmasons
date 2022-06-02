@@ -384,7 +384,6 @@ export function addPixiSprite(
   if (texture) {
     const animatedSprite = new PIXI.AnimatedSprite(texture);
     animatedSprite.animationSpeed = options.animationSpeed || 0.1;
-    console.log('jtest', animatedSprite.animationSpeed, imagePath, options)
     if (options.onComplete) {
       animatedSprite.onComplete = options.onComplete;
     }
