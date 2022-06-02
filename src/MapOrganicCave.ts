@@ -519,10 +519,10 @@ const finalTileImages = {
     wallN: 'tiles/bloodWallTop.png',
     wallCornerNW: 'tiles/bloodWallTopLeft.png',
     wallCornerNE: 'tiles/bloodWallTopRight.png',
-    wallInsideCornerNE: 'tiles/bloodWallInsideCornerNE.png',
-    wallInsideCornerNW: 'tiles/bloodWallInsideCornerNW.png',
-    wallInsideCornerSE: 'tiles/bloodWallInsideCornerSE.png',
-    wallInsideCornerSW: 'tiles/bloodWallInsideCornerSW.png',
+    wallInsideCornerNE: 'tiles/bloodCornerTopRight.png',
+    wallInsideCornerNW: 'tiles/bloodCornerTopLeft.png',
+    wallInsideCornerSE: 'tiles/bloodCornerBtmRight.png',
+    wallInsideCornerSW: 'tiles/bloodCornerBtmLeft.png',
 };
 
 export function toObstacle(t: Tile): IObstacle | undefined {
