@@ -1432,7 +1432,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
 	"sourceSize": {"w":64,"h":64}
 },
-"tiles/bloodInsideCornerNE.png":
+"tiles/bloodSideBottom.png":
 {
 	"frame": {"x":199,"y":133,"w":64,"h":64},
 	"rotated": false,
@@ -1440,7 +1440,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
 	"sourceSize": {"w":64,"h":64}
 },
-"tiles/bloodInsideCornerNW.png":
+"tiles/bloodSideBottomLeft.png":
 {
 	"frame": {"x":265,"y":67,"w":64,"h":64},
 	"rotated": false,
@@ -1448,7 +1448,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
 	"sourceSize": {"w":64,"h":64}
 },
-"tiles/bloodInsideCornerSE.png":
+"tiles/bloodSideBottomRight.png":
 {
 	"frame": {"x":331,"y":1,"w":64,"h":64},
 	"rotated": false,
@@ -1456,7 +1456,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
 	"sourceSize": {"w":64,"h":64}
 },
-"tiles/bloodInsideCornerSW.png":
+"tiles/bloodSideCornerBtmLeft.png":
 {
 	"frame": {"x":1,"y":397,"w":64,"h":64},
 	"rotated": false,
@@ -1464,7 +1464,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
 	"sourceSize": {"w":64,"h":64}
 },
-"tiles/bloodSideBottom.png":
+"tiles/bloodSideCornerBtmRight.png":
 {
 	"frame": {"x":67,"y":331,"w":64,"h":64},
 	"rotated": false,
@@ -1472,7 +1472,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
 	"sourceSize": {"w":64,"h":64}
 },
-"tiles/bloodSideBottomLeft.png":
+"tiles/bloodSideCornerTopLeft.png":
 {
 	"frame": {"x":133,"y":265,"w":64,"h":64},
 	"rotated": false,
@@ -1480,7 +1480,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
 	"sourceSize": {"w":64,"h":64}
 },
-"tiles/bloodSideBottomRight.png":
+"tiles/bloodSideCornerTopRight.png":
 {
 	"frame": {"x":199,"y":199,"w":64,"h":64},
 	"rotated": false,
@@ -1945,6 +1945,6 @@
 	"format": "RGBA8888",
 	"size": {"w":1064,"h":493},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:465a551893c95f28b918facf1411817e:c0d5d3e76cf3dcabb88e2757245459ce:81b8455959c6df0a71f2d78f10f487eb$"
+	"smartupdate": "$TexturePacker:SmartUpdate:777d4162fc268146e80de857abd057b6:0d2826f929006ce0d95cc945c928be79:81b8455959c6df0a71f2d78f10f487eb$"
 }
 }
