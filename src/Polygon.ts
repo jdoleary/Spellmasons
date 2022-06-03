@@ -1,7 +1,7 @@
 import type { Vec2 } from "./Vec";
 import * as Vec from './Vec';
 import { distance, similarTriangles } from "./math";
-import { isCollinearAndOverlapping, isCollinearAndPointInSameDirection, LineSegment, lineSegmentIntersection } from "./collision/collisionMath";
+import { isCollinearAndOverlapping, isCollinearAndPointInSameDirection, LineSegment, lineSegmentIntersection } from "./collision/lineSegment";
 import { clockwiseAngle, isAngleBetweenAngles } from "./Angle";
 
 export interface Polygon {
@@ -82,7 +82,7 @@ export interface Branch {
     distance: number;
     nextLine: PolygonLineSegment;
 }
-function growOverlappingCollinearLinesInDirectionOfP2(line: LineSegment, walls: LineSegment[]): LineSegment {
+export function growOverlappingCollinearLinesInDirectionOfP2(line: LineSegment, walls: LineSegment[]): LineSegment {
     // Grow test line from line.p1 to the farthest colinear, touching line's p2
     let testLineGrew = false;
     let relevantWalls = walls.filter(w => isCollinearAndPointInSameDirection(line, w));

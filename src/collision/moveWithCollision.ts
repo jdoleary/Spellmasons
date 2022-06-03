@@ -1,6 +1,6 @@
 import { add, magnitude, subtract, Vec2 } from '../Vec';
 import { distance, similarTriangles } from "../math";
-import { findWherePointIntersectLineSegmentAtRightAngle, LineSegment } from "./collisionMath";
+import { findWherePointIntersectLineSegmentAtRightAngle, LineSegment } from "./lineSegment";
 import * as config from '../config';
 import type * as Unit from '../Unit';
 

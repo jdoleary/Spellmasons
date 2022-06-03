@@ -13,7 +13,7 @@ import type * as TimeRelease from '../TimeRelease';
 import type * as Pickup from '../Pickup';
 import { targetBlue } from './colors';
 import { calculateCost, CardCost } from '../cards/cardUtils';
-import { closestLineSegmentIntersection } from '../collision/collisionMath';
+import { closestLineSegmentIntersection } from '../collision/lineSegment';
 import { getBestRangedLOSTarget } from '../units/actions/rangedAction';
 
 let planningViewGraphics: PIXI.Graphics;

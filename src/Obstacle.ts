@@ -4,7 +4,7 @@ import { containerWalls } from './PixiUtils';
 import { OBSTACLE_SIZE } from './config';
 import type { Vec2 } from './Vec';
 import { IUnit, takeDamage } from './Unit';
-import { lineSegmentIntersection } from './collision/collisionMath';
+import { lineSegmentIntersection } from './collision/lineSegment';
 import { Material } from './Conway';
 export interface IObstacle {
   x: number;

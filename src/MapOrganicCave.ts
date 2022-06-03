@@ -1,4 +1,4 @@
-import { lineSegmentIntersection } from "./collision/collisionMath";
+import { lineSegmentIntersection } from "./collision/lineSegment";
 import { distance, lerp, similarTriangles } from "./math";
 import { isVec2InsidePolygon } from "./Polygon";
 import { randFloat, randInt } from "./rand";

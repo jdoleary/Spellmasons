@@ -1,7 +1,7 @@
 // @ts-nocheck
 import type { Vec2 } from "../Vec";
 import { testables, Branch, makePolygonIndexIterator, Polygon, expandPolygon, mergeOverlappingPolygons, polygonToPolygonLineSegments, getInsideAnglesOfPoint, doesLineFromPointToTargetProjectAwayFromOwnPolygon, getInsideAnglesOfWall } from '../Polygon';
-import { LineSegment, toStandardForm } from "../collision/collisionMath";
+import { LineSegment, toStandardForm } from "../collision/lineSegment";
 const { getLoopableIndex, isVec2InsidePolygon, findFirstPointNotInsideAnotherPoly, getNormalVectorOfLineSegment,
     getClosestBranch, growOverlappingCollinearLinesInDirectionOfP2, arePolygonsEquivalent, getPointNormalVector } = testables;
 

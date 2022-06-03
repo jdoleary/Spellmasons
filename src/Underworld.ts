@@ -36,7 +36,7 @@ import { allUnits } from './units';
 import { updateManaCostUI, updatePlanningView } from './ui/PlanningView';
 import { prng, randInt, SeedrandomState } from './rand';
 import { calculateCost } from './cards/cardUtils';
-import { lineSegmentIntersection, LineSegment } from './collision/collisionMath';
+import { lineSegmentIntersection, LineSegment } from './collision/lineSegment';
 import { expandPolygon, mergeOverlappingPolygons, Polygon, PolygonLineSegment, polygonLineSegmentToLineSegment, polygonToPolygonLineSegments } from './Polygon';
 import { calculateDistanceOfVec2Array, findPath, findPolygonsThatVec2IsInsideOf } from './Pathfinding';
 import { removeUnderworldEventListeners } from './views';
