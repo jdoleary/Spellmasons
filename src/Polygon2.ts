@@ -24,7 +24,7 @@ export function mergePolygon2s(polygons: Polygon2[]): Polygon2[] {
         const lineSegment = lineSegments[i];
         if (lineSegment) {
             const poly = processLineSegment(lineSegment, lineSegments);
-            if (poly) {
+            if (poly && poly.length) {
                 resultPolys.push(poly);
             }
         }
@@ -42,22 +42,28 @@ export function processLineSegment(processingLineSegment: LineSegment.LineSegmen
     do {
         // Get the closest branch
         const branch = getClosestBranch(currentLine, lineSegments);
-        console.log('branch', branch?.nextLine);
+        console.log('chosen branch', branch);
         if (branch === undefined) {
-            console.log('jtest', newPoly);
             // Return an empty polygon since it did not reconnect to itself
+            console.log('FAIL, empty did not reconnect\n')
             return [];
         }
         currentLine = branch.nextLine;
+        // console.log('next line', currentLine);
         // Check to see if point is already in the poly
         // Closes when the point about to be added is in the newPoly
-        if (newPoly.some(p => Vec.equal(currentLine.p1, p))) {
-            // TODO: omit previous points, start with the point that it connected at
+        const indexOfMatch = newPoly.findIndex(p => Vec.equal(currentLine.p1, p));
+        if (indexOfMatch !== -1) {
+            // LEFT OFF: TODO remove line segments that are moved to a new poly
+            console.log('DONE', indexOfMatch, newPoly, '\n')
             // The poly is successfully closed and done processing
-            return newPoly;
+            // Use slice to omit points before the match so that the polygon
+            // is closed perfectly
+            return newPoly.slice(indexOfMatch);
         }
         // Add that point to newPoly
         newPoly.push(currentLine.p1);
+        console.log('points', newPoly);
 
 
     } while (true);
@@ -83,7 +89,7 @@ export function toLineSegments(poly: Polygon2): LineSegment.LineSegment[] {
     return lineSegments;
 }
 function getClosestBranch(line: LineSegment.LineSegment, lineSegments: LineSegment.LineSegment[]): Branch | undefined {
-    console.log('---------')
+    console.log('---------', line)
     line = growOverlappingCollinearLinesInDirectionOfP2(line, lineSegments);
 
     let branches: Branch[] = [];
@@ -94,7 +100,6 @@ function getClosestBranch(line: LineSegment.LineSegment, lineSegments: LineSegme
             continue;
         }
         let intersection = LineSegment.lineSegmentIntersection(line, wall);
-        console.log('intersection,', line, wall, intersection)
         if (intersection) {
             // Round the intersection since points that are of by 0.00000000001 (roughly) should be considered idential
             // (the lineSegment intersection function isn't perfect)
@@ -111,11 +116,16 @@ function getClosestBranch(line: LineSegment.LineSegment, lineSegments: LineSegme
             // but if the intersection is just an intersection along the line, then the next point is the first vertex
             const nextLineAngle = Vec.getAngleBetweenVec2s(intersection, wall.p2);
             const branchAngle = clockwiseAngle(lastLineAngle, nextLineAngle);
-            branches.push({
-                branchAngle,
-                distance: dist,
-                nextLine: { p1: intersection, p2: wall.p2 },
-            });
+            // console.log(' lastLineAngle', lastLineAngle * 180 / Math.PI, 'nextLineAngle', nextLineAngle * 180 / Math.PI, 'branchANgle', branchAngle * 180 / Math.PI);
+
+            // Exclude branches where the intersection is equal to the end point
+            if (!Vec.equal(intersection, wall.p2)) {
+                branches.push({
+                    branchAngle,
+                    distance: dist,
+                    nextLine: { p1: intersection, p2: wall.p2 },
+                });
+            }
         }
     }
     // Sort branches by distance (then by angle)
@@ -129,6 +139,9 @@ function getClosestBranch(line: LineSegment.LineSegment, lineSegments: LineSegme
         }
 
     });
+    console.log('branches', branches.map(b => ({
+        ...b, nextLine: LineSegment.toString(b.nextLine), branchAngle: b.branchAngle * 180 / Math.PI
+    })))
     // Find the closest branch with a branchAngle < 180 because a branch angle of > 180 degrees
     // (if it's not the last branch means that it branches off INSIDE of another branch
     // if there are none, find the furthest with a branchAngle of 180 exactly (this is the farthest point
@@ -158,5 +171,5 @@ export interface Branch {
     // in rads
     branchAngle: number;
     distance: number;
-    nextLine: LineSegment;
+    nextLine: LineSegment.LineSegment;
 }

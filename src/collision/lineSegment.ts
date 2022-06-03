@@ -8,6 +8,9 @@ export interface LineSegment {
 export function equal(line1: LineSegment, line2: LineSegment): boolean {
     return Vec.equal(line1.p1, line2.p1) && Vec.equal(line1.p2, line2.p2);
 }
+export function toString(line: LineSegment): string {
+    return `${line.p1.x},${line.p1.y} to ${line.p2.x},${line.p2.y}`;
+}
 function slope(line: LineSegment): number | undefined {
     const X = (line.p2.x - line.p1.x);
     if (X == 0) {

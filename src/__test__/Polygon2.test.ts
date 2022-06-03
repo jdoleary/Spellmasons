@@ -1,4 +1,4 @@
-import { LineSegment } from '../collision/collisionMath';
+import { LineSegment } from '../collision/lineSegment';
 import { Polygon2, mergePolygon2s, toLineSegments, processLineSegment } from '../Polygon2';
 import { Vec2 } from '../Vec';
 
@@ -27,7 +27,44 @@ describe('Polygon2', () => {
         });
 
     });
-    describe.only('processLineSegment', () => {
+    describe('processLineSegment', () => {
+        it.only('should remove lineSegments as they are processed and split line segments up if they are branched off of an intersection instead of an end point', () => {
+            const lineSegments = [
+                // mallet head:
+                ...toLineSegments([
+                    { x: 0, y: 0 },
+                    { x: 0, y: 3 },
+                    { x: 3, y: 3 },
+                    { x: 3, y: 0 },
+                ]),
+                // mallet handle:
+                ...toLineSegments([
+                    { x: -1, y: 2 },
+                    { x: 1, y: 2 },
+                    { x: 1, y: 1 },
+                    { x: -1, y: 1 },
+                ]),
+
+            ]
+            const actual = processLineSegment(lineSegments[0] as LineSegment, lineSegments)
+            const expected: Polygon2 = [
+                { x: 0, y: 0 },
+                // intersection
+                { x: 0, y: 1 },
+                { x: -1, y: 1 },
+                { x: -1, y: 2 },
+                // intersection
+                { x: 0, y: 2 },
+                { x: 0, y: 3 },
+                { x: 3, y: 3 },
+                { x: 3, y: 0 },
+            ];
+            // LEFT OFF: REMOVE LINE SEGMENTS ONCE THEY ARE PROCESSED
+            console.log('actual', actual);
+            console.log('remaining', lineSegments);
+            expect(actual).toEqual(expected);
+
+        });
         it('should not return a poly if a lone linesegment doesn\'t connect to other line segments that eventually close the shape', () => {
             const lineSegment = { p1: { x: 0, y: 0 }, p2: { x: 0, y: 100 } }
             // These don't touch
@@ -44,7 +81,7 @@ describe('Polygon2', () => {
             const expected: Polygon2 = [];
             expect(actual).toEqual(expected);
         });
-        it.only('should omit line segments that are not part of the reconnected shape', () => {
+        it('should omit line segments that are not part of the reconnected shape', () => {
             const pole = { p1: { x: 0, y: 0 }, p2: { x: 0, y: 100 } }
             const flagPolygon = [
 
@@ -62,7 +99,7 @@ describe('Polygon2', () => {
         });
     });
     describe('mergePolygon2s', () => {
-        describe('given multiple polygons that intersect at the same vertex on all of them', () => {
+        describe.skip('given multiple polygons that intersect at the same vertex on all of them', () => {
             it('should merge them in the correct order', () => {
                 // This example uses 4 diamonds that intersect at 0,0
 
@@ -103,11 +140,12 @@ describe('Polygon2', () => {
                     p1d, p2d, p3d, p4d,
                     p1
                 ]
+                console.log('actula', actual)
                 expect(actual).toEqual(expected);
 
             });
         });
-        it('should handle merging 4 polygons that make a donut of rectancles (with a hole in the middle)', () => {
+        it.skip('should handle merging 4 polygons that make a donut of rectancles (with a hole in the middle)', () => {
             const p1 = { x: 0, y: 0 }
             const p2 = { x: 10, y: 0 }
             const p3 = { x: 10, y: 10 }
@@ -167,8 +205,9 @@ describe('Polygon2', () => {
             const pointsDiamond: Vec2[] = [p1b, p2b, p3b, p4b];
             const polygonDiamond: Polygon2 = pointsDiamond
             //  They will intersect directly on p1b, which means it will be in the merged poly twice
-            const actual = mergePolygon2s([polygonA, polygonDiamond])[0]
-            const expected = [p1, p2, p1b, p2b, p3b, p4b, p1b, p3, p4];
+            const actual = mergePolygon2s([polygonA, polygonDiamond])
+            console.log('actual', actual)
+            const expected = [[p1, p2, p1b, p2b, p3b, p4b, p1b, p3, p4]];
             expect(actual).toEqual(expected);
 
         });
@@ -211,13 +250,14 @@ describe('Polygon2', () => {
             const polygonB: Polygon2 = pointsb;
             const mergedPolygons = mergePolygon2s([polygonA, polygonB]);
 
-            const actual = mergedPolygons[0];
-            const expected = [
+            const actual = mergedPolygons;
+            console.log('actual', actual)
+            const expected = [[
                 p1,
                 p2b,
                 p3b,
                 p4,
-            ];
+            ]];
             expect(actual).toEqual(expected);
         });
         it('should merge them so there is only one left', () => {
