@@ -28,7 +28,8 @@ describe('Polygon2', () => {
 
     });
     describe('processLineSegment', () => {
-        it.only('should remove lineSegments as they are processed and split line segments up if they are branched off of an intersection instead of an end point', () => {
+        describe('mallet example', () => {
+
             const lineSegments = [
                 // mallet head:
                 ...toLineSegments([
@@ -46,24 +47,30 @@ describe('Polygon2', () => {
                 ]),
 
             ]
-            const actual = processLineSegment(lineSegments[0] as LineSegment, lineSegments)
-            const expected: Polygon2 = [
-                { x: 0, y: 0 },
-                // intersection
-                { x: 0, y: 1 },
-                { x: -1, y: 1 },
-                { x: -1, y: 2 },
-                // intersection
-                { x: 0, y: 2 },
-                { x: 0, y: 3 },
-                { x: 3, y: 3 },
-                { x: 3, y: 0 },
-            ];
-            // LEFT OFF: REMOVE LINE SEGMENTS ONCE THEY ARE PROCESSED
-            console.log('actual', actual);
-            console.log('remaining', lineSegments);
-            expect(actual).toEqual(expected);
-
+            it('should remove lineSegments as they are processed and split line segments up if they are branched off of an intersection instead of an end point; dangling linesegments should be removed entirely because they share a vertex with the polygon that was just created but did not become a part of it', () => {
+                processLineSegment(lineSegments[0] as LineSegment, lineSegments);
+                const actual = lineSegments;
+                const expected: LineSegment[] = [
+                    { p1: { x: 1, y: 2 }, p2: { x: 1, y: 1 } }
+                ];
+                expect(actual).toEqual(expected);
+            });
+            it('should merge the mallet into one polygon', () => {
+                const actual = processLineSegment(lineSegments[0] as LineSegment, lineSegments)
+                const expected: Polygon2 = [
+                    { x: 0, y: 0 },
+                    // intersection
+                    { x: 0, y: 1 },
+                    { x: -1, y: 1 },
+                    { x: -1, y: 2 },
+                    // intersection
+                    { x: 0, y: 2 },
+                    { x: 0, y: 3 },
+                    { x: 3, y: 3 },
+                    { x: 3, y: 0 },
+                ];
+                expect(actual).toEqual(expected);
+            });
         });
         it('should not return a poly if a lone linesegment doesn\'t connect to other line segments that eventually close the shape', () => {
             const lineSegment = { p1: { x: 0, y: 0 }, p2: { x: 0, y: 100 } }
@@ -405,6 +412,7 @@ describe('Polygon2', () => {
             const polygonB: Polygon2 = points;
             const mergedPolygons = mergePolygon2s([polygonA, polygonB]);
             const actual = mergedPolygons.length;
+            console.log('mergedPolys', mergedPolygons)
             const expected = 1;
             expect(actual).toEqual(expected);
         });
@@ -423,11 +431,11 @@ describe('Polygon2', () => {
             expect(mergedPolygons.length).toEqual(1);
             const actual = mergedPolygons[0];
             const expected = [
-                p5,
                 p1,
                 p2,
                 p3,
                 p4,
+                p5,
             ];
             expect(actual).toEqual(expected);
         });

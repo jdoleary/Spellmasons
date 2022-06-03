@@ -1,8 +1,10 @@
 # Critical Path
-- Big Tasks (Due 6/3, end of this week)
+- Big Tasks
+    - Polygon2 - Refactor Line Segments
     - Implement new tile "sewing" with Che's assets
     - Restore unit "crowding" once all linesegments (pathing, liquid, walls) are finalized with Che's tileset
     - Liquid "magnets": if you get close enough to the edge you "fall in"
+    - Standalone server
 - Final Steps
     - [Tutorial](https://www.youtube.com/watch?v=-GV814cWiAw)
     - Optimize

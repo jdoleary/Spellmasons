@@ -15,7 +15,11 @@ export type Polygon2 = Vec2[];
 // (see tests for "donuts" demonstration).
 export function mergePolygon2s(polygons: Polygon2[]): Polygon2[] {
     // Convert all polygons into line segments for processing:
-    const lineSegments = polygons.map(toLineSegments).flat();
+    let lineSegments = polygons.map(toLineSegments).flat();
+
+    // Remove duplicate lineSegments
+    lineSegments = lineSegments.filter((ls, index) => index == lineSegments.findIndex(other => LineSegment.equal(other, ls)))
+
 
     // resultPolys stores the merged polygons:
     const resultPolys: Polygon2[] = [];
@@ -38,17 +42,62 @@ export function processLineSegment(processingLineSegment: LineSegment.LineSegmen
     // Add point to the newPoly
     const newPoly: Polygon2 = [processingLineSegment.p1];
     let currentLine = processingLineSegment;
+
+    // These will be removed if they do not become part of the poly because they touch the poly.
+    let danglingLineSegments = []
+
     // Loop Branch:
     do {
+        const indexOfMatchEnd = newPoly.findIndex(p => Vec.equal(currentLine.p2, p));
+        if (indexOfMatchEnd !== -1) {
+            // console.log('DONE end', indexOfMatchEnd, newPoly, '\n')
+            // The poly is successfully closed and done processing because
+            // the currentLine's p2 is already a point on the poly
+
+            // Use slice to omit points before the match so that the polygon
+            // is closed perfectly
+            return newPoly.slice(indexOfMatchEnd);
+        }
         // Get the closest branch
-        const branch = getClosestBranch(currentLine, lineSegments);
-        console.log('chosen branch', branch);
+        const branch = getClosestBranch(currentLine, [...lineSegments, ...danglingLineSegments]);
+        // console.log('chosen branch', branch);
         if (branch === undefined) {
             // Return an empty polygon since it did not reconnect to itself
             console.log('FAIL, empty did not reconnect\n')
             return [];
         }
-        currentLine = branch.nextLine;
+        // Now that we have a branch, split both the current line and the next line
+        if (Vec.equal(branch.intersection, branch.branchingLine.p2)) {
+            console.error('Unexpected: intersection should not be equal to branchingLine.p2')
+        }
+        if (Vec.equal(branch.intersection, currentLine.p1)) {
+            console.error('Unexpected: intersection should not be equal to currentLine.p1')
+        }
+        // Remove currentLine and branchingLine from line segments because they are either
+        // wholy used in the newPoly or they have been split and half of the split is dangling
+        // and the other have is used in the newPoly.
+        const branchingLineIndex = lineSegments.findIndex(ls => ls == branch.branchingLine);
+        if (branchingLineIndex !== -1) {
+            lineSegments.splice(branchingLineIndex, 1);
+        }
+        const currentLineIndex = lineSegments.findIndex(ls => ls == currentLine);
+        if (currentLineIndex !== -1) {
+            lineSegments.splice(currentLineIndex, 1);
+        }
+
+        // If intersection is not the end point of the current line, split the current line
+        if (!Vec.equal(branch.intersection, currentLine.p2)) {
+            danglingLineSegments.push({ p1: branch.intersection, p2: currentLine.p2 });
+        }
+        // Make the next current line be from intersection to branchingLine.p2
+        currentLine = { p1: branch.intersection, p2: branch.branchingLine.p2 };
+
+        // If intersection is not equal to p1 of branchingLine, split branching line so that the
+        // later half (intersection to p2) is the currentLine and the former half becomes dangling.
+        if (!Vec.equal(branch.intersection, branch.branchingLine.p1)) {
+            danglingLineSegments.push({ p1: branch.branchingLine.p1, p2: branch.intersection });
+        }
+
         // console.log('next line', currentLine);
         // Check to see if point is already in the poly
         // Closes when the point about to be added is in the newPoly
@@ -63,7 +112,7 @@ export function processLineSegment(processingLineSegment: LineSegment.LineSegmen
         }
         // Add that point to newPoly
         newPoly.push(currentLine.p1);
-        console.log('points', newPoly);
+        // console.log('points', newPoly);
 
 
     } while (true);
@@ -89,7 +138,7 @@ export function toLineSegments(poly: Polygon2): LineSegment.LineSegment[] {
     return lineSegments;
 }
 function getClosestBranch(line: LineSegment.LineSegment, lineSegments: LineSegment.LineSegment[]): Branch | undefined {
-    console.log('---------', line)
+    // console.log('---------', line, lineSegments)
     line = growOverlappingCollinearLinesInDirectionOfP2(line, lineSegments);
 
     let branches: Branch[] = [];
@@ -123,7 +172,8 @@ function getClosestBranch(line: LineSegment.LineSegment, lineSegments: LineSegme
                 branches.push({
                     branchAngle,
                     distance: dist,
-                    nextLine: { p1: intersection, p2: wall.p2 },
+                    intersection,
+                    branchingLine: wall
                 });
             }
         }
@@ -139,9 +189,10 @@ function getClosestBranch(line: LineSegment.LineSegment, lineSegments: LineSegme
         }
 
     });
-    console.log('branches', branches.map(b => ({
-        ...b, nextLine: LineSegment.toString(b.nextLine), branchAngle: b.branchAngle * 180 / Math.PI
-    })))
+    // console.log('branches', branches.map(b => ({
+    //     ...b, branchingLine: LineSegment.toString(b.branchingLine), branchAngle: b.branchAngle * 180 / Math.PI
+    // })))
+
     // Find the closest branch with a branchAngle < 180 because a branch angle of > 180 degrees
     // (if it's not the last branch means that it branches off INSIDE of another branch
     // if there are none, find the furthest with a branchAngle of 180 exactly (this is the farthest point
@@ -171,5 +222,6 @@ export interface Branch {
     // in rads
     branchAngle: number;
     distance: number;
-    nextLine: LineSegment.LineSegment;
+    intersection: Vec.Vec2;
+    branchingLine: LineSegment.LineSegment;
 }
