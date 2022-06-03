@@ -1,5 +1,6 @@
 import { LineSegment } from "./collision/collisionMath";
 import { Vec2 } from "./Vec";
+import * as Vec from "./Vec";
 
 // A Polygon2 is just an array of points where the last point connects to the first point to form a closed shape
 export type Polygon2 = Vec2[];
@@ -32,14 +33,29 @@ export function mergePolygon2s(polygons: Polygon2[]): Polygon2[] {
 // intersecting lineSegments until it finds it's way back to the beginning
 export function processLineSegment(processingLineSegment: LineSegment, lineSegments: LineSegment[]): Polygon2 {
     // Add point to the newPoly
+    const newPoly: Polygon2 = [processingLineSegment.p1];
+    let currentLine = processingLineSegment;
     // Loop Branch:
-    // Get the closest branch
-    // Add that point to newPoly
-    // Check to see if point is already in the poly
-    // if so, exit loop
-    // else, continue loop
+    do {
+        // Get the closest branch
+        const branch = getClosestBranch(currentLine, lineSegments);
+        if (branch === undefined) {
+            // Return an empty polygon since it did not reconnect to itself
+            return [];
+        }
+        currentLine = branch.nextLine;
+        // Check to see if point is already in the poly
+        // Closes when the point about to be added is in the newPoly
+        if (newPoly.some(p => Vec.equal(currentLine.p1, p))) {
+            // TODO: omit previous points, start with the point that it connected at
+            // The poly is successfully closed and done processing
+            return newPoly;
+        }
+        // Add that point to newPoly
+        newPoly.push(currentLine.p1);
 
-    return [];
+
+    } while (true);
 }
 export function toLineSegments(poly: Polygon2): LineSegment[] {
     let lastPoint = null;
