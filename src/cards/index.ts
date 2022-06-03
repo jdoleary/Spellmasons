@@ -179,6 +179,8 @@ export interface ICard {
   healthCost: number;
   probability: number;
   thumbnail: string;
+  // The path for the animation effect when the spell is cast
+  animationPath?: string;
   effect: EffectFn;
   description: string;
   // requiresFollowingCard is for cards like chain or AOE that need another

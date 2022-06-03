@@ -1523,7 +1523,7 @@ export default class Underworld {
 
           // Show the card that's being cast:
           if (!prediction) {
-            animations.push(this.animateSpell(target, card.thumbnail));
+            animations.push(this.animateSpell(target, card.animationPath || ''));
           }
         }
         // .then is necessary to convert return type of promise.all to just be void
@@ -1562,28 +1562,24 @@ export default class Underworld {
 
     return effectState;
   }
-  async animateSpell(target: Vec2, imagePath: string) {
-    const image = Image.create(
-      target,
-      imagePath,
-      containerUI,
-    );
-    // Animate icons of spell cards as they are cast:
-    image.sprite.scale.set(1.0);
-    const scaleAnimation = Promise.all([
-      Image.scale(image, 1.4),
-      Image.move(image, image.sprite.x, image.sprite.y - 50),
-      new Promise<void>((resolve) => {
-        // Make the image fade out after a delay
-        setTimeout(() => {
-          resolve();
-          Image.hide(image).then(() => {
-            Image.cleanup(image);
-          })
-        }, config.MILLIS_PER_SPELL_ANIMATION * .8);
-      })
-    ]);
-    return scaleAnimation;
+  async animateSpell(target: Vec2, imagePath: string): Promise<void> {
+    return new Promise((resolve) => {
+      const image = Image.create(
+        target,
+        imagePath,
+        containerUI,
+        {
+          loop: false,
+          animationSpeed: 0.15,
+          onComplete: () => {
+            Image.hide(image).then(() => {
+              Image.cleanup(image);
+              resolve();
+            })
+          }
+        }
+      );
+    })
 
 
   }
