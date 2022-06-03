@@ -259,9 +259,28 @@ the face of the last card in the group is seen*/
   cursor: pointer;
   position: relative;
   transition: all 0.1s;
-  background-image: url('images/card-background.png');
   width: 80px;
   height: 106px;
+}
+
+.card.rarity-forbidden {
+  background-image: url('images/card-designs/cardStylized.png')
+}
+
+.card.rarity-rare {
+  background-image: url('images/card-designs/cardStylized.png')
+}
+
+.card.rarity-uncommon {
+  background-image: url('images/card-designs/cardStylized.png')
+}
+
+.card.rarity-special {
+  background-image: url('images/card-designs/bookStone.png')
+}
+
+.card.rarity-common {
+  background-image: url('images/card-designs/cardStylized.png')
 }
 
 
@@ -405,9 +424,7 @@ kbd {
 
 .card-inner {
   display: flex;
-  border-width: 8px;
-  border-style: solid;
-  border-radius: 4px 4px;
+  padding: 8px;
   flex-direction: column;
   flex-grow: 1;
 }

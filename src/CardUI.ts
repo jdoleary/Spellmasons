@@ -399,31 +399,58 @@ export function clearSelectedCards() {
   // Now that there are no more selected cards, update the spell effect projection
   runPredictions();
 }
-
-export function getCardRarityColor(content: { probability: number }): string {
+enum CardRarity {
+  COMMON,
+  SPECIAL,
+  UNCOMMON,
+  RARE,
+  FORBIDDEN
+}
+function cardProbabilityToRarity(content: { probability: number }): CardRarity {
   if (content.probability == 1) {
     // Super rare
-    return '#241623';
+    return CardRarity.FORBIDDEN;
   } else if (content.probability < 5) {
     // Rare
-    return '#432534';
+    return CardRarity.RARE;
   } else if (content.probability < 10) {
     // Uncommon
-    return '#004e64';
+    return CardRarity.UNCOMMON
   } else if (content.probability < 20) {
     // Special
-    return '#19381F';
+    return CardRarity.SPECIAL;
   } else if (content.probability < 50) {
     // Semi-common
-    return '#3b322c'
+    return CardRarity.COMMON;
   }
   // Highly-common
-  return '#191513';
+  return CardRarity.COMMON;
+}
+export function getCardRarityColor(content: { probability: number }): string {
+  const rarity = cardProbabilityToRarity(content);
+  switch (rarity) {
+    case CardRarity.FORBIDDEN:
+      return '#241623';
+    case CardRarity.RARE:
+      return '#432534';
+    case CardRarity.UNCOMMON:
+      return '#004e64';
+    case CardRarity.SPECIAL:
+      return '#19381F';
+    case CardRarity.COMMON:
+      return '#3b322c'
+  }
 }
 function createCardElement(content: Cards.ICard) {
   const element = document.createElement('div');
   element.draggable = true;
   element.classList.add('card');
+  const rarityString = CardRarity[cardProbabilityToRarity(content)]
+  if (rarityString) {
+    element.classList.add(`rarity-${rarityString.toLowerCase()}`);
+  } else {
+    console.error('Card does not have rarity string', content);
+  }
   element.dataset.cardId = content.id;
   const elCardInner = document.createElement('div');
   elCardInner.classList.add('card-inner');
