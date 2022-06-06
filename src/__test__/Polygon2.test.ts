@@ -513,8 +513,9 @@ describe('Polygon2', () => {
         ]
 
         const mergedPolygons = mergePolygon2s([polyBridge, polyTop, polyBottom]);
-        const actual = mergedPolygons[0];
-        const expected = [
+        const actual = mergedPolygons;
+        const expected = [[
+            { x: 0, y: 2 },
             polyTop[0],
             polyTop[1],
             polyTop[2],
@@ -526,9 +527,8 @@ describe('Polygon2', () => {
             polyBottom[0],
             polyBottom[1],
             { x: 0, y: 1 },
-            { x: 0, y: 2 },
 
-        ];
+        ]];
         expect(actual).toEqual(expected);
 
     });

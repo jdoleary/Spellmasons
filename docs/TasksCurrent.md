@@ -1,14 +1,10 @@
-- A bold new plan for making polygons with holes:
-    - Forget about inverted
-    - Collect all polys as line segments and run the same branching algorithm
-    - When a newPoly takes a branch, remove that linesegment from the array of original line segments
-    - Keep iterating until all the line segments are used up
-    - Line segments that don't find a way back to the original point are discarded
-
 ## Tasks
-2. Liquid interactions
+1. Refactor line segments (Monday)
+2. Fix lonesome walls turning into tiles (Tuesday)
+3. Liquid interactions (Tuesday)
     - Apply liquid impact and submerge shader when units "fall in"
-3. Rework unit crowding
+4. Rework unit crowding (Wednesday)
+5. Standalone server (Thursday)
 ------
 - Idea: Use css blend mode on cards to have a "dark" version and a "light" version depending on if the spell is good or evil.
 - Bug: unit animation stops after unit nsync?
