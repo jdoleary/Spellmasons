@@ -268,7 +268,6 @@ describe('Polygon2', () => {
             const polygonDiamond: Polygon2 = pointsDiamond
             //  They will intersect directly on p1b, which means it will be in the merged poly twice
             const actual = mergePolygon2s([polygonA, polygonDiamond])
-            console.log('actual', actual)
             const expected = [[p1, p2, p1b, p2b, p3b, p4b, p1b, p3, p4]];
             expect(actual).toEqual(expected);
 
@@ -319,7 +318,6 @@ describe('Polygon2', () => {
                 p3b,
                 p4,
             ]]
-            console.log('actual', actual)
             expect(actual).toEqual(expected);
         });
         it('should merge them so there is only one left', () => {
@@ -467,7 +465,6 @@ describe('Polygon2', () => {
             const polygonB: Polygon2 = points;
             const mergedPolygons = mergePolygon2s([polygonA, polygonB]);
             const actual = mergedPolygons.length;
-            console.log('mergedPolys', mergedPolygons)
             const expected = 1;
             expect(actual).toEqual(expected);
         });

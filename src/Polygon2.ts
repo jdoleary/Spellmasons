@@ -106,7 +106,6 @@ export function growOverlappingCollinearLinesInDirectionOfP2(line: LineSegment.L
 // Processes a lineSegment by walking along it and branching along other 
 // intersecting lineSegments until it finds it's way back to the beginning
 export function processLineSegment(processingLineSegment: LineSegment.LineSegment, lineSegments: LineSegment.LineSegment[]): Polygon2 {
-    console.log('PROCESS LINE SEGMENT', processingLineSegment, 'remaining line segements count: ', lineSegments.length)
     // Add point to the newPoly
     const newPoly: Polygon2 = [processingLineSegment.p1];
     let currentLine = processingLineSegment;
@@ -133,10 +132,8 @@ export function processLineSegment(processingLineSegment: LineSegment.LineSegmen
         // }
         // Get the closest branch
         const branch = getClosestBranch(currentLine, [...lineSegments, ...danglingLineSegments, ...usedLineSegments]);
-        // console.log('chosen branch', branch);
         if (branch === undefined) {
             // Return an empty polygon since it did not reconnect to itself
-            console.log('FAIL, empty did not reconnect\n')
             return [];
         }
         // Now that we have a branch, split both the current line and the next line
@@ -171,14 +168,11 @@ export function processLineSegment(processingLineSegment: LineSegment.LineSegmen
             danglingLineSegments.push({ p1: branch.branchingLine.p1, p2: branch.intersection });
         }
 
-        console.log('next line', currentLine);
         // Check to see if point is already in the poly
         // Closes when the point about to be added is in the newPoly
         const indexOfP1Match = newPoly.findIndex(p => Vec.equal(currentLine.p1, p));
         const indexOfP2Match = newPoly.findIndex(p => Vec.equal(currentLine.p2, p));
         if (indexOfP1Match !== -1 && indexOfP2Match !== -1) {
-            // LEFT OFF: TODO remove line segments that are moved to a new poly
-            console.log('DONE', currentLine, newPoly, '\n')
             // The poly is successfully closed and done processing
             // Use slice to omit points before the match so that the polygon
             // is closed perfectly
@@ -186,7 +180,6 @@ export function processLineSegment(processingLineSegment: LineSegment.LineSegmen
         }
         // Add that point to newPoly
         newPoly.push(currentLine.p1);
-        console.log('add point', currentLine.p1, newPoly);
 
 
     } while (true);
@@ -212,7 +205,6 @@ export function toLineSegments(poly: Polygon2): LineSegment.LineSegment[] {
     return lineSegments;
 }
 function getClosestBranch(line: LineSegment.LineSegment, lineSegments: LineSegment.LineSegment[]): Branch | undefined {
-    console.log('getClosestBranch---------', line, lineSegments)
 
     let branches: Branch[] = [];
     // Check for collisions between the last line in path and line segments
@@ -262,9 +254,9 @@ function getClosestBranch(line: LineSegment.LineSegment, lineSegments: LineSegme
         }
 
     });
-    console.log('branches', branches.map(b => ({
-        ...b, branchingLine: LineSegment.toString(b.branchingLine), branchAngle: b.branchAngle * 180 / Math.PI
-    })))
+    // console.log('branches', branches.map(b => ({
+    //     ...b, branchingLine: LineSegment.toString(b.branchingLine), branchAngle: b.branchAngle * 180 / Math.PI
+    // })))
 
     // Find the closest branch with a branchAngle < 180 because a branch angle of > 180 degrees
     // (if it's not the last branch means that it branches off INSIDE of another branch
