@@ -119,9 +119,7 @@ export function isPointOnLineSegment(point: Vec.Vec2, lineSegment: LineSegment):
     return false;
 
 }
-// A slice of logic from lineSegmentIntersection
-// returns true if two line segmenst are collinear and point in the same direction
-export function isCollinearAndPointInSameDirection(l1: LineSegment, l2: LineSegment): boolean {
+export function getRelation(l1: LineSegment, l2: LineSegment): { isCollinear: boolean, isOverlapping: boolean, pointInSameDirection: boolean } {
     // l1 expressed as p to p+r
     const p = l1.p1;
     const r = Vec.subtract(l1.p2, l1.p1);
@@ -134,45 +132,38 @@ export function isCollinearAndPointInSameDirection(l1: LineSegment, l2: LineSegm
     const qMinusP = Vec.subtract(q, p);
     const rCrossS = Vec.crossproduct(r, s);
     // If r × s = 0 and (q − p) × r = 0, then the two lines are collinear.
-    const collinear = rCrossS == 0 && Vec.crossproduct(qMinusP, r) == 0;
+    const isCollinear = rCrossS == 0 && Vec.crossproduct(qMinusP, r) == 0;
     const pointInSameDirection = Vec.dotProduct(s, r) >= 0;
-    return collinear && pointInSameDirection;
-
-}
-// A slice of logic from lineSegmentIntersection
-// returns true if two line segmenst are both collinear and overlapping
-export function isCollinearAndOverlapping(l1: LineSegment, l2: LineSegment): boolean {
-    // l1 expressed as p to p+r
-    const p = l1.p1;
-    const r = Vec.subtract(l1.p2, l1.p1);
-    // l2 expressed as q to q+s
-    const q = l2.p1;
-    const s = Vec.subtract(l2.p2, l2.p1);
-    // The two lines intersect if we can find t and u such that: p + t r = q + u s
-    // And therefore, solving for t: t = (q − p) × s / (r × s)
-    // In the same way, we can solve for u: u = (q − p) × r / (r × s)
-    const qMinusP = Vec.subtract(q, p);
-    const rCrossS = Vec.crossproduct(r, s);
-    // If r × s = 0 and (q − p) × r = 0, then the two lines are collinear.
-    const collinear = rCrossS == 0 && Vec.crossproduct(qMinusP, r) == 0;
     //     In this case, express the endpoints of the second segment (q and q + s) in terms of the equation of the first line segment (p + t r):
     //     t0 = (q − p) · r / (r · r)
     //     t1 = (q + s − p) · r / (r · r) = t0 + s · r / (r · r)
-    if (collinear) {
+    if (isCollinear) {
         const dotRR = Vec.dotProduct(r, r);
         const t0 = Vec.dotProduct(Vec.subtract(q, p), r) / dotRR;
         const t1 = t0 + Vec.dotProduct(s, r) / dotRR;
         // If the interval between t0 and t1 intersects the interval [0, 1] then the line segments are collinear and overlapping; otherwise they are collinear and disjoint.
         // Note that if s and r point in opposite directions, then s · r < 0 and so the interval to be checked is [t1, t0] rather than [t0, t1].
         // const overlapping = (0 <= t0 && t0 <= 1) || (0 <= t1 && t1 <= 1);
-        const overlapping = Vec.dotProduct(s, r) < 0
+        const isOverlapping = Vec.dotProduct(s, r) < 0
             ? (t0 >= 1 && t1 <= 1) || (t1 <= 0 && t0 >= 0)
             : (t1 >= 1 && t0 <= 1) || (t0 <= 0 && t1 >= 0);
-        return overlapping;
+        return { isCollinear, isOverlapping, pointInSameDirection };
     } else {
-        return false
+        return { isCollinear, isOverlapping: false, pointInSameDirection };
     }
+}
+// A slice of logic from lineSegmentIntersection
+// returns true if two line segmenst are collinear and point in the same direction
+export function isCollinearAndPointInSameDirection(l1: LineSegment, l2: LineSegment): boolean {
+    const { isCollinear, pointInSameDirection } = getRelation(l1, l2);
+    return isCollinear && pointInSameDirection;
 
+}
+// A slice of logic from lineSegmentIntersection
+// returns true if two line segmenst are both collinear and overlapping
+export function isCollinearAndOverlapping(l1: LineSegment, l2: LineSegment): boolean {
+    const { isCollinear, isOverlapping } = getRelation(l1, l2);
+    return isCollinear && isOverlapping;
 }
 
 // Test l1 for intersections with each of otherLines; of all the intersections return the closest intersection
