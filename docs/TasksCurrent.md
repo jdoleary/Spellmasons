@@ -1,5 +1,4 @@
 ## Tasks
-1. Refactor line segments (Monday)
 2. Fix lonesome walls turning into tiles (Tuesday)
 3. Liquid interactions (Tuesday)
     - Apply liquid impact and submerge shader when units "fall in"

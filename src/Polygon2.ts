@@ -2,7 +2,8 @@ import * as LineSegment from "./collision/lineSegment";
 import { Vec2 } from "./Vec";
 import * as Vec from "./Vec";
 import { distance } from "./math";
-import { clockwiseAngle } from "./Angle";
+import { clockwiseAngle, isAngleBetweenAngles } from "./Angle";
+import { getLoopableIndex, getPointNormalVector } from "./Polygon";
 
 // A Polygon2 is just an array of points where the last point connects to the first point to form a closed shape
 export type Polygon2 = Vec2[];
@@ -204,6 +205,9 @@ export function toLineSegments(poly: Polygon2): LineSegment.LineSegment[] {
     }
     return lineSegments;
 }
+export function toPolygon2LineSegments(polygon: Polygon2): Polygon2LineSegment[] {
+    return toLineSegments(polygon).map(ls => ({ ...ls, polygon }));
+}
 function getClosestBranch(line: LineSegment.LineSegment, lineSegments: LineSegment.LineSegment[]): Branch | undefined {
 
     let branches: Branch[] = [];
@@ -282,6 +286,209 @@ function getClosestBranch(line: LineSegment.LineSegment, lineSegments: LineSegme
             return diffDistance;
         }
     })[0];
+}
+// Refactored from Polygon to Polygon2
+// Note: There is a slight flaw in this algorithm in that if the point lies
+// directly on a line of the poly on the left side, it will yield a false negative
+export function isVec2InsidePolygon(point: Vec2, polygon: Polygon2): boolean {
+    // From geeksforgeeks.com: 
+    // 1) Draw a horizontal line to the right of each point and extend it to infinity 
+    // 2) Count the number of times the line intersects with polygon edges. 
+    // 3) A point is inside the polygon if either count of intersections is odd or point lies on an edge of polygon. 
+    // If none of the conditions is true, then point lies outside
+    // Note: we must test both a horizontal line and a vertical line in order to
+    // account for corner cases such as the horizontal line intersecting directly with a vertex of a 
+    // poly (which would be 1 intersection, but the point could still be outside);
+    // Corner cases include when the test line intersects directly with a vertex or perfectly with an
+    // edge.  Intersecting with multiple points on the same edge should be reduced to 1 intersection
+    // We do two lines to account for the corner case of intersecting directly with a vertex.
+
+    const horizontalLine: LineSegment.LineSegment = { p1: point, p2: { x: Number.MAX_SAFE_INTEGER, y: point.y } };
+    // Start outside, so each odd number of flips will determine it to be inside
+    let isInside = false;
+    const intersections: Vec2[] = [];
+    for (let wall of toLineSegments(polygon)) {
+        const _intersection = LineSegment.lineSegmentIntersection(horizontalLine, wall)
+        // Rounding and removing extra zeros: https://stackoverflow.com/a/12830454/4418836
+        // See test
+        // 'should return false for this real world example which would incur a floating point error without the current form of the function'
+        // for explanation
+        const intersection = _intersection ? { x: +_intersection.x.toFixed(2), y: +_intersection.y.toFixed(2) } : undefined
+
+        //  Don't process the same intersection more than once
+        //  Only process intersections at verticies once
+        if (intersection && !intersections.find(i =>
+            // intersection already processed
+            Vec.equal(i, intersection) &&
+            // intersection equals a vertex of the poly
+            polygon.some(p => Vec.equal(intersection, p))
+        )) {
+            intersections.push(intersection);
+            // If the intersection is at a vertex of the polygon, this is a special case and must be handled by checking the
+            // angles of what happens when the line goes through the intersection
+            // This logic solves these corner cases:
+            // 1. point is same location as a vertex of the polygon (inside)
+            // 2. point is horizontal to a vertex of the polygon (possibly inside or outside)
+            // 3. point is colinear with, but not on, a horizontal edge of the polygon (possibly inside or outside)
+            if (Vec.equal(intersection, point)) {
+                // The point itself is an intersection point, meaning the point lies directly on one of the walls of the polygon
+                // then it obviously is inside of the polygon (this implementation includes ON the walls as inside)
+                // Note: This is so for inverted polygons too.
+                return true
+            } else if (Vec.equal(intersection, wall.p1) || Vec.equal(intersection, wall.p2)) {
+                // Get the INSIDE angle of the vertex (relative to it's polygon)
+                const indexOfVertex = polygon.findIndex(p => Vec.equal(p, intersection));
+                const nextPoint = polygon[getLoopableIndex(indexOfVertex + 1, polygon)];
+                const prevPoint = polygon[getLoopableIndex(indexOfVertex - 1, polygon)];
+                if (nextPoint && prevPoint) {
+
+                    const startClockwiseAngle = Vec.getAngleBetweenVec2s(intersection, nextPoint);
+                    const endClockwiseAngle = Vec.getAngleBetweenVec2s(intersection, prevPoint);
+                    // Take the vectors: line.p1 (the point) to vertex/intersection and vertex/intersection to line.p2
+                    const v1Angle = Vec.getAngleBetweenVec2s(intersection, horizontalLine.p1);
+                    const v2Angle = Vec.getAngleBetweenVec2s(intersection, horizontalLine.p2);
+                    const allowableAngle = clockwiseAngle(startClockwiseAngle, endClockwiseAngle);
+                    const v1AngleInside = Vec.equal(intersection, point) || clockwiseAngle(startClockwiseAngle, v1Angle) <= allowableAngle;
+                    const v2AngleInside = clockwiseAngle(startClockwiseAngle, v2Angle) <= allowableAngle;
+                    // Only flip if v1AngleInside XOR v2AngleInside
+                    if (v1AngleInside !== v2AngleInside) {
+                        isInside = !isInside;
+                    }
+                    // Debug logging
+                    // console.log(' start/end', Math.round(startClockwiseAngle * 180 / Math.PI), Math.round(endClockwiseAngle * 180 / Math.PI));
+                    // console.log(' v1angle/v2angle', Math.round(v1Angle * 180 / Math.PI), Math.round(v2Angle * 180 / Math.PI));
+                    // console.log(' not inside angle:', Math.round(clockwiseAngle(startClockwiseAngle, v1Angle) * 180 / Math.PI), Math.round(clockwiseAngle(startClockwiseAngle, v2Angle) * 180 / Math.PI), Math.round(allowableAngle * 180 / Math.PI), v1AngleInside, v2AngleInside)
+                } else {
+                    console.error('Next point or prev point is undefined. This error should never occur.');
+                }
+            } else {
+                // If it intersects with a wall, flip the bool
+                isInside = !isInside
+            }
+        }
+    }
+    return isInside;
+
+}
+// Refactored from Polygon.ts
+function projectPointForPathingMesh(polygon: Polygon2, pointIndex: number, magnitude: number): Vec2 {
+    const point = polygon[pointIndex];
+    if (point) {
+        const nextPoint = polygon[getLoopableIndex(pointIndex + 1, polygon)];
+        const prevPoint = polygon[getLoopableIndex(pointIndex - 1, polygon)];
+        if (nextPoint && prevPoint) {
+            const projectToPoint = getPointNormalVector(point, prevPoint, nextPoint)
+            projectToPoint.x *= magnitude;
+            projectToPoint.y *= magnitude;
+            // Round to the nearest whole number to avoid floating point inequalities later
+            // when processing these points
+            return Vec.round(Vec.add(point, projectToPoint));
+        } else {
+            console.error('projectPointForPathingMesh: nextPoint or prevPoint is undefined.  This error should never happen.');
+            return { x: 0, y: 0 };
+        }
+    } else {
+        console.error('projectPointForPathingMesh: point is undefined.  This error should never happen.');
+        return { x: 0, y: 0 };
+    }
+
+}
+// Refactored from Polygon.ts
+// Expand polygon: Grows a polygon into it's "outside" by the distance of magnitude
+// along the normal vectors of each vertex.
+// Pure: returns a new polygon without mutating the old
+export function expandPolygon(polygon: Polygon2, magnitude: number): Polygon2 {
+    return polygon.map((_p, i) => projectPointForPathingMesh(polygon, i, magnitude));
+}
+
+// Refactored from Polygon.ts
+export function* makePolygonIndexIterator(polygon: Polygon2, startIndex: number = 0): Generator<number, undefined> {
+
+    for (let i = startIndex; i < startIndex + polygon.length; i++) {
+        yield getLoopableIndex(i, polygon);
+
+    }
+
+    return
+}
+// Refactored from Polygon.ts
+export function getPointsFromPolygonStartingAt(polygon: Polygon2, startPoint: Vec2): Vec2[] {
+    const startPointIndex = polygon.findIndex(p => Vec.equal(p, startPoint))
+    if (startPointIndex == -1) {
+        // startPoint is not on polygon;
+        // Note sometimes this function is used to determine if two polygons are equivalent
+        // so it is within the relm of regular usage to pass a startPoint that pay not
+        // exist on polygon.points
+        return []
+    } else {
+        const polygonIndicies = Array.from(makePolygonIndexIterator(polygon, startPointIndex))
+        const vec2s = polygonIndicies.map(i => {
+            if (polygon[i]) {
+                return polygon[i];
+            } else {
+                return undefined
+            }
+        })
+        // Typeguard
+        if (vec2s.some(v => v == undefined)) {
+            console.error('One or more polygonIndicies are undefined')
+            return [];
+        }
+        return vec2s as Vec2[];
+    }
+}
+// Refactored from Polygon.ts
+export function doesVertexBelongToPolygon(p: Vec2, poly: Polygon2): boolean {
+    return !!poly.find(x => Vec.equal(x, p));
+}
+// Refactored from Polygon.ts
+export function getInsideAnglesOfWall(p: Polygon2LineSegment): { start: number, end: number } {
+    const A = Vec.getAngleBetweenVec2s(p.p1, p.p2);
+    return { start: A, end: A - Math.PI };
+}
+// Refactored from Polygon.ts
+// In radians
+// Returns the inside angle of a point from start clockwise to end
+// The "inside angle" is the angle that points towards the inside ("non-walkable")
+// part of the polygon
+export function getInsideAnglesOfPoint(polygon: Polygon2, pointIndex: number): { start: number, end: number } {
+    const point = polygon[pointIndex];
+    if (point) {
+        const nextPoint = polygon[getLoopableIndex(pointIndex + 1, polygon)];
+        const prevPoint = polygon[getLoopableIndex(pointIndex - 1, polygon)];
+        if (nextPoint && prevPoint) {
+            const angleToPrevPoint = Vec.getAngleBetweenVec2s(point, prevPoint);
+            const angleToNextPoint = Vec.getAngleBetweenVec2s(point, nextPoint);
+            return { start: angleToNextPoint, end: angleToPrevPoint };
+        } else {
+            console.error('getInsideAnglesOfPoint: nextPoint or prevPoint is undefined. This error should never happen.');
+            return { start: 0, end: 0 };
+        }
+    } else {
+        console.error('getInsideAnglesOfPoint: point is undefined. This error should never happen.');
+        return { start: 0, end: 0 };
+    }
+}
+// Refactored from Polygon.ts
+// Returns true if casting a line from point (a vertex on a polygon) to a target Vec2 passes through the
+// inside of point's polygon
+export function doesLineFromPointToTargetProjectAwayFromOwnPolygon(polygon: Polygon2, pointIndex: number, target: Vec2): boolean {
+    const point = polygon[pointIndex];
+    if (point !== undefined) {
+        const { start, end } = getInsideAnglesOfPoint(polygon, pointIndex);
+        const angleToTarget = Vec.getAngleBetweenVec2s(point, target);
+        return !isAngleBetweenAngles(angleToTarget, start, end);
+    } else {
+        console.error("Invalid pointIndex");
+        return false;
+    }
+}
+export interface Polygon2LineSegment {
+    p1: Vec2;
+    p2: Vec2;
+    // The polygon that these points belong to
+    polygon: Polygon2;
+
 }
 export interface Branch {
     // in rads

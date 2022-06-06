@@ -12,12 +12,12 @@ import {
 } from './PlanningView';
 import { toggleMenu, View } from '../views';
 import { pointsEveryXDistanceAlongPath } from '../Pathfinding';
-import { polygonToPolygonLineSegments } from '../Polygon';
 import * as colors from './colors';
 import type { Vec2 } from '../Vec';
 import { distance, getCoordsAtDistanceTowardsTarget } from '../math';
 import * as config from '../config';
 import { cameraAutoFollow, getCamera, moveCamera } from '../PixiUtils';
+import { toPolygon2LineSegments } from '../Polygon2';
 
 export const keyDown = {
   w: false,
@@ -309,14 +309,9 @@ export function mouseMove(e?: MouseEvent) {
     const mouseTarget = window.underworld.getMousePos();
     (document.getElementById('debug-info') as HTMLElement).innerText = `x:${Math.round(mouseTarget.x)}, y:${Math.round(mouseTarget.y)}; cellX: ${Math.round(mouseTarget.x / config.OBSTACLE_SIZE)}, cellY: ${Math.round(mouseTarget.y / config.OBSTACLE_SIZE)}`;
     // Draw the pathing walls
-    const pathingWalls = window.underworld.pathingPolygons.map(polygonToPolygonLineSegments).flat();
+    const pathingWalls = window.underworld.pathingPolygons.map(toPolygon2LineSegments).flat();
     for (let lineSegment of pathingWalls) {
-      if (lineSegment.polygon.inverted) {
-        // Show inverted polys as purple
-        window.debugGraphics.lineStyle(2, 0x6305dc, 1.0);
-      } else {
-        window.debugGraphics.lineStyle(2, 0xffaabb, 1.0);
-      }
+      window.debugGraphics.lineStyle(2, 0xffaabb, 1.0);
       window.debugGraphics.moveTo(lineSegment.p1.x, lineSegment.p1.y);
       window.debugGraphics.lineTo(lineSegment.p2.x, lineSegment.p2.y);
     }

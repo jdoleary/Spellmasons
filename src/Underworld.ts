@@ -37,7 +37,7 @@ import { updateManaCostUI, updatePlanningView } from './ui/PlanningView';
 import { prng, randInt, SeedrandomState } from './rand';
 import { calculateCost } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment } from './collision/lineSegment';
-import { expandPolygon, mergeOverlappingPolygons, Polygon, PolygonLineSegment, polygonLineSegmentToLineSegment, polygonToPolygonLineSegments } from './Polygon';
+import { expandPolygon, mergePolygon2s, Polygon2, Polygon2LineSegment, toLineSegments, toPolygon2LineSegments } from './Polygon2';
 import { calculateDistanceOfVec2Array, findPath, findPolygonsThatVec2IsInsideOf } from './Pathfinding';
 import { removeUnderworldEventListeners } from './views';
 import * as readyState from './readyState';
@@ -98,10 +98,10 @@ export default class Underworld {
   walls: LineSegment[] = [];
   // line segments that prevent movement under certain circumstances
   liquidBounds: LineSegment[] = [];
-  pathingPolygons: Polygon[] = [];
-  // pathingLineSegments shall always be exactly pathingPolygons converted to PolygonLineSegments.
+  pathingPolygons: Polygon2[] = [];
+  // pathingLineSegments shall always be exactly pathingPolygons converted to LineSegments.
   // It is kept up to date whenever pathingPolygons changes in cachedWalls
-  pathingLineSegments: PolygonLineSegment[] = [];
+  pathingLineSegments: Polygon2LineSegment[] = [];
   // Keeps track of how many messages have been processed so that clients can
   // know when they've desynced.  Only used for syncronous message processing
   // since only the syncronous messages affect gamestate.
@@ -475,7 +475,7 @@ export default class Underworld {
   // cacheWalls updates underworld.walls array
   // with the walls for the edge of the map
   // and the walls from the current obstacles
-  cacheWalls(obstacles: Obstacle.IObstacle[], groundTiles: Tile[]) {
+  cacheWalls(obstacles: Obstacle.IObstacle[], _groundTiles: Tile[]) {
 
     // TODO: Restore
     // for (let o of obstacles) {
@@ -483,31 +483,31 @@ export default class Underworld {
     //     this.lavaObstacles.push(o);
     //   }
     // }
-    const distanceFromGroundCenterWhenAdjacent = 1 + Math.sqrt(2) * config.OBSTACLE_SIZE / 2;
-    // Optimization: Removes linesegments that are not adjacent to walkable ground to prevent
-    // having to process linesegments that will never be used
-    function filterRemoveNonGroundAdjacent(ls: LineSegment): boolean {
-      return groundTiles.some(gt => math.distance(gt, ls.p1) <= distanceFromGroundCenterWhenAdjacent)
-    }
-    // Optimization: Removes polygons that are not adjacent to walkable ground to prevent
-    // having to process polygons that will never be used
-    function filterRemoveNonGroundAdjacentPoly(poly: Polygon): boolean {
-      return groundTiles.some(gt => poly.points.some(p => math.distance(gt, p) <= distanceFromGroundCenterWhenAdjacent))
-    }
+    // const distanceFromGroundCenterWhenAdjacent = 1 + Math.sqrt(2) * config.OBSTACLE_SIZE / 2;
+    // // Optimization: Removes linesegments that are not adjacent to walkable ground to prevent
+    // // having to process linesegments that will never be used
+    // function filterRemoveNonGroundAdjacent(ls: LineSegment): boolean {
+    //   return groundTiles.some(gt => math.distance(gt, ls.p1) <= distanceFromGroundCenterWhenAdjacent)
+    // }
+    // // Optimization: Removes polygons that are not adjacent to walkable ground to prevent
+    // // having to process polygons that will never be used
+    // function filterRemoveNonGroundAdjacentPoly(poly: Polygon): boolean {
+    //   return groundTiles.some(gt => poly.points.some(p => math.distance(gt, p) <= distanceFromGroundCenterWhenAdjacent))
+    // }
     // walls block sight and movement
-    this.walls = mergeOverlappingPolygons(obstacles.filter(o => o.material == Material.WALL).map(o => o.bounds)).map(polygonToPolygonLineSegments).flat()
+    this.walls = mergePolygon2s(obstacles.filter(o => o.material == Material.WALL).map(o => o.bounds)).map(toLineSegments).flat();
     //.filter(filterRemoveNonGroundAdjacent);
 
     // liquid bounds block movement only under certain circumstances
-    this.liquidBounds = mergeOverlappingPolygons(obstacles.filter(o => o.material == Material.LIQUID).map(o => o.bounds)).map(polygonToPolygonLineSegments).flat().map(polygonLineSegmentToLineSegment)
+    this.liquidBounds = mergePolygon2s(obstacles.filter(o => o.material == Material.LIQUID).map(o => o.bounds)).map(toLineSegments).flat();
     //.filter(filterRemoveNonGroundAdjacent);
 
     const expandMagnitude = config.COLLISION_MESH_RADIUS * config.NON_HEAVY_UNIT_SCALE
     // Expand pathing walls by the size of the regular unit
     // pathing polygons determines the area that units can move within
-    this.pathingPolygons = mergeOverlappingPolygons([...obstacles.map(o => o.bounds)]
-      //.filter(filterRemoveNonGroundAdjacentPoly)
+    this.pathingPolygons = mergePolygon2s([...obstacles.map(o => o.bounds)]
       .map(p => expandPolygon(p, expandMagnitude)));
+    //.filter(filterRemoveNonGroundAdjacentPoly)
 
     // const biggestPoly = this.pathingPolygons.reduce((biggestPoly, poly) => {
     //   const limit = getLimits(poly.points);
@@ -535,7 +535,7 @@ export default class Underworld {
     // TODO: Optimize if needed: When this.pathingLineSegments gets serialized to send over the network
     // it has an excess of serialized polygons with many points  because lots of the linesegments have a ref to the
     // same polygon.  This is a lot of extra data that is repeated.  Optimize if needed
-    this.pathingLineSegments = this.pathingPolygons.map(polygonToPolygonLineSegments).flat();
+    this.pathingLineSegments = this.pathingPolygons.map(toPolygon2LineSegments).flat();
   }
   spawnPickup(index: number, coords: Vec2) {
     const pickup = Pickup.pickups[index];
@@ -601,11 +601,11 @@ export default class Underworld {
       1, 1, 1, 1, 4, 1, 1, 1,
       1, 4, 4, 1, 4, 1, 4, 1,
       1, 4, 4, 1, 4, 1, 1, 1,
-      1, 4, 1, 1, 4, 4, 4, 4,
+      1, 1, 1, 1, 4, 4, 4, 4,
       1, 4, 4, 1, 4, 4, 4, 4,
       1, 4, 4, 1, 4, 4, 4, 4,
       1, 4, 4, 1, 4, 4, 4, 4,
-      1, 4, 1, 1, 4, 4, 4, 4,
+      1, 1, 1, 1, 4, 4, 4, 4,
     ].map((value, i) => {
       const pos = oneDimentionIndexToVec2(i, width);
       return {

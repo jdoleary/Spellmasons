@@ -1,6 +1,6 @@
 import type { Vec2 } from "./Vec";
 import * as Vec from './Vec';
-import { distance, similarTriangles } from "./math";
+import { distance } from "./math";
 import { isCollinearAndOverlapping, isCollinearAndPointInSameDirection, LineSegment, lineSegmentIntersection } from "./collision/lineSegment";
 import { clockwiseAngle, isAngleBetweenAngles } from "./Angle";
 
@@ -302,7 +302,7 @@ function projectPointForPathingMesh(polygon: Polygon, pointIndex: number, magnit
 
 }
 
-function getPointNormalVector(point: Vec2, prevPoint: Vec2, nextPoint: Vec2): Vec2 {
+export function getPointNormalVector(point: Vec2, prevPoint: Vec2, nextPoint: Vec2): Vec2 {
     // Find a point along the normal:
     let projectToPoint = { x: 0, y: 0 };
     const dxPrev = point.x - prevPoint.x;
@@ -488,6 +488,7 @@ function findFirstPointNotInsideAnotherPoly(polygon: Polygon, polygons: Polygon[
         }
         return point;
     }
+    return undefined;
 }
 // How merging overlapping polygons works:
 // For every polygon that hasn't already been processed,
@@ -618,7 +619,7 @@ export function mergeOverlappingPolygons(polygons: Polygon[]): Polygon[] {
     }
     // Loop through all polys to see if they need to merge
     for (let startProcessingPolygon of polygons) {
-        const processedSuccessfully = processPolygon(startProcessingPolygon);
+        processPolygon(startProcessingPolygon);
         // TODO: how to handle if a polygon failed to process
     }
     return resultPolys;
