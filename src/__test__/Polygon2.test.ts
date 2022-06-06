@@ -1,8 +1,6 @@
 import { LineSegment } from '../collision/lineSegment';
 import { Polygon2, mergePolygon2s, toLineSegments, processLineSegment, mergeCollinearOverlappingSameDirectionLines } from '../Polygon2';
 import { Vec2 } from '../Vec';
-// Squelch console.log
-console.log = () => { }
 
 describe('Polygon2', () => {
     describe('mergeColinearOverlappingSameDirectionLines', () => {
@@ -161,7 +159,7 @@ describe('Polygon2', () => {
         });
     });
     describe('mergePolygon2s', () => {
-        describe.skip('given multiple polygons that intersect at the same vertex on all of them', () => {
+        describe('given multiple polygons that intersect at the same vertex on all of them', () => {
             it('should merge them in the correct order', () => {
                 // This example uses 4 diamonds that intersect at 0,0
 
@@ -193,21 +191,19 @@ describe('Polygon2', () => {
                 const p4d = { x: -1, y: -2 }
                 const pointsd: Vec2[] = [p1d, p2d, p3d, p4d];
                 const polygonD: Polygon2 = pointsd;
-                const mergedPolygon = mergePolygon2s([polygonA, polygonB, polygonD, polygonC])[0];
-                const actual = mergedPolygon;
-                const expected: Vec2[] = [
-                    p2, p3, p4,
+                const mergedPolygons = mergePolygon2s([polygonA, polygonB, polygonD, polygonC]);
+                const actual = mergedPolygons;
+                const expected: Polygon2[] = [[
+                    p1, p2, p3, p4,
                     p1b, p2b, p3b, p4b,
                     p1c, p2c, p3c, p4c,
                     p1d, p2d, p3d, p4d,
-                    p1
-                ]
-                console.log('actula', actual)
+                ]]
                 expect(actual).toEqual(expected);
 
             });
         });
-        it.skip('should handle merging 4 polygons that make a donut of rectancles (with a hole in the middle)', () => {
+        it('should handle merging 4 polygons that make a donut of rectancles (with a hole in the middle)', () => {
             const p1 = { x: 0, y: 0 }
             const p2 = { x: 10, y: 0 }
             const p3 = { x: 10, y: 10 }
@@ -216,7 +212,9 @@ describe('Polygon2', () => {
             const p6 = { x: 9, y: 9 }
             const p7 = { x: 9, y: 1 }
             const p8 = { x: 0, y: 1 }
-            const points: Vec2[] = [p1, p2, p3, p4, p5, p6, p7, p8];
+            // Note: The order of points matter, they must iterate the polygon clockwise
+            // when I wrote this test it was counter clockwise, so the .reverse() makes it clockwise
+            const points: Vec2[] = [p1, p2, p3, p4, p5, p6, p7, p8].reverse();
             const polygonA: Polygon2 = points;
 
             // PolygonB closes the "horseshoe" of polygon A leaving a square
@@ -225,24 +223,26 @@ describe('Polygon2', () => {
             const p2b = { x: 1, y: 1 }
             const p3b = { x: 1, y: 9 }
             const p4b = { x: 0, y: 9 }
-            const pointsb: Vec2[] = [p1b, p2b, p3b, p4b];
+            // Note: The order of points matter, they must iterate the polygon clockwise
+            // when I wrote this test it was counter clockwise, so the .reverse() makes it clockwise
+            const pointsb: Vec2[] = [p1b, p2b, p3b, p4b].reverse();
             const polygonB: Polygon2 = pointsb;
 
             const mergedPolygons = mergePolygon2s([polygonA, polygonB]);
             const actual = mergedPolygons;
             const expected = [
                 [
-                    { x: 0, y: 0 },
-                    { x: 0, y: 10 },
-                    { x: 10, y: 10 },
-                    { x: 10, y: 0 },
+                    { x: 9, y: 1 },
+                    { x: 9, y: 9 },
+                    { x: 1, y: 9 },
+                    { x: 1, y: 1 },
                 ],
                 [
-                    { x: 1, y: 1 },
-                    { x: 1, y: 9 },
-                    { x: 9, y: 9 },
-                    { x: 9, y: 1 },
-                ]
+                    { x: 10, y: 10 },
+                    { x: 10, y: 0 },
+                    { x: 0, y: 0 },
+                    { x: 0, y: 10 },
+                ],
             ]
             expect(actual).toEqual(expected);
 
