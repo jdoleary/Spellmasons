@@ -631,7 +631,7 @@ export default class Underworld {
       imageOnlyTiles: tiles.flatMap(x => x == undefined ? [] : [x]),
       pickups: [],
       enemies: [],
-      validPlayerSpawnCoords: [{ x: 0, y: 0 }]
+      validPlayerSpawnCoords: [{ x: 290, y: 300 }]
 
     }
 

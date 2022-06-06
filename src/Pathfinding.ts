@@ -33,6 +33,8 @@ interface Path {
     // done represents that the path should no longer be processing;
     // it gives no guaruntee as to the validity of the path
     done: boolean;
+    // Represents if the path reached the destination
+    complete: boolean;
     // A invalid path does not path to the target and can be ignored
     invalid: boolean;
     points: Vec2[];
@@ -61,7 +63,7 @@ export function findPath(startPoint: Vec2, target: Vec2, pathingLineSegments: Po
         // Note, the distance is calculated inside of processPaths even if 
         // there are no interruptions to the path and it just goes from startPoint
         // to target.
-        { done: false, invalid: false, points: [startPoint], target, distance: 0 }
+        { done: false, complete: false, invalid: false, points: [startPoint], target, distance: 0 }
     ];
 
     // There is a processingLimit to prevent infinite processing.
@@ -98,10 +100,9 @@ export function findPath(startPoint: Vec2, target: Vec2, pathingLineSegments: Po
         }
     }
 
-    // Now that processing is over, mark all paths that aren't done as invalid:
+    // Now that processing is over, mark all paths as done:
     paths.forEach(path => {
         if (!path.done) {
-            path.invalid = true;
             path.done = true;
         }
     })
@@ -139,6 +140,7 @@ export function findPath(startPoint: Vec2, target: Vec2, pathingLineSegments: Po
 
     // Remove invalid paths
     paths = paths.filter(p => !p.invalid);
+    paths = paths.filter(p => p.complete);
 
     // Find the shortest Path
     // --
@@ -255,6 +257,7 @@ function walkAroundAPoly(path: Path, pathingWalls: Polygon2LineSegment[]) {
     // This occurs if the target point lies directly on an edge of the current polygon
     const endPoint = path.points[path.points.length - 1]
     if (endPoint && isPointOnLineSegment(path.target, { p1: endPoint, p2: vertex })) {
+        path.complete = true;
         path.done = true
         return;
     }
@@ -304,6 +307,7 @@ function walkAroundAPoly(path: Path, pathingWalls: Polygon2LineSegment[]) {
             // Stop if there is no intersecting wall, the path is complete because it has reached the poly
             // so, clear walking info because it is done
             path.walkAroundPolyInfo = undefined;
+            path.complete = true;
             path.done = true;
         }
     }
@@ -354,6 +358,7 @@ function processPaths(paths: Path[], pathingWalls: Polygon2LineSegment[]): Path[
 
                     // Mark the path as "done"
                     path.done = true;
+                    path.complete = true;
 
                 } else {
                     path.points.push(closestIntersection);
@@ -437,6 +442,7 @@ function processPaths(paths: Path[], pathingWalls: Polygon2LineSegment[]): Path[
 
                 // Mark the path as "done"
                 path.done = true;
+                path.complete = true;
             }
         }
     }
