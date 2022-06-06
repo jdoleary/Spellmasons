@@ -1,8 +1,60 @@
 import { LineSegment } from '../collision/lineSegment';
-import { Polygon2, mergePolygon2s, toLineSegments, processLineSegment } from '../Polygon2';
+import { Polygon2, mergePolygon2s, toLineSegments, processLineSegment, mergeCollinearOverlappingSameDirectionLines } from '../Polygon2';
 import { Vec2 } from '../Vec';
+// console.log = () => { }
 
 describe('Polygon2', () => {
+    describe('mergeColinearOverlappingSameDirectionLines', () => {
+        it('should return an array of merged lines', () => {
+            const lines = [
+                { p1: { x: -1, y: 0 }, p2: { x: 0, y: 0 } },
+                { p1: { x: 0, y: 0 }, p2: { x: 1, y: 0 } },
+                { p1: { x: 0, y: 0 }, p2: { x: 4, y: 0 } },
+            ]
+            const actual = mergeCollinearOverlappingSameDirectionLines(lines);
+            const expected = [
+                { p1: { x: -1, y: 0 }, p2: { x: 4, y: 0 } },
+            ]
+            expect(actual).toEqual(expected);
+        });
+        it('should NOT merge overlapping colinear lines pointing in opposite directions', () => {
+            const lines = [
+                { p1: { x: -10, y: 0 }, p2: { x: 10, y: 0 } },
+                { p1: { x: 11, y: 0 }, p2: { x: 0, y: 0 } },
+            ]
+            const actual = mergeCollinearOverlappingSameDirectionLines(lines);
+            const expected = [
+                { p1: { x: -10, y: 0 }, p2: { x: 10, y: 0 } },
+                { p1: { x: 11, y: 0 }, p2: { x: 0, y: 0 } },
+            ]
+            expect(actual).toEqual(expected);
+        });
+        it('should NOT merge nonoverlapping colinear lines pointing in the same direction', () => {
+            const lines = [
+                { p1: { x: 0, y: 0 }, p2: { x: 10, y: 0 } },
+                { p1: { x: -10, y: 0 }, p2: { x: -1, y: 0 } },
+            ]
+            const actual = mergeCollinearOverlappingSameDirectionLines(lines);
+            const expected = [
+                { p1: { x: 0, y: 0 }, p2: { x: 10, y: 0 } },
+                { p1: { x: -10, y: 0 }, p2: { x: -1, y: 0 } },
+            ]
+            expect(actual).toEqual(expected);
+        });
+        it('should NOT merge noncolinear lines', () => {
+            const lines = [
+                { p1: { x: 0, y: 0 }, p2: { x: 10, y: 0 } },
+                { p1: { x: -10, y: 1 }, p2: { x: 5, y: 1 } },
+            ]
+            const actual = mergeCollinearOverlappingSameDirectionLines(lines);
+            const expected = [
+                { p1: { x: 0, y: 0 }, p2: { x: 10, y: 0 } },
+                { p1: { x: -10, y: 1 }, p2: { x: 5, y: 1 } },
+            ]
+            expect(actual).toEqual(expected);
+        });
+
+    });
     describe('toLineSegments', () => {
         it('should turn a polygon2 into an array of line segments', () => {
             const p1 = { x: 0, y: 0 };
@@ -219,7 +271,7 @@ describe('Polygon2', () => {
 
         });
     });
-    describe('given polygons that intersect at a vertex that they both share but no more', () => {
+    describe.only('given polygons that intersect at a vertex that they both share but no more', () => {
         it('should merge the polygons', () => {
             const p1 = { x: 0, y: 0 }
             const p2 = { x: 0, y: 1 }
@@ -235,8 +287,9 @@ describe('Polygon2', () => {
             const pointsDiamond: Vec2[] = [p1b, p2b, p3b, p4b];
             const polygonDiamond: Polygon2 = pointsDiamond;
             //  They will intersect directly on p3/p1b, which means it will be in the merged poly twice
-            const actual = mergePolygon2s([polygonA, polygonDiamond])[0]
-            const expected = [p1, p2, p1b, p2b, p3b, p4b, p1b, p4];
+            const actual = mergePolygon2s([polygonA, polygonDiamond]);
+            console.log('actual', actual)
+            const expected = [[p1, p2, p1b, p2b, p3b, p4b, p1b, p4]];
             expect(actual).toEqual(expected);
 
         });
@@ -258,13 +311,13 @@ describe('Polygon2', () => {
             const mergedPolygons = mergePolygon2s([polygonA, polygonB]);
 
             const actual = mergedPolygons;
-            console.log('actual', actual)
             const expected = [[
                 p1,
                 p2b,
                 p3b,
                 p4,
-            ]];
+            ]]
+            console.log('actual', actual)
             expect(actual).toEqual(expected);
         });
         it('should merge them so there is only one left', () => {

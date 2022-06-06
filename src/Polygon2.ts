@@ -1,13 +1,50 @@
 import * as LineSegment from "./collision/lineSegment";
 import { Vec2 } from "./Vec";
 import * as Vec from "./Vec";
-import { growOverlappingCollinearLinesInDirectionOfP2 } from "./Polygon";
 import { distance } from "./math";
 import { clockwiseAngle } from "./Angle";
 
 // A Polygon2 is just an array of points where the last point connects to the first point to form a closed shape
 export type Polygon2 = Vec2[];
 
+export function mergeCollinearOverlappingSameDirectionLines(lines: LineSegment.LineSegment[]): LineSegment.LineSegment[] {
+    const newLines = [];
+    for (let i = lines.length - 1; i >= 0; i--) {
+        const line = lines[i];
+        if (line) {
+            const linesForMerging = lines.filter(l => {
+                const relation = LineSegment.getRelation(line, l);
+                return relation.isCollinear && relation.isOverlapping && relation.pointInSameDirection;
+            });
+            let newLine = linesForMerging[0];
+            if (newLine) {
+                for (let mergeLine of linesForMerging) {
+                    if (mergeLine == newLine) {
+                        //skip self
+                        continue;
+                    }
+                    const selfDistance = distance(newLine.p1, newLine.p2);
+                    if (distance(mergeLine.p1, newLine.p2) > selfDistance) {
+                        newLine.p1 = mergeLine.p1;
+                    }
+                    if (distance(newLine.p1, mergeLine.p2) > selfDistance) {
+                        newLine.p2 = mergeLine.p2;
+                    }
+                }
+                // unshift so that lines maintain their original order if not modified since
+                // the forloop iterates it backwards
+                newLines.unshift(newLine);
+            }
+            // Remove lines once they have been used
+            for (let removeWall of linesForMerging) {
+                lines.splice(lines.indexOf(removeWall), 1);
+            }
+            i = lines.length;
+        }
+    }
+    return newLines;
+
+}
 
 // Given an array of Polygon2s, it returns an array of Polygon2s where overlapping
 // polygons have been merged into one.
@@ -18,8 +55,9 @@ export function mergePolygon2s(polygons: Polygon2[]): Polygon2[] {
     let lineSegments = polygons.map(toLineSegments).flat();
 
     // Remove duplicate lineSegments
-    lineSegments = lineSegments.filter((ls, index) => index == lineSegments.findIndex(other => LineSegment.equal(other, ls)))
+    lineSegments = lineSegments.filter((ls, index) => index == lineSegments.findIndex(other => LineSegment.equal(other, ls)));
 
+    lineSegments = mergeCollinearOverlappingSameDirectionLines(lineSegments);
 
     // resultPolys stores the merged polygons:
     const resultPolys: Polygon2[] = [];
@@ -28,12 +66,41 @@ export function mergePolygon2s(polygons: Polygon2[]): Polygon2[] {
         const lineSegment = lineSegments[i];
         if (lineSegment) {
             const poly = processLineSegment(lineSegment, lineSegments);
-            if (poly && poly.length) {
+            // Valid polygons must be 3 points or more, or else it will just be a line
+            if (poly && poly.length > 2) {
                 resultPolys.push(poly);
             }
         }
     }
     return resultPolys;
+}
+export function growOverlappingCollinearLinesInDirectionOfP2(line: LineSegment.LineSegment, walls: LineSegment.LineSegment[]): { grownLine: LineSegment.LineSegment, removedLines: LineSegment.LineSegment[] } {
+    // Grow test line from line.p1 to the farthest colinear, touching line's p2
+    const removedLines = [];
+    let testLineGrew = false;
+    let relevantWalls = walls.filter(w => LineSegment.isCollinearAndPointInSameDirection(line, w));
+    const originalNumberOfPotentialGrowthLoops = relevantWalls.length;
+    for (let i = 0; i < originalNumberOfPotentialGrowthLoops; i++) {
+        testLineGrew = false;
+        for (let wall of relevantWalls) {
+            if (LineSegment.isCollinearAndOverlapping(line, wall) && distance(line.p1, line.p2) < distance(line.p1, wall.p2)) {
+                testLineGrew = true;
+                // Remove the wall that was used for growing
+                relevantWalls = relevantWalls.filter(x => x !== wall);
+                removedLines.push(wall);
+
+                line.p2 = wall.p2;
+                break;
+            }
+        }
+        if (!testLineGrew) {
+            break;
+
+        }
+
+    }
+    return { grownLine: line, removedLines };
+
 }
 
 // Processes a lineSegment by walking along it and branching along other 
@@ -118,7 +185,7 @@ export function processLineSegment(processingLineSegment: LineSegment.LineSegmen
         }
         // Add that point to newPoly
         newPoly.push(currentLine.p1);
-        console.log('add point', currentLine.p1);
+        console.log('add point', currentLine.p1, newPoly);
 
 
     } while (true);
@@ -145,7 +212,6 @@ export function toLineSegments(poly: Polygon2): LineSegment.LineSegment[] {
 }
 function getClosestBranch(line: LineSegment.LineSegment, lineSegments: LineSegment.LineSegment[]): Branch | undefined {
     console.log('getClosestBranch---------', line, lineSegments)
-    line = growOverlappingCollinearLinesInDirectionOfP2(line, lineSegments);
 
     let branches: Branch[] = [];
     // Check for collisions between the last line in path and line segments
