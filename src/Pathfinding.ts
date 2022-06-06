@@ -48,56 +48,13 @@ interface Path {
         poly: Polygon2;
     };
 }
-export function findPath(startPoint: Vec2, target: Vec2, pathingPolygons: Polygon2[], pathingLineSegments: Polygon2LineSegment[]): Vec2[] {
+export function findPath(startPoint: Vec2, target: Vec2, pathingLineSegments: Polygon2LineSegment[]): Vec2[] {
     // Ensure that startPoint and target are ONLY Vec2s and are not duck-typed
     // This is important for serialization to prevent circular references
     startPoint = clone(startPoint);
     target = clone(target)
-    // If the target is inside of a non-inverted polygon, move it to the closest edge so that
-    // the unit can path to the closest pathable point near where they are attempting to go.
-    // This is important if, for example, a player clicks in empty space which is inside
-    // of the poly but not inside an obstacle.  The pathing should take the unit
-    // as close as it can go without intersecting the polygon
-    const targetInsideOfPolys: Polygon2[] = findPolygonsThatVec2IsInsideOf(target, pathingPolygons);
 
-    // window.debugGraphics.clear();
-    // If the real target is in an invalid location,
-    // find the closest valid target to represent the endpoint of the path
-    if (targetInsideOfPolys.length) {
-        const nearPointsOnWalls = [];
-        for (let poly of targetInsideOfPolys) {
-            for (let wall of toPolygon2LineSegments(poly)) {
-                const intersection = findWherePointIntersectLineSegmentAtRightAngle(target, wall);
-                if (intersection) {
-                    // window.debugGraphics.lineStyle(3, 0xff0000, 1.0);
-                    // window.debugGraphics.drawCircle(intersection.x, intersection.y, 3);
-                    nearPointsOnWalls.push(intersection);
-                }
 
-            }
-            targetInsideOfPolys.flat().forEach(point => {
-                // window.debugGraphics.lineStyle(3, 0x00ff00, 1.0);
-                // window.debugGraphics.drawCircle(point.x, point.y, 3);
-                nearPointsOnWalls.push(point);
-            });
-        }
-        // Find the closest of the nearPointsOnWalls 
-        if (nearPointsOnWalls[0]) {
-            const closest = nearPointsOnWalls.reduce<{ intersection: Vec2, dist: number }>((acc, cur) => {
-                const dist = distance(cur, target)
-                if (dist <= acc.dist) {
-                    return { intersection: cur, dist };
-                } else {
-                    return acc;
-                }
-
-            }, { intersection: nearPointsOnWalls[0], dist: Number.MAX_SAFE_INTEGER })
-            // window.debugGraphics.lineStyle(3, 0x0000ff, 1.0);
-            // window.debugGraphics.drawCircle(closest.intersection.x, closest.intersection.y, 4);
-            // Override target with a location that the unit can actually fit in:
-            target = closest.intersection;
-        }
-    }
 
     let paths: Path[] = [
         // Start with the first idea path from start to target

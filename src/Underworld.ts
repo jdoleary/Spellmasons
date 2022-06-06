@@ -342,7 +342,7 @@ export default class Underworld {
   // reused like 'calculatePath()' does.
   calculatePathNoCache(startPoint: Vec2, target: Vec2): Unit.UnitPath {
     return {
-      points: findPath(startPoint, target, this.pathingPolygons, this.pathingLineSegments),
+      points: findPath(startPoint, target, this.pathingLineSegments),
       lastOwnPosition: Vec.clone(startPoint),
       targetPosition: Vec.clone(target)
     }
