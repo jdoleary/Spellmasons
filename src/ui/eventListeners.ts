@@ -327,6 +327,14 @@ export function mouseMove(e?: MouseEvent) {
       window.debugGraphics.moveTo(wall.p1.x, wall.p1.y);
       window.debugGraphics.lineTo(wall.p2.x, wall.p2.y);
     }
+    // Draw underworld limits
+    window.debugGraphics.lineStyle(2, 0xff0000, 1.0);
+    window.debugGraphics.moveTo(window.underworld.limits.xMin, window.underworld.limits.yMin);
+    window.debugGraphics.lineTo(window.underworld.limits.xMax, window.underworld.limits.yMin);
+    window.debugGraphics.lineTo(window.underworld.limits.xMax, window.underworld.limits.yMax);
+    window.debugGraphics.lineTo(window.underworld.limits.xMin, window.underworld.limits.yMax);
+    window.debugGraphics.lineTo(window.underworld.limits.xMin, window.underworld.limits.yMin);
+
   }
 }
 // Handle right click on game board
