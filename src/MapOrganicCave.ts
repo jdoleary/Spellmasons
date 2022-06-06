@@ -174,10 +174,6 @@ export function generateCave(params: CaveParams): { map: Map, limits: Limits } {
         return { image, x: dimentions.x * config.OBSTACLE_SIZE, y: dimentions.y * config.OBSTACLE_SIZE }
     });
     const bounds = getLimits(tiles);
-    bounds.xMin -= config.OBSTACLE_SIZE / 2;
-    bounds.yMin -= config.OBSTACLE_SIZE / 2;
-    bounds.xMax += config.OBSTACLE_SIZE / 2;
-    bounds.yMax += config.OBSTACLE_SIZE / 2;
 
 
     const map = {
@@ -493,6 +489,10 @@ export function getLimits(points: Vec.Vec2[]): Limits {
             limits.yMax = Math.ceil(p.y);
         }
     }
+    limits.xMin -= config.OBSTACLE_SIZE / 2;
+    limits.yMin -= config.OBSTACLE_SIZE / 2;
+    limits.xMax += config.OBSTACLE_SIZE / 2;
+    limits.yMax += config.OBSTACLE_SIZE / 2;
     return limits;
 
 }
