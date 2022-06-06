@@ -139,6 +139,7 @@ export function findPath(startPoint: Vec2, target: Vec2, pathingLineSegments: Po
     // console.log('paths', paths.filter(p => !p.invalid).length, '/', paths.length);
 
     // Remove invalid paths
+    const firstIntersection = paths[0]?.points[1];
     paths = paths.filter(p => !p.invalid);
     paths = paths.filter(p => p.complete);
 
@@ -222,7 +223,10 @@ export function findPath(startPoint: Vec2, target: Vec2, pathingLineSegments: Po
         // Remove the start point, since the unit doing the pathing is already at the start point:
         shortestPath.points.shift();
     }
-    return shortestPath ? [...shortestPath.points, shortestPath.target] : [];
+    return shortestPath
+        ? [...shortestPath.points, shortestPath.target]
+        // If no path is found, move to the first intersection which will always be a valid path.
+        : firstIntersection ? [startPoint, firstIntersection] : [];
 }
 // Note: Mutates Path
 function addWalkAroundPolyInfoToPath(path: Path, direction: 'prev' | 'next', startVertex: Vec2, poly: Polygon2) {
