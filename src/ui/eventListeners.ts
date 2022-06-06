@@ -210,7 +210,6 @@ export function mouseMove(e?: MouseEvent) {
 
   // Show walk path if in inspect-mode:
   window.walkPathGraphics.clear();
-  if (!isOutOfBounds(mouseTarget)) {
     if (window.player) {
       // If in inspect-mode
       if (document.body.classList.contains('inspect-mode')) {
@@ -301,7 +300,6 @@ export function mouseMove(e?: MouseEvent) {
         }
       }
     }
-  }
 
   // Test pathing
   if (window.showDebug && window.player) {
@@ -351,10 +349,6 @@ export function contextmenuHandler(e: MouseEvent) {
   e.stopPropagation();
   // Right click to move
   const mouseTarget = window.underworld.getMousePos();
-  if (isOutOfBounds(mouseTarget)) {
-    // Disallow click out of bounds
-    return;
-  }
   if (window.underworld.isMyTurn()) {
     // If player is able to move
     if (window.player) {
