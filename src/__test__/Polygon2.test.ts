@@ -1,7 +1,8 @@
 import { LineSegment } from '../collision/lineSegment';
 import { Polygon2, mergePolygon2s, toLineSegments, processLineSegment, mergeCollinearOverlappingSameDirectionLines } from '../Polygon2';
 import { Vec2 } from '../Vec';
-// console.log = () => { }
+// Squelch console.log
+console.log = () => { }
 
 describe('Polygon2', () => {
     describe('mergeColinearOverlappingSameDirectionLines', () => {
@@ -81,24 +82,26 @@ describe('Polygon2', () => {
     });
     describe('processLineSegment', () => {
         describe('mallet example', () => {
+            let lineSegments: LineSegment[] = [];
+            beforeEach(() => {
+                lineSegments = [
+                    // mallet head:
+                    ...toLineSegments([
+                        { x: 0, y: 0 },
+                        { x: 0, y: 3 },
+                        { x: 3, y: 3 },
+                        { x: 3, y: 0 },
+                    ]),
+                    // mallet handle:
+                    ...toLineSegments([
+                        { x: -1, y: 2 },
+                        { x: 1, y: 2 },
+                        { x: 1, y: 1 },
+                        { x: -1, y: 1 },
+                    ]),
+                ]
+            })
 
-            const lineSegments = [
-                // mallet head:
-                ...toLineSegments([
-                    { x: 0, y: 0 },
-                    { x: 0, y: 3 },
-                    { x: 3, y: 3 },
-                    { x: 3, y: 0 },
-                ]),
-                // mallet handle:
-                ...toLineSegments([
-                    { x: -1, y: 2 },
-                    { x: 1, y: 2 },
-                    { x: 1, y: 1 },
-                    { x: -1, y: 1 },
-                ]),
-
-            ]
             it('should remove lineSegments as they are processed and split line segments up if they are branched off of an intersection instead of an end point; dangling linesegments should be removed entirely because they share a vertex with the polygon that was just created but did not become a part of it', () => {
                 processLineSegment(lineSegments[0] as LineSegment, lineSegments);
                 const actual = lineSegments;
@@ -271,7 +274,7 @@ describe('Polygon2', () => {
 
         });
     });
-    describe.only('given polygons that intersect at a vertex that they both share but no more', () => {
+    describe('given polygons that intersect at a vertex that they both share but no more', () => {
         it('should merge the polygons', () => {
             const p1 = { x: 0, y: 0 }
             const p2 = { x: 0, y: 1 }
@@ -288,7 +291,6 @@ describe('Polygon2', () => {
             const polygonDiamond: Polygon2 = pointsDiamond;
             //  They will intersect directly on p3/p1b, which means it will be in the merged poly twice
             const actual = mergePolygon2s([polygonA, polygonDiamond]);
-            console.log('actual', actual)
             const expected = [[p1, p2, p1b, p2b, p3b, p4b, p1b, p4]];
             expect(actual).toEqual(expected);
 
@@ -383,7 +385,6 @@ describe('Polygon2', () => {
 
             const actual = mergedPolygon;
             const expected = [
-                p1,
                 { x: 0, y: 1 },
                 p1b,
                 p2b,
@@ -391,6 +392,7 @@ describe('Polygon2', () => {
                 p4b,
                 { x: 1, y: 1 },
                 p4,
+                p1,
             ];
             expect(actual).toEqual(expected);
         });

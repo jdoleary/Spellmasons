@@ -171,17 +171,18 @@ export function processLineSegment(processingLineSegment: LineSegment.LineSegmen
             danglingLineSegments.push({ p1: branch.branchingLine.p1, p2: branch.intersection });
         }
 
-        // console.log('next line', currentLine);
+        console.log('next line', currentLine);
         // Check to see if point is already in the poly
         // Closes when the point about to be added is in the newPoly
-        const indexOfMatch = newPoly.findIndex(p => Vec.equal(currentLine.p1, p));
-        if (indexOfMatch !== -1) {
+        const indexOfP1Match = newPoly.findIndex(p => Vec.equal(currentLine.p1, p));
+        const indexOfP2Match = newPoly.findIndex(p => Vec.equal(currentLine.p2, p));
+        if (indexOfP1Match !== -1 && indexOfP2Match !== -1) {
             // LEFT OFF: TODO remove line segments that are moved to a new poly
-            console.log('DONE', indexOfMatch, newPoly, '\n')
+            console.log('DONE', currentLine, newPoly, '\n')
             // The poly is successfully closed and done processing
             // Use slice to omit points before the match so that the polygon
             // is closed perfectly
-            return newPoly.slice(indexOfMatch);
+            return newPoly.slice(indexOfP1Match);
         }
         // Add that point to newPoly
         newPoly.push(currentLine.p1);
