@@ -146,7 +146,7 @@ export function processLineSegment(processingLineSegment: LineSegment.LineSegmen
         }
         // Remove currentLine and branchingLine from line segments because they are either
         // wholy used in the newPoly or they have been split and half of the split is dangling
-        // and the other have is used in the newPoly.
+        // and the other half is used in the newPoly.
         const branchingLineIndex = lineSegments.findIndex(ls => ls == branch.branchingLine);
         if (branchingLineIndex !== -1) {
             usedLineSegments.push(...lineSegments.splice(branchingLineIndex, 1));
