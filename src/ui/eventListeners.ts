@@ -210,96 +210,96 @@ export function mouseMove(e?: MouseEvent) {
 
   // Show walk path if in inspect-mode:
   window.walkPathGraphics.clear();
-    if (window.player) {
-      // If in inspect-mode
-      if (document.body.classList.contains('inspect-mode')) {
-        //
-        // Show the player's current walk path (walk rope)
-        //
-        // The distance that the player can cover with their current stamina
-        // is drawn in the stamina color.
-        // There are dots dilineating how far the unit can move each turn.
-        //
-        walkRopePath = window.underworld.calculatePath(walkRopePath, Vec.round(window.player.unit), Vec.round(mouseTarget));
-        const { points: currentPlayerPath } = walkRopePath;
-        if (currentPlayerPath.length) {
-          const turnStopPoints = pointsEveryXDistanceAlongPath(window.player.unit, currentPlayerPath, window.player.unit.staminaMax, window.player.unit.staminaMax - window.player.unit.stamina);
-          window.walkPathGraphics.lineStyle(4, 0xffffff, 1.0);
-          window.walkPathGraphics.moveTo(window.player.unit.x, window.player.unit.y);
-          let lastPoint: Vec2 = window.player.unit;
-          let distanceCovered = 0;
-          const distanceLeftToMove = window.player.unit.stamina;
-          for (let i = 0; i < currentPlayerPath.length; i++) {
-            const point = currentPlayerPath[i];
-            if (point) {
-              const thisLineDistance = distance(lastPoint, point);
-              if (distanceCovered > distanceLeftToMove) {
+  if (window.player) {
+    // If in inspect-mode
+    if (document.body.classList.contains('inspect-mode')) {
+      //
+      // Show the player's current walk path (walk rope)
+      //
+      // The distance that the player can cover with their current stamina
+      // is drawn in the stamina color.
+      // There are dots dilineating how far the unit can move each turn.
+      //
+      walkRopePath = window.underworld.calculatePath(walkRopePath, Vec.round(window.player.unit), Vec.round(mouseTarget));
+      const { points: currentPlayerPath } = walkRopePath;
+      if (currentPlayerPath.length) {
+        const turnStopPoints = pointsEveryXDistanceAlongPath(window.player.unit, currentPlayerPath, window.player.unit.staminaMax, window.player.unit.staminaMax - window.player.unit.stamina);
+        window.walkPathGraphics.lineStyle(4, 0xffffff, 1.0);
+        window.walkPathGraphics.moveTo(window.player.unit.x, window.player.unit.y);
+        let lastPoint: Vec2 = window.player.unit;
+        let distanceCovered = 0;
+        const distanceLeftToMove = window.player.unit.stamina;
+        for (let i = 0; i < currentPlayerPath.length; i++) {
+          const point = currentPlayerPath[i];
+          if (point) {
+            const thisLineDistance = distance(lastPoint, point);
+            if (distanceCovered > distanceLeftToMove) {
+              window.walkPathGraphics.lineStyle(4, 0xffffff, 1.0);
+              window.walkPathGraphics.lineTo(point.x, point.y);
+            } else {
+              window.walkPathGraphics.lineStyle(4, colors.stamina, 1.0);
+              if (distanceCovered + thisLineDistance > distanceLeftToMove) {
+                // Draw up to the firstStop with the stamina color
+                const pointAtWhichUnitOutOfStamina = getCoordsAtDistanceTowardsTarget(lastPoint, point, distanceLeftToMove - distanceCovered);
+                window.walkPathGraphics.lineTo(pointAtWhichUnitOutOfStamina.x, pointAtWhichUnitOutOfStamina.y);
                 window.walkPathGraphics.lineStyle(4, 0xffffff, 1.0);
                 window.walkPathGraphics.lineTo(point.x, point.y);
               } else {
-                window.walkPathGraphics.lineStyle(4, colors.stamina, 1.0);
-                if (distanceCovered + thisLineDistance > distanceLeftToMove) {
-                  // Draw up to the firstStop with the stamina color
-                  const pointAtWhichUnitOutOfStamina = getCoordsAtDistanceTowardsTarget(lastPoint, point, distanceLeftToMove - distanceCovered);
-                  window.walkPathGraphics.lineTo(pointAtWhichUnitOutOfStamina.x, pointAtWhichUnitOutOfStamina.y);
-                  window.walkPathGraphics.lineStyle(4, 0xffffff, 1.0);
-                  window.walkPathGraphics.lineTo(point.x, point.y);
-                } else {
-                  window.walkPathGraphics.lineTo(point.x, point.y);
-                }
+                window.walkPathGraphics.lineTo(point.x, point.y);
               }
-              distanceCovered += distance(lastPoint, point);
-              lastPoint = point;
             }
+            distanceCovered += distance(lastPoint, point);
+            lastPoint = point;
           }
+        }
 
-          // Draw the points along the path at which the unit will stop on each turn
-          for (let i = 0; i < turnStopPoints.length; i++) {
-            if (i == 0 && distanceLeftToMove > 0) {
-              window.walkPathGraphics.lineStyle(4, colors.stamina, 1.0);
-            } else {
-              window.walkPathGraphics.lineStyle(4, 0xffffff, 1.0);
-            }
-            const point = turnStopPoints[i];
-            if (point) {
-              window.walkPathGraphics.drawCircle(point.x, point.y, 3);
-            }
-          }
-          if (turnStopPoints.length == 0 && distanceLeftToMove > 0) {
+        // Draw the points along the path at which the unit will stop on each turn
+        for (let i = 0; i < turnStopPoints.length; i++) {
+          if (i == 0 && distanceLeftToMove > 0) {
             window.walkPathGraphics.lineStyle(4, colors.stamina, 1.0);
           } else {
             window.walkPathGraphics.lineStyle(4, 0xffffff, 1.0);
           }
-          // Draw a stop circle at the end
-          const lastPointInPath = currentPlayerPath[currentPlayerPath.length - 1]
-          if (lastPointInPath) {
-            window.walkPathGraphics.drawCircle(lastPointInPath.x, lastPointInPath.y, 3);
+          const point = turnStopPoints[i];
+          if (point) {
+            window.walkPathGraphics.drawCircle(point.x, point.y, 3);
           }
         }
-      } else if (CardUI.areAnyCardsSelected()) {
-        // Show the cast line
-        // Players can only cast within their attack range
-        const castLine = { p1: window.player.unit, p2: mouseTarget };
-
-        window.walkPathGraphics.lineStyle(3, colors.targetBlue, 0.7);
-        window.walkPathGraphics.moveTo(castLine.p1.x, castLine.p1.y);
-        if (distance(castLine.p1, castLine.p2) > window.player.unit.attackRange) {
-          const endOfRange = getCoordsAtDistanceTowardsTarget(castLine.p1, castLine.p2, window.player.unit.attackRange);
-          window.walkPathGraphics.lineTo(endOfRange.x, endOfRange.y);
-          // Draw a red line the rest of the way shoing that you cannot cast
-          window.walkPathGraphics.lineStyle(3, 0x333333, 0.7);
-          window.walkPathGraphics.lineTo(castLine.p2.x, castLine.p2.y);
-          window.walkPathGraphics.drawCircle(castLine.p2.x, castLine.p2.y, 3);
-          // Draw a circle where the cast stops
-          window.walkPathGraphics.moveTo(castLine.p2.x, castLine.p2.y);//test
-          window.walkPathGraphics.lineStyle(3, colors.targetBlue, 0.7);
-          window.walkPathGraphics.drawCircle(endOfRange.x, endOfRange.y, 3);
+        if (turnStopPoints.length == 0 && distanceLeftToMove > 0) {
+          window.walkPathGraphics.lineStyle(4, colors.stamina, 1.0);
         } else {
-          window.walkPathGraphics.lineTo(castLine.p2.x, castLine.p2.y);
-          window.walkPathGraphics.drawCircle(castLine.p2.x, castLine.p2.y, 3);
+          window.walkPathGraphics.lineStyle(4, 0xffffff, 1.0);
+        }
+        // Draw a stop circle at the end
+        const lastPointInPath = currentPlayerPath[currentPlayerPath.length - 1]
+        if (lastPointInPath) {
+          window.walkPathGraphics.drawCircle(lastPointInPath.x, lastPointInPath.y, 3);
         }
       }
+    } else if (CardUI.areAnyCardsSelected()) {
+      // Show the cast line
+      // Players can only cast within their attack range
+      const castLine = { p1: window.player.unit, p2: mouseTarget };
+
+      window.walkPathGraphics.lineStyle(3, colors.targetBlue, 0.7);
+      window.walkPathGraphics.moveTo(castLine.p1.x, castLine.p1.y);
+      if (distance(castLine.p1, castLine.p2) > window.player.unit.attackRange) {
+        const endOfRange = getCoordsAtDistanceTowardsTarget(castLine.p1, castLine.p2, window.player.unit.attackRange);
+        window.walkPathGraphics.lineTo(endOfRange.x, endOfRange.y);
+        // Draw a red line the rest of the way shoing that you cannot cast
+        window.walkPathGraphics.lineStyle(3, 0x333333, 0.7);
+        window.walkPathGraphics.lineTo(castLine.p2.x, castLine.p2.y);
+        window.walkPathGraphics.drawCircle(castLine.p2.x, castLine.p2.y, 3);
+        // Draw a circle where the cast stops
+        window.walkPathGraphics.moveTo(castLine.p2.x, castLine.p2.y);//test
+        window.walkPathGraphics.lineStyle(3, colors.targetBlue, 0.7);
+        window.walkPathGraphics.drawCircle(endOfRange.x, endOfRange.y, 3);
+      } else {
+        window.walkPathGraphics.lineTo(castLine.p2.x, castLine.p2.y);
+        window.walkPathGraphics.drawCircle(castLine.p2.x, castLine.p2.y, 3);
+      }
     }
+  }
 
   // Test pathing
   if (window.showDebug && window.player) {
@@ -326,12 +326,12 @@ export function mouseMove(e?: MouseEvent) {
       window.debugGraphics.lineTo(wall.p2.x, wall.p2.y);
     }
     // Draw underworld limits
-    window.debugGraphics.lineStyle(2, 0xff0000, 1.0);
-    window.debugGraphics.moveTo(window.underworld.limits.xMin, window.underworld.limits.yMin);
-    window.debugGraphics.lineTo(window.underworld.limits.xMax, window.underworld.limits.yMin);
-    window.debugGraphics.lineTo(window.underworld.limits.xMax, window.underworld.limits.yMax);
-    window.debugGraphics.lineTo(window.underworld.limits.xMin, window.underworld.limits.yMax);
-    window.debugGraphics.lineTo(window.underworld.limits.xMin, window.underworld.limits.yMin);
+    // window.debugGraphics.lineStyle(2, 0xff0000, 1.0);
+    // window.debugGraphics.moveTo(window.underworld.limits.xMin, window.underworld.limits.yMin);
+    // window.debugGraphics.lineTo(window.underworld.limits.xMax, window.underworld.limits.yMin);
+    // window.debugGraphics.lineTo(window.underworld.limits.xMax, window.underworld.limits.yMax);
+    // window.debugGraphics.lineTo(window.underworld.limits.xMin, window.underworld.limits.yMax);
+    // window.debugGraphics.lineTo(window.underworld.limits.xMin, window.underworld.limits.yMin);
 
   }
 }
