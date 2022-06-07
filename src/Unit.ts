@@ -1,8 +1,9 @@
+import * as PIXI from 'pixi.js';
 import * as config from './config';
 import * as Image from './Image';
 import * as math from './math';
 import { distance } from './math';
-import { addPixiSprite, containerDoodads, containerUnits } from './PixiUtils';
+import { addPixiSprite, containerDoodads, containerUnits, PixiSpriteOptions } from './PixiUtils';
 import { UnitSubType, UnitType, Faction } from './commonTypes';
 import type { Vec2 } from './Vec';
 import * as Vec from './Vec';
@@ -264,7 +265,7 @@ export function load(unit: IUnitSerialized, prediction: boolean): IUnit {
     ...restUnit,
     shaderUniforms: {},
     resolveDoneMoving: () => { },
-    image: Image.load(unit.image, containerUnits),
+    image: Image.load(unit.image, getParentContainer(unit.alive)),
   };
   setupShaders(loadedunit);
   // Load in shader uniforms by ONLY setting the uniforms that are saved
@@ -314,15 +315,18 @@ export function returnToDefaultSprite(unit: IUnit) {
   // dies because a prediction unit won't have an image property
   if (unit.image) {
     const defaultImageString = unit.alive ? unit.defaultImagePath : 'units/corpse.png'
-    const container = unit.alive ? containerUnits : containerDoodads;
     Image.changeSprite(
       unit.image,
-      addPixiSprite(defaultImageString, container),
+      addPixiSprite(defaultImageString, getParentContainer(unit.alive)),
     );
   }
 }
+export function getParentContainer(alive: boolean): PIXI.Container {
+  return alive ? containerUnits : containerDoodads;
 
-export function playAnimation(unit: IUnit, spritePath: string): Promise<void> {
+}
+
+export function playAnimation(unit: IUnit, spritePath: string, options?: PixiSpriteOptions): Promise<void> {
   // Change animation and change back to default
   return new Promise<void>((resolve) => {
     if (!unit.image) {
@@ -330,11 +334,31 @@ export function playAnimation(unit: IUnit, spritePath: string): Promise<void> {
     }
     Image.changeSprite(unit.image, addPixiSprite(spritePath, unit.image.sprite.parent, {
       loop: false,
+      ...options,
       onComplete: () => {
         returnToDefaultSprite(unit);
         resolve();
       }
     }));
+  });
+}
+export function addOneOffAnimation(unit: IUnit, spritePath: string, options?: PixiSpriteOptions): Promise<void> {
+  // Play animation and then remove it
+  return new Promise<void>((resolve) => {
+    if (!unit.image) {
+      return resolve();
+    }
+    const animationSprite = addPixiSprite(spritePath, unit.image.sprite, {
+      loop: false,
+      ...options,
+      onComplete: () => {
+        if (unit.image) {
+          unit.image.sprite.removeChild(animationSprite);
+        }
+        resolve();
+      }
+    });
+    animationSprite.anchor.set(0.5);
   });
 }
 
@@ -353,15 +377,17 @@ export function die(unit: IUnit, prediction: boolean) {
     cleanup(unit);
     return;
   } else {
+    // Set unit.alive to false, this must come before getParentContainer
+    // so it'll know to put the new image in the right container
+    unit.alive = false;
     // This check for unit.image prevents creating a corpse image when a predictionUnit
     // dies because a prediction unit won't have an image property
     if (unit.image) {
       Image.changeSprite(
         unit.image,
-        addPixiSprite('units/corpse.png', containerDoodads),
+        addPixiSprite('units/corpse.png', getParentContainer(unit.alive)),
       );
     }
-    unit.alive = false;
     unit.mana = 0;
     // Ensure that the unit resolvesDoneMoving when they die in the event that 
     // they die while they are moving.  This prevents turn phase from getting stuck
