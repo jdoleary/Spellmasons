@@ -1,5 +1,7 @@
 ## Tasks
+- Infinite loop: 0.6703444034161962 
 1. Fix polygons connected by a line with no thickness
+    - Clearly broken: 0.9314812248882851
 2. Fix lonesome walls turning into tiles (Tuesday)
 3. Liquid interactions (Tuesday)
     - Apply liquid impact and submerge shader when units "fall in"
