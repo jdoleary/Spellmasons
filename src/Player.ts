@@ -13,7 +13,7 @@ import defaultPlayerUnit from './units/jester';
 import { MESSAGE_TYPES } from './MessageTypes';
 import { jitter } from './Vec';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
-import { playerCoatPrimary, playerCoatSecondary } from './ui/colors';
+import { playerCastAnimationColor, playerCoatPrimary, playerCoatSecondary } from './ui/colors';
 
 // The serialized version of the interface changes the interface to allow only the data
 // that can be serialized in JSON.  It may exclude data that is not neccessary to
@@ -69,7 +69,8 @@ export function create(clientId: string): IPlayer {
       new MultiColorReplaceFilter(
         [
           [playerCoatPrimary, 0xFF0000],
-          [playerCoatSecondary, 0xaa0000]
+          [playerCoatSecondary, 0xaa0000],
+          [playerCastAnimationColor, 0x0000ff],
         ],
         0.1
       )

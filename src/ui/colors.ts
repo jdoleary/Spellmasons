@@ -6,3 +6,4 @@ export const healthAllyGreen = 0x40a058;
 
 export const playerCoatPrimary = 0x417F81;
 export const playerCoatSecondary = 0x70A5A7;
+export const playerCastAnimationColor = 0xFFa1d3;
