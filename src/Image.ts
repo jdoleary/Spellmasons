@@ -68,11 +68,17 @@ export function changeSprite(image: IImage | undefined, sprite: PIXI.Sprite) {
   sprite.scale.y = image.sprite.scale.y;
   sprite.anchor.x = image.sprite.anchor.x;
   sprite.anchor.y = image.sprite.anchor.y;
+  // Save children before they are removed
+  const children = [...image.sprite.children];
   cleanup(image);
   image.sprite = sprite;
   // Keep filters from previous sprite
   image.sprite.filters = filters;
   restoreSubsprites(image);
+  // Transfer children to new sprite
+  for (let child of children) {
+    sprite.addChild(child);
+  }
 }
 // Converts an Image entity into a serialized form
 // that can be saved as JSON and rehydrated later into
