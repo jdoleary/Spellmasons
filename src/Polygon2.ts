@@ -69,7 +69,10 @@ export function mergePolygon2s(polygons: Polygon2[]): Polygon2[] {
             const poly = processLineSegment(lineSegment, lineSegments);
             // Valid polygons must be 3 points or more, or else it will just be a line
             if (poly && poly.length > 2) {
+                console.log('keep poly', poly)
                 resultPolys.push(poly);
+            } else {
+                console.log('discard too small poly', poly)
             }
         }
     }
@@ -121,19 +124,10 @@ export function processLineSegment(processingLineSegment: LineSegment.LineSegmen
 
     // Loop Branch:
     do {
-        // const indexOfMatchEnd = newPoly.findIndex(p => Vec.equal(currentLine.p2, p));
-        // if (indexOfMatchEnd !== -1) {
-        //     console.log('DONE end', indexOfMatchEnd, newPoly, newPoly[indexOfMatchEnd], currentLine, '\n')
-        //     // The poly is successfully closed and done processing because
-        //     // the currentLine's p2 is already a point on the poly
-
-        //     // Use slice to omit points before the match so that the polygon
-        //     // is closed perfectly
-        //     return newPoly.slice(indexOfMatchEnd);
-        // }
         // Get the closest branch
         const branch = getClosestBranch(currentLine, [...lineSegments, ...danglingLineSegments, ...usedLineSegments]);
         if (branch === undefined) {
+            console.log('could not reconnect', newPoly)
             // Return an empty polygon since it did not reconnect to itself
             return [];
         }
@@ -174,9 +168,11 @@ export function processLineSegment(processingLineSegment: LineSegment.LineSegmen
         const indexOfP1Match = newPoly.findIndex(p => Vec.equal(currentLine.p1, p));
         const indexOfP2Match = newPoly.findIndex(p => Vec.equal(currentLine.p2, p));
         if (indexOfP1Match !== -1 && indexOfP2Match !== -1) {
+            // if (indexOfP1Match !== -1) {
             // The poly is successfully closed and done processing
             // Use slice to omit points before the match so that the polygon
             // is closed perfectly
+            console.log('success', newPoly)
             return newPoly.slice(indexOfP1Match);
         }
         // Add that point to newPoly

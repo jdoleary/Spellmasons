@@ -495,7 +495,12 @@ export default class Underworld {
     //   return groundTiles.some(gt => poly.points.some(p => math.distance(gt, p) <= distanceFromGroundCenterWhenAdjacent))
     // }
     // walls block sight and movement
-    this.walls = mergePolygon2s(obstacles.filter(o => o.material == Material.WALL).map(o => o.bounds)).map(toLineSegments).flat();
+    console.log('jtest', obstacles.filter(o => o.material == Material.WALL).map(o => o.bounds))
+    this.walls = mergePolygon2s(obstacles.filter(o => o.material == Material.WALL).map(o => o.bounds)).map(toLineSegments).flat()
+    console.log('jtest2', this.walls)
+    // test
+    // .filter(ls => ls.p1.x >);
+    // this.walls = mergePolygon2s(obstacles.filter(o => o.material == Material.WALL).map(o => o.bounds)).map(toLineSegments).flat();
     //.filter(filterRemoveNonGroundAdjacent);
 
     // liquid bounds block movement only under certain circumstances
@@ -589,8 +594,8 @@ export default class Underworld {
   testLevelData(): LevelData {
     const baseTileValues = Object.values(baseTiles);
     // Hard coded to match the tiles array below
-    const width = 8;
-    const height = 8;
+    const width = 4;
+    const height = 3;
     // 0: empty
     // 1: wall
     // 2: semiWall
@@ -598,14 +603,9 @@ export default class Underworld {
     // 4: ground
 
     const _tiles: Tile[] = [
-      1, 1, 1, 1, 4, 1, 1, 1,
-      1, 4, 4, 1, 4, 1, 4, 1,
-      1, 4, 4, 1, 4, 1, 1, 1,
-      1, 1, 1, 1, 4, 4, 4, 4,
-      1, 4, 4, 1, 4, 4, 4, 4,
-      1, 4, 4, 1, 4, 4, 4, 4,
-      1, 4, 4, 1, 4, 4, 4, 4,
-      1, 1, 1, 1, 4, 4, 4, 4,
+      1, 1, 4, 1,
+      1, 4, 4, 1,
+      1, 1, 1, 1,
     ].map((value, i) => {
       const pos = oneDimentionIndexToVec2(i, width);
       return {

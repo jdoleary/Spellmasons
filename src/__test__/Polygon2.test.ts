@@ -159,6 +159,96 @@ describe('Polygon2', () => {
         });
     });
     describe('mergePolygon2s', () => {
+        describe('real world examples', () => {
+            it('test 1', () => {
+                const p1 = { x: 0, y: 4 }
+                const p2 = { x: 1, y: 4 }
+                const p3 = { x: 1, y: 1 }
+                const p4 = { x: 0, y: 1 }
+                const points: Vec2[] = [p1, p2, p3, p4];
+
+                const p1b = { x: 1, y: 4 }
+                const p2b = { x: 4, y: 4 }
+                const p3b = { x: 4, y: 3 }
+                const p4b = { x: 1, y: 3 }
+                const pointsb: Vec2[] = [p1b, p2b, p3b, p4b];
+
+                const p1c = { x: 4, y: 3 }
+                const p2c = { x: 4, y: 0 }
+                const p3c = { x: 3, y: 0 }
+                const p4c = { x: 3, y: 3 }
+                const pointsc: Vec2[] = [p1c, p2c, p3c, p4c];
+
+                const p1d = { x: 3, y: 0 }
+                const p2d = { x: 0, y: 0 }
+                const p3d = { x: 0, y: 1 }
+                const p4d = { x: 3, y: 1 }
+                const pointsd: Vec2[] = [p1d, p2d, p3d, p4d];
+                const mergedPolygons = mergePolygon2s([points, pointsb, pointsc, pointsd]);
+                const actual = mergedPolygons;
+                const expected: Polygon2[] = [
+                    [
+                        p3, p4d, p4c, p4b
+                    ],
+                    [
+                        p1, p2b, p2c, p2d
+                    ],
+                ]
+                expect(actual).toEqual(expected);
+
+            });
+            it('test 2', () => {
+                const points = [
+                    { x: 0, y: 2 },
+                    { x: 0, y: 4 },
+                    { x: 1, y: 4 },
+                    { x: 1, y: 3 },
+                    { x: 2, y: 3 },
+                    { x: 2, y: 2 },
+                ]
+                const points2 = [
+                    { x: 0, y: 0 },
+                    { x: 0, y: 2 },
+                    { x: 2, y: 2 },
+                    { x: 2, y: 1 },
+                    { x: 1, y: 1 },
+                    { x: 1, y: 0 },
+                ]
+                const points3 = [
+                    { x: 2, y: 3 },
+                    { x: 3, y: 3 },
+                    { x: 3, y: 1 },
+                    { x: 2, y: 1 },
+                ]
+
+                const mergedPolygons = mergePolygon2s([points, points2, points3]);
+                const actual = mergedPolygons;
+                const expected: Polygon2[] = [[
+                    { x: 0, y: 4 },
+                    { x: 1, y: 4 },
+                    { x: 1, y: 3 },
+                    { x: 3, y: 3 },
+                    { x: 3, y: 1 },
+                    { x: 1, y: 1 },
+                    { x: 1, y: 0 },
+                    { x: 0, y: 0 },
+                ]]
+                expect(actual).toEqual(expected);
+            });
+            it.only('test 3', () => {
+                const polys = [[{ x: -32, y: 32 }, { x: -7, y: 32 }, { x: -7, y: -12 }, { x: 32, y: -12 }, { x: 32, y: -32 }, { x: -32, y: -32 }], [{ x: 32, y: -12 }, { x: 57, y: -12 }, { x: 57, y: -32 }, { x: 32, y: -32 }], [{ x: 199, y: 32 }, { x: 224, y: 32 }, { x: 224, y: -32 }, { x: 199, y: -32 }], [{ x: -32, y: 96 }, { x: -7, y: 96 }, { x: -7, y: 32 }, { x: -32, y: 32 }], [{ x: 199, y: 96 }, { x: 224, y: 96 }, { x: 224, y: 32 }, { x: 199, y: 32 }], [{ x: -32, y: 160 }, { x: 32, y: 160 }, { x: 32, y: 135 }, { x: -7, y: 135 }, { x: -7, y: 96 }, { x: -32, y: 96 }], [{ x: 32, y: 160 }, { x: 96, y: 160 }, { x: 96, y: 135 }, { x: 32, y: 135 }], [{ x: 96, y: 160 }, { x: 160, y: 160 }, { x: 160, y: 135 }, { x: 96, y: 135 }], [{ x: 199, y: 135 }, { x: 160, y: 135 }, { x: 160, y: 160 }, { x: 224, y: 160 }, { x: 224, y: 96 }, { x: 199, y: 96 }]];
+
+
+                const mergedPolygons = mergePolygon2s(polys);
+                const actual = mergedPolygons;
+                const expected: Polygon2[] = [[
+                    'not blank'
+                ]]
+                console.log('actual', actual)
+                expect(actual).toEqual(expected);
+            });
+
+        });
         describe('given multiple polygons that intersect at the same vertex on all of them', () => {
             it('should merge them in the correct order', () => {
                 // This example uses 4 diamonds that intersect at 0,0

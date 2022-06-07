@@ -27,6 +27,8 @@ import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './contants';
 import type { Vec2 } from './Vec';
 import type { LevelData } from './Underworld';
 import type { Circle } from './collision/moveWithCollision';
+import { MESSAGE_TYPES } from './MessageTypes';
+import floatingText from './FloatingText';
 
 const YES = 'yes'
 const SKIP_TUTORIAL = 'skipTutorial';
@@ -259,3 +261,30 @@ window.showDebug = true;
 if (!window.devMode) {
   window.onbeforeunload = function () { return "Are you sure you want to quit?"; };
 }
+window.p = (points, timeoutAdd) => {
+  let timeout = 0;
+  for (let point of points) {
+    timeout += timeoutAdd;
+    setTimeout(() => {
+      floatingText({
+        coords: point,
+        text: '🎈',
+      });
+
+    }, timeout)
+
+  }
+
+}
+
+// LEFT OFF at 32, 135 it cuts back into self at 32, 160 rather than choosing -7, 135
+//     [
+//   { x: -7, y: -12 },  { x: 57, y: -12 },
+//   { x: 57, y: -32 },  { x: -32, y: -32 },
+//   { x: -32, y: 32 },  { x: -32, y: 160 },
+//   { x: 96, y: 160 },  { x: 224, y: 160 },
+//   { x: 224, y: 32 },  { x: 224, y: -32 },
+//   { x: 199, y: -32 }, { x: 199, y: 32 },
+//   { x: 199, y: 135 }, { x: 96, y: 135 },
+//   { x: 32, y: 135 },  { x: 32, y: 160 }
+// ]
