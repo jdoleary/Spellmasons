@@ -27,6 +27,8 @@ import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './contants';
 import type { Vec2 } from './Vec';
 import type { LevelData } from './Underworld';
 import type { Circle } from './collision/moveWithCollision';
+import floatingText from './FloatingText';
+import type { LineSegment } from './collision/lineSegment';
 
 const YES = 'yes'
 const SKIP_TUTORIAL = 'skipTutorial';
@@ -218,6 +220,8 @@ declare global {
     seedOverride: string | undefined;
     // devMode: auto picks character and upgrades
     devMode: boolean;
+    debugDrawVec2s: (points: Vec2[]) => void;
+    debugDrawLineSegments: (lineSegments: LineSegment[]) => void;
   }
 }
 window.setMMBDown = (isDown: boolean) => {
@@ -258,4 +262,39 @@ window.showDebug = true;
 // asks "are you sure?" every time
 if (!window.devMode) {
   window.onbeforeunload = function () { return "Are you sure you want to quit?"; };
+}
+window.debugDrawVec2s = (points: Vec2[]) => {
+  const timeoutAdd = 500;//ms
+  let timeout = 0;
+  for (let point of points) {
+    timeout += timeoutAdd;
+    setTimeout(() => {
+      floatingText({
+        coords: point,
+        text: '🎈',
+      });
+
+    }, timeout)
+
+  }
+
+}
+window.debugDrawLineSegments = (lines) => {
+  const timeoutAdd = 500;//ms
+  let timeout = 0;
+  for (let line of lines) {
+    timeout += timeoutAdd;
+    setTimeout(() => {
+      floatingText({
+        coords: line.p1,
+        text: '🎈',
+      });
+      floatingText({
+        coords: line.p2,
+        text: '🎈',
+      });
+
+    }, timeout)
+
+  }
 }
