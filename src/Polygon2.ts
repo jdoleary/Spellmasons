@@ -24,11 +24,10 @@ export function mergeCollinearOverlappingSameDirectionLines(lines: LineSegment.L
                         //skip self
                         continue;
                     }
-                    const selfDistance = distance(newLine.p1, newLine.p2);
-                    if (distance(mergeLine.p1, newLine.p2) > selfDistance) {
+                    if (distance(mergeLine.p1, newLine.p2) > distance(newLine.p1, newLine.p2)) {
                         newLine.p1 = mergeLine.p1;
                     }
-                    if (distance(newLine.p1, mergeLine.p2) > selfDistance) {
+                    if (distance(newLine.p1, mergeLine.p2) > distance(newLine.p1, newLine.p2)) {
                         newLine.p2 = mergeLine.p2;
                     }
                 }
