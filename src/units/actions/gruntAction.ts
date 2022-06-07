@@ -1,4 +1,4 @@
-import type { Vec2 } from 'src/Vec';
+import type { Vec2 } from '../../Vec';
 import { distance } from '../../math';
 import * as Unit from '../../Unit';
 
