@@ -120,16 +120,6 @@ export function processLineSegment(processingLineSegment: LineSegment.LineSegmen
 
     // Loop Branch:
     do {
-        // const indexOfMatchEnd = newPoly.findIndex(p => Vec.equal(currentLine.p2, p));
-        // if (indexOfMatchEnd !== -1) {
-        //     console.log('DONE end', indexOfMatchEnd, newPoly, newPoly[indexOfMatchEnd], currentLine, '\n')
-        //     // The poly is successfully closed and done processing because
-        //     // the currentLine's p2 is already a point on the poly
-
-        //     // Use slice to omit points before the match so that the polygon
-        //     // is closed perfectly
-        //     return newPoly.slice(indexOfMatchEnd);
-        // }
         // Get the closest branch
         const branch = getClosestBranch(currentLine, [...lineSegments, ...danglingLineSegments, ...usedLineSegments]);
         if (branch === undefined) {
