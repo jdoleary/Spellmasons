@@ -1,4 +1,5 @@
 ## Tasks
+- Try out large card and let Che know about spell icons
 - Infinite loop: 0.6703444034161962 
 1. Fix polygons connected by a line with no thickness
     - Clearly broken: 0.9314812248882851

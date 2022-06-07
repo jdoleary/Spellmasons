@@ -59,12 +59,21 @@ export function mergePolygon2s(polygons: Polygon2[]): Polygon2[] {
 
     lineSegments = mergeCollinearOverlappingSameDirectionLines(lineSegments);
 
+    // // Remove dead ends (also known as reversals):
+    // let reversals: LineSegment.LineSegment[] = []
+    // for (let line of lineSegments) {
+    //     reversals.push(...lineSegments.filter(other => Vec.equal(line.p1, other.p2) && Vec.equal(line.p2, other.p1)));
+    // }
+    // lineSegments = lineSegments.filter(line => !reversals.includes(line));
+
     // resultPolys stores the merged polygons:
     const resultPolys: Polygon2[] = [];
 
+    window.j = [];
     for (let i = 0; i < lineSegments.length; i++) {
         const lineSegment = lineSegments[i];
         if (lineSegment) {
+            j.push([...lineSegments])
             const poly = processLineSegment(lineSegment, lineSegments);
             // Valid polygons must be 3 points or more, or else it will just be a line
             if (poly && poly.length > 2) {
@@ -103,6 +112,7 @@ export function growOverlappingCollinearLinesInDirectionOfP2(line: LineSegment.L
 
 }
 
+const q = { x: -64, y: 192 }
 // Processes a lineSegment by walking along it and branching along other 
 // intersecting lineSegments until it finds it's way back to the beginning
 export function processLineSegment(processingLineSegment: LineSegment.LineSegment, lineSegments: LineSegment.LineSegment[]): Polygon2 {
@@ -166,7 +176,33 @@ export function processLineSegment(processingLineSegment: LineSegment.LineSegmen
             // The poly is successfully closed and done processing
             // Use slice to omit points before the match so that the polygon
             // is closed perfectly
-            return newPoly.slice(indexOfP1Match);
+            if (Vec.equal(newPoly[0], q)) {
+                console.log('jtest lineSegments', lineSegments.filter(l => Vec.equal(l.p1, q) || Vec.equal(l.p2, q)))
+                console.log('jtest danglingLineSeg', danglingLineSegments.filter(l => Vec.equal(l.p1, q) || Vec.equal(l.p2, q)))
+                console.log('jtest usedLine', usedLineSegments.filter(l => Vec.equal(l.p1, q) || Vec.equal(l.p2, q)))
+                console.log('jtest branch', branch);
+                console.log('jtest closed', currentLine, newPoly, newPoly.slice(indexOfP1Match));
+            }
+            const slicedNewPoly = newPoly.slice(indexOfP1Match);
+            // Remove dead ends:
+            for (let i = 0; i < slicedNewPoly.length; i++) {
+                const point = slicedNewPoly[i];
+                const nextPoint = slicedNewPoly[i + 1];
+                const secondNextPoint = slicedNewPoly[i + 2];
+                if (point && nextPoint && secondNextPoint) {
+                    if (Vec.equal(point, secondNextPoint)) {
+                        console.log('dead end at', point, nextPoint, secondNextPoint)
+                        // Remove dead end
+                        slicedNewPoly.splice(i, 2);
+                    }
+                }
+
+            }
+
+            return slicedNewPoly;
+        }
+        if (Vec.equal(newPoly[0], { x: -64, y: 192 })) {
+            console.log('jtest push', currentLine.p1, branch)
         }
         // Add that point to newPoly
         newPoly.push(currentLine.p1);

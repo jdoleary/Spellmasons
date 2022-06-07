@@ -36,8 +36,8 @@ import { allUnits } from './units';
 import { updateManaCostUI, updatePlanningView } from './ui/PlanningView';
 import { prng, randInt, SeedrandomState } from './rand';
 import { calculateCost } from './cards/cardUtils';
-import { lineSegmentIntersection, LineSegment } from './collision/lineSegment';
-import { expandPolygon, mergePolygon2s, Polygon2, Polygon2LineSegment, toLineSegments, toPolygon2LineSegments } from './Polygon2';
+import { lineSegmentIntersection, LineSegment, equal } from './collision/lineSegment';
+import { expandPolygon, mergeCollinearOverlappingSameDirectionLines, mergePolygon2s, Polygon2, Polygon2LineSegment, toLineSegments, toPolygon2LineSegments } from './Polygon2';
 import { calculateDistanceOfVec2Array, findPath, findPolygonsThatVec2IsInsideOf } from './Pathfinding';
 import { removeUnderworldEventListeners } from './views';
 import * as readyState from './readyState';
@@ -496,6 +496,23 @@ export default class Underworld {
     // }
     // walls block sight and movement
     this.walls = mergePolygon2s(obstacles.filter(o => o.material == Material.WALL).map(o => o.bounds)).map(toLineSegments).flat();
+
+    // TEST
+    // Convert all polygons into line segments for processing:
+    // let lineSegments = obstacles.filter(o => o.material == Material.WALL).map(o => o.bounds).map(toLineSegments).flat();
+
+    // // Remove duplicate lineSegments
+    // lineSegments = lineSegments.filter((ls, index) => index == lineSegments.findIndex(other => equal(other, ls)));
+
+    // lineSegments = mergeCollinearOverlappingSameDirectionLines(lineSegments);
+
+    // // Remove dead ends (also known as reversals):
+    // let reversals: LineSegment[] = []
+    // for (let line of lineSegments) {
+    //   reversals.push(...lineSegments.filter(other => Vec.equal(line.p1, other.p2) && Vec.equal(line.p2, other.p1)));
+    // }
+    // this.walls = lineSegments.filter(line => !reversals.includes(line));
+    // TEST
     //.filter(filterRemoveNonGroundAdjacent);
 
     // liquid bounds block movement only under certain circumstances
@@ -535,6 +552,10 @@ export default class Underworld {
     // TODO: Optimize if needed: When this.pathingLineSegments gets serialized to send over the network
     // it has an excess of serialized polygons with many points  because lots of the linesegments have a ref to the
     // same polygon.  This is a lot of extra data that is repeated.  Optimize if needed
+    this.pathingLineSegments = this.pathingPolygons.map(toPolygon2LineSegments).flat();
+  }
+  t() {
+    this.pathingPolygons.splice(0, 1);
     this.pathingLineSegments = this.pathingPolygons.map(toPolygon2LineSegments).flat();
   }
   spawnPickup(index: number, coords: Vec2) {
@@ -631,7 +652,7 @@ export default class Underworld {
       imageOnlyTiles: tiles.flatMap(x => x == undefined ? [] : [x]),
       pickups: [],
       enemies: [],
-      validPlayerSpawnCoords: [{ x: 290, y: 300 }]
+      validPlayerSpawnCoords: [{ x: 64, y: 300 }]
 
     }
 

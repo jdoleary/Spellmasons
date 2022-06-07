@@ -8,7 +8,7 @@ import * as readyState from './readyState';
 import { setupPixi } from './PixiUtils';
 import * as Cards from './cards';
 import * as Units from './units';
-import { initPlanningView } from './ui/PlanningView';
+import { drawPredictionLine, initPlanningView } from './ui/PlanningView';
 import type PieClient from '@websocketpie/client';
 import { setupAudio } from './Audio';
 import cookieConsentPopup from './cookieConsent';
@@ -282,19 +282,23 @@ window.debugDrawVec2s = (points: Vec2[]) => {
 window.debugDrawLineSegments = (lines) => {
   const timeoutAdd = 500;//ms
   let timeout = 0;
+  window.debugGraphics2.clear();
   for (let line of lines) {
+    window.debugGraphics2.lineStyle(3, 0x0000ff, 0.8);
+    window.debugGraphics2.moveTo(line.p1.x, line.p1.y);
+    window.debugGraphics2.lineTo(line.p2.x, line.p2.y);
     timeout += timeoutAdd;
-    setTimeout(() => {
-      floatingText({
-        coords: line.p1,
-        text: '🎈',
-      });
-      floatingText({
-        coords: line.p2,
-        text: '🎈',
-      });
+    // setTimeout(() => {
+    //   floatingText({
+    //     coords: line.p1,
+    //     text: '🎈',
+    //   });
+    //   floatingText({
+    //     coords: line.p2,
+    //     text: '🎈',
+    //   });
 
-    }, timeout)
+    // }, timeout)
 
   }
 }
