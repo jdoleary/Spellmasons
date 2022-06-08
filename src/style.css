@@ -190,7 +190,7 @@ body.inspect-mode #card-inspect {
   flex-direction: column-reverse;
   z-index: 1;
   position: fixed;
-  bottom: 0;
+  bottom: -160px;
 }
 
 
@@ -241,9 +241,8 @@ body.inspect-mode #card-inspect {
 /* The group of similar cards has a padding the same size as the width of a card inner so that
 the face of the last card in the group is seen*/
 .card-type-group {
-  display: flex;
-  flex-direction: row-reverse;
   position: relative;
+  width: 140px;
 }
 
 .card-type-group:empty {
@@ -252,7 +251,9 @@ the face of the last card in the group is seen*/
 }
 
 .card:hover {
-  transform: translate(0, -8px);
+  transform: translate(0, -176px);
+  /* Show in front of other cards */
+  z-index: 1;
 }
 
 .card {
@@ -260,8 +261,8 @@ the face of the last card in the group is seen*/
   position: relative;
   transition: all 0.1s;
   background-image: url('images/card-background.png');
-  width: 80px;
-  height: 106px;
+  width: 245px;
+  height: 350px;
 }
 
 
@@ -405,11 +406,8 @@ kbd {
 
 .card-inner {
   display: flex;
-  border-width: 8px;
-  border-style: solid;
-  border-radius: 4px 4px;
   flex-direction: column;
-  flex-grow: 1;
+  height: 100%;
 }
 
 .card-thumb {
@@ -417,6 +415,7 @@ kbd {
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 260px;
 }
 
 .card-thumb img {
@@ -431,9 +430,9 @@ kbd {
 }
 
 .card-title {
-  font-size: 12px;
+  font-size: 24px;
   flex-grow: 3;
-  color: white;
+  color: #79531c;
   text-align: center;
   text-transform: capitalize;
   white-space: nowrap;
