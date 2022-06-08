@@ -143,8 +143,9 @@ export function getParametricRelation(l1: LineSegment, l2: LineSegment) {
         // Note that if s and r point in opposite directions, then s · r < 0 and so the interval to be checked is [t1, t0] rather than [t0, t1].
         const l2p1Insidel1 = (0 <= t0 && t0 <= 1);
         const l2p2Insidel1 = (0 <= t1 && t1 <= 1);
-        const l2FullyCoversl1 = (t0 < 0 && t1 > 1);
-        const isOverlapping = l2p1Insidel1 || l2p2Insidel1 || l2FullyCoversl1;
+        const l2FullyCoversl1 = (t0 <= 0 && t1 >= 1);
+        const l1FullyCoversl2 = (t1 <= 0 && t0 >= 1);
+        const isOverlapping = l2p1Insidel1 || l2p2Insidel1 || l2FullyCoversl1 || l1FullyCoversl2;
         return {
             p, r, q, s, qMinusP, rCrossS, isCollinear, pointInSameDirection, isOverlapping, l2p1Insidel1, l2p2Insidel1, l2FullyCoversl1
         }
