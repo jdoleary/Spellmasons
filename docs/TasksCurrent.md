@@ -1,17 +1,27 @@
 ## Tasks
-- Try out large card and let Che know about spell icons
-- Infinite loop
-    this.seed = '0.9277798563844031';
-    - Dnagling line segments keeps increasing
-1. Fix polygons connected by a line with no thickness
-    - Clearly broken: 0.9314812248882851
-2. Fix lonesome walls turning into tiles (Tuesday)
-3. Liquid interactions (Tuesday)
+- (H) Polygon Merging (Thursday)
+    - New strategy for polygon merging
+        - map all polys into line segments
+        - split all line segments that have intersections with other line segments
+        - remove all line segments that have both their p1 and p2 inside of the same other polygon
+        - What is left will be the "correctly merged" linesegments which can then be turned into polys
+- (M) Liquid interactions
     - Apply liquid impact and submerge shader when units "fall in"
-4. Rework unit crowding (Wednesday)
-5. Standalone server (Thursday)
+- (M) Rework unit crowding (save for later, non priority)
+- (M) Standalone server
+- (M) Card Hand refactor
+    - Replace "hand of cards" with diablo style toolbar (https://eu.diablo3.blizzard.com/static/images/game/guide/fundamentals/action-bar.jpg?v=58-137)
+    - Right click to change (opens inventory)
+- (E) Player Customization
+- (H) Game Balance
+- (M) Menu
+- (M) Steam Page
+- (E) Website Presskit page
+- (M) SFX
+- (E) Master music
+- (M) Tutorial
+- (M) Hoise spells?
 ------
-- Idea: Use css blend mode on cards to have a "dark" version and a "light" version depending on if the spell is good or evil.
 - Bug: unit animation stops after unit nsync?
 - Content: AOE clone should work for pickups
 - Bug: Clone doesn't show cloned units until they move cause they spawn right on top of each other
@@ -26,6 +36,7 @@ i can still cast spells during my turn; as well as end turns
 - Task: An ally that has died at all (even if ressed) should lose their upgrade priviledge
 - Task: Better shaders for lava?
 - **!**Fix host alt-tabbing issue
+    - This will be fixed with standalone server
 - Bug: When you pull a guy and he actually gets to you, and then you move, you "carry" him
 - Content: Time crystal releases something when it breaks
 - Fix: Brad cast a spell out of range, but it still triggered on my screen
