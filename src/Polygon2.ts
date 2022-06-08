@@ -139,8 +139,8 @@ export function processLineSegment(processingLineSegment: LineSegment.LineSegmen
         const branch = getClosestBranch(currentLine, [...lineSegments, ...danglingLineSegments, ...usedLineSegments]);
         if (branch === undefined) {
             if (lastMatch) {
-                // Reached a dead end, but there was previously a match so return the
-                // polygon that closed at that match
+                // This is the first way to close a poly.  Branching has reached a dead end
+                // and there is a lastMatch so close the poly at the last match.
                 const matches = newPoly.map(p => lastMatch && Vec.equal(p, lastMatch))
                 return newPoly.slice(matches.indexOf(true), matches.lastIndexOf(true));
             } else {
@@ -151,6 +151,14 @@ export function processLineSegment(processingLineSegment: LineSegment.LineSegmen
             const indexOfBranchIntersectionInPoly = newPoly.findIndex(p => Vec.equal(branch.intersection, p));
             if (indexOfBranchIntersectionInPoly !== -1) {
                 if (lastMatch && lastIntersection && Vec.equal(lastMatch, lastIntersection)) {
+                    // This is the second way (and most common) way to close a poly.
+                    // The lastIntersection is also a match for a previous point in the poly
+                    // AND the current intersection is a match.  Two matches in a row
+                    // means iterating along branches will now fully repeat which means
+                    // we've found a perfect closed polygon.
+                    // So close the polygon by removing the beginning dangling points (if any)
+                    // and removing the last point (the last intersection) because it'll be
+                    // the same as the first point after the beginning dangling points are removed
                     return newPoly.slice(indexOfBranchIntersectionInPoly - 1, -1);
                 }
             }
