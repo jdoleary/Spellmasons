@@ -154,6 +154,28 @@ describe('Polygon2', () => {
 
     });
     describe('processLineSegment', () => {
+        it('real-world example: handle case when all lines have dangling beginnings', () => {
+            // Before this commit's change, this caused an infinite loop because the processLineSegments
+            // function was checking intersection and p2 instead of intersection and next intersection
+            // to see if the poly had fully looped and was about to start over
+            const a = { p1: { x: 192, y: 167 }, p2: { x: 0, y: 167 } };
+            const b = { p1: { x: 25, y: 192 }, p2: { x: 25, y: 0 } };
+            const c = { p1: { x: 0, y: 20 }, p2: { x: 192, y: 20 } };
+            const d = { p1: { x: 128, y: -64 }, p2: { x: 128, y: 128 } };
+            const e = { p1: { x: 128, y: 64 }, p2: { x: 128, y: 320 } };
+            const f = { p1: { x: 192, y: 167 }, p2: { x: 0, y: 167 } };
+            const lineSegments = [a, b, c, d, e, f];
+            const actual = processLineSegment(lineSegments[0] as LineSegment, lineSegments);
+            const expected: Vec2[] = [
+                { x: 25, y: 167 },
+                { x: 25, y: 20 },
+                { x: 128, y: 20 },
+                { x: 128, y: 64 },
+                { x: 128, y: 167 }
+            ];
+            expect(actual).toEqual(expected);
+
+        });
         describe('finishing a polygon in the middle of dangling lines', () => {
             let lineSegments: LineSegment[] = [];
             // b,c,d,e,b make up the square
@@ -529,6 +551,7 @@ describe('Polygon2', () => {
 
             const actual = mergedPolygon;
             const expected = [
+                p1,
                 { x: 0, y: 1 },
                 p1b,
                 p2b,
@@ -536,7 +559,6 @@ describe('Polygon2', () => {
                 p4b,
                 { x: 1, y: 1 },
                 p4,
-                p1,
             ];
             expect(actual).toEqual(expected);
         });

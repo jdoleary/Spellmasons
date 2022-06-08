@@ -123,10 +123,19 @@ export function processLineSegment(processingLineSegment: LineSegment.LineSegmen
     // so that these lineSegments will be premanently removed from the lineSegments array once this function
     // returns.
     let usedLineSegments = [];
+    // lastMatch is a point in the poly that also exists previously in the poly's points.
+    // This is important for polygons that share a single vertex but nothing else.  Since they are
+    // touching, they need to be merged, but we don't want the algorithm to exit early just
+    // because it found a match (a closed poly), so it stores the last match and carries on looking.
+    // If it reaches a dead end and there is a match, it takes the closed poly that it already found - otherwise
+    // there is no poly.  If it finds 2 points in a row that are already in the poly, it has now begun to loop
+    // and knows that the poly it found is fully complete and can return with that poly.
     let lastMatch: Vec2 | undefined = undefined;
+    let lastIntersection: Vec2 | undefined = undefined;
 
     // Loop Branch:
     do {
+        // console.log('jtest ls groups', lineSegments.length, danglingLineSegments.length, usedLineSegments.length);
         // Get the closest branch
         const branch = getClosestBranch(currentLine, [...lineSegments, ...danglingLineSegments, ...usedLineSegments]);
         if (branch === undefined) {
@@ -134,11 +143,24 @@ export function processLineSegment(processingLineSegment: LineSegment.LineSegmen
                 // Reached a dead end, but there was previously a match so return the
                 // polygon that closed at that match
                 const matches = newPoly.map(p => lastMatch && Vec.equal(p, lastMatch))
+                // console.log('done2')
                 return newPoly.slice(matches.indexOf(true), matches.lastIndexOf(true));
             } else {
+                // console.log('done - no close, no matches', newPoly)
                 // Return an empty polygon since it did not reconnect to itself
                 return [];
             }
+        } else {
+            const indexOfBranchIntersectionInPoly = newPoly.findIndex(p => Vec.equal(branch.intersection, p));
+            console.log('current intersection', branch.intersection, indexOfBranchIntersectionInPoly, 'last', lastIntersection, 'match', lastMatch);
+            if (indexOfBranchIntersectionInPoly !== -1) {
+                if (lastMatch && lastIntersection && Vec.equal(lastMatch, lastIntersection)) {
+                    console.log('!!poly', newPoly, newPoly.slice(indexOfBranchIntersectionInPoly))
+                    return newPoly.slice(indexOfBranchIntersectionInPoly - 1, -1);
+                }
+            }
+
+
         }
         // Now that we have a branch, split both the current line and the next line
         if (Vec.equal(branch.intersection, branch.branchingLine.p2)) {
@@ -171,22 +193,32 @@ export function processLineSegment(processingLineSegment: LineSegment.LineSegmen
         if (!Vec.equal(branch.intersection, branch.branchingLine.p1)) {
             danglingLineSegments.push({ p1: branch.branchingLine.p1, p2: branch.intersection });
         }
-
-        // Check to see if point is already in the poly
-        // Closes when the point about to be added is in the newPoly
-        const indexOfP1Match = newPoly.findIndex(p => Vec.equal(currentLine.p1, p));
-        const indexOfP2Match = newPoly.findIndex(p => Vec.equal(currentLine.p2, p));
-        if (indexOfP1Match !== -1) {
-            lastMatch = currentLine.p1;
-            // The poly is successfully closed and done processing
-            // Use slice to omit points before the match so that the polygon
-            // is closed perfectly
-            if (indexOfP2Match !== -1) {
-                return newPoly.slice(indexOfP1Match);
-            }
+        // TODO, remove; protects against infinite
+        if (danglingLineSegments.length > 20) {
+            console.error('dangling got too big')
+            // console.log('so far', newPoly);
+            return []
         }
+        // // Check to see if intersection is already in the poly
+        // // Closes when the point about to be added is in the newPoly
+        const indexOfP1Match = newPoly.findIndex(p => Vec.equal(branch.intersection, p));
+        if (indexOfP1Match !== -1) {
+            lastMatch = branch.intersection;
+            // console.log('set last match', lastMatch, indexOfP1Match, newPoly)
+            //     const indexOfP2Match = newPoly.findIndex(p => Vec.equal(branch.intersection, p));
+            //     // The poly is successfully closed and done processing
+            //     // Use slice to omit points before the match so that the polygon
+            //     // is closed perfectly
+            //     if (indexOfP2Match !== -1) {
+            //         console.log('done', newPoly, indexOfP1Match)
+            //         return newPoly.slice(indexOfP1Match);
+            //     }
+        }
+        lastIntersection = branch.intersection;
+
         // Add that point to newPoly
         newPoly.push(currentLine.p1);
+        // console.log('add point', newPoly)
 
 
     } while (true);
@@ -264,8 +296,8 @@ function getClosestBranch(line: LineSegment.LineSegment, lineSegments: LineSegme
         }
 
     });
-    // console.log('branches', branches.map(b => ({
-    //     ...b, branchingLine: LineSegment.toString(b.branchingLine), branchAngle: b.branchAngle * 180 / Math.PI, line: LineSegment.toString(line)
+    // console.log('branches', LineSegment.toString(line), branches.map(b => ({
+    //     ...b, branchingLine: LineSegment.toString(b.branchingLine), branchAngle: b.branchAngle * 180 / Math.PI
     // })))
 
     // Find the closest branch with a branchAngle < 180 because a branch angle of > 180 degrees
