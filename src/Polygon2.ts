@@ -13,39 +13,32 @@ export function mergeCollinearOverlappingSameDirectionLines(lines: LineSegment.L
         const line = lines[i];
         if (line) {
             const linesForMerging = lines.filter(l => {
-                // exclude self
-                if (l == line) {
-                    return false;
-                }
                 const relation = LineSegment.getRelation(line, l);
                 return relation.isCollinear && relation.isOverlapping && relation.pointInSameDirection;
             });
-            if (linesForMerging.length) {
-
+            let newLine = linesForMerging[0];
+            if (newLine) {
                 for (let mergeLine of linesForMerging) {
-                    if (distance(mergeLine.p1, line.p2) > distance(line.p1, line.p2)) {
-                        line.p1 = mergeLine.p1;
+                    if (mergeLine == newLine) {
+                        //skip self
+                        continue;
                     }
-                    if (distance(line.p1, mergeLine.p2) > distance(line.p1, line.p2)) {
-                        line.p2 = mergeLine.p2;
+                    if (distance(mergeLine.p1, newLine.p2) > distance(newLine.p1, newLine.p2)) {
+                        newLine.p1 = mergeLine.p1;
+                    }
+                    if (distance(newLine.p1, mergeLine.p2) > distance(newLine.p1, newLine.p2)) {
+                        newLine.p2 = mergeLine.p2;
                     }
                 }
                 // unshift so that lines maintain their original order if not modified since
                 // the forloop iterates it backwards
-                newLines.unshift(line);
-                // Remove self from lines, now that it's been added to newLines
-                lines.splice(i, 1);
-                // Remove lines once they have been used
-                for (let removeWall of linesForMerging) {
-                    lines.splice(lines.indexOf(removeWall), 1);
-                }
-                i = lines.length;
-            } else {
-                // If no lines to try to merge, add this line to newLines
-                // unshift so that lines maintain their original order if not modified since
-                // the forloop iterates it backwards
-                newLines.unshift(line);
+                newLines.unshift(newLine);
             }
+            // Remove lines once they have been used
+            for (let removeWall of linesForMerging) {
+                lines.splice(lines.indexOf(removeWall), 1);
+            }
+            i = lines.length;
         }
     }
     return newLines;
