@@ -53,26 +53,22 @@ export function mergePolygon2s(polygons: Polygon2[]): Polygon2[] {
     // Convert all polygons into line segments for processing:
     let lineSegments = polygons.map(toLineSegments).flat();
 
-    // Remove duplicate lineSegments
-    lineSegments = lineSegments.filter((ls, index) => index == lineSegments.findIndex(other => LineSegment.equal(other, ls)));
-
+    // Merge overlapping lines
     lineSegments = mergeCollinearOverlappingSameDirectionLines(lineSegments);
 
-    // // Remove dead ends (also known as reversals):
-    // let reversals: LineSegment.LineSegment[] = []
-    // for (let line of lineSegments) {
-    //     reversals.push(...lineSegments.filter(other => Vec.equal(line.p1, other.p2) && Vec.equal(line.p2, other.p1)));
-    // }
-    // lineSegments = lineSegments.filter(line => !reversals.includes(line));
+    // Remove dead ends (also known as reversals):
+    let reversals: LineSegment.LineSegment[] = []
+    for (let line of lineSegments) {
+        reversals.push(...lineSegments.filter(other => Vec.equal(line.p1, other.p2) && Vec.equal(line.p2, other.p1)));
+    }
+    lineSegments = lineSegments.filter(line => !reversals.includes(line));
 
     // resultPolys stores the merged polygons:
     const resultPolys: Polygon2[] = [];
 
-    window.j = [];
     for (let i = 0; i < lineSegments.length; i++) {
         const lineSegment = lineSegments[i];
         if (lineSegment) {
-            j.push([...lineSegments])
             const poly = processLineSegment(lineSegment, lineSegments);
             // Valid polygons must be 3 points or more, or else it will just be a line
             if (poly && poly.length > 2) {
@@ -111,12 +107,14 @@ export function growOverlappingCollinearLinesInDirectionOfP2(line: LineSegment.L
 
 }
 
-const q = { x: -64, y: 192 }
 // Processes a lineSegment by walking along it and branching along other 
 // intersecting lineSegments until it finds it's way back to the beginning
+// Returns a polygon and mutates the lineSegments array to remove the segments that
+// were used or left dangling
 export function processLineSegment(processingLineSegment: LineSegment.LineSegment, lineSegments: LineSegment.LineSegment[]): Polygon2 {
     // Add point to the newPoly
     const newPoly: Polygon2 = [processingLineSegment.p1];
+    // console.log('start point', newPoly[0])
     let currentLine = processingLineSegment;
 
     // These will be removed if they do not become part of the poly because they touch the poly.
@@ -126,6 +124,7 @@ export function processLineSegment(processingLineSegment: LineSegment.LineSegmen
     // so that these lineSegments will be premanently removed from the lineSegments array once this function
     // returns.
     let usedLineSegments = [];
+    let lastMatch: Vec2 | undefined = undefined;
 
     // Loop Branch:
     do {
@@ -133,7 +132,14 @@ export function processLineSegment(processingLineSegment: LineSegment.LineSegmen
         const branch = getClosestBranch(currentLine, [...lineSegments, ...danglingLineSegments, ...usedLineSegments]);
         if (branch === undefined) {
             // Return an empty polygon since it did not reconnect to itself
-            return [];
+            if (lastMatch) {
+                const matches = newPoly.map(p => lastMatch && Vec.equal(p, lastMatch))
+                // console.log('deadend:', matches.indexOf(true), matches.lastIndexOf(true))
+                return newPoly.slice(matches.indexOf(true), matches.lastIndexOf(true));
+            } else {
+                // console.log('empty, did not reconnect')
+                return [];
+            }
         }
         // Now that we have a branch, split both the current line and the next line
         if (Vec.equal(branch.intersection, branch.branchingLine.p2)) {
@@ -147,10 +153,12 @@ export function processLineSegment(processingLineSegment: LineSegment.LineSegmen
         // and the other half is used in the newPoly.
         const branchingLineIndex = lineSegments.findIndex(ls => ls == branch.branchingLine);
         if (branchingLineIndex !== -1) {
+            // console.log('branching line', branch.branchingLine)
             usedLineSegments.push(...lineSegments.splice(branchingLineIndex, 1));
         }
         const currentLineIndex = lineSegments.findIndex(ls => ls == currentLine);
         if (currentLineIndex !== -1) {
+            // console.log('current line', currentLine)
             usedLineSegments.push(...lineSegments.splice(currentLineIndex, 1));
         }
 
@@ -160,6 +168,7 @@ export function processLineSegment(processingLineSegment: LineSegment.LineSegmen
         }
         // Make the next current line be from intersection to branchingLine.p2
         currentLine = { p1: branch.intersection, p2: branch.branchingLine.p2 };
+        // console.log('currentLine', currentLine)
 
         // If intersection is not equal to p1 of branchingLine, split branching line so that the
         // later half (intersection to p2) is the currentLine and the former half becomes dangling.
@@ -171,44 +180,31 @@ export function processLineSegment(processingLineSegment: LineSegment.LineSegmen
         // Closes when the point about to be added is in the newPoly
         const indexOfP1Match = newPoly.findIndex(p => Vec.equal(currentLine.p1, p));
         const indexOfP2Match = newPoly.findIndex(p => Vec.equal(currentLine.p2, p));
-        if (indexOfP1Match !== -1 && indexOfP2Match !== -1) {
+        // if (indexOfP1Match !== -1 && indexOfP2Match !== -1) {
+        if (indexOfP1Match !== -1) {
+            lastMatch = currentLine.p1;
             // The poly is successfully closed and done processing
             // Use slice to omit points before the match so that the polygon
             // is closed perfectly
-            if (Vec.equal(newPoly[0], q)) {
-                console.log('jtest lineSegments', lineSegments.filter(l => Vec.equal(l.p1, q) || Vec.equal(l.p2, q)))
-                console.log('jtest danglingLineSeg', danglingLineSegments.filter(l => Vec.equal(l.p1, q) || Vec.equal(l.p2, q)))
-                console.log('jtest usedLine', usedLineSegments.filter(l => Vec.equal(l.p1, q) || Vec.equal(l.p2, q)))
-                console.log('jtest branch', branch);
-                console.log('jtest closed', currentLine, newPoly, newPoly.slice(indexOfP1Match));
+            // window.j.push(newPoly)
+            if (indexOfP2Match !== -1) {
+                const slicedPoly = newPoly.slice(indexOfP1Match);
+                // const unusedLineSegments = usedLineSegments.filter(ls => !slicedPoly.find(p => Vec.equal(p, ls.p1)) && !slicedPoly.find(p => Vec.equal(p, ls.p2)))
+                // console.log('jtest done', [...newPoly], usedLineSegments, danglingLineSegments, 'currentLine', currentLine, indexOfP1Match, 'unused', unusedLineSegments)
+                // console.log('jtest slicedPoly', slicedPoly, 'unused', unusedLineSegments)
+                // lineSegments.push(...unusedLineSegments)
+                // console.log('closed', newPoly, slicedPoly)
+                return slicedPoly;
             }
-            const slicedNewPoly = newPoly.slice(indexOfP1Match);
-            // Remove dead ends:
-            for (let i = 0; i < slicedNewPoly.length; i++) {
-                const point = slicedNewPoly[i];
-                const nextPoint = slicedNewPoly[i + 1];
-                const secondNextPoint = slicedNewPoly[i + 2];
-                if (point && nextPoint && secondNextPoint) {
-                    if (Vec.equal(point, secondNextPoint)) {
-                        console.log('dead end at', point, nextPoint, secondNextPoint)
-                        // Remove dead end
-                        slicedNewPoly.splice(i, 2);
-                    }
-                }
-
-            }
-
-            return slicedNewPoly;
         }
-        if (Vec.equal(newPoly[0], { x: -64, y: 192 })) {
-            console.log('jtest push', currentLine.p1, branch)
-        }
+        // console.log('point', currentLine.p1, branch.branchingLine);
         // Add that point to newPoly
         newPoly.push(currentLine.p1);
 
 
     } while (true);
 }
+// window.j = []
 export function toLineSegments(poly: Polygon2): LineSegment.LineSegment[] {
     let lastPoint = null;
     if (poly[0] == undefined) {
@@ -283,7 +279,7 @@ function getClosestBranch(line: LineSegment.LineSegment, lineSegments: LineSegme
 
     });
     // console.log('branches', branches.map(b => ({
-    //     ...b, branchingLine: LineSegment.toString(b.branchingLine), branchAngle: b.branchAngle * 180 / Math.PI
+    //     ...b, branchingLine: LineSegment.toString(b.branchingLine), branchAngle: b.branchAngle * 180 / Math.PI, line: LineSegment.toString(line)
     // })))
 
     // Find the closest branch with a branchAngle < 180 because a branch angle of > 180 degrees

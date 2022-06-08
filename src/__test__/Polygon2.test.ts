@@ -154,6 +154,49 @@ describe('Polygon2', () => {
 
     });
     describe('processLineSegment', () => {
+        describe('finishing a polygon in the middle of dangling lines', () => {
+            let lineSegments: LineSegment[] = [];
+            // b,c,d,e,b make up the square
+            const b = { x: 0, y: 0 };
+            const c = { x: 0, y: 5 };
+            const d = { x: 5, y: 5 };
+            const e = { x: 5, y: 0 };
+            beforeEach(() => {
+                // a is dangling before the square
+                const a = { x: 0, y: -5 };
+                // f is dangling after the square
+                const f = { x: 5, y: -5 };
+                const g = { x: 6, y: -6 };
+
+                lineSegments = [
+                    { p1: a, p2: b },
+                    { p1: b, p2: c },
+                    { p1: c, p2: d },
+                    { p1: d, p2: e },
+                    { p1: e, p2: b },
+                    { p1: b, p2: f },
+                    { p1: f, p2: g },
+                ];
+            })
+            it('should discard dangling lines before and dangling lines after', () => {
+                processLineSegment(lineSegments[0] as LineSegment, lineSegments);
+                const actual = lineSegments;
+                // Empty intentionally, all of the line segments should be used 
+                // in the poly returned from processLineSegment, or omitted
+                const expected: LineSegment[] = [];
+                expect(actual).toEqual(expected);
+
+            });
+            it('should not include any of the dangling lines (before nor after) in the final polygon', () => {
+                const poly = processLineSegment(lineSegments[0] as LineSegment, lineSegments);
+                const actual = poly;
+                const expected = [
+                    b, c, d, e
+                ];
+                expect(actual).toEqual(expected);
+
+            });
+        })
         describe('mallet example', () => {
             let lineSegments: LineSegment[] = [];
             beforeEach(() => {
@@ -235,7 +278,35 @@ describe('Polygon2', () => {
     });
     describe('mergePolygon2s', () => {
         describe('given multiple polygons that intersect at the same vertex on all of them', () => {
-            it('should merge them in the correct order', () => {
+            it('2 diamonds; should merge them in the correct order', () => {
+                // This example uses 4 diamonds that intersect at 0,0
+
+                // Diamond left
+                const p1 = { x: 0, y: 0 }
+                const p2 = { x: -2, y: -1 }
+                const p3 = { x: -3, y: 0 }
+                const p4 = { x: -2, y: 1 }
+                const points: Vec2[] = [p1, p2, p3, p4];
+                const polygonA: Polygon2 = points;
+                // Diamond top
+                const p1b = { x: 0, y: 0 }
+                const p2b = { x: -1, y: 2 }
+                const p3b = { x: 0, y: 3 }
+                const p4b = { x: 1, y: 2 }
+                const pointsb: Vec2[] = [p1b, p2b, p3b, p4b];
+                const polygonB: Polygon2 = pointsb;
+                const mergedPolygons = mergePolygon2s([polygonA, polygonB]);
+                const actual = mergedPolygons;
+                const expected: Polygon2[] = [
+                    [
+                        p1, p2, p3, p4,
+                        p1b, p2b, p3b, p4b
+                    ]
+                ];
+                expect(actual).toEqual(expected);
+
+            });
+            it('4 diamonds; should merge them in the correct order', () => {
                 // This example uses 4 diamonds that intersect at 0,0
 
                 // Diamond left
@@ -388,11 +459,11 @@ describe('Polygon2', () => {
 
             const actual = mergedPolygons;
             const expected = [[
+                p4,
                 p1,
                 p2b,
                 p3b,
-                p4,
-            ]]
+            ]];
             expect(actual).toEqual(expected);
         });
         it('should merge them so there is only one left', () => {
