@@ -135,7 +135,6 @@ export function processLineSegment(processingLineSegment: LineSegment.LineSegmen
 
     // Loop Branch:
     do {
-        // console.log('jtest ls groups', lineSegments.length, danglingLineSegments.length, usedLineSegments.length);
         // Get the closest branch
         const branch = getClosestBranch(currentLine, [...lineSegments, ...danglingLineSegments, ...usedLineSegments]);
         if (branch === undefined) {
@@ -143,19 +142,15 @@ export function processLineSegment(processingLineSegment: LineSegment.LineSegmen
                 // Reached a dead end, but there was previously a match so return the
                 // polygon that closed at that match
                 const matches = newPoly.map(p => lastMatch && Vec.equal(p, lastMatch))
-                // console.log('done2')
                 return newPoly.slice(matches.indexOf(true), matches.lastIndexOf(true));
             } else {
-                // console.log('done - no close, no matches', newPoly)
                 // Return an empty polygon since it did not reconnect to itself
                 return [];
             }
         } else {
             const indexOfBranchIntersectionInPoly = newPoly.findIndex(p => Vec.equal(branch.intersection, p));
-            console.log('current intersection', branch.intersection, indexOfBranchIntersectionInPoly, 'last', lastIntersection, 'match', lastMatch);
             if (indexOfBranchIntersectionInPoly !== -1) {
                 if (lastMatch && lastIntersection && Vec.equal(lastMatch, lastIntersection)) {
-                    console.log('!!poly', newPoly, newPoly.slice(indexOfBranchIntersectionInPoly))
                     return newPoly.slice(indexOfBranchIntersectionInPoly - 1, -1);
                 }
             }
@@ -193,32 +188,16 @@ export function processLineSegment(processingLineSegment: LineSegment.LineSegmen
         if (!Vec.equal(branch.intersection, branch.branchingLine.p1)) {
             danglingLineSegments.push({ p1: branch.branchingLine.p1, p2: branch.intersection });
         }
-        // TODO, remove; protects against infinite
-        if (danglingLineSegments.length > 20) {
-            console.error('dangling got too big')
-            // console.log('so far', newPoly);
-            return []
-        }
         // // Check to see if intersection is already in the poly
         // // Closes when the point about to be added is in the newPoly
         const indexOfP1Match = newPoly.findIndex(p => Vec.equal(branch.intersection, p));
         if (indexOfP1Match !== -1) {
             lastMatch = branch.intersection;
-            // console.log('set last match', lastMatch, indexOfP1Match, newPoly)
-            //     const indexOfP2Match = newPoly.findIndex(p => Vec.equal(branch.intersection, p));
-            //     // The poly is successfully closed and done processing
-            //     // Use slice to omit points before the match so that the polygon
-            //     // is closed perfectly
-            //     if (indexOfP2Match !== -1) {
-            //         console.log('done', newPoly, indexOfP1Match)
-            //         return newPoly.slice(indexOfP1Match);
-            //     }
         }
         lastIntersection = branch.intersection;
 
         // Add that point to newPoly
         newPoly.push(currentLine.p1);
-        // console.log('add point', newPoly)
 
 
     } while (true);
@@ -272,7 +251,6 @@ function getClosestBranch(line: LineSegment.LineSegment, lineSegments: LineSegme
             // but if the intersection is just an intersection along the line, then the next point is the first vertex
             const nextLineAngle = Vec.getAngleBetweenVec2s(intersection, wall.p2);
             const branchAngle = clockwiseAngle(lastLineAngle, nextLineAngle);
-            // console.log(' lastLineAngle', lastLineAngle * 180 / Math.PI, 'nextLineAngle', nextLineAngle * 180 / Math.PI, 'branchANgle', branchAngle * 180 / Math.PI);
 
             // Exclude branches where the intersection is equal to the end point
             if (!Vec.equal(intersection, wall.p2)) {
