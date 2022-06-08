@@ -198,7 +198,7 @@ export function closestLineSegmentIntersection(l1: LineSegment, otherLines: Line
 // Resources https://www.math.usm.edu/lambers/mat169/fall09/lecture25.pdf
 // Example points: "Converting your example into my notation, I get p=(11,11), r=(-12,-12), q=(0,0), s=(0,10), r×s=-120, t=11/12, u=0. Since r×s is non-zero, the segments are not parallel."
 export function lineSegmentIntersection(l1: LineSegment, l2: LineSegment): Vec.Vec2 | undefined {
-    const { p, r, s, qMinusP, rCrossS, isCollinear, isOverlapping, pointInSameDirection, l2p1Insidel1, l2p2Insidel1, l2FullyCoversl1 } = getParametricRelation(l1, l2);
+    const { p, r, s, qMinusP, rCrossS, isCollinear, isOverlapping, l2p1Insidel1, l2p2Insidel1, l2FullyCoversl1 } = getParametricRelation(l1, l2);
     if (isCollinear) {
         if (isOverlapping) {
             // Since the line segments are collinear and overlapping, there are infinite intersection points,
@@ -238,7 +238,6 @@ export function lineSegmentIntersection(l1: LineSegment, l2: LineSegment): Vec.V
 
     // If r × s ≠ 0 and 0 ≤ t ≤ 1 and 0 ≤ u ≤ 1, the two line segments meet at the point p + t r = q + u s.
     if (rCrossS != 0 && 0 <= t && t <= 1 && 0 <= u && u <= 1) {
-        console.log('intersection 6')
         return Vec.add(p, Vec.multiply(t, r))
     }
 
