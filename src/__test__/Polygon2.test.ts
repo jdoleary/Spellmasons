@@ -1,9 +1,84 @@
 import { LineSegment } from '../collision/lineSegment';
 import { Polygon2, mergePolygon2s, toLineSegments, processLineSegment, mergeCollinearOverlappingSameDirectionLines } from '../Polygon2';
-import { Vec2 } from '../Vec';
+import { Vec2, clone } from '../Vec';
 
 describe('Polygon2', () => {
     describe('mergeColinearOverlappingSameDirectionLines', () => {
+        describe('the possible types of merges', () => {
+            it('should merge correctly when B.p1 is inside A.p1 and A.p2 and B.p2 is outside', () => {
+                const A = { p1: { x: 0, y: 0 }, p2: { x: 2, y: 0 } };
+                const B = { p1: { x: 1, y: 0 }, p2: { x: 3, y: 0 } };
+                const actual = mergeCollinearOverlappingSameDirectionLines([A, B]);
+                const expected = [
+                    { p1: A.p1, p2: B.p2 },
+                ]
+                expect(actual).toEqual(expected);
+            });
+            it('should merge correctly when B.p1 is before A.p1 and B.p2 is between A.p1 and A.p2', () => {
+                const A = { p1: { x: 0, y: 0 }, p2: { x: 2, y: 0 } };
+                const B = { p1: { x: -1, y: 0 }, p2: { x: 1, y: 0 } };
+                const actual = mergeCollinearOverlappingSameDirectionLines([A, B]);
+                const expected = [
+                    { p1: B.p1, p2: A.p2 },
+                ]
+                expect(actual).toEqual(expected);
+            });
+            it('should merge correctly when B completely encompases A', () => {
+                const A = { p1: { x: 0, y: 0 }, p2: { x: 2, y: 0 } };
+                const B = { p1: { x: -10, y: 0 }, p2: { x: 10, y: 0 } };
+                const actual = mergeCollinearOverlappingSameDirectionLines([A, B]);
+                const expected = [
+                    { p1: B.p1, p2: B.p2 },
+                ]
+                expect(actual).toEqual(expected);
+            });
+            it('should merge correctly when A completely encompases B', () => {
+                const A = { p1: { x: -10, y: 0 }, p2: { x: 10, y: 0 } };
+                const B = { p1: { x: 0, y: 0 }, p2: { x: 2, y: 0 } };
+                const actual = mergeCollinearOverlappingSameDirectionLines([A, B]);
+                const expected = [
+                    { p1: A.p1, p2: A.p2 },
+                ]
+                expect(actual).toEqual(expected);
+            });
+            it('should merge correctly when A.p2 == B.p1', () => {
+                const A = { p1: { x: 0, y: 0 }, p2: { x: 2, y: 0 } };
+                const B = { p1: clone(A.p2), p2: { x: 4, y: 0 } };
+                const actual = mergeCollinearOverlappingSameDirectionLines([A, B]);
+                const expected = [
+                    { p1: A.p1, p2: B.p2 },
+                ]
+                expect(actual).toEqual(expected);
+            });
+            it('should merge correctly when A.p1 == B.p2', () => {
+                const A = { p1: { x: 0, y: 0 }, p2: { x: 2, y: 0 } };
+                const B = { p1: { x: -1, y: 0 }, p2: clone(A.p1) };
+                const actual = mergeCollinearOverlappingSameDirectionLines([A, B]);
+                const expected = [
+                    { p1: B.p1, p2: A.p2 },
+                ]
+                expect(actual).toEqual(expected);
+            });
+            it('should merge correctly when lines are identical', () => {
+                const A = { p1: { x: 0, y: 0 }, p2: { x: 2, y: 0 } };
+                const B = { p1: clone(A.p1), p2: clone(A.p2) };
+                const actual = mergeCollinearOverlappingSameDirectionLines([A, B]);
+                const expected = [
+                    A,
+                ]
+                expect(actual).toEqual(expected);
+            });
+            it('should NOT merge when lines are identical but reversed', () => {
+                const A = { p1: { x: 0, y: 0 }, p2: { x: 2, y: 0 } };
+                const B = { p1: clone(A.p2), p2: clone(A.p1) };
+                const actual = mergeCollinearOverlappingSameDirectionLines([A, B]);
+                const expected = [
+                    A,
+                    B
+                ]
+                expect(actual).toEqual(expected);
+            });
+        })
         it('should return an array of merged lines', () => {
             const lines = [
                 { p1: { x: -1, y: 0 }, p2: { x: 0, y: 0 } },
@@ -40,7 +115,7 @@ describe('Polygon2', () => {
             ]
             expect(actual).toEqual(expected);
         });
-        it('should NOT merge noncolinear lines', () => {
+        it('should NOT merge only noncolinear lines', () => {
             const lines = [
                 { p1: { x: 0, y: 0 }, p2: { x: 10, y: 0 } },
                 { p1: { x: -10, y: 1 }, p2: { x: 5, y: 1 } },
