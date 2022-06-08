@@ -56,7 +56,7 @@ export function mergePolygon2s(polygons: Polygon2[]): Polygon2[] {
     // Merge overlapping lines
     lineSegments = mergeCollinearOverlappingSameDirectionLines(lineSegments);
 
-    // Remove dead ends (also known as reversals):
+    // Remove dead ends (2 lines that double back on themselves) (also known as reversals):
     let reversals: LineSegment.LineSegment[] = []
     for (let line of lineSegments) {
         reversals.push(...lineSegments.filter(other => Vec.equal(line.p1, other.p2) && Vec.equal(line.p2, other.p1)));
