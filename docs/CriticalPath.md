@@ -5,6 +5,16 @@
     - Restore unit "crowding" once all linesegments (pathing, liquid, walls) are finalized with Che's tileset
     - Liquid "magnets": if you get close enough to the edge you "fall in"
     - Standalone server
+- Player Customization
+- Game Balance
+- Card UI refactor for big cards
+- Menu
+- Steam Page
+- Website Presskit page
+- SFX
+- Master music
+- Tutorial
+- Hoise spells?
 - Final Steps
     - [Tutorial](https://www.youtube.com/watch?v=-GV814cWiAw)
     - Optimize

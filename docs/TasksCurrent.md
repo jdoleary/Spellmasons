@@ -1,6 +1,8 @@
 ## Tasks
 - Try out large card and let Che know about spell icons
-- Infinite loop: 0.6703444034161962 
+- Infinite loop
+    this.seed = '0.9277798563844031';
+    - Dnagling line segments keeps increasing
 1. Fix polygons connected by a line with no thickness
     - Clearly broken: 0.9314812248882851
 2. Fix lonesome walls turning into tiles (Tuesday)
