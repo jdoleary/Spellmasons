@@ -1,7 +1,25 @@
 import { LineSegment, findWherePointIntersectLineSegmentAtRightAngle, lineSegmentIntersection, testables, isPointOnLineSegment, isCollinearAndOverlapping } from '../lineSegment';
 import type { Vec2 } from '../../Vec';
 const { slope, toStandardForm } = testables;
-describe('collisionMath', () => {
+describe('lineSegment', () => {
+    describe('getRelation', () => {
+        describe('isOverlapping', () => {
+            it('should return true when B fully overlaps A', () => {
+
+                const A = { p1: { x: 0, y: 0 }, p2: { x: 2, y: 0 } };
+                const B = { p1: { x: -10, y: 0 }, p2: { x: 10, y: 0 } };
+                const actual = isCollinearAndOverlapping(A, B);
+                expect(actual).toEqual(true);
+            });
+            it('should return true when A fully overlaps B', () => {
+
+                const A = { p1: { x: -10, y: 0 }, p2: { x: 10, y: 0 } };
+                const B = { p1: { x: 0, y: 0 }, p2: { x: 2, y: 0 } };
+                const actual = isCollinearAndOverlapping(A, B);
+                expect(actual).toEqual(true);
+            });
+        });
+    });
     describe('isCollinearAndOverlapping', () => {
         [
             {
@@ -262,6 +280,21 @@ describe('collisionMath', () => {
 
     });
     describe('intersectionOfLineSegments', () => {
+        describe('fully overlapping', () => {
+            it('should return A.p2 when B fully overlaps A', () => {
+                const A = { p1: { x: 0, y: 0 }, p2: { x: 2, y: 0 } };
+                const B = { p1: { x: -10, y: 0 }, p2: { x: 10, y: 0 } };
+                const actual = lineSegmentIntersection(A, B);
+                expect(actual).toEqual(A.p2);
+            });
+            it('should return B.p2 when A fully overlaps B', () => {
+                const A = { p1: { x: -10, y: 0 }, p2: { x: 10, y: 0 } };
+                const B = { p1: { x: 0, y: 0 }, p2: { x: 2, y: 0 } };
+                const actual = lineSegmentIntersection(A, B);
+                expect(actual).toEqual(B.p2);
+            });
+
+        });
         describe('colinear', () => {
             it('test co-linear non-overlapping lines', () => {
                 const ls1: LineSegment = { p1: { x: 0, y: 0 }, p2: { x: 1, y: 1 } };

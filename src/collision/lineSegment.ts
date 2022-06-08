@@ -119,16 +119,13 @@ export function isPointOnLineSegment(point: Vec.Vec2, lineSegment: LineSegment):
     return false;
 
 }
-export function getRelation(l1: LineSegment, l2: LineSegment): { isCollinear: boolean, isOverlapping: boolean, pointInSameDirection: boolean } {
+export function getParametricRelation(l1: LineSegment, l2: LineSegment) {
     // l1 expressed as p to p+r
     const p = l1.p1;
     const r = Vec.subtract(l1.p2, l1.p1);
     // l2 expressed as q to q+s
     const q = l2.p1;
     const s = Vec.subtract(l2.p2, l2.p1);
-    // The two lines intersect if we can find t and u such that: p + t r = q + u s
-    // And therefore, solving for t: t = (q − p) × s / (r × s)
-    // In the same way, we can solve for u: u = (q − p) × r / (r × s)
     const qMinusP = Vec.subtract(q, p);
     const rCrossS = Vec.crossproduct(r, s);
     // If r × s = 0 and (q − p) × r = 0, then the two lines are collinear.
@@ -139,18 +136,27 @@ export function getRelation(l1: LineSegment, l2: LineSegment): { isCollinear: bo
     //     t1 = (q + s − p) · r / (r · r) = t0 + s · r / (r · r)
     if (isCollinear) {
         const dotRR = Vec.dotProduct(r, r);
+        const dotSR = Vec.dotProduct(s, r);
         const t0 = Vec.dotProduct(Vec.subtract(q, p), r) / dotRR;
-        const t1 = t0 + Vec.dotProduct(s, r) / dotRR;
+        const t1 = t0 + dotSR / dotRR;
         // If the interval between t0 and t1 intersects the interval [0, 1] then the line segments are collinear and overlapping; otherwise they are collinear and disjoint.
         // Note that if s and r point in opposite directions, then s · r < 0 and so the interval to be checked is [t1, t0] rather than [t0, t1].
-        // const overlapping = (0 <= t0 && t0 <= 1) || (0 <= t1 && t1 <= 1);
-        const isOverlapping = Vec.dotProduct(s, r) < 0
-            ? (t0 >= 1 && t1 <= 1) || (t1 <= 0 && t0 >= 0)
-            : (t1 >= 1 && t0 <= 1) || (t0 <= 0 && t1 >= 0);
-        return { isCollinear, isOverlapping, pointInSameDirection };
+        const l2p1Insidel1 = (0 <= t0 && t0 <= 1);
+        const l2p2Insidel1 = (0 <= t1 && t1 <= 1);
+        const l2FullyCoversl1 = (t0 < 0 && t1 > 1);
+        const isOverlapping = l2p1Insidel1 || l2p2Insidel1 || l2FullyCoversl1;
+        return {
+            p, r, q, s, qMinusP, rCrossS, isCollinear, pointInSameDirection, isOverlapping, l2p1Insidel1, l2p2Insidel1, l2FullyCoversl1
+        }
     } else {
-        return { isCollinear, isOverlapping: false, pointInSameDirection };
+        return {
+            p, r, q, s, qMinusP, rCrossS, isCollinear, pointInSameDirection, isOverlapping: false
+        }
     }
+}
+export function getRelation(l1: LineSegment, l2: LineSegment): { isCollinear: boolean, isOverlapping: boolean, pointInSameDirection: boolean } {
+    const { isCollinear, pointInSameDirection, isOverlapping } = getParametricRelation(l1, l2);
+    return { isCollinear, pointInSameDirection, isOverlapping };
 }
 // A slice of logic from lineSegmentIntersection
 // returns true if two line segmenst are collinear and point in the same direction
@@ -191,50 +197,39 @@ export function closestLineSegmentIntersection(l1: LineSegment, otherLines: Line
 // Resources https://www.math.usm.edu/lambers/mat169/fall09/lecture25.pdf
 // Example points: "Converting your example into my notation, I get p=(11,11), r=(-12,-12), q=(0,0), s=(0,10), r×s=-120, t=11/12, u=0. Since r×s is non-zero, the segments are not parallel."
 export function lineSegmentIntersection(l1: LineSegment, l2: LineSegment): Vec.Vec2 | undefined {
-    // l1 expressed as p to p+r
-    const p = l1.p1;
-    const r = Vec.subtract(l1.p2, l1.p1);
-    // l2 expressed as q to q+s
-    const q = l2.p1;
-    const s = Vec.subtract(l2.p2, l2.p1);
-    // The two lines intersect if we can find t and u such that: p + t r = q + u s
-    // And therefore, solving for t: t = (q − p) × s / (r × s)
-    // In the same way, we can solve for u: u = (q − p) × r / (r × s)
-    const qMinusP = Vec.subtract(q, p);
-    const rCrossS = Vec.crossproduct(r, s);
-    // If r × s = 0 and (q − p) × r = 0, then the two lines are collinear.
-    if (rCrossS == 0 && Vec.crossproduct(qMinusP, r) == 0) {
-        //     In this case, express the endpoints of the second segment (q and q + s) in terms of the equation of the first line segment (p + t r):
-        //     t0 = (q − p) · r / (r · r)
-        //     t1 = (q + s − p) · r / (r · r) = t0 + s · r / (r · r)
-        const dotRR = Vec.dotProduct(r, r);
-        const t0 = Vec.dotProduct(Vec.subtract(q, p), r) / dotRR;
-        const t1 = t0 + Vec.dotProduct(s, r) / dotRR;
-        // If the interval between t0 and t1 intersects the interval [0, 1] then the line segments are collinear and overlapping; otherwise they are collinear and disjoint.
-        // Note that if s and r point in opposite directions, then s · r < 0 and so the interval to be checked is [t1, t0] rather than [t0, t1].
-        const overlapping = (0 <= t0 && t0 <= 1) || (0 <= t1 && t1 <= 1);
-        if (overlapping) {
+    const { p, r, s, qMinusP, rCrossS, isCollinear, isOverlapping, l2p1Insidel1, l2p2Insidel1, l2FullyCoversl1 } = getParametricRelation(l1, l2);
+    if (isCollinear) {
+        if (isOverlapping) {
             // Since the line segments are collinear and overlapping, there are infinite intersection points,
             // but since this function only returns 1 intersection point, I, personally, am opting to prefer
             // an endpoing on l1 over l2 and the p2 point over the p1 point
-            if (Vec.isBetween(l1.p2, l2.p1, l2.p2)) {
+            if (l2p1Insidel1 && l2p2Insidel1) {
+                // l1 fully covers l2
+                return l2.p2;
+            } else if (l2p1Insidel1) {
                 return l1.p2;
-            } else if (Vec.isBetween(l1.p1, l2.p1, l2.p2)) {
+            } else if (l2p2Insidel1) {
                 return l1.p1;
+            } else if (l2FullyCoversl1) {
+                return l1.p2;
             } else {
-                // In this case, all of l2 is inside of l1, so just
-                // choose to return l2.p2;
+                // This should never happen, if the line segments are overlapping, one of the above cases
+                // will be true
                 return l2.p2;
             }
-
         } else {
-            return
+            // No intersection
+            return undefined
         }
     }
     // If r × s = 0 and (q − p) × r ≠ 0, then the two lines are parallel and non-intersecting.
     if (rCrossS == 0 && Vec.crossproduct(qMinusP, r) != 0) {
-        return
+        // No intersection
+        return undefined
     }
+    // The two lines intersect if we can find t and u such that: p + t r = q + u s
+    // And therefore, solving for t: t = (q − p) × s / (r × s)
+    // In the same way, we can solve for u: u = (q − p) × r / (r × s)
     const t = Vec.crossproduct(qMinusP, s) / rCrossS;
     const u = Vec.crossproduct(qMinusP, r) / rCrossS;
 
