@@ -9,8 +9,9 @@ describe('Polygon2', () => {
                 { p1: { x: 0, y: 0 }, p2: { x: 0, y: 10 } },
                 { p1: { x: 0, y: 10 }, p2: { x: 0, y: 20 } },
             ]
-            const actual = splitIntersectingLineSegments(lineSegments);
-            const expected = lineSegments;
+            const actual = splitIntersectingLineSegments(lineSegments[0] as LineSegment, lineSegments);
+            // Expect it to be unchanged
+            const expected = [lineSegments[0]];
             expect(actual).toEqual(expected);
         });
         it('should ignore collinear lines', () => {
@@ -18,21 +19,22 @@ describe('Polygon2', () => {
                 { p1: { x: 0, y: 0 }, p2: { x: 0, y: 10 } },
                 { p1: { x: 0, y: 5 }, p2: { x: 0, y: 15 } },
             ]
-            const actual = splitIntersectingLineSegments(lineSegments);
-            const expected = lineSegments;
+            const actual = splitIntersectingLineSegments(lineSegments[0] as LineSegment, lineSegments);
+            // Expect it to be unchanged
+            const expected = [lineSegments[0]];
             expect(actual).toEqual(expected);
         });
         it('should handle a line that runs in reverse direction to other tests', () => {
             const A = { p1: { x: 0, y: 10 }, p2: { x: 0, y: 0 } };
             const B = { p1: { x: -1, y: 4 }, p2: { x: 1, y: 4 } };
-            const actual = splitIntersectingLineSegments([A, B]);
+            const actual = splitIntersectingLineSegments(A, [A, B]);
             const expected = [
                 // A
                 { p1: A.p1, p2: { x: 0, y: 4 } },
                 { p1: { x: 0, y: 4 }, p2: { x: 0, y: A.p2.y } },
-                // B
-                { p1: { x: B.p1.x, y: 4 }, p2: { x: 0, y: 4 } },
-                { p1: { x: 0, y: 4 }, p2: { x: B.p2.x, y: 4 } },
+                // // B
+                // { p1: { x: B.p1.x, y: 4 }, p2: { x: 0, y: 4 } },
+                // { p1: { x: 0, y: 4 }, p2: { x: B.p2.x, y: 4 } },
             ]
             expect(actual).toEqual(expected);
 
@@ -45,7 +47,7 @@ describe('Polygon2', () => {
             const B = { p1: { x: -1, y: BY }, p2: { x: 1, y: BY } };
             const C = { p1: { x: -1, y: CY }, p2: { x: 1, y: CY } };
             const D = { p1: { x: -1, y: DY }, p2: { x: 1, y: DY } };
-            const actual = splitIntersectingLineSegments([A, B, C, D]);
+            const actual = splitIntersectingLineSegments(A, [A, B, C, D]);
             const expected = [
                 // A
                 // (note C has a lower y than b and so will come first
@@ -55,14 +57,14 @@ describe('Polygon2', () => {
                 { p1: { x: 0, y: BY }, p2: { x: 0, y: DY } },
                 { p1: { x: 0, y: DY }, p2: { x: 0, y: A.p2.y } },
                 // B
-                { p1: { x: B.p1.x, y: BY }, p2: { x: 0, y: BY } },
-                { p1: { x: 0, y: BY }, p2: { x: B.p2.x, y: BY } },
-                // C
-                { p1: { x: C.p1.x, y: CY }, p2: { x: 0, y: CY } },
-                { p1: { x: 0, y: CY }, p2: { x: C.p2.x, y: CY } },
-                // D
-                { p1: { x: D.p1.x, y: DY }, p2: { x: 0, y: DY } },
-                { p1: { x: 0, y: DY }, p2: { x: D.p2.x, y: DY } },
+                // { p1: { x: B.p1.x, y: BY }, p2: { x: 0, y: BY } },
+                // { p1: { x: 0, y: BY }, p2: { x: B.p2.x, y: BY } },
+                // // C
+                // { p1: { x: C.p1.x, y: CY }, p2: { x: 0, y: CY } },
+                // { p1: { x: 0, y: CY }, p2: { x: C.p2.x, y: CY } },
+                // // D
+                // { p1: { x: D.p1.x, y: DY }, p2: { x: 0, y: DY } },
+                // { p1: { x: 0, y: DY }, p2: { x: D.p2.x, y: DY } },
             ]
             expect(actual).toEqual(expected);
 
@@ -586,15 +588,14 @@ describe('Polygon2', () => {
         const p4b = { x: 1, y: 0 }
         const pointsb: Vec2[] = [p1b, p2b, p3b, p4b];
         const polygonB: Polygon2 = pointsb;
-        const mergedPolygon = mergePolygon2s([polygonA, polygonB])[0];
+        const actual = mergePolygon2s([polygonA, polygonB]);
 
-        const actual = mergedPolygon;
-        const expected = [
+        const expected = [[
             p1,
             p2,
             p3,
             p4,
-        ];
+        ]];
         expect(actual).toEqual(expected);
     });
     describe('given overlapping boxes on one side', () => {
@@ -801,6 +802,7 @@ describe('Polygon2', () => {
         const mergedPolygons = mergePolygon2s([polyBridge, polyTop, polyBottom]);
         const actual = mergedPolygons;
         const expected = [[
+            { x: 0, y: 1 },
             { x: 0, y: 2 },
             polyTop[0],
             polyTop[1],
@@ -812,8 +814,6 @@ describe('Polygon2', () => {
             polyBottom[3],
             polyBottom[0],
             polyBottom[1],
-            { x: 0, y: 1 },
-
         ]];
         expect(actual).toEqual(expected);
 

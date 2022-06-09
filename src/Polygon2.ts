@@ -5,6 +5,11 @@ import { distance } from "./math";
 import { clockwiseAngle, isAngleBetweenAngles } from "./Angle";
 import { getLoopableIndex, getPointNormalVector } from "./Polygon";
 
+// A line segment that contains a reference to the polygon that it belongs to
+export type Polygon2LineSegment = LineSegment.LineSegment &
+// The polygon that these points belong to
+{ polygon: Polygon2 };
+
 // A Polygon2 is just an array of points where the last point connects to the first point to form a closed shape
 export type Polygon2 = Vec2[];
 export function mergeCollinearOverlappingSameDirectionLines(lines: LineSegment.LineSegment[]): LineSegment.LineSegment[] {
@@ -44,43 +49,52 @@ export function mergeCollinearOverlappingSameDirectionLines(lines: LineSegment.L
     return newLines;
 
 }
-export function splitIntersectingLineSegments(lineSegments: LineSegment.LineSegment[]): LineSegment.LineSegment[] {
+export function splitIntersectingLineSegments(line: LineSegment.LineSegment, lineSegments: LineSegment.LineSegment[]): LineSegment.LineSegment[] {
     let splitLineSegments: LineSegment.LineSegment[] = []
-    for (let line of lineSegments) {
-        let intersections: Vec2[] = [];
-        for (let other of lineSegments) {
-            if (line == other) {
-                // Don't test against self
-                continue;
-            }
-            const { isCollinear } = LineSegment.getRelation(line, other);
-            // Ignore collinear lines since even if they are overlapping
-            // they would have infinite intersections and can't be meaningfully
-            // split
-            if (isCollinear) {
-                continue;
-            }
-            const intersection = LineSegment.lineSegmentIntersection(line, other);
-            if (intersection) {
-                // Ignore intersections at vertex, these should not be "split" because
-                // if it were it would split into a "no length" line (a point).
-                if (!Vec.equal(intersection, line.p1) && !Vec.equal(intersection, line.p2)) {
+    let intersections: Vec2[] = [];
+    for (let other of lineSegments) {
+        if (line == other) {
+            // Don't test against self
+            continue;
+        }
+        const { isCollinear } = LineSegment.getRelation(line, other);
+        // Ignore collinear lines since even if they are overlapping
+        // they would have infinite intersections and can't be meaningfully
+        // split
+        if (isCollinear) {
+            continue;
+        }
+        const intersection = LineSegment.lineSegmentIntersection(line, other);
+        if (intersection) {
+            // Ignore intersections at vertex, these should not be "split" because
+            // if it were it would split into a "no length" line (a point).
+            if (!Vec.equal(intersection, line.p1) && !Vec.equal(intersection, line.p2)) {
+                // Don't add duplicate intersection points
+                if (intersections.findIndex(i => Vec.equal(i, intersection)) == -1) {
                     intersections.push(intersection)
                 }
             }
         }
-        // Sort closest first
-        intersections.sort((a, b) => distance(line.p1, a) - distance(line.p1, b));
-        // Make new line segments
-        let lastPoint = line.p1;
-        for (let intersection of intersections) {
-            splitLineSegments.push({ p1: lastPoint, p2: intersection });
-            lastPoint = intersection;
-        }
-        splitLineSegments.push({ p1: lastPoint, p2: line.p2 });
-
     }
+    // Sort closest first
+    intersections.sort((a, b) => distance(line.p1, a) - distance(line.p1, b));
+    // Make new line segments
+    let lastPoint = line.p1;
+    for (let intersection of intersections) {
+        splitLineSegments.push({ p1: lastPoint, p2: intersection });
+        lastPoint = intersection;
+    }
+    splitLineSegments.push({ p1: lastPoint, p2: line.p2 });
+
     return splitLineSegments;
+}
+export function splitIntersectingPolygon2LineSegments(lineSegments: Polygon2LineSegment[]): Polygon2LineSegment[] {
+    let splitPolygon2LineSegments: Polygon2LineSegment[] = []
+    for (let line of lineSegments) {
+        const splitLineSegments = splitIntersectingLineSegments(line, lineSegments);
+        splitPolygon2LineSegments.push(...splitLineSegments.map(ls => ({ ...ls, polygon: line.polygon })));
+    }
+    return splitPolygon2LineSegments;
 }
 
 // Given an array of Polygon2s, it returns an array of Polygon2s where overlapping
@@ -88,32 +102,58 @@ export function splitIntersectingLineSegments(lineSegments: LineSegment.LineSegm
 // Allows for "donuts": where 2 polygon2s can merge into 2 different polygon2s
 // (see tests for "donuts" demonstration).
 export function mergePolygon2s(polygons: Polygon2[]): Polygon2[] {
-    // Convert all polygons into line segments for processing:
-    let lineSegments = polygons.map(toLineSegments).flat();
+    // Step 1: Convert all polygons into line segments for processing:
+    let polyLineSegments = polygons.map(toPolygon2LineSegments).flat();
 
-    // Merge overlapping lines
-    lineSegments = mergeCollinearOverlappingSameDirectionLines(lineSegments);
-
-    // Remove dead ends (2 lines that double back on themselves) (also known as reversals):
-    let reversals: LineSegment.LineSegment[] = []
-    for (let line of lineSegments) {
-        reversals.push(...lineSegments.filter(other => Vec.equal(line.p1, other.p2) && Vec.equal(line.p2, other.p1)));
-    }
-    lineSegments = lineSegments.filter(line => !reversals.includes(line));
+    // Step 2: Split all line segments along intersections
+    // so that there are no line segments left with intersections
+    // other than at their verticies
+    // console.log('count before split', polyLineSegments.length)
+    polyLineSegments = splitIntersectingPolygon2LineSegments(polyLineSegments);
+    // console.log('count after split', polyLineSegments.length, polyLineSegments.map(x => ({ ...x, polygon: polygons.indexOf(x.polygon) })))
 
     // resultPolys stores the merged polygons:
     const resultPolys: Polygon2[] = [];
-
-    for (let i = 0; i < lineSegments.length; i++) {
-        const lineSegment = lineSegments[i];
+    // Step 3: Remove any linesegment that has BOTH it's verticies
+    // inside of the same other polygon
+    for (let i = polyLineSegments.length - 1; i >= 0; i--) {
+        // console.log('i--------', i)
+        const lineSegment = polyLineSegments[i];
         if (lineSegment) {
-            const poly = processLineSegment(lineSegment, lineSegments);
-            // Valid polygons must be 3 points or more, or else it will just be a line
-            if (poly && poly.length > 2) {
-                resultPolys.push(poly);
+            for (let poly of polygons) {
+                // Ignore polygon that owns the linesegment:
+                if (lineSegment.polygon == poly) {
+                    continue;
+                }
+                const p1Inside = isVec2InsidePolygon(lineSegment.p1, poly);
+                // console.log('jtest2', lineSegment.p1, p1Inside, polygons.indexOf(poly))
+                if (!p1Inside) {
+                    continue;
+                }
+                const p2Inside = isVec2InsidePolygon(lineSegment.p2, poly);
+                // console.log('jtest2P2', lineSegment.p2, p2Inside, polygons.indexOf(poly))
+                if (p1Inside && p2Inside) {
+                    // console.log('jtest REMOVE', lineSegment, polygons.indexOf(poly))
+                    polyLineSegments.splice(i, 1);
+                    break;
+                }
+
             }
         }
     }
+    // console.log('count after remove', polyLineSegments.length)
+    // Step 4: Remove unnecessary in-between verticies:
+    const lineSegments = mergeCollinearOverlappingSameDirectionLines(polyLineSegments)
+    // console.log('count after merge overlapping', lineSegments.length)
+    // Step 5: Turn all remaining line segments into polygons:
+    for (let lineSegment of lineSegments) {
+        const poly = processLineSegment(lineSegment, lineSegments);
+        // Valid polygons must be 3 points or more, or else it will just be a line
+        if (poly && poly.length > 2) {
+            resultPolys.push(poly);
+        }
+    }
+
     return resultPolys;
 }
 export function growOverlappingCollinearLinesInDirectionOfP2(line: LineSegment.LineSegment, walls: LineSegment.LineSegment[]): { grownLine: LineSegment.LineSegment, removedLines: LineSegment.LineSegment[] } {
@@ -544,13 +584,6 @@ export function doesLineFromPointToTargetProjectAwayFromOwnPolygon(polygon: Poly
         console.error("Invalid pointIndex");
         return false;
     }
-}
-export interface Polygon2LineSegment {
-    p1: Vec2;
-    p2: Vec2;
-    // The polygon that these points belong to
-    polygon: Polygon2;
-
 }
 export interface Branch {
     // in rads
