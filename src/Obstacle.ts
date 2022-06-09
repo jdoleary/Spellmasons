@@ -1,31 +1,28 @@
-import * as Image from './Image';
-import { Polygon, polygonToPolygonLineSegments } from './Polygon';
-import { containerWalls } from './PixiUtils';
 import { OBSTACLE_SIZE } from './config';
 import type { Vec2 } from './Vec';
 import { IUnit, takeDamage } from './Unit';
-import { lineSegmentIntersection } from './collision/collisionMath';
+import { lineSegmentIntersection } from './collision/lineSegment';
 import { Material } from './Conway';
+import { Polygon2, toPolygon2LineSegments } from './Polygon2';
 export interface IObstacle {
   x: number;
   y: number;
-  bounds: Polygon;
+  bounds: Polygon2;
   material: Material;
 }
 
-export function coordToPoly(coord: Vec2, inverted: boolean = false): Polygon {
+export function coordToPoly(coord: Vec2): Polygon2 {
   const width = OBSTACLE_SIZE;
   const height = OBSTACLE_SIZE;
   const _x = coord.x - width / 2;
   const _y = coord.y - height / 2;
-  const bounds = {
-    points: [
-      { x: _x, y: _y },
-      { x: _x, y: _y + height },
-      { x: _x + width, y: _y + height },
-      { x: _x + width, y: _y },
-    ], inverted
-  };
+  const bounds = [
+    { x: _x, y: _y },
+    { x: _x, y: _y + height },
+    { x: _x + width, y: _y + height },
+    { x: _x + width, y: _y },
+  ]
+
   return bounds;
 }
 
@@ -34,7 +31,7 @@ export function checkLavaDamageDueToMovement(unit: IUnit, endPos: Vec2, predicti
   // Check intersections with lava:
   let hitLava = false;
   for (let o of window.underworld.lavaObstacles) {
-    const walls = polygonToPolygonLineSegments(o.bounds);
+    const walls = toPolygon2LineSegments(o.bounds);
     for (let wall of walls) {
       if (lineSegmentIntersection({ p1: unit, p2: endPos }, wall)) {
         hitLava = true;

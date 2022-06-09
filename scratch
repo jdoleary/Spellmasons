@@ -1,6 +1,6 @@
-        if (Vec.equal(position, { x: 9, y: 5 })) {
-            console.log('ujtest', neighbors, currentCell?.image);
-        }
+if (Vec.equal(position, { x: 9, y: 5 })) {
+    console.log('ujtest', neighbors, currentCell?.image);
+}
 window.t = testShader;
 window.x = submerged.filter;
 function testShader() {
@@ -38,3 +38,42 @@ pull
 decoy
 trap
 explode
+
+// mutate array
+function test() {
+    const arr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    for (let i = arr.length - 1; i >= 0; i--) {
+        if (i == 6) {
+            const kept = pro(i, arr);
+            // Take the 1st index of kept and add it back to
+            // the array since it was used in pro but chose
+            // not to be saved to log
+            const omitted = kept.splice(0, 1)
+            console.log('save for later', omitted);
+            arr.push(...omitted);
+            // Now that some have been removed because they've been processed,
+            // reset i to the newly modified top to prevent it from processing 
+            // undefined's
+            i = arr.length;
+            console.log('batch processed', kept);
+        } else {
+
+            // console.log('log:', arr, 'index', i,);
+            console.log('solo processed:', arr.splice(i, 1)[0]);
+
+        }
+    }
+}
+function pro(i, arr) {
+    let keep = [];
+    for (let x = 0; x < 4; x++) {
+        const randomIndex = Math.floor(Math.random() * arr.length);
+        const num = arr[randomIndex];
+        if (num !== undefined) {
+            keep.push(num);
+            arr.splice(randomIndex, 1);
+        }
+    }
+    return keep;
+}
+test();

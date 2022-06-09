@@ -1,7 +1,79 @@
-import { LineSegment, findWherePointIntersectLineSegmentAtRightAngle, lineSegmentIntersection, testables, isPointOnLineSegment, isCollinearAndOverlapping } from '../collisionMath';
+import { LineSegment, findWherePointIntersectLineSegmentAtRightAngle, lineSegmentIntersection, testables, isPointOnLineSegment, isCollinearAndOverlapping, getCenterPoint, toString } from '../lineSegment';
 import type { Vec2 } from '../../Vec';
 const { slope, toStandardForm } = testables;
-describe('collisionMath', () => {
+describe('lineSegment', () => {
+    describe('getCenterPoint', () => {
+        [
+            {
+                l1: {
+                    p1: {
+                        x: 0, y: 0
+                    },
+                    p2: {
+                        x: 2, y: 0
+                    }
+                },
+                expected: { x: 1, y: 0 }
+            },
+            {
+                l1: {
+                    p1: {
+                        x: 2, y: 0
+                    },
+                    p2: {
+                        x: 0, y: 0
+                    }
+                },
+                expected: { x: 1, y: 0 }
+            },
+            {
+                l1: {
+                    p1: {
+                        x: 0, y: 0
+                    },
+                    p2: {
+                        x: 2, y: 2
+                    }
+                },
+                expected: { x: 1, y: 1 }
+            },
+            {
+                l1: {
+                    p1: {
+                        x: 2, y: 2
+                    },
+                    p2: {
+                        x: 0, y: 0
+                    }
+                },
+                expected: { x: 1, y: 1 }
+            },
+        ].forEach(({ l1, expected }) => {
+            it(`should return ${expected} as centerpoint for ${toString(l1)}`, () => {
+                const actual = getCenterPoint(l1);
+                expect(actual).toEqual(expected);
+            });
+        });
+
+    });
+    describe('getRelation', () => {
+        describe('isOverlapping', () => {
+            it('should return true when B fully overlaps A', () => {
+
+                const A = { p1: { x: 0, y: 0 }, p2: { x: 2, y: 0 } };
+                const B = { p1: { x: -10, y: 0 }, p2: { x: 10, y: 0 } };
+                const actual = isCollinearAndOverlapping(A, B);
+                expect(actual).toEqual(true);
+            });
+            it('should return true when A fully overlaps B', () => {
+
+                const A = { p1: { x: -10, y: 0 }, p2: { x: 10, y: 0 } };
+                const B = { p1: { x: 0, y: 0 }, p2: { x: 2, y: 0 } };
+                const actual = isCollinearAndOverlapping(A, B);
+                expect(actual).toEqual(true);
+            });
+        });
+    });
     describe('isCollinearAndOverlapping', () => {
         [
             {
@@ -262,6 +334,21 @@ describe('collisionMath', () => {
 
     });
     describe('intersectionOfLineSegments', () => {
+        describe('fully overlapping', () => {
+            it('should return A.p2 when B fully overlaps A', () => {
+                const A = { p1: { x: 0, y: 0 }, p2: { x: 2, y: 0 } };
+                const B = { p1: { x: -10, y: 0 }, p2: { x: 10, y: 0 } };
+                const actual = lineSegmentIntersection(A, B);
+                expect(actual).toEqual(A.p2);
+            });
+            it('should return B.p2 when A fully overlaps B', () => {
+                const A = { p1: { x: -10, y: 0 }, p2: { x: 10, y: 0 } };
+                const B = { p1: { x: 0, y: 0 }, p2: { x: 2, y: 0 } };
+                const actual = lineSegmentIntersection(A, B);
+                expect(actual).toEqual(B.p2);
+            });
+
+        });
         describe('colinear', () => {
             it('test co-linear non-overlapping lines', () => {
                 const ls1: LineSegment = { p1: { x: 0, y: 0 }, p2: { x: 1, y: 1 } };
@@ -279,8 +366,9 @@ describe('collisionMath', () => {
                 const actual = lineSegmentIntersection(ls1, ls2);
                 // Since there are infinite collision points, I want it to return 
                 // the ls1 endpoint that is within ls2, if none, then the ls2 endpoint
-                // within ls1, (prefer p2)
-                const expected = ls1.p2;
+                // within ls1.  Intersection point is arbitrary since there are infinite
+                // points to choose from
+                const expected = ls2.p1;
                 expect(actual).toEqual(expected);
 
             });
@@ -288,15 +376,17 @@ describe('collisionMath', () => {
                 const ls1: LineSegment = { p1: { x: 0, y: 0 }, p2: { x: 3, y: 0 } };
                 const ls2: LineSegment = { p1: { x: 1, y: 0 }, p2: { x: 4, y: 0 } };
                 const actual = lineSegmentIntersection(ls1, ls2);
-                const expected = ls1.p2;
+                // Intersection point is arbitrary since there are infinite
+                // points to choose from
+                const expected = ls2.p1;
                 expect(actual).toEqual(expected);
             });
             describe('if lines are collinear and overlapping but l1.p2 is not within the overlap', () => {
-                it('should return l1.p1 when l1.p1 is within the overlap', () => {
+                it('choose arbitrary point among infinite intersections', () => {
                     const ls1: LineSegment = { p1: { x: 0, y: 0 }, p2: { x: 2, y: 2 } };
                     const ls2: LineSegment = { p1: { x: -1, y: -1 }, p2: { x: 1, y: 1 } };
                     const actual = lineSegmentIntersection(ls1, ls2);
-                    const expected = ls1.p1;
+                    const expected = ls2.p2;
                     expect(actual).toEqual(expected);
                 });
                 describe('if neither l1.p2 nor l1.p1 are inside the overlap because l2 is entirely inside the overlap', () => {
@@ -310,6 +400,20 @@ describe('collisionMath', () => {
                     });
                 });
             });
+        });
+        it('should return a point of intersection for 2 collinear overlapping lines facing away from each other', () => {
+            const ls1: LineSegment = { p1: { x: 0, y: 0 }, p2: { x: -2, y: -1 } };
+            const ls2: LineSegment = { p1: { x: 0, y: 0 }, p2: { x: 2, y: 1 } };
+            const actual = lineSegmentIntersection(ls1, ls2);
+            const expected = { x: 0, y: 0 };
+            expect(actual).toEqual(expected);
+        });
+        it('should return a point of intersection for 2 collinear overlapping lines facing towards each other', () => {
+            const ls1: LineSegment = { p1: { x: 0, y: 0 }, p2: { x: -2, y: -1 } };
+            const ls2: LineSegment = { p1: { x: 2, y: 1 }, p2: { x: 0, y: 0 } };
+            const actual = lineSegmentIntersection(ls1, ls2);
+            const expected = { x: 0, y: 0 };
+            expect(actual).toEqual(expected);
         });
         it('should return the point of intersection for 2 lines', () => {
             const ls1: LineSegment = { p1: { x: -1, y: -1 }, p2: { x: 1, y: 1 } };

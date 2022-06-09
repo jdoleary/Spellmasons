@@ -1,15 +1,15 @@
 import { isAngleBetweenAngles } from "./Angle";
-import { findWherePointIntersectLineSegmentAtRightAngle, isPointOnLineSegment, LineSegment, lineSegmentIntersection } from "./collision/collisionMath";
+import { findWherePointIntersectLineSegmentAtRightAngle, isPointOnLineSegment, LineSegment, lineSegmentIntersection } from "./collision/lineSegment";
 import { distance } from "./math";
-import { getPointsFromPolygonStartingAt, doesVertexBelongToPolygon, Polygon, PolygonLineSegment, polygonToPolygonLineSegments, isVec2InsidePolygon, doesLineFromPointToTargetProjectAwayFromOwnPolygon, getInsideAnglesOfWall } from "./Polygon";
 import { Vec2, clone } from './Vec';
 import * as Vec from './Vec';
 import * as math from './math';
+import { isVec2InsidePolygon, Polygon2, Polygon2LineSegment, toPolygon2LineSegments, doesVertexBelongToPolygon, getInsideAnglesOfWall, doesLineFromPointToTargetProjectAwayFromOwnPolygon, getPointsFromPolygonStartingAt } from "./Polygon2";
 
 // Will return either an array with 1 normal polygon or an array with 1 or more 
 // inverted polygons 
-export function findPolygonsThatVec2IsInsideOf(point: Vec2, testPolygons: Polygon[]): Polygon[] {
-    let insideOfPolys: Polygon[] = [];
+export function findPolygonsThatVec2IsInsideOf(point: Vec2, testPolygons: Polygon2[]): Polygon2[] {
+    let insideOfPolys: Polygon2[] = [];
     for (let poly of testPolygons) {
         // Exclude inverted polygons because if there is more than 1
         // inverted polygon, and since inverted polygons' "insides"
@@ -18,34 +18,14 @@ export function findPolygonsThatVec2IsInsideOf(point: Vec2, testPolygons: Polygo
         // "inside" an inverted polygon.  Maybe this calls for the concept
         // of inverted polygons to be rethought, since it really only works
         // when there is only one single inverted polygon
-        if (!poly.inverted) {
-            if (isVec2InsidePolygon(point, poly)) {
-                insideOfPolys = [poly];
-                // Exit immediately if the point is inside a non-inverted polygon
-                // since overlapping polygons should be merged, we can assume it
-                // is only inide this one polygon
-                break;
-            }
+        if (isVec2InsidePolygon(point, poly)) {
+            insideOfPolys = [poly];
+            // Exit immediately if the point is inside a non-inverted polygon
+            // since overlapping polygons should be merged, we can assume it
+            // is only inide this one polygon
+            break;
         }
 
-    }
-    // If the target is NOT inside any non-inverted polygons
-    // Check if it's "inside" (outside) ALL inverted polys
-    // If it is outside of ALL inverted polygons, that means that the
-    // target is invalid so we have to find the closest valid target to path to
-    if (insideOfPolys.length == 0) {
-        for (let poly of testPolygons) {
-            if (poly.inverted) {
-                if (isVec2InsidePolygon(point, poly)) {
-                    insideOfPolys.push(poly);
-                } else {
-                    // If the target is outside (in valid walk space) any single
-                    // inverted polygon then the location is valid
-                    insideOfPolys = [];
-                    break;
-                }
-            }
-        }
     }
     return insideOfPolys;
 }
@@ -53,6 +33,8 @@ interface Path {
     // done represents that the path should no longer be processing;
     // it gives no guaruntee as to the validity of the path
     done: boolean;
+    // Represents if the path reached the destination
+    complete: boolean;
     // A invalid path does not path to the target and can be ignored
     invalid: boolean;
     points: Vec2[];
@@ -65,66 +47,23 @@ interface Path {
         // one at a time to walk around the polygon
         verticies: Vec2[];
         // The original polygon
-        poly: Polygon;
+        poly: Polygon2;
     };
 }
-export function findPath(startPoint: Vec2, target: Vec2, pathingPolygons: Polygon[], pathingLineSegments: PolygonLineSegment[]): Vec2[] {
+export function findPath(startPoint: Vec2, target: Vec2, pathingLineSegments: Polygon2LineSegment[]): Vec2[] {
     // Ensure that startPoint and target are ONLY Vec2s and are not duck-typed
     // This is important for serialization to prevent circular references
     startPoint = clone(startPoint);
     target = clone(target)
-    // If the target is inside of a non-inverted polygon, move it to the closest edge so that
-    // the unit can path to the closest pathable point near where they are attempting to go.
-    // This is important if, for example, a player clicks in empty space which is inside
-    // of the poly but not inside an obstacle.  The pathing should take the unit
-    // as close as it can go without intersecting the polygon
-    const targetInsideOfPolys: Polygon[] = findPolygonsThatVec2IsInsideOf(target, pathingPolygons);
 
-    // window.debugGraphics.clear();
-    // If the real target is in an invalid location,
-    // find the closest valid target to represent the endpoint of the path
-    if (targetInsideOfPolys.length) {
-        const nearPointsOnWalls = [];
-        for (let poly of targetInsideOfPolys) {
-            for (let wall of polygonToPolygonLineSegments(poly)) {
-                const intersection = findWherePointIntersectLineSegmentAtRightAngle(target, wall);
-                if (intersection) {
-                    // window.debugGraphics.lineStyle(3, 0xff0000, 1.0);
-                    // window.debugGraphics.drawCircle(intersection.x, intersection.y, 3);
-                    nearPointsOnWalls.push(intersection);
-                }
 
-            }
-            targetInsideOfPolys.map(p => p.points).flat().forEach(point => {
-                // window.debugGraphics.lineStyle(3, 0x00ff00, 1.0);
-                // window.debugGraphics.drawCircle(point.x, point.y, 3);
-                nearPointsOnWalls.push(point);
-            });
-        }
-        // Find the closest of the nearPointsOnWalls 
-        if (nearPointsOnWalls[0]) {
-            const closest = nearPointsOnWalls.reduce<{ intersection: Vec2, dist: number }>((acc, cur) => {
-                const dist = distance(cur, target)
-                if (dist <= acc.dist) {
-                    return { intersection: cur, dist };
-                } else {
-                    return acc;
-                }
-
-            }, { intersection: nearPointsOnWalls[0], dist: Number.MAX_SAFE_INTEGER })
-            // window.debugGraphics.lineStyle(3, 0x0000ff, 1.0);
-            // window.debugGraphics.drawCircle(closest.intersection.x, closest.intersection.y, 4);
-            // Override target with a location that the unit can actually fit in:
-            target = closest.intersection;
-        }
-    }
 
     let paths: Path[] = [
         // Start with the first idea path from start to target
         // Note, the distance is calculated inside of processPaths even if 
         // there are no interruptions to the path and it just goes from startPoint
         // to target.
-        { done: false, invalid: false, points: [startPoint], target, distance: 0 }
+        { done: false, complete: false, invalid: false, points: [startPoint], target, distance: 0 }
     ];
 
     // There is a processingLimit to prevent infinite processing.
@@ -161,10 +100,9 @@ export function findPath(startPoint: Vec2, target: Vec2, pathingPolygons: Polygo
         }
     }
 
-    // Now that processing is over, mark all paths that aren't done as invalid:
+    // Now that processing is over, mark all paths as done:
     paths.forEach(path => {
         if (!path.done) {
-            path.invalid = true;
             path.done = true;
         }
     })
@@ -201,7 +139,9 @@ export function findPath(startPoint: Vec2, target: Vec2, pathingPolygons: Polygo
     // console.log('paths', paths.filter(p => !p.invalid).length, '/', paths.length);
 
     // Remove invalid paths
+    const firstIntersection = paths[0]?.points[1];
     paths = paths.filter(p => !p.invalid);
+    paths = paths.filter(p => p.complete);
 
     // Find the shortest Path
     // --
@@ -238,7 +178,7 @@ export function findPath(startPoint: Vec2, target: Vec2, pathingPolygons: Polygo
                     if (intersectingWall) {
                         const intersectingPoly = intersectingWall.polygon;
 
-                        const indexIfP2IsOnVertex = intersectingPoly.points.findIndex(p => Vec.equal(p, nextLine.p2));
+                        const indexIfP2IsOnVertex = intersectingPoly.findIndex(p => Vec.equal(p, nextLine.p2));
                         if (indexIfP2IsOnVertex !== -1) {
                             const lineToTargetDoesNotPassThroughOwnPolygon =
                                 doesLineFromPointToTargetProjectAwayFromOwnPolygon(intersectingPoly, indexIfP2IsOnVertex, nextLine.p1);
@@ -283,13 +223,16 @@ export function findPath(startPoint: Vec2, target: Vec2, pathingPolygons: Polygo
         // Remove the start point, since the unit doing the pathing is already at the start point:
         shortestPath.points.shift();
     }
-    return shortestPath ? [...shortestPath.points, shortestPath.target] : [];
+    return shortestPath
+        ? [...shortestPath.points, shortestPath.target]
+        // If no path is found, move to the first intersection which will always be a valid path.
+        : firstIntersection ? [startPoint, firstIntersection] : [];
 }
 // Note: Mutates Path
-function addWalkAroundPolyInfoToPath(path: Path, direction: 'prev' | 'next', startVertex: Vec2, poly: Polygon) {
+function addWalkAroundPolyInfoToPath(path: Path, direction: 'prev' | 'next', startVertex: Vec2, poly: Polygon2) {
     // Walk all the way around a poly in "direction" (clockwise/next or counterclockwise/prev) until you have 
     // a straight line path to the target, or until the straight line path
-    // to the target intersects another PolygonLineSegment
+    // to the target intersects another Polygon2LineSegment
     // --
     // Note: walkAroundAPoly adds "target" to the end of the path when it is finished
     // --
@@ -304,7 +247,7 @@ function addWalkAroundPolyInfoToPath(path: Path, direction: 'prev' | 'next', sta
     }
 
 }
-function walkAroundAPoly(path: Path, pathingWalls: PolygonLineSegment[]) {
+function walkAroundAPoly(path: Path, pathingWalls: Polygon2LineSegment[]) {
     if (!path.walkAroundPolyInfo) {
         // Cannot walk if there is no walk info
         return;
@@ -318,13 +261,14 @@ function walkAroundAPoly(path: Path, pathingWalls: PolygonLineSegment[]) {
     // This occurs if the target point lies directly on an edge of the current polygon
     const endPoint = path.points[path.points.length - 1]
     if (endPoint && isPointOnLineSegment(path.target, { p1: endPoint, p2: vertex })) {
+        path.complete = true;
         path.done = true
         return;
     }
 
     path.points.push(vertex);
     // Check if a straight line between the new vertex and the target passes through the current polygon
-    const indexOfVertex = path.walkAroundPolyInfo.poly.points.findIndex(p => Vec.equal(p, vertex));
+    const indexOfVertex = path.walkAroundPolyInfo.poly.findIndex(p => Vec.equal(p, vertex));
     // true if line to target doesn't pass through own polygon
     let lineToTargetDoesNotPassThroughOwnPolygon = false;
     if (indexOfVertex >= 0) {
@@ -367,6 +311,7 @@ function walkAroundAPoly(path: Path, pathingWalls: PolygonLineSegment[]) {
             // Stop if there is no intersecting wall, the path is complete because it has reached the poly
             // so, clear walking info because it is done
             path.walkAroundPolyInfo = undefined;
+            path.complete = true;
             path.done = true;
         }
     }
@@ -375,7 +320,7 @@ function walkAroundAPoly(path: Path, pathingWalls: PolygonLineSegment[]) {
 // and if there is not it will add points until either the path is invalid or the path is complete
 // --
 // Note: Mutates the paths array's objects
-function processPaths(paths: Path[], pathingWalls: PolygonLineSegment[]): Path[] {
+function processPaths(paths: Path[], pathingWalls: Polygon2LineSegment[]): Path[] {
     // Continue to process paths that are incomplete
     tryAllPaths:
     for (let path of paths) {
@@ -417,6 +362,7 @@ function processPaths(paths: Path[], pathingWalls: PolygonLineSegment[]): Path[]
 
                     // Mark the path as "done"
                     path.done = true;
+                    path.complete = true;
 
                 } else {
                     path.points.push(closestIntersection);
@@ -472,7 +418,7 @@ function processPaths(paths: Path[], pathingWalls: PolygonLineSegment[]): Path[]
                         }
                     }
 
-                    let { next, prev } = polygonLineSegmentToPrevAndNext(intersectingWall);
+                    let { next } = polygonLineSegmentToPrevAndNext(intersectingWall);
 
                     // Branch the path.  The original path will try navigating around p1
                     // and the branchedPath will try navigating around p2.
@@ -480,7 +426,7 @@ function processPaths(paths: Path[], pathingWalls: PolygonLineSegment[]): Path[]
                     const branchedPath = { ...path, points: path.points.map(p => Vec.clone(p)) };
                     paths.push(branchedPath);
 
-                    const nextWalkPoint = intersectingWall.polygon.inverted ? prev : next;
+                    const nextWalkPoint = next;
 
 
                     // Starting from the "prev" corner, walk around the poly until you can make a 
@@ -500,6 +446,7 @@ function processPaths(paths: Path[], pathingWalls: PolygonLineSegment[]): Path[]
 
                 // Mark the path as "done"
                 path.done = true;
+                path.complete = true;
             }
         }
     }
@@ -537,7 +484,7 @@ export function calculateDistanceOfVec2Array(points: Vec2[]): number {
     }
     return totalDistance;
 }
-function polygonLineSegmentToPrevAndNext(wall: PolygonLineSegment): { prev: Vec2, next: Vec2 } {
+function polygonLineSegmentToPrevAndNext(wall: Polygon2LineSegment): { prev: Vec2, next: Vec2 } {
     return { prev: wall.p1, next: wall.p2 };
 }
 function getLastLineInPath(path: Path): LineSegment {
@@ -550,7 +497,7 @@ function getLastLineInPath(path: Path): LineSegment {
     }
 
 }
-// Given an array of PolygonLineSegment[], of all the intersections between line and the walls,
+// Given an array of Polygon2LineSegment[], of all the intersections between line and the walls,
 // find the closest intersection to line.p1
 // --
 // Most of the time, we want to ignore if there is a collision at line.p1, because
@@ -560,7 +507,7 @@ function getLastLineInPath(path: Path): LineSegment {
 // a new path because if the unit's start point is already on an edge of a poly, if we 
 // don't allow for collisions with line.p1, they will path right through the poly that
 // they are already on the edge of.
-function getClosestIntersectionWithWalls(line: LineSegment, walls: PolygonLineSegment[], includeStartPoint: boolean = false): { intersectingWall?: PolygonLineSegment, closestIntersection?: Vec2 } {
+function getClosestIntersectionWithWalls(line: LineSegment, walls: Polygon2LineSegment[], includeStartPoint: boolean = false): { intersectingWall?: Polygon2LineSegment, closestIntersection?: Vec2 } {
     let intersectingWall;
     let closestIntersection;
     let closestIntersectionDistance;

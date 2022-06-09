@@ -1,16 +1,23 @@
-- A bold new plan for making polygons with holes:
-    - Forget about inverted
-    - Collect all polys as line segments and run the same branching algorithm
-    - When a newPoly takes a branch, remove that linesegment from the array of original line segments
-    - Keep iterating until all the line segments are used up
-    - Line segments that don't find a way back to the original point are discarded
-
 ## Tasks
-2. Liquid interactions
+- (H) Polygon Merging (Thursday)
+    - Walls are messed up in seed '0.6794135326578248'
+- (M) Liquid interactions
     - Apply liquid impact and submerge shader when units "fall in"
-3. Rework unit crowding
+- (M) Rework unit crowding (save for later, non priority)
+- (M) Standalone server
+- (M) Card Hand refactor
+    - Replace "hand of cards" with diablo style toolbar (https://eu.diablo3.blizzard.com/static/images/game/guide/fundamentals/action-bar.jpg?v=58-137)
+    - Right click to change (opens inventory)
+- (E) Player Customization
+- (H) Game Balance
+- (M) Menu
+- (M) Steam Page
+- (E) Website Presskit page
+- (M) SFX
+- (E) Master music
+- (M) Tutorial
+- (M) Hoise spells?
 ------
-- Idea: Use css blend mode on cards to have a "dark" version and a "light" version depending on if the spell is good or evil.
 - Bug: unit animation stops after unit nsync?
 - Content: AOE clone should work for pickups
 - Bug: Clone doesn't show cloned units until they move cause they spawn right on top of each other
@@ -25,6 +32,7 @@ i can still cast spells during my turn; as well as end turns
 - Task: An ally that has died at all (even if ressed) should lose their upgrade priviledge
 - Task: Better shaders for lava?
 - **!**Fix host alt-tabbing issue
+    - This will be fixed with standalone server
 - Bug: When you pull a guy and he actually gets to you, and then you move, you "carry" him
 - Content: Time crystal releases something when it breaks
 - Fix: Brad cast a spell out of range, but it still triggered on my screen
