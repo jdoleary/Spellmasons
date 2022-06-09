@@ -114,26 +114,21 @@ export function mergePolygon2s(polygons: Polygon2[]): Polygon2[] {
 
     // resultPolys stores the merged polygons:
     const resultPolys: Polygon2[] = [];
-    // Step 3: Remove any linesegment that has BOTH it's verticies
+    // Step 4: Remove any linesegment that has it's centerpoint
     // inside of the same other polygon
     for (let i = polyLineSegments.length - 1; i >= 0; i--) {
         // console.log('i--------', i)
         const lineSegment = polyLineSegments[i];
         if (lineSegment) {
+            const center = LineSegment.getCenterPoint(lineSegment);
             for (let poly of polygons) {
                 // Ignore polygon that owns the linesegment:
                 if (lineSegment.polygon == poly) {
                     continue;
                 }
-                const p1Inside = isVec2InsidePolygon(lineSegment.p1, poly);
-                // console.log('jtest2', lineSegment.p1, p1Inside, polygons.indexOf(poly))
-                if (!p1Inside) {
-                    continue;
-                }
-                const p2Inside = isVec2InsidePolygon(lineSegment.p2, poly);
-                // console.log('jtest2P2', lineSegment.p2, p2Inside, polygons.indexOf(poly))
-                if (p1Inside && p2Inside) {
-                    // console.log('jtest REMOVE', lineSegment, polygons.indexOf(poly))
+                const isInside = isVec2InsidePolygon(center, poly);
+                if (isInside) {
+                    console.log('jtest REMOVE', lineSegment, polygons.indexOf(poly))
                     polyLineSegments.splice(i, 1);
                     break;
                 }

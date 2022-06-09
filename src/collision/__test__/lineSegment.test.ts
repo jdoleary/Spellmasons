@@ -1,7 +1,61 @@
-import { LineSegment, findWherePointIntersectLineSegmentAtRightAngle, lineSegmentIntersection, testables, isPointOnLineSegment, isCollinearAndOverlapping } from '../lineSegment';
+import { LineSegment, findWherePointIntersectLineSegmentAtRightAngle, lineSegmentIntersection, testables, isPointOnLineSegment, isCollinearAndOverlapping, getCenterPoint, toString } from '../lineSegment';
 import type { Vec2 } from '../../Vec';
 const { slope, toStandardForm } = testables;
 describe('lineSegment', () => {
+    describe('getCenterPoint', () => {
+        [
+            {
+                l1: {
+                    p1: {
+                        x: 0, y: 0
+                    },
+                    p2: {
+                        x: 2, y: 0
+                    }
+                },
+                expected: { x: 1, y: 0 }
+            },
+            {
+                l1: {
+                    p1: {
+                        x: 2, y: 0
+                    },
+                    p2: {
+                        x: 0, y: 0
+                    }
+                },
+                expected: { x: 1, y: 0 }
+            },
+            {
+                l1: {
+                    p1: {
+                        x: 0, y: 0
+                    },
+                    p2: {
+                        x: 2, y: 2
+                    }
+                },
+                expected: { x: 1, y: 1 }
+            },
+            {
+                l1: {
+                    p1: {
+                        x: 2, y: 2
+                    },
+                    p2: {
+                        x: 0, y: 0
+                    }
+                },
+                expected: { x: 1, y: 1 }
+            },
+        ].forEach(({ l1, expected }) => {
+            it(`should return ${expected} as centerpoint for ${toString(l1)}`, () => {
+                const actual = getCenterPoint(l1);
+                expect(actual).toEqual(expected);
+            });
+        });
+
+    });
     describe('getRelation', () => {
         describe('isOverlapping', () => {
             it('should return true when B fully overlaps A', () => {

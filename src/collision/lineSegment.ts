@@ -106,6 +106,10 @@ export function findWherePointIntersectLineSegmentAtRightAngle(point: Vec.Vec2, 
     }
 
 }
+export function getCenterPoint(ls: LineSegment): Vec.Vec2 {
+    return Vec.add(ls.p1, Vec.multiply(0.5, Vec.subtract(ls.p2, ls.p1)));
+
+}
 export function isPointOnLineSegment(point: Vec.Vec2, lineSegment: LineSegment): boolean {
     const segmentSlope = slope(lineSegment);
     const slopeFromPointToEndOfSegment = slope({ p1: point, p2: lineSegment.p2 })

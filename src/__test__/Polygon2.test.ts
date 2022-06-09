@@ -468,10 +468,10 @@ describe('Polygon2', () => {
             const actual = mergedPolygons;
             const expected = [
                 [
+                    { x: 1, y: 1 },
                     { x: 9, y: 1 },
                     { x: 9, y: 9 },
                     { x: 1, y: 9 },
-                    { x: 1, y: 1 },
                 ],
                 [
                     { x: 10, y: 10 },
