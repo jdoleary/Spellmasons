@@ -128,9 +128,17 @@ export function mergePolygon2s(polygons: Polygon2[]): Polygon2[] {
                 }
                 const isInside = isVec2InsidePolygon(center, poly);
                 if (isInside) {
-                    console.log('jtest REMOVE', lineSegment, polygons.indexOf(poly))
+                    const notDirectlyOnLine = toLineSegments(poly).every(ls => !LineSegment.isPointOnLineSegment(center, ls));
+                    // Only remove a lineSegment if it is both inside a polygon and the center point
+                    // is not directly on one of the linesegments of that polygon.
+                    // This is very important and shows it's usefulness in the 
+                    // "given boxes that are mostly identical > should keep the larger one" test where
+                    // overlapping boxes with slight differences must not be removed
+
+                    if (notDirectlyOnLine) {
                     polyLineSegments.splice(i, 1);
                     break;
+                    }
                 }
 
             }

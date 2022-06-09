@@ -714,16 +714,14 @@ describe('Polygon2', () => {
             const p5 = { x: 1, y: -1 };
             const polygonA: Polygon2 = points;
             const polygonB: Polygon2 = [...points, p5];
-            const mergedPolygons = mergePolygon2s([polygonA, polygonB]);
-            expect(mergedPolygons.length).toEqual(1);
-            const actual = mergedPolygons[0];
-            const expected = [
+            const actual = mergePolygon2s([polygonA, polygonB]);
+            const expected = [[
                 p1,
                 p2,
                 p3,
                 p4,
                 p5,
-            ];
+            ]];
             expect(actual).toEqual(expected);
         });
     });
