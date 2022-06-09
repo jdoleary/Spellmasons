@@ -1,10 +1,6 @@
 ## Tasks
 - (H) Polygon Merging (Thursday)
-    - New strategy for polygon merging
-        - map all polys into line segments
-        - split all line segments that have intersections with other line segments
-        - remove all line segments that have both their p1 and p2 inside of the same other polygon
-        - What is left will be the "correctly merged" linesegments which can then be turned into polys
+    - Walls are messed up in seed '0.6794135326578248'
 - (M) Liquid interactions
     - Apply liquid impact and submerge shader when units "fall in"
 - (M) Rework unit crowding (save for later, non priority)
