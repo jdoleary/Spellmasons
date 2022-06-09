@@ -102,22 +102,19 @@ export function splitIntersectingPolygon2LineSegments(lineSegments: Polygon2Line
 // Allows for "donuts": where 2 polygon2s can merge into 2 different polygon2s
 // (see tests for "donuts" demonstration).
 export function mergePolygon2s(polygons: Polygon2[]): Polygon2[] {
-    // Step 1: Convert all polygons into line segments for processing:
+    // Convert all polygons into line segments for processing:
     let polyLineSegments = polygons.map(toPolygon2LineSegments).flat();
 
-    // Step 2: Split all line segments along intersections
+    // Split all line segments along intersections
     // so that there are no line segments left with intersections
     // other than at their verticies
-    // console.log('count before split', polyLineSegments.length)
     polyLineSegments = splitIntersectingPolygon2LineSegments(polyLineSegments);
-    // console.log('count after split', polyLineSegments.length, polyLineSegments.map(x => ({ ...x, polygon: polygons.indexOf(x.polygon) })))
 
     // resultPolys stores the merged polygons:
     const resultPolys: Polygon2[] = [];
-    // Step 4: Remove any linesegment that has it's centerpoint
+    // Remove any linesegment that has it's centerpoint
     // inside of the same other polygon
     for (let i = polyLineSegments.length - 1; i >= 0; i--) {
-        // console.log('i--------', i)
         const lineSegment = polyLineSegments[i];
         if (lineSegment) {
             const center = LineSegment.getCenterPoint(lineSegment);
@@ -136,19 +133,17 @@ export function mergePolygon2s(polygons: Polygon2[]): Polygon2[] {
                     // overlapping boxes with slight differences must not be removed
 
                     if (notDirectlyOnLine) {
-                    polyLineSegments.splice(i, 1);
-                    break;
+                        polyLineSegments.splice(i, 1);
+                        break;
                     }
                 }
 
             }
         }
     }
-    // console.log('count after remove', polyLineSegments.length)
-    // Step 4: Remove unnecessary in-between verticies:
+    // Remove unnecessary in-between verticies:
     const lineSegments = mergeCollinearOverlappingSameDirectionLines(polyLineSegments)
-    // console.log('count after merge overlapping', lineSegments.length)
-    // Step 5: Turn all remaining line segments into polygons:
+    // Turn all remaining line segments into polygons:
     for (let lineSegment of lineSegments) {
         const poly = processLineSegment(lineSegment, lineSegments);
         // Valid polygons must be 3 points or more, or else it will just be a line
