@@ -44,7 +44,7 @@ export function mergeCollinearOverlappingSameDirectionLines(lines: LineSegment.L
     return newLines;
 
 }
-export function splitOverlappingLineSegments(lineSegments: LineSegment.LineSegment[]): LineSegment.LineSegment[] {
+export function splitIntersectingLineSegments(lineSegments: LineSegment.LineSegment[]): LineSegment.LineSegment[] {
     let splitLineSegments: LineSegment.LineSegment[] = []
     for (let line of lineSegments) {
         let intersections: Vec2[] = [];

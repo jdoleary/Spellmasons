@@ -1,15 +1,15 @@
 import { LineSegment } from '../collision/lineSegment';
-import { Polygon2, mergePolygon2s, toLineSegments, processLineSegment, mergeCollinearOverlappingSameDirectionLines, splitOverlappingLineSegments } from '../Polygon2';
+import { Polygon2, mergePolygon2s, toLineSegments, processLineSegment, mergeCollinearOverlappingSameDirectionLines, splitIntersectingLineSegments } from '../Polygon2';
 import { Vec2, clone } from '../Vec';
 
 describe('Polygon2', () => {
-    describe('splitOverlappingLineSegments', () => {
+    describe('splitIntersectingLineSegments', () => {
         it('should ignore intersections at verticies', () => {
             const lineSegments = [
                 { p1: { x: 0, y: 0 }, p2: { x: 0, y: 10 } },
                 { p1: { x: 0, y: 10 }, p2: { x: 0, y: 20 } },
             ]
-            const actual = splitOverlappingLineSegments(lineSegments);
+            const actual = splitIntersectingLineSegments(lineSegments);
             const expected = lineSegments;
             expect(actual).toEqual(expected);
         });
@@ -18,14 +18,14 @@ describe('Polygon2', () => {
                 { p1: { x: 0, y: 0 }, p2: { x: 0, y: 10 } },
                 { p1: { x: 0, y: 5 }, p2: { x: 0, y: 15 } },
             ]
-            const actual = splitOverlappingLineSegments(lineSegments);
+            const actual = splitIntersectingLineSegments(lineSegments);
             const expected = lineSegments;
             expect(actual).toEqual(expected);
         });
         it('should handle a line that runs in reverse direction to other tests', () => {
             const A = { p1: { x: 0, y: 10 }, p2: { x: 0, y: 0 } };
             const B = { p1: { x: -1, y: 4 }, p2: { x: 1, y: 4 } };
-            const actual = splitOverlappingLineSegments([A, B]);
+            const actual = splitIntersectingLineSegments([A, B]);
             const expected = [
                 // A
                 { p1: A.p1, p2: { x: 0, y: 4 } },
@@ -45,7 +45,7 @@ describe('Polygon2', () => {
             const B = { p1: { x: -1, y: BY }, p2: { x: 1, y: BY } };
             const C = { p1: { x: -1, y: CY }, p2: { x: 1, y: CY } };
             const D = { p1: { x: -1, y: DY }, p2: { x: 1, y: DY } };
-            const actual = splitOverlappingLineSegments([A, B, C, D]);
+            const actual = splitIntersectingLineSegments([A, B, C, D]);
             const expected = [
                 // A
                 // (note C has a lower y than b and so will come first
