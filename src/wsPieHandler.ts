@@ -396,6 +396,21 @@ async function handleSpell(caster: Player.IPlayer, payload: any) {
   // Only allow casting during the PlayerTurns phase
   if (window.underworld.turn_phase === turn_phase.PlayerTurns) {
     window.animatingSpells = true;
+    const animationSpeed = 0.2;
+
+    let castAnimation = Promise.resolve();
+    if (payload.cards.length < 3) {
+      castAnimation = Unit.addOneOffAnimation(caster.unit, 'units/playerAttackZap', { animationSpeed, loop: false });
+    } else if (payload.cards.length < 5) {
+      castAnimation = Unit.addOneOffAnimation(caster.unit, 'units/playerAttackSingle', { animationSpeed, loop: false });
+    } else {
+      castAnimation = Unit.addOneOffAnimation(caster.unit, 'units/playerAttackBomb', { animationSpeed, loop: false });
+    }
+    const animations = [
+      Unit.playAnimation(caster.unit, 'units/playerAttack', { animationSpeed, loop: false }),
+      castAnimation,
+    ]
+    await Promise.all(animations);
     await window.underworld.castCards(caster.cardUsageCounts, caster.unit, payload.cards, payload, false, false);
     window.animatingSpells = false;
     // Check for dead players to end their turn,

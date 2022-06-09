@@ -12,6 +12,8 @@ import { clearTooltipSelection } from './ui/PlanningView';
 import defaultPlayerUnit from './units/playerUnit';
 import { MESSAGE_TYPES } from './MessageTypes';
 import { jitter } from './Vec';
+import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
+import { playerCastAnimationColor, playerCoatPrimary, playerCoatSecondary } from './ui/colors';
 
 // The serialized version of the interface changes the interface to allow only the data
 // that can be serialized in JSON.  It may exclude data that is not neccessary to
@@ -58,6 +60,24 @@ export function create(clientId: string): IPlayer {
     cardsAmount: config.START_CARDS_COUNT,
     upgrades: [],
   };
+  // Add player-specific shaders
+  // regardless of if the image sprite changes to a new animation or not.
+  // @ts-ignore
+  if (player.unit.image && player.unit.image.sprite.filters) {
+
+    player.unit.image.sprite.filters.push(
+      new MultiColorReplaceFilter(
+        [
+          [playerCoatPrimary, 0xFF0000],
+          [playerCoatSecondary, 0xaa0000],
+          [playerCastAnimationColor, 0x0000ff],
+        ],
+        0.1
+      )
+    );
+  }
+
+
   // Player units get full mana every turn
   player.unit.manaPerTurn = player.unit.manaMax;
   player.inPortal = true;
@@ -72,6 +92,7 @@ export function create(clientId: string): IPlayer {
   updateGlobalRefToCurrentClientPlayer(player);
   // Add initial cards to hand
   CardUI.addCardToHand(allCards['hurt'], player);
+  // CardUI.addCardToHand(allCards['summon_decoy'], player);
   // CardUI.addCardToHand(allCards['heal'], player);
   // CardUI.addCardToHand(allCards['AOE'], player);
   // CardUI.addCardToHand(allCards['chain'], player);

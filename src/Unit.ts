@@ -1,8 +1,9 @@
+import * as PIXI from 'pixi.js';
 import * as config from './config';
 import * as Image from './Image';
 import * as math from './math';
 import { distance } from './math';
-import { addPixiSprite, containerDoodads, containerUnits } from './PixiUtils';
+import { addPixiSprite, containerDoodads, containerUnits, PixiSpriteOptions } from './PixiUtils';
 import { UnitSubType, UnitType, Faction } from './commonTypes';
 import type { Vec2 } from './Vec';
 import * as Vec from './Vec';
@@ -272,7 +273,7 @@ export function load(unit: IUnitSerialized, prediction: boolean): IUnit {
     ...restUnit,
     shaderUniforms: {},
     resolveDoneMoving: () => { },
-    image: Image.load(unit.image, containerUnits),
+    image: Image.load(unit.image, getParentContainer(unit.alive)),
   };
   setupShaders(loadedunit);
   // Load in shader uniforms by ONLY setting the uniforms that are saved
@@ -338,411 +339,435 @@ export function returnToDefaultSprite(unit: IUnit) {
     }
   }
 }
+export function getParentContainer(alive: boolean): PIXI.Container {
+  return alive ? containerUnits : containerDoodads;
 
-export function playAnimation(unit: IUnit, spritePath: string | undefined): Promise<void> {
-  if (!spritePath) {
-    console.trace('tried to play missing animation');
-    return Promise.resolve();
-  }
-  // Change animation and change back to default
-  return new Promise<void>((resolve) => {
-    if (!unit.image) {
-      return resolve();
+  export function playAnimation(unit: IUnit, spritePath: string | undefined): Promise<void> {
+    if (!spritePath) {
+      console.trace('tried to play missing animation');
+      return Promise.resolve();
     }
-    Image.changeSprite(unit.image, addPixiSprite(spritePath, unit.image.sprite.parent, {
-      loop: false,
-      onComplete: () => {
-        returnToDefaultSprite(unit);
-        resolve();
+    // Change animation and change back to default
+    return new Promise<void>((resolve) => {
+      if (!unit.image) {
+        return resolve();
       }
-    }));
-  });
-}
+      Image.changeSprite(unit.image, addPixiSprite(spritePath, unit.image.sprite.parent, {
+        loop: false,
+        ...options,
+        onComplete: () => {
+          returnToDefaultSprite(unit);
+          resolve();
+        }
+      }));
+    });
+  }
+  export function addOneOffAnimation(unit: IUnit, spritePath: string, options?: PixiSpriteOptions): Promise<void> {
+    // Play animation and then remove it
+    return new Promise<void>((resolve) => {
+      if (!unit.image) {
+        return resolve();
+      }
+      const animationSprite = addPixiSprite(spritePath, unit.image.sprite, {
+        loop: false,
+        ...options,
+        onComplete: () => {
+          if (unit.image) {
+            unit.image.sprite.removeChild(animationSprite);
+          }
+          resolve();
+        }
+      });
+      animationSprite.anchor.set(0.5);
+    });
+  }
 
-export function resurrect(unit: IUnit) {
-  // Return dead units back to full health
-  unit.health = unit.healthMax;
-  unit.alive = true;
-  returnToDefaultSprite(unit);
-}
-// A list of unit source ids that will produce no corpse when killed
-// Useful for decoy (and maybe bosses in the future??)
-const noCorpseIds = ['decoy'];
-export function die(unit: IUnit, prediction: boolean) {
-  if (noCorpseIds.includes(unit.unitSourceId)) {
-    // Remove the unit entirely
-    cleanup(unit);
-    return;
-  } else {
-    // This check for unit.image prevents creating a corpse image when a predictionUnit
-    // dies because a prediction unit won't have an image property
-    if (unit.image) {
-      const dieSprite = addPixiSprite(unit.animations.die, containerDoodads);
-      // @ts-ignore: .loop does exist on animatedSprite
-      dieSprite.loop = false;
-      Image.changeSprite(
-        unit.image,
-        dieSprite
-      );
+  export function resurrect(unit: IUnit) {
+    // Return dead units back to full health
+    unit.health = unit.healthMax;
+    unit.alive = true;
+    returnToDefaultSprite(unit);
+  }
+  // A list of unit source ids that will produce no corpse when killed
+  // Useful for decoy (and maybe bosses in the future??)
+  const noCorpseIds = ['decoy'];
+  export function die(unit: IUnit, prediction: boolean) {
+    if (noCorpseIds.includes(unit.unitSourceId)) {
+      // Remove the unit entirely
+      cleanup(unit);
+      return;
+    } else {
+      // Set unit.alive to false, this must come before getParentContainer
+      // so it'll know to put the new image in the right container
+      unit.alive = false;
+      // This check for unit.image prevents creating a corpse image when a predictionUnit
+      // dies because a prediction unit won't have an image property
+      if (unit.image) {
+        const dieSprite = addPixiSprite(unit.animations.die, containerDoodads);
+        // @ts-ignore: .loop does exist on animatedSprite
+        dieSprite.loop = false;
+        Image.changeSprite(
+          unit.image,
+          dieSprite
+        );
+      }
+      unit.mana = 0;
+      // Ensure that the unit resolvesDoneMoving when they die in the event that 
+      // they die while they are moving.  This prevents turn phase from getting stuck
+      unit.resolveDoneMoving();
+
+      for (let i = 0; i < unit.onDeathEvents.length; i++) {
+        const eventName = unit.onDeathEvents[i];
+        if (eventName) {
+          const fn = Events.onDeathSource[eventName];
+          if (fn) {
+            fn(unit, prediction);
+          }
+        }
+      }
+
+      // Remove all modifiers
+      // Note: This must come AFTER onDeathEvents or else it will remove the modifier
+      // that added the onDeathEvent and the onDeathEvent won't trigger
+      for (let [modifier, _modifierProperties] of Object.entries(unit.modifiers)) {
+        removeModifier(unit, modifier);
+      }
     }
-    unit.alive = false;
-    unit.mana = 0;
-    // Ensure that the unit resolvesDoneMoving when they die in the event that 
-    // they die while they are moving.  This prevents turn phase from getting stuck
-    unit.resolveDoneMoving();
 
-    for (let i = 0; i < unit.onDeathEvents.length; i++) {
-      const eventName = unit.onDeathEvents[i];
-      if (eventName) {
-        const fn = Events.onDeathSource[eventName];
-        if (fn) {
-          fn(unit, prediction);
+    if (window.player && window.player.unit == unit) {
+      centeredFloatingText(`💀 You Died 💀`, 'red');
+    }
+    // In the event that this unit that just died is the selected unit,
+    // this will remove the tooltip:
+    checkIfNeedToClearTooltip();
+    window.underworld.checkIfShouldSpawnPortal();
+  }
+  export function composeOnDamageEvents(unit: IUnit, damage: number, prediction: boolean): number {
+    // Compose onDamageEvents
+    for (let eventName of unit.onDamageEvents) {
+      const fn = Events.onDamageSource[eventName];
+      if (fn) {
+        // onDamage events can alter the amount of damage taken
+        damage = fn(unit, damage, prediction);
+      }
+    }
+    return damage
+
+  }
+  export function takeDamage(unit: IUnit, amount: number, prediction: boolean, state?: EffectState) {
+    amount = composeOnDamageEvents(unit, amount, prediction);
+    if (!prediction) {
+      console.log(`takeDamage: unit ${unit.id}; amount: ${amount}; events:`, unit.onDamageEvents);
+      playAnimation(unit, unit.animations.hit);
+    }
+    unit.health -= amount;
+    // Prevent health from going over maximum or under 0
+    unit.health = Math.max(0, Math.min(unit.health, unit.healthMax));
+    // If the unit is actually taking damage (not taking 0 damage or being healed - (negative damage))
+    if (!prediction) {
+      if (amount > 0) {
+        // Use all_red shader to flash the unit to show they are taking damage
+        if (unit.shaderUniforms.all_red) {
+          unit.shaderUniforms.all_red.alpha = 1;
+          addLerpable(unit.shaderUniforms.all_red, "alpha", 0, 200);
         }
       }
     }
 
-    // Remove all modifiers
-    // Note: This must come AFTER onDeathEvents or else it will remove the modifier
-    // that added the onDeathEvent and the onDeathEvent won't trigger
-    for (let [modifier, _modifierProperties] of Object.entries(unit.modifiers)) {
-      removeModifier(unit, modifier);
-    }
-  }
-
-  if (window.player && window.player.unit == unit) {
-    centeredFloatingText(`💀 You Died 💀`, 'red');
-  }
-  // In the event that this unit that just died is the selected unit,
-  // this will remove the tooltip:
-  checkIfNeedToClearTooltip();
-  window.underworld.checkIfShouldSpawnPortal();
-}
-export function composeOnDamageEvents(unit: IUnit, damage: number, prediction: boolean): number {
-  // Compose onDamageEvents
-  for (let eventName of unit.onDamageEvents) {
-    const fn = Events.onDamageSource[eventName];
-    if (fn) {
-      // onDamage events can alter the amount of damage taken
-      damage = fn(unit, damage, prediction);
-    }
-  }
-  return damage
-
-}
-export function takeDamage(unit: IUnit, amount: number, prediction: boolean, state?: EffectState) {
-  amount = composeOnDamageEvents(unit, amount, prediction);
-  if (!prediction) {
-    console.log(`takeDamage: unit ${unit.id}; amount: ${amount}; events:`, unit.onDamageEvents);
-    playAnimation(unit, unit.animations.hit);
-  }
-  unit.health -= amount;
-  // Prevent health from going over maximum or under 0
-  unit.health = Math.max(0, Math.min(unit.health, unit.healthMax));
-  // If the unit is actually taking damage (not taking 0 damage or being healed - (negative damage))
-  if (!prediction) {
-    if (amount > 0) {
-      // Use all_red shader to flash the unit to show they are taking damage
-      if (unit.shaderUniforms.all_red) {
-        unit.shaderUniforms.all_red.alpha = 1;
-        addLerpable(unit.shaderUniforms.all_red, "alpha", 0, 200);
+    // If taking damage (not healing) and health is 0 or less...
+    if (amount > 0 && unit.health <= 0) {
+      // if unit is alive, die
+      if (unit.alive) {
+        die(unit, prediction);
       }
     }
-  }
 
-  // If taking damage (not healing) and health is 0 or less...
-  if (amount > 0 && unit.health <= 0) {
-    // if unit is alive, die
-    if (unit.alive) {
-      die(unit, prediction);
+  }
+  export function syncPlayerHealthManaUI() {
+    if (!(window.player && elHealthBar && elManaBar && elStaminaBar && elHealthLabel && elManaLabel && elStaminaBarLabel)) {
+      return
     }
-  }
+    const unit = window.player.unit;
+    const healthRatio = unit.health / unit.healthMax
+    // Set the health bar that shows how much health you currently have
+    elHealthBar.style["width"] = `${100 * healthRatio}%`;
+    elHealthLabel.innerHTML = `${unit.health}/${unit.healthMax}`;
 
-}
-export function syncPlayerHealthManaUI() {
-  if (!(window.player && elHealthBar && elManaBar && elStaminaBar && elHealthLabel && elManaLabel && elStaminaBarLabel)) {
-    return
-  }
-  const unit = window.player.unit;
-  const healthRatio = unit.health / unit.healthMax
-  // Set the health bar that shows how much health you currently have
-  elHealthBar.style["width"] = `${100 * healthRatio}%`;
-  elHealthLabel.innerHTML = `${unit.health}/${unit.healthMax}`;
-
-  const predictionPlayerUnit = window.predictionUnits.find(u => u.id == window.player?.unit.id) || { health: unit.health, mana: unit.mana };
-  // Set the health cost bar that shows how much health will be removed if the spell is cast
-  if (predictionPlayerUnit.health > 0) {
-    // Show cost bar from current health location minus whatever it's value is
-    elHealthCost.style['left'] = `${100 * predictionPlayerUnit.health / unit.healthMax}%`;
-    elHealthCost.style['width'] = `${100 * (unit.health - predictionPlayerUnit.health) / unit.healthMax}%`;
-  } else {
-    elHealthCost.style['left'] = '100%';
-    elHealthCost.style['width'] = '0';
-  }
-
-  // Set the 3 mana bars that show how much mana you currently have
-  const manaRatio = unit.mana / unit.manaMax;
-  elManaBar.style["width"] = `${100 * Math.min(manaRatio, 1)}%`;
-  const manaRatio2 = (Math.max(0, unit.mana - unit.manaMax)) / unit.manaMax
-  elManaBar2.style["width"] = `${100 * Math.min(manaRatio2, 1)}%`;
-  const manaRatio3 = (Math.max(0, unit.mana - unit.manaMax * 2)) / unit.manaMax;
-  elManaBar3.style["width"] = `${100 * Math.min(manaRatio3, 1)}%`;
-  if (predictionPlayerUnit.mana !== unit.mana) {
-    elManaLabel.innerHTML = `${predictionPlayerUnit.mana} Mana Left`;
-  } else {
-    elManaLabel.innerHTML = `${unit.mana}/${unit.manaMax}`;
-  }
-
-  // Set the 3 mana cost bars that show how much mana will be removed if the spell is cast
-  if (predictionPlayerUnit.mana > 0) {
-    // Show cost bar from current mana location minus whatever it's value is
-    elManaCost.style['left'] = `${100 * predictionPlayerUnit.mana / unit.manaMax}%`;
-    elManaCost.style['width'] = `${100 * Math.min(((unit.mana - predictionPlayerUnit.mana) / unit.manaMax), 1)}%`;
-
-    elManaCost2.style['left'] = `${100 * (predictionPlayerUnit.mana - unit.manaMax) / unit.manaMax}%`;
-    let cost2Left = 100 * (predictionPlayerUnit.mana - unit.manaMax) / unit.manaMax;
-    if (cost2Left < 0) {
-      elManaBar2.style['left'] = `${cost2Left}%`;
-      elManaCost2.style['left'] = `0%`;
+    const predictionPlayerUnit = window.predictionUnits.find(u => u.id == window.player?.unit.id) || { health: unit.health, mana: unit.mana };
+    // Set the health cost bar that shows how much health will be removed if the spell is cast
+    if (predictionPlayerUnit.health > 0) {
+      // Show cost bar from current health location minus whatever it's value is
+      elHealthCost.style['left'] = `${100 * predictionPlayerUnit.health / unit.healthMax}%`;
+      elHealthCost.style['width'] = `${100 * (unit.health - predictionPlayerUnit.health) / unit.healthMax}%`;
     } else {
-      elManaBar2.style['left'] = '0%';
-      elManaCost2.style['left'] = `${cost2Left}%`;
+      elHealthCost.style['left'] = '100%';
+      elHealthCost.style['width'] = '0';
     }
-    elManaCost2.style['width'] = `${100 * Math.min(manaRatio2, 1)}%`;
 
-    let cost3Left = 100 * (predictionPlayerUnit.mana - unit.manaMax * 2) / unit.manaMax;
-    if (cost3Left < 0) {
-      elManaBar3.style['left'] = `${cost3Left}%`;
-      elManaCost3.style['left'] = `0%`;
+    // Set the 3 mana bars that show how much mana you currently have
+    const manaRatio = unit.mana / unit.manaMax;
+    elManaBar.style["width"] = `${100 * Math.min(manaRatio, 1)}%`;
+    const manaRatio2 = (Math.max(0, unit.mana - unit.manaMax)) / unit.manaMax
+    elManaBar2.style["width"] = `${100 * Math.min(manaRatio2, 1)}%`;
+    const manaRatio3 = (Math.max(0, unit.mana - unit.manaMax * 2)) / unit.manaMax;
+    elManaBar3.style["width"] = `${100 * Math.min(manaRatio3, 1)}%`;
+    if (predictionPlayerUnit.mana !== unit.mana) {
+      elManaLabel.innerHTML = `${predictionPlayerUnit.mana} Mana Left`;
     } else {
-      elManaBar3.style['left'] = '0%';
-      elManaCost3.style['left'] = `${cost3Left}%`;
+      elManaLabel.innerHTML = `${unit.mana}/${unit.manaMax}`;
     }
-    elManaCost3.style['width'] = `${100 * Math.min(manaRatio3, 1)}%`;
-  } else {
-    elManaCost.style['left'] = `100%`;
-    elManaCost2.style['left'] = `100%`;
-    elManaCost3.style['left'] = `100%`;
-  }
 
-  const staminaLeft = Math.max(0, Math.round(unit.stamina));
-  elStaminaBar.style["width"] = `${100 * (unit.stamina) / unit.staminaMax}%`;
-  elStaminaBarLabel.innerHTML = `${staminaLeft}`;
-  if (staminaLeft <= 0) {
-    // Now that the current player has moved, highlight the "end-turn-btn" to
-    // remind them that they need to end their turn before they can move again
-    document.querySelector('#end-turn-btn')?.classList.add('highlight');
-  } else {
-    document.querySelector('#end-turn-btn')?.classList.remove('highlight');
+    // Set the 3 mana cost bars that show how much mana will be removed if the spell is cast
+    if (predictionPlayerUnit.mana > 0) {
+      // Show cost bar from current mana location minus whatever it's value is
+      elManaCost.style['left'] = `${100 * predictionPlayerUnit.mana / unit.manaMax}%`;
+      elManaCost.style['width'] = `${100 * Math.min(((unit.mana - predictionPlayerUnit.mana) / unit.manaMax), 1)}%`;
 
-  }
-}
-export function canMove(unit: IUnit): boolean {
-  // Do not move if dead
-  if (!unit.alive) {
-    console.log("canMove: false - unit is not alive")
-    return false;
-  }
-  // Do not move if already moved
-  if (unit.stamina <= 0) {
-    console.log("canMove: false - unit has already used all their stamina this turn")
-    return false;
-  }
-  return true;
-}
-export function livingUnitsInDifferentFaction(unit: IUnit) {
-  return window.underworld.units.filter(
-    (u) => u.faction !== unit.faction && u.alive,
-  );
-}
-export function livingUnitsInSameFaction(unit: IUnit) {
-  // u !== unit excludes self from returning as the closest unit
-  return window.underworld.units.filter(
-    (u) => u !== unit && u.faction == unit.faction && u.alive,
-  );
-}
-function closestInListOfUnits(
-  sourceUnit: IUnit,
-  units: IUnit[],
-): IUnit | undefined {
-  return units.reduce<{ closest: IUnit | undefined; distance: number }>(
-    (acc, currentUnitConsidered) => {
-      const dist = distance(currentUnitConsidered, sourceUnit);
-      if (dist <= acc.distance) {
-        return { closest: currentUnitConsidered, distance: dist };
+      elManaCost2.style['left'] = `${100 * (predictionPlayerUnit.mana - unit.manaMax) / unit.manaMax}%`;
+      let cost2Left = 100 * (predictionPlayerUnit.mana - unit.manaMax) / unit.manaMax;
+      if (cost2Left < 0) {
+        elManaBar2.style['left'] = `${cost2Left}%`;
+        elManaCost2.style['left'] = `0%`;
+      } else {
+        elManaBar2.style['left'] = '0%';
+        elManaCost2.style['left'] = `${cost2Left}%`;
       }
-      return acc;
-    },
-    { closest: undefined, distance: Number.MAX_SAFE_INTEGER },
-  ).closest;
-}
-export function findClosestUnitInDifferentFaction(
-  unit: IUnit,
-): IUnit | undefined {
-  return closestInListOfUnits(unit, livingUnitsInDifferentFaction(unit));
-}
-export function findClosestUnitInSameFaction(unit: IUnit): IUnit | undefined {
-  return closestInListOfUnits(unit, livingUnitsInSameFaction(unit));
-}
-// moveTo moves a unit, considering all the in-game blockers
-export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
-  if (!canMove(unit)) {
-    return Promise.resolve();
-  }
-  let coordinates = math.getCoordsAtDistanceTowardsTarget(
-    unit,
-    target,
-    unit.stamina
-  );
-  // Compose onMoveEvents
-  for (let eventName of unit.onMoveEvents) {
-    const fn = Events.onMoveSource[eventName];
-    if (fn) {
-      coordinates = fn(unit, coordinates);
+      elManaCost2.style['width'] = `${100 * Math.min(manaRatio2, 1)}%`;
+
+      let cost3Left = 100 * (predictionPlayerUnit.mana - unit.manaMax * 2) / unit.manaMax;
+      if (cost3Left < 0) {
+        elManaBar3.style['left'] = `${cost3Left}%`;
+        elManaCost3.style['left'] = `0%`;
+      } else {
+        elManaBar3.style['left'] = '0%';
+        elManaCost3.style['left'] = `${cost3Left}%`;
+      }
+      elManaCost3.style['width'] = `${100 * Math.min(manaRatio3, 1)}%`;
+    } else {
+      elManaCost.style['left'] = `100%`;
+      elManaCost2.style['left'] = `100%`;
+      elManaCost3.style['left'] = `100%`;
+    }
+
+    const staminaLeft = Math.max(0, Math.round(unit.stamina));
+    elStaminaBar.style["width"] = `${100 * (unit.stamina) / unit.staminaMax}%`;
+    elStaminaBarLabel.innerHTML = `${staminaLeft}`;
+    if (staminaLeft <= 0) {
+      // Now that the current player has moved, highlight the "end-turn-btn" to
+      // remind them that they need to end their turn before they can move again
+      document.querySelector('#end-turn-btn')?.classList.add('highlight');
+    } else {
+      document.querySelector('#end-turn-btn')?.classList.remove('highlight');
+
     }
   }
-  if (unit.image) {
-    Image.changeSprite(
-      unit.image,
-      addPixiSprite(unit.animations.walk, unit.image.sprite.parent)
+  export function canMove(unit: IUnit): boolean {
+    // Do not move if dead
+    if (!unit.alive) {
+      console.log("canMove: false - unit is not alive")
+      return false;
+    }
+    // Do not move if already moved
+    if (unit.stamina <= 0) {
+      console.log("canMove: false - unit has already used all their stamina this turn")
+      return false;
+    }
+    return true;
+  }
+  export function livingUnitsInDifferentFaction(unit: IUnit) {
+    return window.underworld.units.filter(
+      (u) => u.faction !== unit.faction && u.alive,
     );
   }
-  // Set path which will be used in the game loop to actually move the unit
-  window.underworld.setPath(unit, Vec.clone(target));
-  return new Promise<void>((resolve) => {
-    // Clear previous timeout
-    if (unit.resolveDoneMovingTimeout !== undefined) {
-      clearTimeout(unit.resolveDoneMovingTimeout);
+  export function livingUnitsInSameFaction(unit: IUnit) {
+    // u !== unit excludes self from returning as the closest unit
+    return window.underworld.units.filter(
+      (u) => u !== unit && u.faction == unit.faction && u.alive,
+    );
+  }
+  function closestInListOfUnits(
+    sourceUnit: IUnit,
+    units: IUnit[],
+  ): IUnit | undefined {
+    return units.reduce<{ closest: IUnit | undefined; distance: number }>(
+      (acc, currentUnitConsidered) => {
+        const dist = distance(currentUnitConsidered, sourceUnit);
+        if (dist <= acc.distance) {
+          return { closest: currentUnitConsidered, distance: dist };
+        }
+        return acc;
+      },
+      { closest: undefined, distance: Number.MAX_SAFE_INTEGER },
+    ).closest;
+  }
+  export function findClosestUnitInDifferentFaction(
+    unit: IUnit,
+  ): IUnit | undefined {
+    return closestInListOfUnits(unit, livingUnitsInDifferentFaction(unit));
+  }
+  export function findClosestUnitInSameFaction(unit: IUnit): IUnit | undefined {
+    return closestInListOfUnits(unit, livingUnitsInSameFaction(unit));
+  }
+  // moveTo moves a unit, considering all the in-game blockers
+  export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
+    if (!canMove(unit)) {
+      return Promise.resolve();
     }
-    unit.resolveDoneMoving = resolve;
-    const timeoutMs = unit.stamina / unit.moveSpeed;
-    unit.resolveDoneMovingTimeout = setTimeout(() => {
-      resolve()
-    }, timeoutMs);
-  }).then(() => {
+    let coordinates = math.getCoordsAtDistanceTowardsTarget(
+      unit,
+      target,
+      unit.stamina
+    );
+    // Compose onMoveEvents
+    for (let eventName of unit.onMoveEvents) {
+      const fn = Events.onMoveSource[eventName];
+      if (fn) {
+        coordinates = fn(unit, coordinates);
+      }
+    }
     if (unit.image) {
       Image.changeSprite(
         unit.image,
-        addPixiSprite(unit.animations.idle, unit.image.sprite.parent)
+        addPixiSprite(unit.animations.walk, unit.image.sprite.parent)
       );
     }
-    if (unit.resolveDoneMovingTimeout !== undefined) {
-      clearTimeout(unit.resolveDoneMovingTimeout);
+    // Set path which will be used in the game loop to actually move the unit
+    window.underworld.setPath(unit, Vec.clone(target));
+    return new Promise<void>((resolve) => {
+      // Clear previous timeout
+      if (unit.resolveDoneMovingTimeout !== undefined) {
+        clearTimeout(unit.resolveDoneMovingTimeout);
+      }
+      unit.resolveDoneMoving = resolve;
+      const timeoutMs = unit.stamina / unit.moveSpeed;
+      unit.resolveDoneMovingTimeout = setTimeout(() => {
+        resolve()
+      }, timeoutMs);
+    }).then(() => {
+      if (unit.image) {
+        Image.changeSprite(
+          unit.image,
+          addPixiSprite(unit.animations.idle, unit.image.sprite.parent)
+        );
+      }
+      if (unit.resolveDoneMovingTimeout !== undefined) {
+        clearTimeout(unit.resolveDoneMovingTimeout);
+      }
+    });
+  }
+
+  // setLocation, unlike moveTo, simply sets a unit to a coordinate without
+  // considering in-game blockers or changing any unit flags
+  // Note: NOT TO BE USED FOR in-game collision-based movement
+  export function setLocation(unit: IUnit, coordinates: Vec2) {
+    // Set state instantly to new position
+    unit.x = coordinates.x;
+    unit.y = coordinates.y;
+    unit.path = undefined;
+  }
+  export function changeFaction(unit: IUnit, faction: Faction) {
+    unit.faction = faction;
+    if (unit.faction === Faction.ALLY) {
+      // headband signifies a player ally unit
+      // Image.addSubSprite(unit.image, 'headband');
+    } else {
+      // Image.removeSubSprite(unit.image, 'headband');
     }
-  });
-}
-
-// setLocation, unlike moveTo, simply sets a unit to a coordinate without
-// considering in-game blockers or changing any unit flags
-// Note: NOT TO BE USED FOR in-game collision-based movement
-export function setLocation(unit: IUnit, coordinates: Vec2) {
-  // Set state instantly to new position
-  unit.x = coordinates.x;
-  unit.y = coordinates.y;
-  unit.path = undefined;
-}
-export function changeFaction(unit: IUnit, faction: Faction) {
-  unit.faction = faction;
-  if (unit.faction === Faction.ALLY) {
-    // headband signifies a player ally unit
-    // Image.addSubSprite(unit.image, 'headband');
-  } else {
-    // Image.removeSubSprite(unit.image, 'headband');
   }
-}
 
-// syncImage updates a unit's Image to match it's game state
-export function syncImage(unit: IUnit) {
-  if (unit.image) {
-    unit.image.sprite.x = unit.x;
-    unit.image.sprite.y = unit.y;
+  // syncImage updates a unit's Image to match it's game state
+  export function syncImage(unit: IUnit) {
+    if (unit.image) {
+      unit.image.sprite.x = unit.x;
+      unit.image.sprite.y = unit.y;
+    }
   }
-}
-export function getImagePathForUnitId(id: string): string {
-  return "images/units/" + id + ".png";
-}
-export function inRange(unit: IUnit, coords: Vec2): boolean {
-  return math.distance(unit, coords) <= unit.attackRange;
-}
+  export function getImagePathForUnitId(id: string): string {
+    return "images/units/" + id + ".png";
+  }
+  export function inRange(unit: IUnit, coords: Vec2): boolean {
+    return math.distance(unit, coords) <= unit.attackRange;
+  }
 
-// return boolean signifies if unit should abort their turn
-export async function runTurnStartEvents(unit: IUnit, prediction: boolean = false): Promise<boolean> {
-  // Note: This must be a for loop instead of a for..of loop
-  // so that if one of the onTurnStartEvents modifies the
-  // unit's onTurnStartEvents array (for example, after death)
-  // this loop will take that into account.
-  let abortTurn = false;
-  for (let i = 0; i < unit.onTurnStartEvents.length; i++) {
-    const eventName = unit.onTurnStartEvents[i];
-    if (eventName) {
-      const fn = Events.onTurnStartSource[eventName];
-      if (fn) {
-        const shouldAbortTurn = await fn(unit, prediction);
-        // Only change abort turn from false to true,
-        // never from turn to false because if any one
-        // of the turn start events needs the unit to abort
-        // their turn, the turn should abort, regardless of
-        // the other events
-        if (shouldAbortTurn) {
-          abortTurn = true;
+  // return boolean signifies if unit should abort their turn
+  export async function runTurnStartEvents(unit: IUnit, prediction: boolean = false): Promise<boolean> {
+    // Note: This must be a for loop instead of a for..of loop
+    // so that if one of the onTurnStartEvents modifies the
+    // unit's onTurnStartEvents array (for example, after death)
+    // this loop will take that into account.
+    let abortTurn = false;
+    for (let i = 0; i < unit.onTurnStartEvents.length; i++) {
+      const eventName = unit.onTurnStartEvents[i];
+      if (eventName) {
+        const fn = Events.onTurnStartSource[eventName];
+        if (fn) {
+          const shouldAbortTurn = await fn(unit, prediction);
+          // Only change abort turn from false to true,
+          // never from turn to false because if any one
+          // of the turn start events needs the unit to abort
+          // their turn, the turn should abort, regardless of
+          // the other events
+          if (shouldAbortTurn) {
+            abortTurn = true;
+          }
+        } else {
+          console.error('No function associated with turn start event', eventName);
         }
       } else {
-        console.error('No function associated with turn start event', eventName);
+        console.error('No turn start event at index', i)
       }
+    }
+    return abortTurn
+
+  }
+  // Makes a copy of the unit's data suitable for 
+  // a predictionUnit
+  export function copyForPredictionUnit(u: IUnit): IUnit {
+    // Ensure that units have a path before they are copied
+    // so that the prediction unit will have a reference to
+    // a real path object
+    if (!u.path) {
+      const target = window.underworld.getUnitAttackTarget(u);
+      if (target) {
+        window.underworld.setPath(u, target);
+      }
+    }
+    const { image, resolveDoneMoving, modifiers, ...unit } = u;
+    return {
+      ...unit,
+      // prediction units INTENTIONALLY share a reference to the original
+      // unit's path so that we can get the efficiency gains of
+      // cached paths per unit.  If we made a deep copy instead, the
+      // prediction unit would cache-miss each time it was recreated
+      // and needed a path
+      path: unit.path,
+      // Prediction units should have full stamina because they will
+      // when it is their turn
+      stamina: unit.staminaMax,
+      onDamageEvents: [...unit.onDamageEvents],
+      onDeathEvents: [...unit.onDeathEvents],
+      onMoveEvents: [...unit.onMoveEvents],
+      onAgroEvents: [...unit.onAgroEvents],
+      onTurnStartEvents: [...unit.onTurnStartEvents],
+      onTurnEndEvents: [...unit.onTurnEndEvents],
+      // Deep copy modifiers so it doesn't mutate the unit's actual modifiers object
+      modifiers: JSON.parse(JSON.stringify(modifiers)),
+      shaderUniforms: {},
+      resolveDoneMoving: () => { }
+    };
+
+  }
+
+  // Returns true if it is currently this unit's turn phase
+  export function isUnitsTurnPhase(unit: IUnit): boolean {
+    const { turn_phase: phase } = window.underworld;
+    if (unit.unitType == UnitType.PLAYER_CONTROLLED) {
+      return phase == turn_phase.PlayerTurns;
     } else {
-      console.error('No turn start event at index', i)
+      if (unit.faction == Faction.ALLY) {
+        return phase == turn_phase.NPC_ALLY;
+      } else {
+        return phase == turn_phase.NPC_ENEMY;
+      }
     }
   }
-  return abortTurn
-
-}
-// Makes a copy of the unit's data suitable for 
-// a predictionUnit
-export function copyForPredictionUnit(u: IUnit): IUnit {
-  // Ensure that units have a path before they are copied
-  // so that the prediction unit will have a reference to
-  // a real path object
-  if (!u.path) {
-    const target = window.underworld.getUnitAttackTarget(u);
-    if (target) {
-      window.underworld.setPath(u, target);
-    }
-  }
-  const { image, resolveDoneMoving, modifiers, ...unit } = u;
-  return {
-    ...unit,
-    // prediction units INTENTIONALLY share a reference to the original
-    // unit's path so that we can get the efficiency gains of
-    // cached paths per unit.  If we made a deep copy instead, the
-    // prediction unit would cache-miss each time it was recreated
-    // and needed a path
-    path: unit.path,
-    // Prediction units should have full stamina because they will
-    // when it is their turn
-    stamina: unit.staminaMax,
-    onDamageEvents: [...unit.onDamageEvents],
-    onDeathEvents: [...unit.onDeathEvents],
-    onMoveEvents: [...unit.onMoveEvents],
-    onAgroEvents: [...unit.onAgroEvents],
-    onTurnStartEvents: [...unit.onTurnStartEvents],
-    onTurnEndEvents: [...unit.onTurnEndEvents],
-    // Deep copy modifiers so it doesn't mutate the unit's actual modifiers object
-    modifiers: JSON.parse(JSON.stringify(modifiers)),
-    shaderUniforms: {},
-    resolveDoneMoving: () => { }
-  };
-
-}
-
-// Returns true if it is currently this unit's turn phase
-export function isUnitsTurnPhase(unit: IUnit): boolean {
-  const { turn_phase: phase } = window.underworld;
-  if (unit.unitType == UnitType.PLAYER_CONTROLLED) {
-    return phase == turn_phase.PlayerTurns;
-  } else {
-    if (unit.faction == Faction.ALLY) {
-      return phase == turn_phase.NPC_ALLY;
-    } else {
-      return phase == turn_phase.NPC_ENEMY;
-    }
-  }
-}
