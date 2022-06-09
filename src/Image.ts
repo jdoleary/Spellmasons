@@ -13,7 +13,7 @@ export type IImageSerialized = {
     x: number,
     y: number,
     scale: { x: number, y: number },
-    textureCacheIds: string[]
+    animationOrImagePath: string;
   },
   subSprites: string[],
 };
@@ -86,7 +86,7 @@ export function serialize(image: IImage): IImageSerialized {
       x: image.sprite.x,
       y: image.sprite.y,
       scale: { x: image.sprite.scale.x, y: image.sprite.scale.y },
-      textureCacheIds: image.sprite._texture.textureCacheIds,
+      animationOrImagePath: getAnimationPathFromSprite(image.sprite),
 
     },
     subSprites: image.subSprites,
@@ -100,14 +100,14 @@ export function load(image: IImageSerialized | undefined, parent: PIXI.Container
     return undefined;
   }
   const copy = { ...image };
-  const { scale, textureCacheIds } = copy.sprite;
-  if (!textureCacheIds[0]) {
+  const { scale, animationOrImagePath } = copy.sprite;
+  if (!animationOrImagePath) {
     // Missing image path
-    console.error('Cannot load image, missing image path in textureCacheIds')
+    console.error('Cannot load image, missing image path')
     return;
   }
   // Recreate the sprite using the create function so it initializes it properly
-  const newImage = create(copy.sprite, textureCacheIds[0], parent);
+  const newImage = create(copy.sprite, animationOrImagePath, parent);
   newImage.sprite.scale.set(scale.x, scale.y);
   // copy over the subsprite array (list of strings)
   newImage.subSprites = [...copy.subSprites];
@@ -116,6 +116,12 @@ export function load(image: IImageSerialized | undefined, parent: PIXI.Container
 
   return newImage;
 }
+export function getAnimationPathFromSprite(sprite: PIXI.Sprite): string {
+  const textureCacheIds = sprite._texture.textureCacheIds;
+  const animationOrImagePath = textureCacheIds[0] ? textureCacheIds[0].replace(/_\d+.png/g, "") : '';
+  return animationOrImagePath;
+
+}
 // syncronize updates an existing originalImage to match the properties of imageSerialized
 // mutates originalImage
 // TODO test for memory leaks
@@ -123,7 +129,7 @@ export function syncronize(imageSerialized: IImageSerialized, originalImage?: II
   if (!originalImage) {
     return undefined;
   }
-  if (imageSerialized.sprite.textureCacheIds[0] === originalImage.sprite._texture.textureCacheIds[0]) {
+  if (imageSerialized.sprite.animationOrImagePath === getAnimationPathFromSprite(originalImage.sprite)) {
     // then we only need to update properties:
     const { x, y, scale } = imageSerialized.sprite;
     originalImage.sprite.x = x;
