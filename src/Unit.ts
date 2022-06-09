@@ -456,10 +456,10 @@ export function composeOnDamageEvents(unit: IUnit, damage: number, prediction: b
 
 }
 export function takeDamage(unit: IUnit, amount: number, prediction: boolean, state?: EffectState) {
+  amount = composeOnDamageEvents(unit, amount, prediction);
   if (amount == 0) {
     return;
   }
-  amount = composeOnDamageEvents(unit, amount, prediction);
   if (!prediction) {
     console.log(`takeDamage: unit ${unit.id}; amount: ${amount}; events:`, unit.onDamageEvents);
     playAnimation(unit, unit.animations.hit);
