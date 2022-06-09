@@ -14,7 +14,7 @@ const unit: UnitSource = {
     staminaMax: config.UNIT_BASE_STAMINA,
     attackRange: 10 + config.COLLISION_MESH_RADIUS * 2,
     manaMax: 0,
-    healthMax: 10,
+    healthMax: 2,
   },
   spawnParams: {
     probability: 100,

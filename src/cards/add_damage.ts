@@ -19,7 +19,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: 50,
     thumbnail: 'damage.png',
-    animationPath: 'spell-effects/spellHurt',
+    animationPath: 'spell-effects/spellHurtCuts',
     description: `
 Deals ${damageDone} damage to all targets.    
     `,
