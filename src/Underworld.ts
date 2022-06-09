@@ -497,22 +497,6 @@ export default class Underworld {
     // walls block sight and movement
     this.walls = mergePolygon2s(obstacles.filter(o => o.material == Material.WALL).map(o => o.bounds)).map(toLineSegments).flat();
 
-    // TEST
-    // Convert all polygons into line segments for processing:
-    // let lineSegments = obstacles.filter(o => o.material == Material.WALL).map(o => o.bounds).map(toLineSegments).flat();
-
-    // // Remove duplicate lineSegments
-    // lineSegments = lineSegments.filter((ls, index) => index == lineSegments.findIndex(other => equal(other, ls)));
-
-    // lineSegments = mergeCollinearOverlappingSameDirectionLines(lineSegments);
-
-    // // Remove dead ends (also known as reversals):
-    // let reversals: LineSegment[] = []
-    // for (let line of lineSegments) {
-    //   reversals.push(...lineSegments.filter(other => Vec.equal(line.p1, other.p2) && Vec.equal(line.p2, other.p1)));
-    // }
-    // this.walls = lineSegments.filter(line => !reversals.includes(line));
-    // TEST
     //.filter(filterRemoveNonGroundAdjacent);
 
     // liquid bounds block movement only under certain circumstances
@@ -525,28 +509,6 @@ export default class Underworld {
     this.pathingPolygons = mergePolygon2s([...obstacles.map(o => o.bounds)]
       .map(p => expandPolygon(p, expandMagnitude)));
     //.filter(filterRemoveNonGroundAdjacentPoly)
-
-    // const biggestPoly = this.pathingPolygons.reduce((biggestPoly, poly) => {
-    //   const limit = getLimits(poly.points);
-    //   const size = (limit.xMax - limit.xMin) * (limit.yMax - limit.yMin);
-    //   if (size > biggestPoly.size) {
-    //     biggestPoly.poly = poly;
-    //     biggestPoly.size = size;
-    //   }
-    //   return biggestPoly;
-    // }, { poly: this.pathingPolygons[0], size: 0 }).poly;
-
-    // if (biggestPoly) {
-    //   biggestPoly.inverted = true;
-    //   // If a polygon needs to be manually inverted its points also have to be in
-    //   // REVERSE order.  This is very important or else if won't be iterated
-    //   // correctly.  This is an unfortunate consequence of my earlier decision for
-    //   // how I designed inverted and non-inverted polygons where one is iterated in
-    //   // the clockwise direction and the other counter-clockwise
-    //   biggestPoly.points.reverse();
-    // } else {
-    //   console.error('No biggest poly found for making inverted border')
-    // }
 
     // Process the polygons into pathingwalls for use in tryPath
     // TODO: Optimize if needed: When this.pathingLineSegments gets serialized to send over the network
