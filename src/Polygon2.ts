@@ -44,6 +44,35 @@ export function mergeCollinearOverlappingSameDirectionLines(lines: LineSegment.L
     return newLines;
 
 }
+export function splitOverlappingLineSegments(lineSegments: LineSegment.LineSegment[]): LineSegment.LineSegment[] {
+    let splitLineSegments: LineSegment.LineSegment[] = []
+    for (let line of lineSegments) {
+        let intersections: Vec2[] = [];
+        for (let other of lineSegments) {
+            if (line == other) {
+                // Don't test against self
+                continue;
+            }
+            const intersection = LineSegment.lineSegmentIntersection(line, other);
+            if (intersection) {
+                intersections.push(intersection)
+            }
+        }
+        if (intersections.length) {
+            // Sort closest first
+            intersections.sort((a, b) => distance(line.p1, a) - distance(line.p1, b));
+            // Make new line segments
+            let lastPoint = line.p1;
+            for (let intersection of intersections) {
+                splitLineSegments.push({ p1: lastPoint, p2: intersection });
+                lastPoint = intersection;
+            }
+            splitLineSegments.push({ p1: lastPoint, p2: line.p2 });
+        }
+
+    }
+    return splitLineSegments;
+}
 
 // Given an array of Polygon2s, it returns an array of Polygon2s where overlapping
 // polygons have been merged into one.

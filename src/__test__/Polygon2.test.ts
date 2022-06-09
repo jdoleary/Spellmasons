@@ -1,8 +1,42 @@
 import { LineSegment } from '../collision/lineSegment';
-import { Polygon2, mergePolygon2s, toLineSegments, processLineSegment, mergeCollinearOverlappingSameDirectionLines } from '../Polygon2';
+import { Polygon2, mergePolygon2s, toLineSegments, processLineSegment, mergeCollinearOverlappingSameDirectionLines, splitOverlappingLineSegments } from '../Polygon2';
 import { Vec2, clone } from '../Vec';
 
 describe('Polygon2', () => {
+    describe('splitOverlappingLineSegments', () => {
+        // TODO what about collinear lines?
+        it.only('should handle a line that is overlapped multiple times', () => {
+            const BY = 4;
+            const CY = 1;
+            const DY = 6;
+            const A = { p1: { x: 0, y: 0 }, p2: { x: 0, y: 10 } };
+            const B = { p1: { x: -1, y: BY }, p2: { x: 1, y: BY } };
+            const C = { p1: { x: -1, y: CY }, p2: { x: 1, y: CY } };
+            const D = { p1: { x: -1, y: DY }, p2: { x: 1, y: DY } };
+            const actual = splitOverlappingLineSegments([A, B, C, D]);
+            const expected = [
+                // A
+                // (note C has a lower y than b and so will come first
+                // since it's intersection comes first along the line of A)
+                { p1: A.p1, p2: { x: 0, y: CY } },
+                { p1: { x: 0, y: CY }, p2: { x: 0, y: BY } },
+                { p1: { x: 0, y: BY }, p2: { x: 0, y: DY } },
+                { p1: { x: 0, y: DY }, p2: { x: 0, y: A.p2.y } },
+                // B
+                { p1: { x: B.p1.x, y: BY }, p2: { x: 0, y: BY } },
+                { p1: { x: 0, y: BY }, p2: { x: B.p2.x, y: BY } },
+                // C
+                { p1: { x: C.p1.x, y: CY }, p2: { x: 0, y: CY } },
+                { p1: { x: 0, y: CY }, p2: { x: C.p2.x, y: CY } },
+                // D
+                { p1: { x: D.p1.x, y: DY }, p2: { x: 0, y: DY } },
+                { p1: { x: 0, y: DY }, p2: { x: D.p2.x, y: DY } },
+            ]
+            expect(actual).toEqual(expected);
+
+        })
+
+    })
     describe('mergeColinearOverlappingSameDirectionLines', () => {
         describe('the possible types of merges', () => {
             it('should merge correctly when B.p1 is inside A.p1 and A.p2 and B.p2 is outside', () => {
