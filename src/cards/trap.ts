@@ -1,7 +1,7 @@
 import type { Spell } from '.';
 import * as Pickup from '../Pickup';
 import * as Image from '../Image';
-import { containerUnits } from '../PixiUtils';
+import { addPixiSprite, containerUnits } from '../PixiUtils';
 import * as TimeRelease from '../TimeRelease';
 
 export const id = 'trap';
@@ -29,7 +29,7 @@ Sets a spell as a trap, to be triggered when stepped on.  Wrapping a spell in a 
         TimeRelease.create({
           pos: state.castLocation,
           description: 'The trap is winding...',
-          imagePath: 'pickups/trap-closed.png', turnsLeft: turnsItTakesTrapToWindUp, onRelease: async () => {
+          imagePath: 'pickups/trapClosed.png', turnsLeft: turnsItTakesTrapToWindUp, onRelease: async () => {
             const x = state.castLocation.x;
             const y = state.castLocation.y;
             const imagePath = 'pickups/trap';
@@ -47,6 +47,26 @@ Sets a spell as a trap, to be triggered when stepped on.  Wrapping a spell in a 
               playerOnly: false,
               effect: ({ unit }) => {
                 if (unit) {
+                  // Play trap spring animation
+                  const animationSprite = addPixiSprite('pickups/trapAttack', containerUnits, {
+                    loop: false,
+                    onComplete: () => {
+                      animationSprite.parent.removeChild(animationSprite);
+                    }
+                  });
+                  animationSprite.anchor.set(0.5);
+                  animationSprite.x = x;
+                  animationSprite.y = y;
+                  const animationSprite2 = addPixiSprite('pickups/trapAttackMagic', containerUnits, {
+                    loop: false,
+                    onComplete: () => {
+                      animationSprite2.parent.removeChild(animationSprite2);
+                    }
+                  });
+                  animationSprite2.anchor.set(0.5);
+                  animationSprite2.x = x;
+                  animationSprite2.y = y;
+
                   window.underworld.castCards({}, state.casterUnit, cardsInTrap, unit, false, true);
                   return true;
                 } else {

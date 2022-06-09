@@ -1,4 +1,5 @@
 ## Tasks
+- Triggering Trap animation
 - (H) Polygon Merging (Thursday)
     - Walls are messed up in seed '0.6794135326578248'
 - (M) Liquid interactions
@@ -16,10 +17,9 @@
 - (M) SFX
 - (E) Master music
 - (M) Tutorial
-- (M) Hoise spells?
+- (M) Hoist spells?
 ------
-- Bug: regular Image.syncronize doesn't work with animations.
-- Bug: unit animation stops after unit nsync?
+- Bug: When trap triggers, spell effect is left behind as unit keeps moving through it
 - Content: AOE clone should work for pickups
 - Bug: Clone doesn't show cloned units until they move cause they spawn right on top of each other
 - Bug: clear tooltip on enter portal?? not sure if necessary, tooltip remained while I was manually calling initLevel
