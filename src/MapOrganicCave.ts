@@ -1,6 +1,6 @@
 import { lineSegmentIntersection } from "./collision/lineSegment";
 import { distance, lerp, similarTriangles } from "./math";
-import { isVec2InsidePolygon } from "./Polygon";
+import { isVec2InsidePolygon } from "./Polygon2";
 import { randFloat, randInt } from "./rand";
 import * as Vec from "./Vec";
 import * as config from './config';
@@ -350,7 +350,7 @@ function crawlersChangeTilesToMaterial(crawlers: CaveCrawler[], material: Materi
             let isInside = false;
             for (let crawler of crawlers) {
                 for (let rect of crawler.rectangles) {
-                    if (isVec2InsidePolygon({ x: x * config.OBSTACLE_SIZE, y: y * config.OBSTACLE_SIZE }, { points: rect, inverted: false })) {
+                    if (isVec2InsidePolygon({ x: x * config.OBSTACLE_SIZE, y: y * config.OBSTACLE_SIZE }, rect)) {
                         isInside = true;
                         break;
                     }
@@ -454,9 +454,9 @@ function crawl(cc: CaveCrawler, endPosition: Vec.Vec2, params: CaveParams) {
                 }
                 // Protect against chevron shaped rectangles:
                 for (let p of points) {
-                    const withoutP = { points: points.filter(x => x !== p), inverted: false };
+                    const withoutP = points.filter(x => x !== p);
                     if (isVec2InsidePolygon(p, withoutP)) {
-                        points = withoutP.points;
+                        points = withoutP;
                         break;
                     }
                 }

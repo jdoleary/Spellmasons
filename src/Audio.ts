@@ -1,4 +1,4 @@
-import { getLoopableIndex } from "./Polygon";
+import { getLoopableIndex } from "./Polygon2";
 import * as storage from "./storage";
 
 const sfx = {

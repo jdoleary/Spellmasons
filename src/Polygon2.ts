@@ -3,8 +3,54 @@ import { Vec2 } from "./Vec";
 import * as Vec from "./Vec";
 import { distance } from "./math";
 import { clockwiseAngle, isAngleBetweenAngles } from "./Angle";
-import { getLoopableIndex, getPointNormalVector } from "./Polygon";
 
+// Allows accessing an array without going out of bounds.  So getBoundedIndex(array.length+1)
+// will be index of 1 instead of beyond the limit of the array
+export function getLoopableIndex(index: number, array: any[]) {
+    let adjusted = index % array.length;
+    if (adjusted < 0) {
+        adjusted = array.length + adjusted;
+    }
+    return adjusted;
+}
+export function getPointNormalVector(point: Vec2, prevPoint: Vec2, nextPoint: Vec2): Vec2 {
+    // Find a point along the normal:
+    let projectToPoint = { x: 0, y: 0 };
+    const dxPrev = point.x - prevPoint.x;
+    const dyPrev = point.y - prevPoint.y;
+    projectToPoint.x += dxPrev;
+    projectToPoint.y += dyPrev;
+    const dxNext = point.x - nextPoint.x;
+    const dyNext = point.y - nextPoint.y;
+    projectToPoint.x += dxNext;
+    projectToPoint.y += dyNext;
+    // Now this is tricky, since polygons are expressed in points from prev to point to next,
+    // the normal vector of a point depends on the "direction" of traversal from prev to point to next.
+    // So if the 2 lines from prev to point and from point to next make an obtuse angle, we project
+    // the normal to the outside (in the direction of the obtuse angle), but if they make an acute angle
+    // the normal point will be inside the acute angle.  The orientation of the prev point and the next point
+    // relative to the main point is what determines wether the outside angle is the obtuse or the actue angle.
+    const outsideAngle = getOutsideAngleOfPoint(prevPoint, point, nextPoint);
+    if (outsideAngle <= Math.PI / 2) {
+        // Invert
+        projectToPoint = Vec.multiply(-1, projectToPoint);
+    }
+
+    // Normalize projectToPoint so it only carries the + or -
+    if (projectToPoint.x !== 0) {
+        projectToPoint.x /= Math.abs(projectToPoint.x);
+    }
+    if (projectToPoint.y !== 0) {
+        projectToPoint.y /= Math.abs(projectToPoint.y);
+    }
+    return projectToPoint;
+}
+function getOutsideAngleOfPoint(prevPoint: Vec2, point: Vec2, nextPoint: Vec2): number {
+    const angleToPrevPoint = Vec.getAngleBetweenVec2s(point, prevPoint);
+    const angleToNextPoint = Vec.getAngleBetweenVec2s(point, nextPoint);
+    return clockwiseAngle(angleToPrevPoint, angleToNextPoint);
+
+}
 // A line segment that contains a reference to the polygon that it belongs to
 export type Polygon2LineSegment = LineSegment.LineSegment &
 // The polygon that these points belong to
