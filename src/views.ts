@@ -162,9 +162,14 @@ function clientChooseUnit(unitId: string) {
 
 // zoom camera
 function zoom(e: WheelEvent) {
-  let newScale = app.stage.scale.x + e.deltaY * -0.002;
+  // TODO: This value could be customizable in the menu later:
+  const scrollSensitivity = 200;
+  const scrollFactor = Math.abs(e.deltaY / scrollSensitivity);
+  const zoomIn = e.deltaY < 0;
+  const zoomDelta = (zoomIn ? 1 + 1 * scrollFactor : 1 - 0.5 * scrollFactor);
+  let newScale = app.stage.scale.x * zoomDelta;
   // Limit zoom out and in to sensible limits
-  newScale = Math.min(Math.max(0.3, newScale), 3);
+  newScale = Math.min(Math.max(0.3, newScale), 4);
 
   window.zoomTarget = newScale;
 }
