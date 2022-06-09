@@ -4,8 +4,40 @@ import { Vec2, clone } from '../Vec';
 
 describe('Polygon2', () => {
     describe('splitOverlappingLineSegments', () => {
-        // TODO what about collinear lines?
-        it.only('should handle a line that is overlapped multiple times', () => {
+        it('should ignore intersections at verticies', () => {
+            const lineSegments = [
+                { p1: { x: 0, y: 0 }, p2: { x: 0, y: 10 } },
+                { p1: { x: 0, y: 10 }, p2: { x: 0, y: 20 } },
+            ]
+            const actual = splitOverlappingLineSegments(lineSegments);
+            const expected = lineSegments;
+            expect(actual).toEqual(expected);
+        });
+        it('should ignore collinear lines', () => {
+            const lineSegments = [
+                { p1: { x: 0, y: 0 }, p2: { x: 0, y: 10 } },
+                { p1: { x: 0, y: 5 }, p2: { x: 0, y: 15 } },
+            ]
+            const actual = splitOverlappingLineSegments(lineSegments);
+            const expected = lineSegments;
+            expect(actual).toEqual(expected);
+        });
+        it('should handle a line that runs in reverse direction to other tests', () => {
+            const A = { p1: { x: 0, y: 10 }, p2: { x: 0, y: 0 } };
+            const B = { p1: { x: -1, y: 4 }, p2: { x: 1, y: 4 } };
+            const actual = splitOverlappingLineSegments([A, B]);
+            const expected = [
+                // A
+                { p1: A.p1, p2: { x: 0, y: 4 } },
+                { p1: { x: 0, y: 4 }, p2: { x: 0, y: A.p2.y } },
+                // B
+                { p1: { x: B.p1.x, y: 4 }, p2: { x: 0, y: 4 } },
+                { p1: { x: 0, y: 4 }, p2: { x: B.p2.x, y: 4 } },
+            ]
+            expect(actual).toEqual(expected);
+
+        })
+        it('should handle a line that is overlapped multiple times', () => {
             const BY = 4;
             const CY = 1;
             const DY = 6;

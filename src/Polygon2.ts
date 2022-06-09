@@ -53,22 +53,31 @@ export function splitOverlappingLineSegments(lineSegments: LineSegment.LineSegme
                 // Don't test against self
                 continue;
             }
+            const { isCollinear } = LineSegment.getRelation(line, other);
+            // Ignore collinear lines since even if they are overlapping
+            // they would have infinite intersections and can't be meaningfully
+            // split
+            if (isCollinear) {
+                continue;
+            }
             const intersection = LineSegment.lineSegmentIntersection(line, other);
             if (intersection) {
-                intersections.push(intersection)
+                // Ignore intersections at vertex, these should not be "split" because
+                // if it were it would split into a "no length" line (a point).
+                if (!Vec.equal(intersection, line.p1) && !Vec.equal(intersection, line.p2)) {
+                    intersections.push(intersection)
+                }
             }
         }
-        if (intersections.length) {
-            // Sort closest first
-            intersections.sort((a, b) => distance(line.p1, a) - distance(line.p1, b));
-            // Make new line segments
-            let lastPoint = line.p1;
-            for (let intersection of intersections) {
-                splitLineSegments.push({ p1: lastPoint, p2: intersection });
-                lastPoint = intersection;
-            }
-            splitLineSegments.push({ p1: lastPoint, p2: line.p2 });
+        // Sort closest first
+        intersections.sort((a, b) => distance(line.p1, a) - distance(line.p1, b));
+        // Make new line segments
+        let lastPoint = line.p1;
+        for (let intersection of intersections) {
+            splitLineSegments.push({ p1: lastPoint, p2: intersection });
+            lastPoint = intersection;
         }
+        splitLineSegments.push({ p1: lastPoint, p2: line.p2 });
 
     }
     return splitLineSegments;
