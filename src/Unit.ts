@@ -37,6 +37,13 @@ export interface UnitPath {
 // that can be serialized in JSON.  It may exclude data that is not neccessary to
 // rehydrate the JSON into an entity
 export type IUnitSerialized = Omit<IUnit, "resolveDoneMoving" | "resolveDoneMovingTimeout" | "image"> & { image?: Image.IImageSerialized };
+export interface UnitAnimations {
+  idle: string;
+  hit: string;
+  attack: string;
+  die: string;
+  walk: string;
+}
 export interface IUnit {
   // A unique id so that units can be identified
   // across the network
@@ -80,6 +87,7 @@ export interface IUnit {
   onAgroEvents: string[];
   onTurnStartEvents: string[];
   onTurnEndEvents: string[];
+  animations: UnitAnimations;
   modifiers: {
     [name: string]: {
       isCurse: boolean;
@@ -101,75 +109,75 @@ export function create(
   const health = Math.round(config.UNIT_BASE_HEALTH * strength);
   const mana = Math.round(config.UNIT_BASE_MANA * strength);
   const staminaMax = config.UNIT_BASE_STAMINA;
-  const unit: IUnit = Object.assign({
-    id: ++window.underworld.lastUnitId,
-    unitSourceId,
-    x,
-    y,
-    strength,
-    radius: config.UNIT_BASE_RADIUS,
-    path: undefined,
-    moveSpeed: config.UNIT_MOVE_SPEED,
-    resolveDoneMoving: () => { },
-    resolveDoneMovingTimeout: undefined,
-    stamina: 0,
-    staminaMax,
-    attackRange: 10 + config.COLLISION_MESH_RADIUS * 2,
-    faction,
-    image: Image.create({ x, y }, defaultImagePath, containerUnits),
-    defaultImagePath,
-    shaderUniforms: {},
-    damage: Math.round(config.UNIT_BASE_DAMAGE * strength),
-    health,
-    healthMax: health,
-    mana,
-    manaMax: mana,
-    manaPerTurn: config.MANA_GET_PER_TURN,
-    alive: true,
-    immovable: false,
-    unitType,
-    unitSubType,
-    onDamageEvents: [],
-    onDeathEvents: [],
-    onMoveEvents: [],
-    onAgroEvents: [],
-    onTurnStartEvents: [],
-    onTurnEndEvents: [],
-    modifiers: {},
-  }, sourceUnitProps);
-
-  // Since unit stats can be overridden with sourceUnitProps
-  // Ensure that the unit starts will full mana and health
-  unit.mana = unit.manaMax;
-  unit.health = unit.healthMax;
-  if (unit.manaMax === 0) {
-    unit.manaPerTurn = 0;
-  }
-  if (unit.staminaMax === 0) {
-    unit.stamina = 0;
-  }
-  unit.image?.sprite.scale.set(config.NON_HEAVY_UNIT_SCALE);
-
   const sourceUnit = allUnits[unitSourceId];
   if (sourceUnit) {
+    const unit: IUnit = Object.assign({
+      id: ++window.underworld.lastUnitId,
+      unitSourceId,
+      x,
+      y,
+      strength,
+      radius: config.UNIT_BASE_RADIUS,
+      path: undefined,
+      moveSpeed: config.UNIT_MOVE_SPEED,
+      resolveDoneMoving: () => { },
+      resolveDoneMovingTimeout: undefined,
+      stamina: 0,
+      staminaMax,
+      attackRange: 10 + config.COLLISION_MESH_RADIUS * 2,
+      faction,
+      image: Image.create({ x, y }, defaultImagePath, containerUnits),
+      defaultImagePath,
+      shaderUniforms: {},
+      damage: Math.round(config.UNIT_BASE_DAMAGE * strength),
+      health,
+      healthMax: health,
+      mana,
+      manaMax: mana,
+      manaPerTurn: config.MANA_GET_PER_TURN,
+      alive: true,
+      immovable: false,
+      unitType,
+      unitSubType,
+      onDamageEvents: [],
+      onDeathEvents: [],
+      onMoveEvents: [],
+      onAgroEvents: [],
+      onTurnStartEvents: [],
+      onTurnEndEvents: [],
+      modifiers: {},
+      animations: sourceUnit.animations,
+    }, sourceUnitProps);
+
+    // Since unit stats can be overridden with sourceUnitProps
+    // Ensure that the unit starts will full mana and health
+    unit.mana = unit.manaMax;
+    unit.health = unit.healthMax;
+    if (unit.manaMax === 0) {
+      unit.manaPerTurn = 0;
+    }
+    if (unit.staminaMax === 0) {
+      unit.stamina = 0;
+    }
+    unit.image?.sprite.scale.set(config.NON_HEAVY_UNIT_SCALE);
     if (sourceUnit.init) {
       // Initialize unit IF unit contains initialization function
       sourceUnit.init(unit);
     }
-  } else {
-    console.error('Source unit with id', unitSourceId, 'does not exist');
+    setupShaders(unit);
 
+    // Ensure all change factions logic applies when a unit is first created
+    changeFaction(unit, faction);
+
+
+    window.underworld.addUnitToArray(unit, false);
+
+    return unit;
+  } else {
+    throw new Error(`Source unit with id ${unitSourceId} does not exist`);
   }
 
-  setupShaders(unit);
 
-  // Ensure all change factions logic applies when a unit is first created
-  changeFaction(unit, faction);
-
-
-  window.underworld.addUnitToArray(unit, false);
-
-  return unit;
 }
 function setupShaders(unit: IUnit) {
   if (unit.image) {
@@ -313,16 +321,29 @@ export function returnToDefaultSprite(unit: IUnit) {
   // This check for unit.image prevents creating a corpse image when a predictionUnit
   // dies because a prediction unit won't have an image property
   if (unit.image) {
-    const defaultImageString = unit.alive ? unit.defaultImagePath : 'units/corpse.png'
-    const container = unit.alive ? containerUnits : containerDoodads;
-    Image.changeSprite(
-      unit.image,
-      addPixiSprite(defaultImageString, container),
-    );
+    if (unit.alive) {
+      const sprite = addPixiSprite(unit.animations.idle, containerUnits)
+      Image.changeSprite(
+        unit.image,
+        sprite
+      );
+    } else {
+      const sprite = addPixiSprite(unit.animations.die, containerDoodads);
+      // @ts-ignore: AnimatedSprite does have .loop
+      sprite.loop = false;
+      Image.changeSprite(
+        unit.image,
+        sprite
+      );
+    }
   }
 }
 
-export function playAnimation(unit: IUnit, spritePath: string): Promise<void> {
+export function playAnimation(unit: IUnit, spritePath: string | undefined): Promise<void> {
+  if (!spritePath) {
+    console.trace('tried to play missing animation');
+    return Promise.resolve();
+  }
   // Change animation and change back to default
   return new Promise<void>((resolve) => {
     if (!unit.image) {
@@ -356,9 +377,12 @@ export function die(unit: IUnit, prediction: boolean) {
     // This check for unit.image prevents creating a corpse image when a predictionUnit
     // dies because a prediction unit won't have an image property
     if (unit.image) {
+      const dieSprite = addPixiSprite(unit.animations.die, containerDoodads);
+      // @ts-ignore: .loop does exist on animatedSprite
+      dieSprite.loop = false;
       Image.changeSprite(
         unit.image,
-        addPixiSprite('units/corpse.png', containerDoodads),
+        dieSprite
       );
     }
     unit.alive = false;
@@ -409,6 +433,7 @@ export function takeDamage(unit: IUnit, amount: number, prediction: boolean, sta
   amount = composeOnDamageEvents(unit, amount, prediction);
   if (!prediction) {
     console.log(`takeDamage: unit ${unit.id}; amount: ${amount}; events:`, unit.onDamageEvents);
+    playAnimation(unit, unit.animations.hit);
   }
   unit.health -= amount;
   // Prevent health from going over maximum or under 0
@@ -575,6 +600,12 @@ export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
       coordinates = fn(unit, coordinates);
     }
   }
+  if (unit.image) {
+    Image.changeSprite(
+      unit.image,
+      addPixiSprite(unit.animations.walk, unit.image.sprite.parent)
+    );
+  }
   // Set path which will be used in the game loop to actually move the unit
   window.underworld.setPath(unit, Vec.clone(target));
   return new Promise<void>((resolve) => {
@@ -588,6 +619,12 @@ export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
       resolve()
     }, timeoutMs);
   }).then(() => {
+    if (unit.image) {
+      Image.changeSprite(
+        unit.image,
+        addPixiSprite(unit.animations.idle, unit.image.sprite.parent)
+      );
+    }
     if (unit.resolveDoneMovingTimeout !== undefined) {
       clearTimeout(unit.resolveDoneMovingTimeout);
     }

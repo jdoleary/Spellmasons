@@ -18,6 +18,7 @@
 - (M) Tutorial
 - (M) Hoise spells?
 ------
+- Bug: regular Image.syncronize doesn't work with animations.
 - Bug: unit animation stops after unit nsync?
 - Content: AOE clone should work for pickups
 - Bug: Clone doesn't show cloned units until they move cause they spawn right on top of each other

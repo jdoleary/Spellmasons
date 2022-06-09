@@ -30,7 +30,7 @@ export async function action(unit: Unit.IUnit, attackTarget: Unit.IUnit | undefi
   // Instead, just check that the distance is within the attack range
   // and let canAttackEnemy be used for just the attention markers
   if (withinMeleeRange(unit, attackTarget)) {
-    await Unit.playAnimation(unit, 'units/golem_eat');
+    await Unit.playAnimation(unit, 'units/gruntAttack');
     Unit.takeDamage(attackTarget, unit.damage, false, undefined);
   }
 }

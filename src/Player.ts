@@ -9,7 +9,7 @@ import { getClients } from './wsPieHandler';
 import { allCards } from './cards';
 import { randInt } from './rand';
 import { clearTooltipSelection } from './ui/PlanningView';
-import defaultPlayerUnit from './units/jester';
+import defaultPlayerUnit from './units/playerUnit';
 import { MESSAGE_TYPES } from './MessageTypes';
 import { jitter } from './Vec';
 

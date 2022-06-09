@@ -17,6 +17,7 @@ export interface UnitSource {
   unitProps: Partial<Unit.IUnit>;
   extraTooltipInfo?: () => string;
   spawnParams?: SpawnParams;
+  animations: Unit.UnitAnimations;
 }
 
 interface SpawnParams {
@@ -25,10 +26,7 @@ interface SpawnParams {
 }
 
 /// Units to register
-import manBlue from './manBlue';
-import ladyBlue from './ladyBlue';
-import manMohawk from './manMohawk';
-import jester from './jester';
+import playerUnit from './playerUnit';
 import grunt from './grunt';
 import archer from './archer';
 import lobber from './lobber';
@@ -56,10 +54,7 @@ export function registerUnits() {
   register(poisoner);
   register(vampire);
 
-  register(manBlue);
-  register(ladyBlue);
-  register(manMohawk);
-  register(jester);
+  register(playerUnit);
   register(decoy);
   register(nightqueen);
 }
