@@ -4,7 +4,7 @@ import { View } from './views';
 import * as math from './math';
 import * as config from './config';
 import { keyDown } from './ui/eventListeners';
-import { LoaderResource, MIPMAP_MODES, SCALE_MODES } from 'pixi.js';
+import { LoaderResource, SCALE_MODES } from 'pixi.js';
 
 // if PIXI is finished setting up
 let isReady = false;
