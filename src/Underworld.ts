@@ -111,7 +111,6 @@ export default class Underworld {
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
     window.underworld = this;
     this.seed = window.seedOverride || seed;
-    this.seed = '0.6794135326578248'
 
     elSeed.innerText = `Seed: ${this.seed}`;
     console.log("RNG create with seed:", this.seed, ", state: ", RNGState);
@@ -499,7 +498,7 @@ export default class Underworld {
     //.filter(filterRemoveNonGroundAdjacent);
 
     // liquid bounds block movement only under certain circumstances
-    this.liquidBounds = (obstacles.filter(o => o.material == Material.LIQUID).map(o => o.bounds)).map(toLineSegments).flat();
+    this.liquidBounds = mergePolygon2s(obstacles.filter(o => o.material == Material.LIQUID).map(o => o.bounds)).map(toLineSegments).flat();
     //.filter(filterRemoveNonGroundAdjacent);
 
     const expandMagnitude = config.COLLISION_MESH_RADIUS * config.NON_HEAVY_UNIT_SCALE

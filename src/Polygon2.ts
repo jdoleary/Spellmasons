@@ -187,6 +187,12 @@ export function mergePolygon2s(polygons: Polygon2[]): Polygon2[] {
             }
         }
     }
+    // Remove dead ends (2 lines that double back on themselves) (also known as reversals):
+    let reversals: Polygon2LineSegment[] = []
+    for (let line of polyLineSegments) {
+        reversals.push(...polyLineSegments.filter(other => Vec.equal(line.p1, other.p2) && Vec.equal(line.p2, other.p1)));
+    }
+    polyLineSegments = polyLineSegments.filter(line => !reversals.includes(line));
     // Remove unnecessary in-between verticies:
     const lineSegments = mergeCollinearOverlappingSameDirectionLines(polyLineSegments)
     // Turn all remaining line segments into polygons:
