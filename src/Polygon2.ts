@@ -81,13 +81,20 @@ export function mergeCollinearOverlappingSameDirectionLines(lines: LineSegment.L
                         newLine.p2 = mergeLine.p2;
                     }
                 }
-                // unshift so that lines maintain their original order if not modified since
-                // the forloop iterates it backwards
-                newLines.unshift(newLine);
             }
             // Remove lines once they have been used
             for (let removeWall of linesForMerging) {
                 lines.splice(lines.indexOf(removeWall), 1);
+            }
+            if (newLine) {
+                if (linesForMerging.length == 1 && newLine == line) {
+                    // unshift so that lines maintain their original order if not modified since
+                    // the forloop iterates it backwards
+                    newLines.unshift(newLine);
+                } else {
+                    // Add newLine back into lines array so it can be processed again until it doesn't have any lines left to merge with.
+                    lines.push(newLine);
+                }
             }
             i = lines.length;
         }

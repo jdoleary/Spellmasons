@@ -72,6 +72,18 @@ describe('Polygon2', () => {
 
     })
     describe('mergeColinearOverlappingSameDirectionLines', () => {
+        it('should merge a line multiple times if needed', () => {
+            const lineSegments = [
+                { p1: { x: 0, y: 0 }, p2: { x: 1, y: 0 } },
+                { p1: { x: 1, y: 0 }, p2: { x: 2, y: 0 } },
+                { p1: { x: 2, y: 0 }, p2: { x: 3, y: 0 } },
+            ];
+            const actual = mergeCollinearOverlappingSameDirectionLines(lineSegments);
+            const expected = [
+                { p1: { x: 0, y: 0 }, p2: { x: 3, y: 0 } },
+            ]
+            expect(actual).toEqual(expected);
+        });
         describe('the possible types of merges', () => {
             it('should merge correctly when B.p1 is inside A.p1 and A.p2 and B.p2 is outside', () => {
                 const A = { p1: { x: 0, y: 0 }, p2: { x: 2, y: 0 } };
@@ -776,25 +788,25 @@ describe('Polygon2', () => {
     it('should properly merge 3 polys when one of them has all of it\'s verts within the other two but it\'s walls will still affect the final merged polygon', () => {
         const polyBridge =
             [
-                { "x": 0, "y": 0 },
-                { "x": 0, "y": 3 },
-                { "x": 3, "y": 3 },
-                { "x": 3, "y": 0 }
+                { x: 0, y: 0 },
+                { x: 0, y: 3 },
+                { x: 3, y: 3 },
+                { x: 3, y: 0 }
             ]
         // Covers polyBridge's top 2 points
         const polyTop =
             [
-                { "x": -1, "y": 2 },
-                { "x": -1, "y": 4 },
-                { "x": 4, "y": 4 },
-                { "x": 4, "y": 2 }
+                { x: -1, y: 2 },
+                { x: -1, y: 4 },
+                { x: 4, y: 4 },
+                { x: 4, y: 2 }
             ]
         // Covers polyBridge's bottom 2 points
         const polyBottom = [
-            { "x": -1, "y": -1 },
-            { "x": -1, "y": 1 },
-            { "x": 4, "y": 1 },
-            { "x": 4, "y": -1 }
+            { x: -1, y: -1 },
+            { x: -1, y: 1 },
+            { x: 4, y: 1 },
+            { x: 4, y: -1 }
         ]
 
         const mergedPolygons = mergePolygon2s([polyBridge, polyTop, polyBottom]);
