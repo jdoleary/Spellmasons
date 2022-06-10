@@ -494,11 +494,12 @@ export default class Underworld {
     // }
     // walls block sight and movement
     this.walls = mergePolygon2s(obstacles.filter(o => o.material == Material.WALL).map(o => o.bounds)).map(toLineSegments).flat();
-
+    // TODO: Optimize:
     //.filter(filterRemoveNonGroundAdjacent);
 
     // liquid bounds block movement only under certain circumstances
     this.liquidBounds = mergePolygon2s(obstacles.filter(o => o.material == Material.LIQUID).map(o => o.bounds)).map(toLineSegments).flat();
+    // TODO: Optimize:
     //.filter(filterRemoveNonGroundAdjacent);
 
     const expandMagnitude = config.COLLISION_MESH_RADIUS * config.NON_HEAVY_UNIT_SCALE
@@ -506,6 +507,7 @@ export default class Underworld {
     // pathing polygons determines the area that units can move within
     this.pathingPolygons = mergePolygon2s([...obstacles.map(o => o.bounds)]
       .map(p => expandPolygon(p, expandMagnitude)));
+    // TODO: Optimize:
     //.filter(filterRemoveNonGroundAdjacentPoly)
 
     // Process the polygons into pathingwalls for use in tryPath
