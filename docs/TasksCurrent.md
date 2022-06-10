@@ -1,23 +1,20 @@
 ## Tasks
-- Triggering Trap animation
-- (H) Polygon Merging (Thursday)
-    - Walls are messed up in seed '0.6794135326578248'
 - (M) Liquid interactions
     - Apply liquid impact and submerge shader when units "fall in"
-- (M) Rework unit crowding (save for later, non priority)
 - (M) Standalone server
 - (M) Card Hand refactor
     - Replace "hand of cards" with diablo style toolbar (https://eu.diablo3.blizzard.com/static/images/game/guide/fundamentals/action-bar.jpg?v=58-137)
     - Right click to change (opens inventory)
-- (E) Player Customization
 - (H) Game Balance
-- (M) Menu
-- (M) Steam Page
-- (E) Website Presskit page
 - (M) SFX
-- (E) Master music
 - (M) Tutorial
 - (M) Hoist spells?
+- (M) Rework unit crowding (save for later, non priority)
+- Clerical Stuff
+    - (M) Menu
+    - (M) Steam Page
+    - (E) Website Presskit page
+    - (E) Master music
 ------
 - Bug: When trap triggers, spell effect is left behind as unit keeps moving through it
 - Content: AOE clone should work for pickups
