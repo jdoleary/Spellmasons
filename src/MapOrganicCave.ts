@@ -4,7 +4,7 @@ import { isVec2InsidePolygon } from "./Polygon2";
 import { randFloat, randInt } from "./rand";
 import * as Vec from "./Vec";
 import * as config from './config';
-import { oneDimentionIndexToVec2, vec2ToOneDimentionIndex } from "./WaveFunctionCollapse";
+import { oneDimentionIndexToVec2, vec2ToOneDimentionIndex, vec2ToOneDimentionIndexPreventWrap } from "./WaveFunctionCollapse";
 import { conway, ConwayState } from "./Conway";
 import type { IObstacle } from "./Obstacle";
 
@@ -503,7 +503,7 @@ interface Map {
     height: number;
 }
 function getCell(map: Map, position: Vec.Vec2): Tile | undefined {
-    return map.tiles[vec2ToOneDimentionIndex(position, map.width)];
+    return map.tiles[vec2ToOneDimentionIndexPreventWrap(position, map.width)];
 }
 enum Material {
     EMPTY,

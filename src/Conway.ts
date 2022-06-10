@@ -1,6 +1,5 @@
 import { randInt } from "./rand";
-import type { Vec2 } from "./Vec"
-import { oneDimentionIndexToVec2 } from "./WaveFunctionCollapse";
+import { oneDimentionIndexToVec2, vec2ToOneDimentionIndexPreventWrap } from "./WaveFunctionCollapse";
 export enum Material {
     EMPTY,
     LIQUID,
@@ -55,14 +54,6 @@ function mutateViaRules(tile: Material, neighbors: (Material | undefined)[], sta
     return tile;
 }
 
-// Disallows negative x or x > last column which would "wrap" and return a valid index that isn't a true neighbor
-function vec2ToOneDimentionIndexPreventWrap(pos: Vec2, width: number): number {
-    if (pos.x < 0 || pos.x > width - 1) {
-        return -1;
-    }
-    return pos.y * width + pos.x
-
-}
 export function getNeighbors(tileIndex: number, tiles: Material[], widthOf2DArray: number): (Material | undefined)[] {
     const { x, y } = oneDimentionIndexToVec2(tileIndex, widthOf2DArray);
     const neighbors = [
