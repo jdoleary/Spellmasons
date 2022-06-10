@@ -13,7 +13,8 @@ import defaultPlayerUnit from './units/playerUnit';
 import { MESSAGE_TYPES } from './MessageTypes';
 import { jitter } from './Vec';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
-import { playerCastAnimationColor, playerCoatPrimary, playerCoatSecondary } from './ui/colors';
+import { playerCastAnimationColor, playerCoatPrimary, playerCoatSecondary, playerColors, playerColorsSecondary } from './ui/colors';
+import { _chooseObjectWithProbability } from './math';
 
 // The serialized version of the interface changes the interface to allow only the data
 // that can be serialized in JSON.  It may exclude data that is not neccessary to
@@ -64,13 +65,16 @@ export function create(clientId: string): IPlayer {
   // regardless of if the image sprite changes to a new animation or not.
   // @ts-ignore
   if (player.unit.image && player.unit.image.sprite.filters) {
+    const colorIndex = randInt(window.underworld.random, 0, playerColors.length - 1);
 
+    const color = playerColors[colorIndex];
+    const colorSecondary = playerColorsSecondary[colorIndex];
     player.unit.image.sprite.filters.push(
       new MultiColorReplaceFilter(
         [
-          [playerCoatPrimary, 0xFF0000],
-          [playerCoatSecondary, 0xaa0000],
-          [playerCastAnimationColor, 0x0000ff],
+          [playerCoatPrimary, color],
+          [playerCoatSecondary, colorSecondary],
+          [playerCastAnimationColor, color],
         ],
         0.1
       )
