@@ -493,20 +493,27 @@ export default class Underworld {
     //   return groundTiles.some(gt => poly.points.some(p => math.distance(gt, p) <= distanceFromGroundCenterWhenAdjacent))
     // }
     // walls block sight and movement
-    this.walls = mergePolygon2s(obstacles.filter(o => o.material == Material.WALL).map(o => o.bounds)).map(toLineSegments).flat();
+    const wallPolygons = mergePolygon2s(obstacles.filter(o => o.material == Material.WALL).map(o => o.bounds));
+    this.walls = wallPolygons.map(toLineSegments).flat();
     // TODO: Optimize:
     //.filter(filterRemoveNonGroundAdjacent);
+    const expandMagnitude = config.COLLISION_MESH_RADIUS * config.NON_HEAVY_UNIT_SCALE
 
     // liquid bounds block movement only under certain circumstances
-    this.liquidBounds = mergePolygon2s(obstacles.filter(o => o.material == Material.LIQUID).map(o => o.bounds)).map(toLineSegments).flat();
+    const liquidPolygons = mergePolygon2s(obstacles.filter(o => o.material == Material.LIQUID).map(o => o.bounds))
+      .map(p => expandPolygon(p, -expandMagnitude))
+    this.liquidBounds = liquidPolygons.map(toLineSegments).flat();
     // TODO: Optimize:
     //.filter(filterRemoveNonGroundAdjacent);
 
-    const expandMagnitude = config.COLLISION_MESH_RADIUS * config.NON_HEAVY_UNIT_SCALE
     // Expand pathing walls by the size of the regular unit
     // pathing polygons determines the area that units can move within
-    this.pathingPolygons = mergePolygon2s([...obstacles.map(o => o.bounds)]
-      .map(p => expandPolygon(p, expandMagnitude)));
+    // this.pathingPolygons = mergePolygon2s([...obstacles.map(o => o.bounds)]
+    this.pathingPolygons = [...wallPolygons, ...liquidPolygons]
+      // Move bounds up because center of units is not where they stand, and the bounds
+      // should be realtive to a unit's feet
+      .map(p => p.map(vec2 => ({ x: vec2.x, y: vec2.y - expandMagnitude / 2 })))
+      .map(p => expandPolygon(p, expandMagnitude));
     // TODO: Optimize:
     //.filter(filterRemoveNonGroundAdjacentPoly)
 
