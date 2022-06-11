@@ -1,9 +1,11 @@
 import { OBSTACLE_SIZE } from './config';
-import type { Vec2 } from './Vec';
+import { Vec2, subtract, magnitude, add } from './Vec';
 import { IUnit, takeDamage } from './Unit';
-import { lineSegmentIntersection } from './collision/lineSegment';
+import { findWherePointIntersectLineSegmentAtRightAngle, isOnOutside } from './collision/lineSegment';
 import { Material } from './Conway';
-import { Polygon2, toPolygon2LineSegments } from './Polygon2';
+import { Polygon2 } from './Polygon2';
+import { distance, similarTriangles } from './math';
+import submerged from './shaders/submerged';
 export interface IObstacle {
   x: number;
   y: number;
@@ -27,38 +29,71 @@ export function coordToPoly(coord: Vec2): Polygon2 {
 }
 
 export const lavaDamage = 2;
-export function checkLavaDamageDueToMovement(unit: IUnit, endPos: Vec2, prediction: boolean) {
+// Invoked manually when a unit moves due to forced movement (non pathing movement)
+// to check to see if they "fall in" to liquid
+export function checkLiquidInteractionDueToMovement(unit: IUnit, prediction: boolean) {
   // Check intersections with lava:
   let hitLava = false;
-  for (let o of window.underworld.lavaObstacles) {
-    const walls = toPolygon2LineSegments(o.bounds);
-    for (let wall of walls) {
-      if (lineSegmentIntersection({ p1: unit, p2: endPos }, wall)) {
-        hitLava = true;
-        break;
+  const fallInThreshold = 20;
+  // + 10 gives a margin so that they don't just fall right back out.
+  const fallInDistance = fallInThreshold + 10;
+  for (let wall of window.underworld.liquidBounds) {
+    const intersection = findWherePointIntersectLineSegmentAtRightAngle(unit, wall);
+    if (intersection) {
+
+      const dist = distance(unit, intersection);
+      if (dist <= fallInThreshold) {
+        let fallInPoint = similarTriangles(intersection.x - unit.x, intersection.y - unit.y, dist, fallInDistance)
+        // Edge case: If unit is closer than fallInThreshold from endpoint of wall
+        // and the wall is connected to another wall by a right angle, when they
+        // "fall in", they will immediately come back out in a perpendicular direction
+        // because they fell in within the fall out threshold of the other wall.
+        // Ensure that if they fall in they are at least fallInThreshold away from other
+        // walls too.
+        const diffFromP1 = subtract(intersection, wall.p1);
+        const diffFromP2 = subtract(intersection, wall.p2);
+        const isOutside = isOnOutside(wall, unit);
+        if (isOutside && magnitude(diffFromP1) <= fallInThreshold) {
+          const deltaX = wall.p1.x - wall.p2.x;
+          const deltaY = wall.p1.y - wall.p2.y;
+          const fromCorner = similarTriangles(deltaX, deltaY, magnitude(subtract(wall.p1, wall.p2)), fallInDistance)
+          const fallInThresholdProjectedFromWallP1toWallP2 = subtract(wall.p1, fromCorner);
+          // Rotate vector 90 degrees https://stackoverflow.com/a/4780141/4418836
+          const safeFallInPosition = add(fallInThresholdProjectedFromWallP1toWallP2, { x: -fromCorner.y, y: fromCorner.x });
+          unit.x = safeFallInPosition.x;
+          unit.y = safeFallInPosition.y;
+        } else if (isOutside && magnitude(diffFromP2) <= fallInThreshold) {
+          const deltaX = wall.p2.x - wall.p1.x;
+          const deltaY = wall.p2.y - wall.p1.y;
+          const fromCorner = similarTriangles(deltaX, deltaY, magnitude(subtract(wall.p2, wall.p1)), fallInDistance)
+          const fallInThresholdProjectedFromWallP2toWallP1 = subtract(wall.p2, fromCorner);
+          const safeFallInPosition = add(fallInThresholdProjectedFromWallP2toWallP1, { x: fromCorner.y, y: -fromCorner.x });
+          unit.x = safeFallInPosition.x;
+          unit.y = safeFallInPosition.y;
+        } else {
+          unit.x = intersection.x + fallInPoint.x;
+          unit.y = intersection.y + fallInPoint.y;
+        }
+        unit.resolveDoneMoving();
+        hitLava = !isOnOutside(wall, unit);
+        if (hitLava) {
+          takeDamage(unit, lavaDamage, prediction);
+          if (unit.image && unit.image.sprite.filters) {
+            unit.shaderUniforms.submerged = submerged.uniforms;
+            unit.image.sprite.filters.push(submerged.filter);
+          }
+        } else {
+          if (unit.image && unit.image.sprite.filters) {
+            unit.image.sprite.filters = unit.image.sprite.filters.filter(f => f !== submerged.filter);
+          }
+        }
       }
-    }
-    if (hitLava) {
-      break;
+
+
     }
   }
   const predictionColor = hitLava ? 0xff0000 : 0x0000ff;
   window.predictionGraphics.lineStyle(4, predictionColor, 1.0)
   window.predictionGraphics.moveTo(unit.x, unit.y);
-  window.predictionGraphics.lineTo(endPos.x, endPos.y);
-  window.predictionGraphics.drawCircle(endPos.x, endPos.y, 4);
-  if (hitLava) {
-    if (!prediction) {
-      // Add a timeout because the pull happens over time and this executes
-      // immediately. This is kindof a cheat way to wait to show the lava icon
-      // until the unit collides with the lava obstacle; however it doesn't actually
-      // wait for the collision, it just knows it will happen so it shows the effect 
-      // after a delay
-      setTimeout(() => {
-        window.underworld.animateSpell(unit, 'tiles/lava.png');
-      }, 500);
-    }
-    takeDamage(unit, lavaDamage, prediction);
-  }
 
 }
