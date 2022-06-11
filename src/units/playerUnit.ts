@@ -14,9 +14,9 @@ const unit: UnitSource = {
   action,
   animations: {
     idle: 'units/playerIdle',
-    hit: 'units/playerHit',
+    hit: 'units/playerIdle',
     attack: 'units/playerCast',
-    die: 'units/playerDie',
+    die: 'units/playerDeath',
     walk: 'units/playerWalk',
   },
 };

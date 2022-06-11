@@ -329,13 +329,16 @@ export function returnToDefaultSprite(unit: IUnit) {
         sprite
       );
     } else {
-      const sprite = addPixiSprite(unit.animations.die, containerDoodads);
-      // @ts-ignore: AnimatedSprite does have .loop
-      sprite.loop = false;
-      Image.changeSprite(
-        unit.image,
-        sprite
-      );
+      // // TODO: How to prevent this from shortcircuiting an animation that is in progress?
+      // // Just move to the last dead frame, don't replay the death animation
+      // const sprite = addPixiSprite(unit.animations.die, containerDoodads);
+      // sprite.gotoAndStop(sprite.textures.length-1)
+      // // @ts-ignore: AnimatedSprite does have .loop
+      // sprite.loop = false;
+      // Image.changeSprite(
+      //   unit.image,
+      //   sprite
+      // );
     }
   }
 }
@@ -393,6 +396,10 @@ export function resurrect(unit: IUnit) {
 // Useful for decoy (and maybe bosses in the future??)
 const noCorpseIds = ['decoy'];
 export function die(unit: IUnit, prediction: boolean) {
+  if (!unit.alive) {
+    // If already dead, do nothing
+    return;
+  }
   if (noCorpseIds.includes(unit.unitSourceId)) {
     // Remove the unit entirely
     cleanup(unit);
@@ -480,10 +487,7 @@ export function takeDamage(unit: IUnit, amount: number, prediction: boolean, sta
 
   // If taking damage (not healing) and health is 0 or less...
   if (amount > 0 && unit.health <= 0) {
-    // if unit is alive, die
-    if (unit.alive) {
-      die(unit, prediction);
-    }
+    die(unit, prediction);
   }
 
 }

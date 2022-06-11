@@ -1,7 +1,4 @@
 ## Tasks
-- (M) Liquid interactions
-    - Apply liquid impact and submerge shader when units "fall in"
-    - Remove or refactor lavaObstacles
 - (M) Standalone server
 - (M) Card Hand refactor
     - Replace "hand of cards" with diablo style toolbar (https://eu.diablo3.blizzard.com/static/images/game/guide/fundamentals/action-bar.jpg?v=58-137)
@@ -16,6 +13,8 @@
     - (M) Steam Page
     - (E) Website Presskit page
     - (E) Master music
+- TODO: Better solution for syncronizing unit animation state when doing network syncronization.  Refactor returnToDefaultSprite
+- Bug: Portal spawns when you predition kill yourself on test level
 ------
 - Bug: When trap triggers, spell effect is left behind as unit keeps moving through it
 - Content: AOE clone should work for pickups
