@@ -1,6 +1,7 @@
 ## Tasks
 - (M) Liquid interactions
     - Apply liquid impact and submerge shader when units "fall in"
+    - Remove or refactor lavaObstacles
 - (M) Standalone server
 - (M) Card Hand refactor
     - Replace "hand of cards" with diablo style toolbar (https://eu.diablo3.blizzard.com/static/images/game/guide/fundamentals/action-bar.jpg?v=58-137)

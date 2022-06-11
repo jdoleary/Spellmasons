@@ -1,3 +1,4 @@
+- pointInSameDirection returned true in getParametricRelation for perpendicular lines
 - bug: You can spawn on a pickup such as spikes
   - couldn't reproduce
 - "maximum shield" shows a bunch of times on hover if casting the spell would give them map
