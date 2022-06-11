@@ -40,14 +40,15 @@ uniform sampler2D uSampler;
 uniform float time;
 void main(void)
 {
-    float howHighUpAndDown = 20.0;
+    float howHighUpAndDown = 5.0;
     vec4 color = texture2D(uSampler, vTextureCoord);
-    if(vTextureCoord.y + sin(time/1000.0)/8.0 > 0.6){
+    if(vTextureCoord.y > 0.3){
         gl_FragColor = vec4(0.0,0.0,0.0,0.0);
     }else{
         gl_FragColor = color;
     }
 }`;
+// if(vTextureCoord.y + sin(time/1000.0)/8.0 > 0.6){
 // Default pixi vShader
 const vShader = `
 attribute vec2 aVertexPosition;
