@@ -123,6 +123,10 @@ export function isPointOnLineSegment(point: Vec.Vec2, lineSegment: LineSegment):
     return false;
 
 }
+// modified from https://stackoverflow.com/a/3461533/4418836
+export function isOnOutside(line: LineSegment, c: Vec.Vec2): boolean {
+    return ((line.p2.x - line.p1.x) * (c.y - line.p1.y) - (line.p2.y - line.p1.y) * (c.x - line.p1.x)) > 0;
+}
 export function getParametricRelation(l1: LineSegment, l2: LineSegment) {
     // l1 expressed as p to p+r
     const p = l1.p1;

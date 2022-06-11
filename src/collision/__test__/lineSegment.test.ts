@@ -1,7 +1,73 @@
-import { LineSegment, findWherePointIntersectLineSegmentAtRightAngle, lineSegmentIntersection, testables, isPointOnLineSegment, isCollinearAndOverlapping, getCenterPoint, toString } from '../lineSegment';
+import { LineSegment, isOnOutside, findWherePointIntersectLineSegmentAtRightAngle, lineSegmentIntersection, testables, isPointOnLineSegment, isCollinearAndOverlapping, getCenterPoint, toString } from '../lineSegment';
 import type { Vec2 } from '../../Vec';
 const { slope, toStandardForm } = testables;
 describe('lineSegment', () => {
+    describe('isOnOutside', () => {
+        [
+            {
+                l1: {
+                    p1: {
+                        x: 0, y: 0
+                    },
+                    p2: {
+                        x: 2, y: 0
+                    }
+                },
+                point: {
+                    x: 0, y: 1,
+                },
+                expected: true
+            },
+            {
+                l1: {
+                    p1: {
+                        x: 0, y: 0
+                    },
+                    p2: {
+                        x: 2, y: 0
+                    }
+                },
+                point: {
+                    x: 0, y: -1,
+                },
+                expected: false
+            },
+            {
+                l1: {
+                    p1: {
+                        x: 0, y: 0
+                    },
+                    p2: {
+                        x: 0, y: 2
+                    }
+                },
+                point: {
+                    x: -1, y: 0,
+                },
+                expected: true
+            },
+            {
+                l1: {
+                    p1: {
+                        x: 0, y: 0
+                    },
+                    p2: {
+                        x: 0, y: 2
+                    }
+                },
+                point: {
+                    x: 1, y: 0,
+                },
+                expected: false
+            },
+        ].forEach(({ l1, point, expected }) => {
+            it(`should return ${expected} for ${point.x},${point.y} isOnOutside of  ${toString(l1)}`, () => {
+                const actual = isOnOutside(l1, point);
+                expect(actual).toEqual(expected);
+            });
+        });
+
+    })
     describe('getCenterPoint', () => {
         [
             {
