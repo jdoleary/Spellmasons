@@ -1,4 +1,4 @@
-import type * as PIXI from 'pixi.js';
+import * as PIXI from 'pixi.js';
 import AnimationTimeline from './AnimationTimeline';
 import type * as Player from './Player';
 import type * as Unit from './Unit';
@@ -146,8 +146,10 @@ declare global {
     // Set to true in developer console to see debug information
     showDebug: boolean;
     // Graphics for drawing debug information, use window.showDebug = true
-    // to show at runtime
+    // to show at runtime. Automatically draws pathing bounds, walls, etc
     debugGraphics: PIXI.Graphics;
+    // Graphics for drawing debug information a-la-carte
+    devDebugGraphics: PIXI.Graphics;
     // Shows radiuses for spells
     radiusGraphics: PIXI.Graphics;
     // Graphics for drawing the player visible path
