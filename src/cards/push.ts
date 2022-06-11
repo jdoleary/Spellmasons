@@ -1,7 +1,6 @@
 import { add, subtract, Vec2 } from '../Vec';
 import type { Spell } from '.';
 import { distance, similarTriangles, getCoordsAtDistanceTowardsTarget } from '../math';
-import { checkLavaDamageDueToMovement } from '../Obstacle';
 import type { Circle } from '../collision/moveWithCollision';
 
 export const id = 'push';
@@ -23,8 +22,7 @@ Pushes the target(s) away from the caster
         // Push away from caster if unit was direct targeted by cast, otherwise push away from the
         // cast location (as in the case of AOE, push)
         const awayFrom = distance(state.castLocation, unit) < unit.radius ? state.casterUnit : state.castLocation;
-        const endPos = forcePush(unit, awayFrom, prediction);
-        checkLavaDamageDueToMovement(unit, endPos, prediction);
+        forcePush(unit, awayFrom, prediction);
       }
       for (let pickup of state.targetedPickups) {
         // Push away from caster if unit was direct targeted by cast, otherwise push away from the

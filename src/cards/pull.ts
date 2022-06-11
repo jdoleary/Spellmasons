@@ -1,8 +1,7 @@
 import { add, subtract, Vec2 } from '../Vec';
 import type { Spell } from '.';
 import { distance, getCoordsAtDistanceTowardsTarget, similarTriangles } from '../math';
-import { checkLavaDamageDueToMovement } from '../Obstacle';
-import type { Circle } from 'src/collision/moveWithCollision';
+import type { Circle } from '../collision/moveWithCollision';
 
 export const id = 'pull';
 const pullDistance = 100;
@@ -20,8 +19,7 @@ Pulls the target(s) towards the caster
     `,
     effect: async (state, prediction) => {
       for (let unit of state.targetedUnits) {
-        const endPos = pull(unit, state.casterUnit, prediction);
-        checkLavaDamageDueToMovement(unit, endPos, prediction);
+        pull(unit, state.casterUnit, prediction);
       }
       for (let pickup of state.targetedPickups) {
         pull(pickup, state.casterUnit, prediction);

@@ -93,7 +93,6 @@ export default class Underworld {
   pickups: Pickup.IPickup[] = [];
   timeReleases: TimeRelease.ITimeRelease[] = [];
   imageOnlyTiles: Tile[] = [];
-  lavaObstacles: Obstacle.IObstacle[] = [];
   // line segments that prevent sight and movement
   walls: LineSegment[] = [];
   // line segments that prevent movement under certain circumstances
@@ -174,6 +173,8 @@ export default class Underworld {
       if (u) {
         const predictionUnit = window.predictionUnits[i];
         if (u.alive) {
+          // TODO: Optimize: maybe only call this during force move
+          Obstacle.checkLiquidInteractionDueToMovement(u, false);
           // Only allow movement if the unit has stamina
           if (u.path && u.path.points[0] && u.stamina > 0 && Unit.isUnitsTurnPhase(u)) {
             // Move towards target
@@ -475,12 +476,6 @@ export default class Underworld {
   // and the walls from the current obstacles
   cacheWalls(obstacles: Obstacle.IObstacle[], _groundTiles: Tile[]) {
 
-    // TODO: Restore
-    // for (let o of obstacles) {
-    //   if (o.name == 'Lava') {
-    //     this.lavaObstacles.push(o);
-    //   }
-    // }
     // const distanceFromGroundCenterWhenAdjacent = 1 + Math.sqrt(2) * config.OBSTACLE_SIZE / 2;
     // // Optimization: Removes linesegments that are not adjacent to walkable ground to prevent
     // // having to process linesegments that will never be used
@@ -501,7 +496,7 @@ export default class Underworld {
 
     // liquid bounds block movement only under certain circumstances
     const liquidPolygons = mergePolygon2s(obstacles.filter(o => o.material == Material.LIQUID).map(o => o.bounds))
-      .map(p => expandPolygon(p, -expandMagnitude))
+      .map(p => expandPolygon(p, -expandMagnitude / 2))
     this.liquidBounds = liquidPolygons.map(toLineSegments).flat();
     // TODO: Optimize:
     //.filter(filterRemoveNonGroundAdjacent);
@@ -588,13 +583,13 @@ export default class Underworld {
     // 4: ground
 
     const _tiles: Tile[] = [
-      1, 1, 1, 1, 4, 1, 1, 1,
-      1, 4, 4, 1, 4, 1, 4, 1,
-      1, 4, 4, 1, 4, 1, 1, 1,
+      1, 1, 1, 1, 4, 4, 4, 4,
+      1, 4, 4, 1, 4, 4, 4, 4,
       1, 1, 1, 1, 4, 4, 4, 4,
       1, 4, 4, 1, 4, 4, 4, 4,
       1, 4, 4, 1, 4, 4, 4, 4,
       1, 4, 4, 1, 4, 4, 4, 4,
+      1, 4, 4, 1, 4, 3, 3, 4,
       1, 1, 1, 1, 4, 4, 4, 4,
     ].map((value, i) => {
       const pos = oneDimentionIndexToVec2(i, width);
@@ -621,7 +616,7 @@ export default class Underworld {
       imageOnlyTiles: tiles.flatMap(x => x == undefined ? [] : [x]),
       pickups: [],
       enemies: [],
-      validPlayerSpawnCoords: [{ x: 64, y: 300 }]
+      validPlayerSpawnCoords: [{ x: 304, y: 280 }]
 
     }
 
@@ -818,7 +813,7 @@ export default class Underworld {
       this.levelIndex = levelIndex;
       // Generate level
       let level;
-      if (false && window.devMode) {
+      if (window.devMode) {
         level = this.testLevelData();
       } else {
         do {
