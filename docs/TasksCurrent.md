@@ -1,8 +1,17 @@
 ## Tasks
+- Fix shader texture coords
+    - Submerged shader messes up bigtime when you zoom
+    - https://github.com/pixijs/pixijs/wiki/v4-Creating-Filters
+    - THis example shader should show how it's done: https://github.com/pixijs/pixijs/blob/db74023f2f884f66cc81e3faf533831644a1add8/packages/filter-displacement/src/DisplacementFilter.ts
+    - Maybe use a simple mask instead of messing with shaders
+
+- Adjust pathing mesh relative to liquid bounds and top and bottom walls.
+- Fix WFC so that there aren't weird wall alignments
 - (M) Standalone server
 - (M) Card Hand refactor
     - Replace "hand of cards" with diablo style toolbar (https://eu.diablo3.blizzard.com/static/images/game/guide/fundamentals/action-bar.jpg?v=58-137)
     - Right click to change (opens inventory)
+---
 - (H) Game Balance
 - (M) SFX
 - (M) Tutorial
