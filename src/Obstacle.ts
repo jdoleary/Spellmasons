@@ -34,7 +34,7 @@ export const lavaDamage = 2;
 export function checkLiquidInteractionDueToMovement(unit: IUnit, prediction: boolean) {
   // Check intersections with lava:
   let hitLava = false;
-  const fallInThreshold = 20;
+  const fallInThreshold = 10;
   // + 10 gives a margin so that they don't just fall right back out.
   const fallInDistance = fallInThreshold + 10;
   for (let wall of window.underworld.liquidBounds) {
