@@ -27,6 +27,7 @@ import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './contants';
 import type { Vec2 } from './Vec';
 import type { LevelData } from './Underworld';
 import type { Circle } from './collision/moveWithCollision';
+import { syncInventory } from './CardUI';
 
 const YES = 'yes'
 const SKIP_TUTORIAL = 'skipTutorial';
@@ -251,6 +252,7 @@ window.superMe = () => {
     // predictionUnits so that the player's prediction copy
     // has the same mana and health
     window.underworld.syncPredictionUnits();
+    syncInventory(undefined);
   }
 }
 window.showDebug = true;

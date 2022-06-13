@@ -206,10 +206,6 @@ body.inspect-mode #card-inspect {
   padding: 10px;
   /* leave room for the mana badges at the top */
   padding-top: 15px;
-  /* Put selected cards next to health and mana */
-  position: absolute;
-  top: -22px;
-  left: 222px;
 }
 
 #selected-cards:empty {
@@ -247,11 +243,12 @@ body.inspect-mode #card-inspect {
   cursor: pointer;
   position: relative;
   transition: all 0.1s;
-  width: 80px;
+  width: 64px;
+  margin: 8px;
   height: 106px;
 }
 
-.card.rarity-forbidden {
+/* .card.rarity-forbidden {
   background-image: url('images/card-designs/cardStylized.png')
 }
 
@@ -269,31 +266,7 @@ body.inspect-mode #card-inspect {
 
 .card.rarity-common {
   background-image: url('images/card-designs/cardStylized.png')
-}
-
-
-/* CSS to manage drag and drop affordance */
-.card .hotkey-badge .dragHandle {
-  display: none;
-  font-size: 18px;
-  font-weight: bold;
-  /* cursor: grab to clue users in that they can drag and drop cards */
-  cursor: grab;
-}
-
-.card:hover .hotkey-badge .key {
-  display: none;
-}
-
-.card:hover .hotkey-badge-holder {
-  bottom: -14px;
-}
-
-.card:hover .hotkey-badge .dragHandle {
-  display: block;
-}
-
-/* END CSS to manage drag and drop affordance */
+} */
 
 /* Disable dragging for card thumbnails */
 .card img {
@@ -301,8 +274,6 @@ body.inspect-mode #card-inspect {
 }
 
 #card-holder .card {
-  padding: 8px;
-  margin: 8px;
   width: 225px;
   height: 350px;
   background-color: white;
@@ -379,7 +350,6 @@ body.inspect-mode #card-inspect {
 
 .hotkey-badge-holder {
   position: absolute;
-  bottom: -8px;
   left: 0;
   right: 0;
   margin: 0 auto;
@@ -412,13 +382,13 @@ kbd {
 
 .card-inner {
   display: flex;
-  padding: 8px;
   flex-direction: column;
   flex-grow: 1;
 }
 
 .card-thumb {
-  /* background-color: rgba(255, 255, 255, 0.3); */
+  background-color: rgb(161, 161, 161);
+  width: 64px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -987,33 +957,54 @@ body.draggingCamera {
 }
 
 #inventory {
-  display: none;
-  justify-content: center;
-  align-items: center;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
 }
 
-body.open-inventory #inventory {
-  display: block;
+body.open-inventory #inventory-content {
+  display: flex;
 }
 
 #inventory-content {
   background-color: rgba(0, 0, 0, 0.4);
   max-width: 600px;
-  display: flex;
+  display: none;
   flex-wrap: wrap;
 }
 
-/* Cards should not be draggable in inventory */
-#inventory .card .dragHandle {
-  display: none;
+#inventory .card.inToolbar {
+  opacity: 0.5;
 }
 
-.card.inToolbar {
-  opacity: 0.5;
+.slot {
+  margin: 8px;
+  width: 64px;
+}
+
+.slot .card-inner,
+#inventory .card-inner {
+  width: 64px;
 }
 
 .empty-slot {
   width: 64px;
   height: 64px;
   background-image: url('images/toolbar-slot.png')
+}
+
+#inventory-icon {
+  width: 80px;
+  height: 106px;
+  background-image: url('images/card-designs/bookStone.png');
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+body.open-inventory #inventory-icon {
+  opacity: 0.5;
+}
+
+#inventory-icon:hover {
+  transform: translate(0, -8px);
 }
