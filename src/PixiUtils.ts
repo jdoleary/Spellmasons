@@ -219,10 +219,7 @@ export function updateCameraPosition() {
 
           //Clamp camera Y
           const mapTopMostPoint = 0 - marginY;
-          // Ensure the mapBottomMostPoint takes the cardHolder's height into consideration
-          // so that units don't get hidden under the card UI
-          const cardHoldersRect = elCardHolders.getBoundingClientRect();
-          const mapBottomMostPoint = window.underworld.limits.yMax + marginY + cardHoldersRect.height;
+          const mapBottomMostPoint = window.underworld.limits.yMax + marginY;
           const camCenterYMin = mapTopMostPoint + elPIXIHolder.clientHeight / 2 / zoom;
           const camCenterYMax = mapBottomMostPoint - elPIXIHolder.clientHeight / 2 / zoom;
           // If the supposed minimum is more than the maximum, just center the camera:
