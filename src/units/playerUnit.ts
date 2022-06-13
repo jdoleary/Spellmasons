@@ -17,7 +17,7 @@ const unit: UnitSource = {
     hit: 'units/playerIdle',
     attack: 'units/playerCast',
     die: 'units/playerDeath',
-    walk: 'units/playerWalk',
+    walk: 'units/playerIdle',
   },
 };
 export default unit;
