@@ -603,6 +603,7 @@ export default class Underworld {
       width,
       height
     };
+    window.map = JSON.parse(JSON.stringify(map))
     convertBaseTilesToFinalTiles(map);
     const { tiles } = map;
     return {

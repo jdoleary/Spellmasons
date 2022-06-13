@@ -221,6 +221,8 @@ declare global {
     seedOverride: string | undefined;
     // devMode: auto picks character and upgrades
     devMode: boolean;
+    // Used for development to debug the original information used to make a map
+    map: any;
   }
 }
 window.setMMBDown = (isDown: boolean) => {
@@ -255,7 +257,7 @@ window.superMe = () => {
     syncInventory(undefined);
   }
 }
-window.showDebug = true;
+window.showDebug = false;
 
 // Prevent accidental back button only when not in devMode
 // In devMode, lots of refreshing happens so it's annoying when it

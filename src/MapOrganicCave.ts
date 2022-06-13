@@ -181,6 +181,7 @@ export function generateCave(params: CaveParams): { map: Map, limits: Limits } {
         width,
         height
     };
+    window.map = JSON.parse(JSON.stringify(map));
     convertBaseTilesToFinalTiles(map);
     return { map, limits: bounds };
 
@@ -300,9 +301,9 @@ export function convertBaseTilesToFinalTiles(map: Map) {
         if (currentCell?.image == baseTiles.wall) {
             if (neighbors.north == baseTiles.ground) {
                 if (neighbors.east != baseTiles.wall && neighbors.west == baseTiles.wall) {
-                changeTile(i, finalTileImages.wallInsideCornerSW);
+                    changeTile(i, finalTileImages.wallInsideCornerSW);
                 } else if (neighbors.west != baseTiles.wall && neighbors.east == baseTiles.wall) {
-                changeTile(i, finalTileImages.wallInsideCornerSE);
+                    changeTile(i, finalTileImages.wallInsideCornerSE);
                 } else if (neighbors.south == baseTiles.wall) {
                     // This is a weird exeption, if there is a tetris block of walls, like so:
                     //  w
@@ -312,7 +313,7 @@ export function convertBaseTilesToFinalTiles(map: Map) {
                     // Setting it to ground prevents weird pathing shapes
                     changeTile(i, finalTileImages.all_ground);
                 } else {
-                changeTile(i, finalTileImages.wallS);
+                    changeTile(i, finalTileImages.wallS);
                 }
             } else if (neighbors.south == baseTiles.ground) {
                 if (neighbors.west != baseTiles.wall && neighbors.east == baseTiles.wall) {

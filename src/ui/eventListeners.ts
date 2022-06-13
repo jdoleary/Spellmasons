@@ -18,6 +18,7 @@ import { distance, getCoordsAtDistanceTowardsTarget } from '../math';
 import * as config from '../config';
 import { cameraAutoFollow, getCamera, moveCamera } from '../PixiUtils';
 import { toPolygon2LineSegments } from '../Polygon2';
+import { vec2ToOneDimentionIndex } from '../WaveFunctionCollapse';
 
 export const keyDown = {
   w: false,
@@ -325,7 +326,11 @@ export function mouseMove(e?: MouseEvent) {
   if (window.showDebug && window.player) {
     window.debugGraphics.clear();
     const mouseTarget = window.underworld.getMousePos();
-    (document.getElementById('debug-info') as HTMLElement).innerText = `x:${Math.round(mouseTarget.x)}, y:${Math.round(mouseTarget.y)}; cellX: ${Math.round(mouseTarget.x / config.OBSTACLE_SIZE)}, cellY: ${Math.round(mouseTarget.y / config.OBSTACLE_SIZE)}`;
+    const cellX = Math.round(mouseTarget.x / config.OBSTACLE_SIZE);
+    const cellY = Math.round(mouseTarget.y / config.OBSTACLE_SIZE);
+    const originalTile = window.map ? window.map.tiles[vec2ToOneDimentionIndex({ x: cellX, y: cellY }, window.map.width)] : undefined;
+    const originalTileImage = originalTile ? originalTile.image : '';
+    (document.getElementById('debug-info') as HTMLElement).innerText = `x:${Math.round(mouseTarget.x)}, y:${Math.round(mouseTarget.y)}; cellX: ${cellX}, cellY: ${cellY}; tile: ${originalTileImage}`;
     // Draw the pathing walls
     const pathingWalls = window.underworld.pathingPolygons.map(toPolygon2LineSegments).flat();
     for (let lineSegment of pathingWalls) {
