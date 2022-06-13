@@ -341,9 +341,6 @@ export function contextmenuHandler(e: MouseEvent) {
   if (window.view !== View.Game) {
     return;
   }
-  if ((e.target as HTMLElement).closest('.card')) {
-    return;
-  }
   e.preventDefault();
   e.stopPropagation();
   // Right click to move

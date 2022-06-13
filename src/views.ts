@@ -23,6 +23,7 @@ import {
   onWindowBlur,
 } from './ui/eventListeners';
 
+const elPIXIHolder = document.getElementById('PIXI-holder') as HTMLElement;
 // A view is not shared between players in the same game, a player could choose any view at any time
 export enum View {
   Menu,
@@ -180,7 +181,7 @@ function addUnderworldEventListeners() {
   // Add keyboard shortcuts
   window.addEventListener('keydown', keydownListener);
   window.addEventListener('keyup', keyupListener);
-  document.body.addEventListener('contextmenu', contextmenuHandler);
+  elPIXIHolder.addEventListener('contextmenu', contextmenuHandler);
   document.body.addEventListener('click', clickHandler);
   window.addEventListener('mousedown', mouseDownHandler);
   window.addEventListener('mouseup', mouseUpHandler);
