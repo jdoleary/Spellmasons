@@ -5,7 +5,6 @@ import { findWherePointIntersectLineSegmentAtRightAngle, isOnOutside } from './c
 import { Material } from './Conway';
 import { Polygon2 } from './Polygon2';
 import { distance, similarTriangles } from './math';
-import submerged from './shaders/submerged';
 export interface IObstacle {
   x: number;
   y: number;
@@ -86,8 +85,8 @@ export function checkLiquidInteractionDueToMovement(unit: IUnit, prediction: boo
             // unit.image.sprite.mask = sprite;
           }
         } else {
-          if (unit.image && unit.image.sprite.filters) {
-            unit.image.sprite.filters = unit.image.sprite.filters.filter(f => f !== submerged.filter);
+          if (unit.image) {
+            unit.image.mask = undefined;
           }
         }
       }

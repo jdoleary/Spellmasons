@@ -1,16 +1,6 @@
 if (Vec.equal(position, { x: 9, y: 5 })) {
     console.log('ujtest', neighbors, currentCell?.image);
 }
-window.t = testShader;
-window.x = submerged.filter;
-function testShader() {
-    for (let unit of window.underworld.units) {
-        if (unit && unit.image) {
-            unit.shaderUniforms.submerged = submerged.uniforms;
-            unit.image.sprite.filters = [submerged.filter];
-        }
-    }
-}
 
 
 add_damage
