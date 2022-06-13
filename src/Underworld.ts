@@ -1504,7 +1504,11 @@ export default class Underworld {
 
           // Show the card that's being cast:
           if (!prediction) {
-            animations.push(this.animateSpell(target, card.animationPath || ''));
+            if (card.animationPath) {
+              animations.push(this.animateSpell(target, card.animationPath));
+            } else {
+              console.log('Card', cardId, 'has no animation path')
+            }
           }
         }
         // .then is necessary to convert return type of promise.all to just be void
