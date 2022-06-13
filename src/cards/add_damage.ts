@@ -20,6 +20,7 @@ const spell: Spell = {
     probability: 50,
     thumbnail: 'damage.png',
     animationPath: 'spell-effects/spellHurtCuts',
+    sfx: 'hurt',
     description: `
 Deals ${damageDone} damage to all targets.    
     `,

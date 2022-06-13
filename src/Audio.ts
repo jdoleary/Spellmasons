@@ -1,8 +1,9 @@
 import { getLoopableIndex } from "./Polygon2";
 import * as storage from "./storage";
 
-const sfx = {
+export const sfx: { [key: string]: string } = {
     whoosh: './sound/sfx/whoosh.m4a',
+    hurt: './sound/sfx/hurt.mp3'
 };
 export const sfxPageTurn = [
     // './sound/sfx/page-turn-1.flac',
@@ -41,7 +42,11 @@ export function playNextSong() {
     musicInstance.play();
 }
 
-export function playSFX(path: string) {
+export function playSFX(path?: string) {
+    if (!path) {
+        return;
+    }
+    console.log('sfx:', path);
     // In order to allow sounds to overlap, they must be 
     // fully instantiated each time they are played
     const audioInstance = new Audio(path);

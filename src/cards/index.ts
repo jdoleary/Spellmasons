@@ -192,6 +192,7 @@ export interface ICard {
   // This flag allows casting on the ground and is necessary
   // for spells like AOE, Trap, etc
   allowNonUnitTarget?: boolean;
+  sfx?: string;
 }
 
 export const allCards: { [cardId: string]: ICard } = {};

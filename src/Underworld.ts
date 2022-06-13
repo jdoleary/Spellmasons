@@ -53,6 +53,7 @@ import * as TimeRelease from './TimeRelease';
 import { all_ground, baseTiles, caveSizes, convertBaseTilesToFinalTiles, generateCave, getLimits, Limits as Limits, Tile, toObstacle } from './MapOrganicCave';
 import { Material } from './Conway';
 import { oneDimentionIndexToVec2 } from './WaveFunctionCollapse';
+import { playSFX, sfx } from './Audio';
 
 export enum turn_phase {
   PlayerTurns,
@@ -1506,7 +1507,7 @@ export default class Underworld {
         const targets = effectState.targetedUnits.length == 0 ? [castLocation] : effectState.targetedUnits
         for (let target of targets) {
 
-          // Show the card that's being cast:
+          // Animate the card for each target
           if (!prediction) {
             if (card.animationPath) {
               animations.push(this.animateSpell(target, card.animationPath));
@@ -1515,6 +1516,11 @@ export default class Underworld {
             }
           }
         }
+        // Play the card sound effect:
+        if (!prediction && card.sfx) {
+          playSFX(sfx[card.sfx]);
+        }
+
         // .then is necessary to convert return type of promise.all to just be void
         animationPromises.push(Promise.all([animations]).then(() => { }));
         const { targetedUnits: previousTargets } = effectState;
