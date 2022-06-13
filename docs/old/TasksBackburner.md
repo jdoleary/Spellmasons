@@ -1,3 +1,4 @@
+- verify do subsprites persist after serialization save/load?
 - How to show when a unit has the vampire modifier
 - Fix host alt-tabbing issue
     - This will be fixed with standalone server

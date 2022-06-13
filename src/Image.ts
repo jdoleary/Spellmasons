@@ -13,19 +13,15 @@ export type IImageSerialized = {
     x: number,
     y: number,
     scale: { x: number, y: number },
-    animationOrImagePath: string;
+    animationOrImagePath: string,
+    // A list of sprite jids (jordan identifier for subsprites)
+    children: string[],
   },
-  subSprites: string[],
   mask?: string,
 };
 export interface IImage {
   // Not to be serialized
   sprite: PIXI.Sprite;
-  // Not to be serialized
-  subSpriteInstances: { [key: string]: PIXI.Sprite };
-  // image IS serializable, it is a list of the keys corresponding to subSprite
-  // data in Subsprites.ts
-  subSprites: string[];
   // Sprite that acts as a mask
   mask?: string,
 }
@@ -42,8 +38,6 @@ export function create(
 
   const image: IImage = {
     sprite,
-    subSpriteInstances: {},
-    subSprites: [],
   };
   setPosition(image, coords);
   return image;
@@ -100,9 +94,9 @@ export function serialize(image: IImage): IImageSerialized {
       y: image.sprite.y,
       scale: { x: image.sprite.scale.x, y: image.sprite.scale.y },
       animationOrImagePath: getAnimationPathFromSprite(image.sprite),
+      children: image.sprite.children.map(c => c.jid)
 
     },
-    subSprites: image.subSprites,
   };
 }
 // Reinitialize an Image from IImageSerialized JSON
@@ -122,8 +116,6 @@ export function load(image: IImageSerialized | undefined, parent: PIXI.Container
   // Recreate the sprite using the create function so it initializes it properly
   const newImage = create(copy.sprite, animationOrImagePath, parent);
   newImage.sprite.scale.set(scale.x, scale.y);
-  // copy over the subsprite array (list of strings)
-  newImage.subSprites = [...copy.subSprites];
   // Restore subsprites (the actual sprites)
   restoreSubsprites(newImage);
 
@@ -134,6 +126,10 @@ export function getAnimationPathFromSprite(sprite: PIXI.Sprite): string {
   const animationOrImagePath = textureCacheIds[0] ? textureCacheIds[0].replace(/_\d+.png/g, "") : '';
   return animationOrImagePath;
 
+}
+export function getSubspriteJids(image: IImage | IImageSerialized): string[] {
+  // @ts-ignore: jid is a property that i've added and is not a part of the PIXI type
+  return image.sprite.children.map(c => c.jid);
 }
 // syncronize updates an existing originalImage to match the properties of imageSerialized
 // mutates originalImage
@@ -149,8 +145,7 @@ export function syncronize(imageSerialized: IImageSerialized, originalImage?: II
     originalImage.sprite.y = y;
     originalImage.sprite.scale.x = scale.x
     originalImage.sprite.scale.y = scale.y;
-    if (JSON.stringify(imageSerialized.subSprites) != JSON.stringify(originalImage.subSprites)) {
-      originalImage.subSprites = imageSerialized.subSprites;
+    if (getSubspriteJids(imageSerialized) != getSubspriteJids(originalImage)) {
       restoreSubsprites(originalImage);
     }
     return originalImage;
@@ -170,10 +165,8 @@ export function restoreSubsprites(image?: IImage) {
     return;
   }
   // Re-add subsprites
-  const subSprites = [...image.subSprites];
+  const subSprites = getSubspriteJids(image);
   image.sprite.removeChildren();
-  image.subSpriteInstances = {};
-  image.subSprites = [];
   for (let subSprite of subSprites) {
     addSubSprite(image, subSprite);
   }
@@ -230,15 +223,15 @@ export function addSubSprite(image: IImage | undefined, key: string) {
     return;
   }
   // Don't add more than one copy
-  if (!image.subSprites.includes(key)) {
-    image.subSprites.push(key);
+  if (!getSubspriteJids(image).includes(key)) {
     const subSpriteData = Subsprites[key];
     if (subSpriteData) {
       const sprite = addPixiSprite(subSpriteData.imageName, image.sprite);
+      // @ts-ignore: jid is a property that i've added and is not a part of the PIXI type
+      sprite.jid = key;
       sprite.alpha = subSpriteData.alpha;
       sprite.anchor.set(subSpriteData.anchor.x, subSpriteData.anchor.y);
       sprite.scale.set(subSpriteData.scale.x, subSpriteData.scale.y);
-      image.subSpriteInstances[key] = sprite;
     } else {
       console.error("Missing subsprite data")
     }
@@ -248,13 +241,13 @@ export function removeSubSprite(image: IImage | undefined, key: string) {
   if (!image) {
     return;
   }
-  const subSprite = image.subSpriteInstances[key];
+  // @ts-ignore: jid is a property that i've added and is not a part of the PIXI type
+  const subSprite = image.sprite.children.find(c => c.jid == key)
   if (subSprite) {
     // Remove PIXI.Sprite instance
     subSprite.parent.removeChild(subSprite);
-    delete image.subSpriteInstances[key];
-    // Remove from subSprites list
-    image.subSprites = image.subSprites.filter((k) => k !== key);
+  } else {
+    console.log('Cannot remove subsprite', key, 'subsprite is missing from sprite.children');
   }
 }
 export function move(image: IImage, x: number, y: number) {
