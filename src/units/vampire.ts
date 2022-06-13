@@ -10,7 +10,7 @@ const unit: UnitSource = {
   id: 'vampire',
   info: {
     description: 'A vampire takes half damage when hurt, but takes all heals as pure damage.  Beware that it doesn\'t get close enough to bite you or you too will become a vampire!',
-    image: 'units/vampire.png',
+    image: 'units/vampireIdle',
     subtype: UnitSubType.MELEE,
   },
   unitProps: {
@@ -21,6 +21,13 @@ const unit: UnitSource = {
   spawnParams: {
     probability: 15,
     unavailableUntilLevelIndex: 5,
+  },
+  animations: {
+    idle: 'units/vampireIdle',
+    hit: 'units/vampireHit',
+    attack: 'units/vampireAttack',
+    die: 'units/vampireDeath',
+    walk: 'units/vampireWalk',
   },
   init: (unit: Unit.IUnit) => {
     Unit.addModifier(unit, vampire_bite.id);
@@ -38,22 +45,10 @@ const unit: UnitSource = {
     // Movement
     await Unit.moveTowards(unit, adjustedTarget);
 
-    // Orient; make the sprite face it's enemy
-    if (unit.image) {
-
-      if (attackTarget.x > unit.x) {
-        // Assuming all units are left facing, if the enemy is to the right, make it right facing
-        unit.image.sprite.scale.x = -Math.abs(unit.image.sprite.scale.x);
-      } else {
-        unit.image.sprite.scale.x = Math.abs(unit.image.sprite.scale.x);
-
-      }
-    }
-
     // Attack closest enemy
     if (canAttackTarget) {
       // TODO: Change out for vampire animation on attack
-      await Unit.playAnimation(unit, 'units/gruntAttack');
+      await Unit.playAnimation(unit, unit.animations.attack);
       Unit.takeDamage(attackTarget, unit.damage, false, undefined);
       Unit.addModifier(attackTarget, vampire_bite.id);
     }

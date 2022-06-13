@@ -9,7 +9,7 @@ const unit: UnitSource = {
   id: 'poisoner',
   info: {
     description: 'A poisoner will cast a poison curse on it\'s enemies.',
-    image: 'units/golem-poison.png',
+    image: 'units/poisIdle',
     subtype: UnitSubType.RANGED_RADIUS,
   },
   unitProps: {
@@ -18,6 +18,13 @@ const unit: UnitSource = {
   spawnParams: {
     probability: 20,
     unavailableUntilLevelIndex: 7,
+  },
+  animations: {
+    idle: 'units/poisIdle',
+    hit: 'units/poisHit',
+    attack: 'units/poisAttack',
+    die: 'units/poisDeath',
+    walk: 'units/poisWalk',
   },
   action: async (unit: Unit.IUnit) => {
     const nonPoisonedEnemyUnits = window.underworld.units.filter(
@@ -30,6 +37,7 @@ const unit: UnitSource = {
       const chosenUnit = nonPoisonedEnemyUnits[0];
       if (chosenUnit) {
         if (Unit.inRange(unit, chosenUnit)) {
+          await Unit.playAnimation(unit, unit.animations.attack);
           createVisualLobbingProjectile(
             unit,
             chosenUnit,
