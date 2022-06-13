@@ -183,7 +183,7 @@ function addUnderworldEventListeners() {
   window.addEventListener('keydown', keydownListener);
   window.addEventListener('keypress', keypressListener);
   window.addEventListener('keyup', keyupListener);
-  elPIXIHolder.addEventListener('contextmenu', contextmenuHandler);
+  document.body.addEventListener('contextmenu', contextmenuHandler);
   document.body.addEventListener('click', clickHandler);
   window.addEventListener('mousedown', mouseDownHandler);
   window.addEventListener('mouseup', mouseUpHandler);

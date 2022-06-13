@@ -12,9 +12,6 @@ import { composeOnDamageEvents, copyForPredictionUnit } from './Unit';
 import { NUMBER_OF_TOOLBAR_SLOTS } from './config';
 
 const elCardHolders = document.getElementById('card-holders') as HTMLElement;
-elCardHolders.addEventListener('contextmenu', e => {
-  e.preventDefault();
-})
 const elInvContent = document.getElementById('inventory-content') as HTMLElement;
 const elInvButton = document.getElementById('inventory-icon') as HTMLElement;
 // Where the non-selected cards are displayed
@@ -229,6 +226,8 @@ function addToolbarListener(
   element.addEventListener('contextmenu', (e) => {
     element.classList.add('active-toolbar-element')
     toggleInventory(toolbarIndex, undefined);
+    e.preventDefault();
+    e.stopPropagation();
   });
 
 }
