@@ -9,8 +9,9 @@
     - Solve for syncronize interrupting / resetting animations
         - Maybe use a state machine
         - TODO: Better solution for syncronizing unit animation state when doing network syncronization.  Refactor returnToDefaultSprite
-    - Sync SFX to animations
 ---
+- Organize candidates for sfx
+- Refactor Image.subsprites to just use the "jid" property of the sprite's children
 - ART TASK: Add wall sides to ground tiles images that are below ghost walls
 - Allow pickups to be stored in inventory
 - Bug: Poison subsprite didn't get removed when i purified myself
