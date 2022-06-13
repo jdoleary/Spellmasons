@@ -1,3 +1,5 @@
+- Fix host alt-tabbing issue
+    - This will be fixed with standalone server
 - pointInSameDirection returned true in getParametricRelation for perpendicular lines
 - bug: You can spawn on a pickup such as spikes
   - couldn't reproduce

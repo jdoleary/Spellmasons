@@ -1,16 +1,24 @@
-## Tasks
-- Fix shader texture coords
-    - Submerged shader messes up bigtime when you zoom
-    - https://github.com/pixijs/pixijs/wiki/v4-Creating-Filters
-    - THis example shader should show how it's done: https://github.com/pixijs/pixijs/blob/db74023f2f884f66cc81e3faf533831644a1add8/packages/filter-displacement/src/DisplacementFilter.ts
-    - Maybe use a simple mask instead of messing with shaders
 
-- Adjust pathing mesh relative to liquid bounds and top and bottom walls.
-- Fix WFC so that there aren't weird wall alignments
-- (M) Standalone server
-- (M) Card Hand refactor
-    - Replace "hand of cards" with diablo style toolbar (https://eu.diablo3.blizzard.com/static/images/game/guide/fundamentals/action-bar.jpg?v=58-137)
-    - Right click to change (opens inventory)
+## Tasks
+
+- Monday
+    - Implement "mask" for being submerged in liquid
+        - Reemove submerged shader
+    - Adjust pathing mesh relative to liquid bounds and top and bottom walls.
+    - Fix WFC so that there aren't weird wall alignments
+        - You can do this easily with test level data
+        - TODO: Better solution for syncronizing unit animation state when doing network syncronization.  Refactor returnToDefaultSprite
+    - Solve for syncronize interrupting / resetting animations
+        - Maybe use a state machine
+    - Sync SFX to animations
+- Tuesday
+    - (M) Standalone server
+        - Standalone headless server should be able to be proven out using unit tests
+        - No Images, no SFX
+        - It should probably just use a global variable that omits visuals
+    - (M) Card Hand refactor
+        - Replace "hand of cards" with diablo style toolbar (https://eu.diablo3.blizzard.com/static/images/game/guide/fundamentals/action-bar.jpg?v=58-137)
+        - Right click to change (opens inventory)
 ---
 - (H) Game Balance
 - (M) SFX
@@ -22,7 +30,6 @@
     - (M) Steam Page
     - (E) Website Presskit page
     - (E) Master music
-- TODO: Better solution for syncronizing unit animation state when doing network syncronization.  Refactor returnToDefaultSprite
 - Bug: Portal spawns when you predition kill yourself on test level
 ------
 - Bug: When trap triggers, spell effect is left behind as unit keeps moving through it
@@ -30,16 +37,11 @@
 - Bug: Clone doesn't show cloned units until they move cause they spawn right on top of each other
 - Bug: clear tooltip on enter portal?? not sure if necessary, tooltip remained while I was manually calling initLevel
 - Show modifiers in UI somehow, not just on player, especially when you have the modifier on you
-- Critical, polish, robustness: Protect against hit looplimit, if it happens, it's a bad map and must be regenerated
 - Bug: There was a bug that ended my game though. I got shield buffed by a resurrected priest, and my character disappeared. this all happened on the turn when the portal appeared (finished the level). Now I cant walk through the portal
 I'm getting the empty stamina message when I try to move my (invisible) player
 i can still cast spells during my turn; as well as end turns
 - Content: Spell that increases cast range, or upgrade
-- Bug: Sometimes grunt animations just stop
 - Task: An ally that has died at all (even if ressed) should lose their upgrade priviledge
-- Task: Better shaders for lava?
-- **!**Fix host alt-tabbing issue
-    - This will be fixed with standalone server
 - Bug: When you pull a guy and he actually gets to you, and then you move, you "carry" him
 - Content: Time crystal releases something when it breaks
 - Fix: Brad cast a spell out of range, but it still triggered on my screen
@@ -62,9 +64,6 @@ i can still cast spells during my turn; as well as end turns
 
 - Content: An enemy that pulls you into danger
 - Content: "Orge" enemies that get stronger for every ally of theirs that dies
-- Bug: Pathing broken on seed 0.5727148663470687 
-    - it ran into `Hit loopLimit for polygon processing.  May be an infinite loop or the polygon may just be too big.`
-    - In this case it should just abort that level and try a new one
 - Bug: Should sync portals when syncing units if all enemies are dead
 - Bug: Portal didn't appear once (honeycomb seems broken if you have walls above and below you)
 - Bug: Goons spawned outside of map when summoner was stuffed in upper left corner of map

@@ -1,3 +1,29 @@
 
 - [SFX](https://www.asoundeffect.com/sound-library/metamorphosis/)
 - Adobe? https://www.adobe.com/products/audition/offers/AdobeAuditionDLCSFX.html
+- [Magic elemental SFX](https://www.asoundeffect.com/sound-library/rpg3-magic-spells-elemental-packs/)
+
+- Sound needs
+    - Push / Pull
+    - Heal
+    - Hurt
+    - Mana potion, health potion
+    - Contagious
+    - poison
+    - Freeze
+    - Resurrect
+    - Shield
+    - Teleport / swap
+    - stomp
+    - purify
+    - vulnerable
+    - clone
+    - mana burn / steal
+    - vampire
+    - decoy / summon
+    - trap
+    - explode
+    - click sfx
+    - new level sound
+    - dead sound
+    - [Unit sounds](https://www.asoundeffect.com/sound-library/animal-hyperrealism-vol-ii/)

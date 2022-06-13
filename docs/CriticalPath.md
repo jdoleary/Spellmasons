@@ -1,9 +1,6 @@
 # Critical Path
 - Big Tasks
-    - Polygon2 - Refactor Line Segments
-    - Implement new tile "sewing" with Che's assets
     - Restore unit "crowding" once all linesegments (pathing, liquid, walls) are finalized with Che's tileset
-    - Liquid "magnets": if you get close enough to the edge you "fall in"
     - Standalone server
 - Player Customization
 - Game Balance
