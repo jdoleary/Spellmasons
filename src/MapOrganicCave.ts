@@ -243,13 +243,14 @@ export function convertBaseTilesToFinalTiles(map: Map) {
         changeTileToLiquidIf3NeighborsAreLiquid(position);
     }
     // Outline all base tiles with finalized tiles:
+    const originalMap = { ...map, tiles: JSON.parse(JSON.stringify(map.tiles)) };
     for (let i = 0; i < size; i++) {
         const position = oneDimentionIndexToVec2(i, width);
         const currentCell = getCell(map, position);
         const neighbors = (Object.keys(SIDES_WITH_DIAG) as SIDES_WITH_DIAG_KEYS[]).reduce<Record<SIDES_WITH_DIAG_KEYS, string>>((neighbors, side) => {
             const sidePosition = SIDES_WITH_DIAG[side];
             if (sidePosition) {
-                const cell = getCell(map, Vec.add(position, sidePosition));
+                const cell = getCell(originalMap, Vec.add(position, sidePosition));
                 // Checking for cell.image intentionally excludes the "empty" cell
                 if (cell && cell.image) {
                     neighbors[side] = cell.image;
@@ -267,9 +268,6 @@ export function convertBaseTilesToFinalTiles(map: Map) {
             west: baseTiles.empty,
             northwest: baseTiles.empty,
         });
-        // if (Vec.equal(position, { x: 14, y: 4 })) {
-        //     debugger
-        // }
         // Change ground tiles
         if (currentCell?.image == baseTiles.ground) {
             if (neighbors.west == baseTiles.liquid && neighbors.south == baseTiles.liquid) {
@@ -300,22 +298,26 @@ export function convertBaseTilesToFinalTiles(map: Map) {
         }
         // change wall tiles
         if (currentCell?.image == baseTiles.wall) {
-            if (neighbors.west == baseTiles.ground && neighbors.south == baseTiles.ground) {
-                changeTile(i, finalTileImages.wallInsideCornerNE);
-            } else if (neighbors.east == baseTiles.ground && neighbors.south == baseTiles.ground) {
-                changeTile(i, finalTileImages.wallInsideCornerNW);
-            } else if (neighbors.east == baseTiles.ground && neighbors.north == baseTiles.ground) {
+            if (neighbors.north == baseTiles.ground) {
+                if (neighbors.east != baseTiles.wall && neighbors.west == baseTiles.wall) {
                 changeTile(i, finalTileImages.wallInsideCornerSW);
-            } else if (neighbors.west == baseTiles.ground && neighbors.north == baseTiles.ground) {
+                } else if (neighbors.west != baseTiles.wall && neighbors.east == baseTiles.wall) {
                 changeTile(i, finalTileImages.wallInsideCornerSE);
-            } else if (neighbors.north == baseTiles.ground) {
+                } else {
                 changeTile(i, finalTileImages.wallS);
+                }
+            } else if (neighbors.south == baseTiles.ground) {
+                if (neighbors.west != baseTiles.wall && neighbors.east == baseTiles.wall) {
+                    changeTile(i, finalTileImages.wallInsideCornerNE);
+                } else if (neighbors.east != baseTiles.wall && neighbors.west == baseTiles.wall) {
+                    changeTile(i, finalTileImages.wallInsideCornerNW)
+                } else {
+                    changeTile(i, finalTileImages.wallN);
+                }
             } else if (neighbors.east == baseTiles.ground) {
                 changeTile(i, finalTileImages.wallW);
             } else if (neighbors.west == baseTiles.ground) {
                 changeTile(i, finalTileImages.wallE);
-            } else if (neighbors.south == baseTiles.ground) {
-                changeTile(i, finalTileImages.wallN);
             } else if (neighbors.northeast == baseTiles.ground) {
                 changeTile(i, finalTileImages.wallCornerSW);
             } else if (neighbors.northwest == baseTiles.ground) {
