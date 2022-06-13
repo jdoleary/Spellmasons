@@ -13,16 +13,6 @@ export async function action(unit: Unit.IUnit, attackTarget: Unit.IUnit | undefi
   // Movement
   await Unit.moveTowards(unit, attackTarget);
 
-  // Orient; make the sprite face it's enemy
-  if (unit.image) {
-    if (attackTarget.x > unit.x) {
-      // Assuming all units are left facing, if the enemy is to the right, make it right facing
-      unit.image.sprite.scale.x = -Math.abs(unit.image.sprite.scale.x);
-    } else {
-      unit.image.sprite.scale.x = Math.abs(unit.image.sprite.scale.x);
-    }
-  }
-
   // Attack closest enemy
   // Note: Special case: don't use canAttackEnemy for melee units
   // because pathing doesn't take immovable units into account yet

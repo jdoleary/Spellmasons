@@ -635,6 +635,18 @@ export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
       addPixiSprite(unit.animations.walk, unit.image.sprite.parent)
     );
   }
+  // Orient; make the sprite face it's enemy
+  if (unit.image) {
+
+    if (target.x > unit.x) {
+      // Assuming all units are left facing, if the enemy is to the right, make it right facing
+      unit.image.sprite.scale.x = -Math.abs(unit.image.sprite.scale.x);
+    } else {
+      unit.image.sprite.scale.x = Math.abs(unit.image.sprite.scale.x);
+
+    }
+  }
+
   // Set path which will be used in the game loop to actually move the unit
   window.underworld.setPath(unit, Vec.clone(target));
   return new Promise<void>((resolve) => {
