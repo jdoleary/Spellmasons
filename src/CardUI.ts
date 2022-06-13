@@ -183,7 +183,7 @@ export function syncInventory(slotModifyingIndex: number | undefined) {
               window.player.cards[slotModifyingIndex] = inventoryCardId;
               recalcPositionForCards(window.player)
               // Close inventory
-              document.body.classList.toggle(openInvClass, false);
+              toggleInventory(undefined, false);
               e.preventDefault();
               e.stopPropagation();
               e.stopImmediatePropagation();
@@ -206,16 +206,20 @@ export function syncInventory(slotModifyingIndex: number | undefined) {
     console.error('Cannot sync inventory, window.player is undefined');
   }
 }
-export function toggleInventory(toolbarIndex: number | undefined) {
-  document.body.classList.toggle(openInvClass);
-  // Create inventory
+export function toggleInventory(toolbarIndex: number | undefined, forceState: boolean | undefined) {
+  document.body.classList.toggle(openInvClass, forceState);
   if (window.player && document.body.classList.contains(openInvClass)) {
+    // Create inventory
     syncInventory(toolbarIndex);
+  } else {
+    // When inventory closes, remove active toolbar element class
+    document.querySelectorAll('.active-toolbar-element').forEach(e => e.classList.remove('active-toolbar-element'))
+
   }
 
 }
 elInvButton.addEventListener('click', () => {
-  toggleInventory(undefined);
+  toggleInventory(undefined, undefined);
 
 })
 function addToolbarListener(
@@ -223,7 +227,8 @@ function addToolbarListener(
   toolbarIndex: number
 ) {
   element.addEventListener('contextmenu', (e) => {
-    toggleInventory(toolbarIndex)
+    element.classList.add('active-toolbar-element')
+    toggleInventory(toolbarIndex, undefined);
   });
 
 }
