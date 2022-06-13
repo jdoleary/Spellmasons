@@ -78,9 +78,12 @@ export function checkLiquidInteractionDueToMovement(unit: IUnit, prediction: boo
         hitLava = !isOnOutside(wall, unit);
         if (hitLava) {
           takeDamage(unit, lavaDamage, prediction);
-          if (unit.image && unit.image.sprite.filters) {
-            unit.shaderUniforms.submerged = submerged.uniforms;
-            unit.image.sprite.filters.push(submerged.filter);
+          if (unit.image) {
+            // TEST MASK
+            // const sprite = addPixiSprite('liquid-mask.png', unit.image.sprite);
+            console.log('add mask')
+            unit.image.mask = 'liquid-mask.png'
+            // unit.image.sprite.mask = sprite;
           }
         } else {
           if (unit.image && unit.image.sprite.filters) {

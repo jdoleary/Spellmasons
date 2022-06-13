@@ -16,6 +16,7 @@ export type IImageSerialized = {
     animationOrImagePath: string;
   },
   subSprites: string[],
+  mask?: string,
 };
 export interface IImage {
   // Not to be serialized
@@ -25,6 +26,8 @@ export interface IImage {
   // image IS serializable, it is a list of the keys corresponding to subSprite
   // data in Subsprites.ts
   subSprites: string[];
+  // Sprite that acts as a mask
+  mask?: string,
 }
 export function create(
   coords: Vec2,
@@ -170,6 +173,19 @@ export function restoreSubsprites(image?: IImage) {
   for (let subSprite of subSprites) {
     addSubSprite(image, subSprite);
   }
+  // Re-add mask:
+  if (image.mask) {
+    const mask = addPixiSprite(image.mask, image.sprite);
+    mask.anchor.set(0.5);
+    image.sprite.mask = mask;
+  }
+}
+export function addMask(image: IImage, path: string) {
+  // TODO store mask and remove previous mask child LEFT OFF
+  const mask = addPixiSprite(path, image.sprite);
+  mask.anchor.set(0.5);
+  image.sprite.mask = mask;
+
 }
 export function setPosition(image: IImage | undefined, pos: Vec2) {
   if (!image) {

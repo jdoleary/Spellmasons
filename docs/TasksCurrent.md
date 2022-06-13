@@ -2,23 +2,23 @@
 ## Tasks
 
 - Monday
+    - (M) Card Hand refactor
+        - Replace "hand of cards" with diablo style toolbar (https://eu.diablo3.blizzard.com/static/images/game/guide/fundamentals/action-bar.jpg?v=58-137)
+        - Right click to change (opens inventory)
     - Implement "mask" for being submerged in liquid
         - Reemove submerged shader
     - Adjust pathing mesh relative to liquid bounds and top and bottom walls.
     - Fix WFC so that there aren't weird wall alignments
         - You can do this easily with test level data
         - TODO: Better solution for syncronizing unit animation state when doing network syncronization.  Refactor returnToDefaultSprite
-    - Solve for syncronize interrupting / resetting animations
-        - Maybe use a state machine
-    - Sync SFX to animations
 - Tuesday
     - (M) Standalone server
         - Standalone headless server should be able to be proven out using unit tests
         - No Images, no SFX
         - It should probably just use a global variable that omits visuals
-    - (M) Card Hand refactor
-        - Replace "hand of cards" with diablo style toolbar (https://eu.diablo3.blizzard.com/static/images/game/guide/fundamentals/action-bar.jpg?v=58-137)
-        - Right click to change (opens inventory)
+    - Solve for syncronize interrupting / resetting animations
+        - Maybe use a state machine
+    - Sync SFX to animations
 ---
 - (H) Game Balance
 - (M) SFX

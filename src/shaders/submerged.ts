@@ -34,15 +34,20 @@ import * as PIXI from 'pixi.js';
 // float mod_float(float base, float div){
 //     return div - (base * floor(div/base));
 // }
+// https://github.com/pixijs/pixijs/wiki/v4-Creating-Filters
 const fShader = `
 varying vec2 vTextureCoord;
 uniform sampler2D uSampler;
 uniform float time;
+uniform vec4 filterArea;
+uniform vec2 dimensions;
 void main(void)
 {
     float howHighUpAndDown = 5.0;
+    vec2 pixelCoord = vTextureCoord * filterArea.xy;
+    vec2 normalizedCoord = pixelCoord / dimensions;
     vec4 color = texture2D(uSampler, vTextureCoord);
-    if(vTextureCoord.y > 0.3){
+    if(normalizedCoord.y < 0.1){
         gl_FragColor = vec4(0.0,0.0,0.0,0.0);
     }else{
         gl_FragColor = color;
@@ -55,6 +60,7 @@ attribute vec2 aVertexPosition;
 attribute vec2 aTextureCoord;
 uniform mat3 projectionMatrix;
 varying vec2 vTextureCoord;
+
 void main(void)
 {
     gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);
@@ -62,10 +68,19 @@ void main(void)
 }`;
 function submerged() {
     const uniforms = {
-        time: 0.0
+        time: 0.0,
+        dimensions: []
     };
+    const filter = new PIXI.Filter(vShader, fShader, uniforms)
+    filter.apply = function (filterManager, input, output, clear) {
+        this.uniforms.dimensions[0] = input.width;
+        this.uniforms.dimensions[1] = input.height;
+        // filterManager.calculateSpriteMatrix
+        // draw the filter...
+        filterManager.applyFilter(this, input, output, clear);
+    }
     return {
-        filter: new PIXI.Filter(vShader, fShader, uniforms),
+        filter,
         uniforms
     };
 }
