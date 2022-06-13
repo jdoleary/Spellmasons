@@ -2,11 +2,9 @@
 ## Tasks
 
 - Monday
-    - Adjust pathing mesh relative to liquid bounds and top and bottom walls.
-    - Fix WFC so that there aren't weird wall alignments
-        - You can do this easily with test level data
-        - TODO: Better solution for syncronizing unit animation state when doing network syncronization.  Refactor returnToDefaultSprite
+    - Add wall sides to ground tiles images that are below ghost walls
     - Test larger poisoner animation frame for Che
+    - Move liquid top pathing bounds up
 - Tuesday
     - (M) Standalone server
         - Standalone headless server should be able to be proven out using unit tests
@@ -14,8 +12,10 @@
         - It should probably just use a global variable that omits visuals
     - Solve for syncronize interrupting / resetting animations
         - Maybe use a state machine
+        - TODO: Better solution for syncronizing unit animation state when doing network syncronization.  Refactor returnToDefaultSprite
     - Sync SFX to animations
 ---
+- Bug: Poison subsprite didn't get removed when i purified myself
 - (H) Game Balance
 - (M) SFX
 - (M) Tutorial

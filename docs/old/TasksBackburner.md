@@ -1,3 +1,4 @@
+- How to show when a unit has the vampire modifier
 - Fix host alt-tabbing issue
     - This will be fixed with standalone server
 - pointInSameDirection returned true in getParametricRelation for perpendicular lines
