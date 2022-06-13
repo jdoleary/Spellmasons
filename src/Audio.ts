@@ -3,7 +3,8 @@ import * as storage from "./storage";
 
 export const sfx: { [key: string]: string } = {
     whoosh: './sound/sfx/whoosh.m4a',
-    hurt: './sound/sfx/hurt.mp3'
+    hurt: './sound/sfx/hurt.mp3',
+    cast: './sound/sfx/cast.mp3'
 };
 export const sfxPageTurn = [
     // './sound/sfx/page-turn-1.flac',
@@ -42,6 +43,12 @@ export function playNextSong() {
     musicInstance.play();
 }
 
+export function playSFXKey(key?: string) {
+    if (!key) {
+        return
+    }
+    playSFX(sfx[key]);
+}
 export function playSFX(path?: string) {
     if (!path) {
         return;

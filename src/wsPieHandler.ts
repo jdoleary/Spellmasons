@@ -12,6 +12,7 @@ import * as storage from './storage';
 import { setView, View } from './views';
 import { allUnits } from './units';
 import { pie } from './wsPieSetup';
+import { playSFXKey } from './Audio';
 
 const messageLog: any[] = [];
 let clients: string[] = [];
@@ -410,6 +411,8 @@ async function handleSpell(caster: Player.IPlayer, payload: any) {
       Unit.playAnimation(caster.unit, 'units/playerAttack', { animationSpeed, loop: false }),
       castAnimation,
     ]
+    // Play cast sound effect:
+    playSFXKey('cast');
     await Promise.all(animations);
     await window.underworld.castCards(caster.cardUsageCounts, caster.unit, payload.cards, payload, false, false);
     window.animatingSpells = false;
