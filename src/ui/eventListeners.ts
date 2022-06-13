@@ -52,34 +52,9 @@ export function keypressListener(event: KeyboardEvent) {
     return
   }
 
-  // Possibly handle hotkey for Jprompt:
-  // note: :last-child targets the top most prompt if there are more than one
-  const promptYesBtn = document.querySelector(`.prompt:last-child .yes[data-key="${event.code}"]`) as HTMLElement;
-  if (promptYesBtn) {
-    promptYesBtn.click();
-    // Return immediately, prompt hotkey overrides other hotkeys
-    return;
-  }
-  // note: :last-child targets the top most prompt if there are more than one
-  const promptNoBtn = document.querySelector(`.prompt:last-child .no[data-key="${event.code}"]`) as HTMLElement;
-  if (promptNoBtn) {
-    promptNoBtn.click();
-    // Return immediately, prompt hotkey overrides other hotkeys
-    return;
-  }
-
   switch (event.code) {
     case 'KeyI':
-      CardUI.toggleInventory(undefined);
-      break;
-    case 'Escape':
-      const thereWasTooltipActive = clearTooltipSelection();
-      const thereWereCardsSelected = CardUI.areAnyCardsSelected();
-      CardUI.clearSelectedCards();
-      if (!thereWasTooltipActive && !thereWereCardsSelected) {
-        // Otherwise finally toggle menu
-        toggleMenu();
-      }
+      CardUI.toggleInventory(undefined, undefined);
       break;
     case 'Space':
       window.underworld.endMyTurn();
@@ -126,9 +101,34 @@ export function keydownListener(event: KeyboardEvent) {
     return
   }
 
+  // Possibly handle hotkey for Jprompt:
+  // note: :last-child targets the top most prompt if there are more than one
+  const promptYesBtn = document.querySelector(`.prompt:last-child .yes[data-key="${event.code}"]`) as HTMLElement;
+  if (promptYesBtn) {
+    promptYesBtn.click();
+    // Return immediately, prompt hotkey overrides other hotkeys
+    return;
+  }
+  // note: :last-child targets the top most prompt if there are more than one
+  const promptNoBtn = document.querySelector(`.prompt:last-child .no[data-key="${event.code}"]`) as HTMLElement;
+  if (promptNoBtn) {
+    promptNoBtn.click();
+    // Return immediately, prompt hotkey overrides other hotkeys
+    return;
+  }
+
   switch (event.code) {
+    case 'Escape':
+      const thereWasTooltipActive = clearTooltipSelection();
+      const thereWereCardsSelected = CardUI.areAnyCardsSelected();
+      CardUI.clearSelectedCards();
+      if (!thereWasTooltipActive && !thereWereCardsSelected) {
+        // Otherwise finally toggle menu
+        toggleMenu();
+      }
+      break;
     case 'Tab':
-      CardUI.toggleInventory(undefined);
+      CardUI.toggleInventory(undefined, undefined);
       event.preventDefault();
       break;
     case 'Backspace':
