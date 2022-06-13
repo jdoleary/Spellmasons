@@ -798,8 +798,8 @@ export function toObstacle(t: Tile): IObstacle | undefined {
             y: t.y,
             material: Material.LIQUID,
             bounds: [
-                { x: 29, y: 32 },
-                { x: 64, y: 32 },
+                { x: 29, y: 10 },
+                { x: 64, y: 10 },
                 { x: 64, y: 64 },
                 { x: 29, y: 64 },
             ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
@@ -815,8 +815,8 @@ export function toObstacle(t: Tile): IObstacle | undefined {
                 { x: 64, y: 0 },
                 { x: 64, y: 64 },
                 { x: 0, y: 64 },
-                { x: 0, y: 32 },
-                { x: 29, y: 32 },
+                { x: 0, y: 10 },
+                { x: 29, y: 10 },
             ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
 
         }
@@ -826,8 +826,8 @@ export function toObstacle(t: Tile): IObstacle | undefined {
             y: t.y,
             material: Material.LIQUID,
             bounds: [
-                { x: 0, y: 32 },
-                { x: 64, y: 32 },
+                { x: 0, y: 10 },
+                { x: 64, y: 10 },
                 { x: 64, y: 64 },
                 { x: 0, y: 64 },
             ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
@@ -839,8 +839,8 @@ export function toObstacle(t: Tile): IObstacle | undefined {
             y: t.y,
             material: Material.LIQUID,
             bounds: [
-                { x: 0, y: 32 },
-                { x: 34, y: 32 },
+                { x: 0, y: 10 },
+                { x: 34, y: 10 },
                 { x: 34, y: 64 },
                 { x: 0, y: 64 },
             ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
@@ -867,8 +867,8 @@ export function toObstacle(t: Tile): IObstacle | undefined {
             bounds: [
                 { x: 0, y: 0 },
                 { x: 34, y: 0 },
-                { x: 34, y: 32 },
-                { x: 64, y: 32 },
+                { x: 34, y: 10 },
+                { x: 64, y: 10 },
                 { x: 64, y: 64 },
                 { x: 0, y: 64 },
             ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),

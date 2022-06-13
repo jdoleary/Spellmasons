@@ -494,6 +494,9 @@ export default class Underworld {
     // liquid bounds block movement only under certain circumstances
     this.liquidPolygons = mergePolygon2s(obstacles.filter(o => o.material == Material.LIQUID).map(o => o.bounds))
       .map(p => expandPolygon(p, -expandMagnitude / 2))
+      // Move bounds up because center of units is not where they stand, and the bounds
+      // should be realtive to a unit's feet
+      .map(p => p.map(vec2 => ({ x: vec2.x, y: vec2.y - expandMagnitude / 2 })))
     this.liquidBounds = this.liquidPolygons.map(toLineSegments).flat();
     // TODO: Optimize:
     //.filter(filterRemoveNonGroundAdjacent);
@@ -504,10 +507,7 @@ export default class Underworld {
 
     // TEMP: Exclude liquidPolygons from pathing for testing
     this.pathingPolygons = [...wallPolygons.map(p => expandPolygon(p, expandMagnitude)), ...this.liquidPolygons.map(p => expandPolygon(p, expandMagnitude / 2))];
-      // Move bounds up because center of units is not where they stand, and the bounds
-      // should be realtive to a unit's feet
-      .map(p => p.map(vec2 => ({ x: vec2.x, y: vec2.y - expandMagnitude / 2 })))
-      .map(p => expandPolygon(p, expandMagnitude));
+
     // TODO: Optimize:
     //.filter(filterRemoveNonGroundAdjacentPoly)
 
