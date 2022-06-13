@@ -18,7 +18,7 @@ To show original tiles:
 The pathing only requires being inside an inverted poly if there is a single inverted poly anywhere, if there are none, it works fine with just
 regular polys
 
-## 2022.06/12
+## 2022.06.12
 I have 8 working days until Erin and I leave on our June Trip.  By that time I think the game will be in a very good state. Major tasks I'll have done:
 - Map Generation
 - Liquid interaction
@@ -26,3 +26,7 @@ I have 8 working days until Erin and I leave on our June Trip.  By that time I t
 - Stand alone server
 - Server browser
 - Better Menu
+
+## 2022.06.13
+Was able to horizontally flip images with the following command:
+`magick *.png -flop -set filename:base "%[basename]" "%[filename:base].png"`
