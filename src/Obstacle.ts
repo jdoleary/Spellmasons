@@ -74,6 +74,11 @@ export function checkLiquidInteractionDueToMovement(unit: IUnit, prediction: boo
           unit.x = intersection.x + fallInPoint.x;
           unit.y = intersection.y + fallInPoint.y;
         }
+        // Once unit is moved via liquid interations, stop all force movement if unit is under control of force movement:
+        // This prevents the issue of a unit moving across liquid and possibly back out due to a single forceMove
+        // When the move, if they "fall in", their movement stops
+        window.forceMove = window.forceMove.filter(fm => fm.pushedObject !== unit)
+
         unit.resolveDoneMoving();
         hitLava = !isOnOutside(wall, unit);
         if (hitLava) {
