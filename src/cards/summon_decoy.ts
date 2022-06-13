@@ -3,7 +3,7 @@ import * as Unit from '../Unit';
 import { Faction, UnitType } from '../commonTypes';
 import { allUnits } from '../units';
 
-export const id = 'summon_decoy';
+export const id = 'decoy';
 const spell: Spell = {
   card: {
     id,
