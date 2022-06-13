@@ -42,7 +42,7 @@ function nonUnderworldKeydownListener(event: KeyboardEvent) {
       break;
   }
 }
-export function keydownListener(event: KeyboardEvent) {
+export function keypressListener(event: KeyboardEvent) {
   // Only handle hotkeys when viewing the Game
   if (window.view !== View.Game) {
     return;
@@ -68,6 +68,9 @@ export function keydownListener(event: KeyboardEvent) {
   }
 
   switch (event.code) {
+    case 'KeyI':
+      CardUI.toggleInventory(undefined);
+      break;
     case 'Escape':
       const thereWasTooltipActive = clearTooltipSelection();
       const thereWereCardsSelected = CardUI.areAnyCardsSelected();
@@ -79,9 +82,6 @@ export function keydownListener(event: KeyboardEvent) {
       break;
     case 'Space':
       window.underworld.endMyTurn();
-      break;
-    case 'KeyF':
-      CardUI.toggleInspectMode(true);
       break;
     case 'Backspace':
       CardUI.deselectLastCard();
@@ -115,6 +115,26 @@ export function keydownListener(event: KeyboardEvent) {
       break;
     case 'Digit0':
       CardUI.selectCardByIndex(9);
+      break;
+
+  }
+}
+export function keydownListener(event: KeyboardEvent) {
+  // Only handle hotkeys when viewing the Game
+  if (window.view !== View.Game) {
+    return;
+  }
+  if (!window.underworld) {
+    return
+  }
+
+  switch (event.code) {
+    case 'Tab':
+      CardUI.toggleInventory(undefined);
+      event.preventDefault();
+      break;
+    case 'KeyF':
+      CardUI.toggleInspectMode(true);
       break;
     // Camera movement
     case 'KeyW':

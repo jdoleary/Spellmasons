@@ -206,7 +206,7 @@ export function syncInventory(slotModifyingIndex: number | undefined) {
     console.error('Cannot sync inventory, window.player is undefined');
   }
 }
-function toggleInventory(toolbarIndex: number | undefined) {
+export function toggleInventory(toolbarIndex: number | undefined) {
   document.body.classList.toggle(openInvClass);
   // Create inventory
   if (window.player && document.body.classList.contains(openInvClass)) {

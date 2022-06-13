@@ -21,6 +21,7 @@ import {
   mouseUpHandler,
   mouseMove,
   onWindowBlur,
+  keypressListener,
 } from './ui/eventListeners';
 
 const elPIXIHolder = document.getElementById('PIXI-holder') as HTMLElement;
@@ -180,6 +181,7 @@ const endTurnBtnId = 'end-turn-btn';
 function addUnderworldEventListeners() {
   // Add keyboard shortcuts
   window.addEventListener('keydown', keydownListener);
+  window.addEventListener('keypress', keypressListener);
   window.addEventListener('keyup', keyupListener);
   elPIXIHolder.addEventListener('contextmenu', contextmenuHandler);
   document.body.addEventListener('click', clickHandler);
