@@ -1,8 +1,6 @@
 
 ## Tasks
 
-- Monday
-    - Add wall sides to ground tiles images that are below ghost walls
 - Tuesday
     - (M) Standalone server
         - Standalone headless server should be able to be proven out using unit tests
@@ -13,6 +11,7 @@
         - TODO: Better solution for syncronizing unit animation state when doing network syncronization.  Refactor returnToDefaultSprite
     - Sync SFX to animations
 ---
+- ART TASK: Add wall sides to ground tiles images that are below ghost walls
 - Allow pickups to be stored in inventory
 - Bug: Poison subsprite didn't get removed when i purified myself
 - (H) Game Balance

@@ -293,7 +293,7 @@ export default class Underworld {
   // setPath finds a path to the target
   // and sets that to the unit's path
   setPath(unit: Unit.IUnit, target: Vec2) {
-    const path = this.calculatePath(unit.path, unit, target)
+    const path = this.calculatePath(unit.path, Vec.round(unit), Vec.round(target))
     if (unit.path) {
       // If there is a pre-existing path, intentionally mutate it.
       // This is so that predictionUnits can mutate the path's of 
