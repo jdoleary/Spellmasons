@@ -97,7 +97,7 @@ export function checkLiquidInteractionDueToMovement(unit: IUnit, prediction: boo
     }
     if (insideLiquid) {
       if (unit.image) {
-        addMask(unit.image, 'liquid-mask.png');
+        addMask(unit.image, 'liquid-mask');
       }
     } else {
       if (unit.image) {
