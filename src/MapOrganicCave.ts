@@ -303,6 +303,14 @@ export function convertBaseTilesToFinalTiles(map: Map) {
                 changeTile(i, finalTileImages.wallInsideCornerSW);
                 } else if (neighbors.west != baseTiles.wall && neighbors.east == baseTiles.wall) {
                 changeTile(i, finalTileImages.wallInsideCornerSE);
+                } else if (neighbors.south == baseTiles.wall) {
+                    // This is a weird exeption, if there is a tetris block of walls, like so:
+                    //  w
+                    //w,w,w
+                    // the wall at 2,2 will be a corner piece but since the wall at
+                    // 2,1 is all along it would be a wallS if not for this check.
+                    // Setting it to ground prevents weird pathing shapes
+                    changeTile(i, finalTileImages.all_ground);
                 } else {
                 changeTile(i, finalTileImages.wallS);
                 }
@@ -311,6 +319,14 @@ export function convertBaseTilesToFinalTiles(map: Map) {
                     changeTile(i, finalTileImages.wallInsideCornerNE);
                 } else if (neighbors.east != baseTiles.wall && neighbors.west == baseTiles.wall) {
                     changeTile(i, finalTileImages.wallInsideCornerNW)
+                } else if (neighbors.north == baseTiles.wall) {
+                    // This is a weird exeption, if there is a tetris block of walls, like so:
+                    //w,w,w
+                    //  w
+                    // the wall at 2,1 will be a corner piece but since the wall at
+                    // 2,2 is all along it would be a wallN if not for this check.
+                    // Setting it to ground prevents weird pathing shapes
+                    changeTile(i, finalTileImages.all_ground);
                 } else {
                     changeTile(i, finalTileImages.wallN);
                 }
