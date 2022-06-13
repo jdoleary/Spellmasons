@@ -170,7 +170,6 @@ export function recalcPositionForCards(player: Player.IPlayer | undefined) {
 const openInvClass = 'open-inventory';
 export function syncInventory(slotModifyingIndex: number | undefined) {
   if (window.player) {
-
     // clear contents
     elInvContent.innerHTML = '';
 
@@ -178,8 +177,7 @@ export function syncInventory(slotModifyingIndex: number | undefined) {
       const card = Cards.allCards[inventoryCardId];
       if (card) {
         const elCard = createCardElement(card);
-        if (slotModifyingIndex) {
-
+        if (slotModifyingIndex !== undefined) {
           elCard.addEventListener('click', (e) => {
             if (window.player) {
               window.player.cards[slotModifyingIndex] = inventoryCardId;
@@ -281,7 +279,7 @@ export function deselectLastCard() {
 export function selectCardByIndex(index: number) {
   if (elCardHand) {
     const cardGroup = elCardHand.children.item(index) as HTMLElement;
-    if (cardGroup) {
+    if (cardGroup && cardGroup.children.item(0)) {
       (cardGroup.children.item(0) as HTMLElement).click();
     } else {
       console.warn(`Cannot select a card, no card in hand at index ${index}`)
