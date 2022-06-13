@@ -57,7 +57,7 @@ export function create(clientId: string): IPlayer {
       1
     ),
     inPortal: false,
-    cards: [],
+    cards: Array(config.NUMBER_OF_TOOLBAR_SLOTS).fill(''),
     inventory: [],
     cardUsageCounts: {},
     cardsAmount: config.START_CARDS_COUNT,

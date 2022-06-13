@@ -366,6 +366,10 @@ export function addCardToHand(card: Cards.ICard | undefined, player: Player.IPla
   // not removed when cast
   if (!player.inventory.includes(card.id)) {
     player.inventory.push(card.id);
+    const emptySlotIndex = player.cards.indexOf('');
+    if (emptySlotIndex !== -1) {
+      player.cards[emptySlotIndex] = card.id;
+    }
   }
 }
 
