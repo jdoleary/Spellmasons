@@ -83,9 +83,6 @@ export function keypressListener(event: KeyboardEvent) {
     case 'Space':
       window.underworld.endMyTurn();
       break;
-    case 'Backspace':
-      CardUI.deselectLastCard();
-      break;
     case 'Digit1':
       CardUI.selectCardByIndex(0);
       break;
@@ -132,6 +129,9 @@ export function keydownListener(event: KeyboardEvent) {
     case 'Tab':
       CardUI.toggleInventory(undefined);
       event.preventDefault();
+      break;
+    case 'Backspace':
+      CardUI.deselectLastCard();
       break;
     case 'KeyF':
       CardUI.toggleInspectMode(true);
