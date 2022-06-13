@@ -2,7 +2,6 @@
 ## Tasks
 
 - Monday
-    - Implement "mask" for being submerged in liquid
     - Adjust pathing mesh relative to liquid bounds and top and bottom walls.
     - Fix WFC so that there aren't weird wall alignments
         - You can do this easily with test level data

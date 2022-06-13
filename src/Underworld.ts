@@ -96,6 +96,7 @@ export default class Underworld {
   walls: LineSegment[] = [];
   // line segments that prevent movement under certain circumstances
   liquidBounds: LineSegment[] = [];
+  liquidPolygons: Polygon2[] = [];
   pathingPolygons: Polygon2[] = [];
   // pathingLineSegments shall always be exactly pathingPolygons converted to LineSegments.
   // It is kept up to date whenever pathingPolygons changes in cachedWalls
@@ -491,9 +492,9 @@ export default class Underworld {
     const expandMagnitude = config.COLLISION_MESH_RADIUS * config.NON_HEAVY_UNIT_SCALE
 
     // liquid bounds block movement only under certain circumstances
-    const liquidPolygons = mergePolygon2s(obstacles.filter(o => o.material == Material.LIQUID).map(o => o.bounds))
+    this.liquidPolygons = mergePolygon2s(obstacles.filter(o => o.material == Material.LIQUID).map(o => o.bounds))
       .map(p => expandPolygon(p, -expandMagnitude / 2))
-    this.liquidBounds = liquidPolygons.map(toLineSegments).flat();
+    this.liquidBounds = this.liquidPolygons.map(toLineSegments).flat();
     // TODO: Optimize:
     //.filter(filterRemoveNonGroundAdjacent);
 

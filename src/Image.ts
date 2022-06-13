@@ -73,6 +73,8 @@ export function changeSprite(image: IImage | undefined, sprite: PIXI.Sprite) {
   sprite.anchor.y = image.sprite.anchor.y;
   // Save children before they are removed
   const children = [...image.sprite.children];
+  // Save mask
+  const mask = image.sprite.mask;
   cleanup(image);
   image.sprite = sprite;
   // Keep filters from previous sprite
@@ -82,6 +84,8 @@ export function changeSprite(image: IImage | undefined, sprite: PIXI.Sprite) {
   for (let child of children) {
     sprite.addChild(child);
   }
+  // restore mask:
+  sprite.mask = mask;
 }
 // Converts an Image entity into a serialized form
 // that can be saved as JSON and rehydrated later into
@@ -175,17 +179,31 @@ export function restoreSubsprites(image?: IImage) {
   }
   // Re-add mask:
   if (image.mask) {
-    const mask = addPixiSprite(image.mask, image.sprite);
-    mask.anchor.set(0.5);
-    image.sprite.mask = mask;
+    addMask(image, image.mask);
   }
 }
-export function addMask(image: IImage, path: string) {
-  // TODO store mask and remove previous mask child LEFT OFF
-  const mask = addPixiSprite(path, image.sprite);
-  mask.anchor.set(0.5);
-  image.sprite.mask = mask;
+export function removeMask(image: IImage) {
+  if (image.sprite.mask) {
+    try {
+      // @ts-ignore
+      image.sprite.removeChild(image.sprite.mask);
+    } catch (e) {
+      console.log('ignore error', e);
+    }
+    image.sprite.mask = null;
+    image.mask = undefined;
+  }
 
+}
+export function addMask(image: IImage, path: string) {
+  if (image.mask !== path) {
+    // remove old mask:
+    removeMask(image);
+    const mask = addPixiSprite(path, image.sprite);
+    mask.anchor.set(0.5);
+    image.sprite.mask = mask;
+    image.mask = path;
+  }
 }
 export function setPosition(image: IImage | undefined, pos: Vec2) {
   if (!image) {

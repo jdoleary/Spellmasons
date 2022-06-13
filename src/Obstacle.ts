@@ -3,8 +3,9 @@ import { Vec2, subtract, magnitude, add } from './Vec';
 import { IUnit, takeDamage } from './Unit';
 import { findWherePointIntersectLineSegmentAtRightAngle, isOnOutside } from './collision/lineSegment';
 import { Material } from './Conway';
-import { Polygon2 } from './Polygon2';
+import { isVec2InsidePolygon, Polygon2 } from './Polygon2';
 import { distance, similarTriangles } from './math';
+import { addMask, removeMask } from './Image';
 export interface IObstacle {
   x: number;
   y: number;
@@ -77,20 +78,26 @@ export function checkLiquidInteractionDueToMovement(unit: IUnit, prediction: boo
         hitLava = !isOnOutside(wall, unit);
         if (hitLava) {
           takeDamage(unit, lavaDamage, prediction);
-          if (unit.image) {
-            // TEST MASK
-            // const sprite = addPixiSprite('liquid-mask.png', unit.image.sprite);
-            console.log('add mask')
-            unit.image.mask = 'liquid-mask.png'
-            // unit.image.sprite.mask = sprite;
-          }
-        } else {
-          if (unit.image) {
-            unit.image.mask = undefined;
-          }
         }
       }
-
+    }
+  }
+  if (window.underworld.liquidPolygons.length) {
+    let insideLiquid = false;
+    for (let poly of window.underworld.liquidPolygons) {
+      insideLiquid = isVec2InsidePolygon(unit, poly);
+      if (insideLiquid) {
+        break;
+      }
+    }
+    if (insideLiquid) {
+      if (unit.image) {
+        addMask(unit.image, 'liquid-mask.png');
+      }
+    } else {
+      if (unit.image) {
+        removeMask(unit.image);
+      }
 
     }
   }
