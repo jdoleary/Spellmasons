@@ -30,6 +30,7 @@ export interface IPlayer {
   unit: Unit.IUnit;
   inPortal: boolean;
   cards: string[];
+  inventory: string[];
   // The number of cards a player's hand is populated with at the start of a level
   cardsAmount: number;
   upgrades: Upgrade.IUpgrade[];
@@ -57,6 +58,7 @@ export function create(clientId: string): IPlayer {
     ),
     inPortal: false,
     cards: [],
+    inventory: [],
     cardUsageCounts: {},
     cardsAmount: config.START_CARDS_COUNT,
     upgrades: [],

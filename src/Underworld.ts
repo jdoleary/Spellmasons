@@ -1095,7 +1095,7 @@ export default class Underworld {
     if (player == window.player) {
       document.body.querySelector(`.card[data-upgrade="${upgrade.title}"]`)?.classList.toggle('chosen', true);
       // Clear upgrades when current player has picked one
-      if (player.cards.length >= config.STARTING_CARD_COUNT) {
+      if (player.inventory.length >= config.STARTING_CARD_COUNT) {
         document.body.classList.toggle('showUpgrades', false);
       }
     }

@@ -238,18 +238,6 @@ body.inspect-mode #card-inspect {
   opacity: 50%;
 }
 
-/* The group of similar cards has a padding the same size as the width of a card inner so that
-the face of the last card in the group is seen*/
-.card-type-group {
-  display: flex;
-  flex-direction: row-reverse;
-  position: relative;
-}
-
-.card-type-group:empty {
-  padding-right: 0;
-  margin-right: 0;
-}
 
 .card:hover {
   transform: translate(0, -8px);
@@ -996,4 +984,36 @@ body.draggingCamera {
 
 .card-rare {
   border-image: url('images/card-borders/cardRareBorder.png') 30 / 1 / 0 stretch;
+}
+
+#inventory {
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+body.open-inventory #inventory {
+  display: block;
+}
+
+#inventory-content {
+  background-color: rgba(0, 0, 0, 0.4);
+  max-width: 600px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Cards should not be draggable in inventory */
+#inventory .card .dragHandle {
+  display: none;
+}
+
+.card.inToolbar {
+  opacity: 0.5;
+}
+
+.empty-slot {
+  width: 64px;
+  height: 64px;
+  background-image: url('images/toolbar-slot.png')
 }

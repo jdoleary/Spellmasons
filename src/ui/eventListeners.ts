@@ -342,7 +342,6 @@ export function contextmenuHandler(e: MouseEvent) {
     return;
   }
   if ((e.target as HTMLElement).closest('.card')) {
-    console.log('ignoring right click on card element')
     return;
   }
   e.preventDefault();

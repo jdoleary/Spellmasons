@@ -9,11 +9,13 @@ import { calculateCostForSingleCard } from './cards/cardUtils';
 import floatingText, { centeredFloatingText } from './FloatingText';
 import { playSFX, sfxPageTurn } from './Audio';
 import { composeOnDamageEvents, copyForPredictionUnit } from './Unit';
+import { NUMBER_OF_TOOLBAR_SLOTS } from './config';
 
 const elCardHolders = document.getElementById('card-holders') as HTMLElement;
 elCardHolders.addEventListener('contextmenu', e => {
   e.preventDefault();
 })
+const elInvContent = document.getElementById('inventory-content') as HTMLElement;
 // Where the non-selected cards are displayed
 const elCardHand = document.getElementById('card-hand') as HTMLElement;
 // Where the selected cards are displayed
@@ -143,16 +145,6 @@ export function recalcPositionForCards(player: Player.IPlayer | undefined) {
     // Do not reconcile dom elements for a player who is not the current client's player
     return;
   }
-  const cardCountPairs = Object.entries<number>(
-    player.cards
-      .reduce<{ [cardId: string]: number }>((tally, cardId) => {
-        if (!tally[cardId]) {
-          tally[cardId] = 0;
-        }
-        tally[cardId]++;
-        return tally;
-      }, {}),
-  );
   // Remove all current cards:
   if (elCardHand) {
     elCardHand.innerHTML = '';
@@ -161,10 +153,12 @@ export function recalcPositionForCards(player: Player.IPlayer | undefined) {
   }
 
   // Reconcile the elements with the player's hand
-  for (let [cardId, count] of cardCountPairs) {
+  for (let slotIndex = 0; slotIndex < NUMBER_OF_TOOLBAR_SLOTS; slotIndex++) {
+    const cardId = player.cards[slotIndex];
     const className = `card-${cardId}`;
 
-    for (let i = 0; i < count; i++) {
+    if (cardId) {
+
       // Create UI element for card
       const card = Cards.allCards[cardId];
       // Note: Some upgrades don't have corresponding cards (such as resurrect)
@@ -173,15 +167,17 @@ export function recalcPositionForCards(player: Player.IPlayer | undefined) {
         element.classList.add(className);
         // When the user clicks on a card
         addListenersToCardElement(player, element, cardId);
-        let elCardTypeGroup = document.getElementById(`holder-${cardId}`);
-        if (!elCardTypeGroup) {
-          elCardTypeGroup = makeCardTypeGroup(cardId);
-        }
-        elCardTypeGroup.appendChild(element);
+        elCardHand.appendChild(element);
 
       } else {
         console.log(`No corresponding source card exists for "${cardId}"`);
       }
+    } else {
+      // Slot is empty
+      const element = document.createElement('div');
+      element.classList.add('empty-slot');
+      addToolbarListener(element, slotIndex);
+      elCardHand.appendChild(element);
     }
   }
   // Remove all current selected cards
@@ -208,6 +204,47 @@ export function recalcPositionForCards(player: Player.IPlayer | undefined) {
   }
   updateCardBadges();
 }
+function addToolbarListener(
+  element: HTMLElement,
+  toolbarIndex: number
+) {
+  element.addEventListener('contextmenu', (e) => {
+    const openInvClass = 'open-inventory';
+    document.body.classList.toggle(openInvClass);
+    if (window.player && document.body.classList.contains(openInvClass)) {
+      // clear contents
+      elInvContent.innerHTML = '';
+
+      for (let inventoryCardId of window.player.inventory) {
+        const card = Cards.allCards[inventoryCardId];
+        if (card) {
+          const elCard = createCardElement(card);
+          // Show that card is already on toolbar
+          if (window.player.cards.includes(inventoryCardId)) {
+            elCard.classList.add('inToolbar');
+          }
+          elCard.addEventListener('click', () => {
+            if (window.player) {
+              window.player.cards[toolbarIndex] = inventoryCardId;
+              recalcPositionForCards(window.player)
+              // Close inventory
+              document.body.classList.toggle(openInvClass, false);
+            }
+
+            console.log('chose', inventoryCardId);
+
+          })
+          elInvContent.appendChild(elCard);
+        } else {
+          console.error('Could not find card for ', inventoryCardId)
+        }
+      }
+
+
+    }
+  });
+
+}
 let dragCard: string | undefined;
 function addListenersToCardElement(
   player: Player.IPlayer,
@@ -219,6 +256,9 @@ function addListenersToCardElement(
     const sfxInst = sfxPageTurn[Math.floor(Math.random() * sfxPageTurn.length)]
     sfxInst && playSFX(sfxInst);
   });
+
+  addToolbarListener(element, player.cards.indexOf(cardId))
+
 
   element.addEventListener('click', (e) => {
     if ((e.target as HTMLElement).classList.contains('dragHandle')) {
@@ -249,17 +289,6 @@ function addListenersToCardElement(
       selectCard(player, element, cardId);
     }
   });
-}
-function makeCardTypeGroup(cardId: string): HTMLDivElement {
-  const elCardTypeGroup = document.createElement('div');
-  elCardTypeGroup.classList.add('card-type-group');
-  elCardTypeGroup.id = `holder-${cardId}`;
-  if (elCardHand) {
-    elCardHand.appendChild(elCardTypeGroup);
-  } else {
-    console.error('elCardHand is null');
-  }
-  return elCardTypeGroup;
 }
 export function deselectLastCard() {
   if (elSelectedCards) {
@@ -355,11 +384,8 @@ export function addCardToHand(card: Cards.ICard | undefined, player: Player.IPla
   }
   // Players may not have more than 1 of a particular card, because now, cards are
   // not removed when cast
-  if (!player.cards.includes(card.id)) {
-    player.cards.push(card.id);
-    if (player === window.player) {
-      recalcPositionForCards(window.player);
-    }
+  if (!player.inventory.includes(card.id)) {
+    player.inventory.push(card.id);
   }
 }
 
