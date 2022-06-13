@@ -34,20 +34,7 @@ function remove(unit: IUnit) {
 }
 
 const spell: Spell = {
-  subsprites: {
-    [id]: {
-      imageName: 'units/vampire_eyes.png',
-      alpha: 1.0,
-      anchor: {
-        x: 0.5,
-        y: 0.5,
-      },
-      scale: {
-        x: 1,
-        y: 1,
-      },
-    },
-  },
+  subsprites: {},
   card: {
     id,
     manaCost: 20,
