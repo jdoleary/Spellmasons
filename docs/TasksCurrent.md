@@ -4,16 +4,18 @@
 - Tuesday
     - (E) Integrate player walk animation
     - (M) ART TASK: Add wall sides to ground tiles images that are below ghost walls
-    - (M) Standalone server
-        - Standalone headless server should be able to be proven out using unit tests
-        - No Images, no SFX
-        - It should probably just use a global variable that omits visuals
+    - Solve for syncronize interrupting / resetting animations
+        - Maybe use a state machine
+        - TODO: Better solution for syncronizing unit animation state when doing network syncronization.  Refactor returnToDefaultSprite
+    - Organize candidates for sfx
+    - Bug: When trap triggers, spell effect is left behind as unit keeps moving through it
+    - Content: AOE clone should work for pickups
+    - Bug: Clone doesn't show cloned units until they move cause they spawn right on top of each other
+    - Bug: clear tooltip on enter portal?? not sure if necessary, tooltip remained while I was manually calling initLevel
+    - Bug: When you pull a guy and he actually gets to you, and then you move, you "carry" him
+    - Task: An ally that has died at all (even if ressed) should lose their upgrade priviledge
 ---
 - More player colors
-- Solve for syncronize interrupting / resetting animations
-    - Maybe use a state machine
-    - TODO: Better solution for syncronizing unit animation state when doing network syncronization.  Refactor returnToDefaultSprite
-- Organize candidates for sfx
 - Allow pickups to be stored in inventory
 - (H) Game Balance
 - (M) SFX
@@ -27,35 +29,12 @@
     - (E) Master music
 - Bug: Portal spawns when you prediction kill yourself on test level
 ------
-- Bug: When trap triggers, spell effect is left behind as unit keeps moving through it
-- Content: AOE clone should work for pickups
-- Bug: Clone doesn't show cloned units until they move cause they spawn right on top of each other
-- Bug: clear tooltip on enter portal?? not sure if necessary, tooltip remained while I was manually calling initLevel
 - Show modifiers in UI somehow, not just on player, especially when you have the modifier on you
 - Bug: There was a bug that ended my game though. I got shield buffed by a resurrected priest, and my character disappeared. this all happened on the turn when the portal appeared (finished the level). Now I cant walk through the portal
 I'm getting the empty stamina message when I try to move my (invisible) player
 i can still cast spells during my turn; as well as end turns
 - Content: Spell that increases cast range, or upgrade
-- Task: An ally that has died at all (even if ressed) should lose their upgrade priviledge
-- Bug: When you pull a guy and he actually gets to you, and then you move, you "carry" him
 - Content: Time crystal releases something when it breaks
-- Fix: Brad cast a spell out of range, but it still triggered on my screen
-- Hoist spells
-    - Logic to avoid fizzle spells
-        - Don't cast res on no dead
-        - do this by hoisting and checking pre-cast
-        - How to resurrect units you are standing on top of (blocking?)
----
-- More random generation / better maps.  This isn't a rogue-like without the random element
-    - Take queues from slay the spire
-    - Sectors could have optional elements
-    - Sectors could fit together using WFC instead of just being picked by random
-    - Interesting Parts of levels
-        - choke points
-        - pickups
-        - hiding places
-        - 2 ways to get somewhere
-        - traps that trigger things
 
 - Content: An enemy that pulls you into danger
 - Content: "Orge" enemies that get stronger for every ally of theirs that dies
@@ -74,16 +53,10 @@ and 2nd client got `Cannot change character, player not found with id 8c502be8-6
 - Make an overlay screen that blocks interaction while waiting for sync
 - Unit movement desync occurred between clients when one client has CPU throttled, the non throttled client has the unit move much farther
 
-# Stale, but important bugs
 
-- The zoom coordinates off issue between multiplayer sessions when casting
-    - hit on one screen, miss on another
 
 
 ## More content
-- Upgradable spells like hurt2
-- Disincentivise hiding and casting
-    - Maybe a spawn crystal that if you don't kill it, it'll spawn a bunch of bad guys
 - An enemy that consumes allies to get stronger
 - Specific barriers or walls that can't be cast through
 - Content: A spell to destroy corpses

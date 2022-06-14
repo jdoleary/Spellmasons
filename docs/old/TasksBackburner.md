@@ -1,3 +1,6 @@
+- The zoom coordinates off issue between multiplayer sessions when casting
+    - hit on one screen, miss on another
+    - Related?  Brad cast a spell out of range, but it still triggered on my screen
 - verify do subsprites persist after serialization save/load?
 - How to show when a unit has the vampire modifier
 - Fix host alt-tabbing issue

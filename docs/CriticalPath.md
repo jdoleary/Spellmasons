@@ -1,5 +1,4 @@
 # Critical Path
-- Standalone server
 - Game Balance
 - Clerical
     - Menu
@@ -24,11 +23,19 @@
         - [Storage and Persistence](https://cameronnokes.com/blog/how-to-store-user-data-in-electron/)
         - [AutoUpdate](https://github.com/vercel/hazel)
     - Stretch Goals
-        - Hoist spells?
+        - Hoist spells
+            - Logic to avoid fizzle spells
+                - Don't cast res on no dead
+                - do this by hoisting and checking pre-cast
+                - How to resurrect units you are standing on top of (blocking?)
         - Restore unit "crowding" once all linesegments (pathing, liquid, walls) are finalized with Che's tileset
         - Server customization
             - Turn time
             - Pvp mode (more factions)
+        - (M) Standalone server
+            - Standalone headless server should be able to be proven out using unit tests
+            - No Images, no SFX
+            - It should probably just use a global variable that omits visuals
         - More content
 
 ## Definition of Done

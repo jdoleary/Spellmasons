@@ -3,6 +3,7 @@
 - Adobe? https://www.adobe.com/products/audition/offers/AdobeAuditionDLCSFX.html
 - [Magic elemental SFX](https://www.asoundeffect.com/sound-library/rpg3-magic-spells-elemental-packs/)
 
+- Freebees: https://mail.google.com/mail/u/0/#inbox/FMfcgzGpGTGBmJmVrVFHnZBZChppsftB
 - Sound needs
     - Push / Pull
     - Heal
