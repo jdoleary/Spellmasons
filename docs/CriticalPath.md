@@ -1,17 +1,13 @@
 # Critical Path
-- Big Tasks
-    - Restore unit "crowding" once all linesegments (pathing, liquid, walls) are finalized with Che's tileset
-    - Standalone server
-- Player Customization
+- Standalone server
 - Game Balance
-- Card UI refactor for big cards
-- Menu
-- Steam Page
-- Website Presskit page
+- Clerical
+    - Menu
+    - Steam Page
+    - Website Presskit page
 - SFX
 - Master music
 - Tutorial
-- Hoise spells?
 - Final Steps
     - [Tutorial](https://www.youtube.com/watch?v=-GV814cWiAw)
     - Optimize
@@ -20,18 +16,19 @@
             - May depend on art, but would help with optimization
         - Support huge numbers of mobs (100? 500? 1000?)
             - Profile and figure out where the weak points are
+        - Delete line segments that are not accessable, like the very outside walls
     - Multiplayer Community Servers
         - Stress test droplets to see how many users they can support
-    - Convert from wsPie to standalone server
-        - Enable simultaneous turn taking for players
     - Improved Menu
-    - Aesthetic
-        - Juice / SFX / Music
     - (Lastly) Package as Electron App
         - [Storage and Persistence](https://cameronnokes.com/blog/how-to-store-user-data-in-electron/)
         - [AutoUpdate](https://github.com/vercel/hazel)
     - Stretch Goals
-        - Pvp mode
+        - Hoist spells?
+        - Restore unit "crowding" once all linesegments (pathing, liquid, walls) are finalized with Che's tileset
+        - Server customization
+            - Turn time
+            - Pvp mode (more factions)
         - More content
 
 ## Definition of Done
@@ -49,7 +46,7 @@ Keeping to a hard deadline will ensure that I iterate and keep making more games
 - ~~My part (gameplay) should be finished end of Feb 2022~~
 - ~~My part (gameplay) should be finished end of March 2022~~
 - ~~My part (gameplay) should be finished end of April 2022~~
-- Core Gameplay done by 5/30
+- DONE Core Gameplay done by 5/30
 ## Thoughts
 Don't get stuck on feature creep.  Finish the game and get it out so you can move on
 

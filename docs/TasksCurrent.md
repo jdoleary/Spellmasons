@@ -2,16 +2,18 @@
 ## Tasks
 
 - Tuesday
+    - (E) Integrate player walk animation
+    - (M) ART TASK: Add wall sides to ground tiles images that are below ghost walls
     - (M) Standalone server
         - Standalone headless server should be able to be proven out using unit tests
         - No Images, no SFX
         - It should probably just use a global variable that omits visuals
-    - Solve for syncronize interrupting / resetting animations
-        - Maybe use a state machine
-        - TODO: Better solution for syncronizing unit animation state when doing network syncronization.  Refactor returnToDefaultSprite
 ---
+- More player colors
+- Solve for syncronize interrupting / resetting animations
+    - Maybe use a state machine
+    - TODO: Better solution for syncronizing unit animation state when doing network syncronization.  Refactor returnToDefaultSprite
 - Organize candidates for sfx
-- ART TASK: Add wall sides to ground tiles images that are below ghost walls
 - Allow pickups to be stored in inventory
 - (H) Game Balance
 - (M) SFX
@@ -23,7 +25,7 @@
     - (M) Steam Page
     - (E) Website Presskit page
     - (E) Master music
-- Bug: Portal spawns when you predition kill yourself on test level
+- Bug: Portal spawns when you prediction kill yourself on test level
 ------
 - Bug: When trap triggers, spell effect is left behind as unit keeps moving through it
 - Content: AOE clone should work for pickups
