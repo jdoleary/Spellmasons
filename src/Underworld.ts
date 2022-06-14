@@ -583,13 +583,13 @@ export default class Underworld {
     // 4: ground
 
     const _tiles: Tile[] = [
-      1, 1, 1, 1, 4, 4, 4, 4,
-      1, 4, 4, 1, 4, 4, 4, 4,
-      1, 1, 1, 1, 4, 4, 4, 4,
-      1, 4, 4, 1, 4, 4, 4, 4,
-      1, 4, 4, 1, 4, 4, 4, 4,
-      1, 4, 4, 1, 4, 4, 4, 4,
-      1, 4, 4, 1, 4, 3, 3, 4,
+      0, 1, 1, 1, 1, 1, 0, 0,
+      1, 1, 4, 4, 4, 1, 1, 1,
+      1, 4, 4, 3, 4, 4, 1, 4,
+      1, 4, 3, 4, 4, 4, 4, 4,
+      1, 4, 4, 4, 4, 4, 4, 4,
+      1, 1, 4, 4, 4, 4, 4, 4,
+      1, 4, 1, 4, 4, 4, 4, 4,
       1, 1, 1, 1, 4, 4, 4, 4,
     ].map((value, i) => {
       const pos = oneDimentionIndexToVec2(i, width);
@@ -616,7 +616,9 @@ export default class Underworld {
       }),
       imageOnlyTiles: tiles.flatMap(x => x == undefined ? [] : [x]),
       pickups: [],
-      enemies: [],
+      enemies: [
+        // { id: 'vampire', coord: { x: 64, y: 64 }, strength: 1, isArmored: false }
+      ],
       validPlayerSpawnCoords: [{ x: 304, y: 280 }]
 
     }
