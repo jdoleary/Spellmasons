@@ -379,6 +379,35 @@ describe('Polygon2', () => {
         });
     });
     describe('mergePolygon2s', () => {
+        describe('running mergePolygon2s more than once should not change the result', () => {
+            it('should only remove line segments that have their center in the other polygon if they intersect with that other polygon', () => {
+                // This example uses a box inside of a box that do not touch.
+                // Both should remain untouched when mergePolygon2s is used on them.
+                // Since they do not have any intersections
+                const p1 = { x: 0, y: 0 }
+                const p2 = { x: 0, y: 1 }
+                const p3 = { x: 1, y: 1 }
+                const p4 = { x: 1, y: 0 }
+                const points: Vec2[] = [p1, p2, p3, p4];
+                const polygonA: Polygon2 = points;
+                const p1b = { x: -1, y: -1 }
+                const p2b = { x: -1, y: 2 }
+                const p3b = { x: 2, y: 2 }
+                const p4b = { x: 2, y: -1 }
+                const pointsb: Vec2[] = [p1b, p2b, p3b, p4b];
+                const polygonB: Polygon2 = pointsb;
+                const mergedPolygonsFirstTime = mergePolygon2s([polygonA, polygonB]);
+                const actual = mergePolygon2s(mergedPolygonsFirstTime);
+                const expected = [
+                    [p1, p2, p3, p4],
+                    // Note: The points are shifted due to the algorithm but
+                    // the polygon is still identical
+                    [p3b, p4b, p1b, p2b],
+                ]
+                expect(actual).toEqual(expected);
+
+            });
+        })
         describe('given multiple polygons that intersect at the same vertex on all of them', () => {
             it('2 diamonds; should merge them in the correct order', () => {
                 // This example uses 4 diamonds that intersect at 0,0

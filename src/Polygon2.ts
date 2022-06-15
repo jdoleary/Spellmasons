@@ -166,7 +166,7 @@ export function mergePolygon2s(polygons: Polygon2[]): Polygon2[] {
     // resultPolys stores the merged polygons:
     const resultPolys: Polygon2[] = [];
     // Remove any linesegment that has it's centerpoint
-    // inside of the same other polygon
+    // inside of another polygon that it is touching
     for (let i = polyLineSegments.length - 1; i >= 0; i--) {
         const lineSegment = polyLineSegments[i];
         if (lineSegment) {
@@ -176,6 +176,14 @@ export function mergePolygon2s(polygons: Polygon2[]): Polygon2[] {
                 if (lineSegment.polygon == poly) {
                     continue;
                 }
+                // Only consider polygons that the line segment touches
+                // This ensures that a rectangle can remain inside of another rectangle
+                // without being merged so long as they don't intersect (donut example)
+                if (toLineSegments(poly).filter(ls => LineSegment.isPointOnLineSegment(lineSegment.p1, ls) || LineSegment.isPointOnLineSegment(lineSegment.p2, ls)).length == 0) {
+                    continue;
+                }
+
+
                 const isInside = isVec2InsidePolygon(center, poly);
                 if (isInside) {
                     const notDirectlyOnLine = toLineSegments(poly).every(ls => !LineSegment.isPointOnLineSegment(center, ls));
