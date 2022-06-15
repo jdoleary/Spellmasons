@@ -1,9 +1,9 @@
 
 ## Tasks
 - Wednesday
-    - Improve `convertBaseTilesToFinalTiles` so that it covers all possibilities
     - (M) ART TASK: Add wall sides to ground tiles images that are below ghost walls
-    - Solve pathing mesh overlap occuring on seed 0.7771387726829492
+    - Improve `convertBaseTilesToFinalTiles` so that it covers all possibilities
+    - Get rid of artifact (super small squares in pathing mesh)
 - More
     - Solve for syncronize interrupting / resetting animations
         - Maybe use a state machine
