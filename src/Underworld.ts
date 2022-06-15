@@ -485,9 +485,9 @@ export default class Underworld {
     // function filterRemoveNonGroundAdjacentPoly(poly: Polygon): boolean {
     //   return groundTiles.some(gt => poly.points.some(p => math.distance(gt, p) <= distanceFromGroundCenterWhenAdjacent))
     // }
+    const getWallPolygons = () => obstacles.filter(o => o.material == Material.WALL).map(o => o.bounds);
     // walls block sight and movement
-    const wallPolygons = mergePolygon2s(obstacles.filter(o => o.material == Material.WALL).map(o => o.bounds));
-    this.walls = wallPolygons.map(toLineSegments).flat();
+    this.walls = mergePolygon2s(getWallPolygons()).map(toLineSegments).flat();
     // TODO: Optimize:
     //.filter(filterRemoveNonGroundAdjacent);
     const expandMagnitude = config.COLLISION_MESH_RADIUS * 0.8;
@@ -506,8 +506,7 @@ export default class Underworld {
     // pathing polygons determines the area that units can move within
     // this.pathingPolygons = mergePolygon2s([...obstacles.map(o => o.bounds)]
 
-    // TEMP: Exclude liquidPolygons from pathing for testing
-    this.pathingPolygons = [...wallPolygons.map(p => expandPolygon(p, expandMagnitude)), ...this.liquidPolygons.map(p => expandPolygon(p, expandMagnitude / 2))];
+    this.pathingPolygons = mergePolygon2s([...getWallPolygons().map(p => expandPolygon(p, expandMagnitude)), ...this.liquidPolygons.map(p => expandPolygon(p, expandMagnitude / 2))]);
 
     // TODO: Optimize:
     //.filter(filterRemoveNonGroundAdjacentPoly)
