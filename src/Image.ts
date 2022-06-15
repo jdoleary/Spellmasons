@@ -129,7 +129,7 @@ export function getAnimationPathFromSprite(sprite: PIXI.Sprite): string {
 }
 export function getSubspriteJids(image: IImage | IImageSerialized): string[] {
   // @ts-ignore: jid is a property that i've added and is not a part of the PIXI type
-  return image.sprite.children.map(c => c.jid);
+  return image.sprite.children.filter(c => c !== undefined).map(c => c.jid);
 }
 // syncronize updates an existing originalImage to match the properties of imageSerialized
 // mutates originalImage

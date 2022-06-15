@@ -1,7 +1,6 @@
 
 ## Tasks
 - Wednesday
-    - sometimes a sprite.children can be undefined
     - (E) Integrate player walk animation
     - (M) ART TASK: Add wall sides to ground tiles images that are below ghost walls
     - Solve pathing mesh overlap occuring on seed 0.7771387726829492
