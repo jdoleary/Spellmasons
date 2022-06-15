@@ -300,34 +300,34 @@ export function convertBaseTilesToFinalTiles(map: Map) {
         // change wall tiles
         if (currentCell?.image == baseTiles.wall) {
             if (neighbors.north == baseTiles.ground) {
-                if (neighbors.east != baseTiles.wall && neighbors.west == baseTiles.wall) {
+                if (neighbors.east != baseTiles.wall && neighbors.west == baseTiles.wall && neighbors.south == baseTiles.wall) {
                     changeTile(i, finalTileImages.wallInsideCornerSW);
-                } else if (neighbors.west != baseTiles.wall && neighbors.east == baseTiles.wall) {
+                } else if (neighbors.west != baseTiles.wall && neighbors.east == baseTiles.wall && neighbors.south == baseTiles.wall) {
                     changeTile(i, finalTileImages.wallInsideCornerSE);
-                } else if (neighbors.south == baseTiles.wall) {
-                    // This is a weird exeption, if there is a tetris block of walls, like so:
-                    //  w
-                    //w,w,w
-                    // the wall at 2,2 will be a corner piece but since the wall at
-                    // 2,1 is all along it would be a wallS if not for this check.
-                    // Setting it to ground prevents weird pathing shapes
-                    changeTile(i, finalTileImages.all_ground);
+                    // } else if (neighbors.south == baseTiles.wall) {
+                    //     // This is a weird exeption, if there is a tetris block of walls, like so:
+                    //     //  w
+                    //     //w,w,w
+                    //     // the wall at 2,2 will be a corner piece but since the wall at
+                    //     // 2,1 is all along it would be a wallS if not for this check.
+                    //     // Setting it to ground prevents weird pathing shapes
+                    //     changeTile(i, finalTileImages.all_ground);
                 } else {
                     changeTile(i, finalTileImages.wallS);
                 }
             } else if (neighbors.south == baseTiles.ground) {
-                if (neighbors.west != baseTiles.wall && neighbors.east == baseTiles.wall) {
+                if (neighbors.west != baseTiles.wall && neighbors.east == baseTiles.wall && neighbors.north == baseTiles.wall) {
                     changeTile(i, finalTileImages.wallInsideCornerNE);
-                } else if (neighbors.east != baseTiles.wall && neighbors.west == baseTiles.wall) {
+                } else if (neighbors.east != baseTiles.wall && neighbors.west == baseTiles.wall && neighbors.north == baseTiles.wall) {
                     changeTile(i, finalTileImages.wallInsideCornerNW)
-                } else if (neighbors.north == baseTiles.wall) {
-                    // This is a weird exeption, if there is a tetris block of walls, like so:
-                    //w,w,w
-                    //  w
-                    // the wall at 2,1 will be a corner piece but since the wall at
-                    // 2,2 is all along it would be a wallN if not for this check.
-                    // Setting it to ground prevents weird pathing shapes
-                    changeTile(i, finalTileImages.all_ground);
+                    // } else if (neighbors.north == baseTiles.wall) {
+                    //     // This is a weird exeption, if there is a tetris block of walls, like so:
+                    //     //w,w,w
+                    //     //  w
+                    //     // the wall at 2,1 will be a corner piece but since the wall at
+                    //     // 2,2 is all along it would be a wallN if not for this check.
+                    //     // Setting it to ground prevents weird pathing shapes
+                    //     changeTile(i, finalTileImages.all_ground);
                 } else {
                     changeTile(i, finalTileImages.wallN);
                 }
@@ -537,36 +537,36 @@ export const baseTiles = {
     liquid: 'tiles/lava.png',
     ground: 'tiles/ground.png',
 }
-const all_liquid = 'tiles/blood.png';
-export const all_ground = 'tiles/bloodFloor.png';
+const all_liquid = 'tiles/all_liquid.png';
+export const all_ground = 'tiles/all_ground.png';
 const finalTileImages = {
     all_liquid,
     all_ground,
-    liquidInsideCornerNE: 'tiles/bloodSideCornerTopRight.png',
-    liquidInsideCornerNW: 'tiles/bloodSideCornerTopLeft.png',
-    liquidInsideCornerSE: 'tiles/bloodSideCornerBtmRight.png',
-    liquidInsideCornerSW: 'tiles/bloodSideCornerBtmLeft.png',
-    liquidNGroundS: 'tiles/bloodSideBottom.png',
-    liquidCornerNE: 'tiles/bloodSideBottomLeft.png',
-    liquidCornerNW: 'tiles/bloodSideBottomRight.png',
-    liquidEGroundW: 'tiles/bloodSideLeft.png',
-    liquidWGroundE: 'tiles/bloodSideRight.png',
-    liquidSGroundN: 'tiles/bloodSideTop.png',
-    liquidCornerSE: 'tiles/bloodSideTopLeft.png',
-    liquidCornerSW: 'tiles/bloodSideTopRight.png',
-    wallS: 'tiles/bloodWallBtm.png',
-    wallCornerSW: 'tiles/bloodWallBtmLeft.png',
-    wallCornerSE: 'tiles/bloodWallBtmRight.png',
-    wallE: 'tiles/bloodWallRight.png',
-    wallW: 'tiles/bloodWallLeft.png',
-    wallN: 'tiles/bloodWallTop.png',
-    wallNOnly: 'tiles/bloodWallTop-only.png',
-    wallCornerNW: 'tiles/bloodWallTopLeft.png',
-    wallCornerNE: 'tiles/bloodWallTopRight.png',
-    wallInsideCornerNE: 'tiles/bloodCornerTopRight.png',
-    wallInsideCornerNW: 'tiles/bloodCornerTopLeft.png',
-    wallInsideCornerSE: 'tiles/bloodCornerBtmRight.png',
-    wallInsideCornerSW: 'tiles/bloodCornerBtmLeft.png',
+    liquidInsideCornerNE: 'tiles/liquidInsideCornerNE.png',
+    liquidInsideCornerNW: 'tiles/liquidInsideCornerNW.png',
+    liquidInsideCornerSE: 'tiles/liquidInsideCornerSE.png',
+    liquidInsideCornerSW: 'tiles/liquidInsideCornerSW.png',
+    liquidNGroundS: 'tiles/liquidNGroundS.png',
+    liquidCornerNE: 'tiles/liquidCornerNE.png',
+    liquidCornerNW: 'tiles/liquidCornerNW.png',
+    liquidEGroundW: 'tiles/liquidEGroundW.png',
+    liquidWGroundE: 'tiles/liquidWGroundE.png',
+    liquidSGroundN: 'tiles/liquidSGroundN.png',
+    liquidCornerSE: 'tiles/liquidCornerSE.png',
+    liquidCornerSW: 'tiles/liquidCornerSW.png',
+    wallS: 'tiles/wallS.png',
+    wallE: 'tiles/wallE.png',
+    wallW: 'tiles/wallW.png',
+    wallN: 'tiles/wallN.png',
+    wallNOnly: 'tiles/wallNOnly.png',
+    wallCornerNW: 'tiles/wallCornerNW.png',
+    wallCornerNE: 'tiles/wallCornerNE.png',
+    wallCornerSW: 'tiles/wallCornerSW.png',
+    wallCornerSE: 'tiles/wallCornerSE.png',
+    wallInsideCornerNE: 'tiles/wallInsideCornerNE.png',
+    wallInsideCornerNW: 'tiles/wallInsideCornerNW.png',
+    wallInsideCornerSE: 'tiles/wallInsideCornerSE.png',
+    wallInsideCornerSW: 'tiles/wallInsideCornerSW.png',
 };
 
 export function toObstacle(t: Tile): IObstacle | undefined {
