@@ -1,7 +1,7 @@
 
 ## Tasks
 - Wednesday
-    - (E) Integrate player walk animation
+    - Improve `convertBaseTilesToFinalTiles` so that it covers all possibilities
     - (M) ART TASK: Add wall sides to ground tiles images that are below ghost walls
     - Solve pathing mesh overlap occuring on seed 0.7771387726829492
 - More
