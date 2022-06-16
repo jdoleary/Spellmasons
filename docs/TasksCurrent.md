@@ -1,9 +1,23 @@
 
 ## Tasks
-- Wednesday
-    - (M) ART TASK: Add wall sides to ground tiles images that are below ghost walls
-    - Improve `convertBaseTilesToFinalTiles` so that it covers all possibilities
+- Thursday 
+    - Address disappearing walls
     - Get rid of artifact (super small squares in pathing mesh)
+    - Bug: I killed a unit, it instantly teleported me to the new level and left an explode on death subsprite behind, it also stops their death animation part way
+    - Bug: Grunts on level 4 of 0.7771387726829492 have attention marker when they definitely wont hit me next turn
+    - Bug: Found a unit with no health but was animating idle, froze half way through death animation
+    - Bug: I lost my robe color after taking damage
+    - Bug: I got `unit.animations` is undefined and it got stuck on player 2s turn during single player:
+```export function returnToDefaultSprite(unit) {
+  if (unit.image) {
+    if (unit.alive) {
+      const sprite = addPixiSprite(unit.animations.idle, containerUnits);
+      Image.changeSprite(unit.image, sprite);
+    } else {
+    }
+  }
+}```
+    
 - More
     - Solve for syncronize interrupting / resetting animations
         - Maybe use a state machine
@@ -16,6 +30,7 @@
     - Bug: When you pull a guy and he actually gets to you, and then you move, you "carry" him
     - Task: An ally that has died at all (even if ressed) should lose their upgrade priviledge
 ---
+- (M) ART TASK: Add wall sides to ground tiles images that are below ghost walls
 - More player colors
 - Allow pickups to be stored in inventory
 - (H) Game Balance
