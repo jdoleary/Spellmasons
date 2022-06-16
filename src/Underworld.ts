@@ -1559,6 +1559,10 @@ export default class Underworld {
     return effectState;
   }
   async animateSpell(target: Vec2, imagePath: string): Promise<void> {
+    if (imagePath.indexOf('.png') !== -1) {
+      console.error('Cannot animate a still image, this function requires an animation path or else it will not "hide when complete"', imagePath);
+      return Promise.resolve();
+    }
     return new Promise((resolve) => {
       const image = Image.create(
         target,

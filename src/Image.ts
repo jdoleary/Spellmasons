@@ -44,10 +44,14 @@ export function create(
 }
 export function cleanup(image?: IImage) {
   // Remove PIXI sprite
-  if (image && image.sprite && image.sprite.parent) {
+  if (image && image.sprite) {
     // Remove subsprites
     image.sprite.removeChildren();
-    image.sprite.parent.removeChild(image.sprite);
+    if (image.sprite.parent) {
+      image.sprite.parent.removeChild(image.sprite);
+    }
+  } else {
+    console.error('could not clean up image', image, image?.sprite, image?.sprite.parent);
   }
 }
 // changeSprite changes the still image or animation of a sprite
@@ -252,7 +256,7 @@ export function removeSubSprite(image: IImage | undefined, key: string) {
     return;
   }
   // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
-  const subSprite = image.sprite.children.find(c => c.imagePath == key)
+  const subSprite = image.sprite.children.find(c => c.imagePath == Subsprites[key]?.imageName)
   if (subSprite) {
     // Remove PIXI.Sprite instance
     subSprite.parent.removeChild(subSprite);
