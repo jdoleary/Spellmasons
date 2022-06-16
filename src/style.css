@@ -126,6 +126,7 @@ body.view-Game.showUpgrades #upgrade-picker {
 
 #upgrade-picker .card-thumb {
   min-height: 180px;
+  width: 100%;
 }
 
 body.inspect-mode {
