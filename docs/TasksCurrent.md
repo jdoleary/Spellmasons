@@ -1,7 +1,6 @@
 
 ## Tasks
-- Content: AOE clone should work for pickups
-- Bug: Clone doesn't show cloned units until they move cause they spawn right on top of each other
+- Draw walls above units so their corpses don't render over top of the walls
 - More
     - Bug: When trap triggers, spell effect is left behind as unit keeps moving through it
     - Bug: clear tooltip on enter portal?? not sure if necessary, tooltip remained while I was manually calling initLevel
@@ -9,7 +8,6 @@
     - Task: An ally that has died at all (even if ressed) should lose their upgrade priviledge
 ---
 - Bug: I killed a unit, it instantly teleported me to the new level
-    - Fix findValidSpawn, no longer works since I removed inverted polygons
 - Bug: Grunts on level 4 of 0.7771387726829492 have attention marker when they definitely wont hit me next turn
 - Bug: I lost my robe color after taking damage
 - SOUND: Organize candidates for sfx

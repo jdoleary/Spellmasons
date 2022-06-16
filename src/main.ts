@@ -257,7 +257,7 @@ window.superMe = () => {
     syncInventory(undefined);
   }
 }
-window.showDebug = true;
+window.showDebug = false;
 
 // Prevent accidental back button only when not in devMode
 // In devMode, lots of refreshing happens so it's annoying when it
