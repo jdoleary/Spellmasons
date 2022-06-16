@@ -22,8 +22,9 @@ Clones each target
       // Batch find targets that should be cloned
       // Note: They need to be batched so that the new clones don't get cloned
       const clonePairs: Vec2[][] = [];
-      const targets = state.targetedUnits.length ? state.targetedUnits : [state.castLocation]
-      for (let target of [...targets, ...state.targetedPickups]) {
+      let targets: Vec2[] = [...state.targetedUnits, ...state.targetedPickups];
+      targets = targets.length ? targets : [state.castLocation];
+      for (let target of targets) {
         clonePairs.push([target, { x: target.x, y: target.y }]);
       }
       // Clone all the batched clone jobs
