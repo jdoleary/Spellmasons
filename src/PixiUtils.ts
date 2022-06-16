@@ -397,6 +397,9 @@ export function addPixiSprite(
       console.error('Could not find texture for', imagePath);
     }
   }
+  // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
+  // which is used for identifying the sprite or animation that is currently active
+  sprite.imagePath = imagePath;
   parent.addChild(sprite);
   return sprite;
 }

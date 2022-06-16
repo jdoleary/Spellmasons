@@ -14,7 +14,7 @@ export type IImageSerialized = {
     y: number,
     scale: { x: number, y: number },
     animationOrImagePath: string,
-    // A list of sprite jids (jordan identifier for subsprites)
+    // A list of sprite imagePaths (jordan identifier for subsprites)
     children: string[],
   },
   mask?: string,
@@ -54,10 +54,20 @@ export function cleanup(image?: IImage) {
 // Note: if playing a temporary animation, opt for Unit.playAnimation
 // because it has built in protections for returning to the correct  
 // default sprite
-export function changeSprite(image: IImage | undefined, sprite: PIXI.Sprite) {
+// Returns sprite IF sprite has changed
+export function changeSprite(image: IImage | undefined, imagePath: string, container: PIXI.Container, options?: PixiSpriteOptions): PIXI.Sprite | undefined {
   if (!image) {
     return;
   }
+  // @ts-ignore: imagePath is a property that I've added to sprite to identify which
+  // animation is playing currently
+  if (image.sprite.imagePath == imagePath && image.sprite.parent == container) {
+    // Do not change if imagePath would be unchanged and
+    // container would be unchanged 
+    // Return undefined because sprite is unchanged
+    return undefined;
+  }
+  const sprite = addPixiSprite(imagePath, container, options);
   const filters = image.sprite.filters;
   sprite.x = image.sprite.x;
   sprite.y = image.sprite.y;
@@ -80,6 +90,7 @@ export function changeSprite(image: IImage | undefined, sprite: PIXI.Sprite) {
   }
   // restore mask:
   sprite.mask = mask;
+  return sprite;
 }
 // Converts an Image entity into a serialized form
 // that can be saved as JSON and rehydrated later into
@@ -94,7 +105,8 @@ export function serialize(image: IImage): IImageSerialized {
       y: image.sprite.y,
       scale: { x: image.sprite.scale.x, y: image.sprite.scale.y },
       animationOrImagePath: getAnimationPathFromSprite(image.sprite),
-      children: image.sprite.children.map(c => c.jid)
+      // @ts-ignore: imagePath is a property that I added to identify currently playing animation or sprite.
+      children: image.sprite.children.map(c => c.imagePath)
 
     },
   };
@@ -127,9 +139,9 @@ export function getAnimationPathFromSprite(sprite: PIXI.Sprite): string {
   return animationOrImagePath;
 
 }
-export function getSubspriteJids(image: IImage | IImageSerialized): string[] {
-  // @ts-ignore: jid is a property that i've added and is not a part of the PIXI type
-  return image.sprite.children.filter(c => c !== undefined).map(c => c.jid);
+export function getSubspriteImagePaths(image: IImage | IImageSerialized): string[] {
+  // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
+  return image.sprite.children.filter(c => c !== undefined).map(c => c.imagePath);
 }
 // syncronize updates an existing originalImage to match the properties of imageSerialized
 // mutates originalImage
@@ -145,7 +157,7 @@ export function syncronize(imageSerialized: IImageSerialized, originalImage?: II
     originalImage.sprite.y = y;
     originalImage.sprite.scale.x = scale.x
     originalImage.sprite.scale.y = scale.y;
-    if (getSubspriteJids(imageSerialized) != getSubspriteJids(originalImage)) {
+    if (getSubspriteImagePaths(imageSerialized) != getSubspriteImagePaths(originalImage)) {
       restoreSubsprites(originalImage);
     }
     return originalImage;
@@ -165,7 +177,7 @@ export function restoreSubsprites(image?: IImage) {
     return;
   }
   // Re-add subsprites
-  const subSprites = getSubspriteJids(image);
+  const subSprites = getSubspriteImagePaths(image);
   image.sprite.removeChildren();
   for (let subSprite of subSprites) {
     addSubSprite(image, subSprite);
@@ -223,17 +235,15 @@ export function addSubSprite(image: IImage | undefined, key: string) {
     return;
   }
   // Don't add more than one copy
-  if (!getSubspriteJids(image).includes(key)) {
+  if (!getSubspriteImagePaths(image).includes(key)) {
     const subSpriteData = Subsprites[key];
     if (subSpriteData) {
       const sprite = addPixiSprite(subSpriteData.imageName, image.sprite);
-      // @ts-ignore: jid is a property that i've added and is not a part of the PIXI type
-      sprite.jid = key;
       sprite.alpha = subSpriteData.alpha;
       sprite.anchor.set(subSpriteData.anchor.x, subSpriteData.anchor.y);
       sprite.scale.set(subSpriteData.scale.x, subSpriteData.scale.y);
     } else {
-      console.error("Missing subsprite data")
+      console.error("Missing subsprite data for key", key)
     }
   }
 }
@@ -241,8 +251,8 @@ export function removeSubSprite(image: IImage | undefined, key: string) {
   if (!image) {
     return;
   }
-  // @ts-ignore: jid is a property that i've added and is not a part of the PIXI type
-  const subSprite = image.sprite.children.find(c => c.jid == key)
+  // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
+  const subSprite = image.sprite.children.find(c => c.imagePath == key)
   if (subSprite) {
     // Remove PIXI.Sprite instance
     subSprite.parent.removeChild(subSprite);

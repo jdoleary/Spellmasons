@@ -309,7 +309,14 @@ export function syncronize(unitSerialized: IUnitSerialized, originalUnit: IUnit)
   returnToDefaultSprite(originalUnit);
   originalUnit.image = Image.syncronize(image, originalUnit.image);
 }
-
+export function changeToDieSprite(unit: IUnit) {
+  Image.changeSprite(
+    unit.image,
+    unit.animations.die,
+    containerDoodads,
+    { loop: false }
+  );
+}
 // It is important to use this function when returning a unit to the previous
 // sprite because it takes into account wether or not a unit is dead.  If a unit
 // dies mid-animation and this function is not used, it would return to the default
@@ -319,22 +326,13 @@ export function returnToDefaultSprite(unit: IUnit) {
   // dies because a prediction unit won't have an image property
   if (unit.image) {
     if (unit.alive) {
-      const sprite = addPixiSprite(unit.animations.idle, containerUnits)
       Image.changeSprite(
         unit.image,
-        sprite
+        unit.animations.idle,
+        containerUnits
       );
     } else {
-      // // TODO: How to prevent this from shortcircuiting an animation that is in progress?
-      // // Just move to the last dead frame, don't replay the death animation
-      // const sprite = addPixiSprite(unit.animations.die, containerDoodads);
-      // sprite.gotoAndStop(sprite.textures.length-1)
-      // // @ts-ignore: AnimatedSprite does have .loop
-      // sprite.loop = false;
-      // Image.changeSprite(
-      //   unit.image,
-      //   sprite
-      // );
+      changeToDieSprite(unit);
     }
   }
 }
@@ -352,14 +350,14 @@ export function playAnimation(unit: IUnit, spritePath: string | undefined, optio
     if (!unit.image) {
       return resolve();
     }
-    Image.changeSprite(unit.image, addPixiSprite(spritePath, unit.image.sprite.parent, {
+    Image.changeSprite(unit.image, spritePath, unit.image.sprite.parent, {
       loop: false,
       ...options,
       onComplete: () => {
         returnToDefaultSprite(unit);
         resolve();
       }
-    }));
+    });
   });
 }
 export function addOneOffAnimation(unit: IUnit, spritePath: string, options?: PixiSpriteOptions): Promise<void> {
@@ -407,13 +405,7 @@ export function die(unit: IUnit, prediction: boolean) {
     // This check for unit.image prevents creating a corpse image when a predictionUnit
     // dies because a prediction unit won't have an image property
     if (unit.image) {
-      const dieSprite = addPixiSprite(unit.animations.die, containerDoodads);
-      // @ts-ignore: .loop does exist on animatedSprite
-      dieSprite.loop = false;
-      Image.changeSprite(
-        unit.image,
-        dieSprite
-      );
+      changeToDieSprite(unit);
     }
     unit.mana = 0;
     // Ensure that the unit resolvesDoneMoving when they die in the event that 
@@ -632,7 +624,8 @@ export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
   if (unit.image) {
     Image.changeSprite(
       unit.image,
-      addPixiSprite(unit.animations.walk, unit.image.sprite.parent)
+      unit.animations.walk,
+      unit.image.sprite.parent
     );
   }
   // Orient; make the sprite face it's enemy
@@ -663,7 +656,8 @@ export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
     if (unit.image) {
       Image.changeSprite(
         unit.image,
-        addPixiSprite(unit.animations.idle, unit.image.sprite.parent)
+        unit.animations.idle,
+        unit.image.sprite.parent
       );
     }
     if (unit.resolveDoneMovingTimeout !== undefined) {
