@@ -2,7 +2,6 @@
 ## Tasks
 - Thursday 
     - **Address disappearing walls (green wall line segments)**
-    - Solve Ghoast walls, keep wall images separate from ground, make wall images taller and don't use anchor, just offset by 32,32.  Layer them top to bottom and I wont have ghost wall issues
     - BACKLOG: Get rid of artifact (super small squares in pathing mesh)
     
 - More
