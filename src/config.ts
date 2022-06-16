@@ -1,6 +1,7 @@
 export const PLAYER_BASE_HEALTH = 10;
 export const UNIT_MOVE_SPEED = 0.25;
 export const COLLISION_MESH_RADIUS = 32;
+export const HEALTH_BAR_UI_HEIGHT = 42;
 export const LOB_PROJECTILE_SPEED = 600; // in millis
 export const UNIT_SIZE = COLLISION_MESH_RADIUS * 2;
 export const UNIT_BASE_HEALTH = 4;
