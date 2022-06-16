@@ -1,19 +1,11 @@
 
 ## Tasks
-- Solve Ghoast walls, keep wall images separate from ground, make wall images taller and don't use anchor, just offset by 32,32.  Layer them top to bottom and I wont have ghost wall issues
 - Thursday 
     - **Address disappearing walls (green wall line segments)**
-    - Get rid of artifact (super small squares in pathing mesh)
-    - Bug: I killed a unit, it instantly teleported me to the new level
-        - Fix findValidSpawn, no longer works since I removed inverted polygons
-    - Bug: Grunts on level 4 of 0.7771387726829492 have attention marker when they definitely wont hit me next turn
-    - Bug: I lost my robe color after taking damage
+    - Solve Ghoast walls, keep wall images separate from ground, make wall images taller and don't use anchor, just offset by 32,32.  Layer them top to bottom and I wont have ghost wall issues
+    - BACKLOG: Get rid of artifact (super small squares in pathing mesh)
     
 - More
-    - Solve for syncronize interrupting / resetting animations
-        - Maybe use a state machine
-        - TODO: Better solution for syncronizing unit animation state when doing network syncronization.  Refactor returnToDefaultSprite
-    - Organize candidates for sfx
     - Bug: When trap triggers, spell effect is left behind as unit keeps moving through it
     - Content: AOE clone should work for pickups
     - Bug: Clone doesn't show cloned units until they move cause they spawn right on top of each other
@@ -21,6 +13,11 @@
     - Bug: When you pull a guy and he actually gets to you, and then you move, you "carry" him
     - Task: An ally that has died at all (even if ressed) should lose their upgrade priviledge
 ---
+- Bug: I killed a unit, it instantly teleported me to the new level
+    - Fix findValidSpawn, no longer works since I removed inverted polygons
+- Bug: Grunts on level 4 of 0.7771387726829492 have attention marker when they definitely wont hit me next turn
+- Bug: I lost my robe color after taking damage
+- SOUND: Organize candidates for sfx
 - (M) ART TASK: Add wall sides to ground tiles images that are below ghost walls
 - More player colors
 - Allow pickups to be stored in inventory
