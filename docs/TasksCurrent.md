@@ -1,7 +1,6 @@
 
 ## Tasks
 - Thursday 
-    - **Address disappearing walls (green wall line segments)**
     - BACKLOG: Get rid of artifact (super small squares in pathing mesh)
     
 - More

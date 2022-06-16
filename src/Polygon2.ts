@@ -211,11 +211,14 @@ export function mergePolygon2s(polygons: Polygon2[]): Polygon2[] {
     // Remove unnecessary in-between verticies:
     const lineSegments = mergeCollinearOverlappingSameDirectionLines(polyLineSegments)
     // Turn all remaining line segments into polygons:
-    for (let lineSegment of lineSegments) {
-        const poly = processLineSegment(lineSegment, lineSegments);
-        // Valid polygons must be 3 points or more, or else it will just be a line
-        if (poly && poly.length > 2) {
-            resultPolys.push(poly);
+    for (let i = lineSegments.length - 1; i >= 0; i--) {
+        const lineSegment = lineSegments[i];
+        if (lineSegment) {
+            const poly = processLineSegment(lineSegment, lineSegments);
+            // Valid polygons must be 3 points or more, or else it will just be a line
+            if (poly && poly.length > 2) {
+                resultPolys.push(poly);
+            }
         }
     }
 
