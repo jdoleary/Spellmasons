@@ -232,6 +232,11 @@ export function cleanup(unit: IUnit) {
   unit.y = NaN;
   unit.flaggedForRemoval = true;
   Image.cleanup(unit.image);
+  // Setting the entire image to undefined is important
+  // because changeImage rejects replacing an image that is undefined.
+  // This ensures that units won't get their image sprite changed while
+  // they are waiting to be cleaned up, which could result in a dangling sprite
+  unit.image = undefined;
 }
 // Converts a unit entity into a serialized form
 // that can be saved as JSON and rehydrated later into

@@ -9,7 +9,6 @@
         - This happened between level 1 and 2 also, when map changes immediately (cause portal spawn is currently broken and it spawns right on you), it interrupts a death animation
         and the animation carries over to the next level
     - Bug: Grunts on level 4 of 0.7771387726829492 have attention marker when they definitely wont hit me next turn
-    - Bug: Found a unit with no health but was animating idle, froze half way through death animation
     - Bug: I lost my robe color after taking damage
     - Bug: I got `unit.animations` is undefined and it got stuck on player 2s turn during single player:
 ```export function returnToDefaultSprite(unit) {
