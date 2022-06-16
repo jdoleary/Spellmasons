@@ -343,10 +343,6 @@ export function convertBaseTilesToFinalTiles(map: Map) {
                 changeTile(i, finalTileImages.wallCornerNW);
             } else if (neighbors.southwest == baseTiles.ground) {
                 changeTile(i, finalTileImages.wallCornerNE);
-            } else if (neighbors.south == baseTiles.empty) {
-                changeTile(i, finalTileImages.wallNOnly);
-            } else if (neighbors.south == baseTiles.wall) {
-                changeTile(i, finalTileImages.wallNOnly);
             }
         }
     }
@@ -558,7 +554,6 @@ const finalTileImages = {
     wallE: 'tiles/wallE.png',
     wallW: 'tiles/wallW.png',
     wallN: 'tiles/wallN.png',
-    wallNOnly: 'tiles/wallNOnly.png',
     wallCornerNW: 'tiles/wallCornerNW.png',
     wallCornerNE: 'tiles/wallCornerNE.png',
     wallCornerSW: 'tiles/wallCornerSW.png',
@@ -574,7 +569,7 @@ export function toObstacle(t: Tile): IObstacle | undefined {
     //   const height = config.OBSTACLE_SIZE;
     //   const _x = t.x - width / 2;
     //   const _y = t.y - height / 2;
-    if (t.image == finalTileImages.wallN || t.image == finalTileImages.wallNOnly) {
+    if (t.image == finalTileImages.wallN) {
         return {
             x: t.x,
             y: t.y,
