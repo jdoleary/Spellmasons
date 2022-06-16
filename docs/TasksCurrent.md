@@ -4,10 +4,8 @@
 - Thursday 
     - **Address disappearing walls (green wall line segments)**
     - Get rid of artifact (super small squares in pathing mesh)
-    - Bug: I killed a unit, it instantly teleported me to the new level and left an explode on death subsprite behind, it also stops their death animation part way
+    - Bug: I killed a unit, it instantly teleported me to the new level
         - Fix findValidSpawn, no longer works since I removed inverted polygons
-        - This happened between level 1 and 2 also, when map changes immediately (cause portal spawn is currently broken and it spawns right on you), it interrupts a death animation
-        and the animation carries over to the next level
     - Bug: Grunts on level 4 of 0.7771387726829492 have attention marker when they definitely wont hit me next turn
     - Bug: I lost my robe color after taking damage
     - Bug: I got `unit.animations` is undefined and it got stuck on player 2s turn during single player:
