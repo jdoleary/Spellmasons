@@ -507,7 +507,9 @@ export default class Underworld {
     // pathing polygons determines the area that units can move within
     // this.pathingPolygons = mergePolygon2s([...obstacles.map(o => o.bounds)]
 
-    this.pathingPolygons = mergePolygon2s([...getWallPolygons().map(p => expandPolygon(p, expandMagnitude)), ...this.liquidPolygons.map(p => expandPolygon(p, expandMagnitude / 2))]);
+    this.pathingPolygons = mergePolygon2s([...getWallPolygons().map(p => expandPolygon(p, expandMagnitude))
+      .map(p => p.map(vec2 => ({ x: vec2.x, y: vec2.y - 10 })))
+      , ...this.liquidPolygons.map(p => expandPolygon(p, expandMagnitude))]);
 
     // TODO: Optimize:
     //.filter(filterRemoveNonGroundAdjacentPoly)
