@@ -1,10 +1,8 @@
 import * as Unit from '../Unit';
 import type { UnitSource } from './index';
 import { UnitSubType } from '../commonTypes';
-import type { Vec2 } from '../Vec';
 import * as math from '../math';
 import { createVisualLobbingProjectile } from '../Projectile';
-import * as config from '../config';
 import Shield from '../cards/shield';
 import { apply as purify } from '../cards/purify';
 

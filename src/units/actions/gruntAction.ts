@@ -2,7 +2,7 @@ import type { Vec2 } from '../../Vec';
 import { distance } from '../../math';
 import * as Unit from '../../Unit';
 
-export async function action(unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, canAttackTarget: boolean) {
+export async function action(unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, _canAttackTarget: boolean) {
   if (!Unit.canMove(unit)) {
     return;
   }

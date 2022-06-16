@@ -11,6 +11,13 @@ const unit: UnitSource = {
     image: 'units/nightqueen.png',
     subtype: UnitSubType.RANGED_RADIUS,
   },
+  animations: {
+    idle: 'units/nightqueen.png',
+    hit: 'units/nightqueen.png',
+    attack: 'units/nightqueen.png',
+    die: 'units/nightqueen.png',
+    walk: 'units/nightqueen.png',
+  },
   unitProps: {
     manaMax: 100,
     healthMax: 50,
@@ -43,6 +50,8 @@ const unit: UnitSource = {
             // Change resurrected unit to own faction
             Unit.changeFaction(deadUnit, unit.faction);
           });
+        } else {
+          return Promise.resolve()
         }
       })]);
     }

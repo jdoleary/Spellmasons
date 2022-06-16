@@ -2,7 +2,6 @@ import * as Unit from '../Unit';
 import type { UnitSource } from './index';
 import { UnitSubType, UnitType } from '../commonTypes';
 import { createVisualFlyingProjectile } from '../Projectile';
-import * as config from '../config';
 
 const CAST_MANA_COST = 30;
 const unit: UnitSource = {
@@ -11,6 +10,13 @@ const unit: UnitSource = {
     description: 'A demon resurrects its allies.',
     image: 'units/demon.png',
     subtype: UnitSubType.RANGED_RADIUS,
+  },
+  animations: {
+    idle: 'units/demon.png',
+    hit: 'units/demon.png',
+    attack: 'units/demon.png',
+    die: 'units/demon.png',
+    walk: 'units/demon.png',
   },
   unitProps: {
     manaMax: 60

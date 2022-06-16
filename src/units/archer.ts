@@ -26,7 +26,7 @@ const unit: UnitSource = {
     die: 'units/archerDeath',
     walk: 'units/archerWalk',
   },
-  action: async (unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, canAttackTarget: boolean) => {
+  action: async (unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, _canAttackTarget: boolean) => {
     const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit);
     // Attack
     let attackPromise;

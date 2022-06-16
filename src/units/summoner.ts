@@ -2,7 +2,6 @@ import * as Unit from '../Unit';
 import { allUnits, UnitSource } from './index';
 import { UnitSubType, UnitType } from '../commonTypes';
 import * as math from '../math';
-import floatingText from '../FloatingText';
 
 const SUMMON_MANA_COST = 30;
 const unit: UnitSource = {
@@ -11,6 +10,13 @@ const unit: UnitSource = {
     description: 'A summoner uses mana to summon grunts.',
     image: 'units/golem-summoner.png',
     subtype: UnitSubType.RANGED_RADIUS,
+  },
+  animations: {
+    idle: 'units/golem-summoner.png',
+    hit: 'units/golem-summoner.png',
+    attack: 'units/golem-summoner.png',
+    die: 'units/golem-summoner.png',
+    walk: 'units/golem-summoner.png',
   },
   unitProps: {
   },

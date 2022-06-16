@@ -10,6 +10,13 @@ const unit: UnitSource = {
     image: 'units/decoy.png',
     subtype: UnitSubType.MELEE,
   },
+  animations: {
+    idle: 'units/decoy.png',
+    hit: 'units/decoy.png',
+    attack: 'units/decoy.png',
+    die: 'units/decoy.png',
+    walk: 'units/decoy.png',
+  },
   unitProps: {
     staminaMax: 0,
     attackRange: 0,
@@ -19,7 +26,7 @@ const unit: UnitSource = {
     immovable: true,
     radius: config.COLLISION_MESH_RADIUS
   },
-  action: async (self: Unit.IUnit, attackTarget: Unit.IUnit | undefined, canAttackTarget: boolean) => { }
+  action: async (_self: Unit.IUnit, _attackTarget: Unit.IUnit | undefined, _canAttackTarget: boolean) => { }
 };
 
 export default unit;

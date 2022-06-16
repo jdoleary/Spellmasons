@@ -458,7 +458,7 @@ export function composeOnDamageEvents(unit: IUnit, damage: number, prediction: b
   return damage
 
 }
-export function takeDamage(unit: IUnit, amount: number, prediction: boolean, state?: EffectState) {
+export function takeDamage(unit: IUnit, amount: number, prediction: boolean, _state?: EffectState) {
   amount = composeOnDamageEvents(unit, amount, prediction);
   if (amount == 0) {
     return;
