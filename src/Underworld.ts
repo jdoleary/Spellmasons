@@ -36,9 +36,9 @@ import { allUnits } from './units';
 import { updateManaCostUI, updatePlanningView } from './ui/PlanningView';
 import { prng, randInt, SeedrandomState } from './rand';
 import { calculateCost } from './cards/cardUtils';
-import { lineSegmentIntersection, LineSegment } from './collision/lineSegment';
+import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle } from './collision/lineSegment';
 import { expandPolygon, mergePolygon2s, Polygon2, Polygon2LineSegment, toLineSegments, toPolygon2LineSegments } from './Polygon2';
-import { calculateDistanceOfVec2Array, findPath, findPolygonsThatVec2IsInsideOf } from './Pathfinding';
+import { calculateDistanceOfVec2Array, findPath } from './Pathfinding';
 import { removeUnderworldEventListeners } from './views';
 import * as readyState from './readyState';
 import { mouseMove } from './ui/eventListeners';
@@ -708,15 +708,32 @@ export default class Underworld {
       }
     }
   }
+  // fromSource is used when the spawn in question is spawning FROM something else,
+  // like clone.  This prevents clones from spawning through walls
+  isPointValidSpawn(spawnPoint: Vec2, radius: number, fromSource?: Vec2): boolean {
+    if (fromSource) {
+      // Ensure attemptSpawn isn't through any walls or liquidBounds
+      if ([...window.underworld.walls, ...window.underworld.liquidBounds].some(wall => lineSegmentIntersection({ p1: fromSource, p2: spawnPoint }, wall))) {
+        return false;
+      }
+    }
+    // Ensure spawnPoint doesn't intersect any walls with radius:
+    if ([...window.underworld.walls, ...window.underworld.liquidBounds].some(wall => {
+      const rightAngleIntersection = findWherePointIntersectLineSegmentAtRightAngle(spawnPoint, wall);
+      return rightAngleIntersection && math.distance(rightAngleIntersection, spawnPoint) <= radius;
+    })) {
+      return false;
+    }
+    return true;
+
+  }
   // ringLimit limits how far away from the spawnSource it will check for valid spawn locations
   // same as below "findValidSpanws", but shortcircuits at the first valid spawn found and returns that
   findValidSpawn(spawnSource: Vec2, ringLimit: number): Vec2 | undefined {
     const honeycombRings = ringLimit;
     for (let s of math.honeycombGenerator(config.COLLISION_MESH_RADIUS, spawnSource, honeycombRings)) {
       const attemptSpawn = { ...s, radius: config.COLLISION_MESH_RADIUS };
-      // Ensure attemptSpawn isn't inside of pathingPolygons
-      if (findPolygonsThatVec2IsInsideOf(attemptSpawn, this.pathingPolygons).length === 0) {
-        // Return the first valid spawn found
+      if (this.isPointValidSpawn(attemptSpawn, config.COLLISION_MESH_RADIUS, spawnSource)) {
         return attemptSpawn
       }
     }
@@ -731,8 +748,7 @@ export default class Underworld {
       // attemptSpawns radius must be the full config.COLLISION_MESH_RADIUS to ensure
       // that the spawning unit wont intersect something it shouldn't
       const attemptSpawn = { ...s, radius: config.COLLISION_MESH_RADIUS };
-      // Ensure attemptSpawn isn't inside of pathingPolygons
-      if (findPolygonsThatVec2IsInsideOf(attemptSpawn, this.pathingPolygons).length === 0) {
+      if (this.isPointValidSpawn(attemptSpawn, config.COLLISION_MESH_RADIUS, spawnSource)) {
         // Return the first valid spawn found
         validSpawns.push(attemptSpawn);
       }

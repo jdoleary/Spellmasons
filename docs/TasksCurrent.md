@@ -1,12 +1,9 @@
 
 ## Tasks
-- Thursday 
-    - BACKLOG: Get rid of artifact (super small squares in pathing mesh)
-    
+- Content: AOE clone should work for pickups
+- Bug: Clone doesn't show cloned units until they move cause they spawn right on top of each other
 - More
     - Bug: When trap triggers, spell effect is left behind as unit keeps moving through it
-    - Content: AOE clone should work for pickups
-    - Bug: Clone doesn't show cloned units until they move cause they spawn right on top of each other
     - Bug: clear tooltip on enter portal?? not sure if necessary, tooltip remained while I was manually calling initLevel
     - Bug: When you pull a guy and he actually gets to you, and then you move, you "carry" him
     - Task: An ally that has died at all (even if ressed) should lose their upgrade priviledge
