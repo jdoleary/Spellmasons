@@ -8,7 +8,7 @@ const unit: UnitSource = {
   id: 'lobber',
   info: {
     description: 'This ranged creature will throw magic high up in the air - over walls - to deal damage to it\'s enemies.',
-    image: 'units/golem-sand.png',
+    image: 'units/lobberIdle',
     subtype: UnitSubType.RANGED_RADIUS,
   },
   unitProps: {
@@ -18,10 +18,18 @@ const unit: UnitSource = {
     probability: 40,
     unavailableUntilLevelIndex: 2,
   },
+  animations: {
+    idle: 'units/lobberIdle',
+    hit: 'units/lobberHit',
+    attack: 'units/lobberAttack',
+    die: 'units/lobberDeath',
+    walk: 'units/lobberWalk',
+  },
   action: async (unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, canAttackTarget: boolean) => {
     // Attack
     let attackPromise;
     if (attackTarget && canAttackTarget) {
+      await Unit.playAnimation(unit, unit.animations.attack);
       attackPromise = createVisualLobbingProjectile(
         unit,
         attackTarget,

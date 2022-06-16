@@ -8,7 +8,7 @@ const unit: UnitSource = {
   id: 'archer',
   info: {
     description: 'An archer will try to get close enough to shoot you but not much closer.  It can only shoot you if there aren\'t any walls between you both.',
-    image: 'units/golem-blue.png',
+    image: 'units/archerIdle',
     subtype: UnitSubType.RANGED_LOS,
   },
   unitProps: {
@@ -19,11 +19,19 @@ const unit: UnitSource = {
     probability: 50,
     unavailableUntilLevelIndex: 1,
   },
+  animations: {
+    idle: 'units/archerIdle',
+    hit: 'units/archerHit',
+    attack: 'units/archerAttack',
+    die: 'units/archerDeath',
+    walk: 'units/archerWalk',
+  },
   action: async (unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, canAttackTarget: boolean) => {
     const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit);
     // Attack
     let attackPromise;
     if (attackTarget) {
+      await Unit.playAnimation(unit, unit.animations.attack);
       attackPromise = createVisualFlyingProjectile(
         unit,
         attackTarget,

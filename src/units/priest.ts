@@ -13,7 +13,7 @@ const unit: UnitSource = {
   id: 'priest',
   info: {
     description: 'The priest heals damaged allies, and if it\'s allies are at full health it will bless them with a Shield.',
-    image: 'units/priest.png',
+    image: 'units/priestIdle',
     subtype: UnitSubType.SUPPORT_CLASS,
   },
   unitProps: {
@@ -22,6 +22,13 @@ const unit: UnitSource = {
   spawnParams: {
     probability: 20,
     unavailableUntilLevelIndex: 5,
+  },
+  animations: {
+    idle: 'units/priestIdle',
+    hit: 'units/priestHit',
+    attack: 'units/priestAttack',
+    die: 'units/priestDeath',
+    walk: 'units/priestWalk',
   },
   extraTooltipInfo: () => {
     return `Mana cost per cast: ${CAST_MANA_COST}`;
@@ -51,6 +58,7 @@ const unit: UnitSource = {
           if (Unit.inRange(unit, ally)) {
             const chosenUnit = damagedAllys[0];
             if (chosenUnit) {
+              await Unit.playAnimation(unit, unit.animations.attack);
               await createVisualLobbingProjectile(
                 unit,
                 chosenUnit,
@@ -70,6 +78,7 @@ const unit: UnitSource = {
         // if there are no damaged allies cast shield on the closest:
         if (closestAlly) {
           if (Unit.inRange(unit, closestAlly)) {
+            await Unit.playAnimation(unit, unit.animations.attack);
             await createVisualLobbingProjectile(
               unit,
               closestAlly,
