@@ -174,6 +174,7 @@ export function syncInventory(slotModifyingIndex: number | undefined) {
       const card = Cards.allCards[inventoryCardId];
       if (card) {
         const elCard = createCardElement(card);
+        elCard.draggable = true;
         if (slotModifyingIndex !== undefined) {
           elCard.addEventListener('click', (e) => {
             if (window.player) {
@@ -452,7 +453,6 @@ export function getCardRarityColor(content: { probability: number }): string {
 }
 function createCardElement(content: Cards.ICard) {
   const element = document.createElement('div');
-  element.draggable = true;
   element.classList.add('card');
   const rarityString = CardRarity[cardProbabilityToRarity(content)]
   if (rarityString) {
