@@ -8,16 +8,6 @@
         - Fix findValidSpawn, no longer works since I removed inverted polygons
     - Bug: Grunts on level 4 of 0.7771387726829492 have attention marker when they definitely wont hit me next turn
     - Bug: I lost my robe color after taking damage
-    - Bug: I got `unit.animations` is undefined and it got stuck on player 2s turn during single player:
-```export function returnToDefaultSprite(unit) {
-  if (unit.image) {
-    if (unit.alive) {
-      const sprite = addPixiSprite(unit.animations.idle, containerUnits);
-      Image.changeSprite(unit.image, sprite);
-    } else {
-    }
-  }
-}```
     
 - More
     - Solve for syncronize interrupting / resetting animations
