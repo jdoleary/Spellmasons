@@ -25,6 +25,7 @@ import {
   withinCameraBounds,
   containerPlayerThinking,
   containerWalls,
+  addPixiSprite,
 } from './PixiUtils';
 import { queueCenteredFloatingText } from './FloatingText';
 import { UnitType, Faction, UnitSubType } from './commonTypes';
@@ -688,9 +689,20 @@ export default class Underworld {
 
   }
   addGroundTileImages() {
-    for (let tile of this.imageOnlyTiles) {
+    // Lay down a ground tile for every tile that is not liquid
+    for (let tile of this.imageOnlyTiles.filter(t => t.image.indexOf('liquid') === -1)) {
       if (tile.image) {
-        Image.create(tile, tile.image, containerBoard);
+        const sprite = addPixiSprite('tiles/all_ground.png', containerBoard);
+        sprite.x = tile.x - config.COLLISION_MESH_RADIUS;
+        sprite.y = tile.y - config.COLLISION_MESH_RADIUS;
+      }
+    }
+    // Then lay down wall tiles on top of them
+    for (let tile of this.imageOnlyTiles.filter(t => t.image !== 'tiles/all_ground.png')) {
+      if (tile.image) {
+        const sprite = addPixiSprite(tile.image, containerBoard);
+        sprite.x = tile.x - config.COLLISION_MESH_RADIUS;
+        sprite.y = tile.y - config.COLLISION_MESH_RADIUS;
       }
     }
   }
