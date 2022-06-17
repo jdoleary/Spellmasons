@@ -157,14 +157,14 @@ export default class Underworld {
       for (let i = window.forceMove.length - 1; i >= 0; i--) {
         const forceMoveInst = window.forceMove[i];
         if (forceMoveInst) {
-          const { pushedObject, step } = forceMoveInst;
-          forceMoveInst.distance -= Vec.magnitude(step);
-          moveWithCollisions(pushedObject, Vec.add(pushedObject, step), aliveNPCs);
+          const { pushedObject, velocity, velocity_falloff } = forceMoveInst;
+          moveWithCollisions(pushedObject, Vec.add(pushedObject, velocity), aliveNPCs);
           collideWithLineSegments(pushedObject, this.walls);
+          forceMoveInst.velocity = Vec.multiply(velocity_falloff, velocity);
           // Remove it from forceMove array once the distance has been covers
           // This works even if collisions prevent the unit from moving since
           // distance is modified even if the unit doesn't move each loop
-          if (forceMoveInst.distance <= 0) {
+          if (Vec.magnitude(forceMoveInst.velocity) <= 0.1) {
             window.forceMove.splice(i, 1);
           }
         }

@@ -1,11 +1,10 @@
-import { add, subtract, Vec2 } from '../Vec';
+import { Vec2 } from '../Vec';
 import type { Spell } from '.';
-import { distance, getCoordsAtDistanceTowardsTarget, similarTriangles } from '../math';
+import { distance, similarTriangles } from '../math';
 import type { Circle } from '../collision/moveWithCollision';
 
 export const id = 'pull';
-const pullDistance = 100;
-const speed = 5;
+const pullDistance = 15;
 const spell: Spell = {
   card: {
     id,
@@ -29,12 +28,12 @@ Pulls the target(s) towards the caster
   },
 };
 export function pull(pushedObject: Circle, towards: Vec2, prediction: boolean): Vec2 {
-  const endPos = add(pushedObject, similarTriangles(pushedObject.x - towards.x, pushedObject.y - towards.y, distance(pushedObject, towards), -pullDistance));
+  const velocity = similarTriangles(pushedObject.x - towards.x, pushedObject.y - towards.y, distance(pushedObject, towards), -pullDistance);
   if (!prediction) {
-    const step = subtract(getCoordsAtDistanceTowardsTarget(pushedObject, endPos, speed), pushedObject);
-    window.forceMove.push({ pushedObject, step, distance: pullDistance });
+    const velocity_falloff = 0.93;
+    window.forceMove.push({ pushedObject, velocity, velocity_falloff });
   }
-  return endPos;
+  return velocity;
 
 }
 export default spell;

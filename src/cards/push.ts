@@ -1,11 +1,10 @@
-import { add, subtract, Vec2 } from '../Vec';
+import { Vec2 } from '../Vec';
 import type { Spell } from '.';
-import { distance, similarTriangles, getCoordsAtDistanceTowardsTarget } from '../math';
+import { distance, similarTriangles } from '../math';
 import type { Circle } from '../collision/moveWithCollision';
 
 export const id = 'push';
-const pushDistance = 100;
-const speed = 5;
+const pushDistance = 20;
 const spell: Spell = {
   card: {
     id,
@@ -35,12 +34,12 @@ Pushes the target(s) away from the caster
   },
 };
 export function forcePush(pushedObject: Circle, awayFrom: Vec2, prediction: boolean): Vec2 {
-  const endPos = add(pushedObject, similarTriangles(pushedObject.x - awayFrom.x, pushedObject.y - awayFrom.y, distance(pushedObject, awayFrom), pushDistance));
+  const velocity = similarTriangles(pushedObject.x - awayFrom.x, pushedObject.y - awayFrom.y, distance(pushedObject, awayFrom), pushDistance);
   if (!prediction) {
-    const step = subtract(getCoordsAtDistanceTowardsTarget(pushedObject, endPos, speed), pushedObject);
-    window.forceMove.push({ pushedObject, step, distance: pushDistance });
+    const velocity_falloff = 0.93;
+    window.forceMove.push({ pushedObject, velocity, velocity_falloff });
   }
-  return endPos;
+  return velocity;
 
 }
 export default spell;

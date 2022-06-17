@@ -1,7 +1,6 @@
 ## Tasks
 - Make extra sprites stop if their attached sprite changes, see how spell effect still lives if wizard hurts themself in cast. (addOneOffAnimation)
 - Juice: Add finishOnFrame to archer and lobber's attacks
-- Juice: Push and pull should start fast and slow down like friction is causing it to slow
 Erin Playtest:
 - death skull due to poison is confusing
 - Priest "run away" ai is broken
@@ -11,12 +10,12 @@ Erin Playtest:
 - task: Tweak pathing to be able to walk through 'walkThisGap.png' on desktop
 - ui: I accidentally moved while trying to interact with my spells on my toolbar
 - bug: poison subsprite is gone after one turn
+- task: allow clearing spell on toolbar
 - Add loading screen for when level is generating
 - Fix Polygon2 tests
 - Draw walls above units so their corpses don't render over top of the walls
     - Update email to Che?
 - More
-    - Bug: When trap triggers, spell effect is left behind as unit keeps moving through it
     - Bug: clear tooltip on enter portal?? not sure if necessary, tooltip remained while I was manually calling initLevel
     - Bug: When you pull a guy and he actually gets to you, and then you move, you "carry" him
     - Task: An ally that has died at all (even if ressed) should lose their upgrade priviledge
