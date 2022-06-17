@@ -173,10 +173,10 @@ export default class Underworld {
       for (let i = 0; i < this.units.length; i++) {
         const u = this.units[i];
         if (u) {
+          // TODO: Optimize: maybe only call this during force move
+          Obstacle.checkLiquidInteractionDueToMovement(u, false);
           const predictionUnit = window.predictionUnits[i];
           if (u.alive) {
-            // TODO: Optimize: maybe only call this during force move
-            Obstacle.checkLiquidInteractionDueToMovement(u, false);
             // Only allow movement if the unit has stamina
             if (u.path && u.path.points[0] && u.stamina > 0 && Unit.isUnitsTurnPhase(u)) {
               // Move towards target
