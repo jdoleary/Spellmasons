@@ -49,7 +49,9 @@ const unit: UnitSource = {
     if (unit.mana >= CAST_MANA_COST) {
       // Heal an ally
       const damagedAllys = window.underworld.units.filter(
-        (u) => u.faction === unit.faction && u.alive && u.health < u.healthMax,
+        // Only select allies, that are alive, that are damaged, and that aren't SUPPORT_CLASS cause it's
+        // annoying when priests heal each other.
+        (u) => u.faction === unit.faction && u.alive && u.health < u.healthMax && u.unitSubType !== UnitSubType.SUPPORT_CLASS,
       );
       if (damagedAllys.length) {
         for (let ally of damagedAllys) {
@@ -74,7 +76,7 @@ const unit: UnitSource = {
         }
       } else {
         // if there are no damaged allies cast shield on the closest:
-        if (closestAlly) {
+        if (closestAlly && closestAlly.unitSubType !== UnitSubType.SUPPORT_CLASS) {
           if (Unit.inRange(unit, closestAlly)) {
             await Unit.playAnimation(unit, unit.animations.attack);
             await createVisualLobbingProjectile(

@@ -1,7 +1,6 @@
 ## Tasks
 Erin Playtest:
 - When a trap triggers, it should pause unit movement
-- shield stacks too much from priest and is annoying (don't let priests heal each other or themselves)
 - death skull due to poison is confusing
 - Priest "run away" ai is broken
 - why does some loop 1 archers have 8 health, not showing armor?
