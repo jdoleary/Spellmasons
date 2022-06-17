@@ -108,23 +108,28 @@ body.view-Game.showUpgrades #upgrade-picker {
   margin-bottom: 12px;
 }
 
-#upgrade-picker .card {
+#upgrade-picker .card,
+#card-inspect .card {
   width: 100%;
   max-width: 300px;
   margin: 8px;
 }
 
-#upgrade-picker .card-inner {
+#upgrade-picker .card-inner,
+#card-inspect .card-inner {
   height: 500px;
   width: 100%;
+  background-color: #333;
 }
 
-#upgrade-picker .card-title {
+#upgrade-picker .card-title,
+#card-inspect .card-title {
   text-align: center;
   color: white;
 }
 
-#upgrade-picker .card-thumb {
+#upgrade-picker .card-thumb,
+#card-inspect .card-thumb {
   min-height: 180px;
   width: 100%;
 }

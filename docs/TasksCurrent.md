@@ -1,7 +1,6 @@
 ## Tasks
 Erin Playtest:
 - When a trap triggers, it should pause unit movement
-- "f" view for spells has broken css
 - Right click on toolbar spell when spells are queued up highlights them all, should just highlight on toolbar
 - clicking even when out of range should cast at end of range (especially with AOE). Think convenience.  When players view the aoe circle they assume this is where it will cast when they click
 - shield stacks too much from priest and is annoying (don't let priests heal each other or themselves)
