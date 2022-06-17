@@ -1,4 +1,5 @@
 ## Tasks
+- Make extra sprites stop if their attached sprite changes, see how spell effect still lives if wizard hurts themself in cast. (addOneOffAnimation)
 - Juice: Add finishOnFrame to archer and lobber's attacks
 - Juice: Push and pull should start fast and slow down like friction is causing it to slow
 Erin Playtest:
