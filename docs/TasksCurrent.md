@@ -1,6 +1,6 @@
-
 ## Tasks
 Erin Playtest:
+- Bug: "Pick -7 cards" shows when you first start
 - When a trap triggers, it should pause unit movement
 - "f" view for spells has broken css
 - Right click on toolbar spell when spells are queued up highlights them all, should just highlight on toolbar
