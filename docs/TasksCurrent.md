@@ -2,8 +2,8 @@
 Erin Playtest:
 - death skull due to poison is confusing
 - Priest "run away" ai is broken
-- Fix robe losing color at new level
-- Should be able to 'push' and 'pull' trap
+- Fix robe losing color 
+- Should be able to 'push' and 'pull' trap (TimeReleases are not affected by forceMoves or push and pull)
 ---
 - task: Tweak pathing to be able to walk through 'walkThisGap.png' on desktop
 - ui: I accidentally moved while trying to interact with my spells on my toolbar
