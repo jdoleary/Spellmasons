@@ -1016,6 +1016,6 @@ body.open-inventory #inventory-icon {
 }
 
 /* Glow to signify that this toolbar element is active and will change if an inventory item is selected */
-.active-toolbar-element {
+#card-hand .active-toolbar-element {
   box-shadow: 0px 0px 11px 4px rgba(242, 234, 0, 1);
 }
