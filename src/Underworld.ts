@@ -1141,7 +1141,7 @@ export default class Underworld {
     if (this.levelIndex == 0) {
       // Limit starting cards to a probability of 10 or more
       minimumProbability = 10;
-      elUpgradePickerLabel.innerHTML = `Pick ${config.STARTING_CARD_COUNT - window.player.cards.length} starting cards.`;
+      elUpgradePickerLabel.innerHTML = `Pick ${config.STARTING_CARD_COUNT - window.player.inventory.length} starting spells.`;
     } else {
       elUpgradePickerLabel.innerHTML = 'Pick an upgrade.';
     }
