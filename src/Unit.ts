@@ -7,12 +7,13 @@ import { addPixiSprite, containerDoodads, containerUnits, PixiSpriteOptions } fr
 import { UnitSubType, UnitType, Faction } from './commonTypes';
 import type { Vec2 } from './Vec';
 import * as Vec from './Vec';
+import * as CardUI from './CardUI';
 import Events from './Events';
 import makeAllRedShader from './shaders/selected';
 import { addLerpable } from './lerpList';
 import { allUnits } from './units';
 import { allModifiers, EffectState } from './cards';
-import { checkIfNeedToClearTooltip } from './ui/PlanningView';
+import { checkIfNeedToClearTooltip, clearSpellEffectProjection } from './ui/PlanningView';
 import { centeredFloatingText } from './FloatingText';
 import { turn_phase } from './Underworld';
 const elHealthBar: HTMLElement = document.querySelector('#health .fill') as HTMLElement;
@@ -436,6 +437,8 @@ export function die(unit: IUnit, prediction: boolean) {
   }
 
   if (window.player && window.player.unit == unit) {
+    clearSpellEffectProjection();
+    CardUI.clearSelectedCards();
     centeredFloatingText(`💀 You Died 💀`, 'red');
   }
   // In the event that this unit that just died is the selected unit,

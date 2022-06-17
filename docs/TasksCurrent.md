@@ -4,7 +4,7 @@ Erin Playtest:
 - death skull due to poison is confusing
 - Priest "run away" ai is broken
 - why does some loop 1 archers have 8 health, not showing armor?
-- clear spell projection when you die
+- Fix robe losing color at new level
 ---
 - task: Tweak pathing to be able to walk through 'walkThisGap.png' on desktop
 - ui: I accidentally moved while trying to interact with my spells on my toolbar
