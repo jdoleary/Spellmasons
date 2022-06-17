@@ -370,6 +370,7 @@ export function addCardToHand(card: Cards.ICard | undefined, player: Player.IPla
     if (emptySlotIndex !== -1) {
       player.cards[emptySlotIndex] = card.id;
     }
+    recalcPositionForCards(player);
   }
 }
 
