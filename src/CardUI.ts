@@ -23,15 +23,17 @@ const elSelectedCards = document.getElementById('selected-cards') as HTMLElement
 const gapBetweenCards = 4;
 elCardHand.style['gap'] = `${gapBetweenCards}px`;
 elSelectedCards.style['gap'] = `${gapBetweenCards}px`;
-elInvContent.addEventListener('dragstart', ev => {
+const dragstart = (ev: any) => {
   const target = (ev.target as HTMLElement)
   if (target.closest('.card')) {
-    dragCard = (target.closest('.card') as HTMLElement)?.dataset.cardId;
+    dragCard = (target.closest('.card') as HTMLElement)
   } else {
     ev.preventDefault();
   }
 
-})
+}
+elInvContent.addEventListener('dragstart', dragstart);
+elCardHand.addEventListener('dragstart', dragstart);
 elCardHand.addEventListener('dragover', ev => {
   ev.preventDefault();
 })
@@ -40,8 +42,23 @@ elCardHolders.style['paddingLeft'] = `${cardHoldersPaddingLeft}px`;
 elCardHand.addEventListener('drop', ev => {
   const dropElement = ((ev.target as HTMLElement).closest('.slot') as HTMLElement);
   const dropIndex = dropElement.parentNode ? Array.from(dropElement.parentNode.children).indexOf(dropElement) : -1;
-  if (window.player && dropIndex !== -1 && dragCard) {
-    window.player.cards[dropIndex] = dragCard;
+  const cardId = dragCard && dragCard.dataset.cardId
+  if (window.player && dropIndex !== -1 && dragCard && cardId !== undefined) {
+    const startDragCardIndex = dragCard.parentNode ? Array.from(dragCard.parentNode.children).indexOf(dragCard) : -1;
+    if (startDragCardIndex !== -1) {
+      // Then the drag card is already in the toolbar and this is a swap between
+      // two cards on the toolbar
+      const swapCard = window.player.cards[dropIndex];
+      window.player.cards[dropIndex] = cardId;
+      if (swapCard !== undefined) {
+        window.player.cards[startDragCardIndex] = swapCard;
+      } else {
+        console.error('Unexpected error, swapCard is undefined')
+      }
+    } else {
+      // else a card is being dragged in from inventory
+      window.player.cards[dropIndex] = cardId;
+    }
     recalcPositionForCards(window.player);
     syncInventory(undefined);
   } else {
@@ -123,6 +140,7 @@ export function recalcPositionForCards(player: Player.IPlayer | undefined) {
       // Note: Some upgrades don't have corresponding cards (such as resurrect)
       if (card) {
         const element = createCardElement(card);
+        element.draggable = true;
         element.classList.add(className, 'slot');
         // When the user clicks on a card
         addListenersToCardElement(player, element, cardId);
@@ -232,7 +250,7 @@ function addToolbarListener(
   });
 
 }
-let dragCard: string | undefined;
+let dragCard: HTMLElement | undefined;
 function addListenersToCardElement(
   player: Player.IPlayer,
   element: HTMLElement,

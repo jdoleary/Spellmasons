@@ -10,7 +10,6 @@ Erin Playtest:
 ---
 - task: Tweak pathing to be able to walk through 'walkThisGap.png' on desktop
 - ui: I accidentally moved while trying to interact with my spells on my toolbar
-- UI: Allow swapping spells on toolbar
 - bug: poison subsprite is gone after one turn
 - Add loading screen for when level is generating
 - Fix Polygon2 tests
