@@ -39,7 +39,7 @@ import { calculateCost } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle } from './collision/lineSegment';
 import { expandPolygon, mergePolygon2s, Polygon2, Polygon2LineSegment, toLineSegments, toPolygon2LineSegments } from './Polygon2';
 import { calculateDistanceOfVec2Array, findPath } from './Pathfinding';
-import { removeUnderworldEventListeners } from './views';
+import { removeUnderworldEventListeners, setView, View } from './views';
 import * as readyState from './readyState';
 import { mouseMove } from './ui/eventListeners';
 import Jprompt from './Jprompt';
@@ -844,24 +844,29 @@ export default class Underworld {
     this.postSetupLevel();
   }
   async initLevel(levelIndex: number) {
-    if (window.hostClientId === window.clientId) {
-      console.log('Setup: initLevel as host', levelIndex);
-      this.levelIndex = levelIndex;
-      // Generate level
-      let level;
-      if (false && window.devMode) {
-        level = this.testLevelData();
-      } else {
-        do {
-          // Invoke generateRandomLevel again until it succeeds
-          level = this.generateRandomLevelData(levelIndex);
-        } while (level === undefined);
+    setView(View.Loading);
+    // setTimeout allows the UI to refresh before locking up the CPU with
+    // heavy level generation code
+    setTimeout(() => {
+      if (window.hostClientId === window.clientId) {
+        console.log('Setup: initLevel as host', levelIndex);
+        this.levelIndex = levelIndex;
+        // Generate level
+        let level;
+        if (false && window.devMode) {
+          level = this.testLevelData();
+        } else {
+          do {
+            // Invoke generateRandomLevel again until it succeeds
+            level = this.generateRandomLevelData(levelIndex);
+          } while (level === undefined);
+        }
+        window.pie.sendData({
+          type: MESSAGE_TYPES.CREATE_LEVEL,
+          level
+        });
       }
-      window.pie.sendData({
-        type: MESSAGE_TYPES.CREATE_LEVEL,
-        level
-      });
-    }
+    }, 10);
   }
   checkPickupCollisions(unit: Unit.IUnit) {
     for (let pu of this.pickups) {

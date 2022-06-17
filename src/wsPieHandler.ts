@@ -264,6 +264,7 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       console.log('sync: Syncing level');
       if (window.underworld) {
         window.underworld.createLevel(level);
+        setView(View.Game);
       } else {
         console.error('Cannot sync level, no window.underworld exists')
       }

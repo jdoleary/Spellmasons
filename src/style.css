@@ -25,6 +25,24 @@ body {
   top: 0;
 }
 
+#loading-screen {
+  display: none;
+  font-size: 162px;
+  color: white;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  position: absolute;
+  text-align: center;
+  line-height: 100vh;
+  top: 0;
+}
+
+body.view-Loading #loading-screen {
+  display: block;
+
+}
+
 /* Hide game content and underworld when the menu is open */
 body.view-Menu #game-content-holder,
 body.view-Menu #underworld-container {

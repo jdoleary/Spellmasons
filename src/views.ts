@@ -28,6 +28,7 @@ const elPIXIHolder = document.getElementById('PIXI-holder') as HTMLElement;
 // A view is not shared between players in the same game, a player could choose any view at any time
 export enum View {
   Menu,
+  Loading,
   Setup,
   CharacterSelect,
   Game,

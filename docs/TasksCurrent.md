@@ -1,17 +1,18 @@
 ## Tasks
-- When AOE cast is out of range, only show AOE circle
+- **Important** When AOE cast is out of range, only show AOE circle
 where it will cast
+    - Come up with better solution for out of range casting, but still allowing predictions
 - death skull due to poison is confusing
 - Priest "run away" ai is broken
 - Fix robe losing color 
 - Should be able to 'push' and 'pull' trap (TimeReleases are not affected by forceMoves or push and pull)
 ---
 - task: Tweak pathing to be able to walk through 'walkThisGap.png' on desktop
+    - 0.2643389503447078
 - ui: I accidentally moved while trying to interact with my spells on my toolbar
 - wall: see abberant-wall.png
 - bug: poison subsprite is gone after one turn
 - task: allow clearing spell on toolbar
-- Add loading screen for when level is generating
 - Fix Polygon2 tests
 - Draw walls above units so their corpses don't render over top of the walls
     - Update email to Che?
@@ -58,7 +59,6 @@ i can still cast spells during my turn; as well as end turns
 and 2nd client got `Cannot change character, player not found with id 8c502be8-631c-482a-9398-40155f77c21f`
     - maybe in this case, re-request player sync??
 - Improve sending castCards with targeting based on id not position
-- Make loading screen
 - Make an overlay screen that blocks interaction while waiting for sync
 - Unit movement desync occurred between clients when one client has CPU throttled, the non throttled client has the unit move much farther
 
