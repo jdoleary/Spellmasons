@@ -1,5 +1,4 @@
 ## Tasks
-- Update push so that it pushes away from self
 - When AOE cast is out of range, only show AOE circle
 where it will cast
 - death skull due to poison is confusing
@@ -9,6 +8,7 @@ where it will cast
 ---
 - task: Tweak pathing to be able to walk through 'walkThisGap.png' on desktop
 - ui: I accidentally moved while trying to interact with my spells on my toolbar
+- wall: see abberant-wall.png
 - bug: poison subsprite is gone after one turn
 - task: allow clearing spell on toolbar
 - Add loading screen for when level is generating

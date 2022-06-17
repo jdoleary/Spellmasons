@@ -2,6 +2,7 @@ import { Vec2 } from '../Vec';
 import type { Spell } from '.';
 import { distance, similarTriangles } from '../math';
 import type { Circle } from '../collision/moveWithCollision';
+import * as config from '../config';
 
 export const id = 'push';
 const pushDistance = 20;
@@ -20,13 +21,13 @@ Pushes the target(s) away from the caster
       for (let unit of state.targetedUnits) {
         // Push away from caster if unit was direct targeted by cast, otherwise push away from the
         // cast location (as in the case of AOE, push)
-        const awayFrom = distance(state.castLocation, unit) < unit.radius ? state.casterUnit : state.castLocation;
+        const awayFrom = distance(state.castLocation, unit) < config.COLLISION_MESH_RADIUS ? state.casterUnit : state.castLocation;
         forcePush(unit, awayFrom, prediction);
       }
       for (let pickup of state.targetedPickups) {
         // Push away from caster if unit was direct targeted by cast, otherwise push away from the
         // cast location (as in the case of AOE, push)
-        const awayFrom = distance(state.castLocation, pickup) < pickup.radius ? state.casterUnit : state.castLocation;
+        const awayFrom = distance(state.castLocation, pickup) < config.COLLISION_MESH_RADIUS ? state.casterUnit : state.castLocation;
         forcePush(pickup, awayFrom, prediction);
       }
       return state;
