@@ -4,7 +4,7 @@ import type { Spell } from '.';
 import floatingText from '../FloatingText';
 
 const id = 'shield';
-const damageBlocked = 6;
+const damageBlocked = 3;
 const maxStack = 1;
 const spell: Spell = {
   card: {
