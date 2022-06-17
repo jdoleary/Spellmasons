@@ -1,6 +1,5 @@
 ## Tasks
 - Make extra sprites stop if their attached sprite changes, see how spell effect still lives if wizard hurts themself in cast. (addOneOffAnimation)
-- Juice: Add finishOnFrame to archer and lobber's attacks
 Erin Playtest:
 - death skull due to poison is confusing
 - Priest "run away" ai is broken
