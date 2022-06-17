@@ -1,7 +1,6 @@
 ## Tasks
 Erin Playtest:
 - When a trap triggers, it should pause unit movement
-- clicking even when out of range should cast at end of range (especially with AOE). Think convenience.  When players view the aoe circle they assume this is where it will cast when they click
 - shield stacks too much from priest and is annoying (don't let priests heal each other or themselves)
 - death skull due to poison is confusing
 - Priest "run away" ai is broken

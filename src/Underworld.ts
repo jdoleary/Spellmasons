@@ -1132,6 +1132,20 @@ export default class Underworld {
     }
   }
 
+  // If desired target is within range it will return the desiredTarget, else
+  // it will return a target in that direction as far as the player can reach.
+  getCastTarget(caster: Player.IPlayer, desiredTarget: Vec2): Vec2 {
+    let target = desiredTarget;
+    if (math.distance(caster.unit, target) >= caster.unit.attackRange) {
+      // If mouse is beyond cast range, change target to end of cast range.
+      // This is a matter of convenience, especially for AOE where the player
+      // instinctively assumes that a click will trigger the spell on the whole visible radius.
+      const endOfRange = math.getCoordsAtDistanceTowardsTarget(caster.unit, target, caster.unit.attackRange);
+      target = endOfRange;
+    }
+    return target;
+  }
+
   showUpgrades() {
     if (!window.player) {
       console.error('Cannot show upgrades, no window.player');
