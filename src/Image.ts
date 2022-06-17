@@ -80,7 +80,12 @@ export function changeSprite(image: IImage | undefined, imagePath: string, conta
   sprite.anchor.x = image.sprite.anchor.x;
   sprite.anchor.y = image.sprite.anchor.y;
   // Save children before they are removed
-  const children = [...image.sprite.children];
+  const children = [
+    ...image.sprite.children
+      // @ts-ignore: isOneOff is a custom property that I'm adding to denote if a sprite is a oneOff sprite
+      // meaning, it should get removed if the primary sprite changes
+      .filter(c => !c.isOneOff)
+  ];
   // Save mask
   const mask = image.sprite.mask;
   cleanup(image);

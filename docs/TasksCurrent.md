@@ -1,8 +1,7 @@
 ## Tasks
-- Revise finish on frame so that the animation will finish but something callback like firing an arrow can be triggered before it's done
+- Update push so that it pushes away from self
 - When AOE cast is out of range, only show AOE circle
 where it will cast
-- Make extra sprites stop if their attached sprite changes, see how spell effect still lives if wizard hurts themself in cast. (addOneOffAnimation)
 - death skull due to poison is confusing
 - Priest "run away" ai is broken
 - Fix robe losing color 

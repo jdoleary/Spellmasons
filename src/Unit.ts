@@ -16,7 +16,8 @@ import { allModifiers, EffectState } from './cards';
 import { checkIfNeedToClearTooltip, clearSpellEffectProjection } from './ui/PlanningView';
 import { centeredFloatingText } from './FloatingText';
 import { turn_phase } from './Underworld';
-import AnimationTiming from './AnimationTiming';
+import combos from './AnimationCombos';
+import { playSFXKey } from './Audio';
 
 const elHealthBar: HTMLElement = document.querySelector('#health .fill') as HTMLElement;
 const elHealthCost: HTMLElement = document.querySelector('#health .cost') as HTMLElement;
@@ -348,6 +349,57 @@ export function getParentContainer(alive: boolean): PIXI.Container {
   return alive ? containerUnits : containerDoodads;
 }
 
+export function playComboAnimation(unit: IUnit, key: string | undefined, keyMoment?: () => Promise<any>, options?: PixiSpriteOptions): Promise<void> {
+  if (!key) {
+    console.trace('tried to play missing animation');
+    return Promise.resolve();
+  }
+  // Change animation and change back to default
+  return new Promise<void>((resolve) => {
+    if (!unit.image) {
+      return resolve();
+    }
+    const combo = combos[key];
+    if (!combo) {
+      console.error('Combo data missing for animation with key', key)
+      return resolve();
+    }
+    const finishOnFrame = combo.keyFrame;
+    let keyMomentPromise = Promise.resolve();
+    // Ensure keyMoment doesn't trigger more than once.
+    let keyMomentTriggered = false;
+    const onFrameChange = (finishOnFrame === undefined || keyMoment === undefined) ? undefined : (currentFrame: number) => {
+      if (currentFrame >= finishOnFrame && !keyMomentTriggered) {
+        keyMomentPromise = keyMoment();
+        keyMomentTriggered = true;
+      }
+
+    }
+    // Play sound effect
+    if (combo.SFX) {
+      playSFXKey(combo.SFX)
+    }
+    Image.changeSprite(unit.image, combo.primaryAnimation, unit.image.sprite.parent, {
+      loop: false,
+      ...options,
+      onFrameChange,
+      onComplete: () => {
+        // Once main animation is complete,
+        // wait for keymoment to complete,
+        // then resolve the whole combo animation.
+        keyMomentPromise.then(() => {
+          resolve();
+        })
+      }
+    });
+    // Note: oneOff animations MUST be added after changeSprite because changeSprite wipes any existing oneOff animations
+    // This is how oneOff animations are attached to a primary animation, so if the primary animation ends early, so do
+    // the currently playing oneOff animations.
+    for (let animPath of combo.companionAnimations) {
+      addOneOffAnimation(unit, animPath, options);
+    }
+  }).then(() => { returnToDefaultSprite(unit); });
+}
 export function playAnimation(unit: IUnit, spritePath: string | undefined, options?: PixiSpriteOptions): Promise<void> {
   if (!spritePath) {
     console.trace('tried to play missing animation');
@@ -358,17 +410,10 @@ export function playAnimation(unit: IUnit, spritePath: string | undefined, optio
     if (!unit.image) {
       return resolve();
     }
-    const finishOnFrame = AnimationTiming[spritePath]?.finishOnFrame;
-    const onFrameChange = finishOnFrame === undefined ? undefined : (currentFrame: number) => {
-      if (currentFrame >= finishOnFrame) {
-        resolve();
-      }
 
-    }
     Image.changeSprite(unit.image, spritePath, unit.image.sprite.parent, {
       loop: false,
       ...options,
-      onFrameChange,
       onComplete: () => {
         resolve();
       }
@@ -391,6 +436,9 @@ export function addOneOffAnimation(unit: IUnit, spritePath: string, options?: Pi
         resolve();
       }
     });
+    // @ts-ignore: isOneOff is a custom property that I'm adding to denote if a sprite is a oneOff sprite
+    // meaning, it should get removed if the primary sprite changes
+    animationSprite.isOneOff = true;
     animationSprite.anchor.set(0.5);
   });
 }

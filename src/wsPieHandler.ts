@@ -397,19 +397,14 @@ async function handleSpell(caster: Player.IPlayer, payload: any) {
   // Only allow casting during the PlayerTurns phase
   if (window.underworld.turn_phase === turn_phase.PlayerTurns) {
     window.animatingSpells = true;
-    const animationSpeed = 0.2;
-
+    let animationKey = 'playerAttackLarge';
     if (payload.cards.length < 3) {
-      Unit.addOneOffAnimation(caster.unit, 'units/playerAttackZap', { animationSpeed, loop: false });
+      animationKey = 'playerAttackSmall';
     } else if (payload.cards.length < 5) {
-      Unit.addOneOffAnimation(caster.unit, 'units/playerAttackSingle', { animationSpeed, loop: false });
-    } else {
-      Unit.addOneOffAnimation(caster.unit, 'units/playerAttackBomb', { animationSpeed, loop: false });
+      animationKey = 'playerAttackMedium';
     }
-    // Play cast sound effect:
-    playSFXKey('cast');
-    await Unit.playAnimation(caster.unit, 'units/playerAttack', { animationSpeed, loop: false });
-    await window.underworld.castCards(caster.cardUsageCounts, caster.unit, payload.cards, payload, false, false);
+    const keyMoment = () => window.underworld.castCards(caster.cardUsageCounts, caster.unit, payload.cards, payload, false, false);
+    await Unit.playComboAnimation(caster.unit, animationKey, keyMoment, { animationSpeed: 0.2, loop: false });
     window.animatingSpells = false;
     // Check for dead players to end their turn,
     // this occurs here because spells may have caused their death

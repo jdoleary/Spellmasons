@@ -28,21 +28,21 @@ const unit: UnitSource = {
   },
   action: async (unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, _canAttackTarget: boolean) => {
     const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit);
-    let movePromise;
-    let attackPromise;
     // Attack
     if (attackTarget) {
       // Archers attack or move, not both; so clear their existing path
       unit.path = undefined;
       Unit.orient(unit, attackTarget);
-      await Unit.playAnimation(unit, unit.animations.attack);
-      attackPromise = createVisualFlyingProjectile(
-        unit,
-        attackTarget,
-        'arrow.png',
-      ).then(() => {
-        Unit.takeDamage(attackTarget, unit.damage, false, undefined);
-      })
+      await Unit.playComboAnimation(unit, unit.animations.attack, () => {
+        return createVisualFlyingProjectile(
+          unit,
+          attackTarget,
+          'arrow.png',
+        ).then(() => {
+          Unit.takeDamage(attackTarget, unit.damage, false, undefined);
+        })
+
+      });
     } else {
       // Movement:
       if (closestEnemy) {
@@ -52,16 +52,14 @@ const unit: UnitSource = {
             ? -unit.stamina // flee as far as it can
             : Math.min(unit.stamina, distanceToEnemy - unit.attackRange) // move in range but no farther
           const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestEnemy, moveDistance);
-          movePromise = Unit.moveTowards(unit, moveTo);
+          await Unit.moveTowards(unit, moveTo);
         } else {
           // If they don't have line of sight, move closer
           const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestEnemy, unit.stamina);
-          movePromise = Unit.moveTowards(unit, moveTo);
+          await Unit.moveTowards(unit, moveTo);
         }
       }
     }
-    // Move and attack at the same time, but wait for the slowest to finish before moving on
-    await Promise.all([attackPromise, movePromise])
   },
 };
 export default unit;
