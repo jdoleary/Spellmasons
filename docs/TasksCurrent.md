@@ -1,4 +1,6 @@
 ## Tasks
+- **important** make some animations stop "await"ing early like at the top of lobbers throw or at the strike moment of players cast, to look responsive
+- Push and pull should start fast and slow down like friction is causing it to slow
 Erin Playtest:
 - death skull due to poison is confusing
 - Priest "run away" ai is broken
