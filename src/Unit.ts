@@ -472,6 +472,10 @@ export function takeDamage(unit: IUnit, amount: number, prediction: boolean, _st
   if (amount == 0) {
     return;
   }
+  if (!unit.alive) {
+    // Do not deal damage to dead unitsn
+    return;
+  }
   if (!prediction) {
     console.log(`takeDamage: unit ${unit.id}; amount: ${amount}; events:`, unit.onDamageEvents);
     playAnimation(unit, unit.animations.hit);

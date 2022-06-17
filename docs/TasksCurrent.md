@@ -11,7 +11,6 @@ Erin Playtest:
 - task: Tweak pathing to be able to walk through 'walkThisGap.png' on desktop
 - ui: I accidentally moved while trying to interact with my spells on my toolbar
 - UI: Allow swapping spells on toolbar
-- bug: Already dead units "redied" via animation when damage was done to their corpse via an explosion
 - bug: poison subsprite is gone after one turn
 - Add loading screen for when level is generating
 - Fix Polygon2 tests
