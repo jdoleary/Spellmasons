@@ -363,6 +363,7 @@ export function addAnimatedPixiSprite(
   return sprite;
 }
 export interface PixiSpriteOptions {
+  onFrameChange?: (currentFrame: number) => void,
   onComplete?: () => void,
   loop: boolean,
   animationSpeed?: number
@@ -386,6 +387,9 @@ export function addPixiSprite(
     animatedSprite.animationSpeed = options.animationSpeed || 0.1;
     if (options.onComplete) {
       animatedSprite.onComplete = options.onComplete;
+    }
+    if (options.onFrameChange) {
+      animatedSprite.onFrameChange = options.onFrameChange;
     }
     animatedSprite.loop = options.loop;
     animatedSprite.play();

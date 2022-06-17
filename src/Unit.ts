@@ -16,6 +16,8 @@ import { allModifiers, EffectState } from './cards';
 import { checkIfNeedToClearTooltip, clearSpellEffectProjection } from './ui/PlanningView';
 import { centeredFloatingText } from './FloatingText';
 import { turn_phase } from './Underworld';
+import AnimationTiming from './AnimationTiming';
+
 const elHealthBar: HTMLElement = document.querySelector('#health .fill') as HTMLElement;
 const elHealthCost: HTMLElement = document.querySelector('#health .cost') as HTMLElement;
 const elHealthLabel: HTMLElement = document.querySelector('#health .label') as HTMLElement;
@@ -356,15 +358,22 @@ export function playAnimation(unit: IUnit, spritePath: string | undefined, optio
     if (!unit.image) {
       return resolve();
     }
+    const finishOnFrame = AnimationTiming[spritePath]?.finishOnFrame;
+    const onFrameChange = finishOnFrame === undefined ? undefined : (currentFrame: number) => {
+      if (currentFrame >= finishOnFrame) {
+        resolve();
+      }
+
+    }
     Image.changeSprite(unit.image, spritePath, unit.image.sprite.parent, {
       loop: false,
       ...options,
+      onFrameChange,
       onComplete: () => {
-        returnToDefaultSprite(unit);
         resolve();
       }
     });
-  });
+  }).then(() => { returnToDefaultSprite(unit); });
 }
 export function addOneOffAnimation(unit: IUnit, spritePath: string, options?: PixiSpriteOptions): Promise<void> {
   // Play animation and then remove it
