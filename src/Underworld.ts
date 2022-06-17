@@ -677,7 +677,7 @@ export default class Underworld {
       const coord = validSpawnCoords.splice(validSpawnCoordsIndex, 1)[0];
       if (coord) {
         const roll = randInt(this.random, 0, 100);
-        const isArmored = (roll <= config.PERCENT_CHANCE_OF_HEAVY_UNIT);
+        const isArmored = (roll < config.PERCENT_CHANCE_OF_HEAVY_UNIT);
         levelData.enemies.push({ id, coord, strength, isArmored })
       }
     }

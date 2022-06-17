@@ -15,7 +15,8 @@ export const NON_HEAVY_UNIT_SCALE = 1.5;
 export const START_CARDS_COUNT = 60;
 export const MILLIS_PER_ANIMATION = 200;
 export const MILLIS_PER_SPELL_ANIMATION = 400;
-export const PERCENT_CHANCE_OF_HEAVY_UNIT = 10;
+// Temporarily disable heavy / armored units since I don't have a good way to visually show it
+export const PERCENT_CHANCE_OF_HEAVY_UNIT = -1;
 export const STARTING_CARD_COUNT = 3;
 export const OBSTACLE_SIZE = COLLISION_MESH_RADIUS * 2;
 export const MAX_PLAYERS = 8;
