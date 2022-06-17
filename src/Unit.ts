@@ -625,6 +625,19 @@ export function findClosestUnitInDifferentFaction(
 export function findClosestUnitInSameFaction(unit: IUnit): IUnit | undefined {
   return closestInListOfUnits(unit, livingUnitsInSameFaction(unit));
 }
+export function orient(unit: IUnit, faceTarget: Vec2) {
+  // Orient; make the sprite face it's enemy
+  if (unit.image) {
+    if (faceTarget.x > unit.x) {
+      // Assuming all units are left facing, if the enemy is to the right, make it right facing
+      unit.image.sprite.scale.x = -Math.abs(unit.image.sprite.scale.x);
+    } else {
+      unit.image.sprite.scale.x = Math.abs(unit.image.sprite.scale.x);
+
+    }
+  }
+
+}
 // moveTo moves a unit, considering all the in-game blockers
 export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
   if (!canMove(unit)) {
@@ -649,17 +662,7 @@ export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
       unit.image.sprite.parent
     );
   }
-  // Orient; make the sprite face it's enemy
-  if (unit.image) {
-
-    if (target.x > unit.x) {
-      // Assuming all units are left facing, if the enemy is to the right, make it right facing
-      unit.image.sprite.scale.x = -Math.abs(unit.image.sprite.scale.x);
-    } else {
-      unit.image.sprite.scale.x = Math.abs(unit.image.sprite.scale.x);
-
-    }
-  }
+  orient(unit, target);
 
   // Set path which will be used in the game loop to actually move the unit
   window.underworld.setPath(unit, Vec.clone(target));

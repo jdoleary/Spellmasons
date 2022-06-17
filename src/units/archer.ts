@@ -28,9 +28,13 @@ const unit: UnitSource = {
   },
   action: async (unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, _canAttackTarget: boolean) => {
     const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit);
-    // Attack
+    let movePromise;
     let attackPromise;
+    // Attack
     if (attackTarget) {
+      // Archers attack or move, not both; so clear their existing path
+      unit.path = undefined;
+      Unit.orient(unit, attackTarget);
       await Unit.playAnimation(unit, unit.animations.attack);
       attackPromise = createVisualFlyingProjectile(
         unit,
@@ -39,21 +43,21 @@ const unit: UnitSource = {
       ).then(() => {
         Unit.takeDamage(attackTarget, unit.damage, false, undefined);
       })
-    }
-    // Movement:
-    let movePromise;
-    if (closestEnemy) {
-      if (window.underworld.hasLineOfSight(unit, closestEnemy)) {
-        const distanceToEnemy = math.distance(unit, closestEnemy);
-        const moveDistance = distanceToEnemy < unit.attackRange
-          ? -unit.stamina // flee as far as it can
-          : Math.min(unit.stamina, distanceToEnemy - unit.attackRange) // move in range but no farther
-        const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestEnemy, moveDistance);
-        movePromise = Unit.moveTowards(unit, moveTo);
-      } else {
-        // If they don't have line of sight, move closer
-        const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestEnemy, unit.stamina);
-        movePromise = Unit.moveTowards(unit, moveTo);
+    } else {
+      // Movement:
+      if (closestEnemy) {
+        if (window.underworld.hasLineOfSight(unit, closestEnemy)) {
+          const distanceToEnemy = math.distance(unit, closestEnemy);
+          const moveDistance = distanceToEnemy < unit.attackRange
+            ? -unit.stamina // flee as far as it can
+            : Math.min(unit.stamina, distanceToEnemy - unit.attackRange) // move in range but no farther
+          const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestEnemy, moveDistance);
+          movePromise = Unit.moveTowards(unit, moveTo);
+        } else {
+          // If they don't have line of sight, move closer
+          const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestEnemy, unit.stamina);
+          movePromise = Unit.moveTowards(unit, moveTo);
+        }
       }
     }
     // Move and attack at the same time, but wait for the slowest to finish before moving on

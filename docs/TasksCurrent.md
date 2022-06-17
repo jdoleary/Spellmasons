@@ -1,4 +1,7 @@
 ## Tasks
+- When AOE cast is out of range, only show AOE circle
+where it will cast
+
 - Make extra sprites stop if their attached sprite changes, see how spell effect still lives if wizard hurts themself in cast. (addOneOffAnimation)
 Erin Playtest:
 - death skull due to poison is confusing
@@ -16,7 +19,6 @@ Erin Playtest:
     - Update email to Che?
 - More
     - Bug: clear tooltip on enter portal?? not sure if necessary, tooltip remained while I was manually calling initLevel
-    - Bug: When you pull a guy and he actually gets to you, and then you move, you "carry" him
     - Task: An ally that has died at all (even if ressed) should lose their upgrade priviledge
 ---
 - Bug: I killed a unit, it instantly teleported me to the new level

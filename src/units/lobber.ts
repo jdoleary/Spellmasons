@@ -29,6 +29,9 @@ const unit: UnitSource = {
     // Attack
     let attackPromise;
     if (attackTarget && canAttackTarget) {
+      // Archers attack or move, not both; so clear their existing path
+      unit.path = undefined;
+      Unit.orient(unit, attackTarget);
       await Unit.playAnimation(unit, unit.animations.attack);
       attackPromise = createVisualLobbingProjectile(
         unit,
