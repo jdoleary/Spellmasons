@@ -73,6 +73,8 @@ let requestAnimationFrameGameLoopId: number;
 export default class Underworld {
   seed: string;
   random: prng;
+  // Suspends game loop while casting, especially for when a trap is triggering
+  suspendGameLoop: boolean;
   // The index of the level the players are on
   levelIndex: number = -1;
   // for serializing random: prng
@@ -112,6 +114,7 @@ export default class Underworld {
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
     window.underworld = this;
     this.seed = window.seedOverride || seed;
+    this.suspendGameLoop = false;
 
     elSeed.innerText = `Seed: ${this.seed}`;
     console.log("RNG create with seed:", this.seed, ", state: ", RNGState);
@@ -148,133 +151,135 @@ export default class Underworld {
     Unit.syncPlayerHealthManaUI();
     window.unitOverlayGraphics.clear();
 
-    const aliveNPCs = this.units.filter(u => u.alive && u.unitType == UnitType.AI);
-    // Run all forces in window.forceMove
-    for (let i = window.forceMove.length - 1; i >= 0; i--) {
-      const forceMoveInst = window.forceMove[i];
-      if (forceMoveInst) {
-        const { pushedObject, step } = forceMoveInst;
-        forceMoveInst.distance -= Vec.magnitude(step);
-        moveWithCollisions(pushedObject, Vec.add(pushedObject, step), aliveNPCs);
-        collideWithLineSegments(pushedObject, this.walls);
-        // Remove it from forceMove array once the distance has been covers
-        // This works even if collisions prevent the unit from moving since
-        // distance is modified even if the unit doesn't move each loop
-        if (forceMoveInst.distance <= 0) {
-          window.forceMove.splice(i, 1);
+    if (!this.suspendGameLoop) {
+      const aliveNPCs = this.units.filter(u => u.alive && u.unitType == UnitType.AI);
+      // Run all forces in window.forceMove
+      for (let i = window.forceMove.length - 1; i >= 0; i--) {
+        const forceMoveInst = window.forceMove[i];
+        if (forceMoveInst) {
+          const { pushedObject, step } = forceMoveInst;
+          forceMoveInst.distance -= Vec.magnitude(step);
+          moveWithCollisions(pushedObject, Vec.add(pushedObject, step), aliveNPCs);
+          collideWithLineSegments(pushedObject, this.walls);
+          // Remove it from forceMove array once the distance has been covers
+          // This works even if collisions prevent the unit from moving since
+          // distance is modified even if the unit doesn't move each loop
+          if (forceMoveInst.distance <= 0) {
+            window.forceMove.splice(i, 1);
+          }
         }
       }
-    }
 
-    for (let i = 0; i < this.units.length; i++) {
-      const u = this.units[i];
-      if (u) {
-        const predictionUnit = window.predictionUnits[i];
-        if (u.alive) {
-          // TODO: Optimize: maybe only call this during force move
-          Obstacle.checkLiquidInteractionDueToMovement(u, false);
-          // Only allow movement if the unit has stamina
-          if (u.path && u.path.points[0] && u.stamina > 0 && Unit.isUnitsTurnPhase(u)) {
-            // Move towards target
-            const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.path.points[0], u.moveSpeed * deltaTime)
-            let moveDist = 0;
-            // For now, only AI units will collide with each other
-            // This is because the collisions were causing issues with player movement that I don't
-            // have time to solve at the moment.
-            if (u.unitType == UnitType.PLAYER_CONTROLLED) {
-              // Player units don't collide, they just move, and pathfinding keeps
-              // them from moving through walls
-              moveDist = math.distance(u, stepTowardsTarget);
-              u.x = stepTowardsTarget.x;
-              u.y = stepTowardsTarget.y;
-            } else {
-              // AI collide with each other and walls
-              const originalPosition = Vec.clone(u);
-              // Only move other NPCs out of the way, never move player units
-              moveWithCollisions(u, stepTowardsTarget, aliveNPCs);
-              moveDist = math.distance(originalPosition, u);
-            }
-            u.stamina -= moveDist;
-            if (u.path.points[0] && (
-              Vec.equal(u, u.path.points[0]) ||
-              // If unit is MELEE and only has the final target left in the path, stop when it gets close enough
-              (u.path.points.length == 1 && u.unitSubType == UnitSubType.MELEE && math.distance(u, u.path.points[0]) <= config.COLLISION_MESH_RADIUS * 2)
-            )) {
-              // Once the unit reaches the target, shift so the next point in the path is the next target
-              u.path.points.shift();
-            }
-          }
-          // check for collisions with pickups in new location
-          this.checkPickupCollisions(u);
-          // Ensure that resolveDoneMoving is invoked when unit is out of stamina (and thus, done moving)
-          // or when find point in the path has been reached.
-          // This is necessary to end the moving units turn because elsewhere we are awaiting the fulfillment of that promise
-          // to know they are done moving
-          if (u.stamina <= 0 || !u.path || u.path.points.length === 0) {
-            u.resolveDoneMoving();
-            if (u.path) {
-              // Update last position that changed via own movement
-              u.path.lastOwnPosition = Vec.clone(u);
-            }
-          }
-        }
-        for (let p of this.pickups) {
-          Pickup.syncImage(p);
-        }
-        // Sync Image even for non moving units since they may be moved by forces other than themselves
-        // This keeps the unit.image in the same place as unit.x, unit.y
-        Unit.syncImage(u)
-        // Draw unit overlay graphics
-        //--
-        // Prevent drawing unit overlay graphics when a unit is in the portal
-        if (u.x !== null && u.y !== null) {
-          // Draw health bar
-          const healthBarColor = u.faction == Faction.ALLY ? healthAllyGreen : healthRed;
-          const healthBarHurtColor = u.faction == Faction.ALLY ? 0x235730 : healthHurtRed;
-          const healthBarHealColor = u.faction == Faction.ALLY ? 0x23ff30 : 0xff2828;
-          window.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
-          window.unitOverlayGraphics.beginFill(healthBarColor, 1.0);
-          const healthBarWidth = Math.max(0, config.UNIT_UI_BAR_WIDTH * u.health / u.healthMax);
-          window.unitOverlayGraphics.drawRect(
-            u.x - config.UNIT_UI_BAR_WIDTH / 2,
-            u.y - config.HEALTH_BAR_UI_HEIGHT - config.UNIT_UI_BAR_HEIGHT,
-            healthBarWidth,
-            config.UNIT_UI_BAR_HEIGHT);
-
-          // Only show health bar predictions on PlayerTurns, while players are able
-          // to cast, otherwise it will show out of sync when NPCs do damage
-          if (this.turn_phase == turn_phase.PlayerTurns) {
-            // Show how much damage they'll take on their health bar
-            window.unitOverlayGraphics.beginFill(healthBarHurtColor, 1.0);
-            if (predictionUnit) {
-              const healthAfterHurt = predictionUnit.health;
-              if (healthAfterHurt > u.health) {
-                window.unitOverlayGraphics.beginFill(healthBarHealColor, 1.0);
+      for (let i = 0; i < this.units.length; i++) {
+        const u = this.units[i];
+        if (u) {
+          const predictionUnit = window.predictionUnits[i];
+          if (u.alive) {
+            // TODO: Optimize: maybe only call this during force move
+            Obstacle.checkLiquidInteractionDueToMovement(u, false);
+            // Only allow movement if the unit has stamina
+            if (u.path && u.path.points[0] && u.stamina > 0 && Unit.isUnitsTurnPhase(u)) {
+              // Move towards target
+              const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.path.points[0], u.moveSpeed * deltaTime)
+              let moveDist = 0;
+              // For now, only AI units will collide with each other
+              // This is because the collisions were causing issues with player movement that I don't
+              // have time to solve at the moment.
+              if (u.unitType == UnitType.PLAYER_CONTROLLED) {
+                // Player units don't collide, they just move, and pathfinding keeps
+                // them from moving through walls
+                moveDist = math.distance(u, stepTowardsTarget);
+                u.x = stepTowardsTarget.x;
+                u.y = stepTowardsTarget.y;
+              } else {
+                // AI collide with each other and walls
+                const originalPosition = Vec.clone(u);
+                // Only move other NPCs out of the way, never move player units
+                moveWithCollisions(u, stepTowardsTarget, aliveNPCs);
+                moveDist = math.distance(originalPosition, u);
               }
-              const healthBarHurtWidth = Math.max(0, config.UNIT_UI_BAR_WIDTH * (u.health - healthAfterHurt) / u.healthMax);
-              window.unitOverlayGraphics.drawRect(
-                u.x - config.UNIT_UI_BAR_WIDTH / 2 + config.UNIT_UI_BAR_WIDTH * healthAfterHurt / u.healthMax,
-                u.y - config.HEALTH_BAR_UI_HEIGHT - config.UNIT_UI_BAR_HEIGHT,
-                healthBarHurtWidth,
-                config.UNIT_UI_BAR_HEIGHT);
-              // Draw red death circle if a unit is currently alive, but wont be after cast
-              if (u.alive && !predictionUnit.alive) {
-                ImmediateMode.draw('skull.png', { x: u.x, y: u.y - (32 / zoom) }, 1 / zoom);
+              u.stamina -= moveDist;
+              if (u.path.points[0] && (
+                Vec.equal(u, u.path.points[0]) ||
+                // If unit is MELEE and only has the final target left in the path, stop when it gets close enough
+                (u.path.points.length == 1 && u.unitSubType == UnitSubType.MELEE && math.distance(u, u.path.points[0]) <= config.COLLISION_MESH_RADIUS * 2)
+              )) {
+                // Once the unit reaches the target, shift so the next point in the path is the next target
+                u.path.points.shift();
+              }
+            }
+            // check for collisions with pickups in new location
+            this.checkPickupCollisions(u);
+            // Ensure that resolveDoneMoving is invoked when unit is out of stamina (and thus, done moving)
+            // or when find point in the path has been reached.
+            // This is necessary to end the moving units turn because elsewhere we are awaiting the fulfillment of that promise
+            // to know they are done moving
+            if (u.stamina <= 0 || !u.path || u.path.points.length === 0) {
+              u.resolveDoneMoving();
+              if (u.path) {
+                // Update last position that changed via own movement
+                u.path.lastOwnPosition = Vec.clone(u);
               }
             }
           }
-          // Draw mana bar
-          if (u.manaMax != 0) {
-            const manaBarWidth = Math.max(0, config.UNIT_UI_BAR_WIDTH * Math.min(1, u.mana / u.manaMax));
+          for (let p of this.pickups) {
+            Pickup.syncImage(p);
+          }
+          // Sync Image even for non moving units since they may be moved by forces other than themselves
+          // This keeps the unit.image in the same place as unit.x, unit.y
+          Unit.syncImage(u)
+          // Draw unit overlay graphics
+          //--
+          // Prevent drawing unit overlay graphics when a unit is in the portal
+          if (u.x !== null && u.y !== null) {
+            // Draw health bar
+            const healthBarColor = u.faction == Faction.ALLY ? healthAllyGreen : healthRed;
+            const healthBarHurtColor = u.faction == Faction.ALLY ? 0x235730 : healthHurtRed;
+            const healthBarHealColor = u.faction == Faction.ALLY ? 0x23ff30 : 0xff2828;
             window.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
-            window.unitOverlayGraphics.beginFill(0x5656d5, 1.0);
+            window.unitOverlayGraphics.beginFill(healthBarColor, 1.0);
+            const healthBarWidth = Math.max(0, config.UNIT_UI_BAR_WIDTH * u.health / u.healthMax);
             window.unitOverlayGraphics.drawRect(
               u.x - config.UNIT_UI_BAR_WIDTH / 2,
-              u.y - config.HEALTH_BAR_UI_HEIGHT,
-              manaBarWidth,
+              u.y - config.HEALTH_BAR_UI_HEIGHT - config.UNIT_UI_BAR_HEIGHT,
+              healthBarWidth,
               config.UNIT_UI_BAR_HEIGHT);
+
+            // Only show health bar predictions on PlayerTurns, while players are able
+            // to cast, otherwise it will show out of sync when NPCs do damage
+            if (this.turn_phase == turn_phase.PlayerTurns) {
+              // Show how much damage they'll take on their health bar
+              window.unitOverlayGraphics.beginFill(healthBarHurtColor, 1.0);
+              if (predictionUnit) {
+                const healthAfterHurt = predictionUnit.health;
+                if (healthAfterHurt > u.health) {
+                  window.unitOverlayGraphics.beginFill(healthBarHealColor, 1.0);
+                }
+                const healthBarHurtWidth = Math.max(0, config.UNIT_UI_BAR_WIDTH * (u.health - healthAfterHurt) / u.healthMax);
+                window.unitOverlayGraphics.drawRect(
+                  u.x - config.UNIT_UI_BAR_WIDTH / 2 + config.UNIT_UI_BAR_WIDTH * healthAfterHurt / u.healthMax,
+                  u.y - config.HEALTH_BAR_UI_HEIGHT - config.UNIT_UI_BAR_HEIGHT,
+                  healthBarHurtWidth,
+                  config.UNIT_UI_BAR_HEIGHT);
+                // Draw red death circle if a unit is currently alive, but wont be after cast
+                if (u.alive && !predictionUnit.alive) {
+                  ImmediateMode.draw('skull.png', { x: u.x, y: u.y - (32 / zoom) }, 1 / zoom);
+                }
+              }
+            }
+            // Draw mana bar
+            if (u.manaMax != 0) {
+              const manaBarWidth = Math.max(0, config.UNIT_UI_BAR_WIDTH * Math.min(1, u.mana / u.manaMax));
+              window.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
+              window.unitOverlayGraphics.beginFill(0x5656d5, 1.0);
+              window.unitOverlayGraphics.drawRect(
+                u.x - config.UNIT_UI_BAR_WIDTH / 2,
+                u.y - config.HEALTH_BAR_UI_HEIGHT,
+                manaBarWidth,
+                config.UNIT_UI_BAR_HEIGHT);
+            }
+            window.unitOverlayGraphics.endFill();
           }
-          window.unitOverlayGraphics.endFill();
         }
       }
     }
@@ -1511,6 +1516,7 @@ export default class Underworld {
       // Prevent dead players from casting
       return effectState;
     }
+    this.suspendGameLoop = true;
     if (!costPrepaid) {
       const cards = Cards.getCardsFromIds(cardIds);
       const spellCost = calculateCost(cards, casterCardUsage);
@@ -1599,6 +1605,7 @@ export default class Underworld {
       containerSpells.removeChildren();
     }
 
+    this.suspendGameLoop = false;
     return effectState;
   }
   async animateSpell(target: Vec2, imagePath: string): Promise<void> {

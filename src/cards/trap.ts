@@ -51,7 +51,9 @@ Sets a spell as a trap, to be triggered when stepped on.  Wrapping a spell in a 
                   const animationSprite = addPixiSprite('pickups/trapAttack', containerUnits, {
                     loop: false,
                     onComplete: () => {
-                      animationSprite.parent.removeChild(animationSprite);
+                      if (animationSprite.parent) {
+                        animationSprite.parent.removeChild(animationSprite);
+                      }
                     }
                   });
                   animationSprite.anchor.set(0.5);
