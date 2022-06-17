@@ -1,6 +1,25 @@
 
 ## Tasks
+Erin Playtest:
+- When a trap triggers, it should pause unit movement
+- "f" view for spells has broken css
+- Right click on toolbar spell when spells are queued up highlights them all, should just highlight on toolbar
+- clicking even when out of range should cast at end of range (especially with AOE). Think convenience.  When players view the aoe circle they assume this is where it will cast when they click
+- shield stacks too much from priest and is annoying (don't let priests heal each other or themselves)
+- death skull due to poison is confusing
+- Priest "run away" ai is broken
+- why does some loop 1 archers have 8 health, not showing armor?
+- clear spell projection when you die
+---
+- task: Tweak pathing to be able to walk through 'walkThisGap.png' on desktop
+- ui: I accidentally moved while trying to interact with my spells on my toolbar
+- UI: Allow swapping spells on toolbar
+- bug: Already dead units "redied" via animation when damage was done to their corpse via an explosion
+- bug: poison subsprite is gone after one turn
+- Add loading screen for when level is generating
+- Fix Polygon2 tests
 - Draw walls above units so their corpses don't render over top of the walls
+    - Update email to Che?
 - More
     - Bug: When trap triggers, spell effect is left behind as unit keeps moving through it
     - Bug: clear tooltip on enter portal?? not sure if necessary, tooltip remained while I was manually calling initLevel
@@ -57,3 +76,5 @@ and 2nd client got `Cannot change character, player not found with id 8c502be8-6
 - An enemy that consumes allies to get stronger
 - Specific barriers or walls that can't be cast through
 - Content: A spell to destroy corpses
+- task: Spell to trade mana for stamina
+- idea; one use bargains (deals with the devil) that mix up your max stats.  or have a50% chance of good or bad outcome
