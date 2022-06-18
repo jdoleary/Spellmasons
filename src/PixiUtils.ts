@@ -5,6 +5,7 @@ import * as math from './math';
 import * as config from './config';
 import { keyDown } from './ui/eventListeners';
 import { LoaderResource, SCALE_MODES } from 'pixi.js';
+import * as colors from './ui/colors';
 
 // if PIXI is finished setting up
 let isReady = false;
@@ -65,7 +66,7 @@ containerBetweenBoardAndWalls.addChild(window.radiusGraphics);
 export const containerCharacterSelect = new PIXI.Container();
 const characterSelectContainers = [containerCharacterSelect];
 
-app.renderer.backgroundColor = 0x888a90;
+app.renderer.backgroundColor = colors.abyss;
 
 window.addEventListener('resize', resizePixi);
 window.addEventListener('load', () => {
