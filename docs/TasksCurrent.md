@@ -1,8 +1,12 @@
+I have 3 days left until we leave for our trip.
+If there is a unit within COLLISION_MESH_RADIUS of castTarget, then you are within range to cast. This needs to be implemented in 2 places:
+- Planning View
+- Actual cast where it says "No Target"
 ## Focus
-- **Important** When AOE cast is out of range, only show AOE circle
+- **PRETRIP** When AOE cast is out of range, only show AOE circle
 where it will cast
     - Come up with better solution for out of range casting, but still allowing predictions
-- task: Tweak pathing to be able to walk through 'walkThisGap.png' on desktop
+- **PRETRIP** task: Tweak pathing to be able to walk through 'walkThisGap.png' on desktop
     - 0.2643389503447078
 ## Bugs
 - Priest "run away" ai is broken
@@ -12,20 +16,21 @@ where it will cast
 - Bug: Grunts on level 4 of 0.7771387726829492 have attention marker when they definitely wont hit me next turn
 - Fix Polygon2 tests
 - Bug: Portal spawns when you prediction kill yourself on test level
-- Bug: There was a bug that ended my game though. I got shield buffed by a resurrected priest, and my character disappeared. this all happened on the turn when the portal appeared (finished the level). Now I cant walk through the portal
+- **PRETRIP**Bug: There was a bug that ended my game though. I got shield buffed by a resurrected priest, and my character disappeared. this all happened on the turn when the portal appeared (finished the level). Now I cant walk through the portal
 I'm getting the empty stamina message when I try to move my (invisible) player
 i can still cast spells during my turn; as well as end turns
 - Bug: Should sync portals when syncing units if all enemies are dead
 - Bug: (Note: this is probably fixed now) Goons spawned outside of map when summoner was stuffed in upper left corner of map
 ---
 ## Features
-- Priests should not heal ally vampires and should heal enemy vampires to damage them
-- Should be able to 'push' and 'pull' trap (TimeReleases are not affected by forceMoves or push and pull)
+- What if potions drop from slain enemies?
+- **PRETRIP**Should be able to 'push' and 'pull' trap (TimeReleases are not affected by forceMoves or push and pull)
+- **PRETRIP**Priests should not heal ally vampires and should heal enemy vampires to damage them
 - Task: An ally that has died at all (even if ressed) should lose their upgrade priviledge
 - SOUND: Organize candidates for sfx
-- Allow pickups to be stored in inventory
+- **PRETRIP**Allow pickups to be stored in inventory
 - (M) Rework unit crowding (save for later, non priority)
-- task: allow clearing spell on toolbar
+- **PRETRIP**task: allow clearing spell on toolbar
 - Show modifiers in UI somehow, not just on player, especially when you have the modifier on you
 ---
 ## UI
@@ -36,7 +41,7 @@ i can still cast spells during my turn; as well as end turns
 - Make damage that they WILL take different from damage that they HAVE taken.  It's confusing
 ---
 ## Stretch Content
-- Content: Spell that increases cast range, or upgrade
+- **PRETRIP**Content: Spell that increases cast range, or upgrade
 - Content: Time crystal releases something when it breaks
 - Content: An enemy that pulls you into danger
 - Content: "Orge" enemies that get stronger for every ally of theirs that dies
