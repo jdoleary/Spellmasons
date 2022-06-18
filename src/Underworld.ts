@@ -33,7 +33,7 @@ import type { Vec2 } from "./Vec";
 import * as Vec from "./Vec";
 import Events from './Events';
 import { allUnits } from './units';
-import { updateManaCostUI, updatePlanningView } from './ui/PlanningView';
+import { drawTarget, setPredictionGraphicsLineStyle, updateManaCostUI, updatePlanningView } from './ui/PlanningView';
 import { prng, randInt, SeedrandomState } from './rand';
 import { calculateCost } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle } from './collision/lineSegment';
@@ -1142,20 +1142,6 @@ export default class Underworld {
     }
   }
 
-  // If desired target is within range it will return the desiredTarget, else
-  // it will return a target in that direction as far as the player can reach.
-  getCastTarget(caster: Player.IPlayer, desiredTarget: Vec2): Vec2 {
-    let target = desiredTarget;
-    if (math.distance(caster.unit, target) >= caster.unit.attackRange) {
-      // If mouse is beyond cast range, change target to end of cast range.
-      // This is a matter of convenience, especially for AOE where the player
-      // instinctively assumes that a click will trigger the spell on the whole visible radius.
-      const endOfRange = math.getCoordsAtDistanceTowardsTarget(caster.unit, target, caster.unit.attackRange);
-      target = endOfRange;
-    }
-    return target;
-  }
-
   showUpgrades() {
     if (!window.player) {
       console.error('Cannot show upgrades, no window.player');
@@ -1588,20 +1574,23 @@ export default class Underworld {
         }
         // Clear images from previous card before drawing the images from the new card
         containerSpells.removeChildren();
+
         // Animate target additions:
-        for (let targetedUnit of effectState.targetedUnits) {
-          // If already included target:
-          if (
-            previousTargets.find((t) => t.x === targetedUnit.x && t.y === targetedUnit.y)
-          ) {
-            // Don't animate previous targets, they should be drawn full, immediately
-            animationPromises.push(drawTarget(targetedUnit.x, targetedUnit.y, false));
-          } else {
-            // If a new target, animate it in
-            animationPromises.push(drawTarget(targetedUnit.x, targetedUnit.y, !prediction));
+        if (!prediction) {
+          setPredictionGraphicsLineStyle(colors.targetBlue);
+          for (let targetedUnit of effectState.targetedUnits) {
+            // If already included target:
+            if (
+              previousTargets.find((t) => t.x === targetedUnit.x && t.y === targetedUnit.y)
+            ) {
+              // Don't animate previous targets, they should be drawn full, immediately
+              drawTarget(targetedUnit);
+            } else {
+              // If a new target, animate it in
+              drawTarget(targetedUnit);
+            }
           }
         }
-
         await Promise.all(animationPromises);
       }
     }
@@ -1868,15 +1857,6 @@ export default class Underworld {
   }
 }
 
-function drawTarget(x: number, y: number, animate: boolean): Promise<void> {
-  const image = Image.create({ x, y }, 'target.png', containerSpells);
-  if (animate) {
-    image.sprite.scale.set(0.0);
-    return Image.scale(image, 1.0);
-  } else {
-    return Promise.resolve();
-  }
-}
 type IUnderworldSerialized = Omit<typeof Underworld, "prototype" | "players" | "units" | "pickups" | "random" | "turnInterval"
   // walls and pathingPolygons are omitted because they are derived from obstacles when cacheWalls() in invoked
   | "walls" | "pathingPolygons"> & {

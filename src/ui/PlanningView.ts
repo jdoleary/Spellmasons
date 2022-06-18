@@ -11,10 +11,12 @@ import * as config from '../config';
 import * as Unit from '../Unit';
 import type * as TimeRelease from '../TimeRelease';
 import type * as Pickup from '../Pickup';
-import { targetBlue } from './colors';
 import { calculateCost, CardCost } from '../cards/cardUtils';
 import { closestLineSegmentIntersection } from '../collision/lineSegment';
 import { getBestRangedLOSTarget } from '../units/actions/rangedAction';
+import * as math from '../math';
+import * as colors from './colors';
+import { getCastTarget } from '../PlayerUtils';
 
 let planningViewGraphics: PIXI.Graphics;
 let predictionGraphics: PIXI.Graphics;
@@ -114,6 +116,7 @@ export function updatePlanningView() {
           // and is dependent on the animation's feet location
           const arbitratyOffset = 3;
           planningViewGraphics.drawEllipse(window.player.unit.x + arbitratyOffset, window.player.unit.y + config.COLLISION_MESH_RADIUS - arbitratyOffset, config.COLLISION_MESH_RADIUS / 2, config.COLLISION_MESH_RADIUS / 3);
+          planningViewGraphics.endFill();
         }
         lastSpotCurrentPlayerTurnCircle = clone(window.player.unit);
       }
@@ -163,16 +166,25 @@ export async function runPredictions() {
       }
       const cardIds = CardUI.getSelectedCardIds();
       if (cardIds.length) {
+        const modifiedTarget = getCastTarget(window.player, target);
+        const isOutOfRange = Math.round(math.distance(modifiedTarget, casterUnit)) > casterUnit.attackRange;
+        // Note: setPredictionGraphicsLineStyle must be called before castCards (because castCards may use it
+        // to draw predictions) and after clearSpellEffectProjection, which clears predictionGraphics.
+        setPredictionGraphicsLineStyle(isOutOfRange ? 0xaaaaaa : colors.targetBlue);
         const effectState = await window.underworld.castCards(
           // Make a copy of cardUsageCounts for prediction so it can accurately
           // calculate mana for multiple copies of one spell in one cast
           JSON.parse(JSON.stringify(window.player.cardUsageCounts)),
           casterUnit,
           cardIds,
-          target,
+          modifiedTarget,
           true,
           false
         );
+        // Draw targeted units
+        for (let targetedUnit of effectState.targetedUnits) {
+          drawTarget(targetedUnit);
+        }
         for (let unitStats of effectState.aggregator.unitDamage) {
           // If a unit is currently alive and will take fatal damage,
           // draw red circle.
@@ -245,10 +257,13 @@ export function drawPredictionLine(start: Vec2, end: Vec2) {
   // predictionGraphics.endFill();
 }
 export function drawPredictionCircle(target: Vec2, radius: number) {
-  predictionGraphics.lineStyle(3, targetBlue, 0.5);
-  predictionGraphics.beginFill(0x000000, 0);
   predictionGraphics.drawCircle(target.x, target.y, radius);
-  predictionGraphics.endFill();
+}
+export function setPredictionGraphicsLineStyle(color: number) {
+  predictionGraphics.lineStyle(3, color, 1.0)
+}
+export function drawTarget(pos: Vec2) {
+  predictionGraphics.drawCircle(pos.x, pos.y, config.COLLISION_MESH_RADIUS)
 }
 export function drawPredictionCircleFill(target: Vec2, radius: number) {
   window.radiusGraphics.lineStyle(1, 0x000000, 0.0);
@@ -426,7 +441,7 @@ export function drawCircleUnderTarget(mousePos: Vec2, opacity: number, graphics:
   if (target) {
     graphics.lineStyle(3, 0xFFFFFF, opacity);
     graphics.beginFill(0x000000, 0);
-    graphics.drawCircle(target.x, target.y, config.COLLISION_MESH_RADIUS);
+    graphics.drawCircle(target.x, target.y, config.COLLISION_MESH_RADIUS - 4);
     graphics.endFill();
   }
 }

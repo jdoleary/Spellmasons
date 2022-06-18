@@ -3,9 +3,6 @@ If there is a unit within COLLISION_MESH_RADIUS of castTarget, then you are with
 - Planning View
 - Actual cast where it says "No Target"
 ## Focus
-- **PRETRIP** When AOE cast is out of range, only show AOE circle
-where it will cast
-    - Come up with better solution for out of range casting, but still allowing predictions
 - **PRETRIP** task: Tweak pathing to be able to walk through 'walkThisGap.png' on desktop
     - 0.2643389503447078
 ## Bugs

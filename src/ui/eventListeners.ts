@@ -19,6 +19,7 @@ import * as config from '../config';
 import { cameraAutoFollow, getCamera, moveCamera } from '../PixiUtils';
 import { toPolygon2LineSegments } from '../Polygon2';
 import { vec2ToOneDimentionIndex } from '../WaveFunctionCollapse';
+import { getCastTarget } from '../PlayerUtils';
 
 export const keyDown = {
   w: false,
@@ -453,7 +454,7 @@ export function clickHandler(e: MouseEvent) {
       // If the player casting is the current client player
       if (selfPlayer) {
         // cast the spell
-        const target = window.underworld.getCastTarget(selfPlayer, mousePos);
+        const target = getCastTarget(selfPlayer, mousePos);
         const cardIds = CardUI.getSelectedCardIds();
         const cards = CardUI.getSelectedCards();
 
