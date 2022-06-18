@@ -1,10 +1,27 @@
 # Critical Path
+- Core 2
+    - Better Prediction Graphics (blue vs grey for out of range)
 - Game Balance
 - Clerical
     - Menu
     - Steam Page
     - Website Presskit page
 - SFX
+    - Unit Sounds
+    - Spell Sounds
+    - Consumable Sounds
+    - Splash Liquid Sounds
+    - UI Sounds
+- Art Integration
+    - 90%: Unit Animations
+    - 0%: Projectiles
+    - 0%: Liquid Splash Animation
+    - 0%: Use Consumable (potion) animation
+    - 10%: Spell Animations
+    - 0%: Spell Icons
+    - 0%: Cover Art
+    - 20%: Biome Tiles
+    - 0%: UI
 - Master music
 - Tutorial
 - Final Steps
