@@ -182,6 +182,7 @@ export async function runPredictions() {
           false
         );
         // Draw targeted units
+        setPredictionGraphicsLineStyle(isOutOfRange ? 0xaaaaaa : colors.targetBlue);
         for (let targetedUnit of effectState.targetedUnits) {
           drawTarget(targetedUnit);
         }
