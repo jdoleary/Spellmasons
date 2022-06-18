@@ -139,11 +139,14 @@ export function setView(v: View) {
       resizePixi();
       addUnderworldEventListeners();
       break;
+    case View.Loading:
+      // Intentionally left blank
+      break;
     case View.Disconnected:
       // Intentionally left blank - this view is handled in css
       break;
     default:
-      console.error('Cannot set view to', v, 'no such view exists or is not configured');
+      console.error(`Cannot set view to "${View[v]}" view is not handled in switch statement.`);
       break;
   }
   // Update the camera position when the view changes because gameLoop might not be
