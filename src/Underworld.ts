@@ -495,7 +495,7 @@ export default class Underworld {
     this.walls = mergePolygon2s(getWallPolygons()).map(toLineSegments).flat();
     // TODO: Optimize:
     //.filter(filterRemoveNonGroundAdjacent);
-    const expandMagnitude = config.COLLISION_MESH_RADIUS * 0.8;
+    const expandMagnitude = config.COLLISION_MESH_RADIUS * 0.6;
 
     // liquid bounds block movement only under certain circumstances
     this.liquidPolygons = mergePolygon2s(obstacles.filter(o => o.material == Material.LIQUID).map(o => o.bounds))

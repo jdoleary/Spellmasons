@@ -3,8 +3,6 @@ If there is a unit within COLLISION_MESH_RADIUS of castTarget, then you are with
 - Planning View
 - Actual cast where it says "No Target"
 ## Focus
-- **PRETRIP** task: Tweak pathing to be able to walk through 'walkThisGap.png' on desktop
-    - 0.2643389503447078
 ## Bugs
 - Priest "run away" ai is broken
 - Fix robe losing color 
