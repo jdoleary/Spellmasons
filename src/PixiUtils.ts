@@ -16,7 +16,6 @@ export const containerBoard = new PIXI.Container();
 export const containerBetweenBoardAndWalls = new PIXI.Container();
 export const containerWalls = new PIXI.Container();
 export const containerPlanningView = new PIXI.Container();
-containerPlanningView.alpha = 0.5;
 export const containerDoodads = new PIXI.Container();
 export const containerUnits = new PIXI.Container();
 export const containerSpells = new PIXI.Container();
