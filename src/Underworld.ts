@@ -844,7 +844,7 @@ export default class Underworld {
     this.postSetupLevel();
   }
   async initLevel(levelIndex: number) {
-    setView(View.Loading);
+    document.body.classList.toggle('loading', true);
     // setTimeout allows the UI to refresh before locking up the CPU with
     // heavy level generation code
     setTimeout(() => {

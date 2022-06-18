@@ -258,6 +258,7 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       await window.underworld.initializeTurnPhase(phase);
       break;
     case MESSAGE_TYPES.CREATE_LEVEL:
+      document.body.classList.toggle('loading', false);
       const { level } = payload as {
         level: LevelData
       }

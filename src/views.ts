@@ -24,11 +24,9 @@ import {
   keypressListener,
 } from './ui/eventListeners';
 
-const elPIXIHolder = document.getElementById('PIXI-holder') as HTMLElement;
 // A view is not shared between players in the same game, a player could choose any view at any time
 export enum View {
   Menu,
-  Loading,
   Setup,
   CharacterSelect,
   Game,
@@ -138,9 +136,6 @@ export function setView(v: View) {
     case View.Game:
       resizePixi();
       addUnderworldEventListeners();
-      break;
-    case View.Loading:
-      // Intentionally left blank
       break;
     case View.Disconnected:
       // Intentionally left blank - this view is handled in css
