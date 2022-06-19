@@ -176,18 +176,18 @@ export const upgradeStatsSource: IUpgrade[] = [
     probability: 30,
     cost: { healthCost: 0, manaCost: 0 },
   },
-  // {
-  //   title: '+ Mana per turn',
-  //   description: (player) =>
-  //     `Increases your mana per turn from ${player.unit.manaPerTurn} per turn to ${player.unit.manaPerTurn + manaPerTurnIncreaseAmount
-  //     } per turn.`,
-  //   thumbnail: 'images/upgrades/todo.png',
-  //   effect: (player) => {
-  //     player.unit.manaPerTurn += manaPerTurnIncreaseAmount;
-  //   },
-  //   probability: 30,
-  //   cost: { healthCost: 0, manaCost: 0 },
-  // },
+  {
+    title: '+ Cast Range',
+    description: (player) =>
+      `Increases your maximum cast range from ${player.unit.attackRange} to ${player.unit.attackRange + castRangeIncreaseAmount
+      }`,
+    thumbnail: 'images/upgrades/todo.png',
+    effect: (player) => {
+      player.unit.attackRange += castRangeIncreaseAmount;
+    },
+    probability: 30,
+    cost: { healthCost: 0, manaCost: 0 },
+  },
   {
     title: '+ Max Stamina',
     description: (player) =>
@@ -203,6 +203,7 @@ export const upgradeStatsSource: IUpgrade[] = [
   },
 ];
 const maxManaIncreaseAmount = 10;
+const castRangeIncreaseAmount = 30;
 const maxStaminaIncreaseAmount = 50;
 const maxHealthIncreaseAmount = 4;
 // const manaPerTurnIncreaseAmount = 8;

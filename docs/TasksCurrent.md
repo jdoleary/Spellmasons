@@ -1,9 +1,7 @@
-I have 3 days left until we leave for our trip.
-If there is a unit within COLLISION_MESH_RADIUS of castTarget, then you are within range to cast. This needs to be implemented in 2 places:
-- Planning View
-- Actual cast where it says "No Target"
 ## Focus
+- Remove Character Select View, it conflicts with loading when loading is done it gets set to game view right away
 ## Bugs
+
 - Priest "run away" ai is broken
 - Fix robe losing color 
 - wall: see abberant-wall.png
@@ -36,7 +34,6 @@ i can still cast spells during my turn; as well as end turns
 - Make damage that they WILL take different from damage that they HAVE taken.  It's confusing
 ---
 ## Stretch Content
-- **PRETRIP**Content: Spell that increases cast range, or upgrade
 - Content: Time crystal releases something when it breaks
 - Content: An enemy that pulls you into danger
 - Content: "Orge" enemies that get stronger for every ally of theirs that dies

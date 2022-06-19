@@ -91,7 +91,7 @@ export function create(clientId: string): IPlayer {
   // during collisions while other units move
   player.unit.immovable = true;
   player.unit.alive = false;
-  player.unit.attackRange = 500;
+  player.unit.attackRange = config.PLAYER_BASE_ATTACK_RANGE;
   player.unit.staminaMax = config.PLAYER_BASE_STAMINA;
   player.unit.stamina = config.PLAYER_BASE_STAMINA;
 

@@ -1,4 +1,5 @@
 export const PLAYER_BASE_HEALTH = 10;
+export const PLAYER_BASE_ATTACK_RANGE = 500;
 export const UNIT_MOVE_SPEED = 0.25;
 export const COLLISION_MESH_RADIUS = 32;
 export const HEALTH_BAR_UI_HEIGHT = 42;
