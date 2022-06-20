@@ -88,7 +88,8 @@ export function joinRoom(_room_info = {}): Promise<void> {
       // --
       // Note: This must occur AFTER PIXI assets are done being loaded
       // or else the characters to select wont display
-      setView(View.CharacterSelect);
+      // setView(View.CharacterSelect);
+      // FUTURE: THis might be a good place to view the lobby
     }
   }).catch((err: string) => {
     console.error(err);

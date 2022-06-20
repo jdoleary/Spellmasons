@@ -1,5 +1,4 @@
 import {
-  containerCharacterSelect,
   addPixiContainersForView,
   resizePixi,
   app,
@@ -28,7 +27,6 @@ import {
 export enum View {
   Menu,
   Setup,
-  CharacterSelect,
   Game,
   Disconnected
 }
@@ -95,44 +93,6 @@ export function setView(v: View) {
       elMenu.classList.remove('hidden');
       window.updateInGameMenuStatus();
       break;
-    case View.CharacterSelect:
-      // Host or join a game brings client to Character select
-      const playerControlledUnits =
-        Object.values(Units.allUnits)
-          .filter(
-            (unitSource) =>
-              unitSource.info.subtype === UnitSubType.PLAYER_CONTROLLED,
-          );
-
-      playerControlledUnits.forEach((unitSource, index) => {
-        const image = Image.create(
-          { x: 0, y: 0 },
-          unitSource.info.image,
-          containerCharacterSelect,
-        );
-        Image.setPosition(image, { x: (index - playerControlledUnits.length / 2) * image.sprite.width + image.sprite.width / 2, y: 0 })
-        image.sprite.interactive = true;
-        image.sprite.on('click', () => {
-          // Timeout prevents click from propagating into overworld listener
-          // for some reason e.stopPropagation doesn't work :/
-          setTimeout(() => {
-            clientChooseUnit(unitSource.id);
-          }, 0);
-        });
-        // If devMode is true, automatically choose the first character
-        if (index == 0 && window.devMode) {
-          clientChooseUnit(unitSource.id);
-        }
-      });
-      // Add title:
-      const pixiText = new PIXI.Text("Select a Character", { fill: 'white', align: 'center' });
-      pixiText.x = 0;
-      pixiText.y = -config.COLLISION_MESH_RADIUS * 2;
-      pixiText.anchor.x = 0.5;
-      pixiText.anchor.y = 0.5;
-      containerCharacterSelect.addChild(pixiText);
-
-      break;
     case View.Game:
       resizePixi();
       addUnderworldEventListeners();
@@ -150,8 +110,6 @@ export function setView(v: View) {
 }
 
 function clientChooseUnit(unitId: string) {
-  // Cleanup container
-  containerCharacterSelect.removeChildren();
 
   window.pie.sendData({
     type: MESSAGE_TYPES.CHANGE_CHARACTER,

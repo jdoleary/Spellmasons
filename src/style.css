@@ -49,12 +49,6 @@ body.view-Menu #underworld-container {
   display: none;
 }
 
-/* Hide when the character select screen is open */
-body.view-CharacterSelect #game-content-holder,
-body.view-CharacterSelect #card-holders {
-  display: none;
-}
-
 #game-content-holder {
   display: flex;
   align-items: flex-start;

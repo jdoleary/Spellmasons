@@ -2,7 +2,6 @@
 - Monday
     - bug: poison subsprite is gone after one turn
     - Stretch: Standalone server
-    - Remove Character Select View, it conflicts with loading when loading is done it gets set to game view right away
 
 ## Bugs
 

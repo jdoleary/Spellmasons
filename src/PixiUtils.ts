@@ -63,8 +63,6 @@ colorMatrix.alpha = 0.2;
 window.radiusGraphics.filters = [colorMatrix];
 containerBetweenBoardAndWalls.addChild(window.radiusGraphics);
 
-export const containerCharacterSelect = new PIXI.Container();
-const characterSelectContainers = [containerCharacterSelect];
 
 app.renderer.backgroundColor = colors.abyss;
 
@@ -165,10 +163,6 @@ export function updateCameraPosition() {
   app.stage.scale.y = zoom;
 
   switch (window.view) {
-    case View.CharacterSelect:
-      app.stage.x = elPIXIHolder.clientWidth / 2;
-      app.stage.y = elPIXIHolder.clientHeight / 2;
-      break;
     case View.Game:
       if (window.player) {
         if (doCameraAutoFollow) {
@@ -294,9 +288,6 @@ export function addPixiContainersForView(view: View) {
   app.stage.removeChildren();
   removeContainers(underworldPixiContainers);
   switch (view) {
-    case View.CharacterSelect:
-      addContainers(characterSelectContainers);
-      break;
     case View.Game:
       addContainers(underworldPixiContainers);
       break;
