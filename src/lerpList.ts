@@ -33,10 +33,8 @@ function processLerpList(currentTime: number, lerpQueue: Lerpable[]) {
 
 }
 const globalLerpList: Lerpable[] = [];
-let lastTimestamp = 0;
 export function lerpLoop(timestamp: number) {
     processLerpList(timestamp, globalLerpList);
-    lastTimestamp = timestamp;
     // Only continue to loop if there are
     if (globalLerpList.length !== 0) {
         requestAnimationFrame(lerpLoop)

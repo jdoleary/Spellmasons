@@ -4,7 +4,7 @@ import { isVec2InsidePolygon } from "./Polygon2";
 import { randFloat, randInt } from "./rand";
 import * as Vec from "./Vec";
 import * as config from './config';
-import { oneDimentionIndexToVec2, vec2ToOneDimentionIndex, vec2ToOneDimentionIndexPreventWrap } from "./WaveFunctionCollapse";
+import { oneDimentionIndexToVec2, vec2ToOneDimentionIndex, vec2ToOneDimentionIndexPreventWrap } from "./ArrayUtil";
 import { conway, ConwayState } from "./Conway";
 import type { IObstacle } from "./Obstacle";
 

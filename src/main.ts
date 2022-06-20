@@ -1,15 +1,11 @@
-import * as PIXI from 'pixi.js';
+import './globalTypes';
 import AnimationTimeline from './AnimationTimeline';
-import type * as Player from './Player';
-import type * as Unit from './Unit';
-import type Underworld from './Underworld';
 import { setView, View } from './views';
 import * as readyState from './readyState';
 import { setupPixi } from './PixiUtils';
 import * as Cards from './cards';
 import * as Units from './units';
 import { initPlanningView } from './ui/PlanningView';
-import type PieClient from '@websocketpie/client';
 import { setupAudio } from './Audio';
 import cookieConsentPopup from './cookieConsent';
 import { setupMonitoring } from './monitoring';
@@ -24,9 +20,6 @@ cookieConsentPopup(false);
 // the pie globals
 import './wsPieSetup';
 import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './contants';
-import type { Vec2 } from './Vec';
-import type { LevelData } from './Underworld';
-import type { Circle } from './collision/moveWithCollision';
 import { syncInventory } from './CardUI';
 
 const YES = 'yes'

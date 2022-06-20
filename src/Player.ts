@@ -71,16 +71,21 @@ export function create(clientId: string): IPlayer {
 
     const color = playerColors[colorIndex];
     const colorSecondary = playerColorsSecondary[colorIndex];
-    player.unit.image.sprite.filters.push(
-      new MultiColorReplaceFilter(
-        [
-          [playerCoatPrimary, color],
-          [playerCoatSecondary, colorSecondary],
-          [playerCastAnimationColor, color],
-        ],
-        0.1
-      )
-    );
+    if (color !== undefined && colorSecondary !== undefined) {
+      player.unit.image.sprite.filters.push(
+        // @ts-ignore
+        new MultiColorReplaceFilter(
+          [
+            [playerCoatPrimary, color],
+            [playerCoatSecondary, colorSecondary],
+            [playerCastAnimationColor, color],
+          ],
+          0.1
+        )
+      );
+    } else {
+      console.error('color or colorSecondary is undefined', color, colorSecondary);
+    }
   }
 
 

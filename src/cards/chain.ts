@@ -1,6 +1,5 @@
-import { drawPredictionCircle, drawPredictionCircleFill, drawPredictionLine } from '../ui/PlanningView';
+import { drawPredictionCircleFill, drawPredictionLine } from '../ui/PlanningView';
 import { addUnitTarget, Spell } from '.';
-import type { Vec2 } from '../Vec';
 import type * as Unit from '../Unit';
 
 const id = 'chain';

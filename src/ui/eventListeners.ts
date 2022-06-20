@@ -18,7 +18,7 @@ import { distance, getCoordsAtDistanceTowardsTarget } from '../math';
 import * as config from '../config';
 import { cameraAutoFollow, getCamera, moveCamera } from '../PixiUtils';
 import { toPolygon2LineSegments } from '../Polygon2';
-import { vec2ToOneDimentionIndex } from '../WaveFunctionCollapse';
+import { vec2ToOneDimentionIndex } from '../ArrayUtil';
 import { getCastTarget } from '../PlayerUtils';
 
 export const keyDown = {

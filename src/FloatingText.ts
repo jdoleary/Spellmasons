@@ -1,7 +1,6 @@
 import * as PIXI from 'pixi.js';
 import type { Vec2 } from './Vec';
 import { app, containerFloatingText, containerUIFixed, withinCameraBounds } from './PixiUtils';
-import * as config from './config';
 
 interface FText {
   x: number;
