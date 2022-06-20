@@ -1,6 +1,5 @@
 ## Focus
 - Monday
-    - **PRETRIP**Bug: There was a bug that ended my game though. I got shield buffed by a resurrected priest, and my character disappeared. this all happened on the turn when the portal appeared (finished the level). Now I cant walk through the portal. I'm getting the empty stamina message when I try to move my (invisible) player. i can still cast spells during my turn; as well as end turns
     - bug: poison subsprite is gone after one turn
     - Stretch: Standalone server
     - Remove Character Select View, it conflicts with loading when loading is done it gets set to game view right away
