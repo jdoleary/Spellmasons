@@ -4,3 +4,4 @@ node_modules
 gimp
 testQueue.js
 scratchpad
+headless-server-build
