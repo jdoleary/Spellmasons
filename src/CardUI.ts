@@ -254,6 +254,9 @@ function addToolbarListener(
       // just close the inventory
       toggleInventory(undefined, false);
     } else {
+      document.querySelectorAll(`.${ACTIVE_TOOLBAR_ELEMENT_CLASSNAME}`).forEach(el => {
+        el.classList.remove(ACTIVE_TOOLBAR_ELEMENT_CLASSNAME);
+      })
       // Otherwise open the inventory with the right-clicked element selected
       element.classList.add(ACTIVE_TOOLBAR_ELEMENT_CLASSNAME)
       toggleInventory(toolbarIndex, true);
