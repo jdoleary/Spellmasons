@@ -48,13 +48,9 @@ elCardHand.addEventListener('drop', ev => {
     if (startDragCardIndex !== -1) {
       // Then the drag card is already in the toolbar and this is a swap between
       // two cards on the toolbar
-      const swapCard = window.player.cards[dropIndex];
+      const swapCard = window.player.cards[dropIndex] || "";
       window.player.cards[dropIndex] = cardId;
-      if (swapCard !== undefined) {
-        window.player.cards[startDragCardIndex] = swapCard;
-      } else {
-        console.error('Unexpected error, swapCard is undefined')
-      }
+      window.player.cards[startDragCardIndex] = swapCard;
     } else {
       // else a card is being dragged in from inventory
       window.player.cards[dropIndex] = cardId;
