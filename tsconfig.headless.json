@@ -1,24 +1,30 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
     "useDefineForClassFields": true,
-    "module": "ESNext",
     "lib": [
       "ESNext",
       "DOM"
     ],
+    "target": "es6",
+    "module": "commonjs",
     "moduleResolution": "Node",
     "strict": true,
     "sourceMap": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "esModuleInterop": true,
-    "noEmit": true,
     "skipLibCheck": true,
     "noUncheckedIndexedAccess": true,
     "strictNullChecks": true,
   },
+  "buildOptions": {
+    "verbose": true
+  },
   "files": [
     "src/HeadlessServer.ts"
   ],
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": []
 }
