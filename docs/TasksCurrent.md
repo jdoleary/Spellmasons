@@ -1,5 +1,9 @@
 ## Focus
-- bug: enter, enter doesn't make "are you sure" go away
+- Decouple the various layers (data: underworld; networking: pie; visual: Pixi / DOM; audio)
+    - Then improve syncing strategy between the data layer and the visual layer.  This will be useful for network syncs, saves and loads, standalone headless server.
+        - It should also solve the disappearing subsprite bug and the wizard robes changing color bug.
+    - In order to decouple, each should have imports only in one file that can be dependency injected.  So ALL pie stuff goes through the networking layer, all DOM stuff goes through the UI layer, all PIXI (including PixiUtils which is how a lot of the files interact with PIXI) stuff goes through the pixi layer.  This should make it easy to make a headless server or make tests that use a data-only underworld
+- bug: enter, enter doesn't make "are you sure" prompt go away when there are no enemies.
 - Monday
     - bug: poison subsprite is gone after one turn
         - I think this is also related to the bug that makes the player cloak color revert to normal. If i cast poison on myself and then go get hit by a grunt, I both lose the poison subsprite AND the filter that changes cloak color
