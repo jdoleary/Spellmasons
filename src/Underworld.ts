@@ -50,7 +50,6 @@ import { getClients, hostGiveClientGameStateForInitialLoad } from './wsPieHandle
 import { healthAllyGreen, healthHurtRed, healthRed } from './ui/colors';
 import objectHash from 'object-hash';
 import { withinMeleeRange } from './units/actions/gruntAction';
-import * as TimeRelease from './TimeRelease';
 import { all_ground, baseTiles, caveSizes, convertBaseTilesToFinalTiles, generateCave, getLimits, Limits as Limits, Tile, toObstacle } from './MapOrganicCave';
 import { Material } from './Conway';
 import { oneDimentionIndexToVec2 } from './WaveFunctionCollapse';
@@ -94,7 +93,6 @@ export default class Underworld {
   players: Player.IPlayer[] = [];
   units: Unit.IUnit[] = [];
   pickups: Pickup.IPickup[] = [];
-  timeReleases: TimeRelease.ITimeRelease[] = [];
   imageOnlyTiles: Tile[] = [];
   // line segments that prevent sight and movement
   walls: LineSegment[] = [];
@@ -531,15 +529,7 @@ export default class Underworld {
   spawnPickup(index: number, coords: Vec2) {
     const pickup = Pickup.pickups[index];
     if (pickup) {
-      Pickup.create(
-        coords.x,
-        coords.y,
-        pickup,
-        pickup.singleUse,
-        pickup.animationSpeed,
-        pickup.playerOnly || false,
-        pickup.turnsLeftToGrab
-      );
+      Pickup.create({ pos: coords, pickupSource: pickup });
     } else {
       console.error('Could not find pickup with index', index);
     }
@@ -964,19 +954,12 @@ export default class Underworld {
         }
       }
       if (p.turnsLeftToGrab == 0) {
+        // Trigger custom behavior
+        if (p.onTurnsLeftDone) {
+          await p.onTurnsLeftDone(p);
+        }
+        // Remove pickup
         Pickup.removePickup(p);
-      }
-    }
-
-    for (let t of this.timeReleases) {
-      t.turnsLeft--;
-      if (t.text) {
-        t.text.text = `${t.turnsLeft}`;
-      }
-      if (t.turnsLeft <= 0) {
-        await t.onRelease();
-        // Remove it
-        TimeRelease.cleanup(t);
       }
     }
 
@@ -1460,11 +1443,6 @@ export default class Underworld {
     const closest = sortedByProximityToCoords[0]
     return closest;
   }
-  getTimeReleaseAt(coords: Vec2): TimeRelease.ITimeRelease | undefined {
-    const sortedByProximityToCoords = this.timeReleases.filter(p => !isNaN(p.x) && !isNaN(p.y) && math.distance(coords, p) <= p.radius).sort((a, b) => math.distance(a, coords) - math.distance(b, coords));
-    const closest = sortedByProximityToCoords[0]
-    return closest;
-  }
   addUnitToArray(unit: Unit.IUnit, prediction: boolean) {
     if (prediction) {
       window.predictionUnits.push(unit);
@@ -1634,14 +1612,7 @@ export default class Underworld {
       if (portalPickup) {
         for (let playerUnit of this.units.filter(u => u.unitType == UnitType.PLAYER_CONTROLLED && u.alive)) {
           const portalSpawnLocation = this.findValidSpawn(playerUnit, 2) || playerUnit;
-          Pickup.create(
-            portalSpawnLocation.x,
-            portalSpawnLocation.y,
-            portalPickup,
-            false,
-            portalPickup.animationSpeed,
-            true,
-          );
+          Pickup.create({ pos: portalSpawnLocation, pickupSource: portalPickup });
           // Give all player units max stamina for convenience:
           playerUnit.stamina = playerUnit.staminaMax;
 

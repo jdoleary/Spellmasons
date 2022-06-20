@@ -12,6 +12,7 @@ import * as Cards from './cards';
 import * as config from './config';
 import { chooseObjectWithProbability } from './math';
 import seedrandom from 'seedrandom';
+import { Vec2 } from './Vec';
 
 export const PICKUP_RADIUS = config.COLLISION_MESH_RADIUS;
 export interface IPickup {
@@ -28,6 +29,8 @@ export interface IPickup {
   playerOnly: boolean;
   // Pickups optionally have a "time limit" and will disappear after this many turns
   turnsLeftToGrab?: number;
+  // Defines custom behavior when turnsLeftToGrab reaches 0
+  onTurnsLeftDone?: (self: IPickup) => Promise<void>;
   text?: PIXI.Text;
   // effect is ONLY to be called within triggerPickup
   // returns true if the pickup did in fact trigger - this is useful
@@ -48,16 +51,12 @@ interface IPickupSource {
   effect: ({ unit, player }: { unit?: IUnit; player?: Player.IPlayer }) => boolean | undefined;
 }
 
-export function create(
-  x: number,
-  y: number,
-  pickupSource: IPickupSource,
-  singleUse: boolean,
-  animationSpeed: number = 0.1,
-  playerOnly: boolean,
-  turnsLeftToGrab?: number
-): IPickup {
-  const { name, description, imagePath, effect, scale } = pickupSource;
+export function create({ pos, pickupSource, onTurnsLeftDone }:
+  {
+    pos: Vec2, pickupSource: IPickupSource, onTurnsLeftDone?: (self: IPickup) => Promise<void>
+  }) {
+  const { name, description, imagePath, effect, scale, singleUse, animationSpeed, playerOnly = false, turnsLeftToGrab } = pickupSource;
+  const { x, y } = pos
   const self: IPickup = {
     x,
     y,
@@ -71,6 +70,7 @@ export function create(
     singleUse,
     playerOnly,
     effect,
+    onTurnsLeftDone
   };
   self.image.sprite.scale.x = scale;
   self.image.sprite.scale.y = scale;
@@ -93,6 +93,7 @@ export function create(
 
   return self;
 }
+
 export function syncImage(pickup: IPickup) {
   if (pickup.image) {
     pickup.image.sprite.x = pickup.x;
@@ -121,14 +122,9 @@ export function load(pickup: IPickup) {
   // Get the pickup object
   let foundPickup = pickups.find((p) => p.imagePath == pickup.imagePath);
   if (foundPickup) {
-    const self = create(
-      pickup.x,
-      pickup.y,
-      foundPickup,
-      pickup.singleUse,
-      0.1,
-      pickup.playerOnly,
-    );
+    // TODO verify that complex pickup behavior like onTurnsLeftDone still work after load, traps
+    // probably don't work after load because callbacks can't be serialized
+    const self = { ...create({ pos: pickup, pickupSource: foundPickup }), ...pickup };
     return self;
   } else {
     throw new Error(`Could not load pickup with path ${pickup.imagePath}`);

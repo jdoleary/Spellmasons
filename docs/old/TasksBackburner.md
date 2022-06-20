@@ -1,3 +1,4 @@
+- Ensure trap pickups work after load, they probably done
 - The zoom coordinates off issue between multiplayer sessions when casting
     - hit on one screen, miss on another
     - Related?  Brad cast a spell out of range, but it still triggered on my screen
