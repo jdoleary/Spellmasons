@@ -526,7 +526,12 @@ export function takeDamage(unit: IUnit, amount: number, prediction: boolean, _st
   }
   if (!prediction) {
     console.log(`takeDamage: unit ${unit.id}; amount: ${amount}; events:`, unit.onDamageEvents);
-    playAnimation(unit, unit.animations.hit);
+    // Only play hit animation if taking actual damage,
+    // note: heals call takeDamage with a negative amount, so we don't want to play a hit animation when
+    // player is healed
+    if (amount > 0) {
+      playAnimation(unit, unit.animations.hit);
+    }
   }
   unit.health -= amount;
   // Prevent health from going over maximum or under 0
