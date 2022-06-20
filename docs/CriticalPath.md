@@ -1,10 +1,8 @@
 # Critical Path
-- Core 2
-    - Better Prediction Graphics (blue vs grey for out of range)
 - Game Balance
 - Clerical
     - Menu
-    - Steam Page
+    - Steam Page (waiting on art)
     - Website Presskit page
 - SFX
     - Unit Sounds

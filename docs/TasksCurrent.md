@@ -1,29 +1,30 @@
 ## Focus
-- Remove Character Select View, it conflicts with loading when loading is done it gets set to game view right away
+- Monday
+    - **PRETRIP**task: allow clearing spell on toolbar
+    - **PRETRIP**Should be able to 'push' and 'pull' trap (TimeReleases are not affected by forceMoves or push and pull)
+    - **PRETRIP**Priests should not heal ally vampires and should heal enemy vampires to damage them
+    - **PRETRIP**Bug: There was a bug that ended my game though. I got shield buffed by a resurrected priest, and my character disappeared. this all happened on the turn when the portal appeared (finished the level). Now I cant walk through the portal. I'm getting the empty stamina message when I try to move my (invisible) player. i can still cast spells during my turn; as well as end turns
+    - bug: poison subsprite is gone after one turn
+    - Stretch: Standalone server
+    - Remove Character Select View, it conflicts with loading when loading is done it gets set to game view right away
+
 ## Bugs
 
 - Priest "run away" ai is broken
 - Fix robe losing color 
 - wall: see abberant-wall.png
-- bug: poison subsprite is gone after one turn
 - Bug: Grunts on level 4 of 0.7771387726829492 have attention marker when they definitely wont hit me next turn
 - Fix Polygon2 tests
 - Bug: Portal spawns when you prediction kill yourself on test level
-- **PRETRIP**Bug: There was a bug that ended my game though. I got shield buffed by a resurrected priest, and my character disappeared. this all happened on the turn when the portal appeared (finished the level). Now I cant walk through the portal
-I'm getting the empty stamina message when I try to move my (invisible) player
-i can still cast spells during my turn; as well as end turns
 - Bug: Should sync portals when syncing units if all enemies are dead
 - Bug: (Note: this is probably fixed now) Goons spawned outside of map when summoner was stuffed in upper left corner of map
 ---
 ## Features
 - What if potions drop from slain enemies?
-- **PRETRIP**Should be able to 'push' and 'pull' trap (TimeReleases are not affected by forceMoves or push and pull)
-- **PRETRIP**Priests should not heal ally vampires and should heal enemy vampires to damage them
 - Task: An ally that has died at all (even if ressed) should lose their upgrade priviledge
 - SOUND: Organize candidates for sfx
-- **PRETRIP**Allow pickups to be stored in inventory
+- Allow pickups to be stored in inventory
 - (M) Rework unit crowding (save for later, non priority)
-- **PRETRIP**task: allow clearing spell on toolbar
 - Show modifiers in UI somehow, not just on player, especially when you have the modifier on you
 ---
 ## UI
