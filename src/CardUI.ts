@@ -237,22 +237,27 @@ export function toggleInventory(toolbarIndex: number | undefined, forceState: bo
     syncInventory(toolbarIndex);
   } else {
     // When inventory closes, remove active toolbar element class
-    document.querySelectorAll('.active-toolbar-element').forEach(e => e.classList.remove('active-toolbar-element'))
-
+    document.querySelectorAll('.active-toolbar-element').forEach(e => e.classList.remove(ACTIVE_TOOLBAR_ELEMENT_CLASSNAME))
   }
-
 }
 elInvButton.addEventListener('click', () => {
   toggleInventory(undefined, undefined);
 
 })
+const ACTIVE_TOOLBAR_ELEMENT_CLASSNAME = 'active-toolbar-element'
 function addToolbarListener(
   element: HTMLElement,
   toolbarIndex: number
 ) {
   element.addEventListener('contextmenu', (e) => {
-    element.classList.add('active-toolbar-element')
-    toggleInventory(toolbarIndex, undefined);
+    if (element.classList.contains(ACTIVE_TOOLBAR_ELEMENT_CLASSNAME)) {
+      // just close the inventory
+      toggleInventory(undefined, false);
+    } else {
+      // Otherwise open the inventory with the right-clicked element selected
+      element.classList.add(ACTIVE_TOOLBAR_ELEMENT_CLASSNAME)
+      toggleInventory(toolbarIndex, true);
+    }
     e.preventDefault();
     e.stopPropagation();
   });
