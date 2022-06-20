@@ -218,6 +218,18 @@ export function syncInventory(slotModifyingIndex: number | undefined) {
         console.error('Could not find card for ', inventoryCardId)
       }
     }
+    // Add an inventory element to clear the currently selected toolbar item
+    if (slotModifyingIndex !== undefined) {
+      const elClearSlotModifiyingIndex = createNonCardInventoryElement('toolbar-slot.png', 'Empty');
+      elInvContent.appendChild(elClearSlotModifiyingIndex);
+      elClearSlotModifiyingIndex.addEventListener('click', e => {
+        if (window.player && slotModifyingIndex !== undefined) {
+          window.player.cards[slotModifyingIndex] = '';
+          recalcPositionForCards(window.player);
+          toggleInventory(undefined, false);
+        }
+      })
+    }
   } else {
     console.error('Cannot sync inventory, window.player is undefined');
   }
@@ -469,6 +481,24 @@ export function getCardRarityColor(content: { probability: number }): string {
     case CardRarity.COMMON:
       return '#3b322c'
   }
+}
+function createNonCardInventoryElement(thumbnailPath: string, titleText: string) {
+  const element = document.createElement('div');
+  element.classList.add('card');
+  const elCardInner = document.createElement('div');
+  elCardInner.classList.add('card-inner');
+  element.appendChild(elCardInner);
+  const thumbHolder = document.createElement('div');
+  const thumbnail = document.createElement('img');
+  thumbnail.src = 'images/spell/' + thumbnailPath;
+  thumbHolder.appendChild(thumbnail);
+  thumbHolder.classList.add('card-thumb');
+  elCardInner.appendChild(thumbHolder);
+  const title = document.createElement('div');
+  title.classList.add('card-title');
+  title.innerHTML = titleText;
+  elCardInner.appendChild(title);
+  return element;
 }
 function createCardElement(content: Cards.ICard) {
   const element = document.createElement('div');

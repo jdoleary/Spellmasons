@@ -1014,7 +1014,7 @@ body.open-inventory #inventory-content {
 .empty-slot {
   width: 64px;
   height: 64px;
-  background-image: url('images/toolbar-slot.png')
+  background-image: url('images/spell/toolbar-slot.png')
 }
 
 #inventory-icon {

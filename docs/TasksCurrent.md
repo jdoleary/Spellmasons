@@ -1,6 +1,5 @@
 ## Focus
 - Monday
-    - **PRETRIP**task: allow clearing spell on toolbar
     - **PRETRIP**Should be able to 'push' and 'pull' trap (TimeReleases are not affected by forceMoves or push and pull)
     - **PRETRIP**Priests should not heal ally vampires and should heal enemy vampires to damage them
     - **PRETRIP**Bug: There was a bug that ended my game though. I got shield buffed by a resurrected priest, and my character disappeared. this all happened on the turn when the portal appeared (finished the level). Now I cant walk through the portal. I'm getting the empty stamina message when I try to move my (invisible) player. i can still cast spells during my turn; as well as end turns
