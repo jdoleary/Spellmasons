@@ -220,7 +220,7 @@ export function syncInventory(slotModifyingIndex: number | undefined) {
     if (slotModifyingIndex !== undefined) {
       const elClearSlotModifiyingIndex = createNonCardInventoryElement('toolbar-slot.png', 'Empty');
       elInvContent.appendChild(elClearSlotModifiyingIndex);
-      elClearSlotModifiyingIndex.addEventListener('click', e => {
+      elClearSlotModifiyingIndex.addEventListener('click', () => {
         if (window.player && slotModifyingIndex !== undefined) {
           window.player.cards[slotModifyingIndex] = '';
           recalcPositionForCards(window.player);

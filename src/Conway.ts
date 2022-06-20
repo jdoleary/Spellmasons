@@ -1,5 +1,5 @@
 import { randInt } from "./rand";
-import { oneDimentionIndexToVec2, vec2ToOneDimentionIndexPreventWrap } from "./WaveFunctionCollapse";
+import { oneDimentionIndexToVec2, vec2ToOneDimentionIndexPreventWrap } from "./ArrayUtil";
 export enum Material {
     EMPTY,
     LIQUID,

@@ -40,7 +40,7 @@ import { calculateCost } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle } from './collision/lineSegment';
 import { expandPolygon, mergePolygon2s, Polygon2, Polygon2LineSegment, toLineSegments, toPolygon2LineSegments } from './Polygon2';
 import { calculateDistanceOfVec2Array, findPath } from './Pathfinding';
-import { removeUnderworldEventListeners, setView, View } from './views';
+import { removeUnderworldEventListeners } from './views';
 import * as readyState from './readyState';
 import { mouseMove } from './ui/eventListeners';
 import Jprompt from './Jprompt';
@@ -53,7 +53,7 @@ import objectHash from 'object-hash';
 import { withinMeleeRange } from './units/actions/gruntAction';
 import { all_ground, baseTiles, caveSizes, convertBaseTilesToFinalTiles, generateCave, getLimits, Limits as Limits, Tile, toObstacle } from './MapOrganicCave';
 import { Material } from './Conway';
-import { oneDimentionIndexToVec2 } from './WaveFunctionCollapse';
+import { oneDimentionIndexToVec2 } from './ArrayUtil';
 import { playSFX, sfx } from './Audio';
 
 export enum turn_phase {

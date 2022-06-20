@@ -4,7 +4,6 @@ import {
   app,
   updateCameraPosition,
 } from './PixiUtils';
-import { MESSAGE_TYPES } from './MessageTypes';
 import {
   clickHandler,
   contextmenuHandler,

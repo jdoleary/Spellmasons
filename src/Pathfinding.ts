@@ -1,10 +1,10 @@
 import { isAngleBetweenAngles } from "./Angle";
-import { findWherePointIntersectLineSegmentAtRightAngle, isPointOnLineSegment, LineSegment, lineSegmentIntersection } from "./collision/lineSegment";
+import { isPointOnLineSegment, LineSegment, lineSegmentIntersection } from "./collision/lineSegment";
 import { distance } from "./math";
 import { Vec2, clone } from './Vec';
 import * as Vec from './Vec';
 import * as math from './math';
-import { isVec2InsidePolygon, Polygon2, Polygon2LineSegment, toPolygon2LineSegments, doesVertexBelongToPolygon, getInsideAnglesOfWall, doesLineFromPointToTargetProjectAwayFromOwnPolygon, getPointsFromPolygonStartingAt } from "./Polygon2";
+import { isVec2InsidePolygon, Polygon2, Polygon2LineSegment, doesVertexBelongToPolygon, getInsideAnglesOfWall, doesLineFromPointToTargetProjectAwayFromOwnPolygon, getPointsFromPolygonStartingAt } from "./Polygon2";
 
 // Will return either an array with 1 normal polygon or an array with 1 or more 
 // inverted polygons 

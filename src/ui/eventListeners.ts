@@ -14,10 +14,8 @@ import {
 import { toggleMenu, View } from '../views';
 import * as config from '../config';
 import { cameraAutoFollow, getCamera, moveCamera } from '../PixiUtils';
-import { vec2ToOneDimentionIndex } from '../WaveFunctionCollapse';
 import { getEndOfRangeTarget, isOutOfRange } from '../PlayerUtils';
-import { closestLineSegmentIntersection } from '../collision/lineSegment';
-import { distance, getCoordsAtDistanceTowardsTarget } from '../math';
+import { vec2ToOneDimentionIndex } from '../ArrayUtil';
 
 export const keyDown = {
   w: false,
