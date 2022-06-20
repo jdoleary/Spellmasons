@@ -1,10 +1,13 @@
 ## Focus
+- bug: enter, enter doesn't make "are you sure" go away
 - Monday
     - bug: poison subsprite is gone after one turn
-    - Stretch: Standalone server
+        - I think this is also related to the bug that makes the player cloak color revert to normal. If i cast poison on myself and then go get hit by a grunt, I both lose the poison subsprite AND the filter that changes cloak color
+    - Fix tests so I can deploy
 
 ## Bugs
 
+- Standalone server
 - Priest "run away" ai is broken
 - Fix robe losing color 
 - wall: see abberant-wall.png
