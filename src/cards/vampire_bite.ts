@@ -4,7 +4,10 @@ import { allCards, Spell } from '.';
 import { addCardToHand, removeCardsFromHand } from '../CardUI';
 import * as Unit from '../Unit';
 
-export const id = 'bite';
+export const id = 'vampire bite';
+export function isVampire(unit: IUnit): boolean {
+  return Object.keys(unit.modifiers).some(m => m === id)
+}
 function add(unit: IUnit) {
   // Note: Curse can stack multiple times but doesn't keep any state
   // so it doesn't need a first time setup like freeze does
