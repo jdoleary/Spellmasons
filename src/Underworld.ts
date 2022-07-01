@@ -39,7 +39,7 @@ import { calculateCost } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle } from './collision/lineSegment';
 import { expandPolygon, mergePolygon2s, Polygon2, Polygon2LineSegment, toLineSegments, toPolygon2LineSegments } from './Polygon2';
 import { calculateDistanceOfVec2Array, findPath } from './Pathfinding';
-import { removeUnderworldEventListeners, setView, View } from './views';
+import { removeUnderworldEventListeners } from './views';
 import * as readyState from './readyState';
 import { mouseMove } from './ui/eventListeners';
 import Jprompt from './Jprompt';
@@ -404,12 +404,14 @@ export default class Underworld {
           const card = Cards.allCards[cardId];
           if (card) {
             const x = getXLocationOfImageForThoughtBubble(thinkingPlayer.unit.x, i, cardIds.length);
-            const image = Image.create(
-              { x, y: thinkingPlayer.unit.y - config.COLLISION_MESH_RADIUS * 2 },
-              card.thumbnail,
-              containerPlayerThinking,
-            );
-            image.sprite.scale.set(0.3);
+            const sprite = addPixiSprite(card.thumbnail, containerPlayerThinking);
+            sprite.anchor.x = 0.5;
+            sprite.anchor.y = 0.5;
+            sprite.rotation = 0;
+            const pos = { x, y: thinkingPlayer.unit.y - config.COLLISION_MESH_RADIUS * 2 };
+            sprite.x = pos.x;
+            sprite.y = pos.y;
+            sprite.scale.set(0.3);
           }
         }
         if (target && cardIds.length) {

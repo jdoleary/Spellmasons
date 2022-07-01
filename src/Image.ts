@@ -1,6 +1,6 @@
 import type * as PIXI from 'pixi.js';
 
-import { addPixiSprite, PixiSpriteOptions } from './PixiUtils';
+import { addPixiSprite, addPixiSpriteAnimated, getPixiTextureAnimated, PixiSpriteOptions } from './PixiUtils';
 import Subsprites from './Subsprites';
 import { animateIndependent } from './AnimationTimeline';
 import type { Vec2 } from "./Vec";
@@ -8,20 +8,28 @@ import type { Vec2 } from "./Vec";
 // The serialized version of the interface changes the interface to allow only the data
 // that can be serialized in JSON.  It may exclude data that is not neccessary to
 // rehydrate the JSON into an entity
-export type IImageSerialized = {
+export type IImageAnimatedSerialized = {
   sprite: {
     x: number,
     y: number,
     scale: { x: number, y: number },
-    animationOrImagePath: string,
+    imagePath: string,
     // A list of sprite imagePaths (jordan identifier for subsprites)
     children: string[],
   },
   mask?: string,
 };
-export interface IImage {
+// 'imagePath' is a property that I've added to sprite to identify which
+// animation is playing currently
+// 'isOneOff' is a custom property that I'm adding to denote if a sprite is a oneOff sprite
+// meaning, it should get removed if the primary sprite changes
+export type JSpriteAnimated = PIXI.AnimatedSprite & { imagePath: string, isOneOff: boolean };
+export interface IImageAnimated {
   // Not to be serialized
-  sprite: PIXI.Sprite;
+  sprite: JSpriteAnimated;
+  // When invoked, resolves any promises waiting on this animation to complete
+  // such as the underworld waiting for a spell animation before moving on
+  resolver: undefined | (() => void);
   // Sprite that acts as a mask
   mask?: string,
 }
@@ -30,19 +38,20 @@ export function create(
   spritesheetId: string,
   parent: PIXI.Container,
   pixiSpriteOptions?: PixiSpriteOptions
-): IImage {
-  const sprite = addPixiSprite(spritesheetId, parent, pixiSpriteOptions);
+): IImageAnimated {
+  const sprite = addPixiSpriteAnimated(spritesheetId, parent, pixiSpriteOptions);
   sprite.anchor.x = 0.5;
   sprite.anchor.y = 0.5;
   sprite.rotation = 0;
 
-  const image: IImage = {
+  const image: IImageAnimated = {
     sprite,
+    resolver: undefined
   };
   setPosition(image, coords);
   return image;
 }
-export function cleanup(image?: IImage) {
+export function cleanup(image?: IImageAnimated) {
   // Remove PIXI sprite
   if (image && image.sprite) {
     // Remove subsprites
@@ -59,47 +68,74 @@ export function cleanup(image?: IImage) {
 // because it has built in protections for returning to the correct  
 // default sprite
 // Returns sprite IF sprite has changed
-export function changeSprite(image: IImage | undefined, imagePath: string, container: PIXI.Container, options?: PixiSpriteOptions): PIXI.Sprite | undefined {
+// Note: Sprite management is complicated, many invokations await an animation completing to
+// do something else, so this function is very careful to ensure that the previous animation's
+// promise is resolved (if there is one) before switching the animation.  This is why 'resolver'
+// is a required field, it should be explicitly set to noop if there is no promise meant to be waiting 
+// for the animation to finish.
+export function changeSprite(image: IImageAnimated | undefined, imagePath: string, container: PIXI.Container, resolver: undefined | (() => void), options?: PixiSpriteOptions,): JSpriteAnimated | undefined {
   if (!image) {
     return;
   }
-  // @ts-ignore: imagePath is a property that I've added to sprite to identify which
-  // animation is playing currently
   if (image.sprite.imagePath == imagePath && image.sprite.parent == container) {
     // Do not change if imagePath would be unchanged and
     // container would be unchanged 
     // Return undefined because sprite is unchanged
     return undefined;
   }
-  const sprite = addPixiSprite(imagePath, container, options);
-  const filters = image.sprite.filters;
-  sprite.x = image.sprite.x;
-  sprite.y = image.sprite.y;
-  sprite.scale.x = image.sprite.scale.x;
-  sprite.scale.y = image.sprite.scale.y;
-  sprite.anchor.x = image.sprite.anchor.x;
-  sprite.anchor.y = image.sprite.anchor.y;
-  // Save children before they are removed
-  const children = [
-    ...image.sprite.children
-      // @ts-ignore: isOneOff is a custom property that I'm adding to denote if a sprite is a oneOff sprite
-      // meaning, it should get removed if the primary sprite changes
-      .filter(c => !c.isOneOff)
-  ];
-  // Save mask
-  const mask = image.sprite.mask;
-  cleanup(image);
-  image.sprite = sprite;
-  // Keep filters from previous sprite
-  image.sprite.filters = filters;
-  restoreSubsprites(image);
-  // Transfer children to new sprite
-  for (let child of children) {
-    sprite.addChild(child);
+  // Since the image is changing, resolve whatever was waiting for it to complete.
+  if (image.resolver) {
+    image.resolver();
   }
-  // restore mask:
-  sprite.mask = mask;
-  return sprite;
+  // Set resolver so that even if the image changes, the game wont deadlock, waiting for a 
+  // never-to-be-completed animation.  Defaults to noop if not provided
+  image.resolver = resolver;
+  const tex = getPixiTextureAnimated(imagePath);
+  if (tex) {
+    const sprite = image.sprite;
+    sprite.textures = tex;
+    sprite.imagePath = imagePath;
+    // Change container if necessary:
+    if (container !== sprite.parent) {
+      container.addChild(sprite);
+    }
+    // Remove oneOff sprites attached to this sprites previous animation:
+    for (let child of sprite.children as JSpriteAnimated[]) {
+      if (child.isOneOff) {
+        sprite.removeChild(child);
+      }
+    }
+    // Default loop to true
+    sprite.loop = true;
+    // Default animationSpeed to 0.1
+    sprite.animationSpeed = 0.1;
+    if (options) {
+      const { onFrameChange, onComplete, loop, animationSpeed } = options;
+      sprite.onFrameChange = onFrameChange;
+      sprite.loop = loop;
+      if (!loop && !resolver) {
+        console.warn('Sprite is changing to a non-looping sprite, but no resolver was provided.  Is this intentional?');
+      }
+      if (animationSpeed !== undefined) {
+        sprite.animationSpeed = animationSpeed;
+      }
+      sprite.onComplete = () => {
+        if (onComplete) {
+          onComplete();
+        }
+        if (resolver) {
+          // Always trigger resolver when sprite completes animating so that
+          // whatever is waiting for the animation to finish can carry on
+          resolver();
+        }
+      };
+    }
+    sprite.play();
+    return image.sprite;
+  } else {
+    console.error('Could not change sprite to', imagePath);
+    return undefined
+  }
 }
 // Converts an Image entity into a serialized form
 // that can be saved as JSON and rehydrated later into
@@ -107,35 +143,35 @@ export function changeSprite(image: IImage | undefined, imagePath: string, conta
 // Returns only the properties that can be saved
 // callbacks and complicated objects such as PIXI.Sprites
 // are removed
-export function serialize(image: IImage): IImageSerialized {
+export function serialize(image: IImageAnimated): IImageAnimatedSerialized {
   return {
     sprite: {
       x: image.sprite.x,
       y: image.sprite.y,
       scale: { x: image.sprite.scale.x, y: image.sprite.scale.y },
-      animationOrImagePath: getAnimationPathFromSprite(image.sprite),
+      imagePath: getAnimationPathFromSprite(image.sprite),
       // @ts-ignore: imagePath is a property that I added to identify currently playing animation or sprite.
       children: image.sprite.children.map(c => c.imagePath)
 
     },
   };
 }
-// Reinitialize an Image from IImageSerialized JSON
+// Reinitialize an Image from IImageAnimatedSerialized JSON
 // this is useful when loading game state after reconnect
 // This is the opposite of serialize
-export function load(image: IImageSerialized | undefined, parent: PIXI.Container): IImage | undefined {
+export function load(image: IImageAnimatedSerialized | undefined, parent: PIXI.Container): IImageAnimated | undefined {
   if (!image) {
     return undefined;
   }
   const copy = { ...image };
-  const { scale, animationOrImagePath } = copy.sprite;
-  if (!animationOrImagePath) {
+  const { scale, imagePath } = copy.sprite;
+  if (!imagePath) {
     // Missing image path
     console.error('Cannot load image, missing image path')
     return;
   }
   // Recreate the sprite using the create function so it initializes it properly
-  const newImage = create(copy.sprite, animationOrImagePath, parent);
+  const newImage = create(copy.sprite, imagePath, parent);
   newImage.sprite.scale.set(scale.x, scale.y);
   // Restore subsprites (the actual sprites)
   restoreSubsprites(newImage);
@@ -144,22 +180,22 @@ export function load(image: IImageSerialized | undefined, parent: PIXI.Container
 }
 export function getAnimationPathFromSprite(sprite: PIXI.Sprite): string {
   const textureCacheIds = sprite._texture.textureCacheIds;
-  const animationOrImagePath = textureCacheIds[0] ? textureCacheIds[0].replace(/_\d+.png/g, "") : '';
-  return animationOrImagePath;
+  const imagePath = textureCacheIds[0] ? textureCacheIds[0].replace(/_\d+.png/g, "") : '';
+  return imagePath;
 
 }
-export function getSubspriteImagePaths(image: IImage | IImageSerialized): string[] {
+export function getSubspriteImagePaths(image: IImageAnimated | IImageAnimatedSerialized): string[] {
   // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
   return image.sprite.children.filter(c => c !== undefined).map(c => c.imagePath);
 }
 // syncronize updates an existing originalImage to match the properties of imageSerialized
 // mutates originalImage
 // TODO test for memory leaks
-export function syncronize(imageSerialized: IImageSerialized, originalImage?: IImage): IImage | undefined {
+export function syncronize(imageSerialized: IImageAnimatedSerialized, originalImage?: IImageAnimated): IImageAnimated | undefined {
   if (!originalImage) {
     return undefined;
   }
-  if (imageSerialized.sprite.animationOrImagePath === getAnimationPathFromSprite(originalImage.sprite)) {
+  if (imageSerialized.sprite.imagePath === getAnimationPathFromSprite(originalImage.sprite)) {
     // then we only need to update properties:
     const { x, y, scale } = imageSerialized.sprite;
     originalImage.sprite.x = x;
@@ -181,7 +217,7 @@ export function syncronize(imageSerialized: IImageSerialized, originalImage?: II
   }
 
 }
-export function restoreSubsprites(image?: IImage) {
+export function restoreSubsprites(image?: IImageAnimated) {
   if (!image) {
     return;
   }
@@ -196,7 +232,7 @@ export function restoreSubsprites(image?: IImage) {
     addMask(image, image.mask);
   }
 }
-export function removeMask(image: IImage) {
+export function removeMask(image: IImageAnimated) {
   if (image.sprite.mask) {
     try {
       // @ts-ignore
@@ -209,7 +245,7 @@ export function removeMask(image: IImage) {
   }
 
 }
-export function addMask(image: IImage, path: string) {
+export function addMask(image: IImageAnimated, path: string) {
   if (image.mask !== path) {
     // remove old mask:
     removeMask(image);
@@ -219,14 +255,14 @@ export function addMask(image: IImage, path: string) {
     image.mask = path;
   }
 }
-export function setPosition(image: IImage | undefined, pos: Vec2) {
+export function setPosition(image: IImageAnimated | undefined, pos: Vec2) {
   if (!image) {
     return;
   }
   image.sprite.x = pos.x;
   image.sprite.y = pos.y;
 }
-export function scale(image: IImage | undefined, scale: number): Promise<void> {
+export function scale(image: IImageAnimated | undefined, scale: number): Promise<void> {
   if (!image) {
     return Promise.resolve();
   }
@@ -239,7 +275,7 @@ export function scale(image: IImage | undefined, scale: number): Promise<void> {
     },
   ]);
 }
-export function addSubSprite(image: IImage | undefined, key: string) {
+export function addSubSprite(image: IImageAnimated | undefined, key: string) {
   if (!image) {
     return;
   }
@@ -256,7 +292,7 @@ export function addSubSprite(image: IImage | undefined, key: string) {
     }
   }
 }
-export function removeSubSprite(image: IImage | undefined, key: string) {
+export function removeSubSprite(image: IImageAnimated | undefined, key: string) {
   if (!image) {
     return;
   }
@@ -269,7 +305,7 @@ export function removeSubSprite(image: IImage | undefined, key: string) {
     console.log('Cannot remove subsprite', key, 'subsprite is missing from sprite.children');
   }
 }
-export function move(image: IImage, x: number, y: number) {
+export function move(image: IImageAnimated, x: number, y: number) {
   return animateIndependent([
     {
       sprite: image.sprite,
@@ -277,7 +313,7 @@ export function move(image: IImage, x: number, y: number) {
     },
   ]);
 }
-export function show(image?: IImage): Promise<void> {
+export function show(image?: IImageAnimated): Promise<void> {
   if (!image) {
     return Promise.resolve();
   }
@@ -288,7 +324,7 @@ export function show(image?: IImage): Promise<void> {
     },
   ]);
 }
-export function hide(image?: IImage) {
+export function hide(image?: IImageAnimated) {
   if (!image) {
     return Promise.resolve();
   }

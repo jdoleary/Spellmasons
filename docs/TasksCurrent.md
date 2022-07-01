@@ -31,6 +31,7 @@
         - I think this is also related to the bug that makes the player cloak color revert to normal. If i cast poison on myself and then go get hit by a grunt, I both lose the poison subsprite AND the filter that changes cloak color
 
 ## Bugs
+- Was able to cast beyond cast range
 
 - enter, enter doesn't make "are you sure" prompt go away when there are no enemies.
 - Priest "run away" ai is broken

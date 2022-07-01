@@ -3,7 +3,7 @@ import * as config from './config';
 import * as Image from './Image';
 import * as math from './math';
 import { distance } from './math';
-import { addPixiSprite, containerDoodads, containerUnits, PixiSpriteOptions } from './PixiUtils';
+import { addPixiSpriteAnimated, containerDoodads, containerUnits, PixiSpriteOptions } from './PixiUtils';
 import { UnitSubType, UnitType, Faction } from './commonTypes';
 import type { Vec2 } from './Vec';
 import * as Vec from './Vec';
@@ -40,7 +40,7 @@ export interface UnitPath {
 // The serialized version of the interface changes the interface to allow only the data
 // that can be serialized in JSON.  It may exclude data that is not neccessary to
 // rehydrate the JSON into an entity
-export type IUnitSerialized = Omit<IUnit, "resolveDoneMoving" | "resolveDoneMovingTimeout" | "image"> & { image?: Image.IImageSerialized };
+export type IUnitSerialized = Omit<IUnit, "resolveDoneMoving" | "resolveDoneMovingTimeout" | "image"> & { image?: Image.IImageAnimatedSerialized };
 export interface UnitAnimations {
   idle: string;
   hit: string;
@@ -68,7 +68,7 @@ export interface IUnit {
   // Strength is a modifier which affects base stats used for scaling difficulty
   strength: number;
   faction: Faction;
-  image?: Image.IImage;
+  image?: Image.IImageAnimated;
   defaultImagePath: string;
   shaderUniforms: { [key: string]: any };
   damage: number;
@@ -323,6 +323,9 @@ export function changeToDieSprite(unit: IUnit) {
     unit.image,
     unit.animations.die,
     containerDoodads,
+    // DieSprite intentionally stops animating when it is complete, therefore
+    // resolver is undefined, since no promise is waiting for it.
+    undefined,
     { loop: false }
   );
 }
@@ -333,13 +336,22 @@ export function changeToDieSprite(unit: IUnit) {
 export function returnToDefaultSprite(unit: IUnit) {
   // This check for unit.image prevents creating a corpse image when a predictionUnit
   // dies because a prediction unit won't have an image property
+  // Only return to default if it is not currently playing an animation, this prevents
   if (unit.image) {
     if (unit.alive) {
-      Image.changeSprite(
-        unit.image,
-        unit.animations.idle,
-        containerUnits
-      );
+      // Don't overwrite a currently playing animation, this function
+      // should only change the animating sprite back to default if it's done
+      // animating
+      if (!unit.image.sprite.playing) {
+        Image.changeSprite(
+          unit.image,
+          unit.animations.idle,
+          containerUnits,
+          undefined
+        );
+      }
+      // Ensure that the sprite is attached to the correct parent
+      containerUnits.addChild(unit.image.sprite);
     } else {
       changeToDieSprite(unit);
     }
@@ -379,11 +391,19 @@ export function playComboAnimation(unit: IUnit, key: string | undefined, keyMome
     if (combo.SFX) {
       playSFXKey(combo.SFX)
     }
-    Image.changeSprite(unit.image, combo.primaryAnimation, unit.image.sprite.parent, {
+    Image.changeSprite(unit.image, combo.primaryAnimation, unit.image.sprite.parent, resolve, {
       loop: false,
       ...options,
       onFrameChange,
       onComplete: () => {
+        if (keyMoment && !keyMomentTriggered) {
+          // Ensure that if keyMoment hasn't been called yet (because)
+          // the animation was interrupted, it is called now
+          // A keyMoment should ALWAYS be invoked
+          console.error(`Force invoking keyMoment at the end of animation ${combo.primaryAnimation}.  It should have been triggered but wasn't.`);
+          keyMomentPromise = keyMoment();
+          keyMomentTriggered = true;
+        }
         // Once main animation is complete,
         // wait for keymoment to complete,
         // then resolve the whole combo animation.
@@ -398,7 +418,9 @@ export function playComboAnimation(unit: IUnit, key: string | undefined, keyMome
     for (let animPath of combo.companionAnimations) {
       addOneOffAnimation(unit, animPath, options);
     }
-  }).then(() => { returnToDefaultSprite(unit); });
+  }).then(() => {
+    returnToDefaultSprite(unit);
+  });
 }
 export function playAnimation(unit: IUnit, spritePath: string | undefined, options?: PixiSpriteOptions): Promise<void> {
   if (!spritePath) {
@@ -411,12 +433,9 @@ export function playAnimation(unit: IUnit, spritePath: string | undefined, optio
       return resolve();
     }
 
-    Image.changeSprite(unit.image, spritePath, unit.image.sprite.parent, {
+    Image.changeSprite(unit.image, spritePath, unit.image.sprite.parent, resolve, {
       loop: false,
       ...options,
-      onComplete: () => {
-        resolve();
-      }
     });
   }).then(() => { returnToDefaultSprite(unit); });
 }
@@ -426,7 +445,7 @@ export function addOneOffAnimation(unit: IUnit, spritePath: string, options?: Pi
     if (!unit.image) {
       return resolve();
     }
-    const animationSprite = addPixiSprite(spritePath, unit.image.sprite, {
+    const animationSprite = addPixiSpriteAnimated(spritePath, unit.image.sprite, {
       loop: false,
       ...options,
       onComplete: () => {
@@ -436,8 +455,6 @@ export function addOneOffAnimation(unit: IUnit, spritePath: string, options?: Pi
         resolve();
       }
     });
-    // @ts-ignore: isOneOff is a custom property that I'm adding to denote if a sprite is a oneOff sprite
-    // meaning, it should get removed if the primary sprite changes
     animationSprite.isOneOff = true;
     animationSprite.anchor.set(0.5);
   });
@@ -694,6 +711,7 @@ export function orient(unit: IUnit, faceTarget: Vec2) {
 // moveTo moves a unit, considering all the in-game blockers
 export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
   if (!canMove(unit)) {
+    console.log('cannot move')
     return Promise.resolve();
   }
   let coordinates = math.getCoordsAtDistanceTowardsTarget(
@@ -712,7 +730,8 @@ export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
     Image.changeSprite(
       unit.image,
       unit.animations.walk,
-      unit.image.sprite.parent
+      unit.image.sprite.parent,
+      undefined
     );
   }
   orient(unit, target);
@@ -734,7 +753,8 @@ export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
       Image.changeSprite(
         unit.image,
         unit.animations.idle,
-        unit.image.sprite.parent
+        unit.image.sprite.parent,
+        undefined
       );
     }
     if (unit.resolveDoneMovingTimeout !== undefined) {

@@ -22,7 +22,7 @@ export interface IPickup {
   name: string;
   description: string;
   imagePath: string;
-  image: Image.IImage;
+  image: Image.IImageAnimated;
   // Only can be picked up once
   singleUse: boolean;
   // Only can be picked up by players
@@ -106,7 +106,7 @@ export function setPosition(pickup: IPickup, x: number, y: number) {
   Image.setPosition(pickup.image, { x, y });
 }
 export type IPickupSerialized = Omit<IPickup, "image" | "effect"> & {
-  image: Image.IImageSerialized
+  image: Image.IImageAnimatedSerialized
 };
 export function serialize(p: IPickup): IPickupSerialized {
   // effect is a callback and cannot be serialized
@@ -153,7 +153,7 @@ const healthPotionRestoreAmount = 5;
 const spike_damage = 6;
 export const pickups: IPickupSource[] = [
   {
-    imagePath: 'pickups/spikes.png',
+    imagePath: 'pickups/spikes',
     animationSpeed: -0.5,
     playerOnly: false,
     singleUse: true,

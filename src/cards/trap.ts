@@ -1,7 +1,7 @@
 import type { Spell } from '.';
 import * as Pickup from '../Pickup';
 import * as Image from '../Image';
-import { addPixiSprite, containerUnits } from '../PixiUtils';
+import { addPixiSpriteAnimated, containerUnits } from '../PixiUtils';
 
 export const id = 'Trap';
 const turnsItTakesTrapToWindUp = 2;
@@ -69,7 +69,7 @@ Sets a spell as a trap, to be triggered when stepped on.  Wrapping a spell in a 
                 effect: ({ unit }) => {
                   if (unit) {
                     // Play trap spring animation
-                    const animationSprite = addPixiSprite('pickups/trapAttack', containerUnits, {
+                    const animationSprite = addPixiSpriteAnimated('pickups/trapAttack', containerUnits, {
                       loop: false,
                       onComplete: () => {
                         if (animationSprite.parent) {
@@ -80,7 +80,7 @@ Sets a spell as a trap, to be triggered when stepped on.  Wrapping a spell in a 
                     animationSprite.anchor.set(0.5);
                     animationSprite.x = x;
                     animationSprite.y = y;
-                    const animationSprite2 = addPixiSprite('pickups/trapAttackMagic', containerUnits, {
+                    const animationSprite2 = addPixiSpriteAnimated('pickups/trapAttackMagic', containerUnits, {
                       loop: false,
                       onComplete: () => {
                         animationSprite2.parent.removeChild(animationSprite2);

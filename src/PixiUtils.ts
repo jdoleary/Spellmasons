@@ -4,8 +4,9 @@ import { View } from './views';
 import * as math from './math';
 import * as config from './config';
 import { keyDown } from './ui/eventListeners';
-import { LoaderResource, SCALE_MODES } from 'pixi.js';
+import { SCALE_MODES } from 'pixi.js';
 import * as colors from './ui/colors';
+import { JSpriteAnimated } from './Image';
 
 // if PIXI is finished setting up
 let isReady = false;
@@ -275,7 +276,6 @@ export function updateCameraPosition() {
 
 }
 // PIXI textures
-let resources: { [key: string]: PIXI.ILoaderResource };
 let sheet: PIXI.Spritesheet;
 export function setupPixi(): Promise<void> {
   // The application will create a canvas element for you that you
@@ -327,32 +327,7 @@ function loadTextures(): Promise<void> {
     });
   });
 }
-export function addAnimatedPixiSprite(
-  imagePaths: string[],
-  parent: PIXI.Container,
-  animationSpeed: number = 0.1,
-): PIXI.Sprite {
-  if (!isReady) {
-    throw new Error(
-      'PIXI is not finished setting up.  Cannot add a sprite yet',
-    );
-  }
-  const textures = [];
-  for (let path of imagePaths) {
-    const resource: PIXI.ILoaderResource = resources[path] as LoaderResource;
-    if (resource && resource.texture) {
-      textures.push(resource.texture);
-    } else {
-      console.error('path', path, 'cannot be loaded as a texture');
-    }
-  }
-  const sprite = new PIXI.AnimatedSprite(textures);
-  sprite.animationSpeed = animationSpeed;
-  sprite.play();
-  parent.addChild(sprite);
 
-  return sprite;
-}
 export interface PixiSpriteOptions {
   onFrameChange?: (currentFrame: number) => void,
   onComplete?: () => void,
@@ -377,13 +352,13 @@ export function addPixiSpriteAnimated(
   options: PixiSpriteOptions = {
     loop: true
   }
-): PIXI.AnimatedSprite {
+): JSpriteAnimated {
   if (!isReady) {
     throw new Error(
       'PIXI is not finished setting up.  Cannot add a sprite yet',
     );
   }
-  let sprite: PIXI.AnimatedSprite;
+  let sprite: JSpriteAnimated;
   let texture = sheet.animations[imagePath];
   if (texture) {
     const animatedSprite = new PIXI.AnimatedSprite(texture);
@@ -396,15 +371,15 @@ export function addPixiSpriteAnimated(
     }
     animatedSprite.loop = options.loop;
     animatedSprite.play();
-    sprite = animatedSprite;
-    // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
-    // which is used for identifying the sprite or animation that is currently active
+    // Adding imagePath to a PIXI.AnimatedSprite makes it a JSpriteAnimated object
+    sprite = animatedSprite as JSpriteAnimated;
     sprite.imagePath = imagePath;
+
     parent.addChild(sprite);
     return sprite;
   } else {
     throw new Error(
-      'Could not find animated texture for' + imagePath
+      'Could not find animated texture for ' + imagePath
     );
   }
 }

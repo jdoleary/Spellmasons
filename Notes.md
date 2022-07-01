@@ -1,4 +1,9 @@
 # Notes
+Requirements for animation management
+- A callback can be triggered at a key Moment in an animation, for example: to launch a projectile
+- The game must be able to wait for an animation to complete before moving on
+- Be able to change animations without interrupting the above requirements
+---
 
 - Global coordinates if you need them: `const pixiCoords = app.renderer.plugins.interaction.mouse.global;`
 

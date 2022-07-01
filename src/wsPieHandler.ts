@@ -12,7 +12,6 @@ import * as storage from './storage';
 import { setView, View } from './views';
 import { allUnits } from './units';
 import { pie } from './wsPieSetup';
-import { playSFXKey } from './Audio';
 
 const messageLog: any[] = [];
 let clients: string[] = [];
@@ -37,7 +36,7 @@ export function onData(d: OnDataArgs) {
   // up a lot of memory for real games
   messageLog.push(d);
 
-  const { payload, fromClient } = d;
+  const { payload } = d;
   const type: MESSAGE_TYPES = payload.type;
   switch (type) {
     case MESSAGE_TYPES.PING:
@@ -460,7 +459,7 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
     // If game is already started
     if (window.underworld) {
       // Ensure each client corresponds with a Player instance
-      const newPlayers = window.underworld.ensureAllClientsHaveAssociatedPlayers(clients);
+      window.underworld.ensureAllClientsHaveAssociatedPlayers(clients);
     } else {
       if (window.hostClientId === window.clientId) {
         console.log(`Setup: Setting Host client to ${window.hostClientId}. You are the host. `);
