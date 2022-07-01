@@ -1,5 +1,6 @@
 ## Schedule
 - Today bugs:
+    - Bug: Attention marker on enemy that is way to far from me: 0.9777202476067982
     - Was able to cast beyond cast range
     - Trap Killed enemy but he didn't animate dead
     - Freeze icon and poison doesn't go away on dead unit
