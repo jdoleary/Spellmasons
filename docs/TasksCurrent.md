@@ -12,8 +12,6 @@
     - Pathing is broken sometimes where a unit moves a little and then no further
     - Bug: I only have 6 toolbar slots showing up (empty ones don't show)
         - and when I got bitten by a vampire it didn't add "bite" to a new slot (only to my inventory)
-    - Game got stuck on enemy turn while I was alt-tabbed. This is relevant even without standalone server because it happened in singleplayern
-        - Note: Pie status says "Not Connected" and I got an error in console: ` Uncaught (in promise) DOMException: String contains an invalid character CardUI.ts:140:8`
 - 2022.07.04
     - Standalone Server
     - Add "preparing" animation used to reduce desyncs due to network latency, so that if multiple users are casting spells at the same time, the wizard bending down to "charge" as soon as the current user clicks, masks a delay to make sure it doesn't conflict with other spells.  It'll send the spell over the network as soon as the user clicks but waits to cast it so that there aren't conflicting spells making desyncs on multiple clients.

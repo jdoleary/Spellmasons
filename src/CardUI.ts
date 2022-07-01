@@ -127,7 +127,6 @@ export function recalcPositionForCards(player: Player.IPlayer | undefined) {
   // Reconcile the elements with the player's hand
   for (let slotIndex = 0; slotIndex < NUMBER_OF_TOOLBAR_SLOTS; slotIndex++) {
     const cardId = player.cards[slotIndex];
-    const className = `card-${cardId}`;
 
     if (cardId) {
 
@@ -137,7 +136,7 @@ export function recalcPositionForCards(player: Player.IPlayer | undefined) {
       if (card) {
         const element = createCardElement(card);
         element.draggable = true;
-        element.classList.add(className, 'slot');
+        element.classList.add('slot');
         // When the user clicks on a card
         addListenersToCardElement(player, element, cardId);
         addToolbarListener(element, slotIndex);
@@ -162,14 +161,12 @@ export function recalcPositionForCards(player: Player.IPlayer | undefined) {
   }
   // Rebuild all the card elements within #selected-cards
   for (let cardId of cardsSelected) {
-    const className = `card-${cardId}`;
 
     // Create UI element for card
     const card = Cards.allCards[cardId];
     // Note: Some upgrades don't have corresponding cards (such as resurrect)
     if (card) {
       const element = createCardElement(card);
-      element.classList.add(className);
       // When the user clicks on a card
       selectCard(player, element, cardId);
     } else {
