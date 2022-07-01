@@ -549,7 +549,7 @@ export function takeDamage(unit: IUnit, amount: number, prediction: boolean, _st
     // note: heals call takeDamage with a negative amount, so we don't want to play a hit animation when
     // player is healed
     if (amount > 0) {
-      playAnimation(unit, unit.animations.hit);
+      playAnimation(unit, unit.animations.hit, { loop: false, animationSpeed: 0.2 });
     }
   }
   unit.health -= amount;
