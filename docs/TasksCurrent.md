@@ -4,7 +4,7 @@
     - (COULDN"T REPRODUCE) Loading screen doesn't appear between levels
     - Just shielded unit died when i cast one hurt on him (he  already had one shield that I worked through before)
     - Pathing is broken sometimes where a unit moves a little and then no further
-    - Bug: I only have 6 toolbar slots showing up (empty ones don't show)
+    - (COULDN"T REPRODUCE) Bug: I only have 6 toolbar slots showing up (empty ones don't show)
         - and when I got bitten by a vampire it didn't add "bite" to a new slot (only to my inventory)
     - How to keep syncronize from interrupting an animation while it's running
 - 2022.07.04
