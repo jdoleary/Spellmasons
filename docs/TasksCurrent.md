@@ -3,7 +3,6 @@
     - Freeze icon and poison doesn't go away on dead unit
     - Freeze icon doesn't go away when freeze expires
     - Prevent spikes from spawning on units at beginning of level 
-    - Could not find animated texture for decoy.png
     - Loading screen doesn't appear between levels
     - Just shielded unit died when i cast one hurt on him (he  already had one shield that I worked through before)
     - Pathing is broken sometimes where a unit moves a little and then no further

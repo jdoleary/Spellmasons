@@ -7,15 +7,15 @@ const unit: UnitSource = {
   id: 'decoy',
   info: {
     description: 'A decoy to distract enemies',
-    image: 'units/decoy.png',
+    image: 'units/decoy',
     subtype: UnitSubType.MELEE,
   },
   animations: {
-    idle: 'units/decoy.png',
-    hit: 'units/decoy.png',
-    attack: 'units/decoy.png',
-    die: 'units/decoy.png',
-    walk: 'units/decoy.png',
+    idle: 'units/decoy',
+    hit: 'units/decoy',
+    attack: 'units/decoy',
+    die: 'units/decoy',
+    walk: 'units/decoy',
   },
   unitProps: {
     staminaMax: 0,
