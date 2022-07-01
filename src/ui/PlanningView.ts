@@ -246,6 +246,11 @@ export function clearSpellEffectProjection() {
     predictionGraphics.clear();
     window.radiusGraphics.clear();
     containerSpells.removeChildren();
+    window.underworld.units.forEach(unit => {
+      if (unit.shaderUniforms.all_red) {
+        unit.shaderUniforms.all_red.alpha = 0;
+      }
+    })
   }
 }
 
@@ -262,8 +267,11 @@ export function drawPredictionCircle(target: Vec2, radius: number) {
 export function setPredictionGraphicsLineStyle(color: number) {
   predictionGraphics.lineStyle(3, color, 1.0)
 }
-export function drawTarget(pos: Vec2) {
-  predictionGraphics.drawCircle(pos.x, pos.y, config.COLLISION_MESH_RADIUS)
+export function drawTarget(unit: Unit.IUnit) {
+  const realUnit = window.underworld.units.find(u => u.id == unit.id);
+  if (realUnit && realUnit.shaderUniforms.all_red) {
+    realUnit.shaderUniforms.all_red.alpha = 0.5;
+  }
 }
 export function drawPredictionCircleFill(target: Vec2, radius: number) {
   window.radiusGraphics.lineStyle(1, 0x000000, 0.0);

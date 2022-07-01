@@ -5,6 +5,7 @@ import * as Vec from '../Vec';
 import * as math from '../math';
 import floatingText from '../FloatingText';
 import {
+  clearSpellEffectProjection,
   clearTooltipSelection,
   drawCircleUnderTarget,
   isOutOfBounds,
@@ -506,6 +507,7 @@ export function clickHandler(_e: MouseEvent) {
           // Cancel Casting
           return;
         }
+        clearSpellEffectProjection();
 
         window.pie.sendData({
           type: MESSAGE_TYPES.SPELL,
