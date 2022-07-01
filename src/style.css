@@ -226,6 +226,12 @@ body.inspect-mode #card-inspect {
   padding-top: 15px;
 }
 
+/* Give selected spells a rounded look to differentiate them */
+#selected-cards .card-thumb {
+  border-radius: 100px 100px;
+  overflow: hidden;
+}
+
 #selected-cards:empty {
   display: none;
 }
