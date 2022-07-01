@@ -1,6 +1,5 @@
 ## Schedule
 - Today bugs:
-    - Trap Killed enemy but he didn't animate dead
     - Freeze icon and poison doesn't go away on dead unit
     - Freeze icon doesn't go away when freeze expires
     - Prevent spikes from spawning on units at beginning of level 
