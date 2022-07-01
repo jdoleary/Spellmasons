@@ -2,6 +2,7 @@ import { MESSAGE_TYPES } from '../MessageTypes';
 import * as CardUI from '../CardUI';
 import type * as Unit from '../Unit';
 import * as Vec from '../Vec';
+import * as math from '../math';
 import floatingText from '../FloatingText';
 import {
   clearTooltipSelection,
@@ -482,6 +483,15 @@ export function clickHandler(e: MouseEvent) {
           }
           // Then cancel casting:
           return
+        }
+        const castDistance = math.distance(selfPlayer.unit, target)
+        if (castDistance >= selfPlayer.unit.attackRange) {
+          floatingText({
+            coords: target,
+            text: 'Out of Range!'
+          })
+          // Cancel Casting
+          return;
         }
 
         // Abort casting if there is no unitAtCastLocation

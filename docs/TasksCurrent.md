@@ -1,7 +1,5 @@
 ## Schedule
 - Today bugs:
-    - How to keep syncronize from interrupting an animation while it's running
-    - Was able to cast beyond cast range
     - Trap Killed enemy but he didn't animate dead
     - Freeze icon and poison doesn't go away on dead unit
     - Freeze icon doesn't go away when freeze expires
@@ -12,6 +10,7 @@
     - Pathing is broken sometimes where a unit moves a little and then no further
     - Bug: I only have 6 toolbar slots showing up (empty ones don't show)
         - and when I got bitten by a vampire it didn't add "bite" to a new slot (only to my inventory)
+    - How to keep syncronize from interrupting an animation while it's running
 - 2022.07.04
     - Standalone Server
     - Add "preparing" animation used to reduce desyncs due to network latency, so that if multiple users are casting spells at the same time, the wizard bending down to "charge" as soon as the current user clicks, masks a delay to make sure it doesn't conflict with other spells.  It'll send the spell over the network as soon as the user clicks but waits to cast it so that there aren't conflicting spells making desyncs on multiple clients.
