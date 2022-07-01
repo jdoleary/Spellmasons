@@ -47,7 +47,6 @@ const unit: UnitSource = {
 
     // Attack closest enemy
     if (canAttackTarget) {
-      // TODO: Change out for vampire animation on attack
       await Unit.playAnimation(unit, unit.animations.attack);
       Unit.takeDamage(attackTarget, unit.damage, false, undefined);
       Unit.addModifier(attackTarget, vampire_bite.id);
