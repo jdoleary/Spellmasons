@@ -1,8 +1,6 @@
 ## Schedule
 - Today bugs:
     - How to keep syncronize from interrupting an animation while it's running
-    - Bug: Attention marker on enemy that is way to far from me: 0.9777202476067982
-        - You have to walk close to the closest guy first to see it
     - Was able to cast beyond cast range
     - Trap Killed enemy but he didn't animate dead
     - Freeze icon and poison doesn't go away on dead unit
@@ -46,7 +44,6 @@
 - Priest "run away" ai is broken
 - Fix robe losing color 
 - wall: see abberant-wall.png
-- Bug: Grunts on level 4 of 0.7771387726829492 have attention marker when they definitely wont hit me next turn
 - Fix Polygon2 tests
 - Bug: Portal spawns when you prediction kill yourself on test level
 - Bug: Should sync portals when syncing units if all enemies are dead
