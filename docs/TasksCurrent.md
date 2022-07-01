@@ -1,7 +1,7 @@
 ## Schedule
 - Today bugs:
-    - Just shielded unit died when i cast one hurt on him (he  already had one shield that I worked through before)
     - How to keep syncronize from interrupting an animation while it's running
+    - (COULDN"T REPRODUCE) Just shielded unit died when i cast one hurt on him (he  already had one shield that I worked through before)
     - (COULDN"T REPRODUCE) Loading screen doesn't appear between levels
     - Pathing is broken sometimes where a unit moves a little and then no further
     - (COULDN"T REPRODUCE) Bug: I only have 6 toolbar slots showing up (empty ones don't show)
