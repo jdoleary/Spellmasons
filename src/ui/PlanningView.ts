@@ -21,6 +21,7 @@ let planningViewGraphics: PIXI.Graphics;
 let predictionGraphics: PIXI.Graphics;
 export function initPlanningView() {
   planningViewGraphics = new PIXI.Graphics();
+  window.planningViewGraphics = planningViewGraphics;
   containerPlanningView.addChild(planningViewGraphics);
   predictionGraphics = new PIXI.Graphics();
   window.predictionGraphics = predictionGraphics;
@@ -429,11 +430,16 @@ export function updateTooltipSelection(mousePos: Vec2) {
 
 // Draws a faint circle over things that can be clicked on
 export function drawCircleUnderTarget(mousePos: Vec2, opacity: number, graphics: PIXI.Graphics) {
-  const target: Vec2 | undefined = window.underworld.getUnitAt(mousePos) || window.underworld.getPickupAt(mousePos);
+  const targetUnit = window.underworld.getUnitAt(mousePos)
+  const target: Vec2 | undefined = targetUnit || window.underworld.getPickupAt(mousePos);
   if (target) {
-    graphics.lineStyle(3, 0xFFFFFF, opacity);
+    graphics.lineStyle(3, 0xaaaaaa, opacity);
     graphics.beginFill(0x000000, 0);
-    graphics.drawCircle(target.x, target.y, config.COLLISION_MESH_RADIUS - 4);
+    // offset ensures the circle is under the player's feet
+    // and is dependent on the animation's feet location
+    const offsetX = targetUnit ? 3 : 0;
+    const offsetY = targetUnit ? -3 : -15;
+    graphics.drawEllipse(target.x + offsetX, target.y + config.COLLISION_MESH_RADIUS + offsetY, config.COLLISION_MESH_RADIUS / 2, config.COLLISION_MESH_RADIUS / 3);
     graphics.endFill();
   }
 }

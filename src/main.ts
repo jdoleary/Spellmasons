@@ -161,6 +161,9 @@ declare global {
     unitOverlayGraphics: PIXI.Graphics;
     // Graphics for drawing the spell effects during the dry run phase
     predictionGraphics: PIXI.Graphics;
+    // Graphics for rendering above board and walls but beneath units and doodads,
+    // see containerPlanningView for exact render order.
+    planningViewGraphics: PIXI.Graphics;
     // Graphics for debugging the cave
     debugCave: PIXI.Graphics;
     allowCookies: boolean;
