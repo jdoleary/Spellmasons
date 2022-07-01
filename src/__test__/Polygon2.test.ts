@@ -399,7 +399,7 @@ describe('Polygon2', () => {
                 const mergedPolygonsFirstTime = mergePolygon2s([polygonA, polygonB]);
                 const actual = mergePolygon2s(mergedPolygonsFirstTime);
                 const expected = [
-                    [p1, p2, p3, p4],
+                    [p3, p4, p1, p2,],
                     // Note: The points are shifted due to the algorithm but
                     // the polygon is still identical
                     [p3b, p4b, p1b, p2b],
@@ -430,8 +430,9 @@ describe('Polygon2', () => {
                 const actual = mergedPolygons;
                 const expected: Polygon2[] = [
                     [
+                        p4b,
                         p1, p2, p3, p4,
-                        p1b, p2b, p3b, p4b
+                        p1b, p2b, p3b,
                     ]
                 ];
                 expect(actual).toEqual(expected);
@@ -471,10 +472,10 @@ describe('Polygon2', () => {
                 const mergedPolygons = mergePolygon2s([polygonA, polygonB, polygonD, polygonC]);
                 const actual = mergedPolygons;
                 const expected: Polygon2[] = [[
-                    p1, p2, p3, p4,
+                    p4c,
+                    p1d, p2d, p3d, p4d, p1, p2, p3, p4,
                     p1b, p2b, p3b, p4b,
-                    p1c, p2c, p3c, p4c,
-                    p1d, p2d, p3d, p4d,
+                    p1c, p2c, p3c,
                 ]]
                 expect(actual).toEqual(expected);
 
@@ -509,16 +510,16 @@ describe('Polygon2', () => {
             const actual = mergedPolygons;
             const expected = [
                 [
+                    { x: 0, y: 0 },
+                    { x: 0, y: 10 },
+                    { x: 10, y: 10 },
+                    { x: 10, y: 0 },
+                ],
+                [
+                    { x: 1, y: 9 },
                     { x: 1, y: 1 },
                     { x: 9, y: 1 },
                     { x: 9, y: 9 },
-                    { x: 1, y: 9 },
-                ],
-                [
-                    { x: 10, y: 10 },
-                    { x: 10, y: 0 },
-                    { x: 0, y: 0 },
-                    { x: 0, y: 10 },
                 ],
             ]
             expect(actual).toEqual(expected);
@@ -545,7 +546,7 @@ describe('Polygon2', () => {
             const polygonDiamond: Polygon2 = pointsDiamond
             //  They will intersect directly on p1b, which means it will be in the merged poly twice
             const actual = mergePolygon2s([polygonA, polygonDiamond])
-            const expected = [[p1, p2, p1b, p2b, p3b, p4b, p1b, p3, p4]];
+            const expected = [[p4b, p1b, p3, p4, p1, p2, p1b, p2b, p3b]];
             expect(actual).toEqual(expected);
 
         });
@@ -567,7 +568,7 @@ describe('Polygon2', () => {
             const polygonDiamond: Polygon2 = pointsDiamond;
             //  They will intersect directly on p3/p1b, which means it will be in the merged poly twice
             const actual = mergePolygon2s([polygonA, polygonDiamond]);
-            const expected = [[p1, p2, p1b, p2b, p3b, p4b, p1b, p4]];
+            const expected = [[p4b, p1b, p4, p1, p2, p1b, p2b, p3b]];
             expect(actual).toEqual(expected);
 
         });
@@ -590,10 +591,10 @@ describe('Polygon2', () => {
 
             const actual = mergedPolygons;
             const expected = [[
+                p3b,
                 p4,
                 p1,
                 p2b,
-                p3b,
             ]];
             expect(actual).toEqual(expected);
         });
@@ -632,10 +633,10 @@ describe('Polygon2', () => {
         const actual = mergePolygon2s([polygonA, polygonB]);
 
         const expected = [[
+            p4,
             p1,
             p2,
             p3,
-            p4,
         ]];
         expect(actual).toEqual(expected);
     });
@@ -659,7 +660,6 @@ describe('Polygon2', () => {
 
             const actual = mergedPolygon;
             const expected = [
-                p1,
                 { x: 0, y: 1 },
                 p1b,
                 p2b,
@@ -667,6 +667,7 @@ describe('Polygon2', () => {
                 p4b,
                 { x: 1, y: 1 },
                 p4,
+                p1,
             ];
             expect(actual).toEqual(expected);
         });
@@ -687,14 +688,14 @@ describe('Polygon2', () => {
 
             const actual = mergedPolygon;
             const expected = [
+                p4,
+                p1,
+                { x: 0, y: 1 },
                 p1b,
                 p2b,
                 p3b,
                 p4b,
                 { x: 1, y: 1 },
-                p4,
-                p1,
-                { x: 0, y: 1 },
             ];
             expect(actual).toEqual(expected);
         });
@@ -717,14 +718,14 @@ describe('Polygon2', () => {
 
             const actual = mergedPolygon;
             const expected = [
+                p4b,
+                { x: 2, y: 1 },
+                p4,
                 p1,
                 p2,
                 { x: 1, y: 2 },
                 p2b,
                 p3b,
-                p4b,
-                { x: 2, y: 1 },
-                p4,
             ];
             expect(actual).toEqual(expected);
 
@@ -757,11 +758,11 @@ describe('Polygon2', () => {
             const polygonB: Polygon2 = [...points, p5];
             const actual = mergePolygon2s([polygonA, polygonB]);
             const expected = [[
+                p5,
                 p1,
                 p2,
                 p3,
                 p4,
-                p5,
             ]];
             expect(actual).toEqual(expected);
         });
@@ -789,15 +790,6 @@ describe('Polygon2', () => {
             const mergedPolygons = mergePolygon2s([largePoly, smallPoly1, smallPoly2]);
             const actual = mergedPolygons[0];
             const expected = [
-                { x: 0, y: 0 },
-                // intersection between largePoly and smallPoly1
-                { x: 0, y: 2 },
-                // Some of smallPoly1's points
-                { x: -1, y: 2 },
-                { x: -1, y: 3 },
-                // intersection between largePoly and smallPoly1
-                { x: 0, y: 3 },
-                // back to iterating largePoly
                 // intersection between largePoly and smallPoly2
                 { x: 0, y: 7 },
                 // Some of smallPoly2's points
@@ -808,7 +800,15 @@ describe('Polygon2', () => {
                 // back to iterating largePoly
                 { x: 0, y: 10 },
                 { x: 4, y: 10 },
-                { x: 4, y: 0 }
+                { x: 4, y: 0 },
+                { x: 0, y: 0 },
+                // intersection between largePoly and smallPoly1
+                { x: 0, y: 2 },
+                // Some of smallPoly1's points
+                { x: -1, y: 2 },
+                { x: -1, y: 3 },
+                // intersection between largePoly and smallPoly1
+                { x: 0, y: 3 },
             ];
             expect(actual).toEqual(expected);
 
@@ -841,6 +841,9 @@ describe('Polygon2', () => {
         const mergedPolygons = mergePolygon2s([polyBridge, polyTop, polyBottom]);
         const actual = mergedPolygons;
         const expected = [[
+            polyBottom[3],
+            polyBottom[0],
+            polyBottom[1],
             { x: 0, y: 1 },
             { x: 0, y: 2 },
             polyTop[0],
@@ -850,9 +853,6 @@ describe('Polygon2', () => {
             { x: 3, y: 2 },
             { x: 3, y: 1 },
             polyBottom[2],
-            polyBottom[3],
-            polyBottom[0],
-            polyBottom[1],
         ]];
         expect(actual).toEqual(expected);
 
