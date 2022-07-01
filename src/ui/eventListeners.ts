@@ -415,10 +415,9 @@ export function mouseDownHandler(e: MouseEvent) {
     // setMMBDown so camera will be dragged around
     window.setMMBDown(true);
     e.preventDefault();
-    return false;
   }
 }
-export function mouseUpHandler(e: MouseEvent) {
+export function mouseUpHandler(_e: MouseEvent) {
   // Turn MMBDown off for any click to protect against it getting stuck
   // as flagged "down"
   window.setMMBDown(false);
@@ -432,7 +431,7 @@ export function onWindowBlur() {
   window.setMMBDown(false);
 }
 // Handle clicks on the game board
-export function clickHandler(e: MouseEvent) {
+export function clickHandler(_e: MouseEvent) {
   // Only handle clicks when viewing the Game
   if (window.view !== View.Game) {
     return;

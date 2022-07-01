@@ -196,7 +196,6 @@ export function syncInventory(slotModifyingIndex: number | undefined) {
               e.preventDefault();
               e.stopPropagation();
               e.stopImmediatePropagation();
-              return false;
             }
           })
         }

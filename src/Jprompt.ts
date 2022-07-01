@@ -59,7 +59,6 @@ export default async function Jprompt(prompt: Prompt): Promise<boolean> {
                 }
                 e.preventDefault();
                 e.stopPropagation();
-                return false;
             }
         }
         el.addEventListener('click', cancelFn);

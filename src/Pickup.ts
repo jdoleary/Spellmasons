@@ -166,6 +166,7 @@ export const pickups: IPickupSource[] = [
         takeDamage(unit, spike_damage, false)
         return true;
       }
+      return false;
     }
   },
   {
@@ -224,6 +225,7 @@ export const pickups: IPickupSource[] = [
         }
         return true;
       }
+      return false;
     },
   },
   {
@@ -246,6 +248,7 @@ export const pickups: IPickupSource[] = [
         window.underworld.syncPlayerPredictionUnitOnly();
         return true;
       }
+      return false;
     },
   },
   {
@@ -257,7 +260,7 @@ export const pickups: IPickupSource[] = [
     playerOnly: true,
     singleUse: true,
     description: `Restores ${healthPotionRestoreAmount} health.`,
-    effect: ({ unit, player }) => {
+    effect: ({ player }) => {
       if (player && player.unit.health < player.unit.healthMax) {
         takeDamage(player.unit, -healthPotionRestoreAmount, false);
         // Cap health at max
@@ -269,6 +272,7 @@ export const pickups: IPickupSource[] = [
         window.underworld.syncPlayerPredictionUnitOnly();
         return true;
       }
+      return false;
     },
   },
 ];

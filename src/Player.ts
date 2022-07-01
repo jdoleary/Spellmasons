@@ -71,16 +71,20 @@ export function create(clientId: string): IPlayer {
 
     const color = playerColors[colorIndex];
     const colorSecondary = playerColorsSecondary[colorIndex];
-    player.unit.image.sprite.filters.push(
-      new MultiColorReplaceFilter(
-        [
-          [playerCoatPrimary, color],
-          [playerCoatSecondary, colorSecondary],
-          [playerCastAnimationColor, color],
-        ],
-        0.1
-      )
-    );
+    if (color && colorSecondary) {
+      player.unit.image.sprite.filters.push(
+        // @ts-ignore for some reason ts is flagging this as an error but it works fine
+        // in pixi.
+        new MultiColorReplaceFilter(
+          [
+            [playerCoatPrimary, color],
+            [playerCoatSecondary, colorSecondary],
+            [playerCastAnimationColor, color],
+          ],
+          0.1
+        )
+      );
+    }
   }
 
 

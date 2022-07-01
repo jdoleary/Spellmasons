@@ -1,4 +1,6 @@
 ## Schedule
+- Today
+    - Fix build errors and publish
 - 2022.07.04
     - Standalone Server
     - Add "preparing" animation used to reduce desyncs due to network latency, so that if multiple users are casting spells at the same time, the wizard bending down to "charge" as soon as the current user clicks, masks a delay to make sure it doesn't conflict with other spells.  It'll send the spell over the network as soon as the user clicks but waits to cast it so that there aren't conflicting spells making desyncs on multiple clients.
@@ -11,26 +13,21 @@
     - Trailer
     - Marketing
 ## Focus
+- Playtest with Colin
 - How to show targeting: https://photos.google.com/photo/AF1QipNRQYCeW85Yokd11e4YA9nyjhu7WD3qt1CAmvZh?
-- Publish graphics version and play with Colin
-    - Fix tests so I can deploy
-- Decouple the various layers (data: underworld; networking: pie; visual: Pixi / DOM; audio)
-    - Then improve syncing strategy between the data layer and the visual layer.  This will be useful for network syncs, saves and loads, standalone headless server.
-        - It should also solve the disappearing subsprite bug and the wizard robes changing color bug.
-    - In order to decouple, each should have imports only in one file that can be dependency injected.  So ALL pie stuff goes through the networking layer, all DOM stuff goes through the UI layer, all PIXI (including PixiUtils which is how a lot of the files interact with PIXI) stuff goes through the pixi layer.  This should make it easy to make a headless server or make tests that use a data-only underworld
-- Monday
-    - bug: (duplicate?? Solved by other task?)poison subsprite is gone after one turn
-        - I think this is also related to the bug that makes the player cloak color revert to normal. If i cast poison on myself and then go get hit by a grunt, I both lose the poison subsprite AND the filter that changes cloak color
+- Standalone Server
+    - Decouple the various layers (data: underworld; networking: pie; visual: Pixi / DOM; audio)
+        - Then improve syncing strategy between the data layer and the visual layer.  This will be useful for network syncs, saves and loads, standalone headless server.
+            - It should also solve the disappearing subsprite bug and the wizard robes changing color bug.
+        - In order to decouple, each should have imports only in one file that can be dependency injected.  So ALL pie stuff goes through the networking layer, all DOM stuff goes through the UI layer, all PIXI (including PixiUtils which is how a lot of the files interact with PIXI) stuff goes through the pixi layer.  This should make it easy to make a headless server or make tests that use a data-only underworld
 
 ## Bugs
 
-    - How to keep syncronize from interrupting an animation while it's running
-    - Pathing is broken sometimes where a unit moves a little and then no further
+- How to keep syncronize from interrupting an animation while it's running
+- Pathing is broken sometimes where a unit moves a little and then no further
 - enter, enter doesn't make "are you sure" prompt go away when there are no enemies.
 - Priest "run away" ai is broken
-- Fix robe losing color 
 - wall: see abberant-wall.png
-- Fix Polygon2 tests
 - Bug: Portal spawns when you prediction kill yourself on test level
 - Bug: Should sync portals when syncing units if all enemies are dead
 - Bug: (Note: this is probably fixed now) Goons spawned outside of map when summoner was stuffed in upper left corner of map
