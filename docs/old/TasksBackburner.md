@@ -1,3 +1,4 @@
+- DON'T PREMATURELY OPTIMIZE.  BACKLOG THIS. Refactor castCards to target unit Ids over the network instead of positions to reduce desync issues. Maybe play all targeting cards and THEN send the CAST message?  But what if they are mixed in? not sure how to handle this.  Maybe the cast message sends the effect of the cast (e.g. poison this guy, push this guy from here to here, set this guy's health to this, etc, rather than the cards).
 - Ensure trap pickups work after load, they probably done
 - The zoom coordinates off issue between multiplayer sessions when casting
     - hit on one screen, miss on another

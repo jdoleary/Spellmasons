@@ -1,17 +1,38 @@
+## Schedule
+- 2022.07.01
+    - Make Gameplay functional again
+        - Fix texture swapping
+    - Publish
+        - Fix tests?
+- 2022.07.04
+    - Standalone Server
+    - Add "preparing" animation used to reduce desyncs due to network latency, so that if multiple users are casting spells at the same time, the wizard bending down to "charge" as soon as the current user clicks, masks a delay to make sure it doesn't conflict with other spells.  It'll send the spell over the network as soon as the user clicks but waits to cast it so that there aren't conflicting spells making desyncs on multiple clients.
+- 2022.07.05
+    - Unit Crowding
+- Ordered next tasks
+    - all SFX
+    - Master Music
+    - Steam Page
+    - Trailer
+    - Marketing
 ## Focus
+- How to show targeting: https://photos.google.com/photo/AF1QipNRQYCeW85Yokd11e4YA9nyjhu7WD3qt1CAmvZh?
+- Bug: can't move player after move, then hurt self.
+    - This is because somehow the cast hurt never finishes
+    - Due to texture switching
+- Publish graphics version and play with Colin
+    - Fix tests so I can deploy
 - Decouple the various layers (data: underworld; networking: pie; visual: Pixi / DOM; audio)
     - Then improve syncing strategy between the data layer and the visual layer.  This will be useful for network syncs, saves and loads, standalone headless server.
         - It should also solve the disappearing subsprite bug and the wizard robes changing color bug.
     - In order to decouple, each should have imports only in one file that can be dependency injected.  So ALL pie stuff goes through the networking layer, all DOM stuff goes through the UI layer, all PIXI (including PixiUtils which is how a lot of the files interact with PIXI) stuff goes through the pixi layer.  This should make it easy to make a headless server or make tests that use a data-only underworld
-- bug: enter, enter doesn't make "are you sure" prompt go away when there are no enemies.
 - Monday
-    - bug: poison subsprite is gone after one turn
+    - bug: (duplicate?? Solved by other task?)poison subsprite is gone after one turn
         - I think this is also related to the bug that makes the player cloak color revert to normal. If i cast poison on myself and then go get hit by a grunt, I both lose the poison subsprite AND the filter that changes cloak color
-    - Fix tests so I can deploy
 
 ## Bugs
 
-- Standalone server
+- enter, enter doesn't make "are you sure" prompt go away when there are no enemies.
 - Priest "run away" ai is broken
 - Fix robe losing color 
 - wall: see abberant-wall.png
@@ -22,6 +43,7 @@
 - Bug: (Note: this is probably fixed now) Goons spawned outside of map when summoner was stuffed in upper left corner of map
 ---
 ## Features
+- Standalone server
 - What if potions drop from slain enemies?
 - Task: An ally that has died at all (even if ressed) should lose their upgrade priviledge
 - SOUND: Organize candidates for sfx

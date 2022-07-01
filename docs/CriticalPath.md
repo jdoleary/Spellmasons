@@ -1,29 +1,36 @@
 # Critical Path
-- Game Balance
+- Remake gameplay functional
+- Standalone Server
 - Clerical
     - Menu
     - Steam Page (waiting on art)
     - Website Presskit page
-- SFX
+    - Trailer
+        - [Remove hud](https://twitter.com/berkesayil/status/1541899749938417667)
+- SFX (Ready for work)
     - Unit Sounds
     - Spell Sounds
     - Consumable Sounds
     - Splash Liquid Sounds
     - UI Sounds
-- Art Integration
+- Art Integration (Blocked: Waiting on Che) (ordered by priority)
     - 90%: Unit Animations
+        - Waiting on Summoner
+    - 0%: Cover Art / Steam Page
     - 0%: Projectiles
-    - 0%: Liquid Splash Animation
+        - Arrow, Lobber Thrown Magic
     - 0%: Use Consumable (potion) animation
     - 10%: Spell Animations
     - 0%: Spell Icons
-    - 0%: Cover Art
     - 20%: Biome Tiles
+        - 0%: Liquid Splash Animation
+            - Lava, blood, Water
     - 0%: UI
-- Master music
-- Tutorial
-- Final Steps
+- Master music (Brad)
+- Tutorial (Last priority)
     - [Tutorial](https://www.youtube.com/watch?v=-GV814cWiAw)
+- Game Balance (Blocked: Requires more playtesting)
+- Final Steps
     - Optimize
         - Support large maps
         - Round of wall corners so it doesn't stair step??
