@@ -3,7 +3,7 @@
     - Freeze icon and poison doesn't go away on dead unit
     - Freeze icon doesn't go away when freeze expires
     - Prevent spikes from spawning on units at beginning of level 
-    - Loading screen doesn't appear between levels
+    - (COULDN"T REPRODUCE) Loading screen doesn't appear between levels
     - Just shielded unit died when i cast one hurt on him (he  already had one shield that I worked through before)
     - Pathing is broken sometimes where a unit moves a little and then no further
     - Bug: I only have 6 toolbar slots showing up (empty ones don't show)
