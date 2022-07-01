@@ -339,19 +339,12 @@ export function returnToDefaultSprite(unit: IUnit) {
   // Only return to default if it is not currently playing an animation, this prevents
   if (unit.image) {
     if (unit.alive) {
-      // Don't overwrite a currently playing animation, this function
-      // should only change the animating sprite back to default if it's done
-      // animating
-      if (!unit.image.sprite.playing) {
-        Image.changeSprite(
-          unit.image,
-          unit.animations.idle,
-          containerUnits,
-          undefined
-        );
-      }
-      // Ensure that the sprite is attached to the correct parent
-      containerUnits.addChild(unit.image.sprite);
+      Image.changeSprite(
+        unit.image,
+        unit.animations.idle,
+        containerUnits,
+        undefined
+      );
     } else {
       changeToDieSprite(unit);
     }
@@ -396,6 +389,7 @@ export function playComboAnimation(unit: IUnit, key: string | undefined, keyMome
       ...options,
       onFrameChange,
       onComplete: () => {
+        returnToDefaultSprite(unit);
         if (keyMoment && !keyMomentTriggered) {
           // Ensure that if keyMoment hasn't been called yet (because)
           // the animation was interrupted, it is called now
@@ -418,8 +412,6 @@ export function playComboAnimation(unit: IUnit, key: string | undefined, keyMome
     for (let animPath of combo.companionAnimations) {
       addOneOffAnimation(unit, animPath, options);
     }
-  }).then(() => {
-    returnToDefaultSprite(unit);
   });
 }
 export function playAnimation(unit: IUnit, spritePath: string | undefined, options?: PixiSpriteOptions): Promise<void> {
@@ -436,8 +428,14 @@ export function playAnimation(unit: IUnit, spritePath: string | undefined, optio
     Image.changeSprite(unit.image, spritePath, unit.image.sprite.parent, resolve, {
       loop: false,
       ...options,
+      onComplete: () => {
+        returnToDefaultSprite(unit);
+        if (options?.onComplete) {
+          options.onComplete();
+        }
+      }
     });
-  }).then(() => { returnToDefaultSprite(unit); });
+  });
 }
 export function addOneOffAnimation(unit: IUnit, spritePath: string, options?: PixiSpriteOptions): Promise<void> {
   // Play animation and then remove it
@@ -750,12 +748,8 @@ export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
     }, timeoutMs);
   }).then(() => {
     if (unit.image) {
-      Image.changeSprite(
-        unit.image,
-        unit.animations.idle,
-        unit.image.sprite.parent,
-        undefined
-      );
+      // When done moving return to default
+      returnToDefaultSprite(unit);
     }
     if (unit.resolveDoneMovingTimeout !== undefined) {
       clearTimeout(unit.resolveDoneMovingTimeout);
