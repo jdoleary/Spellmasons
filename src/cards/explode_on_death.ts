@@ -6,6 +6,7 @@ import { drawPredictionCircle } from '../ui/PlanningView';
 import { forcePush } from './push';
 
 const id = 'explode';
+const imageName = 'explode-on-death.png';
 const damage = 3;
 const range = 200;
 function add(unit: IUnit) {
@@ -19,14 +20,14 @@ function add(unit: IUnit) {
       unit.onDeathEvents.push(id);
     }
     // Add subsprite image
-    Image.addSubSprite(unit.image, id);
+    Image.addSubSprite(unit.image, imageName);
   }
 }
 
 const spell: Spell = {
   subsprites: {
     [id]: {
-      imageName: 'explode-on-death.png',
+      imageName,
       alpha: 1.0,
       anchor: {
         x: 0,

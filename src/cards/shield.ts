@@ -4,6 +4,7 @@ import type { Spell } from '.';
 import floatingText from '../FloatingText';
 
 const id = 'shield';
+const imageName = 'shield.png';
 const damageBlocked = 3;
 const maxStack = 1;
 const spell: Spell = {
@@ -59,8 +60,8 @@ Protects bearer from the next ${damageBlocked} damage that they would incur.
     },
   },
   subsprites: {
-    [id]: {
-      imageName: 'shield.png',
+    [imageName]: {
+      imageName,
       alpha: 1.0,
       anchor: {
         x: 0,
@@ -84,7 +85,7 @@ function add(unit: Unit.IUnit) {
     // Add event
     unit.onDamageEvents.push(id);
     // Add subsprite image
-    Image.addSubSprite(unit.image, id);
+    Image.addSubSprite(unit.image, imageName);
   }
   modifier = unit.modifiers[id];
   if (modifier) {

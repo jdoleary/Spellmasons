@@ -4,6 +4,7 @@ import type { Spell } from '.';
 import * as Unit from '../Unit';
 
 export const id = 'poison';
+const imageName = 'poison.png'
 function add(unit: IUnit) {
   // First time setup
   if (!unit.modifiers[id]) {
@@ -15,7 +16,7 @@ function add(unit: IUnit) {
       unit.onTurnStartEvents.push(id);
     }
     // Add subsprite image
-    Image.addSubSprite(unit.image, id);
+    Image.addSubSprite(unit.image, imageName);
   }
   // Increment the number of stacks of poison 
   const modifier = unit.modifiers[id];
@@ -28,8 +29,8 @@ function add(unit: IUnit) {
 
 const spell: Spell = {
   subsprites: {
-    [id]: {
-      imageName: 'poison.png',
+    [imageName]: {
+      imageName,
       alpha: 1.0,
       anchor: {
         x: 0,

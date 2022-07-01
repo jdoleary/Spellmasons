@@ -3,6 +3,7 @@ import * as Image from '../Image';
 import type { Spell } from '.';
 
 const id = 'vulnerable';
+const imageName = 'vulnerable.png';
 const spell: Spell = {
   card: {
     id,
@@ -36,8 +37,8 @@ in the future.
     },
   },
   subsprites: {
-    [id]: {
-      imageName: 'vulnerable.png',
+    [imageName]: {
+      imageName,
       alpha: 1.0,
       anchor: {
         x: 0,
@@ -60,6 +61,6 @@ function add(unit: Unit.IUnit) {
   unit.onDamageEvents.push(id);
 
   // Add subsprite image
-  Image.addSubSprite(unit.image, id);
+  Image.addSubSprite(unit.image, imageName);
 }
 export default spell;

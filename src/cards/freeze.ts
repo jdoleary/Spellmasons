@@ -5,6 +5,7 @@ import { UnitType } from '../commonTypes';
 import * as config from '../config'
 
 const id = 'freeze';
+const imageName = 'freeze.png';
 const spell: Spell = {
   card: {
     id,
@@ -59,7 +60,7 @@ Freezes the target(s) for 1 turn, preventing them from moving or acting.
     },
   },
   subsprites: {
-    [id]: {
+    [imageName]: {
       imageName: 'freeze.png',
       alpha: 1.0,
       anchor: {
@@ -88,7 +89,7 @@ function add(unit: Unit.IUnit) {
     }
 
     // Add subsprite image
-    Image.addSubSprite(unit.image, id);
+    Image.addSubSprite(unit.image, imageName);
     // Prevents units from being pushed out of the way and units
     // act as a blockade
     unit.immovable = true;

@@ -8,6 +8,7 @@ import floatingText from '../FloatingText';
 import * as Unit from '../Unit';
 
 const id = 'contagious';
+const imageName = 'contagious.png'
 function add(unit: IUnit) {
   // Note: Curse can stack multiple times but doesn't keep any state
   // so it doesn't need a first time setup like freeze does
@@ -19,13 +20,13 @@ function add(unit: IUnit) {
   // TODO: This may require a pre-turn-start event phase
   unit.onTurnStartEvents.unshift(id);
   // Add subsprite image
-  Image.addSubSprite(unit.image, id);
+  Image.addSubSprite(unit.image, imageName);
 }
 
 const spell: Spell = {
   subsprites: {
-    [id]: {
-      imageName: 'contagious.png',
+    [imageName]: {
+      imageName,
       alpha: 1.0,
       anchor: {
         x: 0,

@@ -15,8 +15,6 @@ function add(unit: IUnit) {
   unit.modifiers[id] = { isCurse: true };
   // Add event
   unit.onDamageEvents.push(id);
-  // Add subsprite image
-  Image.addSubSprite(unit.image, id);
 
   // If unit belongs to player
   const player = window.underworld.players.find(p => p.unit == unit)
