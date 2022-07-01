@@ -299,17 +299,17 @@ export function addSubSprite(image: IImageAnimated | undefined, key: string) {
     }
   }
 }
-export function removeSubSprite(image: IImageAnimated | undefined, key: string) {
+export function removeSubSprite(image: IImageAnimated | undefined, imagePath: string) {
   if (!image) {
     return;
   }
   // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
-  const subSprite = image.sprite.children.find(c => c.imagePath == Subsprites[key]?.imageName)
+  const subSprite = image.sprite.children.find(c => c.imagePath == imagePath)
   if (subSprite) {
     // Remove PIXI.Sprite instance
     subSprite.parent.removeChild(subSprite);
   } else {
-    console.log('Cannot remove subsprite', key, 'subsprite is missing from sprite.children');
+    console.log('Cannot remove subsprite', imagePath, 'subsprite is missing from sprite.children');
   }
 }
 export function move(image: IImageAnimated, x: number, y: number) {

@@ -210,7 +210,10 @@ export function addModifier(unit: IUnit, key: string) {
 }
 
 export function removeModifier(unit: IUnit, key: string) {
-  Image.removeSubSprite(unit.image, key);
+  const modifier = allModifiers[key];
+  if (modifier && modifier.subsprite) {
+    Image.removeSubSprite(unit.image, modifier.subsprite.imageName);
+  }
   unit.onDamageEvents = unit.onDamageEvents.filter((e) => e !== key);
   unit.onDeathEvents = unit.onDeathEvents.filter((e) => e !== key);
   unit.onMoveEvents = unit.onMoveEvents.filter((e) => e !== key);

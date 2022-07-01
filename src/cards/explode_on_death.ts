@@ -20,25 +20,11 @@ function add(unit: IUnit) {
       unit.onDeathEvents.push(id);
     }
     // Add subsprite image
-    Image.addSubSprite(unit.image, imageName);
+    Image.addSubSprite(unit.image, id);
   }
 }
 
 const spell: Spell = {
-  subsprites: {
-    [id]: {
-      imageName,
-      alpha: 1.0,
-      anchor: {
-        x: 0,
-        y: 0,
-      },
-      scale: {
-        x: 0.5,
-        y: 0.5,
-      },
-    },
-  },
   card: {
     id,
     manaCost: 15,
@@ -56,7 +42,19 @@ const spell: Spell = {
     },
   },
   modifiers: {
-    add
+    add,
+    subsprite: {
+      imageName,
+      alpha: 1.0,
+      anchor: {
+        x: 0,
+        y: 0,
+      },
+      scale: {
+        x: 0.5,
+        y: 0.5,
+      },
+    },
   },
   events: {
     onDeath: async (unit: IUnit, prediction: boolean) => {

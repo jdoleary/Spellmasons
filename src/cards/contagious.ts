@@ -20,24 +20,10 @@ function add(unit: IUnit) {
   // TODO: This may require a pre-turn-start event phase
   unit.onTurnStartEvents.unshift(id);
   // Add subsprite image
-  Image.addSubSprite(unit.image, imageName);
+  Image.addSubSprite(unit.image, id);
 }
 
 const spell: Spell = {
-  subsprites: {
-    [imageName]: {
-      imageName,
-      alpha: 1.0,
-      anchor: {
-        x: 0,
-        y: 0,
-      },
-      scale: {
-        x: 0.5,
-        y: 0.5,
-      },
-    },
-  },
   card: {
     id,
     manaCost: 50,
@@ -59,7 +45,20 @@ Makes this unit's curses contagious to other nearby units
     },
   },
   modifiers: {
-    add
+    add,
+    subsprite: {
+      imageName,
+      alpha: 1.0,
+      anchor: {
+        x: 0,
+        y: 0,
+      },
+      scale: {
+        x: 0.5,
+        y: 0.5,
+      },
+    },
+
   },
   events: {
     onTurnStart: async (unit: IUnit, prediction: boolean) => {

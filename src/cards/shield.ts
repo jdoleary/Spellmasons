@@ -26,7 +26,21 @@ Protects bearer from the next ${damageBlocked} damage that they would incur.
       return state;
     },
   },
-  modifiers: { add },
+  modifiers: {
+    add,
+    subsprite: {
+      imageName,
+      alpha: 1.0,
+      anchor: {
+        x: 0,
+        y: 0,
+      },
+      scale: {
+        x: 0.5,
+        y: 0.5,
+      },
+    },
+  },
   events: {
     onDamage: (unit, amount, prediction, damageDealer) => {
       const modifier = unit.modifiers[id];
@@ -59,20 +73,7 @@ Protects bearer from the next ${damageBlocked} damage that they would incur.
       }
     },
   },
-  subsprites: {
-    [imageName]: {
-      imageName,
-      alpha: 1.0,
-      anchor: {
-        x: 0,
-        y: 0,
-      },
-      scale: {
-        x: 0.5,
-        y: 0.5,
-      },
-    },
-  },
+
 };
 
 function add(unit: Unit.IUnit) {
@@ -85,7 +86,7 @@ function add(unit: Unit.IUnit) {
     // Add event
     unit.onDamageEvents.push(id);
     // Add subsprite image
-    Image.addSubSprite(unit.image, imageName);
+    Image.addSubSprite(unit.image, id);
   }
   modifier = unit.modifiers[id];
   if (modifier) {

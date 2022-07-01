@@ -11,7 +11,7 @@ export interface Subsprite {
   };
 }
 export interface ISubsprites {
-  [key: string]: Subsprite;
+  [id: string]: Subsprite;
 }
 const Subsprites: ISubsprites = {
   heavy_armor: {

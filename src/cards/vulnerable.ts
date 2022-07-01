@@ -24,20 +24,8 @@ in the future.
     },
   },
   modifiers: {
-    add
-  },
-  events: {
-    onDamage: (unit, amount, damageDealer) => {
-      // Magnify positive damage
-      if (amount > 0) {
-        return amount * 2;
-      } else {
-        return amount;
-      }
-    },
-  },
-  subsprites: {
-    [imageName]: {
+    add,
+    subsprite: {
       imageName,
       alpha: 1.0,
       anchor: {
@@ -48,6 +36,16 @@ in the future.
         x: 0.5,
         y: 0.5,
       },
+    },
+  },
+  events: {
+    onDamage: (unit, amount, damageDealer) => {
+      // Magnify positive damage
+      if (amount > 0) {
+        return amount * 2;
+      } else {
+        return amount;
+      }
     },
   },
 };
@@ -61,6 +59,6 @@ function add(unit: Unit.IUnit) {
   unit.onDamageEvents.push(id);
 
   // Add subsprite image
-  Image.addSubSprite(unit.image, imageName);
+  Image.addSubSprite(unit.image, id);
 }
 export default spell;

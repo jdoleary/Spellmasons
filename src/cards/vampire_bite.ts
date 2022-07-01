@@ -35,7 +35,6 @@ function remove(unit: IUnit) {
 }
 
 const spell: Spell = {
-  subsprites: {},
   card: {
     id,
     manaCost: 20,
@@ -54,7 +53,8 @@ const spell: Spell = {
   },
   modifiers: {
     add,
-    remove
+    remove,
+    subsprite: undefined,
   },
   events: {
     onDamage: (unit: IUnit, amount: number, prediction: boolean, damageDealer?: IUnit) => {

@@ -10,7 +10,7 @@ import Events, {
   onTurnStart,
   onTurnEnd,
 } from '../Events';
-import Subsprites, { ISubsprites } from '../Subsprites';
+import Subsprites, { Subsprite } from '../Subsprites';
 // Register spells:
 import add_damage, { UnitDamage } from './add_damage';
 import add_heal from './add_heal';
@@ -39,6 +39,7 @@ import { IUpgrade, upgradeCardsSource } from '../Upgrade';
 import { _getCardsFromIds } from './cardUtils';
 import { addCardToHand } from '../CardUI';
 export interface Modifiers {
+  subsprite?: Subsprite;
   add?: (unit: Unit.IUnit) => void;
   remove?: (unit: Unit.IUnit) => void;
 }
@@ -62,11 +63,10 @@ export interface Spell {
     onTurnStart?: onTurnStart;
     onTurnEnd?: onTurnEnd;
   };
-  subsprites?: ISubsprites;
 }
 
 function register(spell: Spell) {
-  const { subsprites, card, events } = spell;
+  const { modifiers, card, events } = spell;
   const { id } = card;
   // Add card to cards pool
   allCards[id] = card;
@@ -77,10 +77,9 @@ function register(spell: Spell) {
   // Add card as upgrade:
   upgradeCardsSource.push(cardToUpgrade(card));
   // Add subsprites
-  if (subsprites) {
-    Object.entries(subsprites).forEach(([key, value]) => {
-      Subsprites[key] = value;
-    });
+  console.log('jtest register', modifiers, modifiers?.subsprite)
+  if (modifiers && modifiers.subsprite) {
+    Subsprites[id] = modifiers.subsprite;
   }
   // Add events
   if (events) {

@@ -16,7 +16,7 @@ function add(unit: IUnit) {
       unit.onTurnStartEvents.push(id);
     }
     // Add subsprite image
-    Image.addSubSprite(unit.image, imageName);
+    Image.addSubSprite(unit.image, id);
   }
   // Increment the number of stacks of poison 
   const modifier = unit.modifiers[id];
@@ -28,20 +28,6 @@ function add(unit: IUnit) {
 }
 
 const spell: Spell = {
-  subsprites: {
-    [imageName]: {
-      imageName,
-      alpha: 1.0,
-      anchor: {
-        x: 0,
-        y: 0,
-      },
-      scale: {
-        x: 0.5,
-        y: 0.5,
-      },
-    },
-  },
   card: {
     id,
     manaCost: 20,
@@ -62,7 +48,20 @@ at the start of the unit's turn.
     },
   },
   modifiers: {
-    add
+    add,
+    subsprite: {
+      imageName,
+      alpha: 1.0,
+      anchor: {
+        x: 0,
+        y: 0,
+      },
+      scale: {
+        x: 0.5,
+        y: 0.5,
+      },
+    },
+
   },
   events: {
     onTurnStart: async (unit: IUnit, prediction: boolean) => {

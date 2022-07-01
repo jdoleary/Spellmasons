@@ -34,7 +34,19 @@ Freezes the target(s) for 1 turn, preventing them from moving or acting.
   },
   modifiers: {
     add,
-    remove
+    remove,
+    subsprite: {
+      imageName: 'freeze.png',
+      alpha: 1.0,
+      anchor: {
+        x: 0.5,
+        y: 0.5,
+      },
+      scale: {
+        x: 1,
+        y: 1,
+      },
+    },
   },
   events: {
     onTurnStart: async (unit: Unit.IUnit) => {
@@ -59,20 +71,7 @@ Freezes the target(s) for 1 turn, preventing them from moving or acting.
       }
     },
   },
-  subsprites: {
-    [imageName]: {
-      imageName: 'freeze.png',
-      alpha: 1.0,
-      anchor: {
-        x: 0.5,
-        y: 0.5,
-      },
-      scale: {
-        x: 1,
-        y: 1,
-      },
-    },
-  },
+
 };
 
 function add(unit: Unit.IUnit) {
@@ -89,7 +88,7 @@ function add(unit: Unit.IUnit) {
     }
 
     // Add subsprite image
-    Image.addSubSprite(unit.image, imageName);
+    Image.addSubSprite(unit.image, id);
     // Prevents units from being pushed out of the way and units
     // act as a blockade
     unit.immovable = true;
