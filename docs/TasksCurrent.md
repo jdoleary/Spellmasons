@@ -1,11 +1,4 @@
 ## Schedule
-- Today bugs:
-    - How to keep syncronize from interrupting an animation while it's running
-    - (COULDN"T REPRODUCE) Just shielded unit died when i cast one hurt on him (he  already had one shield that I worked through before)
-    - (COULDN"T REPRODUCE) Loading screen doesn't appear between levels
-    - Pathing is broken sometimes where a unit moves a little and then no further
-    - (COULDN"T REPRODUCE) Bug: I only have 6 toolbar slots showing up (empty ones don't show)
-        - and when I got bitten by a vampire it didn't add "bite" to a new slot (only to my inventory)
 - 2022.07.04
     - Standalone Server
     - Add "preparing" animation used to reduce desyncs due to network latency, so that if multiple users are casting spells at the same time, the wizard bending down to "charge" as soon as the current user clicks, masks a delay to make sure it doesn't conflict with other spells.  It'll send the spell over the network as soon as the user clicks but waits to cast it so that there aren't conflicting spells making desyncs on multiple clients.
@@ -19,9 +12,6 @@
     - Marketing
 ## Focus
 - How to show targeting: https://photos.google.com/photo/AF1QipNRQYCeW85Yokd11e4YA9nyjhu7WD3qt1CAmvZh?
-- Bug: can't move player after move, then hurt self.
-    - This is because somehow the cast hurt never finishes
-    - Due to texture switching
 - Publish graphics version and play with Colin
     - Fix tests so I can deploy
 - Decouple the various layers (data: underworld; networking: pie; visual: Pixi / DOM; audio)
@@ -34,6 +24,8 @@
 
 ## Bugs
 
+    - How to keep syncronize from interrupting an animation while it's running
+    - Pathing is broken sometimes where a unit moves a little and then no further
 - enter, enter doesn't make "are you sure" prompt go away when there are no enemies.
 - Priest "run away" ai is broken
 - Fix robe losing color 
