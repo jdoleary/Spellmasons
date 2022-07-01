@@ -75,6 +75,7 @@ export function cleanup(image?: IImageAnimated) {
 // for the animation to finish.
 export function changeSprite(image: IImageAnimated | undefined, imagePath: string, container: PIXI.Container, resolver: undefined | (() => void), options?: PixiSpriteOptions,): JSpriteAnimated | undefined {
   if (!image) {
+    console.warn('Cannot changeSprite, no image object to change to', imagePath)
     return;
   }
   if (image.sprite.imagePath == imagePath && image.sprite.parent == container) {
@@ -195,25 +196,31 @@ export function syncronize(imageSerialized: IImageAnimatedSerialized, originalIm
   if (!originalImage) {
     return undefined;
   }
+  // then we only need to update properties:
+  const { x, y, scale } = imageSerialized.sprite;
+  originalImage.sprite.x = x;
+  originalImage.sprite.y = y;
+  originalImage.sprite.scale.x = scale.x
+  originalImage.sprite.scale.y = scale.y;
+  if (getSubspriteImagePaths(imageSerialized) != getSubspriteImagePaths(originalImage)) {
+    restoreSubsprites(originalImage);
+  }
   if (imageSerialized.sprite.imagePath === getAnimationPathFromSprite(originalImage.sprite)) {
-    // then we only need to update properties:
-    const { x, y, scale } = imageSerialized.sprite;
-    originalImage.sprite.x = x;
-    originalImage.sprite.y = y;
-    originalImage.sprite.scale.x = scale.x
-    originalImage.sprite.scale.y = scale.y;
-    if (getSubspriteImagePaths(imageSerialized) != getSubspriteImagePaths(originalImage)) {
-      restoreSubsprites(originalImage);
-    }
     return originalImage;
   } else {
     // if the textures do not match, then the sprite is majorly out of sync and it's
     // best to just load()
     // --
     // Clean up old image and completely replace
-    const newImage = load(imageSerialized, originalImage.sprite.parent);
-    cleanup(originalImage);
-    return newImage;
+    // TODO: Sync mask
+    // TODO: Serialized image cant carry callbacks with it so this may cause an issue if there is an onComplete callback
+    // changeSprite(originalImage, imageSerialized.sprite.imagePath)
+    // TODO: Temporarily disabled: Replacing the image leads to problems where a callback depends on the same image reference
+    // in order to restore it to a different animation and when the reference changes it causes an issue where playerHit would loop
+    // and never change back to playerIdle
+    // const newImage = load(imageSerialized, originalImage.sprite.parent);
+    // cleanup(originalImage);
+    return originalImage;
   }
 
 }

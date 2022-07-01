@@ -112,6 +112,7 @@ export default class Underworld {
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
     window.underworld = this;
     this.seed = window.seedOverride || seed;
+    this.seed = '0.9777202476067982'
     this.suspendGameLoop = false;
 
     elSeed.innerText = `Seed: ${this.seed}`;
@@ -1843,7 +1844,7 @@ export type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, Underworl
 
 // TODO: enforce max units at level index
 // Idea: Higher probability of tougher units at certain levels
-const startingNumberOfUnits = 3;
+const startingNumberOfUnits = 0;
 const bossEveryXLevels = 15;
 
 function getEnemiesForAltitude(levelIndex: number): { unitIds: string[], strength: number } {

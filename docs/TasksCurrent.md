@@ -1,7 +1,6 @@
 ## Schedule
 - Today bugs:
     - How to keep syncronize from interrupting an animation while it's running
-    - Bug: getting bit by vampire puts me in playerHit infinite animation loop
     - Bug: Attention marker on enemy that is way to far from me: 0.9777202476067982
         - You have to walk close to the closest guy first to see it
     - Was able to cast beyond cast range

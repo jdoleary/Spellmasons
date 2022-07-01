@@ -315,8 +315,9 @@ export function syncronize(unitSerialized: IUnitSerialized, originalUnit: IUnit)
   // Note: returnToDefaultSprite must be called BEFORE Image.syncronize
   // to ensure that the originalUnit.image.sprite has a parent because
   // the parent could have been cleared previously.
-  returnToDefaultSprite(originalUnit);
-  originalUnit.image = Image.syncronize(image, originalUnit.image);
+  // TODO: TEMPORARILY DISABLED: How to keep syncronize from interrupting an animation while it's running
+  // returnToDefaultSprite(originalUnit);
+  // originalUnit.image = Image.syncronize(image, originalUnit.image);
 }
 export function changeToDieSprite(unit: IUnit) {
   Image.changeSprite(
