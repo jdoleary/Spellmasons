@@ -359,19 +359,31 @@ export interface PixiSpriteOptions {
   loop: boolean,
   animationSpeed?: number
 }
-export function addPixiSprite(
-  imagePath: string,
-  parent: PIXI.Container,
-  options: PixiSpriteOptions = {
-    loop: true
-  }
-): PIXI.Sprite {
+// Allows files without access to locally scoped 'sheet' to get an 
+// animated texture from the sheet
+export function getPixiTextureAnimated(
+  imagePath: string
+) {
   if (!isReady) {
     throw new Error(
       'PIXI is not finished setting up.  Cannot add a sprite yet',
     );
   }
-  let sprite: PIXI.Sprite;
+  return sheet.animations[imagePath];
+}
+export function addPixiSpriteAnimated(
+  imagePath: string,
+  parent: PIXI.Container,
+  options: PixiSpriteOptions = {
+    loop: true
+  }
+): PIXI.AnimatedSprite {
+  if (!isReady) {
+    throw new Error(
+      'PIXI is not finished setting up.  Cannot add a sprite yet',
+    );
+  }
+  let sprite: PIXI.AnimatedSprite;
   let texture = sheet.animations[imagePath];
   if (texture) {
     const animatedSprite = new PIXI.AnimatedSprite(texture);
@@ -385,13 +397,33 @@ export function addPixiSprite(
     animatedSprite.loop = options.loop;
     animatedSprite.play();
     sprite = animatedSprite;
+    // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
+    // which is used for identifying the sprite or animation that is currently active
+    sprite.imagePath = imagePath;
+    parent.addChild(sprite);
+    return sprite;
   } else {
-    let singleTexture = sheet.textures[imagePath];
-    sprite = new PIXI.Sprite(singleTexture);
-    if (!singleTexture) {
-      console.error('Could not find texture for', imagePath);
-    }
+    throw new Error(
+      'Could not find animated texture for' + imagePath
+    );
   }
+}
+
+export function addPixiSprite(
+  imagePath: string,
+  parent: PIXI.Container,
+): PIXI.Sprite {
+  if (!isReady) {
+    throw new Error(
+      'PIXI is not finished setting up.  Cannot add a sprite yet',
+    );
+  }
+  let singleTexture = sheet.textures[imagePath];
+  const sprite = new PIXI.Sprite(singleTexture);
+  if (!singleTexture) {
+    console.error('Could not find texture for', imagePath);
+  }
+
   // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
   // which is used for identifying the sprite or animation that is currently active
   sprite.imagePath = imagePath;
