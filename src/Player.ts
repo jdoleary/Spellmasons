@@ -151,6 +151,8 @@ export function resetPlayerForNextLevel(player: IPlayer) {
   } else {
     console.log('Level: cannot find valid spawn for player unit');
   }
+
+  Unit.returnToDefaultSprite(player.unit);
 }
 // Keep a global reference to the current client's player
 export function updateGlobalRefToCurrentClientPlayer(player: IPlayer) {
