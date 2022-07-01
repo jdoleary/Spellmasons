@@ -1,9 +1,18 @@
 ## Schedule
-- 2022.07.01
-    - Make Gameplay functional again
-        - Fix texture swapping
-    - Publish
-        - Fix tests?
+- Today bugs:
+    - Was able to cast beyond cast range
+    - Trap Killed enemy but he didn't animate dead
+    - Freeze icon and poison doesn't go away on dead unit
+    - Freeze icon doesn't go away when freeze expires
+    - Prevent spikes from spawning on units at beginning of level 
+    - Could not find animated texture for decoy.png
+    - Loading screen doesn't appear between levels
+    - Just shielded unit died when i cast one hurt on him (he  already had one shield that I worked through before)
+    - Pathing is broken sometimes where a unit moves a little and then no further
+    - Bug: I only have 6 toolbar slots showing up (empty ones don't show)
+        - and when I got bitten by a vampire it didn't add "bite" to a new slot (only to my inventory)
+    - Game got stuck on enemy turn while I was alt-tabbed. This is relevant even without standalone server because it happened in singleplayern
+        - Note: Pie status says "Not Connected" and I got an error in console: ` Uncaught (in promise) DOMException: String contains an invalid character CardUI.ts:140:8`
 - 2022.07.04
     - Standalone Server
     - Add "preparing" animation used to reduce desyncs due to network latency, so that if multiple users are casting spells at the same time, the wizard bending down to "charge" as soon as the current user clicks, masks a delay to make sure it doesn't conflict with other spells.  It'll send the spell over the network as soon as the user clicks but waits to cast it so that there aren't conflicting spells making desyncs on multiple clients.
@@ -31,7 +40,6 @@
         - I think this is also related to the bug that makes the player cloak color revert to normal. If i cast poison on myself and then go get hit by a grunt, I both lose the poison subsprite AND the filter that changes cloak color
 
 ## Bugs
-- Was able to cast beyond cast range
 
 - enter, enter doesn't make "are you sure" prompt go away when there are no enemies.
 - Priest "run away" ai is broken
