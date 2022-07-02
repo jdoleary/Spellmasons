@@ -377,10 +377,30 @@ export function playComboAnimation(unit: IUnit, key: string | undefined, keyMome
     let keyMomentPromise = Promise.resolve();
     // Ensure keyMoment doesn't trigger more than once.
     let keyMomentTriggered = false;
+
+    const tryTriggerKeyMoment = () => {
+      if (keyMoment && !keyMomentTriggered) {
+        // Ensure that if keyMoment hasn't been called yet (because)
+        // the animation was interrupted, it is called now
+        // A keyMoment should ALWAYS be invoked
+        keyMomentPromise = keyMoment().then(() => {
+          // resolve resolves the promise that the combo animation returns.
+          // The keyMoment is the ultimate arbiter of when the combo animation is done
+          // since it usually triggers a projectile or spell that will take longer to
+          // finish than the primary animation, so whatever's waiting for the combo animation
+          // to finish should wait for the keyMoment rather than any of the other animations
+          // that occur in the combo
+          resolve();
+        });
+        keyMomentTriggered = true;
+      }
+
+    }
     const onFrameChange = (finishOnFrame === undefined || keyMoment === undefined) ? undefined : (currentFrame: number) => {
       if (currentFrame >= finishOnFrame && !keyMomentTriggered) {
-        keyMomentPromise = keyMoment();
-        keyMomentTriggered = true;
+        // This is when the keyMoment is INTENTED to be triggered: at a specified "finishOnFrame" of the
+        // animation
+        tryTriggerKeyMoment();
       }
 
     }
@@ -388,28 +408,21 @@ export function playComboAnimation(unit: IUnit, key: string | undefined, keyMome
     if (combo.SFX) {
       playSFXKey(combo.SFX)
     }
-    Image.changeSprite(unit.image, combo.primaryAnimation, unit.image.sprite.parent, resolve, {
-      loop: false,
-      ...options,
-      onFrameChange,
-      onComplete: () => {
-        returnToDefaultSprite(unit);
-        if (keyMoment && !keyMomentTriggered) {
-          // Ensure that if keyMoment hasn't been called yet (because)
-          // the animation was interrupted, it is called now
-          // A keyMoment should ALWAYS be invoked
-          console.error(`Force invoking keyMoment at the end of animation ${combo.primaryAnimation}.  It should have been triggered but wasn't.`);
-          keyMomentPromise = keyMoment();
-          keyMomentTriggered = true;
+    Image.changeSprite(unit.image, combo.primaryAnimation, unit.image.sprite.parent,
+      // It is expected that the key moment will never be triggered here because if the animation
+      // gets all the way to the end to the point where it triggers changeSprite's onComplete
+      // which calls this callback, the keyMoment should've already happened; however, since
+      // we don't want this promise resolving UNTIL the keyMoment is finished, we'll pipe this
+      // through tryTriggerKeyMoment which will eventually call resolve when the keyMoment is finished
+      tryTriggerKeyMoment,
+      {
+        loop: false,
+        ...options,
+        onFrameChange,
+        onComplete: () => {
+          returnToDefaultSprite(unit);
         }
-        // Once main animation is complete,
-        // wait for keymoment to complete,
-        // then resolve the whole combo animation.
-        keyMomentPromise.then(() => {
-          resolve();
-        })
-      }
-    });
+      });
     // Note: oneOff animations MUST be added after changeSprite because changeSprite wipes any existing oneOff animations
     // This is how oneOff animations are attached to a primary animation, so if the primary animation ends early, so do
     // the currently playing oneOff animations.

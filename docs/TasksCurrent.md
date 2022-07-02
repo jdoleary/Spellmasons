@@ -3,7 +3,6 @@
     - Out of range sometimes shows when it shouldn't
     - fix grey ellipse positioning under lobber
     - Didn't show unit die in lava
-    - "your turn" happens too early when an arrow is in flight
     - trap image is broken
 - 2022.07.04
     - Standalone Server
