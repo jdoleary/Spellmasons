@@ -1,4 +1,12 @@
 ## Schedule
+- Today
+    - Card bounces when you hover near bottom
+    - Out of range sometimes shows when it shouldn't
+    - Make archer grey LOS more visible
+    - fix grey ellipse positioning under lobber
+    - Didn't show unit die in lava
+    - "your turn" happens too early when an arrow is in flight
+    - trap image is broken
 - 2022.07.04
     - Standalone Server
     - Add "preparing" animation used to reduce desyncs due to network latency, so that if multiple users are casting spells at the same time, the wizard bending down to "charge" as soon as the current user clicks, masks a delay to make sure it doesn't conflict with other spells.  It'll send the spell over the network as soon as the user clicks but waits to cast it so that there aren't conflicting spells making desyncs on multiple clients.
@@ -7,6 +15,10 @@
     - Tell Che to separate walls from floor in new biomes
 - Ordered next tasks
     - all SFX
+        - all spells
+        - Fall in lava
+        - use potion
+        - die
     - Master Music
     - Steam Page
     - Trailer
