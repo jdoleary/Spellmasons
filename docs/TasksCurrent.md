@@ -1,7 +1,6 @@
 ## Schedule
 - Today
     - Out of range sometimes shows when it shouldn't
-    - Make archer grey LOS more visible
     - fix grey ellipse positioning under lobber
     - Didn't show unit die in lava
     - "your turn" happens too early when an arrow is in flight

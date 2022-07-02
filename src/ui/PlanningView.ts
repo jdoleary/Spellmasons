@@ -59,7 +59,7 @@ export function updatePlanningView() {
             planningViewGraphics.moveTo(attackLine.p1.x, attackLine.p1.y);
             if (closestIntersection) {
               // Draw a grey line  showing that the target is blocked
-              planningViewGraphics.lineStyle(3, 0x333333, 0.7);
+              planningViewGraphics.lineStyle(3, 0xaaaaaa, 0.7);
               planningViewGraphics.lineTo(closestIntersection.x, closestIntersection.y);
               planningViewGraphics.lineTo(attackLine.p2.x, attackLine.p2.y);
               planningViewGraphics.drawCircle(attackLine.p2.x, attackLine.p2.y, 3);
