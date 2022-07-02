@@ -1,10 +1,22 @@
 ## Schedule
-- Today
+- Next
     - Out of range sometimes shows when it shouldn't
-    - fix grey ellipse positioning under lobber
+        - Requirements:
+            - Hovering over out of range units still shows the units that would be targeted if the spell were in range (but in grey)
+            - A click near end range will still try to cast at end range for convenience
+                - units with a part of them in range will allow a click on any part of them to cast
+                - Idea, this could be done by not visualizing your range with a line and just allowing a click on a unit if their center is in range
+        - Note: A click should trigger the spell if the mouse is within the AOE range or near the end of range or within range
+            - If a click should trigger it, then show what it'll do in red highlights
+            - Otherwise show what it would do in grey
+        - Note: The reason this is hard is because of conflicting priorities:
+            - There is a scenario where it would need to show real targets and out of range targets simultaneously, say there's AOE and the pointer is out of range but within the AOE circle at end range,  Does it show what would happen if the center of the AOE was at the pointer or
+            does it show what would happen if the click cast it at end range (which it should as many players expect it to), or should it show both.
+    - fix grey ellipse positioning under lobber, it's too low
     - Didn't show unit die in lava
 - 2022.07.04
     - Standalone Server
+    - Server should be able to send syncs that will wait to execute until turn changes so it doesn't interrupt animations and mess up the state when it syncs
     - Add "preparing" animation used to reduce desyncs due to network latency, so that if multiple users are casting spells at the same time, the wizard bending down to "charge" as soon as the current user clicks, masks a delay to make sure it doesn't conflict with other spells.  It'll send the spell over the network as soon as the user clicks but waits to cast it so that there aren't conflicting spells making desyncs on multiple clients.
 - 2022.07.05
     - Unit Crowding
@@ -40,6 +52,7 @@
 - Bug: (Note: this is probably fixed now) Goons spawned outside of map when summoner was stuffed in upper left corner of map
 ---
 ## Features
+- Use summoner magic animation for units that are summoned
 - Standalone server
 - What if potions drop from slain enemies?
 - Task: An ally that has died at all (even if ressed) should lose their upgrade priviledge

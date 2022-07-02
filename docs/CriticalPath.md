@@ -1,5 +1,5 @@
 # Critical Path
-- Remake gameplay functional
+- Solve "Out of range" issue
 - Standalone Server
 - Clerical
     - Menu
@@ -16,12 +16,12 @@
 - Art Integration (Blocked: Waiting on Che) (ordered by priority)
     - 90%: Unit Animations
         - Waiting on Summoner
-    - 0%: Cover Art / Steam Page
     - 0%: Projectiles
         - Arrow, Lobber Thrown Magic
     - 0%: Use Consumable (potion) animation
     - 10%: Spell Animations
     - 0%: Spell Icons
+    - 0%: Cover Art / Steam Page
     - 20%: Biome Tiles
         - 0%: Liquid Splash Animation
             - Lava, blood, Water

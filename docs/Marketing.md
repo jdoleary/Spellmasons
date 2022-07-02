@@ -1,6 +1,6 @@
 - Homepage / Marketing / Steam Page / Email Signup
     - Marketing (Tell a story)
-        - "Plan. Build. Unleash. Spellmasons!"
+        - "Plan. Combine. Unleash. Spellmasons!"
         - "Coorindate. Strategize. Invent. Spellmasons!"
         - "Invent magic together.  Spellmasons!"
         - "Magic with friends! Spellmasons"
@@ -8,3 +8,21 @@
             - Plan / Plot / Conspire / Devise
             - Unleash / Execute
             - Invent / Envision / Formulate
+    - How to reach people to review
+        - See curators on steam
+
+- Research
+    - https://twitter.com/berkesayil/status/1541899749938417667
+        - Trailer is king
+        - Trailer goal is to explain the game in a concise manner.
+        - No logos
+        - No HUD
+        - Show Fast
+        - Show what the player does and make sure it's clear
+        - Keep short rather than empty
+            - 60 - 90 seconds is standard
+        - Many kinds of trailers
+            - One to introduce it
+            - Another to show what multiplayer is like coordinating with friends.
+        - Make it fun to listen to
+        - Show content, don't count it out
