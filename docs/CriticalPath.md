@@ -6,16 +6,14 @@
     - Steam Page (waiting on art)
     - Website Presskit page
     - Trailer
-        - [Remove hud](https://twitter.com/berkesayil/status/1541899749938417667)
 - SFX (Ready for work)
     - Unit Sounds
     - Spell Sounds
     - Consumable Sounds
     - Splash Liquid Sounds
     - UI Sounds
-- Art Integration (Blocked: Waiting on Che) (ordered by priority)
-    - 90%: Unit Animations
-        - Waiting on Summoner
+- Art Integration
+    - 100%: Unit Animations
     - 0%: Projectiles
         - Arrow, Lobber Thrown Magic
     - 0%: Use Consumable (potion) animation

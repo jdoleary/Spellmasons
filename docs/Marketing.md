@@ -12,17 +12,20 @@
         - See curators on steam
 
 - Research
-    - https://twitter.com/berkesayil/status/1541899749938417667
-        - Trailer is king
-        - Trailer goal is to explain the game in a concise manner.
-        - No logos
-        - No HUD
-        - Show Fast
-        - Show what the player does and make sure it's clear
-        - Keep short rather than empty
-            - 60 - 90 seconds is standard
-        - Many kinds of trailers
-            - One to introduce it
-            - Another to show what multiplayer is like coordinating with friends.
-        - Make it fun to listen to
-        - Show content, don't count it out
+    - Trailer
+        - https://www.youtube.com/playlist?list=PLIGLRMCk1Wi8eD4iDKL6bOPFFAKAINQbv
+        - https://twitter.com/berkesayil/status/1541899749938417667
+            - Trailer is king
+            - Trailer goal is to explain the game in a concise manner.
+            - No logos
+            - No HUD
+            - Show Fast
+            - Show what the player does and make sure it's clear
+            - Keep short rather than empty
+                - 60 - 90 seconds is standard
+            - Many kinds of trailers
+                - One to introduce it
+                - Another to show what multiplayer is like coordinating with friends.
+            - Make it fun to listen to
+            - Show content, don't count it out visually. Viewers don't care if you have "10,000 unique spells!"
+            - Keep it fun
