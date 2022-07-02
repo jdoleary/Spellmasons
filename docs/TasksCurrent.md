@@ -1,6 +1,5 @@
 ## Schedule
 - Today
-    - Card bounces when you hover near bottom
     - Out of range sometimes shows when it shouldn't
     - Make archer grey LOS more visible
     - fix grey ellipse positioning under lobber

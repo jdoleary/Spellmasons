@@ -260,7 +260,7 @@ body.inspect-mode #card-inspect {
 
 
 .card:hover {
-  transform: translate(0, -8px);
+  transform: scale(1.02);
 }
 
 .card {
