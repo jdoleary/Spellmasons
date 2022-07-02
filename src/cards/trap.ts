@@ -8,7 +8,7 @@ const turnsItTakesTrapToWindUp = 2;
 // Register as pickup:
 Pickup.pickups.push(
   {
-    imagePath: 'pickups/trapClosed.png',
+    imagePath: 'pickups/trapClosed',
     animationSpeed: 0,
     playerOnly: true,
     singleUse: false,

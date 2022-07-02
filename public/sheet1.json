@@ -840,7 +840,15 @@
 	"spriteSourceSize": {"x":0,"y":7,"w":64,"h":38},
 	"sourceSize": {"w":64,"h":64}
 },
-"pickups/trapClosed.png":
+"pickups/trapClosed_1.png":
+{
+	"frame": {"x":264,"y":1363,"w":22,"h":31},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":21,"y":9,"w":22,"h":31},
+	"sourceSize": {"w":64,"h":64}
+},
+"pickups/trapClosed_2.png":
 {
 	"frame": {"x":264,"y":1363,"w":22,"h":31},
 	"rotated": false,
@@ -5353,6 +5361,7 @@
 	"pickups/trap": ["pickups/trap_1.png","pickups/trap_2.png","pickups/trap_3.png","pickups/trap_4.png","pickups/trap_5.png","pickups/trap_6.png"],
 	"pickups/trapAttack": ["pickups/trapAttack_1.png","pickups/trapAttack_2.png","pickups/trapAttack_3.png","pickups/trapAttack_4.png","pickups/trapAttack_5.png","pickups/trapAttack_6.png"],
 	"pickups/trapAttackMagic": ["pickups/trapAttackMagic_1.png","pickups/trapAttackMagic_2.png","pickups/trapAttackMagic_3.png","pickups/trapAttackMagic_4.png","pickups/trapAttackMagic_5.png","pickups/trapAttackMagic_6.png"],
+	"pickups/trapClosed": ["pickups/trapClosed_1.png","pickups/trapClosed_2.png"],
 	"portal": ["portal_0.png","portal_1.png","portal_2.png","portal_3.png","portal_4.png","portal_5.png","portal_6.png","portal_7.png","portal_8.png","portal_9.png","portal_10.png","portal_11.png","portal_12.png","portal_13.png","portal_14.png","portal_15.png","portal_16.png","portal_17.png","portal_18.png","portal_19.png","portal_20.png","portal_21.png","portal_22.png","portal_23.png","portal_24.png","portal_25.png","portal_26.png","portal_27.png","portal_28.png","portal_29.png","portal_30.png","portal_31.png","portal_32.png","portal_33.png","portal_34.png","portal_35.png","portal_36.png","portal_37.png","portal_38.png","portal_39.png","portal_40.png","portal_41.png","portal_42.png","portal_43.png","portal_44.png","portal_45.png","portal_46.png","portal_47.png","portal_48.png","portal_49.png","portal_50.png","portal_51.png","portal_52.png","portal_53.png","portal_54.png","portal_55.png","portal_56.png","portal_57.png","portal_58.png","portal_59.png","portal_60.png","portal_61.png","portal_62.png","portal_63.png","portal_64.png","portal_65.png","portal_66.png","portal_67.png","portal_68.png","portal_69.png"],
 	"spell-effects/spellHurtCuts": ["spell-effects/spellHurtCuts_1.png","spell-effects/spellHurtCuts_2.png","spell-effects/spellHurtCuts_3.png","spell-effects/spellHurtCuts_4.png","spell-effects/spellHurtCuts_5.png","spell-effects/spellHurtCuts_6.png","spell-effects/spellHurtCuts_7.png","spell-effects/spellHurtCuts_8.png","spell-effects/spellHurtCuts_9.png"],
 	"spell-effects/spellPoison": ["spell-effects/spellPoison_1.png","spell-effects/spellPoison_2.png","spell-effects/spellPoison_3.png","spell-effects/spellPoison_4.png","spell-effects/spellPoison_5.png","spell-effects/spellPoison_6.png","spell-effects/spellPoison_7.png","spell-effects/spellPoison_8.png","spell-effects/spellPoison_9.png","spell-effects/spellPoison_10.png","spell-effects/spellPoison_11.png"],
@@ -5405,6 +5414,6 @@
 	"format": "RGBA8888",
 	"size": {"w":973,"h":1448},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:7cae2096dfc99b93d879857c0190b712:96bfc1b275351f457a22098f1ee2800d:81b8455959c6df0a71f2d78f10f487eb$"
+	"smartupdate": "$TexturePacker:SmartUpdate:1b67949eb1f0586b26345e35157c339c:9fc0a2844dac7c7a8a76d3c699db504c:81b8455959c6df0a71f2d78f10f487eb$"
 }
 }
