@@ -77,7 +77,6 @@ function register(spell: Spell) {
   // Add card as upgrade:
   upgradeCardsSource.push(cardToUpgrade(card));
   // Add subsprites
-  console.log('jtest register', modifiers, modifiers?.subsprite)
   if (modifiers && modifiers.subsprite) {
     Subsprites[id] = modifiers.subsprite;
   }
