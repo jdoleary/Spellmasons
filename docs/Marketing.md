@@ -14,11 +14,19 @@
 - Research
     - Trailer
         - https://www.youtube.com/playlist?list=PLIGLRMCk1Wi8eD4iDKL6bOPFFAKAINQbv
+            - Use the language of film and editing to focus on the experience and feel of the game, not the minute details
+            - [Audio](https://www.youtube.com/watch?v=brNYbUlPrBk&list=PLIGLRMCk1Wi8eD4iDKL6bOPFFAKAINQbv&index=4)
+                - Record with music off, easy to add in later
+                - Sound effects are important, they direct the eyes of the viewer
         - https://twitter.com/berkesayil/status/1541899749938417667
             - Trailer is king
             - Trailer goal is to explain the game in a concise manner.
             - No logos
             - No HUD
+                - Does the hud communicate the key messages of?
+                    - The shot
+                    - The trailer
+                    - the game's premise
             - Show Fast
             - Show what the player does and make sure it's clear
             - Keep short rather than empty
