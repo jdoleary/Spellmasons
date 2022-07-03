@@ -1,7 +1,6 @@
 ## Schedule
 - Next
     - fix grey ellipse positioning under lobber, it's too low
-    - Didn't show unit die in lava
     - Make combo wait for full completion so it doesn't change sprite to idle after resolving.
         - This makes it so that when casting two spells in quick succession, the second attack animation gets overridden by returningToDefaultSprite
 - 2022.07.04
@@ -41,7 +40,6 @@
     - explain manaburn better
     - AI should avoid traps when moving
     - allow changing path if you click again while moving to cancel accidental movement
-    - fix dissapearing units in lava
     - dad assumed vampire bite would deal damage
     - how to explain "+ cast range", units of measure no good.  Try percentage
     - Casting decoy should support using end of range but it says "out of range"

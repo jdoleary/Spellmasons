@@ -396,7 +396,7 @@ export function addPixiSprite(
   let singleTexture = sheet.textures[imagePath];
   const sprite = new PIXI.Sprite(singleTexture);
   if (!singleTexture) {
-    console.error('Could not find texture for', imagePath);
+    console.error('Could not find non-animated texture for', imagePath);
   }
 
   // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
