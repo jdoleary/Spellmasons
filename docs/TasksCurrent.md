@@ -2,6 +2,7 @@
 - Next
     - fix grey ellipse positioning under lobber, it's too low
     - Didn't show unit die in lava
+    - Make combo wait for full completion so it doesn't change sprite to idle after resolving.
 - 2022.07.04
     - Standalone Server
     - Server should be able to send syncs that will wait to execute until turn changes so it doesn't interrupt animations and mess up the state when it syncs
