@@ -4,6 +4,7 @@ import { defineConfig } from 'vite';
  */
 export default defineConfig(({ command, mode }) => ({
     build: {
-        chunkSizeWarningLimit: 1000000
+        chunkSizeWarningLimit: 1000000,
+        outDir: 'build'
     }
 }));
