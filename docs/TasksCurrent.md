@@ -36,6 +36,12 @@
 
 ## Bugs
 ---
+- Brad Feedback
+    - cloned self doesn't show magic animation when they cast
+    - priest is attacking /dealing damage to him but he's not a vamp. how?
+    - can't drag spell from book to toolbar if it's already in toolbar
+    - **critical** Brad's game got stuck on Message Type 9 Couldn't pick an upgrade
+---
 - Dad Loch playtest
     - Make health and mana go full when portal spawns so users aren't tempted to collect potions meaninglessly
     - Multiplayer doesn't work when second player clicks "join game"
