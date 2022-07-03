@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 import AnimationTimeline from './AnimationTimeline';
 import type * as Player from './Player';
-import type * as Unit from './Unit';
+import * as Unit from './Unit';
 import type Underworld from './Underworld';
 import { setView, View } from './views';
 import * as readyState from './readyState';
@@ -15,6 +15,7 @@ import cookieConsentPopup from './cookieConsent';
 import { setupMonitoring } from './monitoring';
 import * as storage from './storage';
 import { version } from '../package.json';
+import { Faction, UnitType } from './commonTypes';
 window.SPELLMASONS_PACKAGE_VERSION = version;
 import './style.css';
 cookieConsentPopup(false);
@@ -226,6 +227,30 @@ declare global {
     devMode: boolean;
     // Used for development to debug the original information used to make a map
     map: any;
+    devSpawnUnit: (unitId: string, faction: Faction) => void;
+  }
+}
+// For development, spawns a unit near the player
+window.devSpawnUnit = (unitId: string, faction: Faction = Faction.ENEMY) => {
+  if (window.player) {
+    const coords = window.underworld.findValidSpawn(window.player.unit, 5)
+    const sourceUnit = Units.allUnits[unitId];
+    if (coords && sourceUnit) {
+      Unit.create(
+        unitId,
+        // Start the unit at the summoners location
+        coords.x,
+        coords.y,
+        // A unit always summons units in their own faction
+        faction,
+        sourceUnit.info.image,
+        UnitType.AI,
+        sourceUnit.info.subtype,
+        1,
+        sourceUnit.unitProps
+      );
+    }
+
   }
 }
 window.setMMBDown = (isDown: boolean) => {
