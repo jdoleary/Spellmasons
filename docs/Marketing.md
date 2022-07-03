@@ -18,6 +18,7 @@
             - [Audio](https://www.youtube.com/watch?v=brNYbUlPrBk&list=PLIGLRMCk1Wi8eD4iDKL6bOPFFAKAINQbv&index=4)
                 - Record with music off, easy to add in later
                 - Sound effects are important, they direct the eyes of the viewer
+            - Logical order to the clips is good
         - https://twitter.com/berkesayil/status/1541899749938417667
             - Trailer is king
             - Trailer goal is to explain the game in a concise manner.
