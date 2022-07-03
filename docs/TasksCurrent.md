@@ -3,6 +3,7 @@
     - fix grey ellipse positioning under lobber, it's too low
     - Didn't show unit die in lava
     - Make combo wait for full completion so it doesn't change sprite to idle after resolving.
+        - This makes it so that when casting two spells in quick succession, the second attack animation gets overridden by returningToDefaultSprite
 - 2022.07.04
     - Standalone Server
     - Server should be able to send syncs that will wait to execute until turn changes so it doesn't interrupt animations and mess up the state when it syncs
@@ -21,6 +22,7 @@
     - Trailer
     - Marketing
 ## Focus
+- This game will live or die on the reviews, make sure (like rustlang) that everything is explained well.
 - Playtest with Colin
 - How to show targeting: https://photos.google.com/photo/AF1QipNRQYCeW85Yokd11e4YA9nyjhu7WD3qt1CAmvZh?
 - Standalone Server
@@ -30,7 +32,34 @@
         - In order to decouple, each should have imports only in one file that can be dependency injected.  So ALL pie stuff goes through the networking layer, all DOM stuff goes through the UI layer, all PIXI (including PixiUtils which is how a lot of the files interact with PIXI) stuff goes through the pixi layer.  This should make it easy to make a headless server or make tests that use a data-only underworld
 
 ## Bugs
-
+---
+- Dad Loch playtest
+    - Missing spellbook and empty toolbar icons
+    - Make health and mana go full when portal spawns so users aren't tempted to collect potions meaninglessly
+    - Multiplayer doesn't work when second player clicks "join game"
+    - Introduce card pickup
+    - explain manaburn better
+    - AI should avoid traps when moving
+    - allow changing path if you click again while moving to cancel accidental movement
+    - fix dissapearing units in lava
+    - dad assumed vampire bite would deal damage
+    - how to explain "+ cast range", units of measure no good.  Try percentage
+    - Casting decoy should support using end of range but it says "out of range"
+    - health bars should be same size regardless of zoom
+    - should "explode" be able to stack?
+        - Maybe rename to "burstable"?
+    - decoy should look like delapadated version of you
+    - decoy should pull agro even if farther away?
+    - bug: Movement spells should "await" finish before going on to cast other spells
+    - Flag things visually as modifiers (loch says explode is confusing)
+    - casting non-curses like heal or purify on self should show green, not red
+    - copy: priest "enemy" is confusing; say "vampires of different faction"
+    - pathfinding for vampires broken?
+    - health bars bigger and farther from their head
+    - death circle can be confusing when moved out of the way of the toolbar (add arrow?)
+    - Introduce mana cost changing of cards when used
+    - error: cannot animation a still image (explode-on-death.png)
+---
 - How to keep syncronize from interrupting an animation while it's running
 - Pathing is broken sometimes where a unit moves a little and then no further
 - enter, enter doesn't make "are you sure" prompt go away when there are no enemies.
@@ -41,6 +70,10 @@
 - Bug: (Note: this is probably fixed now) Goons spawned outside of map when summoner was stuffed in upper left corner of map
 ---
 ## Features
+- Cannot be combined
+    - Jump card- to jump over walls
+    - card to temporarily increase cast range
+- vortex card - to pull units in to a center location
 - Use summoner magic animation for units that are summoned
 - Standalone server
 - What if potions drop from slain enemies?
