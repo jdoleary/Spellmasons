@@ -1,8 +1,11 @@
 ## Schedule
 - Next
-    - fix grey ellipse positioning under lobber, it's too low
-    - Make combo wait for full completion so it doesn't change sprite to idle after resolving.
-        - This makes it so that when casting two spells in quick succession, the second attack animation gets overridden by returningToDefaultSprite
+    - Add custom margin to withinCameraBounds so that it supports text label
+    - **critical** Brad's game got stuck on Message Type 9 Couldn't pick an upgrade
+        - Develop a way of better logging where it's hanging
+    - Could use Promise.race and a timeout wrapper as a bandaid to make sure game never hangs and reports where it would have
+    - bug: Movement spells should "await" finish before going on to cast other spells
+    - Multiplayer doesn't work when second player clicks "join game"
 - 2022.07.04
     - Standalone Server
     - Server should be able to send syncs that will wait to execute until turn changes so it doesn't interrupt animations and mess up the state when it syncs
@@ -40,11 +43,9 @@
     - cloned self doesn't show magic animation when they cast
     - priest is attacking /dealing damage to him but he's not a vamp. how?
     - can't drag spell from book to toolbar if it's already in toolbar
-    - **critical** Brad's game got stuck on Message Type 9 Couldn't pick an upgrade
 ---
 - Dad Loch playtest
     - Make health and mana go full when portal spawns so users aren't tempted to collect potions meaninglessly
-    - Multiplayer doesn't work when second player clicks "join game"
     - Introduce card pickup
     - explain manaburn better
     - AI should avoid traps when moving
@@ -57,7 +58,6 @@
         - Maybe rename to "burstable"?
     - decoy should look like delapadated version of you
     - decoy should pull agro even if farther away?
-    - bug: Movement spells should "await" finish before going on to cast other spells
     - Flag things visually as modifiers (loch says explode is confusing)
     - casting non-curses like heal or purify on self should show green, not red
     - copy: priest "enemy" is confusing; say "vampires of different faction"
@@ -67,10 +67,13 @@
     - Introduce mana cost changing of cards when used
     - error: cannot animation a still image (explode-on-death.png)
 ---
+- Make combo wait for full completion so it doesn't change sprite to idle after resolving.
+    - This makes it so that when casting two spells in quick succession, the second attack animation gets overridden by returningToDefaultSprite
 - How to keep syncronize from interrupting an animation while it's running
+    - Hold on to syncronize messages until a good time to execute them
 - Pathing is broken sometimes where a unit moves a little and then no further
 - enter, enter doesn't make "are you sure" prompt go away when there are no enemies.
-- Priest "run away" ai is broken
+- Priest "run away" ai is broken / Archer pursue ai is not working well
 - wall: see abberant-wall.png
 - Bug: Portal spawns when you prediction kill yourself on test level
 - Bug: Should sync portals when syncing units if all enemies are dead
@@ -115,4 +118,4 @@ and 2nd client got `Cannot change character, player not found with id 8c502be8-6
 - Improve sending castCards with targeting based on id not position
 - Make an overlay screen that blocks interaction while waiting for sync
 - Unit movement desync occurred between clients when one client has CPU throttled, the non throttled client has the unit move much farther
----
+- fix grey ellipse positioning under lobber, it's too low
