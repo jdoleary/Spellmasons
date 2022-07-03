@@ -18,6 +18,11 @@ import { getEndOfRangeTarget, isOutOfRange } from '../PlayerUtils';
 
 let planningViewGraphics: PIXI.Graphics;
 let predictionGraphics: PIXI.Graphics;
+// labelText is used to add a label to planningView circles 
+// so that the player knows what the circle is referencing.
+let labelText = new PIXI.Text('', { fill: 'white' });
+labelText.anchor.x = 0.5;
+labelText.anchor.y = 0;
 export function initPlanningView() {
   planningViewGraphics = new PIXI.Graphics();
   window.planningViewGraphics = planningViewGraphics;
@@ -25,11 +30,13 @@ export function initPlanningView() {
   predictionGraphics = new PIXI.Graphics();
   window.predictionGraphics = predictionGraphics;
   containerUI.addChild(predictionGraphics);
+  containerUI.addChild(labelText);
 }
 let lastSpotCurrentPlayerTurnCircle: Vec2 = { x: 0, y: 0 };
 export function updatePlanningView() {
   if (planningViewGraphics) {
     planningViewGraphics.clear();
+    labelText.text = '';
     if (selectedPickup) {
       // Draw circle to show that pickup is selected
       drawCircleUnderTarget(selectedPickup, 1.0, planningViewGraphics);
@@ -79,13 +86,24 @@ export function updatePlanningView() {
               selectedUnit.y,
               selectedUnit.attackRange
             );
+            labelText.text = 'Attack Range';
           } else if (selectedUnit.unitSubType === UnitSubType.MELEE) {
             window.unitOverlayGraphics.drawCircle(
               selectedUnit.x,
               selectedUnit.y,
-              selectedUnit.staminaMax + selectedUnit.attackRange
+              selectedUnit.attackRange
             );
+            labelText.text = 'Attack Range';
+          } else if (selectedUnit.unitSubType === UnitSubType.PLAYER_CONTROLLED) {
+            window.unitOverlayGraphics.drawCircle(
+              selectedUnit.x,
+              selectedUnit.y,
+              selectedUnit.attackRange
+            );
+            labelText.text = 'Cast Range';
           }
+          labelText.x = selectedUnit.x;
+          labelText.y = selectedUnit.y + selectedUnit.attackRange;
           window.unitOverlayGraphics.endFill();
         }
       }

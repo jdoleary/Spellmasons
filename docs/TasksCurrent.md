@@ -21,6 +21,10 @@
     - Trailer
     - Marketing
 ## Focus
+- Loch feedback:
+    - Readd cast range circle when you select yoruseelf and **label it**
+    - Move card so people don't accidentally right click and move into an enemy.
+    - Show all the places you could move by sample size.
 - This game will live or die on the reviews, make sure (like rustlang) that everything is explained well.
 - Playtest with Colin
 - How to show targeting: https://photos.google.com/photo/AF1QipNRQYCeW85Yokd11e4YA9nyjhu7WD3qt1CAmvZh?
