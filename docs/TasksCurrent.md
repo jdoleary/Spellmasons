@@ -33,7 +33,6 @@
 ## Bugs
 ---
 - Dad Loch playtest
-    - Missing spellbook and empty toolbar icons
     - Make health and mana go full when portal spawns so users aren't tempted to collect potions meaninglessly
     - Multiplayer doesn't work when second player clicks "join game"
     - Introduce card pickup
