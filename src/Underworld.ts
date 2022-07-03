@@ -1467,6 +1467,12 @@ export default class Underworld {
   addPickupToArray(pickup: Pickup.IPickup) {
     this.pickups.push(pickup);
   }
+  // Returns true if the spell cast will hit a unit or pickup with the first card
+  hasInitialTarget(castLocation: Vec2): boolean {
+    const unitAtCastLocation = this.getUnitAt(castLocation, true);
+    const pickupAtCastLocation = this.getPickupAt(castLocation);
+    return !!unitAtCastLocation || !!pickupAtCastLocation;
+  }
   async castCards(
     casterCardUsage: Player.CardUsage,
     casterUnit: Unit.IUnit,
@@ -1573,10 +1579,10 @@ export default class Underworld {
               previousTargets.find((t) => t.x === targetedUnit.x && t.y === targetedUnit.y)
             ) {
               // Don't animate previous targets, they should be drawn full, immediately
-              drawTarget(targetedUnit);
+              drawTarget(targetedUnit, false);
             } else {
               // If a new target, animate it in
-              drawTarget(targetedUnit);
+              drawTarget(targetedUnit, false);
             }
           }
         }

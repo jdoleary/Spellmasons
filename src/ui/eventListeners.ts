@@ -21,7 +21,7 @@ import * as config from '../config';
 import { cameraAutoFollow, getCamera, moveCamera } from '../PixiUtils';
 import { toPolygon2LineSegments } from '../Polygon2';
 import { vec2ToOneDimentionIndex } from '../WaveFunctionCollapse';
-import { getCastTarget } from '../PlayerUtils';
+import { getEndOfRangeTarget, isOutOfRange } from '../PlayerUtils';
 
 export const keyDown = {
   w: false,
@@ -455,7 +455,7 @@ export function clickHandler(_e: MouseEvent) {
       // If the player casting is the current client player
       if (selfPlayer) {
         // cast the spell
-        const target = getCastTarget(selfPlayer, mousePos);
+        let target = mousePos;
         const cardIds = CardUI.getSelectedCardIds();
         const cards = CardUI.getSelectedCards();
 
@@ -484,14 +484,21 @@ export function clickHandler(_e: MouseEvent) {
           // Then cancel casting:
           return
         }
-        const castDistance = math.distance(selfPlayer.unit, target)
-        if (castDistance >= selfPlayer.unit.attackRange) {
-          floatingText({
-            coords: target,
-            text: 'Out of Range!'
-          })
-          // Cancel Casting
-          return;
+        if (isOutOfRange(selfPlayer, mousePos)) {
+          // If the mouse is out of range, but there is a target at end range,
+          // assume the user is trying to cast at the end of their range.
+          const endRangeTarget = getEndOfRangeTarget(selfPlayer, target);
+          if (window.underworld.hasInitialTarget(endRangeTarget)) {
+            target = endRangeTarget;
+          } else {
+            // If there is no target at end range, just show that they are trying to cast out of range
+            floatingText({
+              coords: target,
+              text: 'Out of Range!'
+            })
+            // Cancel Casting
+            return;
+          }
         }
 
         // Abort casting if there is no unitAtCastLocation

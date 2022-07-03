@@ -13,9 +13,8 @@ import type * as Pickup from '../Pickup';
 import { calculateCost, CardCost } from '../cards/cardUtils';
 import { closestLineSegmentIntersection } from '../collision/lineSegment';
 import { getBestRangedLOSTarget } from '../units/actions/rangedAction';
-import * as math from '../math';
 import * as colors from './colors';
-import { getCastTarget } from '../PlayerUtils';
+import { getEndOfRangeTarget, isOutOfRange } from '../PlayerUtils';
 
 let planningViewGraphics: PIXI.Graphics;
 let predictionGraphics: PIXI.Graphics;
@@ -135,6 +134,38 @@ export function updateManaCostUI(): CardCost {
   return { manaCost: 0, healthCost: 0 };
 }
 
+// Returns true if castCards has effect
+async function showCastCardsPrediction(target: Vec2, casterUnit: Unit.IUnit, cardIds: string[], outOfRange: boolean): Promise<boolean> {
+  if (window.player) {
+    // Note: setPredictionGraphicsLineStyle must be called before castCards (because castCards may use it
+    // to draw predictions) and after clearSpellEffectProjection, which clears predictionGraphics.
+    setPredictionGraphicsLineStyle(outOfRange ? 0xaaaaaa : colors.targetBlue);
+    const effectState = await window.underworld.castCards(
+      // Make a copy of cardUsageCounts for prediction so it can accurately
+      // calculate mana for multiple copies of one spell in one cast
+      JSON.parse(JSON.stringify(window.player.cardUsageCounts)),
+      casterUnit,
+      cardIds,
+      target,
+      true,
+      false
+    );
+    // Show units as targeted
+    for (let targetedUnit of effectState.targetedUnits) {
+      drawTarget(targetedUnit, outOfRange);
+    }
+    for (let unitStats of effectState.aggregator.unitDamage) {
+      // If a unit is currently alive and will take fatal damage,
+      // draw red circle.
+      if (unitStats.health > 0 && unitStats.damageTaken >= unitStats.health) {
+        predictionGraphics.lineStyle(4, 0xff0000, 1.0);
+        predictionGraphics.drawCircle(unitStats.x, unitStats.y, config.COLLISION_MESH_RADIUS);
+      }
+    }
+    return effectState.targetedUnits.length > 0 || effectState.targetedPickups.length > 0;
+  }
+  return false;
+}
 // predicts what will happen next turn
 // via enemy attention markers (showing if they will hurt you)
 // your health and mana bar (the stripes)
@@ -166,33 +197,21 @@ export async function runPredictions() {
       }
       const cardIds = CardUI.getSelectedCardIds();
       if (cardIds.length) {
-        const modifiedTarget = getCastTarget(window.player, target);
-        const isOutOfRange = Math.round(math.distance(modifiedTarget, casterUnit)) > casterUnit.attackRange;
-        // Note: setPredictionGraphicsLineStyle must be called before castCards (because castCards may use it
-        // to draw predictions) and after clearSpellEffectProjection, which clears predictionGraphics.
-        setPredictionGraphicsLineStyle(isOutOfRange ? 0xaaaaaa : colors.targetBlue);
-        const effectState = await window.underworld.castCards(
-          // Make a copy of cardUsageCounts for prediction so it can accurately
-          // calculate mana for multiple copies of one spell in one cast
-          JSON.parse(JSON.stringify(window.player.cardUsageCounts)),
-          casterUnit,
-          cardIds,
-          modifiedTarget,
-          true,
-          false
-        );
-        // Draw targeted units
-        setPredictionGraphicsLineStyle(isOutOfRange ? 0xaaaaaa : colors.targetBlue);
-        for (let targetedUnit of effectState.targetedUnits) {
-          drawTarget(targetedUnit);
-        }
-        for (let unitStats of effectState.aggregator.unitDamage) {
-          // If a unit is currently alive and will take fatal damage,
-          // draw red circle.
-          if (unitStats.health > 0 && unitStats.damageTaken >= unitStats.health) {
-            predictionGraphics.lineStyle(4, 0xff0000, 1.0);
-            predictionGraphics.drawCircle(unitStats.x, unitStats.y, config.COLLISION_MESH_RADIUS);
+        const outOfRange = isOutOfRange(window.player, target);
+        if (outOfRange) {
+          // If the target is out of range, try predicting at the point of the end of player's range
+          const endOfRangeTarget = getEndOfRangeTarget(window.player, target);
+          // Note, showCastCardsPredition's outOfRange is explicitly set to false because the endOfRangeTarget
+          // is by-definition, in range because it is the literal end of the player's range
+          const didHaveEffect = await showCastCardsPrediction(endOfRangeTarget, casterUnit, cardIds, false);
+          if (!didHaveEffect) {
+            // If the cast at the end of range had no effect then predict what would happen at the actual
+            // target so players can see what it will do if they do get close enough to cast
+            await showCastCardsPrediction(target, casterUnit, cardIds, outOfRange);
           }
+        } else {
+          // If they are within range, just predict like normal, easy peasy.
+          await showCastCardsPrediction(target, casterUnit, cardIds, outOfRange);
         }
       }
       // Send this client's intentions to the other clients so they can see what they're thinking
@@ -248,9 +267,12 @@ export function clearSpellEffectProjection() {
     window.radiusGraphics.clear();
     containerSpells.removeChildren();
     window.underworld.units.forEach(unit => {
-      if (unit.shaderUniforms.all_red) {
-        unit.shaderUniforms.all_red.alpha = 0;
+      if (unit.image) {
+        unit.image.sprite.tint = 0xFFFFFF;
       }
+      // if (unit.shaderUniforms.all_red) {
+      //   unit.shaderUniforms.all_red.alpha = 0;
+      // }
     })
   }
 }
@@ -268,11 +290,19 @@ export function drawPredictionCircle(target: Vec2, radius: number) {
 export function setPredictionGraphicsLineStyle(color: number) {
   predictionGraphics.lineStyle(3, color, 1.0)
 }
-export function drawTarget(unit: Unit.IUnit) {
+export function drawTarget(unit: Unit.IUnit, isOutOfRange: boolean) {
+  // Convert prediction unit's associated real unit
   const realUnit = window.underworld.units.find(u => u.id == unit.id);
-  if (realUnit && realUnit.shaderUniforms.all_red) {
-    realUnit.shaderUniforms.all_red.alpha = 0.5;
+  if (realUnit && realUnit.image) {
+    if (isOutOfRange) {
+      realUnit.image.sprite.tint = 0xaaaaaa;
+    } else {
+      realUnit.image.sprite.tint = 0xaa0000;
+    }
   }
+  // if (realUnit && realUnit.shaderUniforms.all_red) {
+  //   realUnit.shaderUniforms.all_red.alpha = 0.5;
+  // }
 }
 export function drawPredictionCircleFill(target: Vec2, radius: number) {
   window.radiusGraphics.lineStyle(1, 0x000000, 0.0);

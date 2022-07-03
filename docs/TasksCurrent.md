@@ -1,17 +1,5 @@
 ## Schedule
 - Next
-    - Out of range sometimes shows when it shouldn't
-        - Requirements:
-            - Hovering over out of range units still shows the units that would be targeted if the spell were in range (but in grey)
-            - A click near end range will still try to cast at end range for convenience
-                - units with a part of them in range will allow a click on any part of them to cast
-                - Idea, this could be done by not visualizing your range with a line and just allowing a click on a unit if their center is in range
-        - Note: A click should trigger the spell if the mouse is within the AOE range or near the end of range or within range
-            - If a click should trigger it, then show what it'll do in red highlights
-            - Otherwise show what it would do in grey
-        - Note: The reason this is hard is because of conflicting priorities:
-            - There is a scenario where it would need to show real targets and out of range targets simultaneously, say there's AOE and the pointer is out of range but within the AOE circle at end range,  Does it show what would happen if the center of the AOE was at the pointer or
-            does it show what would happen if the click cast it at end range (which it should as many players expect it to), or should it show both.
     - fix grey ellipse positioning under lobber, it's too low
     - Didn't show unit die in lava
 - 2022.07.04
