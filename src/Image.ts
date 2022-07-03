@@ -78,12 +78,8 @@ export function changeSprite(image: IImageAnimated | undefined, imagePath: strin
     console.warn('Cannot changeSprite, no image object to change to', imagePath)
     return;
   }
-  if (image.sprite.imagePath == imagePath && image.sprite.parent == container) {
-    // Do not change if imagePath would be unchanged and
-    // container would be unchanged 
-    // Return undefined because sprite is unchanged
-    return undefined;
-  }
+  // Note: This resolver logic MUST BE executed before early returns (with the exception of the image
+  // not existing).  If it is not, the latest resolver may never be assigned and the game could hang.
   // Since the image is changing, resolve whatever was waiting for it to complete.
   if (image.resolver) {
     image.resolver();
@@ -91,6 +87,13 @@ export function changeSprite(image: IImageAnimated | undefined, imagePath: strin
   // Set resolver so that even if the image changes, the game wont deadlock, waiting for a 
   // never-to-be-completed animation.  Defaults to noop if not provided
   image.resolver = resolver;
+
+  if (image.sprite.imagePath == imagePath && image.sprite.parent == container) {
+    // Do not change if imagePath would be unchanged and
+    // container would be unchanged 
+    // Return undefined because sprite is unchanged
+    return undefined;
+  }
   const tex = getPixiTextureAnimated(imagePath);
   if (tex) {
     const sprite = image.sprite;
