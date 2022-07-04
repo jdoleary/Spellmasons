@@ -86,7 +86,7 @@ cameraAutoFollow(true);
 // Vec2 that is within the bounds of the camera so that it will 
 // surely be seen by a user even if they have panned away.
 // Used for attention markers and pings
-export function withinCameraBounds(position: Vec2): Vec2 {
+export function withinCameraBounds(position: Vec2, marginHoriz?: number): Vec2 {
   const cardHoldersRect = elCardHolders.getBoundingClientRect();
   const pixiHolderRect = elPIXIHolder.getBoundingClientRect();
   // cardHand has padding of 300px to allow for a far right drop zone,
@@ -95,7 +95,7 @@ export function withinCameraBounds(position: Vec2): Vec2 {
   const cardHandPaddingRight = 300;
   const { x: camX, y: camY, zoom } = getCamera();
   // Determine bounds
-  const margin = 30 / zoom;
+  const margin = (marginHoriz !== undefined ? marginHoriz : 30) / zoom;
   const marginTop = 45 / zoom;
   const marginBottom = 45 / zoom;
   const left = margin + camX / zoom;

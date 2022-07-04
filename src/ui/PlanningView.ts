@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 
 import { allUnits } from '../units';
-import { containerSpells, containerUI } from '../PixiUtils';
+import { containerSpells, containerUI, withinCameraBounds } from '../PixiUtils';
 import { containerPlanningView } from '../PixiUtils';
 import { Faction, UnitSubType, UnitType } from '../commonTypes';
 import { clone, equal, Vec2 } from '../Vec';
@@ -102,8 +102,9 @@ export function updatePlanningView() {
             );
             labelText.text = 'Cast Range';
           }
-          labelText.x = selectedUnit.x;
-          labelText.y = selectedUnit.y + selectedUnit.attackRange;
+          const labelPosition = withinCameraBounds({ x: selectedUnit.x, y: selectedUnit.y + selectedUnit.attackRange }, labelText.width / 2);
+          labelText.x = labelPosition.x;
+          labelText.y = labelPosition.y;
           window.unitOverlayGraphics.endFill();
         }
       }
