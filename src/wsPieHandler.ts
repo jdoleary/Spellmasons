@@ -58,6 +58,7 @@ export function onData(d: OnDataArgs) {
         // after the full gamestate sync
         onDataQueueContainer.queue = [d];
         handleLoadGameState(payload);
+        setView(View.Game);
       } else {
         console.log('Ignoring INIT_GAME_STATE because underworld has already been initialized.');
       }
@@ -123,7 +124,7 @@ export function processNextInQueueIfReady() {
     messageQueue.processNextInQueue(onDataQueueContainer, handleOnDataMessage);
   }
 }
-function tryStartGame() {
+async function tryStartGame() {
   console.log('Start Game: Attempt to start the game')
   const currentClientIsHost = window.hostClientId == window.clientId;
   // Starts a new game if THIS client is the host, and 
@@ -136,10 +137,10 @@ function tryStartGame() {
       // Mark the underworld as "ready"
       readyState.set('underworld', true);
       setView(View.Game);
-      window.underworld.initLevel(0);
+      const levelData = await window.underworld.initLevel(0);
       console.log('Host: Send all clients game state for initial load');
       clients.forEach(clientId => {
-        hostGiveClientGameStateForInitialLoad(clientId);
+        hostGiveClientGameStateForInitialLoad(clientId, levelData);
       });
     } else {
       console.log('Start Game: Won\'t, game has already been started');
@@ -257,14 +258,12 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       await window.underworld.initializeTurnPhase(phase);
       break;
     case MESSAGE_TYPES.CREATE_LEVEL:
-      document.body.classList.toggle('loading', false);
       const { level } = payload as {
         level: LevelData
       }
       console.log('sync: Syncing level');
       if (window.underworld) {
         window.underworld.createLevel(level);
-        setView(View.Game);
       } else {
         console.error('Cannot sync level, no window.underworld exists')
       }
@@ -423,17 +422,17 @@ async function handleSpell(caster: Player.IPlayer, payload: any) {
 export function getClients(): string[] {
   return clients;
 }
-export function hostGiveClientGameStateForInitialLoad(clientId: string) {
+export function hostGiveClientGameStateForInitialLoad(clientId: string, level: LevelData = window.lastLevelCreated) {
   // Only the host should be sending INIT_GAME_STATE messages
   // because the host has the canonical game state
   if (window.hostClientId === window.clientId) {
     // Do not send this message to self
     if (window.clientId !== clientId) {
-      console.log(`Host: Send ${clientId} game state for initial load`);
-      if (window.lastLevelCreated) {
+      if (level) {
+        console.log(`Host: Send ${clientId} game state for initial load`);
         window.pie.sendData({
           type: MESSAGE_TYPES.INIT_GAME_STATE,
-          level: window.lastLevelCreated,
+          level,
           underworld: window.underworld.serializeForSyncronize(),
           phase: window.underworld.turn_phase,
           units: window.underworld.units.map(Unit.serialize),
@@ -443,7 +442,7 @@ export function hostGiveClientGameStateForInitialLoad(clientId: string) {
           whisperClientIds: [clientId],
         });
       } else {
-        console.error('Could not send INIT_GAME_STATE, window.lastLevelCreated is undefined');
+        console.error('Could not send INIT_GAME_STATE, levelData is undefined');
       }
     }
   }
