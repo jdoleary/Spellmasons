@@ -215,7 +215,7 @@ declare global {
     playerThoughts: { [clientId: string]: { target: Vec2, cardIds: string[] } };
     // A list of units and pickups and an endPosition that they are moved to via a "force",
     // like a push or pull or explosion.
-    forceMove: { pushedObject: Circle, velocity: Vec2, velocity_falloff: number }[];
+    forceMove: { pushedObject: Circle, velocity: Vec2, velocity_falloff: number, resolve: () => void }[];
     // Middle Mouse Button Down
     // Note: do NOT set directly, use setMMBDown instead
     readonly MMBDown: boolean;

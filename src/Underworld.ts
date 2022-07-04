@@ -163,6 +163,7 @@ export default class Underworld {
           // This works even if collisions prevent the unit from moving since
           // distance is modified even if the unit doesn't move each loop
           if (Vec.magnitude(forceMoveInst.velocity) <= 0.1) {
+            forceMoveInst.resolve();
             window.forceMove.splice(i, 1);
           }
         }

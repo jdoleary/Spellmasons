@@ -18,27 +18,31 @@ const spell: Spell = {
 Pushes the target(s) away from the caster 
     `,
     effect: async (state, prediction) => {
+      let promises = [];
       for (let unit of state.targetedUnits) {
         // Push away from caster if unit was direct targeted by cast, otherwise push away from the
         // cast location (as in the case of AOE, push)
         const awayFrom = distance(state.castLocation, unit) < config.COLLISION_MESH_RADIUS ? state.casterUnit : state.castLocation;
-        forcePush(unit, awayFrom, prediction);
+        promises.push(forcePush(unit, awayFrom, prediction));
       }
       for (let pickup of state.targetedPickups) {
         // Push away from caster if unit was direct targeted by cast, otherwise push away from the
         // cast location (as in the case of AOE, push)
         const awayFrom = distance(state.castLocation, pickup) < config.COLLISION_MESH_RADIUS ? state.casterUnit : state.castLocation;
-        forcePush(pickup, awayFrom, prediction);
+        promises.push(forcePush(pickup, awayFrom, prediction));
       }
+      await Promise.all(promises);
       return state;
     },
   },
 };
-export function forcePush(pushedObject: Circle, awayFrom: Vec2, prediction: boolean): Vec2 {
+export async function forcePush(pushedObject: Circle, awayFrom: Vec2, prediction: boolean): Promise<Vec2> {
   const velocity = similarTriangles(pushedObject.x - awayFrom.x, pushedObject.y - awayFrom.y, distance(pushedObject, awayFrom), pushDistance);
   if (!prediction) {
     const velocity_falloff = 0.93;
-    window.forceMove.push({ pushedObject, velocity, velocity_falloff });
+    await new Promise<void>((resolve) => {
+      window.forceMove.push({ pushedObject, velocity, velocity_falloff, resolve });
+    });
   }
   return velocity;
 

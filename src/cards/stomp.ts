@@ -18,20 +18,18 @@ const spell: Spell = {
       // Draw visual circle for prediction
       drawPredictionCircle(state.casterUnit, range);
       // Push units away
-      window.underworld.getUnitsWithinDistanceOfTarget(
+      const unitPushPromises = window.underworld.getUnitsWithinDistanceOfTarget(
         state.casterUnit,
         range,
         prediction
-      ).forEach(unit => forcePush(unit, state.casterUnit, prediction));
+      ).map(unit => forcePush(unit, state.casterUnit, prediction));
 
-      window.underworld.getPickupsWithinDistanceOfTarget(
+      // Push pickups away
+      const pickupPushPromises = window.underworld.getPickupsWithinDistanceOfTarget(
         state.casterUnit,
         range
-      ).forEach(p => {
-        // Push pickups away
-        forcePush(p, state.casterUnit, prediction);
-      })
-
+      ).map(p => forcePush(p, state.casterUnit, prediction))
+      await Promise.all([...unitPushPromises, ...pickupPushPromises]);
       return state;
     },
   },

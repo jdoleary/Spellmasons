@@ -7,7 +7,6 @@
     - **critical** Brad's game got stuck on Message Type 9 Couldn't pick an upgrade
         - Develop a way of better logging where it's hanging
     - Could use Promise.race and a timeout wrapper as a bandaid to make sure game never hangs and reports where it would have
-    - bug: Movement spells should "await" finish before going on to cast other spells
     - Multiplayer doesn't work when second player clicks "join game"
 - 2022.07.04
     - Standalone Server
@@ -31,6 +30,7 @@
     - Readd cast range circle when you select yoruseelf and **label it**
     - Move card so people don't accidentally right click and move into an enemy.
     - Show all the places you could move by sample size.
+- Make predictions consider the effect of forceMove, like `push, AOE` should show the prediction circle in the end location of the push
 - This game will live or die on the reviews, make sure (like rustlang) that everything is explained well.
 - Playtest with Colin
 - How to show targeting: https://photos.google.com/photo/AF1QipNRQYCeW85Yokd11e4YA9nyjhu7WD3qt1CAmvZh?

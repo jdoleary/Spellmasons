@@ -17,21 +17,25 @@ const spell: Spell = {
 Pulls the target(s) towards the caster 
     `,
     effect: async (state, prediction) => {
+      let promises = [];
       for (let unit of state.targetedUnits) {
-        pull(unit, state.casterUnit, prediction);
+        promises.push(pull(unit, state.casterUnit, prediction));
       }
       for (let pickup of state.targetedPickups) {
-        pull(pickup, state.casterUnit, prediction);
+        promises.push(pull(pickup, state.casterUnit, prediction));
       }
+      await Promise.all(promises);
       return state;
     },
   },
 };
-export function pull(pushedObject: Circle, towards: Vec2, prediction: boolean): Vec2 {
+export async function pull(pushedObject: Circle, towards: Vec2, prediction: boolean): Promise<Vec2> {
   const velocity = similarTriangles(pushedObject.x - towards.x, pushedObject.y - towards.y, distance(pushedObject, towards), -pullDistance);
   if (!prediction) {
     const velocity_falloff = 0.93;
-    window.forceMove.push({ pushedObject, velocity, velocity_falloff });
+    await new Promise<void>((resolve) => {
+      window.forceMove.push({ pushedObject, velocity, velocity_falloff, resolve });
+    });
   }
   return velocity;
 
