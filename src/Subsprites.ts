@@ -26,7 +26,7 @@ const Subsprites: ISubsprites = {
       y: 1
     }
   },
-  disconnected: {
+  'disconnected.png': {
     imageName: 'disconnected.png',
     alpha: 1.0,
     anchor: {

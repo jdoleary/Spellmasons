@@ -207,9 +207,9 @@ export function load(player: IPlayerSerialized) {
 export function setClientConnected(player: IPlayer, connected: boolean) {
   player.clientConnected = connected;
   if (connected) {
-    Image.removeSubSprite(player.unit.image, 'disconnected');
+    Image.removeSubSprite(player.unit.image, 'disconnected.png');
   } else {
-    Image.addSubSprite(player.unit.image, 'disconnected');
+    Image.addSubSprite(player.unit.image, 'disconnected.png');
     // If they disconnect, end their turn
     window.underworld.endPlayerTurn(player.clientId);
   }
