@@ -1,4 +1,6 @@
 # Notes
+Current server url: https://play.spellmasons.com/?pieUrl=wss%3A%2F%2Fwebsocketpie-3oyno.ondigitalocean.app%2F&game=abc
+---
 Requirements for animation management
 - A callback can be triggered at a key Moment in an animation, for example: to launch a projectile
 - The game must be able to wait for an animation to complete before moving on
