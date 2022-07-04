@@ -16,7 +16,10 @@ import { getBestRangedLOSTarget } from '../units/actions/rangedAction';
 import * as colors from './colors';
 import { getEndOfRangeTarget, isOutOfRange } from '../PlayerUtils';
 
+// Graphics for rendering above board and walls but beneath units and doodads,
+// see containerPlanningView for exact render order.
 let planningViewGraphics: PIXI.Graphics;
+// Graphics for drawing the spell effects during the dry run phase
 let predictionGraphics: PIXI.Graphics;
 // labelText is used to add a label to planningView circles 
 // so that the player knows what the circle is referencing.
