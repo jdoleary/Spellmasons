@@ -1,6 +1,6 @@
 ## Schedule
 - Next
-    - There should be only once instance of setView(View.Game)
+    - Multiplayer something is very wrong with sync units, player 2 keeps getting replaced with a grunt
     - The great refactor
         - Group topics in folders: audio, graphics, gamelogic, etc
             - cleanly separated

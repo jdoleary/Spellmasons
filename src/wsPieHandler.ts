@@ -58,7 +58,6 @@ export function onData(d: OnDataArgs) {
         // after the full gamestate sync
         onDataQueueContainer.queue = [d];
         handleLoadGameState(payload);
-        setView(View.Game);
       } else {
         console.log('Ignoring INIT_GAME_STATE because underworld has already been initialized.');
       }
@@ -136,7 +135,6 @@ async function tryStartGame() {
       window.underworld = new Underworld(Math.random().toString());
       // Mark the underworld as "ready"
       readyState.set('underworld', true);
-      setView(View.Game);
       const levelData = await window.underworld.initLevel(0);
       console.log('Host: Send all clients game state for initial load');
       clients.forEach(clientId => {
@@ -376,14 +374,6 @@ function handleLoadGameState(payload: {
 
   window.underworld.syncTurnMessage();
 
-  // If the client is recieving the game state because
-  // they WERE in a game but got disconnected, automatically
-  // set the view back to View.Game once now that the gamestate
-  // has been received
-  if (window.view == View.Disconnected) {
-    setView(View.Game);
-  }
-
 }
 async function handleSpell(caster: Player.IPlayer, payload: any) {
   if (typeof payload.x !== 'number' || typeof payload.y !== 'number') {
@@ -504,7 +494,6 @@ window.load = async (title) => {
       units,
       players
     });
-    setView(View.Game);
 
   } else {
     console.error('no save game found with title', title);
