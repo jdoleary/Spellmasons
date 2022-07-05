@@ -154,8 +154,6 @@ declare global {
     devDebugGraphics: PIXI.Graphics;
     // Shows radiuses for spells
     radiusGraphics: PIXI.Graphics;
-    // Graphics for drawing the player visible path
-    walkPathGraphics: PIXI.Graphics;
     // Graphics to show what other players are thinking
     thinkingPlayerGraphics: PIXI.Graphics;
     // Graphics for drawing unit health and mana bars
@@ -221,6 +219,11 @@ declare global {
     readonly MMBDown: boolean;
     // Used to set MMBDown so it will affect CSS too
     setMMBDown: (isDown: boolean) => void;
+    // Right Mouse Button Down
+    // Note: do NOT set directly, use setRMBDown instead
+    readonly RMBDown: boolean;
+    // Used to set Right mouse button down
+    setRMBDown: (isDown: boolean) => void;
     // Allows manually overriding the underworld seed via the JS console
     seedOverride: string | undefined;
     // devMode: auto picks character and upgrades
@@ -258,6 +261,11 @@ window.setMMBDown = (isDown: boolean) => {
   // @ts-expect-error Override "readyonly" error.  This is the ONLY place that MMBDown should be mutated.
   window.MMBDown = isDown;
   document.body.classList.toggle('draggingCamera', window.MMBDown);
+}
+window.setRMBDown = (isDown: boolean) => {
+  // I want it to show a compile error anywhere else
+  // @ts-expect-error Override "readyonly" error.  This is the ONLY place that RMBDown should be mutated.
+  window.RMBDown = isDown;
 }
 window.skipTutorial = () => {
   storage.set(SKIP_TUTORIAL, YES);

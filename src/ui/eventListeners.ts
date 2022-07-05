@@ -1,6 +1,6 @@
 import { MESSAGE_TYPES } from '../MessageTypes';
 import * as CardUI from '../CardUI';
-import type * as Unit from '../Unit';
+import * as Unit from '../Unit';
 import * as Vec from '../Vec';
 import floatingText from '../FloatingText';
 import {
@@ -12,10 +12,6 @@ import {
   updateTooltipSelection,
 } from './PlanningView';
 import { toggleMenu, View } from '../views';
-import { pointsEveryXDistanceAlongPath } from '../Pathfinding';
-import * as colors from './colors';
-import type { Vec2 } from '../Vec';
-import { distance, getCoordsAtDistanceTowardsTarget } from '../math';
 import * as config from '../config';
 import { cameraAutoFollow, getCamera, moveCamera } from '../PixiUtils';
 import { toPolygon2LineSegments } from '../Polygon2';
@@ -28,10 +24,6 @@ export const keyDown = {
   s: false,
   d: false
 }
-// a UnitPath that is used to display the player's "walk rope"
-// which shows the path that they will travel if they were
-// to move towards the mouse cursor
-let walkRopePath: Unit.UnitPath | undefined = undefined;
 
 window.addEventListener('keydown', nonUnderworldKeydownListener);
 function nonUnderworldKeydownListener(event: KeyboardEvent) {
@@ -121,7 +113,6 @@ export function keydownListener(event: KeyboardEvent) {
 
   switch (event.code) {
     case 'Escape':
-      window.walkPathGraphics.clear();
       const thereWasTooltipActive = clearTooltipSelection();
       const thereWereCardsSelected = CardUI.areAnyCardsSelected();
       CardUI.clearSelectedCards();
@@ -214,10 +205,41 @@ export function mouseMove(e?: MouseEvent) {
     cameraAutoFollow(false);
     moveCamera(-movementX / zoom, -movementY / zoom);
   }
+  const mouseTarget = window.underworld.getMousePos();
+
+  // RMB
+  if (window.player) {
+
+    if (window.RMBDown) {
+      if (window.underworld.isMyTurn()) {
+        // If player is able to move
+        if (window.player.unit.stamina > 0) {
+          // TODO: Notify multiplayer clients
+          // window.pie.sendData({
+          //   type: MESSAGE_TYPES.MOVE_PLAYER,
+          //   ...moveTarget,
+          // });
+          Unit.directMove(window.player.unit, mouseTarget)
+        } else {
+          floatingText({
+            coords: mouseTarget,
+            text: 'Out of stamina',
+          });
+          // This is a hack to prevent it from continuing to notify out of stamina over and over.
+          // If RMBDown is ever used for more than hold to move, this should be replaced with a better solution.
+          window.setRMBDown(false);
+        }
+      } else {
+        floatingText({
+          coords: mouseTarget,
+          text: 'You must wait for your turn\nto move',
+        });
+      }
+    }
+  }
 
   runPredictions();
 
-  const mouseTarget = window.underworld.getMousePos();
   // TODO: optimize this function by not rerunning parts if mouse & player.unit position
   // havent changed since last call.
 
@@ -272,145 +294,32 @@ export function mouseMove(e?: MouseEvent) {
 
   }
 }
-function drawWalkRope(target: Vec2) {
-  if (!window.player) {
-    return
-  }
-  //
-  // Show the player's current walk path (walk rope)
-  //
-  // The distance that the player can cover with their current stamina
-  // is drawn in the stamina color.
-  // There are dots dilineating how far the unit can move each turn.
-  //
-  // Show walk path
-  window.walkPathGraphics.clear();
-  walkRopePath = window.underworld.calculatePath(walkRopePath, Vec.round(window.player.unit), Vec.round(target));
-  const { points: currentPlayerPath } = walkRopePath;
-  if (currentPlayerPath.length) {
-    const turnStopPoints = pointsEveryXDistanceAlongPath(window.player.unit, currentPlayerPath, window.player.unit.staminaMax, window.player.unit.staminaMax - window.player.unit.stamina);
-    window.walkPathGraphics.lineStyle(4, 0xffffff, 1.0);
-    window.walkPathGraphics.moveTo(window.player.unit.x, window.player.unit.y);
-    let lastPoint: Vec2 = window.player.unit;
-    let distanceCovered = 0;
-    const distanceLeftToMove = window.player.unit.stamina;
-    for (let i = 0; i < currentPlayerPath.length; i++) {
-      const point = currentPlayerPath[i];
-      if (point) {
-        const thisLineDistance = distance(lastPoint, point);
-        if (distanceCovered > distanceLeftToMove) {
-          window.walkPathGraphics.lineStyle(4, 0xffffff, 1.0);
-          window.walkPathGraphics.lineTo(point.x, point.y);
-        } else {
-          window.walkPathGraphics.lineStyle(4, colors.stamina, 1.0);
-          if (distanceCovered + thisLineDistance > distanceLeftToMove) {
-            // Draw up to the firstStop with the stamina color
-            const pointAtWhichUnitOutOfStamina = getCoordsAtDistanceTowardsTarget(lastPoint, point, distanceLeftToMove - distanceCovered);
-            window.walkPathGraphics.lineTo(pointAtWhichUnitOutOfStamina.x, pointAtWhichUnitOutOfStamina.y);
-            window.walkPathGraphics.lineStyle(4, 0xffffff, 1.0);
-            window.walkPathGraphics.lineTo(point.x, point.y);
-          } else {
-            window.walkPathGraphics.lineTo(point.x, point.y);
-          }
-        }
-        distanceCovered += distance(lastPoint, point);
-        lastPoint = point;
-      }
-    }
-
-    // Draw the points along the path at which the unit will stop on each turn
-    for (let i = 0; i < turnStopPoints.length; i++) {
-      if (i == 0 && distanceLeftToMove > 0) {
-        window.walkPathGraphics.lineStyle(4, colors.stamina, 1.0);
-      } else {
-        window.walkPathGraphics.lineStyle(4, 0xffffff, 1.0);
-      }
-      const point = turnStopPoints[i];
-      if (point) {
-        window.walkPathGraphics.drawCircle(point.x, point.y, 3);
-      }
-    }
-    if (turnStopPoints.length == 0 && distanceLeftToMove > 0) {
-      window.walkPathGraphics.lineStyle(4, colors.stamina, 1.0);
-    } else {
-      window.walkPathGraphics.lineStyle(4, 0xffffff, 1.0);
-    }
-    // Draw a stop circle at the end
-    const lastPointInPath = currentPlayerPath[currentPlayerPath.length - 1]
-    if (lastPointInPath) {
-      window.walkPathGraphics.drawCircle(lastPointInPath.x, lastPointInPath.y, 3);
-    }
-  }
-
-}
-// Initialize to values so that it's not undefined, and values that will not trigger
-// a double click...
-let lastRightClick: {
-  position: Vec2,
-  time: number
-} = { position: { x: -1000, y: -1000 }, time: -1000 };
-// Handle right click on game board
 export function contextmenuHandler(e: MouseEvent) {
-  // Only handle clicks when viewing the Game
-  if (window.view !== View.Game) {
-    return;
-  }
-  const mouseTarget = window.underworld.getMousePos();
-  // A double click is only detected if it is within the millisecond time threshold of the last click
-  // and within the distance of the last right click.
-  const isDoubleClick = Date.now() - lastRightClick.time <= config.RIGHT_CLICK_DOUBLE_MS_THRESHOLD &&
-    distance(lastRightClick.position, mouseTarget) <= config.RIGHT_CLICK_DOUBLE_DISTANCE_THRESHOLD;
-  lastRightClick = { position: mouseTarget, time: Date.now() };
+  // Prevent opening context menu on right click
   e.preventDefault();
   e.stopPropagation();
-  // Single right click draws walk rope
-  drawWalkRope(mouseTarget);
-  // Double Right click to move
-  if (isDoubleClick) {
-    // Set the moveTarget to the lastRightClick so that the player
-    // moves to the location that the path shows
-    const moveTarget = lastRightClick.position;
-
-    if (window.underworld.isMyTurn()) {
-      // If player is able to move
-      if (window.player) {
-        if (window.player.unit.stamina > 0) {
-          window.walkPathGraphics.clear();
-          window.pie.sendData({
-            type: MESSAGE_TYPES.MOVE_PLAYER,
-            ...moveTarget,
-          });
-        } else {
-          floatingText({
-            coords: mouseTarget,
-            text: 'You are out of stamina.\nEnd your turn to get more.',
-          });
-        }
-      } else {
-        console.error('Cannot move, window.player = undefined');
-      }
-    } else {
-      floatingText({
-        coords: mouseTarget,
-        text: 'You must wait for your turn\nto move',
-      });
-    }
-  }
-
-
-  return false;
 }
 export function mouseDownHandler(e: MouseEvent) {
   if (e.button == 1) {
     // setMMBDown so camera will be dragged around
     window.setMMBDown(true);
     e.preventDefault();
+  } else if (e.button == 2) {
+    window.setRMBDown(true);
+    e.preventDefault();
   }
 }
-export function mouseUpHandler(_e: MouseEvent) {
+export function mouseUpHandler(e: MouseEvent) {
   // Turn MMBDown off for any click to protect against it getting stuck
   // as flagged "down"
   window.setMMBDown(false);
+  if (window.player) {
+    window.player.unit.path = undefined;
+  }
+  if (e.button == 2) {
+    window.setRMBDown(false);
+    e.preventDefault();
+  }
 }
 export function onWindowBlur() {
   // Turn off keyboard and mouse flags when the document loses focus
@@ -429,8 +338,6 @@ export function clickHandler(_e: MouseEvent) {
   if (!window.underworld) {
     return;
   }
-  // Left click clears walk rope
-  window.walkPathGraphics.clear();
   const mousePos = window.underworld.getMousePos();
   if (isOutOfBounds(mousePos)) {
     // Disallow click out of bounds

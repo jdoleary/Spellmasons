@@ -9,7 +9,7 @@ export const RIGHT_CLICK_DOUBLE_DISTANCE_THRESHOLD = 30;
 
 export const PLAYER_BASE_HEALTH = 10;
 export const PLAYER_BASE_ATTACK_RANGE = 330;
-export const UNIT_MOVE_SPEED = 0.25;
+export const UNIT_MOVE_SPEED = 0.15;
 export const COLLISION_MESH_RADIUS = 32;
 export const HEALTH_BAR_UI_HEIGHT = 42;
 export const LOB_PROJECTILE_SPEED = 600; // in millis

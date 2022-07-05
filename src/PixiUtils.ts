@@ -55,8 +55,6 @@ window.debugGraphics = new PIXI.Graphics();
 containerUI.addChild(window.debugGraphics);
 window.unitOverlayGraphics = new PIXI.Graphics();
 containerUI.addChild(window.unitOverlayGraphics);
-window.walkPathGraphics = new PIXI.Graphics();
-containerUI.addChild(window.walkPathGraphics);
 window.thinkingPlayerGraphics = new PIXI.Graphics();
 window.radiusGraphics = new PIXI.Graphics();
 const colorMatrix = new PIXI.filters.AlphaFilter();
