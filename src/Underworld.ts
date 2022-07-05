@@ -1639,6 +1639,10 @@ export default class Underworld {
           Pickup.create({ pos: portalSpawnLocation, pickupSource: portalPickup });
           // Give all player units max stamina for convenience:
           playerUnit.stamina = playerUnit.staminaMax;
+          // Give all players max health and mana (it will be reset anyway when they are reset for the next level
+          // but this disswades them from going around to pickup potions)
+          playerUnit.health = playerUnit.healthMax;
+          playerUnit.mana = playerUnit.manaMax;
 
         }
       } else {
