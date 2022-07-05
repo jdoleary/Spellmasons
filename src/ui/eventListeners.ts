@@ -176,11 +176,6 @@ export function keyupListener(event: KeyboardEvent) {
     return;
   }
   switch (event.code) {
-    case 'KeyF':
-      CardUI.toggleInspectMode(false);
-      // Clear walk path on inspect mode off
-      window.walkPathGraphics.clear();
-      break;
     // Camera movement
     case 'KeyW':
       keyDown.w = false;

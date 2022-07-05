@@ -64,28 +64,35 @@ elCardHand.addEventListener('drop', ev => {
 })
 // Displays a full card with info on inspect-mode + hover of card
 const elCardInspect = document.getElementById('card-inspect');
-if (elCardHolders) {
-  // Show full card on hover
-  elCardHolders.addEventListener('mousemove', (e) => {
-    if (e.target instanceof HTMLElement) {
-      const element = e.target?.closest('.card');
-      const cardId =
-        element instanceof HTMLElement ? element.dataset.cardId || '' : '';
-      if (cardId) {
-        const card = Cards.allCards[cardId];
-        if (card) {
-          showFullCard(card);
-        } else {
-          console.error(`Could not find source card with id "${cardId}"`);
+addCardInspectHandlers(elCardHand);
+addCardInspectHandlers(elInvContent);
+function addCardInspectHandlers(cardContainerElement: HTMLElement) {
+  if (cardContainerElement) {
+    // Show full card on hover
+    cardContainerElement.addEventListener('mousemove', (e) => {
+      if (e.target instanceof HTMLElement) {
+        const element = e.target?.closest('.card');
+        const cardId =
+          element instanceof HTMLElement ? element.dataset.cardId || '' : '';
+        if (cardId) {
+          const card = Cards.allCards[cardId];
+          if (card) {
+            showFullCard(card);
+          } else {
+            console.error(`Could not find source card with id "${cardId}"`);
+          }
         }
       }
-    }
-  });
-  elCardHolders.addEventListener('mouseleave', (e) => {
-    clearCurrentlyShownCard();
-  });
+    });
+    cardContainerElement.addEventListener('mouseleave', (e) => {
+      clearCurrentlyShownCard();
+    });
+  } else {
+    console.error('Card container element is undefined, cannot add card inspect handlers.')
+  }
 }
 export function clearCurrentlyShownCard() {
+  console.log('clear currently shown card jteset')
   // Clear cardInspect when the mouse leaves elCardHolders so that the large card
   // doesn't stay in the center of the screen
   if (elCardInspect) {
@@ -417,14 +424,6 @@ export function getSelectedCards(): Cards.ICard[] {
   return Cards.getCardsFromIds(cardIds);
 }
 
-// Currently used only for reading spell details on hover
-export function toggleInspectMode(active: boolean) {
-  document.body.classList.toggle('inspect-mode', active);
-  elSelectedCards && elSelectedCards.classList.toggle('hide', active);
-  if (!active) {
-    clearCurrentlyShownCard();
-  }
-}
 export function clearSelectedCards() {
   // Deselect all selected cards
   cardsSelected = []

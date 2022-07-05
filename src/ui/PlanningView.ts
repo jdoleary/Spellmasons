@@ -115,10 +115,6 @@ export function updatePlanningView() {
     // Draw a circle under the feet of the player whos current turn it is
     if (window.underworld) {
       // Update tooltip for whatever is being hovered
-      if (document.body.classList.contains('inspect-mode')) {
-        const mousePos = window.underworld.getMousePos();
-        updateTooltipSelection(mousePos);
-      }
       updateTooltipContent();
 
       if (window.player) {

@@ -146,39 +146,11 @@ body.view-Game.showUpgrades #upgrade-picker {
   width: 100%;
 }
 
-body.inspect-mode {
-  cursor: help;
-}
-
-#inspect-mode-indicator {
-  color: white;
-  pointer-events: none;
-}
-
-#inspect-mode-indicator .hotkey-badge-holder {
-  bottom: -28px;
-}
-
-body.inspect-mode #inspect-mode-indicator .hotkey-badge-holder {
-  bottom: -29px;
-}
-
-body.inspect-mode #inspect-mode-indicator .hotkey-badge {
-  /* Simulate button being depressed */
-  box-shadow: 0 -19px 1px rgba(0, 0, 0, .2) inset, 0 2px 0 0 rgba(255, 255, 255, .7) inset
-}
-
-body.inspect-mode #inspect-mode-indicator {
-  color: #d5b356;
-}
-
-body.inspect-mode #card-inspect {
+body #card-inspect {
   display: flex;
 }
 
 #card-inspect {
-  /*Hidden until inspect-mode reveals it*/
-  display: none;
   position: fixed;
   top: 0;
   left: 0;
@@ -190,6 +162,10 @@ body.inspect-mode #card-inspect {
   flex-direction: column;
   /* Render over top of card hand */
   z-index: 2;
+}
+
+#card-inspect:empty {
+  display: none;
 }
 
 #card-inspect .card-inner {
