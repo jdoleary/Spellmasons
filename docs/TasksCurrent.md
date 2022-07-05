@@ -1,7 +1,6 @@
 ## Schedule
 - Next
     - Low hanging fruit
-        - Add staff glow to player idle animation
         - Single right click show path, double right click confirms move
             - Remove "f"
         - Controls could show on escape menu instead of always
