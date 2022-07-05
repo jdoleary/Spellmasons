@@ -470,9 +470,12 @@ body.your-turn #end-turn-btn {
 
 #end-turn-btn {
   opacity: 0.5;
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
 }
 
-#end-turn-btn.highlight {
+#end-turn-btn.highlight .hotkey-badge {
   animation: blink-end-turn-animation 1.0s steps(5, start) infinite;
 }
 
@@ -482,12 +485,13 @@ body.your-turn #end-turn-btn {
   0%,
   100% {
     color: black;
-    border: 2px black solid;
+    background-color: white;
   }
 
   50% {
-    color: red;
-    border: 2px red solid;
+    color: white;
+    background-color: red;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 2px 0 0 rgba(255, 0, 0, .7) inset;
   }
 }
 

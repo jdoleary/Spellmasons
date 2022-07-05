@@ -16,7 +16,6 @@
     - Restore planning view graphics for force move spells
     - improve withinCameraBounds when accounting for toolbar
     - Add "modifier" label to spells that are modifiers like "explode / bloat" and blue outline
-    - Add end turn button after spells
 
 
     - Add 'loading' after clicking `join game`
