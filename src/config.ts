@@ -1,3 +1,12 @@
+// These double right click thresholds exist to differentiate
+// a double click from two unrelated clicks.
+// They are set generously enough to support double clicks for
+// people who don't keep the mouse very still or who click slowly
+// but constrained enough to reject false positives.
+// Same speed as Microsoft: https://docs.microsoft.com/en-us/windows/win32/controls/ttm-setdelaytime?redirectedfrom=MSDN
+export const RIGHT_CLICK_DOUBLE_MS_THRESHOLD = 500;
+export const RIGHT_CLICK_DOUBLE_DISTANCE_THRESHOLD = 30;
+
 export const PLAYER_BASE_HEALTH = 10;
 export const PLAYER_BASE_ATTACK_RANGE = 500;
 export const UNIT_MOVE_SPEED = 0.25;

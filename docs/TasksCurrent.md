@@ -1,8 +1,7 @@
 ## Schedule
 - Next
     - Low hanging fruit
-        - Single right click show path, double right click confirms move
-            - Remove "f"
+        - Remove "f"
         - Controls could show on escape menu instead of always
     - Should unit select work on hover instead of click?
     - Scale down gameplay

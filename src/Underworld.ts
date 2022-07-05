@@ -7,6 +7,7 @@ import * as Player from './Player';
 import * as Upgrade from './Upgrade';
 import * as math from './math';
 import * as Cards from './cards';
+import * as CardUI from './CardUI';
 import * as Image from './Image';
 import * as storage from './storage';
 import * as ImmediateMode from './ImmediateModeSprites';
@@ -145,6 +146,32 @@ export default class Underworld {
 
     Unit.syncPlayerHealthManaUI();
     window.unitOverlayGraphics.clear();
+
+    // Draw cast line:
+    if (window.player) {
+      if (CardUI.areAnyCardsSelected()) {
+        const mouseTarget = window.underworld.getMousePos();
+        // Players can only cast within their attack range
+        const castLine = { p1: window.player.unit, p2: mouseTarget };
+        window.unitOverlayGraphics.lineStyle(3, colors.targetBlue, 0.7);
+        window.unitOverlayGraphics.moveTo(castLine.p1.x, castLine.p1.y);
+        if (math.distance(castLine.p1, castLine.p2) > window.player.unit.attackRange) {
+          const endOfRange = math.getCoordsAtDistanceTowardsTarget(castLine.p1, castLine.p2, window.player.unit.attackRange);
+          window.unitOverlayGraphics.lineTo(endOfRange.x, endOfRange.y);
+          // Draw a red line the rest of the way shoing that you cannot cast
+          window.unitOverlayGraphics.lineStyle(3, 0x333333, 0.7);
+          window.unitOverlayGraphics.lineTo(castLine.p2.x, castLine.p2.y);
+          window.unitOverlayGraphics.drawCircle(castLine.p2.x, castLine.p2.y, 3);
+          // Draw a circle where the cast stops
+          window.unitOverlayGraphics.moveTo(castLine.p2.x, castLine.p2.y);//test
+          window.unitOverlayGraphics.lineStyle(3, colors.targetBlue, 0.7);
+          window.unitOverlayGraphics.drawCircle(endOfRange.x, endOfRange.y, 3);
+        } else {
+          window.unitOverlayGraphics.lineTo(castLine.p2.x, castLine.p2.y);
+          window.unitOverlayGraphics.drawCircle(castLine.p2.x, castLine.p2.y, 3);
+        }
+      }
+    }
 
     const aliveNPCs = this.units.filter(u => u.alive && u.unitType == UnitType.AI);
     // Run all forces in window.forceMove
