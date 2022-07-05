@@ -1,5 +1,29 @@
 ## Schedule
 - Next
+    - Low hanging fruit
+        - Make health and mana full when portal spawns
+        - Add staff glow to player idle animation
+        - Single right click show path, double right click confirms move
+            - Remove "f"
+        - Controls could show on escape menu instead of always
+        - More pools of liquid, less expansive
+    - Should unit select work on hover instead of click?
+    - Make robe color consistent, add to unit property
+    - Scale down gameplay
+        - restore units to original scale
+    - Prevent hang on await
+    - Philosophy
+        - Make "rules for copy"
+            1. Does the word suggest more than what really happens. (ex: bite != damage)
+            2. Numbers are meaningless, use percentages instead. (ex: "Increase cast range by 10%")
+        - Explain everything, use popups more than once with a "do not show again" button
+    - Allow casting no target spells (like decoy) at end of range instead of saying "out of range"
+    - Restore planning view graphics for force move spells
+    - improve withinCameraBounds when accounting for toolbar
+    - Add "modifier" label to spells that are modifiers like "explode / bloat" and blue outline
+    - Add end turn button after spells
+
+
     - Add 'loading' after clicking `join game`
     - Multiplayer: something is very wrong with sync units, player 2 keeps getting replaced with a grunt
         - Multiplayer: Player units don't load in the correct position
