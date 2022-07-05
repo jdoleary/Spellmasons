@@ -63,30 +63,7 @@ export function create(clientId: string): IPlayer {
     cardsAmount: config.START_CARDS_COUNT,
     upgrades: [],
   };
-  // Add player-specific shaders
-  // regardless of if the image sprite changes to a new animation or not.
-  // @ts-ignore
-  if (player.unit.image && player.unit.image.sprite.filters) {
-    const colorIndex = randInt(window.underworld.random, 0, playerColors.length - 1);
-
-    const color = playerColors[colorIndex];
-    const colorSecondary = playerColorsSecondary[colorIndex];
-    if (color && colorSecondary) {
-      player.unit.image.sprite.filters.push(
-        // @ts-ignore for some reason ts is flagging this as an error but it works fine
-        // in pixi.
-        new MultiColorReplaceFilter(
-          [
-            [playerCoatPrimary, color],
-            [playerCoatSecondary, colorSecondary],
-            [playerCastAnimationColor, color],
-          ],
-          0.1
-        )
-      );
-    }
-  }
-
+  setPlayerRobeColor(player);
 
   // Player units get full mana every turn
   player.unit.manaPerTurn = player.unit.manaMax;
@@ -119,6 +96,37 @@ export function create(clientId: string): IPlayer {
 
   window.underworld.players.push(player);
   return player;
+}
+// TODO: This creates a NEW MultiColorReplaceFilter,
+// there should be a better way of syncing filters.  This is a footgun if called
+// more than once on a player object.  As of this writing it is only called on new player objects
+// Proceed with caution.
+function setPlayerRobeColor(player: IPlayer) {
+  // Add player-specific shaders
+  // regardless of if the image sprite changes to a new animation or not.
+  if (player.unit.image && player.unit.image.sprite.filters) {
+    const clients = getClients();
+    const colorIndex = clients.indexOf(player.clientId);
+
+    const color = playerColors[colorIndex];
+    const colorSecondary = playerColorsSecondary[colorIndex];
+    if (color && colorSecondary) {
+      player.unit.image.sprite.filters.push(
+        // @ts-ignore for some reason ts is flagging this as an error but it works fine
+        // in pixi.
+        new MultiColorReplaceFilter(
+          [
+            [playerCoatPrimary, color],
+            [playerCoatSecondary, colorSecondary],
+            [playerCastAnimationColor, color],
+          ],
+          0.1
+        )
+      );
+    }
+  }
+
+
 }
 export function resetPlayerForNextLevel(player: IPlayer) {
   // Player is no longer in portal
@@ -200,6 +208,7 @@ export function load(player: IPlayerSerialized) {
   updateGlobalRefToCurrentClientPlayer(playerLoaded);
   CardUI.recalcPositionForCards(playerLoaded);
   window.underworld.players.push(playerLoaded);
+  setPlayerRobeColor(playerLoaded);
   return playerLoaded;
 }
 

@@ -797,47 +797,50 @@ export default class Underworld {
     // this.ensureAllClientsHaveAssociatedPlayers(getClients());
   }
   // creates a level from levelData
-  createLevel(levelData: LevelData) {
-    document.body.classList.toggle('loading', true);
-    // Add timeout so that loading can update dom
-    setTimeout(() => {
-      // showUpgrades is invoked by createLevel which is called from a wsPie message
-      // rather than from checkForEndOfLevel() because all players are guarunteed to receive
-      // the CREATE_LEVEL message whereas, checkForEndOfLevel could be subject to a race condition
-      // that might prevent the upgrade screen from showing for some users in rare circumstances.
-      // Better to have the upgrade screen tied to the network message.
-      this.showUpgrades();
+  async createLevel(levelData: LevelData) {
+    return new Promise<void>(resolve => {
+      document.body.classList.toggle('loading', true);
+      // Add timeout so that loading can update dom
+      setTimeout(() => {
+        // showUpgrades is invoked by createLevel which is called from a wsPie message
+        // rather than from checkForEndOfLevel() because all players are guarunteed to receive
+        // the CREATE_LEVEL message whereas, checkForEndOfLevel could be subject to a race condition
+        // that might prevent the upgrade screen from showing for some users in rare circumstances.
+        // Better to have the upgrade screen tied to the network message.
+        this.showUpgrades();
 
-      console.log('Setup: createLevel', levelData);
-      window.lastLevelCreated = levelData;
-      // Clean up the previous level
-      this.cleanUpLevel();
+        console.log('Setup: createLevel', levelData);
+        window.lastLevelCreated = levelData;
+        // Clean up the previous level
+        this.cleanUpLevel();
 
-      const { levelIndex, limits, imageOnlyTiles, pickups, enemies, obstacles, validPlayerSpawnCoords } = levelData;
-      this.levelIndex = levelIndex;
-      this.limits = limits;
-      this.cacheWalls(obstacles, imageOnlyTiles.filter(x => x.image == all_ground));
-      this.imageOnlyTiles = imageOnlyTiles;
-      this.addGroundTileImages();
-      for (let p of pickups) {
-        this.spawnPickup(p.index, p.coord);
-      }
-      for (let e of enemies) {
-        this.spawnEnemy(e.id, e.coord, e.isArmored, e.strength);
-      }
-      // Show text in center of screen for the new level
-      queueCenteredFloatingText(
-        `Level ${this.levelIndex + 1}`,
-        'white'
-      );
-      // validPlayerSpawnCoords must be set before resetting the player
-      // so the player has coords to spawn into
-      this.validPlayerSpawnCoords = validPlayerSpawnCoords;
-      for (let player of this.players) {
-        Player.resetPlayerForNextLevel(player);
-      }
-      this.postSetupLevel();
-    }, 10)
+        const { levelIndex, limits, imageOnlyTiles, pickups, enemies, obstacles, validPlayerSpawnCoords } = levelData;
+        this.levelIndex = levelIndex;
+        this.limits = limits;
+        this.cacheWalls(obstacles, imageOnlyTiles.filter(x => x.image == all_ground));
+        this.imageOnlyTiles = imageOnlyTiles;
+        this.addGroundTileImages();
+        for (let p of pickups) {
+          this.spawnPickup(p.index, p.coord);
+        }
+        for (let e of enemies) {
+          this.spawnEnemy(e.id, e.coord, e.isArmored, e.strength);
+        }
+        // Show text in center of screen for the new level
+        queueCenteredFloatingText(
+          `Level ${this.levelIndex + 1}`,
+          'white'
+        );
+        // validPlayerSpawnCoords must be set before resetting the player
+        // so the player has coords to spawn into
+        this.validPlayerSpawnCoords = validPlayerSpawnCoords;
+        for (let player of this.players) {
+          Player.resetPlayerForNextLevel(player);
+        }
+        this.postSetupLevel();
+        resolve();
+      }, 10)
+    });
   }
   async initLevel(levelIndex: number): Promise<LevelData> {
     return await new Promise<LevelData>(resolve => {

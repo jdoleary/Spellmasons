@@ -8,7 +8,6 @@
         - Controls could show on escape menu instead of always
         - More pools of liquid, less expansive
     - Should unit select work on hover instead of click?
-    - Make robe color consistent, add to unit property
     - Scale down gameplay
         - restore units to original scale
     - Prevent hang on await
@@ -25,9 +24,6 @@
 
 
     - Add 'loading' after clicking `join game`
-    - Multiplayer: something is very wrong with sync units, player 2 keeps getting replaced with a grunt
-        - Multiplayer: Player units don't load in the correct position
-        - Task: Add player colors to the object (or to the unit??) so that the colors sync between clients
     - The great refactor
         - Group topics in folders: audio, graphics, gamelogic, etc
             - cleanly separated

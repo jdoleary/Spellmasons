@@ -331,7 +331,7 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       break;
   }
 }
-function handleLoadGameState(payload: {
+async function handleLoadGameState(payload: {
   level: LevelData,
   underworld: IUnderworldSerializedForSyncronize,
   phase: turn_phase,
@@ -348,14 +348,16 @@ function handleLoadGameState(payload: {
   window.underworld = new Underworld(loadedGameState.seed, loadedGameState.RNGState);
   window.underworld.playerTurnIndex = loadedGameState.playerTurnIndex;
   window.underworld.levelIndex = loadedGameState.levelIndex;
-  // Sync Level
-  window.underworld.createLevel(level);
+  // Sync Level.  Must await createLevel since it uses setTimeout to ensure that
+  // the DOM can update with the "loading..." message before locking up the CPU with heavy processing.
+  // This is important so that createLevel runs BEFORE loading units and syncing Players
+  await window.underworld.createLevel(level);
 
-  // Sync units, players, and turn_phase
+  // Load units
   if (units) {
-    window.underworld.syncUnits(units);
+    window.underworld.units = units.map(u => Unit.load(u, false));
   }
-  // Note: Players should sync after units so
+  // Note: Players should sync after units are loaded so
   // that the player.unit reference is synced
   // with up to date units
   if (players) {
