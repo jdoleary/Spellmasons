@@ -25,13 +25,6 @@ function mutateViaRules(tile: Material, neighbors: (Material | undefined)[], sta
     }
     // Given a ground tile
     if (tile == Material.GROUND) {
-        if (state.currentNumberOfLiquidPools < state.desiredNumberOfLiquidPools) {
-            // If all of it's neighbors are ground it is a candidate for liquid pool
-            if (neighbors.every(t => t && t == Material.GROUND)) {
-                state.currentNumberOfLiquidPools++;
-                return Material.LIQUID
-            }
-        }
 
         // Grow liquid pools
         // If at least one neighbor is liquid
@@ -71,9 +64,8 @@ export function getNeighbors(tileIndex: number, tiles: Material[], widthOf2DArra
 
 // Mutates tiles based on what the tile's neighbors are
 // Probably will need multiple passes to completely satisfy rules
+// TODO: There are many better ways to grow more interesting pools of liquid.  This one is too uniform
 export interface ConwayState {
-    currentNumberOfLiquidPools: number;
-    desiredNumberOfLiquidPools: number;
     percentChanceOfLiquidSpread: number;
     liquidSpreadChanceFalloff: number;
 }
@@ -83,6 +75,28 @@ export function conway(tiles: Material[], widthOf2DArray: number, state: ConwayS
         if (tile !== undefined) {
             const neighbors = getNeighbors(i, tiles, widthOf2DArray);
             tiles[i] = mutateViaRules(tile, neighbors, state);
+        }
+    }
+}
+export function placeLiquidSources(tiles: Material[], widthOf2DArray: number, numberOfLiquidSources: number) {
+    let candidatesForLiquidSource = [];
+    for (let i = 0; i < tiles.length; i++) {
+        const tile = tiles[i];
+        if (tile == Material.GROUND) {
+            const neighbors = getNeighbors(i, tiles, widthOf2DArray);
+            // If all of it's neighbors are ground it is a candidate for liquid pool
+            if (neighbors.every(t => t && t == Material.GROUND)) {
+                candidatesForLiquidSource.push(i);
+            }
+        }
+    }
+    for (let i = 0; i < numberOfLiquidSources; i++) {
+        const chosenIndex = candidatesForLiquidSource[randInt(window.underworld.random, 0, candidatesForLiquidSource.length)];
+
+        if (chosenIndex !== undefined && tiles[chosenIndex] !== undefined) {
+            tiles[chosenIndex] = Material.LIQUID;
+        } else {
+            console.error('Attempted to place liquid tile but undefined')
         }
     }
 }

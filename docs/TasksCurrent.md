@@ -4,7 +4,6 @@
         - Single right click show path, double right click confirms move
             - Remove "f"
         - Controls could show on escape menu instead of always
-        - More pools of liquid, less expansive
     - Should unit select work on hover instead of click?
     - Scale down gameplay
         - restore units to original scale

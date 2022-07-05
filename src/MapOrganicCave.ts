@@ -5,7 +5,7 @@ import { randFloat, randInt } from "./rand";
 import * as Vec from "./Vec";
 import * as config from './config';
 import { oneDimentionIndexToVec2, vec2ToOneDimentionIndex, vec2ToOneDimentionIndexPreventWrap } from "./WaveFunctionCollapse";
-import { conway, ConwayState } from "./Conway";
+import { conway, ConwayState, placeLiquidSources } from "./Conway";
 import type { IObstacle } from "./Obstacle";
 
 export const caveSizes: { [size: string]: CaveParams } = {
@@ -141,18 +141,19 @@ export function generateCave(params: CaveParams): { map: Map, limits: Limits } {
     //         window.debugCave.lineStyle(1, 0x000000, 0.0);
     //     }
     // }
-    // 1st pass for walls
     let conwayState: ConwayState = {
-        currentNumberOfLiquidPools: 0,
-        desiredNumberOfLiquidPools: 2,
         // 50%
-        percentChanceOfLiquidSpread: 50,
+        percentChanceOfLiquidSpread: 10,
         // how quickly the percentChanceOfLiquidSpread
         // will decrease
         liquidSpreadChanceFalloff: 2
     }
+    // 1st pass for walls
     conway(materials, width, conwayState);
     // 2nd pass for semi-walls
+    conway(materials, width, conwayState);
+    // 3rd pass to grow liquid pools.  Number of pools is relative to map width
+    placeLiquidSources(materials, width, Math.floor(width / 5));
     conway(materials, width, conwayState);
 
 
