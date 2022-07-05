@@ -1,5 +1,7 @@
 ## Schedule
 - Next
+    - Fix: Idle animation is reversed x axis
+    - What if you just HOLD RMB to move and it doesn't even path, it just moves you in that direction?
     - bug: critical: Casting on self causes infinite recursion and kills self even if you only cast with one hurt
     - Controls could show on escape menu instead of always
     - Prevent hang on await
