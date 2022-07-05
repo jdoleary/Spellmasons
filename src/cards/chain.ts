@@ -41,7 +41,7 @@ off of all existing targeted units to units touching them.
     },
   },
 };
-const range = 160;
+const range = 105;
 function getTouchingUnitsRecursive(
   x: number,
   y: number,

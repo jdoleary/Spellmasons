@@ -92,7 +92,6 @@ function addCardInspectHandlers(cardContainerElement: HTMLElement) {
   }
 }
 export function clearCurrentlyShownCard() {
-  console.log('clear currently shown card jteset')
   // Clear cardInspect when the mouse leaves elCardHolders so that the large card
   // doesn't stay in the center of the screen
   if (elCardInspect) {

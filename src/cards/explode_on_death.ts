@@ -8,7 +8,7 @@ import { forcePush } from './push';
 const id = 'explode';
 const imageName = 'explode-on-death.png';
 const damage = 3;
-const range = 200;
+const range = 140;
 function add(unit: IUnit) {
   // First time setup
   if (!unit.modifiers[id]) {

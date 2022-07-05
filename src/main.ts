@@ -45,7 +45,7 @@ window.lastThoughtsHash = '';
 window.playerThoughts = {};
 window.forceMove = [];
 window.devMode = location.href.includes('localhost');
-window.zoomTarget = 1;
+window.zoomTarget = 1.3;
 if (window.devMode) {
   console.log('ADMIN: devMode = true! Character and upgrades will be picked automatically.');
 }

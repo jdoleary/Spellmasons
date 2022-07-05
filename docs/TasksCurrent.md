@@ -1,11 +1,7 @@
 ## Schedule
 - Next
     - bug: critical: Casting on self causes infinite recursion and kills self even if you only cast with one hurt
-    - Low hanging fruit
-        - Controls could show on escape menu instead of always
-    - Should unit select work on hover instead of click?
-    - Scale down gameplay
-        - restore units to original scale
+    - Controls could show on escape menu instead of always
     - Prevent hang on await
     - Philosophy
         - Make "rules for copy"

@@ -131,8 +131,8 @@ export function updatePlanningView() {
           }
           // offset ensures the circle is under the player's feet
           // and is dependent on the animation's feet location
-          const arbitratyOffset = 3;
-          planningViewGraphics.drawEllipse(window.player.unit.x + arbitratyOffset, window.player.unit.y + config.COLLISION_MESH_RADIUS - arbitratyOffset, config.COLLISION_MESH_RADIUS / 2, config.COLLISION_MESH_RADIUS / 3);
+          const arbitratyOffset = 10;
+          planningViewGraphics.drawEllipse(window.player.unit.x, window.player.unit.y + config.COLLISION_MESH_RADIUS - arbitratyOffset, config.COLLISION_MESH_RADIUS / 2, config.COLLISION_MESH_RADIUS / 3);
           planningViewGraphics.endFill();
         }
         lastSpotCurrentPlayerTurnCircle = clone(window.player.unit);
@@ -485,8 +485,8 @@ export function drawCircleUnderTarget(mousePos: Vec2, opacity: number, graphics:
     graphics.beginFill(0x000000, 0);
     // offset ensures the circle is under the player's feet
     // and is dependent on the animation's feet location
-    const offsetX = targetUnit ? 3 : 0;
-    const offsetY = targetUnit ? -3 : -15;
+    const offsetX = targetUnit ? 0 : 0;
+    const offsetY = targetUnit ? -10 : -15;
     graphics.drawEllipse(target.x + offsetX, target.y + config.COLLISION_MESH_RADIUS + offsetY, config.COLLISION_MESH_RADIUS / 2, config.COLLISION_MESH_RADIUS / 3);
     graphics.endFill();
   }

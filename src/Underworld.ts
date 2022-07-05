@@ -650,11 +650,11 @@ export default class Underworld {
   // Returns undefined if it fails to make valid LevelData
   generateRandomLevelData(levelIndex: number): LevelData | undefined {
     console.log('Setup: generateRandomLevel', levelIndex);
-    if (!caveSizes.medium) {
-      console.error('Missing caveSizes.small')
+    if (!caveSizes.small || !caveSizes.medium) {
+      console.error('Missing caveSize for generating level')
       return;
     }
-    const { map, limits } = generateCave(caveSizes.medium);
+    const { map, limits } = generateCave(levelIndex > 6 ? caveSizes.medium : caveSizes.small);
     const { tiles } = map;
     const levelData: LevelData = {
       levelIndex,

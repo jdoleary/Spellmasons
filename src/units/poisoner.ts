@@ -13,7 +13,7 @@ const unit: UnitSource = {
     subtype: UnitSubType.RANGED_RADIUS,
   },
   unitProps: {
-    attackRange: 300
+    attackRange: 210
   },
   spawnParams: {
     probability: 20,

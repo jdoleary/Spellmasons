@@ -3,7 +3,7 @@ import { drawPredictionCircle } from '../ui/PlanningView';
 import { forcePush } from './push';
 
 const id = 'stomp';
-const range = 200;
+const range = 140;
 const spell: Spell = {
   card: {
     id,
