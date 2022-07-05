@@ -1,7 +1,7 @@
 import { addPickupTarget, addUnitTarget, Spell } from '.';
 import { drawPredictionCircle } from '../ui/PlanningView';
 
-const id = 'AOE';
+const id = 'Expanding';
 const range = 140;
 const spell: Spell = {
   card: {

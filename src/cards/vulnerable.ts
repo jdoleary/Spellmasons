@@ -2,7 +2,7 @@ import * as Unit from '../Unit';
 import * as Image from '../Image';
 import type { Spell } from '.';
 
-const id = 'vulnerable';
+const id = 'Debilitate';
 const imageName = 'vulnerable.png';
 const spell: Spell = {
   card: {

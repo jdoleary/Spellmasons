@@ -4,7 +4,7 @@ import { allCards, Spell } from '.';
 import { addCardToHand, removeCardsFromHand } from '../CardUI';
 import * as Unit from '../Unit';
 
-export const id = 'vampire bite';
+export const id = 'Exsanguinate';
 export function isVampire(unit: IUnit): boolean {
   return Object.keys(unit.modifiers).some(m => m === id)
 }

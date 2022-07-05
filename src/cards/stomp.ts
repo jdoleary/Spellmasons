@@ -2,7 +2,7 @@ import type { Spell } from '.';
 import { drawPredictionCircle } from '../ui/PlanningView';
 import { forcePush } from './push';
 
-const id = 'stomp';
+const id = 'Repel';
 const range = 140;
 const spell: Spell = {
   card: {

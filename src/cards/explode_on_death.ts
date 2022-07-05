@@ -5,7 +5,7 @@ import type { Spell } from '.';
 import { drawPredictionCircle } from '../ui/PlanningView';
 import { forcePush } from './push';
 
-const id = 'explode';
+const id = 'Bloat';
 const imageName = 'explode-on-death.png';
 const damage = 3;
 const range = 140;

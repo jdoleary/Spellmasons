@@ -3,7 +3,7 @@ import { addUnitTarget, Spell } from '.';
 import type { Vec2 } from '../Vec';
 import type * as Unit from '../Unit';
 
-const id = 'chain';
+const id = 'Adjoining';
 const spell: Spell = {
   card: {
     id,

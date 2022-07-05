@@ -3,7 +3,7 @@ import * as Pickup from '../Pickup';
 import * as Image from '../Image';
 import { addPixiSpriteAnimated, containerUnits } from '../PixiUtils';
 
-export const id = 'Trap';
+export const id = 'Delay';
 const turnsItTakesTrapToWindUp = 2;
 // Register as pickup:
 Pickup.pickups.push(
