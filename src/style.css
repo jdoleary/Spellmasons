@@ -138,6 +138,7 @@ body.view-Game.showUpgrades #upgrade-picker {
 #card-inspect .card-title {
   text-align: center;
   color: white;
+  height: 30px;
 }
 
 #upgrade-picker .card-thumb,
