@@ -1,10 +1,9 @@
 ## Schedule
 - Today
-    - Add "modifier" label to spells that are modifiers like "explode / bloat" and blue outline
     - What if you just HOLD RMB to move and it doesn't even path, it just moves you in that direction?
         - TODO: if you die when moving by stepping on spikes the new move function overrides the animation and it stays walking
         - TODO: Remove onMoveEvents? or add them to newly made `directMOve`
-        - **critical**: Don't let player intentionally move into lava or through walls
+        - Fix the "getting stuck on walls" while moving issue
     - bug: critical: Casting on self causes infinite recursion and kills self even if you only cast with one hurt
     - Allow casting no target spells (like decoy) at end of range instead of saying "out of range"
     - Restore planning view graphics for force move spells

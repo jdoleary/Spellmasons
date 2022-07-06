@@ -1,3 +1,4 @@
+- Add "modifier" label to spells that are modifiers like "explode / bloat" and blue outline
 - (COULDN"T REPRODUCE) Just shielded unit died when i cast one hurt on him (he  already had one shield that I worked through before)
 - (COULDN"T REPRODUCE) Loading screen doesn't appear between levels
 - (COULDN"T REPRODUCE) Bug: I only have 6 toolbar slots showing up (empty ones don't show)

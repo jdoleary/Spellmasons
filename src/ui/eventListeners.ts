@@ -14,9 +14,10 @@ import {
 import { toggleMenu, View } from '../views';
 import * as config from '../config';
 import { cameraAutoFollow, getCamera, moveCamera } from '../PixiUtils';
-import { toPolygon2LineSegments } from '../Polygon2';
 import { vec2ToOneDimentionIndex } from '../WaveFunctionCollapse';
 import { getEndOfRangeTarget, isOutOfRange } from '../PlayerUtils';
+import { closestLineSegmentIntersection } from '../collision/lineSegment';
+import { distance, getCoordsAtDistanceTowardsTarget } from '../math';
 
 export const keyDown = {
   w: false,
@@ -219,7 +220,16 @@ export function mouseMove(e?: MouseEvent) {
           //   type: MESSAGE_TYPES.MOVE_PLAYER,
           //   ...moveTarget,
           // });
-          Unit.directMove(window.player.unit, mouseTarget)
+          // window.underworld.pathingLineSegments
+          const intersection = closestLineSegmentIntersection({ p1: window.player.unit, p2: mouseTarget }, window.underworld.pathingLineSegments)
+          window.debugGraphics.clear();
+          window.debugGraphics.lineStyle(3, 0xff0000, 1.0);
+          if (intersection) {
+            window.debugGraphics.drawCircle(intersection?.x, intersection?.y, 10)
+          }
+          // Move up to but not onto intersection or else unit will get stuck ON linesegment
+          const adjustedMoveTarget = intersection ? getCoordsAtDistanceTowardsTarget(window.player.unit, intersection, distance(window.player.unit, intersection) - 1) : mouseTarget;
+          Unit.moveDirectly(window.player.unit, adjustedMoveTarget)
         } else {
           floatingText({
             coords: mouseTarget,
@@ -266,8 +276,7 @@ export function mouseMove(e?: MouseEvent) {
     // window.debugGraphics.lineTo(cellX * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2, cellY * config.OBSTACLE_SIZE + config.OBSTACLE_SIZE / 2);
     // window.debugGraphics.lineTo(cellX * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2, cellY * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2);
     // Draw the pathing walls
-    const pathingWalls = window.underworld.pathingPolygons.map(toPolygon2LineSegments).flat();
-    for (let lineSegment of pathingWalls) {
+    for (let lineSegment of window.underworld.pathingLineSegments) {
       window.debugGraphics.lineStyle(2, 0xffaabb, 1.0);
       window.debugGraphics.moveTo(lineSegment.p1.x, lineSegment.p1.y);
       window.debugGraphics.lineTo(lineSegment.p2.x, lineSegment.p2.y);

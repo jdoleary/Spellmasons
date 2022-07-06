@@ -285,7 +285,7 @@ window.superMe = () => {
     // Run farther! Jump higher!
     window.player.unit.staminaMax = 10000;
     window.player.unit.stamina = window.player.unit.staminaMax;
-    window.player.unit.moveSpeed = 2;
+    window.player.unit.moveSpeed = 0.3;
     // Now that player's health and mana has changed we must sync
     // predictionUnits so that the player's prediction copy
     // has the same mana and health

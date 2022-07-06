@@ -723,9 +723,9 @@ export function orient(unit: IUnit, faceTarget: Vec2) {
   }
 
 }
-// directMove moves a unit in a direction without pathing, useful
+// moveDirectly moves a unit in a direction without pathing, useful
 // for players' hold RMB to move
-export function directMove(unit: IUnit, target: Vec2) {
+export function moveDirectly(unit: IUnit, target: Vec2) {
   if (!canMove(unit)) {
     // TODO: Explain to the player why they can't move
   }
