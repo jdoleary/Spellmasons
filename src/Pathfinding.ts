@@ -223,6 +223,12 @@ export function findPath(startPoint: Vec2, target: Vec2, pathingLineSegments: Po
         // Remove the start point, since the unit doing the pathing is already at the start point:
         shortestPath.points.shift();
     }
+    // Prevent returning a path that consists of the same 2 points
+    // If there is no shortestPath and the firstIntersection is the same
+    // as the startPoint then there is no path
+    if (!shortestPath && firstIntersection && Vec.equal(startPoint, firstIntersection)) {
+        return [];
+    }
     return shortestPath
         ? [...shortestPath.points, shortestPath.target]
         // If no path is found, move to the first intersection which will always be a valid path.
