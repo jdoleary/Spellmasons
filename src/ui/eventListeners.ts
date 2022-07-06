@@ -220,16 +220,8 @@ export function mouseMove(e?: MouseEvent) {
           //   type: MESSAGE_TYPES.MOVE_PLAYER,
           //   ...moveTarget,
           // });
-          // window.underworld.pathingLineSegments
-          const intersection = closestLineSegmentIntersection({ p1: window.player.unit, p2: mouseTarget }, window.underworld.pathingLineSegments)
-          window.debugGraphics.clear();
-          window.debugGraphics.lineStyle(3, 0xff0000, 1.0);
-          if (intersection) {
-            window.debugGraphics.drawCircle(intersection?.x, intersection?.y, 10)
-          }
           // Move up to but not onto intersection or else unit will get stuck ON linesegment
-          const adjustedMoveTarget = intersection ? getCoordsAtDistanceTowardsTarget(window.player.unit, intersection, distance(window.player.unit, intersection) - 1) : mouseTarget;
-          Unit.moveDirectly(window.player.unit, adjustedMoveTarget)
+          Unit.moveTowards(window.player.unit, mouseTarget);
         } else {
           floatingText({
             coords: mouseTarget,
@@ -260,6 +252,17 @@ export function mouseMove(e?: MouseEvent) {
   // Test pathing
   if (window.showDebug && window.player) {
     window.debugGraphics.clear();
+
+    // Draw player path
+    const path = window.player.unit.path;
+    if (path && path.points[0]) {
+      window.debugGraphics.lineStyle(4, 0x00ff00, 1.0);
+      window.debugGraphics.moveTo(window.player.unit.x, window.player.unit.y);
+      for (let point of path.points) {
+        window.debugGraphics.lineTo(point.x, point.y);
+      }
+      window.debugGraphics.lineTo(path.targetPosition.x, path.targetPosition.y);
+    }
     const mouseTarget = window.underworld.getMousePos();
     const cellX = Math.round(mouseTarget.x / config.OBSTACLE_SIZE);
     const cellY = Math.round(mouseTarget.y / config.OBSTACLE_SIZE);

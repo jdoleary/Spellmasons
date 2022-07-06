@@ -723,29 +723,6 @@ export function orient(unit: IUnit, faceTarget: Vec2) {
   }
 
 }
-// moveDirectly moves a unit in a direction without pathing, useful
-// for players' hold RMB to move
-export function moveDirectly(unit: IUnit, target: Vec2) {
-  if (!canMove(unit)) {
-    // TODO: Explain to the player why they can't move
-  }
-  if (unit.image) {
-    Image.changeSprite(
-      unit.image,
-      unit.animations.walk,
-      unit.image.sprite.parent,
-      undefined
-    );
-  }
-  orient(unit, target);
-
-  // Set path which will be used in the game loop to actually move the unit
-  unit.path = {
-    lastOwnPosition: Vec.clone(unit),
-    targetPosition: target,
-    points: [target]
-  }
-}
 
 // moveTo moves a unit, considering all the in-game blockers
 export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {

@@ -199,6 +199,13 @@ export default class Underworld {
         Obstacle.checkLiquidInteractionDueToMovement(u, false);
         const predictionUnit = window.predictionUnits[i];
         if (u.alive) {
+          while (u.path && u.path.points[0] && Vec.equal(Vec.round(u), u.path.points[0])) {
+            // Remove next points until the next point is NOT equal to the unit's current position
+            // This prevent's "jittery" "slow" movement where it's moving less than {x:1.0, y:1.0}
+            // because the unit's position may have a decimal while the path does not so it'll stop
+            // moving when it reaches the target which may be less than 1.0 and 1.0 away.
+            u.path.points.shift();
+          }
           // Only allow movement if the unit has stamina
           if (u.path && u.path.points[0] && u.stamina > 0 && Unit.isUnitsTurnPhase(u)) {
             // Move towards target
@@ -221,14 +228,14 @@ export default class Underworld {
               moveDist = math.distance(originalPosition, u);
             }
             u.stamina -= moveDist;
-            if (u.path.points[0] && (
-              Vec.equal(u, u.path.points[0]) ||
-              // If unit is MELEE and only has the final target left in the path, stop when it gets close enough
-              (u.path.points.length == 1 && u.unitSubType == UnitSubType.MELEE && math.distance(u, u.path.points[0]) <= config.COLLISION_MESH_RADIUS * 2)
-            )) {
+            // If unit is MELEE and only has the final target left in the path, stop when it gets close enough
+            if (
+              u.path.points[0] && u.path.points.length == 1 && u.unitSubType == UnitSubType.MELEE && math.distance(u, u.path.points[0]) <= config.COLLISION_MESH_RADIUS * 2
+            ) {
               // Once the unit reaches the target, shift so the next point in the path is the next target
               u.path.points.shift();
             }
+
           }
           // check for collisions with pickups in new location
           this.checkPickupCollisions(u);
