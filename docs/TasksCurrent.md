@@ -1,11 +1,14 @@
 ## Schedule
-- Next
+- Today
+    - Add "modifier" label to spells that are modifiers like "explode / bloat" and blue outline
     - What if you just HOLD RMB to move and it doesn't even path, it just moves you in that direction?
         - TODO: if you die when moving by stepping on spikes the new move function overrides the animation and it stays walking
         - TODO: Remove onMoveEvents? or add them to newly made `directMOve`
-        - TODO: Don't let player intentionally move into lava or through walls
-        - Show stamina bar above head when moving
+        - **critical**: Don't let player intentionally move into lava or through walls
     - bug: critical: Casting on self causes infinite recursion and kills self even if you only cast with one hurt
+    - Allow casting no target spells (like decoy) at end of range instead of saying "out of range"
+    - Restore planning view graphics for force move spells
+- Next
     - Controls could show on escape menu instead of always
     - Prevent hang on await
     - Philosophy
@@ -13,10 +16,6 @@
             1. Does the word suggest more than what really happens. (ex: bite != damage)
             2. Numbers are meaningless, use percentages instead. (ex: "Increase cast range by 10%")
         - Explain everything, use popups more than once with a "do not show again" button
-    - Allow casting no target spells (like decoy) at end of range instead of saying "out of range"
-    - Restore planning view graphics for force move spells
-    - improve withinCameraBounds when accounting for toolbar
-    - Add "modifier" label to spells that are modifiers like "explode / bloat" and blue outline
 
 
     - Add 'loading' after clicking `join game`

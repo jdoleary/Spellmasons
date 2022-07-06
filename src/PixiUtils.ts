@@ -50,7 +50,8 @@ const underworldPixiContainers = [
 ];
 
 const elPIXIHolder: HTMLElement = document.getElementById('PIXI-holder') as HTMLElement;
-const elCardHolders = document.getElementById('card-holders') as HTMLElement;
+const elCardHand = document.getElementById('card-hand') as HTMLElement;
+const elHealthMana = document.getElementById('health-mana') as HTMLElement;
 window.debugGraphics = new PIXI.Graphics();
 containerUI.addChild(window.debugGraphics);
 window.unitOverlayGraphics = new PIXI.Graphics();
@@ -85,7 +86,8 @@ cameraAutoFollow(true);
 // surely be seen by a user even if they have panned away.
 // Used for attention markers and pings
 export function withinCameraBounds(position: Vec2, marginHoriz?: number): Vec2 {
-  const cardHoldersRect = elCardHolders.getBoundingClientRect();
+  const cardHandRect = elCardHand.getBoundingClientRect();
+  const healthManaRect = elHealthMana.getBoundingClientRect();
   const pixiHolderRect = elPIXIHolder.getBoundingClientRect();
   // cardHand has padding of 300px to allow for a far right drop zone,
   // this should be taken into account when keeping the attention marker
@@ -114,15 +116,21 @@ export function withinCameraBounds(position: Vec2, marginHoriz?: number): Vec2 {
     x: Math.min(Math.max(left, position.x), right),
     y: Math.min(Math.max(top, position.y), bottom)
   }
-  const cardHandRight = (cardHoldersRect.width + (camX - cardHandPaddingRight)) / zoom;
-  const cardHandTop = (cardHoldersRect.top - pixiHolderRect.top + camY) / zoom;
   // window.unitOverlayGraphics.drawCircle(camX / zoom, camY / zoom, 4);
   // window.unitOverlayGraphics.drawCircle(cardHandRight, cardHandTop, 8);
 
   // Don't let the attention marker get obscured by the cardHolders element
+  const cardHandRight = (cardHandRect.width + (camX - cardHandPaddingRight)) / zoom;
+  const cardHandTop = (cardHandRect.top - pixiHolderRect.top + camY) / zoom;
   if (withinBoundsPos.x < cardHandRight && withinBoundsPos.y > cardHandTop) {
     // 32 is arbitrary extra padding for the height of the marker
     withinBoundsPos.y = cardHandTop - 32;
+  }
+  const healthManaRight = (healthManaRect.width + camX) / zoom;
+  const healthManaTop = (healthManaRect.top - pixiHolderRect.top + camY) / zoom;
+  if (withinBoundsPos.x < healthManaRight && withinBoundsPos.y > healthManaTop) {
+    // 32 is arbitrary extra padding for the height of the marker
+    withinBoundsPos.y = healthManaTop - 32;
   }
   return withinBoundsPos;
 }
