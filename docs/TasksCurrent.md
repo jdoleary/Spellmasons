@@ -1,5 +1,6 @@
 ## Schedule
 - Today
+    - Optimize: Is setPath being called when you just move your mouse?
     - What if you just HOLD RMB to move and it doesn't even path, it just moves you in that direction?
         - TODO: if you die when moving by stepping on spikes the new move function overrides the animation and it stays walking
         - TODO: Clean: Remove old onMoveEvents? Not used anymore
@@ -8,6 +9,7 @@
             - It feels like you're stuck but in reality it's just not finding a path
             - seed : 0.981592993211875
             - see "feels-stuck.png" on desktop
+            - Easy way to reproduce: Get right on a pathingLineSegment(pink lines) and try to path to the brick portion of a liquidSGroundN.png tile and you'll see it draws a straight line rather than a path and the unit does not move
     - bug: critical: Casting on self causes infinite recursion and kills self even if you only cast with one hurt
     - Allow casting no target spells (like decoy) at end of range instead of saying "out of range"
     - Restore planning view graphics for force move spells
