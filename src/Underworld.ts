@@ -421,8 +421,6 @@ export default class Underworld {
           }
 
         }, { intersection: nearPointsOnWalls[0], dist: Number.MAX_SAFE_INTEGER })
-        window.debugGraphics.lineStyle(3, 0x0000ff, 1.0);
-        window.debugGraphics.drawCircle(closest.intersection.x, closest.intersection.y, 4);
         // Override target with a location that the unit can actually fit in:
         target = closest.intersection;
       }
