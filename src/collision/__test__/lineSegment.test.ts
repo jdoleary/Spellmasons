@@ -1,7 +1,17 @@
-import { LineSegment, isOnOutside, findWherePointIntersectLineSegmentAtRightAngle, lineSegmentIntersection, testables, isPointOnLineSegment, isCollinearAndOverlapping, getCenterPoint, toString } from '../lineSegment';
+import { LineSegment, isOnOutside, findWherePointIntersectLineSegmentAtRightAngle, lineSegmentIntersection, testables, isPointOnLineSegment, isCollinearAndOverlapping, getCenterPoint, toString, getParametricRelation } from '../lineSegment';
 import type { Vec2 } from '../../Vec';
 const { slope, toStandardForm } = testables;
 describe('lineSegment', () => {
+    describe('getParametricRelation', () => {
+        it('should correctly return true when l2 covers l1 even if they point in opposite directions', () => {
+            const l1 = { p1: { x: 516, y: 885 }, p2: { x: 547, y: 885 } };
+            // l2 points in the opposite direction as l1.
+            const l2 = { p1: { x: 587, y: 885 }, p2: { x: 436, y: 885 } };
+            const actual = getParametricRelation(l1, l2);
+            expect(actual.l2FullyCoversl1).toEqual(true);
+
+        })
+    });
     describe('isOnOutside', () => {
         [
             {

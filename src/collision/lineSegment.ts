@@ -127,7 +127,21 @@ export function isPointOnLineSegment(point: Vec.Vec2, lineSegment: LineSegment):
 export function isOnOutside(line: LineSegment, c: Vec.Vec2): boolean {
     return ((line.p2.x - line.p1.x) * (c.y - line.p1.y) - (line.p2.y - line.p1.y) * (c.x - line.p1.x)) > 0;
 }
-export function getParametricRelation(l1: LineSegment, l2: LineSegment) {
+interface ParametricRelation {
+    p: Vec.Vec2;
+    r: Vec.Vec2;
+    q: Vec.Vec2;
+    s: Vec.Vec2;
+    qMinusP: Vec.Vec2;
+    rCrossS: number;
+    isCollinear: boolean;
+    pointInSameDirection: boolean;
+    isOverlapping: boolean;
+    l2p1Insidel1?: boolean;
+    l2p2Insidel1?: boolean;
+    l2FullyCoversl1?: boolean;
+}
+export function getParametricRelation(l1: LineSegment, l2: LineSegment): ParametricRelation {
     // l1 expressed as p to p+r
     const p = l1.p1;
     const r = Vec.subtract(l1.p2, l1.p1);
@@ -143,19 +157,25 @@ export function getParametricRelation(l1: LineSegment, l2: LineSegment) {
     //     t0 = (q − p) · r / (r · r)
     //     t1 = (q + s − p) · r / (r · r) = t0 + s · r / (r · r)
     if (isCollinear) {
-        const dotRR = Vec.dotProduct(r, r);
-        const dotSR = Vec.dotProduct(s, r);
-        const t0 = Vec.dotProduct(Vec.subtract(q, p), r) / dotRR;
-        const t1 = t0 + dotSR / dotRR;
-        // If the interval between t0 and t1 intersects the interval [0, 1] then the line segments are collinear and overlapping; otherwise they are collinear and disjoint.
-        // Note that if s and r point in opposite directions, then s · r < 0 and so the interval to be checked is [t1, t0] rather than [t0, t1].
-        const l2p1Insidel1 = (0 <= t0 && t0 <= 1);
-        const l2p2Insidel1 = (0 <= t1 && t1 <= 1);
-        const l2FullyCoversl1 = (t0 <= 0 && t1 >= 1);
-        const l1FullyCoversl2 = (t1 <= 0 && t0 >= 1);
-        const isOverlapping = l2p1Insidel1 || l2p2Insidel1 || l2FullyCoversl1 || l1FullyCoversl2;
-        return {
-            p, r, q, s, qMinusP, rCrossS, isCollinear, pointInSameDirection, isOverlapping, l2p1Insidel1, l2p2Insidel1, l2FullyCoversl1
+        if (!pointInSameDirection) {
+            // If lines are collinear but do NOT point in the same direction, one of the lines
+            // must be reversed in order for the t0,t1 checks to work as intended.
+            return getParametricRelation(l1, { p1: l2.p2, p2: l2.p1 })
+        } else {
+            const dotRR = Vec.dotProduct(r, r);
+            const dotSR = Vec.dotProduct(s, r);
+            const t0 = Vec.dotProduct(Vec.subtract(q, p), r) / dotRR;
+            const t1 = t0 + dotSR / dotRR;
+            // If the interval between t0 and t1 intersects the interval [0, 1] then the line segments are collinear and overlapping; otherwise they are collinear and disjoint.
+            // Note that if s and r point in opposite directions, then s · r < 0 and so the interval to be checked is [t1, t0] rather than [t0, t1].
+            const l2p1Insidel1 = (0 <= t0 && t0 <= 1);
+            const l2p2Insidel1 = (0 <= t1 && t1 <= 1);
+            const l2FullyCoversl1 = (t0 <= 0 && t1 >= 1);
+            const l1FullyCoversl2 = (t1 <= 0 && t0 >= 1);
+            const isOverlapping = l2p1Insidel1 || l2p2Insidel1 || l2FullyCoversl1 || l1FullyCoversl2;
+            return {
+                p, r, q, s, qMinusP, rCrossS, isCollinear, pointInSameDirection, isOverlapping, l2p1Insidel1, l2p2Insidel1, l2FullyCoversl1
+            }
         }
     } else {
         return {
