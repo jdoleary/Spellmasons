@@ -393,8 +393,45 @@ export default class Underworld {
   // calculatePathNoCache calculates a path without checking if an old path can be 
   // reused like 'calculatePath()' does.
   calculatePathNoCache(startPoint: Vec2, target: Vec2): Unit.UnitPath {
+    let points = findPath(startPoint, target, this.pathingLineSegments);
+
+    // If the real target is in an invalid location,
+    // find the closest valid target to represent the endpoint of the path
+    if (points.length == 0) {
+      const nearPointsOnWalls = [];
+      for (let wall of this.pathingLineSegments) {
+        const intersection = findWherePointIntersectLineSegmentAtRightAngle(target, wall);
+        if (intersection) {
+          // window.debugGraphics.lineStyle(3, 0xff0000, 1.0);
+          // window.debugGraphics.drawCircle(intersection.x, intersection.y, 3);
+          nearPointsOnWalls.push(intersection);
+        }
+        nearPointsOnWalls.push(wall.p1);
+        nearPointsOnWalls.push(wall.p2);
+
+      }
+      // Find the closest of the nearPointsOnWalls 
+      if (nearPointsOnWalls[0]) {
+        const closest = nearPointsOnWalls.reduce<{ intersection: Vec2, dist: number }>((acc, cur) => {
+          const dist = math.distance(cur, target)
+          if (dist <= acc.dist) {
+            return { intersection: cur, dist };
+          } else {
+            return acc;
+          }
+
+        }, { intersection: nearPointsOnWalls[0], dist: Number.MAX_SAFE_INTEGER })
+        window.debugGraphics.lineStyle(3, 0x0000ff, 1.0);
+        window.debugGraphics.drawCircle(closest.intersection.x, closest.intersection.y, 4);
+        // Override target with a location that the unit can actually fit in:
+        target = closest.intersection;
+      }
+      // Try again with adjustedTarget set to nearpoint on wall
+      points = findPath(startPoint, target, this.pathingLineSegments);
+
+    }
     return {
-      points: findPath(startPoint, target, this.pathingLineSegments),
+      points,
       lastOwnPosition: Vec.clone(startPoint),
       targetPosition: Vec.clone(target)
     }
