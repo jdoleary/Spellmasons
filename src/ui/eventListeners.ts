@@ -261,7 +261,6 @@ export function mouseMove(e?: MouseEvent) {
       for (let point of path.points) {
         window.debugGraphics.lineTo(point.x, point.y);
       }
-      window.debugGraphics.lineTo(path.targetPosition.x, path.targetPosition.y);
     }
     const mouseTarget = window.underworld.getMousePos();
     const cellX = Math.round(mouseTarget.x / config.OBSTACLE_SIZE);
