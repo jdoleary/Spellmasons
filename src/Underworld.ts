@@ -566,24 +566,25 @@ export default class Underworld {
   // cacheWalls updates underworld.walls array
   // with the walls for the edge of the map
   // and the walls from the current obstacles
-  cacheWalls(obstacles: Obstacle.IObstacle[], _groundTiles: Tile[]) {
+  cacheWalls(obstacles: Obstacle.IObstacle[], groundTiles: Tile[]) {
 
-    // const distanceFromGroundCenterWhenAdjacent = 1 + Math.sqrt(2) * config.OBSTACLE_SIZE / 2;
-    // // Optimization: Removes linesegments that are not adjacent to walkable ground to prevent
-    // // having to process linesegments that will never be used
+    const distanceFromGroundCenterWhenAdjacent = 1 + Math.sqrt(2) * config.OBSTACLE_SIZE / 2;
+    // Optimization: Removes linesegments that are not adjacent to walkable ground to prevent
+    // having to process linesegments that will never be used
     // function filterRemoveNonGroundAdjacent(ls: LineSegment): boolean {
     //   return groundTiles.some(gt => math.distance(gt, ls.p1) <= distanceFromGroundCenterWhenAdjacent)
     // }
-    // // Optimization: Removes polygons that are not adjacent to walkable ground to prevent
-    // // having to process polygons that will never be used
-    // function filterRemoveNonGroundAdjacentPoly(poly: Polygon): boolean {
-    //   return groundTiles.some(gt => poly.points.some(p => math.distance(gt, p) <= distanceFromGroundCenterWhenAdjacent))
-    // }
+    // Optimization: Removes polygons that are not adjacent to walkable ground to prevent
+    // having to process polygons that will never be used
+    function filterRemoveNonGroundAdjacentPoly(poly: Polygon2): boolean {
+      return groundTiles.some(gt => poly.some(p => math.distance(gt, p) <= distanceFromGroundCenterWhenAdjacent))
+    }
     const getWallPolygons = () => obstacles.filter(o => o.material == Material.WALL).map(o => o.bounds);
     // walls block sight and movement
-    this.walls = mergePolygon2s(getWallPolygons()).map(toLineSegments).flat();
-    // TODO: Optimize:
-    //.filter(filterRemoveNonGroundAdjacent);
+    this.walls = mergePolygon2s(getWallPolygons()).map(toLineSegments).flat()
+    // TODO: Optimize
+    // .filter(filterRemoveNonGroundAdjacent);
+
     const expandMagnitude = config.COLLISION_MESH_RADIUS * 0.6;
 
     // liquid bounds block movement only under certain circumstances
@@ -602,10 +603,9 @@ export default class Underworld {
 
     this.pathingPolygons = mergePolygon2s([...getWallPolygons().map(p => expandPolygon(p, expandMagnitude))
       .map(p => p.map(vec2 => ({ x: vec2.x, y: vec2.y - 10 })))
-      , ...this.liquidPolygons.map(p => expandPolygon(p, expandMagnitude))]);
+      , ...this.liquidPolygons.map(p => expandPolygon(p, expandMagnitude))])
+      .filter(filterRemoveNonGroundAdjacentPoly)
 
-    // TODO: Optimize:
-    //.filter(filterRemoveNonGroundAdjacentPoly)
 
     // Process the polygons into pathingwalls for use in tryPath
     // TODO: Optimize if needed: When this.pathingLineSegments gets serialized to send over the network
