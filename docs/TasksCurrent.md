@@ -1,6 +1,5 @@
 ## Schedule
 - Today
-    - Figure out how to accurately remove most outside wall polygon to ensure movement will work even if your mouse is out of bounds
     - Optimize: Is setPath being called when you just move your mouse?
     - What if you just HOLD RMB to move and it doesn't even path, it just moves you in that direction?
         - TODO: if you die when moving by stepping on spikes the new move function overrides the animation and it stays walking

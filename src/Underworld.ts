@@ -564,24 +564,25 @@ export default class Underworld {
   // cacheWalls updates underworld.walls array
   // with the walls for the edge of the map
   // and the walls from the current obstacles
-  cacheWalls(obstacles: Obstacle.IObstacle[], groundTiles: Tile[]) {
+  cacheWalls(obstacles: Obstacle.IObstacle[], emptyTiles: Tile[]) {
 
-    const distanceFromGroundCenterWhenAdjacent = 1 + Math.sqrt(2) * config.OBSTACLE_SIZE / 2;
+    const distanceFromTileCenterWhenAdjacent = 1 + Math.sqrt(2) * config.OBSTACLE_SIZE / 2;
     // Optimization: Removes linesegments that are not adjacent to walkable ground to prevent
     // having to process linesegments that will never be used
     // function filterRemoveNonGroundAdjacent(ls: LineSegment): boolean {
-    //   return groundTiles.some(gt => math.distance(gt, ls.p1) <= distanceFromGroundCenterWhenAdjacent)
+    //   return groundTiles.some(gt => math.distance(gt, ls.p1) <= distanceFromTileCenterWhenAdjacent)
     // }
-    // Optimization: Removes polygons that are not adjacent to walkable ground to prevent
-    // having to process polygons that will never be used
-    function filterRemoveNonGroundAdjacentPoly(poly: Polygon2): boolean {
-      return groundTiles.some(gt => poly.some(p => math.distance(gt, p) <= distanceFromGroundCenterWhenAdjacent))
+
+    // Used to remove polygons that border empty tiles
+    function filterRemoveEmptyTileAdjacentPoly(poly: Polygon2): boolean {
+      return !emptyTiles.some(tile => poly.some(p => math.distance(tile, p) <= distanceFromTileCenterWhenAdjacent))
     }
     const getWallPolygons = () => obstacles.filter(o => o.material == Material.WALL).map(o => o.bounds);
     // walls block sight and movement
-    this.walls = mergePolygon2s(getWallPolygons()).map(toLineSegments).flat()
-    // TODO: Optimize
-    // .filter(filterRemoveNonGroundAdjacent);
+    this.walls = mergePolygon2s(getWallPolygons())
+      // Optimization, remove the outermost wall poly since no units will ever collide with it
+      .filter(filterRemoveEmptyTileAdjacentPoly)
+      .map(toLineSegments).flat()
 
     const expandMagnitude = config.COLLISION_MESH_RADIUS * 0.6;
 
@@ -602,7 +603,12 @@ export default class Underworld {
     this.pathingPolygons = mergePolygon2s([...getWallPolygons().map(p => expandPolygon(p, expandMagnitude))
       .map(p => p.map(vec2 => ({ x: vec2.x, y: vec2.y - 10 })))
       , ...this.liquidPolygons.map(p => expandPolygon(p, expandMagnitude))])
-      .filter(filterRemoveNonGroundAdjacentPoly)
+      // remove polygons that border empty tiles (the outermost poly) so that if player tries to path to an out of bounds location
+      // it will still be able to find the nearest point on a wall.  If it wasn't removed, attempting to path to an out of bounds
+      // location would find an adjusted path target on the wall of the outermost poly, but since the inside 2nd outermost poly
+      // is always between units and the outermost poly, that adjusted point wouldn't find a successful path either
+      // and it the player would not move. 
+      .filter(filterRemoveEmptyTileAdjacentPoly);
 
 
     // Process the polygons into pathingwalls for use in tryPath
@@ -907,7 +913,8 @@ export default class Underworld {
         const { levelIndex, limits, imageOnlyTiles, pickups, enemies, obstacles, validPlayerSpawnCoords } = levelData;
         this.levelIndex = levelIndex;
         this.limits = limits;
-        this.cacheWalls(obstacles, imageOnlyTiles.filter(x => x.image == all_ground));
+        // empty tiles are tiles with an image of ''
+        this.cacheWalls(obstacles, imageOnlyTiles.filter(x => x.image == ''));
         this.imageOnlyTiles = imageOnlyTiles;
         this.addGroundTileImages();
         for (let p of pickups) {
