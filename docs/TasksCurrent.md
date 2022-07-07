@@ -43,7 +43,6 @@
     - Master Music
 
 
-- Right clicking on toolbar moves character
 - Ordered next tasks
     - Steam Page
     - Trailer

@@ -25,6 +25,7 @@ export enum View {
   Game,
   Disconnected
 }
+const elPIXIHolder = document.getElementById('PIXI-holder') as HTMLElement;
 const elUpgradePicker = document.getElementById('upgrade-picker') as HTMLElement;
 let lastNonMenuView: View | undefined;
 function closeMenu() {
@@ -127,7 +128,10 @@ function addUnderworldEventListeners() {
   window.addEventListener('keyup', keyupListener);
   document.body.addEventListener('contextmenu', contextmenuHandler);
   document.body.addEventListener('click', clickHandler);
-  window.addEventListener('mousedown', mouseDownHandler);
+  elPIXIHolder.addEventListener('mousedown', mouseDownHandler);
+  // mousedown is added to elPIXIHolder while mouseUp is intentionally on
+  // the entire window object so that anywhere the mouse is released, it will
+  // be detected.
   window.addEventListener('mouseup', mouseUpHandler);
   window.addEventListener('blur', onWindowBlur);
   document.body.addEventListener('wheel', zoom);

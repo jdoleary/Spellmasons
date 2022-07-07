@@ -316,8 +316,8 @@ export function mouseDownHandler(e: MouseEvent) {
     window.setMMBDown(true);
     e.preventDefault();
   } else if (e.button == 2) {
-    window.setRMBDown(true);
     e.preventDefault();
+    window.setRMBDown(true);
   }
 }
 export function mouseUpHandler(e: MouseEvent) {
