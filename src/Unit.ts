@@ -851,24 +851,24 @@ export function copyForPredictionUnit(u: IUnit): IUnit {
       window.underworld.setPath(u, target);
     }
   }
-  const { image, resolveDoneMoving, modifiers, ...unit } = u;
+  const { image, resolveDoneMoving, modifiers, ...rest } = u;
   return {
-    ...unit,
+    ...rest,
     // prediction units INTENTIONALLY share a reference to the original
     // unit's path so that we can get the efficiency gains of
     // cached paths per unit.  If we made a deep copy instead, the
     // prediction unit would cache-miss each time it was recreated
     // and needed a path
-    path: unit.path,
+    path: rest.path,
     // Prediction units should have full stamina because they will
     // when it is their turn
-    stamina: unit.staminaMax,
-    onDamageEvents: [...unit.onDamageEvents],
-    onDeathEvents: [...unit.onDeathEvents],
-    onMoveEvents: [...unit.onMoveEvents],
-    onAgroEvents: [...unit.onAgroEvents],
-    onTurnStartEvents: [...unit.onTurnStartEvents],
-    onTurnEndEvents: [...unit.onTurnEndEvents],
+    stamina: rest.staminaMax,
+    onDamageEvents: [...rest.onDamageEvents],
+    onDeathEvents: [...rest.onDeathEvents],
+    onMoveEvents: [...rest.onMoveEvents],
+    onAgroEvents: [...rest.onAgroEvents],
+    onTurnStartEvents: [...rest.onTurnStartEvents],
+    onTurnEndEvents: [...rest.onTurnEndEvents],
     // Deep copy modifiers so it doesn't mutate the unit's actual modifiers object
     modifiers: JSON.parse(JSON.stringify(modifiers)),
     shaderUniforms: {},
