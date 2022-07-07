@@ -20,16 +20,11 @@ Pushes the target(s) away from the caster
     `,
     effect: async (state, prediction) => {
       let promises = [];
+      const awayFrom = state.casterUnit;
       for (let unit of state.targetedUnits) {
-        // Push away from caster if unit was direct targeted by cast, otherwise push away from the
-        // cast location (as in the case of AOE, push)
-        const awayFrom = distance(state.castLocation, unit) < config.COLLISION_MESH_RADIUS ? state.casterUnit : state.castLocation;
         promises.push(forcePush(unit, awayFrom, prediction));
       }
       for (let pickup of state.targetedPickups) {
-        // Push away from caster if unit was direct targeted by cast, otherwise push away from the
-        // cast location (as in the case of AOE, push)
-        const awayFrom = distance(state.castLocation, pickup) < config.COLLISION_MESH_RADIUS ? state.casterUnit : state.castLocation;
         promises.push(forcePush(pickup, awayFrom, prediction));
       }
       await Promise.all(promises);

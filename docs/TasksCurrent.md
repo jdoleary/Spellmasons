@@ -48,6 +48,7 @@
     - Trailer
     - Marketing
 ## Bugs
+- AOE + Push leaves all targeted units red
 - Pack 7: Dad Loch playtest
     - (resolved?) Make health and mana go full when portal spawns so users aren't tempted to collect potions meaninglessly
     - Explain to user with popups
