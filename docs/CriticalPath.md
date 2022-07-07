@@ -1,6 +1,6 @@
 # Critical Path
 - Week of 7/4
-    - Pack 1
+    - DONE Pack 1
 - Week of 7/11
     - Pack 2 & 3
 - Week of 7/18

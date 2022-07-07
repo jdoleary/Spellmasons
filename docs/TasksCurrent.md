@@ -1,6 +1,4 @@
 ## Schedule
-- Pack 1
-    - Add prediction pickups to targetedPickups or else forceMove prediction will actually push real pickup
 - Pack 2
     - bug: critical: Casting on self causes infinite recursion and kills self even if you only cast with one hurt
     - Prevent hang on await
