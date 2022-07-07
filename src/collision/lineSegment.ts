@@ -160,11 +160,23 @@ export function getParametricRelation(l1: LineSegment, l2: LineSegment): Paramet
         if (!pointInSameDirection) {
             // If lines are collinear but do NOT point in the same direction, one of the lines
             // must be reversed in order for the t0,t1 checks to work as intended.
-            const relation = getParametricRelation(l1, { p1: l2.p2, p2: l2.p1 })
+            const reversedRelation = getParametricRelation(l1, { p1: l2.p2, p2: l2.p1 })
             return {
-                ...relation,
-                l2p1Insidel1: relation.l2p2Insidel1,
-                l2p2Insidel1: relation.l2p1Insidel1,
+                // Take l2FullyCoversl1, l2p1Insidel1, and l2p2Insidel1 from the reversed relation
+                // These are the properties that required the reversed relation to calculate correctly
+                l2FullyCoversl1: reversedRelation.l2FullyCoversl1,
+                // Flip these back since l2's points were reversed above
+                l2p1Insidel1: reversedRelation.l2p2Insidel1,
+                l2p2Insidel1: reversedRelation.l2p1Insidel1,
+                // Take isOverlapping from the reversed relation just so that it doesn't have to be recalculated
+                isOverlapping: reversedRelation.isOverlapping,
+                // Keep the original properties of the relation,
+                // so that they aren't changed with the abover reversal
+                p, r, q, s,
+                qMinusP,
+                rCrossS,
+                isCollinear,
+                pointInSameDirection
             }
         } else {
             const dotRR = Vec.dotProduct(r, r);
@@ -249,6 +261,7 @@ export function lineSegmentIntersection(l1: LineSegment, l2: LineSegment): Vec.V
             } else if (l2FullyCoversl1) {
                 return l1.p2;
             } else {
+                console.error('lineSegmentIntersection: this line should be impossible to reach')
                 // This should never happen, if the line segments are overlapping, one of the above cases
                 // will be true
                 return l2.p2;
