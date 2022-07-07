@@ -1,3 +1,6 @@
+- dad assumed vampire bite would deal damage
+  - resolved with new wording? ask
+- Loch feedback: Show all the places you could move by sample size. and shade in an area
 - Controls could show on escape menu instead of always
 - TODO: Clean: Remove old onMoveEvents? Not used anymore
 - Add "modifier" label to spells that are modifiers like "explode / bloat" and blue outline

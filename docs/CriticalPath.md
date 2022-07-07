@@ -48,6 +48,7 @@
             1. Does the word suggest more than what really happens. (ex: bite != damage)
             2. Numbers are meaningless, use percentages instead. (ex: "Increase cast range by 10%")
         - Explain everything, use popups more than once with a "do not show again" button
+        - This game will live or die on the reviews, make sure (like rustlang) that everything is explained well.
     - Optimize
         - Support large maps
         - Round of wall corners so it doesn't stair step??

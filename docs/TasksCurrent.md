@@ -1,13 +1,14 @@
 ## Schedule
 - Pack 1
-    - bug: critical: Casting on self causes infinite recursion and kills self even if you only cast with one hurt
     - Bug: Archers on level 2 have more health than archers on level 1
     - bug: Game didn't go to game over when i died by walking into spikes
     - Restore planning view graphics for force move spells
     - Allow casting no target spells (like decoy) at end of range instead of saying "out of range"
+    - how to explain "+ cast range", units of measure no good.  Try percentage
     - Add 'loading' after clicking `join game`
     - Make predictions consider the effect of forceMove, like `push, AOE` should show the prediction circle in the end location of the push
 - Pack 2
+    - bug: critical: Casting on self causes infinite recursion and kills self even if you only cast with one hurt
     - Prevent hang on await
     - Bug: I pushed a unit into lava and the game is hanging on an await
     - **critical** Brad's game got stuck on Message Type 9 Couldn't pick an upgrade
@@ -30,6 +31,10 @@
     - can't drag spell from book to toolbar if it's already in toolbar
 - Pack 6
     - Standalone Server
+        - Decouple the various layers (data: underworld; networking: pie; visual: Pixi / DOM; audio)
+            - Then improve syncing strategy between the data layer and the visual layer.  This will be useful for network syncs, saves and loads, standalone headless server.
+                - It should also solve the disappearing subsprite bug and the wizard robes changing color bug.
+            - In order to decouple, each should have imports only in one file that can be dependency injected.  So ALL pie stuff goes through the networking layer, all DOM stuff goes through the UI layer, all PIXI (including PixiUtils which is how a lot of the files interact with PIXI) stuff goes through the pixi layer.  This should make it easy to make a headless server or make tests that use a data-only underworld
 - Pack 7
     - Unit Crowding
 
@@ -44,39 +49,19 @@
     - Steam Page
     - Trailer
     - Marketing
-## Focus
-- Loch feedback:
-    - Readd cast range circle when you select yoruseelf and **label it**
-    - Move card so people don't accidentally right click and move into an enemy.
-    - Show all the places you could move by sample size.
-- This game will live or die on the reviews, make sure (like rustlang) that everything is explained well.
-- Playtest with Colin
-- How to show targeting: https://photos.google.com/photo/AF1QipNRQYCeW85Yokd11e4YA9nyjhu7WD3qt1CAmvZh?
-- Standalone Server
-    - Decouple the various layers (data: underworld; networking: pie; visual: Pixi / DOM; audio)
-        - Then improve syncing strategy between the data layer and the visual layer.  This will be useful for network syncs, saves and loads, standalone headless server.
-            - It should also solve the disappearing subsprite bug and the wizard robes changing color bug.
-        - In order to decouple, each should have imports only in one file that can be dependency injected.  So ALL pie stuff goes through the networking layer, all DOM stuff goes through the UI layer, all PIXI (including PixiUtils which is how a lot of the files interact with PIXI) stuff goes through the pixi layer.  This should make it easy to make a headless server or make tests that use a data-only underworld
-
 ## Bugs
----
 - Pack 7: Dad Loch playtest
     - (resolved?) Make health and mana go full when portal spawns so users aren't tempted to collect potions meaninglessly
-    - Introduce card pickup
-    - explain manaburn better
+    - Explain to user with popups
+        - Introduce card pickup
+        - explain manaburn better
     - AI should avoid traps when moving
-    - allow changing path if you click again while moving to cancel accidental movement
-    - dad assumed vampire bite would deal damage
-    - how to explain "+ cast range", units of measure no good.  Try percentage
-    - Casting decoy should support using end of range but it says "out of range"
     - health bars should be same size regardless of zoom
     - should "explode" be able to stack?
-        - Maybe rename to "burstable"?
     - decoy should look like delapadated version of you
     - decoy should pull agro even if farther away?
     - Flag things visually as modifiers (loch says explode is confusing)
     - casting non-curses like heal or purify on self should show green, not red
-    - copy: priest "enemy" is confusing; say "vampires of different faction"
     - pathfinding for vampires broken?
     - health bars bigger and farther from their head
     - death circle can be confusing when moved out of the way of the toolbar (add arrow?)
