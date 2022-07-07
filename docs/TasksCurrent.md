@@ -1,7 +1,18 @@
 ## Schedule
 - Pack 2
     - Prevent hang on await
-    - Bug: I pushed a unit into lava and the game is hanging on an await
+        - Possible causes
+            - forceMoveInstances
+            - fly() - flying / lobbing projectiles
+            - createLevel
+            - initLevel
+            - animateSpell
+            - playComboAnimation
+            - playAnimation
+            - addOneOffAnimation
+            - moveTowards
+            - resolveDoneMoving
+            - unit.action
     - **critical** Brad's game got stuck on Message Type 9 Couldn't pick an upgrade
         - Develop a way of better logging where it's hanging
     - Could use Promise.race and a timeout wrapper as a bandaid to make sure game never hangs and reports where it would have
@@ -48,6 +59,7 @@
     - Trailer
     - Marketing
 ## Bugs
+- Self clones will walk through lava
 - It's possible for a unit to "fall in" to lava and then to "fall out" immediately back on to ground depending on their position
 - Pack 7: Dad Loch playtest
     - (resolved?) Make health and mana go full when portal spawns so users aren't tempted to collect potions meaninglessly
