@@ -1,8 +1,9 @@
-import { Vec2 } from '../Vec';
+import { Vec2, magnitude, clone } from '../Vec';
 import type { Spell } from '.';
 import { distance, similarTriangles } from '../math';
-import type { Circle } from '../collision/moveWithCollision';
+import type { Circle, ForceMove } from '../collision/moveWithCollision';
 import * as config from '../config';
+import { forceMoveColor } from '../ui/colors';
 
 export const id = 'push';
 const pushDistance = 20;
@@ -36,15 +37,27 @@ Pushes the target(s) away from the caster
     },
   },
 };
-export async function forcePush(pushedObject: Circle, awayFrom: Vec2, prediction: boolean): Promise<Vec2> {
+export async function forcePush(pushedObject: Circle, awayFrom: Vec2, prediction: boolean): Promise<void> {
   const velocity = similarTriangles(pushedObject.x - awayFrom.x, pushedObject.y - awayFrom.y, distance(pushedObject, awayFrom), pushDistance);
-  if (!prediction) {
-    const velocity_falloff = 0.93;
-    await new Promise<void>((resolve) => {
-      window.forceMove.push({ pushedObject, velocity, velocity_falloff, resolve });
-    });
-  }
-  return velocity;
+  const velocity_falloff = 0.93;
+  const originalPosition = clone(pushedObject);
+  return await new Promise<void>((resolve) => {
+    const forceMoveInst: ForceMove = { pushedObject, velocity, velocity_falloff, resolve }
+    if (prediction) {
+      // Simulate the forceMove until it's complete
+      while (magnitude(forceMoveInst.velocity) > 0.1) {
+        window.underworld.runForceMove(forceMoveInst);
+      }
+      resolve();
+      // Draw prediction lines
+      window.predictionGraphics.lineStyle(4, forceMoveColor, 1.0)
+      window.predictionGraphics.moveTo(originalPosition.x, originalPosition.y);
+      window.predictionGraphics.lineTo(pushedObject.x, pushedObject.y);
+      window.predictionGraphics.drawCircle(pushedObject.x, pushedObject.y, 4);
+    } else {
+      window.forceMove.push(forceMoveInst);
+    };
+  });
 
 }
 export default spell;

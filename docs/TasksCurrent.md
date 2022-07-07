@@ -1,7 +1,6 @@
 ## Schedule
 - Pack 1
-    - Restore planning view graphics for force move spells
-        - Make predictions consider the effect of forceMove, like `push, AOE` should show the prediction circle in the end location of the push
+    - Add prediction pickups to targetedPickups or else forceMove prediction will actually push real pickup
 - Pack 2
     - bug: critical: Casting on self causes infinite recursion and kills self even if you only cast with one hurt
     - Prevent hang on await
@@ -32,6 +31,7 @@
             - In order to decouple, each should have imports only in one file that can be dependency injected.  So ALL pie stuff goes through the networking layer, all DOM stuff goes through the UI layer, all PIXI (including PixiUtils which is how a lot of the files interact with PIXI) stuff goes through the pixi layer.  This should make it easy to make a headless server or make tests that use a data-only underworld
 - Pack 7
     - Unit Crowding
+        - `// TODO: Temp removed aliveNPCs because moveWithCollisions doesn't consider them yet`
     - casting non-curses like heal or purify on self should show green, not red
     - pathfinding for vampires broken?
     - Priest "run away" ai is broken / Archer pursue ai is not working well

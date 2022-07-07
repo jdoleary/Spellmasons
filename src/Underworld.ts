@@ -44,7 +44,7 @@ import { removeUnderworldEventListeners, setView, View } from './views';
 import * as readyState from './readyState';
 import { mouseMove } from './ui/eventListeners';
 import Jprompt from './Jprompt';
-import { collideWithLineSegments, moveWithCollisions } from './collision/moveWithCollision';
+import { collideWithLineSegments, ForceMove, moveWithCollisions } from './collision/moveWithCollision';
 import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './contants';
 import { getBestRangedLOSTarget } from './units/actions/rangedAction';
 import { getClients, hostGiveClientGameStateForInitialLoad } from './wsPieHandler';
@@ -137,6 +137,13 @@ export default class Underworld {
     this.random = seedrandom(this.seed, { state: RNGState })
     return this.random;
   }
+  runForceMove(forceMoveInst: ForceMove) {
+    const { pushedObject, velocity, velocity_falloff } = forceMoveInst;
+    // TODO: Temp removed aliveNPCs because moveWithCollisions doesn't consider them yet
+    moveWithCollisions(pushedObject, Vec.add(pushedObject, velocity), []);
+    collideWithLineSegments(pushedObject, this.walls);
+    forceMoveInst.velocity = Vec.multiply(velocity_falloff, velocity);
+  }
   gameLoop = (timestamp: number) => {
     const deltaTime = timestamp - lastTime;
     lastTime = timestamp;
@@ -178,10 +185,7 @@ export default class Underworld {
     for (let i = window.forceMove.length - 1; i >= 0; i--) {
       const forceMoveInst = window.forceMove[i];
       if (forceMoveInst) {
-        const { pushedObject, velocity, velocity_falloff } = forceMoveInst;
-        moveWithCollisions(pushedObject, Vec.add(pushedObject, velocity), aliveNPCs);
-        collideWithLineSegments(pushedObject, this.walls);
-        forceMoveInst.velocity = Vec.multiply(velocity_falloff, velocity);
+        this.runForceMove(forceMoveInst);
         // Remove it from forceMove array once the distance has been covers
         // This works even if collisions prevent the unit from moving since
         // distance is modified even if the unit doesn't move each loop

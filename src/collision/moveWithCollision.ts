@@ -3,6 +3,12 @@ import { distance, similarTriangles } from "../math";
 import { findWherePointIntersectLineSegmentAtRightAngle, LineSegment } from "./lineSegment";
 import * as config from '../config';
 import type * as Unit from '../Unit';
+export interface ForceMove {
+    pushedObject: Circle;
+    velocity: Vec2;
+    velocity_falloff: number;
+    resolve: () => void;
+}
 
 export type Circle = {
     radius: number;

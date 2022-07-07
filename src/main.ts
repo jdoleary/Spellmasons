@@ -27,7 +27,7 @@ import './wsPieSetup';
 import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './contants';
 import type { Vec2 } from './Vec';
 import type { LevelData } from './Underworld';
-import type { Circle } from './collision/moveWithCollision';
+import type { ForceMove } from './collision/moveWithCollision';
 import { syncInventory } from './CardUI';
 
 const YES = 'yes'
@@ -213,7 +213,7 @@ declare global {
     playerThoughts: { [clientId: string]: { target: Vec2, cardIds: string[] } };
     // A list of units and pickups and an endPosition that they are moved to via a "force",
     // like a push or pull or explosion.
-    forceMove: { pushedObject: Circle, velocity: Vec2, velocity_falloff: number, resolve: () => void }[];
+    forceMove: ForceMove[];
     // Middle Mouse Button Down
     // Note: do NOT set directly, use setMMBDown instead
     readonly MMBDown: boolean;
