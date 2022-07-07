@@ -1736,6 +1736,7 @@ export default class Underworld {
           }
         }
       );
+      image.resolver = resolve;
     })
 
 

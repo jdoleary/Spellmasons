@@ -53,6 +53,9 @@ export function create(
 export function cleanup(image?: IImageAnimated) {
   // Remove PIXI sprite
   if (image) {
+    if (image.resolver) {
+      image.resolver();
+    }
     if (image.sprite) {
       // Remove subsprites
       image.sprite.removeChildren();
