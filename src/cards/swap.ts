@@ -34,13 +34,13 @@ Swaps the caster with the source target.
           swapUnits.push([targetUnit, swapLocations.shift() || swapLocation]);
         }
         // The pickup at the target location
-        const pickupAtTarget = window.underworld.getPickupAt(state.castLocation);
+        const pickupAtTarget = window.underworld.getPickupAt(state.castLocation, prediction);
         // Physically swap with pickups
         if (pickupAtTarget) {
           swapPickups.push([pickupAtTarget, swapLocation]);
         }
         // The pickup at the swap location
-        const pickupAtSwap = window.underworld.getPickupAt(swapLocation);
+        const pickupAtSwap = window.underworld.getPickupAt(swapLocation, prediction);
 
         if (pickupAtSwap) {
           swapPickups.push([pickupAtSwap, targetUnit]);

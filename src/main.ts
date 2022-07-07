@@ -29,6 +29,7 @@ import type { Vec2 } from './Vec';
 import type { LevelData } from './Underworld';
 import type { ForceMove } from './collision/moveWithCollision';
 import { syncInventory } from './CardUI';
+import { IPickup } from './Pickup';
 
 const YES = 'yes'
 const SKIP_TUTORIAL = 'skipTutorial';
@@ -193,6 +194,8 @@ declare global {
     superMe: () => void;
     // A local copy of underworld.units used to predict damage and mana use from casting a spell
     predictionUnits: Unit.IUnit[];
+    // A local copy of underworld.pickups used to predict effect from casting a spell
+    predictionPickups: IPickup[];
     // Shows icons above the heads of enemies who will damage you next turn
     attentionMarkers: Vec2[];
     // Shows icon for units that will be successfully resurrected

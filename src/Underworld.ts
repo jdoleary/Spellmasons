@@ -130,6 +130,7 @@ export default class Underworld {
   // for the sake of prediction
   syncPredictionUnits() {
     window.predictionUnits = this.units.map(Unit.copyForPredictionUnit);
+    window.predictionPickups = this.pickups.map(Pickup.copyForPredictionPickup);
   }
   syncronizeRNG(RNGState: SeedrandomState | boolean) {
     // state of "true" initializes the RNG with the ability to save it's state,
@@ -1564,14 +1565,15 @@ export default class Underworld {
   getUnitAt(coords: Vec2, prediction?: boolean): Unit.IUnit | undefined {
     return this.getUnitsAt(coords, prediction)[0];
   }
-  getPickupAt(coords: Vec2): Pickup.IPickup | undefined {
-    const sortedByProximityToCoords = this.pickups.filter(p => !isNaN(p.x) && !isNaN(p.y) && math.distance(coords, p) <= p.radius).sort((a, b) => math.distance(a, coords) - math.distance(b, coords));
+  getPickupAt(coords: Vec2, prediction?: boolean): Pickup.IPickup | undefined {
+    const sortedByProximityToCoords = (prediction ? window.predictionPickups : this.pickups)
+      .filter(p => !isNaN(p.x) && !isNaN(p.y) && math.distance(coords, p) <= p.radius).sort((a, b) => math.distance(a, coords) - math.distance(b, coords));
     const closest = sortedByProximityToCoords[0]
     return closest;
   }
   addUnitToArray(unit: Unit.IUnit, prediction: boolean) {
     if (prediction) {
-      window.predictionUnits.push(unit);
+      window.predictionUnits.push(Unit.copyForPredictionUnit(unit));
     } else {
       this.units.push(unit);
     }
@@ -1579,13 +1581,17 @@ export default class Underworld {
   removePickupFromArray(pickup: Pickup.IPickup) {
     this.pickups = this.pickups.filter((p) => p !== pickup);
   }
-  addPickupToArray(pickup: Pickup.IPickup) {
-    this.pickups.push(pickup);
+  addPickupToArray(pickup: Pickup.IPickup, prediction: boolean) {
+    if (prediction) {
+      window.predictionPickups.push(Pickup.copyForPredictionPickup(pickup))
+    } else {
+      this.pickups.push(pickup);
+    }
   }
   // Returns true if the spell cast will hit a unit or pickup with the first card
   hasInitialTarget(castLocation: Vec2): boolean {
     const unitAtCastLocation = this.getUnitAt(castLocation, true);
-    const pickupAtCastLocation = this.getPickupAt(castLocation);
+    const pickupAtCastLocation = this.getPickupAt(castLocation, true);
     return !!unitAtCastLocation || !!pickupAtCastLocation;
   }
   async castCards(
@@ -1601,7 +1607,7 @@ export default class Underworld {
       window.castThisTurn = true;
     }
     const unitAtCastLocation = this.getUnitAt(castLocation, prediction);
-    const pickupAtCastLocation = this.getPickupAt(castLocation);
+    const pickupAtCastLocation = this.getPickupAt(castLocation, prediction);
     let effectState: Cards.EffectState = {
       cardIds,
       casterCardUsage,

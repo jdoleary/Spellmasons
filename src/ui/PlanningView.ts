@@ -436,7 +436,7 @@ export function checkIfNeedToClearTooltip() {
   }
   // Quick hack to check if the pickup has been picked up
   // If so, deselect it
-  if (selectedPickup && selectedPickup.image.sprite.parent === null) {
+  if (selectedPickup && (selectedPickup.image && selectedPickup.image.sprite.parent === null)) {
     clearTooltipSelection();
   }
 

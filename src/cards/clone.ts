@@ -34,7 +34,7 @@ Clones each target
           // Since pickups aren't currently considered in prediction predictions just return undefined
           // if this is a prediction or else it will ACTUALLY clone pickups when just making predictions
           // 2022-05-09
-          const pickup = prediction ? undefined : window.underworld.getPickupAt(target);
+          const pickup = prediction ? undefined : window.underworld.getPickupAt(target, prediction);
 
           // If there is are clone coordinates to clone into
           if (cloneSourceCoords) {

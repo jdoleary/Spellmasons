@@ -22,7 +22,7 @@ export interface IPickup {
   name: string;
   description: string;
   imagePath: string;
-  image: Image.IImageAnimated;
+  image?: Image.IImageAnimated;
   // Only can be picked up once
   singleUse: boolean;
   // Only can be picked up by players
@@ -50,6 +50,13 @@ interface IPickupSource {
   probability: number;
   effect: ({ unit, player }: { unit?: IUnit; player?: Player.IPlayer }) => boolean | undefined;
 }
+export function copyForPredictionPickup(p: IPickup): IPickup {
+  // Remove image and text since prediction pickups won't be rendered
+  const { image, text, ...rest } = p;
+  return {
+    ...rest
+  }
+}
 
 export function create({ pos, pickupSource, onTurnsLeftDone }:
   {
@@ -72,24 +79,31 @@ export function create({ pos, pickupSource, onTurnsLeftDone }:
     effect,
     onTurnsLeftDone
   };
-  self.image.sprite.scale.x = scale;
-  self.image.sprite.scale.y = scale;
+  if (self.image) {
+    self.image.sprite.scale.x = scale;
+    self.image.sprite.scale.y = scale;
+  }
   if (turnsLeftToGrab) {
     self.turnsLeftToGrab = turnsLeftToGrab;
 
-    const timeCircle = addPixiSprite('time-circle.png', self.image.sprite);
-    timeCircle.anchor.x = 0;
-    timeCircle.anchor.y = 0;
+    // Only add timeCircle and text if the pickup has an image (meaning it is rendered)
+    // Prediction pickups are not rendered and don't need these.
+    if (self.image) {
 
-    self.text = new PIXI.Text(`${turnsLeftToGrab}`, { fill: 'white', align: 'center' });
-    self.text.anchor.x = 0;
-    self.text.anchor.y = 0;
-    // Center the text in the timeCircle
-    self.text.x = 8;
-    self.image.sprite.addChild(self.text);
+      const timeCircle = addPixiSprite('time-circle.png', self.image.sprite);
+      timeCircle.anchor.x = 0;
+      timeCircle.anchor.y = 0;
+
+      self.text = new PIXI.Text(`${turnsLeftToGrab}`, { fill: 'white', align: 'center' });
+      self.text.anchor.x = 0;
+      self.text.anchor.y = 0;
+      // Center the text in the timeCircle
+      self.text.x = 8;
+      self.image.sprite.addChild(self.text);
+    }
   }
 
-  window.underworld.addPickupToArray(self);
+  window.underworld.addPickupToArray(self, false);
 
   return self;
 }
@@ -106,14 +120,14 @@ export function setPosition(pickup: IPickup, x: number, y: number) {
   Image.setPosition(pickup.image, { x, y });
 }
 export type IPickupSerialized = Omit<IPickup, "image" | "effect"> & {
-  image: Image.IImageAnimatedSerialized
+  image?: Image.IImageAnimatedSerialized
 };
 export function serialize(p: IPickup): IPickupSerialized {
   // effect is a callback and cannot be serialized
   const { effect, ...rest } = p;
   const serialized: IPickupSerialized = {
     ...rest,
-    image: Image.serialize(p.image),
+    image: p.image ? Image.serialize(p.image) : undefined,
   };
   return serialized;
 }
