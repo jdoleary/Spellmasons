@@ -8,7 +8,9 @@
 - Week of 7/25
     - Pack 6
 - Week of 8/1
+    - Pack 7
 - Week of 8/8
+    - Pack 8
 - Week of 8/15
 - Week of 8/22
 - Week of 8/29
