@@ -1668,6 +1668,10 @@ export default class Underworld {
       const animationPromises: Promise<void>[] = [];
       if (card) {
         const targets = effectState.targetedUnits.length == 0 ? [castLocation] : effectState.targetedUnits
+        // Play the card sound effect:
+        if (!prediction && card.sfx) {
+          playSFX(sfx[card.sfx]);
+        }
         for (let target of targets) {
 
           // Animate the card for each target
@@ -1678,10 +1682,6 @@ export default class Underworld {
               console.log('Card', cardId, 'has no animation path')
             }
           }
-        }
-        // Play the card sound effect:
-        if (!prediction && card.sfx) {
-          playSFX(sfx[card.sfx]);
         }
 
         // .then is necessary to convert return type of promise.all to just be void
