@@ -29,6 +29,7 @@ body {
   display: none;
   font-size: 162px;
   color: #6363ff;
+  background: rgba(255, 255, 255, 0.3);
   width: 100vw;
   height: 100vh;
   z-index: 1;
