@@ -359,6 +359,7 @@ export function getParentContainer(alive: boolean): PIXI.Container {
 }
 
 export function playComboAnimation(unit: IUnit, key: string | undefined, keyMoment?: () => Promise<any>, options?: PixiSpriteOptions): Promise<void> {
+  console.log('jtest playComboAnimation')
   if (!key) {
     console.trace('tried to play missing animation');
     return Promise.resolve();
@@ -380,6 +381,14 @@ export function playComboAnimation(unit: IUnit, key: string | undefined, keyMome
 
     const tryTriggerKeyMoment = () => {
       if (keyMoment && !keyMomentTriggered) {
+        // Note: keyMomentTriggered must be set to true BEFORE the following invokation
+        // of keyMoment() and the resolve because there is a potential for the
+        // keyMoment to change the sprite of this unit which would try to retrigger
+        // the keyMoment immediately which would result in an infinite loop.
+        // Placing keyMomentTriggered = true BEFORE prevents this from happening
+        // because this function (tryTriggerKeyMoment) checks to ensure that it
+        // doesn't trigger it more than once.
+        keyMomentTriggered = true;
         // Ensure that if keyMoment hasn't been called yet (because)
         // the animation was interrupted, it is called now
         // A keyMoment should ALWAYS be invoked
@@ -392,7 +401,6 @@ export function playComboAnimation(unit: IUnit, key: string | undefined, keyMome
           // that occur in the combo
           resolve();
         });
-        keyMomentTriggered = true;
       }
 
     }

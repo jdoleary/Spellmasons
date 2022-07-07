@@ -1,6 +1,5 @@
 ## Schedule
 - Pack 2
-    - bug: critical: Casting on self causes infinite recursion and kills self even if you only cast with one hurt
     - Prevent hang on await
     - Bug: I pushed a unit into lava and the game is hanging on an await
     - **critical** Brad's game got stuck on Message Type 9 Couldn't pick an upgrade
