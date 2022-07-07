@@ -48,8 +48,7 @@
     - Trailer
     - Marketing
 ## Bugs
-- AOE + Push leaves all targeted units red
-    - Movement spells never resolve if they are stopped due to lava
+- It's possible for a unit to "fall in" to lava and then to "fall out" immediately back on to ground depending on their position
 - Pack 7: Dad Loch playtest
     - (resolved?) Make health and mana go full when portal spawns so users aren't tempted to collect potions meaninglessly
     - Explain to user with popups

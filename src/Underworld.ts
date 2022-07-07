@@ -138,6 +138,14 @@ export default class Underworld {
     this.random = seedrandom(this.seed, { state: RNGState })
     return this.random;
   }
+  removeForceMove(forceMoveInst: ForceMove) {
+    // Note: setting the velocity to 0,0 is the idempotent way to end
+    // a forceMove because the forceMove engine will then call it's resolve function on next
+    // iteration.
+    forceMoveInst.velocity = { x: 0, y: 0 };
+    forceMoveInst.resolve();
+
+  }
   runForceMove(forceMoveInst: ForceMove) {
     const { pushedObject, velocity, velocity_falloff } = forceMoveInst;
     // TODO: Temp removed aliveNPCs because moveWithCollisions doesn't consider them yet
