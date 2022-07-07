@@ -1,3 +1,5 @@
+- bug: Game didn't go to game over when i died by walking into spikes
+  - Implement better game over handling. be careful to not trigger game over too early. for example: A units spell might resurrect itself after dying
 - dad assumed vampire bite would deal damage
   - resolved with new wording? ask
 - Loch feedback: Show all the places you could move by sample size. and shade in an area

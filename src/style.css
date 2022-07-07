@@ -28,7 +28,7 @@ body {
 #loading-screen {
   display: none;
   font-size: 162px;
-  color: white;
+  color: #6363ff;
   width: 100vw;
   height: 100vh;
   z-index: 1;
@@ -36,6 +36,8 @@ body {
   text-align: center;
   line-height: 100vh;
   top: 0;
+  /* Render over top of the menu */
+  z-index: 2;
 }
 
 body.loading #loading-screen {

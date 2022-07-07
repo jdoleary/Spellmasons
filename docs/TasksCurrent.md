@@ -1,7 +1,5 @@
 ## Schedule
 - Pack 1
-    - bug: Game didn't go to game over when i died by walking into spikes
-    - Add 'loading' after clicking `join game`
     - Restore planning view graphics for force move spells
         - Make predictions consider the effect of forceMove, like `push, AOE` should show the prediction circle in the end location of the push
 - Pack 2
