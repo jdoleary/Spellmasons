@@ -1,3 +1,5 @@
+- Controls could show on escape menu instead of always
+- TODO: Clean: Remove old onMoveEvents? Not used anymore
 - Add "modifier" label to spells that are modifiers like "explode / bloat" and blue outline
 - (COULDN"T REPRODUCE) Just shielded unit died when i cast one hurt on him (he  already had one shield that I worked through before)
 - (COULDN"T REPRODUCE) Loading screen doesn't appear between levels

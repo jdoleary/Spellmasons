@@ -1,37 +1,39 @@
 ## Schedule
-- Today
-    - Optimize: Is setPath being called when you just move your mouse?
-    - What if you just HOLD RMB to move and it doesn't even path, it just moves you in that direction?
-        - TODO: if you die when moving by stepping on spikes the new move function overrides the animation and it stays walking
-        - TODO: Clean: Remove old onMoveEvents? Not used anymore
+- Pack 1
     - bug: critical: Casting on self causes infinite recursion and kills self even if you only cast with one hurt
-    - Allow casting no target spells (like decoy) at end of range instead of saying "out of range"
+    - Bug: Archers on level 2 have more health than archers on level 1
+    - bug: Game didn't go to game over when i died by walking into spikes
     - Restore planning view graphics for force move spells
-- Next
-    - Controls could show on escape menu instead of always
-    - Prevent hang on await
-    - Philosophy
-        - Make "rules for copy"
-            1. Does the word suggest more than what really happens. (ex: bite != damage)
-            2. Numbers are meaningless, use percentages instead. (ex: "Increase cast range by 10%")
-        - Explain everything, use popups more than once with a "do not show again" button
-
-
+    - Allow casting no target spells (like decoy) at end of range instead of saying "out of range"
     - Add 'loading' after clicking `join game`
+    - Make predictions consider the effect of forceMove, like `push, AOE` should show the prediction circle in the end location of the push
+- Pack 2
+    - Prevent hang on await
+    - Bug: I pushed a unit into lava and the game is hanging on an await
+    - **critical** Brad's game got stuck on Message Type 9 Couldn't pick an upgrade
+        - Develop a way of better logging where it's hanging
+    - Could use Promise.race and a timeout wrapper as a bandaid to make sure game never hangs and reports where it would have
+- Pack 3
     - The great refactor
         - Group topics in folders: audio, graphics, gamelogic, etc
             - cleanly separated
         - Add window.headless
-    - **critical** Brad's game got stuck on Message Type 9 Couldn't pick an upgrade
-        - Develop a way of better logging where it's hanging
-    - Could use Promise.race and a timeout wrapper as a bandaid to make sure game never hangs and reports where it would have
-- 2022.07.04
-    - Standalone Server
+- Pack 4
     - Server should be able to send syncs that will wait to execute until turn changes so it doesn't interrupt animations and mess up the state when it syncs
     - Add "preparing" animation used to reduce desyncs due to network latency, so that if multiple users are casting spells at the same time, the wizard bending down to "charge" as soon as the current user clicks, masks a delay to make sure it doesn't conflict with other spells.  It'll send the spell over the network as soon as the user clicks but waits to cast it so that there aren't conflicting spells making desyncs on multiple clients.
-- 2022.07.05
+    - **critical** Figure out how to broadcast player movement (due to the new system) to multiple clients
+- Pack 5
+    - Fix: bad-pathing.mkv in videos folder
+        - seed: 0.6450583331398443
+    - cloned self doesn't show magic animation when they cast
+    - priest is attacking /dealing damage to him but he's not a vamp. how?
+    - can't drag spell from book to toolbar if it's already in toolbar
+- Pack 6
+    - Standalone Server
+- Pack 7
     - Unit Crowding
-    - Tell Che to separate walls from floor in new biomes
+
+
 - Ordered next tasks
     - all SFX
         - all spells
@@ -47,7 +49,6 @@
     - Readd cast range circle when you select yoruseelf and **label it**
     - Move card so people don't accidentally right click and move into an enemy.
     - Show all the places you could move by sample size.
-- Make predictions consider the effect of forceMove, like `push, AOE` should show the prediction circle in the end location of the push
 - This game will live or die on the reviews, make sure (like rustlang) that everything is explained well.
 - Playtest with Colin
 - How to show targeting: https://photos.google.com/photo/AF1QipNRQYCeW85Yokd11e4YA9nyjhu7WD3qt1CAmvZh?
@@ -59,13 +60,8 @@
 
 ## Bugs
 ---
-- Brad Feedback
-    - cloned self doesn't show magic animation when they cast
-    - priest is attacking /dealing damage to him but he's not a vamp. how?
-    - can't drag spell from book to toolbar if it's already in toolbar
----
-- Dad Loch playtest
-    - Make health and mana go full when portal spawns so users aren't tempted to collect potions meaninglessly
+- Pack 7: Dad Loch playtest
+    - (resolved?) Make health and mana go full when portal spawns so users aren't tempted to collect potions meaninglessly
     - Introduce card pickup
     - explain manaburn better
     - AI should avoid traps when moving
@@ -91,7 +87,7 @@
     - This makes it so that when casting two spells in quick succession, the second attack animation gets overridden by returningToDefaultSprite
 - How to keep syncronize from interrupting an animation while it's running
     - Hold on to syncronize messages until a good time to execute them
-- Pathing is broken sometimes where a unit moves a little and then no further
+- (resolved?) Pathing is broken sometimes where a unit moves a little and then no further
 - enter, enter doesn't make "are you sure" prompt go away when there are no enemies.
 - Priest "run away" ai is broken / Archer pursue ai is not working well
 - wall: see abberant-wall.png

@@ -1,5 +1,19 @@
 # Critical Path
-- Solve "Out of range" issue
+- Week of 7/4
+    - Pack 1
+- Week of 7/11
+    - Pack 2 & 3
+- Week of 7/18
+    - Pack 4 & 5
+- Week of 7/25
+    - Pack 6
+- Week of 8/1
+- Week of 8/8
+- Week of 8/15
+- Week of 8/22
+- Week of 8/29
+
+
 - Standalone Server
 - Clerical
     - Menu
@@ -29,6 +43,11 @@
     - [Tutorial](https://www.youtube.com/watch?v=-GV814cWiAw)
 - Game Balance (Blocked: Requires more playtesting)
 - Final Steps
+    - Philosophy
+        - "rules for copy"
+            1. Does the word suggest more than what really happens. (ex: bite != damage)
+            2. Numbers are meaningless, use percentages instead. (ex: "Increase cast range by 10%")
+        - Explain everything, use popups more than once with a "do not show again" button
     - Optimize
         - Support large maps
         - Round of wall corners so it doesn't stair step??
