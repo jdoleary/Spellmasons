@@ -160,7 +160,12 @@ export function getParametricRelation(l1: LineSegment, l2: LineSegment): Paramet
         if (!pointInSameDirection) {
             // If lines are collinear but do NOT point in the same direction, one of the lines
             // must be reversed in order for the t0,t1 checks to work as intended.
-            return getParametricRelation(l1, { p1: l2.p2, p2: l2.p1 })
+            const relation = getParametricRelation(l1, { p1: l2.p2, p2: l2.p1 })
+            return {
+                ...relation,
+                l2p1Insidel1: relation.l2p2Insidel1,
+                l2p2Insidel1: relation.l2p1Insidel1,
+            }
         } else {
             const dotRR = Vec.dotProduct(r, r);
             const dotSR = Vec.dotProduct(s, r);
