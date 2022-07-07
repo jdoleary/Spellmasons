@@ -98,7 +98,7 @@ Sets a spell as a trap, to be triggered when stepped on.  Wrapping a spell in a 
                   }
                 },
               };
-              window.underworld.addPickupToArray(self);
+              window.underworld.addPickupToArray(self, prediction);
 
             }
           });
