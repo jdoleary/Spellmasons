@@ -1,11 +1,10 @@
 ## Schedule
 - Pack 1
     - bug: Game didn't go to game over when i died by walking into spikes
-    - Restore planning view graphics for force move spells
     - Allow casting no target spells (like decoy) at end of range instead of saying "out of range"
-    - how to explain "+ cast range", units of measure no good.  Try percentage
     - Add 'loading' after clicking `join game`
-    - Make predictions consider the effect of forceMove, like `push, AOE` should show the prediction circle in the end location of the push
+    - Restore planning view graphics for force move spells
+        - Make predictions consider the effect of forceMove, like `push, AOE` should show the prediction circle in the end location of the push
 - Pack 2
     - bug: critical: Casting on self causes infinite recursion and kills self even if you only cast with one hurt
     - Prevent hang on await
