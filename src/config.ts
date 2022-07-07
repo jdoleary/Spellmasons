@@ -25,8 +25,6 @@ export const PLAYER_BASE_STAMINA = UNIT_BASE_STAMINA + 100;
 export const UNIT_BASE_DAMAGE = 3;
 export const NON_HEAVY_UNIT_SCALE = 1.0;
 export const START_CARDS_COUNT = 60;
-export const MILLIS_PER_ANIMATION = 200;
-export const MILLIS_PER_SPELL_ANIMATION = 400;
 // Temporarily disable heavy / armored units since I don't have a good way to visually show it
 export const PERCENT_CHANCE_OF_HEAVY_UNIT = -1;
 export const STARTING_CARD_COUNT = 3;

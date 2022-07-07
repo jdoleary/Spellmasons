@@ -1,5 +1,4 @@
 import * as PIXI from 'pixi.js';
-import AnimationTimeline from './AnimationTimeline';
 import type * as Player from './Player';
 import * as Unit from './Unit';
 import type Underworld from './Underworld';
@@ -96,8 +95,6 @@ function setupAll() {
     console.error('Cannot find "menu" element in DOM');
   }
 
-  window.animationTimeline = new AnimationTimeline();
-
   // Set UI version info
   const elVersionInfo = document.getElementById('version-info')
   if (elVersionInfo && window.SPELLMASONS_PACKAGE_VERSION) {
@@ -110,7 +107,6 @@ declare global {
     SPELLMASONS_PACKAGE_VERSION: string;
     latencyPanel: Stats.Panel;
     runPredictionsPanel: Stats.Panel;
-    animationTimeline: AnimationTimeline;
     underworld: Underworld;
     // A reference to the player instance of the client playing on this instance
     player: Player.IPlayer | undefined;

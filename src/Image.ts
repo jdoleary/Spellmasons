@@ -2,7 +2,6 @@ import type * as PIXI from 'pixi.js';
 
 import { addPixiSprite, addPixiSpriteAnimated, getPixiTextureAnimated, PixiSpriteOptions } from './PixiUtils';
 import Subsprites from './Subsprites';
-import { animateIndependent } from './AnimationTimeline';
 import type { Vec2 } from "./Vec";
 
 // The serialized version of the interface changes the interface to allow only the data
@@ -272,19 +271,6 @@ export function setPosition(image: IImageAnimated | undefined, pos: Vec2) {
   image.sprite.x = pos.x;
   image.sprite.y = pos.y;
 }
-export function scale(image: IImageAnimated | undefined, scale: number): Promise<void> {
-  if (!image) {
-    return Promise.resolve();
-  }
-  // Clamp to a positive value
-  scale = Math.max(0, scale);
-  return animateIndependent([
-    {
-      sprite: image.sprite,
-      target: { scale },
-    },
-  ]);
-}
 export function addSubSprite(image: IImageAnimated | undefined, key: string) {
   if (!image) {
     return;
@@ -315,33 +301,13 @@ export function removeSubSprite(image: IImageAnimated | undefined, imagePath: st
     console.log('Cannot remove subsprite', imagePath, 'subsprite is missing from sprite.children');
   }
 }
-export function move(image: IImageAnimated, x: number, y: number) {
-  return animateIndependent([
-    {
-      sprite: image.sprite,
-      target: { x, y },
-    },
-  ]);
-}
-export function show(image?: IImageAnimated): Promise<void> {
-  if (!image) {
-    return Promise.resolve();
+export function show(image?: IImageAnimated) {
+  if (image) {
+    image.sprite.alpha = 1;
   }
-  return animateIndependent([
-    {
-      sprite: image.sprite,
-      target: { alpha: 1 },
-    },
-  ]);
 }
 export function hide(image?: IImageAnimated) {
-  if (!image) {
-    return Promise.resolve();
+  if (image) {
+    image.sprite.alpha = 0;
   }
-  return animateIndependent([
-    {
-      sprite: image.sprite,
-      target: { alpha: 0 },
-    },
-  ]);
 }

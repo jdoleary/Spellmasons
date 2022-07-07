@@ -1659,14 +1659,13 @@ export default class Underworld {
       const card = Cards.allCards[cardId];
       const animationPromises: Promise<void>[] = [];
       if (card) {
-        const animations = []
         const targets = effectState.targetedUnits.length == 0 ? [castLocation] : effectState.targetedUnits
         for (let target of targets) {
 
           // Animate the card for each target
           if (!prediction) {
             if (card.animationPath) {
-              animations.push(this.animateSpell(target, card.animationPath));
+              await this.animateSpell(target, card.animationPath);
             } else {
               console.log('Card', cardId, 'has no animation path')
             }
@@ -1678,15 +1677,8 @@ export default class Underworld {
         }
 
         // .then is necessary to convert return type of promise.all to just be void
-        animationPromises.push(Promise.all([animations]).then(() => { }));
         const { targetedUnits: previousTargets } = effectState;
         effectState = await card.effect(effectState, prediction);
-        // Delay animation between spells so players can understand what's going on
-        if (!prediction) {
-          await new Promise<void>((resolve) => {
-            setTimeout(resolve, config.MILLIS_PER_SPELL_ANIMATION);
-          })
-        }
         // Clear images from previous card before drawing the images from the new card
         containerSpells.removeChildren();
 
@@ -1730,10 +1722,9 @@ export default class Underworld {
           loop: false,
           animationSpeed: 0.15,
           onComplete: () => {
-            Image.hide(image).then(() => {
-              Image.cleanup(image);
-              resolve();
-            })
+            Image.hide(image)
+            Image.cleanup(image);
+            resolve();
           }
         }
       );

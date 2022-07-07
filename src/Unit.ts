@@ -359,7 +359,6 @@ export function getParentContainer(alive: boolean): PIXI.Container {
 }
 
 export function playComboAnimation(unit: IUnit, key: string | undefined, keyMoment?: () => Promise<any>, options?: PixiSpriteOptions): Promise<void> {
-  console.log('jtest playComboAnimation')
   if (!key) {
     console.trace('tried to play missing animation');
     return Promise.resolve();
