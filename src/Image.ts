@@ -52,14 +52,16 @@ export function create(
 }
 export function cleanup(image?: IImageAnimated) {
   // Remove PIXI sprite
-  if (image && image.sprite) {
-    // Remove subsprites
-    image.sprite.removeChildren();
-    if (image.sprite.parent) {
-      image.sprite.parent.removeChild(image.sprite);
+  if (image) {
+    if (image.sprite) {
+      // Remove subsprites
+      image.sprite.removeChildren();
+      if (image.sprite.parent) {
+        image.sprite.parent.removeChild(image.sprite);
+      }
+    } else {
+      console.error('could not clean up image, image.sprite is falsey');
     }
-  } else {
-    console.error('could not clean up image', image, image?.sprite, image?.sprite.parent);
   }
 }
 // changeSprite changes the still image or animation of a sprite
