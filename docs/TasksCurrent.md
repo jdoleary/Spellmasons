@@ -48,6 +48,8 @@
     - Trailer
     - Marketing
 ## Bugs
+- AOE + Push leaves all targeted units red
+    - Movement spells never resolve if they are stopped due to lava
 - Pack 7: Dad Loch playtest
     - (resolved?) Make health and mana go full when portal spawns so users aren't tempted to collect potions meaninglessly
     - Explain to user with popups
@@ -71,6 +73,7 @@
 - Bug: Portal spawns when you prediction kill yourself on test level
 - Bug: Should sync portals when syncing units if all enemies are dead
 - Bug: (Note: this is probably fixed now) Goons spawned outside of map when summoner was stuffed in upper left corner of map
+- Bug: RMB hold on toolbar moves character.  Be very careful when solving this to ensure you don't make clicks in the invisible part of UI elements no longer work
 ---
 ## Features
 - Archers on level 2 have more health than archers on level 1
