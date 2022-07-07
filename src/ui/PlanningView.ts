@@ -491,3 +491,24 @@ export function drawCircleUnderTarget(mousePos: Vec2, opacity: number, graphics:
     graphics.endFill();
   }
 }
+
+
+// Used to return properties for drawRect for drawing
+// unit health and mana bars
+export function getUIBarProps(x: number, y: number, numerator: number, denominator: number, zoom: number): { x: number, y: number, width: number, height: number } {
+  const barWidthAccountForZoom = config.UNIT_UI_BAR_WIDTH / zoom;
+  const barWidth = Math.max(0, barWidthAccountForZoom * numerator / denominator);
+  const height = config.UNIT_UI_BAR_HEIGHT / zoom;
+  return {
+    x: x - barWidthAccountForZoom / 2,
+    // - height so that bar stays in the same position relative to the unit
+    // regardless of zoom
+    // - config.HEALTH_BAR_UI_Y_POS so that it renders above their head instead of
+    // on their center point
+    y: y - config.HEALTH_BAR_UI_Y_POS - height,
+    width: barWidth,
+    height
+  }
+
+
+}

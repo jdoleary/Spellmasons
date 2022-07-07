@@ -34,7 +34,7 @@ import type { Vec2 } from "./Vec";
 import * as Vec from "./Vec";
 import Events from './Events';
 import { allUnits } from './units';
-import { drawTarget, setPredictionGraphicsLineStyle, updateManaCostUI, updatePlanningView } from './ui/PlanningView';
+import { drawTarget, getUIBarProps, setPredictionGraphicsLineStyle, updateManaCostUI, updatePlanningView } from './ui/PlanningView';
 import { prng, randInt, SeedrandomState } from './rand';
 import { calculateCost } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle } from './collision/lineSegment';
@@ -267,12 +267,14 @@ export default class Underworld {
           const healthBarHealColor = u.faction == Faction.ALLY ? 0x23ff30 : 0xff2828;
           window.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
           window.unitOverlayGraphics.beginFill(healthBarColor, 1.0);
-          const healthBarWidth = Math.max(0, config.UNIT_UI_BAR_WIDTH * u.health / u.healthMax);
+          const healthBarProps = getUIBarProps(u.x, u.y, u.health, u.healthMax, zoom);
           window.unitOverlayGraphics.drawRect(
-            u.x - config.UNIT_UI_BAR_WIDTH / 2,
-            u.y - config.HEALTH_BAR_UI_HEIGHT - config.UNIT_UI_BAR_HEIGHT,
-            healthBarWidth,
-            config.UNIT_UI_BAR_HEIGHT);
+            healthBarProps.x,
+            // Stack the health bar above the mana bar
+            healthBarProps.y - config.UNIT_UI_BAR_HEIGHT / zoom,
+            healthBarProps.width,
+            healthBarProps.height
+          );
 
           // Only show health bar predictions on PlayerTurns, while players are able
           // to cast, otherwise it will show out of sync when NPCs do damage
@@ -284,12 +286,15 @@ export default class Underworld {
               if (healthAfterHurt > u.health) {
                 window.unitOverlayGraphics.beginFill(healthBarHealColor, 1.0);
               }
-              const healthBarHurtWidth = Math.max(0, config.UNIT_UI_BAR_WIDTH * (u.health - healthAfterHurt) / u.healthMax);
+              // const healthBarHurtWidth = Math.max(0, config.UNIT_UI_BAR_WIDTH * (u.health - healthAfterHurt) / u.healthMax);
+              const healthBarHurtProps = getUIBarProps(u.x, u.y, u.health - healthAfterHurt, u.healthMax, zoom);
               window.unitOverlayGraphics.drawRect(
-                u.x - config.UNIT_UI_BAR_WIDTH / 2 + config.UNIT_UI_BAR_WIDTH * healthAfterHurt / u.healthMax,
-                u.y - config.HEALTH_BAR_UI_HEIGHT - config.UNIT_UI_BAR_HEIGHT,
-                healthBarHurtWidth,
-                config.UNIT_UI_BAR_HEIGHT);
+                // Show the healthBarHurtBar on the right side of the health  bar
+                healthBarHurtProps.x + config.UNIT_UI_BAR_WIDTH / zoom * healthAfterHurt / u.healthMax,
+                // Stack the health bar above the mana bar
+                healthBarHurtProps.y - config.UNIT_UI_BAR_HEIGHT / zoom,
+                healthBarHurtProps.width,
+                healthBarHurtProps.height);
               // Draw red death circle if a unit is currently alive, but wont be after cast
               if (u.alive && !predictionUnit.alive) {
                 const skullPosition = withinCameraBounds({ x: u.x, y: u.y - config.COLLISION_MESH_RADIUS * 2 + 8 });
@@ -299,14 +304,14 @@ export default class Underworld {
           }
           // Draw mana bar
           if (u.manaMax != 0) {
-            const manaBarWidth = Math.max(0, config.UNIT_UI_BAR_WIDTH * Math.min(1, u.mana / u.manaMax));
             window.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
             window.unitOverlayGraphics.beginFill(0x5656d5, 1.0);
+            const manaBarProps = getUIBarProps(u.x, u.y, u.mana, u.manaMax, zoom);
             window.unitOverlayGraphics.drawRect(
-              u.x - config.UNIT_UI_BAR_WIDTH / 2,
-              u.y - config.HEALTH_BAR_UI_HEIGHT,
-              manaBarWidth,
-              config.UNIT_UI_BAR_HEIGHT);
+              manaBarProps.x,
+              manaBarProps.y,
+              manaBarProps.width,
+              manaBarProps.height);
           }
           if (window.player && u === window.player.unit && window.RMBDown) {
             window.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);

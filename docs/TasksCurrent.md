@@ -63,7 +63,6 @@
     - Flag things visually as modifiers (loch says explode is confusing)
     - casting non-curses like heal or purify on self should show green, not red
     - pathfinding for vampires broken?
-    - health bars bigger and farther from their head
     - death circle can be confusing when moved out of the way of the toolbar (add arrow?)
     - Introduce mana cost changing of cards when used
     - error: cannot animation a still image (explode-on-death.png)
