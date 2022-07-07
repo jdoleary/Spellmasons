@@ -153,6 +153,11 @@ body #card-inspect {
   display: flex;
 }
 
+body.open-inventory #card-inspect {
+  padding-left: 200px;
+
+}
+
 #card-inspect {
   position: fixed;
   top: 0;

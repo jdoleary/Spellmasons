@@ -11,9 +11,9 @@
             - cleanly separated
         - Add window.headless
 - Pack 4
+    - **critical** Figure out how to broadcast player movement (due to the new system) to multiple clients
     - Server should be able to send syncs that will wait to execute until turn changes so it doesn't interrupt animations and mess up the state when it syncs
     - Add "preparing" animation used to reduce desyncs due to network latency, so that if multiple users are casting spells at the same time, the wizard bending down to "charge" as soon as the current user clicks, masks a delay to make sure it doesn't conflict with other spells.  It'll send the spell over the network as soon as the user clicks but waits to cast it so that there aren't conflicting spells making desyncs on multiple clients.
-    - **critical** Figure out how to broadcast player movement (due to the new system) to multiple clients
 - Pack 5
     - Fix: bad-pathing.mkv in videos folder
         - seed: 0.6450583331398443
@@ -43,7 +43,6 @@
     - Master Music
 
 
-- Card inspect interferes with inventory on thin screens
 - Right clicking on toolbar moves character
 - Ordered next tasks
     - Steam Page
