@@ -397,7 +397,8 @@ export function clickHandler(_e: MouseEvent) {
           // If the mouse is out of range, but there is a target at end range,
           // assume the user is trying to cast at the end of their range.
           const endRangeTarget = getEndOfRangeTarget(selfPlayer, target);
-          if (window.underworld.hasInitialTarget(endRangeTarget)) {
+          // OR if the first card doesn't require a unit target (like summon_decoy), allow casting at end range
+          if (window.underworld.hasInitialTarget(endRangeTarget) || (cards[0] && cards[0].allowNonUnitTarget)) {
             target = endRangeTarget;
           } else {
             // If there is no target at end range, just show that they are trying to cast out of range

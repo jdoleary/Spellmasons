@@ -1,7 +1,6 @@
 ## Schedule
 - Pack 1
     - bug: Game didn't go to game over when i died by walking into spikes
-    - Allow casting no target spells (like decoy) at end of range instead of saying "out of range"
     - Add 'loading' after clicking `join game`
     - Restore planning view graphics for force move spells
         - Make predictions consider the effect of forceMove, like `push, AOE` should show the prediction circle in the end location of the push
@@ -49,6 +48,8 @@
     - Master Music
 
 
+- Card inspect interferes with inventory on thin screens
+- Right clicking on toolbar moves character
 - Ordered next tasks
     - Steam Page
     - Trailer
