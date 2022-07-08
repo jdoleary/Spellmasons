@@ -1,6 +1,6 @@
 import * as Unit from '../Unit';
 import { allUnits, UnitSource } from './index';
-import { UnitSubType, UnitType } from '../../commonTypes';
+import { UnitSubType, UnitType } from '../../types/commonTypes';
 import * as math from '../../mathematics/math';
 
 const SUMMON_MANA_COST = 30;

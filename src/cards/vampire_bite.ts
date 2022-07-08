@@ -1,8 +1,8 @@
-import type { IUnit } from '../Unit';
+import type { IUnit } from '../entity/Unit';
 import * as Image from '../graphics/Image';
 import { allCards, Spell } from '.';
 import { addCardToHand, removeCardsFromHand } from '../graphics/ui/CardUI';
-import * as Unit from '../Unit';
+import * as Unit from '../entity/Unit';
 
 export const id = 'Exsanguinate';
 export function isVampire(unit: IUnit): boolean {

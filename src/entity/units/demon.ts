@@ -1,6 +1,6 @@
 import * as Unit from '../Unit';
 import type { UnitSource } from './index';
-import { UnitSubType, UnitType } from '../../commonTypes';
+import { UnitSubType, UnitType } from '../../types/commonTypes';
 import { createVisualFlyingProjectile } from '../Projectile';
 
 const CAST_MANA_COST = 30;

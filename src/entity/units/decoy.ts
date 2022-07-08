@@ -1,5 +1,5 @@
 import type { UnitSource } from './index';
-import { UnitSubType } from '../../commonTypes';
+import { UnitSubType } from '../../types/commonTypes';
 import type * as Unit from '../Unit';
 import * as config from '../../config';
 

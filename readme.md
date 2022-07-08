@@ -2,10 +2,13 @@
 
 https://www.spellmasons.com
 
-View dependecy graph:
+View dependecy graph as svg:
 Run `depcruise --include-only "^src" --output-type dot src > depcruise-out.dot`
 // Copy output to:
 https://dreampuf.github.io/GraphvizOnline
+
+View dependecy graph as table:
+Run `depcruise --include-only "^src" --output-type html src > depcruise-out.html`
 
 ## Dev information
 

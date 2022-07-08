@@ -1,5 +1,5 @@
-import * as Unit from './Unit';
-import './globalTypes';
+import * as Unit from './entity/Unit';
+import './types/globalTypes';
 import { setView, View } from './views';
 import * as readyState from './readyState';
 import { setupPixi } from './graphics/PixiUtils';
@@ -11,7 +11,7 @@ import cookieConsentPopup from './cookieConsent';
 import { setupMonitoring } from './monitoring';
 import * as storage from './storage';
 import { version } from '../package.json';
-import { Faction, UnitType } from './commonTypes';
+import { Faction, UnitType } from './types/commonTypes';
 window.SPELLMASONS_PACKAGE_VERSION = version;
 import './style.css';
 cookieConsentPopup(false);

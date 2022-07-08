@@ -1,5 +1,5 @@
 import type { Spell } from '.';
-import { createVisualLobbingProjectile } from '../Projectile';
+import { createVisualLobbingProjectile } from '../entity/Projectile';
 import floatingText from '../graphics/FloatingText';
 import { explainManaOverfill } from '../graphics/Jprompt';
 

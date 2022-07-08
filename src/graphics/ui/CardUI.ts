@@ -8,7 +8,7 @@ import {
 import { calculateCostForSingleCard } from '../../cards/cardUtils';
 import floatingText, { centeredFloatingText } from '../FloatingText';
 import { playSFX, sfxPageTurn } from '../../Audio';
-import { composeOnDamageEvents, copyForPredictionUnit } from '../../Unit';
+import { composeOnDamageEvents, copyForPredictionUnit } from '../../entity/Unit';
 import { NUMBER_OF_TOOLBAR_SLOTS } from '../../config';
 
 const elCardHolders = document.getElementById('card-holders') as HTMLElement;

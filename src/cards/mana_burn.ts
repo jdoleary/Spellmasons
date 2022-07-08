@@ -1,4 +1,4 @@
-import * as Unit from '../Unit';
+import * as Unit from '../entity/Unit';
 import type { Spell } from '.';
 
 const id = 'mana_burn';

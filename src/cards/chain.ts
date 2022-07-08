@@ -1,6 +1,6 @@
 import { drawPredictionCircleFill, drawPredictionLine } from '../graphics/PlanningView';
 import { addUnitTarget, Spell } from '.';
-import type * as Unit from '../Unit';
+import type * as Unit from '../entity/Unit';
 
 const id = 'Adjoining';
 const spell: Spell = {

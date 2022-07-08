@@ -6,7 +6,7 @@ import * as Vec from "./mathematics/Vec";
 import * as config from './config';
 import { oneDimentionIndexToVec2, vec2ToOneDimentionIndex, vec2ToOneDimentionIndexPreventWrap } from "./mathematics/ArrayUtil";
 import { conway, ConwayState, placeLiquidSources } from "./Conway";
-import type { IObstacle } from "./Obstacle";
+import type { IObstacle } from "./entity/Obstacle";
 
 export const caveSizes: { [size: string]: CaveParams } = {
     'small': {

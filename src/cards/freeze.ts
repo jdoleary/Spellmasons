@@ -1,7 +1,7 @@
-import * as Unit from '../Unit';
+import * as Unit from '../entity/Unit';
 import * as Image from '../graphics/Image';
 import type { Spell } from '.';
-import { UnitType } from '../commonTypes';
+import { UnitType } from '../types/commonTypes';
 import * as config from '../config'
 
 const id = 'freeze';

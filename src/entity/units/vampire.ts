@@ -1,6 +1,6 @@
 import * as Unit from '../Unit';
 import type { UnitSource } from './index';
-import { UnitSubType } from '../../commonTypes';
+import { UnitSubType } from '../../types/commonTypes';
 import * as Vec from '../../mathematics/Vec';
 import * as math from '../../mathematics/math';
 import * as config from '../../config';

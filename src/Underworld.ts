@@ -1,8 +1,8 @@
 import seedrandom from 'seedrandom';
 import * as config from './config';
-import * as Unit from './Unit';
-import * as Pickup from './Pickup';
-import * as Obstacle from './Obstacle';
+import * as Unit from './entity/Unit';
+import * as Pickup from './entity/Pickup';
+import * as Obstacle from './entity/Obstacle';
 import * as Player from './entity/Player';
 import * as Upgrade from './Upgrade';
 import * as math from './mathematics/math';
@@ -12,7 +12,7 @@ import * as Image from './graphics/Image';
 import * as storage from './storage';
 import * as ImmediateMode from './graphics/ImmediateModeSprites';
 import * as colors from './graphics/ui/colors';
-import { MESSAGE_TYPES } from './MessageTypes';
+import { MESSAGE_TYPES } from './types/MessageTypes';
 import {
   app,
   containerBoard,
@@ -29,7 +29,7 @@ import {
   addPixiSprite,
 } from './graphics/PixiUtils';
 import { queueCenteredFloatingText } from './graphics/FloatingText';
-import { UnitType, Faction, UnitSubType } from './commonTypes';
+import { UnitType, Faction, UnitSubType } from './types/commonTypes';
 import type { Vec2 } from "./mathematics/Vec";
 import * as Vec from "./mathematics/Vec";
 import Events from './Events';

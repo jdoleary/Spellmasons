@@ -1,7 +1,6 @@
-import { MESSAGE_TYPES } from '../../MessageTypes';
+import { MESSAGE_TYPES } from '../../types/MessageTypes';
 import * as CardUI from './CardUI';
-import * as Unit from '../../Unit';
-import * as Vec from '../../mathematics/Vec';
+import * as Unit from '../../entity/Unit';
 import floatingText from '../FloatingText';
 import {
   clearSpellEffectProjection,

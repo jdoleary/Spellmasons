@@ -1,6 +1,6 @@
 import type { Spell } from '.';
-import * as Unit from '../Unit'
-import { UnitType } from '../commonTypes';
+import * as Unit from '../entity/Unit'
+import { UnitType } from '../types/commonTypes';
 import { Vec2, equal } from '../mathematics/Vec';
 
 const id = 'protection';

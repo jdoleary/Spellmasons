@@ -1,5 +1,5 @@
-import * as Unit from '../Unit';
-import * as Pickup from '../Pickup';
+import * as Unit from '../entity/Unit';
+import * as Pickup from '../entity/Pickup';
 import type { Spell } from '.';
 import type { Vec2 } from '../mathematics/Vec';
 import * as config from '../config';

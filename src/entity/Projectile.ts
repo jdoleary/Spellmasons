@@ -1,8 +1,8 @@
 import type * as PIXI from 'pixi.js';
-import { addPixiSprite, containerProjectiles } from './graphics/PixiUtils';
-import { lerp, distance } from './mathematics/math';
-import type { Vec2 } from './mathematics/Vec';
-import * as config from './config';
+import { addPixiSprite, containerProjectiles } from '../graphics/PixiUtils';
+import { lerp, distance } from '../mathematics/math';
+import type { Vec2 } from '../mathematics/Vec';
+import * as config from '../config';
 
 interface Projectile {
   x: number;

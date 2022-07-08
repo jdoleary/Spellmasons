@@ -1,4 +1,4 @@
-import * as Unit from '../Unit';
+import * as Unit from '../entity/Unit';
 import * as Image from '../graphics/Image';
 import type { Spell } from '.';
 import floatingText from '../graphics/FloatingText';

@@ -1,5 +1,5 @@
-import { IUnit, takeDamage } from '../Unit';
-import * as Unit from '../Unit';
+import { IUnit, takeDamage } from '../entity/Unit';
+import * as Unit from '../entity/Unit';
 import * as Image from '../graphics/Image';
 import type { Spell } from '.';
 import { drawPredictionCircle } from '../graphics/PlanningView';

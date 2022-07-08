@@ -1,18 +1,18 @@
 import * as PIXI from 'pixi.js';
-import * as Image from './graphics/Image';
+import * as Image from '../graphics/Image';
 import type * as Player from './Player';
-import { addPixiSprite, containerUnits } from './graphics/PixiUtils';
+import { addPixiSprite, containerUnits } from '../graphics/PixiUtils';
 import { IUnit, takeDamage } from './Unit';
-import { checkIfNeedToClearTooltip } from './graphics/PlanningView';
-import { explainManaOverfill } from './graphics/Jprompt';
-import { MESSAGE_TYPES } from './MessageTypes';
-import floatingText from './graphics/FloatingText';
-import * as CardUI from './graphics/ui/CardUI';
-import * as Cards from './cards';
-import * as config from './config';
-import { chooseObjectWithProbability } from './mathematics/math';
+import { checkIfNeedToClearTooltip } from '../graphics/PlanningView';
+import { explainManaOverfill } from '../graphics/Jprompt';
+import { MESSAGE_TYPES } from '../types/MessageTypes';
+import floatingText from '../graphics/FloatingText';
+import * as CardUI from '../graphics/ui/CardUI';
+import * as Cards from '../cards';
+import * as config from '../config';
+import { chooseObjectWithProbability } from '../mathematics/math';
 import seedrandom from 'seedrandom';
-import { Vec2 } from './mathematics/Vec';
+import { Vec2 } from '../mathematics/Vec';
 
 export const PICKUP_RADIUS = config.COLLISION_MESH_RADIUS;
 export interface IPickup {

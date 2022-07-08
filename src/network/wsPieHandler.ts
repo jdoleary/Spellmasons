@@ -1,16 +1,15 @@
 import type { ClientPresenceChangedArgs, OnDataArgs } from '@websocketpie/client';
 
-import { MESSAGE_TYPES } from './MessageTypes';
-import floatingText from './graphics/FloatingText';
-import { getUpgradeByTitle } from './Upgrade';
-import Underworld, { IUnderworldSerializedForSyncronize, LevelData, turn_phase } from './Underworld';
-import * as Player from './Player';
-import * as Unit from './Unit';
-import * as readyState from './readyState';
-import * as messageQueue from './messageQueue';
-import * as storage from './storage';
-import { setView, View } from './views';
-import { allUnits } from './units';
+import { MESSAGE_TYPES } from '../types/MessageTypes';
+import floatingText from '../graphics/FloatingText';
+import { getUpgradeByTitle } from '../Upgrade';
+import Underworld, { IUnderworldSerializedForSyncronize, LevelData, turn_phase } from '../Underworld';
+import * as Player from '../entity/Player';
+import * as Unit from '../entity/Unit';
+import * as readyState from '../readyState';
+import * as messageQueue from '../messageQueue';
+import * as storage from '../storage';
+import { allUnits } from '../entity/units';
 import { pie } from './wsPieSetup';
 
 const messageLog: any[] = [];

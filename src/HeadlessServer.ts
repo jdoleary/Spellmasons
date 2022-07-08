@@ -1,6 +1,6 @@
 "use strict";
 
-import './globalTypes';
+import './types/globalTypes';
 import './Shims';
 
 // Copied from @websocketpie/client

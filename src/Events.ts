@@ -1,5 +1,5 @@
 import type { Vec2 } from './mathematics/Vec';
-import type { IUnit } from './Unit';
+import type { IUnit } from './entity/Unit';
 
 export type onDamage = {
   // Returns a possibly modified damage

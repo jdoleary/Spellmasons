@@ -1,5 +1,5 @@
 import type * as Unit from '../Unit';
-import type { UnitSubType } from '../../commonTypes';
+import type { UnitSubType } from '../../types/commonTypes';
 
 interface ConstructorInfo {
   description: string;

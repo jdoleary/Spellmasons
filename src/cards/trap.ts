@@ -1,5 +1,5 @@
 import type { Spell } from '.';
-import * as Pickup from '../Pickup';
+import * as Pickup from '../entity/Pickup';
 import * as Image from '../graphics/Image';
 import { addPixiSpriteAnimated, containerUnits } from '../graphics/PixiUtils';
 
