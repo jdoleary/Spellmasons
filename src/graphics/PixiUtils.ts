@@ -27,6 +27,7 @@ export const containerLiquid = !globalThis.pixi ? undefined : new globalThis.pix
 export const containerBoard = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerBetweenBoardAndWalls = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerWalls = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
+export const containerBloodSmear = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerPlanningView = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerDoodads = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerUnits = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
@@ -36,6 +37,12 @@ export const containerUI = !globalThis.pixi ? undefined : new globalThis.pixi.Co
 export const containerPlayerThinking = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerUIFixed = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerFloatingText = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
+
+
+export const graphicsBloodSmear = !globalThis.pixi ? undefined : new globalThis.pixi.Graphics();
+if (containerBloodSmear && graphicsBloodSmear) {
+  containerBloodSmear.addChild(graphicsBloodSmear);
+}
 let updateLiquidFilterIntervalId: NodeJS.Timer | undefined;
 // Setup animated liquid displacement
 export function setupLiquidFilter() {
@@ -101,6 +108,7 @@ if (globalThis.pixi && containerUI && app && containerBetweenBoardAndWalls) {
     containerBoard &&
     containerBetweenBoardAndWalls &&
     containerWalls &&
+    containerBloodSmear &&
     containerPlanningView &&
     containerDoodads &&
     containerUnits &&
@@ -118,6 +126,7 @@ if (globalThis.pixi && containerUI && app && containerBetweenBoardAndWalls) {
       containerBoard,
       containerBetweenBoardAndWalls,
       containerWalls,
+      containerBloodSmear,
       containerPlanningView,
       containerDoodads,
       containerUnits,

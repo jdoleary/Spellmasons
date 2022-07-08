@@ -28,6 +28,7 @@ import {
   containerPlayerThinking,
   containerWalls,
   addPixiSprite,
+  graphicsBloodSmear,
   containerLiquid,
   setupLiquidFilter,
   cleanUpLiquidFilter,
@@ -69,6 +70,11 @@ export enum turn_phase {
   NPC_ALLY,
   NPC_ENEMY,
 }
+const smearJitter = [
+  { x: -3, y: -3 },
+  { x: 3, y: -3 },
+  { x: 0, y: 3 },
+]
 const elPlayerTurnIndicator = document.getElementById('player-turn-indicator');
 const elLevelIndicator = document.getElementById('level-indicator');
 const elUpgradePicker = document.getElementById('upgrade-picker') as (HTMLElement | undefined);
@@ -135,6 +141,7 @@ export default class Underworld {
   constructor(pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
     this.pie = pie;
     this.seed = globalThis.seedOverride || seed;
+    this.seed = '0.8541225371499359'
 
     // Initialize content
     Cards.registerCards(this);
@@ -309,7 +316,35 @@ export default class Underworld {
     for (let i = this.forceMove.length - 1; i >= 0; i--) {
       const forceMoveInst = this.forceMove[i];
       if (forceMoveInst) {
+        // Ensure blood is at unit feet, not center
+        const unitImageYOffset = config.COLLISION_MESH_RADIUS / 2;
+        const startPos = Vec.clone(forceMoveInst.pushedObject);
+        startPos.y += unitImageYOffset;
         const done = this.runForceMove(forceMoveInst, false);
+        const endPos = { x: forceMoveInst.pushedObject.x, y: forceMoveInst.pushedObject.y + unitImageYOffset };
+        // Note bug: this will leavee a smear on pickups since pickups aren't alive
+        if (graphicsBloodSmear && forceMoveInst.pushedObject.health !== undefined && forceMoveInst.pushedObject.health <= 0) {
+          const size = 3;
+          for (let j of smearJitter) {
+            // Multiple blood trails
+            graphicsBloodSmear.beginFill(colors.bloodGrunt, 1.0);
+            graphicsBloodSmear.lineStyle(1, colors.bloodGrunt, 1.0);
+            const bloodDrop = Vec.jitter(endPos, 5, this.random);
+            // Draw a blood drop
+            graphicsBloodSmear.drawCircle(bloodDrop.x, bloodDrop.y, randInt(this.random, 2, 4));
+
+            const startWithJitter = Vec.add(startPos, j);
+            const endWithJitter = Vec.add(endPos, j);
+            // Draw circle at the ends of the smear line line so the smear lines don't look like rectangles
+            graphicsBloodSmear.drawCircle(startWithJitter.x, startWithJitter.y, size);
+            graphicsBloodSmear.drawCircle(endWithJitter.x, endWithJitter.y, size);
+            graphicsBloodSmear.endFill();
+            // Draw a smear line
+            graphicsBloodSmear.lineStyle(size, colors.bloodGrunt, 1.0);
+            graphicsBloodSmear.moveTo(startWithJitter.x, startWithJitter.y);
+            graphicsBloodSmear.lineTo(endWithJitter.x, endWithJitter.y);
+          }
+        }
         // Remove it from forceMove array once the distance has been covers
         // This works even if collisions prevent the unit from moving since
         // distance is modified even if the unit doesn't move each loop
@@ -1028,6 +1063,8 @@ export default class Underworld {
     containerWalls?.removeChildren();
     containerLiquid?.removeChildren();
     cleanUpLiquidFilter();
+    // Clean up blood
+    graphicsBloodSmear?.clear();
     this.imageOnlyTiles = [];
 
     // Clear card usage counts, otherwise players will be

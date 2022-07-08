@@ -6,6 +6,7 @@ export const manaBlue = 0x5656d5;
 export const healthAllyGreen = 0x40a058;
 export const abyss = 0x353535;
 export const forceMoveColor = 0xffffff;
+export const bloodGrunt = 0xc70000;
 
 export const playerCoatPrimary = 0x417F81;
 export const playerCoatSecondary = 0x70A5A7;

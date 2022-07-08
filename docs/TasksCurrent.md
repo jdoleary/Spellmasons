@@ -2,6 +2,7 @@
 - Low hanging fruit
     - bug: AOE is giving me "no target" when I click on ground (hurtx4,aoe,hurt)
     - I got an out of range message and error but when I clicked on the end of my blue cast it worked
+        - seed: 0.8541225371499359
         - maybe make the whole line grey if there's no target in range?
     - fix issue where units near lava get mask but don't take damage
 - Tasks:
@@ -10,6 +11,8 @@
     - "poolshot" for pickups?
     - blood trails
         - Maybe do multiple small radius lines to simulate smear and they have a chance to dissapear
+        - Make blood at base of unit, not center
+        - Don't draw blood over liquid
 ## This weeks goals:
 - Milestone 5 | **Movement & Spell Quantity** | Due Aug 11
 - Milestone 4 | **Perfect Prediction Attacks** | Due Aug 8
