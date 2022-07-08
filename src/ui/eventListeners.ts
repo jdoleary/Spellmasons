@@ -425,6 +425,8 @@ export function clickHandler(_e: MouseEvent) {
           return;
         }
         clearSpellEffectProjection();
+        // Clear resMarkers so they don't hang around once the spell is cast
+        window.resMarkers = [];
 
         window.pie.sendData({
           type: MESSAGE_TYPES.SPELL,

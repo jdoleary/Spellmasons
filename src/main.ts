@@ -230,6 +230,7 @@ declare global {
     // Used for development to debug the original information used to make a map
     map: any;
     devSpawnUnit: (unitId: string, faction: Faction) => void;
+    devSpawnAllUnits: () => void;
   }
 }
 // For development, spawns a unit near the player
@@ -253,6 +254,11 @@ window.devSpawnUnit = (unitId: string, faction: Faction = Faction.ENEMY) => {
       );
     }
 
+  }
+}
+window.devSpawnAllUnits = () => {
+  for (let id of Object.keys(Units.allUnits)) {
+    window.devSpawnUnit(id, Faction.ENEMY);
   }
 }
 window.setMMBDown = (isDown: boolean) => {
