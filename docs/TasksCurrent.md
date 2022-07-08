@@ -114,6 +114,7 @@
 - Content: A spell to destroy corpses
 - task: Spell to trade mana for stamina
 - idea; one use bargains (deals with the devil) that mix up your max stats.  or have a50% chance of good or bad outcome
+- Leave blood trails behind for dead units that are force pushed
 
 ## Misc
 - Bug: Had a scenario where i had a debugger on enterPortal and on image.show
