@@ -17,6 +17,7 @@ export const app = new PIXI.Application();
 export const containerBoard = new PIXI.Container();
 export const containerBetweenBoardAndWalls = new PIXI.Container();
 export const containerWalls = new PIXI.Container();
+export const containerBloodSmear = new PIXI.Container();
 export const containerPlanningView = new PIXI.Container();
 export const containerDoodads = new PIXI.Container();
 export const containerUnits = new PIXI.Container();
@@ -38,6 +39,7 @@ const underworldPixiContainers = [
   containerBoard,
   containerBetweenBoardAndWalls,
   containerWalls,
+  containerBloodSmear,
   containerPlanningView,
   containerDoodads,
   containerUnits,
@@ -48,6 +50,9 @@ const underworldPixiContainers = [
   containerUIFixed,
   containerFloatingText,
 ];
+
+export const graphicsBloodSmear = new PIXI.Graphics();
+containerBloodSmear.addChild(graphicsBloodSmear);
 
 const elPIXIHolder: HTMLElement = document.getElementById('PIXI-holder') as HTMLElement;
 const elCardHand = document.getElementById('card-hand') as HTMLElement;

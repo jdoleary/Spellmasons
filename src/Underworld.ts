@@ -27,6 +27,7 @@ import {
   containerPlayerThinking,
   containerWalls,
   addPixiSprite,
+  graphicsBloodSmear,
 } from './PixiUtils';
 import { queueCenteredFloatingText } from './FloatingText';
 import { UnitType, Faction, UnitSubType } from './commonTypes';
@@ -194,7 +195,19 @@ export default class Underworld {
     for (let i = window.forceMove.length - 1; i >= 0; i--) {
       const forceMoveInst = window.forceMove[i];
       if (forceMoveInst) {
+        const startPos = Vec.clone(forceMoveInst.pushedObject);
         this.runForceMove(forceMoveInst);
+        if (!forceMoveInst.pushedObject.alive) {
+          const size = 10;
+          graphicsBloodSmear.beginFill(0xb51d1d, 1.0);
+          graphicsBloodSmear.lineStyle(1, 0xb51d1d, 1.0);
+          graphicsBloodSmear.drawCircle(startPos.x, startPos.y, size / 2);
+          graphicsBloodSmear.drawCircle(forceMoveInst.pushedObject.x, forceMoveInst.pushedObject.y, size / 2);
+          graphicsBloodSmear.endFill();
+          graphicsBloodSmear.lineStyle(size, 0xb51d1d, 1.0);
+          graphicsBloodSmear.moveTo(startPos.x, startPos.y);
+          graphicsBloodSmear.lineTo(forceMoveInst.pushedObject.x, forceMoveInst.pushedObject.y);
+        }
         // Remove it from forceMove array once the distance has been covers
         // This works even if collisions prevent the unit from moving since
         // distance is modified even if the unit doesn't move each loop
