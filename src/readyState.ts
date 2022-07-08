@@ -1,5 +1,5 @@
-import { processNextInQueueIfReady } from "./wsPieHandler";
-import { joinRoom } from "./wsPieSetup";
+import { processNextInQueueIfReady } from "./network/wsPieHandler";
+import { joinRoom } from "./network/wsPieSetup";
 
 const readyState = {
     wsPieConnection: false,

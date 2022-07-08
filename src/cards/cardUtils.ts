@@ -1,6 +1,6 @@
 import type { ICard } from ".";
 import * as config from '../config';
-import type { CardUsage, IPlayer } from "../Player";
+import type { CardUsage, IPlayer } from "../entity/Player";
 export interface CardCost {
     manaCost: number;
     healthCost: number;

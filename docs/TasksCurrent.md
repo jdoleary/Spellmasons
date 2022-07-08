@@ -18,7 +18,7 @@
     - Could use Promise.race and a timeout wrapper as a bandaid to make sure game never hangs and reports where it would have
 - Pack 3
     - The great refactor
-        - Group topics in folders: audio, graphics, gamelogic, etc
+        - Group topics in folders: audio, graphics, gamelogic, network
             - cleanly separated
         - Add window.headless
 - Pack 4

@@ -1,5 +1,5 @@
 import { IUnit, takeDamage } from '../Unit';
-import * as Image from '../Image';
+import * as Image from '../graphics/Image';
 import type { Spell } from '.';
 import * as Unit from '../Unit';
 

@@ -1,7 +1,7 @@
 import type { Spell } from '.';
 import { createVisualLobbingProjectile } from '../Projectile';
-import floatingText from '../FloatingText';
-import { explainManaOverfill } from '../Jprompt';
+import floatingText from '../graphics/FloatingText';
+import { explainManaOverfill } from '../graphics/Jprompt';
 
 const id = 'mana_steal';
 const mana_stolen = 20;

@@ -1,7 +1,7 @@
 import type { IUnit } from '../Unit';
-import * as Image from '../Image';
+import * as Image from '../graphics/Image';
 import { allCards, Spell } from '.';
-import { addCardToHand, removeCardsFromHand } from '../CardUI';
+import { addCardToHand, removeCardsFromHand } from '../graphics/ui/CardUI';
 import * as Unit from '../Unit';
 
 export const id = 'Exsanguinate';

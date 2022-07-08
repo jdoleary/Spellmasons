@@ -3,7 +3,7 @@ import {
   resizePixi,
   app,
   updateCameraPosition,
-} from './PixiUtils';
+} from './graphics/PixiUtils';
 import {
   clickHandler,
   contextmenuHandler,
@@ -15,7 +15,7 @@ import {
   mouseMove,
   onWindowBlur,
   keypressListener,
-} from './ui/eventListeners';
+} from './graphics/ui/eventListeners';
 
 // A view is not shared between players in the same game, a player could choose any view at any time
 export enum View {

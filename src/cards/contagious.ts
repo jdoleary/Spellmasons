@@ -1,10 +1,10 @@
 
 import type { IUnit } from '../Unit';
-import * as Image from '../Image';
+import * as Image from '../graphics/Image';
 import { allCards, ICard, Spell } from './index';
 import { COLLISION_MESH_RADIUS } from '../config';
 import { createVisualLobbingProjectile } from '../Projectile';
-import floatingText from '../FloatingText';
+import floatingText from '../graphics/FloatingText';
 import * as Unit from '../Unit';
 
 const id = 'contagious';

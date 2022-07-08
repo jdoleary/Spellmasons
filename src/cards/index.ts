@@ -1,7 +1,7 @@
-import type * as Player from '../Player';
+import type * as Player from '../entity/Player';
 import type * as Unit from '../Unit';
 import type * as Pickup from '../Pickup';
-import type { Vec2 } from '../Vec';
+import type { Vec2 } from '../mathematics/Vec';
 import Events, {
   onDamage,
   onDeath,
@@ -37,7 +37,7 @@ import trap from './trap';
 import explode from './explode_on_death';
 import { IUpgrade, upgradeCardsSource } from '../Upgrade';
 import { _getCardsFromIds } from './cardUtils';
-import { addCardToHand } from '../CardUI';
+import { addCardToHand } from '../graphics/ui/CardUI';
 export interface Modifiers {
   subsprite?: Subsprite;
   add?: (unit: Unit.IUnit) => void;

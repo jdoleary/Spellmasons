@@ -1,4 +1,4 @@
-import type { Vec2 } from './Vec';
+import type { Vec2 } from './mathematics/Vec';
 import type { IUnit } from './Unit';
 
 export type onDamage = {

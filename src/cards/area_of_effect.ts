@@ -1,5 +1,5 @@
 import { addPickupTarget, addUnitTarget, Spell } from '.';
-import { drawPredictionCircle } from '../ui/PlanningView';
+import { drawPredictionCircle } from '../graphics/PlanningView';
 
 const id = 'Expanding';
 const range = 140;

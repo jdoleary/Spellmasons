@@ -1,5 +1,5 @@
 import type { Spell } from '.';
-import { drawPredictionCircle } from '../ui/PlanningView';
+import { drawPredictionCircle } from '../graphics/PlanningView';
 import { forcePush } from './push';
 
 const id = 'Repel';

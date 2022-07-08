@@ -3,17 +3,31 @@
 import './globalTypes';
 import './Shims';
 
-import { OnDataArgs } from '@websocketpie/client';
+// Copied from @websocketpie/client
+// @websocketpie/client is only meant for the browser so it shall not be imported
+// in the node-only HeadlessServer
+interface OnDataArgs {
+    type: string;
+    subType: string;
+    fromClient: string;
+    payload: any;
+    time: number;
+}
 import * as Cards from './cards';
-import * as Units from './units';
-import { onClientPresenceChanged } from './wsPieHandler';
+import * as Units from './entity/units';
+import { onClientPresenceChanged } from './network/wsPieHandler';
+
+// LEFT OFF!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// LEFT OFF!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// LEFT OFF!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Headless Server should exclude
 // - Audio
 // - Visual (UI and Pixi.js)
 // - Menu
 // - Planning view
 // - Predictions
-// Current compile and run command `tsc --project tsconfig.headless.json --outDir headless-server-build/ && node headless/HeadlessServer.js`
+// Current compile and run command:
+// tsc --project tsconfig.headless.json --outDir headless-server-build/ && node headless-server-build/src/HeadlessServer.js
 
 const pie = require('@websocketpie/server');
 

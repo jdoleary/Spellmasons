@@ -1,9 +1,9 @@
 import seedrandom from 'seedrandom';
 import type { CardCost } from './cards/cardUtils';
-import { getCardRarityColor } from './CardUI';
-import { chooseObjectWithProbability, probabilityToRarity } from './math';
+import { getCardRarityColor } from './graphics/ui/CardUI';
+import { chooseObjectWithProbability, probabilityToRarity } from './mathematics/math';
 import { MESSAGE_TYPES } from './MessageTypes';
-import type { IPlayer } from './Player';
+import type { IPlayer } from './entity/Player';
 export interface IUpgrade {
   title: string;
   description: (player: IPlayer) => string;

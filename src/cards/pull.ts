@@ -1,8 +1,8 @@
-import { clone, magnitude, Vec2 } from '../Vec';
+import { clone, magnitude, Vec2 } from '../mathematics/Vec';
 import type { Spell } from '.';
-import { distance, similarTriangles } from '../math';
-import type { Circle, ForceMove } from '../collision/moveWithCollision';
-import { forceMoveColor } from '../ui/colors';
+import { distance, similarTriangles } from '../mathematics/math';
+import type { Circle, ForceMove } from '../mathematics/moveWithCollision';
+import { forceMoveColor } from '../graphics/ui/colors';
 
 export const id = 'pull';
 const pullDistance = 15;

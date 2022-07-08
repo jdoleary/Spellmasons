@@ -1,7 +1,7 @@
 import * as Unit from '../Unit';
-import * as Image from '../Image';
+import * as Image from '../graphics/Image';
 import type { Spell } from '.';
-import floatingText from '../FloatingText';
+import floatingText from '../graphics/FloatingText';
 
 const id = 'shield';
 const imageName = 'shield.png';

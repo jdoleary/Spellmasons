@@ -1,14 +1,11 @@
-import * as PIXI from 'pixi.js';
-import type * as Player from './Player';
 import * as Unit from './Unit';
-import type Underworld from './Underworld';
 import './globalTypes';
 import { setView, View } from './views';
 import * as readyState from './readyState';
-import { setupPixi } from './PixiUtils';
+import { setupPixi } from './graphics/PixiUtils';
 import * as Cards from './cards';
-import * as Units from './units';
-import { initPlanningView } from './ui/PlanningView';
+import * as Units from './entity/units';
+import { initPlanningView } from './graphics/PlanningView';
 import { setupAudio } from './Audio';
 import cookieConsentPopup from './cookieConsent';
 import { setupMonitoring } from './monitoring';
@@ -22,13 +19,9 @@ cookieConsentPopup(false);
 
 // This import is critical so that the svelte menu has access to
 // the pie globals
-import './wsPieSetup';
+import './network/wsPieSetup';
 import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './contants';
-import type { Vec2 } from './Vec';
-import type { LevelData } from './Underworld';
-import type { ForceMove } from './collision/moveWithCollision';
-import { syncInventory } from './CardUI';
-import { IPickup } from './Pickup';
+import { syncInventory } from './graphics/ui/CardUI';
 
 const YES = 'yes'
 const SKIP_TUTORIAL = 'skipTutorial';

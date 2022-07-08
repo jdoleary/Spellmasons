@@ -1,4 +1,4 @@
-import { drawPredictionCircleFill, drawPredictionLine } from '../ui/PlanningView';
+import { drawPredictionCircleFill, drawPredictionLine } from '../graphics/PlanningView';
 import { addUnitTarget, Spell } from '.';
 import type * as Unit from '../Unit';
 

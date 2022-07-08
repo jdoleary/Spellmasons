@@ -1,6 +1,6 @@
-import * as math from './math';
-import * as Player from './Player';
-import { Vec2 } from './Vec';
+import * as math from './mathematics/math';
+import * as Player from './entity/Player';
+import { Vec2 } from './mathematics/Vec';
 
 export function isOutOfRange(caster: Player.IPlayer, target: Vec2): boolean {
     const castDistance = math.distance(caster.unit, target)

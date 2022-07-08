@@ -1,8 +1,8 @@
 import { IUnit, takeDamage } from '../Unit';
 import * as Unit from '../Unit';
-import * as Image from '../Image';
+import * as Image from '../graphics/Image';
 import type { Spell } from '.';
-import { drawPredictionCircle } from '../ui/PlanningView';
+import { drawPredictionCircle } from '../graphics/PlanningView';
 import { forcePush } from './push';
 
 const id = 'Bloat';

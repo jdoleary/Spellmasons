@@ -1,7 +1,7 @@
 import type { Spell } from '.';
 import * as Unit from '../Unit';
 import { Faction, UnitType } from '../commonTypes';
-import { allUnits } from '../units';
+import { allUnits } from '../entity/units';
 
 export const id = 'decoy';
 const spell: Spell = {

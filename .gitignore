@@ -5,3 +5,5 @@ gimp
 testQueue.js
 scratchpad
 headless-server-build
+depcruise-out.dot
+depcruise-out.html

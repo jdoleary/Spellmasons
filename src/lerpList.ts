@@ -1,4 +1,4 @@
-import { lerp } from "./math"
+import { lerp } from "./mathematics/math"
 
 interface Lerpable {
     mutatable: any,

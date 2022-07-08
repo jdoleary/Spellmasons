@@ -3,15 +3,15 @@ import * as config from './config';
 import * as Unit from './Unit';
 import * as Pickup from './Pickup';
 import * as Obstacle from './Obstacle';
-import * as Player from './Player';
+import * as Player from './entity/Player';
 import * as Upgrade from './Upgrade';
-import * as math from './math';
+import * as math from './mathematics/math';
 import * as Cards from './cards';
-import * as CardUI from './CardUI';
-import * as Image from './Image';
+import * as CardUI from './graphics/ui/CardUI';
+import * as Image from './graphics/Image';
 import * as storage from './storage';
-import * as ImmediateMode from './ImmediateModeSprites';
-import * as colors from './ui/colors';
+import * as ImmediateMode from './graphics/ImmediateModeSprites';
+import * as colors from './graphics/ui/colors';
 import { MESSAGE_TYPES } from './MessageTypes';
 import {
   app,
@@ -27,33 +27,33 @@ import {
   containerPlayerThinking,
   containerWalls,
   addPixiSprite,
-} from './PixiUtils';
-import { queueCenteredFloatingText } from './FloatingText';
+} from './graphics/PixiUtils';
+import { queueCenteredFloatingText } from './graphics/FloatingText';
 import { UnitType, Faction, UnitSubType } from './commonTypes';
-import type { Vec2 } from "./Vec";
-import * as Vec from "./Vec";
+import type { Vec2 } from "./mathematics/Vec";
+import * as Vec from "./mathematics/Vec";
 import Events from './Events';
-import { allUnits } from './units';
-import { drawTarget, getUIBarProps, setPredictionGraphicsLineStyle, updateManaCostUI, updatePlanningView } from './ui/PlanningView';
-import { prng, randInt, SeedrandomState } from './rand';
+import { allUnits } from './entity/units';
+import { drawTarget, getUIBarProps, setPredictionGraphicsLineStyle, updateManaCostUI, updatePlanningView } from './graphics/PlanningView';
+import { prng, randInt, SeedrandomState } from './mathematics/rand';
 import { calculateCost } from './cards/cardUtils';
-import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle } from './collision/lineSegment';
-import { expandPolygon, mergePolygon2s, Polygon2, Polygon2LineSegment, toLineSegments, toPolygon2LineSegments } from './Polygon2';
-import { calculateDistanceOfVec2Array, findPath } from './Pathfinding';
+import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle } from './mathematics/lineSegment';
+import { expandPolygon, mergePolygon2s, Polygon2, Polygon2LineSegment, toLineSegments, toPolygon2LineSegments } from './mathematics/Polygon2';
+import { calculateDistanceOfVec2Array, findPath } from './mathematics/Pathfinding';
 import { removeUnderworldEventListeners, setView, View } from './views';
 import * as readyState from './readyState';
-import { mouseMove } from './ui/eventListeners';
-import Jprompt from './Jprompt';
-import { collideWithLineSegments, ForceMove, moveWithCollisions } from './collision/moveWithCollision';
+import { mouseMove } from './graphics/ui/eventListeners';
+import Jprompt from './graphics/Jprompt';
+import { collideWithLineSegments, ForceMove, moveWithCollisions } from './mathematics/moveWithCollision';
 import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './contants';
-import { getBestRangedLOSTarget } from './units/actions/rangedAction';
-import { getClients, hostGiveClientGameStateForInitialLoad } from './wsPieHandler';
-import { healthAllyGreen, healthHurtRed, healthRed } from './ui/colors';
+import { getBestRangedLOSTarget } from './entity/units/actions/rangedAction';
+import { getClients, hostGiveClientGameStateForInitialLoad } from './network/wsPieHandler';
+import { healthAllyGreen, healthHurtRed, healthRed } from './graphics/ui/colors';
 import objectHash from 'object-hash';
-import { withinMeleeRange } from './units/actions/gruntAction';
+import { withinMeleeRange } from './entity/units/actions/gruntAction';
 import { all_ground, baseTiles, caveSizes, convertBaseTilesToFinalTiles, generateCave, getLimits, Limits as Limits, Tile, toObstacle } from './MapOrganicCave';
 import { Material } from './Conway';
-import { oneDimentionIndexToVec2 } from './ArrayUtil';
+import { oneDimentionIndexToVec2 } from './mathematics/ArrayUtil';
 import { playSFX, sfx } from './Audio';
 
 export enum turn_phase {

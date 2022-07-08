@@ -1,10 +1,10 @@
-import { lineSegmentIntersection } from "./collision/lineSegment";
-import { distance, lerp, similarTriangles } from "./math";
-import { isVec2InsidePolygon } from "./Polygon2";
-import { randFloat, randInt } from "./rand";
-import * as Vec from "./Vec";
+import { lineSegmentIntersection } from "./mathematics/lineSegment";
+import { distance, lerp, similarTriangles } from "./mathematics/math";
+import { isVec2InsidePolygon } from "./mathematics/Polygon2";
+import { randFloat, randInt } from "./mathematics/rand";
+import * as Vec from "./mathematics/Vec";
 import * as config from './config';
-import { oneDimentionIndexToVec2, vec2ToOneDimentionIndex, vec2ToOneDimentionIndexPreventWrap } from "./ArrayUtil";
+import { oneDimentionIndexToVec2, vec2ToOneDimentionIndex, vec2ToOneDimentionIndexPreventWrap } from "./mathematics/ArrayUtil";
 import { conway, ConwayState, placeLiquidSources } from "./Conway";
 import type { IObstacle } from "./Obstacle";
 

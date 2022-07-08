@@ -1,9 +1,9 @@
-import { Vec2, magnitude, clone } from '../Vec';
+import { Vec2, magnitude, clone } from '../mathematics/Vec';
 import type { Spell } from '.';
-import { distance, similarTriangles } from '../math';
-import type { Circle, ForceMove } from '../collision/moveWithCollision';
+import { distance, similarTriangles } from '../mathematics/math';
+import type { Circle, ForceMove } from '../mathematics/moveWithCollision';
 import * as config from '../config';
-import { forceMoveColor } from '../ui/colors';
+import { forceMoveColor } from '../graphics/ui/colors';
 
 export const id = 'push';
 const pushDistance = 20;

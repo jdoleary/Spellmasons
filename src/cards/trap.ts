@@ -1,7 +1,7 @@
 import type { Spell } from '.';
 import * as Pickup from '../Pickup';
-import * as Image from '../Image';
-import { addPixiSpriteAnimated, containerUnits } from '../PixiUtils';
+import * as Image from '../graphics/Image';
+import { addPixiSpriteAnimated, containerUnits } from '../graphics/PixiUtils';
 
 export const id = 'Delay';
 const turnsItTakesTrapToWindUp = 2;

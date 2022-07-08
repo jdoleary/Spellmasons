@@ -2,9 +2,9 @@ import type { Spell } from '.';
 import * as Unit from '../Unit';
 import * as Pickup from '../Pickup';
 import { UnitSubType, UnitType } from '../commonTypes';
-import { jitter, Vec2 } from '../Vec';
+import { jitter, Vec2 } from '../mathematics/Vec';
 import * as config from '../config';
-import floatingText from '../FloatingText';
+import floatingText from '../graphics/FloatingText';
 
 const id = 'clone';
 const spell: Spell = {
