@@ -6,7 +6,7 @@
       "DOM"
     ],
     "target": "es6",
-    "module": "commonjs",
+    "module": "CommonJS",
     "moduleResolution": "Node",
     "strict": true,
     "sourceMap": true,
