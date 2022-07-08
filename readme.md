@@ -2,6 +2,11 @@
 
 https://www.spellmasons.com
 
+View dependecy graph:
+Run `depcruise --include-only "^src" --output-type dot src > depcruise-out.dot`
+// Copy output to:
+https://dreampuf.github.io/GraphvizOnline
+
 ## Dev information
 
 - Images are stored NOT in the public/ director because they are processed into a sprite sheet and the sprite sheet is added to that directory
