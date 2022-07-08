@@ -9,7 +9,7 @@ export default defineConfig(({ command, mode }) => ({
         assetsDir: '.',
         rollupOptions: {
             external: [
-                'svelte-bundle.css'
+                './svelte-bundle.css'
             ]
         }
     }
