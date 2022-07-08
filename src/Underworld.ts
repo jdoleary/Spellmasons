@@ -40,7 +40,7 @@ import { calculateCost } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle } from './collision/lineSegment';
 import { expandPolygon, mergePolygon2s, Polygon2, Polygon2LineSegment, toLineSegments, toPolygon2LineSegments } from './Polygon2';
 import { calculateDistanceOfVec2Array, findPath } from './Pathfinding';
-import { removeUnderworldEventListeners } from './views';
+import { removeUnderworldEventListeners, setView, View } from './views';
 import * as readyState from './readyState';
 import { mouseMove } from './ui/eventListeners';
 import Jprompt from './Jprompt';

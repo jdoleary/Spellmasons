@@ -5,10 +5,10 @@ import type Underworld from './Underworld';
 import type PieClient from '@websocketpie/client';
 import type { Vec2 } from './Vec';
 import type { LevelData } from './Underworld';
-import type { Circle } from './collision/moveWithCollision';
 import { View } from './views';
 import { Faction } from './commonTypes';
-
+import { IPickup } from './Pickup';
+import { ForceMove } from './collision/moveWithCollision';
 declare global {
     interface Window {
         SPELLMASONS_PACKAGE_VERSION: string;
@@ -58,14 +58,15 @@ declare global {
         devDebugGraphics: PIXI.Graphics;
         // Shows radiuses for spells
         radiusGraphics: PIXI.Graphics;
-        // Graphics for drawing the player visible path
-        walkPathGraphics: PIXI.Graphics;
         // Graphics to show what other players are thinking
         thinkingPlayerGraphics: PIXI.Graphics;
         // Graphics for drawing unit health and mana bars
         unitOverlayGraphics: PIXI.Graphics;
         // Graphics for drawing the spell effects during the dry run phase
         predictionGraphics: PIXI.Graphics;
+        // Graphics for rendering above board and walls but beneath units and doodads,
+        // see containerPlanningView for exact render order.
+        planningViewGraphics: PIXI.Graphics;
         // Graphics for debugging the cave
         debugCave: PIXI.Graphics;
         allowCookies: boolean;
@@ -96,6 +97,8 @@ declare global {
         superMe: () => void;
         // A local copy of underworld.units used to predict damage and mana use from casting a spell
         predictionUnits: Unit.IUnit[];
+        // A local copy of underworld.pickups used to predict effect from casting a spell
+        predictionPickups: IPickup[];
         // Shows icons above the heads of enemies who will damage you next turn
         attentionMarkers: Vec2[];
         // Shows icon for units that will be successfully resurrected
@@ -116,7 +119,7 @@ declare global {
         playerThoughts: { [clientId: string]: { target: Vec2, cardIds: string[] } };
         // A list of units and pickups and an endPosition that they are moved to via a "force",
         // like a push or pull or explosion.
-        forceMove: { pushedObject: Circle, velocity: Vec2, velocity_falloff: number }[];
+        forceMove: ForceMove[];
         // Middle Mouse Button Down
         // Note: do NOT set directly, use setMMBDown instead
         readonly MMBDown: boolean;
@@ -125,15 +128,15 @@ declare global {
         // Right Mouse Button Down
         // Note: do NOT set directly, use setRMBDown instead
         readonly RMBDown: boolean;
-        // Used to set RMBDown
+        // Used to set Right mouse button down
         setRMBDown: (isDown: boolean) => void;
         // Allows manually overriding the underworld seed via the JS console
         seedOverride: string | undefined;
         // devMode: auto picks character and upgrades
         devMode: boolean;
-        devSpawnUnit: (unitId: string, faction: Faction) => void;
-        devSpawnAllUnits: () => void;
         // Used for development to debug the original information used to make a map
         map: any;
+        devSpawnUnit: (unitId: string, faction: Faction) => void;
+        devSpawnAllUnits: () => void;
     }
 }
