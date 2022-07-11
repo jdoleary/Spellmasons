@@ -362,7 +362,10 @@ export function playComboAnimation(unit: IUnit, key: string | undefined, keyMome
     return Promise.resolve();
   }
   // Change animation and change back to default
-  return new Promise<void>((resolve) => {
+  // ---
+  // This timeout value is arbitrary, meant to prevent and report an await hang
+  // if somehow resolve is never called
+  return raceTimeout(6000, `playComboAnimation: ${key}`, new Promise<void>((resolve) => {
     if (!unit.image) {
       return resolve();
     }
@@ -434,7 +437,7 @@ export function playComboAnimation(unit: IUnit, key: string | undefined, keyMome
     for (let animPath of combo.companionAnimations) {
       addOneOffAnimation(unit, animPath, options);
     }
-  });
+  }));
 }
 export function playAnimation(unit: IUnit, spritePath: string | undefined, options?: PixiSpriteOptions): Promise<void> {
   if (!spritePath) {
@@ -442,7 +445,10 @@ export function playAnimation(unit: IUnit, spritePath: string | undefined, optio
     return Promise.resolve();
   }
   // Change animation and change back to default
-  return new Promise<void>((resolve) => {
+  // ---
+  // This timeout value is arbitrary, meant to prevent and report an await hang
+  // if somehow resolve is never called
+  return raceTimeout(6000, `playAnimation: ${spritePath}`, new Promise<void>((resolve) => {
     if (!unit.image) {
       return resolve();
     }
@@ -457,11 +463,14 @@ export function playAnimation(unit: IUnit, spritePath: string | undefined, optio
         }
       }
     });
-  });
+  }));
 }
 export function addOneOffAnimation(unit: IUnit, spritePath: string, options?: PixiSpriteOptions): Promise<void> {
   // Play animation and then remove it
-  return new Promise<void>((resolve) => {
+  // ---
+  // This timeout value is arbitrary, meant to prevent and report an await hang
+  // if somehow resolve is never called
+  return raceTimeout(6000, `addOneOffAnimation: ${spritePath}`, new Promise<void>((resolve) => {
     if (!unit.image) {
       return resolve();
     }
@@ -477,7 +486,7 @@ export function addOneOffAnimation(unit: IUnit, spritePath: string, options?: Pi
     });
     animationSprite.isOneOff = true;
     animationSprite.anchor.set(0.5);
-  });
+  }));
 }
 
 export function resurrect(unit: IUnit) {

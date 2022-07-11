@@ -3,9 +3,6 @@
         - Possible causes
             - createLevel
             - initLevel
-            - playComboAnimation
-            - playAnimation
-            - addOneOffAnimation
             - resolveDoneMoving
     - **critical** Brad's game got stuck on Message Type 9 Couldn't pick an upgrade
         - Develop a way of better logging where it's hanging
