@@ -31,6 +31,7 @@
         - die
     - Master Music
 - Pack 9 | R, J & E feedback
+    - Restore "walk rope" when holding RMB
     - Song should loop until level changes
     - No stamina bar after portal
     - Freeze spell should stop timer on pickups
