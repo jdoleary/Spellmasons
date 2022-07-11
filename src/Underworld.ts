@@ -55,6 +55,7 @@ import { all_ground, baseTiles, caveSizes, convertBaseTilesToFinalTiles, generat
 import { Material } from './Conway';
 import { oneDimentionIndexToVec2 } from './jmath/ArrayUtil';
 import { playSFX, sfx } from './Audio';
+import { raceTimeout } from './Promise';
 
 export enum turn_phase {
   PlayerTurns,
@@ -1460,7 +1461,7 @@ export default class Underworld {
         // Add unit action to the array of promises to wait for
         // TODO: Prevent grunts from attacking if they are out of range
         // like when they are around a corner
-        let promise = unitSource.action(u, target, this.canUnitAttackTarget(u, target));
+        let promise = raceTimeout(5000, `Unit.action is taking too long for unit ${u.id}`, unitSource.action(u, target, this.canUnitAttackTarget(u, target)));
         animationPromises.push(promise);
       } else {
         console.error(

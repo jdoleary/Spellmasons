@@ -11,7 +11,6 @@
             - addOneOffAnimation
             - moveTowards
             - resolveDoneMoving
-            - unit.action
     - **critical** Brad's game got stuck on Message Type 9 Couldn't pick an upgrade
         - Develop a way of better logging where it's hanging
     - Could use Promise.race and a timeout wrapper as a bandaid to make sure game never hangs and reports where it would have
