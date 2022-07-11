@@ -1722,7 +1722,9 @@ export default class Underworld {
       console.error('Cannot animate a still image, this function requires an animation path or else it will not "hide when complete"', imagePath);
       return Promise.resolve();
     }
-    return new Promise((resolve) => {
+    // This timeout value is arbitrary, meant to prevent and report an await hang
+    // if somehow resolve is never called
+    return raceTimeout(6000, `animateSpell: ${imagePath}`, new Promise<void>((resolve) => {
       const image = Image.create(
         target,
         imagePath,
@@ -1738,7 +1740,7 @@ export default class Underworld {
         }
       );
       image.resolver = resolve;
-    })
+    }));
 
 
   }

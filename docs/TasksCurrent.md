@@ -1,10 +1,8 @@
 ## Schedule
 - Pack 2 | Prevent hang on await
         - Possible causes
-            - fly() - flying / lobbing projectiles
             - createLevel
             - initLevel
-            - animateSpell
             - playComboAnimation
             - playAnimation
             - addOneOffAnimation
