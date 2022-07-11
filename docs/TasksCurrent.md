@@ -1,6 +1,5 @@
 ## Schedule
 - Pack 4
-    - bug: Player walk animation doesn't play anymore
 - Pack 5
     - Fix: bad-pathing.mkv in videos folder
         - seed: 0.6450583331398443
