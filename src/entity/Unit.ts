@@ -764,7 +764,7 @@ export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
   // to resolve is within a reasonable range
   const timeoutMs = 300 + unit.stamina / unit.moveSpeed;
 
-  return raceTimeout(timeoutMs, `moveTowards timed out for unit id ${unit.id}`, new Promise<void>((resolve) => {
+  return raceTimeout(timeoutMs, `moveTowards; unit.id: ${unit.id}`, new Promise<void>((resolve) => {
     // Invoke previous resolveDoneMoving if it exists 
     unit.resolveDoneMoving();
     // Set new resolve done moving
