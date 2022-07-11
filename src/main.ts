@@ -147,6 +147,9 @@ window.setRMBDown = (isDown: boolean) => {
   } else {
     console.error('Cannot send MOVE_PLAYER, window.player is undefined')
   }
+  // Reset notifiedOutOfStamina so that when RMB is pressed again, if the 
+  // player is out of stamina it will notify them
+  window.notifiedOutOfStamina = false;
 }
 window.skipTutorial = () => {
   storage.set(SKIP_TUTORIAL, YES);

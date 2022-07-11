@@ -51,6 +51,8 @@ declare global {
         giveMeCard: (cardId: string, quantity: number) => void;
         // Set to true in developer console to see debug information
         showDebug: boolean;
+        // Draw the "walk rope" to show a player how far they can travel.
+        walkPathGraphics: PIXI.Graphics;
         // Graphics for drawing debug information, use window.showDebug = true
         // to show at runtime. Automatically draws pathing bounds, walls, etc
         debugGraphics: PIXI.Graphics;
@@ -130,6 +132,7 @@ declare global {
         readonly RMBDown: boolean;
         // Used to set Right mouse button down
         setRMBDown: (isDown: boolean) => void;
+        notifiedOutOfStamina: boolean;
         // Allows manually overriding the underworld seed via the JS console
         seedOverride: string | undefined;
         // devMode: auto picks character and upgrades

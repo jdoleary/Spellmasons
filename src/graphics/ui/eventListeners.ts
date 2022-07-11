@@ -15,6 +15,11 @@ import * as config from '../../config';
 import { cameraAutoFollow, getCamera, moveCamera } from '../PixiUtils';
 import { getEndOfRangeTarget, isOutOfRange } from '../../PlayerUtils';
 import { vec2ToOneDimentionIndex } from '../../jmath/ArrayUtil';
+import * as Vec from '../../jmath/Vec';
+import { Vec2 } from '../../jmath/Vec';
+import { distance, getCoordsAtDistanceTowardsTarget } from '../../jmath/math';
+import * as colors from '../../graphics/ui/colors';
+import { pointsEveryXDistanceAlongPath } from '../../jmath/Pathfinding';
 
 export const keyDown = {
   w: false,
@@ -22,6 +27,10 @@ export const keyDown = {
   s: false,
   d: false
 }
+// a UnitPath that is used to display the player's "walk rope"
+// which shows the path that they will travel if they were
+// to move towards the mouse cursor
+let walkRopePath: Unit.UnitPath | undefined = undefined;
 
 window.addEventListener('keydown', nonUnderworldKeydownListener);
 function nonUnderworldKeydownListener(event: KeyboardEvent) {
@@ -210,18 +219,19 @@ export function mouseMove(e?: MouseEvent) {
 
     if (window.RMBDown) {
       if (window.underworld.isMyTurn()) {
+        drawWalkRope(mouseTarget);
         // If player is able to move
         if (window.player.unit.stamina > 0) {
           // Move up to but not onto intersection or else unit will get stuck ON linesegment
           Unit.moveTowards(window.player.unit, mouseTarget);
         } else {
-          floatingText({
-            coords: mouseTarget,
-            text: 'Out of stamina',
-          });
-          // This is a hack to prevent it from continuing to notify out of stamina over and over.
-          // If RMBDown is ever used for more than hold to move, this should be replaced with a better solution.
-          window.setRMBDown(false);
+          if (!window.notifiedOutOfStamina) {
+            floatingText({
+              coords: mouseTarget,
+              text: 'Out of stamina',
+            });
+            window.notifiedOutOfStamina = true;
+          }
         }
       } else {
         floatingText({
@@ -297,6 +307,77 @@ export function mouseMove(e?: MouseEvent) {
 
   }
 }
+function drawWalkRope(target: Vec2) {
+  if (!window.player) {
+    return
+  }
+  //
+  // Show the player's current walk path (walk rope)
+  //
+  // The distance that the player can cover with their current stamina
+  // is drawn in the stamina color.
+  // There are dots dilineating how far the unit can move each turn.
+  //
+  // Show walk path
+  window.walkPathGraphics.clear();
+  walkRopePath = window.underworld.calculatePath(walkRopePath, Vec.round(window.player.unit), Vec.round(target));
+  const { points: currentPlayerPath } = walkRopePath;
+  if (currentPlayerPath.length) {
+    const turnStopPoints = pointsEveryXDistanceAlongPath(window.player.unit, currentPlayerPath, window.player.unit.staminaMax, window.player.unit.staminaMax - window.player.unit.stamina);
+    window.walkPathGraphics.lineStyle(4, 0xffffff, 1.0);
+    window.walkPathGraphics.moveTo(window.player.unit.x, window.player.unit.y);
+    let lastPoint: Vec2 = window.player.unit;
+    let distanceCovered = 0;
+    const distanceLeftToMove = window.player.unit.stamina;
+    for (let i = 0; i < currentPlayerPath.length; i++) {
+      const point = currentPlayerPath[i];
+      if (point) {
+        const thisLineDistance = distance(lastPoint, point);
+        if (distanceCovered > distanceLeftToMove) {
+          window.walkPathGraphics.lineStyle(4, 0xffffff, 1.0);
+          window.walkPathGraphics.lineTo(point.x, point.y);
+        } else {
+          window.walkPathGraphics.lineStyle(4, colors.stamina, 1.0);
+          if (distanceCovered + thisLineDistance > distanceLeftToMove) {
+            // Draw up to the firstStop with the stamina color
+            const pointAtWhichUnitOutOfStamina = getCoordsAtDistanceTowardsTarget(lastPoint, point, distanceLeftToMove - distanceCovered);
+            window.walkPathGraphics.lineTo(pointAtWhichUnitOutOfStamina.x, pointAtWhichUnitOutOfStamina.y);
+            window.walkPathGraphics.lineStyle(4, 0xffffff, 1.0);
+            window.walkPathGraphics.lineTo(point.x, point.y);
+          } else {
+            window.walkPathGraphics.lineTo(point.x, point.y);
+          }
+        }
+        distanceCovered += distance(lastPoint, point);
+        lastPoint = point;
+      }
+    }
+
+    // Draw the points along the path at which the unit will stop on each turn
+    for (let i = 0; i < turnStopPoints.length; i++) {
+      if (i == 0 && distanceLeftToMove > 0) {
+        window.walkPathGraphics.lineStyle(4, colors.stamina, 1.0);
+      } else {
+        window.walkPathGraphics.lineStyle(4, 0xffffff, 1.0);
+      }
+      const point = turnStopPoints[i];
+      if (point) {
+        window.walkPathGraphics.drawCircle(point.x, point.y, 3);
+      }
+    }
+    if (turnStopPoints.length == 0 && distanceLeftToMove > 0) {
+      window.walkPathGraphics.lineStyle(4, colors.stamina, 1.0);
+    } else {
+      window.walkPathGraphics.lineStyle(4, 0xffffff, 1.0);
+    }
+    // Draw a stop circle at the end
+    const lastPointInPath = currentPlayerPath[currentPlayerPath.length - 1]
+    if (lastPointInPath) {
+      window.walkPathGraphics.drawCircle(lastPointInPath.x, lastPointInPath.y, 3);
+    }
+  }
+
+}
 export function contextmenuHandler(e: MouseEvent) {
   // Prevent opening context menu on right click
   e.preventDefault();
@@ -320,6 +401,8 @@ export function mouseUpHandler(e: MouseEvent) {
     window.player.unit.path = undefined;
   }
   if (e.button == 2) {
+    // Left click clears walk rope
+    window.walkPathGraphics.clear();
     window.setRMBDown(false);
     e.preventDefault();
   }

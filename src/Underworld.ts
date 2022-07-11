@@ -327,27 +327,6 @@ export default class Underworld {
               manaBarProps.width,
               manaBarProps.height);
           }
-          if (window.player && u === window.player.unit && window.RMBDown) {
-            window.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
-            window.unitOverlayGraphics.beginFill(0x000000, 1.0);
-            // *3 stamina bar is wider
-            const staminaBarWidthMax = config.UNIT_UI_BAR_WIDTH * 3
-            // Draw black background for stamina bar
-            window.unitOverlayGraphics.drawRect(
-              window.player.unit.x - staminaBarWidthMax / 2,
-              window.player.unit.y + config.COLLISION_MESH_RADIUS * 0.7,
-              staminaBarWidthMax,
-              config.UNIT_UI_BAR_HEIGHT);
-
-            const staminaBarWidth = Math.max(0, staminaBarWidthMax * window.player.unit.stamina / window.player.unit.staminaMax);
-            window.unitOverlayGraphics.beginFill(colors.stamina, 1.0);
-            window.unitOverlayGraphics.drawRect(
-              window.player.unit.x - staminaBarWidthMax / 2,
-              window.player.unit.y + config.COLLISION_MESH_RADIUS * 0.7,
-              staminaBarWidth,
-              config.UNIT_UI_BAR_HEIGHT);
-
-          }
           window.unitOverlayGraphics.endFill();
         }
       }
