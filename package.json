@@ -10,7 +10,8 @@
     "test": "jest",
     "format": "prettier --write \"src/**/*.{ts,js}\"",
     "lint": "prettier --check \"src/**/*.{ts,js}\"",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "headless": "tsc --project tsconfig.headless.json --outDir headless-server-build/ && node headless-server-build/src/HeadlessServer.js"
   },
   "repository": {
     "type": "git",
