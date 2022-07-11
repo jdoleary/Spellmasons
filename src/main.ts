@@ -43,7 +43,7 @@ window.zoomTarget = 1.3;
 // the regular game with graphics and audio
 window.headless = false;
 if (window.devMode) {
-  console.log('ADMIN: devMode = true! Character and upgrades will be picked automatically.');
+  console.log('ADMIN: devMode = true! Character and upgrades will be picked automatically. Animations are sped up');
 }
 
 setupAll();
