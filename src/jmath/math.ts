@@ -1,5 +1,4 @@
-import { magnitude, Vec2 } from './Vec';
-import { prng, randInt } from './rand';
+import { Vec2 } from './Vec';
 // https://webdva.github.io/how-i-implemented-client-side-linear-interpolation/
 export function lerp(start: number, end: number, time: number) {
   if (time >= 1) {
