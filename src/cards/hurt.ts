@@ -18,7 +18,7 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 1,
     probability: 50,
-    thumbnail: 'damage.png',
+    thumbnail: 'hurt.png',
     animationPath: 'spell-effects/spellHurtCuts',
     sfx: 'hurt',
     description: `

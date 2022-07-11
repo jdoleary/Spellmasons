@@ -12,7 +12,7 @@ import Events, {
 } from '../Events';
 import Subsprites, { Subsprite } from '../Subsprites';
 // Register spells:
-import add_damage, { UnitDamage } from './add_damage';
+import add_damage, { UnitDamage } from './hurt';
 import add_heal from './add_heal';
 import area_of_effect from './area_of_effect';
 import chain from './chain';
