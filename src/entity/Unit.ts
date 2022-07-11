@@ -364,8 +364,9 @@ export function playComboAnimation(unit: IUnit, key: string | undefined, keyMome
   // Change animation and change back to default
   // ---
   // This timeout value is arbitrary, meant to prevent and report an await hang
-  // if somehow resolve is never called
-  return raceTimeout(6000, `playComboAnimation: ${key}`, new Promise<void>((resolve) => {
+  // if somehow resolve is never called.
+  // This raceTimeout may need to be removed because playComboAnimation can have wildly varying execution times becauses it awaits keyMoment
+  return raceTimeout(20000, `playComboAnimation: ${key}; note: comboAnimation can have greatly varying execution times due to it awaiting keyMoment`, new Promise<void>((resolve) => {
     if (!unit.image) {
       return resolve();
     }
