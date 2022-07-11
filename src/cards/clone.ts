@@ -5,6 +5,7 @@ import { UnitSubType, UnitType } from '../types/commonTypes';
 import { jitter, Vec2 } from '../jmath/Vec';
 import * as config from '../config';
 import floatingText from '../graphics/FloatingText';
+import { returnToDefaultSprite } from '../entity/Unit';
 
 const id = 'clone';
 const spell: Spell = {
@@ -51,7 +52,8 @@ Clones each target
                 // If the cloned unit is player controlled, make them be controlled by the AI
                 if (clone.unitSubType == UnitSubType.PLAYER_CONTROLLED) {
                   clone.unitType = UnitType.AI;
-                  clone.unitSubType = UnitSubType.MELEE;
+                  clone.unitSubType = UnitSubType.RANGED_RADIUS;
+                  returnToDefaultSprite(clone);
                 }
                 clone.x = validSpawnCoords.x;
                 clone.y = validSpawnCoords.y;

@@ -1,6 +1,7 @@
 import type { UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
-import { action } from './actions/gruntAction';
+import * as Unit from '../Unit';
+import * as math from '../../jmath/math';
 
 const unit: UnitSource = {
   id: 'playerUnit',
@@ -11,7 +12,24 @@ const unit: UnitSource = {
   },
   unitProps: {},
   // This is how a user unit would act if controlled by AI (this can happen if you clone yourself)
-  action,
+  action: async (unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, canAttackTarget: boolean) => {
+    // Attack
+    if (attackTarget && canAttackTarget) {
+      // Archers attack or move, not both; so clear their existing path
+      unit.path = undefined;
+      Unit.orient(unit, attackTarget);
+      const keyMoment = () => window.underworld.castCards({}, unit, ['hurt'], attackTarget, false, false);
+      await Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false });
+    }
+    // Movement:
+    const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit);
+    if (closestEnemy) {
+      const distanceToEnemy = math.distance(unit, closestEnemy);
+      // Trick to make the unit only move as far as will put them in range but no closer
+      unit.stamina = Math.min(unit.stamina, distanceToEnemy - unit.attackRange);
+      await Unit.moveTowards(unit, closestEnemy);
+    }
+  },
   animations: {
     idle: 'units/playerIdle',
     hit: 'units/playerHit',

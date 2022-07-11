@@ -1,12 +1,9 @@
 ## Schedule
 - Pack 4
     - **critical** Figure out how to broadcast player movement (due to the new system) to multiple clients
-    - Server should be able to send syncs that will wait to execute until turn changes so it doesn't interrupt animations and mess up the state when it syncs
-    - Add "preparing" animation used to reduce desyncs due to network latency, so that if multiple users are casting spells at the same time, the wizard bending down to "charge" as soon as the current user clicks, masks a delay to make sure it doesn't conflict with other spells.  It'll send the spell over the network as soon as the user clicks but waits to cast it so that there aren't conflicting spells making desyncs on multiple clients.
 - Pack 5
     - Fix: bad-pathing.mkv in videos folder
         - seed: 0.6450583331398443
-    - cloned self doesn't show magic animation when they cast
     - priest is attacking /dealing damage to him but he's not a vamp. how?
     - can't drag spell from book to toolbar if it's already in toolbar
 - Pack 6
@@ -15,6 +12,8 @@
             - Then improve syncing strategy between the data layer and the visual layer.  This will be useful for network syncs, saves and loads, standalone headless server.
                 - It should also solve the disappearing subsprite bug and the wizard robes changing color bug.
             - In order to decouple, each should have imports only in one file that can be dependency injected.  So ALL pie stuff goes through the networking layer, all DOM stuff goes through the UI layer, all PIXI (including PixiUtils which is how a lot of the files interact with PIXI) stuff goes through the pixi layer.  This should make it easy to make a headless server or make tests that use a data-only underworld
+    - Add "preparing" animation used to reduce desyncs due to network latency, so that if multiple users are casting spells at the same time, the wizard bending down to "charge" as soon as the current user clicks, masks a delay to make sure it doesn't conflict with other spells.  It'll send the spell over the network as soon as the user clicks but waits to cast it so that there aren't conflicting spells making desyncs on multiple clients.
+    - Server should be able to send syncs that will wait to execute until turn changes so it doesn't interrupt animations and mess up the state when it syncs
 - Pack 7
     - Unit Crowding
         - `// TODO: Temp removed aliveNPCs because moveWithCollisions doesn't consider them yet`
@@ -91,6 +90,7 @@
 - Bug: Should sync portals when syncing units if all enemies are dead
 - Bug: (Note: this is probably fixed now) Goons spawned outside of map when summoner was stuffed in upper left corner of map
 - Bug: RMB hold on toolbar moves character.  Be very careful when solving this to ensure you don't make clicks in the invisible part of UI elements no longer work
+- Bug: Mana bar over player's head grows too  large when mana is overfilled
 ---
 ## Features
 - Archers on level 2 have more health than archers on level 1
