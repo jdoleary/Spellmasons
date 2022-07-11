@@ -13,6 +13,9 @@ interface OnDataArgs {
     payload: any;
     time: number;
 }
+// This file is the entrypoint for the headless server and must set window.headless
+// to true to denote that there is no graphics nor audio code
+window.headless = true;
 import * as Cards from './cards';
 import * as Units from './entity/units';
 import { onClientPresenceChanged } from './network/wsPieHandler';
