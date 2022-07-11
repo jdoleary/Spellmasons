@@ -10,7 +10,7 @@ import floatingText from '../graphics/FloatingText';
 import * as CardUI from '../graphics/ui/CardUI';
 import * as Cards from '../cards';
 import * as config from '../config';
-import { chooseObjectWithProbability } from '../jmath/math';
+import { chooseObjectWithProbability } from '../jmath/rand';
 import seedrandom from 'seedrandom';
 import { Vec2 } from '../jmath/Vec';
 
