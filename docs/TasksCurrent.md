@@ -1,9 +1,4 @@
 ## Schedule
-- Pack 3 | The great refactor
-        - Group topics in folders: audio, graphics, gamelogic, network
-            - cleanly separated
-        - Add window.headless
-        - Use npm workspaces
 - Pack 2 | Prevent hang on await
         - Possible causes
             - forceMoveInstances
