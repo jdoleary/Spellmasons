@@ -1,6 +1,10 @@
 ## Schedule
-- Pack 2
-    - Prevent hang on await
+- Pack 3 | The great refactor
+        - Group topics in folders: audio, graphics, gamelogic, network
+            - cleanly separated
+        - Add window.headless
+        - Use npm workspaces
+- Pack 2 | Prevent hang on await
         - Possible causes
             - forceMoveInstances
             - fly() - flying / lobbing projectiles
@@ -16,11 +20,6 @@
     - **critical** Brad's game got stuck on Message Type 9 Couldn't pick an upgrade
         - Develop a way of better logging where it's hanging
     - Could use Promise.race and a timeout wrapper as a bandaid to make sure game never hangs and reports where it would have
-- Pack 3
-    - The great refactor
-        - Group topics in folders: audio, graphics, gamelogic, network
-            - cleanly separated
-        - Add window.headless
 - Pack 4
     - **critical** Figure out how to broadcast player movement (due to the new system) to multiple clients
     - Server should be able to send syncs that will wait to execute until turn changes so it doesn't interrupt animations and mess up the state when it syncs
@@ -52,6 +51,33 @@
         - use potion
         - die
     - Master Music
+- Pack 9 | R, J & E feedback
+    - Song should loop until level changes
+    - No stamina bar after portal
+    - Freeze spell should stop timer on pickups
+    - if a pickup says 1 it should last one more turn, not disappear next turn
+    - animated trim path line for archers so it's obvious they'll hit you
+    - Different attack icon for ranged units
+    - Bug: No death circle for pushing units into liquid
+    - Bug: Repel didn't work when R cast it directly on enemy, only worked when she clicked on empty ground
+    - Said "out of range" for pickup but it's highlight underline was under the cursor 
+        - Make their selection radius bigger! (same for units too), never disappoint the player, if the mouse reaches any part of a unit they should be selectable
+    - Got "-60" mana when it should have been 0 when cursor wasn't on a target or was off the map
+    - Hover should always show tooltip so you can see even when spell is queued
+    - Bug: decoy died and archer changed targets, make units commit to a target at the beginning of the round, else PLAYER FRUSTRATION
+    - shield should have number on it
+    - Poison prediction is confusing
+    - describe that decoy has health in card
+    - Spike highlight is not visible
+    - ideas
+        - Have push and pull from the start
+        - Takes too long to be fun, speed it up!!! 
+        - objects to hide behind (raise earth)
+        - More objects to interact with
+        - Spell: grappling hook (pulls your towards something)
+        - freezable liquid to walk over
+        
+        
 
 
 - Ordered next tasks
