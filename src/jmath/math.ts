@@ -47,20 +47,6 @@ export function distance(coords1: Vec2, coords2: Vec2): number {
   );
 }
 
-
-// Normalizes degrees within [0,Math.PI*2)
-// for example Math.PI*2 turns into 0
-// Math.PI*3 turns into Math.PI
-// -Math.PI turns into Math.PI
-export function normalizeRadians(degrees: number) {
-  const remainder = degrees % (Math.PI * 2);
-  if (remainder < 0) {
-    return Math.PI * 2 + remainder;
-  } else {
-    return remainder;
-  }
-}
-
 interface objectWithProbability {
   probability: number;
 }

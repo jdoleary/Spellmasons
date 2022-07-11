@@ -1,5 +1,5 @@
 import {
-  normalizeRadians, _chooseObjectWithProbability, similarTriangles,
+  _chooseObjectWithProbability, similarTriangles,
   getCoordsAtDistanceTowardsTarget, honeycombGenerator, rotateMatrix
 } from '../math';
 
@@ -163,28 +163,6 @@ describe('math', () => {
       });
     });
 
-  });
-  describe('normalizeRadiants', () => {
-    it('should normalize Math.PI*2 to 0', () => {
-      const actual = normalizeRadians(Math.PI * 2);
-      const expected = 0;
-      expect(actual).toEqual(expected);
-    });
-    it('should normalize Math.PI*3 to Math.PI', () => {
-      const actual = normalizeRadians(Math.PI * 3);
-      const expected = Math.PI;
-      expect(actual).toEqual(expected);
-    });
-    it('should normalize -Math.PI to Math.PI', () => {
-      const actual = normalizeRadians(-Math.PI);
-      const expected = Math.PI;
-      expect(actual).toEqual(expected);
-    });
-    it('should leave numbers between 0 inclusive and Math.PI*2 exclusive as they are', () => {
-      const actual = normalizeRadians(Math.PI);
-      const expected = Math.PI;
-      expect(actual).toEqual(expected);
-    });
   });
 
   describe('similarTriangles', () => {
