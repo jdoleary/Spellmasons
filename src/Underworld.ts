@@ -35,7 +35,7 @@ import * as Vec from "./jmath/Vec";
 import Events from './Events';
 import { allUnits } from './entity/units';
 import { drawTarget, getUIBarProps, setPredictionGraphicsLineStyle, updateManaCostUI, updatePlanningView } from './graphics/PlanningView';
-import { prng, randInt, SeedrandomState } from './jmath/rand';
+import { chooseObjectWithProbability, prng, randInt, SeedrandomState } from './jmath/rand';
 import { calculateCost } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle } from './jmath/lineSegment';
 import { expandPolygon, mergePolygon2s, Polygon2, Polygon2LineSegment, toLineSegments, toPolygon2LineSegments } from './jmath/Polygon2';
@@ -767,7 +767,7 @@ export default class Underworld {
     const numberOfPickups = 4;
     for (let i = 0; i < numberOfPickups; i++) {
       if (validSpawnCoords.length == 0) { break; }
-      const choice = math.chooseObjectWithProbability(Pickup.pickups.map((p, i) => ({ index: i, probability: p.probability })), this.random);
+      const choice = chooseObjectWithProbability(Pickup.pickups.map((p, i) => ({ index: i, probability: p.probability })), this.random);
       if (choice) {
         const { index } = choice;
         const validSpawnCoordsIndex = randInt(this.random, 0, validSpawnCoords.length - 1);
@@ -1991,7 +1991,7 @@ function getEnemiesForAltitude(levelIndex: number): { unitIds: string[], strengt
   const unitIds = Array(startingNumberOfUnits + levelIndex).fill(null)
     // flatMap is used to remove any undefineds
     .flatMap(() => {
-      const chosenUnit = math.chooseObjectWithProbability(possibleUnitsToChoose, window.underworld.random)
+      const chosenUnit = chooseObjectWithProbability(possibleUnitsToChoose, window.underworld.random)
       return chosenUnit ? [chosenUnit.id] : []
     })
   const strength = (levelIndex / 10) + window.underworld.players.length / 2;

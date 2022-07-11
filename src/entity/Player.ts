@@ -14,7 +14,6 @@ import { MESSAGE_TYPES } from '../types/MessageTypes';
 import { jitter } from '../jmath/Vec';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import { playerCastAnimationColor, playerCoatPrimary, playerCoatSecondary, playerColors, playerColorsSecondary } from '../graphics/ui/colors';
-import { _chooseObjectWithProbability } from '../jmath/math';
 
 // The serialized version of the interface changes the interface to allow only the data
 // that can be serialized in JSON.  It may exclude data that is not neccessary to
