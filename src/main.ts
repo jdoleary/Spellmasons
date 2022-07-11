@@ -20,7 +20,7 @@ cookieConsentPopup(false);
 // This import is critical so that the svelte menu has access to
 // the pie globals
 import './network/wsPieSetup';
-import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './contants';
+import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './config';
 import { syncInventory } from './graphics/ui/CardUI';
 
 const YES = 'yes'

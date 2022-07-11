@@ -45,3 +45,4 @@ export const DISTANCE_VERY_FAR = 600;
 export const UNIT_BASE_RADIUS = COLLISION_MESH_RADIUS / 4;
 
 export const CAMERA_BASE_SPEED = 20;
+export const ENEMY_ENCOUNTERED_STORAGE_KEY = 'enemyEncountered';

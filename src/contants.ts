@@ -1,1 +1,0 @@
-export const ENEMY_ENCOUNTERED_STORAGE_KEY = 'enemyEncountered';

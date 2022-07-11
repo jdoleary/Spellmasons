@@ -45,7 +45,7 @@ import * as readyState from './readyState';
 import { mouseMove } from './graphics/ui/eventListeners';
 import Jprompt from './graphics/Jprompt';
 import { collideWithLineSegments, ForceMove, moveWithCollisions } from './mathematics/moveWithCollision';
-import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './contants';
+import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './config';
 import { getBestRangedLOSTarget } from './entity/units/actions/rangedAction';
 import { getClients, hostGiveClientGameStateForInitialLoad } from './network/wsPieHandler';
 import { healthAllyGreen, healthHurtRed, healthRed } from './graphics/ui/colors';
