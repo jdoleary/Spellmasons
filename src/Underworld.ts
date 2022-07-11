@@ -1461,7 +1461,7 @@ export default class Underworld {
         // Add unit action to the array of promises to wait for
         // TODO: Prevent grunts from attacking if they are out of range
         // like when they are around a corner
-        let promise = raceTimeout(5000, `Unit.action; unit.id: ${u.id}`, unitSource.action(u, target, this.canUnitAttackTarget(u, target)));
+        let promise = raceTimeout(5000, `Unit.action; unit.id: ${u.id}; subType: ${u.unitSubType}`, unitSource.action(u, target, this.canUnitAttackTarget(u, target)));
         animationPromises.push(promise);
       } else {
         console.error(
