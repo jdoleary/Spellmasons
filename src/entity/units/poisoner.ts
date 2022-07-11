@@ -4,6 +4,7 @@ import { createVisualLobbingProjectile } from '../Projectile';
 import * as Unit from '../Unit';
 import * as math from '../../jmath/math';
 import * as poison from '../../cards/poison';
+import { addPixiSpriteAnimated, containerSpells, containerUnits } from '../../graphics/PixiUtils';
 
 const unit: UnitSource = {
   id: 'poisoner',
@@ -41,9 +42,19 @@ const unit: UnitSource = {
           createVisualLobbingProjectile(
             unit,
             chosenUnit,
-            'green-thing.png',
-          );
-          Unit.addModifier(chosenUnit, poison.id);
+            'projectile/poisonerProjectile',
+          ).then(() => {
+            Unit.addModifier(chosenUnit, poison.id);
+            // Add projectile hit animation
+            const animationSprite = addPixiSpriteAnimated('projectile/poisonerProjectileHit', containerSpells, {
+              loop: false,
+              animationSpeed: 0.2,
+            });
+            animationSprite.anchor.set(0, 0.5);
+            animationSprite.x = chosenUnit.x;
+            animationSprite.y = chosenUnit.y;
+
+          });
         }
         const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, chosenUnit, unit.stamina);
         await Unit.moveTowards(unit, moveTo);

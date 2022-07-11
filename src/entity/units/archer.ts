@@ -3,6 +3,7 @@ import type { UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
 import { createVisualFlyingProjectile } from '../Projectile';
 import * as math from '../../jmath/math';
+import { addPixiSpriteAnimated, containerSpells, containerUnits } from '../../graphics/PixiUtils';
 
 const unit: UnitSource = {
   id: 'archer',
@@ -37,9 +38,18 @@ const unit: UnitSource = {
         return createVisualFlyingProjectile(
           unit,
           attackTarget,
-          'arrow.png',
+          'projectile/arrow',
         ).then(() => {
           Unit.takeDamage(attackTarget, unit.damage, false, undefined);
+          // Add projectile hit animation
+          const animationSprite = addPixiSpriteAnimated('projectile/arrowProjectileHit', containerSpells, {
+            loop: false,
+            animationSpeed: 0.2,
+          });
+          animationSprite.anchor.set(0, 0.5);
+          animationSprite.x = attackTarget.x;
+          animationSprite.y = attackTarget.y;
+
         })
 
       });

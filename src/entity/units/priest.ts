@@ -5,6 +5,7 @@ import * as math from '../../jmath/math';
 import { createVisualLobbingProjectile } from '../Projectile';
 import Shield from '../../cards/shield';
 import { isVampire } from '../../cards/vampire_bite';
+import { addPixiSpriteAnimated, containerSpells, containerUI, containerUnits } from '../../graphics/PixiUtils';
 
 const CAST_MANA_COST = 30;
 async function healOneOf(self: Unit.IUnit, units: Unit.IUnit[]) {
@@ -16,8 +17,16 @@ async function healOneOf(self: Unit.IUnit, units: Unit.IUnit[]) {
         await createVisualLobbingProjectile(
           self,
           chosenUnit,
-          'holy-projectile.png',
+          'projectile/priestProjectileCenter',
         );
+        // Add projectile hit animation
+        const animationSprite = addPixiSpriteAnimated('projectile/priestProjectileHit', containerUnits, {
+          loop: false,
+          animationSpeed: 0.2,
+        });
+        animationSprite.anchor.set(0, 0.5);
+        animationSprite.x = chosenUnit.x;
+        animationSprite.y = chosenUnit.y;
         // Heal for 2
         Unit.takeDamage(chosenUnit, -2, false, undefined);
         // Remove mana once the cast occurs
@@ -82,10 +91,18 @@ const unit: UnitSource = {
             if (Unit.inRange(unit, closestAlly)) {
               await Unit.playAnimation(unit, unit.animations.attack);
               await createVisualLobbingProjectile(
-                unit,
+                self,
                 closestAlly,
-                'holy-projectile.png',
+                'projectile/priestProjectileCenter',
               );
+              // Add projectile hit animation
+              const animationSprite = addPixiSpriteAnimated('projectile/priestProjectileHit', containerUnits, {
+                loop: false,
+                animationSpeed: 0.2,
+              });
+              animationSprite.anchor.set(0, 0.5);
+              animationSprite.x = closestAlly.x;
+              animationSprite.y = closestAlly.y;
               Unit.addModifier(closestAlly, Shield.card.id);
               // Remove mana once the cast occurs
               unit.mana -= CAST_MANA_COST;

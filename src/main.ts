@@ -39,7 +39,7 @@ window.resMarkers = [];
 window.lastThoughtsHash = '';
 window.playerThoughts = {};
 window.forceMove = [];
-window.devMode = location.href.includes('localhost');
+window.devMode = false && location.href.includes('localhost');
 window.zoomTarget = 1.3;
 // If the code in main runs this is NOT a headless instance, main.ts is the entrypoint for
 // the regular game with graphics and audio

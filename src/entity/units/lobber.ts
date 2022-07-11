@@ -3,6 +3,7 @@ import type { UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
 import { createVisualLobbingProjectile } from '../Projectile';
 import * as math from '../../jmath/math';
+import { addPixiSpriteAnimated, containerSpells, containerUnits } from '../../graphics/PixiUtils';
 
 const unit: UnitSource = {
   id: 'lobber',
@@ -35,10 +36,18 @@ const unit: UnitSource = {
         return createVisualLobbingProjectile(
           unit,
           attackTarget,
-          'green-thing.png',
+          'projectile/lobberProjectile',
         ).then(() => {
           if (attackTarget) {
             Unit.takeDamage(attackTarget, unit.damage, false, undefined);
+            // Add projectile hit animation
+            const animationSprite = addPixiSpriteAnimated('projectile/lobberProjectileHit', containerUnits, {
+              loop: false,
+              animationSpeed: 0.2,
+            });
+            animationSprite.anchor.set(0, 0.5);
+            animationSprite.x = attackTarget.x;
+            animationSprite.y = attackTarget.y;
           }
         });
 
