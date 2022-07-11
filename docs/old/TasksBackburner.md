@@ -1,3 +1,5 @@
+- Fix: bad-pathing.mkv in videos folder
+    - seed: 0.6450583331398443
 - priest is attacking /dealing damage to him but he's not a vamp. how?
 - bug: Game didn't go to game over when i died by walking into spikes
   - Implement better game over handling. be careful to not trigger game over too early. for example: A units spell might resurrect itself after dying

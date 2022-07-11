@@ -1,8 +1,4 @@
 ## Schedule
-- Pack 4
-- Pack 5
-    - Fix: bad-pathing.mkv in videos folder
-        - seed: 0.6450583331398443
 - Pack 6
     - Standalone Server
         - Decouple the various layers (data: underworld; networking: pie; visual: Pixi / DOM; audio)
@@ -36,7 +32,6 @@
     - animated trim path line for archers so it's obvious they'll hit you
     - Different attack icon for ranged units
     - Bug: No death circle for pushing units into liquid
-    - Bug: Repel didn't work when R cast it directly on enemy, only worked when she clicked on empty ground
     - Said "out of range" for pickup but it's highlight underline was under the cursor 
         - Make their selection radius bigger! (same for units too), never disappoint the player, if the mouse reaches any part of a unit they should be selectable
     - Got "-60" mana when it should have been 0 when cursor wasn't on a target or was off the map

@@ -1,10 +1,10 @@
 # Critical Path
 - Week of 7/11
     - ~~Pack 2 & 3~~
-    - Pack 4 & 5
+    - ~~Pack 4 & 5~~
     - Pack 6
-- Week of 7/18
     - Pack 7
+- Week of 7/18
 - Week of 7/25
     - Pack 8
 - Week of 8/1
