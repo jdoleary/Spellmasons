@@ -1,10 +1,10 @@
-import { lineSegmentIntersection } from "./mathematics/lineSegment";
-import { distance, lerp, similarTriangles } from "./mathematics/math";
-import { isVec2InsidePolygon } from "./mathematics/Polygon2";
-import { randFloat, randInt } from "./mathematics/rand";
-import * as Vec from "./mathematics/Vec";
+import { lineSegmentIntersection } from "./jmath/lineSegment";
+import { distance, lerp, similarTriangles } from "./jmath/math";
+import { isVec2InsidePolygon } from "./jmath/Polygon2";
+import { randFloat, randInt } from "./jmath/rand";
+import * as Vec from "./jmath/Vec";
 import * as config from './config';
-import { oneDimentionIndexToVec2, vec2ToOneDimentionIndex, vec2ToOneDimentionIndexPreventWrap } from "./mathematics/ArrayUtil";
+import { oneDimentionIndexToVec2, vec2ToOneDimentionIndex, vec2ToOneDimentionIndexPreventWrap } from "./jmath/ArrayUtil";
 import { conway, ConwayState, placeLiquidSources } from "./Conway";
 import type { IObstacle } from "./entity/Obstacle";
 

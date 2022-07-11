@@ -1,6 +1,6 @@
 
 import * as Unit from '../../Unit';
-import * as math from '../../../mathematics/math';
+import * as math from '../../../jmath/math';
 
 export function getBestRangedLOSTarget(unit: Unit.IUnit): Unit.IUnit | undefined {
     const enemies = Unit.livingUnitsInDifferentFaction(unit);

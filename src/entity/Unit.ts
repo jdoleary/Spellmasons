@@ -1,12 +1,12 @@
 import type * as PIXI from 'pixi.js';
 import * as config from '../config';
 import * as Image from '../graphics/Image';
-import * as math from '../mathematics/math';
-import { distance } from '../mathematics/math';
+import * as math from '../jmath/math';
+import { distance } from '../jmath/math';
 import { addPixiSpriteAnimated, containerDoodads, containerUnits, PixiSpriteOptions } from '../graphics/PixiUtils';
 import { UnitSubType, UnitType, Faction } from '../types/commonTypes';
-import type { Vec2 } from '../mathematics/Vec';
-import * as Vec from '../mathematics/Vec';
+import type { Vec2 } from '../jmath/Vec';
+import * as Vec from '../jmath/Vec';
 import * as CardUI from '../graphics/ui/CardUI';
 import Events from '../Events';
 import makeAllRedShader from '../graphics/shaders/selected';

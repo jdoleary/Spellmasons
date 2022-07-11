@@ -2,7 +2,7 @@ import * as Unit from '../Unit';
 import type { UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
 import { createVisualFlyingProjectile } from '../Projectile';
-import * as math from '../../mathematics/math';
+import * as math from '../../jmath/math';
 
 const unit: UnitSource = {
   id: 'archer',

@@ -1,6 +1,6 @@
 import type * as PIXI from 'pixi.js';
 import { addPixiSprite, containerUI } from './PixiUtils';
-import type { Vec2 } from '../mathematics/Vec';
+import type { Vec2 } from '../jmath/Vec';
 // Immediate Mode "draws" a sprite once per loop.
 // It will automatically create and store more sprites if there are not enough of spriteName to 
 // fullfill the draw request

@@ -1,5 +1,5 @@
-import type { Vec2 } from '../../../mathematics/Vec';
-import { distance } from '../../../mathematics/math';
+import type { Vec2 } from '../../../jmath/Vec';
+import { distance } from '../../../jmath/math';
 import * as Unit from '../../Unit';
 
 export async function action(unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, _canAttackTarget: boolean) {

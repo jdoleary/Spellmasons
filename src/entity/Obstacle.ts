@@ -1,10 +1,10 @@
 import { OBSTACLE_SIZE } from '../config';
-import { Vec2, subtract, magnitude, add } from '../mathematics/Vec';
+import { Vec2, subtract, magnitude, add } from '../jmath/Vec';
 import { IUnit, takeDamage } from './Unit';
-import { findWherePointIntersectLineSegmentAtRightAngle, isOnOutside } from '../mathematics/lineSegment';
+import { findWherePointIntersectLineSegmentAtRightAngle, isOnOutside } from '../jmath/lineSegment';
 import { Material } from '../Conway';
-import { isVec2InsidePolygon, Polygon2 } from '../mathematics/Polygon2';
-import { distance, similarTriangles } from '../mathematics/math';
+import { isVec2InsidePolygon, Polygon2 } from '../jmath/Polygon2';
+import { distance, similarTriangles } from '../jmath/math';
 import { addMask, removeMask } from '../graphics/Image';
 export interface IObstacle {
   x: number;

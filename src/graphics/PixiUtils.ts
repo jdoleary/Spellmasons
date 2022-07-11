@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
-import { clone, Vec2 } from '../mathematics/Vec';
+import { clone, Vec2 } from '../jmath/Vec';
 import { View } from '../views';
-import * as math from '../mathematics/math';
+import * as math from '../jmath/math';
 import * as config from '../config';
 import { keyDown } from './ui/eventListeners';
 import { SCALE_MODES } from 'pixi.js';

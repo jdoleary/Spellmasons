@@ -2,7 +2,7 @@ import type { UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
 import { createVisualLobbingProjectile } from '../Projectile';
 import * as Unit from '../Unit';
-import * as math from '../../mathematics/math';
+import * as math from '../../jmath/math';
 import * as poison from '../../cards/poison';
 
 const unit: UnitSource = {

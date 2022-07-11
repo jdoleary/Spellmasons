@@ -3,12 +3,12 @@ import type * as Player from '../entity/Player';
 import type * as Unit from '../entity/Unit';
 import type Underworld from '../Underworld';
 import type PieClient from '@websocketpie/client';
-import type { Vec2 } from '../mathematics/Vec';
+import type { Vec2 } from '../jmath/Vec';
 import type { LevelData } from '../Underworld';
 import { View } from '../views';
 import { Faction } from './commonTypes';
 import { IPickup } from '../entity/Pickup';
-import { ForceMove } from '../mathematics/moveWithCollision';
+import { ForceMove } from '../jmath/moveWithCollision';
 declare global {
     interface Window {
         SPELLMASONS_PACKAGE_VERSION: string;

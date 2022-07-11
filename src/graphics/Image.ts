@@ -2,7 +2,7 @@ import type * as PIXI from 'pixi.js';
 
 import { addPixiSprite, addPixiSpriteAnimated, getPixiTextureAnimated, PixiSpriteOptions } from './PixiUtils';
 import Subsprites from '../Subsprites';
-import type { Vec2 } from "../mathematics/Vec";
+import type { Vec2 } from "../jmath/Vec";
 
 // The serialized version of the interface changes the interface to allow only the data
 // that can be serialized in JSON.  It may exclude data that is not neccessary to

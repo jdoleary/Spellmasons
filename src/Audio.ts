@@ -1,4 +1,4 @@
-import { getLoopableIndex } from "./mathematics/Polygon2";
+import { getLoopableIndex } from "./jmath/Polygon2";
 import * as storage from "./storage";
 
 export const sfx: { [key: string]: string } = {

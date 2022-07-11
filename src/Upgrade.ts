@@ -1,7 +1,7 @@
 import seedrandom from 'seedrandom';
 import type { CardCost } from './cards/cardUtils';
 import { getCardRarityColor } from './graphics/ui/CardUI';
-import { chooseObjectWithProbability, probabilityToRarity } from './mathematics/math';
+import { chooseObjectWithProbability, probabilityToRarity } from './jmath/math';
 import { MESSAGE_TYPES } from './types/MessageTypes';
 import type { IPlayer } from './entity/Player';
 export interface IUpgrade {

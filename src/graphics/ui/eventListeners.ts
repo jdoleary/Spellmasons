@@ -14,7 +14,7 @@ import { toggleMenu, View } from '../../views';
 import * as config from '../../config';
 import { cameraAutoFollow, getCamera, moveCamera } from '../PixiUtils';
 import { getEndOfRangeTarget, isOutOfRange } from '../../PlayerUtils';
-import { vec2ToOneDimentionIndex } from '../../mathematics/ArrayUtil';
+import { vec2ToOneDimentionIndex } from '../../jmath/ArrayUtil';
 
 export const keyDown = {
   w: false,

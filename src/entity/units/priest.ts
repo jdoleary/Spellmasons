@@ -1,7 +1,7 @@
 import * as Unit from '../Unit';
 import type { UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
-import * as math from '../../mathematics/math';
+import * as math from '../../jmath/math';
 import { createVisualLobbingProjectile } from '../Projectile';
 import Shield from '../../cards/shield';
 import { isVampire } from '../../cards/vampire_bite';

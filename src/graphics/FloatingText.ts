@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import type { Vec2 } from '../mathematics/Vec';
+import type { Vec2 } from '../jmath/Vec';
 import { app, containerFloatingText, containerUIFixed, withinCameraBounds } from './PixiUtils';
 
 interface FText {

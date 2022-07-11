@@ -1,7 +1,7 @@
 import * as Unit from '../Unit';
 import { allUnits, UnitSource } from './index';
 import { UnitSubType, UnitType } from '../../types/commonTypes';
-import * as math from '../../mathematics/math';
+import * as math from '../../jmath/math';
 
 const SUMMON_MANA_COST = 30;
 const unit: UnitSource = {

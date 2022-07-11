@@ -2,7 +2,7 @@ import type { Spell } from '.';
 import * as Unit from '../entity/Unit';
 import * as Pickup from '../entity/Pickup';
 import { UnitSubType, UnitType } from '../types/commonTypes';
-import { jitter, Vec2 } from '../mathematics/Vec';
+import { jitter, Vec2 } from '../jmath/Vec';
 import * as config from '../config';
 import floatingText from '../graphics/FloatingText';
 

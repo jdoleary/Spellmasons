@@ -1,7 +1,7 @@
 import * as Unit from '../entity/Unit';
 import * as Pickup from '../entity/Pickup';
 import type { Spell } from '.';
-import type { Vec2 } from '../mathematics/Vec';
+import type { Vec2 } from '../jmath/Vec';
 import * as config from '../config';
 
 const id = 'swap';

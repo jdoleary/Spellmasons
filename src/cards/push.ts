@@ -1,7 +1,7 @@
-import { Vec2, magnitude, clone } from '../mathematics/Vec';
+import { Vec2, magnitude, clone } from '../jmath/Vec';
 import type { Spell } from '.';
-import { distance, similarTriangles } from '../mathematics/math';
-import type { Circle, ForceMove } from '../mathematics/moveWithCollision';
+import { distance, similarTriangles } from '../jmath/math';
+import type { Circle, ForceMove } from '../jmath/moveWithCollision';
 import { forceMoveColor } from '../graphics/ui/colors';
 
 export const id = 'push';

@@ -1,5 +1,5 @@
-import { randInt } from "./mathematics/rand";
-import { oneDimentionIndexToVec2, vec2ToOneDimentionIndexPreventWrap } from "./mathematics/ArrayUtil";
+import { randInt } from "./jmath/rand";
+import { oneDimentionIndexToVec2, vec2ToOneDimentionIndexPreventWrap } from "./jmath/ArrayUtil";
 export enum Material {
     EMPTY,
     LIQUID,

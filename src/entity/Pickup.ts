@@ -10,9 +10,9 @@ import floatingText from '../graphics/FloatingText';
 import * as CardUI from '../graphics/ui/CardUI';
 import * as Cards from '../cards';
 import * as config from '../config';
-import { chooseObjectWithProbability } from '../mathematics/math';
+import { chooseObjectWithProbability } from '../jmath/math';
 import seedrandom from 'seedrandom';
-import { Vec2 } from '../mathematics/Vec';
+import { Vec2 } from '../jmath/Vec';
 
 export const PICKUP_RADIUS = config.COLLISION_MESH_RADIUS;
 export interface IPickup {

@@ -1,7 +1,7 @@
 import type * as Player from '../entity/Player';
 import type * as Unit from '../entity/Unit';
 import type * as Pickup from '../entity/Pickup';
-import type { Vec2 } from '../mathematics/Vec';
+import type { Vec2 } from '../jmath/Vec';
 import Events, {
   onDamage,
   onDeath,

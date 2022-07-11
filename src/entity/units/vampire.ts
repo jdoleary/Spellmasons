@@ -1,8 +1,8 @@
 import * as Unit from '../Unit';
 import type { UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
-import * as Vec from '../../mathematics/Vec';
-import * as math from '../../mathematics/math';
+import * as Vec from '../../jmath/Vec';
+import * as math from '../../jmath/math';
 import * as config from '../../config';
 import * as vampire_bite from '../../cards/vampire_bite';
 
