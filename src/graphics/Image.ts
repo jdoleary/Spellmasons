@@ -77,7 +77,7 @@ export function cleanup(image?: IImageAnimated) {
 // promise is resolved (if there is one) before switching the animation.  This is why 'resolver'
 // is a required field, it should be explicitly set to noop if there is no promise meant to be waiting 
 // for the animation to finish.
-export function changeSprite(image: IImageAnimated | undefined, imagePath: string, container: PIXI.Container, resolver: undefined | (() => void), options?: PixiSpriteOptions,): JSpriteAnimated | undefined {
+export function changeSprite(image: IImageAnimated | undefined, imagePath: string, container: PIXI.Container, resolver: undefined | (() => void), options?: PixiSpriteOptions): JSpriteAnimated | undefined {
   if (!image) {
     console.warn('Cannot changeSprite, no image object to change to', imagePath)
     return;
