@@ -281,6 +281,11 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       }
       break;
     case MESSAGE_TYPES.MOVE_PLAYER:
+      if (fromPlayer == window.player) {
+        // Do not do anything, own player movement is handled locally
+        // so that it is smooth
+        break;
+      }
       if (fromPlayer) {
         await Unit.moveTowards(fromPlayer.unit, payload).then(() => {
           if (fromPlayer.unit.path?.points.length && fromPlayer.unit.stamina == 0) {

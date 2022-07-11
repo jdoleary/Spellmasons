@@ -212,11 +212,6 @@ export function mouseMove(e?: MouseEvent) {
       if (window.underworld.isMyTurn()) {
         // If player is able to move
         if (window.player.unit.stamina > 0) {
-          // TODO: Notify multiplayer clients
-          // window.pie.sendData({
-          //   type: MESSAGE_TYPES.MOVE_PLAYER,
-          //   ...moveTarget,
-          // });
           // Move up to but not onto intersection or else unit will get stuck ON linesegment
           Unit.moveTowards(window.player.unit, mouseTarget);
         } else {

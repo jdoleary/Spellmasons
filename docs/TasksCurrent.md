@@ -1,6 +1,6 @@
 ## Schedule
 - Pack 4
-    - **critical** Figure out how to broadcast player movement (due to the new system) to multiple clients
+    - bug: Player walk animation doesn't play anymore
 - Pack 5
     - Fix: bad-pathing.mkv in videos folder
         - seed: 0.6450583331398443

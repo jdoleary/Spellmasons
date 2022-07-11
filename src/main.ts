@@ -12,6 +12,7 @@ import { setupMonitoring } from './monitoring';
 import * as storage from './storage';
 import { version } from '../package.json';
 import { Faction, UnitType } from './types/commonTypes';
+import * as Vec from './jmath/Vec';
 window.SPELLMASONS_PACKAGE_VERSION = version;
 import './style.css';
 cookieConsentPopup(false);
@@ -22,6 +23,7 @@ cookieConsentPopup(false);
 import './network/wsPieSetup';
 import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './config';
 import { syncInventory } from './graphics/ui/CardUI';
+import { MESSAGE_TYPES } from './types/MessageTypes';
 
 const YES = 'yes'
 const SKIP_TUTORIAL = 'skipTutorial';
@@ -136,6 +138,15 @@ window.setRMBDown = (isDown: boolean) => {
   // I want it to show a compile error anywhere else
   // @ts-expect-error Override "readyonly" error.  This is the ONLY place that RMBDown should be mutated.
   window.RMBDown = isDown;
+  // Now that player has stopped moving notify multiplayer clients that player has moved
+  if (window.player) {
+    window.pie.sendData({
+      type: MESSAGE_TYPES.MOVE_PLAYER,
+      ...Vec.clone(window.player.unit),
+    });
+  } else {
+    console.error('Cannot send MOVE_PLAYER, window.player is undefined')
+  }
 }
 window.skipTutorial = () => {
   storage.set(SKIP_TUTORIAL, YES);
