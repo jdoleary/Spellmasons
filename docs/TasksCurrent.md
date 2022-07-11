@@ -1,7 +1,6 @@
 ## Schedule
 - Pack 2 | Prevent hang on await
         - Possible causes
-            - forceMoveInstances
             - fly() - flying / lobbing projectiles
             - createLevel
             - initLevel

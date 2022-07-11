@@ -3,6 +3,7 @@ import type { Spell } from '.';
 import { distance, similarTriangles } from '../jmath/math';
 import type { Circle, ForceMove } from '../jmath/moveWithCollision';
 import { forceMoveColor } from '../graphics/ui/colors';
+import { raceTimeout } from '../Promise';
 
 export const id = 'push';
 const pushDistance = 20;
@@ -35,7 +36,7 @@ export async function forcePush(pushedObject: Circle, awayFrom: Vec2, prediction
   const velocity = similarTriangles(pushedObject.x - awayFrom.x, pushedObject.y - awayFrom.y, distance(pushedObject, awayFrom), pushDistance);
   const velocity_falloff = 0.93;
   const originalPosition = clone(pushedObject);
-  return await new Promise<void>((resolve) => {
+  return await raceTimeout(2000, 'Push', new Promise<void>((resolve) => {
     const forceMoveInst: ForceMove = { pushedObject, velocity, velocity_falloff, resolve }
     if (prediction) {
       // Simulate the forceMove until it's complete
@@ -51,7 +52,7 @@ export async function forcePush(pushedObject: Circle, awayFrom: Vec2, prediction
     } else {
       window.forceMove.push(forceMoveInst);
     };
-  });
+  }));
 
 }
 export default spell;
