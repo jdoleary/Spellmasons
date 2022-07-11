@@ -47,13 +47,6 @@ export function distance(coords1: Vec2, coords2: Vec2): number {
   );
 }
 
-// Converts a singular index into x,y coords on a rectangle with a known width
-export function indexToXY(index: number, width: number): Vec2 {
-  return { x: index % width, y: Math.floor(index / width) };
-}
-export function xyToIndex(coords: Vec2, width: number) {
-  return coords.y * width + coords.x;
-}
 
 // Normalizes degrees within [0,Math.PI*2)
 // for example Math.PI*2 turns into 0
