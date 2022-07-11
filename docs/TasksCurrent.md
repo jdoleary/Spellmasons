@@ -1,6 +1,7 @@
 ## Schedule
 - Pack 4
     - bug: Player walk animation doesn't play anymore
+    - restore walk rope
 - Pack 5
     - Fix: bad-pathing.mkv in videos folder
         - seed: 0.6450583331398443
@@ -15,6 +16,7 @@
 - Pack 7
     - Unit Crowding
         - `// TODO: Temp removed aliveNPCs because moveWithCollisions doesn't consider them yet`
+        - Similar to how push won't push units through walls
     - casting non-curses like heal or purify on self should show green, not red
     - pathfinding for vampires broken?
     - Priest "run away" ai is broken / Archer pursue ai is not working well
