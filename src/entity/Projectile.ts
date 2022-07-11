@@ -3,6 +3,7 @@ import { addPixiSprite, containerProjectiles } from '../graphics/PixiUtils';
 import { lerp, distance } from '../jmath/math';
 import type { Vec2 } from '../jmath/Vec';
 import * as config from '../config';
+import { raceTimeout } from '../Promise';
 
 interface Projectile {
   x: number;
@@ -48,9 +49,14 @@ export function createVisualFlyingProjectile(
   imagePath: string,
 ): Promise<void> {
   const instance = createProjectile(coords, target, imagePath);
-  return new Promise((resolve) => {
+  const time_in_flight =
+    distance(instance, instance.target) /
+    SPEED_PER_MILLI;
+  // + 1000 is an arbitrary delay to give the original promise ample time to finish without a timeout error
+  // being reported
+  return raceTimeout(time_in_flight + 1000, 'createVisualFlyingProjectile', new Promise((resolve) => {
     requestAnimationFrame((time) => fly(instance, time, resolve));
-  });
+  }));
 }
 
 function fly(
@@ -58,7 +64,9 @@ function fly(
   time: number,
   resolve: (value: void | PromiseLike<void>) => void,
 ) {
-  if (instance.startTime == 0) {
+  const shouldInitialize = instance.startTime == 0;
+  // This block is invoked when the first time fly() is invoked for this instance
+  if (shouldInitialize) {
     instance.startTime = time;
     const time_in_flight =
       distance(instance, instance.target) /
@@ -88,9 +96,11 @@ export function createVisualLobbingProjectile(
   imagePath: string,
 ): Promise<void> {
   const instance = createProjectile(coords, target, imagePath);
-  return new Promise((resolve) => {
+  // + 1000 is an arbitrary delay to give the original promise ample time to finish without a timeout error
+  // being reported
+  return raceTimeout(config.LOB_PROJECTILE_SPEED + 1000, 'createVisualLobbingProjectile', new Promise((resolve) => {
     requestAnimationFrame((time) => lob(instance, time, resolve));
-  });
+  }));
 }
 // Arbitrary lobHeight (negative so it lobs the projectile UP)
 const lobHeight = -100;
