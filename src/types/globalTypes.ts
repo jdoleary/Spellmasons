@@ -1,4 +1,4 @@
-import * as PIXI from 'pixi.js';
+import type * as PIXI from 'pixi.js';
 import type * as Player from '../entity/Player';
 import type * as Unit from '../entity/Unit';
 import type Underworld from '../Underworld';

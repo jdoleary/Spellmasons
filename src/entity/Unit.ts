@@ -1,4 +1,4 @@
-import * as PIXI from 'pixi.js';
+import type * as PIXI from 'pixi.js';
 import * as config from '../config';
 import * as Image from '../graphics/Image';
 import * as math from '../mathematics/math';

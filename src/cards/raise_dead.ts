@@ -1,6 +1,5 @@
 import * as Unit from '../entity/Unit';
 import { ColorOverlayFilter } from '@pixi/filter-color-overlay';
-import * as PIXI from 'pixi.js';
 import type { Spell } from '.';
 
 const id = 'resurrect';

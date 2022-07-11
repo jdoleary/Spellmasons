@@ -414,3 +414,7 @@ export function addPixiSprite(
   parent.addChild(sprite);
   return sprite;
 }
+
+export function pixiText(text: string, style: Partial<PIXI.ITextStyle>): PIXI.Text {
+  return new PIXI.Text(text, style);
+}

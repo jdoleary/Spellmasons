@@ -1,7 +1,7 @@
-import * as PIXI from 'pixi.js';
+import type * as PIXI from 'pixi.js';
 import * as Image from '../graphics/Image';
 import type * as Player from './Player';
-import { addPixiSprite, containerUnits } from '../graphics/PixiUtils';
+import { addPixiSprite, containerUnits, pixiText } from '../graphics/PixiUtils';
 import { IUnit, takeDamage } from './Unit';
 import { checkIfNeedToClearTooltip } from '../graphics/PlanningView';
 import { explainManaOverfill } from '../graphics/Jprompt';
@@ -94,7 +94,7 @@ export function create({ pos, pickupSource, onTurnsLeftDone }:
       timeCircle.anchor.x = 0;
       timeCircle.anchor.y = 0;
 
-      self.text = new PIXI.Text(`${turnsLeftToGrab}`, { fill: 'white', align: 'center' });
+      self.text = pixiText(`${turnsLeftToGrab}`, { fill: 'white', align: 'center' });
       self.text.anchor.x = 0;
       self.text.anchor.y = 0;
       // Center the text in the timeCircle
