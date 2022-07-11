@@ -10,15 +10,6 @@ export function lerp(start: number, end: number, time: number) {
   }
   return start * (1 - time) + end * time;
 }
-// Clamps a vector to a maximum magnitude
-export function clampVector(vector: Vec2, maxMagnitude: number): Vec2 {
-  const mag = magnitude(vector)
-  if (mag <= maxMagnitude) {
-    return vector;
-  } else {
-    return similarTriangles(vector.x, vector.y, mag, maxMagnitude);
-  }
-}
 
 // For a triangle with sides x,y, and d (desired distance / hypotenuse), find the value
 // of x and y given a known h and a known similar triangle of X,Y, and D (distance / hypotenuse)

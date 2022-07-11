@@ -105,3 +105,13 @@ export function isBetween(testPoint: Vec2, boundingPoint: Vec2, boundingPoint2: 
     return minX <= testPoint.x && testPoint.x <= maxX &&
         minY <= testPoint.y && testPoint.y <= maxY;
 }
+
+// Clamps a vector to a maximum magnitude
+export function clampVector(vector: Vec2, maxMagnitude: number): Vec2 {
+    const mag = magnitude(vector)
+    if (mag <= maxMagnitude) {
+        return vector;
+    } else {
+        return similarTriangles(vector.x, vector.y, mag, maxMagnitude);
+    }
+}
