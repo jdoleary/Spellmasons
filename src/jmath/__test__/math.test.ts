@@ -1,52 +1,9 @@
 import {
-  _chooseObjectWithProbability, similarTriangles,
-  getCoordsAtDistanceTowardsTarget, honeycombGenerator, rotateMatrix
+  similarTriangles,
+  getCoordsAtDistanceTowardsTarget, honeycombGenerator
 } from '../math';
 
 describe('math', () => {
-  describe('rotateMatrix', () => {
-    it('should rotate the array clockwise once; wide to long', () => {
-      const matrix = [
-        [0, 1, 2],
-        [3, 4, 5],
-      ]
-      const actual = rotateMatrix(matrix);
-      const expected = [
-        [3, 0],
-        [4, 1],
-        [5, 2]
-      ];
-      expect(actual).toEqual(expected);
-    });
-    it('should rotate the array clockwise once; long to wide', () => {
-      const matrix = [
-        [0, 1],
-        [2, 3],
-        [4, 5]
-      ]
-      const actual = rotateMatrix(matrix);
-      const expected = [
-        [4, 2, 0],
-        [5, 3, 1]
-      ];
-      expect(actual).toEqual(expected);
-    });
-    it('should rotate the array clockwise once; given a 3x3', () => {
-      const matrix = [
-        [0, 1, 2],
-        [3, 4, 5],
-        [6, 7, 8]
-      ]
-      const actual = rotateMatrix(matrix);
-      const expected = [
-        [6, 3, 0],
-        [7, 4, 1],
-        [8, 5, 2]
-      ];
-      expect(actual).toEqual(expected);
-    });
-
-  });
   describe('honeycombGenerator', () => {
     it('Returns coordinates for a honeycomb or circles', () => {
       const radius = 7;

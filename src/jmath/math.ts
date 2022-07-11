@@ -92,25 +92,3 @@ export function* honeycombGenerator(radius: number, start: Vec2, loopLimit: numb
   }
 
 }
-
-// Rotates a matrix clockwise once
-// Useful for rotating obstacleSectors
-export function rotateMatrix(array: any[][]): any[][] {
-  const rotated: typeof array = [];
-  for (let i = 0; i < array.length; i++) {
-    const row = array[i];
-    if (row) {
-      for (let j = 0; j < row.length; j++) {
-        const rj = array.length - 1 - i;
-        const ri = j;
-        if (rotated[ri] === undefined) {
-          rotated[ri] = []
-        }
-        // @ts-expect-error rotated[ri] is not undefined because it
-        // is defined above if it's undefined
-        rotated[ri][rj] = array[i][j];
-      }
-    }
-  }
-  return rotated;
-}
