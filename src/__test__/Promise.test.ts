@@ -1,6 +1,11 @@
 import { raceTimeout } from "../Promise";
 
 describe('raceTimeout', () => {
+    beforeEach(() => {
+        // Squelch expected error and debug log
+        jest.spyOn(console, 'error').mockImplementation(() => { });
+        jest.spyOn(console, 'debug').mockImplementation(() => { });
+    });
     it('should return the result of the original promise, if the promise resolves before the timeout', async () => {
         const promiseResolveValue = 1;
         const expected = promiseResolveValue;
