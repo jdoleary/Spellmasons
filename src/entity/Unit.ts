@@ -18,6 +18,7 @@ import { centeredFloatingText } from '../graphics/FloatingText';
 import { turn_phase } from '../Underworld';
 import combos from '../graphics/AnimationCombos';
 import { playSFXKey } from '../Audio';
+import { raceTimeout } from '../Promise';
 
 const elHealthBar: HTMLElement = document.querySelector('#health .fill') as HTMLElement;
 const elHealthCost: HTMLElement = document.querySelector('#health .cost') as HTMLElement;
@@ -40,7 +41,7 @@ export interface UnitPath {
 // The serialized version of the interface changes the interface to allow only the data
 // that can be serialized in JSON.  It may exclude data that is not neccessary to
 // rehydrate the JSON into an entity
-export type IUnitSerialized = Omit<IUnit, "resolveDoneMoving" | "resolveDoneMovingTimeout" | "image"> & { image?: Image.IImageAnimatedSerialized };
+export type IUnitSerialized = Omit<IUnit, "resolveDoneMoving" | "image"> & { image?: Image.IImageAnimatedSerialized };
 export interface UnitAnimations {
   idle: string;
   hit: string;
@@ -59,7 +60,6 @@ export interface IUnit {
   moveSpeed: number;
   // A resolve callback for when a unit is done moving
   resolveDoneMoving: () => void;
-  resolveDoneMovingTimeout?: NodeJS.Timeout;
   radius: number;
   stamina: number;
   staminaMax: number;
@@ -125,7 +125,6 @@ export function create(
       path: undefined,
       moveSpeed: config.UNIT_MOVE_SPEED,
       resolveDoneMoving: () => { },
-      resolveDoneMovingTimeout: undefined,
       stamina: 0,
       staminaMax,
       attackRange: 10 + config.COLLISION_MESH_RADIUS * 2,
@@ -252,8 +251,7 @@ export function cleanup(unit: IUnit) {
 // This is the opposite of load
 export function serialize(unit: IUnit): IUnitSerialized {
   // resolveDoneMoving is a callback that cannot be serialized
-  // resolveDoneMovingTimeout is a setTimeout id that should not be serialized
-  const { resolveDoneMoving, resolveDoneMovingTimeout, ...rest } = unit
+  const { resolveDoneMoving, ...rest } = unit
   return {
     ...rest,
     // Deep copy path so that the serialized object doesn't share the path object
@@ -761,25 +759,22 @@ export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
 
   // Set path which will be used in the game loop to actually move the unit
   window.underworld.setPath(unit, Vec.clone(target));
-  return new Promise<void>((resolve) => {
-    // Clear previous timeout
-    if (unit.resolveDoneMovingTimeout !== undefined) {
-      clearTimeout(unit.resolveDoneMovingTimeout);
-    }
+  // 300 + is an arbitrary time buffer to ensure that the raceTimeout
+  // doesn't report a false positive if the duration it takes the moveTowards promise
+  // to resolve is within a reasonable range
+  const timeoutMs = 300 + unit.stamina / unit.moveSpeed;
+
+  return raceTimeout(timeoutMs, `moveTowards timed out for unit id ${unit.id}`, new Promise<void>((resolve) => {
+    // Invoke previous resolveDoneMoving if it exists 
+    unit.resolveDoneMoving();
+    // Set new resolve done moving
     unit.resolveDoneMoving = resolve;
-    const timeoutMs = unit.stamina / unit.moveSpeed;
-    unit.resolveDoneMovingTimeout = setTimeout(() => {
-      resolve()
-    }, timeoutMs);
   }).then(() => {
     if (unit.image) {
       // When done moving return to default
       returnToDefaultSprite(unit);
     }
-    if (unit.resolveDoneMovingTimeout !== undefined) {
-      clearTimeout(unit.resolveDoneMovingTimeout);
-    }
-  });
+  }));
 }
 
 // setLocation, unlike moveTo, simply sets a unit to a coordinate without
