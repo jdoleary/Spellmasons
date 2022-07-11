@@ -4,8 +4,6 @@
 - Pack 5
     - Fix: bad-pathing.mkv in videos folder
         - seed: 0.6450583331398443
-    - priest is attacking /dealing damage to him but he's not a vamp. how?
-    - can't drag spell from book to toolbar if it's already in toolbar
 - Pack 6
     - Standalone Server
         - Decouple the various layers (data: underworld; networking: pie; visual: Pixi / DOM; audio)

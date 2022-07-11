@@ -44,7 +44,7 @@ elCardHand.addEventListener('drop', ev => {
   const dropIndex = dropElement.parentNode ? Array.from(dropElement.parentNode.children).indexOf(dropElement) : -1;
   const cardId = dragCard && dragCard.dataset.cardId
   if (window.player && dropIndex !== -1 && dragCard && cardId !== undefined) {
-    const startDragCardIndex = dragCard.parentNode ? Array.from(dragCard.parentNode.children).indexOf(dragCard) : -1;
+    const startDragCardIndex = dragCard.parentNode && dragCard.closest('#card-hand') ? Array.from(dragCard.parentNode.children).indexOf(dragCard) : -1;
     if (startDragCardIndex !== -1) {
       // Then the drag card is already in the toolbar and this is a swap between
       // two cards on the toolbar
