@@ -49,6 +49,9 @@ export interface UnitAnimations {
   die: string;
   walk: string;
 }
+export function isUnit(maybeUnit: any): maybeUnit is IUnit {
+  return maybeUnit.unitSourceId !== undefined;
+}
 export interface IUnit {
   // A unique id so that units can be identified
   // across the network
