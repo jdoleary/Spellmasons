@@ -1054,13 +1054,13 @@ export default class Underworld {
     this.turn_number++;
 
     for (let p of this.pickups) {
-      if (p.turnsLeftToGrab) {
+      if (p.turnsLeftToGrab !== undefined) {
         p.turnsLeftToGrab--;
         if (p.text) {
           p.text.text = `${p.turnsLeftToGrab}`;
         }
       }
-      if (p.turnsLeftToGrab == 0) {
+      if (p.turnsLeftToGrab !== undefined && p.turnsLeftToGrab < 0) {
         // Trigger custom behavior
         if (p.onTurnsLeftDone) {
           await p.onTurnsLeftDone(p);
