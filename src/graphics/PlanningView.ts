@@ -90,6 +90,13 @@ export function updatePlanningView() {
               selectedUnit.attackRange
             );
             labelText.text = 'Attack Range';
+          } else if (selectedUnit.unitSubType === UnitSubType.SUPPORT_CLASS) {
+            window.unitOverlayGraphics.drawCircle(
+              selectedUnit.x,
+              selectedUnit.y,
+              selectedUnit.attackRange
+            );
+            labelText.text = 'Support Range';
           } else if (selectedUnit.unitSubType === UnitSubType.MELEE) {
             window.unitOverlayGraphics.drawCircle(
               selectedUnit.x,
