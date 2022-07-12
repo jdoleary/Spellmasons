@@ -1,6 +1,16 @@
 ## Schedule
 - Today:
+    - Make custom moveTowards for selfPlayer so that it doesn't queue up a bunch of raceTimeouts since the player moves differently than all other units.
     - Low hanging fruit bugs from Pack 9
+        - Song should loop until level c
+        - if a pickup says 1 it should last one more turn, not disappear next turn
+        - Bug: No death circle for pushing units into liquid
+        - Said "out of range" for pickup but it's highlight underline was under the cursor 
+            - Make their selection radius bigger! (same for units too), never disappoint the player, if the mouse reaches any part of a unit they should be selectable
+        - Got "-60" mana when it should have been 0 when cursor wasn't on a target or was off the map
+        - describe that decoy has health in card
+        - Spike highlight is not visible
+nges
     - More ways to "draw you into danger"
         - spell and stats pickups
     - Game should be fun sooner
@@ -34,22 +44,14 @@
     - Master Music
 - Pack 9 | R, J & E feedback
     - Restore "walk rope" when holding RMB
-    - Song should loop until level changes
     - No stamina bar after portal
     - Freeze spell should stop timer on pickups
-    - if a pickup says 1 it should last one more turn, not disappear next turn
     - animated trim path line for archers so it's obvious they'll hit you
     - Different attack icon for ranged units
-    - Bug: No death circle for pushing units into liquid
-    - Said "out of range" for pickup but it's highlight underline was under the cursor 
-        - Make their selection radius bigger! (same for units too), never disappoint the player, if the mouse reaches any part of a unit they should be selectable
-    - Got "-60" mana when it should have been 0 when cursor wasn't on a target or was off the map
     - Hover should always show tooltip so you can see even when spell is queued
     - Bug: decoy died and archer changed targets, make units commit to a target at the beginning of the round, else PLAYER FRUSTRATION
     - shield should have number on it
     - Poison prediction is confusing
-    - describe that decoy has health in card
-    - Spike highlight is not visible
     - ideas
         - Have push and pull from the start
         - Takes too long to be fun, speed it up!!! 
