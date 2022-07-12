@@ -147,12 +147,15 @@ export default class Underworld {
     forceMoveInst.resolve();
 
   }
-  runForceMove(forceMoveInst: ForceMove) {
+  runForceMove(forceMoveInst: ForceMove, prediction: boolean) {
     const { pushedObject, velocity, velocity_falloff } = forceMoveInst;
+    const lastPosition = Vec.clone(pushedObject);
     // TODO: Temp removed aliveNPCs because moveWithCollisions doesn't consider them yet
     moveWithCollisions(pushedObject, Vec.add(pushedObject, velocity), []);
     collideWithLineSegments(pushedObject, this.walls);
     forceMoveInst.velocity = Vec.multiply(velocity_falloff, velocity);
+    Obstacle.checkLiquidInteractionDueToForceMovement(forceMoveInst, lastPosition, prediction);
+
   }
   gameLoop = (timestamp: number) => {
     const deltaTime = timestamp - lastTime;
@@ -195,7 +198,7 @@ export default class Underworld {
     for (let i = window.forceMove.length - 1; i >= 0; i--) {
       const forceMoveInst = window.forceMove[i];
       if (forceMoveInst) {
-        this.runForceMove(forceMoveInst);
+        this.runForceMove(forceMoveInst, false);
         // Remove it from forceMove array once the distance has been covers
         // This works even if collisions prevent the unit from moving since
         // distance is modified even if the unit doesn't move each loop
@@ -209,8 +212,6 @@ export default class Underworld {
     for (let i = 0; i < this.units.length; i++) {
       const u = this.units[i];
       if (u) {
-        // TODO: Optimize: maybe only call this during force move
-        Obstacle.checkLiquidInteractionDueToMovement(u, false);
         const predictionUnit = window.predictionUnits[i];
         if (u.alive) {
           while (u.path && u.path.points[0] && Vec.equal(Vec.round(u), u.path.points[0])) {
@@ -222,6 +223,7 @@ export default class Underworld {
           }
           // Only allow movement if the unit has stamina
           if (u.path && u.path.points[0] && u.stamina > 0 && Unit.isUnitsTurnPhase(u)) {
+            const lastPosition = Vec.clone(u);
             // Move towards target
             const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.path.points[0], u.moveSpeed * deltaTime)
             let moveDist = 0;
@@ -242,6 +244,7 @@ export default class Underworld {
               moveDist = math.distance(originalPosition, u);
             }
             u.stamina -= moveDist;
+            Obstacle.checkLiquidInteractionDueToMovement(u, lastPosition, false);
             // If unit is MELEE and only has the final target left in the path, stop when it gets close enough
             if (
               u.path.points[0] && u.path.points.length == 1 && u.unitSubType == UnitSubType.MELEE && math.distance(u, u.path.points[0]) <= config.COLLISION_MESH_RADIUS * 2
@@ -613,10 +616,6 @@ export default class Underworld {
     // TODO: Optimize if needed: When this.pathingLineSegments gets serialized to send over the network
     // it has an excess of serialized polygons with many points  because lots of the linesegments have a ref to the
     // same polygon.  This is a lot of extra data that is repeated.  Optimize if needed
-    this.pathingLineSegments = this.pathingPolygons.map(toPolygon2LineSegments).flat();
-  }
-  t() {
-    this.pathingPolygons.splice(0, 1);
     this.pathingLineSegments = this.pathingPolygons.map(toPolygon2LineSegments).flat();
   }
   spawnPickup(index: number, coords: Vec2) {

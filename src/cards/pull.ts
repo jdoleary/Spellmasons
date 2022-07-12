@@ -40,7 +40,7 @@ export async function pull(pushedObject: Circle, towards: Vec2, prediction: bool
     if (prediction) {
       // Simulate the forceMove until it's complete
       while (magnitude(forceMoveInst.velocity) > 0.1) {
-        window.underworld.runForceMove(forceMoveInst);
+        window.underworld.runForceMove(forceMoveInst, prediction);
       }
       resolve();
       // Draw prediction lines
