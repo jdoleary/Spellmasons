@@ -23,7 +23,6 @@ function createProjectile(
   const sprite = addPixiSpriteAnimated(imagePath, containerProjectiles, { animationSpeed: 0.25, loop: true });
   sprite.anchor.x = 0.5;
   sprite.anchor.y = 0.5;
-  sprite.scale.set(2);
 
   sprite.x = coords.x;
   sprite.y = coords.y;

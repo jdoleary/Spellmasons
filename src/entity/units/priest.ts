@@ -2,39 +2,52 @@ import * as Unit from '../Unit';
 import type { UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
 import * as math from '../../jmath/math';
-import { createVisualLobbingProjectile } from '../Projectile';
+import { createVisualFlyingProjectile } from '../Projectile';
 import Shield from '../../cards/shield';
 import { isVampire } from '../../cards/vampire_bite';
-import { addPixiSpriteAnimated, containerSpells, containerUI, containerUnits } from '../../graphics/PixiUtils';
+import { addPixiSpriteAnimated, containerUnits } from '../../graphics/PixiUtils';
 
 const CAST_MANA_COST = 30;
-async function healOneOf(self: Unit.IUnit, units: Unit.IUnit[]) {
+async function animatePriestProjectileAndHit(self: Unit.IUnit, target: Unit.IUnit) {
+  await createVisualFlyingProjectile(
+    self,
+    target,
+    'projectile/priestProjectileCenter',
+  );
+  // Add projectile hit animation
+  const animationSprite = addPixiSpriteAnimated('projectile/priestProjectileHit', containerUnits, {
+    loop: false,
+    animationSpeed: 0.1,
+    onComplete: () => {
+      if (animationSprite.parent) {
+        animationSprite.parent.removeChild(animationSprite)
+      } else {
+        console.error('Expected priest animationSprite to have parent so it could be removed but it did not.')
+      }
+    }
+  });
+  animationSprite.anchor.set(0.5, 0.3);
+  animationSprite.x = target.x;
+  animationSprite.y = target.y;
+
+}
+async function healOneOf(self: Unit.IUnit, units: Unit.IUnit[]): Promise<boolean> {
   for (let ally of units) {
     if (Unit.inRange(self, ally)) {
       const chosenUnit = units[0];
       if (chosenUnit) {
         await Unit.playAnimation(self, unit.animations.attack);
-        await createVisualLobbingProjectile(
-          self,
-          chosenUnit,
-          'projectile/priestProjectileCenter',
-        );
-        // Add projectile hit animation
-        const animationSprite = addPixiSpriteAnimated('projectile/priestProjectileHit', containerUnits, {
-          loop: false,
-          animationSpeed: 0.2,
-        });
-        animationSprite.anchor.set(0, 0.5);
-        animationSprite.x = chosenUnit.x;
-        animationSprite.y = chosenUnit.y;
+        await animatePriestProjectileAndHit(self, chosenUnit);
         // Heal for 2
         Unit.takeDamage(chosenUnit, -2, false, undefined);
         // Remove mana once the cast occurs
         self.mana -= CAST_MANA_COST;
+        return true;
       }
       break;
     }
   }
+  return false;
 
 }
 const unit: UnitSource = {
@@ -72,8 +85,7 @@ const unit: UnitSource = {
       );
       if (enemyVampires.length) {
         // Heal to damage enemy vampires
-        await healOneOf(unit, enemyVampires);
-        didAction = true;
+        didAction = await healOneOf(unit, enemyVampires);
       } else {
         // Heal an ally
         const damagedAllys = window.underworld.units.filter(
@@ -83,26 +95,13 @@ const unit: UnitSource = {
           (u) => u.faction === unit.faction && u.alive && u.health < u.healthMax && u.unitSubType !== UnitSubType.SUPPORT_CLASS && !isVampire(u),
         );
         if (damagedAllys.length) {
-          await healOneOf(unit, damagedAllys);
-          didAction = true;
+          didAction = await healOneOf(unit, damagedAllys);
         } else {
           // if there are no damaged allies cast shield on the closest:
           if (closestAlly && closestAlly.unitSubType !== UnitSubType.SUPPORT_CLASS) {
             if (Unit.inRange(unit, closestAlly)) {
               await Unit.playAnimation(unit, unit.animations.attack);
-              await createVisualLobbingProjectile(
-                self,
-                closestAlly,
-                'projectile/priestProjectileCenter',
-              );
-              // Add projectile hit animation
-              const animationSprite = addPixiSpriteAnimated('projectile/priestProjectileHit', containerUnits, {
-                loop: false,
-                animationSpeed: 0.2,
-              });
-              animationSprite.anchor.set(0, 0.5);
-              animationSprite.x = closestAlly.x;
-              animationSprite.y = closestAlly.y;
+              await animatePriestProjectileAndHit(unit, closestAlly);
               Unit.addModifier(closestAlly, Shield.card.id);
               // Remove mana once the cast occurs
               unit.mana -= CAST_MANA_COST;
