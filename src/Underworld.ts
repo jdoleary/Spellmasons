@@ -54,7 +54,7 @@ import { withinMeleeRange } from './entity/units/actions/gruntAction';
 import { all_ground, baseTiles, caveSizes, convertBaseTilesToFinalTiles, generateCave, getLimits, Limits as Limits, Tile, toObstacle } from './MapOrganicCave';
 import { Material } from './Conway';
 import { oneDimentionIndexToVec2 } from './jmath/ArrayUtil';
-import { playSFX, sfx } from './Audio';
+import { playNextSong, playSFX, sfx } from './Audio';
 import { raceTimeout } from './Promise';
 
 export enum turn_phase {
@@ -934,6 +934,8 @@ export default class Underworld {
         }
         this.postSetupLevel();
         resolve();
+        // Change song now that level has changed:
+        playNextSong();
       }, 10)
     });
   }

@@ -33,9 +33,8 @@ export function playNextSong() {
     // Loops through songs
     const index = getLoopableIndex(songIndex++, music)
     musicInstance = new Audio(music[index]);
-    musicInstance.addEventListener("ended", function () {
-        playNextSong();
-    });
+    musicInstance.loop = true;
+
     // Temp; TODO: Base music volume is too loud, (remove "* 0.5" when fixed)
     // task: Master all audio and sfx
     // task: Make independent volume sliders for audio and music
@@ -65,7 +64,9 @@ export function playSFX(path?: string) {
 const STORAGE_OPTIONS = 'OPTIONS';
 export function setupAudio() {
     console.log('Setup: Audio');
-    window.playMusic = playNextSong;
+    // TODO: Remove from svelte menu, music is now played when level is created.
+    // TODO: Ensure music works on electron without being associated with a button press
+    window.playMusic = () => { };
     window.changeVolume = (volume: number) => {
         window.volume = volume;
         storage.assign(STORAGE_OPTIONS, { volume: window.volume });

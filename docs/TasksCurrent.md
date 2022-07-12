@@ -2,8 +2,7 @@
 - Today:
     - Make custom moveTowards for selfPlayer so that it doesn't queue up a bunch of raceTimeouts since the player moves differently than all other units.
     - Low hanging fruit bugs from Pack 9
-        - Song should loop until level c
-        - if a pickup says 1 it should last one more turn, not disappear next turn
+        - bug: "AOE" then hurt only plays the sound effect once, but the animations are sequential
         - Bug: No death circle for pushing units into liquid
         - Said "out of range" for pickup but it's highlight underline was under the cursor 
             - Make their selection radius bigger! (same for units too), never disappoint the player, if the mouse reaches any part of a unit they should be selectable
