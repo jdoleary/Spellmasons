@@ -34,16 +34,13 @@ async function animatePriestProjectileAndHit(self: Unit.IUnit, target: Unit.IUni
 async function healOneOf(self: Unit.IUnit, units: Unit.IUnit[]): Promise<boolean> {
   for (let ally of units) {
     if (Unit.inRange(self, ally)) {
-      const chosenUnit = units[0];
-      if (chosenUnit) {
-        await Unit.playAnimation(self, unit.animations.attack);
-        await animatePriestProjectileAndHit(self, chosenUnit);
-        // Heal for 2
-        Unit.takeDamage(chosenUnit, -2, false, undefined);
-        // Remove mana once the cast occurs
-        self.mana -= CAST_MANA_COST;
-        return true;
-      }
+      await Unit.playAnimation(self, unit.animations.attack);
+      await animatePriestProjectileAndHit(self, ally);
+      // Heal for 2
+      Unit.takeDamage(ally, -2, false, undefined);
+      // Remove mana once the cast occurs
+      self.mana -= CAST_MANA_COST;
+      return true;
       break;
     }
   }
