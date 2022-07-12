@@ -1,4 +1,24 @@
 # Notes
+[How to destroy](https://www.html5gamedevs.com/topic/30539-correct-way-to-remove-sprites-container/):
+```
+correct way is
+
+IKnowParentContainer.removeChild(thisSmallThingy);
+
+but sometimes you dont remember where did you put it!
+
+myContainer.parent.removeChild(myContainer);
+
+and sometimes you know that it wont be used anymore AT ALL. Then if all Text and Sprites elements doesnt have textures that you will use in future, you can destroy all textures inside
+
+myContainer.parent.removeChild(myContainer);
+myContainer.destroy({children:true, texture:true, baseTexture:true});
+
+But dont worry. If you dont destroy things, javascript gc and our own pixi gc will take care of that in a few minutes.
+
+The only evil thing is generated textures, its better if you destroy renderTextures you created. If you dont know whats a renderTexture, dont worry ;)
+```
+---
 Current server url: https://play.spellmasons.com/?pieUrl=wss%3A%2F%2Fwebsocketpie-3oyno.ondigitalocean.app%2F&game=abc
 ---
 Requirements for animation management
