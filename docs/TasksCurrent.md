@@ -1,4 +1,12 @@
 ## Schedule
+- Today:
+    - Low hanging fruit bugs from Pack 9
+    - More ways to "draw you into danger"
+        - spell and stats pickups
+    - Game should be fun sooner
+        - rework how players get to choose new spells
+        - make it on enemy death and have it be experience like nuclear throne where it's more common in the beginning.
+    - Bug: Grunt walked towards liquid and just kept walking animation after it should've returned to idle. seed:0.8154642976606445
 - Pack 6
     - Standalone Server
         - Decouple the various layers (data: underworld; networking: pie; visual: Pixi / DOM; audio)
@@ -14,6 +22,7 @@
     - casting non-curses like heal or purify on self should show green, not red
     - pathfinding for vampires broken?
     - Priest "run away" ai is broken / Archer pursue ai is not working well
+- Particle engine: NOte: see "how to destroy" in Notes.md
 
 
 - Pack 8
@@ -48,7 +57,23 @@
         - More objects to interact with
         - Spell: grappling hook (pulls your towards something)
         - freezable liquid to walk over
-        
+- Pack 10
+    - Better timeout icon
+    - Attention marker for timeout pickups (blue)
+    - planning view doesn't show that movement will stop in liquid
+        - run liquid interactions on prediction units
+    - More ways to "draw you into danger"
+        - maybe pickups are the only way to get more spells/stats (but you still get to choose) and they drop when you kill enemies
+        - All multiplayer players get the drop when one picks it up
+    - maybe "hurt" shouldn't be a given
+    - Spell choice should random spell rarity but then all the spells to choose from should have that rarity.  It's not a choice if there's an obvious right answer
+    - Better spell progression
+        - it should be fun, sooner
+    - what happens if you freeze liquid with a unit in it?
+    - fix vampire bite, rather than the confusing half damage thing, it should just double health and then half it if vampire is removed
+    - shield should be visible on health bar (it's just temporary health)
+    - explain that portal cleanses all buffs and curses
+    - continue to show walk rope after RMB?
         
 
 
