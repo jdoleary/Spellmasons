@@ -7,10 +7,5 @@ export default defineConfig(({ command, mode }) => ({
         chunkSizeWarningLimit: 1000000,
         outDir: 'build',
         assetsDir: '.',
-        rollupOptions: {
-            external: [
-                './svelte-bundle.css'
-            ]
-        }
     }
 }));
