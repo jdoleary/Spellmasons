@@ -1,7 +1,6 @@
 ## Schedule
 - Pack 7
-    - pathfinding for vampires broken?
-    - Priest "run away" ai is broken / Archer pursue ai is not working well
+    - Archer pursue ai is not working well
 - Pack 6
     - Standalone Server
         - Decouple the various layers (data: underworld; networking: pie; visual: Pixi / DOM; audio)

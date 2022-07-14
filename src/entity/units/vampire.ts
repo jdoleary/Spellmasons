@@ -1,10 +1,8 @@
 import * as Unit from '../Unit';
 import type { UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
-import * as Vec from '../../jmath/Vec';
-import * as math from '../../jmath/math';
-import * as config from '../../config';
 import * as vampire_bite from '../../cards/vampire_bite';
+import { withinMeleeRange } from './actions/gruntAction';
 
 const unit: UnitSource = {
   id: 'vampire',
@@ -40,13 +38,16 @@ const unit: UnitSource = {
       // Do not move if they don't have a target
       return;
     }
-    // Move to the edge of the enemy, not to their center
-    const adjustedTarget = Vec.subtract(attackTarget, math.similarTriangles(attackTarget.x - unit.x, attackTarget.y - unit.y, math.distance(attackTarget, unit), config.COLLISION_MESH_RADIUS * 2));
     // Movement
-    await Unit.moveTowards(unit, adjustedTarget);
+    await Unit.moveTowards(unit, attackTarget);
 
     // Attack closest enemy
-    if (canAttackTarget) {
+    // Note: Special case: don't use canAttackEnemy for melee units
+    // because pathing doesn't take immovable units into account yet
+    // so it might think it can attack but will be blocked.
+    // Instead, just check that the distance is within the attack range
+    // and let canAttackEnemy be used for just the attention markers
+    if (withinMeleeRange(unit, attackTarget)) {
       await Unit.playAnimation(unit, unit.animations.attack);
       Unit.takeDamage(attackTarget, unit.damage, false, undefined);
       Unit.addModifier(attackTarget, vampire_bite.id);
