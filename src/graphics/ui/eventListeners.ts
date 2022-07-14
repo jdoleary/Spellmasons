@@ -223,7 +223,7 @@ export function mouseMove(e?: MouseEvent) {
         // If player is able to move
         if (window.player.unit.stamina > 0) {
           // Move up to but not onto intersection or else unit will get stuck ON linesegment
-          Unit.moveTowards(window.player.unit, mouseTarget);
+          Unit._moveTowards(window.player.unit, mouseTarget);
         } else {
           if (!window.notifiedOutOfStamina) {
             floatingText({

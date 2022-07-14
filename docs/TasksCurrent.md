@@ -1,6 +1,5 @@
 ## Schedule
 - Today:
-    - Make custom moveTowards for selfPlayer so that it doesn't queue up a bunch of raceTimeouts since the player moves differently than all other units.
     - Low hanging fruit bugs from Pack 9
         - bug: Sometimes movement preediction SAYS a unit will fall in but it stops short
         - bug: "AOE" then hurt only plays the sound effect once, but the animations are sequential
@@ -10,7 +9,6 @@
         - Got "-60" mana when it should have been 0 when cursor wasn't on a target or was off the map
         - describe that decoy has health in card
         - Spike highlight is not visible
-nges
     - More ways to "draw you into danger"
         - spell and stats pickups
     - Game should be fun sooner

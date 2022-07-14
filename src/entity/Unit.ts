@@ -742,11 +742,13 @@ export function orient(unit: IUnit, faceTarget: Vec2) {
 
 }
 
-// moveTo moves a unit, considering all the in-game blockers
-export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
+// This _ version of moveTowards does not return a promise and is used
+// specifically for moving the current player character which does not await 
+// movement since they hold RMB to move, the target may be constantly changing
+export function _moveTowards(unit: IUnit, target: Vec2) {
   if (!canMove(unit)) {
     console.log('cannot move')
-    return Promise.resolve();
+    return
   }
   let coordinates = math.getCoordsAtDistanceTowardsTarget(
     unit,
@@ -772,6 +774,14 @@ export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
 
   // Set path which will be used in the game loop to actually move the unit
   window.underworld.setPath(unit, Vec.clone(target));
+}
+// moveTo moves a unit, considering all the in-game blockers
+export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
+  if (!canMove(unit)) {
+    console.log('cannot move')
+    return Promise.resolve();
+  }
+  _moveTowards(unit, target);
   // 300 + is an arbitrary time buffer to ensure that the raceTimeout
   // doesn't report a false positive if the duration it takes the moveTowards promise
   // to resolve is within a reasonable range
