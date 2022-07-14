@@ -5,7 +5,7 @@ import { UnitType } from '../types/commonTypes';
 import * as config from '../config'
 
 const id = 'freeze';
-const imageName = 'freeze.png';
+const imageName = 'spell-effects/spellFreeze_9.png';
 const spell: Spell = {
   card: {
     id,
@@ -13,7 +13,7 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 2,
     probability: 50,
-    thumbnail: 'spell_effects/spellFreeze_9.png',
+    thumbnail: 'freeze.png',
     animationPath: 'spell-effects/spellFreeze',
     description: `
 Freezes the target(s) for 1 turn, preventing them from moving or acting.
@@ -37,7 +37,7 @@ Freezes the target(s) for 1 turn, preventing them from moving or acting.
     add,
     remove,
     subsprite: {
-      imageName: 'freeze.png',
+      imageName,
       alpha: 1.0,
       anchor: {
         x: 0.5,
