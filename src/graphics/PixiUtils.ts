@@ -372,7 +372,7 @@ export function addPixiSpriteAnimated(
     const animatedSprite = new PIXI.AnimatedSprite(texture);
     animatedSprite.animationSpeed = options.animationSpeed || 0.1;
     if (window.devMode) {
-      animatedSprite.animationSpeed = 1.5;
+      animatedSprite.animationSpeed = 0.5;
     }
     if (options.onComplete) {
       animatedSprite.onComplete = options.onComplete;
