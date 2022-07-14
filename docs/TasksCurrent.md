@@ -1,7 +1,6 @@
 ## Schedule
 - Today:
     - Low hanging fruit bugs from Pack 9
-        - bug: Sometimes movement preediction SAYS a unit will fall in but it stops short
         - bug: "AOE" then hurt only plays the sound effect once, but the animations are sequential
         - Bug: No death circle for pushing units into liquid
         - Said "out of range" for pickup but it's highlight underline was under the cursor 
