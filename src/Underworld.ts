@@ -355,7 +355,7 @@ export default class Underworld {
           // Draw mana bar
           if (u.manaMax != 0) {
             window.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
-            window.unitOverlayGraphics.beginFill(0x5656d5, 1.0);
+            window.unitOverlayGraphics.beginFill(colors.manaBlue, 1.0);
             const manaBarProps = getUIBarProps(u.x, u.y, u.mana, u.manaMax, zoom);
             window.unitOverlayGraphics.drawRect(
               manaBarProps.x,

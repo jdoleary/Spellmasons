@@ -2,6 +2,7 @@ export const targetBlue = 0x00a5df;
 export const stamina = 0xd5b356;
 export const healthHurtRed = 0x632828;
 export const healthRed = 0xd55656;
+export const manaBlue = 0x5656d5;
 export const healthAllyGreen = 0x40a058;
 export const abyss = 0x353535;
 export const forceMoveColor = 0xffffff;
