@@ -1,7 +1,9 @@
 ## Schedule
 - Today:
+    - Prediction pickup isn't removed when it is triggered: 0.3015545316899122
     - More ways to "draw you into danger"
         - spell and stats pickups
+        - How to prevent experience farming by cloning and killing units over and over.
     - Game should be fun sooner
         - rework how players get to choose new spells
         - make it on enemy death and have it be experience like nuclear throne where it's more common in the beginning.
@@ -130,6 +132,7 @@
 - task: Spell to trade mana for stamina
 - idea; one use bargains (deals with the devil) that mix up your max stats.  or have a50% chance of good or bad outcome
 - Leave blood trails behind for dead units that are force pushed
+- Card: An attack range minimum but not a maximum so you CAN"T attack if they are too close
 
 ## Misc
 - Bug: Had a scenario where i had a debugger on enterPortal and on image.show
