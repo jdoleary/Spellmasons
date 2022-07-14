@@ -23,6 +23,9 @@ describe('repelCircles', () => {
         mover.y = destination.y;
         // This is the flag that ensures "other" does not move when the collision occurs
         const otherIsFixed = true;
+        // Stub window.pathingLineSegment
+        // @ts-ignore
+        window.underworld = { pathingLineSegments: [] };
         repelCircles(mover, originalPosition, other, otherIsFixed);
         const actual = { x: other.x, y: other.y };
         const expected = otherStartPosition;
