@@ -7,6 +7,10 @@
         - https://codepen.io/boli88/pen/pVEaKV
         - See gist https://gist.github.com/jdoleary/8ce49330504609cc49285fccdd7f5537
         - Particle engine: NOte: see "how to destroy" in Notes.md
+- Pack 7
+    - casting non-curses like heal or purify on self should show green, not red
+    - pathfinding for vampires broken?
+    - Priest "run away" ai is broken / Archer pursue ai is not working well
 - UI Refactor
     - Prevent RMB movement when mouse is over toolbar
     - Disable RMB movement when upgrade screen is up
@@ -18,13 +22,6 @@
             - In order to decouple, each should have imports only in one file that can be dependency injected.  So ALL pie stuff goes through the networking layer, all DOM stuff goes through the UI layer, all PIXI (including PixiUtils which is how a lot of the files interact with PIXI) stuff goes through the pixi layer.  This should make it easy to make a headless server or make tests that use a data-only underworld
     - Add "preparing" animation used to reduce desyncs due to network latency, so that if multiple users are casting spells at the same time, the wizard bending down to "charge" as soon as the current user clicks, masks a delay to make sure it doesn't conflict with other spells.  It'll send the spell over the network as soon as the user clicks but waits to cast it so that there aren't conflicting spells making desyncs on multiple clients.
     - Server should be able to send syncs that will wait to execute until turn changes so it doesn't interrupt animations and mess up the state when it syncs
-- Pack 7
-    - Unit Crowding
-        - `// TODO: Temp removed aliveNPCs because moveWithCollisions doesn't consider them yet`
-        - Similar to how push won't push units through walls
-    - casting non-curses like heal or purify on self should show green, not red
-    - pathfinding for vampires broken?
-    - Priest "run away" ai is broken / Archer pursue ai is not working well
 
 
 - Pack 8

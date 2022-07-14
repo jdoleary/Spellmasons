@@ -1,6 +1,6 @@
 import { add, magnitude, subtract, Vec2 } from './Vec';
 import { distance, similarTriangles } from "./math";
-import { findWherePointIntersectLineSegmentAtRightAngle, LineSegment } from "./lineSegment";
+import { closestLineSegmentIntersection, findWherePointIntersectLineSegmentAtRightAngle, LineSegment } from "./lineSegment";
 import * as config from '../config';
 import type * as Unit from '../entity/Unit';
 export interface ForceMove {
@@ -78,22 +78,16 @@ export function moveWithCollisions(mover: Circle, destination: Vec2, circles: Un
     mover.x = destination.x;
     mover.y = destination.y;
 
-    // DEV NOTE: Unit to unit repulsion temporarily disabled until
-    // underworld lineSegments (pathing, wall, liquid), get finalized
-    // \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ \/ 
-    // const originalPosition = { x: mover.x, y: mover.y };
-    // for (let other of circles) {
-    //     // Do not repel self from self
-    //     if (mover !== other) {
-    //         // If the mover now intersects with another circle...
-    //         if (isCircleIntersectingCircle(mover, other)) {
-    //             repelCircles(mover, originalPosition, other, other.immovable);
-    //             // Now that a circle has been repelled, immediately calculate collisions with 
-    //             // walls so that it doesn't phase through a wall
-    //             collideWithLineSegments(other, [...window.underworld.walls, ...window.underworld.liquidBounds]);
-    //         }
-    //     }
-    // }
+    const originalPosition = { x: mover.x, y: mover.y };
+    for (let other of circles) {
+        // Do not repel self from self
+        if (mover !== other) {
+            // If the mover now intersects with another circle...
+            if (isCircleIntersectingCircle(mover, other)) {
+                repelCircles(mover, originalPosition, other, other.immovable);
+            }
+        }
+    }
 }
 // repelCircles moves two intersecting circles away from each other
 // relative to their distance from each other and radius.
@@ -123,15 +117,24 @@ function repelCircles(mover: Circle, originalPosition: Vec2, other: Circle, othe
         if (overlap > 0) {
             if (otherIsFixed) {
                 const moverPos = moveAlongVector(mover, vector, -overlap);
-                mover.x = moverPos.x;
-                mover.y = moverPos.y;
+                const intersection = closestLineSegmentIntersection({ p1: mover, p2: moverPos }, window.underworld.pathingLineSegments);
+                if (intersection) {
+                    mover.x = intersection.x;
+                    mover.y = intersection.y;
+                } else {
+                    mover.x = moverPos.x;
+                    mover.y = moverPos.y;
+                }
             } else {
-                // const moverPos = moveAlongVector(mover, vector, -overlap / 2);
-                // mover.x = moverPos.x;
-                // mover.y = moverPos.y;
                 const otherPos = moveAlongVector(other, vector, overlap);
-                other.x = otherPos.x;
-                other.y = otherPos.y;
+                const intersection = closestLineSegmentIntersection({ p1: other, p2: otherPos }, window.underworld.pathingLineSegments);
+                if (intersection) {
+                    other.x = intersection.x;
+                    other.y = intersection.y;
+                } else {
+                    other.x = otherPos.x;
+                    other.y = otherPos.y;
+                }
             }
         }
     } else {

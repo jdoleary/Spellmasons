@@ -172,8 +172,8 @@ export default class Underworld {
   runForceMove(forceMoveInst: ForceMove, prediction: boolean) {
     const { pushedObject, velocity, velocity_falloff } = forceMoveInst;
     const lastPosition = Vec.clone(pushedObject);
-    // TODO: Temp removed aliveNPCs because moveWithCollisions doesn't consider them yet
-    moveWithCollisions(pushedObject, Vec.add(pushedObject, velocity), []);
+    const aliveUnits = (prediction ? window.predictionUnits : this.units).filter(u => u.alive);
+    moveWithCollisions(pushedObject, Vec.add(pushedObject, velocity), aliveUnits);
     collideWithLineSegments(pushedObject, this.walls);
     forceMoveInst.velocity = Vec.multiply(velocity_falloff, velocity);
     Obstacle.checkLiquidInteractionDueToForceMovement(forceMoveInst, lastPosition, prediction);
