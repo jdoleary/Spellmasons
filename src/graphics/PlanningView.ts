@@ -211,7 +211,7 @@ export async function runPredictions() {
   if (window.underworld.turn_phase == turn_phase.PlayerTurns) {
 
     if (window.player) {
-      window.underworld.syncPredictionUnits();
+      window.underworld.syncPredictionEntities();
       updateManaCostUI();
       // Dry run cast so the user can see what effect it's going to have
       const target = mousePos;

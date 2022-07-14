@@ -129,7 +129,7 @@ export default class Underworld {
   }
   // Assigns window.predictionUnits a copy of this.units
   // for the sake of prediction
-  syncPredictionUnits() {
+  syncPredictionEntities() {
     window.predictionUnits = this.units.map(Unit.copyForPredictionUnit);
     window.predictionPickups = this.pickups.map(Pickup.copyForPredictionPickup);
   }
@@ -856,9 +856,9 @@ export default class Underworld {
         this.units.splice(i, 1);
       }
     }
-    // Now that the units have been cleaned up syncPredictionUnits
+    // Now that the units have been cleaned up syncPredictionEntities
     // so they are not out of sync with the underworld units array
-    this.syncPredictionUnits();
+    this.syncPredictionEntities();
     // Clear all pickups
     for (let p of this.pickups) {
       Pickup.removePickup(p);

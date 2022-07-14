@@ -173,7 +173,7 @@ window.superMe = () => {
     // Now that player's health and mana has changed we must sync
     // predictionUnits so that the player's prediction copy
     // has the same mana and health
-    window.underworld.syncPredictionUnits();
+    window.underworld.syncPredictionEntities();
     syncInventory(undefined);
   }
 }
