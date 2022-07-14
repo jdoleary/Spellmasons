@@ -11,6 +11,7 @@ export const PLAYER_BASE_HEALTH = 10;
 export const PLAYER_BASE_ATTACK_RANGE = 330;
 export const UNIT_MOVE_SPEED = 0.15;
 export const COLLISION_MESH_RADIUS = 32;
+export const SELECTABLE_RADIUS = 36;
 
 export const HEALTH_BAR_UI_Y_POS = 30;
 export const UNIT_UI_BAR_HEIGHT = 5;

@@ -14,7 +14,7 @@ import { chooseObjectWithProbability } from '../jmath/rand';
 import seedrandom from 'seedrandom';
 import { Vec2 } from '../jmath/Vec';
 
-export const PICKUP_RADIUS = config.COLLISION_MESH_RADIUS;
+export const PICKUP_RADIUS = config.SELECTABLE_RADIUS;
 export interface IPickup {
   x: number;
   y: number;

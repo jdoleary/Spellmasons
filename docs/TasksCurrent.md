@@ -1,8 +1,6 @@
 ## Schedule
 - Today:
     - Low hanging fruit bugs from Pack 9
-        - Said "out of range" for pickup but it's highlight underline was under the cursor 
-            - Make their selection radius bigger! (same for units too), never disappoint the player, if the mouse reaches any part of a unit they should be selectable
         - Got "-60" mana when it should have been 0 when cursor wasn't on a target or was off the map
         - describe that decoy has health in card
         - Spike highlight is not visible

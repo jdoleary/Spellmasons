@@ -1554,11 +1554,12 @@ export default class Underworld {
     const sortedByProximityToCoords = (prediction ? window.predictionUnits : this.units)
       // Filter for only valid units, not units with NaN location or waiting to be removed
       .filter(u => !u.flaggedForRemoval && !isNaN(u.x) && !isNaN(u.y))
-      // Filter for units within COLLISION_MESH_RADIUS of coordinates
-      .filter(u => math.distance(u, coords) <= config.COLLISION_MESH_RADIUS)
+      // Filter for units within SELECTABLE_RADIUS of coordinates
+      .filter(u => math.distance(u, coords) <= config.SELECTABLE_RADIUS)
       // Order by closest to coords
       .sort((a, b) => math.distance(a, coords) - math.distance(b, coords))
       // Sort dead units to the back, prefer selecting living units
+      // TODO: This should be opposite if the spell is ressurect
       .sort((a, b) => a.alive && b.alive ? 0 : a.alive ? -1 : 1);
     return sortedByProximityToCoords;
   }
@@ -1608,6 +1609,7 @@ export default class Underworld {
     }
     const unitAtCastLocation = this.getUnitAt(castLocation, prediction);
     const pickupAtCastLocation = this.getPickupAt(castLocation, prediction);
+    console.log('jtest pickup', pickupAtCastLocation)
     let effectState: Cards.EffectState = {
       cardIds,
       casterCardUsage,
