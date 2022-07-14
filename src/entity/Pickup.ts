@@ -36,7 +36,7 @@ export interface IPickup {
   // returns true if the pickup did in fact trigger - this is useful
   // for preventing one use health potions from triggering if the unit
   // already has max health
-  effect: ({ unit, player }: { unit?: IUnit; player?: Player.IPlayer }) => boolean | undefined;
+  effect: ({ unit, player, prediction }: { unit?: IUnit; player?: Player.IPlayer, prediction: boolean }) => boolean | undefined;
 }
 export function isPickup(maybePickup: any): maybePickup is IPickup {
   // Take a select few of the pickup only properties and ensure that the object has them
@@ -54,7 +54,7 @@ interface IPickupSource {
   turnsLeftToGrab?: number;
   scale: number;
   probability: number;
-  effect: ({ unit, player }: { unit?: IUnit; player?: Player.IPlayer }) => boolean | undefined;
+  effect: ({ unit, player, prediction }: { unit?: IUnit; player?: Player.IPlayer, prediction: boolean }) => boolean | undefined;
 }
 export function copyForPredictionPickup(p: IPickup): IPickup {
   // Remove image and text since prediction pickups won't be rendered
@@ -155,13 +155,13 @@ export function removePickup(pickup: IPickup) {
   window.underworld.removePickupFromArray(pickup);
   checkIfNeedToClearTooltip();
 }
-export function triggerPickup(pickup: IPickup, unit: IUnit) {
+export function triggerPickup(pickup: IPickup, unit: IUnit, prediction: boolean) {
   const player = window.underworld.players.find((p) => p.unit === unit);
   if (pickup.playerOnly && !player) {
     // If pickup is playerOnly, do not trigger if a player is not the one triggering it
     return;
   }
-  const didTrigger = pickup.effect({ unit, player });
+  const didTrigger = pickup.effect({ unit, player, prediction });
   // Only remove pickup if it triggered AND is a singleUse pickup
   if (pickup.singleUse && didTrigger) {
     removePickup(pickup);
@@ -181,9 +181,9 @@ export const pickups: IPickupSource[] = [
     probability: 70,
     scale: 1,
     description: `Deals ${spike_damage} to any unit (including NPCs) that touches it`,
-    effect: ({ unit, player }: { unit?: IUnit; player?: Player.IPlayer }) => {
+    effect: ({ unit, player, prediction }) => {
       if (unit) {
-        takeDamage(unit, spike_damage, false)
+        takeDamage(unit, spike_damage, prediction)
         return true;
       }
       return false;
