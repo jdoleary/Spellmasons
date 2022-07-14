@@ -385,6 +385,7 @@ export function addPixiSpriteAnimated(
     // Adding imagePath to a PIXI.AnimatedSprite makes it a JSpriteAnimated object
     sprite = animatedSprite as JSpriteAnimated;
     sprite.imagePath = imagePath;
+    sprite.anchor.set(0.5);
 
     parent.addChild(sprite);
     return sprite;
