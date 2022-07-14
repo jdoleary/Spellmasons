@@ -1,6 +1,5 @@
 ## Schedule
 - Today:
-    - Prediction pickup isn't removed when it is triggered: 0.3015545316899122
     - More ways to "draw you into danger"
         - spell and stats pickups
         - How to prevent experience farming by cloning and killing units over and over.

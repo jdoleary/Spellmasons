@@ -1579,8 +1579,12 @@ export default class Underworld {
       this.units.push(unit);
     }
   }
-  removePickupFromArray(pickup: Pickup.IPickup) {
-    this.pickups = this.pickups.filter((p) => p !== pickup);
+  removePickupFromArray(pickup: Pickup.IPickup, prediction: boolean) {
+    if (prediction) {
+      window.predictionPickups = window.predictionPickups.filter(p => p !== pickup);
+    } else {
+      this.pickups = this.pickups.filter((p) => p !== pickup);
+    }
   }
   addPickupToArray(pickup: Pickup.IPickup, prediction: boolean) {
     if (prediction) {

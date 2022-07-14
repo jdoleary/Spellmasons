@@ -150,9 +150,9 @@ export function load(pickup: IPickup) {
     throw new Error(`Could not load pickup with path ${pickup.imagePath}`);
   }
 }
-export function removePickup(pickup: IPickup) {
+export function removePickup(pickup: IPickup, prediction: boolean) {
   Image.cleanup(pickup.image);
-  window.underworld.removePickupFromArray(pickup);
+  window.underworld.removePickupFromArray(pickup, prediction);
   checkIfNeedToClearTooltip();
 }
 export function triggerPickup(pickup: IPickup, unit: IUnit, prediction: boolean) {
@@ -164,7 +164,7 @@ export function triggerPickup(pickup: IPickup, unit: IUnit, prediction: boolean)
   const didTrigger = pickup.effect({ unit, player, prediction });
   // Only remove pickup if it triggered AND is a singleUse pickup
   if (pickup.singleUse && didTrigger) {
-    removePickup(pickup);
+    removePickup(pickup, prediction);
   }
 }
 
