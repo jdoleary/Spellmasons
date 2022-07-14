@@ -1,7 +1,6 @@
 ## Schedule
 - Today:
     - Low hanging fruit bugs from Pack 9
-        - bug: "AOE" then hurt only plays the sound effect once, but the animations are sequential
         - Bug: No death circle for pushing units into liquid
         - Said "out of range" for pickup but it's highlight underline was under the cursor 
             - Make their selection radius bigger! (same for units too), never disappoint the player, if the mouse reaches any part of a unit they should be selectable

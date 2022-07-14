@@ -1658,12 +1658,13 @@ export default class Underworld {
           // Animate the card for each target
           if (!prediction) {
             if (card.animationPath) {
-              await this.animateSpell(target, card.animationPath);
+              animationPromises.push(this.animateSpell(target, card.animationPath));
             } else {
               console.log('Card', cardId, 'has no animation path')
             }
           }
         }
+        await Promise.all(animationPromises);
 
         // .then is necessary to convert return type of promise.all to just be void
         const { targetedUnits: previousTargets } = effectState;
@@ -1687,7 +1688,6 @@ export default class Underworld {
             }
           }
         }
-        await Promise.all(animationPromises);
       }
     }
     if (!prediction) {
