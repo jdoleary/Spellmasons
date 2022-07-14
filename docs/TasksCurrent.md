@@ -1,19 +1,7 @@
 ## Schedule
-- Today:
-    - What happens to card spawn when unit dies in liquid
-    - Bug: Grunt walked towards liquid and just kept walking animation after it should've returned to idle. seed:0.8154642976606445
-    - Particle engine
-        - https://pixijs.io/pixi-particles-editor/#pixieDust
-        - https://codepen.io/boli88/pen/pVEaKV
-        - See gist https://gist.github.com/jdoleary/8ce49330504609cc49285fccdd7f5537
-        - Particle engine: NOte: see "how to destroy" in Notes.md
 - Pack 7
-    - casting non-curses like heal or purify on self should show green, not red
     - pathfinding for vampires broken?
     - Priest "run away" ai is broken / Archer pursue ai is not working well
-- UI Refactor
-    - Prevent RMB movement when mouse is over toolbar
-    - Disable RMB movement when upgrade screen is up
 - Pack 6
     - Standalone Server
         - Decouple the various layers (data: underworld; networking: pie; visual: Pixi / DOM; audio)
@@ -65,6 +53,17 @@
     - shield should be visible on health bar (it's just temporary health)
     - explain that portal cleanses all buffs and curses
     - continue to show walk rope after RMB?
+- Pack 11:
+    - What happens to card spawn when unit dies in liquid
+    - Bug: Grunt walked towards liquid and just kept walking animation after it should've returned to idle. seed:0.8154642976606445
+    - Particle engine
+        - https://pixijs.io/pixi-particles-editor/#pixieDust
+        - https://codepen.io/boli88/pen/pVEaKV
+        - See gist https://gist.github.com/jdoleary/8ce49330504609cc49285fccdd7f5537
+        - Particle engine: NOte: see "how to destroy" in Notes.md
+    - UI Refactor
+        - Prevent RMB movement when mouse is over toolbar
+        - Disable RMB movement when upgrade screen is up
         
 
 

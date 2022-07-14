@@ -331,7 +331,13 @@ export function drawTarget(unit: Unit.IUnit, isOutOfRange: boolean) {
     if (isOutOfRange) {
       realUnit.image.sprite.tint = 0xaaaaaa;
     } else {
-      realUnit.image.sprite.tint = 0xaa0000;
+      if (unit.faction == window.player?.unit.faction) {
+        // Ally
+        realUnit.image.sprite.tint = 0x5555ff;
+      } else {
+        // Enemy
+        realUnit.image.sprite.tint = 0xff5555;
+      }
     }
   }
   // if (realUnit && realUnit.shaderUniforms.all_red) {
