@@ -31,7 +31,6 @@ import grunt from './grunt';
 import archer from './archer';
 import lobber from './lobber';
 import summoner from './summoner';
-import demon from './demon';
 import priest from './priest';
 import poisoner from './poisoner';
 import vampire from './vampire';
@@ -45,9 +44,7 @@ export function registerUnits() {
   register(grunt);
   register(archer);
   register(lobber);
-  // register(rook);
   register(summoner);
-  register(demon);
   register(priest);
   register(poisoner);
   register(vampire);
