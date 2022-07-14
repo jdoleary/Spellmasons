@@ -48,7 +48,15 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
 	"sourceSize": {"w":64,"h":64}
 },
-"blue-projectile.png":
+"blue-projectile_1.png":
+{
+	"frame": {"x":1002,"y":1582,"w":15,"h":16},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":1,"y":0,"w":15,"h":16},
+	"sourceSize": {"w":16,"h":16}
+},
+"blue-projectile_2.png":
 {
 	"frame": {"x":1002,"y":1582,"w":15,"h":16},
 	"rotated": false,
@@ -6873,6 +6881,7 @@
 	"sourceSize": {"w":64,"h":64}
 }},
 "animations": {
+	"blue-projectile": ["blue-projectile_1.png","blue-projectile_2.png"],
 	"liquid-mask": ["liquid-mask_1.png","liquid-mask_2.png","liquid-mask_3.png","liquid-mask_4.png","liquid-mask_5.png"],
 	"pickups/healthPotion": ["pickups/healthPotion_1.png","pickups/healthPotion_2.png","pickups/healthPotion_3.png","pickups/healthPotion_4.png","pickups/healthPotion_5.png","pickups/healthPotion_6.png","pickups/healthPotion_7.png","pickups/healthPotion_8.png","pickups/healthPotion_9.png","pickups/healthPotion_10.png","pickups/healthPotion_11.png","pickups/healthPotion_12.png","pickups/healthPotion_13.png","pickups/healthPotion_14.png","pickups/healthPotion_15.png","pickups/healthPotion_16.png","pickups/healthPotion_17.png","pickups/healthPotion_18.png","pickups/healthPotion_19.png","pickups/healthPotion_20.png","pickups/healthPotion_21.png","pickups/healthPotion_22.png","pickups/healthPotion_23.png","pickups/healthPotion_24.png","pickups/healthPotion_25.png","pickups/healthPotion_26.png","pickups/healthPotion_27.png"],
 	"pickups/manaPotion": ["pickups/manaPotion_1.png","pickups/manaPotion_2.png","pickups/manaPotion_3.png","pickups/manaPotion_4.png","pickups/manaPotion_5.png","pickups/manaPotion_6.png","pickups/manaPotion_7.png","pickups/manaPotion_8.png","pickups/manaPotion_9.png","pickups/manaPotion_10.png","pickups/manaPotion_11.png","pickups/manaPotion_12.png","pickups/manaPotion_13.png","pickups/manaPotion_14.png","pickups/manaPotion_15.png","pickups/manaPotion_16.png","pickups/manaPotion_17.png","pickups/manaPotion_18.png","pickups/manaPotion_19.png","pickups/manaPotion_20.png","pickups/manaPotion_21.png","pickups/manaPotion_22.png","pickups/manaPotion_23.png","pickups/manaPotion_24.png","pickups/manaPotion_25.png","pickups/manaPotion_26.png","pickups/manaPotion_27.png"],
@@ -6953,6 +6962,6 @@
 	"format": "RGBA8888",
 	"size": {"w":1024,"h":1705},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:c8966071d6a1dd85bc68289f6a8778c4:400f9c150202347ee98deb83a967111b:81b8455959c6df0a71f2d78f10f487eb$"
+	"smartupdate": "$TexturePacker:SmartUpdate:b7e5bde3e4f3df76752c430b26c90408:7a10719a45e8b9cdab1029960da87df2:81b8455959c6df0a71f2d78f10f487eb$"
 }
 }
