@@ -11,6 +11,11 @@ export const PLAYER_BASE_HEALTH = 10;
 export const PLAYER_BASE_ATTACK_RANGE = 330;
 export const UNIT_MOVE_SPEED = 0.15;
 export const COLLISION_MESH_RADIUS = 32;
+// Caution: Changing this may make pickups that spawn in liquid
+// due to units falling in liquid unobtainable without movement spells.
+// SELECTABLE_RADIUS determines the radius of both pickups and 
+// the radius within which a mouse will create a target for a spell
+// from a unit
 export const SELECTABLE_RADIUS = 36;
 
 export const HEALTH_BAR_UI_Y_POS = 30;
