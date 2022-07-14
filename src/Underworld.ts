@@ -895,7 +895,7 @@ export default class Underworld {
     this.syncPredictionEntities();
     // Clear all pickups
     for (let p of this.pickups) {
-      Pickup.removePickup(p);
+      Pickup.removePickup(p, false);
     }
     // Clear all wall images:
     // Note: walls are stored in container Units so they can be sorted z-index
@@ -1101,7 +1101,7 @@ export default class Underworld {
           await p.onTurnsLeftDone(p);
         }
         // Remove pickup
-        Pickup.removePickup(p);
+        Pickup.removePickup(p, false);
       }
     }
 
