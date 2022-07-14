@@ -38,6 +38,12 @@ export interface IPickup {
   // already has max health
   effect: ({ unit, player }: { unit?: IUnit; player?: Player.IPlayer }) => boolean | undefined;
 }
+export function isPickup(maybePickup: any): maybePickup is IPickup {
+  // Take a select few of the pickup only properties and ensure that the object has them
+  // and then tell TS that it is a pickup.  This WILL fail if another non pickup object 
+  // is given these properties.
+  return maybePickup.singleUse !== undefined && maybePickup.playerOnly !== undefined;
+}
 interface IPickupSource {
   name: string;
   description: string;

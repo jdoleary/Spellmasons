@@ -155,6 +155,17 @@ export default class Underworld {
     collideWithLineSegments(pushedObject, this.walls);
     forceMoveInst.velocity = Vec.multiply(velocity_falloff, velocity);
     Obstacle.checkLiquidInteractionDueToForceMovement(forceMoveInst, lastPosition, prediction);
+    if (Unit.isUnit(forceMoveInst.pushedObject)) {
+      // If the pushed object is a unit, check if it collides with any pickups
+      // as it is pushed
+      this.checkPickupCollisions(forceMoveInst.pushedObject, prediction);
+    } else if (Pickup.isPickup(forceMoveInst.pushedObject)) {
+      // If the pushed object is a pickup, check if it collides with any units
+      // as it is pushed
+      (prediction ? window.predictionUnits : this.units).forEach(u => {
+        this.checkPickupCollisions(u, prediction);
+      })
+    }
 
   }
   gameLoop = (timestamp: number) => {
@@ -255,7 +266,7 @@ export default class Underworld {
 
           }
           // check for collisions with pickups in new location
-          this.checkPickupCollisions(u);
+          this.checkPickupCollisions(u, false);
           // Ensure that resolveDoneMoving is invoked when unit is out of stamina (and thus, done moving)
           // or when find point in the path has been reached.
           // This is necessary to end the moving units turn because elsewhere we are awaiting the fulfillment of that promise
@@ -966,8 +977,8 @@ export default class Underworld {
       }, 10);
     })
   }
-  checkPickupCollisions(unit: Unit.IUnit) {
-    for (let pu of this.pickups) {
+  checkPickupCollisions(unit: Unit.IUnit, prediction: boolean) {
+    for (let pu of (prediction ? window.predictionPickups : this.pickups)) {
       // Note, units' radius is rather small (to allow for crowding), so
       // this distance calculation uses neither the radius of the pickup
       // nor the radius of the unit.  It is hard coded to 2 COLLISION_MESH_RADIUSES

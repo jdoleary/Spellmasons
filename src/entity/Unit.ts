@@ -50,6 +50,9 @@ export interface UnitAnimations {
   walk: string;
 }
 export function isUnit(maybeUnit: any): maybeUnit is IUnit {
+  // unitSouceId only belongs to IUnit so it is a safe way to tell
+  // TS that the object is a unit.  This WILL fail if another object
+  // is given a unitSourceId property
   return maybeUnit.unitSourceId !== undefined;
 }
 export interface IUnit {

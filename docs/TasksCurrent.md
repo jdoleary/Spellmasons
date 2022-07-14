@@ -1,7 +1,6 @@
 ## Schedule
 - Today:
     - Low hanging fruit bugs from Pack 9
-        - Bug: No death circle for pushing units into liquid
         - Said "out of range" for pickup but it's highlight underline was under the cursor 
             - Make their selection radius bigger! (same for units too), never disappoint the player, if the mouse reaches any part of a unit they should be selectable
         - Got "-60" mana when it should have been 0 when cursor wasn't on a target or was off the map
