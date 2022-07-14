@@ -230,6 +230,16 @@ export async function runPredictions() {
           // is by-definition, in range because it is the literal end of the player's range
           const didHaveEffect = await showCastCardsPrediction(endOfRangeTarget, casterUnit, cardIds, false);
           if (!didHaveEffect) {
+            // Note: we have to resync prediction units since castCards will have been called twice in 
+            // this prediction cycle within this branch. Otherwise our player's prediction mana
+            // will be reduced by 2x more than it should be
+            window.underworld.syncPredictionEntities();
+            // Reassign casterUnit now that the predictionUnits array has been completely rebuilt
+            const casterUnit = window.predictionUnits.find(u => u.id == window.player?.unit.id)
+            if (!casterUnit) {
+              console.error('Critical Error, caster unit not found');
+              return;
+            }
             // If the cast at the end of range had no effect then predict what would happen at the actual
             // target so players can see what it will do if they do get close enough to cast
             await showCastCardsPrediction(target, casterUnit, cardIds, outOfRange);
@@ -277,7 +287,6 @@ export async function runPredictions() {
           }
         })
       }
-
     }
   }
   if (window.runPredictionsPanel) {

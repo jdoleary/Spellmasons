@@ -1609,7 +1609,6 @@ export default class Underworld {
     }
     const unitAtCastLocation = this.getUnitAt(castLocation, prediction);
     const pickupAtCastLocation = this.getPickupAt(castLocation, prediction);
-    console.log('jtest pickup', pickupAtCastLocation)
     let effectState: Cards.EffectState = {
       cardIds,
       casterCardUsage,
