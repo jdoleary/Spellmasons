@@ -2,7 +2,6 @@
 - Today:
     - Low hanging fruit bugs from Pack 9
         - Got "-60" mana when it should have been 0 when cursor wasn't on a target or was off the map
-        - describe that decoy has health in card
     - More ways to "draw you into danger"
         - spell and stats pickups
     - Game should be fun sooner
