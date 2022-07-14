@@ -1,18 +1,15 @@
 import type * as PIXI from 'pixi.js';
 import * as Image from '../graphics/Image';
 import type * as Player from './Player';
-import { addPixiSprite, containerUnits, pixiText } from '../graphics/PixiUtils';
+import { addPixiSprite, addPixiSpriteAnimated, containerUnits, pixiText } from '../graphics/PixiUtils';
 import { IUnit, takeDamage } from './Unit';
 import { checkIfNeedToClearTooltip } from '../graphics/PlanningView';
 import { explainManaOverfill } from '../graphics/Jprompt';
 import { MESSAGE_TYPES } from '../types/MessageTypes';
-import floatingText from '../graphics/FloatingText';
-import * as CardUI from '../graphics/ui/CardUI';
-import * as Cards from '../cards';
 import * as config from '../config';
-import { chooseObjectWithProbability } from '../jmath/rand';
-import seedrandom from 'seedrandom';
 import { Vec2 } from '../jmath/Vec';
+import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
+import { manaBlue } from '../graphics/ui/colors';
 
 export const PICKUP_RADIUS = config.SELECTABLE_RADIUS;
 export interface IPickup {
@@ -219,7 +216,7 @@ export const pickups: IPickupSource[] = [
     },
   },
   {
-    imagePath: 'pickups/card',
+    imagePath: 'pickups/scroll',
     name: CARDS_PICKUP_NAME,
     description: 'Grants the player a new spell',
     probability: 0,
@@ -245,6 +242,32 @@ export const pickups: IPickupSource[] = [
       if (player) {
         player.unit.mana += manaPotionRestoreAmount;
         explainManaOverfill();
+        // Animate
+        if (player.unit.image) {
+          const animationSprite = addPixiSpriteAnimated('spell-effects/potionPickup', player.unit.image.sprite, {
+            loop: false,
+            onComplete: () => {
+              if (animationSprite.parent) {
+                animationSprite.parent.removeChild(animationSprite);
+              }
+            }
+          });
+          if (!animationSprite.filters) {
+            animationSprite.filters = [];
+          }
+          // Change the health color to blue
+          animationSprite.filters.push(
+            // @ts-ignore for some reason ts is flagging this as an error but it works fine
+            // in pixi.
+            new MultiColorReplaceFilter(
+              [
+                [0xff0000, manaBlue],
+              ],
+              0.1
+            )
+          );
+        }
+
         // Now that the player unit's mana has increased,sync the new
         // mana state with the player's predictionUnit so it is properly
         // refelcted in the mana bar
@@ -267,6 +290,18 @@ export const pickups: IPickupSource[] = [
     effect: ({ player }) => {
       if (player && player.unit.health < player.unit.healthMax) {
         takeDamage(player.unit, -healthPotionRestoreAmount, false);
+        // Add spell effect animation
+        if (player.unit.image) {
+          const animationSprite = addPixiSpriteAnimated('spell-effects/potionPickup', player.unit.image.sprite, {
+            loop: false,
+            onComplete: () => {
+              if (animationSprite.parent) {
+                animationSprite.parent.removeChild(animationSprite);
+              }
+            }
+          });
+        }
+
         // Cap health at max
         player.unit.health = Math.min(player.unit.health, player.unit.healthMax);
         // Now that the player unit's mana has increased,sync the new
