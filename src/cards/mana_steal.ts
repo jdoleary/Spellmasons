@@ -2,6 +2,9 @@ import type { Spell } from '.';
 import { createVisualLobbingProjectile } from '../entity/Projectile';
 import floatingText from '../graphics/FloatingText';
 import { explainManaOverfill } from '../graphics/Jprompt';
+import { addPixiSpriteAnimated } from '../graphics/PixiUtils';
+import { manaBlue } from '../graphics/ui/colors';
+import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 
 const id = 'mana_steal';
 const mana_stolen = 20;
@@ -23,9 +26,34 @@ Sacrifice some of own health to steal up to ${mana_stolen} mana from each target
       for (let unit of state.targetedUnits) {
         const unitManaBurnt = Math.min(unit.mana, mana_stolen);
         unit.mana -= unitManaBurnt;
-        promises.push((prediction ? Promise.resolve() : createVisualLobbingProjectile(unit, caster, 'blue-projectile.png')).then(() => {
+        promises.push((prediction ? Promise.resolve() : createVisualLobbingProjectile(unit, caster, 'blue-projectile')).then(() => {
           state.casterUnit.mana += unitManaBurnt;
           if (!prediction) {
+            // Animate
+            if (state.casterUnit.image) {
+              const animationSprite = addPixiSpriteAnimated('spell-effects/potionPickup', state.casterUnit.image.sprite, {
+                loop: false,
+                onComplete: () => {
+                  if (animationSprite.parent) {
+                    animationSprite.parent.removeChild(animationSprite);
+                  }
+                }
+              });
+              if (!animationSprite.filters) {
+                animationSprite.filters = [];
+              }
+              // Change the health color to blue
+              animationSprite.filters.push(
+                // @ts-ignore for some reason ts is flagging this as an error but it works fine
+                // in pixi.
+                new MultiColorReplaceFilter(
+                  [
+                    [0xff0000, manaBlue],
+                  ],
+                  0.1
+                )
+              );
+            }
             explainManaOverfill();
             floatingText({
               coords: caster,

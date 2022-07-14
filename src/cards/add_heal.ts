@@ -12,6 +12,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: 50,
     thumbnail: 'heal.png',
+    animationPath: 'spell-effects/potionPickup',
     description: `
 Heals all targets ${healAmount} HP.
 Will not heal beyond maximum health.

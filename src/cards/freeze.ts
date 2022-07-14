@@ -13,7 +13,8 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 2,
     probability: 50,
-    thumbnail: 'freeze.png',
+    thumbnail: 'spell_effects/spellFreeze_9.png',
+    animationPath: 'spell-effects/spellFreeze',
     description: `
 Freezes the target(s) for 1 turn, preventing them from moving or acting.
     `,
