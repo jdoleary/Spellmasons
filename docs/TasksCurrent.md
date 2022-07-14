@@ -6,6 +6,7 @@
         - https://pixijs.io/pixi-particles-editor/#pixieDust
         - https://codepen.io/boli88/pen/pVEaKV
         - See gist https://gist.github.com/jdoleary/8ce49330504609cc49285fccdd7f5537
+        - Particle engine: NOte: see "how to destroy" in Notes.md
 - UI Refactor
     - Prevent RMB movement when mouse is over toolbar
     - Disable RMB movement when upgrade screen is up
@@ -24,7 +25,6 @@
     - casting non-curses like heal or purify on self should show green, not red
     - pathfinding for vampires broken?
     - Priest "run away" ai is broken / Archer pursue ai is not working well
-- Particle engine: NOte: see "how to destroy" in Notes.md
 
 
 - Pack 8
