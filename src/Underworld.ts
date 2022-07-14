@@ -108,6 +108,8 @@ export default class Underworld {
   // since only the syncronous messages affect gamestate.
   processedMessageCount: number = 0;
   validPlayerSpawnCoords: Vec2[] = [];
+  cardDropsDropped: number = 0;
+  enemiesKilled: number = 0;
 
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
     window.underworld = this;
@@ -120,6 +122,26 @@ export default class Underworld {
 
     // Start the gameloop
     requestAnimationFrameGameLoopId = requestAnimationFrame(this.gameLoop);
+  }
+  reportEnemyKilled(enemyKilledPos: Vec2) {
+    this.enemiesKilled++;
+    // Check if should drop cards
+    let numberOfEnemiesKilledNeededForNextDrop = 0;
+    const startNumberOfEnemiesNeededToDrop = 2;
+    for (let i = startNumberOfEnemiesNeededToDrop; i < 1 + this.cardDropsDropped + startNumberOfEnemiesNeededToDrop; i++) {
+      numberOfEnemiesKilledNeededForNextDrop += i;
+    }
+    if (numberOfEnemiesKilledNeededForNextDrop <= this.enemiesKilled) {
+      this.cardDropsDropped++;
+      const pickupSource = Pickup.pickups.find(p => p.name == Pickup.CARDS_PICKUP_NAME)
+      if (pickupSource) {
+        Pickup.create({ pos: enemyKilledPos, pickupSource });
+      } else {
+        console.error('pickupSource for', Pickup.CARDS_PICKUP_NAME, ' not found');
+        return
+      }
+    }
+
   }
   syncPlayerPredictionUnitOnly() {
     if (window.player !== undefined) {
@@ -659,6 +681,7 @@ export default class Underworld {
       strength,
       sourceUnit.unitProps
     );
+    unit.originalLife = true;
 
     if (isArmored) {
       unit.healthMax *= 2;
@@ -911,7 +934,7 @@ export default class Underworld {
         // the CREATE_LEVEL message whereas, checkForEndOfLevel could be subject to a race condition
         // that might prevent the upgrade screen from showing for some users in rare circumstances.
         // Better to have the upgrade screen tied to the network message.
-        this.showUpgrades();
+        this.showUpgrades(this.levelIndex !== 0);
 
         console.log('Setup: createLevel', levelData);
         window.lastLevelCreated = levelData;
@@ -1238,24 +1261,28 @@ export default class Underworld {
     if (player == window.player) {
       document.body.querySelector(`.card[data-upgrade="${upgrade.title}"]`)?.classList.toggle('chosen', true);
       // Clear upgrades when current player has picked one
-      if (player.inventory.length >= config.STARTING_CARD_COUNT) {
-        document.body.classList.toggle('showUpgrades', false);
+      document.body.classList.toggle('showUpgrades', false);
+      const startingSpellsLeftToPick = config.STARTING_CARD_COUNT - window.player.inventory.length;
+      if (startingSpellsLeftToPick > 0) {
+        // Show next round of upgrades to pick
+        this.showUpgrades(false);
       }
     }
   }
 
-  showUpgrades() {
+  showUpgrades(statsUpgrades: boolean) {
     if (!window.player) {
       console.error('Cannot show upgrades, no window.player');
       return
     }
     let minimumProbability = 0;
-    if (this.levelIndex == 0) {
+    const startingSpellsLeftToPick = config.STARTING_CARD_COUNT - window.player.inventory.length
+    if (startingSpellsLeftToPick > 0) {
       // Limit starting cards to a probability of 10 or more
       minimumProbability = 10;
-      elUpgradePickerLabel.innerHTML = `Pick ${config.STARTING_CARD_COUNT - window.player.inventory.length} starting spells.`;
+      elUpgradePickerLabel.innerHTML = `Pick ${startingSpellsLeftToPick} starting spells.`;
     } else {
-      elUpgradePickerLabel.innerHTML = 'Pick an upgrade.';
+      elUpgradePickerLabel.innerHTML = statsUpgrades ? 'Pick an upgrade' : 'Pick a spell';
     }
     // Now that level is complete, move to the Upgrade view where players can choose upgrades
     // before moving on to the next level
@@ -1268,7 +1295,7 @@ export default class Underworld {
       (p) => p.clientId === window.clientId,
     );
     if (player) {
-      const upgrades = Upgrade.generateUpgrades(player, 5, minimumProbability);
+      const upgrades = Upgrade.generateUpgrades(player, 3, minimumProbability, statsUpgrades);
       if (!upgrades.length) {
         // Player already has all the upgrades
         document.body.classList.toggle('showUpgrades', false);

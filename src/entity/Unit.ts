@@ -62,6 +62,9 @@ export interface IUnit {
   unitSourceId: string;
   x: number;
   y: number;
+  // true if the unit was spawned at the beginning of the level and not
+  // resurrected or cloned.  This prevents EXP scamming.
+  originalLife: boolean;
   path?: UnitPath;
   moveSpeed: number;
   // A resolve callback for when a unit is done moving
@@ -127,6 +130,7 @@ export function create(
       x,
       y,
       strength,
+      originalLife: false,
       radius: config.UNIT_BASE_RADIUS,
       path: undefined,
       moveSpeed: config.UNIT_MOVE_SPEED,
@@ -555,6 +559,12 @@ export function die(unit: IUnit, prediction: boolean) {
   // this will remove the tooltip:
   checkIfNeedToClearTooltip();
   window.underworld.checkIfShouldSpawnPortal();
+
+  if (!prediction && unit.originalLife) {
+    window.underworld.reportEnemyKilled(unit);
+  }
+  // Once a unit dies it is no longer on it's originalLife
+  unit.originalLife = false;
 }
 export function composeOnDamageEvents(unit: IUnit, damage: number, prediction: boolean): number {
   // Compose onDamageEvents
@@ -880,6 +890,8 @@ export function copyForPredictionUnit(u: IUnit): IUnit {
   const { image, resolveDoneMoving, modifiers, ...rest } = u;
   return {
     ...rest,
+    // Prediction units
+    originalLife: false,
     // prediction units INTENTIONALLY share a reference to the original
     // unit's path so that we can get the efficiency gains of
     // cached paths per unit.  If we made a deep copy instead, the

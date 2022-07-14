@@ -17,13 +17,13 @@ export interface IUpgrade {
 }
 // Chooses a random card based on the card's probabilities
 // minimumProbability ensures that super rare cards won't be presented too early on
-export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, minimumProbability: number): IUpgrade[] {
+// onlyStats: means it'll present stats upgrades instead of card upgrades
+export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, minimumProbability: number, onlyStats: boolean): IUpgrade[] {
   // Dead players choose special upgrades
   if (!player.unit.alive) {
     return [...upgradeSourceWhenDead];
   }
   let upgrades: IUpgrade[] = [];
-  const isAltitudeEven = window.underworld.levelIndex % 2 == 0;
   const filterUpgrades = (u: IUpgrade) =>
     (u.maxCopies === undefined
       ? // Always include upgrades that don't have a specified maxCopies
@@ -38,7 +38,7 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
   // Every other level, players get to choose from stas upgrades or card upgrades
   // Unless Player already has all of the upgrades, in which case they
   // only have stat upgrades to choose from
-  let upgradeList = filteredUpgradeCardsSource.length === 0 || !isAltitudeEven ? upgradeStatsSource.filter(filterUpgrades) : filteredUpgradeCardsSource;
+  let upgradeList = filteredUpgradeCardsSource.length === 0 || onlyStats ? upgradeStatsSource.filter(filterUpgrades) : filteredUpgradeCardsSource;
   // Limit the rarity of cards that are possible to attain
   upgradeList = upgradeList.filter(u => u.probability >= minimumProbability);
 

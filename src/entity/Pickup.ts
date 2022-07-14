@@ -171,6 +171,7 @@ export function triggerPickup(pickup: IPickup, unit: IUnit, prediction: boolean)
 const manaPotionRestoreAmount = 40;
 const healthPotionRestoreAmount = 5;
 const spike_damage = 6;
+export const CARDS_PICKUP_NAME = 'Spells';
 export const pickups: IPickupSource[] = [
   {
     imagePath: 'pickups/spikes',
@@ -218,34 +219,16 @@ export const pickups: IPickupSource[] = [
   },
   {
     imagePath: 'pickups/card',
-    name: 'Cards',
+    name: CARDS_PICKUP_NAME,
     description: 'Grants the player a new spell',
-    probability: 10,
+    probability: 0,
     singleUse: true,
     scale: 0.5,
     turnsLeftToGrab: 4,
     playerOnly: true,
     effect: ({ unit, player }) => {
-      if (player) {
-        const numCardsToGive = 1;
-        for (let i = 0; i < numCardsToGive; i++) {
-          const cardsToChooseFrom = Object.values(Cards.allCards).filter(card => !player.cards.includes(card.id));
-          const card = chooseObjectWithProbability(cardsToChooseFrom, seedrandom());
-          if (card) {
-            CardUI.addCardToHand(card, player);
-          } else {
-            floatingText({
-              coords: {
-                x: player.unit.x,
-                y: player.unit.y
-              },
-              text: `You have all of the cards already!`
-            });
-          }
-        }
-        return true;
-      }
-      return false;
+      window.underworld.showUpgrades(false);
+      return true;
     },
   },
   {
