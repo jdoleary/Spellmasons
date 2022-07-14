@@ -986,10 +986,6 @@ body.open-inventory #inventory-content {
   flex-wrap: wrap;
 }
 
-#inventory .card.inToolbar {
-  opacity: 0.5;
-}
-
 .slot {
   margin: 8px;
   width: 64px;
