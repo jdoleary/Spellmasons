@@ -3,7 +3,8 @@ import type { UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
 import { createVisualFlyingProjectile } from '../Projectile';
 import * as math from '../../jmath/math';
-import { addPixiSpriteAnimated, containerSpells, containerUnits } from '../../graphics/PixiUtils';
+import { addPixiSpriteAnimated, containerSpells } from '../../graphics/PixiUtils';
+import { Vec2 } from '../../jmath/Vec';
 
 const unit: UnitSource = {
   id: 'archer',
@@ -62,18 +63,23 @@ const unit: UnitSource = {
       });
     } else {
       // Movement:
+      // Intelligently move the archer to a position where it can see the enemy
       if (closestEnemy) {
-        if (window.underworld.hasLineOfSight(unit, closestEnemy)) {
-          const distanceToEnemy = math.distance(unit, closestEnemy);
-          const moveDistance = distanceToEnemy < unit.attackRange
-            ? -unit.stamina // flee as far as it can
-            : Math.min(unit.stamina, distanceToEnemy - unit.attackRange) // move in range but no farther
-          const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestEnemy, moveDistance);
-          await Unit.moveTowards(unit, moveTo);
+        const moveOptions = Unit.findLOSLocation(unit, closestEnemy);
+        const moveChoice = moveOptions.reduce<{ dist: number, pos: Vec2 | undefined }>((closest, cur) => {
+          const dist = math.distance(cur, unit);
+          if (dist < closest.dist) {
+            return { dist, pos: cur }
+          } else {
+            return closest
+          }
+        }, { dist: Number.MAX_SAFE_INTEGER, pos: undefined })
+
+        if (moveChoice.pos) {
+          await Unit.moveTowards(unit, moveChoice.pos);
         } else {
-          // If they don't have line of sight, move closer
-          const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestEnemy, unit.stamina);
-          await Unit.moveTowards(unit, moveTo);
+          // Move closer
+          await Unit.moveTowards(unit, closestEnemy);
         }
       }
     }

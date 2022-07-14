@@ -1,6 +1,4 @@
 ## Schedule
-- Pack 7
-    - Archer pursue ai is not working well
 - Pack 6
     - Standalone Server
         - Decouple the various layers (data: underworld; networking: pie; visual: Pixi / DOM; audio)
@@ -55,6 +53,7 @@
 - Pack 11:
     - What happens to card spawn when unit dies in liquid
     - Bug: Grunt walked towards liquid and just kept walking animation after it should've returned to idle. seed:0.8154642976606445
+        - I think this happens when they attempt to move to a location that is ouside of the pathing bounds (like in between a pathing line segment and a wall line segment, so it's still ground but it's out of bounds)
     - Particle engine
         - https://pixijs.io/pixi-particles-editor/#pixieDust
         - https://codepen.io/boli88/pen/pVEaKV
@@ -99,6 +98,7 @@
 - Bug: (Note: this is probably fixed now) Goons spawned outside of map when summoner was stuffed in upper left corner of map
 - Bug: RMB hold on toolbar moves character.  Be very careful when solving this to ensure you don't make clicks in the invisible part of UI elements no longer work
 - Bug: Mana bar over player's head grows too  large when mana is overfilled
+- Bug: If enemies take no action and you end your turn with the "are you sure" prompot, the prompt will layer
 ---
 ## Features
 - Archers on level 2 have more health than archers on level 1

@@ -2,7 +2,7 @@
 - Week of 7/11
     - ~~Pack 2 & 3~~
     - ~~Pack 4 & 5~~
-    - Pack 7
+    - ~~Pack 7~~
 - Week of 7/18
     - Pack 6
 - Week of 7/25

@@ -940,3 +940,24 @@ const subTypeAttentionMarkerMapping = {
 export function subTypeToAttentionMarkerImage(unit: IUnit): string {
   return subTypeAttentionMarkerMapping[unit.unitSubType];
 }
+export function findLOSLocation(unit: IUnit, target: Vec2): Vec2[] {
+  const dist = distance(unit, target);
+  const angleToEnemy = Vec.getAngleBetweenVec2s(target, unit);
+  const degAwayFromTarget = 30 * Math.PI / 180;
+  const increments = 1 * Math.PI / 180;
+  const LOSLocations = [];
+  for (let rad = angleToEnemy - degAwayFromTarget; rad <= angleToEnemy + degAwayFromTarget; rad += increments) {
+    let pos = math.getPosAtAngleAndDistance(target, rad, dist)
+    const intersection = closestLineSegmentIntersection({ p1: target, p2: pos }, window.underworld.walls);
+    window.debugGraphics.lineStyle(3, 0xff00ff, 1);
+    if (intersection) {
+      window.debugGraphics.lineStyle(3, 0x0000ff, 1);
+      pos = intersection;
+    }
+    LOSLocations.push(pos);
+
+    window.debugGraphics.drawCircle(pos.x, pos.y, 4);
+  }
+  return LOSLocations;
+
+}

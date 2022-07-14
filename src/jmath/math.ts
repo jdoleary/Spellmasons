@@ -46,6 +46,15 @@ export function distance(coords1: Vec2, coords2: Vec2): number {
   );
 }
 
+// Returns a point distance away from origin in the direction of the angle radians
+// Currently used for finding best path to LOS for an archer
+export function getPosAtAngleAndDistance(origin: Vec2, radians: number, distance: number): Vec2 {
+  return {
+    x: origin.x + distance * Math.cos(radians),
+    y: origin.y + distance * Math.sin(radians)
+  }
+}
+
 
 // Generates a honeycomb of circles of radius, never intersecting.
 // Used for finding points to test for valid spawn
