@@ -102,7 +102,7 @@ declare global {
         // A local copy of underworld.pickups used to predict effect from casting a spell
         predictionPickups: IPickup[];
         // Shows icons above the heads of enemies who will damage you next turn
-        attentionMarkers: Vec2[];
+        attentionMarkers: { imagePath: string, pos: Vec2 }[];
         // Shows icon for units that will be successfully resurrected
         resMarkers: Vec2[];
         // Keep track of the LevelData from the last level that was created in

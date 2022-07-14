@@ -348,7 +348,7 @@ export default class Underworld {
               // Draw red death circle if a unit is currently alive, but wont be after cast
               if (u.alive && !predictionUnit.alive) {
                 const skullPosition = withinCameraBounds({ x: u.x, y: u.y - config.COLLISION_MESH_RADIUS * 2 + 8 });
-                ImmediateMode.draw('skull.png', skullPosition, (1 / zoom) + (Math.sin(Date.now() / 500) + 1) / 3);
+                ImmediateMode.draw('badgeDeath.png', skullPosition, (1 / zoom) + (Math.sin(Date.now() / 500) + 1) / 3);
               }
             }
           }
@@ -483,13 +483,13 @@ export default class Underworld {
       const { zoom } = getCamera();
 
       // Offset exclamation mark just above the head of the unit "- config.COLLISION_MESH_RADIUS - 10"
-      const exclamationMarkPosition = withinCameraBounds({ x: marker.x, y: marker.y - config.COLLISION_MESH_RADIUS * 2 + 8 });
+      const exclamationMarkPosition = withinCameraBounds({ x: marker.pos.x, y: marker.pos.y - config.COLLISION_MESH_RADIUS * 2 + 8 });
 
       // Draw Attention Icon to show the enemy will hurt you next turn
       // 1/zoom keeps the attention marker the same size regardless of the level of zoom
       // Math.sin... makes the attention marker swell and shink so it grabs the player's attention so they
       // know that they're in danger
-      ImmediateMode.draw('attention_sword.png', exclamationMarkPosition, (1 / zoom) + (Math.sin(Date.now() / 500) + 1) / 3);
+      ImmediateMode.draw(marker.imagePath, exclamationMarkPosition, (1 / zoom) + (Math.sin(Date.now() / 500) + 1) / 3);
     }
   }
   drawPlayerThoughts() {

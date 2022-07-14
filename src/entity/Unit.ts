@@ -928,3 +928,15 @@ export function isUnitsTurnPhase(unit: IUnit): boolean {
     }
   }
 }
+
+const subTypeAttentionMarkerMapping = {
+  [UnitSubType.MELEE]: 'badgeSword.png',
+  [UnitSubType.RANGED_LOS]: 'badgeArcher.png',
+  [UnitSubType.RANGED_RADIUS]: 'badgeNonArcher.png',
+  [UnitSubType.SUPPORT_CLASS]: 'badgeNonArcher.png',
+  [UnitSubType.PLAYER_CONTROLLED]: 'badgeNonArcher.png',
+
+}
+export function subTypeToAttentionMarkerImage(unit: IUnit): string {
+  return subTypeAttentionMarkerMapping[unit.unitSubType];
+}

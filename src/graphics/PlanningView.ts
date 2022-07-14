@@ -270,7 +270,7 @@ export async function runPredictions() {
             // player this function has to warn with an attention marker
             if (target === window.player.unit) {
               if (window.underworld.canUnitAttackTarget(u, target)) {
-                window.attentionMarkers.push(u);
+                window.attentionMarkers.push({ imagePath: Unit.subTypeToAttentionMarkerImage(u), pos: clone(u) });
               }
             }
           }

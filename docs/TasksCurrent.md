@@ -1,9 +1,14 @@
 ## Schedule
 - Today:
-    - Disable RMB movement when upgrade screen is up
+    - What happens to card spawn when unit dies in liquid
     - Bug: Grunt walked towards liquid and just kept walking animation after it should've returned to idle. seed:0.8154642976606445
     - Particle engine
+        - https://pixijs.io/pixi-particles-editor/#pixieDust
+        - https://codepen.io/boli88/pen/pVEaKV
         - See gist https://gist.github.com/jdoleary/8ce49330504609cc49285fccdd7f5537
+- UI Refactor
+    - Prevent RMB movement when mouse is over toolbar
+    - Disable RMB movement when upgrade screen is up
 - Pack 6
     - Standalone Server
         - Decouple the various layers (data: underworld; networking: pie; visual: Pixi / DOM; audio)
@@ -71,6 +76,7 @@
     - Trailer
     - Marketing
 ## Bugs
+- death skull doens't show for decoy
 - Self clones will walk through lava
 - It's possible for a unit to "fall in" to lava and then to "fall out" immediately back on to ground depending on their position
 - Pack 7: Dad Loch playtest

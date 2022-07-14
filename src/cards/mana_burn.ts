@@ -12,6 +12,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: 10,
     thumbnail: 'mana_burn.png',
+    animationPath: 'spell-effects/spellManaBurn',
     description: `
 Burn up to ${mana_burnt} of the targets' mana, causing the target take ${health_burn_ratio * 10} damage per 10 mana burnt.
     `,

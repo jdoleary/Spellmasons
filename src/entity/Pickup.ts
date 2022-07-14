@@ -104,7 +104,8 @@ export function create({ pos, pickupSource, onTurnsLeftDone }:
       self.text.anchor.x = 0;
       self.text.anchor.y = 0;
       // Center the text in the timeCircle
-      self.text.x = 8;
+      self.text.x = 13;
+      self.text.y = 5;
       self.image.sprite.addChild(self.text);
     }
   }
