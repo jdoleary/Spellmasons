@@ -141,6 +141,7 @@ declare global {
         map: any;
         devSpawnUnit: (unitId: string, faction: Faction) => void;
         devSpawnAllUnits: () => void;
+        devRemoveAllEnemies: () => void;
         // true if this instance is the headless server with no visuals or audio, just the game logic
         headless: boolean;
     }

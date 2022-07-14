@@ -128,6 +128,13 @@ window.devSpawnAllUnits = () => {
     window.devSpawnUnit(id, Faction.ENEMY);
   }
 }
+window.devRemoveAllEnemies = () => {
+  for (let u of window.underworld.units) {
+    if (u.faction !== window.player?.unit.faction) {
+      Unit.cleanup(u);
+    }
+  }
+}
 window.setMMBDown = (isDown: boolean) => {
   // I want it to show a compile error anywhere else
   // @ts-expect-error Override "readyonly" error.  This is the ONLY place that MMBDown should be mutated.
