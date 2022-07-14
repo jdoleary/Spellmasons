@@ -1,12 +1,9 @@
 ## Schedule
 - Today:
-    - More ways to "draw you into danger"
-        - spell and stats pickups
-        - How to prevent experience farming by cloning and killing units over and over.
-    - Game should be fun sooner
-        - rework how players get to choose new spells
-        - make it on enemy death and have it be experience like nuclear throne where it's more common in the beginning.
+    - Disable RMB movement when upgrade screen is up
     - Bug: Grunt walked towards liquid and just kept walking animation after it should've returned to idle. seed:0.8154642976606445
+    - Particle engine
+        - See gist https://gist.github.com/jdoleary/8ce49330504609cc49285fccdd7f5537
 - Pack 6
     - Standalone Server
         - Decouple the various layers (data: underworld; networking: pie; visual: Pixi / DOM; audio)

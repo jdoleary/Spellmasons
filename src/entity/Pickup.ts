@@ -200,7 +200,7 @@ export const pickups: IPickupSource[] = [
     scale: 1,
     description:
       'Takes you to the next level when all players are either in the portal or dead.',
-    effect: ({ unit, player }: { unit?: IUnit; player?: Player.IPlayer }) => {
+    effect: ({ unit, player }) => {
       // Only send the ENTER_PORTAL message from
       // the client of the player that entered the portal
       if (player && player == window.player) {

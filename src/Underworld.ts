@@ -1769,6 +1769,12 @@ export default class Underworld {
   }
   checkIfShouldSpawnPortal() {
     if (this.units.filter(u => u.faction == Faction.ENEMY).every(u => !u.alive)) {
+      // Convenience: Pickup any CARD_PICKUP_NAME left automatically, so that they aren't left behind
+      window.underworld.pickups.filter(p => p.name == Pickup.CARDS_PICKUP_NAME).forEach(pickup => {
+        if (window.player) {
+          Pickup.triggerPickup(pickup, window.player.unit, false);
+        }
+      })
       // Spawn portal near each player
       const portalPickup = Pickup.pickups.find(p => p.imagePath == 'portal');
       if (portalPickup) {
