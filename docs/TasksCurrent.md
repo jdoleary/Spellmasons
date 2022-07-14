@@ -64,6 +64,7 @@
     - Trailer
     - Marketing
 ## Bugs
+- Stop idle animation when unit is frozen
 - death skull doens't show for decoy
 - Self clones will walk through lava
 - It's possible for a unit to "fall in" to lava and then to "fall out" immediately back on to ground depending on their position
