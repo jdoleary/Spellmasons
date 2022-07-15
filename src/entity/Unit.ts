@@ -19,6 +19,7 @@ import { turn_phase } from '../Underworld';
 import combos from '../graphics/AnimationCombos';
 import { playSFXKey } from '../Audio';
 import { raceTimeout } from '../Promise';
+import { closestLineSegmentIntersection } from '../jmath/lineSegment';
 
 const elHealthBar: HTMLElement = document.querySelector('#health .fill') as HTMLElement;
 const elHealthCost: HTMLElement = document.querySelector('#health .cost') as HTMLElement;
