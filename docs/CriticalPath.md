@@ -29,11 +29,11 @@
     - UI Sounds
 - Art Integration
     - 100%: Unit Animations
-    - 0%: Projectiles
+    - 100%: Projectiles
         - Arrow, Lobber Thrown Magic
-    - 0%: Use Consumable (potion) animation
-    - 10%: Spell Animations
-    - 0%: Spell Icons
+    - 100%: Use Consumable (potion) animation
+    - 4/21: Spell Animations
+    - : Spell Icons
     - 0%: Cover Art / Steam Page
     - 20%: Biome Tiles
         - 0%: Liquid Splash Animation

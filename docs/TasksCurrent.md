@@ -1,4 +1,5 @@
 ## Schedule
+- Write down Brad's feedback here
 - Pack 6
     - Standalone Server
         - Decouple the various layers (data: underworld; networking: pie; visual: Pixi / DOM; audio)
@@ -7,6 +8,14 @@
             - In order to decouple, each should have imports only in one file that can be dependency injected.  So ALL pie stuff goes through the networking layer, all DOM stuff goes through the UI layer, all PIXI (including PixiUtils which is how a lot of the files interact with PIXI) stuff goes through the pixi layer.  This should make it easy to make a headless server or make tests that use a data-only underworld
     - Add "preparing" animation used to reduce desyncs due to network latency, so that if multiple users are casting spells at the same time, the wizard bending down to "charge" as soon as the current user clicks, masks a delay to make sure it doesn't conflict with other spells.  It'll send the spell over the network as soon as the user clicks but waits to cast it so that there aren't conflicting spells making desyncs on multiple clients.
     - Server should be able to send syncs that will wait to execute until turn changes so it doesn't interrupt animations and mess up the state when it syncs
+- Pack 12
+    - Improve unit "fall in" so it's not a jump but smooth
+    - Particle engine
+        - https://pixijs.io/pixi-particles-editor/#pixieDust
+        - https://codepen.io/boli88/pen/pVEaKV
+        - See gist https://gist.github.com/jdoleary/8ce49330504609cc49285fccdd7f5537
+        - Particle engine: NOte: see "how to destroy" in Notes.md
+    - animated trim path line for archers so it's obvious they'll hit you
 
 
 - Pack 8
@@ -17,11 +26,8 @@
         - die
     - Master Music
 - Pack 9 | R, J & E feedback
-    - Restore "walk rope" when holding RMB
     - No stamina bar after portal
-    - Freeze spell should stop timer on pickups
-    - animated trim path line for archers so it's obvious they'll hit you
-    - Different attack icon for ranged units
+    - Freeze spell should stop timer on pickups (or just increase it by 1)
     - Hover should always show tooltip so you can see even when spell is queued
     - Bug: decoy died and archer changed targets, make units commit to a target at the beginning of the round, else PLAYER FRUSTRATION
     - shield should have number on it
@@ -48,11 +54,6 @@
 - Pack 11:
     - Bug: Grunt walked towards liquid and just kept walking animation after it should've returned to idle. seed:0.8154642976606445
         - I think this happens when they attempt to move to a location that is ouside of the pathing bounds (like in between a pathing line segment and a wall line segment, so it's still ground but it's out of bounds)
-    - Particle engine
-        - https://pixijs.io/pixi-particles-editor/#pixieDust
-        - https://codepen.io/boli88/pen/pVEaKV
-        - See gist https://gist.github.com/jdoleary/8ce49330504609cc49285fccdd7f5537
-        - Particle engine: NOte: see "how to destroy" in Notes.md
     - UI Refactor
         - Prevent RMB movement when mouse is over toolbar
         - Disable RMB movement when upgrade screen is up
