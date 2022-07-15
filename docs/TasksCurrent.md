@@ -1,5 +1,23 @@
 ## Schedule
 - Write down Brad's feedback here
+    - REstore 'f' to see walk rope
+    - it should be clear that it rolls spells after you pick
+    - auto card pickup on portal spawn is not great, should be explained-
+    - 'Adjoining' is confusing
+    - Trap pickup radius is too big, you can't squeeze by it (spikes and trap?)
+    - make decoy more expensive (last more than 1 turn)
+    - bug: double pull through lava fails
+    - chain through pickups?
+    - should take damage every turn if still in lava
+    - lobber image is positioned too high for "feet" position to feel right
+    - Super poor performance on brad's laptop on level 7
+    - "Esc" should close inv
+    - What happens if you spawn decoy out of bounds
+    (if the OOB is in the center of the map, see video)
+
+- Change AOE behavior so that it just expands radius
+    - This radius expansion should work for ANY spell that uses a radius: vortex, bloat, chain, etc
+    - Maybe it only modifies the spell directly after it
 - Pack 6
     - Standalone Server
         - Decouple the various layers (data: underworld; networking: pie; visual: Pixi / DOM; audio)
@@ -16,6 +34,9 @@
         - See gist https://gist.github.com/jdoleary/8ce49330504609cc49285fccdd7f5537
         - Particle engine: NOte: see "how to destroy" in Notes.md
     - animated trim path line for archers so it's obvious they'll hit you
+- Pack 13 | Biomes
+    - Rethink biome construction to allow for dynamic liquid
+        - whole bodies of liquid should be selectable so that they can be frozen
 
 
 - Pack 8
@@ -68,7 +89,6 @@
 - Stop idle animation when unit is frozen
 - death skull doens't show for decoy
 - Self clones will walk through lava
-- It's possible for a unit to "fall in" to lava and then to "fall out" immediately back on to ground depending on their position
 - Pack 7: Dad Loch playtest
     - (resolved?) Make health and mana go full when portal spawns so users aren't tempted to collect potions meaninglessly
     - Explain to user with popups
@@ -99,7 +119,7 @@
 ## Features
 - Archers on level 2 have more health than archers on level 1
     - This is because unit strength gradually increases, how to communicate this?
-- Change contageous so it only spreads curses once instead of permanently?
+- Change contageous so it only spreads curses once (with a radius) instead of permanently?
     - This would solve the "infinite freeze" issue
 - Use summoner magic animation for units that are summoned
 - What if potions drop from slain enemies instead of being just pickups on the ground, it would be more exciting if you needed one and it dropped.

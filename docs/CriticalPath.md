@@ -1,18 +1,21 @@
 # Critical Path
-- Week of 7/11
-    - ~~Pack 2 & 3~~
-    - ~~Pack 4 & 5~~
-    - ~~Pack 7~~
 - Week of 7/18
-    - Pack 6
+    - Pack 6 Standalone Server
+    - Pack 12 Particle Engine
 - Week of 7/25
-    - Pack 8
 - Week of 8/1
-    - Pack 9
 - Week of 8/8
 - Week of 8/15
 - Week of 8/22
 - Week of 8/29
+
+- Packs, priority ordered
+    - Pack 13 Biome and liquid shader
+        - https://codepen.io/chles/pen/aNxMxQ
+    - Pack 8 SFX
+    - Pack 9 R, J & E Feedback
+    - Pack 10
+    - Pack 11
 
 
 - Standalone Server
@@ -21,7 +24,7 @@
     - Steam Page (waiting on art)
     - Website Presskit page
     - Trailer
-- SFX (Ready for work)
+- SFX (Ready for wor)
     - Unit Sounds
     - Spell Sounds
     - Consumable Sounds
@@ -30,10 +33,9 @@
 - Art Integration
     - 100%: Unit Animations
     - 100%: Projectiles
-        - Arrow, Lobber Thrown Magic
-    - 100%: Use Consumable (potion) animation
-    - 4/21: Spell Animations
-    - : Spell Icons
+    - 100%: Use Potion animation
+    - 4/15: Spell Animations
+    - 11/21: Spell Icons
     - 0%: Cover Art / Steam Page
     - 20%: Biome Tiles
         - 0%: Liquid Splash Animation
