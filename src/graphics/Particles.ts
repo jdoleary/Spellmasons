@@ -3,7 +3,8 @@ import * as particles from '@pixi/particle-emitter'
 import * as Vec from '../jmath/Vec';
 import { Vec2 } from '../jmath/Vec';
 import * as math from '../jmath/math';
-import { randInt } from '../jmath/rand';
+import { randFloat } from '../jmath/rand';
+import { normalizeAngle } from '../jmath/Angle';
 
 export const containerParticles = new PIXI.ParticleContainer(5000, {
     scale: true,
@@ -15,15 +16,16 @@ export const containerParticles = new PIXI.ParticleContainer(5000, {
 interface Trail {
     position: Vec2;
     target: Vec2;
-    velocity: Vec2;
-    acceleration: number;
+    angleRad: number;
+    velocity: number;
     emitter: particles.Emitter;
 }
 const trails: Trail[] = [];
-export function addTrail(position: Vec2, target: Vec2, startVelocity: Vec2, acceleration: number, config: particles.EmitterConfigV3) {
+export function addTrail(position: Vec2, target: Vec2, startVelocity: number, angleRad: number, config: particles.EmitterConfigV3) {
     const emitter = new particles.Emitter(containerParticles, config);
     emitter.updateOwnerPos(position.x, position.y);
-    trails.push({ position, target, velocity: startVelocity, acceleration, emitter });
+    trails.push({ position, target, velocity: startVelocity, angleRad: normalizeAngle(angleRad), emitter });
+    console.log('trails', trails.length);
 }
 export function cleanUpTrail(trail: Trail) {
     trail.emitter.destroy();
@@ -36,10 +38,9 @@ export function testTrail(app: PIXI.Application, position: Vec2) {
     const texture = createTexture(0, 8, app.renderer.resolution);
     addTrail(
         position,
-        { x: 0, y: 0 },
-        { x: 0, y: 0 },
-        // { x: randInt(window.underworld.random, -10, 10), y: randInt(window.underworld.random, -10, 10) },
-        1.1,
+        window.player?.unit || { x: 0, y: 0 },
+        10,
+        randFloat(window.underworld.random, 0, Math.PI * 2),
         particles.upgradeConfig({
             autoUpdate: true,
             alpha: {
@@ -75,13 +76,13 @@ export function testTrail(app: PIXI.Application, position: Vec2) {
                 max: 0
             },
             lifetime: {
-                min: 0.6,
-                max: 0.6
+                min: 0.3,
+                max: 0.3
             },
             blendMode: "normal",
             frequency: 0.0008,
             emitterLifetime: -1,
-            maxParticles: 5000,
+            maxParticles: 400,
             pos: {
                 x: 0,
                 y: 0
@@ -116,29 +117,49 @@ export function onTick(delta: number, pointer: Vec2) {
     //     }
     // }
 
+    const inverseRotationSpeed = 10;
+    const velocityIncrease = 0.1;
     for (let t of trails) {
-        const changeInVelocity = Vec.subtract(math.getCoordsAtDistanceTowardsTarget(
-            t.position,
-            t.target,
-            t.acceleration
-        ), t.position);
-        t.velocity.x += changeInVelocity.x;
-        t.velocity.y += changeInVelocity.y;
-        const nextX = t.position.x + t.velocity.x;
-        const nextY = t.position.y + t.velocity.y;
-        if (math.distance({ x: nextX, y: nextY }, t.position) >= math.distance(t.target, t.position)) {
+        const movementDirectionPos = math.getPosAtAngleAndDistance(t.position, t.angleRad, 100);
+        t.position = math.getCoordsAtDistanceTowardsTarget(t.position, movementDirectionPos, t.velocity);
+        const distanceToTarget = math.distance(t.position, t.target);
+        if (distanceToTarget <= t.velocity * 2) {
             // Stop moving and stop emitting new particles once it reaches it's destination
             t.position = Vec.clone(t.target);
             t.emitter.updateOwnerPos(t.position.x, t.position.y);
             // Essentially, stop spawning new particles
             t.emitter.frequency = 10000;
-        } else {
-            t.position.x += t.velocity.x;
-            t.position.y += t.velocity.y;
-
         }
+        const targetRad = normalizeAngle(Vec.getAngleBetweenVec2s(t.position, t.target));
+        const diffToTargetRad = Math.abs(targetRad - t.angleRad);
+        if (Math.abs(diffToTargetRad) < 0.01) {
+            t.angleRad = targetRad;
+        } else {
+            t.angleRad += diffToTargetRad / inverseRotationSpeed;
+        }
+        t.angleRad = normalizeAngle(t.angleRad);
+        t.velocity += velocityIncrease;
+        // console.log('jtest', diffToTargetRad)
+        // const changeInVelocity = Vec.subtract(math.getCoordsAtDistanceTowardsTarget(
+        //     t.position,
+        //     t.target,
+        //     t.acceleration
+        // ), t.position);
+        // t.velocity.x += changeInVelocity.x;
+        // t.velocity.y += changeInVelocity.y;
+        // const nextX = t.position.x + t.velocity.x;
+        // const nextY = t.position.y + t.velocity.y;
+        // if (math.distance({ x: nextX, y: nextY }, t.position) >= math.distance(t.target, t.position)) {
+        //     // Stop moving and stop emitting new particles once it reaches it's destination
+        //     t.position = Vec.clone(t.target);
+        //     t.emitter.updateOwnerPos(t.position.x, t.position.y);
+        //     // Essentially, stop spawning new particles
+        //     t.emitter.frequency = 10000;
+        // } else {
+        // t.position.x += t.velocity.x;
+        // t.position.y += t.velocity.y;
         t.emitter.updateOwnerPos(t.position.x, t.position.y);
-        console.log(t.emitter.particleCount, 'jtest')
+        // }
         if (t.emitter.particleCount == 0) {
             cleanUpTrail(t);
         }
