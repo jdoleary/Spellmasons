@@ -7,6 +7,7 @@ import { keyDown } from './ui/eventListeners';
 import { SCALE_MODES } from 'pixi.js';
 import * as colors from './ui/colors';
 import { JSpriteAnimated } from './Image';
+import { containerParticles, initParticleEngine } from './Particles';
 
 // if PIXI is finished setting up
 let isReady = false;
@@ -34,6 +35,8 @@ window.devDebugGraphics = new PIXI.Graphics();
 window.devDebugGraphics.lineStyle(3, 0x0000ff, 1.0);
 containerUI.addChild(window.devDebugGraphics);
 
+initParticleEngine(app);
+
 const underworldPixiContainers = [
   containerBoard,
   containerBetweenBoardAndWalls,
@@ -44,6 +47,7 @@ const underworldPixiContainers = [
   containerSpells,
   containerProjectiles,
   containerPlayerThinking,
+  containerParticles,
   containerUI,
   containerUIFixed,
   containerFloatingText,

@@ -1,7 +1,7 @@
 # Critical Path
 - Week of 7/18
-    - Pack 6 Standalone Server
     - Pack 12 Particle Engine
+    - Pack 6 Standalone Server
 - Week of 7/25
 - Week of 8/1
 - Week of 8/8

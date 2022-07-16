@@ -42,6 +42,7 @@
   "dependencies": {
     "@pixi/filter-color-overlay": "^4.1.5",
     "@pixi/filter-multi-color-replace": "^4.1.5",
+    "@pixi/particle-emitter": "^5.0.7",
     "@sentry/browser": "^6.19.3",
     "@sentry/integrations": "^6.19.3",
     "@sentry/tracing": "^6.19.3",

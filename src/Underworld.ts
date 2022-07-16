@@ -56,6 +56,7 @@ import { Material } from './Conway';
 import { oneDimentionIndexToVec2 } from './jmath/ArrayUtil';
 import { playNextSong, playSFX, sfx } from './Audio';
 import { raceTimeout } from './Promise';
+import { onTick } from './graphics/Particles';
 
 export enum turn_phase {
   PlayerTurns,
@@ -376,6 +377,8 @@ export default class Underworld {
     this.drawPlayerThoughts();
     updatePlanningView();
     mouseMove();
+    // Particles
+    onTick(deltaTime, window.underworld.getMousePos());
 
     // Invoke gameLoopUnits again next loop
     requestAnimationFrameGameLoopId = requestAnimationFrame(this.gameLoop)
