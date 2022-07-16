@@ -1,13 +1,22 @@
 ## Schedule
-- Bug: sometimes resolve done moving doesn't occur when unit runs into liquid
 - Pack 12
     - Improve unit "fall in" so it's not a jump but smooth
     - Particle engine
-        - https://pixijs.io/pixi-particles-editor/#pixieDust
-        - https://codepen.io/boli88/pen/pVEaKV
-        - See gist https://gist.github.com/jdoleary/8ce49330504609cc49285fccdd7f5537
-        - Particle engine: NOte: see "how to destroy" in Notes.md
+        - add pixelated filter, see stash
+        - OR use a pixelated source image instead of a pixelated filter
+        - It's the framerate that makes it jarring
     - animated trim path line for archers so it's obvious they'll hit you
+- Pack 6
+    - Standalone Server
+        - Decouple the various layers (data: underworld; networking: pie; visual: Pixi / DOM; audio)
+            - Then improve syncing strategy between the data layer and the visual layer.  This will be useful for network syncs, saves and loads, standalone headless server.
+                - It should also solve the disappearing subsprite bug and the wizard robes changing color bug.
+            - In order to decouple, each should have imports only in one file that can be dependency injected.  So ALL pie stuff goes through the networking layer, all DOM stuff goes through the UI layer, all PIXI (including PixiUtils which is how a lot of the files interact with PIXI) stuff goes through the pixi layer.  This should make it easy to make a headless server or make tests that use a data-only underworld
+    - Add "preparing" animation used to reduce desyncs due to network latency, so that if multiple users are casting spells at the same time, the wizard bending down to "charge" as soon as the current user clicks, masks a delay to make sure it doesn't conflict with other spells.  It'll send the spell over the network as soon as the user clicks but waits to cast it so that there aren't conflicting spells making desyncs on multiple clients.
+    - Server should be able to send syncs that will wait to execute until turn changes so it doesn't interrupt animations and mess up the state when it syncs
+---
+- Bug: sometimes resolve done moving doesn't occur when unit runs into liquid
+    - This is also when they keep doing the walking animation after they've stopped
 - Write down Brad's feedback here
     - REstore 'f' to see walk rope
     - it should be clear that it rolls spells after you pick
@@ -27,14 +36,6 @@
 - Change AOE behavior so that it just expands radius
     - This radius expansion should work for ANY spell that uses a radius: vortex, bloat, chain, etc
     - Maybe it only modifies the spell directly after it
-- Pack 6
-    - Standalone Server
-        - Decouple the various layers (data: underworld; networking: pie; visual: Pixi / DOM; audio)
-            - Then improve syncing strategy between the data layer and the visual layer.  This will be useful for network syncs, saves and loads, standalone headless server.
-                - It should also solve the disappearing subsprite bug and the wizard robes changing color bug.
-            - In order to decouple, each should have imports only in one file that can be dependency injected.  So ALL pie stuff goes through the networking layer, all DOM stuff goes through the UI layer, all PIXI (including PixiUtils which is how a lot of the files interact with PIXI) stuff goes through the pixi layer.  This should make it easy to make a headless server or make tests that use a data-only underworld
-    - Add "preparing" animation used to reduce desyncs due to network latency, so that if multiple users are casting spells at the same time, the wizard bending down to "charge" as soon as the current user clicks, masks a delay to make sure it doesn't conflict with other spells.  It'll send the spell over the network as soon as the user clicks but waits to cast it so that there aren't conflicting spells making desyncs on multiple clients.
-    - Server should be able to send syncs that will wait to execute until turn changes so it doesn't interrupt animations and mess up the state when it syncs
 - Pack 13 | Biomes
     - Rethink biome construction to allow for dynamic liquid
         - whole bodies of liquid should be selectable so that they can be frozen

@@ -42,7 +42,7 @@ export function cleanUpTrail(trail: Trail) {
     }
 }
 export function makeManaTrail(start: Vec2, target: Vec2) {
-    const texture = createTexture(0, 8, app.renderer.resolution);
+    const texture = createTexture();
     return addTrail(
         start,
         target,
@@ -131,22 +131,9 @@ export function updateParticlees(delta: number) {
     }
 }
 
-function createTexture(r1: number, r2: number, resolution: number) {
-
-    const c = (r2 + 1) * resolution;
-    r1 *= resolution;
-    r2 *= resolution;
-
-    const canvas = document.createElement("canvas");
-    const context = canvas.getContext("2d") as CanvasRenderingContext2D;
-    canvas.width = canvas.height = c * 2;
-
-    const gradient = context.createRadialGradient(c, c, r1, c, c, r2);
-    gradient.addColorStop(0, "rgba(255,255,255,1)");
-    gradient.addColorStop(1, "rgba(255,255,255,0)");
-
-    context.fillStyle = gradient;
-    context.fillRect(0, 0, canvas.width, canvas.height);
-
-    return PIXI.Texture.from(canvas);
+function createTexture() {
+    const img = new Image();
+    img.src = './images/particle.png';
+    const base = new PIXI.BaseTexture(img);
+    return new PIXI.Texture(base);
 }
