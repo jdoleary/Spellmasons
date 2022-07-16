@@ -35,7 +35,6 @@ window.devDebugGraphics = new PIXI.Graphics();
 window.devDebugGraphics.lineStyle(3, 0x0000ff, 1.0);
 containerUI.addChild(window.devDebugGraphics);
 
-initParticleEngine(app);
 
 const underworldPixiContainers = [
   containerBoard,

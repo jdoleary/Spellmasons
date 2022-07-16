@@ -12,7 +12,7 @@ import {
 } from '../PlanningView';
 import { toggleMenu, View } from '../../views';
 import * as config from '../../config';
-import { cameraAutoFollow, getCamera, moveCamera } from '../PixiUtils';
+import { app, cameraAutoFollow, getCamera, moveCamera } from '../PixiUtils';
 import { getEndOfRangeTarget, isOutOfRange } from '../../PlayerUtils';
 import { vec2ToOneDimentionIndex } from '../../jmath/ArrayUtil';
 import * as Vec from '../../jmath/Vec';
@@ -20,6 +20,7 @@ import { Vec2 } from '../../jmath/Vec';
 import { distance, getCoordsAtDistanceTowardsTarget } from '../../jmath/math';
 import * as colors from '../../graphics/ui/colors';
 import { pointsEveryXDistanceAlongPath } from '../../jmath/Pathfinding';
+import { testTrail } from '../Particles';
 
 export const keyDown = {
   w: false,
@@ -425,6 +426,7 @@ export function clickHandler(_e: MouseEvent) {
     return;
   }
   const mousePos = window.underworld.getMousePos();
+  testTrail(app, mousePos);
   if (isOutOfBounds(mousePos)) {
     // Disallow click out of bounds
     return;
