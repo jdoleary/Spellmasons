@@ -16,6 +16,7 @@
     - Pack 9 R, J & E Feedback
     - Pack 10
     - Pack 11
+    - Pack 14 Quantity
 
 
 - Standalone Server
@@ -23,6 +24,7 @@
     - Menu
     - Steam Page (waiting on art)
     - Website Presskit page
+        - Note: Website should just redirect to steampage
     - Trailer
 - SFX (Ready for wor)
     - Unit Sounds

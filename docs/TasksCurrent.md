@@ -78,6 +78,8 @@
     - UI Refactor
         - Prevent RMB movement when mouse is over toolbar
         - Disable RMB movement when upgrade screen is up
+- Pack 14:
+    - Add "quantity" to spells so that 3 hurt in a row looks different and only plays one animation
         
 
 
