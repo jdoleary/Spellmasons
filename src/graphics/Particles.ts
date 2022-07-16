@@ -5,6 +5,9 @@ import { Vec2 } from '../jmath/Vec';
 import * as math from '../jmath/math';
 import { randFloat } from '../jmath/rand';
 import { normalizeAngle } from '../jmath/Angle';
+import { app } from './PixiUtils';
+import seedrandom from 'seedrandom';
+import { raceTimeout } from '../Promise';
 
 export const containerParticles = new PIXI.ParticleContainer(5000, {
     scale: true,
@@ -19,28 +22,32 @@ interface Trail {
     angleRad: number;
     velocity: number;
     emitter: particles.Emitter;
+    resolver: () => void;
 }
 const trails: Trail[] = [];
-export function addTrail(position: Vec2, target: Vec2, startVelocity: number, angleRad: number, config: particles.EmitterConfigV3) {
+export function addTrail(position: Vec2, target: Vec2, startVelocity: number, angleRad: number, config: particles.EmitterConfigV3): Promise<void> {
     const emitter = new particles.Emitter(containerParticles, config);
     emitter.updateOwnerPos(position.x, position.y);
-    trails.push({ position, target, velocity: startVelocity, angleRad: normalizeAngle(angleRad), emitter });
-    console.log('trails', trails.length);
+    // 3000 is an arbitrary timeout for now
+    return raceTimeout(3000, 'trail', new Promise<void>((resolve) => {
+        trails.push({ position, target, velocity: startVelocity, angleRad: normalizeAngle(angleRad), emitter, resolver: resolve });
+    }));
 }
 export function cleanUpTrail(trail: Trail) {
     trail.emitter.destroy();
+    trail.resolver();
     const i = trails.indexOf(trail);
     if (i !== -1) {
         trails.splice(i, 1)
     }
 }
-export function testTrail(app: PIXI.Application, position: Vec2) {
+export function makeManaTrail(start: Vec2, target: Vec2) {
     const texture = createTexture(0, 8, app.renderer.resolution);
-    addTrail(
-        position,
-        window.player?.unit || { x: 0, y: 0 },
+    return addTrail(
+        start,
+        target,
         10,
-        randFloat(window.underworld.random, 0, Math.PI * 2),
+        randFloat(seedrandom(), 0, Math.PI * 2),
         particles.upgradeConfig({
             autoUpdate: true,
             alpha: {
@@ -90,32 +97,10 @@ export function testTrail(app: PIXI.Application, position: Vec2) {
             addAtBack: false,
             spawnType: "point"
         }, [texture]));
-
 }
 
 
-// window.addEventListener("resize", () => resized = true);
-
-export function onTick(delta: number, pointer: Vec2) {
-
-    // if (!Vec.equal(emitterPos, pointer)) {
-
-    //     const dt = 1 - Math.pow(1 - sharpness, delta);
-    //     const dx = pointer.x - emitterPos.x;
-    //     const dy = pointer.y - emitterPos.y;
-
-    //     if (Math.abs(dx) > minDelta) {
-    //         emitterPos.x += dx * dt;
-    //     } else {
-    //         emitterPos.x = pointer.x;
-    //     }
-
-    //     if (Math.abs(dy) > minDelta) {
-    //         emitterPos.y += dy * dt;
-    //     } else {
-    //         emitterPos.y = pointer.y;
-    //     }
-    // }
+export function updateParticlees(delta: number) {
 
     const inverseRotationSpeed = 10;
     const velocityIncrease = 0.1;
@@ -139,28 +124,8 @@ export function onTick(delta: number, pointer: Vec2) {
         }
         t.angleRad = normalizeAngle(t.angleRad);
         t.velocity += velocityIncrease;
-        // console.log('jtest', diffToTargetRad)
-        // const changeInVelocity = Vec.subtract(math.getCoordsAtDistanceTowardsTarget(
-        //     t.position,
-        //     t.target,
-        //     t.acceleration
-        // ), t.position);
-        // t.velocity.x += changeInVelocity.x;
-        // t.velocity.y += changeInVelocity.y;
-        // const nextX = t.position.x + t.velocity.x;
-        // const nextY = t.position.y + t.velocity.y;
-        // if (math.distance({ x: nextX, y: nextY }, t.position) >= math.distance(t.target, t.position)) {
-        //     // Stop moving and stop emitting new particles once it reaches it's destination
-        //     t.position = Vec.clone(t.target);
-        //     t.emitter.updateOwnerPos(t.position.x, t.position.y);
-        //     // Essentially, stop spawning new particles
-        //     t.emitter.frequency = 10000;
-        // } else {
-        // t.position.x += t.velocity.x;
-        // t.position.y += t.velocity.y;
         t.emitter.updateOwnerPos(t.position.x, t.position.y);
-        // }
-        if (t.emitter.particleCount == 0) {
+        if (Vec.equal(t.position, t.target) && t.emitter.particleCount == 0) {
             cleanUpTrail(t);
         }
     }

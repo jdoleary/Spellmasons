@@ -20,7 +20,6 @@ import { Vec2 } from '../../jmath/Vec';
 import { distance, getCoordsAtDistanceTowardsTarget } from '../../jmath/math';
 import * as colors from '../../graphics/ui/colors';
 import { pointsEveryXDistanceAlongPath } from '../../jmath/Pathfinding';
-import { testTrail } from '../Particles';
 
 export const keyDown = {
   w: false,
@@ -426,7 +425,6 @@ export function clickHandler(_e: MouseEvent) {
     return;
   }
   const mousePos = window.underworld.getMousePos();
-  testTrail(app, mousePos);
   if (isOutOfBounds(mousePos)) {
     // Disallow click out of bounds
     return;

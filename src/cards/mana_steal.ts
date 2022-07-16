@@ -1,10 +1,10 @@
 import type { Spell } from '.';
-import { createVisualLobbingProjectile } from '../entity/Projectile';
 import floatingText from '../graphics/FloatingText';
 import { explainManaOverfill } from '../graphics/Jprompt';
 import { addPixiSpriteAnimated } from '../graphics/PixiUtils';
 import { manaBlue } from '../graphics/ui/colors';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
+import { makeManaTrail } from '../graphics/Particles';
 
 const id = 'mana_steal';
 const mana_stolen = 20;
@@ -26,7 +26,11 @@ Sacrifice some of own health to steal up to ${mana_stolen} mana from each target
       for (let unit of state.targetedUnits) {
         const unitManaBurnt = Math.min(unit.mana, mana_stolen);
         unit.mana -= unitManaBurnt;
-        promises.push((prediction ? Promise.resolve() : createVisualLobbingProjectile(unit, caster, 'blue-projectile')).then(() => {
+        promises.push((prediction ? Promise.resolve() : Promise.all([
+          makeManaTrail(unit, caster),
+          makeManaTrail(unit, caster),
+          makeManaTrail(unit, caster)
+        ])).then(() => {
           state.casterUnit.mana += unitManaBurnt;
           if (!prediction) {
             // Animate

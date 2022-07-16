@@ -1,4 +1,5 @@
 ## Schedule
+- Bug: sometimes resolve done moving doesn't occur when unit runs into liquid
 - Pack 12
     - Improve unit "fall in" so it's not a jump but smooth
     - Particle engine
