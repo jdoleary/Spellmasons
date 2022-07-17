@@ -1,87 +1,82 @@
+# My Focus
+    1. Frustration Free
+    2. Fun
+    3. Well Playtested
+    - Deprioritize
+        - Juice
+        - SFX
 # Critical Path
-- Week of 7/18
-    - Pack 12 Particle Engine
-    - Pack 6 Standalone Server
-- Week of 7/25
-- Week of 8/1
-- Week of 8/8
-- Week of 8/15
-- Week of 8/22
-- Week of 8/29
-
-- Packs, priority ordered
-    - Pack 13 Biome and liquid shader
-        - https://codepen.io/chles/pen/aNxMxQ
-    - Pack 8 SFX
-    - Pack 9 R, J & E Feedback
-    - Pack 10
-    - Pack 11
-    - Pack 14 Quantity
-
-
-- Standalone Server
-- Clerical
-    - Menu
+- Milestone 1 | **Reliable Multiplayer** | July 20
+    - Standalone Server
+    - Menu for community server selector
+    - Stress test droplets to see how many users they can support
+- Milestone 2 | **Biomes** | July 28
+    - More interactable doodads (explosive barrels, movable cover)
+    - Better liquid
+    - Simpler tiles?
+- Milestone X | **Juice** | Due Date Ongoing
+    - SFX
+        - Unit Sounds
+        - Spell Sounds
+        - Consumable Sounds
+        - Splash Liquid Sounds
+        - UI Sounds
+    - Art Integration
+        - 100%: Unit Animations
+        - 100%: Projectiles
+        - 100%: Use Potion animation
+        - 4/15: Spell Animations
+        - 11/21: Spell Icons
+        - 0%: Cover Art / Steam Page
+        - 20%: Biome Tiles
+        - Shader animated liquid
+        - 0%: Liquid Splash Animation
+            - Lava, blood, Water
+        - 0%: UI
+    - Master music (Brad)
+- Milestone X | **Marketing** | Due September 1
     - Steam Page (waiting on art)
     - Website Presskit page
         - Note: Website should just redirect to steampage
     - Trailer
-- SFX (Ready for wor)
-    - Unit Sounds
-    - Spell Sounds
-    - Consumable Sounds
-    - Splash Liquid Sounds
-    - UI Sounds
-- Art Integration
-    - 100%: Unit Animations
-    - 100%: Projectiles
-    - 100%: Use Potion animation
-    - 4/15: Spell Animations
-    - 11/21: Spell Icons
-    - 0%: Cover Art / Steam Page
-    - 20%: Biome Tiles
-        - 0%: Liquid Splash Animation
-            - Lava, blood, Water
-    - 0%: UI
-- Master music (Brad)
-- Tutorial (Last priority)
-    - [Tutorial](https://www.youtube.com/watch?v=-GV814cWiAw)
-- Game Balance (Blocked: Requires more playtesting)
-- Final Steps
-    - Philosophy
-        - "rules for copy"
-            1. Does the word suggest more than what really happens. (ex: bite != damage)
-            2. Numbers are meaningless, use percentages instead. (ex: "Increase cast range by 10%")
-        - Explain everything, use popups more than once with a "do not show again" button
-        - This game will live or die on the reviews, make sure (like rustlang) that everything is explained well.
-    - Optimize
+        - Need HUD removal, music removal
+- Milestone X | **Beta Testers** | Due October 1
+    - Tutorial / Explain prompts based on user actions
+    - Optimize game
         - Support large maps
         - Round of wall corners so it doesn't stair step??
             - May depend on art, but would help with optimization
         - Support huge numbers of mobs (100? 500? 1000?)
             - Profile and figure out where the weak points are
         - Delete line segments that are not accessable, like the very outside walls
-    - Multiplayer Community Servers
-        - Stress test droplets to see how many users they can support
-    - Improved Menu
-    - (Lastly) Package as Electron App
-        - [Storage and Persistence](https://cameronnokes.com/blog/how-to-store-user-data-in-electron/)
-        - [AutoUpdate](https://github.com/vercel/hazel)
-    - Stretch Goals
-        - Hoist spells
-            - Logic to avoid fizzle spells
-                - Don't cast res on no dead
-                - do this by hoisting and checking pre-cast
-                - How to resurrect units you are standing on top of (blocking?)
-        - Restore unit "crowding" once all linesegments (pathing, liquid, walls) are finalized with Che's tileset
-        - Server customization
-            - Turn time
-            - Pvp mode (more factions)
-        - (M) Standalone server
-            - Standalone headless server should be able to be proven out using unit tests
-            - No Images, no SFX
-            - It should probably just use a global variable that omits visuals
-        - More content
+    - Build following
+    - Make survey
+    - Send out to testers
+    - [Tutorial](https://www.youtube.com/watch?v=-GV814cWiAw)
+- Milestone X | **Package as Electron App** | Due November 1
+    - [Storage and Persistence](https://cameronnokes.com/blog/how-to-store-user-data-in-electron/)
+    - [AutoUpdate](https://github.com/vercel/hazel)
+- Milestone **Strech 1**
+    - Hoist spells
+        - Logic to avoid fizzle spells
+            - Don't cast res on no dead
+            - do this by hoisting and checking pre-cast
+            - How to resurrect units you are standing on top of (blocking?)
+    - Server customization
+        - Turn time
+        - Pvp mode (more factions)
+    - (M) Standalone server
+        - Standalone headless server should be able to be proven out using unit tests
+        - No Images, no SFX
+        - It should probably just use a global variable that omits visuals
+    - Rework "Expand" / AOE so that if affects the radius of any radius using spell (e.g. Bloat)
+
+## Philosophy
+    - "rules for copy"
+        1. Does the word suggest more than what really happens. (ex: bite != damage)
+        2. Numbers are meaningless, use percentages instead. (ex: "Increase cast range by 10%")
+    - Explain everything, use popups more than once with a "do not show again" button
+    - This game will live or die on the reviews, make sure (like rustlang) that everything is explained well.
 
 ## Definition of Done
 - DONE Stable Multiplayer

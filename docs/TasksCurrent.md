@@ -1,4 +1,15 @@
 ## Schedule
+- Playtest with Colin
+- Packs, priority ordered
+    - Pack 6 Standalone Server
+    - Pack 13 Biome and liquid shader
+        - https://codepen.io/chles/pen/aNxMxQ
+    - Pack 8 SFX
+    - Pack 9 R, J & E Feedback
+    - Pack 10
+    - Pack 11
+    - Pack 14 Quantity
+    - Pack 12 Particle Engine
 - Pack 12
     - Improve unit "fall in" so it's not a jump but smooth
     - Particle engine
@@ -64,6 +75,7 @@
         - freezable liquid to walk over
 - Pack 10
     - Better timeout icon
+        - Change timeout icon to red when 0 turns left?
     - Attention marker for timeout pickups (blue)
     - More ways to "draw you into danger"
         - maybe pickups are the only way to get more spells/stats (but you still get to choose) and they drop when you kill enemies
