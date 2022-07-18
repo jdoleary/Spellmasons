@@ -187,9 +187,9 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       }
       break;
     case MESSAGE_TYPES.REQUEST_SYNC_PLAYERS:
-      console.log('Host: Sending SYNC_PLAYERS')
       // If host, send sync; if non-host, ignore 
-      if (window.hostClientId === window.clientId) {
+      if (window.isHost()) {
+        console.log('Host: Sending SYNC_PLAYERS')
         const message = {
           type: MESSAGE_TYPES.SYNC_PLAYERS,
           players: window.underworld.players.map(Player.serialize)
@@ -197,8 +197,7 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
         if (window.pie) {
           window.pie.sendData(message);
         } else {
-          // TODO HEADLESS: Send SYNC_PLAYERS over connection
-          console.error('TODO HEADLESS: send SYNC_PLAYERS')
+          console.error('Cannot send SYNC_PLAYERS, window.pie is undefined')
         }
       }
       break;

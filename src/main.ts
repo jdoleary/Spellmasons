@@ -25,6 +25,7 @@ import './network/wsPieSetup';
 import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './config';
 import { syncInventory } from './graphics/ui/CardUI';
 import { MESSAGE_TYPES } from './types/MessageTypes';
+import { typeGuardHostApp } from './network/networkUtil';
 
 const YES = 'yes'
 const SKIP_TUTORIAL = 'skipTutorial';
@@ -47,6 +48,12 @@ window.zoomTarget = 1.3;
 // If the code in main runs this is NOT a headless instance, main.ts is the entrypoint for
 // the regular game with graphics and audio
 window.headless = false;
+window.isHost = () => {
+  // isHost only if playing singleplayer, otherwise the headless hostApp is the host
+  // and this file is the entry point to the non-headless client so it will never be the
+  // hostApp
+  return typeGuardHostApp(window.pie) ? true : window.pie.soloMode;
+}
 if (window.devMode) {
   console.log('ADMIN: devMode = true! Character and upgrades will be picked automatically. Animations are sped up');
 }

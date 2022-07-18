@@ -45,9 +45,6 @@ declare global {
         saveReplay: (title: string) => void;
         // Used to replay onData messages for development
         replay: (title: string) => void;
-        // The client id of the host of the game, may or may not be
-        // identical to clientId
-        hostClientId: string;
         // Current client's id
         clientId: string;
         animatingSpells: boolean;
@@ -156,6 +153,8 @@ declare global {
         sfx: { [key: string]: string } | undefined;
         // svelte menu function to attempt to autoconnect if the queryString holds the info
         tryAutoConnect: () => void;
+        // Returns true if client is playing singleplayer OR if hostapp
+        isHost: () => boolean;
 
     }
 }

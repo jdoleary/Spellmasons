@@ -20,18 +20,15 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
     clients = o.clients;
     // Client joined
     if (clients[0] !== undefined) {
-        // The host is always the first client
-        window.hostClientId = clients[0];
         // If game is already started
         if (window.underworld) {
             // Ensure each client corresponds with a Player instance
             window.underworld.ensureAllClientsHaveAssociatedPlayers(clients);
         } else {
-            if (window.hostClientId === window.clientId) {
-                console.log(`Setup: Setting Host client to ${window.hostClientId}. You are the host. `);
+            if (window.isHost()) {
                 tryStartGame();
             } else {
-                console.log(`Setup: Setting Host client to ${window.hostClientId}.`);
+                console.error('Unexpected, joined a room where the game is not already started but you are not in solomode');
             }
         }
     } else {
@@ -41,9 +38,8 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
 
 async function tryStartGame() {
     console.log('Start Game: Attempt to start the game')
-    const currentClientIsHost = window.hostClientId == window.clientId;
     // Starts a new game if THIS client is the host, and 
-    if (currentClientIsHost) {
+    if (window.isHost()) {
         const gameAlreadyStarted = window.underworld && window.underworld.levelIndex >= 0;
         // if the game hasn't already been started
         if (!gameAlreadyStarted) {
@@ -66,7 +62,7 @@ async function tryStartGame() {
 export function hostGiveClientGameStateForInitialLoad(clientId: string, level: LevelData = window.lastLevelCreated) {
     // Only the host should be sending INIT_GAME_STATE messages
     // because the host has the canonical game state
-    if (window.hostClientId === window.clientId) {
+    if (window.isHost()) {
         // Do not send this message to self
         if (window.clientId !== clientId) {
             if (level) {

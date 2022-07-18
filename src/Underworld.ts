@@ -992,7 +992,7 @@ export default class Underworld {
       // setTimeout allows the UI to refresh before locking up the CPU with
       // heavy level generation code
       setTimeout(() => {
-        if (window.hostClientId === window.clientId) {
+        if (window.isHost()) {
           console.log('Setup: initLevel as host', levelIndex);
           this.levelIndex = levelIndex;
           // Generate level
@@ -1374,7 +1374,7 @@ export default class Underworld {
   }
   async broadcastTurnPhase(p: turn_phase) {
     // If host, send sync; if non-host, ignore 
-    if (window.hostClientId === window.clientId) {
+    if (window.isHost()) {
       window.pie.sendData({
         type: MESSAGE_TYPES.SET_PHASE,
         phase: p,
@@ -1941,17 +1941,6 @@ export default class Underworld {
         // If the game has already started (e.g. the host has already joined), send the initial state to the new 
         // client only so they can load
         hostGiveClientGameStateForInitialLoad(player.clientId);
-      }
-    }
-    // if host left, reassign host
-    const hostPlayer = this.players.find(p => p.clientId == window.hostClientId);
-    if (!(hostPlayer && hostPlayer.clientConnected) && clients[0] !== undefined) {
-      // Set host to the 0th client that is still connected
-      window.hostClientId = clients[0];
-      if (window.hostClientId === window.clientId) {
-        console.log(`Setup: Host client left, reassigning host to ${window.hostClientId}. % c You are the host. `, 'background: #222; color: #bada55');
-      } else {
-        console.log(`Setup: Host client left, reassigning host to ${window.hostClientId}.`);
       }
     }
     return newlyCreatedPlayers;

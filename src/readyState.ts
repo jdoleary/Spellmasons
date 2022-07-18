@@ -33,8 +33,7 @@ export function set(key: keyof typeof readyState, value: boolean) {
     // If all values in readyState are true, then everything is ready
     is_fully_ready = Object.values(readyState).every(x => !!x)
     if (elReadyState) {
-        elReadyState.innerHTML = JSON.stringify(readyState, null, 2) + `
-You are${window.hostClientId == window.clientId ? '' : ' not '} the host.`;
+        elReadyState.innerHTML = JSON.stringify(readyState, null, 2);
         if (is_fully_ready) {
             // Don't show any debug information from readyState if it's
             // fully ready

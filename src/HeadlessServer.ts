@@ -4,6 +4,8 @@ global.window = {};
 // This file is the entrypoint for the headless server and must set window.headless
 // to true to denote that there is no graphics nor audio code
 window.headless = true;
+// hostApp (headless server) is always the host
+window.isHost = () => true;
 
 import './types/globalTypes';
 import './Shims';
