@@ -1,4 +1,5 @@
 ## This weeks goals:
+    - bug: left off: somehow pixi is polyfilling requestAnimationFrame on headless
     - bug: 2nd client gets left over images
     - bug: hostApp isn't the host
     - Standalone Server
