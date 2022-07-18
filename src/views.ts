@@ -24,7 +24,6 @@ export enum View {
   Game,
   Disconnected
 }
-const elPIXIHolder = document.getElementById('PIXI-holder') as HTMLElement;
 const elUpgradePicker = document.getElementById('upgrade-picker') as HTMLElement;
 let lastNonMenuView: View | undefined;
 function closeMenu() {
@@ -39,11 +38,13 @@ function closeMenu() {
   }
 
 }
-const menuBtnId = 'menuBtn';
-const elMenuBtn: HTMLButtonElement = document.getElementById(
-  menuBtnId,
-) as HTMLButtonElement;
-elMenuBtn.addEventListener('click', toggleMenu);
+if (!window.headless) {
+  const menuBtnId = 'menuBtn';
+  const elMenuBtn: HTMLButtonElement = document.getElementById(
+    menuBtnId,
+  ) as HTMLButtonElement;
+  elMenuBtn.addEventListener('click', toggleMenu);
+}
 // Make 'closeMenu' available to the svelte menu
 window.closeMenu = closeMenu;
 export function toggleMenu() {
@@ -61,6 +62,7 @@ export function toggleMenu() {
 // No gamelogic should be executed inside setView
 // including setup.
 export function setView(v: View) {
+  if (window.headless) { return; }
   console.log('setView(', View[v], ')');
   if (window.view == v) {
     // Prevent setting a view more than once if the view hasn't changed
@@ -124,6 +126,7 @@ function zoom(e: WheelEvent) {
 
 const endTurnBtnId = 'end-turn-btn';
 function addUnderworldEventListeners() {
+  if (window.headless) { return; }
   // Add keyboard shortcuts
   window.addEventListener('keydown', keydownListener);
   window.addEventListener('keypress', keypressListener);

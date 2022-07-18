@@ -1,9 +1,7 @@
 ## This weeks goals:
     - Standalone Server
         // Headless Server should exclude
-        // - PieClient
-        // - Audio
-        // - Visual (UI and Pixi.js)
+        // - event listeners
         // - Menu
         // - Planning view
         // - Predictions

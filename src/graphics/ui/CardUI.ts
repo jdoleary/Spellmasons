@@ -7,7 +7,6 @@ import {
 } from '../PlanningView';
 import { calculateCostForSingleCard } from '../../cards/cardUtils';
 import floatingText, { centeredFloatingText } from '../FloatingText';
-import { playSFX, sfxPageTurn } from '../../Audio';
 import { composeOnDamageEvents, copyForPredictionUnit } from '../../entity/Unit';
 import { NUMBER_OF_TOOLBAR_SLOTS } from '../../config';
 
@@ -21,8 +20,6 @@ const elSelectedCards = document.getElementById('selected-cards') as HTMLElement
 // Gap amount must be available programatically (not in css) so it can be
 // taken into account in drag-n-drop
 const gapBetweenCards = 4;
-elCardHand.style['gap'] = `${gapBetweenCards}px`;
-elSelectedCards.style['gap'] = `${gapBetweenCards}px`;
 const dragstart = (ev: any) => {
   const target = (ev.target as HTMLElement)
   if (target.closest('.card')) {
@@ -32,40 +29,48 @@ const dragstart = (ev: any) => {
   }
 
 }
-elInvContent.addEventListener('dragstart', dragstart);
-elCardHand.addEventListener('dragstart', dragstart);
-elCardHand.addEventListener('dragover', ev => {
-  ev.preventDefault();
-})
 const cardHoldersPaddingLeft = 10;
-elCardHolders.style['paddingLeft'] = `${cardHoldersPaddingLeft}px`;
-elCardHand.addEventListener('drop', ev => {
-  const dropElement = ((ev.target as HTMLElement).closest('.slot') as HTMLElement);
-  const dropIndex = dropElement.parentNode ? Array.from(dropElement.parentNode.children).indexOf(dropElement) : -1;
-  const cardId = dragCard && dragCard.dataset.cardId
-  if (window.player && dropIndex !== -1 && dragCard && cardId !== undefined) {
-    const startDragCardIndex = dragCard.parentNode && dragCard.closest('#card-hand') ? Array.from(dragCard.parentNode.children).indexOf(dragCard) : -1;
-    if (startDragCardIndex !== -1) {
-      // Then the drag card is already in the toolbar and this is a swap between
-      // two cards on the toolbar
-      const swapCard = window.player.cards[dropIndex] || "";
-      window.player.cards[dropIndex] = cardId;
-      window.player.cards[startDragCardIndex] = swapCard;
-    } else {
-      // else a card is being dragged in from inventory
-      window.player.cards[dropIndex] = cardId;
-    }
-    recalcPositionForCards(window.player);
-    syncInventory(undefined);
-  } else {
-    console.error('Something went wrong dragndropping card', dropIndex, dragCard);
-  }
-  ev.preventDefault();
-})
 // Displays a full card with info on inspect-mode + hover of card
 const elCardInspect = document.getElementById('card-inspect');
-addCardInspectHandlers(elCardHand);
-addCardInspectHandlers(elInvContent);
+if (!window.headless) {
+  elInvButton?.addEventListener('click', () => {
+    toggleInventory(undefined, undefined);
+  });
+  elCardHolders.style['paddingLeft'] = `${cardHoldersPaddingLeft}px`;
+  elCardHand.style['gap'] = `${gapBetweenCards}px`;
+  elSelectedCards.style['gap'] = `${gapBetweenCards}px`;
+
+  elInvContent.addEventListener('dragstart', dragstart);
+  elCardHand.addEventListener('dragstart', dragstart);
+  elCardHand.addEventListener('dragover', ev => {
+    ev.preventDefault();
+  })
+  elCardHand.addEventListener('drop', ev => {
+    const dropElement = ((ev.target as HTMLElement).closest('.slot') as HTMLElement);
+    const dropIndex = dropElement.parentNode ? Array.from(dropElement.parentNode.children).indexOf(dropElement) : -1;
+    const cardId = dragCard && dragCard.dataset.cardId
+    if (window.player && dropIndex !== -1 && dragCard && cardId !== undefined) {
+      const startDragCardIndex = dragCard.parentNode && dragCard.closest('#card-hand') ? Array.from(dragCard.parentNode.children).indexOf(dragCard) : -1;
+      if (startDragCardIndex !== -1) {
+        // Then the drag card is already in the toolbar and this is a swap between
+        // two cards on the toolbar
+        const swapCard = window.player.cards[dropIndex] || "";
+        window.player.cards[dropIndex] = cardId;
+        window.player.cards[startDragCardIndex] = swapCard;
+      } else {
+        // else a card is being dragged in from inventory
+        window.player.cards[dropIndex] = cardId;
+      }
+      recalcPositionForCards(window.player);
+      syncInventory(undefined);
+    } else {
+      console.error('Something went wrong dragndropping card', dropIndex, dragCard);
+    }
+    ev.preventDefault();
+  })
+  addCardInspectHandlers(elCardHand);
+  addCardInspectHandlers(elInvContent);
+}
 function addCardInspectHandlers(cardContainerElement: HTMLElement) {
   if (cardContainerElement) {
     // Show full card on hover
@@ -92,6 +97,7 @@ function addCardInspectHandlers(cardContainerElement: HTMLElement) {
   }
 }
 export function clearCurrentlyShownCard() {
+  if (window.headless) { return; }
   // Clear cardInspect when the mouse leaves elCardHolders so that the large card
   // doesn't stay in the center of the screen
   if (elCardInspect) {
@@ -116,6 +122,7 @@ function showFullCard(card: Cards.ICard) {
 let cardsSelected: string[] = [];
 
 export function recalcPositionForCards(player: Player.IPlayer | undefined) {
+  if (window.headless) { return; }
   if (!window.player) {
     return
   }
@@ -183,6 +190,7 @@ export function recalcPositionForCards(player: Player.IPlayer | undefined) {
 }
 const openInvClass = 'open-inventory';
 export function syncInventory(slotModifyingIndex: number | undefined) {
+  if (window.headless) { return; }
   if (window.player) {
     // clear contents
     elInvContent.innerHTML = '';
@@ -219,20 +227,23 @@ export function syncInventory(slotModifyingIndex: number | undefined) {
     // Add an inventory element to clear the currently selected toolbar item
     if (slotModifyingIndex !== undefined) {
       const elClearSlotModifiyingIndex = createNonCardInventoryElement('toolbar-slot.png', 'Empty');
-      elInvContent.appendChild(elClearSlotModifiyingIndex);
-      elClearSlotModifiyingIndex.addEventListener('click', () => {
-        if (window.player && slotModifyingIndex !== undefined) {
-          window.player.cards[slotModifyingIndex] = '';
-          recalcPositionForCards(window.player);
-          toggleInventory(undefined, false);
-        }
-      })
+      if (elClearSlotModifiyingIndex) {
+        elInvContent.appendChild(elClearSlotModifiyingIndex);
+        elClearSlotModifiyingIndex.addEventListener('click', () => {
+          if (window.player && slotModifyingIndex !== undefined) {
+            window.player.cards[slotModifyingIndex] = '';
+            recalcPositionForCards(window.player);
+            toggleInventory(undefined, false);
+          }
+        })
+      }
     }
   } else {
     console.error('Cannot sync inventory, window.player is undefined');
   }
 }
 export function toggleInventory(toolbarIndex: number | undefined, forceState: boolean | undefined) {
+  if (window.headless) { return; }
   document.body.classList.toggle(openInvClass, forceState);
   if (window.player && document.body.classList.contains(openInvClass)) {
     // Create inventory
@@ -242,10 +253,6 @@ export function toggleInventory(toolbarIndex: number | undefined, forceState: bo
     document.querySelectorAll('.active-toolbar-element').forEach(e => e.classList.remove(ACTIVE_TOOLBAR_ELEMENT_CLASSNAME))
   }
 }
-elInvButton.addEventListener('click', () => {
-  toggleInventory(undefined, undefined);
-
-})
 const ACTIVE_TOOLBAR_ELEMENT_CLASSNAME = 'active-toolbar-element'
 function addToolbarListener(
   element: HTMLElement,
@@ -274,14 +281,9 @@ function addListenersToCardElement(
   element: HTMLElement,
   cardId: string,
 ) {
-  element.addEventListener('mouseenter', () => {
-    // Play random pageTurn sound
-    const sfxInst = sfxPageTurn[Math.floor(Math.random() * sfxPageTurn.length)]
-    sfxInst && playSFX(sfxInst);
-  });
-
-
-
+  if (window.headless) {
+    return;
+  }
   element.addEventListener('click', (e) => {
     e.stopPropagation();
     if (element.classList.contains('selected')) {
@@ -307,6 +309,7 @@ function addListenersToCardElement(
   });
 }
 export function deselectLastCard() {
+  if (window.headless) { return; }
   if (elSelectedCards) {
     const cardGroup = elSelectedCards.children.item(elSelectedCards.children.length - 1) as HTMLElement;
     if (cardGroup) {
@@ -318,6 +321,7 @@ export function deselectLastCard() {
 
 }
 export function selectCardByIndex(index: number) {
+  if (window.headless) { return; }
   if (elCardHand) {
     const cardGroup = elCardHand.children.item(index) as HTMLElement;
     if (cardGroup && cardGroup.children.item(0)) {
@@ -362,11 +366,13 @@ function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string
   }
 }
 export function areAnyCardsSelected() {
+  if (window.headless) { return false; }
   return !!getSelectedCardIds().length;
 }
 
 // This function fully deletes the cards from the player's hand
 export function removeCardsFromHand(player: Player.IPlayer, cards: string[]) {
+  if (window.headless) { return; }
   player.cards = player.cards.filter(c => !cards.includes(c));
   // Remove any selected cards with a name in the cards array of this function
   for (let card of cards) {
@@ -390,6 +396,7 @@ window.giveMeCard = (cardId: string, quantity: number = 1) => {
   }
 };
 export function addCardToHand(card: Cards.ICard | undefined, player: Player.IPlayer | undefined) {
+  if (window.headless) { return; }
   if (!card) {
     console.error('Attempting to add undefined card to hand');
     return
@@ -411,6 +418,7 @@ export function addCardToHand(card: Cards.ICard | undefined, player: Player.IPla
 }
 
 export function getSelectedCardIds(): string[] {
+  if (window.headless) { return []; }
   if (elSelectedCards && elSelectedCards.classList.contains('hide')) {
     return [];
   }
@@ -419,11 +427,13 @@ export function getSelectedCardIds(): string[] {
   );
 }
 export function getSelectedCards(): Cards.ICard[] {
+  if (window.headless) { return []; }
   const cardIds = getSelectedCardIds();
   return Cards.getCardsFromIds(cardIds);
 }
 
 export function clearSelectedCards() {
+  if (window.headless) { return; }
   // Deselect all selected cards
   cardsSelected = []
   document.querySelectorAll('.card.selected').forEach((el) => {
@@ -481,6 +491,7 @@ export function getCardRarityColor(content: { probability: number }): string {
   }
 }
 function createNonCardInventoryElement(thumbnailPath: string, titleText: string) {
+  if (window.headless) { return; }
   const element = document.createElement('div');
   element.classList.add('card');
   const elCardInner = document.createElement('div');
@@ -582,6 +593,7 @@ function updateHealthBadge(elBadge: Element | null, healthCost: number, card: Ca
 // Updates the UI mana badge for cards in hand.  To be invoked whenever a player's
 // cardUsageCounts object is modified in order to sync the UI
 export function updateCardBadges() {
+  if (window.headless) { return; }
   if (window.player) {
     // Using a prediction unit here so that composeOnDamageEvents
     // used to determine the modified health cost of

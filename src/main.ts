@@ -8,7 +8,7 @@ import { setupPixi } from './graphics/PixiUtils';
 import * as Cards from './cards';
 import * as Units from './entity/units';
 import { initPlanningView } from './graphics/PlanningView';
-import { setupAudio } from './Audio';
+import { setupAudio, playNextSong, playSFX, playSFXKey, sfx } from './Audio';
 import cookieConsentPopup from './cookieConsent';
 import { setupMonitoring } from './monitoring';
 import * as storage from './storage';
@@ -32,6 +32,12 @@ const SKIP_TUTORIAL = 'skipTutorial';
 
 // set window defaults, must be called before setupAll()
 window.pixi = PIXI;
+// Globalize injected Audio functions
+window.playNextSong = playNextSong;
+window.playSFX = playSFX;
+window.playSFXKey = playSFXKey;
+window.sfx = sfx;
+
 window.joinRoom = joinRoom;
 window.volume = 1.0;
 window.volumeMusic = 1.0;

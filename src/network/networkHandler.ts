@@ -1,4 +1,3 @@
-console.log('wsPieHandler.ts jtest')
 import type { OnDataArgs } from '@websocketpie/client';
 
 import { MESSAGE_TYPES } from '../types/MessageTypes';

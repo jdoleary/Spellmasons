@@ -148,5 +148,11 @@ declare global {
         devRemoveAllEnemies: () => void;
         // true if this instance is the headless server with no visuals or audio, just the game logic
         headless: boolean;
+        // Move audio functions into global so they can be injected IF audio is supported
+        playNextSong: () => void | undefined;
+        playSFX: (path?: string) => void | undefined;
+        playSFXKey: (key: string) => void | undefined;
+        sfx: { [key: string]: string } | undefined;
+
     }
 }

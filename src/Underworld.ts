@@ -54,7 +54,6 @@ import { withinMeleeRange } from './entity/units/actions/gruntAction';
 import { all_ground, baseTiles, caveSizes, convertBaseTilesToFinalTiles, generateCave, getLimits, Limits as Limits, Tile, toObstacle } from './MapOrganicCave';
 import { Material } from './Conway';
 import { oneDimentionIndexToVec2 } from './jmath/ArrayUtil';
-import { playNextSong, playSFX, sfx } from './Audio';
 import { raceTimeout } from './Promise';
 import { updateParticlees } from './graphics/Particles';
 
@@ -65,10 +64,10 @@ export enum turn_phase {
 }
 const elPlayerTurnIndicator = document.getElementById('player-turn-indicator');
 const elLevelIndicator = document.getElementById('level-indicator');
-const elUpgradePicker = document.getElementById('upgrade-picker') as HTMLElement;
-const elUpgradePickerContent = document.getElementById('upgrade-picker-content') as HTMLElement;
-const elSeed = document.getElementById('seed') as HTMLElement;
-const elUpgradePickerLabel = document.getElementById('upgrade-picker-label') as HTMLElement;
+const elUpgradePicker = document.getElementById('upgrade-picker') as (HTMLElement | undefined);
+const elUpgradePickerContent = document.getElementById('upgrade-picker-content') as (HTMLElement | undefined);
+const elSeed = document.getElementById('seed') as (HTMLElement | undefined);
+const elUpgradePickerLabel = document.getElementById('upgrade-picker-label') as (HTMLElement | undefined);
 
 let lastTime = 0;
 let requestAnimationFrameGameLoopId: number;
@@ -116,7 +115,9 @@ export default class Underworld {
     window.underworld = this;
     this.seed = window.seedOverride || seed;
 
-    elSeed.innerText = `Seed: ${this.seed}`;
+    if (elSeed) {
+      elSeed.innerText = `Seed: ${this.seed}`;
+    }
     console.log("RNG create with seed:", this.seed, ", state: ", RNGState);
     this.random = this.syncronizeRNG(RNGState);
     this.ensureAllClientsHaveAssociatedPlayers(getClients());
@@ -979,7 +980,9 @@ export default class Underworld {
         this.postSetupLevel();
         resolve();
         // Change song now that level has changed:
-        playNextSong();
+        if (window.playNextSong) {
+          window.playNextSong();
+        }
       }, 10)
     });
   }
@@ -1294,9 +1297,13 @@ export default class Underworld {
     if (startingSpellsLeftToPick > 0) {
       // Limit starting cards to a probability of 10 or more
       minimumProbability = 10;
-      elUpgradePickerLabel.innerHTML = `Pick ${startingSpellsLeftToPick} starting spells.`;
+      if (elUpgradePickerLabel) {
+        elUpgradePickerLabel.innerHTML = `Pick ${startingSpellsLeftToPick} starting spells.`;
+      }
     } else {
-      elUpgradePickerLabel.innerHTML = statsUpgrades ? 'Pick an upgrade' : 'Pick a spell';
+      if (elUpgradePickerLabel) {
+        elUpgradePickerLabel.innerHTML = statsUpgrades ? 'Pick an upgrade' : 'Pick a spell';
+      }
     }
     // Now that level is complete, move to the Upgrade view where players can choose upgrades
     // before moving on to the next level
@@ -1713,7 +1720,9 @@ export default class Underworld {
         const targets = effectState.targetedUnits.length == 0 ? [castLocation] : effectState.targetedUnits
         // Play the card sound effect:
         if (!prediction && card.sfx) {
-          playSFX(sfx[card.sfx]);
+          if (window.playSFX && window.sfx) {
+            window.playSFX(window.sfx[card.sfx]);
+          }
         }
         for (let target of targets) {
 

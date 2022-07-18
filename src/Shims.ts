@@ -4,6 +4,8 @@
 // Shims:
 const fakeElement = {};
 global.document = {
-    getElementById: () => fakeElement
+    getElementById: () => fakeElement,
+    querySelector: () => fakeElement
 };
+window.addEventListener = function () { };
 export { };

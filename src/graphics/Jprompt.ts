@@ -35,8 +35,8 @@ export default async function Jprompt(prompt: Prompt): Promise<boolean> {
     document.body.appendChild(el);
 
     return new Promise<boolean>((res) => {
-        const noBtn = el.querySelector('.no') as HTMLElement;
-        const yesBtn = el.querySelector('.yes') as HTMLElement;
+        const noBtn = el.querySelector('.no') as (HTMLElement | undefined);
+        const yesBtn = el.querySelector('.yes') as (HTMLElement | undefined);
         if (noBtn) {
             noBtn.addEventListener('click', (e) => {
                 res(false);

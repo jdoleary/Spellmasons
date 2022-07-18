@@ -93,9 +93,9 @@ if (window.pixi && containerUI && app && containerBetweenBoardAndWalls) {
     ];
   }
 
-  utilProps.elPIXIHolder = document.getElementById('PIXI-holder') as HTMLElement;
-  utilProps.elCardHand = document.getElementById('card-hand') as HTMLElement;
-  utilProps.elHealthMana = document.getElementById('health-mana') as HTMLElement;
+  utilProps.elPIXIHolder = document.getElementById('PIXI-holder') as (HTMLElement | undefined);
+  utilProps.elCardHand = document.getElementById('card-hand') as (HTMLElement | undefined);
+  utilProps.elHealthMana = document.getElementById('health-mana') as (HTMLElement | undefined);
   window.debugGraphics = new window.pixi.Graphics();
   containerUI.addChild(window.debugGraphics);
   window.unitOverlayGraphics = new window.pixi.Graphics();

@@ -17,22 +17,21 @@ import { checkIfNeedToClearTooltip, clearSpellEffectProjection } from '../graphi
 import { centeredFloatingText } from '../graphics/FloatingText';
 import { turn_phase } from '../Underworld';
 import combos from '../graphics/AnimationCombos';
-import { playSFXKey } from '../Audio';
 import { raceTimeout } from '../Promise';
 import { closestLineSegmentIntersection } from '../jmath/lineSegment';
 
-const elHealthBar: HTMLElement = document.querySelector('#health .fill') as HTMLElement;
-const elHealthCost: HTMLElement = document.querySelector('#health .cost') as HTMLElement;
-const elHealthLabel: HTMLElement = document.querySelector('#health .label') as HTMLElement;
-const elManaBar: HTMLElement = document.querySelector('#mana .fill:nth-child(1)') as HTMLElement;
-const elManaBar2: HTMLElement = document.querySelector('#mana .fill:nth-child(2)') as HTMLElement;
-const elManaBar3: HTMLElement = document.querySelector('#mana .fill:nth-child(3)') as HTMLElement;
-const elManaCost: HTMLElement = document.querySelector('#mana .cost:nth-child(4)') as HTMLElement;
-const elManaCost2: HTMLElement = document.querySelector('#mana .cost:nth-child(5)') as HTMLElement;
-const elManaCost3: HTMLElement = document.querySelector('#mana .cost:nth-child(6)') as HTMLElement;
-const elManaLabel: HTMLElement = document.querySelector('#mana .label') as HTMLElement;
-const elStaminaBar: HTMLElement = document.querySelector('#stamina .fill') as HTMLElement;
-const elStaminaBarLabel: HTMLElement = document.querySelector('#stamina .label') as HTMLElement;
+const elHealthBar = document.querySelector('#health .fill') as HTMLElement;
+const elHealthCost = document.querySelector('#health .cost') as HTMLElement;
+const elHealthLabel = document.querySelector('#health .label') as HTMLElement;
+const elManaBar = document.querySelector('#mana .fill:nth-child(1)') as HTMLElement;
+const elManaBar2 = document.querySelector('#mana .fill:nth-child(2)') as HTMLElement;
+const elManaBar3 = document.querySelector('#mana .fill:nth-child(3)') as HTMLElement;
+const elManaCost = document.querySelector('#mana .cost:nth-child(4)') as HTMLElement;
+const elManaCost2 = document.querySelector('#mana .cost:nth-child(5)') as HTMLElement;
+const elManaCost3 = document.querySelector('#mana .cost:nth-child(6)') as HTMLElement;
+const elManaLabel = document.querySelector('#mana .label') as HTMLElement;
+const elStaminaBar = document.querySelector('#stamina .fill') as HTMLElement;
+const elStaminaBarLabel = document.querySelector('#stamina .label') as HTMLElement;
 
 export interface UnitPath {
   points: Vec2[];
@@ -427,8 +426,8 @@ export function playComboAnimation(unit: IUnit, key: string | undefined, keyMome
 
     }
     // Play sound effect
-    if (combo.SFX) {
-      playSFXKey(combo.SFX)
+    if (combo.SFX && window.playSFXKey) {
+      window.playSFXKey(combo.SFX)
     }
     Image.changeSprite(unit.image, combo.primaryAnimation, unit.image.sprite.parent,
       // It is expected that the key moment will never be triggered here because if the animation
@@ -622,6 +621,7 @@ export function takeDamage(unit: IUnit, amount: number, prediction: boolean, _st
 
 }
 export function syncPlayerHealthManaUI() {
+  if (window.headless) { return; }
   if (!(window.player && elHealthBar && elManaBar && elStaminaBar && elHealthLabel && elManaLabel && elStaminaBarLabel)) {
     return
   }

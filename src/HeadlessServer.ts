@@ -1,4 +1,9 @@
 "use strict";
+// @ts-ignore, instantiate window object so that node can use `window` as the global
+global.window = {};
+// This file is the entrypoint for the headless server and must set window.headless
+// to true to denote that there is no graphics nor audio code
+window.headless = true;
 
 import './types/globalTypes';
 import './Shims';
@@ -13,25 +18,9 @@ interface OnDataArgs {
     payload: any;
     time: number;
 }
-// @ts-ignore, instantiate window object so that node can use `window` as the global
-global.window = {};
-// This file is the entrypoint for the headless server and must set window.headless
-// to true to denote that there is no graphics nor audio code
-window.headless = true;
 import * as Cards from './cards';
 import * as Units from './entity/units';
 import { IHostApp, onClientPresenceChanged } from './network/networkUtil';
-// LEFT OFF!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// LEFT OFF!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// LEFT OFF!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// Headless Server should exclude
-// - Audio
-// - Visual (UI and Pixi.js)
-// - Menu
-// - Planning view
-// - Predictions
-// Current compile and run command:
-// tsc --project tsconfig.headless.json --outDir headless-server-build/ && node headless-server-build/src/HeadlessServer.js
 
 const pie = require('@websocketpie/server');
 

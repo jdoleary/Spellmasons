@@ -94,6 +94,7 @@ export function queueCenteredFloatingText(text: string, fill: string | number = 
   }
 }
 export function centeredFloatingText(text: string, fill: string | number = 'white') {
+  if (window.headless) { return; }
   centeredTextAnimating = true;
   floatingText({
     coords: {
