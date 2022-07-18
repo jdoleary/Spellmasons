@@ -1,13 +1,14 @@
 ## This weeks goals:
+    - bug: 2nd client gets left over images
+    - bug: hostApp isn't the host
     - Standalone Server
-        // Headless Server should exclude
-        // - Menu
-        // - Predictions
-        // Current compile and run command:
-        // tsc --project tsconfig.headless.json --outDir headless-server-build/ && node headless-server-build/src/HeadlessServer.js
+        - Remove window.hostClientId since hostApp doesn't get a clientId
+        - Headless Server should exclude
+            - Predictions
         - TODO
             - Join a headless server's pie server with a local client and send messages
             - Verify that state persists after you leave
+                - I think hostApp isn't a client and so the room is currently cleaned up immediately and the state wont persist
             - how to clean up dead rooms?
     - Menu for community server selector
     - Stress test droplets to see how many users they can support

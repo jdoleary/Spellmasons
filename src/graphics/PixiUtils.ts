@@ -335,6 +335,7 @@ export function updateCameraPosition() {
 let sheet: PIXI.Spritesheet;
 export function setupPixi(): Promise<void> {
   if (!app) {
+    console.error('app is not defined')
     return Promise.resolve();
   }
   // The application will create a canvas element for you that you
@@ -343,7 +344,11 @@ export function setupPixi(): Promise<void> {
     elPIXIHolder.appendChild(app.view);
   }
 
-  return loadTextures();
+  return loadTextures().then(() => {
+    // Resolve the setupPixiPromise so that the menu knows
+    // that pixijs is ready
+    window.pixiPromiseResolver();
+  });
 }
 export function addPixiContainersForView(view: View) {
   if (app && utilProps.underworldPixiContainers) {
@@ -376,7 +381,7 @@ function removeContainers(containers: PIXI.Container[]) {
 }
 function loadTextures(): Promise<void> {
   return new Promise((resolve, reject) => {
-    if (window.pixi) {
+    if (!window.headless && window.pixi) {
       const loader = window.pixi.Loader.shared;
       // loader.onProgress.add(a => console.log("onProgress", a)); // called once per loaded/errored file
       // loader.onError.add(e => console.error("Pixi loader on error:", e)); // called once per errored file
@@ -395,6 +400,8 @@ function loadTextures(): Promise<void> {
           reject();
         }
       });
+    } else {
+      console.error('window.pixi is undefined')
     }
   });
 }

@@ -1,5 +1,4 @@
-import * as PIXI from 'pixi.js';
-import { joinRoom } from "./network/wsPieSetup";
+// set window defaults, must be called before setupAll()
 import * as Unit from './entity/Unit';
 import './types/globalTypes';
 import { setView, View } from './views';
@@ -30,9 +29,6 @@ import { MESSAGE_TYPES } from './types/MessageTypes';
 const YES = 'yes'
 const SKIP_TUTORIAL = 'skipTutorial';
 
-// set window defaults, must be called before setupAll()
-window.pixi = PIXI;
-window.joinRoom = joinRoom;
 // Globalize injected Audio functions
 window.playNextSong = playNextSong;
 window.playSFX = playSFX;
@@ -66,7 +62,7 @@ function setupAll() {
 
   // Initialize Assets
   console.log("Setup: Loading Pixi assets...")
-  window.setupPixiPromise = setupPixi().then(() => {
+  setupPixi().then(() => {
     readyState.set('pixiAssets', true);
     console.log("Setup: Done loading Pixi assets.")
     // Initialize content
@@ -77,6 +73,7 @@ function setupAll() {
     // if (storage.get(SKIP_TUTORIAL) === YES) {
     window.setMenu('PLAY');
     setView(View.Menu);
+    window.tryAutoConnect();
     // } else {
     //   window.setMenu('TUTORIAL');
     //   startTutorial();

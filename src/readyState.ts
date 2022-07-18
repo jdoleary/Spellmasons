@@ -20,10 +20,14 @@ export function set(key: keyof typeof readyState, value: boolean) {
         // Auto join game if specified in url
         let urlSearchParams = new URLSearchParams(location.search);
         let gameName = urlSearchParams.get("game");
-        if (gameName && window.joinRoom) {
-            window.joinRoom({ name: gameName })
+        if (gameName) {
+            if (window.joinRoom) {
+                window.joinRoom({ name: gameName })
+            } else {
+                console.error('window.joinRoom is undefined')
+            }
         } else {
-            console.error('Cannot join room', gameName)
+            console.error('Cannot join room, "gameName" is falsey');
         }
     }
     // If all values in readyState are true, then everything is ready

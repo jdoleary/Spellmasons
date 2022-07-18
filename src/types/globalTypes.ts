@@ -26,6 +26,7 @@ declare global {
         connect_to_wsPie_server: (wsUri?: string) => Promise<void>;
         joinRoom: (_room_info: any) => Promise<unknown> | undefined;
         setupPixiPromise: Promise<void>;
+        pixiPromiseResolver: () => void;
         // Svelte menu handles
         exitCurrentGame: () => void;
         closeMenu: () => void;
@@ -153,6 +154,8 @@ declare global {
         playSFX: (path?: string) => void | undefined;
         playSFXKey: (key: string) => void | undefined;
         sfx: { [key: string]: string } | undefined;
+        // svelte menu function to attempt to autoconnect if the queryString holds the info
+        tryAutoConnect: () => void;
 
     }
 }

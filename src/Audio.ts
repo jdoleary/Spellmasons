@@ -64,9 +64,6 @@ export function playSFX(path?: string) {
 const STORAGE_OPTIONS = 'OPTIONS';
 export function setupAudio() {
     console.log('Setup: Audio');
-    // TODO: Remove from svelte menu, music is now played when level is created.
-    // TODO: Ensure music works on electron without being associated with a button press
-    window.playMusic = () => { };
     window.changeVolume = (volume: number) => {
         window.volume = volume;
         storage.assign(STORAGE_OPTIONS, { volume: window.volume });
