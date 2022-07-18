@@ -1,12 +1,14 @@
 ## This weeks goals:
     - Standalone Server
         // Headless Server should exclude
-        // - event listeners
         // - Menu
-        // - Planning view
         // - Predictions
         // Current compile and run command:
         // tsc --project tsconfig.headless.json --outDir headless-server-build/ && node headless-server-build/src/HeadlessServer.js
+        - TODO
+            - Join a headless server's pie server with a local client and send messages
+            - Verify that state persists after you leave
+            - how to clean up dead rooms?
     - Menu for community server selector
     - Stress test droplets to see how many users they can support
     - More interactable doodads (explosive barrels, movable cover)

@@ -32,16 +32,13 @@ const SKIP_TUTORIAL = 'skipTutorial';
 
 // set window defaults, must be called before setupAll()
 window.pixi = PIXI;
+window.joinRoom = joinRoom;
 // Globalize injected Audio functions
 window.playNextSong = playNextSong;
 window.playSFX = playSFX;
 window.playSFXKey = playSFXKey;
 window.sfx = sfx;
 
-window.joinRoom = joinRoom;
-window.volume = 1.0;
-window.volumeMusic = 1.0;
-window.volumeGame = 1.0;
 window.playerWalkingPromise = Promise.resolve();
 window.predictionUnits = [];
 window.attentionMarkers = [];
@@ -66,11 +63,6 @@ function setupAll() {
 
   setupAudio();
 
-  // Start up menu script now that the window globals are assigned
-  var script = document.createElement('script');
-  script.src = 'svelte-bundle.js';
-  script.async = false;
-  document.body.appendChild(script);
 
   // Initialize Assets
   console.log("Setup: Loading Pixi assets...")
