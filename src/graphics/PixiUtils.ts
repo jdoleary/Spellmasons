@@ -4,7 +4,6 @@ import { View } from '../views';
 import * as math from '../jmath/math';
 import * as config from '../config';
 import { keyDown } from './ui/eventListeners';
-import { SCALE_MODES } from 'pixi.js';
 import * as colors from './ui/colors';
 import { JSpriteAnimated } from './Image';
 import { containerParticles } from './Particles';
@@ -14,6 +13,11 @@ import { elPIXIHolder } from './FloatingText';
 let isReady = false;
 // Ensure textures stay pixelated when scaled:
 if (window.pixi) {
+  // Copied from pixi.js so pixi.js wont have to be imported in headless
+  enum SCALE_MODES {
+    NEAREST = 0,
+    LINEAR = 1
+  }
   window.pixi.settings.SCALE_MODE = SCALE_MODES.NEAREST;
 }
 // PIXI app
