@@ -6,6 +6,7 @@ global.window = {};
 window.headless = true;
 // hostApp (headless server) is always the host
 window.isHost = () => true;
+window.forceMove = [];
 
 import './types/globalTypes';
 import './Shims';
