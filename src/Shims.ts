@@ -9,7 +9,7 @@ global.document = {
 };
 window.addEventListener = function () { };
 global.requestAnimationFrame = (callback) => {
-    console.log('invoke set immediate', typeof document, document);
-    // setImmediate(() => callback(Date.now()));
+    // TODO: OPTIMIZE: Use setImmediate instead? Watch out for 100% CPU
+    setTimeout(() => callback(Date.now()));
 }
 export { };

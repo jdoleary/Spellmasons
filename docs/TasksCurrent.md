@@ -3,6 +3,7 @@
     - bug: 2nd client gets left over images
     - bug: hostApp isn't the host
     - Standalone Server
+        - [Ensure setImmediate doesn't max the cpu](https://timetocode.tumblr.com/post/71512510386/an-accurate-node-js-game-loop-inbetween-settimeout-and)
         - Remove window.hostClientId since hostApp doesn't get a clientId
         - Headless Server should exclude
             - Predictions
