@@ -1,7 +1,14 @@
+## This weeks goals:
+    - Standalone Server
+    - Menu for community server selector
+    - Stress test droplets to see how many users they can support
+    - More interactable doodads (explosive barrels, movable cover)
+    - Better liquid
+    - Simpler tiles?
 ## Schedule
-- Playtest with Colin
 - Packs, priority ordered
     - Pack 6 Standalone Server
+    - Pack 15 Movement
     - Pack 13 Biome and liquid shader
         - https://codepen.io/chles/pen/aNxMxQ
     - Pack 8 SFX
@@ -10,6 +17,15 @@
     - Pack 11
     - Pack 14 Quantity
     - Pack 12 Particle Engine
+- Pack 15 | Movement
+    - Predictive movement, pick a final destination and slow the closer you get
+        - Shoving into walls should do damage and stop the movement
+            - What about at a steep angle?
+        - Shoving into other units should shove them too like billiard balls
+        - Should be a smooth path into the water
+    - Blood trails (just like stealth 'em up)
+        - left when pushing a corpse (color depends on the unit, think blue for lobber, green for poisoner)
+    - Blood trails when damage is done
 - Pack 12
     - Improve unit "fall in" so it's not a jump but smooth
     - Particle engine
@@ -162,6 +178,7 @@
 - idea; one use bargains (deals with the devil) that mix up your max stats.  or have a50% chance of good or bad outcome
 - Leave blood trails behind for dead units that are force pushed
 - Card: An attack range minimum but not a maximum so you CAN"T attack if they are too close
+- Casting curses on liquid should change the liquid type (lava/hurt, purify/water, poison)
 
 ## Misc
 - Bug: Had a scenario where i had a debugger on enterPortal and on image.show

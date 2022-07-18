@@ -1,6 +1,6 @@
 # My Focus
     1. Frustration Free
-    2. Fun
+    2. Fun (difficult, even in early stages)
     3. Well Playtested
     - Deprioritize
         - Juice
@@ -10,10 +10,19 @@
     - Standalone Server
     - Menu for community server selector
     - Stress test droplets to see how many users they can support
-- Milestone 2 | **Biomes** | July 28
+- Milestone 2 | **Balance**
+    - Increase difficulty
+        - Difficulty is directly related to fun, it isn't a puzzel if you can just "hurt" your way through it over and over
+    - Smaller levels
+        - Since this is turn based, super large levels are obnoxious
+- Milestone 3 | **Biomes** | July 28
     - More interactable doodads (explosive barrels, movable cover)
     - Better liquid
     - Simpler tiles?
+- Milestone X | **Movement** | Due Date Ongoing
+    - Pack 15
+        - Improved force movement
+        - Blood trails
 - Milestone X | **Juice** | Due Date Ongoing
     - SFX
         - Unit Sounds
