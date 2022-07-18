@@ -1,15 +1,13 @@
-import * as PIXI from 'pixi.js';
 import * as particles from '@pixi/particle-emitter'
 import * as Vec from '../jmath/Vec';
 import { Vec2 } from '../jmath/Vec';
 import * as math from '../jmath/math';
 import { randFloat } from '../jmath/rand';
 import { normalizeAngle } from '../jmath/Angle';
-import { app } from './PixiUtils';
 import seedrandom from 'seedrandom';
 import { raceTimeout } from '../Promise';
 
-export const containerParticles = new PIXI.ParticleContainer(5000, {
+export const containerParticles = !window.pixi ? undefined : new window.pixi.ParticleContainer(5000, {
     scale: true,
     position: true,
     rotation: false,
@@ -26,6 +24,9 @@ interface Trail {
 }
 const trails: Trail[] = [];
 export function addTrail(position: Vec2, target: Vec2, startVelocity: number, angleRad: number, config: particles.EmitterConfigV3): Promise<void> {
+    if (!containerParticles) {
+        return Promise.resolve();
+    }
     const emitter = new particles.Emitter(containerParticles, config);
     emitter.updateOwnerPos(position.x, position.y);
     // 3000 is an arbitrary timeout for now
@@ -43,6 +44,9 @@ export function cleanUpTrail(trail: Trail) {
 }
 export function makeManaTrail(start: Vec2, target: Vec2) {
     const texture = createTexture();
+    if (!texture) {
+        return undefined
+    }
     return addTrail(
         start,
         target,
@@ -132,8 +136,11 @@ export function updateParticlees(delta: number) {
 }
 
 function createTexture() {
+    if (!window.pixi) {
+        return undefined;
+    }
     const img = new Image();
     img.src = './images/particle.png';
-    const base = new PIXI.BaseTexture(img);
-    return new PIXI.Texture(base);
+    const base = new window.pixi.BaseTexture(img);
+    return new window.pixi.Texture(base);
 }

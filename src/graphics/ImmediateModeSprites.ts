@@ -13,17 +13,22 @@ export function draw(spriteName: string, position: Vec2, scale: number = 1.0) {
         }
         registry[spriteName] = entry;
     }
+    // Use cached sprite if it exists
     let sprite = entry.sprites[++entry.lastIndexDrawn];
     if (!sprite) {
         sprite = addPixiSprite(spriteName, containerUI);
-        sprite.anchor.x = 0.5;
-        sprite.anchor.y = 0.5;
-        entry.sprites.push(sprite);
+        if (sprite) {
+            sprite.anchor.x = 0.5;
+            sprite.anchor.y = 0.5;
+            entry.sprites.push(sprite);
+        }
     }
-    sprite.scale.x = scale;
-    sprite.scale.y = scale;
-    sprite.x = position.x;
-    sprite.y = position.y;
+    if (sprite) {
+        sprite.scale.x = scale;
+        sprite.scale.y = scale;
+        sprite.x = position.x;
+        sprite.y = position.y;
+    }
 }
 interface Registry {
     [spriteName: string]: {

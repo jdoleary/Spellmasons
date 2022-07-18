@@ -1,4 +1,4 @@
-import * as PIXI from 'pixi.js';
+import type * as PIXI from 'pixi.js';
 
 import { allUnits } from '../entity/units';
 import { containerSpells, containerUI, withinCameraBounds } from './PixiUtils';
@@ -18,28 +18,34 @@ import { getEndOfRangeTarget, isOutOfRange } from '../PlayerUtils';
 
 // Graphics for rendering above board and walls but beneath units and doodads,
 // see containerPlanningView for exact render order.
-let planningViewGraphics: PIXI.Graphics;
+let planningViewGraphics: PIXI.Graphics | undefined;
 // Graphics for drawing the spell effects during the dry run phase
-let predictionGraphics: PIXI.Graphics;
+let predictionGraphics: PIXI.Graphics | undefined;
 // labelText is used to add a label to planningView circles 
 // so that the player knows what the circle is referencing.
-let labelText = new PIXI.Text('', { fill: 'white' });
-labelText.anchor.x = 0.5;
-labelText.anchor.y = 0;
+let labelText = !window.pixi ? undefined : new window.pixi.Text('', { fill: 'white' });
 export function initPlanningView() {
-  planningViewGraphics = new PIXI.Graphics();
-  window.planningViewGraphics = planningViewGraphics;
-  containerPlanningView.addChild(planningViewGraphics);
-  predictionGraphics = new PIXI.Graphics();
-  window.predictionGraphics = predictionGraphics;
-  containerUI.addChild(predictionGraphics);
-  containerUI.addChild(labelText);
+  if (containerPlanningView && containerUI && window.pixi) {
+    planningViewGraphics = new window.pixi.Graphics();
+    window.planningViewGraphics = planningViewGraphics;
+    containerPlanningView.addChild(planningViewGraphics);
+    predictionGraphics = new window.pixi.Graphics();
+    window.predictionGraphics = predictionGraphics;
+    containerUI.addChild(predictionGraphics);
+    if (labelText) {
+      labelText.anchor.x = 0.5;
+      labelText.anchor.y = 0;
+      containerUI.addChild(labelText);
+    }
+  }
 }
 let lastSpotCurrentPlayerTurnCircle: Vec2 = { x: 0, y: 0 };
 export function updatePlanningView() {
-  if (planningViewGraphics) {
+  if (planningViewGraphics && window.unitOverlayGraphics && labelText) {
     planningViewGraphics.clear();
-    labelText.text = '';
+    if (labelText) {
+      labelText.text = '';
+    }
     if (selectedPickup) {
       // Draw circle to show that pickup is selected
       drawCircleUnderTarget(selectedPickup, 1.0, planningViewGraphics);
@@ -183,8 +189,10 @@ async function showCastCardsPrediction(target: Vec2, casterUnit: Unit.IUnit, car
       // If a unit is currently alive and will take fatal damage,
       // draw red circle.
       if (unitStats.health > 0 && unitStats.damageTaken >= unitStats.health) {
-        predictionGraphics.lineStyle(4, 0xff0000, 1.0);
-        predictionGraphics.drawCircle(unitStats.x, unitStats.y, config.COLLISION_MESH_RADIUS);
+        if (predictionGraphics) {
+          predictionGraphics.lineStyle(4, 0xff0000, 1.0);
+          predictionGraphics.drawCircle(unitStats.x, unitStats.y, config.COLLISION_MESH_RADIUS);
+        }
       }
     }
     return effectState.targetedUnits.length > 0 || effectState.targetedPickups.length > 0;
@@ -297,9 +305,15 @@ export async function runPredictions() {
 // SpellEffectProjection are images to denote some information, such as the spell or action about to be cast/taken when clicked
 export function clearSpellEffectProjection() {
   if (!window.animatingSpells) {
-    predictionGraphics.clear();
-    window.radiusGraphics.clear();
-    containerSpells.removeChildren();
+    if (predictionGraphics) {
+      predictionGraphics.clear();
+    }
+    if (window.radiusGraphics) {
+      window.radiusGraphics.clear();
+    }
+    if (containerSpells) {
+      containerSpells.removeChildren();
+    }
     window.underworld.units.forEach(unit => {
       if (unit.image) {
         unit.image.sprite.tint = 0xFFFFFF;
@@ -312,17 +326,23 @@ export function clearSpellEffectProjection() {
 }
 
 export function drawPredictionLine(start: Vec2, end: Vec2) {
-  // predictionGraphics.beginFill(0xffff0b, 0.5);
-  predictionGraphics.lineStyle(3, 0x33ff00, 1.0);
-  predictionGraphics.moveTo(start.x, start.y);
-  predictionGraphics.lineTo(end.x, end.y);
-  // predictionGraphics.endFill();
+  if (predictionGraphics) {
+    // predictionGraphics.beginFill(0xffff0b, 0.5);
+    predictionGraphics.lineStyle(3, 0x33ff00, 1.0);
+    predictionGraphics.moveTo(start.x, start.y);
+    predictionGraphics.lineTo(end.x, end.y);
+    // predictionGraphics.endFill();
+  }
 }
 export function drawPredictionCircle(target: Vec2, radius: number) {
-  predictionGraphics.drawCircle(target.x, target.y, radius);
+  if (predictionGraphics) {
+    predictionGraphics.drawCircle(target.x, target.y, radius);
+  }
 }
 export function setPredictionGraphicsLineStyle(color: number) {
-  predictionGraphics.lineStyle(3, color, 1.0)
+  if (predictionGraphics) {
+    predictionGraphics.lineStyle(3, color, 1.0)
+  }
 }
 export function drawTarget(unit: Unit.IUnit, isOutOfRange: boolean) {
   // Convert prediction unit's associated real unit
@@ -345,10 +365,12 @@ export function drawTarget(unit: Unit.IUnit, isOutOfRange: boolean) {
   // }
 }
 export function drawPredictionCircleFill(target: Vec2, radius: number) {
-  window.radiusGraphics.lineStyle(1, 0x000000, 0.0);
-  window.radiusGraphics.beginFill(0xFFFFFF, 1.0);
-  window.radiusGraphics.drawCircle(target.x, target.y, radius);
-  window.radiusGraphics.endFill();
+  if (window.radiusGraphics) {
+    window.radiusGraphics.lineStyle(1, 0x000000, 0.0);
+    window.radiusGraphics.beginFill(0xFFFFFF, 1.0);
+    window.radiusGraphics.drawCircle(target.x, target.y, radius);
+    window.radiusGraphics.endFill();
+  }
 }
 
 export function isOutOfBounds(target: Vec2) {
@@ -499,7 +521,11 @@ export function updateTooltipSelection(mousePos: Vec2) {
 }
 
 // Draws a faint circle over things that can be clicked on
-export function drawCircleUnderTarget(mousePos: Vec2, opacity: number, graphics: PIXI.Graphics) {
+export function drawCircleUnderTarget(mousePos: Vec2, opacity: number, graphics: PIXI.Graphics | undefined) {
+  if (!graphics) {
+    // For headless
+    return;
+  }
   const targetUnit = window.underworld.getUnitAt(mousePos)
   const target: Vec2 | undefined = targetUnit || window.underworld.getPickupAt(mousePos);
   if (target) {

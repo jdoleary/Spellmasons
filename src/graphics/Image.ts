@@ -35,10 +35,16 @@ export interface IImageAnimated {
 export function create(
   coords: Vec2,
   spritesheetId: string,
-  parent: PIXI.Container,
+  parent: PIXI.Container | undefined,
   pixiSpriteOptions?: PixiSpriteOptions
-): IImageAnimated {
+): IImageAnimated | undefined {
+  if (!parent) {
+    return undefined;
+  }
   const sprite = addPixiSpriteAnimated(spritesheetId, parent, pixiSpriteOptions);
+  if (!sprite) {
+    return undefined;
+  }
   sprite.anchor.x = 0.5;
   sprite.anchor.y = 0.5;
   sprite.rotation = 0;
@@ -77,11 +83,16 @@ export function cleanup(image?: IImageAnimated) {
 // promise is resolved (if there is one) before switching the animation.  This is why 'resolver'
 // is a required field, it should be explicitly set to noop if there is no promise meant to be waiting 
 // for the animation to finish.
-export function changeSprite(image: IImageAnimated | undefined, imagePath: string, container: PIXI.Container, resolver: undefined | (() => void), options?: PixiSpriteOptions): JSpriteAnimated | undefined {
+export function changeSprite(image: IImageAnimated | undefined, imagePath: string, container: PIXI.Container | undefined, resolver: undefined | (() => void), options?: PixiSpriteOptions): JSpriteAnimated | undefined {
   if (!image) {
     console.warn('Cannot changeSprite, no image object to change to', imagePath)
     return;
   }
+  if (!container) {
+    // For headless
+    return;
+  }
+
   // Note: This resolver logic MUST BE executed before early returns (with the exception of the image
   // not existing).  If it is not, the latest resolver may never be assigned and the game could hang.
   // Since the image is changing, resolve whatever was waiting for it to complete.
@@ -167,8 +178,12 @@ export function serialize(image: IImageAnimated): IImageAnimatedSerialized {
 // Reinitialize an Image from IImageAnimatedSerialized JSON
 // this is useful when loading game state after reconnect
 // This is the opposite of serialize
-export function load(image: IImageAnimatedSerialized | undefined, parent: PIXI.Container): IImageAnimated | undefined {
+export function load(image: IImageAnimatedSerialized | undefined, parent: PIXI.Container | undefined): IImageAnimated | undefined {
   if (!image) {
+    return undefined;
+  }
+  if (!parent) {
+    // For headless
     return undefined;
   }
   const copy = { ...image };
@@ -180,6 +195,7 @@ export function load(image: IImageAnimatedSerialized | undefined, parent: PIXI.C
   }
   // Recreate the sprite using the create function so it initializes it properly
   const newImage = create(copy.sprite, imagePath, parent);
+  if (!newImage) { return undefined; }
   newImage.sprite.scale.set(scale.x, scale.y);
   // Restore subsprites (the actual sprites)
   restoreSubsprites(newImage);
@@ -264,6 +280,7 @@ export function addMask(image: IImageAnimated, path: string) {
     // remove old mask:
     removeMask(image);
     const mask = addPixiSpriteAnimated(path, image.sprite);
+    if (!mask) { return; }
     mask.anchor.set(0.5);
     image.sprite.mask = mask;
     image.mask = path;
@@ -285,6 +302,7 @@ export function addSubSprite(image: IImageAnimated | undefined, key: string) {
     const subSpriteData = Subsprites[key];
     if (subSpriteData) {
       const sprite = addPixiSprite(subSpriteData.imageName, image.sprite);
+      if (!sprite) { return; }
       sprite.alpha = subSpriteData.alpha;
       sprite.anchor.set(subSpriteData.anchor.x, subSpriteData.anchor.y);
       sprite.scale.set(subSpriteData.scale.x, subSpriteData.scale.y);

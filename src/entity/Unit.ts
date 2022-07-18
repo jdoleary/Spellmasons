@@ -196,8 +196,10 @@ export function create(
 function setupShaders(unit: IUnit) {
   if (unit.image) {
     const all_red = makeAllRedShader()
-    unit.shaderUniforms.all_red = all_red.uniforms;
-    unit.image.sprite.filters = [all_red.filter];
+    if (all_red) {
+      unit.shaderUniforms.all_red = all_red.uniforms;
+      unit.image.sprite.filters = [all_red.filter];
+    }
   }
 }
 
@@ -363,7 +365,7 @@ export function returnToDefaultSprite(unit: IUnit) {
     }
   }
 }
-export function getParentContainer(alive: boolean): PIXI.Container {
+export function getParentContainer(alive: boolean): PIXI.Container | undefined {
   return alive ? containerUnits : containerDoodads;
 }
 
@@ -490,14 +492,16 @@ export function addOneOffAnimation(unit: IUnit, spritePath: string, options?: Pi
       loop: false,
       ...options,
       onComplete: () => {
-        if (unit.image) {
+        if (unit.image && animationSprite) {
           unit.image.sprite.removeChild(animationSprite);
         }
         resolve();
       }
     });
-    animationSprite.isOneOff = true;
-    animationSprite.anchor.set(0.5);
+    if (animationSprite) {
+      animationSprite.isOneOff = true;
+      animationSprite.anchor.set(0.5);
+    }
   }));
 }
 
@@ -950,14 +954,14 @@ export function findLOSLocation(unit: IUnit, target: Vec2): Vec2[] {
   for (let rad = angleToEnemy - degAwayFromTarget; rad <= angleToEnemy + degAwayFromTarget; rad += increments) {
     let pos = math.getPosAtAngleAndDistance(target, rad, dist)
     const intersection = closestLineSegmentIntersection({ p1: target, p2: pos }, window.underworld.walls);
-    window.debugGraphics.lineStyle(3, 0xff00ff, 1);
+    window.debugGraphics?.lineStyle(3, 0xff00ff, 1);
     if (intersection) {
-      window.debugGraphics.lineStyle(3, 0x0000ff, 1);
+      window.debugGraphics?.lineStyle(3, 0x0000ff, 1);
       pos = intersection;
     }
     LOSLocations.push(pos);
 
-    window.debugGraphics.drawCircle(pos.x, pos.y, 4);
+    window.debugGraphics?.drawCircle(pos.x, pos.y, 4);
   }
   return LOSLocations;
 

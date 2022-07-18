@@ -72,23 +72,31 @@ Sets a spell as a trap, to be triggered when stepped on.  Wrapping a spell in a 
                     const animationSprite = addPixiSpriteAnimated('pickups/trapAttack', containerUnits, {
                       loop: false,
                       onComplete: () => {
-                        if (animationSprite.parent) {
+                        if (animationSprite?.parent) {
                           animationSprite.parent.removeChild(animationSprite);
                         }
                       }
                     });
-                    animationSprite.anchor.set(0.5);
-                    animationSprite.x = x;
-                    animationSprite.y = y;
+                    if (animationSprite) {
+
+                      animationSprite.anchor.set(0.5);
+                      animationSprite.x = x;
+                      animationSprite.y = y;
+                    }
                     const animationSprite2 = addPixiSpriteAnimated('pickups/trapAttackMagic', containerUnits, {
                       loop: false,
                       onComplete: () => {
-                        animationSprite2.parent.removeChild(animationSprite2);
+                        if (animationSprite2) {
+
+                          animationSprite2.parent.removeChild(animationSprite2);
+                        }
                       }
                     });
-                    animationSprite2.anchor.set(0.5);
-                    animationSprite2.x = x;
-                    animationSprite2.y = y;
+                    if (animationSprite2) {
+                      animationSprite2.anchor.set(0.5);
+                      animationSprite2.x = x;
+                      animationSprite2.y = y;
+                    }
 
                     window.underworld.castCards({}, state.casterUnit, cardsInTrap, unit, false, true);
                     return true;

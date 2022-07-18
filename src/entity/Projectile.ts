@@ -13,7 +13,7 @@ interface Projectile {
   startTime: number;
   endTime: number;
   target: Vec2;
-  sprite: PIXI.Sprite;
+  sprite: PIXI.Sprite | undefined;
 }
 function createProjectile(
   coords: Vec2,
@@ -21,13 +21,16 @@ function createProjectile(
   imagePath: string,
 ): Projectile {
   const sprite = addPixiSpriteAnimated(imagePath, containerProjectiles, { animationSpeed: 0.25, loop: true });
-  sprite.anchor.x = 0.5;
-  sprite.anchor.y = 0.5;
+  if (sprite) {
 
-  sprite.x = coords.x;
-  sprite.y = coords.y;
+    sprite.anchor.x = 0.5;
+    sprite.anchor.y = 0.5;
 
-  sprite.rotation = Math.atan2(target.y - coords.y, target.x - coords.x);
+    sprite.x = coords.x;
+    sprite.y = coords.y;
+
+    sprite.rotation = Math.atan2(target.y - coords.y, target.x - coords.x);
+  }
 
   return {
     x: coords.x,
@@ -72,8 +75,11 @@ function fly(
       SPEED_PER_MILLI;
     instance.endTime = time + time_in_flight;
   }
-  instance.sprite.x = instance.x;
-  instance.sprite.y = instance.y;
+  if (instance.sprite) {
+
+    instance.sprite.x = instance.x;
+    instance.sprite.y = instance.y;
+  }
   const t =
     (time - instance.startTime) / (instance.endTime - instance.startTime);
   instance.x = lerp(instance.startX, instance.target.x, t);
@@ -81,7 +87,7 @@ function fly(
   // Once it's fully done animating
   if (time >= instance.endTime) {
     // Clean up the element
-    if (instance.sprite.parent) {
+    if (instance.sprite && instance.sprite.parent) {
       instance.sprite.parent.removeChild(instance.sprite);
     }
     resolve();
@@ -114,8 +120,10 @@ function lob(
     const time_in_flight = config.LOB_PROJECTILE_SPEED;
     instance.endTime = time + time_in_flight;
   }
-  instance.sprite.x = instance.x;
-  instance.sprite.y = instance.y;
+  if (instance.sprite) {
+    instance.sprite.x = instance.x;
+    instance.sprite.y = instance.y;
+  }
   const t =
     (time - instance.startTime) / (instance.endTime - instance.startTime);
   instance.x = lerp(instance.startX, instance.target.x, t);
@@ -125,7 +133,7 @@ function lob(
   // Once it's fully done animating
   if (time >= instance.endTime) {
     // Clean up the element
-    if (instance.sprite.parent) {
+    if (instance.sprite?.parent) {
       instance.sprite.parent.removeChild(instance.sprite);
     }
     resolve();

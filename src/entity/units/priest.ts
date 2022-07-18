@@ -19,16 +19,18 @@ async function animatePriestProjectileAndHit(self: Unit.IUnit, target: Unit.IUni
     loop: false,
     animationSpeed: 0.1,
     onComplete: () => {
-      if (animationSprite.parent) {
+      if (animationSprite && animationSprite.parent) {
         animationSprite.parent.removeChild(animationSprite)
       } else {
         console.error('Expected priest animationSprite to have parent so it could be removed but it did not.')
       }
     }
   });
-  animationSprite.anchor.set(0.5, 0.3);
-  animationSprite.x = target.x;
-  animationSprite.y = target.y;
+  if (animationSprite) {
+    animationSprite.anchor.set(0.5, 0.3);
+    animationSprite.x = target.x;
+    animationSprite.y = target.y;
+  }
 
 }
 async function healOneOf(self: Unit.IUnit, units: Unit.IUnit[]): Promise<boolean> {

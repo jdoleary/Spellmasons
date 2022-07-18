@@ -52,6 +52,7 @@
 - Milestone X | **Beta Testers** | Due October 1
     - Tutorial / Explain prompts based on user actions
     - Optimize game
+        - Check ImmediateModeSprites for leaks
         - Support large maps
         - Round of wall corners so it doesn't stair step??
             - May depend on art, but would help with optimization

@@ -199,7 +199,7 @@ export default class Underworld {
     ImmediateMode.loop();
 
     Unit.syncPlayerHealthManaUI();
-    window.unitOverlayGraphics.clear();
+    window.unitOverlayGraphics?.clear();
 
     // Draw cast line:
     if (window.player) {
@@ -207,22 +207,22 @@ export default class Underworld {
         const mouseTarget = window.underworld.getMousePos();
         // Players can only cast within their attack range
         const castLine = { p1: window.player.unit, p2: mouseTarget };
-        window.unitOverlayGraphics.lineStyle(3, colors.targetBlue, 0.7);
-        window.unitOverlayGraphics.moveTo(castLine.p1.x, castLine.p1.y);
+        window.unitOverlayGraphics?.lineStyle(3, colors.targetBlue, 0.7);
+        window.unitOverlayGraphics?.moveTo(castLine.p1.x, castLine.p1.y);
         if (math.distance(castLine.p1, castLine.p2) > window.player.unit.attackRange) {
           const endOfRange = math.getCoordsAtDistanceTowardsTarget(castLine.p1, castLine.p2, window.player.unit.attackRange);
-          window.unitOverlayGraphics.lineTo(endOfRange.x, endOfRange.y);
+          window.unitOverlayGraphics?.lineTo(endOfRange.x, endOfRange.y);
           // Draw a red line the rest of the way shoing that you cannot cast
-          window.unitOverlayGraphics.lineStyle(3, 0x333333, 0.7);
-          window.unitOverlayGraphics.lineTo(castLine.p2.x, castLine.p2.y);
-          window.unitOverlayGraphics.drawCircle(castLine.p2.x, castLine.p2.y, 3);
+          window.unitOverlayGraphics?.lineStyle(3, 0x333333, 0.7);
+          window.unitOverlayGraphics?.lineTo(castLine.p2.x, castLine.p2.y);
+          window.unitOverlayGraphics?.drawCircle(castLine.p2.x, castLine.p2.y, 3);
           // Draw a circle where the cast stops
-          window.unitOverlayGraphics.moveTo(castLine.p2.x, castLine.p2.y);//test
-          window.unitOverlayGraphics.lineStyle(3, colors.targetBlue, 0.7);
-          window.unitOverlayGraphics.drawCircle(endOfRange.x, endOfRange.y, 3);
+          window.unitOverlayGraphics?.moveTo(castLine.p2.x, castLine.p2.y);//test
+          window.unitOverlayGraphics?.lineStyle(3, colors.targetBlue, 0.7);
+          window.unitOverlayGraphics?.drawCircle(endOfRange.x, endOfRange.y, 3);
         } else {
-          window.unitOverlayGraphics.lineTo(castLine.p2.x, castLine.p2.y);
-          window.unitOverlayGraphics.drawCircle(castLine.p2.x, castLine.p2.y, 3);
+          window.unitOverlayGraphics?.lineTo(castLine.p2.x, castLine.p2.y);
+          window.unitOverlayGraphics?.drawCircle(castLine.p2.x, castLine.p2.y, 3);
         }
       }
     }
@@ -316,10 +316,10 @@ export default class Underworld {
           const healthBarColor = u.faction == Faction.ALLY ? healthAllyGreen : healthRed;
           const healthBarHurtColor = u.faction == Faction.ALLY ? 0x235730 : healthHurtRed;
           const healthBarHealColor = u.faction == Faction.ALLY ? 0x23ff30 : 0xff2828;
-          window.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
-          window.unitOverlayGraphics.beginFill(healthBarColor, 1.0);
+          window.unitOverlayGraphics?.lineStyle(0, 0x000000, 1.0);
+          window.unitOverlayGraphics?.beginFill(healthBarColor, 1.0);
           const healthBarProps = getUIBarProps(u.x, u.y, u.health, u.healthMax, zoom);
-          window.unitOverlayGraphics.drawRect(
+          window.unitOverlayGraphics?.drawRect(
             healthBarProps.x,
             // Stack the health bar above the mana bar
             healthBarProps.y - config.UNIT_UI_BAR_HEIGHT / zoom,
@@ -331,15 +331,15 @@ export default class Underworld {
           // to cast, otherwise it will show out of sync when NPCs do damage
           if (this.turn_phase == turn_phase.PlayerTurns) {
             // Show how much damage they'll take on their health bar
-            window.unitOverlayGraphics.beginFill(healthBarHurtColor, 1.0);
+            window.unitOverlayGraphics?.beginFill(healthBarHurtColor, 1.0);
             if (predictionUnit) {
               const healthAfterHurt = predictionUnit.health;
               if (healthAfterHurt > u.health) {
-                window.unitOverlayGraphics.beginFill(healthBarHealColor, 1.0);
+                window.unitOverlayGraphics?.beginFill(healthBarHealColor, 1.0);
               }
               // const healthBarHurtWidth = Math.max(0, config.UNIT_UI_BAR_WIDTH * (u.health - healthAfterHurt) / u.healthMax);
               const healthBarHurtProps = getUIBarProps(u.x, u.y, u.health - healthAfterHurt, u.healthMax, zoom);
-              window.unitOverlayGraphics.drawRect(
+              window.unitOverlayGraphics?.drawRect(
                 // Show the healthBarHurtBar on the right side of the health  bar
                 healthBarHurtProps.x + config.UNIT_UI_BAR_WIDTH / zoom * healthAfterHurt / u.healthMax,
                 // Stack the health bar above the mana bar
@@ -355,21 +355,21 @@ export default class Underworld {
           }
           // Draw mana bar
           if (u.manaMax != 0) {
-            window.unitOverlayGraphics.lineStyle(0, 0x000000, 1.0);
-            window.unitOverlayGraphics.beginFill(colors.manaBlue, 1.0);
+            window.unitOverlayGraphics?.lineStyle(0, 0x000000, 1.0);
+            window.unitOverlayGraphics?.beginFill(colors.manaBlue, 1.0);
             const manaBarProps = getUIBarProps(u.x, u.y, u.mana, u.manaMax, zoom);
-            window.unitOverlayGraphics.drawRect(
+            window.unitOverlayGraphics?.drawRect(
               manaBarProps.x,
               manaBarProps.y,
               manaBarProps.width,
               manaBarProps.height);
           }
-          window.unitOverlayGraphics.endFill();
+          window.unitOverlayGraphics?.endFill();
         }
       }
     }
     // Sort unit sprites visually by y position (like "z-index")
-    containerUnits.children.sort((a, b) => a.y - b.y)
+    containerUnits?.children.sort((a, b) => a.y - b.y)
 
     updateCameraPosition();
     this.drawEnemyAttentionMarkers();
@@ -502,8 +502,8 @@ export default class Underworld {
       return originX + (0.5 + index - totalNumberOfSpells / 2) * spaceBetweenIcons
     }
     // Only display player thoughts if they are not the current client's player
-    window.thinkingPlayerGraphics.clear();
-    containerPlayerThinking.removeChildren();
+    window.thinkingPlayerGraphics?.clear();
+    containerPlayerThinking?.removeChildren();
     for (let [thinkerClientId, thought] of Object.entries(window.playerThoughts)) {
       const { target, cardIds } = thought;
       const thinkingPlayerIndex = this.players.findIndex(p => p.clientId == thinkerClientId);
@@ -511,14 +511,16 @@ export default class Underworld {
       if (thinkingPlayer && thinkingPlayerIndex == this.playerTurnIndex) {
         // Render thought bubble around spell icons
         if (cardIds.length) {
-          containerPlayerThinking.addChild(window.thinkingPlayerGraphics);
+          if (window.thinkingPlayerGraphics) {
+            containerPlayerThinking?.addChild(window.thinkingPlayerGraphics);
+          }
           const thoughtBubbleMargin = 20;
           const thoughtBubbleRight = getXLocationOfImageForThoughtBubble(thinkingPlayer.unit.x, cardIds.length, cardIds.length);
           const thoughtBubbleLeft = getXLocationOfImageForThoughtBubble(thinkingPlayer.unit.x, 0, cardIds.length) - thoughtBubbleMargin;
-          window.thinkingPlayerGraphics.lineStyle(3, 0xffffff, 1.0);
-          window.thinkingPlayerGraphics.beginFill(0xffffff, 0.7);
-          window.thinkingPlayerGraphics.drawRoundedRect(thoughtBubbleLeft, thinkingPlayer.unit.y - config.COLLISION_MESH_RADIUS * 2 - thoughtBubbleMargin, thoughtBubbleRight - thoughtBubbleLeft, thoughtBubbleMargin * 2, 5);
-          window.thinkingPlayerGraphics.endFill();
+          window.thinkingPlayerGraphics?.lineStyle(3, 0xffffff, 1.0);
+          window.thinkingPlayerGraphics?.beginFill(0xffffff, 0.7);
+          window.thinkingPlayerGraphics?.drawRoundedRect(thoughtBubbleLeft, thinkingPlayer.unit.y - config.COLLISION_MESH_RADIUS * 2 - thoughtBubbleMargin, thoughtBubbleRight - thoughtBubbleLeft, thoughtBubbleMargin * 2, 5);
+          window.thinkingPlayerGraphics?.endFill();
         }
         for (let i = 0; i < cardIds.length; i++) {
           const cardId = cardIds[i];
@@ -529,24 +531,26 @@ export default class Underworld {
           if (card) {
             const x = getXLocationOfImageForThoughtBubble(thinkingPlayer.unit.x, i, cardIds.length);
             const sprite = addPixiSprite(card.thumbnail, containerPlayerThinking);
-            sprite.anchor.x = 0.5;
-            sprite.anchor.y = 0.5;
-            sprite.rotation = 0;
-            const pos = { x, y: thinkingPlayer.unit.y - config.COLLISION_MESH_RADIUS * 2 };
-            sprite.x = pos.x;
-            sprite.y = pos.y;
-            sprite.scale.set(0.3);
+            if (sprite) {
+              sprite.anchor.x = 0.5;
+              sprite.anchor.y = 0.5;
+              sprite.rotation = 0;
+              const pos = { x, y: thinkingPlayer.unit.y - config.COLLISION_MESH_RADIUS * 2 };
+              sprite.x = pos.x;
+              sprite.y = pos.y;
+              sprite.scale.set(0.3);
+            }
           }
         }
         if (target && cardIds.length) {
           // Draw a line to show where they're aiming:
-          window.thinkingPlayerGraphics.lineStyle(3, colors.healthAllyGreen, 0.7);
+          window.thinkingPlayerGraphics?.lineStyle(3, colors.healthAllyGreen, 0.7);
           // Use this similarTriangles calculation to make the line pretty so it doesn't originate from the exact center of the
           // other player but from the edge instead
           const startPoint = Vec.subtract(thinkingPlayer.unit, math.similarTriangles(thinkingPlayer.unit.x - target.x, thinkingPlayer.unit.y - target.y, math.distance(thinkingPlayer.unit, target), config.COLLISION_MESH_RADIUS));
-          window.thinkingPlayerGraphics.moveTo(startPoint.x, startPoint.y);
-          window.thinkingPlayerGraphics.lineTo(target.x, target.y);
-          window.thinkingPlayerGraphics.drawCircle(target.x, target.y, 4);
+          window.thinkingPlayerGraphics?.moveTo(startPoint.x, startPoint.y);
+          window.thinkingPlayerGraphics?.lineTo(target.x, target.y);
+          window.thinkingPlayerGraphics?.drawCircle(target.x, target.y, 4);
         }
       }
     }
@@ -584,9 +588,9 @@ export default class Underworld {
       Image.cleanup(x.image);
     }
     // Clean up doodads
-    containerDoodads.removeChildren();
+    containerDoodads?.removeChildren();
     // Clean up board
-    containerBoard.removeChildren();
+    containerBoard?.removeChildren();
     // Prevent requestAnimationFrame from calling this method next time, since this underworld
     // instance is being cleaned up
     if (requestAnimationFrameGameLoopId !== undefined) {
@@ -818,16 +822,20 @@ export default class Underworld {
     for (let tile of this.imageOnlyTiles.filter(t => t.image.indexOf('liquid') === -1)) {
       if (tile.image) {
         const sprite = addPixiSprite('tiles/all_ground.png', containerBoard);
-        sprite.x = tile.x - config.COLLISION_MESH_RADIUS;
-        sprite.y = tile.y - config.COLLISION_MESH_RADIUS;
+        if (sprite) {
+          sprite.x = tile.x - config.COLLISION_MESH_RADIUS;
+          sprite.y = tile.y - config.COLLISION_MESH_RADIUS;
+        }
       }
     }
     // Then lay down wall tiles on top of them
     for (let tile of this.imageOnlyTiles.filter(t => t.image !== 'tiles/all_ground.png')) {
       if (tile.image) {
         const sprite = addPixiSprite(tile.image, containerBoard);
-        sprite.x = tile.x - config.COLLISION_MESH_RADIUS;
-        sprite.y = tile.y - config.COLLISION_MESH_RADIUS;
+        if (sprite) {
+          sprite.x = tile.x - config.COLLISION_MESH_RADIUS;
+          sprite.y = tile.y - config.COLLISION_MESH_RADIUS;
+        }
       }
     }
   }
@@ -883,7 +891,7 @@ export default class Underworld {
   cleanUpLevel() {
     // Now that it's a new level clear out the level's dodads such as
     // bone dust left behind from destroyed corpses
-    containerDoodads.removeChildren();
+    containerDoodads?.removeChildren();
     // Clean previous level info
     for (let i = this.units.length - 1; i >= 0; i--) {
       const u = this.units[i];
@@ -904,11 +912,11 @@ export default class Underworld {
     // Note: walls are stored in container Units so they can be sorted z-index
     // along with units
     // so this removes all unit images too.
-    containerUnits.removeChildren();
+    containerUnits?.removeChildren();
 
     // Clear all floor images
-    containerBoard.removeChildren();
-    containerWalls.removeChildren();
+    containerBoard?.removeChildren();
+    containerWalls?.removeChildren();
     this.imageOnlyTiles = [];
 
     // Clear card usage counts, otherwise players will be
@@ -1015,6 +1023,9 @@ export default class Underworld {
     }
   }
   getMousePos(): Vec2 {
+    if (!(app && containerBoard)) {
+      return { x: 0, y: 0 }
+    }
     const { x, y } = containerBoard.toLocal(
       app.renderer.plugins.interaction.mouse.global,
     );
@@ -1397,7 +1408,7 @@ export default class Underworld {
     window.castThisTurn = false;
 
     // Clear debug graphics
-    window.debugGraphics.clear()
+    window.debugGraphics?.clear()
 
     // Change the underworld.turn_phase variable and
     // related html classes that are used by the UI to
@@ -1716,7 +1727,7 @@ export default class Underworld {
         const { targetedUnits: previousTargets } = effectState;
         effectState = await card.effect(effectState, prediction);
         // Clear images from previous card before drawing the images from the new card
-        containerSpells.removeChildren();
+        containerSpells?.removeChildren();
 
         // Animate target additions:
         if (!prediction) {
@@ -1738,7 +1749,7 @@ export default class Underworld {
     }
     if (!prediction) {
       // Clear spell animations once all cards are done playing their animations
-      containerSpells.removeChildren();
+      containerSpells?.removeChildren();
     }
 
     return effectState;
@@ -1765,7 +1776,9 @@ export default class Underworld {
           }
         }
       );
-      image.resolver = resolve;
+      if (image) {
+        image.resolver = resolve;
+      }
     }));
 
 

@@ -1,4 +1,4 @@
-import * as PIXI from 'pixi.js';
+import type * as PIXI from 'pixi.js';
 import { LineSegment } from '../jmath/lineSegment';
 import floatingText from './FloatingText';
 import { Vec2 } from '../jmath/Vec';

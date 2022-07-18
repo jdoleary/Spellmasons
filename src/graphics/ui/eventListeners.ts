@@ -253,15 +253,15 @@ export function mouseMove(e?: MouseEvent) {
 
   // Test pathing
   if (window.showDebug && window.player) {
-    window.debugGraphics.clear();
+    window.debugGraphics?.clear();
 
     // Draw player path
     const path = window.player.unit.path;
     if (path && path.points[0]) {
-      window.debugGraphics.lineStyle(4, 0x00ff00, 1.0);
-      window.debugGraphics.moveTo(window.player.unit.x, window.player.unit.y);
+      window.debugGraphics?.lineStyle(4, 0x00ff00, 1.0);
+      window.debugGraphics?.moveTo(window.player.unit.x, window.player.unit.y);
       for (let point of path.points) {
-        window.debugGraphics.lineTo(point.x, point.y);
+        window.debugGraphics?.lineTo(point.x, point.y);
       }
     }
     const mouseTarget = window.underworld.getMousePos();
@@ -273,37 +273,37 @@ export function mouseMove(e?: MouseEvent) {
     cellX: ${cellX}, cellY: ${cellY}
     tile: ${originalTileImage}`;
     // Debug draw cell that mouse is hovered over
-    // window.debugGraphics.lineStyle(3, 0xff0000, 1);
-    // window.debugGraphics.moveTo(cellX * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2, cellY * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2);
-    // window.debugGraphics.lineTo(cellX * config.OBSTACLE_SIZE + config.OBSTACLE_SIZE / 2, cellY * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2);
-    // window.debugGraphics.lineTo(cellX * config.OBSTACLE_SIZE + config.OBSTACLE_SIZE / 2, cellY * config.OBSTACLE_SIZE + config.OBSTACLE_SIZE / 2);
-    // window.debugGraphics.lineTo(cellX * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2, cellY * config.OBSTACLE_SIZE + config.OBSTACLE_SIZE / 2);
-    // window.debugGraphics.lineTo(cellX * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2, cellY * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2);
+    // window.debugGraphics?.lineStyle(3, 0xff0000, 1);
+    // window.debugGraphics?.moveTo(cellX * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2, cellY * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2);
+    // window.debugGraphics?.lineTo(cellX * config.OBSTACLE_SIZE + config.OBSTACLE_SIZE / 2, cellY * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2);
+    // window.debugGraphics?.lineTo(cellX * config.OBSTACLE_SIZE + config.OBSTACLE_SIZE / 2, cellY * config.OBSTACLE_SIZE + config.OBSTACLE_SIZE / 2);
+    // window.debugGraphics?.lineTo(cellX * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2, cellY * config.OBSTACLE_SIZE + config.OBSTACLE_SIZE / 2);
+    // window.debugGraphics?.lineTo(cellX * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2, cellY * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2);
     // Draw the pathing walls
     for (let lineSegment of window.underworld.pathingLineSegments) {
-      window.debugGraphics.lineStyle(2, 0xffaabb, 1.0);
-      window.debugGraphics.moveTo(lineSegment.p1.x, lineSegment.p1.y);
-      window.debugGraphics.lineTo(lineSegment.p2.x, lineSegment.p2.y);
+      window.debugGraphics?.lineStyle(2, 0xffaabb, 1.0);
+      window.debugGraphics?.moveTo(lineSegment.p1.x, lineSegment.p1.y);
+      window.debugGraphics?.lineTo(lineSegment.p2.x, lineSegment.p2.y);
     }
     // Draw bounds that prevent movement
     for (let bound of window.underworld.liquidBounds) {
-      window.debugGraphics.lineStyle(2, 0x0000ff, 1.0);
-      window.debugGraphics.moveTo(bound.p1.x, bound.p1.y);
-      window.debugGraphics.lineTo(bound.p2.x, bound.p2.y);
+      window.debugGraphics?.lineStyle(2, 0x0000ff, 1.0);
+      window.debugGraphics?.moveTo(bound.p1.x, bound.p1.y);
+      window.debugGraphics?.lineTo(bound.p2.x, bound.p2.y);
     }
     // Draw walls that prevent line of sight 
     for (let wall of window.underworld.walls) {
-      window.debugGraphics.lineStyle(2, 0x00ff00, 1.0);
-      window.debugGraphics.moveTo(wall.p1.x, wall.p1.y);
-      window.debugGraphics.lineTo(wall.p2.x, wall.p2.y);
+      window.debugGraphics?.lineStyle(2, 0x00ff00, 1.0);
+      window.debugGraphics?.moveTo(wall.p1.x, wall.p1.y);
+      window.debugGraphics?.lineTo(wall.p2.x, wall.p2.y);
     }
     // Draw underworld limits
-    // window.debugGraphics.lineStyle(2, 0xff0000, 1.0);
-    // window.debugGraphics.moveTo(window.underworld.limits.xMin, window.underworld.limits.yMin);
-    // window.debugGraphics.lineTo(window.underworld.limits.xMax, window.underworld.limits.yMin);
-    // window.debugGraphics.lineTo(window.underworld.limits.xMax, window.underworld.limits.yMax);
-    // window.debugGraphics.lineTo(window.underworld.limits.xMin, window.underworld.limits.yMax);
-    // window.debugGraphics.lineTo(window.underworld.limits.xMin, window.underworld.limits.yMin);
+    // window.debugGraphics?.lineStyle(2, 0xff0000, 1.0);
+    // window.debugGraphics?.moveTo(window.underworld.limits.xMin, window.underworld.limits.yMin);
+    // window.debugGraphics?.lineTo(window.underworld.limits.xMax, window.underworld.limits.yMin);
+    // window.debugGraphics?.lineTo(window.underworld.limits.xMax, window.underworld.limits.yMax);
+    // window.debugGraphics?.lineTo(window.underworld.limits.xMin, window.underworld.limits.yMax);
+    // window.debugGraphics?.lineTo(window.underworld.limits.xMin, window.underworld.limits.yMin);
 
   }
 }
@@ -319,13 +319,13 @@ function drawWalkRope(target: Vec2) {
   // There are dots dilineating how far the unit can move each turn.
   //
   // Show walk path
-  window.walkPathGraphics.clear();
+  window.walkPathGraphics?.clear();
   walkRopePath = window.underworld.calculatePath(walkRopePath, Vec.round(window.player.unit), Vec.round(target));
   const { points: currentPlayerPath } = walkRopePath;
   if (currentPlayerPath.length) {
     const turnStopPoints = pointsEveryXDistanceAlongPath(window.player.unit, currentPlayerPath, window.player.unit.staminaMax, window.player.unit.staminaMax - window.player.unit.stamina);
-    window.walkPathGraphics.lineStyle(4, 0xffffff, 1.0);
-    window.walkPathGraphics.moveTo(window.player.unit.x, window.player.unit.y);
+    window.walkPathGraphics?.lineStyle(4, 0xffffff, 1.0);
+    window.walkPathGraphics?.moveTo(window.player.unit.x, window.player.unit.y);
     let lastPoint: Vec2 = window.player.unit;
     let distanceCovered = 0;
     const distanceLeftToMove = window.player.unit.stamina;
@@ -334,18 +334,18 @@ function drawWalkRope(target: Vec2) {
       if (point) {
         const thisLineDistance = distance(lastPoint, point);
         if (distanceCovered > distanceLeftToMove) {
-          window.walkPathGraphics.lineStyle(4, 0xffffff, 1.0);
-          window.walkPathGraphics.lineTo(point.x, point.y);
+          window.walkPathGraphics?.lineStyle(4, 0xffffff, 1.0);
+          window.walkPathGraphics?.lineTo(point.x, point.y);
         } else {
-          window.walkPathGraphics.lineStyle(4, colors.stamina, 1.0);
+          window.walkPathGraphics?.lineStyle(4, colors.stamina, 1.0);
           if (distanceCovered + thisLineDistance > distanceLeftToMove) {
             // Draw up to the firstStop with the stamina color
             const pointAtWhichUnitOutOfStamina = getCoordsAtDistanceTowardsTarget(lastPoint, point, distanceLeftToMove - distanceCovered);
-            window.walkPathGraphics.lineTo(pointAtWhichUnitOutOfStamina.x, pointAtWhichUnitOutOfStamina.y);
-            window.walkPathGraphics.lineStyle(4, 0xffffff, 1.0);
-            window.walkPathGraphics.lineTo(point.x, point.y);
+            window.walkPathGraphics?.lineTo(pointAtWhichUnitOutOfStamina.x, pointAtWhichUnitOutOfStamina.y);
+            window.walkPathGraphics?.lineStyle(4, 0xffffff, 1.0);
+            window.walkPathGraphics?.lineTo(point.x, point.y);
           } else {
-            window.walkPathGraphics.lineTo(point.x, point.y);
+            window.walkPathGraphics?.lineTo(point.x, point.y);
           }
         }
         distanceCovered += distance(lastPoint, point);
@@ -356,24 +356,24 @@ function drawWalkRope(target: Vec2) {
     // Draw the points along the path at which the unit will stop on each turn
     for (let i = 0; i < turnStopPoints.length; i++) {
       if (i == 0 && distanceLeftToMove > 0) {
-        window.walkPathGraphics.lineStyle(4, colors.stamina, 1.0);
+        window.walkPathGraphics?.lineStyle(4, colors.stamina, 1.0);
       } else {
-        window.walkPathGraphics.lineStyle(4, 0xffffff, 1.0);
+        window.walkPathGraphics?.lineStyle(4, 0xffffff, 1.0);
       }
       const point = turnStopPoints[i];
       if (point) {
-        window.walkPathGraphics.drawCircle(point.x, point.y, 3);
+        window.walkPathGraphics?.drawCircle(point.x, point.y, 3);
       }
     }
     if (turnStopPoints.length == 0 && distanceLeftToMove > 0) {
-      window.walkPathGraphics.lineStyle(4, colors.stamina, 1.0);
+      window.walkPathGraphics?.lineStyle(4, colors.stamina, 1.0);
     } else {
-      window.walkPathGraphics.lineStyle(4, 0xffffff, 1.0);
+      window.walkPathGraphics?.lineStyle(4, 0xffffff, 1.0);
     }
     // Draw a stop circle at the end
     const lastPointInPath = currentPlayerPath[currentPlayerPath.length - 1]
     if (lastPointInPath) {
-      window.walkPathGraphics.drawCircle(lastPointInPath.x, lastPointInPath.y, 3);
+      window.walkPathGraphics?.drawCircle(lastPointInPath.x, lastPointInPath.y, 3);
     }
   }
 
@@ -402,7 +402,7 @@ export function mouseUpHandler(e: MouseEvent) {
   }
   if (e.button == 2) {
     // Left click clears walk rope
-    window.walkPathGraphics.clear();
+    window.walkPathGraphics?.clear();
     window.setRMBDown(false);
     e.preventDefault();
   }

@@ -44,10 +44,12 @@ export async function pull(pushedObject: Circle, towards: Vec2, prediction: bool
       }
       resolve();
       // Draw prediction lines
-      window.predictionGraphics.lineStyle(4, forceMoveColor, 1.0)
-      window.predictionGraphics.moveTo(originalPosition.x, originalPosition.y);
-      window.predictionGraphics.lineTo(pushedObject.x, pushedObject.y);
-      window.predictionGraphics.drawCircle(pushedObject.x, pushedObject.y, 4);
+      if (window.predictionGraphics) {
+        window.predictionGraphics.lineStyle(4, forceMoveColor, 1.0)
+        window.predictionGraphics.moveTo(originalPosition.x, originalPosition.y);
+        window.predictionGraphics.lineTo(pushedObject.x, pushedObject.y);
+        window.predictionGraphics.drawCircle(pushedObject.x, pushedObject.y, 4);
+      }
     } else {
       window.forceMove.push(forceMoveInst);
     }

@@ -106,6 +106,9 @@ export function setView(v: View) {
 
 // zoom camera
 function zoom(e: WheelEvent) {
+  if (!app) {
+    return;
+  }
   // TODO: This value could be customizable in the menu later:
   const scrollSensitivity = 200;
   const scrollFactor = Math.abs(e.deltaY / scrollSensitivity);

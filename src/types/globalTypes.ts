@@ -11,6 +11,7 @@ import { IPickup } from '../entity/Pickup';
 import { ForceMove } from '../jmath/moveWithCollision';
 declare global {
     interface Window {
+        pixi: typeof PIXI | undefined;
         SPELLMASONS_PACKAGE_VERSION: string;
         latencyPanel: Stats.Panel;
         runPredictionsPanel: Stats.Panel;
@@ -52,25 +53,25 @@ declare global {
         // Set to true in developer console to see debug information
         showDebug: boolean;
         // Draw the "walk rope" to show a player how far they can travel.
-        walkPathGraphics: PIXI.Graphics;
+        walkPathGraphics: PIXI.Graphics | undefined;
         // Graphics for drawing debug information, use window.showDebug = true
         // to show at runtime. Automatically draws pathing bounds, walls, etc
-        debugGraphics: PIXI.Graphics;
+        debugGraphics: PIXI.Graphics | undefined;
         // Graphics for drawing debug information a-la-carte
-        devDebugGraphics: PIXI.Graphics;
+        devDebugGraphics: PIXI.Graphics | undefined;
         // Shows radiuses for spells
-        radiusGraphics: PIXI.Graphics;
+        radiusGraphics: PIXI.Graphics | undefined;
         // Graphics to show what other players are thinking
-        thinkingPlayerGraphics: PIXI.Graphics;
+        thinkingPlayerGraphics: PIXI.Graphics | undefined;
         // Graphics for drawing unit health and mana bars
-        unitOverlayGraphics: PIXI.Graphics;
+        unitOverlayGraphics: PIXI.Graphics | undefined;
         // Graphics for drawing the spell effects during the dry run phase
-        predictionGraphics: PIXI.Graphics;
+        predictionGraphics: PIXI.Graphics | undefined;
         // Graphics for rendering above board and walls but beneath units and doodads,
         // see containerPlanningView for exact render order.
-        planningViewGraphics: PIXI.Graphics;
+        planningViewGraphics: PIXI.Graphics | undefined;
         // Graphics for debugging the cave
-        debugCave: PIXI.Graphics;
+        debugCave: PIXI.Graphics | undefined;
         allowCookies: boolean;
         playMusic: () => void;
         changeVolume: (volume: number) => void;

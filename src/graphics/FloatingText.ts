@@ -1,4 +1,4 @@
-import * as PIXI from 'pixi.js';
+import type * as PIXI from 'pixi.js';
 import type { Vec2 } from '../jmath/Vec';
 import { app, containerFloatingText, containerUIFixed, withinCameraBounds } from './PixiUtils';
 
@@ -26,7 +26,10 @@ export default function floatingText({
   style = { fill: 'white' },
   keepWithinCameraBounds = true
 }: FloatingTextInsructions) {
-  const pixiText = new PIXI.Text(text, style);
+  if (!(window.pixi && app && container)) {
+    return Promise.resolve();
+  }
+  const pixiText = new window.pixi.Text(text, style);
   pixiText.x = coords.x;
   pixiText.y = coords.y;
   pixiText.anchor.x = 0.5;

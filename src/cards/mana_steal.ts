@@ -38,25 +38,28 @@ Sacrifice some of own health to steal up to ${mana_stolen} mana from each target
               const animationSprite = addPixiSpriteAnimated('spell-effects/potionPickup', state.casterUnit.image.sprite, {
                 loop: false,
                 onComplete: () => {
-                  if (animationSprite.parent) {
+                  if (animationSprite?.parent) {
                     animationSprite.parent.removeChild(animationSprite);
                   }
                 }
               });
-              if (!animationSprite.filters) {
-                animationSprite.filters = [];
+              if (animationSprite) {
+
+                if (!animationSprite.filters) {
+                  animationSprite.filters = [];
+                }
+                // Change the health color to blue
+                animationSprite.filters.push(
+                  // @ts-ignore for some reason ts is flagging this as an error but it works fine
+                  // in pixi.
+                  new MultiColorReplaceFilter(
+                    [
+                      [0xff0000, manaBlue],
+                    ],
+                    0.1
+                  )
+                );
               }
-              // Change the health color to blue
-              animationSprite.filters.push(
-                // @ts-ignore for some reason ts is flagging this as an error but it works fine
-                // in pixi.
-                new MultiColorReplaceFilter(
-                  [
-                    [0xff0000, manaBlue],
-                  ],
-                  0.1
-                )
-              );
             }
             explainManaOverfill();
             floatingText({

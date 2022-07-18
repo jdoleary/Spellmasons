@@ -120,8 +120,8 @@ export function checkLiquidInteractionDueToMovement(unit: IUnit, lastPosition: V
     }
   }
   const predictionColor = hitLava ? 0xff0000 : 0x0000ff;
-  window.predictionGraphics.lineStyle(4, predictionColor, 1.0)
-  window.predictionGraphics.moveTo(unit.x, unit.y);
+  window.predictionGraphics?.lineStyle(4, predictionColor, 1.0)
+  window.predictionGraphics?.moveTo(unit.x, unit.y);
   return liquidMovedUnit;
 
 }

@@ -1,4 +1,3 @@
-import * as PIXI from 'pixi.js';
 const fShader = `
 varying vec2 vTextureCoord;
 uniform sampler2D uSampler;
@@ -21,11 +20,14 @@ void main(void)
     vTextureCoord = aTextureCoord;
 }`;
 export default function () {
+    if (!window.pixi) {
+        return undefined
+    }
     const uniforms = {
         alpha: 0.0
     };
     return {
-        filter: new PIXI.Filter(vShader, fShader, uniforms),
+        filter: new window.pixi.Filter(vShader, fShader, uniforms),
         uniforms
     };
 }

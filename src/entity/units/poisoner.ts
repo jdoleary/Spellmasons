@@ -50,16 +50,18 @@ const unit: UnitSource = {
               loop: false,
               animationSpeed: 0.2,
               onComplete: () => {
-                if (animationSprite.parent) {
+                if (animationSprite?.parent) {
                   animationSprite.parent.removeChild(animationSprite)
                 } else {
                   console.error('Expected poisoner animationSprite to have parent so it could be removed but it did not.')
                 }
               }
             });
-            animationSprite.anchor.set(0.5);
-            animationSprite.x = chosenUnit.x;
-            animationSprite.y = chosenUnit.y;
+            if (animationSprite) {
+              animationSprite.anchor.set(0.5);
+              animationSprite.x = chosenUnit.x;
+              animationSprite.y = chosenUnit.y;
+            }
 
           });
         }

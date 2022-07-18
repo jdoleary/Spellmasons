@@ -76,7 +76,7 @@ export function create({ pos, pickupSource, onTurnsLeftDone }:
     imagePath,
     // Pickups are stored in containerUnits so that they
     // will be automatically z-indexed
-    image: Image.create({ x, y }, imagePath, containerUnits, { animationSpeed, loop: true }),
+    image: !containerUnits ? undefined : Image.create({ x, y }, imagePath, containerUnits, { animationSpeed, loop: true }),
     singleUse,
     playerOnly,
     effect,
@@ -94,16 +94,20 @@ export function create({ pos, pickupSource, onTurnsLeftDone }:
     if (self.image) {
 
       const timeCircle = addPixiSprite('time-circle.png', self.image.sprite);
-      timeCircle.anchor.x = 0;
-      timeCircle.anchor.y = 0;
+      if (timeCircle) {
+        timeCircle.anchor.x = 0;
+        timeCircle.anchor.y = 0;
+      }
 
       self.text = pixiText(`${turnsLeftToGrab}`, { fill: 'white', align: 'center' });
-      self.text.anchor.x = 0;
-      self.text.anchor.y = 0;
-      // Center the text in the timeCircle
-      self.text.x = 13;
-      self.text.y = 5;
-      self.image.sprite.addChild(self.text);
+      if (self.text) {
+        self.text.anchor.x = 0;
+        self.text.anchor.y = 0;
+        // Center the text in the timeCircle
+        self.text.x = 13;
+        self.text.y = 5;
+        self.image.sprite.addChild(self.text);
+      }
     }
   }
 
@@ -247,25 +251,27 @@ export const pickups: IPickupSource[] = [
           const animationSprite = addPixiSpriteAnimated('spell-effects/potionPickup', player.unit.image.sprite, {
             loop: false,
             onComplete: () => {
-              if (animationSprite.parent) {
+              if (animationSprite && animationSprite.parent) {
                 animationSprite.parent.removeChild(animationSprite);
               }
             }
           });
-          if (!animationSprite.filters) {
-            animationSprite.filters = [];
+          if (animationSprite) {
+            if (!animationSprite.filters) {
+              animationSprite.filters = [];
+            }
+            // Change the health color to blue
+            animationSprite.filters.push(
+              // @ts-ignore for some reason ts is flagging this as an error but it works fine
+              // in pixi.
+              new MultiColorReplaceFilter(
+                [
+                  [0xff0000, manaBlue],
+                ],
+                0.1
+              )
+            );
           }
-          // Change the health color to blue
-          animationSprite.filters.push(
-            // @ts-ignore for some reason ts is flagging this as an error but it works fine
-            // in pixi.
-            new MultiColorReplaceFilter(
-              [
-                [0xff0000, manaBlue],
-              ],
-              0.1
-            )
-          );
         }
 
         // Now that the player unit's mana has increased,sync the new
@@ -295,7 +301,7 @@ export const pickups: IPickupSource[] = [
           const animationSprite = addPixiSpriteAnimated('spell-effects/potionPickup', player.unit.image.sprite, {
             loop: false,
             onComplete: () => {
-              if (animationSprite.parent) {
+              if (animationSprite && animationSprite.parent) {
                 animationSprite.parent.removeChild(animationSprite);
               }
             }

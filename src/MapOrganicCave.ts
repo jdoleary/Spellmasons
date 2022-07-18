@@ -39,7 +39,7 @@ const directionRandomAmount = Math.PI / 2;
 export interface Limits { xMin: number, xMax: number, yMin: number, yMax: number };
 export function generateCave(params: CaveParams): { map: Map, limits: Limits } {
     // Debug: Draw caves
-    window.debugCave.clear();
+    window.debugCave?.clear();
     const minDirection = randFloat(window.underworld.random, Math.PI, Math.PI / 2);
     const maxDirection = 0;
     let crawlers = [];
