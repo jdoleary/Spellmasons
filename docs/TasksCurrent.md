@@ -1,5 +1,14 @@
 ## This weeks goals:
     - Standalone Server
+        // Headless Server should exclude
+        // - PieClient
+        // - Audio
+        // - Visual (UI and Pixi.js)
+        // - Menu
+        // - Planning view
+        // - Predictions
+        // Current compile and run command:
+        // tsc --project tsconfig.headless.json --outDir headless-server-build/ && node headless-server-build/src/HeadlessServer.js
     - Menu for community server selector
     - Stress test droplets to see how many users they can support
     - More interactable doodads (explosive barrels, movable cover)
