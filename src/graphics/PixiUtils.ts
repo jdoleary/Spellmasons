@@ -195,7 +195,7 @@ export function isCameraAutoFollowing(): boolean {
 }
 export function cameraAutoFollow(active: boolean) {
   utilProps.doCameraAutoFollow = active;
-  document.body.classList.toggle('auto-camera', active);
+  document.body?.classList.toggle('auto-camera', active);
 }
 export function getCamera() {
   return {

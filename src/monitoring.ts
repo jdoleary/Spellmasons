@@ -51,6 +51,6 @@ window.monitorFPS = () => {
     new Stats.Panel('runPredictions', '#ff8', '#221'),
   );
   stats.dom.classList.add('doob-stats');
-  document.body.appendChild(stats.dom);
+  document.body?.appendChild(stats.dom);
 
 }

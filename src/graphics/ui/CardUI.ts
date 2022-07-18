@@ -244,8 +244,8 @@ export function syncInventory(slotModifyingIndex: number | undefined) {
 }
 export function toggleInventory(toolbarIndex: number | undefined, forceState: boolean | undefined) {
   if (window.headless) { return; }
-  document.body.classList.toggle(openInvClass, forceState);
-  if (window.player && document.body.classList.contains(openInvClass)) {
+  document.body?.classList.toggle(openInvClass, forceState);
+  if (window.player && document.body?.classList.contains(openInvClass)) {
     // Create inventory
     syncInventory(toolbarIndex);
   } else {

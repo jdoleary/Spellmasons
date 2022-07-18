@@ -573,13 +573,15 @@ export default class Underworld {
     removeUnderworldEventListeners();
 
     // Remove all phase classes from body
-    // @ts-expect-error Property 'values' does not exist on type 'DOMTokenList'
-    for (let phaseClass of document.body.classList.values()) {
-      if (phaseClass.includes('phase-')) {
-        document.body.classList.remove(phaseClass);
+    if (document) {
+      // @ts-expect-error Property 'values' does not exist on type 'DOMTokenList'
+      for (let phaseClass of document.body?.classList.values()) {
+        if (phaseClass.includes('phase-')) {
+          document.body?.classList.remove(phaseClass);
+        }
       }
+      document.body?.classList.remove('your-turn');
     }
-    document.body.classList.remove('your-turn');
 
     // Note: Player's unit image is cleaned up below where it also has a reference in this.units
     for (let u of this.units) {
@@ -931,14 +933,14 @@ export default class Underworld {
     // Set the first turn phase
     this.broadcastTurnPhase(turn_phase.PlayerTurns);
     cameraAutoFollow(true);
-    document.body.classList.toggle('loading', false);
+    document.body?.classList.toggle('loading', false);
     setView(View.Game);
     // this.ensureAllClientsHaveAssociatedPlayers(getClients());
   }
   // creates a level from levelData
   async createLevel(levelData: LevelData) {
     return new Promise<void>(resolve => {
-      document.body.classList.toggle('loading', true);
+      document.body?.classList.toggle('loading', true);
       // Add timeout so that loading can update dom
       setTimeout(() => {
         // showUpgrades is invoked by createLevel which is called from a wsPie message
@@ -988,7 +990,7 @@ export default class Underworld {
   }
   async initLevel(levelIndex: number): Promise<LevelData> {
     return await new Promise<LevelData>(resolve => {
-      document.body.classList.toggle('loading', true);
+      document.body?.classList.toggle('loading', true);
       // setTimeout allows the UI to refresh before locking up the CPU with
       // heavy level generation code
       setTimeout(() => {
@@ -1148,7 +1150,7 @@ export default class Underworld {
     if (elPlayerTurnIndicator) {
       elPlayerTurnIndicator.innerText = message;
     }
-    document.body.classList.toggle('your-turn', yourTurn);
+    document.body?.classList.toggle('your-turn', yourTurn);
 
     // Update level indicator UI at top of screen
     if (elLevelIndicator) {
@@ -1276,9 +1278,9 @@ export default class Underworld {
     upgrade.effect(player);
     player.upgrades.push(upgrade);
     if (player == window.player) {
-      document.body.querySelector(`.card[data-upgrade="${upgrade.title}"]`)?.classList.toggle('chosen', true);
+      document.body?.querySelector(`.card[data-upgrade="${upgrade.title}"]`)?.classList.toggle('chosen', true);
       // Clear upgrades when current player has picked one
-      document.body.classList.toggle('showUpgrades', false);
+      document.body?.classList.toggle('showUpgrades', false);
       const startingSpellsLeftToPick = config.STARTING_CARD_COUNT - window.player.inventory.length;
       if (startingSpellsLeftToPick > 0) {
         // Show next round of upgrades to pick
@@ -1308,7 +1310,7 @@ export default class Underworld {
     // Now that level is complete, move to the Upgrade view where players can choose upgrades
     // before moving on to the next level
     // Generate Upgrades
-    document.body.classList.toggle('showUpgrades', true);
+    document.body?.classList.toggle('showUpgrades', true);
     if (!elUpgradePicker || !elUpgradePickerContent) {
       console.error('elUpgradePicker or elUpgradePickerContent are undefined.');
     }
@@ -1319,7 +1321,7 @@ export default class Underworld {
       const upgrades = Upgrade.generateUpgrades(player, 3, minimumProbability, statsUpgrades);
       if (!upgrades.length) {
         // Player already has all the upgrades
-        document.body.classList.toggle('showUpgrades', false);
+        document.body?.classList.toggle('showUpgrades', false);
         queueCenteredFloatingText('No more spell upgrades to pick from.');
       } else {
         const elUpgrades = upgrades.map((upgrade) =>
@@ -1394,15 +1396,15 @@ export default class Underworld {
 
     // Remove all phase classes from body
     // @ts-expect-error Property 'values' does not exist on type 'DOMTokenList'
-    for (let phaseClass of document.body.classList.values()) {
+    for (let phaseClass of document.body?.classList.values()) {
       if (phaseClass.includes('phase-')) {
-        document.body.classList.remove(phaseClass);
+        document.body?.classList.remove(phaseClass);
       }
     }
     const phase = turn_phase[this.turn_phase];
     if (phase) {
       // Add current phase class to body
-      document.body.classList.add('phase-' + phase.toLowerCase());
+      document.body?.classList.add('phase-' + phase.toLowerCase());
     } else {
       console.error('Invalid turn phase', this.turn_phase)
     }

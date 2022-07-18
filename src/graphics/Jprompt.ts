@@ -32,7 +32,7 @@ export default async function Jprompt(prompt: Prompt): Promise<boolean> {
     </div>
 </div>
 `;
-    document.body.appendChild(el);
+    document.body?.appendChild(el);
 
     return new Promise<boolean>((res) => {
         const noBtn = el.querySelector('.no') as (HTMLElement | undefined);
@@ -72,7 +72,7 @@ export default async function Jprompt(prompt: Prompt): Promise<boolean> {
             });
         }
     }).then((result) => {
-        document.body.removeChild(el);
+        document.body?.removeChild(el);
         return result;
     });
 }

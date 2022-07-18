@@ -6,7 +6,7 @@ export default function cookieConsentPopup(forcePopup: boolean) {
         return
     }
     const el = document.createElement('div')
-    document.body.appendChild(el);
+    document.body?.appendChild(el);
     el.innerHTML = `
 <div id="cookie-consent">
     <div id="cookie-consent-inner">

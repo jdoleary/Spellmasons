@@ -72,9 +72,9 @@ export function setView(v: View) {
     return;
   }
   for (let view of Object.keys(View)) {
-    document.body.classList.remove(`view-${view}`);
+    document.body?.classList.remove(`view-${view}`);
   }
-  document.body.classList.add(`view-${View[v]}`);
+  document.body?.classList.add(`view-${View[v]}`);
   window.view = v;
   addPixiContainersForView(v);
   const elMenu = document.getElementById('menu') as HTMLElement;
@@ -131,13 +131,13 @@ function addUnderworldEventListeners() {
   window.addEventListener('keydown', keydownListener);
   window.addEventListener('keypress', keypressListener);
   window.addEventListener('keyup', keyupListener);
-  document.body.addEventListener('contextmenu', contextmenuHandler);
-  document.body.addEventListener('click', clickHandler);
+  document.body?.addEventListener('contextmenu', contextmenuHandler);
+  document.body?.addEventListener('click', clickHandler);
   window.addEventListener('mousedown', mouseDownHandler);
   window.addEventListener('mouseup', mouseUpHandler);
   window.addEventListener('blur', onWindowBlur);
-  document.body.addEventListener('wheel', zoom);
-  document.body.addEventListener('mousemove', mouseMove);
+  document.body?.addEventListener('wheel', zoom);
+  document.body?.addEventListener('mousemove', mouseMove);
   // Add button listeners
   const elEndTurnBtn: HTMLButtonElement = document.getElementById(
     endTurnBtnId,
@@ -151,10 +151,10 @@ export function removeUnderworldEventListeners() {
   window.removeEventListener('keydown', keydownListener);
   window.removeEventListener('keyup', keyupListener);
   // Remove mouse and click listeners
-  document.body.removeEventListener('contextmenu', contextmenuHandler);
-  document.body.removeEventListener('click', clickHandler);
-  document.body.removeEventListener('wheel', zoom);
-  document.body.removeEventListener('mousemove', mouseMove);
+  document.body?.removeEventListener('contextmenu', contextmenuHandler);
+  document.body?.removeEventListener('click', clickHandler);
+  document.body?.removeEventListener('wheel', zoom);
+  document.body?.removeEventListener('mousemove', mouseMove);
   // Remove button listeners
   const elEndTurnBtn: HTMLButtonElement = document.getElementById(
     endTurnBtnId,

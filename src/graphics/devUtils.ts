@@ -3,7 +3,7 @@ import { LineSegment } from '../jmath/lineSegment';
 import floatingText from './FloatingText';
 import { Vec2 } from '../jmath/Vec';
 
-// document.body.addEventListener('mousemove', (e) => {
+// document.body?.addEventListener('mousemove', (e) => {
 //   if (window.underworld) {
 
 

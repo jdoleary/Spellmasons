@@ -145,7 +145,7 @@ window.setMMBDown = (isDown: boolean) => {
   // I want it to show a compile error anywhere else
   // @ts-expect-error Override "readyonly" error.  This is the ONLY place that MMBDown should be mutated.
   window.MMBDown = isDown;
-  document.body.classList.toggle('draggingCamera', window.MMBDown);
+  document.body?.classList.toggle('draggingCamera', window.MMBDown);
 }
 window.setRMBDown = (isDown: boolean) => {
   // I want it to show a compile error anywhere else
