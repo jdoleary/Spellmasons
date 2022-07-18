@@ -47,7 +47,7 @@ import Jprompt from './graphics/Jprompt';
 import { collideWithLineSegments, ForceMove, moveWithCollisions } from './jmath/moveWithCollision';
 import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './config';
 import { getBestRangedLOSTarget } from './entity/units/actions/rangedAction';
-import { getClients, hostGiveClientGameStateForInitialLoad } from './network/wsPieHandler';
+import { getClients, hostGiveClientGameStateForInitialLoad } from './network/networkUtil';
 import { healthAllyGreen, healthHurtRed, healthRed } from './graphics/ui/colors';
 import objectHash from 'object-hash';
 import { withinMeleeRange } from './entity/units/actions/gruntAction';
@@ -1321,9 +1321,14 @@ export default class Underworld {
         if (elUpgradePickerContent) {
           elUpgradePickerContent.innerHTML = '';
           for (let elUpgrade of elUpgrades) {
-            elUpgradePickerContent.appendChild(elUpgrade);
-            if (window.devMode) {
-              elUpgrade.click();
+            if (elUpgrade) {
+
+              elUpgradePickerContent.appendChild(elUpgrade);
+              if (window.devMode) {
+                elUpgrade.click();
+              }
+            } else {
+              console.warn('Upgrade is undefined, this block should never be executed in headless mode')
             }
           }
         }

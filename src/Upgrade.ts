@@ -67,6 +67,10 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
   return upgrades;
 }
 export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer) {
+  if (window.headless) {
+    // There is no DOM in headless mode
+    return;
+  }
   const element = document.createElement('div');
   element.classList.add('card', 'upgrade');
   element.dataset.upgrade = upgrade.title;

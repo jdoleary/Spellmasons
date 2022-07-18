@@ -9,6 +9,8 @@ import { View } from '../views';
 import { Faction } from './commonTypes';
 import { IPickup } from '../entity/Pickup';
 import { ForceMove } from '../jmath/moveWithCollision';
+import { IHostApp } from '../network/networkUtil';
+
 declare global {
     interface Window {
         pixi: typeof PIXI | undefined;
@@ -19,9 +21,10 @@ declare global {
         // A reference to the player instance of the client playing on this instance
         player: Player.IPlayer | undefined;
         // Globals needed for Golems-menu
-        pie: PieClient;
+        // pie will be undefiend for Headless server
+        pie: PieClient | IHostApp;
         connect_to_wsPie_server: (wsUri?: string) => Promise<void>;
-        joinRoom: (_room_info: any) => Promise<unknown>;
+        joinRoom: (_room_info: any) => Promise<unknown> | undefined;
         setupPixiPromise: Promise<void>;
         // Svelte menu handles
         exitCurrentGame: () => void;

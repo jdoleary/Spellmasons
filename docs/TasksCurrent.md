@@ -99,7 +99,7 @@
     - make decoy more expensive (last more than 1 turn)
     - bug: double pull through lava fails
     - chain through pickups?
-    - should take damage every turn if still in lava
+    - should take damage at the END of every turn if still in lava
     - lobber image is positioned too high for "feet" position to feel right
     - Super poor performance on brad's laptop on level 7
     - "Esc" should close inv

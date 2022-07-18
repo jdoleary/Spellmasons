@@ -1,5 +1,6 @@
 import PieClient, { Room } from '@websocketpie/client';
-import { onData, onClientPresenceChanged } from './wsPieHandler';
+import { onData } from './networkHandler';
+import { onClientPresenceChanged } from './networkUtil';
 import * as readyState from '../readyState';
 import { setView, View } from '../views';
 import * as storage from '../storage';

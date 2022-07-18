@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js';
+import { joinRoom } from "./network/wsPieSetup";
 import * as Unit from './entity/Unit';
 import './types/globalTypes';
 import { setView, View } from './views';
@@ -31,6 +32,7 @@ const SKIP_TUTORIAL = 'skipTutorial';
 
 // set window defaults, must be called before setupAll()
 window.pixi = PIXI;
+window.joinRoom = joinRoom;
 window.volume = 1.0;
 window.volumeMusic = 1.0;
 window.volumeGame = 1.0;

@@ -1,4 +1,5 @@
-import type { ClientPresenceChangedArgs, OnDataArgs } from '@websocketpie/client';
+console.log('wsPieHandler.ts jtest')
+import type { OnDataArgs } from '@websocketpie/client';
 
 import { MESSAGE_TYPES } from '../types/MessageTypes';
 import floatingText from '../graphics/FloatingText';
@@ -10,17 +11,16 @@ import * as readyState from '../readyState';
 import * as messageQueue from '../messageQueue';
 import * as storage from '../storage';
 import { allUnits } from '../entity/units';
-import { pie } from './wsPieSetup';
+import { typeGuardHostApp } from './networkUtil';
 
 const messageLog: any[] = [];
-let clients: string[] = [];
 window.exitCurrentGame = function exitCurrentGame(): Promise<void> {
   // Go back to the main PLAY menu
   window.setMenu('PLAY');
   if (window.underworld) {
     window.underworld.cleanup();
   }
-  return pie.disconnect();
+  return typeGuardHostApp(window.pie) ? Promise.resolve() : window.pie.disconnect();
 }
 const NO_LOG_LIST = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
 // Any message types in this list will be dropped if in the queue and an additional message of this type
@@ -122,30 +122,6 @@ export function processNextInQueueIfReady() {
     messageQueue.processNextInQueue(onDataQueueContainer, handleOnDataMessage);
   }
 }
-async function tryStartGame() {
-  console.log('Start Game: Attempt to start the game')
-  const currentClientIsHost = window.hostClientId == window.clientId;
-  // Starts a new game if THIS client is the host, and 
-  if (currentClientIsHost) {
-    const gameAlreadyStarted = window.underworld && window.underworld.levelIndex >= 0;
-    // if the game hasn't already been started
-    if (!gameAlreadyStarted) {
-      console.log('Host: Start game / Initialize Underworld');
-      window.underworld = new Underworld(Math.random().toString());
-      // Mark the underworld as "ready"
-      readyState.set('underworld', true);
-      const levelData = await window.underworld.initLevel(0);
-      console.log('Host: Send all clients game state for initial load');
-      clients.forEach(clientId => {
-        hostGiveClientGameStateForInitialLoad(clientId, levelData);
-      });
-    } else {
-      console.log('Start Game: Won\'t, game has already been started');
-    }
-  } else {
-    console.log('Start Game: Won\'t, client must be host to start the game.')
-  }
-}
 async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
   window.underworld.processedMessageCount++;
   currentlyProcessingOnDataMessage = d;
@@ -215,10 +191,16 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       console.log('Host: Sending SYNC_PLAYERS')
       // If host, send sync; if non-host, ignore 
       if (window.hostClientId === window.clientId) {
-        window.pie.sendData({
+        const message = {
           type: MESSAGE_TYPES.SYNC_PLAYERS,
           players: window.underworld.players.map(Player.serialize)
-        });
+        }
+        if (window.pie) {
+          window.pie.sendData(message);
+        } else {
+          // TODO HEADLESS: Send SYNC_PLAYERS over connection
+          console.error('TODO HEADLESS: send SYNC_PLAYERS')
+        }
       }
       break;
     case MESSAGE_TYPES.SYNC_PLAYERS:
@@ -412,59 +394,6 @@ async function handleSpell(caster: Player.IPlayer, payload: any) {
     }
   } else {
     console.log('Someone is trying to cast out of turn');
-  }
-}
-// Returns the list of clientIds
-export function getClients(): string[] {
-  return clients;
-}
-export function hostGiveClientGameStateForInitialLoad(clientId: string, level: LevelData = window.lastLevelCreated) {
-  // Only the host should be sending INIT_GAME_STATE messages
-  // because the host has the canonical game state
-  if (window.hostClientId === window.clientId) {
-    // Do not send this message to self
-    if (window.clientId !== clientId) {
-      if (level) {
-        console.log(`Host: Send ${clientId} game state for initial load`);
-        window.pie.sendData({
-          type: MESSAGE_TYPES.INIT_GAME_STATE,
-          level,
-          underworld: window.underworld.serializeForSyncronize(),
-          phase: window.underworld.turn_phase,
-          units: window.underworld.units.map(Unit.serialize),
-          players: window.underworld.players.map(Player.serialize)
-        }, {
-          subType: "Whisper",
-          whisperClientIds: [clientId],
-        });
-      } else {
-        console.error('Could not send INIT_GAME_STATE, levelData is undefined');
-      }
-    }
-  }
-}
-
-export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
-  console.log('clientPresenceChanged', o);
-  clients = o.clients;
-  // Client joined
-  if (clients[0] !== undefined) {
-    // The host is always the first client
-    window.hostClientId = clients[0];
-    // If game is already started
-    if (window.underworld) {
-      // Ensure each client corresponds with a Player instance
-      window.underworld.ensureAllClientsHaveAssociatedPlayers(clients);
-    } else {
-      if (window.hostClientId === window.clientId) {
-        console.log(`Setup: Setting Host client to ${window.hostClientId}. You are the host. `);
-        tryStartGame();
-      } else {
-        console.log(`Setup: Setting Host client to ${window.hostClientId}.`);
-      }
-    }
-  } else {
-
   }
 }
 

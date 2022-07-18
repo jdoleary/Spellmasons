@@ -13,13 +13,14 @@ interface OnDataArgs {
     payload: any;
     time: number;
 }
+// @ts-ignore, instantiate window object so that node can use `window` as the global
+global.window = {};
 // This file is the entrypoint for the headless server and must set window.headless
 // to true to denote that there is no graphics nor audio code
 window.headless = true;
 import * as Cards from './cards';
 import * as Units from './entity/units';
-import { onClientPresenceChanged } from './network/wsPieHandler';
-
+import { IHostApp, onClientPresenceChanged } from './network/networkUtil';
 // LEFT OFF!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // LEFT OFF!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // LEFT OFF!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -34,8 +35,14 @@ import { onClientPresenceChanged } from './network/wsPieHandler';
 
 const pie = require('@websocketpie/server');
 
-pie.startServer({ port: 8081, makeHostAppInstance: () => new HostApp() });
-class HostApp {
+pie.startServer({
+    port: 8081, makeHostAppInstance: () => {
+        window.pie = new HostApp();
+        return window.pie;
+    }
+});
+class HostApp implements IHostApp {
+    isHostApp: boolean = true;
     // Automatically overridden when passed into pie.startServer
     sendData: (msg: string) => void = () => { };
     constructor() {

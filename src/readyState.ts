@@ -1,5 +1,4 @@
-import { processNextInQueueIfReady } from "./network/wsPieHandler";
-import { joinRoom } from "./network/wsPieSetup";
+import { processNextInQueueIfReady } from "./network/networkHandler";
 
 const readyState = {
     wsPieConnection: false,
@@ -21,8 +20,10 @@ export function set(key: keyof typeof readyState, value: boolean) {
         // Auto join game if specified in url
         let urlSearchParams = new URLSearchParams(location.search);
         let gameName = urlSearchParams.get("game");
-        if (gameName) {
-            joinRoom({ name: gameName })
+        if (gameName && window.joinRoom) {
+            window.joinRoom({ name: gameName })
+        } else {
+            console.error('Cannot join room', gameName)
         }
     }
     // If all values in readyState are true, then everything is ready
