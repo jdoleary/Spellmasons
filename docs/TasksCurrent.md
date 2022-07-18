@@ -17,6 +17,52 @@
     - Pack 11
     - Pack 14 Quantity
     - Pack 12 Particle Engine
+    - Pack 16 Colin Feedback
+- Pack 16 | Colin Feedback
+    - me: Need affordances for push/pull pickups
+    - explain that you can cast any number of times per turn
+    - bug: spell choice dissappeared when the portal spawned right on him
+    - little blue debug circles appeared on level w/ archer
+    - bug: If you are RMB moving when a prompt popup, it dismisses immediately
+    - Make spell pickups more obvious
+    - copy: bloat "3 damage"
+    - label: bloat visual circle "explosion radius"
+    - copy: "poison is stackable"
+    - explain: remember, vampiree takes heals as pure damage
+    - CRICITAL bug: level 6, prediction pushed a spike for real
+    - push enemies into each other billiard style
+    - vampire had attack icon while in lava but next turn got out of the lava and didn't attack
+    - attack badges block health sometimes
+    - self heal should predict in your health bar
+    - label out of range circle (think aoe), on hover
+    - level 8 map too big
+    - hoisting might not be desireable, what if you want to push then AOE?
+    - bug: bloat pushed a unit out of the map, a summoner was in the corner on level 8.
+    - Colin Direct Feedback:
+        - some enemies chould shoot walls to blow yoru cover
+        - me: maps are too big
+        - add moodiness, make it darker
+        - balance danger:
+            - Minus archers
+            - Plus others
+        - pickup potions
+        - Accidentally spending movement, wants key to see path
+        - fun figuring out mechanics
+        - felt like rinse and repeat
+        - new to genre
+        - QWERTASDFG for hotkeys
+        - More exciting if archers had a % chance based on distance
+        - grunts should cover more ground, archers are the only real threat
+        - physics based env:
+            - drop corpse in lave and have it shoot out lava
+            - bloat gore schrapnel
+                - gore ended up on other characters
+                - gore on them from being next to explosion
+                - gore on walls, leave a mark
+                    - blood trail
+        - fog of war
+        - what if no agro until you got close so you can't just wait for them all to come to you
+        - archer arroes hurt allies as it passes through. % chance. multiple types of archers
 - Pack 15 | Movement
     - Predictive movement, pick a final destination and slow the closer you get
         - Shoving into walls should do damage and stop the movement
