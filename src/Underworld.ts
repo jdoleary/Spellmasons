@@ -146,7 +146,7 @@ export default class Underworld {
 
   }
   syncPlayerPredictionUnitOnly() {
-    if (window.player !== undefined) {
+    if (window.predictionUnits && window.player !== undefined) {
       const predictionUnitIndex = window.predictionUnits.findIndex(u => u.id == window.player?.unit.id);
       window.predictionUnits[predictionUnitIndex] = Unit.copyForPredictionUnit(window.player.unit);
     }
@@ -154,6 +154,8 @@ export default class Underworld {
   // Assigns window.predictionUnits a copy of this.units
   // for the sake of prediction
   syncPredictionEntities() {
+    // Headless does not use predictions because predictions are only for display
+    if (window.headless) { return; }
     window.predictionUnits = this.units.map(Unit.copyForPredictionUnit);
     window.predictionPickups = this.pickups.map(Pickup.copyForPredictionPickup);
   }
@@ -174,7 +176,7 @@ export default class Underworld {
   runForceMove(forceMoveInst: ForceMove, prediction: boolean) {
     const { pushedObject, velocity, velocity_falloff } = forceMoveInst;
     const lastPosition = Vec.clone(pushedObject);
-    const aliveUnits = (prediction ? window.predictionUnits : this.units).filter(u => u.alive);
+    const aliveUnits = ((prediction && window.predictionUnits) ? window.predictionUnits : this.units).filter(u => u.alive);
     moveWithCollisions(pushedObject, Vec.add(pushedObject, velocity), aliveUnits);
     collideWithLineSegments(pushedObject, this.walls);
     forceMoveInst.velocity = Vec.multiply(velocity_falloff, velocity);
@@ -186,7 +188,7 @@ export default class Underworld {
     } else if (Pickup.isPickup(forceMoveInst.pushedObject)) {
       // If the pushed object is a pickup, check if it collides with any units
       // as it is pushed
-      (prediction ? window.predictionUnits : this.units).forEach(u => {
+      ((prediction && window.predictionUnits) ? window.predictionUnits : this.units).forEach(u => {
         this.checkPickupCollisions(u, prediction);
       })
     }
@@ -247,7 +249,7 @@ export default class Underworld {
     for (let i = 0; i < this.units.length; i++) {
       const u = this.units[i];
       if (u) {
-        const predictionUnit = window.predictionUnits[i];
+        const predictionUnit = !window.predictionUnits ? undefined : window.predictionUnits[i];
         if (u.alive) {
           while (u.path && u.path.points[0] && Vec.equal(Vec.round(u), u.path.points[0])) {
             // Remove next points until the next point is NOT equal to the unit's current position
@@ -1017,7 +1019,7 @@ export default class Underworld {
     })
   }
   checkPickupCollisions(unit: Unit.IUnit, prediction: boolean) {
-    for (let pu of (prediction ? window.predictionPickups : this.pickups)) {
+    for (let pu of ((prediction && window.predictionPickups) ? window.predictionPickups : this.pickups)) {
       // Note, units' radius is rather small (to allow for crowding), so
       // this distance calculation uses neither the radius of the pickup
       // nor the radius of the unit.  It is hard coded to 2 COLLISION_MESH_RADIUSES
@@ -1597,7 +1599,7 @@ export default class Underworld {
     prediction: boolean,
   ): Unit.IUnit[] {
     const withinDistance: Unit.IUnit[] = [];
-    const units = prediction ? window.predictionUnits : this.units;
+    const units = (prediction && window.predictionUnits) ? window.predictionUnits : this.units;
     for (let unit of units) {
       if (math.distance(unit, target) <= distance) {
         withinDistance.push(unit);
@@ -1606,7 +1608,7 @@ export default class Underworld {
     return withinDistance;
   }
   getUnitsAt(coords: Vec2, prediction?: boolean): Unit.IUnit[] {
-    const sortedByProximityToCoords = (prediction ? window.predictionUnits : this.units)
+    const sortedByProximityToCoords = (prediction && window.predictionUnits ? window.predictionUnits : this.units)
       // Filter for only valid units, not units with NaN location or waiting to be removed
       .filter(u => !u.flaggedForRemoval && !isNaN(u.x) && !isNaN(u.y))
       // Filter for units within SELECTABLE_RADIUS of coordinates
@@ -1622,27 +1624,27 @@ export default class Underworld {
     return this.getUnitsAt(coords, prediction)[0];
   }
   getPickupAt(coords: Vec2, prediction?: boolean): Pickup.IPickup | undefined {
-    const sortedByProximityToCoords = (prediction ? window.predictionPickups : this.pickups)
+    const sortedByProximityToCoords = (prediction && window.predictionPickups ? window.predictionPickups : this.pickups)
       .filter(p => !isNaN(p.x) && !isNaN(p.y) && math.distance(coords, p) <= p.radius).sort((a, b) => math.distance(a, coords) - math.distance(b, coords));
     const closest = sortedByProximityToCoords[0]
     return closest;
   }
   addUnitToArray(unit: Unit.IUnit, prediction: boolean) {
-    if (prediction) {
+    if (prediction && window.predictionUnits) {
       window.predictionUnits.push(Unit.copyForPredictionUnit(unit));
     } else {
       this.units.push(unit);
     }
   }
   removePickupFromArray(pickup: Pickup.IPickup, prediction: boolean) {
-    if (prediction) {
+    if (prediction && window.predictionPickups) {
       window.predictionPickups = window.predictionPickups.filter(p => p !== pickup);
     } else {
       this.pickups = this.pickups.filter((p) => p !== pickup);
     }
   }
   addPickupToArray(pickup: Pickup.IPickup, prediction: boolean) {
-    if (prediction) {
+    if (prediction && window.predictionPickups) {
       window.predictionPickups.push(Pickup.copyForPredictionPickup(pickup))
     } else {
       this.pickups.push(pickup);

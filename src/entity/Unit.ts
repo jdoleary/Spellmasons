@@ -631,9 +631,9 @@ export function syncPlayerHealthManaUI() {
   elHealthBar.style["width"] = `${100 * healthRatio}%`;
   elHealthLabel.innerHTML = `${unit.health}/${unit.healthMax}`;
 
-  const predictionPlayerUnit = window.predictionUnits.find(u => u.id == window.player?.unit.id) || { health: unit.health, mana: unit.mana };
+  const predictionPlayerUnit = !window.predictionUnits ? undefined : window.predictionUnits.find(u => u.id == window.player?.unit.id) || { health: unit.health, mana: unit.mana };
   // Set the health cost bar that shows how much health will be removed if the spell is cast
-  if (predictionPlayerUnit.health > 0) {
+  if (predictionPlayerUnit && predictionPlayerUnit.health > 0) {
     // Show cost bar from current health location minus whatever it's value is
     elHealthCost.style['left'] = `${100 * predictionPlayerUnit.health / unit.healthMax}%`;
     elHealthCost.style['width'] = `${100 * (unit.health - predictionPlayerUnit.health) / unit.healthMax}%`;
@@ -649,14 +649,14 @@ export function syncPlayerHealthManaUI() {
   elManaBar2.style["width"] = `${100 * Math.min(manaRatio2, 1)}%`;
   const manaRatio3 = (Math.max(0, unit.mana - unit.manaMax * 2)) / unit.manaMax;
   elManaBar3.style["width"] = `${100 * Math.min(manaRatio3, 1)}%`;
-  if (predictionPlayerUnit.mana !== unit.mana) {
+  if (predictionPlayerUnit && predictionPlayerUnit.mana !== unit.mana) {
     elManaLabel.innerHTML = `${predictionPlayerUnit.mana} Mana Left`;
   } else {
     elManaLabel.innerHTML = `${unit.mana}/${unit.manaMax}`;
   }
 
   // Set the 3 mana cost bars that show how much mana will be removed if the spell is cast
-  if (predictionPlayerUnit.mana > 0) {
+  if (predictionPlayerUnit && predictionPlayerUnit.mana > 0) {
     // Show cost bar from current mana location minus whatever it's value is
     elManaCost.style['left'] = `${100 * predictionPlayerUnit.mana / unit.manaMax}%`;
     elManaCost.style['width'] = `${100 * Math.min(((unit.mana - predictionPlayerUnit.mana) / unit.manaMax), 1)}%`;

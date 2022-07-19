@@ -223,7 +223,7 @@ export async function runPredictions() {
       updateManaCostUI();
       // Dry run cast so the user can see what effect it's going to have
       const target = mousePos;
-      const casterUnit = window.predictionUnits.find(u => u.id == window.player?.unit.id)
+      const casterUnit = window.predictionUnits?.find(u => u.id == window.player?.unit.id)
       if (!casterUnit) {
         console.error('Critical Error, caster unit not found');
         return;
@@ -243,7 +243,7 @@ export async function runPredictions() {
             // will be reduced by 2x more than it should be
             window.underworld.syncPredictionEntities();
             // Reassign casterUnit now that the predictionUnits array has been completely rebuilt
-            const casterUnit = window.predictionUnits.find(u => u.id == window.player?.unit.id)
+            const casterUnit = window.predictionUnits?.find(u => u.id == window.player?.unit.id)
             if (!casterUnit) {
               console.error('Critical Error, caster unit not found');
               return;
@@ -265,7 +265,7 @@ export async function runPredictions() {
       // next turn
       window.attentionMarkers = [];
       if (window.player) {
-        for (let u of window.predictionUnits) {
+        for (let u of window.predictionUnits || []) {
           const skipTurn = await Unit.runTurnStartEvents(u, true);
           if (skipTurn) {
             continue;
@@ -287,7 +287,7 @@ export async function runPredictions() {
       // Show if unit will be resurrected
       window.resMarkers = [];
       if (cardIds.includes('resurrect')) {
-        window.predictionUnits.filter(u => u.faction == Faction.ALLY && u.alive).forEach(u => {
+        window.predictionUnits?.filter(u => u.faction == Faction.ALLY && u.alive).forEach(u => {
           // Check if their non-prediction counterpart is dead to see if they will be resurrected:
           const realUnit = window.underworld.units.find(x => x.id == u.id)
           if (realUnit && !realUnit.alive) {

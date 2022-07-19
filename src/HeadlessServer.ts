@@ -7,6 +7,9 @@ window.headless = true;
 // hostApp (headless server) is always the host
 window.isHost = () => true;
 window.forceMove = [];
+// Intentionally undefined because headless shouldn't consider prediction units
+// Prediction units are only for UI
+window.predictionUnits = undefined;
 
 import './types/globalTypes';
 import './Shims';
