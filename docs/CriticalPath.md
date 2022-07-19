@@ -20,6 +20,9 @@
     - Better liquid
     - Simpler tiles?
 - Milestone X | **Movement** | Due Date Ongoing
+    - Pack 14 | Spell quantity
+        - What happens when multiple, identical spells are cast in sequence?
+            - Pass a quantity var to the spell and have each spell handle it manually, do not allow them to be .effect() back to back
     - Pack 15
         - Improved force movement
         - Blood trails
@@ -42,6 +45,7 @@
         - 0%: Liquid Splash Animation
             - Lava, blood, Water
         - 0%: UI
+        - Fix units taking damage animation timing to be when the spell does damage
     - Master music (Brad)
 - Milestone X | **Marketing** | Due September 1
     - Steam Page (waiting on art)
