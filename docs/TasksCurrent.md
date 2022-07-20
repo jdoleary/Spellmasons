@@ -1,9 +1,9 @@
 ## This weeks goals:
-    - todo: Remove player turns
-        - bug: Got "player 3's turn" even when there were only 2 players
+    - bug: Unit images are duplicated and detached
+    - globalThis for headless isn't going to work since a single headless esrver should be able to host multiple rooms and the multiple rooms can't share state
+    ---
     - bug: the headless app doesn't clean up Players (not clients) after they leave
         - bug or by design? I want them to be able to rejoin don't i?
-    - globalThis for headless isn't going to work since a single headless esrver should be able to host multiple rooms and the multiple rooms can't share state
     - Standalone Server
         - [Ensure setImmediate doesn't max the cpu](https://timetocode.tumblr.com/post/71512510386/an-accurate-node-js-game-loop-inbetween-settimeout-and)
             - Join a headless server's pie server with a local client and send messages

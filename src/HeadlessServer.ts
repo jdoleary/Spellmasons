@@ -5,8 +5,7 @@ import * as Units from './entity/units';
 import { getClients, hostGiveClientGameStateForInitialLoad, IHostApp, onClientPresenceChanged } from './network/networkUtil';
 import Underworld from './Underworld';
 import * as readyState from './readyState';
-import { NO_LOG_LIST } from './network/networkHandler';
-import { MESSAGE_TYPES } from './types/MessageTypes';
+import { onData } from './network/networkHandler';
 const pie = require('@websocketpie/server');
 globalThis.SPELLMASONS_PACKAGE_VERSION = version;
 // Init underworld so that when clients join they can use it as the canonical
@@ -74,9 +73,7 @@ class HostApp implements IHostApp {
         Units.registerUnits();
     }
     onData(data: any) {
-        if (!NO_LOG_LIST.includes(data.payload.type)) {
-            console.log("onData:", MESSAGE_TYPES[data.payload.type], data)
-        }
+        onData(data);
     }
     // The host will receive all data that is send from a client
     // to the @websocketpie/server
