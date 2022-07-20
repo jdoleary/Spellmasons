@@ -386,24 +386,24 @@ export function contextmenuHandler(e: MouseEvent) {
 export function mouseDownHandler(e: MouseEvent) {
   if (e.button == 1) {
     // setMMBDown so camera will be dragged around
-    globalThis.setMMBDown(true);
+    globalThis.setMMBDown?.(true);
     e.preventDefault();
   } else if (e.button == 2) {
     e.preventDefault();
-    globalThis.setRMBDown(true);
+    globalThis.setRMBDown?.(true);
   }
 }
 export function mouseUpHandler(e: MouseEvent) {
   // Turn MMBDown off for any click to protect against it getting stuck
   // as flagged "down"
-  globalThis.setMMBDown(false);
+  globalThis.setMMBDown?.(false);
   if (globalThis.player) {
     globalThis.player.unit.path = undefined;
   }
   if (e.button == 2) {
     // Left click clears walk rope
     globalThis.walkPathGraphics?.clear();
-    globalThis.setRMBDown(false);
+    globalThis.setRMBDown?.(false);
     e.preventDefault();
   }
 }
@@ -413,7 +413,7 @@ export function onWindowBlur() {
   // while they alt tab, which - without the following line -
   // would mean that it's stuck "up" when they return to the game
   // if they were to release it when this document wasn't focused
-  globalThis.setMMBDown(false);
+  globalThis.setMMBDown?.(false);
 }
 // Handle clicks on the game board
 export function clickHandler(_e: MouseEvent) {

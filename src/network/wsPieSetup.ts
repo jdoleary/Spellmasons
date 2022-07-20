@@ -81,7 +81,7 @@ export function joinRoom(_room_info = {}): Promise<void> {
     let quickloadName = storage.get('quickload');
     if (quickloadName) {
       console.log('ADMIN: quickload:', quickloadName);
-      globalThis.load(quickloadName);
+      globalThis.load?.(quickloadName);
     } else {
       // All clients should join at the CharacterSelect screen so they can
       // choose their character.  Once they choose their character their

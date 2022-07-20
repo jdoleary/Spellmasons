@@ -5,6 +5,7 @@ import * as Units from './entity/units';
 import { getClients, hostGiveClientGameStateForInitialLoad, IHostApp, onClientPresenceChanged } from './network/networkUtil';
 import Underworld from './Underworld';
 import * as readyState from './readyState';
+const pie = require('@websocketpie/server');
 globalThis.SPELLMASONS_PACKAGE_VERSION = version;
 // Init underworld so that when clients join they can use it as the canonical
 // record of gamestate
@@ -17,24 +18,35 @@ globalThis.headless = true;
 // hostApp (headless server) is always the host
 globalThis.isHost = () => true;
 globalThis.forceMove = [];
+globalThis.playerThoughts = {};
+globalThis.forceMove = [];
 
 function headlessStartGame() {
-    console.log('Start Game: Attempt to start the game')
-    const gameAlreadyStarted = globalThis.underworld && globalThis.underworld.levelIndex >= 0;
-    // if the game hasn't already been started
-    if (!gameAlreadyStarted) {
-        console.log('Host: Start game / Initialize Underworld');
-        globalThis.underworld = new Underworld(Math.random().toString());
-        // Mark the underworld as "ready"
-        readyState.set('underworld', true);
-        globalThis.lastLevelCreated = globalThis.underworld.syncronousInitLevel(0);
-        console.log('Host: Send all clients game state for initial load');
-        getClients().forEach(clientId => {
-            hostGiveClientGameStateForInitialLoad(clientId, globalThis.lastLevelCreated);
-        });
-    } else {
-        console.log('Start Game: Won\'t, game has already been started');
-    }
+    console.log('jtest here')
+
+
+    pie.startServer({
+        port: 8081, makeHostAppInstance: () => {
+            globalThis.pie = new HostApp();
+            console.log('Start Game: Attempt to start the game')
+            const gameAlreadyStarted = globalThis.underworld && globalThis.underworld.levelIndex >= 0;
+            // if the game hasn't already been started
+            if (!gameAlreadyStarted) {
+                console.log('Host: Start game / Initialize Underworld');
+                globalThis.underworld = new Underworld(Math.random().toString());
+                // Mark the underworld as "ready"
+                readyState.set('underworld', true);
+                globalThis.lastLevelCreated = globalThis.underworld.syncronousInitLevel(0);
+                console.log('Host: Send all clients game state for initial load');
+                getClients().forEach(clientId => {
+                    hostGiveClientGameStateForInitialLoad(clientId, globalThis.lastLevelCreated);
+                });
+            } else {
+                console.log('Start Game: Won\'t, game has already been started');
+            }
+            return globalThis.pie;
+        }
+    });
 }
 
 
@@ -48,15 +60,6 @@ interface OnDataArgs {
     payload: any;
     time: number;
 }
-
-const pie = require('@websocketpie/server');
-
-pie.startServer({
-    port: 8081, makeHostAppInstance: () => {
-        globalThis.pie = new HostApp();
-        return globalThis.pie;
-    }
-});
 class HostApp implements IHostApp {
     isHostApp: boolean = true;
     // Automatically overridden when passed into pie.startServer

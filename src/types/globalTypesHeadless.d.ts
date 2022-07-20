@@ -1,7 +1,15 @@
+import type * as PIXI from 'pixi.js';
+import type * as Player from '../entity/Player';
+import type * as Unit from '../entity/Unit';
 import type Underworld from '../Underworld';
+import type PieClient from '@websocketpie/client';
 import type { Vec2 } from '../jmath/Vec';
 import type { LevelData } from '../Underworld';
-import { ForceMove } from '../jmath/moveWithCollision';
+import type { View } from '../views';
+import type { Faction } from './commonTypes';
+import type { IPickup } from '../entity/Pickup';
+import type { ForceMove } from '../jmath/moveWithCollision';
+import type { IHostApp } from '../network/networkUtil';
 
 declare global {
     var SPELLMASONS_PACKAGE_VERSION: string;
@@ -24,119 +32,114 @@ declare global {
     var headless: boolean;
     // Returns true if client is playing singleplayer OR if hostapp
     var isHost: () => boolean;
+    // Note: in headless pie is an IHostApp instead of a @websocketpie/client instance
+    var pie: PieClient | IHostApp;
 
 
     // The following are undefined in the headless server
-    // var pixi: undefined | any;
-    // var latencyPanel: undefined | any;
-    // var runPredictionsPanel: undefined | any;
-    // var player: undefined | any;
-    // var pie: undefined | any;
-    // var connect_to_wsPie_server: undefined | any;
-    // var joinRoom: undefined | any;
-    // var setupPixiPromise: undefined | any;
-    // var pixiPromiseResolver: undefined | any;
-    // var exitCurrentGame: undefined | any;
-    // var closeMenu: undefined | any;
-    // var setMenu: undefined | any;
-    // var updateInGameMenuStatus: undefined | any;
-    // var skipTutorial: undefined | any;
-    // var save: undefined | any;
-    // var load: undefined | any;
-    // var getAllSaveFiles: undefined | any;
-    // var saveReplay: undefined | any;
-    // var replay: undefined | any;
-    // var clientId: undefined | any;
-    // var animatingSpells: undefined | any;
-    // var view: undefined | any;
-    // var giveMeCard: undefined | any;
-    // var showDebug: undefined | any;
-    // var walkPathGraphics: undefined | any;
-    // var debugGraphics: undefined | any;
-    // var devDebugGraphics: undefined | any;
-    // var radiusGraphics: undefined | any;
-    // var thinkingPlayerGraphics: undefined | any;
-    // var unitOverlayGraphics: undefined | any;
-    // var predictionGraphics: undefined | any;
-    // var planningViewGraphics: undefined | any;
-    // var debugCave: undefined | any;
-    // var allowCookies: undefined | any;
-    // var playMusic: undefined | any;
-    // var changeVolume: undefined | any;
-    // var changeVolumeMusic: undefined | any;
-    // var changeVolumeGame: undefined | any;
-    // var volume: undefined | any;
-    // var volumeMusic: undefined | any;
-    // var volumeGame: undefined | any;
-    // var startSingleplayer: undefined | any;
-    // var startMultiplayer: undefined | any;
-    // var playerWalkingPromise: undefined | any;
-    // var cookieConsentPopup: undefined | any;
+    // var pixi: undefined;
+    // var latencyPanel: undefined;
+    // var runPredictionsPanel: undefined;
+    // var player: undefined;
+    // var connect_to_wsPie_server: undefined;
+    // var joinRoom: undefined;
+    // var setupPixiPromise: undefined;
+    // var pixiPromiseResolver: undefined;
+    // var exitCurrentGame: undefined;
+    // var closeMenu: undefined;
+    // var setMenu: undefined;
+    // var updateInGameMenuStatus: undefined;
+    // var skipTutorial: undefined;
+    // var save: undefined;
+    // var load: undefined;
+    // var getAllSaveFiles: undefined;
+    // var saveReplay: undefined;
+    // var replay: undefined;
+    // var clientId: undefined;
+    // var animatingSpells: undefined;
+    // var view: undefined;
+    // var giveMeCard: undefined;
+    // var showDebug: undefined;
+    // var walkPathGraphics: undefined;
+    // var debugGraphics: undefined;
+    // var devDebugGraphics: undefined;
+    // var radiusGraphics: undefined;
+    // var thinkingPlayerGraphics: undefined;
+    // var unitOverlayGraphics: undefined;
+    // var predictionGraphics: undefined;
+    // var planningViewGraphics: undefined;
+    // var debugCave: undefined;
+    // var allowCookies: undefined;
+    // var playMusic: undefined;
+    // var changeVolume: undefined;
+    // var changeVolumeMusic: undefined;
+    // var changeVolumeGame: undefined;
+    // var volume: undefined;
+    // var volumeMusic: undefined;
+    // var volumeGame: undefined;
+    // var startSingleplayer: undefined;
+    // var startMultiplayer: undefined;
+    // var playerWalkingPromise: undefined;
+    // var cookieConsentPopup: undefined;
     // var zoomTarget: any;
-    // var enemyEncountered: undefined | any;
-    // var superMe: undefined | any;
-    // var predictionUnits: undefined | IUnit[];
-    // var predictionPickups: undefined | IPickup[];
-    // var attentionMarkers: undefined | any;
-    // var resMarkers: undefined | any;
-    // var castThisTurn: undefined | any;
-    // var monitorFPS: undefined | any;
-    // var MMBDown: undefined | any;
-    // var setMMBDown: undefined | any;
-    // var RMBDown: undefined | any;
-    // var setRMBDown: undefined | any;
-    // var notifiedOutOfStamina: undefined | any;
-    // var seedOverride: undefined | any;
-    // var devMode: undefined | any;
+    // var enemyEncountered: undefined;
+    // var superMe: undefined;
+    // var predictionUnits: undefined;
+    // var predictionPickups: undefined;
+    // var attentionMarkers: undefined;
+    // var resMarkers: undefined;
+    // var castThisTurn: undefined;
+    // var monitorFPS: undefined;
+    // var MMBDown: undefined;
+    // var setMMBDown: undefined;
+    // var RMBDown: undefined;
+    // var setRMBDown: undefined;
+    // var notifiedOutOfStamina: undefined;
+    // var devMode: undefined;
     // var map: any;
-    // var devSpawnUnit: undefined | any;
-    // var devSpawnAllUnits: undefined | any;
-    // var devRemoveAllEnemies: undefined | any;
-    // var playNextSong: undefined | any;
-    // var playSFX: undefined | any;
-    // var playSFXKey: undefined | any;
-    // var sfx: undefined | any;
-    // var tryAutoConnect: undefined | any;
+    // var devSpawnUnit: undefined;
+    // var devSpawnAllUnits: undefined;
+    // var devRemoveAllEnemies: undefined;
+    // var playNextSong: undefined;
+    // var playSFX: undefined;
+    // var playSFXKey: undefined;
+    // var sfx: undefined;
+    // var tryAutoConnect: undefined;
     var pixi: typeof PIXI | undefined;
-    var SPELLMASONS_PACKAGE_VERSION: string;
-    var latencyPanel: Stats.Panel;
-    var runPredictionsPanel: Stats.Panel;
-    var underworld: Underworld;
+    var latencyPanel: undefined | Stats.Panel;
+    var runPredictionsPanel: undefined | Stats.Panel;
     // A reference to the player instance of the client playing on this instance
     var player: Player.IPlayer | undefined;
-    // Globals needed for Golems-menu
-    // pie will be undefiend for Headless server
-    var pie: PieClient | IHostApp;
-    var connect_to_wsPie_server: (wsUri?: string) => Promise<void>;
-    var joinRoom: (_room_info: any) => (undefined | Promise<unknown>);
-    var setupPixiPromise: Promise<void>;
-    var pixiPromiseResolver: () => void;
+    var connect_to_wsPie_server: undefined | ((wsUri?: string) => Promise<void>);
+    var joinRoom: undefined | ((_room_info: any) => (undefined | Promise<unknown>));
+    var setupPixiPromise: undefined | Promise<void>;
+    var pixiPromiseResolver: undefined | (() => void);
     // Svelte menu handles
-    var exitCurrentGame: () => void;
-    var closeMenu: () => void;
+    var exitCurrentGame: undefined | (() => void);
+    var closeMenu: undefined | (() => void);
     // Sets which route of the menu is available; note, the view must also
     // be set to Menu in order to SEE the menu
-    var setMenu: (route: string) => void;
+    var setMenu: undefined | ((route: string) => void);
     // Used to tell the menu if a game is ongoing or not
-    var updateInGameMenuStatus: () => void;
+    var updateInGameMenuStatus: undefined | (() => void);
     // The menu will call this if the user chooses to skip the tutorial
-    var skipTutorial: () => void;
+    var skipTutorial: undefined | (() => void);
 
-    var save: (title: string) => void;
-    var load: (title: string) => void;
-    var getAllSaveFiles: () => string[];
+    var save: undefined | ((title: string) => void);
+    var load: undefined | ((title: string) => void);
+    var getAllSaveFiles: undefined | (() => string[]);
     // Save pie messages for later replay
-    var saveReplay: (title: string) => void;
+    var saveReplay: undefined | ((title: string) => void);
     // Used to replay onData messages for development
-    var replay: (title: string) => void;
+    var replay: undefined | ((title: string) => void);
     // Current client's id
-    var clientId: string;
-    var animatingSpells: boolean;
-    var view: View;
+    var clientId: undefined | string;
+    var animatingSpells: undefined | boolean;
+    var view: undefined | View;
     // For development use
-    var giveMeCard: (cardId: string, quantity: number) => void;
+    var giveMeCard: undefined | ((cardId: string, quantity: number) => void);
     // Set to true in developer console to see debug information
-    var showDebug: boolean;
+    var showDebug: undefined | boolean;
     // Draw the "walk rope" to show a player how far they can travel.
     var walkPathGraphics: PIXI.Graphics | undefined;
     // Graphics for drawing debug information, use window.showDebug = true
@@ -157,87 +160,68 @@ declare global {
     var planningViewGraphics: PIXI.Graphics | undefined;
     // Graphics for debugging the cave
     var debugCave: PIXI.Graphics | undefined;
-    var allowCookies: boolean;
-    var playMusic: () => void;
-    var changeVolume: (volume: number) => void;
-    var changeVolumeMusic: (volume: number) => void;
-    var changeVolumeGame: (volume: number) => void;
-    var volume: number = 1.0;
-    var volumeMusic: number;
-    var volumeGame: number;
-    var startSingleplayer: () => Promise<void>;
-    var startMultiplayer: (wsPieUrl: string) => Promise<void>;
+    var allowCookies: undefined | boolean;
+    var playMusic: undefined | (() => void);
+    var changeVolume: undefined | ((volume: number) => void);
+    var changeVolumeMusic: undefined | ((volume: number) => void);
+    var changeVolumeGame: undefined | ((volume: number) => void);
+    var volume: undefined | number;
+    var volumeMusic: undefined | number;
+    var volumeGame: undefined | number;
+    var startSingleplayer: undefined | (() => Promise<void>);
+    var startMultiplayer: undefined | ((wsPieUrl: string) => Promise<void>);
     // Used to ensure that the current client's turn doesn't end while they are still walking
     // If they invoke endMyTurn() while they are walking, it will wait until they are done
     // walking to end their turn.  If they are not walking, it will end immediately.
     // This property will always be a promise, since it is set immediately below as a resolved
     // promise.  This is so that the promise is always resolved UNLESS the player is currently
     // walking.
-    var playerWalkingPromise: Promise<void>;
+    var playerWalkingPromise: undefined | Promise<void>;
     // makes a pop up prompting the user to accept cookies
-    var cookieConsentPopup: (forcePopup: boolean) => void;
+    var cookieConsentPopup: undefined | ((forcePopup: boolean) => void);
     // A zoom value that the camera zoom will lerp to
-    var zoomTarget: number;
+    var zoomTarget: undefined | number;
     // A list of enemy ids that have been encountered by this client
     // Used to introduce new enemies
-    var enemyEncountered: string[];
+    var enemyEncountered: undefined | string[];
     // Make me superhuman (used for dev)
-    var superMe: () => void;
+    var superMe: undefined | (() => void);
     // A local copy of underworld.units used to predict damage and mana use from casting a spell
     var predictionUnits: Unit.IUnit[] | undefined;
     // A local copy of underworld.pickups used to predict effect from casting a spell
     var predictionPickups: IPickup[] | undefined;
     // Shows icons above the heads of enemies who will damage you next turn
-    var attentionMarkers: { imagePath: string, pos: Vec2 }[];
+    var attentionMarkers: undefined | { imagePath: string, pos: Vec2 }[];
     // Shows icon for units that will be successfully resurrected
-    var resMarkers: Vec2[];
-    // Keep track of the LevelData from the last level that was created in
-    // case it needs to be sent to another client
-    var lastLevelCreated: LevelData;
+    var resMarkers: undefined | Vec2[];
     // True if client player has casted this turn;
     // Used to prompt before ending turn without taking any action
-    var castThisTurn: boolean;
+    var castThisTurn: undefined | boolean;
     // Turns on fps monitoring
-    var monitorFPS: () => void;
-    // A hash of the last thing this client was thinking
-    // Used with MESSAGE_TYPES.PLAYER_THINKING so other clients 
-    // can see what another client is planning.
-    // The hash is used to prevent sending the same data more than once
-    var lastThoughtsHash: string;
-    var playerThoughts: { [clientId: string]: { target: Vec2, cardIds: string[] } };
-    // A list of units and pickups and an endPosition that they are moved to via a "force",
-    // like a push or pull or explosion.
-    var forceMove: ForceMove[];
+    var monitorFPS: undefined | (() => void);
     // Middle Mouse Button Down
     // Note: do NOT set directly, use setMMBDown instead
-    var MMBDown: boolean;
+    var MMBDown: undefined | boolean;
     // Used to set MMBDown so it will affect CSS too
-    var setMMBDown: (isDown: boolean) => void;
+    var setMMBDown: undefined | ((isDown: boolean) => void);
     // Right Mouse Button Down
     // Note: do NOT set directly, use setRMBDown instead
-    var RMBDown: boolean;
+    var RMBDown: undefined | boolean;
     // Used to set Right mouse button down
-    var setRMBDown: (isDown: boolean) => void;
-    var notifiedOutOfStamina: boolean;
-    // Allows manually overriding the underworld seed via the JS console
-    var seedOverride: string | undefined;
+    var setRMBDown: undefined | ((isDown: boolean) => void);
+    var notifiedOutOfStamina: undefined | boolean;
     // devMode: auto picks character and upgrades
-    var devMode: boolean;
+    var devMode: undefined | boolean;
     // Used for development to debug the original information used to make a map
-    var map: any;
-    var devSpawnUnit: (unitId: string, faction: Faction) => void;
-    var devSpawnAllUnits: () => void;
-    var devRemoveAllEnemies: () => void;
-    // true if this instance is the headless server with no visuals or audio, just the game logic
-    var headless: boolean;
+    var map: undefined | any;
+    var devSpawnUnit: undefined | ((unitId: string, faction: Faction) => void);
+    var devSpawnAllUnits: undefined | (() => void);
+    var devRemoveAllEnemies: undefined | (() => void);
     // Move audio functions into global so they can be injected IF audio is supported
-    var playNextSong: () => void | undefined;
-    var playSFX: (path?: string) => void | undefined;
-    var playSFXKey: (key: string) => void | undefined;
+    var playNextSong: undefined | (() => void | undefined);
+    var playSFX: undefined | ((path?: string) => void | undefined);
+    var playSFXKey: undefined | ((key: string) => void | undefined);
     var sfx: { [key: string]: string } | undefined;
     // svelte menu function to attempt to autoconnect if the queryString holds the info
-    var tryAutoConnect: () => void;
-    // Returns true if client is playing singleplayer OR if hostapp
-    var isHost: () => boolean;
-
+    var tryAutoConnect: undefined | (() => void);
 }

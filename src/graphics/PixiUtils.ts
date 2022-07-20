@@ -205,7 +205,8 @@ export function getCamera() {
   }
 }
 function calculateCameraZoom() {
-  return !app ? 0 : app.stage.scale.x + (globalThis.zoomTarget - app.stage.scale.x) / 8;
+
+  return !app ? 0 : app.stage.scale.x + ((globalThis.zoomTarget || 1) - app.stage.scale.x) / 8;
 }
 let lastZoom = globalThis.zoomTarget;
 export function updateCameraPosition() {
@@ -351,7 +352,7 @@ export function setupPixi(): Promise<void> {
   return loadTextures().then(() => {
     // Resolve the setupPixiPromise so that the menu knows
     // that pixijs is ready
-    globalThis.pixiPromiseResolver();
+    globalThis.pixiPromiseResolver?.();
   });
 }
 export function addPixiContainersForView(view: View) {

@@ -291,7 +291,7 @@ export async function runPredictions() {
           // Check if their non-prediction counterpart is dead to see if they will be resurrected:
           const realUnit = globalThis.underworld.units.find(x => x.id == u.id)
           if (realUnit && !realUnit.alive) {
-            globalThis.resMarkers.push(clone(realUnit));
+            globalThis.resMarkers?.push(clone(realUnit));
           }
         })
       }

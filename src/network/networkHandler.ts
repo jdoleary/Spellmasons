@@ -15,7 +15,7 @@ import { typeGuardHostApp } from './networkUtil';
 const messageLog: any[] = [];
 globalThis.exitCurrentGame = function exitCurrentGame(): Promise<void> {
   // Go back to the main PLAY menu
-  globalThis.setMenu('PLAY');
+  globalThis.setMenu?.('PLAY');
   if (globalThis.underworld) {
     globalThis.underworld.cleanup();
   }
@@ -398,7 +398,7 @@ async function handleSpell(caster: Player.IPlayer, payload: any) {
 const savePrefix = 'spellmasons-save-';
 globalThis.getAllSaveFiles = () => Object.keys(localStorage).filter(x => x.startsWith(savePrefix)).map(x => x.substring(savePrefix.length));
 
-globalThis.save = (title) => {
+globalThis.save = (title: string) => {
   storage.set(
     savePrefix + title,
     JSON.stringify({
@@ -410,12 +410,12 @@ globalThis.save = (title) => {
     }),
   );
 };
-globalThis.load = async (title) => {
+globalThis.load = async (title: string) => {
   const savedGameString = storage.get(savePrefix + title);
   if (savedGameString) {
 
     if (!readyState.get('underworld')) {
-      await globalThis.startSingleplayer();
+      await globalThis.startSingleplayer?.();
     }
 
     const { level, underworld, phase, units, players } = JSON.parse(savedGameString);

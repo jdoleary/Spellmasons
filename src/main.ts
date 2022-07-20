@@ -77,9 +77,9 @@ function setupAll() {
     initPlanningView();
     readyState.set("content", true);
     // if (storage.get(SKIP_TUTORIAL) === YES) {
-    globalThis.setMenu('PLAY');
+    globalThis.setMenu?.('PLAY');
     setView(View.Menu);
-    globalThis.tryAutoConnect();
+    globalThis.tryAutoConnect?.();
     // } else {
     //   globalThis.setMenu('TUTORIAL');
     //   startTutorial();
@@ -130,7 +130,7 @@ globalThis.devSpawnUnit = (unitId: string, faction: Faction = Faction.ENEMY) => 
 }
 globalThis.devSpawnAllUnits = () => {
   for (let id of Object.keys(Units.allUnits)) {
-    globalThis.devSpawnUnit(id, Faction.ENEMY);
+    globalThis.devSpawnUnit?.(id, Faction.ENEMY);
   }
 }
 globalThis.devRemoveAllEnemies = () => {
@@ -175,7 +175,9 @@ globalThis.superMe = () => {
     globalThis.player.unit.mana = 10000;
     globalThis.player.unit.manaMax = 10000;
     // Give me all cards
-    Object.keys(Cards.allCards).forEach(globalThis.giveMeCard);
+    if (globalThis.giveMeCard) {
+      Object.keys(Cards.allCards).forEach(globalThis.giveMeCard);
+    }
     // Run farther! Jump higher!
     globalThis.player.unit.staminaMax = 10000;
     globalThis.player.unit.stamina = globalThis.player.unit.staminaMax;

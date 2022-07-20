@@ -32,7 +32,9 @@ function closeMenu() {
     setView(lastNonMenuView);
     // When the menu closes, set the menu back
     // to the main menu route
-    globalThis.setMenu('PLAY');
+    if (globalThis.setMenu) {
+      globalThis.setMenu('PLAY');
+    }
   } else {
     console.log('Cannot close menu yet, no previous view to change to.');
   }
@@ -88,7 +90,9 @@ export function setView(v: View) {
   switch (v) {
     case View.Menu:
       elMenu.classList.remove('hidden');
-      globalThis.updateInGameMenuStatus();
+      if (globalThis.updateInGameMenuStatus) {
+        globalThis.updateInGameMenuStatus();
+      }
       break;
     case View.Game:
       resizePixi();

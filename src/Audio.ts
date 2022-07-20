@@ -38,7 +38,7 @@ export function playNextSong() {
     // Temp; TODO: Base music volume is too loud, (remove "* 0.5" when fixed)
     // task: Master all audio and sfx
     // task: Make independent volume sliders for audio and music
-    musicInstance.volume = globalThis.volume * globalThis.volumeMusic * 0.5;
+    musicInstance.volume = (globalThis.volume || 1) * (globalThis.volumeMusic || 1) * 0.5;
     musicInstance.play();
 }
 
@@ -56,7 +56,7 @@ export function playSFX(path?: string) {
     // In order to allow sounds to overlap, they must be 
     // fully instantiated each time they are played
     const audioInstance = new Audio(path);
-    audioInstance.volume = globalThis.volume * globalThis.volumeGame;
+    audioInstance.volume = (globalThis.volume || 1) * (globalThis.volumeGame || 1);
     audioInstance.play();
 
 }
@@ -68,14 +68,14 @@ export function setupAudio() {
         globalThis.volume = volume;
         storage.assign(STORAGE_OPTIONS, { volume: globalThis.volume });
         if (musicInstance) {
-            musicInstance.volume = globalThis.volume * globalThis.volumeMusic;
+            musicInstance.volume = globalThis.volume * (globalThis.volumeMusic || 1);
         }
     };
     globalThis.changeVolumeMusic = (volume: number) => {
         globalThis.volumeMusic = volume;
         storage.assign(STORAGE_OPTIONS, { volumeMusic: globalThis.volumeMusic });
         if (musicInstance) {
-            musicInstance.volume = globalThis.volume * globalThis.volumeMusic;
+            musicInstance.volume = (globalThis.volume || 1) * globalThis.volumeMusic;
         }
     };
     globalThis.changeVolumeGame = (volume: number) => {

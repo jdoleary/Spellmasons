@@ -2,7 +2,10 @@
 // @ts-nocheck
 
 // Shims:
-const fakeElement = undefined;
+const fakeElement = {
+    style: {},
+    addEventListener: () => { }
+};
 global.document = {
     getElementById: () => fakeElement,
     querySelector: () => fakeElement

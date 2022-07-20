@@ -475,6 +475,9 @@ export default class Underworld {
     }
   }
   drawResMarkers() {
+    if (!globalThis.resMarkers) {
+      return;
+    }
     for (let marker of globalThis.resMarkers) {
       const { zoom } = getCamera();
       ImmediateMode.draw('raise_dead.png', marker, 1 / zoom);
@@ -482,6 +485,9 @@ export default class Underworld {
 
   }
   drawEnemyAttentionMarkers() {
+    if (!globalThis.attentionMarkers) {
+      return;
+    }
     // Draw attention markers which show if an NPC will
     // attack you next turn
     // Note: this block must come after updating the camera position
@@ -604,7 +610,7 @@ export default class Underworld {
     // @ts-ignore
     globalThis.underworld = undefined;
     readyState.set('underworld', false);
-    globalThis.updateInGameMenuStatus()
+    globalThis.updateInGameMenuStatus?.()
 
   }
   // cacheWalls updates underworld.walls array
@@ -677,7 +683,7 @@ export default class Underworld {
       console.error('Unit with id', id, 'does not exist.  Have you registered it in src/units/index.ts?');
       return;
     }
-    if (!globalThis.enemyEncountered.includes(id)) {
+    if (globalThis.enemyEncountered && !globalThis.enemyEncountered.includes(id)) {
       globalThis.enemyEncountered.push(id);
       storage.set(ENEMY_ENCOUNTERED_STORAGE_KEY, JSON.stringify(globalThis.enemyEncountered));
       Jprompt({ imageSrc: Unit.getImagePathForUnitId(id), text: id + '\n' + sourceUnit.info.description, yesText: 'Okay!', yesKey: 'Space', yesKeyText: 'Spacebar' });

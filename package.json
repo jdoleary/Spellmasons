@@ -12,7 +12,8 @@
     "lint": "prettier --check \"src/**/*.{ts,js}\"",
     "prepare": "husky install",
     "headless-trace": "tsc --traceResolution --project tsconfig.headless.json --outDir headless-server-build/ > resolution.out && node headless-server-build/src/HeadlessServer.js",
-    "headless": "tsc --project tsconfig.headless.json --outDir headless-server-build/ && node headless-server-build/src/HeadlessServer.js"
+    "headless-compile": "tsc --project tsconfig.headless.json --outDir headless-server-build/",
+    "headless-run": "node headless-server-build/src/HeadlessServer.js"
   },
   "repository": {
     "type": "git",
