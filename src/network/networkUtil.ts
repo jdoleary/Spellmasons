@@ -1,6 +1,5 @@
-import Underworld, { LevelData } from '../Underworld';
+import type { LevelData } from '../Underworld';
 import { MESSAGE_TYPES } from '../types/MessageTypes';
-import * as readyState from '../readyState';
 import * as Player from '../entity/Player';
 import * as Unit from '../entity/Unit';
 
@@ -18,45 +17,10 @@ export function getClients(): string[] {
 export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
     console.log('clientPresenceChanged', o);
     clients = o.clients;
-    // Client joined
-    if (clients[0] !== undefined) {
-        // If game is already started
-        if (globalThis.underworld) {
-            // Ensure each client corresponds with a Player instance
-            globalThis.underworld.ensureAllClientsHaveAssociatedPlayers(clients);
-        } else {
-            if (globalThis.isHost()) {
-                tryStartGame();
-            } else {
-                console.error('Unexpected, joined a room where the game is not already started but you are not in solomode');
-            }
-        }
-    } else {
-
-    }
-}
-
-async function tryStartGame() {
-    console.log('Start Game: Attempt to start the game')
-    // Starts a new game if THIS client is the host, and 
-    if (globalThis.isHost()) {
-        const gameAlreadyStarted = globalThis.underworld && globalThis.underworld.levelIndex >= 0;
-        // if the game hasn't already been started
-        if (!gameAlreadyStarted) {
-            console.log('Host: Start game / Initialize Underworld');
-            globalThis.underworld = new Underworld(Math.random().toString());
-            // Mark the underworld as "ready"
-            readyState.set('underworld', true);
-            const levelData = await globalThis.underworld.initLevel(0);
-            console.log('Host: Send all clients game state for initial load');
-            clients.forEach(clientId => {
-                hostGiveClientGameStateForInitialLoad(clientId, levelData);
-            });
-        } else {
-            console.log('Start Game: Won\'t, game has already been started');
-        }
-    } else {
-        console.log('Start Game: Won\'t, client must be host to start the game.')
+    // If game is already started
+    if (globalThis.underworld) {
+        // Ensure each client corresponds with a Player instance
+        globalThis.underworld.ensureAllClientsHaveAssociatedPlayers(clients);
     }
 }
 export function hostGiveClientGameStateForInitialLoad(clientId: string, level: LevelData = globalThis.lastLevelCreated) {

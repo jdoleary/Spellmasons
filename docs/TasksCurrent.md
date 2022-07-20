@@ -1,5 +1,4 @@
 ## This weeks goals:
-    - Left off: fill in the rest of global.window's props that shouldn't be undef
     - bug: 2nd client gets left over images
     - bug: hostApp isn't the host
     - Standalone Server

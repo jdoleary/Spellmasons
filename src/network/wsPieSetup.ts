@@ -5,6 +5,7 @@ import * as readyState from '../readyState';
 import { setView, View } from '../views';
 import * as storage from '../storage';
 import { updateGlobalRefToCurrentClientPlayer } from '../entity/Player';
+import Underworld from '../Underworld';
 // Locally hosted, locally accessed
 // const wsUri = 'ws://localhost:8080';
 // Locally hosted, available to LAN (use your own IP)
@@ -128,6 +129,22 @@ function addHandlers(pie: PieClient) {
 
 globalThis.startSingleplayer = function startSingleplayer() {
   return connect_to_wsPie_server().then(() => {
-    return joinRoom();
+    return joinRoom().then(() => {
+      singleplayerStartGame();
+    });
   });
+}
+
+function singleplayerStartGame() {
+  console.log('Start Game: Attempt to start the game')
+  document.body?.classList.toggle('loading', true);
+  // setTimeout allows the UI to refresh before locking up the CPU with
+  // heavy level generation code
+  setTimeout(() => {
+    console.log('Host: Start game / Initialize Underworld');
+    globalThis.underworld = new Underworld(Math.random().toString());
+    // Mark the underworld as "ready"
+    readyState.set('underworld', true);
+    globalThis.lastLevelCreated = globalThis.underworld.syncronousInitLevel(0);
+  }, 10)
 }

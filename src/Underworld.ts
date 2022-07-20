@@ -990,31 +990,28 @@ export default class Underworld {
       }, 10)
     });
   }
+  syncronousInitLevel(levelIndex: number): LevelData {
+    console.log('Setup: initLevel as host', levelIndex);
+    this.levelIndex = levelIndex;
+    // Generate level
+    let level;
+    do {
+      // Invoke generateRandomLevel again until it succeeds
+      level = this.generateRandomLevelData(levelIndex);
+    } while (level === undefined);
+    globalThis.pie.sendData({
+      type: MESSAGE_TYPES.CREATE_LEVEL,
+      level
+    });
+    return level;
+  }
   async initLevel(levelIndex: number): Promise<LevelData> {
-    return await new Promise<LevelData>(resolve => {
+    return new Promise<LevelData>(resolve => {
       document.body?.classList.toggle('loading', true);
       // setTimeout allows the UI to refresh before locking up the CPU with
       // heavy level generation code
       setTimeout(() => {
-        if (globalThis.isHost()) {
-          console.log('Setup: initLevel as host', levelIndex);
-          this.levelIndex = levelIndex;
-          // Generate level
-          let level;
-          if (false && globalThis.devMode) {
-            level = this.testLevelData();
-          } else {
-            do {
-              // Invoke generateRandomLevel again until it succeeds
-              level = this.generateRandomLevelData(levelIndex);
-            } while (level === undefined);
-          }
-          globalThis.pie.sendData({
-            type: MESSAGE_TYPES.CREATE_LEVEL,
-            level
-          });
-          resolve(level);
-        }
+        resolve(this.syncronousInitLevel(levelIndex));
       }, 10);
     })
   }
@@ -1364,7 +1361,9 @@ export default class Underworld {
       // returning
       setTimeout(() => {
         // Prepare the next level
-        this.initLevel(++this.levelIndex);
+        if (globalThis.isHost()) {
+          this.initLevel(++this.levelIndex);
+        }
       }, 0)
       // Return of true signifies it went to the next level
       return true;
