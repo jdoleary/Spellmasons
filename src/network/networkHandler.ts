@@ -93,13 +93,7 @@ function handleOnDataMessageSyncronously(d: OnDataArgs) {
   // If message type is in the ONLY_KEEP_LATEST list, drop any currently queued messages of the
   // same message type from the same client before adding this one to the queue
   if (d.payload && ONLY_KEEP_LATEST.includes(d.payload.type)) {
-    const oldQueueLength = onDataQueueContainer.queue.length;
     onDataQueueContainer.queue = onDataQueueContainer.queue.filter(x => x.payload.type != d.payload.type && d.fromClient == x.fromClient);
-    const newQueueLength = onDataQueueContainer.queue.length;
-    const numberOfMessagesDiscarded = oldQueueLength - newQueueLength;
-    if (numberOfMessagesDiscarded > 0) {
-      console.log(`ONLY_KEEP_LATEST: Discarded ${numberOfMessagesDiscarded} old messages in queue of type ${MESSAGE_TYPES[d.payload.type]}`)
-    }
   }
   // Queue message for processing one at a time
   onDataQueueContainer.queue.push(d);
