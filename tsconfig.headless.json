@@ -10,10 +10,11 @@
     "module": "CommonJS",
     "moduleResolution": "Node",
     "strict": true,
-    "sourceMap": true,
+    "sourceMap": false,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "esModuleInterop": true,
+    "noImplicitReturns": true,
     "skipLibCheck": true,
     "noUncheckedIndexedAccess": true,
     "strictNullChecks": true,
@@ -21,13 +22,12 @@
   "buildOptions": {
     "verbose": true
   },
-  "files": [
-    "src/HeadlessServer.ts"
-  ],
   "include": [
-    "src/**/*"
+    "src"
   ],
   "exclude": [
-    "src/types/globalTypesMain.d.ts"
+    "src/types/globalTypesMain.d.ts",
+    "src/graphics/**",
+    "src/Audio.ts",
   ]
 }

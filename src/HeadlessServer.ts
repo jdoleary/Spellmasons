@@ -1,6 +1,4 @@
-"use strict";
 import { version } from '../package.json';
-import './types/globalTypesHeadless';
 import './Shims';
 import * as Cards from './cards';
 import * as Units from './entity/units';
