@@ -1,5 +1,4 @@
 ## This weeks goals:
-    - bug: Unit images are duplicated and detached
     - globalThis for headless isn't going to work since a single headless esrver should be able to host multiple rooms and the multiple rooms can't share state
     ---
     - bug: the headless app doesn't clean up Players (not clients) after they leave
