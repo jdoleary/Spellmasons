@@ -1,6 +1,11 @@
 ## This weeks goals:
+    - LEFT OFF:
+        - Finally got headless compiling and it appears to hold gamestate even when both players leave
+        - however there is an issue that player images don't appear
     - bug: 2nd client gets left over images
     - bug: hostApp isn't the host
+    - bug: the headless app doesn't clean up Players (not clients) after they leave
+        - bug or by design? I want them to be able to rejoin don't i?
     - Standalone Server
         - [Ensure setImmediate doesn't max the cpu](https://timetocode.tumblr.com/post/71512510386/an-accurate-node-js-game-loop-inbetween-settimeout-and)
             - Join a headless server's pie server with a local client and send messages
