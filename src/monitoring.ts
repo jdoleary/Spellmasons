@@ -5,7 +5,7 @@ import Stats from 'stats.js';
 
 export function setupMonitoring() {
 
-  const release = `spellmasons@${window.SPELLMASONS_PACKAGE_VERSION}`;
+  const release = `spellmasons@${globalThis.SPELLMASONS_PACKAGE_VERSION}`;
   if (!location.href.includes('http://localhost')) {
     console.log('Setup: Monitoring with Sentry', release);
     Sentry.init({
@@ -29,7 +29,7 @@ export function setupMonitoring() {
   }
 }
 
-window.monitorFPS = () => {
+globalThis.monitorFPS = () => {
   const stats = new Stats();
   // Add fps stats
   function monitorFPS() {
@@ -42,12 +42,12 @@ window.monitorFPS = () => {
 
   // Add latency stats
   stats.showPanel(3);
-  window.latencyPanel = stats.addPanel(
+  globalThis.latencyPanel = stats.addPanel(
     new Stats.Panel('latency', '#ff8', '#221'),
   );
   // Add ms tracker for runPredictions function
   stats.showPanel(4);
-  window.runPredictionsPanel = stats.addPanel(
+  globalThis.runPredictionsPanel = stats.addPanel(
     new Stats.Panel('runPredictions', '#ff8', '#221'),
   );
   stats.dom.classList.add('doob-stats');

@@ -36,7 +36,7 @@ const unit: UnitSource = {
       await Unit.playComboAnimation(unit, unit.animations.attack, async () => {
         const sourceUnit = allUnits.grunt;
         if (sourceUnit) {
-          const coords = window.underworld.findValidSpawn(unit, 5)
+          const coords = globalThis.underworld.findValidSpawn(unit, 5)
           if (coords) {
             const summonedUnit = Unit.create(
               sourceUnit.id,

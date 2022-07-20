@@ -117,7 +117,7 @@ function repelCircles(mover: Circle, originalPosition: Vec2, other: Circle, othe
         if (overlap > 0) {
             if (otherIsFixed) {
                 const moverPos = moveAlongVector(mover, vector, -overlap);
-                const intersection = closestLineSegmentIntersection({ p1: mover, p2: moverPos }, window.underworld.pathingLineSegments);
+                const intersection = closestLineSegmentIntersection({ p1: mover, p2: moverPos }, globalThis.underworld.pathingLineSegments);
                 if (intersection) {
                     mover.x = intersection.x;
                     mover.y = intersection.y;
@@ -127,7 +127,7 @@ function repelCircles(mover: Circle, originalPosition: Vec2, other: Circle, othe
                 }
             } else {
                 const otherPos = moveAlongVector(other, vector, overlap);
-                const intersection = closestLineSegmentIntersection({ p1: other, p2: otherPos }, window.underworld.pathingLineSegments);
+                const intersection = closestLineSegmentIntersection({ p1: other, p2: otherPos }, globalThis.underworld.pathingLineSegments);
                 if (intersection) {
                     other.x = intersection.x;
                     other.y = intersection.y;
@@ -156,10 +156,10 @@ function repelCircleFromLine(mover: Circle, line: LineSegment) {
     // with walls (lines and their verticies).
     const totalRepelDistance = config.COLLISION_MESH_RADIUS * config.NON_HEAVY_UNIT_SCALE;
     // Test for intersection with the line segment
-    // window.unitOverlayGraphics.lineStyle(4, 0xff0000, 1);
+    // globalThis.unitOverlayGraphics.lineStyle(4, 0xff0000, 1);
     // const midPoint = add(line.p1, similarTriangles(line.p2.x - line.p1.x, line.p2.y - line.p1.y, distance(line.p1, line.p2), distance(line.p1, line.p2) / 2))
-    // window.unitOverlayGraphics.moveTo(midPoint.x, midPoint.y);
-    // window.unitOverlayGraphics.lineTo(midPoint.x + repelVector.x, midPoint.y + repelVector.y);
+    // globalThis.unitOverlayGraphics.moveTo(midPoint.x, midPoint.y);
+    // globalThis.unitOverlayGraphics.lineTo(midPoint.x + repelVector.x, midPoint.y + repelVector.y);
     const rightAngleIntersectionWithLineFromMoverCenterPoint = findWherePointIntersectLineSegmentAtRightAngle(mover, line);
     if (rightAngleIntersectionWithLineFromMoverCenterPoint
         && distance(rightAngleIntersectionWithLineFromMoverCenterPoint, mover) <= totalRepelDistance) {

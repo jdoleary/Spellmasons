@@ -4,14 +4,14 @@ import floatingText from './FloatingText';
 import { Vec2 } from '../jmath/Vec';
 
 // document.body?.addEventListener('mousemove', (e) => {
-//   if (window.underworld) {
+//   if (globalThis.underworld) {
 
 
-//     const mouseTarget = window.underworld.getMousePos();
-//     if (window.t) {
-//       const ts = window.t.sort((u, v) => distance(getCenterPoint(u.lineSegment), mouseTarget) - distance(getCenterPoint(v.lineSegment), mouseTarget));
+//     const mouseTarget = globalThis.underworld.getMousePos();
+//     if (globalThis.t) {
+//       const ts = globalThis.t.sort((u, v) => distance(getCenterPoint(u.lineSegment), mouseTarget) - distance(getCenterPoint(v.lineSegment), mouseTarget));
 //       const t1 = ts[0];
-//       window.drawT(t1);
+//       globalThis.drawT(t1);
 //     }
 //   }
 
@@ -19,8 +19,8 @@ import { Vec2 } from '../jmath/Vec';
 export default function devUtils(graphics: PIXI.Graphics) {
 
     // const drawT = ({ lineSegment: line, polygon }, lineColor) => {
-    //     window.debugDrawLineSegments(window.a5);
-    //     window._debugDrawLineSegments(polygon, 0x00ff00);
+    //     globalThis.debugDrawLineSegments(globalThis.a5);
+    //     globalThis._debugDrawLineSegments(polygon, 0x00ff00);
     //     graphics.lineStyle(3, 0xff0000, 0.8);
     //     graphics.drawCircle(line.p1.x, line.p1.y, 2);
     //     graphics.drawCircle(line.p2.x, line.p2.y, 2);

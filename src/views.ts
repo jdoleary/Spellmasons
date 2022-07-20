@@ -32,13 +32,13 @@ function closeMenu() {
     setView(lastNonMenuView);
     // When the menu closes, set the menu back
     // to the main menu route
-    window.setMenu('PLAY');
+    globalThis.setMenu('PLAY');
   } else {
     console.log('Cannot close menu yet, no previous view to change to.');
   }
 
 }
-if (!window.headless) {
+if (!globalThis.headless) {
   const menuBtnId = 'menuBtn';
   const elMenuBtn: HTMLButtonElement = document.getElementById(
     menuBtnId,
@@ -46,7 +46,7 @@ if (!window.headless) {
   elMenuBtn.addEventListener('click', toggleMenu);
 }
 // Make 'closeMenu' available to the svelte menu
-window.closeMenu = closeMenu;
+globalThis.closeMenu = closeMenu;
 export function toggleMenu() {
   const elMenu = document.getElementById('menu') as HTMLElement;
   const menuClosed = elMenu.classList.contains('hidden');
@@ -62,9 +62,9 @@ export function toggleMenu() {
 // No gamelogic should be executed inside setView
 // including setup.
 export function setView(v: View) {
-  if (window.headless) { return; }
+  if (globalThis.headless) { return; }
   console.log('setView(', View[v], ')');
-  if (window.view == v) {
+  if (globalThis.view == v) {
     // Prevent setting a view more than once if the view hasn't changed
     // Since some of these views, (such as upgrade) have
     // initialization logic
@@ -75,7 +75,7 @@ export function setView(v: View) {
     document.body?.classList.remove(`view-${view}`);
   }
   document.body?.classList.add(`view-${View[v]}`);
-  window.view = v;
+  globalThis.view = v;
   addPixiContainersForView(v);
   const elMenu = document.getElementById('menu') as HTMLElement;
   if (v !== View.Menu) {
@@ -88,7 +88,7 @@ export function setView(v: View) {
   switch (v) {
     case View.Menu:
       elMenu.classList.remove('hidden');
-      window.updateInGameMenuStatus();
+      globalThis.updateInGameMenuStatus();
       break;
     case View.Game:
       resizePixi();
@@ -120,22 +120,22 @@ function zoom(e: WheelEvent) {
   // Limit zoom out and in to sensible limits
   newScale = Math.min(Math.max(0.3, newScale), 4);
 
-  window.zoomTarget = newScale;
+  globalThis.zoomTarget = newScale;
 }
 
 
 const endTurnBtnId = 'end-turn-btn';
 function addUnderworldEventListeners() {
-  if (window.headless) { return; }
+  if (globalThis.headless) { return; }
   // Add keyboard shortcuts
-  window.addEventListener('keydown', keydownListener);
-  window.addEventListener('keypress', keypressListener);
-  window.addEventListener('keyup', keyupListener);
+  globalThis.addEventListener('keydown', keydownListener);
+  globalThis.addEventListener('keypress', keypressListener);
+  globalThis.addEventListener('keyup', keyupListener);
   document.body?.addEventListener('contextmenu', contextmenuHandler);
   document.body?.addEventListener('click', clickHandler);
-  window.addEventListener('mousedown', mouseDownHandler);
-  window.addEventListener('mouseup', mouseUpHandler);
-  window.addEventListener('blur', onWindowBlur);
+  globalThis.addEventListener('mousedown', mouseDownHandler);
+  globalThis.addEventListener('mouseup', mouseUpHandler);
+  globalThis.addEventListener('blur', onWindowBlur);
   document.body?.addEventListener('wheel', zoom);
   document.body?.addEventListener('mousemove', mouseMove);
   // Add button listeners
@@ -148,8 +148,8 @@ function addUnderworldEventListeners() {
 
 export function removeUnderworldEventListeners() {
   // Remove keyboard shortcuts
-  window.removeEventListener('keydown', keydownListener);
-  window.removeEventListener('keyup', keyupListener);
+  globalThis.removeEventListener('keydown', keydownListener);
+  globalThis.removeEventListener('keyup', keyupListener);
   // Remove mouse and click listeners
   document.body?.removeEventListener('contextmenu', contextmenuHandler);
   document.body?.removeEventListener('click', clickHandler);

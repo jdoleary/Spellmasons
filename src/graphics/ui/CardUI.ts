@@ -32,7 +32,7 @@ const dragstart = (ev: any) => {
 const cardHoldersPaddingLeft = 10;
 // Displays a full card with info on inspect-mode + hover of card
 const elCardInspect = document.getElementById('card-inspect');
-if (!window.headless) {
+if (!globalThis.headless) {
   elInvButton?.addEventListener('click', () => {
     toggleInventory(undefined, undefined);
   });
@@ -49,19 +49,19 @@ if (!window.headless) {
     const dropElement = ((ev.target as HTMLElement).closest('.slot') as HTMLElement);
     const dropIndex = dropElement.parentNode ? Array.from(dropElement.parentNode.children).indexOf(dropElement) : -1;
     const cardId = dragCard && dragCard.dataset.cardId
-    if (window.player && dropIndex !== -1 && dragCard && cardId !== undefined) {
+    if (globalThis.player && dropIndex !== -1 && dragCard && cardId !== undefined) {
       const startDragCardIndex = dragCard.parentNode && dragCard.closest('#card-hand') ? Array.from(dragCard.parentNode.children).indexOf(dragCard) : -1;
       if (startDragCardIndex !== -1) {
         // Then the drag card is already in the toolbar and this is a swap between
         // two cards on the toolbar
-        const swapCard = window.player.cards[dropIndex] || "";
-        window.player.cards[dropIndex] = cardId;
-        window.player.cards[startDragCardIndex] = swapCard;
+        const swapCard = globalThis.player.cards[dropIndex] || "";
+        globalThis.player.cards[dropIndex] = cardId;
+        globalThis.player.cards[startDragCardIndex] = swapCard;
       } else {
         // else a card is being dragged in from inventory
-        window.player.cards[dropIndex] = cardId;
+        globalThis.player.cards[dropIndex] = cardId;
       }
-      recalcPositionForCards(window.player);
+      recalcPositionForCards(globalThis.player);
       syncInventory(undefined);
     } else {
       console.error('Something went wrong dragndropping card', dropIndex, dragCard);
@@ -97,7 +97,7 @@ function addCardInspectHandlers(cardContainerElement: HTMLElement) {
   }
 }
 export function clearCurrentlyShownCard() {
-  if (window.headless) { return; }
+  if (globalThis.headless) { return; }
   // Clear cardInspect when the mouse leaves elCardHolders so that the large card
   // doesn't stay in the center of the screen
   if (elCardInspect) {
@@ -122,11 +122,11 @@ function showFullCard(card: Cards.ICard) {
 let cardsSelected: string[] = [];
 
 export function recalcPositionForCards(player: Player.IPlayer | undefined) {
-  if (window.headless) { return; }
-  if (!window.player) {
+  if (globalThis.headless) { return; }
+  if (!globalThis.player) {
     return
   }
-  if (window.player !== player) {
+  if (globalThis.player !== player) {
     // Do not reconcile dom elements for a player who is not the current client's player
     return;
   }
@@ -190,21 +190,21 @@ export function recalcPositionForCards(player: Player.IPlayer | undefined) {
 }
 const openInvClass = 'open-inventory';
 export function syncInventory(slotModifyingIndex: number | undefined) {
-  if (window.headless) { return; }
-  if (window.player) {
+  if (globalThis.headless) { return; }
+  if (globalThis.player) {
     // clear contents
     elInvContent.innerHTML = '';
 
-    for (let inventoryCardId of window.player.inventory) {
+    for (let inventoryCardId of globalThis.player.inventory) {
       const card = Cards.allCards[inventoryCardId];
       if (card) {
         const elCard = createCardElement(card);
         elCard.draggable = true;
         if (slotModifyingIndex !== undefined) {
           elCard.addEventListener('click', (e) => {
-            if (window.player) {
-              window.player.cards[slotModifyingIndex] = inventoryCardId;
-              recalcPositionForCards(window.player)
+            if (globalThis.player) {
+              globalThis.player.cards[slotModifyingIndex] = inventoryCardId;
+              recalcPositionForCards(globalThis.player)
               // Close inventory
               toggleInventory(undefined, false);
               e.preventDefault();
@@ -214,9 +214,9 @@ export function syncInventory(slotModifyingIndex: number | undefined) {
           })
         }
         // When the user clicks on a card
-        addListenersToCardElement(window.player, elCard, card.id);
+        addListenersToCardElement(globalThis.player, elCard, card.id);
         // Show that card is already on toolbar
-        if (window.player.cards.includes(inventoryCardId)) {
+        if (globalThis.player.cards.includes(inventoryCardId)) {
           elCard.classList.add('inToolbar');
         }
         elInvContent.appendChild(elCard);
@@ -230,22 +230,22 @@ export function syncInventory(slotModifyingIndex: number | undefined) {
       if (elClearSlotModifiyingIndex) {
         elInvContent.appendChild(elClearSlotModifiyingIndex);
         elClearSlotModifiyingIndex.addEventListener('click', () => {
-          if (window.player && slotModifyingIndex !== undefined) {
-            window.player.cards[slotModifyingIndex] = '';
-            recalcPositionForCards(window.player);
+          if (globalThis.player && slotModifyingIndex !== undefined) {
+            globalThis.player.cards[slotModifyingIndex] = '';
+            recalcPositionForCards(globalThis.player);
             toggleInventory(undefined, false);
           }
         })
       }
     }
   } else {
-    console.error('Cannot sync inventory, window.player is undefined');
+    console.error('Cannot sync inventory, globalThis.player is undefined');
   }
 }
 export function toggleInventory(toolbarIndex: number | undefined, forceState: boolean | undefined) {
-  if (window.headless) { return; }
+  if (globalThis.headless) { return; }
   document.body?.classList.toggle(openInvClass, forceState);
-  if (window.player && document.body?.classList.contains(openInvClass)) {
+  if (globalThis.player && document.body?.classList.contains(openInvClass)) {
     // Create inventory
     syncInventory(toolbarIndex);
   } else {
@@ -281,7 +281,7 @@ function addListenersToCardElement(
   element: HTMLElement,
   cardId: string,
 ) {
-  if (window.headless) {
+  if (globalThis.headless) {
     return;
   }
   element.addEventListener('click', (e) => {
@@ -309,7 +309,7 @@ function addListenersToCardElement(
   });
 }
 export function deselectLastCard() {
-  if (window.headless) { return; }
+  if (globalThis.headless) { return; }
   if (elSelectedCards) {
     const cardGroup = elSelectedCards.children.item(elSelectedCards.children.length - 1) as HTMLElement;
     if (cardGroup) {
@@ -321,7 +321,7 @@ export function deselectLastCard() {
 
 }
 export function selectCardByIndex(index: number) {
-  if (window.headless) { return; }
+  if (globalThis.headless) { return; }
   if (elCardHand) {
     const cardGroup = elCardHand.children.item(index) as HTMLElement;
     if (cardGroup && cardGroup.children.item(0)) {
@@ -345,17 +345,17 @@ function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string
     }
     elSelectedCards.appendChild(clone);
     const cost = updateManaCostUI();
-    if (window.player) {
-      if (cost.manaCost > window.player.unit.mana) {
+    if (globalThis.player) {
+      if (cost.manaCost > globalThis.player.unit.mana) {
         floatingText({
-          coords: window.player.unit,
+          coords: globalThis.player.unit,
           text: 'Insufficient Mana',
           style: { fill: '#5656d5', fontSize: '50px', dropShadow: true, dropShadowDistance: 1 }
         })
         deselectLastCard();
 
       }
-      if (cost.healthCost > window.player.unit.health) {
+      if (cost.healthCost > globalThis.player.unit.health) {
         centeredFloatingText('Insufficient Health', colors.healthRed);
         deselectLastCard();
 
@@ -366,13 +366,13 @@ function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string
   }
 }
 export function areAnyCardsSelected() {
-  if (window.headless) { return false; }
+  if (globalThis.headless) { return false; }
   return !!getSelectedCardIds().length;
 }
 
 // This function fully deletes the cards from the player's hand
 export function removeCardsFromHand(player: Player.IPlayer, cards: string[]) {
-  if (window.headless) { return; }
+  if (globalThis.headless) { return; }
   player.cards = player.cards.filter(c => !cards.includes(c));
   // Remove any selected cards with a name in the cards array of this function
   for (let card of cards) {
@@ -381,22 +381,22 @@ export function removeCardsFromHand(player: Player.IPlayer, cards: string[]) {
       (el as HTMLElement).click();
     });
   }
-  recalcPositionForCards(window.player);
+  recalcPositionForCards(globalThis.player);
 }
 
 // TODO remove dev helper function for production release
-window.giveMeCard = (cardId: string, quantity: number = 1) => {
+globalThis.giveMeCard = (cardId: string, quantity: number = 1) => {
   const card = Cards.allCards[cardId];
   if (card) {
     for (let i = 0; i < quantity; i++) {
-      addCardToHand(card, window.player);
+      addCardToHand(card, globalThis.player);
     }
   } else {
     console.log('card', card, 'not found');
   }
 };
 export function addCardToHand(card: Cards.ICard | undefined, player: Player.IPlayer | undefined) {
-  if (window.headless) { return; }
+  if (globalThis.headless) { return; }
   if (!card) {
     console.error('Attempting to add undefined card to hand');
     return
@@ -418,7 +418,7 @@ export function addCardToHand(card: Cards.ICard | undefined, player: Player.IPla
 }
 
 export function getSelectedCardIds(): string[] {
-  if (window.headless) { return []; }
+  if (globalThis.headless) { return []; }
   if (elSelectedCards && elSelectedCards.classList.contains('hide')) {
     return [];
   }
@@ -427,13 +427,13 @@ export function getSelectedCardIds(): string[] {
   );
 }
 export function getSelectedCards(): Cards.ICard[] {
-  if (window.headless) { return []; }
+  if (globalThis.headless) { return []; }
   const cardIds = getSelectedCardIds();
   return Cards.getCardsFromIds(cardIds);
 }
 
 export function clearSelectedCards() {
-  if (window.headless) { return; }
+  if (globalThis.headless) { return; }
   // Deselect all selected cards
   cardsSelected = []
   document.querySelectorAll('.card.selected').forEach((el) => {
@@ -491,7 +491,7 @@ export function getCardRarityColor(content: { probability: number }): string {
   }
 }
 function createNonCardInventoryElement(thumbnailPath: string, titleText: string) {
-  if (window.headless) { return; }
+  if (globalThis.headless) { return; }
   const element = document.createElement('div');
   element.classList.add('card');
   const elCardInner = document.createElement('div');
@@ -593,19 +593,19 @@ function updateHealthBadge(elBadge: Element | null, healthCost: number, card: Ca
 // Updates the UI mana badge for cards in hand.  To be invoked whenever a player's
 // cardUsageCounts object is modified in order to sync the UI
 export function updateCardBadges() {
-  if (window.headless) { return; }
-  if (window.player) {
+  if (globalThis.headless) { return; }
+  if (globalThis.player) {
     // Using a prediction unit here so that composeOnDamageEvents
     // used to determine the modified health cost of
     // spells that cost health will not affect the real player unit
-    const predictionPlayerUnit = copyForPredictionUnit(window.player.unit);
+    const predictionPlayerUnit = copyForPredictionUnit(globalThis.player.unit);
     // Update selected cards
     const selectedCards = getSelectedCards();
     for (let i = 0; i < selectedCards.length; i++) {
       const card = selectedCards[i];
       if (card) {
         const sliceOfCardsOfSameIdUntilCurrent = selectedCards.slice(0, i).filter(c => c.id == card.id);
-        const cost = calculateCostForSingleCard(card, (window.player.cardUsageCounts[card.id] || 0) + sliceOfCardsOfSameIdUntilCurrent.length);
+        const cost = calculateCostForSingleCard(card, (globalThis.player.cardUsageCounts[card.id] || 0) + sliceOfCardsOfSameIdUntilCurrent.length);
         const elBadges = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"] .card-mana-badge`);
         const elBadge = Array.from(elBadges)[sliceOfCardsOfSameIdUntilCurrent.length];
         if (elBadge) {
@@ -621,10 +621,10 @@ export function updateCardBadges() {
       }
     }
     // Update cards in hand and inventory
-    const cards = Cards.getCardsFromIds(window.player.cards);
+    const cards = Cards.getCardsFromIds(globalThis.player.cards);
     for (let card of cards) {
       const selectedCardElementsOfSameId = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"]`);
-      const cost = calculateCostForSingleCard(card, (window.player.cardUsageCounts[card.id] || 0) + selectedCardElementsOfSameId.length);
+      const cost = calculateCostForSingleCard(card, (globalThis.player.cardUsageCounts[card.id] || 0) + selectedCardElementsOfSameId.length);
       const cardManaQueryString = `.card[data-card-id="${card.id}"] .card-mana-badge`;
       const cardHealthQueryString = `.card[data-card-id="${card.id}"] .card-health-badge`;
       const elBadges = Array.from(document.querySelectorAll(`#card-hand ${cardManaQueryString}, #inventory ${cardManaQueryString}`));

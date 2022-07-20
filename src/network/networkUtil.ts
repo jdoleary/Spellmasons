@@ -21,11 +21,11 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
     // Client joined
     if (clients[0] !== undefined) {
         // If game is already started
-        if (window.underworld) {
+        if (globalThis.underworld) {
             // Ensure each client corresponds with a Player instance
-            window.underworld.ensureAllClientsHaveAssociatedPlayers(clients);
+            globalThis.underworld.ensureAllClientsHaveAssociatedPlayers(clients);
         } else {
-            if (window.isHost()) {
+            if (globalThis.isHost()) {
                 tryStartGame();
             } else {
                 console.error('Unexpected, joined a room where the game is not already started but you are not in solomode');
@@ -39,15 +39,15 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
 async function tryStartGame() {
     console.log('Start Game: Attempt to start the game')
     // Starts a new game if THIS client is the host, and 
-    if (window.isHost()) {
-        const gameAlreadyStarted = window.underworld && window.underworld.levelIndex >= 0;
+    if (globalThis.isHost()) {
+        const gameAlreadyStarted = globalThis.underworld && globalThis.underworld.levelIndex >= 0;
         // if the game hasn't already been started
         if (!gameAlreadyStarted) {
             console.log('Host: Start game / Initialize Underworld');
-            window.underworld = new Underworld(Math.random().toString());
+            globalThis.underworld = new Underworld(Math.random().toString());
             // Mark the underworld as "ready"
             readyState.set('underworld', true);
-            const levelData = await window.underworld.initLevel(0);
+            const levelData = await globalThis.underworld.initLevel(0);
             console.log('Host: Send all clients game state for initial load');
             clients.forEach(clientId => {
                 hostGiveClientGameStateForInitialLoad(clientId, levelData);
@@ -59,21 +59,21 @@ async function tryStartGame() {
         console.log('Start Game: Won\'t, client must be host to start the game.')
     }
 }
-export function hostGiveClientGameStateForInitialLoad(clientId: string, level: LevelData = window.lastLevelCreated) {
+export function hostGiveClientGameStateForInitialLoad(clientId: string, level: LevelData = globalThis.lastLevelCreated) {
     // Only the host should be sending INIT_GAME_STATE messages
     // because the host has the canonical game state
-    if (window.isHost()) {
+    if (globalThis.isHost()) {
         // Do not send this message to self
-        if (window.clientId !== clientId) {
+        if (globalThis.clientId !== clientId) {
             if (level) {
                 console.log(`Host: Send ${clientId} game state for initial load`);
-                window.pie.sendData({
+                globalThis.pie.sendData({
                     type: MESSAGE_TYPES.INIT_GAME_STATE,
                     level,
-                    underworld: window.underworld.serializeForSyncronize(),
-                    phase: window.underworld.turn_phase,
-                    units: window.underworld.units.map(Unit.serialize),
-                    players: window.underworld.players.map(Player.serialize)
+                    underworld: globalThis.underworld.serializeForSyncronize(),
+                    phase: globalThis.underworld.turn_phase,
+                    units: globalThis.underworld.units.map(Unit.serialize),
+                    players: globalThis.underworld.players.map(Player.serialize)
                 }, {
                     subType: "Whisper",
                     whisperClientIds: [clientId],

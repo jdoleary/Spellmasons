@@ -38,7 +38,7 @@ export function checkLiquidInteractionDueToForceMovement(forceMoveInst: ForceMov
       // Once unit is moved via liquid interations, stop all force movement if unit is under control of force movement:
       // This prevents the issue of a unit moving across liquid and possibly back out due to a single forceMove
       // When the move, if they "fall in", their movement stops
-      window.underworld.removeForceMove(forceMoveInst);
+      globalThis.underworld.removeForceMove(forceMoveInst);
     }
   }
 }
@@ -52,7 +52,7 @@ export function checkLiquidInteractionDueToMovement(unit: IUnit, lastPosition: V
   const fallInThreshold = 10;
   // + 10 gives a margin so that they don't just fall right back out.
   const fallInDistance = fallInThreshold + 10;
-  for (let wall of window.underworld.liquidBounds) {
+  for (let wall of globalThis.underworld.liquidBounds) {
     const intersection = lineSegmentIntersection({ p1: unit, p2: lastPosition }, wall);
     if (intersection) {
 
@@ -100,9 +100,9 @@ export function checkLiquidInteractionDueToMovement(unit: IUnit, lastPosition: V
       break;
     }
   }
-  if (window.underworld.liquidPolygons.length) {
+  if (globalThis.underworld.liquidPolygons.length) {
     let insideLiquid = false;
-    for (let poly of window.underworld.liquidPolygons) {
+    for (let poly of globalThis.underworld.liquidPolygons) {
       insideLiquid = isVec2InsidePolygon(unit, poly);
       if (insideLiquid) {
         break;
@@ -120,8 +120,8 @@ export function checkLiquidInteractionDueToMovement(unit: IUnit, lastPosition: V
     }
   }
   const predictionColor = hitLava ? 0xff0000 : 0x0000ff;
-  window.predictionGraphics?.lineStyle(4, predictionColor, 1.0)
-  window.predictionGraphics?.moveTo(unit.x, unit.y);
+  globalThis.predictionGraphics?.lineStyle(4, predictionColor, 1.0)
+  globalThis.predictionGraphics?.moveTo(unit.x, unit.y);
   return liquidMovedUnit;
 
 }

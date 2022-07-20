@@ -1,17 +1,22 @@
 "use strict";
-// @ts-ignore, instantiate window object so that node can use `window` as the global
-global.window = {};
-// This file is the entrypoint for the headless server and must set window.headless
-// to true to denote that there is no graphics nor audio code
-window.headless = true;
-// hostApp (headless server) is always the host
-window.isHost = () => true;
-window.forceMove = [];
-// Intentionally undefined because headless shouldn't consider prediction units
-// Prediction units are only for UI
-window.predictionUnits = undefined;
+import { version } from '../package.json';
+import Underworld from './Underworld';
+var g = {
+    SPELLMASONS_PACKAGE_VERSION: version,
+    underworld: new Underworld(Math.random().toString()),
+    // Headless does not includee a player of it's own, it's just the host
+    player: undefined,
+    // This file is the entrypoint for the headless server and must set globalThis.headless
+    // to true to denote that there is no graphics nor audio code
+    headless: true,
+    // hostApp (headless server) is always the host
+    isHost: () => true,
+    forceMove: [],
 
-import './types/globalTypes';
+
+};
+
+import './types/globalTypesHeadless';
 import './Shims';
 
 // Copied from @websocketpie/client
@@ -32,8 +37,8 @@ const pie = require('@websocketpie/server');
 
 pie.startServer({
     port: 8081, makeHostAppInstance: () => {
-        window.pie = new HostApp();
-        return window.pie;
+        globalThis.pie = new HostApp();
+        return globalThis.pie;
     }
 });
 class HostApp implements IHostApp {

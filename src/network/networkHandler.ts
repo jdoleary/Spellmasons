@@ -13,13 +13,13 @@ import { allUnits } from '../entity/units';
 import { typeGuardHostApp } from './networkUtil';
 
 const messageLog: any[] = [];
-window.exitCurrentGame = function exitCurrentGame(): Promise<void> {
+globalThis.exitCurrentGame = function exitCurrentGame(): Promise<void> {
   // Go back to the main PLAY menu
-  window.setMenu('PLAY');
-  if (window.underworld) {
-    window.underworld.cleanup();
+  globalThis.setMenu('PLAY');
+  if (globalThis.underworld) {
+    globalThis.underworld.cleanup();
   }
-  return typeGuardHostApp(window.pie) ? Promise.resolve() : window.pie.disconnect();
+  return typeGuardHostApp(globalThis.pie) ? Promise.resolve() : globalThis.pie.disconnect();
 }
 const NO_LOG_LIST = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
 // Any message types in this list will be dropped if in the queue and an additional message of this type
@@ -67,7 +67,7 @@ export function onData(d: OnDataArgs) {
       // Reset processedMessageCount since once a client loads a new state
       // it will be synced with all the others and they can all start counting again
       // from 0 to see if they're up to date.
-      window.underworld.processedMessageCount = 0;
+      globalThis.underworld.processedMessageCount = 0;
       // The LOAD_GAME_STATE message is tricky, it is an 
       // exception to the normal pattern used
       // with the queue, but it should still be processed sequentially to prevent
@@ -122,7 +122,7 @@ export function processNextInQueueIfReady() {
   }
 }
 async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
-  window.underworld.processedMessageCount++;
+  globalThis.underworld.processedMessageCount++;
   currentlyProcessingOnDataMessage = d;
   const { payload, fromClient } = d;
   const type: MESSAGE_TYPES = payload.type;
@@ -130,7 +130,7 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
     console.log("Handle ONDATA", type, payload)
   }
   // Get player of the client that sent the message 
-  const fromPlayer = window.underworld.players.find((p) => p.clientId === fromClient);
+  const fromPlayer = globalThis.underworld.players.find((p) => p.clientId === fromClient);
   switch (type) {
     // Checks to see if desync has occurred between clients
     // It is important that this message is handled syncronously, so we don't get 
@@ -141,14 +141,14 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
     // the same messages.
     // case MESSAGE_TYPES.GAMESTATE_HASH:
     //   const hostClientsHash = payload.hash;
-    //   if (window.underworld.processedMessageCount != payload.processedMessageCount) {
-    //     console.log('Skip hash comparison as one of the clients is still catching up to the other in the message queue', window.underworld.processedMessageCount, payload.processedMessageCount)
+    //   if (globalThis.underworld.processedMessageCount != payload.processedMessageCount) {
+    //     console.log('Skip hash comparison as one of the clients is still catching up to the other in the message queue', globalThis.underworld.processedMessageCount, payload.processedMessageCount)
     //     break;
     //   }
-    //   const currentSerializedGameState = window.underworld.serializeForHash();
+    //   const currentSerializedGameState = globalThis.underworld.serializeForHash();
     //   const currentHash = hash(JSON.stringify(currentSerializedGameState));
     //   if (currentHash != hostClientsHash) {
-    //     console.error(`Desync: ${window.underworld.processedMessageCount} ${payload.processedMessageCount} Out of sync with host, ${currentHash} ${hostClientsHash} (${hash(payload.state)})`);
+    //     console.error(`Desync: ${globalThis.underworld.processedMessageCount} ${payload.processedMessageCount} Out of sync with host, ${currentHash} ${hostClientsHash} (${hash(payload.state)})`);
     //     // TODO: Remove floating text for production
     //     floatingText({
     //       coords: { x: MAP_WIDTH / 2, y: MAP_HEIGHT / 2 }, text: "Out of sync with host!",
@@ -158,19 +158,19 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
     //       },
     //     })
     //     console.log("gamestate diff:\n", diff(currentSerializedGameState, JSON.parse(payload.state)));
-    //     window.pie.sendData({
+    //     globalThis.pie.sendData({
     //       type: MESSAGE_TYPES.DESYNC
     //     });
     //   }
     //   break;
     case MESSAGE_TYPES.PLAYER_THINKING:
-      const thinkingPlayer = window.underworld.players.find(p => p.clientId === fromClient)
-      if (thinkingPlayer && thinkingPlayer != window.player) {
-        window.playerThoughts[thinkingPlayer.clientId] = payload;
+      const thinkingPlayer = globalThis.underworld.players.find(p => p.clientId === fromClient)
+      if (thinkingPlayer && thinkingPlayer != globalThis.player) {
+        globalThis.playerThoughts[thinkingPlayer.clientId] = payload;
       }
       break;
     case MESSAGE_TYPES.CHANGE_CHARACTER:
-      const player = window.underworld.players.find(p => p.clientId === fromClient)
+      const player = globalThis.underworld.players.find(p => p.clientId === fromClient)
       if (player) {
         const userSource = allUnits[payload.unitId];
         if (!userSource) {
@@ -188,16 +188,16 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       break;
     case MESSAGE_TYPES.REQUEST_SYNC_PLAYERS:
       // If host, send sync; if non-host, ignore 
-      if (window.isHost()) {
+      if (globalThis.isHost()) {
         console.log('Host: Sending SYNC_PLAYERS')
         const message = {
           type: MESSAGE_TYPES.SYNC_PLAYERS,
-          players: window.underworld.players.map(Player.serialize)
+          players: globalThis.underworld.players.map(Player.serialize)
         }
-        if (window.pie) {
-          window.pie.sendData(message);
+        if (globalThis.pie) {
+          globalThis.pie.sendData(message);
         } else {
-          console.error('Cannot send SYNC_PLAYERS, window.pie is undefined')
+          console.error('Cannot send SYNC_PLAYERS, globalThis.pie is undefined')
         }
       }
       break;
@@ -208,7 +208,7 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
           players?: Player.IPlayerSerialized[],
         }
         if (players) {
-          window.underworld.syncPlayers(players);
+          globalThis.underworld.syncPlayers(players);
         }
       }
       break;
@@ -222,34 +222,34 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       }
 
       if (units) {
-        window.underworld.syncUnits(units);
+        globalThis.underworld.syncUnits(units);
       }
       // Note: Players should sync after units so
       // that the player.unit reference is synced
       // with up to date units
       if (players) {
-        window.underworld.syncPlayers(players);
+        globalThis.underworld.syncPlayers(players);
       }
       // Use the internal setTurnPhrase now that the desired phase has been sent
       // via the public setTurnPhase
-      await window.underworld.initializeTurnPhase(phase);
+      await globalThis.underworld.initializeTurnPhase(phase);
       break;
     case MESSAGE_TYPES.CREATE_LEVEL:
       const { level } = payload as {
         level: LevelData
       }
       console.log('sync: Syncing level');
-      if (window.underworld) {
-        await window.underworld.createLevel(level);
+      if (globalThis.underworld) {
+        await globalThis.underworld.createLevel(level);
       } else {
-        console.error('Cannot sync level, no window.underworld exists')
+        console.error('Cannot sync level, no globalThis.underworld exists')
       }
 
       break;
     case MESSAGE_TYPES.LOAD_GAME_STATE:
       // Clean up old game state
-      if (window.underworld) {
-        window.underworld.cleanup();
+      if (globalThis.underworld) {
+        globalThis.underworld.cleanup();
       }
       handleLoadGameState(payload);
       break;
@@ -261,7 +261,7 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       }
       break;
     case MESSAGE_TYPES.MOVE_PLAYER:
-      if (fromPlayer == window.player) {
+      if (fromPlayer == globalThis.player) {
         // Do not do anything, own player movement is handled locally
         // so that it is smooth
         break;
@@ -293,7 +293,7 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
     case MESSAGE_TYPES.CHOOSE_UPGRADE:
       const upgrade = getUpgradeByTitle(payload.upgrade.title);
       if (fromPlayer && upgrade) {
-        window.underworld.chooseUpgrade(fromPlayer, upgrade);
+        globalThis.underworld.chooseUpgrade(fromPlayer, upgrade);
       } else {
         console.error(
           'Cannot choose upgrade, either the caster or upgrade does not exist',
@@ -304,10 +304,10 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
       break;
     case MESSAGE_TYPES.END_TURN:
       if (fromPlayer) {
-        window.underworld.endPlayerTurn(fromPlayer.clientId);
+        globalThis.underworld.endPlayerTurn(fromPlayer.clientId);
         // Reset stamina immediately on endTurn so that the end-turn-btn highlight goes away
-        if (fromPlayer == window.player) {
-          window.player.unit.stamina = window.player.unit.staminaMax;
+        if (fromPlayer == globalThis.player) {
+          globalThis.player.unit.stamina = globalThis.player.unit.staminaMax;
         }
       } else {
         console.error('Unable to end turn because caster is undefined');
@@ -323,42 +323,42 @@ async function handleLoadGameState(payload: {
   players: Player.IPlayerSerialized[]
 }) {
   console.log("Setup: Load game state", payload)
-  if (window.underworld) {
-    window.underworld.cleanup();
+  if (globalThis.underworld) {
+    globalThis.underworld.cleanup();
   }
   const { level, underworld, phase, units, players } = payload
   // Sync underworld properties
   const loadedGameState: IUnderworldSerializedForSyncronize = { ...underworld };
-  window.underworld = new Underworld(loadedGameState.seed, loadedGameState.RNGState);
-  window.underworld.playerTurnIndex = loadedGameState.playerTurnIndex;
-  window.underworld.levelIndex = loadedGameState.levelIndex;
+  globalThis.underworld = new Underworld(loadedGameState.seed, loadedGameState.RNGState);
+  globalThis.underworld.playerTurnIndex = loadedGameState.playerTurnIndex;
+  globalThis.underworld.levelIndex = loadedGameState.levelIndex;
   // Sync Level.  Must await createLevel since it uses setTimeout to ensure that
   // the DOM can update with the "loading..." message before locking up the CPU with heavy processing.
   // This is important so that createLevel runs BEFORE loading units and syncing Players
-  await window.underworld.createLevel(level);
+  await globalThis.underworld.createLevel(level);
 
   // Load units
   if (units) {
-    window.underworld.units = units.map(u => Unit.load(u, false));
+    globalThis.underworld.units = units.map(u => Unit.load(u, false));
   }
   // Note: Players should sync after units are loaded so
   // that the player.unit reference is synced
   // with up to date units
   if (players) {
-    window.underworld.syncPlayers(players);
+    globalThis.underworld.syncPlayers(players);
   }
   // lastUnitId must be synced AFTER all of the units are synced since the synced
   // units are id aware
-  window.underworld.lastUnitId = loadedGameState.lastUnitId;
+  globalThis.underworld.lastUnitId = loadedGameState.lastUnitId;
   // Set the turn_phase; do not use initializeTurnPhase
   // because that function runs initialization logic that would
   // make the loaded underworld desync from the host's underworld
-  window.underworld.setTurnPhase(phase);
+  globalThis.underworld.setTurnPhase(phase);
 
   // Mark the underworld as "ready"
   readyState.set('underworld', true);
 
-  window.underworld.syncTurnMessage();
+  globalThis.underworld.syncTurnMessage();
 
 }
 async function handleSpell(caster: Player.IPlayer, payload: any) {
@@ -371,23 +371,23 @@ async function handleSpell(caster: Player.IPlayer, payload: any) {
   // Card.removeCardsFromHand(caster, payload.cards);
 
   // Only allow casting during the PlayerTurns phase
-  if (window.underworld.turn_phase === turn_phase.PlayerTurns) {
-    window.animatingSpells = true;
+  if (globalThis.underworld.turn_phase === turn_phase.PlayerTurns) {
+    globalThis.animatingSpells = true;
     let animationKey = 'playerAttackLarge';
     if (payload.cards.length < 3) {
       animationKey = 'playerAttackSmall';
     } else if (payload.cards.length < 5) {
       animationKey = 'playerAttackMedium';
     }
-    const keyMoment = () => window.underworld.castCards(caster.cardUsageCounts, caster.unit, payload.cards, payload, false, false);
+    const keyMoment = () => globalThis.underworld.castCards(caster.cardUsageCounts, caster.unit, payload.cards, payload, false, false);
     await Unit.playComboAnimation(caster.unit, animationKey, keyMoment, { animationSpeed: 0.2, loop: false });
-    window.animatingSpells = false;
+    globalThis.animatingSpells = false;
     // Check for dead players to end their turn,
     // this occurs here because spells may have caused their death
-    for (let p of window.underworld.players) {
+    for (let p of globalThis.underworld.players) {
       // If a player's unit is dead, end their turn
       if (!p.unit.alive) {
-        window.underworld.endPlayerTurn(p.clientId);
+        globalThis.underworld.endPlayerTurn(p.clientId);
       }
     }
   } else {
@@ -396,30 +396,30 @@ async function handleSpell(caster: Player.IPlayer, payload: any) {
 }
 
 const savePrefix = 'spellmasons-save-';
-window.getAllSaveFiles = () => Object.keys(localStorage).filter(x => x.startsWith(savePrefix)).map(x => x.substring(savePrefix.length));
+globalThis.getAllSaveFiles = () => Object.keys(localStorage).filter(x => x.startsWith(savePrefix)).map(x => x.substring(savePrefix.length));
 
-window.save = (title) => {
+globalThis.save = (title) => {
   storage.set(
     savePrefix + title,
     JSON.stringify({
-      level: window.lastLevelCreated,
-      underworld: window.underworld.serializeForSyncronize(),
-      phase: window.underworld.turn_phase,
-      units: window.underworld.units.map(Unit.serialize),
-      players: window.underworld.players.map(Player.serialize)
+      level: globalThis.lastLevelCreated,
+      underworld: globalThis.underworld.serializeForSyncronize(),
+      phase: globalThis.underworld.turn_phase,
+      units: globalThis.underworld.units.map(Unit.serialize),
+      players: globalThis.underworld.players.map(Player.serialize)
     }),
   );
 };
-window.load = async (title) => {
+globalThis.load = async (title) => {
   const savedGameString = storage.get(savePrefix + title);
   if (savedGameString) {
 
     if (!readyState.get('underworld')) {
-      await window.startSingleplayer();
+      await globalThis.startSingleplayer();
     }
 
     const { level, underworld, phase, units, players } = JSON.parse(savedGameString);
-    window.pie.sendData({
+    globalThis.pie.sendData({
       type: MESSAGE_TYPES.LOAD_GAME_STATE,
       level,
       underworld,
@@ -433,15 +433,15 @@ window.load = async (title) => {
   }
 };
 
-window.saveReplay = (title: string) => {
+globalThis.saveReplay = (title: string) => {
   storage.set('golems-' + title, JSON.stringify(messageLog));
 };
 // TODO, replay is currently broken
-// window.replay = (title: string) => {
+// globalThis.replay = (title: string) => {
 //   const messages = JSON.parse(storage.get('golems-' + title) || '[]');
 //   for (let i = 0; i < messages.length; i++) {
 //     const message = messages[i];
-//     message.fromClient = window.underworld.players[0].clientId;
+//     message.fromClient = globalThis.underworld.players[0].clientId;
 //     onData(message);
 //   }
 // };

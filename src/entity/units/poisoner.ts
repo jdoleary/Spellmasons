@@ -28,7 +28,7 @@ const unit: UnitSource = {
     walk: 'units/poisWalk',
   },
   action: async (unit: Unit.IUnit) => {
-    const nonPoisonedEnemyUnits = window.underworld.units.filter(
+    const nonPoisonedEnemyUnits = globalThis.underworld.units.filter(
       (u) =>
         u.faction !== unit.faction &&
         u.alive &&

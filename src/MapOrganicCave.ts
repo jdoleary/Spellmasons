@@ -39,15 +39,15 @@ const directionRandomAmount = Math.PI / 2;
 export interface Limits { xMin: number, xMax: number, yMin: number, yMax: number };
 export function generateCave(params: CaveParams): { map: Map, limits: Limits } {
     // Debug: Draw caves
-    window.debugCave?.clear();
-    const minDirection = randFloat(window.underworld.random, Math.PI, Math.PI / 2);
+    globalThis.debugCave?.clear();
+    const minDirection = randFloat(globalThis.underworld.random, Math.PI, Math.PI / 2);
     const maxDirection = 0;
     let crawlers = [];
-    const NUMBER_OF_CRAWLERS = randInt(window.underworld.random, 2, 4);
+    const NUMBER_OF_CRAWLERS = randInt(globalThis.underworld.random, 2, 4);
     for (let c = 0; c < NUMBER_OF_CRAWLERS - 1; c++) {
         const previousCrawler = crawlers[c - 1];
         const cc: CaveCrawler = {
-            direction: randFloat(window.underworld.random, minDirection, maxDirection),
+            direction: randFloat(globalThis.underworld.random, minDirection, maxDirection),
             thickness: params.startThickness,
             position: Vec.round(Vec.random(-params.startPointJitter, params.startPointJitter)),
             path: [],
@@ -65,7 +65,7 @@ export function generateCave(params: CaveParams): { map: Map, limits: Limits } {
 
         // Connect first crawler and last crawler:
         const cc: CaveCrawler = {
-            direction: randFloat(window.underworld.random, minDirection, maxDirection),
+            direction: randFloat(globalThis.underworld.random, minDirection, maxDirection),
             thickness: params.startThickness,
             position: firstCrawler.path[firstCrawler.path.length - 1] as Vec.Vec2,
             path: [],
@@ -80,12 +80,12 @@ export function generateCave(params: CaveParams): { map: Map, limits: Limits } {
     const crawlerBounds = getLimits(crawlers.map(c => [...c.left, ...c.right]).flat());
 
     // Debug Draw bounds
-    // window.debugCave.lineStyle(2, 0xff0000, 1.0);
-    // window.debugCave.moveTo(crawlerBounds.xMin, crawlerBounds.yMin);
-    // window.debugCave.lineTo(crawlerBounds.xMin, crawlerBounds.yMax);
-    // window.debugCave.lineTo(crawlerBounds.xMax, crawlerBounds.yMax);
-    // window.debugCave.lineTo(crawlerBounds.xMax, crawlerBounds.yMin);
-    // window.debugCave.lineTo(crawlerBounds.xMin, crawlerBounds.yMin);
+    // globalThis.debugCave.lineStyle(2, 0xff0000, 1.0);
+    // globalThis.debugCave.moveTo(crawlerBounds.xMin, crawlerBounds.yMin);
+    // globalThis.debugCave.lineTo(crawlerBounds.xMin, crawlerBounds.yMax);
+    // globalThis.debugCave.lineTo(crawlerBounds.xMax, crawlerBounds.yMax);
+    // globalThis.debugCave.lineTo(crawlerBounds.xMax, crawlerBounds.yMin);
+    // globalThis.debugCave.lineTo(crawlerBounds.xMin, crawlerBounds.yMin);
 
     // + 2 leaves room on the right side and bottom side for surrounding walls
     const width = Math.ceil((crawlerBounds.xMax - crawlerBounds.xMin) / config.OBSTACLE_SIZE) + 2;
@@ -108,13 +108,13 @@ export function generateCave(params: CaveParams): { map: Map, limits: Limits } {
     // Debug draw caves
     // const styles = [0xff0000, 0x0000ff, 0xff00ff, 0x00ffff, 0xffff00];
     // function drawPathWithStyle(path: Vec.Vec2[], style: number, opacity: number) {
-    //     window.debugCave.lineStyle(4, style, opacity);
+    //     globalThis.debugCave.lineStyle(4, style, opacity);
     //     if (path[0]) {
-    //         window.debugCave.moveTo(path[0].x, path[0].y);
+    //         globalThis.debugCave.moveTo(path[0].x, path[0].y);
     //         // @ts-expect-error
-    //         window.debugCave.drawCircle(path[1].x, path[1].y, 25);
+    //         globalThis.debugCave.drawCircle(path[1].x, path[1].y, 25);
     //         for (let point of path) {
-    //             window.debugCave.lineTo(point.x, point.y);
+    //             globalThis.debugCave.lineTo(point.x, point.y);
     //         }
     //     }
 
@@ -124,12 +124,12 @@ export function generateCave(params: CaveParams): { map: Map, limits: Limits } {
     //     const crawler = crawlers[i];
     //     if (crawler) {
     //         drawPathWithStyle(crawler.path, 0x000000, 0.1);
-    //         window.debugCave.beginFill(styles[i % styles.length], 0.1);
+    //         globalThis.debugCave.beginFill(styles[i % styles.length], 0.1);
     //         for (let rect of crawler.rectangles) {
     //             // @ts-expect-error
-    //             window.debugCave.drawPolygon(rect);
+    //             globalThis.debugCave.drawPolygon(rect);
     //         }
-    //         window.debugCave.endFill();
+    //         globalThis.debugCave.endFill();
     //     }
     // }
 
@@ -138,7 +138,7 @@ export function generateCave(params: CaveParams): { map: Map, limits: Limits } {
     //     const crawler = crawlers[i];
     //     if (crawler) {
     //         drawPathWithStyle(crawler.path, styles[i % styles.length] as number, 0.1);
-    //         window.debugCave.lineStyle(1, 0x000000, 0.0);
+    //         globalThis.debugCave.lineStyle(1, 0x000000, 0.0);
     //     }
     // }
     let conwayState: ConwayState = {
@@ -182,7 +182,7 @@ export function generateCave(params: CaveParams): { map: Map, limits: Limits } {
         width,
         height
     };
-    window.map = JSON.parse(JSON.stringify(map));
+    globalThis.map = JSON.parse(JSON.stringify(map));
     convertBaseTilesToFinalTiles(map);
     return { map, limits: bounds };
 
@@ -380,13 +380,13 @@ function crawlersChangeTilesToMaterial(crawlers: CaveCrawler[], material: Materi
                 caveMaterialsArray[index] = material;
             }
             // Debug Draw dot grid
-            // window.debugCave.lineStyle(2, isInside ? 0x00ff00 : 0xff0000, 1.0);
+            // globalThis.debugCave.lineStyle(2, isInside ? 0x00ff00 : 0xff0000, 1.0);
             // if (isInside) {
-            //     window.debugCave.beginFill(0x00ff00, 0.5);
-            //     window.debugCave.drawRect(x, y, dotSize, dotSize);
-            //     window.debugCave.endFill();
+            //     globalThis.debugCave.beginFill(0x00ff00, 0.5);
+            //     globalThis.debugCave.drawRect(x, y, dotSize, dotSize);
+            //     globalThis.debugCave.endFill();
             // } else {
-            //     window.debugCave.drawCircle(x, y, 4);
+            //     globalThis.debugCave.drawCircle(x, y, 4);
             // }
         }
     }
@@ -417,7 +417,7 @@ function crawl(cc: CaveCrawler, endPosition: Vec.Vec2, params: CaveParams) {
 
     // Generate path
     for (let i = 0; i < params.iterations; i++) {
-        const turnRadians = randFloat(window.underworld.random, -directionRandomAmount, directionRandomAmount);
+        const turnRadians = randFloat(globalThis.underworld.random, -directionRandomAmount, directionRandomAmount);
         movePointInDirection(cc, turnRadians, params.velocity);
     }
     if (endPosition) {
@@ -445,7 +445,7 @@ function crawl(cc: CaveCrawler, endPosition: Vec.Vec2, params: CaveParams) {
             const left = { x: p.x + Math.cos(direction + Math.PI / 2), y: p.y + Math.sin(direction + Math.PI / 2) };
             const right = { x: p.x + Math.cos(direction - Math.PI / 2), y: p.y + Math.sin(direction - Math.PI / 2) };
             const tangentDist = distance(p, left);
-            // cc.thickness += randInt(window.underworld.random, -40, 5);
+            // cc.thickness += randInt(globalThis.underworld.random, -40, 5);
             cc.thickness = lerp(params.startThickness, params.minThickness, i / cc.path.length);
             // Don't let thickness be lessthan minThickness 
             cc.thickness = Math.max(params.minThickness, cc.thickness);

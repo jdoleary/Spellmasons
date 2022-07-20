@@ -23,14 +23,14 @@ let planningViewGraphics: PIXI.Graphics | undefined;
 let predictionGraphics: PIXI.Graphics | undefined;
 // labelText is used to add a label to planningView circles 
 // so that the player knows what the circle is referencing.
-let labelText = !window.pixi ? undefined : new window.pixi.Text('', { fill: 'white' });
+let labelText = !globalThis.pixi ? undefined : new globalThis.pixi.Text('', { fill: 'white' });
 export function initPlanningView() {
-  if (containerPlanningView && containerUI && window.pixi) {
-    planningViewGraphics = new window.pixi.Graphics();
-    window.planningViewGraphics = planningViewGraphics;
+  if (containerPlanningView && containerUI && globalThis.pixi) {
+    planningViewGraphics = new globalThis.pixi.Graphics();
+    globalThis.planningViewGraphics = planningViewGraphics;
     containerPlanningView.addChild(planningViewGraphics);
-    predictionGraphics = new window.pixi.Graphics();
-    window.predictionGraphics = predictionGraphics;
+    predictionGraphics = new globalThis.pixi.Graphics();
+    globalThis.predictionGraphics = predictionGraphics;
     containerUI.addChild(predictionGraphics);
     if (labelText) {
       labelText.anchor.x = 0.5;
@@ -41,7 +41,7 @@ export function initPlanningView() {
 }
 let lastSpotCurrentPlayerTurnCircle: Vec2 = { x: 0, y: 0 };
 export function updatePlanningView() {
-  if (planningViewGraphics && window.unitOverlayGraphics && labelText) {
+  if (planningViewGraphics && globalThis.unitOverlayGraphics && labelText) {
     planningViewGraphics.clear();
     if (labelText) {
       labelText.text = '';
@@ -69,7 +69,7 @@ export function updatePlanningView() {
           }
           if (archerTarget) {
             const attackLine = { p1: selectedUnit, p2: archerTarget };
-            const closestIntersection = closestLineSegmentIntersection(attackLine, window.underworld.walls);
+            const closestIntersection = closestLineSegmentIntersection(attackLine, globalThis.underworld.walls);
 
             planningViewGraphics.moveTo(attackLine.p1.x, attackLine.p1.y);
             if (closestIntersection) {
@@ -88,30 +88,30 @@ export function updatePlanningView() {
         } else {
 
           const rangeCircleColor = selectedUnit.faction == Faction.ALLY ? 0x40a058 : 0xd55656;
-          window.unitOverlayGraphics.lineStyle(8, rangeCircleColor, 0.3);
+          globalThis.unitOverlayGraphics.lineStyle(8, rangeCircleColor, 0.3);
           if (selectedUnit.unitSubType === UnitSubType.RANGED_RADIUS) {
-            window.unitOverlayGraphics.drawCircle(
+            globalThis.unitOverlayGraphics.drawCircle(
               selectedUnit.x,
               selectedUnit.y,
               selectedUnit.attackRange
             );
             labelText.text = 'Attack Range';
           } else if (selectedUnit.unitSubType === UnitSubType.SUPPORT_CLASS) {
-            window.unitOverlayGraphics.drawCircle(
+            globalThis.unitOverlayGraphics.drawCircle(
               selectedUnit.x,
               selectedUnit.y,
               selectedUnit.attackRange
             );
             labelText.text = 'Support Range';
           } else if (selectedUnit.unitSubType === UnitSubType.MELEE) {
-            window.unitOverlayGraphics.drawCircle(
+            globalThis.unitOverlayGraphics.drawCircle(
               selectedUnit.x,
               selectedUnit.y,
               selectedUnit.attackRange
             );
             labelText.text = 'Attack Range';
           } else if (selectedUnit.unitSubType === UnitSubType.PLAYER_CONTROLLED) {
-            window.unitOverlayGraphics.drawCircle(
+            globalThis.unitOverlayGraphics.drawCircle(
               selectedUnit.x,
               selectedUnit.y,
               selectedUnit.attackRange
@@ -121,19 +121,19 @@ export function updatePlanningView() {
           const labelPosition = withinCameraBounds({ x: selectedUnit.x, y: selectedUnit.y + selectedUnit.attackRange }, labelText.width / 2);
           labelText.x = labelPosition.x;
           labelText.y = labelPosition.y;
-          window.unitOverlayGraphics.endFill();
+          globalThis.unitOverlayGraphics.endFill();
         }
       }
     }
     // Draw a circle under the feet of the player whos current turn it is
-    if (window.underworld) {
+    if (globalThis.underworld) {
       // Update tooltip for whatever is being hovered
       updateTooltipContent();
 
-      if (window.player) {
+      if (globalThis.player) {
         // Only draw circle if player isn't moving to avoid UI thrashing
-        if (equal(lastSpotCurrentPlayerTurnCircle, window.player.unit)) {
-          if (window.underworld.isMyTurn()) {
+        if (equal(lastSpotCurrentPlayerTurnCircle, globalThis.player.unit)) {
+          if (globalThis.underworld.isMyTurn()) {
             // Yellow if it's you
             planningViewGraphics.lineStyle(4, 0xffde5e);
             planningViewGraphics.beginFill(0xffde5e, 0.3);
@@ -145,21 +145,21 @@ export function updatePlanningView() {
           // offset ensures the circle is under the player's feet
           // and is dependent on the animation's feet location
           const arbitratyOffset = 10;
-          planningViewGraphics.drawEllipse(window.player.unit.x, window.player.unit.y + config.COLLISION_MESH_RADIUS - arbitratyOffset, config.COLLISION_MESH_RADIUS / 2, config.COLLISION_MESH_RADIUS / 3);
+          planningViewGraphics.drawEllipse(globalThis.player.unit.x, globalThis.player.unit.y + config.COLLISION_MESH_RADIUS - arbitratyOffset, config.COLLISION_MESH_RADIUS / 2, config.COLLISION_MESH_RADIUS / 3);
           planningViewGraphics.endFill();
         }
-        lastSpotCurrentPlayerTurnCircle = clone(window.player.unit);
+        lastSpotCurrentPlayerTurnCircle = clone(globalThis.player.unit);
       }
     }
   }
 }
 export function updateManaCostUI(): CardCost {
-  if (window.player) {
+  if (globalThis.player) {
     // Update the UI that shows how much cards cost
     CardUI.updateCardBadges();
     // Updates the mana cost
     const cards = CardUI.getSelectedCards();
-    const cost = calculateCost(cards, window.player.cardUsageCounts)
+    const cost = calculateCost(cards, globalThis.player.cardUsageCounts)
     return cost;
   }
   return { manaCost: 0, healthCost: 0 };
@@ -167,14 +167,14 @@ export function updateManaCostUI(): CardCost {
 
 // Returns true if castCards has effect
 async function showCastCardsPrediction(target: Vec2, casterUnit: Unit.IUnit, cardIds: string[], outOfRange: boolean): Promise<boolean> {
-  if (window.player) {
+  if (globalThis.player) {
     // Note: setPredictionGraphicsLineStyle must be called before castCards (because castCards may use it
     // to draw predictions) and after clearSpellEffectProjection, which clears predictionGraphics.
     setPredictionGraphicsLineStyle(outOfRange ? 0xaaaaaa : colors.targetBlue);
-    const effectState = await window.underworld.castCards(
+    const effectState = await globalThis.underworld.castCards(
       // Make a copy of cardUsageCounts for prediction so it can accurately
       // calculate mana for multiple copies of one spell in one cast
-      JSON.parse(JSON.stringify(window.player.cardUsageCounts)),
+      JSON.parse(JSON.stringify(globalThis.player.cardUsageCounts)),
       casterUnit,
       cardIds,
       target,
@@ -204,36 +204,36 @@ async function showCastCardsPrediction(target: Vec2, casterUnit: Unit.IUnit, car
 // your health and mana bar (the stripes)
 // and enemy health and mana bars
 export async function runPredictions() {
-  if (window.animatingSpells) {
+  if (globalThis.animatingSpells) {
     // Do not change the hover icons when spells are animating
     return;
   }
-  if (!window.underworld) {
+  if (!globalThis.underworld) {
     return;
   }
   const startTime = Date.now();
-  const mousePos = window.underworld.getMousePos();
+  const mousePos = globalThis.underworld.getMousePos();
   // Clear the spelleffectprojection in preparation for showing the current ones
   clearSpellEffectProjection();
   // only show hover target when it's the correct turn phase
-  if (window.underworld.turn_phase == turn_phase.PlayerTurns) {
+  if (globalThis.underworld.turn_phase == turn_phase.PlayerTurns) {
 
-    if (window.player) {
-      window.underworld.syncPredictionEntities();
+    if (globalThis.player) {
+      globalThis.underworld.syncPredictionEntities();
       updateManaCostUI();
       // Dry run cast so the user can see what effect it's going to have
       const target = mousePos;
-      const casterUnit = window.predictionUnits?.find(u => u.id == window.player?.unit.id)
+      const casterUnit = globalThis.predictionUnits?.find(u => u.id == globalThis.player?.unit.id)
       if (!casterUnit) {
         console.error('Critical Error, caster unit not found');
         return;
       }
       const cardIds = CardUI.getSelectedCardIds();
       if (cardIds.length) {
-        const outOfRange = isOutOfRange(window.player, target);
+        const outOfRange = isOutOfRange(globalThis.player, target);
         if (outOfRange) {
           // If the target is out of range, try predicting at the point of the end of player's range
-          const endOfRangeTarget = getEndOfRangeTarget(window.player, target);
+          const endOfRangeTarget = getEndOfRangeTarget(globalThis.player, target);
           // Note, showCastCardsPredition's outOfRange is explicitly set to false because the endOfRangeTarget
           // is by-definition, in range because it is the literal end of the player's range
           const didHaveEffect = await showCastCardsPrediction(endOfRangeTarget, casterUnit, cardIds, false);
@@ -241,9 +241,9 @@ export async function runPredictions() {
             // Note: we have to resync prediction units since castCards will have been called twice in 
             // this prediction cycle within this branch. Otherwise our player's prediction mana
             // will be reduced by 2x more than it should be
-            window.underworld.syncPredictionEntities();
+            globalThis.underworld.syncPredictionEntities();
             // Reassign casterUnit now that the predictionUnits array has been completely rebuilt
-            const casterUnit = window.predictionUnits?.find(u => u.id == window.player?.unit.id)
+            const casterUnit = globalThis.predictionUnits?.find(u => u.id == globalThis.player?.unit.id)
             if (!casterUnit) {
               console.error('Critical Error, caster unit not found');
               return;
@@ -258,63 +258,63 @@ export async function runPredictions() {
         }
       }
       // Send this client's intentions to the other clients so they can see what they're thinking
-      window.underworld.sendPlayerThinking({ target, cardIds })
+      globalThis.underworld.sendPlayerThinking({ target, cardIds })
 
       // Run onTurnStartEvents on predictionUnits:
       // Displays markers above units heads if they will attack the current client's unit
       // next turn
-      window.attentionMarkers = [];
-      if (window.player) {
-        for (let u of window.predictionUnits || []) {
+      globalThis.attentionMarkers = [];
+      if (globalThis.player) {
+        for (let u of globalThis.predictionUnits || []) {
           const skipTurn = await Unit.runTurnStartEvents(u, true);
           if (skipTurn) {
             continue;
           }
           // Only check for threats if the threat is alive and AI controlled
           if (u.alive && u.unitType == UnitType.AI) {
-            const target = window.underworld.getUnitAttackTarget(u);
+            const target = globalThis.underworld.getUnitAttackTarget(u);
             // Only bother determining if the unit can attack the target 
             // if the target is the current player, because that's the only
             // player this function has to warn with an attention marker
-            if (target === window.player.unit) {
-              if (window.underworld.canUnitAttackTarget(u, target)) {
-                window.attentionMarkers.push({ imagePath: Unit.subTypeToAttentionMarkerImage(u), pos: clone(u) });
+            if (target === globalThis.player.unit) {
+              if (globalThis.underworld.canUnitAttackTarget(u, target)) {
+                globalThis.attentionMarkers.push({ imagePath: Unit.subTypeToAttentionMarkerImage(u), pos: clone(u) });
               }
             }
           }
         }
       }
       // Show if unit will be resurrected
-      window.resMarkers = [];
+      globalThis.resMarkers = [];
       if (cardIds.includes('resurrect')) {
-        window.predictionUnits?.filter(u => u.faction == Faction.ALLY && u.alive).forEach(u => {
+        globalThis.predictionUnits?.filter(u => u.faction == Faction.ALLY && u.alive).forEach(u => {
           // Check if their non-prediction counterpart is dead to see if they will be resurrected:
-          const realUnit = window.underworld.units.find(x => x.id == u.id)
+          const realUnit = globalThis.underworld.units.find(x => x.id == u.id)
           if (realUnit && !realUnit.alive) {
-            window.resMarkers.push(clone(realUnit));
+            globalThis.resMarkers.push(clone(realUnit));
           }
         })
       }
     }
   }
-  if (window.runPredictionsPanel) {
-    window.runPredictionsPanel.update(Date.now() - startTime, 300);
+  if (globalThis.runPredictionsPanel) {
+    globalThis.runPredictionsPanel.update(Date.now() - startTime, 300);
   }
 }
 
 // SpellEffectProjection are images to denote some information, such as the spell or action about to be cast/taken when clicked
 export function clearSpellEffectProjection() {
-  if (!window.animatingSpells) {
+  if (!globalThis.animatingSpells) {
     if (predictionGraphics) {
       predictionGraphics.clear();
     }
-    if (window.radiusGraphics) {
-      window.radiusGraphics.clear();
+    if (globalThis.radiusGraphics) {
+      globalThis.radiusGraphics.clear();
     }
     if (containerSpells) {
       containerSpells.removeChildren();
     }
-    window.underworld.units.forEach(unit => {
+    globalThis.underworld.units.forEach(unit => {
       if (unit.image) {
         unit.image.sprite.tint = 0xFFFFFF;
       }
@@ -346,12 +346,12 @@ export function setPredictionGraphicsLineStyle(color: number) {
 }
 export function drawTarget(unit: Unit.IUnit, isOutOfRange: boolean) {
   // Convert prediction unit's associated real unit
-  const realUnit = window.underworld.units.find(u => u.id == unit.id);
+  const realUnit = globalThis.underworld.units.find(u => u.id == unit.id);
   if (realUnit && realUnit.image) {
     if (isOutOfRange) {
       realUnit.image.sprite.tint = 0xaaaaaa;
     } else {
-      if (unit.faction == window.player?.unit.faction) {
+      if (unit.faction == globalThis.player?.unit.faction) {
         // Ally
         realUnit.image.sprite.tint = 0x5555ff;
       } else {
@@ -365,17 +365,17 @@ export function drawTarget(unit: Unit.IUnit, isOutOfRange: boolean) {
   // }
 }
 export function drawPredictionCircleFill(target: Vec2, radius: number) {
-  if (window.radiusGraphics) {
-    window.radiusGraphics.lineStyle(1, 0x000000, 0.0);
-    window.radiusGraphics.beginFill(0xFFFFFF, 1.0);
-    window.radiusGraphics.drawCircle(target.x, target.y, radius);
-    window.radiusGraphics.endFill();
+  if (globalThis.radiusGraphics) {
+    globalThis.radiusGraphics.lineStyle(1, 0x000000, 0.0);
+    globalThis.radiusGraphics.beginFill(0xFFFFFF, 1.0);
+    globalThis.radiusGraphics.drawCircle(target.x, target.y, radius);
+    globalThis.radiusGraphics.endFill();
   }
 }
 
 export function isOutOfBounds(target: Vec2) {
   return (
-    target.x < window.underworld.limits.xMin || target.x >= window.underworld.limits.xMax || target.y < window.underworld.limits.yMin || target.y >= window.underworld.limits.yMax
+    target.x < globalThis.underworld.limits.xMin || target.x >= globalThis.underworld.limits.xMax || target.y < globalThis.underworld.limits.yMin || target.y >= globalThis.underworld.limits.yMax
   );
 }
 
@@ -413,7 +413,7 @@ export function updateTooltipContent() {
       let cards = '';
       if (selectedUnit) {
         if (selectedUnit.unitType === UnitType.PLAYER_CONTROLLED) {
-          const player = window.underworld.players.find((p) => p.unit === selectedUnit);
+          const player = globalThis.underworld.players.find((p) => p.unit === selectedUnit);
           if (player) {
             cards =
               'Cards: ' +
@@ -499,7 +499,7 @@ export function clearTooltipSelection(): boolean {
 export function updateTooltipSelection(mousePos: Vec2) {
 
   // Find unit:
-  const unit = window.underworld.getUnitAt(mousePos);
+  const unit = globalThis.underworld.getUnitAt(mousePos);
   if (unit) {
     selectedUnit = unit;
     selectedType = "unit";
@@ -507,7 +507,7 @@ export function updateTooltipSelection(mousePos: Vec2) {
   } else {
     selectedUnit = undefined;
   }
-  const pickup = window.underworld.getPickupAt(mousePos);
+  const pickup = globalThis.underworld.getPickupAt(mousePos);
   if (pickup) {
     selectedPickup = pickup;
     selectedType = "pickup";
@@ -526,8 +526,8 @@ export function drawCircleUnderTarget(mousePos: Vec2, opacity: number, graphics:
     // For headless
     return;
   }
-  const targetUnit = window.underworld.getUnitAt(mousePos)
-  const target: Vec2 | undefined = targetUnit || window.underworld.getPickupAt(mousePos);
+  const targetUnit = globalThis.underworld.getUnitAt(mousePos)
+  const target: Vec2 | undefined = targetUnit || globalThis.underworld.getPickupAt(mousePos);
   if (target) {
     graphics.lineStyle(3, 0xaaaaaa, opacity);
     graphics.beginFill(0x000000, 0);

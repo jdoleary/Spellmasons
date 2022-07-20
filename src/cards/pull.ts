@@ -40,18 +40,18 @@ export async function pull(pushedObject: Circle, towards: Vec2, prediction: bool
     if (prediction) {
       // Simulate the forceMove until it's complete
       while (magnitude(forceMoveInst.velocity) > 0.1) {
-        window.underworld.runForceMove(forceMoveInst, prediction);
+        globalThis.underworld.runForceMove(forceMoveInst, prediction);
       }
       resolve();
       // Draw prediction lines
-      if (window.predictionGraphics) {
-        window.predictionGraphics.lineStyle(4, forceMoveColor, 1.0)
-        window.predictionGraphics.moveTo(originalPosition.x, originalPosition.y);
-        window.predictionGraphics.lineTo(pushedObject.x, pushedObject.y);
-        window.predictionGraphics.drawCircle(pushedObject.x, pushedObject.y, 4);
+      if (globalThis.predictionGraphics) {
+        globalThis.predictionGraphics.lineStyle(4, forceMoveColor, 1.0)
+        globalThis.predictionGraphics.moveTo(originalPosition.x, originalPosition.y);
+        globalThis.predictionGraphics.lineTo(pushedObject.x, pushedObject.y);
+        globalThis.predictionGraphics.drawCircle(pushedObject.x, pushedObject.y, 4);
       }
     } else {
-      window.forceMove.push(forceMoveInst);
+      globalThis.forceMove.push(forceMoveInst);
     }
   }));
 

@@ -13,7 +13,7 @@ import { updateGlobalRefToCurrentClientPlayer } from '../entity/Player';
 // const wsUri = 'ws://68.48.199.138:7337';
 // Current digital ocean wsPie app:
 // const wsUri = 'wss://websocket-pie-6ggew.ondigitalocean.app';
-export const pie: PieClient = window.pie = new PieClient();
+export const pie: PieClient = globalThis.pie = new PieClient();
 addHandlers(pie);
 function connect_to_wsPie_server(wsUri?: string): Promise<void> {
   return new Promise<void>((resolve, reject) => {
@@ -25,8 +25,8 @@ function connect_to_wsPie_server(wsUri?: string): Promise<void> {
         console.log("Pie: Successfully connected to PieServer.")
         resolve();
       } else {
-        if (window.underworld) {
-          window.underworld.cleanup();
+        if (globalThis.underworld) {
+          globalThis.underworld.cleanup();
           readyState.set('underworld', false);
           setView(View.Disconnected);
         }
@@ -50,14 +50,14 @@ function connect_to_wsPie_server(wsUri?: string): Promise<void> {
     }
   });
 }
-window.connect_to_wsPie_server = connect_to_wsPie_server;
+globalThis.connect_to_wsPie_server = connect_to_wsPie_server;
 
 let maxClients = 8;
 function defaultRoomInfo(_room_info = {}): Room {
   const room_info = Object.assign({
     name: 'Golems Lobby 1',
     app: 'Golems',
-    version: window.SPELLMASONS_PACKAGE_VERSION,
+    version: globalThis.SPELLMASONS_PACKAGE_VERSION,
     maxClients,
   }, _room_info);
   maxClients = room_info.maxClients;
@@ -80,7 +80,7 @@ export function joinRoom(_room_info = {}): Promise<void> {
     let quickloadName = storage.get('quickload');
     if (quickloadName) {
       console.log('ADMIN: quickload:', quickloadName);
-      window.load(quickloadName);
+      globalThis.load(quickloadName);
     } else {
       // All clients should join at the CharacterSelect screen so they can
       // choose their character.  Once they choose their character their
@@ -96,19 +96,19 @@ export function joinRoom(_room_info = {}): Promise<void> {
     console.error(err);
   });
 }
-window.joinRoom = joinRoom;
+globalThis.joinRoom = joinRoom;
 
 function addHandlers(pie: PieClient) {
   pie.onServerAssignedData = (o) => {
-    console.log('Pie: set window.clientId:', o.clientId);
-    window.clientId = o.clientId;
-    if (window.underworld) {
-      const selfPlayer = window.underworld.players.find(p => p.clientId == window.clientId);
+    console.log('Pie: set globalThis.clientId:', o.clientId);
+    globalThis.clientId = o.clientId;
+    if (globalThis.underworld) {
+      const selfPlayer = globalThis.underworld.players.find(p => p.clientId == globalThis.clientId);
       if (selfPlayer) {
         updateGlobalRefToCurrentClientPlayer(selfPlayer);
       }
     }
-    if (window.allowCookies) {
+    if (globalThis.allowCookies) {
       // Only store clientId if it is from a multiplayer session
       // 'solomode_client_id' comes from pieclient's solo mode
       if (o.clientId !== 'solomode_client_id') {
@@ -120,13 +120,13 @@ function addHandlers(pie: PieClient) {
   pie.onError = ({ message }: { message: any }) => console.error('wsPie Error:', message);
   pie.onClientPresenceChanged = onClientPresenceChanged;
   pie.onLatency = (l) => {
-    if (window.latencyPanel) {
-      window.latencyPanel.update(l.average, l.max);
+    if (globalThis.latencyPanel) {
+      globalThis.latencyPanel.update(l.average, l.max);
     }
   };
 }
 
-window.startSingleplayer = function startSingleplayer() {
+globalThis.startSingleplayer = function startSingleplayer() {
   return connect_to_wsPie_server().then(() => {
     return joinRoom();
   });

@@ -6,7 +6,7 @@ export function getBestRangedLOSTarget(unit: Unit.IUnit): Unit.IUnit | undefined
     const enemies = Unit.livingUnitsInDifferentFaction(unit);
     return enemies.reduce<{ distance: number, hasLineOfSight: boolean, unit: Unit.IUnit | undefined }>((bestTarget, enemy) => {
         const dist = math.distance(unit, enemy);
-        if (window.underworld.hasLineOfSight(unit, enemy) && dist < bestTarget.distance) {
+        if (globalThis.underworld.hasLineOfSight(unit, enemy) && dist < bestTarget.distance) {
             return { distance: dist, hasLineOfSight: true, unit: enemy }
         } else {
             return bestTarget;

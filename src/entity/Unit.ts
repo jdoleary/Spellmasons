@@ -125,7 +125,7 @@ export function create(
   const sourceUnit = allUnits[unitSourceId];
   if (sourceUnit) {
     const unit: IUnit = Object.assign({
-      id: ++window.underworld.lastUnitId,
+      id: ++globalThis.underworld.lastUnitId,
       unitSourceId,
       x,
       y,
@@ -183,7 +183,7 @@ export function create(
     changeFaction(unit, faction);
 
 
-    window.underworld.addUnitToArray(unit, false);
+    globalThis.underworld.addUnitToArray(unit, false);
 
     return unit;
   } else {
@@ -303,7 +303,7 @@ export function load(unit: IUnitSerialized, prediction: boolean): IUnit {
       loadedunit.shaderUniforms[key][keyUniform] = value;
     }
   }
-  window.underworld.addUnitToArray(loadedunit, prediction);
+  globalThis.underworld.addUnitToArray(loadedunit, prediction);
   if (!loadedunit.alive) {
     die(loadedunit, prediction);
   }
@@ -426,8 +426,8 @@ export function playComboAnimation(unit: IUnit, key: string | undefined, keyMome
 
     }
     // Play sound effect
-    if (combo.SFX && window.playSFXKey) {
-      window.playSFXKey(combo.SFX)
+    if (combo.SFX && globalThis.playSFXKey) {
+      globalThis.playSFXKey(combo.SFX)
     }
     Image.changeSprite(unit.image, combo.primaryAnimation, unit.image.sprite.parent,
       // It is expected that the key moment will never be triggered here because if the animation
@@ -554,7 +554,7 @@ export function die(unit: IUnit, prediction: boolean) {
     }
   }
 
-  if (window.player && window.player.unit == unit) {
+  if (globalThis.player && globalThis.player.unit == unit) {
     clearSpellEffectProjection();
     CardUI.clearSelectedCards();
     centeredFloatingText(`💀 You Died 💀`, 'red');
@@ -562,10 +562,10 @@ export function die(unit: IUnit, prediction: boolean) {
   // In the event that this unit that just died is the selected unit,
   // this will remove the tooltip:
   checkIfNeedToClearTooltip();
-  window.underworld.checkIfShouldSpawnPortal();
+  globalThis.underworld.checkIfShouldSpawnPortal();
 
   if (!prediction && unit.originalLife) {
-    window.underworld.reportEnemyKilled(unit);
+    globalThis.underworld.reportEnemyKilled(unit);
   }
   // Once a unit dies it is no longer on it's originalLife
   unit.originalLife = false;
@@ -621,17 +621,17 @@ export function takeDamage(unit: IUnit, amount: number, prediction: boolean, _st
 
 }
 export function syncPlayerHealthManaUI() {
-  if (window.headless) { return; }
-  if (!(window.player && elHealthBar && elManaBar && elStaminaBar && elHealthLabel && elManaLabel && elStaminaBarLabel)) {
+  if (globalThis.headless) { return; }
+  if (!(globalThis.player && elHealthBar && elManaBar && elStaminaBar && elHealthLabel && elManaLabel && elStaminaBarLabel)) {
     return
   }
-  const unit = window.player.unit;
+  const unit = globalThis.player.unit;
   const healthRatio = unit.health / unit.healthMax
   // Set the health bar that shows how much health you currently have
   elHealthBar.style["width"] = `${100 * healthRatio}%`;
   elHealthLabel.innerHTML = `${unit.health}/${unit.healthMax}`;
 
-  const predictionPlayerUnit = !window.predictionUnits ? undefined : window.predictionUnits.find(u => u.id == window.player?.unit.id) || { health: unit.health, mana: unit.mana };
+  const predictionPlayerUnit = !globalThis.predictionUnits ? undefined : globalThis.predictionUnits.find(u => u.id == globalThis.player?.unit.id) || { health: unit.health, mana: unit.mana };
   // Set the health cost bar that shows how much health will be removed if the spell is cast
   if (predictionPlayerUnit && predictionPlayerUnit.health > 0) {
     // Show cost bar from current health location minus whatever it's value is
@@ -713,13 +713,13 @@ export function canMove(unit: IUnit): boolean {
   return true;
 }
 export function livingUnitsInDifferentFaction(unit: IUnit) {
-  return window.underworld.units.filter(
+  return globalThis.underworld.units.filter(
     (u) => u.faction !== unit.faction && u.alive,
   );
 }
 export function livingUnitsInSameFaction(unit: IUnit) {
   // u !== unit excludes self from returning as the closest unit
-  return window.underworld.units.filter(
+  return globalThis.underworld.units.filter(
     (u) => u !== unit && u.faction == unit.faction && u.alive,
   );
 }
@@ -791,7 +791,7 @@ export function _moveTowards(unit: IUnit, target: Vec2) {
   orient(unit, target);
 
   // Set path which will be used in the game loop to actually move the unit
-  window.underworld.setPath(unit, Vec.clone(target));
+  globalThis.underworld.setPath(unit, Vec.clone(target));
 }
 // moveTo moves a unit, considering all the in-game blockers
 export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
@@ -887,9 +887,9 @@ export function copyForPredictionUnit(u: IUnit): IUnit {
   // so that the prediction unit will have a reference to
   // a real path object
   if (!u.path) {
-    const target = window.underworld.getUnitAttackTarget(u);
+    const target = globalThis.underworld.getUnitAttackTarget(u);
     if (target) {
-      window.underworld.setPath(u, target);
+      globalThis.underworld.setPath(u, target);
     }
   }
   const { image, resolveDoneMoving, modifiers, ...rest } = u;
@@ -922,7 +922,7 @@ export function copyForPredictionUnit(u: IUnit): IUnit {
 
 // Returns true if it is currently this unit's turn phase
 export function isUnitsTurnPhase(unit: IUnit): boolean {
-  const { turn_phase: phase } = window.underworld;
+  const { turn_phase: phase } = globalThis.underworld;
   if (unit.unitType == UnitType.PLAYER_CONTROLLED) {
     return phase == turn_phase.PlayerTurns;
   } else {
@@ -953,15 +953,15 @@ export function findLOSLocation(unit: IUnit, target: Vec2): Vec2[] {
   const LOSLocations = [];
   for (let rad = angleToEnemy - degAwayFromTarget; rad <= angleToEnemy + degAwayFromTarget; rad += increments) {
     let pos = math.getPosAtAngleAndDistance(target, rad, dist)
-    const intersection = closestLineSegmentIntersection({ p1: target, p2: pos }, window.underworld.walls);
-    window.debugGraphics?.lineStyle(3, 0xff00ff, 1);
+    const intersection = closestLineSegmentIntersection({ p1: target, p2: pos }, globalThis.underworld.walls);
+    globalThis.debugGraphics?.lineStyle(3, 0xff00ff, 1);
     if (intersection) {
-      window.debugGraphics?.lineStyle(3, 0x0000ff, 1);
+      globalThis.debugGraphics?.lineStyle(3, 0x0000ff, 1);
       pos = intersection;
     }
     LOSLocations.push(pos);
 
-    window.debugGraphics?.drawCircle(pos.x, pos.y, 4);
+    globalThis.debugGraphics?.drawCircle(pos.x, pos.y, 4);
   }
   return LOSLocations;
 

@@ -31,7 +31,7 @@ function mutateViaRules(tile: Material, neighbors: (Material | undefined)[], sta
         if (neighbors.some(t => t == Material.LIQUID)) {
             // and all other neighbors are ground (so liquid doesn't butt up against walls and block pathing)
             if (neighbors.every(t => t && t == Material.GROUND || t == Material.LIQUID)) {
-                const roll = randInt(window.underworld.random, 0, 100)
+                const roll = randInt(globalThis.underworld.random, 0, 100)
                 // chance of changing it to liquid and growing the pool
                 if (roll <= state.percentChanceOfLiquidSpread) {
                     // As liquid spreads decrease the chances of it spreading
@@ -91,7 +91,7 @@ export function placeLiquidSources(tiles: Material[], widthOf2DArray: number, nu
         }
     }
     for (let i = 0; i < numberOfLiquidSources; i++) {
-        const chosenIndex = candidatesForLiquidSource[randInt(window.underworld.random, 0, candidatesForLiquidSource.length)];
+        const chosenIndex = candidatesForLiquidSource[randInt(globalThis.underworld.random, 0, candidatesForLiquidSource.length)];
 
         if (chosenIndex !== undefined && tiles[chosenIndex] !== undefined) {
             tiles[chosenIndex] = Material.LIQUID;

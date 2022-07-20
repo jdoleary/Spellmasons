@@ -112,8 +112,8 @@ export default class Underworld {
   enemiesKilled: number = 0;
 
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
-    window.underworld = this;
-    this.seed = window.seedOverride || seed;
+    globalThis.underworld = this;
+    this.seed = globalThis.seedOverride || seed;
 
     if (elSeed) {
       elSeed.innerText = `Seed: ${this.seed}`;
@@ -146,18 +146,18 @@ export default class Underworld {
 
   }
   syncPlayerPredictionUnitOnly() {
-    if (window.predictionUnits && window.player !== undefined) {
-      const predictionUnitIndex = window.predictionUnits.findIndex(u => u.id == window.player?.unit.id);
-      window.predictionUnits[predictionUnitIndex] = Unit.copyForPredictionUnit(window.player.unit);
+    if (globalThis.predictionUnits && globalThis.player !== undefined) {
+      const predictionUnitIndex = globalThis.predictionUnits.findIndex(u => u.id == globalThis.player?.unit.id);
+      globalThis.predictionUnits[predictionUnitIndex] = Unit.copyForPredictionUnit(globalThis.player.unit);
     }
   }
-  // Assigns window.predictionUnits a copy of this.units
+  // Assigns globalThis.predictionUnits a copy of this.units
   // for the sake of prediction
   syncPredictionEntities() {
     // Headless does not use predictions because predictions are only for display
-    if (window.headless) { return; }
-    window.predictionUnits = this.units.map(Unit.copyForPredictionUnit);
-    window.predictionPickups = this.pickups.map(Pickup.copyForPredictionPickup);
+    if (globalThis.headless) { return; }
+    globalThis.predictionUnits = this.units.map(Unit.copyForPredictionUnit);
+    globalThis.predictionPickups = this.pickups.map(Pickup.copyForPredictionPickup);
   }
   syncronizeRNG(RNGState: SeedrandomState | boolean) {
     // state of "true" initializes the RNG with the ability to save it's state,
@@ -176,7 +176,7 @@ export default class Underworld {
   runForceMove(forceMoveInst: ForceMove, prediction: boolean) {
     const { pushedObject, velocity, velocity_falloff } = forceMoveInst;
     const lastPosition = Vec.clone(pushedObject);
-    const aliveUnits = ((prediction && window.predictionUnits) ? window.predictionUnits : this.units).filter(u => u.alive);
+    const aliveUnits = ((prediction && globalThis.predictionUnits) ? globalThis.predictionUnits : this.units).filter(u => u.alive);
     moveWithCollisions(pushedObject, Vec.add(pushedObject, velocity), aliveUnits);
     collideWithLineSegments(pushedObject, this.walls);
     forceMoveInst.velocity = Vec.multiply(velocity_falloff, velocity);
@@ -188,7 +188,7 @@ export default class Underworld {
     } else if (Pickup.isPickup(forceMoveInst.pushedObject)) {
       // If the pushed object is a pickup, check if it collides with any units
       // as it is pushed
-      ((prediction && window.predictionUnits) ? window.predictionUnits : this.units).forEach(u => {
+      ((prediction && globalThis.predictionUnits) ? globalThis.predictionUnits : this.units).forEach(u => {
         this.checkPickupCollisions(u, prediction);
       })
     }
@@ -202,38 +202,38 @@ export default class Underworld {
     ImmediateMode.loop();
 
     Unit.syncPlayerHealthManaUI();
-    window.unitOverlayGraphics?.clear();
+    globalThis.unitOverlayGraphics?.clear();
 
     // Draw cast line:
-    if (window.player) {
+    if (globalThis.player) {
       if (CardUI.areAnyCardsSelected()) {
-        const mouseTarget = window.underworld.getMousePos();
+        const mouseTarget = globalThis.underworld.getMousePos();
         // Players can only cast within their attack range
-        const castLine = { p1: window.player.unit, p2: mouseTarget };
-        window.unitOverlayGraphics?.lineStyle(3, colors.targetBlue, 0.7);
-        window.unitOverlayGraphics?.moveTo(castLine.p1.x, castLine.p1.y);
-        if (math.distance(castLine.p1, castLine.p2) > window.player.unit.attackRange) {
-          const endOfRange = math.getCoordsAtDistanceTowardsTarget(castLine.p1, castLine.p2, window.player.unit.attackRange);
-          window.unitOverlayGraphics?.lineTo(endOfRange.x, endOfRange.y);
+        const castLine = { p1: globalThis.player.unit, p2: mouseTarget };
+        globalThis.unitOverlayGraphics?.lineStyle(3, colors.targetBlue, 0.7);
+        globalThis.unitOverlayGraphics?.moveTo(castLine.p1.x, castLine.p1.y);
+        if (math.distance(castLine.p1, castLine.p2) > globalThis.player.unit.attackRange) {
+          const endOfRange = math.getCoordsAtDistanceTowardsTarget(castLine.p1, castLine.p2, globalThis.player.unit.attackRange);
+          globalThis.unitOverlayGraphics?.lineTo(endOfRange.x, endOfRange.y);
           // Draw a red line the rest of the way shoing that you cannot cast
-          window.unitOverlayGraphics?.lineStyle(3, 0x333333, 0.7);
-          window.unitOverlayGraphics?.lineTo(castLine.p2.x, castLine.p2.y);
-          window.unitOverlayGraphics?.drawCircle(castLine.p2.x, castLine.p2.y, 3);
+          globalThis.unitOverlayGraphics?.lineStyle(3, 0x333333, 0.7);
+          globalThis.unitOverlayGraphics?.lineTo(castLine.p2.x, castLine.p2.y);
+          globalThis.unitOverlayGraphics?.drawCircle(castLine.p2.x, castLine.p2.y, 3);
           // Draw a circle where the cast stops
-          window.unitOverlayGraphics?.moveTo(castLine.p2.x, castLine.p2.y);//test
-          window.unitOverlayGraphics?.lineStyle(3, colors.targetBlue, 0.7);
-          window.unitOverlayGraphics?.drawCircle(endOfRange.x, endOfRange.y, 3);
+          globalThis.unitOverlayGraphics?.moveTo(castLine.p2.x, castLine.p2.y);//test
+          globalThis.unitOverlayGraphics?.lineStyle(3, colors.targetBlue, 0.7);
+          globalThis.unitOverlayGraphics?.drawCircle(endOfRange.x, endOfRange.y, 3);
         } else {
-          window.unitOverlayGraphics?.lineTo(castLine.p2.x, castLine.p2.y);
-          window.unitOverlayGraphics?.drawCircle(castLine.p2.x, castLine.p2.y, 3);
+          globalThis.unitOverlayGraphics?.lineTo(castLine.p2.x, castLine.p2.y);
+          globalThis.unitOverlayGraphics?.drawCircle(castLine.p2.x, castLine.p2.y, 3);
         }
       }
     }
 
     const aliveNPCs = this.units.filter(u => u.alive && u.unitType == UnitType.AI);
-    // Run all forces in window.forceMove
-    for (let i = window.forceMove.length - 1; i >= 0; i--) {
-      const forceMoveInst = window.forceMove[i];
+    // Run all forces in globalThis.forceMove
+    for (let i = globalThis.forceMove.length - 1; i >= 0; i--) {
+      const forceMoveInst = globalThis.forceMove[i];
       if (forceMoveInst) {
         this.runForceMove(forceMoveInst, false);
         // Remove it from forceMove array once the distance has been covers
@@ -241,7 +241,7 @@ export default class Underworld {
         // distance is modified even if the unit doesn't move each loop
         if (Vec.magnitude(forceMoveInst.velocity) <= 0.1) {
           forceMoveInst.resolve();
-          window.forceMove.splice(i, 1);
+          globalThis.forceMove.splice(i, 1);
         }
       }
     }
@@ -249,7 +249,7 @@ export default class Underworld {
     for (let i = 0; i < this.units.length; i++) {
       const u = this.units[i];
       if (u) {
-        const predictionUnit = !window.predictionUnits ? undefined : window.predictionUnits[i];
+        const predictionUnit = !globalThis.predictionUnits ? undefined : globalThis.predictionUnits[i];
         if (u.alive) {
           while (u.path && u.path.points[0] && Vec.equal(Vec.round(u), u.path.points[0])) {
             // Remove next points until the next point is NOT equal to the unit's current position
@@ -319,10 +319,10 @@ export default class Underworld {
           const healthBarColor = u.faction == Faction.ALLY ? healthAllyGreen : healthRed;
           const healthBarHurtColor = u.faction == Faction.ALLY ? 0x235730 : healthHurtRed;
           const healthBarHealColor = u.faction == Faction.ALLY ? 0x23ff30 : 0xff2828;
-          window.unitOverlayGraphics?.lineStyle(0, 0x000000, 1.0);
-          window.unitOverlayGraphics?.beginFill(healthBarColor, 1.0);
+          globalThis.unitOverlayGraphics?.lineStyle(0, 0x000000, 1.0);
+          globalThis.unitOverlayGraphics?.beginFill(healthBarColor, 1.0);
           const healthBarProps = getUIBarProps(u.x, u.y, u.health, u.healthMax, zoom);
-          window.unitOverlayGraphics?.drawRect(
+          globalThis.unitOverlayGraphics?.drawRect(
             healthBarProps.x,
             // Stack the health bar above the mana bar
             healthBarProps.y - config.UNIT_UI_BAR_HEIGHT / zoom,
@@ -334,15 +334,15 @@ export default class Underworld {
           // to cast, otherwise it will show out of sync when NPCs do damage
           if (this.turn_phase == turn_phase.PlayerTurns) {
             // Show how much damage they'll take on their health bar
-            window.unitOverlayGraphics?.beginFill(healthBarHurtColor, 1.0);
+            globalThis.unitOverlayGraphics?.beginFill(healthBarHurtColor, 1.0);
             if (predictionUnit) {
               const healthAfterHurt = predictionUnit.health;
               if (healthAfterHurt > u.health) {
-                window.unitOverlayGraphics?.beginFill(healthBarHealColor, 1.0);
+                globalThis.unitOverlayGraphics?.beginFill(healthBarHealColor, 1.0);
               }
               // const healthBarHurtWidth = Math.max(0, config.UNIT_UI_BAR_WIDTH * (u.health - healthAfterHurt) / u.healthMax);
               const healthBarHurtProps = getUIBarProps(u.x, u.y, u.health - healthAfterHurt, u.healthMax, zoom);
-              window.unitOverlayGraphics?.drawRect(
+              globalThis.unitOverlayGraphics?.drawRect(
                 // Show the healthBarHurtBar on the right side of the health  bar
                 healthBarHurtProps.x + config.UNIT_UI_BAR_WIDTH / zoom * healthAfterHurt / u.healthMax,
                 // Stack the health bar above the mana bar
@@ -358,16 +358,16 @@ export default class Underworld {
           }
           // Draw mana bar
           if (u.manaMax != 0) {
-            window.unitOverlayGraphics?.lineStyle(0, 0x000000, 1.0);
-            window.unitOverlayGraphics?.beginFill(colors.manaBlue, 1.0);
+            globalThis.unitOverlayGraphics?.lineStyle(0, 0x000000, 1.0);
+            globalThis.unitOverlayGraphics?.beginFill(colors.manaBlue, 1.0);
             const manaBarProps = getUIBarProps(u.x, u.y, u.mana, u.manaMax, zoom);
-            window.unitOverlayGraphics?.drawRect(
+            globalThis.unitOverlayGraphics?.drawRect(
               manaBarProps.x,
               manaBarProps.y,
               manaBarProps.width,
               manaBarProps.height);
           }
-          window.unitOverlayGraphics?.endFill();
+          globalThis.unitOverlayGraphics?.endFill();
         }
       }
     }
@@ -442,8 +442,8 @@ export default class Underworld {
       for (let wall of this.pathingLineSegments) {
         const intersection = findWherePointIntersectLineSegmentAtRightAngle(target, wall);
         if (intersection) {
-          // window.debugGraphics.lineStyle(3, 0xff0000, 1.0);
-          // window.debugGraphics.drawCircle(intersection.x, intersection.y, 3);
+          // globalThis.debugGraphics.lineStyle(3, 0xff0000, 1.0);
+          // globalThis.debugGraphics.drawCircle(intersection.x, intersection.y, 3);
           nearPointsOnWalls.push(intersection);
         }
         nearPointsOnWalls.push(wall.p1);
@@ -475,7 +475,7 @@ export default class Underworld {
     }
   }
   drawResMarkers() {
-    for (let marker of window.resMarkers) {
+    for (let marker of globalThis.resMarkers) {
       const { zoom } = getCamera();
       ImmediateMode.draw('raise_dead.png', marker, 1 / zoom);
     }
@@ -485,7 +485,7 @@ export default class Underworld {
     // Draw attention markers which show if an NPC will
     // attack you next turn
     // Note: this block must come after updating the camera position
-    for (let marker of window.attentionMarkers) {
+    for (let marker of globalThis.attentionMarkers) {
       const { zoom } = getCamera();
 
       // Offset exclamation mark just above the head of the unit "- config.COLLISION_MESH_RADIUS - 10"
@@ -505,25 +505,25 @@ export default class Underworld {
       return originX + (0.5 + index - totalNumberOfSpells / 2) * spaceBetweenIcons
     }
     // Only display player thoughts if they are not the current client's player
-    window.thinkingPlayerGraphics?.clear();
+    globalThis.thinkingPlayerGraphics?.clear();
     containerPlayerThinking?.removeChildren();
-    for (let [thinkerClientId, thought] of Object.entries(window.playerThoughts)) {
+    for (let [thinkerClientId, thought] of Object.entries(globalThis.playerThoughts)) {
       const { target, cardIds } = thought;
       const thinkingPlayerIndex = this.players.findIndex(p => p.clientId == thinkerClientId);
       const thinkingPlayer = this.players[thinkingPlayerIndex];
       if (thinkingPlayer && thinkingPlayerIndex == this.playerTurnIndex) {
         // Render thought bubble around spell icons
         if (cardIds.length) {
-          if (window.thinkingPlayerGraphics) {
-            containerPlayerThinking?.addChild(window.thinkingPlayerGraphics);
+          if (globalThis.thinkingPlayerGraphics) {
+            containerPlayerThinking?.addChild(globalThis.thinkingPlayerGraphics);
           }
           const thoughtBubbleMargin = 20;
           const thoughtBubbleRight = getXLocationOfImageForThoughtBubble(thinkingPlayer.unit.x, cardIds.length, cardIds.length);
           const thoughtBubbleLeft = getXLocationOfImageForThoughtBubble(thinkingPlayer.unit.x, 0, cardIds.length) - thoughtBubbleMargin;
-          window.thinkingPlayerGraphics?.lineStyle(3, 0xffffff, 1.0);
-          window.thinkingPlayerGraphics?.beginFill(0xffffff, 0.7);
-          window.thinkingPlayerGraphics?.drawRoundedRect(thoughtBubbleLeft, thinkingPlayer.unit.y - config.COLLISION_MESH_RADIUS * 2 - thoughtBubbleMargin, thoughtBubbleRight - thoughtBubbleLeft, thoughtBubbleMargin * 2, 5);
-          window.thinkingPlayerGraphics?.endFill();
+          globalThis.thinkingPlayerGraphics?.lineStyle(3, 0xffffff, 1.0);
+          globalThis.thinkingPlayerGraphics?.beginFill(0xffffff, 0.7);
+          globalThis.thinkingPlayerGraphics?.drawRoundedRect(thoughtBubbleLeft, thinkingPlayer.unit.y - config.COLLISION_MESH_RADIUS * 2 - thoughtBubbleMargin, thoughtBubbleRight - thoughtBubbleLeft, thoughtBubbleMargin * 2, 5);
+          globalThis.thinkingPlayerGraphics?.endFill();
         }
         for (let i = 0; i < cardIds.length; i++) {
           const cardId = cardIds[i];
@@ -547,13 +547,13 @@ export default class Underworld {
         }
         if (target && cardIds.length) {
           // Draw a line to show where they're aiming:
-          window.thinkingPlayerGraphics?.lineStyle(3, colors.healthAllyGreen, 0.7);
+          globalThis.thinkingPlayerGraphics?.lineStyle(3, colors.healthAllyGreen, 0.7);
           // Use this similarTriangles calculation to make the line pretty so it doesn't originate from the exact center of the
           // other player but from the edge instead
           const startPoint = Vec.subtract(thinkingPlayer.unit, math.similarTriangles(thinkingPlayer.unit.x - target.x, thinkingPlayer.unit.y - target.y, math.distance(thinkingPlayer.unit, target), config.COLLISION_MESH_RADIUS));
-          window.thinkingPlayerGraphics?.moveTo(startPoint.x, startPoint.y);
-          window.thinkingPlayerGraphics?.lineTo(target.x, target.y);
-          window.thinkingPlayerGraphics?.drawCircle(target.x, target.y, 4);
+          globalThis.thinkingPlayerGraphics?.moveTo(startPoint.x, startPoint.y);
+          globalThis.thinkingPlayerGraphics?.lineTo(target.x, target.y);
+          globalThis.thinkingPlayerGraphics?.drawCircle(target.x, target.y, 4);
         }
       }
     }
@@ -562,7 +562,7 @@ export default class Underworld {
   // Returns true if it is the current players turn
   isMyTurn() {
     return this.turn_phase == turn_phase.PlayerTurns
-      && this.playerTurnIndex === this.players.findIndex(p => p === window.player)
+      && this.playerTurnIndex === this.players.findIndex(p => p === globalThis.player)
   }
   // Caution: Be careful when changing clean up code.  There are times when you just want to
   // clean up assets and then there are times when you want to clear and empty the arrays
@@ -602,9 +602,9 @@ export default class Underworld {
       cancelAnimationFrame(requestAnimationFrameGameLoopId);
     }
     // @ts-ignore
-    window.underworld = undefined;
+    globalThis.underworld = undefined;
     readyState.set('underworld', false);
-    window.updateInGameMenuStatus()
+    globalThis.updateInGameMenuStatus()
 
   }
   // cacheWalls updates underworld.walls array
@@ -677,9 +677,9 @@ export default class Underworld {
       console.error('Unit with id', id, 'does not exist.  Have you registered it in src/units/index.ts?');
       return;
     }
-    if (!window.enemyEncountered.includes(id)) {
-      window.enemyEncountered.push(id);
-      storage.set(ENEMY_ENCOUNTERED_STORAGE_KEY, JSON.stringify(window.enemyEncountered));
+    if (!globalThis.enemyEncountered.includes(id)) {
+      globalThis.enemyEncountered.push(id);
+      storage.set(ENEMY_ENCOUNTERED_STORAGE_KEY, JSON.stringify(globalThis.enemyEncountered));
       Jprompt({ imageSrc: Unit.getImagePathForUnitId(id), text: id + '\n' + sourceUnit.info.description, yesText: 'Okay!', yesKey: 'Space', yesKeyText: 'Spacebar' });
     }
     let unit: Unit.IUnit = Unit.create(
@@ -738,7 +738,7 @@ export default class Underworld {
       width,
       height
     };
-    window.map = JSON.parse(JSON.stringify(map))
+    globalThis.map = JSON.parse(JSON.stringify(map))
     convertBaseTilesToFinalTiles(map);
     const { tiles } = map;
     return {
@@ -849,12 +849,12 @@ export default class Underworld {
   isPointValidSpawn(spawnPoint: Vec2, radius: number, fromSource?: Vec2): boolean {
     if (fromSource) {
       // Ensure attemptSpawn isn't through any walls or liquidBounds
-      if ([...window.underworld.walls, ...window.underworld.liquidBounds].some(wall => lineSegmentIntersection({ p1: fromSource, p2: spawnPoint }, wall))) {
+      if ([...globalThis.underworld.walls, ...globalThis.underworld.liquidBounds].some(wall => lineSegmentIntersection({ p1: fromSource, p2: spawnPoint }, wall))) {
         return false;
       }
     }
     // Ensure spawnPoint doesn't intersect any walls with radius:
-    if ([...window.underworld.walls, ...window.underworld.liquidBounds].some(wall => {
+    if ([...globalThis.underworld.walls, ...globalThis.underworld.liquidBounds].some(wall => {
       const rightAngleIntersection = findWherePointIntersectLineSegmentAtRightAngle(spawnPoint, wall);
       return rightAngleIntersection && math.distance(rightAngleIntersection, spawnPoint) <= radius;
     })) {
@@ -953,7 +953,7 @@ export default class Underworld {
         this.showUpgrades(this.levelIndex !== 0);
 
         console.log('Setup: createLevel', levelData);
-        window.lastLevelCreated = levelData;
+        globalThis.lastLevelCreated = levelData;
         // Clean up the previous level
         this.cleanUpLevel();
 
@@ -984,8 +984,8 @@ export default class Underworld {
         this.postSetupLevel();
         resolve();
         // Change song now that level has changed:
-        if (window.playNextSong) {
-          window.playNextSong();
+        if (globalThis.playNextSong) {
+          globalThis.playNextSong();
         }
       }, 10)
     });
@@ -996,12 +996,12 @@ export default class Underworld {
       // setTimeout allows the UI to refresh before locking up the CPU with
       // heavy level generation code
       setTimeout(() => {
-        if (window.isHost()) {
+        if (globalThis.isHost()) {
           console.log('Setup: initLevel as host', levelIndex);
           this.levelIndex = levelIndex;
           // Generate level
           let level;
-          if (false && window.devMode) {
+          if (false && globalThis.devMode) {
             level = this.testLevelData();
           } else {
             do {
@@ -1009,7 +1009,7 @@ export default class Underworld {
               level = this.generateRandomLevelData(levelIndex);
             } while (level === undefined);
           }
-          window.pie.sendData({
+          globalThis.pie.sendData({
             type: MESSAGE_TYPES.CREATE_LEVEL,
             level
           });
@@ -1019,7 +1019,7 @@ export default class Underworld {
     })
   }
   checkPickupCollisions(unit: Unit.IUnit, prediction: boolean) {
-    for (let pu of ((prediction && window.predictionPickups) ? window.predictionPickups : this.pickups)) {
+    for (let pu of ((prediction && globalThis.predictionPickups) ? globalThis.predictionPickups : this.pickups)) {
       // Note, units' radius is rather small (to allow for crowding), so
       // this distance calculation uses neither the radius of the pickup
       // nor the radius of the unit.  It is hard coded to 2 COLLISION_MESH_RADIUSES
@@ -1139,7 +1139,7 @@ export default class Underworld {
     } else if (this.turn_phase === turn_phase.NPC_ENEMY) {
       message = "Enemy Turn";
       yourTurn = false;
-    } else if (currentPlayerTurn === window.player) {
+    } else if (currentPlayerTurn === globalThis.player) {
       message = 'Your Turn'
       yourTurn = true;
     } else if (this.isGameOver()) {
@@ -1184,7 +1184,7 @@ export default class Underworld {
       // Do not continue with initialization
       return;
     }
-    if (player == window.player) {
+    if (player == globalThis.player) {
       // Notify the current player that their turn is starting
       queueCenteredFloatingText(`Your Turn`);
 
@@ -1211,16 +1211,16 @@ export default class Underworld {
   }
   // Sends a network message to end turn
   async endMyTurn() {
-    if (window.player) {
+    if (globalThis.player) {
       // Turns can only be manually ended during the PlayerTurns phase
       if (this.isMyTurn()) {
         let affirm = true
-        if (window.player.unit.stamina == window.player.unit.staminaMax && !window.castThisTurn) {
+        if (globalThis.player.unit.stamina == globalThis.player.unit.staminaMax && !globalThis.castThisTurn) {
           affirm = await Jprompt({ text: 'Are you sure you want to end your turn without moving or casting?', noBtnText: 'Cancel', noBtnKey: 'Escape', yesText: 'End Turn', yesKey: 'Space', yesKeyText: 'Spacebar' });
         }
         if (affirm) {
           console.log('endMyTurn: send END_TURN message');
-          window.pie.sendData({ type: MESSAGE_TYPES.END_TURN });
+          globalThis.pie.sendData({ type: MESSAGE_TYPES.END_TURN });
         }
       }
     }
@@ -1279,11 +1279,11 @@ export default class Underworld {
   chooseUpgrade(player: Player.IPlayer, upgrade: Upgrade.IUpgrade) {
     upgrade.effect(player);
     player.upgrades.push(upgrade);
-    if (player == window.player) {
+    if (player == globalThis.player) {
       document.body?.querySelector(`.card[data-upgrade="${upgrade.title}"]`)?.classList.toggle('chosen', true);
       // Clear upgrades when current player has picked one
       document.body?.classList.toggle('showUpgrades', false);
-      const startingSpellsLeftToPick = config.STARTING_CARD_COUNT - window.player.inventory.length;
+      const startingSpellsLeftToPick = config.STARTING_CARD_COUNT - globalThis.player.inventory.length;
       if (startingSpellsLeftToPick > 0) {
         // Show next round of upgrades to pick
         this.showUpgrades(false);
@@ -1292,12 +1292,12 @@ export default class Underworld {
   }
 
   showUpgrades(statsUpgrades: boolean) {
-    if (!window.player) {
-      console.error('Cannot show upgrades, no window.player');
+    if (!globalThis.player) {
+      console.error('Cannot show upgrades, no globalThis.player');
       return
     }
     let minimumProbability = 0;
-    const startingSpellsLeftToPick = config.STARTING_CARD_COUNT - window.player.inventory.length
+    const startingSpellsLeftToPick = config.STARTING_CARD_COUNT - globalThis.player.inventory.length
     if (startingSpellsLeftToPick > 0) {
       // Limit starting cards to a probability of 10 or more
       minimumProbability = 10;
@@ -1317,7 +1317,7 @@ export default class Underworld {
       console.error('elUpgradePicker or elUpgradePickerContent are undefined.');
     }
     const player = this.players.find(
-      (p) => p.clientId === window.clientId,
+      (p) => p.clientId === globalThis.clientId,
     );
     if (player) {
       const upgrades = Upgrade.generateUpgrades(player, 3, minimumProbability, statsUpgrades);
@@ -1335,7 +1335,7 @@ export default class Underworld {
             if (elUpgrade) {
 
               elUpgradePickerContent.appendChild(elUpgrade);
-              if (window.devMode) {
+              if (globalThis.devMode) {
                 elUpgrade.click();
               }
             } else {
@@ -1378,8 +1378,8 @@ export default class Underworld {
   }
   async broadcastTurnPhase(p: turn_phase) {
     // If host, send sync; if non-host, ignore 
-    if (window.isHost()) {
-      window.pie.sendData({
+    if (globalThis.isHost()) {
+      globalThis.pie.sendData({
         type: MESSAGE_TYPES.SET_PHASE,
         phase: p,
         units: this.units.map(Unit.serialize),
@@ -1421,10 +1421,10 @@ export default class Underworld {
     this.playerTurnIndex = 0;
 
     // Clear cast this turn
-    window.castThisTurn = false;
+    globalThis.castThisTurn = false;
 
     // Clear debug graphics
-    window.debugGraphics?.clear()
+    globalThis.debugGraphics?.clear()
 
     // Change the underworld.turn_phase variable and
     // related html classes that are used by the UI to
@@ -1461,7 +1461,7 @@ export default class Underworld {
             u.stamina = u.staminaMax;
           }
           // Clear enemy attentionMarkers since it's now their turn
-          window.attentionMarkers = [];
+          globalThis.attentionMarkers = [];
           // Run AI unit actions
           await this.executeNPCTurn(Faction.ALLY);
           // Now that allies are done taking their turn, change to NPC Enemy turn phase
@@ -1473,7 +1473,7 @@ export default class Underworld {
             u.stamina = u.staminaMax;
           }
           // Clear enemy attentionMarkers since it's now their turn
-          window.attentionMarkers = [];
+          globalThis.attentionMarkers = [];
           // Run AI unit actions
           await this.executeNPCTurn(Faction.ENEMY);
           // Set turn phase to player turn
@@ -1547,7 +1547,7 @@ export default class Underworld {
           return withinMeleeRange(u, attackTarget)
         }
       case UnitSubType.RANGED_LOS:
-        return window.underworld.hasLineOfSight(u, attackTarget)
+        return globalThis.underworld.hasLineOfSight(u, attackTarget)
       case UnitSubType.RANGED_RADIUS:
         return u.alive && Unit.inRange(u, attackTarget);
       case UnitSubType.SUPPORT_CLASS:
@@ -1599,7 +1599,7 @@ export default class Underworld {
     prediction: boolean,
   ): Unit.IUnit[] {
     const withinDistance: Unit.IUnit[] = [];
-    const units = (prediction && window.predictionUnits) ? window.predictionUnits : this.units;
+    const units = (prediction && globalThis.predictionUnits) ? globalThis.predictionUnits : this.units;
     for (let unit of units) {
       if (math.distance(unit, target) <= distance) {
         withinDistance.push(unit);
@@ -1608,7 +1608,7 @@ export default class Underworld {
     return withinDistance;
   }
   getUnitsAt(coords: Vec2, prediction?: boolean): Unit.IUnit[] {
-    const sortedByProximityToCoords = (prediction && window.predictionUnits ? window.predictionUnits : this.units)
+    const sortedByProximityToCoords = (prediction && globalThis.predictionUnits ? globalThis.predictionUnits : this.units)
       // Filter for only valid units, not units with NaN location or waiting to be removed
       .filter(u => !u.flaggedForRemoval && !isNaN(u.x) && !isNaN(u.y))
       // Filter for units within SELECTABLE_RADIUS of coordinates
@@ -1624,28 +1624,28 @@ export default class Underworld {
     return this.getUnitsAt(coords, prediction)[0];
   }
   getPickupAt(coords: Vec2, prediction?: boolean): Pickup.IPickup | undefined {
-    const sortedByProximityToCoords = (prediction && window.predictionPickups ? window.predictionPickups : this.pickups)
+    const sortedByProximityToCoords = (prediction && globalThis.predictionPickups ? globalThis.predictionPickups : this.pickups)
       .filter(p => !isNaN(p.x) && !isNaN(p.y) && math.distance(coords, p) <= p.radius).sort((a, b) => math.distance(a, coords) - math.distance(b, coords));
     const closest = sortedByProximityToCoords[0]
     return closest;
   }
   addUnitToArray(unit: Unit.IUnit, prediction: boolean) {
-    if (prediction && window.predictionUnits) {
-      window.predictionUnits.push(Unit.copyForPredictionUnit(unit));
+    if (prediction && globalThis.predictionUnits) {
+      globalThis.predictionUnits.push(Unit.copyForPredictionUnit(unit));
     } else {
       this.units.push(unit);
     }
   }
   removePickupFromArray(pickup: Pickup.IPickup, prediction: boolean) {
-    if (prediction && window.predictionPickups) {
-      window.predictionPickups = window.predictionPickups.filter(p => p !== pickup);
+    if (prediction && globalThis.predictionPickups) {
+      globalThis.predictionPickups = globalThis.predictionPickups.filter(p => p !== pickup);
     } else {
       this.pickups = this.pickups.filter((p) => p !== pickup);
     }
   }
   addPickupToArray(pickup: Pickup.IPickup, prediction: boolean) {
-    if (prediction && window.predictionPickups) {
-      window.predictionPickups.push(Pickup.copyForPredictionPickup(pickup))
+    if (prediction && globalThis.predictionPickups) {
+      globalThis.predictionPickups.push(Pickup.copyForPredictionPickup(pickup))
     } else {
       this.pickups.push(pickup);
     }
@@ -1665,8 +1665,8 @@ export default class Underworld {
     // If true, prevents removing mana when spell is cast.  This is used for "trap" card
     costPrepaid: boolean,
   ): Promise<Cards.EffectState> {
-    if (!prediction && casterUnit == (window.player && window.player.unit)) {
-      window.castThisTurn = true;
+    if (!prediction && casterUnit == (globalThis.player && globalThis.player.unit)) {
+      globalThis.castThisTurn = true;
     }
     const unitAtCastLocation = this.getUnitAt(castLocation, prediction);
     const pickupAtCastLocation = this.getPickupAt(castLocation, prediction);
@@ -1724,8 +1724,8 @@ export default class Underworld {
         const targets = effectState.targetedUnits.length == 0 ? [castLocation] : effectState.targetedUnits
         // Play the card sound effect:
         if (!prediction && card.sfx) {
-          if (window.playSFX && window.sfx) {
-            window.playSFX(window.sfx[card.sfx]);
+          if (globalThis.playSFX && globalThis.sfx) {
+            globalThis.playSFX(globalThis.sfx[card.sfx]);
           }
         }
         for (let target of targets) {
@@ -1804,9 +1804,9 @@ export default class Underworld {
   checkIfShouldSpawnPortal() {
     if (this.units.filter(u => u.faction == Faction.ENEMY).every(u => !u.alive)) {
       // Convenience: Pickup any CARD_PICKUP_NAME left automatically, so that they aren't left behind
-      window.underworld.pickups.filter(p => p.name == Pickup.CARDS_PICKUP_NAME).forEach(pickup => {
-        if (window.player) {
-          Pickup.triggerPickup(pickup, window.player.unit, false);
+      globalThis.underworld.pickups.filter(p => p.name == Pickup.CARDS_PICKUP_NAME).forEach(pickup => {
+        if (globalThis.player) {
+          Pickup.triggerPickup(pickup, globalThis.player.unit, false);
         }
       })
       // Spawn portal near each player
@@ -1905,9 +1905,9 @@ export default class Underworld {
         target = Vec.round(target);
       }
       const hash = objectHash({ target, cardIds });
-      if (hash !== window.lastThoughtsHash) {
-        window.lastThoughtsHash = hash;
-        window.pie.sendData({
+      if (hash !== globalThis.lastThoughtsHash) {
+        globalThis.lastThoughtsHash = hash;
+        globalThis.pie.sendData({
           type: MESSAGE_TYPES.PLAYER_THINKING,
           target,
           cardIds
@@ -2046,10 +2046,10 @@ function getEnemiesForAltitude(levelIndex: number): { unitIds: string[], strengt
   const unitIds = Array(startingNumberOfUnits + levelIndex).fill(null)
     // flatMap is used to remove any undefineds
     .flatMap(() => {
-      const chosenUnit = chooseObjectWithProbability(possibleUnitsToChoose, window.underworld.random)
+      const chosenUnit = chooseObjectWithProbability(possibleUnitsToChoose, globalThis.underworld.random)
       return chosenUnit ? [chosenUnit.id] : []
     })
-  const strength = (levelIndex / 10) + window.underworld.players.length / 2;
+  const strength = (levelIndex / 10) + globalThis.underworld.players.length / 2;
   // Add bosses
   if (levelIndex !== 0 && levelIndex % bossEveryXLevels == 0) {
     unitIds.push('Night Queen');

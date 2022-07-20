@@ -1,6 +1,5 @@
 // set window defaults, must be called before setupAll()
 import * as Unit from './entity/Unit';
-import './types/globalTypes';
 import { setView, View } from './views';
 import * as readyState from './readyState';
 import { setupPixi } from './graphics/PixiUtils';
@@ -14,7 +13,7 @@ import * as storage from './storage';
 import { version } from '../package.json';
 import { Faction, UnitType } from './types/commonTypes';
 import * as Vec from './jmath/Vec';
-window.SPELLMASONS_PACKAGE_VERSION = version;
+globalThis.SPELLMASONS_PACKAGE_VERSION = version;
 import './style.css';
 cookieConsentPopup(false);
 
@@ -31,30 +30,30 @@ const YES = 'yes'
 const SKIP_TUTORIAL = 'skipTutorial';
 
 // Globalize injected Audio functions
-window.playNextSong = playNextSong;
-window.playSFX = playSFX;
-window.playSFXKey = playSFXKey;
-window.sfx = sfx;
+globalThis.playNextSong = playNextSong;
+globalThis.playSFX = playSFX;
+globalThis.playSFXKey = playSFXKey;
+globalThis.sfx = sfx;
 
-window.playerWalkingPromise = Promise.resolve();
-window.predictionUnits = [];
-window.attentionMarkers = [];
-window.resMarkers = [];
-window.lastThoughtsHash = '';
-window.playerThoughts = {};
-window.forceMove = [];
-window.devMode = location.href.includes('localhost');
-window.zoomTarget = 1.3;
+globalThis.playerWalkingPromise = Promise.resolve();
+globalThis.predictionUnits = [];
+globalThis.attentionMarkers = [];
+globalThis.resMarkers = [];
+globalThis.lastThoughtsHash = '';
+globalThis.playerThoughts = {};
+globalThis.forceMove = [];
+globalThis.devMode = location.href.includes('localhost');
+globalThis.zoomTarget = 1.3;
 // If the code in main runs this is NOT a headless instance, main.ts is the entrypoint for
 // the regular game with graphics and audio
-window.headless = false;
-window.isHost = () => {
+globalThis.headless = false;
+globalThis.isHost = () => {
   // isHost only if playing singleplayer, otherwise the headless hostApp is the host
   // and this file is the entry point to the non-headless client so it will never be the
   // hostApp
-  return typeGuardHostApp(window.pie) ? true : window.pie.soloMode;
+  return typeGuardHostApp(globalThis.pie) ? true : globalThis.pie.soloMode;
 }
-if (window.devMode) {
+if (globalThis.devMode) {
   console.log('ADMIN: devMode = true! Character and upgrades will be picked automatically. Animations are sped up');
 }
 
@@ -78,11 +77,11 @@ function setupAll() {
     initPlanningView();
     readyState.set("content", true);
     // if (storage.get(SKIP_TUTORIAL) === YES) {
-    window.setMenu('PLAY');
+    globalThis.setMenu('PLAY');
     setView(View.Menu);
-    window.tryAutoConnect();
+    globalThis.tryAutoConnect();
     // } else {
-    //   window.setMenu('TUTORIAL');
+    //   globalThis.setMenu('TUTORIAL');
     //   startTutorial();
     // }
   }).catch(e => {
@@ -101,15 +100,15 @@ function setupAll() {
 
   // Set UI version info
   const elVersionInfo = document.getElementById('version-info')
-  if (elVersionInfo && window.SPELLMASONS_PACKAGE_VERSION) {
-    elVersionInfo.innerText = `Alpha v${window.SPELLMASONS_PACKAGE_VERSION}\nGraphics may not be final`;
+  if (elVersionInfo && globalThis.SPELLMASONS_PACKAGE_VERSION) {
+    elVersionInfo.innerText = `Alpha v${globalThis.SPELLMASONS_PACKAGE_VERSION}\nGraphics may not be final`;
   }
 }
 
 // For development, spawns a unit near the player
-window.devSpawnUnit = (unitId: string, faction: Faction = Faction.ENEMY) => {
-  if (window.player) {
-    const coords = window.underworld.findValidSpawn(window.player.unit, 5)
+globalThis.devSpawnUnit = (unitId: string, faction: Faction = Faction.ENEMY) => {
+  if (globalThis.player) {
+    const coords = globalThis.underworld.findValidSpawn(globalThis.player.unit, 5)
     const sourceUnit = Units.allUnits[unitId];
     if (coords && sourceUnit) {
       Unit.create(
@@ -129,72 +128,70 @@ window.devSpawnUnit = (unitId: string, faction: Faction = Faction.ENEMY) => {
 
   }
 }
-window.devSpawnAllUnits = () => {
+globalThis.devSpawnAllUnits = () => {
   for (let id of Object.keys(Units.allUnits)) {
-    window.devSpawnUnit(id, Faction.ENEMY);
+    globalThis.devSpawnUnit(id, Faction.ENEMY);
   }
 }
-window.devRemoveAllEnemies = () => {
-  for (let u of window.underworld.units) {
-    if (u.faction !== window.player?.unit.faction) {
+globalThis.devRemoveAllEnemies = () => {
+  for (let u of globalThis.underworld.units) {
+    if (u.faction !== globalThis.player?.unit.faction) {
       Unit.cleanup(u);
     }
   }
 }
-window.setMMBDown = (isDown: boolean) => {
-  // I want it to show a compile error anywhere else
-  // @ts-expect-error Override "readyonly" error.  This is the ONLY place that MMBDown should be mutated.
-  window.MMBDown = isDown;
-  document.body?.classList.toggle('draggingCamera', window.MMBDown);
+globalThis.setMMBDown = (isDown: boolean) => {
+  // This is the ONLY place that MMBDown should be mutated.
+  globalThis.MMBDown = isDown;
+  document.body?.classList.toggle('draggingCamera', globalThis.MMBDown);
 }
-window.setRMBDown = (isDown: boolean) => {
-  // I want it to show a compile error anywhere else
-  // @ts-expect-error Override "readyonly" error.  This is the ONLY place that RMBDown should be mutated.
-  window.RMBDown = isDown;
+globalThis.setRMBDown = (isDown: boolean) => {
+  // This is the ONLY place that RMBDown should be mutated.
+  globalThis.RMBDown = isDown;
   // Now that player has stopped moving notify multiplayer clients that player has moved
-  if (window.player) {
-    window.pie.sendData({
+  if (globalThis.player) {
+    globalThis.pie.sendData({
       type: MESSAGE_TYPES.MOVE_PLAYER,
-      ...Vec.clone(window.player.unit),
+      ...Vec.clone(globalThis.player.unit),
     });
   } else {
-    console.error('Cannot send MOVE_PLAYER, window.player is undefined')
+    console.error('Cannot send MOVE_PLAYER, globalThis.player is undefined')
   }
   // Reset notifiedOutOfStamina so that when RMB is pressed again, if the 
   // player is out of stamina it will notify them
-  window.notifiedOutOfStamina = false;
+  globalThis.notifiedOutOfStamina = false;
 }
-window.skipTutorial = () => {
+globalThis.skipTutorial = () => {
   storage.set(SKIP_TUTORIAL, YES);
 }
-window.enemyEncountered = JSON.parse(storage.get(ENEMY_ENCOUNTERED_STORAGE_KEY) || '[]');
-console.log('Setup: initializing enemyEncountered as', window.enemyEncountered);
+globalThis.enemyEncountered = JSON.parse(storage.get(ENEMY_ENCOUNTERED_STORAGE_KEY) || '[]');
+console.log('Setup: initializing enemyEncountered as', globalThis.enemyEncountered);
 
-window.superMe = () => {
-  if (window.player) {
+globalThis.superMe = () => {
+  if (globalThis.player) {
 
-    window.player.unit.health = 10000;
-    window.player.unit.healthMax = 10000;
-    window.player.unit.mana = 10000;
-    window.player.unit.manaMax = 10000;
+    globalThis.player.unit.health = 10000;
+    globalThis.player.unit.healthMax = 10000;
+    globalThis.player.unit.mana = 10000;
+    globalThis.player.unit.manaMax = 10000;
     // Give me all cards
-    Object.keys(Cards.allCards).forEach(window.giveMeCard);
+    Object.keys(Cards.allCards).forEach(globalThis.giveMeCard);
     // Run farther! Jump higher!
-    window.player.unit.staminaMax = 10000;
-    window.player.unit.stamina = window.player.unit.staminaMax;
-    window.player.unit.moveSpeed = 0.3;
+    globalThis.player.unit.staminaMax = 10000;
+    globalThis.player.unit.stamina = globalThis.player.unit.staminaMax;
+    globalThis.player.unit.moveSpeed = 0.3;
     // Now that player's health and mana has changed we must sync
     // predictionUnits so that the player's prediction copy
     // has the same mana and health
-    window.underworld.syncPredictionEntities();
+    globalThis.underworld.syncPredictionEntities();
     syncInventory(undefined);
   }
 }
-window.showDebug = false;
+globalThis.showDebug = false;
 
 // Prevent accidental back button only when not in devMode
 // In devMode, lots of refreshing happens so it's annoying when it
 // asks "are you sure?" every time
-if (!window.devMode) {
-  window.onbeforeunload = function () { return "Are you sure you want to quit?"; };
+if (!globalThis.devMode) {
+  globalThis.onbeforeunload = function () { return "Are you sure you want to quit?"; };
 }

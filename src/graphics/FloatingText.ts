@@ -26,10 +26,10 @@ export default function floatingText({
   style = { fill: 'white' },
   keepWithinCameraBounds = true
 }: FloatingTextInsructions) {
-  if (!(window.pixi && app && container)) {
+  if (!(globalThis.pixi && app && container)) {
     return Promise.resolve();
   }
-  const pixiText = new window.pixi.Text(text, style);
+  const pixiText = new globalThis.pixi.Text(text, style);
   pixiText.x = coords.x;
   pixiText.y = coords.y;
   pixiText.anchor.x = 0.5;
@@ -83,7 +83,7 @@ export const elPIXIHolder = document.getElementById('PIXI-holder') as HTMLElemen
 let centeredTextAnimating = false;
 let centeredTextQueue: { text: string, fill: string | number }[] = [];
 export function queueCenteredFloatingText(text: string, fill: string | number = 'white') {
-  if (window.devMode) {
+  if (globalThis.devMode) {
     // skip floating text in dev mode for sake of time
     return;
   }
@@ -94,7 +94,7 @@ export function queueCenteredFloatingText(text: string, fill: string | number = 
   }
 }
 export function centeredFloatingText(text: string, fill: string | number = 'white') {
-  if (window.headless) { return; }
+  if (globalThis.headless) { return; }
   centeredTextAnimating = true;
   floatingText({
     coords: {

@@ -116,23 +116,23 @@ export function findPath(startPoint: Vec2, target: Vec2, pathingLineSegments: Po
     //     if (path && path.points[0]) {
 
     //         if (path.invalid) {
-    //             window.debugGraphics.lineStyle(4, 0xff0000, 0.3);
+    //             globalThis.debugGraphics.lineStyle(4, 0xff0000, 0.3);
     //         } else {
-    //             window.debugGraphics.lineStyle(4, 0x00ff00, 0.4);
+    //             globalThis.debugGraphics.lineStyle(4, 0x00ff00, 0.4);
     //         }
-    //         window.debugGraphics.moveTo(path.points[0].x + visualOffset, path.points[0].y + visualOffset);
+    //         globalThis.debugGraphics.moveTo(path.points[0].x + visualOffset, path.points[0].y + visualOffset);
     //         for (let point of path.points) {
     //             if (path.invalid && point == path.points[path.points.length - 1]) {
     //                 // Don't draw last point since the path didn't finish
     //                 break;
     //             }
-    //             window.debugGraphics.lineTo(point.x + visualOffset, point.y + visualOffset);
+    //             globalThis.debugGraphics.lineTo(point.x + visualOffset, point.y + visualOffset);
     //         }
 
     //         // Finally, draw to the target, unless the path is invalid (in which case it didn't make
     //         // it to the target); 
     //         if (!path.invalid) {
-    //             window.debugGraphics.lineTo(path.target.x + visualOffset, path.target.y + visualOffset);
+    //             globalThis.debugGraphics.lineTo(path.target.x + visualOffset, path.target.y + visualOffset);
     //         }
     //     }
     // }
@@ -198,10 +198,10 @@ export function findPath(startPoint: Vec2, target: Vec2, pathingLineSegments: Po
                             }
                         }
                         if (!closestIntersection || Vec.equal(closestIntersection, p2)) {
-                            // window.debugGraphics.lineStyle(1, 0xff0000, 1);
-                            // window.debugGraphics.drawCircle(path.points[i].x, path.points[i].y, 4);
-                            // window.debugGraphics.lineStyle(1, 0x0000ff, 1);
-                            // window.debugGraphics.drawCircle(path.points[j].x, path.points[j].y, 4);
+                            // globalThis.debugGraphics.lineStyle(1, 0xff0000, 1);
+                            // globalThis.debugGraphics.drawCircle(path.points[i].x, path.points[i].y, 4);
+                            // globalThis.debugGraphics.lineStyle(1, 0x0000ff, 1);
+                            // globalThis.debugGraphics.drawCircle(path.points[j].x, path.points[j].y, 4);
                             path.points = removeBetweenIndexAtoB(path.points, i, j);
                             return false
                         }
@@ -372,8 +372,8 @@ function processPaths(paths: Path[], pathingWalls: Polygon2LineSegment[]): Path[
 
                 } else {
                     path.points.push(closestIntersection);
-                    // window.debugGraphics.lineStyle(2, 0xff00ff, 1);
-                    // window.debugGraphics.drawCircle(closestIntersection.x, closestIntersection.y, 10);
+                    // globalThis.debugGraphics.lineStyle(2, 0xff00ff, 1);
+                    // globalThis.debugGraphics.drawCircle(closestIntersection.x, closestIntersection.y, 10);
 
                     // Prevent paths from overlapping already existing paths:
                     // This is very important because it prevents infinitely
@@ -410,8 +410,8 @@ function processPaths(paths: Path[], pathingWalls: Polygon2LineSegment[]): Path[
                                         // a shorter route to this vertex
 
                                         // Draw where path stopped
-                                        // window.debugGraphics.lineStyle(1, 0x00ffff, 1);
-                                        // window.debugGraphics.drawCircle(vertex.x, vertex.y, 10);
+                                        // globalThis.debugGraphics.lineStyle(1, 0x00ffff, 1);
+                                        // globalThis.debugGraphics.drawCircle(vertex.x, vertex.y, 10);
 
                                         path.invalid = true;
                                         path.done = true;

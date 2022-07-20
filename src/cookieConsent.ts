@@ -1,8 +1,8 @@
 export default function cookieConsentPopup(forcePopup: boolean) {
     // If user has already allowed cookies, don't show the popup
     if (!forcePopup && localStorage.getItem('cookieConsent') === 'allowed') {
-        window.allowCookies = true;
-        console.log('Setup: Cookie consent:', window.allowCookies);
+        globalThis.allowCookies = true;
+        console.log('Setup: Cookie consent:', globalThis.allowCookies);
         return
     }
     const el = document.createElement('div')
@@ -33,14 +33,14 @@ export default function cookieConsentPopup(forcePopup: boolean) {
     elDeny?.addEventListener('click', deny);
 }
 function allow() {
-    window.allowCookies = true;
+    globalThis.allowCookies = true;
     document.getElementById('cookie-consent')?.remove();
     localStorage.setItem('cookieConsent', 'allowed');
 }
 function deny() {
-    window.allowCookies = false;
+    globalThis.allowCookies = false;
     localStorage.clear();
     document.getElementById('cookie-consent')?.remove();
 
 }
-window.cookieConsentPopup = cookieConsentPopup;
+globalThis.cookieConsentPopup = cookieConsentPopup;

@@ -37,7 +37,7 @@ const unit: UnitSource = {
       unit.mana -= CAST_MANA_COST;
 
       // Resurrect all dead and turns them to her faction 
-      await Promise.all([window.underworld.units.filter(
+      await Promise.all([globalThis.underworld.units.filter(
         (u) => u.unitType === UnitType.AI && !u.alive,
       ).map(deadUnit => {
         if (deadUnit) {
@@ -56,7 +56,7 @@ const unit: UnitSource = {
       })]);
     }
     // Move randomly
-    const moveCoords = window.underworld.getRandomCoordsWithinBounds(window.underworld.limits);
+    const moveCoords = globalThis.underworld.getRandomCoordsWithinBounds(globalThis.underworld.limits);
     await Unit.moveTowards(unit, moveCoords);
   },
 };

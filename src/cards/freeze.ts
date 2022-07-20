@@ -22,11 +22,11 @@ Freezes the target(s) for 1 turn, preventing them from moving or acting.
       for (let unit of state.targetedUnits) {
         Unit.addModifier(unit, id);
         if (unit.unitType === UnitType.PLAYER_CONTROLLED) {
-          const player = window.underworld.players.find(
+          const player = globalThis.underworld.players.find(
             (p) => p.unit === unit,
           );
           if (player) {
-            window.underworld.endPlayerTurn(player.clientId);
+            globalThis.underworld.endPlayerTurn(player.clientId);
           }
         }
       }

@@ -67,7 +67,7 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
   return upgrades;
 }
 export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer) {
-  if (window.headless) {
+  if (globalThis.headless) {
     // There is no DOM in headless mode
     return;
   }
@@ -120,7 +120,7 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer) {
   element.addEventListener('click', (e) => {
     // Prevent click from "falling through" upgrade and propagating to vote for overworld level
     e.stopPropagation();
-    window.pie.sendData({
+    globalThis.pie.sendData({
       type: MESSAGE_TYPES.CHOOSE_UPGRADE,
       upgrade,
     });
@@ -156,7 +156,7 @@ export const upgradeStatsSource: IUpgrade[] = [
       // mana state with the player's predictionUnit so it is properly
       // refelcted in the health bar
       // (note: this would be auto corrected on the next mouse move anyway)
-      window.underworld.syncPlayerPredictionUnitOnly();
+      globalThis.underworld.syncPlayerPredictionUnitOnly();
     },
     probability: 30,
     cost: { healthCost: 0, manaCost: 0 },
@@ -175,7 +175,7 @@ export const upgradeStatsSource: IUpgrade[] = [
       // mana state with the player's predictionUnit so it is properly
       // refelcted in the health bar
       // (note: this would be auto corrected on the next mouse move anyway)
-      window.underworld.syncPlayerPredictionUnitOnly();
+      globalThis.underworld.syncPlayerPredictionUnitOnly();
     },
     probability: 30,
     cost: { healthCost: 0, manaCost: 0 },

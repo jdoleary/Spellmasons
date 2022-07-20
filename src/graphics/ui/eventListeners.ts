@@ -32,10 +32,10 @@ export const keyDown = {
 // to move towards the mouse cursor
 let walkRopePath: Unit.UnitPath | undefined = undefined;
 
-window.addEventListener('keydown', nonUnderworldKeydownListener);
+globalThis.addEventListener('keydown', nonUnderworldKeydownListener);
 function nonUnderworldKeydownListener(event: KeyboardEvent) {
   // Only handle hotkeys when NOT viewing the Game
-  if (window.view == View.Game) {
+  if (globalThis.view == View.Game) {
     return;
   }
   switch (event.code) {
@@ -46,10 +46,10 @@ function nonUnderworldKeydownListener(event: KeyboardEvent) {
 }
 export function keypressListener(event: KeyboardEvent) {
   // Only handle hotkeys when viewing the Game
-  if (window.view !== View.Game) {
+  if (globalThis.view !== View.Game) {
     return;
   }
-  if (!window.underworld) {
+  if (!globalThis.underworld) {
     return
   }
 
@@ -58,7 +58,7 @@ export function keypressListener(event: KeyboardEvent) {
       CardUI.toggleInventory(undefined, undefined);
       break;
     case 'Space':
-      window.underworld.endMyTurn();
+      globalThis.underworld.endMyTurn();
       break;
     case 'Digit1':
       CardUI.selectCardByIndex(0);
@@ -95,10 +95,10 @@ export function keypressListener(event: KeyboardEvent) {
 }
 export function keydownListener(event: KeyboardEvent) {
   // Only handle hotkeys when viewing the Game
-  if (window.view !== View.Game) {
+  if (globalThis.view !== View.Game) {
     return;
   }
-  if (!window.underworld) {
+  if (!globalThis.underworld) {
     return
   }
 
@@ -153,8 +153,8 @@ export function keydownListener(event: KeyboardEvent) {
       cameraAutoFollow(false);
       break;
     case 'KeyC':
-      const mouseTarget = window.underworld.getMousePos();
-      window.pie.sendData({
+      const mouseTarget = globalThis.underworld.getMousePos();
+      globalThis.pie.sendData({
         type: MESSAGE_TYPES.PING,
         x: mouseTarget.x,
         y: mouseTarget.y
@@ -170,7 +170,7 @@ export function keydownListener(event: KeyboardEvent) {
 
 export function keyupListener(event: KeyboardEvent) {
   // Only handle hotkeys when viewing the Game
-  if (window.view !== View.Game) {
+  if (globalThis.view !== View.Game) {
     return;
   }
   switch (event.code) {
@@ -191,7 +191,7 @@ export function keyupListener(event: KeyboardEvent) {
 }
 
 export function endTurnBtnListener(e: MouseEvent) {
-  window.underworld.endMyTurn();
+  globalThis.underworld.endMyTurn();
   e.preventDefault();
   e.stopPropagation();
   return false;
@@ -199,38 +199,38 @@ export function endTurnBtnListener(e: MouseEvent) {
 
 export function mouseMove(e?: MouseEvent) {
   // Only handle clicks when viewing the Game
-  if (window.view !== View.Game) {
+  if (globalThis.view !== View.Game) {
     return;
   }
-  if (!window.underworld) {
+  if (!globalThis.underworld) {
     return
   }
 
-  if (window.MMBDown && e) {
+  if (globalThis.MMBDown && e) {
     const { movementX, movementY } = e;
     const { zoom } = getCamera();
     cameraAutoFollow(false);
     moveCamera(-movementX / zoom, -movementY / zoom);
   }
-  const mouseTarget = window.underworld.getMousePos();
+  const mouseTarget = globalThis.underworld.getMousePos();
 
   // RMB
-  if (window.player) {
+  if (globalThis.player) {
 
-    if (window.RMBDown) {
-      if (window.underworld.isMyTurn()) {
+    if (globalThis.RMBDown) {
+      if (globalThis.underworld.isMyTurn()) {
         drawWalkRope(mouseTarget);
         // If player is able to move
-        if (window.player.unit.stamina > 0) {
+        if (globalThis.player.unit.stamina > 0) {
           // Move up to but not onto intersection or else unit will get stuck ON linesegment
-          Unit._moveTowards(window.player.unit, mouseTarget);
+          Unit._moveTowards(globalThis.player.unit, mouseTarget);
         } else {
-          if (!window.notifiedOutOfStamina) {
+          if (!globalThis.notifiedOutOfStamina) {
             floatingText({
               coords: mouseTarget,
               text: 'Out of stamina',
             });
-            window.notifiedOutOfStamina = true;
+            globalThis.notifiedOutOfStamina = true;
           }
         }
       } else {
@@ -248,67 +248,67 @@ export function mouseMove(e?: MouseEvent) {
   // havent changed since last call.
 
   // Show faint circle on clickable entities on hover:
-  drawCircleUnderTarget(mouseTarget, 1.0, window.planningViewGraphics);
+  drawCircleUnderTarget(mouseTarget, 1.0, globalThis.planningViewGraphics);
 
 
   // Test pathing
-  if (window.showDebug && window.player) {
-    window.debugGraphics?.clear();
+  if (globalThis.showDebug && globalThis.player) {
+    globalThis.debugGraphics?.clear();
 
     // Draw player path
-    const path = window.player.unit.path;
+    const path = globalThis.player.unit.path;
     if (path && path.points[0]) {
-      window.debugGraphics?.lineStyle(4, 0x00ff00, 1.0);
-      window.debugGraphics?.moveTo(window.player.unit.x, window.player.unit.y);
+      globalThis.debugGraphics?.lineStyle(4, 0x00ff00, 1.0);
+      globalThis.debugGraphics?.moveTo(globalThis.player.unit.x, globalThis.player.unit.y);
       for (let point of path.points) {
-        window.debugGraphics?.lineTo(point.x, point.y);
+        globalThis.debugGraphics?.lineTo(point.x, point.y);
       }
     }
-    const mouseTarget = window.underworld.getMousePos();
+    const mouseTarget = globalThis.underworld.getMousePos();
     const cellX = Math.round(mouseTarget.x / config.OBSTACLE_SIZE);
     const cellY = Math.round(mouseTarget.y / config.OBSTACLE_SIZE);
-    const originalTile = window.map ? window.map.tiles[vec2ToOneDimentionIndex({ x: cellX, y: cellY }, window.map.width)] : undefined;
+    const originalTile = globalThis.map ? globalThis.map.tiles[vec2ToOneDimentionIndex({ x: cellX, y: cellY }, globalThis.map.width)] : undefined;
     const originalTileImage = originalTile ? originalTile.image : '';
     (document.getElementById('debug-info') as HTMLElement).innerText = `x:${Math.round(mouseTarget.x)}, y:${Math.round(mouseTarget.y)}
     cellX: ${cellX}, cellY: ${cellY}
     tile: ${originalTileImage}`;
     // Debug draw cell that mouse is hovered over
-    // window.debugGraphics?.lineStyle(3, 0xff0000, 1);
-    // window.debugGraphics?.moveTo(cellX * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2, cellY * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2);
-    // window.debugGraphics?.lineTo(cellX * config.OBSTACLE_SIZE + config.OBSTACLE_SIZE / 2, cellY * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2);
-    // window.debugGraphics?.lineTo(cellX * config.OBSTACLE_SIZE + config.OBSTACLE_SIZE / 2, cellY * config.OBSTACLE_SIZE + config.OBSTACLE_SIZE / 2);
-    // window.debugGraphics?.lineTo(cellX * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2, cellY * config.OBSTACLE_SIZE + config.OBSTACLE_SIZE / 2);
-    // window.debugGraphics?.lineTo(cellX * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2, cellY * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2);
+    // globalThis.debugGraphics?.lineStyle(3, 0xff0000, 1);
+    // globalThis.debugGraphics?.moveTo(cellX * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2, cellY * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2);
+    // globalThis.debugGraphics?.lineTo(cellX * config.OBSTACLE_SIZE + config.OBSTACLE_SIZE / 2, cellY * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2);
+    // globalThis.debugGraphics?.lineTo(cellX * config.OBSTACLE_SIZE + config.OBSTACLE_SIZE / 2, cellY * config.OBSTACLE_SIZE + config.OBSTACLE_SIZE / 2);
+    // globalThis.debugGraphics?.lineTo(cellX * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2, cellY * config.OBSTACLE_SIZE + config.OBSTACLE_SIZE / 2);
+    // globalThis.debugGraphics?.lineTo(cellX * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2, cellY * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2);
     // Draw the pathing walls
-    for (let lineSegment of window.underworld.pathingLineSegments) {
-      window.debugGraphics?.lineStyle(2, 0xffaabb, 1.0);
-      window.debugGraphics?.moveTo(lineSegment.p1.x, lineSegment.p1.y);
-      window.debugGraphics?.lineTo(lineSegment.p2.x, lineSegment.p2.y);
+    for (let lineSegment of globalThis.underworld.pathingLineSegments) {
+      globalThis.debugGraphics?.lineStyle(2, 0xffaabb, 1.0);
+      globalThis.debugGraphics?.moveTo(lineSegment.p1.x, lineSegment.p1.y);
+      globalThis.debugGraphics?.lineTo(lineSegment.p2.x, lineSegment.p2.y);
     }
     // Draw bounds that prevent movement
-    for (let bound of window.underworld.liquidBounds) {
-      window.debugGraphics?.lineStyle(2, 0x0000ff, 1.0);
-      window.debugGraphics?.moveTo(bound.p1.x, bound.p1.y);
-      window.debugGraphics?.lineTo(bound.p2.x, bound.p2.y);
+    for (let bound of globalThis.underworld.liquidBounds) {
+      globalThis.debugGraphics?.lineStyle(2, 0x0000ff, 1.0);
+      globalThis.debugGraphics?.moveTo(bound.p1.x, bound.p1.y);
+      globalThis.debugGraphics?.lineTo(bound.p2.x, bound.p2.y);
     }
     // Draw walls that prevent line of sight 
-    for (let wall of window.underworld.walls) {
-      window.debugGraphics?.lineStyle(2, 0x00ff00, 1.0);
-      window.debugGraphics?.moveTo(wall.p1.x, wall.p1.y);
-      window.debugGraphics?.lineTo(wall.p2.x, wall.p2.y);
+    for (let wall of globalThis.underworld.walls) {
+      globalThis.debugGraphics?.lineStyle(2, 0x00ff00, 1.0);
+      globalThis.debugGraphics?.moveTo(wall.p1.x, wall.p1.y);
+      globalThis.debugGraphics?.lineTo(wall.p2.x, wall.p2.y);
     }
     // Draw underworld limits
-    // window.debugGraphics?.lineStyle(2, 0xff0000, 1.0);
-    // window.debugGraphics?.moveTo(window.underworld.limits.xMin, window.underworld.limits.yMin);
-    // window.debugGraphics?.lineTo(window.underworld.limits.xMax, window.underworld.limits.yMin);
-    // window.debugGraphics?.lineTo(window.underworld.limits.xMax, window.underworld.limits.yMax);
-    // window.debugGraphics?.lineTo(window.underworld.limits.xMin, window.underworld.limits.yMax);
-    // window.debugGraphics?.lineTo(window.underworld.limits.xMin, window.underworld.limits.yMin);
+    // globalThis.debugGraphics?.lineStyle(2, 0xff0000, 1.0);
+    // globalThis.debugGraphics?.moveTo(globalThis.underworld.limits.xMin, globalThis.underworld.limits.yMin);
+    // globalThis.debugGraphics?.lineTo(globalThis.underworld.limits.xMax, globalThis.underworld.limits.yMin);
+    // globalThis.debugGraphics?.lineTo(globalThis.underworld.limits.xMax, globalThis.underworld.limits.yMax);
+    // globalThis.debugGraphics?.lineTo(globalThis.underworld.limits.xMin, globalThis.underworld.limits.yMax);
+    // globalThis.debugGraphics?.lineTo(globalThis.underworld.limits.xMin, globalThis.underworld.limits.yMin);
 
   }
 }
 function drawWalkRope(target: Vec2) {
-  if (!window.player) {
+  if (!globalThis.player) {
     return
   }
   //
@@ -319,33 +319,33 @@ function drawWalkRope(target: Vec2) {
   // There are dots dilineating how far the unit can move each turn.
   //
   // Show walk path
-  window.walkPathGraphics?.clear();
-  walkRopePath = window.underworld.calculatePath(walkRopePath, Vec.round(window.player.unit), Vec.round(target));
+  globalThis.walkPathGraphics?.clear();
+  walkRopePath = globalThis.underworld.calculatePath(walkRopePath, Vec.round(globalThis.player.unit), Vec.round(target));
   const { points: currentPlayerPath } = walkRopePath;
   if (currentPlayerPath.length) {
-    const turnStopPoints = pointsEveryXDistanceAlongPath(window.player.unit, currentPlayerPath, window.player.unit.staminaMax, window.player.unit.staminaMax - window.player.unit.stamina);
-    window.walkPathGraphics?.lineStyle(4, 0xffffff, 1.0);
-    window.walkPathGraphics?.moveTo(window.player.unit.x, window.player.unit.y);
-    let lastPoint: Vec2 = window.player.unit;
+    const turnStopPoints = pointsEveryXDistanceAlongPath(globalThis.player.unit, currentPlayerPath, globalThis.player.unit.staminaMax, globalThis.player.unit.staminaMax - globalThis.player.unit.stamina);
+    globalThis.walkPathGraphics?.lineStyle(4, 0xffffff, 1.0);
+    globalThis.walkPathGraphics?.moveTo(globalThis.player.unit.x, globalThis.player.unit.y);
+    let lastPoint: Vec2 = globalThis.player.unit;
     let distanceCovered = 0;
-    const distanceLeftToMove = window.player.unit.stamina;
+    const distanceLeftToMove = globalThis.player.unit.stamina;
     for (let i = 0; i < currentPlayerPath.length; i++) {
       const point = currentPlayerPath[i];
       if (point) {
         const thisLineDistance = distance(lastPoint, point);
         if (distanceCovered > distanceLeftToMove) {
-          window.walkPathGraphics?.lineStyle(4, 0xffffff, 1.0);
-          window.walkPathGraphics?.lineTo(point.x, point.y);
+          globalThis.walkPathGraphics?.lineStyle(4, 0xffffff, 1.0);
+          globalThis.walkPathGraphics?.lineTo(point.x, point.y);
         } else {
-          window.walkPathGraphics?.lineStyle(4, colors.stamina, 1.0);
+          globalThis.walkPathGraphics?.lineStyle(4, colors.stamina, 1.0);
           if (distanceCovered + thisLineDistance > distanceLeftToMove) {
             // Draw up to the firstStop with the stamina color
             const pointAtWhichUnitOutOfStamina = getCoordsAtDistanceTowardsTarget(lastPoint, point, distanceLeftToMove - distanceCovered);
-            window.walkPathGraphics?.lineTo(pointAtWhichUnitOutOfStamina.x, pointAtWhichUnitOutOfStamina.y);
-            window.walkPathGraphics?.lineStyle(4, 0xffffff, 1.0);
-            window.walkPathGraphics?.lineTo(point.x, point.y);
+            globalThis.walkPathGraphics?.lineTo(pointAtWhichUnitOutOfStamina.x, pointAtWhichUnitOutOfStamina.y);
+            globalThis.walkPathGraphics?.lineStyle(4, 0xffffff, 1.0);
+            globalThis.walkPathGraphics?.lineTo(point.x, point.y);
           } else {
-            window.walkPathGraphics?.lineTo(point.x, point.y);
+            globalThis.walkPathGraphics?.lineTo(point.x, point.y);
           }
         }
         distanceCovered += distance(lastPoint, point);
@@ -356,24 +356,24 @@ function drawWalkRope(target: Vec2) {
     // Draw the points along the path at which the unit will stop on each turn
     for (let i = 0; i < turnStopPoints.length; i++) {
       if (i == 0 && distanceLeftToMove > 0) {
-        window.walkPathGraphics?.lineStyle(4, colors.stamina, 1.0);
+        globalThis.walkPathGraphics?.lineStyle(4, colors.stamina, 1.0);
       } else {
-        window.walkPathGraphics?.lineStyle(4, 0xffffff, 1.0);
+        globalThis.walkPathGraphics?.lineStyle(4, 0xffffff, 1.0);
       }
       const point = turnStopPoints[i];
       if (point) {
-        window.walkPathGraphics?.drawCircle(point.x, point.y, 3);
+        globalThis.walkPathGraphics?.drawCircle(point.x, point.y, 3);
       }
     }
     if (turnStopPoints.length == 0 && distanceLeftToMove > 0) {
-      window.walkPathGraphics?.lineStyle(4, colors.stamina, 1.0);
+      globalThis.walkPathGraphics?.lineStyle(4, colors.stamina, 1.0);
     } else {
-      window.walkPathGraphics?.lineStyle(4, 0xffffff, 1.0);
+      globalThis.walkPathGraphics?.lineStyle(4, 0xffffff, 1.0);
     }
     // Draw a stop circle at the end
     const lastPointInPath = currentPlayerPath[currentPlayerPath.length - 1]
     if (lastPointInPath) {
-      window.walkPathGraphics?.drawCircle(lastPointInPath.x, lastPointInPath.y, 3);
+      globalThis.walkPathGraphics?.drawCircle(lastPointInPath.x, lastPointInPath.y, 3);
     }
   }
 
@@ -386,24 +386,24 @@ export function contextmenuHandler(e: MouseEvent) {
 export function mouseDownHandler(e: MouseEvent) {
   if (e.button == 1) {
     // setMMBDown so camera will be dragged around
-    window.setMMBDown(true);
+    globalThis.setMMBDown(true);
     e.preventDefault();
   } else if (e.button == 2) {
     e.preventDefault();
-    window.setRMBDown(true);
+    globalThis.setRMBDown(true);
   }
 }
 export function mouseUpHandler(e: MouseEvent) {
   // Turn MMBDown off for any click to protect against it getting stuck
   // as flagged "down"
-  window.setMMBDown(false);
-  if (window.player) {
-    window.player.unit.path = undefined;
+  globalThis.setMMBDown(false);
+  if (globalThis.player) {
+    globalThis.player.unit.path = undefined;
   }
   if (e.button == 2) {
     // Left click clears walk rope
-    window.walkPathGraphics?.clear();
-    window.setRMBDown(false);
+    globalThis.walkPathGraphics?.clear();
+    globalThis.setRMBDown(false);
     e.preventDefault();
   }
 }
@@ -413,18 +413,18 @@ export function onWindowBlur() {
   // while they alt tab, which - without the following line -
   // would mean that it's stuck "up" when they return to the game
   // if they were to release it when this document wasn't focused
-  window.setMMBDown(false);
+  globalThis.setMMBDown(false);
 }
 // Handle clicks on the game board
 export function clickHandler(_e: MouseEvent) {
   // Only handle clicks when viewing the Game
-  if (window.view !== View.Game) {
+  if (globalThis.view !== View.Game) {
     return;
   }
-  if (!window.underworld) {
+  if (!globalThis.underworld) {
     return;
   }
-  const mousePos = window.underworld.getMousePos();
+  const mousePos = globalThis.underworld.getMousePos();
   if (isOutOfBounds(mousePos)) {
     // Disallow click out of bounds
     return;
@@ -433,9 +433,9 @@ export function clickHandler(_e: MouseEvent) {
   // If a spell exists (based on the combination of cards selected)...
   if (CardUI.areAnyCardsSelected()) {
     // Only allow casting in the proper phase and on player's turn only
-    if (window.underworld.isMyTurn()) {
+    if (globalThis.underworld.isMyTurn()) {
       // Get current client's player
-      const selfPlayer = window.player;
+      const selfPlayer = globalThis.player;
       // If the player casting is the current client player
       if (selfPlayer) {
         // cast the spell
@@ -473,7 +473,7 @@ export function clickHandler(_e: MouseEvent) {
           // assume the user is trying to cast at the end of their range.
           const endRangeTarget = getEndOfRangeTarget(selfPlayer, target);
           // OR if the first card doesn't require a unit target (like summon_decoy), allow casting at end range
-          if (window.underworld.hasInitialTarget(endRangeTarget) || (cards[0] && cards[0].allowNonUnitTarget)) {
+          if (globalThis.underworld.hasInitialTarget(endRangeTarget) || (cards[0] && cards[0].allowNonUnitTarget)) {
             target = endRangeTarget;
           } else {
             // If there is no target at end range, just show that they are trying to cast out of range
@@ -489,8 +489,8 @@ export function clickHandler(_e: MouseEvent) {
         // Abort casting if there is no unitAtCastLocation
         // unless the first card (like AOE) specifically allows casting
         // on non unit targets
-        const unitAtCastLocation = window.underworld.getUnitAt(target);
-        const pickupAtCastLocation = window.underworld.getPickupAt(target);
+        const unitAtCastLocation = globalThis.underworld.getUnitAt(target);
+        const pickupAtCastLocation = globalThis.underworld.getPickupAt(target);
         if ((!unitAtCastLocation && !pickupAtCastLocation) && cards.length && cards[0] && !cards[0].allowNonUnitTarget) {
           floatingText({
             coords: target,
@@ -501,9 +501,9 @@ export function clickHandler(_e: MouseEvent) {
         }
         clearSpellEffectProjection();
         // Clear resMarkers so they don't hang around once the spell is cast
-        window.resMarkers = [];
+        globalThis.resMarkers = [];
 
-        window.pie.sendData({
+        globalThis.pie.sendData({
           type: MESSAGE_TYPES.SPELL,
           x: target.x,
           y: target.y,
@@ -511,7 +511,7 @@ export function clickHandler(_e: MouseEvent) {
         });
         CardUI.clearSelectedCards();
       } else {
-        console.error("Attempting to cast while window.player is undefined");
+        console.error("Attempting to cast while globalThis.player is undefined");
       }
     } else {
       floatingText({

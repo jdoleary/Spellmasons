@@ -78,8 +78,8 @@ export default async function Jprompt(prompt: Prompt): Promise<boolean> {
 }
 
 export function explainManaOverfill() {
-    if (window.player) {
-        if (window.player.unit.mana > window.player.unit.manaMax && window.allowCookies) {
+    if (globalThis.player) {
+        if (globalThis.player.unit.mana > globalThis.player.unit.manaMax && globalThis.allowCookies) {
             const MANA_INFO_STORAGE_KEY = 'mana-info';
             const YES = 'y'
             if (storage.get(MANA_INFO_STORAGE_KEY) != YES) {

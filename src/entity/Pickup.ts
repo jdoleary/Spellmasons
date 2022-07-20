@@ -111,7 +111,7 @@ export function create({ pos, pickupSource, onTurnsLeftDone }:
     }
   }
 
-  window.underworld.addPickupToArray(self, false);
+  globalThis.underworld.addPickupToArray(self, false);
 
   return self;
 }
@@ -154,11 +154,11 @@ export function load(pickup: IPickup) {
 }
 export function removePickup(pickup: IPickup, prediction: boolean) {
   Image.cleanup(pickup.image);
-  window.underworld.removePickupFromArray(pickup, prediction);
+  globalThis.underworld.removePickupFromArray(pickup, prediction);
   checkIfNeedToClearTooltip();
 }
 export function triggerPickup(pickup: IPickup, unit: IUnit, prediction: boolean) {
-  const player = window.underworld.players.find((p) => p.unit === unit);
+  const player = globalThis.underworld.players.find((p) => p.unit === unit);
   if (pickup.playerOnly && !player) {
     // If pickup is playerOnly, do not trigger if a player is not the one triggering it
     return;
@@ -205,8 +205,8 @@ export const pickups: IPickupSource[] = [
     effect: ({ unit, player }) => {
       // Only send the ENTER_PORTAL message from
       // the client of the player that entered the portal
-      if (player && player == window.player) {
-        window.pie.sendData({
+      if (player && player == globalThis.player) {
+        globalThis.pie.sendData({
           type: MESSAGE_TYPES.ENTER_PORTAL
         });
       }
@@ -229,7 +229,7 @@ export const pickups: IPickupSource[] = [
     turnsLeftToGrab: 4,
     playerOnly: true,
     effect: ({ unit, player }) => {
-      window.underworld.showUpgrades(false);
+      globalThis.underworld.showUpgrades(false);
       return true;
     },
   },
@@ -278,7 +278,7 @@ export const pickups: IPickupSource[] = [
         // mana state with the player's predictionUnit so it is properly
         // refelcted in the mana bar
         // (note: this would be auto corrected on the next mouse move anyway)
-        window.underworld.syncPlayerPredictionUnitOnly();
+        globalThis.underworld.syncPlayerPredictionUnitOnly();
         return true;
       }
       return false;
@@ -314,7 +314,7 @@ export const pickups: IPickupSource[] = [
         // mana state with the player's predictionUnit so it is properly
         // refelcted in the health bar
         // (note: this would be auto corrected on the next mouse move anyway)
-        window.underworld.syncPlayerPredictionUnitOnly();
+        globalThis.underworld.syncPlayerPredictionUnitOnly();
         return true;
       }
       return false;

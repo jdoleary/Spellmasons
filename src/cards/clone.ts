@@ -31,23 +31,23 @@ Clones each target
       // Clone all the batched clone jobs
       for (let [target, cloneSourceCoords] of clonePairs) {
         if (target) {
-          const unit = window.underworld.getUnitAt(target, prediction);
+          const unit = globalThis.underworld.getUnitAt(target, prediction);
           // Since pickups aren't currently considered in prediction predictions just return undefined
           // if this is a prediction or else it will ACTUALLY clone pickups when just making predictions
           // 2022-05-09
-          const pickup = prediction ? undefined : window.underworld.getPickupAt(target, prediction);
+          const pickup = prediction ? undefined : globalThis.underworld.getPickupAt(target, prediction);
 
           // If there is are clone coordinates to clone into
           if (cloneSourceCoords) {
             if (unit) {
               // Jitter prevents multiple clones from spawning on top of each other
-              const validSpawnCoords = window.underworld.findValidSpawn(jitter(cloneSourceCoords, config.COLLISION_MESH_RADIUS / 2), 5);
+              const validSpawnCoords = globalThis.underworld.findValidSpawn(jitter(cloneSourceCoords, config.COLLISION_MESH_RADIUS / 2), 5);
               if (validSpawnCoords) {
                 const clone = Unit.load(Unit.serialize(unit), prediction);
                 if (!prediction) {
                   // Change id of the clone so that it doesn't share the same
                   // 'supposed-to-be-unique' id of the original
-                  clone.id = ++window.underworld.lastUnitId;
+                  clone.id = ++globalThis.underworld.lastUnitId;
                 }
                 // If the cloned unit is player controlled, make them be controlled by the AI
                 if (clone.unitSubType == UnitSubType.PLAYER_CONTROLLED) {
@@ -60,7 +60,7 @@ Clones each target
               }
             }
             if (pickup) {
-              const validSpawnCoords = window.underworld.findValidSpawn(cloneSourceCoords, 5)
+              const validSpawnCoords = globalThis.underworld.findValidSpawn(cloneSourceCoords, 5)
               if (validSpawnCoords) {
                 const clone = Pickup.load(pickup);
                 Pickup.setPosition(clone, validSpawnCoords.x, validSpawnCoords.y);

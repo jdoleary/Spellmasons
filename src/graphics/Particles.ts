@@ -7,7 +7,7 @@ import { normalizeAngle } from '../jmath/Angle';
 import seedrandom from 'seedrandom';
 import { raceTimeout } from '../Promise';
 
-export const containerParticles = !window.pixi ? undefined : new window.pixi.ParticleContainer(5000, {
+export const containerParticles = !globalThis.pixi ? undefined : new globalThis.pixi.ParticleContainer(5000, {
     scale: true,
     position: true,
     rotation: false,
@@ -136,11 +136,11 @@ export function updateParticlees(delta: number) {
 }
 
 function createTexture() {
-    if (!window.pixi) {
+    if (!globalThis.pixi) {
         return undefined;
     }
     const img = new Image();
     img.src = './images/particle.png';
-    const base = new window.pixi.BaseTexture(img);
-    return new window.pixi.Texture(base);
+    const base = new globalThis.pixi.BaseTexture(img);
+    return new globalThis.pixi.Texture(base);
 }

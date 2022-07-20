@@ -21,10 +21,10 @@ export function set(key: keyof typeof readyState, value: boolean) {
         let urlSearchParams = new URLSearchParams(location.search);
         let gameName = urlSearchParams.get("game");
         if (gameName) {
-            if (window.joinRoom) {
-                window.joinRoom({ name: gameName })
+            if (globalThis.joinRoom) {
+                globalThis.joinRoom({ name: gameName })
             } else {
-                console.error('window.joinRoom is undefined')
+                console.error('globalThis.joinRoom is undefined')
             }
         } else {
             console.error('Cannot join room, "gameName" is falsey');

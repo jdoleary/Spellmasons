@@ -79,7 +79,7 @@ const unit: UnitSource = {
     // If they have enough mana
     if (unit.mana >= CAST_MANA_COST) {
       // Heal (in order to damage) enemy vampires
-      const enemyVampires = window.underworld.units.filter(
+      const enemyVampires = globalThis.underworld.units.filter(
         u => u.faction !== unit.faction && isVampire(u)
       );
       if (enemyVampires.length) {
@@ -87,7 +87,7 @@ const unit: UnitSource = {
         didAction = await healOneOf(unit, enemyVampires);
       } else {
         // Heal an ally
-        const damagedAllys = window.underworld.units.filter(
+        const damagedAllys = globalThis.underworld.units.filter(
           // Only select allies, that are alive, that are damaged, and that aren't SUPPORT_CLASS cause it's
           // annoying when priests heal each other.
           // Also exclude vampires because vampires take health as DAMAGE! And we don't want priests hurting their ally vampires

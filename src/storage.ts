@@ -1,5 +1,5 @@
 export function set(key: string, value: any) {
-    if (window.allowCookies) {
+    if (globalThis.allowCookies) {
         localStorage.setItem(key, value);
         console.log('Setting ', key, 'to', value, 'in local storage');
     } else {
@@ -7,7 +7,7 @@ export function set(key: string, value: any) {
     }
 }
 export function assign(key: string, value: object) {
-    if (window.allowCookies) {
+    if (globalThis.allowCookies) {
         const obj = localStorage.getItem(key);
         let json = {};
         if (obj) {
@@ -21,7 +21,7 @@ export function assign(key: string, value: object) {
     }
 }
 export function get(key: string): string | null {
-    if (window.allowCookies) {
+    if (globalThis.allowCookies) {
         return localStorage.getItem(key);
     } else {
         console.log(`Could not retrieve "${key}" from storage, without cookie consent`);

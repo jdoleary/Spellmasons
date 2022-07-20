@@ -60,9 +60,9 @@ const spell: Spell = {
     onDeath: async (unit: IUnit, prediction: boolean) => {
       drawPredictionCircle(unit, range);
       if (!prediction) {
-        window.underworld.animateSpell(unit, 'explode-on-death.png');
+        globalThis.underworld.animateSpell(unit, 'explode-on-death.png');
       }
-      window.underworld.getUnitsWithinDistanceOfTarget(
+      globalThis.underworld.getUnitsWithinDistanceOfTarget(
         unit,
         range,
         prediction
@@ -72,7 +72,7 @@ const spell: Spell = {
         // Deal damage to units
         takeDamage(u, damage, prediction);
       });
-      window.underworld.getPickupsWithinDistanceOfTarget(
+      globalThis.underworld.getPickupsWithinDistanceOfTarget(
         unit,
         range
       ).forEach(p => {

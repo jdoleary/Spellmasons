@@ -12,32 +12,32 @@ import { elPIXIHolder } from './FloatingText';
 // if PIXI is finished setting up
 let isReady = false;
 // Ensure textures stay pixelated when scaled:
-if (window.pixi) {
+if (globalThis.pixi) {
   // Copied from pixi.js so pixi.js wont have to be imported in headless
   enum SCALE_MODES {
     NEAREST = 0,
     LINEAR = 1
   }
-  window.pixi.settings.SCALE_MODE = SCALE_MODES.NEAREST;
+  globalThis.pixi.settings.SCALE_MODE = SCALE_MODES.NEAREST;
 }
 // PIXI app
-export const app = !window.pixi ? undefined : new window.pixi.Application();
-export const containerBoard = !window.pixi ? undefined : new window.pixi.Container();
-export const containerBetweenBoardAndWalls = !window.pixi ? undefined : new window.pixi.Container();
-export const containerWalls = !window.pixi ? undefined : new window.pixi.Container();
-export const containerPlanningView = !window.pixi ? undefined : new window.pixi.Container();
-export const containerDoodads = !window.pixi ? undefined : new window.pixi.Container();
-export const containerUnits = !window.pixi ? undefined : new window.pixi.Container();
-export const containerSpells = !window.pixi ? undefined : new window.pixi.Container();
-export const containerProjectiles = !window.pixi ? undefined : new window.pixi.Container();
-export const containerUI = !window.pixi ? undefined : new window.pixi.Container();
-export const containerPlayerThinking = !window.pixi ? undefined : new window.pixi.Container();
-export const containerUIFixed = !window.pixi ? undefined : new window.pixi.Container();
-export const containerFloatingText = !window.pixi ? undefined : new window.pixi.Container();
+export const app = !globalThis.pixi ? undefined : new globalThis.pixi.Application();
+export const containerBoard = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
+export const containerBetweenBoardAndWalls = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
+export const containerWalls = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
+export const containerPlanningView = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
+export const containerDoodads = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
+export const containerUnits = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
+export const containerSpells = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
+export const containerProjectiles = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
+export const containerUI = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
+export const containerPlayerThinking = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
+export const containerUIFixed = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
+export const containerFloatingText = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 
 export function resizePixi() {
   if (app) {
-    app.renderer.resize(window.innerWidth, window.innerHeight);
+    app.renderer.resize(globalThis.innerWidth, globalThis.innerHeight);
   }
 }
 interface UtilProps {
@@ -58,12 +58,12 @@ const utilProps: UtilProps = {
   doCameraAutoFollow: true,
 }
 // debug: Draw caves
-if (window.pixi && containerUI && app && containerBetweenBoardAndWalls) {
-  window.debugCave = new window.pixi.Graphics();
-  containerUI.addChild(window.debugCave);
-  window.devDebugGraphics = new window.pixi.Graphics();
-  window.devDebugGraphics.lineStyle(3, 0x0000ff, 1.0);
-  containerUI.addChild(window.devDebugGraphics);
+if (globalThis.pixi && containerUI && app && containerBetweenBoardAndWalls) {
+  globalThis.debugCave = new globalThis.pixi.Graphics();
+  containerUI.addChild(globalThis.debugCave);
+  globalThis.devDebugGraphics = new globalThis.pixi.Graphics();
+  globalThis.devDebugGraphics.lineStyle(3, 0x0000ff, 1.0);
+  containerUI.addChild(globalThis.devDebugGraphics);
 
   if (containerBoard &&
     containerBetweenBoardAndWalls &&
@@ -100,24 +100,24 @@ if (window.pixi && containerUI && app && containerBetweenBoardAndWalls) {
   utilProps.elPIXIHolder = document.getElementById('PIXI-holder') as (HTMLElement | undefined);
   utilProps.elCardHand = document.getElementById('card-hand') as (HTMLElement | undefined);
   utilProps.elHealthMana = document.getElementById('health-mana') as (HTMLElement | undefined);
-  window.debugGraphics = new window.pixi.Graphics();
-  containerUI.addChild(window.debugGraphics);
-  window.unitOverlayGraphics = new window.pixi.Graphics();
-  containerUI.addChild(window.unitOverlayGraphics);
-  window.walkPathGraphics = new window.pixi.Graphics();
-  containerUI.addChild(window.walkPathGraphics);
-  window.thinkingPlayerGraphics = new window.pixi.Graphics();
-  window.radiusGraphics = new window.pixi.Graphics();
-  const colorMatrix = new window.pixi.filters.AlphaFilter();
+  globalThis.debugGraphics = new globalThis.pixi.Graphics();
+  containerUI.addChild(globalThis.debugGraphics);
+  globalThis.unitOverlayGraphics = new globalThis.pixi.Graphics();
+  containerUI.addChild(globalThis.unitOverlayGraphics);
+  globalThis.walkPathGraphics = new globalThis.pixi.Graphics();
+  containerUI.addChild(globalThis.walkPathGraphics);
+  globalThis.thinkingPlayerGraphics = new globalThis.pixi.Graphics();
+  globalThis.radiusGraphics = new globalThis.pixi.Graphics();
+  const colorMatrix = new globalThis.pixi.filters.AlphaFilter();
   colorMatrix.alpha = 0.2;
-  window.radiusGraphics.filters = [colorMatrix];
-  containerBetweenBoardAndWalls.addChild(window.radiusGraphics);
+  globalThis.radiusGraphics.filters = [colorMatrix];
+  containerBetweenBoardAndWalls.addChild(globalThis.radiusGraphics);
 
 
   app.renderer.backgroundColor = colors.abyss;
 
-  window.addEventListener('resize', resizePixi);
-  window.addEventListener('load', () => {
+  globalThis.addEventListener('resize', resizePixi);
+  globalThis.addEventListener('load', () => {
     resizePixi();
   });
   // Initialize with camera following player:
@@ -148,25 +148,25 @@ export function withinCameraBounds(position: Vec2, marginHoriz?: number): Vec2 {
   const marginTop = 45 / zoom;
   const marginBottom = 45 / zoom;
   const left = margin + camX / zoom;
-  const right = window.innerWidth / zoom - margin + camX / zoom;
+  const right = globalThis.innerWidth / zoom - margin + camX / zoom;
   const top = marginTop + camY / zoom;
   const bottom = utilProps.elPIXIHolder.clientHeight / zoom - marginBottom + camY / zoom;
 
   // Debug draw camera limit
-  // window.unitOverlayGraphics.lineStyle(4, 0xcb00f5, 1.0);
-  // window.unitOverlayGraphics.moveTo(left, top);
-  // window.unitOverlayGraphics.lineTo(right, top);
-  // window.unitOverlayGraphics.lineTo(right, bottom);
-  // window.unitOverlayGraphics.lineTo(left, bottom);
-  // window.unitOverlayGraphics.lineTo(left, top);
+  // globalThis.unitOverlayGraphics.lineStyle(4, 0xcb00f5, 1.0);
+  // globalThis.unitOverlayGraphics.moveTo(left, top);
+  // globalThis.unitOverlayGraphics.lineTo(right, top);
+  // globalThis.unitOverlayGraphics.lineTo(right, bottom);
+  // globalThis.unitOverlayGraphics.lineTo(left, bottom);
+  // globalThis.unitOverlayGraphics.lineTo(left, top);
 
   // Keep inside bounds of camera
   const withinBoundsPos: Vec2 = {
     x: Math.min(Math.max(left, position.x), right),
     y: Math.min(Math.max(top, position.y), bottom)
   }
-  // window.unitOverlayGraphics.drawCircle(camX / zoom, camY / zoom, 4);
-  // window.unitOverlayGraphics.drawCircle(cardHandRight, cardHandTop, 8);
+  // globalThis.unitOverlayGraphics.drawCircle(camX / zoom, camY / zoom, 4);
+  // globalThis.unitOverlayGraphics.drawCircle(cardHandRight, cardHandTop, 8);
 
   // Don't let the attention marker get obscured by the cardHolders element
   const cardHandRight = (cardHandRect.width + (camX - cardHandPaddingRight)) / zoom;
@@ -205,9 +205,9 @@ export function getCamera() {
   }
 }
 function calculateCameraZoom() {
-  return !app ? 0 : app.stage.scale.x + (window.zoomTarget - app.stage.scale.x) / 8;
+  return !app ? 0 : app.stage.scale.x + (globalThis.zoomTarget - app.stage.scale.x) / 8;
 }
-let lastZoom = window.zoomTarget;
+let lastZoom = globalThis.zoomTarget;
 export function updateCameraPosition() {
   if (!(app)) {
     return
@@ -221,20 +221,20 @@ export function updateCameraPosition() {
   app.stage.scale.x = zoom;
   app.stage.scale.y = zoom;
 
-  switch (window.view) {
+  switch (globalThis.view) {
     case View.Game:
-      if (window.player) {
+      if (globalThis.player) {
         if (utilProps.doCameraAutoFollow) {
-          const activeTurnPlayer = window.underworld.players[window.underworld.playerTurnIndex];
-          if (!window.player.inPortal && window.player.unit.alive) {
+          const activeTurnPlayer = globalThis.underworld.players[globalThis.underworld.playerTurnIndex];
+          if (!globalThis.player.inPortal && globalThis.player.unit.alive) {
             // Follow current client player
-            utilProps.camera = clone(window.player.unit);
+            utilProps.camera = clone(globalThis.player.unit);
           } else if (activeTurnPlayer) {
             // Follow active turn player
             utilProps.camera = clone(activeTurnPlayer.unit);
           } else {
             // Set camera to the center of the map
-            utilProps.camera = { x: (window.underworld.limits.xMax - window.underworld.limits.xMin) / 2, y: (window.underworld.limits.yMax - window.underworld.limits.yMin) / 2 };
+            utilProps.camera = { x: (globalThis.underworld.limits.xMax - globalThis.underworld.limits.xMin) / 2, y: (globalThis.underworld.limits.yMax - globalThis.underworld.limits.yMin) / 2 };
           }
         }
         // Allow camera movement via WSAD
@@ -259,7 +259,7 @@ export function updateCameraPosition() {
           const marginX = config.COLLISION_MESH_RADIUS * 4;
           // Clamp camera X
           const mapLeftMostPoint = 0 - marginX;
-          const mapRightMostPoint = window.underworld.limits.xMax + marginX;
+          const mapRightMostPoint = globalThis.underworld.limits.xMax + marginX;
           const camCenterXMin = mapLeftMostPoint + elPIXIHolder.clientWidth / 2 / zoom;
           const camCenterXMax = mapRightMostPoint - elPIXIHolder.clientWidth / 2 / zoom;
           // If the supposed minimum is more than the maximum, just center the camera:
@@ -272,7 +272,7 @@ export function updateCameraPosition() {
 
           //Clamp camera Y
           const mapTopMostPoint = 0 - marginY;
-          const mapBottomMostPoint = window.underworld.limits.yMax + marginY;
+          const mapBottomMostPoint = globalThis.underworld.limits.yMax + marginY;
           const camCenterYMin = mapTopMostPoint + elPIXIHolder.clientHeight / 2 / zoom;
           const camCenterYMax = mapBottomMostPoint - elPIXIHolder.clientHeight / 2 / zoom;
           // If the supposed minimum is more than the maximum, just center the camera:
@@ -351,7 +351,7 @@ export function setupPixi(): Promise<void> {
   return loadTextures().then(() => {
     // Resolve the setupPixiPromise so that the menu knows
     // that pixijs is ready
-    window.pixiPromiseResolver();
+    globalThis.pixiPromiseResolver();
   });
 }
 export function addPixiContainersForView(view: View) {
@@ -385,8 +385,8 @@ function removeContainers(containers: PIXI.Container[]) {
 }
 function loadTextures(): Promise<void> {
   return new Promise((resolve, reject) => {
-    if (!window.headless && window.pixi) {
-      const loader = window.pixi.Loader.shared;
+    if (!globalThis.headless && globalThis.pixi) {
+      const loader = globalThis.pixi.Loader.shared;
       // loader.onProgress.add(a => console.log("onProgress", a)); // called once per loaded/errored file
       // loader.onError.add(e => console.error("Pixi loader on error:", e)); // called once per errored file
       // loader.onLoad.add(a => console.log("Pixi loader onLoad", a)); // called once per loaded file
@@ -405,7 +405,7 @@ function loadTextures(): Promise<void> {
         }
       });
     } else {
-      console.error('window.pixi is undefined')
+      console.error('globalThis.pixi is undefined')
     }
   });
 }
@@ -440,16 +440,16 @@ export function addPixiSpriteAnimated(
       'PIXI is not finished setting up.  Cannot add a sprite yet',
     );
   }
-  if (!(window.pixi && parent)) {
+  if (!(globalThis.pixi && parent)) {
     // For headless
     return
   }
   let sprite: JSpriteAnimated;
   let texture = sheet.animations[imagePath];
   if (texture) {
-    const animatedSprite = new window.pixi.AnimatedSprite(texture);
+    const animatedSprite = new globalThis.pixi.AnimatedSprite(texture);
     animatedSprite.animationSpeed = options.animationSpeed || 0.1;
-    if (window.devMode) {
+    if (globalThis.devMode) {
       animatedSprite.animationSpeed = 0.5;
     }
     if (options.onComplete) {
@@ -483,12 +483,12 @@ export function addPixiSprite(
       'PIXI is not finished setting up.  Cannot add a sprite yet',
     );
   }
-  if (!(window.pixi && parent)) {
+  if (!(globalThis.pixi && parent)) {
     // For headless server
     return undefined;
   }
   let singleTexture = sheet.textures[imagePath];
-  const sprite = new window.pixi.Sprite(singleTexture);
+  const sprite = new globalThis.pixi.Sprite(singleTexture);
   if (!singleTexture) {
     console.error('Could not find non-animated texture for', imagePath);
   }
@@ -501,8 +501,8 @@ export function addPixiSprite(
 }
 
 export function pixiText(text: string, style: Partial<PIXI.ITextStyle>): PIXI.Text | undefined {
-  if (!window.pixi) {
+  if (!globalThis.pixi) {
     return undefined;
   }
-  return new window.pixi.Text(text, style);
+  return new globalThis.pixi.Text(text, style);
 }

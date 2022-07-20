@@ -45,13 +45,13 @@ export function subtract(p1: Vec2, p2: Vec2): Vec2 {
 // jitter returns a new Vec2 which is the original pos
 // moved randomly capped by maxJitter
 export function jitter(pos: Vec2, maxJitter: number): Vec2 {
-    const jitterX = randInt(window.underworld.random, -maxJitter, maxJitter);
-    const jitterY = randInt(window.underworld.random, -maxJitter, maxJitter);
+    const jitterX = randInt(globalThis.underworld.random, -maxJitter, maxJitter);
+    const jitterY = randInt(globalThis.underworld.random, -maxJitter, maxJitter);
     return add(pos, { x: jitterX, y: jitterY });
 }
 // returns a random Vec2 with x and y capped between min and max inclusive
 export function random(min: number, max: number): Vec2 {
-    return { x: randInt(window.underworld.random, min, max), y: randInt(window.underworld.random, min, max) };
+    return { x: randInt(globalThis.underworld.random, min, max), y: randInt(globalThis.underworld.random, min, max) };
 }
 // Returns a scalar
 export function crossproduct(p1: Vec2, p2: Vec2): number {

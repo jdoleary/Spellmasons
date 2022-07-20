@@ -92,7 +92,7 @@ export function create(clientId: string): IPlayer {
   player.unit.health = PLAYER_BASE_HEALTH;
   player.unit.healthMax = PLAYER_BASE_HEALTH;
 
-  window.underworld.players.push(player);
+  globalThis.underworld.players.push(player);
   return player;
 }
 // TODO: This creates a NEW MultiColorReplaceFilter,
@@ -148,10 +148,10 @@ export function resetPlayerForNextLevel(player: IPlayer) {
   player.unit.mana = player.unit.manaMax;
   player.unit.health = player.unit.healthMax;
   player.unit.stamina = player.unit.staminaMax;
-  if (window.underworld.validPlayerSpawnCoords.length > 0) {
-    const index = randInt(window.underworld.random, 0, window.underworld.validPlayerSpawnCoords.length - 1);
-    console.log('Choose spawn', index, 'of', window.underworld.validPlayerSpawnCoords.length);
-    const spawnCoords = window.underworld.validPlayerSpawnCoords[index];
+  if (globalThis.underworld.validPlayerSpawnCoords.length > 0) {
+    const index = randInt(globalThis.underworld.random, 0, globalThis.underworld.validPlayerSpawnCoords.length - 1);
+    console.log('Choose spawn', index, 'of', globalThis.underworld.validPlayerSpawnCoords.length);
+    const spawnCoords = globalThis.underworld.validPlayerSpawnCoords[index];
     if (spawnCoords) {
       // jitter ensures that units don't perfectly overlap
       Unit.setLocation(player.unit, jitter(spawnCoords, player.unit.radius));
@@ -166,8 +166,8 @@ export function resetPlayerForNextLevel(player: IPlayer) {
 }
 // Keep a global reference to the current client's player
 export function updateGlobalRefToCurrentClientPlayer(player: IPlayer) {
-  if (window.clientId === player.clientId) {
-    window.player = player;
+  if (globalThis.clientId === player.clientId) {
+    globalThis.player = player;
   }
 }
 // Converts a player entity into a serialized form
@@ -183,11 +183,11 @@ export function serialize(player: IPlayer): IPlayerSerialized {
 }
 // load rehydrates a player entity from IPlayerSerialized
 export function load(player: IPlayerSerialized) {
-  const reassignedUnit = window.underworld.units.find(u => u.id == player.unit.id);
+  const reassignedUnit = globalThis.underworld.units.find(u => u.id == player.unit.id);
   if (!reassignedUnit) {
     console.warn('Failed to load player because cannot find associated unit with ID', player.unit.id);
     console.log('Requesting SYNC_PLAYERS from host')
-    window.pie.sendData({
+    globalThis.pie.sendData({
       type: MESSAGE_TYPES.REQUEST_SYNC_PLAYERS
     })
     return
@@ -205,7 +205,7 @@ export function load(player: IPlayerSerialized) {
   setClientConnected(playerLoaded, clients.includes(player.clientId));
   updateGlobalRefToCurrentClientPlayer(playerLoaded);
   CardUI.recalcPositionForCards(playerLoaded);
-  window.underworld.players.push(playerLoaded);
+  globalThis.underworld.players.push(playerLoaded);
   setPlayerRobeColor(playerLoaded);
   return playerLoaded;
 }
@@ -218,7 +218,7 @@ export function setClientConnected(player: IPlayer, connected: boolean) {
   } else {
     Image.addSubSprite(player.unit.image, 'disconnected.png');
     // If they disconnect, end their turn
-    window.underworld.endPlayerTurn(player.clientId);
+    globalThis.underworld.endPlayerTurn(player.clientId);
   }
 }
 export function enterPortal(player: IPlayer) {
@@ -233,7 +233,7 @@ export function enterPortal(player: IPlayer) {
   // your user's move circle in the upper left hand of the map but without the user there)
   clearTooltipSelection();
   // Entering the portal ends the player's turn
-  window.underworld.endPlayerTurn(player.clientId);
+  globalThis.underworld.endPlayerTurn(player.clientId);
 }
 // Note: this is also used for AI targeting to ensure that AI don't target disabled plaeyrs
 export function ableToTakeTurn(player: IPlayer) {
