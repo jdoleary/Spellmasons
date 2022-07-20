@@ -393,7 +393,7 @@ function loadTextures(): Promise<void> {
       // loader.onComplete.add(a => console.log("Pixi loader onComplete")); // called once when the queued resources all load.
       const sheetPath = 'sheet1.json';
       loader.add(sheetPath);
-      loader.load((_loader, resources) => {
+      loader.load((_loader: any, resources: any) => {
         resources = resources;
         const resource = resources[sheetPath]
         if (resource && resource.spritesheet) {

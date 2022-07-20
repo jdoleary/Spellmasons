@@ -372,7 +372,7 @@ export default class Underworld {
       }
     }
     // Sort unit sprites visually by y position (like "z-index")
-    containerUnits?.children.sort((a, b) => a.y - b.y)
+    containerUnits?.children.sort((a: any, b: any) => a.y - b.y)
 
     updateCameraPosition();
     this.drawEnemyAttentionMarkers();
@@ -438,7 +438,7 @@ export default class Underworld {
     // If the real target is in an invalid location,
     // find the closest valid target to represent the endpoint of the path
     if (points.length == 0) {
-      const nearPointsOnWalls = [];
+      const nearPointsOnWalls: Vec2[] = [];
       for (let wall of this.pathingLineSegments) {
         const intersection = findWherePointIntersectLineSegmentAtRightAngle(target, wall);
         if (intersection) {
@@ -1431,7 +1431,7 @@ export default class Underworld {
     this.setTurnPhase(p);
 
     // Clean up invalid units
-    const keepUnits = [];
+    const keepUnits: Unit.IUnit[] = [];
     for (let u of this.units) {
       if (!u.flaggedForRemoval) {
         keepUnits.push(u);
@@ -1906,11 +1906,13 @@ export default class Underworld {
       const hash = objectHash({ target, cardIds });
       if (hash !== globalThis.lastThoughtsHash) {
         globalThis.lastThoughtsHash = hash;
-        globalThis.pie.sendData({
-          type: MESSAGE_TYPES.PLAYER_THINKING,
-          target,
-          cardIds
-        });
+        if (globalThis.pie) {
+          globalThis.pie.sendData({
+            type: MESSAGE_TYPES.PLAYER_THINKING,
+            target,
+            cardIds
+          });
+        }
       }
     }
 

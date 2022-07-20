@@ -126,6 +126,9 @@ export function recalcPositionForCards(player: Player.IPlayer | undefined) {
   if (!globalThis.player) {
     return
   }
+  if (!player) {
+    return;
+  }
   if (globalThis.player !== player) {
     // Do not reconcile dom elements for a player who is not the current client's player
     return;
