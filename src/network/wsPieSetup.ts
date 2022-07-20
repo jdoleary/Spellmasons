@@ -145,6 +145,6 @@ function singleplayerStartGame() {
     globalThis.underworld = new Underworld(Math.random().toString());
     // Mark the underworld as "ready"
     readyState.set('underworld', true);
-    globalThis.lastLevelCreated = globalThis.underworld.syncronousInitLevel(0);
+    globalThis.lastLevelCreated = globalThis.underworld.generateLevelDataSyncronous(0);
   }, 10)
 }

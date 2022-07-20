@@ -292,7 +292,8 @@ export function load(unit: IUnitSerialized, prediction: boolean): IUnit {
     ...restUnit,
     shaderUniforms: {},
     resolveDoneMoving: () => { },
-    image: Image.load(unit.image, getParentContainer(unit.alive)),
+    image: unit.image ? Image.load(unit.image, getParentContainer(unit.alive)) :
+      Image.create({ x: unit.x, y: unit.y }, unit.defaultImagePath, containerUnits),
   };
   setupShaders(loadedunit);
   // Load in shader uniforms by ONLY setting the uniforms that are saved

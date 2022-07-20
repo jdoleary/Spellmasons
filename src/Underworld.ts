@@ -829,6 +829,9 @@ export default class Underworld {
 
   }
   addGroundTileImages() {
+    if (globalThis.headless) {
+      return;
+    }
     // Lay down a ground tile for every tile that is not liquid
     for (let tile of this.imageOnlyTiles.filter(t => t.image.indexOf('liquid') === -1)) {
       if (tile.image) {
@@ -946,58 +949,61 @@ export default class Underworld {
     // this.ensureAllClientsHaveAssociatedPlayers(getClients());
   }
   // creates a level from levelData
+  createLevelSyncronous(levelData: LevelData) {
+    // showUpgrades is invoked by createLevel which is called from a wsPie message
+    // rather than from checkForEndOfLevel() because all players are guarunteed to receive
+    // the CREATE_LEVEL message whereas, checkForEndOfLevel could be subject to a race condition
+    // that might prevent the upgrade screen from showing for some users in rare circumstances.
+    // Better to have the upgrade screen tied to the network message.
+    this.showUpgrades(this.levelIndex !== 0);
+
+    console.log('Setup: createLevel', levelData);
+    globalThis.lastLevelCreated = levelData;
+    // Clean up the previous level
+    this.cleanUpLevel();
+
+    const { levelIndex, limits, imageOnlyTiles, pickups, enemies, obstacles, validPlayerSpawnCoords } = levelData;
+    this.levelIndex = levelIndex;
+    this.limits = limits;
+    // empty tiles are tiles with an image of ''
+    this.cacheWalls(obstacles, imageOnlyTiles.filter(x => x.image == ''));
+    this.imageOnlyTiles = imageOnlyTiles;
+    this.addGroundTileImages();
+    for (let p of pickups) {
+      this.spawnPickup(p.index, p.coord);
+    }
+    for (let e of enemies) {
+      this.spawnEnemy(e.id, e.coord, e.isArmored, e.strength);
+    }
+    // Show text in center of screen for the new level
+    queueCenteredFloatingText(
+      `Level ${this.levelIndex + 1}`,
+      'white'
+    );
+    // validPlayerSpawnCoords must be set before resetting the player
+    // so the player has coords to spawn into
+    this.validPlayerSpawnCoords = validPlayerSpawnCoords;
+    for (let player of this.players) {
+      Player.resetPlayerForNextLevel(player);
+    }
+    this.postSetupLevel();
+    // Change song now that level has changed:
+    if (globalThis.playNextSong) {
+      globalThis.playNextSong();
+    }
+  }
   async createLevel(levelData: LevelData) {
     return new Promise<void>(resolve => {
       document.body?.classList.toggle('loading', true);
       // Add timeout so that loading can update dom
       setTimeout(() => {
-        // showUpgrades is invoked by createLevel which is called from a wsPie message
-        // rather than from checkForEndOfLevel() because all players are guarunteed to receive
-        // the CREATE_LEVEL message whereas, checkForEndOfLevel could be subject to a race condition
-        // that might prevent the upgrade screen from showing for some users in rare circumstances.
-        // Better to have the upgrade screen tied to the network message.
-        this.showUpgrades(this.levelIndex !== 0);
-
-        console.log('Setup: createLevel', levelData);
-        globalThis.lastLevelCreated = levelData;
-        // Clean up the previous level
-        this.cleanUpLevel();
-
-        const { levelIndex, limits, imageOnlyTiles, pickups, enemies, obstacles, validPlayerSpawnCoords } = levelData;
-        this.levelIndex = levelIndex;
-        this.limits = limits;
-        // empty tiles are tiles with an image of ''
-        this.cacheWalls(obstacles, imageOnlyTiles.filter(x => x.image == ''));
-        this.imageOnlyTiles = imageOnlyTiles;
-        this.addGroundTileImages();
-        for (let p of pickups) {
-          this.spawnPickup(p.index, p.coord);
-        }
-        for (let e of enemies) {
-          this.spawnEnemy(e.id, e.coord, e.isArmored, e.strength);
-        }
-        // Show text in center of screen for the new level
-        queueCenteredFloatingText(
-          `Level ${this.levelIndex + 1}`,
-          'white'
-        );
-        // validPlayerSpawnCoords must be set before resetting the player
-        // so the player has coords to spawn into
-        this.validPlayerSpawnCoords = validPlayerSpawnCoords;
-        for (let player of this.players) {
-          Player.resetPlayerForNextLevel(player);
-        }
-        this.postSetupLevel();
+        this.createLevelSyncronous(levelData);
         resolve();
-        // Change song now that level has changed:
-        if (globalThis.playNextSong) {
-          globalThis.playNextSong();
-        }
       }, 10)
     });
   }
-  syncronousInitLevel(levelIndex: number): LevelData {
-    console.log('Setup: initLevel as host', levelIndex);
+  generateLevelDataSyncronous(levelIndex: number): LevelData {
+    console.log('Setup: generateLevelData', levelIndex);
     this.levelIndex = levelIndex;
     // Generate level
     let level;
@@ -1011,13 +1017,13 @@ export default class Underworld {
     });
     return level;
   }
-  async initLevel(levelIndex: number): Promise<LevelData> {
+  async generateLevelData(levelIndex: number): Promise<LevelData> {
     return new Promise<LevelData>(resolve => {
       document.body?.classList.toggle('loading', true);
       // setTimeout allows the UI to refresh before locking up the CPU with
       // heavy level generation code
       setTimeout(() => {
-        resolve(this.syncronousInitLevel(levelIndex));
+        resolve(this.generateLevelDataSyncronous(levelIndex));
       }, 10);
     })
   }
@@ -1368,7 +1374,7 @@ export default class Underworld {
       setTimeout(() => {
         // Prepare the next level
         if (globalThis.isHost()) {
-          this.initLevel(++this.levelIndex);
+          this.generateLevelData(++this.levelIndex);
         }
       }, 0)
       // Return of true signifies it went to the next level

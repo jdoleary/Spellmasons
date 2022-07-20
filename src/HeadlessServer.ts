@@ -5,6 +5,8 @@ import * as Units from './entity/units';
 import { getClients, hostGiveClientGameStateForInitialLoad, IHostApp, onClientPresenceChanged } from './network/networkUtil';
 import Underworld from './Underworld';
 import * as readyState from './readyState';
+import { NO_LOG_LIST } from './network/networkHandler';
+import { MESSAGE_TYPES } from './types/MessageTypes';
 const pie = require('@websocketpie/server');
 globalThis.SPELLMASONS_PACKAGE_VERSION = version;
 // Init underworld so that when clients join they can use it as the canonical
@@ -19,10 +21,9 @@ globalThis.headless = true;
 globalThis.isHost = () => true;
 globalThis.forceMove = [];
 globalThis.playerThoughts = {};
-globalThis.forceMove = [];
 
 function headlessStartGame() {
-    console.log('jtest here')
+    console.log('Headless Server Started')
 
 
     pie.startServer({
@@ -36,7 +37,10 @@ function headlessStartGame() {
                 globalThis.underworld = new Underworld(Math.random().toString());
                 // Mark the underworld as "ready"
                 readyState.set('underworld', true);
-                globalThis.lastLevelCreated = globalThis.underworld.syncronousInitLevel(0);
+                // Generate the level data
+                globalThis.lastLevelCreated = globalThis.underworld.generateLevelDataSyncronous(0);
+                // Actually create it
+                globalThis.underworld.createLevelSyncronous(globalThis.lastLevelCreated);
                 console.log('Host: Send all clients game state for initial load');
                 getClients().forEach(clientId => {
                     hostGiveClientGameStateForInitialLoad(clientId, globalThis.lastLevelCreated);
@@ -70,12 +74,13 @@ class HostApp implements IHostApp {
         Units.registerUnits();
     }
     onData(data: any) {
-        console.log('onData', data);
+        if (!NO_LOG_LIST.includes(data.payload.type)) {
+            console.log("onData:", MESSAGE_TYPES[data.payload.type], data)
+        }
     }
     // The host will receive all data that is send from a client
     // to the @websocketpie/server
     handleMessage(message: OnDataArgs) {
-        console.log('HostApp received: ', message.type, message)
         switch (message.type) {
             case MessageType.Data:
                 if (this.onData) {

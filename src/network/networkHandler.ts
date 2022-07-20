@@ -21,7 +21,7 @@ globalThis.exitCurrentGame = function exitCurrentGame(): Promise<void> {
   }
   return typeGuardHostApp(globalThis.pie) ? Promise.resolve() : globalThis.pie.disconnect();
 }
-const NO_LOG_LIST = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
+export const NO_LOG_LIST = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
 // Any message types in this list will be dropped if in the queue and an additional message of this type
 // comes through
 const ONLY_KEEP_LATEST = [MESSAGE_TYPES.PLAYER_THINKING];
