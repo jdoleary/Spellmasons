@@ -11,15 +11,22 @@ globalThis.SPELLMASONS_PACKAGE_VERSION = version;
 // Init underworld so that when clients join they can use it as the canonical
 // record of gamestate
 headlessStartGame();
-// Headless does not includee a player of it's own, it's just the host
-globalThis.player = undefined;
 // This file is the entrypoint for the headless server and must set globalThis.headless
 // to true to denote that there is no graphics nor audio code
 globalThis.headless = true;
 // hostApp (headless server) is always the host
 globalThis.isHost = () => true;
+// Headless does not includee a player of it's own, it's just the host
+globalThis.player = undefined;
+
+
+// TODO: The following need to be specific to a host app
 globalThis.forceMove = [];
 globalThis.playerThoughts = {};
+// globalThis.pie
+// globalThis.underworld
+// globalThis.lastLeveLCreated
+// readyState.underworld
 
 function headlessStartGame() {
     console.log('Headless Server Started')

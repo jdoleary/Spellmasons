@@ -15,6 +15,7 @@ import { jitter } from '../jmath/Vec';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import { playerCastAnimationColor, playerCoatPrimary, playerCoatSecondary, playerColors, playerColorsSecondary } from '../graphics/ui/colors';
 
+const elLobbyBody = document.getElementById('lobby-body') as (HTMLElement | undefined);
 // The serialized version of the interface changes the interface to allow only the data
 // that can be serialized in JSON.  It may exclude data that is not neccessary to
 // rehydrate the JSON into an entity
@@ -23,6 +24,7 @@ export interface CardUsage {
   [cardId: string]: number
 }
 export interface IPlayer {
+  ready: boolean;
   // wsPie id
   clientId: string;
   clientConnected: boolean;
@@ -40,6 +42,7 @@ export interface IPlayer {
 export function create(clientId: string): IPlayer {
   const userSource = defaultPlayerUnit;
   const player: IPlayer = {
+    ready: false,
     clientId,
     // init players as not connected.  clientConnected status
     // should only be handled in one place and tied directly
@@ -202,11 +205,11 @@ export function load(player: IPlayerSerialized) {
     playerLoaded.unit.x = NaN;
     playerLoaded.unit.y = NaN;
   }
-  const clients = getClients();
-  setClientConnected(playerLoaded, clients.includes(player.clientId));
   updateGlobalRefToCurrentClientPlayer(playerLoaded);
   CardUI.recalcPositionForCards(playerLoaded);
   globalThis.underworld.players.push(playerLoaded);
+  const clients = getClients();
+  setClientConnected(playerLoaded, clients.includes(player.clientId));
   setPlayerRobeColor(playerLoaded);
   return playerLoaded;
 }
@@ -220,6 +223,13 @@ export function setClientConnected(player: IPlayer, connected: boolean) {
     Image.addSubSprite(player.unit.image, 'disconnected.png');
     // If they disconnect, end their turn
     globalThis.underworld.endPlayerTurn(player.clientId);
+  }
+  syncLobby()
+}
+function syncLobby() {
+  // Update lobby element
+  if (elLobbyBody) {
+    elLobbyBody.innerHTML = globalThis.underworld.players.map(p => `<tr><td>${p.clientId}</td><td>${p.clientConnected}</td></tr>`).join('');
   }
 }
 export function enterPortal(player: IPlayer) {
