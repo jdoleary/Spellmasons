@@ -513,6 +513,9 @@ export default class Underworld {
     // Only display player thoughts if they are not the current client's player
     globalThis.thinkingPlayerGraphics?.clear();
     containerPlayerThinking?.removeChildren();
+    if (globalThis.thinkingPlayerGraphics) {
+      containerPlayerThinking?.addChild(globalThis.thinkingPlayerGraphics);
+    }
     for (let [thinkerClientId, thought] of Object.entries(globalThis.playerThoughts)) {
       const { target, cardIds } = thought;
       const thinkingPlayerIndex = this.players.findIndex(p => p.clientId == thinkerClientId);
@@ -520,9 +523,6 @@ export default class Underworld {
       if (thinkingPlayer) {
         // Render thought bubble around spell icons
         if (cardIds.length) {
-          if (globalThis.thinkingPlayerGraphics) {
-            containerPlayerThinking?.addChild(globalThis.thinkingPlayerGraphics);
-          }
           const thoughtBubbleMargin = 20;
           const thoughtBubbleRight = getXLocationOfImageForThoughtBubble(thinkingPlayer.unit.x, cardIds.length, cardIds.length);
           const thoughtBubbleLeft = getXLocationOfImageForThoughtBubble(thinkingPlayer.unit.x, 0, cardIds.length) - thoughtBubbleMargin;
