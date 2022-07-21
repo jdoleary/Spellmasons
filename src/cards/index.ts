@@ -36,7 +36,7 @@ import trap from './trap';
 import explode from './explode_on_death';
 import { IUpgrade, upgradeCardsSource } from '../Upgrade';
 import { _getCardsFromIds } from './cardUtils';
-import { addCardToHand } from '../graphics/ui/CardUI';
+import { addCardToHand } from '../entity/Player';
 export interface Modifiers {
   subsprite?: Subsprite;
   add?: (unit: Unit.IUnit) => void;

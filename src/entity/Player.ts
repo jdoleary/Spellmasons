@@ -3,6 +3,7 @@ import * as Unit from './Unit';
 import * as Image from '../graphics/Image';
 import type * as Upgrade from '../Upgrade';
 import * as CardUI from '../graphics/ui/CardUI';
+import * as Cards from '../cards';
 import * as config from '../config';
 import { Faction, UnitType } from '../types/commonTypes';
 import { getClients } from '../network/networkUtil';
@@ -238,4 +239,48 @@ export function enterPortal(player: IPlayer) {
 // Note: this is also used for AI targeting to ensure that AI don't target disabled plaeyrs
 export function ableToTakeTurn(player: IPlayer) {
   return !player.inPortal && player.unit.alive && player.clientConnected;
+}
+
+// TODO remove dev helper function for production release
+globalThis.giveMeCard = (cardId: string, quantity: number = 1) => {
+  const card = Cards.allCards[cardId];
+  if (card) {
+    for (let i = 0; i < quantity; i++) {
+      addCardToHand(card, globalThis.player);
+    }
+  } else {
+    console.log('card', card, 'not found');
+  }
+};
+export function addCardToHand(card: Cards.ICard | undefined, player: IPlayer | undefined) {
+  if (!card) {
+    console.error('Attempting to add undefined card to hand');
+    return
+  }
+  if (!player) {
+    console.warn("Attempted to add cards to a non-existant player's hand")
+    return
+  }
+  // Players may not have more than 1 of a particular card, because now, cards are
+  // not removed when cast
+  if (!player.inventory.includes(card.id)) {
+    player.inventory.push(card.id);
+    const emptySlotIndex = player.cards.indexOf('');
+    if (emptySlotIndex !== -1) {
+      player.cards[emptySlotIndex] = card.id;
+    }
+    CardUI.recalcPositionForCards(player);
+  }
+}
+// This function fully deletes the cards from the player's hand
+export function removeCardsFromHand(player: IPlayer, cards: string[]) {
+  player.cards = player.cards.filter(c => !cards.includes(c));
+  // Remove any selected cards with a name in the cards array of this function
+  for (let card of cards) {
+    document.querySelectorAll(`#selected-cards .card[data-card-id="${card}"]`).forEach(el => {
+      // clicking a selected card, deselects it
+      (el as HTMLElement).click();
+    });
+  }
+  CardUI.recalcPositionForCards(globalThis.player);
 }

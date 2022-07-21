@@ -373,53 +373,6 @@ export function areAnyCardsSelected() {
   return !!getSelectedCardIds().length;
 }
 
-// This function fully deletes the cards from the player's hand
-export function removeCardsFromHand(player: Player.IPlayer, cards: string[]) {
-  if (globalThis.headless) { return; }
-  player.cards = player.cards.filter(c => !cards.includes(c));
-  // Remove any selected cards with a name in the cards array of this function
-  for (let card of cards) {
-    document.querySelectorAll(`#selected-cards .card[data-card-id="${card}"]`).forEach(el => {
-      // clicking a selected card, deselects it
-      (el as HTMLElement).click();
-    });
-  }
-  recalcPositionForCards(globalThis.player);
-}
-
-// TODO remove dev helper function for production release
-globalThis.giveMeCard = (cardId: string, quantity: number = 1) => {
-  const card = Cards.allCards[cardId];
-  if (card) {
-    for (let i = 0; i < quantity; i++) {
-      addCardToHand(card, globalThis.player);
-    }
-  } else {
-    console.log('card', card, 'not found');
-  }
-};
-// Note: This function needs to be run even on headless because it mutates the player object
-// it isn't just responsible for UI
-export function addCardToHand(card: Cards.ICard | undefined, player: Player.IPlayer | undefined) {
-  if (!card) {
-    console.error('Attempting to add undefined card to hand');
-    return
-  }
-  if (!player) {
-    console.warn("Attempted to add cards to a non-existant player's hand")
-    return
-  }
-  // Players may not have more than 1 of a particular card, because now, cards are
-  // not removed when cast
-  if (!player.inventory.includes(card.id)) {
-    player.inventory.push(card.id);
-    const emptySlotIndex = player.cards.indexOf('');
-    if (emptySlotIndex !== -1) {
-      player.cards[emptySlotIndex] = card.id;
-    }
-    recalcPositionForCards(player);
-  }
-}
 
 export function getSelectedCardIds(): string[] {
   if (globalThis.headless) { return []; }
