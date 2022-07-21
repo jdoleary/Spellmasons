@@ -36,6 +36,8 @@ export const containerUIFixed = !globalThis.pixi ? undefined : new globalThis.pi
 export const containerFloatingText = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 
 export function resizePixi() {
+  // Headless does not use graphics
+  if (globalThis.headless) { return; }
   if (app) {
     app.renderer.resize(globalThis.innerWidth, globalThis.innerHeight);
   }
@@ -131,6 +133,8 @@ if (globalThis.pixi && containerUI && app && containerBetweenBoardAndWalls) {
 // surely be seen by a user even if they have panned away.
 // Used for attention markers and pings
 export function withinCameraBounds(position: Vec2, marginHoriz?: number): Vec2 {
+  // Headless does not use graphics
+  if (globalThis.headless) { return { x: 0, y: 0 }; }
   if (!(utilProps.elCardHand && utilProps.elHealthMana && utilProps.elPIXIHolder)) {
     // If headless, the return of this function is irrelevant
     return { x: 0, y: 0 }
@@ -210,6 +214,8 @@ function calculateCameraZoom() {
 }
 let lastZoom = globalThis.zoomTarget;
 export function updateCameraPosition() {
+  // Headless does not use graphics
+  if (globalThis.headless) { return; }
   if (!(app)) {
     return
   }
@@ -335,6 +341,8 @@ export function updateCameraPosition() {
 // PIXI textures
 let sheet: PIXI.Spritesheet;
 export function setupPixi(): Promise<void> {
+  // Headless does not use graphics
+  if (globalThis.headless) { return Promise.resolve(); }
   if (!app) {
     console.error('app is not defined')
     return Promise.resolve();
@@ -352,6 +360,8 @@ export function setupPixi(): Promise<void> {
   });
 }
 export function addPixiContainersForView(view: View) {
+  // Headless does not use graphics
+  if (globalThis.headless) { return; }
   if (app && utilProps.underworldPixiContainers) {
     app.stage.removeChildren();
     removeContainers(utilProps.underworldPixiContainers);
@@ -363,6 +373,8 @@ export function addPixiContainersForView(view: View) {
   }
 }
 function addContainers(containers: PIXI.Container[]) {
+  // Headless does not use graphics
+  if (globalThis.headless) { return; }
   if (!app) {
     return;
   }
@@ -372,6 +384,8 @@ function addContainers(containers: PIXI.Container[]) {
   }
 }
 function removeContainers(containers: PIXI.Container[]) {
+  // Headless does not use graphics
+  if (globalThis.headless) { return; }
   if (!app) {
     return;
   }
@@ -381,6 +395,8 @@ function removeContainers(containers: PIXI.Container[]) {
   }
 }
 function loadTextures(): Promise<void> {
+  // Headless does not use graphics
+  if (globalThis.headless) { return Promise.resolve(); }
   return new Promise((resolve, reject) => {
     if (!globalThis.headless && globalThis.pixi) {
       const loader = globalThis.pixi.Loader.shared;
@@ -418,6 +434,8 @@ export interface PixiSpriteOptions {
 export function getPixiTextureAnimated(
   imagePath: string
 ) {
+  // Headless does not use graphics
+  if (globalThis.headless) { return; }
   if (!isReady) {
     throw new Error(
       'PIXI is not finished setting up.  Cannot add a sprite yet',
@@ -432,6 +450,8 @@ export function addPixiSpriteAnimated(
     loop: true
   }
 ): JSpriteAnimated | undefined {
+  // Headless does not use graphics
+  if (globalThis.headless) { return; }
   if (!isReady) {
     throw new Error(
       'PIXI is not finished setting up.  Cannot add a sprite yet',
@@ -475,6 +495,8 @@ export function addPixiSprite(
   imagePath: string,
   parent: PIXI.Container | undefined,
 ): PIXI.Sprite | undefined {
+  // Headless does not use graphics
+  if (globalThis.headless) { return; }
   if (!isReady) {
     throw new Error(
       'PIXI is not finished setting up.  Cannot add a sprite yet',
