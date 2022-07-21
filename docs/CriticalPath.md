@@ -6,7 +6,7 @@
         - Juice
         - SFX
 # Critical Path
-- Milestone 1 | **Reliable Multiplayer** | July 20
+- Milestone 1 | **Reliable Multiplayer** | July 22
     - Standalone Server
     - Simultaneous player turns
 - Milestone 2 | **Balance**
@@ -47,11 +47,11 @@
         - Fix units taking damage animation timing to be when the spell does damage
     - Master music (Brad)
 - Milestone X | **Marketing** | Due September 1
+    - Trailer
+        - Need HUD removal, music removal
     - Steam Page (waiting on art)
     - Website Presskit page
         - Note: Website should just redirect to steampage
-    - Trailer
-        - Need HUD removal, music removal
 - Milestone X | **Beta Testers** | Due October 1
     - Tutorial / Explain prompts based on user actions
     - Optimize game

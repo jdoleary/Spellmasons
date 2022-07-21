@@ -1,4 +1,5 @@
 ## This weeks goals:
+- Simultaneous turn taking
 - C:\git\Golems\headless-server-build\src\entity\Unit.js:847
     const { turn_phase: phase } = globalThis.underworld;
                         ^
@@ -11,6 +12,7 @@ TypeError: Cannot destructure property 'turn_phase' of 'globalThis.underworld' a
     at processTimers (node:internal/timers:502:7)
 
     - globalThis for headless isn't going to work since a single headless esrver should be able to host multiple rooms and the multiple rooms can't share state
+        - or each pieserver room could be it's own process??
         // TODO: The following need to be specific to a host app
         globalThis.forceMove = [];
         globalThis.playerThoughts = {};

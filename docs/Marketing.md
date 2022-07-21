@@ -1,3 +1,18 @@
+- Tasks:
+    - Make the steam page
+    - Make the trailer
+    - Reroute spellmasons.com to the steam page directly
+    - Deside on a hard release date
+    - Contractors
+        - Social Media
+            - https://www.fiverr.com/arseldabrahimi/be-your-social-media-manager-marketing-2415?context_referrer=user_page&ref_ctx_id=1345a6c7774476a75ea0e7f67f357d5a&pckg_id=1&pos=1&imp_id=528588d5-0a34-4f92-a885-93ed44860a3c
+        - Thumbnails
+            - https://www.fiverr.com/thumbnails_ayan/make-view-boosting-youtube-thumbnail-in-5hrs?context_referrer=user_page&ref_ctx_id=37006fb9caa74ffbf292ec368a5a7f86&pckg_id=1&pos=1&imp_id=f3bb2f04-2e2c-4aaa-a931-a751dca59fb4
+        - Video Editing
+            - https://www.fiverr.com/uzair1748/do-any-type-of-simple-or-professional-video-editing?context_referrer=user_page&ref_ctx_id=504bb6e376595e00698ce57100c5f490&pckg_id=1&pos=1&imp_id=917713e6-7448-439c-8237-fe132c6a7334
+        - Youtube SEO
+            - https://www.fiverr.com/najminjoli/be-your-certified-youtube-channel-manager-for-organic-growth?context_referrer=subcategory_listing&source=vertical-buckets&ref_ctx_id=a502fa26cdfb8af96c4236f97f83a63e&pckg_id=1&pos=8&context_type=rating&funnel=a502fa26cdfb8af96c4236f97f83a63e&fiverr_choice=true&imp_id=19f883c0-6ccc-4f61-b07a-8cb3910fa4bb
+
 - Homepage / Marketing / Steam Page / Email Signup
     - Marketing (Tell a story)
         - "Plan. Combine. Unleash. Spellmasons!"
