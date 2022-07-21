@@ -8,7 +8,7 @@
 # Critical Path
 - Milestone 1 | **Reliable Multiplayer** | July 20
     - Standalone Server
-    - Stress test droplets to see how many users they can support
+    - Simultaneous player turns
 - Milestone 2 | **Balance**
     - Increase difficulty
         - Difficulty is directly related to fun, it isn't a puzzel if you can just "hurt" your way through it over and over
@@ -24,7 +24,7 @@
             - Pass a quantity var to the spell and have each spell handle it manually, do not allow them to be .effect() back to back
     - Pack 15
         - Improved force movement
-        - Blood trails
+        - Blood trails - use stealth'emup's code, or figure out how to streak blood
 - Milestone X | **Juice** | Due Date Ongoing
     - SFX
         - Unit Sounds
@@ -55,6 +55,7 @@
 - Milestone X | **Beta Testers** | Due October 1
     - Tutorial / Explain prompts based on user actions
     - Optimize game
+        - Memory Leaks: call destroy() on any Graphics object you no longer need to avoid memory leaks.
         - Stress test droplets to see how many users they can support
         - Check ImmediateModeSprites for leaks
         - Support large maps
