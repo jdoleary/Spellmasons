@@ -398,8 +398,9 @@ globalThis.giveMeCard = (cardId: string, quantity: number = 1) => {
     console.log('card', card, 'not found');
   }
 };
+// Note: This function needs to be run even on headless because it mutates the player object
+// it isn't just responsible for UI
 export function addCardToHand(card: Cards.ICard | undefined, player: Player.IPlayer | undefined) {
-  if (globalThis.headless) { return; }
   if (!card) {
     console.error('Attempting to add undefined card to hand');
     return
