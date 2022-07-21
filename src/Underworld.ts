@@ -581,7 +581,7 @@ export default class Underworld {
     removeUnderworldEventListeners();
 
     // Remove all phase classes from body
-    if (document) {
+    if (document && !globalThis.headless) {
       // @ts-expect-error Property 'values' does not exist on type 'DOMTokenList'
       for (let phaseClass of document.body?.classList.values()) {
         if (phaseClass.includes('phase-')) {
@@ -1390,6 +1390,7 @@ export default class Underworld {
   async broadcastTurnPhase(p: turn_phase) {
     // If host, send sync; if non-host, ignore 
     if (globalThis.isHost()) {
+      console.log('Broadcast turn phase', turn_phase[p]);
       globalThis.pie.sendData({
         type: MESSAGE_TYPES.SET_PHASE,
         phase: p,
@@ -1408,10 +1409,12 @@ export default class Underworld {
     this.syncTurnMessage();
 
     // Remove all phase classes from body
-    // @ts-expect-error Property 'values' does not exist on type 'DOMTokenList'
-    for (let phaseClass of document.body?.classList.values()) {
-      if (phaseClass.includes('phase-')) {
-        document.body?.classList.remove(phaseClass);
+    if (!globalThis.headless) {
+      // @ts-expect-error Property 'values' does not exist on type 'DOMTokenList'
+      for (let phaseClass of document.body?.classList.values()) {
+        if (phaseClass.includes('phase-')) {
+          document.body?.classList.remove(phaseClass);
+        }
       }
     }
     const phase = turn_phase[this.turn_phase];
