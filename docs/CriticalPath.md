@@ -8,7 +8,6 @@
 # Critical Path
 - Milestone 1 | **Reliable Multiplayer** | July 20
     - Standalone Server
-    - Menu for community server selector
     - Stress test droplets to see how many users they can support
 - Milestone 2 | **Balance**
     - Increase difficulty
@@ -56,6 +55,7 @@
 - Milestone X | **Beta Testers** | Due October 1
     - Tutorial / Explain prompts based on user actions
     - Optimize game
+        - Stress test droplets to see how many users they can support
         - Check ImmediateModeSprites for leaks
         - Support large maps
         - Round of wall corners so it doesn't stair step??
@@ -68,6 +68,7 @@
     - Send out to testers
     - [Tutorial](https://www.youtube.com/watch?v=-GV814cWiAw)
 - Milestone X | **Package as Electron App** | Due November 1
+    - Menu for community server selector
     - [Storage and Persistence](https://cameronnokes.com/blog/how-to-store-user-data-in-electron/)
     - [AutoUpdate](https://github.com/vercel/hazel)
 - Milestone **Strech 1**
