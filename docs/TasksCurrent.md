@@ -1,4 +1,15 @@
 ## This weeks goals:
+- C:\git\Golems\headless-server-build\src\entity\Unit.js:847
+    const { turn_phase: phase } = globalThis.underworld;
+                        ^
+
+TypeError: Cannot destructure property 'turn_phase' of 'globalThis.underworld' as it is undefined.
+    at Object.isUnitsTurnPhase (C:\git\Golems\headless-server-build\src\entity\Unit.js:847:25)
+    at value (C:\git\Golems\headless-server-build\src\Underworld.js:324:85)
+    at Timeout._onTimeout (C:\git\Golems\headless-server-build\src\Shims.js:19:22)
+    at listOnTimeout (node:internal/timers:559:17)
+    at processTimers (node:internal/timers:502:7)
+
     - globalThis for headless isn't going to work since a single headless esrver should be able to host multiple rooms and the multiple rooms can't share state
         // TODO: The following need to be specific to a host app
         globalThis.forceMove = [];
@@ -8,6 +19,7 @@
         // globalThis.lastLeveLCreated
         // readyState.underworld
     - lobby
+        - ready up and start game
 ## Schedule
 - Packs, priority ordered
     - Pack 6 Standalone Server

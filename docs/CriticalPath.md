@@ -36,9 +36,9 @@
         - 100%: Unit Animations
         - 100%: Projectiles
         - 100%: Use Potion animation
-        - 4/15: Spell Animations
-        - 11/21: Spell Icons
-        - 0%: Cover Art / Steam Page
+        - 13/15: Spell Animations
+        - 20/21: Spell Icons
+        - 10%: Cover Art / Steam Page
         - 20%: Biome Tiles
         - Shader animated liquid
         - 0%: Liquid Splash Animation
