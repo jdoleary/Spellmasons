@@ -505,6 +505,8 @@ export default class Underworld {
     }
   }
   drawPlayerThoughts() {
+    // No graphics for headless
+    if (globalThis.headless) { return; }
 
     const spaceBetweenIcons = 20;
     function getXLocationOfImageForThoughtBubble(originX: number, index: number, totalNumberOfSpells: number) {
