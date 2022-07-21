@@ -27,7 +27,8 @@ export const NO_LOG_LIST = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
 const ONLY_KEEP_LATEST = [MESSAGE_TYPES.PLAYER_THINKING];
 export function onData(d: OnDataArgs) {
   if (!NO_LOG_LIST.includes(d.payload.type)) {
-    console.log("onData:", MESSAGE_TYPES[d.payload.type], d)
+    // Don't clog up server logs with payloads, leave that for the client which can handle them better
+    console.log("onData:", MESSAGE_TYPES[d.payload.type], globalThis.headless ? '' : d)
   }
   // Temporarily for development
   // TODO: Remove for production, messageLog will take
@@ -121,7 +122,8 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
   const { payload, fromClient } = d;
   const type: MESSAGE_TYPES = payload.type;
   if (!NO_LOG_LIST.includes(type)) {
-    console.log("Handle ONDATA", type, payload)
+    // Don't clog up server logs with payloads, leave that for the client which can handle them better
+    console.log("Handle ONDATA", MESSAGE_TYPES[type], globalThis.headless ? '' : payload)
   }
   // Get player of the client that sent the message 
   const fromPlayer = globalThis.underworld.players.find((p) => p.clientId === fromClient);
