@@ -1,13 +1,13 @@
 ## This weeks goals:
     - globalThis for headless isn't going to work since a single headless esrver should be able to host multiple rooms and the multiple rooms can't share state
-    ---
-    - Headless server should WAIT if there are no players and not just keep processing enemy turns
-    - bug: the headless app doesn't clean up Players (not clients) after they leave
-        - bug or by design? I want them to be able to rejoin don't i?
-    - bug: full leave and rejoin puts the server in an infinite loop
-    - Standalone Server
-        - [Ensure setImmediate doesn't max the cpu](https://timetocode.tumblr.com/post/71512510386/an-accurate-node-js-game-loop-inbetween-settimeout-and)
-        - how to clean up dead rooms?
+        // TODO: The following need to be specific to a host app
+        globalThis.forceMove = [];
+        globalThis.playerThoughts = {};
+        // globalThis.pie
+        // globalThis.underworld
+        // globalThis.lastLeveLCreated
+        // readyState.underworld
+    - lobby
 ## Schedule
 - Packs, priority ordered
     - Pack 6 Standalone Server

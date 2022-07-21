@@ -11,8 +11,11 @@ global.document = {
     querySelector: () => fakeElement
 };
 globalThis.addEventListener = function () { };
+const TICK_RATE = 16;
+console.log('TICK_RATE set to', TICK_RATE)
 global.requestAnimationFrame = (callback) => {
-    // TODO: OPTIMIZE: Use setImmediate instead? Watch out for 100% CPU
-    setTimeout(() => callback(Date.now()));
+    // Note, changing TICK_RATE from undefined to 16
+    // went from consuming 20% cpu to 7% cpu
+    setTimeout(() => callback(Date.now()), TICK_RATE);
 }
 export { };
