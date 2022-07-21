@@ -576,6 +576,7 @@ export default class Underworld {
   // cleanup cleans up all assets that must be manually removed (for now `Image`s)
   // if an object stops being used.  It does not empty the underworld arrays, by design.
   cleanup() {
+    console.log('teardown: Cleaning up underworld');
     readyState.set('underworld', false);
 
     removeUnderworldEventListeners();

@@ -82,6 +82,9 @@ class HostApp implements IHostApp {
     onData(data: any) {
         onData(data);
     }
+    cleanup() {
+        globalThis.underworld.cleanup();
+    }
     // The host will receive all data that is send from a client
     // to the @websocketpie/server
     handleMessage(message: OnDataArgs) {
