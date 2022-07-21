@@ -1,15 +1,25 @@
 ## This weeks goals:
-- Simultaneous turn taking
-- C:\git\Golems\headless-server-build\src\entity\Unit.js:847
-    const { turn_phase: phase } = globalThis.underworld;
-                        ^
+- bug: player 2 doesn't get cards
+- sometimes after underworld teardown i get weird underworld undefined errors as if the object still exists but it's own `this` has been unassigned
+    - C:\git\Golems\headless-server-build\src\Underworld.js:1307
+                this.syncTurnMessage();
+                    ^
 
-TypeError: Cannot destructure property 'turn_phase' of 'globalThis.underworld' as it is undefined.
-    at Object.isUnitsTurnPhase (C:\git\Golems\headless-server-build\src\entity\Unit.js:847:25)
-    at value (C:\git\Golems\headless-server-build\src\Underworld.js:324:85)
-    at Timeout._onTimeout (C:\git\Golems\headless-server-build\src\Shims.js:19:22)
-    at listOnTimeout (node:internal/timers:559:17)
-    at processTimers (node:internal/timers:502:7)
+    TypeError: Cannot read properties of undefined (reading 'syncTurnMessage')
+        at C:\git\Golems\headless-server-build\src\Underworld.js:1307:18
+        at Generator.next (<anonymous>)
+        at fulfilled (C:\git\Golems\headless-server-build\src\Underworld.js:28:58)
+        at processTicksAndRejections (node:internal/process/task_queues:96:5)
+    - C:\git\Golems\headless-server-build\src\entity\Unit.js:847
+        const { turn_phase: phase } = globalThis.underworld;
+                            ^
+
+    TypeError: Cannot destructure property 'turn_phase' of 'globalThis.underworld' as it is undefined.
+        at Object.isUnitsTurnPhase (C:\git\Golems\headless-server-build\src\entity\Unit.js:847:25)
+        at value (C:\git\Golems\headless-server-build\src\Underworld.js:324:85)
+        at Timeout._onTimeout (C:\git\Golems\headless-server-build\src\Shims.js:19:22)
+        at listOnTimeout (node:internal/timers:559:17)
+        at processTimers (node:internal/timers:502:7)
 
     - globalThis for headless isn't going to work since a single headless esrver should be able to host multiple rooms and the multiple rooms can't share state
         - or each pieserver room could be it's own process??
