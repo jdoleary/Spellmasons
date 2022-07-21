@@ -74,8 +74,8 @@ function setupAll() {
     // Initialize content
     Cards.registerCards();
     Units.registerUnits();
-    initPlanningView();
     readyState.set("content", true);
+    initPlanningView();
     // if (storage.get(SKIP_TUTORIAL) === YES) {
     globalThis.setMenu?.('PLAY');
     setView(View.Menu);

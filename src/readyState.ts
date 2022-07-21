@@ -14,7 +14,7 @@ let hasAutoJoined = false;
 export function set(key: keyof typeof readyState, value: boolean) {
     console.log('Ready State: ', key, value);
     readyState[key] = value;
-    if (!hasAutoJoined && readyState.wsPieConnection && readyState.pixiAssets && readyState.content) {
+    if (!globalThis.headless && !hasAutoJoined && readyState.wsPieConnection && readyState.pixiAssets && readyState.content) {
         // Prevent autojoining more than once
         hasAutoJoined = true;
         // Auto join game if specified in url
@@ -46,6 +46,9 @@ export function set(key: keyof typeof readyState, value: boolean) {
 }
 export function get(key: keyof typeof readyState) {
     return readyState[key];
+}
+export function log() {
+    return Object.keys(readyState).map(key => `${key}:${readyState[key as keyof typeof readyState]}`)
 }
 // isReady is true if game is ready to recieve wsPie messages
 export function isReady(): boolean {

@@ -34,8 +34,19 @@ function headlessStartGame() {
             if (!gameAlreadyStarted) {
                 console.log('Host: Start game / Initialize Underworld');
                 globalThis.underworld = new Underworld(Math.random().toString());
-                // Mark the underworld as "ready"
+                // Mark the underworld as "ready". This is important even for headless so that it doesn't
+                // try to process it's own INIT_GAME_STATE messages
                 readyState.set('underworld', true);
+                // Headless makes it's own wsPieConnection
+                readyState.set('wsPieConnection', true);
+                // Headless makes it's own room
+                readyState.set('wsPieRoomJoined', true);
+                // Headless does NOT use graphics so this can be set to true immediately
+                readyState.set('pixiAssets', true);
+                // Initialize content
+                Cards.registerCards();
+                Units.registerUnits();
+                readyState.set("content", true);
                 // Generate the level data
                 globalThis.lastLevelCreated = globalThis.underworld.generateLevelDataSyncronous(0);
                 // Actually create it
@@ -67,11 +78,7 @@ class HostApp implements IHostApp {
     isHostApp: boolean = true;
     // Automatically overridden when passed into pie.startServer
     sendData: (msg: string) => void = () => { };
-    constructor() {
-        // Initialize content
-        Cards.registerCards();
-        Units.registerUnits();
-    }
+    constructor() { }
     onData(data: any) {
         onData(data);
     }
