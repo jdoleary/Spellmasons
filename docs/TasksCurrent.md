@@ -1,4 +1,5 @@
 ## This weeks goals:
+- Fix: Move player so it doesn't use stamina because IT MUST bring them to a synced location if their position somehow get's out of sync
 - bug: player 2 doesn't get cards
 - sometimes after underworld teardown i get weird underworld undefined errors as if the object still exists but it's own `this` has been unassigned
     - C:\git\Golems\headless-server-build\src\Underworld.js:1307
