@@ -4,12 +4,15 @@
         - "Coorindate. Strategize. Invent. Spellmasons!"
         - "Invent magic together.  Spellmasons!"
         - "Magic with friends! Spellmasons"
+        - "Magic is more fun with friends! Spellmasons"
         - Synonyms:
             - Plan / Plot / Conspire / Devise
             - Unleash / Execute
             - Invent / Envision / Formulate
     - How to reach people to review
         - See curators on steam
+- Video ideas
+    - How I found the perfect artist for my game
 
 - Research
     - Trailer
