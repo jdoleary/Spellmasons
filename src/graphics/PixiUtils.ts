@@ -226,13 +226,9 @@ export function updateCameraPosition() {
     case View.Game:
       if (globalThis.player) {
         if (utilProps.doCameraAutoFollow) {
-          const activeTurnPlayer = globalThis.underworld.players[globalThis.underworld.playerTurnIndex];
           if (!globalThis.player.inPortal && globalThis.player.unit.alive) {
             // Follow current client player
             utilProps.camera = clone(globalThis.player.unit);
-          } else if (activeTurnPlayer) {
-            // Follow active turn player
-            utilProps.camera = clone(activeTurnPlayer.unit);
           } else {
             // Set camera to the center of the map
             utilProps.camera = { x: (globalThis.underworld.limits.xMax - globalThis.underworld.limits.xMin) / 2, y: (globalThis.underworld.limits.yMax - globalThis.underworld.limits.yMin) / 2 };

@@ -326,7 +326,6 @@ async function handleLoadGameState(payload: {
   // Sync underworld properties
   const loadedGameState: IUnderworldSerializedForSyncronize = { ...underworld };
   globalThis.underworld = new Underworld(loadedGameState.seed, loadedGameState.RNGState);
-  globalThis.underworld.playerTurnIndex = loadedGameState.playerTurnIndex;
   globalThis.underworld.levelIndex = loadedGameState.levelIndex;
   // Sync Level.  Must await createLevel since it uses setTimeout to ensure that
   // the DOM can update with the "loading..." message before locking up the CPU with heavy processing.

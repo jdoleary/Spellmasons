@@ -25,6 +25,7 @@ export interface CardUsage {
 }
 export interface IPlayer {
   ready: boolean;
+  endedTurn: boolean;
   // wsPie id
   clientId: string;
   clientConnected: boolean;
@@ -43,6 +44,7 @@ export function create(clientId: string): IPlayer {
   const userSource = defaultPlayerUnit;
   const player: IPlayer = {
     ready: false,
+    endedTurn: false,
     clientId,
     // init players as not connected.  clientConnected status
     // should only be handled in one place and tied directly

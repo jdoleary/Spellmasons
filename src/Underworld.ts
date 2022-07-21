@@ -79,8 +79,6 @@ export default class Underworld {
   // for serializing random: prng
   RNGState?: SeedrandomState;
   turn_phase: turn_phase = turn_phase.PlayerTurns;
-  // Index of the player whose turn it is
-  playerTurnIndex: number = 0;
   // An id incrementor to make sure no 2 units share the same id
   lastUnitId: number = -1;
   // A count of which turn it is, this is useful for
@@ -519,7 +517,7 @@ export default class Underworld {
       const { target, cardIds } = thought;
       const thinkingPlayerIndex = this.players.findIndex(p => p.clientId == thinkerClientId);
       const thinkingPlayer = this.players[thinkingPlayerIndex];
-      if (thinkingPlayer && thinkingPlayerIndex == this.playerTurnIndex) {
+      if (thinkingPlayer) {
         // Render thought bubble around spell icons
         if (cardIds.length) {
           if (globalThis.thinkingPlayerGraphics) {
@@ -569,8 +567,7 @@ export default class Underworld {
   }
   // Returns true if it is the current players turn
   isMyTurn() {
-    return this.turn_phase == turn_phase.PlayerTurns
-      && this.playerTurnIndex === this.players.findIndex(p => p === globalThis.player)
+    return this.turn_phase == turn_phase.PlayerTurns;
   }
   // Caution: Be careful when changing clean up code.  There are times when you just want to
   // clean up assets and then there are times when you want to clear and empty the arrays
@@ -1057,13 +1054,14 @@ export default class Underworld {
     if (this.turn_phase === turn_phase.PlayerTurns) {
       // If all players that have taken turns, then...
       // (Players who CANT take turns have their turn ended automatically)
+      // TODO: Make sure game can't get stuck here
       if (
-        this.playerTurnIndex >= this.players.length
+        this.players.filter(p => p.clientConnected && p.unit.alive).every(p => p.endedTurn)
       ) {
         this.endPlayerTurnPhase();
         return true;
       } else {
-        console.log('PlayerTurn: Check end player turn phase', this.playerTurnIndex, this.players.length);
+        console.log('PlayerTurn: Check end player turn phase', this.players.length);
       }
     }
     return false;
@@ -1102,12 +1100,7 @@ export default class Underworld {
     // Note: The reason this logic happens here instead of in initializeTurnPhase
     // is because initializeTurnPhase needs to be called on game load to put everything
     // in a good state when updating to the canonical client's game state. (this 
-    // happens when one client disconnects and rejoins).  If playerTurnIndex were
-    // reset in initializeTurnPhase, a client reconnecting would also reset the 
-    // playerTurnIndex (which is not desireable because it's trying to LOAD the
-    // game state).  Instead, it's handled here, when the NPC turn phase ends
-    // so that clients CAN reconnect mid player turn and the playerTurnIndex is 
-    // maintained
+    // happens when one client disconnects and rejoins).
     // --
     // Trigger onTurnEnd Events
     for (let unit of this.units.filter(u => u.unitType === UnitType.AI)) {
@@ -1141,8 +1134,7 @@ export default class Underworld {
     this.broadcastTurnPhase(turn_phase.PlayerTurns);
   }
   syncTurnMessage() {
-    const currentPlayerTurn = this.players[this.playerTurnIndex];
-    console.log('syncTurnMessage: phase:', turn_phase[this.turn_phase], '; player:', this.playerTurnIndex)
+    console.log('syncTurnMessage: phase:', turn_phase[this.turn_phase]);
     let message = '';
     let yourTurn = false;
     if (this.turn_phase === turn_phase.NPC_ALLY) {
@@ -1151,15 +1143,20 @@ export default class Underworld {
     } else if (this.turn_phase === turn_phase.NPC_ENEMY) {
       message = "Enemy Turn";
       yourTurn = false;
-    } else if (currentPlayerTurn === globalThis.player) {
-      message = 'Your Turn'
-      yourTurn = true;
+    } else if (this.turn_phase === turn_phase.PlayerTurns) {
+      if (globalThis.player?.endedTurn) {
+        message = 'Waiting on Other Players'
+        yourTurn = true;
+      } else {
+        message = 'Your Turn';
+        yourTurn = true;
+      }
     } else if (this.isGameOver()) {
       message = 'Game Over';
       yourTurn = false;
     } else {
-      message = `Player ${this.playerTurnIndex + 1}'s turn`
-      yourTurn = false;
+      message = '';
+      console.error('Unknown syncTurnMessage state');
     }
     if (elPlayerTurnIndicator) {
       elPlayerTurnIndicator.innerText = message;
@@ -1173,12 +1170,11 @@ export default class Underworld {
       console.error('elLevelIndicator is null');
     }
   }
-  async initializePlayerTurn(playerIndex: number) {
-    const player = this.players[playerIndex];
+  async initializePlayerTurn(player: Player.IPlayer) {
     if (!player) {
-      console.error("Attempted to initialize turn for a non existant player index", playerIndex)
-      console.trace('Attempted to initialize nonexistant player trace')
-      return
+      console.error("Attempted to initialize turn for a non existant player");
+      console.trace('Attempted to initialize nonexistant player trace');
+      return;
     }
     // Give mana at the start of turn
     const manaTillFull = player.unit.manaMax - player.unit.mana;
@@ -1245,7 +1241,7 @@ export default class Underworld {
       console.error('Cannot end turn, player with clientId:', clientId, 'does not exist');
       return;
     }
-    if (this.playerTurnIndex != playerIndex) {
+    if (this.turn_phase != turn_phase.PlayerTurns) {
       // (A player "ending their turn" when it is not their turn
       // can occur when a client disconnects when it is not their turn)
       console.info('Cannot end the turn of a player when it isn\'t currently their turn')
@@ -1260,12 +1256,7 @@ export default class Underworld {
           return fn ? await fn(player.unit) : false;
         },
       ));
-      // Incrememt the playerTurnIndex
-      // This must happen before goToNextPhaseIfAppropriate
-      // which checks if the playerTurnIndex is >= the number of players
-      // to see if it should go to the next phase
-      this.playerTurnIndex = playerIndex + 1;
-      console.log('PlayerTurn: End player turn', clientId, '; Increment player turn to', this.playerTurnIndex);
+      console.log('PlayerTurn: End player turn', clientId);
       this.syncTurnMessage();
       const wentToNextLevel = this.checkForEndOfLevel();
       if (wentToNextLevel) {
@@ -1282,8 +1273,6 @@ export default class Underworld {
       if (wentToNextPhase) {
         return;
       }
-      // Go to next players' turn
-      this.initializePlayerTurn(this.playerTurnIndex)
     } else {
       console.error("turn_phase must be PlayerTurns to end turn.  Cannot be ", this.turn_phase);
     }
@@ -1434,8 +1423,6 @@ export default class Underworld {
   // when you want to set the turn_phase
   async initializeTurnPhase(p: turn_phase) {
     console.log('initializeTurnPhase(', turn_phase[p], ')');
-    // Reset to first player's turn
-    this.playerTurnIndex = 0;
 
     // Clear cast this turn
     globalThis.castThisTurn = false;
@@ -1469,8 +1456,7 @@ export default class Underworld {
           // Lastly, initialize the player turns.
           // Note, it is possible that calling this will immediately end
           // the player phase (if there are no players to take turns)
-          console.log('PlayerTurn: Change to PlayerTurns phase and initialize player with index', this.playerTurnIndex);
-          this.initializePlayerTurn(this.playerTurnIndex);
+          this.players.map(this.initializePlayerTurn);
           break;
         case turn_phase[turn_phase.NPC_ALLY]:
           for (let u of this.units.filter(u => u.unitType == UnitType.AI && u.faction == Faction.ALLY)) {
@@ -2020,7 +2006,6 @@ export default class Underworld {
   //   }
   //   this.levelIndex = serialized.levelIndex;
   //   this.turn_phase = serialized.turn_phase;
-  //   this.playerTurnIndex = serialized.playerTurnIndex;
   //   this.turn_number = serialized.turn_number;
   //   // Note: obstacles are not serialized since they are unchanging between levels
   //   // TODO, remove walls and pathingPolygons here, they are set in cacheWalls, so this is redundant
