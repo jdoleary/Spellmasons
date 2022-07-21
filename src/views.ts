@@ -151,6 +151,7 @@ function addUnderworldEventListeners() {
 }
 
 export function removeUnderworldEventListeners() {
+  if (globalThis.headless) { return; }
   // Remove keyboard shortcuts
   globalThis.removeEventListener('keydown', keydownListener);
   globalThis.removeEventListener('keyup', keyupListener);
