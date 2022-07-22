@@ -1170,50 +1170,53 @@ export default class Underworld {
       console.error('elLevelIndicator is null');
     }
   }
-  async initializePlayerTurn(player: Player.IPlayer) {
-    if (!player) {
-      console.error("Attempted to initialize turn for a non existant player");
-      console.trace('Attempted to initialize nonexistant player trace');
-      return;
-    }
-    // Give mana at the start of turn
-    const manaTillFull = player.unit.manaMax - player.unit.mana;
-    // Give the player their mana per turn but don't let it go beyond manaMax
-    // It's implemented this way instead of an actual capping in a setter so that
-    // mana CAN go beyond max for other reasons (like mana potions), by design
-    if (player.unit.alive) {
-      player.unit.mana += Math.max(0, Math.min(player.unit.manaPerTurn, manaTillFull));
-    }
+  async initializePlayerTurns() {
+    for (let player of this.players) {
 
-    // If this current player is NOT able to take their turn...
-    if (!Player.ableToTakeTurn(player)) {
-      // Skip them
-      this.endPlayerTurn(player.clientId);
-      // Do not continue with initialization
-      return;
-    }
-    if (player == globalThis.player) {
-      // Notify the current player that their turn is starting
-      queueCenteredFloatingText(`Your Turn`);
+      if (!player) {
+        console.error("Attempted to initialize turn for a non existant player");
+        console.trace('Attempted to initialize nonexistant player trace');
+        return;
+      }
+      // Give mana at the start of turn
+      const manaTillFull = player.unit.manaMax - player.unit.mana;
+      // Give the player their mana per turn but don't let it go beyond manaMax
+      // It's implemented this way instead of an actual capping in a setter so that
+      // mana CAN go beyond max for other reasons (like mana potions), by design
+      if (player.unit.alive) {
+        player.unit.mana += Math.max(0, Math.min(player.unit.manaPerTurn, manaTillFull));
+      }
 
-    }
-    // Trigger onTurnStart Events
-    const onTurnStartEventResults: boolean[] = await Promise.all(player.unit.onTurnStartEvents.map(
-      async (eventName) => {
-        const fn = Events.onTurnStartSource[eventName];
-        return fn ? await fn(player.unit, false) : false;
-      },
-    ));
-    if (onTurnStartEventResults.some((b) => b)) {
-      // If any onTurnStartEvents return true, skip the player
-      this.endPlayerTurn(player.clientId);
-      // Do not continue with initialization
-      return;
-    }
-    // If player is killed at the start of their turn (for example, due to poison)
-    // end their turn
-    if (!player.unit.alive) {
-      this.endPlayerTurn(player.clientId);
+      // If this current player is NOT able to take their turn...
+      if (!Player.ableToTakeTurn(player)) {
+        // Skip them
+        this.endPlayerTurn(player.clientId);
+        // Do not continue with initialization
+        return;
+      }
+      if (player == globalThis.player) {
+        // Notify the current player that their turn is starting
+        queueCenteredFloatingText(`Your Turn`);
+
+      }
+      // Trigger onTurnStart Events
+      const onTurnStartEventResults: boolean[] = await Promise.all(player.unit.onTurnStartEvents.map(
+        async (eventName) => {
+          const fn = Events.onTurnStartSource[eventName];
+          return fn ? await fn(player.unit, false) : false;
+        },
+      ));
+      if (onTurnStartEventResults.some((b) => b)) {
+        // If any onTurnStartEvents return true, skip the player
+        this.endPlayerTurn(player.clientId);
+        // Do not continue with initialization
+        return;
+      }
+      // If player is killed at the start of their turn (for example, due to poison)
+      // end their turn
+      if (!player.unit.alive) {
+        this.endPlayerTurn(player.clientId);
+      }
     }
     this.syncTurnMessage();
   }
@@ -1456,7 +1459,7 @@ export default class Underworld {
           // Lastly, initialize the player turns.
           // Note, it is possible that calling this will immediately end
           // the player phase (if there are no players to take turns)
-          this.players.map(this.initializePlayerTurn);
+          this.initializePlayerTurns();
           break;
         case turn_phase[turn_phase.NPC_ALLY]:
           for (let u of this.units.filter(u => u.unitType == UnitType.AI && u.faction == Faction.ALLY)) {

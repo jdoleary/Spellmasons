@@ -2,16 +2,6 @@
 - bug: Single player can't end turn anymore
 - Fix: Move player so it doesn't use stamina because IT MUST bring them to a synced location if their position somehow get's out of sync
 - bug: player 2 doesn't get cards
-- sometimes after underworld teardown i get weird underworld undefined errors as if the object still exists but it's own `this` has been unassigned
-    - C:\git\Golems\headless-server-build\src\Underworld.js:1307
-                this.syncTurnMessage();
-                    ^
-
-    TypeError: Cannot read properties of undefined (reading 'syncTurnMessage')
-        at C:\git\Golems\headless-server-build\src\Underworld.js:1307:18
-        at Generator.next (<anonymous>)
-        at fulfilled (C:\git\Golems\headless-server-build\src\Underworld.js:28:58)
-        at processTicksAndRejections (node:internal/process/task_queues:96:5)
     - C:\git\Golems\headless-server-build\src\entity\Unit.js:847
         const { turn_phase: phase } = globalThis.underworld;
                             ^
