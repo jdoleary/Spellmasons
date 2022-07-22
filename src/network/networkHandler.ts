@@ -395,7 +395,7 @@ export function setupNetworkHandlerGlobalFunctions(underworld: Underworld) {
   const savePrefix = 'spellmasons-save-';
   globalThis.getAllSaveFiles = () => Object.keys(localStorage).filter(x => x.startsWith(savePrefix)).map(x => x.substring(savePrefix.length));
 
-  globalThis.save = (title: string, underworld: Underworld) => {
+  globalThis.save = (title: string) => {
     storage.set(
       savePrefix + title,
       JSON.stringify({
@@ -412,7 +412,7 @@ export function setupNetworkHandlerGlobalFunctions(underworld: Underworld) {
     if (savedGameString) {
 
       if (!readyState.get('underworld')) {
-        await globalThis.startSingleplayer?.(underworld);
+        await globalThis.startSingleplayer?.();
       }
 
       const { level, underworld: savedUnderworld, phase, units, players } = JSON.parse(savedGameString);

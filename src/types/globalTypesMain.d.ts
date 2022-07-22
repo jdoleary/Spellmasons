@@ -15,7 +15,6 @@ declare global {
     var SPELLMASONS_PACKAGE_VERSION: string;
     var latencyPanel: undefined | Stats.Panel;
     var runPredictionsPanel: undefined | Stats.Panel;
-    var underworld: Underworld;
     // A reference to the player instance of the client playing on this instance
     var player: Player.IPlayer | undefined;
     // Globals needed for Golems-menu
@@ -37,7 +36,7 @@ declare global {
     var skipTutorial: undefined | (() => void);
 
     var save: undefined | ((title: string, underworld: Underworld) => void);
-    var load: undefined | ((title: string, underworld: Underworld) => void);
+    var load: undefined | ((title: string) => void);
     var getAllSaveFiles: undefined | (() => string[]);
     // Save pie messages for later replay
     var saveReplay: undefined | ((title: string) => void);
@@ -79,7 +78,7 @@ declare global {
     var volume: undefined | number;
     var volumeMusic: undefined | number;
     var volumeGame: undefined | number;
-    var startSingleplayer: undefined | ((underworld: Underworld) => Promise<void>);
+    var startSingleplayer: undefined | (() => Promise<void>);
     var startMultiplayer: undefined | ((wsPieUrl: string) => Promise<void>);
     // Used to ensure that the current client's turn doesn't end while they are still walking
     // If they invoke endMyTurn() while they are walking, it will wait until they are done

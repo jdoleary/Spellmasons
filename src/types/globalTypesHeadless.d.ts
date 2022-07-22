@@ -4,7 +4,6 @@ import type * as Unit from '../entity/Unit';
 import type Underworld from '../Underworld';
 import type PieClient from '@websocketpie/client';
 import type { Vec2 } from '../jmath/Vec';
-import type { LevelData } from '../Underworld';
 import type { View } from '../views';
 import type { Faction } from './commonTypes';
 import type { IPickup } from '../entity/Pickup';
@@ -155,7 +154,7 @@ declare global {
     var volume: undefined | number;
     var volumeMusic: undefined | number;
     var volumeGame: undefined | number;
-    var startSingleplayer: undefined | ((underworld: Underworld) => Promise<void>);
+    var startSingleplayer: undefined | (() => Promise<void>);
     var startMultiplayer: undefined | ((wsPieUrl: string) => Promise<void>);
     // Used to ensure that the current client's turn doesn't end while they are still walking
     // If they invoke endMyTurn() while they are walking, it will wait until they are done

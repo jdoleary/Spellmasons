@@ -56,7 +56,6 @@ import { Material } from './Conway';
 import { oneDimentionIndexToVec2 } from './jmath/ArrayUtil';
 import { raceTimeout } from './Promise';
 import { updateParticlees } from './graphics/Particles';
-import { setupWSPieGlobalFunctions } from './network/wsPieSetup';
 import { setupNetworkHandlerGlobalFunctions } from './network/networkHandler';
 import { setupDevGlobalFunctions } from './devUtils';
 
@@ -131,7 +130,6 @@ export default class Underworld {
     this.seed = globalThis.seedOverride || seed;
 
     // Setup global functions that need access to underworld:
-    setupWSPieGlobalFunctions(this);
     setupNetworkHandlerGlobalFunctions(this);
     setupDevGlobalFunctions(this);
 

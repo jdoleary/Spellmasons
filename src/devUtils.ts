@@ -45,6 +45,30 @@ export default function devUtils(graphics: PIXI.Graphics) {
     return { debugDrawLineSegments, debugDrawVec2s }
 }
 export function setupDevGlobalFunctions(underworld: Underworld) {
+    // For development, spawns a unit near the player
+    globalThis.devSpawnUnit = (unitId: string, faction: Faction = Faction.ENEMY) => {
+        if (globalThis.player) {
+            const coords = underworld.findValidSpawn(globalThis.player.unit, 5)
+            const sourceUnit = Units.allUnits[unitId];
+            if (coords && sourceUnit) {
+                Unit.create(
+                    unitId,
+                    // Start the unit at the summoners location
+                    coords.x,
+                    coords.y,
+                    // A unit always summons units in their own faction
+                    faction,
+                    sourceUnit.info.image,
+                    UnitType.AI,
+                    sourceUnit.info.subtype,
+                    1,
+                    sourceUnit.unitProps,
+                    underworld
+                );
+            }
+
+        }
+    }
     globalThis.devSpawnAllUnits = () => {
         for (let id of Object.keys(Units.allUnits)) {
             globalThis.devSpawnUnit?.(id, Faction.ENEMY);

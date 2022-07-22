@@ -1,3 +1,13 @@
+// Note: headless server MUST NOT import this file because @websocketpie/client is a browser only package
+// If you get something like the following error:
+// C:\git\Golems\node_modules\@websocketpie\client\dist\src\PieClient.js:10
+// import { MessageType } from './enums';
+// ^^^^^^
+
+// SyntaxError: Cannot use import statement outside a module
+// Trace the imports for headless server and you will find that somewhere this file
+// is imported.
+
 import PieClient, { Room } from '@websocketpie/client';
 import { onData } from './networkHandler';
 import { onClientPresenceChanged } from './networkUtil';
@@ -64,7 +74,7 @@ function defaultRoomInfo(_room_info = {}): Room {
   return room_info;
 }
 
-export function joinRoom(_room_info = {}, underworld: Underworld): Promise<void> {
+export function joinRoom(_room_info = {}): Promise<void> {
   if (!pie) {
     console.error('Could not join room, pie instance is undefined');
     return Promise.reject();
@@ -74,13 +84,13 @@ export function joinRoom(_room_info = {}, underworld: Underworld): Promise<void>
   // when people are trying to join each other's games
   room_info.name = room_info.name.toLowerCase();
   return pie.joinRoom(room_info, true).then(() => {
-    readyState.set('wsPieRoomJoined', true, underworld);
+    readyState.set('wsPieRoomJoined', true);
     console.log('Pie: You are now in the room', JSON.stringify(room_info, null, 2));
     // Useful for development to get into the game quickly
     let quickloadName = storage.get('quickload');
     if (quickloadName) {
       console.log('ADMIN: quickload:', quickloadName);
-      globalThis.load?.(quickloadName, underworld);
+      globalThis.load?.(quickloadName);
     } else {
       // All clients should join at the CharacterSelect screen so they can
       // choose their character.  Once they choose their character their
@@ -125,27 +135,25 @@ function addHandlers(pie: PieClient, underworld: Underworld) {
   };
 }
 
-globalThis.startSingleplayer = function startSingleplayer(underworld: Underworld) {
+
+globalThis.joinRoom = room_info => joinRoom(room_info);
+globalThis.startSingleplayer = function startSingleplayer() {
   console.log('Start Game: Attempt to start the game')
   document.body?.classList.toggle('loading', true);
-  return connect_to_wsPie_server(undefined, underworld).then(() => {
-    return new Promise<void>((resolve) => {
-      // setTimeout allows the UI to refresh before locking up the CPU with
-      // heavy level generation code
-      setTimeout(() => {
-        console.log('Host: Start game / Initialize Underworld');
-        const underworld = new Underworld(Math.random().toString());
+  return new Promise<void>((resolve) => {
+    // setTimeout allows the UI to refresh before locking up the CPU with
+    // heavy level generation code
+    setTimeout(() => {
+      console.log('Host: Start game / Initialize Underworld');
+      const underworld = new Underworld(Math.random().toString());
+      globalThis.connect_to_wsPie_server = wsUri => connect_to_wsPie_server(wsUri, underworld);
+      connect_to_wsPie_server(undefined, underworld).then(() => {
         // Mark the underworld as "ready"
         readyState.set('underworld', true, underworld);
         underworld.lastLevelCreated = underworld.generateLevelDataSyncronous(0);
-        joinRoom(undefined, underworld).then(resolve);
-      }, 10)
+        joinRoom().then(resolve);
 
-    })
+      })
+    }, 10)
   });
-}
-
-export function setupWSPieGlobalFunctions(underworld: Underworld) {
-  globalThis.connect_to_wsPie_server = wsUri => connect_to_wsPie_server(wsUri, underworld);
-  globalThis.joinRoom = room_info => joinRoom(room_info, underworld);
 }
