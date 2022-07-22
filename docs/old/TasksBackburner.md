@@ -1,3 +1,4 @@
+- Investigate webgl context was lost
 - Fix: bad-pathing.mkv in videos folder
     - seed: 0.6450583331398443
 - priest is attacking /dealing damage to him but he's not a vamp. how?

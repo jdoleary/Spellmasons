@@ -1172,12 +1172,13 @@ export default class Underworld {
   }
   async initializePlayerTurns() {
     for (let player of this.players) {
-
       if (!player) {
         console.error("Attempted to initialize turn for a non existant player");
         console.trace('Attempted to initialize nonexistant player trace');
         return;
       }
+      // Reset player.endedTurn
+      player.endedTurn = false;
       // Give mana at the start of turn
       const manaTillFull = player.unit.manaMax - player.unit.mana;
       // Give the player their mana per turn but don't let it go beyond manaMax
@@ -1244,6 +1245,7 @@ export default class Underworld {
       console.error('Cannot end turn, player with clientId:', clientId, 'does not exist');
       return;
     }
+    player.endedTurn = true;
     if (this.turn_phase != turn_phase.PlayerTurns) {
       // (A player "ending their turn" when it is not their turn
       // can occur when a client disconnects when it is not their turn)

@@ -1,5 +1,4 @@
 ## This weeks goals:
-- bug: Single player can't end turn anymore
 - Fix: Move player so it doesn't use stamina because IT MUST bring them to a synced location if their position somehow get's out of sync
 - bug: player 2 doesn't get cards
     - C:\git\Golems\headless-server-build\src\entity\Unit.js:847
