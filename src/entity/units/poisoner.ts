@@ -28,7 +28,7 @@ const unit: UnitSource = {
     walk: 'units/poisWalk',
   },
   action: async (unit: Unit.IUnit) => {
-    const nonPoisonedEnemyUnits = globalThis.underworld.units.filter(
+    const nonPoisonedEnemyUnits = underworld.units.filter(
       (u) =>
         u.faction !== unit.faction &&
         u.alive &&
@@ -66,7 +66,7 @@ const unit: UnitSource = {
           });
         }
         const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, chosenUnit, unit.stamina);
-        await Unit.moveTowards(unit, moveTo);
+        await Unit.moveTowards(unit, moveTo, underworld);
       }
     }
   },

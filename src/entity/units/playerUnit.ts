@@ -19,16 +19,16 @@ const unit: UnitSource = {
       // Archers attack or move, not both; so clear their existing path
       unit.path = undefined;
       Unit.orient(unit, attackTarget);
-      const keyMoment = () => globalThis.underworld.castCards({}, unit, ['hurt'], attackTarget, false, false);
+      const keyMoment = () => underworld.castCards({}, unit, ['hurt'], attackTarget, false, false);
       await Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false });
     }
     // Movement:
-    const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit);
+    const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit, underworld);
     if (closestEnemy) {
       const distanceToEnemy = math.distance(unit, closestEnemy);
       // Trick to make the unit only move as far as will put them in range but no closer
       unit.stamina = Math.min(unit.stamina, distanceToEnemy - unit.attackRange);
-      await Unit.moveTowards(unit, closestEnemy);
+      await Unit.moveTowards(unit, closestEnemy, underworld);
     }
   },
   animations: {

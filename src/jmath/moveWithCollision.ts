@@ -3,6 +3,7 @@ import { distance, similarTriangles } from "./math";
 import { closestLineSegmentIntersection, findWherePointIntersectLineSegmentAtRightAngle, LineSegment } from "./lineSegment";
 import * as config from '../config';
 import type * as Unit from '../entity/Unit';
+import Underworld from '../Underworld';
 export interface ForceMove {
     pushedObject: Circle;
     velocity: Vec2;
@@ -67,7 +68,7 @@ export function collideWithLineSegments(circle: Circle, lineSegments: LineSegmen
 // collisions with circles and eventaully lines.  Collisions may cause
 // both colliders to move
 // mover may not end up at destination if it collides
-export function moveWithCollisions(mover: Circle, destination: Vec2, circles: Unit.IUnit[]) {
+export function moveWithCollisions(mover: Circle, destination: Vec2, circles: Unit.IUnit[], underworld: Underworld) {
     // Determine if the mover intersects with any "circles" as
     // it travels from mover to destination
     // We do this by adding mover.radius to the other circle's radius
@@ -84,7 +85,7 @@ export function moveWithCollisions(mover: Circle, destination: Vec2, circles: Un
         if (mover !== other) {
             // If the mover now intersects with another circle...
             if (isCircleIntersectingCircle(mover, other)) {
-                repelCircles(mover, originalPosition, other, other.immovable);
+                repelCircles(mover, originalPosition, other, underworld, other.immovable);
             }
         }
     }
@@ -98,7 +99,7 @@ export function moveWithCollisions(mover: Circle, destination: Vec2, circles: Un
 // Note: this function is only meant to handle small increments of movements, this function
 // will not account for the case where the destination does not intersect
 // a circle but the mover would travel through a circle on it's way to destination.  This is by design.
-function repelCircles(mover: Circle, originalPosition: Vec2, other: Circle, otherIsFixed: boolean = false) {
+function repelCircles(mover: Circle, originalPosition: Vec2, other: Circle, underworld: Underworld, otherIsFixed: boolean = false) {
     // Repel, so they don't intersect
     // Circles should move mover.radius/2 + other.radius/2 away from each others
     // positions
@@ -117,7 +118,7 @@ function repelCircles(mover: Circle, originalPosition: Vec2, other: Circle, othe
         if (overlap > 0) {
             if (otherIsFixed) {
                 const moverPos = moveAlongVector(mover, vector, -overlap);
-                const intersection = closestLineSegmentIntersection({ p1: mover, p2: moverPos }, globalThis.underworld.pathingLineSegments);
+                const intersection = closestLineSegmentIntersection({ p1: mover, p2: moverPos }, underworld.pathingLineSegments);
                 if (intersection) {
                     mover.x = intersection.x;
                     mover.y = intersection.y;
@@ -127,7 +128,7 @@ function repelCircles(mover: Circle, originalPosition: Vec2, other: Circle, othe
                 }
             } else {
                 const otherPos = moveAlongVector(other, vector, overlap);
-                const intersection = closestLineSegmentIntersection({ p1: other, p2: otherPos }, globalThis.underworld.pathingLineSegments);
+                const intersection = closestLineSegmentIntersection({ p1: other, p2: otherPos }, underworld.pathingLineSegments);
                 if (intersection) {
                     other.x = intersection.x;
                     other.y = intersection.y;
@@ -184,10 +185,10 @@ function repelCircleFromLine(mover: Circle, line: LineSegment) {
     }
     // Test for intersection with the line segment endpoints
     if (distance(line.p1, mover) <= totalRepelDistance) {
-        repelCircles(mover, mover, { ...line.p1, radius: totalRepelDistance }, true);
+        repelCircles(mover, mover, { ...line.p1, radius: totalRepelDistance }, underworld, true);
     }
     if (distance(line.p2, mover) <= totalRepelDistance) {
-        repelCircles(mover, mover, { ...line.p2, radius: totalRepelDistance }, true);
+        repelCircles(mover, mover, { ...line.p2, radius: totalRepelDistance }, underworld, true);
     }
 }
 export const testables = {

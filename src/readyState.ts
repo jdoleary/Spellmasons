@@ -1,4 +1,5 @@
 import { processNextInQueueIfReady } from "./network/networkHandler";
+import Underworld from "./Underworld";
 
 const readyState = {
     wsPieConnection: false,
@@ -11,7 +12,7 @@ const readyState = {
 let is_fully_ready = false;
 const elReadyState = document.getElementById('ready-state');
 let hasAutoJoined = false;
-export function set(key: keyof typeof readyState, value: boolean) {
+export function set(key: keyof typeof readyState, value: boolean, underworld?: Underworld) {
     console.log('Ready State: ', key, value);
     readyState[key] = value;
     if (!globalThis.headless && !hasAutoJoined && readyState.wsPieConnection && readyState.pixiAssets && readyState.content) {
@@ -43,7 +44,7 @@ export function set(key: keyof typeof readyState, value: boolean) {
     }
     // When the game is ready to process wsPie messages, begin
     // processing them
-    processNextInQueueIfReady();
+    processNextInQueueIfReady(underworld);
 }
 export function get(key: keyof typeof readyState) {
     return readyState[key];

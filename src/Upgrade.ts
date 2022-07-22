@@ -4,13 +4,14 @@ import { getCardRarityColor } from './graphics/ui/CardUI';
 import { chooseObjectWithProbability, probabilityToRarity } from './jmath/rand';
 import { MESSAGE_TYPES } from './types/MessageTypes';
 import type { IPlayer } from './entity/Player';
+import Underworld from './Underworld';
 export interface IUpgrade {
   title: string;
   description: (player: IPlayer) => string;
   thumbnail: string;
   // The maximum number of copies a player can have of this upgrade
   maxCopies?: number;
-  effect: (player: IPlayer) => void;
+  effect: (player: IPlayer, underworld: Underworld) => void;
   // The probability of getting this as an upgrade
   probability: number;
   cost: CardCost;
@@ -149,14 +150,14 @@ export const upgradeStatsSource: IUpgrade[] = [
       `Increases your max health from ${player.unit.healthMax} to ${player.unit.healthMax + maxHealthIncreaseAmount
       }`,
     thumbnail: 'images/upgrades/plus_max_health.png',
-    effect: (player) => {
+    effect: (player, underworld) => {
       player.unit.healthMax += maxHealthIncreaseAmount;
       player.unit.health = player.unit.healthMax;
       // Now that the player unit's mana has increased,sync the new
       // mana state with the player's predictionUnit so it is properly
       // refelcted in the health bar
       // (note: this would be auto corrected on the next mouse move anyway)
-      globalThis.underworld.syncPlayerPredictionUnitOnly();
+      underworld.syncPlayerPredictionUnitOnly();
     },
     probability: 30,
     cost: { healthCost: 0, manaCost: 0 },
@@ -167,7 +168,7 @@ export const upgradeStatsSource: IUpgrade[] = [
       `Increases your mana from ${player.unit.manaMax} to ${player.unit.manaMax + maxManaIncreaseAmount
       }`,
     thumbnail: 'images/upgrades/todo.png',
-    effect: (player) => {
+    effect: (player, underworld) => {
       player.unit.manaMax += maxManaIncreaseAmount;
       player.unit.mana = player.unit.manaMax;
       player.unit.manaPerTurn = player.unit.manaMax;
@@ -175,7 +176,7 @@ export const upgradeStatsSource: IUpgrade[] = [
       // mana state with the player's predictionUnit so it is properly
       // refelcted in the health bar
       // (note: this would be auto corrected on the next mouse move anyway)
-      globalThis.underworld.syncPlayerPredictionUnitOnly();
+      underworld.syncPlayerPredictionUnitOnly();
     },
     probability: 30,
     cost: { healthCost: 0, manaCost: 0 },

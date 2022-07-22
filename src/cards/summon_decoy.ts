@@ -32,7 +32,8 @@ The decoy has health but cannot move.  It will be destroyed when its health reac
             UnitType.AI,
             sourceUnit.info.subtype,
             0,
-            sourceUnit.unitProps
+            sourceUnit.unitProps,
+            underworld
           );
         } else {
           console.error(`Source unit ${unitId} is missing`);

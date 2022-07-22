@@ -20,6 +20,7 @@ import { Vec2 } from '../../jmath/Vec';
 import { distance, getCoordsAtDistanceTowardsTarget } from '../../jmath/math';
 import * as colors from '../../graphics/ui/colors';
 import { pointsEveryXDistanceAlongPath } from '../../jmath/Pathfinding';
+import Underworld from '../../Underworld';
 
 export const keyDown = {
   w: false,
@@ -44,12 +45,12 @@ function nonUnderworldKeydownListener(event: KeyboardEvent) {
       break;
   }
 }
-export function keypressListener(event: KeyboardEvent) {
+export function keypressListener(underworld: Underworld, event: KeyboardEvent) {
   // Only handle hotkeys when viewing the Game
   if (globalThis.view !== View.Game) {
     return;
   }
-  if (!globalThis.underworld) {
+  if (!underworld) {
     return
   }
 
@@ -58,7 +59,7 @@ export function keypressListener(event: KeyboardEvent) {
       CardUI.toggleInventory(undefined, undefined);
       break;
     case 'Space':
-      globalThis.underworld.endMyTurn();
+      underworld.endMyTurn();
       break;
     case 'Digit1':
       CardUI.selectCardByIndex(0);
@@ -93,12 +94,12 @@ export function keypressListener(event: KeyboardEvent) {
 
   }
 }
-export function keydownListener(event: KeyboardEvent) {
+export function keydownListener(underworld: Underworld, event: KeyboardEvent) {
   // Only handle hotkeys when viewing the Game
   if (globalThis.view !== View.Game) {
     return;
   }
-  if (!globalThis.underworld) {
+  if (!underworld) {
     return
   }
 
@@ -122,7 +123,7 @@ export function keydownListener(event: KeyboardEvent) {
     case 'Escape':
       const thereWasTooltipActive = clearTooltipSelection();
       const thereWereCardsSelected = CardUI.areAnyCardsSelected();
-      CardUI.clearSelectedCards();
+      CardUI.clearSelectedCards(underworld);
       if (!thereWasTooltipActive && !thereWereCardsSelected) {
         // Otherwise finally toggle menu
         toggleMenu();
@@ -153,7 +154,7 @@ export function keydownListener(event: KeyboardEvent) {
       cameraAutoFollow(false);
       break;
     case 'KeyC':
-      const mouseTarget = globalThis.underworld.getMousePos();
+      const mouseTarget = underworld.getMousePos();
       globalThis.pie.sendData({
         type: MESSAGE_TYPES.PING,
         x: mouseTarget.x,
@@ -168,7 +169,7 @@ export function keydownListener(event: KeyboardEvent) {
   }
 }
 
-export function keyupListener(event: KeyboardEvent) {
+export function keyupListener(underworld: Underworld, event: KeyboardEvent) {
   // Only handle hotkeys when viewing the Game
   if (globalThis.view !== View.Game) {
     return;
@@ -190,19 +191,19 @@ export function keyupListener(event: KeyboardEvent) {
   }
 }
 
-export function endTurnBtnListener(e: MouseEvent) {
-  globalThis.underworld.endMyTurn();
+export function endTurnBtnListener(underworld: Underworld, e: MouseEvent) {
+  underworld.endMyTurn();
   e.preventDefault();
   e.stopPropagation();
   return false;
 }
 
-export function mouseMove(e?: MouseEvent) {
+export function mouseMove(underworld: Underworld, e?: MouseEvent) {
   // Only handle clicks when viewing the Game
   if (globalThis.view !== View.Game) {
     return;
   }
-  if (!globalThis.underworld) {
+  if (!underworld) {
     return
   }
 
@@ -212,18 +213,18 @@ export function mouseMove(e?: MouseEvent) {
     cameraAutoFollow(false);
     moveCamera(-movementX / zoom, -movementY / zoom);
   }
-  const mouseTarget = globalThis.underworld.getMousePos();
+  const mouseTarget = underworld.getMousePos();
 
   // RMB
   if (globalThis.player) {
 
     if (globalThis.RMBDown) {
-      if (globalThis.underworld.isMyTurn()) {
+      if (underworld.isMyTurn()) {
         drawWalkRope(mouseTarget);
         // If player is able to move
         if (globalThis.player.unit.stamina > 0) {
           // Move up to but not onto intersection or else unit will get stuck ON linesegment
-          Unit._moveTowards(globalThis.player.unit, mouseTarget);
+          Unit._moveTowards(globalThis.player.unit, mouseTarget, underworld);
         } else {
           if (!globalThis.notifiedOutOfStamina) {
             floatingText({
@@ -242,7 +243,7 @@ export function mouseMove(e?: MouseEvent) {
     }
   }
 
-  runPredictions();
+  runPredictions(underworld);
 
   // TODO: optimize this function by not rerunning parts if mouse & player.unit position
   // havent changed since last call.
@@ -264,7 +265,7 @@ export function mouseMove(e?: MouseEvent) {
         globalThis.debugGraphics?.lineTo(point.x, point.y);
       }
     }
-    const mouseTarget = globalThis.underworld.getMousePos();
+    const mouseTarget = underworld.getMousePos();
     const cellX = Math.round(mouseTarget.x / config.OBSTACLE_SIZE);
     const cellY = Math.round(mouseTarget.y / config.OBSTACLE_SIZE);
     const originalTile = globalThis.map ? globalThis.map.tiles[vec2ToOneDimentionIndex({ x: cellX, y: cellY }, globalThis.map.width)] : undefined;
@@ -280,30 +281,30 @@ export function mouseMove(e?: MouseEvent) {
     // globalThis.debugGraphics?.lineTo(cellX * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2, cellY * config.OBSTACLE_SIZE + config.OBSTACLE_SIZE / 2);
     // globalThis.debugGraphics?.lineTo(cellX * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2, cellY * config.OBSTACLE_SIZE - config.OBSTACLE_SIZE / 2);
     // Draw the pathing walls
-    for (let lineSegment of globalThis.underworld.pathingLineSegments) {
+    for (let lineSegment of underworld.pathingLineSegments) {
       globalThis.debugGraphics?.lineStyle(2, 0xffaabb, 1.0);
       globalThis.debugGraphics?.moveTo(lineSegment.p1.x, lineSegment.p1.y);
       globalThis.debugGraphics?.lineTo(lineSegment.p2.x, lineSegment.p2.y);
     }
     // Draw bounds that prevent movement
-    for (let bound of globalThis.underworld.liquidBounds) {
+    for (let bound of underworld.liquidBounds) {
       globalThis.debugGraphics?.lineStyle(2, 0x0000ff, 1.0);
       globalThis.debugGraphics?.moveTo(bound.p1.x, bound.p1.y);
       globalThis.debugGraphics?.lineTo(bound.p2.x, bound.p2.y);
     }
     // Draw walls that prevent line of sight 
-    for (let wall of globalThis.underworld.walls) {
+    for (let wall of underworld.walls) {
       globalThis.debugGraphics?.lineStyle(2, 0x00ff00, 1.0);
       globalThis.debugGraphics?.moveTo(wall.p1.x, wall.p1.y);
       globalThis.debugGraphics?.lineTo(wall.p2.x, wall.p2.y);
     }
     // Draw underworld limits
     // globalThis.debugGraphics?.lineStyle(2, 0xff0000, 1.0);
-    // globalThis.debugGraphics?.moveTo(globalThis.underworld.limits.xMin, globalThis.underworld.limits.yMin);
-    // globalThis.debugGraphics?.lineTo(globalThis.underworld.limits.xMax, globalThis.underworld.limits.yMin);
-    // globalThis.debugGraphics?.lineTo(globalThis.underworld.limits.xMax, globalThis.underworld.limits.yMax);
-    // globalThis.debugGraphics?.lineTo(globalThis.underworld.limits.xMin, globalThis.underworld.limits.yMax);
-    // globalThis.debugGraphics?.lineTo(globalThis.underworld.limits.xMin, globalThis.underworld.limits.yMin);
+    // globalThis.debugGraphics?.moveTo(underworld.limits.xMin, underworld.limits.yMin);
+    // globalThis.debugGraphics?.lineTo(underworld.limits.xMax, underworld.limits.yMin);
+    // globalThis.debugGraphics?.lineTo(underworld.limits.xMax, underworld.limits.yMax);
+    // globalThis.debugGraphics?.lineTo(underworld.limits.xMin, underworld.limits.yMax);
+    // globalThis.debugGraphics?.lineTo(underworld.limits.xMin, underworld.limits.yMin);
 
   }
 }
@@ -320,7 +321,7 @@ function drawWalkRope(target: Vec2) {
   //
   // Show walk path
   globalThis.walkPathGraphics?.clear();
-  walkRopePath = globalThis.underworld.calculatePath(walkRopePath, Vec.round(globalThis.player.unit), Vec.round(target));
+  walkRopePath = underworld.calculatePath(walkRopePath, Vec.round(globalThis.player.unit), Vec.round(target));
   const { points: currentPlayerPath } = walkRopePath;
   if (currentPlayerPath.length) {
     const turnStopPoints = pointsEveryXDistanceAlongPath(globalThis.player.unit, currentPlayerPath, globalThis.player.unit.staminaMax, globalThis.player.unit.staminaMax - globalThis.player.unit.stamina);
@@ -378,12 +379,12 @@ function drawWalkRope(target: Vec2) {
   }
 
 }
-export function contextmenuHandler(e: MouseEvent) {
+export function contextmenuHandler(underworld: Underworld, e: MouseEvent) {
   // Prevent opening context menu on right click
   e.preventDefault();
   e.stopPropagation();
 }
-export function mouseDownHandler(e: MouseEvent) {
+export function mouseDownHandler(underworld: Underworld, e: MouseEvent) {
   if (e.button == 1) {
     // setMMBDown so camera will be dragged around
     globalThis.setMMBDown?.(true);
@@ -393,7 +394,7 @@ export function mouseDownHandler(e: MouseEvent) {
     globalThis.setRMBDown?.(true);
   }
 }
-export function mouseUpHandler(e: MouseEvent) {
+export function mouseUpHandler(underworld: Underworld, e: MouseEvent) {
   // Turn MMBDown off for any click to protect against it getting stuck
   // as flagged "down"
   globalThis.setMMBDown?.(false);
@@ -407,7 +408,7 @@ export function mouseUpHandler(e: MouseEvent) {
     e.preventDefault();
   }
 }
-export function onWindowBlur() {
+export function onWindowBlur(underworld: Underworld) {
   // Turn off keyboard and mouse flags when the document loses focus
   // To protect against the case where a user has middle mouse down
   // while they alt tab, which - without the following line -
@@ -416,15 +417,15 @@ export function onWindowBlur() {
   globalThis.setMMBDown?.(false);
 }
 // Handle clicks on the game board
-export function clickHandler(_e: MouseEvent) {
+export function clickHandler(underworld: Underworld, _e: MouseEvent) {
   // Only handle clicks when viewing the Game
   if (globalThis.view !== View.Game) {
     return;
   }
-  if (!globalThis.underworld) {
+  if (!underworld) {
     return;
   }
-  const mousePos = globalThis.underworld.getMousePos();
+  const mousePos = underworld.getMousePos();
   if (isOutOfBounds(mousePos)) {
     // Disallow click out of bounds
     return;
@@ -433,7 +434,7 @@ export function clickHandler(_e: MouseEvent) {
   // If a spell exists (based on the combination of cards selected)...
   if (CardUI.areAnyCardsSelected()) {
     // Only allow casting in the proper phase and on player's turn only
-    if (globalThis.underworld.isMyTurn()) {
+    if (underworld.isMyTurn()) {
       // Get current client's player
       const selfPlayer = globalThis.player;
       // If the player casting is the current client player
@@ -473,7 +474,7 @@ export function clickHandler(_e: MouseEvent) {
           // assume the user is trying to cast at the end of their range.
           const endRangeTarget = getEndOfRangeTarget(selfPlayer, target);
           // OR if the first card doesn't require a unit target (like summon_decoy), allow casting at end range
-          if (globalThis.underworld.hasInitialTarget(endRangeTarget) || (cards[0] && cards[0].allowNonUnitTarget)) {
+          if (underworld.hasInitialTarget(endRangeTarget) || (cards[0] && cards[0].allowNonUnitTarget)) {
             target = endRangeTarget;
           } else {
             // If there is no target at end range, just show that they are trying to cast out of range
@@ -489,8 +490,8 @@ export function clickHandler(_e: MouseEvent) {
         // Abort casting if there is no unitAtCastLocation
         // unless the first card (like AOE) specifically allows casting
         // on non unit targets
-        const unitAtCastLocation = globalThis.underworld.getUnitAt(target);
-        const pickupAtCastLocation = globalThis.underworld.getPickupAt(target);
+        const unitAtCastLocation = underworld.getUnitAt(target);
+        const pickupAtCastLocation = underworld.getPickupAt(target);
         if ((!unitAtCastLocation && !pickupAtCastLocation) && cards.length && cards[0] && !cards[0].allowNonUnitTarget) {
           floatingText({
             coords: target,
@@ -509,7 +510,7 @@ export function clickHandler(_e: MouseEvent) {
           y: target.y,
           cards: cardIds,
         });
-        CardUI.clearSelectedCards();
+        CardUI.clearSelectedCards(underworld);
       } else {
         console.error("Attempting to cast while globalThis.player is undefined");
       }

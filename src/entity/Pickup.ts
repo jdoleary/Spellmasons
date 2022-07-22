@@ -65,7 +65,7 @@ export function copyForPredictionPickup(p: IPickup): IPickup {
 export function create({ pos, pickupSource, onTurnsLeftDone }:
   {
     pos: Vec2, pickupSource: IPickupSource, onTurnsLeftDone?: (self: IPickup) => Promise<void>
-  }) {
+  }, underworld: Underworld) {
   const { name, description, imagePath, effect, scale, singleUse, animationSpeed, playerOnly = false, turnsLeftToGrab } = pickupSource;
   const { x, y } = pos
   const self: IPickup = {
@@ -112,7 +112,7 @@ export function create({ pos, pickupSource, onTurnsLeftDone }:
     }
   }
 
-  globalThis.underworld.addPickupToArray(self, false);
+  underworld.addPickupToArray(self, false);
 
   return self;
 }
@@ -141,25 +141,25 @@ export function serialize(p: IPickup): IPickupSerialized {
   return serialized;
 }
 // Reinitialize a pickup from another pickup object, this is used in loading game state after reconnect
-export function load(pickup: IPickup) {
+export function load(pickup: IPickup, underworld: Underworld) {
   // Get the pickup object
   let foundPickup = pickups.find((p) => p.imagePath == pickup.imagePath);
   if (foundPickup) {
     // TODO verify that complex pickup behavior like onTurnsLeftDone still work after load, traps
     // probably don't work after load because callbacks can't be serialized
-    const self = { ...create({ pos: pickup, pickupSource: foundPickup }), ...pickup };
+    const self = { ...create({ pos: pickup, pickupSource: foundPickup }, underworld), ...pickup };
     return self;
   } else {
     throw new Error(`Could not load pickup with path ${pickup.imagePath}`);
   }
 }
-export function removePickup(pickup: IPickup, prediction: boolean) {
+export function removePickup(pickup: IPickup, underworld: Underworld, prediction: boolean) {
   Image.cleanup(pickup.image);
-  globalThis.underworld.removePickupFromArray(pickup, prediction);
+  underworld.removePickupFromArray(pickup, prediction);
   checkIfNeedToClearTooltip();
 }
 export function triggerPickup(pickup: IPickup, unit: IUnit, underworld: Underworld, prediction: boolean) {
-  const player = globalThis.underworld.players.find((p) => p.unit === unit);
+  const player = underworld.players.find((p) => p.unit === unit);
   if (pickup.playerOnly && !player) {
     // If pickup is playerOnly, do not trigger if a player is not the one triggering it
     return;
@@ -167,7 +167,7 @@ export function triggerPickup(pickup: IPickup, unit: IUnit, underworld: Underwor
   const didTrigger = pickup.effect({ unit, player, underworld, prediction });
   // Only remove pickup if it triggered AND is a singleUse pickup
   if (pickup.singleUse && didTrigger) {
-    removePickup(pickup, prediction);
+    removePickup(pickup, underworld, prediction);
   }
 }
 
@@ -229,8 +229,8 @@ export const pickups: IPickupSource[] = [
     scale: 0.5,
     turnsLeftToGrab: 4,
     playerOnly: true,
-    effect: ({ unit, player }) => {
-      globalThis.underworld.showUpgrades(false);
+    effect: ({ unit, player, underworld }) => {
+      underworld.showUpgrades(false);
       return true;
     },
   },
@@ -243,7 +243,7 @@ export const pickups: IPickupSource[] = [
     singleUse: true,
     scale: 1.0,
     playerOnly: true,
-    effect: ({ unit, player }) => {
+    effect: ({ unit, player, underworld }) => {
       if (player) {
         player.unit.mana += manaPotionRestoreAmount;
         explainManaOverfill();
@@ -279,7 +279,7 @@ export const pickups: IPickupSource[] = [
         // mana state with the player's predictionUnit so it is properly
         // refelcted in the mana bar
         // (note: this would be auto corrected on the next mouse move anyway)
-        globalThis.underworld.syncPlayerPredictionUnitOnly();
+        underworld.syncPlayerPredictionUnitOnly();
         return true;
       }
       return false;
@@ -294,7 +294,7 @@ export const pickups: IPickupSource[] = [
     playerOnly: true,
     singleUse: true,
     description: `Restores ${healthPotionRestoreAmount} health.`,
-    effect: ({ player }) => {
+    effect: ({ player, underworld }) => {
       if (player && player.unit.health < player.unit.healthMax) {
         takeDamage(player.unit, -healthPotionRestoreAmount, underworld, false);
         // Add spell effect animation
@@ -315,7 +315,7 @@ export const pickups: IPickupSource[] = [
         // mana state with the player's predictionUnit so it is properly
         // refelcted in the health bar
         // (note: this would be auto corrected on the next mouse move anyway)
-        globalThis.underworld.syncPlayerPredictionUnitOnly();
+        underworld.syncPlayerPredictionUnitOnly();
         return true;
       }
       return false;

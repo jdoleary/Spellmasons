@@ -40,7 +40,7 @@ import { calculateCost } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle } from './jmath/lineSegment';
 import { expandPolygon, mergePolygon2s, Polygon2, Polygon2LineSegment, toLineSegments, toPolygon2LineSegments } from './jmath/Polygon2';
 import { calculateDistanceOfVec2Array, findPath } from './jmath/Pathfinding';
-import { removeUnderworldEventListeners, setView, View } from './views';
+import { setView, View } from './views';
 import * as readyState from './readyState';
 import { mouseMove } from './graphics/ui/eventListeners';
 import Jprompt from './graphics/Jprompt';
@@ -56,6 +56,9 @@ import { Material } from './Conway';
 import { oneDimentionIndexToVec2 } from './jmath/ArrayUtil';
 import { raceTimeout } from './Promise';
 import { updateParticlees } from './graphics/Particles';
+import { setupWSPieGlobalFunctions } from './network/wsPieSetup';
+import { setupNetworkHandlerGlobalFunctions } from './network/networkHandler';
+import { setupDevGlobalFunctions } from './devUtils';
 
 export enum turn_phase {
   PlayerTurns,
@@ -119,10 +122,18 @@ export default class Underworld {
   // The hash is used to prevent sending the same data more than once
   lastThoughtsHash: string = '';
   playerThoughts: { [clientId: string]: { target: Vec2, cardIds: string[] } } = {};
+  // Keep track of the LevelData from the last level that was created in
+  // case it needs to be sent to another client
+  lastLevelCreated: LevelData | undefined;
+  removeEventListeners: undefined | (() => void);
 
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
-    globalThis.underworld = this;
     this.seed = globalThis.seedOverride || seed;
+
+    // Setup global functions that need access to underworld:
+    setupWSPieGlobalFunctions(this);
+    setupNetworkHandlerGlobalFunctions(this);
+    setupDevGlobalFunctions(this);
 
     if (elSeed) {
       elSeed.innerText = `Seed: ${this.seed}`;
@@ -146,7 +157,7 @@ export default class Underworld {
       this.cardDropsDropped++;
       const pickupSource = Pickup.pickups.find(p => p.name == Pickup.CARDS_PICKUP_NAME)
       if (pickupSource) {
-        Pickup.create({ pos: enemyKilledPos, pickupSource });
+        Pickup.create({ pos: enemyKilledPos, pickupSource }, this);
       } else {
         console.error('pickupSource for', Pickup.CARDS_PICKUP_NAME, ' not found');
         return
@@ -157,7 +168,7 @@ export default class Underworld {
   syncPlayerPredictionUnitOnly() {
     if (globalThis.predictionUnits && globalThis.player !== undefined) {
       const predictionUnitIndex = globalThis.predictionUnits.findIndex(u => u.id == globalThis.player?.unit.id);
-      globalThis.predictionUnits[predictionUnitIndex] = Unit.copyForPredictionUnit(globalThis.player.unit);
+      globalThis.predictionUnits[predictionUnitIndex] = Unit.copyForPredictionUnit(globalThis.player.unit, this);
     }
   }
   // Assigns globalThis.predictionUnits a copy of this.units
@@ -165,7 +176,7 @@ export default class Underworld {
   syncPredictionEntities() {
     // Headless does not use predictions because predictions are only for display
     if (globalThis.headless) { return; }
-    globalThis.predictionUnits = this.units.map(Unit.copyForPredictionUnit);
+    globalThis.predictionUnits = this.units.map(u => Unit.copyForPredictionUnit(u, this));
     globalThis.predictionPickups = this.pickups.map(Pickup.copyForPredictionPickup);
   }
   syncronizeRNG(RNGState: SeedrandomState | boolean) {
@@ -186,10 +197,10 @@ export default class Underworld {
     const { pushedObject, velocity, velocity_falloff } = forceMoveInst;
     const lastPosition = Vec.clone(pushedObject);
     const aliveUnits = ((prediction && globalThis.predictionUnits) ? globalThis.predictionUnits : this.units).filter(u => u.alive);
-    moveWithCollisions(pushedObject, Vec.add(pushedObject, velocity), aliveUnits);
+    moveWithCollisions(pushedObject, Vec.add(pushedObject, velocity), aliveUnits, this);
     collideWithLineSegments(pushedObject, this.walls);
     forceMoveInst.velocity = Vec.multiply(velocity_falloff, velocity);
-    Obstacle.checkLiquidInteractionDueToForceMovement(forceMoveInst, lastPosition, prediction);
+    Obstacle.checkLiquidInteractionDueToForceMovement(forceMoveInst, lastPosition, this, prediction);
     if (Unit.isUnit(forceMoveInst.pushedObject)) {
       // If the pushed object is a unit, check if it collides with any pickups
       // as it is pushed
@@ -216,7 +227,7 @@ export default class Underworld {
     // Draw cast line:
     if (globalThis.player) {
       if (CardUI.areAnyCardsSelected()) {
-        const mouseTarget = globalThis.underworld.getMousePos();
+        const mouseTarget = this.getMousePos();
         // Players can only cast within their attack range
         const castLine = { p1: globalThis.player.unit, p2: mouseTarget };
         globalThis.unitOverlayGraphics?.lineStyle(3, colors.targetBlue, 0.7);
@@ -268,7 +279,7 @@ export default class Underworld {
             u.path.points.shift();
           }
           // Only allow movement if the unit has stamina
-          if (u.path && u.path.points[0] && u.stamina > 0 && Unit.isUnitsTurnPhase(u)) {
+          if (u.path && u.path.points[0] && u.stamina > 0 && Unit.isUnitsTurnPhase(u, this)) {
             const lastPosition = Vec.clone(u);
             // Move towards target
             const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.path.points[0], u.moveSpeed * deltaTime)
@@ -286,11 +297,11 @@ export default class Underworld {
               // AI collide with each other and walls
               const originalPosition = Vec.clone(u);
               // Only move other NPCs out of the way, never move player units
-              moveWithCollisions(u, stepTowardsTarget, aliveNPCs);
+              moveWithCollisions(u, stepTowardsTarget, aliveNPCs, this);
               moveDist = math.distance(originalPosition, u);
             }
             u.stamina -= moveDist;
-            Obstacle.checkLiquidInteractionDueToMovement(u, lastPosition, false);
+            Obstacle.checkLiquidInteractionDueToMovement(u, lastPosition, this, false);
             // If unit is MELEE and only has the final target left in the path, stop when it gets close enough
             if (
               u.path.points[0] && u.path.points.length == 1 && u.unitSubType == UnitSubType.MELEE && math.distance(u, u.path.points[0]) <= config.COLLISION_MESH_RADIUS * 2
@@ -383,12 +394,12 @@ export default class Underworld {
     // Sort unit sprites visually by y position (like "z-index")
     containerUnits?.children.sort((a: any, b: any) => a.y - b.y)
 
-    updateCameraPosition();
+    updateCameraPosition(this);
     this.drawEnemyAttentionMarkers();
     this.drawResMarkers();
     this.drawPlayerThoughts();
-    updatePlanningView();
-    mouseMove();
+    updatePlanningView(this);
+    mouseMove(this);
     // Particles
     updateParticlees(deltaTime);
 
@@ -587,11 +598,11 @@ export default class Underworld {
   // if an object stops being used.  It does not empty the underworld arrays, by design.
   cleanup() {
     console.trace('teardown: Cleaning up underworld');
-    readyState.set('underworld', false);
-    // @ts-ignore
-    globalThis.underworld = undefined;
+    readyState.set('underworld', false, this);
 
-    removeUnderworldEventListeners();
+    if (underworld.removeEventListeners) {
+      underworld.removeEventListeners();
+    }
 
     // Remove all phase classes from body
     if (document && !globalThis.headless) {
@@ -682,7 +693,7 @@ export default class Underworld {
   spawnPickup(index: number, coords: Vec2) {
     const pickup = Pickup.pickups[index];
     if (pickup) {
-      Pickup.create({ pos: coords, pickupSource: pickup });
+      Pickup.create({ pos: coords, pickupSource: pickup }, this);
     } else {
       console.error('Could not find pickup with index', index);
     }
@@ -707,7 +718,8 @@ export default class Underworld {
       UnitType.AI,
       sourceUnit.info.subtype,
       strength,
-      sourceUnit.unitProps
+      sourceUnit.unitProps,
+      this
     );
     unit.originalLife = true;
 
@@ -782,7 +794,7 @@ export default class Underworld {
       console.error('Missing caveSize for generating level')
       return;
     }
-    const { map, limits } = generateCave(levelIndex > 6 ? caveSizes.medium : caveSizes.small);
+    const { map, limits } = generateCave(levelIndex > 6 ? caveSizes.medium : caveSizes.small, this);
     const { tiles } = map;
     const levelData: LevelData = {
       levelIndex,
@@ -819,7 +831,7 @@ export default class Underworld {
       }
     }
     // Spawn units at the start of the level
-    const { unitIds, strength } = getEnemiesForAltitude(levelIndex);
+    const { unitIds, strength } = getEnemiesForAltitude(levelIndex, this);
     for (let id of unitIds) {
       if (validSpawnCoords.length == 0) { break; }
       const validSpawnCoordsIndex = randInt(this.random, 0, validSpawnCoords.length - 1);
@@ -868,12 +880,12 @@ export default class Underworld {
   isPointValidSpawn(spawnPoint: Vec2, radius: number, fromSource?: Vec2): boolean {
     if (fromSource) {
       // Ensure attemptSpawn isn't through any walls or liquidBounds
-      if ([...globalThis.underworld.walls, ...globalThis.underworld.liquidBounds].some(wall => lineSegmentIntersection({ p1: fromSource, p2: spawnPoint }, wall))) {
+      if ([...this.walls, ...this.liquidBounds].some(wall => lineSegmentIntersection({ p1: fromSource, p2: spawnPoint }, wall))) {
         return false;
       }
     }
     // Ensure spawnPoint doesn't intersect any walls with radius:
-    if ([...globalThis.underworld.walls, ...globalThis.underworld.liquidBounds].some(wall => {
+    if ([...this.walls, ...this.liquidBounds].some(wall => {
       const rightAngleIntersection = findWherePointIntersectLineSegmentAtRightAngle(spawnPoint, wall);
       return rightAngleIntersection && math.distance(rightAngleIntersection, spawnPoint) <= radius;
     })) {
@@ -930,7 +942,7 @@ export default class Underworld {
     this.syncPredictionEntities();
     // Clear all pickups
     for (let p of this.pickups) {
-      Pickup.removePickup(p, false);
+      Pickup.removePickup(p, this, false);
     }
     // Clear all wall images:
     // Note: walls are stored in container Units so they can be sorted z-index
@@ -955,7 +967,7 @@ export default class Underworld {
     this.broadcastTurnPhase(turn_phase.PlayerTurns);
     cameraAutoFollow(true);
     document.body?.classList.toggle('loading', false);
-    setView(View.Game);
+    setView(View.Game, this);
     // this.ensureAllClientsHaveAssociatedPlayers(getClients());
   }
   // creates a level from levelData
@@ -968,7 +980,7 @@ export default class Underworld {
     this.showUpgrades(this.levelIndex !== 0);
 
     console.log('Setup: createLevel', levelData);
-    globalThis.lastLevelCreated = levelData;
+    this.lastLevelCreated = levelData;
     // Clean up the previous level
     this.cleanUpLevel();
 
@@ -994,7 +1006,7 @@ export default class Underworld {
     // so the player has coords to spawn into
     this.validPlayerSpawnCoords = validPlayerSpawnCoords;
     for (let player of this.players) {
-      Player.resetPlayerForNextLevel(player);
+      Player.resetPlayerForNextLevel(player, this);
     }
     this.postSetupLevel();
     // Change song now that level has changed:
@@ -1096,7 +1108,7 @@ export default class Underworld {
         }
       }
     }
-    updateManaCostUI();
+    updateManaCostUI(this);
     // Move onto next phase
     // Note: BroadcastTurnPhase should happen last because it
     // queues up a unitsync, so if changes to the units
@@ -1138,7 +1150,7 @@ export default class Underworld {
           await p.onTurnsLeftDone(p);
         }
         // Remove pickup
-        Pickup.removePickup(p, false);
+        Pickup.removePickup(p, this, false);
       }
     }
 
@@ -1294,7 +1306,7 @@ export default class Underworld {
     }
   }
   chooseUpgrade(player: Player.IPlayer, upgrade: Upgrade.IUpgrade) {
-    upgrade.effect(player);
+    upgrade.effect(player, this);
     player.upgrades.push(upgrade);
     if (player == globalThis.player) {
       document.body?.querySelector(`.card[data-upgrade="${upgrade.title}"]`)?.classList.toggle('chosen', true);
@@ -1566,7 +1578,7 @@ export default class Underworld {
           return withinMeleeRange(u, attackTarget)
         }
       case UnitSubType.RANGED_LOS:
-        return globalThis.underworld.hasLineOfSight(u, attackTarget)
+        return this.hasLineOfSight(u, attackTarget)
       case UnitSubType.RANGED_RADIUS:
         return u.alive && Unit.inRange(u, attackTarget);
       case UnitSubType.SUPPORT_CLASS:
@@ -1581,11 +1593,11 @@ export default class Underworld {
   getUnitAttackTarget(u: Unit.IUnit): Unit.IUnit | undefined {
     switch (u.unitSubType) {
       case UnitSubType.MELEE:
-        return Unit.findClosestUnitInDifferentFaction(u);
+        return Unit.findClosestUnitInDifferentFaction(u, this);
       case UnitSubType.RANGED_LOS:
-        return getBestRangedLOSTarget(u);
+        return getBestRangedLOSTarget(u, this);
       case UnitSubType.RANGED_RADIUS:
-        return Unit.findClosestUnitInDifferentFaction(u);
+        return Unit.findClosestUnitInDifferentFaction(u, this);
       case UnitSubType.PLAYER_CONTROLLED:
         // Ignore player controlled units, they don't get an attack target assigned by
         // the game, they choose their own.
@@ -1650,7 +1662,7 @@ export default class Underworld {
   }
   addUnitToArray(unit: Unit.IUnit, prediction: boolean) {
     if (prediction && globalThis.predictionUnits) {
-      globalThis.predictionUnits.push(Unit.copyForPredictionUnit(unit));
+      globalThis.predictionUnits.push(Unit.copyForPredictionUnit(unit, this));
     } else {
       this.units.push(unit);
     }
@@ -1725,7 +1737,7 @@ export default class Underworld {
           }
           casterCardUsage[cardId] += card.expenseScaling;
           if (!prediction) {
-            updateManaCostUI();
+            updateManaCostUI(this);
           }
         }
       }
@@ -1823,7 +1835,7 @@ export default class Underworld {
   checkIfShouldSpawnPortal() {
     if (this.units.filter(u => u.faction == Faction.ENEMY).every(u => !u.alive)) {
       // Convenience: Pickup any CARD_PICKUP_NAME left automatically, so that they aren't left behind
-      globalThis.underworld.pickups.filter(p => p.name == Pickup.CARDS_PICKUP_NAME).forEach(pickup => {
+      this.pickups.filter(p => p.name == Pickup.CARDS_PICKUP_NAME).forEach(pickup => {
         if (globalThis.player) {
           Pickup.triggerPickup(pickup, globalThis.player.unit, this, false);
         }
@@ -1833,7 +1845,7 @@ export default class Underworld {
       if (portalPickup) {
         for (let playerUnit of this.units.filter(u => u.unitType == UnitType.PLAYER_CONTROLLED && u.alive)) {
           const portalSpawnLocation = this.findValidSpawn(playerUnit, 2) || playerUnit;
-          Pickup.create({ pos: portalSpawnLocation, pickupSource: portalPickup });
+          Pickup.create({ pos: portalSpawnLocation, pickupSource: portalPickup }, this);
           // Give all player units max stamina for convenience:
           playerUnit.stamina = playerUnit.staminaMax;
           // Give all players max health and mana (it will be reset anyway when they are reset for the next level
@@ -1904,7 +1916,7 @@ export default class Underworld {
           // Note: Unit.syncronize maintains the player.unit reference
           Unit.syncronize(syncUnit, currentUnit);
         } else {
-          const newUnit = Unit.create(syncUnit.unitSourceId, syncUnit.x, syncUnit.y, syncUnit.faction, syncUnit.defaultImagePath, syncUnit.unitType, syncUnit.unitSubType, syncUnit.strength);
+          const newUnit = Unit.create(syncUnit.unitSourceId, syncUnit.x, syncUnit.y, syncUnit.faction, syncUnit.defaultImagePath, syncUnit.unitType, syncUnit.unitSubType, syncUnit.strength, undefined, this);
           Unit.syncronize(syncUnit, newUnit);
         }
       }
@@ -1947,8 +1959,8 @@ export default class Underworld {
         // If the client that joined does not have a player yet, make them one immediately
         // since all clients should always have a player associated
         console.log(`Setup: Create a Player instance for ${clientId}`)
-        const p = Player.create(clientId);
-        Player.resetPlayerForNextLevel(p);
+        const p = Player.create(clientId, this);
+        Player.resetPlayerForNextLevel(p, this);
         newlyCreatedPlayers.push(p);
       }
     }
@@ -1958,14 +1970,14 @@ export default class Underworld {
     for (let player of this.players) {
       const wasConnected = player.clientConnected;
       const isConnected = clients.includes(player.clientId);
-      Player.setClientConnected(player, isConnected);
+      Player.setClientConnected(player, isConnected, this);
       if (!wasConnected && isConnected) {
         // Send the lastest gamestate to that client so they can be up-to-date:
         // Note: It is important that this occurs AFTER the player instance is created for the
         // client who just joined
         // If the game has already started (e.g. the host has already joined), send the initial state to the new 
         // client only so they can load
-        hostGiveClientGameStateForInitialLoad(player.clientId);
+        hostGiveClientGameStateForInitialLoad(player.clientId, this, this.lastLevelCreated);
       }
     }
     return newlyCreatedPlayers;
@@ -1974,7 +1986,7 @@ export default class Underworld {
     console.log('sync: Syncing players', JSON.stringify(players.map(p => p.clientId)));
     // Clear previous players array
     this.players = [];
-    players.map(Player.load);
+    players.map(p => Player.load(p, this));
   }
 
   // Create a hash from the gamestate.  Useful for determining if
@@ -2059,17 +2071,17 @@ export type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, Underworl
 const startingNumberOfUnits = 3;
 const bossEveryXLevels = 15;
 
-function getEnemiesForAltitude(levelIndex: number): { unitIds: string[], strength: number } {
+function getEnemiesForAltitude(levelIndex: number, underworld: Underworld): { unitIds: string[], strength: number } {
   const possibleUnitsToChoose = Object.values(allUnits)
     .filter(u => u.spawnParams && u.spawnParams.unavailableUntilLevelIndex <= levelIndex)
     .map(u => ({ id: u.id, probability: u.spawnParams ? u.spawnParams.probability : 0 }))
   const unitIds = Array(startingNumberOfUnits + levelIndex).fill(null)
     // flatMap is used to remove any undefineds
     .flatMap(() => {
-      const chosenUnit = chooseObjectWithProbability(possibleUnitsToChoose, globalThis.underworld.random)
+      const chosenUnit = chooseObjectWithProbability(possibleUnitsToChoose, underworld.random)
       return chosenUnit ? [chosenUnit.id] : []
     })
-  const strength = (levelIndex / 10) + globalThis.underworld.players.length / 2;
+  const strength = (levelIndex / 10) + underworld.players.length / 2;
   // Add bosses
   if (levelIndex !== 0 && levelIndex % bossEveryXLevels == 0) {
     unitIds.push('Night Queen');

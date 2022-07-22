@@ -117,7 +117,8 @@ export function create(
   unitType: UnitType,
   unitSubType: UnitSubType,
   strength: number,
-  sourceUnitProps: Partial<IUnit> = {}
+  sourceUnitProps: Partial<IUnit> = {},
+  underworld: Underworld
 ): IUnit {
   const health = Math.round(config.UNIT_BASE_HEALTH * strength);
   const mana = Math.round(config.UNIT_BASE_MANA * strength);
@@ -125,7 +126,7 @@ export function create(
   const sourceUnit = allUnits[unitSourceId];
   if (sourceUnit) {
     const unit: IUnit = Object.assign({
-      id: ++globalThis.underworld.lastUnitId,
+      id: ++underworld.lastUnitId,
       unitSourceId,
       x,
       y,
@@ -183,7 +184,7 @@ export function create(
     changeFaction(unit, faction);
 
 
-    globalThis.underworld.addUnitToArray(unit, false);
+    underworld.addUnitToArray(unit, false);
 
     return unit;
   } else {
@@ -304,7 +305,7 @@ export function load(unit: IUnitSerialized, underworld: Underworld, prediction: 
       loadedunit.shaderUniforms[key][keyUniform] = value;
     }
   }
-  globalThis.underworld.addUnitToArray(loadedunit, prediction);
+  underworld.addUnitToArray(loadedunit, prediction);
   if (!loadedunit.alive) {
     die(loadedunit, underworld, prediction);
   }
@@ -557,16 +558,16 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
 
   if (globalThis.player && globalThis.player.unit == unit) {
     clearSpellEffectProjection();
-    CardUI.clearSelectedCards();
+    CardUI.clearSelectedCards(underworld);
     centeredFloatingText(`💀 You Died 💀`, 'red');
   }
   // In the event that this unit that just died is the selected unit,
   // this will remove the tooltip:
   checkIfNeedToClearTooltip();
-  globalThis.underworld.checkIfShouldSpawnPortal();
+  underworld.checkIfShouldSpawnPortal();
 
   if (!prediction && unit.originalLife) {
-    globalThis.underworld.reportEnemyKilled(unit);
+    underworld.reportEnemyKilled(unit);
   }
   // Once a unit dies it is no longer on it's originalLife
   unit.originalLife = false;
@@ -713,14 +714,14 @@ export function canMove(unit: IUnit): boolean {
   }
   return true;
 }
-export function livingUnitsInDifferentFaction(unit: IUnit) {
-  return globalThis.underworld.units.filter(
+export function livingUnitsInDifferentFaction(unit: IUnit, underworld: Underworld) {
+  return underworld.units.filter(
     (u) => u.faction !== unit.faction && u.alive,
   );
 }
-export function livingUnitsInSameFaction(unit: IUnit) {
+export function livingUnitsInSameFaction(unit: IUnit, underworld: Underworld) {
   // u !== unit excludes self from returning as the closest unit
-  return globalThis.underworld.units.filter(
+  return underworld.units.filter(
     (u) => u !== unit && u.faction == unit.faction && u.alive,
   );
 }
@@ -741,11 +742,12 @@ function closestInListOfUnits(
 }
 export function findClosestUnitInDifferentFaction(
   unit: IUnit,
+  underworld: Underworld
 ): IUnit | undefined {
-  return closestInListOfUnits(unit, livingUnitsInDifferentFaction(unit));
+  return closestInListOfUnits(unit, livingUnitsInDifferentFaction(unit, underworld));
 }
-export function findClosestUnitInSameFaction(unit: IUnit): IUnit | undefined {
-  return closestInListOfUnits(unit, livingUnitsInSameFaction(unit));
+export function findClosestUnitInSameFaction(unit: IUnit, underworld: Underworld): IUnit | undefined {
+  return closestInListOfUnits(unit, livingUnitsInSameFaction(unit, underworld));
 }
 export function orient(unit: IUnit, faceTarget: Vec2) {
   // Orient; make the sprite face it's enemy
@@ -764,7 +766,7 @@ export function orient(unit: IUnit, faceTarget: Vec2) {
 // This _ version of moveTowards does not return a promise and is used
 // specifically for moving the current player character which does not await 
 // movement since they hold RMB to move, the target may be constantly changing
-export function _moveTowards(unit: IUnit, target: Vec2) {
+export function _moveTowards(unit: IUnit, target: Vec2, underworld: Underworld) {
   if (!canMove(unit)) {
     console.log('cannot move')
     return
@@ -792,15 +794,15 @@ export function _moveTowards(unit: IUnit, target: Vec2) {
   orient(unit, target);
 
   // Set path which will be used in the game loop to actually move the unit
-  globalThis.underworld.setPath(unit, Vec.clone(target));
+  underworld.setPath(unit, Vec.clone(target));
 }
 // moveTo moves a unit, considering all the in-game blockers
-export function moveTowards(unit: IUnit, target: Vec2): Promise<void> {
+export function moveTowards(unit: IUnit, target: Vec2, underworld: Underworld): Promise<void> {
   if (!canMove(unit)) {
     console.log('cannot move')
     return Promise.resolve();
   }
-  _moveTowards(unit, target);
+  _moveTowards(unit, target, underworld);
   // 300 + is an arbitrary time buffer to ensure that the raceTimeout
   // doesn't report a false positive if the duration it takes the moveTowards promise
   // to resolve is within a reasonable range
@@ -883,14 +885,14 @@ export async function runTurnStartEvents(unit: IUnit, prediction: boolean = fals
 }
 // Makes a copy of the unit's data suitable for 
 // a predictionUnit
-export function copyForPredictionUnit(u: IUnit): IUnit {
+export function copyForPredictionUnit(u: IUnit, underworld: Underworld): IUnit {
   // Ensure that units have a path before they are copied
   // so that the prediction unit will have a reference to
   // a real path object
   if (!u.path) {
-    const target = globalThis.underworld.getUnitAttackTarget(u);
+    const target = underworld.getUnitAttackTarget(u);
     if (target) {
-      globalThis.underworld.setPath(u, target);
+      underworld.setPath(u, target);
     }
   }
   const { image, resolveDoneMoving, modifiers, ...rest } = u;
@@ -922,8 +924,8 @@ export function copyForPredictionUnit(u: IUnit): IUnit {
 }
 
 // Returns true if it is currently this unit's turn phase
-export function isUnitsTurnPhase(unit: IUnit): boolean {
-  const { turn_phase: phase } = globalThis.underworld;
+export function isUnitsTurnPhase(unit: IUnit, underworld: Underworld): boolean {
+  const { turn_phase: phase } = underworld;
   if (unit.unitType == UnitType.PLAYER_CONTROLLED) {
     return phase == turn_phase.PlayerTurns;
   } else {
@@ -946,7 +948,7 @@ const subTypeAttentionMarkerMapping = {
 export function subTypeToAttentionMarkerImage(unit: IUnit): string {
   return subTypeAttentionMarkerMapping[unit.unitSubType];
 }
-export function findLOSLocation(unit: IUnit, target: Vec2): Vec2[] {
+export function findLOSLocation(unit: IUnit, target: Vec2, underworld: Underworld): Vec2[] {
   const dist = distance(unit, target);
   const angleToEnemy = Vec.getAngleBetweenVec2s(target, unit);
   const degAwayFromTarget = 30 * Math.PI / 180;
@@ -954,7 +956,7 @@ export function findLOSLocation(unit: IUnit, target: Vec2): Vec2[] {
   const LOSLocations = [];
   for (let rad = angleToEnemy - degAwayFromTarget; rad <= angleToEnemy + degAwayFromTarget; rad += increments) {
     let pos = math.getPosAtAngleAndDistance(target, rad, dist)
-    const intersection = closestLineSegmentIntersection({ p1: target, p2: pos }, globalThis.underworld.walls);
+    const intersection = closestLineSegmentIntersection({ p1: target, p2: pos }, underworld.walls);
     globalThis.debugGraphics?.lineStyle(3, 0xff00ff, 1);
     if (intersection) {
       globalThis.debugGraphics?.lineStyle(3, 0x0000ff, 1);

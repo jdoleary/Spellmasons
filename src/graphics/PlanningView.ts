@@ -5,7 +5,7 @@ import { containerSpells, containerUI, withinCameraBounds } from './PixiUtils';
 import { containerPlanningView } from './PixiUtils';
 import { Faction, UnitSubType, UnitType } from '../types/commonTypes';
 import { clone, equal, Vec2 } from '../jmath/Vec';
-import { turn_phase } from '../Underworld';
+import Underworld, { turn_phase } from '../Underworld';
 import * as CardUI from './ui/CardUI';
 import * as config from '../config';
 import * as Unit from '../entity/Unit';
@@ -40,7 +40,7 @@ export function initPlanningView() {
   }
 }
 let lastSpotCurrentPlayerTurnCircle: Vec2 = { x: 0, y: 0 };
-export function updatePlanningView() {
+export function updatePlanningView(underworld: Underworld) {
   if (planningViewGraphics && globalThis.unitOverlayGraphics && labelText) {
     planningViewGraphics.clear();
     if (labelText) {
@@ -60,16 +60,16 @@ export function updatePlanningView() {
         // If selectedUnit is an archer, draw LOS attack line
         //  instead of attack range for them
         if (selectedUnit.unitSubType == UnitSubType.RANGED_LOS) {
-          let archerTarget = getBestRangedLOSTarget(selectedUnit)
+          let archerTarget = getBestRangedLOSTarget(selectedUnit, underworld);
           // If they don't have a target they can actually attack
           // draw a line to the closest enemy that they would target if
           // they had LOS
           if (!archerTarget) {
-            archerTarget = Unit.findClosestUnitInDifferentFaction(selectedUnit);
+            archerTarget = Unit.findClosestUnitInDifferentFaction(selectedUnit, underworld);
           }
           if (archerTarget) {
             const attackLine = { p1: selectedUnit, p2: archerTarget };
-            const closestIntersection = closestLineSegmentIntersection(attackLine, globalThis.underworld.walls);
+            const closestIntersection = closestLineSegmentIntersection(attackLine, underworld.walls);
 
             planningViewGraphics.moveTo(attackLine.p1.x, attackLine.p1.y);
             if (closestIntersection) {
@@ -126,14 +126,14 @@ export function updatePlanningView() {
       }
     }
     // Draw a circle under the feet of the player whos current turn it is
-    if (globalThis.underworld) {
+    if (underworld) {
       // Update tooltip for whatever is being hovered
       updateTooltipContent();
 
       if (globalThis.player) {
         // Only draw circle if player isn't moving to avoid UI thrashing
         if (equal(lastSpotCurrentPlayerTurnCircle, globalThis.player.unit)) {
-          if (globalThis.underworld.isMyTurn()) {
+          if (underworld.isMyTurn()) {
             // Yellow if it's you
             planningViewGraphics.lineStyle(4, 0xffde5e);
             planningViewGraphics.beginFill(0xffde5e, 0.3);
@@ -153,10 +153,10 @@ export function updatePlanningView() {
     }
   }
 }
-export function updateManaCostUI(): CardCost {
+export function updateManaCostUI(underworld: Underworld): CardCost {
   if (globalThis.player) {
     // Update the UI that shows how much cards cost
-    CardUI.updateCardBadges();
+    CardUI.updateCardBadges(underworld);
     // Updates the mana cost
     const cards = CardUI.getSelectedCards();
     const cost = calculateCost(cards, globalThis.player.cardUsageCounts)
@@ -171,7 +171,7 @@ async function showCastCardsPrediction(target: Vec2, casterUnit: Unit.IUnit, car
     // Note: setPredictionGraphicsLineStyle must be called before castCards (because castCards may use it
     // to draw predictions) and after clearSpellEffectProjection, which clears predictionGraphics.
     setPredictionGraphicsLineStyle(outOfRange ? 0xaaaaaa : colors.targetBlue);
-    const effectState = await globalThis.underworld.castCards(
+    const effectState = await underworld.castCards(
       // Make a copy of cardUsageCounts for prediction so it can accurately
       // calculate mana for multiple copies of one spell in one cast
       JSON.parse(JSON.stringify(globalThis.player.cardUsageCounts)),
@@ -203,24 +203,24 @@ async function showCastCardsPrediction(target: Vec2, casterUnit: Unit.IUnit, car
 // via enemy attention markers (showing if they will hurt you)
 // your health and mana bar (the stripes)
 // and enemy health and mana bars
-export async function runPredictions() {
+export async function runPredictions(underworld: Underworld) {
   if (globalThis.animatingSpells) {
     // Do not change the hover icons when spells are animating
     return;
   }
-  if (!globalThis.underworld) {
+  if (!underworld) {
     return;
   }
   const startTime = Date.now();
-  const mousePos = globalThis.underworld.getMousePos();
+  const mousePos = underworld.getMousePos();
   // Clear the spelleffectprojection in preparation for showing the current ones
   clearSpellEffectProjection();
   // only show hover target when it's the correct turn phase
-  if (globalThis.underworld.turn_phase == turn_phase.PlayerTurns) {
+  if (underworld.turn_phase == turn_phase.PlayerTurns) {
 
     if (globalThis.player) {
-      globalThis.underworld.syncPredictionEntities();
-      updateManaCostUI();
+      underworld.syncPredictionEntities();
+      updateManaCostUI(underworld);
       // Dry run cast so the user can see what effect it's going to have
       const target = mousePos;
       const casterUnit = globalThis.predictionUnits?.find(u => u.id == globalThis.player?.unit.id)
@@ -241,7 +241,7 @@ export async function runPredictions() {
             // Note: we have to resync prediction units since castCards will have been called twice in 
             // this prediction cycle within this branch. Otherwise our player's prediction mana
             // will be reduced by 2x more than it should be
-            globalThis.underworld.syncPredictionEntities();
+            underworld.syncPredictionEntities();
             // Reassign casterUnit now that the predictionUnits array has been completely rebuilt
             const casterUnit = globalThis.predictionUnits?.find(u => u.id == globalThis.player?.unit.id)
             if (!casterUnit) {
@@ -258,7 +258,7 @@ export async function runPredictions() {
         }
       }
       // Send this client's intentions to the other clients so they can see what they're thinking
-      globalThis.underworld.sendPlayerThinking({ target, cardIds })
+      underworld.sendPlayerThinking({ target, cardIds })
 
       // Run onTurnStartEvents on predictionUnits:
       // Displays markers above units heads if they will attack the current client's unit
@@ -272,12 +272,12 @@ export async function runPredictions() {
           }
           // Only check for threats if the threat is alive and AI controlled
           if (u.alive && u.unitType == UnitType.AI) {
-            const target = globalThis.underworld.getUnitAttackTarget(u);
+            const target = underworld.getUnitAttackTarget(u);
             // Only bother determining if the unit can attack the target 
             // if the target is the current player, because that's the only
             // player this function has to warn with an attention marker
             if (target === globalThis.player.unit) {
-              if (globalThis.underworld.canUnitAttackTarget(u, target)) {
+              if (underworld.canUnitAttackTarget(u, target)) {
                 globalThis.attentionMarkers.push({ imagePath: Unit.subTypeToAttentionMarkerImage(u), pos: clone(u) });
               }
             }
@@ -289,7 +289,7 @@ export async function runPredictions() {
       if (cardIds.includes('resurrect')) {
         globalThis.predictionUnits?.filter(u => u.faction == Faction.ALLY && u.alive).forEach(u => {
           // Check if their non-prediction counterpart is dead to see if they will be resurrected:
-          const realUnit = globalThis.underworld.units.find(x => x.id == u.id)
+          const realUnit = underworld.units.find(x => x.id == u.id)
           if (realUnit && !realUnit.alive) {
             globalThis.resMarkers?.push(clone(realUnit));
           }
@@ -314,7 +314,7 @@ export function clearSpellEffectProjection() {
     if (containerSpells) {
       containerSpells.removeChildren();
     }
-    globalThis.underworld.units.forEach(unit => {
+    underworld.units.forEach(unit => {
       if (unit.image) {
         unit.image.sprite.tint = 0xFFFFFF;
       }
@@ -346,7 +346,7 @@ export function setPredictionGraphicsLineStyle(color: number) {
 }
 export function drawTarget(unit: Unit.IUnit, isOutOfRange: boolean) {
   // Convert prediction unit's associated real unit
-  const realUnit = globalThis.underworld.units.find(u => u.id == unit.id);
+  const realUnit = underworld.units.find(u => u.id == unit.id);
   if (realUnit && realUnit.image) {
     if (isOutOfRange) {
       realUnit.image.sprite.tint = 0xaaaaaa;
@@ -375,7 +375,7 @@ export function drawPredictionCircleFill(target: Vec2, radius: number) {
 
 export function isOutOfBounds(target: Vec2) {
   return (
-    target.x < globalThis.underworld.limits.xMin || target.x >= globalThis.underworld.limits.xMax || target.y < globalThis.underworld.limits.yMin || target.y >= globalThis.underworld.limits.yMax
+    target.x < underworld.limits.xMin || target.x >= underworld.limits.xMax || target.y < underworld.limits.yMin || target.y >= underworld.limits.yMax
   );
 }
 
@@ -413,7 +413,7 @@ export function updateTooltipContent() {
       let cards = '';
       if (selectedUnit) {
         if (selectedUnit.unitType === UnitType.PLAYER_CONTROLLED) {
-          const player = globalThis.underworld.players.find((p) => p.unit === selectedUnit);
+          const player = underworld.players.find((p) => p.unit === selectedUnit);
           if (player) {
             cards =
               'Cards: ' +
@@ -499,7 +499,7 @@ export function clearTooltipSelection(): boolean {
 export function updateTooltipSelection(mousePos: Vec2) {
 
   // Find unit:
-  const unit = globalThis.underworld.getUnitAt(mousePos);
+  const unit = underworld.getUnitAt(mousePos);
   if (unit) {
     selectedUnit = unit;
     selectedType = "unit";
@@ -507,7 +507,7 @@ export function updateTooltipSelection(mousePos: Vec2) {
   } else {
     selectedUnit = undefined;
   }
-  const pickup = globalThis.underworld.getPickupAt(mousePos);
+  const pickup = underworld.getPickupAt(mousePos);
   if (pickup) {
     selectedPickup = pickup;
     selectedType = "pickup";
@@ -526,8 +526,8 @@ export function drawCircleUnderTarget(mousePos: Vec2, opacity: number, graphics:
     // For headless
     return;
   }
-  const targetUnit = globalThis.underworld.getUnitAt(mousePos)
-  const target: Vec2 | undefined = targetUnit || globalThis.underworld.getPickupAt(mousePos);
+  const targetUnit = underworld.getUnitAt(mousePos)
+  const target: Vec2 | undefined = targetUnit || underworld.getPickupAt(mousePos);
   if (target) {
     graphics.lineStyle(3, 0xaaaaaa, opacity);
     graphics.beginFill(0x000000, 0);

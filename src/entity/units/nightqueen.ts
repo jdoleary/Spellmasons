@@ -31,13 +31,13 @@ const unit: UnitSource = {
       unit.image.sprite.scale.y = 4;
     }
   },
-  action: async (unit: Unit.IUnit) => {
+  action: async (unit: Unit.IUnit, _attackTarget, underworld) => {
     // If they have enough mana
     if (unit.mana >= CAST_MANA_COST) {
       unit.mana -= CAST_MANA_COST;
 
       // Resurrect all dead and turns them to her faction 
-      await Promise.all([globalThis.underworld.units.filter(
+      await Promise.all([underworld.units.filter(
         (u) => u.unitType === UnitType.AI && !u.alive,
       ).map(deadUnit => {
         if (deadUnit) {
@@ -56,8 +56,8 @@ const unit: UnitSource = {
       })]);
     }
     // Move randomly
-    const moveCoords = globalThis.underworld.getRandomCoordsWithinBounds(globalThis.underworld.limits);
-    await Unit.moveTowards(unit, moveCoords);
+    const moveCoords = underworld.getRandomCoordsWithinBounds(underworld.limits);
+    await Unit.moveTowards(unit, moveCoords, underworld);
   },
 };
 

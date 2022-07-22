@@ -16,7 +16,7 @@ const spell: Spell = {
       const allies = [
         // Prioritize self over all other allies
         state.casterUnit,
-        ...Unit.livingUnitsInSameFaction(state.casterUnit)
+        ...Unit.livingUnitsInSameFaction(state.casterUnit, underworld)
           .sort((a, b) => {
             // Prioritize PLAYER_CONTROLLED allies over AI controlled allies
             return a.unitType == UnitType.PLAYER_CONTROLLED && b.unitType == UnitType.PLAYER_CONTROLLED ? 0 :

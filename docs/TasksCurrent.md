@@ -15,11 +15,8 @@
     - globalThis for headless isn't going to work since a single headless esrver should be able to host multiple rooms and the multiple rooms can't share state
         - or each pieserver room could be it's own process??
         // TODO: The following need to be specific to a host app
-        globalThis.forceMove = [];
-        globalThis.playerThoughts = {};
         // globalThis.pie
         // globalThis.underworld
-        // globalThis.lastLeveLCreated
         // readyState.underworld
     - lobby
         - ready up and start game

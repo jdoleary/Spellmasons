@@ -8,6 +8,7 @@ import * as colors from './ui/colors';
 import { JSpriteAnimated } from './Image';
 import { containerParticles } from './Particles';
 import { elPIXIHolder } from './FloatingText';
+import Underworld from '../Underworld';
 
 // if PIXI is finished setting up
 let isReady = false;
@@ -213,7 +214,7 @@ function calculateCameraZoom() {
   return !app ? 0 : app.stage.scale.x + ((globalThis.zoomTarget || 1) - app.stage.scale.x) / 8;
 }
 let lastZoom = globalThis.zoomTarget;
-export function updateCameraPosition() {
+export function updateCameraPosition(underworld: Underworld) {
   // Headless does not use graphics
   if (globalThis.headless) { return; }
   if (!(app)) {
@@ -237,7 +238,7 @@ export function updateCameraPosition() {
             utilProps.camera = clone(globalThis.player.unit);
           } else {
             // Set camera to the center of the map
-            utilProps.camera = { x: (globalThis.underworld.limits.xMax - globalThis.underworld.limits.xMin) / 2, y: (globalThis.underworld.limits.yMax - globalThis.underworld.limits.yMin) / 2 };
+            utilProps.camera = { x: (underworld.limits.xMax - underworld.limits.xMin) / 2, y: (underworld.limits.yMax - underworld.limits.yMin) / 2 };
           }
         }
         // Allow camera movement via WSAD
@@ -262,7 +263,7 @@ export function updateCameraPosition() {
           const marginX = config.COLLISION_MESH_RADIUS * 4;
           // Clamp camera X
           const mapLeftMostPoint = 0 - marginX;
-          const mapRightMostPoint = globalThis.underworld.limits.xMax + marginX;
+          const mapRightMostPoint = underworld.limits.xMax + marginX;
           const camCenterXMin = mapLeftMostPoint + elPIXIHolder.clientWidth / 2 / zoom;
           const camCenterXMax = mapRightMostPoint - elPIXIHolder.clientWidth / 2 / zoom;
           // If the supposed minimum is more than the maximum, just center the camera:
@@ -275,7 +276,7 @@ export function updateCameraPosition() {
 
           //Clamp camera Y
           const mapTopMostPoint = 0 - marginY;
-          const mapBottomMostPoint = globalThis.underworld.limits.yMax + marginY;
+          const mapBottomMostPoint = underworld.limits.yMax + marginY;
           const camCenterYMin = mapTopMostPoint + elPIXIHolder.clientHeight / 2 / zoom;
           const camCenterYMax = mapBottomMostPoint - elPIXIHolder.clientHeight / 2 / zoom;
           // If the supposed minimum is more than the maximum, just center the camera:

@@ -64,12 +64,12 @@ const unit: UnitSource = {
       });
     }
     // Movement:
-    const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit);
+    const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit, underworld);
     if (closestEnemy) {
       const distanceToEnemy = math.distance(unit, closestEnemy);
       // Trick to make the unit only move as far as will put them in range but no closer
       unit.stamina = Math.min(unit.stamina, distanceToEnemy - unit.attackRange);
-      await Unit.moveTowards(unit, closestEnemy);
+      await Unit.moveTowards(unit, closestEnemy, underworld);
     }
   },
 };

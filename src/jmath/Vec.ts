@@ -1,7 +1,7 @@
 
 import { clockwiseAngle } from "./Angle";
 import { distance, similarTriangles } from "./math";
-import { randInt } from "./rand";
+import { prng, randInt } from "./rand";
 export interface Vec2 {
     x: number;
     y: number;
@@ -44,14 +44,14 @@ export function subtract(p1: Vec2, p2: Vec2): Vec2 {
 }
 // jitter returns a new Vec2 which is the original pos
 // moved randomly capped by maxJitter
-export function jitter(pos: Vec2, maxJitter: number): Vec2 {
-    const jitterX = randInt(globalThis.underworld.random, -maxJitter, maxJitter);
-    const jitterY = randInt(globalThis.underworld.random, -maxJitter, maxJitter);
+export function jitter(pos: Vec2, maxJitter: number, random: prng): Vec2 {
+    const jitterX = randInt(random, -maxJitter, maxJitter);
+    const jitterY = randInt(random, -maxJitter, maxJitter);
     return add(pos, { x: jitterX, y: jitterY });
 }
 // returns a random Vec2 with x and y capped between min and max inclusive
-export function random(min: number, max: number): Vec2 {
-    return { x: randInt(globalThis.underworld.random, min, max), y: randInt(globalThis.underworld.random, min, max) };
+export function random(min: number, max: number, random: prng): Vec2 {
+    return { x: randInt(random, min, max), y: randInt(random, min, max) };
 }
 // Returns a scalar
 export function crossproduct(p1: Vec2, p2: Vec2): number {

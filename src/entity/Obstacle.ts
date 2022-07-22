@@ -7,6 +7,7 @@ import { isVec2InsidePolygon, Polygon2 } from '../jmath/Polygon2';
 import { distance, similarTriangles } from '../jmath/math';
 import { addMask, removeMask } from '../graphics/Image';
 import { ForceMove } from '../jmath/moveWithCollision';
+import Underworld from '../Underworld';
 export interface IObstacle {
   x: number;
   y: number;
@@ -30,29 +31,29 @@ export function coordToPoly(coord: Vec2): Polygon2 {
 }
 
 export const lavaDamage = 2;
-export function checkLiquidInteractionDueToForceMovement(forceMoveInst: ForceMove, lastPosition: Vec2, prediction: boolean) {
+export function checkLiquidInteractionDueToForceMovement(forceMoveInst: ForceMove, lastPosition: Vec2, underworld: Underworld, prediction: boolean) {
   if (isUnit(forceMoveInst.pushedObject)) {
     const unit = forceMoveInst.pushedObject;
-    const liquidMovedUnit = checkLiquidInteractionDueToMovement(unit, lastPosition, prediction);
+    const liquidMovedUnit = checkLiquidInteractionDueToMovement(unit, lastPosition, underworld, prediction);
     if (liquidMovedUnit) {
       // Once unit is moved via liquid interations, stop all force movement if unit is under control of force movement:
       // This prevents the issue of a unit moving across liquid and possibly back out due to a single forceMove
       // When the move, if they "fall in", their movement stops
-      globalThis.underworld.removeForceMove(forceMoveInst);
+      underworld.removeForceMove(forceMoveInst);
     }
   }
 }
 // Invoked manually when a unit moves due to forced movement (non pathing movement)
 // to check to see if they "fall in" to liquid
 // Returns true if their position changed due to liquid interaction
-export function checkLiquidInteractionDueToMovement(unit: IUnit, lastPosition: Vec2, prediction: boolean): boolean {
+export function checkLiquidInteractionDueToMovement(unit: IUnit, lastPosition: Vec2, underworld: Underworld, prediction: boolean): boolean {
   let liquidMovedUnit = false;
   // Check intersections with lava:
   let hitLava = false;
   const fallInThreshold = 10;
   // + 10 gives a margin so that they don't just fall right back out.
   const fallInDistance = fallInThreshold + 10;
-  for (let wall of globalThis.underworld.liquidBounds) {
+  for (let wall of underworld.liquidBounds) {
     const intersection = lineSegmentIntersection({ p1: unit, p2: lastPosition }, wall);
     if (intersection) {
 
@@ -100,9 +101,9 @@ export function checkLiquidInteractionDueToMovement(unit: IUnit, lastPosition: V
       break;
     }
   }
-  if (globalThis.underworld.liquidPolygons.length) {
+  if (underworld.liquidPolygons.length) {
     let insideLiquid = false;
-    for (let poly of globalThis.underworld.liquidPolygons) {
+    for (let poly of underworld.liquidPolygons) {
       insideLiquid = isVec2InsidePolygon(unit, poly);
       if (insideLiquid) {
         break;

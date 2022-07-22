@@ -19,7 +19,7 @@ Resurrects a dead unit and converts them to the caster's faction.
     effect: async (state, underworld, prediction) => {
       // If there is a living unit atop a dead unit at the cast location, specifically target the dead unit
       // so the spell doesn't fizzle.
-      const firstDeadUnitAtCastLocation = globalThis.underworld.getUnitsAt(state.castLocation, prediction).filter(u => !u.alive)[0]
+      const firstDeadUnitAtCastLocation = underworld.getUnitsAt(state.castLocation, prediction).filter(u => !u.alive)[0]
       for (let unit of [firstDeadUnitAtCastLocation, ...state.targetedUnits]) {
         if (unit && !unit.alive) {
           let colorOverlayFilter: ColorOverlayFilter;

@@ -98,7 +98,7 @@ Sets a spell as a trap, to be triggered when stepped on.  Wrapping a spell in a 
                       animationSprite2.y = y;
                     }
 
-                    globalThis.underworld.castCards({}, state.casterUnit, cardsInTrap, unit, false, true);
+                    underworld.castCards({}, state.casterUnit, cardsInTrap, unit, false, true);
                     return true;
                   } else {
                     console.error('Tried to trigger trap, but unit was undefined')
@@ -106,10 +106,10 @@ Sets a spell as a trap, to be triggered when stepped on.  Wrapping a spell in a 
                   }
                 },
               };
-              globalThis.underworld.addPickupToArray(self, prediction);
+              underworld.addPickupToArray(self, prediction);
 
             }
-          });
+          }, underworld);
           pickup.description = 'The trap is winding...';
         } else {
           console.error(`Could not find pickup ${id} in pickups`);

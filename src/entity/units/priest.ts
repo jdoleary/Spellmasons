@@ -76,11 +76,11 @@ const unit: UnitSource = {
   },
   action: async (unit: Unit.IUnit, _attackTarget, underworld: Underworld) => {
     let didAction = false;
-    const closestAlly = Unit.findClosestUnitInSameFaction(unit);
+    const closestAlly = Unit.findClosestUnitInSameFaction(unit, underworld);
     // If they have enough mana
     if (unit.mana >= CAST_MANA_COST) {
       // Heal (in order to damage) enemy vampires
-      const enemyVampires = globalThis.underworld.units.filter(
+      const enemyVampires = underworld.units.filter(
         u => u.faction !== unit.faction && isVampire(u)
       );
       if (enemyVampires.length) {
@@ -88,7 +88,7 @@ const unit: UnitSource = {
         didAction = await healOneOf(unit, enemyVampires, underworld);
       } else {
         // Heal an ally
-        const damagedAllys = globalThis.underworld.units.filter(
+        const damagedAllys = underworld.units.filter(
           // Only select allies, that are alive, that are damaged, and that aren't SUPPORT_CLASS cause it's
           // annoying when priests heal each other.
           // Also exclude vampires because vampires take health as DAMAGE! And we don't want priests hurting their ally vampires
@@ -115,13 +115,13 @@ const unit: UnitSource = {
       // Move to closest ally
       if (closestAlly) {
         const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestAlly, unit.stamina);
-        await Unit.moveTowards(unit, moveTo);
+        await Unit.moveTowards(unit, moveTo, underworld);
       } else {
         // flee from closest enemey
-        const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit);
+        const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit, underworld);
         if (closestEnemy) {
           const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestEnemy, -unit.stamina);
-          await Unit.moveTowards(unit, moveTo);
+          await Unit.moveTowards(unit, moveTo, underworld);
         }
       }
     }

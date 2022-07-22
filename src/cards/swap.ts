@@ -23,24 +23,24 @@ Swaps the caster with the source target.
       const swapPickups: [Pickup.IPickup, Vec2][] = [];
       const swapLocation = { x: casterUnit.x, y: casterUnit.y };
       // The unit at the location that the targetUnit will swap to
-      const swapUnit = globalThis.underworld.getUnitAt(swapLocation, prediction);
+      const swapUnit = underworld.getUnitAt(swapLocation, prediction);
       if (swapUnit && targetedUnits[0]) {
         swapUnits.push([swapUnit, targetedUnits[0]]);
       }
-      const swapLocations = [swapLocation, ...globalThis.underworld.findValidSpawns(swapLocation, config.COLLISION_MESH_RADIUS / 4, 4)];
+      const swapLocations = [swapLocation, ...underworld.findValidSpawns(swapLocation, config.COLLISION_MESH_RADIUS / 4, 4)];
       // The units at the target location
       for (let targetUnit of targetedUnits) {
         if (targetUnit) {
           swapUnits.push([targetUnit, swapLocations.shift() || swapLocation]);
         }
         // The pickup at the target location
-        const pickupAtTarget = globalThis.underworld.getPickupAt(state.castLocation, prediction);
+        const pickupAtTarget = underworld.getPickupAt(state.castLocation, prediction);
         // Physically swap with pickups
         if (pickupAtTarget) {
           swapPickups.push([pickupAtTarget, swapLocation]);
         }
         // The pickup at the swap location
-        const pickupAtSwap = globalThis.underworld.getPickupAt(swapLocation, prediction);
+        const pickupAtSwap = underworld.getPickupAt(swapLocation, prediction);
 
         if (pickupAtSwap) {
           swapPickups.push([pickupAtSwap, targetUnit]);

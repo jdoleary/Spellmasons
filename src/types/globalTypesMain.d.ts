@@ -36,8 +36,8 @@ declare global {
     // The menu will call this if the user chooses to skip the tutorial
     var skipTutorial: undefined | (() => void);
 
-    var save: undefined | ((title: string) => void);
-    var load: undefined | ((title: string) => void);
+    var save: undefined | ((title: string, underworld: Underworld) => void);
+    var load: undefined | ((title: string, underworld: Underworld) => void);
     var getAllSaveFiles: undefined | (() => string[]);
     // Save pie messages for later replay
     var saveReplay: undefined | ((title: string) => void);
@@ -79,7 +79,7 @@ declare global {
     var volume: undefined | number;
     var volumeMusic: undefined | number;
     var volumeGame: undefined | number;
-    var startSingleplayer: undefined | (() => Promise<void>);
+    var startSingleplayer: undefined | ((underworld: Underworld) => Promise<void>);
     var startMultiplayer: undefined | ((wsPieUrl: string) => Promise<void>);
     // Used to ensure that the current client's turn doesn't end while they are still walking
     // If they invoke endMyTurn() while they are walking, it will wait until they are done
@@ -96,7 +96,7 @@ declare global {
     // Used to introduce new enemies
     var enemyEncountered: undefined | string[];
     // Make me superhuman (used for dev)
-    var superMe: undefined | (() => void);
+    var superMe: undefined | ((underworld: Underworld) => void);
     // A local copy of underworld.units used to predict damage and mana use from casting a spell
     var predictionUnits: Unit.IUnit[] | undefined;
     // A local copy of underworld.pickups used to predict effect from casting a spell
@@ -105,9 +105,6 @@ declare global {
     var attentionMarkers: undefined | { imagePath: string, pos: Vec2 }[];
     // Shows icon for units that will be successfully resurrected
     var resMarkers: undefined | Vec2[];
-    // Keep track of the LevelData from the last level that was created in
-    // case it needs to be sent to another client
-    var lastLevelCreated: LevelData;
     // True if client player has casted this turn;
     // Used to prompt before ending turn without taking any action
     var castThisTurn: undefined | boolean;
@@ -132,7 +129,7 @@ declare global {
     var map: undefined | any;
     var devSpawnUnit: undefined | ((unitId: string, faction: Faction) => void);
     var devSpawnAllUnits: undefined | (() => void);
-    var devRemoveAllEnemies: undefined | (() => void);
+    var devRemoveAllEnemies: undefined | ((underworld: Underworld) => void);
     // true if this instance is the headless server with no visuals or audio, just the game logic
     var headless: boolean;
     // Move audio functions into global so they can be injected IF audio is supported

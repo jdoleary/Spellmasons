@@ -20,7 +20,7 @@ Adds a radius to the spell so it can affect more targets
       for (let target of [state.castLocation, ...state.targetedUnits]) {
         // Draw visual circle for prediction
         drawPredictionCircle(target, range);
-        const withinRadius = globalThis.underworld.getUnitsWithinDistanceOfTarget(
+        const withinRadius = underworld.getUnitsWithinDistanceOfTarget(
           target,
           range,
           prediction
@@ -28,7 +28,7 @@ Adds a radius to the spell so it can affect more targets
         // Add units to target
         withinRadius.forEach(unit => addUnitTarget(unit, state));
 
-        const pickupsWithinRadius = globalThis.underworld.getPickupsWithinDistanceOfTarget(
+        const pickupsWithinRadius = underworld.getPickupsWithinDistanceOfTarget(
           target,
           range
         );

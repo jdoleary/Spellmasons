@@ -17,7 +17,7 @@ function add(unit: IUnit) {
   unit.onDamageEvents.push(id);
 
   // If unit belongs to player
-  const player = globalThis.underworld.players.find(p => p.unit == unit)
+  const player = underworld.players.find(p => p.unit == unit)
   if (player) {
     addCardToHand(allCards[id], player);
   }
@@ -27,7 +27,7 @@ function remove(unit: IUnit) {
   Image.removeSubSprite(unit.image, id);
 
   // If unit belongs to player
-  const player = globalThis.underworld.players.find(p => p.unit == unit)
+  const player = underworld.players.find(p => p.unit == unit)
   if (player) {
     removeCardsFromHand(player, [id]);
   }

@@ -30,7 +30,7 @@ const unit: UnitSource = {
     walk: 'units/archerWalk',
   },
   action: async (unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, underworld: Underworld, _canAttackTarget: boolean) => {
-    const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit);
+    const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit, underworld);
     // Attack
     if (attackTarget) {
       // Archers attack or move, not both; so clear their existing path
@@ -68,7 +68,7 @@ const unit: UnitSource = {
       // Movement:
       // Intelligently move the archer to a position where it can see the enemy
       if (closestEnemy) {
-        const moveOptions = Unit.findLOSLocation(unit, closestEnemy);
+        const moveOptions = Unit.findLOSLocation(unit, closestEnemy, underworld);
         const moveChoice = moveOptions.reduce<{ dist: number, pos: Vec2 | undefined }>((closest, cur) => {
           const dist = math.distance(cur, unit);
           if (dist < closest.dist) {
@@ -79,10 +79,10 @@ const unit: UnitSource = {
         }, { dist: Number.MAX_SAFE_INTEGER, pos: undefined })
 
         if (moveChoice.pos) {
-          await Unit.moveTowards(unit, moveChoice.pos);
+          await Unit.moveTowards(unit, moveChoice.pos, underworld);
         } else {
           // Move closer
-          await Unit.moveTowards(unit, closestEnemy);
+          await Unit.moveTowards(unit, closestEnemy, underworld);
         }
       }
     }

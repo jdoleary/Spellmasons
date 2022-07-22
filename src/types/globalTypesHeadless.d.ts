@@ -13,9 +13,6 @@ import type { IHostApp } from '../network/networkUtil';
 declare global {
     var SPELLMASONS_PACKAGE_VERSION: string;
     var underworld: Underworld;
-    // Keep track of the LevelData from the last level that was created in
-    // case it needs to be sent to another client
-    var lastLevelCreated: LevelData;
     // Allows manually overriding the underworld seed via the JS console
     var seedOverride: string | undefined;
     // true if this instance is the headless server with no visuals or audio, just the game logic
@@ -158,7 +155,7 @@ declare global {
     var volume: undefined | number;
     var volumeMusic: undefined | number;
     var volumeGame: undefined | number;
-    var startSingleplayer: undefined | (() => Promise<void>);
+    var startSingleplayer: undefined | ((underworld: Underworld) => Promise<void>);
     var startMultiplayer: undefined | ((wsPieUrl: string) => Promise<void>);
     // Used to ensure that the current client's turn doesn't end while they are still walking
     // If they invoke endMyTurn() while they are walking, it will wait until they are done

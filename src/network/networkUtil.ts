@@ -2,6 +2,7 @@ import type { LevelData } from '../Underworld';
 import { MESSAGE_TYPES } from '../types/MessageTypes';
 import * as Player from '../entity/Player';
 import * as Unit from '../entity/Unit';
+import Underworld from '../Underworld';
 
 // Copied from PieClient.d.ts so as to not have to import PieClient
 export interface ClientPresenceChangedArgs {
@@ -14,16 +15,17 @@ let clients: string[] = [];
 export function getClients(): string[] {
     return clients;
 }
-export function onClientPresenceChanged(o: ClientPresenceChangedArgs) {
+export function onClientPresenceChanged(o: ClientPresenceChangedArgs, underworld: Underworld) {
     console.log('clientPresenceChanged', o);
     clients = o.clients;
-    // If game is already started
-    if (globalThis.underworld) {
-        // Ensure each client corresponds with a Player instance
-        globalThis.underworld.ensureAllClientsHaveAssociatedPlayers(clients);
-    }
+    // Ensure each client corresponds with a Player instance
+    underworld.ensureAllClientsHaveAssociatedPlayers(clients);
 }
-export function hostGiveClientGameStateForInitialLoad(clientId: string, level: LevelData = globalThis.lastLevelCreated) {
+export function hostGiveClientGameStateForInitialLoad(clientId: string, underworld: Underworld, level?: LevelData) {
+    if (!level) {
+        console.error('Cannot give client game state, levelData is undefined');
+        return
+    }
     // Only the host should be sending INIT_GAME_STATE messages
     // because the host has the canonical game state
     if (globalThis.isHost()) {
@@ -34,10 +36,10 @@ export function hostGiveClientGameStateForInitialLoad(clientId: string, level: L
                 globalThis.pie.sendData({
                     type: MESSAGE_TYPES.INIT_GAME_STATE,
                     level,
-                    underworld: globalThis.underworld.serializeForSyncronize(),
-                    phase: globalThis.underworld.turn_phase,
-                    units: globalThis.underworld.units.map(Unit.serialize),
-                    players: globalThis.underworld.players.map(Player.serialize)
+                    underworld: underworld.serializeForSyncronize(),
+                    phase: underworld.turn_phase,
+                    units: underworld.units.map(Unit.serialize),
+                    players: underworld.players.map(Player.serialize)
                 }, {
                     subType: "Whisper",
                     whisperClientIds: [clientId],

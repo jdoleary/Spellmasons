@@ -23,10 +23,10 @@ describe('repelCircles', () => {
         mover.y = destination.y;
         // This is the flag that ensures "other" does not move when the collision occurs
         const otherIsFixed = true;
-        // Stub globalThis.pathingLineSegment
-        // @ts-ignore
-        globalThis.underworld = { pathingLineSegments: [] };
-        repelCircles(mover, originalPosition, other, otherIsFixed);
+        // Stub pathingLineSegment
+        const underworld = { pathingLineSegments: [] };
+        // @ts-ignore, underworld is a stub
+        repelCircles(mover, originalPosition, other, underworld, otherIsFixed);
         const actual = { x: other.x, y: other.y };
         const expected = otherStartPosition;
         // Assert that "other" did NOT move
@@ -39,7 +39,8 @@ describe('moveWithCollisions', () => {
     it("should travel to it's destination if unobstructed", () => {
         const c1: Circle = { x: 0, y: 0, radius: 2 };
         const destination = { x: 2, y: 2 };
-        moveWithCollisions(c1, destination, []);
+        //@ts-ignore: underworld is undefined in this test because it is not needed
+        moveWithCollisions(c1, destination, [], undefined);
         const actual = { x: c1.x, y: c1.y };
         const expected = destination;
         expect(actual).toEqual(expected);
@@ -50,7 +51,8 @@ describe('moveWithCollisions', () => {
     it("should not make a circle collide with itself", () => {
         const c1: any = { x: 0, y: 0, radius: 5, immovable: false };
         const destination = { x: 1, y: 0 };
-        moveWithCollisions(c1, destination, [c1]);
+        //@ts-ignore: underworld is undefined in this test because it is not needed
+        moveWithCollisions(c1, destination, [c1], undefined);
         const actual = { x: c1.x, y: c1.y };
         const expected = destination;
         expect(actual).toEqual(expected);
@@ -66,7 +68,8 @@ describe('moveWithCollisions', () => {
                     circles.push({ x: 6, y: 0, radius: 5, immovable: false });
                 }
                 const destination = { x: 0, y: 0 };
-                moveWithCollisions(c1, destination, circles);
+                // @ts-ignore: No underworld needed for this test, so it is set to undefined
+                moveWithCollisions(c1, destination, circles, undefined);
                 const { duration } = performance.measure(
                     'end',
                     'moveWithCollisions-start',

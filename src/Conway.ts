@@ -1,5 +1,6 @@
 import { randInt } from "./jmath/rand";
 import { oneDimentionIndexToVec2, vec2ToOneDimentionIndexPreventWrap } from "./jmath/ArrayUtil";
+import Underworld from "./Underworld";
 export enum Material {
     EMPTY,
     LIQUID,
@@ -12,7 +13,7 @@ export enum Material {
 // 0,1,2
 // 7   3
 // 6,5,4
-function mutateViaRules(tile: Material, neighbors: (Material | undefined)[], state: ConwayState): Material {
+function mutateViaRules(tile: Material, neighbors: (Material | undefined)[], state: ConwayState, underworld: Underworld): Material {
     // Replace empty tiles
     if (tile == Material.EMPTY) {
         if (neighbors.some(t => t && t == Material.GROUND)) {
@@ -31,7 +32,7 @@ function mutateViaRules(tile: Material, neighbors: (Material | undefined)[], sta
         if (neighbors.some(t => t == Material.LIQUID)) {
             // and all other neighbors are ground (so liquid doesn't butt up against walls and block pathing)
             if (neighbors.every(t => t && t == Material.GROUND || t == Material.LIQUID)) {
-                const roll = randInt(globalThis.underworld.random, 0, 100)
+                const roll = randInt(underworld.random, 0, 100)
                 // chance of changing it to liquid and growing the pool
                 if (roll <= state.percentChanceOfLiquidSpread) {
                     // As liquid spreads decrease the chances of it spreading
@@ -69,16 +70,16 @@ export interface ConwayState {
     percentChanceOfLiquidSpread: number;
     liquidSpreadChanceFalloff: number;
 }
-export function conway(tiles: Material[], widthOf2DArray: number, state: ConwayState) {
+export function conway(tiles: Material[], widthOf2DArray: number, state: ConwayState, underworld: Underworld) {
     for (let i = 0; i < tiles.length; i++) {
         const tile = tiles[i];
         if (tile !== undefined) {
             const neighbors = getNeighbors(i, tiles, widthOf2DArray);
-            tiles[i] = mutateViaRules(tile, neighbors, state);
+            tiles[i] = mutateViaRules(tile, neighbors, state, underworld);
         }
     }
 }
-export function placeLiquidSources(tiles: Material[], widthOf2DArray: number, numberOfLiquidSources: number) {
+export function placeLiquidSources(tiles: Material[], widthOf2DArray: number, numberOfLiquidSources: number, underworld: Underworld) {
     let candidatesForLiquidSource = [];
     for (let i = 0; i < tiles.length; i++) {
         const tile = tiles[i];
@@ -91,7 +92,7 @@ export function placeLiquidSources(tiles: Material[], widthOf2DArray: number, nu
         }
     }
     for (let i = 0; i < numberOfLiquidSources; i++) {
-        const chosenIndex = candidatesForLiquidSource[randInt(globalThis.underworld.random, 0, candidatesForLiquidSource.length)];
+        const chosenIndex = candidatesForLiquidSource[randInt(underworld.random, 0, candidatesForLiquidSource.length)];
 
         if (chosenIndex !== undefined && tiles[chosenIndex] !== undefined) {
             tiles[chosenIndex] = Material.LIQUID;

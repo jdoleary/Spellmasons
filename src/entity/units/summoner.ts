@@ -2,6 +2,7 @@ import * as Unit from '../Unit';
 import { allUnits, UnitSource } from './index';
 import { UnitSubType, UnitType } from '../../types/commonTypes';
 import * as math from '../../jmath/math';
+import Underworld from '../../Underworld';
 
 const SUMMON_MANA_COST = 30;
 const unit: UnitSource = {
@@ -27,7 +28,7 @@ const unit: UnitSource = {
   extraTooltipInfo: () => {
     return `Mana cost per summon: ${SUMMON_MANA_COST}`;
   },
-  action: async (unit: Unit.IUnit) => {
+  action: async (unit: Unit.IUnit, _attackTarget, underworld: Underworld) => {
     // Summon unit
     if (unit.mana >= SUMMON_MANA_COST) {
       // Summoners attack or move, not both; so clear their existing path
@@ -36,7 +37,7 @@ const unit: UnitSource = {
       await Unit.playComboAnimation(unit, unit.animations.attack, async () => {
         const sourceUnit = allUnits.grunt;
         if (sourceUnit) {
-          const coords = globalThis.underworld.findValidSpawn(unit, 5)
+          const coords = underworld.findValidSpawn(unit, 5)
           if (coords) {
             const summonedUnit = Unit.create(
               sourceUnit.id,
@@ -49,9 +50,10 @@ const unit: UnitSource = {
               UnitType.AI,
               sourceUnit.info.subtype,
               unit.strength,
-              sourceUnit.unitProps
+              sourceUnit.unitProps,
+              underworld
             );
-            await Unit.moveTowards(summonedUnit, unit);
+            await Unit.moveTowards(summonedUnit, unit, underworld);
           } else {
             console.log("Summoner could not find valid spawn");
           }
@@ -63,10 +65,10 @@ const unit: UnitSource = {
       });
     } else {
       // Move opposite to closest enemy
-      const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit);
+      const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit, underworld);
       if (closestEnemy) {
         const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, closestEnemy, -unit.stamina);
-        await Unit.moveTowards(unit, moveTo);
+        await Unit.moveTowards(unit, moveTo, underworld);
       }
 
     }

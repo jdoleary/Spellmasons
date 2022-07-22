@@ -62,7 +62,7 @@ Makes this unit's curses contagious to other nearby units
   },
   events: {
     onTurnStart: async (unit: IUnit, prediction: boolean) => {
-      const nearByUnits = globalThis.underworld.getUnitsWithinDistanceOfTarget(unit, COLLISION_MESH_RADIUS * 4, prediction)
+      const nearByUnits = underworld.getUnitsWithinDistanceOfTarget(unit, COLLISION_MESH_RADIUS * 4, prediction)
         // Filter out undefineds
         .filter(x => x !== undefined)
         // Do not spread to dead units

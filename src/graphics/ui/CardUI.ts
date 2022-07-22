@@ -9,6 +9,7 @@ import { calculateCostForSingleCard } from '../../cards/cardUtils';
 import floatingText, { centeredFloatingText } from '../FloatingText';
 import { composeOnDamageEvents, copyForPredictionUnit } from '../../entity/Unit';
 import { NUMBER_OF_TOOLBAR_SLOTS } from '../../config';
+import Underworld from '../../Underworld';
 
 const elCardHolders = document.getElementById('card-holders') as HTMLElement;
 const elInvContent = document.getElementById('inventory-content') as HTMLElement;
@@ -61,7 +62,7 @@ if (!globalThis.headless) {
         // else a card is being dragged in from inventory
         globalThis.player.cards[dropIndex] = cardId;
       }
-      recalcPositionForCards(globalThis.player);
+      recalcPositionForCards(globalThis.player, underworld);
       syncInventory(undefined);
     } else {
       console.error('Something went wrong dragndropping card', dropIndex, dragCard);
@@ -121,7 +122,7 @@ function showFullCard(card: Cards.ICard) {
 }
 let cardsSelected: string[] = [];
 
-export function recalcPositionForCards(player: Player.IPlayer | undefined) {
+export function recalcPositionForCards(player: Player.IPlayer | undefined, underworld: Underworld) {
   if (globalThis.headless) { return; }
   if (!globalThis.player) {
     return
@@ -184,12 +185,12 @@ export function recalcPositionForCards(player: Player.IPlayer | undefined) {
     if (card) {
       const element = createCardElement(card);
       // When the user clicks on a card
-      selectCard(player, element, cardId);
+      selectCard(player, element, cardId, underworld);
     } else {
       console.log(`No corresponding source card exists for "${cardId}"`);
     }
   }
-  updateCardBadges();
+  updateCardBadges(underworld);
 }
 const openInvClass = 'open-inventory';
 export function syncInventory(slotModifyingIndex: number | undefined) {
@@ -207,7 +208,7 @@ export function syncInventory(slotModifyingIndex: number | undefined) {
           elCard.addEventListener('click', (e) => {
             if (globalThis.player) {
               globalThis.player.cards[slotModifyingIndex] = inventoryCardId;
-              recalcPositionForCards(globalThis.player)
+              recalcPositionForCards(globalThis.player, underworld)
               // Close inventory
               toggleInventory(undefined, false);
               e.preventDefault();
@@ -235,7 +236,7 @@ export function syncInventory(slotModifyingIndex: number | undefined) {
         elClearSlotModifiyingIndex.addEventListener('click', () => {
           if (globalThis.player && slotModifyingIndex !== undefined) {
             globalThis.player.cards[slotModifyingIndex] = '';
-            recalcPositionForCards(globalThis.player);
+            recalcPositionForCards(globalThis.player, underworld);
             toggleInventory(undefined, false);
           }
         })
@@ -307,7 +308,7 @@ function addListenersToCardElement(
       }
     } else {
       cardsSelected.push(cardId);
-      selectCard(player, element, cardId);
+      selectCard(player, element, cardId, underworld);
     }
   });
 }
@@ -335,7 +336,7 @@ export function selectCardByIndex(index: number) {
   }
 }
 // Moves a card element to selected-cards div
-function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string) {
+function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string, underworld: Underworld) {
   if (elSelectedCards) {
     const clone = element.cloneNode(true) as HTMLElement;
     // Selected cards are not draggable for rearranging
@@ -347,7 +348,7 @@ function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string
       clone.classList.add('requires-following-card')
     }
     elSelectedCards.appendChild(clone);
-    const cost = updateManaCostUI();
+    const cost = updateManaCostUI(underworld);
     if (globalThis.player) {
       if (cost.manaCost > globalThis.player.unit.mana) {
         floatingText({
@@ -389,7 +390,7 @@ export function getSelectedCards(): Cards.ICard[] {
   return Cards.getCardsFromIds(cardIds);
 }
 
-export function clearSelectedCards() {
+export function clearSelectedCards(underworld: Underworld) {
   if (globalThis.headless) { return; }
   // Deselect all selected cards
   cardsSelected = []
@@ -403,7 +404,7 @@ export function clearSelectedCards() {
     }
   });
   // Now that there are no more selected cards, update the spell effect projection
-  runPredictions();
+  runPredictions(underworld);
 }
 enum CardRarity {
   COMMON,
@@ -549,13 +550,13 @@ function updateHealthBadge(elBadge: Element | null, healthCost: number, card: Ca
 }
 // Updates the UI mana badge for cards in hand.  To be invoked whenever a player's
 // cardUsageCounts object is modified in order to sync the UI
-export function updateCardBadges() {
+export function updateCardBadges(underworld: Underworld) {
   if (globalThis.headless) { return; }
   if (globalThis.player) {
     // Using a prediction unit here so that composeOnDamageEvents
     // used to determine the modified health cost of
     // spells that cost health will not affect the real player unit
-    const predictionPlayerUnit = copyForPredictionUnit(globalThis.player.unit);
+    const predictionPlayerUnit = copyForPredictionUnit(globalThis.player.unit, underworld);
     // Update selected cards
     const selectedCards = getSelectedCards();
     for (let i = 0; i < selectedCards.length; i++) {

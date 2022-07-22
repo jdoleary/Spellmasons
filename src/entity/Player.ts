@@ -14,6 +14,7 @@ import { MESSAGE_TYPES } from '../types/MessageTypes';
 import { jitter } from '../jmath/Vec';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import { playerCastAnimationColor, playerCoatPrimary, playerCoatSecondary, playerColors, playerColorsSecondary } from '../graphics/ui/colors';
+import Underworld from '../Underworld';
 
 const elLobbyBody = document.getElementById('lobby-body') as (HTMLElement | undefined);
 // The serialized version of the interface changes the interface to allow only the data
@@ -40,7 +41,7 @@ export interface IPlayer {
   // be reflected in the UI
   cardUsageCounts: CardUsage;
 }
-export function create(clientId: string): IPlayer {
+export function create(clientId: string, underworld: Underworld): IPlayer {
   const userSource = defaultPlayerUnit;
   const player: IPlayer = {
     ready: false,
@@ -58,7 +59,9 @@ export function create(clientId: string): IPlayer {
       userSource.info.image,
       UnitType.PLAYER_CONTROLLED,
       userSource.info.subtype,
-      1
+      1,
+      undefined,
+      underworld
     ),
     inPortal: false,
     cards: Array(config.NUMBER_OF_TOOLBAR_SLOTS).fill(''),
@@ -98,7 +101,7 @@ export function create(clientId: string): IPlayer {
   player.unit.health = PLAYER_BASE_HEALTH;
   player.unit.healthMax = PLAYER_BASE_HEALTH;
 
-  globalThis.underworld.players.push(player);
+  underworld.players.push(player);
   return player;
 }
 // TODO: This creates a NEW MultiColorReplaceFilter,
@@ -132,7 +135,7 @@ function setPlayerRobeColor(player: IPlayer) {
 
 
 }
-export function resetPlayerForNextLevel(player: IPlayer) {
+export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld) {
   // Player is no longer in portal
   player.inPortal = false;
 
@@ -154,13 +157,13 @@ export function resetPlayerForNextLevel(player: IPlayer) {
   player.unit.mana = player.unit.manaMax;
   player.unit.health = player.unit.healthMax;
   player.unit.stamina = player.unit.staminaMax;
-  if (globalThis.underworld.validPlayerSpawnCoords.length > 0) {
-    const index = randInt(globalThis.underworld.random, 0, globalThis.underworld.validPlayerSpawnCoords.length - 1);
-    console.log('Choose spawn', index, 'of', globalThis.underworld.validPlayerSpawnCoords.length);
-    const spawnCoords = globalThis.underworld.validPlayerSpawnCoords[index];
+  if (underworld.validPlayerSpawnCoords.length > 0) {
+    const index = randInt(underworld.random, 0, underworld.validPlayerSpawnCoords.length - 1);
+    console.log('Choose spawn', index, 'of', underworld.validPlayerSpawnCoords.length);
+    const spawnCoords = underworld.validPlayerSpawnCoords[index];
     if (spawnCoords) {
       // jitter ensures that units don't perfectly overlap
-      Unit.setLocation(player.unit, jitter(spawnCoords, player.unit.radius));
+      Unit.setLocation(player.unit, jitter(spawnCoords, player.unit.radius, underworld.random));
     } else {
       console.log('Level: cannot find valid spawn for player unit');
     }
@@ -188,8 +191,8 @@ export function serialize(player: IPlayer): IPlayerSerialized {
   }
 }
 // load rehydrates a player entity from IPlayerSerialized
-export function load(player: IPlayerSerialized) {
-  const reassignedUnit = globalThis.underworld.units.find(u => u.id == player.unit.id);
+export function load(player: IPlayerSerialized, underworld: Underworld) {
+  const reassignedUnit = underworld.units.find(u => u.id == player.unit.id);
   if (!reassignedUnit) {
     console.warn('Failed to load player because cannot find associated unit with ID', player.unit.id);
     console.log('Requesting SYNC_PLAYERS from host')
@@ -208,33 +211,33 @@ export function load(player: IPlayerSerialized) {
     playerLoaded.unit.y = NaN;
   }
   updateGlobalRefToCurrentClientPlayer(playerLoaded);
-  CardUI.recalcPositionForCards(playerLoaded);
-  globalThis.underworld.players.push(playerLoaded);
+  CardUI.recalcPositionForCards(playerLoaded, underworld);
+  underworld.players.push(playerLoaded);
   const clients = getClients();
-  setClientConnected(playerLoaded, clients.includes(player.clientId));
+  setClientConnected(playerLoaded, clients.includes(player.clientId), underworld);
   setPlayerRobeColor(playerLoaded);
   return playerLoaded;
 }
 
 // Sets boolean and substring denoting if the player has a @websocketpie/client client associated with it
-export function setClientConnected(player: IPlayer, connected: boolean) {
+export function setClientConnected(player: IPlayer, connected: boolean, underworld: Underworld) {
   player.clientConnected = connected;
   if (connected) {
     Image.removeSubSprite(player.unit.image, 'disconnected.png');
   } else {
     Image.addSubSprite(player.unit.image, 'disconnected.png');
     // If they disconnect, end their turn
-    globalThis.underworld.endPlayerTurn(player.clientId);
+    underworld.endPlayerTurn(player.clientId);
   }
-  syncLobby()
+  syncLobby(underworld)
 }
-function syncLobby() {
+function syncLobby(underworld: Underworld) {
   // Update lobby element
   if (elLobbyBody) {
-    elLobbyBody.innerHTML = globalThis.underworld.players.map(p => `<tr><td>${p.clientId}</td><td>${p.clientConnected}</td></tr>`).join('');
+    elLobbyBody.innerHTML = underworld.players.map(p => `<tr><td>${p.clientId}</td><td>${p.clientConnected}</td></tr>`).join('');
   }
 }
-export function enterPortal(player: IPlayer) {
+export function enterPortal(player: IPlayer, underworld: Underworld) {
   player.inPortal = true;
   Image.hide(player.unit.image);
   // Make sure to resolve the moving promise once they enter the portal or else 
@@ -246,7 +249,7 @@ export function enterPortal(player: IPlayer) {
   // your user's move circle in the upper left hand of the map but without the user there)
   clearTooltipSelection();
   // Entering the portal ends the player's turn
-  globalThis.underworld.endPlayerTurn(player.clientId);
+  underworld.endPlayerTurn(player.clientId);
 }
 // Note: this is also used for AI targeting to ensure that AI don't target disabled plaeyrs
 export function ableToTakeTurn(player: IPlayer) {
@@ -281,7 +284,7 @@ export function addCardToHand(card: Cards.ICard | undefined, player: IPlayer | u
     if (emptySlotIndex !== -1) {
       player.cards[emptySlotIndex] = card.id;
     }
-    CardUI.recalcPositionForCards(player);
+    CardUI.recalcPositionForCards(player, underworld);
   }
 }
 // This function fully deletes the cards from the player's hand
@@ -294,5 +297,5 @@ export function removeCardsFromHand(player: IPlayer, cards: string[]) {
       (el as HTMLElement).click();
     });
   }
-  CardUI.recalcPositionForCards(globalThis.player);
+  CardUI.recalcPositionForCards(player, underworld);
 }

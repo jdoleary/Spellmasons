@@ -1,6 +1,7 @@
 import { drawPredictionCircleFill, drawPredictionLine } from '../graphics/PlanningView';
 import { addUnitTarget, Spell } from '.';
 import type * as Unit from '../entity/Unit';
+import Underworld from '../Underworld';
 
 const id = 'Adjoining';
 const spell: Spell = {
@@ -28,6 +29,7 @@ off of all existing targeted units to units touching them.
           const chained_units = getTouchingUnitsRecursive(
             unit.x,
             unit.y,
+            underworld,
             prediction,
             state.targetedUnits
           );
@@ -44,10 +46,11 @@ const range = 105;
 function getTouchingUnitsRecursive(
   x: number,
   y: number,
+  underworld: Underworld,
   prediction: boolean,
   ignore: Unit.IUnit[] = [],
 ): Unit.IUnit[] {
-  const units = prediction && globalThis.predictionUnits ? globalThis.predictionUnits : globalThis.underworld.units;
+  const units = prediction && globalThis.predictionUnits ? globalThis.predictionUnits : underworld.units;
   let touching = units.filter((u) => {
     return (
       u.x <= x + range &&
@@ -64,7 +67,7 @@ function getTouchingUnitsRecursive(
   })
   for (let u of touching) {
     touching = touching.concat(
-      getTouchingUnitsRecursive(u.x, u.y, prediction, ignore),
+      getTouchingUnitsRecursive(u.x, u.y, underworld, prediction, ignore),
     );
   }
   return touching;

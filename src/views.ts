@@ -16,6 +16,7 @@ import {
   onWindowBlur,
   keypressListener,
 } from './graphics/ui/eventListeners';
+import Underworld from './Underworld';
 
 // A view is not shared between players in the same game, a player could choose any view at any time
 export enum View {
@@ -26,10 +27,10 @@ export enum View {
 }
 const elUpgradePicker = document.getElementById('upgrade-picker') as HTMLElement;
 let lastNonMenuView: View | undefined;
-function closeMenu() {
+function closeMenu(underworld?: Underworld) {
   // Change to the last non menu view
   if (lastNonMenuView) {
-    setView(lastNonMenuView);
+    setView(lastNonMenuView, underworld);
     // When the menu closes, set the menu back
     // to the main menu route
     if (globalThis.setMenu) {
@@ -40,30 +41,21 @@ function closeMenu() {
   }
 
 }
-if (!globalThis.headless) {
-  const menuBtnId = 'menuBtn';
-  const elMenuBtn: HTMLButtonElement = document.getElementById(
-    menuBtnId,
-  ) as HTMLButtonElement;
-  elMenuBtn.addEventListener('click', toggleMenu);
-}
-// Make 'closeMenu' available to the svelte menu
-globalThis.closeMenu = closeMenu;
-export function toggleMenu() {
+export function toggleMenu(underworld?: Underworld) {
   const elMenu = document.getElementById('menu') as HTMLElement;
   const menuClosed = elMenu.classList.contains('hidden');
   if (menuClosed) {
     // Open it
-    setView(View.Menu);
+    setView(View.Menu, underworld);
   } else {
-    closeMenu();
+    closeMenu(underworld);
   }
 
 }
 // The "View" is what the client is looking at
 // No gamelogic should be executed inside setView
 // including setup.
-export function setView(v: View) {
+export function setView(v: View, underworld?: Underworld) {
   if (globalThis.headless) { return; }
   console.log('setView(', View[v], ')');
   if (globalThis.view == v) {
@@ -84,7 +76,9 @@ export function setView(v: View) {
     elMenu.classList.add('hidden');
     lastNonMenuView = v;
   }
-  removeUnderworldEventListeners();
+  if (underworld && underworld.removeEventListeners) {
+    underworld.removeEventListeners();
+  }
   // Hide the upgrade picker when the view changes
   elUpgradePicker.classList.remove('active');
   switch (v) {
@@ -96,7 +90,14 @@ export function setView(v: View) {
       break;
     case View.Game:
       resizePixi();
-      addUnderworldEventListeners();
+      if (underworld) {
+        underworld.removeEventListeners = addUnderworldEventListeners(underworld);
+        // Update the camera position when the view changes because gameLoop might not be
+        // running yet (and gameLoop is what usually updates the camera position)
+        updateCameraPosition(underworld);
+      } else {
+        console.error('Attempted to set view to Game but no underworld was passed as argument')
+      }
       break;
     case View.Disconnected:
       // Intentionally left blank - this view is handled in css
@@ -105,13 +106,10 @@ export function setView(v: View) {
       console.error(`Cannot set view to "${View[v]}" view is not handled in switch statement.`);
       break;
   }
-  // Update the camera position when the view changes because gameLoop might not be
-  // running yet (and gameLoop is what usually updates the camera position)
-  updateCameraPosition();
 }
 
 // zoom camera
-function zoom(e: WheelEvent) {
+function zoom(underworld: Underworld, e: WheelEvent) {
   if (!app) {
     return;
   }
@@ -129,40 +127,93 @@ function zoom(e: WheelEvent) {
 
 
 const endTurnBtnId = 'end-turn-btn';
-function addUnderworldEventListeners() {
+const menuBtnId = 'menuBtn';
+function addUnderworldEventListeners(underworld: Underworld) {
   if (globalThis.headless) { return; }
-  // Add keyboard shortcuts
-  globalThis.addEventListener('keydown', keydownListener);
-  globalThis.addEventListener('keypress', keypressListener);
-  globalThis.addEventListener('keyup', keyupListener);
-  document.body?.addEventListener('contextmenu', contextmenuHandler);
-  document.body?.addEventListener('click', clickHandler);
-  globalThis.addEventListener('mousedown', mouseDownHandler);
-  globalThis.addEventListener('mouseup', mouseUpHandler);
-  globalThis.addEventListener('blur', onWindowBlur);
-  document.body?.addEventListener('wheel', zoom);
-  document.body?.addEventListener('mousemove', mouseMove);
-  // Add button listeners
   const elEndTurnBtn: HTMLButtonElement = document.getElementById(
     endTurnBtnId,
   ) as HTMLButtonElement;
-  elEndTurnBtn.addEventListener('click', endTurnBtnListener);
-
-}
-
-export function removeUnderworldEventListeners() {
-  if (globalThis.headless) { return; }
-  // Remove keyboard shortcuts
-  globalThis.removeEventListener('keydown', keydownListener);
-  globalThis.removeEventListener('keyup', keyupListener);
-  // Remove mouse and click listeners
-  document.body?.removeEventListener('contextmenu', contextmenuHandler);
-  document.body?.removeEventListener('click', clickHandler);
-  document.body?.removeEventListener('wheel', zoom);
-  document.body?.removeEventListener('mousemove', mouseMove);
-  // Remove button listeners
-  const elEndTurnBtn: HTMLButtonElement = document.getElementById(
-    endTurnBtnId,
+  const elMenuBtn: HTMLButtonElement = document.getElementById(
+    menuBtnId,
   ) as HTMLButtonElement;
-  elEndTurnBtn.removeEventListener('click', endTurnBtnListener);
+
+  const listeners: {
+    target: HTMLElement | typeof globalThis;
+    event: string;
+    listener: any;
+  }[] = [
+      {
+        target: globalThis,
+        event: 'keydown',
+        listener: keydownListener.bind(undefined, underworld)
+      },
+      {
+        target: globalThis,
+        event: 'keypress',
+        listener: keypressListener.bind(undefined, underworld)
+      },
+      {
+        target: globalThis,
+        event: 'keyup',
+        listener: keyupListener.bind(undefined, underworld)
+      },
+      {
+        target: document.body,
+        event: 'contextmenu',
+        listener: contextmenuHandler.bind(undefined, underworld)
+      },
+      {
+        target: document.body,
+        event: 'click',
+        listener: clickHandler.bind(undefined, underworld)
+      },
+      {
+        target: globalThis,
+        event: 'mousedown',
+        listener: mouseDownHandler.bind(undefined, underworld)
+      },
+      {
+        target: globalThis,
+        event: 'mouseup',
+        listener: mouseUpHandler.bind(undefined, underworld)
+      },
+      {
+        target: globalThis,
+        event: 'blur',
+        listener: onWindowBlur.bind(undefined, underworld)
+      },
+      {
+        target: document.body,
+        event: 'wheel',
+        listener: zoom.bind(undefined, underworld)
+      },
+      {
+        target: document.body,
+        event: 'mousemove',
+        listener: mouseMove.bind(undefined, underworld)
+      },
+      {
+        target: elEndTurnBtn,
+        event: 'click',
+        listener: endTurnBtnListener.bind(undefined, underworld)
+      },
+      {
+        target: elMenuBtn,
+        event: 'click',
+        listener: toggleMenu.bind(undefined, underworld)
+      },
+    ];
+  // Make 'closeMenu' available to the svelte menu
+  globalThis.closeMenu = () => closeMenu(underworld);
+  for (let { target, event, listener } of listeners) {
+    target.addEventListener(event, listener);
+  }
+
+  return function removeUnderworldEventListeners() {
+    if (globalThis.headless) { return; }
+    for (let { target, event, listener } of listeners) {
+      target.removeEventListener(event, listener);
+    }
+
+  }
 }

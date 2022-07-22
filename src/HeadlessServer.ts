@@ -22,7 +22,6 @@ globalThis.player = undefined;
 
 // TODO: The following need to be specific to a host app
 // globalThis.pie
-// globalThis.underworld
 // globalThis.lastLeveLCreated
 // readyState.underworld
 
@@ -32,38 +31,33 @@ function headlessStartGame() {
 
     pie.startServer({
         port: 8081, makeHostAppInstance: () => {
-            globalThis.pie = new HostApp();
+            const hostAppInst = new HostApp();
+            globalThis.pie = hostAppInst;
             console.log('Start Game: Attempt to start the game')
-            const gameAlreadyStarted = globalThis.underworld && globalThis.underworld.levelIndex >= 0;
-            // if the game hasn't already been started
-            if (!gameAlreadyStarted) {
-                console.log('Host: Start game / Initialize Underworld');
-                globalThis.underworld = new Underworld(Math.random().toString());
-                // Mark the underworld as "ready". This is important even for headless so that it doesn't
-                // try to process it's own INIT_GAME_STATE messages
-                readyState.set('underworld', true);
-                // Headless makes it's own wsPieConnection
-                readyState.set('wsPieConnection', true);
-                // Headless makes it's own room
-                readyState.set('wsPieRoomJoined', true);
-                // Headless does NOT use graphics so this can be set to true immediately
-                readyState.set('pixiAssets', true);
-                // Initialize content
-                Cards.registerCards();
-                Units.registerUnits();
-                readyState.set("content", true);
-                // Generate the level data
-                globalThis.lastLevelCreated = globalThis.underworld.generateLevelDataSyncronous(0);
-                // Actually create it
-                globalThis.underworld.createLevelSyncronous(globalThis.lastLevelCreated);
-                console.log('Host: Send all clients game state for initial load');
-                getClients().forEach(clientId => {
-                    hostGiveClientGameStateForInitialLoad(clientId, globalThis.lastLevelCreated);
-                });
-            } else {
-                console.log('Start Game: Won\'t, game has already been started');
-            }
-            return globalThis.pie;
+            console.log('Host: Start game / Initialize Underworld');
+            hostAppInst.underworld = new Underworld(Math.random().toString());
+            // Mark the underworld as "ready". This is important even for headless so that it doesn't
+            // try to process it's own INIT_GAME_STATE messages
+            readyState.set('underworld', true, hostAppInst.underworld);
+            // Headless makes it's own wsPieConnection
+            readyState.set('wsPieConnection', true, hostAppInst.underworld);
+            // Headless makes it's own room
+            readyState.set('wsPieRoomJoined', true, hostAppInst.underworld);
+            // Headless does NOT use graphics so this can be set to true immediately
+            readyState.set('pixiAssets', true, hostAppInst.underworld);
+            // Initialize content
+            Cards.registerCards();
+            Units.registerUnits();
+            readyState.set("content", true, hostAppInst.underworld);
+            // Generate the level data
+            hostAppInst.underworld.lastLevelCreated = hostAppInst.underworld.generateLevelDataSyncronous(0);
+            // Actually create it
+            hostAppInst.underworld.createLevelSyncronous(hostAppInst.underworld.lastLevelCreated);
+            console.log('Host: Send all clients game state for initial load');
+            getClients().forEach(clientId => {
+                hostGiveClientGameStateForInitialLoad(clientId, hostAppInst.underworld, hostAppInst.underworld.lastLevelCreated);
+            });
+            return hostAppInst;
         }
     });
 }
@@ -83,12 +77,13 @@ class HostApp implements IHostApp {
     isHostApp: boolean = true;
     // Automatically overridden when passed into pie.startServer
     sendData: (msg: string) => void = () => { };
+    underworld: Underworld = new Underworld(Math.random().toString());
     constructor() { }
     onData(data: any) {
-        onData(data);
+        onData(data, this.underworld);
     }
     cleanup() {
-        globalThis.underworld.cleanup();
+        this.underworld.cleanup();
     }
     // The host will receive all data that is send from a client
     // to the @websocketpie/server
@@ -120,7 +115,7 @@ class HostApp implements IHostApp {
                 // }
                 break;
             case MessageType.ClientPresenceChanged:
-                onClientPresenceChanged(message as any);
+                onClientPresenceChanged(message as any, this.underworld);
                 // this._updateDebugInfo(message);
                 // // If client is accepting the onClientPresenceChanged callback,
                 // // send the message to it

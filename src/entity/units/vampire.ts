@@ -40,7 +40,7 @@ const unit: UnitSource = {
       return;
     }
     // Movement
-    await Unit.moveTowards(unit, attackTarget);
+    await Unit.moveTowards(unit, attackTarget, underworld);
 
     // Attack closest enemy
     // Note: Special case: don't use canAttackEnemy for melee units

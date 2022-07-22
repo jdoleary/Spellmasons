@@ -22,7 +22,6 @@ cookieConsentPopup(false);
 // the pie globals
 import './network/wsPieSetup';
 import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './config';
-import { syncInventory } from './graphics/ui/CardUI';
 import { MESSAGE_TYPES } from './types/MessageTypes';
 import { typeGuardHostApp } from './network/networkUtil';
 
@@ -105,7 +104,7 @@ function setupAll() {
 // For development, spawns a unit near the player
 globalThis.devSpawnUnit = (unitId: string, faction: Faction = Faction.ENEMY) => {
   if (globalThis.player) {
-    const coords = globalThis.underworld.findValidSpawn(globalThis.player.unit, 5)
+    const coords = underworld.findValidSpawn(globalThis.player.unit, 5)
     const sourceUnit = Units.allUnits[unitId];
     if (coords && sourceUnit) {
       Unit.create(
@@ -119,22 +118,11 @@ globalThis.devSpawnUnit = (unitId: string, faction: Faction = Faction.ENEMY) => 
         UnitType.AI,
         sourceUnit.info.subtype,
         1,
-        sourceUnit.unitProps
+        sourceUnit.unitProps,
+        underworld
       );
     }
 
-  }
-}
-globalThis.devSpawnAllUnits = () => {
-  for (let id of Object.keys(Units.allUnits)) {
-    globalThis.devSpawnUnit?.(id, Faction.ENEMY);
-  }
-}
-globalThis.devRemoveAllEnemies = () => {
-  for (let u of globalThis.underworld.units) {
-    if (u.faction !== globalThis.player?.unit.faction) {
-      Unit.cleanup(u);
-    }
   }
 }
 globalThis.setMMBDown = (isDown: boolean) => {
@@ -164,28 +152,6 @@ globalThis.skipTutorial = () => {
 globalThis.enemyEncountered = JSON.parse(storage.get(ENEMY_ENCOUNTERED_STORAGE_KEY) || '[]');
 console.log('Setup: initializing enemyEncountered as', globalThis.enemyEncountered);
 
-globalThis.superMe = () => {
-  if (globalThis.player) {
-
-    globalThis.player.unit.health = 10000;
-    globalThis.player.unit.healthMax = 10000;
-    globalThis.player.unit.mana = 10000;
-    globalThis.player.unit.manaMax = 10000;
-    // Give me all cards
-    if (globalThis.giveMeCard) {
-      Object.keys(Cards.allCards).forEach(globalThis.giveMeCard);
-    }
-    // Run farther! Jump higher!
-    globalThis.player.unit.staminaMax = 10000;
-    globalThis.player.unit.stamina = globalThis.player.unit.staminaMax;
-    globalThis.player.unit.moveSpeed = 0.3;
-    // Now that player's health and mana has changed we must sync
-    // predictionUnits so that the player's prediction copy
-    // has the same mana and health
-    globalThis.underworld.syncPredictionEntities();
-    syncInventory(undefined);
-  }
-}
 globalThis.showDebug = false;
 
 // Prevent accidental back button only when not in devMode
