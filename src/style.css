@@ -1028,5 +1028,9 @@ body.open-inventory #inventory-icon {
   left: 0;
   top: 0;
   background-color: white;
+  display: none;
+}
 
+body.view-Menu #lobby {
+  display: block;
 }
