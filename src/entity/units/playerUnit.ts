@@ -2,6 +2,7 @@ import type { UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
 import * as Unit from '../Unit';
 import * as math from '../../jmath/math';
+import Underworld from '../../Underworld';
 
 const unit: UnitSource = {
   id: 'playerUnit',
@@ -12,7 +13,7 @@ const unit: UnitSource = {
   },
   unitProps: {},
   // This is how a user unit would act if controlled by AI (this can happen if you clone yourself)
-  action: async (unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, canAttackTarget: boolean) => {
+  action: async (unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, underworld: Underworld, canAttackTarget: boolean) => {
     // Attack
     if (attackTarget && canAttackTarget) {
       // Archers attack or move, not both; so clear their existing path

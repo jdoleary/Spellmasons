@@ -1,8 +1,9 @@
 import type { Vec2 } from '../../../jmath/Vec';
 import { distance } from '../../../jmath/math';
 import * as Unit from '../../Unit';
+import Underworld from '../../../Underworld';
 
-export async function action(unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, _canAttackTarget: boolean) {
+export async function action(unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, underworld: Underworld, _canAttackTarget: boolean) {
   if (!Unit.canMove(unit)) {
     return;
   }
@@ -21,7 +22,7 @@ export async function action(unit: Unit.IUnit, attackTarget: Unit.IUnit | undefi
   // and let canAttackEnemy be used for just the attention markers
   if (withinMeleeRange(unit, attackTarget)) {
     await Unit.playAnimation(unit, unit.animations.attack);
-    Unit.takeDamage(attackTarget, unit.damage, false, undefined);
+    Unit.takeDamage(attackTarget, unit.damage, underworld, false, undefined);
   }
 }
 export function withinMeleeRange(unit: Unit.IUnit, target: Vec2): boolean {

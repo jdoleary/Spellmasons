@@ -162,7 +162,7 @@ async function handleOnDataMessage(d: OnDataArgs): Promise<any> {
     case MESSAGE_TYPES.PLAYER_THINKING:
       const thinkingPlayer = globalThis.underworld.players.find(p => p.clientId === fromClient)
       if (thinkingPlayer && thinkingPlayer != globalThis.player) {
-        globalThis.playerThoughts[thinkingPlayer.clientId] = payload;
+        globalThis.underworld.playerThoughts[thinkingPlayer.clientId] = payload;
       }
       break;
     case MESSAGE_TYPES.CHANGE_CHARACTER:
@@ -337,7 +337,7 @@ async function handleLoadGameState(payload: {
     // Clean up previous units if they exist
     globalThis.underworld.units.map(Unit.cleanup)
 
-    globalThis.underworld.units = units.map(u => Unit.load(u, false));
+    globalThis.underworld.units = units.map(u => Unit.load(u, globalThis.underworld, false));
   }
   // Note: Players should sync after units are loaded so
   // that the player.unit reference is synced

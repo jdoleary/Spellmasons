@@ -19,7 +19,7 @@ const spell: Spell = {
     description: `
 Clones each target
     `,
-    effect: async (state, prediction) => {
+    effect: async (state, underworld, prediction) => {
       // Batch find targets that should be cloned
       // Note: They need to be batched so that the new clones don't get cloned
       const clonePairs: Vec2[][] = [];
@@ -43,7 +43,7 @@ Clones each target
               // Jitter prevents multiple clones from spawning on top of each other
               const validSpawnCoords = globalThis.underworld.findValidSpawn(jitter(cloneSourceCoords, config.COLLISION_MESH_RADIUS / 2), 5);
               if (validSpawnCoords) {
-                const clone = Unit.load(Unit.serialize(unit), prediction);
+                const clone = Unit.load(Unit.serialize(unit), underworld, prediction);
                 if (!prediction) {
                   // Change id of the clone so that it doesn't share the same
                   // 'supposed-to-be-unique' id of the original

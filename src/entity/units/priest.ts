@@ -6,6 +6,7 @@ import { createVisualFlyingProjectile } from '../Projectile';
 import Shield from '../../cards/shield';
 import { isVampire } from '../../cards/vampire_bite';
 import { addPixiSpriteAnimated, containerUnits } from '../../graphics/PixiUtils';
+import Underworld from '../../Underworld';
 
 const CAST_MANA_COST = 30;
 async function animatePriestProjectileAndHit(self: Unit.IUnit, target: Unit.IUnit) {
@@ -33,13 +34,13 @@ async function animatePriestProjectileAndHit(self: Unit.IUnit, target: Unit.IUni
   }
 
 }
-async function healOneOf(self: Unit.IUnit, units: Unit.IUnit[]): Promise<boolean> {
+async function healOneOf(self: Unit.IUnit, units: Unit.IUnit[], underworld: Underworld): Promise<boolean> {
   for (let ally of units) {
     if (Unit.inRange(self, ally)) {
       await Unit.playAnimation(self, unit.animations.attack);
       await animatePriestProjectileAndHit(self, ally);
       // Heal for 2
-      Unit.takeDamage(ally, -2, false, undefined);
+      Unit.takeDamage(ally, -2, underworld, false, undefined);
       // Remove mana once the cast occurs
       self.mana -= CAST_MANA_COST;
       return true;
@@ -73,7 +74,7 @@ const unit: UnitSource = {
   extraTooltipInfo: () => {
     return `Mana cost per cast: ${CAST_MANA_COST}`;
   },
-  action: async (unit: Unit.IUnit) => {
+  action: async (unit: Unit.IUnit, _attackTarget, underworld: Underworld) => {
     let didAction = false;
     const closestAlly = Unit.findClosestUnitInSameFaction(unit);
     // If they have enough mana
@@ -84,7 +85,7 @@ const unit: UnitSource = {
       );
       if (enemyVampires.length) {
         // Heal to damage enemy vampires
-        didAction = await healOneOf(unit, enemyVampires);
+        didAction = await healOneOf(unit, enemyVampires, underworld);
       } else {
         // Heal an ally
         const damagedAllys = globalThis.underworld.units.filter(
@@ -94,7 +95,7 @@ const unit: UnitSource = {
           (u) => u.faction === unit.faction && u.alive && u.health < u.healthMax && u.unitSubType !== UnitSubType.SUPPORT_CLASS && !isVampire(u),
         );
         if (damagedAllys.length) {
-          didAction = await healOneOf(unit, damagedAllys);
+          didAction = await healOneOf(unit, damagedAllys, underworld);
         } else {
           // if there are no damaged allies cast shield on the closest:
           if (closestAlly && closestAlly.unitSubType !== UnitSubType.SUPPORT_CLASS) {

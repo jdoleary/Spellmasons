@@ -5,6 +5,7 @@ import { createVisualFlyingProjectile } from '../Projectile';
 import * as math from '../../jmath/math';
 import { addPixiSpriteAnimated, containerSpells } from '../../graphics/PixiUtils';
 import { Vec2 } from '../../jmath/Vec';
+import Underworld from '../../Underworld';
 
 const unit: UnitSource = {
   id: 'archer',
@@ -28,7 +29,7 @@ const unit: UnitSource = {
     die: 'units/archerDeath',
     walk: 'units/archerWalk',
   },
-  action: async (unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, _canAttackTarget: boolean) => {
+  action: async (unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, underworld: Underworld, _canAttackTarget: boolean) => {
     const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit);
     // Attack
     if (attackTarget) {
@@ -41,7 +42,7 @@ const unit: UnitSource = {
           attackTarget,
           'projectile/arrow',
         ).then(() => {
-          Unit.takeDamage(attackTarget, unit.damage, false, undefined);
+          Unit.takeDamage(attackTarget, unit.damage, underworld, false, undefined);
           // Add projectile hit animation
           const animationSprite = addPixiSpriteAnimated('projectile/arrowProjectileHit', containerSpells, {
             loop: false,

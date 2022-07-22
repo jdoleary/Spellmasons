@@ -3,6 +3,7 @@ import type { UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
 import * as vampire_bite from '../../cards/vampire_bite';
 import { withinMeleeRange } from './actions/gruntAction';
+import Underworld from '../../Underworld';
 
 const unit: UnitSource = {
   id: 'vampire',
@@ -30,7 +31,7 @@ const unit: UnitSource = {
   init: (unit: Unit.IUnit) => {
     Unit.addModifier(unit, vampire_bite.id);
   },
-  action: async (unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, canAttackTarget: boolean) => {
+  action: async (unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, underworld: Underworld, canAttackTarget: boolean) => {
     if (!Unit.canMove(unit)) {
       return;
     }
@@ -49,7 +50,7 @@ const unit: UnitSource = {
     // and let canAttackEnemy be used for just the attention markers
     if (withinMeleeRange(unit, attackTarget)) {
       await Unit.playAnimation(unit, unit.animations.attack);
-      Unit.takeDamage(attackTarget, unit.damage, false, undefined);
+      Unit.takeDamage(attackTarget, unit.damage, underworld, false, undefined);
       Unit.addModifier(attackTarget, vampire_bite.id);
     }
   }

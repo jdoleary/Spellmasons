@@ -37,6 +37,7 @@ import explode from './explode_on_death';
 import { IUpgrade, upgradeCardsSource } from '../Upgrade';
 import { _getCardsFromIds } from './cardUtils';
 import { addCardToHand } from '../entity/Player';
+import Underworld from '../Underworld';
 export interface Modifiers {
   subsprite?: Subsprite;
   add?: (unit: Unit.IUnit) => void;
@@ -163,7 +164,7 @@ export interface EffectState {
 }
 export type EffectFn = {
   // Dry run is for displaying to the user what will happen if they cast
-  (state: EffectState, prediction: boolean): Promise<EffectState>;
+  (state: EffectState, underworld: Underworld, prediction: boolean): Promise<EffectState>;
 };
 
 export interface ICard {

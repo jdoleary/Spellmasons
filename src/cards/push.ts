@@ -4,6 +4,7 @@ import { distance, similarTriangles } from '../jmath/math';
 import type { Circle, ForceMove } from '../jmath/moveWithCollision';
 import { forceMoveColor } from '../graphics/ui/colors';
 import { raceTimeout } from '../Promise';
+import Underworld from '../Underworld';
 
 export const id = 'push';
 const pushDistance = 20;
@@ -18,21 +19,21 @@ const spell: Spell = {
     description: `
 Pushes the target(s) away from the caster 
     `,
-    effect: async (state, prediction) => {
+    effect: async (state, underworld, prediction) => {
       let promises = [];
       const awayFrom = state.casterUnit;
       for (let unit of state.targetedUnits) {
-        promises.push(forcePush(unit, awayFrom, prediction));
+        promises.push(forcePush(unit, awayFrom, underworld, prediction));
       }
       for (let pickup of state.targetedPickups) {
-        promises.push(forcePush(pickup, awayFrom, prediction));
+        promises.push(forcePush(pickup, awayFrom, underworld, prediction));
       }
       await Promise.all(promises);
       return state;
     },
   },
 };
-export async function forcePush(pushedObject: Circle, awayFrom: Vec2, prediction: boolean): Promise<void> {
+export async function forcePush(pushedObject: Circle, awayFrom: Vec2, underworld: Underworld, prediction: boolean): Promise<void> {
   const velocity = similarTriangles(pushedObject.x - awayFrom.x, pushedObject.y - awayFrom.y, distance(pushedObject, awayFrom), pushDistance);
   const velocity_falloff = 0.93;
   const originalPosition = clone(pushedObject);
@@ -52,7 +53,7 @@ export async function forcePush(pushedObject: Circle, awayFrom: Vec2, prediction
         globalThis.predictionGraphics.drawCircle(pushedObject.x, pushedObject.y, 4);
       }
     } else {
-      globalThis.forceMove.push(forceMoveInst);
+      underworld.forceMove.push(forceMoveInst);
     };
   }));
 

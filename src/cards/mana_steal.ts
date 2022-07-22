@@ -20,7 +20,7 @@ const spell: Spell = {
     description: `
 Sacrifice some of own health to steal up to ${mana_stolen} mana from each target.
     `,
-    effect: async (state, prediction) => {
+    effect: async (state, underworld, prediction) => {
       const caster = state.casterUnit;
       let promises = [];
       for (let unit of state.targetedUnits) {

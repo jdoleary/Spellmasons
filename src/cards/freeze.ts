@@ -18,7 +18,7 @@ const spell: Spell = {
     description: `
 Freezes the target(s) for 1 turn, preventing them from moving or acting.
     `,
-    effect: async (state, prediction) => {
+    effect: async (state, underworld, prediction) => {
       for (let unit of state.targetedUnits) {
         Unit.addModifier(unit, id);
         if (unit.unitType === UnitType.PLAYER_CONTROLLED) {

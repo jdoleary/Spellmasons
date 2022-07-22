@@ -15,7 +15,7 @@ import { allUnits } from './units';
 import { allModifiers, EffectState } from '../cards';
 import { checkIfNeedToClearTooltip, clearSpellEffectProjection } from '../graphics/PlanningView';
 import { centeredFloatingText } from '../graphics/FloatingText';
-import { turn_phase } from '../Underworld';
+import Underworld, { turn_phase } from '../Underworld';
 import combos from '../graphics/AnimationCombos';
 import { raceTimeout } from '../Promise';
 import { closestLineSegmentIntersection } from '../jmath/lineSegment';
@@ -283,7 +283,7 @@ export function serialize(unit: IUnit): IUnitSerialized {
 // Reinitialize a unit from another unit object
 // this is useful when loading game state after reconnect
 // This is the opposite of serialize
-export function load(unit: IUnitSerialized, prediction: boolean): IUnit {
+export function load(unit: IUnitSerialized, underworld: Underworld, prediction: boolean): IUnit {
   const { shaderUniforms, ...restUnit } = unit
   // Since resolveDoneMoving is about to be overwritten,
   // call it, just in case there is a pending promise (there shouldn't be)
@@ -306,7 +306,7 @@ export function load(unit: IUnitSerialized, prediction: boolean): IUnit {
   }
   globalThis.underworld.addUnitToArray(loadedunit, prediction);
   if (!loadedunit.alive) {
-    die(loadedunit, prediction);
+    die(loadedunit, underworld, prediction);
   }
   return loadedunit;
 }
@@ -514,7 +514,7 @@ export function resurrect(unit: IUnit) {
 // A list of unit source ids that will produce no corpse when killed
 // Useful for decoy (and maybe bosses in the future??)
 const noCorpseIds = ['decoy'];
-export function die(unit: IUnit, prediction: boolean) {
+export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   if (!unit.alive) {
     // If already dead, do nothing
     return;
@@ -542,7 +542,7 @@ export function die(unit: IUnit, prediction: boolean) {
       if (eventName) {
         const fn = Events.onDeathSource[eventName];
         if (fn) {
-          fn(unit, prediction);
+          fn(unit, underworld, prediction);
         }
       }
     }
@@ -583,7 +583,7 @@ export function composeOnDamageEvents(unit: IUnit, damage: number, prediction: b
   return damage
 
 }
-export function takeDamage(unit: IUnit, amount: number, prediction: boolean, _state?: EffectState) {
+export function takeDamage(unit: IUnit, amount: number, underworld: Underworld, prediction: boolean, _state?: EffectState) {
   amount = composeOnDamageEvents(unit, amount, prediction);
   if (amount == 0) {
     return;
@@ -617,7 +617,7 @@ export function takeDamage(unit: IUnit, amount: number, prediction: boolean, _st
 
   // If taking damage (not healing) and health is 0 or less...
   if (amount > 0 && unit.health <= 0) {
-    die(unit, prediction);
+    die(unit, underworld, prediction);
   }
 
 }

@@ -21,8 +21,6 @@ globalThis.player = undefined;
 
 
 // TODO: The following need to be specific to a host app
-globalThis.forceMove = [];
-globalThis.playerThoughts = {};
 // globalThis.pie
 // globalThis.underworld
 // globalThis.lastLeveLCreated

@@ -68,7 +68,7 @@ at the start of the unit's turn.
       // TODO: There was a bug here where somehow modifiers['poison'] was undefined after i did chain, vulx10, poisonx10
       const modifier = unit.modifiers[id];
       if (modifier) {
-        takeDamage(unit, modifier.stacks || 1, prediction, undefined);
+        takeDamage(unit, modifier.stacks || 1, underworld, prediction, undefined);
       } else {
         console.error('Should have poison modifier on unit but it is missing')
       }

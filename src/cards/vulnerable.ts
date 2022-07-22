@@ -17,7 +17,7 @@ const spell: Spell = {
 Makes the target(s) take double damage whenever they receive damage
 in the future.
     `,
-    effect: async (state, prediction) => {
+    effect: async (state, underworld, prediction) => {
       for (let unit of state.targetedUnits) {
         Unit.addModifier(unit, id);
       }

@@ -108,6 +108,17 @@ export default class Underworld {
   validPlayerSpawnCoords: Vec2[] = [];
   cardDropsDropped: number = 0;
   enemiesKilled: number = 0;
+  // Not to be synced between clients but should belong to the underworld as they are unique
+  // to each game lobby:
+  // A list of units and pickups and an endPosition that they are moved to via a "force",
+  // like a push or pull or explosion.
+  forceMove: ForceMove[] = [];
+  // A hash of the last thing this client was thinking
+  // Used with MESSAGE_TYPES.PLAYER_THINKING so other clients 
+  // can see what another client is planning.
+  // The hash is used to prevent sending the same data more than once
+  lastThoughtsHash: string = '';
+  playerThoughts: { [clientId: string]: { target: Vec2, cardIds: string[] } } = {};
 
   constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
     globalThis.underworld = this;
@@ -229,9 +240,9 @@ export default class Underworld {
     }
 
     const aliveNPCs = this.units.filter(u => u.alive && u.unitType == UnitType.AI);
-    // Run all forces in globalThis.forceMove
-    for (let i = globalThis.forceMove.length - 1; i >= 0; i--) {
-      const forceMoveInst = globalThis.forceMove[i];
+    // Run all forces in this.forceMove
+    for (let i = this.forceMove.length - 1; i >= 0; i--) {
+      const forceMoveInst = this.forceMove[i];
       if (forceMoveInst) {
         this.runForceMove(forceMoveInst, false);
         // Remove it from forceMove array once the distance has been covers
@@ -239,7 +250,7 @@ export default class Underworld {
         // distance is modified even if the unit doesn't move each loop
         if (Vec.magnitude(forceMoveInst.velocity) <= 0.1) {
           forceMoveInst.resolve();
-          globalThis.forceMove.splice(i, 1);
+          this.forceMove.splice(i, 1);
         }
       }
     }
@@ -516,7 +527,7 @@ export default class Underworld {
     if (globalThis.thinkingPlayerGraphics) {
       containerPlayerThinking?.addChild(globalThis.thinkingPlayerGraphics);
     }
-    for (let [thinkerClientId, thought] of Object.entries(globalThis.playerThoughts)) {
+    for (let [thinkerClientId, thought] of Object.entries(this.playerThoughts)) {
       const { target, cardIds } = thought;
       const thinkingPlayerIndex = this.players.findIndex(p => p.clientId == thinkerClientId);
       const thinkingPlayer = this.players[thinkingPlayerIndex];
@@ -575,8 +586,10 @@ export default class Underworld {
   // cleanup cleans up all assets that must be manually removed (for now `Image`s)
   // if an object stops being used.  It does not empty the underworld arrays, by design.
   cleanup() {
-    console.log('teardown: Cleaning up underworld');
+    console.trace('teardown: Cleaning up underworld');
     readyState.set('underworld', false);
+    // @ts-ignore
+    globalThis.underworld = undefined;
 
     removeUnderworldEventListeners();
 
@@ -607,9 +620,6 @@ export default class Underworld {
     if (requestAnimationFrameGameLoopId !== undefined) {
       cancelAnimationFrame(requestAnimationFrameGameLoopId);
     }
-    // @ts-ignore
-    globalThis.underworld = undefined;
-    readyState.set('underworld', false);
     globalThis.updateInGameMenuStatus?.()
 
   }
@@ -1034,7 +1044,7 @@ export default class Underworld {
       // nor the radius of the unit.  It is hard coded to 2 COLLISION_MESH_RADIUSES
       // which is currently 64 px (or the average size of a unit);
       if (math.distance(unit, pu) < config.COLLISION_MESH_RADIUS * 2) {
-        Pickup.triggerPickup(pu, unit, prediction);
+        Pickup.triggerPickup(pu, unit, this, prediction);
       }
     }
   }
@@ -1055,13 +1065,14 @@ export default class Underworld {
       // If all players that have taken turns, then...
       // (Players who CANT take turns have their turn ended automatically)
       // TODO: Make sure game can't get stuck here
+      const activeAlivePlayers = this.players.filter(p => p.clientConnected && p.unit.alive);
       if (
-        this.players.filter(p => p.clientConnected && p.unit.alive).every(p => p.endedTurn)
+        activeAlivePlayers.every(p => p.endedTurn)
       ) {
         this.endPlayerTurnPhase();
         return true;
       } else {
-        console.log('PlayerTurn: Check end player turn phase', this.players.length);
+        console.log('PlayerTurn: Check end player turn phase; players havent ended turn yet:', activeAlivePlayers.filter(p => !p.endedTurn).length);
       }
     }
     return false;
@@ -1145,7 +1156,7 @@ export default class Underworld {
       yourTurn = false;
     } else if (this.turn_phase === turn_phase.PlayerTurns) {
       if (globalThis.player?.endedTurn) {
-        message = 'Waiting on Other Players'
+        message = `Waiting on ${this.players.filter(p => !p.endedTurn).length} Other Players`
         yourTurn = true;
       } else {
         message = 'Your Turn';
@@ -1517,7 +1528,7 @@ export default class Underworld {
         // Add unit action to the array of promises to wait for
         // TODO: Prevent grunts from attacking if they are out of range
         // like when they are around a corner
-        let promise = raceTimeout(5000, `Unit.action; unit.id: ${u.id}; subType: ${u.unitSubType}`, unitSource.action(u, target, this.canUnitAttackTarget(u, target)));
+        let promise = raceTimeout(5000, `Unit.action; unit.id: ${u.id}; subType: ${u.unitSubType}`, unitSource.action(u, target, this, this.canUnitAttackTarget(u, target)));
         animationPromises.push(promise);
       } else {
         console.error(
@@ -1700,7 +1711,7 @@ export default class Underworld {
       // Note: it is important that this is done BEFORE a card is actually cast because
       // the card may affect the caster's mana
       effectState.casterUnit.mana -= spellCost.manaCost;
-      Unit.takeDamage(effectState.casterUnit, spellCost.healthCost, prediction, effectState);
+      Unit.takeDamage(effectState.casterUnit, spellCost.healthCost, this, prediction, effectState);
       // Add expense scaling BEFORE card effects are invoked
       // This is important because of 'trap' since trap removes
       // the cards after it in the spell, it is important
@@ -1751,7 +1762,7 @@ export default class Underworld {
 
         // .then is necessary to convert return type of promise.all to just be void
         const { targetedUnits: previousTargets } = effectState;
-        effectState = await card.effect(effectState, prediction);
+        effectState = await card.effect(effectState, this, prediction);
         // Clear images from previous card before drawing the images from the new card
         containerSpells?.removeChildren();
 
@@ -1814,7 +1825,7 @@ export default class Underworld {
       // Convenience: Pickup any CARD_PICKUP_NAME left automatically, so that they aren't left behind
       globalThis.underworld.pickups.filter(p => p.name == Pickup.CARDS_PICKUP_NAME).forEach(pickup => {
         if (globalThis.player) {
-          Pickup.triggerPickup(pickup, globalThis.player.unit, false);
+          Pickup.triggerPickup(pickup, globalThis.player.unit, this, false);
         }
       })
       // Spawn portal near each player
@@ -1913,8 +1924,8 @@ export default class Underworld {
         target = Vec.round(target);
       }
       const hash = objectHash({ target, cardIds });
-      if (hash !== globalThis.lastThoughtsHash) {
-        globalThis.lastThoughtsHash = hash;
+      if (hash !== this.lastThoughtsHash) {
+        this.lastThoughtsHash = hash;
         if (globalThis.pie) {
           globalThis.pie.sendData({
             type: MESSAGE_TYPES.PLAYER_THINKING,

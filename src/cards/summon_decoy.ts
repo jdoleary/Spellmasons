@@ -18,7 +18,7 @@ The decoy attracts attacks for enemies that it is closer to that you are.
 The decoy has health but cannot move.  It will be destroyed when its health reaches 0.
     `,
     allowNonUnitTarget: true,
-    effect: async (state, prediction) => {
+    effect: async (state, underworld, prediction) => {
       const unitId = 'decoy';
       if (!prediction) {
         const sourceUnit = allUnits[unitId];

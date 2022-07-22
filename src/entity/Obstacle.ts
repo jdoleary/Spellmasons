@@ -93,7 +93,7 @@ export function checkLiquidInteractionDueToMovement(unit: IUnit, lastPosition: V
       unit.resolveDoneMoving();
       hitLava = !isOnOutside(wall, unit);
       if (hitLava) {
-        takeDamage(unit, lavaDamage, prediction);
+        takeDamage(unit, lavaDamage, underworld, prediction);
       }
       // Since unit has "fallen in", break out of for loop so that they don't fall back out
       // which can occur if they fall in near a corner

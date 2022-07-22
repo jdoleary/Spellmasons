@@ -8,7 +8,6 @@ import type { LevelData } from '../Underworld';
 import type { View } from '../views';
 import type { Faction } from './commonTypes';
 import type { IPickup } from '../entity/Pickup';
-import type { ForceMove } from '../jmath/moveWithCollision';
 import type { IHostApp } from '../network/networkUtil';
 
 declare global {
@@ -114,15 +113,6 @@ declare global {
     var castThisTurn: undefined | boolean;
     // Turns on fps monitoring
     var monitorFPS: undefined | (() => void);
-    // A hash of the last thing this client was thinking
-    // Used with MESSAGE_TYPES.PLAYER_THINKING so other clients 
-    // can see what another client is planning.
-    // The hash is used to prevent sending the same data more than once
-    var lastThoughtsHash: string;
-    var playerThoughts: { [clientId: string]: { target: Vec2, cardIds: string[] } };
-    // A list of units and pickups and an endPosition that they are moved to via a "force",
-    // like a push or pull or explosion.
-    var forceMove: ForceMove[];
     // Middle Mouse Button Down
     // Note: do NOT set directly, use setMMBDown instead
     var MMBDown: undefined | boolean;

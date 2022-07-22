@@ -7,7 +7,7 @@ interface ConstructorInfo {
   subtype: UnitSubType;
 }
 export type UnitAction = {
-  (self: Unit.IUnit, attackTarget: Unit.IUnit | undefined, canAttackTarget: boolean): Promise<void>;
+  (self: Unit.IUnit, attackTarget: Unit.IUnit | undefined, underworld: Underworld, canAttackTarget: boolean): Promise<void>;
 };
 export interface UnitSource {
   id: string;
@@ -36,6 +36,7 @@ import poisoner from './poisoner';
 import vampire from './vampire';
 import decoy from './decoy';
 import nightqueen from './nightqueen';
+import Underworld from '../../Underworld';
 
 function register(unit: UnitSource) {
   allUnits[unit.id] = unit;

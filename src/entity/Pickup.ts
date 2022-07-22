@@ -10,6 +10,7 @@ import * as config from '../config';
 import { Vec2 } from '../jmath/Vec';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import { manaBlue } from '../graphics/ui/colors';
+import Underworld from '../Underworld';
 
 export const PICKUP_RADIUS = config.SELECTABLE_RADIUS;
 export interface IPickup {
@@ -33,7 +34,7 @@ export interface IPickup {
   // returns true if the pickup did in fact trigger - this is useful
   // for preventing one use health potions from triggering if the unit
   // already has max health
-  effect: ({ unit, player, prediction }: { unit?: IUnit; player?: Player.IPlayer, prediction: boolean }) => boolean | undefined;
+  effect: ({ unit, player, prediction }: { unit?: IUnit; player?: Player.IPlayer, underworld: Underworld, prediction: boolean }) => boolean | undefined;
 }
 export function isPickup(maybePickup: any): maybePickup is IPickup {
   // Take a select few of the pickup only properties and ensure that the object has them
@@ -51,7 +52,7 @@ interface IPickupSource {
   turnsLeftToGrab?: number;
   scale: number;
   probability: number;
-  effect: ({ unit, player, prediction }: { unit?: IUnit; player?: Player.IPlayer, prediction: boolean }) => boolean | undefined;
+  effect: ({ unit, player, prediction }: { unit?: IUnit; player?: Player.IPlayer, underworld: Underworld, prediction: boolean }) => boolean | undefined;
 }
 export function copyForPredictionPickup(p: IPickup): IPickup {
   // Remove image and text since prediction pickups won't be rendered
@@ -157,13 +158,13 @@ export function removePickup(pickup: IPickup, prediction: boolean) {
   globalThis.underworld.removePickupFromArray(pickup, prediction);
   checkIfNeedToClearTooltip();
 }
-export function triggerPickup(pickup: IPickup, unit: IUnit, prediction: boolean) {
+export function triggerPickup(pickup: IPickup, unit: IUnit, underworld: Underworld, prediction: boolean) {
   const player = globalThis.underworld.players.find((p) => p.unit === unit);
   if (pickup.playerOnly && !player) {
     // If pickup is playerOnly, do not trigger if a player is not the one triggering it
     return;
   }
-  const didTrigger = pickup.effect({ unit, player, prediction });
+  const didTrigger = pickup.effect({ unit, player, underworld, prediction });
   // Only remove pickup if it triggered AND is a singleUse pickup
   if (pickup.singleUse && didTrigger) {
     removePickup(pickup, prediction);
@@ -186,7 +187,7 @@ export const pickups: IPickupSource[] = [
     description: `Deals ${spike_damage} to any unit (including NPCs) that touches it`,
     effect: ({ unit, player, prediction }) => {
       if (unit) {
-        takeDamage(unit, spike_damage, prediction)
+        takeDamage(unit, spike_damage, underworld, prediction)
         return true;
       }
       return false;
@@ -295,7 +296,7 @@ export const pickups: IPickupSource[] = [
     description: `Restores ${healthPotionRestoreAmount} health.`,
     effect: ({ player }) => {
       if (player && player.unit.health < player.unit.healthMax) {
-        takeDamage(player.unit, -healthPotionRestoreAmount, false);
+        takeDamage(player.unit, -healthPotionRestoreAmount, underworld, false);
         // Add spell effect animation
         if (player.unit.image) {
           const animationSprite = addPixiSpriteAnimated('spell-effects/potionPickup', player.unit.image.sprite, {

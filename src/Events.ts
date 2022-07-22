@@ -1,5 +1,6 @@
 import type { Vec2 } from './jmath/Vec';
 import type { IUnit } from './entity/Unit';
+import Underworld from './Underworld';
 
 export type onDamage = {
   // Returns a possibly modified damage
@@ -9,7 +10,7 @@ export type onDamage = {
 const onDamageSource: { [name: string]: onDamage } = {};
 
 export type onDeath = {
-  (unit: IUnit, prediction: boolean): Promise<void>;
+  (unit: IUnit, underworld: Underworld, prediction: boolean): Promise<void>;
 };
 const onDeathSource: { [name: string]: onDeath } = {};
 

@@ -15,7 +15,7 @@ const spell: Spell = {
     description: `
 Removes all curses from the target(s).
     `,
-    effect: async (state, prediction) => {
+    effect: async (state, underworld, prediction) => {
       for (let unit of state.targetedUnits) {
         apply(unit)
       }

@@ -4,6 +4,7 @@ import { UnitSubType } from '../../types/commonTypes';
 import { createVisualLobbingProjectile } from '../Projectile';
 import * as math from '../../jmath/math';
 import { addPixiSpriteAnimated, containerSpells, containerUnits } from '../../graphics/PixiUtils';
+import Underworld from '../../Underworld';
 
 const unit: UnitSource = {
   id: 'lobber',
@@ -26,7 +27,7 @@ const unit: UnitSource = {
     die: 'units/lobberDeath',
     walk: 'units/lobberWalk',
   },
-  action: async (unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, canAttackTarget: boolean) => {
+  action: async (unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, underworld: Underworld, canAttackTarget: boolean) => {
     // Attack
     if (attackTarget && canAttackTarget) {
       // Archers attack or move, not both; so clear their existing path
@@ -39,7 +40,7 @@ const unit: UnitSource = {
           'projectile/lobberProjectile',
         ).then(() => {
           if (attackTarget) {
-            Unit.takeDamage(attackTarget, unit.damage, false, undefined);
+            Unit.takeDamage(attackTarget, unit.damage, underworld, false, undefined);
             // Add projectile hit animation
             const animationSprite = addPixiSpriteAnimated('projectile/lobberProjectileHit', containerUnits, {
               loop: false,

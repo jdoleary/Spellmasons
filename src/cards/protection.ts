@@ -12,7 +12,7 @@ const spell: Spell = {
     probability: 10,
     thumbnail: 'protection.png',
     description: 'Removes self or ally from existing spell targets.  Will protect 1 allied unit (including self) per use.  Prioritizes protecting yourself, then ally wizards, then other allies.  You may cast more than one in a single spell to protect multiple allies.',
-    effect: async (state, prediction) => {
+    effect: async (state, underworld, prediction) => {
       const allies = [
         // Prioritize self over all other allies
         state.casterUnit,

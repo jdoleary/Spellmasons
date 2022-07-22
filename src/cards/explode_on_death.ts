@@ -4,6 +4,7 @@ import * as Image from '../graphics/Image';
 import type { Spell } from '.';
 import { drawPredictionCircle } from '../graphics/PlanningView';
 import { forcePush } from './push';
+import Underworld from '../Underworld';
 
 const id = 'Bloat';
 const imageName = 'explode-on-death.png';
@@ -34,7 +35,7 @@ const spell: Spell = {
     thumbnail: 'explode-on-death.png',
     description: `Cursed targets explode when they die dealing ${damage} to all units within the
     explosion radius.`,
-    effect: async (state, prediction) => {
+    effect: async (state, underworld, prediction) => {
       for (let unit of state.targetedUnits) {
         Unit.addModifier(unit, id);
       }
@@ -57,7 +58,7 @@ const spell: Spell = {
     },
   },
   events: {
-    onDeath: async (unit: IUnit, prediction: boolean) => {
+    onDeath: async (unit: IUnit, underworld: Underworld, prediction: boolean) => {
       drawPredictionCircle(unit, range);
       if (!prediction) {
         globalThis.underworld.animateSpell(unit, 'explode-on-death.png');
@@ -68,16 +69,16 @@ const spell: Spell = {
         prediction
       ).forEach(u => {
         // Push units away from exploding unit
-        forcePush(u, unit, prediction);
+        forcePush(u, unit, underworld, prediction);
         // Deal damage to units
-        takeDamage(u, damage, prediction);
+        takeDamage(u, damage, underworld, prediction);
       });
       globalThis.underworld.getPickupsWithinDistanceOfTarget(
         unit,
         range
       ).forEach(p => {
         // Push pickups away
-        forcePush(p, unit, prediction);
+        forcePush(p, unit, underworld, prediction);
       })
     }
   }

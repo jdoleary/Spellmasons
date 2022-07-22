@@ -2,6 +2,7 @@ import type { UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
 import type * as Unit from '../Unit';
 import * as config from '../../config';
+import Underworld from '../../Underworld';
 
 const unit: UnitSource = {
   id: 'decoy',
@@ -26,7 +27,7 @@ const unit: UnitSource = {
     immovable: true,
     radius: config.COLLISION_MESH_RADIUS
   },
-  action: async (_self: Unit.IUnit, _attackTarget: Unit.IUnit | undefined, _canAttackTarget: boolean) => { }
+  action: async (_self: Unit.IUnit, _attackTarget: Unit.IUnit | undefined, _underworld: Underworld, _canAttackTarget: boolean) => { }
 };
 
 export default unit;

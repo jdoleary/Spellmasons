@@ -39,9 +39,6 @@ globalThis.playerWalkingPromise = Promise.resolve();
 globalThis.predictionUnits = [];
 globalThis.attentionMarkers = [];
 globalThis.resMarkers = [];
-globalThis.lastThoughtsHash = '';
-globalThis.playerThoughts = {};
-globalThis.forceMove = [];
 globalThis.devMode = location.href.includes('localhost');
 globalThis.zoomTarget = 1.3;
 // If the code in main runs this is NOT a headless instance, main.ts is the entrypoint for

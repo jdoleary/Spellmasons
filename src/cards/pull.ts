@@ -4,6 +4,7 @@ import { distance, similarTriangles } from '../jmath/math';
 import type { Circle, ForceMove } from '../jmath/moveWithCollision';
 import { forceMoveColor } from '../graphics/ui/colors';
 import { raceTimeout } from '../Promise';
+import Underworld from '../Underworld';
 
 export const id = 'pull';
 const pullDistance = 15;
@@ -18,20 +19,20 @@ const spell: Spell = {
     description: `
 Pulls the target(s) towards the caster 
     `,
-    effect: async (state, prediction) => {
+    effect: async (state, underworld, prediction) => {
       let promises = [];
       for (let unit of state.targetedUnits) {
-        promises.push(pull(unit, state.casterUnit, prediction));
+        promises.push(pull(unit, state.casterUnit, underworld, prediction));
       }
       for (let pickup of state.targetedPickups) {
-        promises.push(pull(pickup, state.casterUnit, prediction));
+        promises.push(pull(pickup, state.casterUnit, underworld, prediction));
       }
       await Promise.all(promises);
       return state;
     },
   },
 };
-export async function pull(pushedObject: Circle, towards: Vec2, prediction: boolean): Promise<void> {
+export async function pull(pushedObject: Circle, towards: Vec2, underworld: Underworld, prediction: boolean): Promise<void> {
   const velocity = similarTriangles(pushedObject.x - towards.x, pushedObject.y - towards.y, distance(pushedObject, towards), -pullDistance);
   const velocity_falloff = 0.93;
   const originalPosition = clone(pushedObject);
@@ -51,7 +52,7 @@ export async function pull(pushedObject: Circle, towards: Vec2, prediction: bool
         globalThis.predictionGraphics.drawCircle(pushedObject.x, pushedObject.y, 4);
       }
     } else {
-      globalThis.forceMove.push(forceMoveInst);
+      underworld.forceMove.push(forceMoveInst);
     }
   }));
 
