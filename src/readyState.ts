@@ -27,7 +27,8 @@ export function set(key: keyof typeof readyState, value: boolean) {
                 console.error('globalThis.joinRoom is undefined')
             }
         } else {
-            console.error('Cannot join room, "gameName" is falsey');
+            // It is common that gameName won't exist, it's totally option
+            // so do nothing if it doesn't exist
         }
     }
     // If all values in readyState are true, then everything is ready
