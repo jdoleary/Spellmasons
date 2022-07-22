@@ -24,6 +24,9 @@
             - Plan / Plot / Conspire / Devise
             - Unleash / Execute
             - Invent / Envision / Formulate
+        - Spellmasons is a multiplayer creative problem solving game where you can
+            - "push monsters into lava"
+            - "resurrect your dead enemies to fight for you, and send them out against their brotheren"
     - How to reach people to review
         - See curators on steam
 - Video ideas
