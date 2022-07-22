@@ -67,7 +67,7 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
   }
   return upgrades;
 }
-export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer) {
+export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underworld: Underworld) {
   if (globalThis.headless) {
     // There is no DOM in headless mode
     return;
@@ -121,7 +121,7 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer) {
   element.addEventListener('click', (e) => {
     // Prevent click from "falling through" upgrade and propagating to vote for overworld level
     e.stopPropagation();
-    globalThis.pie.sendData({
+    underworld.pie.sendData({
       type: MESSAGE_TYPES.CHOOSE_UPGRADE,
       upgrade,
     });

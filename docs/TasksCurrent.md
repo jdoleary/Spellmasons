@@ -1,4 +1,11 @@
 ## This weeks goals:
+
+- WHAT IF UNDERWORLD OWNS THE PIE CONNECTION and for clients underworld never changes even on load, it just modifies the underworld data
+- underworld should own readystate too
+    - globalThis for headless isn't going to work since a single headless esrver should be able to host multiple rooms and the multiple rooms can't share state
+        - or each pieserver room could be it's own process??
+        // TODO: The following need to be specific to a host app
+        // readyState.underworld
 - Fix: Move player so it doesn't use stamina because IT MUST bring them to a synced location if their position somehow get's out of sync
 - bug: player 2 doesn't get cards
     - C:\git\Golems\headless-server-build\src\entity\Unit.js:847
@@ -11,13 +18,6 @@
         at Timeout._onTimeout (C:\git\Golems\headless-server-build\src\Shims.js:19:22)
         at listOnTimeout (node:internal/timers:559:17)
         at processTimers (node:internal/timers:502:7)
-
-    - globalThis for headless isn't going to work since a single headless esrver should be able to host multiple rooms and the multiple rooms can't share state
-        - or each pieserver room could be it's own process??
-        // TODO: The following need to be specific to a host app
-        // globalThis.pie
-        // globalThis.underworld
-        // readyState.underworld
     - lobby
         - ready up and start game
 ## Schedule

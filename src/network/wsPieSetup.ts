@@ -10,7 +10,7 @@
 
 import PieClient, { Room } from '@websocketpie/client';
 import { onData } from './networkHandler';
-import { onClientPresenceChanged } from './networkUtil';
+import { onClientPresenceChanged, typeGuardHostApp } from './networkUtil';
 import * as readyState from '../readyState';
 import { setView, View } from '../views';
 import * as storage from '../storage';
@@ -24,8 +24,12 @@ import Underworld from '../Underworld';
 // const wsUri = 'ws://68.48.199.138:7337';
 // Current digital ocean wsPie app:
 // const wsUri = 'wss://websocket-pie-6ggew.ondigitalocean.app';
-export const pie: PieClient = globalThis.pie = new PieClient();
 function connect_to_wsPie_server(wsUri: string | undefined, underworld: Underworld): Promise<void> {
+  const pie = underworld.pie;
+  if (typeGuardHostApp(pie)) {
+    console.error('This file should only ever be used with the client, never with the Headless Server');
+    return Promise.reject();
+  }
   addHandlers(pie, underworld);
   return new Promise<void>((resolve, reject) => {
     const storedClientId = sessionStorage.getItem('pie-clientId');
@@ -140,12 +144,13 @@ globalThis.joinRoom = room_info => joinRoom(room_info);
 globalThis.startSingleplayer = function startSingleplayer() {
   console.log('Start Game: Attempt to start the game')
   document.body?.classList.toggle('loading', true);
+  const pie = new PieClient();
   return new Promise<void>((resolve) => {
     // setTimeout allows the UI to refresh before locking up the CPU with
     // heavy level generation code
     setTimeout(() => {
       console.log('Host: Start game / Initialize Underworld');
-      const underworld = new Underworld(Math.random().toString());
+      const underworld = new Underworld(pie, Math.random().toString());
       globalThis.connect_to_wsPie_server = wsUri => connect_to_wsPie_server(wsUri, underworld);
       connect_to_wsPie_server(undefined, underworld).then(() => {
         // Mark the underworld as "ready"

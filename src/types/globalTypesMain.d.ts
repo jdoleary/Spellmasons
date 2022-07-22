@@ -18,8 +18,6 @@ declare global {
     // A reference to the player instance of the client playing on this instance
     var player: Player.IPlayer | undefined;
     // Globals needed for Golems-menu
-    // pie will be undefiend for Headless server
-    var pie: PieClient | IHostApp;
     var connect_to_wsPie_server: undefined | ((wsUri?: string) => Promise<void>);
     var joinRoom: undefined | ((_room_info: any) => (undefined | Promise<unknown>));
     var setupPixiPromise: undefined | Promise<void>;
@@ -118,7 +116,7 @@ declare global {
     // Note: do NOT set directly, use setRMBDown instead
     var RMBDown: undefined | boolean;
     // Used to set Right mouse button down
-    var setRMBDown: undefined | ((isDown: boolean) => void);
+    var setRMBDown: undefined | ((isDown: boolean, underworld: Underworld) => void);
     var notifiedOutOfStamina: undefined | boolean;
     // Allows manually overriding the underworld seed via the JS console
     var seedOverride: string | undefined;
@@ -139,5 +137,5 @@ declare global {
     // svelte menu function to attempt to autoconnect if the queryString holds the info
     var tryAutoConnect: undefined | (() => void);
     // Returns true if client is playing singleplayer OR if hostapp
-    var isHost: () => boolean;
+    var isHost: (pie: PieClient | IHostApp) => boolean;
 }

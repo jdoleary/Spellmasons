@@ -40,8 +40,8 @@ import { addCardToHand } from '../entity/Player';
 import Underworld from '../Underworld';
 export interface Modifiers {
   subsprite?: Subsprite;
-  add?: (unit: Unit.IUnit) => void;
-  remove?: (unit: Unit.IUnit) => void;
+  add?: (unit: Unit.IUnit, underworld: Underworld) => void;
+  remove?: (unit: Unit.IUnit, underworld: Underworld) => void;
 }
 // TODO: If I decide to hoist cards, do it here
 export enum CardType {
@@ -65,7 +65,7 @@ export interface Spell {
   };
 }
 
-function register(spell: Spell) {
+function register(spell: Spell, underworld: Underworld) {
   const { modifiers, card, events } = spell;
   const { id } = card;
   // Add card to cards pool
@@ -75,7 +75,7 @@ function register(spell: Spell) {
     allModifiers[id] = spell.modifiers;
   }
   // Add card as upgrade:
-  upgradeCardsSource.push(cardToUpgrade(card));
+  upgradeCardsSource.push(cardToUpgrade(card, underworld));
   // Add subsprites
   if (modifiers && modifiers.subsprite) {
     Subsprites[id] = modifiers.subsprite;
@@ -102,33 +102,33 @@ function register(spell: Spell) {
     }
   }
 }
-export function registerCards() {
-  register(add_damage);
-  register(add_heal);
-  register(area_of_effect);
-  register(chain);
-  register(contagious);
-  register(freeze);
-  register(raise_dead);
-  register(shield);
-  register(poison);
-  register(purify);
-  register(swap);
-  register(vulnerable);
-  // register(lance);
-  // register(protection);
-  // register(charge);
-  register(clone);
-  register(mana_burn);
-  register(mana_steal);
-  register(vampire_bite);
-  register(push);
-  register(pull);
-  register(decoy);
-  register(trap);
-  register(explode);
+export function registerCards(underworld: Underworld) {
+  register(add_damage, underworld);
+  register(add_heal, underworld);
+  register(area_of_effect, underworld);
+  register(chain, underworld);
+  register(contagious, underworld);
+  register(freeze, underworld);
+  register(raise_dead, underworld);
+  register(shield, underworld);
+  register(poison, underworld);
+  register(purify, underworld);
+  register(swap, underworld);
+  register(vulnerable, underworld);
+  // register(lance, underworld);
+  // register(protection, underworld);
+  // register(charge, underworld);
+  register(clone, underworld);
+  register(mana_burn, underworld);
+  register(mana_steal, underworld);
+  register(vampire_bite, underworld);
+  register(push, underworld);
+  register(pull, underworld);
+  register(decoy, underworld);
+  register(trap, underworld);
+  register(explode, underworld);
 }
-function cardToUpgrade(c: ICard): IUpgrade {
+function cardToUpgrade(c: ICard, underworld: Underworld): IUpgrade {
   return {
     title: c.id,
     description: () => c.description,
@@ -136,7 +136,7 @@ function cardToUpgrade(c: ICard): IUpgrade {
     // TODO: Feature creep: What if you could UPGRADE the effect of a spell!! 0.o
     maxCopies: 1,
     effect: (player) => {
-      addCardToHand(c, player);
+      addCardToHand(c, player, underworld);
     },
     probability: c.probability,
     cost: { healthCost: c.healthCost, manaCost: c.manaCost }

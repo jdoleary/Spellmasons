@@ -185,7 +185,7 @@ export const pickups: IPickupSource[] = [
     probability: 70,
     scale: 1,
     description: `Deals ${spike_damage} to any unit (including NPCs) that touches it`,
-    effect: ({ unit, player, prediction }) => {
+    effect: ({ unit, player, prediction, underworld }) => {
       if (unit) {
         takeDamage(unit, spike_damage, underworld, prediction)
         return true;
@@ -203,11 +203,11 @@ export const pickups: IPickupSource[] = [
     scale: 1,
     description:
       'Takes you to the next level when all players are either in the portal or dead.',
-    effect: ({ unit, player }) => {
+    effect: ({ unit, player, underworld }) => {
       // Only send the ENTER_PORTAL message from
       // the client of the player that entered the portal
       if (player && player == globalThis.player) {
-        globalThis.pie.sendData({
+        underworld.pie.sendData({
           type: MESSAGE_TYPES.ENTER_PORTAL
         });
       }

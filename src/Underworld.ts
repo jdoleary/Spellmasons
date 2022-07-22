@@ -47,7 +47,7 @@ import Jprompt from './graphics/Jprompt';
 import { collideWithLineSegments, ForceMove, moveWithCollisions } from './jmath/moveWithCollision';
 import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './config';
 import { getBestRangedLOSTarget } from './entity/units/actions/rangedAction';
-import { getClients, hostGiveClientGameStateForInitialLoad } from './network/networkUtil';
+import { getClients, hostGiveClientGameStateForInitialLoad, IHostApp } from './network/networkUtil';
 import { healthAllyGreen, healthHurtRed, healthRed } from './graphics/ui/colors';
 import objectHash from 'object-hash';
 import { withinMeleeRange } from './entity/units/actions/gruntAction';
@@ -58,6 +58,7 @@ import { raceTimeout } from './Promise';
 import { updateParticlees } from './graphics/Particles';
 import { setupNetworkHandlerGlobalFunctions } from './network/networkHandler';
 import { setupDevGlobalFunctions } from './devUtils';
+import type PieClient from '@websocketpie/client';
 
 export enum turn_phase {
   PlayerTurns,
@@ -76,6 +77,7 @@ let requestAnimationFrameGameLoopId: number;
 export default class Underworld {
   seed: string;
   random: prng;
+  pie: PieClient | IHostApp;
   // The index of the level the players are on
   levelIndex: number = -1;
   // for serializing random: prng
@@ -126,7 +128,8 @@ export default class Underworld {
   lastLevelCreated: LevelData | undefined;
   removeEventListeners: undefined | (() => void);
 
-  constructor(seed: string, RNGState: SeedrandomState | boolean = true) {
+  constructor(pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
+    this.pie = pie;
     this.seed = globalThis.seedOverride || seed;
 
     // Setup global functions that need access to underworld:
@@ -598,8 +601,8 @@ export default class Underworld {
     console.trace('teardown: Cleaning up underworld');
     readyState.set('underworld', false, this);
 
-    if (underworld.removeEventListeners) {
-      underworld.removeEventListeners();
+    if (this.removeEventListeners) {
+      this.removeEventListeners();
     }
 
     // Remove all phase classes from body
@@ -1031,7 +1034,7 @@ export default class Underworld {
       // Invoke generateRandomLevel again until it succeeds
       level = this.generateRandomLevelData(levelIndex);
     } while (level === undefined);
-    globalThis.pie.sendData({
+    this.pie.sendData({
       type: MESSAGE_TYPES.CREATE_LEVEL,
       level
     });
@@ -1253,7 +1256,7 @@ export default class Underworld {
         }
         if (affirm) {
           console.log('endMyTurn: send END_TURN message');
-          globalThis.pie.sendData({ type: MESSAGE_TYPES.END_TURN });
+          this.pie.sendData({ type: MESSAGE_TYPES.END_TURN });
         }
       }
     }
@@ -1353,9 +1356,7 @@ export default class Underworld {
         document.body?.classList.toggle('showUpgrades', false);
         queueCenteredFloatingText('No more spell upgrades to pick from.');
       } else {
-        const elUpgrades = upgrades.map((upgrade) =>
-          Upgrade.createUpgradeElement(upgrade, player),
-        );
+        const elUpgrades = upgrades.map((upgrade) => Upgrade.createUpgradeElement(upgrade, player, this));
         if (elUpgradePickerContent) {
           elUpgradePickerContent.innerHTML = '';
           for (let elUpgrade of elUpgrades) {
@@ -1391,7 +1392,7 @@ export default class Underworld {
       // returning
       setTimeout(() => {
         // Prepare the next level
-        if (globalThis.isHost()) {
+        if (globalThis.isHost(this.pie)) {
           this.generateLevelData(++this.levelIndex);
         }
       }, 0)
@@ -1407,9 +1408,9 @@ export default class Underworld {
   }
   async broadcastTurnPhase(p: turn_phase) {
     // If host, send sync; if non-host, ignore 
-    if (globalThis.isHost()) {
+    if (globalThis.isHost(this.pie)) {
       console.log('Broadcast turn phase', turn_phase[p]);
-      globalThis.pie.sendData({
+      this.pie.sendData({
         type: MESSAGE_TYPES.SET_PHASE,
         phase: p,
         units: this.units.map(Unit.serialize),
@@ -1936,8 +1937,8 @@ export default class Underworld {
       const hash = objectHash({ target, cardIds });
       if (hash !== this.lastThoughtsHash) {
         this.lastThoughtsHash = hash;
-        if (globalThis.pie) {
-          globalThis.pie.sendData({
+        if (this.pie) {
+          this.pie.sendData({
             type: MESSAGE_TYPES.PLAYER_THINKING,
             target,
             cardIds

@@ -22,7 +22,9 @@ cookieConsentPopup(false);
 import './network/wsPieSetup';
 import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './config';
 import { MESSAGE_TYPES } from './types/MessageTypes';
-import { typeGuardHostApp } from './network/networkUtil';
+import { IHostApp, typeGuardHostApp } from './network/networkUtil';
+import Underworld from './Underworld';
+import type PieClient from '@websocketpie/client';
 
 const YES = 'yes'
 const SKIP_TUTORIAL = 'skipTutorial';
@@ -42,11 +44,11 @@ globalThis.zoomTarget = 1.3;
 // If the code in main runs this is NOT a headless instance, main.ts is the entrypoint for
 // the regular game with graphics and audio
 globalThis.headless = false;
-globalThis.isHost = () => {
+globalThis.isHost = (pie: PieClient | IHostApp) => {
   // isHost only if playing singleplayer, otherwise the headless hostApp is the host
   // and this file is the entry point to the non-headless client so it will never be the
   // hostApp
-  return typeGuardHostApp(globalThis.pie) ? true : globalThis.pie.soloMode;
+  return typeGuardHostApp(pie) ? true : pie.soloMode;
 }
 if (globalThis.devMode) {
   console.log('ADMIN: devMode = true! Character and upgrades will be picked automatically. Animations are sped up');
@@ -67,7 +69,7 @@ function setupAll() {
     readyState.set('pixiAssets', true);
     console.log("Setup: Done loading Pixi assets.")
     // Initialize content
-    Cards.registerCards();
+    Cards.registerCards(underworld);
     Units.registerUnits();
     readyState.set("content", true);
     initPlanningView();
@@ -105,12 +107,12 @@ globalThis.setMMBDown = (isDown: boolean) => {
   globalThis.MMBDown = isDown;
   document.body?.classList.toggle('draggingCamera', globalThis.MMBDown);
 }
-globalThis.setRMBDown = (isDown: boolean) => {
+globalThis.setRMBDown = (isDown: boolean, underworld: Underworld) => {
   // This is the ONLY place that RMBDown should be mutated.
   globalThis.RMBDown = isDown;
   // Now that player has stopped moving notify multiplayer clients that player has moved
   if (globalThis.player) {
-    globalThis.pie.sendData({
+    underworld.pie.sendData({
       type: MESSAGE_TYPES.MOVE_PLAYER,
       ...Vec.clone(globalThis.player.unit),
     });

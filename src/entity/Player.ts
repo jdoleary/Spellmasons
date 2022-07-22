@@ -196,7 +196,7 @@ export function load(player: IPlayerSerialized, underworld: Underworld) {
   if (!reassignedUnit) {
     console.warn('Failed to load player because cannot find associated unit with ID', player.unit.id);
     console.log('Requesting SYNC_PLAYERS from host')
-    globalThis.pie.sendData({
+    underworld.pie.sendData({
       type: MESSAGE_TYPES.REQUEST_SYNC_PLAYERS
     })
     return
@@ -256,18 +256,7 @@ export function ableToTakeTurn(player: IPlayer) {
   return !player.inPortal && player.unit.alive && player.clientConnected;
 }
 
-// TODO remove dev helper function for production release
-globalThis.giveMeCard = (cardId: string, quantity: number = 1) => {
-  const card = Cards.allCards[cardId];
-  if (card) {
-    for (let i = 0; i < quantity; i++) {
-      addCardToHand(card, globalThis.player);
-    }
-  } else {
-    console.log('card', card, 'not found');
-  }
-};
-export function addCardToHand(card: Cards.ICard | undefined, player: IPlayer | undefined) {
+export function addCardToHand(card: Cards.ICard | undefined, player: IPlayer | undefined, underworld: Underworld) {
   if (!card) {
     console.error('Attempting to add undefined card to hand');
     return
@@ -288,7 +277,7 @@ export function addCardToHand(card: Cards.ICard | undefined, player: IPlayer | u
   }
 }
 // This function fully deletes the cards from the player's hand
-export function removeCardsFromHand(player: IPlayer, cards: string[]) {
+export function removeCardsFromHand(player: IPlayer, cards: string[], underworld: Underworld) {
   player.cards = player.cards.filter(c => !cards.includes(c));
   // Remove any selected cards with a name in the cards array of this function
   for (let card of cards) {

@@ -155,7 +155,7 @@ export function keydownListener(underworld: Underworld, event: KeyboardEvent) {
       break;
     case 'KeyC':
       const mouseTarget = underworld.getMousePos();
-      globalThis.pie.sendData({
+      underworld.pie.sendData({
         type: MESSAGE_TYPES.PING,
         x: mouseTarget.x,
         y: mouseTarget.y
@@ -391,7 +391,7 @@ export function mouseDownHandler(underworld: Underworld, e: MouseEvent) {
     e.preventDefault();
   } else if (e.button == 2) {
     e.preventDefault();
-    globalThis.setRMBDown?.(true);
+    globalThis.setRMBDown?.(true, underworld);
   }
 }
 export function mouseUpHandler(underworld: Underworld, e: MouseEvent) {
@@ -404,7 +404,7 @@ export function mouseUpHandler(underworld: Underworld, e: MouseEvent) {
   if (e.button == 2) {
     // Left click clears walk rope
     globalThis.walkPathGraphics?.clear();
-    globalThis.setRMBDown?.(false);
+    globalThis.setRMBDown?.(false, underworld);
     e.preventDefault();
   }
 }
@@ -504,7 +504,7 @@ export function clickHandler(underworld: Underworld, _e: MouseEvent) {
         // Clear resMarkers so they don't hang around once the spell is cast
         globalThis.resMarkers = [];
 
-        globalThis.pie.sendData({
+        underworld.pie.sendData({
           type: MESSAGE_TYPES.SPELL,
           x: target.x,
           y: target.y,

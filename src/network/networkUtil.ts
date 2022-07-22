@@ -3,6 +3,7 @@ import { MESSAGE_TYPES } from '../types/MessageTypes';
 import * as Player from '../entity/Player';
 import * as Unit from '../entity/Unit';
 import Underworld from '../Underworld';
+import type PieClient from '@websocketpie/client';
 
 // Copied from PieClient.d.ts so as to not have to import PieClient
 export interface ClientPresenceChangedArgs {
@@ -28,12 +29,12 @@ export function hostGiveClientGameStateForInitialLoad(clientId: string, underwor
     }
     // Only the host should be sending INIT_GAME_STATE messages
     // because the host has the canonical game state
-    if (globalThis.isHost()) {
+    if (globalThis.isHost(underworld.pie)) {
         // Do not send this message to self
         if (globalThis.clientId !== clientId) {
             if (level) {
                 console.log(`Host: Send ${clientId} game state for initial load`);
-                globalThis.pie.sendData({
+                underworld.pie.sendData({
                     type: MESSAGE_TYPES.INIT_GAME_STATE,
                     level,
                     underworld: underworld.serializeForSyncronize(),
@@ -55,6 +56,8 @@ export interface IHostApp {
     sendData(payload: any, extras?: any): void;
     isHostApp: boolean;
 }
-export function typeGuardHostApp(x: any): x is IHostApp {
+export function typeGuardHostApp(x: PieClient | IHostApp): x is IHostApp {
+    // @ts-ignore: PieClient does not have isHostApp property but this typeguard will
+    // still work
     return x.isHostApp;
 }

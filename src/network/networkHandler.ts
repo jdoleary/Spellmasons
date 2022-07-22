@@ -150,7 +150,7 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
     //       },
     //     })
     //     console.log("gamestate diff:\n", diff(currentSerializedGameState, JSON.parse(payload.state)));
-    //     globalThis.pie.sendData({
+    //     underworld.pie.sendData({
     //       type: MESSAGE_TYPES.DESYNC
     //     });
     //   }
@@ -180,16 +180,16 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
       break;
     case MESSAGE_TYPES.REQUEST_SYNC_PLAYERS:
       // If host, send sync; if non-host, ignore 
-      if (globalThis.isHost()) {
+      if (globalThis.isHost(underworld.pie)) {
         console.log('Host: Sending SYNC_PLAYERS')
         const message = {
           type: MESSAGE_TYPES.SYNC_PLAYERS,
           players: underworld.players.map(Player.serialize)
         }
-        if (globalThis.pie) {
-          globalThis.pie.sendData(message);
+        if (underworld.pie) {
+          underworld.pie.sendData(message);
         } else {
-          console.error('Cannot send SYNC_PLAYERS, globalThis.pie is undefined')
+          console.error('Cannot send SYNC_PLAYERS, underworld.pie is undefined')
         }
       }
       break;
@@ -277,7 +277,7 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
       break;
     case MESSAGE_TYPES.SPELL:
       if (fromPlayer) {
-        await handleSpell(fromPlayer, payload);
+        await handleSpell(fromPlayer, payload, underworld);
       } else {
         console.error('Cannot cast, caster does not exist');
       }
@@ -321,6 +321,7 @@ async function handleLoadGameState(payload: {
   const { level, underworld: payloadUnderworld, phase, units, players } = payload
   // Sync underworld properties
   const loadedGameState: IUnderworldSerializedForSyncronize = { ...payloadUnderworld };
+  // TODO overwrite underworld, don't reassign
   const underworld = new Underworld(loadedGameState.seed, loadedGameState.RNGState);
   underworld.levelIndex = loadedGameState.levelIndex;
   // Sync Level.  Must await createLevel since it uses setTimeout to ensure that
@@ -355,7 +356,7 @@ async function handleLoadGameState(payload: {
   underworld.syncTurnMessage();
 
 }
-async function handleSpell(caster: Player.IPlayer, payload: any) {
+async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Underworld) {
   if (typeof payload.x !== 'number' || typeof payload.y !== 'number') {
     console.error('Spell is invalid, it must have coordinates');
     return;
@@ -416,7 +417,7 @@ export function setupNetworkHandlerGlobalFunctions(underworld: Underworld) {
       }
 
       const { level, underworld: savedUnderworld, phase, units, players } = JSON.parse(savedGameString);
-      globalThis.pie.sendData({
+      underworld.pie.sendData({
         type: MESSAGE_TYPES.LOAD_GAME_STATE,
         level,
         underworld: savedUnderworld,
@@ -439,7 +440,7 @@ export function setupNetworkHandlerGlobalFunctions(underworld: Underworld) {
     if (underworld) {
       underworld.cleanup();
     }
-    return typeGuardHostApp(globalThis.pie) ? Promise.resolve() : globalThis.pie.disconnect();
+    return typeGuardHostApp(underworld.pie) ? Promise.resolve() : underworld.pie.disconnect();
   }
   // TODO, replay is currently broken
   // globalThis.replay = (title: string) => {

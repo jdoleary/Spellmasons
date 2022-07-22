@@ -8,6 +8,7 @@ import * as Units from './entity/units';
 import { Faction, UnitType } from './types/commonTypes';
 import * as Cards from './cards';
 import { syncInventory } from './graphics/ui/CardUI';
+import { addCardToHand } from './entity/Player';
 
 export default function devUtils(graphics: PIXI.Graphics) {
 
@@ -45,6 +46,17 @@ export default function devUtils(graphics: PIXI.Graphics) {
     return { debugDrawLineSegments, debugDrawVec2s }
 }
 export function setupDevGlobalFunctions(underworld: Underworld) {
+    // TODO remove dev helper function for production release
+    globalThis.giveMeCard = (cardId: string, quantity: number = 1) => {
+        const card = Cards.allCards[cardId];
+        if (card) {
+            for (let i = 0; i < quantity; i++) {
+                addCardToHand(card, globalThis.player, underworld);
+            }
+        } else {
+            console.log('card', card, 'not found');
+        }
+    };
     // For development, spawns a unit near the player
     globalThis.devSpawnUnit = (unitId: string, faction: Faction = Faction.ENEMY) => {
         if (globalThis.player) {

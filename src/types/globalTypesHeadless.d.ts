@@ -7,7 +7,6 @@ import type { Vec2 } from '../jmath/Vec';
 import type { View } from '../views';
 import type { Faction } from './commonTypes';
 import type { IPickup } from '../entity/Pickup';
-import type { IHostApp } from '../network/networkUtil';
 
 declare global {
     var SPELLMASONS_PACKAGE_VERSION: string;
@@ -18,8 +17,6 @@ declare global {
     var headless: boolean;
     // Returns true if client is playing singleplayer OR if hostapp
     var isHost: () => boolean;
-    // Note: in headless pie is an IHostApp instead of a @websocketpie/client instance
-    var pie: PieClient | IHostApp;
 
 
     // The following are undefined in the headless server

@@ -21,8 +21,6 @@ globalThis.player = undefined;
 
 
 // TODO: The following need to be specific to a host app
-// globalThis.pie
-// globalThis.lastLeveLCreated
 // readyState.underworld
 
 function headlessStartGame() {
@@ -32,10 +30,9 @@ function headlessStartGame() {
     pie.startServer({
         port: 8081, makeHostAppInstance: () => {
             const hostAppInst = new HostApp();
-            globalThis.pie = hostAppInst;
             console.log('Start Game: Attempt to start the game')
             console.log('Host: Start game / Initialize Underworld');
-            hostAppInst.underworld = new Underworld(Math.random().toString());
+            hostAppInst.underworld = new Underworld(hostAppInst, Math.random().toString());
             // Mark the underworld as "ready". This is important even for headless so that it doesn't
             // try to process it's own INIT_GAME_STATE messages
             readyState.set('underworld', true, hostAppInst.underworld);
@@ -46,7 +43,7 @@ function headlessStartGame() {
             // Headless does NOT use graphics so this can be set to true immediately
             readyState.set('pixiAssets', true, hostAppInst.underworld);
             // Initialize content
-            Cards.registerCards();
+            Cards.registerCards(hostAppInst.underworld);
             Units.registerUnits();
             readyState.set("content", true, hostAppInst.underworld);
             // Generate the level data
