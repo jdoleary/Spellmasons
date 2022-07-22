@@ -12,6 +12,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: 10,
     thumbnail: 'vulnerable.png',
+    animationPath: 'spell-effects/spellDebilitate',
     description: `
 Makes the target(s) take double damage whenever they receive damage
 in the future.
