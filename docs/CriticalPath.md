@@ -9,15 +9,16 @@
 - Milestone 1 | **Reliable Multiplayer** | July 22
     - Standalone Server
     - Simultaneous player turns
-- Milestone 2 | **Balance**
+- Milestone 2 | **Biomes** | July 28
+    - More interactable doodads (explosive barrels, movable cover)
+    - Better liquid
+    - Simpler tiles?
+    - Get Che new standard for tile art
+- Milestone 3 | **Balance**
     - Increase difficulty
         - Difficulty is directly related to fun, it isn't a puzzel if you can just "hurt" your way through it over and over
     - Smaller levels
         - Since this is turn based, super large levels are obnoxious
-- Milestone 3 | **Biomes** | July 28
-    - More interactable doodads (explosive barrels, movable cover)
-    - Better liquid
-    - Simpler tiles?
 - Milestone X | **Movement** | Due Date Ongoing
     - Pack 14 | Spell quantity
         - What happens when multiple, identical spells are cast in sequence?

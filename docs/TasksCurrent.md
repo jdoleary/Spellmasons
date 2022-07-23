@@ -170,6 +170,7 @@
         - Disable RMB movement when upgrade screen is up
 - Pack 14:
     - Add "quantity" to spells so that 3 hurt in a row looks different and only plays one animation
+    - Upgrade: Start each level with 2x mana overfill (think of new upgrade "perks")
         
 
 
