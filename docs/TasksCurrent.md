@@ -1,31 +1,11 @@
 ## This weeks goals:
 - It's running hot for some reason
-- BUG BIG: After racetimeout it skips a message in queue:
-    - it seems to happen if you end your turn while moving
-    - fixed now?
-```
-Handle ONDATA MOVE_PLAYER 
-onData: END_TURN 
-onData: MOVE_PLAYER 
-onData: MOVE_PLAYER 
-onData: END_TURN 
-raceTimeout:  moveTowards; unit.id: 4
-Handle ONDATA MOVE_PLAYER 
-Handle ONDATA MOVE_PLAYER
-raceTimeout:  moveTowards; unit.id: 3
-Handle ONDATA END_TURN 
-endPlayerTurn 3b392f38-a183-4d82-9cd3-f4f34630da4d
-PlayerTurn: End player turn 3b392f38-a183-4d82-9cd3-f4f34630da4d
-syncTurnMessage: phase: PlayerTurns
-PlayerTurn: Check end player turn phase; players havent ended turn yet: [ 'a90c4a30-218b-4063-9dd6-7706805f29e5' ]
-onData: MOVE_PLAYER 
-Handle ONDATA MOVE_PLAYER 
-```
+- multiplayer, player doesn't play hit animation when a grunt bites it
+- Game waits a long time after last player has ended their turn before moving on to enemy turn
 - headless server runs loop quickly when it has nothing to do (after i make a change and the clients are connecting in the other os window's space)
 - is init_game_state being invoked more than once for player 2
-- bug: got desync where client thought it had ended turn but server didn't get that
-
 - Fix: Move player so it doesn't use stamina because IT MUST bring them to a synced location if their position somehow get's out of sync
+    - Desync: Due to the stamina issue I had one player in a different spot on one screen, then when he cast push and pushed a grunt into lava the grunt only moved and died on one screen and syncUnits didn't correct it somehow
 - bug: player 2 doesn't get cards
     - C:\git\Golems\headless-server-build\src\entity\Unit.js:847
         const { turn_phase: phase } = globalThis.underworld;
@@ -199,6 +179,7 @@ Handle ONDATA MOVE_PLAYER
     - Trailer
     - Marketing
 ## Bugs
+- Player robe colors are mixed up after refresh
 - Handle error in menu when attempting to connect to a bad url
 - Stop idle animation when unit is frozen
 - death skull doens't show for decoy
