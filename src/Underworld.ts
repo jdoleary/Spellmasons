@@ -1993,7 +1993,7 @@ export default class Underworld {
         // client who just joined
         // If the game has already started (e.g. the host has already joined), send the initial state to the new 
         // client only so they can load
-        hostGiveClientGameStateForInitialLoad(player.clientId, this, this.lastLevelCreated);
+        hostGiveClientGameState(player.clientId, this, this.lastLevelCreated, MESSAGE_TYPES.INIT_GAME_STATE);
       }
     }
     return newlyCreatedPlayers;

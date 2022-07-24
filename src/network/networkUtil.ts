@@ -22,7 +22,7 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs, underworld
     // Ensure each client corresponds with a Player instance
     underworld.ensureAllClientsHaveAssociatedPlayers(clients);
 }
-export function hostGiveClientGameStateForInitialLoad(clientId: string, underworld: Underworld, level?: LevelData) {
+export function hostGiveClientGameState(clientId: string, underworld: Underworld, level: LevelData | undefined, message_type: MESSAGE_TYPES.INIT_GAME_STATE | MESSAGE_TYPES.LOAD_GAME_STATE) {
     // Only the host should be sending INIT_GAME_STATE messages
     // because the host has the canonical game state
     if (globalThis.isHost(underworld.pie)) {
@@ -35,7 +35,7 @@ export function hostGiveClientGameStateForInitialLoad(clientId: string, underwor
             if (level) {
                 console.log(`Host: Send ${clientId} game state for initial load`);
                 underworld.pie.sendData({
-                    type: MESSAGE_TYPES.INIT_GAME_STATE,
+                    type: message_type,
                     level,
                     underworld: underworld.serializeForSyncronize(),
                     phase: underworld.turn_phase,

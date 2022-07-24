@@ -1,8 +1,9 @@
 import { version } from '../package.json';
 import './Shims';
-import { getClients, hostGiveClientGameStateForInitialLoad, IHostApp, onClientPresenceChanged } from './network/networkUtil';
+import { getClients, hostGiveClientGameState, IHostApp, onClientPresenceChanged } from './network/networkUtil';
 import Underworld from './Underworld';
 import { onData } from './network/networkHandler';
+import { MESSAGE_TYPES } from './types/MessageTypes';
 const pie = require('@websocketpie/server');
 globalThis.SPELLMASONS_PACKAGE_VERSION = version;
 // Init underworld so that when clients join they can use it as the canonical
@@ -32,7 +33,7 @@ function headlessStartGame() {
             hostAppInst.underworld.createLevelSyncronous(hostAppInst.underworld.lastLevelCreated);
             console.log('Host: Send all clients game state for initial load');
             getClients().forEach(clientId => {
-                hostGiveClientGameStateForInitialLoad(clientId, hostAppInst.underworld, hostAppInst.underworld.lastLevelCreated);
+                hostGiveClientGameState(clientId, hostAppInst.underworld, hostAppInst.underworld.lastLevelCreated, MESSAGE_TYPES.INIT_GAME_STATE);
             });
             return hostAppInst;
         }

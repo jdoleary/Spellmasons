@@ -195,9 +195,9 @@ export function load(player: IPlayerSerialized, underworld: Underworld) {
   const reassignedUnit = underworld.units.find(u => u.id == player.unit.id);
   if (!reassignedUnit) {
     console.error('Failed to load player because cannot find associated unit with ID', player.unit.id);
-    console.log('Requesting SYNC_PLAYERS from host')
+    console.log('Requesting game state from host')
     underworld.pie.sendData({
-      type: MESSAGE_TYPES.REQUEST_SYNC_PLAYERS
+      type: MESSAGE_TYPES.REQUEST_SYNC_GAME_STATE
     })
     return
   }

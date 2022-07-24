@@ -12,11 +12,11 @@ export enum MESSAGE_TYPES {
   CHANGE_CHARACTER,
   // Occurs synchronously, fully replaces the game state
   LOAD_GAME_STATE,
+  REQUEST_SYNC_GAME_STATE,
   // Ping a location on the map
   PING,
   CREATE_LEVEL,
   SET_PHASE,
-  REQUEST_SYNC_PLAYERS,
   SYNC_PLAYERS,
   // Shows other players what another player is up to
   PLAYER_THINKING,

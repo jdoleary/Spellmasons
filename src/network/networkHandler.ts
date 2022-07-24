@@ -9,7 +9,7 @@ import * as Unit from '../entity/Unit';
 import * as messageQueue from '../messageQueue';
 import * as storage from '../storage';
 import { allUnits } from '../entity/units';
-import { typeGuardHostApp } from './networkUtil';
+import { hostGiveClientGameState, typeGuardHostApp } from './networkUtil';
 
 const messageLog: any[] = [];
 export const NO_LOG_LIST = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
@@ -174,18 +174,14 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
         // TODO: This should request a unit and player sync
       }
       break;
-    case MESSAGE_TYPES.REQUEST_SYNC_PLAYERS:
+    case MESSAGE_TYPES.REQUEST_SYNC_GAME_STATE:
       // If host, send sync; if non-host, ignore 
       if (globalThis.isHost(underworld.pie)) {
-        console.log('Host: Sending SYNC_PLAYERS')
-        const message = {
-          type: MESSAGE_TYPES.SYNC_PLAYERS,
-          players: underworld.players.map(Player.serialize)
-        }
+        console.log('Host: Sending game state for REQUEST_SYNC_GAME_STATE')
         if (underworld.pie) {
-          underworld.pie.sendData(message);
+          hostGiveClientGameState(fromClient, underworld, underworld.lastLevelCreated, MESSAGE_TYPES.LOAD_GAME_STATE);
         } else {
-          console.error('Cannot send SYNC_PLAYERS, underworld.pie is undefined')
+          console.error('Cannot send response to REQUEST_SYNC_GAME_STATE, underworld.pie is undefined')
         }
       }
       break;
