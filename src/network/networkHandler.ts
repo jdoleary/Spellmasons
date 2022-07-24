@@ -13,9 +13,7 @@ import { typeGuardHostApp } from './networkUtil';
 
 const messageLog: any[] = [];
 export const NO_LOG_LIST = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
-// Any message types in this list will be dropped if in the queue and an additional message of this type
-// comes through
-const ONLY_KEEP_LATEST = [MESSAGE_TYPES.PLAYER_THINKING];
+export const HANDLE_IMMEDIATELY = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
 export function onData(d: OnDataArgs, underworld: Underworld) {
   if (!NO_LOG_LIST.includes(d.payload.type)) {
     // Don't clog up server logs with payloads, leave that for the client which can handle them better
@@ -73,8 +71,14 @@ export function onData(d: OnDataArgs, underworld: Underworld) {
       processNextInQueueIfReady(underworld);
       break;
     default:
-      // All other messages should be handled one at a time to prevent desync
-      handleOnDataMessageSyncronously(d, underworld);
+      // MESSAGE_TYPES in HANDLE_IMMEDIATELY are not to be queued and can be processed
+      // as soon as they are received.
+      if (Object.values(HANDLE_IMMEDIATELY).includes(d.payload.type)) {
+        handleOnDataMessage(d, underworld)
+      } else {
+        // All other messages should be handled one at a time to prevent desync
+        handleOnDataMessageSyncronously(d, underworld);
+      }
       break;
   }
 }
@@ -82,11 +86,6 @@ let onDataQueueContainer = messageQueue.makeContainer<OnDataArgs>();
 // Waits until a message is done before it will continue to process more messages that come through
 // This ensures that players can't move in the middle of when spell effects are occurring for example.
 function handleOnDataMessageSyncronously(d: OnDataArgs, underworld: Underworld) {
-  // If message type is in the ONLY_KEEP_LATEST list, drop any currently queued messages of the
-  // same message type from the same client before adding this one to the queue
-  if (d.payload && ONLY_KEEP_LATEST.includes(d.payload.type)) {
-    onDataQueueContainer.queue = onDataQueueContainer.queue.filter(x => x.payload.type != d.payload.type && d.fromClient == x.fromClient);
-  }
   // Queue message for processing one at a time
   onDataQueueContainer.queue.push(d);
   // 10 is an arbitrary limit which will report that something may be wrong
@@ -116,7 +115,7 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
   const type: MESSAGE_TYPES = payload.type;
   if (!NO_LOG_LIST.includes(type)) {
     // Don't clog up server logs with payloads, leave that for the client which can handle them better
-    console.log("Handle ONDATA", MESSAGE_TYPES[type], globalThis.headless ? '' : payload)
+    console.log("Handle ONDATA", underworld.processedMessageCount, MESSAGE_TYPES[type], globalThis.headless ? '' : payload)
   }
   // Get player of the client that sent the message 
   const fromPlayer = underworld.players.find((p) => p.clientId === fromClient);
