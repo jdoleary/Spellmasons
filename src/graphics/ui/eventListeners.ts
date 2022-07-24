@@ -23,6 +23,7 @@ import { pointsEveryXDistanceAlongPath } from '../../jmath/Pathfinding';
 import Underworld from '../../Underworld';
 
 export const keyDown = {
+  f: false,
   w: false,
   a: false,
   s: false,
@@ -136,6 +137,9 @@ export function keydownListener(underworld: Underworld, event: KeyboardEvent) {
     case 'Backspace':
       CardUI.deselectLastCard();
       break;
+    case 'KeyF':
+      keyDown.f = true;
+      break;
     // Camera movement
     case 'KeyW':
       keyDown.w = true;
@@ -175,6 +179,9 @@ export function keyupListener(underworld: Underworld, event: KeyboardEvent) {
     return;
   }
   switch (event.code) {
+    case 'KeyF':
+      keyDown.f = false;
+      break;
     // Camera movement
     case 'KeyW':
       keyDown.w = false;
@@ -218,9 +225,13 @@ export function mouseMove(underworld: Underworld, e?: MouseEvent) {
   // RMB
   if (globalThis.player) {
 
+    if (globalThis.RMBDown || keyDown.f) {
+      drawWalkRope(mouseTarget, underworld);
+    } else {
+      globalThis.walkPathGraphics?.clear();
+    }
     if (globalThis.RMBDown) {
       if (underworld.isMyTurn()) {
-        drawWalkRope(mouseTarget, underworld);
         // If player is able to move
         if (globalThis.player.unit.stamina > 0) {
           // Move up to but not onto intersection or else unit will get stuck ON linesegment

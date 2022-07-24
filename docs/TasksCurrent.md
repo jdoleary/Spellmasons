@@ -105,7 +105,6 @@
 - Bug: sometimes resolve done moving doesn't occur when unit runs into liquid
     - This is also when they keep doing the walking animation after they've stopped
 - Write down Brad's feedback here
-    - REstore 'f' to see walk rope
     - it should be clear that it rolls spells after you pick
     - auto card pickup on portal spawn is not great, should be explained-
     - 'Adjoining' is confusing
@@ -161,7 +160,6 @@
     - fix vampire bite, rather than the confusing half damage thing, it should just double health and then half it if vampire is removed
     - shield should be visible on health bar (it's just temporary health)
     - explain that portal cleanses all buffs and curses
-    - continue to show walk rope after RMB?
 - Pack 11:
     - Bug: Grunt walked towards liquid and just kept walking animation after it should've returned to idle. seed:0.8154642976606445
         - I think this happens when they attempt to move to a location that is ouside of the pathing bounds (like in between a pathing line segment and a wall line segment, so it's still ground but it's out of bounds)
