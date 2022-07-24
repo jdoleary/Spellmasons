@@ -3,6 +3,7 @@ import * as Image from '../graphics/Image';
 import type { Spell } from '.';
 import { UnitType } from '../types/commonTypes';
 import * as config from '../config'
+import Underworld from '../Underworld';
 
 const id = 'freeze';
 const imageName = 'spell-effects/spellFreeze_9.png';
@@ -20,7 +21,7 @@ Freezes the target(s) for 1 turn, preventing them from moving or acting.
     `,
     effect: async (state, underworld, prediction) => {
       for (let unit of state.targetedUnits) {
-        Unit.addModifier(unit, id);
+        Unit.addModifier(unit, id, underworld);
         if (unit.unitType === UnitType.PLAYER_CONTROLLED) {
           const player = underworld.players.find(
             (p) => p.unit === unit,
@@ -61,13 +62,13 @@ Freezes the target(s) for 1 turn, preventing them from moving or acting.
       // Skip turn
       return true;
     },
-    onTurnEnd: async (unit: Unit.IUnit) => {
+    onTurnEnd: async (unit: Unit.IUnit, underworld: Underworld) => {
       // Decrement how many turns left the unit is frozen
       const modifier = unit.modifiers[id];
       if (modifier) {
         modifier.turnsLeft--;
         if (modifier.turnsLeft <= 0) {
-          Unit.removeModifier(unit, id);
+          Unit.removeModifier(unit, id, underworld);
         }
       }
     },

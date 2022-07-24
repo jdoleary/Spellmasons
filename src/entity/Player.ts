@@ -149,7 +149,7 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
   // This prevents players from scamming shields at the end of a level
   // on infinite mana
   Object.keys(player.unit.modifiers).forEach(modifier => {
-    Unit.removeModifier(player.unit, modifier);
+    Unit.removeModifier(player.unit, modifier, underworld);
   });
 
   // Reset mana and health - otherwise players are incentivized to bum around after killing all enemies

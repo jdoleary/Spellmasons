@@ -33,44 +33,47 @@ const dragstart = (ev: any) => {
 const cardHoldersPaddingLeft = 10;
 // Displays a full card with info on inspect-mode + hover of card
 const elCardInspect = document.getElementById('card-inspect');
-if (!globalThis.headless) {
-  elInvButton?.addEventListener('click', () => {
-    toggleInventory(undefined, undefined);
-  });
-  elCardHolders.style['paddingLeft'] = `${cardHoldersPaddingLeft}px`;
-  elCardHand.style['gap'] = `${gapBetweenCards}px`;
-  elSelectedCards.style['gap'] = `${gapBetweenCards}px`;
+export function setupCardUIEventListeners(underworld: Underworld) {
 
-  elInvContent.addEventListener('dragstart', dragstart);
-  elCardHand.addEventListener('dragstart', dragstart);
-  elCardHand.addEventListener('dragover', ev => {
-    ev.preventDefault();
-  })
-  elCardHand.addEventListener('drop', ev => {
-    const dropElement = ((ev.target as HTMLElement).closest('.slot') as HTMLElement);
-    const dropIndex = dropElement.parentNode ? Array.from(dropElement.parentNode.children).indexOf(dropElement) : -1;
-    const cardId = dragCard && dragCard.dataset.cardId
-    if (globalThis.player && dropIndex !== -1 && dragCard && cardId !== undefined) {
-      const startDragCardIndex = dragCard.parentNode && dragCard.closest('#card-hand') ? Array.from(dragCard.parentNode.children).indexOf(dragCard) : -1;
-      if (startDragCardIndex !== -1) {
-        // Then the drag card is already in the toolbar and this is a swap between
-        // two cards on the toolbar
-        const swapCard = globalThis.player.cards[dropIndex] || "";
-        globalThis.player.cards[dropIndex] = cardId;
-        globalThis.player.cards[startDragCardIndex] = swapCard;
+  if (!globalThis.headless) {
+    elInvButton?.addEventListener('click', () => {
+      toggleInventory(undefined, undefined, underworld);
+    });
+    elCardHolders.style['paddingLeft'] = `${cardHoldersPaddingLeft}px`;
+    elCardHand.style['gap'] = `${gapBetweenCards}px`;
+    elSelectedCards.style['gap'] = `${gapBetweenCards}px`;
+
+    elInvContent.addEventListener('dragstart', dragstart);
+    elCardHand.addEventListener('dragstart', dragstart);
+    elCardHand.addEventListener('dragover', ev => {
+      ev.preventDefault();
+    })
+    elCardHand.addEventListener('drop', ev => {
+      const dropElement = ((ev.target as HTMLElement).closest('.slot') as HTMLElement);
+      const dropIndex = dropElement.parentNode ? Array.from(dropElement.parentNode.children).indexOf(dropElement) : -1;
+      const cardId = dragCard && dragCard.dataset.cardId
+      if (globalThis.player && dropIndex !== -1 && dragCard && cardId !== undefined) {
+        const startDragCardIndex = dragCard.parentNode && dragCard.closest('#card-hand') ? Array.from(dragCard.parentNode.children).indexOf(dragCard) : -1;
+        if (startDragCardIndex !== -1) {
+          // Then the drag card is already in the toolbar and this is a swap between
+          // two cards on the toolbar
+          const swapCard = globalThis.player.cards[dropIndex] || "";
+          globalThis.player.cards[dropIndex] = cardId;
+          globalThis.player.cards[startDragCardIndex] = swapCard;
+        } else {
+          // else a card is being dragged in from inventory
+          globalThis.player.cards[dropIndex] = cardId;
+        }
+        recalcPositionForCards(globalThis.player, underworld);
+        syncInventory(undefined, underworld);
       } else {
-        // else a card is being dragged in from inventory
-        globalThis.player.cards[dropIndex] = cardId;
+        console.error('Something went wrong dragndropping card', dropIndex, dragCard);
       }
-      recalcPositionForCards(globalThis.player, underworld);
-      syncInventory(undefined);
-    } else {
-      console.error('Something went wrong dragndropping card', dropIndex, dragCard);
-    }
-    ev.preventDefault();
-  })
-  addCardInspectHandlers(elCardHand);
-  addCardInspectHandlers(elInvContent);
+      ev.preventDefault();
+    })
+    addCardInspectHandlers(elCardHand);
+    addCardInspectHandlers(elInvContent);
+  }
 }
 function addCardInspectHandlers(cardContainerElement: HTMLElement) {
   if (cardContainerElement) {
@@ -155,8 +158,8 @@ export function recalcPositionForCards(player: Player.IPlayer | undefined, under
         element.draggable = true;
         element.classList.add('slot');
         // When the user clicks on a card
-        addListenersToCardElement(player, element, cardId);
-        addToolbarListener(element, slotIndex);
+        addListenersToCardElement(player, element, cardId, underworld);
+        addToolbarListener(element, slotIndex, underworld);
         elCardHand.appendChild(element);
 
       } else {
@@ -166,7 +169,7 @@ export function recalcPositionForCards(player: Player.IPlayer | undefined, under
       // Slot is empty
       const element = document.createElement('div');
       element.classList.add('empty-slot', 'slot');
-      addToolbarListener(element, slotIndex);
+      addToolbarListener(element, slotIndex, underworld);
       elCardHand.appendChild(element);
     }
   }
@@ -193,7 +196,7 @@ export function recalcPositionForCards(player: Player.IPlayer | undefined, under
   updateCardBadges(underworld);
 }
 const openInvClass = 'open-inventory';
-export function syncInventory(slotModifyingIndex: number | undefined) {
+export function syncInventory(slotModifyingIndex: number | undefined, underworld: Underworld) {
   if (globalThis.headless) { return; }
   if (globalThis.player) {
     // clear contents
@@ -210,7 +213,7 @@ export function syncInventory(slotModifyingIndex: number | undefined) {
               globalThis.player.cards[slotModifyingIndex] = inventoryCardId;
               recalcPositionForCards(globalThis.player, underworld)
               // Close inventory
-              toggleInventory(undefined, false);
+              toggleInventory(undefined, false, underworld);
               e.preventDefault();
               e.stopPropagation();
               e.stopImmediatePropagation();
@@ -218,7 +221,7 @@ export function syncInventory(slotModifyingIndex: number | undefined) {
           })
         }
         // When the user clicks on a card
-        addListenersToCardElement(globalThis.player, elCard, card.id);
+        addListenersToCardElement(globalThis.player, elCard, card.id, underworld);
         // Show that card is already on toolbar
         if (globalThis.player.cards.includes(inventoryCardId)) {
           elCard.classList.add('inToolbar');
@@ -237,7 +240,7 @@ export function syncInventory(slotModifyingIndex: number | undefined) {
           if (globalThis.player && slotModifyingIndex !== undefined) {
             globalThis.player.cards[slotModifyingIndex] = '';
             recalcPositionForCards(globalThis.player, underworld);
-            toggleInventory(undefined, false);
+            toggleInventory(undefined, false, underworld);
           }
         })
       }
@@ -246,12 +249,12 @@ export function syncInventory(slotModifyingIndex: number | undefined) {
     console.error('Cannot sync inventory, globalThis.player is undefined');
   }
 }
-export function toggleInventory(toolbarIndex: number | undefined, forceState: boolean | undefined) {
+export function toggleInventory(toolbarIndex: number | undefined, forceState: boolean | undefined, underworld: Underworld) {
   if (globalThis.headless) { return; }
   document.body?.classList.toggle(openInvClass, forceState);
   if (globalThis.player && document.body?.classList.contains(openInvClass)) {
     // Create inventory
-    syncInventory(toolbarIndex);
+    syncInventory(toolbarIndex, underworld);
   } else {
     // When inventory closes, remove active toolbar element class
     document.querySelectorAll('.active-toolbar-element').forEach(e => e.classList.remove(ACTIVE_TOOLBAR_ELEMENT_CLASSNAME))
@@ -260,19 +263,20 @@ export function toggleInventory(toolbarIndex: number | undefined, forceState: bo
 const ACTIVE_TOOLBAR_ELEMENT_CLASSNAME = 'active-toolbar-element'
 function addToolbarListener(
   element: HTMLElement,
-  toolbarIndex: number
+  toolbarIndex: number,
+  underworld: Underworld
 ) {
   element.addEventListener('contextmenu', (e) => {
     if (element.classList.contains(ACTIVE_TOOLBAR_ELEMENT_CLASSNAME)) {
       // just close the inventory
-      toggleInventory(undefined, false);
+      toggleInventory(undefined, false, underworld);
     } else {
       document.querySelectorAll(`.${ACTIVE_TOOLBAR_ELEMENT_CLASSNAME}`).forEach(el => {
         el.classList.remove(ACTIVE_TOOLBAR_ELEMENT_CLASSNAME);
       })
       // Otherwise open the inventory with the right-clicked element selected
       element.classList.add(ACTIVE_TOOLBAR_ELEMENT_CLASSNAME)
-      toggleInventory(toolbarIndex, true);
+      toggleInventory(toolbarIndex, true, underworld);
     }
     e.preventDefault();
     e.stopPropagation();
@@ -284,6 +288,7 @@ function addListenersToCardElement(
   player: Player.IPlayer,
   element: HTMLElement,
   cardId: string,
+  underworld: Underworld
 ) {
   if (globalThis.headless) {
     return;
@@ -341,7 +346,7 @@ function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string
     const clone = element.cloneNode(true) as HTMLElement;
     // Selected cards are not draggable for rearranging
     clone.draggable = false;
-    addListenersToCardElement(player, clone, cardId);
+    addListenersToCardElement(player, clone, cardId, underworld);
     clone.classList.add('selected');
     const card = Cards.allCards[cardId]
     if (card?.requiresFollowingCard) {
@@ -574,7 +579,7 @@ export function updateCardBadges(underworld: Underworld) {
         if (elBadgeH) {
           // onDamageEvents alter the healthCost of cards that cost health to cast
           // such as 'bite', 'vulnerable', or 'shield'
-          updateHealthBadge(elBadgeH, composeOnDamageEvents(predictionPlayerUnit, cost.healthCost, true), card);
+          updateHealthBadge(elBadgeH, composeOnDamageEvents(predictionPlayerUnit, cost.healthCost, underworld, true), card);
         }
       }
     }
@@ -593,7 +598,7 @@ export function updateCardBadges(underworld: Underworld) {
       // onDamageEvents alter the healthCost of cards that cost health to cast
       // such as 'bite', 'vulnerable', or 'shield'
       for (let elBadgeHealth of elBadgeHealths) {
-        updateHealthBadge(elBadgeHealth, composeOnDamageEvents(predictionPlayerUnit, cost.healthCost, true), card);
+        updateHealthBadge(elBadgeHealth, composeOnDamageEvents(predictionPlayerUnit, cost.healthCost, underworld, true), card);
       }
     }
 

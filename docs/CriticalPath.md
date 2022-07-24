@@ -13,13 +13,13 @@
     - More interactable doodads (explosive barrels, movable cover)
     - Better liquid
     - Simpler tiles?
-    - Get Che new standard for tile art
+    - Unblock Che for tile art
 - Milestone 3 | **Balance**
     - Increase difficulty
         - Difficulty is directly related to fun, it isn't a puzzel if you can just "hurt" your way through it over and over
     - Smaller levels
         - Since this is turn based, super large levels are obnoxious
-- Milestone X | **Movement** | Due Date Ongoing
+- Milestone X | **Movement & Spell Quantity** | Due Date Ongoing
     - Pack 14 | Spell quantity
         - What happens when multiple, identical spells are cast in sequence?
             - Pass a quantity var to the spell and have each spell handle it manually, do not allow them to be .effect() back to back
@@ -56,6 +56,7 @@
 - Milestone X | **Beta Testers** | Due October 1
     - Tutorial / Explain prompts based on user actions
     - Optimize game
+        - repelCircleFromLine is used for both unit crowding and wall physics and with wall physics it doesn't need a reference to underworld, that's only needed for unit crowding to make sure they don't crowd each other through walls
         - Memory Leaks: call destroy() on any Graphics object you no longer need to avoid memory leaks.
         - Stress test droplets to see how many users they can support
         - Check ImmediateModeSprites for leaks

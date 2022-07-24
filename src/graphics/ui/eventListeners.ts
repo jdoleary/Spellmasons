@@ -56,7 +56,7 @@ export function keypressListener(underworld: Underworld, event: KeyboardEvent) {
 
   switch (event.code) {
     case 'KeyI':
-      CardUI.toggleInventory(undefined, undefined);
+      CardUI.toggleInventory(undefined, undefined, underworld);
       break;
     case 'Space':
       underworld.endMyTurn();
@@ -130,7 +130,7 @@ export function keydownListener(underworld: Underworld, event: KeyboardEvent) {
       }
       break;
     case 'Tab':
-      CardUI.toggleInventory(undefined, undefined);
+      CardUI.toggleInventory(undefined, undefined, underworld);
       event.preventDefault();
       break;
     case 'Backspace':
@@ -220,7 +220,7 @@ export function mouseMove(underworld: Underworld, e?: MouseEvent) {
 
     if (globalThis.RMBDown) {
       if (underworld.isMyTurn()) {
-        drawWalkRope(mouseTarget);
+        drawWalkRope(mouseTarget, underworld);
         // If player is able to move
         if (globalThis.player.unit.stamina > 0) {
           // Move up to but not onto intersection or else unit will get stuck ON linesegment
@@ -249,7 +249,7 @@ export function mouseMove(underworld: Underworld, e?: MouseEvent) {
   // havent changed since last call.
 
   // Show faint circle on clickable entities on hover:
-  drawCircleUnderTarget(mouseTarget, 1.0, globalThis.planningViewGraphics);
+  drawCircleUnderTarget(mouseTarget, underworld, 1.0, globalThis.planningViewGraphics);
 
 
   // Test pathing
@@ -308,7 +308,7 @@ export function mouseMove(underworld: Underworld, e?: MouseEvent) {
 
   }
 }
-function drawWalkRope(target: Vec2) {
+function drawWalkRope(target: Vec2, underworld: Underworld) {
   if (!globalThis.player) {
     return
   }
@@ -426,7 +426,7 @@ export function clickHandler(underworld: Underworld, _e: MouseEvent) {
     return;
   }
   const mousePos = underworld.getMousePos();
-  if (isOutOfBounds(mousePos)) {
+  if (isOutOfBounds(mousePos, underworld)) {
     // Disallow click out of bounds
     return;
   }
@@ -500,7 +500,7 @@ export function clickHandler(underworld: Underworld, _e: MouseEvent) {
           // Cancel Casting
           return;
         }
-        clearSpellEffectProjection();
+        clearSpellEffectProjection(underworld);
         // Clear resMarkers so they don't hang around once the spell is cast
         globalThis.resMarkers = [];
 
@@ -521,6 +521,6 @@ export function clickHandler(underworld: Underworld, _e: MouseEvent) {
       });
     }
   } else {
-    updateTooltipSelection(mousePos);
+    updateTooltipSelection(mousePos, underworld);
   }
 }

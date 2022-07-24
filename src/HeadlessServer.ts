@@ -42,10 +42,6 @@ function headlessStartGame() {
             readyState.set('wsPieRoomJoined', true, hostAppInst.underworld);
             // Headless does NOT use graphics so this can be set to true immediately
             readyState.set('pixiAssets', true, hostAppInst.underworld);
-            // Initialize content
-            Cards.registerCards(hostAppInst.underworld);
-            Units.registerUnits();
-            readyState.set("content", true, hostAppInst.underworld);
             // Generate the level data
             hostAppInst.underworld.lastLevelCreated = hostAppInst.underworld.generateLevelDataSyncronous(0);
             // Actually create it
@@ -74,8 +70,10 @@ class HostApp implements IHostApp {
     isHostApp: boolean = true;
     // Automatically overridden when passed into pie.startServer
     sendData: (msg: string) => void = () => { };
-    underworld: Underworld = new Underworld(Math.random().toString());
-    constructor() { }
+    underworld: Underworld;
+    constructor() {
+        this.underworld = new Underworld(this, Math.random().toString());
+    }
     onData(data: any) {
         onData(data, this.underworld);
     }

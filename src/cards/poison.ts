@@ -2,6 +2,7 @@ import { IUnit, takeDamage } from '../entity/Unit';
 import * as Image from '../graphics/Image';
 import type { Spell } from '.';
 import * as Unit from '../entity/Unit';
+import Underworld from '../Underworld';
 
 export const id = 'poison';
 const imageName = 'poison.png'
@@ -40,9 +41,9 @@ const spell: Spell = {
 Poisons all target(s).  Poison will deal 1 base damage every turn
 at the start of the unit's turn.
     `,
-    effect: async (state) => {
+    effect: async (state, underworld) => {
       for (let unit of state.targetedUnits) {
-        Unit.addModifier(unit, id);
+        Unit.addModifier(unit, id, underworld);
       }
       return state;
     },
@@ -64,7 +65,7 @@ at the start of the unit's turn.
 
   },
   events: {
-    onTurnStart: async (unit: IUnit, prediction: boolean) => {
+    onTurnStart: async (unit: IUnit, prediction: boolean, underworld: Underworld) => {
       // TODO: There was a bug here where somehow modifiers['poison'] was undefined after i did chain, vulx10, poisonx10
       const modifier = unit.modifiers[id];
       if (modifier) {

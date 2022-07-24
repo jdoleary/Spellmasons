@@ -176,7 +176,7 @@ export function create(
     unit.image?.sprite.scale.set(config.NON_HEAVY_UNIT_SCALE);
     if (sourceUnit.init) {
       // Initialize unit IF unit contains initialization function
-      sourceUnit.init(unit);
+      sourceUnit.init(unit, underworld);
     }
     setupShaders(unit);
 
@@ -203,13 +203,13 @@ function setupShaders(unit: IUnit) {
   }
 }
 
-export function addModifier(unit: IUnit, key: string) {
+export function addModifier(unit: IUnit, key: string, underworld: Underworld) {
   if (unit.alive) {
     // Call custom modifier's add function
     const modifier = allModifiers[key];
     if (modifier) {
       if (modifier.add) {
-        modifier.add(unit);
+        modifier.add(unit, underworld);
       } else {
         console.error('No "add" modifier for ', key);
       }
@@ -221,7 +221,7 @@ export function addModifier(unit: IUnit, key: string) {
   }
 }
 
-export function removeModifier(unit: IUnit, key: string) {
+export function removeModifier(unit: IUnit, key: string, underworld: Underworld) {
   const modifier = allModifiers[key];
   if (modifier && modifier.subsprite) {
     Image.removeSubSprite(unit.image, modifier.subsprite.imageName);
@@ -237,7 +237,7 @@ export function removeModifier(unit: IUnit, key: string) {
   // Call custom modifier's remove function
   const customRemoveFn = allModifiers[key]?.remove;
   if (customRemoveFn) {
-    customRemoveFn(unit);
+    customRemoveFn(unit, underworld);
   }
 
 }
@@ -552,12 +552,12 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
     // Note: This must come AFTER onDeathEvents or else it will remove the modifier
     // that added the onDeathEvent and the onDeathEvent won't trigger
     for (let [modifier, _modifierProperties] of Object.entries(unit.modifiers)) {
-      removeModifier(unit, modifier);
+      removeModifier(unit, modifier, underworld);
     }
   }
 
   if (globalThis.player && globalThis.player.unit == unit) {
-    clearSpellEffectProjection();
+    clearSpellEffectProjection(underworld);
     CardUI.clearSelectedCards(underworld);
     centeredFloatingText(`💀 You Died 💀`, 'red');
   }
@@ -572,20 +572,20 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   // Once a unit dies it is no longer on it's originalLife
   unit.originalLife = false;
 }
-export function composeOnDamageEvents(unit: IUnit, damage: number, prediction: boolean): number {
+export function composeOnDamageEvents(unit: IUnit, damage: number, underworld: Underworld, prediction: boolean): number {
   // Compose onDamageEvents
   for (let eventName of unit.onDamageEvents) {
     const fn = Events.onDamageSource[eventName];
     if (fn) {
       // onDamage events can alter the amount of damage taken
-      damage = fn(unit, damage, prediction);
+      damage = fn(unit, damage, underworld, prediction);
     }
   }
   return damage
 
 }
 export function takeDamage(unit: IUnit, amount: number, underworld: Underworld, prediction: boolean, _state?: EffectState) {
-  amount = composeOnDamageEvents(unit, amount, prediction);
+  amount = composeOnDamageEvents(unit, amount, underworld, prediction);
   if (amount == 0) {
     return;
   }
@@ -853,7 +853,7 @@ export function inRange(unit: IUnit, coords: Vec2): boolean {
 }
 
 // return boolean signifies if unit should abort their turn
-export async function runTurnStartEvents(unit: IUnit, prediction: boolean = false): Promise<boolean> {
+export async function runTurnStartEvents(unit: IUnit, prediction: boolean = false, underworld: Underworld): Promise<boolean> {
   // Note: This must be a for loop instead of a for..of loop
   // so that if one of the onTurnStartEvents modifies the
   // unit's onTurnStartEvents array (for example, after death)
@@ -864,7 +864,7 @@ export async function runTurnStartEvents(unit: IUnit, prediction: boolean = fals
     if (eventName) {
       const fn = Events.onTurnStartSource[eventName];
       if (fn) {
-        const shouldAbortTurn = await fn(unit, prediction);
+        const shouldAbortTurn = await fn(unit, prediction, underworld);
         // Only change abort turn from false to true,
         // never from turn to false because if any one
         // of the turn start events needs the unit to abort

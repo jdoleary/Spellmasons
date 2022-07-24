@@ -48,7 +48,7 @@ export function updatePlanningView(underworld: Underworld) {
     }
     if (selectedPickup) {
       // Draw circle to show that pickup is selected
-      drawCircleUnderTarget(selectedPickup, 1.0, planningViewGraphics);
+      drawCircleUnderTarget(selectedPickup, underworld, 1.0, planningViewGraphics);
     }
     // Draw UI for the selectedUnit
     if (selectedUnit) {
@@ -56,7 +56,7 @@ export function updatePlanningView(underworld: Underworld) {
         selectedUnit.alive
       ) {
         // Draw circle to show that unit is selected
-        drawCircleUnderTarget(selectedUnit, 1.0, planningViewGraphics);
+        drawCircleUnderTarget(selectedUnit, underworld, 1.0, planningViewGraphics);
         // If selectedUnit is an archer, draw LOS attack line
         //  instead of attack range for them
         if (selectedUnit.unitSubType == UnitSubType.RANGED_LOS) {
@@ -128,7 +128,7 @@ export function updatePlanningView(underworld: Underworld) {
     // Draw a circle under the feet of the player whos current turn it is
     if (underworld) {
       // Update tooltip for whatever is being hovered
-      updateTooltipContent();
+      updateTooltipContent(underworld);
 
       if (globalThis.player) {
         // Only draw circle if player isn't moving to avoid UI thrashing
@@ -166,7 +166,7 @@ export function updateManaCostUI(underworld: Underworld): CardCost {
 }
 
 // Returns true if castCards has effect
-async function showCastCardsPrediction(target: Vec2, casterUnit: Unit.IUnit, cardIds: string[], outOfRange: boolean): Promise<boolean> {
+async function showCastCardsPrediction(underworld: Underworld, target: Vec2, casterUnit: Unit.IUnit, cardIds: string[], outOfRange: boolean): Promise<boolean> {
   if (globalThis.player) {
     // Note: setPredictionGraphicsLineStyle must be called before castCards (because castCards may use it
     // to draw predictions) and after clearSpellEffectProjection, which clears predictionGraphics.
@@ -183,7 +183,7 @@ async function showCastCardsPrediction(target: Vec2, casterUnit: Unit.IUnit, car
     );
     // Show units as targeted
     for (let targetedUnit of effectState.targetedUnits) {
-      drawTarget(targetedUnit, outOfRange);
+      drawTarget(targetedUnit, outOfRange, underworld);
     }
     for (let unitStats of effectState.aggregator.unitDamage) {
       // If a unit is currently alive and will take fatal damage,
@@ -214,7 +214,7 @@ export async function runPredictions(underworld: Underworld) {
   const startTime = Date.now();
   const mousePos = underworld.getMousePos();
   // Clear the spelleffectprojection in preparation for showing the current ones
-  clearSpellEffectProjection();
+  clearSpellEffectProjection(underworld);
   // only show hover target when it's the correct turn phase
   if (underworld.turn_phase == turn_phase.PlayerTurns) {
 
@@ -236,7 +236,7 @@ export async function runPredictions(underworld: Underworld) {
           const endOfRangeTarget = getEndOfRangeTarget(globalThis.player, target);
           // Note, showCastCardsPredition's outOfRange is explicitly set to false because the endOfRangeTarget
           // is by-definition, in range because it is the literal end of the player's range
-          const didHaveEffect = await showCastCardsPrediction(endOfRangeTarget, casterUnit, cardIds, false);
+          const didHaveEffect = await showCastCardsPrediction(underworld, endOfRangeTarget, casterUnit, cardIds, false);
           if (!didHaveEffect) {
             // Note: we have to resync prediction units since castCards will have been called twice in 
             // this prediction cycle within this branch. Otherwise our player's prediction mana
@@ -250,11 +250,11 @@ export async function runPredictions(underworld: Underworld) {
             }
             // If the cast at the end of range had no effect then predict what would happen at the actual
             // target so players can see what it will do if they do get close enough to cast
-            await showCastCardsPrediction(target, casterUnit, cardIds, outOfRange);
+            await showCastCardsPrediction(underworld, target, casterUnit, cardIds, outOfRange);
           }
         } else {
           // If they are within range, just predict like normal, easy peasy.
-          await showCastCardsPrediction(target, casterUnit, cardIds, outOfRange);
+          await showCastCardsPrediction(underworld, target, casterUnit, cardIds, outOfRange);
         }
       }
       // Send this client's intentions to the other clients so they can see what they're thinking
@@ -266,7 +266,7 @@ export async function runPredictions(underworld: Underworld) {
       globalThis.attentionMarkers = [];
       if (globalThis.player) {
         for (let u of globalThis.predictionUnits || []) {
-          const skipTurn = await Unit.runTurnStartEvents(u, true);
+          const skipTurn = await Unit.runTurnStartEvents(u, true, underworld);
           if (skipTurn) {
             continue;
           }
@@ -303,7 +303,7 @@ export async function runPredictions(underworld: Underworld) {
 }
 
 // SpellEffectProjection are images to denote some information, such as the spell or action about to be cast/taken when clicked
-export function clearSpellEffectProjection() {
+export function clearSpellEffectProjection(underworld: Underworld) {
   if (!globalThis.animatingSpells) {
     if (predictionGraphics) {
       predictionGraphics.clear();
@@ -344,7 +344,7 @@ export function setPredictionGraphicsLineStyle(color: number) {
     predictionGraphics.lineStyle(3, color, 1.0)
   }
 }
-export function drawTarget(unit: Unit.IUnit, isOutOfRange: boolean) {
+export function drawTarget(unit: Unit.IUnit, isOutOfRange: boolean, underworld: Underworld) {
   // Convert prediction unit's associated real unit
   const realUnit = underworld.units.find(u => u.id == unit.id);
   if (realUnit && realUnit.image) {
@@ -373,7 +373,7 @@ export function drawPredictionCircleFill(target: Vec2, radius: number) {
   }
 }
 
-export function isOutOfBounds(target: Vec2) {
+export function isOutOfBounds(target: Vec2, underworld: Underworld) {
   return (
     target.x < underworld.limits.xMin || target.x >= underworld.limits.xMax || target.y < underworld.limits.yMin || target.y >= underworld.limits.yMax
   );
@@ -393,7 +393,7 @@ const elInspectorTooltipImage: HTMLImageElement = (document.getElementById(
 let selectedType: "unit" | "pickup" | "obstacle" | null = null;
 let selectedUnit: Unit.IUnit | undefined;
 let selectedPickup: Pickup.IPickup | undefined;
-export function updateTooltipContent() {
+export function updateTooltipContent(underworld: Underworld) {
   if (
     !(
       elInspectorTooltipContent &&
@@ -496,7 +496,7 @@ export function clearTooltipSelection(): boolean {
     return false;
   }
 }
-export function updateTooltipSelection(mousePos: Vec2) {
+export function updateTooltipSelection(mousePos: Vec2, underworld: Underworld) {
 
   // Find unit:
   const unit = underworld.getUnitAt(mousePos);
@@ -521,7 +521,7 @@ export function updateTooltipSelection(mousePos: Vec2) {
 }
 
 // Draws a faint circle over things that can be clicked on
-export function drawCircleUnderTarget(mousePos: Vec2, opacity: number, graphics: PIXI.Graphics | undefined) {
+export function drawCircleUnderTarget(mousePos: Vec2, underworld: Underworld, opacity: number, graphics: PIXI.Graphics | undefined) {
   if (!graphics) {
     // For headless
     return;

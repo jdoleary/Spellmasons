@@ -57,9 +57,9 @@ export function normalizedVector(point1: Vec2, point2: Vec2): { vector: Vec2 | u
     // Return the normalized vector and the distance between the two points
     return { vector: { x: a, y: b }, distance: bigC };
 }
-export function collideWithLineSegments(circle: Circle, lineSegments: LineSegment[]) {
+export function collideWithLineSegments(circle: Circle, lineSegments: LineSegment[], underworld: Underworld) {
     for (let line of lineSegments) {
-        repelCircleFromLine(circle, line);
+        repelCircleFromLine(circle, line, underworld);
     }
 }
 
@@ -151,7 +151,7 @@ function repelCircles(mover: Circle, originalPosition: Vec2, other: Circle, unde
 // Note: this function is only meant to handle small increments of movements, this function
 // will not account for the case where the destination does not intersect
 // a line but the mover would travel through a linesegment on it's way to destination.  This is by design.
-function repelCircleFromLine(mover: Circle, line: LineSegment) {
+function repelCircleFromLine(mover: Circle, line: LineSegment, underworld: Underworld) {
     // The radius used for the line points makes up the different between a regular unit collision radius and the units physicsMover's radius
     // The units physicsMover's radius is small so that units can "squeeze" past each other, but I want the full unit size to collide
     // with walls (lines and their verticies).

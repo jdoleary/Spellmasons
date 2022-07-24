@@ -4,7 +4,7 @@ import Underworld from './Underworld';
 
 export type onDamage = {
   // Returns a possibly modified damage
-  (unit: IUnit, amount: number, prediction: boolean, damageDealer?: IUnit): number;
+  (unit: IUnit, amount: number, underworld: Underworld, prediction: boolean, damageDealer?: IUnit): number;
 };
 
 const onDamageSource: { [name: string]: onDamage } = {};
@@ -28,10 +28,10 @@ const onAgroSource: { [name: string]: onAgro } = {};
 
 export type onTurnStart = {
   // Return boolean skips the turn if true
-  (unit: IUnit, prediction: boolean): Promise<boolean>;
+  (unit: IUnit, prediction: boolean, underworld: Underworld): Promise<boolean>;
 };
 const onTurnStartSource: { [name: string]: onTurnStart } = {};
-export type onTurnEnd = { (unit: IUnit): Promise<void>; }
+export type onTurnEnd = { (unit: IUnit, underworld: Underworld): Promise<void>; }
 const onTurnEndSource: { [name: string]: onTurnEnd } = {};
 
 export default {

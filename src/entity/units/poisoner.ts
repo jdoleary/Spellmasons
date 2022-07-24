@@ -27,7 +27,7 @@ const unit: UnitSource = {
     die: 'units/poisDeath',
     walk: 'units/poisWalk',
   },
-  action: async (unit: Unit.IUnit) => {
+  action: async (unit: Unit.IUnit, _attackTarget, underworld) => {
     const nonPoisonedEnemyUnits = underworld.units.filter(
       (u) =>
         u.faction !== unit.faction &&
@@ -44,7 +44,7 @@ const unit: UnitSource = {
             chosenUnit,
             'projectile/poisonerProjectile',
           ).then(() => {
-            Unit.addModifier(chosenUnit, poison.id);
+            Unit.addModifier(chosenUnit, poison.id, underworld);
             // Add projectile hit animation
             const animationSprite = addPixiSpriteAnimated('projectile/poisonerProjectileHit', containerUnits, {
               loop: false,

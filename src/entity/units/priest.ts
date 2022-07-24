@@ -102,7 +102,7 @@ const unit: UnitSource = {
             if (Unit.inRange(unit, closestAlly)) {
               await Unit.playAnimation(unit, unit.animations.attack);
               await animatePriestProjectileAndHit(unit, closestAlly);
-              Unit.addModifier(closestAlly, Shield.card.id);
+              Unit.addModifier(closestAlly, Shield.card.id, underworld);
               // Remove mana once the cast occurs
               unit.mana -= CAST_MANA_COST;
               didAction = true;

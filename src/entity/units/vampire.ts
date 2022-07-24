@@ -28,8 +28,8 @@ const unit: UnitSource = {
     die: 'units/vampireDeath',
     walk: 'units/vampireWalk',
   },
-  init: (unit: Unit.IUnit) => {
-    Unit.addModifier(unit, vampire_bite.id);
+  init: (unit: Unit.IUnit, underworld: Underworld) => {
+    Unit.addModifier(unit, vampire_bite.id, underworld);
   },
   action: async (unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, underworld: Underworld, canAttackTarget: boolean) => {
     if (!Unit.canMove(unit)) {
@@ -51,7 +51,7 @@ const unit: UnitSource = {
     if (withinMeleeRange(unit, attackTarget)) {
       await Unit.playAnimation(unit, unit.animations.attack);
       Unit.takeDamage(attackTarget, unit.damage, underworld, false, undefined);
-      Unit.addModifier(attackTarget, vampire_bite.id);
+      Unit.addModifier(attackTarget, vampire_bite.id, underworld);
     }
   }
 };

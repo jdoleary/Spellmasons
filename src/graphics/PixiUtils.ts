@@ -355,6 +355,7 @@ export function setupPixi(): Promise<void> {
   }
 
   return loadTextures().then(() => {
+    readyState.set('pixiAssets', true);
     // Resolve the setupPixiPromise so that the menu knows
     // that pixijs is ready
     globalThis.pixiPromiseResolver?.();

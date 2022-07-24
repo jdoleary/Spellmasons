@@ -309,24 +309,34 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
 }
 async function handleLoadGameState(payload: {
   level: LevelData,
-  underworld: IUnderworldSerializedForSyncronize,
+  underworldSerialized: IUnderworldSerializedForSyncronize,
   phase: turn_phase,
   units: Unit.IUnitSerialized[],
   players: Player.IPlayerSerialized[]
-}, preExistingUnderworld: Underworld) {
+}, underworld: Underworld) {
   console.log("Setup: Load game state", payload)
-  if (preExistingUnderworld) {
-    preExistingUnderworld.cleanup();
-  }
-  const { level, underworld: payloadUnderworld, phase, units, players } = payload
+  const { level, underworldSerialized: payloadUnderworld, phase, units, players } = payload
   // Sync underworld properties
   const loadedGameState: IUnderworldSerializedForSyncronize = { ...payloadUnderworld };
-  // TODO overwrite underworld, don't reassign
-  const underworld = new Underworld(loadedGameState.seed, loadedGameState.RNGState);
   underworld.levelIndex = loadedGameState.levelIndex;
+
+  underworld.seed = loadedGameState.seed;
+  if (loadedGameState.RNGState) {
+    underworld.syncronizeRNG(loadedGameState.RNGState);
+  }
+  underworld.turn_phase = loadedGameState.turn_phase;
+  underworld.turn_number = loadedGameState.turn_number;
+  underworld.forceMove = loadedGameState.forceMove;
+  underworld.processedMessageCount = loadedGameState.processedMessageCount;
+  underworld.cardDropsDropped = loadedGameState.cardDropsDropped;
+  underworld.enemiesKilled = loadedGameState.enemiesKilled;
+  underworld.forceMove = loadedGameState.forceMove;
+
   // Sync Level.  Must await createLevel since it uses setTimeout to ensure that
   // the DOM can update with the "loading..." message before locking up the CPU with heavy processing.
   // This is important so that createLevel runs BEFORE loading units and syncing Players
+  // Note: createLevel syncronizes a bunch of underworld properties; for example it invokes cache_walls.
+  // Check if carefully befor manually syncronizing properties
   await underworld.createLevel(level);
 
   // Load units

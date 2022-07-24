@@ -66,12 +66,7 @@ function setupAll() {
   // Initialize Assets
   console.log("Setup: Loading Pixi assets...")
   setupPixi().then(() => {
-    readyState.set('pixiAssets', true);
     console.log("Setup: Done loading Pixi assets.")
-    // Initialize content
-    Cards.registerCards(underworld);
-    Units.registerUnits();
-    readyState.set("content", true);
     initPlanningView();
     // if (storage.get(SKIP_TUTORIAL) === YES) {
     globalThis.setMenu?.('PLAY');

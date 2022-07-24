@@ -219,7 +219,8 @@ describe.skip('repelCircleFromLine', () => {
             c1.x = destination.x;
             c1.y = destination.y;
             for (let line of lineSegments) {
-                repelCircleFromLine(c1, line);
+                // @ts-ignore underworld force set to undefined for this test
+                repelCircleFromLine(c1, line, undefined);
             }
             const { duration } = performance.measure(
                 'end',
@@ -237,6 +238,7 @@ describe.skip('repelCircleFromLine', () => {
         // Actually move the mover
         c1.x = destination.x;
         c1.y = destination.y;
+        // @ts-ignore underworld force set to undefined for this test
         repelCircleFromLine(c1, line);
         expect(c1.x).toEqual(2);
     });
@@ -249,6 +251,7 @@ describe.skip('repelCircleFromLine', () => {
         // Actually move the mover
         c1.x = destination.x;
         c1.y = destination.y;
+        // @ts-ignore forcing underworld to undefined for this test
         repelCircleFromLine(c1, line);
         expect(c1.x).toEqual(2);
         expect(c1.y).toEqual(1);
@@ -262,7 +265,8 @@ describe.skip('repelCircleFromLine', () => {
         // Actually move the mover
         c1.x = destination.x;
         c1.y = destination.y;
-        repelCircleFromLine(c1, line);
+        // @ts-ignore forcing underworld to undefined for this test
+        repelCircleFromLine(c1, line, undefined);
         expect(c1.x).toEqual(2);
     });
 });

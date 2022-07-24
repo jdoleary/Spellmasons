@@ -2,6 +2,7 @@ import * as Unit from '../entity/Unit';
 import * as Image from '../graphics/Image';
 import type { Spell } from '.';
 import floatingText from '../graphics/FloatingText';
+import Underworld from '../Underworld';
 
 const id = 'shield';
 const imageName = 'shield.png';
@@ -19,9 +20,9 @@ const spell: Spell = {
     description: `
 Protects bearer from the next ${damageBlocked} damage that they would incur.
     `,
-    effect: async (state) => {
+    effect: async (state, underworld) => {
       for (let unit of state.targetedUnits) {
-        Unit.addModifier(unit, id);
+        Unit.addModifier(unit, id, underworld);
       }
       return state;
     },
@@ -42,7 +43,7 @@ Protects bearer from the next ${damageBlocked} damage that they would incur.
     },
   },
   events: {
-    onDamage: (unit, amount, prediction, damageDealer) => {
+    onDamage: (unit, amount, underworld, prediction, damageDealer) => {
       const modifier = unit.modifiers[id];
       if (modifier) {
         // Only block damage, not heals
@@ -61,7 +62,7 @@ Protects bearer from the next ${damageBlocked} damage that they would incur.
           modifier.damage_block -= amount - adjustedAmount;
 
           if (modifier && modifier.damage_block <= 0) {
-            Unit.removeModifier(unit, id);
+            Unit.removeModifier(unit, id, underworld);
           }
 
           return adjustedAmount;

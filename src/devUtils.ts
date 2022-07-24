@@ -112,7 +112,7 @@ export function setupDevGlobalFunctions(underworld: Underworld) {
             // predictionUnits so that the player's prediction copy
             // has the same mana and health
             underworld.syncPredictionEntities();
-            syncInventory(undefined);
+            syncInventory(undefined, underworld);
         }
     }
 

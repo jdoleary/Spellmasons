@@ -19,7 +19,7 @@ in the future.
     `,
     effect: async (state, underworld, prediction) => {
       for (let unit of state.targetedUnits) {
-        Unit.addModifier(unit, id);
+        Unit.addModifier(unit, id, underworld);
       }
       return state;
     },
@@ -40,7 +40,7 @@ in the future.
     },
   },
   events: {
-    onDamage: (unit, amount, damageDealer) => {
+    onDamage: (unit, amount, _underworld, damageDealer) => {
       // Magnify positive damage
       if (amount > 0) {
         return amount * 2;

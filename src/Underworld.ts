@@ -1,6 +1,7 @@
 import seedrandom from 'seedrandom';
 import * as config from './config';
 import * as Unit from './entity/Unit';
+import * as Units from './entity/units';
 import * as Pickup from './entity/Pickup';
 import * as Obstacle from './entity/Obstacle';
 import * as Player from './entity/Player';
@@ -132,17 +133,22 @@ export default class Underworld {
     this.pie = pie;
     this.seed = globalThis.seedOverride || seed;
 
+    // Initialize content
+    Cards.registerCards(this);
+    Units.registerUnits();
+    readyState.set("content", true);
+
     // Setup global functions that need access to underworld:
     setupNetworkHandlerGlobalFunctions(this);
     setupDevGlobalFunctions(this);
 
-    if (elSeed) {
-      elSeed.innerText = `Seed: ${this.seed}`;
-    }
-    console.log("RNG create with seed:", this.seed, ", state: ", RNGState);
+    // Setup UI event listeners
+    CardUI.setupCardUIEventListeners(this);
+
     this.random = this.syncronizeRNG(RNGState);
     this.ensureAllClientsHaveAssociatedPlayers(getClients());
 
+    readyState.set('underworld', true, this);
     // Start the gameloop
     requestAnimationFrameGameLoopId = requestAnimationFrame(this.gameLoop);
   }
@@ -181,6 +187,10 @@ export default class Underworld {
     globalThis.predictionPickups = this.pickups.map(Pickup.copyForPredictionPickup);
   }
   syncronizeRNG(RNGState: SeedrandomState | boolean) {
+    if (elSeed) {
+      elSeed.innerText = `Seed: ${this.seed}`;
+    }
+    console.log("RNG create with seed:", this.seed, ", state: ", RNGState);
     // state of "true" initializes the RNG with the ability to save it's state,
     // state of a state object, rehydrates the RNG to a particular state
     this.random = seedrandom(this.seed, { state: RNGState })
@@ -199,7 +209,7 @@ export default class Underworld {
     const lastPosition = Vec.clone(pushedObject);
     const aliveUnits = ((prediction && globalThis.predictionUnits) ? globalThis.predictionUnits : this.units).filter(u => u.alive);
     moveWithCollisions(pushedObject, Vec.add(pushedObject, velocity), aliveUnits, this);
-    collideWithLineSegments(pushedObject, this.walls);
+    collideWithLineSegments(pushedObject, this.walls, this);
     forceMoveInst.velocity = Vec.multiply(velocity_falloff, velocity);
     Obstacle.checkLiquidInteractionDueToForceMovement(forceMoveInst, lastPosition, this, prediction);
     if (Unit.isUnit(forceMoveInst.pushedObject)) {
@@ -1131,7 +1141,7 @@ export default class Underworld {
       await Promise.all(unit.onTurnEndEvents.map(
         async (eventName) => {
           const fn = Events.onTurnEndSource[eventName];
-          return fn ? await fn(unit) : false;
+          return fn ? await fn(unit, this) : false;
         },
       ));
     }
@@ -1228,7 +1238,7 @@ export default class Underworld {
       const onTurnStartEventResults: boolean[] = await Promise.all(player.unit.onTurnStartEvents.map(
         async (eventName) => {
           const fn = Events.onTurnStartSource[eventName];
-          return fn ? await fn(player.unit, false) : false;
+          return fn ? await fn(player.unit, false, this) : false;
         },
       ));
       if (onTurnStartEventResults.some((b) => b)) {
@@ -1282,7 +1292,7 @@ export default class Underworld {
       await Promise.all(player.unit.onTurnEndEvents.map(
         async (eventName) => {
           const fn = Events.onTurnEndSource[eventName];
-          return fn ? await fn(player.unit) : false;
+          return fn ? await fn(player.unit, this) : false;
         },
       ));
       console.log('PlayerTurn: End player turn', clientId);
@@ -1524,7 +1534,7 @@ export default class Underworld {
       (u) => u.unitType === UnitType.AI && u.alive && u.faction == faction,
     )) {
       // Trigger onTurnStart Events
-      const abortTurn = await Unit.runTurnStartEvents(u);
+      const abortTurn = await Unit.runTurnStartEvents(u, false, this);
       if (abortTurn) {
         continue unitloop;
       }
@@ -1786,10 +1796,10 @@ export default class Underworld {
               previousTargets.find((t) => t.x === targetedUnit.x && t.y === targetedUnit.y)
             ) {
               // Don't animate previous targets, they should be drawn full, immediately
-              drawTarget(targetedUnit, false);
+              drawTarget(targetedUnit, false, this);
             } else {
               // If a new target, animate it in
-              drawTarget(targetedUnit, false);
+              drawTarget(targetedUnit, false, this);
             }
           }
         }
@@ -2044,7 +2054,7 @@ export default class Underworld {
   //   this.cacheWalls();
   // }
   serializeForSyncronize(): IUnderworldSerializedForSyncronize {
-    const { players, units, pickups, random, processedMessageCount, gameLoop, ...rest } = this;
+    const { players, units, pickups, random, gameLoop, ...rest } = this;
     const serialized: IUnderworldSerializedForSyncronize = {
       ...rest,
       // the state of the Random Number Generator
@@ -2063,7 +2073,7 @@ type IUnderworldSerialized = Omit<typeof Underworld, "prototype" | "players" | "
   };
 type NonFunctionPropertyNames<T> = { [K in keyof T]: T[K] extends Function ? never : K }[keyof T];
 type UnderworldNonFunctionProperties = Exclude<NonFunctionPropertyNames<Underworld>, null | undefined>;
-export type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFunctionProperties>, "debugGraphics" | "players" | "units" | "pickups" | "obstacles" | "random" | "processedMessageCount" | "gameLoop">;
+export type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFunctionProperties>, "debugGraphics" | "players" | "units" | "pickups" | "obstacles" | "random" | "gameLoop">;
 
 // TODO: enforce max units at level index
 // Idea: Higher probability of tougher units at certain levels

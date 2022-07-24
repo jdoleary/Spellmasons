@@ -12,7 +12,7 @@ export type UnitAction = {
 export interface UnitSource {
   id: string;
   info: ConstructorInfo;
-  init?: (unit: Unit.IUnit) => void;
+  init?: (unit: Unit.IUnit, underworld: Underworld) => void;
   action: UnitAction;
   unitProps: Partial<Unit.IUnit>;
   extraTooltipInfo?: () => string;

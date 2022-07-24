@@ -1,4 +1,14 @@
 # Notes
+Into the breach notes:
+  - Shows what's going to happen next turn
+  - Shows when something's going to die
+  - Makes ONE button the obvious next choice
+    - (click to cast, backspace to cancel)
+  - everything labeled
+  - doesn't waste your time
+  - Menu screen shows faded game in background to show you are still in a game
+  - Uses gifs to show how moves work
+---
 [How to destroy](https://www.html5gamedevs.com/topic/30539-correct-way-to-remove-sprites-container/):
 ```
 correct way is

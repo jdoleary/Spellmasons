@@ -6,6 +6,7 @@ import { COLLISION_MESH_RADIUS } from '../config';
 import { createVisualLobbingProjectile } from '../entity/Projectile';
 import floatingText from '../graphics/FloatingText';
 import * as Unit from '../entity/Unit';
+import Underworld from '../Underworld';
 
 const id = 'contagious';
 const imageName = 'contagious.png'
@@ -38,7 +39,7 @@ Makes this unit's curses contagious to other nearby units
       for (let unit of state.targetedUnits) {
         // Don't add contagious more than once
         if (!unit.onTurnStartEvents.includes(id)) {
-          Unit.addModifier(unit, id);
+          Unit.addModifier(unit, id, underworld);
         }
       }
       return state;
@@ -61,7 +62,7 @@ Makes this unit's curses contagious to other nearby units
 
   },
   events: {
-    onTurnStart: async (unit: IUnit, prediction: boolean) => {
+    onTurnStart: async (unit: IUnit, prediction: boolean, underworld: Underworld) => {
       const nearByUnits = underworld.getUnitsWithinDistanceOfTarget(unit, COLLISION_MESH_RADIUS * 4, prediction)
         // Filter out undefineds
         .filter(x => x !== undefined)
@@ -89,7 +90,7 @@ Makes this unit's curses contagious to other nearby units
               floatingText({ coords: touchingUnit, text: card.id });
             }));
           }
-          Unit.addModifier(touchingUnit, card.id);
+          Unit.addModifier(touchingUnit, card.id, underworld);
         }
         await Promise.all(promises);
 

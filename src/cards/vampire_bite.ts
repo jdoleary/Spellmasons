@@ -47,7 +47,7 @@ const spell: Spell = {
     `,
     effect: async (state, underworld, prediction) => {
       for (let unit of state.targetedUnits) {
-        Unit.addModifier(unit, id);
+        Unit.addModifier(unit, id, underworld);
       }
       return state;
     },
@@ -58,7 +58,7 @@ const spell: Spell = {
     subsprite: undefined,
   },
   events: {
-    onDamage: (unit: IUnit, amount: number, prediction: boolean, damageDealer?: IUnit) => {
+    onDamage: (unit: IUnit, amount: number, _underworld: Underworld, prediction: boolean, damageDealer?: IUnit) => {
       // Takes healing as damage
       if (amount < 0) {
         return -1 * amount;
