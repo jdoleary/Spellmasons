@@ -1,6 +1,9 @@
 ## This weeks goals:
+- It's running hot for some reason
+- REQUEST_SYNC_PLAYERS causes an infinite loop, instead request LOAD_GAME_STATE
 - BUG BIG: After racetimeout it skips a message in queue:
     - it seems to happen if you end your turn while moving
+    - fixed now?
 ```
 Handle ONDATA MOVE_PLAYER 
 onData: END_TURN 
