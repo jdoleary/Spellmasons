@@ -208,4 +208,8 @@ declare global {
     var sfx: { [key: string]: string } | undefined;
     // svelte menu function to attempt to autoconnect if the queryString holds the info
     var tryAutoConnect: undefined | (() => void);
+    // Returns pie.isConnected()
+    var isConnected: undefined | (() => boolean);
+    // Disconnects pie from server
+    var pieDisconnect: undefined | (() => Promise<void>);
 }

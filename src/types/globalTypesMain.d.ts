@@ -138,4 +138,8 @@ declare global {
     var tryAutoConnect: undefined | (() => void);
     // Returns true if client is playing singleplayer OR if hostapp
     var isHost: (pie: PieClient | IHostApp) => boolean;
+    // Returns pie.isConnected()
+    var isConnected: () => boolean;
+    // Disconnects pie from server
+    var pieDisconnect: () => Promise<void>;
 }

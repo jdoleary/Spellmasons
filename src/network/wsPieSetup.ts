@@ -142,6 +142,9 @@ function addHandlers(pie: PieClient, underworld: Underworld) {
 
 export function setupPieAndUnderworld() {
   if (globalThis.headless) {
+    console.error('wsPieSetup is only for browser clients and should not be invoked from headless server.')
+    return;
+  } else {
     console.log('Client: Initialize PieClient');
     const pie = new PieClient();
     console.log('Client: Initialize Underworld');
@@ -159,6 +162,8 @@ export function setupPieAndUnderworld() {
       }
 
     });
+    globalThis.isConnected = pie.isConnected;
+    globalThis.pieDisconnect = pie.disconnect;
 
     globalThis.joinRoom = room_info => joinRoom(underworld, room_info);
     globalThis.startSingleplayer = function startSingleplayer() {
@@ -176,5 +181,8 @@ export function setupPieAndUnderworld() {
         }, 10)
       });
     }
+    globalThis.setMenu?.('PLAY');
+    setView(View.Menu);
+    globalThis.tryAutoConnect?.();
   }
 }

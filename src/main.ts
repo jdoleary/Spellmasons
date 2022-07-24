@@ -67,9 +67,6 @@ function setupAll() {
     initPlanningView();
     setupPieAndUnderworld();
     // if (storage.get(SKIP_TUTORIAL) === YES) {
-    globalThis.setMenu?.('PLAY');
-    setView(View.Menu);
-    globalThis.tryAutoConnect?.();
     // } else {
     //   globalThis.setMenu('TUTORIAL');
     //   startTutorial();
