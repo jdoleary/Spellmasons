@@ -23,13 +23,13 @@ export function onClientPresenceChanged(o: ClientPresenceChangedArgs, underworld
     underworld.ensureAllClientsHaveAssociatedPlayers(clients);
 }
 export function hostGiveClientGameStateForInitialLoad(clientId: string, underworld: Underworld, level?: LevelData) {
-    if (!level) {
-        console.error('Cannot give client game state, levelData is undefined');
-        return
-    }
     // Only the host should be sending INIT_GAME_STATE messages
     // because the host has the canonical game state
     if (globalThis.isHost(underworld.pie)) {
+        if (!level) {
+            console.error('Cannot give client game state, levelData is undefined');
+            return
+        }
         // Do not send this message to self
         if (globalThis.clientId !== clientId) {
             if (level) {
