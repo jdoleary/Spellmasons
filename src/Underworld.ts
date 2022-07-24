@@ -47,7 +47,7 @@ import Jprompt from './graphics/Jprompt';
 import { collideWithLineSegments, ForceMove, moveWithCollisions } from './jmath/moveWithCollision';
 import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './config';
 import { getBestRangedLOSTarget } from './entity/units/actions/rangedAction';
-import { getClients, hostGiveClientGameStateForInitialLoad, IHostApp } from './network/networkUtil';
+import { getClients, hostGiveClientGameState, IHostApp } from './network/networkUtil';
 import { healthAllyGreen, healthHurtRed, healthRed } from './graphics/ui/colors';
 import objectHash from 'object-hash';
 import { withinMeleeRange } from './entity/units/actions/gruntAction';
@@ -1091,7 +1091,10 @@ export default class Underworld {
     return !this.players.some(p => p.unit.alive);
   }
   goToNextPhaseIfAppropriate(): boolean {
-    if (this.turn_phase === turn_phase.PlayerTurns) {
+    // Only move on from the player turn phase if there are players in the game,
+    // otherwise, wait for players to be in the game so that the serve doesn't just 
+    // run cycles pointlessly
+    if (this.turn_phase === turn_phase.PlayerTurns && this.players.length > 0) {
       // If all players that have taken turns, then...
       // (Players who CANT take turns have their turn ended automatically)
       // TODO: Make sure game can't get stuck here
@@ -1102,7 +1105,7 @@ export default class Underworld {
         this.endPlayerTurnPhase();
         return true;
       } else {
-        console.log('PlayerTurn: Check end player turn phase; players havent ended turn yet:', activeAlivePlayers.filter(p => !p.endedTurn).length);
+        console.log('PlayerTurn: Check end player turn phase; players havent ended turn yet:', activeAlivePlayers.filter(p => !p.endedTurn).map(p => p.clientId));
       }
     }
     return false;
