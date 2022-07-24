@@ -6,7 +6,7 @@
         - Juice
         - SFX
 # Critical Path
-- Milestone 1 | **Reliable Multiplayer** | July 22
+- DONE - Milestone 1 | **Reliable Multiplayer** | July 22
     - Standalone Server
     - Simultaneous player turns
 - Milestone 2 | **Biomes** | July 28

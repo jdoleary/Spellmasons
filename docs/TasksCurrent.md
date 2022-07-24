@@ -1,4 +1,7 @@
 ## This weeks goals:
+- Remove archer blue debug circles
+
+## Standalone server backlog bugs
 - It's running hot for some reason
 - multiplayer, player doesn't play hit animation when a grunt bites it
 - Game waits a long time after last player has ended their turn before moving on to enemy turn
@@ -21,7 +24,6 @@
         - ready up and start game
 ## Schedule
 - Packs, priority ordered
-    - Pack 6 Standalone Server
     - Pack 15 Movement
     - Pack 13 Biome and liquid shader
         - https://codepen.io/chles/pen/aNxMxQ
