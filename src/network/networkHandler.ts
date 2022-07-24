@@ -323,11 +323,9 @@ async function handleLoadGameState(payload: {
   }
   underworld.turn_phase = loadedGameState.turn_phase;
   underworld.turn_number = loadedGameState.turn_number;
-  underworld.forceMove = loadedGameState.forceMove;
   underworld.processedMessageCount = loadedGameState.processedMessageCount;
   underworld.cardDropsDropped = loadedGameState.cardDropsDropped;
   underworld.enemiesKilled = loadedGameState.enemiesKilled;
-  underworld.forceMove = loadedGameState.forceMove;
 
   // Sync Level.  Must await createLevel since it uses setTimeout to ensure that
   // the DOM can update with the "loading..." message before locking up the CPU with heavy processing.
