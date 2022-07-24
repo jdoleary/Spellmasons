@@ -297,13 +297,13 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
 }
 async function handleLoadGameState(payload: {
   level: LevelData,
-  underworldSerialized: IUnderworldSerializedForSyncronize,
+  underworld: IUnderworldSerializedForSyncronize,
   phase: turn_phase,
   units: Unit.IUnitSerialized[],
   players: Player.IPlayerSerialized[]
 }, underworld: Underworld) {
   console.log("Setup: Load game state", payload)
-  const { level, underworldSerialized: payloadUnderworld, phase, units, players } = payload
+  const { level, underworld: payloadUnderworld, phase, units, players } = payload
   // Sync underworld properties
   const loadedGameState: IUnderworldSerializedForSyncronize = { ...payloadUnderworld };
   underworld.levelIndex = loadedGameState.levelIndex;
