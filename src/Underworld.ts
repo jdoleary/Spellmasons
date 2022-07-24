@@ -2028,7 +2028,7 @@ export default class Underworld {
   // callbacks and complicated objects such as PIXI.Sprites
   // are removed
   serializeForSaving(): IUnderworldSerialized {
-    const { random, players, units, pickups, walls, pathingPolygons, ...rest } = this;
+    const { pie, random, players, units, pickups, walls, pathingPolygons, ...rest } = this;
     return {
       ...rest,
       players: this.players.map(Player.serialize),
@@ -2059,7 +2059,7 @@ export default class Underworld {
   //   this.cacheWalls();
   // }
   serializeForSyncronize(): IUnderworldSerializedForSyncronize {
-    const { players, units, pickups, random, gameLoop, ...rest } = this;
+    const { pie, players, units, pickups, random, gameLoop, ...rest } = this;
     const serialized: IUnderworldSerializedForSyncronize = {
       ...rest,
       // the state of the Random Number Generator
@@ -2069,7 +2069,7 @@ export default class Underworld {
   }
 }
 
-type IUnderworldSerialized = Omit<typeof Underworld, "prototype" | "players" | "units" | "pickups" | "random" | "turnInterval"
+type IUnderworldSerialized = Omit<typeof Underworld, "pie" | "prototype" | "players" | "units" | "pickups" | "random" | "turnInterval"
   // walls and pathingPolygons are omitted because they are derived from obstacles when cacheWalls() in invoked
   | "walls" | "pathingPolygons"> & {
     players: Player.IPlayerSerialized[],
@@ -2078,7 +2078,7 @@ type IUnderworldSerialized = Omit<typeof Underworld, "prototype" | "players" | "
   };
 type NonFunctionPropertyNames<T> = { [K in keyof T]: T[K] extends Function ? never : K }[keyof T];
 type UnderworldNonFunctionProperties = Exclude<NonFunctionPropertyNames<Underworld>, null | undefined>;
-export type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFunctionProperties>, "debugGraphics" | "players" | "units" | "pickups" | "obstacles" | "random" | "gameLoop">;
+export type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, UnderworldNonFunctionProperties>, "pie" | "debugGraphics" | "players" | "units" | "pickups" | "obstacles" | "random" | "gameLoop">;
 
 // TODO: enforce max units at level index
 // Idea: Higher probability of tougher units at certain levels
