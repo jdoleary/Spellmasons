@@ -199,6 +199,7 @@ Handle ONDATA MOVE_PLAYER
     - Trailer
     - Marketing
 ## Bugs
+- Handle error in menu when attempting to connect to a bad url
 - Stop idle animation when unit is frozen
 - death skull doens't show for decoy
 - Self clones will walk through lava
