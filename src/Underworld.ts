@@ -610,6 +610,19 @@ export default class Underworld {
   isMyTurn() {
     return this.turn_phase == turn_phase.PlayerTurns;
   }
+  destroy() {
+    console.log('teardown: destroying underworld')
+
+    if (this.removeEventListeners) {
+      this.removeEventListeners();
+    }
+    // Prevent requestAnimationFrame from calling this method next time, since this underworld
+    // instance is being cleaned up
+    if (requestAnimationFrameGameLoopId !== undefined) {
+      cancelAnimationFrame(requestAnimationFrameGameLoopId);
+    }
+
+  }
   // Caution: Be careful when changing clean up code.  There are times when you just want to
   // clean up assets and then there are times when you want to clear and empty the arrays
   // Be sure not to confuse them.
@@ -617,10 +630,6 @@ export default class Underworld {
   // if an object stops being used.  It does not empty the underworld arrays, by design.
   cleanup() {
     console.trace('teardown: Cleaning up underworld');
-
-    if (this.removeEventListeners) {
-      this.removeEventListeners();
-    }
 
     // Remove all phase classes from body
     if (document && !globalThis.headless) {
@@ -644,11 +653,6 @@ export default class Underworld {
     containerDoodads?.removeChildren();
     // Clean up board
     containerBoard?.removeChildren();
-    // Prevent requestAnimationFrame from calling this method next time, since this underworld
-    // instance is being cleaned up
-    if (requestAnimationFrameGameLoopId !== undefined) {
-      cancelAnimationFrame(requestAnimationFrameGameLoopId);
-    }
     globalThis.updateInGameMenuStatus?.()
 
   }
