@@ -1275,7 +1275,13 @@ export default class Underworld {
       // Turns can only be manually ended during the PlayerTurns phase
       if (this.isMyTurn()) {
         let affirm = true
-        if (globalThis.player.unit.stamina == globalThis.player.unit.staminaMax && !globalThis.castThisTurn) {
+        // Interrupt endTurn with a cancellable prompt IF
+        // player hasn't already ended their turn (note if they already HAVE ended their turn, just allow the END_TURN message to go through; this
+        // might, but hopefully never, come in handy in the event that there is a desync and the client thinks it's ended its turn but the server doesn't. then
+        // the client can end it again)
+        // and stamina is still max
+        // and player has not cast yet
+        if (!globalThis.player.endedTurn && globalThis.player.unit.stamina == globalThis.player.unit.staminaMax && !globalThis.castThisTurn) {
           affirm = await Jprompt({ text: 'Are you sure you want to end your turn without moving or casting?', noBtnText: 'Cancel', noBtnKey: 'Escape', yesText: 'End Turn', yesKey: 'Space', yesKeyText: 'Spacebar' });
         }
         if (affirm) {
