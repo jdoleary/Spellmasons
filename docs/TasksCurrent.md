@@ -1,5 +1,4 @@
 ## This weeks goals:
-- Remove archer blue debug circles
 
 ## Standalone server backlog bugs
 - It's running hot for some reason

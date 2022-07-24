@@ -957,14 +957,14 @@ export function findLOSLocation(unit: IUnit, target: Vec2, underworld: Underworl
   for (let rad = angleToEnemy - degAwayFromTarget; rad <= angleToEnemy + degAwayFromTarget; rad += increments) {
     let pos = math.getPosAtAngleAndDistance(target, rad, dist)
     const intersection = closestLineSegmentIntersection({ p1: target, p2: pos }, underworld.walls);
-    globalThis.debugGraphics?.lineStyle(3, 0xff00ff, 1);
+    // globalThis.debugGraphics?.lineStyle(3, 0xff00ff, 1);
     if (intersection) {
-      globalThis.debugGraphics?.lineStyle(3, 0x0000ff, 1);
+      // globalThis.debugGraphics?.lineStyle(3, 0x0000ff, 1);
       pos = intersection;
     }
     LOSLocations.push(pos);
 
-    globalThis.debugGraphics?.drawCircle(pos.x, pos.y, 4);
+    // globalThis.debugGraphics?.drawCircle(pos.x, pos.y, 4);
   }
   return LOSLocations;
 
