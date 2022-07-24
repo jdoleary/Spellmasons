@@ -7,6 +7,7 @@ import type { Vec2 } from '../jmath/Vec';
 import type { View } from '../views';
 import type { Faction } from './commonTypes';
 import type { IPickup } from '../entity/Pickup';
+import { IHostApp } from '../network/networkUtil';
 
 declare global {
     var SPELLMASONS_PACKAGE_VERSION: string;
@@ -16,7 +17,7 @@ declare global {
     // true if this instance is the headless server with no visuals or audio, just the game logic
     var headless: boolean;
     // Returns true if client is playing singleplayer OR if hostapp
-    var isHost: () => boolean;
+    var isHost: (pie: PieClient | IHostApp) => boolean;
 
 
     // The following are undefined in the headless server
@@ -191,7 +192,7 @@ declare global {
     // Note: do NOT set directly, use setRMBDown instead
     var RMBDown: undefined | boolean;
     // Used to set Right mouse button down
-    var setRMBDown: undefined | ((isDown: boolean) => void);
+    var setRMBDown: undefined | ((isDown: boolean, underworld: Underworld) => void);
     var notifiedOutOfStamina: undefined | boolean;
     // devMode: auto picks character and upgrades
     var devMode: undefined | boolean;
