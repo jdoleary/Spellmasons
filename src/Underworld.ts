@@ -42,7 +42,6 @@ import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmen
 import { expandPolygon, mergePolygon2s, Polygon2, Polygon2LineSegment, toLineSegments, toPolygon2LineSegments } from './jmath/Polygon2';
 import { calculateDistanceOfVec2Array, findPath } from './jmath/Pathfinding';
 import { setView, View } from './views';
-import * as readyState from './readyState';
 import { mouseMove } from './graphics/ui/eventListeners';
 import Jprompt from './graphics/Jprompt';
 import { collideWithLineSegments, ForceMove, moveWithCollisions } from './jmath/moveWithCollision';
@@ -57,7 +56,7 @@ import { Material } from './Conway';
 import { oneDimentionIndexToVec2 } from './jmath/ArrayUtil';
 import { raceTimeout } from './Promise';
 import { updateParticlees } from './graphics/Particles';
-import { setupNetworkHandlerGlobalFunctions } from './network/networkHandler';
+import { processNextInQueueIfReady, setupNetworkHandlerGlobalFunctions } from './network/networkHandler';
 import { setupDevGlobalFunctions } from './devUtils';
 import type PieClient from '@websocketpie/client';
 
@@ -136,7 +135,6 @@ export default class Underworld {
     // Initialize content
     Cards.registerCards(this);
     Units.registerUnits();
-    readyState.set("content", true);
 
     // Setup global functions that need access to underworld:
     setupNetworkHandlerGlobalFunctions(this);
@@ -148,9 +146,17 @@ export default class Underworld {
     this.random = this.syncronizeRNG(RNGState);
     this.ensureAllClientsHaveAssociatedPlayers(getClients());
 
-    readyState.set('underworld', true, this);
     // Start the gameloop
     requestAnimationFrameGameLoopId = requestAnimationFrame(this.gameLoop);
+    // When the game is ready to process wsPie messages, begin
+    // processing them
+    // The game is ready when the following have been loaded
+    // - wsPieConnection
+    // - wsPieRoomJoined 
+    // - pixiAssets 
+    // - content (register cards and untis)
+    // - underworld
+    processNextInQueueIfReady(this);
   }
   reportEnemyKilled(enemyKilledPos: Vec2) {
     this.enemiesKilled++;
@@ -609,7 +615,6 @@ export default class Underworld {
   // if an object stops being used.  It does not empty the underworld arrays, by design.
   cleanup() {
     console.trace('teardown: Cleaning up underworld');
-    readyState.set('underworld', false, this);
 
     if (this.removeEventListeners) {
       this.removeEventListeners();

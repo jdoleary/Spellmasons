@@ -11,7 +11,6 @@
 import PieClient, { Room } from '@websocketpie/client';
 import { onData } from './networkHandler';
 import { onClientPresenceChanged, typeGuardHostApp } from './networkUtil';
-import * as readyState from '../readyState';
 import { setView, View } from '../views';
 import * as storage from '../storage';
 import { updateGlobalRefToCurrentClientPlayer } from '../entity/Player';
@@ -36,13 +35,11 @@ function connect_to_wsPie_server(wsUri: string | undefined, underworld: Underwor
     pie.onConnectInfo = (o) => {
       console.log('onConnectInfo', o);
       if (o.connected) {
-        readyState.set('wsPieConnection', true, underworld);
         console.log("Pie: Successfully connected to PieServer.")
         resolve();
       } else {
         if (underworld) {
           underworld.cleanup();
-          readyState.set('underworld', false, underworld);
           setView(View.Disconnected);
         }
       }
@@ -79,8 +76,13 @@ function defaultRoomInfo(_room_info = {}): Room {
 }
 
 export function joinRoom(underworld: Underworld, _room_info = {}): Promise<void> {
-  if (!pie) {
+  if (!underworld.pie) {
     console.error('Could not join room, pie instance is undefined');
+    return Promise.reject();
+  }
+  const pie = underworld.pie;
+  if (typeGuardHostApp(pie)) {
+    console.error('wsPieSetup is for client only, not host app. This function should never be called with a pie of IHostApp');
     return Promise.reject();
   }
   const room_info = defaultRoomInfo(_room_info);
@@ -88,7 +90,6 @@ export function joinRoom(underworld: Underworld, _room_info = {}): Promise<void>
   // when people are trying to join each other's games
   room_info.name = room_info.name.toLowerCase();
   return pie.joinRoom(room_info, true).then(() => {
-    readyState.set('wsPieRoomJoined', true);
     console.log('Pie: You are now in the room', JSON.stringify(room_info, null, 2));
     // Useful for development to get into the game quickly
     let quickloadName = storage.get('quickload');
@@ -139,25 +140,41 @@ function addHandlers(pie: PieClient, underworld: Underworld) {
   };
 }
 
-console.log('Client: Initialize PieClient');
-const pie = new PieClient();
-console.log('Client: Initialize Underworld');
-const underworld = new Underworld(pie, Math.random().toString());
-globalThis.connect_to_wsPie_server = wsUri => connect_to_wsPie_server(wsUri, underworld);
+export function setupPieAndUnderworld() {
+  if (globalThis.headless) {
+    console.log('Client: Initialize PieClient');
+    const pie = new PieClient();
+    console.log('Client: Initialize Underworld');
+    const underworld = new Underworld(pie, Math.random().toString());
+    globalThis.connect_to_wsPie_server = wsUri => connect_to_wsPie_server(wsUri, underworld).then(() => {
+      // Auto join game if specified in url
+      let urlSearchParams = new URLSearchParams(location.search);
+      let gameName = urlSearchParams.get("game");
+      if (gameName) {
+        if (globalThis.joinRoom) {
+          globalThis.joinRoom({ name: gameName })
+        } else {
+          console.error('globalThis.joinRoom is undefined')
+        }
+      }
 
-globalThis.joinRoom = room_info => joinRoom(underworld, room_info);
-globalThis.startSingleplayer = function startSingleplayer() {
-  console.log('Start Game: Attempt to start the game')
-  document.body?.classList.toggle('loading', true);
-  return new Promise<void>((resolve) => {
-    // setTimeout allows the UI to refresh before locking up the CPU with
-    // heavy level generation code
-    setTimeout(() => {
-      connect_to_wsPie_server(undefined, underworld).then(() => {
-        underworld.lastLevelCreated = underworld.generateLevelDataSyncronous(0);
-        joinRoom(underworld).then(resolve);
+    });
 
-      })
-    }, 10)
-  });
+    globalThis.joinRoom = room_info => joinRoom(underworld, room_info);
+    globalThis.startSingleplayer = function startSingleplayer() {
+      console.log('Start Game: Attempt to start the game')
+      document.body?.classList.toggle('loading', true);
+      return new Promise<void>((resolve) => {
+        // setTimeout allows the UI to refresh before locking up the CPU with
+        // heavy level generation code
+        setTimeout(() => {
+          connect_to_wsPie_server(undefined, underworld).then(() => {
+            underworld.lastLevelCreated = underworld.generateLevelDataSyncronous(0);
+            joinRoom(underworld).then(resolve);
+
+          })
+        }, 10)
+      });
+    }
+  }
 }

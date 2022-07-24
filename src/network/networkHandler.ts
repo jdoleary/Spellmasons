@@ -6,7 +6,6 @@ import { getUpgradeByTitle } from '../Upgrade';
 import Underworld, { IUnderworldSerializedForSyncronize, LevelData, turn_phase } from '../Underworld';
 import * as Player from '../entity/Player';
 import * as Unit from '../entity/Unit';
-import * as readyState from '../readyState';
 import * as messageQueue from '../messageQueue';
 import * as storage from '../storage';
 import { allUnits } from '../entity/units';
@@ -37,13 +36,13 @@ export function onData(d: OnDataArgs, underworld: Underworld) {
       });
       break;
     case MESSAGE_TYPES.INIT_GAME_STATE:
-      // If the underworld is not yet setup for this client then
+      // If the underworld is not yet initialized for this client then
       // load the game state
       // INIT_GAME_STATE is only to be handled by clients who just
       // connected to the room and need the first transfer of game state
       // This is why it is okay that updating the game state happens 
       // asynchronously.
-      if (!readyState.get("underworld")) {
+      if (underworld.lastLevelCreated === undefined) {
         // If a client loads a full game state, they should be fully synced
         // so clear the onDataQueue to prevent old messages from being processed
         // after the full gamestate sync
@@ -101,15 +100,13 @@ function handleOnDataMessageSyncronously(d: OnDataArgs, underworld: Underworld) 
 // currentlyProcessingOnDataMessage is used to help with bug reports to show
 // which message is stuck and didn't finish being processed.
 let currentlyProcessingOnDataMessage: any = null;
-export function processNextInQueueIfReady(underworld?: Underworld) {
+export function processNextInQueueIfReady(underworld: Underworld) {
   // If game is ready to process messages, begin processing
   // (if not, they will remain in the queue until the game is ready)
-  if (readyState.isReady()) {
-    if (underworld) {
-      messageQueue.processNextInQueue(onDataQueueContainer, d => handleOnDataMessage(d, underworld));
-    } else {
-      console.error('readyState is ready but underworld is undefined. This should never occur.')
-    }
+  if (underworld) {
+    messageQueue.processNextInQueue(onDataQueueContainer, d => handleOnDataMessage(d, underworld));
+  } else {
+    console.error('underworld is undefined. This should never occur.')
   }
 }
 async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promise<any> {
@@ -360,9 +357,6 @@ async function handleLoadGameState(payload: {
   // make the loaded underworld desync from the host's underworld
   underworld.setTurnPhase(phase);
 
-  // Mark the underworld as "ready"
-  readyState.set('underworld', true);
-
   underworld.syncTurnMessage();
 
 }
@@ -422,9 +416,7 @@ export function setupNetworkHandlerGlobalFunctions(underworld: Underworld) {
     const savedGameString = storage.get(savePrefix + title);
     if (savedGameString) {
 
-      if (!readyState.get('underworld')) {
-        await globalThis.startSingleplayer?.();
-      }
+      await globalThis.startSingleplayer?.();
 
       const { level, underworld: savedUnderworld, phase, units, players } = JSON.parse(savedGameString);
       underworld.pie.sendData({

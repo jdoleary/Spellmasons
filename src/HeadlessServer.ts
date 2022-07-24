@@ -1,10 +1,7 @@
 import { version } from '../package.json';
 import './Shims';
-import * as Cards from './cards';
-import * as Units from './entity/units';
 import { getClients, hostGiveClientGameStateForInitialLoad, IHostApp, onClientPresenceChanged } from './network/networkUtil';
 import Underworld from './Underworld';
-import * as readyState from './readyState';
 import { onData } from './network/networkHandler';
 const pie = require('@websocketpie/server');
 globalThis.SPELLMASONS_PACKAGE_VERSION = version;
@@ -19,10 +16,6 @@ globalThis.isHost = () => true;
 // Headless does not includee a player of it's own, it's just the host
 globalThis.player = undefined;
 
-
-// TODO: The following need to be specific to a host app
-// readyState.underworld
-
 function headlessStartGame() {
     console.log('Headless Server Started')
 
@@ -33,15 +26,6 @@ function headlessStartGame() {
             console.log('Start Game: Attempt to start the game')
             console.log('Host: Start game / Initialize Underworld');
             hostAppInst.underworld = new Underworld(hostAppInst, Math.random().toString());
-            // Mark the underworld as "ready". This is important even for headless so that it doesn't
-            // try to process it's own INIT_GAME_STATE messages
-            readyState.set('underworld', true, hostAppInst.underworld);
-            // Headless makes it's own wsPieConnection
-            readyState.set('wsPieConnection', true, hostAppInst.underworld);
-            // Headless makes it's own room
-            readyState.set('wsPieRoomJoined', true, hostAppInst.underworld);
-            // Headless does NOT use graphics so this can be set to true immediately
-            readyState.set('pixiAssets', true, hostAppInst.underworld);
             // Generate the level data
             hostAppInst.underworld.lastLevelCreated = hostAppInst.underworld.generateLevelDataSyncronous(0);
             // Actually create it

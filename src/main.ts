@@ -1,10 +1,6 @@
 // set window defaults, must be called before setupAll()
-import * as Unit from './entity/Unit';
 import { setView, View } from './views';
-import * as readyState from './readyState';
 import { setupPixi } from './graphics/PixiUtils';
-import * as Cards from './cards';
-import * as Units from './entity/units';
 import { initPlanningView } from './graphics/PlanningView';
 import { setupAudio, playNextSong, playSFX, playSFXKey, sfx } from './Audio';
 import cookieConsentPopup from './cookieConsent';
@@ -25,6 +21,7 @@ import { MESSAGE_TYPES } from './types/MessageTypes';
 import { IHostApp, typeGuardHostApp } from './network/networkUtil';
 import Underworld from './Underworld';
 import type PieClient from '@websocketpie/client';
+import { setupPieAndUnderworld } from './network/wsPieSetup';
 
 const YES = 'yes'
 const SKIP_TUTORIAL = 'skipTutorial';
@@ -68,6 +65,7 @@ function setupAll() {
   setupPixi().then(() => {
     console.log("Setup: Done loading Pixi assets.")
     initPlanningView();
+    setupPieAndUnderworld();
     // if (storage.get(SKIP_TUTORIAL) === YES) {
     globalThis.setMenu?.('PLAY');
     setView(View.Menu);
