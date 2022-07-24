@@ -1187,7 +1187,7 @@ export default class Underworld {
     } else if (this.turn_phase === turn_phase.PlayerTurns) {
       if (globalThis.player?.endedTurn) {
         message = `Waiting on ${this.players.filter(p => !p.endedTurn).length} Other Players`
-        yourTurn = true;
+        yourTurn = false;
       } else {
         message = 'Your Turn';
         yourTurn = true;
