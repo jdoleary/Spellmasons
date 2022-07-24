@@ -1,7 +1,5 @@
 ## This weeks goals:
-- left off, run `npm run tsc` and fix compile errors
 
-- WHAT IF UNDERWORLD OWNS THE PIE CONNECTION and for clients underworld never changes even on load, it just modifies the underworld data
 - Fix: Move player so it doesn't use stamina because IT MUST bring them to a synced location if their position somehow get's out of sync
 - bug: player 2 doesn't get cards
     - C:\git\Golems\headless-server-build\src\entity\Unit.js:847
