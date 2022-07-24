@@ -41,7 +41,7 @@ import { calculateCost } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle } from './jmath/lineSegment';
 import { expandPolygon, mergePolygon2s, Polygon2, Polygon2LineSegment, toLineSegments, toPolygon2LineSegments } from './jmath/Polygon2';
 import { calculateDistanceOfVec2Array, findPath } from './jmath/Pathfinding';
-import { setView, View } from './views';
+import { addUnderworldEventListeners, setView, View } from './views';
 import { mouseMove } from './graphics/ui/eventListeners';
 import Jprompt from './graphics/Jprompt';
 import { collideWithLineSegments, ForceMove, moveWithCollisions } from './jmath/moveWithCollision';
@@ -135,6 +135,8 @@ export default class Underworld {
     // Initialize content
     Cards.registerCards(this);
     Units.registerUnits();
+    // Add event listeners
+    this.removeEventListeners = addUnderworldEventListeners(this);
 
     // Setup global functions that need access to underworld:
     setupNetworkHandlerGlobalFunctions(this);
@@ -983,7 +985,7 @@ export default class Underworld {
     this.broadcastTurnPhase(turn_phase.PlayerTurns);
     cameraAutoFollow(true);
     document.body?.classList.toggle('loading', false);
-    setView(View.Game, this);
+    setView(View.Game);
     // this.ensureAllClientsHaveAssociatedPlayers(getClients());
   }
   // creates a level from levelData

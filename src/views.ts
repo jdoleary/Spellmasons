@@ -27,10 +27,10 @@ export enum View {
 }
 const elUpgradePicker = document.getElementById('upgrade-picker') as HTMLElement;
 let lastNonMenuView: View | undefined;
-function closeMenu(underworld?: Underworld) {
+function closeMenu() {
   // Change to the last non menu view
   if (lastNonMenuView) {
-    setView(lastNonMenuView, underworld);
+    setView(lastNonMenuView);
     // When the menu closes, set the menu back
     // to the main menu route
     if (globalThis.setMenu) {
@@ -41,21 +41,21 @@ function closeMenu(underworld?: Underworld) {
   }
 
 }
-export function toggleMenu(underworld?: Underworld) {
+export function toggleMenu() {
   const elMenu = document.getElementById('menu') as HTMLElement;
   const menuClosed = elMenu.classList.contains('hidden');
   if (menuClosed) {
     // Open it
-    setView(View.Menu, underworld);
+    setView(View.Menu);
   } else {
-    closeMenu(underworld);
+    closeMenu();
   }
 
 }
 // The "View" is what the client is looking at
 // No gamelogic should be executed inside setView
 // including setup.
-export function setView(v: View, underworld?: Underworld) {
+export function setView(v: View) {
   if (globalThis.headless) { return; }
   console.log('setView(', View[v], ')');
   if (globalThis.view == v) {
@@ -76,9 +76,6 @@ export function setView(v: View, underworld?: Underworld) {
     elMenu.classList.add('hidden');
     lastNonMenuView = v;
   }
-  if (underworld && underworld.removeEventListeners) {
-    underworld.removeEventListeners();
-  }
   // Hide the upgrade picker when the view changes
   elUpgradePicker.classList.remove('active');
   switch (v) {
@@ -90,14 +87,6 @@ export function setView(v: View, underworld?: Underworld) {
       break;
     case View.Game:
       resizePixi();
-      if (underworld) {
-        underworld.removeEventListeners = addUnderworldEventListeners(underworld);
-        // Update the camera position when the view changes because gameLoop might not be
-        // running yet (and gameLoop is what usually updates the camera position)
-        updateCameraPosition(underworld);
-      } else {
-        console.error('Attempted to set view to Game but no underworld was passed as argument')
-      }
       break;
     case View.Disconnected:
       // Intentionally left blank - this view is handled in css
@@ -110,6 +99,9 @@ export function setView(v: View, underworld?: Underworld) {
 
 // zoom camera
 function zoom(underworld: Underworld, e: WheelEvent) {
+  if (globalThis.view !== View.Game) {
+    return;
+  }
   if (!app) {
     return;
   }
@@ -128,7 +120,7 @@ function zoom(underworld: Underworld, e: WheelEvent) {
 
 const endTurnBtnId = 'end-turn-btn';
 const menuBtnId = 'menuBtn';
-function addUnderworldEventListeners(underworld: Underworld) {
+export function addUnderworldEventListeners(underworld: Underworld) {
   if (globalThis.headless) { return; }
   const elEndTurnBtn: HTMLButtonElement = document.getElementById(
     endTurnBtnId,
@@ -204,7 +196,7 @@ function addUnderworldEventListeners(underworld: Underworld) {
       },
     ];
   // Make 'closeMenu' available to the svelte menu
-  globalThis.closeMenu = () => closeMenu(underworld);
+  globalThis.closeMenu = () => closeMenu();
   for (let { target, event, listener } of listeners) {
     target.addEventListener(event, listener);
   }
