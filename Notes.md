@@ -1,4 +1,6 @@
 # Notes
+- Sometimes player 2's cards get clobbered via a syncPlayers but is fixed on the next sync players.  I think this only occurs due to devMode choosing upgrades really fast but it might be worth watching carefully
+---
 Into the breach notes:
   - Shows what's going to happen next turn
   - Shows when something's going to die
