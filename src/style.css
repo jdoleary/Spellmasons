@@ -458,7 +458,7 @@ kbd {
 
 #player-turn-indicator-holder>div {
   padding: 8px;
-  width: 140px;
+  min-width: 140px;
 }
 
 body.your-turn:not(.showUpgrades) #player-turn-indicator-holder {
