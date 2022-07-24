@@ -692,7 +692,7 @@ export function syncPlayerHealthManaUI() {
   const staminaLeft = Math.max(0, Math.round(unit.stamina));
   elStaminaBar.style["width"] = `${100 * (unit.stamina) / unit.staminaMax}%`;
   elStaminaBarLabel.innerHTML = `${staminaLeft}`;
-  if (staminaLeft <= 0) {
+  if (staminaLeft <= 0 && !player?.endedTurn) {
     // Now that the current player has moved, highlight the "end-turn-btn" to
     // remind them that they need to end their turn before they can move again
     document.querySelector('#end-turn-btn')?.classList.add('highlight');

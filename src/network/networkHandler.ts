@@ -294,10 +294,6 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
     case MESSAGE_TYPES.END_TURN:
       if (fromPlayer) {
         underworld.endPlayerTurn(fromPlayer.clientId);
-        // Reset stamina immediately on endTurn so that the end-turn-btn highlight goes away
-        if (fromPlayer == globalThis.player) {
-          globalThis.player.unit.stamina = globalThis.player.unit.staminaMax;
-        }
       } else {
         console.error('Unable to end turn because caster is undefined');
       }
