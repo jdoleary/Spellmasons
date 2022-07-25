@@ -13,16 +13,16 @@ export const caveSizes: { [size: string]: CaveParams } = {
     'small': {
         minThickness: config.OBSTACLE_SIZE,
         startThickness: 150,
-        startPointJitter: 500,
-        iterations: 15,
-        velocity: 80
+        startPointJitter: 400,
+        iterations: 12,
+        velocity: 60
     },
     'medium': {
         minThickness: config.OBSTACLE_SIZE,
         startThickness: 150,
-        startPointJitter: 700,
-        iterations: 20,
-        velocity: 100
+        startPointJitter: 500,
+        iterations: 15,
+        velocity: 80
     }
 }
 interface CaveParams {
