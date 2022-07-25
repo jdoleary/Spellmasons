@@ -30,7 +30,8 @@ Adds a radius to the spell so it can affect more targets
 
         const pickupsWithinRadius = underworld.getPickupsWithinDistanceOfTarget(
           target,
-          range
+          range,
+          prediction
         );
         // Add pickups to target
         pickupsWithinRadius.forEach(unit => addPickupTarget(unit, state));

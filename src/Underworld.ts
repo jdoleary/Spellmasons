@@ -1643,9 +1643,10 @@ export default class Underworld {
   getPickupsWithinDistanceOfTarget(
     target: Vec2,
     distance: number,
+    prediction: boolean,
   ): Pickup.IPickup[] {
     const withinDistance: Pickup.IPickup[] = [];
-    const pickups = this.pickups;
+    const pickups = (prediction && globalThis.predictionPickups) ? globalThis.predictionPickups : this.pickups;
     for (let pickup of pickups) {
       if (math.distance(pickup, target) <= distance) {
         withinDistance.push(pickup);

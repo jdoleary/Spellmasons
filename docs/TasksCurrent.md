@@ -1,5 +1,4 @@
 ## This weeks goals:
-- bug: Movement spells push pickups in prediction with expanding
 - task: Move prediction pickups and units to underworld not global or else they will be shared between multiple underworlds
 
 ## Standalone server backlog bugs

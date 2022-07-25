@@ -75,7 +75,8 @@ const spell: Spell = {
       });
       underworld.getPickupsWithinDistanceOfTarget(
         unit,
-        range
+        range,
+        prediction
       ).forEach(p => {
         // Push pickups away
         forcePush(p, unit, underworld, prediction);
