@@ -682,12 +682,14 @@ export default class Underworld {
     const expandMagnitude = config.COLLISION_MESH_RADIUS * 0.6;
 
     // liquid bounds block movement only under certain circumstances
-    this.liquidPolygons = mergePolygon2s(obstacles.filter(o => o.material == Material.LIQUID).map(o => o.bounds))
+    this.liquidPolygons = mergePolygon2s(obstacles.filter(o => o.material == Material.LIQUID).map(o => o.bounds));
+    const expandedLiquidPolygons = this.liquidPolygons//.map(p => p.map(Vec.clone))
       .map(p => expandPolygon(p, -expandMagnitude / 2))
       // Move bounds up because center of units is not where they stand, and the bounds
       // should be realtive to a unit's feet
       .map(p => p.map(vec2 => ({ x: vec2.x, y: vec2.y - expandMagnitude / 2 })))
-    this.liquidBounds = this.liquidPolygons.map(toLineSegments).flat();
+    this.liquidBounds = expandedLiquidPolygons
+      .map(toLineSegments).flat();
     // TODO: Optimize:
     //.filter(filterRemoveNonGroundAdjacent);
 
@@ -697,7 +699,7 @@ export default class Underworld {
 
     this.pathingPolygons = mergePolygon2s([...getWallPolygons().map(p => expandPolygon(p, expandMagnitude))
       .map(p => p.map(vec2 => ({ x: vec2.x, y: vec2.y - 10 })))
-      , ...this.liquidPolygons.map(p => expandPolygon(p, expandMagnitude))])
+      , ...expandedLiquidPolygons.map(p => expandPolygon(p, expandMagnitude))])
       // remove polygons that border empty tiles (the outermost poly) so that if player tries to path to an out of bounds location
       // it will still be able to find the nearest point on a wall.  If it wasn't removed, attempting to path to an out of bounds
       // location would find an adjusted path target on the wall of the outermost poly, but since the inside 2nd outermost poly
@@ -889,6 +891,10 @@ export default class Underworld {
     // Then lay down wall tiles on top of them
     for (let tile of this.imageOnlyTiles.filter(t => t.image !== 'tiles/all_ground.png')) {
       if (tile.image) {
+        if (tile.image == 'tiles/all_liquid.png') {
+          // liquid tiles are rendered with a shader
+          continue;
+        }
         const sprite = addPixiSprite(tile.image, containerBoard);
         if (sprite) {
           sprite.x = tile.x - config.COLLISION_MESH_RADIUS;

@@ -24,6 +24,7 @@ if (globalThis.pixi) {
 }
 // PIXI app
 export const app = !globalThis.pixi ? undefined : new globalThis.pixi.Application();
+export const containerLiquid = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerBoard = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerBetweenBoardAndWalls = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerWalls = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
@@ -36,11 +37,10 @@ export const containerUI = !globalThis.pixi ? undefined : new globalThis.pixi.Co
 export const containerPlayerThinking = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerUIFixed = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerFloatingText = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
-if (containerBoard) {
+if (containerLiquid) {
   const shader = shaderLiquid();
   if (shader) {
-    console.log('shader worked jtest');
-    containerBoard.filters = [shader.filter];
+    containerLiquid.filters = [shader.filter];
   }
 }
 
