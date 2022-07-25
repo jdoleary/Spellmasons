@@ -66,39 +66,42 @@ Sets a spell as a trap, to be triggered when stepped on.  Wrapping a spell in a 
                 image: Image.create({ x, y }, imagePath, containerUnits),
                 singleUse: true,
                 playerOnly: false,
-                effect: ({ unit }) => {
+                effect: ({ unit, prediction }) => {
                   if (unit) {
                     // Play trap spring animation
-                    const animationSprite = addPixiSpriteAnimated('pickups/trapAttack', containerUnits, {
-                      loop: false,
-                      onComplete: () => {
-                        if (animationSprite?.parent) {
-                          animationSprite.parent.removeChild(animationSprite);
+                    if (!prediction) {
+
+                      const animationSprite = addPixiSpriteAnimated('pickups/trapAttack', containerUnits, {
+                        loop: false,
+                        onComplete: () => {
+                          if (animationSprite?.parent) {
+                            animationSprite.parent.removeChild(animationSprite);
+                          }
                         }
+                      });
+                      if (animationSprite) {
+
+                        animationSprite.anchor.set(0.5);
+                        animationSprite.x = x;
+                        animationSprite.y = y;
                       }
-                    });
-                    if (animationSprite) {
+                      const animationSprite2 = addPixiSpriteAnimated('pickups/trapAttackMagic', containerUnits, {
+                        loop: false,
+                        onComplete: () => {
+                          if (animationSprite2) {
 
-                      animationSprite.anchor.set(0.5);
-                      animationSprite.x = x;
-                      animationSprite.y = y;
-                    }
-                    const animationSprite2 = addPixiSpriteAnimated('pickups/trapAttackMagic', containerUnits, {
-                      loop: false,
-                      onComplete: () => {
-                        if (animationSprite2) {
-
-                          animationSprite2.parent.removeChild(animationSprite2);
+                            animationSprite2.parent.removeChild(animationSprite2);
+                          }
                         }
+                      });
+                      if (animationSprite2) {
+                        animationSprite2.anchor.set(0.5);
+                        animationSprite2.x = x;
+                        animationSprite2.y = y;
                       }
-                    });
-                    if (animationSprite2) {
-                      animationSprite2.anchor.set(0.5);
-                      animationSprite2.x = x;
-                      animationSprite2.y = y;
                     }
 
-                    underworld.castCards({}, state.casterUnit, cardsInTrap, unit, false, true);
+                    underworld.castCards({}, state.casterUnit, cardsInTrap, unit, prediction, true);
                     return true;
                   } else {
                     console.error('Tried to trigger trap, but unit was undefined')

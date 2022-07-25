@@ -5,7 +5,6 @@
 - should be able to swap with pickups
 - reduce spike damage
 - I got bit by a vampire but it didn't accurately warn me he would
-- bug: prediction trap plays animations 
 
 ## Standalone server backlog bugs
 - It's running hot for some reason
