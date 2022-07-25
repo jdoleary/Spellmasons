@@ -202,9 +202,16 @@ export function syncInventory(slotModifyingIndex: number | undefined, underworld
     // clear contents
     elInvContent.innerHTML = '';
 
-    for (let inventoryCardId of globalThis.player.inventory) {
-      const card = Cards.allCards[inventoryCardId];
+    const invCards = globalThis.player.inventory.map(c => Cards.allCards[c]).sort((a, b) => {
+      if (!a || !b) {
+        return 0;
+      } else {
+        return b?.probability - a?.probability;
+      }
+    });
+    for (let card of invCards) {
       if (card) {
+        const inventoryCardId = card.id;
         const elCard = createCardElement(card);
         elCard.draggable = true;
         if (slotModifyingIndex !== undefined) {
