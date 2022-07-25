@@ -46,6 +46,12 @@ export default function devUtils(graphics: PIXI.Graphics) {
     return { debugDrawLineSegments, debugDrawVec2s }
 }
 export function setupDevGlobalFunctions(underworld: Underworld) {
+    if (window) {
+        // @ts-ignore: window.devUnderworld is NOT typed in globalThis intentionally
+        // so that it will not be used elsewhere, but it is assigned here
+        // so that it can be accessed by a developer in client
+        window.devUnderworld = underworld;
+    }
     // TODO remove dev helper function for production release
     globalThis.giveMeCard = (cardId: string) => {
         const card = Cards.allCards[cardId];
