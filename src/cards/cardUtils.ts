@@ -63,14 +63,3 @@ export function _getCardsFromIds(cardIds: string[], cards: { [cardId: string]: I
     }
     return result;
 }
-
-// Mana thoughts: https://docs.google.com/spreadsheets/d/151O_cXNhITsg4yImNy3xhYfFsCRff2-EZz0zX0hD5zY/edit#gid=0
-export function distanceToManaMultiplier(distance: number): number {
-    if (distance < config.DISTANCE_FAR) {
-        return 1;
-    } else if (distance < config.DISTANCE_VERY_FAR) {
-        return 1.5;
-    } else {
-        return 2;
-    }
-}

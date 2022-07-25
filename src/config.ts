@@ -41,8 +41,6 @@ export const NUMBER_OF_TOOLBAR_SLOTS = 10;
 
 // Mana
 export const MANA_GET_PER_TURN = 10;
-export const DISTANCE_FAR = 300;
-export const DISTANCE_VERY_FAR = 600;
 
 // Collision radiuses
 // Make the UNIT_BASE_RADIUS a little smaller than the actual size of the image
