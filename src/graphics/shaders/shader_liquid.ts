@@ -4,17 +4,20 @@ const fShader = `
 precision mediump float;
 #endif
 
-uniform vec2 uResolution;
 
 varying vec2 vTextureCoord;
 // The image data from the PIXI object that the filter is applied to
 uniform sampler2D uSampler;
+// The resolution of whatever container the texture is being painted onto
+uniform vec2 uResolution;
 uniform sampler2D uTexture;
 
 
 void main() {
-  vec4 texColor = texture2D(uTexture, vTextureCoord);
-  gl_FragColor = texColor;
+    // The size of the texture in the uniform
+    vec2 texSize = vec2(64.0,64.0);
+    vec2 coord = vTextureCoord * (uResolution / texSize);
+    gl_FragColor = texture2D(uTexture, coord);
 }
 `;
 // Default pixi vShader
@@ -36,6 +39,7 @@ export default function () {
         uResolution: new PIXI.Point(800, 600),
         uTexture: new PIXI.Texture.from('images/tiles/all_liquid.png'),
     };
+    uniforms.uTexture.baseTexture.wrapMode = PIXI.WRAP_MODES.REPEAT;
     return {
         filter: new globalThis.pixi.Filter(vShader, fShader, uniforms),
         uniforms
