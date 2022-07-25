@@ -3,7 +3,6 @@
 - I got an out of range message and error but when I clicked on the end of my blue cast it worked
     - maybe make the whole line grey if there's no target in range?
 - should be able to swap with pickups
-- reduce spike damage
 - I got bit by a vampire but it didn't accurately warn me he would
 
 ## Standalone server backlog bugs
