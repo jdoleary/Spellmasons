@@ -14,7 +14,7 @@
     - Better liquid
     - Simpler tiles?
     - Unblock Che for tile art
-- Milestone 3 | **Balance**
+- DONE - Milestone 3 | **Balance**
     - Increase difficulty
         - Difficulty is directly related to fun, it isn't a puzzel if you can just "hurt" your way through it over and over
     - Smaller levels

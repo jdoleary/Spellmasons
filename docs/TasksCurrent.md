@@ -4,6 +4,8 @@
     - maybe make the whole line grey if there's no target in range?
 - I got bit by a vampire but it didn't accurately warn me he would
     - wrap this in with preventing units from changing targets from their prediction even if the decoy dies (lobber move then throw?)
+- always sort spells in the same order in inventory
+- Resurrect icon didn't show in prediction when it was buried in a trap that I pushed someone into (in prediction)
 
 ## Standalone server backlog bugs
 - It's running hot for some reason
