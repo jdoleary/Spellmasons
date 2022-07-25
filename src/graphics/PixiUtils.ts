@@ -9,6 +9,7 @@ import { JSpriteAnimated } from './Image';
 import { containerParticles } from './Particles';
 import { elPIXIHolder } from './FloatingText';
 import Underworld from '../Underworld';
+import shaderLiquid from './shaders/shader_liquid';
 
 // if PIXI is finished setting up
 let isReady = false;
@@ -35,6 +36,13 @@ export const containerUI = !globalThis.pixi ? undefined : new globalThis.pixi.Co
 export const containerPlayerThinking = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerUIFixed = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerFloatingText = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
+if (containerBoard) {
+  const shader = shaderLiquid();
+  if (shader) {
+    console.log('shader worked jtest');
+    containerBoard.filters = [shader.filter];
+  }
+}
 
 export function resizePixi() {
   // Headless does not use graphics
@@ -358,6 +366,8 @@ export function setupPixi(): Promise<void> {
     // Resolve the setupPixiPromise so that the menu knows
     // that pixijs is ready
     globalThis.pixiPromiseResolver?.();
+  }).catch(e => {
+    console.error('pixi load failed', e)
   });
 }
 export function addPixiContainersForView(view: View) {
@@ -407,6 +417,9 @@ function loadTextures(): Promise<void> {
       // loader.onComplete.add(a => console.log("Pixi loader onComplete")); // called once when the queued resources all load.
       const sheetPath = 'sheet1.json';
       loader.add(sheetPath);
+      loader.onError.add(e => {
+        console.error('Pixi loader error', e)
+      })
       loader.load((_loader: any, resources: any) => {
         resources = resources;
         const resource = resources[sheetPath]
