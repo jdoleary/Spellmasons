@@ -7,8 +7,7 @@
 export const RIGHT_CLICK_DOUBLE_MS_THRESHOLD = 500;
 export const RIGHT_CLICK_DOUBLE_DISTANCE_THRESHOLD = 30;
 
-export const PLAYER_BASE_HEALTH = 10;
-export const PLAYER_BASE_ATTACK_RANGE = 330;
+export const PLAYER_BASE_HEALTH = 4;
 export const UNIT_MOVE_SPEED = 0.15;
 export const COLLISION_MESH_RADIUS = 32;
 // Caution: Changing this may make pickups that spawn in liquid
@@ -27,7 +26,10 @@ export const UNIT_SIZE = COLLISION_MESH_RADIUS * 2;
 export const UNIT_BASE_HEALTH = 4;
 export const UNIT_BASE_MANA = 60;
 export const UNIT_BASE_STAMINA = 300;
-export const PLAYER_BASE_STAMINA = UNIT_BASE_STAMINA + 100;
+// For game difficulty, I'm making the attack range less than the unit base stamina
+export const PLAYER_BASE_ATTACK_RANGE = UNIT_BASE_STAMINA * 0.8;
+// For game difficulty, player stamina less than the unit stamina so they can't run away without upgrading it
+export const PLAYER_BASE_STAMINA = UNIT_BASE_STAMINA * 0.7;
 export const UNIT_BASE_DAMAGE = 3;
 export const NON_HEAVY_UNIT_SCALE = 1.0;
 export const START_CARDS_COUNT = 60;
