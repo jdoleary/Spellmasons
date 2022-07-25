@@ -10,8 +10,8 @@
     - Standalone Server
     - Simultaneous player turns
 - Milestone 2 | **Biomes** | July 28
-    - More interactable doodads (explosive barrels, movable cover)
     - Better liquid
+    - More interactable doodads (explosive barrels, movable cover)
     - Simpler tiles?
     - Unblock Che for tile art
 - DONE - Milestone 3 | **Balance**
@@ -19,7 +19,11 @@
         - Difficulty is directly related to fun, it isn't a puzzel if you can just "hurt" your way through it over and over
     - Smaller levels
         - Since this is turn based, super large levels are obnoxious
-- Milestone X | **Movement & Spell Quantity** | Due Date Ongoing
+- Milestone 4 | **Perfect Prediction Attacks** | Due Aug 8
+    - Units should NEVER change target from their prediction. A case where this happened is when a decoy died from other units attacking it
+    - Grunt attack predictions are not perfect. See branch 'perfect-predictions'
+    - Move predictionUnits and predictionPickups out of globalThis so they don't get clobbered when multiple instances on a single server
+- Milestone 5 | **Movement & Spell Quantity** | Due Aug 11
     - Pack 14 | Spell quantity
         - What happens when multiple, identical spells are cast in sequence?
             - Pass a quantity var to the spell and have each spell handle it manually, do not allow them to be .effect() back to back
