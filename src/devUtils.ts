@@ -57,6 +57,9 @@ export function setupDevGlobalFunctions(underworld: Underworld) {
             console.log('card', card, 'not found');
         }
     };
+    globalThis.devKillAll = () => {
+        underworld.units.filter(u => u.unitType !== UnitType.PLAYER_CONTROLLED).forEach(u => Unit.die(u, underworld, false));
+    }
     // For development, spawns a unit near the player
     globalThis.devSpawnUnit = (unitId: string, faction: Faction = Faction.ENEMY) => {
         if (globalThis.player) {

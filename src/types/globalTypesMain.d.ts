@@ -124,6 +124,7 @@ declare global {
     var devMode: undefined | boolean;
     // Used for development to debug the original information used to make a map
     var map: undefined | any;
+    var devKillAll: undefined | (() => void);
     var devSpawnUnit: undefined | ((unitId: string, faction: Faction) => void);
     var devSpawnAllUnits: undefined | (() => void);
     var devRemoveAllEnemies: undefined | ((underworld: Underworld) => void);
