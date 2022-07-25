@@ -47,12 +47,10 @@ export default function devUtils(graphics: PIXI.Graphics) {
 }
 export function setupDevGlobalFunctions(underworld: Underworld) {
     // TODO remove dev helper function for production release
-    globalThis.giveMeCard = (cardId: string, quantity: number = 1) => {
+    globalThis.giveMeCard = (cardId: string) => {
         const card = Cards.allCards[cardId];
         if (card) {
-            for (let i = 0; i < quantity; i++) {
-                addCardToHand(card, globalThis.player, underworld);
-            }
+            addCardToHand(card, globalThis.player, underworld);
         } else {
             console.log('card', card, 'not found');
         }
@@ -104,6 +102,7 @@ export function setupDevGlobalFunctions(underworld: Underworld) {
             globalThis.player.unit.mana = 10000;
             globalThis.player.unit.manaMax = 10000;
             // Give me all cards
+            console.log('jtest', Cards.allCards, Object.keys(Cards.allCards).length)
             if (globalThis.giveMeCard) {
                 Object.keys(Cards.allCards).forEach(globalThis.giveMeCard);
             }
