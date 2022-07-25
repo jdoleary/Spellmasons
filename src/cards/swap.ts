@@ -3,6 +3,7 @@ import * as Pickup from '../entity/Pickup';
 import type { Spell } from '.';
 import type { Vec2 } from '../jmath/Vec';
 import * as config from '../config';
+import * as Vec from '../jmath/Vec';
 
 const id = 'swap';
 const spell: Spell = {
@@ -17,15 +18,15 @@ const spell: Spell = {
 Swaps the caster with the source target.
     `,
     effect: async (state, underworld, prediction) => {
-      const { casterUnit, targetedUnits } = state;
+      const { casterUnit, targetedUnits, targetedPickups } = state;
       // Loop through all targets and batch swap locations
       const swapUnits: [Unit.IUnit, Vec2][] = [];
       const swapPickups: [Pickup.IPickup, Vec2][] = [];
       const swapLocation = { x: casterUnit.x, y: casterUnit.y };
-      // The unit at the location that the targetUnit will swap to
-      const swapUnit = underworld.getUnitAt(swapLocation, prediction);
-      if (swapUnit && targetedUnits[0]) {
-        swapUnits.push([swapUnit, targetedUnits[0]]);
+      // Swap the casterUnit
+      const casterSwapTarget = targetedUnits[0] || targetedPickups[0]
+      if (casterSwapTarget) {
+        swapUnits.push([casterUnit, Vec.clone(casterSwapTarget)]);
       }
       const swapLocations = [swapLocation, ...underworld.findValidSpawns(swapLocation, config.COLLISION_MESH_RADIUS / 4, 4)];
       // The units at the target location
@@ -33,35 +34,28 @@ Swaps the caster with the source target.
         if (targetUnit) {
           swapUnits.push([targetUnit, swapLocations.shift() || swapLocation]);
         }
-        // The pickup at the target location
-        const pickupAtTarget = underworld.getPickupAt(state.castLocation, prediction);
-        // Physically swap with pickups
-        if (pickupAtTarget) {
-          swapPickups.push([pickupAtTarget, swapLocation]);
-        }
-        // The pickup at the swap location
-        const pickupAtSwap = underworld.getPickupAt(swapLocation, prediction);
+      }
+      for (let targetPickup of targetedPickups) {
+        swapPickups.push([targetPickup, swapLocations.shift() || swapLocation]);
 
-        if (pickupAtSwap) {
-          swapPickups.push([pickupAtSwap, targetUnit]);
-        }
       }
-      // Don't swap if there is nothing to swap with
-      // comparing to <=1 because the caster will always
-      // be added to swapUnits
-      if (swapPickups.length + swapUnits.length <= 1) {
-        return state;
+
+      const temporaryPosition = { x: -1000, y: -1000 };
+      // First swap pickups  to a temporary location so that they don't get "picked up" by a unit that
+      // hasn't swapped yet
+      for (let [pickup, _newLocation] of swapPickups) {
+        // Physically swap
+        Pickup.setPosition(pickup, temporaryPosition.x, temporaryPosition.y);
       }
+      for (let [unit, newLocation] of swapUnits) {
+        // Physically swap
+        Unit.setLocation(unit, newLocation);
+      }
+      // Now that the units have swapped, put the pickups at their final resting place
       for (let [pickup, newLocation] of swapPickups) {
         if (!prediction) {
           // Physically swap
           Pickup.setPosition(pickup, newLocation.x, newLocation.y);
-        }
-      }
-      for (let [unit, newLocation] of swapUnits) {
-        if (!prediction) {
-          // Physically swap
-          Unit.setLocation(unit, newLocation);
         }
       }
       return state;

@@ -2,8 +2,8 @@
 - task: Move prediction pickups and units to underworld not global or else they will be shared between multiple underworlds
 - I got an out of range message and error but when I clicked on the end of my blue cast it worked
     - maybe make the whole line grey if there's no target in range?
-- should be able to swap with pickups
 - I got bit by a vampire but it didn't accurately warn me he would
+    - wrap this in with preventing units from changing targets from their prediction even if the decoy dies (lobber move then throw?)
 
 ## Standalone server backlog bugs
 - It's running hot for some reason
