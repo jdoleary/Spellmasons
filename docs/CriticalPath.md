@@ -11,9 +11,10 @@
     - Simultaneous player turns
 - Milestone 2 | **Biomes** | July 28
     - DONE Better liquid
-    - More interactable doodads (explosive barrels, movable cover)
     - Simpler tiles?
     - Unblock Che for tile art
+- Milestone X | *Doodads*
+    - More interactable doodads (explosive barrels, movable cover)
 - DONE - Milestone 3 | **Balance**
     - Increase difficulty
         - Difficulty is directly related to fun, it isn't a puzzel if you can just "hurt" your way through it over and over
