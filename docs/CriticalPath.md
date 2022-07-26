@@ -9,17 +9,16 @@
 - DONE - Milestone 1 | **Reliable Multiplayer** | July 22
     - Standalone Server
     - Simultaneous player turns
-- Milestone 2 | **Biomes** | July 28
+- DONE Milestone 2 | **Biomes** | July 28
     - DONE Better liquid
-    - Simpler tiles?
-    - Unblock Che for tile art
-- Milestone X | *Doodads*
-    - More interactable doodads (explosive barrels, movable cover)
+    - DONE Unblock Che for tile art
 - DONE - Milestone 3 | **Balance**
     - Increase difficulty
         - Difficulty is directly related to fun, it isn't a puzzel if you can just "hurt" your way through it over and over
     - Smaller levels
         - Since this is turn based, super large levels are obnoxious
+- Milestone X | *Doodads*
+    - More interactable doodads (explosive barrels, movable cover)
 - Milestone 4 | **Perfect Prediction Attacks** | Due Aug 8
     - Units should NEVER change target from their prediction. A case where this happened is when a decoy died from other units attacking it
     - Grunt attack predictions are not perfect. See branch 'perfect-predictions'
