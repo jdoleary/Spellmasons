@@ -485,9 +485,6 @@ export function addPixiSpriteAnimated(
   if (texture) {
     const animatedSprite = new globalThis.pixi.AnimatedSprite(texture);
     animatedSprite.animationSpeed = options.animationSpeed || 0.1;
-    if (globalThis.devMode) {
-      animatedSprite.animationSpeed = 0.5;
-    }
     if (options.onComplete) {
       animatedSprite.onComplete = options.onComplete;
     }
