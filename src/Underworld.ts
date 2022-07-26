@@ -1790,12 +1790,23 @@ export default class Underworld {
       }
     }
 
+    // "quantity" is the number of identical cards cast in a row. Rather than casting the card sequentially
+    // quantity allows the card to have a unique scaling effect when cast sequentially after itself.
+    let quantity = 1;
     for (let index = 0; index < effectState.cardIds.length; index++) {
       const cardId = effectState.cardIds[index];
-      if (!cardId) {
+      if (cardId === undefined) {
         console.error('card id is undefined in loop', index, effectState.cardIds);
         continue;
       }
+      const nextCardId = effectState.cardIds[index + 1];
+      if (nextCardId !== undefined) {
+        if (nextCardId === cardId) {
+          quantity++;
+          continue;
+        }
+      }
+
       const card = Cards.allCards[cardId];
       const animationPromises: Promise<void>[] = [];
       if (card) {
@@ -1817,31 +1828,35 @@ export default class Underworld {
             }
           }
         }
-        await Promise.all(animationPromises);
 
         // .then is necessary to convert return type of promise.all to just be void
         const { targetedUnits: previousTargets } = effectState;
-        effectState = await card.effect(effectState, this, prediction);
+        const promiseResults = await Promise.all([card.effect(effectState, quantity, this, prediction), ...animationPromises]);
+        // Overwrite effectState with the result of the card.effect() promise
+        effectState = promiseResults[0];
+
         // Clear images from previous card before drawing the images from the new card
         containerSpells?.removeChildren();
 
-        // Animate target additions:
-        if (!prediction) {
-          setPredictionGraphicsLineStyle(colors.targetBlue);
-          for (let targetedUnit of effectState.targetedUnits) {
-            // If already included target:
-            if (
-              previousTargets.find((t) => t.x === targetedUnit.x && t.y === targetedUnit.y)
-            ) {
-              // Don't animate previous targets, they should be drawn full, immediately
-              drawTarget(targetedUnit, false, this);
-            } else {
-              // If a new target, animate it in
-              drawTarget(targetedUnit, false, this);
-            }
-          }
-        }
+        // // Animate target additions:
+        // if (!prediction) {
+        //   setPredictionGraphicsLineStyle(colors.targetBlue);
+        //   for (let targetedUnit of effectState.targetedUnits) {
+        //     // If already included target:
+        //     if (
+        //       previousTargets.find((t) => t.x === targetedUnit.x && t.y === targetedUnit.y)
+        //     ) {
+        //       // Don't animate previous targets, they should be drawn full, immediately
+        //       drawTarget(targetedUnit, false, this);
+        //     } else {
+        //       // If a new target, animate it in
+        //       drawTarget(targetedUnit, false, this);
+        //     }
+        //   }
+        // }
       }
+      // Reset quantity once a card is cast
+      quantity = 1;
     }
     if (!prediction) {
       // Clear spell animations once all cards are done playing their animations

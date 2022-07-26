@@ -20,7 +20,7 @@ const spell: Spell = {
     description: `
 Clones each target
     `,
-    effect: async (state, underworld, prediction) => {
+    effect: async (state, quantity, underworld, prediction) => {
       // Batch find targets that should be cloned
       // Note: They need to be batched so that the new clones don't get cloned
       const clonePairs: Vec2[][] = [];

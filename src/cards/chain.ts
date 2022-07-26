@@ -19,7 +19,7 @@ const spell: Spell = {
 Adds targets for the following cards to effect by "chaining like electricity" 
 off of all existing targeted units to units touching them. 
     `,
-    effect: async (state, underworld, prediction) => {
+    effect: async (state, quantity, underworld, prediction) => {
       // Note: This loop must NOT be a for..of because it
       // mutates state.targetedUnits as it iterates.
       for (let i = 0; i < state.targetedUnits.length; i++) {

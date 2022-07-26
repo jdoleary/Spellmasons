@@ -158,7 +158,7 @@ export interface EffectState {
 }
 export type EffectFn = {
   // Dry run is for displaying to the user what will happen if they cast
-  (state: EffectState, underworld: Underworld, prediction: boolean): Promise<EffectState>;
+  (state: EffectState, quantity: number, underworld: Underworld, prediction: boolean): Promise<EffectState>;
 };
 export interface ICard {
   id: string;

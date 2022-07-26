@@ -21,7 +21,7 @@ const spell: Spell = {
     description: `
 Pulls the target(s) towards the caster 
     `,
-    effect: async (state, underworld, prediction) => {
+    effect: async (state, quantity, underworld, prediction) => {
       let promises = [];
       for (let unit of state.targetedUnits) {
         promises.push(pull(unit, state.casterUnit, underworld, prediction));

@@ -62,7 +62,7 @@ const spell: Spell = {
     thumbnail: 'bite.png',
     description: `Turns the victim into a Vampire.
     `,
-    effect: async (state, underworld, prediction) => {
+    effect: async (state, quantity, underworld, prediction) => {
       for (let unit of state.targetedUnits) {
         Unit.addModifier(unit, id, underworld);
       }

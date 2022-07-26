@@ -21,7 +21,7 @@ const spell: Spell = {
     description: `
 Pushes the target(s) away from the caster 
     `,
-    effect: async (state, underworld, prediction) => {
+    effect: async (state, quantity, underworld, prediction) => {
       let promises = [];
       const awayFrom = state.casterUnit;
       for (let unit of state.targetedUnits) {
