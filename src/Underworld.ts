@@ -1824,23 +1824,6 @@ export default class Underworld {
         effectState = await card.effect(effectState, this, prediction);
         // Clear images from previous card before drawing the images from the new card
         containerSpells?.removeChildren();
-
-        // Animate target additions:
-        if (!prediction) {
-          setPredictionGraphicsLineStyle(colors.targetBlue);
-          for (let targetedUnit of effectState.targetedUnits) {
-            // If already included target:
-            if (
-              previousTargets.find((t) => t.x === targetedUnit.x && t.y === targetedUnit.y)
-            ) {
-              // Don't animate previous targets, they should be drawn full, immediately
-              drawTarget(targetedUnit, false, this);
-            } else {
-              // If a new target, animate it in
-              drawTarget(targetedUnit, false, this);
-            }
-          }
-        }
       }
     }
     if (!prediction) {
