@@ -9,7 +9,7 @@ import { JSpriteAnimated } from './Image';
 import { containerParticles } from './Particles';
 import { elPIXIHolder } from './FloatingText';
 import Underworld from '../Underworld';
-import shaderLiquid from './shaders/shader_liquid';
+import shaderLiquid, { liquidUniforms } from './shaders/shader_liquid';
 
 // if PIXI is finished setting up
 let isReady = false;
@@ -236,6 +236,8 @@ export function updateCameraPosition(underworld: Underworld) {
   // Note: This must happen BEFORE the stage x and y is updated
   // or else it will get jumpy when zooming
   const zoom = calculateCameraZoom();
+
+  liquidUniforms.uZoom = zoom;
 
   app.stage.scale.x = zoom;
   app.stage.scale.y = zoom;
