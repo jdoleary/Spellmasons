@@ -1,4 +1,5 @@
 ## This weeks goals:
+- Allow changeSprite to override sprite when it's animation.hit only
 - bug: A map with no enemies: '0.47596223309121266'
 - bug: AOE is giving me "no target" when I click on ground (hurtx4,aoe,hurt)
 - task: Move prediction pickups and units to underworld not global or else they will be shared between multiple underworlds
