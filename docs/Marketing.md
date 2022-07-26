@@ -17,18 +17,18 @@
 
 - Homepage / Marketing / Steam Page / Email Signup
     - Marketing (Tell a story)
+        - Main tagline: "Multiplayer Tactical Wizardry. Spellmasons"
         - "Plan. Combine. Unleash. Spellmasons!"
         - "Coorindate. Strategize. Invent. Spellmasons!"
-        - "Invent magic together.  Spellmasons!"
         - "Magic with friends! Spellmasons"
         - "Magic is more fun with friends! Spellmasons"
         - Synonyms:
             - Plan / Plot / Conspire / Devise
             - Unleash / Execute
             - Invent / Envision / Formulate
-        - Spellmasons is a multiplayer creative problem solving game where you can
+        - Spellmasons is a ["multiplayer creative problem solving", "multiplayer tactical wizardry"] game where you can
             - "push monsters into lava"
-            - "resurrect your dead enemies to fight for you, and send them out against their brotheren"
+            - "resurrect your dead enemies to fight for you, and send them out against their allies"
     - How to reach people to review
         - See curators on steam
 - Video ideas
