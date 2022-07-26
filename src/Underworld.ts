@@ -1808,52 +1808,13 @@ export default class Underworld {
       }
 
       const card = Cards.allCards[cardId];
-      const animationPromises: Promise<void>[] = [];
       if (card) {
-        const targets = effectState.targetedUnits.length == 0 ? [castLocation] : effectState.targetedUnits
-        // Play the card sound effect:
-        if (!prediction && card.sfx) {
-          if (globalThis.playSFX && globalThis.sfx) {
-            globalThis.playSFX(globalThis.sfx[card.sfx]);
-          }
-        }
-        for (let target of targets) {
 
-          // Animate the card for each target
-          if (!prediction) {
-            if (card.animationPath) {
-              animationPromises.push(this.animateSpell(target, card.animationPath));
-            } else {
-              console.log('Card', cardId, 'has no animation path')
-            }
-          }
-        }
-
-        // .then is necessary to convert return type of promise.all to just be void
-        const { targetedUnits: previousTargets } = effectState;
-        const promiseResults = await Promise.all([card.effect(effectState, quantity, this, prediction), ...animationPromises]);
-        // Overwrite effectState with the result of the card.effect() promise
-        effectState = promiseResults[0];
+        effectState = await card.effect(effectState, quantity, this, prediction);
 
         // Clear images from previous card before drawing the images from the new card
         containerSpells?.removeChildren();
 
-        // // Animate target additions:
-        // if (!prediction) {
-        //   setPredictionGraphicsLineStyle(colors.targetBlue);
-        //   for (let targetedUnit of effectState.targetedUnits) {
-        //     // If already included target:
-        //     if (
-        //       previousTargets.find((t) => t.x === targetedUnit.x && t.y === targetedUnit.y)
-        //     ) {
-        //       // Don't animate previous targets, they should be drawn full, immediately
-        //       drawTarget(targetedUnit, false, this);
-        //     } else {
-        //       // If a new target, animate it in
-        //       drawTarget(targetedUnit, false, this);
-        //     }
-        //   }
-        // }
       }
       // Reset quantity once a card is cast
       quantity = 1;
@@ -1864,35 +1825,6 @@ export default class Underworld {
     }
 
     return effectState;
-  }
-  async animateSpell(target: Vec2, imagePath: string): Promise<void> {
-    if (imagePath.indexOf('.png') !== -1) {
-      console.error('Cannot animate a still image, this function requires an animation path or else it will not "hide when complete"', imagePath);
-      return Promise.resolve();
-    }
-    // This timeout value is arbitrary, meant to prevent and report an await hang
-    // if somehow resolve is never called
-    return raceTimeout(6000, `animateSpell: ${imagePath}`, new Promise<void>((resolve) => {
-      const image = Image.create(
-        target,
-        imagePath,
-        containerUI,
-        {
-          loop: false,
-          animationSpeed: 0.15,
-          onComplete: () => {
-            Image.hide(image)
-            Image.cleanup(image);
-            resolve();
-          }
-        }
-      );
-      if (image) {
-        image.resolver = resolve;
-      }
-    }));
-
-
   }
   checkIfShouldSpawnPortal() {
     if (this.units.filter(u => u.faction == Faction.ENEMY).every(u => !u.alive)) {

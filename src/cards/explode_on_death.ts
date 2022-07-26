@@ -6,6 +6,7 @@ import { drawPredictionCircle } from '../graphics/PlanningView';
 import { forcePush } from './push';
 import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
+import { animateSpell } from './cardUtils';
 
 const id = 'Bloat';
 const imageName = 'explode-on-death.png';
@@ -63,7 +64,7 @@ const spell: Spell = {
     onDeath: async (unit: IUnit, underworld: Underworld, prediction: boolean) => {
       drawPredictionCircle(unit, range);
       if (!prediction) {
-        underworld.animateSpell(unit, 'explode-on-death.png');
+        animateSpell(unit, 'explode-on-death.png');
       }
       underworld.getUnitsWithinDistanceOfTarget(
         unit,

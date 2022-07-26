@@ -1,9 +1,63 @@
 import type { ICard } from ".";
-import * as config from '../config';
-import type { CardUsage, IPlayer } from "../entity/Player";
+import type { CardUsage } from "../entity/Player";
+import { Vec2 } from "../jmath/Vec";
+import { raceTimeout } from "../Promise";
+import * as Image from '../graphics/Image';
+import { containerUI } from "../graphics/PixiUtils";
 export interface CardCost {
     manaCost: number;
     healthCost: number;
+}
+export function playDefaultSpellSFX(card: ICard, prediction: boolean) {
+    // Play the card sound effect:
+    if (!prediction && card.sfx) {
+        if (globalThis.playSFX && globalThis.sfx) {
+            globalThis.playSFX(globalThis.sfx[card.sfx]);
+        }
+    }
+}
+export async function playDefaultSpellAnimation(card: ICard, targets: Vec2[], prediction: boolean) {
+    let promises = [];
+    for (let target of targets) {
+        // Animate the card for each target
+        if (!prediction) {
+            if (card.animationPath) {
+                promises.push(animateSpell(target, card.animationPath));
+            } else {
+                console.log('Card', card.id, 'has no animation path')
+            }
+        }
+    }
+    return Promise.all(promises);
+}
+export async function animateSpell(target: Vec2, imagePath: string): Promise<void> {
+    if (imagePath.indexOf('.png') !== -1) {
+        console.error('Cannot animate a still image, this function requires an animation path or else it will not "hide when complete"', imagePath);
+        return Promise.resolve();
+    }
+    // This timeout value is arbitrary, meant to prevent and report an await hang
+    // if somehow resolve is never called
+    return raceTimeout(6000, `animateSpell: ${imagePath}`, new Promise<void>((resolve) => {
+        const image = Image.create(
+            target,
+            imagePath,
+            containerUI,
+            {
+                loop: false,
+                animationSpeed: 0.15,
+                onComplete: () => {
+                    Image.hide(image)
+                    Image.cleanup(image);
+                    resolve();
+                }
+            }
+        );
+        if (image) {
+            image.resolver = resolve;
+        }
+    }));
+
+
 }
 export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number = 0): CardCost {
     let cardCost = { manaCost: 0, healthCost: 0 }
