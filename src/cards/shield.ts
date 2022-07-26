@@ -21,7 +21,7 @@ const spell: Spell = {
     description: `
 Protects bearer from the next ${damageBlocked} damage that they would incur.
     `,
-    effect: async (state, underworld) => {
+    effect: async (state, quantity, underworld) => {
       for (let unit of state.targetedUnits) {
         Unit.addModifier(unit, id, underworld);
       }
