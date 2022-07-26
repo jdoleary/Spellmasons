@@ -176,9 +176,11 @@ export function generateCave(params: CaveParams, underworld: Underworld): { map:
         return { image, x: dimentions.x * config.OBSTACLE_SIZE, y: dimentions.y * config.OBSTACLE_SIZE }
     });
     const bounds = getLimits(tiles);
+    const liquid = tiles.filter(t => t.image == baseTiles.liquid);
 
 
     const map = {
+        liquid,
         tiles,
         width,
         height
@@ -273,30 +275,47 @@ export function convertBaseTilesToFinalTiles(map: Map) {
         });
         // Change ground tiles
         if (currentCell?.image == baseTiles.ground) {
-            if (neighbors.west == baseTiles.liquid && neighbors.south == baseTiles.liquid) {
-                changeTile(i, finalTileImages.liquidInsideCornerNE);
-            } else if (neighbors.east == baseTiles.liquid && neighbors.south == baseTiles.liquid) {
-                changeTile(i, finalTileImages.liquidInsideCornerNW);
-            } else if (neighbors.east == baseTiles.liquid && neighbors.north == baseTiles.liquid) {
-                changeTile(i, finalTileImages.liquidInsideCornerSW);
-            } else if (neighbors.west == baseTiles.liquid && neighbors.north == baseTiles.liquid) {
-                changeTile(i, finalTileImages.liquidInsideCornerSE);
-            } else if (neighbors.north == baseTiles.liquid) {
-                changeTile(i, finalTileImages.liquidNGroundS);
-            } else if (neighbors.east == baseTiles.liquid) {
-                changeTile(i, finalTileImages.liquidEGroundW);
-            } else if (neighbors.west == baseTiles.liquid) {
-                changeTile(i, finalTileImages.liquidWGroundE);
-            } else if (neighbors.south == baseTiles.liquid) {
-                changeTile(i, finalTileImages.liquidSGroundN);
-            } else if (neighbors.northeast == baseTiles.liquid) {
-                changeTile(i, finalTileImages.liquidCornerNE);
-            } else if (neighbors.northwest == baseTiles.liquid) {
-                changeTile(i, finalTileImages.liquidCornerNW);
-            } else if (neighbors.southeast == baseTiles.liquid) {
-                changeTile(i, finalTileImages.liquidCornerSE);
-            } else if (neighbors.southwest == baseTiles.liquid) {
-                changeTile(i, finalTileImages.liquidCornerSW);
+            const tile = map.tiles[i];
+            if (tile) {
+                if (neighbors.west == baseTiles.liquid && neighbors.south == baseTiles.liquid) {
+                    changeTile(i, finalTileImages.liquidInsideCornerNE);
+                    map.liquid.push({ image: baseTiles.liquid, x: tile.x, y: tile.y })
+                } else if (neighbors.east == baseTiles.liquid && neighbors.south == baseTiles.liquid) {
+                    changeTile(i, finalTileImages.liquidInsideCornerNW);
+                    map.liquid.push({ image: baseTiles.liquid, x: tile.x, y: tile.y })
+                } else if (neighbors.east == baseTiles.liquid && neighbors.north == baseTiles.liquid) {
+                    changeTile(i, finalTileImages.liquidInsideCornerSW);
+                    map.liquid.push({ image: baseTiles.liquid, x: tile.x, y: tile.y })
+                } else if (neighbors.west == baseTiles.liquid && neighbors.north == baseTiles.liquid) {
+                    changeTile(i, finalTileImages.liquidInsideCornerSE);
+                    map.liquid.push({ image: baseTiles.liquid, x: tile.x, y: tile.y })
+                } else if (neighbors.north == baseTiles.liquid) {
+                    changeTile(i, finalTileImages.liquidNGroundS);
+                    map.liquid.push({ image: baseTiles.liquid, x: tile.x, y: tile.y })
+                } else if (neighbors.east == baseTiles.liquid) {
+                    changeTile(i, finalTileImages.liquidEGroundW);
+                    map.liquid.push({ image: baseTiles.liquid, x: tile.x, y: tile.y })
+                } else if (neighbors.west == baseTiles.liquid) {
+                    changeTile(i, finalTileImages.liquidWGroundE);
+                    map.liquid.push({ image: baseTiles.liquid, x: tile.x, y: tile.y })
+                } else if (neighbors.south == baseTiles.liquid) {
+                    changeTile(i, finalTileImages.liquidSGroundN);
+                    map.liquid.push({ image: baseTiles.liquid, x: tile.x, y: tile.y })
+                } else if (neighbors.northeast == baseTiles.liquid) {
+                    changeTile(i, finalTileImages.liquidCornerNE);
+                    map.liquid.push({ image: baseTiles.liquid, x: tile.x, y: tile.y })
+                } else if (neighbors.northwest == baseTiles.liquid) {
+                    changeTile(i, finalTileImages.liquidCornerNW);
+                    map.liquid.push({ image: baseTiles.liquid, x: tile.x, y: tile.y })
+                } else if (neighbors.southeast == baseTiles.liquid) {
+                    changeTile(i, finalTileImages.liquidCornerSE);
+                    map.liquid.push({ image: baseTiles.liquid, x: tile.x, y: tile.y })
+                } else if (neighbors.southwest == baseTiles.liquid) {
+                    changeTile(i, finalTileImages.liquidCornerSW);
+                    map.liquid.push({ image: baseTiles.liquid, x: tile.x, y: tile.y })
+                }
+            } else {
+                console.error('Unexpected map generation error, tile is undefined.')
             }
         }
         // change wall tiles
@@ -515,7 +534,8 @@ export function getLimits(points: Vec.Vec2[]): Limits {
 }
 export type Tile = { image: string } & Vec.Vec2;
 interface Map {
-    tiles: (Tile | undefined)[];
+    liquid: Tile[];
+    tiles: Tile[];
     width: number;
     height: number;
 }

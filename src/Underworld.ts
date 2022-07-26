@@ -28,6 +28,7 @@ import {
   containerPlayerThinking,
   containerWalls,
   addPixiSprite,
+  containerLiquid,
 } from './graphics/PixiUtils';
 import { queueCenteredFloatingText } from './graphics/FloatingText';
 import { UnitType, Faction, UnitSubType } from './types/commonTypes';
@@ -786,6 +787,7 @@ export default class Underworld {
       }
     });
     const map = {
+      liquid: [],
       tiles: _tiles,
       width,
       height
@@ -795,6 +797,7 @@ export default class Underworld {
     const { tiles } = map;
     return {
       levelIndex: 1,
+      liquid: [],
       limits: getLimits(tiles),
       obstacles: tiles.flatMap(t => {
         const obstacle = t && toObstacle(t);
@@ -819,10 +822,11 @@ export default class Underworld {
       return;
     }
     const { map, limits } = generateCave(levelIndex > 6 ? caveSizes.medium : caveSizes.small, this);
-    const { tiles } = map;
+    const { tiles, liquid } = map;
     const levelData: LevelData = {
       levelIndex,
       limits,
+      liquid,
       obstacles: tiles.flatMap(t => {
         const obstacle = t && toObstacle(t);
         return obstacle ? [obstacle] : [];
@@ -1012,9 +1016,16 @@ export default class Underworld {
     // Clean up the previous level
     this.cleanUpLevel();
 
-    const { levelIndex, limits, imageOnlyTiles, pickups, enemies, obstacles, validPlayerSpawnCoords } = levelData;
+    const { levelIndex, limits, liquid, imageOnlyTiles, pickups, enemies, obstacles, validPlayerSpawnCoords } = levelData;
     this.levelIndex = levelIndex;
     this.limits = limits;
+    for (let tile of liquid) {
+      const sprite = addPixiSprite('tiles/whiteTile.png', containerLiquid);
+      if (sprite) {
+        sprite.x = tile.x - config.COLLISION_MESH_RADIUS;
+        sprite.y = tile.y - config.COLLISION_MESH_RADIUS;
+      }
+    }
     // empty tiles are tiles with an image of ''
     this.cacheWalls(obstacles, imageOnlyTiles.filter(x => x.image == ''));
     this.imageOnlyTiles = imageOnlyTiles;
@@ -2131,6 +2142,7 @@ export interface LevelData {
   levelIndex: number,
   limits: Limits,
   obstacles: Obstacle.IObstacle[];
+  liquid: Tile[];
   imageOnlyTiles: Tile[];
   pickups: {
     index: number;

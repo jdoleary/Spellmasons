@@ -76,7 +76,9 @@ if (globalThis.pixi && containerUI && app && containerBetweenBoardAndWalls) {
   globalThis.devDebugGraphics.lineStyle(3, 0x0000ff, 1.0);
   containerUI.addChild(globalThis.devDebugGraphics);
 
-  if (containerBoard &&
+  if (
+    containerLiquid &&
+    containerBoard &&
     containerBetweenBoardAndWalls &&
     containerWalls &&
     containerPlanningView &&
@@ -92,6 +94,7 @@ if (globalThis.pixi && containerUI && app && containerBetweenBoardAndWalls) {
   ) {
 
     utilProps.underworldPixiContainers = [
+      containerLiquid,
       containerBoard,
       containerBetweenBoardAndWalls,
       containerWalls,
