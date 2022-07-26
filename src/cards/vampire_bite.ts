@@ -10,13 +10,23 @@ export const id = 'Exsanguinate';
 export function isVampire(unit: IUnit): boolean {
   return Object.keys(unit.modifiers).some(m => m === id)
 }
+const healthMultiplier = 2;
 function add(unit: IUnit, underworld: Underworld) {
   // Note: Curse can stack multiple times but doesn't keep any state
   // so it doesn't need a first time setup like freeze does
 
+  // Do NOT apply this curse more than once, otherwise you could double
+  // your health more than once
+  if (unit.modifiers[id]) {
+    return;
+  }
+
   unit.modifiers[id] = { isCurse: true };
   // Add event
   unit.onDamageEvents.push(id);
+
+  unit.healthMax *= healthMultiplier;
+  unit.health *= healthMultiplier;
 
   // If unit belongs to player
   const player = underworld.players.find(p => p.unit == unit)
@@ -27,6 +37,11 @@ function add(unit: IUnit, underworld: Underworld) {
 function remove(unit: IUnit, underworld: Underworld) {
   // remove subsprite image
   Image.removeSubSprite(unit.image, id);
+
+  unit.health /= healthMultiplier;
+  unit.health = Math.round(unit.health);
+  unit.healthMax /= healthMultiplier;
+  unit.healthMax = Math.round(unit.healthMax);
 
   // If unit belongs to player
   const player = underworld.players.find(p => p.unit == unit)
@@ -65,9 +80,8 @@ const spell: Spell = {
       if (amount < 0) {
         return -1 * amount;
       } else {
-        // Takes regular damage at half
-        return Math.round(amount / 2);
-
+        // Takes regular damage just as damage
+        return amount;
       }
     },
   },
