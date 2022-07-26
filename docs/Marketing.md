@@ -4,6 +4,8 @@
     - Reroute spellmasons.com to the steam page directly
     - Deside on a hard release date
     - Contractors
+        - "Spellmasons.com" voiceover
+            - https://www.fiverr.com/whsmcompany/voice-over-artist-for-hire?context_referrer=user_page&ref_ctx_id=8bdac01683fe1e63273125e485dc837c&pckg_id=1&pos=1&imp_id=cfbadd76-e036-4dc5-b701-aeba0d1ca052
         - Social Media
             - https://www.fiverr.com/arseldabrahimi/be-your-social-media-manager-marketing-2415?context_referrer=user_page&ref_ctx_id=1345a6c7774476a75ea0e7f67f357d5a&pckg_id=1&pos=1&imp_id=528588d5-0a34-4f92-a885-93ed44860a3c
         - Thumbnails

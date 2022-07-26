@@ -17,21 +17,18 @@
         - Difficulty is directly related to fun, it isn't a puzzel if you can just "hurt" your way through it over and over
     - Smaller levels
         - Since this is turn based, super large levels are obnoxious
-- Milestone X | *Doodads*
-    - More interactable doodads (explosive barrels, movable cover)
 - Milestone 4 | **Perfect Prediction Attacks** | Due Aug 8
     - Units should NEVER change target from their prediction. A case where this happened is when a decoy died from other units attacking it
     - Grunt attack predictions are not perfect. See branch 'perfect-predictions'
     - Move predictionUnits and predictionPickups out of globalThis so they don't get clobbered when multiple instances on a single server
 - Milestone 5 | **Movement & Spell Quantity** | Due Aug 11
-    - Pack 14 | Spell quantity
-        - Task: Implement quantity for each spell effect
-        - Task: Reimplement animations, use default animation in cardUtils if necessary
-        - What happens when multiple, identical spells are cast in sequence?
-            - Pass a quantity var to the spell and have each spell handle it manually, do not allow them to be .effect() back to back
+    - DONE Pack 14 | Spell quantity
     - Pack 15
         - Improved force movement
         - Blood trails - use stealth'emup's code, or figure out how to streak blood
+            - blood splatter on take damage, leave it all over the map
+- Milestone X | **Doodads**
+    - More interactable doodads (explosive barrels, movable cover)
 - Milestone X | **Juice** | Due Date Ongoing
     - SFX
         - Unit Sounds
