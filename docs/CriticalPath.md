@@ -10,7 +10,7 @@
     - Standalone Server
     - Simultaneous player turns
 - Milestone 2 | **Biomes** | July 28
-    - Better liquid
+    - DONE Better liquid
     - More interactable doodads (explosive barrels, movable cover)
     - Simpler tiles?
     - Unblock Che for tile art
