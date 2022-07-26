@@ -1,10 +1,11 @@
 import { IUnit, takeDamage } from '../entity/Unit';
 import * as Unit from '../entity/Unit';
 import * as Image from '../graphics/Image';
-import type { Spell } from '.';
+import { Spell } from './index';
 import { drawPredictionCircle } from '../graphics/PlanningView';
 import { forcePush } from './push';
 import Underworld from '../Underworld';
+import { CardCategory } from '../types/commonTypes';
 
 const id = 'Bloat';
 const imageName = 'explode-on-death.png';
@@ -28,6 +29,7 @@ function add(unit: IUnit) {
 const spell: Spell = {
   card: {
     id,
+    category: CardCategory.Curses,
     manaCost: 15,
     healthCost: 0,
     expenseScaling: 1,

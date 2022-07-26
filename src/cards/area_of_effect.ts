@@ -1,11 +1,13 @@
-import { addPickupTarget, addUnitTarget, Spell } from '.';
+import { addPickupTarget, addUnitTarget, Spell } from './index';
 import { drawPredictionCircle } from '../graphics/PlanningView';
+import { CardCategory } from '../types/commonTypes';
 
 const id = 'Expanding';
 const range = 140;
 const spell: Spell = {
   card: {
     id,
+    category: CardCategory.Targeting,
     manaCost: 20,
     healthCost: 0,
     expenseScaling: 1,

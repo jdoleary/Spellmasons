@@ -1,9 +1,10 @@
 import type { IUnit } from '../entity/Unit';
 import * as Image from '../graphics/Image';
-import { allCards, Spell } from '.';
+import { allCards, Spell } from './index';
 import { addCardToHand, removeCardsFromHand } from '../entity/Player';
 import * as Unit from '../entity/Unit';
 import Underworld from '../Underworld';
+import { CardCategory } from '../types/commonTypes';
 
 export const id = 'Exsanguinate';
 export function isVampire(unit: IUnit): boolean {
@@ -38,6 +39,7 @@ function remove(unit: IUnit, underworld: Underworld) {
 const spell: Spell = {
   card: {
     id,
+    category: CardCategory.Curses,
     manaCost: 20,
     healthCost: 0,
     expenseScaling: 1,

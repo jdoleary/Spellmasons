@@ -1,8 +1,8 @@
 import * as Unit from '../entity/Unit';
 import * as Image from '../graphics/Image';
-import type { Spell } from '.';
+import { Spell } from './index';
 import floatingText from '../graphics/FloatingText';
-import Underworld from '../Underworld';
+import { CardCategory } from '../types/commonTypes';
 
 const id = 'shield';
 const imageName = 'shield.png';
@@ -11,6 +11,7 @@ const maxStack = 1;
 const spell: Spell = {
   card: {
     id,
+    category: CardCategory.Blessings,
     manaCost: 60,
     healthCost: 0,
     expenseScaling: 1,

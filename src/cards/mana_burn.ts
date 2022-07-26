@@ -1,5 +1,6 @@
 import * as Unit from '../entity/Unit';
-import type { Spell } from '.';
+import { CardCategory } from '../types/commonTypes';
+import { Spell } from './index';
 
 const id = 'mana_burn';
 const mana_burnt = 30;
@@ -7,6 +8,7 @@ const health_burn_ratio = .1;
 const spell: Spell = {
   card: {
     id,
+    category: CardCategory.Mana,
     manaCost: 20,
     healthCost: 0,
     expenseScaling: 1,

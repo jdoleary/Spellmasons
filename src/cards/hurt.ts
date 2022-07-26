@@ -1,5 +1,6 @@
 import * as Unit from '../entity/Unit';
-import type { Spell } from '.';
+import { CardCategory } from '../types/commonTypes';
+import { Spell } from './index';
 
 export const id = 'hurt';
 const damageDone = 2;
@@ -14,6 +15,7 @@ export interface UnitDamage {
 const spell: Spell = {
   card: {
     id,
+    category: CardCategory.Primary,
     manaCost: 10,
     healthCost: 0,
     expenseScaling: 1,

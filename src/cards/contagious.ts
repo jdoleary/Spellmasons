@@ -7,6 +7,7 @@ import { createVisualLobbingProjectile } from '../entity/Projectile';
 import floatingText from '../graphics/FloatingText';
 import * as Unit from '../entity/Unit';
 import Underworld from '../Underworld';
+import { CardCategory } from '../types/commonTypes';
 
 const id = 'contagious';
 const imageName = 'contagious.png'
@@ -27,6 +28,7 @@ function add(unit: IUnit) {
 const spell: Spell = {
   card: {
     id,
+    category: CardCategory.Curses,
     manaCost: 50,
     healthCost: 0,
     expenseScaling: 1,

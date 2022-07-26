@@ -14,3 +14,12 @@ export enum Faction {
   ALLY,
   ENEMY,
 }
+
+export enum CardCategory {
+  Movement,
+  Targeting,
+  Mana,
+  Curses,
+  Blessings,
+  Primary
+}

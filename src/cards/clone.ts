@@ -1,7 +1,7 @@
-import type { Spell } from '.';
+import { Spell } from './index';
 import * as Unit from '../entity/Unit';
 import * as Pickup from '../entity/Pickup';
-import { UnitSubType, UnitType } from '../types/commonTypes';
+import { CardCategory, UnitSubType, UnitType } from '../types/commonTypes';
 import { jitter, Vec2 } from '../jmath/Vec';
 import * as config from '../config';
 import floatingText from '../graphics/FloatingText';
@@ -11,6 +11,7 @@ const id = 'clone';
 const spell: Spell = {
   card: {
     id,
+    category: CardCategory.Primary,
     manaCost: 80,
     healthCost: 0,
     probability: 1,

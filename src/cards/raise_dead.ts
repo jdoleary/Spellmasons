@@ -1,6 +1,7 @@
 import * as Unit from '../entity/Unit';
 import { ColorOverlayFilter } from '@pixi/filter-color-overlay';
-import type { Spell } from '.';
+import { Spell } from './index';
+import { CardCategory } from '../types/commonTypes';
 
 const id = 'resurrect';
 // Brings stats back to this amount on res
@@ -8,6 +9,7 @@ const resStatAmount = 1.0;
 const spell: Spell = {
   card: {
     id,
+    category: CardCategory.Primary,
     manaCost: 80,
     healthCost: 0,
     expenseScaling: 2,

@@ -38,17 +38,11 @@ import { IUpgrade, upgradeCardsSource } from '../Upgrade';
 import { _getCardsFromIds } from './cardUtils';
 import { addCardToHand } from '../entity/Player';
 import Underworld from '../Underworld';
+import { CardCategory } from '../types/commonTypes';
 export interface Modifiers {
   subsprite?: Subsprite;
   add?: (unit: Unit.IUnit, underworld: Underworld) => void;
   remove?: (unit: Unit.IUnit, underworld: Underworld) => void;
-}
-// TODO: If I decide to hoist cards, do it here
-export enum CardType {
-  CardsModifier,
-  Target,
-  DirectEffect,
-  PostCast
 }
 export interface Spell {
   card: ICard;
@@ -166,10 +160,9 @@ export type EffectFn = {
   // Dry run is for displaying to the user what will happen if they cast
   (state: EffectState, underworld: Underworld, prediction: boolean): Promise<EffectState>;
 };
-
 export interface ICard {
   id: string;
-  // type: CardType;
+  category: CardCategory;
   manaCost: number;
   // Used in trap to reduce the cost of the spell by a percentage
   manaCostMultiplier?: number;

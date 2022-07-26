@@ -1,14 +1,16 @@
 import * as Unit from '../entity/Unit';
 import * as Pickup from '../entity/Pickup';
-import type { Spell } from '.';
+import { Spell } from './index';
 import type { Vec2 } from '../jmath/Vec';
 import * as config from '../config';
 import * as Vec from '../jmath/Vec';
+import { CardCategory } from '../types/commonTypes';
 
 const id = 'swap';
 const spell: Spell = {
   card: {
     id,
+    category: CardCategory.Movement,
     manaCost: 15,
     healthCost: 0,
     probability: 5,

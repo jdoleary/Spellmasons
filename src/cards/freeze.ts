@@ -1,7 +1,7 @@
 import * as Unit from '../entity/Unit';
 import * as Image from '../graphics/Image';
-import type { Spell } from '.';
-import { UnitType } from '../types/commonTypes';
+import { Spell } from './index';
+import { CardCategory, UnitType } from '../types/commonTypes';
 import * as config from '../config'
 import Underworld from '../Underworld';
 
@@ -10,6 +10,7 @@ const imageName = 'spell-effects/spellFreeze_9.png';
 const spell: Spell = {
   card: {
     id,
+    category: CardCategory.Curses,
     manaCost: 25,
     healthCost: 0,
     expenseScaling: 2,

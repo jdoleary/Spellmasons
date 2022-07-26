@@ -983,7 +983,23 @@ body.open-inventory #inventory-content {
   background-color: rgba(0, 0, 0, 0.4);
   max-width: 600px;
   display: none;
+  flex-direction: column;
   flex-wrap: wrap;
+}
+
+#inventory-content .category {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+#inventory-content .category-label {
+  display: none;
+  color: white;
+  white-space: nowrap;
+}
+
+#inventory-content .category-label.visible {
+  display: block;
 }
 
 .slot {

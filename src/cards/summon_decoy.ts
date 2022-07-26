@@ -1,12 +1,13 @@
-import type { Spell } from '.';
+import { Spell } from './index';
 import * as Unit from '../entity/Unit';
-import { Faction, UnitType } from '../types/commonTypes';
+import { CardCategory, Faction, UnitType } from '../types/commonTypes';
 import { allUnits } from '../entity/units';
 
 export const id = 'decoy';
 const spell: Spell = {
   card: {
     id,
+    category: CardCategory.Primary,
     manaCost: 60,
     healthCost: 0,
     expenseScaling: 1,

@@ -1,16 +1,18 @@
 import { Vec2, magnitude, clone } from '../jmath/Vec';
-import type { Spell } from '.';
+import { Spell } from './index';
 import { distance, similarTriangles } from '../jmath/math';
 import type { Circle, ForceMove } from '../jmath/moveWithCollision';
 import { forceMoveColor } from '../graphics/ui/colors';
 import { raceTimeout } from '../Promise';
 import Underworld from '../Underworld';
+import { CardCategory } from '../types/commonTypes';
 
 export const id = 'push';
 const pushDistance = 20;
 const spell: Spell = {
   card: {
     id,
+    category: CardCategory.Movement,
     manaCost: 10,
     healthCost: 0,
     expenseScaling: 1,

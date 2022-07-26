@@ -1,8 +1,9 @@
 import { IUnit, takeDamage } from '../entity/Unit';
 import * as Image from '../graphics/Image';
-import type { Spell } from '.';
+import { Spell } from './index';
 import * as Unit from '../entity/Unit';
 import Underworld from '../Underworld';
+import { CardCategory } from '../types/commonTypes';
 
 export const id = 'poison';
 const imageName = 'poison.png'
@@ -31,6 +32,7 @@ function add(unit: IUnit) {
 const spell: Spell = {
   card: {
     id,
+    category: CardCategory.Curses,
     manaCost: 20,
     healthCost: 0,
     expenseScaling: 1,

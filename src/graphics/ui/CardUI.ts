@@ -10,9 +10,32 @@ import floatingText, { centeredFloatingText } from '../FloatingText';
 import { composeOnDamageEvents, copyForPredictionUnit } from '../../entity/Unit';
 import { NUMBER_OF_TOOLBAR_SLOTS } from '../../config';
 import Underworld from '../../Underworld';
+import { CardCategory } from '../../types/commonTypes';
 
 const elCardHolders = document.getElementById('card-holders') as HTMLElement;
 const elInvContent = document.getElementById('inventory-content') as HTMLElement;
+resetInventoryContent();
+function resetInventoryContent() {
+  if (elInvContent) {
+    elInvContent.innerHTML = '';
+    Object.entries(CardCategory).forEach(([index, category]) => {
+      if (!isNaN(parseInt(category.toString()))) {
+        // Don't make elements for the enum's number version of the enum values
+        return;
+      }
+      const elLabel = document.createElement('div');
+      elLabel.classList.add('category-label');
+      elLabel.innerText = category.toString();
+      elLabel.dataset.category = category.toString();
+      elInvContent.appendChild(elLabel);
+      const el = document.createElement('div');
+      el.classList.add('category');
+      el.dataset.category = category.toString();
+      elInvContent.appendChild(el);
+    })
+  }
+
+}
 const elInvButton = document.getElementById('inventory-icon') as HTMLElement;
 // Where the non-selected cards are displayed
 const elCardHand = document.getElementById('card-hand') as HTMLElement;
@@ -200,7 +223,7 @@ export function syncInventory(slotModifyingIndex: number | undefined, underworld
   if (globalThis.headless) { return; }
   if (globalThis.player) {
     // clear contents
-    elInvContent.innerHTML = '';
+    resetInventoryContent();
 
     const invCards = globalThis.player.inventory.map(c => Cards.allCards[c]).sort((a, b) => {
       if (!a || !b) {
@@ -233,11 +256,18 @@ export function syncInventory(slotModifyingIndex: number | undefined, underworld
         if (globalThis.player.cards.includes(inventoryCardId)) {
           elCard.classList.add('inToolbar');
         }
-        elInvContent.appendChild(elCard);
-      } else {
-        console.error('Could not find card for ', inventoryCardId)
+        const elCategory = elInvContent.querySelector(`.category[data-category="${CardCategory[card.category]}"]`)
+        if (elCategory) {
+          elCategory.appendChild(elCard);
+        } else {
+          console.error('Category element not found for', card.category);
+        }
       }
     }
+    // Make category labels visible if player has at least one card in that category
+    invCards.map(c => c ? CardCategory[c.category] : '')
+      .map(category => elInvContent.querySelector(`.category-label[data-category="${category}"]`))
+      .forEach(el => el?.classList.add('visible'))
     // Add an inventory element to clear the currently selected toolbar item
     if (slotModifyingIndex !== undefined) {
       const elClearSlotModifiyingIndex = createNonCardInventoryElement('toolbar-slot.png', 'Empty');

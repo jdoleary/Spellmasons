@@ -1,11 +1,12 @@
-import type { Spell } from '.';
+import { Spell } from './index';
 import * as Unit from '../entity/Unit'
-import { UnitType } from '../types/commonTypes';
+import { CardCategory, UnitType } from '../types/commonTypes';
 
 const id = 'protection';
 const spell: Spell = {
   card: {
     id,
+    category: CardCategory.Blessings,
     manaCost: 20,
     healthCost: 0,
     expenseScaling: 1,

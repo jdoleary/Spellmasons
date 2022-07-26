@@ -108,7 +108,6 @@ export function setupDevGlobalFunctions(underworld: Underworld) {
             globalThis.player.unit.mana = 10000;
             globalThis.player.unit.manaMax = 10000;
             // Give me all cards
-            console.log('jtest', Cards.allCards, Object.keys(Cards.allCards).length)
             if (globalThis.giveMeCard) {
                 Object.keys(Cards.allCards).forEach(globalThis.giveMeCard);
             }

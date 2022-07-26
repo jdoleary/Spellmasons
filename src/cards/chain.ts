@@ -1,12 +1,14 @@
 import { drawPredictionCircleFill, drawPredictionLine } from '../graphics/PlanningView';
-import { addUnitTarget, Spell } from '.';
+import { addUnitTarget, Spell } from './index';
 import type * as Unit from '../entity/Unit';
 import Underworld from '../Underworld';
+import { CardCategory } from '../types/commonTypes';
 
 const id = 'Adjoining';
 const spell: Spell = {
   card: {
     id,
+    category: CardCategory.Targeting,
     manaCost: 20,
     healthCost: 0,
     expenseScaling: 1,

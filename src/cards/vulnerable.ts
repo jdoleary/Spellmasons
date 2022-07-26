@@ -1,12 +1,14 @@
 import * as Unit from '../entity/Unit';
 import * as Image from '../graphics/Image';
-import type { Spell } from '.';
+import { CardCategory } from '../types/commonTypes';
+import { Spell } from './index';
 
 const id = 'Debilitate';
 const imageName = 'vulnerable.png';
 const spell: Spell = {
   card: {
     id,
+    category: CardCategory.Curses,
     manaCost: 20,
     healthCost: 0,
     expenseScaling: 1,

@@ -1,10 +1,11 @@
-import type { Spell } from '.';
+import { Spell } from './index';
 import floatingText from '../graphics/FloatingText';
 import { explainManaOverfill } from '../graphics/Jprompt';
 import { addPixiSpriteAnimated } from '../graphics/PixiUtils';
 import { manaBlue } from '../graphics/ui/colors';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import { makeManaTrail } from '../graphics/Particles';
+import { CardCategory } from '../types/commonTypes';
 
 const id = 'mana_steal';
 const mana_stolen = 20;
@@ -12,6 +13,7 @@ const health_burn = 3;
 const spell: Spell = {
   card: {
     id,
+    category: CardCategory.Mana,
     manaCost: 0,
     healthCost: health_burn,
     expenseScaling: 1,

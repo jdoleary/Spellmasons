@@ -1,12 +1,14 @@
 import * as Unit from '../entity/Unit';
-import type { Spell } from '.';
+import { Spell } from './index';
 import Underworld from '../Underworld';
+import { CardCategory } from '../types/commonTypes';
 
 const id = 'purify';
 // Removes all curse modifiers
 const spell: Spell = {
   card: {
     id,
+    category: CardCategory.Blessings,
     manaCost: 20,
     healthCost: 0,
     expenseScaling: 1,

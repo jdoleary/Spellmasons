@@ -1,7 +1,8 @@
-import type { Spell } from '.';
+import { Spell } from './index';
 import * as Pickup from '../entity/Pickup';
 import * as Image from '../graphics/Image';
 import { addPixiSpriteAnimated, containerUnits } from '../graphics/PixiUtils';
+import { CardCategory } from '../types/commonTypes';
 
 export const id = 'Delay';
 const turnsItTakesTrapToWindUp = 2;
@@ -27,6 +28,7 @@ const manaCostMultiplier = 0.8;
 const spell: Spell = {
   card: {
     id,
+    category: CardCategory.Primary,
     manaCost: 0,
     manaCostMultiplier,
     healthCost: 0,
