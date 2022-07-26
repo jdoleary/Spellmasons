@@ -132,6 +132,8 @@ export default class Underworld {
   constructor(pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
     this.pie = pie;
     this.seed = globalThis.seedOverride || seed;
+    // bug: Why no enemies spawning on this level?n
+    // this.seed = '0.47596223309121266'
 
     // Initialize content
     Cards.registerCards(this);
@@ -1790,41 +1792,33 @@ export default class Underworld {
       }
     }
 
+    // "quantity" is the number of identical cards cast in a row. Rather than casting the card sequentially
+    // quantity allows the card to have a unique scaling effect when cast sequentially after itself.
+    let quantity = 1;
     for (let index = 0; index < effectState.cardIds.length; index++) {
       const cardId = effectState.cardIds[index];
-      if (!cardId) {
+      if (cardId === undefined) {
         console.error('card id is undefined in loop', index, effectState.cardIds);
         continue;
       }
+      const nextCardId = effectState.cardIds[index + 1];
+      if (nextCardId !== undefined) {
+        if (nextCardId === cardId) {
+          quantity++;
+          continue;
+        }
+      }
+
       const card = Cards.allCards[cardId];
-      const animationPromises: Promise<void>[] = [];
       if (card) {
-        const targets = effectState.targetedUnits.length == 0 ? [castLocation] : effectState.targetedUnits
-        // Play the card sound effect:
-        if (!prediction && card.sfx) {
-          if (globalThis.playSFX && globalThis.sfx) {
-            globalThis.playSFX(globalThis.sfx[card.sfx]);
-          }
-        }
-        for (let target of targets) {
 
-          // Animate the card for each target
-          if (!prediction) {
-            if (card.animationPath) {
-              animationPromises.push(this.animateSpell(target, card.animationPath));
-            } else {
-              console.log('Card', cardId, 'has no animation path')
-            }
-          }
-        }
-        await Promise.all(animationPromises);
+        effectState = await card.effect(effectState, card, quantity, this, prediction);
 
-        // .then is necessary to convert return type of promise.all to just be void
-        const { targetedUnits: previousTargets } = effectState;
-        effectState = await card.effect(effectState, this, prediction);
         // Clear images from previous card before drawing the images from the new card
         containerSpells?.removeChildren();
       }
+      // Reset quantity once a card is cast
+      quantity = 1;
     }
     if (!prediction) {
       // Clear spell animations once all cards are done playing their animations
@@ -1832,35 +1826,6 @@ export default class Underworld {
     }
 
     return effectState;
-  }
-  async animateSpell(target: Vec2, imagePath: string): Promise<void> {
-    if (imagePath.indexOf('.png') !== -1) {
-      console.error('Cannot animate a still image, this function requires an animation path or else it will not "hide when complete"', imagePath);
-      return Promise.resolve();
-    }
-    // This timeout value is arbitrary, meant to prevent and report an await hang
-    // if somehow resolve is never called
-    return raceTimeout(6000, `animateSpell: ${imagePath}`, new Promise<void>((resolve) => {
-      const image = Image.create(
-        target,
-        imagePath,
-        containerUI,
-        {
-          loop: false,
-          animationSpeed: 0.15,
-          onComplete: () => {
-            Image.hide(image)
-            Image.cleanup(image);
-            resolve();
-          }
-        }
-      );
-      if (image) {
-        image.resolver = resolve;
-      }
-    }));
-
-
   }
   checkIfShouldSpawnPortal() {
     if (this.units.filter(u => u.faction == Faction.ENEMY).every(u => !u.alive)) {

@@ -6,6 +6,7 @@ import { drawPredictionCircle } from '../graphics/PlanningView';
 import { forcePush } from './push';
 import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
+import { animateSpell } from './cardUtils';
 
 const id = 'Bloat';
 const imageName = 'explode-on-death.png';
@@ -37,7 +38,7 @@ const spell: Spell = {
     thumbnail: 'explode-on-death.png',
     description: `Cursed targets explode when they die dealing ${damage} to all units within the
     explosion radius.`,
-    effect: async (state, underworld, prediction) => {
+    effect: async (state, card, quantity, underworld, prediction) => {
       for (let unit of state.targetedUnits) {
         Unit.addModifier(unit, id, underworld);
       }
@@ -63,7 +64,7 @@ const spell: Spell = {
     onDeath: async (unit: IUnit, underworld: Underworld, prediction: boolean) => {
       drawPredictionCircle(unit, range);
       if (!prediction) {
-        underworld.animateSpell(unit, 'explode-on-death.png');
+        animateSpell(unit, 'explode-on-death.png');
       }
       underworld.getUnitsWithinDistanceOfTarget(
         unit,

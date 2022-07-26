@@ -37,7 +37,7 @@ const spell: Spell = {
     description: `
 Makes this unit's curses contagious to other nearby units
     `,
-    effect: async (state, underworld, prediction) => {
+    effect: async (state, card, quantity, underworld, prediction) => {
       for (let unit of state.targetedUnits) {
         // Don't add contagious more than once
         if (!unit.onTurnStartEvents.includes(id)) {

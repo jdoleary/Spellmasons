@@ -40,7 +40,7 @@ const spell: Spell = {
 Sets a spell as a trap, to be triggered when stepped on.  Wrapping a spell in a trap reduces its mana cost.  The trap will be ready to be sprung after ${turnsItTakesTrapToWindUp} turns.
     `,
     allowNonUnitTarget: true,
-    effect: async (state, underworld, prediction) => {
+    effect: async (state, card, quantity, underworld, prediction) => {
       // Remove all following cards so that they exist IN the trap:
       const cardsInTrap = state.cardIds.filter(x => x !== id);
       state.cardIds = [];

@@ -18,13 +18,14 @@ const spell: Spell = {
 Adds a radius to the spell so it can affect more targets
     `,
     allowNonUnitTarget: true,
-    effect: async (state, underworld, prediction) => {
+    effect: async (state, card, quantity, underworld, prediction) => {
+      const adjustedRange = range * quantity;
       for (let target of [state.castLocation, ...state.targetedUnits]) {
         // Draw visual circle for prediction
-        drawPredictionCircle(target, range);
+        drawPredictionCircle(target, adjustedRange);
         const withinRadius = underworld.getUnitsWithinDistanceOfTarget(
           target,
-          range,
+          adjustedRange,
           prediction
         );
         // Add units to target
@@ -32,7 +33,7 @@ Adds a radius to the spell so it can affect more targets
 
         const pickupsWithinRadius = underworld.getPickupsWithinDistanceOfTarget(
           target,
-          range,
+          adjustedRange,
           prediction
         );
         // Add pickups to target

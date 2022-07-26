@@ -25,6 +25,8 @@
     - Move predictionUnits and predictionPickups out of globalThis so they don't get clobbered when multiple instances on a single server
 - Milestone 5 | **Movement & Spell Quantity** | Due Aug 11
     - Pack 14 | Spell quantity
+        - Task: Implement quantity for each spell effect
+        - Task: Reimplement animations, use default animation in cardUtils if necessary
         - What happens when multiple, identical spells are cast in sequence?
             - Pass a quantity var to the spell and have each spell handle it manually, do not allow them to be .effect() back to back
     - Pack 15
@@ -41,8 +43,8 @@
         - 100%: Unit Animations
         - 100%: Projectiles
         - 100%: Use Potion animation
-        - 13/15: Spell Animations
-        - 20/21: Spell Icons
+        - 15/15: Spell Animations
+        - 21/21: Spell Icons
         - 10%: Cover Art / Steam Page
         - 20%: Biome Tiles
         - Shader animated liquid

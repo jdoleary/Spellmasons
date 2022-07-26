@@ -4,9 +4,10 @@ import { Spell } from './index';
 import { CardCategory, UnitType } from '../types/commonTypes';
 import * as config from '../config'
 import Underworld from '../Underworld';
+import { animateSpell, playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
 
 const id = 'freeze';
-const imageName = 'spell-effects/spellFreeze_9.png';
+const imageName = 'spell-effects/spellFreeze_still.png';
 const spell: Spell = {
   card: {
     id,
@@ -20,7 +21,9 @@ const spell: Spell = {
     description: `
 Freezes the target(s) for 1 turn, preventing them from moving or acting.
     `,
-    effect: async (state, underworld, prediction) => {
+    effect: async (state, card, quantity, underworld, prediction) => {
+      // TODO: IF freeze is enchanced to affect pickups, it'll need to use targetedPickups too
+      await Promise.all([playDefaultSpellAnimation(card, state.targetedUnits, prediction), playDefaultSpellSFX(card, prediction)]);
       for (let unit of state.targetedUnits) {
         Unit.addModifier(unit, id, underworld);
         if (unit.unitType === UnitType.PLAYER_CONTROLLED) {
@@ -92,6 +95,8 @@ function add(unit: Unit.IUnit) {
 
     // Add subsprite image
     Image.addSubSprite(unit.image, id);
+    // Stop the animation
+    unit.image?.sprite.stop();
     // Prevents units from being pushed out of the way and units
     // act as a blockade
     unit.immovable = true;
@@ -108,6 +113,8 @@ function remove(unit: Unit.IUnit) {
   unit.radius = config.UNIT_BASE_RADIUS
   // Unit can be pushed around again as other units try to move past them
   unit.immovable = false;
+  // Resume the animation
+  unit.image?.sprite.play();
 }
 
 export default spell;

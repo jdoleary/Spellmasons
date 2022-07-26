@@ -374,6 +374,7 @@ export function convertBaseTilesToFinalTiles(map: Map) {
         const cell = getCell(map, position);
         if (cell?.image == baseTiles.liquid) {
             changeTile(i, all_liquid);
+            map.liquid.push({ image: baseTiles.liquid, x: cell.x, y: cell.y })
         } else if (cell?.image == baseTiles.ground) {
             changeTile(i, all_ground);
         }
