@@ -18,7 +18,7 @@ const spell: Spell = {
     description: `
 Resurrects a dead unit and converts them to the caster's faction.
     `,
-    effect: async (state, quantity, underworld, prediction) => {
+    effect: async (state, card, quantity, underworld, prediction) => {
       // If there is a living unit atop a dead unit at the cast location, specifically target the dead unit
       // so the spell doesn't fizzle.
       const firstDeadUnitAtCastLocation = underworld.getUnitsAt(state.castLocation, prediction).filter(u => !u.alive)[0]

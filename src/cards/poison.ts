@@ -4,6 +4,7 @@ import { Spell } from './index';
 import * as Unit from '../entity/Unit';
 import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
+import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
 
 export const id = 'poison';
 const imageName = 'poison.png'
@@ -43,7 +44,8 @@ const spell: Spell = {
 Poisons all target(s).  Poison will deal 1 base damage every turn
 at the start of the unit's turn.
     `,
-    effect: async (state, quantity, underworld) => {
+    effect: async (state, card, quantity, underworld, prediction) => {
+      await Promise.all([playDefaultSpellAnimation(card, state.targetedUnits, prediction), playDefaultSpellSFX(card, prediction)]);
       for (let unit of state.targetedUnits) {
         Unit.addModifier(unit, id, underworld);
       }

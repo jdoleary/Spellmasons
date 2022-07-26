@@ -3,7 +3,8 @@ import type { CardUsage } from "../entity/Player";
 import { Vec2 } from "../jmath/Vec";
 import { raceTimeout } from "../Promise";
 import * as Image from '../graphics/Image';
-import { containerUI } from "../graphics/PixiUtils";
+import { containerUI, PixiSpriteOptions } from "../graphics/PixiUtils";
+import { Container } from "pixi.js";
 export interface CardCost {
     manaCost: number;
     healthCost: number;
@@ -38,26 +39,33 @@ export async function animateSpell(target: Vec2, imagePath: string): Promise<voi
     // This timeout value is arbitrary, meant to prevent and report an await hang
     // if somehow resolve is never called
     return raceTimeout(6000, `animateSpell: ${imagePath}`, new Promise<void>((resolve) => {
-        const image = Image.create(
-            target,
-            imagePath,
-            containerUI,
-            {
-                loop: false,
-                animationSpeed: 0.15,
-                onComplete: () => {
-                    Image.hide(image)
-                    Image.cleanup(image);
-                    resolve();
+        oneOffImage(target, imagePath, containerUI, resolve);
+    }));
+}
+// Not to be confused with addOneOffAnimation
+// The main difference is that this function is not async and returns the image
+export function oneOffImage(coords: Vec2, imagePath: string, parent: Container | undefined, resolver?: () => void): Image.IImageAnimated | undefined {
+    // TODO: HOW TO RESOLVE THIS IN HEADLESS
+    const image = Image.create(
+        coords,
+        imagePath,
+        parent,
+        {
+            loop: false,
+            animationSpeed: 0.15,
+            onComplete: () => {
+                Image.hide(image)
+                Image.cleanup(image);
+                if (resolver) {
+                    resolver();
                 }
             }
-        );
-        if (image) {
-            image.resolver = resolve;
         }
-    }));
-
-
+    );
+    if (image) {
+        image.resolver = resolver;
+    }
+    return image;
 }
 export function calculateCostForSingleCard(card: ICard, timesUsedSoFar: number = 0): CardCost {
     let cardCost = { manaCost: 0, healthCost: 0 }

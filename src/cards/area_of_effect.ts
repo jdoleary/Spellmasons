@@ -18,7 +18,7 @@ const spell: Spell = {
 Adds a radius to the spell so it can affect more targets
     `,
     allowNonUnitTarget: true,
-    effect: async (state, quantity, underworld, prediction) => {
+    effect: async (state, card, quantity, underworld, prediction) => {
       const adjustedRange = range * quantity;
       for (let target of [state.castLocation, ...state.targetedUnits]) {
         // Draw visual circle for prediction

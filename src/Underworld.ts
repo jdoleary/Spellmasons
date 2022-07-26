@@ -132,6 +132,8 @@ export default class Underworld {
   constructor(pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
     this.pie = pie;
     this.seed = globalThis.seedOverride || seed;
+    // bug: Why no enemies spawning on this level?n
+    // this.seed = '0.47596223309121266'
 
     // Initialize content
     Cards.registerCards(this);
@@ -1810,7 +1812,7 @@ export default class Underworld {
       const card = Cards.allCards[cardId];
       if (card) {
 
-        effectState = await card.effect(effectState, quantity, this, prediction);
+        effectState = await card.effect(effectState, card, quantity, this, prediction);
 
         // Clear images from previous card before drawing the images from the new card
         containerSpells?.removeChildren();

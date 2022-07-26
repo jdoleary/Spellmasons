@@ -18,7 +18,7 @@ const spell: Spell = {
     description: `
 Burn up to ${mana_burnt} of the targets' mana, causing the target take ${health_burn_ratio * 10} damage per 10 mana burnt.
     `,
-    effect: async (state, quantity, underworld, prediction) => {
+    effect: async (state, card, quantity, underworld, prediction) => {
       for (let unit of state.targetedUnits) {
         const unitManaBurnt = Math.min(unit.mana, mana_burnt);
         unit.mana -= unitManaBurnt;

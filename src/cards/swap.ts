@@ -19,7 +19,7 @@ const spell: Spell = {
     description: `
 Swaps the caster with the source target.
     `,
-    effect: async (state, quantity, underworld, prediction) => {
+    effect: async (state, card, quantity, underworld, prediction) => {
       const { casterUnit, targetedUnits, targetedPickups } = state;
       // Loop through all targets and batch swap locations
       const swapUnits: [Unit.IUnit, Vec2][] = [];

@@ -1,4 +1,5 @@
 ## This weeks goals:
+- bug: A map with no enemies: '0.47596223309121266'
 - bug: AOE is giving me "no target" when I click on ground (hurtx4,aoe,hurt)
 - task: Move prediction pickups and units to underworld not global or else they will be shared between multiple underworlds
 - I got an out of range message and error but when I clicked on the end of my blue cast it worked
