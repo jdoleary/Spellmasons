@@ -552,7 +552,7 @@ export const baseTiles = {
     empty: '',
     wall: 'tiles/wall.png',
     semiWall: 'tiles/wall.png',
-    liquid: 'tiles/lava.png',
+    liquid: 'tiles/all_liquid.png',
     ground: 'tiles/ground.png',
 }
 const all_liquid = 'tiles/all_liquid.png';

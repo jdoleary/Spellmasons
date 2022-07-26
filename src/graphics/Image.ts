@@ -279,7 +279,7 @@ export function addMask(image: IImageAnimated, path: string) {
   if (image.mask !== path) {
     // remove old mask:
     removeMask(image);
-    const mask = addPixiSpriteAnimated(path, image.sprite);
+    const mask = addPixiSpriteAnimated(path, image.sprite, { animationSpeed: 0.05, loop: true });
     if (!mask) { return; }
     mask.anchor.set(0.5);
     image.sprite.mask = mask;

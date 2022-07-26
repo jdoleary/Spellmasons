@@ -1020,7 +1020,7 @@ export default class Underworld {
     this.levelIndex = levelIndex;
     this.limits = limits;
     for (let tile of liquid) {
-      const sprite = addPixiSprite('tiles/whiteTile.png', containerLiquid);
+      const sprite = addPixiSprite(tile.image, containerLiquid);
       if (sprite) {
         sprite.x = tile.x - config.COLLISION_MESH_RADIUS;
         sprite.y = tile.y - config.COLLISION_MESH_RADIUS;

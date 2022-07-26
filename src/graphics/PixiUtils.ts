@@ -9,7 +9,6 @@ import { JSpriteAnimated } from './Image';
 import { containerParticles } from './Particles';
 import { elPIXIHolder } from './FloatingText';
 import Underworld from '../Underworld';
-import shaderLiquid, { liquidUniforms } from './shaders/shader_liquid';
 
 // if PIXI is finished setting up
 let isReady = false;
@@ -38,9 +37,20 @@ export const containerPlayerThinking = !globalThis.pixi ? undefined : new global
 export const containerUIFixed = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerFloatingText = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 if (containerLiquid) {
-  const shader = shaderLiquid();
-  if (shader) {
-    containerLiquid.filters = [shader.filter];
+  if (globalThis.pixi) {
+    // Setup animated liquid displacement
+    const displacementSprite = globalThis.pixi.Sprite.from('images/noise.png');
+    displacementSprite.texture.baseTexture.wrapMode = globalThis.pixi.WRAP_MODES.REPEAT;
+
+    const displacementFilter = new globalThis.pixi.filters.DisplacementFilter(displacementSprite);
+
+    displacementSprite.scale.y = 0.6;
+    displacementSprite.scale.x = 0.6;
+    containerLiquid.addChild(displacementSprite);
+    containerLiquid.filters = [displacementFilter];
+    setInterval(() => {
+      displacementSprite.x += 0.3;
+    }, 10)
   }
 }
 
@@ -236,8 +246,6 @@ export function updateCameraPosition(underworld: Underworld) {
   // Note: This must happen BEFORE the stage x and y is updated
   // or else it will get jumpy when zooming
   const zoom = calculateCameraZoom();
-
-  liquidUniforms.uZoom = zoom;
 
   app.stage.scale.x = zoom;
   app.stage.scale.y = zoom;

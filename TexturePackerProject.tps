@@ -728,6 +728,7 @@
             <key type="filename">images/tiles/wallInsideCornerNE.png</key>
             <key type="filename">images/tiles/wallInsideCornerNW.png</key>
             <key type="filename">images/tiles/wallN.png</key>
+            <key type="filename">images/tiles/whiteTile.png</key>
             <key type="filename">images/time-crystal.png</key>
             <key type="filename">images/units/decoy_1.png</key>
             <key type="filename">images/units/decoy_2.png</key>
