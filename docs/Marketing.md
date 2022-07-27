@@ -4,6 +4,7 @@
     - Reroute spellmasons.com to the steam page directly
     - Deside on a hard release date
     - Contractors
+        - COVER YOUR ASS LEGALLY HERE
         - "Spellmasons.com" voiceover
             - https://www.fiverr.com/whsmcompany/voice-over-artist-for-hire?context_referrer=user_page&ref_ctx_id=8bdac01683fe1e63273125e485dc837c&pckg_id=1&pos=1&imp_id=cfbadd76-e036-4dc5-b701-aeba0d1ca052
         - Social Media
@@ -17,9 +18,12 @@
 
 - Homepage / Marketing / Steam Page / Email Signup
     - Marketing (Tell a story)
-        - Main tagline: "Multiplayer Tactical Wizardry. Spellmasons"
-        - "Plan. Combine. Unleash. Spellmasons!"
+        - Elevator Pitch: "Multiplayer Tactical Wizardry. Spellmasons"
+        - "Plan. Combine. **Unleash**. Spellmasons!"
         - "Coorindate. Strategize. Invent. Spellmasons!"
+        - "Inventing new ways to unleash spells to devour your enemies"
+        - **Literally telling a story**: Organic tictoc/instagram reels/youtube shorts: "Pull a goon into lava, pull his corpse out of the lava, resurrect him and now he's on your side.  Now he's attacking his buddies"
+            - Don't be corny, don't let it come off as a joke
         - "Magic with friends! Spellmasons"
         - "Magic is more fun with friends! Spellmasons"
         - Synonyms:

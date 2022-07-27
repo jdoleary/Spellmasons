@@ -1,4 +1,5 @@
 ## This weeks goals:
+- BUG: liquid images not cleaned up on new level
 - Allow changeSprite to override sprite when it's animation.hit only
 - bug: A map with no enemies: '0.47596223309121266'
 - bug: AOE is giving me "no target" when I click on ground (hurtx4,aoe,hurt)
@@ -135,6 +136,14 @@
 - Pack 13 | Biomes
     - Rethink biome construction to allow for dynamic liquid
         - whole bodies of liquid should be selectable so that they can be frozen
+- Brad feedback
+    - I need a way to see my cast range when planning out my movement
+    - Add a glow on hover to spells in spellbook
+    - Ambiance, particles around the map
+    - environment looks off because wall depth shows into the grey
+    - precast animations, when you hover over a corpse with resurrect, white particles should come up from the ground
+    - bug: resurrect leaves dangling Images behind
+    - clone animation: soul stretches out of them and makes the clone
 
 
 - Pack 8
