@@ -14,7 +14,7 @@ import { toggleMenu, View } from '../../views';
 import * as config from '../../config';
 import { app, cameraAutoFollow, getCamera, moveCamera } from '../PixiUtils';
 import { getEndOfRangeTarget, isOutOfRange } from '../../PlayerUtils';
-import { vec2ToOneDimentionIndex } from '../../jmath/ArrayUtil';
+import { vec2ToOneDimentionIndex, vec2ToOneDimentionIndexPreventWrap } from '../../jmath/ArrayUtil';
 import * as Vec from '../../jmath/Vec';
 import { Vec2 } from '../../jmath/Vec';
 import { distance, getCoordsAtDistanceTowardsTarget } from '../../jmath/math';
@@ -283,7 +283,7 @@ export function mouseMove(underworld: Underworld, e?: MouseEvent) {
     const mouseTarget = underworld.getMousePos();
     const cellX = Math.round(mouseTarget.x / config.OBSTACLE_SIZE);
     const cellY = Math.round(mouseTarget.y / config.OBSTACLE_SIZE);
-    const originalTile = globalThis.map ? globalThis.map.tiles[vec2ToOneDimentionIndex({ x: cellX, y: cellY }, globalThis.map.width)] : undefined;
+    const originalTile = globalThis.map ? globalThis.map.tiles[vec2ToOneDimentionIndexPreventWrap({ x: cellX, y: cellY }, globalThis.map.width)] : undefined;
     const originalTileImage = originalTile ? originalTile.image : '';
     (document.getElementById('debug-info') as HTMLElement).innerText = `x:${Math.round(mouseTarget.x)}, y:${Math.round(mouseTarget.y)}
     cellX: ${cellX}, cellY: ${cellY}

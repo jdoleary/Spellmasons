@@ -56,7 +56,7 @@ import objectHash from 'object-hash';
 import { withinMeleeRange } from './entity/units/actions/gruntAction';
 import { all_ground, baseTiles, caveSizes, convertBaseTilesToFinalTiles, generateCave, getLimits, Limits as Limits, Tile, toObstacle } from './MapOrganicCave';
 import { Material } from './Conway';
-import { oneDimentionIndexToVec2 } from './jmath/ArrayUtil';
+import { oneDimentionIndexToVec2, vec2ToOneDimentionIndexPreventWrap } from './jmath/ArrayUtil';
 import { raceTimeout } from './Promise';
 import { updateParticlees } from './graphics/Particles';
 import { processNextInQueueIfReady, setupNetworkHandlerGlobalFunctions } from './network/networkHandler';
@@ -806,6 +806,7 @@ export default class Underworld {
         return obstacle ? [obstacle] : [];
       }),
       imageOnlyTiles: tiles.flatMap(x => x == undefined ? [] : [x]),
+      width,
       pickups: [],
       enemies: [
         // { id: 'vampire', coord: { x: 64, y: 64 }, strength: 1, isArmored: false }
@@ -824,7 +825,7 @@ export default class Underworld {
       return;
     }
     const { map, limits } = generateCave(levelIndex > 6 ? caveSizes.medium : caveSizes.small, this);
-    const { tiles, liquid } = map;
+    const { tiles, liquid, width } = map;
     const levelData: LevelData = {
       levelIndex,
       limits,
@@ -834,6 +835,7 @@ export default class Underworld {
         return obstacle ? [obstacle] : [];
       }),
       imageOnlyTiles: [],
+      width,
       pickups: [],
       enemies: [],
       validPlayerSpawnCoords: []
@@ -1144,6 +1146,17 @@ export default class Underworld {
   }
   endPlayerTurnPhase() {
     console.log('Underworld: TurnPhase: End player turn phase');
+    // Safety, force die any units that are out of bounds (this should never happen)
+    for (let u of this.units.filter(u => u.alive)) {
+      if (this.lastLevelCreated) {
+        // TODO ensure that this works on headless
+        const originalTile = this.lastLevelCreated.imageOnlyTiles[vec2ToOneDimentionIndexPreventWrap({ x: Math.round(u.x / config.OBSTACLE_SIZE), y: Math.round(u.y / config.OBSTACLE_SIZE) }, this.lastLevelCreated.width)];
+        if (!originalTile || originalTile.image == '') {
+          console.error('Unit was force killed because they ended up out of bounds', u.unitSubType)
+          Unit.die(u, this, false);
+        }
+      }
+    }
     // Add mana to AI units
     for (let unit of this.units.filter((u) => u.unitType === UnitType.AI && u.alive)) {
       unit.mana += unit.manaPerTurn;
@@ -2101,6 +2114,8 @@ export interface LevelData {
   obstacles: Obstacle.IObstacle[];
   liquid: Tile[];
   imageOnlyTiles: Tile[];
+  // Width in tiles
+  width: number;
   pickups: {
     index: number;
     coord: Vec2;
