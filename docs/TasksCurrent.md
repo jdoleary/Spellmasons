@@ -1,6 +1,5 @@
 ## Today
 - Low hanging fruit
-    - BUG: liquid images not cleaned up on new level
     - Allow changeSprite to override sprite when it's animation.hit only
         - Change hit animations to be faster
     - bug: A map with no enemies: '0.47596223309121266'

@@ -36,21 +36,31 @@ export const containerUI = !globalThis.pixi ? undefined : new globalThis.pixi.Co
 export const containerPlayerThinking = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerUIFixed = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerFloatingText = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
-if (containerLiquid) {
-  if (globalThis.pixi) {
-    // Setup animated liquid displacement
-    const displacementSprite = globalThis.pixi.Sprite.from('images/noise.png');
-    displacementSprite.texture.baseTexture.wrapMode = globalThis.pixi.WRAP_MODES.REPEAT;
+let updateLiquidFilterIntervalId: NodeJS.Timer | undefined;
+// Setup animated liquid displacement
+export function setupLiquidFilter() {
+  if (containerLiquid) {
+    if (globalThis.pixi) {
+      const displacementSprite = globalThis.pixi.Sprite.from('images/noise.png');
+      displacementSprite.texture.baseTexture.wrapMode = globalThis.pixi.WRAP_MODES.REPEAT;
 
-    const displacementFilter = new globalThis.pixi.filters.DisplacementFilter(displacementSprite);
+      const displacementFilter = new globalThis.pixi.filters.DisplacementFilter(displacementSprite);
 
-    displacementSprite.scale.y = 0.6;
-    displacementSprite.scale.x = 0.6;
-    containerLiquid.addChild(displacementSprite);
-    containerLiquid.filters = [displacementFilter];
-    setInterval(() => {
-      displacementSprite.x += 0.3;
-    }, 10)
+      displacementSprite.scale.y = 0.6;
+      displacementSprite.scale.x = 0.6;
+      containerLiquid.addChild(displacementSprite);
+      containerLiquid.filters = [displacementFilter];
+      updateLiquidFilterIntervalId = setInterval(() => {
+        displacementSprite.x += 0.3;
+      }, 10)
+    }
+  }
+}
+export function cleanUpLiquidFilter() {
+  // Note: cleanup only needs to clear the interval, the rest is cleaned up
+  // when containerLiquid.removeChildren() is called on level cleanup
+  if (updateLiquidFilterIntervalId !== undefined) {
+    clearInterval(updateLiquidFilterIntervalId)
   }
 }
 

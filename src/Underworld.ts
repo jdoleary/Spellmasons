@@ -29,6 +29,8 @@ import {
   containerWalls,
   addPixiSprite,
   containerLiquid,
+  setupLiquidFilter,
+  cleanUpLiquidFilter,
 } from './graphics/PixiUtils';
 import { queueCenteredFloatingText } from './graphics/FloatingText';
 import { UnitType, Faction, UnitSubType } from './types/commonTypes';
@@ -987,6 +989,8 @@ export default class Underworld {
     // Clear all floor images
     containerBoard?.removeChildren();
     containerWalls?.removeChildren();
+    containerLiquid?.removeChildren();
+    cleanUpLiquidFilter();
     this.imageOnlyTiles = [];
 
     // Clear card usage counts, otherwise players will be
@@ -1021,6 +1025,9 @@ export default class Underworld {
     const { levelIndex, limits, liquid, imageOnlyTiles, pickups, enemies, obstacles, validPlayerSpawnCoords } = levelData;
     this.levelIndex = levelIndex;
     this.limits = limits;
+
+    // Setup liquid
+    setupLiquidFilter();
     for (let tile of liquid) {
       const sprite = addPixiSprite(tile.image, containerLiquid);
       if (sprite) {
