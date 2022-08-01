@@ -5,6 +5,7 @@ import { createVisualLobbingProjectile } from '../Projectile';
 import * as math from '../../jmath/math';
 import { addPixiSpriteAnimated, containerSpells, containerUnits } from '../../graphics/PixiUtils';
 import Underworld from '../../Underworld';
+import { bloodLobber } from '../../graphics/ui/colors';
 
 const unit: UnitSource = {
   id: 'lobber',
@@ -14,7 +15,8 @@ const unit: UnitSource = {
     subtype: UnitSubType.RANGED_RADIUS,
   },
   unitProps: {
-    attackRange: 210
+    attackRange: 210,
+    bloodColor: bloodLobber
   },
   spawnParams: {
     probability: 40,

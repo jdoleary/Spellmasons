@@ -19,6 +19,7 @@ import Underworld, { turn_phase } from '../Underworld';
 import combos from '../graphics/AnimationCombos';
 import { raceTimeout } from '../Promise';
 import { closestLineSegmentIntersection } from '../jmath/lineSegment';
+import { bloodColorDefault } from '../graphics/ui/colors';
 
 const elHealthBar = document.querySelector('#health .fill') as HTMLElement;
 const elHealthCost = document.querySelector('#health .cost') as HTMLElement;
@@ -81,6 +82,7 @@ export interface IUnit {
   defaultImagePath: string;
   shaderUniforms: { [key: string]: any };
   damage: number;
+  bloodColor: number;
   health: number;
   healthMax: number;
   mana: number;
@@ -144,6 +146,8 @@ export function create(
       defaultImagePath,
       shaderUniforms: {},
       damage: Math.round(config.UNIT_BASE_DAMAGE * strength),
+      // default blood color
+      bloodColor: bloodColorDefault,
       health,
       healthMax: health,
       mana,

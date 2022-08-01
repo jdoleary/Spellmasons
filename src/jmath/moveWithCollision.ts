@@ -12,8 +12,10 @@ export interface ForceMove {
     resolve: () => void;
 }
 
+// Circle is used exclusively for force move objects
 export type Circle = {
     health?: number;
+    bloodColor?: number;
     radius: number;
 } & Vec2;
 export function isVecIntersectingVecWithCustomRadius(c1: Vec2, c2: Vec2, radius: number): boolean {

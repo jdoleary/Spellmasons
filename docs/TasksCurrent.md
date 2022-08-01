@@ -1,5 +1,8 @@
 ## Today
 - Low hanging fruit
+    - bug: Picked up pickups from pull should not transfer move to player
+    - bug **critical**: Adjoining, hurt, hurt, push on many units caused CPU to lag massively on prediction
+    - bug: death animation occurs before hurt animations are done playing
     - bug: AOE is giving me "no target" when I click on ground (hurtx4,aoe,hurt)
     - I got an out of range message and error but when I clicked on the end of my blue cast it worked
         - seed: 0.8541225371499359

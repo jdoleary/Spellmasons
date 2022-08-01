@@ -4,6 +4,7 @@ import { UnitSubType } from '../../types/commonTypes';
 import * as vampire_bite from '../../cards/vampire_bite';
 import { withinMeleeRange } from './actions/gruntAction';
 import Underworld from '../../Underworld';
+import { bloodVampire } from '../../graphics/ui/colors';
 
 const unit: UnitSource = {
   id: 'vampire',
@@ -15,7 +16,8 @@ const unit: UnitSource = {
   unitProps: {
     manaMax: 60,
     healthMax: 18,
-    damage: 5
+    damage: 5,
+    bloodColor: bloodVampire
   },
   spawnParams: {
     probability: 15,

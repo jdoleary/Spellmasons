@@ -327,8 +327,8 @@ export default class Underworld {
           const size = 3;
           for (let j of smearJitter) {
             // Multiple blood trails
-            graphicsBloodSmear.beginFill(colors.bloodGrunt, 1.0);
-            graphicsBloodSmear.lineStyle(1, colors.bloodGrunt, 1.0);
+            graphicsBloodSmear.beginFill(forceMoveInst.pushedObject.bloodColor, 1.0);
+            graphicsBloodSmear.lineStyle(1, forceMoveInst.pushedObject.bloodColor, 1.0);
             const bloodDrop = Vec.jitter(endPos, 5, this.random);
             // Draw a blood drop
             graphicsBloodSmear.drawCircle(bloodDrop.x, bloodDrop.y, randInt(this.random, 2, 4));
@@ -340,7 +340,7 @@ export default class Underworld {
             graphicsBloodSmear.drawCircle(endWithJitter.x, endWithJitter.y, size);
             graphicsBloodSmear.endFill();
             // Draw a smear line
-            graphicsBloodSmear.lineStyle(size, colors.bloodGrunt, 1.0);
+            graphicsBloodSmear.lineStyle(size, forceMoveInst.pushedObject.bloodColor, 1.0);
             graphicsBloodSmear.moveTo(startWithJitter.x, startWithJitter.y);
             graphicsBloodSmear.lineTo(endWithJitter.x, endWithJitter.y);
           }
