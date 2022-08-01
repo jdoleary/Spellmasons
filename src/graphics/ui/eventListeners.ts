@@ -22,6 +22,7 @@ import * as colors from '../../graphics/ui/colors';
 import { pointsEveryXDistanceAlongPath } from '../../jmath/Pathfinding';
 import Underworld from '../../Underworld';
 import { toLineSegments } from '../../jmath/Polygon2';
+import { closestLineSegmentIntersection } from '../../jmath/lineSegment';
 
 export const keyDown = {
   f: false,
@@ -225,8 +226,7 @@ export function mouseMove(underworld: Underworld, e?: MouseEvent) {
 
   // RMB
   if (globalThis.player) {
-
-    if (globalThis.RMBDown || keyDown.f) {
+    if (keyDown.f) {
       drawWalkRope(mouseTarget, underworld);
     } else {
       globalThis.walkPathGraphics?.clear();
@@ -235,8 +235,11 @@ export function mouseMove(underworld: Underworld, e?: MouseEvent) {
       if (underworld.isMyTurn()) {
         // If player is able to move
         if (globalThis.player.unit.stamina > 0) {
-          // Move up to but not onto intersection or else unit will get stuck ON linesegment
-          Unit._moveTowards(globalThis.player.unit, mouseTarget, underworld);
+          // Move towards mouseTarget, but stop pathing where the direct path intersects a wall
+          // This ensures that the player will always move in the direction of the mouse
+          // and won't path in an unexpected direction to attempt to get to the final destination.
+          const intersection = closestLineSegmentIntersection({ p1: globalThis.player.unit, p2: mouseTarget }, underworld.walls) || mouseTarget;
+          Unit._moveTowards(globalThis.player.unit, intersection, underworld);
         } else {
           if (!globalThis.notifiedOutOfStamina) {
             floatingText({
