@@ -6,7 +6,7 @@
 - bug: Picked up pickups from pull should not transfer move to player
 - bug: death animation occurs before hurt animations are done playing
 - bug: AOE is giving me "no target" when I click on ground (hurtx4,aoe,hurt)
-- fix issue where units near lava get mask but don't take damage
+    - rather than "no target" maybe it just doesn't use mana and shows a fizzle animation?
 - Tasks:
     - Finish spell quantity
         - If a spell doesn't support quantity, don't waste mana, don't even let it be queued up sequentially

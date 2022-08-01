@@ -95,6 +95,9 @@ export function checkLiquidInteractionDueToMovement(unit: IUnit, lastPosition: V
       hitLava = !isOnOutside(wall, unit);
       if (hitLava) {
         takeDamage(unit, lavaDamage, underworld, prediction);
+        if (unit.image) {
+          addMask(unit.image, 'liquid-mask');
+        }
       }
       // Since unit has "fallen in", break out of for loop so that they don't fall back out
       // which can occur if they fall in near a corner
@@ -109,15 +112,10 @@ export function checkLiquidInteractionDueToMovement(unit: IUnit, lastPosition: V
         break;
       }
     }
-    if (insideLiquid) {
-      if (unit.image) {
-        addMask(unit.image, 'liquid-mask');
-      }
-    } else {
+    if (!insideLiquid) {
       if (unit.image) {
         removeMask(unit.image);
       }
-
     }
   }
   const predictionColor = hitLava ? 0xff0000 : 0x0000ff;
