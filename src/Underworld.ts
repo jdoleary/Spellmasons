@@ -134,8 +134,6 @@ export default class Underworld {
   constructor(pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
     this.pie = pie;
     this.seed = globalThis.seedOverride || seed;
-    // bug: Why no enemies spawning on this level?n
-    // this.seed = '0.47596223309121266'
 
     // Initialize content
     Cards.registerCards(this);
@@ -864,6 +862,10 @@ export default class Underworld {
     }
     // Spawn units at the start of the level
     const { unitIds, strength } = getEnemiesForAltitude(levelIndex, this);
+    if (validSpawnCoords.length == 0) {
+      console.error('Not enough spawn coords to spawn ANY enemies');
+      return undefined;
+    }
     for (let id of unitIds) {
       if (validSpawnCoords.length == 0) { break; }
       const validSpawnCoordsIndex = randInt(this.random, 0, validSpawnCoords.length - 1);
