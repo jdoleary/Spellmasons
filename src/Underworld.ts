@@ -247,13 +247,13 @@ export default class Underworld {
         forceMoveInst.velocity = Vec.multiply(0.5, forceMoveInst.velocity);
         // If they collide transfer force:
         const preExistingForceMoveForThisTarget = this.forceMove.find(fm => fm.pushedObject == other);
+        // Don't push another object more than once from the same source
         if (preExistingForceMoveForThisTarget) {
-          // Don't push another object more than once from the same source
-          if (preExistingForceMoveForThisTarget.source !== forceMoveInst.pushedObject) {
+          if (preExistingForceMoveForThisTarget.id !== forceMoveInst.id) {
             preExistingForceMoveForThisTarget.velocity = Vec.add(preExistingForceMoveForThisTarget.velocity, forceMoveInst.velocity)
           }
         } else {
-          forcePush(other, forceMoveInst.pushedObject, this, prediction);
+          forcePush(other, forceMoveInst.pushedObject, forceMoveInst.id, this, prediction);
         }
 
       }

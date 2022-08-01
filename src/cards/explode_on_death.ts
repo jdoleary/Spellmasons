@@ -66,13 +66,14 @@ const spell: Spell = {
       if (!prediction) {
         animateSpell(unit, 'explode-on-death.png');
       }
+      const id = Math.random();
       underworld.getUnitsWithinDistanceOfTarget(
         unit,
         range,
         prediction
       ).forEach(u => {
         // Push units away from exploding unit
-        forcePush(u, unit, underworld, prediction);
+        forcePush(u, unit, id, underworld, prediction);
         // Deal damage to units
         takeDamage(u, damage, underworld, prediction);
       });
@@ -82,7 +83,7 @@ const spell: Spell = {
         prediction
       ).forEach(p => {
         // Push pickups away
-        forcePush(p, unit, underworld, prediction);
+        forcePush(p, unit, id, underworld, prediction);
       })
     }
   }

@@ -1,18 +1,17 @@
 ## Today
 - Poolshot velocity transfer should be decreased
-- bug **critical**: Adjoining, hurt, hurt, push on many units caused CPU to lag massively on prediction
-    - use a push id and say each push id can't move other pushes with the same push id so it doesn't get recursive
----
-- bug: Picked up pickups from pull should not transfer move to player
-- bug: AOE is giving me "no target" when I click on ground (hurtx4,aoe,hurt)
-    - rather than "no target" maybe it just doesn't use mana and shows a fizzle animation?
 - Tasks:
     - Finish spell quantity
         - If a spell doesn't support quantity, don't waste mana, don't even let it be queued up sequentially
-        - It doesn't work for heal
+        - It's not yet implemented for heal
     - blood trails
         - Don't draw blood over liquid
             - use floor tiles as mask?
+---
+- bug: if you push a unit into liquid from the top of the liquid at an angle it doesn't go far enough into the liquid and the mask shows the stones behind
+- bug: Picked up pickups from pull should not transfer move to player
+- bug: AOE is giving me "no target" when I click on ground (hurtx4,aoe,hurt)
+    - rather than "no target" maybe it just doesn't use mana and shows a fizzle animation?
 ## This weeks goals:
 - Milestone 5 | **Movement & Spell Quantity** | Due Aug 11
 - Milestone 4 | **Perfect Prediction Attacks** | Due Aug 8

@@ -23,23 +23,24 @@ Pulls the target(s) towards the caster
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
       let promises = [];
+      const id = Math.random();
       for (let unit of state.targetedUnits) {
-        promises.push(pull(unit, state.casterUnit, underworld, prediction));
+        promises.push(pull(unit, state.casterUnit, id, underworld, prediction));
       }
       for (let pickup of state.targetedPickups) {
-        promises.push(pull(pickup, state.casterUnit, underworld, prediction));
+        promises.push(pull(pickup, state.casterUnit, id, underworld, prediction));
       }
       await Promise.all(promises);
       return state;
     },
   },
 };
-export async function pull(pushedObject: Circle, towards: Vec2, underworld: Underworld, prediction: boolean): Promise<void> {
+export async function pull(pushedObject: Circle, towards: Vec2, id: number, underworld: Underworld, prediction: boolean): Promise<void> {
   const velocity = similarTriangles(pushedObject.x - towards.x, pushedObject.y - towards.y, distance(pushedObject, towards), -pullDistance);
   const velocity_falloff = 0.93;
   const originalPosition = clone(pushedObject);
   return await raceTimeout(2000, 'Pull', new Promise<void>((resolve) => {
-    const forceMoveInst: ForceMove = { source: towards, pushedObject, velocity, velocity_falloff, resolve }
+    const forceMoveInst: ForceMove = { id, pushedObject, velocity, velocity_falloff, resolve }
     if (prediction) {
       // Simulate the forceMove until it's complete
       while (magnitude(forceMoveInst.velocity) > 0.1) {

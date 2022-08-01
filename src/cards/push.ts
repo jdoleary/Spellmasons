@@ -23,24 +23,25 @@ Pushes the target(s) away from the caster
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
       let promises = [];
+      const id = Math.random();
       const awayFrom = state.casterUnit;
       for (let unit of state.targetedUnits) {
-        promises.push(forcePush(unit, awayFrom, underworld, prediction));
+        promises.push(forcePush(unit, awayFrom, id, underworld, prediction));
       }
       for (let pickup of state.targetedPickups) {
-        promises.push(forcePush(pickup, awayFrom, underworld, prediction));
+        promises.push(forcePush(pickup, awayFrom, id, underworld, prediction));
       }
       await Promise.all(promises);
       return state;
     },
   },
 };
-export async function forcePush(pushedObject: Circle, awayFrom: Vec2, underworld: Underworld, prediction: boolean): Promise<void> {
+export async function forcePush(pushedObject: Circle, awayFrom: Vec2, id: number, underworld: Underworld, prediction: boolean): Promise<void> {
   const velocity = similarTriangles(pushedObject.x - awayFrom.x, pushedObject.y - awayFrom.y, distance(pushedObject, awayFrom), pushDistance);
   const velocity_falloff = 0.93;
   const originalPosition = clone(pushedObject);
   return await raceTimeout(2000, 'Push', new Promise<void>((resolve) => {
-    const forceMoveInst: ForceMove = { source: awayFrom, pushedObject, velocity, velocity_falloff, resolve }
+    const forceMoveInst: ForceMove = { id, pushedObject, velocity, velocity_falloff, resolve }
     if (prediction) {
       // Simulate the forceMove until it's complete
       let done = false;
