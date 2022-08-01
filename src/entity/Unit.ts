@@ -520,6 +520,8 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
     // If already dead, do nothing
     return;
   }
+  // Health should already be 0 but make sure it is for the sake of the UI bar
+  unit.health = 0;
   if (noCorpseIds.includes(unit.unitSourceId)) {
     // Remove the unit entirely
     cleanup(unit);
