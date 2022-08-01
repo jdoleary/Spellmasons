@@ -3,6 +3,7 @@
     - bug: AOE is giving me "no target" when I click on ground (hurtx4,aoe,hurt)
     - I got an out of range message and error but when I clicked on the end of my blue cast it worked
         - maybe make the whole line grey if there's no target in range?
+    - fix issue where units near lava get mask but don't take damage
 - Tasks:
     - Finish spell quantity
         - If a spell doesn't support quantity, don't waste mana, don't even let it be queued up sequentially
