@@ -494,8 +494,15 @@ export function clickHandler(underworld: Underworld, _e: MouseEvent) {
           // If the mouse is out of range, but there is a target at end range,
           // assume the user is trying to cast at the end of their range.
           const endRangeTarget = getEndOfRangeTarget(selfPlayer, target);
+          // Find if there are any valid targets at the endRangeTarget:
+          // Note: Since predictionUnits and predictionPickups may be moved around due to the prediction cast,
+          // getting the initial target should use NON-prediction units and pickups.  It needs to look for truly
+          // existing units and pickups when the click occurs because those are the units and pickups that
+          // the spell will act on.
+          const initialTarget = !!underworld.getUnitAt(endRangeTarget, false) || !!underworld.getPickupAt(endRangeTarget, false);
+          // If there is a target for the cast
           // OR if the first card doesn't require a unit target (like summon_decoy), allow casting at end range
-          if (underworld.hasInitialTarget(endRangeTarget) || (cards[0] && cards[0].allowNonUnitTarget)) {
+          if (initialTarget || (cards[0] && cards[0].allowNonUnitTarget)) {
             target = endRangeTarget;
           } else {
             // If there is no target at end range, just show that they are trying to cast out of range

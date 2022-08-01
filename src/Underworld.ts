@@ -1822,12 +1822,6 @@ export default class Underworld {
       this.pickups.push(pickup);
     }
   }
-  // Returns true if the spell cast will hit a unit or pickup with the first card
-  hasInitialTarget(castLocation: Vec2): boolean {
-    const unitAtCastLocation = this.getUnitAt(castLocation, true);
-    const pickupAtCastLocation = this.getPickupAt(castLocation, true);
-    return !!unitAtCastLocation || !!pickupAtCastLocation;
-  }
   async castCards(
     casterCardUsage: Player.CardUsage,
     casterUnit: Unit.IUnit,
