@@ -1,21 +1,22 @@
 ## Today
-- Low hanging fruit
-    - bug: Picked up pickups from pull should not transfer move to player
-    - bug **critical**: Adjoining, hurt, hurt, push on many units caused CPU to lag massively on prediction
-    - bug: death animation occurs before hurt animations are done playing
-    - bug: AOE is giving me "no target" when I click on ground (hurtx4,aoe,hurt)
-    - I got an out of range message and error but when I clicked on the end of my blue cast it worked
-        - seed: 0.8541225371499359
-        - maybe make the whole line grey if there's no target in range?
-    - fix issue where units near lava get mask but don't take damage
+- Poolshot velocity transfer should be decreased
+- bug **critical**: Adjoining, hurt, hurt, push on many units caused CPU to lag massively on prediction
+    - use a push id and say each push id can't move other pushes with the same push id so it doesn't get recursive
+---
+- bug: Picked up pickups from pull should not transfer move to player
+- bug: death animation occurs before hurt animations are done playing
+- bug: AOE is giving me "no target" when I click on ground (hurtx4,aoe,hurt)
+- I got an out of range message and error but when I clicked on the end of my blue cast it worked
+    - seed: 0.8541225371499359
+    - maybe make the whole line grey if there's no target in range?
+- fix issue where units near lava get mask but don't take damage
 - Tasks:
     - Finish spell quantity
         - If a spell doesn't support quantity, don't waste mana, don't even let it be queued up sequentially
-    - "poolshot" for pickups?
+        - It doesn't work for heal
     - blood trails
-        - Maybe do multiple small radius lines to simulate smear and they have a chance to dissapear
-        - Make blood at base of unit, not center
         - Don't draw blood over liquid
+            - use floor tiles as mask?
 ## This weeks goals:
 - Milestone 5 | **Movement & Spell Quantity** | Due Aug 11
 - Milestone 4 | **Perfect Prediction Attacks** | Due Aug 8
@@ -23,6 +24,8 @@
 - I got bit by a vampire but it didn't accurately warn me he would
     - wrap this in with preventing units from changing targets from their prediction even if the decoy dies (lobber move then throw?)
 - Resurrect icon didn't show in prediction when it was buried in a trap that I pushed someone into (in prediction)
+- bug: clone flashes potion and then it disappears
+    - seed: 0.8541225371499359
 
 ## Standalone server backlog bugs
 - It's running hot for some reason
