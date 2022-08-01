@@ -63,7 +63,7 @@ Clones each target
             if (pickup) {
               const validSpawnCoords = underworld.findValidSpawn(cloneSourceCoords, 5)
               if (validSpawnCoords) {
-                const clone = Pickup.load(pickup, underworld);
+                const clone = Pickup.load(pickup, underworld, prediction);
                 Pickup.setPosition(clone, validSpawnCoords.x, validSpawnCoords.y);
               } else {
                 floatingText({ coords: cloneSourceCoords, text: 'No space to clone into!' });

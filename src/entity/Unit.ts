@@ -297,8 +297,11 @@ export function load(unit: IUnitSerialized, underworld: Underworld, prediction: 
     ...restUnit,
     shaderUniforms: {},
     resolveDoneMoving: () => { },
-    image: unit.image ? Image.load(unit.image, getParentContainer(unit.alive)) :
-      Image.create({ x: unit.x, y: unit.y }, unit.defaultImagePath, containerUnits),
+    image: prediction
+      ? undefined
+      : unit.image
+        ? Image.load(unit.image, getParentContainer(unit.alive))
+        : Image.create({ x: unit.x, y: unit.y }, unit.defaultImagePath, containerUnits),
   };
   setupShaders(loadedunit);
   // Load in shader uniforms by ONLY setting the uniforms that are saved

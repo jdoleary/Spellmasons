@@ -65,7 +65,7 @@ export function copyForPredictionPickup(p: IPickup): IPickup {
 export function create({ pos, pickupSource, onTurnsLeftDone }:
   {
     pos: Vec2, pickupSource: IPickupSource, onTurnsLeftDone?: (self: IPickup) => Promise<void>
-  }, underworld: Underworld) {
+  }, underworld: Underworld, prediction: boolean) {
   const { name, description, imagePath, effect, scale, singleUse, animationSpeed, playerOnly = false, turnsLeftToGrab } = pickupSource;
   const { x, y } = pos
   const self: IPickup = {
@@ -77,7 +77,7 @@ export function create({ pos, pickupSource, onTurnsLeftDone }:
     imagePath,
     // Pickups are stored in containerUnits so that they
     // will be automatically z-indexed
-    image: !containerUnits ? undefined : Image.create({ x, y }, imagePath, containerUnits, { animationSpeed, loop: true }),
+    image: (!containerUnits || prediction) ? undefined : Image.create({ x, y }, imagePath, containerUnits, { animationSpeed, loop: true }),
     singleUse,
     playerOnly,
     effect,
@@ -112,7 +112,7 @@ export function create({ pos, pickupSource, onTurnsLeftDone }:
     }
   }
 
-  underworld.addPickupToArray(self, false);
+  underworld.addPickupToArray(self, prediction);
 
   return self;
 }
@@ -141,19 +141,25 @@ export function serialize(p: IPickup): IPickupSerialized {
   return serialized;
 }
 // Reinitialize a pickup from another pickup object, this is used in loading game state after reconnect
-export function load(pickup: IPickup, underworld: Underworld) {
+export function load(pickup: IPickup, underworld: Underworld, prediction: boolean) {
   // Get the pickup object
   let foundPickup = pickups.find((p) => p.imagePath == pickup.imagePath);
   if (foundPickup) {
     // TODO verify that complex pickup behavior like onTurnsLeftDone still work after load, traps
     // probably don't work after load because callbacks can't be serialized
-    const self = { ...create({ pos: pickup, pickupSource: foundPickup }, underworld), ...pickup };
-    return self;
+    const { image, ...toCopy } = pickup;
+    const newPickup = create({ pos: pickup, pickupSource: foundPickup }, underworld, prediction);
+    // Note: It is important here to use Object.assign so that the pickup reference is the SAME ref as is created in the
+    // create function because the create function passes that ref to the underworld pickups array.
+    // So when you mutate the properties, the ref must stay the same.
+    Object.assign(newPickup, toCopy);
+    return newPickup;
   } else {
     throw new Error(`Could not load pickup with path ${pickup.imagePath}`);
   }
 }
 export function removePickup(pickup: IPickup, underworld: Underworld, prediction: boolean) {
+  console.log('jtest remove pickup', pickup, prediction);
   Image.cleanup(pickup.image);
   underworld.removePickupFromArray(pickup, prediction);
   checkIfNeedToClearTooltip();
