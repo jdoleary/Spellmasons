@@ -1,7 +1,7 @@
 import type * as PIXI from 'pixi.js';
 import { LineSegment } from './jmath/lineSegment';
 import floatingText from './graphics/FloatingText';
-import { Vec2 } from './jmath/Vec';
+import { Vec2, jitter } from './jmath/Vec';
 import Underworld from './Underworld';
 import * as Unit from './entity/Unit';
 import * as Units from './entity/units';
@@ -9,6 +9,7 @@ import { Faction, UnitType } from './types/commonTypes';
 import * as Cards from './cards';
 import { syncInventory } from './graphics/ui/CardUI';
 import { addCardToHand } from './entity/Player';
+import { moveWithCollisions } from './jmath/moveWithCollision';
 
 export default function devUtils(graphics: PIXI.Graphics) {
 
@@ -70,7 +71,7 @@ export function setupDevGlobalFunctions(underworld: Underworld) {
             const coords = underworld.findValidSpawn(globalThis.player.unit, 5)
             const sourceUnit = Units.allUnits[unitId];
             if (coords && sourceUnit) {
-                Unit.create(
+                const newUnit = Unit.create(
                     unitId,
                     // Start the unit at the summoners location
                     coords.x,
@@ -84,6 +85,8 @@ export function setupDevGlobalFunctions(underworld: Underworld) {
                     sourceUnit.unitProps,
                     underworld
                 );
+                // Prevent them from overlapping
+                moveWithCollisions(newUnit, jitter(newUnit, 1, underworld.random), underworld.units, underworld);
             }
 
         }
