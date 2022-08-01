@@ -47,7 +47,7 @@ import { calculateDistanceOfVec2Array, findPath } from './jmath/Pathfinding';
 import { addUnderworldEventListeners, setView, View } from './views';
 import { mouseMove } from './graphics/ui/eventListeners';
 import Jprompt from './graphics/Jprompt';
-import { collideWithLineSegments, ForceMove, moveWithCollisions } from './jmath/moveWithCollision';
+import { collideWithLineSegments, ForceMove, isVecIntersectingVecWithCustomRadius, moveWithCollisions } from './jmath/moveWithCollision';
 import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './config';
 import { getBestRangedLOSTarget } from './entity/units/actions/rangedAction';
 import { getClients, hostGiveClientGameState, IHostApp } from './network/networkUtil';
@@ -62,6 +62,7 @@ import { updateParticlees } from './graphics/Particles';
 import { processNextInQueueIfReady, setupNetworkHandlerGlobalFunctions } from './network/networkHandler';
 import { setupDevGlobalFunctions } from './devUtils';
 import type PieClient from '@websocketpie/client';
+import { forcePush } from './cards/push';
 
 export enum turn_phase {
   PlayerTurns,
@@ -215,11 +216,41 @@ export default class Underworld {
     forceMoveInst.resolve();
 
   }
-  runForceMove(forceMoveInst: ForceMove, prediction: boolean) {
+  // Returns true when forceMove is complete
+  runForceMove(forceMoveInst: ForceMove, prediction: boolean): boolean {
     const { pushedObject, velocity, velocity_falloff } = forceMoveInst;
+    if (Vec.magnitude(velocity) <= 0.1) {
+      return true;
+    }
     const lastPosition = Vec.clone(pushedObject);
     const aliveUnits = ((prediction && globalThis.predictionUnits) ? globalThis.predictionUnits : this.units).filter(u => u.alive);
-    moveWithCollisions(pushedObject, Vec.add(pushedObject, velocity), aliveUnits, this);
+    const newPosition = Vec.add(pushedObject, velocity)
+    pushedObject.x = newPosition.x;
+    pushedObject.y = newPosition.y;
+    for (let other of aliveUnits) {
+      if (other == forceMoveInst.pushedObject) {
+        // Don't collide with self
+        continue;
+      }
+      // The units' regular radius is for "crowding". It is much smaller than their actual size and it is used
+      // to ensure they can crowd together but not overlap perfect, so here we use a custom radius to detect
+      // forcePush collisions.
+      if (isVecIntersectingVecWithCustomRadius(pushedObject, other, config.COLLISION_MESH_RADIUS)) {
+        // Reduce own velocity by half due to the transfer of force:
+        forceMoveInst.velocity = Vec.multiply(0.5, forceMoveInst.velocity);
+        // If they collide transfer force:
+        const preExistingForceMoveForThisTarget = this.forceMove.find(fm => fm.pushedObject == other);
+        if (preExistingForceMoveForThisTarget) {
+          // Don't push another object more than once from the same source
+          if (preExistingForceMoveForThisTarget.source !== forceMoveInst.pushedObject) {
+            preExistingForceMoveForThisTarget.velocity = Vec.add(preExistingForceMoveForThisTarget.velocity, forceMoveInst.velocity)
+          }
+        } else {
+          forcePush(other, forceMoveInst.pushedObject, this, prediction);
+        }
+
+      }
+    }
     collideWithLineSegments(pushedObject, this.walls, this);
     forceMoveInst.velocity = Vec.multiply(velocity_falloff, velocity);
     Obstacle.checkLiquidInteractionDueToForceMovement(forceMoveInst, lastPosition, this, prediction);
@@ -234,6 +265,7 @@ export default class Underworld {
         this.checkPickupCollisions(u, prediction);
       })
     }
+    return false;
 
   }
   gameLoop = (timestamp: number) => {
@@ -277,11 +309,11 @@ export default class Underworld {
     for (let i = this.forceMove.length - 1; i >= 0; i--) {
       const forceMoveInst = this.forceMove[i];
       if (forceMoveInst) {
-        this.runForceMove(forceMoveInst, false);
+        const done = this.runForceMove(forceMoveInst, false);
         // Remove it from forceMove array once the distance has been covers
         // This works even if collisions prevent the unit from moving since
         // distance is modified even if the unit doesn't move each loop
-        if (Vec.magnitude(forceMoveInst.velocity) <= 0.1) {
+        if (done) {
           forceMoveInst.resolve();
           this.forceMove.splice(i, 1);
         }
@@ -293,6 +325,7 @@ export default class Underworld {
       if (u) {
         const predictionUnit = !globalThis.predictionUnits ? undefined : globalThis.predictionUnits[i];
         if (u.alive) {
+
           while (u.path && u.path.points[0] && Vec.equal(Vec.round(u), u.path.points[0])) {
             // Remove next points until the next point is NOT equal to the unit's current position
             // This prevent's "jittery" "slow" movement where it's moving less than {x:1.0, y:1.0}

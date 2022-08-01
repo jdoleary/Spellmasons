@@ -5,6 +5,7 @@ import * as config from '../config';
 import type * as Unit from '../entity/Unit';
 import Underworld from '../Underworld';
 export interface ForceMove {
+    source: Vec2;
     pushedObject: Circle;
     velocity: Vec2;
     velocity_falloff: number;
@@ -14,6 +15,9 @@ export interface ForceMove {
 export type Circle = {
     radius: number;
 } & Vec2;
+export function isVecIntersectingVecWithCustomRadius(c1: Vec2, c2: Vec2, radius: number): boolean {
+    return distance(c1, c2) <= radius;
+}
 export function isCircleIntersectingCircle(c1: Circle, c2: Circle): boolean {
     return distance(c1, c2) <= c1.radius + c2.radius;
 }

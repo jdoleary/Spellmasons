@@ -7,8 +7,7 @@
 - Tasks:
     - Finish spell quantity
         - If a spell doesn't support quantity, don't waste mana, don't even let it be queued up sequentially
-    - Improve force movement
-        - Motion blur for pushed units?
+    - "poolshot" for pickups?
     - blood trails
         - Maybe do multiple small radius lines to simulate smear and they have a chance to dissapear
 ## This weeks goals:

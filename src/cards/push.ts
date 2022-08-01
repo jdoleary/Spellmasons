@@ -40,11 +40,12 @@ export async function forcePush(pushedObject: Circle, awayFrom: Vec2, underworld
   const velocity_falloff = 0.93;
   const originalPosition = clone(pushedObject);
   return await raceTimeout(2000, 'Push', new Promise<void>((resolve) => {
-    const forceMoveInst: ForceMove = { pushedObject, velocity, velocity_falloff, resolve }
+    const forceMoveInst: ForceMove = { source: awayFrom, pushedObject, velocity, velocity_falloff, resolve }
     if (prediction) {
       // Simulate the forceMove until it's complete
-      while (magnitude(forceMoveInst.velocity) > 0.1) {
-        underworld.runForceMove(forceMoveInst, prediction);
+      let done = false;
+      while (!done) {
+        done = underworld.runForceMove(forceMoveInst, prediction);
       }
       resolve();
       // Draw prediction lines

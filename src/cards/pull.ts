@@ -39,7 +39,7 @@ export async function pull(pushedObject: Circle, towards: Vec2, underworld: Unde
   const velocity_falloff = 0.93;
   const originalPosition = clone(pushedObject);
   return await raceTimeout(2000, 'Pull', new Promise<void>((resolve) => {
-    const forceMoveInst: ForceMove = { pushedObject, velocity, velocity_falloff, resolve }
+    const forceMoveInst: ForceMove = { source: towards, pushedObject, velocity, velocity_falloff, resolve }
     if (prediction) {
       // Simulate the forceMove until it's complete
       while (magnitude(forceMoveInst.velocity) > 0.1) {
