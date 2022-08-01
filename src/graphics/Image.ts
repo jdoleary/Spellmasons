@@ -106,8 +106,12 @@ export function changeSprite(image: IImageAnimated | undefined, imagePath: strin
   if (image.sprite.imagePath == imagePath && image.sprite.parent == container) {
     // Do not change if imagePath would be unchanged and
     // container would be unchanged 
-    // Return undefined because sprite is unchanged
-    return undefined;
+    // Exception: Only cancel the change if it is NOT a Hit animation, allow it to be interrupted and replaced with another hit animation
+    // since a unit may take damage more quickly than the hit animation can finish.
+    if (image.sprite.imagePath.indexOf('Hit') === -1) {
+      // Return undefined because sprite is unchanged
+      return undefined
+    }
   }
   const tex = getPixiTextureAnimated(imagePath);
   if (tex) {

@@ -1,7 +1,5 @@
 ## Today
 - Low hanging fruit
-    - Allow changeSprite to override sprite when it's animation.hit only
-        - Change hit animations to be faster
     - bug: A map with no enemies: '0.47596223309121266'
     - bug: AOE is giving me "no target" when I click on ground (hurtx4,aoe,hurt)
     - I got an out of range message and error but when I clicked on the end of my blue cast it worked
