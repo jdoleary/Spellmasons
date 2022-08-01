@@ -6,23 +6,12 @@
         - Juice
         - SFX
 # Critical Path
-- DONE - Milestone 1 | **Reliable Multiplayer** | July 22
-    - Standalone Server
-    - Simultaneous player turns
-- DONE Milestone 2 | **Biomes** | July 28
-    - DONE Better liquid
-    - DONE Unblock Che for tile art
-- DONE - Milestone 3 | **Balance**
-    - Increase difficulty
-        - Difficulty is directly related to fun, it isn't a puzzel if you can just "hurt" your way through it over and over
-    - Smaller levels
-        - Since this is turn based, super large levels are obnoxious
 - Milestone 4 | **Perfect Prediction Attacks** | Due Aug 8
     - Units should NEVER change target from their prediction. A case where this happened is when a decoy died from other units attacking it
     - Grunt attack predictions are not perfect. See branch 'perfect-predictions'
     - Move predictionUnits and predictionPickups out of globalThis so they don't get clobbered when multiple instances on a single server
 - Milestone 5 | **Movement & Spell Quantity** | Due Aug 11
-    - DONE Pack 14 | Spell quantity
+    - IN PROGRESS Pack 14 | Spell quantity
     - Pack 15
         - Improved force movement
         - Blood trails - use stealth'emup's code, or figure out how to streak blood

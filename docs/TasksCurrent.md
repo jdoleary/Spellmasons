@@ -1,11 +1,23 @@
+## Today
+- Low hanging fruit
+    - BUG: liquid images not cleaned up on new level
+    - Allow changeSprite to override sprite when it's animation.hit only
+        - Change hit animations to be faster
+    - bug: A map with no enemies: '0.47596223309121266'
+    - bug: AOE is giving me "no target" when I click on ground (hurtx4,aoe,hurt)
+    - I got an out of range message and error but when I clicked on the end of my blue cast it worked
+        - maybe make the whole line grey if there's no target in range?
+- Tasks:
+    - Finish spell quantity
+        - If a spell doesn't support quantity, don't waste mana, don't even let it be queued up sequentially
+    - Improve force movement
+        - Motion blur for pushed units?
+    - blood trails
+        - Maybe do multiple small radius lines to simulate smear and they have a chance to dissapear
 ## This weeks goals:
-- BUG: liquid images not cleaned up on new level
-- Allow changeSprite to override sprite when it's animation.hit only
-- bug: A map with no enemies: '0.47596223309121266'
-- bug: AOE is giving me "no target" when I click on ground (hurtx4,aoe,hurt)
+- Milestone 5 | **Movement & Spell Quantity** | Due Aug 11
+- Milestone 4 | **Perfect Prediction Attacks** | Due Aug 8
 - task: Move prediction pickups and units to underworld not global or else they will be shared between multiple underworlds
-- I got an out of range message and error but when I clicked on the end of my blue cast it worked
-    - maybe make the whole line grey if there's no target in range?
 - I got bit by a vampire but it didn't accurately warn me he would
     - wrap this in with preventing units from changing targets from their prediction even if the decoy dies (lobber move then throw?)
 - Resurrect icon didn't show in prediction when it was buried in a trap that I pushed someone into (in prediction)
@@ -34,8 +46,6 @@
 ## Schedule
 - Packs, priority ordered
     - Pack 15 Movement
-    - Pack 13 Biome and liquid shader
-        - https://codepen.io/chles/pen/aNxMxQ
     - Pack 8 SFX
     - Pack 9 R, J & E Feedback
     - Pack 10
