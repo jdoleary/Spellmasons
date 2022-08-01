@@ -33,9 +33,13 @@ Deals ${damageDone} damage to all targets.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
       let animationDelaySum = 0;
-      let delayBetweenAnimations = delayBetweenAnimationsStart;
-      for (let q = 0; q < quantity; q++) {
-        for (let unit of state.targetedUnits) {
+      for (let unit of state.targetedUnits) {
+        animationDelaySum = 0;
+        let delayBetweenAnimations = delayBetweenAnimationsStart;
+        // Note: quantity loop should always be INSIDE of the targetedUnits loop
+        // so that any quantity-based animations will play simultaneously on multiple targets
+        // but sequentially within themselves (on a single target, e.g. multiple hurts over and over)
+        for (let q = 0; q < quantity; q++) {
           if (!prediction) {
             setTimeout(() => {
               const spellEffectImage = oneOffImage(unit, animationPath, containerUI);
