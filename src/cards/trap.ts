@@ -114,7 +114,7 @@ Sets a spell as a trap, to be triggered when stepped on.  Wrapping a spell in a 
               underworld.addPickupToArray(self, prediction);
 
             }
-          }, underworld);
+          }, underworld, prediction);
           pickup.description = 'The trap is winding...';
         } else {
           console.error(`Could not find pickup ${id} in pickups`);

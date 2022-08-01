@@ -183,7 +183,7 @@ export default class Underworld {
       this.cardDropsDropped++;
       const pickupSource = Pickup.pickups.find(p => p.name == Pickup.CARDS_PICKUP_NAME)
       if (pickupSource) {
-        Pickup.create({ pos: enemyKilledPos, pickupSource }, this);
+        Pickup.create({ pos: enemyKilledPos, pickupSource }, this, false);
       } else {
         console.error('pickupSource for', Pickup.CARDS_PICKUP_NAME, ' not found');
         return
@@ -788,7 +788,7 @@ export default class Underworld {
   spawnPickup(index: number, coords: Vec2) {
     const pickup = Pickup.pickups[index];
     if (pickup) {
-      Pickup.create({ pos: coords, pickupSource: pickup }, this);
+      Pickup.create({ pos: coords, pickupSource: pickup }, this, false);
     } else {
       console.error('Could not find pickup with index', index);
     }
@@ -1926,7 +1926,7 @@ export default class Underworld {
       if (portalPickup) {
         for (let playerUnit of this.units.filter(u => u.unitType == UnitType.PLAYER_CONTROLLED && u.alive)) {
           const portalSpawnLocation = this.findValidSpawn(playerUnit, 2) || playerUnit;
-          Pickup.create({ pos: portalSpawnLocation, pickupSource: portalPickup }, this);
+          Pickup.create({ pos: portalSpawnLocation, pickupSource: portalPickup }, this, false);
           // Give all player units max stamina for convenience:
           playerUnit.stamina = playerUnit.staminaMax;
           // Give all players max health and mana (it will be reset anyway when they are reset for the next level
