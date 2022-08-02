@@ -14,8 +14,6 @@
     - IN PROGRESS Pack 14 | Spell quantity
     - Pack 15
         - Improved force movement
-        - Blood trails - use stealth'emup's code, or figure out how to streak blood
-            - blood splatter on take damage, leave it all over the map
 - Milestone X | **Doodads**
     - More interactable doodads (explosive barrels, movable cover)
 - Milestone X | **Juice** | Due Date Ongoing
@@ -83,7 +81,7 @@
 
 ## Definition of Done
 - DONE Stable Multiplayer
-- Supports extra large maps with 1000 units
+- Supports 1000 units
 - Complete Menu with options
 - Bug Reporting built in (e.g. Save game state and send it to me)
 - Packaged in Electron App

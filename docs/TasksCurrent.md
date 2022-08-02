@@ -1,28 +1,28 @@
 ## Today
-- Poolshot velocity transfer should be decreased
+- LEFT OFF Poolshot velocity transfer should be decreased
+    - Fix push into water, it should be smooth
+    - bug: if you push a unit into liquid from the top of the liquid at an angle it doesn't go far enough into the liquid and the mask shows the stones behind
 - Tasks:
     - Finish spell quantity
         - If a spell doesn't support quantity, don't waste mana, don't even let it be queued up sequentially
         - It's not yet implemented for heal
-    - blood trails
-        - Don't draw blood over liquid
-            - use floor tiles as mask?
+    - blood splatter on take damage, leave it all over the map
+    - ART: Integrate new attack animations
 ---
-- bug: if you push a unit into liquid from the top of the liquid at an angle it doesn't go far enough into the liquid and the mask shows the stones behind
 - bug: Picked up pickups from pull should not transfer move to player
 - bug: AOE is giving me "no target" when I click on ground (hurtx4,aoe,hurt)
     - rather than "no target" maybe it just doesn't use mana and shows a fizzle animation?
+    - It's giving "no target" because of the first hurt
 ## This weeks goals:
 - Milestone 5 | **Movement & Spell Quantity** | Due Aug 11
 - Milestone 4 | **Perfect Prediction Attacks** | Due Aug 8
+    - I got bit by a vampire but it didn't accurately warn me he would
+        - wrap this in with preventing units from changing targets from their prediction even if the decoy dies (lobber move then throw?)
+    - Resurrect icon didn't show in prediction when it was buried in a trap that I pushed someone into (in prediction)
 - task: Move prediction pickups and units to underworld not global or else they will be shared between multiple underworlds
-- I got bit by a vampire but it didn't accurately warn me he would
-    - wrap this in with preventing units from changing targets from their prediction even if the decoy dies (lobber move then throw?)
-- Resurrect icon didn't show in prediction when it was buried in a trap that I pushed someone into (in prediction)
-- bug: clone flashes potion and then it disappears
-    - seed: 0.8541225371499359
-
 ## Standalone server backlog bugs
+- Ensure standalone server doesn't bother running predictions
+    - Unless the predictions determine their attacks from "perfect predictions" branch
 - It's running hot for some reason
 - multiplayer, player doesn't play hit animation when a grunt bites it
 - Game waits a long time after last player has ended their turn before moving on to enemy turn

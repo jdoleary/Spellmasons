@@ -1,3 +1,6 @@
+- blood trails
+    - Don't draw blood over liquid
+        - use floor tiles as mask?
 - Investigate webgl context was lost
 - Fix: bad-pathing.mkv in videos folder
     - seed: 0.6450583331398443
