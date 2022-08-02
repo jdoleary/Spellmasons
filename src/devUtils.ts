@@ -87,9 +87,11 @@ export function setupDevGlobalFunctions(underworld: Underworld) {
                 );
                 // Prevent them from overlapping
                 moveWithCollisions(newUnit, jitter(newUnit, 1, underworld.random), underworld.units, underworld);
+                return newUnit;
             }
 
         }
+        return undefined;
     }
     globalThis.devSpawnAllUnits = () => {
         for (let id of Object.keys(Units.allUnits)) {
