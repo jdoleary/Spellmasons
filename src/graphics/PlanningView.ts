@@ -456,11 +456,13 @@ ${unitSource.extraTooltipInfo ? unitSource.extraTooltipInfo() : ''}
 ${cards}
       `;
 
-          const imagePath = Unit.getImagePathForUnitId(unitSource.id);
-          if (elInspectorTooltipImage.src !== imagePath) {
+          // Temporarily disabled image since unit images are not in public folder
+          // and i don't want it to report a bunch of 404s
+          // const imagePath = Unit.getImagePathForUnitId(unitSource.id);
+          // if (elInspectorTooltipImage.src !== imagePath) {
 
-            elInspectorTooltipImage.src = imagePath;
-          }
+          //   elInspectorTooltipImage.src = imagePath;
+          // }
         }
       }
       break;
