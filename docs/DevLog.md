@@ -1,3 +1,6 @@
+## 2022.08.02
+ Horizontall flip image:
+ `magick playerAttackSmallMagic_*.png -flop -set filename:base "%[basename]" "%[filename:base].png"`
 ### Blue Ocean Principle
 The primary unique driver behind Spellmasons is creativity in spellcasting.  So don't get distracted by all sorts of other things like upgrades and other roguelite elements.  Focus on making the spellcasting superb!
 

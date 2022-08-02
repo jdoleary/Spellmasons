@@ -361,11 +361,11 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
   // Only allow casting during the PlayerTurns phase
   if (underworld.turn_phase === turn_phase.PlayerTurns) {
     globalThis.animatingSpells = true;
-    let animationKey = 'playerAttackLarge';
+    let animationKey = 'playerAttackEpic';
     if (payload.cards.length < 3) {
       animationKey = 'playerAttackSmall';
     } else if (payload.cards.length < 5) {
-      animationKey = 'playerAttackMedium';
+      animationKey = 'playerAttackMedium0';
     }
     const keyMoment = () => underworld.castCards(caster.cardUsageCounts, caster.unit, payload.cards, payload, false, false);
     await Unit.playComboAnimation(caster.unit, animationKey, keyMoment, { animationSpeed: 0.2, loop: false });

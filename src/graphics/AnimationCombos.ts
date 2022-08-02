@@ -11,25 +11,35 @@ interface AnimationCombo {
 }
 const combos: { [spritePath: string]: AnimationCombo } = {
     'playerAttackSmall': {
+        keyFrame: 11,
+        primaryAnimation: 'units/playerAttackSmall',
+        companionAnimations: ['units/playerAttackSmallMagic'],
+    },
+    'playerAttackMedium0': {
         // At the moment the wizard's staff hits the ground
         keyFrame: 7,
         primaryAnimation: 'units/playerAttack',
         companionAnimations: ['units/playerAttackZap'],
         SFX: 'cast',
     },
-    'playerAttackMedium': {
+    'playerAttackMedium1': {
         // At the moment the wizard's staff hits the ground
         keyFrame: 7,
         primaryAnimation: 'units/playerAttack',
         companionAnimations: ['units/playerAttackSingle'],
         SFX: 'cast',
     },
-    'playerAttackLarge': {
+    'playerAttackMedium2': {
         // At the moment the wizard's staff hits the ground
         keyFrame: 7,
         primaryAnimation: 'units/playerAttack',
         companionAnimations: ['units/playerAttackBomb'],
         SFX: 'cast',
+    },
+    'playerAttackEpic': {
+        keyFrame: 23,
+        primaryAnimation: 'units/playerAttackEpic',
+        companionAnimations: ['units/playerAttackEpicMagic'],
     },
     'units/lobberAttack': {
         keyFrame: 4,
