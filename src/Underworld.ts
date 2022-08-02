@@ -82,6 +82,8 @@ const elUpgradePickerContent = document.getElementById('upgrade-picker-content')
 const elSeed = document.getElementById('seed') as (HTMLElement | undefined);
 const elUpgradePickerLabel = document.getElementById('upgrade-picker-label') as (HTMLElement | undefined);
 
+let showUpgradesQueue: boolean[] = [];
+
 let lastTime = 0;
 let requestAnimationFrameGameLoopId: number;
 export default class Underworld {
@@ -1088,7 +1090,13 @@ export default class Underworld {
     // the CREATE_LEVEL message whereas, checkForEndOfLevel could be subject to a race condition
     // that might prevent the upgrade screen from showing for some users in rare circumstances.
     // Better to have the upgrade screen tied to the network message.
-    this.showUpgrades(this.levelIndex !== 0);
+    if (this.levelIndex === 0) {
+      for (let i = 0; i < config.STARTING_CARD_COUNT; i++) {
+        this.showUpgrades(false);
+      }
+    } else {
+      this.showUpgrades(true);
+    }
 
     console.log('Setup: createLevel', levelData);
     this.lastLevelCreated = levelData;
@@ -1453,11 +1461,14 @@ export default class Underworld {
       document.body?.querySelector(`.card[data-upgrade="${upgrade.title}"]`)?.classList.toggle('chosen', true);
       // Clear upgrades when current player has picked one
       document.body?.classList.toggle('showUpgrades', false);
-      const startingSpellsLeftToPick = config.STARTING_CARD_COUNT - globalThis.player.inventory.length;
-      if (startingSpellsLeftToPick > 0) {
-        // Show next round of upgrades to pick
-        this.showUpgrades(false);
+      // Show next round of upgrades to pick if there are upgrades in the queue
+      if (showUpgradesQueue.length) {
+        const statsUpgrades = showUpgradesQueue.shift();
+        if (statsUpgrades !== undefined) {
+          this.showUpgrades(statsUpgrades);
+        }
       }
+
     }
   }
 
@@ -1465,6 +1476,11 @@ export default class Underworld {
     if (!globalThis.player) {
       console.error('Cannot show upgrades, no globalThis.player');
       return
+    }
+    if (document.body?.classList.contains('showUpgrades')) {
+      // Upgrades are already visible, queue the next upgrades
+      showUpgradesQueue.push(statsUpgrades);
+      return;
     }
     let minimumProbability = 0;
     const startingSpellsLeftToPick = config.STARTING_CARD_COUNT - globalThis.player.inventory.length
