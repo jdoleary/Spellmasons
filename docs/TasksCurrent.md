@@ -1,4 +1,5 @@
 ## Today
+- art bug: Blood splatter goes under liquid tiles but not under liquid
 - bug: player stuck in walking animation after clone
 - bug: CRITICAL: Single player escape just quits game, it doesn't go to "resume" menu anymore
 - LEFT OFF Poolshot velocity transfer should be decreased
@@ -8,8 +9,6 @@
     - Finish spell quantity
         - If a spell doesn't support quantity, don't waste mana, don't even let it be queued up sequentially
         - It's not yet implemented for heal
-    - blood splatter on take damage, leave it all over the map
-    - ART: Integrate new attack animations
 ---
 - bug: Picked up pickups from pull should not transfer move to player
 - bug: AOE is giving me "no target" when I click on ground (hurtx4,aoe,hurt)
