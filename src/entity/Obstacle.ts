@@ -34,13 +34,7 @@ export const lavaDamage = 2;
 export function checkLiquidInteractionDueToForceMovement(forceMoveInst: ForceMove, lastPosition: Vec2, underworld: Underworld, prediction: boolean) {
   if (isUnit(forceMoveInst.pushedObject)) {
     const unit = forceMoveInst.pushedObject;
-    const liquidMovedUnit = checkLiquidInteractionDueToMovement(unit, lastPosition, underworld, prediction);
-    if (liquidMovedUnit) {
-      // Once unit is moved via liquid interations, stop all force movement if unit is under control of force movement:
-      // This prevents the issue of a unit moving across liquid and possibly back out due to a single forceMove
-      // When the move, if they "fall in", their movement stops
-      underworld.removeForceMove(forceMoveInst);
-    }
+    checkLiquidInteractionDueToMovement(unit, lastPosition, underworld, prediction);
   }
 }
 // Invoked manually when a unit moves due to forced movement (non pathing movement)

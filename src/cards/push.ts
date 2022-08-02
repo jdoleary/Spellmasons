@@ -1,4 +1,4 @@
-import { Vec2, magnitude, clone } from '../jmath/Vec';
+import { Vec2, magnitude, clone, add } from '../jmath/Vec';
 import { Spell } from './index';
 import { distance, similarTriangles } from '../jmath/math';
 import type { Circle, ForceMove } from '../jmath/moveWithCollision';
@@ -8,7 +8,6 @@ import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
 
 export const id = 'push';
-const pushDistance = 20;
 const spell: Spell = {
   card: {
     id,
@@ -23,42 +22,55 @@ Pushes the target(s) away from the caster
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
       let promises = [];
-      const id = Math.random();
       const awayFrom = state.casterUnit;
       for (let unit of state.targetedUnits) {
-        promises.push(forcePush(unit, awayFrom, id, underworld, prediction));
+        promises.push(forcePush(unit, awayFrom, underworld, prediction));
       }
       for (let pickup of state.targetedPickups) {
-        promises.push(forcePush(pickup, awayFrom, id, underworld, prediction));
+        promises.push(forcePush(pickup, awayFrom, underworld, prediction));
       }
       await Promise.all(promises);
       return state;
     },
   },
 };
-export async function forcePush(pushedObject: Circle, awayFrom: Vec2, id: number, underworld: Underworld, prediction: boolean): Promise<void> {
-  const velocity = similarTriangles(pushedObject.x - awayFrom.x, pushedObject.y - awayFrom.y, distance(pushedObject, awayFrom), pushDistance);
-  const velocity_falloff = 0.93;
+interface forcePushArgs {
+  pushedObject: Circle;
+  awayFrom: Vec2;
+  pushDistance?: number;
+  resolve: () => void;
+}
+export function makeForcePush(args: forcePushArgs, underworld: Underworld, prediction: boolean): ForceMove {
+  console.log('jtest make force push', prediction, args)
+  const { pushedObject, awayFrom, resolve, pushDistance } = args;
+  const endPoint = add(pushedObject, similarTriangles(pushedObject.x - awayFrom.x, pushedObject.y - awayFrom.y, distance(pushedObject, awayFrom), pushDistance || 300));
+  const id = Math.random();
   const originalPosition = clone(pushedObject);
+  const forceMoveInst: ForceMove = { pushedObject, id, endPoint, resolve }
+  if (prediction) {
+    // Simulate the forceMove until it's complete
+    let done = false;
+    while (!done) {
+      // TODO: TOO much recursion when push on devSpawnAllUnits because the predictions don't get added to an array to check against
+      done = underworld.runForceMove(forceMoveInst, prediction);
+    }
+    resolve();
+    // Draw prediction lines
+    if (globalThis.predictionGraphics) {
+      globalThis.predictionGraphics.lineStyle(4, forceMoveColor, 1.0)
+      globalThis.predictionGraphics.moveTo(originalPosition.x, originalPosition.y);
+      globalThis.predictionGraphics.lineTo(pushedObject.x, pushedObject.y);
+      globalThis.predictionGraphics.drawCircle(pushedObject.x, pushedObject.y, 4);
+    }
+  } else {
+    underworld.forceMove.push(forceMoveInst);
+  }
+  return forceMoveInst;
+
+}
+export async function forcePush(pushedObject: Circle, awayFrom: Vec2, underworld: Underworld, prediction: boolean): Promise<void> {
   return await raceTimeout(2000, 'Push', new Promise<void>((resolve) => {
-    const forceMoveInst: ForceMove = { id, pushedObject, velocity, velocity_falloff, resolve }
-    if (prediction) {
-      // Simulate the forceMove until it's complete
-      let done = false;
-      while (!done) {
-        done = underworld.runForceMove(forceMoveInst, prediction);
-      }
-      resolve();
-      // Draw prediction lines
-      if (globalThis.predictionGraphics) {
-        globalThis.predictionGraphics.lineStyle(4, forceMoveColor, 1.0)
-        globalThis.predictionGraphics.moveTo(originalPosition.x, originalPosition.y);
-        globalThis.predictionGraphics.lineTo(pushedObject.x, pushedObject.y);
-        globalThis.predictionGraphics.drawCircle(pushedObject.x, pushedObject.y, 4);
-      }
-    } else {
-      underworld.forceMove.push(forceMoveInst);
-    };
+    makeForcePush({ pushedObject, awayFrom, resolve }, underworld, prediction);
   }));
 
 }

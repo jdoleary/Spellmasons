@@ -1,6 +1,7 @@
 ## Next Tasks
-- radial blood splatter for when origin and target are the same like damaging self
 - Finish force movement refactor (see stash)
+    - Collision isn't working for some reason (it is in prediction mode)
+    - When they stop when they hit walls they need to stop hard, not slid into them
 - finish quantity implementation
 - take damage when hitting walls (add blood splatter) 
 

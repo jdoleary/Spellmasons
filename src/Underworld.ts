@@ -34,7 +34,7 @@ import {
   cleanUpLiquidFilter,
   BloodParticle,
 } from './graphics/PixiUtils';
-import { queueCenteredFloatingText } from './graphics/FloatingText';
+import floatingText, { queueCenteredFloatingText } from './graphics/FloatingText';
 import { UnitType, Faction, UnitSubType } from './types/commonTypes';
 import type { Vec2 } from "./jmath/Vec";
 import * as Vec from "./jmath/Vec";
@@ -43,7 +43,7 @@ import { allUnits } from './entity/units';
 import { drawTarget, getUIBarProps, setPredictionGraphicsLineStyle, updateManaCostUI, updatePlanningView } from './graphics/PlanningView';
 import { chooseObjectWithProbability, prng, randInt, SeedrandomState } from './jmath/rand';
 import { calculateCost } from './cards/cardUtils';
-import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle } from './jmath/lineSegment';
+import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle, closestLineSegmentIntersection } from './jmath/lineSegment';
 import { expandPolygon, mergePolygon2s, Polygon2, Polygon2LineSegment, toLineSegments, toPolygon2LineSegments } from './jmath/Polygon2';
 import { calculateDistanceOfVec2Array, findPath } from './jmath/Pathfinding';
 import { addUnderworldEventListeners, setView, View } from './views';
@@ -64,7 +64,7 @@ import { updateParticlees } from './graphics/Particles';
 import { processNextInQueueIfReady, setupNetworkHandlerGlobalFunctions } from './network/networkHandler';
 import { setupDevGlobalFunctions } from './devUtils';
 import type PieClient from '@websocketpie/client';
-import { forcePush } from './cards/push';
+import { forcePush, makeForcePush } from './cards/push';
 
 export enum turn_phase {
   PlayerTurns,
@@ -130,6 +130,7 @@ export default class Underworld {
   // A list of units and pickups and an endPosition that they are moved to via a "force",
   // like a push or pull or explosion.
   forceMove: ForceMove[] = [];
+  // forceMovePrediction: ForceMove[] = [];
   // A hash of the last thing this client was thinking
   // Used with MESSAGE_TYPES.PLAYER_THINKING so other clients 
   // can see what another client is planning.
@@ -218,23 +219,20 @@ export default class Underworld {
     this.random = seedrandom(this.seed, { state: RNGState })
     return this.random;
   }
-  removeForceMove(forceMoveInst: ForceMove) {
-    // Note: setting the velocity to 0,0 is the idempotent way to end
-    // a forceMove because the forceMove engine will then call it's resolve function on next
-    // iteration.
-    forceMoveInst.velocity = { x: 0, y: 0 };
-    forceMoveInst.resolve();
-
-  }
   // Returns true when forceMove is complete
   runForceMove(forceMoveInst: ForceMove, prediction: boolean): boolean {
-    const { pushedObject, velocity, velocity_falloff } = forceMoveInst;
-    if (Vec.magnitude(velocity) <= 0.1) {
+    const { pushedObject, id, endPoint } = forceMoveInst;
+    if (math.distance(pushedObject, endPoint) <= 1) {
+      // It's close enough, set final position to endPoint
+      pushedObject.x = endPoint.x;
+      pushedObject.y = endPoint.y;
       return true;
     }
     const lastPosition = Vec.clone(pushedObject);
     const aliveUnits = ((prediction && globalThis.predictionUnits) ? globalThis.predictionUnits : this.units).filter(u => u.alive);
-    const newPosition = Vec.add(pushedObject, velocity)
+    const distanceToEndPoint = math.distance(pushedObject, endPoint);
+    const travelDistancePerTick = distanceToEndPoint * 0.1;
+    const newPosition = Vec.add(pushedObject, math.similarTriangles(endPoint.x - pushedObject.x, endPoint.y - pushedObject.y, distanceToEndPoint, travelDistancePerTick))
     pushedObject.x = newPosition.x;
     pushedObject.y = newPosition.y;
     for (let other of aliveUnits) {
@@ -246,23 +244,42 @@ export default class Underworld {
       // to ensure they can crowd together but not overlap perfect, so here we use a custom radius to detect
       // forcePush collisions.
       if (isVecIntersectingVecWithCustomRadius(pushedObject, other, config.COLLISION_MESH_RADIUS)) {
-        // Reduce own velocity by half due to the transfer of force:
-        forceMoveInst.velocity = Vec.multiply(0.5, forceMoveInst.velocity);
         // If they collide transfer force:
-        const preExistingForceMoveForThisTarget = this.forceMove.find(fm => fm.pushedObject == other);
-        // Don't push another object more than once from the same source
+        const preExistingForceMoveForThisTarget = this.forceMove.find(fm => fm.id == forceMoveInst.id);
+        // Don't push another object  
         if (preExistingForceMoveForThisTarget) {
-          if (preExistingForceMoveForThisTarget.id !== forceMoveInst.id) {
-            preExistingForceMoveForThisTarget.velocity = Vec.add(preExistingForceMoveForThisTarget.velocity, forceMoveInst.velocity)
-          }
+          // Don't push an object that is already moving.
+          // This may create an infinite push loop
+          continue;
         } else {
-          forcePush(other, forceMoveInst.pushedObject, forceMoveInst.id, this, prediction);
+          // () => {}: No resolver needed for second order force pushes
+          // All pushable objects have the same mass so when a collision happens they'll split the distance
+          const fullDist = math.distance(forceMoveInst.pushedObject, forceMoveInst.endPoint);
+          const halfDist = fullDist / 2;
+          floatingText({
+            coords: other,
+            text: '🎈',
+          });
+          floatingText({
+            coords: forceMoveInst.pushedObject,
+            text: 'X🎈X',
+          });
+          makeForcePush({ pushedObject: other, awayFrom: forceMoveInst.pushedObject, pushDistance: halfDist, resolve: () => { } }, this, prediction);
+          // Affect the endpoint of the current mover since it just collided
+          const oldEndPoint = forceMoveInst.endPoint;
+          forceMoveInst.endPoint = Vec.add(forceMoveInst.pushedObject, math.similarTriangles(forceMoveInst.pushedObject.x - forceMoveInst.endPoint.x, forceMoveInst.pushedObject.y - forceMoveInst.endPoint.y, fullDist, halfDist));
+          console.log('jtest', forceMoveInst.endPoint, oldEndPoint);
         }
 
       }
     }
-    collideWithLineSegments(pushedObject, this.walls, this);
-    forceMoveInst.velocity = Vec.multiply(velocity_falloff, velocity);
+    // TODO: WARN: If the endpoint is beyond a barrier it will never get close enough and enter an infinite loop:
+    // collideWithLineSegments(pushedObject, this.walls, this);
+    const wallCollisionIntersection = closestLineSegmentIntersection({ p1: pushedObject, p2: endPoint }, this.walls);
+    if (wallCollisionIntersection) {
+      console.log('TODO collided with walls, take damage?')
+      forceMoveInst.endPoint = wallCollisionIntersection
+    }
     Obstacle.checkLiquidInteractionDueToForceMovement(forceMoveInst, lastPosition, this, prediction);
     if (Unit.isUnit(forceMoveInst.pushedObject)) {
       // If the pushed object is a unit, check if it collides with any pickups

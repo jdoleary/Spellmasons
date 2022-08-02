@@ -5,12 +5,9 @@ import * as config from '../config';
 import type * as Unit from '../entity/Unit';
 import Underworld from '../Underworld';
 export interface ForceMove {
-    // id prevents recursive pushing.  Only objects pushed from different events
-    // can affect each other
-    id: number;
     pushedObject: Circle;
-    velocity: Vec2;
-    velocity_falloff: number;
+    id: number;
+    endPoint: Vec2;
     resolve: () => void;
 }
 

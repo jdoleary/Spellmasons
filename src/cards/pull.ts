@@ -36,15 +36,14 @@ Pulls the target(s) towards the caster
   },
 };
 export async function pull(pushedObject: Circle, towards: Vec2, id: number, underworld: Underworld, prediction: boolean): Promise<void> {
-  const velocity = similarTriangles(pushedObject.x - towards.x, pushedObject.y - towards.y, distance(pushedObject, towards), -pullDistance);
-  const velocity_falloff = 0.93;
   const originalPosition = clone(pushedObject);
   return await raceTimeout(2000, 'Pull', new Promise<void>((resolve) => {
-    const forceMoveInst: ForceMove = { id, pushedObject, velocity, velocity_falloff, resolve }
+    const forceMoveInst: ForceMove = { id, pushedObject, endPoint: towards, resolve }
     if (prediction) {
       // Simulate the forceMove until it's complete
-      while (magnitude(forceMoveInst.velocity) > 0.1) {
-        underworld.runForceMove(forceMoveInst, prediction);
+      let done = false;
+      while (!done) {
+        done = underworld.runForceMove(forceMoveInst, prediction);
       }
       resolve();
       // Draw prediction lines
