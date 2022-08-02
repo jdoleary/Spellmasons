@@ -1,4 +1,10 @@
-## Today
+## Next Tasks
+- radial blood splatter for when origin and target are the same like damaging self
+- Finish force movement refactor (see stash)
+- finish quantity implementation
+- take damage when hitting walls (add blood splatter) 
+
+## This weeks goals:
 - art bug: Blood splatter goes under liquid tiles but not under liquid
 - bug: player stuck in walking animation after clone
 - bug: CRITICAL: Single player escape just quits game, it doesn't go to "resume" menu anymore
@@ -14,7 +20,6 @@
 - bug: AOE is giving me "no target" when I click on ground (hurtx4,aoe,hurt)
     - rather than "no target" maybe it just doesn't use mana and shows a fizzle animation?
     - It's giving "no target" because of the first hurt
-## This weeks goals:
 - Milestone 5 | **Movement & Spell Quantity** | Due Aug 11
 - Milestone 4 | **Perfect Prediction Attacks** | Due Aug 8
     - I got bit by a vampire but it didn't accurately warn me he would

@@ -1,9 +1,8 @@
 import * as Unit from '../entity/Unit';
 import { containerUI, startBloodParticleSplatter } from '../graphics/PixiUtils';
 import { randFloat } from '../jmath/rand';
-import { clone, getAngleBetweenVec2s, getAngleBetweenVec2sYInverted } from '../jmath/Vec';
 import { CardCategory } from '../types/commonTypes';
-import { animateSpell, oneOffImage, playDefaultSpellSFX } from './cardUtils';
+import { oneOffImage, playDefaultSpellSFX } from './cardUtils';
 import { Spell } from './index';
 
 export const id = 'hurt';
@@ -54,7 +53,7 @@ Deals ${damageDone} damage to all targets.
               }
               playDefaultSpellSFX(card, prediction);
               setTimeout(() => {
-                startBloodParticleSplatter(underworld, getAngleBetweenVec2sYInverted(state.casterUnit, unit), unit);
+                startBloodParticleSplatter(underworld, state.casterUnit, unit);
               }, 300)
               Unit.takeDamage(unit, damageDone, underworld, prediction, state);
             }, animationDelaySum)

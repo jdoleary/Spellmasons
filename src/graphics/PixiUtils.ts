@@ -1,5 +1,5 @@
 import type * as PIXI from 'pixi.js';
-import { clone, Vec2 } from '../jmath/Vec';
+import { clone, equal, getAngleBetweenVec2sYInverted, Vec2 } from '../jmath/Vec';
 import { View } from '../views';
 import * as math from '../jmath/math';
 import * as config from '../config';
@@ -588,14 +588,16 @@ export type BloodParticle = {
   color: number,
 }
 const blood_speed = 1;
-export function startBloodParticleSplatter(underworld: Underworld, angle: number, target: IUnit) {
+export function startBloodParticleSplatter(underworld: Underworld, damageOrigin: Vec2, target: IUnit) {
   if (globalThis.headless) {
     return;
   }
-  var bloodAmount = randInt(underworld.random, 30, 60);
-  for (var i = 0; i < bloodAmount; i++) {
-    var randSpeed = randFloat(underworld.random, 0.7, blood_speed);
-    var randRotationOffset = randFloat(underworld.random, -Math.PI / 8, Math.PI / 8);
+  const bloodAmount = randInt(underworld.random, 30, 60);
+  const angle = getAngleBetweenVec2sYInverted(damageOrigin, target);
+  for (let i = 0; i < bloodAmount; i++) {
+    const randSpeed = randFloat(underworld.random, 0.7, blood_speed);
+    // If the damage origin is the same as target, the spread is a full circle, if not, it's a narrow fan so it can spray in one direction
+    const randRotationOffset = equal(damageOrigin, target) ? randFloat(underworld.random, -Math.PI, Math.PI) : randFloat(underworld.random, -Math.PI / 8, Math.PI / 8);
     const randScale = randInt(underworld.random, 5, 10);
     // Ensure blood is at unit feet, not center
     const unitImageYOffset = config.COLLISION_MESH_RADIUS / 2;
