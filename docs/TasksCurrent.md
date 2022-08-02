@@ -1,4 +1,6 @@
 ## Today
+- bug: player stuck in walking animation after clone
+- bug: CRITICAL: Single player escape just quits game, it doesn't go to "resume" menu anymore
 - LEFT OFF Poolshot velocity transfer should be decreased
     - Fix push into water, it should be smooth
     - bug: if you push a unit into liquid from the top of the liquid at an angle it doesn't go far enough into the liquid and the mask shows the stones behind

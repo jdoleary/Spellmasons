@@ -141,7 +141,6 @@ export default class Underworld {
   constructor(pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
     this.pie = pie;
     this.seed = globalThis.seedOverride || seed;
-    this.seed = '0.8541225371499359'
 
     // Initialize content
     Cards.registerCards(this);
@@ -1004,9 +1003,9 @@ export default class Underworld {
   }
   // ringLimit limits how far away from the spawnSource it will check for valid spawn locations
   // same as below "findValidSpanws", but shortcircuits at the first valid spawn found and returns that
-  findValidSpawn(spawnSource: Vec2, ringLimit: number): Vec2 | undefined {
+  findValidSpawn(spawnSource: Vec2, ringLimit: number, radius: number = config.COLLISION_MESH_RADIUS): Vec2 | undefined {
     const honeycombRings = ringLimit;
-    for (let s of math.honeycombGenerator(config.COLLISION_MESH_RADIUS, spawnSource, honeycombRings)) {
+    for (let s of math.honeycombGenerator(radius, spawnSource, honeycombRings)) {
       const attemptSpawn = { ...s, radius: config.COLLISION_MESH_RADIUS };
       if (this.isPointValidSpawn(attemptSpawn, config.COLLISION_MESH_RADIUS, spawnSource)) {
         return attemptSpawn

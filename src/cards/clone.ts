@@ -6,6 +6,8 @@ import { jitter, Vec2 } from '../jmath/Vec';
 import * as config from '../config';
 import floatingText from '../graphics/FloatingText';
 import { returnToDefaultSprite } from '../entity/Unit';
+import { IImageAnimated } from '../graphics/Image';
+import { raceTimeout } from '../Promise';
 
 const id = 'clone';
 const spell: Spell = {
@@ -41,8 +43,9 @@ Clones each target
           // If there is are clone coordinates to clone into
           if (cloneSourceCoords) {
             if (unit) {
+              await animateMitosis(unit.image);
               // Jitter prevents multiple clones from spawning on top of each other
-              const validSpawnCoords = underworld.findValidSpawn(jitter(cloneSourceCoords, config.COLLISION_MESH_RADIUS / 2, underworld.random), 5);
+              const validSpawnCoords = underworld.findValidSpawn(jitter(cloneSourceCoords, config.COLLISION_MESH_RADIUS / 2, underworld.random), 5, 10);
               if (validSpawnCoords) {
                 const clone = Unit.load(Unit.serialize(unit), underworld, prediction);
                 if (!prediction) {
@@ -61,7 +64,8 @@ Clones each target
               }
             }
             if (pickup) {
-              const validSpawnCoords = underworld.findValidSpawn(cloneSourceCoords, 5)
+              const validSpawnCoords = underworld.findValidSpawn(cloneSourceCoords, 5, 20)
+              await animateMitosis(pickup.image);
               if (validSpawnCoords) {
                 const clone = Pickup.load(pickup, underworld, prediction);
                 Pickup.setPosition(clone, validSpawnCoords.x, validSpawnCoords.y);
@@ -76,4 +80,34 @@ Clones each target
     },
   },
 };
+async function animateMitosis(image?: IImageAnimated) {
+  if (!image) {
+    return;
+  }
+  const iterations = 100;
+  const millisBetweenIterations = 3;
+  const startScaleX = image.sprite.scale.x || 1.0;
+  const startScaleY = image.sprite.scale.y || 1.0;
+  // "iterations + 10" gives it a little extra time so it doesn't timeout right when the animation would finish on time
+  return raceTimeout(millisBetweenIterations * (iterations + 10), 'animatedMitosis', new Promise<void>(resolve => {
+    for (let i = 0; i < iterations; i++) {
+
+      setTimeout(() => {
+        // Stretch
+        if (image) {
+          image.sprite.scale.x *= 1.01;
+          image.sprite.scale.y -= 0.001;
+          if (i == iterations - 1) {
+            resolve();
+          }
+
+        }
+      }, millisBetweenIterations * i)
+    }
+  })).then(() => {
+    // Restore scale
+    image.sprite.scale.x = startScaleX;
+    image.sprite.scale.y = startScaleY;
+  });
+}
 export default spell;
