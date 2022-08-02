@@ -978,7 +978,7 @@ export default class Underworld {
           // liquid tiles are rendered with a shader
           continue;
         }
-        const sprite = addPixiSprite(tile.image, containerBoard);
+        const sprite = addPixiSprite(tile.image, containerWalls);
         if (sprite) {
           sprite.x = tile.x - config.COLLISION_MESH_RADIUS;
           sprite.y = tile.y - config.COLLISION_MESH_RADIUS;

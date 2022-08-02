@@ -27,9 +27,9 @@ if (globalThis.pixi) {
 export const app = !globalThis.pixi ? undefined : new globalThis.pixi.Application();
 export const containerLiquid = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerBoard = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
+export const containerBloodSmear = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerBetweenBoardAndWalls = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerWalls = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
-export const containerBloodSmear = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerPlanningView = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerDoodads = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerUnits = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
@@ -112,9 +112,9 @@ if (globalThis.pixi && containerUI && app && containerBetweenBoardAndWalls) {
   if (
     containerLiquid &&
     containerBoard &&
+    containerBloodSmear &&
     containerBetweenBoardAndWalls &&
     containerWalls &&
-    containerBloodSmear &&
     containerPlanningView &&
     containerDoodads &&
     containerUnits &&
@@ -130,9 +130,9 @@ if (globalThis.pixi && containerUI && app && containerBetweenBoardAndWalls) {
     utilProps.underworldPixiContainers = [
       containerLiquid,
       containerBoard,
+      containerBloodSmear,
       containerBetweenBoardAndWalls,
       containerWalls,
-      containerBloodSmear,
       containerPlanningView,
       containerDoodads,
       containerUnits,
