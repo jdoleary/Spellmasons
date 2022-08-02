@@ -9,6 +9,8 @@ import { JSpriteAnimated } from './Image';
 import { containerParticles } from './Particles';
 import { elPIXIHolder } from './FloatingText';
 import Underworld from '../Underworld';
+import { randFloat, randInt } from '../jmath/rand';
+import { IUnit } from '../entity/Unit';
 
 // if PIXI is finished setting up
 let isReady = false;
@@ -42,6 +44,10 @@ export const containerFloatingText = !globalThis.pixi ? undefined : new globalTh
 export const graphicsBloodSmear = !globalThis.pixi ? undefined : new globalThis.pixi.Graphics();
 if (containerBloodSmear && graphicsBloodSmear) {
   containerBloodSmear.addChild(graphicsBloodSmear);
+}
+export const containerBloodParticles = !globalThis.pixi ? undefined : new globalThis.pixi.ParticleContainer();
+if (containerBloodSmear && containerBloodParticles) {
+  containerBloodSmear.addChild(containerBloodParticles);
 }
 let updateLiquidFilterIntervalId: NodeJS.Timer | undefined;
 // Setup animated liquid displacement
@@ -567,4 +573,62 @@ export function pixiText(text: string, style: Partial<PIXI.ITextStyle>): PIXI.Te
     return undefined;
   }
   return new globalThis.pixi.Text(text, style);
+}
+
+// Non particle engine particles
+// particle engine references pixi specific particles and their generators,
+// these are just sprites that we manage ourselves
+export type BloodParticle = {
+  x: number,
+  y: number,
+  dx: number,
+  dy: number,
+  tick: number,
+  scale: number,
+  color: number,
+}
+const blood_speed = 1;
+export function startBloodParticleSplatter(underworld: Underworld, angle: number, target: IUnit) {
+  if (globalThis.headless) {
+    return;
+  }
+  var bloodAmount = randInt(underworld.random, 30, 60);
+  for (var i = 0; i < bloodAmount; i++) {
+    var randSpeed = randFloat(underworld.random, 0.7, blood_speed);
+    var randRotationOffset = randFloat(underworld.random, -Math.PI / 8, Math.PI / 8);
+    const randScale = randInt(underworld.random, 5, 10);
+    // Ensure blood is at unit feet, not center
+    const unitImageYOffset = config.COLLISION_MESH_RADIUS / 2;
+    const bloodSplat = {
+      x: target.x,
+      y: target.y + unitImageYOffset,
+      dx: -randSpeed * Math.cos(angle + randRotationOffset) * 15,
+      dy: -randSpeed * Math.sin(angle + randRotationOffset) * 15,
+      tick: 0, // the amount of times that it has moved
+      scale: randScale,
+      color: target.bloodColor,
+    };
+
+
+    underworld.bloods.push(bloodSplat);
+  }
+
+
+}
+export function tickParticle(particle: BloodParticle) {
+  if (globalThis.headless) {
+    //remove it from array
+    return true;
+  }
+  particle.y += particle.dy;
+  particle.x -= particle.dx;
+  particle.dx *= 0.9;
+  particle.dy *= 0.9;
+  particle.tick++;
+  //remove from array once it is done moving (OPTIMIZATION)
+  if (particle.tick > 10) {
+    //remove it from array
+    return true;
+  }
+  return false;
 }

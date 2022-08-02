@@ -2,10 +2,11 @@ import * as particles from '@pixi/particle-emitter'
 import * as Vec from '../jmath/Vec';
 import { Vec2 } from '../jmath/Vec';
 import * as math from '../jmath/math';
-import { randFloat } from '../jmath/rand';
+import { prng, randFloat } from '../jmath/rand';
 import { normalizeAngle } from '../jmath/Angle';
 import seedrandom from 'seedrandom';
 import { raceTimeout } from '../Promise';
+import { BloodParticle, graphicsBloodSmear, tickParticle } from './PixiUtils';
 
 export const containerParticles = !globalThis.pixi ? undefined : new globalThis.pixi.ParticleContainer(5000, {
     scale: true,
@@ -104,8 +105,9 @@ export function makeManaTrail(start: Vec2, target: Vec2) {
 }
 
 
-export function updateParticlees(delta: number) {
+export function updateParticlees(delta: number, bloods: BloodParticle[], seedrandom: prng) {
 
+    // Emitters:
     const inverseRotationSpeed = 10;
     const velocityIncrease = 0.1;
     for (let t of trails) {
@@ -132,6 +134,35 @@ export function updateParticlees(delta: number) {
         if (Vec.equal(t.position, t.target) && t.emitter.particleCount == 0) {
             cleanUpTrail(t);
         }
+    }
+    // "graphics" particles
+    for (var i = 0; i < bloods.length; i++) {
+        var blood = bloods[i];
+        if (!blood) {
+            continue;
+        }
+        if (graphicsBloodSmear) {
+            graphicsBloodSmear.beginFill(blood?.color, 1.0);
+        }
+        //shrink blood particle:
+        blood.scale *= 0.7;
+
+        var blood_x_mod = randFloat(seedrandom, -10, 10);
+        var blood_y_mod = randFloat(seedrandom, -10, 10);
+        var blood_size_mod = randFloat(seedrandom, 1, blood.scale);
+        if (graphicsBloodSmear) {
+            graphicsBloodSmear.drawCircle(blood.x + blood_x_mod, blood.y + blood_y_mod, blood_size_mod);
+        }
+
+        //remove when done ticking
+        if (tickParticle(blood)) {
+            bloods.splice(i, 1);
+            i--;
+        }
+        if (graphicsBloodSmear) {
+            graphicsBloodSmear.endFill();
+        }
+
     }
 }
 

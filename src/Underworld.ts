@@ -32,6 +32,7 @@ import {
   containerLiquid,
   setupLiquidFilter,
   cleanUpLiquidFilter,
+  BloodParticle,
 } from './graphics/PixiUtils';
 import { queueCenteredFloatingText } from './graphics/FloatingText';
 import { UnitType, Faction, UnitSubType } from './types/commonTypes';
@@ -139,6 +140,7 @@ export default class Underworld {
   // case it needs to be sent to another client
   lastLevelCreated: LevelData | undefined;
   removeEventListeners: undefined | (() => void);
+  bloods: BloodParticle[] = [];
 
   constructor(pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
     this.pie = pie;
@@ -492,7 +494,7 @@ export default class Underworld {
     updatePlanningView(this);
     mouseMove(this);
     // Particles
-    updateParticlees(deltaTime);
+    updateParticlees(deltaTime, this.bloods, this.random);
 
     // Invoke gameLoopUnits again next loop
     requestAnimationFrameGameLoopId = requestAnimationFrame(this.gameLoop)

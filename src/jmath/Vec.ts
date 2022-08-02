@@ -23,6 +23,11 @@ export function getAngleBetweenVec2s(origin: Vec2, point: Vec2): number {
     const dx = point.x - origin.x;
     return Math.atan2(dy, dx);
 }
+export function getAngleBetweenVec2sYInverted(origin: Vec2, point: Vec2): number {
+    const dy = point.y - origin.y;
+    const dx = point.x - origin.x;
+    return Math.atan2(dy * -1, dx);
+}
 
 export function multiply(scalar: number, p2: Vec2): Vec2 {
     return {
