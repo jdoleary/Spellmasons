@@ -1,12 +1,13 @@
 ## Next Tasks
+- art bug: Blood splatter goes under liquid border tiles but not under liquid
+- bug: pull has debug floating text and the unit continues to follow you after you pull if they're dead
+- finish quantity implementation
 - Finish force movement refactor (see stash)
     - Collision isn't working for some reason (it is in prediction mode)
     - When they stop when they hit walls they need to stop hard, not slid into them
-- finish quantity implementation
 - take damage when hitting walls (add blood splatter) 
 
 ## This weeks goals:
-- art bug: Blood splatter goes under liquid tiles but not under liquid
 - bug: player stuck in walking animation after clone
 - bug: CRITICAL: Single player escape just quits game, it doesn't go to "resume" menu anymore
 - LEFT OFF Poolshot velocity transfer should be decreased
