@@ -1,4 +1,6 @@
 ## Next Tasks
+- bug: inLiquid doesn't work for dead units
+- bug: push doesn't go as far as expected if CPU is slowed down
 - Finish force movement refactor (see stash)
     - fix wall collisions
 - take a break
