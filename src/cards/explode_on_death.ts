@@ -36,7 +36,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: 50,
     thumbnail: 'explode-on-death.png',
-    description: `Cursed targets explode when they die dealing ${damage} to all units within the
+    description: `Cursed targets explode when they die dealing ${damage} damage to all units within the
     explosion radius.`,
     effect: async (state, card, quantity, underworld, prediction) => {
       for (let unit of state.targetedUnits) {
