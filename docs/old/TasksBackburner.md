@@ -1,3 +1,11 @@
+- Finish force movement refactor (see stash)
+    - When they stop when they hit walls they need to stop hard, not slid into them
+    - They go too far into walls
+    - take damage when hitting walls (add blood splatter) 
+- bug: AOE is giving me "no target" when I click on ground (hurtx4,aoe,hurt)
+    - rather than "no target" maybe it just doesn't use mana and shows a fizzle animation?
+    - It's giving "no target" because of the first hurt
+- bug: push doesn't go as far as expected if CPU is slowed down
 - Don't let RMB movement interrupt cast animation
 - Investigate webgl context was lost
 - Fix: bad-pathing.mkv in videos folder

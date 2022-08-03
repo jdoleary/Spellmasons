@@ -6,14 +6,12 @@
         - Juice
         - SFX
 # Critical Path
-- Milestone 5 | **Movement & Spell Quantity** | Due Aug 8
-    - Improved force movement
-- Milestone 4 | **Perfect Prediction Attacks** | Due Aug 11 
-    - Units should NEVER change target from their prediction. A case where this happened is when a decoy died from other units attacking it
-    - Grunt attack predictions are not perfect. See branch 'perfect-predictions'
-    - Move predictionUnits and predictionPickups out of globalThis so they don't get clobbered when multiple instances on a single server
-- Milestone X | **Doodads**
-    - More interactable doodads (explosive barrels, movable cover)
+- Milestone X | **Trailer-ready Alpha** | Due August 15
+    - Optimize blood graphics so it doesn't slow cpu
+    - Test standalone server with friends
+    - Pick low hanging gameplay fruit
+        - add quantity to spells that could use it
+    - Fix environment background
 - Milestone X | **Juice** | Due Date Ongoing
     - SFX
         - Unit Sounds
@@ -29,11 +27,24 @@
         - 0%: UI
     - Master music (Brad)
 - Milestone X | **Marketing** | Due September 1
+    - See Marketing.md for more info
     - Trailer
-        - Need HUD removal, music removal
+        - Need HUD removal, music removal button
+        - Need biomes
+        - Need sfx
+        - Need spell effects
     - Steam Page (waiting on art)
     - Website Presskit page
         - Note: Website should just redirect to steampage
+- Milestone X | **Perfect Prediction Attacks** | Due Date Ongoing
+    - I got bit by a vampire but it didn't accurately warn me he would
+        - wrap this in with preventing units from changing targets from their prediction even if the decoy dies (lobber move then throw?)
+    - Resurrect icon didn't show in prediction when it was buried in a trap that I pushed someone into (in prediction)
+    - Units should NEVER change target from their prediction. A case where this happened is when a decoy died from other units attacking it
+    - Grunt attack predictions are not perfect. See branch 'perfect-predictions'
+    - Move predictionUnits and predictionPickups out of globalThis so they don't get clobbered when multiple instances on a single server
+- Milestone X | **Doodads**
+    - More interactable doodads (explosive barrels, movable cover)
 - Milestone X | **Beta Testers** | Due October 1
     - Tutorial / Explain prompts based on user actions
     - Optimize game
@@ -64,11 +75,9 @@
     - Server customization
         - Turn time
         - Pvp mode (more factions)
-    - (M) Standalone server
-        - Standalone headless server should be able to be proven out using unit tests
-        - No Images, no SFX
-        - It should probably just use a global variable that omits visuals
     - Rework "Expand" / AOE so that if affects the radius of any radius using spell (e.g. Bloat)
+    - More enemies
+        - Color enemies different colors and give them different behavior. For example, a blue "poisoner" could be like the "smoker" from left4dead
 
 ## Philosophy
     - "rules for copy"

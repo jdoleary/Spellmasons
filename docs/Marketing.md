@@ -3,6 +3,7 @@
     - Make the trailer
     - Reroute spellmasons.com to the steam page directly
     - Deside on a hard release date
+    - Once the marketing campain is launched aim to release 1 short a week
     - Contractors
         - COVER YOUR ASS LEGALLY HERE
         - "Spellmasons.com" voiceover
@@ -43,6 +44,7 @@
         - https://www.derek-lieu.com/blog/2018/5/1/the-best-debug-tools-for-game-trailer-capture
         - [Very good Derek Lieu GDC talk](https://www.youtube.com/watch?v=QWd7F0z1W_Y)
             - Focus on what's unique
+                - Spellmixing
             - Let the game speak for itself
             - Good shot hierarchy
                 - Clear

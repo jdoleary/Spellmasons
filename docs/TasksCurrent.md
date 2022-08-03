@@ -1,25 +1,18 @@
-## Next Tasks
+## Path to Trailer-ready alpha
+- Add 'quantity' to the spells that would benefit from it (freeze, poison, aoe, etc)
 - bug: inLiquid doesn't work for dead units
-- bug: push doesn't go as far as expected if CPU is slowed down
-- Finish force movement refactor (see stash)
-    - fix wall collisions
-- take a break
-- Finish force movement refactor (see stash)
-    - When they stop when they hit walls they need to stop hard, not slid into them
-    - They go too far into walls
-    - take damage when hitting walls (add blood splatter) 
-
-## This weeks goals:
+    - change inLiquid so it's not a modifier,should just be a property on unit
+- measure and fix performance for blood splatter?
+- Change AOE behavior so that it just expands radius
+    - This radius expansion should work for ANY spell that uses a radius: vortex, bloat, chain, etc
+    - Maybe it only modifies the spell directly after it
+- Change contageous so it only spreads curses once (with a radius) instead of permanently?
+    - This would solve the "infinite freeze" issue
+    - update copy
 - bug: CRITICAL: Single player escape just quits game, it doesn't go to "resume" menu anymore
-- bug: Picked up pickups from pull should not transfer move to player
-- bug: AOE is giving me "no target" when I click on ground (hurtx4,aoe,hurt)
-    - rather than "no target" maybe it just doesn't use mana and shows a fizzle animation?
-    - It's giving "no target" because of the first hurt
-- Milestone 4 | **Perfect Prediction Attacks** | Due Aug 8
-    - I got bit by a vampire but it didn't accurately warn me he would
-        - wrap this in with preventing units from changing targets from their prediction even if the decoy dies (lobber move then throw?)
-    - Resurrect icon didn't show in prediction when it was buried in a trap that I pushed someone into (in prediction)
 - task: Move prediction pickups and units to underworld not global or else they will be shared between multiple underworlds
+- environment looks off because wall depth shows into the grey
+- Fix spell icon borders
 ## Standalone server backlog bugs
 - Ensure standalone server doesn't bother running predictions
     - Unless the predictions determine their attacks from "perfect predictions" branch
@@ -44,22 +37,10 @@
     - lobby
         - ready up and start game
 ## Schedule
-- Packs, priority ordered
-    - Pack 8 SFX
-    - Pack 9 R, J & E Feedback
-    - Pack 10
-    - Pack 11
-    - Pack 14 Quantity
-    - Pack 12 Particle Engine
-    - Pack 16 Colin Feedback
 - Pack 16 | Colin Feedback
-    - me: Need affordances for push/pull pickups
     - explain that you can cast any number of times per turn
-    - bug: spell choice dissappeared when the portal spawned right on him
-    - little blue debug circles appeared on level w/ archer
     - bug: If you are RMB moving when a prompt popup, it dismisses immediately
     - Make spell pickups more obvious
-    - copy: bloat "3 damage"
     - label: bloat visual circle "explosion radius"
     - copy: "poison is stackable"
     - explain: remember, vampiree takes heals as pure damage
@@ -69,9 +50,7 @@
     - attack badges block health sometimes
     - self heal should predict in your health bar
     - label out of range circle (think aoe), on hover
-    - level 8 map too big
     - hoisting might not be desireable, what if you want to push then AOE?
-    - bug: bloat pushed a unit out of the map, a summoner was in the corner on level 8.
     - Colin Direct Feedback:
         - some enemies chould shoot walls to blow yoru cover
         - me: maps are too big
@@ -86,7 +65,6 @@
         - new to genre
         - QWERTASDFG for hotkeys
         - More exciting if archers had a % chance based on distance
-        - grunts should cover more ground, archers are the only real threat
         - physics based env:
             - drop corpse in lave and have it shoot out lava
             - bloat gore schrapnel
@@ -97,13 +75,7 @@
         - fog of war
         - what if no agro until you got close so you can't just wait for them all to come to you
         - archer arroes hurt allies as it passes through. % chance. multiple types of archers
-- Pack 15 | Movement
-    - Predictive movement, pick a final destination and slow the closer you get
-        - Shoving into walls should do damage and stop the movement
-            - What about at a steep angle?
-        - Should be a smooth path into the water
 - Pack 12
-    - Improve unit "fall in" so it's not a jump but smooth
     - Particle engine
         - add pixelated filter, see stash
         - OR use a pixelated source image instead of a pixelated filter
@@ -111,15 +83,9 @@
     - animated trim path line for archers so it's obvious they'll hit you
 - Pack 6
     - Standalone Server
-        - Decouple the various layers (data: underworld; networking: pie; visual: Pixi / DOM; audio)
-            - Then improve syncing strategy between the data layer and the visual layer.  This will be useful for network syncs, saves and loads, standalone headless server.
-                - It should also solve the disappearing subsprite bug and the wizard robes changing color bug.
-            - In order to decouple, each should have imports only in one file that can be dependency injected.  So ALL pie stuff goes through the networking layer, all DOM stuff goes through the UI layer, all PIXI (including PixiUtils which is how a lot of the files interact with PIXI) stuff goes through the pixi layer.  This should make it easy to make a headless server or make tests that use a data-only underworld
-    - Add "preparing" animation used to reduce desyncs due to network latency, so that if multiple users are casting spells at the same time, the wizard bending down to "charge" as soon as the current user clicks, masks a delay to make sure it doesn't conflict with other spells.  It'll send the spell over the network as soon as the user clicks but waits to cast it so that there aren't conflicting spells making desyncs on multiple clients.
-    - Server should be able to send syncs that will wait to execute until turn changes so it doesn't interrupt animations and mess up the state when it syncs
+        - Add "preparing" animation used to reduce desyncs due to network latency, so that if multiple users are casting spells at the same time, the wizard bending down to "charge" as soon as the current user clicks, masks a delay to make sure it doesn't conflict with other spells.  It'll send the spell over the network as soon as the user clicks but waits to cast it so that there aren't conflicting spells making desyncs on multiple clients.
+        - Server should be able to send syncs that will wait to execute until turn changes so it doesn't interrupt animations and mess up the state when it syncs
 ---
-- Bug: sometimes resolve done moving doesn't occur when unit runs into liquid
-    - This is also when they keep doing the walking animation after they've stopped
 - Write down Brad's feedback here
     - it should be clear that it rolls spells after you pick
     - auto card pickup on portal spawn is not great, should be explained-
@@ -135,12 +101,6 @@
     - What happens if you spawn decoy out of bounds
     (if the OOB is in the center of the map, see video)
 
-- Change AOE behavior so that it just expands radius
-    - This radius expansion should work for ANY spell that uses a radius: vortex, bloat, chain, etc
-    - Maybe it only modifies the spell directly after it
-- Pack 13 | Biomes
-    - Rethink biome construction to allow for dynamic liquid
-        - whole bodies of liquid should be selectable so that they can be frozen
 - Brad feedback
     - I need a way to see my cast range when planning out my movement
     - Add a glow on hover to spells in spellbook
@@ -151,13 +111,6 @@
     - clone animation: soul stretches out of them and makes the clone
 
 
-- Pack 8
-    - all SFX
-        - all spells
-        - Fall in lava
-        - use potion
-        - die
-    - Master Music
 - Pack 9 | R, J & E feedback
     - No stamina bar after portal
     - Freeze spell should stop timer on pickups (or just increase it by 1)
@@ -167,11 +120,8 @@
     - Poison prediction is confusing
     - ideas
         - Have push and pull from the start
-        - Takes too long to be fun, speed it up!!! 
         - objects to hide behind (raise earth)
         - More objects to interact with
-        - Spell: grappling hook (pulls your towards something)
-        - freezable liquid to walk over
 - Pack 10
     - Better timeout icon
         - Change timeout icon to red when 0 turns left?
@@ -181,7 +131,6 @@
         - All multiplayer players get the drop when one picks it up
     - Spell choice should random spell rarity but then all the spells to choose from should have that rarity.  It's not a choice if there's an obvious right answer
     - what happens if you freeze liquid with a unit in it?
-    - fix vampire bite, rather than the confusing half damage thing, it should just double health and then half it if vampire is removed
     - shield should be visible on health bar (it's just temporary health)
     - explain that portal cleanses all buffs and curses
 - Pack 11:
@@ -190,24 +139,12 @@
     - UI Refactor
         - Prevent RMB movement when mouse is over toolbar
         - Disable RMB movement when upgrade screen is up
-- Pack 14:
-    - Add "quantity" to spells so that 3 hurt in a row looks different and only plays one animation
-    - Upgrade: Start each level with 2x mana overfill (think of new upgrade "perks")
-        
-
-
-- Ordered next tasks
-    - Steam Page
-    - Trailer
-    - Marketing
 ## Bugs
 - Player robe colors are mixed up after refresh
 - Handle error in menu when attempting to connect to a bad url
-- Stop idle animation when unit is frozen
 - death skull doens't show for decoy
-- Self clones will walk through lava
+- Own health bar prediction doesn't work
 - Pack 7: Dad Loch playtest
-    - (resolved?) Make health and mana go full when portal spawns so users aren't tempted to collect potions meaninglessly
     - Explain to user with popups
         - Introduce card pickup
         - explain manaburn better
@@ -228,16 +165,15 @@
 - wall: see abberant-wall.png
 - Bug: Portal spawns when you prediction kill yourself on test level
 - Bug: Should sync portals when syncing units if all enemies are dead
-- Bug: (Note: this is probably fixed now) Goons spawned outside of map when summoner was stuffed in upper left corner of map
 - Bug: RMB hold on toolbar moves character.  Be very careful when solving this to ensure you don't make clicks in the invisible part of UI elements no longer work
-- Bug: Mana bar over player's head grows too  large when mana is overfilled
 - Bug: If enemies take no action and you end your turn with the "are you sure" prompot, the prompt will layer
----
+
 ## Features
+- whole bodies of liquid should be selectable so that they can be frozen
+    - freezable liquid to walk over
+- Upgrade: Start each level with 2x mana overfill (think of new upgrade "perks")
 - Archers on level 2 have more health than archers on level 1
     - This is because unit strength gradually increases, how to communicate this?
-- Change contageous so it only spreads curses once (with a radius) instead of permanently?
-    - This would solve the "infinite freeze" issue
 - Use summoner magic animation for units that are summoned
 - What if potions drop from slain enemies instead of being just pickups on the ground, it would be more exciting if you needed one and it dropped.
 - Task: An ally that has died at all (even if ressed) should lose their upgrade priviledge
@@ -255,6 +191,7 @@
 - vortex card - to pull units in to a center location
 - Content: Time crystal releases something when it breaks
 - Content: An enemy that pulls you into danger
+    - a blue poisoner
 - Content: "Orge" enemies that get stronger for every ally of theirs that dies
 - An enemy that consumes allies to get stronger
 - Specific barriers or walls that can't be cast through
@@ -265,6 +202,7 @@
 - Card: An attack range minimum but not a maximum so you CAN"T attack if they are too close
 - Casting curses on liquid should change the liquid type (lava/hurt, purify/water, poison)
 - More "Quantity" implementations for spells beyond hurt
+- Spell: grappling hook (pulls your towards something)
 
 
 ## Misc
