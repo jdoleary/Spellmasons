@@ -1,6 +1,4 @@
 ## Next Tasks
-- don't draw blood on liquid by checking liquid bounds
-- take a break
 - Finish force movement refactor (see stash)
     - fix climbing out of liquid for player and units
     - fix wall collisions

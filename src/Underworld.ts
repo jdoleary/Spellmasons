@@ -44,7 +44,7 @@ import { drawTarget, getUIBarProps, setPredictionGraphicsLineStyle, updateManaCo
 import { chooseObjectWithProbability, prng, randInt, SeedrandomState } from './jmath/rand';
 import { calculateCost } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle, closestLineSegmentIntersection } from './jmath/lineSegment';
-import { expandPolygon, mergePolygon2s, Polygon2, Polygon2LineSegment, toLineSegments, toPolygon2LineSegments } from './jmath/Polygon2';
+import { expandPolygon, isVec2InsidePolygon, mergePolygon2s, Polygon2, Polygon2LineSegment, toLineSegments, toPolygon2LineSegments } from './jmath/Polygon2';
 import { calculateDistanceOfVec2Array, findPath } from './jmath/Pathfinding';
 import { addUnderworldEventListeners, setView, View } from './views';
 import { mouseMove } from './graphics/ui/eventListeners';
@@ -339,11 +339,16 @@ export default class Underworld {
             graphicsBloodSmear.beginFill(forceMoveInst.pushedObject.bloodColor, 1.0);
             graphicsBloodSmear.lineStyle(1, forceMoveInst.pushedObject.bloodColor, 1.0);
             const bloodDrop = Vec.jitter(endPos, 5, this.random);
+            // Don't draw if inside liquid
+            if (!this.isInsideLiquid(bloodDrop)) {
             // Draw a blood drop
             graphicsBloodSmear.drawCircle(bloodDrop.x, bloodDrop.y, randInt(this.random, 2, 4));
+            }
 
             const startWithJitter = Vec.add(startPos, j);
             const endWithJitter = Vec.add(endPos, j);
+            // Only draw if both are not inside liquid bounds
+            if (!this.isInsideLiquid(startPos) && !this.isInsideLiquid(endWithJitter)) {
             // Draw circle at the ends of the smear line line so the smear lines don't look like rectangles
             graphicsBloodSmear.drawCircle(startWithJitter.x, startWithJitter.y, size);
             graphicsBloodSmear.drawCircle(endWithJitter.x, endWithJitter.y, size);
@@ -352,6 +357,7 @@ export default class Underworld {
             graphicsBloodSmear.lineStyle(size, forceMoveInst.pushedObject.bloodColor, 1.0);
             graphicsBloodSmear.moveTo(startWithJitter.x, startWithJitter.y);
             graphicsBloodSmear.lineTo(endWithJitter.x, endWithJitter.y);
+            }
           }
         }
         // Remove it from forceMove array once the distance has been covers
@@ -501,7 +507,7 @@ export default class Underworld {
     updatePlanningView(this);
     mouseMove(this);
     // Particles
-    updateParticlees(deltaTime, this.bloods, this.random);
+    updateParticlees(deltaTime, this.bloods, this.random, this);
 
     // Invoke gameLoopUnits again next loop
     requestAnimationFrameGameLoopId = requestAnimationFrame(this.gameLoop)
@@ -893,6 +899,16 @@ export default class Underworld {
       validPlayerSpawnCoords: [{ x: 304, y: 280 }]
 
     }
+
+  }
+  // returns true if point is inside of liquid bounds
+  isInsideLiquid(point: Vec2): boolean {
+    for (let poly of this.liquidPolygons) {
+      if (isVec2InsidePolygon(point, poly)) {
+        return true;
+      }
+    }
+    return false;
 
   }
 

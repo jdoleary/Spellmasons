@@ -7,6 +7,7 @@ import { normalizeAngle } from '../jmath/Angle';
 import seedrandom from 'seedrandom';
 import { raceTimeout } from '../Promise';
 import { BloodParticle, graphicsBloodSmear, tickParticle } from './PixiUtils';
+import type Underworld from '../Underworld';
 
 export const containerParticles = !globalThis.pixi ? undefined : new globalThis.pixi.ParticleContainer(5000, {
     scale: true,
@@ -105,7 +106,7 @@ export function makeManaTrail(start: Vec2, target: Vec2) {
 }
 
 
-export function updateParticlees(delta: number, bloods: BloodParticle[], seedrandom: prng) {
+export function updateParticlees(delta: number, bloods: BloodParticle[], seedrandom: prng, underworld: Underworld) {
 
     // Emitters:
     const inverseRotationSpeed = 10;
@@ -146,19 +147,23 @@ export function updateParticlees(delta: number, bloods: BloodParticle[], seedran
         }
         //shrink blood particle:
         blood.scale *= 0.7;
-
         var blood_x_mod = randFloat(seedrandom, -10, 10);
         var blood_y_mod = randFloat(seedrandom, -10, 10);
         var blood_size_mod = randFloat(seedrandom, 1, blood.scale);
-        if (graphicsBloodSmear) {
-            graphicsBloodSmear.drawCircle(blood.x + blood_x_mod, blood.y + blood_y_mod, blood_size_mod);
+        const drawBloodPosition = { x: blood.x + blood_x_mod, y: blood.y + blood_y_mod }
+
+        let isInsideLiquid = underworld.isInsideLiquid(drawBloodPosition);
+        // Only draw if blood isn't inside of liquid bounds
+        if (!isInsideLiquid && graphicsBloodSmear) {
+            graphicsBloodSmear.drawCircle(drawBloodPosition.x, drawBloodPosition.y, blood_size_mod);
         }
 
-        //remove when done ticking
-        if (tickParticle(blood)) {
+        // remove when inside liquid so it doesn't draw blood on top of liquid OR when done ticking
+        if (isInsideLiquid || tickParticle(blood)) {
             bloods.splice(i, 1);
             i--;
         }
+
         if (graphicsBloodSmear) {
             graphicsBloodSmear.endFill();
         }
