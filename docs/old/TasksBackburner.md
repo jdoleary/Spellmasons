@@ -1,3 +1,4 @@
+- Don't let RMB movement interrupt cast animation
 - blood trails
     - Don't draw blood over liquid
         - use floor tiles as mask?

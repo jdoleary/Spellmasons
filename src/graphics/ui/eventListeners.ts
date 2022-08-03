@@ -423,7 +423,6 @@ export function mouseUpHandler(underworld: Underworld, e: MouseEvent) {
     globalThis.player.unit.path = undefined;
   }
   if (e.button == 2) {
-    // Left click clears walk rope
     globalThis.walkPathGraphics?.clear();
     globalThis.setRMBDown?.(false, underworld);
     e.preventDefault();

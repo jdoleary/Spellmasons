@@ -1,6 +1,7 @@
 ## Next Tasks
 - Finish force movement refactor (see stash)
-    - liquid interactions aren't working anymore
+    - fix climbing out of liquid for player and units
+    - fix wall collisions
 - take a break
 - Finish force movement refactor (see stash)
     - When they stop when they hit walls they need to stop hard, not slid into them
@@ -8,7 +9,6 @@
     - take damage when hitting walls (add blood splatter) 
 
 ## This weeks goals:
-- bug: player stuck in walking animation after clone
 - bug: CRITICAL: Single player escape just quits game, it doesn't go to "resume" menu anymore
 - bug: Picked up pickups from pull should not transfer move to player
 - bug: AOE is giving me "no target" when I click on ground (hurtx4,aoe,hurt)

@@ -22,6 +22,7 @@ import { IHostApp, typeGuardHostApp } from './network/networkUtil';
 import Underworld from './Underworld';
 import type PieClient from '@websocketpie/client';
 import { setupPieAndUnderworld } from './network/wsPieSetup';
+import { returnToDefaultSprite } from './entity/Unit';
 
 const YES = 'yes'
 const SKIP_TUTORIAL = 'skipTutorial';
@@ -101,13 +102,16 @@ globalThis.setRMBDown = (isDown: boolean, underworld: Underworld) => {
   // This is the ONLY place that RMBDown should be mutated.
   globalThis.RMBDown = isDown;
   // Now that player has stopped moving notify multiplayer clients that player has moved
-  if (globalThis.player) {
-    underworld.pie.sendData({
-      type: MESSAGE_TYPES.MOVE_PLAYER,
-      ...Vec.clone(globalThis.player.unit),
-    });
-  } else {
-    console.error('Cannot send MOVE_PLAYER, globalThis.player is undefined')
+  if (!isDown) {
+    if (globalThis.player) {
+      returnToDefaultSprite(globalThis.player.unit);
+      underworld.pie.sendData({
+        type: MESSAGE_TYPES.MOVE_PLAYER,
+        ...Vec.clone(globalThis.player.unit),
+      });
+    } else {
+      console.error('Cannot send MOVE_PLAYER, globalThis.player is undefined')
+    }
   }
   // Reset notifiedOutOfStamina so that when RMB is pressed again, if the 
   // player is out of stamina it will notify them
