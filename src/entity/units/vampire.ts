@@ -31,7 +31,7 @@ const unit: UnitSource = {
     walk: 'units/vampireWalk',
   },
   init: (unit: Unit.IUnit, underworld: Underworld) => {
-    Unit.addModifier(unit, vampire_bite.id, underworld);
+    Unit.addModifier(unit, vampire_bite.id, underworld, false);
   },
   action: async (unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, underworld: Underworld, canAttackTarget: boolean) => {
     if (!Unit.canMove(unit)) {
@@ -53,7 +53,8 @@ const unit: UnitSource = {
     if (withinMeleeRange(unit, attackTarget)) {
       await Unit.playAnimation(unit, unit.animations.attack);
       Unit.takeDamage(attackTarget, unit.damage, underworld, false, undefined);
-      Unit.addModifier(attackTarget, vampire_bite.id, underworld);
+      // prediction is false because unit.action doesn't yet ever occur during a prediction
+      Unit.addModifier(attackTarget, vampire_bite.id, underworld, false);
     }
   }
 };

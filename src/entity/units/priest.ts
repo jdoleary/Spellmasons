@@ -102,7 +102,8 @@ const unit: UnitSource = {
             if (Unit.inRange(unit, closestAlly)) {
               await Unit.playAnimation(unit, unit.animations.attack);
               await animatePriestProjectileAndHit(unit, closestAlly);
-              Unit.addModifier(closestAlly, Shield.card.id, underworld);
+              // prediction is false because unit.action doesn't yet ever occur during a prediction
+              Unit.addModifier(closestAlly, Shield.card.id, underworld, false);
               // Remove mana once the cast occurs
               unit.mana -= CAST_MANA_COST;
               didAction = true;

@@ -6,9 +6,9 @@ import { forceMoveColor } from '../graphics/ui/colors';
 import { raceTimeout } from '../Promise';
 import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
-import { findSafeFallInPoint, lavaDamage } from '../entity/Obstacle';
-import { isUnit, takeDamage } from '../entity/Unit';
-import { addMask } from '../graphics/Image';
+import { findSafeFallInPoint } from '../entity/Obstacle';
+import { addModifier, isUnit } from '../entity/Unit';
+import * as inLiquid from '../cards/inLiquid';
 
 export const id = 'push';
 const spell: Spell = {
@@ -58,10 +58,8 @@ export function makeForcePush(args: forcePushArgs, underworld: Underworld, predi
       if (isUnit(forceMoveInst.pushedObject)) {
         const unit = forceMoveInst.pushedObject;
         unit.resolveDoneMoving();
-        takeDamage(unit, lavaDamage, underworld, prediction);
-        if (unit.image) {
-          addMask(unit.image, 'liquid-mask');
-        }
+        // Make the unit be "in the liquid" with the inLiquid modifier
+        addModifier(unit, inLiquid.id, underworld, prediction);
       }
     }
   }

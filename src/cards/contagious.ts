@@ -92,7 +92,7 @@ Makes this unit's curses contagious to other nearby units
               floatingText({ coords: touchingUnit, text: card.id });
             }));
           }
-          Unit.addModifier(touchingUnit, card.id, underworld);
+          Unit.addModifier(touchingUnit, card.id, underworld, prediction);
         }
         await Promise.all(promises);
 

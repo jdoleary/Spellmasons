@@ -406,8 +406,8 @@ export default class Underworld {
               moveDist = math.distance(originalPosition, u);
             }
             u.stamina -= moveDist;
-            // TODO Replace fall out of lava
-            // Obstacle.checkLiquidInteractionDueToMovement(u, lastPosition, this, false);
+            // Check if the unit was once in lava but now is out of the lava
+            Obstacle.tryFallOutOfLava(u, this);
             // If unit is MELEE and only has the final target left in the path, stop when it gets close enough
             if (
               u.path.points[0] && u.path.points.length == 1 && u.unitSubType == UnitSubType.MELEE && math.distance(u, u.path.points[0]) <= config.COLLISION_MESH_RADIUS * 2

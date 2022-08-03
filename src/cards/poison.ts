@@ -47,7 +47,7 @@ at the start of the unit's turn.
     effect: async (state, card, quantity, underworld, prediction) => {
       await Promise.all([playDefaultSpellAnimation(card, state.targetedUnits, prediction), playDefaultSpellSFX(card, prediction)]);
       for (let unit of state.targetedUnits) {
-        Unit.addModifier(unit, id, underworld);
+        Unit.addModifier(unit, id, underworld, prediction);
       }
       return state;
     },

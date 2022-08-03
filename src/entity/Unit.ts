@@ -207,13 +207,13 @@ function setupShaders(unit: IUnit) {
   }
 }
 
-export function addModifier(unit: IUnit, key: string, underworld: Underworld) {
+export function addModifier(unit: IUnit, key: string, underworld: Underworld, prediction: boolean) {
   if (unit.alive) {
     // Call custom modifier's add function
     const modifier = allModifiers[key];
     if (modifier) {
       if (modifier.add) {
-        modifier.add(unit, underworld);
+        modifier.add(unit, underworld, prediction);
       } else {
         console.error('No "add" modifier for ', key);
       }
@@ -820,12 +820,12 @@ export function moveTowards(unit: IUnit, target: Vec2, underworld: Underworld): 
   return raceTimeout(timeoutMs, `moveTowards; unit.id: ${unit.id}`, new Promise<void>((resolve) => {
     // Set new resolve done moving
     unit.resolveDoneMoving = resolve;
-  }).then(() => {
+  })).then(() => {
     if (unit.image) {
       // When done moving return to default
       returnToDefaultSprite(unit);
     }
-  }));
+  });
 }
 
 // setLocation, unlike moveTo, simply sets a unit to a coordinate without

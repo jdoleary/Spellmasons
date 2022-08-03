@@ -1,6 +1,5 @@
 ## Next Tasks
 - Finish force movement refactor (see stash)
-    - fix climbing out of liquid for player and units
     - fix wall collisions
 - take a break
 - Finish force movement refactor (see stash)

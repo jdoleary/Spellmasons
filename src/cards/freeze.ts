@@ -25,7 +25,7 @@ Freezes the target(s) for 1 turn, preventing them from moving or acting.
       // TODO: IF freeze is enchanced to affect pickups, it'll need to use targetedPickups too
       await Promise.all([playDefaultSpellAnimation(card, state.targetedUnits, prediction), playDefaultSpellSFX(card, prediction)]);
       for (let unit of state.targetedUnits) {
-        Unit.addModifier(unit, id, underworld);
+        Unit.addModifier(unit, id, underworld, prediction);
         if (unit.unitType === UnitType.PLAYER_CONTROLLED) {
           const player = underworld.players.find(
             (p) => p.unit === unit,

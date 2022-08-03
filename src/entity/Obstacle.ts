@@ -1,13 +1,12 @@
 import { OBSTACLE_SIZE } from '../config';
 import { Vec2, subtract, magnitude, add, clone } from '../jmath/Vec';
-import { isUnit, IUnit, takeDamage } from './Unit';
-import { closestLineSegmentIntersectionWithLine, isOnOutside, lineSegmentIntersection } from '../jmath/lineSegment';
+import { IUnit, removeModifier } from './Unit';
+import { closestLineSegmentIntersectionWithLine, isOnOutside } from '../jmath/lineSegment';
 import { Material } from '../Conway';
 import { isVec2InsidePolygon, Polygon2 } from '../jmath/Polygon2';
 import { distance, similarTriangles } from '../jmath/math';
-import { addMask, removeMask } from '../graphics/Image';
-import { ForceMove } from '../jmath/moveWithCollision';
-import Underworld from '../Underworld';
+import type Underworld from '../Underworld';
+import * as inLiquid from '../cards/inLiquid';
 export interface IObstacle {
   x: number;
   y: number;
@@ -82,18 +81,20 @@ export function findSafeFallInPoint(currentPosition: Vec2, nextPosition: Vec2, u
 
 }
 
-// FALL OUT OF LAVA
-  // if (underworld.liquidPolygons.length) {
-  //   let insideLiquid = false;
-  //   for (let poly of underworld.liquidPolygons) {
-  //     insideLiquid = isVec2InsidePolygon(unit, poly);
-  //     if (insideLiquid) {
-  //       break;
-  //     }
-  //   }
-  //   if (!insideLiquid) {
-  //     if (unit.image) {
-  //       removeMask(unit.image);
-  //     }
-  //   }
-  // }
+export function tryFallOutOfLava(unit: IUnit, underworld: Underworld) {
+  // Only check this logic if the unit has the inLiquid modifier which means they are
+  // currently in liquid already
+  if (unit.modifiers[inLiquid.id] !== undefined && underworld.liquidPolygons.length) {
+    let insideLiquid = false;
+    for (let poly of underworld.liquidPolygons) {
+      insideLiquid = isVec2InsidePolygon(unit, poly);
+      if (insideLiquid) {
+        break;
+      }
+    }
+    if (!insideLiquid) {
+      removeModifier(unit, inLiquid.id, underworld);
+    }
+  }
+
+}

@@ -40,7 +40,7 @@ const spell: Spell = {
     explosion radius.`,
     effect: async (state, card, quantity, underworld, prediction) => {
       for (let unit of state.targetedUnits) {
-        Unit.addModifier(unit, id, underworld);
+        Unit.addModifier(unit, id, underworld, prediction);
       }
       return state;
     },
