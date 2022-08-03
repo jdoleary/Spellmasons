@@ -6,7 +6,6 @@
     - When they stop when they hit walls they need to stop hard, not slid into them
     - They go too far into walls
     - take damage when hitting walls (add blood splatter) 
-- bug: if you push a unit into liquid from the top of the liquid at an angle it doesn't go far enough into the liquid and the mask shows the stones behind
 
 ## This weeks goals:
 - bug: player stuck in walking animation after clone
