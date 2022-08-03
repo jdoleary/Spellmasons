@@ -565,7 +565,7 @@ export function drawCircleUnderTarget(mousePos: Vec2, underworld: Underworld, op
 // unit health and mana bars
 export function getUIBarProps(x: number, y: number, numerator: number, denominator: number, zoom: number): { x: number, y: number, width: number, height: number } {
   const barWidthAccountForZoom = config.UNIT_UI_BAR_WIDTH / zoom;
-  const barWidth = Math.max(0, barWidthAccountForZoom * numerator / denominator);
+  const barWidth = Math.max(0, barWidthAccountForZoom * Math.min(1, numerator / denominator));
   const height = config.UNIT_UI_BAR_HEIGHT / zoom;
   return {
     x: x - barWidthAccountForZoom / 2,
