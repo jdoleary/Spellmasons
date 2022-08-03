@@ -1910,16 +1910,20 @@ export default class Underworld {
         console.error('card id is undefined in loop', index, effectState.cardIds);
         continue;
       }
-      const nextCardId = effectState.cardIds[index + 1];
-      if (nextCardId !== undefined) {
-        if (nextCardId === cardId) {
-          quantity++;
-          continue;
-        }
-      }
-
       const card = Cards.allCards[cardId];
       if (card) {
+        // Only increment quantity for sequntial identical cards IF the card
+        // explicitly supports quantity
+        if (card.supportQuantity) {
+          const nextCardId = effectState.cardIds[index + 1];
+          if (nextCardId !== undefined) {
+            if (nextCardId === cardId) {
+              quantity++;
+              continue;
+            }
+          }
+        }
+
 
         effectState = await card.effect(effectState, card, quantity, this, prediction);
 

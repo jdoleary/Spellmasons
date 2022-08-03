@@ -21,6 +21,7 @@ const spell: Spell = {
   card: {
     id,
     category: CardCategory.Primary,
+    supportQuantity: true,
     manaCost: 10,
     healthCost: 0,
     expenseScaling: 1,

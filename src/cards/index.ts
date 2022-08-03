@@ -182,6 +182,11 @@ export interface ICard {
   // This flag allows casting on the ground and is necessary
   // for spells like AOE, Trap, etc
   allowNonUnitTarget?: boolean;
+  // supportQuantity, if true, makes multiple sequential invokations of a card combine
+  // into only 1 invokation with a quantity arg passed to the effect function.
+  // If false, it will just invoke card.effect for the number of times that the card
+  // is in the spell
+  supportQuantity?: boolean;
   sfx?: string;
 }
 

@@ -1,9 +1,8 @@
 ## Next Tasks
-- take a break
-- finish quantity implementation
 - Finish force movement refactor (see stash)
     - When they stop when they hit walls they need to stop hard, not slid into them
     - They go too far into walls
+- take a break
 - take damage when hitting walls (add blood splatter) 
 
 ## This weeks goals:
@@ -12,10 +11,6 @@
 - LEFT OFF Poolshot velocity transfer should be decreased
     - Fix push into water, it should be smooth
     - bug: if you push a unit into liquid from the top of the liquid at an angle it doesn't go far enough into the liquid and the mask shows the stones behind
-- Tasks:
-    - Finish spell quantity
-        - If a spell doesn't support quantity, don't waste mana, don't even let it be queued up sequentially
-        - It's not yet implemented for heal
 ---
 - bug: Picked up pickups from pull should not transfer move to player
 - bug: AOE is giving me "no target" when I click on ground (hurtx4,aoe,hurt)
@@ -276,6 +271,8 @@
 - Leave blood trails behind for dead units that are force pushed
 - Card: An attack range minimum but not a maximum so you CAN"T attack if they are too close
 - Casting curses on liquid should change the liquid type (lava/hurt, purify/water, poison)
+- More "Quantity" implementations for spells beyond hurt
+
 
 ## Misc
 - Bug: Had a scenario where i had a debugger on enterPortal and on image.show
