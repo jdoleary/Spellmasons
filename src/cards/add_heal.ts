@@ -23,6 +23,7 @@ Will not heal beyond maximum health.
       for (let unit of state.targetedUnits) {
         const damage = -healAmount;
         Unit.takeDamage(unit, damage, underworld, prediction, state);
+        await Unit.addOneOffAnimation(unit, 'spell-effects/potionPickup');
       }
       return state;
     },
