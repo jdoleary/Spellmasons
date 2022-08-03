@@ -1,4 +1,4 @@
-import { Vec2, magnitude, clone, add } from '../jmath/Vec';
+import { Vec2, magnitude, clone, add, equal } from '../jmath/Vec';
 import { Spell } from './index';
 import { distance, similarTriangles } from '../jmath/math';
 import type { Circle, ForceMove } from '../jmath/moveWithCollision';
@@ -6,6 +6,9 @@ import { forceMoveColor } from '../graphics/ui/colors';
 import { raceTimeout } from '../Promise';
 import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
+import { findSafeFallInPoint, lavaDamage } from '../entity/Obstacle';
+import { isUnit, takeDamage } from '../entity/Unit';
+import { addMask } from '../graphics/Image';
 
 export const id = 'push';
 const spell: Spell = {
@@ -46,6 +49,22 @@ export function makeForcePush(args: forcePushArgs, underworld: Underworld, predi
   const endPoint = add(pushedObject, similarTriangles(pushedObject.x - awayFrom.x, pushedObject.y - awayFrom.y, distance(pushedObject, awayFrom), pushDistance || 300));
   const originalPosition = clone(pushedObject);
   const forceMoveInst: ForceMove = { pushedObject, canCreateSecondOrderPushes, endPoint, resolve }
+  // Adjust endpoint to account for falling into lava:
+  const { safeFallInPosition, hitLava } = findSafeFallInPoint(pushedObject, endPoint, underworld)
+  if (hitLava) {
+    // Override end point
+    forceMoveInst.endPoint = safeFallInPosition;
+    forceMoveInst.onComplete = () => {
+      if (isUnit(forceMoveInst.pushedObject)) {
+        const unit = forceMoveInst.pushedObject;
+        unit.resolveDoneMoving();
+        takeDamage(unit, lavaDamage, underworld, prediction);
+        if (unit.image) {
+          addMask(unit.image, 'liquid-mask');
+        }
+      }
+    }
+  }
   if (prediction) {
     // Simulate the forceMove until it's complete
     let done = false;

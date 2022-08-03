@@ -1,22 +1,20 @@
 ## Next Tasks
 - Finish force movement refactor (see stash)
+    - liquid interactions aren't working anymore
+- take a break
+- Finish force movement refactor (see stash)
     - When they stop when they hit walls they need to stop hard, not slid into them
     - They go too far into walls
-- take a break
-- take damage when hitting walls (add blood splatter) 
+    - take damage when hitting walls (add blood splatter) 
+- bug: if you push a unit into liquid from the top of the liquid at an angle it doesn't go far enough into the liquid and the mask shows the stones behind
 
 ## This weeks goals:
 - bug: player stuck in walking animation after clone
 - bug: CRITICAL: Single player escape just quits game, it doesn't go to "resume" menu anymore
-- LEFT OFF Poolshot velocity transfer should be decreased
-    - Fix push into water, it should be smooth
-    - bug: if you push a unit into liquid from the top of the liquid at an angle it doesn't go far enough into the liquid and the mask shows the stones behind
----
 - bug: Picked up pickups from pull should not transfer move to player
 - bug: AOE is giving me "no target" when I click on ground (hurtx4,aoe,hurt)
     - rather than "no target" maybe it just doesn't use mana and shows a fizzle animation?
     - It's giving "no target" because of the first hurt
-- Milestone 5 | **Movement & Spell Quantity** | Due Aug 11
 - Milestone 4 | **Perfect Prediction Attacks** | Due Aug 8
     - I got bit by a vampire but it didn't accurately warn me he would
         - wrap this in with preventing units from changing targets from their prediction even if the decoy dies (lobber move then throw?)
@@ -47,7 +45,6 @@
         - ready up and start game
 ## Schedule
 - Packs, priority ordered
-    - Pack 15 Movement
     - Pack 8 SFX
     - Pack 9 R, J & E Feedback
     - Pack 10
@@ -104,11 +101,7 @@
     - Predictive movement, pick a final destination and slow the closer you get
         - Shoving into walls should do damage and stop the movement
             - What about at a steep angle?
-        - Shoving into other units should shove them too like billiard balls
         - Should be a smooth path into the water
-    - Blood trails (just like stealth 'em up)
-        - left when pushing a corpse (color depends on the unit, think blue for lobber, green for poisoner)
-    - Blood trails when damage is done
 - Pack 12
     - Improve unit "fall in" so it's not a jump but smooth
     - Particle engine

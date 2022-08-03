@@ -221,11 +221,14 @@ export default class Underworld {
   }
   // Returns true when forceMove is complete
   runForceMove(forceMoveInst: ForceMove, prediction: boolean): boolean {
-    const { pushedObject, id, endPoint } = forceMoveInst;
+    const { pushedObject, endPoint } = forceMoveInst;
     if (math.distance(pushedObject, endPoint) <= 1) {
       // It's close enough, set final position to endPoint
       pushedObject.x = endPoint.x;
       pushedObject.y = endPoint.y;
+      if (forceMoveInst.onComplete) {
+        forceMoveInst.onComplete();
+      }
       return true;
     }
     const lastPosition = Vec.clone(pushedObject);
@@ -397,7 +400,8 @@ export default class Underworld {
               moveDist = math.distance(originalPosition, u);
             }
             u.stamina -= moveDist;
-            Obstacle.checkLiquidInteractionDueToMovement(u, lastPosition, this, false);
+            // TODO Replace fall out of lava
+            // Obstacle.checkLiquidInteractionDueToMovement(u, lastPosition, this, false);
             // If unit is MELEE and only has the final target left in the path, stop when it gets close enough
             if (
               u.path.points[0] && u.path.points.length == 1 && u.unitSubType == UnitSubType.MELEE && math.distance(u, u.path.points[0]) <= config.COLLISION_MESH_RADIUS * 2

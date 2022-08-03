@@ -6,14 +6,12 @@
         - Juice
         - SFX
 # Critical Path
-- Milestone 4 | **Perfect Prediction Attacks** | Due Aug 8
+- Milestone 5 | **Movement & Spell Quantity** | Due Aug 8
+    - Improved force movement
+- Milestone 4 | **Perfect Prediction Attacks** | Due Aug 11 
     - Units should NEVER change target from their prediction. A case where this happened is when a decoy died from other units attacking it
     - Grunt attack predictions are not perfect. See branch 'perfect-predictions'
     - Move predictionUnits and predictionPickups out of globalThis so they don't get clobbered when multiple instances on a single server
-- Milestone 5 | **Movement & Spell Quantity** | Due Aug 11
-    - IN PROGRESS Pack 14 | Spell quantity
-    - Pack 15
-        - Improved force movement
 - Milestone X | **Doodads**
     - More interactable doodads (explosive barrels, movable cover)
 - Milestone X | **Juice** | Due Date Ongoing
