@@ -6,7 +6,7 @@ import type * as Unit from '../entity/Unit';
 import Underworld from '../Underworld';
 export interface ForceMove {
     pushedObject: Circle;
-    id: number;
+    canCreateSecondOrderPushes: boolean;
     endPoint: Vec2;
     resolve: () => void;
 }

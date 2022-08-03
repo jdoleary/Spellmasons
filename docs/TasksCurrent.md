@@ -1,10 +1,9 @@
 ## Next Tasks
-- bug: pull has debug floating text
 - take a break
 - finish quantity implementation
 - Finish force movement refactor (see stash)
-    - Collision isn't working for some reason (it is in prediction mode)
     - When they stop when they hit walls they need to stop hard, not slid into them
+    - They go too far into walls
 - take damage when hitting walls (add blood splatter) 
 
 ## This weeks goals:

@@ -38,15 +38,14 @@ interface forcePushArgs {
   pushedObject: Circle;
   awayFrom: Vec2;
   pushDistance?: number;
+  canCreateSecondOrderPushes: boolean;
   resolve: () => void;
 }
 export function makeForcePush(args: forcePushArgs, underworld: Underworld, prediction: boolean): ForceMove {
-  console.log('jtest make force push', prediction, args)
-  const { pushedObject, awayFrom, resolve, pushDistance } = args;
+  const { pushedObject, awayFrom, resolve, pushDistance, canCreateSecondOrderPushes } = args;
   const endPoint = add(pushedObject, similarTriangles(pushedObject.x - awayFrom.x, pushedObject.y - awayFrom.y, distance(pushedObject, awayFrom), pushDistance || 300));
-  const id = Math.random();
   const originalPosition = clone(pushedObject);
-  const forceMoveInst: ForceMove = { pushedObject, id, endPoint, resolve }
+  const forceMoveInst: ForceMove = { pushedObject, canCreateSecondOrderPushes, endPoint, resolve }
   if (prediction) {
     // Simulate the forceMove until it's complete
     let done = false;
@@ -69,8 +68,8 @@ export function makeForcePush(args: forcePushArgs, underworld: Underworld, predi
 
 }
 export async function forcePush(pushedObject: Circle, awayFrom: Vec2, underworld: Underworld, prediction: boolean): Promise<void> {
-  return await raceTimeout(2000, 'Push', new Promise<void>((resolve) => {
-    makeForcePush({ pushedObject, awayFrom, resolve }, underworld, prediction);
+  return await raceTimeout(3000, 'Push', new Promise<void>((resolve) => {
+    makeForcePush({ pushedObject, awayFrom, resolve, canCreateSecondOrderPushes: true }, underworld, prediction);
   }));
 
 }

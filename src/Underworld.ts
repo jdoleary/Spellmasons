@@ -243,33 +243,19 @@ export default class Underworld {
       // The units' regular radius is for "crowding". It is much smaller than their actual size and it is used
       // to ensure they can crowd together but not overlap perfect, so here we use a custom radius to detect
       // forcePush collisions.
-      if (isVecIntersectingVecWithCustomRadius(pushedObject, other, config.COLLISION_MESH_RADIUS)) {
+      // Only allow instances that are flagged as able to create second order pushes create new pushes on collision or else you risk infinite
+      // recursion
+      if (forceMoveInst.canCreateSecondOrderPushes && isVecIntersectingVecWithCustomRadius(pushedObject, other, config.COLLISION_MESH_RADIUS)) {
         // If they collide transfer force:
-        const preExistingForceMoveForThisTarget = this.forceMove.find(fm => fm.id == forceMoveInst.id);
-        // Don't push another object  
-        if (preExistingForceMoveForThisTarget) {
-          // Don't push an object that is already moving.
-          // This may create an infinite push loop
-          continue;
-        } else {
-          // () => {}: No resolver needed for second order force pushes
-          // All pushable objects have the same mass so when a collision happens they'll split the distance
-          const fullDist = math.distance(forceMoveInst.pushedObject, forceMoveInst.endPoint);
-          const halfDist = fullDist / 2;
-          floatingText({
-            coords: other,
-            text: '🎈',
-          });
-          floatingText({
-            coords: forceMoveInst.pushedObject,
-            text: 'X🎈X',
-          });
-          makeForcePush({ pushedObject: other, awayFrom: forceMoveInst.pushedObject, pushDistance: halfDist, resolve: () => { } }, this, prediction);
-          // Affect the endpoint of the current mover since it just collided
-          const oldEndPoint = forceMoveInst.endPoint;
-          forceMoveInst.endPoint = Vec.add(forceMoveInst.pushedObject, math.similarTriangles(forceMoveInst.pushedObject.x - forceMoveInst.endPoint.x, forceMoveInst.pushedObject.y - forceMoveInst.endPoint.y, fullDist, halfDist));
-          console.log('jtest', forceMoveInst.endPoint, oldEndPoint);
-        }
+        // () => {}: No resolver needed for second order force pushes
+        // All pushable objects have the same mass so when a collision happens they'll split the distance
+        const fullDist = math.distance(forceMoveInst.pushedObject, forceMoveInst.endPoint);
+        const halfDist = fullDist / 2;
+        // This is a second order push and second order pushes CANNOT create more pushes or else you risk infinite recursion in prediction mode
+        const canCreateSecondOrderPushes = false;
+        makeForcePush({ pushedObject: other, awayFrom: forceMoveInst.pushedObject, pushDistance: halfDist, resolve: () => { }, canCreateSecondOrderPushes }, this, prediction);
+        // Affect the endpoint of the current mover since it just collided
+        forceMoveInst.endPoint = Vec.add(forceMoveInst.pushedObject, math.similarTriangles(forceMoveInst.endPoint.x - forceMoveInst.pushedObject.x, forceMoveInst.endPoint.y - forceMoveInst.pushedObject.y, fullDist, halfDist));
 
       }
     }
