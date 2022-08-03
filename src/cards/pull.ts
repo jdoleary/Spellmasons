@@ -38,7 +38,7 @@ Pulls the target(s) towards the caster
 export async function pull(pushedObject: Circle, towards: Vec2, id: number, underworld: Underworld, prediction: boolean): Promise<void> {
   const originalPosition = clone(pushedObject);
   return await raceTimeout(2000, 'Pull', new Promise<void>((resolve) => {
-    const forceMoveInst: ForceMove = { id, pushedObject, endPoint: towards, resolve }
+    const forceMoveInst: ForceMove = { id, pushedObject, endPoint: clone(towards), resolve }
     if (prediction) {
       // Simulate the forceMove until it's complete
       let done = false;

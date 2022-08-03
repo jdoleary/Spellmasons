@@ -1,5 +1,5 @@
 ## Next Tasks
-- bug: pull has debug floating text and the unit continues to follow you after you pull if they're dead
+- bug: pull has debug floating text
 - take a break
 - finish quantity implementation
 - Finish force movement refactor (see stash)
