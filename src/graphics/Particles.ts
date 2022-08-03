@@ -144,6 +144,7 @@ export function updateParticlees(delta: number, bloods: BloodParticle[], seedran
         }
         if (graphicsBloodSmear) {
             graphicsBloodSmear.beginFill(blood?.color, 1.0);
+            graphicsBloodSmear.lineStyle(1, blood?.color, 1.0);
         }
         //shrink blood particle:
         blood.scale *= 0.7;
