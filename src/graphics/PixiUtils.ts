@@ -587,7 +587,7 @@ export type BloodParticle = {
   scale: number,
   color: number,
 }
-const blood_speed = 1;
+const blood_speed = 2;
 export function startBloodParticleSplatter(underworld: Underworld, damageOrigin: Vec2, target: IUnit) {
   if (globalThis.headless) {
     return;

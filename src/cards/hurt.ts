@@ -55,7 +55,7 @@ Deals ${damageDone} damage to all targets.
               playDefaultSpellSFX(card, prediction);
               setTimeout(() => {
                 startBloodParticleSplatter(underworld, state.casterUnit, unit);
-              }, 300)
+              }, 100)
               Unit.takeDamage(unit, damageDone, underworld, prediction, state);
             }, animationDelaySum)
             animationDelaySum += delayBetweenAnimations;
