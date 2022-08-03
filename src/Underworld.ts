@@ -262,14 +262,10 @@ export default class Underworld {
 
       }
     }
-    // TODO: WARN: If the endpoint is beyond a barrier it will never get close enough and enter an infinite loop:
-    // collideWithLineSegments(pushedObject, this.walls, this);
-    const wallCollisionIntersection = closestLineSegmentIntersection({ p1: pushedObject, p2: endPoint }, this.walls);
-    if (wallCollisionIntersection) {
-      console.log('TODO collided with walls, take damage?')
-      forceMoveInst.endPoint = wallCollisionIntersection
+    const didCollide = collideWithLineSegments(pushedObject, this.walls, this);
+    if (didCollide) {
+      forceMoveInst.endPoint = pushedObject;
     }
-    Obstacle.checkLiquidInteractionDueToForceMovement(forceMoveInst, lastPosition, this, prediction);
     if (Unit.isUnit(forceMoveInst.pushedObject)) {
       // If the pushed object is a unit, check if it collides with any pickups
       // as it is pushed
@@ -341,22 +337,22 @@ export default class Underworld {
             const bloodDrop = Vec.jitter(endPos, 5, this.random);
             // Don't draw if inside liquid
             if (!this.isInsideLiquid(bloodDrop)) {
-            // Draw a blood drop
-            graphicsBloodSmear.drawCircle(bloodDrop.x, bloodDrop.y, randInt(this.random, 2, 4));
+              // Draw a blood drop
+              graphicsBloodSmear.drawCircle(bloodDrop.x, bloodDrop.y, randInt(this.random, 2, 4));
             }
 
             const startWithJitter = Vec.add(startPos, j);
             const endWithJitter = Vec.add(endPos, j);
             // Only draw if both are not inside liquid bounds
             if (!this.isInsideLiquid(startPos) && !this.isInsideLiquid(endWithJitter)) {
-            // Draw circle at the ends of the smear line line so the smear lines don't look like rectangles
-            graphicsBloodSmear.drawCircle(startWithJitter.x, startWithJitter.y, size);
-            graphicsBloodSmear.drawCircle(endWithJitter.x, endWithJitter.y, size);
-            graphicsBloodSmear.endFill();
-            // Draw a smear line
-            graphicsBloodSmear.lineStyle(size, forceMoveInst.pushedObject.bloodColor, 1.0);
-            graphicsBloodSmear.moveTo(startWithJitter.x, startWithJitter.y);
-            graphicsBloodSmear.lineTo(endWithJitter.x, endWithJitter.y);
+              // Draw circle at the ends of the smear line line so the smear lines don't look like rectangles
+              graphicsBloodSmear.drawCircle(startWithJitter.x, startWithJitter.y, size);
+              graphicsBloodSmear.drawCircle(endWithJitter.x, endWithJitter.y, size);
+              graphicsBloodSmear.endFill();
+              // Draw a smear line
+              graphicsBloodSmear.lineStyle(size, forceMoveInst.pushedObject.bloodColor, 1.0);
+              graphicsBloodSmear.moveTo(startWithJitter.x, startWithJitter.y);
+              graphicsBloodSmear.lineTo(endWithJitter.x, endWithJitter.y);
             }
           }
         }

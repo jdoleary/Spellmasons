@@ -64,10 +64,16 @@ export function normalizedVector(point1: Vec2, point2: Vec2): { vector: Vec2 | u
     // Return the normalized vector and the distance between the two points
     return { vector: { x: a, y: b }, distance: bigC };
 }
-export function collideWithLineSegments(circle: Circle, lineSegments: LineSegment[], underworld: Underworld) {
+// Returns true if collision occurred
+export function collideWithLineSegments(circle: Circle, lineSegments: LineSegment[], underworld: Underworld): boolean {
+    let collisionDidOccur = false;
     for (let line of lineSegments) {
-        repelCircleFromLine(circle, line, underworld);
+        const collided = repelCircleFromLine(circle, line, underworld);
+        if (collided) {
+            collisionDidOccur = true;
+        }
     }
+    return collisionDidOccur;
 }
 
 
@@ -158,7 +164,9 @@ function repelCircles(mover: Circle, originalPosition: Vec2, other: Circle, unde
 // Note: this function is only meant to handle small increments of movements, this function
 // will not account for the case where the destination does not intersect
 // a line but the mover would travel through a linesegment on it's way to destination.  This is by design.
-function repelCircleFromLine(mover: Circle, line: LineSegment, underworld: Underworld) {
+// Returns true if collision and repulsion occurred
+function repelCircleFromLine(mover: Circle, line: LineSegment, underworld: Underworld): boolean {
+    let repelled = false;
     // The radius used for the line points makes up the different between a regular unit collision radius and the units physicsMover's radius
     // The units physicsMover's radius is small so that units can "squeeze" past each other, but I want the full unit size to collide
     // with walls (lines and their verticies).
@@ -189,14 +197,18 @@ function repelCircleFromLine(mover: Circle, line: LineSegment, underworld: Under
         const newLocation = add(rightAngleIntersectionWithLineFromMoverCenterPoint, newLocationRelative);
         mover.x = newLocation.x;
         mover.y = newLocation.y;
+        repelled = true;
     }
     // Test for intersection with the line segment endpoints
     if (distance(line.p1, mover) <= totalRepelDistance) {
         repelCircles(mover, mover, { ...line.p1, radius: totalRepelDistance }, underworld, true);
+        repelled = true;
     }
     if (distance(line.p2, mover) <= totalRepelDistance) {
         repelCircles(mover, mover, { ...line.p2, radius: totalRepelDistance }, underworld, true);
+        repelled = true;
     }
+    return repelled;
 }
 export const testables = {
     repelCircles,
