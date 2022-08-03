@@ -995,7 +995,10 @@ export default class Underworld {
           // liquid tiles are rendered with a shader
           continue;
         }
-        const sprite = addPixiSprite(tile.image, containerWalls);
+        // Ground tiles that border liquid should go in containerBoard
+        // Wall tiles should go in containerWalls
+        const isWall = tile.image.toLowerCase().includes('wall');
+        const sprite = addPixiSprite(tile.image, isWall ? containerWalls : containerBoard);
         if (sprite) {
           sprite.x = tile.x - config.COLLISION_MESH_RADIUS;
           sprite.y = tile.y - config.COLLISION_MESH_RADIUS;

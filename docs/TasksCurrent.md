@@ -1,6 +1,6 @@
 ## Next Tasks
-- art bug: Blood splatter goes under liquid border tiles but not under liquid
 - bug: pull has debug floating text and the unit continues to follow you after you pull if they're dead
+- take a break
 - finish quantity implementation
 - Finish force movement refactor (see stash)
     - Collision isn't working for some reason (it is in prediction mode)
