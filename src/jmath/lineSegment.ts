@@ -218,10 +218,10 @@ export function isCollinearAndOverlapping(l1: LineSegment, l2: LineSegment): boo
     return isCollinear && isOverlapping;
 }
 
-// Test l1 for intersections with each of otherLines; of all the intersections return the closest intersection
-export function closestLineSegmentIntersection(l1: LineSegment, otherLines: LineSegment[]): Vec.Vec2 | undefined {
+export function closestLineSegmentIntersectionWithLine(l1: LineSegment, otherLines: LineSegment[]): { intersection: Vec.Vec2, lineSegment: LineSegment } | undefined {
     let shortestDistance = Number.MAX_SAFE_INTEGER;
     let closestIntersection = undefined;
+    let lineThatIntersected = undefined;
     for (let line of otherLines) {
         // Don't test against self
         if (line == l1) {
@@ -233,10 +233,15 @@ export function closestLineSegmentIntersection(l1: LineSegment, otherLines: Line
             if (!closestIntersection || distanceToIntersection < shortestDistance) {
                 shortestDistance = distanceToIntersection;
                 closestIntersection = intersection;
+                lineThatIntersected = line;
             }
         }
     }
-    return closestIntersection;
+    return closestIntersection && lineThatIntersected ? { intersection: closestIntersection, lineSegment: lineThatIntersected } : undefined;
+}
+// Test l1 for intersections with each of otherLines; of all the intersections return the closest intersection
+export function closestLineSegmentIntersection(l1: LineSegment, otherLines: LineSegment[]): Vec.Vec2 | undefined {
+    return closestLineSegmentIntersectionWithLine(l1, otherLines)?.intersection;
 }
 
 // Adapted from https://stackoverflow.com/a/565282
