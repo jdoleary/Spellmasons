@@ -270,6 +270,8 @@ export default class Underworld {
       // If the pushed object is a unit, check if it collides with any pickups
       // as it is pushed
       this.checkPickupCollisions(forceMoveInst.pushedObject, prediction);
+      // Check to see if unit has falled out of lava via a forcemove
+      Obstacle.tryFallOutOfLava(forceMoveInst.pushedObject, this);
     } else if (Pickup.isPickup(forceMoveInst.pushedObject)) {
       // If the pushed object is a pickup, check if it collides with any units
       // as it is pushed
