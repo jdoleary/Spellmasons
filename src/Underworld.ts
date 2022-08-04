@@ -736,10 +736,10 @@ export default class Underworld {
     for (let x of this.pickups) {
       Image.cleanup(x.image);
     }
-    // Clean up doodads
-    containerDoodads?.removeChildren();
-    // Clean up board
-    containerBoard?.removeChildren();
+
+    // Clear player
+    globalThis.player = undefined;
+
     globalThis.updateInGameMenuStatus?.()
 
   }

@@ -8,9 +8,7 @@
         - This would solve the "infinite freeze" issue
         - update copy
 - break;
-    - Fix spell icon borders
     - measure and fix performance for blood splatter?
-    - bug: CRITICAL: Single player escape just quits game, it doesn't go to "resume" menu anymore
 - break;
 ## Path to Trailer-ready alpha
 - task: Move prediction pickups and units to underworld not global or else they will be shared between multiple underworlds
