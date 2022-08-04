@@ -59,25 +59,25 @@ export function updatePlanningView(underworld: Underworld) {
       // Draw circle to show that pickup is selected
       drawCircleUnderTarget(selectedPickup, underworld, 1.0, planningViewGraphics);
     }
-    // Draw UI for the selectedUnit
-    if (selectedUnit) {
+    // Draw UI for the globalThis.selectedUnit
+    if (globalThis.selectedUnit) {
       if (
-        selectedUnit.alive
+        globalThis.selectedUnit.alive
       ) {
         // Draw circle to show that unit is selected
-        drawCircleUnderTarget(selectedUnit, underworld, 1.0, planningViewGraphics);
-        // If selectedUnit is an archer, draw LOS attack line
+        drawCircleUnderTarget(globalThis.selectedUnit, underworld, 1.0, planningViewGraphics);
+        // If globalThis.selectedUnit is an archer, draw LOS attack line
         //  instead of attack range for them
-        if (selectedUnit.unitSubType == UnitSubType.RANGED_LOS) {
-          let archerTarget = getBestRangedLOSTarget(selectedUnit, underworld);
+        if (globalThis.selectedUnit.unitSubType == UnitSubType.RANGED_LOS) {
+          let archerTarget = getBestRangedLOSTarget(globalThis.selectedUnit, underworld);
           // If they don't have a target they can actually attack
           // draw a line to the closest enemy that they would target if
           // they had LOS
           if (!archerTarget) {
-            archerTarget = Unit.findClosestUnitInDifferentFaction(selectedUnit, underworld);
+            archerTarget = Unit.findClosestUnitInDifferentFaction(globalThis.selectedUnit, underworld);
           }
           if (archerTarget) {
-            const attackLine = { p1: selectedUnit, p2: archerTarget };
+            const attackLine = { p1: globalThis.selectedUnit, p2: archerTarget };
             const closestIntersection = closestLineSegmentIntersection(attackLine, underworld.walls);
 
             planningViewGraphics.moveTo(attackLine.p1.x, attackLine.p1.y);
@@ -96,47 +96,47 @@ export function updatePlanningView(underworld: Underworld) {
           }
         } else {
 
-          const rangeCircleColor = selectedUnit.faction == Faction.ALLY ? 0x40a058 : 0xd55656;
+          const rangeCircleColor = globalThis.selectedUnit.faction == Faction.ALLY ? 0x40a058 : 0xd55656;
           globalThis.unitOverlayGraphics.lineStyle(8, rangeCircleColor, 0.3);
-          if (selectedUnit.unitSubType === UnitSubType.RANGED_RADIUS) {
+          if (globalThis.selectedUnit.unitSubType === UnitSubType.RANGED_RADIUS) {
             globalThis.unitOverlayGraphics.drawCircle(
-              selectedUnit.x,
-              selectedUnit.y,
-              selectedUnit.attackRange
+              globalThis.selectedUnit.x,
+              globalThis.selectedUnit.y,
+              globalThis.selectedUnit.attackRange
             );
             labelText.text = 'Attack Range';
-          } else if (selectedUnit.unitSubType === UnitSubType.SUPPORT_CLASS) {
+          } else if (globalThis.selectedUnit.unitSubType === UnitSubType.SUPPORT_CLASS) {
             globalThis.unitOverlayGraphics.drawCircle(
-              selectedUnit.x,
-              selectedUnit.y,
-              selectedUnit.attackRange
+              globalThis.selectedUnit.x,
+              globalThis.selectedUnit.y,
+              globalThis.selectedUnit.attackRange
             );
             labelText.text = 'Support Range';
-          } else if (selectedUnit.unitSubType === UnitSubType.MELEE) {
+          } else if (globalThis.selectedUnit.unitSubType === UnitSubType.MELEE) {
             globalThis.unitOverlayGraphics.drawCircle(
-              selectedUnit.x,
-              selectedUnit.y,
-              selectedUnit.attackRange
+              globalThis.selectedUnit.x,
+              globalThis.selectedUnit.y,
+              globalThis.selectedUnit.attackRange
             );
             labelText.text = 'Attack Range';
             globalThis.unitOverlayGraphics.drawCircle(
-              selectedUnit.x,
-              selectedUnit.y,
-              selectedUnit.staminaMax
+              globalThis.selectedUnit.x,
+              globalThis.selectedUnit.y,
+              globalThis.selectedUnit.staminaMax
             );
             labelMoveText.text = 'Move Range';
-          } else if (selectedUnit.unitSubType === UnitSubType.PLAYER_CONTROLLED) {
+          } else if (globalThis.selectedUnit.unitSubType === UnitSubType.PLAYER_CONTROLLED) {
             globalThis.unitOverlayGraphics.drawCircle(
-              selectedUnit.x,
-              selectedUnit.y,
-              selectedUnit.attackRange
+              globalThis.selectedUnit.x,
+              globalThis.selectedUnit.y,
+              globalThis.selectedUnit.attackRange
             );
             labelText.text = 'Cast Range';
           }
-          const labelPosition = withinCameraBounds({ x: selectedUnit.x, y: selectedUnit.y + selectedUnit.attackRange }, labelText.width / 2);
+          const labelPosition = withinCameraBounds({ x: globalThis.selectedUnit.x, y: globalThis.selectedUnit.y + globalThis.selectedUnit.attackRange }, labelText.width / 2);
           labelText.x = labelPosition.x;
           labelText.y = labelPosition.y;
-          const label2Position = withinCameraBounds({ x: selectedUnit.x, y: selectedUnit.y + selectedUnit.staminaMax }, labelText.width / 2);
+          const label2Position = withinCameraBounds({ x: globalThis.selectedUnit.x, y: globalThis.selectedUnit.y + globalThis.selectedUnit.staminaMax }, labelText.width / 2);
           labelMoveText.x = label2Position.x;
           labelMoveText.y = label2Position.y;
           globalThis.unitOverlayGraphics.endFill();
@@ -409,7 +409,6 @@ const elInspectorTooltipImage: HTMLImageElement = (document.getElementById(
 ) as HTMLImageElement);
 
 let selectedType: "unit" | "pickup" | "obstacle" | null = null;
-let selectedUnit: Unit.IUnit | undefined;
 let selectedPickup: Pickup.IPickup | undefined;
 export function updateTooltipContent(underworld: Underworld) {
   if (
@@ -429,29 +428,29 @@ export function updateTooltipContent(underworld: Underworld) {
   switch (selectedType) {
     case "unit":
       let cards = '';
-      if (selectedUnit) {
-        if (selectedUnit.unitType === UnitType.PLAYER_CONTROLLED) {
-          const player = underworld.players.find((p) => p.unit === selectedUnit);
+      if (globalThis.selectedUnit) {
+        if (globalThis.selectedUnit.unitType === UnitType.PLAYER_CONTROLLED) {
+          const player = underworld.players.find((p) => p.unit === globalThis.selectedUnit);
           if (player) {
             cards =
               'Cards: ' +
               player.cards.join(', ');
           } else {
-            console.error('Tooltip: selectedUnit is player controlled but does not exist in underworld.players array.');
-            selectedUnit = undefined;
+            console.error('Tooltip: globalThis.selectedUnit is player controlled but does not exist in underworld.players array.');
+            globalThis.selectedUnit = undefined;
             break;
           }
         }
-        const unitSource = allUnits[selectedUnit.unitSourceId]
+        const unitSource = allUnits[globalThis.selectedUnit.unitSourceId]
         if (unitSource) {
           text += `\
 ${unitSource.id}
 ${unitSource.info.description}
-${selectedUnit.faction == Faction.ALLY ? '🤝' : '⚔️️'} ${Faction[selectedUnit.faction]}
-🗡️ ${selectedUnit.damage}
-❤️ ${selectedUnit.health}/${selectedUnit.healthMax}
-🔵 Mana ${selectedUnit.mana}/${selectedUnit.manaMax} + ${selectedUnit.manaPerTurn} per turn
-Modifiers ${modifiersToText(selectedUnit.modifiers)}
+${globalThis.selectedUnit.faction == Faction.ALLY ? '🤝' : '⚔️️'} ${Faction[globalThis.selectedUnit.faction]}
+🗡️ ${globalThis.selectedUnit.damage}
+❤️ ${globalThis.selectedUnit.health}/${globalThis.selectedUnit.healthMax}
+🔵 Mana ${globalThis.selectedUnit.mana}/${globalThis.selectedUnit.manaMax} + ${globalThis.selectedUnit.manaPerTurn} per turn
+Modifiers ${modifiersToText(globalThis.selectedUnit.modifiers)}
 ${unitSource.extraTooltipInfo ? unitSource.extraTooltipInfo() : ''}
 ${cards}
       `;
@@ -495,7 +494,7 @@ ${key}${JSON.stringify(value, null, 2).split('"').join('').split('{').join('').s
 
 }
 export function checkIfNeedToClearTooltip() {
-  if (selectedUnit && !selectedUnit.alive) {
+  if (globalThis.selectedUnit && !globalThis.selectedUnit.alive) {
     clearTooltipSelection();
   }
   // Quick hack to check if the pickup has been picked up
@@ -508,7 +507,7 @@ export function checkIfNeedToClearTooltip() {
 // return boolean represents if there was a tooltip to clear
 export function clearTooltipSelection(): boolean {
   if (selectedType) {
-    selectedUnit = undefined;
+    globalThis.selectedUnit = undefined;
     selectedPickup = undefined;
     selectedType = null;
     return true
@@ -521,11 +520,11 @@ export function updateTooltipSelection(mousePos: Vec2, underworld: Underworld) {
   // Find unit:
   const unit = underworld.getUnitAt(mousePos);
   if (unit) {
-    selectedUnit = unit;
+    globalThis.selectedUnit = unit;
     selectedType = "unit";
     return
   } else {
-    selectedUnit = undefined;
+    globalThis.selectedUnit = undefined;
   }
   const pickup = underworld.getPickupAt(mousePos);
   if (pickup) {

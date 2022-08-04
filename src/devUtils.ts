@@ -11,6 +11,9 @@ import { syncInventory } from './graphics/ui/CardUI';
 import { addCardToHand } from './entity/Player';
 import { moveWithCollisions } from './jmath/moveWithCollision';
 
+// Development helpers
+// Note: clicking on a unit will assign them to `selectedUnit` so they are available in the browser console
+
 export default function devUtils(graphics: PIXI.Graphics) {
 
     const _debugDrawLineSegments = (lines: LineSegment[], lineColor = 0x0000ff) => {
