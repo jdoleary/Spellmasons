@@ -977,6 +977,26 @@ export default class Underworld {
     return levelData;
 
   }
+  pickGroundTile(): string {
+    const baseTile = { path: 'tiles/all_ground.png', probability: 30 };
+    const tiles: { path: string, probability: number }[] = [
+      baseTile,
+      ...[
+        'tiles/all_ground_1.png',
+        'tiles/all_ground_2.png',
+        'tiles/all_ground_3.png',
+        'tiles/all_ground_4.png',
+        'tiles/all_ground_5.png',
+        'tiles/all_ground_6.png',
+        'tiles/all_ground_7.png',
+        'tiles/all_ground_8.png',
+        'tiles/all_ground_9.png',
+      ].map(path => ({ path, probability: 1 }))
+    ]
+    const choice = chooseObjectWithProbability(tiles, this.random) || baseTile;
+    return choice.path;
+
+  }
   addGroundTileImages() {
     if (globalThis.headless) {
       return;
@@ -984,7 +1004,7 @@ export default class Underworld {
     // Lay down a ground tile for every tile that is not liquid
     for (let tile of this.imageOnlyTiles.filter(t => t.image.indexOf('liquid') === -1)) {
       if (tile.image) {
-        const sprite = addPixiSprite('tiles/all_ground.png', containerBoard);
+        const sprite = addPixiSprite(this.pickGroundTile(), containerBoard);
         if (sprite) {
           sprite.x = tile.x - config.COLLISION_MESH_RADIUS;
           sprite.y = tile.y - config.COLLISION_MESH_RADIUS;
@@ -992,7 +1012,7 @@ export default class Underworld {
       }
     }
     // Then lay down wall tiles on top of them
-    for (let tile of this.imageOnlyTiles.filter(t => t.image !== 'tiles/all_ground.png')) {
+    for (let tile of this.imageOnlyTiles.filter(t => !t.image.includes('tiles/all_ground'))) {
       if (tile.image) {
         if (tile.image == 'tiles/all_liquid.png') {
           // liquid tiles are rendered with a shader

@@ -1,18 +1,24 @@
+## Today
+    - New dev tools, shift right click spawns input box where you can do near matching for spawning units
+        - clicking on a unit should assign them in the console
+    - bug: inLiquid doesn't work for dead units
+        - change inLiquid so it's not a modifier,should just be a property on unit
+- break;
+    - Add 'quantity' to the spells that would benefit from it (freeze, poison, aoe, etc)
+    - Change AOE behavior so that it just expands radius
+        - This radius expansion should work for ANY spell that uses a radius: vortex, bloat, chain, etc
+        - Maybe it only modifies the spell directly after it
+    - Change contageous so it only spreads curses once (with a radius) instead of permanently?
+        - This would solve the "infinite freeze" issue
+        - update copy
+- break;
+    - Fix spell icon borders
+    - measure and fix performance for blood splatter?
+    - bug: CRITICAL: Single player escape just quits game, it doesn't go to "resume" menu anymore
+- break;
 ## Path to Trailer-ready alpha
-- Add 'quantity' to the spells that would benefit from it (freeze, poison, aoe, etc)
-- bug: inLiquid doesn't work for dead units
-    - change inLiquid so it's not a modifier,should just be a property on unit
-- measure and fix performance for blood splatter?
-- Change AOE behavior so that it just expands radius
-    - This radius expansion should work for ANY spell that uses a radius: vortex, bloat, chain, etc
-    - Maybe it only modifies the spell directly after it
-- Change contageous so it only spreads curses once (with a radius) instead of permanently?
-    - This would solve the "infinite freeze" issue
-    - update copy
-- bug: CRITICAL: Single player escape just quits game, it doesn't go to "resume" menu anymore
 - task: Move prediction pickups and units to underworld not global or else they will be shared between multiple underworlds
 - environment looks off because wall depth shows into the grey
-- Fix spell icon borders
 ## Standalone server backlog bugs
 - Ensure standalone server doesn't bother running predictions
     - Unless the predictions determine their attacks from "perfect predictions" branch
