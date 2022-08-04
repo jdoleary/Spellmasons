@@ -4,7 +4,7 @@ import { UnitSubType } from '../../types/commonTypes';
 import * as math from '../../jmath/math';
 import { createVisualFlyingProjectile } from '../Projectile';
 import Shield from '../../cards/shield';
-import { isVampire } from '../../cards/vampire_bite';
+import { isVampire } from '../../cards/blood_curse';
 import { addPixiSpriteAnimated, containerUnits } from '../../graphics/PixiUtils';
 import Underworld from '../../Underworld';
 

@@ -28,7 +28,7 @@ import vulnerable from './vulnerable';
 import clone from './clone';
 import mana_burn from './mana_burn';
 import mana_steal from './mana_steal';
-import vampire_bite from './vampire_bite';
+import vampire_bite from './blood_curse';
 import push from './push';
 import pull from './pull';
 import decoy from './summon_decoy';

@@ -1,7 +1,7 @@
 import * as Unit from '../Unit';
 import type { UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
-import * as vampire_bite from '../../cards/vampire_bite';
+import * as blood_curse from '../../cards/blood_curse';
 import { withinMeleeRange } from './actions/gruntAction';
 import Underworld from '../../Underworld';
 import { bloodVampire } from '../../graphics/ui/colors';
@@ -31,7 +31,7 @@ const unit: UnitSource = {
     walk: 'units/vampireWalk',
   },
   init: (unit: Unit.IUnit, underworld: Underworld) => {
-    Unit.addModifier(unit, vampire_bite.id, underworld, false);
+    Unit.addModifier(unit, blood_curse.id, underworld, false);
   },
   action: async (unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, underworld: Underworld, canAttackTarget: boolean) => {
     if (!Unit.canMove(unit)) {
@@ -54,7 +54,7 @@ const unit: UnitSource = {
       await Unit.playAnimation(unit, unit.animations.attack);
       Unit.takeDamage(attackTarget, unit.damage, underworld, false, undefined);
       // prediction is false because unit.action doesn't yet ever occur during a prediction
-      Unit.addModifier(attackTarget, vampire_bite.id, underworld, false);
+      Unit.addModifier(attackTarget, blood_curse.id, underworld, false);
     }
   }
 };

@@ -6,7 +6,7 @@ import * as Unit from '../entity/Unit';
 import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
 
-export const id = 'Exsanguinate';
+export const id = 'Blood Curse';
 export function isVampire(unit: IUnit): boolean {
   return Object.keys(unit.modifiers).some(m => m === id)
 }
