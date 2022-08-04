@@ -8,6 +8,7 @@ export interface ForceMove {
     pushedObject: Circle;
     canCreateSecondOrderPushes: boolean;
     endPoint: Vec2;
+    timedOut?: boolean;
     resolve: () => void;
 }
 

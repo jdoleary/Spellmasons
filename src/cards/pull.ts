@@ -54,7 +54,7 @@ export async function pull(pushedObject: Circle, towards: Vec2, id: number, unde
         globalThis.predictionGraphics.drawCircle(pushedObject.x, pushedObject.y, 4);
       }
     } else {
-      underworld.forceMove.push(forceMoveInst);
+      underworld.addForceMove(forceMoveInst);
     }
   }));
 

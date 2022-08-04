@@ -219,9 +219,21 @@ export default class Underworld {
     this.random = seedrandom(this.seed, { state: RNGState })
     return this.random;
   }
+  addForceMove(forceMoveInst: ForceMove) {
+    // Ensure there aren't any preexisting forceMoves on this object already
+    if (!this.forceMove.find(fm => !fm.timedOut && fm.pushedObject == forceMoveInst.pushedObject)) {
+      this.forceMove.push(forceMoveInst);
+    } else {
+      console.error('Cannot add multiple forceMoves on the same object, they will deadlock and neither will complete')
+    }
+
+  }
   // Returns true when forceMove is complete
   runForceMove(forceMoveInst: ForceMove, prediction: boolean): boolean {
-    const { pushedObject, endPoint } = forceMoveInst;
+    const { pushedObject, endPoint, timedOut } = forceMoveInst;
+    if (timedOut) {
+      return true;
+    }
     if (math.distance(pushedObject, endPoint) <= 1) {
       // It's close enough, set final position to endPoint
       pushedObject.x = endPoint.x;
@@ -1107,6 +1119,10 @@ export default class Underworld {
     // along with units
     // so this removes all unit images too.
     containerUnits?.removeChildren();
+
+
+    // Empty any remaining forceMoves
+    this.forceMove = [];
 
     // Clear all floor images
     containerBoard?.removeChildren();

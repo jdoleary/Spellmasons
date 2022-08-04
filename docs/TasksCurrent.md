@@ -1,6 +1,9 @@
 ## Today
-- break;
     - measure and fix performance for blood splatter?
+        - I was able to get the fps to drop once the pushes and pulls timed out
+        - after clearing the graphics it looks like after a race timeout a dead unit is continuing to draw (from push not from splatter)
+        - Even after level change the forceMoves remained (the blood was gone), but it was still slow.  The pushedObject's x,ys were nan so it never finished
+        - TODO: remove forceMoveInst if the push timesout
 - break;
     - bug: fix layout move when selecting a spell right in spellbook
 ## Path to Trailer-ready alpha

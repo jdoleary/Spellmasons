@@ -70,15 +70,20 @@ export function makeForcePush(args: forcePushArgs, underworld: Underworld, predi
       globalThis.predictionGraphics.drawCircle(pushedObject.x, pushedObject.y, 4);
     }
   } else {
-    underworld.forceMove.push(forceMoveInst);
+    underworld.addForceMove(forceMoveInst);
   }
   return forceMoveInst;
 
 }
 export async function forcePush(pushedObject: Circle, awayFrom: Vec2, underworld: Underworld, prediction: boolean): Promise<void> {
+  let forceMoveInst: ForceMove;
   return await raceTimeout(3000, 'Push', new Promise<void>((resolve) => {
-    makeForcePush({ pushedObject, awayFrom, resolve, canCreateSecondOrderPushes: true }, underworld, prediction);
-  }));
+    forceMoveInst = makeForcePush({ pushedObject, awayFrom, resolve, canCreateSecondOrderPushes: true }, underworld, prediction);
+  })).then(() => {
+    if (forceMoveInst) {
+      forceMoveInst.timedOut = true;
+    }
+  });
 
 }
 export default spell;
