@@ -24,7 +24,7 @@ Adds a radius to the spell so it can affect more targets.
       const adjustedRange = range * quantity;
       for (let target of [state.castLocation, ...state.targetedUnits]) {
         // Draw visual circle for prediction
-        drawPredictionCircle(target, adjustedRange);
+        drawPredictionCircle(target, adjustedRange, 'Targeting Radius');
         const withinRadius = underworld.getUnitsWithinDistanceOfTarget(
           target,
           adjustedRange,

@@ -62,7 +62,7 @@ const spell: Spell = {
   },
   events: {
     onDeath: async (unit: IUnit, underworld: Underworld, prediction: boolean) => {
-      drawPredictionCircle(unit, range);
+      drawPredictionCircle(unit, range, 'Explosion Radius');
       if (!prediction) {
         animateSpell(unit, 'explode-on-death.png');
       }

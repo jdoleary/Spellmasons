@@ -352,9 +352,15 @@ export function drawPredictionLine(start: Vec2, end: Vec2) {
     // predictionGraphics.endFill();
   }
 }
-export function drawPredictionCircle(target: Vec2, radius: number) {
+export function drawPredictionCircle(target: Vec2, radius: number, text: string) {
   if (predictionGraphics) {
     predictionGraphics.drawCircle(target.x, target.y, radius);
+    if (labelText) {
+      labelText.text = text;
+      const labelPosition = withinCameraBounds({ x: target.x, y: target.y + radius }, labelText.width / 2);
+      labelText.x = labelPosition.x;
+      labelText.y = labelPosition.y;
+    }
   }
 }
 export function setPredictionGraphicsLineStyle(color: number) {
