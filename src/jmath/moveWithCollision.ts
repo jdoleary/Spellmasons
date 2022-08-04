@@ -9,7 +9,6 @@ export interface ForceMove {
     canCreateSecondOrderPushes: boolean;
     endPoint: Vec2;
     resolve: () => void;
-    onComplete?: () => void;
 }
 
 // Circle is used exclusively for force move objects

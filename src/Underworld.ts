@@ -226,9 +226,6 @@ export default class Underworld {
       // It's close enough, set final position to endPoint
       pushedObject.x = endPoint.x;
       pushedObject.y = endPoint.y;
-      if (forceMoveInst.onComplete) {
-        forceMoveInst.onComplete();
-      }
       return true;
     }
     const lastPosition = Vec.clone(pushedObject);
@@ -271,7 +268,7 @@ export default class Underworld {
       // as it is pushed
       this.checkPickupCollisions(forceMoveInst.pushedObject, prediction);
       // Check to see if unit has falled out of lava via a forcemove
-      Obstacle.tryFallOutOfLava(forceMoveInst.pushedObject, this);
+      Obstacle.tryFallInOutOfLiquid(forceMoveInst.pushedObject, this, prediction);
     } else if (Pickup.isPickup(forceMoveInst.pushedObject)) {
       // If the pushed object is a pickup, check if it collides with any units
       // as it is pushed
@@ -404,8 +401,13 @@ export default class Underworld {
               moveDist = math.distance(originalPosition, u);
             }
             u.stamina -= moveDist;
-            // Check if the unit was once in lava but now is out of the lava
-            Obstacle.tryFallOutOfLava(u, this);
+            // Only do this check if they are already in the liquid because units will never enter liquid
+            // just by moving themselves, they can only be forceMoved into liquid and that check happens 
+            // elsewhere
+            if (u.inLiquid) {
+              // Check if the unit was once in lava but now is out of the lava
+              Obstacle.tryFallInOutOfLiquid(u, this, false);
+            }
             // If unit is MELEE and only has the final target left in the path, stop when it gets close enough
             if (
               u.path.points[0] && u.path.points.length == 1 && u.unitSubType == UnitSubType.MELEE && math.distance(u, u.path.points[0]) <= config.COLLISION_MESH_RADIUS * 2

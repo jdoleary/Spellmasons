@@ -54,14 +54,6 @@ export function makeForcePush(args: forcePushArgs, underworld: Underworld, predi
   if (hitLava) {
     // Override end point
     forceMoveInst.endPoint = safeFallInPosition;
-    forceMoveInst.onComplete = () => {
-      if (isUnit(forceMoveInst.pushedObject)) {
-        const unit = forceMoveInst.pushedObject;
-        unit.resolveDoneMoving();
-        // Make the unit be "in the liquid"
-        inLiquid.add(unit, underworld, prediction);
-      }
-    }
   }
   if (prediction) {
     // Simulate the forceMove until it's complete

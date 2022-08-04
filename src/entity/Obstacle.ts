@@ -81,14 +81,13 @@ export function findSafeFallInPoint(currentPosition: Vec2, nextPosition: Vec2, u
 
 }
 
-export function tryFallOutOfLava(unit: IUnit, underworld: Underworld) {
-  // Only check this logic if the unit.inLiquid is true meaning they are 
-  // currently in liquid already
-  if (unit.inLiquid && underworld.liquidPolygons.length) {
+export function tryFallInOutOfLiquid(unit: IUnit, underworld: Underworld, prediction: boolean) {
+  if (underworld.liquidPolygons.length) {
     let insideLiquid = false;
     for (let poly of underworld.liquidPolygons) {
       insideLiquid = isVec2InsidePolygon(unit, poly);
       if (insideLiquid) {
+        inLiquid.add(unit, underworld, prediction);
         break;
       }
     }
