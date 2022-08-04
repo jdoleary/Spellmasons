@@ -41,7 +41,7 @@ Makes this unit's curses contagious to other nearby units
       for (let unit of state.targetedUnits) {
         // Don't add contagious more than once
         if (!unit.onTurnStartEvents.includes(id)) {
-          Unit.addModifier(unit, id, underworld);
+          Unit.addModifier(unit, id, underworld, prediction);
         }
       }
       return state;
