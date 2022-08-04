@@ -59,7 +59,6 @@ export function makeForcePush(args: forcePushArgs, underworld: Underworld, predi
     // Simulate the forceMove until it's complete
     let done = false;
     while (!done) {
-      // TODO: TOO much recursion when push on devSpawnAllUnits because the predictions don't get added to an array to check against
       done = underworld.runForceMove(forceMoveInst, prediction);
     }
     resolve();
