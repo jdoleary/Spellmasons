@@ -7,11 +7,11 @@
         - SFX
 # Critical Path
 - Milestone X | **Trailer-ready Alpha** | Due August 15
-    - Optimize blood graphics so it doesn't slow cpu
+    - Need HUD removal and music mute button
     - Test standalone server with friends
-    - Pick low hanging gameplay fruit
-        - add quantity to spells that could use it
     - Fix environment background
+    - Need sfx
+    - Need spell effects
 - Milestone X | **Juice** | Due Date Ongoing
     - SFX
         - Unit Sounds
@@ -29,7 +29,7 @@
 - Milestone X | **Marketing** | Due September 1
     - See Marketing.md for more info
     - Trailer
-        - Need HUD removal, music removal button
+        - Need HUD removal and music mute button
         - Need biomes
         - Need sfx
         - Need spell effects
