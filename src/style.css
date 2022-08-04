@@ -1056,16 +1056,16 @@ body.view-Menu #lobby {
   position: fixed;
   background: ghostwhite;
   color: black;
-  cursor: pointer;
-  border: 1px black solid
-}
-
-#ctxmenu>p {
+  border: 1px black solid;
   padding: 0 1rem;
-  margin: 0
 }
 
-#ctxmenu>p:hover {
+#ctxmenu li {
+  margin: 0;
+  cursor: pointer;
+}
+
+#ctxmenu li:hover {
   background: black;
   color: ghostwhite
 }

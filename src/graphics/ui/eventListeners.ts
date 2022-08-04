@@ -449,28 +449,6 @@ export function clickHandler(underworld: Underworld, e: MouseEvent) {
   }
   const mousePos = underworld.getMousePos();
 
-  // Developer tool, shift left click to choose to spawn a unit
-  if (devMode && e.shiftKey) {
-    let menu = document.createElement("div") as HTMLElement;
-    menu.id = "ctxmenu"
-    menu.style.top = `${e.pageY - 10}px`;
-    menu.style.left = `${e.pageX - 40}px`;
-    menu.style.zIndex = '2';
-    menu.onmouseleave = () => menu.outerHTML = '';
-    Object.values(allUnits).forEach(u => {
-      const element = document.createElement('p');
-      element.innerHTML = u.id;
-      element.addEventListener('click', () => {
-        if (devSpawnUnit) {
-          devSpawnUnit(u.id, Faction.ENEMY, mousePos);
-        }
-        menu.remove();
-      });
-      menu.appendChild(element);
-    })
-    document.body.appendChild(menu);
-
-  }
 
   if (isOutOfBounds(mousePos, underworld)) {
     // Disallow click out of bounds
@@ -576,4 +554,75 @@ export function clickHandler(underworld: Underworld, e: MouseEvent) {
   } else {
     updateTooltipSelection(mousePos, underworld);
   }
+  tryShowDevContextMenu(underworld, e, mousePos);
+}
+function tryShowDevContextMenu(underworld: Underworld, e: MouseEvent, mousePos: Vec2) {
+  // Developer tool, shift left click to choose to spawn a unit
+  if (devMode && e.shiftKey) {
+    let menu = document.createElement("div") as HTMLElement;
+    menu.id = "ctxmenu"
+    menu.style.top = `${e.pageY - 10}px`;
+    menu.style.left = `${e.pageX - 40}px`;
+    menu.style.zIndex = '2';
+    menu.onmouseleave = () => menu.outerHTML = '';
+    menu.innerHTML = `
+    <p id='selected-unit-label'>Selected Unit</p>
+    <ul id='menu-selected-unit'>
+    </ul>
+    <p>Spawn</p>
+    <ul id='menu-spawn'>
+    </ul>
+    <p>Self</p>
+    <ul id='menu-self'>
+    </ul>
+    `;
+    if (globalThis.selectedUnit) {
+
+      const elSelectedUnitList = menu.querySelector('#menu-selected-unit') as HTMLElement;
+      const el = document.createElement('li');
+      el.innerHTML = 'Die'
+      el.addEventListener('click', () => {
+        if (globalThis.selectedUnit) {
+          Unit.die(globalThis.selectedUnit, underworld, false);
+        }
+        // Close the menu
+        menu.remove();
+      })
+      elSelectedUnitList.appendChild(el);
+    } else {
+      menu.querySelector('#menu-selected-unit')?.remove();
+      menu.querySelector('#selected-unit-label')?.remove();
+    }
+
+    const elSpawnList = menu.querySelector('#menu-spawn') as HTMLElement;
+
+    Object.values(allUnits).forEach(u => {
+      const element = document.createElement('li');
+      element.innerHTML = u.id;
+      element.addEventListener('click', () => {
+        if (devSpawnUnit) {
+          devSpawnUnit(u.id, Faction.ENEMY, mousePos);
+        }
+        // Close the menu
+        menu.remove();
+      });
+      elSpawnList.appendChild(element);
+    });
+
+    const elSelfList = menu.querySelector('#menu-self') as HTMLElement;
+    const el = document.createElement('li');
+    el.innerHTML = 'Super Me'
+    el.addEventListener('click', () => {
+      if (superMe) {
+        superMe(underworld);
+      }
+      // Close the menu
+      menu.remove();
+    })
+    elSelfList.appendChild(el);
+
+    document.body.appendChild(menu);
+
+  }
+
 }
