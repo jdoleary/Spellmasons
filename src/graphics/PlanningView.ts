@@ -122,7 +122,7 @@ export function updatePlanningView(underworld: Underworld) {
             globalThis.unitOverlayGraphics.drawCircle(
               globalThis.selectedUnit.x,
               globalThis.selectedUnit.y,
-              globalThis.selectedUnit.staminaMax
+              globalThis.selectedUnit.staminaMax + globalThis.selectedUnit.attackRange
             );
             labelMoveText.text = 'Move Range';
           } else if (globalThis.selectedUnit.unitSubType === UnitSubType.PLAYER_CONTROLLED) {
