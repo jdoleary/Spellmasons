@@ -985,6 +985,10 @@ body.open-inventory #inventory-content {
   display: none;
   flex-direction: column;
   flex-wrap: wrap;
+  /* Bandaid fix to selecting spells causing inventory reflow */
+  position: fixed;
+  left: 100px;
+  top: 110px;
 }
 
 #inventory-content .category {
