@@ -181,6 +181,7 @@ export const upgradeStatsSource: IUpgrade[] = [
     probability: 30,
     cost: { healthCost: 0, manaCost: 0 },
   },
+  // Temp remove cast range upgrade because it greatly affects the difficulty of the game
   {
     title: '+ Cast Range',
     description: (player) =>
