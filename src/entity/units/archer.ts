@@ -17,6 +17,7 @@ const unit: UnitSource = {
   unitProps: {
     attackRange: 10000,
     manaMax: 0,
+    damage: 1,
   },
   spawnParams: {
     probability: 50,
