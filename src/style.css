@@ -254,7 +254,6 @@ body.open-inventory #card-inspect {
   transition: all 0.1s;
   width: 64px;
   margin: 8px;
-  height: 106px;
 }
 
 /* .card.rarity-forbidden {
