@@ -192,18 +192,19 @@ export const upgradeStatsSource: IUpgrade[] = [
     probability: 30,
     cost: { healthCost: 0, manaCost: 0 },
   },
-  {
-    title: '+ Max Stamina',
-    description: (player) =>
-      `Increases your stamina by ${maxStaminaIncreaseProportion * 100}%`,
-    thumbnail: 'images/spell/walk.png',
-    effect: (player) => {
-      player.unit.staminaMax += player.unit.staminaMax * maxStaminaIncreaseProportion;
-      player.unit.stamina = player.unit.staminaMax;
-    },
-    probability: 30,
-    cost: { healthCost: 0, manaCost: 0 },
-  },
+  // Temp remove stamina upgrade because stamina greatly affects the difficulty of the game
+  // {
+  //   title: '+ Max Stamina',
+  //   description: (player) =>
+  //     `Increases your stamina by ${maxStaminaIncreaseProportion * 100}%`,
+  //   thumbnail: 'images/spell/walk.png',
+  //   effect: (player) => {
+  //     player.unit.staminaMax += player.unit.staminaMax * maxStaminaIncreaseProportion;
+  //     player.unit.stamina = player.unit.staminaMax;
+  //   },
+  //   probability: 30,
+  //   cost: { healthCost: 0, manaCost: 0 },
+  // },
 ];
 const maxManaIncreaseAmount = 10;
 const castRangeIncreaseProportion = 0.1;
