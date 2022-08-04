@@ -109,6 +109,7 @@ export interface IUnit {
       [key: string]: any;
     };
   };
+  inLiquid: boolean;
 }
 export function create(
   unitSourceId: string,
@@ -165,6 +166,7 @@ export function create(
       onTurnEndEvents: [],
       modifiers: {},
       animations: sourceUnit.animations,
+      inLiquid: false,
     }, sourceUnitProps);
 
     // Since unit stats can be overridden with sourceUnitProps

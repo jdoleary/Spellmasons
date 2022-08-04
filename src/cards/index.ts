@@ -39,7 +39,6 @@ import { _getCardsFromIds } from './cardUtils';
 import { addCardToHand } from '../entity/Player';
 import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
-import * as inLiquid from './inLiquid';
 export interface Modifiers {
   subsprite?: Subsprite;
   add?: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => void;
@@ -122,12 +121,6 @@ export function registerCards(underworld: Underworld) {
   register(decoy, underworld);
   register(trap, underworld);
   register(explode, underworld);
-  // Add inLiquid modifier functions to manage
-  // units going in and out of liquid
-  allModifiers[inLiquid.id] = {
-    add: inLiquid.add,
-    remove: inLiquid.remove
-  }
 }
 function cardToUpgrade(c: ICard, underworld: Underworld): IUpgrade {
   return {

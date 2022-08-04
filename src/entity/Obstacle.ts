@@ -6,7 +6,7 @@ import { Material } from '../Conway';
 import { isVec2InsidePolygon, Polygon2 } from '../jmath/Polygon2';
 import { distance, similarTriangles } from '../jmath/math';
 import type Underworld from '../Underworld';
-import * as inLiquid from '../cards/inLiquid';
+import * as inLiquid from '../inLiquid';
 export interface IObstacle {
   x: number;
   y: number;
@@ -82,9 +82,9 @@ export function findSafeFallInPoint(currentPosition: Vec2, nextPosition: Vec2, u
 }
 
 export function tryFallOutOfLava(unit: IUnit, underworld: Underworld) {
-  // Only check this logic if the unit has the inLiquid modifier which means they are
+  // Only check this logic if the unit.inLiquid is true meaning they are 
   // currently in liquid already
-  if (unit.modifiers[inLiquid.id] !== undefined && underworld.liquidPolygons.length) {
+  if (unit.inLiquid && underworld.liquidPolygons.length) {
     let insideLiquid = false;
     for (let poly of underworld.liquidPolygons) {
       insideLiquid = isVec2InsidePolygon(unit, poly);
@@ -93,7 +93,7 @@ export function tryFallOutOfLava(unit: IUnit, underworld: Underworld) {
       }
     }
     if (!insideLiquid) {
-      removeModifier(unit, inLiquid.id, underworld);
+      inLiquid.remove(unit);
     }
   }
 

@@ -1,6 +1,4 @@
 ## Today
-    - bug: inLiquid doesn't work for dead units
-        - change inLiquid so it's not a modifier,should just be a property on unit
 - break;
     - Add 'quantity' to the spells that would benefit from it (freeze, poison, aoe, etc)
     - Change AOE behavior so that it just expands radius

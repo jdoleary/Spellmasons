@@ -8,7 +8,7 @@ import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
 import { findSafeFallInPoint } from '../entity/Obstacle';
 import { addModifier, isUnit } from '../entity/Unit';
-import * as inLiquid from '../cards/inLiquid';
+import * as inLiquid from '../inLiquid';
 
 export const id = 'push';
 const spell: Spell = {
@@ -58,8 +58,8 @@ export function makeForcePush(args: forcePushArgs, underworld: Underworld, predi
       if (isUnit(forceMoveInst.pushedObject)) {
         const unit = forceMoveInst.pushedObject;
         unit.resolveDoneMoving();
-        // Make the unit be "in the liquid" with the inLiquid modifier
-        addModifier(unit, inLiquid.id, underworld, prediction);
+        // Make the unit be "in the liquid"
+        inLiquid.add(unit, underworld, prediction);
       }
     }
   }
