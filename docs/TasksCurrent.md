@@ -1,5 +1,4 @@
 ## Today
-- bug: why does hurt self not show up in prediction but purify blood curse does
 ## Path to Trailer-ready alpha
 - task: Move prediction pickups and units to underworld not global or else they will be shared between multiple underworlds
 - environment looks off because wall depth shows into the grey
@@ -30,7 +29,6 @@
 ## Schedule
 - Pack 16 | Colin Feedback
     - explain that you can cast any number of times per turn
-    - bug: If you are RMB moving when a prompt popup, it dismisses immediately
     - Make spell pickups more obvious
     - label: bloat visual circle "explosion radius"
     - copy: "poison is stackable"
