@@ -3,6 +3,7 @@ import * as Image from '../graphics/Image';
 import { Spell } from './index';
 import floatingText from '../graphics/FloatingText';
 import { CardCategory } from '../types/commonTypes';
+import type Underworld from '../Underworld';
 
 const id = 'shield';
 const imageName = 'shield.png';
@@ -12,6 +13,7 @@ const spell: Spell = {
   card: {
     id,
     category: CardCategory.Blessings,
+    supportQuantity: true,
     manaCost: 60,
     healthCost: 0,
     expenseScaling: 1,
@@ -78,7 +80,7 @@ Protects bearer from the next ${damageBlocked} damage that they would incur.
 
 };
 
-function add(unit: Unit.IUnit) {
+function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, quantity: number = 1) {
   // First time setup
   let modifier = unit.modifiers[id];
   if (!modifier) {
@@ -94,7 +96,7 @@ function add(unit: Unit.IUnit) {
   if (modifier) {
 
     // Increment the number of damage_block on this modifier
-    modifier.damage_block = (modifier.damage_block || 0) + damageBlocked;
+    modifier.damage_block = (modifier.damage_block || 0) + damageBlocked * quantity;
     const maxBlock = maxStack * damageBlocked;
     if (modifier.damage_block > maxBlock) {
       // Cap how much shield a unit can have

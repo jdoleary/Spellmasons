@@ -41,7 +41,7 @@ import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
 export interface Modifiers {
   subsprite?: Subsprite;
-  add?: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => void;
+  add?: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number) => void;
   remove?: (unit: Unit.IUnit, underworld: Underworld) => void;
 }
 export interface Spell {

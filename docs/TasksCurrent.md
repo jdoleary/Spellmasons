@@ -1,15 +1,12 @@
 ## Today
 - break;
-    - Add 'quantity' to the spells that would benefit from it (freeze, poison, aoe, etc)
-    - Change AOE behavior so that it just expands radius
-        - This radius expansion should work for ANY spell that uses a radius: vortex, bloat, chain, etc
-        - Maybe it only modifies the spell directly after it
     - Change contageous so it only spreads curses once (with a radius) instead of permanently?
         - This would solve the "infinite freeze" issue
         - update copy
 - break;
     - measure and fix performance for blood splatter?
 - break;
+    - bug: fix layout move when selecting a spell right in spellbook
 ## Path to Trailer-ready alpha
 - task: Move prediction pickups and units to underworld not global or else they will be shared between multiple underworlds
 - environment looks off because wall depth shows into the grey
@@ -203,6 +200,9 @@
 - Casting curses on liquid should change the liquid type (lava/hurt, purify/water, poison)
 - More "Quantity" implementations for spells beyond hurt
 - Spell: grappling hook (pulls your towards something)
+- Change AOE behavior so that it just expands radius
+    - This radius expansion should work for ANY spell that uses a radius: vortex, bloat, chain, etc
+    - Maybe it only modifies the spell directly after it
 
 
 ## Misc

@@ -8,6 +8,7 @@ const spell: Spell = {
   card: {
     id,
     category: CardCategory.Targeting,
+    supportQuantity: true,
     manaCost: 20,
     healthCost: 0,
     expenseScaling: 1,
@@ -15,7 +16,8 @@ const spell: Spell = {
     thumbnail: 'aoe.png',
     requiresFollowingCard: true,
     description: `
-Adds a radius to the spell so it can affect more targets
+Adds a radius to the spell so it can affect more targets.
+"Expanding" can be cast multiple times in succession to stack it's effect.
     `,
     allowNonUnitTarget: true,
     effect: async (state, card, quantity, underworld, prediction) => {

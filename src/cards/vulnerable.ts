@@ -1,6 +1,7 @@
 import * as Unit from '../entity/Unit';
 import * as Image from '../graphics/Image';
 import { CardCategory } from '../types/commonTypes';
+import type Underworld from '../Underworld';
 import { Spell } from './index';
 
 const id = 'Debilitate';
@@ -9,6 +10,7 @@ const spell: Spell = {
   card: {
     id,
     category: CardCategory.Curses,
+    supportQuantity: true,
     manaCost: 20,
     healthCost: 0,
     expenseScaling: 1,
@@ -18,6 +20,7 @@ const spell: Spell = {
     description: `
 Makes the target(s) take double damage whenever they receive damage
 in the future.
+"Debilitate" can be cast multiple times in succession to stack it's effect.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
       for (let unit of state.targetedUnits) {
@@ -53,13 +56,15 @@ in the future.
   },
 };
 
-function add(unit: Unit.IUnit) {
+function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, quantity: number = 1) {
   // First time setup
   if (!unit.modifiers[id]) {
     unit.modifiers[id] = { isCurse: true };
   }
-  // Add event
-  unit.onDamageEvents.push(id);
+  // Add event, stackable via quantity
+  for (let i = 0; i < quantity; i++) {
+    unit.onDamageEvents.push(id);
+  }
 
   // Add subsprite image
   Image.addSubSprite(unit.image, id);
