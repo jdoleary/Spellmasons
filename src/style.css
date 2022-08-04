@@ -979,15 +979,16 @@ body.open-inventory #inventory-content {
 }
 
 #inventory-content {
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.7);
   max-width: 600px;
   display: none;
   flex-direction: column;
   flex-wrap: wrap;
+  padding: 8px;
   /* Bandaid fix to selecting spells causing inventory reflow */
   position: fixed;
   left: 100px;
-  top: 110px;
+  top: 178px;
 }
 
 #inventory-content .category {
