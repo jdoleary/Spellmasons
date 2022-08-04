@@ -6,6 +6,7 @@ export function raceTimeout(ms: number, message: string, promise: Promise<any>):
             resolve(undefined);
         }, ms)
         promise.then(x => {
+            //console.log(x, message, 'finished after', Date.now() - start);
             // Ensure that the timeout doesn't trigger now that the promise has resolved
             // natually within the allowed time
             clearTimeout(timeoutId);
