@@ -23,6 +23,8 @@ import { pointsEveryXDistanceAlongPath } from '../../jmath/Pathfinding';
 import Underworld from '../../Underworld';
 import { toLineSegments } from '../../jmath/Polygon2';
 import { closestLineSegmentIntersection } from '../../jmath/lineSegment';
+import { allUnits } from '../../entity/units';
+import { Faction } from '../../types/commonTypes';
 
 export const keyDown = {
   f: false,
@@ -437,7 +439,7 @@ export function onWindowBlur(underworld: Underworld) {
   globalThis.setMMBDown?.(false);
 }
 // Handle clicks on the game board
-export function clickHandler(underworld: Underworld, _e: MouseEvent) {
+export function clickHandler(underworld: Underworld, e: MouseEvent) {
   // Only handle clicks when viewing the Game
   if (globalThis.view !== View.Game) {
     return;
@@ -446,6 +448,30 @@ export function clickHandler(underworld: Underworld, _e: MouseEvent) {
     return;
   }
   const mousePos = underworld.getMousePos();
+
+  // Developer tool, shift left click to choose to spawn a unit
+  if (devMode && e.shiftKey) {
+    let menu = document.createElement("div") as HTMLElement;
+    menu.id = "ctxmenu"
+    menu.style.top = `${e.pageY - 10}px`;
+    menu.style.left = `${e.pageX - 40}px`;
+    menu.style.zIndex = '2';
+    menu.onmouseleave = () => menu.outerHTML = '';
+    Object.values(allUnits).forEach(u => {
+      const element = document.createElement('p');
+      element.innerHTML = u.id;
+      element.addEventListener('click', () => {
+        if (devSpawnUnit) {
+          devSpawnUnit(u.id, Faction.ENEMY, mousePos);
+        }
+        menu.remove();
+      });
+      menu.appendChild(element);
+    })
+    document.body.appendChild(menu);
+
+  }
+
   if (isOutOfBounds(mousePos, underworld)) {
     // Disallow click out of bounds
     return;

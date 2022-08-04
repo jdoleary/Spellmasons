@@ -1,5 +1,4 @@
 ## Today
-    - New dev tools, shift right click spawns input box where you can do near matching for spawning units
     - bug: inLiquid doesn't work for dead units
         - change inLiquid so it's not a modifier,should just be a property on unit
 - break;

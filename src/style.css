@@ -1050,3 +1050,22 @@ body.open-inventory #inventory-icon {
 body.view-Menu #lobby {
   display: block;
 }
+
+/* Dev util right click context menu */
+#ctxmenu {
+  position: fixed;
+  background: ghostwhite;
+  color: black;
+  cursor: pointer;
+  border: 1px black solid
+}
+
+#ctxmenu>p {
+  padding: 0 1rem;
+  margin: 0
+}
+
+#ctxmenu>p:hover {
+  background: black;
+  color: ghostwhite
+}

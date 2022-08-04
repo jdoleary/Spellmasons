@@ -125,7 +125,7 @@ declare global {
     // Used for development to debug the original information used to make a map
     var map: undefined | any;
     var devKillAll: undefined | (() => void);
-    var devSpawnUnit: undefined | ((unitId: string, faction: Faction) => void);
+    var devSpawnUnit: undefined | ((unitId: string, faction: Faction, coords?: Vec2) => void);
     var devSpawnAllUnits: undefined | (() => void);
     var devRemoveAllEnemies: undefined | ((underworld: Underworld) => void);
     // true if this instance is the headless server with no visuals or audio, just the game logic

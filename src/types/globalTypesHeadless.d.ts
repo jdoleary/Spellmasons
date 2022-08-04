@@ -199,7 +199,7 @@ declare global {
     // Used for development to debug the original information used to make a map
     var map: undefined | any;
     var devKillAll: undefined | (() => void);
-    var devSpawnUnit: undefined | ((unitId: string, faction: Faction) => void);
+    var devSpawnUnit: undefined | ((unitId: string, faction: Faction, coords?: Vec2) => void);
     var devSpawnAllUnits: undefined | (() => void);
     var devRemoveAllEnemies: undefined | (() => void);
     // Move audio functions into global so they can be injected IF audio is supported

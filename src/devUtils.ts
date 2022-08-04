@@ -13,6 +13,8 @@ import { moveWithCollisions } from './jmath/moveWithCollision';
 
 // Development helpers
 // Note: clicking on a unit will assign them to `selectedUnit` so they are available in the browser console
+// Note: shift + left click to choose to spawn a unit from a context menu
+
 
 export default function devUtils(graphics: PIXI.Graphics) {
 
@@ -69,9 +71,9 @@ export function setupDevGlobalFunctions(underworld: Underworld) {
         underworld.units.filter(u => u.unitType !== UnitType.PLAYER_CONTROLLED).forEach(u => Unit.die(u, underworld, false));
     }
     // For development, spawns a unit near the player
-    globalThis.devSpawnUnit = (unitId: string, faction: Faction = Faction.ENEMY) => {
+    globalThis.devSpawnUnit = (unitId: string, faction: Faction = Faction.ENEMY, coords?: Vec2) => {
         if (globalThis.player) {
-            const coords = underworld.findValidSpawn(globalThis.player.unit, 5)
+            coords = coords || underworld.findValidSpawn(globalThis.player.unit, 5)
             const sourceUnit = Units.allUnits[unitId];
             if (coords && sourceUnit) {
                 const newUnit = Unit.create(
