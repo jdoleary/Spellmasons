@@ -25,6 +25,7 @@ import { toLineSegments } from '../../jmath/Polygon2';
 import { closestLineSegmentIntersection } from '../../jmath/lineSegment';
 import { allUnits } from '../../entity/units';
 import { Faction } from '../../types/commonTypes';
+import * as Freeze from '../../cards/freeze';
 
 export const keyDown = {
   f: false,
@@ -236,7 +237,7 @@ export function mouseMove(underworld: Underworld, e?: MouseEvent) {
     if (globalThis.RMBDown) {
       if (underworld.isMyTurn()) {
         // If player is able to move
-        if (globalThis.player.unit.stamina > 0) {
+        if (Unit.canMove(globalThis.player.unit)) {
           // Move towards mouseTarget, but stop pathing where the direct path intersects a wall
           // This ensures that the player will always move in the direction of the mouse
           // and won't path in an unexpected direction to attempt to get to the final destination.
@@ -530,6 +531,11 @@ export function clickHandler(underworld: Underworld, e: MouseEvent) {
           })
           // Cancel Casting
           return;
+        }
+        if (selfPlayer.unit.modifiers[Freeze.id]) {
+          floatingText({ coords: selfPlayer.unit, text: 'Cannot Cast. Frozen.' })
+          // Cancel Casting
+          return
         }
         clearSpellEffectProjection(underworld);
         // Clear resMarkers so they don't hang around once the spell is cast

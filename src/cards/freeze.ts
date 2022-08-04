@@ -6,7 +6,7 @@ import * as config from '../config'
 import type Underworld from '../Underworld';
 import { animateSpell, playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
 
-const id = 'freeze';
+export const id = 'freeze';
 const imageName = 'spell-effects/spellFreeze_still.png';
 const spell: Spell = {
   card: {
@@ -28,14 +28,6 @@ Freezes the target(s) for 1 turn, preventing them from moving or acting.
       await Promise.all([playDefaultSpellAnimation(card, state.targetedUnits, prediction), playDefaultSpellSFX(card, prediction)]);
       for (let unit of state.targetedUnits) {
         Unit.addModifier(unit, id, underworld, prediction, quantity);
-        if (unit.unitType === UnitType.PLAYER_CONTROLLED) {
-          const player = underworld.players.find(
-            (p) => p.unit === unit,
-          );
-          if (player) {
-            underworld.endPlayerTurn(player.clientId);
-          }
-        }
       }
       return state;
     },
@@ -82,11 +74,13 @@ Freezes the target(s) for 1 turn, preventing them from moving or acting.
 
 };
 
-function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, quantity: number = 1) {
+function add(unit: Unit.IUnit, underworld: Underworld, _prediction: boolean, quantity: number = 1) {
   // First time setup
   if (!unit.modifiers[id]) {
     unit.radius = config.COLLISION_MESH_RADIUS
     unit.modifiers[id] = { isCurse: true };
+    // Immediately set stamina to 0 so they can't move
+    unit.stamina = 0;
     // Add event
     if (!unit.onTurnStartEvents.includes(id)) {
       unit.onTurnStartEvents.push(id);
@@ -102,6 +96,15 @@ function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, qu
     // Prevents units from being pushed out of the way and units
     // act as a blockade
     unit.immovable = true;
+    // If the frozen unit is a player, end their turn when they become frozen
+    if (unit.unitType === UnitType.PLAYER_CONTROLLED) {
+      const player = underworld.players.find(
+        (p) => p.unit === unit,
+      );
+      if (player) {
+        underworld.endPlayerTurn(player.clientId);
+      }
+    }
   }
   const modifier = unit.modifiers[id];
   if (modifier) {

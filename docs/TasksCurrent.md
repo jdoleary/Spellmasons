@@ -3,7 +3,6 @@
     - measure and fix performance for blood splatter?
 - break;
     - bug: fix layout move when selecting a spell right in spellbook
-- bug: when player gets frozen via contageon it doesn't end their turn
 ## Path to Trailer-ready alpha
 - task: Move prediction pickups and units to underworld not global or else they will be shared between multiple underworlds
 - environment looks off because wall depth shows into the grey
