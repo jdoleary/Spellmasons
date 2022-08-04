@@ -610,11 +610,22 @@ function tryShowDevContextMenu(underworld: Underworld, e: MouseEvent, mousePos: 
     });
 
     const elSelfList = menu.querySelector('#menu-self') as HTMLElement;
-    const el = document.createElement('li');
+    let el = document.createElement('li');
     el.innerHTML = 'Super Me'
     el.addEventListener('click', () => {
       if (superMe) {
         superMe(underworld);
+      }
+      // Close the menu
+      menu.remove();
+    })
+    elSelfList.appendChild(el);
+    el = document.createElement('li');
+    el.innerHTML = 'Teleport Here'
+    el.addEventListener('click', () => {
+      if (player) {
+        player.unit.x = mousePos.x;
+        player.unit.y = mousePos.y;
       }
       // Close the menu
       menu.remove();
