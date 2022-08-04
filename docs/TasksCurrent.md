@@ -1,4 +1,20 @@
 ## Today
+- Don't play hurt sound affects all at the same time for multiple targets
+- bloat explosion didn't push mana potion but it predicted that it would
+- push predicted taht a lobber would fall in lava and die but it didn't
+    - that same lobber when resurrected just crawled over lava so it must've been inside but just didn't take the damage
+- push, bload, expand, hurt suprisingly damaged me when i clicked on an enemy near me, i think it's cause it both expanded the enemy's radius and where i clicked
+- pull doesn't trigger fallInLava, i pulled a unit right through lava
+- move range and attack range labels are in bad position for vampire
+- archer movement got stuck which made me lose a game 0.3199228271451904
+- bug: when i quit a game and start over it gives me the resurrect optoin
+- Ensure hurt is presented in first spell picks
+- Stop targeting flickering
+- Grunt pre3diction circle should be attack range + move range
+- see cantwalk.png on desktop
+- bug: explosion radius text and some move lines left on the screen after cast was done
+- bug: Pushing spike into grunt pushed the grunt instead of damaging him and the spike disappeared
+- game slows down when there's a lot of blood on the screen and it's painint more
 ## Path to Trailer-ready alpha
 - task: Move prediction pickups and units to underworld not global or else they will be shared between multiple underworlds
 - environment looks off because wall depth shows into the grey
@@ -33,8 +49,6 @@
     - label: bloat visual circle "explosion radius"
     - copy: "poison is stackable"
     - explain: remember, vampiree takes heals as pure damage
-    - CRICITAL bug: level 6, prediction pushed a spike for real
-    - push enemies into each other billiard style
     - vampire had attack icon while in lava but next turn got out of the lava and didn't attack
     - attack badges block health sometimes
     - self heal should predict in your health bar
