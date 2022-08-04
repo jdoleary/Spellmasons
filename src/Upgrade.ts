@@ -182,17 +182,17 @@ export const upgradeStatsSource: IUpgrade[] = [
     cost: { healthCost: 0, manaCost: 0 },
   },
   // Temp remove cast range upgrade because it greatly affects the difficulty of the game
-  {
-    title: '+ Cast Range',
-    description: (player) =>
-      `Increases your maximum cast range by ${castRangeIncreaseProportion * 100}%`,
-    thumbnail: 'images/upgrades/todo.png',
-    effect: (player) => {
-      player.unit.attackRange += player.unit.attackRange * castRangeIncreaseProportion;
-    },
-    probability: 30,
-    cost: { healthCost: 0, manaCost: 0 },
-  },
+  // {
+  //   title: '+ Cast Range',
+  //   description: (player) =>
+  //     `Increases your maximum cast range by ${castRangeIncreaseProportion * 100}%`,
+  //   thumbnail: 'images/upgrades/todo.png',
+  //   effect: (player) => {
+  //     player.unit.attackRange += player.unit.attackRange * castRangeIncreaseProportion;
+  //   },
+  //   probability: 30,
+  //   cost: { healthCost: 0, manaCost: 0 },
+  // },
   // Temp remove stamina upgrade because stamina greatly affects the difficulty of the game
   // {
   //   title: '+ Max Stamina',
