@@ -22,7 +22,9 @@ Resurrects a dead unit and converts them to the caster's faction.
       // If there is a living unit atop a dead unit at the cast location, specifically target the dead unit
       // so the spell doesn't fizzle.
       const firstDeadUnitAtCastLocation = underworld.getUnitsAt(state.castLocation, prediction).filter(u => !u.alive)[0]
-      for (let unit of [firstDeadUnitAtCastLocation, ...state.targetedUnits]) {
+      const animationPromises = [];
+      const targets = [firstDeadUnitAtCastLocation, ...state.targetedUnits]
+      for (let unit of targets) {
         if (unit && !unit.alive) {
           let colorOverlayFilter: ColorOverlayFilter;
           if (unit.image && unit.image.sprite.filters) {
@@ -36,17 +38,23 @@ Resurrects a dead unit and converts them to the caster's faction.
           unit.mana = unit.manaMax * resStatAmount;
           Unit.changeFaction(unit, state.casterUnit.faction);
           // Resurrect animation is the die animation played backwards
-          const playAnimationPromise = Unit.playAnimation(unit, unit.animations.die, { loop: false, animationSpeed: -0.2 });
+          animationPromises.push(Unit.playAnimation(unit, unit.animations.die, { loop: false, animationSpeed: -0.2 }));
           if (unit.image) {
             unit.image.sprite.gotoAndPlay(unit.image.sprite.totalFrames - 1);
           }
-          await playAnimationPromise;
-          // Remove color overlay now that the unit is done being resurrected
-          if (unit.image && unit.image.sprite.filters) {
-            // @ts-ignore Something is wrong with PIXI's filter types
-            unit.image.sprite.filters = unit.image.sprite.filters.filter(f => f !== colorOverlayFilter)
-          }
         }
+      }
+      await Promise.all(animationPromises);
+      for (let unit of targets) {
+        if (!unit) {
+          continue;
+        }
+        // Remove color overlay now that the unit is done being resurrected
+        if (unit.image && unit.image.sprite.filters) {
+          // @ts-ignore This filter does have a __proto__ property
+          unit.image.sprite.filters = unit.image.sprite.filters.filter(f => f.__proto__ !== ColorOverlayFilter.prototype)
+        }
+
       }
       return state;
     },
