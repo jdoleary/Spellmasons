@@ -24,7 +24,6 @@ let predictionGraphics: PIXI.Graphics | undefined;
 // labelText is used to add a label to planningView circles 
 // so that the player knows what the circle is referencing.
 let labelText = !globalThis.pixi ? undefined : new globalThis.pixi.Text('', { fill: 'white' });
-let labelMoveText = !globalThis.pixi ? undefined : new globalThis.pixi.Text('', { fill: 'white' });
 export function initPlanningView() {
   if (containerPlanningView && containerUI && globalThis.pixi) {
     planningViewGraphics = new globalThis.pixi.Graphics();
@@ -38,22 +37,14 @@ export function initPlanningView() {
       labelText.anchor.y = 0;
       containerUI.addChild(labelText);
     }
-    if (labelMoveText) {
-      labelMoveText.anchor.x = 0.5;
-      labelMoveText.anchor.y = 0;
-      containerUI.addChild(labelMoveText);
-    }
   }
 }
 let lastSpotCurrentPlayerTurnCircle: Vec2 = { x: 0, y: 0 };
 export function updatePlanningView(underworld: Underworld) {
-  if (planningViewGraphics && globalThis.unitOverlayGraphics && labelText && labelMoveText) {
+  if (planningViewGraphics && globalThis.unitOverlayGraphics && labelText) {
     planningViewGraphics.clear();
     if (labelText) {
       labelText.text = '';
-    }
-    if (labelMoveText) {
-      labelMoveText.text = '';
     }
     if (selectedPickup) {
       // Draw circle to show that pickup is selected
@@ -105,6 +96,9 @@ export function updatePlanningView(underworld: Underworld) {
               globalThis.selectedUnit.attackRange
             );
             labelText.text = 'Attack Range';
+            const labelPosition = withinCameraBounds({ x: globalThis.selectedUnit.x, y: globalThis.selectedUnit.y + globalThis.selectedUnit.attackRange }, labelText.width / 2);
+            labelText.x = labelPosition.x;
+            labelText.y = labelPosition.y;
           } else if (globalThis.selectedUnit.unitSubType === UnitSubType.SUPPORT_CLASS) {
             globalThis.unitOverlayGraphics.drawCircle(
               globalThis.selectedUnit.x,
@@ -112,19 +106,20 @@ export function updatePlanningView(underworld: Underworld) {
               globalThis.selectedUnit.attackRange
             );
             labelText.text = 'Support Range';
+            const labelPosition = withinCameraBounds({ x: globalThis.selectedUnit.x, y: globalThis.selectedUnit.y + globalThis.selectedUnit.attackRange }, labelText.width / 2);
+            labelText.x = labelPosition.x;
+            labelText.y = labelPosition.y;
           } else if (globalThis.selectedUnit.unitSubType === UnitSubType.MELEE) {
             globalThis.unitOverlayGraphics.drawCircle(
               globalThis.selectedUnit.x,
               globalThis.selectedUnit.y,
               globalThis.selectedUnit.staminaMax
             );
-            labelText.text = 'Move Range';
-            globalThis.unitOverlayGraphics.drawCircle(
-              globalThis.selectedUnit.x,
-              globalThis.selectedUnit.y,
-              globalThis.selectedUnit.staminaMax + globalThis.selectedUnit.attackRange
-            );
-            labelMoveText.text = 'Attack Range';
+            globalThis.unitOverlayGraphics.endFill();
+            labelText.text = 'Attack Range';
+            const labelPosition = withinCameraBounds({ x: globalThis.selectedUnit.x, y: globalThis.selectedUnit.y + globalThis.selectedUnit.staminaMax + globalThis.selectedUnit.attackRange }, labelText.width / 2);
+            labelText.x = labelPosition.x;
+            labelText.y = labelPosition.y;
           } else if (globalThis.selectedUnit.unitSubType === UnitSubType.PLAYER_CONTROLLED) {
             globalThis.unitOverlayGraphics.drawCircle(
               globalThis.selectedUnit.x,
@@ -132,14 +127,10 @@ export function updatePlanningView(underworld: Underworld) {
               globalThis.selectedUnit.attackRange
             );
             labelText.text = 'Cast Range';
+            const labelPosition = withinCameraBounds({ x: globalThis.selectedUnit.x, y: globalThis.selectedUnit.y + globalThis.selectedUnit.attackRange }, labelText.width / 2);
+            labelText.x = labelPosition.x;
+            labelText.y = labelPosition.y;
           }
-          const labelPosition = withinCameraBounds({ x: globalThis.selectedUnit.x, y: globalThis.selectedUnit.y + globalThis.selectedUnit.attackRange }, labelText.width / 2);
-          labelText.x = labelPosition.x;
-          labelText.y = labelPosition.y;
-          const label2Position = withinCameraBounds({ x: globalThis.selectedUnit.x, y: globalThis.selectedUnit.y + globalThis.selectedUnit.staminaMax }, labelText.width / 2);
-          labelMoveText.x = label2Position.x;
-          labelMoveText.y = label2Position.y;
-          globalThis.unitOverlayGraphics.endFill();
         }
       }
     }

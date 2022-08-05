@@ -1,5 +1,4 @@
 ## Today
-- move range and attack range labels are in bad position for vampire
 - Music volume resets with level change
 - Decoy and clone should stay expensive for longer
 - sfx way too loud
