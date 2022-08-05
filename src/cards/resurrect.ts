@@ -14,7 +14,7 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 2,
     probability: 5,
-    thumbnail: 'raise_dead.png',
+    thumbnail: 'spellIconResurrect.png',
     description: `
 Resurrects a dead unit and converts them to the caster's faction.
     `,

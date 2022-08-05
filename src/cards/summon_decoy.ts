@@ -12,7 +12,7 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 1,
     probability: 50,
-    thumbnail: 'decoy.png',
+    thumbnail: 'spellIconDecoy.png',
     description: `
 Summons a decoy.
 The decoy attracts attacks for enemies that it is closer to that you are.

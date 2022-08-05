@@ -15,7 +15,7 @@ const spell: Spell = {
     healthCost: 0,
     probability: 5,
     expenseScaling: 1,
-    thumbnail: 'swap.png',
+    thumbnail: 'spellIconSwap.png',
     description: `
 Swaps the caster with the source target.
     `,

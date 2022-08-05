@@ -35,7 +35,7 @@ const spell: Spell = {
     expenseScaling: 0,
     probability: 50,
     requiresFollowingCard: true,
-    thumbnail: 'trap.png',
+    thumbnail: 'spellIconDelay.png',
     description: `
 Sets a spell as a trap, to be triggered when stepped on.  Wrapping a spell in a trap reduces its mana cost.  The trap will be ready to be sprung after ${turnsItTakesTrapToWindUp} turns.
     `,

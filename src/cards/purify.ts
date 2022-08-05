@@ -13,7 +13,7 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 1,
     probability: 10,
-    thumbnail: 'purify.png',
+    thumbnail: 'spellIconPurify.png',
     animationPath: 'spell-effects/spellPurify',
     description: `
 Removes all curses from the target(s).

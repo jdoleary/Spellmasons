@@ -19,7 +19,7 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 1,
     probability: 50,
-    thumbnail: 'push.png',
+    thumbnail: 'spellIconPush.png',
     description: `
 Pushes the target(s) away from the caster 
     `,

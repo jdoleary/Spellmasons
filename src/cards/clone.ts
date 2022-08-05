@@ -18,7 +18,7 @@ const spell: Spell = {
     healthCost: 0,
     probability: 1,
     expenseScaling: 1,
-    thumbnail: 'clone.png',
+    thumbnail: 'spellIconClone.png',
     description: `
 Clones each target
     `,

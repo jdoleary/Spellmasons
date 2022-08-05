@@ -17,7 +17,7 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 1,
     probability: 50,
-    thumbnail: 'pull.png',
+    thumbnail: 'spellIconPull.png',
     description: `
 Pulls the target(s) towards the caster 
     `,

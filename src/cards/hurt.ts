@@ -26,7 +26,7 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 1,
     probability: 50,
-    thumbnail: 'hurt.png',
+    thumbnail: 'spellIconHurt.png',
     animationPath,
     sfx: 'hurt',
     description: `

@@ -8,12 +8,12 @@ const healAmount = 3;
 const spell: Spell = {
   card: {
     id,
-    category: CardCategory.Primary,
+    category: CardCategory.Blessings,
     manaCost: 15,
     healthCost: 0,
     expenseScaling: 1,
     probability: 50,
-    thumbnail: 'heal.png',
+    thumbnail: 'spellIconHeal.png',
     animationPath: 'spell-effects/potionPickup',
     description: `
 Heals all targets ${healAmount} HP.

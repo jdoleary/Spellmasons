@@ -20,7 +20,7 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 1,
     probability: 5,
-    thumbnail: 'contagious.png',
+    thumbnail: 'spellIconContagious.png',
     description: `
 Immediately spreads this unit's curses to other nearby units.
     `,

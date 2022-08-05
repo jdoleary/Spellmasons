@@ -18,7 +18,7 @@ const spell: Spell = {
     healthCost: health_burn,
     expenseScaling: 1,
     probability: 20,
-    thumbnail: 'mana_steal.png',
+    thumbnail: 'spellIconManaSteal.png',
     description: `
 Sacrifice some of own health to steal up to ${mana_stolen} mana from each target.
     `,

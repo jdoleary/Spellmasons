@@ -39,7 +39,7 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 1,
     probability: 10,
-    thumbnail: 'poison.png',
+    thumbnail: 'spellIconPoison.png',
     animationPath: 'spell-effects/spellPoison',
     description: `
 Poisons all target(s).  Poison will deal 1 base damage every turn

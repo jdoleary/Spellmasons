@@ -13,7 +13,7 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 1,
     probability: 20,
-    thumbnail: 'chain.png',
+    thumbnail: 'spellIconAdjoining.png',
     requiresFollowingCard: true,
     description: `
 Adds targets for the following cards to effect by "chaining like electricity" 

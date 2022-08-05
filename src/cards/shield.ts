@@ -18,7 +18,7 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 1,
     probability: 20,
-    thumbnail: 'shield.png',
+    thumbnail: 'spellIconShield.png',
     animationPath: 'spell-effects/spellShield',
     description: `
 Protects bearer from the next ${damageBlocked} damage that they would incur.

@@ -13,7 +13,7 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 1,
     probability: 10,
-    thumbnail: 'aoe.png',
+    thumbnail: 'spellIconExpanding.png',
     requiresFollowingCard: true,
     description: `
 Adds a radius to the spell so it can affect more targets.

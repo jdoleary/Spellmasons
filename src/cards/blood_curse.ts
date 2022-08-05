@@ -59,7 +59,7 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 1,
     probability: 0,
-    thumbnail: 'bite.png',
+    thumbnail: 'spellIconBloodCurse.png',
     description: `Turns the victim into a Vampire.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
