@@ -41,6 +41,11 @@ const combos: { [spritePath: string]: AnimationCombo } = {
         primaryAnimation: 'units/playerAttackEpic',
         companionAnimations: ['units/playerAttackEpicMagic'],
     },
+    'units/gruntAttack': {
+        keyFrame: 6,
+        primaryAnimation: 'units/gruntAttack',
+        companionAnimations: []
+    },
     'units/lobberAttack': {
         keyFrame: 4,
         primaryAnimation: 'units/lobberAttack',
