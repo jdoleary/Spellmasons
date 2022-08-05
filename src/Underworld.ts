@@ -359,7 +359,7 @@ export default class Underworld {
           for (let j of smearJitter) {
             // Multiple blood trails
             graphicsBloodSmear.beginFill(forceMoveInst.pushedObject.bloodColor, 1.0);
-            graphicsBloodSmear.lineStyle(1, forceMoveInst.pushedObject.bloodColor, 1.0);
+            graphicsBloodSmear.lineStyle(0);
             const bloodDrop = Vec.jitter(endPos, 5, this.random);
             // Don't draw if inside liquid
             if (!this.isInsideLiquid(bloodDrop)) {

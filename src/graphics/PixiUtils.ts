@@ -44,6 +44,7 @@ export const containerFloatingText = !globalThis.pixi ? undefined : new globalTh
 export const graphicsBloodSmear = !globalThis.pixi ? undefined : new globalThis.pixi.Graphics();
 if (containerBloodSmear && graphicsBloodSmear) {
   containerBloodSmear.addChild(graphicsBloodSmear);
+  containerBloodSmear.alpha = 0.5;
 }
 export const containerBloodParticles = !globalThis.pixi ? undefined : new globalThis.pixi.ParticleContainer();
 if (containerBloodSmear && containerBloodParticles) {
