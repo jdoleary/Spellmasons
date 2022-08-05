@@ -17,7 +17,7 @@ const spell: Spell = {
     manaCost: 80,
     healthCost: 0,
     probability: 1,
-    expenseScaling: 1,
+    expenseScaling: 2,
     thumbnail: 'spellIconClone.png',
     description: `
 Clones each target

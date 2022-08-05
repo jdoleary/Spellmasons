@@ -1,5 +1,4 @@
 ## Today
-- Decoy and clone should stay expensive for longer
 - make bloat stackable
 - blood splatter when grunts & archers do damage
 - heal effect should happen mid animation keyframe

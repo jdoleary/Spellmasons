@@ -10,7 +10,7 @@ const spell: Spell = {
     category: CardCategory.Primary,
     manaCost: 60,
     healthCost: 0,
-    expenseScaling: 1,
+    expenseScaling: 3,
     probability: 50,
     thumbnail: 'spellIconDecoy.png',
     description: `
