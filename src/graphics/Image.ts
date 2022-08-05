@@ -3,6 +3,7 @@ import type * as PIXI from 'pixi.js';
 import { addPixiSprite, addPixiSpriteAnimated, getPixiTextureAnimated, PixiSpriteOptions } from './PixiUtils';
 import Subsprites from '../Subsprites';
 import type { Vec2 } from "../jmath/Vec";
+import * as config from '../config';
 
 // The serialized version of the interface changes the interface to allow only the data
 // that can be serialized in JSON.  It may exclude data that is not neccessary to
@@ -130,8 +131,8 @@ export function changeSprite(image: IImageAnimated | undefined, imagePath: strin
     }
     // Default loop to true
     sprite.loop = true;
-    // Default animationSpeed to 0.1
-    sprite.animationSpeed = 0.1;
+    // Default animationSpeed
+    sprite.animationSpeed = config.DEFAULT_ANIMATION_SPEED;
     if (options) {
       const { onFrameChange, onComplete, loop, animationSpeed } = options;
       sprite.onFrameChange = onFrameChange;

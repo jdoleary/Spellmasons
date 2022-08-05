@@ -7,6 +7,7 @@ import Shield from '../../cards/shield';
 import { isVampire } from '../../cards/blood_curse';
 import { addPixiSpriteAnimated, containerUnits } from '../../graphics/PixiUtils';
 import Underworld from '../../Underworld';
+import * as config from '../../config';
 
 const CAST_MANA_COST = 30;
 async function animatePriestProjectileAndHit(self: Unit.IUnit, target: Unit.IUnit) {
@@ -18,7 +19,7 @@ async function animatePriestProjectileAndHit(self: Unit.IUnit, target: Unit.IUni
   // Add projectile hit animation
   const animationSprite = addPixiSpriteAnimated('projectile/priestProjectileHit', containerUnits, {
     loop: false,
-    animationSpeed: 0.1,
+    animationSpeed: config.DEFAULT_ANIMATION_SPEED,
     onComplete: () => {
       if (animationSprite && animationSprite.parent) {
         animationSprite.parent.removeChild(animationSprite)

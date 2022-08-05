@@ -63,8 +63,6 @@
     - lobby
         - ready up and start game
 ## Schedule
-- Increase animation framerates per Che's comment
-
 - Pack 16 | Colin Feedback
     - explain that you can cast any number of times per turn
     - Make spell pickups more obvious

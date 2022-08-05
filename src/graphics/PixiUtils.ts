@@ -517,7 +517,7 @@ export function addPixiSpriteAnimated(
   let texture = sheet.animations[imagePath];
   if (texture) {
     const animatedSprite = new globalThis.pixi.AnimatedSprite(texture);
-    animatedSprite.animationSpeed = options.animationSpeed || 0.1;
+    animatedSprite.animationSpeed = options.animationSpeed || config.DEFAULT_ANIMATION_SPEED;
     if (options.onComplete) {
       animatedSprite.onComplete = options.onComplete;
     }
