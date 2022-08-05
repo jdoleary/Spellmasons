@@ -7,11 +7,39 @@
         - SFX
 # Critical Path
 - Milestone X | **Trailer-ready Alpha** | Due August 15
-    - Need HUD removal and music mute button
     - Test standalone server with friends
     - Fix environment background
     - Need sfx
+        - heal
+        - aoe
+        - bloat
+        - blood curse
+        - chain
+        - clone
+        - contagious
+        - debilitate
+        - delay
+        - freeze
+        - mana burn
+        - mana steal
+        - poison
+        - protection
+        - pull/push/swap
+        - purify
+        - resurrect
+        - shield
+        - summon decoy
     - Need spell effects
+        - aoe
+        - bloat
+        - blood curse
+        - chain
+        - contagious
+        - debilitate
+        - pull/push/swap
+        - purify
+        - shield
+        - summon decoy
 - Milestone X | **Juice** | Due Date Ongoing
     - SFX
         - Unit Sounds

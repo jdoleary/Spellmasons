@@ -1073,3 +1073,16 @@ body.view-Menu #lobby {
   background: black;
   color: ghostwhite
 }
+
+/* Hide HUD */
+body.HUD-hidden .doob-stats,
+body.HUD-hidden #websocketpie-connection-status,
+body.HUD-hidden #player-turn-indicator-holder,
+body.HUD-hidden #version,
+body.HUD-hidden #toolbar {
+  display: none;
+}
+
+body.HUD-hidden #PIXI-holder {
+  z-index: 3;
+}

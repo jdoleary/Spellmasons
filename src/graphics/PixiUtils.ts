@@ -28,7 +28,7 @@ export const app = !globalThis.pixi ? undefined : new globalThis.pixi.Applicatio
 export const containerLiquid = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerBoard = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerBloodSmear = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
-export const containerBetweenBoardAndWalls = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
+export const containerRadiusUI = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerWalls = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerPlanningView = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
 export const containerDoodads = !globalThis.pixi ? undefined : new globalThis.pixi.Container();
@@ -103,7 +103,7 @@ const utilProps: UtilProps = {
   doCameraAutoFollow: true,
 }
 // debug: Draw caves
-if (globalThis.pixi && containerUI && app && containerBetweenBoardAndWalls) {
+if (globalThis.pixi && containerUI && app && containerRadiusUI) {
   globalThis.debugCave = new globalThis.pixi.Graphics();
   containerUI.addChild(globalThis.debugCave);
   globalThis.devDebugGraphics = new globalThis.pixi.Graphics();
@@ -114,7 +114,7 @@ if (globalThis.pixi && containerUI && app && containerBetweenBoardAndWalls) {
     containerLiquid &&
     containerBoard &&
     containerBloodSmear &&
-    containerBetweenBoardAndWalls &&
+    containerRadiusUI &&
     containerWalls &&
     containerPlanningView &&
     containerDoodads &&
@@ -132,7 +132,7 @@ if (globalThis.pixi && containerUI && app && containerBetweenBoardAndWalls) {
       containerLiquid,
       containerBoard,
       containerBloodSmear,
-      containerBetweenBoardAndWalls,
+      containerRadiusUI,
       containerWalls,
       containerPlanningView,
       containerDoodads,
@@ -161,7 +161,7 @@ if (globalThis.pixi && containerUI && app && containerBetweenBoardAndWalls) {
   const colorMatrix = new globalThis.pixi.filters.AlphaFilter();
   colorMatrix.alpha = 0.2;
   globalThis.radiusGraphics.filters = [colorMatrix];
-  containerBetweenBoardAndWalls.addChild(globalThis.radiusGraphics);
+  containerRadiusUI.addChild(globalThis.radiusGraphics);
 
 
   app.renderer.backgroundColor = colors.abyss;
@@ -644,4 +644,38 @@ export function tickParticle(particle: BloodParticle) {
     return true;
   }
   return false;
+}
+
+// Used for disabling the HUD for recording
+export function toggleHUD() {
+  globalThis.isHUDHidden = !globalThis.isHUDHidden;
+  const visible = !globalThis.isHUDHidden;
+  if (document) {
+    document.body.classList.toggle('HUD-hidden', !visible);
+  }
+  console.log(`Togggle hud to ${visible ? 'visible' : 'hidden'}`)
+  // Toggling HUD off should also set the music to 0 since music will
+  // be added in post production for recording
+  if (!visible && globalThis.changeVolumeMusic) {
+    globalThis.changeVolumeMusic(0);
+  }
+  if (containerPlanningView) {
+    containerPlanningView.visible = visible
+  }
+  if (containerUI) {
+    containerUI.visible = visible;
+  }
+  if (containerPlayerThinking) {
+    containerPlayerThinking.visible = visible;
+  }
+  if (containerUIFixed) {
+    containerUIFixed.visible = visible;
+  }
+  if (containerFloatingText) {
+    containerFloatingText.visible = visible;
+  }
+  if (containerRadiusUI) {
+    containerRadiusUI.visible = visible;
+  }
+
 }

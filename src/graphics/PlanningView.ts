@@ -362,7 +362,8 @@ export function setPredictionGraphicsLineStyle(color: number) {
 export function drawTarget(unit: Unit.IUnit, isOutOfRange: boolean, underworld: Underworld) {
   // Convert prediction unit's associated real unit
   const realUnit = underworld.units.find(u => u.id == unit.id);
-  if (realUnit && realUnit.image) {
+  // don't change tint if HUD is hidden
+  if (realUnit && realUnit.image && !globalThis.isHUDHidden) {
     if (isOutOfRange) {
       realUnit.image.sprite.tint = 0xaaaaaa;
     } else {

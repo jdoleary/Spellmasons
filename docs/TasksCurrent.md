@@ -1,6 +1,6 @@
 ## Today
-- bloat doesn't show prediction damage
 ## Tasks
+- bloat doesn't show prediction damage
 - Many force moves (push and pull) for many targets often fails.  Some of them will never get added because they will deadlock
 - Brad feedback 2022-08-04
     - game crashed with adjoin pull!

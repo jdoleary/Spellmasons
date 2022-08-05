@@ -215,4 +215,6 @@ declare global {
     var pieDisconnect: undefined | (() => Promise<void>);
     // the currently selected unit, useful as a devTool, click on a unit and they will be available in the console
     var selectedUnit: Unit.IUnit | undefined;
+    // used for hiding the HUD for recording purposes
+    var isHUDHidden: boolean | undefined;
 }

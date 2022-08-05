@@ -12,7 +12,7 @@ import {
 } from '../PlanningView';
 import { toggleMenu, View } from '../../views';
 import * as config from '../../config';
-import { app, cameraAutoFollow, getCamera, moveCamera } from '../PixiUtils';
+import { app, cameraAutoFollow, getCamera, moveCamera, toggleHUD } from '../PixiUtils';
 import { getEndOfRangeTarget, isOutOfRange } from '../../PlayerUtils';
 import { vec2ToOneDimentionIndex, vec2ToOneDimentionIndexPreventWrap } from '../../jmath/ArrayUtil';
 import * as Vec from '../../jmath/Vec';
@@ -97,6 +97,11 @@ export function keypressListener(underworld: Underworld, event: KeyboardEvent) {
       break;
     case 'Digit0':
       CardUI.selectCardByIndex(9);
+      break;
+    case 'KeyZ':
+      if (devMode) {
+        toggleHUD();
+      }
       break;
 
   }
