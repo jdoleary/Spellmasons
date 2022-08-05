@@ -587,16 +587,15 @@ export type BloodParticle = {
   scale: number,
   color: number,
 }
-export function startBloodParticleSplatter(underworld: Underworld, damageOrigin: Vec2, target: IUnit) {
+export function startBloodParticleSplatter(underworld: Underworld, damageOrigin: Vec2, target: IUnit, options?: { maxRotationOffset: number, numberOfParticles: number }) {
   if (globalThis.headless) {
     return;
   }
-  const bloodAmount = randInt(underworld.random, 30, 60);
+  const bloodAmount = options ? options.numberOfParticles : randInt(underworld.random, 30, 60);
   const angle = getAngleBetweenVec2sYInverted(damageOrigin, target);
   for (let i = 0; i < bloodAmount; i++) {
-    // const randSpeed = randFloat(underworld.random, 0.7, blood_speed);
     const isDamageFromSelf = equal(damageOrigin, target);
-    const MAX_ROTATION_OFFSET = Math.PI / 4;
+    const MAX_ROTATION_OFFSET = options ? options.maxRotationOffset : Math.PI / 4;
     // If the damage origin is the same as target, the spread is a full circle, if not, it's a narrow fan so it can spray in one direction
     const randRotationOffset = isDamageFromSelf ? randFloat(underworld.random, -Math.PI, Math.PI) : randFloat(underworld.random, -MAX_ROTATION_OFFSET, MAX_ROTATION_OFFSET);
     const randScale = randInt(underworld.random, 5, 10);
