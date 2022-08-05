@@ -34,7 +34,11 @@ Deals ${damageDone} damage to all targets.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
       let animationDelaySum = 0;
-      for (let unit of state.targetedUnits) {
+      for (let i = 0; i < state.targetedUnits.length; i++) {
+        const unit = state.targetedUnits[i];
+        if (!unit) {
+          continue;
+        }
         animationDelaySum = 0;
         let delayBetweenAnimations = delayBetweenAnimationsStart;
         // Note: quantity loop should always be INSIDE of the targetedUnits loop
@@ -52,7 +56,11 @@ Deals ${damageDone} damage to all targets.
                   spellEffectImage.sprite.scale.x = -1;
                 }
               }
-              playDefaultSpellSFX(card, prediction);
+              // Only play sound effect for the first unit because playing multiple sound effects simultaneously just 
+              // muddies up the sound
+              if (i == 0) {
+                playDefaultSpellSFX(card, prediction);
+              }
               setTimeout(() => {
                 startBloodParticleSplatter(underworld, state.casterUnit, unit);
               }, 100)
