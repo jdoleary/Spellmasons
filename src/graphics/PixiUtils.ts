@@ -587,7 +587,6 @@ export type BloodParticle = {
   scale: number,
   color: number,
 }
-const blood_speed = 2;
 export function startBloodParticleSplatter(underworld: Underworld, damageOrigin: Vec2, target: IUnit) {
   if (globalThis.headless) {
     return;
@@ -595,17 +594,28 @@ export function startBloodParticleSplatter(underworld: Underworld, damageOrigin:
   const bloodAmount = randInt(underworld.random, 30, 60);
   const angle = getAngleBetweenVec2sYInverted(damageOrigin, target);
   for (let i = 0; i < bloodAmount; i++) {
-    const randSpeed = randFloat(underworld.random, 0.7, blood_speed);
+    // const randSpeed = randFloat(underworld.random, 0.7, blood_speed);
+    const isDamageFromSelf = equal(damageOrigin, target);
+    const MAX_ROTATION_OFFSET = Math.PI / 4;
     // If the damage origin is the same as target, the spread is a full circle, if not, it's a narrow fan so it can spray in one direction
-    const randRotationOffset = equal(damageOrigin, target) ? randFloat(underworld.random, -Math.PI, Math.PI) : randFloat(underworld.random, -Math.PI / 8, Math.PI / 8);
+    const randRotationOffset = isDamageFromSelf ? randFloat(underworld.random, -Math.PI, Math.PI) : randFloat(underworld.random, -MAX_ROTATION_OFFSET, MAX_ROTATION_OFFSET);
     const randScale = randInt(underworld.random, 5, 10);
     // Ensure blood is at unit feet, not center
     const unitImageYOffset = config.COLLISION_MESH_RADIUS / 2;
+    // Make spray go farther the closer it is to the centerline
+    const proportionOfMaxAwayFromCenterLine = Math.abs(randRotationOffset / MAX_ROTATION_OFFSET);
+    const DISTANCE_MAGNIFIER = 2;
+    // For speeds
+    // 0.5 is short 
+    // 2 is far
+    // Invert the proportion so that closer to the centerline goes farther out
+    const speed = DISTANCE_MAGNIFIER * Math.abs((1 - proportionOfMaxAwayFromCenterLine));
+
     const bloodSplat = {
       x: target.x,
       y: target.y + unitImageYOffset,
-      dx: -randSpeed * Math.cos(angle + randRotationOffset) * 15,
-      dy: -randSpeed * Math.sin(angle + randRotationOffset) * 15,
+      dx: -speed * Math.cos(angle + randRotationOffset) * 15,
+      dy: -speed * Math.sin(angle + randRotationOffset) * 15,
       tick: 0, // the amount of times that it has moved
       scale: randScale,
       color: target.bloodColor,
