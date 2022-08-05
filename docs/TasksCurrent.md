@@ -1,5 +1,5 @@
 ## Today
-- make bloat stackable
+- bloat doesn't show prediction damage
 - blood splatter when grunts & archers do damage
 - heal effect should happen mid animation keyframe
 - multiple heals should happen faster, just do a "4x" floating text
