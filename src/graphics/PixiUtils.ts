@@ -603,12 +603,13 @@ export function startBloodParticleSplatter(underworld: Underworld, damageOrigin:
     const unitImageYOffset = config.COLLISION_MESH_RADIUS / 2;
     // Make spray go farther the closer it is to the centerline
     const proportionOfMaxAwayFromCenterLine = Math.abs(randRotationOffset / MAX_ROTATION_OFFSET);
-    const DISTANCE_MAGNIFIER = 2;
+    const DISTANCE_MAGNIFIER = isDamageFromSelf ? 0.5 : 2;
     // For speeds
     // 0.5 is short 
     // 2 is far
     // Invert the proportion so that closer to the centerline goes farther out
-    const speed = DISTANCE_MAGNIFIER * Math.abs((1 - proportionOfMaxAwayFromCenterLine));
+    // Max ensures they particles don't go too far
+    const speed = Math.min(2, DISTANCE_MAGNIFIER * Math.abs((1 - proportionOfMaxAwayFromCenterLine)));
 
     const bloodSplat = {
       x: target.x,
