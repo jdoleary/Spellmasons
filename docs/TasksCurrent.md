@@ -1,7 +1,5 @@
 ## Today
-- Music volume resets with level change
 - Decoy and clone should stay expensive for longer
-- sfx way too loud
 - esc should toggle you out of menu
 - res multiple targets should all happen at once
 - make bloat stackable

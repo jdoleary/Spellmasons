@@ -10,8 +10,8 @@ globalThis.setupPixiPromise = new Promise((resolve) => {
     globalThis.pixiPromiseResolver = resolve;
 })
 globalThis.volume = 1.0;
-globalThis.volumeMusic = 1.0;
-globalThis.volumeGame = 1.0;
+globalThis.volumeMusic = 0.5;
+globalThis.volumeGame = 0.25;
 // TODO: Remove from svelte menu, music is now played when level is created.
 // TODO: Ensure music works on electron without being associated with a button press
 globalThis.playMusic = () => { };

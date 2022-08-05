@@ -35,10 +35,9 @@ export function playNextSong() {
     musicInstance = new Audio(music[index]);
     musicInstance.loop = true;
 
-    // Temp; TODO: Base music volume is too loud, (remove "* 0.5" when fixed)
     // task: Master all audio and sfx
     // task: Make independent volume sliders for audio and music
-    musicInstance.volume = (globalThis.volume || 1) * (globalThis.volumeMusic || 1) * 0.5;
+    musicInstance.volume = (globalThis.volume || 1) * (globalThis.volumeMusic || 1);
     musicInstance.play();
 }
 
