@@ -60,8 +60,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: 0,
     thumbnail: 'spellIconBloodCurse.png',
-    description: `Turns the victim into a Vampire.
-    `,
+    description: `Makes the victim take HEALING as pure damage, but also doubles the victims max health.`,
     effect: async (state, card, quantity, underworld, prediction) => {
       for (let unit of state.targetedUnits) {
         Unit.addModifier(unit, id, underworld, prediction);
