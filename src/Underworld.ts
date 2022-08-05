@@ -1150,18 +1150,6 @@ export default class Underworld {
   }
   // creates a level from levelData
   createLevelSyncronous(levelData: LevelData) {
-    // showUpgrades is invoked by createLevel which is called from a wsPie message
-    // rather than from checkForEndOfLevel() because all players are guarunteed to receive
-    // the CREATE_LEVEL message whereas, checkForEndOfLevel could be subject to a race condition
-    // that might prevent the upgrade screen from showing for some users in rare circumstances.
-    // Better to have the upgrade screen tied to the network message.
-    if (this.levelIndex === 0) {
-      for (let i = 0; i < config.STARTING_CARD_COUNT; i++) {
-        this.showUpgrades(false);
-      }
-    } else {
-      this.showUpgrades(true);
-    }
 
     console.log('Setup: createLevel', levelData);
     this.lastLevelCreated = levelData;
@@ -1206,6 +1194,20 @@ export default class Underworld {
     // Change song now that level has changed:
     if (globalThis.playNextSong) {
       globalThis.playNextSong();
+    }
+
+    // showUpgrades is invoked by createLevel which is called from a wsPie message
+    // rather than from checkForEndOfLevel() because all players are guarunteed to receive
+    // the CREATE_LEVEL message whereas, checkForEndOfLevel could be subject to a race condition
+    // that might prevent the upgrade screen from showing for some users in rare circumstances.
+    // Better to have the upgrade screen tied to the network message.
+    // Note: Upgrades must come AFTER resetPlayerForNextLevel, see commit for explanation
+    if (this.levelIndex === 0) {
+      for (let i = 0; i < config.STARTING_CARD_COUNT; i++) {
+        this.showUpgrades(false);
+      }
+    } else {
+      this.showUpgrades(true);
     }
   }
   async createLevel(levelData: LevelData) {

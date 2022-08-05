@@ -15,7 +15,6 @@
         - pull alone also lagged it out
         - protect against infinite w/ force move prediction
     - upgrade where you gives omethng up to gain something
-    - bloodcurse is removed due to end level but blood curse w/ health upgrade shows wrong healthmax
     - delay should support quantity
     - decoy should be immune to blood curse?, or should show it?
     - 10th toolbar space isn't filling up when you get a new spell?
