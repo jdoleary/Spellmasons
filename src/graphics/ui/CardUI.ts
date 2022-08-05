@@ -605,7 +605,7 @@ export function updateCardBadges(underworld: Underworld) {
       const card = selectedCards[i];
       if (card) {
         const sliceOfCardsOfSameIdUntilCurrent = selectedCards.slice(0, i).filter(c => c.id == card.id);
-        const cost = calculateCostForSingleCard(card, (globalThis.player.cardUsageCounts[card.id] || 0) + sliceOfCardsOfSameIdUntilCurrent.length);
+        const cost = calculateCostForSingleCard(card, (globalThis.player.cardUsageCounts[card.id] || 0) + sliceOfCardsOfSameIdUntilCurrent.length * card.expenseScaling);
         const elBadges = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"] .card-mana-badge`);
         const elBadge = Array.from(elBadges)[sliceOfCardsOfSameIdUntilCurrent.length];
         if (elBadge) {
@@ -624,7 +624,7 @@ export function updateCardBadges(underworld: Underworld) {
     const cards = Cards.getCardsFromIds(globalThis.player.cards);
     for (let card of cards) {
       const selectedCardElementsOfSameId = document.querySelectorAll(`#selected-cards .card[data-card-id="${card.id}"]`);
-      const cost = calculateCostForSingleCard(card, (globalThis.player.cardUsageCounts[card.id] || 0) + selectedCardElementsOfSameId.length);
+      const cost = calculateCostForSingleCard(card, (globalThis.player.cardUsageCounts[card.id] || 0) + selectedCardElementsOfSameId.length * card.expenseScaling);
       const cardManaQueryString = `.card[data-card-id="${card.id}"] .card-mana-badge`;
       const cardHealthQueryString = `.card[data-card-id="${card.id}"] .card-health-badge`;
       const elBadges = Array.from(document.querySelectorAll(`#card-hand ${cardManaQueryString}, #inventory ${cardManaQueryString}`));
