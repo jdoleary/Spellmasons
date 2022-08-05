@@ -48,6 +48,7 @@ function nonUnderworldKeydownListener(event: KeyboardEvent) {
   switch (event.code) {
     case 'Escape':
       toggleMenu();
+      event.stopImmediatePropagation();
       break;
   }
 }
