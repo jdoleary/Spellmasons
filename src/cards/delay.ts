@@ -5,7 +5,7 @@ import { addPixiSpriteAnimated, containerUnits } from '../graphics/PixiUtils';
 import { CardCategory } from '../types/commonTypes';
 
 export const id = 'Delay';
-const turnsItTakesTrapToWindUp = 2;
+const turnsItTakesTrapToWindUp = 1;
 // Register as pickup:
 Pickup.pickups.push(
   {
