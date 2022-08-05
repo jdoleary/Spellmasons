@@ -1,11 +1,42 @@
 ## Today
+- move range and attack range labels are in bad position for vampire
 - Don't play hurt sound affects all at the same time for multiple targets
+- Music volume resets with level change
+- Decoy and clone should stay expensive for longer
+- sfx way too loud
+- esc should toggle you out of menu
+- res multiple targets should all happen at once
+- make bloat stackable
+- blood splatter when grunts & archers do damage
+- heal effect should happen mid animation keyframe
+- multiple heals should happen faster, just do a "4x" floating text
+    - multiple heals too slow
+- decrease trap turn limit, and show mana cost changes
+- grunt animation keyframe when damaging
+- update vampire copy
+## Tasks
+- Brad feedback 2022-08-04
+    - game crashed with adjoin pull!
+    - decoy didn't trigger bloat
+    - freeze should shield damage?
+        - if frozen unit takes damage it restarts animation
+    - targeting mishap, see video
+    - clones exploding without bloat modifier, it's like they kept the event somehow
+    - looping death animation bug
+    - adjoining + push locks up the game
+        - multiple push wile push is already going
+        - pull alone also lagged it out
+        - protect against infinite w/ force move prediction
+    - upgrade where you gives omethng up to gain something
+    - bloodcurse is removed due to end level but blood curse w/ health upgrade shows wrong healthmax
+    - delay should support quantity
+    - decoy should be immune to blood curse?, or should show it?
+    - 10th toolbar space isn't filling up when you get a new spell?
 - bloat explosion didn't push mana potion but it predicted that it would
 - push predicted taht a lobber would fall in lava and die but it didn't
     - that same lobber when resurrected just crawled over lava so it must've been inside but just didn't take the damage
 - push, bload, expand, hurt suprisingly damaged me when i clicked on an enemy near me, i think it's cause it both expanded the enemy's radius and where i clicked
 - pull doesn't trigger fallInLava, i pulled a unit right through lava
-- move range and attack range labels are in bad position for vampire
 - archer movement got stuck which made me lose a game 0.3199228271451904
 - bug: when i quit a game and start over it gives me the resurrect optoin
 - Ensure hurt is presented in first spell picks
@@ -44,36 +75,6 @@
         - ready up and start game
 ## Schedule
 - Increase animation framerates per Che's comment
-- Brad feedback 2022-08-04
-    - Music volume resets with level change
-    - Decoy and clone should stay expensive for longer
-    - game crashed with adjoin pull!
-    - sfx way too loud
-    - esc should toggle you out of menu
-    - res multiple targets should all happen at once
-    - decoy didn't trigger bloat
-    - make bloat stackable
-    - freeze should shield damage?
-        - if frozen unit takes damage it restarts animation
-    - targeting mishap, see video
-    - clones exploding without bloat modifier, it's like they kept the event somehow
-    - blood splatter when grunts & archers do damage
-    - looping death animation bug
-    - adjoining + push locks up the game
-        - multiple push wile push is already going
-        - pull alone also lagged it out
-        - protect against infinite w/ force move prediction
-    - heal effect should happen mid animation keyframe
-    - multiple heals should happen faster, just do a "4x" floating text
-    - upgrade where you gives omethng up to gain something
-    - decrease trap turn limit, and show mana cost changes
-    - grunt animation keyframe when damaging
-    - update vampire copy
-    - bloodcurse is removed due to end level but blood curse w/ health upgrade shows wrong healthmax
-    - delay should support quantity
-    - multiple heals too slow
-    - decoy should be immune to blood curse?, or should show it?
-    - 10th toolbar space isn't filling up when you get a new spell?
 
 - Pack 16 | Colin Feedback
     - explain that you can cast any number of times per turn
