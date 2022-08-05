@@ -43,6 +43,38 @@
     - lobby
         - ready up and start game
 ## Schedule
+- Increase animation framerates per Che's comment
+- Brad feedback 2022-08-04
+    - Music volume resets with level change
+    - Decoy and clone should stay expensive for longer
+    - game crashed with adjoin pull!
+    - sfx way too loud
+    - esc should toggle you out of menu
+    - res multiple targets should all happen at once
+    - decoy didn't trigger bloat
+    - make bloat stackable
+    - freeze should shield damage?
+        - if frozen unit takes damage it restarts animation
+    - targeting mishap, see video
+    - clones exploding without bloat modifier, it's like they kept the event somehow
+    - blood splatter when grunts & archers do damage
+    - looping death animation bug
+    - adjoining + push locks up the game
+        - multiple push wile push is already going
+        - pull alone also lagged it out
+        - protect against infinite w/ force move prediction
+    - heal effect should happen mid animation keyframe
+    - multiple heals should happen faster, just do a "4x" floating text
+    - upgrade where you gives omethng up to gain something
+    - decrease trap turn limit, and show mana cost changes
+    - grunt animation keyframe when damaging
+    - update vampire copy
+    - bloodcurse is removed due to end level but blood curse w/ health upgrade shows wrong healthmax
+    - delay should support quantity
+    - multiple heals too slow
+    - decoy should be immune to blood curse?, or should show it?
+    - 10th toolbar space isn't filling up when you get a new spell?
+
 - Pack 16 | Colin Feedback
     - explain that you can cast any number of times per turn
     - Make spell pickups more obvious
