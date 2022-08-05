@@ -41,7 +41,7 @@ async function healOneOf(self: Unit.IUnit, units: Unit.IUnit[], underworld: Unde
       await Unit.playAnimation(self, unit.animations.attack);
       await animatePriestProjectileAndHit(self, ally);
       // Heal for 2
-      Unit.takeDamage(ally, -2, underworld, false, undefined);
+      Unit.takeDamage(ally, -2, undefined, underworld, false, undefined);
       // Remove mana once the cast occurs
       self.mana -= CAST_MANA_COST;
       return true;

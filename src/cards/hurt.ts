@@ -62,9 +62,8 @@ Deals ${damageDone} damage to all targets.
                 playDefaultSpellSFX(card, prediction);
               }
               setTimeout(() => {
-                startBloodParticleSplatter(underworld, state.casterUnit, unit);
+                Unit.takeDamage(unit, damageDone, state.casterUnit, underworld, prediction, state);
               }, 100)
-              Unit.takeDamage(unit, damageDone, underworld, prediction, state);
             }, animationDelaySum)
             animationDelaySum += delayBetweenAnimations;
             // Don't let it go below 100 milliseconds
@@ -72,7 +71,7 @@ Deals ${damageDone} damage to all targets.
             // Juice: Speed up subsequent hits
             delayBetweenAnimations *= 0.80
           } else {
-            Unit.takeDamage(unit, damageDone, underworld, prediction, state);
+            Unit.takeDamage(unit, damageDone, state.casterUnit, underworld, prediction, state);
           }
         }
       }

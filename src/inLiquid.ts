@@ -7,7 +7,7 @@ export function add(unit: IUnit, underworld: Underworld, prediction: boolean) {
     // Can't set inLiquid if they are already in liquid
     if (!unit.inLiquid) {
         unit.inLiquid = true;
-        takeDamage(unit, lavaDamage, underworld, prediction);
+        takeDamage(unit, lavaDamage, undefined, underworld, prediction);
         if (unit.image) {
             addMask(unit.image, 'liquid-mask');
         }

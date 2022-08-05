@@ -3,7 +3,7 @@ import * as config from '../config';
 import * as Image from '../graphics/Image';
 import * as math from '../jmath/math';
 import { distance } from '../jmath/math';
-import { addPixiSpriteAnimated, containerDoodads, containerUnits, PixiSpriteOptions } from '../graphics/PixiUtils';
+import { addPixiSpriteAnimated, containerDoodads, containerUnits, PixiSpriteOptions, startBloodParticleSplatter } from '../graphics/PixiUtils';
 import { UnitSubType, UnitType, Faction } from '../types/commonTypes';
 import type { Vec2 } from '../jmath/Vec';
 import * as Vec from '../jmath/Vec';
@@ -595,7 +595,8 @@ export function composeOnDamageEvents(unit: IUnit, damage: number, underworld: U
   return damage
 
 }
-export function takeDamage(unit: IUnit, amount: number, underworld: Underworld, prediction: boolean, _state?: EffectState) {
+// damageFromVec2 is the location that the damage came from and is used for blood splatter
+export function takeDamage(unit: IUnit, amount: number, damageFromVec2: Vec2 | undefined, underworld: Underworld, prediction: boolean, state?: EffectState) {
   amount = composeOnDamageEvents(unit, amount, underworld, prediction);
   if (amount == 0) {
     return;
@@ -611,6 +612,9 @@ export function takeDamage(unit: IUnit, amount: number, underworld: Underworld, 
     // player is healed
     if (amount > 0) {
       playAnimation(unit, unit.animations.hit, { loop: false, animationSpeed: 0.2 });
+      if (damageFromVec2) {
+        startBloodParticleSplatter(underworld, damageFromVec2, unit);
+      }
     }
   }
   unit.health -= amount;

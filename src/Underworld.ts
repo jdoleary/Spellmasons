@@ -1955,7 +1955,7 @@ export default class Underworld {
       // Note: it is important that this is done BEFORE a card is actually cast because
       // the card may affect the caster's mana
       effectState.casterUnit.mana -= spellCost.manaCost;
-      Unit.takeDamage(effectState.casterUnit, spellCost.healthCost, this, prediction, effectState);
+      Unit.takeDamage(effectState.casterUnit, spellCost.healthCost, effectState.casterUnit, this, prediction, effectState);
       // Add expense scaling BEFORE card effects are invoked
       // This is important because of 'trap' since trap removes
       // the cards after it in the spell, it is important

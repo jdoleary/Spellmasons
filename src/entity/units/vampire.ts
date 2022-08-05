@@ -52,7 +52,7 @@ const unit: UnitSource = {
     // and let canAttackEnemy be used for just the attention markers
     if (withinMeleeRange(unit, attackTarget)) {
       await Unit.playAnimation(unit, unit.animations.attack);
-      Unit.takeDamage(attackTarget, unit.damage, underworld, false, undefined);
+      Unit.takeDamage(attackTarget, unit.damage, unit, underworld, false, undefined);
       // prediction is false because unit.action doesn't yet ever occur during a prediction
       Unit.addModifier(attackTarget, blood_curse.id, underworld, false);
     }

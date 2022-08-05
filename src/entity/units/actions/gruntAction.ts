@@ -22,7 +22,7 @@ export async function action(unit: Unit.IUnit, attackTarget: Unit.IUnit | undefi
   // and let canAttackEnemy be used for just the attention markers
   if (withinMeleeRange(unit, attackTarget)) {
     await Unit.playComboAnimation(unit, unit.animations.attack, async () =>
-      Unit.takeDamage(attackTarget, unit.damage, underworld, false, undefined)
+      Unit.takeDamage(attackTarget, unit.damage, unit, underworld, false, undefined)
     );
   }
 }

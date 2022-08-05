@@ -193,7 +193,7 @@ export const pickups: IPickupSource[] = [
     description: `Deals ${spike_damage} to any unit (including NPCs) that touches it`,
     effect: ({ unit, player, prediction, underworld }) => {
       if (unit) {
-        takeDamage(unit, spike_damage, underworld, prediction)
+        takeDamage(unit, spike_damage, unit, underworld, prediction)
         return true;
       }
       return false;
@@ -302,7 +302,7 @@ export const pickups: IPickupSource[] = [
     description: `Restores ${healthPotionRestoreAmount} health.`,
     effect: ({ player, underworld }) => {
       if (player && player.unit.health < player.unit.healthMax) {
-        takeDamage(player.unit, -healthPotionRestoreAmount, underworld, false);
+        takeDamage(player.unit, -healthPotionRestoreAmount, undefined, underworld, false);
         // Add spell effect animation
         if (player.unit.image) {
           const animationSprite = addPixiSpriteAnimated('spell-effects/potionPickup', player.unit.image.sprite, {

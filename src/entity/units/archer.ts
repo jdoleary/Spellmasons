@@ -43,7 +43,7 @@ const unit: UnitSource = {
           attackTarget,
           'projectile/arrow',
         ).then(() => {
-          Unit.takeDamage(attackTarget, unit.damage, underworld, false, undefined);
+          Unit.takeDamage(attackTarget, unit.damage, unit, underworld, false, undefined);
           // Add projectile hit animation
           const animationSprite = addPixiSpriteAnimated('projectile/arrowProjectileHit', containerSpells, {
             loop: false,

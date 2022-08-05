@@ -23,7 +23,7 @@ Burn up to ${mana_burnt} of the targets' mana, causing the target take ${health_
         const unitManaBurnt = Math.min(unit.mana, mana_burnt);
         unit.mana -= unitManaBurnt;
         const damage = unitManaBurnt * health_burn_ratio
-        Unit.takeDamage(unit, damage, underworld, prediction, state);
+        Unit.takeDamage(unit, damage, unit, underworld, prediction, state);
       }
       return state;
     },

@@ -78,7 +78,7 @@ const spell: Spell = {
         // Push units away from exploding unit
         forcePush(u, unit, underworld, prediction);
         // Deal damage to units
-        takeDamage(u, damage * quantity, underworld, prediction);
+        takeDamage(u, damage * quantity, u, underworld, prediction);
       });
       underworld.getPickupsWithinDistanceOfTarget(
         unit,

@@ -42,7 +42,7 @@ const unit: UnitSource = {
           'projectile/lobberProjectile',
         ).then(() => {
           if (attackTarget) {
-            Unit.takeDamage(attackTarget, unit.damage, underworld, false, undefined);
+            Unit.takeDamage(attackTarget, unit.damage, attackTarget, underworld, false, undefined);
             // Add projectile hit animation
             const animationSprite = addPixiSpriteAnimated('projectile/lobberProjectileHit', containerUnits, {
               loop: false,
