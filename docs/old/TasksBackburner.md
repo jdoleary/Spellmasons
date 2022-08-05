@@ -1,3 +1,4 @@
+- how to attach priest spell hit animation to moving ally?
 - Finish force movement refactor (see stash)
     - When they stop when they hit walls they need to stop hard, not slid into them
     - They go too far into walls
