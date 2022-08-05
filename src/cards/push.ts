@@ -56,11 +56,7 @@ export function makeForcePush(args: forcePushArgs, underworld: Underworld, predi
     forceMoveInst.endPoint = safeFallInPosition;
   }
   if (prediction) {
-    // Simulate the forceMove until it's complete
-    let done = false;
-    while (!done) {
-      done = underworld.runForceMove(forceMoveInst, prediction);
-    }
+    underworld.fullySimulateForceMove(forceMoveInst, prediction);
     resolve();
     // Draw prediction lines
     if (globalThis.predictionGraphics) {

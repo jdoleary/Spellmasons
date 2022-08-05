@@ -228,6 +228,21 @@ export default class Underworld {
     }
 
   }
+  // Simulate the forceMove until it's complete
+  // Returns true when done
+  fullySimulateForceMove(forceMoveInst: ForceMove, prediction: boolean): boolean {
+    let done = false;
+    const PREVENT_INFINITE_WITH_WARN_LOOP_THRESHOLD = 100;
+    let loopCount = 0;
+    while (!done || loopCount < PREVENT_INFINITE_WITH_WARN_LOOP_THRESHOLD) {
+      loopCount++;
+      done = this.runForceMove(forceMoveInst, prediction);
+    }
+    if (loopCount > PREVENT_INFINITE_WITH_WARN_LOOP_THRESHOLD) {
+      console.error('forceMove hit PREVENT_INFINITE threshold', forceMoveInst, prediction);
+    }
+    return done;
+  }
   // Returns true when forceMove is complete
   runForceMove(forceMoveInst: ForceMove, prediction: boolean): boolean {
     const { pushedObject, endPoint, timedOut } = forceMoveInst;

@@ -2,6 +2,7 @@
 - bloat doesn't show prediction damage
 - blood splatter when grunts & archers do damage
 ## Tasks
+- Many force moves (push and pull) for many targets often fails.  Some of them will never get added because they will deadlock
 - Brad feedback 2022-08-04
     - game crashed with adjoin pull!
     - decoy didn't trigger bloat
@@ -15,7 +16,6 @@
         - pull alone also lagged it out
         - protect against infinite w/ force move prediction
     - upgrade where you gives omethng up to gain something
-    - delay should support quantity
     - decoy should be immune to blood curse?, or should show it?
     - 10th toolbar space isn't filling up when you get a new spell?
 - bloat explosion didn't push mana potion but it predicted that it would
@@ -236,3 +236,4 @@ and 2nd client got `Cannot change character, player not found with id 8c502be8-6
 - (wont do?) Make an overlay screen that blocks interaction while waiting for sync
 - Unit movement desync occurred between clients when one client has CPU throttled, the non throttled client has the unit move much farther
 - fix grey ellipse positioning under lobber, it's too low
+- EXPLAIn that all modifiers are removed after each level

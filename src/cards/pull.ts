@@ -37,14 +37,11 @@ Pulls the target(s) towards the caster
 };
 export async function pull(pushedObject: Circle, towards: Vec2, id: number, underworld: Underworld, prediction: boolean): Promise<void> {
   const originalPosition = clone(pushedObject);
+  let forceMoveInst: ForceMove;
   return await raceTimeout(2000, 'Pull', new Promise<void>((resolve) => {
-    const forceMoveInst: ForceMove = { canCreateSecondOrderPushes: true, pushedObject, endPoint: clone(towards), resolve }
+    forceMoveInst = { canCreateSecondOrderPushes: true, pushedObject, endPoint: clone(towards), resolve }
     if (prediction) {
-      // Simulate the forceMove until it's complete
-      let done = false;
-      while (!done) {
-        done = underworld.runForceMove(forceMoveInst, prediction);
-      }
+      underworld.fullySimulateForceMove(forceMoveInst, prediction);
       resolve();
       // Draw prediction lines
       if (globalThis.predictionGraphics) {
@@ -56,7 +53,11 @@ export async function pull(pushedObject: Circle, towards: Vec2, id: number, unde
     } else {
       underworld.addForceMove(forceMoveInst);
     }
-  }));
+  })).then(() => {
+    if (forceMoveInst) {
+      forceMoveInst.timedOut = true;
+    }
+  });
 
 }
 export default spell;
