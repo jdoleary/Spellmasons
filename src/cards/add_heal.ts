@@ -1,4 +1,5 @@
 import * as Unit from '../entity/Unit';
+import floatingText from '../graphics/FloatingText';
 import { CardCategory } from '../types/commonTypes';
 import { Spell } from './index';
 
@@ -9,6 +10,7 @@ const spell: Spell = {
   card: {
     id,
     category: CardCategory.Blessings,
+    supportQuantity: true,
     manaCost: 15,
     healthCost: 0,
     expenseScaling: 1,
@@ -18,12 +20,21 @@ const spell: Spell = {
     description: `
 Heals all targets ${healAmount} HP.
 Will not heal beyond maximum health.
+Stackable.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
       for (let unit of state.targetedUnits) {
-        const damage = -healAmount;
+        const damage = -healAmount * quantity;
+        if (!prediction && quantity > 1) {
+          for (let unit of state.targetedUnits) {
+            floatingText({
+              coords: unit,
+              text: `+${Math.abs(damage)} Health`
+            });
+          }
+        }
         Unit.takeDamage(unit, damage, underworld, prediction, state);
-        await Unit.addOneOffAnimation(unit, 'spell-effects/potionPickup');
+        await Unit.addOneOffAnimation(unit, 'spell-effects/potionPickup', { loop: false, animationSpeed: 0.3 });
       }
       return state;
     },

@@ -1,9 +1,6 @@
 ## Today
 - bloat doesn't show prediction damage
 - blood splatter when grunts & archers do damage
-- heal effect should happen mid animation keyframe
-- multiple heals should happen faster, just do a "4x" floating text
-    - multiple heals too slow
 - decrease trap turn limit, and show mana cost changes
 - grunt animation keyframe when damaging
 - update vampire copy
