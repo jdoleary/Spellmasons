@@ -9,7 +9,7 @@ import { bloodVampire } from '../../graphics/ui/colors';
 const unit: UnitSource = {
   id: 'vampire',
   info: {
-    description: 'A vampire takes half damage when hurt, but takes all heals as pure damage.  Beware that it doesn\'t get close enough to bite you or you too will become a vampire!',
+    description: 'A vampire has a blood curse that it spreads to anyone it bites.  Anyone with a blood curse get\'s 2x max health but takes heals as pure damage.',
     image: 'units/vampireIdle',
     subtype: UnitSubType.MELEE,
   },

@@ -3,7 +3,6 @@
 - blood splatter when grunts & archers do damage
 - decrease trap turn limit, and show mana cost changes
 - grunt animation keyframe when damaging
-- update vampire copy
 ## Tasks
 - Brad feedback 2022-08-04
     - game crashed with adjoin pull!
