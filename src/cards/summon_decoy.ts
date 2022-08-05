@@ -8,6 +8,7 @@ const spell: Spell = {
   card: {
     id,
     category: CardCategory.Primary,
+    supportQuantity: true,
     manaCost: 60,
     healthCost: 0,
     expenseScaling: 3,
@@ -17,6 +18,7 @@ const spell: Spell = {
 Summons a decoy.
 The decoy attracts attacks for enemies that it is closer to that you are.
 The decoy has health but cannot move.  It will be destroyed when its health reaches 0.
+Multiple sequential decoy spells will create a decoy with more health.
     `,
     allowNonUnitTarget: true,
     effect: async (state, card, quantity, underworld, prediction) => {
@@ -24,7 +26,7 @@ The decoy has health but cannot move.  It will be destroyed when its health reac
       if (!prediction) {
         const sourceUnit = allUnits[unitId];
         if (sourceUnit) {
-          Unit.create(
+          const decoyUnit = Unit.create(
             sourceUnit.id,
             state.castLocation.x,
             state.castLocation.y,
@@ -36,6 +38,8 @@ The decoy has health but cannot move.  It will be destroyed when its health reac
             sourceUnit.unitProps,
             underworld
           );
+          decoyUnit.healthMax *= quantity;
+          decoyUnit.health = decoyUnit.healthMax;
         } else {
           console.error(`Source unit ${unitId} is missing`);
         }
