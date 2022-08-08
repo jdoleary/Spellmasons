@@ -1,6 +1,8 @@
 ## Today
+- Replace endPoint-style forceMove implementation with velocity style because:
+    - prevents infinite bug
+    - reacts better to walls
 ## Tasks
-- bloat doesn't show prediction damage
 - Many force moves (push and pull) for many targets often fails.  Some of them will never get added because they will deadlock
 - Brad feedback 2022-08-04
     - game crashed with adjoin pull!
@@ -18,15 +20,12 @@
     - decoy should be immune to blood curse?, or should show it?
     - 10th toolbar space isn't filling up when you get a new spell?
 - bloat explosion didn't push mana potion but it predicted that it would
-- push predicted taht a lobber would fall in lava and die but it didn't
-    - that same lobber when resurrected just crawled over lava so it must've been inside but just didn't take the damage
 - push, bload, expand, hurt suprisingly damaged me when i clicked on an enemy near me, i think it's cause it both expanded the enemy's radius and where i clicked
 - pull doesn't trigger fallInLava, i pulled a unit right through lava
 - archer movement got stuck which made me lose a game 0.3199228271451904
 - bug: when i quit a game and start over it gives me the resurrect optoin
 - Ensure hurt is presented in first spell picks
 - Stop targeting flickering
-- Grunt pre3diction circle should be attack range + move range
 - see cantwalk.png on desktop
 - bug: explosion radius text and some move lines left on the screen after cast was done
 - bug: Pushing spike into grunt pushed the grunt instead of damaging him and the spike disappeared
@@ -168,7 +167,6 @@
         - Introduce card pickup
         - explain manaburn better
     - AI should avoid traps when moving
-    - should "explode" be able to stack?
     - decoy should pull agro even if farther away?
     - Flag things visually as modifiers (loch says explode is confusing)
     - death circle can be confusing when moved out of the way of the toolbar (add arrow?)
@@ -200,7 +198,7 @@
 - Allow pickups to be stored in inventory
 - Show modifiers in UI somehow, not just on player, especially when you have the modifier on you
 ## UI
-- death skull due to poison is confusing
+- death skull due to poison is confusing (group: perfect predictions)
 - Draw walls above units so their corpses don't render over top of the walls
 - Make damage that they WILL take different from damage that they HAVE taken.  It's confusing
 ## Stretch Content

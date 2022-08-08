@@ -1,15 +1,17 @@
-# My Focus
-    1. Frustration Free
-    2. Fun (difficult, even in early stages)
-    3. Well Playtested
-    - Deprioritize
-        - Juice
-        - SFX
 # Critical Path
-- Milestone X | **Trailer-ready Alpha** | Due August 15
+- Milestone | **Multiplayer Playtesting**
+    - Reimplement velocity based push pull
+        - need solution for "fall in" liquid
+        - relevant commits: 31f06bfa, d7dceac8, 9a013ba5, **0aa206ce**
+    - Deploy standalone server to Digital Ocean and record instructions for how to deploy
+    - Stop target flickering
+    - New 64x64 map generation (waiting on new assets from Che)
+- Milestone | **Trailer-ready Alpha**
     - Test standalone server with friends
     - Fix environment background
     - Need sfx
+        - 3 types of player casts
+        - death sounds
         - heal
         - aoe
         - bloat
@@ -40,7 +42,7 @@
         - purify
         - shield
         - summon decoy
-- Milestone X | **Juice** | Due Date Ongoing
+- Milestone X | **Juice**
     - SFX
         - Unit Sounds
         - Spell Sounds
@@ -54,7 +56,7 @@
             - Lava, blood, Water
         - 0%: UI
     - Master music (Brad)
-- Milestone X | **Marketing** | Due September 1
+- Milestone | **Marketing** | Planning on September 1
     - See Marketing.md for more info
     - Trailer
         - Need HUD removal and music mute button
@@ -64,16 +66,20 @@
     - Steam Page (waiting on art)
     - Website Presskit page
         - Note: Website should just redirect to steampage
-- Milestone X | **Perfect Prediction Attacks** | Due Date Ongoing
+- Milestone X | **Perfect Prediction Attacks**
     - I got bit by a vampire but it didn't accurately warn me he would
         - wrap this in with preventing units from changing targets from their prediction even if the decoy dies (lobber move then throw?)
     - Resurrect icon didn't show in prediction when it was buried in a trap that I pushed someone into (in prediction)
     - Units should NEVER change target from their prediction. A case where this happened is when a decoy died from other units attacking it
     - Grunt attack predictions are not perfect. See branch 'perfect-predictions'
     - Move predictionUnits and predictionPickups out of globalThis so they don't get clobbered when multiple instances on a single server
+    - Known issues:
+        - bloat doesn't show prediction damage
+        - push predicted taht a lobber would fall in lava and die but it didn't
+            - that same lobber when resurrected just crawled over lava so it must've been inside but just didn't take the damage
 - Milestone X | **Doodads**
     - More interactable doodads (explosive barrels, movable cover)
-- Milestone X | **Beta Testers** | Due October 1
+- Milestone X | **Beta Testers** | Planning on October 1
     - Tutorial / Explain prompts based on user actions
     - Optimize game
         - repelCircleFromLine is used for both unit crowding and wall physics and with wall physics it doesn't need a reference to underworld, that's only needed for unit crowding to make sure they don't crowd each other through walls
@@ -90,8 +96,9 @@
     - Make survey
     - Send out to testers
     - [Tutorial](https://www.youtube.com/watch?v=-GV814cWiAw)
-- Milestone X | **Package as Electron App** | Due November 1
+- Milestone X | **Package as Electron App** | Planning on November 1
     - Menu for community server selector
+    - Allow running local standalone server from inside app
     - [Storage and Persistence](https://cameronnokes.com/blog/how-to-store-user-data-in-electron/)
     - [AutoUpdate](https://github.com/vercel/hazel)
 - Milestone **Strech 1**
