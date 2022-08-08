@@ -1,4 +1,4 @@
-import { clone, magnitude, Vec2 } from '../jmath/Vec';
+import { clone, magnitude, multiply, Vec2 } from '../jmath/Vec';
 import { Spell } from './index';
 import { distance, similarTriangles } from '../jmath/math';
 import type { Circle, ForceMove } from '../jmath/moveWithCollision';
@@ -8,7 +8,7 @@ import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
 
 export const id = 'pull';
-const pullDistance = 15;
+const pullDistance = 12;
 const spell: Spell = {
   card: {
     id,
@@ -23,23 +23,25 @@ Pulls the target(s) towards the caster
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
       let promises = [];
-      const id = Math.random();
       for (let unit of state.targetedUnits) {
-        promises.push(pull(unit, state.casterUnit, id, underworld, prediction));
+        promises.push(pull(unit, state.casterUnit, underworld, prediction));
       }
       for (let pickup of state.targetedPickups) {
-        promises.push(pull(pickup, state.casterUnit, id, underworld, prediction));
+        promises.push(pull(pickup, state.casterUnit, underworld, prediction));
       }
       await Promise.all(promises);
       return state;
     },
   },
 };
-export async function pull(pushedObject: Circle, towards: Vec2, id: number, underworld: Underworld, prediction: boolean): Promise<void> {
+export async function pull(pushedObject: Circle, towards: Vec2, underworld: Underworld, prediction: boolean): Promise<void> {
+  const velocity_falloff = 0.93;
+  // Set the velocity so it's just enough to pull the unit into you
+  const velocity = multiply(1 - velocity_falloff, { x: towards.x - pushedObject.x, y: towards.y - pushedObject.y });
   const originalPosition = clone(pushedObject);
   let forceMoveInst: ForceMove;
   return await raceTimeout(2000, 'Pull', new Promise<void>((resolve) => {
-    forceMoveInst = { canCreateSecondOrderPushes: true, pushedObject, endPoint: clone(towards), resolve }
+    forceMoveInst = { canCreateSecondOrderPushes: true, pushedObject, velocity, velocity_falloff, resolve }
     if (prediction) {
       underworld.fullySimulateForceMove(forceMoveInst, prediction);
       resolve();

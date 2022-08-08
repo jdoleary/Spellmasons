@@ -40,21 +40,23 @@ Pushes the target(s) away from the caster
 interface forcePushArgs {
   pushedObject: Circle;
   awayFrom: Vec2;
-  pushDistance?: number;
+  velocityStartMagnitude: number;
   canCreateSecondOrderPushes: boolean;
   resolve: () => void;
 }
 export function makeForcePush(args: forcePushArgs, underworld: Underworld, prediction: boolean): ForceMove {
-  const { pushedObject, awayFrom, resolve, pushDistance, canCreateSecondOrderPushes } = args;
-  const endPoint = add(pushedObject, similarTriangles(pushedObject.x - awayFrom.x, pushedObject.y - awayFrom.y, distance(pushedObject, awayFrom), pushDistance || 300));
+  const { pushedObject, awayFrom, resolve, velocityStartMagnitude, canCreateSecondOrderPushes } = args;
+  const velocity = similarTriangles(pushedObject.x - awayFrom.x, pushedObject.y - awayFrom.y, distance(pushedObject, awayFrom), velocityStartMagnitude);
+  const velocity_falloff = 0.93;
+  // const endPoint = add(pushedObject, similarTriangles(pushedObject.x - awayFrom.x, pushedObject.y - awayFrom.y, distance(pushedObject, awayFrom), pushDistance || 300));
   const originalPosition = clone(pushedObject);
-  const forceMoveInst: ForceMove = { pushedObject, canCreateSecondOrderPushes, endPoint, resolve }
-  // Adjust endpoint to account for falling into lava:
-  const { safeFallInPosition, hitLava } = findSafeFallInPoint(pushedObject, endPoint, underworld)
-  if (hitLava) {
-    // Override end point
-    forceMoveInst.endPoint = safeFallInPosition;
-  }
+  const forceMoveInst: ForceMove = { pushedObject, canCreateSecondOrderPushes, velocity, velocity_falloff, resolve }
+  // // Adjust endpoint to account for falling into lava:
+  // const { safeFallInPosition, hitLava } = findSafeFallInPoint(pushedObject, endPoint, underworld)
+  // if (hitLava) {
+  //   // Override end point
+  //   forceMoveInst.endPoint = safeFallInPosition;
+  // }
   if (prediction) {
     underworld.fullySimulateForceMove(forceMoveInst, prediction);
     resolve();
@@ -71,10 +73,11 @@ export function makeForcePush(args: forcePushArgs, underworld: Underworld, predi
   return forceMoveInst;
 
 }
+const velocityStartMagnitude = 10;
 export async function forcePush(pushedObject: Circle, awayFrom: Vec2, underworld: Underworld, prediction: boolean): Promise<void> {
   let forceMoveInst: ForceMove;
   return await raceTimeout(3000, 'Push', new Promise<void>((resolve) => {
-    forceMoveInst = makeForcePush({ pushedObject, awayFrom, resolve, canCreateSecondOrderPushes: true }, underworld, prediction);
+    forceMoveInst = makeForcePush({ pushedObject, awayFrom, velocityStartMagnitude, resolve, canCreateSecondOrderPushes: true }, underworld, prediction);
   })).then(() => {
     if (forceMoveInst) {
       forceMoveInst.timedOut = true;

@@ -1,8 +1,5 @@
 # Critical Path
 - Milestone | **Multiplayer Playtesting**
-    - Reimplement velocity based push pull
-        - need solution for "fall in" liquid
-        - relevant commits: 31f06bfa, d7dceac8, 9a013ba5, **0aa206ce**
     - Deploy standalone server to Digital Ocean and record instructions for how to deploy
     - Stop target flickering
     - New 64x64 map generation (waiting on new assets from Che)

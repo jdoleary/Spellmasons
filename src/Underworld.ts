@@ -245,21 +245,16 @@ export default class Underworld {
   }
   // Returns true when forceMove is complete
   runForceMove(forceMoveInst: ForceMove, prediction: boolean): boolean {
-    const { pushedObject, endPoint, timedOut } = forceMoveInst;
+    const { pushedObject, velocity, velocity_falloff, timedOut } = forceMoveInst;
     if (timedOut) {
       return true;
     }
-    if (math.distance(pushedObject, endPoint) <= 1) {
-      // It's close enough, set final position to endPoint
-      pushedObject.x = endPoint.x;
-      pushedObject.y = endPoint.y;
+    if (Vec.magnitude(velocity) <= 0.1) {
+      // It's close enough, return true to signify complete 
       return true;
     }
-    const lastPosition = Vec.clone(pushedObject);
     const aliveUnits = ((prediction && globalThis.predictionUnits) ? globalThis.predictionUnits : this.units).filter(u => u.alive);
-    const distanceToEndPoint = math.distance(pushedObject, endPoint);
-    const travelDistancePerTick = distanceToEndPoint * 0.1;
-    const newPosition = Vec.add(pushedObject, math.similarTriangles(endPoint.x - pushedObject.x, endPoint.y - pushedObject.y, distanceToEndPoint, travelDistancePerTick))
+    const newPosition = Vec.add(pushedObject, velocity)
     pushedObject.x = newPosition.x;
     pushedObject.y = newPosition.y;
     for (let other of aliveUnits) {
@@ -276,20 +271,18 @@ export default class Underworld {
         // If they collide transfer force:
         // () => {}: No resolver needed for second order force pushes
         // All pushable objects have the same mass so when a collision happens they'll split the distance
-        const fullDist = math.distance(forceMoveInst.pushedObject, forceMoveInst.endPoint);
+        const fullDist = Vec.magnitude(forceMoveInst.velocity);
         const halfDist = fullDist / 2;
         // This is a second order push and second order pushes CANNOT create more pushes or else you risk infinite recursion in prediction mode
         const canCreateSecondOrderPushes = false;
-        makeForcePush({ pushedObject: other, awayFrom: forceMoveInst.pushedObject, pushDistance: halfDist, resolve: () => { }, canCreateSecondOrderPushes }, this, prediction);
-        // Affect the endpoint of the current mover since it just collided
-        forceMoveInst.endPoint = Vec.add(forceMoveInst.pushedObject, math.similarTriangles(forceMoveInst.endPoint.x - forceMoveInst.pushedObject.x, forceMoveInst.endPoint.y - forceMoveInst.pushedObject.y, fullDist, halfDist));
+        makeForcePush({ pushedObject: other, awayFrom: forceMoveInst.pushedObject, velocityStartMagnitude: halfDist, resolve: () => { }, canCreateSecondOrderPushes }, this, prediction);
+        // Reduce own velocity by half due to the transfer of force:
+        forceMoveInst.velocity = Vec.multiply(0.5, forceMoveInst.velocity);
 
       }
     }
-    const didCollide = collideWithLineSegments(pushedObject, this.walls, this);
-    if (didCollide) {
-      forceMoveInst.endPoint = pushedObject;
-    }
+    collideWithLineSegments(pushedObject, this.walls, this);
+    forceMoveInst.velocity = Vec.multiply(velocity_falloff, velocity);
     if (Unit.isUnit(forceMoveInst.pushedObject)) {
       // If the pushed object is a unit, check if it collides with any pickups
       // as it is pushed

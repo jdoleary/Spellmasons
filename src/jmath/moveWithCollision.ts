@@ -7,7 +7,8 @@ import Underworld from '../Underworld';
 export interface ForceMove {
     pushedObject: Circle;
     canCreateSecondOrderPushes: boolean;
-    endPoint: Vec2;
+    velocity: Vec2;
+    velocity_falloff: number;
     timedOut?: boolean;
     resolve: () => void;
 }
