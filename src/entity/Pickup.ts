@@ -159,7 +159,6 @@ export function load(pickup: IPickup, underworld: Underworld, prediction: boolea
   }
 }
 export function removePickup(pickup: IPickup, underworld: Underworld, prediction: boolean) {
-  console.log('jtest remove pickup', pickup, prediction);
   Image.cleanup(pickup.image);
   underworld.removePickupFromArray(pickup, prediction);
   checkIfNeedToClearTooltip();

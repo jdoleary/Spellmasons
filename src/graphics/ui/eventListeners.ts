@@ -569,6 +569,9 @@ export function clickHandler(underworld: Underworld, e: MouseEvent) {
   tryShowDevContextMenu(underworld, e, mousePos);
 }
 function tryShowDevContextMenu(underworld: Underworld, e: MouseEvent, mousePos: Vec2) {
+  if (globalThis.headless) {
+    return;
+  }
   // Developer tool, shift left click to choose to spawn a unit
   if (devMode && e.shiftKey) {
     let menu = document.createElement("div") as HTMLElement;

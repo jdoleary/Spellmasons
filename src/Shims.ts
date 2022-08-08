@@ -8,6 +8,7 @@ const fakeElement = {
 };
 global.document = {
     getElementById: () => fakeElement,
+    createElement: () => fakeElement,
     querySelector: () => fakeElement
 };
 globalThis.addEventListener = function () { };

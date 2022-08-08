@@ -16,6 +16,9 @@ const elCardHolders = document.getElementById('card-holders') as HTMLElement;
 const elInvContent = document.getElementById('inventory-content') as HTMLElement;
 resetInventoryContent();
 function resetInventoryContent() {
+  if (globalThis.headless) {
+    return;
+  }
   if (elInvContent) {
     elInvContent.innerHTML = '';
     Object.entries(CardCategory).forEach(([index, category]) => {

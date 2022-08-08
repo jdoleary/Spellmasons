@@ -169,7 +169,7 @@ declare global {
     // Used to introduce new enemies
     var enemyEncountered: undefined | string[];
     // Make me superhuman (used for dev)
-    var superMe: undefined | (() => void);
+    var superMe: undefined | ((underworld: Underworld) => void);
     // A local copy of underworld.units used to predict damage and mana use from casting a spell
     var predictionUnits: Unit.IUnit[] | undefined;
     // A local copy of underworld.pickups used to predict effect from casting a spell
