@@ -1,0 +1,16 @@
+spec:
+  name: spellmasons-multiplayer-server
+  region: nyc
+  services:
+    - http_port: 8080
+      image:
+        registry: jordanoleary
+        registry_type: DOCKER_HUB
+        repository: smms
+        tag: latest
+      instance_count: 1
+      instance_size_slug: basic-xxs
+      name: spellmasons-multiplayer-service
+      routes:
+        - path: /
+      source_dir: /

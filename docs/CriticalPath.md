@@ -1,7 +1,7 @@
 # Critical Path
 - Milestone | **Multiplayer Playtesting**
-    - Deploy standalone server to Digital Ocean and record instructions for how to deploy
     - Stop target flickering
+    - take a break
     - New 64x64 map generation (waiting on new assets from Che)
 - Milestone | **Trailer-ready Alpha**
     - Test standalone server with friends

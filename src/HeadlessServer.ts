@@ -11,6 +11,7 @@ const pie = require('@websocketpie/server');
 globalThis.SPELLMASONS_PACKAGE_VERSION = version;
 // Init underworld so that when clients join they can use it as the canonical
 // record of gamestate
+const PORT = process.env.PORT || 8080;
 headlessStartGame();
 // hostApp (headless server) is always the host
 globalThis.isHost = () => true;
@@ -18,11 +19,11 @@ globalThis.isHost = () => true;
 globalThis.player = undefined;
 
 function headlessStartGame() {
-    console.log('Headless Server Started')
+    console.log('Headless Server Started at port ', PORT)
 
 
     pie.startServer({
-        port: 8081, makeHostAppInstance: () => {
+        port: PORT, makeHostAppInstance: () => {
             const hostAppInst = new HostApp();
             console.log('Start Game: Attempt to start the game')
             console.log('Host: Start game / Initialize Underworld');
