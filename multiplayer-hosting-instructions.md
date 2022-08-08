@@ -1,5 +1,6 @@
 # For users
 TODO: Create a deploy to DO button for users to use
+https://docs.digitalocean.com/products/app-platform/how-to/add-deploy-do-button/
 ```
 [![Deploy to DO](https://www.deploytodo.com/do-btn-blue.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/{REPO-OWNER}/{REPO-NAME}/tree/{BRANCH-NAME})
 ```
