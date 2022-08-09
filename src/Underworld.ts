@@ -1001,24 +1001,39 @@ export default class Underworld {
     return levelData;
 
   }
-  pickGroundTile(): string {
-    const baseTile = { path: 'tiles/all_ground.png', probability: 30 };
-    const tiles: { path: string, probability: number }[] = [
-      baseTile,
+  pickGroundTileLayers(): string[] {
+    const baseTile = 'tiles/all_ground.png';
+    const meatTiles: { path: string, probability: number }[] = [
+      { path: '', probability: 20 },
       ...[
-        'tiles/all_ground_1.png',
-        'tiles/all_ground_2.png',
-        'tiles/all_ground_3.png',
-        'tiles/all_ground_4.png',
-        'tiles/all_ground_5.png',
-        'tiles/all_ground_6.png',
-        'tiles/all_ground_7.png',
-        'tiles/all_ground_8.png',
-        'tiles/all_ground_9.png',
+        'tiles/all_ground_meat_1.png',
+        'tiles/all_ground_meat_2.png',
+        'tiles/all_ground_meat_3.png',
+        'tiles/all_ground_meat_4.png',
+        'tiles/all_ground_meat_5.png',
+        'tiles/all_ground_meat_6.png',
+        'tiles/all_ground_meat_7.png',
+        'tiles/all_ground_meat_8.png',
+        'tiles/all_ground_meat_9.png',
       ].map(path => ({ path, probability: 1 }))
     ]
-    const choice = chooseObjectWithProbability(tiles, this.random) || baseTile;
-    return choice.path;
+    const meatChoice = chooseObjectWithProbability(meatTiles, this.random);
+    const mossTiles: { path: string, probability: number }[] = [
+      { path: '', probability: 20 },
+      ...[
+        'tiles/all_ground_moss_1.png',
+        'tiles/all_ground_moss_2.png',
+        'tiles/all_ground_moss_3.png',
+        'tiles/all_ground_moss_4.png',
+        'tiles/all_ground_moss_5.png',
+        'tiles/all_ground_moss_6.png',
+        'tiles/all_ground_moss_7.png',
+        'tiles/all_ground_moss_8.png',
+        'tiles/all_ground_moss_9.png',
+      ].map(path => ({ path, probability: 1 }))
+    ]
+    const mossChoice = chooseObjectWithProbability(mossTiles, this.random);
+    return [baseTile, meatChoice ? meatChoice.path : '', mossChoice ? mossChoice.path : ''];
 
   }
   addGroundTileImages() {
@@ -1028,10 +1043,15 @@ export default class Underworld {
     // Lay down a ground tile for every tile that is not liquid
     for (let tile of this.imageOnlyTiles.filter(t => t.image.indexOf('liquid') === -1)) {
       if (tile.image) {
-        const sprite = addPixiSprite(this.pickGroundTile(), containerBoard);
-        if (sprite) {
-          sprite.x = tile.x - config.COLLISION_MESH_RADIUS;
-          sprite.y = tile.y - config.COLLISION_MESH_RADIUS;
+        const layers = this.pickGroundTileLayers();
+        for (let path of layers) {
+          if (path) {
+            const sprite = addPixiSprite(path, containerBoard);
+            if (sprite) {
+              sprite.x = tile.x - config.COLLISION_MESH_RADIUS;
+              sprite.y = tile.y - config.COLLISION_MESH_RADIUS;
+            }
+          }
         }
       }
     }
