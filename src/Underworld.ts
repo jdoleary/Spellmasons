@@ -1003,6 +1003,21 @@ export default class Underworld {
   }
   pickGroundTileLayers(): string[] {
     const baseTile = 'tiles/all_ground.png';
+    const baseTiles: { path: string, probability: number }[] = [
+      { path: baseTile, probability: 20 },
+      ...[
+        'tiles/all_ground_dirt_1.png',
+        'tiles/all_ground_dirt_2.png',
+        'tiles/all_ground_dirt_3.png',
+        'tiles/all_ground_dirt_4.png',
+        'tiles/all_ground_dirt_5.png',
+        'tiles/all_ground_dirt_6.png',
+        'tiles/all_ground_dirt_7.png',
+        'tiles/all_ground_dirt_8.png',
+        'tiles/all_ground_dirt_9.png',
+      ].map(path => ({ path, probability: 1 }))
+    ]
+    const baseTileChoice = chooseObjectWithProbability(baseTiles, this.random);
     const meatTiles: { path: string, probability: number }[] = [
       { path: '', probability: 20 },
       ...[
@@ -1033,7 +1048,7 @@ export default class Underworld {
       ].map(path => ({ path, probability: 1 }))
     ]
     const mossChoice = chooseObjectWithProbability(mossTiles, this.random);
-    return [baseTile, meatChoice ? meatChoice.path : '', mossChoice ? mossChoice.path : ''];
+    return [baseTileChoice ? baseTileChoice.path : baseTile, meatChoice ? meatChoice.path : '', mossChoice ? mossChoice.path : ''];
 
   }
   addGroundTileImages() {
