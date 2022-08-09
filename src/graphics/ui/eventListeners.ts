@@ -6,6 +6,7 @@ import {
   clearSpellEffectProjection,
   clearTooltipSelection,
   drawCircleUnderTarget,
+  drawWalkRope,
   isOutOfBounds,
   runPredictions,
   updateTooltipSelection,
@@ -34,10 +35,6 @@ export const keyDown = {
   s: false,
   d: false
 }
-// a UnitPath that is used to display the player's "walk rope"
-// which shows the path that they will travel if they were
-// to move towards the mouse cursor
-let walkRopePath: Unit.UnitPath | undefined = undefined;
 
 globalThis.addEventListener('keydown', nonUnderworldKeydownListener);
 function nonUnderworldKeydownListener(event: KeyboardEvent) {
@@ -337,77 +334,6 @@ export function mouseMove(underworld: Underworld, e?: MouseEvent) {
     // globalThis.debugGraphics?.lineTo(underworld.limits.xMin, underworld.limits.yMin);
 
   }
-}
-function drawWalkRope(target: Vec2, underworld: Underworld) {
-  if (!globalThis.player) {
-    return
-  }
-  //
-  // Show the player's current walk path (walk rope)
-  //
-  // The distance that the player can cover with their current stamina
-  // is drawn in the stamina color.
-  // There are dots dilineating how far the unit can move each turn.
-  //
-  // Show walk path
-  globalThis.walkPathGraphics?.clear();
-  walkRopePath = underworld.calculatePath(walkRopePath, Vec.round(globalThis.player.unit), Vec.round(target));
-  const { points: currentPlayerPath } = walkRopePath;
-  if (currentPlayerPath.length) {
-    const turnStopPoints = pointsEveryXDistanceAlongPath(globalThis.player.unit, currentPlayerPath, globalThis.player.unit.staminaMax, globalThis.player.unit.staminaMax - globalThis.player.unit.stamina);
-    globalThis.walkPathGraphics?.lineStyle(4, 0xffffff, 1.0);
-    globalThis.walkPathGraphics?.moveTo(globalThis.player.unit.x, globalThis.player.unit.y);
-    let lastPoint: Vec2 = globalThis.player.unit;
-    let distanceCovered = 0;
-    const distanceLeftToMove = globalThis.player.unit.stamina;
-    for (let i = 0; i < currentPlayerPath.length; i++) {
-      const point = currentPlayerPath[i];
-      if (point) {
-        const thisLineDistance = distance(lastPoint, point);
-        if (distanceCovered > distanceLeftToMove) {
-          globalThis.walkPathGraphics?.lineStyle(4, 0xffffff, 1.0);
-          globalThis.walkPathGraphics?.lineTo(point.x, point.y);
-        } else {
-          globalThis.walkPathGraphics?.lineStyle(4, colors.stamina, 1.0);
-          if (distanceCovered + thisLineDistance > distanceLeftToMove) {
-            // Draw up to the firstStop with the stamina color
-            const pointAtWhichUnitOutOfStamina = getCoordsAtDistanceTowardsTarget(lastPoint, point, distanceLeftToMove - distanceCovered);
-            globalThis.walkPathGraphics?.lineTo(pointAtWhichUnitOutOfStamina.x, pointAtWhichUnitOutOfStamina.y);
-            globalThis.walkPathGraphics?.lineStyle(4, 0xffffff, 1.0);
-            globalThis.walkPathGraphics?.lineTo(point.x, point.y);
-          } else {
-            globalThis.walkPathGraphics?.lineTo(point.x, point.y);
-          }
-        }
-        distanceCovered += distance(lastPoint, point);
-        lastPoint = point;
-      }
-    }
-
-    // Draw the points along the path at which the unit will stop on each turn
-    for (let i = 0; i < turnStopPoints.length; i++) {
-      if (i == 0 && distanceLeftToMove > 0) {
-        globalThis.walkPathGraphics?.lineStyle(4, colors.stamina, 1.0);
-      } else {
-        globalThis.walkPathGraphics?.lineStyle(4, 0xffffff, 1.0);
-      }
-      const point = turnStopPoints[i];
-      if (point) {
-        globalThis.walkPathGraphics?.drawCircle(point.x, point.y, 3);
-      }
-    }
-    if (turnStopPoints.length == 0 && distanceLeftToMove > 0) {
-      globalThis.walkPathGraphics?.lineStyle(4, colors.stamina, 1.0);
-    } else {
-      globalThis.walkPathGraphics?.lineStyle(4, 0xffffff, 1.0);
-    }
-    // Draw a stop circle at the end
-    const lastPointInPath = currentPlayerPath[currentPlayerPath.length - 1]
-    if (lastPointInPath) {
-      globalThis.walkPathGraphics?.drawCircle(lastPointInPath.x, lastPointInPath.y, 3);
-    }
-  }
-
 }
 export function contextmenuHandler(underworld: Underworld, e: MouseEvent) {
   // Prevent opening context menu on right click

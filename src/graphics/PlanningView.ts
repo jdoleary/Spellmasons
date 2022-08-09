@@ -4,7 +4,7 @@ import { allUnits } from '../entity/units';
 import { containerSpells, containerUI, withinCameraBounds } from './PixiUtils';
 import { containerPlanningView } from './PixiUtils';
 import { Faction, UnitSubType, UnitType } from '../types/commonTypes';
-import { clone, equal, Vec2 } from '../jmath/Vec';
+import { clone, equal, Vec2, round } from '../jmath/Vec';
 import Underworld, { turn_phase } from '../Underworld';
 import * as CardUI from './ui/CardUI';
 import * as config from '../config';
@@ -15,6 +15,9 @@ import { closestLineSegmentIntersection } from '../jmath/lineSegment';
 import { getBestRangedLOSTarget } from '../entity/units/actions/rangedAction';
 import * as colors from './ui/colors';
 import { getEndOfRangeTarget, isOutOfRange } from '../PlayerUtils';
+import { pointsEveryXDistanceAlongPath } from '../jmath/Pathfinding';
+import { distance, getCoordsAtDistanceTowardsTarget } from '../jmath/math';
+import { Graphics } from 'pixi.js';
 
 // Graphics for rendering above board and walls but beneath units and doodads,
 // see containerPlanningView for exact render order.
@@ -87,7 +90,7 @@ export function updatePlanningView(underworld: Underworld) {
           }
         } else {
 
-          const rangeCircleColor = globalThis.selectedUnit.faction == Faction.ALLY ? 0x40a058 : 0xd55656;
+          const rangeCircleColor = globalThis.selectedUnit.faction == Faction.ALLY ? colors.attackRangeAlly : colors.attackRangeEnemy;
           globalThis.unitOverlayGraphics.lineStyle(8, rangeCircleColor, 0.3);
           if (globalThis.selectedUnit.unitSubType === UnitSubType.RANGED_RADIUS) {
             globalThis.unitOverlayGraphics.drawCircle(
@@ -121,15 +124,7 @@ export function updatePlanningView(underworld: Underworld) {
             labelText.x = labelPosition.x;
             labelText.y = labelPosition.y;
           } else if (globalThis.selectedUnit.unitSubType === UnitSubType.PLAYER_CONTROLLED) {
-            globalThis.unitOverlayGraphics.drawCircle(
-              globalThis.selectedUnit.x,
-              globalThis.selectedUnit.y,
-              globalThis.selectedUnit.attackRange
-            );
-            labelText.text = 'Cast Range';
-            const labelPosition = withinCameraBounds({ x: globalThis.selectedUnit.x, y: globalThis.selectedUnit.y + globalThis.selectedUnit.attackRange }, labelText.width / 2);
-            labelText.x = labelPosition.x;
-            labelText.y = labelPosition.y;
+            drawCastRangeCircle(globalThis.selectedUnit, globalThis.selectedUnit.attackRange, globalThis.unitOverlayGraphics)
           }
         }
       }
@@ -159,6 +154,99 @@ export function updatePlanningView(underworld: Underworld) {
         }
         lastSpotCurrentPlayerTurnCircle = clone(globalThis.player.unit);
       }
+    }
+  }
+}
+// a UnitPath that is used to display the player's "walk rope"
+// which shows the path that they will travel if they were
+// to move towards the mouse cursor
+let walkRopePath: Unit.UnitPath | undefined = undefined;
+export function drawWalkRope(target: Vec2, underworld: Underworld) {
+  if (!globalThis.player) {
+    return
+  }
+  //
+  // Show the player's current walk path (walk rope)
+  //
+  // The distance that the player can cover with their current stamina
+  // is drawn in the stamina color.
+  // There are dots dilineating how far the unit can move each turn.
+  //
+  // Show walk path
+  globalThis.walkPathGraphics?.clear();
+  walkRopePath = underworld.calculatePath(walkRopePath, round(globalThis.player.unit), round(target));
+  const { points: currentPlayerPath } = walkRopePath;
+  if (currentPlayerPath.length) {
+    const turnStopPoints = pointsEveryXDistanceAlongPath(globalThis.player.unit, currentPlayerPath, globalThis.player.unit.staminaMax, globalThis.player.unit.staminaMax - globalThis.player.unit.stamina);
+    globalThis.walkPathGraphics?.lineStyle(4, 0xffffff, 1.0);
+    globalThis.walkPathGraphics?.moveTo(globalThis.player.unit.x, globalThis.player.unit.y);
+    let lastPoint: Vec2 = globalThis.player.unit;
+    let distanceCovered = 0;
+    let pointAtWhichUnitOutOfStamina: Vec2 | undefined;
+    const distanceLeftToMove = globalThis.player.unit.stamina;
+    for (let i = 0; i < currentPlayerPath.length; i++) {
+      const point = currentPlayerPath[i];
+      if (point) {
+        const thisLineDistance = distance(lastPoint, point);
+        if (distanceCovered > distanceLeftToMove) {
+          globalThis.walkPathGraphics?.lineStyle(4, 0xffffff, 1.0);
+          globalThis.walkPathGraphics?.lineTo(point.x, point.y);
+        } else {
+          globalThis.walkPathGraphics?.lineStyle(4, colors.stamina, 1.0);
+          if (distanceCovered + thisLineDistance > distanceLeftToMove) {
+            // Draw up to the firstStop with the stamina color
+            pointAtWhichUnitOutOfStamina = getCoordsAtDistanceTowardsTarget(lastPoint, point, distanceLeftToMove - distanceCovered);
+            globalThis.walkPathGraphics?.lineTo(pointAtWhichUnitOutOfStamina.x, pointAtWhichUnitOutOfStamina.y);
+            globalThis.walkPathGraphics?.lineStyle(4, 0xffffff, 1.0);
+            globalThis.walkPathGraphics?.lineTo(point.x, point.y);
+          } else {
+            globalThis.walkPathGraphics?.lineTo(point.x, point.y);
+          }
+        }
+        distanceCovered += distance(lastPoint, point);
+        lastPoint = point;
+      }
+    }
+    drawCastRangeCircle(pointAtWhichUnitOutOfStamina || lastPoint, globalThis.player.unit.attackRange, globalThis.walkPathGraphics, 'Potential Cast Range');
+    // Draw the points along the path at which the unit will stop on each turn
+    for (let i = 0; i < turnStopPoints.length; i++) {
+      if (i == 0 && distanceLeftToMove > 0) {
+        globalThis.walkPathGraphics?.lineStyle(4, colors.stamina, 1.0);
+      } else {
+        globalThis.walkPathGraphics?.lineStyle(4, 0xffffff, 1.0);
+      }
+      const point = turnStopPoints[i];
+      if (point) {
+        globalThis.walkPathGraphics?.drawCircle(point.x, point.y, 3);
+      }
+    }
+    if (turnStopPoints.length == 0 && distanceLeftToMove > 0) {
+      globalThis.walkPathGraphics?.lineStyle(4, colors.stamina, 1.0);
+    } else {
+      globalThis.walkPathGraphics?.lineStyle(4, 0xffffff, 1.0);
+    }
+    // Draw a stop circle at the end
+    const lastPointInPath = currentPlayerPath[currentPlayerPath.length - 1]
+    if (lastPointInPath) {
+      globalThis.walkPathGraphics?.drawCircle(lastPointInPath.x, lastPointInPath.y, 3);
+    }
+  }
+
+}
+function drawCastRangeCircle(point: Vec2, range: number, graphics?: Graphics, text: string = 'Cast Range') {
+  if (graphics) {
+    // Draw what cast range would be if unit moved to this point:
+    graphics.lineStyle(3, colors.attackRangeAlly, 1.0);
+    graphics.drawCircle(
+      point.x,
+      point.y,
+      range
+    );
+    if (labelText) {
+      labelText.text = text;
+      const labelPosition = withinCameraBounds({ x: point.x, y: point.y + range }, labelText.width / 2);
+      labelText.x = labelPosition.x;
+      labelText.y = labelPosition.y;
     }
   }
 }

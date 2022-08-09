@@ -14,6 +14,8 @@ export const bloodPoisoner = 0x86eb83;
 export const playerCoatPrimary = 0x417F81;
 export const playerCoatSecondary = 0x70A5A7;
 export const playerCastAnimationColor = 0xFFa1d3;
+export const attackRangeAlly = 0x40a058;
+export const attackRangeEnemy = 0xd55656;
 
 // https://coolors.co/ef476f-ffd166-06d6a0-118ab2-073b4c
 export const playerColors = [
