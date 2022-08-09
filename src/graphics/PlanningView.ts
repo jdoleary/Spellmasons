@@ -378,6 +378,9 @@ export async function runPredictions(underworld: Underworld) {
           // If they are within range, just predict like normal, easy peasy.
           await showCastCardsPrediction(underworld, target, casterUnit, cardIds, outOfRange);
         }
+      } else {
+        // If there are no cards ready to cast, clear unit tints (which symbolize units that are targeted by the active spell)
+        clearUnitTints(underworld);
       }
       // Send this client's intentions to the other clients so they can see what they're thinking
       underworld.sendPlayerThinking({ target, cardIds })
