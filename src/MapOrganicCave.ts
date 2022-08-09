@@ -320,50 +320,10 @@ export function convertBaseTilesToFinalTiles(map: Map) {
         }
         // change wall tiles
         if (currentCell?.image == baseTiles.wall) {
-            if (neighbors.north == baseTiles.ground) {
-                if (neighbors.east != baseTiles.wall && neighbors.west == baseTiles.wall && neighbors.south == baseTiles.wall) {
-                    changeTile(i, finalTileImages.wallInsideCornerSW);
-                } else if (neighbors.west != baseTiles.wall && neighbors.east == baseTiles.wall && neighbors.south == baseTiles.wall) {
-                    changeTile(i, finalTileImages.wallInsideCornerSE);
-                    // } else if (neighbors.south == baseTiles.wall) {
-                    //     // This is a weird exeption, if there is a tetris block of walls, like so:
-                    //     //  w
-                    //     //w,w,w
-                    //     // the wall at 2,2 will be a corner piece but since the wall at
-                    //     // 2,1 is all along it would be a wallS if not for this check.
-                    //     // Setting it to ground prevents weird pathing shapes
-                    //     changeTile(i, finalTileImages.all_ground);
-                } else {
-                    changeTile(i, finalTileImages.wallS);
-                }
-            } else if (neighbors.south == baseTiles.ground) {
-                if (neighbors.west != baseTiles.wall && neighbors.east == baseTiles.wall && neighbors.north == baseTiles.wall) {
-                    changeTile(i, finalTileImages.wallInsideCornerNE);
-                } else if (neighbors.east != baseTiles.wall && neighbors.west == baseTiles.wall && neighbors.north == baseTiles.wall) {
-                    changeTile(i, finalTileImages.wallInsideCornerNW)
-                    // } else if (neighbors.north == baseTiles.wall) {
-                    //     // This is a weird exeption, if there is a tetris block of walls, like so:
-                    //     //w,w,w
-                    //     //  w
-                    //     // the wall at 2,1 will be a corner piece but since the wall at
-                    //     // 2,2 is all along it would be a wallN if not for this check.
-                    //     // Setting it to ground prevents weird pathing shapes
-                    //     changeTile(i, finalTileImages.all_ground);
-                } else {
-                    changeTile(i, finalTileImages.wallN);
-                }
-            } else if (neighbors.east == baseTiles.ground) {
-                changeTile(i, finalTileImages.wallW);
-            } else if (neighbors.west == baseTiles.ground) {
-                changeTile(i, finalTileImages.wallE);
-            } else if (neighbors.northeast == baseTiles.ground) {
-                changeTile(i, finalTileImages.wallCornerSW);
-            } else if (neighbors.northwest == baseTiles.ground) {
-                changeTile(i, finalTileImages.wallCornerSE);
-            } else if (neighbors.southeast == baseTiles.ground) {
-                changeTile(i, finalTileImages.wallCornerNW);
-            } else if (neighbors.southwest == baseTiles.ground) {
-                changeTile(i, finalTileImages.wallCornerNE);
+            if (neighbors.south == baseTiles.ground) {
+                changeTile(i, finalTileImages.wallN);
+            } else {
+                changeTile(i, finalTileImages.wall);
             }
         }
     }
@@ -573,18 +533,8 @@ const finalTileImages = {
     liquidSGroundN: 'tiles/liquidSGroundN.png',
     liquidCornerSE: 'tiles/liquidCornerSE.png',
     liquidCornerSW: 'tiles/liquidCornerSW.png',
-    wallS: 'tiles/wallS.png',
-    wallE: 'tiles/wallE.png',
-    wallW: 'tiles/wallW.png',
+    wall: 'tiles/wall.png',
     wallN: 'tiles/wallN.png',
-    wallCornerNW: 'tiles/wallCornerNW.png',
-    wallCornerNE: 'tiles/wallCornerNE.png',
-    wallCornerSW: 'tiles/wallCornerSW.png',
-    wallCornerSE: 'tiles/wallCornerSE.png',
-    wallInsideCornerNE: 'tiles/wallInsideCornerNE.png',
-    wallInsideCornerNW: 'tiles/wallInsideCornerNW.png',
-    wallInsideCornerSE: 'tiles/wallInsideCornerSE.png',
-    wallInsideCornerSW: 'tiles/wallInsideCornerSW.png',
 };
 
 export function toObstacle(t: Tile): IObstacle | undefined {
@@ -592,89 +542,7 @@ export function toObstacle(t: Tile): IObstacle | undefined {
     //   const height = config.OBSTACLE_SIZE;
     //   const _x = t.x - width / 2;
     //   const _y = t.y - height / 2;
-    if (t.image == finalTileImages.wallN) {
-        return {
-            x: t.x,
-            y: t.y,
-            material: Material.WALL,
-            bounds: [
-                { x: 0, y: 0 },
-                { x: 64, y: 0 },
-                { x: 64, y: 20 },
-                { x: 0, y: 20 },
-            ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
-
-        }
-    } else if (t.image == finalTileImages.wallE) {
-        return {
-            x: t.x,
-            y: t.y,
-            material: Material.WALL,
-            bounds: [
-                { x: 39, y: 0 },
-                { x: 64, y: 0 },
-                { x: 64, y: 64 },
-                { x: 39, y: 64 },
-            ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
-
-        }
-    } else if (t.image == finalTileImages.wallW) {
-        return {
-            x: t.x,
-            y: t.y,
-            material: Material.WALL,
-            bounds: [
-                { x: 0, y: 0 },
-                { x: 25, y: 0 },
-                { x: 25, y: 64 },
-                { x: 0, y: 64 },
-            ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
-
-        }
-    } else if (t.image == finalTileImages.wallS) {
-        return {
-            x: t.x,
-            y: t.y,
-            material: Material.WALL,
-            bounds: [
-                { x: 0, y: 39 },
-                { x: 64, y: 39 },
-                { x: 64, y: 64 },
-                { x: 0, y: 64 },
-            ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
-
-        }
-    } else if (t.image == finalTileImages.wallCornerSW) {
-        return {
-            x: t.x,
-            y: t.y,
-            material: Material.WALL,
-            bounds: [
-                { x: 0, y: 0 },
-                { x: 25, y: 0 },
-                { x: 25, y: 39 },
-                { x: 64, y: 39 },
-                { x: 64, y: 64 },
-                { x: 0, y: 64 },
-            ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
-
-        }
-    } else if (t.image == finalTileImages.wallCornerSE) {
-        return {
-            x: t.x,
-            y: t.y,
-            material: Material.WALL,
-            bounds: [
-                { x: 39, y: 0 },
-                { x: 64, y: 0 },
-                { x: 64, y: 64 },
-                { x: 0, y: 64 },
-                { x: 0, y: 39 },
-                { x: 39, y: 39 },
-            ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
-
-        }
-    } else if (t.image == finalTileImages.wallCornerNE) {
+    if (t.image == finalTileImages.wall) {
         return {
             x: t.x,
             y: t.y,
@@ -683,13 +551,11 @@ export function toObstacle(t: Tile): IObstacle | undefined {
                 { x: 0, y: 0 },
                 { x: 64, y: 0 },
                 { x: 64, y: 64 },
-                { x: 39, y: 64 },
-                { x: 39, y: 20 },
-                { x: 0, y: 20 },
+                { x: 0, y: 64 },
             ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
 
         }
-    } else if (t.image == finalTileImages.wallCornerNW) {
+    } else if (t.image == finalTileImages.wallN) {
         return {
             x: t.x,
             y: t.y,
@@ -697,62 +563,8 @@ export function toObstacle(t: Tile): IObstacle | undefined {
             bounds: [
                 { x: 0, y: 0 },
                 { x: 64, y: 0 },
-                { x: 64, y: 20 },
-                { x: 25, y: 20 },
-                { x: 25, y: 64 },
-                { x: 0, y: 64 },
-            ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
-
-        }
-    } else if (t.image == finalTileImages.wallInsideCornerNE) {
-        return {
-            x: t.x,
-            y: t.y,
-            material: Material.WALL,
-            bounds: [
-                { x: 39, y: 0 },
-                { x: 64, y: 0 },
-                { x: 64, y: 20 },
-                { x: 39, y: 20 },
-            ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
-
-        }
-    } else if (t.image == finalTileImages.wallInsideCornerNW) {
-        return {
-            x: t.x,
-            y: t.y,
-            material: Material.WALL,
-            bounds: [
-                { x: 0, y: 0 },
-                { x: 25, y: 0 },
-                { x: 25, y: 20 },
-                { x: 0, y: 20 },
-            ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
-
-        }
-    } else if (t.image == finalTileImages.wallInsideCornerSE) {
-        return {
-            x: t.x,
-            y: t.y,
-            material: Material.WALL,
-            bounds: [
-                { x: 39, y: 39 },
-                { x: 64, y: 39 },
-                { x: 64, y: 64 },
-                { x: 39, y: 64 },
-            ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
-
-        }
-    } else if (t.image == finalTileImages.wallInsideCornerSW) {
-        return {
-            x: t.x,
-            y: t.y,
-            material: Material.WALL,
-            bounds: [
-                { x: 0, y: 39 },
-                { x: 25, y: 39 },
-                { x: 25, y: 64 },
-                { x: 0, y: 64 },
+                { x: 64, y: 50 },
+                { x: 0, y: 50 },
             ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
 
         }

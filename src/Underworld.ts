@@ -146,6 +146,8 @@ export default class Underworld {
   constructor(pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
     this.pie = pie;
     this.seed = globalThis.seedOverride || seed;
+    this.seed = '0.1620854215450961'
+    window.showDebug = true;
 
     // Initialize content
     Cards.registerCards(this);
@@ -791,7 +793,7 @@ export default class Underworld {
     // liquid bounds block movement only under certain circumstances
     this.liquidPolygons = mergePolygon2s(obstacles.filter(o => o.material == Material.LIQUID).map(o => o.bounds));
     const expandedLiquidPolygons = this.liquidPolygons//.map(p => p.map(Vec.clone))
-      .map(p => expandPolygon(p, -expandMagnitude / 2))
+      .map(p => expandPolygon(p, -expandMagnitude))
     this.liquidBounds = expandedLiquidPolygons
       .map(toLineSegments).flat();
     // TODO: Optimize:
