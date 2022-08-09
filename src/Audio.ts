@@ -4,7 +4,12 @@ import * as storage from "./storage";
 export const sfx: { [key: string]: string } = {
     whoosh: './sound/sfx/whoosh.m4a',
     hurt: './sound/sfx/hurt.mp3',
-    cast: './sound/sfx/cast.mp3'
+    cast: './sound/sfx/cast.mp3',
+    playerAttackSmall: './sound/sfx/playerAttackSmall.mp3',
+    playerAttackEpic: './sound/sfx/playerAttackEpic.wav',
+    freeze: './sound/sfx/freeze.wav',
+    push: './sound/sfx/push.wav',
+    pull: './sound/sfx/pull.wav',
 };
 export const sfxPageTurn = [
     // './sound/sfx/page-turn-1.flac',

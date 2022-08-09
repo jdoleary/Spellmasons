@@ -12,6 +12,7 @@ const spell: Spell = {
   card: {
     id,
     category: CardCategory.Curses,
+    sfx: 'freeze',
     supportQuantity: true,
     manaCost: 25,
     healthCost: 0,

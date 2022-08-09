@@ -5,6 +5,7 @@ import { forceMoveColor } from '../graphics/ui/colors';
 import { raceTimeout } from '../Promise';
 import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
+import { playDefaultSpellSFX } from './cardUtils';
 
 export const id = 'pull';
 const pullDistance = 12;
@@ -12,6 +13,7 @@ const spell: Spell = {
   card: {
     id,
     category: CardCategory.Movement,
+    sfx: 'pull',
     manaCost: 10,
     healthCost: 0,
     expenseScaling: 1,
@@ -22,6 +24,7 @@ Pulls the target(s) towards the caster
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
       let promises = [];
+      playDefaultSpellSFX(card, prediction);
       for (let unit of state.targetedUnits) {
         promises.push(pull(unit, state.casterUnit, underworld, prediction));
       }

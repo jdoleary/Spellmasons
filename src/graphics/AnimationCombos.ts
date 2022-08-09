@@ -14,6 +14,7 @@ const combos: { [spritePath: string]: AnimationCombo } = {
         keyFrame: 11,
         primaryAnimation: 'units/playerAttackSmall',
         companionAnimations: ['units/playerAttackSmallMagic'],
+        SFX: 'playerAttackSmall'
     },
     'playerAttackMedium0': {
         // At the moment the wizard's staff hits the ground
@@ -40,6 +41,7 @@ const combos: { [spritePath: string]: AnimationCombo } = {
         keyFrame: 23,
         primaryAnimation: 'units/playerAttackEpic',
         companionAnimations: ['units/playerAttackEpicMagic'],
+        SFX: 'playerAttackEpic'
     },
     'units/gruntAttack': {
         keyFrame: 6,

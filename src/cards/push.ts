@@ -6,6 +6,7 @@ import { forceMoveColor } from '../graphics/ui/colors';
 import { raceTimeout } from '../Promise';
 import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
+import { playDefaultSpellSFX } from './cardUtils';
 
 export const id = 'push';
 export const velocityStartMagnitude = 10;
@@ -14,6 +15,7 @@ const spell: Spell = {
     id,
     category: CardCategory.Movement,
     supportQuantity: true,
+    sfx: 'push',
     manaCost: 10,
     healthCost: 0,
     expenseScaling: 1,
@@ -25,6 +27,7 @@ Pushes the target(s) away from the caster
     effect: async (state, card, quantity, underworld, prediction) => {
       let promises = [];
       const awayFrom = state.casterUnit;
+      playDefaultSpellSFX(card, prediction);
       for (let unit of state.targetedUnits) {
         promises.push(forcePush(unit, awayFrom, velocityStartMagnitude * quantity, underworld, prediction));
       }
