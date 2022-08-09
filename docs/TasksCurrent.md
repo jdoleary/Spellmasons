@@ -22,7 +22,6 @@
 - archer movement got stuck which made me lose a game 0.3199228271451904
 - bug: when i quit a game and start over it gives me the resurrect optoin
 - Ensure hurt is presented in first spell picks
-- Stop targeting flickering
 - see cantwalk.png on desktop
 - bug: explosion radius text and some move lines left on the screen after cast was done
 - bug: Pushing spike into grunt pushed the grunt instead of damaging him and the spike disappeared

@@ -1,6 +1,5 @@
 # Critical Path
 - Milestone | **Multiplayer Playtesting**
-    - Stop target flickering
     - take a break
     - New 64x64 map generation (waiting on new assets from Che)
 - Milestone | **Trailer-ready Alpha**

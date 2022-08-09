@@ -34,13 +34,13 @@ import {
   cleanUpLiquidFilter,
   BloodParticle,
 } from './graphics/PixiUtils';
-import floatingText, { queueCenteredFloatingText } from './graphics/FloatingText';
+import { queueCenteredFloatingText } from './graphics/FloatingText';
 import { UnitType, Faction, UnitSubType } from './types/commonTypes';
 import type { Vec2 } from "./jmath/Vec";
 import * as Vec from "./jmath/Vec";
 import Events from './Events';
 import { allUnits } from './entity/units';
-import { drawTarget, getUIBarProps, setPredictionGraphicsLineStyle, updateManaCostUI, updatePlanningView } from './graphics/PlanningView';
+import { getUIBarProps, clearUnitTints, updateManaCostUI, updatePlanningView } from './graphics/PlanningView';
 import { chooseObjectWithProbability, prng, randInt, SeedrandomState } from './jmath/rand';
 import { calculateCost } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle, closestLineSegmentIntersection } from './jmath/lineSegment';
@@ -2001,6 +2001,14 @@ export default class Underworld {
           }
         }
       }
+    }
+    // Now that cards are being cast, clear unit tints (which symbolized which units are targetted)
+    if (!prediction) {
+      // Note, the tints are only reset here for real non-prediction casts because prediction has much more
+      // complicated logic to change things under certain conditions (for example when a unit is out of range)
+      // and prediction logic needs to govern it's own tint clearing.  Without this "if" check, the tint would
+      // flicker.
+      clearUnitTints(this);
     }
 
     // "quantity" is the number of identical cards cast in a row. Rather than casting the card sequentially

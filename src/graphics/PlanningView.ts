@@ -261,6 +261,14 @@ export function updateManaCostUI(underworld: Underworld): CardCost {
   }
   return { manaCost: 0, healthCost: 0 };
 }
+export function clearUnitTints(underworld: Underworld) {
+  // Reset tints before setting new tints to show targeting
+  underworld.units.forEach(unit => {
+    if (unit.image) {
+      unit.image.sprite.tint = 0xFFFFFF;
+    }
+  });
+}
 
 // Returns true if castCards has effect
 async function showCastCardsPrediction(underworld: Underworld, target: Vec2, casterUnit: Unit.IUnit, cardIds: string[], outOfRange: boolean): Promise<boolean> {
@@ -278,9 +286,26 @@ async function showCastCardsPrediction(underworld: Underworld, target: Vec2, cas
       true,
       false
     );
-    // Show units as targeted
+    // Clears unit tints in preparation for setting new tints to symbolize which units are targeted by spell
+    clearUnitTints(underworld);
+    // Show units as targeted with tint
     for (let targetedUnit of effectState.targetedUnits) {
-      drawTarget(targetedUnit, outOfRange, underworld);
+      // Convert prediction unit's associated real unit
+      const realUnit = underworld.units.find(u => u.id == targetedUnit.id);
+      // don't change tint if HUD is hidden
+      if (realUnit && realUnit.image && !globalThis.isHUDHidden) {
+        if (outOfRange) {
+          realUnit.image.sprite.tint = 0xaaaaaa;
+        } else {
+          if (targetedUnit.faction == globalThis.player?.unit.faction) {
+            // Ally
+            realUnit.image.sprite.tint = 0x5555ff;
+          } else {
+            // Enemy
+            realUnit.image.sprite.tint = 0xff5555;
+          }
+        }
+      }
     }
     for (let unitStats of effectState.aggregator.unitDamage) {
       // If a unit is currently alive and will take fatal damage,
@@ -411,14 +436,6 @@ export function clearSpellEffectProjection(underworld: Underworld) {
     if (containerSpells) {
       containerSpells.removeChildren();
     }
-    underworld.units.forEach(unit => {
-      if (unit.image) {
-        unit.image.sprite.tint = 0xFFFFFF;
-      }
-      // if (unit.shaderUniforms.all_red) {
-      //   unit.shaderUniforms.all_red.alpha = 0;
-      // }
-    })
   }
 }
 
@@ -446,27 +463,6 @@ export function setPredictionGraphicsLineStyle(color: number) {
   if (predictionGraphics) {
     predictionGraphics.lineStyle(3, color, 1.0)
   }
-}
-export function drawTarget(unit: Unit.IUnit, isOutOfRange: boolean, underworld: Underworld) {
-  // Convert prediction unit's associated real unit
-  const realUnit = underworld.units.find(u => u.id == unit.id);
-  // don't change tint if HUD is hidden
-  if (realUnit && realUnit.image && !globalThis.isHUDHidden) {
-    if (isOutOfRange) {
-      realUnit.image.sprite.tint = 0xaaaaaa;
-    } else {
-      if (unit.faction == globalThis.player?.unit.faction) {
-        // Ally
-        realUnit.image.sprite.tint = 0x5555ff;
-      } else {
-        // Enemy
-        realUnit.image.sprite.tint = 0xff5555;
-      }
-    }
-  }
-  // if (realUnit && realUnit.shaderUniforms.all_red) {
-  //   realUnit.shaderUniforms.all_red.alpha = 0.5;
-  // }
 }
 export function drawPredictionCircleFill(target: Vec2, radius: number) {
   if (globalThis.radiusGraphics) {
