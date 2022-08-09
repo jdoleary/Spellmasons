@@ -146,8 +146,6 @@ export default class Underworld {
   constructor(pie: PieClient | IHostApp, seed: string, RNGState: SeedrandomState | boolean = true) {
     this.pie = pie;
     this.seed = globalThis.seedOverride || seed;
-    this.seed = '0.1620854215450961'
-    window.showDebug = true;
 
     // Initialize content
     Cards.registerCards(this);
