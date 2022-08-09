@@ -3,7 +3,7 @@ import * as Unit from '../entity/Unit';
 import * as Image from '../graphics/Image';
 import { Spell } from './index';
 import { drawPredictionCircle } from '../graphics/PlanningView';
-import { forcePush } from './push';
+import { forcePush, velocityStartMagnitude } from './push';
 import type Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
 import { animateSpell } from './cardUtils';
@@ -76,7 +76,7 @@ const spell: Spell = {
         prediction
       ).forEach(u => {
         // Push units away from exploding unit
-        forcePush(u, unit, underworld, prediction);
+        forcePush(u, unit, velocityStartMagnitude, underworld, prediction);
         // Deal damage to units
         takeDamage(u, damage * quantity, u, underworld, prediction);
       });
@@ -86,7 +86,7 @@ const spell: Spell = {
         prediction
       ).forEach(p => {
         // Push pickups away
-        forcePush(p, unit, underworld, prediction);
+        forcePush(p, unit, velocityStartMagnitude, underworld, prediction);
       })
     }
   }

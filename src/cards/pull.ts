@@ -1,6 +1,5 @@
-import { clone, magnitude, multiply, Vec2 } from '../jmath/Vec';
+import { clone, multiply, Vec2 } from '../jmath/Vec';
 import { Spell } from './index';
-import { distance, similarTriangles } from '../jmath/math';
 import type { Circle, ForceMove } from '../jmath/moveWithCollision';
 import { forceMoveColor } from '../graphics/ui/colors';
 import { raceTimeout } from '../Promise';

@@ -1,4 +1,4 @@
-import { Vec2, magnitude, clone, add, equal } from '../jmath/Vec';
+import { Vec2, clone } from '../jmath/Vec';
 import { Spell } from './index';
 import { distance, similarTriangles } from '../jmath/math';
 import type { Circle, ForceMove } from '../jmath/moveWithCollision';
@@ -6,15 +6,14 @@ import { forceMoveColor } from '../graphics/ui/colors';
 import { raceTimeout } from '../Promise';
 import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
-import { findSafeFallInPoint } from '../entity/Obstacle';
-import { addModifier, isUnit } from '../entity/Unit';
-import * as inLiquid from '../inLiquid';
 
 export const id = 'push';
+export const velocityStartMagnitude = 10;
 const spell: Spell = {
   card: {
     id,
     category: CardCategory.Movement,
+    supportQuantity: true,
     manaCost: 10,
     healthCost: 0,
     expenseScaling: 1,
@@ -27,10 +26,10 @@ Pushes the target(s) away from the caster
       let promises = [];
       const awayFrom = state.casterUnit;
       for (let unit of state.targetedUnits) {
-        promises.push(forcePush(unit, awayFrom, underworld, prediction));
+        promises.push(forcePush(unit, awayFrom, velocityStartMagnitude * quantity, underworld, prediction));
       }
       for (let pickup of state.targetedPickups) {
-        promises.push(forcePush(pickup, awayFrom, underworld, prediction));
+        promises.push(forcePush(pickup, awayFrom, velocityStartMagnitude * quantity, underworld, prediction));
       }
       await Promise.all(promises);
       return state;
@@ -73,11 +72,10 @@ export function makeForcePush(args: forcePushArgs, underworld: Underworld, predi
   return forceMoveInst;
 
 }
-const velocityStartMagnitude = 10;
-export async function forcePush(pushedObject: Circle, awayFrom: Vec2, underworld: Underworld, prediction: boolean): Promise<void> {
+export async function forcePush(pushedObject: Circle, awayFrom: Vec2, magnitude: number, underworld: Underworld, prediction: boolean): Promise<void> {
   let forceMoveInst: ForceMove;
   return await raceTimeout(3000, 'Push', new Promise<void>((resolve) => {
-    forceMoveInst = makeForcePush({ pushedObject, awayFrom, velocityStartMagnitude, resolve, canCreateSecondOrderPushes: true }, underworld, prediction);
+    forceMoveInst = makeForcePush({ pushedObject, awayFrom, velocityStartMagnitude: magnitude, resolve, canCreateSecondOrderPushes: true }, underworld, prediction);
   })).then(() => {
     if (forceMoveInst) {
       forceMoveInst.timedOut = true;
