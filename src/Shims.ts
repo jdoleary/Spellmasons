@@ -14,9 +14,13 @@ global.document = {
 globalThis.addEventListener = function () { };
 const TICK_RATE = 16;
 console.log('TICK_RATE set to', TICK_RATE)
+
+global.cancelAnimationFrame = (id) => {
+    clearTimeout(id);
+}
 global.requestAnimationFrame = (callback) => {
     // Note, changing TICK_RATE from undefined to 16
     // went from consuming 20% cpu to 7% cpu
-    setTimeout(() => callback(Date.now()), TICK_RATE);
+    return setTimeout(() => callback(Date.now()), TICK_RATE);
 }
 export { };

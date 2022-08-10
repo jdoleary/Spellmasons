@@ -163,8 +163,6 @@ export default class Underworld {
     this.random = this.syncronizeRNG(RNGState);
     this.ensureAllClientsHaveAssociatedPlayers(getClients());
 
-    // Start the gameloop
-    requestAnimationFrameGameLoopId = requestAnimationFrame(this.gameLoop);
     // When the game is ready to process wsPie messages, begin
     // processing them
     // The game is ready when the following have been loaded
@@ -299,7 +297,21 @@ export default class Underworld {
     return false;
 
   }
+  queueGameLoop = () => {
+    // prevent multiple gameLoop invokations being queued
+    cancelAnimationFrame(requestAnimationFrameGameLoopId);
+    // Invoke gameLoopUnits again next loop
+    requestAnimationFrameGameLoopId = requestAnimationFrame(this.gameLoop)
+
+  }
   gameLoop = (timestamp: number) => {
+    if (this.players.filter(p => p.clientConnected).length == 0) {
+      console.log('Gameloop: pause; 0 connected players in game');
+      // Returning without requesting a new AnimationFrame is equivalent to 'pausing'
+      // the gameloop
+      return;
+    }
+
     const deltaTime = timestamp - lastTime;
     lastTime = timestamp;
     const { zoom } = getCamera();
@@ -529,8 +541,7 @@ export default class Underworld {
     // Particles
     updateParticlees(deltaTime, this.bloods, this.random, this);
 
-    // Invoke gameLoopUnits again next loop
-    requestAnimationFrameGameLoopId = requestAnimationFrame(this.gameLoop)
+    this.queueGameLoop();
   }
   // setPath finds a path to the target
   // and sets that to the unit's path
@@ -1315,11 +1326,12 @@ export default class Underworld {
     // Only move on from the player turn phase if there are players in the game,
     // otherwise, wait for players to be in the game so that the serve doesn't just 
     // run cycles pointlessly
-    if (this.turn_phase === turn_phase.PlayerTurns && this.players.length > 0) {
+    const connectedPlayers = this.players.filter(p => p.clientConnected)
+    if (this.turn_phase === turn_phase.PlayerTurns && connectedPlayers.length > 0) {
       // If all players that have taken turns, then...
       // (Players who CANT take turns have their turn ended automatically)
       // TODO: Make sure game can't get stuck here
-      const activeAlivePlayers = this.players.filter(p => p.clientConnected && p.unit.alive);
+      const activeAlivePlayers = connectedPlayers.filter(p => p.unit.alive);
       if (
         activeAlivePlayers.every(p => p.endedTurn)
       ) {

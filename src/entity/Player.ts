@@ -102,6 +102,7 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
   player.unit.healthMax = PLAYER_BASE_HEALTH;
 
   underworld.players.push(player);
+  underworld.queueGameLoop();
   return player;
 }
 // TODO: This creates a NEW MultiColorReplaceFilter,
@@ -215,6 +216,7 @@ export function load(player: IPlayerSerialized, underworld: Underworld) {
   underworld.players.push(playerLoaded);
   const clients = getClients();
   setClientConnected(playerLoaded, clients.includes(player.clientId), underworld);
+  underworld.queueGameLoop();
   setPlayerRobeColor(playerLoaded);
   return playerLoaded;
 }
@@ -224,6 +226,7 @@ export function setClientConnected(player: IPlayer, connected: boolean, underwor
   player.clientConnected = connected;
   if (connected) {
     Image.removeSubSprite(player.unit.image, 'disconnected.png');
+    underworld.queueGameLoop();
   } else {
     Image.addSubSprite(player.unit.image, 'disconnected.png');
     // If they disconnect, end their turn
