@@ -1,7 +1,8 @@
 # Critical Path
 - Milestone | **Trailer-ready Alpha**
+    - stand alone server goes into infinite loop when all players leave
+    - grunts don't do damage in multiplayer
     - Test standalone server with friends
-    - Fix environment background
     - Need sfx
         - 3 types of player casts
         - death sounds
@@ -52,7 +53,6 @@
 - Milestone | **Marketing** | Planning on September 1
     - See Marketing.md for more info
     - Trailer
-        - Need HUD removal and music mute button
         - Need biomes
         - Need sfx
         - Need spell effects
