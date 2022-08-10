@@ -53,7 +53,7 @@ export default function devUtils(graphics: PIXI.Graphics) {
     return { debugDrawLineSegments, debugDrawVec2s }
 }
 export function setupDevGlobalFunctions(underworld: Underworld) {
-    if (window) {
+    if (typeof window !== 'undefined') {
         // @ts-ignore: window.devUnderworld is NOT typed in globalThis intentionally
         // so that it will not be used elsewhere, but it is assigned here
         // so that it can be accessed by a developer in client
