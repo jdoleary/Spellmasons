@@ -160,7 +160,7 @@ export function setupPieAndUnderworld() {
       }
 
     });
-    globalThis.isConnected = pie.isConnected;
+    globalThis.isConnected = pie.isConnected.bind(pie);
     globalThis.pieDisconnect = pie.disconnect;
 
     globalThis.joinRoom = room_info => joinRoom(underworld, room_info);
