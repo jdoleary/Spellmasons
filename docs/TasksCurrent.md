@@ -1,5 +1,4 @@
 ## Today
-- swapped with a corpse into lava, i didn't take damage and the corpse dind't come out
 - Pick a spell screen comes up too fast
 - Multiplayer, grunts don't do damage - race condition?
 - fix resurrect icon

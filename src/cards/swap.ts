@@ -4,6 +4,7 @@ import { Spell } from './index';
 import type { Vec2 } from '../jmath/Vec';
 import * as config from '../config';
 import * as Vec from '../jmath/Vec';
+import * as Obstacle from '../entity/Obstacle';
 import { CardCategory } from '../types/commonTypes';
 
 const id = 'swap';
@@ -52,6 +53,9 @@ Swaps the caster with the source target.
       for (let [unit, newLocation] of swapUnits) {
         // Physically swap
         Unit.setLocation(unit, newLocation);
+
+        // Check to see if unit interacts with liquid
+        Obstacle.tryFallInOutOfLiquid(unit, underworld, prediction);
       }
       // Now that the units have swapped, put the pickups at their final resting place
       for (let [pickup, newLocation] of swapPickups) {
