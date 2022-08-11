@@ -65,6 +65,7 @@ import { processNextInQueueIfReady, setupNetworkHandlerGlobalFunctions } from '.
 import { setupDevGlobalFunctions } from './devUtils';
 import type PieClient from '@websocketpie/client';
 import { forcePush, makeForcePush } from './cards/push';
+import { createVisualLobbingProjectile } from './entity/Projectile';
 
 export enum turn_phase {
   PlayerTurns,
@@ -2076,11 +2077,23 @@ export default class Underworld {
   }
   checkIfShouldSpawnPortal() {
     if (this.units.filter(u => u.faction == Faction.ENEMY).every(u => !u.alive)) {
-      // Convenience: Pickup any CARD_PICKUP_NAME left automatically, so that they aren't left behind
-      this.pickups.filter(p => p.name == Pickup.CARDS_PICKUP_NAME).forEach(pickup => {
-        if (globalThis.player) {
-          Pickup.triggerPickup(pickup, globalThis.player.unit, this, false);
-        }
+      let timeBetweenPickupFly = 100;
+      this.pickups.filter(p => ![Pickup.PICKUP_SPIKES_NAME, Pickup.PICKUP_PORTAL_NAME].includes(p.name)).forEach(pickup => {
+        timeBetweenPickupFly += 100;
+        // Make the pickup fly to the player. this gives them some time so it doesn't trigger immediately.
+        setTimeout(() => {
+          if (globalThis.player) {
+            if (pickup.image) {
+              pickup.image.sprite.visible = false;
+            }
+            createVisualLobbingProjectile(pickup, globalThis.player.unit, pickup.imagePath).then(() => {
+              // Convenience: Pickup any CARD_PICKUP_NAME left automatically, so that they aren't left behind
+              if (globalThis.player) {
+                Pickup.triggerPickup(pickup, globalThis.player.unit, this, false);
+              }
+            });
+          }
+        }, timeBetweenPickupFly)
       })
       // Spawn portal near each player
       const portalPickup = Pickup.pickups.find(p => p.imagePath == 'portal');

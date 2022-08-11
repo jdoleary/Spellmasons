@@ -180,13 +180,15 @@ const manaPotionRestoreAmount = 40;
 const healthPotionRestoreAmount = 5;
 const spike_damage = 3;
 export const CARDS_PICKUP_NAME = 'Spells';
+export const PICKUP_SPIKES_NAME = 'Spike Pit';
+export const PICKUP_PORTAL_NAME = 'Portal';
 export const pickups: IPickupSource[] = [
   {
     imagePath: 'pickups/spikes',
     animationSpeed: -0.5,
     playerOnly: false,
     singleUse: true,
-    name: 'Spike Pit',
+    name: PICKUP_SPIKES_NAME,
     probability: 70,
     scale: 1,
     description: `Deals ${spike_damage} to any unit (including NPCs) that touches it`,
@@ -203,7 +205,7 @@ export const pickups: IPickupSource[] = [
     animationSpeed: -0.5,
     playerOnly: true,
     singleUse: false,
-    name: 'Portal',
+    name: PICKUP_PORTAL_NAME,
     probability: 0,
     scale: 1,
     description:
