@@ -842,7 +842,7 @@ export default class Underworld {
       console.error('Could not find pickup with index', index);
     }
   }
-  spawnEnemy(id: string, coords: Vec2, isArmored: boolean, strength: number) {
+  spawnEnemy(id: string, coords: Vec2, isArmored: boolean) {
     const sourceUnit = allUnits[id];
     if (!sourceUnit) {
       console.error('Unit with id', id, 'does not exist.  Have you registered it in src/units/index.ts?');
@@ -861,7 +861,7 @@ export default class Underworld {
       sourceUnit.info.image,
       UnitType.AI,
       sourceUnit.info.subtype,
-      strength,
+      calculateUnitStrength(this),
       sourceUnit.unitProps,
       this
     );
@@ -998,7 +998,7 @@ export default class Underworld {
       }
     }
     // Spawn units at the start of the level
-    const { unitIds, strength } = getEnemiesForAltitude(levelIndex, this);
+    const unitIds = getEnemiesForAltitude(this);
     if (validSpawnCoords.length == 0) {
       console.error('Not enough spawn coords to spawn ANY enemies');
       return undefined;
@@ -1010,7 +1010,7 @@ export default class Underworld {
       if (coord) {
         const roll = randInt(this.random, 0, 100);
         const isArmored = (roll < config.PERCENT_CHANCE_OF_HEAVY_UNIT);
-        levelData.enemies.push({ id, coord, strength, isArmored })
+        levelData.enemies.push({ id, coord, isArmored })
       }
     }
 
@@ -1244,7 +1244,7 @@ export default class Underworld {
       this.spawnPickup(p.index, p.coord);
     }
     for (let e of enemies) {
-      this.spawnEnemy(e.id, e.coord, e.isArmored, e.strength);
+      this.spawnEnemy(e.id, e.coord, e.isArmored);
     }
     // Show text in center of screen for the new level
     queueCenteredFloatingText(
@@ -2219,6 +2219,13 @@ export default class Underworld {
         newlyCreatedPlayers.push(p);
       }
     }
+    // Since the player's array length has changed, recalculate all
+    // unit strengths.  This must happen BEFORE clients are given the gamestate
+    const newStrength = calculateUnitStrength(this);
+    console.log('The number of players has changed, adjusting game difficulty via units\' strength to ', newStrength);
+    this.units.forEach(unit => {
+      Unit.adjustUnitStrength(unit, newStrength);
+    })
     // Sync all players' connection statuses with the clients list
     // This ensures that there are no players left that think they're connected
     // but are not a part of the clients list
@@ -2325,8 +2332,13 @@ export type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, Underworl
 // Idea: Higher probability of tougher units at certain levels
 const startingNumberOfUnits = 3;
 const bossEveryXLevels = 15;
+function calculateUnitStrength(underworld: Underworld) {
+  return (underworld.levelIndex / 10) + underworld.players.length / 2;
 
-function getEnemiesForAltitude(levelIndex: number, underworld: Underworld): { unitIds: string[], strength: number } {
+}
+
+function getEnemiesForAltitude(underworld: Underworld): string[] {
+  const { levelIndex } = underworld;
   const possibleUnitsToChoose = Object.values(allUnits)
     .filter(u => u.spawnParams && u.spawnParams.unavailableUntilLevelIndex <= levelIndex)
     .map(u => ({ id: u.id, probability: u.spawnParams ? u.spawnParams.probability : 0 }))
@@ -2336,13 +2348,12 @@ function getEnemiesForAltitude(levelIndex: number, underworld: Underworld): { un
       const chosenUnit = chooseObjectWithProbability(possibleUnitsToChoose, underworld.random)
       return chosenUnit ? [chosenUnit.id] : []
     })
-  const strength = (levelIndex / 10) + underworld.players.length / 2;
   // Add bosses
   if (levelIndex !== 0 && levelIndex % bossEveryXLevels == 0) {
     unitIds.push('Night Queen');
   }
-  console.log('Level strength: ', strength, 'enemies:', unitIds);
-  return { unitIds, strength };
+  console.log('Enemies:', unitIds);
+  return unitIds;
 }
 
 // Explicit list of biome types
@@ -2364,7 +2375,6 @@ export interface LevelData {
   enemies: {
     id: string,
     coord: Vec2,
-    strength: number,
     isArmored: boolean
   }[];
   validPlayerSpawnCoords: Vec2[]

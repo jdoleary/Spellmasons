@@ -146,7 +146,8 @@ export function create(
       image: Image.create({ x, y }, defaultImagePath, containerUnits),
       defaultImagePath,
       shaderUniforms: {},
-      damage: Math.round(config.UNIT_BASE_DAMAGE * strength),
+      // damage is set elsewhere in adjustUnitStrength
+      damage: 0,
       // default blood color
       bloodColor: bloodColorDefault,
       health,
@@ -168,6 +169,8 @@ export function create(
       animations: sourceUnit.animations,
       inLiquid: false,
     }, sourceUnitProps);
+
+    adjustUnitStrength(unit, unit.strength);
 
     // Since unit stats can be overridden with sourceUnitProps
     // Ensure that the unit starts will full mana and health
@@ -196,8 +199,12 @@ export function create(
   } else {
     throw new Error(`Source unit with id ${unitSourceId} does not exist`);
   }
+}
 
-
+// sets all the properties that depend on strength
+export function adjustUnitStrength(unit: IUnit, strength: number) {
+  unit.strength = strength;
+  unit.damage = Math.round(config.UNIT_BASE_DAMAGE * strength);
 }
 function setupShaders(unit: IUnit) {
   if (unit.image) {
