@@ -6,9 +6,9 @@
 //         }, ms)
 //     });
 // }
-if (Vec.equal(position, { x: 9, y: 5 })) {
-    console.log('ujtest', neighbors, currentCell?.image);
-}
+// if (Vec.equal(position, { x: 9, y: 5 })) {
+//     console.log('test', neighbors, currentCell?.image);
+// }
 
 
 add_damage

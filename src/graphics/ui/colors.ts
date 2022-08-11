@@ -40,11 +40,11 @@ export const playerColorsSecondary = [
 //     if (col) {
 //         var gray = col.r * 0.3086 + col.g * 0.6094 + col.b * 0.0820;
 
-//         console.log('jtest before', col)
+//         console.log('before', col)
 //         col.r = Math.round(col.r * saturation + gray * (1 - saturation));
 //         col.g = Math.round(col.g * saturation + gray * (1 - saturation));
 //         col.b = Math.round(col.b * saturation + gray * (1 - saturation));
-//         console.log('jtest', col)
+//         console.log('after', col)
 
 //         return rgbToHex(col.r, col.g, col.b);
 //     } else {
