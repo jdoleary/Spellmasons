@@ -386,16 +386,7 @@ export function playComboAnimation(unit: IUnit, key: string | undefined, keyMome
   // This timeout value is arbitrary, meant to prevent and report an await hang
   // if somehow resolve is never called.
   // This raceTimeout may need to be removed because playComboAnimation can have wildly varying execution times becauses it awaits keyMoment
-  return raceTimeout(20000, `playComboAnimation: ${key}; note: comboAnimation can have greatly varying execution times due to it awaiting keyMoment`, new Promise<void>((resolve) => {
-    if (!unit.image) {
-      return resolve();
-    }
-    const combo = combos[key];
-    if (!combo) {
-      console.error('Combo data missing for animation with key', key)
-      return resolve();
-    }
-    const finishOnFrame = combo.keyFrame;
+  return raceTimeout(20000, `playComboAnimation: ${key}; note: comboAnimation can have greatly varying execution times due to it awaiting keyMoment`, new Promise<void>((resolve, reject) => {
     let keyMomentPromise = Promise.resolve();
     // Ensure keyMoment doesn't trigger more than once.
     let keyMomentTriggered = false;
@@ -423,8 +414,21 @@ export function playComboAnimation(unit: IUnit, key: string | undefined, keyMome
           resolve();
         });
       }
+      return keyMomentPromise;
 
     }
+    if (!unit.image) {
+      // If the unit has no image than this code path is being run headless,
+      // just trigger the key moment immediately and return it's promise
+      return tryTriggerKeyMoment();
+    }
+    const combo = combos[key];
+    if (!combo) {
+      const err = 'Combo data missing for animation with key ' + key
+      console.error(err)
+      return reject(err);
+    }
+    const finishOnFrame = combo.keyFrame;
     const onFrameChange = (finishOnFrame === undefined || keyMoment === undefined) ? undefined : (currentFrame: number) => {
       if (currentFrame >= finishOnFrame && !keyMomentTriggered) {
         // This is when the keyMoment is INTENTED to be triggered: at a specified "finishOnFrame" of the
