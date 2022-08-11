@@ -1,7 +1,6 @@
 # Critical Path
 - Milestone | **Trailer-ready Alpha**
     - stand alone server goes into infinite loop when all players leave
-    - grunts don't do damage in multiplayer
     - Test standalone server with friends
     - Need sfx
         - 3 types of player casts
