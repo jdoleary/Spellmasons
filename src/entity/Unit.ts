@@ -332,9 +332,6 @@ export function syncronize(unitSerialized: IUnitSerialized, originalUnit: IUnit)
   // and since syncronize is mainly meant to keep things like health and position in sync,
   // I'm choosing just to omit shaderUniforms from syncronize
   const { image, shaderUniforms, ...rest } = unitSerialized;
-  if (!image) {
-    return
-  }
   Object.assign(originalUnit, rest);
   // Note: returnToDefaultSprite must be called BEFORE Image.syncronize
   // to ensure that the originalUnit.image.sprite has a parent because
