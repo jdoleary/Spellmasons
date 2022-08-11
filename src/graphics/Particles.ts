@@ -16,13 +16,13 @@ export const containerParticles = !globalThis.pixi ? undefined : new globalThis.
     uvs: false,
     tint: true
 });
-export function simpleEmitter(position: Vec2, config: particles.EmitterConfigV3): Promise<void> {
+export function simpleEmitter(position: Vec2, config: particles.EmitterConfigV3) {
     if (!containerParticles) {
-        return Promise.resolve();
+        return undefined
     }
     const emitter = new particles.Emitter(containerParticles, config);
     emitter.updateOwnerPos(position.x, position.y);
-    return Promise.resolve();
+    return emitter;
 
 }
 interface Trail {
@@ -189,4 +189,67 @@ export function createParticleTexture() {
     img.src = './images/particle.png';
     const base = new globalThis.pixi.BaseTexture(img);
     return new globalThis.pixi.Texture(base);
+}
+
+export function moveStreakEmitter(position: Vec2, prediction: boolean) {
+    if (prediction) {
+        // Don't show if just a prediction
+        return undefined
+    }
+    const texture = createParticleTexture();
+    if (!texture) {
+        console.error('No texture for makeBloatExplosion')
+        return
+    }
+    const config =
+        particles.upgradeConfig({
+            autoUpdate: true,
+            "alpha": {
+                "start": 0.4,
+                "end": 0
+            },
+            "scale": {
+                "start": 10,
+                "end": 1,
+                "minimumScaleMultiplier": 1
+            },
+            "color": {
+                "start": "#ffffff",
+                "end": "#ffffff"
+            },
+            "speed": {
+                "start": 0,
+                "end": 0,
+                "minimumSpeedMultiplier": 1
+            },
+            "acceleration": {
+                "x": 0,
+                "y": 0
+            },
+            "maxSpeed": 0,
+            "startRotation": {
+                "min": 0,
+                "max": 360
+            },
+            "noRotation": true,
+            "rotationSpeed": {
+                "min": 0,
+                "max": 0
+            },
+            "lifetime": {
+                "min": 0.7,
+                "max": 0.7
+            },
+            "blendMode": "normal",
+            "frequency": 0.0001,
+            "emitterLifetime": 1,
+            "maxParticles": 2000,
+            "pos": {
+                "x": 0,
+                "y": 0
+            },
+            "addAtBack": true,
+            "spawnType": "point"
+        }, [texture]);
+    return simpleEmitter(position, config);
 }
