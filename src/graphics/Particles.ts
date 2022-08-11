@@ -16,6 +16,15 @@ export const containerParticles = !globalThis.pixi ? undefined : new globalThis.
     uvs: false,
     tint: true
 });
+export function simpleEmitter(position: Vec2, config: particles.EmitterConfigV3): Promise<void> {
+    if (!containerParticles) {
+        return Promise.resolve();
+    }
+    const emitter = new particles.Emitter(containerParticles, config);
+    emitter.updateOwnerPos(position.x, position.y);
+    return Promise.resolve();
+
+}
 interface Trail {
     position: Vec2;
     target: Vec2;
@@ -45,7 +54,7 @@ export function cleanUpTrail(trail: Trail) {
     }
 }
 export function makeManaTrail(start: Vec2, target: Vec2) {
-    const texture = createTexture();
+    const texture = createParticleTexture();
     if (!texture) {
         return undefined
     }
@@ -172,7 +181,7 @@ export function updateParticlees(delta: number, bloods: BloodParticle[], seedran
     }
 }
 
-function createTexture() {
+export function createParticleTexture() {
     if (!globalThis.pixi) {
         return undefined;
     }
