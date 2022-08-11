@@ -1,4 +1,9 @@
 ## Today
+- swapped with a corpse into lava, i didn't take damage and the corpse dind't come out
+- Pick a spell screen comes up too fast
+- Multiplayer, grunts don't do damage - race condition?
+- fix resurrect icon
+- replace wallN.png image 
 ## Tasks
 - Many force moves (push and pull) for many targets often fails.  Some of them will never get added because they will deadlock
 - Brad feedback 2022-08-04
@@ -219,6 +224,7 @@
 - Change AOE behavior so that it just expands radius
     - This radius expansion should work for ANY spell that uses a radius: vortex, bloat, chain, etc
     - Maybe it only modifies the spell directly after it
+- Spell: Range, like aoe and chain but extends your range
 
 
 ## Misc

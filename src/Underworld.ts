@@ -56,7 +56,7 @@ import { getClients, hostGiveClientGameState, IHostApp } from './network/network
 import { healthAllyGreen, healthHurtRed, healthRed } from './graphics/ui/colors';
 import objectHash from 'object-hash';
 import { withinMeleeRange } from './entity/units/actions/gruntAction';
-import { all_ground, baseTiles, caveSizes, convertBaseTilesToFinalTiles, generateCave, getLimits, Limits as Limits, Tile, toObstacle } from './MapOrganicCave';
+import { baseTiles, caveSizes, convertBaseTilesToFinalTiles, generateCave, getLimits, Limits as Limits, makeFinalTileImages, Map, Tile, toObstacle } from './MapOrganicCave';
 import { Material } from './Conway';
 import { oneDimentionIndexToVec2, vec2ToOneDimentionIndexPreventWrap } from './jmath/ArrayUtil';
 import { raceTimeout } from './Promise';
@@ -904,21 +904,25 @@ export default class Underworld {
         image: baseTileValues[value] || ''
       }
     });
-    const map = {
+    // testLevel biome is arbitrary
+    const biome = 'blood';
+    const map: Map = {
+      biome,
       liquid: [],
       tiles: _tiles,
       width,
       height
     };
-    globalThis.map = JSON.parse(JSON.stringify(map))
+    globalThis.map = JSON.parse(JSON.stringify(map));
     convertBaseTilesToFinalTiles(map);
     const { tiles } = map;
     return {
       levelIndex: 1,
+      biome,
       liquid: [],
       limits: getLimits(tiles),
       obstacles: tiles.flatMap(t => {
-        const obstacle = t && toObstacle(t);
+        const obstacle = t && toObstacle(t, map.biome);
         return obstacle ? [obstacle] : [];
       }),
       imageOnlyTiles: tiles.flatMap(x => x == undefined ? [] : [x]),
@@ -950,14 +954,17 @@ export default class Underworld {
       console.error('Missing caveSize for generating level')
       return;
     }
-    const { map, limits } = generateCave(levelIndex > 6 ? caveSizes.medium : caveSizes.small, this);
+    // TODO: set biome dynamically
+    const biome: Biome = 'blood';
+    const { map, limits } = generateCave(levelIndex > 6 ? caveSizes.medium : caveSizes.small, biome, this);
     const { tiles, liquid, width } = map;
     const levelData: LevelData = {
       levelIndex,
+      biome: 'blood',
       limits,
       liquid,
       obstacles: tiles.flatMap(t => {
-        const obstacle = t && toObstacle(t);
+        const obstacle = t && toObstacle(t, biome);
         return obstacle ? [obstacle] : [];
       }),
       imageOnlyTiles: [],
@@ -966,7 +973,8 @@ export default class Underworld {
       enemies: [],
       validPlayerSpawnCoords: []
     };
-    let validSpawnCoords: Vec2[] = tiles.flatMap(t => t && t.image == all_ground ? [t] : []);
+    const finalTileImages = makeFinalTileImages(biome);
+    let validSpawnCoords: Vec2[] = tiles.flatMap(t => t && t.image == finalTileImages.all_ground ? [t] : []);
     // flatMap removes undefineds
     levelData.imageOnlyTiles = tiles.flatMap(x => x == undefined ? [] : [x]);
 
@@ -1012,64 +1020,64 @@ export default class Underworld {
     return levelData;
 
   }
-  pickGroundTileLayers(): string[] {
-    const baseTile = 'tiles/all_ground.png';
+  pickGroundTileLayers(biome: string): string[] {
+    const baseTile = `tiles/${biome}/all_ground.png`;
     const baseTiles: { path: string, probability: number }[] = [
       { path: baseTile, probability: 20 },
       ...[
-        'tiles/all_ground_dirt_1.png',
-        'tiles/all_ground_dirt_2.png',
-        'tiles/all_ground_dirt_3.png',
-        'tiles/all_ground_dirt_4.png',
-        'tiles/all_ground_dirt_5.png',
-        'tiles/all_ground_dirt_6.png',
-        'tiles/all_ground_dirt_7.png',
-        'tiles/all_ground_dirt_8.png',
-        'tiles/all_ground_dirt_9.png',
+        `tiles/${biome}/all_ground_dirt_1.png`,
+        `tiles/${biome}/all_ground_dirt_2.png`,
+        `tiles/${biome}/all_ground_dirt_3.png`,
+        `tiles/${biome}/all_ground_dirt_4.png`,
+        `tiles/${biome}/all_ground_dirt_5.png`,
+        `tiles/${biome}/all_ground_dirt_6.png`,
+        `tiles/${biome}/all_ground_dirt_7.png`,
+        `tiles/${biome}/all_ground_dirt_8.png`,
+        `tiles/${biome}/all_ground_dirt_9.png`,
       ].map(path => ({ path, probability: 1 }))
     ]
     const baseTileChoice = chooseObjectWithProbability(baseTiles, this.random);
     const meatTiles: { path: string, probability: number }[] = [
       { path: '', probability: 20 },
       ...[
-        'tiles/all_ground_meat_1.png',
-        'tiles/all_ground_meat_2.png',
-        'tiles/all_ground_meat_3.png',
-        'tiles/all_ground_meat_4.png',
-        'tiles/all_ground_meat_5.png',
-        'tiles/all_ground_meat_6.png',
-        'tiles/all_ground_meat_7.png',
-        'tiles/all_ground_meat_8.png',
-        'tiles/all_ground_meat_9.png',
+        `tiles/${biome}/all_ground_meat_1.png`,
+        `tiles/${biome}/all_ground_meat_2.png`,
+        `tiles/${biome}/all_ground_meat_3.png`,
+        `tiles/${biome}/all_ground_meat_4.png`,
+        `tiles/${biome}/all_ground_meat_5.png`,
+        `tiles/${biome}/all_ground_meat_6.png`,
+        `tiles/${biome}/all_ground_meat_7.png`,
+        `tiles/${biome}/all_ground_meat_8.png`,
+        `tiles/${biome}/all_ground_meat_9.png`,
       ].map(path => ({ path, probability: 1 }))
     ]
     const meatChoice = chooseObjectWithProbability(meatTiles, this.random);
     const mossTiles: { path: string, probability: number }[] = [
       { path: '', probability: 20 },
       ...[
-        'tiles/all_ground_moss_1.png',
-        'tiles/all_ground_moss_2.png',
-        'tiles/all_ground_moss_3.png',
-        'tiles/all_ground_moss_4.png',
-        'tiles/all_ground_moss_5.png',
-        'tiles/all_ground_moss_6.png',
-        'tiles/all_ground_moss_7.png',
-        'tiles/all_ground_moss_8.png',
-        'tiles/all_ground_moss_9.png',
+        `tiles/${biome}/all_ground_moss_1.png`,
+        `tiles/${biome}/all_ground_moss_2.png`,
+        `tiles/${biome}/all_ground_moss_3.png`,
+        `tiles/${biome}/all_ground_moss_4.png`,
+        `tiles/${biome}/all_ground_moss_5.png`,
+        `tiles/${biome}/all_ground_moss_6.png`,
+        `tiles/${biome}/all_ground_moss_7.png`,
+        `tiles/${biome}/all_ground_moss_8.png`,
+        `tiles/${biome}/all_ground_moss_9.png`,
       ].map(path => ({ path, probability: 1 }))
     ]
     const mossChoice = chooseObjectWithProbability(mossTiles, this.random);
     return [baseTileChoice ? baseTileChoice.path : baseTile, meatChoice ? meatChoice.path : '', mossChoice ? mossChoice.path : ''];
 
   }
-  addGroundTileImages() {
+  addGroundTileImages(biome: string) {
     if (globalThis.headless) {
       return;
     }
     // Lay down a ground tile for every tile that is not liquid
     for (let tile of this.imageOnlyTiles.filter(t => t.image.indexOf('liquid') === -1)) {
       if (tile.image) {
-        const layers = this.pickGroundTileLayers();
+        const layers = this.pickGroundTileLayers(biome);
         for (let path of layers) {
           if (path) {
             const sprite = addPixiSprite(path, containerBoard);
@@ -1081,10 +1089,14 @@ export default class Underworld {
         }
       }
     }
+    if (!this.lastLevelCreated) {
+      console.error('cannot lay down wall tiles, no lastLevelCreated to get biome from');
+      return;
+    }
     // Then lay down wall tiles on top of them
-    for (let tile of this.imageOnlyTiles.filter(t => !t.image.includes('tiles/all_ground'))) {
+    for (let tile of this.imageOnlyTiles.filter(t => !t.image.includes(`tiles/${this.lastLevelCreated?.biome}/all_ground`))) {
       if (tile.image) {
-        if (tile.image == 'tiles/all_liquid.png') {
+        if (tile.image == `tiles/${this.lastLevelCreated.biome}/all_liquid.png`) {
           // liquid tiles are rendered with a shader
           continue;
         }
@@ -1210,7 +1222,7 @@ export default class Underworld {
     // Clean up the previous level
     this.cleanUpLevel();
 
-    const { levelIndex, limits, liquid, imageOnlyTiles, pickups, enemies, obstacles, validPlayerSpawnCoords } = levelData;
+    const { levelIndex, biome, limits, liquid, imageOnlyTiles, pickups, enemies, obstacles, validPlayerSpawnCoords } = levelData;
     this.levelIndex = levelIndex;
     this.limits = limits;
 
@@ -1226,7 +1238,7 @@ export default class Underworld {
     // empty tiles are tiles with an image of ''
     this.cacheWalls(obstacles, imageOnlyTiles.filter(x => x.image == ''));
     this.imageOnlyTiles = imageOnlyTiles;
-    this.addGroundTileImages();
+    this.addGroundTileImages(biome);
     for (let p of pickups) {
       this.spawnPickup(p.index, p.coord);
     }
@@ -2320,9 +2332,12 @@ function getEnemiesForAltitude(levelIndex: number, underworld: Underworld): { un
   return { unitIds, strength };
 }
 
+// Explicit list of biome types
+export type Biome = 'blood';// | ''
 
 export interface LevelData {
   levelIndex: number,
+  biome: Biome,
   limits: Limits,
   obstacles: Obstacle.IObstacle[];
   liquid: Tile[];

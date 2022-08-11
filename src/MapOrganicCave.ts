@@ -7,7 +7,7 @@ import * as config from './config';
 import { oneDimentionIndexToVec2, vec2ToOneDimentionIndex, vec2ToOneDimentionIndexPreventWrap } from "./jmath/ArrayUtil";
 import { conway, ConwayState, placeLiquidSources } from "./Conway";
 import type { IObstacle } from "./entity/Obstacle";
-import Underworld from "./Underworld";
+import Underworld, { Biome } from "./Underworld";
 
 export const caveSizes: { [size: string]: CaveParams } = {
     'small': {
@@ -38,7 +38,7 @@ interface CaveParams {
 }
 const directionRandomAmount = Math.PI / 2;
 export interface Limits { xMin: number, xMax: number, yMin: number, yMax: number };
-export function generateCave(params: CaveParams, underworld: Underworld): { map: Map, limits: Limits } {
+export function generateCave(params: CaveParams, biome: Biome, underworld: Underworld): { map: Map, limits: Limits } {
     // Debug: Draw caves
     globalThis.debugCave?.clear();
     const minDirection = randFloat(underworld.random, Math.PI, Math.PI / 2);
@@ -180,6 +180,7 @@ export function generateCave(params: CaveParams, underworld: Underworld): { map:
 
 
     const map = {
+        biome,
         liquid,
         tiles,
         width,
@@ -249,6 +250,7 @@ export function convertBaseTilesToFinalTiles(map: Map) {
     }
     // Outline all base tiles with finalized tiles:
     const originalMap = { ...map, tiles: JSON.parse(JSON.stringify(map.tiles)) };
+    const finalTileImages = makeFinalTileImages(map.biome);
     for (let i = 0; i < size; i++) {
         const position = oneDimentionIndexToVec2(i, width);
         const currentCell = getCell(map, position);
@@ -279,40 +281,40 @@ export function convertBaseTilesToFinalTiles(map: Map) {
             if (tile) {
                 if (neighbors.west == baseTiles.liquid && neighbors.south == baseTiles.liquid) {
                     changeTile(i, finalTileImages.liquidInsideCornerNE);
-                    map.liquid.push({ image: baseTiles.liquid, x: tile.x, y: tile.y })
+                    map.liquid.push({ image: finalTileImages.all_liquid, x: tile.x, y: tile.y })
                 } else if (neighbors.east == baseTiles.liquid && neighbors.south == baseTiles.liquid) {
                     changeTile(i, finalTileImages.liquidInsideCornerNW);
-                    map.liquid.push({ image: baseTiles.liquid, x: tile.x, y: tile.y })
+                    map.liquid.push({ image: finalTileImages.all_liquid, x: tile.x, y: tile.y })
                 } else if (neighbors.east == baseTiles.liquid && neighbors.north == baseTiles.liquid) {
                     changeTile(i, finalTileImages.liquidInsideCornerSW);
-                    map.liquid.push({ image: baseTiles.liquid, x: tile.x, y: tile.y })
+                    map.liquid.push({ image: finalTileImages.all_liquid, x: tile.x, y: tile.y })
                 } else if (neighbors.west == baseTiles.liquid && neighbors.north == baseTiles.liquid) {
                     changeTile(i, finalTileImages.liquidInsideCornerSE);
-                    map.liquid.push({ image: baseTiles.liquid, x: tile.x, y: tile.y })
+                    map.liquid.push({ image: finalTileImages.all_liquid, x: tile.x, y: tile.y })
                 } else if (neighbors.north == baseTiles.liquid) {
                     changeTile(i, finalTileImages.liquidNGroundS);
-                    map.liquid.push({ image: baseTiles.liquid, x: tile.x, y: tile.y })
+                    map.liquid.push({ image: finalTileImages.all_liquid, x: tile.x, y: tile.y })
                 } else if (neighbors.east == baseTiles.liquid) {
                     changeTile(i, finalTileImages.liquidEGroundW);
-                    map.liquid.push({ image: baseTiles.liquid, x: tile.x, y: tile.y })
+                    map.liquid.push({ image: finalTileImages.all_liquid, x: tile.x, y: tile.y })
                 } else if (neighbors.west == baseTiles.liquid) {
                     changeTile(i, finalTileImages.liquidWGroundE);
-                    map.liquid.push({ image: baseTiles.liquid, x: tile.x, y: tile.y })
+                    map.liquid.push({ image: finalTileImages.all_liquid, x: tile.x, y: tile.y })
                 } else if (neighbors.south == baseTiles.liquid) {
                     changeTile(i, finalTileImages.liquidSGroundN);
-                    map.liquid.push({ image: baseTiles.liquid, x: tile.x, y: tile.y })
+                    map.liquid.push({ image: finalTileImages.all_liquid, x: tile.x, y: tile.y })
                 } else if (neighbors.northeast == baseTiles.liquid) {
                     changeTile(i, finalTileImages.liquidCornerNE);
-                    map.liquid.push({ image: baseTiles.liquid, x: tile.x, y: tile.y })
+                    map.liquid.push({ image: finalTileImages.all_liquid, x: tile.x, y: tile.y })
                 } else if (neighbors.northwest == baseTiles.liquid) {
                     changeTile(i, finalTileImages.liquidCornerNW);
-                    map.liquid.push({ image: baseTiles.liquid, x: tile.x, y: tile.y })
+                    map.liquid.push({ image: finalTileImages.all_liquid, x: tile.x, y: tile.y })
                 } else if (neighbors.southeast == baseTiles.liquid) {
                     changeTile(i, finalTileImages.liquidCornerSE);
-                    map.liquid.push({ image: baseTiles.liquid, x: tile.x, y: tile.y })
+                    map.liquid.push({ image: finalTileImages.all_liquid, x: tile.x, y: tile.y })
                 } else if (neighbors.southwest == baseTiles.liquid) {
                     changeTile(i, finalTileImages.liquidCornerSW);
-                    map.liquid.push({ image: baseTiles.liquid, x: tile.x, y: tile.y })
+                    map.liquid.push({ image: finalTileImages.all_liquid, x: tile.x, y: tile.y })
                 }
             } else {
                 console.error('Unexpected map generation error, tile is undefined.')
@@ -333,10 +335,10 @@ export function convertBaseTilesToFinalTiles(map: Map) {
         const position = oneDimentionIndexToVec2(i, width);
         const cell = getCell(map, position);
         if (cell?.image == baseTiles.liquid) {
-            changeTile(i, all_liquid);
-            map.liquid.push({ image: baseTiles.liquid, x: cell.x, y: cell.y })
+            changeTile(i, finalTileImages.all_liquid);
+            map.liquid.push({ image: finalTileImages.all_liquid, x: cell.x, y: cell.y })
         } else if (cell?.image == baseTiles.ground) {
-            changeTile(i, all_ground);
+            changeTile(i, finalTileImages.all_ground);
         }
     }
 }
@@ -494,7 +496,8 @@ export function getLimits(points: Vec.Vec2[]): Limits {
 
 }
 export type Tile = { image: string } & Vec.Vec2;
-interface Map {
+export interface Map {
+    biome: Biome;
     liquid: Tile[];
     tiles: Tile[];
     width: number;
@@ -516,32 +519,31 @@ export const baseTiles = {
     liquid: 'tiles/all_liquid.png',
     ground: 'tiles/ground.png',
 }
-const all_liquid = 'tiles/all_liquid.png';
-export const all_ground = 'tiles/all_ground.png';
-const finalTileImages = {
-    all_liquid,
-    all_ground,
-    liquidInsideCornerNE: 'tiles/liquidInsideCornerNE.png',
-    liquidInsideCornerNW: 'tiles/liquidInsideCornerNW.png',
-    liquidInsideCornerSE: 'tiles/liquidInsideCornerSE.png',
-    liquidInsideCornerSW: 'tiles/liquidInsideCornerSW.png',
-    liquidNGroundS: 'tiles/liquidNGroundS.png',
-    liquidCornerNE: 'tiles/liquidCornerNE.png',
-    liquidCornerNW: 'tiles/liquidCornerNW.png',
-    liquidEGroundW: 'tiles/liquidEGroundW.png',
-    liquidWGroundE: 'tiles/liquidWGroundE.png',
-    liquidSGroundN: 'tiles/liquidSGroundN.png',
-    liquidCornerSE: 'tiles/liquidCornerSE.png',
-    liquidCornerSW: 'tiles/liquidCornerSW.png',
-    wall: 'tiles/wall.png',
-    wallN: 'tiles/wallN.png',
-};
+export const makeFinalTileImages = (biome: string) => ({
+    all_liquid: `tiles/${biome}/all_liquid.png`,
+    all_ground: `tiles/${biome}/all_ground.png`,
+    liquidInsideCornerNE: `tiles/${biome}/liquidInsideCornerNE.png`,
+    liquidInsideCornerNW: `tiles/${biome}/liquidInsideCornerNW.png`,
+    liquidInsideCornerSE: `tiles/${biome}/liquidInsideCornerSE.png`,
+    liquidInsideCornerSW: `tiles/${biome}/liquidInsideCornerSW.png`,
+    liquidNGroundS: `tiles/${biome}/liquidNGroundS.png`,
+    liquidCornerNE: `tiles/${biome}/liquidCornerNE.png`,
+    liquidCornerNW: `tiles/${biome}/liquidCornerNW.png`,
+    liquidEGroundW: `tiles/${biome}/liquidEGroundW.png`,
+    liquidWGroundE: `tiles/${biome}/liquidWGroundE.png`,
+    liquidSGroundN: `tiles/${biome}/liquidSGroundN.png`,
+    liquidCornerSE: `tiles/${biome}/liquidCornerSE.png`,
+    liquidCornerSW: `tiles/${biome}/liquidCornerSW.png`,
+    wall: `tiles/${biome}/wall.png`,
+    wallN: `tiles/${biome}/wallN.png`,
+});
 
-export function toObstacle(t: Tile): IObstacle | undefined {
+export function toObstacle(t: Tile, biome: string): IObstacle | undefined {
     //   const width = config.OBSTACLE_SIZE;
     //   const height = config.OBSTACLE_SIZE;
     //   const _x = t.x - width / 2;
     //   const _y = t.y - height / 2;
+    const finalTileImages = makeFinalTileImages(biome);
     if (t.image == finalTileImages.wall) {
         return {
             x: t.x,
