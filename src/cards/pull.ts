@@ -1,14 +1,12 @@
-import { clone, multiply, Vec2 } from '../jmath/Vec';
+import { multiply, Vec2 } from '../jmath/Vec';
 import { Spell } from './index';
 import type { Circle, ForceMove } from '../jmath/moveWithCollision';
-import { forceMoveColor } from '../graphics/ui/colors';
 import { raceTimeout } from '../Promise';
 import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
 
 export const id = 'pull';
-const pullDistance = 12;
 const spell: Spell = {
   card: {
     id,
