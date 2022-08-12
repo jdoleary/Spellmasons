@@ -2,9 +2,6 @@
 - Do a few sfx and spell effects every day
 - multiplayer bug: when a player joins after another player has already died, on client 2 the other player's sprite is in idle instead of dead
 - make quantity work for pull
-- ding sound design when "leveling up"
-- purified vampires shouldn't spread bloodcurse
-- bloodcurse show as 18+18/36
 ## Tasks
 - Many force moves (push and pull) for many targets often fails.  Some of them will never get added because they will deadlock
 - Brad feedback 2022-08-04
@@ -92,6 +89,10 @@
         - OR use a pixelated source image instead of a pixelated filter
         - It's the framerate that makes it jarring
     - animated trim path line for archers so it's obvious they'll hit you
+- Lochlan feedback
+    - ding sound design when "leveling up"
+    - purified vampires shouldn't spread bloodcurse
+    - bloodcurse show as 18+18/36
 - Pack 6
     - Standalone Server
         - Add "preparing" animation used to reduce desyncs due to network latency, so that if multiple users are casting spells at the same time, the wizard bending down to "charge" as soon as the current user clicks, masks a delay to make sure it doesn't conflict with other spells.  It'll send the spell over the network as soon as the user clicks but waits to cast it so that there aren't conflicting spells making desyncs on multiple clients.
