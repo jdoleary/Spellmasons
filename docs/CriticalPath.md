@@ -3,7 +3,6 @@
     - stand alone server goes into infinite loop when all players leave
     - Test standalone server with friends
     - Need sfx
-        - 3 types of player casts
         - death sounds
         - heal
         - aoe
@@ -19,25 +18,24 @@
         - mana steal
         - poison
         - protection
-        - pull/push/swap
+        - swap
         - purify
         - resurrect
         - shield
         - summon decoy
     - Need spell effects
         - aoe
-        - bloat
         - blood curse
         - chain
-        - contagious
         - debilitate
         - pull/push/swap
         - purify
         - shield
-        - summon decoy
 - Milestone X | **Juice**
     - SFX
         - Unit Sounds
+            - Attack sounds
+            - Death sounds
         - Spell Sounds
         - Consumable Sounds
         - Splash Liquid Sounds

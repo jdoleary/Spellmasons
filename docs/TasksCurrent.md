@@ -1,31 +1,29 @@
 ## Today
+- Refactor addOneOffAnimation to replace more complicated animation logic in Lobber.ts and other files so that it OPTIONALLY removes animation when sprite changes.  Refactoring it will make it auto remove when it's done **important**
+- Do a few sfx and spell effects every day
 - multiplayer bug: when a player joins after another player has already died, on client 2 the other player's sprite is in idle instead of dead
+- make quantity work for pull
+- change decoy blood color to brown
+- ding sound design when "leveling up"
+- purified vampires shouldn't spread bloodcurse
+- bloodcurse show as 18+18/36
 ## Tasks
 - Many force moves (push and pull) for many targets often fails.  Some of them will never get added because they will deadlock
 - Brad feedback 2022-08-04
-    - game crashed with adjoin pull!
     - decoy didn't trigger bloat
     - freeze should shield damage?
         - if frozen unit takes damage it restarts animation
     - targeting mishap, see video
     - clones exploding without bloat modifier, it's like they kept the event somehow
     - looping death animation bug
-    - adjoining + push locks up the game
-        - multiple push wile push is already going
-        - pull alone also lagged it out
-        - protect against infinite w/ force move prediction
     - upgrade where you gives omethng up to gain something
     - decoy should be immune to blood curse?, or should show it?
     - 10th toolbar space isn't filling up when you get a new spell?
-- bloat explosion didn't push mana potion but it predicted that it would
 - push, bload, expand, hurt suprisingly damaged me when i clicked on an enemy near me, i think it's cause it both expanded the enemy's radius and where i clicked
-- pull doesn't trigger fallInLava, i pulled a unit right through lava
-- archer movement got stuck which made me lose a game 0.3199228271451904
 - bug: when i quit a game and start over it gives me the resurrect optoin
 - Ensure hurt is presented in first spell picks
 - see cantwalk.png on desktop
 - bug: explosion radius text and some move lines left on the screen after cast was done
-- bug: Pushing spike into grunt pushed the grunt instead of damaging him and the spike disappeared
 - game slows down when there's a lot of blood on the screen and it's painint more
 ## Path to Trailer-ready alpha
 - task: Move prediction pickups and units to underworld not global or else they will be shared between multiple underworlds
