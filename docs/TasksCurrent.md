@@ -2,10 +2,10 @@
 - Do a few sfx and spell effects every day
 - multiplayer bug: when a player joins after another player has already died, on client 2 the other player's sprite is in idle instead of dead
 - make quantity work for pull
+- bug: decoy, bloat in that order doesn't add bloat to decoy
 ## Tasks
 - Many force moves (push and pull) for many targets often fails.  Some of them will never get added because they will deadlock
 - Brad feedback 2022-08-04
-    - decoy didn't trigger bloat
     - freeze should shield damage?
         - if frozen unit takes damage it restarts animation
     - targeting mishap, see video

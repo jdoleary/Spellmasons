@@ -534,9 +534,6 @@ export function resurrect(unit: IUnit) {
   unit.alive = true;
   returnToDefaultSprite(unit);
 }
-// A list of unit source ids that will produce no corpse when killed
-// Useful for decoy (and maybe bosses in the future??)
-const noCorpseIds = ['decoy'];
 export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   if (!unit.alive) {
     // If already dead, do nothing
@@ -544,40 +541,34 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   }
   // Health should already be 0 but make sure it is for the sake of the UI bar
   unit.health = 0;
-  if (noCorpseIds.includes(unit.unitSourceId)) {
-    // Remove the unit entirely
-    cleanup(unit);
-    return;
-  } else {
-    // Set unit.alive to false, this must come before getParentContainer
-    // so it'll know to put the new image in the right container
-    unit.alive = false;
-    // This check for unit.image prevents creating a corpse image when a predictionUnit
-    // dies because a prediction unit won't have an image property
-    if (unit.image) {
-      changeToDieSprite(unit);
-    }
-    unit.mana = 0;
-    // Ensure that the unit resolvesDoneMoving when they die in the event that 
-    // they die while they are moving.  This prevents turn phase from getting stuck
-    unit.resolveDoneMoving();
+  // Set unit.alive to false, this must come before getParentContainer
+  // so it'll know to put the new image in the right container
+  unit.alive = false;
+  // This check for unit.image prevents creating a corpse image when a predictionUnit
+  // dies because a prediction unit won't have an image property
+  if (unit.image) {
+    changeToDieSprite(unit);
+  }
+  unit.mana = 0;
+  // Ensure that the unit resolvesDoneMoving when they die in the event that 
+  // they die while they are moving.  This prevents turn phase from getting stuck
+  unit.resolveDoneMoving();
 
-    for (let i = 0; i < unit.onDeathEvents.length; i++) {
-      const eventName = unit.onDeathEvents[i];
-      if (eventName) {
-        const fn = Events.onDeathSource[eventName];
-        if (fn) {
-          fn(unit, underworld, prediction);
-        }
+  for (let i = 0; i < unit.onDeathEvents.length; i++) {
+    const eventName = unit.onDeathEvents[i];
+    if (eventName) {
+      const fn = Events.onDeathSource[eventName];
+      if (fn) {
+        fn(unit, underworld, prediction);
       }
     }
+  }
 
-    // Remove all modifiers
-    // Note: This must come AFTER onDeathEvents or else it will remove the modifier
-    // that added the onDeathEvent and the onDeathEvent won't trigger
-    for (let [modifier, _modifierProperties] of Object.entries(unit.modifiers)) {
-      removeModifier(unit, modifier, underworld);
-    }
+  // Remove all modifiers
+  // Note: This must come AFTER onDeathEvents or else it will remove the modifier
+  // that added the onDeathEvent and the onDeathEvent won't trigger
+  for (let [modifier, _modifierProperties] of Object.entries(unit.modifiers)) {
+    removeModifier(unit, modifier, underworld);
   }
 
   if (globalThis.player && globalThis.player.unit == unit) {
