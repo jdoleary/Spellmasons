@@ -13,6 +13,7 @@ const spell: Spell = {
   card: {
     id,
     category: CardCategory.Movement,
+    supportQuantity: true,
     sfx: 'pull',
     manaCost: 10,
     healthCost: 0,
@@ -26,21 +27,21 @@ Pulls the target(s) towards the caster
       let promises = [];
       playDefaultSpellSFX(card, prediction);
       for (let unit of state.targetedUnits) {
-        promises.push(pull(unit, state.casterUnit, underworld, prediction));
+        promises.push(pull(unit, state.casterUnit, quantity, underworld, prediction));
       }
       for (let pickup of state.targetedPickups) {
-        promises.push(pull(pickup, state.casterUnit, underworld, prediction));
+        promises.push(pull(pickup, state.casterUnit, quantity, underworld, prediction));
       }
       await Promise.all(promises);
       return state;
     },
   },
 };
-export async function pull(pushedObject: Circle, towards: Vec2, underworld: Underworld, prediction: boolean): Promise<void> {
-  const velocity_falloff = 0.93;
+const velocity_falloff = 0.93;
+export async function pull(pushedObject: Circle, towards: Vec2, quantity: number, underworld: Underworld, prediction: boolean): Promise<void> {
   // Set the velocity so it's just enough to pull the unit into you
-  const velocity = multiply(1 - velocity_falloff, { x: towards.x - pushedObject.x, y: towards.y - pushedObject.y });
-  const originalPosition = clone(pushedObject);
+  let velocity = multiply(1 - velocity_falloff, { x: towards.x - pushedObject.x, y: towards.y - pushedObject.y });
+  velocity = multiply(quantity, velocity);
   let forceMoveInst: ForceMove;
   return await raceTimeout(2000, 'Pull', new Promise<void>((resolve) => {
     forceMoveInst = { canCreateSecondOrderPushes: true, pushedObject, velocity, velocity_falloff, resolve }
