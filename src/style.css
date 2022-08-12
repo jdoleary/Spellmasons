@@ -25,6 +25,7 @@ body {
   top: 0;
 }
 
+
 #loading-screen {
   display: none;
   font-size: 162px;
@@ -43,7 +44,10 @@ body {
 
 body.loading #loading-screen {
   display: block;
+}
 
+body.loading.HUD-hidden #loading-screen {
+  display: none;
 }
 
 /* Hide game content and underworld when the menu is open */
