@@ -34,7 +34,7 @@ Stackable.
           }
         }
         Unit.takeDamage(unit, damage, undefined, underworld, prediction, state);
-        await Unit.addOneOffAnimation(unit, 'spell-effects/potionPickup', { loop: false, animationSpeed: 0.3 });
+        await Unit.addOneOffAnimation(unit, 'spell-effects/potionPickup', {}, { loop: false, animationSpeed: 0.3 });
       }
       return state;
     },

@@ -21,9 +21,9 @@ export type IImageAnimatedSerialized = {
 };
 // 'imagePath' is a property that I've added to sprite to identify which
 // animation is playing currently
-// 'isOneOff' is a custom property that I'm adding to denote if a sprite is a oneOff sprite
+// 'doRemoveWhenPrimaryAnimationChanges' is a custom property that I'm adding to denote if a sprite is a oneOff sprite
 // meaning, it should get removed if the primary sprite changes
-export type JSpriteAnimated = PIXI.AnimatedSprite & { imagePath: string, isOneOff: boolean };
+export type JSpriteAnimated = PIXI.AnimatedSprite & { imagePath: string, doRemoveWhenPrimaryAnimationChanges: boolean };
 export interface IImageAnimated {
   // Not to be serialized
   sprite: JSpriteAnimated;
@@ -125,7 +125,7 @@ export function changeSprite(image: IImageAnimated | undefined, imagePath: strin
     }
     // Remove oneOff sprites attached to this sprites previous animation:
     for (let child of sprite.children as JSpriteAnimated[]) {
-      if (child.isOneOff) {
+      if (child.doRemoveWhenPrimaryAnimationChanges) {
         sprite.removeChild(child);
       }
     }

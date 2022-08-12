@@ -1,5 +1,4 @@
 ## Today
-- Refactor addOneOffAnimation to replace more complicated animation logic in Lobber.ts and other files so that it OPTIONALLY removes animation when sprite changes.  Refactoring it will make it auto remove when it's done **important**
 - Do a few sfx and spell effects every day
 - multiplayer bug: when a player joins after another player has already died, on client 2 the other player's sprite is in idle instead of dead
 - make quantity work for pull

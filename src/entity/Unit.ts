@@ -464,10 +464,11 @@ export function playComboAnimation(unit: IUnit, key: string | undefined, keyMome
         }
       });
     // Note: oneOff animations MUST be added after changeSprite because changeSprite wipes any existing oneOff animations
-    // This is how oneOff animations are attached to a primary animation, so if the primary animation ends early, so do
-    // the currently playing oneOff animations.
+    // with `doRemoveWhenPrimaryAnimationChanges` is set to true
+    // This is how these animations are attached to a primary animation, so if the primary animation ends early, so do
+    // the currently playing animations with that flag.
     for (let animPath of combo.companionAnimations) {
-      addOneOffAnimation(unit, animPath, options);
+      addOneOffAnimation(unit, animPath, { doRemoveWhenPrimaryAnimationChanges: true }, options);
     }
   }));
 }
@@ -497,7 +498,11 @@ export function playAnimation(unit: IUnit, spritePath: string | undefined, optio
     });
   }));
 }
-export function addOneOffAnimation(unit: IUnit, spritePath: string, options?: PixiSpriteOptions): Promise<void> {
+interface OneOffOptions {
+  doRemoveWhenPrimaryAnimationChanges?: boolean;
+}
+
+export function addOneOffAnimation(unit: IUnit, spritePath: string, oneOffOptions?: OneOffOptions, options?: PixiSpriteOptions): Promise<void> {
   // Play animation and then remove it
   // ---
   // This timeout value is arbitrary, meant to prevent and report an await hang
@@ -517,7 +522,7 @@ export function addOneOffAnimation(unit: IUnit, spritePath: string, options?: Pi
       }
     });
     if (animationSprite) {
-      animationSprite.isOneOff = true;
+      animationSprite.doRemoveWhenPrimaryAnimationChanges = oneOffOptions?.doRemoveWhenPrimaryAnimationChanges || false;
       animationSprite.anchor.set(0.5);
     }
   }));

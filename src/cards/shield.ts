@@ -24,9 +24,12 @@ const spell: Spell = {
 Protects bearer from the next ${damageBlocked} damage that they would incur.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
+      let animationPromise = Promise.resolve();
       for (let unit of state.targetedUnits) {
         Unit.addModifier(unit, id, underworld, prediction);
+        animationPromise = Unit.addOneOffAnimation(unit, 'projectile/priestProjectileHit', {}, { loop: false });
       }
+      await animationPromise;
       return state;
     },
   },
