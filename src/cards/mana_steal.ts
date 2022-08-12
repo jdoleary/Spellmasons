@@ -37,6 +37,10 @@ Sacrifice some of own health to steal up to ${mana_stolen} mana from each target
           if (!prediction) {
             // Animate
             if (state.casterUnit.image) {
+              // Note: This uses the lower-level addPixiSpriteAnimated directly so that it can get a reference to the sprite
+              // and add a filter; however, addOneOffAnimation is the higher level and more common for adding a simple
+              // "one off" animated sprite.  Use it instead of addPixiSpriteAnimated unless you need more direct control like
+              // we do here
               const animationSprite = addPixiSpriteAnimated('spell-effects/potionPickup', state.casterUnit.image.sprite, {
                 loop: false,
                 onComplete: () => {

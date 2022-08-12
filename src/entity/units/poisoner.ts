@@ -49,23 +49,7 @@ const unit: UnitSource = {
             // prediction is false because unit.action doesn't yet ever occur during a prediction
             Unit.addModifier(chosenUnit, poison.id, underworld, false);
             // Add projectile hit animation
-            const animationSprite = addPixiSpriteAnimated('projectile/poisonerProjectileHit', containerUnits, {
-              loop: false,
-              animationSpeed: 0.2,
-              onComplete: () => {
-                if (animationSprite?.parent) {
-                  animationSprite.parent.removeChild(animationSprite)
-                } else {
-                  console.error('Expected poisoner animationSprite to have parent so it could be removed but it did not.')
-                }
-              }
-            });
-            if (animationSprite) {
-              animationSprite.anchor.set(0.5);
-              animationSprite.x = chosenUnit.x;
-              animationSprite.y = chosenUnit.y;
-            }
-
+            Unit.addOneOffAnimation(chosenUnit, 'projectile/poisonerProjectileHit');
           });
         }
         const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, chosenUnit, unit.stamina);

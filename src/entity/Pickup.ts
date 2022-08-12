@@ -7,6 +7,7 @@ import { checkIfNeedToClearTooltip } from '../graphics/PlanningView';
 import { explainManaOverfill } from '../graphics/Jprompt';
 import { MESSAGE_TYPES } from '../types/MessageTypes';
 import * as config from '../config';
+import * as Unit from './Unit';
 import { Vec2 } from '../jmath/Vec';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import { manaBlue } from '../graphics/ui/colors';
@@ -256,6 +257,10 @@ export const pickups: IPickupSource[] = [
         explainManaOverfill();
         // Animate
         if (player.unit.image) {
+          // Note: This uses the lower-level addPixiSpriteAnimated directly so that it can get a reference to the sprite
+          // and add a filter; however, addOneOffAnimation is the higher level and more common for adding a simple
+          // "one off" animated sprite.  Use it instead of addPixiSpriteAnimated unless you need more direct control like
+          // we do here
           const animationSprite = addPixiSpriteAnimated('spell-effects/potionPickup', player.unit.image.sprite, {
             loop: false,
             onComplete: () => {
@@ -305,16 +310,7 @@ export const pickups: IPickupSource[] = [
       if (player && player.unit.health < player.unit.healthMax) {
         takeDamage(player.unit, -healthPotionRestoreAmount, undefined, underworld, false);
         // Add spell effect animation
-        if (player.unit.image) {
-          const animationSprite = addPixiSpriteAnimated('spell-effects/potionPickup', player.unit.image.sprite, {
-            loop: false,
-            onComplete: () => {
-              if (animationSprite && animationSprite.parent) {
-                animationSprite.parent.removeChild(animationSprite);
-              }
-            }
-          });
-        }
+        Unit.addOneOffAnimation(player.unit, 'spell-effects/potionPickup');
 
         // Cap health at max
         player.unit.health = Math.min(player.unit.health, player.unit.healthMax);

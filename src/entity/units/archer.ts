@@ -45,23 +45,7 @@ const unit: UnitSource = {
         ).then(() => {
           Unit.takeDamage(attackTarget, unit.damage, unit, underworld, false, undefined);
           // Add projectile hit animation
-          const animationSprite = addPixiSpriteAnimated('projectile/arrowProjectileHit', containerSpells, {
-            loop: false,
-            animationSpeed: 0.2,
-            onComplete: () => {
-              if (animationSprite?.parent) {
-                animationSprite.parent.removeChild(animationSprite)
-              } else {
-                console.error('Expected archer animationSprite to have parent so it could be removed but it did not.')
-              }
-            }
-          });
-          if (animationSprite) {
-            animationSprite.anchor.set(0, 0.5);
-            animationSprite.x = attackTarget.x;
-            animationSprite.y = attackTarget.y;
-          }
-
+          Unit.addOneOffAnimation(attackTarget, 'projectile/arrowProjectileHit');
         })
 
       });

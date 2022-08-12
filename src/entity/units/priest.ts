@@ -17,23 +17,7 @@ async function animatePriestProjectileAndHit(self: Unit.IUnit, target: Unit.IUni
     'projectile/priestProjectileCenter',
   );
   // Add projectile hit animation
-  const animationSprite = addPixiSpriteAnimated('projectile/priestProjectileHit', containerUnits, {
-    loop: false,
-    animationSpeed: config.DEFAULT_ANIMATION_SPEED,
-    onComplete: () => {
-      if (animationSprite && animationSprite.parent) {
-        animationSprite.parent.removeChild(animationSprite)
-      } else {
-        console.error('Expected priest animationSprite to have parent so it could be removed but it did not.')
-      }
-    }
-  });
-  if (animationSprite) {
-    animationSprite.anchor.set(0.5, 0.3);
-    animationSprite.x = target.x;
-    animationSprite.y = target.y;
-  }
-
+  Unit.addOneOffAnimation(target, 'projectile/priestProjectileHit');
 }
 async function healOneOf(self: Unit.IUnit, units: Unit.IUnit[], underworld: Underworld): Promise<boolean> {
   for (let ally of units) {
