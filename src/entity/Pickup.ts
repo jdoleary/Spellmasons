@@ -263,6 +263,7 @@ export const pickups: IPickupSource[] = [
           // we do here
           const animationSprite = addPixiSpriteAnimated('spell-effects/potionPickup', player.unit.image.sprite, {
             loop: false,
+            animationSpeed: 0.3,
             onComplete: () => {
               if (animationSprite && animationSprite.parent) {
                 animationSprite.parent.removeChild(animationSprite);
@@ -310,7 +311,7 @@ export const pickups: IPickupSource[] = [
       if (player && player.unit.health < player.unit.healthMax) {
         takeDamage(player.unit, -healthPotionRestoreAmount, undefined, underworld, false);
         // Add spell effect animation
-        Unit.addOneOffAnimation(player.unit, 'spell-effects/potionPickup');
+        Unit.addOneOffAnimation(player.unit, 'spell-effects/potionPickup', {}, { animationSpeed: 0.3, loop: false });
 
         // Cap health at max
         player.unit.health = Math.min(player.unit.health, player.unit.healthMax);
