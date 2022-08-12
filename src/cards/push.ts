@@ -50,15 +50,7 @@ export function makeForcePush(args: forcePushArgs, underworld: Underworld, predi
   const { pushedObject, awayFrom, resolve, velocityStartMagnitude, canCreateSecondOrderPushes } = args;
   const velocity = similarTriangles(pushedObject.x - awayFrom.x, pushedObject.y - awayFrom.y, distance(pushedObject, awayFrom), velocityStartMagnitude);
   const velocity_falloff = 0.93;
-  // const endPoint = add(pushedObject, similarTriangles(pushedObject.x - awayFrom.x, pushedObject.y - awayFrom.y, distance(pushedObject, awayFrom), pushDistance || 300));
-  const originalPosition = clone(pushedObject);
   const forceMoveInst: ForceMove = { pushedObject, canCreateSecondOrderPushes, velocity, velocity_falloff, resolve }
-  // // Adjust endpoint to account for falling into lava:
-  // const { safeFallInPosition, hitLava } = findSafeFallInPoint(pushedObject, endPoint, underworld)
-  // if (hitLava) {
-  //   // Override end point
-  //   forceMoveInst.endPoint = safeFallInPosition;
-  // }
   if (prediction) {
     underworld.fullySimulateForceMove(forceMoveInst, prediction);
     resolve();
