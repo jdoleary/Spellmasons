@@ -8,6 +8,7 @@ export const abyss = 0x2d6265;
 export const forceMoveColor = 0xffffff;
 export const bloodColorDefault = 0xc70000;
 export const bloodLobber = 0x67c3d7;
+export const bloodDecoy = 0x7b531f;
 export const bloodVampire = 0xf1fa68;
 export const bloodPoisoner = 0x86eb83;
 

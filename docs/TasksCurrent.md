@@ -2,7 +2,6 @@
 - Do a few sfx and spell effects every day
 - multiplayer bug: when a player joins after another player has already died, on client 2 the other player's sprite is in idle instead of dead
 - make quantity work for pull
-- change decoy blood color to brown
 - ding sound design when "leveling up"
 - purified vampires shouldn't spread bloodcurse
 - bloodcurse show as 18+18/36
