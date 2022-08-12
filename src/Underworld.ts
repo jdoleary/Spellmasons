@@ -218,15 +218,6 @@ export default class Underworld {
     this.random = seedrandom(this.seed, { state: RNGState })
     return this.random;
   }
-  addForceMove(forceMoveInst: ForceMove) {
-    // Ensure there aren't any preexisting forceMoves on this object already
-    if (!this.forceMove.find(fm => !fm.timedOut && fm.pushedObject == forceMoveInst.pushedObject)) {
-      this.forceMove.push(forceMoveInst);
-    } else {
-      console.error('Cannot add multiple forceMoves on the same object, they will deadlock and neither will complete')
-    }
-
-  }
   // Simulate the forceMove until it's complete
   // Returns true when done
   fullySimulateForceMove(forceMoveInst: ForceMove, prediction: boolean): boolean {

@@ -49,7 +49,7 @@ export async function pull(pushedObject: Circle, towards: Vec2, quantity: number
       underworld.fullySimulateForceMove(forceMoveInst, prediction);
       resolve();
     } else {
-      underworld.addForceMove(forceMoveInst);
+      underworld.forceMove.push(forceMoveInst);
     }
   })).then(() => {
     if (forceMoveInst) {

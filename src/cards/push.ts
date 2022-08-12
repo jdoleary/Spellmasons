@@ -55,7 +55,7 @@ export function makeForcePush(args: forcePushArgs, underworld: Underworld, predi
     underworld.fullySimulateForceMove(forceMoveInst, prediction);
     resolve();
   } else {
-    underworld.addForceMove(forceMoveInst);
+    underworld.forceMove.push(forceMoveInst);
   }
   return forceMoveInst;
 
