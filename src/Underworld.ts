@@ -225,7 +225,7 @@ export default class Underworld {
     const PREVENT_INFINITE_WITH_WARN_LOOP_THRESHOLD = 100;
     let loopCount = 0;
     if (globalThis.predictionGraphics) {
-      globalThis.predictionGraphics.lineStyle(4, colors.forceMoveColor, 1.0)
+      globalThis.predictionGraphics.beginFill(colors.forceMoveColor);
     }
     while (!done || loopCount < PREVENT_INFINITE_WITH_WARN_LOOP_THRESHOLD) {
       loopCount++;
@@ -233,13 +233,18 @@ export default class Underworld {
       done = this.runForceMove(forceMoveInst, prediction);
       // Draw prediction lines
       if (globalThis.predictionGraphics) {
+        globalThis.predictionGraphics.lineStyle(4, colors.forceMoveColor, 1.0);
         globalThis.predictionGraphics.moveTo(startPos.x, startPos.y);
         globalThis.predictionGraphics.lineTo(forceMoveInst.pushedObject.x, forceMoveInst.pushedObject.y);
+        // Draw circle at the end so the line path isn't a trail of rectangles with sharp edges
+        globalThis.predictionGraphics.lineStyle(1, colors.forceMoveColor, 1.0);
+        globalThis.predictionGraphics.drawCircle(forceMoveInst.pushedObject.x, forceMoveInst.pushedObject.y, 1);
       }
     }
     // Draw a circle at the end position
     if (globalThis.predictionGraphics) {
-      globalThis.predictionGraphics.drawCircle(forceMoveInst.pushedObject.x, forceMoveInst.pushedObject.y, 4);
+      globalThis.predictionGraphics.drawCircle(forceMoveInst.pushedObject.x, forceMoveInst.pushedObject.y, 2);
+      globalThis.predictionGraphics.endFill();
     }
     if (loopCount > PREVENT_INFINITE_WITH_WARN_LOOP_THRESHOLD) {
       console.error('forceMove hit PREVENT_INFINITE threshold', forceMoveInst, prediction);
