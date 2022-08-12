@@ -233,9 +233,22 @@ export default class Underworld {
     let done = false;
     const PREVENT_INFINITE_WITH_WARN_LOOP_THRESHOLD = 100;
     let loopCount = 0;
+    if (globalThis.predictionGraphics) {
+      globalThis.predictionGraphics.lineStyle(4, colors.forceMoveColor, 1.0)
+    }
     while (!done || loopCount < PREVENT_INFINITE_WITH_WARN_LOOP_THRESHOLD) {
       loopCount++;
+      const startPos = Vec.clone(forceMoveInst.pushedObject);
       done = this.runForceMove(forceMoveInst, prediction);
+      // Draw prediction lines
+      if (globalThis.predictionGraphics) {
+        globalThis.predictionGraphics.moveTo(startPos.x, startPos.y);
+        globalThis.predictionGraphics.lineTo(forceMoveInst.pushedObject.x, forceMoveInst.pushedObject.y);
+      }
+    }
+    // Draw a circle at the end position
+    if (globalThis.predictionGraphics) {
+      globalThis.predictionGraphics.drawCircle(forceMoveInst.pushedObject.x, forceMoveInst.pushedObject.y, 4);
     }
     if (loopCount > PREVENT_INFINITE_WITH_WARN_LOOP_THRESHOLD) {
       console.error('forceMove hit PREVENT_INFINITE threshold', forceMoveInst, prediction);

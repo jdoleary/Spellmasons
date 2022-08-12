@@ -62,13 +62,6 @@ export function makeForcePush(args: forcePushArgs, underworld: Underworld, predi
   if (prediction) {
     underworld.fullySimulateForceMove(forceMoveInst, prediction);
     resolve();
-    // Draw prediction lines
-    if (globalThis.predictionGraphics) {
-      globalThis.predictionGraphics.lineStyle(4, forceMoveColor, 1.0)
-      globalThis.predictionGraphics.moveTo(originalPosition.x, originalPosition.y);
-      globalThis.predictionGraphics.lineTo(pushedObject.x, pushedObject.y);
-      globalThis.predictionGraphics.drawCircle(pushedObject.x, pushedObject.y, 4);
-    }
   } else {
     underworld.addForceMove(forceMoveInst);
   }
