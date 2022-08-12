@@ -31,6 +31,7 @@
         - pull/push/swap
         - purify
         - shield
+    - How to represent shield, poison and other modifiers visually and with countdown
 - Milestone X | **Juice**
     - SFX
         - Unit Sounds
