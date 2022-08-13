@@ -82,7 +82,6 @@
     - Trap pickup radius is too big, you can't squeeze by it (spikes and trap?)
     - chain through pickups?
     - should take damage at the END of every turn if still in lava
-    - lobber image is positioned too high for "feet" position to feel right
     - Super poor performance on brad's laptop on level 7
         - double pull through lava make my computer's fan pickup
 
@@ -121,23 +120,14 @@
 ## Bugs
 - Player robe colors are mixed up after refresh
 - Handle error in menu when attempting to connect to a bad url
-- death skull doens't show for decoy
 - Pack 7: Dad Loch playtest
     - Explain to user with popups
         - Introduce card pickup
         - explain manaburn better
     - AI should avoid traps when moving
     - decoy should pull agro even if farther away?
-    - Flag things visually as modifiers (loch says explode is confusing)
     - death circle can be confusing when moved out of the way of the toolbar (add arrow?)
     - Introduce mana cost changing of cards when used
-    - error: cannot animation a still image (explode-on-death.png)
----
-- Make combo wait for full completion so it doesn't change sprite to idle after resolving.
-    - This makes it so that when casting two spells in quick succession, the second attack animation gets overridden by returningToDefaultSprite
-- How to keep syncronize from interrupting an animation while it's running
-    - Hold on to syncronize messages until a good time to execute them
-- (resolved?) Pathing is broken sometimes where a unit moves a little and then no further
 - enter, enter doesn't make "are you sure" prompt go away when there are no enemies.
 - wall: see abberant-wall.png
 - Bug: Portal spawns when you prediction kill yourself on test level
@@ -157,10 +147,6 @@
 - SOUND: Organize candidates for sfx
 - Allow pickups to be stored in inventory
 - Show modifiers in UI somehow, not just on player, especially when you have the modifier on you
-## UI
-- death skull due to poison is confusing (group: perfect predictions)
-- Draw walls above units so their corpses don't render over top of the walls
-- Make damage that they WILL take different from damage that they HAVE taken.  It's confusing
 ## Stretch Content
 - Cannot be combined with other spells
     - Jump card- to jump over walls
@@ -187,11 +173,7 @@
 
 
 ## Misc
-- Bug: Had a scenario where i had a debugger on enterPortal and on image.show
-and 2nd client got `Cannot change character, player not found with id 8c502be8-631c-482a-9398-40155f77c21f`
-    - maybe in this case, re-request player sync??
 - **critical** Improve sending castCards with targeting based on id not position
 - (wont do?) Make an overlay screen that blocks interaction while waiting for sync
 - Unit movement desync occurred between clients when one client has CPU throttled, the non throttled client has the unit move much farther
-- fix grey ellipse positioning under lobber, it's too low
 - EXPLAIn that all modifiers are removed after each level

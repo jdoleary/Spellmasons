@@ -29,6 +29,11 @@ const unit: UnitSource = {
     die: 'units/lobberDeath',
     walk: 'units/lobberWalk',
   },
+  init: (unit: Unit.IUnit, underworld: Underworld) => {
+    if (unit.image) {
+      unit.image.sprite.anchor.y = 0.3;
+    }
+  },
   action: async (unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, underworld: Underworld, canAttackTarget: boolean) => {
     // Attack
     if (attackTarget && canAttackTarget) {
