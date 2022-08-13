@@ -4,7 +4,10 @@ export const healthHurtRed = 0x632828;
 export const healthRed = 0xd55656;
 export const manaBlue = 0x5656d5;
 export const healthAllyGreen = 0x40a058;
-export const abyss = 0x2d6265;
+export const abyss = {
+    'blood': 0x2d6265,
+    'lava': 0x4b465c
+}
 export const forceMoveColor = 0xffffff;
 export const bloodColorDefault = 0xc70000;
 export const bloodLobber = 0x67c3d7;

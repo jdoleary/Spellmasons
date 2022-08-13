@@ -8,7 +8,7 @@ import * as colors from './ui/colors';
 import { JSpriteAnimated } from './Image';
 import { containerParticles } from './Particles';
 import { elPIXIHolder } from './FloatingText';
-import Underworld from '../Underworld';
+import Underworld, { Biome } from '../Underworld';
 import { randFloat, randInt } from '../jmath/rand';
 import { IUnit } from '../entity/Unit';
 
@@ -164,7 +164,6 @@ if (globalThis.pixi && containerUI && app && containerRadiusUI) {
   containerRadiusUI.addChild(globalThis.radiusGraphics);
 
 
-  app.renderer.backgroundColor = colors.abyss;
 
   globalThis.addEventListener('resize', resizePixi);
   globalThis.addEventListener('load', () => {
@@ -174,6 +173,12 @@ if (globalThis.pixi && containerUI && app && containerRadiusUI) {
   // It is important that doCameraAutoFollow is changed only
   // in cameraAutoFollow so that the body's class can change with it.
   cameraAutoFollow(true);
+
+}
+export function setAbyssColor(biome: Biome) {
+  if (app) {
+    app.renderer.backgroundColor = colors.abyss[biome];
+  }
 
 }
 // withinCameraBounds takes a Vec2 (in game space) and returns a 

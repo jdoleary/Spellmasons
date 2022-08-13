@@ -33,6 +33,7 @@ import {
   setupLiquidFilter,
   cleanUpLiquidFilter,
   BloodParticle,
+  setAbyssColor,
 } from './graphics/PixiUtils';
 import { queueCenteredFloatingText } from './graphics/FloatingText';
 import { UnitType, Faction, UnitSubType } from './types/commonTypes';
@@ -970,7 +971,7 @@ export default class Underworld {
     const { tiles, liquid, width } = map;
     const levelData: LevelData = {
       levelIndex,
-      biome: 'blood',
+      biome,
       limits,
       liquid,
       obstacles: tiles.flatMap(t => {
@@ -1229,6 +1230,7 @@ export default class Underworld {
 
     console.log('Setup: createLevel', levelData);
     this.lastLevelCreated = levelData;
+    setAbyssColor(levelData.biome);
     // Clean up the previous level
     this.cleanUpLevel();
 
@@ -2366,7 +2368,7 @@ function getEnemiesForAltitude(underworld: Underworld): string[] {
 }
 
 // Explicit list of biome types
-export type Biome = 'blood';// | ''
+export type Biome = 'blood' | 'lava';
 
 export interface LevelData {
   levelIndex: number,
