@@ -279,16 +279,16 @@ export function convertBaseTilesToFinalTiles(map: Map) {
         if (currentCell?.image == baseTiles.ground) {
             const tile = map.tiles[i];
             if (tile) {
-                if (neighbors.west == baseTiles.liquid && neighbors.south == baseTiles.liquid) {
+                if (neighbors.west == baseTiles.liquid && (neighbors.south == baseTiles.liquid || neighbors.southeast == baseTiles.liquid)) {
                     changeTile(i, finalTileImages.liquidInsideCornerNE);
                     map.liquid.push({ image: finalTileImages.all_liquid, x: tile.x, y: tile.y })
-                } else if (neighbors.east == baseTiles.liquid && neighbors.south == baseTiles.liquid) {
+                } else if (neighbors.east == baseTiles.liquid && (neighbors.south == baseTiles.liquid || neighbors.southwest == baseTiles.liquid)) {
                     changeTile(i, finalTileImages.liquidInsideCornerNW);
                     map.liquid.push({ image: finalTileImages.all_liquid, x: tile.x, y: tile.y })
-                } else if (neighbors.east == baseTiles.liquid && neighbors.north == baseTiles.liquid) {
+                } else if (neighbors.east == baseTiles.liquid && (neighbors.north == baseTiles.liquid || neighbors.northwest == baseTiles.liquid)) {
                     changeTile(i, finalTileImages.liquidInsideCornerSW);
                     map.liquid.push({ image: finalTileImages.all_liquid, x: tile.x, y: tile.y })
-                } else if (neighbors.west == baseTiles.liquid && neighbors.north == baseTiles.liquid) {
+                } else if (neighbors.west == baseTiles.liquid && (neighbors.north == baseTiles.liquid || neighbors.northeast == baseTiles.liquid)) {
                     changeTile(i, finalTileImages.liquidInsideCornerSE);
                     map.liquid.push({ image: finalTileImages.all_liquid, x: tile.x, y: tile.y })
                 } else if (neighbors.north == baseTiles.liquid) {
