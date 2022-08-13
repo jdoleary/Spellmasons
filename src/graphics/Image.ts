@@ -14,6 +14,8 @@ export type IImageAnimatedSerialized = {
     y: number,
     scale: { x: number, y: number },
     imagePath: string,
+    // if the animation should loop
+    loop: boolean,
     // A list of sprite imagePaths (jordan identifier for subsprites)
     children: string[],
   },
@@ -174,6 +176,7 @@ export function serialize(image: IImageAnimated): IImageAnimatedSerialized {
       y: image.sprite.y,
       scale: { x: image.sprite.scale.x, y: image.sprite.scale.y },
       imagePath: getAnimationPathFromSprite(image.sprite),
+      loop: image.sprite.loop,
       // @ts-ignore: imagePath is a property that I added to identify currently playing animation or sprite.
       children: image.sprite.children.map(c => c.imagePath)
 
@@ -199,7 +202,7 @@ export function load(image: IImageAnimatedSerialized | undefined, parent: PIXI.C
     return;
   }
   // Recreate the sprite using the create function so it initializes it properly
-  const newImage = create(copy.sprite, imagePath, parent);
+  const newImage = create(copy.sprite, imagePath, parent, { loop: image.sprite.loop });
   if (!newImage) { return undefined; }
   newImage.sprite.scale.set(scale.x, scale.y);
   // Restore subsprites (the actual sprites)
