@@ -1,3 +1,10 @@
+- Particle engine
+    - add pixelated filter, see stash
+    - OR use a pixelated source image instead of a pixelated filter
+    - It's the framerate that makes it jarring
+- Standalone Server
+    - Add "preparing" animation used to reduce desyncs due to network latency, so that if multiple users are casting spells at the same time, the wizard bending down to "charge" as soon as the current user clicks, masks a delay to make sure it doesn't conflict with other spells.  It'll send the spell over the network as soon as the user clicks but waits to cast it so that there aren't conflicting spells making desyncs on multiple clients.
+    - Server should be able to send syncs that will wait to execute until turn changes so it doesn't interrupt animations and mess up the state when it syncs
 - how to attach priest spell hit animation to moving ally?
 - Finish force movement refactor (see stash)
     - When they stop when they hit walls they need to stop hard, not slid into them

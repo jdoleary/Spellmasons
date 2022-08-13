@@ -388,6 +388,10 @@ export function clickHandler(underworld: Underworld, e: MouseEvent) {
 
   if (isOutOfBounds(mousePos, underworld)) {
     // Disallow click out of bounds
+    floatingText({
+      coords: mousePos,
+      text: 'Invalid Target!'
+    })
     return;
   }
 
@@ -434,6 +438,19 @@ export function clickHandler(underworld: Underworld, e: MouseEvent) {
           floatingText({
             coords: target,
             text: 'Out of Range!'
+          })
+          // Cancel Casting
+          return;
+        }
+
+        // Prevent casting on wall or out of bounds
+        const cellX = Math.round(mousePos.x / config.OBSTACLE_SIZE);
+        const cellY = Math.round(mousePos.y / config.OBSTACLE_SIZE);
+        const originalTile = globalThis.map ? globalThis.map.tiles[vec2ToOneDimentionIndexPreventWrap({ x: cellX, y: cellY }, globalThis.map.width)] : undefined;
+        if (originalTile && (originalTile.image == '' || originalTile.image.includes('wall'))) {
+          floatingText({
+            coords: target,
+            text: 'Invalid Target!'
           })
           // Cancel Casting
           return;
