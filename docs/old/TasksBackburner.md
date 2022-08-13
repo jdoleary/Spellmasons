@@ -1,3 +1,43 @@
+## feedback might be won't do:
+    - hoisting might not be desireable, what if you want to push then AOE?
+    - Colin Direct Feedback:
+        - some enemies chould shoot walls to blow yoru cover
+        - add moodiness, make it darker
+        - pickup potions
+        - fun figuring out mechanics
+        - felt like rinse and repeat
+        - new to genre
+        - QWERTASDFG for hotkeys
+        - More exciting if archers had a % chance based on distance
+        - physics based env:
+            - drop corpse in lave and have it shoot out lava
+            - bloat gore schrapnel
+                - gore ended up on other characters
+                - gore on them from being next to explosion
+                - gore on walls, leave a mark
+                    - blood trail
+        - fog of war
+        - what if no agro until you got close so you can't just wait for them all to come to you
+        - archer arroes hurt allies as it passes through. % chance. multiple types of archers
+- Lochlan feedback
+    - ding sound design when "leveling up"
+    - purified vampires shouldn't spread bloodcurse
+    - bloodcurse show as 18+18/36
+- Brad feedback
+    - Add a glow on hover to spells in spellbook
+    - Ambiance, particles around the map
+    - precast animations, when you hover over a corpse with resurrect, white particles should come up from the ground
+- Pack 9 | R, J & E feedback
+    - No stamina bar after portal
+    - Freeze spell should stop timer on pickups (or just increase it by 1)
+    - Hover should always show tooltip so you can see even when spell is queued
+    - shield should have number on it
+    - ideas
+        - Have push and pull from the start
+        - objects to hide behind (raise earth)
+        - More objects to interact with
+
+---
 - Particle engine
     - add pixelated filter, see stash
     - OR use a pixelated source image instead of a pixelated filter
