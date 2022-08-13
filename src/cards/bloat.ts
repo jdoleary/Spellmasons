@@ -10,6 +10,7 @@ import { CardCategory } from '../types/commonTypes';
 import { animateSpell } from './cardUtils';
 import { createParticleTexture, simpleEmitter } from '../graphics/Particles';
 import { Vec2 } from '../jmath/Vec';
+import * as colors from '../graphics/ui/colors';
 
 const id = 'Bloat';
 const imageName = 'explode-on-death.png';
@@ -69,7 +70,7 @@ const spell: Spell = {
   events: {
     onDeath: async (unit: IUnit, underworld: Underworld, prediction: boolean) => {
       const quantity = unit.modifiers[id]?.quantity || 1;
-      drawPredictionCircle(unit, range, 'Explosion Radius');
+      drawPredictionCircle(unit, range, colors.healthRed, 'Explosion Radius');
       if (!prediction) {
         animateSpell(unit, 'explode-on-death.png');
       }

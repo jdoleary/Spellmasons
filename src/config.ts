@@ -53,3 +53,5 @@ export const UNIT_BASE_RADIUS = COLLISION_MESH_RADIUS / 4;
 export const CAMERA_BASE_SPEED = 20;
 export const ENEMY_ENCOUNTERED_STORAGE_KEY = 'enemyEncountered';
 export const DEFAULT_ANIMATION_SPEED = 0.132;
+
+export const CAST_RANGE_COYOTE_MARGIN = 50;

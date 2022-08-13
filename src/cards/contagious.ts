@@ -1,11 +1,11 @@
 
 import type { IUnit } from '../entity/Unit';
-import * as Image from '../graphics/Image';
 import { allCards, ICard, Spell } from './index';
 import { COLLISION_MESH_RADIUS } from '../config';
 import { createVisualLobbingProjectile } from '../entity/Projectile';
 import floatingText from '../graphics/FloatingText';
 import * as Unit from '../entity/Unit';
+import * as colors from '../graphics/ui/colors';
 import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
 import { drawPredictionCircle } from '../graphics/PlanningView';
@@ -36,7 +36,7 @@ export default spell;
 
 async function spreadCurses(unit: IUnit, underworld: Underworld, prediction: boolean) {
   const range = COLLISION_MESH_RADIUS * 4;
-  drawPredictionCircle(unit, range, 'Contagion Radius');
+  drawPredictionCircle(unit, range, colors.targetingSpellGreen, 'Contagion Radius');
   const nearByUnits = underworld.getUnitsWithinDistanceOfTarget(unit, range, prediction)
     // Filter out undefineds
     .filter(x => x !== undefined)

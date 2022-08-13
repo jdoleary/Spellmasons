@@ -14,7 +14,7 @@ import {
 import { toggleMenu, View } from '../../views';
 import * as config from '../../config';
 import { app, cameraAutoFollow, getCamera, moveCamera, toggleHUD } from '../PixiUtils';
-import { getEndOfRangeTarget, isOutOfRange } from '../../PlayerUtils';
+import { getAdjustedCastTarget, isOutOfRange } from '../../PlayerUtils';
 import { vec2ToOneDimentionIndex, vec2ToOneDimentionIndexPreventWrap } from '../../jmath/ArrayUtil';
 import * as Vec from '../../jmath/Vec';
 import { Vec2 } from '../../jmath/Vec';
@@ -397,7 +397,7 @@ export function clickHandler(underworld: Underworld, e: MouseEvent) {
       // If the player casting is the current client player
       if (selfPlayer) {
         // cast the spell
-        let target = mousePos;
+        const target = getAdjustedCastTarget(selfPlayer, mousePos);
         const cardIds = CardUI.getSelectedCardIds();
         const cards = CardUI.getSelectedCards();
 
@@ -426,29 +426,14 @@ export function clickHandler(underworld: Underworld, e: MouseEvent) {
           // Then cancel casting:
           return
         }
-        if (isOutOfRange(selfPlayer, mousePos)) {
-          // If the mouse is out of range, but there is a target at end range,
-          // assume the user is trying to cast at the end of their range.
-          const endRangeTarget = getEndOfRangeTarget(selfPlayer, target);
-          // Find if there are any valid targets at the endRangeTarget:
-          // Note: Since predictionUnits and predictionPickups may be moved around due to the prediction cast,
-          // getting the initial target should use NON-prediction units and pickups.  It needs to look for truly
-          // existing units and pickups when the click occurs because those are the units and pickups that
-          // the spell will act on.
-          const initialTarget = !!underworld.getUnitAt(endRangeTarget, false) || !!underworld.getPickupAt(endRangeTarget, false);
-          // If there is a target for the cast
-          // OR if the first card doesn't require a unit target (like summon_decoy), allow casting at end range
-          if (initialTarget || (cards[0] && cards[0].allowNonUnitTarget)) {
-            target = endRangeTarget;
-          } else {
-            // If there is no target at end range, just show that they are trying to cast out of range
-            floatingText({
-              coords: target,
-              text: 'Out of Range!'
-            })
-            // Cancel Casting
-            return;
-          }
+        if (isOutOfRange(selfPlayer, mousePos, true)) {
+          // If there is no target at end range, just show that they are trying to cast out of range
+          floatingText({
+            coords: target,
+            text: 'Out of Range!'
+          })
+          // Cancel Casting
+          return;
         }
 
         // Abort casting if there is no unitAtCastLocation

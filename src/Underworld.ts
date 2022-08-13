@@ -68,6 +68,7 @@ import { setupDevGlobalFunctions } from './devUtils';
 import type PieClient from '@websocketpie/client';
 import { forcePush, makeForcePush } from './cards/push';
 import { createVisualLobbingProjectile } from './entity/Projectile';
+import { getAdjustedCastTarget, getEndOfRange, isOutOfRange } from './PlayerUtils';
 
 export enum turn_phase {
   PlayerTurns,
@@ -346,20 +347,19 @@ export default class Underworld {
         const castLine = { p1: globalThis.player.unit, p2: mouseTarget };
         globalThis.unitOverlayGraphics?.lineStyle(3, colors.targetBlue, 0.7);
         globalThis.unitOverlayGraphics?.moveTo(castLine.p1.x, castLine.p1.y);
-        if (math.distance(castLine.p1, castLine.p2) > globalThis.player.unit.attackRange) {
-          const endOfRange = math.getCoordsAtDistanceTowardsTarget(castLine.p1, castLine.p2, globalThis.player.unit.attackRange);
-          globalThis.unitOverlayGraphics?.lineTo(endOfRange.x, endOfRange.y);
-          // Draw a red line the rest of the way shoing that you cannot cast
-          globalThis.unitOverlayGraphics?.lineStyle(3, 0x333333, 0.7);
+        const endOfRange = getEndOfRange(globalThis.player, mouseTarget);
+        if (isOutOfRange(globalThis.player, mouseTarget, true)) {
+          // Draw a grey line showing that you cannot cast
+          globalThis.unitOverlayGraphics?.lineStyle(3, colors.outOfRangeGrey, 1.0);
           globalThis.unitOverlayGraphics?.lineTo(castLine.p2.x, castLine.p2.y);
-          globalThis.unitOverlayGraphics?.drawCircle(castLine.p2.x, castLine.p2.y, 3);
-          // Draw a circle where the cast stops
-          globalThis.unitOverlayGraphics?.moveTo(castLine.p2.x, castLine.p2.y);//test
-          globalThis.unitOverlayGraphics?.lineStyle(3, colors.targetBlue, 0.7);
+          // Draw a circle where the castrange stops
+          globalThis.unitOverlayGraphics?.drawCircle(endOfRange.x, endOfRange.y, 3);
+        } else if (isOutOfRange(globalThis.player, mouseTarget, false)) {
+          globalThis.unitOverlayGraphics?.lineTo(endOfRange.x, endOfRange.y);
           globalThis.unitOverlayGraphics?.drawCircle(endOfRange.x, endOfRange.y, 3);
         } else {
-          globalThis.unitOverlayGraphics?.lineTo(castLine.p2.x, castLine.p2.y);
-          globalThis.unitOverlayGraphics?.drawCircle(castLine.p2.x, castLine.p2.y, 3);
+          globalThis.unitOverlayGraphics?.lineTo(mouseTarget.x, mouseTarget.y);
+          globalThis.unitOverlayGraphics?.drawCircle(mouseTarget.x, mouseTarget.y, 3);
         }
       }
     }
@@ -1997,6 +1997,10 @@ export default class Underworld {
     prediction: boolean,
     // If true, prevents removing mana when spell is cast.  This is used for "trap" card
     costPrepaid: boolean,
+    // True if the cast is out of range, this can be used to draw UI elements differently
+    // (like the color of a radius circle in the "Expanding" card) to clue the user in to
+    // the fact that the spell is out of range but it's showing them what would happen.
+    outOfRange?: boolean,
   ): Promise<Cards.EffectState> {
     if (!prediction && casterUnit == (globalThis.player && globalThis.player.unit)) {
       globalThis.castThisTurn = true;
@@ -2077,7 +2081,7 @@ export default class Underworld {
         }
 
 
-        effectState = await card.effect(effectState, card, quantity, this, prediction);
+        effectState = await card.effect(effectState, card, quantity, this, prediction, outOfRange);
 
         // Clear images from previous card before drawing the images from the new card
         containerSpells?.removeChildren();

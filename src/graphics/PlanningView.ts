@@ -14,7 +14,7 @@ import { calculateCost, CardCost } from '../cards/cardUtils';
 import { closestLineSegmentIntersection } from '../jmath/lineSegment';
 import { getBestRangedLOSTarget } from '../entity/units/actions/rangedAction';
 import * as colors from './ui/colors';
-import { getEndOfRangeTarget, isOutOfRange } from '../PlayerUtils';
+import { getAdjustedCastTarget, isOutOfRange } from '../PlayerUtils';
 import { pointsEveryXDistanceAlongPath } from '../jmath/Pathfinding';
 import { distance, getCoordsAtDistanceTowardsTarget } from '../jmath/math';
 import { Graphics } from 'pixi.js';
@@ -77,7 +77,7 @@ export function updatePlanningView(underworld: Underworld) {
             planningViewGraphics.moveTo(attackLine.p1.x, attackLine.p1.y);
             if (closestIntersection) {
               // Draw a grey line  showing that the target is blocked
-              planningViewGraphics.lineStyle(3, 0xaaaaaa, 0.7);
+              planningViewGraphics.lineStyle(3, colors.outOfRangeGrey, 0.7);
               planningViewGraphics.lineTo(closestIntersection.x, closestIntersection.y);
               planningViewGraphics.lineTo(attackLine.p2.x, attackLine.p2.y);
               planningViewGraphics.drawCircle(attackLine.p2.x, attackLine.p2.y, 3);
@@ -284,7 +284,8 @@ async function showCastCardsPrediction(underworld: Underworld, target: Vec2, cas
       cardIds,
       target,
       true,
-      false
+      false,
+      outOfRange
     );
     // Clears unit tints in preparation for setting new tints to symbolize which units are targeted by spell
     clearUnitTints(underworld);
@@ -344,7 +345,7 @@ export async function runPredictions(underworld: Underworld) {
       underworld.syncPredictionEntities();
       updateManaCostUI(underworld);
       // Dry run cast so the user can see what effect it's going to have
-      const target = mousePos;
+      const target = getAdjustedCastTarget(globalThis.player, mousePos);
       const casterUnit = globalThis.predictionUnits?.find(u => u.id == globalThis.player?.unit.id)
       if (!casterUnit) {
         console.error('Critical Error, caster unit not found');
@@ -352,32 +353,8 @@ export async function runPredictions(underworld: Underworld) {
       }
       const cardIds = CardUI.getSelectedCardIds();
       if (cardIds.length) {
-        const outOfRange = isOutOfRange(globalThis.player, target);
-        if (outOfRange) {
-          // If the target is out of range, try predicting at the point of the end of player's range
-          const endOfRangeTarget = getEndOfRangeTarget(globalThis.player, target);
-          // Note, showCastCardsPredition's outOfRange is explicitly set to false because the endOfRangeTarget
-          // is by-definition, in range because it is the literal end of the player's range
-          const didHaveEffect = await showCastCardsPrediction(underworld, endOfRangeTarget, casterUnit, cardIds, false);
-          if (!didHaveEffect) {
-            // Note: we have to resync prediction units since castCards will have been called twice in 
-            // this prediction cycle within this branch. Otherwise our player's prediction mana
-            // will be reduced by 2x more than it should be
-            underworld.syncPredictionEntities();
-            // Reassign casterUnit now that the predictionUnits array has been completely rebuilt
-            const casterUnit = globalThis.predictionUnits?.find(u => u.id == globalThis.player?.unit.id)
-            if (!casterUnit) {
-              console.error('Critical Error, caster unit not found');
-              return;
-            }
-            // If the cast at the end of range had no effect then predict what would happen at the actual
-            // target so players can see what it will do if they do get close enough to cast
-            await showCastCardsPrediction(underworld, target, casterUnit, cardIds, outOfRange);
-          }
-        } else {
-          // If they are within range, just predict like normal, easy peasy.
-          await showCastCardsPrediction(underworld, target, casterUnit, cardIds, outOfRange);
-        }
+        const outOfRange = isOutOfRange(globalThis.player, target, true);
+        await showCastCardsPrediction(underworld, target, casterUnit, cardIds, outOfRange);
       } else {
         // If there are no cards ready to cast, clear unit tints (which symbolize units that are targeted by the active spell)
         clearUnitTints(underworld);
@@ -451,10 +428,11 @@ export function drawPredictionLine(start: Vec2, end: Vec2) {
     // predictionGraphics.endFill();
   }
 }
-export function drawPredictionCircle(target: Vec2, radius: number, text: string) {
+export function drawPredictionCircle(target: Vec2, radius: number, color: number, text?: string) {
   if (predictionGraphics) {
+    predictionGraphics.lineStyle(2, color, 1.0)
     predictionGraphics.drawCircle(target.x, target.y, radius);
-    if (labelText) {
+    if (text && labelText) {
       labelText.text = text;
       const labelPosition = withinCameraBounds({ x: target.x, y: target.y + radius }, labelText.width / 2);
       labelText.x = labelPosition.x;

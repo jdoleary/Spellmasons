@@ -1,6 +1,7 @@
 import { addPickupTarget, addUnitTarget, Spell } from './index';
 import { drawPredictionCircle } from '../graphics/PlanningView';
 import { CardCategory } from '../types/commonTypes';
+import * as colors from '../graphics/ui/colors';
 
 const id = 'Expanding';
 const range = 140;
@@ -20,11 +21,15 @@ Adds a radius to the spell so it can affect more targets.
 "Expanding" can be cast multiple times in succession to stack it's effect.
     `,
     allowNonUnitTarget: true,
-    effect: async (state, card, quantity, underworld, prediction) => {
+    effect: async (state, card, quantity, underworld, prediction, outOfRange) => {
       const adjustedRange = range * quantity;
-      for (let target of [state.castLocation, ...state.targetedUnits]) {
+      for (let target of state.targetedUnits.length ? state.targetedUnits : [state.castLocation]) {
         // Draw visual circle for prediction
-        drawPredictionCircle(target, adjustedRange, 'Targeting Radius');
+        if (outOfRange) {
+          drawPredictionCircle(target, adjustedRange, colors.outOfRangeGrey);
+        } else {
+          drawPredictionCircle(target, adjustedRange, colors.targetingSpellGreen, 'Expand Radius');
+        }
         const withinRadius = underworld.getUnitsWithinDistanceOfTarget(
           target,
           adjustedRange,
