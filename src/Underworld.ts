@@ -13,6 +13,7 @@ import * as Image from './graphics/Image';
 import * as storage from './storage';
 import * as ImmediateMode from './graphics/ImmediateModeSprites';
 import * as colors from './graphics/ui/colors';
+import * as resurrect from './cards/resurrect';
 import { MESSAGE_TYPES } from './types/MessageTypes';
 import {
   app,
@@ -653,7 +654,7 @@ export default class Underworld {
     }
     for (let marker of globalThis.resMarkers) {
       const { zoom } = getCamera();
-      ImmediateMode.draw('raise_dead.png', marker, 1 / zoom);
+      ImmediateMode.draw(resurrect.thumbnail, marker, 1 / zoom);
     }
 
   }

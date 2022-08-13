@@ -4,6 +4,7 @@ import { Spell } from './index';
 import { CardCategory } from '../types/commonTypes';
 
 const id = 'resurrect';
+export const thumbnail = 'spellIconResurrect.png';
 // Brings stats back to this amount on res
 const resStatAmount = 1.0;
 const spell: Spell = {
@@ -14,7 +15,7 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 2,
     probability: 5,
-    thumbnail: 'spellIconResurrect.png',
+    thumbnail,
     description: `
 Resurrects a dead unit and converts them to the caster's faction.
     `,
