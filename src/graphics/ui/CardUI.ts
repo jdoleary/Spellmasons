@@ -62,7 +62,10 @@ const elCardInspect = document.getElementById('card-inspect');
 export function setupCardUIEventListeners(underworld: Underworld) {
 
   if (!globalThis.headless) {
-    elInvButton?.addEventListener('click', () => {
+    elInvButton?.addEventListener('click', (e) => {
+      // Prevent a click on the inventory button from triggering other click listeners
+      // (like casting an active spell)
+      e.stopPropagation();
       toggleInventory(undefined, undefined, underworld);
     });
     elCardHolders.style['paddingLeft'] = `${cardHoldersPaddingLeft}px`;
