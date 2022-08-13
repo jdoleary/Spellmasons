@@ -1,6 +1,7 @@
 ## Today
-- Fix save/load
 - Perfect Prediction attacks
+    - research: deep cloning the entire underworld takes 50 milliseconds but cloning just the units and pickups takes 0-1 millis
+        - next: move predictionUnits/pickups/forceMove to underworld isntead of global this
 - Docs for deploying update to standalone server
 - Big Bug hunt
 ## Perfect prediction attacks
@@ -9,7 +10,6 @@
     - Resurrect icon didn't show in prediction when it was buried in a trap that I pushed someone into (in prediction)
     - Units should NEVER change target from their prediction. A case where this happened is when a decoy died from other units attacking it
     - Grunt attack predictions are not perfect. See branch 'perfect-predictions'
-    - Move predictionUnits and predictionPickups out of globalThis so they don't get clobbered when multiple instances on a single server
     - Known issues:
         - bloat doesn't show prediction damage
         - push predicted taht a lobber would fall in lava and die but it didn't
