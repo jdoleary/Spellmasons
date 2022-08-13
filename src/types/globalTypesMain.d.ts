@@ -36,10 +36,6 @@ declare global {
     var save: undefined | ((title: string, underworld: Underworld) => void);
     var load: undefined | ((title: string) => void);
     var getAllSaveFiles: undefined | (() => string[]);
-    // Save pie messages for later replay
-    var saveReplay: undefined | ((title: string) => void);
-    // Used to replay onData messages for development
-    var replay: undefined | ((title: string) => void);
     // Current client's id
     var clientId: undefined | string;
     var animatingSpells: undefined | boolean;

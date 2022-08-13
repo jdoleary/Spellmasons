@@ -422,9 +422,6 @@ export function setupNetworkHandlerGlobalFunctions(underworld: Underworld) {
     }
   };
 
-  globalThis.saveReplay = (title: string) => {
-    storage.set('golems-' + title, JSON.stringify(messageLog));
-  };
   globalThis.exitCurrentGame = function exitCurrentGame(): Promise<void> {
     // Go back to the main PLAY menu
     globalThis.setMenu?.('PLAY');
@@ -433,14 +430,4 @@ export function setupNetworkHandlerGlobalFunctions(underworld: Underworld) {
     }
     return typeGuardHostApp(underworld.pie) ? Promise.resolve() : underworld.pie.disconnect();
   }
-  // TODO, replay is currently broken
-  // globalThis.replay = (title: string) => {
-  //   const messages = JSON.parse(storage.get('golems-' + title) || '[]');
-  //   for (let i = 0; i < messages.length; i++) {
-  //     const message = messages[i];
-  //     message.fromClient = underworld.players[0].clientId;
-  //     onData(message);
-  //   }
-  // };
-
 }
