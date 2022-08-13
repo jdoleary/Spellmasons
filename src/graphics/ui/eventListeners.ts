@@ -513,6 +513,8 @@ function tryShowDevContextMenu(underworld: Underworld, e: MouseEvent, mousePos: 
     menu.onmouseleave = () => menu.outerHTML = '';
     menu.innerHTML = `
     <p id='selected-unit-label'>Selected Unit</p>
+    <ul id='menu-global'>
+    </ul>
     <ul id='menu-selected-unit'>
     </ul>
     <p>Spawn</p>
@@ -539,6 +541,17 @@ function tryShowDevContextMenu(underworld: Underworld, e: MouseEvent, mousePos: 
       menu.querySelector('#menu-selected-unit')?.remove();
       menu.querySelector('#selected-unit-label')?.remove();
     }
+    const elGlobalList = menu.querySelector('#menu-global') as HTMLElement;
+    const elKillAll = document.createElement('li');
+    elKillAll.innerHTML = 'Kill All Enemies'
+    elKillAll.addEventListener('click', () => {
+      underworld.units.filter(u => u.faction == Faction.ENEMY).forEach(u => {
+        Unit.die(u, underworld, false);
+      })
+      // Close the menu
+      menu.remove();
+    })
+    elGlobalList.appendChild(elKillAll);
 
     const elSpawnList = menu.querySelector('#menu-spawn') as HTMLElement;
 
