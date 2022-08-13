@@ -657,11 +657,19 @@ export function syncPlayerHealthManaUI() {
   elHealthLabel.innerHTML = `${unit.health}/${unit.healthMax}`;
 
   const predictionPlayerUnit = !globalThis.predictionUnits ? undefined : globalThis.predictionUnits.find(u => u.id == globalThis.player?.unit.id) || { health: unit.health, mana: unit.mana };
-  // Set the health cost bar that shows how much health will be removed if the spell is cast
+  // Set the health cost bar that shows how much health will be changed if the spell is cast
   if (predictionPlayerUnit && predictionPlayerUnit.health > 0) {
-    // Show cost bar from current health location minus whatever it's value is
-    elHealthCost.style['left'] = `${100 * predictionPlayerUnit.health / unit.healthMax}%`;
-    elHealthCost.style['width'] = `${100 * (unit.health - predictionPlayerUnit.health) / unit.healthMax}%`;
+    const losingHealth = predictionPlayerUnit.health < unit.health;
+    if (losingHealth) {
+      // Visualize health loss
+      elHealthCost.style['left'] = `${100 * predictionPlayerUnit.health / unit.healthMax}%`;
+      elHealthCost.style['width'] = `${100 * (unit.health - predictionPlayerUnit.health) / unit.healthMax}%`;
+    } else {
+      // Visualize health gain
+      elHealthCost.style['left'] = `${100 * unit.health / unit.healthMax}%`;
+      elHealthCost.style['width'] = `${100 * (predictionPlayerUnit.health - unit.health) / unit.healthMax}%`;
+
+    }
   } else {
     elHealthCost.style['left'] = '100%';
     elHealthCost.style['width'] = '0';

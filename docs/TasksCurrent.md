@@ -52,8 +52,6 @@
     - explain: remember, vampiree takes heals as pure damage
     - vampire had attack icon while in lava but next turn got out of the lava and didn't attack
     - attack badges block health sometimes
-    - self heal should predict in your health bar
-    - label out of range circle (think aoe), on hover
     - hoisting might not be desireable, what if you want to push then AOE?
     - Colin Direct Feedback:
         - some enemies chould shoot walls to blow yoru cover
@@ -150,7 +148,6 @@
 - Player robe colors are mixed up after refresh
 - Handle error in menu when attempting to connect to a bad url
 - death skull doens't show for decoy
-- Own health bar prediction doesn't work
 - Pack 7: Dad Loch playtest
     - Explain to user with popups
         - Introduce card pickup
