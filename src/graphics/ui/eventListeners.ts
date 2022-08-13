@@ -132,8 +132,11 @@ export function keydownListener(underworld: Underworld, event: KeyboardEvent) {
     case 'Escape':
       const thereWasTooltipActive = clearTooltipSelection();
       const thereWereCardsSelected = CardUI.areAnyCardsSelected();
+      const thereWasInventoryOpen = document.body?.classList.contains(CardUI.openInvClass);
+      // force close inventory
+      CardUI.toggleInventory(undefined, false, underworld);
       CardUI.clearSelectedCards(underworld);
-      if (!thereWasTooltipActive && !thereWereCardsSelected) {
+      if (!thereWasTooltipActive && !thereWereCardsSelected && !thereWasInventoryOpen) {
         // Otherwise finally toggle menu
         toggleMenu();
       }

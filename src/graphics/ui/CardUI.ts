@@ -224,7 +224,7 @@ export function recalcPositionForCards(player: Player.IPlayer | undefined, under
   }
   updateCardBadges(underworld);
 }
-const openInvClass = 'open-inventory';
+export const openInvClass = 'open-inventory';
 export function syncInventory(slotModifyingIndex: number | undefined, underworld: Underworld) {
   if (globalThis.headless) { return; }
   if (globalThis.player) {

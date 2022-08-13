@@ -3,6 +3,7 @@
     - research: deep cloning the entire underworld takes 50 milliseconds but cloning just the units and pickups takes 0-1 millis
         - next: move predictionUnits/pickups/forceMove to underworld isntead of global this
     - Why does a bloated unit exploding and damaging me NOT show up in my prediction health?
+    - A GOOD WAY TO DETECT THIS IS TO PULL A SPIKE INTO AN ENEMY AND SEE THAT PREDICTION LINES THINK IT'LL KEEP GOING
 - Docs for deploying update to standalone server
 - Big Bug hunt
 ## Perfect prediction attacks
@@ -19,56 +20,35 @@
 - Better push predictions
 - key 'z' is used both to hide hud AND to have camera follow player
 - multiplayer bug: Player robe colors are not synced
-- multiplayer bug: floor tile variation not synced
+    - this is because if first player leaves and rejoins, the clients array is now rearranged and they might switch robes
 - bug: decoy, bloat in that order doesn't add bloat to decoy
 - Brad feedback 2022-08-04
     - freeze should shield damage?
         - if frozen unit takes damage it restarts animation
     - targeting mishap, see video
     - clones exploding without bloat modifier, it's like they kept the event somehow
-    - looping death animation bug
     - upgrade where you gives omethng up to gain something
     - decoy should be immune to blood curse?, or should show it?
     - 10th toolbar space isn't filling up when you get a new spell?
-- push, bload, expand, hurt suprisingly damaged me when i clicked on an enemy near me, i think it's cause it both expanded the enemy's radius and where i clicked
 - bug: when i quit a game and start over it gives me the resurrect optoin
+    - or it maintains some state, like all the spells in my inventory
 - Ensure hurt is presented in first spell picks
 - see cantwalk.png on desktop
 - bug: explosion radius text and some move lines left on the screen after cast was done
 - game slows down when there's a lot of blood on the screen and it's painint more
-## Path to Trailer-ready alpha
-- task: Move prediction pickups and units to underworld not global or else they will be shared between multiple underworlds
-- environment looks off because wall depth shows into the grey
-- Finish standalone server
 ## Standalone server backlog bugs
 - Ensure standalone server doesn't bother running predictions
     - Unless the predictions determine their attacks from "perfect predictions" branch
 - It's running hot for some reason
-- multiplayer, player doesn't play hit animation when a grunt bites it
 - Game waits a long time after last player has ended their turn before moving on to enemy turn
 - headless server runs loop quickly when it has nothing to do (after i make a change and the clients are connecting in the other os window's space)
 - is init_game_state being invoked more than once for player 2
 - Fix: Move player so it doesn't use stamina because IT MUST bring them to a synced location if their position somehow get's out of sync
     - Desync: Due to the stamina issue I had one player in a different spot on one screen, then when he cast push and pushed a grunt into lava the grunt only moved and died on one screen and syncUnits didn't correct it somehow
-- bug: player 2 doesn't get cards
-    - C:\git\Golems\headless-server-build\src\entity\Unit.js:847
-        const { turn_phase: phase } = globalThis.underworld;
-                            ^
-
-    TypeError: Cannot destructure property 'turn_phase' of 'globalThis.underworld' as it is undefined.
-        at Object.isUnitsTurnPhase (C:\git\Golems\headless-server-build\src\entity\Unit.js:847:25)
-        at value (C:\git\Golems\headless-server-build\src\Underworld.js:324:85)
-        at Timeout._onTimeout (C:\git\Golems\headless-server-build\src\Shims.js:19:22)
-        at listOnTimeout (node:internal/timers:559:17)
-        at processTimers (node:internal/timers:502:7)
-    - lobby
-        - ready up and start game
 ## Schedule
 - Pack 16 | Colin Feedback
     - explain that you can cast any number of times per turn
     - Make spell pickups more obvious
-    - label: bloat visual circle "explosion radius"
-    - copy: "poison is stackable"
     - explain: remember, vampiree takes heals as pure damage
     - vampire had attack icon while in lava but next turn got out of the lava and didn't attack
     - attack badges block health sometimes
@@ -125,7 +105,6 @@
     - should take damage at the END of every turn if still in lava
     - lobber image is positioned too high for "feet" position to feel right
     - Super poor performance on brad's laptop on level 7
-    - "Esc" should close inv
     - What happens if you spawn decoy out of bounds
     (if the OOB is in the center of the map, see video)
 
