@@ -394,7 +394,7 @@ export function setupNetworkHandlerGlobalFunctions(underworld: Underworld) {
       savePrefix + title,
       JSON.stringify({
         level: underworld.lastLevelCreated,
-        underworld: underworld.serializeForSyncronize(),
+        underworld: underworld.serializeForSaving(),
         phase: underworld.turn_phase,
         units: underworld.units.map(Unit.serialize),
         players: underworld.players.map(Player.serialize)
