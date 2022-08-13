@@ -277,6 +277,11 @@ export default class Underworld {
       // Only allow instances that are flagged as able to create second order pushes create new pushes on collision or else you risk infinite
       // recursion
       if (forceMoveInst.canCreateSecondOrderPushes && isVecIntersectingVecWithCustomRadius(pushedObject, other, config.COLLISION_MESH_RADIUS)) {
+        // Don't collide with the same object more than once
+        // TODO: this doesn't work for prediction because prediction doesn't add units to this.forceMove
+        if (this.forceMove.find(fm => fm.pushedObject == other)) {
+          continue;
+        }
         // If they collide transfer force:
         // () => {}: No resolver needed for second order force pushes
         // All pushable objects have the same mass so when a collision happens they'll split the distance
