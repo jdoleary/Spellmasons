@@ -16,8 +16,7 @@ const spell: Spell = {
     thumbnail: 'spellIconAdjoining.png',
     requiresFollowingCard: true,
     description: `
-Adds targets for the following cards to effect by "chaining like electricity" 
-off of all existing targeted units to units touching them. 
+Link nearby enemies (and allys!) together so they are all affected by the next spells.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
       // Note: This loop must NOT be a for..of because it
