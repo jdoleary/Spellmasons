@@ -1,9 +1,24 @@
 ## Today
+- Fix save/load
+- Perfect Prediction attacks
+- Docs for deploying update to standalone server
+- Big Bug hunt
+## Perfect prediction attacks
+    - I got bit by a vampire but it didn't accurately warn me he would
+        - wrap this in with preventing units from changing targets from their prediction even if the decoy dies (lobber move then throw?)
+    - Resurrect icon didn't show in prediction when it was buried in a trap that I pushed someone into (in prediction)
+    - Units should NEVER change target from their prediction. A case where this happened is when a decoy died from other units attacking it
+    - Grunt attack predictions are not perfect. See branch 'perfect-predictions'
+    - Move predictionUnits and predictionPickups out of globalThis so they don't get clobbered when multiple instances on a single server
+    - Known issues:
+        - bloat doesn't show prediction damage
+        - push predicted taht a lobber would fall in lava and die but it didn't
+            - that same lobber when resurrected just crawled over lava so it must've been inside but just didn't take the damage
+## Tasks
 - Better push predictions
 - key 'z' is used both to hide hud AND to have camera follow player
 - Clicking on spellbook with an active spell causes it to cast
-## Tasks
-- Do a few sfx and spell effects every day
+- decoy's post should be where you click, not his center
 - multiplayer bug: when a player joins after another player has already died, on client 2 the other player's sprite is in idle instead of dead
 - bug: decoy, bloat in that order doesn't add bloat to decoy
 - Many force moves (push and pull) for many targets often fails.  Some of them will never get added because they will deadlock

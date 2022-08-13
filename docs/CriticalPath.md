@@ -1,6 +1,10 @@
 # Critical Path
+- Milestone | **Perfect Prediction Attacks**
+    - Clone entire underworld for predictions
+    - use profiler to see how expensive it is
 - Milestone | **Trailer-ready Alpha**
     - stand alone server goes into infinite loop when all players leave
+    - easy instructions for updating standalone server
     - Test standalone server with friends
     - Need sfx
         - death sounds
@@ -57,17 +61,6 @@
     - Steam Page (waiting on art)
     - Website Presskit page
         - Note: Website should just redirect to steampage
-- Milestone X | **Perfect Prediction Attacks**
-    - I got bit by a vampire but it didn't accurately warn me he would
-        - wrap this in with preventing units from changing targets from their prediction even if the decoy dies (lobber move then throw?)
-    - Resurrect icon didn't show in prediction when it was buried in a trap that I pushed someone into (in prediction)
-    - Units should NEVER change target from their prediction. A case where this happened is when a decoy died from other units attacking it
-    - Grunt attack predictions are not perfect. See branch 'perfect-predictions'
-    - Move predictionUnits and predictionPickups out of globalThis so they don't get clobbered when multiple instances on a single server
-    - Known issues:
-        - bloat doesn't show prediction damage
-        - push predicted taht a lobber would fall in lava and die but it didn't
-            - that same lobber when resurrected just crawled over lava so it must've been inside but just didn't take the damage
 - Milestone X | **Doodads**
     - More interactable doodads (explosive barrels, movable cover)
 - Milestone X | **Beta Testers** | Planning on October 1
