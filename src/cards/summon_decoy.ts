@@ -3,6 +3,7 @@ import * as Unit from '../entity/Unit';
 import { CardCategory, Faction, UnitType } from '../types/commonTypes';
 import { allUnits } from '../entity/units';
 import { skyBeam } from '../VisualEffects';
+import * as config from '../config';
 
 export const id = 'decoy';
 const spell: Spell = {
@@ -30,7 +31,8 @@ Multiple sequential decoy spells will create a decoy with more health.
           const decoyUnit = Unit.create(
             sourceUnit.id,
             state.castLocation.x,
-            state.castLocation.y,
+            // Place the decoy root (the post) where the click occurs, not the center of the decoy
+            state.castLocation.y - 22,
             Faction.ALLY,
             sourceUnit.info.image,
             UnitType.AI,

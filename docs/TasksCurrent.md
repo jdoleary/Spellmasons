@@ -18,7 +18,6 @@
 ## Tasks
 - Better push predictions
 - key 'z' is used both to hide hud AND to have camera follow player
-- decoy's post should be where you click, not his center
 - multiplayer bug: when a player joins after another player has already died, on client 2 the other player's sprite is in idle instead of dead
 - bug: decoy, bloat in that order doesn't add bloat to decoy
 - Many force moves (push and pull) for many targets often fails.  Some of them will never get added because they will deadlock
