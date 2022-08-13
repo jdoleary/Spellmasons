@@ -1,5 +1,7 @@
 ## Today
 - Better push predictions
+- key 'z' is used both to hide hud AND to have camera follow player
+- Clicking on spellbook with an active spell causes it to cast
 ## Tasks
 - Do a few sfx and spell effects every day
 - multiplayer bug: when a player joins after another player has already died, on client 2 the other player's sprite is in idle instead of dead
