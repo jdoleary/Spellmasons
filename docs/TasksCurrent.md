@@ -18,9 +18,9 @@
 ## Tasks
 - Better push predictions
 - key 'z' is used both to hide hud AND to have camera follow player
-- multiplayer bug: when a player joins after another player has already died, on client 2 the other player's sprite is in idle instead of dead
+- multiplayer bug: Player robe colors are not synced
+- multiplayer bug: floor tile variation not synced
 - bug: decoy, bloat in that order doesn't add bloat to decoy
-- Many force moves (push and pull) for many targets often fails.  Some of them will never get added because they will deadlock
 - Brad feedback 2022-08-04
     - freeze should shield damage?
         - if frozen unit takes damage it restarts animation

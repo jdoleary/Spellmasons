@@ -323,7 +323,11 @@ export function load(unit: IUnitSerialized, underworld: Underworld, prediction: 
   }
   underworld.addUnitToArray(loadedunit, prediction);
   if (!loadedunit.alive) {
-    die(loadedunit, underworld, prediction);
+    if (loadedunit.image) {
+      // Ensure unit is on die sprite
+      changeToDieSprite(loadedunit);
+      loadedunit.image.sprite.gotoAndStop(loadedunit.image.sprite.totalFrames - 1);
+    }
   }
   return loadedunit;
 }
