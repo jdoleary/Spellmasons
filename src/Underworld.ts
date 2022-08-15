@@ -134,7 +134,7 @@ export default class Underworld {
   // A list of units and pickups and an endPosition that they are moved to via a "force",
   // like a push or pull or explosion.
   forceMove: ForceMove[] = [];
-  // forceMovePrediction: ForceMove[] = [];
+  forceMovePrediction: ForceMove[] = [];
   // A hash of the last thing this client was thinking
   // Used with MESSAGE_TYPES.PLAYER_THINKING so other clients 
   // can see what another client is planning.
@@ -222,37 +222,51 @@ export default class Underworld {
     return this.random;
   }
   // Simulate the forceMove until it's complete
-  // Returns true when done
-  fullySimulateForceMove(forceMoveInst: ForceMove, prediction: boolean): boolean {
-    let done = false;
-    const PREVENT_INFINITE_WITH_WARN_LOOP_THRESHOLD = 100;
+  fullySimulateForceMovePredictions() {
+    if (this.forceMovePrediction.length > 1) {
+      // this function should only be invoked once per prediction, this check
+      // prevents it from being invoked more than once because any time a forceMovePrediction
+      // is added to the forceMovePrediction array this function will be invoked and it will run until
+      // all the forceMovePredictions associated are finished
+      return;
+    }
+    const prediction = true;
+    const PREVENT_INFINITE_WITH_WARN_LOOP_THRESHOLD = 300;
     let loopCount = 0;
     if (globalThis.predictionGraphics) {
       globalThis.predictionGraphics.beginFill(colors.forceMoveColor);
     }
-    while (!done || loopCount < PREVENT_INFINITE_WITH_WARN_LOOP_THRESHOLD) {
+    while (this.forceMovePrediction.length > 0 && loopCount < PREVENT_INFINITE_WITH_WARN_LOOP_THRESHOLD) {
       loopCount++;
-      const startPos = Vec.clone(forceMoveInst.pushedObject);
-      done = this.runForceMove(forceMoveInst, prediction);
-      // Draw prediction lines
-      if (globalThis.predictionGraphics) {
-        globalThis.predictionGraphics.lineStyle(4, colors.forceMoveColor, 1.0);
-        globalThis.predictionGraphics.moveTo(startPos.x, startPos.y);
-        globalThis.predictionGraphics.lineTo(forceMoveInst.pushedObject.x, forceMoveInst.pushedObject.y);
-        // Draw circle at the end so the line path isn't a trail of rectangles with sharp edges
-        globalThis.predictionGraphics.lineStyle(1, colors.forceMoveColor, 1.0);
-        globalThis.predictionGraphics.drawCircle(forceMoveInst.pushedObject.x, forceMoveInst.pushedObject.y, 1);
+      for (let i = this.forceMovePrediction.length - 1; i >= 0; i--) {
+        const forceMoveInst = this.forceMovePrediction[i];
+        if (forceMoveInst) {
+          const startPos = Vec.clone(forceMoveInst.pushedObject);
+          const done = this.runForceMove(forceMoveInst, prediction);
+          // Draw prediction lines
+          if (globalThis.predictionGraphics) {
+            globalThis.predictionGraphics.lineStyle(4, colors.forceMoveColor, 1.0);
+            globalThis.predictionGraphics.moveTo(startPos.x, startPos.y);
+            globalThis.predictionGraphics.lineTo(forceMoveInst.pushedObject.x, forceMoveInst.pushedObject.y);
+            // Draw circle at the end so the line path isn't a trail of rectangles with sharp edges
+            globalThis.predictionGraphics.lineStyle(1, colors.forceMoveColor, 1.0);
+            globalThis.predictionGraphics.drawCircle(forceMoveInst.pushedObject.x, forceMoveInst.pushedObject.y, 1);
+          }
+          if (done) {
+            // Draw a circle at the end position
+            if (globalThis.predictionGraphics) {
+              globalThis.predictionGraphics.drawCircle(forceMoveInst.pushedObject.x, forceMoveInst.pushedObject.y, 3);
+              globalThis.predictionGraphics.endFill();
+            }
+            forceMoveInst.resolve();
+            this.forceMovePrediction.splice(i, 1);
+          }
+        }
       }
     }
-    // Draw a circle at the end position
-    if (globalThis.predictionGraphics) {
-      globalThis.predictionGraphics.drawCircle(forceMoveInst.pushedObject.x, forceMoveInst.pushedObject.y, 2);
-      globalThis.predictionGraphics.endFill();
+    if (loopCount >= PREVENT_INFINITE_WITH_WARN_LOOP_THRESHOLD) {
+      console.error('forceMove simulation hit PREVENT_INFINITE threshold');
     }
-    if (loopCount > PREVENT_INFINITE_WITH_WARN_LOOP_THRESHOLD) {
-      console.error('forceMove hit PREVENT_INFINITE threshold', forceMoveInst, prediction);
-    }
-    return done;
   }
   // Returns true when forceMove is complete
   runForceMove(forceMoveInst: ForceMove, prediction: boolean): boolean {
@@ -280,8 +294,8 @@ export default class Underworld {
       // recursion
       if (forceMoveInst.canCreateSecondOrderPushes && isVecIntersectingVecWithCustomRadius(pushedObject, other, config.COLLISION_MESH_RADIUS)) {
         // Don't collide with the same object more than once
-        // TODO: this doesn't work for prediction because prediction doesn't add units to this.forceMove
-        if (this.forceMove.find(fm => fm.pushedObject == other)) {
+        const fmArray = prediction ? this.forceMovePrediction : this.forceMove;
+        if (fmArray.find(fm => fm.pushedObject == other)) {
           continue;
         }
         // If they collide transfer force:
@@ -1206,6 +1220,7 @@ export default class Underworld {
 
     // Empty any remaining forceMoves
     this.forceMove = [];
+    this.forceMovePrediction = [];
 
     // Clear all floor images
     containerBoard?.removeChildren();

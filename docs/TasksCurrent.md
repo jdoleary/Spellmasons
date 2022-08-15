@@ -1,9 +1,5 @@
 ## Today
-- Perfect Prediction attacks
-    - research: deep cloning the entire underworld takes 50 milliseconds but cloning just the units and pickups takes 0-1 millis
-        - next: move predictionUnits/pickups/forceMove to underworld isntead of global this
-    - Why does a bloated unit exploding and damaging me NOT show up in my prediction health?
-    - A GOOD WAY TO DETECT THIS IS TO PULL A SPIKE INTO AN ENEMY AND SEE THAT PREDICTION LINES THINK IT'LL KEEP GOING
+- next: move predictionUnits/pickups/forceMove to underworld isntead of global this
 - Docs for deploying update to standalone server
 - fix hotkey for jprompt
 ## Perfect prediction attacks

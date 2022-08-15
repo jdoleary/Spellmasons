@@ -163,6 +163,12 @@ export function removePickup(pickup: IPickup, underworld: Underworld, prediction
   Image.cleanup(pickup.image);
   underworld.removePickupFromArray(pickup, prediction);
   checkIfNeedToClearTooltip();
+  // Remove any associated forcePushs
+  const fms = (prediction ? underworld.forceMovePrediction : underworld.forceMove).filter(fm => fm.pushedObject == pickup)
+  if (fms.length) {
+    // set the associated forceMove to velocity of 0 so it will be removed at the next invocation of runForceMove
+    fms.forEach(fm => { fm.velocity = { x: 0, y: 0 } });
+  }
 }
 export function triggerPickup(pickup: IPickup, unit: IUnit, underworld: Underworld, prediction: boolean) {
   const player = underworld.players.find((p) => p.unit === unit);
