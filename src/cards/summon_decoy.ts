@@ -1,4 +1,4 @@
-import { Spell } from './index';
+import { addUnitTarget, Spell } from './index';
 import * as Unit from '../entity/Unit';
 import { CardCategory, Faction, UnitType } from '../types/commonTypes';
 import { allUnits } from '../entity/units';
@@ -25,30 +25,33 @@ Multiple sequential decoy spells will create a decoy with more health.
     allowNonUnitTarget: true,
     effect: async (state, card, quantity, underworld, prediction) => {
       const unitId = 'decoy';
-      if (!prediction) {
-        const sourceUnit = allUnits[unitId];
-        if (sourceUnit) {
-          const decoyUnit = Unit.create(
-            sourceUnit.id,
-            state.castLocation.x,
-            // Place the decoy root (the post) where the click occurs, not the center of the decoy
-            state.castLocation.y - 22,
-            Faction.ALLY,
-            sourceUnit.info.image,
-            UnitType.AI,
-            sourceUnit.info.subtype,
-            0,
-            sourceUnit.unitProps,
-            underworld
-          );
+      const sourceUnit = allUnits[unitId];
+      if (sourceUnit) {
+        const decoyUnit = Unit.create(
+          sourceUnit.id,
+          state.castLocation.x,
+          // Place the decoy root (the post) where the click occurs, not the center of the decoy
+          state.castLocation.y - 22,
+          Faction.ALLY,
+          sourceUnit.info.image,
+          UnitType.AI,
+          sourceUnit.info.subtype,
+          0,
+          sourceUnit.unitProps,
+          underworld,
+          prediction
+        );
+        addUnitTarget(decoyUnit, state);
 
+        if (!prediction) {
+          // Animate effect of unit spawning from the sky
           skyBeam(decoyUnit);
-
-          decoyUnit.healthMax *= quantity;
-          decoyUnit.health = decoyUnit.healthMax;
-        } else {
-          console.error(`Source unit ${unitId} is missing`);
         }
+
+        decoyUnit.healthMax *= quantity;
+        decoyUnit.health = decoyUnit.healthMax;
+      } else {
+        console.error(`Source unit ${unitId} is missing`);
       }
       return state;
     },

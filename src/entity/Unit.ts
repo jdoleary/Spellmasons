@@ -121,7 +121,8 @@ export function create(
   unitSubType: UnitSubType,
   strength: number,
   sourceUnitProps: Partial<IUnit> = {},
-  underworld: Underworld
+  underworld: Underworld,
+  prediction?: boolean,
 ): IUnit {
   const health = Math.round(config.UNIT_BASE_HEALTH * strength);
   const mana = Math.round(config.UNIT_BASE_MANA * strength);
@@ -143,7 +144,7 @@ export function create(
       staminaMax,
       attackRange: 10 + config.COLLISION_MESH_RADIUS * 2,
       faction,
-      image: Image.create({ x, y }, defaultImagePath, containerUnits),
+      image: prediction ? undefined : Image.create({ x, y }, defaultImagePath, containerUnits),
       defaultImagePath,
       shaderUniforms: {},
       // damage is set elsewhere in adjustUnitStrength
@@ -193,7 +194,7 @@ export function create(
     changeFaction(unit, faction);
 
 
-    underworld.addUnitToArray(unit, false);
+    underworld.addUnitToArray(unit, prediction || false);
 
     return unit;
   } else {
