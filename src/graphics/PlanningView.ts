@@ -90,41 +90,44 @@ export function updatePlanningView(underworld: Underworld) {
           }
         } else {
 
-          const rangeCircleColor = globalThis.selectedUnit.faction == Faction.ALLY ? colors.attackRangeAlly : colors.attackRangeEnemy;
-          globalThis.unitOverlayGraphics.lineStyle(8, rangeCircleColor, 0.3);
-          if (globalThis.selectedUnit.unitSubType === UnitSubType.RANGED_RADIUS) {
-            globalThis.unitOverlayGraphics.drawCircle(
-              globalThis.selectedUnit.x,
-              globalThis.selectedUnit.y,
-              globalThis.selectedUnit.attackRange
-            );
-            labelText.text = 'Attack Range';
-            const labelPosition = withinCameraBounds({ x: globalThis.selectedUnit.x, y: globalThis.selectedUnit.y + globalThis.selectedUnit.attackRange }, labelText.width / 2);
-            labelText.x = labelPosition.x;
-            labelText.y = labelPosition.y;
-          } else if (globalThis.selectedUnit.unitSubType === UnitSubType.SUPPORT_CLASS) {
-            globalThis.unitOverlayGraphics.drawCircle(
-              globalThis.selectedUnit.x,
-              globalThis.selectedUnit.y,
-              globalThis.selectedUnit.attackRange
-            );
-            labelText.text = 'Support Range';
-            const labelPosition = withinCameraBounds({ x: globalThis.selectedUnit.x, y: globalThis.selectedUnit.y + globalThis.selectedUnit.attackRange }, labelText.width / 2);
-            labelText.x = labelPosition.x;
-            labelText.y = labelPosition.y;
-          } else if (globalThis.selectedUnit.unitSubType === UnitSubType.MELEE) {
-            globalThis.unitOverlayGraphics.drawCircle(
-              globalThis.selectedUnit.x,
-              globalThis.selectedUnit.y,
-              globalThis.selectedUnit.staminaMax
-            );
-            globalThis.unitOverlayGraphics.endFill();
-            labelText.text = 'Attack Range';
-            const labelPosition = withinCameraBounds({ x: globalThis.selectedUnit.x, y: globalThis.selectedUnit.y + globalThis.selectedUnit.staminaMax + globalThis.selectedUnit.attackRange }, labelText.width / 2);
-            labelText.x = labelPosition.x;
-            labelText.y = labelPosition.y;
-          } else if (globalThis.selectedUnit.unitSubType === UnitSubType.PLAYER_CONTROLLED) {
-            drawCastRangeCircle(globalThis.selectedUnit, globalThis.selectedUnit.attackRange, globalThis.unitOverlayGraphics)
+          if (globalThis.selectedUnit.attackRange > 0) {
+
+            const rangeCircleColor = globalThis.selectedUnit.faction == Faction.ALLY ? colors.attackRangeAlly : colors.attackRangeEnemy;
+            globalThis.unitOverlayGraphics.lineStyle(8, rangeCircleColor, 0.3);
+            if (globalThis.selectedUnit.unitSubType === UnitSubType.RANGED_RADIUS) {
+              globalThis.unitOverlayGraphics.drawCircle(
+                globalThis.selectedUnit.x,
+                globalThis.selectedUnit.y,
+                globalThis.selectedUnit.attackRange
+              );
+              labelText.text = 'Attack Range';
+              const labelPosition = withinCameraBounds({ x: globalThis.selectedUnit.x, y: globalThis.selectedUnit.y + globalThis.selectedUnit.attackRange }, labelText.width / 2);
+              labelText.x = labelPosition.x;
+              labelText.y = labelPosition.y;
+            } else if (globalThis.selectedUnit.unitSubType === UnitSubType.SUPPORT_CLASS) {
+              globalThis.unitOverlayGraphics.drawCircle(
+                globalThis.selectedUnit.x,
+                globalThis.selectedUnit.y,
+                globalThis.selectedUnit.attackRange
+              );
+              labelText.text = 'Support Range';
+              const labelPosition = withinCameraBounds({ x: globalThis.selectedUnit.x, y: globalThis.selectedUnit.y + globalThis.selectedUnit.attackRange }, labelText.width / 2);
+              labelText.x = labelPosition.x;
+              labelText.y = labelPosition.y;
+            } else if (globalThis.selectedUnit.unitSubType === UnitSubType.MELEE) {
+              globalThis.unitOverlayGraphics.drawCircle(
+                globalThis.selectedUnit.x,
+                globalThis.selectedUnit.y,
+                globalThis.selectedUnit.staminaMax
+              );
+              globalThis.unitOverlayGraphics.endFill();
+              labelText.text = 'Attack Range';
+              const labelPosition = withinCameraBounds({ x: globalThis.selectedUnit.x, y: globalThis.selectedUnit.y + globalThis.selectedUnit.staminaMax + globalThis.selectedUnit.attackRange }, labelText.width / 2);
+              labelText.x = labelPosition.x;
+              labelText.y = labelPosition.y;
+            } else if (globalThis.selectedUnit.unitSubType === UnitSubType.PLAYER_CONTROLLED) {
+              drawCastRangeCircle(globalThis.selectedUnit, globalThis.selectedUnit.attackRange, globalThis.unitOverlayGraphics)
+            }
           }
         }
       }
