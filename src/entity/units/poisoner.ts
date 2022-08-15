@@ -40,6 +40,8 @@ const unit: UnitSource = {
       const chosenUnit = nonPoisonedEnemyUnits[0];
       if (chosenUnit) {
         if (Unit.inRange(unit, chosenUnit)) {
+          // Poisoners attack or move, not both; so clear their existing path
+          unit.path = undefined;
           await Unit.playAnimation(unit, unit.animations.attack);
           createVisualLobbingProjectile(
             unit,
@@ -51,9 +53,11 @@ const unit: UnitSource = {
             // Add projectile hit animation
             Unit.addOneOffAnimation(chosenUnit, 'projectile/poisonerProjectileHit');
           });
+        } else {
+          // Only move if not in range
+          const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, chosenUnit, unit.stamina);
+          await Unit.moveTowards(unit, moveTo, underworld);
         }
-        const moveTo = math.getCoordsAtDistanceTowardsTarget(unit, chosenUnit, unit.stamina);
-        await Unit.moveTowards(unit, moveTo, underworld);
       }
     }
   },
