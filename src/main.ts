@@ -34,7 +34,6 @@ globalThis.playSFXKey = playSFXKey;
 globalThis.sfx = sfx;
 
 globalThis.playerWalkingPromise = Promise.resolve();
-globalThis.predictionUnits = [];
 globalThis.attentionMarkers = [];
 globalThis.resMarkers = [];
 globalThis.devMode = location.href.includes('localhost');

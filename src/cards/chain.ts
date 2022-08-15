@@ -51,7 +51,7 @@ function getTouchingUnitsRecursive(
   prediction: boolean,
   ignore: Unit.IUnit[] = [],
 ): Unit.IUnit[] {
-  const units = prediction && globalThis.predictionUnits ? globalThis.predictionUnits : underworld.units;
+  const units = prediction ? underworld.unitsPrediction : underworld.units;
   let touching = units.filter((u) => {
     return (
       u.x <= x + range &&

@@ -645,7 +645,7 @@ export function takeDamage(unit: IUnit, amount: number, damageFromVec2: Vec2 | u
   }
 
 }
-export function syncPlayerHealthManaUI() {
+export function syncPlayerHealthManaUI(underworld: Underworld) {
   if (globalThis.headless) { return; }
   if (!(globalThis.player && elHealthBar && elManaBar && elStaminaBar && elHealthLabel && elManaLabel && elStaminaBarLabel)) {
     return
@@ -656,7 +656,7 @@ export function syncPlayerHealthManaUI() {
   elHealthBar.style["width"] = `${100 * healthRatio}%`;
   elHealthLabel.innerHTML = `${unit.health}/${unit.healthMax}`;
 
-  const predictionPlayerUnit = !globalThis.predictionUnits ? undefined : globalThis.predictionUnits.find(u => u.id == globalThis.player?.unit.id) || { health: unit.health, mana: unit.mana };
+  const predictionPlayerUnit = underworld.unitsPrediction.find(u => u.id == globalThis.player?.unit.id) || { health: unit.health, mana: unit.mana };
   // Set the health cost bar that shows how much health will be changed if the spell is cast
   if (predictionPlayerUnit && predictionPlayerUnit.health > 0) {
     const losingHealth = predictionPlayerUnit.health < unit.health;

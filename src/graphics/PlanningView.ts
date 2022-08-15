@@ -346,7 +346,7 @@ export async function runPredictions(underworld: Underworld) {
       updateManaCostUI(underworld);
       // Dry run cast so the user can see what effect it's going to have
       const target = getAdjustedCastTarget(globalThis.player, mousePos);
-      const casterUnit = globalThis.predictionUnits?.find(u => u.id == globalThis.player?.unit.id)
+      const casterUnit = underworld.unitsPrediction.find(u => u.id == globalThis.player?.unit.id)
       if (!casterUnit) {
         console.error('Critical Error, caster unit not found');
         return;
@@ -367,7 +367,7 @@ export async function runPredictions(underworld: Underworld) {
       // next turn
       globalThis.attentionMarkers = [];
       if (globalThis.player) {
-        for (let u of globalThis.predictionUnits || []) {
+        for (let u of underworld.unitsPrediction) {
           const skipTurn = await Unit.runTurnStartEvents(u, true, underworld);
           if (skipTurn) {
             continue;
@@ -389,7 +389,7 @@ export async function runPredictions(underworld: Underworld) {
       // Show if unit will be resurrected
       globalThis.resMarkers = [];
       if (cardIds.includes('resurrect')) {
-        globalThis.predictionUnits?.filter(u => u.faction == Faction.ALLY && u.alive).forEach(u => {
+        underworld.unitsPrediction.filter(u => u.faction == Faction.ALLY && u.alive).forEach(u => {
           // Check if their non-prediction counterpart is dead to see if they will be resurrected:
           const realUnit = underworld.units.find(x => x.id == u.id)
           if (realUnit && !realUnit.alive) {

@@ -1,5 +1,4 @@
 ## Today
-- next: move predictionUnits/pickups/forceMove to underworld isntead of global this
 - Docs for deploying update to standalone server
 - fix hotkey for jprompt
 ## Perfect prediction attacks

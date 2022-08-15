@@ -111,7 +111,9 @@ export default class Underworld {
   limits: Limits = { xMin: 0, xMax: 0, yMin: 0, yMax: 0 };
   players: Player.IPlayer[] = [];
   units: Unit.IUnit[] = [];
+  unitsPrediction: Unit.IUnit[] = [];
   pickups: Pickup.IPickup[] = [];
+  pickupsPrediction: Pickup.IPickup[] = [];
   imageOnlyTiles: Tile[] = [];
   // line segments that prevent sight and movement
   walls: LineSegment[] = [];
@@ -198,17 +200,17 @@ export default class Underworld {
 
   }
   syncPlayerPredictionUnitOnly() {
-    if (globalThis.predictionUnits && globalThis.player !== undefined) {
-      const predictionUnitIndex = globalThis.predictionUnits.findIndex(u => u.id == globalThis.player?.unit.id);
-      globalThis.predictionUnits[predictionUnitIndex] = Unit.copyForPredictionUnit(globalThis.player.unit, this);
+    if (this.unitsPrediction && globalThis.player !== undefined) {
+      const predictionUnitIndex = this.unitsPrediction.findIndex(u => u.id == globalThis.player?.unit.id);
+      this.unitsPrediction[predictionUnitIndex] = Unit.copyForPredictionUnit(globalThis.player.unit, this);
     }
   }
-  // Assigns globalThis.predictionUnits a copy of this.units
+  // Assigns this.unitsPrediction a copy of this.units
   // for the sake of prediction
   syncPredictionEntities() {
     // Headless does not use predictions because predictions are only for display
     if (globalThis.headless) { return; }
-    globalThis.predictionUnits = this.units.map(u => Unit.copyForPredictionUnit(u, this));
+    this.unitsPrediction = this.units.map(u => Unit.copyForPredictionUnit(u, this));
     globalThis.predictionPickups = this.pickups.map(Pickup.copyForPredictionPickup);
   }
   syncronizeRNG(RNGState: SeedrandomState | boolean) {
@@ -278,7 +280,7 @@ export default class Underworld {
       // It's close enough, return true to signify complete 
       return true;
     }
-    const aliveUnits = ((prediction && globalThis.predictionUnits) ? globalThis.predictionUnits : this.units).filter(u => u.alive);
+    const aliveUnits = ((prediction && this.unitsPrediction) ? this.unitsPrediction : this.units).filter(u => u.alive);
     const newPosition = Vec.add(pushedObject, velocity)
     pushedObject.x = newPosition.x;
     pushedObject.y = newPosition.y;
@@ -322,7 +324,7 @@ export default class Underworld {
     } else if (Pickup.isPickup(forceMoveInst.pushedObject)) {
       // If the pushed object is a pickup, check if it collides with any units
       // as it is pushed
-      ((prediction && globalThis.predictionUnits) ? globalThis.predictionUnits : this.units).forEach(u => {
+      ((prediction && this.unitsPrediction) ? this.unitsPrediction : this.units).forEach(u => {
         this.checkPickupCollisions(u, prediction);
       })
     }
@@ -350,7 +352,7 @@ export default class Underworld {
 
     ImmediateMode.loop();
 
-    Unit.syncPlayerHealthManaUI();
+    Unit.syncPlayerHealthManaUI(this);
     globalThis.unitOverlayGraphics?.clear();
 
     // Draw cast line:
@@ -431,7 +433,7 @@ export default class Underworld {
     for (let i = 0; i < this.units.length; i++) {
       const u = this.units[i];
       if (u) {
-        const predictionUnit = !globalThis.predictionUnits ? undefined : globalThis.predictionUnits[i];
+        const predictionUnit = !this.unitsPrediction ? undefined : this.unitsPrediction[i];
         if (u.alive) {
 
           while (u.path && u.path.points[0] && Vec.equal(Vec.round(u), u.path.points[0])) {
@@ -580,7 +582,7 @@ export default class Underworld {
     const path = this.calculatePath(unit.path, Vec.round(unit), Vec.round(target))
     if (unit.path) {
       // If there is a pre-existing path, intentionally mutate it.
-      // This is so that predictionUnits can mutate the path's of 
+      // This is so that this.unitsPrediction can mutate the path's of 
       // their actual unit counterparts so we get the optimization gains
       // of cached paths.
       unit.path.lastOwnPosition = path.lastOwnPosition;
@@ -1953,7 +1955,7 @@ export default class Underworld {
     prediction: boolean,
   ): Unit.IUnit[] {
     const withinDistance: Unit.IUnit[] = [];
-    const units = (prediction && globalThis.predictionUnits) ? globalThis.predictionUnits : this.units;
+    const units = (prediction && this.unitsPrediction) ? this.unitsPrediction : this.units;
     for (let unit of units) {
       if (math.distance(unit, target) <= distance) {
         withinDistance.push(unit);
@@ -1962,7 +1964,7 @@ export default class Underworld {
     return withinDistance;
   }
   getUnitsAt(coords: Vec2, prediction?: boolean): Unit.IUnit[] {
-    const sortedByProximityToCoords = (prediction && globalThis.predictionUnits ? globalThis.predictionUnits : this.units)
+    const sortedByProximityToCoords = (prediction && this.unitsPrediction ? this.unitsPrediction : this.units)
       // Filter for only valid units, not units with NaN location or waiting to be removed
       .filter(u => !u.flaggedForRemoval && !isNaN(u.x) && !isNaN(u.y))
       // Filter for units within SELECTABLE_RADIUS of coordinates
@@ -1984,8 +1986,8 @@ export default class Underworld {
     return closest;
   }
   addUnitToArray(unit: Unit.IUnit, prediction: boolean) {
-    if (prediction && globalThis.predictionUnits) {
-      globalThis.predictionUnits.push(Unit.copyForPredictionUnit(unit, this));
+    if (prediction && this.unitsPrediction) {
+      this.unitsPrediction.push(Unit.copyForPredictionUnit(unit, this));
     } else {
       this.units.push(unit);
     }
