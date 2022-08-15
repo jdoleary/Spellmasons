@@ -76,10 +76,12 @@ at the start of the unit's turn.
       const modifier = unit.modifiers[id];
       // Don't take damage on prediction because it is confusing for people to see the prediction damage that poison will do,
       // they assume prediction damage is only from their direct cast, not including the start of the next turn
-      if (!prediction && modifier) {
-        takeDamage(unit, modifier.stacks || 1, unit, underworld, prediction, undefined);
-      } else {
-        console.error('Should have poison modifier on unit but it is missing')
+      if (!prediction) {
+        if (modifier) {
+          takeDamage(unit, modifier.stacks || 1, unit, underworld, prediction, undefined);
+        } else {
+          console.error('Should have poison modifier on unit but it is missing')
+        }
       }
       return false;
     },
