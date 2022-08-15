@@ -1,7 +1,4 @@
 # Critical Path
-- Milestone | **Perfect Prediction Attacks**
-    - Clone entire underworld for predictions
-    - use profiler to see how expensive it is
 - Milestone | **Standalone Server Playtest**
     - stand alone server goes into infinite loop when all players leave
     - easy instructions for updating standalone server
