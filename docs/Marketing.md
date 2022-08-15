@@ -1,3 +1,35 @@
+- Resources:
+    - https://www.progamemarketing.com/p/howtomakeasteampage
+        - Show lots of variety in the steampage
+            - screenshot rules
+                - variety of environments
+                - varity of visual effects
+                - show in-game menus
+                - better to have fewer screenshots than to repeat
+            - capsule rules
+                - goal: show that you spent money on game's art
+            - the page itself
+                - put game assets throughout the page
+                - show, don't tell. Don't waste words describing what can be shown
+                - problem: unclear genre, what do you do
+                    - verb focused short descriptions
+                    - explain that it's turn-based, and rogue-like
+                    - avoid screenshots that don't show the genre
+                - make steam tagging algorithm WORK FOR YOU. THIS IS SUPER IMPORTANT, EVERYTHING IS BASED ON TAGS
+                    - look at similar popular games and their tags
+                - Prevent "dead game syndrome"
+                    - players want to play a game that looks like it has attention.  I should be posting regular events in steam to show that it's active
+                    - Look at "chicken police" events
+                - In forums:
+                    - answer if it's coming to switch and if it's 60fps
+                    - Pin a "Where to find us" post
+                    - show that you're communicating with your audience
+                - You can continue to update the game after it's released
+                - don't give up, keep trying things until it works
+                - wishlists are the key metric
+                - Marketing & Visibility > Store & Steam Platform Traffic Breakdown to see Tags and Discovery Queue metrics
+    - https://howtomarketagame.com/
+    - https://partner.steamgames.com/doc/store/assets/standard#header_capsule
 - Tasks:
     - Make the steam page
     - Make the trailer
