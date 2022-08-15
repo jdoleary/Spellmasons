@@ -5,7 +5,7 @@
     - Why does a bloated unit exploding and damaging me NOT show up in my prediction health?
     - A GOOD WAY TO DETECT THIS IS TO PULL A SPIKE INTO AN ENEMY AND SEE THAT PREDICTION LINES THINK IT'LL KEEP GOING
 - Docs for deploying update to standalone server
-- Big Bug hunt
+- fix hotkey for jprompt
 ## Perfect prediction attacks
     - I got bit by a vampire but it didn't accurately warn me he would
         - wrap this in with preventing units from changing targets from their prediction even if the decoy dies (lobber move then throw?)
@@ -52,31 +52,7 @@
     - explain: remember, vampiree takes heals as pure damage
     - vampire had attack icon while in lava but next turn got out of the lava and didn't attack
     - attack badges block health sometimes
-    - hoisting might not be desireable, what if you want to push then AOE?
-    - Colin Direct Feedback:
-        - some enemies chould shoot walls to blow yoru cover
-        - add moodiness, make it darker
-        - pickup potions
-        - fun figuring out mechanics
-        - felt like rinse and repeat
-        - new to genre
-        - QWERTASDFG for hotkeys
-        - More exciting if archers had a % chance based on distance
-        - physics based env:
-            - drop corpse in lave and have it shoot out lava
-            - bloat gore schrapnel
-                - gore ended up on other characters
-                - gore on them from being next to explosion
-                - gore on walls, leave a mark
-                    - blood trail
-        - fog of war
-        - what if no agro until you got close so you can't just wait for them all to come to you
-        - archer arroes hurt allies as it passes through. % chance. multiple types of archers
 - animated trim path line for archers so it's obvious they'll hit you
-- Lochlan feedback
-    - ding sound design when "leveling up"
-    - purified vampires shouldn't spread bloodcurse
-    - bloodcurse show as 18+18/36
 - Write down Brad's feedback here
     - it should be clear that it rolls spells after you pick
     - Trap pickup radius is too big, you can't squeeze by it (spikes and trap?)
@@ -85,21 +61,8 @@
     - Super poor performance on brad's laptop on level 7
         - double pull through lava make my computer's fan pickup
 
-- Brad feedback
-    - Add a glow on hover to spells in spellbook
-    - Ambiance, particles around the map
-    - precast animations, when you hover over a corpse with resurrect, white particles should come up from the ground
     - bug: resurrect leaves dangling Images behind
-- Pack 9 | R, J & E feedback
-    - No stamina bar after portal
-    - Freeze spell should stop timer on pickups (or just increase it by 1)
-    - Hover should always show tooltip so you can see even when spell is queued
-    - Bug: decoy died and archer changed targets, make units commit to a target at the beginning of the round, else PLAYER FRUSTRATION
-    - shield should have number on it
-    - ideas
-        - Have push and pull from the start
-        - objects to hide behind (raise earth)
-        - More objects to interact with
+- Bug: decoy died and archer changed targets, make units commit to a target at the beginning of the round, else PLAYER FRUSTRATION
 - Pack 10
     - Better timeout icon
         - Change timeout icon to red when 0 turns left?
