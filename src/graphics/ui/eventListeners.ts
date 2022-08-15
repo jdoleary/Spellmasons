@@ -527,11 +527,23 @@ function tryShowDevContextMenu(underworld: Underworld, e: MouseEvent, mousePos: 
     if (globalThis.selectedUnit) {
 
       const elSelectedUnitList = menu.querySelector('#menu-selected-unit') as HTMLElement;
-      const el = document.createElement('li');
+      // Die
+      let el = document.createElement('li');
       el.innerHTML = 'Die'
       el.addEventListener('click', () => {
         if (globalThis.selectedUnit) {
           Unit.die(globalThis.selectedUnit, underworld, false);
+        }
+        // Close the menu
+        menu.remove();
+      })
+      elSelectedUnitList.appendChild(el);
+      // Play all Animations
+      el = document.createElement('li');
+      el.innerHTML = 'Play all Animations'
+      el.addEventListener('click', () => {
+        if (globalThis.selectedUnit) {
+          Unit.demoAnimations(globalThis.selectedUnit);
         }
         // Close the menu
         menu.remove();

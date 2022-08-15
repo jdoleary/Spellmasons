@@ -14,7 +14,7 @@ import { addLerpable } from '../lerpList';
 import { allUnits } from './units';
 import { allModifiers, EffectState } from '../cards';
 import { checkIfNeedToClearTooltip, clearSpellEffectProjection } from '../graphics/PlanningView';
-import { centeredFloatingText } from '../graphics/FloatingText';
+import floatingText, { centeredFloatingText } from '../graphics/FloatingText';
 import Underworld, { turn_phase } from '../Underworld';
 import combos from '../graphics/AnimationCombos';
 import { raceTimeout } from '../Promise';
@@ -999,5 +999,32 @@ export function findLOSLocation(unit: IUnit, target: Vec2, underworld: Underworl
     // globalThis.debugGraphics?.drawCircle(pos.x, pos.y, 4);
   }
   return LOSLocations;
+
+}
+
+export async function demoAnimations(unit: IUnit) {
+  for (let animKey of Object.keys(unit.animations)) {
+    if (animKey === 'idle') {
+      // Skip idle, since idle loops
+      continue;
+    }
+
+    floatingText({
+      coords: { x: unit.x, y: unit.y - config.COLLISION_MESH_RADIUS },
+      text: animKey
+    });
+
+    await new Promise<void>(resolve => {
+      Image.changeSprite(
+        unit.image,
+        // @ts-ignore
+        unit.animations[animKey],
+        containerUnits,
+        resolve,
+        { loop: false }
+      );
+    });
+  }
+  returnToDefaultSprite(unit);
 
 }
