@@ -2,6 +2,7 @@ import * as Unit from '../entity/Unit';
 import * as Image from '../graphics/Image';
 import { CardCategory } from '../types/commonTypes';
 import type Underworld from '../Underworld';
+import { playDefaultSpellAnimation } from './cardUtils';
 import { Spell } from './index';
 
 const id = 'Debilitate';
@@ -23,6 +24,7 @@ in the future.
 "Debilitate" can be cast multiple times in succession to stack it's effect.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
+      await playDefaultSpellAnimation(card, state.targetedUnits, prediction);
       for (let unit of state.targetedUnits) {
         Unit.addModifier(unit, id, underworld, prediction);
       }

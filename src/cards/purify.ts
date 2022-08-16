@@ -2,6 +2,7 @@ import * as Unit from '../entity/Unit';
 import { Spell } from './index';
 import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
+import { playDefaultSpellAnimation } from './cardUtils';
 
 const id = 'purify';
 // Removes all curse modifiers
@@ -19,6 +20,7 @@ const spell: Spell = {
 Removes all curses from the target(s).
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
+      await playDefaultSpellAnimation(card, state.targetedUnits, prediction);
       for (let unit of state.targetedUnits) {
         apply(unit, underworld)
       }
