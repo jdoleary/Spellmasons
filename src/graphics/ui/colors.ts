@@ -40,6 +40,38 @@ export const playerColorsSecondary = [
     0x113541,
 ]
 
+// Color names from coolors.co
+export const robeColors = [
+    0x17bebb, // Tiffany Blue,
+    0x4b1d3f, // dark purple,
+    0xd4f4dd, // aero blue
+    0xf24236, // cinnabar
+    0xf5f749, // maximum yellow
+    0x2e86ab, // blue ncs
+    0x000000, // black
+    0x2a1a1f, // black coffee
+    0x764134, // bole
+    0x9a48d0, // dark orchid
+    0xe4b7e5, // pink lavender
+    0x7e5a9b, // royal purple
+    0x63458a, // cyber grape
+    0xe03616, // vermilion
+    0xcfffb0, // tea green
+    0xfff689, // canary
+    0x8da9c4, // pewter blue
+    0x134074, // indigo dye
+    0x0cce6b, // emerald
+    0x363537, // jet
+    0xed7d31, // mango tango
+    0xfcb0b3, // light pink
+    0x445e93, // bdazzled blue
+    0xfcecc9, // blanched almond
+    0x404e4e, // charcoal
+    0x912f40, // red violet color wheel
+
+
+]
+
 // // From https://stackoverflow.com/a/13348458/4418836
 // export function desaturateColor(color: string, saturation: number): string {
 //     var col = hexToRgb(color);

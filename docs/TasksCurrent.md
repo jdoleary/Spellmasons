@@ -2,7 +2,6 @@
 - server tell hostapp version
 - throttle player move on multiplayer
 - movable barrier
-- "smoker unit"
 - rework exp
 - auto difficulty adjustment
 - make robe color and magic color belong to player object
