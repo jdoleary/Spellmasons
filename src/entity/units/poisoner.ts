@@ -29,7 +29,7 @@ const unit: UnitSource = {
     die: 'units/poisDeath',
     walk: 'units/poisWalk',
   },
-  action: async (unit: Unit.IUnit, _attackTarget, underworld, prediction) => {
+  action: async (unit: Unit.IUnit, _attackTarget, underworld) => {
     const nonPoisonedEnemyUnits = underworld.units.filter(
       (u) =>
         u.faction !== unit.faction &&
