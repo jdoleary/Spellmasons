@@ -111,7 +111,12 @@ export function joinRoom(underworld: Underworld, _room_info = {}): Promise<void>
 
 function addHandlers(pie: PieClient, underworld: Underworld) {
   pie.onServerAssignedData = (o) => {
-    console.log('Pie: set globalThis.clientId:', o.clientId);
+    console.log('Pie: set globalThis.clientId:', o.clientId, o);
+    // The headless server's version
+    const elVersionInfoHeadless = document.getElementById('version-info-headless-server')
+    if (elVersionInfoHeadless) {
+      elVersionInfoHeadless.innerText = `Server v${o?.hostAppVersion}`;
+    }
     globalThis.clientId = o.clientId;
     if (underworld) {
       const selfPlayer = underworld.players.find(p => p.clientId == globalThis.clientId);

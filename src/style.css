@@ -898,7 +898,9 @@ td:first-child {
   padding-right: 4px;
 }
 
+#version-info-headless-server,
 #version-info,
+#graphics-disclaimer,
 #seed {
   font-size: small;
 }

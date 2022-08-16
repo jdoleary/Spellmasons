@@ -12,7 +12,6 @@ globalThis.SPELLMASONS_PACKAGE_VERSION = version;
 // Init underworld so that when clients join they can use it as the canonical
 // record of gamestate
 const PORT = process.env.PORT || 8080;
-headlessStartGame();
 // hostApp (headless server) is always the host
 globalThis.isHost = () => true;
 // Headless does not includee a player of it's own, it's just the host
@@ -20,8 +19,6 @@ globalThis.player = undefined;
 
 function headlessStartGame() {
     console.log('Headless Server Started at port ', PORT)
-
-
     pie.startServer({
         port: PORT, makeHostAppInstance: () => {
             const hostAppInst = new HostApp();
@@ -54,6 +51,8 @@ interface OnDataArgs {
 }
 class HostApp implements IHostApp {
     isHostApp: boolean = true;
+    // HostApp should have the Spellmasons version to ensure the clients and server are running the same version
+    version = version;
     // Automatically overridden when passed into pie.startServer
     sendData: (msg: string) => void = () => { };
     underworld: Underworld;
@@ -136,3 +135,6 @@ const MessageType = {
     // Unique to PieClient
     ConnectInfo: 'ConnectInfo',
 };
+
+
+headlessStartGame();

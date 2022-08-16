@@ -1,5 +1,4 @@
 ## Today
-- server tell hostapp version
 - throttle player move on multiplayer
 - movable barrier
 - rework exp
