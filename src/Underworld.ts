@@ -359,8 +359,13 @@ export default class Underworld {
     if (globalThis.player) {
       if (CardUI.areAnyCardsSelected()) {
         const mouseTarget = this.getMousePos();
+        // Use this similarTriangles calculation to make the line pretty so it doesn't originate from the exact center of the
+        // other player but from the edge instead
+        const startPoint = math.distance(globalThis.player.unit, mouseTarget) <= config.COLLISION_MESH_RADIUS
+          ? mouseTarget
+          : Vec.subtract(globalThis.player.unit, math.similarTriangles(globalThis.player.unit.x - mouseTarget.x, globalThis.player.unit.y - mouseTarget.y, math.distance(globalThis.player.unit, mouseTarget), config.COLLISION_MESH_RADIUS));
         // Players can only cast within their attack range
-        const castLine = { p1: globalThis.player.unit, p2: mouseTarget };
+        const castLine = { p1: startPoint, p2: mouseTarget };
         globalThis.unitOverlayGraphics?.lineStyle(3, colors.targetBlue, 0.7);
         globalThis.unitOverlayGraphics?.moveTo(castLine.p1.x, castLine.p1.y);
         const endOfRange = getEndOfRange(globalThis.player, mouseTarget);
@@ -748,7 +753,9 @@ export default class Underworld {
           globalThis.thinkingPlayerGraphics?.lineStyle(3, colors.healthAllyGreen, 0.7);
           // Use this similarTriangles calculation to make the line pretty so it doesn't originate from the exact center of the
           // other player but from the edge instead
-          const startPoint = Vec.subtract(thinkingPlayer.unit, math.similarTriangles(thinkingPlayer.unit.x - target.x, thinkingPlayer.unit.y - target.y, math.distance(thinkingPlayer.unit, target), config.COLLISION_MESH_RADIUS));
+          const startPoint = math.distance(thinkingPlayer.unit, target) <= config.COLLISION_MESH_RADIUS
+            ? target
+            : Vec.subtract(thinkingPlayer.unit, math.similarTriangles(thinkingPlayer.unit.x - target.x, thinkingPlayer.unit.y - target.y, math.distance(thinkingPlayer.unit, target), config.COLLISION_MESH_RADIUS));
           globalThis.thinkingPlayerGraphics?.moveTo(startPoint.x, startPoint.y);
           globalThis.thinkingPlayerGraphics?.lineTo(target.x, target.y);
           globalThis.thinkingPlayerGraphics?.drawCircle(target.x, target.y, 4);

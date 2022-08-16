@@ -1,6 +1,4 @@
 ## Today
-- restore debilitate animation
-- fix blue spell line just like green line
 - server tell hostapp version
 - throttle player move on multiplayer
 - movable barrier
