@@ -24,7 +24,7 @@ Burn up to ${mana_burnt} of the targets' mana, causing the target take ${health_
         const unitManaBurnt = Math.min(unit.mana, mana_burnt);
         unit.mana -= unitManaBurnt;
         const damage = unitManaBurnt * health_burn_ratio
-        await playDefaultSpellAnimation(card, state.targetedUnits, prediction);
+        await Unit.addOneOffAnimation(unit, 'spell-effects/spellManaBurn', { keyFrame: 4 });
         Unit.takeDamage(unit, damage, unit, underworld, prediction, state);
       }
       return state;
