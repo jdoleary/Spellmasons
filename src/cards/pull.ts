@@ -43,6 +43,7 @@ export async function pull(pushedObject: Circle, towards: Vec2, quantity: number
   let forceMoveInst: ForceMove;
   return await raceTimeout(2000, 'Pull', new Promise<void>((resolve) => {
     forceMoveInst = { canCreateSecondOrderPushes: true, pushedObject, velocity, velocity_falloff, resolve }
+    console.log('jtest pull', prediction)
     if (prediction) {
       underworld.forceMovePrediction.push(forceMoveInst);
       underworld.fullySimulateForceMovePredictions();

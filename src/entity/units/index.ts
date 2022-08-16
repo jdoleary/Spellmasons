@@ -36,6 +36,7 @@ import poisoner from './poisoner';
 import vampire from './vampire';
 import decoy from './decoy';
 import nightqueen from './nightqueen';
+import dragger from './dragger';
 import Underworld from '../../Underworld';
 
 function register(unit: UnitSource) {
@@ -49,6 +50,7 @@ export function registerUnits() {
   register(priest);
   register(poisoner);
   register(vampire);
+  register(dragger);
 
   register(playerUnit);
   register(decoy);

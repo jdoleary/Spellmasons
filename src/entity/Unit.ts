@@ -184,11 +184,11 @@ export function create(
       unit.stamina = 0;
     }
     unit.image?.sprite.scale.set(config.NON_HEAVY_UNIT_SCALE);
+    setupShaders(unit);
     if (sourceUnit.init) {
       // Initialize unit IF unit contains initialization function
       sourceUnit.init(unit, underworld);
     }
-    setupShaders(unit);
 
     // Ensure all change factions logic applies when a unit is first created
     changeFaction(unit, faction);

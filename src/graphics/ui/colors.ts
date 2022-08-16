@@ -16,6 +16,7 @@ export const bloodLobber = 0x67c3d7;
 export const bloodDecoy = 0x7b531f;
 export const bloodVampire = 0xf1fa68;
 export const bloodPoisoner = 0x86eb83;
+export const bloodDragger = 0x83d7eb;
 
 export const playerCoatPrimary = 0x417F81;
 export const playerCoatSecondary = 0x70A5A7;
