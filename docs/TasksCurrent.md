@@ -1,6 +1,15 @@
 ## Today
-- Docs for deploying update to standalone server
-- fix hotkey for jprompt
+- restore debilitate animation
+- fix blue spell line just like green line
+- server tell hostapp version
+- throttle player move on multiplayer
+- movable barrier
+- "smoker unit"
+- rework exp
+- auto difficulty adjustment
+- make robe color and magic color belong to player object
+- trap prediction bugs
+- trap should be immovable
 ## Perfect prediction attacks
     - I got bit by a vampire but it didn't accurately warn me he would
         - wrap this in with preventing units from changing targets from their prediction even if the decoy dies (lobber move then throw?)
@@ -11,6 +20,8 @@
         - push predicted taht a lobber would fall in lava and die but it didn't
             - that same lobber when resurrected just crawled over lava so it must've been inside but just didn't take the damage
 ## Tasks
+- Docs for deploying update to standalone server
+- fix hotkey for jprompt
 - key 'z' is used both to hide hud AND to have camera follow player
 - multiplayer bug: Player robe colors are not synced
     - this is because if first player leaves and rejoins, the clients array is now rearranged and they might switch robes
