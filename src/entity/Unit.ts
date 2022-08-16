@@ -388,6 +388,10 @@ export function getParentContainer(alive: boolean): PIXI.Container | undefined {
   return alive ? containerUnits : containerDoodads;
 }
 
+// ComboAnimations are a unit's primary animation that has to coordinate with other animations attached to the unit, like a player cast that
+// has multiple layers of animations playing simultaneously.
+// keyMoment is a callback that can be triggered at a specific frame (even before the animation has finished) to trigger some action, like
+// casting the effect of a spell at the apex of an animation.
 export function playComboAnimation(unit: IUnit, key: string | undefined, keyMoment?: () => Promise<any>, options?: PixiSpriteOptions): Promise<void> {
   if (!key) {
     console.trace('tried to play missing animation');
@@ -505,8 +509,14 @@ export function playAnimation(unit: IUnit, spritePath: string | undefined, optio
 }
 interface OneOffOptions {
   doRemoveWhenPrimaryAnimationChanges?: boolean;
+  // a numbered frame during which the promise will resolve early (before the end of the animation).
+  // The animation will continue to the end, but it will no longer be blocking on await
+  keyFrame?: number;
 }
 
+// A one off animation is an animation that is attached to a unit but operates independently of the unit's primary animation and will
+// not be affected by changes to the unit's primary animation.  This useful for example for playing a healing animation over top of a unit,
+// and the healing animation will continue regardless of wether the unit's primary animations changes or not
 export function addOneOffAnimation(unit: IUnit, spritePath: string, oneOffOptions?: OneOffOptions, options?: PixiSpriteOptions): Promise<void> {
   // Play animation and then remove it
   // ---
@@ -516,9 +526,17 @@ export function addOneOffAnimation(unit: IUnit, spritePath: string, oneOffOption
     if (!unit.image) {
       return resolve();
     }
+    const finishOnFrame = oneOffOptions?.keyFrame;
+    const onFrameChange = (finishOnFrame === undefined) ? undefined : (currentFrame: number) => {
+      if (currentFrame >= finishOnFrame) {
+        resolve();
+      }
+
+    }
     const animationSprite = addPixiSpriteAnimated(spritePath, unit.image.sprite, {
       loop: false,
       ...options,
+      onFrameChange,
       onComplete: () => {
         if (unit.image && animationSprite) {
           unit.image.sprite.removeChild(animationSprite);
