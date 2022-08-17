@@ -258,13 +258,15 @@ export default class Underworld {
             // Draw a circle at the end position
             if (globalThis.predictionGraphics) {
               globalThis.predictionGraphics.drawCircle(forceMoveInst.pushedObject.x, forceMoveInst.pushedObject.y, 3);
-              globalThis.predictionGraphics.endFill();
             }
             forceMoveInst.resolve();
             this.forceMovePrediction.splice(i, 1);
           }
         }
       }
+    }
+    if (globalThis.predictionGraphics) {
+      globalThis.predictionGraphics.endFill();
     }
     if (loopCount >= PREVENT_INFINITE_WITH_WARN_LOOP_THRESHOLD) {
       console.error('forceMove simulation hit PREVENT_INFINITE threshold');

@@ -435,6 +435,7 @@ export function drawPredictionLine(start: Vec2, end: Vec2) {
 export function drawPredictionCircle(target: Vec2, radius: number, color: number, text?: string) {
   if (predictionGraphics) {
     predictionGraphics.lineStyle(2, color, 1.0)
+    predictionGraphics.endFill();
     predictionGraphics.drawCircle(target.x, target.y, radius);
     if (text && labelText) {
       labelText.text = text;
