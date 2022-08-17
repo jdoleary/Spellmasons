@@ -538,11 +538,28 @@ export const makeFinalTileImages = (biome: string) => ({
     wallN: `tiles/${biome}/wallN.png`,
 });
 
-export function toObstacle(t: Tile, biome: string): IObstacle | undefined {
+export function toObstacle(t: Tile, biome: Biome): IObstacle | undefined {
     //   const width = config.OBSTACLE_SIZE;
     //   const height = config.OBSTACLE_SIZE;
     //   const _x = t.x - width / 2;
     //   const _y = t.y - height / 2;
+    const bounds = {
+        'blood': {
+            left: 29,
+            right: 34,
+            top: 39
+        },
+        'lava': {
+            left: 16,
+            right: 47,
+            top: 45
+        },
+        'water': {
+            left: 19,
+            right: 44,
+            top: 42
+        },
+    }
     const finalTileImages = makeFinalTileImages(biome);
     if (t.image == finalTileImages.wall) {
         return {
@@ -578,8 +595,8 @@ export function toObstacle(t: Tile, biome: string): IObstacle | undefined {
             bounds: [
                 { x: 0, y: 0 },
                 { x: 64, y: 0 },
-                { x: 64, y: 39 },
-                { x: 0, y: 39 },
+                { x: 64, y: bounds[biome].top },
+                { x: 0, y: bounds[biome].top },
             ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
 
         }
@@ -589,10 +606,10 @@ export function toObstacle(t: Tile, biome: string): IObstacle | undefined {
             y: t.y,
             material: Material.LIQUID,
             bounds: [
-                { x: 29, y: 0 },
+                { x: bounds[biome].left, y: 0 },
                 { x: 64, y: 0 },
-                { x: 64, y: 39 },
-                { x: 29, y: 39 },
+                { x: 64, y: bounds[biome].top },
+                { x: bounds[biome].left, y: bounds[biome].top },
             ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
 
         }
@@ -605,9 +622,9 @@ export function toObstacle(t: Tile, biome: string): IObstacle | undefined {
                 { x: 0, y: 0 },
                 { x: 64, y: 0 },
                 { x: 64, y: 64 },
-                { x: 29, y: 64 },
-                { x: 29, y: 39 },
-                { x: 0, y: 39 },
+                { x: bounds[biome].left, y: 64 },
+                { x: bounds[biome].left, y: bounds[biome].top },
+                { x: 0, y: bounds[biome].top },
             ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
 
         }
@@ -617,10 +634,10 @@ export function toObstacle(t: Tile, biome: string): IObstacle | undefined {
             y: t.y,
             material: Material.LIQUID,
             bounds: [
-                { x: 29, y: 0 },
+                { x: bounds[biome].left, y: 0 },
                 { x: 64, y: 0 },
                 { x: 64, y: 64 },
-                { x: 29, y: 64 },
+                { x: bounds[biome].left, y: 64 },
             ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
 
         }
@@ -630,10 +647,10 @@ export function toObstacle(t: Tile, biome: string): IObstacle | undefined {
             y: t.y,
             material: Material.LIQUID,
             bounds: [
-                { x: 29, y: 10 },
+                { x: bounds[biome].left, y: 10 },
                 { x: 64, y: 10 },
                 { x: 64, y: 64 },
-                { x: 29, y: 64 },
+                { x: bounds[biome].left, y: 64 },
             ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
 
         }
@@ -643,12 +660,12 @@ export function toObstacle(t: Tile, biome: string): IObstacle | undefined {
             y: t.y,
             material: Material.LIQUID,
             bounds: [
-                { x: 29, y: 0 },
+                { x: bounds[biome].left, y: 0 },
                 { x: 64, y: 0 },
                 { x: 64, y: 64 },
                 { x: 0, y: 64 },
                 { x: 0, y: 10 },
-                { x: 29, y: 10 },
+                { x: bounds[biome].left, y: 10 },
             ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
 
         }
@@ -672,8 +689,8 @@ export function toObstacle(t: Tile, biome: string): IObstacle | undefined {
             material: Material.LIQUID,
             bounds: [
                 { x: 0, y: 10 },
-                { x: 34, y: 10 },
-                { x: 34, y: 64 },
+                { x: bounds[biome].right, y: 10 },
+                { x: bounds[biome].right, y: 64 },
                 { x: 0, y: 64 },
             ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
 
@@ -685,8 +702,8 @@ export function toObstacle(t: Tile, biome: string): IObstacle | undefined {
             material: Material.LIQUID,
             bounds: [
                 { x: 0, y: 0 },
-                { x: 34, y: 0 },
-                { x: 34, y: 64 },
+                { x: bounds[biome].right, y: 0 },
+                { x: bounds[biome].right, y: 64 },
                 { x: 0, y: 64 },
             ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
 
@@ -698,8 +715,8 @@ export function toObstacle(t: Tile, biome: string): IObstacle | undefined {
             material: Material.LIQUID,
             bounds: [
                 { x: 0, y: 0 },
-                { x: 34, y: 0 },
-                { x: 34, y: 10 },
+                { x: bounds[biome].right, y: 0 },
+                { x: bounds[biome].right, y: 10 },
                 { x: 64, y: 10 },
                 { x: 64, y: 64 },
                 { x: 0, y: 64 },
@@ -713,9 +730,9 @@ export function toObstacle(t: Tile, biome: string): IObstacle | undefined {
             material: Material.LIQUID,
             bounds: [
                 { x: 0, y: 0 },
-                { x: 34, y: 0 },
-                { x: 34, y: 39 },
-                { x: 0, y: 39 },
+                { x: bounds[biome].right, y: 0 },
+                { x: bounds[biome].right, y: bounds[biome].top },
+                { x: 0, y: bounds[biome].top },
             ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
 
         }
@@ -727,9 +744,9 @@ export function toObstacle(t: Tile, biome: string): IObstacle | undefined {
             bounds: [
                 { x: 0, y: 0 },
                 { x: 64, y: 0 },
-                { x: 64, y: 39 },
-                { x: 34, y: 39 },
-                { x: 34, y: 64 },
+                { x: 64, y: bounds[biome].top },
+                { x: bounds[biome].right, y: bounds[biome].top },
+                { x: bounds[biome].right, y: 64 },
                 { x: 0, y: 64 },
             ].reverse().map(({ x, y }) => ({ x: x + t.x - config.OBSTACLE_SIZE / 2, y: y + t.y - config.OBSTACLE_SIZE / 2 })),
 

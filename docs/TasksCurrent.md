@@ -1,6 +1,5 @@
 ## Today
 - bug: After i ended a level on a racetimeout push I got to choose WAY too many upgrade spells
-- bug: Water border on water level is too close, see screenshot walkbug
 - throttle player move on multiplayer
 - auto difficulty adjustment
 - When a client moved from game a to game b without player 2 ever having moved, player two still showed up in game b (but as disconnected)
