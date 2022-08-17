@@ -1,7 +1,6 @@
 # Critical Path
 - Milestone | **Standalone Server Playtest**
     - stand alone server goes into infinite loop when all players leave
-    - easy instructions for updating standalone server
     - Test standalone server with friends
 - Milestone | **Trailer-ready Alpha**
     - Need sfx
