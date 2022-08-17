@@ -18,6 +18,7 @@ import { getAdjustedCastTarget, isOutOfRange } from '../PlayerUtils';
 import { pointsEveryXDistanceAlongPath } from '../jmath/Pathfinding';
 import { distance, getCoordsAtDistanceTowardsTarget } from '../jmath/math';
 import { Graphics } from 'pixi.js';
+import { allCards } from '../cards';
 
 // Graphics for rendering above board and walls but beneath units and doodads,
 // see containerPlanningView for exact render order.
@@ -516,7 +517,8 @@ ${globalThis.selectedUnit.faction == Faction.ALLY ? '🤝' : '⚔️️'} ${Fact
 🗡️ ${globalThis.selectedUnit.damage}
 ❤️ ${globalThis.selectedUnit.health}/${globalThis.selectedUnit.healthMax}
 🔵 Mana ${globalThis.selectedUnit.mana}/${globalThis.selectedUnit.manaMax} + ${globalThis.selectedUnit.manaPerTurn} per turn
-Modifiers ${modifiersToText(globalThis.selectedUnit.modifiers)}
+
+${modifiersToText(globalThis.selectedUnit.modifiers)}
 ${unitSource.extraTooltipInfo ? unitSource.extraTooltipInfo() : ''}
 ${cards}
       `;
@@ -541,7 +543,7 @@ ${selectedPickup.description}
       break;
   }
 
-  elInspectorTooltipContent.innerText = text;
+  elInspectorTooltipContent.innerHTML = text;
   if (text == '') {
     elInspectorTooltipContainer.style.visibility = "hidden";
   } else {
@@ -550,11 +552,12 @@ ${selectedPickup.description}
   }
 }
 function modifiersToText(modifiers: object): string {
+  if (Object.keys(modifiers).length === 0) {
+    return ''
+  }
   let message = '';
   for (let [key, value] of Object.entries(modifiers)) {
-    message += `
-${key}${JSON.stringify(value, null, 2).split('"').join('').split('{').join('').split('}').join('')}`
-
+    message += `<div style="line-height:16px"><img width="16px" height="16px" src="images/spell/${allCards[key]?.thumbnail}"> ${key} ${value.stacks || value.turnsLeft || value.damage_block || ''}</div>`
   }
   return message;
 
