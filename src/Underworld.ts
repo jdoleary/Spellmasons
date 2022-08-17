@@ -994,8 +994,7 @@ export default class Underworld {
       console.error('Missing caveSize for generating level')
       return;
     }
-    // TODO: set biome dynamically
-    const biome: Biome = 'blood';
+    const biome: Biome = ['blood', 'lava', 'water'][Math.floor(Math.random() * 3)] as Biome;
     const { map, limits } = generateCave(levelIndex > 6 ? caveSizes.medium : caveSizes.small, biome, this);
     const { tiles, liquid, width } = map;
     const levelData: LevelData = {
@@ -1060,57 +1059,82 @@ export default class Underworld {
     return levelData;
 
   }
-  pickGroundTileLayers(biome: string): string[] {
+  pickGroundTileLayers(biome: Biome): string[] {
+    const layers: { [biome in Biome]: {
+      baseTiles: string[],
+      layer2Tiles: string[],
+      layer3Tiles: string[],
+    } } = {
+      'blood': {
+        baseTiles: [
+          `tiles/${biome}/all_ground_dirt_1.png`,
+          `tiles/${biome}/all_ground_dirt_2.png`,
+          `tiles/${biome}/all_ground_dirt_3.png`,
+          `tiles/${biome}/all_ground_dirt_4.png`,
+          `tiles/${biome}/all_ground_dirt_5.png`,
+          `tiles/${biome}/all_ground_dirt_6.png`,
+          `tiles/${biome}/all_ground_dirt_7.png`,
+          `tiles/${biome}/all_ground_dirt_8.png`,
+          `tiles/${biome}/all_ground_dirt_9.png`,
+        ],
+        layer2Tiles: [
+          `tiles/${biome}/all_ground_meat_1.png`,
+          `tiles/${biome}/all_ground_meat_2.png`,
+          `tiles/${biome}/all_ground_meat_3.png`,
+          `tiles/${biome}/all_ground_meat_4.png`,
+          `tiles/${biome}/all_ground_meat_5.png`,
+          `tiles/${biome}/all_ground_meat_6.png`,
+          `tiles/${biome}/all_ground_meat_7.png`,
+          `tiles/${biome}/all_ground_meat_8.png`,
+          `tiles/${biome}/all_ground_meat_9.png`,
+
+        ],
+        layer3Tiles: [
+          `tiles/${biome}/all_ground_moss_1.png`,
+          `tiles/${biome}/all_ground_moss_2.png`,
+          `tiles/${biome}/all_ground_moss_3.png`,
+          `tiles/${biome}/all_ground_moss_4.png`,
+          `tiles/${biome}/all_ground_moss_5.png`,
+          `tiles/${biome}/all_ground_moss_6.png`,
+          `tiles/${biome}/all_ground_moss_7.png`,
+          `tiles/${biome}/all_ground_moss_8.png`,
+          `tiles/${biome}/all_ground_moss_9.png`,
+
+        ],
+      },
+      'lava': {
+        baseTiles: [],
+        layer2Tiles: [],
+        layer3Tiles: [],
+      },
+      'water': {
+        baseTiles: [],
+        layer2Tiles: [],
+        layer3Tiles: [],
+      }
+    }
     const baseTile = `tiles/${biome}/all_ground.png`;
     const baseTiles: { path: string, probability: number }[] = [
       { path: baseTile, probability: 20 },
-      ...[
-        `tiles/${biome}/all_ground_dirt_1.png`,
-        `tiles/${biome}/all_ground_dirt_2.png`,
-        `tiles/${biome}/all_ground_dirt_3.png`,
-        `tiles/${biome}/all_ground_dirt_4.png`,
-        `tiles/${biome}/all_ground_dirt_5.png`,
-        `tiles/${biome}/all_ground_dirt_6.png`,
-        `tiles/${biome}/all_ground_dirt_7.png`,
-        `tiles/${biome}/all_ground_dirt_8.png`,
-        `tiles/${biome}/all_ground_dirt_9.png`,
-      ].map(path => ({ path, probability: 1 }))
+      ...layers[biome].baseTiles.map(path => ({ path, probability: 1 }))
     ]
     const baseTileChoice = chooseObjectWithProbability(baseTiles, this.random);
-    const meatTiles: { path: string, probability: number }[] = [
+    const layer2Tiles: { path: string, probability: number }[] = [
+      // No tile is the higher probability default so that this layers tiles are rarer
       { path: '', probability: 20 },
-      ...[
-        `tiles/${biome}/all_ground_meat_1.png`,
-        `tiles/${biome}/all_ground_meat_2.png`,
-        `tiles/${biome}/all_ground_meat_3.png`,
-        `tiles/${biome}/all_ground_meat_4.png`,
-        `tiles/${biome}/all_ground_meat_5.png`,
-        `tiles/${biome}/all_ground_meat_6.png`,
-        `tiles/${biome}/all_ground_meat_7.png`,
-        `tiles/${biome}/all_ground_meat_8.png`,
-        `tiles/${biome}/all_ground_meat_9.png`,
-      ].map(path => ({ path, probability: 1 }))
+      ...layers[biome].layer2Tiles.map(path => ({ path, probability: 1 }))
     ]
-    const meatChoice = chooseObjectWithProbability(meatTiles, this.random);
-    const mossTiles: { path: string, probability: number }[] = [
+    const layer2Choice = chooseObjectWithProbability(layer2Tiles, this.random);
+    const layer3Tiles: { path: string, probability: number }[] = [
+      // No tile is the higher probability default so that this layers tiles are rarer
       { path: '', probability: 20 },
-      ...[
-        `tiles/${biome}/all_ground_moss_1.png`,
-        `tiles/${biome}/all_ground_moss_2.png`,
-        `tiles/${biome}/all_ground_moss_3.png`,
-        `tiles/${biome}/all_ground_moss_4.png`,
-        `tiles/${biome}/all_ground_moss_5.png`,
-        `tiles/${biome}/all_ground_moss_6.png`,
-        `tiles/${biome}/all_ground_moss_7.png`,
-        `tiles/${biome}/all_ground_moss_8.png`,
-        `tiles/${biome}/all_ground_moss_9.png`,
-      ].map(path => ({ path, probability: 1 }))
+      ...layers[biome].layer3Tiles.map(path => ({ path, probability: 1 }))
     ]
-    const mossChoice = chooseObjectWithProbability(mossTiles, this.random);
-    return [baseTileChoice ? baseTileChoice.path : baseTile, meatChoice ? meatChoice.path : '', mossChoice ? mossChoice.path : ''];
+    const layer3Choice = chooseObjectWithProbability(layer3Tiles, this.random);
+    return [baseTileChoice ? baseTileChoice.path : baseTile, layer2Choice ? layer2Choice.path : '', layer3Choice ? layer3Choice.path : ''];
 
   }
-  addGroundTileImages(biome: string) {
+  addGroundTileImages(biome: Biome) {
     if (globalThis.headless) {
       return;
     }
@@ -2402,7 +2426,7 @@ function getEnemiesForAltitude(underworld: Underworld): string[] {
 }
 
 // Explicit list of biome types
-export type Biome = 'blood' | 'lava';
+export type Biome = 'blood' | 'lava' | 'water';
 
 export interface LevelData {
   levelIndex: number,
