@@ -22,7 +22,7 @@ export const bloodDragger = 0x83d7eb;
 export const playerCoatPrimary = 0x417F81;
 export const playerCoatSecondary = 0x70A5A7;
 export const playerCastAnimationColor = 0xFFa1d3;
-export const attackRangeAlly = 0x40a058;
+export const attackRangeAlly = targetBlue;
 export const attackRangeEnemy = 0xd55656;
 
 

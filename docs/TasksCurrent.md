@@ -1,6 +1,5 @@
 ## Today
 - bug: After i ended a level on a racetimeout push I got to choose WAY too many upgrade spells
-- ui: Expand radius and cast range shouldn't be the same color circlese
 - bug: Water border on water level is too close, see screenshot walkbug
 - throttle player move on multiplayer
 - auto difficulty adjustment
