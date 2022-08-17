@@ -130,7 +130,6 @@ function setPlayerRobeColor(player: IPlayer, color: number) {
 
     const colorSecondary = parseInt(`0x${r_secondary.toString(16)}${g_secondary.toString(16)}${b_secondary.toString(16)}`, 16);
     if (color && colorSecondary) {
-      console.log('jtest', color.toString(16), colorSecondary.toString(16), ';', r, g, b, ';', r_secondary, g_secondary, b_secondary)
       player.unit.image.sprite.filters.push(
         // @ts-ignore for some reason ts is flagging this as an error but it works fine
         // in pixi.
