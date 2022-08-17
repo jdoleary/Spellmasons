@@ -1,9 +1,12 @@
 ## Today
 - throttle player move on multiplayer
+- make robe color and magic color belong to player object
+    - Use parseint(hex, 16) to convert to rbg and do secondary color generation from that
+- auto difficulty adjustment
+- When a client moved from game a to game b without player 2 ever having moved, player two still showed up in game b (but as disconnected)
+---
 - movable barrier
 - rework exp
-- auto difficulty adjustment
-- make robe color and magic color belong to player object
 - trap prediction bugs
 - trap should be immovable
 ## Perfect prediction attacks

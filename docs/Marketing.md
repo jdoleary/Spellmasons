@@ -73,6 +73,7 @@
 
 - Research
     - Trailer
+        - FTL's trailer has a dynamic camera, it shows the UI but it's zooming in on key parts
         - https://www.derek-lieu.com/blog/2018/5/1/the-best-debug-tools-for-game-trailer-capture
         - [Very good Derek Lieu GDC talk](https://www.youtube.com/watch?v=QWd7F0z1W_Y)
             - Focus on what's unique
@@ -154,3 +155,23 @@
             - Make it fun to listen to
             - Show content, don't count it out visually. Viewers don't care if you have "10,000 unique spells!"
             - Keep it fun
+
+- Notes from https://www.progamemarketing.com/courses/1270885/lectures/29635980
+    - Know what you game is and what games it is similar to
+        - Genre is very important
+        - Be specific and clear
+    - Steam page main goals
+        1. Tell steam algorithm what type of game my game is
+        2. Make the game look attractive to players and high quality
+    - Developers who understand their game better and other related games in the market have a better time
+    - Understand your core gameloop
+    - Great capsule
+        - eye catching
+        - demonstrates quality
+        - hints at the mood of the game
+        - shows genre
+        - doesn't over explain
+    - The "More like this" Section on your steam page tells you if your game is tagged correctly. If they are just a random assortment than steam doesn't know your game well
+    - Use the **tag wizard** specifically for editing your tags. It's under 'Edit Store Page' > 'Tags'
+    - In the tagging wizard, adjust the tag priority until the similar games are arranged as you want them to be
+- Twitter Marketing https://howtomarketagame.com/2022/08/01/how-to-go-viral-on-twitter/
