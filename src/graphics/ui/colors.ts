@@ -25,21 +25,6 @@ export const playerCastAnimationColor = 0xFFa1d3;
 export const attackRangeAlly = 0x40a058;
 export const attackRangeEnemy = 0xd55656;
 
-// https://coolors.co/ef476f-ffd166-06d6a0-118ab2-073b4c
-export const playerColors = [
-    0xef476f,
-    0xffd166,
-    0x06d6a0,
-    0x118ab2,
-    0x073b4c,
-]
-export const playerColorsSecondary = [
-    0xd6617c,
-    0xe8c87d,
-    0x25b790,
-    0x297d99,
-    0x113541,
-]
 
 // Color names from coolors.co
 export const robeColors = [

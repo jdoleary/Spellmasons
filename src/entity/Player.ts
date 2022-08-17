@@ -13,8 +13,9 @@ import defaultPlayerUnit from './units/playerUnit';
 import { MESSAGE_TYPES } from '../types/MessageTypes';
 import { jitter } from '../jmath/Vec';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
-import { playerCastAnimationColor, playerCoatPrimary, playerCoatSecondary, playerColors, playerColorsSecondary } from '../graphics/ui/colors';
+import { playerCastAnimationColor, playerCoatPrimary, playerCoatSecondary, robeColors } from '../graphics/ui/colors';
 import Underworld from '../Underworld';
+import { lerp } from "../jmath/math"
 
 const elLobbyBody = document.getElementById('lobby-body') as (HTMLElement | undefined);
 // The serialized version of the interface changes the interface to allow only the data
@@ -30,6 +31,8 @@ export interface IPlayer {
   // wsPie id
   clientId: string;
   clientConnected: boolean;
+  // color of robe
+  color: number;
   unit: Unit.IUnit;
   inPortal: boolean;
   cards: string[];
@@ -43,6 +46,8 @@ export interface IPlayer {
 }
 export function create(clientId: string, underworld: Underworld): IPlayer {
   const userSource = defaultPlayerUnit;
+  const notAlreadyUsedColors = robeColors.filter(c => !underworld.players.map(p => p.color).includes(c));
+  const color = notAlreadyUsedColors[Math.floor(Math.random() * notAlreadyUsedColors.length)] || 0xef476f;
   const player: IPlayer = {
     ready: false,
     endedTurn: false,
@@ -51,6 +56,7 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
     // should only be handled in one place and tied directly
     // to pie.clients
     clientConnected: false,
+    color,
     unit: Unit.create(
       userSource.id,
       NaN,
@@ -70,7 +76,7 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
     cardsAmount: config.START_CARDS_COUNT,
     upgrades: [],
   };
-  setPlayerRobeColor(player);
+  setPlayerRobeColor(player, color);
 
   // Player units get full mana every turn
   player.unit.manaPerTurn = player.unit.manaMax;
@@ -109,16 +115,22 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
 // there should be a better way of syncing filters.  This is a footgun if called
 // more than once on a player object.  As of this writing it is only called on new player objects
 // Proceed with caution.
-function setPlayerRobeColor(player: IPlayer) {
+function setPlayerRobeColor(player: IPlayer, color: number) {
   // Add player-specific shaders
   // regardless of if the image sprite changes to a new animation or not.
   if (player.unit.image && player.unit.image.sprite.filters) {
-    const clients = getClients();
-    const colorIndex = clients.indexOf(player.clientId);
+    const r = Math.floor(color / 0x10000);
+    const g = Math.floor((color - r * 0x10000) / 0x100);
+    const b = Math.floor((color - r * 0x10000 - g * 0x100));
 
-    const color = playerColors[colorIndex];
-    const colorSecondary = playerColorsSecondary[colorIndex];
+    const lightenCoefficient = 0.3;
+    const r_secondary = Math.floor(lerp(r, 255, lightenCoefficient));
+    const g_secondary = Math.floor(lerp(g, 255, lightenCoefficient));
+    const b_secondary = Math.floor(lerp(b, 255, lightenCoefficient));
+
+    const colorSecondary = parseInt(`0x${r_secondary.toString(16)}${g_secondary.toString(16)}${b_secondary.toString(16)}`, 16);
     if (color && colorSecondary) {
+      console.log('jtest', color.toString(16), colorSecondary.toString(16), ';', r, g, b, ';', r_secondary, g_secondary, b_secondary)
       player.unit.image.sprite.filters.push(
         // @ts-ignore for some reason ts is flagging this as an error but it works fine
         // in pixi.
@@ -217,7 +229,7 @@ export function load(player: IPlayerSerialized, underworld: Underworld) {
   const clients = getClients();
   setClientConnected(playerLoaded, clients.includes(player.clientId), underworld);
   underworld.queueGameLoop();
-  setPlayerRobeColor(playerLoaded);
+  setPlayerRobeColor(playerLoaded, playerLoaded.color);
   return playerLoaded;
 }
 
