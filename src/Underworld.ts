@@ -188,6 +188,7 @@ export default class Underworld {
       numberOfEnemiesKilledNeededForNextDrop += i;
     }
     if (numberOfEnemiesKilledNeededForNextDrop <= this.enemiesKilled) {
+      console.log('Pickup: Drop scroll pickup', this.cardDropsDropped, this.enemiesKilled, numberOfEnemiesKilledNeededForNextDrop)
       this.cardDropsDropped++;
       const pickupSource = Pickup.pickups.find(p => p.name == Pickup.CARDS_PICKUP_NAME)
       if (pickupSource) {
@@ -1679,8 +1680,10 @@ export default class Underworld {
       console.error('Cannot show upgrades, no globalThis.player');
       return
     }
+    console.trace('show upgrades')
     if (document.body?.classList.contains('showUpgrades')) {
       // Upgrades are already visible, queue the next upgrades
+      console.log('Queue upgrades. there are currently', showUpgradesQueue.length, 'upgrades in queue'.)
       showUpgradesQueue.push(statsUpgrades);
       return;
     }
