@@ -1,4 +1,8 @@
 ## Today
+- bug: After i ended a level on a racetimeout push I got to choose WAY too many upgrade spells
+- ui: Expand radius and cast range shouldn't be the same color circlese
+- bug: explosion radius has a white fill when used with a push spell
+- bug: Water border on water level is too close, see screenshot walkbug
 - throttle player move on multiplayer
 - auto difficulty adjustment
 - When a client moved from game a to game b without player 2 ever having moved, player two still showed up in game b (but as disconnected)
