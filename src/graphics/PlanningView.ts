@@ -95,7 +95,7 @@ export function updatePlanningView(underworld: Underworld) {
           if (globalThis.selectedUnit.attackRange > 0) {
 
             const rangeCircleColor = globalThis.selectedUnit.faction == Faction.ALLY ? colors.attackRangeAlly : colors.attackRangeEnemy;
-            globalThis.unitOverlayGraphics.lineStyle(8, rangeCircleColor, 0.3);
+            globalThis.unitOverlayGraphics.lineStyle(2, rangeCircleColor, 1.0);
             if (globalThis.selectedUnit.unitSubType === UnitSubType.RANGED_RADIUS) {
               globalThis.unitOverlayGraphics.drawCircle(
                 globalThis.selectedUnit.x,
@@ -120,7 +120,7 @@ export function updatePlanningView(underworld: Underworld) {
               globalThis.unitOverlayGraphics.drawCircle(
                 globalThis.selectedUnit.x,
                 globalThis.selectedUnit.y,
-                globalThis.selectedUnit.staminaMax
+                globalThis.selectedUnit.staminaMax + globalThis.selectedUnit.attackRange
               );
               globalThis.unitOverlayGraphics.endFill();
               labelText.text = 'Attack Range';
