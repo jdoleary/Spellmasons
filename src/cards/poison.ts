@@ -20,13 +20,14 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
     }
     // Add subsprite image
     if (!prediction) {
-
-      const poisonSubsprite = Image.addSubSprite(unit.image, spell.modifiers?.subsprite?.imageName);
-      if (poisonSubsprite) {
-        const animatedSprite = poisonSubsprite as PIXI.AnimatedSprite;
-        animatedSprite.onFrameChange = (currentFrame) => {
-          if (currentFrame == 5) {
-            animatedSprite.anchor.x = (3 + Math.random() * (6 - 3)) / 10;
+      if (spell.modifiers?.subsprite) {
+        const poisonSubsprite = Image.addSubSprite(unit.image, spell.modifiers.subsprite.imageName);
+        if (poisonSubsprite) {
+          const animatedSprite = poisonSubsprite as PIXI.AnimatedSprite;
+          animatedSprite.onFrameChange = (currentFrame) => {
+            if (currentFrame == 5) {
+              animatedSprite.anchor.x = (3 + Math.random() * (6 - 3)) / 10;
+            }
           }
         }
       }
