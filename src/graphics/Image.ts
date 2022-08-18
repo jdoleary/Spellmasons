@@ -206,7 +206,7 @@ export function load(image: IImageAnimatedSerialized | undefined, parent: PIXI.C
   if (!newImage) { return undefined; }
   newImage.sprite.scale.set(scale.x, scale.y);
   // Restore subsprites (the actual sprites)
-  restoreSubsprites(newImage);
+  restoreSubsprites(newImage, copy.sprite.children);
 
   return newImage;
 }
@@ -216,7 +216,7 @@ export function getAnimationPathFromSprite(sprite: PIXI.Sprite): string {
   return imagePath;
 
 }
-export function getSubspriteImagePaths(image: IImageAnimated | IImageAnimatedSerialized): string[] {
+export function getSubspriteImagePaths(image: IImageAnimated): string[] {
   // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
   return image.sprite.children.filter(c => c !== undefined).map(c => c.imagePath);
 }
@@ -233,8 +233,8 @@ export function syncronize(imageSerialized: IImageAnimatedSerialized, originalIm
   originalImage.sprite.y = y;
   originalImage.sprite.scale.x = scale.x
   originalImage.sprite.scale.y = scale.y;
-  if (getSubspriteImagePaths(imageSerialized) != getSubspriteImagePaths(originalImage)) {
-    restoreSubsprites(originalImage);
+  if (imageSerialized.sprite.children != getSubspriteImagePaths(originalImage)) {
+    restoreSubsprites(originalImage, imageSerialized.sprite.children);
   }
   if (imageSerialized.sprite.imagePath === getAnimationPathFromSprite(originalImage.sprite)) {
     return originalImage;
@@ -255,14 +255,13 @@ export function syncronize(imageSerialized: IImageAnimatedSerialized, originalIm
   }
 
 }
-export function restoreSubsprites(image?: IImageAnimated) {
+export function restoreSubsprites(image: IImageAnimated | undefined, subspriteIds: string[]) {
   if (!image) {
     return;
   }
   // Re-add subsprites
-  const subSprites = getSubspriteImagePaths(image);
   image.sprite.removeChildren();
-  for (let subSprite of subSprites) {
+  for (let subSprite of subspriteIds) {
     addSubSprite(image, subSprite);
   }
   // Re-add mask:

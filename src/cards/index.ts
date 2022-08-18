@@ -72,7 +72,7 @@ function register(spell: Spell, underworld: Underworld) {
   upgradeCardsSource.push(cardToUpgrade(card, underworld));
   // Add subsprites
   if (modifiers && modifiers.subsprite) {
-    Subsprites[id] = modifiers.subsprite;
+    Subsprites[modifiers.subsprite.imageName] = modifiers.subsprite;
   }
   // Add events
   if (events) {

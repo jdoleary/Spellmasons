@@ -1,4 +1,5 @@
 ## Tasks
+- casting poison on self says 'invalid target' on loading 'test3'
 - shield modifier subsprite is not restored on load
 - backlog: Remove isArmored
 - prevent strength adjustment from affecting players
