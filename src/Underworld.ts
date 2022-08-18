@@ -2322,7 +2322,11 @@ export default class Underworld {
     // unit strengths.  This must happen BEFORE clients are given the gamestate
     const newStrength = calculateUnitStrength(this);
     this.units.forEach(unit => {
-      Unit.adjustUnitStrength(unit, newStrength);
+      // Adjust npc unit strength when the number of players changes
+      // Do NOT adjust player unit strength
+      if (unit.unitType !== UnitType.PLAYER_CONTROLLED) {
+        Unit.adjustUnitStrength(unit, newStrength);
+      }
     });
     console.log('The number of players has changed, adjusting game difficulty via units\' strength to ', newStrength, ' for ', this.players.filter(p => p.clientConnected).length, ' connected players.');
 
