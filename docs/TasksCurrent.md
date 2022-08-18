@@ -2,7 +2,10 @@
 - bug: After i ended a level on a racetimeout push I got to choose WAY too many upgrade spells
 - throttle player move on multiplayer
 - auto difficulty adjustment
+    - " adjusting game difficulty via units' strength"
 - When a client moved from game a to game b without player 2 ever having moved, player two still showed up in game b (but as disconnected)
+    - make networkUtil.ts's clients array belong to either udnerworld or hostapp
+- liquid messed up; seed: 0.6404564349842206
 ---
 - movable barrier
 - rework exp
