@@ -63,13 +63,15 @@
             - Plan / Plot / Conspire / Devise
             - Unleash / Execute
             - Invent / Envision / Formulate
-        - Spellmasons is a ["multiplayer creative problem solving", "multiplayer tactical wizardry"] game where you can
+        - Spellmasons is a ["multiplayer creative problem solving", "multiplayer tactical roguelike"] game where you can
+            - "plan complex sequences of spell combinations"
             - "push monsters into lava"
             - "resurrect your dead enemies to fight for you, and send them out against their allies"
     - How to reach people to review
         - See curators on steam
 - Video ideas
     - How I found the perfect artist for my game
+    - 
 
 - Research
     - Trailer
@@ -200,3 +202,7 @@
     - show what makes the game unique **Show spells cast in different order**
     - Subtly look high quality and high value with lots of gameplay
     - Add a buy embed at the bottom of the "Read more" just like RogueLegacy2 does
+- Short description
+    - Be very specific not generic
+        - no: go on missions
+        - yes: sneak into an embassy in london

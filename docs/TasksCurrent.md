@@ -1,4 +1,6 @@
 ## Tasks
+- use card background for upgrades with different colors depending on rarity
+- "contageous" to "contaminate"
 - `Missing subsprite data for key shield`
 - rework expand, it's predictions are often way off.  Maybe it would do better to just increase the radius of all spells?
 - replace spikes image with trap image
