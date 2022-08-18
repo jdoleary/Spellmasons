@@ -1,4 +1,13 @@
-## Today
+## Tasks
+- shield modifier subsprite is not restored on load
+- backlog: Remove isArmored
+- prevent strength adjustment from affecting players
+- Spell Modifier effects
+    - poison: Add continuous drip
+    - bloat: Change x scale
+    - shield
+    - debilitate
+    - blood curse
 - Rename contagious to signify that it just spreads once
 - bug: Swap with AOE swaps you do a weird place
 - bug: A player that died in liquid when the level goes next will still have liquid filter on them.

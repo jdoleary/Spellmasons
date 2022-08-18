@@ -11,7 +11,7 @@
         - aoe
         - blood curse
         - chain
-        - pull/push/swap
+        - pull/push
 - Milestone X | **Juice**
     - Hand craft liquid pool configurations so you don't get abberant floor combinations
     - SFX
