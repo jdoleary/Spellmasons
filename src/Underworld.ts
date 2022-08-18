@@ -2447,6 +2447,18 @@ function getEnemiesForAltitude(underworld: Underworld): string[] {
 // Explicit list of biome types
 export type Biome = 'blood' | 'lava' | 'water';
 
+export function biomeTextColor(biome?: Biome): string {
+  switch (biome) {
+    case 'blood':
+      return 'white';
+    case 'lava':
+      return 'white';
+    case 'water':
+      return 'black';
+    default:
+      return 'white';
+  }
+}
 export interface LevelData {
   levelIndex: number,
   biome: Biome,

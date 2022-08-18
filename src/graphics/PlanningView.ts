@@ -5,7 +5,7 @@ import { containerSpells, containerUI, withinCameraBounds } from './PixiUtils';
 import { containerPlanningView } from './PixiUtils';
 import { Faction, UnitSubType, UnitType } from '../types/commonTypes';
 import { clone, equal, Vec2, round } from '../jmath/Vec';
-import Underworld, { turn_phase } from '../Underworld';
+import Underworld, { biomeTextColor, turn_phase } from '../Underworld';
 import * as CardUI from './ui/CardUI';
 import * as config from '../config';
 import * as Unit from '../entity/Unit';
@@ -49,6 +49,7 @@ export function updatePlanningView(underworld: Underworld) {
     planningViewGraphics.clear();
     if (labelText) {
       labelText.text = '';
+      labelText.style.fill = biomeTextColor(underworld.lastLevelCreated?.biome)
     }
     if (selectedPickup) {
       // Draw circle to show that pickup is selected
