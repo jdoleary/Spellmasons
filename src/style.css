@@ -1092,3 +1092,8 @@ body.HUD-hidden #toolbar {
 body.HUD-hidden #PIXI-holder {
   z-index: 3;
 }
+
+/* TODO: Custom cursor goes here */
+/* body {
+  cursor: url('images/spell/spellIconPoison.png'), url('image-path-2.svg'), url('image-path-3.jpeg'), auto;
+} */
