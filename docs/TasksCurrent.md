@@ -1,9 +1,10 @@
 ## Today
 - bug: After i ended a level on a racetimeout push I got to choose WAY too many upgrade spells
-- throttle player move on multiplayer
+- implement auto reconnect when `setView(View.Disconnected)`
 - auto difficulty adjustment
     - " adjusting game difficulty via units' strength"
 - liquid messed up; seed: 0.6404564349842206
+- on refresh (with only 1 client in room) the server reseeded level but my position stayed the same
 ---
 - movable barrier
 - rework exp

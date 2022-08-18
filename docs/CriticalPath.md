@@ -2,6 +2,7 @@
 - Milestone | **Standalone Server Playtest**
     - stand alone server goes into infinite loop when all players leave
     - Test standalone server with friends
+    - When does stand alone server remove a room?
 - Milestone | **Trailer-ready Alpha**
     - Need sfx
     - Solution for visually representing modifiers, maybe just improve the tooltip for now? remove the json and use an icon
