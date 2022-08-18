@@ -105,10 +105,6 @@ globalThis.setRMBDown = (isDown: boolean, underworld: Underworld) => {
   if (!isDown) {
     if (globalThis.player) {
       returnToDefaultSprite(globalThis.player.unit);
-      underworld.pie.sendData({
-        type: MESSAGE_TYPES.MOVE_PLAYER,
-        ...Vec.clone(globalThis.player.unit),
-      });
     } else {
       console.error('Cannot send MOVE_PLAYER, globalThis.player is undefined')
     }

@@ -1,4 +1,5 @@
 import { MESSAGE_TYPES } from '../../types/MessageTypes';
+import throttle from 'lodash.throttle';
 import * as CardUI from './CardUI';
 import * as Unit from '../../entity/Unit';
 import floatingText from '../FloatingText';
@@ -215,6 +216,17 @@ export function endTurnBtnListener(underworld: Underworld, e: MouseEvent) {
   e.stopPropagation();
   return false;
 }
+const sendMovePlayer = throttle((underworld: Underworld) => {
+  if (globalThis.player) {
+    underworld.pie.sendData({
+      type: MESSAGE_TYPES.MOVE_PLAYER,
+      ...Vec.clone(globalThis.player.unit),
+    });
+  } else {
+    console.error('Cannot send MOVE_PLAYER, globalThis.player is undefined')
+  }
+
+}, 200, { trailing: true });
 
 export function mouseMove(underworld: Underworld, e?: MouseEvent) {
   // Only handle clicks when viewing the Game
@@ -249,6 +261,9 @@ export function mouseMove(underworld: Underworld, e?: MouseEvent) {
           // and won't path in an unexpected direction to attempt to get to the final destination.
           const intersection = closestLineSegmentIntersection({ p1: globalThis.player.unit, p2: mouseTarget }, underworld.walls) || mouseTarget;
           Unit._moveTowards(globalThis.player.unit, intersection, underworld);
+          // Send current player movements to server
+          sendMovePlayer(underworld);
+
         } else {
           if (!globalThis.notifiedOutOfStamina) {
             floatingText({
