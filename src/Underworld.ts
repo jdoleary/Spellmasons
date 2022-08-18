@@ -791,7 +791,7 @@ export default class Underworld {
   // cleanup cleans up all assets that must be manually removed (for now `Image`s)
   // if an object stops being used.  It does not empty the underworld arrays, by design.
   cleanup() {
-    console.trace('teardown: Cleaning up underworld');
+    console.log('teardown: Cleaning up underworld');
 
     // Remove all phase classes from body
     if (document && !globalThis.headless) {
@@ -2294,36 +2294,43 @@ export default class Underworld {
         newlyCreatedPlayers.push(p);
       }
     }
-    // Since the player's array length has changed, recalculate all
-    // unit strengths.  This must happen BEFORE clients are given the gamestate
-    const newStrength = calculateUnitStrength(this);
-    console.log('The number of players has changed, adjusting game difficulty via units\' strength to ', newStrength);
-    this.units.forEach(unit => {
-      Unit.adjustUnitStrength(unit, newStrength);
-    })
     // Sync all players' connection statuses with the clients list
     // This ensures that there are no players left that think they're connected
     // but are not a part of the clients list
+    let clientsToSendGameState = [];
     for (let player of this.players) {
       const wasConnected = player.clientConnected;
       const isConnected = clients.includes(player.clientId);
       Player.setClientConnected(player, isConnected, this);
       if (!wasConnected && isConnected) {
-        // Send the lastest gamestate to that client so they can be up-to-date:
-        // Note: It is important that this occurs AFTER the player instance is created for the
-        // client who just joined
-        // If the game has already started (e.g. the host has already joined), send the initial state to the new 
-        // client only so they can load
-        hostGiveClientGameState(player.clientId, this, this.lastLevelCreated, MESSAGE_TYPES.INIT_GAME_STATE);
+        clientsToSendGameState.push(player.clientId);
       }
     }
     // Since the player's array length has changed, recalculate all
     // unit strengths.  This must happen BEFORE clients are given the gamestate
     const newStrength = calculateUnitStrength(this);
-    console.log('The number of players has changed, adjusting game difficulty via units\' strength to ', newStrength);
     this.units.forEach(unit => {
       Unit.adjustUnitStrength(unit, newStrength);
     });
+    console.log('The number of players has changed, adjusting game difficulty via units\' strength to ', newStrength, ' for ', this.players.filter(p => p.clientConnected).length, ' connected players.');
+
+    // Send game state after units' strength has been recalculated
+    for (let clientId of clientsToSendGameState) {
+      // Send the lastest gamestate to that client so they can be up-to-date:
+      // Note: It is important that this occurs AFTER the player instance is created for the
+      // client who just joined
+      // If the game has already started (e.g. the host has already joined), send the initial state to the new 
+      // client only so they can load
+      hostGiveClientGameState(clientId, this, this.lastLevelCreated, MESSAGE_TYPES.INIT_GAME_STATE);
+    }
+
+    if (globalThis.isHost(this.pie)) {
+      this.pie.sendData({
+        type: MESSAGE_TYPES.SYNC_PLAYERS,
+        units: this.units.map(Unit.serialize),
+        players: this.players.map(Player.serialize)
+      });
+    }
     return newlyCreatedPlayers;
   }
   syncPlayers(players: Player.IPlayerSerialized[]) {
@@ -2415,8 +2422,7 @@ export type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, Underworl
 const startingNumberOfUnits = 3;
 const bossEveryXLevels = 15;
 function calculateUnitStrength(underworld: Underworld) {
-  return (underworld.levelIndex / 10) + underworld.players.length / 2;
-
+  return (underworld.levelIndex / 10) + underworld.players.filter(p => p.clientConnected).length / 2;
 }
 
 function getEnemiesForAltitude(underworld: Underworld): string[] {

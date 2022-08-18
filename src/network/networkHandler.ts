@@ -188,13 +188,18 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
       break;
     case MESSAGE_TYPES.SYNC_PLAYERS:
       {
-        const { players } = payload as {
+        const { units, players } = payload as {
+          // Note: When syncing players, must also sync units
+          // because IPlayerSerialized doesn't container a full
+          // unit serialized
+          units: Unit.IUnitSerialized[],
           // Sync data for players
-          players?: Player.IPlayerSerialized[],
+          players: Player.IPlayerSerialized[],
         }
-        if (players) {
-          underworld.syncPlayers(players);
-        }
+        // Units must be synced before players so that the player's
+        // associated unit is available for referencing
+        underworld.syncUnits(units);
+        underworld.syncPlayers(players);
       }
       break;
     case MESSAGE_TYPES.SET_PHASE:
