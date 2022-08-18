@@ -2438,7 +2438,7 @@ export type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, Underworl
 const startingNumberOfUnits = 3;
 const bossEveryXLevels = 15;
 function calculateUnitStrength(underworld: Underworld) {
-  return (underworld.levelIndex / 10) + underworld.players.filter(p => p.clientConnected).length / 2;
+  return underworld.players.filter(p => p.clientConnected).length / 2;
 }
 
 function getEnemiesForAltitude(underworld: Underworld): string[] {
