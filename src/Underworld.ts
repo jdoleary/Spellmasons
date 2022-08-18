@@ -2317,6 +2317,13 @@ export default class Underworld {
         hostGiveClientGameState(player.clientId, this, this.lastLevelCreated, MESSAGE_TYPES.INIT_GAME_STATE);
       }
     }
+    // Since the player's array length has changed, recalculate all
+    // unit strengths.  This must happen BEFORE clients are given the gamestate
+    const newStrength = calculateUnitStrength(this);
+    console.log('The number of players has changed, adjusting game difficulty via units\' strength to ', newStrength);
+    this.units.forEach(unit => {
+      Unit.adjustUnitStrength(unit, newStrength);
+    });
     return newlyCreatedPlayers;
   }
   syncPlayers(players: Player.IPlayerSerialized[]) {

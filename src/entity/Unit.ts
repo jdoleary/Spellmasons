@@ -206,6 +206,12 @@ export function create(
 export function adjustUnitStrength(unit: IUnit, strength: number) {
   unit.strength = strength;
   unit.damage = Math.round(config.UNIT_BASE_DAMAGE * strength);
+  const health = Math.round(config.UNIT_BASE_HEALTH * strength);
+  unit.healthMax = health;
+  unit.health = health;
+  const mana = Math.round(config.UNIT_BASE_MANA * strength);
+  unit.manaMax = mana;
+  unit.mana = mana;
 }
 function setupShaders(unit: IUnit) {
   if (unit.image) {
