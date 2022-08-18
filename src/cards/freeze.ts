@@ -1,5 +1,6 @@
 import * as Unit from '../entity/Unit';
 import * as Image from '../graphics/Image';
+import * as Pickup from '../entity/Pickup';
 import { Spell } from './index';
 import { CardCategory, UnitType } from '../types/commonTypes';
 import * as config from '../config'
@@ -29,6 +30,13 @@ Freezes the target(s) for 1 turn, preventing them from moving or acting.
       await Promise.all([playDefaultSpellAnimation(card, state.targetedUnits, prediction), playDefaultSpellSFX(card, prediction)]);
       for (let unit of state.targetedUnits) {
         Unit.addModifier(unit, id, underworld, prediction, quantity);
+      }
+      for (let pickup of state.targetedPickups) {
+        if (pickup.turnsLeftToGrab !== undefined) {
+          pickup.turnsLeftToGrab += quantity;
+          // Update the text now that turnsLeftToGrab has changed
+          Pickup.sync(pickup);
+        }
       }
       return state;
     },

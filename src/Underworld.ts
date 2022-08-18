@@ -507,7 +507,7 @@ export default class Underworld {
           }
         }
         for (let p of this.pickups) {
-          Pickup.syncImage(p);
+          Pickup.sync(p);
         }
         // Sync Image even for non moving units since they may be moved by forces other than themselves
         // This keeps the unit.image in the same place as unit.x, unit.y

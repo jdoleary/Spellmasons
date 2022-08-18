@@ -101,7 +101,9 @@ export function create({ pos, pickupSource, onTurnsLeftDone }:
         timeCircle.anchor.y = 0;
       }
 
-      self.text = pixiText(`${turnsLeftToGrab}`, { fill: 'white', align: 'center' });
+      // Value of text is set in sync()
+      self.text = pixiText('', { fill: 'white', align: 'center' });
+      sync(self);
       if (self.text) {
         self.text.anchor.x = 0;
         self.text.anchor.y = 0;
@@ -118,10 +120,13 @@ export function create({ pos, pickupSource, onTurnsLeftDone }:
   return self;
 }
 
-export function syncImage(pickup: IPickup) {
+export function sync(pickup: IPickup) {
   if (pickup.image) {
     pickup.image.sprite.x = pickup.x;
     pickup.image.sprite.y = pickup.y;
+  }
+  if (pickup.turnsLeftToGrab !== undefined && pickup.text) {
+    pickup.text.text = `${pickup.turnsLeftToGrab}`;
   }
 }
 export function setPosition(pickup: IPickup, x: number, y: number) {
