@@ -1,12 +1,10 @@
 # Critical Path
 - Milestone | **Standalone Server Playtest**
-    - stand alone server goes into infinite loop when all players leave
+    - (fixed?) stand alone server goes into infinite loop when all players leave
     - Test standalone server with friends
     - When does stand alone server remove a room?
 - Milestone | **Trailer-ready Alpha**
     - Need sfx
-    - Solution for visually representing modifiers
-        - How to represent shield, poison and other modifiers visually and with countdown
     - Need spell effects
         - aoe
         - blood curse
@@ -21,7 +19,7 @@
     - Master music (Brad)
 - Milestone | **Marketing** | Planning on September 1
     - See Marketing.md for more info
-    - Steam Page (waiting on art)
+    - Steam Page
     - Website Presskit page
         - Note: Website should just redirect to steampage
 - Milestone X | **Doodads**

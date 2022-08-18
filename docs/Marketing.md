@@ -199,3 +199,4 @@
     - show how the game is played
     - show what makes the game unique **Show spells cast in different order**
     - Subtly look high quality and high value with lots of gameplay
+    - Add a buy embed at the bottom of the "Read more" just like RogueLegacy2 does

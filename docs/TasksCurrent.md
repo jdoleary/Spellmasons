@@ -1,12 +1,15 @@
 ## Tasks
+- `Missing subsprite data for key shield`
+- rework expand, it's predictions are often way off.  Maybe it would do better to just increase the radius of all spells?
 - replace spikes image with trap image
 - Change how strength scales so it's not dependent on level.  It would be confusing if unit health changes under you.
     - just make more or different kinds of units
-- For load, it doesn't call "add" on modifiers so if the modifier has any special init logic, it wont run, it just loads the modifier state
-- casting poison on self says 'invalid target' on loading 'test3'
+- For load, it doesn't call "add" on modifiers so if the modifier has any special init logic, it wont run, it just loads the modifier state (see poison for example)
+- casting poison on self says 'invalid target' on loading 'test3', (was this due to not enough mana?)
+    - if a unit is high up against a wall you can't cast there.  For a wall you should just prevent casting on the top of a wall
 - shield modifier subsprite is not restored on load
 - backlog: Remove isArmored
-- Spell Modifier effects
+- Spell Modifier effects visual representation
     - debilitate
     - blood curse
 - Rename contagious to signify that it just spreads once
