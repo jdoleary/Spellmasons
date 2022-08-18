@@ -5,30 +5,22 @@
     - When does stand alone server remove a room?
 - Milestone | **Trailer-ready Alpha**
     - Need sfx
-    - Solution for visually representing modifiers, maybe just improve the tooltip for now? remove the json and use an icon
+    - Solution for visually representing modifiers
+        - How to represent shield, poison and other modifiers visually and with countdown
     - Need spell effects
         - aoe
         - blood curse
         - chain
         - pull/push/swap
-        - shield
-    - How to represent shield, poison and other modifiers visually and with countdown
 - Milestone X | **Juice**
     - Hand craft liquid pool configurations so you don't get abberant floor combinations
     - SFX
-    - Art Integration
-        - 10%: Cover Art / Steam Page
-        - 20%: Biome Tiles
-        - 0%: Liquid Splash Animation
-            - Lava, blood, Water
-        - 0%: UI
+    - 0%: Liquid Splash Animation
+        - Lava, blood, Water
+    - 0%: UI
     - Master music (Brad)
 - Milestone | **Marketing** | Planning on September 1
     - See Marketing.md for more info
-    - Trailer
-        - Need biomes
-        - Need sfx
-        - Need spell effects
     - Steam Page (waiting on art)
     - Website Presskit page
         - Note: Website should just redirect to steampage
@@ -41,12 +33,8 @@
         - Memory Leaks: call destroy() on any Graphics object you no longer need to avoid memory leaks.
         - Stress test droplets to see how many users they can support
         - Check ImmediateModeSprites for leaks
-        - Support large maps
-        - Round of wall corners so it doesn't stair step??
-            - May depend on art, but would help with optimization
         - Support huge numbers of mobs (100? 500? 1000?)
             - Profile and figure out where the weak points are
-        - Delete line segments that are not accessable, like the very outside walls
     - Build following
     - Make survey
     - Send out to testers
@@ -57,6 +45,7 @@
     - [Storage and Persistence](https://cameronnokes.com/blog/how-to-store-user-data-in-electron/)
     - [AutoUpdate](https://github.com/vercel/hazel)
 - Milestone **Strech 1**
+    - [Mod support](https://partner.steamgames.com/doc/features/workshop)
     - Hoist spells
         - Logic to avoid fizzle spells
             - Don't cast res on no dead

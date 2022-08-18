@@ -175,3 +175,27 @@
     - Use the **tag wizard** specifically for editing your tags. It's under 'Edit Store Page' > 'Tags'
     - In the tagging wizard, adjust the tag priority until the similar games are arranged as you want them to be
 - Twitter Marketing https://howtomarketagame.com/2022/08/01/how-to-go-viral-on-twitter/
+- Screenshots
+    - Show the UI
+    - Show who you play as
+    - Indicate the game and genre
+    - The first 4 are the most important, they get sent out in the email
+    - showcase the core gameplay loop
+    - don't show start menu
+    - do show variety
+    - don't use dark images for first 4
+    - don't add text (in post) to screenshots (ui is okay)
+- Steam videos
+    - Get right to gameplay
+    - no logos, no cinematics, no title cards. For steam, just do gameplay
+- What are shoppers thinking:
+    - is the game pretty?
+    - is it high quality? (bugs, jank, depth)
+    - What genre is it and would i like it
+    - how is the game played (turn based, dialog choices, 3rd person, etc)
+    - is the game being updated
+    - what is the high concept, is the game unique
+- My steam page must
+    - show how the game is played
+    - show what makes the game unique **Show spells cast in different order**
+    - Subtly look high quality and high value with lots of gameplay

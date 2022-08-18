@@ -1,4 +1,6 @@
 ## Today
+- Rename contagious to signify that it just spreads once
+- Can't read white radius text in light biome
 - bug: A player that died in liquid when the level goes next will still have liquid filter on them.
 - bug: After i ended a level on a racetimeout push I got to choose WAY too many upgrade spells
 - implement auto reconnect when `setView(View.Disconnected)`
@@ -20,11 +22,8 @@
         - push predicted taht a lobber would fall in lava and die but it didn't
             - that same lobber when resurrected just crawled over lava so it must've been inside but just didn't take the damage
 ## Tasks
-- Docs for deploying update to standalone server
 - fix hotkey for jprompt
 - key 'z' is used both to hide hud AND to have camera follow player
-- multiplayer bug: Player robe colors are not synced
-    - this is because if first player leaves and rejoins, the clients array is now rearranged and they might switch robes
 - Brad feedback 2022-08-04
     - freeze should shield damage?
         - if frozen unit takes damage it restarts animation
