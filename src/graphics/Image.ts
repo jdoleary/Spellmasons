@@ -309,7 +309,9 @@ export function addSubSprite(image: IImageAnimated | undefined, key: string) {
   if (!getSubspriteImagePaths(image).includes(key)) {
     const subSpriteData = Subsprites[key];
     if (subSpriteData) {
-      const sprite = addPixiSprite(subSpriteData.imageName, image.sprite);
+      const sprite = subSpriteData.imageName.includes('.png')
+        ? addPixiSprite(subSpriteData.imageName, image.sprite)
+        : addPixiSpriteAnimated(subSpriteData.imageName, image.sprite);
       if (!sprite) { return; }
       sprite.alpha = subSpriteData.alpha;
       sprite.anchor.set(subSpriteData.anchor.x, subSpriteData.anchor.y);

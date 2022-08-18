@@ -57,15 +57,15 @@ at the start of the unit's turn.
   modifiers: {
     add,
     subsprite: {
-      imageName,
+      imageName: 'spell-effects/modifierPoisonDrip',
       alpha: 1.0,
       anchor: {
-        x: 0,
-        y: 0,
+        x: 0.6,
+        y: 0.5,
       },
       scale: {
-        x: 0.5,
-        y: 0.5,
+        x: 1.0,
+        y: 1.0,
       },
     },
 

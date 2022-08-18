@@ -5,8 +5,8 @@ import floatingText from '../graphics/FloatingText';
 import { CardCategory } from '../types/commonTypes';
 import type Underworld from '../Underworld';
 
-const id = 'shield';
-const imageName = 'shield.png';
+export const id = 'shield';
+export const modifierImagePath = 'spell-effects/modifierShield.png';
 const damageBlocked = 3;
 const maxStack = 1;
 const spell: Spell = {
@@ -26,25 +26,31 @@ Protects bearer from the next ${damageBlocked} damage that they would incur.
     effect: async (state, card, quantity, underworld, prediction) => {
       let animationPromise = Promise.resolve();
       for (let unit of state.targetedUnits) {
-        Unit.addModifier(unit, id, underworld, prediction);
         animationPromise = Unit.addOneOffAnimation(unit, 'projectile/priestProjectileHit', {}, { loop: false });
       }
+      // We only need to wait for one of these promises, since they all take the same amount of time to complete
       await animationPromise;
+      // Add the modifier after the animation so that the subsprite doesn't get added until after the animation is
+      // complete
+      for (let unit of state.targetedUnits) {
+        Unit.addModifier(unit, id, underworld, prediction);
+      }
+
       return state;
     },
   },
   modifiers: {
     add,
     subsprite: {
-      imageName,
+      imageName: modifierImagePath,
       alpha: 1.0,
       anchor: {
-        x: 0,
-        y: 0,
-      },
-      scale: {
         x: 0.5,
         y: 0.5,
+      },
+      scale: {
+        x: 1.0,
+        y: 1.0,
       },
     },
   },

@@ -14,6 +14,7 @@ import * as storage from './storage';
 import * as ImmediateMode from './graphics/ImmediateModeSprites';
 import * as colors from './graphics/ui/colors';
 import * as resurrect from './cards/resurrect';
+import * as shield from './cards/shield';
 import { MESSAGE_TYPES } from './types/MessageTypes';
 import {
   app,
@@ -568,6 +569,17 @@ export default class Underworld {
               manaBarProps.height);
           }
           globalThis.unitOverlayGraphics?.endFill();
+        }
+        // Animate modifier sprites
+        if (u.modifiers[shield.id] && u.image) {
+          // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
+          // which is used for identifying the sprite or animation that is currently active
+          const modifierSprite = u.image.sprite.children.find(c => c.imagePath == shield.modifierImagePath)
+          if (modifierSprite) {
+            modifierSprite.rotation += 0.01;
+            modifierSprite.x = Math.sin(timestamp / 1000) * 3;
+            modifierSprite.y = Math.cos(timestamp / 1000) * 3;
+          }
         }
       }
     }

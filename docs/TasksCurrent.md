@@ -3,9 +3,6 @@
 - backlog: Remove isArmored
 - prevent strength adjustment from affecting players
 - Spell Modifier effects
-    - poison: Add continuous drip
-    - bloat: Change x scale
-    - shield
     - debilitate
     - blood curse
 - Rename contagious to signify that it just spreads once
