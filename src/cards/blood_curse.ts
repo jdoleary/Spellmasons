@@ -42,13 +42,6 @@ function remove(unit: IUnit, underworld: Underworld) {
   unit.health = Math.round(unit.health);
   unit.healthMax /= healthMultiplier;
   unit.healthMax = Math.round(unit.healthMax);
-
-  // If unit belongs to player
-  const player = underworld.players.find(p => p.unit == unit)
-  if (player) {
-    removeCardsFromHand(player, [id], underworld);
-  }
-
 }
 
 const spell: Spell = {
@@ -58,9 +51,9 @@ const spell: Spell = {
     manaCost: 20,
     healthCost: 0,
     expenseScaling: 1,
-    probability: 0,
+    probability: 10,
     thumbnail: 'spellIconBloodCurse.png',
-    description: `Makes the victim take HEALING as pure damage, but also doubles the victims max health.`,
+    description: `2x max health but healing is taken as damage`,
     effect: async (state, card, quantity, underworld, prediction) => {
       for (let unit of state.targetedUnits) {
         Unit.addModifier(unit, id, underworld, prediction);
