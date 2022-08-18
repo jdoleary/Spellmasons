@@ -1,8 +1,8 @@
 ## Today
+- bug: A player that died in liquid when the level goes next will still have liquid filter on them.
 - bug: After i ended a level on a racetimeout push I got to choose WAY too many upgrade spells
 - implement auto reconnect when `setView(View.Disconnected)`
-- auto difficulty adjustment
-    - " adjusting game difficulty via units' strength"
+- If player joins mid enemy movement it will force reset them
 - liquid messed up; seed: 0.6404564349842206
 - on refresh (with only 1 client in room) the server reseeded level but my position stayed the same
 ---

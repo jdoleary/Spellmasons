@@ -14,6 +14,7 @@
         - shield
     - How to represent shield, poison and other modifiers visually and with countdown
 - Milestone X | **Juice**
+    - Hand craft liquid pool configurations so you don't get abberant floor combinations
     - SFX
     - Art Integration
         - 10%: Cover Art / Steam Page
