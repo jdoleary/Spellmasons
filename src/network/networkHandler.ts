@@ -8,6 +8,7 @@ import * as Player from '../entity/Player';
 import * as Unit from '../entity/Unit';
 import * as messageQueue from '../messageQueue';
 import * as storage from '../storage';
+import * as config from '../config';
 import { allUnits } from '../entity/units';
 import { hostGiveClientGameState, typeGuardHostApp } from './networkUtil';
 
@@ -251,6 +252,13 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
         break;
       }
       if (fromPlayer) {
+        // Network Sync: Make sure other players move a little slower so that the MOVE_PLAYER messages have time to set the
+        // next move point on the client's screen.  This prevents jagged movement due to network latency
+        fromPlayer.unit.moveSpeed = config.UNIT_MOVE_SPEED * 0.9;
+        // Network Sync: Make sure the other player always has stamina to get where they're going, this is to ensure that
+        // the local copies of other player's stay in sync with the server and aren't prematurely stopped due
+        // to a stamina limitation
+        fromPlayer.unit.stamina = 100;
         await Unit.moveTowards(fromPlayer.unit, payload, underworld).then(() => {
           if (fromPlayer.unit.path?.points.length && fromPlayer.unit.stamina == 0) {
             // If they do not reach their destination, notify that they are out of stamina
