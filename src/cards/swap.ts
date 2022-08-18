@@ -6,6 +6,7 @@ import * as config from '../config';
 import * as Vec from '../jmath/Vec';
 import * as Obstacle from '../entity/Obstacle';
 import { CardCategory } from '../types/commonTypes';
+import { skyBeam } from '../VisualEffects';
 
 const id = 'swap';
 const spell: Spell = {
@@ -53,15 +54,21 @@ Swaps the caster with the source target.
       for (let [unit, newLocation] of swapUnits) {
         // Physically swap
         Unit.setLocation(unit, newLocation);
+        if (!prediction) {
+          // Animate effect of unit spawning from the sky
+          skyBeam(newLocation);
+        }
 
         // Check to see if unit interacts with liquid
         Obstacle.tryFallInOutOfLiquid(unit, underworld, prediction);
       }
       // Now that the units have swapped, put the pickups at their final resting place
       for (let [pickup, newLocation] of swapPickups) {
+        // Physically swap
+        Pickup.setPosition(pickup, newLocation.x, newLocation.y);
         if (!prediction) {
-          // Physically swap
-          Pickup.setPosition(pickup, newLocation.x, newLocation.y);
+          // Animate effect of unit spawning from the sky
+          skyBeam(newLocation);
         }
       }
       return state;
