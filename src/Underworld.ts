@@ -54,7 +54,7 @@ import Jprompt from './graphics/Jprompt';
 import { collideWithLineSegments, ForceMove, isVecIntersectingVecWithCustomRadius, moveWithCollisions } from './jmath/moveWithCollision';
 import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './config';
 import { getBestRangedLOSTarget } from './entity/units/actions/rangedAction';
-import { getClients, hostGiveClientGameState, IHostApp } from './network/networkUtil';
+import { hostGiveClientGameState, IHostApp } from './network/networkUtil';
 import { healthAllyGreen, healthHurtRed, healthRed } from './graphics/ui/colors';
 import objectHash from 'object-hash';
 import { withinMeleeRange } from './entity/units/actions/gruntAction';
@@ -95,6 +95,8 @@ export default class Underworld {
   seed: string;
   random: prng;
   pie: PieClient | IHostApp;
+  // a list of clientIds
+  clients: string[] = [];
   // The index of the level the players are on
   levelIndex: number = -1;
   // for serializing random: prng
@@ -167,7 +169,6 @@ export default class Underworld {
     CardUI.setupCardUIEventListeners(this);
 
     this.random = this.syncronizeRNG(RNGState);
-    this.ensureAllClientsHaveAssociatedPlayers(getClients());
 
     // When the game is ready to process wsPie messages, begin
     // processing them
@@ -1280,12 +1281,11 @@ export default class Underworld {
     cameraAutoFollow(true);
     document.body?.classList.toggle('loading', false);
     setView(View.Game);
-    // this.ensureAllClientsHaveAssociatedPlayers(getClients());
   }
   // creates a level from levelData
   createLevelSyncronous(levelData: LevelData) {
 
-    console.log('Setup: createLevel', levelData);
+    console.log('Setup: createLevelSyncronous');
     this.lastLevelCreated = levelData;
     setAbyssColor(levelData.biome);
     // Clean up the previous level
@@ -2280,9 +2280,10 @@ export default class Underworld {
   }
   // Returns an array of newly created players
   ensureAllClientsHaveAssociatedPlayers(clients: string[]): Player.IPlayer[] {
+    this.clients = clients;
     let newlyCreatedPlayers: Player.IPlayer[] = [];
     // Ensure all clients have players
-    for (let clientId of clients) {
+    for (let clientId of this.clients) {
       const player = this.players.find(p => p.clientId == clientId);
       if (!player) {
         // If the client that joined does not have a player yet, make them one immediately

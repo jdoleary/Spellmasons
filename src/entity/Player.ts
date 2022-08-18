@@ -6,7 +6,6 @@ import * as CardUI from '../graphics/ui/CardUI';
 import * as Cards from '../cards';
 import * as config from '../config';
 import { Faction, UnitType } from '../types/commonTypes';
-import { getClients } from '../network/networkUtil';
 import { randInt } from '../jmath/rand';
 import { clearTooltipSelection } from '../graphics/PlanningView';
 import defaultPlayerUnit from './units/playerUnit';
@@ -225,8 +224,7 @@ export function load(player: IPlayerSerialized, underworld: Underworld) {
   updateGlobalRefToCurrentClientPlayer(playerLoaded);
   CardUI.recalcPositionForCards(playerLoaded, underworld);
   underworld.players.push(playerLoaded);
-  const clients = getClients();
-  setClientConnected(playerLoaded, clients.includes(player.clientId), underworld);
+  setClientConnected(playerLoaded, underworld.clients.includes(player.clientId), underworld);
   underworld.queueGameLoop();
   setPlayerRobeColor(playerLoaded, playerLoaded.color);
   return playerLoaded;

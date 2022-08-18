@@ -3,7 +3,7 @@
 globalThis.headless = true;
 import { version } from '../package.json';
 import './Shims';
-import { getClients, hostGiveClientGameState, IHostApp, onClientPresenceChanged } from './network/networkUtil';
+import { hostGiveClientGameState, IHostApp, onClientPresenceChanged } from './network/networkUtil';
 import Underworld from './Underworld';
 import { onData } from './network/networkHandler';
 import { MESSAGE_TYPES } from './types/MessageTypes';
@@ -29,10 +29,6 @@ function headlessStartGame() {
             hostAppInst.underworld.lastLevelCreated = hostAppInst.underworld.generateLevelDataSyncronous(0);
             // Actually create it
             hostAppInst.underworld.createLevelSyncronous(hostAppInst.underworld.lastLevelCreated);
-            console.log('Host: Send all clients game state for initial load');
-            getClients().forEach(clientId => {
-                hostGiveClientGameState(clientId, hostAppInst.underworld, hostAppInst.underworld.lastLevelCreated, MESSAGE_TYPES.INIT_GAME_STATE);
-            });
             return hostAppInst;
         }
     });

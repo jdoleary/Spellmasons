@@ -11,16 +11,10 @@ export interface ClientPresenceChangedArgs {
     clients: string[];
     time: number;
 }
-let clients: string[] = [];
-// Returns the list of clientIds
-export function getClients(): string[] {
-    return clients;
-}
 export function onClientPresenceChanged(o: ClientPresenceChangedArgs, underworld: Underworld) {
     console.log('clientPresenceChanged', o);
-    clients = o.clients;
     // Ensure each client corresponds with a Player instance
-    underworld.ensureAllClientsHaveAssociatedPlayers(clients);
+    underworld.ensureAllClientsHaveAssociatedPlayers(o.clients);
 }
 export function hostGiveClientGameState(clientId: string, underworld: Underworld, level: LevelData | undefined, message_type: MESSAGE_TYPES.INIT_GAME_STATE | MESSAGE_TYPES.LOAD_GAME_STATE) {
     // Only the host should be sending INIT_GAME_STATE messages
