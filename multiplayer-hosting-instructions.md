@@ -12,7 +12,9 @@ To update the official image:
 1. Run DockerDesktop
 2. Build
 `docker build . -t jordanoleary/smms`
-3. Push a new image to the docker repo:
+3. Test the image
+`docker container run -d -p 8080:8080/tcp jordanoleary/smms`
+4. Push a new image to the docker repo:
 `docker push jordanoleary/smms`
 
 To update a community server running on Digital Ocean
