@@ -1,3 +1,4 @@
+import type * as PIXI from 'pixi.js';
 import { IUnit, takeDamage } from '../entity/Unit';
 import * as Image from '../graphics/Image';
 import { Spell } from './index';
@@ -7,8 +8,7 @@ import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
 
 export const id = 'poison';
-const imageName = 'poison.png'
-function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, quantity: number = 1) {
+function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) {
   // First time setup
   if (!unit.modifiers[id]) {
     unit.modifiers[id] = {
@@ -19,7 +19,18 @@ function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, qu
       unit.onTurnStartEvents.push(id);
     }
     // Add subsprite image
-    Image.addSubSprite(unit.image, id);
+    if (!prediction) {
+
+      const poisonSubsprite = Image.addSubSprite(unit.image, spell.modifiers?.subsprite?.imageName);
+      if (poisonSubsprite) {
+        const animatedSprite = poisonSubsprite as PIXI.AnimatedSprite;
+        animatedSprite.onFrameChange = (currentFrame) => {
+          if (currentFrame == 5) {
+            animatedSprite.anchor.x = (3 + Math.random() * (6 - 3)) / 10;
+          }
+        }
+      }
+    }
   }
   // Increment the number of stacks of poison 
   const modifier = unit.modifiers[id];

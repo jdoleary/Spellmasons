@@ -3,6 +3,8 @@ import { allUnits, UnitSource } from './index';
 import { UnitSubType, UnitType } from '../../types/commonTypes';
 import * as math from '../../jmath/math';
 import Underworld from '../../Underworld';
+import { oneOffImage } from '../../cards/cardUtils';
+import { containerUnits } from '../../graphics/PixiUtils';
 
 const SUMMON_MANA_COST = 30;
 const unit: UnitSource = {
@@ -53,6 +55,8 @@ const unit: UnitSource = {
               sourceUnit.unitProps,
               underworld
             );
+            await new Promise<void>(resolve => oneOffImage(coords, 'units/summonerMagic', containerUnits, resolve));
+
             await Unit.moveTowards(summonedUnit, unit, underworld);
           } else {
             console.log("Summoner could not find valid spawn");

@@ -300,7 +300,7 @@ export function setPosition(image: IImageAnimated | undefined, pos: Vec2) {
   image.sprite.x = pos.x;
   image.sprite.y = pos.y;
 }
-export function addSubSprite(image: IImageAnimated | undefined, key: string) {
+export function addSubSprite(image: IImageAnimated | undefined, key: string): PIXI.AnimatedSprite | PIXI.Sprite | undefined {
   if (!image) {
     return;
   }
@@ -315,10 +315,12 @@ export function addSubSprite(image: IImageAnimated | undefined, key: string) {
       sprite.alpha = subSpriteData.alpha;
       sprite.anchor.set(subSpriteData.anchor.x, subSpriteData.anchor.y);
       sprite.scale.set(subSpriteData.scale.x, subSpriteData.scale.y);
+      return sprite;
     } else {
       console.error("Missing subsprite data for key", key)
     }
   }
+  return;
 }
 export function removeSubSprite(image: IImageAnimated | undefined, imagePath: string) {
   if (!image) {

@@ -1,4 +1,5 @@
 ## Tasks
+- For load, it doesn't call "add" on modifiers so if the modifier has any special init logic, it wont run, it just loads the modifier state
 - casting poison on self says 'invalid target' on loading 'test3'
 - shield modifier subsprite is not restored on load
 - backlog: Remove isArmored
