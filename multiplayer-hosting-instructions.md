@@ -9,12 +9,14 @@ https://docs.digitalocean.com/products/app-platform/how-to/add-deploy-do-button/
 View the official Spellmasons Server image at https://hub.docker.com/repository/docker/jordanoleary/smms
 
 To update the official image:
-1. Run DockerDesktop
-2. Build
+1. Build the headless server code
+`npm run headless-build-only`
+2. Run DockerDesktop
+3. Build
 `docker build . -t jordanoleary/smms`
-3. Test the image
-`docker container run -d -p 8080:8080/tcp jordanoleary/smms`
-4. Push a new image to the docker repo:
+4. Test the image
+`docker container run -p 8080:8080/tcp jordanoleary/smms`
+5. Push a new image to the docker repo:
 `docker push jordanoleary/smms`
 
 To update a community server running on Digital Ocean
