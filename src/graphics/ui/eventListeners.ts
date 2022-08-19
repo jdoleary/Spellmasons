@@ -405,7 +405,7 @@ export function clickHandler(underworld: Underworld, e: MouseEvent) {
     // Disallow click out of bounds
     floatingText({
       coords: mousePos,
-      text: 'Invalid Target!'
+      text: 'Out of bounds!'
     })
     return;
   }
@@ -457,20 +457,6 @@ export function clickHandler(underworld: Underworld, e: MouseEvent) {
           // Cancel Casting
           return;
         }
-
-        // Prevent casting on wall or out of bounds
-        const cellX = Math.round(mousePos.x / config.OBSTACLE_SIZE);
-        const cellY = Math.round(mousePos.y / config.OBSTACLE_SIZE);
-        const originalTile = globalThis.map ? globalThis.map.tiles[vec2ToOneDimentionIndexPreventWrap({ x: cellX, y: cellY }, globalThis.map.width)] : undefined;
-        if (originalTile && (originalTile.image == '' || originalTile.image.includes('wall'))) {
-          floatingText({
-            coords: target,
-            text: 'Invalid Target!'
-          })
-          // Cancel Casting
-          return;
-        }
-
         // Abort casting if there is no unitAtCastLocation
         // unless the first card (like AOE) specifically allows casting
         // on non unit targets
@@ -484,6 +470,25 @@ export function clickHandler(underworld: Underworld, e: MouseEvent) {
           // Cancel Casting
           return;
         }
+
+        // Prevent casting on wall
+        const cellX = Math.round(mousePos.x / config.OBSTACLE_SIZE);
+        const cellY = Math.round(mousePos.y / config.OBSTACLE_SIZE);
+        const originalTile = globalThis.map ? globalThis.map.tiles[vec2ToOneDimentionIndexPreventWrap({ x: cellX, y: cellY }, globalThis.map.width)] : undefined;
+        if (originalTile && (originalTile.image == '' || originalTile.image.includes('wall'))) {
+          // Deny casting on a wall tile unless there is a target (which may overlap the wall)
+          // 'allowNonUnitTarget' is specifically excluded from this check so that nonUnitTarget casts
+          // such as summon_decoy may not be cast on a wall
+          if (!unitAtCastLocation && !pickupAtCastLocation) {
+            floatingText({
+              coords: target,
+              text: 'Invalid Target!'
+            })
+            // Cancel Casting
+            return;
+          }
+        }
+
         if (selfPlayer.unit.modifiers[Freeze.id]) {
           floatingText({ coords: selfPlayer.unit, text: 'Cannot Cast. Frozen.' })
           // Cancel Casting
