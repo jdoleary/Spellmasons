@@ -38,10 +38,8 @@ export const sfx: { [key: string]: string } = {
     potionPickupMana: './sound/sfx-from-val/potion-pickup-mana.wav',
     priestAttack: './sound/sfx-from-val/priest-attack.wav',
     priestDeath: './sound/sfx-from-val/priest-death.wav',
-    // push: './sound/sfx/push.wav',
-    // pull: './sound/sfx/pull.wav',
-    pull: './sound/sfx-from-val/pull.wav',
-    push: './sound/sfx-from-val/push.wav',
+    push: './sound/sfx/push.wav',
+    pull: './sound/sfx/pull.wav',
     resurrect: './sound/sfx-from-val/resurrect.wav',
     shield: './sound/sfx-from-val/shield.wav',
     summonDecoy: './sound/sfx-from-val/summon-decoy.wav',
@@ -83,7 +81,7 @@ export function playNextSong() {
 
     // task: Master all audio and sfx
     // task: Make independent volume sliders for audio and music
-    musicInstance.volume = (globalThis.volume || 1) * (globalThis.volumeMusic || 1);
+    musicInstance.volume = (globalThis.volume === undefined ? 1 : globalThis.volume) * (globalThis.volumeMusic === undefined ? 1 : globalThis.volumeMusic);
     musicInstance.play();
 }
 
@@ -101,7 +99,7 @@ export function playSFX(path?: string) {
     // In order to allow sounds to overlap, they must be 
     // fully instantiated each time they are played
     const audioInstance = new Audio(path);
-    audioInstance.volume = (globalThis.volume || 1) * (globalThis.volumeGame || 1);
+    audioInstance.volume = (globalThis.volume === undefined ? 1 : globalThis.volume) * (globalThis.volumeGame === undefined ? 1 : globalThis.volumeGame);
     audioInstance.play();
 
 }
@@ -113,14 +111,14 @@ export function setupAudio() {
         globalThis.volume = volume;
         storage.assign(STORAGE_OPTIONS, { volume: globalThis.volume });
         if (musicInstance) {
-            musicInstance.volume = globalThis.volume * (globalThis.volumeMusic || 1);
+            musicInstance.volume = globalThis.volume * (globalThis.volumeMusic === undefined ? 1 : globalThis.volumeMusic);
         }
     };
     globalThis.changeVolumeMusic = (volume: number) => {
         globalThis.volumeMusic = volume;
         storage.assign(STORAGE_OPTIONS, { volumeMusic: globalThis.volumeMusic });
         if (musicInstance) {
-            musicInstance.volume = (globalThis.volume || 1) * globalThis.volumeMusic;
+            musicInstance.volume = (globalThis.volume === undefined ? 1 : globalThis.volume) * globalThis.volumeMusic;
         }
     };
     globalThis.changeVolumeGame = (volume: number) => {
@@ -131,13 +129,13 @@ export function setupAudio() {
     const storedOptions = storage.get(STORAGE_OPTIONS);
     if (storedOptions !== null) {
         const options = JSON.parse(storedOptions);
-        if (options.volume) {
+        if (options.volume !== undefined) {
             globalThis.changeVolume(options.volume);
         }
-        if (options.volumeMusic) {
+        if (options.volumeMusic !== undefined) {
             globalThis.changeVolumeMusic(options.volumeMusic);
         }
-        if (options.volumeGame) {
+        if (options.volumeGame !== undefined) {
             globalThis.changeVolumeGame(options.volumeGame);
         }
     }
