@@ -91,10 +91,10 @@ const spell: Spell = {
         range,
         prediction
       ).forEach(u => {
-        // Push units away from exploding unit
-        forcePush(u, unit, velocityStartMagnitude, underworld, prediction);
         // Deal damage to units
         takeDamage(u, damage * quantity, u, underworld, prediction);
+        // Push units away from exploding unit
+        forcePush(u, unit, velocityStartMagnitude, underworld, prediction);
       });
       underworld.getPickupsWithinDistanceOfTarget(
         unit,
