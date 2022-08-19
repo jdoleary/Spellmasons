@@ -10,7 +10,7 @@ import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
 import { drawPredictionCircle } from '../graphics/PlanningView';
 
-const id = 'contagious';
+const id = 'contaminate';
 
 const spell: Spell = {
   card: {

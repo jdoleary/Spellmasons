@@ -5,13 +5,11 @@
 ## Tasks
 - Names above players in multiplayer
 - use card background for upgrades with different colors depending on rarity
-- "contageous" to "contaminate"
 - rework expand, it's predictions are often way off.  Maybe it would do better to just increase the radius of all spells?
 - replace spikes image with trap image
 - Spell Modifier effects visual representation
     - debilitate
     - blood curse
-- Rename contagious to signify that it just spreads once
 - bug: Swap with AOE swaps you do a weird place
 - bug: A player that died in liquid when the level goes next will still have liquid filter on them.
 - bug: After i ended a level on a racetimeout push I got to choose WAY too many upgrade spells
