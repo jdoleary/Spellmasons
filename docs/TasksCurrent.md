@@ -1,11 +1,5 @@
 ## Tasks
-- custom cursor:
-```
-body {
-  cursor: url('image-path.png'), url('image-path-2.svg), 
-          url('image-path-3.jpeg'), auto;
-}
-```
+- Names above players in multiplayer
 - use card background for upgrades with different colors depending on rarity
 - "contageous" to "contaminate"
 - `Missing subsprite data for key shield`
