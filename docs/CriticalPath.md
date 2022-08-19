@@ -3,17 +3,9 @@
     - (fixed?) stand alone server goes into infinite loop when all players leave
     - Test standalone server with friends
     - When does stand alone server remove a room?
-- Milestone | **Trailer-ready Alpha**
-    - Need spell effects
-        - aoe
-        - blood curse
-        - chain
-        - pull/push
 - Milestone X | **Juice**
     - Hand craft liquid pool configurations so you don't get abberant floor combinations
-    - 0%: Liquid Splash Animation
-        - Lava, blood, Water
-    - 0%: UI
+    - UI
     - Master music (Brad)
 - Milestone | **Marketing** | Planning on September 1
     - See Marketing.md for more info
@@ -35,6 +27,15 @@
     - Make survey
     - Send out to testers
     - [Tutorial](https://www.youtube.com/watch?v=-GV814cWiAw)
+- Milestone | **Miscellaneous**
+    - Use Che's mana steal config
+    - Need spell effects
+        - aoe
+        - blood curse
+        - chain
+        - pull/push
+    - Liquid Splash Animation
+        - Lava, blood, Water
 - Milestone X | **Package as Electron App** | Planning on November 1
     - Menu for community server selector
     - Allow running local standalone server from inside app
