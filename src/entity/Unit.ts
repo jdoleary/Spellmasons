@@ -359,7 +359,7 @@ export function syncronize(unitSerialized: IUnitSerialized, originalUnit: IUnit)
   // originalUnit.image = Image.syncronize(image, originalUnit.image);
 }
 export function changeToDieSprite(unit: IUnit) {
-  Image.changeSprite(
+  const newSprite = Image.changeSprite(
     unit.image,
     unit.animations.die,
     containerDoodads,
@@ -368,6 +368,11 @@ export function changeToDieSprite(unit: IUnit) {
     undefined,
     { loop: false }
   );
+  // If a sprite is returned then the sprite did change
+  if (newSprite) {
+    playSFXKey(`${unit.unitSourceId}Death`)
+
+  }
 }
 // It is important to use this function when returning a unit to the previous
 // sprite because it takes into account wether or not a unit is dead.  If a unit
@@ -644,6 +649,7 @@ export function takeDamage(unit: IUnit, amount: number, damageFromVec2: Vec2 | u
     // note: heals call takeDamage with a negative amount, so we don't want to play a hit animation when
     // player is healed
     if (amount > 0) {
+      playSFXKey(`${unit.unitSourceId}Damage`);
       playAnimation(unit, unit.animations.hit, { loop: false, animationSpeed: 0.2 });
       if (damageFromVec2) {
         startBloodParticleSplatter(underworld, damageFromVec2, unit);

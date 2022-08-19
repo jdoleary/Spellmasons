@@ -1,6 +1,6 @@
 import * as Unit from '../entity/Unit';
 import { CardCategory } from '../types/commonTypes';
-import { playDefaultSpellAnimation } from './cardUtils';
+import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
 import { Spell } from './index';
 
 const id = 'mana_burn';
@@ -10,6 +10,7 @@ const spell: Spell = {
   card: {
     id,
     category: CardCategory.Mana,
+    sfx: 'manaBurn',
     manaCost: 20,
     healthCost: 0,
     expenseScaling: 1,
@@ -24,6 +25,7 @@ Burn up to ${mana_burnt} of the targets' mana, causing the target take ${health_
         const unitManaBurnt = Math.min(unit.mana, mana_burnt);
         unit.mana -= unitManaBurnt;
         const damage = unitManaBurnt * health_burn_ratio
+        playDefaultSpellSFX(card, prediction);
         await Unit.addOneOffAnimation(unit, 'spell-effects/spellManaBurn', { keyFrame: 4 });
         Unit.takeDamage(unit, damage, unit, underworld, prediction, state);
       }

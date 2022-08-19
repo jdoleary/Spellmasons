@@ -128,8 +128,8 @@ declare global {
     var headless: boolean;
     // Move audio functions into global so they can be injected IF audio is supported
     var playNextSong: undefined | (() => void | undefined);
-    var playSFX: undefined | ((path?: string) => void | undefined);
-    var playSFXKey: undefined | ((key: string) => void | undefined);
+    var playSFX: ((path?: string) => void | undefined);
+    var playSFXKey: ((key: string) => void | undefined);
     var sfx: { [key: string]: string } | undefined;
     // svelte menu function to attempt to autoconnect if the queryString holds the info
     var tryAutoConnect: undefined | (() => void);

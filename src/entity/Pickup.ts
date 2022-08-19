@@ -297,10 +297,13 @@ export const pickups: IPickupSource[] = [
     singleUse: true,
     scale: 1.0,
     playerOnly: true,
-    effect: ({ unit, player, underworld }) => {
+    effect: ({ unit, player, underworld, prediction }) => {
       if (player) {
         player.unit.mana += manaPotionRestoreAmount;
         explainManaOverfill();
+        if (!prediction) {
+          playSFXKey('potionPickupMana');
+        }
         // Animate
         if (player.unit.image) {
           // Note: This uses the lower-level addPixiSpriteAnimated directly so that it can get a reference to the sprite
@@ -353,11 +356,14 @@ export const pickups: IPickupSource[] = [
     playerOnly: true,
     singleUse: true,
     description: `Restores ${healthPotionRestoreAmount} health.`,
-    effect: ({ player, underworld }) => {
+    effect: ({ player, underworld, prediction }) => {
       if (player && player.unit.health < player.unit.healthMax) {
         takeDamage(player.unit, -healthPotionRestoreAmount, undefined, underworld, false);
         // Add spell effect animation
         Unit.addOneOffAnimation(player.unit, 'spell-effects/potionPickup', {}, { animationSpeed: 0.3, loop: false });
+        if (!prediction) {
+          playSFXKey('potionPickupHealth');
+        }
 
         // Cap health at max
         player.unit.health = Math.min(player.unit.health, player.unit.healthMax);

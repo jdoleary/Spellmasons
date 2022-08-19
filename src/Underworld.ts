@@ -1569,6 +1569,7 @@ export default class Underworld {
       if (player == globalThis.player) {
         // Notify the current player that their turn is starting
         queueCenteredFloatingText(`Your Turn`);
+        playSFXKey('yourTurn');
 
       }
       // Trigger onTurnStart Events
@@ -1609,6 +1610,7 @@ export default class Underworld {
         }
         if (affirm) {
           console.log('endMyTurn: send END_TURN message');
+          playSFXKey('endTurn');
           this.pie.sendData({ type: MESSAGE_TYPES.END_TURN });
         }
       }

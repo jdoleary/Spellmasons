@@ -4,6 +4,7 @@ import { Spell } from './index';
 import floatingText from '../graphics/FloatingText';
 import { CardCategory } from '../types/commonTypes';
 import type Underworld from '../Underworld';
+import { playDefaultSpellSFX } from './cardUtils';
 
 export const id = 'shield';
 export const modifierImagePath = 'spell-effects/modifierShield.png';
@@ -13,6 +14,7 @@ const spell: Spell = {
   card: {
     id,
     category: CardCategory.Blessings,
+    sfx: 'shield',
     supportQuantity: true,
     manaCost: 60,
     healthCost: 0,
@@ -28,6 +30,7 @@ Protects bearer from the next ${damageBlocked} damage that they would incur.
       for (let unit of state.targetedUnits) {
         animationPromise = Unit.addOneOffAnimation(unit, 'projectile/priestProjectileHit', {}, { loop: false });
       }
+      playDefaultSpellSFX(card, prediction);
       // We only need to wait for one of these promises, since they all take the same amount of time to complete
       await animationPromise;
       // Add the modifier after the animation so that the subsprite doesn't get added until after the animation is

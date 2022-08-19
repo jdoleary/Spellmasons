@@ -11,6 +11,9 @@ export function add(unit: IUnit, underworld: Underworld, prediction: boolean) {
         if (unit.image) {
             addMask(unit.image, 'liquid-mask');
         }
+        if (!prediction) {
+            playSFXKey(`fallIntoLiquid-${underworld.lastLevelCreated?.biome}`);
+        }
     }
 }
 export function remove(unit: IUnit) {

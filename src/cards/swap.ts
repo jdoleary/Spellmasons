@@ -7,12 +7,14 @@ import * as Vec from '../jmath/Vec';
 import * as Obstacle from '../entity/Obstacle';
 import { CardCategory } from '../types/commonTypes';
 import { skyBeam } from '../VisualEffects';
+import { playDefaultSpellSFX } from './cardUtils';
 
 const id = 'swap';
 const spell: Spell = {
   card: {
     id,
     category: CardCategory.Movement,
+    sfx: 'swap',
     manaCost: 15,
     healthCost: 0,
     probability: 5,
@@ -23,6 +25,7 @@ Swaps the caster with the source target.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
       const { casterUnit, targetedUnits, targetedPickups } = state;
+      playDefaultSpellSFX(card, prediction);
       // Loop through all targets and batch swap locations
       const swapUnits: [Unit.IUnit, Vec2][] = [];
       const swapPickups: [Pickup.IPickup, Vec2][] = [];

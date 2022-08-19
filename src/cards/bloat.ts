@@ -83,6 +83,7 @@ const spell: Spell = {
       drawPredictionCircle(unit, range, colors.healthRed, 'Explosion Radius');
       if (!prediction) {
         animateSpell(unit, 'explode-on-death.png');
+        playSFXKey('bloatExplosion');
       }
       makeBloatExplosionWithParticles(unit, prediction);
       underworld.getUnitsWithinDistanceOfTarget(

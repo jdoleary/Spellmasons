@@ -23,4 +23,7 @@ global.requestAnimationFrame = (callback) => {
     // went from consuming 20% cpu to 7% cpu
     return setTimeout(() => callback(Date.now()), TICK_RATE);
 }
+// Headless server plays no audio
+global.playSFX = (_string) => { };
+global.playSFXKey = (_string) => { };
 export { };

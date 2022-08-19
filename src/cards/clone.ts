@@ -48,6 +48,9 @@ Clones each target
           }
         }
       }
+      if (!prediction) {
+        playSFXKey('clone');
+      }
       // Note: animationPromise is overwritten over and over because each animateMitosis will take the same amount of time
       // and they are all triggered at once so we only need to wait for one of them.
       await animationPromise;

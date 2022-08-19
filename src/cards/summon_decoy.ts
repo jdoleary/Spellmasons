@@ -4,12 +4,14 @@ import { CardCategory, Faction, UnitType } from '../types/commonTypes';
 import { allUnits } from '../entity/units';
 import { skyBeam } from '../VisualEffects';
 import * as config from '../config';
+import { playDefaultSpellSFX } from './cardUtils';
 
 export const id = 'decoy';
 const spell: Spell = {
   card: {
     id,
     category: CardCategory.Primary,
+    sfx: 'summonDecoy',
     supportQuantity: true,
     manaCost: 60,
     healthCost: 0,
@@ -24,6 +26,7 @@ Multiple sequential decoy spells will create a decoy with more health.
     `,
     allowNonUnitTarget: true,
     effect: async (state, card, quantity, underworld, prediction) => {
+      playDefaultSpellSFX(card, prediction);
       const unitId = 'decoy';
       const sourceUnit = allUnits[unitId];
       if (sourceUnit) {

@@ -69,6 +69,9 @@ async function spreadCurses(unit: IUnit, underworld: Underworld, prediction: boo
       }
       // Spread the curse after the animation promise completes
       animationPromise.then(() => {
+        if (!prediction) {
+          playSFXKey('contageousSplat');
+        }
         Unit.addModifier(touchingUnit, card.id, underworld, prediction);
       });
     }

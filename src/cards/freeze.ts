@@ -26,7 +26,6 @@ Freezes the target(s) for 1 turn, preventing them from moving or acting.
 "Freeze" can be cast multiple times in succession to stack it's effect.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
-      // TODO: IF freeze is enchanced to affect pickups, it'll need to use targetedPickups too
       await Promise.all([playDefaultSpellAnimation(card, state.targetedUnits, prediction), playDefaultSpellSFX(card, prediction)]);
       for (let unit of state.targetedUnits) {
         Unit.addModifier(unit, id, underworld, prediction, quantity);

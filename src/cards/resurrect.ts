@@ -2,6 +2,7 @@ import * as Unit from '../entity/Unit';
 import { ColorOverlayFilter } from '@pixi/filter-color-overlay';
 import { Spell } from './index';
 import { CardCategory } from '../types/commonTypes';
+import { playDefaultSpellSFX } from './cardUtils';
 
 const id = 'resurrect';
 export const thumbnail = 'spellIconResurrect.png';
@@ -11,6 +12,7 @@ const spell: Spell = {
   card: {
     id,
     category: CardCategory.Primary,
+    sfx: 'resurrect',
     manaCost: 80,
     healthCost: 0,
     expenseScaling: 2,
@@ -34,6 +36,7 @@ Resurrects a dead unit and converts them to the caster's faction.
             // @ts-ignore Something is wrong with PIXI's filter types
             unit.image.sprite.filters.push(colorOverlayFilter)
           }
+          playDefaultSpellSFX(card, prediction);
           Unit.resurrect(unit);
           unit.health = unit.healthMax * resStatAmount;
           unit.mana = unit.manaMax * resStatAmount;

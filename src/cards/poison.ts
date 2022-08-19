@@ -46,6 +46,7 @@ const spell: Spell = {
   card: {
     id,
     category: CardCategory.Curses,
+    sfx: 'poison',
     supportQuantity: true,
     manaCost: 20,
     healthCost: 0,

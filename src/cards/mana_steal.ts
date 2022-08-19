@@ -6,6 +6,7 @@ import { manaBlue } from '../graphics/ui/colors';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import { makeManaTrail } from '../graphics/Particles';
 import { CardCategory } from '../types/commonTypes';
+import { playDefaultSpellSFX } from './cardUtils';
 
 const id = 'mana_steal';
 const mana_stolen = 20;
@@ -14,6 +15,7 @@ const spell: Spell = {
   card: {
     id,
     category: CardCategory.Mana,
+    sfx: 'manaSteal',
     manaCost: 0,
     healthCost: health_burn,
     expenseScaling: 1,
@@ -35,6 +37,7 @@ Sacrifice some of own health to steal up to ${mana_stolen} mana from each target
         ])).then(() => {
           state.casterUnit.mana += unitManaBurnt;
           if (!prediction) {
+            playDefaultSpellSFX(card, prediction);
             // Animate
             if (state.casterUnit.image) {
               // Note: This uses the lower-level addPixiSpriteAnimated directly so that it can get a reference to the sprite

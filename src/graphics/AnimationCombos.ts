@@ -14,49 +14,52 @@ const combos: { [spritePath: string]: AnimationCombo } = {
         keyFrame: 11,
         primaryAnimation: 'units/playerAttackSmall',
         companionAnimations: ['units/playerAttackSmallMagic'],
-        SFX: 'playerAttackSmall'
+        SFX: 'playerCharacterSmallCast'
     },
     'playerAttackMedium0': {
         // At the moment the wizard's staff hits the ground
         keyFrame: 7,
         primaryAnimation: 'units/playerAttack',
         companionAnimations: ['units/playerAttackZap'],
-        SFX: 'cast',
+        SFX: 'playerCharacterMediumCast',
     },
     'playerAttackMedium1': {
         // At the moment the wizard's staff hits the ground
         keyFrame: 7,
         primaryAnimation: 'units/playerAttack',
         companionAnimations: ['units/playerAttackSingle'],
-        SFX: 'cast',
+        SFX: 'playerCharacterMediumCast',
     },
     'playerAttackMedium2': {
         // At the moment the wizard's staff hits the ground
         keyFrame: 7,
         primaryAnimation: 'units/playerAttack',
         companionAnimations: ['units/playerAttackBomb'],
-        SFX: 'cast',
+        SFX: 'playerCharacterMediumCast',
     },
     'playerAttackEpic': {
         keyFrame: 23,
         primaryAnimation: 'units/playerAttackEpic',
         companionAnimations: ['units/playerAttackEpicMagic'],
-        SFX: 'playerAttackEpic'
+        SFX: 'playerCharacterLargeCast'
     },
     'units/gruntAttack': {
         keyFrame: 6,
         primaryAnimation: 'units/gruntAttack',
-        companionAnimations: []
+        companionAnimations: [],
+        SFX: 'gruntAttack'
     },
     'units/lobberAttack': {
         keyFrame: 4,
         primaryAnimation: 'units/lobberAttack',
-        companionAnimations: []
+        companionAnimations: [],
+        SFX: 'lobberAttack'
     },
     'units/archerAttack': {
         keyFrame: 6,
         primaryAnimation: 'units/archerAttack',
-        companionAnimations: []
+        companionAnimations: [],
+        SFX: 'archerAttack'
     },
     'units/summonerAttack': {
         keyFrame: 8,

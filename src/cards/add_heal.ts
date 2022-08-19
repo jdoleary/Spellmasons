@@ -1,6 +1,7 @@
 import * as Unit from '../entity/Unit';
 import floatingText from '../graphics/FloatingText';
 import { CardCategory } from '../types/commonTypes';
+import { playDefaultSpellSFX } from './cardUtils';
 import { Spell } from './index';
 
 const id = 'heal';
@@ -10,6 +11,7 @@ const spell: Spell = {
   card: {
     id,
     category: CardCategory.Blessings,
+    sfx: 'heal',
     supportQuantity: true,
     manaCost: 15,
     healthCost: 0,
@@ -33,6 +35,7 @@ Stackable.
             });
           }
         }
+        playDefaultSpellSFX(card, prediction);
         Unit.takeDamage(unit, damage, undefined, underworld, prediction, state);
         await Unit.addOneOffAnimation(unit, 'spell-effects/potionPickup', {}, { loop: false, animationSpeed: 0.3 });
       }
