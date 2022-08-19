@@ -897,7 +897,7 @@ export default class Underworld {
       console.error('Could not find pickup with index', index);
     }
   }
-  spawnEnemy(id: string, coords: Vec2, isArmored: boolean) {
+  spawnEnemy(id: string, coords: Vec2) {
     const sourceUnit = allUnits[id];
     if (!sourceUnit) {
       console.error('Unit with id', id, 'does not exist.  Have you registered it in src/units/index.ts?');
@@ -921,15 +921,6 @@ export default class Underworld {
       this
     );
     unit.originalLife = true;
-
-    if (isArmored) {
-      unit.healthMax *= 2;
-      unit.health = unit.healthMax;
-      unit.damage *= 2;
-      // Add subsprite to show they are armored:
-      Image.addSubSprite(unit.image, 'heavy_armor');
-
-    }
 
   }
   testLevelData(): LevelData {
@@ -985,7 +976,7 @@ export default class Underworld {
       width,
       pickups: [],
       enemies: [
-        // { id: 'vampire', coord: { x: 64, y: 64 }, strength: 1, isArmored: false }
+        // { id: 'vampire', coord: { x: 64, y: 64 }, strength: 1 }
       ],
       validPlayerSpawnCoords: [{ x: 304, y: 280 }]
 
@@ -1063,8 +1054,7 @@ export default class Underworld {
       const coord = validSpawnCoords.splice(validSpawnCoordsIndex, 1)[0];
       if (coord) {
         const roll = randInt(this.random, 0, 100);
-        const isArmored = (roll < config.PERCENT_CHANCE_OF_HEAVY_UNIT);
-        levelData.enemies.push({ id, coord, isArmored })
+        levelData.enemies.push({ id, coord })
       }
     }
 
@@ -1324,7 +1314,7 @@ export default class Underworld {
       this.spawnPickup(p.index, p.coord);
     }
     for (let e of enemies) {
-      this.spawnEnemy(e.id, e.coord, e.isArmored);
+      this.spawnEnemy(e.id, e.coord);
     }
     // Show text in center of screen for the new level
     queueCenteredFloatingText(
@@ -2491,7 +2481,6 @@ export interface LevelData {
   enemies: {
     id: string,
     coord: Vec2,
-    isArmored: boolean
   }[];
   validPlayerSpawnCoords: Vec2[]
 }

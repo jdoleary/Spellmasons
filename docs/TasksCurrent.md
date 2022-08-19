@@ -8,9 +8,6 @@
 - "contageous" to "contaminate"
 - rework expand, it's predictions are often way off.  Maybe it would do better to just increase the radius of all spells?
 - replace spikes image with trap image
-- Change how strength scales so it's not dependent on level.  It would be confusing if unit health changes under you.
-    - just make more or different kinds of units
-- backlog: Remove isArmored
 - Spell Modifier effects visual representation
     - debilitate
     - blood curse
@@ -52,6 +49,7 @@
 - see cantwalk.png on desktop
 - bug: explosion radius text and some move lines left on the screen after cast was done
 - game slows down when there's a lot of blood on the screen and it's painint more
+- How does endgame scale now that strength doesn't depend on the levelIndex?
 ## Standalone server backlog bugs
 - Ensure standalone server doesn't bother running predictions
     - Unless the predictions determine their attacks from "perfect predictions" branch
