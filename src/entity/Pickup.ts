@@ -198,7 +198,7 @@ export const PICKUP_PORTAL_NAME = 'Portal';
 export const pickups: IPickupSource[] = [
   {
     imagePath: 'pickups/trap',
-    animationSpeed: -0.5,
+    animationSpeed: -config.DEFAULT_ANIMATION_SPEED,
     playerOnly: false,
     singleUse: true,
     name: PICKUP_SPIKES_NAME,
