@@ -466,7 +466,10 @@ export function playComboAnimation(unit: IUnit, key: string | undefined, keyMome
     }
     // Play sound effect
     if (combo.SFX && globalThis.playSFXKey) {
-      globalThis.playSFXKey(combo.SFX)
+      const key = combo.SFX[Math.floor(Math.random() * combo.SFX.length)];
+      if (key) {
+        globalThis.playSFXKey(key);
+      }
     }
     Image.changeSprite(unit.image, combo.primaryAnimation, unit.image.sprite.parent,
       // It is expected that the key moment will never be triggered here because if the animation

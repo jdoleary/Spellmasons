@@ -7,59 +7,59 @@ interface AnimationCombo {
     primaryAnimation: string;
     // OneOff animations that play with and belong to the primary animation.
     companionAnimations: string[];
-    SFX?: string;
+    SFX?: string[];
 }
 const combos: { [spritePath: string]: AnimationCombo } = {
     'playerAttackSmall': {
         keyFrame: 11,
         primaryAnimation: 'units/playerAttackSmall',
         companionAnimations: ['units/playerAttackSmallMagic'],
-        SFX: 'playerCharacterSmallCast'
+        SFX: ['playerCharacterSmallCast']
     },
     'playerAttackMedium0': {
         // At the moment the wizard's staff hits the ground
         keyFrame: 7,
         primaryAnimation: 'units/playerAttack',
         companionAnimations: ['units/playerAttackZap'],
-        SFX: 'playerCharacterMediumCast',
+        SFX: ['playerCharacterMediumCast', 'playerCharacterMediumCast2'],
     },
     'playerAttackMedium1': {
         // At the moment the wizard's staff hits the ground
         keyFrame: 7,
         primaryAnimation: 'units/playerAttack',
         companionAnimations: ['units/playerAttackSingle'],
-        SFX: 'playerCharacterMediumCast',
+        SFX: ['playerCharacterMediumCast', 'playerCharacterMediumCast2'],
     },
     'playerAttackMedium2': {
         // At the moment the wizard's staff hits the ground
         keyFrame: 7,
         primaryAnimation: 'units/playerAttack',
         companionAnimations: ['units/playerAttackBomb'],
-        SFX: 'playerCharacterMediumCast',
+        SFX: ['playerCharacterMediumCast', 'playerCharacterMediumCast2'],
     },
     'playerAttackEpic': {
         keyFrame: 23,
         primaryAnimation: 'units/playerAttackEpic',
         companionAnimations: ['units/playerAttackEpicMagic'],
-        SFX: 'playerCharacterLargeCast'
+        SFX: ['playerCharacterLargeCast', 'playerCharacterLargeCast2']
     },
     'units/gruntAttack': {
         keyFrame: 6,
         primaryAnimation: 'units/gruntAttack',
         companionAnimations: [],
-        SFX: 'gruntAttack'
+        SFX: ['gruntAttack']
     },
     'units/lobberAttack': {
         keyFrame: 4,
         primaryAnimation: 'units/lobberAttack',
         companionAnimations: [],
-        SFX: 'lobberAttack'
+        SFX: ['lobberAttack']
     },
     'units/archerAttack': {
         keyFrame: 6,
         primaryAnimation: 'units/archerAttack',
         companionAnimations: [],
-        SFX: 'archerAttack'
+        SFX: ['archerAttack']
     },
     'units/summonerAttack': {
         keyFrame: 8,
