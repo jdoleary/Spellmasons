@@ -2105,14 +2105,6 @@ export default class Underworld {
         }
       }
     }
-    // Now that cards are being cast, clear unit tints (which symbolized which units are targetted)
-    if (!prediction) {
-      // Note, the tints are only reset here for real non-prediction casts because prediction has much more
-      // complicated logic to change things under certain conditions (for example when a unit is out of range)
-      // and prediction logic needs to govern it's own tint clearing.  Without this "if" check, the tint would
-      // flicker.
-      clearUnitTints(this);
-    }
 
     // "quantity" is the number of identical cards cast in a row. Rather than casting the card sequentially
     // quantity allows the card to have a unique scaling effect when cast sequentially after itself.

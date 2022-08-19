@@ -6,6 +6,7 @@ import floatingText from '../FloatingText';
 import {
   clearSpellEffectProjection,
   clearTooltipSelection,
+  clearUnitTints,
   drawCircleUnderTarget,
   drawWalkRope,
   isOutOfBounds,
@@ -505,6 +506,8 @@ export function clickHandler(underworld: Underworld, e: MouseEvent) {
           cards: cardIds,
         });
         CardUI.clearSelectedCards(underworld);
+        // Now that the cast has begun, clear the prediction tint so it doesn't color the targeted units anymore
+        clearUnitTints(underworld);
       } else {
         console.error("Attempting to cast while globalThis.player is undefined");
       }
