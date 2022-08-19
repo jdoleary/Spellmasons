@@ -4,7 +4,6 @@
     - Test standalone server with friends
     - When does stand alone server remove a room?
 - Milestone | **Trailer-ready Alpha**
-    - Need sfx
     - Need spell effects
         - aoe
         - blood curse
@@ -12,7 +11,6 @@
         - pull/push
 - Milestone X | **Juice**
     - Hand craft liquid pool configurations so you don't get abberant floor combinations
-    - SFX
     - 0%: Liquid Splash Animation
         - Lava, blood, Water
     - 0%: UI

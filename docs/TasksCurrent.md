@@ -1,12 +1,12 @@
 ## Today
-- Integrate new SFX
+- uibug: Blue highlight stays too long after casting
+- Add sounds for decoy death, dragger death
 - For load, it doesn't call "add" on modifiers so if the modifier has any special init logic, it wont run, it just loads the modifier state (see poison for example)
 
 ## Tasks
 - Names above players in multiplayer
 - use card background for upgrades with different colors depending on rarity
 - rework expand, it's predictions are often way off.  Maybe it would do better to just increase the radius of all spells?
-- replace spikes image with trap image
 - Spell Modifier effects visual representation
     - debilitate
     - blood curse
