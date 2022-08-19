@@ -16,7 +16,9 @@ const unit: UnitSource = {
   },
   unitProps: {
     attackRange: 210,
-    bloodColor: bloodLobber
+    bloodColor: bloodLobber,
+    healthMax: 8,
+    damage: 2,
   },
   spawnParams: {
     probability: 40,

@@ -22,6 +22,7 @@ const unit: UnitSource = {
     walk: 'units/summonerWalk',
   },
   unitProps: {
+    healthMax: 6
   },
   spawnParams: {
     probability: 20,

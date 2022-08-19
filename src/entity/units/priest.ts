@@ -43,7 +43,8 @@ const unit: UnitSource = {
     subtype: UnitSubType.SUPPORT_CLASS,
   },
   unitProps: {
-    attackRange: 264
+    attackRange: 264,
+    healthMax: 2,
   },
   spawnParams: {
     probability: 20,

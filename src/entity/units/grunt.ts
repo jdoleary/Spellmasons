@@ -15,6 +15,7 @@ const unit: UnitSource = {
     attackRange: 10 + config.COLLISION_MESH_RADIUS * 2,
     manaMax: 0,
     healthMax: 2,
+    damage: 3,
   },
   spawnParams: {
     probability: 100,
