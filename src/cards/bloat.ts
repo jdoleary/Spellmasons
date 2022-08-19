@@ -14,7 +14,7 @@ import * as colors from '../graphics/ui/colors';
 
 const id = 'Bloat';
 const imageName = 'explode-on-death.png';
-const damage = 3;
+const damage = 1;
 const range = 140;
 function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity: number) {
   // First time setup
