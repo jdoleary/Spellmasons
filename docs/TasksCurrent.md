@@ -1,6 +1,4 @@
 ## Today
-- BUG: seed 0.5247303631545602 if you walk straight towards the trap you  get stuck
-    - on 'lava' biome specifically
 - Integrate new SFX
 - For load, it doesn't call "add" on modifiers so if the modifier has any special init logic, it wont run, it just loads the modifier state (see poison for example)
 

@@ -853,7 +853,7 @@ export default class Underworld {
       .filter(filterRemoveEmptyTileAdjacentPoly)
       .map(toLineSegments).flat()
 
-    const expandMagnitude = config.COLLISION_MESH_RADIUS * 0.6;
+    const expandMagnitude = config.COLLISION_MESH_RADIUS * 0.5;
 
     // liquid bounds block movement only under certain circumstances
     this.liquidPolygons = mergePolygon2s(obstacles.filter(o => o.material == Material.LIQUID).map(o => o.bounds));
@@ -868,7 +868,7 @@ export default class Underworld {
     // pathing polygons determines the area that units can move within
     // this.pathingPolygons = mergePolygon2s([...obstacles.map(o => o.bounds)]
 
-    this.pathingPolygons = mergePolygon2s([...getWallPolygons().map(p => expandPolygon(p, expandMagnitude))
+    this.pathingPolygons = mergePolygon2s([...getWallPolygons().map(p => expandPolygon(p, config.COLLISION_MESH_RADIUS * 0.4))
       .map(p => p.map(vec2 => ({ x: vec2.x, y: vec2.y - 10 })))
       , ...expandedLiquidPolygons
         // Move bounds up because center of units is not where they stand, and the bounds
