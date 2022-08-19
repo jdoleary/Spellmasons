@@ -255,13 +255,13 @@ export function syncronize(imageSerialized: IImageAnimatedSerialized, originalIm
   }
 
 }
-export function restoreSubsprites(image: IImageAnimated | undefined, subspriteIds: string[]) {
+export function restoreSubsprites(image: IImageAnimated | undefined, subspriteImageNames: string[]) {
   if (!image) {
     return;
   }
   // Re-add subsprites
   image.sprite.removeChildren();
-  for (let subSprite of subspriteIds) {
+  for (let subSprite of subspriteImageNames) {
     addSubSprite(image, subSprite);
   }
   // Re-add mask:
@@ -300,13 +300,13 @@ export function setPosition(image: IImageAnimated | undefined, pos: Vec2) {
   image.sprite.x = pos.x;
   image.sprite.y = pos.y;
 }
-export function addSubSprite(image: IImageAnimated | undefined, key: string): PIXI.AnimatedSprite | PIXI.Sprite | undefined {
+export function addSubSprite(image: IImageAnimated | undefined, imageName: string): PIXI.AnimatedSprite | PIXI.Sprite | undefined {
   if (!image) {
     return;
   }
   // Don't add more than one copy
-  if (!getSubspriteImagePaths(image).includes(key)) {
-    const subSpriteData = Subsprites[key];
+  if (!getSubspriteImagePaths(image).includes(imageName)) {
+    const subSpriteData = Subsprites[imageName];
     if (subSpriteData) {
       const sprite = subSpriteData.imageName.includes('.png')
         ? addPixiSprite(subSpriteData.imageName, image.sprite)
@@ -317,7 +317,7 @@ export function addSubSprite(image: IImageAnimated | undefined, key: string): PI
       sprite.scale.set(subSpriteData.scale.x, subSpriteData.scale.y);
       return sprite;
     } else {
-      console.error("Missing subsprite data for key", key)
+      console.error("Missing subsprite data for imageName", imageName)
     }
   }
   return;

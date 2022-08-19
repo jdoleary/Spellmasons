@@ -99,7 +99,7 @@ function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, qu
     // Add event
     unit.onDamageEvents.push(id);
     // Add subsprite image
-    Image.addSubSprite(unit.image, id);
+    Image.addSubSprite(unit.image, modifierImagePath);
   }
   modifier = unit.modifiers[id];
   if (modifier) {

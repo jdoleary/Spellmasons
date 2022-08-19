@@ -28,7 +28,6 @@ function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity:
       unit.onDeathEvents.push(id);
     }
     // Add subsprite image
-    // Image.addSubSprite(unit.image, id);
     if (unit.image) {
       // Visually "bloat" the image
       unit.image.sprite.scale.x = 1.5;

@@ -5,7 +5,7 @@ import { Spell } from './index';
 import { CardCategory, UnitType } from '../types/commonTypes';
 import * as config from '../config'
 import type Underworld from '../Underworld';
-import { animateSpell, playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
+import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
 
 export const id = 'freeze';
 const imageName = 'spell-effects/spellFreeze_still.png';
@@ -99,7 +99,7 @@ function add(unit: Unit.IUnit, underworld: Underworld, _prediction: boolean, qua
     }
 
     // Add subsprite image
-    Image.addSubSprite(unit.image, id);
+    Image.addSubSprite(unit.image, imageName);
     // Stop the animation
     unit.image?.sprite.stop();
     // Prevents units from being pushed out of the way and units
