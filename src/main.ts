@@ -49,7 +49,6 @@ globalThis.isHost = (pie: PieClient | IHostApp) => {
 }
 if (globalThis.devMode) {
   console.log('ADMIN: devMode = true! Character and upgrades will be picked automatically. Animations are sped up');
-  globalThis.monitorFPS?.();
 }
 
 setupAll();
