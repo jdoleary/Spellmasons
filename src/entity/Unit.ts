@@ -205,13 +205,18 @@ export function create(
 // sets all the properties that depend on strength
 export function adjustUnitStrength(unit: IUnit, strength: number) {
   unit.strength = strength;
-  unit.damage = Math.round(config.UNIT_BASE_DAMAGE * strength);
-  const health = Math.round(config.UNIT_BASE_HEALTH * strength);
-  unit.healthMax = health;
-  unit.health = health;
-  const mana = Math.round(config.UNIT_BASE_MANA * strength);
-  unit.manaMax = mana;
-  unit.mana = mana;
+  const source = allUnits[unit.unitSourceId];
+  if (source) {
+    unit.damage = Math.round(source.unitProps.damage !== undefined ? source.unitProps.damage : config.UNIT_BASE_DAMAGE * strength);
+    const health = Math.round(source.unitProps.healthMax !== undefined ? source.unitProps.healthMax : config.UNIT_BASE_HEALTH * strength);
+    unit.healthMax = health;
+    unit.health = health;
+    const mana = Math.round(source.unitProps.manaMax !== undefined ? source.unitProps.manaMax : config.UNIT_BASE_MANA * strength);
+    unit.manaMax = mana;
+    unit.mana = mana;
+  } else {
+    console.error('missing unit source');
+  }
 }
 function setupShaders(unit: IUnit) {
   if (unit.image) {

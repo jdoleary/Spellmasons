@@ -1,8 +1,6 @@
 ## Today
-- bug: archers do 2 damage, they should do 1
 - Add sounds for dragger death (poisoner alt)
 - For load, it doesn't call "add" on modifiers so if the modifier has any special init logic, it wont run, it just loads the modifier state (see poison for example)
-- bug: Grunts have mana
 
 ## Tasks
 - Names above players in multiplayer
