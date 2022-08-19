@@ -10,7 +10,7 @@
 - Spell Modifier effects visual representation
     - debilitate
     - blood curse
-- bug: A player that died in liquid when the level goes next will still have liquid filter on them.
+- TO VERIFY: bug: A player that died in liquid when the level goes next will still have liquid filter on them.
 - bug: After i ended a level on a racetimeout push I got to choose WAY too many upgrade spells
 - implement auto reconnect when `setView(View.Disconnected)`
 - If player joins mid enemy movement it will force reset them

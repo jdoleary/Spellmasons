@@ -156,6 +156,11 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
     Unit.resurrect(player.unit);
   }
 
+  // Remove liquid mask which may be attached if the player died in liquid
+  if (player.unit.image) {
+    Image.removeMask(player.unit.image);
+  }
+
   // Remove all modifiers between levels
   // This prevents players from scamming shields at the end of a level
   // on infinite mana
