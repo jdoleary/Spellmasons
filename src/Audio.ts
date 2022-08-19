@@ -8,6 +8,7 @@ export const sfx: { [key: string]: string } = {
     bloatExplosion: './sound/sfx-from-val/bloat.wav',
     clone: './sound/sfx-from-val/clone.wav',
     contageousSplat: './sound/sfx-from-val/contageous.wav',
+    decoyDeath: './sound/sfx/decoyDeath.wav',
     endTurn: './sound/sfx-from-val/end-turn.wav',
     "fallIntoLiquid-blood": './sound/sfx-from-val/fall-into-liquid-blood.wav',
     "fallIntoLiquid-lava": './sound/sfx-from-val/fall-into-liquid-lava.wav',

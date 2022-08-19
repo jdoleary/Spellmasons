@@ -1,6 +1,6 @@
 ## Today
-- uibug: Blue highlight stays too long after casting
-- Add sounds for decoy death, dragger death
+- bug: archers do 2 damage, they should do 1
+- Add sounds for dragger death (poisoner alt)
 - For load, it doesn't call "add" on modifiers so if the modifier has any special init logic, it wont run, it just loads the modifier state (see poison for example)
 - bug: Grunts have mana
 
