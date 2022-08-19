@@ -66,8 +66,8 @@ export function makeManaTrail(start: Vec2, target: Vec2) {
         particles.upgradeConfig({
             autoUpdate: true,
             alpha: {
-                start: 0.8,
-                end: 0.15
+                start: 1,
+                end: 0
             },
             scale: {
                 start: 1,
@@ -75,8 +75,8 @@ export function makeManaTrail(start: Vec2, target: Vec2) {
                 minimumScaleMultiplier: 1
             },
             color: {
-                start: "#2196F3",
-                end: "#e3f9ff"
+                start: "#e4f9ff",
+                end: "#3fcbff"
             },
             speed: {
                 start: 0,
@@ -90,7 +90,7 @@ export function makeManaTrail(start: Vec2, target: Vec2) {
             maxSpeed: 0,
             startRotation: {
                 min: 0,
-                max: 0
+                max: 360
             },
             noRotation: true,
             rotationSpeed: {
@@ -98,13 +98,13 @@ export function makeManaTrail(start: Vec2, target: Vec2) {
                 max: 0
             },
             lifetime: {
-                min: 0.3,
-                max: 0.3
+                min: 0.4,
+                max: 0.4
             },
             blendMode: "normal",
-            frequency: 0.0008,
+            frequency: 0.021,
             emitterLifetime: -1,
-            maxParticles: 400,
+            maxParticles: 30,
             pos: {
                 x: 0,
                 y: 0

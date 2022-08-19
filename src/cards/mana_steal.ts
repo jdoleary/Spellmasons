@@ -16,6 +16,7 @@ const spell: Spell = {
     id,
     category: CardCategory.Mana,
     sfx: 'manaSteal',
+    supportQuantity: true,
     manaCost: 0,
     healthCost: health_burn,
     expenseScaling: 1,
@@ -28,14 +29,16 @@ Sacrifice some of own health to steal up to ${mana_stolen} mana from each target
       const caster = state.casterUnit;
       let promises = [];
       for (let unit of state.targetedUnits) {
-        const unitManaBurnt = Math.min(unit.mana, mana_stolen);
-        unit.mana -= unitManaBurnt;
-        promises.push((prediction ? Promise.resolve() : Promise.all([
-          makeManaTrail(unit, caster),
-          makeManaTrail(unit, caster),
-          makeManaTrail(unit, caster)
-        ])).then(() => {
-          state.casterUnit.mana += unitManaBurnt;
+        const unitManaStolen = Math.min(unit.mana, mana_stolen * quantity);
+        unit.mana -= unitManaStolen;
+        const manaTrailPromises = [];
+        if (!prediction) {
+          for (let i = 0; i < quantity * 3; i++) {
+            manaTrailPromises.push(makeManaTrail(unit, caster));
+          }
+        }
+        promises.push((prediction ? Promise.resolve() : Promise.all(manaTrailPromises)).then(() => {
+          state.casterUnit.mana += unitManaStolen;
           if (!prediction) {
             playDefaultSpellSFX(card, prediction);
             // Animate
@@ -73,7 +76,7 @@ Sacrifice some of own health to steal up to ${mana_stolen} mana from each target
             explainManaOverfill();
             floatingText({
               coords: caster,
-              text: `+ ${unitManaBurnt} Mana`,
+              text: `+ ${unitManaStolen} Mana`,
               style: { fill: 'blue' }
             })
           }
