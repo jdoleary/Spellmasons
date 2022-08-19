@@ -14,6 +14,7 @@ import { manaBlue } from '../graphics/ui/colors';
 import Underworld from '../Underworld';
 
 export const PICKUP_RADIUS = config.SELECTABLE_RADIUS;
+type IPickupEffect = ({ unit, player, pickup, prediction }: { unit?: IUnit; player?: Player.IPlayer, pickup: IPickup, underworld: Underworld, prediction: boolean }) => boolean | undefined;
 export interface IPickup {
   x: number;
   y: number;
@@ -35,7 +36,7 @@ export interface IPickup {
   // returns true if the pickup did in fact trigger - this is useful
   // for preventing one use health potions from triggering if the unit
   // already has max health
-  effect: ({ unit, player, prediction }: { unit?: IUnit; player?: Player.IPlayer, underworld: Underworld, prediction: boolean }) => boolean | undefined;
+  effect: IPickupEffect
 }
 export function isPickup(maybePickup: any): maybePickup is IPickup {
   // Take a select few of the pickup only properties and ensure that the object has them
@@ -53,7 +54,7 @@ interface IPickupSource {
   turnsLeftToGrab?: number;
   scale: number;
   probability: number;
-  effect: ({ unit, player, prediction }: { unit?: IUnit; player?: Player.IPlayer, underworld: Underworld, prediction: boolean }) => boolean | undefined;
+  effect: IPickupEffect
 }
 export function copyForPredictionPickup(p: IPickup): IPickup {
   // Remove image and text since prediction pickups won't be rendered
@@ -181,7 +182,7 @@ export function triggerPickup(pickup: IPickup, unit: IUnit, underworld: Underwor
     // If pickup is playerOnly, do not trigger if a player is not the one triggering it
     return;
   }
-  const didTrigger = pickup.effect({ unit, player, underworld, prediction });
+  const didTrigger = pickup.effect({ unit, player, pickup, underworld, prediction });
   // Only remove pickup if it triggered AND is a singleUse pickup
   if (pickup.singleUse && didTrigger) {
     removePickup(pickup, underworld, prediction);
@@ -196,7 +197,7 @@ export const PICKUP_SPIKES_NAME = 'Spike Pit';
 export const PICKUP_PORTAL_NAME = 'Portal';
 export const pickups: IPickupSource[] = [
   {
-    imagePath: 'pickups/spikes',
+    imagePath: 'pickups/trap',
     animationSpeed: -0.5,
     playerOnly: false,
     singleUse: true,
@@ -204,8 +205,42 @@ export const pickups: IPickupSource[] = [
     probability: 70,
     scale: 1,
     description: `Deals ${spike_damage} to any unit (including NPCs) that touches it`,
-    effect: ({ unit, player, prediction, underworld }) => {
+    effect: ({ unit, player, pickup, prediction, underworld }) => {
       if (unit) {
+        // Play trap spring animation
+        if (!prediction) {
+          const animationSprite = addPixiSpriteAnimated('pickups/trapAttack', containerUnits, {
+            loop: false,
+            animationSpeed: 0.2,
+            onComplete: () => {
+              if (animationSprite?.parent) {
+                animationSprite.parent.removeChild(animationSprite);
+              }
+            }
+          });
+          if (animationSprite) {
+
+            animationSprite.anchor.set(0.5);
+            animationSprite.x = pickup.x;
+            animationSprite.y = pickup.y;
+          }
+          const animationSprite2 = addPixiSpriteAnimated('pickups/trapAttackMagic', containerUnits, {
+            loop: false,
+            animationSpeed: 0.2,
+            onComplete: () => {
+              if (animationSprite2) {
+
+                animationSprite2.parent.removeChild(animationSprite2);
+              }
+            }
+          });
+          if (animationSprite2) {
+            animationSprite2.anchor.set(0.5);
+            animationSprite2.x = pickup.x;
+            animationSprite2.y = pickup.y;
+          }
+
+        }
         takeDamage(unit, spike_damage, unit, underworld, prediction)
         return true;
       }
