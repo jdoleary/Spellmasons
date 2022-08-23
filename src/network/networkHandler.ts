@@ -11,6 +11,9 @@ import * as storage from '../storage';
 import * as config from '../config';
 import { allUnits } from '../entity/units';
 import { hostGiveClientGameState, typeGuardHostApp } from './networkUtil';
+import { skyBeam } from '../VisualEffects';
+import { tryFallInOutOfLiquid } from '../entity/Obstacle';
+import { cameraAutoFollow } from '../graphics/PixiUtils';
 
 const messageLog: any[] = [];
 export const NO_LOG_LIST = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
@@ -248,6 +251,20 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
         Player.enterPortal(fromPlayer, underworld);
       } else {
         console.error('Recieved ENTER_PORTAL message but "caster" is undefined')
+      }
+      break;
+    case MESSAGE_TYPES.SPAWN_PLAYER:
+      if (fromPlayer) {
+        Player.resetPlayerForNextLevel(fromPlayer, underworld);
+        fromPlayer.isSpawned = true;
+        Unit.setLocation(fromPlayer.unit, payload);
+        // Detect if player spawns in liquid
+        tryFallInOutOfLiquid(fromPlayer.unit, underworld, false);
+        // Animate effect of unit spawning from the sky
+        skyBeam(fromPlayer.unit);
+        cameraAutoFollow(true);
+      } else {
+        console.error('Cannot SPAWN_PLAYER, fromPlayer is undefined.')
       }
       break;
     case MESSAGE_TYPES.MOVE_PLAYER:

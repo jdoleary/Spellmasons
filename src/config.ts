@@ -36,7 +36,6 @@ export const START_CARDS_COUNT = 60;
 export const STARTING_CARD_COUNT = 3;
 export const OBSTACLE_SIZE = COLLISION_MESH_RADIUS * 2;
 export const MAX_PLAYERS = 8;
-export const SAFETY_DISTANCE_FROM_PLAYER_SPAWN = COLLISION_MESH_RADIUS * 10;
 export const NUMBER_OF_TOOLBAR_SLOTS = 10;
 
 // Mana

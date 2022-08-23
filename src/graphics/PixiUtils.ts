@@ -169,10 +169,6 @@ if (globalThis.pixi && containerUI && app && containerRadiusUI) {
   globalThis.addEventListener('load', () => {
     resizePixi();
   });
-  // Initialize with camera following player:
-  // It is important that doCameraAutoFollow is changed only
-  // in cameraAutoFollow so that the body's class can change with it.
-  cameraAutoFollow(true);
 
 }
 export function setAbyssColor(biome: Biome) {

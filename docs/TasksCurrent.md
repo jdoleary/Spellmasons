@@ -1,6 +1,6 @@
 ## Today
 - Player names and robe color config
-- Choose spawn at beginning of level
+- bug: Moving transparent player for spawn triggers pickups that you move over
 - steam page
     - redirect website
 - perks

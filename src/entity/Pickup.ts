@@ -182,6 +182,11 @@ export function triggerPickup(pickup: IPickup, unit: IUnit, underworld: Underwor
     // If pickup is playerOnly, do not trigger if a player is not the one triggering it
     return;
   }
+  if (player && !player.isSpawned) {
+    // Don't trigger pickups for players that haven't spawned yet
+    // (and are looking for a spawn my moving their "ghost self" around)
+    return;
+  }
   const didTrigger = pickup.effect({ unit, player, pickup, underworld, prediction });
   // Only remove pickup if it triggered AND is a singleUse pickup
   if (pickup.singleUse && didTrigger) {

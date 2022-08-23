@@ -131,7 +131,6 @@ export default class Underworld {
   // know when they've desynced.  Only used for syncronous message processing
   // since only the syncronous messages affect gamestate.
   processedMessageCount: number = 0;
-  validPlayerSpawnCoords: Vec2[] = [];
   cardDropsDropped: number = 0;
   enemiesKilled: number = 0;
   // Not to be synced between clients but should belong to the underworld as they are unique
@@ -978,7 +977,6 @@ export default class Underworld {
       enemies: [
         // { id: 'vampire', coord: { x: 64, y: 64 }, strength: 1 }
       ],
-      validPlayerSpawnCoords: [{ x: 304, y: 280 }]
 
     }
 
@@ -1017,16 +1015,11 @@ export default class Underworld {
       width,
       pickups: [],
       enemies: [],
-      validPlayerSpawnCoords: []
     };
     const finalTileImages = makeFinalTileImages(biome);
     let validSpawnCoords: Vec2[] = tiles.flatMap(t => t && t.image == finalTileImages.all_ground ? [t] : []);
     // flatMap removes undefineds
     levelData.imageOnlyTiles = tiles.flatMap(x => x == undefined ? [] : [x]);
-
-    levelData.validPlayerSpawnCoords = validSpawnCoords.filter(c => c.x <= config.OBSTACLE_SIZE * 2).slice(0, 8);
-    // Remove spawns that are too close to player spawns
-    validSpawnCoords = validSpawnCoords.filter(spawn => levelData.validPlayerSpawnCoords.every(ps => math.distance(spawn, ps) >= config.SAFETY_DISTANCE_FROM_PLAYER_SPAWN));
 
     // TODO numberOfPickups should scale with level size
     const numberOfPickups = 4;
@@ -1058,10 +1051,6 @@ export default class Underworld {
       }
     }
 
-    if (levelData.validPlayerSpawnCoords.length < this.players.length) {
-      console.log('Bad level seed, not enough valid spawns for players, regenerating', levelData.validPlayerSpawnCoords.length, this.players.length);
-      return;
-    }
     return levelData;
 
   }
@@ -1280,7 +1269,7 @@ export default class Underworld {
   postSetupLevel() {
     // Set the first turn phase
     this.broadcastTurnPhase(turn_phase.PlayerTurns);
-    cameraAutoFollow(true);
+    cameraAutoFollow(false);
     document.body?.classList.toggle('loading', false);
     setView(View.Game);
   }
@@ -1293,7 +1282,7 @@ export default class Underworld {
     // Clean up the previous level
     this.cleanUpLevel();
 
-    const { levelIndex, biome, limits, liquid, imageOnlyTiles, pickups, enemies, obstacles, validPlayerSpawnCoords } = levelData;
+    const { levelIndex, biome, limits, liquid, imageOnlyTiles, pickups, enemies, obstacles } = levelData;
     this.levelIndex = levelIndex;
     this.limits = limits;
 
@@ -1321,9 +1310,6 @@ export default class Underworld {
       `Level ${this.levelIndex + 1}`,
       'white'
     );
-    // validPlayerSpawnCoords must be set before resetting the player
-    // so the player has coords to spawn into
-    this.validPlayerSpawnCoords = validPlayerSpawnCoords;
     for (let player of this.players) {
       Player.resetPlayerForNextLevel(player, this);
     }
@@ -1392,6 +1378,12 @@ export default class Underworld {
         Pickup.triggerPickup(pu, unit, this, prediction);
       }
     }
+  }
+  isCoordOnWallTile(coord: Vec2): boolean {
+    const cellX = Math.round(coord.x / config.OBSTACLE_SIZE);
+    const cellY = Math.round(coord.y / config.OBSTACLE_SIZE);
+    const originalTile = globalThis.map ? globalThis.map.tiles[vec2ToOneDimentionIndexPreventWrap({ x: cellX, y: cellY }, globalThis.map.width)] : undefined;
+    return originalTile && (originalTile.image == '' || originalTile.image.includes('wall'));
   }
   getMousePos(): Vec2 {
     if (!(app && containerBoard)) {
@@ -2286,7 +2278,6 @@ export default class Underworld {
         // since all clients should always have a player associated
         console.log(`Setup: Create a Player instance for ${clientId}`)
         const p = Player.create(clientId, this);
-        Player.resetPlayerForNextLevel(p, this);
         newlyCreatedPlayers.push(p);
       }
     }
@@ -2476,5 +2467,4 @@ export interface LevelData {
     id: string,
     coord: Vec2,
   }[];
-  validPlayerSpawnCoords: Vec2[]
 }

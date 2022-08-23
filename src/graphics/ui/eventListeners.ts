@@ -15,20 +15,18 @@ import {
 } from '../PlanningView';
 import { toggleMenu, View } from '../../views';
 import * as config from '../../config';
-import { app, cameraAutoFollow, getCamera, moveCamera, toggleHUD } from '../PixiUtils';
+import { cameraAutoFollow, getCamera, moveCamera, toggleHUD } from '../PixiUtils';
 import { getAdjustedCastTarget, isOutOfRange } from '../../PlayerUtils';
-import { vec2ToOneDimentionIndex, vec2ToOneDimentionIndexPreventWrap } from '../../jmath/ArrayUtil';
+import { vec2ToOneDimentionIndexPreventWrap } from '../../jmath/ArrayUtil';
 import * as Vec from '../../jmath/Vec';
 import { Vec2 } from '../../jmath/Vec';
-import { distance, getCoordsAtDistanceTowardsTarget } from '../../jmath/math';
-import * as colors from '../../graphics/ui/colors';
-import { pointsEveryXDistanceAlongPath } from '../../jmath/Pathfinding';
 import Underworld from '../../Underworld';
 import { toLineSegments } from '../../jmath/Polygon2';
 import { closestLineSegmentIntersection } from '../../jmath/lineSegment';
 import { allUnits } from '../../entity/units';
 import { Faction } from '../../types/commonTypes';
 import * as Freeze from '../../cards/freeze';
+import { collideWithLineSegments } from '../../jmath/moveWithCollision';
 
 export const keyDown = {
   f: false,
@@ -237,6 +235,21 @@ export function mouseMove(underworld: Underworld, e?: MouseEvent) {
   if (!underworld) {
     return
   }
+  const mouseTarget = underworld.getMousePos();
+  if (globalThis.player && !globalThis.player.isSpawned) {
+    const spawnPoint = { ...mouseTarget, radius: config.COLLISION_MESH_RADIUS }
+    collideWithLineSegments(spawnPoint, underworld.walls, underworld);
+    if (globalThis.player.unit.image) {
+      globalThis.player.unit.image.sprite.alpha = 0.5;
+      if (underworld.isCoordOnWallTile(spawnPoint) || isOutOfBounds(spawnPoint, underworld)) {
+        globalThis.player.unit.x = NaN;
+        globalThis.player.unit.y = NaN;
+      } else {
+        globalThis.player.unit.x = spawnPoint.x;
+        globalThis.player.unit.y = spawnPoint.y;
+      }
+    }
+  }
 
   if (globalThis.MMBDown && e) {
     const { movementX, movementY } = e;
@@ -244,7 +257,6 @@ export function mouseMove(underworld: Underworld, e?: MouseEvent) {
     cameraAutoFollow(false);
     moveCamera(-movementX / zoom, -movementY / zoom);
   }
-  const mouseTarget = underworld.getMousePos();
 
   // RMB
   if (globalThis.player) {
@@ -410,13 +422,31 @@ export function clickHandler(underworld: Underworld, e: MouseEvent) {
     })
     return;
   }
+  // Get current client's player
+  const selfPlayer = globalThis.player;
+  if (selfPlayer && !selfPlayer.isSpawned) {
+    const spawnPoint = { ...mousePos, radius: config.COLLISION_MESH_RADIUS }
+    collideWithLineSegments(spawnPoint, underworld.walls, underworld);
+    if (underworld.isCoordOnWallTile(spawnPoint)) {
+      floatingText({
+        coords: mousePos,
+        text: 'Invalid Spawn Location'
+      })
+    } else {
+      // Spawn player:
+      underworld.pie.sendData({
+        type: MESSAGE_TYPES.SPAWN_PLAYER,
+        x: spawnPoint.x,
+        y: spawnPoint.y,
+      });
+      return;
+    }
+  }
 
   // If a spell exists (based on the combination of cards selected)...
   if (CardUI.areAnyCardsSelected()) {
     // Only allow casting in the proper phase and on player's turn only
     if (underworld.isMyTurn()) {
-      // Get current client's player
-      const selfPlayer = globalThis.player;
       // If the player casting is the current client player
       if (selfPlayer) {
         // cast the spell
@@ -473,10 +503,7 @@ export function clickHandler(underworld: Underworld, e: MouseEvent) {
         }
 
         // Prevent casting on wall
-        const cellX = Math.round(mousePos.x / config.OBSTACLE_SIZE);
-        const cellY = Math.round(mousePos.y / config.OBSTACLE_SIZE);
-        const originalTile = globalThis.map ? globalThis.map.tiles[vec2ToOneDimentionIndexPreventWrap({ x: cellX, y: cellY }, globalThis.map.width)] : undefined;
-        if (originalTile && (originalTile.image == '' || originalTile.image.includes('wall'))) {
+        if (underworld.isCoordOnWallTile(mousePos)) {
           // Deny casting on a wall tile unless there is a target (which may overlap the wall)
           // 'allowNonUnitTarget' is specifically excluded from this check so that nonUnitTarget casts
           // such as summon_decoy may not be cast on a wall

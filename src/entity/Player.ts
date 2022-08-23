@@ -6,11 +6,9 @@ import * as CardUI from '../graphics/ui/CardUI';
 import * as Cards from '../cards';
 import * as config from '../config';
 import { Faction, UnitType } from '../types/commonTypes';
-import { randInt } from '../jmath/rand';
 import { clearTooltipSelection } from '../graphics/PlanningView';
 import defaultPlayerUnit from './units/playerUnit';
 import { MESSAGE_TYPES } from '../types/MessageTypes';
-import { jitter } from '../jmath/Vec';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import { playerCastAnimationColor, playerCoatPrimary, playerCoatSecondary, robeColors } from '../graphics/ui/colors';
 import Underworld from '../Underworld';
@@ -34,6 +32,7 @@ export interface IPlayer {
   color: number;
   unit: Unit.IUnit;
   inPortal: boolean;
+  isSpawned: boolean;
   cards: string[];
   inventory: string[];
   // The number of cards a player's hand is populated with at the start of a level
@@ -68,7 +67,8 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
       undefined,
       underworld
     ),
-    inPortal: false,
+    inPortal: true,
+    isSpawned: false,
     cards: Array(config.NUMBER_OF_TOOLBAR_SLOTS).fill(''),
     inventory: [],
     cardUsageCounts: {},
@@ -79,7 +79,6 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
 
   // Player units get full mana every turn
   player.unit.manaPerTurn = player.unit.manaMax;
-  player.inPortal = true;
   // Player units shouldn't be pushed around
   // during collisions while other units move
   player.unit.immovable = true;
@@ -149,6 +148,8 @@ function setPlayerRobeColor(player: IPlayer, color: number) {
 export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld) {
   // Player is no longer in portal
   player.inPortal = false;
+  // Set the player so they can choose their next spawn
+  player.isSpawned = false;
 
   // Make unit visible
   Image.show(player.unit.image);
@@ -156,9 +157,12 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
     Unit.resurrect(player.unit);
   }
 
-  // Remove liquid mask which may be attached if the player died in liquid
   if (player.unit.image) {
+    // Remove liquid mask which may be attached if the player died in liquid
     Image.removeMask(player.unit.image);
+    // Restore player alpha which was 0.5 while player
+    // was looking for a spawn point
+    player.unit.image.sprite.alpha = 1.0;
   }
 
   // Remove all modifiers between levels
@@ -173,19 +177,6 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
   player.unit.mana = player.unit.manaMax;
   player.unit.health = player.unit.healthMax;
   player.unit.stamina = player.unit.staminaMax;
-  if (underworld.validPlayerSpawnCoords.length > 0) {
-    const index = randInt(underworld.random, 0, underworld.validPlayerSpawnCoords.length - 1);
-    console.log('Choose spawn', index, 'of', underworld.validPlayerSpawnCoords.length);
-    const spawnCoords = underworld.validPlayerSpawnCoords[index];
-    if (spawnCoords) {
-      // jitter ensures that units don't perfectly overlap
-      Unit.setLocation(player.unit, jitter(spawnCoords, player.unit.radius, underworld.random));
-    } else {
-      console.log('Level: cannot find valid spawn for player unit');
-    }
-  } else {
-    console.log('Level: cannot find valid spawn for player unit');
-  }
 
   Unit.returnToDefaultSprite(player.unit);
 }
