@@ -277,14 +277,18 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
       break;
     case MESSAGE_TYPES.SPAWN_PLAYER:
       if (fromPlayer) {
-        Player.resetPlayerForNextLevel(fromPlayer, underworld);
-        fromPlayer.isSpawned = true;
-        Unit.setLocation(fromPlayer.unit, payload);
-        // Detect if player spawns in liquid
-        tryFallInOutOfLiquid(fromPlayer.unit, underworld, false);
-        // Animate effect of unit spawning from the sky
-        skyBeam(fromPlayer.unit);
-        cameraAutoFollow(true);
+        if (!(isNaN(payload.x) && isNaN(payload.y))) {
+          Player.resetPlayerForNextLevel(fromPlayer, underworld);
+          fromPlayer.isSpawned = true;
+          Unit.setLocation(fromPlayer.unit, payload);
+          // Detect if player spawns in liquid
+          tryFallInOutOfLiquid(fromPlayer.unit, underworld, false);
+          // Animate effect of unit spawning from the sky
+          skyBeam(fromPlayer.unit);
+          cameraAutoFollow(true);
+        } else {
+          console.error('Cannot spawn player at NaN')
+        }
       } else {
         console.error('Cannot SPAWN_PLAYER, fromPlayer is undefined.')
       }
