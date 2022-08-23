@@ -1,7 +1,6 @@
 ## Today
 - Player names and robe color config
 - Choose spawn at beginning of level
-- tint pickups
 - steam page
     - redirect website
 - perks

@@ -266,11 +266,16 @@ export function updateManaCostUI(underworld: Underworld): CardCost {
   }
   return { manaCost: 0, healthCost: 0 };
 }
-export function clearUnitTints(underworld: Underworld) {
+export function clearTints(underworld: Underworld) {
   // Reset tints before setting new tints to show targeting
   underworld.units.forEach(unit => {
     if (unit.image) {
       unit.image.sprite.tint = 0xFFFFFF;
+    }
+  });
+  underworld.pickups.forEach(pickup => {
+    if (pickup.image) {
+      pickup.image.sprite.tint = 0xFFFFFF;
     }
   });
 }
@@ -293,7 +298,20 @@ async function showCastCardsPrediction(underworld: Underworld, target: Vec2, cas
       outOfRange
     );
     // Clears unit tints in preparation for setting new tints to symbolize which units are targeted by spell
-    clearUnitTints(underworld);
+    clearTints(underworld);
+    // Show pickups as targeted with tint
+    for (let targetedPickup of effectState.targetedPickups) {
+      // Convert prediction pickup's associated real pickup
+      const realPickup = underworld.pickups.find(p => p.x == targetedPickup.x && p.y == targetedPickup.y && p.name == targetedPickup.name);
+      // don't change tint if HUD is hidden
+      if (realPickup && realPickup.image && !globalThis.isHUDHidden) {
+        if (outOfRange) {
+          realPickup.image.sprite.tint = 0xaaaaaa;
+        } else {
+          realPickup.image.sprite.tint = 0xff5555;
+        }
+      }
+    }
     // Show units as targeted with tint
     for (let targetedUnit of effectState.targetedUnits) {
       // Convert prediction unit's associated real unit
@@ -362,7 +380,7 @@ export async function runPredictions(underworld: Underworld) {
         await showCastCardsPrediction(underworld, target, casterUnit, cardIds, outOfRange);
       } else {
         // If there are no cards ready to cast, clear unit tints (which symbolize units that are targeted by the active spell)
-        clearUnitTints(underworld);
+        clearTints(underworld);
       }
       // Send this client's intentions to the other clients so they can see what they're thinking
       underworld.sendPlayerThinking({ target, cardIds })

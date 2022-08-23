@@ -43,7 +43,7 @@ import type { Vec2 } from "./jmath/Vec";
 import * as Vec from "./jmath/Vec";
 import Events from './Events';
 import { allUnits } from './entity/units';
-import { getUIBarProps, clearUnitTints, updateManaCostUI, updatePlanningView } from './graphics/PlanningView';
+import { getUIBarProps, clearTints, updateManaCostUI, updatePlanningView } from './graphics/PlanningView';
 import { chooseObjectWithProbability, prng, randInt, SeedrandomState } from './jmath/rand';
 import { calculateCost } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle, closestLineSegmentIntersection } from './jmath/lineSegment';
