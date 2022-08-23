@@ -1,14 +1,31 @@
 ## Today
+- Player names and robe color config
+- Choose spawn at beginning of level
+- tint pickups
+- steam page
+    - redirect website
+- perks
+
+---
+- sound effect lags for 'freeze'
 - Add sounds for dragger death (poisoner alt)
-- For load, it doesn't call "add" on modifiers so if the modifier has any special init logic, it wont run, it just loads the modifier state (see poison for example)
+- **important** For load, it doesn't call "add" on modifiers so if the modifier has any special init logic, it wont run, it just loads the modifier state (see poison for example)
 - prediction was wrong where i had a bloat explode kill another guy with bloat and it showed the 2nd bloat would be at the end of the push but it was at the beginning
     -it's like the damage doesn't wait for push to be done so it triggers the bloat early
 - lobbers should have more hp
 - archer chose me over decoy that was closer???
 - when I, with 4 health, predict taking damage from two bloat explosions, I die but it only predicts -3 health
 
+## Tuesday
+- Big ideas:
+    - **Important** You get to choose where you spawn in on each level
+        - this dramatically reduces doom state
+    - Add rocks to block archers and deal damage when pushed
+    - Names above players in multiplayer and colors, save on esc menu
+    - What if it's not a roguelike? What if it's more like WormsTD
+        - I like roguelike for replayability but I find that the early game can be boring and there's not much variety.
+
 ## Tasks
-- Names above players in multiplayer
 - use card background for upgrades with different colors depending on rarity
 - rework expand, it's predictions are often way off.  Maybe it would do better to just increase the radius of all spells?
 - Spell Modifier effects visual representation

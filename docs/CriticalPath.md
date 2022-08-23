@@ -1,8 +1,8 @@
 # Critical Path
 - Milestone | **Standalone Server Playtest**
     - (fixed?) stand alone server goes into infinite loop when all players leave
-    - Test standalone server with friends
     - When does stand alone server remove a room?
+    - Test standalone server with friends
 - Milestone X | **Juice**
     - Hand craft liquid pool configurations so you don't get abberant floor combinations
     - UI
@@ -28,7 +28,6 @@
     - Send out to testers
     - [Tutorial](https://www.youtube.com/watch?v=-GV814cWiAw)
 - Milestone | **Miscellaneous**
-    - Use Che's mana steal config
     - Need spell effects
         - aoe
         - blood curse
@@ -52,6 +51,7 @@
         - Turn time
         - Pvp mode (more factions)
     - Rework "Expand" / AOE so that if affects the radius of any radius using spell (e.g. Bloat)
+    - A "Long Shot" Spell that increases your cast range
     - More enemies
         - Color enemies different colors and give them different behavior. For example, a blue "poisoner" could be like the "smoker" from left4dead
 
