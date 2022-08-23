@@ -3,7 +3,7 @@ import * as config from '../config';
 import * as Image from '../graphics/Image';
 import * as math from '../jmath/math';
 import { distance } from '../jmath/math';
-import { addPixiSpriteAnimated, containerDoodads, containerUnits, PixiSpriteOptions, startBloodParticleSplatter } from '../graphics/PixiUtils';
+import { addPixiSpriteAnimated, containerDoodads, containerUnits, PixiSpriteOptions, startBloodParticleSplatter, updateNameText } from '../graphics/PixiUtils';
 import { UnitSubType, UnitType, Faction } from '../types/commonTypes';
 import type { Vec2 } from '../jmath/Vec';
 import * as Vec from '../jmath/Vec';
@@ -827,8 +827,11 @@ export function orient(unit: IUnit, faceTarget: Vec2) {
       unit.image.sprite.scale.x = -Math.abs(unit.image.sprite.scale.x);
     } else {
       unit.image.sprite.scale.x = Math.abs(unit.image.sprite.scale.x);
-
     }
+    // Update the orientation of the possible player's nametext so that it doesn't display backwards
+    // @ts-ignore jid is a custom identifier to id the text element used for the player name
+    const nameText = unit.image.sprite.children.find(c => c.jid == config.NAME_TEXT_ID) as undefined | PIXI.Text;
+    updateNameText(nameText, undefined);
   }
 
 }

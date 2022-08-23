@@ -391,14 +391,24 @@ export function updateCameraPosition(underworld: Underworld) {
     if (p.unit.image) {
       // @ts-ignore jid is a custom identifier to id the text element used for the player name
       const nameText = p.unit.image.sprite.children.find(c => c.jid === config.NAME_TEXT_ID) as undefined | PIXI.Text
-      if (nameText) {
-        // Keep the text the same size regardless of zoom
-        nameText.scale.set(1 / zoom);
-        // Adjust the text position so it stays relatively the same distance above the player head
-        nameText.y = -config.COLLISION_MESH_RADIUS - config.NAME_TEXT_Y_OFFSET / zoom;
-      }
+      updateNameText(nameText, zoom);
     }
   })
+}
+export function updateNameText(nameText?: PIXI.Text, zoom?: number) {
+  if (nameText) {
+    // Keep the text the same size regardless of zoom
+    if (zoom) {
+      nameText.scale.set(1 / zoom);
+      // Adjust the text position so it stays relatively the same distance above the player head
+      nameText.y = -config.COLLISION_MESH_RADIUS - config.NAME_TEXT_Y_OFFSET / zoom;
+    }
+    if (nameText.parent.scale.x < 0) {
+      nameText.scale.x = -Math.abs(nameText.scale.x);
+    } else {
+      nameText.scale.x = Math.abs(nameText.scale.x);
+    }
+  }
 
 }
 // PIXI textures
