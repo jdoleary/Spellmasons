@@ -1,4 +1,5 @@
 import type { OnDataArgs } from '@websocketpie/client';
+import type * as PIXI from 'pixi.js';
 
 import { MESSAGE_TYPES } from '../types/MessageTypes';
 import floatingText from '../graphics/FloatingText';
@@ -13,7 +14,7 @@ import { allUnits } from '../entity/units';
 import { hostGiveClientGameState, typeGuardHostApp } from './networkUtil';
 import { skyBeam } from '../VisualEffects';
 import { tryFallInOutOfLiquid } from '../entity/Obstacle';
-import { cameraAutoFollow } from '../graphics/PixiUtils';
+import { cameraAutoFollow, PixiSpriteOptions } from '../graphics/PixiUtils';
 
 const messageLog: any[] = [];
 export const NO_LOG_LIST = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
@@ -251,6 +252,27 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
         Player.enterPortal(fromPlayer, underworld);
       } else {
         console.error('Recieved ENTER_PORTAL message but "caster" is undefined')
+      }
+      break;
+    case MESSAGE_TYPES.PLAYER_CONFIG:
+      const { color, name } = payload;
+      if (fromPlayer) {
+        fromPlayer.name = name;
+        if (globalThis.pixi && fromPlayer.unit.image) {
+          // @ts-ignore jid is a custom identifier to id the text element used for the player name
+          const nameText = fromPlayer.unit.image.sprite.children.find(child => child.jid == config.NAME_TEXT_ID) as PIXI.Text || new globalThis.pixi.Text();
+          // @ts-ignore jid is a custom identifier to id the text element used for the player name
+          nameText.jid = config.NAME_TEXT_ID;
+          fromPlayer.unit.image.sprite.addChild(nameText);
+          nameText.text = fromPlayer.name;
+          nameText.y = -config.COLLISION_MESH_RADIUS - config.NAME_TEXT_Y_OFFSET;
+          nameText.style = { fill: 'white', fontSize: config.NAME_TEXT_DEFAULT_SIZE };
+          nameText.anchor.x = 0.5;
+          nameText.anchor.y = 0.5;
+        }
+        Player.setPlayerRobeColor(fromPlayer, color);
+      } else {
+        console.error('Cannot PLAYER_CONFIG, no associated player')
       }
       break;
     case MESSAGE_TYPES.SPAWN_PLAYER:

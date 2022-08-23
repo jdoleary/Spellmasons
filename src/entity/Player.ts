@@ -23,13 +23,15 @@ export interface CardUsage {
   [cardId: string]: number
 }
 export interface IPlayer {
+  // Multiplayer "gamer handle"
+  name: string;
+  // color of robe
+  color: number;
   ready: boolean;
   endedTurn: boolean;
   // wsPie id
   clientId: string;
   clientConnected: boolean;
-  // color of robe
-  color: number;
   unit: Unit.IUnit;
   inPortal: boolean;
   isSpawned: boolean;
@@ -47,6 +49,7 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
   const notAlreadyUsedColors = robeColors.filter(c => !underworld.players.map(p => p.color).includes(c));
   const color = notAlreadyUsedColors[Math.floor(Math.random() * notAlreadyUsedColors.length)] || 0xef476f;
   const player: IPlayer = {
+    name: '',
     ready: false,
     endedTurn: false,
     clientId,
@@ -113,7 +116,8 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
 // there should be a better way of syncing filters.  This is a footgun if called
 // more than once on a player object.  As of this writing it is only called on new player objects
 // Proceed with caution.
-function setPlayerRobeColor(player: IPlayer, color: number) {
+// color: a color in hex such as 0xff0000
+export function setPlayerRobeColor(player: IPlayer, color: number) {
   // Add player-specific shaders
   // regardless of if the image sprite changes to a new animation or not.
   if (player.unit.image && player.unit.image.sprite.filters) {
@@ -128,18 +132,24 @@ function setPlayerRobeColor(player: IPlayer, color: number) {
 
     const colorSecondary = parseInt(`0x${r_secondary.toString(16)}${g_secondary.toString(16)}${b_secondary.toString(16)}`, 16);
     if (color && colorSecondary) {
-      player.unit.image.sprite.filters.push(
-        // @ts-ignore for some reason ts is flagging this as an error but it works fine
-        // in pixi.
-        new MultiColorReplaceFilter(
-          [
-            [playerCoatPrimary, color],
-            [playerCoatSecondary, colorSecondary],
-            [playerCastAnimationColor, color],
-          ],
-          0.1
-        )
+      // @ts-ignore for some reason ts is flagging this as an error but it works fine
+      // in pixi.
+      const robeColorFilter = new MultiColorReplaceFilter(
+        [
+          [playerCoatPrimary, color],
+          [playerCoatSecondary, colorSecondary],
+          [playerCastAnimationColor, color],
+        ],
+        0.1
       );
+      const ROBE_COLOR_FILTER_ID = 'robeColorFilter';
+      // @ts-ignore: jid is a custom identifier to differentiate this filter
+      robeColorFilter.jid = ROBE_COLOR_FILTER_ID;
+      // Remove previous robeColorFilters
+      // @ts-ignore: jid is a custom identifier to differentiate this filter
+      player.unit.image.sprite.filters = player.unit.image.sprite.filters.filter(f => f.jid != ROBE_COLOR_FILTER_ID);
+      // Add new robe color filter
+      player.unit.image.sprite.filters.push(robeColorFilter);
     }
   }
 

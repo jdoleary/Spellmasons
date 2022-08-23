@@ -52,3 +52,7 @@ export const ENEMY_ENCOUNTERED_STORAGE_KEY = 'enemyEncountered';
 export const DEFAULT_ANIMATION_SPEED = 0.132;
 
 export const CAST_RANGE_COYOTE_MARGIN = 50;
+// Used to identify the PIXI.Text element on Player units the show their name
+export const NAME_TEXT_ID = 'nameText';
+export const NAME_TEXT_DEFAULT_SIZE = 16;
+export const NAME_TEXT_Y_OFFSET = 20
