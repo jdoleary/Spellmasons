@@ -1,5 +1,4 @@
 ## Today
-- Player names and robe color config
 - steam page
     - redirect website
 - perks

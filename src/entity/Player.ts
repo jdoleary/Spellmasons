@@ -46,8 +46,6 @@ export interface IPlayer {
 }
 export function create(clientId: string, underworld: Underworld): IPlayer {
   const userSource = defaultPlayerUnit;
-  const notAlreadyUsedColors = robeColors.filter(c => !underworld.players.map(p => p.color).includes(c));
-  const color = notAlreadyUsedColors[Math.floor(Math.random() * notAlreadyUsedColors.length)] || 0xef476f;
   const player: IPlayer = {
     name: '',
     ready: false,
@@ -57,7 +55,7 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
     // should only be handled in one place and tied directly
     // to pie.clients
     clientConnected: false,
-    color,
+    color: 0xffffff,
     unit: Unit.create(
       userSource.id,
       NaN,
@@ -78,7 +76,6 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
     cardsAmount: config.START_CARDS_COUNT,
     upgrades: [],
   };
-  setPlayerRobeColor(player, color);
 
   // Player units get full mana every turn
   player.unit.manaPerTurn = player.unit.manaMax;
@@ -117,7 +114,12 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
 // more than once on a player object.  As of this writing it is only called on new player objects
 // Proceed with caution.
 // color: a color in hex such as 0xff0000
-export function setPlayerRobeColor(player: IPlayer, color: number) {
+export function setPlayerRobeColor(player: IPlayer, color: number | string) {
+  // Protect against hex number as string coming in from storage
+  if (typeof color === 'string') {
+    color = parseInt(color);
+  }
+  player.color = color;
   // Add player-specific shaders
   // regardless of if the image sprite changes to a new animation or not.
   if (player.unit.image && player.unit.image.sprite.filters) {

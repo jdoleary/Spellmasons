@@ -4,17 +4,30 @@ import * as Player from '../entity/Player';
 import * as Unit from '../entity/Unit';
 import Underworld from '../Underworld';
 import type PieClient from '@websocketpie/client';
+import * as storage from '../storage';
+import * as config from '../config';
 
 // Copied from PieClient.d.ts so as to not have to import PieClient
 export interface ClientPresenceChangedArgs {
     type: string;
     clients: string[];
+    clientThatChanged: string;
     time: number;
 }
 export function onClientPresenceChanged(o: ClientPresenceChangedArgs, underworld: Underworld) {
     console.log('clientPresenceChanged', o);
     // Ensure each client corresponds with a Player instance
     underworld.ensureAllClientsHaveAssociatedPlayers(o.clients);
+    if (o.clientThatChanged == globalThis.player?.clientId) {
+        const color = storage.get(config.STORAGE_ID_PLAYER_COLOR);
+        const name = storage.get(config.STORAGE_ID_PLAYER_NAME);
+        console.log('Initializing player settings from storage', name, color);
+        underworld.pie.sendData({
+            type: MESSAGE_TYPES.PLAYER_CONFIG,
+            color,
+            name
+        });
+    }
 }
 export function hostGiveClientGameState(clientId: string, underworld: Underworld, level: LevelData | undefined, message_type: MESSAGE_TYPES.INIT_GAME_STATE | MESSAGE_TYPES.LOAD_GAME_STATE) {
     // Only the host should be sending INIT_GAME_STATE messages
