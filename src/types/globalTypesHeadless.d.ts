@@ -139,6 +139,7 @@ declare global {
     // Graphics for debugging the cave
     var debugCave: PIXI.Graphics | undefined;
     var allowCookies: undefined | boolean;
+    var configPlayer: undefined | (({ color, name }: { color: number, name: string }) => void);
     var playMusic: undefined | (() => void);
     var changeVolume: undefined | ((volume: number) => void);
     var changeVolumeMusic: undefined | ((volume: number) => void);

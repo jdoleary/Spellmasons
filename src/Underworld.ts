@@ -2469,7 +2469,7 @@ export interface LevelData {
   }[];
 }
 
-window.configPlayer = ({ color, name }) => {
+globalThis.configPlayer = ({ color, name }: { color: number, name: string }) => {
   storage.set(config.STORAGE_ID_PLAYER_COLOR, color);
   storage.set(config.STORAGE_ID_PLAYER_NAME, name);
   // @ts-ignore
