@@ -56,3 +56,6 @@ export const CAST_RANGE_COYOTE_MARGIN = 50;
 export const NAME_TEXT_ID = 'nameText';
 export const NAME_TEXT_DEFAULT_SIZE = 16;
 export const NAME_TEXT_Y_OFFSET = 20
+
+export const STORAGE_ID_PLAYER_COLOR = 'player-color';
+export const STORAGE_ID_PLAYER_NAME = 'player-name';
