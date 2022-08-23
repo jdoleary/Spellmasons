@@ -1,4 +1,8 @@
 ## Today
+- SFX for spawn in animation
+- bug: Player appears dead when looking for spawn in location in multiplayer
+- bug: Player that joins multiplayer doesn't see their own color
+
 - steam page
     - redirect website
 - perks
@@ -15,10 +19,7 @@
 
 ## Tuesday
 - Big ideas:
-    - **Important** You get to choose where you spawn in on each level
-        - this dramatically reduces doom state
     - Add rocks to block archers and deal damage when pushed
-    - Names above players in multiplayer and colors, save on esc menu
     - What if it's not a roguelike? What if it's more like WormsTD
         - I like roguelike for replayability but I find that the early game can be boring and there's not much variety.
 
