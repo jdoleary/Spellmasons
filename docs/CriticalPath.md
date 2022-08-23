@@ -1,17 +1,10 @@
 # Critical Path
-- Milestone | **Standalone Server Playtest**
-    - (fixed?) stand alone server goes into infinite loop when all players leave
-    - When does stand alone server remove a room?
-    - Test standalone server with friends
-- Milestone X | **Juice**
-    - Hand craft liquid pool configurations so you don't get abberant floor combinations
-    - UI
-    - Master music (Brad)
+- Get mastered SFX from Brad
+- Record multiplayer playtest
 - Milestone | **Marketing** | Planning on September 1
-    - See Marketing.md for more info
-    - Steam Page
-    - Website Presskit page
-        - Note: Website should just redirect to steampage
+    - Make Steam Page
+    - Forward Spellmasons.com to steam back
+    - Start marketing
 - Milestone X | **Doodads**
     - More interactable doodads (explosive barrels, movable cover)
 - Milestone X | **Beta Testers** | Planning on October 1
@@ -38,6 +31,7 @@
 - Milestone X | **Package as Electron App** | Planning on November 1
     - Menu for community server selector
     - Allow running local standalone server from inside app
+    - Integrate Steam friends for joining the same server
     - [Storage and Persistence](https://cameronnokes.com/blog/how-to-store-user-data-in-electron/)
     - [AutoUpdate](https://github.com/vercel/hazel)
 - Milestone **Strech 1**
@@ -51,7 +45,22 @@
         - Turn time
         - Pvp mode (more factions)
     - Rework "Expand" / AOE so that if affects the radius of any radius using spell (e.g. Bloat)
-    - A "Long Shot" Spell that increases your cast range
+    - Spell ideas:
+        - A "Long Shot" Spell that increases your cast range (but maybe you can't cast close so you're only a sniper)
+        - vortex
+        - grappling hook
+        - confuse
+        - Auras that combine with other spells (poison + aura = thorns aura or DOT)
+        - Bleed like blood seeker from Dota
+    - Perks | "upgrades" with some random attributes
+        - % chance to get more stamina on level start
+        - start level with 2x mana
+        - % chance to start level with mob on your faction
+        - % chance that casting wont consume mana
+        - % chance to freeze on damage
+        - one time: 50/50 chance to incrase max stat or decrease it
+        - make 1 random spell permanently more expensive and another permanently cheaper
+        
     - More enemies
         - Color enemies different colors and give them different behavior. For example, a blue "poisoner" could be like the "smoker" from left4dead
 

@@ -6,6 +6,10 @@
 - steam page
     - redirect website
 - perks
+- Standalone server backlog
+    - (fixed?) stand alone server goes into infinite loop when all players leave
+    - When does stand alone server remove a room?
+    - Test standalone server with friends
 
 ---
 - sound effect lags for 'freeze'
