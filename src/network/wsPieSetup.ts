@@ -15,6 +15,8 @@ import { setView, View } from '../views';
 import * as storage from '../storage';
 import { updateGlobalRefToCurrentClientPlayer } from '../entity/Player';
 import Underworld from '../Underworld';
+import * as config from '../config';
+import { MESSAGE_TYPES } from '../types/MessageTypes';
 // Locally hosted, locally accessed
 // const wsUri = 'ws://localhost:8080';
 // Locally hosted, available to LAN (use your own IP)
@@ -88,6 +90,15 @@ export function joinRoom(underworld: Underworld, _room_info = {}): Promise<void>
   room_info.name = room_info.name.toLowerCase();
   return pie.joinRoom(room_info, true).then(() => {
     console.log('Pie: You are now in the room', JSON.stringify(room_info, null, 2));
+    // Send this clients player config to others:
+    const color = storage.get(config.STORAGE_ID_PLAYER_COLOR);
+    const name = storage.get(config.STORAGE_ID_PLAYER_NAME);
+    console.log('Initializing player settings from storage', name, color);
+    underworld.pie.sendData({
+      type: MESSAGE_TYPES.PLAYER_CONFIG,
+      color,
+      name
+    });
     // Useful for development to get into the game quickly
     let quickloadName = storage.get('quickload');
     if (quickloadName) {
