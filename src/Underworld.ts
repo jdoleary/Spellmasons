@@ -36,6 +36,7 @@ import {
   cleanUpLiquidFilter,
   BloodParticle,
   setAbyssColor,
+  setCameraToMapCenter,
 } from './graphics/PixiUtils';
 import { queueCenteredFloatingText } from './graphics/FloatingText';
 import { UnitType, Faction, UnitSubType } from './types/commonTypes';
@@ -1270,6 +1271,7 @@ export default class Underworld {
     // Set the first turn phase
     this.broadcastTurnPhase(turn_phase.PlayerTurns);
     cameraAutoFollow(false);
+    setCameraToMapCenter(this);
     document.body?.classList.toggle('loading', false);
     setView(View.Game);
   }

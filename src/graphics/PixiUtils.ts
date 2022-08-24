@@ -261,6 +261,10 @@ function calculateCameraZoom() {
 
   return !app ? 0 : app.stage.scale.x + ((globalThis.zoomTarget || 1) - app.stage.scale.x) / 8;
 }
+export function setCameraToMapCenter(underworld: Underworld) {
+  // Set camera to the center of the map
+  utilProps.camera = { x: (underworld.limits.xMax - underworld.limits.xMin) / 2, y: (underworld.limits.yMax - underworld.limits.yMin) / 2 };
+}
 let lastZoom = globalThis.zoomTarget;
 export function updateCameraPosition(underworld: Underworld) {
   // Headless does not use graphics
@@ -285,8 +289,7 @@ export function updateCameraPosition(underworld: Underworld) {
             // Follow current client player
             utilProps.camera = clone(globalThis.player.unit);
           } else {
-            // Set camera to the center of the map
-            utilProps.camera = { x: (underworld.limits.xMax - underworld.limits.xMin) / 2, y: (underworld.limits.yMax - underworld.limits.yMin) / 2 };
+            setCameraToMapCenter(underworld);
           }
         }
         // Allow camera movement via WSAD

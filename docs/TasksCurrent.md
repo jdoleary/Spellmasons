@@ -1,5 +1,4 @@
 ## Today
-- center camera before spawn
 - SFX for spawn in animation
 - res particles
 - bug: Player appears dead when looking for spawn in location in multiplayer
