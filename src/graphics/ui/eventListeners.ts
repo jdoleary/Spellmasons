@@ -95,9 +95,11 @@ export function keypressListener(underworld: Underworld, event: KeyboardEvent) {
     case 'Digit0':
       CardUI.selectCardByIndex(9);
       break;
-    case 'KeyZ':
+    case 'Period':
       if (devMode) {
         toggleHUD();
+      } else {
+        console.log('Aborted: This key "would" toggleHUD if devMode was true.  You can set devMode to true in console.')
       }
       break;
 

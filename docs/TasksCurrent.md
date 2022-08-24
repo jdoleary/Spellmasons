@@ -2,7 +2,6 @@
 - center camera before spawn
 - SFX for spawn in animation
 - res particles
-- reassign 'z'
 - bug: Player appears dead when looking for spawn in location in multiplayer
 - bug: Player that joins multiplayer doesn't see their own color
 
