@@ -1,13 +1,22 @@
 # Critical Path
-- Get mastered SFX from Brad
-- Record multiplayer playtest
 - Milestone | **Marketing** | Planning on September 1
-    - Make Steam Page
-    - Forward Spellmasons.com to steam back
+    - Get mastered SFX from Brad
+    - Record multiplayer playtest
+    - Get Steampage approved
+        - Forward Spellmasons.com to steam back
+    - Make Trailer
     - Start marketing
-- Milestone X | **Doodads**
+- Milestone | **Final Content**
     - More interactable doodads (explosive barrels, movable cover)
-- Milestone X | **Beta Testers** | Planning on October 1
+    - Need spell effects
+        - aoe
+        - blood curse
+        - chain
+        - pull/push
+    - Liquid Splash Animation
+        - Lava, blood, Water
+    - Rework "Expand" / AOE so that if affects the radius of any radius using spell (e.g. Bloat)
+- Milestone | **Beta Testing** | Planning on October 1
     - Tutorial / Explain prompts based on user actions
     - Optimize game
         - repelCircleFromLine is used for both unit crowding and wall physics and with wall physics it doesn't need a reference to underworld, that's only needed for unit crowding to make sure they don't crowd each other through walls
@@ -20,14 +29,6 @@
     - Make survey
     - Send out to testers
     - [Tutorial](https://www.youtube.com/watch?v=-GV814cWiAw)
-- Milestone | **Miscellaneous**
-    - Need spell effects
-        - aoe
-        - blood curse
-        - chain
-        - pull/push
-    - Liquid Splash Animation
-        - Lava, blood, Water
 - Milestone X | **Package as Electron App** | Planning on November 1
     - Menu for community server selector
     - Allow running local standalone server from inside app
@@ -44,7 +45,6 @@
     - Server customization
         - Turn time
         - Pvp mode (more factions)
-    - Rework "Expand" / AOE so that if affects the radius of any radius using spell (e.g. Bloat)
     - Spell ideas:
         - A "Long Shot" Spell that increases your cast range (but maybe you can't cast close so you're only a sniper)
         - vortex
