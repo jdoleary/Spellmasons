@@ -2,6 +2,7 @@ import { MESSAGE_TYPES } from '../../types/MessageTypes';
 import throttle from 'lodash.throttle';
 import * as CardUI from './CardUI';
 import * as Unit from '../../entity/Unit';
+import * as storage from '../../storage';
 import floatingText from '../FloatingText';
 import {
   clearSpellEffectProjection,
@@ -440,6 +441,14 @@ export function clickHandler(underworld: Underworld, e: MouseEvent) {
         type: MESSAGE_TYPES.SPAWN_PLAYER,
         x: spawnPoint.x,
         y: spawnPoint.y,
+      });
+      // Resync player config from storage
+      const color = storage.get(config.STORAGE_ID_PLAYER_COLOR);
+      const name = storage.get(config.STORAGE_ID_PLAYER_NAME);
+      underworld.pie.sendData({
+        type: MESSAGE_TYPES.PLAYER_CONFIG,
+        color: color,
+        name: name
       });
       return;
     }

@@ -2473,7 +2473,7 @@ export interface LevelData {
 
 globalThis.configPlayer = ({ color, name }: { color: number, name: string }) => {
   storage.set(config.STORAGE_ID_PLAYER_COLOR, color);
-  storage.set(config.STORAGE_ID_PLAYER_NAME, name);
+  storage.set(config.STORAGE_ID_PLAYER_NAME, name || '');
   // @ts-ignore
   globalThis.devUnderworld.pie.sendData({
     type: MESSAGE_TYPES.PLAYER_CONFIG,

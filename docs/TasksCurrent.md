@@ -8,14 +8,12 @@
     - Test standalone server with friends
 
 # Bugs
-- bug: Player that joins multiplayer doesn't see their own color
 - sound effect lags for 'freeze'
 - Add sounds for dragger death (poisoner alt)
 - **important** For load, it doesn't call "add" on modifiers so if the modifier has any special init logic, it wont run, it just loads the modifier state (see poison for example)
 - prediction was wrong where i had a bloat explode kill another guy with bloat and it showed the 2nd bloat would be at the end of the push but it was at the beginning
     -it's like the damage doesn't wait for push to be done so it triggers the bloat early
 - archer chose me over decoy that was closer???
-- when I, with 4 health, predict taking damage from two bloat explosions, I die but it only predicts -3 health
 
 ## Tasks
 - use card background for upgrades with different colors depending on rarity
