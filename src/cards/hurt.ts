@@ -1,5 +1,5 @@
 import * as Unit from '../entity/Unit';
-import { containerUI, startBloodParticleSplatter } from '../graphics/PixiUtils';
+import { containerSpells } from '../graphics/PixiUtils';
 import { randFloat } from '../jmath/rand';
 import { CardCategory } from '../types/commonTypes';
 import { oneOffImage, playDefaultSpellSFX } from './cardUtils';
@@ -47,7 +47,7 @@ Deals ${damageDone} damage to all targets.
         for (let q = 0; q < quantity; q++) {
           if (!prediction) {
             setTimeout(() => {
-              const spellEffectImage = oneOffImage(unit, animationPath, containerUI);
+              const spellEffectImage = oneOffImage(unit, animationPath, containerSpells);
               if (spellEffectImage) {
                 // Randomize rotation a bit so that subsequent slashes don't perfectly overlap
                 spellEffectImage.sprite.rotation = randFloat(underworld.random, -Math.PI / 6, Math.PI / 6);

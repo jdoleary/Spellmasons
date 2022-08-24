@@ -3,7 +3,7 @@ import type { CardUsage } from "../entity/Player";
 import { Vec2 } from "../jmath/Vec";
 import { raceTimeout } from "../Promise";
 import * as Image from '../graphics/Image';
-import { containerUI, PixiSpriteOptions } from "../graphics/PixiUtils";
+import { containerSpells } from "../graphics/PixiUtils";
 import { Container } from "pixi.js";
 export interface CardCost {
     manaCost: number;
@@ -39,7 +39,7 @@ export async function animateSpell(target: Vec2, imagePath: string): Promise<voi
     // This timeout value is arbitrary, meant to prevent and report an await hang
     // if somehow resolve is never called
     return raceTimeout(6000, `animateSpell: ${imagePath}`, new Promise<void>((resolve) => {
-        oneOffImage(target, imagePath, containerUI, resolve);
+        oneOffImage(target, imagePath, containerSpells, resolve);
     }));
 }
 // Not to be confused with addOneOffAnimation
