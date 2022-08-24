@@ -1,5 +1,4 @@
 ## Today
-- SFX for spawn in animation
 - res particles
 - bug: Player appears dead when looking for spawn in location in multiplayer
 - bug: Player that joins multiplayer doesn't see their own color

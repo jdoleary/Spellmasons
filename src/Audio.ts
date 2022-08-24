@@ -47,6 +47,7 @@ export const sfx: { [key: string]: string } = {
     vampireAttack: './sound/sfx-from-val/vampire-attack.wav',
     vampireDeath: './sound/sfx-from-val/vampire-death.wav',
     yourTurn: './sound/sfx-from-val/your-turn.wav',
+    spawnFromSky: './sound/sfx/spawn-from-sky.wav'
 
 };
 export const sfxPageTurn = [
