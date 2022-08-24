@@ -4,6 +4,7 @@
     - Record multiplayer playtest
     - Get Steampage approved
         - Forward Spellmasons.com to steam back
+    - Figure out how to separate audio tracks
     - Make Trailer
     - Start marketing
 - Milestone | **Final Content**
