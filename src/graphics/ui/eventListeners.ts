@@ -97,10 +97,10 @@ export function keypressListener(underworld: Underworld, event: KeyboardEvent) {
       CardUI.selectCardByIndex(9);
       break;
     case 'Period':
-      if (devMode) {
+      if (adminMode) {
         toggleHUD();
       } else {
-        console.log('Aborted: This key "would" toggleHUD if devMode was true.  You can set devMode to true in console.')
+        console.log('Aborted: This key "would" toggleHUD if "adminMode" was set to true.')
       }
       break;
 
@@ -565,7 +565,7 @@ function tryShowDevContextMenu(underworld: Underworld, e: MouseEvent, mousePos: 
     return;
   }
   // Developer tool, shift left click to choose to spawn a unit
-  if (devMode && e.shiftKey) {
+  if (adminMode && e.shiftKey) {
     let menu = document.createElement("div") as HTMLElement;
     menu.id = "ctxmenu"
     menu.style.top = `${e.pageY - 10}px`;

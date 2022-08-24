@@ -37,6 +37,7 @@ globalThis.playerWalkingPromise = Promise.resolve();
 globalThis.attentionMarkers = [];
 globalThis.resMarkers = [];
 globalThis.devMode = location.href.includes('localhost');
+globalThis.adminMode = location.href.includes('localhost');
 globalThis.zoomTarget = 1.3;
 // If the code in main runs this is NOT a headless instance, main.ts is the entrypoint for
 // the regular game with graphics and audio

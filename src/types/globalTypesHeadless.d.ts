@@ -191,6 +191,8 @@ declare global {
     var notifiedOutOfStamina: undefined | boolean;
     // devMode: auto picks character and upgrades
     var devMode: undefined | boolean;
+    // Allows toggling off hud and access to the admin menu
+    var adminMode: undefined | boolean;
     // Used for development to debug the original information used to make a map
     var map: undefined | any;
     var devKillAll: undefined | (() => void);
