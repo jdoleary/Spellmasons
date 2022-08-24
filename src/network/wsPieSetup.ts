@@ -15,8 +15,7 @@ import { setView, View } from '../views';
 import * as storage from '../storage';
 import { updateGlobalRefToCurrentClientPlayer } from '../entity/Player';
 import Underworld from '../Underworld';
-import * as config from '../config';
-import { MESSAGE_TYPES } from '../types/MessageTypes';
+import { version } from '../../package.json';
 // Locally hosted, locally accessed
 // const wsUri = 'ws://localhost:8080';
 // Locally hosted, available to LAN (use your own IP)
@@ -24,7 +23,7 @@ import { MESSAGE_TYPES } from '../types/MessageTypes';
 // Locally hosted, externally accessed (use your own IP)
 // const wsUri = 'ws://68.48.199.138:7337';
 // Current digital ocean wsPie app:
-// const wsUri = 'wss://websocket-pie-6ggew.ondigitalocean.app';
+// const wsUri = 'wss://sea-lion-app-hjub5.ondigitalocean.app/';
 function connect_to_wsPie_server(wsUri: string | undefined, underworld: Underworld): Promise<void> {
   const pie = underworld.pie;
   if (typeGuardHostApp(pie)) {
@@ -118,6 +117,10 @@ function addHandlers(pie: PieClient, underworld: Underworld) {
     const elVersionInfoHeadless = document.getElementById('version-info-headless-server')
     if (elVersionInfoHeadless) {
       elVersionInfoHeadless.innerText = `Server v${o?.hostAppVersion}`;
+    }
+    if (o?.hostAppVersion !== version) {
+      console.warn('Host app version does not match client version');
+
     }
     globalThis.clientId = o.clientId;
     if (underworld) {
