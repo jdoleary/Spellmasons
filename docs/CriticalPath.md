@@ -1,10 +1,14 @@
 # Critical Path
 - Milestone | **Marketing** | Planning on September 1
     - Get mastered SFX from Brad
+    - Figure out how to separate audio tracks
+        - discord on phone
+        - my voice on separate audio track in OBS
+        - Game audio in OBS
+        - Music OFF, REMEMBER MUSIC OFF
     - Record multiplayer playtest
     - Get Steampage approved
         - Forward Spellmasons.com to steam back
-    - Figure out how to separate audio tracks
     - Make Trailer
     - Start marketing
 - Milestone | **Final Content**

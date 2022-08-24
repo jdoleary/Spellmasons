@@ -1,7 +1,9 @@
 ## Today
+- was able to spawn ontop of a wall in 0.6340301689651962 at coords 27,173
+    - it only happens in play.spellmasons.com
 - res particles
 
-- perks
+- Feature: perks
 - Standalone server backlog
     - (fixed?) stand alone server goes into infinite loop when all players leave
     - When does stand alone server remove a room?
