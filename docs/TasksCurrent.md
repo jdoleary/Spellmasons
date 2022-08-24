@@ -1,7 +1,5 @@
 ## Today
 - res particles
-- bug: Player appears dead when looking for spawn in location in multiplayer
-- bug: Player that joins multiplayer doesn't see their own color
 
 - perks
 - Standalone server backlog
@@ -9,7 +7,9 @@
     - When does stand alone server remove a room?
     - Test standalone server with friends
 
----
+# Bugs
+- bug: Player appears dead when looking for spawn in location in multiplayer
+- bug: Player that joins multiplayer doesn't see their own color
 - sound effect lags for 'freeze'
 - Add sounds for dragger death (poisoner alt)
 - **important** For load, it doesn't call "add" on modifiers so if the modifier has any special init logic, it wont run, it just loads the modifier state (see poison for example)
@@ -18,29 +18,21 @@
 - archer chose me over decoy that was closer???
 - when I, with 4 health, predict taking damage from two bloat explosions, I die but it only predicts -3 health
 
-## Tuesday
-- Big ideas:
-    - Add rocks to block archers and deal damage when pushed
-    - What if it's not a roguelike? What if it's more like WormsTD
-        - I like roguelike for replayability but I find that the early game can be boring and there's not much variety.
-
 ## Tasks
 - use card background for upgrades with different colors depending on rarity
 - rework expand, it's predictions are often way off.  Maybe it would do better to just increase the radius of all spells?
-- Spell Modifier effects visual representation
+- Spell Modifier effects visual representation to stay on units
     - debilitate
     - blood curse
 - TO VERIFY: bug: A player that died in liquid when the level goes next will still have liquid filter on them.
-- bug: After i ended a level on a racetimeout push I got to choose WAY too many upgrade spells
+- bug: After i ended a level on a racetimeout push I got to choose infinite upgrade spells
 - implement auto reconnect when `setView(View.Disconnected)`
 - If player joins mid enemy movement it will force reset them
 - liquid messed up; seed: 0.6404564349842206
 - on refresh (with only 1 client in room) the server reseeded level but my position stayed the same
----
-- movable barrier
 - rework exp
 - trap prediction bugs
-- trap should be immovable
+- trap should be immovable?
 ## Perfect prediction attacks
     - I got bit by a vampire but it didn't accurately warn me he would
         - wrap this in with preventing units from changing targets from their prediction even if the decoy dies (lobber move then throw?)
@@ -52,7 +44,6 @@
             - that same lobber when resurrected just crawled over lava so it must've been inside but just didn't take the damage
 ## Tasks
 - fix hotkey for jprompt
-- key 'z' is used both to hide hud AND to have camera follow player
 - Brad feedback 2022-08-04
     - freeze should shield damage?
         - if frozen unit takes damage it restarts animation

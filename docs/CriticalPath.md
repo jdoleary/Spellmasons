@@ -7,7 +7,10 @@
     - Make Trailer
     - Start marketing
 - Milestone | **Final Content**
-    - More interactable doodads (explosive barrels, movable cover)
+    - resurrection particles
+    - add boulder
+        - movable cover
+        - deals damage when pushed
     - Need spell effects
         - aoe
         - blood curse
@@ -36,6 +39,7 @@
     - [Storage and Persistence](https://cameronnokes.com/blog/how-to-store-user-data-in-electron/)
     - [AutoUpdate](https://github.com/vercel/hazel)
 - Milestone **Strech 1**
+    - Explosive barrels??
     - [Mod support](https://partner.steamgames.com/doc/features/workshop)
     - Hoist spells
         - Logic to avoid fizzle spells
