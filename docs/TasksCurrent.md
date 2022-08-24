@@ -8,7 +8,6 @@
     - Test standalone server with friends
 
 # Bugs
-- bug: Player appears dead when looking for spawn in location in multiplayer
 - bug: Player that joins multiplayer doesn't see their own color
 - sound effect lags for 'freeze'
 - Add sounds for dragger death (poisoner alt)

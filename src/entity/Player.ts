@@ -82,7 +82,6 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
   // Player units shouldn't be pushed around
   // during collisions while other units move
   player.unit.immovable = true;
-  player.unit.alive = false;
   player.unit.attackRange = config.PLAYER_BASE_ATTACK_RANGE;
   player.unit.staminaMax = config.PLAYER_BASE_STAMINA;
   player.unit.stamina = config.PLAYER_BASE_STAMINA;
