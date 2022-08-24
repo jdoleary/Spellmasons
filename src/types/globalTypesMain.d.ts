@@ -122,6 +122,7 @@ declare global {
     // Allows toggling off hud and access to the admin menu
     var adminMode: undefined | boolean;
     // Used for development to debug the original information used to make a map
+    // NOT FOR USE IN PRODUCTION CODE, it is not set in multiplayer
     var map: undefined | any;
     var devKillAll: undefined | (() => void);
     var devSpawnUnit: undefined | ((unitId: string, faction: Faction, coords?: Vec2) => void);

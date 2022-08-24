@@ -1,6 +1,4 @@
 ## Today
-- was able to spawn ontop of a wall in 0.6340301689651962 at coords 27,173
-    - it only happens in play.spellmasons.com
 - res particles
 
 - Feature: perks
