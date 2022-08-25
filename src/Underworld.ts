@@ -712,7 +712,9 @@ export default class Underworld {
       // 1/zoom keeps the attention marker the same size regardless of the level of zoom
       // Math.sin... makes the attention marker swell and shink so it grabs the player's attention so they
       // know that they're in danger
-      ImmediateMode.draw(marker.imagePath, exclamationMarkPosition, (1 / zoom) + (Math.sin(Date.now() / 500) + 1) / 3);
+      // + 1 makes it go from 0 to 2 instead of -1 to 1
+      // / 8 limits the size
+      ImmediateMode.draw(marker.imagePath, exclamationMarkPosition, (1 / zoom) + (Math.sin(Date.now() / 500) + 1) / 8);
     }
   }
   drawPlayerThoughts() {

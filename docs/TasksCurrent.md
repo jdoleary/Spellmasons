@@ -2,9 +2,7 @@
 - Bug: Grunt walked towards liquid and just kept walking animation after it should've returned to idle. seed:0.8154642976606445
     - I think this happens when they attempt to move to a location that is ouside of the pathing bounds (like in between a pathing line segment and a wall line segment, so it's still ground but it's out of bounds)
 - chain through pickups?
-- fix pathing issue when AI moving near liquid
 - getting unit sync issues in multiplayer
-- attack badges block health sometimes
 
 # Bugs
 - sound effect lags for 'freeze'
