@@ -41,6 +41,10 @@ import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
 export interface Modifiers {
   subsprite?: Subsprite;
+  // run special init logic (usually for visuals) when a modifier is added or loaded
+  // see 'poison' for example
+  // init is inteded to be called within add.
+  init?: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => void;
   add?: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number) => void;
   remove?: (unit: Unit.IUnit, underworld: Underworld) => void;
 }

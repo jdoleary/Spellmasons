@@ -324,6 +324,16 @@ export function load(unit: IUnitSerialized, underworld: Underworld, prediction: 
         ? Image.load(unit.image, getParentContainer(unit.alive))
         : Image.create({ x: unit.x, y: unit.y }, unit.defaultImagePath, containerUnits),
   };
+  for (let key of Object.keys(loadedunit.modifiers)) {
+    const modifier = allModifiers[key];
+    if (modifier && modifier.init) {
+      // Invoke modifier.init so that special init logic
+      // such as there is in 'poison' will run
+      modifier.init(loadedunit, underworld, false);
+    } else {
+      console.error('Unable to init modifier with key', key)
+    }
+  }
   setupShaders(loadedunit);
   // Load in shader uniforms by ONLY setting the uniforms that are saved
   // it is important that the other objects stay exactly the same

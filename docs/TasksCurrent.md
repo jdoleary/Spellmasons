@@ -1,5 +1,4 @@
 ## Today
-- **important** For load, it doesn't call "add" on modifiers so if the modifier has any special init logic, it wont run, it just loads the modifier state (see poison for example)
 
 # Bugs
 - sound effect lags for 'freeze'

@@ -8,6 +8,21 @@ import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
 
 export const id = 'poison';
+function init(unit: Unit.IUnit, underworld: Underworld, prediction: boolean) {
+  if (spell.modifiers?.subsprite) {
+    // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
+    // which is used for identifying the sprite or animation that is currently active
+    const poisonSubsprite = unit.image?.sprite.children.find(c => c.imagePath == spell.modifiers?.subsprite?.imageName)
+    if (poisonSubsprite) {
+      const animatedSprite = poisonSubsprite as PIXI.AnimatedSprite;
+      animatedSprite.onFrameChange = (currentFrame) => {
+        if (currentFrame == 5) {
+          animatedSprite.anchor.x = (3 + Math.random() * (6 - 3)) / 10;
+        }
+      }
+    }
+  }
+}
 function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) {
   // First time setup
   if (!unit.modifiers[id]) {
@@ -21,15 +36,8 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
     // Add subsprite image
     if (!prediction) {
       if (spell.modifiers?.subsprite) {
-        const poisonSubsprite = Image.addSubSprite(unit.image, spell.modifiers.subsprite.imageName);
-        if (poisonSubsprite) {
-          const animatedSprite = poisonSubsprite as PIXI.AnimatedSprite;
-          animatedSprite.onFrameChange = (currentFrame) => {
-            if (currentFrame == 5) {
-              animatedSprite.anchor.x = (3 + Math.random() * (6 - 3)) / 10;
-            }
-          }
-        }
+        Image.addSubSprite(unit.image, spell.modifiers.subsprite.imageName);
+        init(unit, underworld, prediction);
       }
     }
   }
@@ -69,6 +77,7 @@ at the start of the unit's turn.
   },
   modifiers: {
     add,
+    init,
     subsprite: {
       imageName: 'spell-effects/modifierPoisonDrip',
       alpha: 1.0,

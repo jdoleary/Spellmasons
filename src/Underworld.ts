@@ -570,7 +570,7 @@ export default class Underworld {
           }
           globalThis.unitOverlayGraphics?.endFill();
         }
-        // Animate modifier sprites
+        // Animate shield modifier sprites
         if (u.modifiers[shield.id] && u.image) {
           // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
           // which is used for identifying the sprite or animation that is currently active
