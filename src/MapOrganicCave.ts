@@ -186,7 +186,6 @@ export function generateCave(params: CaveParams, biome: Biome, underworld: Under
         width,
         height
     };
-    globalThis.map = JSON.parse(JSON.stringify(map));
     convertBaseTilesToFinalTiles(map);
     return { map, limits: bounds };
 

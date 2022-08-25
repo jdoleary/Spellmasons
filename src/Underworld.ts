@@ -960,7 +960,6 @@ export default class Underworld {
       width,
       height
     };
-    globalThis.map = JSON.parse(JSON.stringify(map));
     convertBaseTilesToFinalTiles(map);
     const { tiles } = map;
     return {
@@ -1384,7 +1383,7 @@ export default class Underworld {
   isCoordOnWallTile(coord: Vec2): boolean {
     const cellX = Math.round(coord.x / config.OBSTACLE_SIZE);
     const cellY = Math.round(coord.y / config.OBSTACLE_SIZE);
-    const originalTile = this.lastLevelCreated?.imageOnlyTiles[vec2ToOneDimentionIndexPreventWrap({ x: cellX, y: cellY }, globalThis.map.width)];
+    const originalTile = this.lastLevelCreated?.imageOnlyTiles[vec2ToOneDimentionIndexPreventWrap({ x: cellX, y: cellY }, this.lastLevelCreated?.width)];
     return !!originalTile && (originalTile.image == '' || originalTile.image.includes('wall'));
   }
   getMousePos(): Vec2 {
