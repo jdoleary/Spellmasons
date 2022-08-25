@@ -2428,10 +2428,6 @@ function getEnemiesForAltitude(underworld: Underworld): string[] {
       const chosenUnit = chooseObjectWithProbability(possibleUnitsToChoose, underworld.random)
       return chosenUnit ? [chosenUnit.id] : []
     })
-  // Add bosses
-  if (levelIndex !== 0 && levelIndex % bossEveryXLevels == 0) {
-    unitIds.push('Night Queen');
-  }
   console.log('Enemies:', unitIds);
   return unitIds;
 }
