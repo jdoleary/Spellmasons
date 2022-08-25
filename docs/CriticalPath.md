@@ -2,6 +2,7 @@
 - Milestone | **Marketing** | Planning on September 1
     - Get mastered SFX from Brad
     - Figure out how to separate audio tracks
+        - https://obsproject.com/forum/resources/win-capture-audio.1338/
         - discord on phone
         - my voice on separate audio track in OBS
         - Game audio in OBS

@@ -1,4 +1,12 @@
 ## Today
+- **important** For load, it doesn't call "add" on modifiers so if the modifier has any special init logic, it wont run, it just loads the modifier state (see poison for example)
+
+# Bugs
+- sound effect lags for 'freeze'
+- Add sounds for dragger death (poisoner alt)
+- archer chose me over decoy that was closer???
+
+## Tasks
 - res particles
 
 - Feature: perks
@@ -6,16 +14,6 @@
     - (fixed?) stand alone server goes into infinite loop when all players leave
     - When does stand alone server remove a room?
     - Test standalone server with friends
-
-# Bugs
-- sound effect lags for 'freeze'
-- Add sounds for dragger death (poisoner alt)
-- **important** For load, it doesn't call "add" on modifiers so if the modifier has any special init logic, it wont run, it just loads the modifier state (see poison for example)
-- prediction was wrong where i had a bloat explode kill another guy with bloat and it showed the 2nd bloat would be at the end of the push but it was at the beginning
-    -it's like the damage doesn't wait for push to be done so it triggers the bloat early
-- archer chose me over decoy that was closer???
-
-## Tasks
 - use card background for upgrades with different colors depending on rarity
 - rework expand, it's predictions are often way off.  Maybe it would do better to just increase the radius of all spells?
 - Spell Modifier effects visual representation to stay on units
