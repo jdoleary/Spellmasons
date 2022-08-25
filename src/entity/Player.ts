@@ -13,6 +13,7 @@ import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import { playerCastAnimationColor, playerCoatPrimary, playerCoatSecondary, robeColors } from '../graphics/ui/colors';
 import Underworld from '../Underworld';
 import { lerp } from "../jmath/math"
+import * as inLiquid from '../inLiquid';
 
 const elLobbyBody = document.getElementById('lobby-body') as (HTMLElement | undefined);
 // The serialized version of the interface changes the interface to allow only the data
@@ -170,7 +171,7 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
 
   if (player.unit.image) {
     // Remove liquid mask which may be attached if the player died in liquid
-    Image.removeMask(player.unit.image);
+    inLiquid.remove(player.unit);
     // Restore player alpha which was 0.5 while player
     // was looking for a spawn point
     player.unit.image.sprite.alpha = 1.0;

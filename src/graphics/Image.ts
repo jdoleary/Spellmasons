@@ -269,6 +269,10 @@ export function restoreSubsprites(image: IImageAnimated | undefined, subspriteIm
     addMask(image, image.mask);
   }
 }
+// Caution: this function removes a mask on an image,
+// but if you are trying to remove the unit from being
+// in liquid, you should use this function THROUGH inLiquid.remove.
+// not on it's own.
 export function removeMask(image: IImageAnimated) {
   if (image.sprite.mask) {
     try {

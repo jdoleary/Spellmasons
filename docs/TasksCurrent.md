@@ -1,4 +1,5 @@
 ## Today
+- fix pathing issue when AI moving near liquid
 
 # Bugs
 - sound effect lags for 'freeze'
@@ -18,7 +19,6 @@
 - Spell Modifier effects visual representation to stay on units
     - debilitate
     - blood curse
-- TO VERIFY: bug: A player that died in liquid when the level goes next will still have liquid filter on them.
 - bug: After i ended a level on a racetimeout push I got to choose infinite upgrade spells
 - implement auto reconnect when `setView(View.Disconnected)`
 - If player joins mid enemy movement it will force reset them
