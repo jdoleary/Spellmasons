@@ -253,7 +253,6 @@ body.open-inventory #card-inspect {
 }
 
 .card {
-  cursor: pointer;
   position: relative;
   transition: all 0.1s;
   width: 64px;
@@ -866,7 +865,6 @@ body.view-GameOver #game-over {
   text-align: center;
   position: relative;
   margin: 12px 8px;
-  cursor: pointer;
   white-space: nowrap;
   padding: 0 15px;
 }
@@ -1032,7 +1030,6 @@ body.open-inventory #inventory-content {
   width: 80px;
   height: 106px;
   background-image: url('images/card-designs/bookStone.png');
-  cursor: pointer;
   transition: all 0.2s;
 }
 
@@ -1072,7 +1069,6 @@ body.view-Menu #lobby {
 
 #ctxmenu li {
   margin: 0;
-  cursor: pointer;
 }
 
 #ctxmenu li:hover {
@@ -1093,6 +1089,7 @@ body.HUD-hidden #PIXI-holder {
   z-index: 3;
 }
 
-body {
+body,
+button {
   cursor: url('cursor.png'), auto;
 }
