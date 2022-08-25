@@ -1,3 +1,64 @@
+- res particles
+- liquid issues:
+  - liquid messed up; seed: 0.6404564349842206
+  - see cantwalk.png on desktop
+- trap prediction bugs
+- trap should be immovable?
+- freeze should shield damage?
+    - if frozen unit takes damage it restarts animation
+- Brad feedback 2022-08-04
+  - targeting mishap, see video
+  - clones exploding without bloat modifier, it's like they kept the event somehow
+  - upgrade where you gives omethng up to gain something
+  - 10th toolbar space isn't filling up when you get a new spell?
+  - bug: explosion radius text and some move lines left on the screen after cast was done
+- animated trim path line for archers so it's obvious they'll hit you
+- Write down Brad's feedback here
+    - it should be clear that it rolls spells after you pick
+    - Trap pickup radius is too big, you can't squeeze by it (spikes and trap?)
+    - should take damage at the END of every turn if still in lava
+    - Super poor performance on brad's laptop on level 7
+        - double pull through lava make my computer's fan pickup
+    - bug: resurrect leaves dangling Images behind
+- Pack 16 | Colin Feedback
+    - explain that you can cast any number of times per turn
+    - Make spell pickups more obvious
+    - vampire had attack icon while in lava but next turn got out of the lava and didn't attack
+- what happens if you freeze liquid with a unit in it?
+- shield should be visible on health bar (it's just temporary health)
+- Handle error in menu when attempting to connect to a bad url
+- AI should avoid traps when moving
+- death circle can be confusing when moved out of the way of the toolbar (add arrow?)
+## UI
+- Bug: RMB hold on toolbar moves character.  Be very careful when solving this to ensure you don't make clicks in the invisible part of UI elements no longer work
+- Prevent RMB movement when mouse is over toolbar
+- Disable RMB movement when upgrade screen is up
+
+## To Explain
+  - explain that portal cleanses all buffs and curses
+  - Introduce mana cost changing of cards when used
+  - that all modifiers are removed after each level
+## Standalone server backlog bugs
+- targeting issues:
+  - archer chose me over decoy that was closer???
+  - Bug: decoy died and archer changed targets, make units commit to a target at the beginning of the round, else PLAYER FRUSTRATION
+- Ensure standalone server doesn't bother running predictions
+    - Unless the predictions determine their attacks from "perfect predictions" branch
+- It's running hot for some reason
+- Game waits a long time after last player has ended their turn before moving on to enemy turn
+- headless server runs loop quickly when it has nothing to do (after i make a change and the clients are connecting in the other os window's space)
+- is init_game_state being invoked more than once for player 2
+- Fix: Move player so it doesn't use stamina because IT MUST bring them to a synced location if their position somehow get's out of sync
+    - Desync: Due to the stamina issue I had one player in a different spot on one screen, then when he cast push and pushed a grunt into lava the grunt only moved and died on one screen and syncUnits didn't correct it somehow
+## Perfect prediction attacks
+    - I got bit by a vampire but it didn't accurately warn me he would
+        - wrap this in with preventing units from changing targets from their prediction even if the decoy dies (lobber move then throw?)
+    - Resurrect icon didn't show in prediction when it was buried in a trap that I pushed someone into (in prediction)
+    - Units should NEVER change target from their prediction. A case where this happened is when a decoy died from other units attacking it
+    - Grunt attack predictions are not perfect. See branch 'perfect-predictions'
+    - Known issues:
+        - push predicted taht a lobber would fall in lava and die but it didn't
+            - that same lobber when resurrected just crawled over lava so it must've been inside but just didn't take the damage
 ## feedback might be won't do:
     - hoisting might not be desireable, what if you want to push then AOE?
     - Colin Direct Feedback:
