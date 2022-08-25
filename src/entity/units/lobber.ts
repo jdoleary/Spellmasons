@@ -31,6 +31,9 @@ const unit: UnitSource = {
     die: 'units/lobberDeath',
     walk: 'units/lobberWalk',
   },
+  sfx: {
+    death: 'lobberDeath'
+  },
   init: (unit: Unit.IUnit, underworld: Underworld) => {
     if (unit.image) {
       unit.image.sprite.anchor.y = 0.3;

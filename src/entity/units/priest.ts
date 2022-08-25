@@ -57,6 +57,9 @@ const unit: UnitSource = {
     die: 'units/priestDeath',
     walk: 'units/priestWalk',
   },
+  sfx: {
+    death: 'priestDeath',
+  },
   extraTooltipInfo: () => {
     return `Mana cost per cast: ${CAST_MANA_COST}`;
   },

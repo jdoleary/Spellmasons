@@ -38,5 +38,8 @@ const unit: UnitSource = {
     die: 'units/playerDeath',
     walk: 'units/playerWalk',
   },
+  sfx: {
+    death: 'playerUnitDeath',
+  }
 };
 export default unit;

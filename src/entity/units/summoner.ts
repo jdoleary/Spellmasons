@@ -21,6 +21,9 @@ const unit: UnitSource = {
     die: 'units/summonerDeath',
     walk: 'units/summonerWalk',
   },
+  sfx: {
+    death: 'summonerDeath'
+  },
   unitProps: {
     healthMax: 6
   },

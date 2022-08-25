@@ -19,6 +19,9 @@ const unit: UnitSource = {
     die: 'units/decoy_Death',
     walk: 'units/decoy',
   },
+  sfx: {
+    death: 'decoyDeath',
+  },
   unitProps: {
     staminaMax: 0,
     attackRange: 0,

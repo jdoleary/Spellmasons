@@ -28,6 +28,9 @@ const unit: UnitSource = {
     die: 'units/gruntDeath',
     walk: 'units/gruntWalk',
   },
+  sfx: {
+    death: 'gruntDeath'
+  },
   action,
 };
 

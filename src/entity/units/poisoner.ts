@@ -4,7 +4,6 @@ import { createVisualLobbingProjectile } from '../Projectile';
 import * as Unit from '../Unit';
 import * as math from '../../jmath/math';
 import * as poison from '../../cards/poison';
-import { addPixiSpriteAnimated, containerSpells, containerUnits } from '../../graphics/PixiUtils';
 import { bloodPoisoner } from '../../graphics/ui/colors';
 
 const unit: UnitSource = {
@@ -29,6 +28,9 @@ const unit: UnitSource = {
     attack: 'units/poisAttack',
     die: 'units/poisDeath',
     walk: 'units/poisWalk',
+  },
+  sfx: {
+    death: 'poisonerDeath'
   },
   action: async (unit: Unit.IUnit, _attackTarget, underworld) => {
     const nonPoisonedEnemyUnits = underworld.units.filter(

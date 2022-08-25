@@ -1,6 +1,4 @@
 ## Today
-- Add sounds for dragger death (poisoner alt)
-    - don't make death sound depend on imageName
 - Bug: Grunt walked towards liquid and just kept walking animation after it should've returned to idle. seed:0.8154642976606445
     - I think this happens when they attempt to move to a location that is ouside of the pathing bounds (like in between a pathing line segment and a wall line segment, so it's still ground but it's out of bounds)
 - chain through pickups?

@@ -30,6 +30,9 @@ const unit: UnitSource = {
     die: 'units/vampireDeath',
     walk: 'units/vampireWalk',
   },
+  sfx: {
+    death: 'vampireDeath'
+  },
   init: (unit: Unit.IUnit, underworld: Underworld) => {
     Unit.addModifier(unit, blood_curse.id, underworld, false);
   },

@@ -18,6 +18,7 @@ export interface UnitSource {
   extraTooltipInfo?: () => string;
   spawnParams?: SpawnParams;
   animations: Unit.UnitAnimations;
+  sfx: Unit.UnitSFX;
 }
 
 interface SpawnParams {
@@ -35,7 +36,6 @@ import priest from './priest';
 import poisoner from './poisoner';
 import vampire from './vampire';
 import decoy from './decoy';
-import nightqueen from './nightqueen';
 import dragger from './dragger';
 import Underworld from '../../Underworld';
 
@@ -54,7 +54,6 @@ export function registerUnits() {
 
   register(playerUnit);
   register(decoy);
-  register(nightqueen);
 }
 
 

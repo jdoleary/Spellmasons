@@ -50,6 +50,9 @@ export interface UnitAnimations {
   die: string;
   walk: string;
 }
+export interface UnitSFX {
+  death: string;
+}
 export function isUnit(maybeUnit: any): maybeUnit is IUnit {
   // unitSouceId only belongs to IUnit so it is a safe way to tell
   // TS that the object is a unit.  This WILL fail if another object
@@ -103,6 +106,7 @@ export interface IUnit {
   onTurnStartEvents: string[];
   onTurnEndEvents: string[];
   animations: UnitAnimations;
+  sfx: UnitSFX;
   modifiers: {
     [name: string]: {
       isCurse: boolean;
@@ -168,6 +172,7 @@ export function create(
       onTurnEndEvents: [],
       modifiers: {},
       animations: sourceUnit.animations,
+      sfx: sourceUnit.sfx,
       inLiquid: false,
     }, sourceUnitProps);
 
@@ -385,7 +390,7 @@ export function changeToDieSprite(unit: IUnit) {
   );
   // If a sprite is returned then the sprite did change
   if (newSprite) {
-    playSFXKey(`${unit.unitSourceId}Death`)
+    playSFXKey(unit.sfx.death);
 
   }
 }

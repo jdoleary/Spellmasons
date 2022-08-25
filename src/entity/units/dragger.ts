@@ -29,6 +29,9 @@ const unit: UnitSource = {
     die: 'units/poisDeath',
     walk: 'units/poisWalk',
   },
+  sfx: {
+    death: 'poisonerDeath'
+  },
   init: (unit: Unit.IUnit, underworld: Underworld) => {
     if (unit.image && unit.image.sprite && unit.image.sprite.filters) {
       unit.image.sprite.filters.push(
