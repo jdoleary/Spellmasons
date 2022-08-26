@@ -388,7 +388,7 @@ async function handleLoadGameState(payload: {
   // the DOM can update with the "loading..." message before locking up the CPU with heavy processing.
   // This is important so that createLevel runs BEFORE loading units and syncing Players
   // Note: createLevel syncronizes a bunch of underworld properties; for example it invokes cache_walls.
-  // Check if carefully befor manually syncronizing properties
+  // Check it carefully before manually syncronizing properties
   await underworld.createLevel(level);
 
   // Since level data has pickups stored in it and since those pickups' locations
