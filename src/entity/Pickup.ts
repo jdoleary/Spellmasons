@@ -156,7 +156,7 @@ export function serialize(p: IPickup): IPickupSerialized {
   return serialized;
 }
 // Reinitialize a pickup from another pickup object, this is used in loading game state after reconnect
-export function load(pickup: IPickup, underworld: Underworld, prediction: boolean) {
+export function load(pickup: IPickup, underworld: Underworld, prediction: boolean): IPickup | undefined {
   // Get the pickup object
   let foundPickup = pickups.find((p) => p.imagePath == pickup.imagePath);
   if (foundPickup) {
@@ -171,7 +171,8 @@ export function load(pickup: IPickup, underworld: Underworld, prediction: boolea
     addText(newPickup);
     return newPickup;
   } else {
-    throw new Error(`Could not load pickup with path ${pickup.imagePath}`);
+    console.error('Could not load pickup with path', pickup.imagePath);
+    return undefined;
   }
 }
 export function removePickup(pickup: IPickup, underworld: Underworld, prediction: boolean) {
