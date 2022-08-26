@@ -90,6 +90,7 @@ const elSeed = document.getElementById('seed') as (HTMLElement | undefined);
 const elUpgradePickerLabel = document.getElementById('upgrade-picker-label') as (HTMLElement | undefined);
 
 let showUpgradesQueue: boolean[] = [];
+export const showUpgradesClassName = 'showUpgrades';
 
 let lastTime = 0;
 let requestAnimationFrameGameLoopId: number;
@@ -1670,7 +1671,7 @@ export default class Underworld {
     if (player == globalThis.player) {
       document.body?.querySelector(`.card[data-upgrade="${upgrade.title}"]`)?.classList.toggle('chosen', true);
       // Clear upgrades when current player has picked one
-      document.body?.classList.toggle('showUpgrades', false);
+      document.body?.classList.toggle(showUpgradesClassName, false);
       // Show next round of upgrades to pick if there are upgrades in the queue
       if (showUpgradesQueue.length) {
         const statsUpgrades = showUpgradesQueue.shift();
@@ -1687,10 +1688,9 @@ export default class Underworld {
       console.error('Cannot show upgrades, no globalThis.player');
       return
     }
-    console.log('show upgrades', showUpgradesQueue.length);
-    if (document.body?.classList.contains('showUpgrades')) {
+    console.log('show upgrades.  Upgrade Queue: ', showUpgradesQueue.length);
+    if (document.body?.classList.contains(showUpgradesClassName)) {
       // Upgrades are already visible, queue the next upgrades
-      console.log('Queue upgrades. there are currently', showUpgradesQueue.length, 'upgrades in queue');
       showUpgradesQueue.push(statsUpgrades);
       return;
     }
@@ -1710,7 +1710,7 @@ export default class Underworld {
     // Now that level is complete, move to the Upgrade view where players can choose upgrades
     // before moving on to the next level
     // Generate Upgrades
-    document.body?.classList.toggle('showUpgrades', true);
+    document.body?.classList.toggle(showUpgradesClassName, true);
     if (!elUpgradePicker || !elUpgradePickerContent) {
       console.error('elUpgradePicker or elUpgradePickerContent are undefined.');
     }
@@ -1721,7 +1721,7 @@ export default class Underworld {
       const upgrades = Upgrade.generateUpgrades(player, 3, minimumProbability, statsUpgrades);
       if (!upgrades.length) {
         // Player already has all the upgrades
-        document.body?.classList.toggle('showUpgrades', false);
+        document.body?.classList.toggle(showUpgradesClassName, false);
         queueCenteredFloatingText('No more spell upgrades to pick from.');
       } else {
         const elUpgrades = upgrades.map((upgrade) => Upgrade.createUpgradeElement(upgrade, player, this));

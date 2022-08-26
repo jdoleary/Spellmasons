@@ -21,7 +21,7 @@ import { getAdjustedCastTarget, isOutOfRange } from '../../PlayerUtils';
 import { vec2ToOneDimentionIndexPreventWrap } from '../../jmath/ArrayUtil';
 import * as Vec from '../../jmath/Vec';
 import { Vec2 } from '../../jmath/Vec';
-import Underworld from '../../Underworld';
+import Underworld, { showUpgradesClassName } from '../../Underworld';
 import { toLineSegments } from '../../jmath/Polygon2';
 import { closestLineSegmentIntersection } from '../../jmath/lineSegment';
 import { allUnits } from '../../entity/units';
@@ -227,7 +227,10 @@ export function mouseMove(underworld: Underworld, e?: MouseEvent) {
     return
   }
   const mouseTarget = underworld.getMousePos();
-  if (globalThis.player && !globalThis.player.isSpawned) {
+  // Move the spawn "ghost" around so players can see where they will
+  // spawn if they click
+  if (globalThis.player && !globalThis.player.isSpawned &&
+    !document.body?.classList.contains(showUpgradesClassName)) {
     const spawnPoint = { ...mouseTarget, radius: config.COLLISION_MESH_RADIUS }
     collideWithLineSegments(spawnPoint, underworld.walls, underworld);
     if (globalThis.player.unit.image) {
@@ -415,7 +418,8 @@ export function clickHandler(underworld: Underworld, e: MouseEvent) {
   }
   // Get current client's player
   const selfPlayer = globalThis.player;
-  if (selfPlayer && !selfPlayer.isSpawned) {
+  if (selfPlayer && !selfPlayer.isSpawned &&
+    !document.body?.classList.contains(showUpgradesClassName)) {
     const spawnPoint = { ...mousePos, radius: config.COLLISION_MESH_RADIUS }
     collideWithLineSegments(spawnPoint, underworld.walls, underworld);
     if (underworld.isCoordOnWallTile(spawnPoint)) {
