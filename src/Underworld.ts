@@ -1844,6 +1844,13 @@ export default class Underworld {
           // Note, it is possible that calling this will immediately end
           // the player phase (if there are no players to take turns)
           this.initializePlayerTurns();
+          if (devMode) {
+            if (globalThis.save) {
+              const saveGameName = 'lastPlayerTurn';
+              console.info(`Dev: quick saving game as "${saveGameName}"`);
+              globalThis.save(saveGameName, this);
+            }
+          }
           break;
         case turn_phase[turn_phase.NPC_ALLY]:
           for (let u of this.units.filter(u => u.unitType == UnitType.AI && u.faction == Faction.ALLY)) {
