@@ -16,6 +16,8 @@
     - Make Trailer
     - Start marketing
 - Milestone | **Final Content**
+    - Fix liquid generation bugs
+    - Finalize UI
     - resurrection particles
     - add boulder
         - movable cover
@@ -46,7 +48,7 @@
     - Allow running local standalone server from inside app
     - Integrate Steam friends for joining the same server
     - [Storage and Persistence](https://cameronnokes.com/blog/how-to-store-user-data-in-electron/)
-    - [AutoUpdate](https://github.com/vercel/hazel)
+    - [AutoUpdate](https://github.com/vercel/hazel) Not needed because of updates through steam?
 - Milestone **Strech 1**
     - Explosive barrels??
     - [Mod support](https://partner.steamgames.com/doc/features/workshop)
