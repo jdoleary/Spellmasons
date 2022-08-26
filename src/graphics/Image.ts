@@ -170,6 +170,12 @@ export function changeSprite(image: IImageAnimated | undefined, imagePath: strin
 // callbacks and complicated objects such as PIXI.Sprites
 // are removed
 export function serialize(image: IImageAnimated): IImageAnimatedSerialized {
+  // @ts-ignore: imagePath is a property that I added to identify currently playing animation or sprite.
+  const children = image.sprite.children.map(c => c.imagePath);
+  if (children.find(c => c == null || c == undefined)) {
+    // @ts-ignore: imagePath is a property that I added to identify currently playing animation or sprite.
+    console.error('Improperly serialized Image children, at least one child missing imagePath:', image.sprite.children.filter(c => !c.imagePath));
+  }
   return {
     sprite: {
       x: image.sprite.x,
@@ -177,8 +183,7 @@ export function serialize(image: IImageAnimated): IImageAnimatedSerialized {
       scale: { x: image.sprite.scale.x, y: image.sprite.scale.y },
       imagePath: getAnimationPathFromSprite(image.sprite),
       loop: image.sprite.loop,
-      // @ts-ignore: imagePath is a property that I added to identify currently playing animation or sprite.
-      children: image.sprite.children.map(c => c.imagePath)
+      children,
 
     },
   };
