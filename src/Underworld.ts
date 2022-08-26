@@ -446,7 +446,7 @@ export default class Underworld {
         const predictionUnit = !this.unitsPrediction ? undefined : this.unitsPrediction[i];
         if (u.alive) {
 
-          while (u.path && u.path.points[0] && Vec.equal(Vec.round(u), u.path.points[0])) {
+          while (u.path && u.path.points[0] && Vec.equal(Vec.round(u), Vec.round(u.path.points[0]))) {
             // Remove next points until the next point is NOT equal to the unit's current position
             // This prevent's "jittery" "slow" movement where it's moving less than {x:1.0, y:1.0}
             // because the unit's position may have a decimal while the path does not so it'll stop
@@ -455,7 +455,6 @@ export default class Underworld {
           }
           // Only allow movement if the unit has stamina
           if (u.path && u.path.points[0] && u.stamina > 0 && Unit.isUnitsTurnPhase(u, this)) {
-            const lastPosition = Vec.clone(u);
             // Move towards target
             const stepTowardsTarget = math.getCoordsAtDistanceTowardsTarget(u, u.path.points[0], u.moveSpeed * deltaTime)
             let moveDist = 0;
@@ -1593,6 +1592,8 @@ export default class Underworld {
     if (globalThis.player) {
       // Turns can only be manually ended during the PlayerTurns phase
       if (this.isMyTurn()) {
+        // In devMode only, the game quicksaves for development purposes
+        // so I can jump back to right before I ended my turn
         if (devMode) {
           if (globalThis.save) {
             const saveGameName = 'quicksave';

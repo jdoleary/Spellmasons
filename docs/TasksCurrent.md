@@ -1,9 +1,6 @@
 ## Today
 - Bug: loading a level shows upgrades because create level assumes it's being created for the first time
 - player unit has a subsprite without an imagePath, what is it? it's saving as 'null' and then throwing an error when it tries to load it
-- Bug: Grunt walked towards liquid and just kept walking animation after it should've returned to idle. seed:0.8154642976606445
-    - I think this happens when they attempt to move to a location that is ouside of the pathing bounds (like in between a pathing line segment and a wall line segment, so it's still ground but it's out of bounds)
-    - use `quicksave` after it happens to figure out why
 
 - chain through pickups?
 - getting unit sync issues in multiplayer

@@ -15,6 +15,8 @@ import { moveWithCollisions } from './jmath/moveWithCollision';
 // Note: clicking on a unit will assign them to `selectedUnit` so they are available in the browser console
 // Note: shift + left click to choose to spawn a unit from a context menu
 // Note: Use hotkey Z to hide the HUD for recording, see function toggleHUD for more info
+// Note: Search for `quicksave`, in devMode the game quickSaves right before I end every turn
+// so I can go back for development purposes.
 
 
 export default function devUtils(graphics: PIXI.Graphics) {
