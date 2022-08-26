@@ -102,23 +102,31 @@ export function create({ pos, pickupSource, onTurnsLeftDone }:
         timeCircle.anchor.y = 0;
       }
 
-      // Value of text is set in sync()
-      self.text = pixiText('', { fill: 'white', align: 'center' });
-      sync(self);
-      if (self.text) {
-        self.text.anchor.x = 0;
-        self.text.anchor.y = 0;
-        // Center the text in the timeCircle
-        self.text.x = 13;
-        self.text.y = 5;
-        self.image.sprite.addChild(self.text);
-      }
+      addText(self);
     }
   }
 
   underworld.addPickupToArray(self, prediction);
 
   return self;
+}
+function addText(pickup: IPickup) {
+  // Value of text is set in sync()
+  pickup.text = pixiText('', { fill: 'white', align: 'center' });
+  sync(pickup);
+  if (pickup.text) {
+    pickup.text.anchor.x = 0;
+    pickup.text.anchor.y = 0;
+    // Center the text in the timeCircle
+    pickup.text.x = 13;
+    pickup.text.y = 5;
+    if (pickup.image) {
+      pickup.image.sprite.addChild(pickup.text);
+    } else {
+      console.error('Cannot add text to pickup, image is missing')
+    }
+  }
+
 }
 
 export function sync(pickup: IPickup) {
@@ -135,12 +143,12 @@ export function setPosition(pickup: IPickup, x: number, y: number) {
   pickup.y = y;
   Image.setPosition(pickup.image, { x, y });
 }
-export type IPickupSerialized = Omit<IPickup, "image" | "effect"> & {
+export type IPickupSerialized = Omit<IPickup, "image" | "effect" | "text"> & {
   image?: Image.IImageAnimatedSerialized
 };
 export function serialize(p: IPickup): IPickupSerialized {
   // effect is a callback and cannot be serialized
-  const { effect, ...rest } = p;
+  const { effect, text, ...rest } = p;
   const serialized: IPickupSerialized = {
     ...rest,
     image: p.image ? Image.serialize(p.image) : undefined,
@@ -160,6 +168,7 @@ export function load(pickup: IPickup, underworld: Underworld, prediction: boolea
     // create function because the create function passes that ref to the underworld pickups array.
     // So when you mutate the properties, the ref must stay the same.
     Object.assign(newPickup, toCopy);
+    addText(newPickup);
     return newPickup;
   } else {
     throw new Error(`Could not load pickup with path ${pickup.imagePath}`);
