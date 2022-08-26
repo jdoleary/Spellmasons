@@ -192,6 +192,7 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
       break;
     case MESSAGE_TYPES.SYNC_PLAYERS:
       {
+        console.log('sync: SYNC_PLAYERS; syncs units and players')
         const { units, players } = payload as {
           // Note: When syncing players, must also sync units
           // because IPlayerSerialized doesn't container a full
@@ -207,6 +208,7 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
       }
       break;
     case MESSAGE_TYPES.SET_PHASE:
+      console.log('sync: SET_PHASE; syncs units and players')
       const { phase, units, players } = payload as {
         phase: turn_phase,
         // Sync data for players
@@ -232,7 +234,7 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
       const { level } = payload as {
         level: LevelData
       }
-      console.log('sync: Syncing level');
+      console.log('sync: CREATE_LEVEL: Syncing / Creating level');
       if (underworld) {
         await underworld.createLevel(level);
       } else {
