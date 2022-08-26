@@ -172,7 +172,7 @@ export function changeSprite(image: IImageAnimated | undefined, imagePath: strin
 export function serialize(image: IImageAnimated): IImageAnimatedSerialized {
   // @ts-ignore: imagePath is a property that I added to identify currently playing animation or sprite.
   const children = image.sprite.children.map(c => c.imagePath);
-  if (children.find(c => c == null || c == undefined)) {
+  if (children.find(c => c == null || c == undefined || c == 'null')) {
     // @ts-ignore: imagePath is a property that I added to identify currently playing animation or sprite.
     console.error('Improperly serialized Image children, at least one child missing imagePath:', image.sprite.children.filter(c => !c.imagePath));
   }
