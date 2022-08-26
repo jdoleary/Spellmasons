@@ -1,4 +1,5 @@
 - Resources:
+    - [Steam branding guidelines](https://steamcdn-a.akamaihd.net/steamcommunity/public/images/steamworks_docs/english/Steam_Guidelines_060222.pdf)
     - https://www.progamemarketing.com/p/howtomakeasteampage
         - Show lots of variety in the steampage
             - screenshot rules

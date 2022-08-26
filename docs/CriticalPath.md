@@ -1,7 +1,10 @@
+# Parallel Focuses
+- Prep for Multiplayer
+- Record Trailer and start marketing
+- Miscillaneous bug smashing
 # Critical Path
 - Milestone | **Ready for Multiplayer**
     - Fix sync issues
-    - Fix unit pathing around liquid pools
 - Milestone | **Marketing** | Planning on September 1
     - Get mastered SFX from Brad
     - Figure out how to separate audio tracks
@@ -15,9 +18,14 @@
     - Record multiplayer playtest
     - Make Trailer
     - Start marketing
+- Milestone | **UI**
+    - Inventory
+    - Menu
+    - Upgrade cards
+    - Toolbar
+    - Health / Mana / Stamina bars
 - Milestone | **Final Content**
     - Fix liquid generation bugs
-    - Finalize UI
     - resurrection particles
     - add boulder
         - movable cover

@@ -1,11 +1,12 @@
 ## Today
+- Rename adjoining to 'link' or 'connect' or 'bind'
 - Bug: loading a level shows upgrades because create level assumes it's being created for the first time
 - player unit has a subsprite without an imagePath, what is it? it's saving as 'null' and then throwing an error when it tries to load it
 
-- chain through pickups?
 - getting unit sync issues in multiplayer
 
 # Bugs
+- chain through pickups?
 - sound effect lags for 'freeze'
 - Bug: Should sync portals when syncing units if all enemies are dead
     - I think just sending pickups to sync would work here
@@ -21,7 +22,6 @@
 - Spell Modifier effects visual representation to stay on units
     - debilitate
     - blood curse
-- bug: After i ended a level on a racetimeout push I got to choose infinite upgrade spells
 - implement auto reconnect when `setView(View.Disconnected)`
 - If player joins mid enemy movement it will force reset them
 - on refresh (with only 1 client in room) the server reseeded level but my position stayed the same
