@@ -355,16 +355,20 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
   }
 }
 async function handleLoadGameState(payload: {
-  level: LevelData,
   underworld: IUnderworldSerializedForSyncronize,
   phase: turn_phase,
   units: Unit.IUnitSerialized[],
   players: Player.IPlayerSerialized[]
 }, underworld: Underworld) {
   console.log("Setup: Load game state", payload)
-  const { level, underworld: payloadUnderworld, phase, units, players } = payload
+  const { underworld: payloadUnderworld, phase, units, players } = payload
   // Sync underworld properties
   const loadedGameState: IUnderworldSerializedForSyncronize = { ...payloadUnderworld };
+  const level = loadedGameState.lastLevelCreated;
+  if (!level) {
+    console.error('Cannot handleLoadGameState, level is undefined');
+    return;
+  }
   underworld.levelIndex = loadedGameState.levelIndex;
 
   underworld.seed = loadedGameState.seed;
@@ -452,7 +456,6 @@ export function setupNetworkHandlerGlobalFunctions(underworld: Underworld) {
     storage.set(
       savePrefix + title,
       JSON.stringify({
-        level: underworld.lastLevelCreated,
         underworld: underworld.serializeForSaving(),
         phase: underworld.turn_phase,
         units: underworld.units.map(Unit.serialize),
@@ -466,10 +469,9 @@ export function setupNetworkHandlerGlobalFunctions(underworld: Underworld) {
 
       await globalThis.startSingleplayer?.();
 
-      const { level, underworld: savedUnderworld, phase, units, players } = JSON.parse(savedGameString);
+      const { underworld: savedUnderworld, phase, units, players } = JSON.parse(savedGameString);
       underworld.pie.sendData({
         type: MESSAGE_TYPES.LOAD_GAME_STATE,
-        level,
         underworld: savedUnderworld,
         phase,
         units,

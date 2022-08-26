@@ -1,5 +1,4 @@
 - Optimize: Save files need not save unitsPrediction
-  - level & lastLevelCreated are duplicates in save file??
 - Bug: Portal spawns when you prediction kill yourself on test level
 - res particles
 - liquid issues:
