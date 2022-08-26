@@ -2,6 +2,7 @@ import type { LevelData } from '../Underworld';
 import { MESSAGE_TYPES } from '../types/MessageTypes';
 import * as Player from '../entity/Player';
 import * as Unit from '../entity/Unit';
+import * as Pickup from '../entity/Pickup';
 import Underworld from '../Underworld';
 import type PieClient from '@websocketpie/client';
 import * as storage from '../storage';
@@ -35,6 +36,7 @@ export function hostGiveClientGameState(clientId: string, underworld: Underworld
                     level,
                     underworld: underworld.serializeForSyncronize(),
                     phase: underworld.turn_phase,
+                    pickups: underworld.pickups.map(Pickup.serialize),
                     units: underworld.units.map(Unit.serialize),
                     players: underworld.players.map(Player.serialize)
                 }, {

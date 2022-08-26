@@ -7,6 +7,7 @@ import { getUpgradeByTitle } from '../Upgrade';
 import Underworld, { IUnderworldSerializedForSyncronize, LevelData, turn_phase } from '../Underworld';
 import * as Player from '../entity/Player';
 import * as Unit from '../entity/Unit';
+import * as Pickup from '../entity/Pickup';
 import * as messageQueue from '../messageQueue';
 import * as storage from '../storage';
 import * as config from '../config';
@@ -15,6 +16,7 @@ import { hostGiveClientGameState, typeGuardHostApp } from './networkUtil';
 import { skyBeam } from '../VisualEffects';
 import { tryFallInOutOfLiquid } from '../entity/Obstacle';
 import { cameraAutoFollow, PixiSpriteOptions } from '../graphics/PixiUtils';
+import { IPickupSerialized, removePickup } from '../entity/Pickup';
 
 const messageLog: any[] = [];
 export const NO_LOG_LIST = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
@@ -357,11 +359,12 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
 async function handleLoadGameState(payload: {
   underworld: IUnderworldSerializedForSyncronize,
   phase: turn_phase,
+  pickups: IPickupSerialized[],
   units: Unit.IUnitSerialized[],
   players: Player.IPlayerSerialized[]
 }, underworld: Underworld) {
   console.log("Setup: Load game state", payload)
-  const { underworld: payloadUnderworld, phase, units, players } = payload
+  const { underworld: payloadUnderworld, phase, pickups, units, players } = payload
   // Sync underworld properties
   const loadedGameState: IUnderworldSerializedForSyncronize = { ...payloadUnderworld };
   const level = loadedGameState.lastLevelCreated;
@@ -387,6 +390,28 @@ async function handleLoadGameState(payload: {
   // Note: createLevel syncronizes a bunch of underworld properties; for example it invokes cache_walls.
   // Check if carefully befor manually syncronizing properties
   await underworld.createLevel(level);
+
+  // Since level data has pickups stored in it and since those pickups' locations
+  // for existance may have changed between when the level was created and when
+  // the gamestate was saved, remove all pickups and spawn pickups from the pickups array
+  for (let p of underworld.pickups) {
+    removePickup(p, underworld, false);
+  }
+  if (pickups) {
+    for (let p of pickups) {
+      const pickup = Pickup.pickups.find(pickupSource => pickupSource.imagePath == p.imagePath);
+      if (pickup) {
+        const newPickup = Pickup.create({ pos: { x: p.x, y: p.y }, pickupSource: pickup }, underworld, false);
+        if (newPickup) {
+          const { image, ...rest } = p;
+          // Override pickup properties such as turnsLeftToGrab
+          Object.assign(newPickup, rest);
+        }
+      } else {
+        console.error('Could not spawn pickup, pickup source missing for imagePath', p.imagePath);
+      }
+    }
+  }
 
   // Load units
   if (units) {
@@ -458,6 +483,7 @@ export function setupNetworkHandlerGlobalFunctions(underworld: Underworld) {
       JSON.stringify({
         underworld: underworld.serializeForSaving(),
         phase: underworld.turn_phase,
+        pickups: underworld.pickups.map(Pickup.serialize),
         units: underworld.units.map(Unit.serialize),
         players: underworld.players.map(Player.serialize)
       }),
@@ -469,10 +495,11 @@ export function setupNetworkHandlerGlobalFunctions(underworld: Underworld) {
 
       await globalThis.startSingleplayer?.();
 
-      const { underworld: savedUnderworld, phase, units, players } = JSON.parse(savedGameString);
+      const { underworld: savedUnderworld, phase, units, players, pickups } = JSON.parse(savedGameString);
       underworld.pie.sendData({
         type: MESSAGE_TYPES.LOAD_GAME_STATE,
         underworld: savedUnderworld,
+        pickups,
         phase,
         units,
         players
