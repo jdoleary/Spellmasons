@@ -1,16 +1,17 @@
 ## Today
+- Better logging for the sake of server debugging
 - Bug: Grunt walked towards liquid and just kept walking animation after it should've returned to idle. seed:0.8154642976606445
     - I think this happens when they attempt to move to a location that is ouside of the pathing bounds (like in between a pathing line segment and a wall line segment, so it's still ground but it's out of bounds)
 - chain through pickups?
 - getting unit sync issues in multiplayer
+- Prompt
+    - fix hotkey for jprompt
+    - Bug: enter, enter doesn't make "are you sure" prompt go away when there are no enemies.
+    - Bug: If enemies take no action and you end your turn with the "are you sure" prompot, the prompt will layer
 
 # Bugs
 - sound effect lags for 'freeze'
-- Bug: enter, enter doesn't make "are you sure" prompt go away when there are no enemies.
-- Bug: Portal spawns when you prediction kill yourself on test level
 - Bug: Should sync portals when syncing units if all enemies are dead
-- Bug: If enemies take no action and you end your turn with the "are you sure" prompot, the prompt will layer
-
 ## Tasks
 - Feature: perks
 - Standalone server backlog
@@ -27,7 +28,6 @@
 - If player joins mid enemy movement it will force reset them
 - on refresh (with only 1 client in room) the server reseeded level but my position stayed the same
 - rework exp
-- fix hotkey for jprompt
 - bug: when i quit a game and start over it gives me the resurrect optoin
     - or it maintains some state, like all the spells in my inventory
 - Ensure hurt is presented in first spell picks

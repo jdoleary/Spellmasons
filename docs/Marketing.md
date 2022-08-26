@@ -29,6 +29,7 @@
                 - wishlists are the key metric
                 - Marketing & Visibility > Store & Steam Platform Traffic Breakdown to see Tags and Discovery Queue metrics
     - https://howtomarketagame.com/
+    - [Steam marketing best practices](https://partner.steamgames.com/doc/marketing/bestpractices)
     - https://partner.steamgames.com/doc/store/assets/standard#header_capsule
 - Tasks:
     - Make the steam page

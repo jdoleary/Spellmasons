@@ -1,3 +1,4 @@
+- Bug: Portal spawns when you prediction kill yourself on test level
 - res particles
 - liquid issues:
   - liquid messed up; seed: 0.6404564349842206

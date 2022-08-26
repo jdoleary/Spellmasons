@@ -1,4 +1,7 @@
 # Critical Path
+- Milestone | **Ready for Multiplayer**
+    - Fix sync issues
+    - Fix unit pathing around liquid pools
 - Milestone | **Marketing** | Planning on September 1
     - Get mastered SFX from Brad
     - Figure out how to separate audio tracks
@@ -6,10 +9,10 @@
         - discord on phone
         - my voice on separate audio track in OBS
         - Game audio in OBS
-        - Music OFF, REMEMBER MUSIC OFF
+        - Remember
+            - Do you want your mouse recorded
+            - Music OFF, **REMEMBER MUSIC OFF WHEN RECORDING**
     - Record multiplayer playtest
-    - Get Steampage approved
-        - Forward Spellmasons.com to steam back
     - Make Trailer
     - Start marketing
 - Milestone | **Final Content**
