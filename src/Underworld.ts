@@ -1593,6 +1593,13 @@ export default class Underworld {
     if (globalThis.player) {
       // Turns can only be manually ended during the PlayerTurns phase
       if (this.isMyTurn()) {
+        if (devMode) {
+          if (globalThis.save) {
+            const saveGameName = 'quicksave';
+            console.info(`Dev: quick saving game as "${saveGameName}"`);
+            globalThis.save(saveGameName, this);
+          }
+        }
         let affirm = true
         // Interrupt endTurn with a cancellable prompt IF
         // player hasn't already ended their turn (note if they already HAVE ended their turn, just allow the END_TURN message to go through; this
@@ -1844,13 +1851,6 @@ export default class Underworld {
           // Note, it is possible that calling this will immediately end
           // the player phase (if there are no players to take turns)
           this.initializePlayerTurns();
-          if (devMode) {
-            if (globalThis.save) {
-              const saveGameName = 'lastPlayerTurn';
-              console.info(`Dev: quick saving game as "${saveGameName}"`);
-              globalThis.save(saveGameName, this);
-            }
-          }
           break;
         case turn_phase[turn_phase.NPC_ALLY]:
           for (let u of this.units.filter(u => u.unitType == UnitType.AI && u.faction == Faction.ALLY)) {
