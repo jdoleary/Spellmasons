@@ -1,6 +1,6 @@
 import { OBSTACLE_SIZE } from '../config';
 import { Vec2, subtract, magnitude, add, clone } from '../jmath/Vec';
-import { IUnit, removeModifier } from './Unit';
+import { IUnit } from './Unit';
 import { closestLineSegmentIntersectionWithLine, isOnOutside } from '../jmath/lineSegment';
 import { Material } from '../Conway';
 import { isVec2InsidePolygon, Polygon2 } from '../jmath/Polygon2';

@@ -2,7 +2,6 @@ import {
   addPixiContainersForView,
   resizePixi,
   app,
-  updateCameraPosition,
 } from './graphics/PixiUtils';
 import {
   clickHandler,
@@ -14,7 +13,6 @@ import {
   mouseUpHandler,
   mouseMove,
   onWindowBlur,
-  keypressListener,
 } from './graphics/ui/eventListeners';
 import Underworld from './Underworld';
 

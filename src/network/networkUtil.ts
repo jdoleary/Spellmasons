@@ -5,8 +5,6 @@ import * as Unit from '../entity/Unit';
 import * as Pickup from '../entity/Pickup';
 import Underworld from '../Underworld';
 import type PieClient from '@websocketpie/client';
-import * as storage from '../storage';
-import * as config from '../config';
 
 // Copied from PieClient.d.ts so as to not have to import PieClient
 export interface ClientPresenceChangedArgs {

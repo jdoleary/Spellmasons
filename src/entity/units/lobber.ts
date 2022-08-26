@@ -3,7 +3,6 @@ import type { UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
 import { createVisualLobbingProjectile } from '../Projectile';
 import * as math from '../../jmath/math';
-import { addPixiSpriteAnimated, containerSpells, containerUnits } from '../../graphics/PixiUtils';
 import Underworld from '../../Underworld';
 import { bloodLobber } from '../../graphics/ui/colors';
 

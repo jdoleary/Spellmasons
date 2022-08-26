@@ -5,9 +5,7 @@ import * as math from '../../jmath/math';
 import { createVisualFlyingProjectile } from '../Projectile';
 import Shield from '../../cards/shield';
 import { isVampire } from '../../cards/blood_curse';
-import { addPixiSpriteAnimated, containerUnits } from '../../graphics/PixiUtils';
 import Underworld from '../../Underworld';
-import * as config from '../../config';
 
 const CAST_MANA_COST = 30;
 async function animatePriestProjectileAndHit(self: Unit.IUnit, target: Unit.IUnit) {

@@ -44,7 +44,7 @@ import type { Vec2 } from "./jmath/Vec";
 import * as Vec from "./jmath/Vec";
 import Events from './Events';
 import { allUnits } from './entity/units';
-import { getUIBarProps, clearTints, updateManaCostUI, updatePlanningView } from './graphics/PlanningView';
+import { getUIBarProps, updateManaCostUI, updatePlanningView } from './graphics/PlanningView';
 import { chooseObjectWithProbability, prng, randInt, SeedrandomState } from './jmath/rand';
 import { calculateCost } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle, closestLineSegmentIntersection } from './jmath/lineSegment';
@@ -68,9 +68,9 @@ import { updateParticlees } from './graphics/Particles';
 import { processNextInQueueIfReady, setupNetworkHandlerGlobalFunctions } from './network/networkHandler';
 import { setupDevGlobalFunctions } from './devUtils';
 import type PieClient from '@websocketpie/client';
-import { forcePush, makeForcePush } from './cards/push';
+import { makeForcePush } from './cards/push';
 import { createVisualLobbingProjectile } from './entity/Projectile';
-import { getAdjustedCastTarget, getEndOfRange, isOutOfRange } from './PlayerUtils';
+import { getEndOfRange, isOutOfRange } from './PlayerUtils';
 
 export enum turn_phase {
   PlayerTurns,

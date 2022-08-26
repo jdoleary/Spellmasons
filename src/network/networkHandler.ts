@@ -15,7 +15,7 @@ import { allUnits } from '../entity/units';
 import { hostGiveClientGameState, typeGuardHostApp } from './networkUtil';
 import { skyBeam } from '../VisualEffects';
 import { tryFallInOutOfLiquid } from '../entity/Obstacle';
-import { cameraAutoFollow, PixiSpriteOptions } from '../graphics/PixiUtils';
+import { cameraAutoFollow } from '../graphics/PixiUtils';
 import { IPickupSerialized, removePickup } from '../entity/Pickup';
 
 const messageLog: any[] = [];

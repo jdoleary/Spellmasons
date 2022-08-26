@@ -3,7 +3,6 @@ import type { UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
 import { createVisualFlyingProjectile } from '../Projectile';
 import * as math from '../../jmath/math';
-import { addPixiSpriteAnimated, containerSpells } from '../../graphics/PixiUtils';
 import { Vec2 } from '../../jmath/Vec';
 import Underworld from '../../Underworld';
 

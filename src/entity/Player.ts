@@ -10,7 +10,7 @@ import { clearTooltipSelection } from '../graphics/PlanningView';
 import defaultPlayerUnit from './units/playerUnit';
 import { MESSAGE_TYPES } from '../types/MessageTypes';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
-import { playerCastAnimationColor, playerCoatPrimary, playerCoatSecondary, robeColors } from '../graphics/ui/colors';
+import { playerCastAnimationColor, playerCoatPrimary, playerCoatSecondary } from '../graphics/ui/colors';
 import Underworld from '../Underworld';
 import { lerp } from "../jmath/math"
 import * as inLiquid from '../inLiquid';
