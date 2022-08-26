@@ -1,7 +1,10 @@
 ## Today
+- load 'pathing' didn't load scroll pickup back in
+    - This is because pickups are stored in 'level' but new pickups aren't
 - Better logging for the sake of server debugging
 - Bug: Grunt walked towards liquid and just kept walking animation after it should've returned to idle. seed:0.8154642976606445
     - I think this happens when they attempt to move to a location that is ouside of the pathing bounds (like in between a pathing line segment and a wall line segment, so it's still ground but it's out of bounds)
+    
 - chain through pickups?
 - getting unit sync issues in multiplayer
 - Prompt
