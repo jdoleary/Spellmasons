@@ -1679,7 +1679,7 @@ export default class Underworld {
       console.error('Cannot show upgrades, no globalThis.player');
       return
     }
-    console.trace('show upgrades');
+    console.log('show upgrades', showUpgradesQueue.length);
     if (document.body?.classList.contains('showUpgrades')) {
       // Upgrades are already visible, queue the next upgrades
       console.log('Queue upgrades. there are currently', showUpgradesQueue.length, 'upgrades in queue');
