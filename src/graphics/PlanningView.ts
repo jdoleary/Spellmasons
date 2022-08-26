@@ -444,11 +444,9 @@ export function clearSpellEffectProjection(underworld: Underworld) {
 
 export function drawPredictionLine(start: Vec2, end: Vec2) {
   if (predictionGraphics) {
-    // predictionGraphics.beginFill(0xffff0b, 0.5);
-    predictionGraphics.lineStyle(3, 0x33ff00, 1.0);
+    predictionGraphics.lineStyle(3, colors.targetingSpellGreen, 1.0);
     predictionGraphics.moveTo(start.x, start.y);
     predictionGraphics.lineTo(end.x, end.y);
-    // predictionGraphics.endFill();
   }
 }
 export function drawPredictionCircle(target: Vec2, radius: number, color: number, text?: string) {
