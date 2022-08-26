@@ -50,62 +50,6 @@ function nonUnderworldKeydownListener(event: KeyboardEvent) {
       break;
   }
 }
-export function keypressListener(underworld: Underworld, event: KeyboardEvent) {
-  // Only handle hotkeys when viewing the Game
-  if (globalThis.view !== View.Game) {
-    return;
-  }
-  if (!underworld) {
-    return
-  }
-
-  switch (event.code) {
-    case 'KeyI':
-      CardUI.toggleInventory(undefined, undefined, underworld);
-      break;
-    case 'Space':
-      underworld.endMyTurn();
-      break;
-    case 'Digit1':
-      CardUI.selectCardByIndex(0);
-      break;
-    case 'Digit2':
-      CardUI.selectCardByIndex(1);
-      break;
-    case 'Digit3':
-      CardUI.selectCardByIndex(2);
-      break;
-    case 'Digit4':
-      CardUI.selectCardByIndex(3);
-      break;
-    case 'Digit5':
-      CardUI.selectCardByIndex(4);
-      break;
-    case 'Digit6':
-      CardUI.selectCardByIndex(5);
-      break;
-    case 'Digit7':
-      CardUI.selectCardByIndex(6);
-      break;
-    case 'Digit8':
-      CardUI.selectCardByIndex(7);
-      break;
-    case 'Digit9':
-      CardUI.selectCardByIndex(8);
-      break;
-    case 'Digit0':
-      CardUI.selectCardByIndex(9);
-      break;
-    case 'Period':
-      if (adminMode) {
-        toggleHUD();
-      } else {
-        console.log('Aborted: This key "would" toggleHUD if "adminMode" was set to true.')
-      }
-      break;
-
-  }
-}
 export function keydownListener(underworld: Underworld, event: KeyboardEvent) {
   // Only handle hotkeys when viewing the Game
   if (globalThis.view !== View.Game) {
@@ -126,6 +70,7 @@ export function keydownListener(underworld: Underworld, event: KeyboardEvent) {
   // note: :last-child targets the top most prompt if there are more than one
   const promptNoBtn = document.querySelector(`.prompt:last-child .no[data-key="${event.code}"]`) as HTMLElement;
   if (promptNoBtn) {
+    // Event was handled
     promptNoBtn.click();
     // Return immediately, prompt hotkey overrides other hotkeys
     return;
@@ -182,6 +127,49 @@ export function keydownListener(underworld: Underworld, event: KeyboardEvent) {
     case 'KeyZ':
       // Make camera follow player unit 
       cameraAutoFollow(true)
+      break;
+    case 'KeyI':
+      CardUI.toggleInventory(undefined, undefined, underworld);
+      break;
+    case 'Space':
+      underworld.endMyTurn();
+      break;
+    case 'Digit1':
+      CardUI.selectCardByIndex(0);
+      break;
+    case 'Digit2':
+      CardUI.selectCardByIndex(1);
+      break;
+    case 'Digit3':
+      CardUI.selectCardByIndex(2);
+      break;
+    case 'Digit4':
+      CardUI.selectCardByIndex(3);
+      break;
+    case 'Digit5':
+      CardUI.selectCardByIndex(4);
+      break;
+    case 'Digit6':
+      CardUI.selectCardByIndex(5);
+      break;
+    case 'Digit7':
+      CardUI.selectCardByIndex(6);
+      break;
+    case 'Digit8':
+      CardUI.selectCardByIndex(7);
+      break;
+    case 'Digit9':
+      CardUI.selectCardByIndex(8);
+      break;
+    case 'Digit0':
+      CardUI.selectCardByIndex(9);
+      break;
+    case 'Period':
+      if (adminMode) {
+        toggleHUD();
+      } else {
+        console.log('Aborted: This key "would" toggleHUD if "adminMode" was set to true.')
+      }
       break;
 
   }

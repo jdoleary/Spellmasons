@@ -141,11 +141,6 @@ export function addUnderworldEventListeners(underworld: Underworld) {
       },
       {
         target: globalThis,
-        event: 'keypress',
-        listener: keypressListener.bind(undefined, underworld)
-      },
-      {
-        target: globalThis,
         event: 'keyup',
         listener: keyupListener.bind(undefined, underworld)
       },

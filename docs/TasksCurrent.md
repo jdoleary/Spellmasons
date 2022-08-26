@@ -4,13 +4,9 @@
 - Better logging for the sake of server debugging
 - Bug: Grunt walked towards liquid and just kept walking animation after it should've returned to idle. seed:0.8154642976606445
     - I think this happens when they attempt to move to a location that is ouside of the pathing bounds (like in between a pathing line segment and a wall line segment, so it's still ground but it's out of bounds)
-    
+
 - chain through pickups?
 - getting unit sync issues in multiplayer
-- Prompt
-    - fix hotkey for jprompt
-    - Bug: enter, enter doesn't make "are you sure" prompt go away when there are no enemies.
-    - Bug: If enemies take no action and you end your turn with the "are you sure" prompot, the prompt will layer
 
 # Bugs
 - sound effect lags for 'freeze'
