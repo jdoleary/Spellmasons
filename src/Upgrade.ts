@@ -7,6 +7,7 @@ import type { IPlayer } from './entity/Player';
 import Underworld from './Underworld';
 export interface IUpgrade {
   title: string;
+  type: 'perk' | 'card';
   description: (player: IPlayer) => string;
   thumbnail: string;
   // The maximum number of copies a player can have of this upgrade
@@ -135,6 +136,7 @@ export function getUpgradeByTitle(title: string): IUpgrade | undefined {
 export const upgradeSourceWhenDead: IUpgrade[] = [
   {
     title: 'Resurrect',
+    type: 'card',
     description: () => 'Resurrects you so the adventure can continue!',
     thumbnail: 'images/upgrades/resurrect.png',
     // Resurrection happens automatically at the start of each level
@@ -146,6 +148,7 @@ export const upgradeSourceWhenDead: IUpgrade[] = [
 export const upgradeStatsSource: IUpgrade[] = [
   {
     title: '+ Max Health',
+    type: 'perk',
     description: (player) =>
       `Increases your max health from ${player.unit.healthMax} to ${player.unit.healthMax + maxHealthIncreaseAmount
       }`,
@@ -164,6 +167,7 @@ export const upgradeStatsSource: IUpgrade[] = [
   },
   {
     title: '+ Max Mana',
+    type: 'perk',
     description: (player) =>
       `Increases your mana from ${player.unit.manaMax} to ${player.unit.manaMax + maxManaIncreaseAmount
       }`,

@@ -38,9 +38,9 @@ export interface IPlayer {
   isSpawned: boolean;
   cards: string[];
   inventory: string[];
-  // The number of cards a player's hand is populated with at the start of a level
-  cardsAmount: number;
   upgrades: Upgrade.IUpgrade[];
+  upgradesLeftToChoose: number;
+  perksLeftToChoose: number;
   // Note: call updateCardManaBadges() any time you modify cardUsageCounts so it will
   // be reflected in the UI
   cardUsageCounts: CardUsage;
@@ -74,8 +74,9 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
     cards: Array(config.NUMBER_OF_TOOLBAR_SLOTS).fill(''),
     inventory: [],
     cardUsageCounts: {},
-    cardsAmount: config.START_CARDS_COUNT,
     upgrades: [],
+    upgradesLeftToChoose: config.STARTING_CARD_COUNT,
+    perksLeftToChoose: 0,
   };
 
   // Player units get full mana every turn

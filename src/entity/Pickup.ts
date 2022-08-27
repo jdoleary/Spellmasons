@@ -299,6 +299,8 @@ export const pickups: IPickupSource[] = [
     turnsLeftToGrab: 4,
     playerOnly: true,
     effect: ({ unit, player, underworld }) => {
+      // All players get to pick a new upgrade when one picks up the scroll.
+      underworld.players.forEach(p => p.upgradesLeftToChoose++);
       underworld.showUpgrades(false);
       return true;
     },

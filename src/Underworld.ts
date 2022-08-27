@@ -89,7 +89,6 @@ const elUpgradePickerContent = document.getElementById('upgrade-picker-content')
 const elSeed = document.getElementById('seed') as (HTMLElement | undefined);
 const elUpgradePickerLabel = document.getElementById('upgrade-picker-label') as (HTMLElement | undefined);
 
-let showUpgradesQueue: boolean[] = [];
 export const showUpgradesClassName = 'showUpgrades';
 
 let lastTime = 0;
@@ -1329,10 +1328,9 @@ export default class Underworld {
     // Better to have the upgrade screen tied to the network message.
     // Note: Upgrades must come AFTER resetPlayerForNextLevel, see commit for explanation
     if (this.levelIndex === 0) {
-      for (let i = 0; i < config.STARTING_CARD_COUNT; i++) {
-        this.showUpgrades(false);
-      }
+      this.showUpgrades(false);
     } else {
+      this.players.forEach(p => p.perksLeftToChoose++);
       this.showUpgrades(true);
     }
   }
@@ -1666,45 +1664,42 @@ export default class Underworld {
     }
   }
   chooseUpgrade(player: Player.IPlayer, upgrade: Upgrade.IUpgrade) {
+    if (upgrade.type == 'card') {
+      player.upgradesLeftToChoose--;
+    } else {
+      player.perksLeftToChoose--;
+    }
     upgrade.effect(player, this);
     player.upgrades.push(upgrade);
     if (player == globalThis.player) {
       document.body?.querySelector(`.card[data-upgrade="${upgrade.title}"]`)?.classList.toggle('chosen', true);
       // Clear upgrades when current player has picked one
       document.body?.classList.toggle(showUpgradesClassName, false);
-      // Show next round of upgrades to pick if there are upgrades in the queue
-      if (showUpgradesQueue.length) {
-        const statsUpgrades = showUpgradesQueue.shift();
-        if (statsUpgrades !== undefined) {
-          this.showUpgrades(statsUpgrades);
-        }
+      // Show next round of upgrades to pick if there are upgrades left to be chosen 
+      if (player.upgradesLeftToChoose > 0) {
+        this.showUpgrades(false);
+      } else if (player.perksLeftToChoose > 0) {
+        this.showUpgrades(true);
       }
 
     }
   }
 
-  showUpgrades(statsUpgrades: boolean) {
+  showUpgrades(isPerk: boolean) {
     if (!globalThis.player) {
       console.error('Cannot show upgrades, no globalThis.player');
       return
     }
-    console.log('show upgrades.  Upgrade Queue: ', showUpgradesQueue.length);
-    if (document.body?.classList.contains(showUpgradesClassName)) {
-      // Upgrades are already visible, queue the next upgrades
-      showUpgradesQueue.push(statsUpgrades);
-      return;
-    }
     let minimumProbability = 0;
-    const startingSpellsLeftToPick = config.STARTING_CARD_COUNT - globalThis.player.inventory.length
-    if (startingSpellsLeftToPick > 0) {
+    if (globalThis.player.upgradesLeftToChoose > 0 && globalThis.player.inventory.length < config.STARTING_CARD_COUNT) {
       // Limit starting cards to a probability of 10 or more
       minimumProbability = 10;
       if (elUpgradePickerLabel) {
-        elUpgradePickerLabel.innerHTML = `Pick ${startingSpellsLeftToPick} starting spells.`;
+        elUpgradePickerLabel.innerHTML = `Pick ${globalThis.player.upgradesLeftToChoose > 1 ? `${globalThis.player.upgradesLeftToChoose} spells` : `${globalThis.player.upgradesLeftToChoose} spell`}`;
       }
     } else {
       if (elUpgradePickerLabel) {
-        elUpgradePickerLabel.innerHTML = statsUpgrades ? 'Pick an upgrade' : 'Pick a spell';
+        elUpgradePickerLabel.innerHTML = isPerk ? 'Pick a Perk' : 'Pick a spell';
       }
     }
     // Now that level is complete, move to the Upgrade view where players can choose upgrades
@@ -1718,7 +1713,7 @@ export default class Underworld {
       (p) => p.clientId === globalThis.clientId,
     );
     if (player) {
-      const upgrades = Upgrade.generateUpgrades(player, 3, minimumProbability, statsUpgrades);
+      const upgrades = Upgrade.generateUpgrades(player, 3, minimumProbability, isPerk);
       if (!upgrades.length) {
         // Player already has all the upgrades
         document.body?.classList.toggle(showUpgradesClassName, false);

@@ -32,7 +32,6 @@ export const PLAYER_BASE_ATTACK_RANGE = UNIT_BASE_STAMINA * 0.8;
 export const PLAYER_BASE_STAMINA = UNIT_BASE_STAMINA * 0.7;
 export const UNIT_BASE_DAMAGE = 3;
 export const NON_HEAVY_UNIT_SCALE = 1.0;
-export const START_CARDS_COUNT = 60;
 export const STARTING_CARD_COUNT = 3;
 export const OBSTACLE_SIZE = COLLISION_MESH_RADIUS * 2;
 export const MAX_PLAYERS = 8;

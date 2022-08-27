@@ -129,6 +129,7 @@ export function registerCards(underworld: Underworld) {
 function cardToUpgrade(c: ICard, underworld: Underworld): IUpgrade {
   return {
     title: c.id,
+    type: 'card',
     description: () => c.description,
     thumbnail: `images/spell/${c.thumbnail}`,
     // TODO: Feature creep: What if you could UPGRADE the effect of a spell!! 0.o
