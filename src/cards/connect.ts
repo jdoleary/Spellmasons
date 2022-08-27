@@ -4,7 +4,7 @@ import type * as Unit from '../entity/Unit';
 import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
 
-const id = 'Adjoining';
+const id = 'Connect';
 const spell: Spell = {
   card: {
     id,
@@ -13,10 +13,10 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 1,
     probability: 20,
-    thumbnail: 'spellIconAdjoining.png',
+    thumbnail: 'spellIconConnect.png',
     requiresFollowingCard: true,
     description: `
-Link nearby enemies (and allys!) together so they are all affected by the next spells.
+Link together enemies (and allys) in close proximity to each other.  All connected beings will be affected by the following spells in your cast.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
       // Note: This loop must NOT be a for..of because it

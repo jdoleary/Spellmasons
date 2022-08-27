@@ -15,7 +15,7 @@ import Subsprites, { Subsprite } from '../Subsprites';
 import add_damage, { UnitDamage } from './hurt';
 import add_heal from './add_heal';
 import area_of_effect from './area_of_effect';
-import chain from './chain';
+import connect from './connect';
 import contagious from './contagious';
 import freeze from './freeze';
 import raise_dead from './resurrect';
@@ -104,7 +104,7 @@ export function registerCards(underworld: Underworld) {
   register(add_damage, underworld);
   register(add_heal, underworld);
   register(area_of_effect, underworld);
-  register(chain, underworld);
+  register(connect, underworld);
   register(contagious, underworld);
   register(freeze, underworld);
   register(raise_dead, underworld);
