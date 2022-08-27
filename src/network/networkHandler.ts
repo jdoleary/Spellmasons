@@ -21,6 +21,7 @@ import { IPickupSerialized, removePickup } from '../entity/Pickup';
 const messageLog: any[] = [];
 export const NO_LOG_LIST = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
 export const HANDLE_IMMEDIATELY = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
+const elInstructions = document.getElementById('instructions') as (HTMLElement | undefined);
 export function onData(d: OnDataArgs, underworld: Underworld) {
   if (!NO_LOG_LIST.includes(d.payload.type)) {
     // Don't clog up server logs with payloads, leave that for the client which can handle them better
@@ -284,6 +285,11 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
         if (!(isNaN(payload.x) && isNaN(payload.y))) {
           Player.resetPlayerForNextLevel(fromPlayer, underworld);
           fromPlayer.isSpawned = true;
+          if (fromPlayer == globalThis.player) {
+            if (elInstructions) {
+              elInstructions.innerText = '';
+            }
+          }
           Unit.setLocation(fromPlayer.unit, payload);
           // Detect if player spawns in liquid
           tryFallInOutOfLiquid(fromPlayer.unit, underworld, false);

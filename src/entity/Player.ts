@@ -16,6 +16,7 @@ import { lerp } from "../jmath/math"
 import * as inLiquid from '../inLiquid';
 
 const elLobbyBody = document.getElementById('lobby-body') as (HTMLElement | undefined);
+const elInstructions = document.getElementById('instructions') as (HTMLElement | undefined);
 // The serialized version of the interface changes the interface to allow only the data
 // that can be serialized in JSON.  It may exclude data that is not neccessary to
 // rehydrate the JSON into an entity
@@ -163,6 +164,11 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
   player.inPortal = false;
   // Set the player so they can choose their next spawn
   player.isSpawned = false;
+
+  if (elInstructions) {
+    console.log('jtest set')
+    elInstructions.innerText = 'Choose a place to spawn in with Left Mouse Button.'
+  }
 
   // Make unit visible
   Image.show(player.unit.image);

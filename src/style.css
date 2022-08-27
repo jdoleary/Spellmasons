@@ -1094,3 +1094,20 @@ body,
 button {
   cursor: url('cursor.png'), auto;
 }
+
+#instructions {
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  font-size: 54px;
+  margin-bottom: 12px;
+  text-shadow: 2px 2px 2px #000;
+  position: absolute;
+  top: 220px;
+  z-index: 1;
+  width: 60%;
+  margin: 0 auto;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+}
