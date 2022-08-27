@@ -1,7 +1,4 @@
 ## Today
-- Rename adjoining to 'link' or 'connect' or 'bind'
-- Bug: loading a level shows upgrades because create level assumes it's being created for the first time
-- player unit has a subsprite without an imagePath, what is it? it's saving as 'null' and then throwing an error when it tries to load it
 
 - getting unit sync issues in multiplayer
 

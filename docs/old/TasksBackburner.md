@@ -1,4 +1,6 @@
+- bug: if you save while having picked 1 of the 3 starting spells, it loads and shows the picker before the player is synced, so just the text is out of date
 - Optimize: Save files need not save unitsPrediction
+- player unit has a subsprite without an imagePath, what is it? it's saving as 'null' and then throwing an error when it tries to load it
 - Bug: Portal spawns when you prediction kill yourself on test level
 - res particles
 - liquid issues:

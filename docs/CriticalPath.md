@@ -25,6 +25,7 @@
     - Toolbar
     - Health / Mana / Stamina bars
 - Milestone | **Final Content**
+    - Perks
     - Fix liquid generation bugs
     - resurrection particles
     - add boulder
