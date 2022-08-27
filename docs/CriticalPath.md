@@ -1,7 +1,22 @@
 # Parallel Focuses
 - Prep for Multiplayer
 - Record Trailer and start marketing
+    - trailer should be more zoomed in
 - Miscillaneous bug smashing
+
+# Desired Schedule
+- August / September
+    - Start Marketing
+- October / November
+    - Finish UI
+    - Reliable Multiplayer
+    - Package as Electron App
+- December / January
+    - "Explain Engine" (Adaptive Tutorial)
+    - Beta Testing
+    - More content depending on how marketing is going
+    - Finish polish and reliability
+    - Release
 # Critical Path
 - Milestone | **Ready for Multiplayer**
     - Fix sync issues
@@ -13,6 +28,7 @@
         - my voice on separate audio track in OBS
         - Game audio in OBS
         - Remember
+            - Vary the amound of zoom, you should be close enough for those viewing on a small screen
             - Do you want your mouse recorded
             - Music OFF, **REMEMBER MUSIC OFF WHEN RECORDING**
     - Record multiplayer playtest
@@ -87,6 +103,7 @@
         
     - More enemies
         - Color enemies different colors and give them different behavior. For example, a blue "poisoner" could be like the "smoker" from left4dead
+        - Boss enemies
 
 ## Philosophy
     - "rules for copy"
