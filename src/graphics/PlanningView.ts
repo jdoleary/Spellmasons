@@ -139,7 +139,7 @@ export function updatePlanningView(underworld: Underworld) {
       // Update tooltip for whatever is being hovered
       updateTooltipContent(underworld);
 
-      if (globalThis.player) {
+      if (globalThis.player && globalThis.player.isSpawned) {
         // Only draw circle if player isn't moving to avoid UI thrashing
         if (equal(lastSpotCurrentPlayerTurnCircle, globalThis.player.unit)) {
           if (underworld.isMyTurn()) {
