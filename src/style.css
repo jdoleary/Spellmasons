@@ -125,6 +125,7 @@ body.view-Game.showUpgrades #upgrade-picker {
   font-weight: bold;
   font-size: 54px;
   margin-bottom: 12px;
+  text-shadow: 2px 2px 2px #000;
 }
 
 #upgrade-picker .card,
