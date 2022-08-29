@@ -1,3 +1,4 @@
+This is the font used for the logo: https://fonts.adobe.com/fonts/bradley-djr#about-section
 # Notes
 - Sometimes player 2's cards get clobbered via a syncPlayers but is fixed on the next sync players.  I think this only occurs due to devMode choosing upgrades really fast but it might be worth watching carefully
 ---
