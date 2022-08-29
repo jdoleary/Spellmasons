@@ -2,12 +2,12 @@ const fs = require('fs');
 const { exec } = require("child_process");
 
 const onlyList = []
-const greenList = ['playerDeath_17', 'playerDeath_18', 'playerDeath_19', 'playerDeath_20', 'playerDeath_21', 'playerDeath_22'];
-const redList = ['Magic'];
+const greenList = ['lobberWalk'];
+const redList = ['Magic', 'Death_1'];
 fs.readdirSync('.').forEach(file => {
     if (onlyList.every(ol => file.includes(ol)) && greenList.some(gl => file.includes(gl)) && !redList.some(rl => file.includes(rl))) {
         // Modify
-        const magickCommand = `magick composite -gravity center ${file} ../playerDeath_17-shadow.png ${file}`;
+        const magickCommand = `magick composite -gravity center ${file} ../lobber-shadow-walk.png ${file}`;
         exec(magickCommand, (error, stdout, stderr) => {
             console.log(file);
             if (error) {
