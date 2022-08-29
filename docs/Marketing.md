@@ -33,10 +33,7 @@
     - [Steam marketing best practices](https://partner.steamgames.com/doc/marketing/bestpractices)
     - https://partner.steamgames.com/doc/store/assets/standard#header_capsule
 - Tasks:
-    - Make the steam page
     - Make the trailer
-    - Reroute spellmasons.com to the steam page directly
-    - Deside on a hard release date
     - Once the marketing campain is launched aim to release 1 short a week
     - Contractors
         - COVER YOUR ASS LEGALLY HERE
@@ -54,6 +51,7 @@
 - Homepage / Marketing / Steam Page / Email Signup
     - Marketing (Tell a story)
         - Elevator Pitch: "Multiplayer Tactical Wizardry. Spellmasons"
+        - "Spellmasons is a tactical roguelike where you devise ingenious spell combinations to overcome an onslaught of relentless enemies."
         - "Plan. Combine. **Unleash**. Spellmasons!"
         - "Coorindate. Strategize. Invent. Spellmasons!"
         - "Inventing new ways to unleash spells to devour your enemies"

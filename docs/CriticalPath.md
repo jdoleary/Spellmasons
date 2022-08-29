@@ -3,6 +3,7 @@
 - Record Trailer and start marketing
     - trailer should be more zoomed in
 - Miscillaneous bug smashing
+- thought: Again questioning the utility of this game as a roguelike.  What if you are just challenged to solve different scenarios?
 
 # Desired Schedule
 - August / September
@@ -22,6 +23,7 @@
     - Fix sync issues
 - Milestone | **Marketing** | Planning on September 1
     - Get mastered SFX from Brad
+    - Improve the steam page with gifs and more description, see Marketing.md
     - Figure out how to separate audio tracks
         - https://obsproject.com/forum/resources/win-capture-audio.1338/
         - discord on phone
