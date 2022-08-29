@@ -166,7 +166,6 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
   player.isSpawned = false;
 
   if (elInstructions) {
-    console.log('jtest set')
     elInstructions.innerText = 'Choose a place to spawn in with Left Mouse Button.'
   }
 
