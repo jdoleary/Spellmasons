@@ -1,14 +1,14 @@
 const fs = require('fs');
 const { exec } = require("child_process");
 
-const onlyList = [];//['summoner']
-const greenList = ['Hit'];
+const onlyList = ['summoner']
+const greenList = ['Attack', 'Death', 'Idle', 'Hit', 'Walk'];
 const redList = ['Magic', "lobber", "decoy", "player", "priest", "vampire"];
 fs.readdirSync('.').forEach(file => {
     if (onlyList.every(ol => file.includes(ol)) && greenList.some(gl => file.includes(gl)) && !redList.some(rl => file.includes(rl))) {
         console.log(file);
         // Modify
-        const magickCommand = `magick composite -gravity center ${file} ../shadow.png ${file}`;
+        const magickCommand = `magick composite -gravity center ${file} ../shadow-summoner.png ${file}`;
         exec(magickCommand, (error, stdout, stderr) => {
             if (error) {
                 console.log(`error: ${error.message}`);
@@ -18,7 +18,9 @@ fs.readdirSync('.').forEach(file => {
                 console.log(`stderr: ${stderr}`);
                 return;
             }
-            console.log(`stdout: ${stdout}`);
+            if (stdout) {
+                console.log(`stdout: ${stdout}`);
+            }
         });
     }
 });
