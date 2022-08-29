@@ -19,7 +19,6 @@
 - Spell Modifier effects visual representation to stay on units
     - debilitate
     - blood curse
-- implement auto reconnect when `setView(View.Disconnected)`
 - If player joins mid enemy movement it will force reset them
 - on refresh (with only 1 client in room) the server reseeded level but my position stayed the same
 - rework exp

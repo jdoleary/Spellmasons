@@ -33,7 +33,7 @@ declare global {
     // The menu will call this if the user chooses to skip the tutorial
     var skipTutorial: undefined | (() => void);
 
-    var save: undefined | ((title: string, underworld: Underworld) => void);
+    var save: undefined | ((title: string) => void);
     var load: undefined | ((title: string) => void);
     var getAllSaveFiles: undefined | (() => string[]);
     // Current client's id

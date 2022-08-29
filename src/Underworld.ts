@@ -1597,7 +1597,7 @@ export default class Underworld {
           if (globalThis.save) {
             const saveGameName = 'quicksave';
             console.info(`Dev: quick saving game as "${saveGameName}"`);
-            globalThis.save(saveGameName, this);
+            globalThis.save(saveGameName);
           }
         }
         let affirm = true

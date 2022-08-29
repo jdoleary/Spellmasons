@@ -24,6 +24,8 @@ import { version } from '../../package.json';
 // const wsUri = 'ws://68.48.199.138:7337';
 // Current digital ocean wsPie app:
 // const wsUri = 'wss://sea-lion-app-hjub5.ondigitalocean.app/';
+const elFalloff = document.getElementById('pie-reconnect-with-falloff');
+let falloff = 1;
 function connect_to_wsPie_server(wsUri: string | undefined, underworld: Underworld): Promise<void> {
   const pie = underworld.pie;
   if (typeGuardHostApp(pie)) {
@@ -36,12 +38,45 @@ function connect_to_wsPie_server(wsUri: string | undefined, underworld: Underwor
     pie.onConnectInfo = (o) => {
       console.log('onConnectInfo', o);
       if (o.connected) {
+        // reset falloff
+        falloff = 1;
         console.log("Pie: Successfully connected to PieServer.")
+        if (!(underworld.pie as PieClient).currentRoomInfo) {
+          // Go to menu if pieClient instance hasn't joined a room yet
+          setView(View.Menu);
+        } else {
+          // If it has joined a room go to the game view
+          setView(View.Game);
+        }
         resolve();
       } else {
         if (underworld) {
           underworld.cleanup();
           setView(View.Disconnected);
+          // Retry connect with falloff:
+          falloff *= 2;
+          let falloffLeft = falloff;
+          function updateFalloffMessage() {
+            if (elFalloff) {
+              elFalloff.innerText = `Reattempting connection in ${falloffLeft} seconds.`
+            }
+          }
+          updateFalloffMessage();
+          // Update falloff message every second
+          for (let i = 0; i < falloff; i++) {
+            setTimeout(() => {
+              falloffLeft -= 1;
+              updateFalloffMessage();
+            }, i * 1000)
+          }
+          console.log('net: retry connection after', falloff, 'seconds');
+          setTimeout(() => {
+            if (elFalloff) {
+              elFalloff.innerText = ``;
+            }
+            console.log('net: retry connection');
+            connect_to_wsPie_server(wsUri, underworld).then(resolve);
+          }, falloff * 1000);
         }
       }
     };
