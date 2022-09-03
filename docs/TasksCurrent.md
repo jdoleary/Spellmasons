@@ -1,6 +1,10 @@
 ## Today
 
+- Integrate new Che art
+- fix bounds for 'ghost' biome
+- More dev tools, set health, remove without blood, etc
 - getting unit sync issues in multiplayer
+- Jake UI
 
 # Bugs
 - chain through pickups?

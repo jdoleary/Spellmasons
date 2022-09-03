@@ -1,3 +1,9 @@
+- Timeline:
+    - Now: Build endcap
+        - Wishlist now at Spellmasons.com
+    - Now: Build Trailer
+    - Between: Gifs, Youtube shorts, Pinterest
+    - Near release: Reach out to streams
 - Resources:
     - [Steam branding guidelines](https://steamcdn-a.akamaihd.net/steamcommunity/public/images/steamworks_docs/english/Steam_Guidelines_060222.pdf)
     - https://www.progamemarketing.com/p/howtomakeasteampage
