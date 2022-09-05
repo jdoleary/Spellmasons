@@ -580,28 +580,73 @@ function tryShowDevContextMenu(underworld: Underworld, e: MouseEvent, mousePos: 
     if (globalThis.selectedUnit) {
 
       const elSelectedUnitList = menu.querySelector('#menu-selected-unit') as HTMLElement;
-      // Die
-      let el = document.createElement('li');
-      el.innerHTML = 'Die'
-      el.addEventListener('click', () => {
-        if (globalThis.selectedUnit) {
-          Unit.die(globalThis.selectedUnit, underworld, false);
+      const selectedUnitActions = [
+        {
+          label: 'Die',
+          action: () => {
+            if (globalThis.selectedUnit) {
+              Unit.die(globalThis.selectedUnit, underworld, false);
+            }
+
+          }
+        },
+        {
+          label: 'Delete',
+          action: () => {
+            // Remove without blood, remember clean up will just
+            // flag them for deletion, they will be removed from the array
+            // at the start of the next turn.
+            if (globalThis.selectedUnit) {
+              Unit.cleanup(globalThis.selectedUnit);
+            }
+
+          }
+        },
+        {
+          label: 'Play All Animations',
+          action: () => {
+            if (globalThis.selectedUnit) {
+              Unit.demoAnimations(globalThis.selectedUnit);
+            }
+          }
+        },
+        {
+          label: 'Set Health',
+          action: () => {
+            const health = prompt('Choose a new max health')
+            const parsedHealth = parseInt(health || '');
+            if (!isNaN(parsedHealth)) {
+              if (globalThis.selectedUnit) {
+                globalThis.selectedUnit.healthMax = parsedHealth;
+                globalThis.selectedUnit.health = parsedHealth;
+              }
+            }
+          }
+        },
+        {
+          label: 'Set Mana',
+          action: () => {
+            const mana = prompt('Choose a new max mana')
+            const parsedMana = parseInt(mana || '');
+            if (!isNaN(parsedMana)) {
+              if (globalThis.selectedUnit) {
+                globalThis.selectedUnit.manaMax = parsedMana;
+                globalThis.selectedUnit.mana = parsedMana;
+              }
+            }
+          }
         }
-        // Close the menu
-        menu.remove();
-      })
-      elSelectedUnitList.appendChild(el);
-      // Play all Animations
-      el = document.createElement('li');
-      el.innerHTML = 'Play all Animations'
-      el.addEventListener('click', () => {
-        if (globalThis.selectedUnit) {
-          Unit.demoAnimations(globalThis.selectedUnit);
-        }
-        // Close the menu
-        menu.remove();
-      })
-      elSelectedUnitList.appendChild(el);
+      ]
+      for (let { label, action } of selectedUnitActions) {
+        let el = document.createElement('li');
+        el.innerHTML = label
+        el.addEventListener('click', () => {
+          action();
+          // Close the menu
+          menu.remove();
+        })
+        elSelectedUnitList.appendChild(el);
+      }
     } else {
       menu.querySelector('#menu-selected-unit')?.remove();
       menu.querySelector('#selected-unit-label')?.remove();

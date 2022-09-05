@@ -1,9 +1,4 @@
 ## Today
-
-- Ghost tiles liquid rendering weird: 0.6316881792292295
-- Deside between ghost dark tiles or light tiles
-- Integrate new Che art
-- More dev tools, set health, remove without blood, etc
 - getting unit sync issues in multiplayer
 - Jake UI
 
