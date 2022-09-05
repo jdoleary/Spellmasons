@@ -1,12 +1,14 @@
 ## Today
 
+- Ghost tiles liquid rendering weird: 0.6316881792292295
+- Deside between ghost dark tiles or light tiles
 - Integrate new Che art
-- fix bounds for 'ghost' biome
 - More dev tools, set health, remove without blood, etc
 - getting unit sync issues in multiplayer
 - Jake UI
 
 # Bugs
+- Permanently fix liquid
 - chain through pickups?
 - sound effect lags for 'freeze'
 - Bug: Should sync portals when syncing units if all enemies are dead

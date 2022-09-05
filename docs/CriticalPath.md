@@ -6,21 +6,24 @@
 - thought: Again questioning the utility of this game as a roguelike.  What if you are just challenged to solve different scenarios?
 
 # Desired Schedule
-- August / September
+- August / September / Octover
+    - Timeline
+        - Off Days: 4 + 17 (weekend)
+        - Working days: 38
+    - Finish UI (2 days)
     - Start Marketing
-- October / November
-    - Finish UI
-    - Reliable Multiplayer
+        - Finish Steam Page (description with gifs) / Trailer
+    - Reliable Multiplayer (10 days)
+- November
     - Package as Electron App
-- December / January
     - "Explain Engine" (Adaptive Tutorial)
+        - Gifs to introduce enemies
     - Beta Testing
+- December / January
     - More content depending on how marketing is going
     - Finish polish and reliability
     - Release
 # Critical Path
-- Milestone | **Ready for Multiplayer**
-    - Fix sync issues
 - Milestone | **Marketing** | Planning on September 1
     - Get mastered SFX from Brad
     - Improve the steam page with gifs and more description, see Marketing.md
@@ -37,11 +40,9 @@
     - Make Trailer
     - Start marketing
 - Milestone | **UI**
-    - Inventory
-    - Menu
-    - Upgrade cards
-    - Toolbar
-    - Health / Mana / Stamina bars
+    - Meet with Jake Monday
+- Milestone | **Ready for Multiplayer**
+    - Fix sync issues
 - Milestone | **Final Content**
     - Perks
     - Fix liquid generation bugs

@@ -9,7 +9,8 @@ export const outOfRangeGrey = 0xaaaaaa;
 export const abyss = {
     'blood': 0x2d6265,
     'lava': 0x4b465c,
-    'water': 0xf7f7e3
+    'water': 0xf7f7e3,
+    'ghost': 0x278b77
 }
 export const forceMoveColor = 0xffffff;
 export const bloodColorDefault = 0xc70000;
