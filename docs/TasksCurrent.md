@@ -1,7 +1,23 @@
 ## Today
+- #262324 for black text
+- mess with attack icons moving now that UI is centered
+- find full size art from Che
 - cant fit under bottom of liquid, ether biome, seed: 0.2666456315958342
 - getting unit sync issues in multiplayer
 - Jake UI
+- Need UI sound interactions
+    - Think of warcraft 3 frozen throne
+    - **not** for hover states
+    - button clicks
+    - left click
+    - spells
+    - book opening for inventory
+    - volume plays as you change sound settings
+    - a "you died" (gta wasted)
+    - quieter end turn in multiplayer
+    - sounds that lets you know everyone is waiting on you
+    - warnings: out of stamina, no target, out of range (see breath of the wild)
+- cast line should connect to the feet not your center
 
 # Bugs
 - Permanently fix liquid
@@ -11,7 +27,7 @@
     - I think just sending pickups to sync would work here
 - weird liquid : 0.5211362200270263
 ## Tasks
-- use css classes 'requires-following-card blink' to warn of self-damage
+- add shadow to potion pickups
 - Feature: perks
 - Standalone server backlog
     - (fixed?) stand alone server goes into infinite loop when all players leave
