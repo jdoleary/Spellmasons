@@ -749,6 +749,7 @@ body.showUpgrades #player-turn-indicator {
   line-height: 70px;
 }
 
+#own-damage-warning,
 #selected-cards .card.requires-following-card.blink:last-child:before {
   animation: blink-animation 0.5s steps(5, start) infinite, shake 0.82s cubic-bezier(.36, .07, .19, .97) both;
 }
@@ -757,10 +758,19 @@ body.showUpgrades #player-turn-indicator {
   animation: shake 0.82s cubic-bezier(.36, .07, .19, .97) both;
 }
 
+#own-damage-warning {
+  display: none;
+  color: white;
+  background-color: rgba(253, 98, 98, 0.596);
+  border: 4px red dotted;
+  padding: 8px;
+  border-radius: 18px;
+
+}
+
 @keyframes blink-animation {
   to {
     border: 4px red solid;
-    border-left: 0;
   }
 }
 
