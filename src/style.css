@@ -105,7 +105,7 @@ body.view-Menu #underworld-container {
   z-index: 1;
   /* default to hidden */
   display: none;
-  background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(0, 0, 0, 0.75);
 }
 
 body.view-Game.showUpgrades #upgrade-picker {
