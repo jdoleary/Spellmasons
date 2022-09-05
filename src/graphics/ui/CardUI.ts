@@ -389,6 +389,8 @@ function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string
     const clone = element.cloneNode(true) as HTMLElement;
     // Selected cards are not draggable for rearranging
     clone.draggable = false;
+    // No title for selected cards, icon only
+    clone.querySelector('.card-title')?.remove();
     addListenersToCardElement(player, clone, cardId, underworld);
     clone.classList.add('selected');
     const card = Cards.allCards[cardId]
