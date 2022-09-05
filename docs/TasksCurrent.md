@@ -1,4 +1,5 @@
 ## Today
+- cant fit under bottom of liquid, ether biome, seed: 0.2666456315958342
 - getting unit sync issues in multiplayer
 - Jake UI
 
@@ -10,6 +11,7 @@
     - I think just sending pickups to sync would work here
 - weird liquid : 0.5211362200270263
 ## Tasks
+- use css classes 'requires-following-card blink' to warn of self-damage
 - Feature: perks
 - Standalone server backlog
     - (fixed?) stand alone server goes into infinite loop when all players leave
@@ -31,6 +33,7 @@
 - Show modifiers in UI somehow, not just on player, especially when you have the modifier on you
 
 ## Stretch Content
+- "overwatch" where some archers can shoot even not on their turn if you walk in their LOS
 - Upgrade: Start each level with 2x mana overfill (think of new upgrade "perks")
 - What if potions drop from slain enemies instead of being just pickups on the ground, it would be more exciting if you needed one and it dropped.
 - Task: An ally that has died at all (even if ressed) should lose their upgrade priviledge

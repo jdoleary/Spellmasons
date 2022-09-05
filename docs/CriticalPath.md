@@ -3,13 +3,20 @@
 - Record Trailer and start marketing
     - trailer should be more zoomed in
 - Miscillaneous bug smashing
-- thought: Again questioning the utility of this game as a roguelike.  What if you are just challenged to solve different scenarios?
 
 # Desired Schedule
+  - (e) UI
+  - (h) Fix multiplayer
+  - (m) Marketing
+  - (h) Fix liquid glitches perminantly
+  - (m) Integrate freestanding obstacles (tree, urn, etc)
+  - (m) Adaptive tutorial
+  - (?) Package for Electron
+  - (e) Bug reporting
+  - (m) Steam integration
+  - (h) I want 2x as many spells (21 to 42) and 2x as many enemies (7 to 14)
+  - (m) Add perks
 - August / September / Octover
-    - Timeline
-        - Off Days: 4 + 17 (weekend)
-        - Working days: 38
     - Finish UI (2 days)
     - Start Marketing
         - Finish Steam Page (description with gifs) / Trailer
