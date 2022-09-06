@@ -18,6 +18,7 @@
     - sounds that lets you know everyone is waiting on you
     - warnings: out of stamina, no target, out of range (see breath of the wild)
 - cast line should connect to the feet not your center
+- unused sfx: player damage, priest attack, vampire-attack
 
 # Bugs
 - Permanently fix liquid
@@ -29,6 +30,7 @@
 ## Tasks
 - add shadow to potion pickups
 - Feature: perks
+- Feature: "Soul bind" - bound units share applied effects
 - Standalone server backlog
     - (fixed?) stand alone server goes into infinite loop when all players leave
     - When does stand alone server remove a room?
