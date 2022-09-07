@@ -18,7 +18,7 @@ const spell: Spell = {
     thumbnail: 'spellIconManaBurn.png',
     animationPath: 'spell-effects/spellManaBurn',
     description: `
-Burn up to ${mana_burnt} of the targets' mana, causing the target take ${health_burn_ratio * 10} damage per 10 mana burnt.
+Burn up to ${mana_burnt} of the targets' mana and cause ${health_burn_ratio * 10} damage for every 10 mana burnt.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
       for (let unit of state.targetedUnits) {
