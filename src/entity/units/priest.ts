@@ -18,6 +18,7 @@ async function animatePriestProjectileAndHit(self: Unit.IUnit, target: Unit.IUni
   Unit.addOneOffAnimation(target, 'projectile/priestProjectileHit');
 }
 async function healOneOf(self: Unit.IUnit, units: Unit.IUnit[], underworld: Underworld): Promise<boolean> {
+  playSFXKey('priestAttack');
   for (let ally of units) {
     if (Unit.inRange(self, ally)) {
       await Unit.playAnimation(self, unit.animations.attack);
@@ -87,6 +88,7 @@ const unit: UnitSource = {
           // if there are no damaged allies cast shield on the closest:
           if (closestAlly && closestAlly.unitSubType !== UnitSubType.SUPPORT_CLASS) {
             if (Unit.inRange(unit, closestAlly)) {
+              playSFXKey('priestAttack');
               await Unit.playAnimation(unit, unit.animations.attack);
               await animatePriestProjectileAndHit(unit, closestAlly);
               // prediction is false because unit.action doesn't yet ever occur during a prediction

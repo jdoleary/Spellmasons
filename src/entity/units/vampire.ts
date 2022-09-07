@@ -54,6 +54,7 @@ const unit: UnitSource = {
     // Instead, just check that the distance is within the attack range
     // and let canAttackEnemy be used for just the attention markers
     if (withinMeleeRange(unit, attackTarget)) {
+      playSFXKey('vampireAttack');
       await Unit.playAnimation(unit, unit.animations.attack);
       Unit.takeDamage(attackTarget, unit.damage, unit, underworld, false, undefined);
     }
