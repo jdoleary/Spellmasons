@@ -1,4 +1,8 @@
 ## Today
+- bug: Spawn in shaft renders under walls now
+- fix multiplayer sync issues
+- record new screenshots and footage (zoomed in, no music)
+- Add gifs to steam page
 
 # Bugs
 - Permanently fix liquid

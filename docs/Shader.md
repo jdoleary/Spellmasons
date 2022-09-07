@@ -67,38 +67,12 @@ from 0.5 to 1.0.
 (note, requires: `sprite.texture.baseTexture.wrapMode = globalThis.pixi.WRAP_MODES.REPEAT;`)
 The amount that renders blank changes based on my zoom.  https://www.html5gamedevs.com/topic/23486-question-about-scrollingscaling/ says
 to use the displacement filter, so maybe I'll just repurpose it
-```js
-const fragment = `
-varying vec2 vTextureCoord;
-uniform sampler2D uSampler;
-uniform float time;
-void main(void)
-{
-    vec2 coord = mod(vTextureCoord + vec2(time, 0.0), 1.0);
-    gl_FragColor = texture2D(uSampler, coord);
-}`;
-// Default pixi vShader
-const vertex = `
-attribute vec2 aVertexPosition;
-attribute vec2 aTextureCoord;
-uniform mat3 projectionMatrix;
-varying vec2 vTextureCoord;
-void main(void)
-{
-    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);
-    vTextureCoord = aTextureCoord;
-}`;
-const filter = function () {
-    if (!globalThis.pixi) {
-        return undefined
-    }
-    const uniforms = {
-        time: 0.0
-    };
-    return {
-        filter: new globalThis.pixi.Filter(vertex, fragment, uniforms),
-        uniforms
-    };
-}
-export default filter;
-```
+
+Relevant links:
+- https://www.html5gamedevs.com/topic/25492-what-is-it-with-vtexturecoord-shaders/
+- https://www.html5gamedevs.com/topic/24347-weird-filterareas-size-on-v4/
+- https://github.com/pixijs/pixijs/issues/5550
+- https://registry.khronos.org/OpenGL-Refpages/gl4/
+- https://github.com/pixijs/pixijs/wiki/v5-Hacks
+- https://github.com/pixijs/pixijs/wiki/v6-Migration-Guide
+- https://www.khronos.org/opengl/wiki/Data_Type_(GLSL)#Swizzling
