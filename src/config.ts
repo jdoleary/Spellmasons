@@ -58,3 +58,8 @@ export const NAME_TEXT_Y_OFFSET = 20
 
 export const STORAGE_ID_PLAYER_COLOR = 'player-color';
 export const STORAGE_ID_PLAYER_NAME = 'player-name';
+
+// Liquid animation settings
+export const LIQUID_X_SCROLL_SPEED = 400; // higher is slower
+export const LIQUID_DISPLACEMENT_SPEED = 0.1;
+export const LIQUID_DISPLACEMENT_SCALE = 0.6;

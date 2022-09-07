@@ -362,7 +362,7 @@ export default class Underworld {
     globalThis.unitOverlayGraphics?.clear();
 
     // Make liquid move to the right:
-    const scrollSpeed = deltaTime / 120;
+    const scrollSpeed = deltaTime / config.LIQUID_X_SCROLL_SPEED;
     for (let liquidSprite of this.liquidSprites) {
       liquidSprite.tilePosition.x -= scrollSpeed;
     }

@@ -60,12 +60,12 @@ export function setupLiquidFilter() {
 
       const displacementFilter = new globalThis.pixi.filters.DisplacementFilter(displacementSprite);
 
-      displacementSprite.scale.y = 0.6;
-      displacementSprite.scale.x = 0.6;
+      displacementSprite.scale.y = config.LIQUID_DISPLACEMENT_SCALE;
+      displacementSprite.scale.x = config.LIQUID_DISPLACEMENT_SCALE;
       containerLiquid.addChild(displacementSprite);
       containerLiquid.filters = [displacementFilter];
       updateLiquidFilterIntervalId = setInterval(() => {
-        displacementSprite.x += 0.3;
+        displacementSprite.x += config.LIQUID_DISPLACEMENT_SPEED;
       }, 10)
     }
   }
