@@ -244,7 +244,7 @@ body.open-inventory #card-inspect {
 
 
 .card:hover {
-  transform: scale(1.02);
+  transform: translate(0, -5px);
 }
 
 .card {
@@ -256,8 +256,9 @@ body.open-inventory #card-inspect {
 
 .card.selected {
   height: var(--selected-card-size);
-  margin: 0 8px;
+  margin-right: 8px;
   display: flex;
+  width: 40px;
 }
 
 .card.selected:last-child:after {
@@ -270,6 +271,7 @@ body.open-inventory #card-inspect {
   color: white;
   font-size: 2em;
   line-height: var(--selected-card-size);
+  padding: 0 8px;
 }
 
 .card.selected .card-inner {
