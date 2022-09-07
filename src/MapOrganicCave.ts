@@ -335,7 +335,10 @@ export function convertBaseTilesToFinalTiles(map: Map) {
         const cell = getCell(map, position);
         if (cell?.image == baseTiles.liquid) {
             changeTile(i, finalTileImages.all_liquid);
-            map.liquid.push({ image: finalTileImages.all_liquid, x: cell.x, y: cell.y })
+            // Add tile to liquid array if it isn't already
+            if (!map.liquid.find(tile => tile.x == cell.x && tile.y == cell.y)) {
+                map.liquid.push({ image: finalTileImages.all_liquid, x: cell.x, y: cell.y })
+            }
         } else if (cell?.image == baseTiles.ground) {
             changeTile(i, finalTileImages.all_ground);
         }
