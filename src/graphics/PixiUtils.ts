@@ -11,6 +11,7 @@ import { elPIXIHolder } from './FloatingText';
 import Underworld, { Biome } from '../Underworld';
 import { randFloat, randInt } from '../jmath/rand';
 import { IUnit } from '../entity/Unit';
+import { addMarginToRect, isWithinRect, Rect } from '../jmath/Rect';
 
 // if PIXI is finished setting up
 let isReady = false;
@@ -89,7 +90,9 @@ interface UtilProps {
   underworldPixiContainers: PIXI.Container[] | undefined;
   elPIXIHolder: HTMLElement | undefined;
   elCardHand: HTMLElement | undefined;
-  elHealthMana: HTMLElement | undefined;
+  elCardHoldersInner: HTMLElement | undefined;
+  elInventoryIcon: HTMLElement | undefined;
+  elEndTurnBtn: HTMLElement | undefined;
   camera: Vec2;
   doCameraAutoFollow: boolean;
 }
@@ -97,7 +100,9 @@ const utilProps: UtilProps = {
   underworldPixiContainers: undefined,
   elPIXIHolder: undefined,
   elCardHand: undefined,
-  elHealthMana: undefined,
+  elCardHoldersInner: undefined,
+  elInventoryIcon: undefined,
+  elEndTurnBtn: undefined,
   camera: { x: 0, y: 0 },
   // True if camera should auto follow player unit
   doCameraAutoFollow: true,
@@ -149,7 +154,9 @@ if (globalThis.pixi && containerUI && app && containerRadiusUI) {
 
   utilProps.elPIXIHolder = document.getElementById('PIXI-holder') as (HTMLElement | undefined);
   utilProps.elCardHand = document.getElementById('card-hand') as (HTMLElement | undefined);
-  utilProps.elHealthMana = document.getElementById('health-mana') as (HTMLElement | undefined);
+  utilProps.elCardHoldersInner = document.getElementById('card-holders-inner') as (HTMLElement | undefined);
+  utilProps.elInventoryIcon = document.getElementById('inventory-icon') as (HTMLElement | undefined);
+  utilProps.elEndTurnBtn = document.getElementById('end-turn-btn') as (HTMLElement | undefined);
   globalThis.debugGraphics = new globalThis.pixi.Graphics();
   containerUI.addChild(globalThis.debugGraphics);
   globalThis.unitOverlayGraphics = new globalThis.pixi.Graphics();
@@ -177,6 +184,20 @@ export function setAbyssColor(biome: Biome) {
   }
 
 }
+function UIElementToInGameSpace(el: HTMLElement, pixiHolderRect: Rect, camX: number, camY: number, zoom: number): Rect {
+  const elRect = el.getBoundingClientRect();
+  const box = {
+    top: (elRect.top - pixiHolderRect.top + camY) / zoom,
+    bottom: (elRect.bottom - pixiHolderRect.top + camY) / zoom,
+    right: (elRect.right + camX) / zoom,
+    left: (elRect.left + camX) / zoom
+  }
+  // Debug draw
+  // globalThis.unitOverlayGraphics?.lineStyle(4, 0xcb00f5, 1.0);
+  // globalThis.unitOverlayGraphics?.drawRect(box.left, box.top, box.right - box.left, box.bottom - box.top);
+  return box;
+
+}
 // withinCameraBounds takes a Vec2 (in game space) and returns a 
 // Vec2 that is within the bounds of the camera so that it will 
 // surely be seen by a user even if they have panned away.
@@ -184,17 +205,11 @@ export function setAbyssColor(biome: Biome) {
 export function withinCameraBounds(position: Vec2, marginHoriz?: number): Vec2 {
   // Headless does not use graphics
   if (globalThis.headless) { return { x: 0, y: 0 }; }
-  if (!(utilProps.elCardHand && utilProps.elHealthMana && utilProps.elPIXIHolder)) {
+  if (!(utilProps.elCardHoldersInner && utilProps.elInventoryIcon && utilProps.elEndTurnBtn && utilProps.elPIXIHolder)) {
     // If headless, the return of this function is irrelevant
     return { x: 0, y: 0 }
   }
-  const cardHandRect = utilProps.elCardHand.getBoundingClientRect();
-  const healthManaRect = utilProps.elHealthMana.getBoundingClientRect();
   const pixiHolderRect = utilProps.elPIXIHolder.getBoundingClientRect();
-  // cardHand has padding of 300px to allow for a far right drop zone,
-  // this should be taken into account when keeping the attention marker
-  // outside of the cardHoldersRect bounds
-  const cardHandPaddingRight = 300;
   const { x: camX, y: camY, zoom } = getCamera();
   // Determine bounds
   const margin = (marginHoriz !== undefined ? marginHoriz : 30) / zoom;
@@ -221,18 +236,21 @@ export function withinCameraBounds(position: Vec2, marginHoriz?: number): Vec2 {
   // globalThis.unitOverlayGraphics.drawCircle(camX / zoom, camY / zoom, 4);
   // globalThis.unitOverlayGraphics.drawCircle(cardHandRight, cardHandTop, 8);
 
-  // Don't let the attention marker get obscured by the cardHolders element
-  const cardHandRight = (cardHandRect.width + (camX - cardHandPaddingRight)) / zoom;
-  const cardHandTop = (cardHandRect.top - pixiHolderRect.top + camY) / zoom;
-  if (withinBoundsPos.x < cardHandRight && withinBoundsPos.y > cardHandTop) {
-    // 32 is arbitrary extra padding for the height of the marker
-    withinBoundsPos.y = cardHandTop - 32;
+  // Don't let the attention marker get obscured by the UI element
+  const cardHoldersInnerBox = UIElementToInGameSpace(utilProps.elCardHoldersInner, pixiHolderRect, camX, camY, zoom);
+  // Move the position if it is obscured by the card-holder
+  if (isWithinRect(withinBoundsPos, cardHoldersInnerBox)) {
+    withinBoundsPos.y = cardHoldersInnerBox.top;
   }
-  const healthManaRight = (healthManaRect.width + camX) / zoom;
-  const healthManaTop = (healthManaRect.top - pixiHolderRect.top + camY) / zoom;
-  if (withinBoundsPos.x < healthManaRight && withinBoundsPos.y > healthManaTop) {
-    // 32 is arbitrary extra padding for the height of the marker
-    withinBoundsPos.y = healthManaTop - 32;
+  // Move the position if it is obscured by the inventory icon 
+  const invIconBox = addMarginToRect(UIElementToInGameSpace(utilProps.elInventoryIcon, pixiHolderRect, camX, camY, zoom), 16);
+  if (isWithinRect(withinBoundsPos, invIconBox)) {
+    withinBoundsPos.y = invIconBox.top;
+  }
+  // Move the position if it is obscured by the end turn btn 
+  const endTurnBox = addMarginToRect(UIElementToInGameSpace(utilProps.elEndTurnBtn, pixiHolderRect, camX, camY, zoom), 16);
+  if (isWithinRect(withinBoundsPos, endTurnBox)) {
+    withinBoundsPos.y = endTurnBox.top;
   }
   return withinBoundsPos;
 }
