@@ -1,6 +1,5 @@
 ## Today
 - find full size art from Che
-- cant fit under bottom of liquid, ether biome, seed: 0.2666456315958342
 - getting unit sync issues in multiplayer
 - Jake UI
 - Need UI sound interactions

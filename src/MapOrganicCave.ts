@@ -564,7 +564,7 @@ export function toObstacle(t: Tile, biome: Biome): IObstacle | undefined {
         'ghost': {
             right: 19,
             left: 44,
-            bottom: 56,
+            bottom: 40,
             top: 0,
         },
     }
