@@ -26,6 +26,8 @@ export const playerCastAnimationColor = 0xFFa1d3;
 export const attackRangeAlly = targetBlue;
 export const attackRangeEnemy = 0xd55656;
 
+export const textSoftBlack = 0x262324;
+
 
 // Color names from coolors.co
 export const robeColors = [

@@ -1,5 +1,4 @@
 ## Today
-- #262324 for black text
 - mess with attack icons moving now that UI is centered
 - find full size art from Che
 - cant fit under bottom of liquid, ether biome, seed: 0.2666456315958342
@@ -18,12 +17,11 @@
     - sounds that lets you know everyone is waiting on you
     - warnings: out of stamina, no target, out of range (see breath of the wild)
 - cast line should connect to the feet not your center
-- unused sfx: player damage, priest attack, vampire-attack
+- make use of sfx: player damage, priest attack, vampire-attack
 
 # Bugs
 - Permanently fix liquid
 - chain through pickups?
-- sound effect lags for 'freeze'
 - Bug: Should sync portals when syncing units if all enemies are dead
     - I think just sending pickups to sync would work here
 - weird liquid : 0.5211362200270263
