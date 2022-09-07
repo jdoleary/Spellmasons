@@ -635,6 +635,14 @@ function tryShowDevContextMenu(underworld: Underworld, e: MouseEvent, mousePos: 
               }
             }
           }
+        },
+        {
+          label: 'Orient image towards player',
+          action: () => {
+            if (globalThis.selectedUnit && player) {
+              Unit.orient(globalThis.selectedUnit, player.unit);
+            }
+          }
         }
       ]
       for (let { label, action } of selectedUnitActions) {
