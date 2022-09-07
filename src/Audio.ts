@@ -131,6 +131,8 @@ export function setupAudio() {
     };
     globalThis.changeVolumeGame = (volume: number) => {
         globalThis.volumeGame = volume;
+        // Play a sound so it'll show the user how loud it is
+        globalThis.playSFXKey('hurt');
         storage.assign(STORAGE_OPTIONS, { volumeGame: globalThis.volumeGame });
     };
     // Retrieve audio settings from storage
