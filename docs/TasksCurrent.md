@@ -23,10 +23,11 @@
     - quieter end turn in multiplayer
     - sounds that lets you know everyone is waiting on you
     - warnings: out of stamina, no target, out of range (see breath of the wild)
+    - missing sfx for vulnerable/debilitate
 - cast line should connect to the feet not your center
-- missing sfx for vulnerable
 - Feature: perks
 - Feature: "Soul bind" - bound units share applied effects
+    - Use PIXI.SimpleRope https://pixijs.download/dev/docs/PIXI.SimpleRope.html
 - Standalone server backlog
     - (fixed?) stand alone server goes into infinite loop when all players leave
     - When does stand alone server remove a room?
