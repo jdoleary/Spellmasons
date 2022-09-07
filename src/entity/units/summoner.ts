@@ -5,12 +5,13 @@ import * as math from '../../jmath/math';
 import Underworld from '../../Underworld';
 import { oneOffImage } from '../../cards/cardUtils';
 import { containerUnits } from '../../graphics/PixiUtils';
+import { chooseObjectWithProbability } from '../../jmath/rand';
 
 const SUMMON_MANA_COST = 30;
 const unit: UnitSource = {
   id: 'summoner',
   info: {
-    description: 'A summoner uses mana to summon grunts.',
+    description: 'A summoner uses mana to summon enemies.',
     image: 'units/summonerIdle',
     subtype: UnitSubType.RANGED_RADIUS,
   },
@@ -25,7 +26,7 @@ const unit: UnitSource = {
     death: 'summonerDeath'
   },
   unitProps: {
-    healthMax: 6
+    healthMax: 12
   },
   spawnParams: {
     probability: 20,
@@ -41,35 +42,56 @@ const unit: UnitSource = {
       unit.path = undefined;
       unit.mana -= SUMMON_MANA_COST;
       await Unit.playComboAnimation(unit, unit.animations.attack, async () => {
-        const sourceUnit = allUnits.grunt;
-        if (sourceUnit) {
-          const coords = underworld.findValidSpawn(unit, 5)
-          if (coords) {
-            const summonedUnit = Unit.create(
-              sourceUnit.id,
-              // Start the unit at the summoners location
-              coords.x,
-              coords.y,
-              // A unit always summons units in their own faction
-              unit.faction,
-              sourceUnit.info.image,
-              UnitType.AI,
-              sourceUnit.info.subtype,
-              unit.strength,
-              sourceUnit.unitProps,
-              underworld
-            );
-            await new Promise<void>(resolve => oneOffImage(coords, 'units/summonerMagic', containerUnits, resolve));
-
-            await Unit.moveTowards(summonedUnit, unit, underworld);
-          } else {
-            console.log("Summoner could not find valid spawn");
+        const { sourceUnit, number: NUMBER_OF_SUMMONS } = chooseObjectWithProbability([
+          {
+            sourceUnit: allUnits.grunt,
+            probability: 100,
+            number: 5
+          },
+          {
+            sourceUnit: allUnits.archer,
+            probability: 50,
+            number: 3,
+          },
+          {
+            sourceUnit: allUnits.lobber,
+            probability: 10,
+            number: 2,
+          },
+        ], underworld.random) || { sourceUnit: allUnits.grunt, number: 5 };
+        const spawns = underworld.findValidSpawns(unit, 20, 5);
+        let lastPromise = Promise.resolve();
+        for (let i = 0; i < NUMBER_OF_SUMMONS; i++) {
+          if (sourceUnit) {
+            const coords = spawns[i];
+            if (coords) {
+              const summonedUnit = Unit.create(
+                sourceUnit.id,
+                // Start the unit at the summoners location
+                coords.x,
+                coords.y,
+                // A unit always summons units in their own faction
+                unit.faction,
+                sourceUnit.info.image,
+                UnitType.AI,
+                sourceUnit.info.subtype,
+                unit.strength,
+                sourceUnit.unitProps,
+                underworld
+              );
+              const summonPromise = new Promise<void>(resolve => oneOffImage(coords, 'units/summonerMagic', containerUnits, resolve)).then(() => {
+                Unit.moveTowards(summonedUnit, unit, underworld);
+              });
+              lastPromise = summonPromise;
+            } else {
+              console.log("Summoner could not find valid spawn");
+            }
           }
-          // Unit.setLocation(summonedUnit, coords);
+          else {
+            console.error('summoner could not find unit source to summon from');
+          }
         }
-        else {
-          console.error('summoner could not find unit source to summon from');
-        }
+        await lastPromise;
       });
     } else {
       // Move opposite to closest enemy

@@ -1,5 +1,6 @@
 ## Today
 - find full size art from Che
+- bug: I did "kill all enemies" And when the summoner died it left a standing, non animated version of itself behind
 - getting unit sync issues in multiplayer
 - Jake UI
 - Need UI sound interactions
