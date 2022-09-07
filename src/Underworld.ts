@@ -21,14 +21,12 @@ import {
   containerBoard,
   containerDoodads,
   containerSpells,
-  containerUI,
   containerUnits,
   updateCameraPosition,
   cameraAutoFollow,
   getCamera,
   withinCameraBounds,
   containerPlayerThinking,
-  containerWalls,
   addPixiSprite,
   graphicsBloodSmear,
   containerLiquid,
@@ -1218,9 +1216,11 @@ export default class Underworld {
           continue;
         }
         // Ground tiles that border liquid should go in containerBoard
-        // Wall tiles should go in containerWalls
+        // Wall tiles should go in containerUnits, yes UNITS so that they can be
+        // z-index sorted with units so that when units die behind a wall their corpse image
+        // doesn't get painted on top of the wall 
         const isWall = tile.image.toLowerCase().includes('wall');
-        const sprite = addPixiSprite(tile.image, isWall ? containerWalls : containerBoard);
+        const sprite = addPixiSprite(tile.image, isWall ? containerUnits : containerBoard);
         if (sprite) {
           sprite.x = tile.x - config.COLLISION_MESH_RADIUS;
           sprite.y = tile.y - config.COLLISION_MESH_RADIUS;
@@ -1310,7 +1310,6 @@ export default class Underworld {
 
     // Clear all floor images
     containerBoard?.removeChildren();
-    containerWalls?.removeChildren();
     containerLiquid?.removeChildren();
     cleanUpLiquidFilter();
     // Clean up blood
