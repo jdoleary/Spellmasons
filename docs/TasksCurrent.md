@@ -1,8 +1,5 @@
 ## Today
-- try Stina's new music
-- prevent multiple simultaneous dying monsters from playing  the same sound overtop of each other, it get's distorted. (same for all sfx actually)
 - fix multiplayer sync issues
-- fix mana burn doesn't stack right
 - record new screenshots and footage (zoomed in, no music)
 - Add gifs to steam page
 
@@ -27,7 +24,7 @@
     - sounds that lets you know everyone is waiting on you
     - warnings: out of stamina, no target, out of range (see breath of the wild)
 - cast line should connect to the feet not your center
-- make use of sfx: player damage, priest attack, vampire-attack
+- make use of sfx: priest attack, vampire-attack
 - missing sfx for vulnerable
 - Feature: perks
 - Feature: "Soul bind" - bound units share applied effects

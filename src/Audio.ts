@@ -23,7 +23,7 @@ export const sfx: { [key: string]: string } = {
     lobberDeath: './sound/sfx-from-val/lobber-death.wav',
     manaBurn: './sound/sfx-from-val/mana-burn.wav',
     manaSteal: './sound/sfx-from-val/mana-steal.wav',
-    playerDamage: './sound/sfx-from-val/player-damage.wav',
+    playerUnitDamage: './sound/sfx-from-val/player-damage.wav',
     playerUnitDeath: './sound/sfx-from-val/player-character-death.wav',
     playerCharacterLargeCast2: './sound/sfx/playerAttackEpic.wav',
     playerCharacterLargeCast: './sound/sfx-from-val/player-character-large-cast.wav',
