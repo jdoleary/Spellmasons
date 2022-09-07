@@ -1,7 +1,13 @@
 ## Today
-- find full size art from Che
+
+# Bugs
+- Permanently fix liquid
+- chain through pickups?
+- Bug: Should sync portals when syncing units if all enemies are dead
+    - I think just sending pickups to sync would work here
+- weird liquid : 0.5211362200270263
+## Tasks
 - getting unit sync issues in multiplayer
-- Jake UI
 - Need UI sound interactions
     - Think of warcraft 3 frozen throne
     - **not** for hover states
@@ -16,14 +22,6 @@
     - warnings: out of stamina, no target, out of range (see breath of the wild)
 - cast line should connect to the feet not your center
 - make use of sfx: player damage, priest attack, vampire-attack
-
-# Bugs
-- Permanently fix liquid
-- chain through pickups?
-- Bug: Should sync portals when syncing units if all enemies are dead
-    - I think just sending pickups to sync would work here
-- weird liquid : 0.5211362200270263
-## Tasks
 - add shadow to potion pickups
 - Feature: perks
 - Feature: "Soul bind" - bound units share applied effects
