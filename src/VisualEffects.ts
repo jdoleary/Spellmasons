@@ -1,9 +1,13 @@
-import { addPixiSprite, addPixiSpriteAnimated, containerUnits } from "./graphics/PixiUtils";
+import { addPixiSprite, addPixiSpriteAnimated, containerProjectiles, containerSpells, containerUnits } from "./graphics/PixiUtils";
 import { Vec2 } from "./jmath/Vec";
 
 // A 'level up' style beam that is cast down from the sky and fades out on it's own
 export function skyBeam(position: Vec2) {
-    const whiteCircle = addPixiSprite('half-circle.png', containerUnits)
+    // Note: T his is in containerProjectiles instead of containerSpells
+    // because containerSpells automatically clears it's contents while
+    // containerProjectiles does not.  containerProjectiles's children
+    // are expected to clear themselves, which is what the skybeam does
+    const whiteCircle = addPixiSprite('half-circle.png', containerProjectiles)
     if (whiteCircle) {
         whiteCircle.x = position.x;
         whiteCircle.y = position.y;
@@ -11,7 +15,7 @@ export function skyBeam(position: Vec2) {
         whiteCircle.anchor.set(0.5);
     }
 
-    const lightBeam = addPixiSprite('light-beam.png', containerUnits);
+    const lightBeam = addPixiSprite('light-beam.png', containerProjectiles);
     if (lightBeam) {
         lightBeam.anchor.set(0.5);
         const beamHeight = 1000;
