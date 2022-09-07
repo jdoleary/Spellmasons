@@ -58,6 +58,7 @@ const music = [
     './sound/music/ChainingSpells.m4a',
     './sound/music/FirstSteps.mp3',
     './sound/music/DeepWandering.mp3',
+    './sound/music/ItShallNotFindMe.mp3',
 ]
 
 // Preload all sounds
