@@ -92,11 +92,18 @@ export function playSFXKey(key?: string) {
     }
     playSFX(sfx[key]);
 }
+const lastPlayed: { [key: string]: number } = {};
 export function playSFX(path?: string) {
     if (!path) {
         return;
     }
     console.log('sfx:', path);
+    const lastTimeThisPathWasPlayed = lastPlayed[path];
+    if (lastTimeThisPathWasPlayed && Date.now() - lastTimeThisPathWasPlayed <= 100) {
+        console.log('Cancel playing sound', path, 'it was played too recently')
+        return;
+    }
+    lastPlayed[path] = Date.now();
     // In order to allow sounds to overlap, they must be 
     // fully instantiated each time they are played
     const audioInstance = new Audio(path);
