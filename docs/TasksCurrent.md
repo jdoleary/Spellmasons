@@ -22,7 +22,6 @@
     - warnings: out of stamina, no target, out of range (see breath of the wild)
 - cast line should connect to the feet not your center
 - make use of sfx: player damage, priest attack, vampire-attack
-- add shadow to potion pickups
 - Feature: perks
 - Feature: "Soul bind" - bound units share applied effects
 - Standalone server backlog
