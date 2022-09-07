@@ -2428,7 +2428,7 @@ export default class Underworld {
   // callbacks and complicated objects such as PIXI.Sprites
   // are removed
   serializeForSaving(): IUnderworldSerialized {
-    const { pie, random, players, units, pickups, walls, pathingPolygons, ...rest } = this;
+    const { pie, random, players, units, pickups, walls, pathingPolygons, liquidSprites, ...rest } = this;
     return {
       ...rest,
       players: this.players.map(Player.serialize),
@@ -2469,7 +2469,7 @@ export default class Underworld {
   }
 }
 
-type IUnderworldSerialized = Omit<typeof Underworld, "pie" | "prototype" | "players" | "units" | "pickups" | "random" | "turnInterval"
+type IUnderworldSerialized = Omit<typeof Underworld, "pie" | "prototype" | "players" | "units" | "pickups" | "random" | "turnInterval" | "liquidSprites"
   // walls and pathingPolygons are omitted because they are derived from obstacles when cacheWalls() in invoked
   | "walls" | "pathingPolygons"> & {
     players: Player.IPlayerSerialized[],
