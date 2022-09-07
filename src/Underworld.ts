@@ -35,6 +35,7 @@ import {
   BloodParticle,
   setAbyssColor,
   setCameraToMapCenter,
+  addPixiTilingSprite,
 } from './graphics/PixiUtils';
 import { queueCenteredFloatingText } from './graphics/FloatingText';
 import { UnitType, Faction, UnitSubType } from './types/commonTypes';
@@ -69,6 +70,7 @@ import type PieClient from '@websocketpie/client';
 import { makeForcePush } from './cards/push';
 import { createVisualLobbingProjectile } from './entity/Projectile';
 import { getEndOfRange, isOutOfRange } from './PlayerUtils';
+import type { TilingSprite } from 'pixi.js';
 
 export enum turn_phase {
   PlayerTurns,
@@ -117,6 +119,7 @@ export default class Underworld {
   pickups: Pickup.IPickup[] = [];
   pickupsPrediction: Pickup.IPickup[] = [];
   imageOnlyTiles: Tile[] = [];
+  liquidSprites: TilingSprite[] = [];
   // line segments that prevent sight and movement
   walls: LineSegment[] = [];
   // line segments that prevent movement under certain circumstances
@@ -357,6 +360,12 @@ export default class Underworld {
 
     Unit.syncPlayerHealthManaUI(this);
     globalThis.unitOverlayGraphics?.clear();
+
+    // Make liquid move to the right:
+    const scrollSpeed = deltaTime / 120;
+    for (let liquidSprite of this.liquidSprites) {
+      liquidSprite.tilePosition.x -= scrollSpeed;
+    }
 
     // Draw cast line:
     if (globalThis.player) {
@@ -1347,10 +1356,11 @@ export default class Underworld {
     // Setup liquid
     setupLiquidFilter();
     for (let tile of liquid) {
-      const sprite = addPixiSprite(tile.image, containerLiquid);
+      const sprite = addPixiTilingSprite(tile.image, containerLiquid);
       if (sprite) {
         sprite.x = tile.x - config.COLLISION_MESH_RADIUS;
         sprite.y = tile.y - config.COLLISION_MESH_RADIUS;
+        this.liquidSprites.push(sprite);
       }
     }
     // empty tiles are tiles with an image of ''

@@ -584,6 +584,35 @@ export function addPixiSpriteAnimated(
   }
 }
 
+export function addPixiTilingSprite(
+  imagePath: string,
+  parent: PIXI.Container | undefined,
+): PIXI.TilingSprite | undefined {
+  // Headless does not use graphics
+  if (globalThis.headless) { return; }
+  if (!isReady) {
+    throw new Error(
+      'PIXI is not finished setting up.  Cannot add a sprite yet',
+    );
+  }
+  if (!(globalThis.pixi && parent)) {
+    // For headless server
+    return undefined;
+  }
+  let singleTexture = sheet.textures[imagePath];
+  if (!singleTexture) {
+    console.error('Could not find texture for', imagePath, 'check the spritesheet to figure out why it is missing.');
+    return undefined;
+  }
+  singleTexture.baseTexture.wrapMode = globalThis.pixi.WRAP_MODES.REPEAT;
+  const sprite = new globalThis.pixi.TilingSprite(singleTexture);
+
+  // @ts-ignore: imagePath is a property that i've added and is not a part of the PIXI type
+  // which is used for identifying the sprite or animation that is currently active
+  sprite.imagePath = imagePath;
+  parent.addChild(sprite);
+  return sprite;
+}
 export function addPixiSprite(
   imagePath: string,
   parent: PIXI.Container | undefined,

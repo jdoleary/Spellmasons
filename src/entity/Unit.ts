@@ -225,7 +225,7 @@ export function adjustUnitStrength(unit: IUnit, strength: number) {
 }
 function setupShaders(unit: IUnit) {
   if (unit.image) {
-    const all_red = makeAllRedShader()
+    const all_red = makeAllRedShader();
     if (all_red) {
       unit.shaderUniforms.all_red = all_red.uniforms;
       unit.image.sprite.filters = [all_red.filter];
