@@ -576,6 +576,21 @@ export default class Underworld {
               manaBarProps.y,
               manaBarProps.width,
               manaBarProps.height);
+            // Draw the mana that goes missing after a spell (useful for mana_burn)
+            if (predictionUnit) {
+              globalThis.unitOverlayGraphics?.beginFill(colors.manaLostBlue, 1.0);
+              const manaAfterSpell = predictionUnit.mana;
+              const manaBarHurtProps = getUIBarProps(u.x, u.y, u.mana - manaAfterSpell, u.manaMax, zoom);
+              globalThis.unitOverlayGraphics?.drawRect(
+                // Show the manaBarHurtBar on the right side of the mana  bar
+                manaBarHurtProps.x + config.UNIT_UI_BAR_WIDTH / zoom * manaAfterSpell / u.manaMax,
+                manaBarHurtProps.y,
+                manaBarHurtProps.width,
+                manaBarHurtProps.height);
+              // if (manaAfterSpell > u.mana) {
+              //   globalThis.unitOverlayGraphics?.beginFill(manaBarHealColor, 1.0);
+              // }
+            }
           }
           globalThis.unitOverlayGraphics?.endFill();
         }
