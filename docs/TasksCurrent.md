@@ -1,7 +1,6 @@
 ## Low hanging fruit
 - small bugs:
     - should be able to disable UI without admin mode on
-    - bug: Archer sounds like he's playing attack sfx twice
     - dead units in front of walls render behind walls
     - swap then damage hurts yourself also, it shouldn't be this way it should hurt the target
     - after swapping I got stuck in a wall
