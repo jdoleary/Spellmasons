@@ -1,3 +1,58 @@
+## JakobFree 2022-09-08
+- Remind players they can move camera when spawning in
+- "requires a following spell to modify" -> "to have an effect"
+- label connect range circle
+- out of range is confusing and not obvious
+  - out of range could be red instead of grey
+  - maybe have cast range appear as soon as you exceed it
+- adaptive tutorial could explain "connect", when it's usable and when not
+- should pickups be destroyable
+- lobbers aren't aggressive enough, they never end up hitting you cause it's too easy to get out of their range cause they don't come close enough
+- ***Mistakes should be strategy of player but not interface
+- recommends information overload to start
+- super skinny ridge is confusing and not obvious (impassable)
+- "people love to know how much content is in the game"
+- "I don't know what every circle means, nor do I know what every lines mean". Teach it differently
+- change "cards on it's right" to "spells on ..."
+- explain: lava damage and how units can stay in lava
+- bug: he didn't get to pick spell when he got pushed into the portal, actually he did but they got overlapped by the perks, change the order so that new waits in queue
+- fix priest copy to reference blood curse not vampires
+- maybe hide spell prediction when "f" is held
+- purify doesn't make sense without context
+  - showing purify without that context is just making the player screw up due to interface issues rather than strategy issues
+  - purify could explain curses
+  - "a curse is a modifier that stays attached to a target"
+- Have a referencable index (pokedex)
+- explain zoom
+- collect telemetry from playtests to find out spell choices and how much they're using each
+  - are people being as imaginitive and taking risks as I would hope they do
+  - how to push players out of their shell and make them take risks
+  - "painting with an increasingly expansive palette"
+- bug: on the lava level it predicted it would kill a guy but didn't
+- explain that push stacks
+- at the start of the new level, tour the space, show off the new enemies with the camera, so users can appreciate the art
+  - it also introduces the whole level
+- chain radius reaches someones feet but doesn't target them - this doesn't make sense
+- not enough mana to add new spell to the chain wasn't clear, wasn't noticed
+  - "Insufficient Mana" should be where your cursor is
+- every new move is accompanied by a video of it being used
+- "target take" to "target to take" for mana burn
+- summoner does damage but shouldn't
+- could attack range circles be skewed to fit game perspective?
+- "F" and spell effect shouldn't happen at the same time***
+- Feedback:
+  - Expected cost: $10-$15
+  - Dominant feelings: anxiety, satisfaction, like complex manuvers, possibility space feels large,  "I will like I could play 1:15min again and my goal would be to play it differently", expansive
+  - Issue:
+    - UI explanations
+    - Expectations should always be delivered
+    - Overall communication to player about enemy behaviors and spell functionality, be elegant
+    - Multiplayer would be amazing
+    - Beef up presentation, then it would be on par with ...
+      - could command higher price point, would A+
+      - Better transitions, cards appearing on screen, getting spell scroll, more juice, screen shake, more VFX, improve negative space around play area
+      - Keep Jakob in the loop with release plans and future playtesting
+
 ## Lochlan feedback
     - Have to communicate cards getting more expensive better
     - Not enough cover to stay out of LOS of archer
