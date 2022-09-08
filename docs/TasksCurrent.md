@@ -6,7 +6,7 @@
     - after swapping I got stuck in a wall
     - missing vampire hurt noise (when you push them into lava)
     - if you pull something into you and you're standing on the edge of liquid you take damage as if you fell in the liquid (on blood level)
-    - spells like mana burn and hurt shouldn't play on dead units
+    - spells like mana burn and hurt shouldn't play on dead units or pickups
     - sometimes when you walk you get stuck on a wall and it wastes stamina
 ## Today
 - fix multiplayer sync issues
