@@ -11,6 +11,7 @@ export const sfx: { [key: string]: string } = {
     decoyDeath: './sound/sfx/decoyDeath.wav',
     endTurn: './sound/sfx-from-val/end-turn.wav',
     "fallIntoLiquid-blood": './sound/sfx-from-val/fall-into-liquid-blood.wav',
+    "fallIntoLiquid-ghost": './sound/sfx-from-val/fall-into-liquid-blood.wav',
     "fallIntoLiquid-lava": './sound/sfx-from-val/fall-into-liquid-lava.wav',
     "fallIntoLiquid-water": './sound/sfx-from-val/fall-into-liquid-water.wav',
     // freeze: './sound/sfx/freeze.wav',

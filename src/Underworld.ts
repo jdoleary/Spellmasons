@@ -1011,7 +1011,7 @@ export default class Underworld {
       return;
     }
     const biomes = ['blood', 'lava', 'water', 'ghost'];
-    const biome: Biome = 'water';//biomes[Math.floor(Math.random() * biomes.length)] as Biome;
+    const biome: Biome = biomes[Math.floor(Math.random() * biomes.length)] as Biome;
     const { map, limits } = generateCave(levelIndex > 6 ? caveSizes.medium : caveSizes.small, biome, this);
     const { tiles, liquid, width } = map;
     const levelData: LevelData = {
