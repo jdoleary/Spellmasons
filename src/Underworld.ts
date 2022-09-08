@@ -1506,7 +1506,9 @@ export default class Underworld {
   endPlayerTurnPhase() {
     console.log('Underworld: TurnPhase: End player turn phase');
     // Safety, force die any units that are out of bounds (this should never happen)
-    for (let u of this.units.filter(u => u.alive)) {
+    // Note: Player Controlled units are out of bounds when they are inPortal so that they don't collide,
+    // this filters out PLAYER_CONTROLLED so that they don't get die()'d when they are inPortalb
+    for (let u of this.units.filter(u => u.alive && u.unitType !== UnitType.PLAYER_CONTROLLED)) {
       if (this.lastLevelCreated) {
         // TODO ensure that this works on headless
         const originalTile = this.lastLevelCreated.imageOnlyTiles[vec2ToOneDimentionIndexPreventWrap({ x: Math.round(u.x / config.OBSTACLE_SIZE), y: Math.round(u.y / config.OBSTACLE_SIZE) }, this.lastLevelCreated.width)];

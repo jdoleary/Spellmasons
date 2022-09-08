@@ -169,8 +169,11 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
     elInstructions.innerText = 'Choose a place to spawn in with Left Mouse Button.'
   }
 
-  // Make unit visible
-  Image.show(player.unit.image);
+  // Make unit visible only if they are current users player
+  // so that they can see where to spawn them
+  if (globalThis.player == player) {
+    Image.show(player.unit.image);
+  }
   if (!player.unit.alive) {
     Unit.resurrect(player.unit);
   }
@@ -234,6 +237,7 @@ export function load(player: IPlayerSerialized, underworld: Underworld) {
   if (playerLoaded.inPortal) {
     playerLoaded.unit.x = NaN;
     playerLoaded.unit.y = NaN;
+    Image.hide(playerLoaded.unit.image);
   }
   updateGlobalRefToCurrentClientPlayer(playerLoaded);
   CardUI.recalcPositionForCards(playerLoaded, underworld);
