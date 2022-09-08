@@ -2,13 +2,11 @@
 - small bugs:
     - when your main mana bar has 0 mana left it doesn't show the diagonal lines
     - should be able to disable UI without admin mode on
-    - dead units in front of walls render behind walls
     - swap then damage hurts yourself also, it shouldn't be this way it should hurt the target
     - after swapping I got stuck in a wall
     - missing vampire hurt noise (when you push them into lava)
     - if you pull something into you and you're standing on the edge of liquid you take damage as if you fell in the liquid (on blood level)
     - spells like mana burn and hurt shouldn't play on dead units
-    - no summoner sound effect when cast?
     - sometimes when you walk you get stuck on a wall and it wastes stamina
 ## Today
 - fix multiplayer sync issues
@@ -37,6 +35,7 @@
     - sounds that lets you know everyone is waiting on you
     - warnings: out of stamina, no target, out of range (see breath of the wild)
     - missing sfx for vulnerable/debilitate
+    - summoner cast sfx
 - cast line should connect to the feet not your center
 - Feature: perks
 - Feature: "Soul bind" - bound units share applied effects

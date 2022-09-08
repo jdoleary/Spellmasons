@@ -1,3 +1,4 @@
+- Camera shouldn't jerk around when you die
 - "Potential Cast Range" text doesn't scale when you zoom
 - bug: if you save while having picked 1 of the 3 starting spells, it loads and shows the picker before the player is synced, so just the text is out of date
 - Optimize: Save files need not save unitsPrediction

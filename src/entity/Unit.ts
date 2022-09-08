@@ -382,7 +382,7 @@ export function changeToDieSprite(unit: IUnit) {
   const newSprite = Image.changeSprite(
     unit.image,
     unit.animations.die,
-    containerDoodads,
+    containerUnits,
     // DieSprite intentionally stops animating when it is complete, therefore
     // resolver is undefined, since no promise is waiting for it.
     undefined,
