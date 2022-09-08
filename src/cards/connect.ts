@@ -1,6 +1,7 @@
 import { drawPredictionCircleFill, drawPredictionLine } from '../graphics/PlanningView';
 import { addUnitTarget, Spell } from './index';
 import type * as Unit from '../entity/Unit';
+import * as config from '../config';
 import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
 
@@ -25,7 +26,10 @@ Link together enemies (and allys) in close proximity to each other.  All connect
         const unit = state.targetedUnits[i];
         if (unit) {
           // Draw visual circle for prediction
-          drawPredictionCircleFill(unit, range);
+          // - config.COLLISION_MESH_RADIUS / 2 accounts for the fact that the game logic
+          // will only connect units if their CENTER POINT falls within the radius; however,
+          // to the players eyes if any part of them is touching the circle it should connect
+          drawPredictionCircleFill(unit, range - config.COLLISION_MESH_RADIUS / 2);
           // Find all units touching the spell origin
           const chained_units = getTouchingUnitsRecursive(
             unit.x,

@@ -9,7 +9,6 @@
 - "I don't know what every circle means, nor do I know what every lines mean". Teach it differently
 - explain: lava damage and how units can stay in lava
 - bug: he didn't get to pick spell when he got pushed into the portal, actually he did but they got overlapped by the perks, change the order so that new waits in queue
-- maybe hide spell prediction when "f" is held
 - purify doesn't make sense without context
   - showing purify without that context is just making the player screw up due to interface issues rather than strategy issues
   - purify could explain curses
@@ -24,7 +23,6 @@
 - explain that push stacks
 - at the start of the new level, tour the space, show off the new enemies with the camera, so users can appreciate the art
   - it also introduces the whole level
-- chain radius reaches someones feet but doesn't target them - this doesn't make sense
 - not enough mana to add new spell to the chain wasn't clear, wasn't noticed
   - "Insufficient Mana" should be where your cursor is
 - every new move is accompanied by a video of it being used
