@@ -165,7 +165,7 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
   // Set the player so they can choose their next spawn
   player.isSpawned = false;
 
-  if (elInstructions) {
+  if (elInstructions && globalThis.player == player) {
     elInstructions.innerText = 'Choose a place to spawn in with Left Mouse Button.'
   }
 
