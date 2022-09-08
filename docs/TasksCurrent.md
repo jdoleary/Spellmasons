@@ -1,8 +1,16 @@
-## Today
-- fix multiplayer sync issues
-- record new screenshots and footage (zoomed in, no music)
-- Add gifs to steam page
-- push bloat hurt prediction resulted in weird prediction lines
+## Low hanging fruit
+- copy:
+    - "requires a following spell to modify" -> "to have an effect"
+    - label connect range circle
+    - change "cards on it's right" to "spells on ..."
+    - fix priest copy to reference blood curse not vampires
+    - purify should explain curses
+        - "a curse is a modifier that stays attached to a target"
+    - "target take" to "target to take" for mana burn
+- "Insufficient Mana" floating text should be where your cursor is
+- "F" and spell effect shouldn't happen at the same time***
+- summoner does damage but shouldn't
+- add drop shadow to all text, see networkHandler.ts line 274
 - small bugs:
     - should be able to disable UI without admin mode on
     - bug: Archer sounds like he's playing attack sfx twice
@@ -18,6 +26,11 @@
     - spells like mana burn and hurt shouldn't play on dead units
     - no summoner sound effect when cast?
     - sometimes when you walk you get stuck on a wall and it wastes stamina
+## Today
+- fix multiplayer sync issues
+- record new screenshots and footage (zoomed in, no music)
+- Add gifs to steam page
+- push bloat hurt prediction resulted in weird prediction lines
 
 # Bugs
 - Permanently fix liquid

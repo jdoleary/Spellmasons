@@ -1,7 +1,5 @@
 ## JakobFree 2022-09-08
 - Remind players they can move camera when spawning in
-- "requires a following spell to modify" -> "to have an effect"
-- label connect range circle
 - out of range is confusing and not obvious
   - out of range could be red instead of grey
   - maybe have cast range appear as soon as you exceed it
@@ -13,10 +11,8 @@
 - super skinny ridge is confusing and not obvious (impassable)
 - "people love to know how much content is in the game"
 - "I don't know what every circle means, nor do I know what every lines mean". Teach it differently
-- change "cards on it's right" to "spells on ..."
 - explain: lava damage and how units can stay in lava
 - bug: he didn't get to pick spell when he got pushed into the portal, actually he did but they got overlapped by the perks, change the order so that new waits in queue
-- fix priest copy to reference blood curse not vampires
 - maybe hide spell prediction when "f" is held
 - purify doesn't make sense without context
   - showing purify without that context is just making the player screw up due to interface issues rather than strategy issues
@@ -36,10 +32,7 @@
 - not enough mana to add new spell to the chain wasn't clear, wasn't noticed
   - "Insufficient Mana" should be where your cursor is
 - every new move is accompanied by a video of it being used
-- "target take" to "target to take" for mana burn
-- summoner does damage but shouldn't
 - could attack range circles be skewed to fit game perspective?
-- "F" and spell effect shouldn't happen at the same time***
 - Feedback:
   - Expected cost: $10-$15
   - Dominant feelings: anxiety, satisfaction, like complex manuvers, possibility space feels large,  "I will like I could play 1:15min again and my goal would be to play it differently", expansive
