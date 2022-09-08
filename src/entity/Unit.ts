@@ -21,6 +21,7 @@ import { raceTimeout } from '../Promise';
 import { closestLineSegmentIntersection } from '../jmath/lineSegment';
 import { bloodColorDefault } from '../graphics/ui/colors';
 
+const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elHealthBar = document.querySelector('#health .fill') as HTMLElement;
 const elHealthCost = document.querySelector('#health .cost') as HTMLElement;
 const elHealthLabel = document.querySelector('#health .label') as HTMLElement;
@@ -714,6 +715,9 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
   // Set the health cost bar that shows how much health will be changed if the spell is cast
   if (predictionPlayerUnit && predictionPlayerUnit.health > 0) {
     const losingHealth = predictionPlayerUnit.health < unit.health;
+    if (elCautionBox) {
+      elCautionBox.classList.toggle('visible', losingHealth);
+    }
     if (losingHealth) {
       // Visualize health loss
       elHealthCost.style['left'] = `${100 * predictionPlayerUnit.health / unit.healthMax}%`;

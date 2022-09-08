@@ -751,7 +751,6 @@ body.showUpgrades #player-turn-indicator {
   line-height: 70px;
 }
 
-#own-damage-warning,
 #selected-cards .card.requires-following-card.blink:last-child:before {
   animation: blink-animation 0.5s steps(5, start) infinite, shake 0.82s cubic-bezier(.36, .07, .19, .97) both;
 }
@@ -760,15 +759,6 @@ body.showUpgrades #player-turn-indicator {
   animation: shake 0.82s cubic-bezier(.36, .07, .19, .97) both;
 }
 
-#own-damage-warning {
-  display: none;
-  color: white;
-  background-color: rgba(253, 98, 98, 0.596);
-  border: 4px red dotted;
-  padding: 8px;
-  border-radius: 18px;
-
-}
 
 @keyframes blink-animation {
   to {
@@ -1177,4 +1167,95 @@ button {
       rgba(0, 0, 0, 0) 20px,
       rgba(196, 53, 53, 1.0) 20px,
       rgba(196, 53, 53, 1.0) 40px) 10;
+}
+
+/* caution-box styling modified from https://codepen.io/evilpeacock/pen/OJyyBBP */
+#caution-box-positioner {
+  pointer-events: none;
+  z-index: 1;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 220px;
+
+}
+
+#caution-box {
+  margin: 0 auto;
+  display: none;
+}
+
+#caution-box.visible {
+  display: block;
+}
+
+#caution-box #caution-box-inner {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: black;
+}
+
+#caution-box {
+  width: 300px;
+  height: 80px;
+  box-sizing: border-box;
+  padding: 10px;
+  position: relative;
+  overflow: hidden;
+  --color-error: #d55656;
+  --color-error2: #8d3a3a;
+  --color-background: #d55656;
+  color: white;
+}
+
+#caution-box::before {
+  content: '';
+  position: absolute;
+  width: 150%;
+  height: 650%;
+  background: repeating-linear-gradient(var(--color-error2) 0%,
+      var(--color-error2) 7.5px,
+      var(--color-error) 7.5px,
+      var(--color-error) 15px,
+      var(--color-error2) 15px,
+      var(--color-error2) 22.5px,
+      var(--color-error) 22.5px,
+      var(--color-error) 30px);
+  transform: translateX(-50%) translateY(-50%) rotate(-45deg);
+  animation: animate-caution-box 20s linear infinite;
+}
+
+#caution-box #caution-box-inner {
+  /*display: none;*/
+  position: relative;
+  background-color: var(--color-background);
+  flex-direction: column;
+  box-sizing: border-box;
+  padding: 30px;
+  text-align: center;
+  font-family: sans-serif;
+  font-size: 1.3em;
+  z-index: 2;
+}
+
+#caution-box,
+#caution-box #caution-box-inner {
+  border-radius: 4px;
+}
+
+#caution-box #caution-box-inner a {
+  text-decoration: none;
+  color: #111;
+}
+
+@keyframes animate-caution-box {
+  from {
+    background-position: 0;
+  }
+
+  to {
+    background-position: 0 250px;
+  }
 }
