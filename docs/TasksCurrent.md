@@ -7,7 +7,6 @@
     - after swapping I got stuck in a wall
     - missing vampire hurt noise (when you push them into lava)
     - if you pull something into you and you're standing on the edge of liquid you take damage as if you fell in the liquid (on blood level)
-    - mana burn sfx and animation plays one at a time instead of all at once so if you have multiple targets it's annoying, also it doesn't wait for the animation to be done before playing the next spell so burn then hurt overlap
     - spells like mana burn and hurt shouldn't play on dead units
     - no summoner sound effect when cast?
     - sometimes when you walk you get stuck on a wall and it wastes stamina
