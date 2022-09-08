@@ -27,7 +27,7 @@ let planningViewGraphics: PIXI.Graphics | undefined;
 let predictionGraphics: PIXI.Graphics | undefined;
 // labelText is used to add a label to planningView circles 
 // so that the player knows what the circle is referencing.
-let labelText = !globalThis.pixi ? undefined : new globalThis.pixi.Text('', { fill: 'white' });
+let labelText = !globalThis.pixi ? undefined : new globalThis.pixi.Text('', { fill: 'white', ...config.PIXI_TEXT_DROP_SHADOW });
 export function initPlanningView() {
   if (containerPlanningView && containerUI && globalThis.pixi) {
     planningViewGraphics = new globalThis.pixi.Graphics();

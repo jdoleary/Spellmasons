@@ -1,6 +1,7 @@
 import type * as Player from '../../entity/Player';
 import * as colors from './colors';
 import * as Cards from '../../cards';
+import * as config from '../../config';
 import {
   runPredictions,
   updateManaCostUI,
@@ -404,7 +405,7 @@ function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string
         floatingText({
           coords: globalThis.player.unit,
           text: 'Insufficient Mana',
-          style: { fill: '#5656d5', fontSize: '50px', dropShadow: true, dropShadowDistance: 1 }
+          style: { fill: '#5656d5', fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
         })
         deselectLastCard();
 

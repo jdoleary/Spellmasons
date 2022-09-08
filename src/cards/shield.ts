@@ -5,6 +5,7 @@ import floatingText from '../graphics/FloatingText';
 import { CardCategory } from '../types/commonTypes';
 import type Underworld from '../Underworld';
 import { playDefaultSpellSFX } from './cardUtils';
+import * as config from '../config';
 
 export const id = 'shield';
 export const modifierImagePath = 'spell-effects/modifierShield.png';
@@ -70,6 +71,7 @@ Protects bearer from the next ${damageBlocked} damage that they would incur.
               text: 'Shielded from damage!',
               style: {
                 fill: 'blue',
+                ...config.PIXI_TEXT_DROP_SHADOW
               },
             });
           }

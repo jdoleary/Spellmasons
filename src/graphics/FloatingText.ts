@@ -1,5 +1,6 @@
 import type * as PIXI from 'pixi.js';
 import type { Vec2 } from '../jmath/Vec';
+import * as config from '../config';
 import { app, containerFloatingText, containerUIFixed, withinCameraBounds } from './PixiUtils';
 
 interface FText {
@@ -23,7 +24,7 @@ export default function floatingText({
   coords,
   text,
   container = containerFloatingText,
-  style = { fill: 'white' },
+  style = { fill: 'white', ...config.PIXI_TEXT_DROP_SHADOW },
   keepWithinCameraBounds = true
 }: FloatingTextInsructions) {
   if (!(globalThis.pixi && app && container)) {
@@ -105,7 +106,8 @@ export function centeredFloatingText(text: string, fill: string | number = 'whit
     container: containerUIFixed,
     style: {
       fill,
-      fontSize: '120px'
+      fontSize: '120px',
+      ...config.PIXI_TEXT_DROP_SHADOW
     },
     // centered text is FIXED to the center, so it shouldn't be adjusted based on the camera
     // position or else it will leave the center under certain camera positions

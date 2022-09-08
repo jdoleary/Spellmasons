@@ -466,7 +466,7 @@ export function clickHandler(underworld: Underworld, e: MouseEvent) {
           floatingText({
             coords: target,
             text: `${lastCard.id} only modifies\nspells on its right`,
-            style: { fill: 'red' }
+            style: { fill: 'red', ...config.PIXI_TEXT_DROP_SHADOW }
           });
           const elHints = document.querySelectorAll('.requires-following-card');
           const elHint = elHints.length ? elHints[elHints.length - 1] : undefined;

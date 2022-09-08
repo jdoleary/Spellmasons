@@ -112,7 +112,7 @@ export function create({ pos, pickupSource, onTurnsLeftDone }:
 }
 function addText(pickup: IPickup) {
   // Value of text is set in sync()
-  pickup.text = pixiText('', { fill: 'white', align: 'center' });
+  pickup.text = pixiText('', { fill: 'white', align: 'center', ...config.PIXI_TEXT_DROP_SHADOW });
   sync(pickup);
   if (pickup.text) {
     pickup.text.anchor.x = 0;

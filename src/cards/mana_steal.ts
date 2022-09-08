@@ -7,6 +7,7 @@ import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import { makeManaTrail } from '../graphics/Particles';
 import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
+import * as config from '../config';
 
 const id = 'mana_steal';
 const mana_stolen = 20;
@@ -77,7 +78,7 @@ Sacrifice some of own health to steal up to ${mana_stolen} mana from each target
             floatingText({
               coords: caster,
               text: `+ ${unitManaStolen} Mana`,
-              style: { fill: 'blue' }
+              style: { fill: 'blue', ...config.PIXI_TEXT_DROP_SHADOW }
             })
           }
         }));

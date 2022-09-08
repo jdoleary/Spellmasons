@@ -5,7 +5,6 @@ import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
 
 const id = 'Connect';
-let labelText = !globalThis.pixi ? undefined : new globalThis.pixi.Text('', { fill: 'white' });
 const spell: Spell = {
   card: {
     id,

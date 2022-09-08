@@ -63,3 +63,4 @@ export const STORAGE_ID_PLAYER_NAME = 'player-name';
 export const LIQUID_X_SCROLL_SPEED = 400; // higher is slower
 export const LIQUID_DISPLACEMENT_SPEED = 0.1;
 export const LIQUID_DISPLACEMENT_SCALE = 0.6;
+export const PIXI_TEXT_DROP_SHADOW = { dropShadow: true, dropShadowDistance: 1 };

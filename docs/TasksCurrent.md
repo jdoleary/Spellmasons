@@ -2,7 +2,6 @@
 - "Insufficient Mana" floating text should be where your cursor is
 - "F" and spell effect shouldn't happen at the same time***
 - summoner does damage but shouldn't
-- add drop shadow to all text, see networkHandler.ts line 274
 - small bugs:
     - should be able to disable UI without admin mode on
     - bug: Archer sounds like he's playing attack sfx twice
