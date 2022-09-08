@@ -37,7 +37,7 @@ async function healOneOf(self: Unit.IUnit, units: Unit.IUnit[], underworld: Unde
 const unit: UnitSource = {
   id: 'priest',
   info: {
-    description: 'The priest heals its allies, and if its allies are at full health it will shield them.  Priests will also attack vampires of a different faction by healing them (which makes them take damage).',
+    description: 'The priest heals its allies, and if its allies are at full health it will shield them.  Priests will also attack of a different faction if they have blood curse by healing them (heals are taken as damage when a unit is blood cursed).',
     image: 'units/priestIdle',
     subtype: UnitSubType.SUPPORT_CLASS,
   },

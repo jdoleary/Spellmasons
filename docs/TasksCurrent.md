@@ -1,12 +1,6 @@
 ## Low hanging fruit
 - copy:
-    - "requires a following spell to modify" -> "to have an effect"
     - label connect range circle
-    - change "cards on it's right" to "spells on ..."
-    - fix priest copy to reference blood curse not vampires
-    - purify should explain curses
-        - "a curse is a modifier that stays attached to a target"
-    - "target take" to "target to take" for mana burn
 - "Insufficient Mana" floating text should be where your cursor is
 - "F" and spell effect shouldn't happen at the same time***
 - summoner does damage but shouldn't

@@ -465,7 +465,7 @@ export function clickHandler(underworld: Underworld, e: MouseEvent) {
         if (lastCard && lastCard.requiresFollowingCard) {
           floatingText({
             coords: target,
-            text: `${lastCard.id} only modifies\ncards on its right`,
+            text: `${lastCard.id} only modifies\nspells on its right`,
             style: { fill: 'red' }
           });
           const elHints = document.querySelectorAll('.requires-following-card');
