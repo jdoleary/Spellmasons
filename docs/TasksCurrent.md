@@ -3,7 +3,6 @@
 - Lobbers should move closer so they're more dangerous
 - small bugs:
     - when your main mana bar has 0 mana left it doesn't show the diagonal lines
-    - should be able to disable UI without admin mode on
     - swap then damage hurts yourself also, it shouldn't be this way it should hurt the target
     - after swapping I got stuck in a wall
     - missing vampire hurt noise (when you push them into lava)

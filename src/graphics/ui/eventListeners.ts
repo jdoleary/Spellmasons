@@ -169,14 +169,6 @@ export function keydownListener(underworld: Underworld, event: KeyboardEvent) {
     case 'Digit0':
       CardUI.selectCardByIndex(9);
       break;
-    case 'Period':
-      if (adminMode) {
-        toggleHUD();
-      } else {
-        console.log('Aborted: This key "would" toggleHUD if "adminMode" was set to true.')
-      }
-      break;
-
   }
 }
 
@@ -648,16 +640,7 @@ function tryShowDevContextMenu(underworld: Underworld, e: MouseEvent, mousePos: 
           }
         }
       ]
-      for (let { label, action } of selectedUnitActions) {
-        let el = document.createElement('li');
-        el.innerHTML = label
-        el.addEventListener('click', () => {
-          action();
-          // Close the menu
-          menu.remove();
-        })
-        elSelectedUnitList.appendChild(el);
-      }
+      createContextMenuOptions(selectedUnitActions, elSelectedUnitList, menu);
     } else {
       menu.querySelector('#menu-selected-unit')?.remove();
       menu.querySelector('#selected-unit-label')?.remove();
@@ -675,45 +658,58 @@ function tryShowDevContextMenu(underworld: Underworld, e: MouseEvent, mousePos: 
     elGlobalList.appendChild(elKillAll);
 
     const elSpawnList = menu.querySelector('#menu-spawn') as HTMLElement;
-
-    Object.values(allUnits).forEach(u => {
-      const element = document.createElement('li');
-      element.innerHTML = u.id;
-      element.addEventListener('click', () => {
+    createContextMenuOptions(Object.values(allUnits).map(u => ({
+      label: u.id,
+      action: () => {
         if (devSpawnUnit) {
           devSpawnUnit(u.id, Faction.ENEMY, mousePos);
         }
-        // Close the menu
-        menu.remove();
-      });
-      elSpawnList.appendChild(element);
-    });
+
+      }
+    })), elSpawnList, menu);
 
     const elSelfList = menu.querySelector('#menu-self') as HTMLElement;
-    let el = document.createElement('li');
-    el.innerHTML = 'Super Me'
-    el.addEventListener('click', () => {
-      if (superMe) {
-        superMe(underworld);
+    createContextMenuOptions([
+      {
+        label: 'Super Me',
+        action: () => {
+          if (superMe) {
+            superMe(underworld);
+          }
+        }
+      },
+      {
+        label: 'Teleport Here',
+        action: () => {
+          if (player) {
+            player.unit.x = mousePos.x;
+            player.unit.y = mousePos.y;
+          }
+        }
+      },
+      {
+        label: 'Toggle HUD',
+        action: () => {
+          toggleHUD();
+        }
       }
-      // Close the menu
-      menu.remove();
-    })
-    elSelfList.appendChild(el);
-    el = document.createElement('li');
-    el.innerHTML = 'Teleport Here'
-    el.addEventListener('click', () => {
-      if (player) {
-        player.unit.x = mousePos.x;
-        player.unit.y = mousePos.y;
-      }
-      // Close the menu
-      menu.remove();
-    })
-    elSelfList.appendChild(el);
+    ], elSelfList, menu);
 
     document.body.appendChild(menu);
 
+  }
+
+}
+function createContextMenuOptions(options: { action: () => void, label: string }[], container: HTMLElement, menu: HTMLElement) {
+  for (let { label, action } of options) {
+    let el = document.createElement('li');
+    el.innerHTML = label
+    el.addEventListener('click', () => {
+      action();
+      // Close the menu
+      menu.remove();
+    })
+    container.appendChild(el);
   }
 
 }
