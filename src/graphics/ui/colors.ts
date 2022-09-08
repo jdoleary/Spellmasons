@@ -6,6 +6,7 @@ export const manaBlue = 0x5656d5;
 export const healthAllyGreen = 0x40a058;
 export const targetingSpellGreen = 0x57ed61;
 export const outOfRangeGrey = 0xaaaaaa;
+export const errorRed = 0xF93943;
 export const abyss = {
     'blood': 0x2d6265,
     'lava': 0x4b465c,

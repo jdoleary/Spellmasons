@@ -1,5 +1,4 @@
 ## Low hanging fruit
-- "Insufficient Mana" floating text should be where your cursor is
 - "F" and spell effect shouldn't happen at the same time***
 - summoner does damage but shouldn't
 - small bugs:

@@ -403,9 +403,9 @@ function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string
     if (globalThis.player) {
       if (cost.manaCost > globalThis.player.unit.mana) {
         floatingText({
-          coords: globalThis.player.unit,
+          coords: underworld.getMousePos(),
           text: 'Insufficient Mana',
-          style: { fill: '#5656d5', fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
+          style: { fill: colors.errorRed, fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
         })
         deselectLastCard();
 
