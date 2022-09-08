@@ -500,7 +500,7 @@ export function setPredictionGraphicsLineStyle(color: number) {
     predictionGraphics.lineStyle(3, color, 1.0)
   }
 }
-export function drawPredictionCircleFill(target: Vec2, radius: number, text: string = 'Connect Radius') {
+export function drawPredictionCircleFill(target: Vec2, radius: number, text: string = 'Connect Area') {
   if (globalThis.radiusGraphics) {
     globalThis.radiusGraphics.lineStyle(1, 0x000000, 0.0);
     globalThis.radiusGraphics.beginFill(0xFFFFFF, 1.0);
