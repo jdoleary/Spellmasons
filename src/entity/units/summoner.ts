@@ -26,7 +26,9 @@ const unit: UnitSource = {
     death: 'summonerDeath'
   },
   unitProps: {
-    healthMax: 12
+    healthMax: 12,
+    damage: 0,
+    attackRange: 0,
   },
   spawnParams: {
     probability: 20,
