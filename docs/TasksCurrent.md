@@ -1,4 +1,6 @@
 ## Low hanging fruit
+- when there is an error in UI like (out of range), no other circles (such as attack range or bloat radius) should show as red
+- Lobbers should move closer so they're more dangerous
 - small bugs:
     - when your main mana bar has 0 mana left it doesn't show the diagonal lines
     - should be able to disable UI without admin mode on

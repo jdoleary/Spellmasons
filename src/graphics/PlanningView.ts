@@ -21,6 +21,7 @@ import { Graphics } from 'pixi.js';
 import { allCards } from '../cards';
 import { keyDown } from './ui/eventListeners';
 
+const TEXT_OUT_OF_RANGE = 'Out of Range';
 // Graphics for rendering above board and walls but beneath units and doodads,
 // see containerPlanningView for exact render order.
 let planningViewGraphics: PIXI.Graphics | undefined;
@@ -131,6 +132,29 @@ export function updatePlanningView(underworld: Underworld) {
             } else if (globalThis.selectedUnit.unitSubType === UnitSubType.PLAYER_CONTROLLED) {
               drawCastRangeCircle(globalThis.selectedUnit, globalThis.selectedUnit.attackRange, globalThis.unitOverlayGraphics)
             }
+          }
+        }
+      }
+    }
+    // If the player has a spell ready and the mouse is beyond their max cast range
+    // show the players cast range so they user knows that they are out of range
+    const mouseTarget = underworld.getMousePos();
+    if (globalThis.player) {
+      if (CardUI.areAnyCardsSelected()) {
+        const outOfRange = isOutOfRange(globalThis.player, mouseTarget, true);
+        if (outOfRange) {
+          globalThis.unitOverlayGraphics.lineStyle(3, colors.errorRed, 1.0);
+          globalThis.unitOverlayGraphics.drawCircle(
+            globalThis.player.unit.x,
+            globalThis.player.unit.y,
+            globalThis.player.unit.attackRange
+          );
+          if (labelText) {
+            labelText.text = TEXT_OUT_OF_RANGE;
+            labelText.style.fill = colors.errorRed;
+            const labelPosition = withinCameraBounds({ x: mouseTarget.x, y: mouseTarget.y - labelText.height }, labelText.width / 2);
+            labelText.x = labelPosition.x;
+            labelText.y = labelPosition.y;
           }
         }
       }
@@ -460,10 +484,14 @@ export function drawPredictionCircle(target: Vec2, radius: number, color: number
     predictionGraphics.endFill();
     predictionGraphics.drawCircle(target.x, target.y, radius);
     if (text && labelText) {
-      labelText.text = text;
-      const labelPosition = withinCameraBounds({ x: target.x, y: target.y + radius }, labelText.width / 2);
-      labelText.x = labelPosition.x;
-      labelText.y = labelPosition.y;
+      // Exception: Don't override label text if text is
+      // currently telling the user that they are aiming out of range
+      if (labelText.text !== TEXT_OUT_OF_RANGE) {
+        labelText.text = text;
+        const labelPosition = withinCameraBounds({ x: target.x, y: target.y + radius }, labelText.width / 2);
+        labelText.x = labelPosition.x;
+        labelText.y = labelPosition.y;
+      }
     }
   }
 }
@@ -479,10 +507,14 @@ export function drawPredictionCircleFill(target: Vec2, radius: number, text: str
     globalThis.radiusGraphics.drawCircle(target.x, target.y, radius);
     globalThis.radiusGraphics.endFill();
     if (labelText) {
-      labelText.text = text;
-      const labelPosition = withinCameraBounds({ x: target.x, y: target.y + radius }, labelText.width / 2);
-      labelText.x = labelPosition.x;
-      labelText.y = labelPosition.y;
+      // Exception: Don't override label text if text is
+      // currently telling the user that they are aiming out of range
+      if (labelText.text !== TEXT_OUT_OF_RANGE) {
+        labelText.text = text;
+        const labelPosition = withinCameraBounds({ x: target.x, y: target.y + radius }, labelText.width / 2);
+        labelText.x = labelPosition.x;
+        labelText.y = labelPosition.y;
+      }
     }
   }
 }

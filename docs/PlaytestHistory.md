@@ -1,8 +1,5 @@
 ## JakobFree 2022-09-08
 - Remind players they can move camera when spawning in
-- out of range is confusing and not obvious
-  - out of range could be red instead of grey
-  - maybe have cast range appear as soon as you exceed it
 - adaptive tutorial could explain "connect", when it's usable and when not
 - should pickups be destroyable
 - lobbers aren't aggressive enough, they never end up hitting you cause it's too easy to get out of their range cause they don't come close enough
