@@ -2,7 +2,6 @@
 - Remind players they can move camera when spawning in
 - adaptive tutorial could explain "connect", when it's usable and when not
 - should pickups be destroyable
-- lobbers aren't aggressive enough, they never end up hitting you cause it's too easy to get out of their range cause they don't come close enough
 - ***Mistakes should be strategy of player but not interface
 - recommends information overload to start
 - super skinny ridge is confusing and not obvious (impassable)

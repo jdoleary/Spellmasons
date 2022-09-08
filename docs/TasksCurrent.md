@@ -1,6 +1,5 @@
 ## Low hanging fruit
 - when there is an error in UI like (out of range), no other circles (such as attack range or bloat radius) should show as red
-- Lobbers should move closer so they're more dangerous
 - small bugs:
     - when your main mana bar has 0 mana left it doesn't show the diagonal lines
     - swap then damage hurts yourself also, it shouldn't be this way it should hurt the target

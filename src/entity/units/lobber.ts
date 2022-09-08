@@ -5,6 +5,7 @@ import { createVisualLobbingProjectile } from '../Projectile';
 import * as math from '../../jmath/math';
 import Underworld from '../../Underworld';
 import { bloodLobber } from '../../graphics/ui/colors';
+import * as config from '../../config';
 
 const unit: UnitSource = {
   id: 'lobber',
@@ -63,8 +64,8 @@ const unit: UnitSource = {
     const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit, underworld);
     if (closestEnemy) {
       const distanceToEnemy = math.distance(unit, closestEnemy);
-      // Trick to make the unit only move as far as will put them in range but no closer
-      unit.stamina = Math.min(unit.stamina, distanceToEnemy - unit.attackRange);
+      // The following is a hacky way to make them not move too close to the enemy
+      unit.stamina = Math.min(unit.stamina, distanceToEnemy - config.COLLISION_MESH_RADIUS);
       await Unit.moveTowards(unit, closestEnemy, underworld);
     }
   },
