@@ -28,9 +28,10 @@ import { allUnits } from '../../entity/units';
 import { Faction } from '../../types/commonTypes';
 import * as Freeze from '../../cards/freeze';
 import { collideWithLineSegments } from '../../jmath/moveWithCollision';
+import keyMapping from './keyMapping';
 
 export const keyDown = {
-  f: false,
+  showWalkRope: false,
   w: false,
   a: false,
   s: false,
@@ -96,8 +97,12 @@ export function keydownListener(underworld: Underworld, event: KeyboardEvent) {
     case 'Backspace':
       CardUI.deselectLastCard();
       break;
-    case 'KeyF':
-      keyDown.f = true;
+    case keyMapping.showWalkRope:
+      keyDown.showWalkRope = true;
+      // When the walkRope turns on clear the spell effect projection
+      // so the user can focus on the information that the walk rope is 
+      // communicating
+      clearSpellEffectProjection(underworld);
       break;
     // Camera movement
     case 'KeyW':
@@ -181,8 +186,8 @@ export function keyupListener(underworld: Underworld, event: KeyboardEvent) {
     return;
   }
   switch (event.code) {
-    case 'KeyF':
-      keyDown.f = false;
+    case keyMapping.showWalkRope:
+      keyDown.showWalkRope = false;
       break;
     // Camera movement
     case 'KeyW':
@@ -252,9 +257,8 @@ export function mouseMove(underworld: Underworld, e?: MouseEvent) {
     moveCamera(-movementX / zoom, -movementY / zoom);
   }
 
-  // RMB
   if (globalThis.player) {
-    if (keyDown.f) {
+    if (keyDown.showWalkRope) {
       drawWalkRope(mouseTarget, underworld);
     } else {
       globalThis.walkPathGraphics?.clear();
@@ -406,7 +410,6 @@ export function clickHandler(underworld: Underworld, e: MouseEvent) {
     return;
   }
   const mousePos = underworld.getMousePos();
-
 
   if (isOutOfBounds(mousePos, underworld)) {
     // Disallow click out of bounds

@@ -50,7 +50,7 @@ import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmen
 import { expandPolygon, isVec2InsidePolygon, mergePolygon2s, Polygon2, Polygon2LineSegment, toLineSegments, toPolygon2LineSegments } from './jmath/Polygon2';
 import { calculateDistanceOfVec2Array, findPath } from './jmath/Pathfinding';
 import { addUnderworldEventListeners, setView, View } from './views';
-import { mouseMove } from './graphics/ui/eventListeners';
+import { keyDown, mouseMove } from './graphics/ui/eventListeners';
 import Jprompt from './graphics/Jprompt';
 import { collideWithLineSegments, ForceMove, isVecIntersectingVecWithCustomRadius, moveWithCollisions } from './jmath/moveWithCollision';
 import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './config';
@@ -369,30 +369,33 @@ export default class Underworld {
 
     // Draw cast line:
     if (globalThis.player) {
-      if (CardUI.areAnyCardsSelected()) {
-        const mouseTarget = this.getMousePos();
-        // Use this similarTriangles calculation to make the line pretty so it doesn't originate from the exact center of the
-        // other player but from the edge instead
-        const startPoint = math.distance(globalThis.player.unit, mouseTarget) <= config.COLLISION_MESH_RADIUS
-          ? mouseTarget
-          : Vec.subtract(globalThis.player.unit, math.similarTriangles(globalThis.player.unit.x - mouseTarget.x, globalThis.player.unit.y - mouseTarget.y, math.distance(globalThis.player.unit, mouseTarget), config.COLLISION_MESH_RADIUS));
-        // Players can only cast within their attack range
-        const castLine = { p1: startPoint, p2: mouseTarget };
-        globalThis.unitOverlayGraphics?.lineStyle(3, colors.targetBlue, 0.7);
-        globalThis.unitOverlayGraphics?.moveTo(castLine.p1.x, castLine.p1.y);
-        const endOfRange = getEndOfRange(globalThis.player, mouseTarget);
-        if (isOutOfRange(globalThis.player, mouseTarget, true)) {
-          // Draw a grey line showing that you cannot cast
-          globalThis.unitOverlayGraphics?.lineStyle(3, colors.outOfRangeGrey, 1.0);
-          globalThis.unitOverlayGraphics?.lineTo(castLine.p2.x, castLine.p2.y);
-          // Draw a circle where the castrange stops
-          globalThis.unitOverlayGraphics?.drawCircle(endOfRange.x, endOfRange.y, 3);
-        } else if (isOutOfRange(globalThis.player, mouseTarget, false)) {
-          globalThis.unitOverlayGraphics?.lineTo(endOfRange.x, endOfRange.y);
-          globalThis.unitOverlayGraphics?.drawCircle(endOfRange.x, endOfRange.y, 3);
-        } else {
-          globalThis.unitOverlayGraphics?.lineTo(mouseTarget.x, mouseTarget.y);
-          globalThis.unitOverlayGraphics?.drawCircle(mouseTarget.x, mouseTarget.y, 3);
+      // Do not show the cast line if the player is checking how far they can move
+      if (!keyDown.showWalkRope) {
+        if (CardUI.areAnyCardsSelected()) {
+          const mouseTarget = this.getMousePos();
+          // Use this similarTriangles calculation to make the line pretty so it doesn't originate from the exact center of the
+          // other player but from the edge instead
+          const startPoint = math.distance(globalThis.player.unit, mouseTarget) <= config.COLLISION_MESH_RADIUS
+            ? mouseTarget
+            : Vec.subtract(globalThis.player.unit, math.similarTriangles(globalThis.player.unit.x - mouseTarget.x, globalThis.player.unit.y - mouseTarget.y, math.distance(globalThis.player.unit, mouseTarget), config.COLLISION_MESH_RADIUS));
+          // Players can only cast within their attack range
+          const castLine = { p1: startPoint, p2: mouseTarget };
+          globalThis.unitOverlayGraphics?.lineStyle(3, colors.targetBlue, 0.7);
+          globalThis.unitOverlayGraphics?.moveTo(castLine.p1.x, castLine.p1.y);
+          const endOfRange = getEndOfRange(globalThis.player, mouseTarget);
+          if (isOutOfRange(globalThis.player, mouseTarget, true)) {
+            // Draw a grey line showing that you cannot cast
+            globalThis.unitOverlayGraphics?.lineStyle(3, colors.outOfRangeGrey, 1.0);
+            globalThis.unitOverlayGraphics?.lineTo(castLine.p2.x, castLine.p2.y);
+            // Draw a circle where the castrange stops
+            globalThis.unitOverlayGraphics?.drawCircle(endOfRange.x, endOfRange.y, 3);
+          } else if (isOutOfRange(globalThis.player, mouseTarget, false)) {
+            globalThis.unitOverlayGraphics?.lineTo(endOfRange.x, endOfRange.y);
+            globalThis.unitOverlayGraphics?.drawCircle(endOfRange.x, endOfRange.y, 3);
+          } else {
+            globalThis.unitOverlayGraphics?.lineTo(mouseTarget.x, mouseTarget.y);
+            globalThis.unitOverlayGraphics?.drawCircle(mouseTarget.x, mouseTarget.y, 3);
+          }
         }
       }
     }

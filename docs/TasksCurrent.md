@@ -1,5 +1,4 @@
 ## Low hanging fruit
-- "F" and spell effect shouldn't happen at the same time***
 - summoner does damage but shouldn't
 - small bugs:
     - should be able to disable UI without admin mode on

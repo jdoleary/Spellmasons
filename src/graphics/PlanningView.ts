@@ -19,6 +19,7 @@ import { pointsEveryXDistanceAlongPath } from '../jmath/Pathfinding';
 import { distance, getCoordsAtDistanceTowardsTarget } from '../jmath/math';
 import { Graphics } from 'pixi.js';
 import { allCards } from '../cards';
+import { keyDown } from './ui/eventListeners';
 
 // Graphics for rendering above board and walls but beneath units and doodads,
 // see containerPlanningView for exact render order.
@@ -282,6 +283,10 @@ export function clearTints(underworld: Underworld) {
 
 // Returns true if castCards has effect
 async function showCastCardsPrediction(underworld: Underworld, target: Vec2, casterUnit: Unit.IUnit, cardIds: string[], outOfRange: boolean): Promise<boolean> {
+  if (keyDown.showWalkRope) {
+    // Do not show castCards prediction if the player is also viewing walkRope
+    return Promise.resolve(false);
+  }
   if (globalThis.player) {
     // Note: setPredictionGraphicsLineStyle must be called before castCards (because castCards may use it
     // to draw predictions) and after clearSpellEffectProjection, which clears predictionGraphics.
