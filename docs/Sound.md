@@ -4,6 +4,7 @@
 - [Magic elemental SFX](https://www.asoundeffect.com/sound-library/rpg3-magic-spells-elemental-packs/)
 - [combat (including bow)](https://www.asoundeffect.com/sound-library/combat-sounds-bundle-collection/)
 - [Impacts](https://www.asoundeffect.com/sound-library/close-combat-construction-kit/)
+- [book](https://www.asoundeffect.com/sound-library/books-alive/)
 
 - Freebees: https://mail.google.com/mail/u/0/#inbox/FMfcgzGpGTGBmJmVrVFHnZBZChppsftB
 - Misc Sound needs
