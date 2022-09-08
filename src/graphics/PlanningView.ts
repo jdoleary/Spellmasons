@@ -467,12 +467,18 @@ export function setPredictionGraphicsLineStyle(color: number) {
     predictionGraphics.lineStyle(3, color, 1.0)
   }
 }
-export function drawPredictionCircleFill(target: Vec2, radius: number) {
+export function drawPredictionCircleFill(target: Vec2, radius: number, text: string = 'Connect Radius') {
   if (globalThis.radiusGraphics) {
     globalThis.radiusGraphics.lineStyle(1, 0x000000, 0.0);
     globalThis.radiusGraphics.beginFill(0xFFFFFF, 1.0);
     globalThis.radiusGraphics.drawCircle(target.x, target.y, radius);
     globalThis.radiusGraphics.endFill();
+    if (labelText) {
+      labelText.text = text;
+      const labelPosition = withinCameraBounds({ x: target.x, y: target.y + radius }, labelText.width / 2);
+      labelText.x = labelPosition.x;
+      labelText.y = labelPosition.y;
+    }
   }
 }
 
