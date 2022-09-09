@@ -1,4 +1,5 @@
 ## Low hanging fruit
+- when loading a game it doesn't hide the "spawn instructions" even if you are already spawned in
 - make admin tools affect multiplayer
 - changing total volume should make sounds too
 - multiplayer, ending turn caused my spells to get rearranged poorly

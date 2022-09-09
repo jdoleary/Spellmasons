@@ -27,7 +27,5 @@
         - Spellmasons.com / wishlist on Steam
 
 # Gifs
-- Devise Ingenious Spell Combinations
 - Work together (pulling wounded ally into health)
-- Akira moment
 - "I feel like I'm painting with an increasingly expansive palette"
