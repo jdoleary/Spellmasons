@@ -568,6 +568,8 @@ function tryShowDevContextMenu(underworld: Underworld, e: MouseEvent, mousePos: 
     <div>
       <p id='selected-unit-label'>Selected Unit</p>
       <ul id='menu-selected-unit'></ul>
+      <p id='selected-pickup-label'>Selected Pickup</p>
+      <ul id='menu-selected-pickup'></ul>
     </div>
     <div>
       <p>Spawn Unit</p>
@@ -583,6 +585,19 @@ function tryShowDevContextMenu(underworld: Underworld, e: MouseEvent, mousePos: 
     </ul>
     </div>
     `;
+    if (globalThis.selectedPickup) {
+      const elSelectedPickupList = menu.querySelector('#menu-selected-pickup') as HTMLElement;
+      createContextMenuOptions([
+        {
+          label: '️✖️ Delete',
+          action: () => {
+            if (globalThis.selectedPickup) {
+              Pickup.removePickup(globalThis.selectedPickup, underworld, false);
+            }
+          }
+        }
+      ], elSelectedPickupList, menu);
+    }
     if (globalThis.selectedUnit) {
 
       const elSelectedUnitList = menu.querySelector('#menu-selected-unit') as HTMLElement;

@@ -53,9 +53,9 @@ export function updatePlanningView(underworld: Underworld) {
       labelText.text = '';
       labelText.style.fill = biomeTextColor(underworld.lastLevelCreated?.biome)
     }
-    if (selectedPickup) {
+    if (globalThis.selectedPickup) {
       // Draw circle to show that pickup is selected
-      drawCircleUnderTarget(selectedPickup, underworld, 1.0, planningViewGraphics);
+      drawCircleUnderTarget(globalThis.selectedPickup, underworld, 1.0, planningViewGraphics);
     }
     // Draw UI for the globalThis.selectedUnit
     if (globalThis.selectedUnit) {
@@ -537,7 +537,6 @@ const elInspectorTooltipImage: HTMLImageElement = (document.getElementById(
 ) as HTMLImageElement);
 
 let selectedType: "unit" | "pickup" | "obstacle" | null = null;
-let selectedPickup: Pickup.IPickup | undefined;
 export function updateTooltipContent(underworld: Underworld) {
   if (
     !(
@@ -595,10 +594,10 @@ ${cards}
       }
       break;
     case "pickup":
-      if (selectedPickup) {
+      if (globalThis.selectedPickup) {
         text += `\
-${selectedPickup.name}
-${selectedPickup.description}
+${globalThis.selectedPickup.name}
+${globalThis.selectedPickup.description}
       `;
       }
       break;
@@ -629,7 +628,7 @@ export function checkIfNeedToClearTooltip() {
   }
   // Quick hack to check if the pickup has been picked up
   // If so, deselect it
-  if (selectedPickup && (selectedPickup.image && selectedPickup.image.sprite.parent === null)) {
+  if (globalThis.selectedPickup && (globalThis.selectedPickup.image && globalThis.selectedPickup.image.sprite.parent === null)) {
     clearTooltipSelection();
   }
 
@@ -638,7 +637,7 @@ export function checkIfNeedToClearTooltip() {
 export function clearTooltipSelection(): boolean {
   if (selectedType) {
     globalThis.selectedUnit = undefined;
-    selectedPickup = undefined;
+    globalThis.selectedPickup = undefined;
     selectedType = null;
     return true
   } else {
@@ -658,11 +657,11 @@ export function updateTooltipSelection(mousePos: Vec2, underworld: Underworld) {
   }
   const pickup = underworld.getPickupAt(mousePos);
   if (pickup) {
-    selectedPickup = pickup;
+    globalThis.selectedPickup = pickup;
     selectedType = "pickup";
     return
   } else {
-    selectedPickup = undefined;
+    globalThis.selectedPickup = undefined;
   }
   // If nothing was found to select, null-out selectedType
   // deselect

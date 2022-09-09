@@ -1,6 +1,7 @@
 import type * as PIXI from 'pixi.js';
 import type * as Player from '../entity/Player';
 import type * as Unit from '../entity/Unit';
+import type * as Pickup from '../entity/Pickup';
 import type Underworld from '../Underworld';
 import type PieClient from '@websocketpie/client';
 import type { Vec2 } from '../jmath/Vec';
@@ -210,6 +211,7 @@ declare global {
     var pieDisconnect: undefined | (() => Promise<void>);
     // the currently selected unit, useful as a devTool, click on a unit and they will be available in the console
     var selectedUnit: Unit.IUnit | undefined;
+    var selectedPickup: Pickup.IPickup | undefined;
     // used for hiding the HUD for recording purposes
     var isHUDHidden: boolean | undefined;
 }
