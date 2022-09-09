@@ -12,7 +12,7 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: 10,
     thumbnail: 'protection.png',
-    description: 'Removes self or ally from existing spell targets.  Will protect 1 allied unit (including self) per use.  Prioritizes protecting yourself, then ally wizards, then other allies.  You may cast more than one in a single spell to protect multiple allies.',
+    description: 'Protects yourself and allies from being effected by the spell you are about to cast.  Will protect 1 allied unit (including self) per use.  Prioritizes protecting yourself, then ally wizards, then other allies.  Multiple stacks of this spell will protect multiple people.',
     effect: async (state, card, quantity, underworld, prediction) => {
       const allies = [
         // Prioritize self over all other allies
