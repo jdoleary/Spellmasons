@@ -1269,3 +1269,12 @@ button {
     background-position: 0 250px;
   }
 }
+
+#ctxmenu {
+  display: flex;
+  gap: 4px;
+}
+
+#ctxmenu div p {
+  white-space: nowrap;
+}

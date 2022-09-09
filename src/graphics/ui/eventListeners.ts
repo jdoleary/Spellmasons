@@ -561,25 +561,34 @@ function tryShowDevContextMenu(underworld: Underworld, e: MouseEvent, mousePos: 
     menu.style.zIndex = '2';
     menu.onmouseleave = () => menu.outerHTML = '';
     menu.innerHTML = `
-    <p id='selected-unit-label'>Selected Unit</p>
-    <ul id='menu-global'>
-    </ul>
-    <ul id='menu-selected-unit'>
-    </ul>
-    <p>Spawn Unit</p>
-    <ul id='menu-spawn'></ul>
+    <div>
+      <p id='global-label'>Global</p>
+      <ul id='menu-global'></ul>
+    </div>
+    <div>
+      <p id='selected-unit-label'>Selected Unit</p>
+      <ul id='menu-selected-unit'></ul>
+    </div>
+    <div>
+      <p>Spawn Unit</p>
+      <ul id='menu-spawn'></ul>
+    </div>
+    <div>
     <p>Spawn Pickup</p>
     <ul id='menu-spawn-pickup'></ul>
+    </div>
+    <div>
     <p>Self</p>
     <ul id='menu-self'>
     </ul>
+    </div>
     `;
     if (globalThis.selectedUnit) {
 
       const elSelectedUnitList = menu.querySelector('#menu-selected-unit') as HTMLElement;
       const selectedUnitActions = [
         {
-          label: 'Die',
+          label: '🔪 Die',
           action: () => {
             if (globalThis.selectedUnit) {
               Unit.die(globalThis.selectedUnit, underworld, false);
@@ -588,7 +597,7 @@ function tryShowDevContextMenu(underworld: Underworld, e: MouseEvent, mousePos: 
           }
         },
         {
-          label: 'Delete',
+          label: '✖️ Delete',
           action: () => {
             // Remove without blood, remember clean up will just
             // flag them for deletion, they will be removed from the array
@@ -608,7 +617,7 @@ function tryShowDevContextMenu(underworld: Underworld, e: MouseEvent, mousePos: 
           }
         },
         {
-          label: 'Set Health',
+          label: '❤️ Set Health',
           action: () => {
             const health = prompt('Choose a new max health')
             const parsedHealth = parseInt(health || '');
@@ -621,7 +630,7 @@ function tryShowDevContextMenu(underworld: Underworld, e: MouseEvent, mousePos: 
           }
         },
         {
-          label: 'Set Mana',
+          label: '🔵 Set Mana',
           action: () => {
             const mana = prompt('Choose a new max mana')
             const parsedMana = parseInt(mana || '');
@@ -629,6 +638,19 @@ function tryShowDevContextMenu(underworld: Underworld, e: MouseEvent, mousePos: 
               if (globalThis.selectedUnit) {
                 globalThis.selectedUnit.manaMax = parsedMana;
                 globalThis.selectedUnit.mana = parsedMana;
+              }
+            }
+          }
+        },
+        {
+          label: '👟 Set Stamina',
+          action: () => {
+            const stamina = prompt('Choose a new max stamina')
+            const parsedStamina = parseInt(stamina || '');
+            if (!isNaN(parsedStamina)) {
+              if (globalThis.selectedUnit) {
+                globalThis.selectedUnit.staminaMax = parsedStamina;
+                globalThis.selectedUnit.stamina = parsedStamina;
               }
             }
           }
@@ -680,7 +702,7 @@ function tryShowDevContextMenu(underworld: Underworld, e: MouseEvent, mousePos: 
     const elSelfList = menu.querySelector('#menu-self') as HTMLElement;
     createContextMenuOptions([
       {
-        label: 'Super Me',
+        label: '🦸‍♂️ Super Me',
         action: () => {
           if (superMe) {
             superMe(underworld);
@@ -688,7 +710,7 @@ function tryShowDevContextMenu(underworld: Underworld, e: MouseEvent, mousePos: 
         }
       },
       {
-        label: 'Teleport Here',
+        label: '☄️ Teleport Here',
         action: () => {
           if (player) {
             player.unit.x = mousePos.x;
@@ -697,13 +719,13 @@ function tryShowDevContextMenu(underworld: Underworld, e: MouseEvent, mousePos: 
         }
       },
       {
-        label: 'Toggle HUD',
+        label: '🎥 Toggle HUD',
         action: () => {
           toggleHUD();
         }
       },
       {
-        label: 'Toggle UI for recording',
+        label: '📹 Toggle UI for recording',
         action: () => {
           // Hides a portion of the UI but not all of it for recording or screenshots
           document.body.classList.toggle('recording');
