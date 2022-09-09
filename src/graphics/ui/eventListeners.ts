@@ -701,16 +701,20 @@ function tryShowDevContextMenu(underworld: Underworld, e: MouseEvent, mousePos: 
       menu.querySelector('#selected-unit-label')?.remove();
     }
     const elGlobalList = menu.querySelector('#menu-global') as HTMLElement;
-    const elKillAll = document.createElement('li');
-    elKillAll.innerHTML = 'Kill All Enemies'
-    elKillAll.addEventListener('click', () => {
-      underworld.units.filter(u => u.faction == Faction.ENEMY).forEach(u => {
-        Unit.die(u, underworld, false);
-      })
-      // Close the menu
-      menu.remove();
-    })
-    elGlobalList.appendChild(elKillAll);
+    createContextMenuOptions([
+      {
+        label: 'Delete all Enemies',
+        action: () => {
+          // Remove without blood, remember clean up will just
+          // flag them for deletion, they will be removed from the array
+          // at the start of the next turn.
+          underworld.units.filter(u => u.faction == Faction.ENEMY).forEach(u => {
+            Unit.cleanup(u);
+          });
+        }
+      }
+
+    ], elGlobalList, menu);
 
     const elSpawnList = menu.querySelector('#menu-spawn') as HTMLElement;
     createContextMenuOptions(Object.values(allUnits).map(u => ({
