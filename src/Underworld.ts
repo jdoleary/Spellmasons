@@ -725,20 +725,29 @@ export default class Underworld {
     }
     // Draw attention markers which show if an NPC will
     // attack you next turn
+    const { zoom } = getCamera();
     // Note: this block must come after updating the camera position
-    for (let marker of globalThis.attentionMarkers) {
-      const { zoom } = getCamera();
+    // 1/zoom keeps the attention marker the same size regardless of the level of zoom
+    // Math.sin... makes the attention marker swell and shink so it grabs the player's attention so they
+    // know that they're in danger
+    // + 1 makes it go from 0 to 2 instead of -1 to 1
+    // / 8 limits the size
+    const markerScale = (1 / zoom) + (Math.sin(Date.now() / 500) + 1) / 8
 
-      // Offset exclamation mark just above the head of the unit "- config.COLLISION_MESH_RADIUS - 10"
-      const exclamationMarkPosition = withinCameraBounds({ x: marker.pos.x, y: marker.pos.y - config.COLLISION_MESH_RADIUS * 2 + 8 });
+    for (let marker of globalThis.attentionMarkers) {
+      const markerHeightHalf = 16 * markerScale;
+      const markerMarginAboveHealthBar = 10;
+      // Offset exclamation mark just above the head of the unit
+      const exclamationMarkPosition = withinCameraBounds({
+        x: marker.pos.x, y: marker.pos.y
+          - config.HEALTH_BAR_UI_Y_POS
+          - config.UNIT_UI_BAR_HEIGHT / zoom
+          - markerHeightHalf
+          - markerMarginAboveHealthBar / zoom
+      });
 
       // Draw Attention Icon to show the enemy will hurt you next turn
-      // 1/zoom keeps the attention marker the same size regardless of the level of zoom
-      // Math.sin... makes the attention marker swell and shink so it grabs the player's attention so they
-      // know that they're in danger
-      // + 1 makes it go from 0 to 2 instead of -1 to 1
-      // / 8 limits the size
-      ImmediateMode.draw(marker.imagePath, exclamationMarkPosition, (1 / zoom) + (Math.sin(Date.now() / 500) + 1) / 8);
+      ImmediateMode.draw(marker.imagePath, exclamationMarkPosition, markerScale);
     }
   }
   drawPlayerThoughts() {
