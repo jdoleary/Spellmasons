@@ -692,6 +692,13 @@ function tryShowDevContextMenu(underworld: Underworld, e: MouseEvent, mousePos: 
         action: () => {
           toggleHUD();
         }
+      },
+      {
+        label: 'Toggle UI for recording',
+        action: () => {
+          // Hides a portion of the UI but not all of it for recording or screenshots
+          document.body.classList.toggle('recording');
+        }
       }
     ], elSelfList, menu);
 

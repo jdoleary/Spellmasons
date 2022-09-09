@@ -497,6 +497,15 @@ kbd {
   display: flex;
 }
 
+body.recording #inventory-icon,
+body.recording #end-turn-btn,
+body.recording #websocketpie-connection-status,
+body.recording #version,
+body.recording #toolbar,
+body.recording #player-turn-indicator-holder {
+  display: none !important;
+}
+
 #player-turn-indicator-holder {
   text-align: center;
   display: flex;
@@ -639,7 +648,8 @@ body.showUpgrades #player-turn-indicator {
   height: 32px;
   flex: 1 1 0;
   border-radius: 3px;
-  border: 1px solid black;
+  border: 1px solid #262324;
+  background-color: #262324;
 }
 
 #health,
