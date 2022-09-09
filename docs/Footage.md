@@ -1,3 +1,12 @@
+# Requirements:
+- Trailer
+    - https://partner.steamgames.com/doc/store/trailer
+    - up to 1920 x 1080 resolution, 30/29.97 or 60/59.94 fps, high bit rate (5,000+ Kbps) and in .mov, .wmv, or .mp4 container files. 
+    - H.264 video and AAC audio is preferred, but we can transcode from many formats. 
+    - 16:9 aspect ratio is preferred since the Steam client is optimized for widescreen, but 4:3 aspect ratio is accepted. Please note that audio will be filtered down to regular stereo when we transcode the videos.
+    - Adobe Media Encoder CC to create compatible video files for Steam. The preset to use is: H.264 Video (20Mbs) with AAC Stereo Audio (192Kbps). 
+- Gifs
+    - Widescreen for steam, square for twitter
 # Trailer 1
 - Key moments
     - pretrailer-trailer
@@ -17,4 +26,8 @@
 - 4 screenshots (1920x1080)
 
 # Gifs
-Widescreen for steam, square for twitter
+- Devise Ingenious Spell Combinations
+- Work together (pulling wounded ally into health)
+- Push your enemies into lava
+- Akira moment
+- "I feel like I'm painting with an increasingly expansive palette"

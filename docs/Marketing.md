@@ -3,7 +3,7 @@
         - Wishlist now at Spellmasons.com
     - Now: Build Trailer
     - Between: Gifs, Youtube shorts, Pinterest
-    - Near release: Reach out to streams
+    - Near release: Reach out to streamers
 - Resources:
     - [Steam branding guidelines](https://steamcdn-a.akamaihd.net/steamcommunity/public/images/steamworks_docs/english/Steam_Guidelines_060222.pdf)
     - https://www.progamemarketing.com/p/howtomakeasteampage
@@ -13,8 +13,6 @@
                 - varity of visual effects
                 - show in-game menus
                 - better to have fewer screenshots than to repeat
-            - capsule rules
-                - goal: show that you spent money on game's art
             - the page itself
                 - put game assets throughout the page
                 - show, don't tell. Don't waste words describing what can be shown
