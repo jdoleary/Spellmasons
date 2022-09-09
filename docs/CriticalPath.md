@@ -1,12 +1,8 @@
 # Parallel Focuses
-- Prep for Multiplayer
 - Record Trailer and start marketing
     - trailer should be more zoomed in
-- Miscillaneous bug smashing
-
 # Desired Schedule
   - (e) UI
-  - (h) Fix multiplayer
   - (m) Marketing
   - (h) Fix liquid glitches perminantly
   - (m) Integrate freestanding obstacles (tree, urn, etc)
@@ -16,11 +12,11 @@
   - (m) Steam integration
   - (h) I want 2x as many spells (21 to 42) and 2x as many enemies (7 to 14)
   - (m) Add perks
-- August / September / Octover
-    - Finish UI (2 days)
+- September / October
+    - Finish UI
     - Start Marketing
         - Finish Steam Page (description with gifs) / Trailer
-    - Reliable Multiplayer (10 days)
+    - Reliable Multiplayer
 - November
     - Package as Electron App
     - "Explain Engine" (Adaptive Tutorial)

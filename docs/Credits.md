@@ -1,5 +1,7 @@
-Art and Animation by theBlurrBox
-Valentin Cochet | @coc_val | Sound Designer 
+Jordan O'Leary | Programming and Game Design
+theBlurryBox | Art and Animation
+Valentin Cochet | @coc_val | Sound Effect Design
 Jake O'Connell | UI Design
-Lost Lumens, Brad Clark | Audio Mastering
 Stina O'Connell | Music
+Lost Lumens, Brad Clark | Audio Mastering
+Matt Sweda | Concept Ideation Assistance

@@ -1,7 +1,5 @@
 ## Low hanging fruit
-- TODO: Fix admin commands that use prompt because `prompt` crashes server
 - when loading a game it doesn't hide the "spawn instructions" even if you are already spawned in
-- make admin tools affect multiplayer
 - changing total volume should make sounds too
 - multiplayer, ending turn caused my spells to get rearranged poorly
 - when there is an error in UI like (out of range), no other circles (such as attack range or bloat radius) should show as red
@@ -13,13 +11,11 @@
     - if you pull something into you and you're standing on the edge of liquid you take damage as if you fell in the liquid (on blood level)
     - spells like mana burn and hurt shouldn't play on dead units or pickups
     - sometimes when you walk you get stuck on a wall and it wastes stamina
-## Today
-- fix multiplayer sync issues
+## Tasks 
 - record new screenshots and footage (zoomed in, no music)
 - Add gifs to steam page
-- push bloat hurt prediction resulted in weird prediction lines
-
 # Bugs
+- push bloat hurt prediction resulted in weird prediction lines
 - Permanently fix liquid
 - chain through pickups?
 - Bug: Should sync portals when syncing units if all enemies are dead
