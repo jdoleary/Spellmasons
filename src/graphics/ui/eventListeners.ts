@@ -2,6 +2,7 @@ import { MESSAGE_TYPES } from '../../types/MessageTypes';
 import throttle from 'lodash.throttle';
 import * as CardUI from './CardUI';
 import * as Unit from '../../entity/Unit';
+import * as Pickup from '../../entity/Pickup';
 import * as storage from '../../storage';
 import floatingText from '../FloatingText';
 import {
@@ -565,9 +566,10 @@ function tryShowDevContextMenu(underworld: Underworld, e: MouseEvent, mousePos: 
     </ul>
     <ul id='menu-selected-unit'>
     </ul>
-    <p>Spawn</p>
-    <ul id='menu-spawn'>
-    </ul>
+    <p>Spawn Unit</p>
+    <ul id='menu-spawn'></ul>
+    <p>Spawn Pickup</p>
+    <ul id='menu-spawn-pickup'></ul>
     <p>Self</p>
     <ul id='menu-self'>
     </ul>
@@ -667,6 +669,13 @@ function tryShowDevContextMenu(underworld: Underworld, e: MouseEvent, mousePos: 
 
       }
     })), elSpawnList, menu);
+    const elSpawnPickupList = menu.querySelector('#menu-spawn-pickup') as HTMLElement;
+    createContextMenuOptions(Pickup.pickups.map(p => ({
+      label: p.name,
+      action: () => {
+        Pickup.create({ pos: mousePos, pickupSource: p }, underworld, false);
+      }
+    })), elSpawnPickupList, menu);
 
     const elSelfList = menu.querySelector('#menu-self') as HTMLElement;
     createContextMenuOptions([
