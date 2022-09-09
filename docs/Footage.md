@@ -7,6 +7,10 @@
     - Adobe Media Encoder CC to create compatible video files for Steam. The preset to use is: H.264 Video (20Mbs) with AAC Stereo Audio (192Kbps). 
 - Gifs
     - Widescreen for steam, square for twitter
+    - Despot's Game has 600x300px gifs
+    - Slay the Spire has 600x207px gifs
+- Screenshots 
+    - (1920x1080)
 # Trailer 1
 - Key moments
     - pretrailer-trailer
@@ -22,12 +26,8 @@
     - Call to Action
         - Spellmasons.com / wishlist on Steam
 
-# Other
-- 4 screenshots (1920x1080)
-
 # Gifs
 - Devise Ingenious Spell Combinations
 - Work together (pulling wounded ally into health)
-- Push your enemies into lava
 - Akira moment
 - "I feel like I'm painting with an increasingly expansive palette"
