@@ -597,11 +597,26 @@ function tryShowDevContextMenu(underworld: Underworld, e: MouseEvent, mousePos: 
           }
         }
       ], elSelectedPickupList, menu);
+    } else {
+      menu.querySelector('#menu-selected-pickup')?.remove();
+      menu.querySelector('#selected-pickup-label')?.remove();
     }
     if (globalThis.selectedUnit) {
 
       const elSelectedUnitList = menu.querySelector('#menu-selected-unit') as HTMLElement;
       const selectedUnitActions = [
+        {
+          label: '✖️ Delete',
+          action: () => {
+            // Remove without blood, remember clean up will just
+            // flag them for deletion, they will be removed from the array
+            // at the start of the next turn.
+            if (globalThis.selectedUnit) {
+              Unit.cleanup(globalThis.selectedUnit);
+            }
+
+          }
+        },
         {
           label: '🔪 Die',
           action: () => {
@@ -612,13 +627,14 @@ function tryShowDevContextMenu(underworld: Underworld, e: MouseEvent, mousePos: 
           }
         },
         {
-          label: '✖️ Delete',
+          label: '🏳️ Change Faction',
           action: () => {
-            // Remove without blood, remember clean up will just
-            // flag them for deletion, they will be removed from the array
-            // at the start of the next turn.
             if (globalThis.selectedUnit) {
-              Unit.cleanup(globalThis.selectedUnit);
+              if (globalThis.selectedUnit.faction == Faction.ALLY) {
+                globalThis.selectedUnit.faction = Faction.ENEMY;
+              } else {
+                globalThis.selectedUnit.faction = Faction.ALLY;
+              }
             }
 
           }
