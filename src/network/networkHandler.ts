@@ -18,6 +18,7 @@ import { skyBeam } from '../VisualEffects';
 import { tryFallInOutOfLiquid } from '../entity/Obstacle';
 import { cameraAutoFollow } from '../graphics/PixiUtils';
 import { IPickupSerialized, removePickup } from '../entity/Pickup';
+import { triggerAdminCommand } from '../graphics/ui/eventListeners';
 
 const messageLog: any[] = [];
 export const NO_LOG_LIST = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
@@ -365,6 +366,11 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
         console.error('Unable to end turn because caster is undefined');
       }
       break;
+    case MESSAGE_TYPES.ADMIN_COMMAND:
+      const { label } = payload;
+      triggerAdminCommand(label, fromClient, payload)
+      break;
+
   }
 }
 async function handleLoadGameState(payload: {

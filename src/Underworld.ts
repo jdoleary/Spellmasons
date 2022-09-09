@@ -50,7 +50,7 @@ import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmen
 import { expandPolygon, isVec2InsidePolygon, mergePolygon2s, Polygon2, Polygon2LineSegment, toLineSegments, toPolygon2LineSegments } from './jmath/Polygon2';
 import { calculateDistanceOfVec2Array, findPath } from './jmath/Pathfinding';
 import { addUnderworldEventListeners, setView, View } from './views';
-import { keyDown, mouseMove } from './graphics/ui/eventListeners';
+import { keyDown, mouseMove, registerAdminContextMenuOptions } from './graphics/ui/eventListeners';
 import Jprompt from './graphics/Jprompt';
 import { collideWithLineSegments, ForceMove, isVecIntersectingVecWithCustomRadius, moveWithCollisions } from './jmath/moveWithCollision';
 import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './config';
@@ -162,6 +162,7 @@ export default class Underworld {
     Units.registerUnits();
     // Add event listeners
     this.removeEventListeners = addUnderworldEventListeners(this);
+    registerAdminContextMenuOptions(this);
 
     // Setup global functions that need access to underworld:
     setupNetworkHandlerGlobalFunctions(this);

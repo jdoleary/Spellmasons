@@ -585,204 +585,281 @@ function tryShowDevContextMenu(underworld: Underworld, e: MouseEvent, mousePos: 
     </ul>
     </div>
     `;
-    if (globalThis.selectedPickup) {
-      const elSelectedPickupList = menu.querySelector('#menu-selected-pickup') as HTMLElement;
-      createContextMenuOptions([
-        {
-          label: '️✖️ Delete',
-          action: () => {
-            if (globalThis.selectedPickup) {
-              Pickup.removePickup(globalThis.selectedPickup, underworld, false);
-            }
-          }
-        }
-      ], elSelectedPickupList, menu);
-    } else {
+
+    // Append menu to DOM
+    document.body.appendChild(menu);
+
+    createContextMenuOptions(menu, underworld);
+
+    // Remove some options if they don't apply
+    if (!globalThis.selectedPickup) {
       menu.querySelector('#menu-selected-pickup')?.remove();
       menu.querySelector('#selected-pickup-label')?.remove();
     }
-    if (globalThis.selectedUnit) {
-
-      const elSelectedUnitList = menu.querySelector('#menu-selected-unit') as HTMLElement;
-      const selectedUnitActions = [
-        {
-          label: '✖️ Delete',
-          action: () => {
-            // Remove without blood, remember clean up will just
-            // flag them for deletion, they will be removed from the array
-            // at the start of the next turn.
-            if (globalThis.selectedUnit) {
-              Unit.cleanup(globalThis.selectedUnit);
-            }
-
-          }
-        },
-        {
-          label: '🔪 Die',
-          action: () => {
-            if (globalThis.selectedUnit) {
-              Unit.die(globalThis.selectedUnit, underworld, false);
-            }
-
-          }
-        },
-        {
-          label: '🏳️ Change Faction',
-          action: () => {
-            if (globalThis.selectedUnit) {
-              if (globalThis.selectedUnit.faction == Faction.ALLY) {
-                globalThis.selectedUnit.faction = Faction.ENEMY;
-              } else {
-                globalThis.selectedUnit.faction = Faction.ALLY;
-              }
-            }
-
-          }
-        },
-        {
-          label: 'Play All Animations',
-          action: () => {
-            if (globalThis.selectedUnit) {
-              Unit.demoAnimations(globalThis.selectedUnit);
-            }
-          }
-        },
-        {
-          label: '❤️ Set Health',
-          action: () => {
-            const health = prompt('Choose a new max health')
-            const parsedHealth = parseInt(health || '');
-            if (!isNaN(parsedHealth)) {
-              if (globalThis.selectedUnit) {
-                globalThis.selectedUnit.healthMax = parsedHealth;
-                globalThis.selectedUnit.health = parsedHealth;
-              }
-            }
-          }
-        },
-        {
-          label: '🔵 Set Mana',
-          action: () => {
-            const mana = prompt('Choose a new max mana')
-            const parsedMana = parseInt(mana || '');
-            if (!isNaN(parsedMana)) {
-              if (globalThis.selectedUnit) {
-                globalThis.selectedUnit.manaMax = parsedMana;
-                globalThis.selectedUnit.mana = parsedMana;
-              }
-            }
-          }
-        },
-        {
-          label: '👟 Set Stamina',
-          action: () => {
-            const stamina = prompt('Choose a new max stamina')
-            const parsedStamina = parseInt(stamina || '');
-            if (!isNaN(parsedStamina)) {
-              if (globalThis.selectedUnit) {
-                globalThis.selectedUnit.staminaMax = parsedStamina;
-                globalThis.selectedUnit.stamina = parsedStamina;
-              }
-            }
-          }
-        },
-        {
-          label: 'Orient image towards player',
-          action: () => {
-            if (globalThis.selectedUnit && player) {
-              Unit.orient(globalThis.selectedUnit, player.unit);
-            }
-          }
-        }
-      ]
-      createContextMenuOptions(selectedUnitActions, elSelectedUnitList, menu);
-    } else {
+    if (!globalThis.selectedUnit) {
       menu.querySelector('#menu-selected-unit')?.remove();
       menu.querySelector('#selected-unit-label')?.remove();
     }
-    const elGlobalList = menu.querySelector('#menu-global') as HTMLElement;
-    createContextMenuOptions([
-      {
-        label: 'Delete all Enemies',
-        action: () => {
-          // Remove without blood, remember clean up will just
-          // flag them for deletion, they will be removed from the array
-          // at the start of the next turn.
-          underworld.units.filter(u => u.faction == Faction.ENEMY).forEach(u => {
-            Unit.cleanup(u);
-          });
-        }
-      }
-
-    ], elGlobalList, menu);
-
-    const elSpawnList = menu.querySelector('#menu-spawn') as HTMLElement;
-    createContextMenuOptions(Object.values(allUnits).map(u => ({
-      label: u.id,
-      action: () => {
-        if (devSpawnUnit) {
-          devSpawnUnit(u.id, Faction.ENEMY, mousePos);
-        }
-
-      }
-    })), elSpawnList, menu);
-    const elSpawnPickupList = menu.querySelector('#menu-spawn-pickup') as HTMLElement;
-    createContextMenuOptions(Pickup.pickups.map(p => ({
-      label: p.name,
-      action: () => {
-        Pickup.create({ pos: mousePos, pickupSource: p }, underworld, false);
-      }
-    })), elSpawnPickupList, menu);
-
-    const elSelfList = menu.querySelector('#menu-self') as HTMLElement;
-    createContextMenuOptions([
-      {
-        label: '🦸‍♂️ Super Me',
-        action: () => {
-          if (superMe) {
-            superMe(underworld);
-          }
-        }
-      },
-      {
-        label: '☄️ Teleport Here',
-        action: () => {
-          if (player) {
-            player.unit.x = mousePos.x;
-            player.unit.y = mousePos.y;
-          }
-        }
-      },
-      {
-        label: '🎥 Toggle HUD',
-        action: () => {
-          toggleHUD();
-        }
-      },
-      {
-        label: '📹 Toggle UI for recording',
-        action: () => {
-          // Hides a portion of the UI but not all of it for recording or screenshots
-          document.body.classList.toggle('recording');
-        }
-      }
-    ], elSelfList, menu);
-
-    document.body.appendChild(menu);
-
   }
-
 }
-function createContextMenuOptions(options: { action: () => void, label: string }[], container: HTMLElement, menu: HTMLElement) {
-  for (let { label, action } of options) {
+const adminCommands: { [label: string]: AdminContextMenuOption } = {};
+export function triggerAdminCommand(label: string, clientId: string, payload: any) {
+  const { action } = adminCommands[label] || {};
+  if (action) {
+    action({ clientId, ...payload });
+  } else {
+    console.error('No admin action with label', label);
+  }
+}
+interface AdminActionProps {
+  clientId?: string;
+  pos?: Vec2;
+  selectedUnitid?: number;
+  selectedPickupLocation?: Vec2;
+}
+type AdminAction = (props: AdminActionProps) => void;
+interface AdminContextMenuOption {
+  action: AdminAction;
+  supportInMultiplayer: boolean;
+  label: string;
+  domQueryContainer: string;
+}
+export function registerAdminContextMenuOptions(underworld: Underworld) {
+
+  const options: AdminContextMenuOption[] = [
+    {
+      label: '🦸‍♂️ Super Me',
+      action: () => {
+        if (superMe) {
+          superMe(underworld);
+        }
+      },
+      supportInMultiplayer: false,
+      domQueryContainer: '#menu-self',
+    },
+    {
+      label: '☄️ Teleport Here',
+      action: (props) => {
+        const { clientId, pos } = props;
+        const player = underworld.players.find(p => p.clientId == clientId);
+        if (player && pos) {
+          player.unit.x = pos.x;
+          player.unit.y = pos.y;
+        }
+      },
+      supportInMultiplayer: true,
+      domQueryContainer: '#menu-self',
+    },
+    {
+      label: '🎥 Toggle HUD',
+      action: () => {
+        toggleHUD();
+      },
+      supportInMultiplayer: false,
+      domQueryContainer: '#menu-self',
+    },
+    {
+      label: '📹 Toggle UI for recording',
+      action: () => {
+        // Hides a portion of the UI but not all of it for recording or screenshots
+        document.body.classList.toggle('recording');
+      },
+      supportInMultiplayer: false,
+      domQueryContainer: '#menu-self',
+    },
+    ...Pickup.pickups.map<AdminContextMenuOption>(p => ({
+      label: p.name,
+      action: ({ pos }) => {
+        if (pos) {
+          Pickup.create({ pos, pickupSource: p }, underworld, false);
+        }
+      },
+      supportInMultiplayer: true,
+      domQueryContainer: '#menu-spawn-pickup'
+    })),
+    ...Object.values(allUnits).map<AdminContextMenuOption>(u => ({
+      label: u.id,
+      action: ({ pos }) => {
+        if (devSpawnUnit && pos) {
+          devSpawnUnit(u.id, Faction.ENEMY, pos);
+        }
+      },
+      supportInMultiplayer: true,
+      domQueryContainer: '#menu-spawn'
+    })),
+    {
+      label: 'Delete all Enemies',
+      action: () => {
+        // Remove without blood, remember clean up will just
+        // flag them for deletion, they will be removed from the array
+        // at the start of the next turn.
+        underworld.units.filter(u => u.faction == Faction.ENEMY).forEach(u => {
+          Unit.cleanup(u);
+        });
+      },
+      supportInMultiplayer: true,
+      domQueryContainer: '#menu-global'
+    },
+    {
+      label: '✖️ Delete',
+      action: ({ selectedUnitid }) => {
+        // Remove without blood, remember clean up will just
+        // flag them for deletion, they will be removed from the array
+        // at the start of the next turn.
+        const unit = underworld.units.find(u => u.id == selectedUnitid);
+        if (unit) {
+          Unit.cleanup(unit);
+        }
+      },
+      supportInMultiplayer: true,
+      domQueryContainer: '#menu-selected-unit'
+    },
+    {
+      label: '🔪 Die',
+      action: ({ selectedUnitid }) => {
+        const unit = underworld.units.find(u => u.id == selectedUnitid);
+        if (unit) {
+          Unit.die(unit, underworld, false);
+        }
+
+      },
+      supportInMultiplayer: true,
+      domQueryContainer: '#menu-selected-unit'
+    },
+    {
+      label: '🏳️ Change Faction',
+      action: ({ selectedUnitid }) => {
+        const unit = underworld.units.find(u => u.id == selectedUnitid);
+        if (unit) {
+          if (unit.faction == Faction.ALLY) {
+            unit.faction = Faction.ENEMY;
+          } else {
+            unit.faction = Faction.ALLY;
+          }
+        }
+      },
+      supportInMultiplayer: true,
+      domQueryContainer: '#menu-selected-unit'
+    },
+    {
+      label: 'Play All Animations',
+      action: () => {
+        if (globalThis.selectedUnit) {
+          Unit.demoAnimations(globalThis.selectedUnit);
+        }
+      },
+      supportInMultiplayer: false,
+      domQueryContainer: '#menu-selected-unit'
+    },
+    {
+      label: '❤️ Set Health',
+      action: ({ selectedUnitid }) => {
+        // TODO prompt will crash server
+        const health = prompt('Choose a new max health')
+        const parsedHealth = parseInt(health || '');
+        if (!isNaN(parsedHealth)) {
+          const unit = underworld.units.find(u => u.id == selectedUnitid);
+          if (unit) {
+            unit.healthMax = parsedHealth;
+            unit.health = parsedHealth;
+          }
+        }
+      },
+      supportInMultiplayer: true,
+      domQueryContainer: '#menu-selected-unit'
+    },
+    {
+      label: '🔵 Set Mana',
+      action: ({ selectedUnitid }) => {
+        const mana = prompt('Choose a new max mana')
+        const parsedMana = parseInt(mana || '');
+        if (!isNaN(parsedMana)) {
+          const unit = underworld.units.find(u => u.id == selectedUnitid);
+          if (unit) {
+            unit.manaMax = parsedMana;
+            unit.mana = parsedMana;
+          }
+        }
+      },
+      supportInMultiplayer: true,
+      domQueryContainer: '#menu-selected-unit'
+
+    },
+    {
+      label: '👟 Set Stamina',
+      action: ({ selectedUnitid }) => {
+        const stamina = prompt('Choose a new max stamina')
+        const parsedStamina = parseInt(stamina || '');
+        if (!isNaN(parsedStamina)) {
+          const unit = underworld.units.find(u => u.id == selectedUnitid);
+          if (unit) {
+            unit.staminaMax = parsedStamina;
+            unit.stamina = parsedStamina;
+          }
+        }
+      },
+      supportInMultiplayer: true,
+      domQueryContainer: '#menu-selected-unit'
+
+    },
+    {
+      label: 'Orient image towards player',
+      action: () => {
+        if (globalThis.selectedUnit && player) {
+          Unit.orient(globalThis.selectedUnit, player.unit);
+        }
+      },
+      supportInMultiplayer: false,
+      domQueryContainer: '#menu-selected-unit'
+
+    },
+    {
+      label: '️✖️ Delete',
+      action: ({ selectedPickupLocation }) => {
+        if (selectedPickupLocation) {
+          const pickup = underworld.pickups.find(p => p.x == selectedPickupLocation.x && p.y == selectedPickupLocation.y);
+          if (pickup) {
+            Pickup.removePickup(pickup, underworld, false);
+          }
+        }
+      },
+      supportInMultiplayer: true,
+      domQueryContainer: '#menu-selected-pickup'
+    }
+  ];
+  for (let op of options) {
+    // Register with admin commands:
+    adminCommands[op.label] = op;
+  }
+}
+function createContextMenuOptions(menu: HTMLElement, underworld: Underworld) {
+  for (let { label, action, domQueryContainer, supportInMultiplayer } of Object.values(adminCommands)) {
+    // Make DOM button to trigger command
     let el = document.createElement('li');
     el.innerHTML = label
+    // cache mouse position when context menu is created
+    const pos = underworld.getMousePos();
     el.addEventListener('click', () => {
-      action();
+      if (supportInMultiplayer) {
+        underworld.pie.sendData({
+          type: MESSAGE_TYPES.ADMIN_COMMAND,
+          label,
+          pos,
+          selectedUnitid: globalThis.selectedUnit && globalThis.selectedUnit.id,
+          selectedPickupLocation: globalThis.selectedPickup && Vec.clone(globalThis.selectedPickup)
+        });
+      } else {
+        action({ clientId: globalThis.clientId || '', pos });
+      }
       // Close the menu
       menu.remove();
     })
-    container.appendChild(el);
+    const container = document.querySelector(domQueryContainer);
+    if (container) {
+      container.appendChild(el);
+    } else {
+      console.error('Could not find DOM element by query:', domQueryContainer)
+    }
   }
 
 }

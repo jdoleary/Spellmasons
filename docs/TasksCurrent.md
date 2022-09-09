@@ -1,4 +1,5 @@
 ## Low hanging fruit
+- TODO: Fix admin commands that use prompt because `prompt` crashes server
 - when loading a game it doesn't hide the "spawn instructions" even if you are already spawned in
 - make admin tools affect multiplayer
 - changing total volume should make sounds too
