@@ -1272,9 +1272,14 @@ button {
 
 #ctxmenu {
   display: flex;
-  gap: 4px;
+  gap: 8px;
 }
 
 #ctxmenu div p {
+  font-weight: bold;
   white-space: nowrap;
+}
+
+#ctxmenu ul {
+  border-left: 1px solid black;
 }
