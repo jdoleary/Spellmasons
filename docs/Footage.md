@@ -12,3 +12,9 @@
         - Show off multiplayer coordination
     - Call to Action
         - Spellmasons.com / wishlist on Steam
+
+# Other
+- 4 screenshots (1920x1080)
+
+# Gifs
+Widescreen for steam, square for twitter
