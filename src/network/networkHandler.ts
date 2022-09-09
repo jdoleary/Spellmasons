@@ -370,6 +370,15 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
       const { label } = payload;
       triggerAdminCommand(label, fromClient, payload)
       break;
+    case MESSAGE_TYPES.ADMIN_CHANGE_STAT:
+      const { unitId, stats } = payload;
+      const unit = underworld.units.find(u => u.id == unitId);
+      if (unit) {
+        Object.assign(unit, stats);
+      } else {
+        console.error('ADMIN_CHANGE_STAT failed', payload)
+      }
+      break;
 
   }
 }

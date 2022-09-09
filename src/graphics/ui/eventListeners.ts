@@ -753,52 +753,78 @@ export function registerAdminContextMenuOptions(underworld: Underworld) {
     },
     {
       label: '❤️ Set Health',
-      action: ({ selectedUnitid }) => {
-        // TODO prompt will crash server
+      action: () => {
         const health = prompt('Choose a new max health')
         const parsedHealth = parseInt(health || '');
-        if (!isNaN(parsedHealth)) {
-          const unit = underworld.units.find(u => u.id == selectedUnitid);
+        if (!isNaN(parsedHealth) && globalThis.selectedUnit) {
+          const unit = underworld.units.find(u => u.id == globalThis.selectedUnit?.id);
           if (unit) {
-            unit.healthMax = parsedHealth;
-            unit.health = parsedHealth;
+            underworld.pie.sendData({
+              type: MESSAGE_TYPES.ADMIN_CHANGE_STAT,
+              unitId: unit.id,
+              stats: {
+                healthMax: parsedHealth,
+                health: parsedHealth
+              }
+            });
           }
         }
       },
-      supportInMultiplayer: true,
+      // NOTE: Commands that use `prompt` cannot run on headless server so use ADMIN_CHANGE_STAT
+      // message instead of ADMIN_COMMAND.  `supportInMultiplayer` is set to false so it doesn't
+      // trigger an ADMIN_COMMAND message automatically
+      supportInMultiplayer: false,
       domQueryContainer: '#menu-selected-unit'
     },
     {
       label: '🔵 Set Mana',
-      action: ({ selectedUnitid }) => {
+      action: () => {
         const mana = prompt('Choose a new max mana')
         const parsedMana = parseInt(mana || '');
         if (!isNaN(parsedMana)) {
-          const unit = underworld.units.find(u => u.id == selectedUnitid);
+          const unit = underworld.units.find(u => u.id == globalThis.selectedUnit?.id);
           if (unit) {
-            unit.manaMax = parsedMana;
-            unit.mana = parsedMana;
+            underworld.pie.sendData({
+              type: MESSAGE_TYPES.ADMIN_CHANGE_STAT,
+              unitId: unit.id,
+              stats: {
+                manaMax: parsedMana,
+                mana: parsedMana
+              }
+            });
           }
         }
       },
-      supportInMultiplayer: true,
+      // NOTE: Commands that use `prompt` cannot run on headless server so use ADMIN_CHANGE_STAT
+      // message instead of ADMIN_COMMAND.  `supportInMultiplayer` is set to false so it doesn't
+      // trigger an ADMIN_COMMAND message automatically
+      supportInMultiplayer: false,
       domQueryContainer: '#menu-selected-unit'
 
     },
     {
       label: '👟 Set Stamina',
-      action: ({ selectedUnitid }) => {
+      action: () => {
         const stamina = prompt('Choose a new max stamina')
         const parsedStamina = parseInt(stamina || '');
         if (!isNaN(parsedStamina)) {
-          const unit = underworld.units.find(u => u.id == selectedUnitid);
+          const unit = underworld.units.find(u => u.id == globalThis.selectedUnit?.id);
           if (unit) {
-            unit.staminaMax = parsedStamina;
-            unit.stamina = parsedStamina;
+            underworld.pie.sendData({
+              type: MESSAGE_TYPES.ADMIN_CHANGE_STAT,
+              unitId: unit.id,
+              stats: {
+                staminaMax: parsedStamina,
+                stamina: parsedStamina
+              }
+            });
           }
         }
       },
-      supportInMultiplayer: true,
+      // NOTE: Commands that use `prompt` cannot run on headless server so use ADMIN_CHANGE_STAT
+      // message instead of ADMIN_COMMAND.  `supportInMultiplayer` is set to false so it doesn't
+      // trigger an ADMIN_COMMAND message automatically
+      supportInMultiplayer: false,
       domQueryContainer: '#menu-selected-unit'
 
     },
