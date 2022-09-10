@@ -140,6 +140,9 @@ export function updatePlanningView(underworld: Underworld) {
     // show the players cast range so they user knows that they are out of range
     const mouseTarget = underworld.getMousePos();
     if (globalThis.player) {
+      // Do not draw out of range information if player is viewing the walkRope so that
+      // they can see how far they can move unobstructed
+      if (!keyDown.showWalkRope) {
       if (CardUI.areAnyCardsSelected()) {
         const outOfRange = isOutOfRange(globalThis.player, mouseTarget, true);
         if (outOfRange) {
@@ -158,6 +161,7 @@ export function updatePlanningView(underworld: Underworld) {
           }
         }
       }
+    }
     }
     // Draw a circle under the feet of the player whos current turn it is
     if (underworld) {

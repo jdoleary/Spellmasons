@@ -368,25 +368,17 @@ export default class Underworld {
       liquidSprite.tilePosition.x -= scrollSpeed;
     }
 
-    // Draw cast line:
+    // Sync css classes to handle changing the cursor
     if (globalThis.player) {
       document.body.classList.toggle('casting', CardUI.areAnyCardsSelected());
-      // Do not show the cast line if the player is checking how far they can move
-      if (!keyDown.showWalkRope) {
-        if (CardUI.areAnyCardsSelected()) {
-          const mouseTarget = this.getMousePos();
-          // Use this similarTriangles calculation to make the line pretty so it doesn't originate from the exact center of the
-          // other player but from the edge instead
-          const startPoint = math.distance(globalThis.player.unit, mouseTarget) <= config.COLLISION_MESH_RADIUS
-            ? mouseTarget
-            : Vec.subtract(globalThis.player.unit, math.similarTriangles(globalThis.player.unit.x - mouseTarget.x, globalThis.player.unit.y - mouseTarget.y, math.distance(globalThis.player.unit, mouseTarget), config.COLLISION_MESH_RADIUS));
-          // Players can only cast within their attack range
-          const castLine = { p1: startPoint, p2: mouseTarget };
-          globalThis.unitOverlayGraphics?.lineStyle(3, colors.targetBlue, 0.7);
-          globalThis.unitOverlayGraphics?.moveTo(castLine.p1.x, castLine.p1.y);
-          const outOfRange = isOutOfRange(globalThis.player, mouseTarget, true)
-          document.body.classList.toggle('outOfRange', outOfRange);
-        }
+      if (CardUI.areAnyCardsSelected()) {
+        const outOfRange = isOutOfRange(globalThis.player, this.getMousePos(), true)
+        document.body.classList.toggle('outOfRange', outOfRange);
+      }
+      // Turn off casting and outOfRange view if the player is viewing the walk rope
+      if (keyDown.showWalkRope) {
+        document.body.classList.toggle('casting', false);
+        document.body.classList.toggle('outOfRange', false);
       }
     }
 
