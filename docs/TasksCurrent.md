@@ -39,7 +39,6 @@
     - warnings: out of stamina, no target, out of range (see breath of the wild)
     - missing sfx for vulnerable/debilitate
     - summoner cast sfx
-- cast line should connect to the feet not your center
 - Feature: perks
 - Feature: "Soul bind" - bound units share applied effects
     - Use PIXI.SimpleRope https://pixijs.download/dev/docs/PIXI.SimpleRope.html

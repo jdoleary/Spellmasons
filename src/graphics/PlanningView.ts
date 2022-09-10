@@ -9,7 +9,8 @@ import Underworld, { biomeTextColor, turn_phase } from '../Underworld';
 import * as CardUI from './ui/CardUI';
 import * as config from '../config';
 import * as Unit from '../entity/Unit';
-import type * as Pickup from '../entity/Pickup';
+import * as Vec from '../jmath/Vec';
+import * as math from '../jmath/math';
 import { calculateCost, CardCost } from '../cards/cardUtils';
 import { closestLineSegmentIntersection } from '../jmath/lineSegment';
 import { getBestRangedLOSTarget } from '../entity/units/actions/rangedAction';
@@ -143,25 +144,25 @@ export function updatePlanningView(underworld: Underworld) {
       // Do not draw out of range information if player is viewing the walkRope so that
       // they can see how far they can move unobstructed
       if (!keyDown.showWalkRope) {
-      if (CardUI.areAnyCardsSelected()) {
-        const outOfRange = isOutOfRange(globalThis.player, mouseTarget, true);
-        if (outOfRange) {
-          globalThis.unitOverlayGraphics.lineStyle(3, colors.errorRed, 1.0);
-          globalThis.unitOverlayGraphics.drawCircle(
-            globalThis.player.unit.x,
-            globalThis.player.unit.y,
-            globalThis.player.unit.attackRange
-          );
-          if (labelText) {
-            labelText.text = TEXT_OUT_OF_RANGE;
-            labelText.style.fill = colors.errorRed;
-            const labelPosition = withinCameraBounds({ x: mouseTarget.x, y: mouseTarget.y - labelText.height * 2 }, labelText.width / 2);
-            labelText.x = labelPosition.x;
-            labelText.y = labelPosition.y;
+        if (CardUI.areAnyCardsSelected()) {
+          const outOfRange = isOutOfRange(globalThis.player, mouseTarget, true);
+          if (outOfRange) {
+            globalThis.unitOverlayGraphics.lineStyle(3, colors.errorRed, 1.0);
+            globalThis.unitOverlayGraphics.drawCircle(
+              globalThis.player.unit.x,
+              globalThis.player.unit.y,
+              globalThis.player.unit.attackRange
+            );
+            if (labelText) {
+              labelText.text = TEXT_OUT_OF_RANGE;
+              labelText.style.fill = colors.errorRed;
+              const labelPosition = withinCameraBounds({ x: mouseTarget.x, y: mouseTarget.y - labelText.height * 2 }, labelText.width / 2);
+              labelText.x = labelPosition.x;
+              labelText.y = labelPosition.y;
+            }
           }
         }
       }
-    }
     }
     // Draw a circle under the feet of the player whos current turn it is
     if (underworld) {
@@ -213,7 +214,13 @@ export function drawWalkRope(target: Vec2, underworld: Underworld) {
   if (currentPlayerPath.length) {
     const turnStopPoints = pointsEveryXDistanceAlongPath(globalThis.player.unit, currentPlayerPath, globalThis.player.unit.staminaMax, globalThis.player.unit.staminaMax - globalThis.player.unit.stamina);
     globalThis.walkPathGraphics?.lineStyle(4, 0xffffff, 1.0);
-    globalThis.walkPathGraphics?.moveTo(globalThis.player.unit.x, globalThis.player.unit.y);
+    // Use this similarTriangles calculation to make the line pretty so it doesn't originate from the exact center of the
+    // other player but from the edge instead
+    const startPoint = math.distance(globalThis.player.unit, target) <= config.COLLISION_MESH_RADIUS
+      ? target
+      : Vec.subtract(globalThis.player.unit, math.similarTriangles(globalThis.player.unit.x - target.x, globalThis.player.unit.y - target.y, math.distance(globalThis.player.unit, target), config.COLLISION_MESH_RADIUS));
+    globalThis.walkPathGraphics?.moveTo(startPoint.x, startPoint.y);
+
     let lastPoint: Vec2 = globalThis.player.unit;
     let distanceCovered = 0;
     let pointAtWhichUnitOutOfStamina: Vec2 | undefined;
