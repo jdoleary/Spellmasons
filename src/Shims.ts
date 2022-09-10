@@ -9,7 +9,13 @@ const fakeElement = {
 global.document = {
     getElementById: () => fakeElement,
     createElement: () => fakeElement,
-    querySelector: () => fakeElement
+    querySelector: () => fakeElement,
+    body: {
+        classList: {
+            toggle: () => { },
+            contains: () => { }
+        },
+    }
 };
 globalThis.addEventListener = function () { };
 const TICK_RATE = 16;
