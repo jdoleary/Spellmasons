@@ -1,10 +1,14 @@
 ## Tasks 
+- Improve out of range targeting: if any part of a unit is in range, then targeting it must be allowed
+---
+- Detect and report super fast turn looping
+    - big bug: ran into a super fast cycling turn loop again.  I had two players in a room, deleted all the enemies, refreshed one of the clients while the other was in a portal
+- Standalone server backlog
+    - stand alone server goes into infinite loop when all players leave
+    - When does stand alone server remove a room?
+    - Test standalone server with friends
 - Record yourself playing with split audio for trailer
     - make sure you disable the partial UI
-- record new screenshots and footage (zoomed in, no music)
-- Add gifs to steam page
-- Improve out of range targeting: if any part of a unit is in range, then targeting it must be allowed
-- optional: dedup upgrade spells, can happen in devMode when upgrades are chosen quickly
 ## Low hanging fruit
 - small bugs:
     - when your main mana bar has 0 mana left it doesn't show the diagonal lines
@@ -17,15 +21,12 @@
 - after quitting single player to main menu and trying to go into multiplayer:
     - window.disconnect is not a function
     - and multiplayer button doesn't work
-- big: ran into a super fast cycling turn loop again.  I had two players in a room, deleted all the enemies, refreshed one of the clients while the other was in a portal
 - push bloat hurt prediction resulted in weird prediction lines
 - Permanently fix liquid
-- chain through pickups?
-- Bug: Should sync portals when syncing units if all enemies are dead
-    - I think just sending pickups to sync would work here
 - weird liquid : 0.5211362200270263
+- chain through pickups?
+- fix AOE
 ## Tasks
-- getting unit sync issues in multiplayer
 - Need UI sound interactions
     - Think of warcraft 3 frozen throne
     - **not** for hover states
@@ -44,13 +45,9 @@
 - Feature: perks
 - Feature: "Soul bind" - bound units share applied effects
     - Use PIXI.SimpleRope https://pixijs.download/dev/docs/PIXI.SimpleRope.html
-- Standalone server backlog
-    - (fixed?) stand alone server goes into infinite loop when all players leave
-    - When does stand alone server remove a room?
-    - Test standalone server with friends
 - use card background for upgrades with different colors depending on rarity
 - rework expand, it's predictions are often way off.  Maybe it would do better to just increase the radius of all spells?
-- Spell Modifier effects visual representation to stay on units
+- art: Spell Modifier effects visual representation to stay on units
     - debilitate
     - blood curse
 - If player joins mid enemy movement it will force reset them
@@ -61,10 +58,9 @@
 - Ensure hurt is presented in first spell picks
 - game slows down when there's a lot of blood on the screen and it's painint more
 - How does endgame scale now that strength doesn't depend on the levelIndex?
-- Show modifiers in UI somehow, not just on player, especially when you have the modifier on you
 
 ## Stretch Content
-- "overwatch" where some archers can shoot even not on their turn if you walk in their LOS
+- Idea: "overwatch" where some archers can shoot even not on their turn if you walk in their LOS
 - Upgrade: Start each level with 2x mana overfill (think of new upgrade "perks")
 - What if potions drop from slain enemies instead of being just pickups on the ground, it would be more exciting if you needed one and it dropped.
 - Task: An ally that has died at all (even if ressed) should lose their upgrade priviledge
