@@ -21,6 +21,7 @@ import { distance, getCoordsAtDistanceTowardsTarget } from '../jmath/math';
 import { Graphics } from 'pixi.js';
 import { allCards } from '../cards';
 import { keyDown } from './ui/eventListeners';
+import * as CSSClasses from '../CSSClasses';
 
 const TEXT_OUT_OF_RANGE = 'Out of Range';
 // Graphics for rendering above board and walls but beneath units and doodads,
@@ -87,8 +88,11 @@ export function updatePlanningView(underworld: Underworld) {
               planningViewGraphics.lineTo(attackLine.p2.x, attackLine.p2.y);
               planningViewGraphics.drawCircle(attackLine.p2.x, attackLine.p2.y, 3);
             } else {
+              // If user's spell is currently out of range, mute the red LOS color so it doesn't draw attention away
+              // from the out of range UI.
+              const color = document.body.classList.contains(CSSClasses.outOfRange) ? colors.outOfRangeGrey : colors.healthRed;
               // Draw a red line, showing that you are in danger
-              planningViewGraphics.lineStyle(3, 0xff0000, 0.7);
+              planningViewGraphics.lineStyle(3, color, 0.7);
               planningViewGraphics.lineTo(attackLine.p2.x, attackLine.p2.y);
               planningViewGraphics.drawCircle(attackLine.p2.x, attackLine.p2.y, 3);
             }

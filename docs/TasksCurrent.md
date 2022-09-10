@@ -6,8 +6,6 @@
 - Improve out of range targeting: if any part of a unit is in range, then targeting it must be allowed
 - optional: dedup upgrade spells, can happen in devMode when upgrades are chosen quickly
 ## Low hanging fruit
-- multiplayer, ending turn caused my spells to get rearranged poorly
-- when there is an error in UI like (out of range), no other circles (such as attack range or bloat radius) should show as red
 - small bugs:
     - when your main mana bar has 0 mana left it doesn't show the diagonal lines
     - swap then damage hurts yourself also, it shouldn't be this way it should hurt the target

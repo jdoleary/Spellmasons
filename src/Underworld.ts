@@ -15,6 +15,7 @@ import * as ImmediateMode from './graphics/ImmediateModeSprites';
 import * as colors from './graphics/ui/colors';
 import * as resurrect from './cards/resurrect';
 import * as shield from './cards/shield';
+import * as CSSClasses from './CSSClasses';
 import { MESSAGE_TYPES } from './types/MessageTypes';
 import {
   app,
@@ -374,15 +375,15 @@ export default class Underworld {
 
     // Sync css classes to handle changing the cursor
     if (globalThis.player) {
-      document.body?.classList.toggle('casting', CardUI.areAnyCardsSelected());
+      document.body?.classList.toggle(CSSClasses.casting, CardUI.areAnyCardsSelected());
       if (CardUI.areAnyCardsSelected()) {
         const outOfRange = isOutOfRange(globalThis.player, this.getMousePos(), true)
-        document.body?.classList.toggle('outOfRange', outOfRange);
+        document.body?.classList.toggle(CSSClasses.outOfRange, outOfRange);
       }
       // Turn off casting and outOfRange view if the player is viewing the walk rope
       if (keyDown.showWalkRope) {
-        document.body?.classList.toggle('casting', false);
-        document.body?.classList.toggle('outOfRange', false);
+        document.body?.classList.toggle(CSSClasses.casting, false);
+        document.body?.classList.toggle(CSSClasses.outOfRange, false);
       }
     }
 
