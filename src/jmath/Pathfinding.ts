@@ -232,7 +232,7 @@ export function findPath(startPoint: Vec2, target: Vec2, pathingLineSegments: Po
     return shortestPath
         ? [...shortestPath.points, shortestPath.target]
         // If no path is found, move to the first intersection which will always be a valid path.
-        : firstIntersection ? [startPoint, firstIntersection] : [];
+        : firstIntersection ? [firstIntersection] : [];
 }
 // Note: Mutates Path
 function addWalkAroundPolyInfoToPath(path: Path, direction: 'prev' | 'next', startVertex: Vec2, poly: Polygon2) {
