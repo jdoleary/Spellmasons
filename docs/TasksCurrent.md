@@ -35,7 +35,6 @@
     - left click
     - spells
     - book opening for inventory
-    - volume plays as you change sound settings
     - a "you died" (gta wasted)
     - quieter end turn in multiplayer
     - sounds that lets you know everyone is waiting on you
