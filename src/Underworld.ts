@@ -191,7 +191,7 @@ export default class Underworld {
     for (let i = startNumberOfEnemiesNeededToDrop; i < 1 + this.cardDropsDropped + startNumberOfEnemiesNeededToDrop; i++) {
       numberOfEnemiesKilledNeededForNextDrop += i;
     }
-    if (document.body.classList.contains('HUD-hidden')) {
+    if (document.body?.classList.contains('HUD-hidden')) {
       console.log('HUD-hidden: Skipping dropping scroll pickup')
       return;
     }
@@ -374,15 +374,15 @@ export default class Underworld {
 
     // Sync css classes to handle changing the cursor
     if (globalThis.player) {
-      document.body.classList.toggle('casting', CardUI.areAnyCardsSelected());
+      document.body?.classList.toggle('casting', CardUI.areAnyCardsSelected());
       if (CardUI.areAnyCardsSelected()) {
         const outOfRange = isOutOfRange(globalThis.player, this.getMousePos(), true)
-        document.body.classList.toggle('outOfRange', outOfRange);
+        document.body?.classList.toggle('outOfRange', outOfRange);
       }
       // Turn off casting and outOfRange view if the player is viewing the walk rope
       if (keyDown.showWalkRope) {
-        document.body.classList.toggle('casting', false);
-        document.body.classList.toggle('outOfRange', false);
+        document.body?.classList.toggle('casting', false);
+        document.body?.classList.toggle('outOfRange', false);
       }
     }
 

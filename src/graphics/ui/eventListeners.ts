@@ -662,7 +662,7 @@ export function registerAdminContextMenuOptions(underworld: Underworld) {
       label: '📹 Toggle UI for recording',
       action: () => {
         // Hides a portion of the UI but not all of it for recording or screenshots
-        document.body.classList.toggle('recording');
+        document.body?.classList.toggle('recording');
       },
       supportInMultiplayer: false,
       domQueryContainer: '#menu-self',

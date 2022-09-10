@@ -724,7 +724,7 @@ export function toggleHUD() {
   globalThis.isHUDHidden = !globalThis.isHUDHidden;
   const visible = !globalThis.isHUDHidden;
   if (document) {
-    document.body.classList.toggle('HUD-hidden', !visible);
+    document.body?.classList.toggle('HUD-hidden', !visible);
   }
   console.log(`Togggle hud to ${visible ? 'visible' : 'hidden'}`)
   // Toggling HUD off should also set the music to 0 since music will
