@@ -4,6 +4,8 @@ export enum MESSAGE_TYPES {
   SPAWN_PLAYER,
   ADMIN_COMMAND,
   ADMIN_CHANGE_STAT,
+  // For rearranging player cards
+  PLAYER_CARDS,
   PLAYER_CONFIG,
   ENTER_PORTAL,
   CHOOSE_UPGRADE,

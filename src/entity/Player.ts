@@ -37,8 +37,11 @@ export interface IPlayer {
   unit: Unit.IUnit;
   inPortal: boolean;
   isSpawned: boolean;
+  // The spells that the player has on their toolbar
   cards: string[];
+  // The spells that the player has in their inventory
   inventory: string[];
+  // The spells and perks that a player has chosen
   upgrades: Upgrade.IUpgrade[];
   upgradesLeftToChoose: number;
   perksLeftToChoose: number;

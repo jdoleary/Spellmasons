@@ -12,6 +12,7 @@ import { composeOnDamageEvents, copyForPredictionUnit } from '../../entity/Unit'
 import { NUMBER_OF_TOOLBAR_SLOTS } from '../../config';
 import Underworld from '../../Underworld';
 import { CardCategory } from '../../types/commonTypes';
+import { MESSAGE_TYPES } from '../../types/MessageTypes';
 
 const elCardHolders = document.getElementById('card-holders') as HTMLElement;
 const elInvContent = document.getElementById('inventory-content') as HTMLElement;
@@ -94,6 +95,11 @@ export function setupCardUIEventListeners(underworld: Underworld) {
           // else a card is being dragged in from inventory
           globalThis.player.cards[dropIndex] = cardId;
         }
+        // Send new card order to server 
+        underworld.pie.sendData({
+          type: MESSAGE_TYPES.PLAYER_CARDS,
+          cards: globalThis.player.cards,
+        });
         recalcPositionForCards(globalThis.player, underworld);
         syncInventory(undefined, underworld);
       } else {

@@ -4,7 +4,6 @@
 - record new screenshots and footage (zoomed in, no music)
 - Add gifs to steam page
 - Improve out of range targeting: if any part of a unit is in range, then targeting it must be allowed
-- bug: must persist rearranging spells to server
 - optional: dedup upgrade spells, can happen in devMode when upgrades are chosen quickly
 ## Low hanging fruit
 - when loading a game it doesn't hide the "spawn instructions" even if you are already spawned in

@@ -261,6 +261,13 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
         console.error('Recieved ENTER_PORTAL message but "caster" is undefined')
       }
       break;
+    case MESSAGE_TYPES.PLAYER_CARDS:
+      if (fromPlayer) {
+        fromPlayer.cards = payload.cards;
+      } else {
+        console.error('No fromPlayer to set card order on')
+      }
+      break;
     case MESSAGE_TYPES.PLAYER_CONFIG:
       const { color, name } = payload;
       if (fromPlayer) {
