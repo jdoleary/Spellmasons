@@ -191,6 +191,10 @@ export default class Underworld {
     for (let i = startNumberOfEnemiesNeededToDrop; i < 1 + this.cardDropsDropped + startNumberOfEnemiesNeededToDrop; i++) {
       numberOfEnemiesKilledNeededForNextDrop += i;
     }
+    if (document.body.classList.contains('HUD-hidden')) {
+      console.log('HUD-hidden: Skipping dropping scroll pickup')
+      return;
+    }
     if (numberOfEnemiesKilledNeededForNextDrop <= this.enemiesKilled) {
       console.log('Pickup: Drop scroll pickup', this.cardDropsDropped, this.enemiesKilled, numberOfEnemiesKilledNeededForNextDrop)
       this.cardDropsDropped++;
