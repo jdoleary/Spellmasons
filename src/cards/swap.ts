@@ -33,7 +33,7 @@ Swaps the caster with the source target.
       // Swap the casterUnit
       const casterSwapTarget = targetedUnits[0] || targetedPickups[0]
       if (casterSwapTarget) {
-        swapUnits.push([casterUnit, state.castLocation]);
+        swapUnits.push([casterUnit, casterSwapTarget]);
       }
       const swapLocations = [swapLocation, ...underworld.findValidSpawns(swapLocation, config.COLLISION_MESH_RADIUS / 4, 4)];
       // The units at the target location
