@@ -211,14 +211,14 @@ export function drawWalkRope(target: Vec2, underworld: Underworld) {
   globalThis.walkPathGraphics?.clear();
   walkRopePath = underworld.calculatePath(walkRopePath, round(globalThis.player.unit), round(target));
   const { points: currentPlayerPath } = walkRopePath;
-  if (currentPlayerPath.length) {
+  if (currentPlayerPath[0]) {
     const turnStopPoints = pointsEveryXDistanceAlongPath(globalThis.player.unit, currentPlayerPath, globalThis.player.unit.staminaMax, globalThis.player.unit.staminaMax - globalThis.player.unit.stamina);
     globalThis.walkPathGraphics?.lineStyle(4, 0xffffff, 1.0);
     // Use this similarTriangles calculation to make the line pretty so it doesn't originate from the exact center of the
     // other player but from the edge instead
-    const startPoint = math.distance(globalThis.player.unit, target) <= config.COLLISION_MESH_RADIUS
-      ? target
-      : Vec.subtract(globalThis.player.unit, math.similarTriangles(globalThis.player.unit.x - target.x, globalThis.player.unit.y - target.y, math.distance(globalThis.player.unit, target), config.COLLISION_MESH_RADIUS));
+    const startPoint = math.distance(globalThis.player.unit, currentPlayerPath[0]) <= config.COLLISION_MESH_RADIUS
+      ? currentPlayerPath[0]
+      : Vec.subtract(globalThis.player.unit, math.similarTriangles(globalThis.player.unit.x - currentPlayerPath[0].x, globalThis.player.unit.y - currentPlayerPath[0].y, math.distance(globalThis.player.unit, currentPlayerPath[0]), config.COLLISION_MESH_RADIUS));
     globalThis.walkPathGraphics?.moveTo(startPoint.x, startPoint.y);
 
     let lastPoint: Vec2 = globalThis.player.unit;
