@@ -1,3 +1,19 @@
+## 2022.09.10
+Was finally able to get npm link working with vite viahttps://dev.to/hontas/using-vite-with-linked-dependencies-37n7
+
+```
+rm -rf node_modules/.vite
+npm link PACKAGE
+
+// in vite config
+export default {
+  // ...
+  optimizeDeps: {
+    exclude: ['PACKAGE']
+  }
+}
+
+```
 ## 2022.08.02
  Horizontall flip image:
  `magick playerAttackSmallMagic_*.png -flop -set filename:base "%[basename]" "%[filename:base].png"`

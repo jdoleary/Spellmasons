@@ -19,6 +19,8 @@
     - spells like mana burn and hurt shouldn't play on dead units or pickups
     - sometimes when you walk you get stuck on a wall and it wastes stamina
 # Bugs
+- wsPie: When reconnects occur it adds a bunch of 'clientId' strings to the end of the url
+- wsPie: There seems to be a way in which pie connects successfully but onConnectInfo is never called and so it never resolves
 - after quitting single player to main menu and trying to go into multiplayer:
     - window.disconnect is not a function
     - and multiplayer button doesn't work
