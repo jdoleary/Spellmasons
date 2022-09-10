@@ -3,6 +3,7 @@
     - make sure you disable the partial UI
 - record new screenshots and footage (zoomed in, no music)
 - Add gifs to steam page
+- Improve out of range targeting: if any part of a unit is in range, then targeting it must be allowed
 ## Low hanging fruit
 - when loading a game it doesn't hide the "spawn instructions" even if you are already spawned in
 - multiplayer, ending turn caused my spells to get rearranged poorly

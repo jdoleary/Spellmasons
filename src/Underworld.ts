@@ -370,6 +370,7 @@ export default class Underworld {
 
     // Draw cast line:
     if (globalThis.player) {
+      document.body.classList.toggle('casting', CardUI.areAnyCardsSelected());
       // Do not show the cast line if the player is checking how far they can move
       if (!keyDown.showWalkRope) {
         if (CardUI.areAnyCardsSelected()) {
@@ -383,20 +384,8 @@ export default class Underworld {
           const castLine = { p1: startPoint, p2: mouseTarget };
           globalThis.unitOverlayGraphics?.lineStyle(3, colors.targetBlue, 0.7);
           globalThis.unitOverlayGraphics?.moveTo(castLine.p1.x, castLine.p1.y);
-          const endOfRange = getEndOfRange(globalThis.player, mouseTarget);
-          if (isOutOfRange(globalThis.player, mouseTarget, true)) {
-            // Draw a grey line showing that you cannot cast
-            globalThis.unitOverlayGraphics?.lineStyle(3, colors.outOfRangeGrey, 1.0);
-            globalThis.unitOverlayGraphics?.lineTo(castLine.p2.x, castLine.p2.y);
-            // Draw a circle where the castrange stops
-            globalThis.unitOverlayGraphics?.drawCircle(endOfRange.x, endOfRange.y, 3);
-          } else if (isOutOfRange(globalThis.player, mouseTarget, false)) {
-            globalThis.unitOverlayGraphics?.lineTo(endOfRange.x, endOfRange.y);
-            globalThis.unitOverlayGraphics?.drawCircle(endOfRange.x, endOfRange.y, 3);
-          } else {
-            globalThis.unitOverlayGraphics?.lineTo(mouseTarget.x, mouseTarget.y);
-            globalThis.unitOverlayGraphics?.drawCircle(mouseTarget.x, mouseTarget.y, 3);
-          }
+          const outOfRange = isOutOfRange(globalThis.player, mouseTarget, true)
+          document.body.classList.toggle('outOfRange', outOfRange);
         }
       }
     }

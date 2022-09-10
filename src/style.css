@@ -536,6 +536,9 @@ body.your-turn #end-turn-btn {
 }
 
 #end-turn-btn {
+  /* z-index set explicitly to make sure it renders overtop of the cardhand so that it will
+  change the cursor from a cursor-casting to just cursor */
+  z-index: 2;
   opacity: 0.5;
   position: absolute;
   right: 8px;
@@ -1149,6 +1152,20 @@ body.HUD-hidden #PIXI-holder {
 
 body,
 button {
+  cursor: url('cursor.png'), auto;
+}
+
+body.casting {
+  cursor: url('cursor-cast.png') 18 18, auto;
+}
+
+body.casting.outOfRange {
+  cursor: url('cursor-cast-out-of-range.png') 18 18, auto;
+}
+
+body.casting .card,
+body.casting #inventory,
+body.casting #end-turn-btn {
   cursor: url('cursor.png'), auto;
 }
 

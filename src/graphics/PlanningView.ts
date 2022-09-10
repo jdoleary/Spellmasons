@@ -152,7 +152,7 @@ export function updatePlanningView(underworld: Underworld) {
           if (labelText) {
             labelText.text = TEXT_OUT_OF_RANGE;
             labelText.style.fill = colors.errorRed;
-            const labelPosition = withinCameraBounds({ x: mouseTarget.x, y: mouseTarget.y - labelText.height }, labelText.width / 2);
+            const labelPosition = withinCameraBounds({ x: mouseTarget.x, y: mouseTarget.y - labelText.height * 2 }, labelText.width / 2);
             labelText.x = labelPosition.x;
             labelText.y = labelPosition.y;
           }
