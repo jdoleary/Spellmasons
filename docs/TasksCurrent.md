@@ -5,7 +5,6 @@
 - Add gifs to steam page
 ## Low hanging fruit
 - when loading a game it doesn't hide the "spawn instructions" even if you are already spawned in
-- changing total volume should make sounds too
 - multiplayer, ending turn caused my spells to get rearranged poorly
 - when there is an error in UI like (out of range), no other circles (such as attack range or bloat radius) should show as red
 - small bugs:

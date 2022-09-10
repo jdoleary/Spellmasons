@@ -127,6 +127,8 @@ export function setupAudio() {
         if (musicInstance) {
             musicInstance.volume = globalThis.volume * (globalThis.volumeMusic === undefined ? 1 : globalThis.volumeMusic);
         }
+        // Play a sound so it'll show the user how loud it is
+        globalThis.playSFXKey('playerUnitDamage');
     };
     globalThis.changeVolumeMusic = (volume: number) => {
         globalThis.volumeMusic = volume;
@@ -138,7 +140,7 @@ export function setupAudio() {
     globalThis.changeVolumeGame = (volume: number) => {
         globalThis.volumeGame = volume;
         // Play a sound so it'll show the user how loud it is
-        globalThis.playSFXKey('hurt');
+        globalThis.playSFXKey('playerUnitDamage');
         storage.assign(STORAGE_OPTIONS, { volumeGame: globalThis.volumeGame });
     };
     // Retrieve audio settings from storage
