@@ -64,7 +64,7 @@ import { Material } from './Conway';
 import { oneDimentionIndexToVec2, vec2ToOneDimentionIndexPreventWrap } from './jmath/ArrayUtil';
 import { raceTimeout } from './Promise';
 import { updateParticlees } from './graphics/Particles';
-import { processNextInQueueIfReady, setupNetworkHandlerGlobalFunctions } from './network/networkHandler';
+import { elInstructions, processNextInQueueIfReady, setupNetworkHandlerGlobalFunctions } from './network/networkHandler';
 import { setupDevGlobalFunctions } from './devUtils';
 import type PieClient from '@websocketpie/client';
 import { makeForcePush } from './cards/push';
@@ -2416,6 +2416,13 @@ export default class Underworld {
     // Clear previous players array
     this.players = [];
     players.map(p => Player.load(p, this));
+    if (globalThis.player?.isSpawned) {
+      // If player is already spawned, clear spawn instructions
+      if (elInstructions) {
+        elInstructions.innerText = '';
+      }
+
+    }
   }
 
   // Create a hash from the gamestate.  Useful for determining if

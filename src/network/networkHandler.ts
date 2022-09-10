@@ -23,7 +23,7 @@ import { triggerAdminCommand } from '../graphics/ui/eventListeners';
 const messageLog: any[] = [];
 export const NO_LOG_LIST = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
 export const HANDLE_IMMEDIATELY = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
-const elInstructions = document.getElementById('instructions') as (HTMLElement | undefined);
+export const elInstructions = document.getElementById('instructions') as (HTMLElement | undefined);
 export function onData(d: OnDataArgs, underworld: Underworld) {
   if (!NO_LOG_LIST.includes(d.payload.type)) {
     // Don't clog up server logs with payloads, leave that for the client which can handle them better

@@ -6,7 +6,6 @@
 - Improve out of range targeting: if any part of a unit is in range, then targeting it must be allowed
 - optional: dedup upgrade spells, can happen in devMode when upgrades are chosen quickly
 ## Low hanging fruit
-- when loading a game it doesn't hide the "spawn instructions" even if you are already spawned in
 - multiplayer, ending turn caused my spells to get rearranged poorly
 - when there is an error in UI like (out of range), no other circles (such as attack range or bloat radius) should show as red
 - small bugs:
