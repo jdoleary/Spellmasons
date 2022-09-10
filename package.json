@@ -46,7 +46,7 @@
     "@sentry/browser": "^6.19.3",
     "@sentry/integrations": "^6.19.3",
     "@sentry/tracing": "^6.19.3",
-    "@websocketpie/client": "^0.15.4",
+    "@websocketpie/client": "^0.15.6",
     "@websocketpie/server": "^0.8.1",
     "lodash.throttle": "^4.1.1",
     "object-hash": "^3.0.0",
