@@ -6,6 +6,8 @@
     - 16:9 aspect ratio is preferred since the Steam client is optimized for widescreen, but 4:3 aspect ratio is accepted. Please note that audio will be filtered down to regular stereo when we transcode the videos.
     - Adobe Media Encoder CC to create compatible video files for Steam. The preset to use is: H.264 Video (20Mbs) with AAC Stereo Audio (192Kbps). 
     - IMPORTANT: OBS can incur lag so make sure to lower computer resolution and close other apps.
+    - IMPORTANT: Do you want your mouse recorded?
+    - IMPORTANT: Is music off and audio configured correctly?
 - Gifs
     - Widescreen for steam, square for twitter
     - Despot's Game has 600x300px gifs
@@ -16,6 +18,7 @@
     - (1920x1080)
 # Trailer 1
 - Note: Video should pan around, like Into The Breach trailer, to direct your gaze
+- Important: DO multitrack audio
 - Key moments
     - pretrailer-trailer
         - A snippet of some crazy moment happening with brad and I
@@ -29,6 +32,19 @@
         - Show off multiplayer coordination
     - Call to Action
         - Spellmasons.com / wishlist on Steam
+    - Maybe play audio quotes from people (social proof)
+
+# End Cap
+    - would be good for Youtube shorts or to add on the end of videos
+    - produce it for widescreen but make a profile aspect ratio version
+    - 5-10 seconds total
+    - Elevator pitch:
+        - "Spellmasons is a tactical, multiplayer roguelike where you devise spell combinations to overcome an onslaught of enemies"
+        - Play 2 or 3 clips from the trailer
+    - Call to Action
+        - Logo
+        - Wishlist on Steam
+        - Find it at spellmasons.com
 
 # Gifs
 - Work together (pulling wounded ally into health)

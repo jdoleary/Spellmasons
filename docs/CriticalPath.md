@@ -1,6 +1,7 @@
 # Parallel Focuses
 - Record Trailer and start marketing
     - trailer should be more zoomed in
+- Record and Produce "end cap" video.  A short 5-10 second end cap for videos to intro the game and tell people where to find it
 # Desired Schedule
   - (e) UI
   - (m) Marketing
@@ -28,8 +29,6 @@
     - Release
 # Critical Path
 - Milestone | **Marketing** | Planning on September 1
-    - Get mastered SFX from Brad
-    - Improve the steam page with gifs and more description, see Marketing.md
     - Figure out how to separate audio tracks
         - https://obsproject.com/forum/resources/win-capture-audio.1338/
         - discord on phone
@@ -37,15 +36,11 @@
         - Game audio in OBS
         - Remember
             - Vary the amound of zoom, you should be close enough for those viewing on a small screen
-            - Do you want your mouse recorded
+            - Do you want your mouse recorded?
             - Music OFF, **REMEMBER MUSIC OFF WHEN RECORDING**
     - Record multiplayer playtest
     - Make Trailer
     - Start marketing
-- Milestone | **UI**
-    - Meet with Jake Monday
-- Milestone | **Ready for Multiplayer**
-    - Fix sync issues
 - Milestone | **Final Content**
     - Perks
     - Fix liquid generation bugs
