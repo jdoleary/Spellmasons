@@ -195,7 +195,7 @@ declare global {
     // Allows toggling off hud and access to the admin menu
     var adminMode: undefined | boolean;
     var devKillAll: undefined | (() => void);
-    var devSpawnUnit: undefined | ((unitId: string, faction: Faction, coords?: Vec2) => void);
+    var devSpawnUnit: undefined | ((unitId: string, faction: Faction, coords: Vec2) => void);
     var devSpawnAllUnits: undefined | (() => void);
     var devRemoveAllEnemies: undefined | (() => void);
     // Move audio functions into global so they can be injected IF audio is supported
