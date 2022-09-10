@@ -47,5 +47,4 @@
         - Find it at spellmasons.com
 
 # Gifs
-- Work together (pulling wounded ally into health)
 - "I feel like I'm painting with an increasingly expansive palette"

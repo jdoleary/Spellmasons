@@ -4,6 +4,8 @@
 - record new screenshots and footage (zoomed in, no music)
 - Add gifs to steam page
 - Improve out of range targeting: if any part of a unit is in range, then targeting it must be allowed
+- bug: must persist rearranging spells to server
+- optional: dedup upgrade spells, can happen in devMode when upgrades are chosen quickly
 ## Low hanging fruit
 - when loading a game it doesn't hide the "spawn instructions" even if you are already spawned in
 - multiplayer, ending turn caused my spells to get rearranged poorly
@@ -12,11 +14,14 @@
     - when your main mana bar has 0 mana left it doesn't show the diagonal lines
     - swap then damage hurts yourself also, it shouldn't be this way it should hurt the target
     - after swapping I got stuck in a wall
-    - missing vampire hurt noise (when you push them into lava)
     - if you pull something into you and you're standing on the edge of liquid you take damage as if you fell in the liquid (on blood level)
     - spells like mana burn and hurt shouldn't play on dead units or pickups
     - sometimes when you walk you get stuck on a wall and it wastes stamina
 # Bugs
+- after quitting single player to main menu and trying to go into multiplayer:
+    - window.disconnect is not a function
+    - and multiplayer button doesn't work
+- big: ran into a super fast cycling turn loop again.  I had two players in a room, deleted all the enemies, refreshed one of the clients while the other was in a portal
 - push bloat hurt prediction resulted in weird prediction lines
 - Permanently fix liquid
 - chain through pickups?
@@ -39,6 +44,7 @@
     - warnings: out of stamina, no target, out of range (see breath of the wild)
     - missing sfx for vulnerable/debilitate
     - summoner cast sfx
+    - missing vampire hurt noise (when you push them into lava)
 - Feature: perks
 - Feature: "Soul bind" - bound units share applied effects
     - Use PIXI.SimpleRope https://pixijs.download/dev/docs/PIXI.SimpleRope.html
