@@ -91,7 +91,12 @@ export function playSFXKey(key?: string) {
     if (!key) {
         return
     }
-    playSFX(sfx[key]);
+    const path = sfx[key];
+    if (path) {
+        playSFX(path);
+    } else {
+        console.error('Missing sfx key', key);
+    }
 }
 const lastPlayed: { [key: string]: number } = {};
 export function playSFX(path?: string) {
