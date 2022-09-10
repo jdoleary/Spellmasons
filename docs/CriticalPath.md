@@ -59,6 +59,7 @@
 - Milestone | **Beta Testing** | Planning on October 1
     - Tutorial / Explain prompts based on user actions
     - Optimize game
+        - setPath is constantly being called by all enemies
         - repelCircleFromLine is used for both unit crowding and wall physics and with wall physics it doesn't need a reference to underworld, that's only needed for unit crowding to make sure they don't crowd each other through walls
         - Memory Leaks: call destroy() on any Graphics object you no longer need to avoid memory leaks.
         - Stress test droplets to see how many users they can support

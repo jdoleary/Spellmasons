@@ -9,8 +9,10 @@
     - Test standalone server with friends
 - Record yourself playing with split audio for trailer
     - make sure you disable the partial UI
+- decrease player unit move speed?
 ## Low hanging fruit
 - small bugs:
+    - Sometimes it tries to path around things and wastes stamina if there isn't a straight line path
     - when your main mana bar has 0 mana left it doesn't show the diagonal lines
     - swap then damage hurts yourself also, it shouldn't be this way it should hurt the target
     - if you pull something into you and you're standing on the edge of liquid you take damage as if you fell in the liquid (on blood level)
