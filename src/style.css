@@ -497,6 +497,21 @@ kbd {
   display: flex;
 }
 
+/* Hide HUD */
+body.HUD-hidden .doob-stats,
+body.HUD-hidden #websocketpie-connection-status,
+body.HUD-hidden #player-turn-indicator-holder,
+body.HUD-hidden #version,
+body.HUD-hidden #inspector-tooltip,
+body.HUD-hidden #toolbar {
+  display: none;
+}
+
+body.HUD-hidden #PIXI-holder {
+  z-index: 3;
+}
+
+/* Hide a subset of HUD */
 body.recording #inventory-icon,
 body.recording #end-turn-btn,
 body.recording #websocketpie-connection-status,
@@ -1137,18 +1152,6 @@ body.view-Menu #lobby {
   color: ghostwhite
 }
 
-/* Hide HUD */
-body.HUD-hidden .doob-stats,
-body.HUD-hidden #websocketpie-connection-status,
-body.HUD-hidden #player-turn-indicator-holder,
-body.HUD-hidden #version,
-body.HUD-hidden #toolbar {
-  display: none;
-}
-
-body.HUD-hidden #PIXI-holder {
-  z-index: 3;
-}
 
 body,
 button {
