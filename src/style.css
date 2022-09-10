@@ -1172,7 +1172,12 @@ body.casting #end-turn-btn {
   cursor: url('cursor.png'), auto;
 }
 
+body.view-Game #instructions {
+  display: block;
+}
+
 #instructions {
+  display: none;
   text-align: center;
   color: white;
   font-weight: bold;
