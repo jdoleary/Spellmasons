@@ -380,7 +380,7 @@ export function syncronize(unitSerialized: IUnitSerialized, originalUnit: IUnit)
   // originalUnit.image = Image.syncronize(image, originalUnit.image);
 }
 export function changeToDieSprite(unit: IUnit) {
-  const newSprite = Image.changeSprite(
+  Image.changeSprite(
     unit.image,
     unit.animations.die,
     containerUnits,
@@ -389,11 +389,6 @@ export function changeToDieSprite(unit: IUnit) {
     undefined,
     { loop: false }
   );
-  // If a sprite is returned then the sprite did change
-  if (newSprite) {
-    playSFXKey(unit.sfx.death);
-
-  }
 }
 // It is important to use this function when returning a unit to the previous
 // sprite because it takes into account wether or not a unit is dead.  If a unit
@@ -596,6 +591,10 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
   if (!unit.alive) {
     // If already dead, do nothing
     return;
+  }
+  // Play death sfx
+  if (!prediction) {
+    playSFXKey(unit.sfx.death);
   }
   // Health should already be 0 but make sure it is for the sake of the UI bar
   unit.health = 0;
