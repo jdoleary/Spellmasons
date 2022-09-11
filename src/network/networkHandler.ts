@@ -101,7 +101,7 @@ function handleOnDataMessageSyncronously(d: OnDataArgs, underworld: Underworld) 
   // 10 is an arbitrary limit which will report that something may be wrong
   // because it's unusual for the queue to get this large
   if (onDataQueueContainer.queue.length > 10) {
-    console.warn("onData queue is growing unusually large: ", onDataQueueContainer.queue.length, "stuck on message: ", MESSAGE_TYPES[currentlyProcessingOnDataMessage.payload.type], currentlyProcessingOnDataMessage, 'Payload Types:', onDataQueueContainer.queue.map(x => MESSAGE_TYPES[x.payload.type]));
+    console.error("onData queue is growing unusually large: ", onDataQueueContainer.queue.length, "stuck on message: ", MESSAGE_TYPES[currentlyProcessingOnDataMessage.payload.type], currentlyProcessingOnDataMessage, 'Payload Types:', onDataQueueContainer.queue.map(x => MESSAGE_TYPES[x.payload.type]));
   }
   // process the "next" (the one that was just added) immediately
   processNextInQueueIfReady(underworld);
