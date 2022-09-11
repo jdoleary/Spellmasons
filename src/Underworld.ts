@@ -849,6 +849,8 @@ export default class Underworld {
     // Clear player
     globalThis.player = undefined;
 
+    this.lastLevelCreated = undefined;
+
     globalThis.updateInGameMenuStatus?.()
 
   }
