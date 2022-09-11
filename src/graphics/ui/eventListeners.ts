@@ -701,6 +701,14 @@ export function registerAdminContextMenuOptions(underworld: Underworld) {
       domQueryContainer: '#menu-global'
     },
     {
+      label: 'Delete all Pickups',
+      action: () => {
+        underworld.pickups.forEach(p => Pickup.removePickup(p, underworld, false));
+      },
+      supportInMultiplayer: true,
+      domQueryContainer: '#menu-global'
+    },
+    {
       label: '✖️ Delete',
       action: ({ selectedUnitid }) => {
         // Remove without blood, remember clean up will just
