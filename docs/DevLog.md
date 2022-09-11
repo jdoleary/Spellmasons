@@ -1,3 +1,8 @@
+## 2022.09.11
+Amazing git command to ammend to a previous commit
+`git config --global alias.amend-to '!f() { SHA=`git rev-parse "$1"`; git stash -k && git commit --fixup "$SHA" && GIT_SEQUENCE_EDITOR=true git rebase --interactive --autosquash "$SHA^" && git stash pop; }; f'`
+from https://stackoverflow.com/a/48999882/4418836
+
 ## 2022.09.10
 Was finally able to get npm link working with vite viahttps://dev.to/hontas/using-vite-with-linked-dependencies-37n7
 
