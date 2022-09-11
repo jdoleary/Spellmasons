@@ -17,7 +17,7 @@ import {
 } from '../PlanningView';
 import { toggleMenu, View } from '../../views';
 import * as config from '../../config';
-import { cameraAutoFollow, getCamera, moveCamera, toggleHUD } from '../PixiUtils';
+import { cameraAutoFollow, getCamera, graphicsBloodSmear, moveCamera, toggleHUD } from '../PixiUtils';
 import { getAdjustedCastTarget, isOutOfRange } from '../../PlayerUtils';
 import { vec2ToOneDimentionIndexPreventWrap } from '../../jmath/ArrayUtil';
 import * as Vec from '../../jmath/Vec';
@@ -715,6 +715,14 @@ export function registerAdminContextMenuOptions(underworld: Underworld) {
         underworld.pickups.forEach(p => Pickup.removePickup(p, underworld, false));
       },
       supportInMultiplayer: true,
+      domQueryContainer: '#menu-global'
+    },
+    {
+      label: '🩸 Clean up Blood',
+      action: () => {
+        graphicsBloodSmear?.clear();
+      },
+      supportInMultiplayer: false,
       domQueryContainer: '#menu-global'
     },
     {
