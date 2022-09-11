@@ -521,6 +521,10 @@ body.recording #player-turn-indicator-holder {
   display: none !important;
 }
 
+.hide-card-holders #card-holders {
+  display: none;
+}
+
 #player-turn-indicator-holder {
   text-align: center;
   display: flex;

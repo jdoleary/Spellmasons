@@ -667,6 +667,15 @@ export function registerAdminContextMenuOptions(underworld: Underworld) {
       supportInMultiplayer: false,
       domQueryContainer: '#menu-self',
     },
+    {
+      label: '🃏 Toggle Card Holder Visibility',
+      action: () => {
+        // Hides a portion of the UI but not all of it for recording or screenshots
+        document.body?.classList.toggle('hide-card-holders');
+      },
+      supportInMultiplayer: false,
+      domQueryContainer: '#menu-self',
+    },
     ...Pickup.pickups.map<AdminContextMenuOption>(p => ({
       label: p.name,
       action: ({ pos }) => {
