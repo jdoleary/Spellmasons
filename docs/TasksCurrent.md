@@ -12,7 +12,6 @@
     - Sometimes it tries to path around things and wastes stamina if there isn't a straight line path
     - when your main mana bar has 0 mana left it doesn't show the diagonal lines
     - if you pull something into you and you're standing on the edge of liquid you take damage as if you fell in the liquid (on blood level)
-    - spells like mana burn and hurt shouldn't play on dead units or pickups
     - sometimes when you walk you get stuck on a wall and it wastes stamina
 # Bugs
 - bug: cloning a dead unit replays death sfx

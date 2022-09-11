@@ -24,9 +24,13 @@ in the future.
 "Debilitate" can be cast multiple times in succession to stack it's effect.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
-      await playDefaultSpellAnimation(card, state.targetedUnits, prediction);
-      for (let unit of state.targetedUnits) {
-        Unit.addModifier(unit, id, underworld, prediction);
+      // .filter: only target living units
+      const targets = state.targetedUnits.filter(u => u.alive);
+      if (targets.length) {
+        await playDefaultSpellAnimation(card, targets, prediction);
+        for (let unit of targets) {
+          Unit.addModifier(unit, id, underworld, prediction);
+        }
       }
       return state;
     },

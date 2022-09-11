@@ -25,7 +25,8 @@ Will not heal beyond maximum health.
 Stackable.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
-      for (let unit of state.targetedUnits) {
+      // .filter: only target living units
+      for (let unit of state.targetedUnits.filter(u => u.alive)) {
         const damage = -healAmount * quantity;
         if (!prediction && quantity > 1) {
           for (let unit of state.targetedUnits) {

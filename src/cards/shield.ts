@@ -27,17 +27,21 @@ const spell: Spell = {
 Protects bearer from the next ${damageBlocked} damage that they would incur.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
-      let animationPromise = Promise.resolve();
-      for (let unit of state.targetedUnits) {
-        animationPromise = Unit.addOneOffAnimation(unit, 'projectile/priestProjectileHit', {}, { loop: false });
-      }
-      playDefaultSpellSFX(card, prediction);
-      // We only need to wait for one of these promises, since they all take the same amount of time to complete
-      await animationPromise;
-      // Add the modifier after the animation so that the subsprite doesn't get added until after the animation is
-      // complete
-      for (let unit of state.targetedUnits) {
-        Unit.addModifier(unit, id, underworld, prediction);
+      // .filter: only target living units
+      const targets = state.targetedUnits.filter(u => u.alive);
+      if (targets.length) {
+        let animationPromise = Promise.resolve();
+        for (let unit of targets) {
+          animationPromise = Unit.addOneOffAnimation(unit, 'projectile/priestProjectileHit', {}, { loop: false });
+        }
+        playDefaultSpellSFX(card, prediction);
+        // We only need to wait for one of these promises, since they all take the same amount of time to complete
+        await animationPromise;
+        // Add the modifier after the animation so that the subsprite doesn't get added until after the animation is
+        // complete
+        for (let unit of targets) {
+          Unit.addModifier(unit, id, underworld, prediction);
+        }
       }
 
       return state;

@@ -55,7 +55,8 @@ const spell: Spell = {
     thumbnail: 'spellIconBloodCurse.png',
     description: `2x max health but healing is taken as damage`,
     effect: async (state, card, quantity, underworld, prediction) => {
-      for (let unit of state.targetedUnits) {
+      // .filter: only target living units
+      for (let unit of state.targetedUnits.filter(u => u.alive)) {
         Unit.addModifier(unit, id, underworld, prediction);
       }
       return state;

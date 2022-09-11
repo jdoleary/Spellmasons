@@ -56,7 +56,8 @@ const spell: Spell = {
     explosion radius.
     Multiple stacks of bloat will increase the amount of damage done when the unit explodes.`,
     effect: async (state, card, quantity, underworld, prediction) => {
-      for (let unit of state.targetedUnits) {
+      // .filter: only target living units
+      for (let unit of state.targetedUnits.filter(u => u.alive)) {
         Unit.addModifier(unit, id, underworld, prediction, quantity);
       }
       return state;

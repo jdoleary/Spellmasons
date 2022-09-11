@@ -34,8 +34,12 @@ Deals ${damageDone} damage to all targets.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
       let animationDelaySum = 0;
-      for (let i = 0; i < state.targetedUnits.length; i++) {
-        const unit = state.targetedUnits[i];
+      // .filter: only target living units
+      const targets = state.targetedUnits.filter(u => u.alive)
+      if (targets.length) {
+        playDefaultSpellSFX(card, prediction);
+      }
+      for (let unit of targets) {
         if (!unit) {
           continue;
         }
@@ -55,11 +59,6 @@ Deals ${damageDone} damage to all targets.
                   // Flip every other slash animation so that it comes from the other side
                   spellEffectImage.sprite.scale.x = -1;
                 }
-              }
-              // Only play sound effect for the first unit because playing multiple sound effects simultaneously just 
-              // muddies up the sound
-              if (i == 0) {
-                playDefaultSpellSFX(card, prediction);
               }
               setTimeout(() => {
                 Unit.takeDamage(unit, damageDone, state.casterUnit, underworld, prediction, state);

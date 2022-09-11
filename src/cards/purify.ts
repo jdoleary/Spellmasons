@@ -21,9 +21,13 @@ Removes all curses from the target(s).
 A curse is a harmful modifier that is attached to a unit: for example: poison, bloat, freeze, blood curse are curses.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
-      await playDefaultSpellAnimation(card, state.targetedUnits, prediction);
-      for (let unit of state.targetedUnits) {
-        apply(unit, underworld)
+      // .filter: only target living units
+      const targets = state.targetedUnits.filter(u => u.alive);
+      if (targets.length) {
+        await playDefaultSpellAnimation(card, targets, prediction);
+        for (let unit of targets) {
+          apply(unit, underworld)
+        }
       }
       return state;
     },

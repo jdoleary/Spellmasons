@@ -25,7 +25,8 @@ const spell: Spell = {
 Immediately spreads this unit's curses to other nearby units.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
-      for (let unit of state.targetedUnits) {
+      // .filter: only target living units
+      for (let unit of state.targetedUnits.filter(u => u.alive)) {
         await spreadCurses(unit, underworld, prediction);
       }
       return state;

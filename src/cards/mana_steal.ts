@@ -27,9 +27,11 @@ const spell: Spell = {
 Sacrifice some of own health to steal up to ${mana_stolen} mana from each target.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
+      // .filter: only target living units
+      const targets = state.targetedUnits.filter(u => u.alive);
       const caster = state.casterUnit;
       let promises = [];
-      for (let unit of state.targetedUnits) {
+      for (let unit of targets) {
         const unitManaStolen = Math.min(unit.mana, mana_stolen * quantity);
         unit.mana -= unitManaStolen;
         const manaTrailPromises = [];
