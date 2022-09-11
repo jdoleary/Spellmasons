@@ -47,8 +47,6 @@ const unit: UnitSource = {
           'projectile/arrow',
         ).then(() => {
           Unit.takeDamage(attackTarget, unit.damage, unit, underworld, false, undefined);
-          // Add projectile hit animation
-          Unit.addOneOffAnimation(attackTarget, 'projectile/arrowProjectileHit');
         })
 
       });
