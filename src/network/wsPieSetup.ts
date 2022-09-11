@@ -74,8 +74,8 @@ function connect_to_wsPie_server(wsUri: string | undefined, underworld: Underwor
 let maxClients = 8;
 function defaultRoomInfo(_room_info = {}): Room {
   const room_info = Object.assign({
-    name: 'Golems Lobby 1',
-    app: 'Golems',
+    name: 'Default Lobby',
+    app: 'Spellmasons',
     version: globalThis.SPELLMASONS_PACKAGE_VERSION,
     maxClients,
   }, _room_info);
