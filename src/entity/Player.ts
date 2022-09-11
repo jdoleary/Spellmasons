@@ -285,8 +285,12 @@ export function enterPortal(player: IPlayer, underworld: Underworld) {
   underworld.endPlayerTurn(player.clientId);
 }
 // Note: this is also used for AI targeting to ensure that AI don't target disabled plaeyrs
-export function ableToTakeTurn(player: IPlayer) {
-  return !player.inPortal && player.unit.alive && player.clientConnected;
+export function ableToAct(player: IPlayer) {
+  const ableToTakeTurn = !player.inPortal && player.unit.alive && player.clientConnected;
+  if (!ableToTakeTurn) {
+    console.log(`Player ${player.clientId} unable to take turn`, 'inPortal:', player.inPortal, 'alive:', player.unit.alive, 'connected: ', player.clientConnected)
+  }
+  return ableToTakeTurn;
 }
 
 export function addCardToHand(card: Cards.ICard | undefined, player: IPlayer | undefined, underworld: Underworld) {

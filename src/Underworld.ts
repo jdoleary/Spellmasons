@@ -1484,19 +1484,16 @@ export default class Underworld {
     // Only move on from the player turn phase if there are players in the game,
     // otherwise, wait for players to be in the game so that the serve doesn't just 
     // run cycles pointlessly
-    const connectedPlayers = this.players.filter(p => p.clientConnected)
-    if (this.turn_phase === turn_phase.PlayerTurns && connectedPlayers.length > 0) {
-      // If all players that have taken turns, then...
-      // (Players who CANT take turns have their turn ended automatically)
-      // TODO: Make sure game can't get stuck here
-      const activeAlivePlayers = connectedPlayers.filter(p => p.unit.alive);
+    const activePlayers = this.players.filter(Player.ableToAct)
+    if (this.turn_phase === turn_phase.PlayerTurns && activePlayers.length > 0) {
+      // If all players that can act have ended their turns...
       if (
-        activeAlivePlayers.every(p => p.endedTurn)
+        activePlayers.every(p => p.endedTurn)
       ) {
         this.endPlayerTurnPhase();
         return true;
       } else {
-        console.log('PlayerTurn: Check end player turn phase; players havent ended turn yet:', activeAlivePlayers.filter(p => !p.endedTurn).map(p => p.clientId));
+        console.log('PlayerTurn: Check end player turn phase; players havent ended turn yet:', activePlayers.filter(p => !p.endedTurn).map(p => p.clientId));
       }
     }
     return false;
@@ -1620,13 +1617,22 @@ export default class Underworld {
   }
   async initializePlayerTurns() {
     for (let player of this.players) {
-      if (!player) {
-        console.error("Attempted to initialize turn for a non existant player");
-        console.trace('Attempted to initialize nonexistant player trace');
-        return;
-      }
       // Reset player.endedTurn
+      // --
+      // Important: This must be set for ALL players
+      // before the rest of player initialization happens because
+      // players that cannot start their turn (for various reasons)
+      // will have their turn ended during initialization
+      // and when a turn is ended it checks if it should move on to the
+      // next phase and that check considers if all players are either
+      // unable to act or have already ended their turns. and so if the
+      // first player has their turn auto ended before the other players
+      // have had their .endedTurn property reset to false, then the game
+      // would go to the next phase thinking all players had ended their turns
+      // or been unable to act.
       player.endedTurn = false;
+    }
+    for (let player of this.players) {
       // Give mana at the start of turn
       const manaTillFull = player.unit.manaMax - player.unit.mana;
       // Give the player their mana per turn but don't let it go beyond manaMax
@@ -1637,17 +1643,16 @@ export default class Underworld {
       }
 
       // If this current player is NOT able to take their turn...
-      if (!Player.ableToTakeTurn(player)) {
+      if (!Player.ableToAct(player)) {
         // Skip them
         this.endPlayerTurn(player.clientId);
         // Do not continue with initialization
-        return;
+        continue;
       }
       if (player == globalThis.player) {
         // Notify the current player that their turn is starting
         queueCenteredFloatingText(`Your Turn`);
         playSFXKey('yourTurn');
-
       }
       // Trigger onTurnStart Events
       const onTurnStartEventResults: boolean[] = await Promise.all(player.unit.onTurnStartEvents.map(
@@ -1658,14 +1663,18 @@ export default class Underworld {
       ));
       if (onTurnStartEventResults.some((b) => b)) {
         // If any onTurnStartEvents return true, skip the player
+        console.log(`Force end player turn, player ${player.clientId} due to onTurnStartEvent`)
         this.endPlayerTurn(player.clientId);
-        // Do not continue with initialization
-        return;
+        // Do not continue with initialization for this player
+        continue;
       }
       // If player is killed at the start of their turn (for example, due to poison)
       // end their turn
       if (!player.unit.alive) {
+        console.log(`Force end player turn, player ${player.clientId} died when their turn started`)
         this.endPlayerTurn(player.clientId);
+        // Do not continue with initialization for this player
+        continue;
       }
     }
     this.syncTurnMessage();
@@ -1703,7 +1712,6 @@ export default class Underworld {
     }
   }
   async endPlayerTurn(clientId: string) {
-    console.log('endPlayerTurn', clientId)
     const playerIndex = this.players.findIndex((p) => p.clientId === clientId);
     const player = this.players[playerIndex];
     if (!player) {
