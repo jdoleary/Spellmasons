@@ -663,6 +663,7 @@ export function registerAdminContextMenuOptions(underworld: Underworld) {
       action: () => {
         // Hides a portion of the UI but not all of it for recording or screenshots
         document.body?.classList.toggle('recording');
+        globalThis.hidePlayerGoldCircle = !globalThis.hidePlayerGoldCircle;
       },
       supportInMultiplayer: false,
       domQueryContainer: '#menu-self',

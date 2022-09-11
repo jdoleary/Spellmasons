@@ -146,4 +146,5 @@ declare global {
     var selectedPickup: Pickup.IPickup | undefined;
     // used for hiding the HUD for recording purposes
     var isHUDHidden: boolean | undefined;
+    var hidePlayerGoldCircle: boolean | undefined;
 }

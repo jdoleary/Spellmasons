@@ -188,7 +188,9 @@ export function updatePlanningView(underworld: Underworld) {
           // offset ensures the circle is under the player's feet
           // and is dependent on the animation's feet location
           const arbitratyOffset = 10;
-          planningViewGraphics.drawEllipse(globalThis.player.unit.x, globalThis.player.unit.y + config.COLLISION_MESH_RADIUS - arbitratyOffset, config.COLLISION_MESH_RADIUS / 2, config.COLLISION_MESH_RADIUS / 3);
+          if (!globalThis.hidePlayerGoldCircle) {
+            planningViewGraphics.drawEllipse(globalThis.player.unit.x, globalThis.player.unit.y + config.COLLISION_MESH_RADIUS - arbitratyOffset, config.COLLISION_MESH_RADIUS / 2, config.COLLISION_MESH_RADIUS / 3);
+          }
           planningViewGraphics.endFill();
         }
         lastSpotCurrentPlayerTurnCircle = clone(globalThis.player.unit);
