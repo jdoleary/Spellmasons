@@ -2,7 +2,25 @@
 - Improve out of range targeting: if any part of a unit is in range, then targeting it must be allowed
 ---
 - Detect and report super fast turn looping
+    - so if we have disconnected but alive players, they haven't ended their turn so it loops in goToNextPhaseIfAppropriate.
+    - ```
+    onData: SET_PHASE
+onData queue is growing unusually large:  213 stuck on message:  SET_PHASE {
+  type: 'Data',
+  payload: {
+    type: 16,
+    phase: 0,
+    units: [ [Object], [Object] ],
+    players: [ [Object], [Object] ]
+  }
+} Payload Types: [
+  'SET_PHASE', 'SET_PHASE', 'SET_PHASE', 'SET_PHASE', 'SET_PHASE',
+  'SET_PHASE', 'SET_PHASE', 'SET_PHASE', 'SET_PHASE', 'SET_PHASE',
+  'SET_PHASE', 'SET_PHASE', 'SET_PHASE', 'SET_PHASE', 'SET_PHASE',
+  'SET_PHASE', 'SET_PHASE', 'SET_PHASE', 'SET_PHASE', 'SET_PHASE',
+    ```
     - big bug: ran into a super fast cycling turn loop again.  I had two players in a room, deleted all the enemies, refreshed one of the clients while the other was in a portal
+    - was able to reproduce by killing all enemies, refreshing one client, then the other
 - Standalone server backlog
     - stand alone server goes into infinite loop when all players leave
     - When does stand alone server remove a room?
@@ -19,8 +37,8 @@
     - spells like mana burn and hurt shouldn't play on dead units or pickups
     - sometimes when you walk you get stuck on a wall and it wastes stamina
 # Bugs
-- wsPie: When reconnects occur it adds a bunch of 'clientId' strings to the end of the url
-- wsPie: There seems to be a way in which pie connects successfully but onConnectInfo is never called and so it never resolves
+- [fixed??] wsPie: When reconnects occur it adds a bunch of 'clientId' strings to the end of the url
+- [fixed??] wsPie: There seems to be a way in which pie connects successfully but onConnectInfo is never called and so it never resolves
 - push bloat hurt prediction resulted in weird prediction lines
 - Permanently fix liquid
     - weird liquid : 0.5211362200270263
