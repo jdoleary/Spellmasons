@@ -12,6 +12,7 @@ global.document = {
     querySelector: () => fakeElement,
     body: {
         classList: {
+            add: () => { },
             toggle: () => { },
             contains: () => { }
         },
