@@ -1,4 +1,26 @@
+## Brad playtest
+- if you are self targeting when you end your turn, all the cast predictions and the self targeting warrning stay up while AI takes their turn
+- he likes having his name above his head even in singleplayer
+- bug: after dying, quitting to main menu and starting new run, Brad kept his old spells
+- shield should show on your healthbar
+- bug: he got "invalid target" when trying to cast on the top of a wall but he was using "expand" so it shoul've been valid cause there were targets in the radius
+- How do i inspect things when I'm in spawn mode
+- mana burn shouldn't animate on guys without mana
+- trap radius too big
+- camera follows when spawning
+    - when ally spawns it moves your camera
+- when someone else swaps with you should it move camera?
+- I can see him at 0,0 when he's choosing spawn and if he queues up a spwll it draws the green line
+- "targeting self" comes up when using steal mana which is true but confusing
+- multiplayer bug where it made a new level twice, see video
+- brad has two poisons on his spellbar
+- pull UI was left up when he sent the message while I was on another screen and I came back to it 
+- brad can't see if his spells will kill enemies until my spell completes
+- Game ending bug: When portals spawned I went to 0,0 and now I can't go through a portal so it won't end
+- idea: give mana spell
+- need a boss  that does AOE damage
 ## Tasks 
+- bug: arrow sticking in a person animation can be backwards
 - Improve out of range targeting: if any part of a unit is in range, then targeting it must be allowed
 ---
 - Standalone server backlog

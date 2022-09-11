@@ -7,12 +7,13 @@
   - (m) Marketing
   - (h) Fix liquid glitches perminantly
   - (m) Integrate freestanding obstacles (tree, urn, etc)
-  - (m) Adaptive tutorial
-  - (?) Package for Electron
-  - (e) Bug reporting
-  - (m) Steam integration
-  - (h) I want 2x as many spells (21 to 42) and 2x as many enemies (7 to 14)
-  - (m) Add perks
+  - Finalize
+    - (m) Adaptive tutorial
+    - (?) Package for Electron
+    - (e) Bug reporting
+    - (m) Steam integration
+    - (h) I want 2x as many spells (21 to 42) and 2x as many enemies (7 to 14)
+    - (m) Add perks
 - September / October
     - Finish UI
     - Start Marketing
