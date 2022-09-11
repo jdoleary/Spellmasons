@@ -59,14 +59,15 @@ const unit: UnitSource = {
         });
 
       });
-    }
-    // Movement:
-    const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit, underworld);
-    if (closestEnemy) {
-      const distanceToEnemy = math.distance(unit, closestEnemy);
-      // The following is a hacky way to make them not move too close to the enemy
-      unit.stamina = Math.min(unit.stamina, distanceToEnemy - config.COLLISION_MESH_RADIUS);
-      await Unit.moveTowards(unit, closestEnemy, underworld);
+    } else {
+      // Movement:
+      const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit, underworld);
+      if (closestEnemy) {
+        const distanceToEnemy = math.distance(unit, closestEnemy);
+        // The following is a hacky way to make them not move too close to the enemy
+        unit.stamina = Math.min(unit.stamina, distanceToEnemy - config.COLLISION_MESH_RADIUS);
+        await Unit.moveTowards(unit, closestEnemy, underworld);
+      }
     }
   },
 };
