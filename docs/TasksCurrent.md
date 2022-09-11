@@ -2,9 +2,8 @@
 - Improve out of range targeting: if any part of a unit is in range, then targeting it must be allowed
 ---
 - Standalone server backlog
-    - stand alone server goes into infinite loop when all players leave
     - When does stand alone server remove a room?
-    - Test standalone server with friends
+        - it appears that when all players leave, if one rejoins it's a new game
 - Record yourself playing with split audio for trailer
     - make sure you disable the partial UI
 - decrease player unit move speed?
@@ -12,13 +11,10 @@
 - small bugs:
     - Sometimes it tries to path around things and wastes stamina if there isn't a straight line path
     - when your main mana bar has 0 mana left it doesn't show the diagonal lines
-    - swap then damage hurts yourself also, it shouldn't be this way it should hurt the target
     - if you pull something into you and you're standing on the edge of liquid you take damage as if you fell in the liquid (on blood level)
     - spells like mana burn and hurt shouldn't play on dead units or pickups
     - sometimes when you walk you get stuck on a wall and it wastes stamina
 # Bugs
-- [fixed??] wsPie: When reconnects occur it adds a bunch of 'clientId' strings to the end of the url
-- [fixed??] wsPie: There seems to be a way in which pie connects successfully but onConnectInfo is never called and so it never resolves
 - push bloat hurt prediction resulted in weird prediction lines
 - Permanently fix liquid
     - weird liquid : 0.5211362200270263
