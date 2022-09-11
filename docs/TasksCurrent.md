@@ -15,6 +15,7 @@
     - spells like mana burn and hurt shouldn't play on dead units or pickups
     - sometimes when you walk you get stuck on a wall and it wastes stamina
 # Bugs
+- bug: cloning a dead unit replays death sfx
 - push bloat hurt prediction resulted in weird prediction lines
 - Permanently fix liquid
     - weird liquid : 0.5211362200270263
