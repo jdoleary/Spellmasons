@@ -21,10 +21,6 @@ export function hostGiveClientGameState(clientId: string, underworld: Underworld
     // Only the host should be sending INIT_GAME_STATE messages
     // because the host has the canonical game state
     if (globalThis.isHost(underworld.pie)) {
-        if (!level) {
-            console.error('Cannot give client game state, levelData is undefined');
-            return
-        }
         // Do not send this message to self
         if (globalThis.clientId !== clientId) {
             if (level) {
@@ -42,7 +38,7 @@ export function hostGiveClientGameState(clientId: string, underworld: Underworld
                     whisperClientIds: [clientId],
                 });
             } else {
-                console.error('Could not send INIT_GAME_STATE, levelData is undefined');
+                console.error('hostGiveClientGameState: Could not send INIT_GAME_STATE, levelData is undefined');
             }
         }
     }
