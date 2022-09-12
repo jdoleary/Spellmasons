@@ -1,4 +1,6 @@
 ## Brad playtest
+- Don't play turn end sound fx if you've already ended yoru turn
+- Move the multiplayer thought bubble so it doesn't cover the name
 - if you are self targeting when you end your turn, all the cast predictions and the self targeting warrning stay up while AI takes their turn
 - he likes having his name above his head even in singleplayer
 - bug: after dying, quitting to main menu and starting new run, Brad kept his old spells
@@ -15,6 +17,7 @@
 - multiplayer bug where it made a new level twice, see video
 - brad has two poisons on his spellbar
 - pull UI was left up when he sent the message while I was on another screen and I came back to it 
+- when portals spawned on us both we didn't get the spell pickup
 - brad can't see if his spells will kill enemies until my spell completes
 - Game ending bug: When portals spawned I went to 0,0 and now I can't go through a portal so it won't end
 - idea: give mana spell
