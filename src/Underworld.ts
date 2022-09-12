@@ -788,7 +788,7 @@ export default class Underworld {
         }
         if (target && cardIds.length) {
           // Draw a line to show where they're aiming:
-          globalThis.thinkingPlayerGraphics?.lineStyle(3, colors.healthAllyGreen, 0.7);
+          globalThis.thinkingPlayerGraphics?.lineStyle(3, colors.healthAllyGreen, 1.0);
           // Use this similarTriangles calculation to make the line pretty so it doesn't originate from the exact center of the
           // other player but from the edge instead
           const startPoint = math.distance(thinkingPlayer.unit, target) <= config.COLLISION_MESH_RADIUS
@@ -796,7 +796,9 @@ export default class Underworld {
             : Vec.subtract(thinkingPlayer.unit, math.similarTriangles(thinkingPlayer.unit.x - target.x, thinkingPlayer.unit.y - target.y, math.distance(thinkingPlayer.unit, target), config.COLLISION_MESH_RADIUS));
           globalThis.thinkingPlayerGraphics?.moveTo(startPoint.x, startPoint.y);
           globalThis.thinkingPlayerGraphics?.lineTo(target.x, target.y);
+          globalThis.thinkingPlayerGraphics?.beginFill(colors.healthAllyGreen);
           globalThis.thinkingPlayerGraphics?.drawCircle(target.x, target.y, 4);
+          globalThis.thinkingPlayerGraphics?.endFill();
         }
       }
     }
