@@ -1,6 +1,7 @@
+- there is a circumstance in multiplayer where a player's upgradeslefttochoose is 3 but they don't see the popup (happens in local)
 ## Brad playtest
+- If you are changing your name and you exit the menu with esc it doesn't save the name
 - Don't play turn end sound fx if you've already ended yoru turn
-- Move the multiplayer thought bubble so it doesn't cover the name
 - if you are self targeting when you end your turn, all the cast predictions and the self targeting warrning stay up while AI takes their turn
 - he likes having his name above his head even in singleplayer
 - bug: after dying, quitting to main menu and starting new run, Brad kept his old spells
