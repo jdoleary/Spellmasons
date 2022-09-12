@@ -16,9 +16,10 @@ import { allUnits } from '../entity/units';
 import { hostGiveClientGameState, typeGuardHostApp } from './networkUtil';
 import { skyBeam } from '../VisualEffects';
 import { tryFallInOutOfLiquid } from '../entity/Obstacle';
-import { cameraAutoFollow } from '../graphics/PixiUtils';
 import { IPickupSerialized, removePickup } from '../entity/Pickup';
 import { triggerAdminCommand } from '../graphics/ui/eventListeners';
+import { Vec2 } from '../jmath/Vec';
+import pingSprite from '../graphics/Ping';
 
 const messageLog: any[] = [];
 export const NO_LOG_LIST = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
@@ -38,10 +39,7 @@ export function onData(d: OnDataArgs, underworld: Underworld) {
   const type: MESSAGE_TYPES = payload.type;
   switch (type) {
     case MESSAGE_TYPES.PING:
-      floatingText({
-        coords: payload,
-        text: '🎈',
-      });
+      pingSprite({ coords: payload as Vec2, color: underworld.players.find(p => p.clientId == d.fromClient)?.color });
       break;
     case MESSAGE_TYPES.INIT_GAME_STATE:
       // If the underworld is not yet initialized for this client then
