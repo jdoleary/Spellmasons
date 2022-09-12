@@ -46,7 +46,7 @@ const unit: UnitSource = {
       await Unit.playComboAnimation(unit, unit.animations.attack, async () => {
         const { sourceUnit, number: NUMBER_OF_SUMMONS } = chooseObjectWithProbability([
           {
-            sourceUnit: allUnits.grunt,
+            sourceUnit: allUnits.golem,
             probability: 100,
             number: 5
           },
@@ -60,7 +60,7 @@ const unit: UnitSource = {
             probability: 10,
             number: 2,
           },
-        ], underworld.random) || { sourceUnit: allUnits.grunt, number: 5 };
+        ], underworld.random) || { sourceUnit: allUnits.golem, number: 5 };
         const spawns = underworld.findValidSpawns(unit, 20, 5);
         let lastPromise = Promise.resolve();
         for (let i = 0; i < NUMBER_OF_SUMMONS; i++) {

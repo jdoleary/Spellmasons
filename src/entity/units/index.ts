@@ -28,7 +28,7 @@ interface SpawnParams {
 
 /// Units to register
 import playerUnit from './playerUnit';
-import grunt from './grunt';
+import golem from './golem';
 import archer from './archer';
 import lobber from './lobber';
 import summoner from './summoner';
@@ -43,7 +43,7 @@ function register(unit: UnitSource) {
   allUnits[unit.id] = unit;
 }
 export function registerUnits() {
-  register(grunt);
+  register(golem);
   register(archer);
   register(lobber);
   register(summoner);

@@ -1,10 +1,10 @@
 import type { UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
-import { action } from './actions/gruntAction';
+import { action } from './actions/golemAction';
 import * as config from '../../config'
 
 const unit: UnitSource = {
-  id: 'grunt',
+  id: 'Golem',
   info: {
     description: 'A simple but persistant creature that will pursue its enemies and attack them if within arm\'s reach.',
     image: 'units/gruntIdle',
@@ -29,7 +29,7 @@ const unit: UnitSource = {
     walk: 'units/gruntWalk',
   },
   sfx: {
-    death: 'gruntDeath'
+    death: 'golemDeath'
   },
   action,
 };

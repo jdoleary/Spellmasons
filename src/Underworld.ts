@@ -59,7 +59,7 @@ import { getBestRangedLOSTarget } from './entity/units/actions/rangedAction';
 import { hostGiveClientGameState, IHostApp } from './network/networkUtil';
 import { healthAllyGreen, healthHurtRed, healthRed } from './graphics/ui/colors';
 import objectHash from 'object-hash';
-import { withinMeleeRange } from './entity/units/actions/gruntAction';
+import { withinMeleeRange } from './entity/units/actions/golemAction';
 import { baseTiles, caveSizes, convertBaseTilesToFinalTiles, generateCave, getLimits, Limits as Limits, makeFinalTileImages, Map, Tile, toObstacle } from './MapOrganicCave';
 import { Material } from './Conway';
 import { oneDimentionIndexToVec2, vec2ToOneDimentionIndexPreventWrap } from './jmath/ArrayUtil';
@@ -1992,7 +1992,7 @@ export default class Underworld {
       if (unitSource) {
         const target = this.getUnitAttackTarget(u);
         // Add unit action to the array of promises to wait for
-        // TODO: Prevent grunts from attacking if they are out of range
+        // TODO: Prevent golems from attacking if they are out of range
         // like when they are around a corner
         let promise = raceTimeout(5000, `Unit.action; unit.id: ${u.id}; subType: ${u.unitSubType}`, unitSource.action(u, target, this, this.canUnitAttackTarget(u, target)));
         animationPromises.push(promise);

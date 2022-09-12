@@ -59,13 +59,13 @@
 - headless server runs loop quickly when it has nothing to do (after i make a change and the clients are connecting in the other os window's space)
 - is init_game_state being invoked more than once for player 2
 - Fix: Move player so it doesn't use stamina because IT MUST bring them to a synced location if their position somehow get's out of sync
-    - Desync: Due to the stamina issue I had one player in a different spot on one screen, then when he cast push and pushed a grunt into lava the grunt only moved and died on one screen and syncUnits didn't correct it somehow
+    - Desync: Due to the stamina issue I had one player in a different spot on one screen, then when he cast push and pushed a golem into lava the golem only moved and died on one screen and syncUnits didn't correct it somehow
 ## Perfect prediction attacks
     - I got bit by a vampire but it didn't accurately warn me he would
         - wrap this in with preventing units from changing targets from their prediction even if the decoy dies (lobber move then throw?)
     - Resurrect icon didn't show in prediction when it was buried in a trap that I pushed someone into (in prediction)
     - Units should NEVER change target from their prediction. A case where this happened is when a decoy died from other units attacking it
-    - Grunt attack predictions are not perfect. See branch 'perfect-predictions'
+    - Golem attack predictions are not perfect. See branch 'perfect-predictions'
     - Known issues:
         - push predicted taht a lobber would fall in lava and die but it didn't
             - that same lobber when resurrected just crawled over lava so it must've been inside but just didn't take the damage

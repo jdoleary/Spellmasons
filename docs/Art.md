@@ -2,7 +2,7 @@
 
 - Units
     - Player Wizards
-    - grunt
+    - golem
     - archer
     - thrower
     - summoner

@@ -82,7 +82,7 @@ i switch to the cauldron overworld)
     - Or if you cast cards out of order like Dicard without a card after it
 - Swap still seems to be broken with chain
 - Fixed i think: 
-    - Bug: Stuck on AI turn after archers killed resurrected grunt
+    - Bug: Stuck on AI turn after archers killed resurrected golem
 - Maybe I want this?? Bug: Chain targets dead units
 - Every unit should always be trying to get in position to do damage
 - Swap should only swap with targets, it shouldn't allow arbitrary teleportation
@@ -94,6 +94,6 @@ i switch to the cauldron overworld)
 - Brad pickuped cards and kept playing and was later suprised at his new cards. Make it obvious
 - I wish i could bring goons with me through the portal
 - Chaining too many units crashed the game (optimize chain)
-- Attack animation for cloned players is the same as the grunt attack animation which is confusing visually
+- Attack animation for cloned players is the same as the golem attack animation which is confusing visually
 - (maybe) Chain needs a radius to show how far away chaining will occur, maybe
 - Clone caused guys to spawn out of bounds

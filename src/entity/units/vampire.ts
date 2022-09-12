@@ -2,7 +2,7 @@ import * as Unit from '../Unit';
 import type { UnitSource } from './index';
 import { UnitSubType } from '../../types/commonTypes';
 import * as blood_curse from '../../cards/blood_curse';
-import { withinMeleeRange } from './actions/gruntAction';
+import { withinMeleeRange } from './actions/golemAction';
 import Underworld from '../../Underworld';
 import { bloodVampire } from '../../graphics/ui/colors';
 

@@ -47,7 +47,7 @@ const combos: { [spritePath: string]: AnimationCombo } = {
         keyFrame: 6,
         primaryAnimation: 'units/gruntAttack',
         companionAnimations: [],
-        SFX: ['gruntAttack']
+        SFX: ['golemAttack']
     },
     'units/lobberAttack': {
         keyFrame: 4,

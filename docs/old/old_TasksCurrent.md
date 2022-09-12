@@ -61,7 +61,7 @@ Matt Feedback
 - **!**Bug: Different zoom levels resulted in spell miss on one screen but not on another
 
 - Map bounds are off for handcrafted level
-- Reverify: Bug: Grunts can attack through walls if they are just beyond a corner
+- Reverify: Bug: Golems can attack through walls if they are just beyond a corner
 - BUG: When branch is undefined occurs it should automatically regen the whole level
 - sequential fireballs should be one big fireball!
 ---
