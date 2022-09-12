@@ -741,7 +741,7 @@ export default class Underworld {
     // No graphics for headless
     if (globalThis.headless) { return; }
 
-    const spaceBetweenIcons = 20;
+    const spaceBetweenIcons = 25;
     function getXLocationOfImageForThoughtBubble(originX: number, index: number, totalNumberOfSpells: number) {
       return originX + (0.5 + index - totalNumberOfSpells / 2) * spaceBetweenIcons
     }
@@ -756,16 +756,9 @@ export default class Underworld {
       const thinkingPlayerIndex = this.players.findIndex(p => p.clientId == thinkerClientId);
       const thinkingPlayer = this.players[thinkingPlayerIndex];
       if (thinkingPlayer) {
-        // Render thought bubble around spell icons
-        if (cardIds.length) {
-          const thoughtBubbleMargin = 20;
-          const thoughtBubbleRight = getXLocationOfImageForThoughtBubble(thinkingPlayer.unit.x, cardIds.length, cardIds.length);
-          const thoughtBubbleLeft = getXLocationOfImageForThoughtBubble(thinkingPlayer.unit.x, 0, cardIds.length) - thoughtBubbleMargin;
-          globalThis.thinkingPlayerGraphics?.lineStyle(3, 0xffffff, 1.0);
-          globalThis.thinkingPlayerGraphics?.beginFill(0xffffff, 0.7);
-          globalThis.thinkingPlayerGraphics?.drawRoundedRect(thoughtBubbleLeft, thinkingPlayer.unit.y - config.COLLISION_MESH_RADIUS * 2 - thoughtBubbleMargin, thoughtBubbleRight - thoughtBubbleLeft, thoughtBubbleMargin * 2, 5);
-          globalThis.thinkingPlayerGraphics?.endFill();
-        }
+        // Leave room for name tag
+        const yMargin = 5;
+        let firstCard, lastCard;
         for (let i = 0; i < cardIds.length; i++) {
           const cardId = cardIds[i];
           if (!cardId) {
@@ -779,12 +772,27 @@ export default class Underworld {
               sprite.anchor.x = 0.5;
               sprite.anchor.y = 0.5;
               sprite.rotation = 0;
-              const pos = { x, y: thinkingPlayer.unit.y - config.COLLISION_MESH_RADIUS * 2 };
+              const y = thinkingPlayer.unit.y - config.COLLISION_MESH_RADIUS * 2 - yMargin
+              const pos = { x, y };
+              if (i == 0) {
+                firstCard = { x, y };
+              }
+              if (i == cardIds.length - 1) {
+                lastCard = { x, y };
+              }
               sprite.x = pos.x;
               sprite.y = pos.y;
               sprite.scale.set(0.3);
             }
           }
+        }
+        // Render thought bubble around spell icons
+        if (firstCard && lastCard) {
+          globalThis.thinkingPlayerGraphics?.lineStyle(1, 0xffffff, 1.0);
+          globalThis.thinkingPlayerGraphics?.beginFill(0xffffff, 0.7);
+          const cardSize = 12;
+          globalThis.thinkingPlayerGraphics?.drawRoundedRect(firstCard.x - cardSize, firstCard.y - cardSize, lastCard.x - firstCard.x + cardSize * 2, lastCard.y - firstCard.y + cardSize * 2, 2);
+          globalThis.thinkingPlayerGraphics?.endFill();
         }
         if (target && cardIds.length) {
           // Draw a line to show where they're aiming:
