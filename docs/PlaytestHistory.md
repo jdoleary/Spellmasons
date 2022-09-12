@@ -1,3 +1,12 @@
+## Brad playtest 2022-09-11
+- he likes having his name above his head even in singleplayer
+- How do i inspect things when I'm in spawn mode
+- when someone else swaps with you should it move camera?
+- multiplayer bug where it made a new level twice, see video
+- pull UI was left up when he sent the message while I was on another screen and I came back to it 
+- brad can't see if his spells will kill enemies until my spell completes
+- idea: give mana to ally spell
+- need a boss  that does AOE damage
 ## JakobFree 2022-09-08
 - Remind players they can move camera when spawning in
 - adaptive tutorial could explain "connect", when it's usable and when not

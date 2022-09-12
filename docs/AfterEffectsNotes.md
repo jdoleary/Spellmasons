@@ -1,0 +1,2 @@
+- Edit -> Copy with Property links
+    - Links properties back to the other layer

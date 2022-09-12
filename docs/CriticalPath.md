@@ -2,7 +2,8 @@
 - Record Trailer and start marketing
     - trailer should be more zoomed in
 - Record and Produce "end cap" video.  A short 5-10 second end cap for videos to intro the game and tell people where to find it
-# Desired Schedule
+
+# Major Tasks
   - (e) UI
   - (m) Marketing
   - (h) Fix liquid glitches perminantly
@@ -14,6 +15,7 @@
     - (m) Steam integration
     - (h) I want 2x as many spells (21 to 42) and 2x as many enemies (7 to 14)
     - (m) Add perks
+# Desired Schedule
 - September / October
     - Finish UI
     - Start Marketing
@@ -21,11 +23,15 @@
     - Reliable Multiplayer
 - November
     - Package as Electron App
+    - Test on all 3 Operating Systems
     - "Explain Engine" (Adaptive Tutorial)
         - Gifs to introduce enemies
     - Beta Testing
 - December / January
     - More content depending on how marketing is going
+        - Perks
+        - 2x spells
+        - 2x enemies
     - Finish polish and reliability
     - Release
 # Critical Path
@@ -85,7 +91,7 @@
             - Don't cast res on no dead
             - do this by hoisting and checking pre-cast
             - How to resurrect units you are standing on top of (blocking?)
-    - Server customization
+    - Server customization (like Worms Armageddon)
         - Turn time
         - Pvp mode (more factions)
     - Spell ideas:

@@ -211,3 +211,7 @@
     - Be very specific not generic
         - no: go on missions
         - yes: sneak into an embassy in london
+
+
+Embeddable links:
+https://partner.steamgames.com/doc/marketing/event_tools/embed

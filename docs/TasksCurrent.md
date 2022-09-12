@@ -11,22 +11,12 @@
 - Game ending bug: When portals spawned I went to 0,0 and now I can't go through a portal so it won't end
 - brad has two poisons on his spellbar
 - when portals spawned on us both we didn't get the spell pickup
-## Brad playtest
-- he likes having his name above his head even in singleplayer
-- How do i inspect things when I'm in spawn mode
-- when someone else swaps with you should it move camera?
-- multiplayer bug where it made a new level twice, see video
-- pull UI was left up when he sent the message while I was on another screen and I came back to it 
-- brad can't see if his spells will kill enemies until my spell completes
-- idea: give mana to ally spell
-- need a boss  that does AOE damage
 ## Tasks 
 - Improve out of range targeting: if any part of a unit is in range, then targeting it must be allowed
 ---
 - Standalone server backlog
     - When does stand alone server remove a room?
         - it appears that when all players leave, if one rejoins it's a new game
-- Record yourself playing with split audio for trailer
 - decrease player unit move speed?
 ## Low hanging fruit
 - small bugs:
