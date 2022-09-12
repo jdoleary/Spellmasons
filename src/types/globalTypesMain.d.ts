@@ -123,8 +123,6 @@ declare global {
     // Allows toggling off hud and access to the admin menu
     var adminMode: undefined | boolean;
     var devKillAll: undefined | (() => void);
-    var devSpawnUnit: undefined | ((unitId: string, faction: Faction, coords: Vec2) => void);
-    var devSpawnAllUnits: undefined | (() => void);
     var devRemoveAllEnemies: undefined | ((underworld: Underworld) => void);
     // true if this instance is the headless server with no visuals or audio, just the game logic
     var headless: boolean;

@@ -73,36 +73,6 @@ export function setupDevGlobalFunctions(underworld: Underworld) {
     globalThis.devKillAll = () => {
         underworld.units.filter(u => u.unitType !== UnitType.PLAYER_CONTROLLED).forEach(u => Unit.die(u, underworld, false));
     }
-    // For development, spawns a unit
-    globalThis.devSpawnUnit = (unitId: string, faction: Faction = Faction.ENEMY, coords: Vec2) => {
-        const sourceUnit = Units.allUnits[unitId];
-        if (sourceUnit) {
-            const newUnit = Unit.create(
-                unitId,
-                // Start the unit at the summoners location
-                coords.x,
-                coords.y,
-                // A unit always summons units in their own faction
-                faction,
-                sourceUnit.info.image,
-                UnitType.AI,
-                sourceUnit.info.subtype,
-                1,
-                sourceUnit.unitProps,
-                underworld
-            );
-            // Prevent them from overlapping
-            moveWithCollisions(newUnit, jitter(newUnit, 1, underworld.random), underworld.units, underworld);
-            return newUnit;
-        }
-
-        return undefined;
-    }
-    globalThis.devSpawnAllUnits = () => {
-        for (let id of Object.keys(Units.allUnits)) {
-            globalThis.devSpawnUnit?.(id, Faction.ENEMY, underworld.players.filter(p => !p.inPortal && p.isSpawned)[0]?.unit || { x: 0, y: 0 });
-        }
-    }
     globalThis.devRemoveAllEnemies = () => {
         for (let u of underworld.units) {
             if (u.faction !== globalThis.player?.unit.faction) {

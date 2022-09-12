@@ -690,8 +690,8 @@ export function registerAdminContextMenuOptions(underworld: Underworld) {
     ...Object.values(allUnits).map<AdminContextMenuOption>(u => ({
       label: u.id,
       action: ({ pos }) => {
-        if (devSpawnUnit && pos) {
-          devSpawnUnit(u.id, Faction.ENEMY, pos);
+        if (pos) {
+          underworld.spawnEnemy(u.id, pos);
         }
       },
       supportInMultiplayer: true,
