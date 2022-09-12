@@ -10,8 +10,6 @@
 - How do i inspect things when I'm in spawn mode
 - mana burn shouldn't animate on guys without mana
 - trap radius too big
-- camera follows when spawning
-    - when ally spawns it moves your camera
 - when someone else swaps with you should it move camera?
 - I can see him at 0,0 when he's choosing spawn and if he queues up a spwll it draws the green line
 - "targeting self" comes up when using steal mana which is true but confusing

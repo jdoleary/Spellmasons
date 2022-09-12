@@ -309,7 +309,6 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
           // Animate effect of unit spawning from the sky
           skyBeam(fromPlayer.unit);
           playSFXKey('spawnFromSky');
-          cameraAutoFollow(true);
         } else {
           console.error('Cannot spawn player at NaN')
         }
