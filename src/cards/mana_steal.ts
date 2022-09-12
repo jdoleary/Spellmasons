@@ -28,7 +28,7 @@ Sacrifice some of own health to steal up to ${mana_stolen} mana from each target
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
-      const targets = state.targetedUnits.filter(u => u.alive);
+      const targets = state.targetedUnits.filter(u => u.alive && u.mana > 0);
       const caster = state.casterUnit;
       let promises = [];
       for (let unit of targets) {

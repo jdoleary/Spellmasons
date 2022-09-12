@@ -22,7 +22,7 @@ Burn up to ${mana_burnt} of the targets' mana and cause ${health_burn_ratio * 10
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
-      const targets = state.targetedUnits.filter(u => u.alive);
+      const targets = state.targetedUnits.filter(u => u.alive && u.mana > 0);
       // We only need to await one animation promise since they all trigger simultaneously
       let animationPromise = Promise.resolve();
       // Play the animation and sfx

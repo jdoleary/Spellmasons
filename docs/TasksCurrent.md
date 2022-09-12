@@ -8,7 +8,6 @@
 - shield should show on your healthbar
 - bug: he got "invalid target" when trying to cast on the top of a wall but he was using "expand" so it shoul've been valid cause there were targets in the radius
 - How do i inspect things when I'm in spawn mode
-- mana burn shouldn't animate on guys without mana
 - trap radius too big
 - when someone else swaps with you should it move camera?
 - I can see him at 0,0 when he's choosing spawn and if he queues up a spwll it draws the green line
