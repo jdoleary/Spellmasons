@@ -21,7 +21,7 @@
 - when portals spawned on us both we didn't get the spell pickup
 - brad can't see if his spells will kill enemies until my spell completes
 - Game ending bug: When portals spawned I went to 0,0 and now I can't go through a portal so it won't end
-- idea: give mana spell
+- idea: give mana to ally spell
 - need a boss  that does AOE damage
 ## Tasks 
 - bug: arrow sticking in a person animation can be backwards

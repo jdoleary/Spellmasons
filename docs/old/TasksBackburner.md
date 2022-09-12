@@ -1,3 +1,5 @@
+- I think the server can get stuck in a state where it's started but doesn't accept connections, hard to reproduce.
+  - maybe if a client is already trying to connect when it starts up?
 - [unable to reproduce] swap then damage hurts yourself also, it shouldn't be this way it should hurt the target
 - [fixed??] wsPie: When reconnects occur it adds a bunch of 'clientId' strings to the end of the url
 - [fixed??] wsPie: There seems to be a way in which pie connects successfully but onConnectInfo is never called and so it never resolves
