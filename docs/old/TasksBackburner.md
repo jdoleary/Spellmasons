@@ -1,3 +1,4 @@
+- there is a circumstance in multiplayer where a player's upgradeslefttochoose is 3 but they don't see the popup (happens in local)
 - I think the server can get stuck in a state where it's started but doesn't accept connections, hard to reproduce.
   - maybe if a client is already trying to connect when it starts up?
 - [unable to reproduce] swap then damage hurts yourself also, it shouldn't be this way it should hurt the target
