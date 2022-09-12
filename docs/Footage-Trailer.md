@@ -23,6 +23,7 @@
     - pretrailer-trailer
         - A snippet of some crazy moment happening with brad and I
         - 5-10 seconds
+        - footage: "brad-audible-reaction"
     - Introduction
         - "Spellmasons is a [description] where you [main action]" (see Marketing.md for ideas for this)
         - Introduces the concept of the game
@@ -30,6 +31,7 @@
         - Now show it in action, present a problem, show how I think through it
     - Multiplayer
         - Show off multiplayer coordination
+        - footage: "expanding-sheild"
     - Call to Action
         - Spellmasons.com / wishlist on Steam
     - Maybe play audio quotes from people (social proof)

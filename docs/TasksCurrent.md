@@ -1,3 +1,8 @@
+## next up
+- Fix spell-effects such as conenct and aoe from lasting too long
+    - No, really what I need to do is ANIMATE AOE and Chain, but they have to be dynamic animations in-engine
+- do a playtest myself and record for trailer footage
+- Make the trailer
 ## To fix from Brad playtest
 - If you are changing your name and you exit the menu with esc it doesn't save the name
 - Don't play turn end sound fx if you've already ended yoru turn
