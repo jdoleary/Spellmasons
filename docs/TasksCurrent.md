@@ -1,5 +1,4 @@
 ## next up
-- limit chain via quantity
 - fix AOE
 - Fix spell-effects such as conenct and aoe from lasting too long
     - No, really what I need to do is ANIMATE AOE and Chain, but they have to be dynamic animations in-engine
