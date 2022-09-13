@@ -1,5 +1,4 @@
 ## next up
-- fix: bloat shows an explosion radius circle even when non prediction
 - limit chain via quantity
 - fix AOE
 - Fix spell-effects such as conenct and aoe from lasting too long

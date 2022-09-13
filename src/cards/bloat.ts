@@ -1,7 +1,6 @@
 import * as particles from '@pixi/particle-emitter'
 import { IUnit, takeDamage } from '../entity/Unit';
 import * as Unit from '../entity/Unit';
-import * as Image from '../graphics/Image';
 import { Spell } from './index';
 import { drawPredictionCircle } from '../graphics/PlanningView';
 import { forcePush, velocityStartMagnitude } from './push';
@@ -85,8 +84,9 @@ const spell: Spell = {
       // If user's spell is currently out of range, mute the red color so it doesn't draw attention away
       // from the out of range UI.
       const color = document.body.classList.contains(CSSClasses.outOfRange) ? colors.outOfRangeGrey : colors.healthRed;
-      drawPredictionCircle(unit, range, color, 'Explosion Radius');
-      if (!prediction) {
+      if (prediction) {
+        drawPredictionCircle(unit, range, color, 'Explosion Radius');
+      } else {
         animateSpell(unit, 'explode-on-death.png');
         playSFXKey('bloatExplosion');
       }
