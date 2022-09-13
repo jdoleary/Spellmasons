@@ -120,7 +120,7 @@ async function animateMitosis(image?: IImageAnimated) {
         if (image) {
           image.sprite.scale.x *= 1.01;
           image.sprite.scale.y -= 0.001;
-          if (i == iterations - 1) {
+          if (i >= iterations - 1) {
             resolve();
           }
 
