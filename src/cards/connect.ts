@@ -1,9 +1,14 @@
 import { drawPredictionCircleFill, drawPredictionLine } from '../graphics/PlanningView';
 import { addUnitTarget, Spell } from './index';
 import type * as Unit from '../entity/Unit';
+import * as colors from '../graphics/ui/colors';
 import * as config from '../config';
 import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
+import { add, Vec2 } from '../jmath/Vec';
+import { raceTimeout } from '../Promise';
+import { similarTriangles, distance } from '../jmath/math';
+import { easeOutCubic } from '../jmath/Easing';
 
 const id = 'Connect';
 const numberOfTargetsPerQuantity = 4;
@@ -37,7 +42,7 @@ All connected beings will be affected by the following spells in your cast.
           // to the players eyes if any part of them is touching the circle it should connect
           drawPredictionCircleFill(unit, range - config.COLLISION_MESH_RADIUS / 2);
           // Find all units touching the spell origin
-          const chained_units = getTouchingUnitsRecursive(
+          const chained_units = await getTouchingUnitsRecursive(
             unit.x,
             unit.y,
             underworld,
@@ -56,7 +61,7 @@ All connected beings will be affected by the following spells in your cast.
   },
 };
 const range = 105;
-function getTouchingUnitsRecursive(
+async function getTouchingUnitsRecursive(
   x: number,
   y: number,
   underworld: Underworld,
@@ -66,7 +71,7 @@ function getTouchingUnitsRecursive(
   chainState: { limitTargetsLeft: number },
   recurseLevel: number,
   ignore: Unit.IUnit[] = [],
-): Unit.IUnit[] {
+): Promise<Unit.IUnit[]> {
   if (chainState.limitTargetsLeft <= 0) {
     return [];
   }
@@ -88,9 +93,15 @@ function getTouchingUnitsRecursive(
 
   ignore.push(...touching);
   // Draw prediction lines so user can see how it chains
-  touching.forEach(chained_unit => {
-    drawPredictionLine({ x, y }, chained_unit);
-  })
+  const sourcePosition = { x, y };
+  if (prediction) {
+    touching.forEach(chained_unit => {
+      drawPredictionLine(sourcePosition, chained_unit);
+    });
+  } else {
+    const oldTargets = ignore.filter(o => !touching.includes(o));
+    await animate(sourcePosition, touching, oldTargets);
+  }
 
   if (chainState.limitTargetsLeft > 0) {
     // Important: Using a regular for loop and cache the length instead of a for..of loop because 
@@ -100,12 +111,52 @@ function getTouchingUnitsRecursive(
     for (let i = 0; i < length; i++) {
       const u = touching[i];
       if (u) {
-        touching = touching.concat(
-          getTouchingUnitsRecursive(u.x, u.y, underworld, prediction, chainState, recurseLevel + 1, ignore)
-        );
+        const newTouching = await getTouchingUnitsRecursive(u.x, u.y, underworld, prediction, chainState, recurseLevel + 1, ignore)
+        touching = touching.concat(newTouching);
       }
     }
   }
   return touching;
+}
+
+async function animate(pos: Vec2, newTargets: Vec2[], oldTargets: Vec2[]) {
+  const iterations = 100;
+  const millisBetweenIterations = 4;
+  // "iterations + 10" gives it a little extra time so it doesn't timeout right when the animation would finish on time
+  return raceTimeout(millisBetweenIterations * (iterations + 10), 'animatedConnect', new Promise<void>(resolve => {
+    for (let i = 0; i < iterations; i++) {
+
+      setTimeout(() => {
+        if (predictionGraphics) {
+          predictionGraphics.clear();
+          predictionGraphics.lineStyle(2, colors.targetingSpellGreen, 1.0);
+          // between 0 and 1;
+          const proportionComplete = easeOutCubic((i + 1) / iterations);
+          newTargets.forEach(target => {
+
+            predictionGraphics?.moveTo(pos.x, pos.y);
+            const dist = distance(pos, target)
+            const pointApproachingTarget = add(pos, similarTriangles(target.x - pos.x, target.y - pos.y, dist, dist * proportionComplete));
+            predictionGraphics?.lineTo(pointApproachingTarget.x, pointApproachingTarget.y);
+            if (proportionComplete >= 1) {
+              predictionGraphics?.drawCircle(target.x, target.y, config.COLLISION_MESH_RADIUS);
+            }
+          });
+          // Draw completed lines and circles on old targets
+          oldTargets.forEach(target => {
+            // predictionGraphics?.moveTo(pos.x, pos.y);
+            // predictionGraphics?.lineTo(target.x, target.y);
+            predictionGraphics?.drawCircle(target.x, target.y, config.COLLISION_MESH_RADIUS);
+          });
+        }
+        if (i >= iterations - 1) {
+          resolve();
+        }
+
+      }, millisBetweenIterations * i)
+    }
+  })).then(() => {
+    predictionGraphics?.clear();
+  });
 }
 export default spell;
