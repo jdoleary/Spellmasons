@@ -25,6 +25,9 @@ Will not heal beyond maximum health.
 Stackable.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
+      // Since all targets are animated simultaneously we only need to await
+      // the latest one, no need to use Promise.all
+      let animationPromise = Promise.resolve();
       // .filter: only target living units
       for (let unit of state.targetedUnits.filter(u => u.alive)) {
         const damage = -healAmount * quantity;
@@ -38,8 +41,9 @@ Stackable.
         }
         playDefaultSpellSFX(card, prediction);
         Unit.takeDamage(unit, damage, undefined, underworld, prediction, state);
-        await Unit.addOneOffAnimation(unit, 'spell-effects/potionPickup', {}, { loop: false, animationSpeed: 0.3 });
+        animationPromise = Unit.addOneOffAnimation(unit, 'spell-effects/potionPickup', {}, { loop: false, animationSpeed: 0.3 });
       }
+      await animationPromise;
       return state;
     },
   },
