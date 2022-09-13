@@ -215,3 +215,8 @@
 
 Embeddable links:
 https://partner.steamgames.com/doc/marketing/event_tools/embed
+
+# Reviewers to submit the game to
+- [ign](https://corp.ign.com/submit-a-game)
+    - Requires DEMOn
+- [rock paper shotgun](https://www.rockpapershotgun.com/how-to-pitch-an-article-to-rock-paper-shotgun)

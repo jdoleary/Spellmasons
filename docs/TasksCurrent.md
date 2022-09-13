@@ -67,9 +67,11 @@
 - Ensure hurt is presented in first spell picks
 - game slows down when there's a lot of blood on the screen and it's painint more
 - How does endgame scale now that strength doesn't depend on the levelIndex?
+- bug: Aoe + many hurt: the hurt sound effect only plays once, it's as if the many damage sound effects from the many targets clears it or something
 
 ## Stretch Content
 - Idea: "overwatch" where some archers can shoot even not on their turn if you walk in their LOS
+- Spell: A spell like AOE, but adds radius to existing spells
 - Upgrade: Start each level with 2x mana overfill (think of new upgrade "perks")
 - What if potions drop from slain enemies instead of being just pickups on the ground, it would be more exciting if you needed one and it dropped.
 - Task: An ally that has died at all (even if ressed) should lose their upgrade priviledge
