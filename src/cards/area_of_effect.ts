@@ -6,6 +6,7 @@ import { raceTimeout } from '../Promise';
 import { Vec2 } from '../jmath/Vec';
 import Underworld from '../Underworld';
 import * as config from '../config';
+import { easeOutCubic } from '../jmath/Easing';
 
 const id = 'Expanding';
 const range = 140;
@@ -109,10 +110,5 @@ async function animate(pos: Vec2, radius: number, underworld: Underworld) {
   })).then(() => {
     predictionGraphics?.clear();
   });
-}
-// from https://easings.net/
-// input should be 0 - 1
-function easeOutCubic(x: number): number {
-  return 1 - Math.pow(1 - x, 3);
 }
 export default spell;
