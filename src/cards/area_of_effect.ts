@@ -23,12 +23,22 @@ Adds a radius to the spell so it can affect more targets.
     allowNonUnitTarget: true,
     effect: async (state, card, quantity, underworld, prediction, outOfRange) => {
       const adjustedRange = range * quantity;
-      for (let target of state.targetedUnits.length ? state.targetedUnits : [state.castLocation]) {
+      // Note: This loop must NOT be a for..of and it must cache the length because it
+      // mutates state.targetedUnits as it iterates.  Otherwise it will continue to loop as it grows
+      const targets = state.targetedUnits.length ? state.targetedUnits : [state.castLocation];
+      const length = targets.length;
+      for (let i = 0; i < length; i++) {
+        const target = targets[i];
+        if (!target) {
+          continue;
+        }
         // Draw visual circle for prediction
-        if (outOfRange) {
-          drawPredictionCircle(target, adjustedRange, colors.outOfRangeGrey);
-        } else {
-          drawPredictionCircle(target, adjustedRange, colors.targetingSpellGreen, 'Expand Radius');
+        if (prediction) {
+          if (outOfRange) {
+            drawPredictionCircle(target, adjustedRange, colors.outOfRangeGrey);
+          } else {
+            drawPredictionCircle(target, adjustedRange, colors.targetingSpellGreen, 'Expand Radius');
+          }
         }
         const withinRadius = underworld.getUnitsWithinDistanceOfTarget(
           target,
