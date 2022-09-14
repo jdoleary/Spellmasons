@@ -220,3 +220,25 @@ https://partner.steamgames.com/doc/marketing/event_tools/embed
 - [ign](https://corp.ign.com/submit-a-game)
     - Requires DEMOn
 - [rock paper shotgun](https://www.rockpapershotgun.com/how-to-pitch-an-article-to-rock-paper-shotgun)
+
+## Trailer voiceover options
+- https://www.fiverr.com/danjohnsonvoice?source=gig_cards&referrer_gig_slug=deep-commanding-yet-gentle-voice-for-your-project&ref_ctx_id=41e0efeff17fa41d43a2ad2a44413e98&imp_id=dcf790d6-ef63-4dd5-9308-920565141982
+    - minor
+- https://www.fiverr.com/naturallyrp?source=gig_cards&referrer_gig_slug=record-a-professional-british-voice-over&ref_ctx_id=41e0efeff17fa41d43a2ad2a44413e98&imp_id=acd4f44f-c260-469e-a3ed-6fd73875a410
+    - too british
+- https://www.fiverr.com/danielzbel?source=gig_cards&referrer_gig_slug=record-your-voice-over-and-you-are-gonna-love-it&ref_ctx_id=41e0efeff17fa41d43a2ad2a44413e98&imp_id=c7729b3d-cb34-4338-9cb8-aebaa5999744
+    - too ford
+- https://www.fiverr.com/elliothardman?source=gig_cards&referrer_gig_slug=record-a-british-english-voiceover-for-you&ref_ctx_id=34d3543879d9a4afae703299d88aee5f&imp_id=e96ea7e1-7919-4388-9007-e16f9b216df9
+    - too fancy
+- https://www.fiverr.com/jacobphillip116/a-male-voiceover-in-english?context_referrer=subcategory_listing&source=visual_filters&ref_ctx_id=34d3543879d9a4afae703299d88aee5f&pckg_id=1&pos=39&context_type=rating&funnel=34d3543879d9a4afae703299d88aee5f&ref=seller_language%3Aen%7Clanguage%3Aenglish%7Cgender%3Amale&imp_id=22f3064b-e0d1-444e-95df-602749b112a7
+- https://www.fiverr.com/jarrettraymond?source=gig_cards&referrer_gig_slug=voice-act-deep-voices&ref_ctx_id=34d3543879d9a4afae703299d88aee5f&imp_id=684a9d45-7a8d-4404-b29c-82442c1ddb66
+    - epic
+- https://www.fiverr.com/midsummervoice?source=gig_cards&referrer_gig_slug=voice-over-a-business-narration&ref_ctx_id=34d3543879d9a4afae703299d88aee5f&imp_id=49ca977a-6d06-4343-a01f-3c4abc1ef3e6
+    - too commercially
+- favorite 3
+    - https://www.fiverr.com/kurouac?source=gig_cards&referrer_gig_slug=record-high-quality-gritty-and-low-american-male-voice-over&ref_ctx_id=18763e305cc6751c8211ec1333b54d10&imp_id=13ff9727-0f97-45ad-9a5d-daa253c4d14c
+        - favorite so far
+    - https://www.fiverr.com/stromenko?source=gig_cards&
+    referrer_gig_slug=do-smoky-gravelly-voiceover-in-english-ukrainian-or-russian&ref_ctx_id=18763e305cc6751c8211ec1333b54d10&imp_id=0ec92aef-2987-4025-bde9-9e78e7360e0e
+        - pretty good!
+    - https://www.fiverr.com/vladimirlaurent?source=gig_cards&referrer_gig_slug=produce-amazing-voiceovers-swiftly&ref_ctx_id=18763e305cc6751c8211ec1333b54d10&imp_id=7298ae23-b244-4cad-9cf0-d73fb1e1ca3c

@@ -1,4 +1,5 @@
 # Parallel Focuses
+- make gif for steam page asking them to wishlist now
 - Record Trailer and start marketing
     - trailer should be more zoomed in
 - Record and Produce "end cap" video.  A short 5-10 second end cap for videos to intro the game and tell people where to find it
@@ -44,6 +45,7 @@
         - 2x spells
         - 2x enemies
     - Finish polish and reliability
+    - Steamdeck support
     - Release
 # Critical Path
 - Milestone | **Marketing** | Planning on September 1

@@ -1,4 +1,6 @@
 ## next up
+- implement jakes UI icons
+- mana steal should animate you receiving mana for each particle that reaches you
 - melee prediction is still off
 - fix portal spawning on you before pickups fly to you
 - archer LOS is drawn under walls which looks weird if it's under a wall but still gets to you because its the front of the wall
