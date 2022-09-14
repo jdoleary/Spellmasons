@@ -30,62 +30,69 @@ Sacrifice some of own health to steal up to ${mana_stolen} mana from each target
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive && u.mana > 0);
       const caster = state.casterUnit;
+      const NUMBER_OF_ANIMATED_TRAILS = 4;
       let promises = [];
+      let totalManaStolen = 0;
       for (let unit of targets) {
         const unitManaStolen = Math.min(unit.mana, mana_stolen * quantity);
+        totalManaStolen += unitManaStolen;
         unit.mana -= unitManaStolen;
         const manaTrailPromises = [];
         if (!prediction) {
-          for (let i = 0; i < quantity * 3; i++) {
-            manaTrailPromises.push(makeManaTrail(unit, caster));
-          }
-        }
-        promises.push((prediction ? Promise.resolve() : Promise.all(manaTrailPromises)).then(() => {
-          state.casterUnit.mana += unitManaStolen;
-          if (!prediction) {
-            playDefaultSpellSFX(card, prediction);
-            // Animate
-            if (state.casterUnit.image) {
-              // Note: This uses the lower-level addPixiSpriteAnimated directly so that it can get a reference to the sprite
-              // and add a filter; however, addOneOffAnimation is the higher level and more common for adding a simple
-              // "one off" animated sprite.  Use it instead of addPixiSpriteAnimated unless you need more direct control like
-              // we do here
-              const animationSprite = addPixiSpriteAnimated('spell-effects/potionPickup', state.casterUnit.image.sprite, {
-                loop: false,
-                onComplete: () => {
-                  if (animationSprite?.parent) {
-                    animationSprite.parent.removeChild(animationSprite);
+          for (let i = 0; i < quantity * NUMBER_OF_ANIMATED_TRAILS; i++) {
+            manaTrailPromises.push(makeManaTrail(unit, caster)?.then(() => {
+              const manaStolenPerTrail = Math.floor(unitManaStolen / NUMBER_OF_ANIMATED_TRAILS)
+              state.casterUnit.mana += manaStolenPerTrail;
+              if (!prediction) {
+                playDefaultSpellSFX(card, prediction);
+                // Animate
+                if (state.casterUnit.image) {
+                  // Note: This uses the lower-level addPixiSpriteAnimated directly so that it can get a reference to the sprite
+                  // and add a filter; however, addOneOffAnimation is the higher level and more common for adding a simple
+                  // "one off" animated sprite.  Use it instead of addPixiSpriteAnimated unless you need more direct control like
+                  // we do here
+                  const animationSprite = addPixiSpriteAnimated('spell-effects/potionPickup', state.casterUnit.image.sprite, {
+                    loop: false,
+                    onComplete: () => {
+                      if (animationSprite?.parent) {
+                        animationSprite.parent.removeChild(animationSprite);
+                      }
+                    }
+                  });
+                  if (animationSprite) {
+
+                    if (!animationSprite.filters) {
+                      animationSprite.filters = [];
+                    }
+                    // Change the health color to blue
+                    animationSprite.filters.push(
+                      // @ts-ignore for some reason ts is flagging this as an error but it works fine
+                      // in pixi.
+                      new MultiColorReplaceFilter(
+                        [
+                          [0xff0000, manaBlue],
+                        ],
+                        0.1
+                      )
+                    );
                   }
                 }
-              });
-              if (animationSprite) {
-
-                if (!animationSprite.filters) {
-                  animationSprite.filters = [];
-                }
-                // Change the health color to blue
-                animationSprite.filters.push(
-                  // @ts-ignore for some reason ts is flagging this as an error but it works fine
-                  // in pixi.
-                  new MultiColorReplaceFilter(
-                    [
-                      [0xff0000, manaBlue],
-                    ],
-                    0.1
-                  )
-                );
+                explainManaOverfill();
               }
-            }
-            explainManaOverfill();
-            floatingText({
-              coords: caster,
-              text: `+ ${unitManaStolen} Mana`,
-              style: { fill: 'blue', ...config.PIXI_TEXT_DROP_SHADOW }
             })
+            );
           }
-        }));
+        }
+        promises.push((prediction ? Promise.resolve() : Promise.all(manaTrailPromises)));
       }
       await Promise.all(promises);
+      if (!prediction) {
+        floatingText({
+          coords: caster,
+          text: `+ ${totalManaStolen} Mana`,
+          style: { fill: 'blue', ...config.PIXI_TEXT_DROP_SHADOW }
+        });
+      }
       return state;
     },
   },
