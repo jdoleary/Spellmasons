@@ -67,6 +67,12 @@
 - bug: Aoe + many hurt: the hurt sound effect only plays once, it's as if the many damage sound effects from the many targets clears it or something
 
 ## Stretch Content
+- Ghost archers: Arrow only hits target, no piercing
+- Piercing arrows as default for archers
+- perk: long range cast only
+- Heavy damage spell: rend
+- Idea: Level up spells along with perks
+    - Leveling up could auto increase quantity / lower mana cost / speed mana recovery
 - Idea: "overwatch" where some archers can shoot even not on their turn if you walk in their LOS
 - Spell: A spell like AOE, but adds radius to existing spells
 - Upgrade: Start each level with 2x mana overfill (think of new upgrade "perks")

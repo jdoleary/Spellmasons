@@ -4,9 +4,10 @@
 - Record and Produce "end cap" video.  A short 5-10 second end cap for videos to intro the game and tell people where to find it
 
 # Major Tasks
-  - (e) UI
   - (m) Marketing
   - (h) Fix liquid glitches perminantly
+  - Fix multiplayer
+  - (e) UI
   - (m) Integrate freestanding obstacles (tree, urn, etc)
   - Finalize
     - (m) Adaptive tutorial
@@ -14,7 +15,7 @@
     - (e) Bug reporting
     - (m) Steam integration
     - (h) I want 2x as many spells (21 to 42) and 2x as many enemies (7 to 14)
-    - (m) Add perks
+    - (m) Add perks and spell level ups
 # Desired Schedule
 - September / October
     - Finish UI
