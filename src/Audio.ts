@@ -1,5 +1,6 @@
 import { getLoopableIndex } from "./jmath/Polygon2";
 import * as storage from "./storage";
+import throttle from 'lodash.throttle';
 
 export const sfx: { [key: string]: string } = {
     whoosh: './sound/sfx/whoosh.m4a',
@@ -125,7 +126,9 @@ export function playSFX(path?: string) {
     audioInstance.play();
 
 }
-
+const demoSoundWhenChangingVolume = throttle(() => {
+    globalThis.playSFXKey('playerUnitDamage');
+}, 150, { trailing: true })
 const STORAGE_OPTIONS = 'OPTIONS';
 export function setupAudio() {
     console.log('Setup: Audio');
@@ -136,7 +139,7 @@ export function setupAudio() {
             musicInstance.volume = globalThis.volume * (globalThis.volumeMusic === undefined ? 1 : globalThis.volumeMusic);
         }
         // Play a sound so it'll show the user how loud it is
-        globalThis.playSFXKey('playerUnitDamage');
+        demoSoundWhenChangingVolume()
     };
     globalThis.changeVolumeMusic = (volume: number) => {
         globalThis.volumeMusic = volume;
@@ -149,7 +152,7 @@ export function setupAudio() {
     globalThis.changeVolumeGame = (volume: number) => {
         globalThis.volumeGame = volume;
         // Play a sound so it'll show the user how loud it is
-        globalThis.playSFXKey('playerUnitDamage');
+        demoSoundWhenChangingVolume();
         storage.assign(STORAGE_OPTIONS, { volumeGame: globalThis.volumeGame });
     };
     // Retrieve audio settings from storage
