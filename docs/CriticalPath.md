@@ -7,9 +7,18 @@
   - (m) Marketing
   - (h) Fix liquid glitches perminantly
   - Fix multiplayer
+    - Fix player moving to 0,0 and getting stuck when portal was out, see footage Spellmasons\footage-video\first-working-multiplayer.mp4
+        - see 0:23:44 for him appearing at 0,0 while he's spawning
+        - see 0:48:55 for when i get stuck post portal out of bounds
+            - it looks like portal spawned on me, I went to 0,0, pickups flew too me, but it didn't end the game. ALSO WE HAD CLONES OUT, MAYBE THAT'S whY?
+        - false positive onData queue getting stuck with a bunch of MOVE_PLAYERS and END_TURNs?
+            - going through the portal again fixed it.
   - (e) UI
   - (m) Integrate freestanding obstacles (tree, urn, etc)
   - Finalize
+    - Rather than "targeted units" and "targeted pickups" use composition to do "movable", "damagable", "turnTakeable"
+        - This would enable "chain through pickups" for free, or freezing liquid without special conditions
+        - But, could the full object get passed to it's own handler so a "turnTakeable" liquid tile goes to Freeze.tile or Tile.turnTakable and a unit goes to Freeze.unit()?  I could use a simple type guard for this.
     - (m) Adaptive tutorial
     - (?) Package for Electron
     - (e) Bug reporting

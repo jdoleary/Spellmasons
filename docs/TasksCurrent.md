@@ -1,6 +1,9 @@
 ## next up
 - do a playtest myself and record for trailer footage
 - Make the trailer
+- Fix multiplayer
+    - I think resetPlayerForNextLevel is called too many times
+    - maybe I could use a player's position of NaN NaN as being inPortal rather than having inPortal as it's own variable
 ## To fix from Brad playtest
 - If you are changing your name and you exit the menu with esc it doesn't save the name
 - Don't play turn end sound fx if you've already ended yoru turn
