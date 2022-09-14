@@ -1,17 +1,17 @@
 ## next up
-- implement jakes UI icons
 - melee prediction is still off
 - fix portal spawning on you before pickups fly to you
 - archer LOS is drawn under walls which looks weird if it's under a wall but still gets to you because its the front of the wall
 - warn self cast when cursing self
 - attack badge shouldn't show if unit doesn't have enough mana to cast
 - attack range shouldn't be red when explosion radius is red
-- sound from offscreen should be played quieter
 - do a playtest myself and record for trailer footage
 - Make the trailer
+
 - Fix multiplayer
     - I think resetPlayerForNextLevel is called too many times
     - maybe I could use a player's position of NaN NaN as being inPortal rather than having inPortal as it's own variable
+- implement jakes UI icons
 ## To fix from Brad playtest
 - If you are changing your name and you exit the menu with esc it doesn't save the name
 - Don't play turn end sound fx if you've already ended yoru turn

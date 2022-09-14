@@ -1,3 +1,4 @@
+- sound from offscreen should be played quieter
 - don't allow `save` in console to work in viewmenu because it will overwrite the previous save with a not fully initialized underworld
 - there is a circumstance in multiplayer where a player's upgradeslefttochoose is 3 but they don't see the popup (happens in local)
 - I think the server can get stuck in a state where it's started but doesn't accept connections, hard to reproduce.
