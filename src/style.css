@@ -1228,7 +1228,7 @@ body.view-Game #instructions {
   display: block;
 }
 
-#caution-box #caution-box-inner {
+#caution-box #caution-box-text {
   height: 100%;
   display: flex;
   align-items: center;
@@ -1237,8 +1237,7 @@ body.view-Game #instructions {
 }
 
 #caution-box {
-  width: 300px;
-  height: 80px;
+  max-width: 500px;
   box-sizing: border-box;
   padding: 10px;
   position: relative;
@@ -1252,8 +1251,9 @@ body.view-Game #instructions {
 #caution-box::before {
   content: '';
   position: absolute;
+  left: 50%;
   width: 150%;
-  height: 650%;
+  height: 1000%;
   background: repeating-linear-gradient(var(--color-error2) 0%,
       var(--color-error2) 7.5px,
       var(--color-error) 7.5px,
@@ -1266,13 +1266,13 @@ body.view-Game #instructions {
   animation: animate-caution-box 20s linear infinite;
 }
 
-#caution-box #caution-box-inner {
+#caution-box #caution-box-text {
   /*display: none;*/
   position: relative;
   background-color: var(--color-background);
   flex-direction: column;
   box-sizing: border-box;
-  padding: 30px;
+  padding: 10px;
   text-align: center;
   font-family: sans-serif;
   font-size: 1.8em;
@@ -1280,11 +1280,11 @@ body.view-Game #instructions {
 }
 
 #caution-box,
-#caution-box #caution-box-inner {
+#caution-box #caution-box-text {
   border-radius: 4px;
 }
 
-#caution-box #caution-box-inner a {
+#caution-box #caution-box-text a {
   text-decoration: none;
   color: #111;
 }

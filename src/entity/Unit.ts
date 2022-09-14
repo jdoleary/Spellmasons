@@ -22,6 +22,7 @@ import { closestLineSegmentIntersection } from '../jmath/lineSegment';
 import { bloodColorDefault } from '../graphics/ui/colors';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
+const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
 const elHealthBar = document.querySelector('#health .fill') as HTMLElement;
 const elHealthCost = document.querySelector('#health .cost') as HTMLElement;
 const elHealthLabel = document.querySelector('#health .label') as HTMLElement;
@@ -710,12 +711,29 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
   elHealthBar.style["width"] = `${100 * healthRatio}%`;
   elHealthLabel.innerHTML = `${unit.health}/${unit.healthMax}`;
 
-  const predictionPlayerUnit = underworld.unitsPrediction.find(u => u.id == globalThis.player?.unit.id) || { health: unit.health, mana: unit.mana };
+  const predictionPlayerUnit = underworld.unitsPrediction.find(u => u.id == unit.id);
   // Set the health cost bar that shows how much health will be changed if the spell is cast
   if (predictionPlayerUnit && predictionPlayerUnit.health > 0) {
     const losingHealth = predictionPlayerUnit.health < unit.health;
     if (elCautionBox) {
-      elCautionBox.classList.toggle('visible', losingHealth);
+      if (elCautionBoxText) {
+        const cursingSelf = Object.values(predictionPlayerUnit.modifiers).filter(m => m.isCurse).length > Object.values(unit.modifiers).filter(m => m.isCurse).length;
+        elCautionBoxText.innerText = '';
+        const warnings = [];
+        if (losingHealth) {
+          warnings.push('damage');
+        }
+
+        if (cursingSelf) {
+          warnings.push('curse');
+        }
+        if (warnings.length) {
+          elCautionBoxText.innerText += 'This spell will ' + warnings.join(' & ') + ' you';
+        }
+
+        // Make visible if it has a message to share
+        elCautionBox.classList.toggle('visible', warnings.length > 0);
+      }
     }
     if (losingHealth) {
       // Visualize health loss

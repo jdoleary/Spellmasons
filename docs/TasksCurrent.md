@@ -1,7 +1,6 @@
 ## next up
 - melee prediction is still off
 - archer LOS is drawn under walls which looks weird if it's under a wall but still gets to you because its the front of the wall
-- warn self cast when cursing self
 - attack badge shouldn't show if unit doesn't have enough mana to cast
 - attack range shouldn't be red when explosion radius is red
 - do a playtest myself and record for trailer footage
