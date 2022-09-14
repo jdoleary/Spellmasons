@@ -2245,10 +2245,12 @@ export default class Underworld {
 
     return effectState;
   }
-  checkIfShouldSpawnPortal() {
+  async checkIfShouldSpawnPortal() {
     if (this.units.filter(u => u.faction == Faction.ENEMY).every(u => !u.alive)) {
       let timeBetweenPickupFly = 100;
-      this.pickups.filter(p => ![Pickup.PICKUP_SPIKES_NAME, Pickup.PICKUP_PORTAL_NAME].includes(p.name)).forEach(pickup => {
+      const getFlyingPickupPromises = this.pickups.filter(p => ![Pickup.PICKUP_SPIKES_NAME, Pickup.PICKUP_PORTAL_NAME].includes(p.name)).map(pickup => {
+        return new Promise<void>((resolve) => {
+
         timeBetweenPickupFly += 100;
         // Make the pickup fly to the player. this gives them some time so it doesn't trigger immediately.
         setTimeout(() => {
@@ -2261,15 +2263,19 @@ export default class Underworld {
               if (globalThis.player) {
                 Pickup.triggerPickup(pickup, globalThis.player.unit, this, false);
               }
+                resolve();
             });
           }
         }, timeBetweenPickupFly)
       })
+      });
+
+      await Promise.all(getFlyingPickupPromises);
       // Spawn portal near each player
       const portalPickup = Pickup.pickups.find(p => p.imagePath == 'portal');
       if (portalPickup) {
         for (let playerUnit of this.units.filter(u => u.unitType == UnitType.PLAYER_CONTROLLED && u.alive)) {
-          const portalSpawnLocation = this.findValidSpawn(playerUnit, 2) || playerUnit;
+          const portalSpawnLocation = this.findValidSpawn(playerUnit, 4) || playerUnit;
           Pickup.create({ pos: portalSpawnLocation, pickupSource: portalPickup }, this, false);
           // Give all player units max stamina for convenience:
           playerUnit.stamina = playerUnit.staminaMax;
