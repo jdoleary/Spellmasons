@@ -40,7 +40,9 @@ All connected beings will be affected by the following spells in your cast.
           // - config.COLLISION_MESH_RADIUS / 2 accounts for the fact that the game logic
           // will only connect units if their CENTER POINT falls within the radius; however,
           // to the players eyes if any part of them is touching the circle it should connect
-          drawPredictionCircleFill(unit, range - config.COLLISION_MESH_RADIUS / 2);
+          if (prediction) {
+            drawPredictionCircleFill(unit, range - config.COLLISION_MESH_RADIUS / 2);
+          }
           // Find all units touching the spell origin
           const chained_units = await getTouchingUnitsRecursive(
             unit.x,
