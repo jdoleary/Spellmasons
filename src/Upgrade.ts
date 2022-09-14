@@ -214,7 +214,7 @@ export const upgradeStatsSource: IUpgrade[] = [
 const maxManaIncreaseAmount = 10;
 const castRangeIncreaseProportion = 0.1;
 const maxStaminaIncreaseProportion = 0.2;
-const maxHealthIncreaseAmount = 1;
+const maxHealthIncreaseAmount = 3;
 // const manaPerTurnIncreaseAmount = 8;
 
 export const upgradeCardsSource: IUpgrade[] = []
