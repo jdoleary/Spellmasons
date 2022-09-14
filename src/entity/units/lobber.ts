@@ -7,10 +7,11 @@ import Underworld from '../../Underworld';
 import { bloodLobber } from '../../graphics/ui/colors';
 import * as config from '../../config';
 
+const attackManaCost = 15;
 const unit: UnitSource = {
-  id: 'lobber',
+  id: 'glop',
   info: {
-    description: 'This ranged creature will throw magic high up in the air - over walls - to deal damage to it\'s enemies.',
+    description: 'The Glop will throw magic high up in the air - over walls - to deal damage to it\'s enemies.',
     image: 'units/lobberIdle',
     subtype: UnitSubType.RANGED_RADIUS,
   },
@@ -41,8 +42,9 @@ const unit: UnitSource = {
   },
   action: async (unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, underworld: Underworld, canAttackTarget: boolean) => {
     // Attack
-    if (attackTarget && canAttackTarget) {
-      // Archers attack or move, not both; so clear their existing path
+    if (attackTarget && canAttackTarget && unit.mana >= attackManaCost) {
+      unit.mana -= attackManaCost;
+      // Attack or move, not both; so clear their existing path
       unit.path = undefined;
       Unit.orient(unit, attackTarget);
       await Unit.playComboAnimation(unit, unit.animations.attack, () => {

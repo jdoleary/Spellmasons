@@ -1,10 +1,9 @@
 ## next up
-- fix: Lobbers shouldn't be able to cast without mana
 - melee prediction is still off
 - fix portal spawning on you before pickups fly to you
 - archer LOS is drawn under walls which looks weird if it's under a wall but still gets to you because its the front of the wall
 - warn self cast when cursing self
-- connect white circle stays up even in prediction mode, it shouldnt
+- attack badge shouldn't show if unit doesn't have enough mana to cast
 - attack range shouldn't be red when explosion radius is red
 - sound from offscreen should be played quieter
 - do a playtest myself and record for trailer footage
