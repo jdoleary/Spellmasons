@@ -44,7 +44,7 @@ import type { Vec2 } from "./jmath/Vec";
 import * as Vec from "./jmath/Vec";
 import Events from './Events';
 import { allUnits } from './entity/units';
-import { getUIBarProps, updateManaCostUI, updatePlanningView } from './graphics/PlanningView';
+import { clearSpellEffectProjection, clearTints, getUIBarProps, updateManaCostUI, updatePlanningView } from './graphics/PlanningView';
 import { chooseObjectWithProbability, prng, randInt, SeedrandomState } from './jmath/rand';
 import { calculateCost } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle, closestLineSegmentIntersection } from './jmath/lineSegment';
@@ -1687,6 +1687,10 @@ export default class Underworld {
         if (affirm) {
           console.log('endMyTurn: send END_TURN message');
           playSFXKey('endTurn');
+          // When a user ends their turn, clear tints and spell effect projections
+          // so they they don't cover the screen while AI take their turn
+          clearSpellEffectProjection(this);
+          clearTints(this);
           this.pie.sendData({ type: MESSAGE_TYPES.END_TURN });
         }
       }
