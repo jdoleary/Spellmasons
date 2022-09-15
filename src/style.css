@@ -514,7 +514,6 @@ body.HUD-hidden #PIXI-holder {
 /* Hide a subset of HUD */
 body.recording #inventory-icon,
 body.recording #end-turn-btn,
-body.recording #websocketpie-connection-status,
 body.recording #version,
 body.recording #toolbar,
 body.recording #player-turn-indicator-holder {
@@ -1025,7 +1024,12 @@ body.view-Disconnected #websocketpie-connection-status {
   text-align: center;
 }
 
+body.view-Menu #websocketpie-connection-status {
+  display: block;
+}
+
 #websocketpie-connection-status {
+  display: none;
   z-index: 1;
   position: absolute;
   top: 5px;
