@@ -658,6 +658,21 @@ body.your-turn #end-turn-btn {
 
 #health .fill {
   background-color: #d55656;
+  position: absolute;
+}
+
+/* 2nd health fill is for shield */
+#health .fill:nth-child(2) {
+  background-color: #ffdaaf;
+}
+
+/* 2nd health cost is for shield */
+#health .cost:nth-child(4) {
+  background: repeating-linear-gradient(45deg,
+      #f8d36b,
+      #f8d36b 10px,
+      rgba(0, 0, 0, 0.0) 10px,
+      rgba(0, 0, 0, 0.0) 20px) fixed;
 }
 
 #stamina .fill {

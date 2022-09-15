@@ -24,6 +24,8 @@ import { bloodColorDefault } from '../graphics/ui/colors';
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
 const elHealthBar = document.querySelector('#health .fill') as HTMLElement;
+const elHealthBarSheild = document.querySelector('#health .fill:nth-child(2)') as HTMLElement;
+const elHealthCostSheild = document.querySelector('#health .cost:nth-child(4)') as HTMLElement;
 const elHealthCost = document.querySelector('#health .cost') as HTMLElement;
 const elHealthLabel = document.querySelector('#health .label') as HTMLElement;
 const elManaBar = document.querySelector('#mana .fill:nth-child(1)') as HTMLElement;
@@ -709,18 +711,28 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
   const healthRatio = unit.health / unit.healthMax
   // Set the health bar that shows how much health you currently have
   elHealthBar.style["width"] = `${100 * healthRatio}%`;
-  elHealthLabel.innerHTML = `${unit.health}/${unit.healthMax}`;
+  const shieldAmount = unit.modifiers.shield?.damage_block || 0;
+  const shieldRatio = shieldAmount / unit.healthMax;
+  elHealthBarSheild.style["width"] = `${100 * Math.min(shieldRatio, 1)}%`;
+  if (shieldAmount) {
+    elHealthLabel.innerHTML = `${unit.health} + ${shieldAmount} / ${unit.healthMax}`;
+  } else {
+    // Label health without shield
+    elHealthLabel.innerHTML = `${unit.health}/${unit.healthMax}`;
+  }
 
   const predictionPlayerUnit = underworld.unitsPrediction.find(u => u.id == unit.id);
   // Set the health cost bar that shows how much health will be changed if the spell is cast
   if (predictionPlayerUnit && predictionPlayerUnit.health > 0) {
     const losingHealth = predictionPlayerUnit.health < unit.health;
+    const predictionPlayerShield = predictionPlayerUnit.modifiers.shield?.damage_block || 0
+    const shieldLost = predictionPlayerShield < shieldAmount;
     if (elCautionBox) {
       if (elCautionBoxText) {
         const cursingSelf = Object.values(predictionPlayerUnit.modifiers).filter(m => m.isCurse).length > Object.values(unit.modifiers).filter(m => m.isCurse).length;
         elCautionBoxText.innerText = '';
         const warnings = [];
-        if (losingHealth) {
+        if (losingHealth || shieldLost) {
           warnings.push('damage');
         }
 
@@ -743,7 +755,15 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
       // Visualize health gain
       elHealthCost.style['left'] = `${100 * unit.health / unit.healthMax}%`;
       elHealthCost.style['width'] = `${100 * (predictionPlayerUnit.health - unit.health) / unit.healthMax}%`;
-
+    }
+    if (shieldLost) {
+      // Visualize shield loss
+      elHealthCostSheild.style['left'] = `${100 * predictionPlayerShield / unit.healthMax}%`;
+      elHealthCostSheild.style['width'] = `${100 * (shieldAmount - predictionPlayerShield) / unit.healthMax}%`;
+    } else {
+      // Visualize shield gain
+      elHealthCostSheild.style['left'] = `${100 * shieldAmount / unit.healthMax}%`;
+      elHealthCostSheild.style['width'] = `${100 * (predictionPlayerShield - shieldAmount) / unit.healthMax}%`;
     }
   } else {
     elHealthCost.style['left'] = '100%';
