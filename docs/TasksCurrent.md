@@ -15,7 +15,6 @@
     - Show player latency
 - implement jakes UI icons
 ## To fix from Brad playtest
-- If you are changing your name and you exit the menu with esc it doesn't save the name
 - Don't play turn end sound fx if you've already ended yoru turn
 - if you are self targeting when you end your turn, all the cast predictions and the self targeting warrning stay up while AI takes their turn
 - bug: after dying, quitting to main menu and starting new run, Brad kept his old spells
