@@ -541,14 +541,6 @@ body.your-turn:not(.showUpgrades) #player-turn-indicator-holder {
   background-color: gold;
 }
 
-#menuBtn {
-  position: absolute;
-  top: 6px;
-  left: 6px;
-  z-index: 1;
-}
-
-
 body.your-turn #end-turn-btn {
   opacity: 1.0;
 }

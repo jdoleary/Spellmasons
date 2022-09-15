@@ -117,14 +117,10 @@ function zoom(underworld: Underworld, e: WheelEvent) {
 
 
 const endTurnBtnId = 'end-turn-btn';
-const menuBtnId = 'menuBtn';
 export function addUnderworldEventListeners(underworld: Underworld) {
   if (globalThis.headless) { return; }
   const elEndTurnBtn: HTMLButtonElement = document.getElementById(
     endTurnBtnId,
-  ) as HTMLButtonElement;
-  const elMenuBtn: HTMLButtonElement = document.getElementById(
-    menuBtnId,
   ) as HTMLButtonElement;
 
   const listeners: {
@@ -181,11 +177,6 @@ export function addUnderworldEventListeners(underworld: Underworld) {
         target: elEndTurnBtn,
         event: 'click',
         listener: endTurnBtnListener.bind(undefined, underworld)
-      },
-      {
-        target: elMenuBtn,
-        event: 'click',
-        listener: toggleMenu.bind(undefined, underworld)
       },
     ];
   // Make 'closeMenu' available to the svelte menu
