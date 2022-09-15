@@ -19,14 +19,30 @@
 # Trailer 1
 - Note: Video should pan around, like Into The Breach trailer, to direct your gaze
 - Important: DO multitrack audio
+- Show within moments what's special about the game
 - Key moments
     - pretrailer-trailer
         - A snippet of some crazy moment happening with brad and I
         - 5-10 seconds
         - footage: "brad-audible-reaction"
     - Introduction
-        - "Spellmasons is a [description] where you [main action]" (see Marketing.md for ideas for this)
-        - Introduces the concept of the game
+        Spellmasons is a tactical, turn-based, roguelike where you and your friends play as mages who combine spells on-the-spot to address the unique challenges of each moment!
+
+        [img]{STEAM_APP_IMAGE}/extras/ae-swap-connect-hurt-600x300.gif[/img]
+        Conjure spells from an ever-growing repertoire of combinations in order to survive against the onslaught of enemies, save your friends, and ultimately devastate the great danger that opposes you.  As you progress further, your spell collection grows, enabling even more chaotic and creative encounters.
+
+        [h2]Use the environment to your advantage![/h2]
+        [img]{STEAM_APP_IMAGE}/extras/use-environment-600x300.gif[/img]
+        Each level is procedurally generated, providing you with ample new means of cheating death just when it appeared that you had no escape.  As you learn the many ways your spells interact with yourself, your enemies, your allies, and the environment you will become more resourceful and adept at handling the most difficult encounters.
+
+        [h2]Work Together![/h2]
+        [img]{STEAM_APP_IMAGE}/extras/heal-friend-600x300.gif[/img]
+        Spellmasons supports online multiplayer so you can coordinate and strategize with your friends!  Spellmasons uses innovative faction-based turns:  You and your fellow mages can all move, cast and act simultaneously.  Plan carefully, work together, execute your master plan, and overcome the challenges before you!
+
+        [h2]Grow into a formidable mage![/h2]
+        [img]{STEAM_APP_IMAGE}/extras/akira-moment-600x300.gif[/img]
+        Unleash absurdly powerful endgame spell combinations where one small difference can mean the simultaneous death of every enemy on the map or the end of your run!
+
     - First puzzle
         - Now show it in action, present a problem, show how I think through it
     - Multiplayer

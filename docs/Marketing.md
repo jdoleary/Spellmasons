@@ -242,3 +242,4 @@ https://partner.steamgames.com/doc/marketing/event_tools/embed
     referrer_gig_slug=do-smoky-gravelly-voiceover-in-english-ukrainian-or-russian&ref_ctx_id=18763e305cc6751c8211ec1333b54d10&imp_id=0ec92aef-2987-4025-bde9-9e78e7360e0e
         - pretty good!
     - https://www.fiverr.com/vladimirlaurent?source=gig_cards&referrer_gig_slug=produce-amazing-voiceovers-swiftly&ref_ctx_id=18763e305cc6751c8211ec1333b54d10&imp_id=7298ae23-b244-4cad-9cf0-d73fb1e1ca3c
+    - https://www.fiverr.com/ehplantva?source=gig_cards&referrer_gig_slug=record-any-kind-of-fun-feisty-or-villainous-character&ref_ctx_id=2a4a71f3df2f065cc08259e94c55d914&imp_id=b23bb039-ed6d-46a6-81cd-cb570545e782
