@@ -1766,8 +1766,16 @@ export default class Underworld {
   }
   chooseUpgrade(player: Player.IPlayer, upgrade: Upgrade.IUpgrade) {
     if (upgrade.type == 'card') {
+      if (player.upgradesLeftToChoose <= 0) {
+        console.log('Cannot choose another upgrade');
+        return;
+      }
       player.upgradesLeftToChoose--;
     } else {
+      if (player.perksLeftToChoose <= 0) {
+        console.log('Cannot choose another perk');
+        return;
+      }
       player.perksLeftToChoose--;
     }
     upgrade.effect(player, this);
@@ -1783,21 +1791,22 @@ export default class Underworld {
   }
 
   showUpgrades() {
-    if (!globalThis.player) {
+    const player = globalThis.player;
+    if (!player) {
       console.error('Cannot show upgrades, no globalThis.player');
       return
     }
     // Return immediately if player has no upgrades that left to pick from
-    if (globalThis.player.upgradesLeftToChoose == 0 && globalThis.player.perksLeftToChoose == 0) {
+    if (player.upgradesLeftToChoose <= 0 && player.perksLeftToChoose <= 0) {
       return;
     }
-    const isPerk = globalThis.player.upgradesLeftToChoose == 0;
+    const isPerk = player.upgradesLeftToChoose == 0;
     let minimumProbability = 0;
-    if (globalThis.player.upgradesLeftToChoose > 0 && globalThis.player.inventory.length < config.STARTING_CARD_COUNT) {
+    if (player.upgradesLeftToChoose > 0 && player.inventory.length < config.STARTING_CARD_COUNT) {
       // Limit starting cards to a probability of 10 or more
       minimumProbability = 10;
       if (elUpgradePickerLabel) {
-        elUpgradePickerLabel.innerHTML = `Pick ${globalThis.player.upgradesLeftToChoose > 1 ? `${globalThis.player.upgradesLeftToChoose} spells` : `${globalThis.player.upgradesLeftToChoose} spell`}`;
+        elUpgradePickerLabel.innerHTML = `Pick ${player.upgradesLeftToChoose > 1 ? `${player.upgradesLeftToChoose} spells` : `${player.upgradesLeftToChoose} spell`}`;
       }
     } else {
       if (elUpgradePickerLabel) {
@@ -1811,9 +1820,6 @@ export default class Underworld {
     if (!elUpgradePicker || !elUpgradePickerContent) {
       console.error('elUpgradePicker or elUpgradePickerContent are undefined.');
     }
-    const player = this.players.find(
-      (p) => p.clientId === globalThis.clientId,
-    );
     if (player) {
       const upgrades = Upgrade.generateUpgrades(player, 3, minimumProbability, isPerk);
       if (!upgrades.length) {
@@ -1828,7 +1834,7 @@ export default class Underworld {
             if (elUpgrade) {
 
               elUpgradePickerContent.appendChild(elUpgrade);
-              if (globalThis.devMode) {
+              if (globalThis.devMode && elUpgrade == elUpgrades[0]) {
                 elUpgrade.click();
               }
             } else {
