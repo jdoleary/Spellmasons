@@ -1,6 +1,3 @@
-## Brad playtest
-- He spawned in but it wouldn't show him upgrades
-    - Due to `Cannot show upgrades, no globalThis.player`
 
 ## next up
 - Write script for voice over and order

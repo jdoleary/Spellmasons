@@ -136,7 +136,7 @@ function addHandlers(pie: PieClient, underworld: Underworld) {
     if (underworld) {
       const selfPlayer = underworld.players.find(p => p.clientId == globalThis.clientId);
       if (selfPlayer) {
-        updateGlobalRefToCurrentClientPlayer(selfPlayer);
+        updateGlobalRefToCurrentClientPlayer(selfPlayer, underworld);
       }
     }
     if (globalThis.allowCookies) {

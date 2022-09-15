@@ -92,7 +92,7 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
   player.unit.staminaMax = config.PLAYER_BASE_STAMINA;
   player.unit.stamina = config.PLAYER_BASE_STAMINA;
 
-  updateGlobalRefToCurrentClientPlayer(player);
+  updateGlobalRefToCurrentClientPlayer(player, underworld);
   // Add initial cards to hand
   // CardUI.addCardToHand(allCards['hurt'], player);
   // CardUI.addCardToHand(allCards['summon_decoy'], player);
@@ -205,9 +205,15 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
   Unit.returnToDefaultSprite(player.unit);
 }
 // Keep a global reference to the current client's player
-export function updateGlobalRefToCurrentClientPlayer(player: IPlayer) {
+export function updateGlobalRefToCurrentClientPlayer(player: IPlayer, underworld: Underworld) {
   if (globalThis.clientId === player.clientId) {
     globalThis.player = player;
+    // If the player has any upgrades that they need to choose it will show them.
+    // showUpgrades depends on having globalThis.player assigned, so this invokation is
+    // to protect against the race condition where the primary call to showUpgrades
+    // (when the level is created) is triggered before the player has been assigned.
+    // This invokation prevents that rare case where players spawn with no starting upgrades
+    underworld.showUpgrades();
   }
 }
 // Converts a player entity into a serialized form
@@ -242,7 +248,7 @@ export function load(player: IPlayerSerialized, underworld: Underworld) {
     playerLoaded.unit.y = NaN;
     Image.hide(playerLoaded.unit.image);
   }
-  updateGlobalRefToCurrentClientPlayer(playerLoaded);
+  updateGlobalRefToCurrentClientPlayer(playerLoaded, underworld);
   CardUI.recalcPositionForCards(playerLoaded, underworld);
   underworld.players.push(playerLoaded);
   setClientConnected(playerLoaded, underworld.clients.includes(player.clientId), underworld);

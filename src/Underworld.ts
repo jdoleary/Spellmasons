@@ -1413,18 +1413,17 @@ export default class Underworld {
       globalThis.playNextSong();
     }
 
+    if (this.levelIndex !== 0) {
+      // If this is not the first level allow players to pick a new perk
+      this.players.forEach(p => p.perksLeftToChoose++);
+    }
     // showUpgrades is invoked by createLevel which is called from a wsPie message
     // rather than from checkForEndOfLevel() because all players are guarunteed to receive
     // the CREATE_LEVEL message whereas, checkForEndOfLevel could be subject to a race condition
     // that might prevent the upgrade screen from showing for some users in rare circumstances.
     // Better to have the upgrade screen tied to the network message.
     // Note: Upgrades must come AFTER resetPlayerForNextLevel, see commit for explanation
-    if (this.levelIndex === 0) {
-      this.showUpgrades(false);
-    } else {
-      this.players.forEach(p => p.perksLeftToChoose++);
-      this.showUpgrades(true);
-    }
+    this.showUpgrades();
   }
   async createLevel(levelData: LevelData) {
     return new Promise<void>(resolve => {
@@ -1777,21 +1776,22 @@ export default class Underworld {
       document.body?.querySelector(`.card[data-upgrade="${upgrade.title}"]`)?.classList.toggle('chosen', true);
       // Clear upgrades when current player has picked one
       document.body?.classList.toggle(showUpgradesClassName, false);
-      // Show next round of upgrades to pick if there are upgrades left to be chosen 
-      if (player.upgradesLeftToChoose > 0) {
-        this.showUpgrades(false);
-      } else if (player.perksLeftToChoose > 0) {
-        this.showUpgrades(true);
-      }
+      // Show next round of upgrades
+      this.showUpgrades();
 
     }
   }
 
-  showUpgrades(isPerk: boolean) {
+  showUpgrades() {
     if (!globalThis.player) {
       console.error('Cannot show upgrades, no globalThis.player');
       return
     }
+    // Return immediately if player has no upgrades that left to pick from
+    if (globalThis.player.upgradesLeftToChoose == 0 && globalThis.player.perksLeftToChoose == 0) {
+      return;
+    }
+    const isPerk = globalThis.player.upgradesLeftToChoose == 0;
     let minimumProbability = 0;
     if (globalThis.player.upgradesLeftToChoose > 0 && globalThis.player.inventory.length < config.STARTING_CARD_COUNT) {
       // Limit starting cards to a probability of 10 or more
@@ -2251,23 +2251,23 @@ export default class Underworld {
       const getFlyingPickupPromises = this.pickups.filter(p => ![Pickup.PICKUP_SPIKES_NAME, Pickup.PICKUP_PORTAL_NAME].includes(p.name)).map(pickup => {
         return new Promise<void>((resolve) => {
 
-        timeBetweenPickupFly += 100;
-        // Make the pickup fly to the player. this gives them some time so it doesn't trigger immediately.
-        setTimeout(() => {
-          if (globalThis.player) {
-            if (pickup.image) {
-              pickup.image.sprite.visible = false;
-            }
-            createVisualLobbingProjectile(pickup, globalThis.player.unit, pickup.imagePath).then(() => {
-              // Convenience: Pickup any CARD_PICKUP_NAME left automatically, so that they aren't left behind
-              if (globalThis.player) {
-                Pickup.triggerPickup(pickup, globalThis.player.unit, this, false);
+          timeBetweenPickupFly += 100;
+          // Make the pickup fly to the player. this gives them some time so it doesn't trigger immediately.
+          setTimeout(() => {
+            if (globalThis.player) {
+              if (pickup.image) {
+                pickup.image.sprite.visible = false;
               }
+              createVisualLobbingProjectile(pickup, globalThis.player.unit, pickup.imagePath).then(() => {
+                // Convenience: Pickup any CARD_PICKUP_NAME left automatically, so that they aren't left behind
+                if (globalThis.player) {
+                  Pickup.triggerPickup(pickup, globalThis.player.unit, this, false);
+                }
                 resolve();
-            });
-          }
-        }, timeBetweenPickupFly)
-      })
+              });
+            }
+          }, timeBetweenPickupFly)
+        })
       });
 
       await Promise.all(getFlyingPickupPromises);
