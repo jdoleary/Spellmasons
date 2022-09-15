@@ -83,8 +83,6 @@ const smearJitter = [
   { x: 3, y: -3 },
   { x: 0, y: 3 },
 ]
-const elPlayerTurnIndicator = document.getElementById('player-turn-indicator');
-const elLevelIndicator = document.getElementById('level-indicator');
 const elUpgradePicker = document.getElementById('upgrade-picker') as (HTMLElement | undefined);
 const elUpgradePickerContent = document.getElementById('upgrade-picker-content') as (HTMLElement | undefined);
 const elSeed = document.getElementById('seed') as (HTMLElement | undefined);
@@ -1589,40 +1587,14 @@ export default class Underworld {
   }
   syncTurnMessage() {
     console.log('syncTurnMessage: phase:', turn_phase[this.turn_phase]);
-    let message = '';
     let yourTurn = false;
-    if (this.turn_phase === turn_phase.NPC_ALLY) {
-      message = "Ally Turn";
-      yourTurn = false;
-    } else if (this.turn_phase === turn_phase.NPC_ENEMY) {
-      message = "Enemy Turn";
-      yourTurn = false;
-    } else if (this.turn_phase === turn_phase.PlayerTurns) {
-      if (globalThis.player?.endedTurn) {
-        message = `Waiting on ${this.players.filter(p => !p.endedTurn).length} Other Players`
-        yourTurn = false;
-      } else {
-        message = 'Your Turn';
+    if (!this.isGameOver() && this.turn_phase === turn_phase.PlayerTurns) {
+      if (!globalThis.player?.endedTurn) {
         yourTurn = true;
       }
-    } else if (this.isGameOver()) {
-      message = 'Game Over';
-      yourTurn = false;
-    } else {
-      message = '';
-      console.error('Unknown syncTurnMessage state');
-    }
-    if (elPlayerTurnIndicator) {
-      elPlayerTurnIndicator.innerText = message;
     }
     document.body?.classList.toggle('your-turn', yourTurn);
 
-    // Update level indicator UI at top of screen
-    if (elLevelIndicator) {
-      elLevelIndicator.innerText = `Level ${this.levelIndex}`;
-    } else {
-      console.error('elLevelIndicator is null');
-    }
   }
   async initializePlayerTurns() {
     for (let player of this.players) {

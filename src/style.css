@@ -500,7 +500,6 @@ kbd {
 /* Hide HUD */
 body.HUD-hidden .doob-stats,
 body.HUD-hidden #websocketpie-connection-status,
-body.HUD-hidden #player-turn-indicator-holder,
 body.HUD-hidden #version,
 body.HUD-hidden #inspector-tooltip,
 body.HUD-hidden #toolbar {
@@ -515,30 +514,12 @@ body.HUD-hidden #PIXI-holder {
 body.recording #inventory-icon,
 body.recording #end-turn-btn,
 body.recording #version,
-body.recording #toolbar,
-body.recording #player-turn-indicator-holder {
+body.recording #toolbar {
   display: none !important;
 }
 
 .hide-card-holders #card-holders {
   display: none;
-}
-
-#player-turn-indicator-holder {
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  background-color: grey;
-  user-select: none;
-}
-
-#player-turn-indicator-holder>div {
-  padding: 8px;
-  min-width: 140px;
-}
-
-body.your-turn:not(.showUpgrades) #player-turn-indicator-holder {
-  background-color: gold;
 }
 
 body.your-turn #end-turn-btn {
@@ -573,17 +554,6 @@ body.your-turn #end-turn-btn {
     background-color: red;
     box-shadow: 0 1px 1px rgba(0, 0, 0, .2), 0 2px 0 0 rgba(255, 0, 0, .7) inset;
   }
-}
-
-
-/* Hide player turn indicator when viewing upgrades
-because a user shouldn't see "Your Turn" when looking at upgrades */
-body.showUpgrades #player-turn-indicator {
-  display: none;
-}
-
-#player-turn-indicator {
-  display: block;
 }
 
 #inspector-tooltip {
