@@ -11,6 +11,8 @@
 - Fix multiplayer
     - I think resetPlayerForNextLevel is called too many times
     - maybe I could use a player's position of NaN NaN as being inPortal rather than having inPortal as it's own variable
+    - Allow rejoining a server's room if disconnected and ensure the server keeps track of the gamestate
+    - Show player latency
 - implement jakes UI icons
 ## To fix from Brad playtest
 - If you are changing your name and you exit the menu with esc it doesn't save the name
