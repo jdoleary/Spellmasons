@@ -81,6 +81,10 @@ export function setupCardUIEventListeners(underworld: Underworld) {
     })
     elCardHand.addEventListener('drop', ev => {
       const dropElement = ((ev.target as HTMLElement).closest('.slot') as HTMLElement);
+      if (!dropElement) {
+        console.warn('Tried to drop spell but dropElement was null. This will happen if user drops spell between slots');
+        return;
+      }
       const dropIndex = dropElement.parentNode ? Array.from(dropElement.parentNode.children).indexOf(dropElement) : -1;
       const cardId = dragCard && dragCard.dataset.cardId
       if (globalThis.player && dropIndex !== -1 && dragCard && cardId !== undefined) {
