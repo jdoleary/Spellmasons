@@ -1740,12 +1740,16 @@ export default class Underworld {
     if (upgrade.type == 'card') {
       if (player.upgradesLeftToChoose <= 0) {
         console.log('Cannot choose another upgrade');
+        // Clear upgrades when current player has picked one
+        document.body?.classList.toggle(showUpgradesClassName, false);
         return;
       }
       player.upgradesLeftToChoose--;
     } else {
       if (player.perksLeftToChoose <= 0) {
         console.log('Cannot choose another perk');
+        // Clear upgrades when current player has picked one
+        document.body?.classList.toggle(showUpgradesClassName, false);
         return;
       }
       player.perksLeftToChoose--;
