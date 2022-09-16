@@ -30,6 +30,7 @@ import { Faction } from '../../types/commonTypes';
 import * as Freeze from '../../cards/freeze';
 import { collideWithLineSegments } from '../../jmath/moveWithCollision';
 import keyMapping from './keyMapping';
+import { inPortal } from '../../entity/Player';
 
 export const keyDown = {
   showWalkRope: false,
@@ -206,7 +207,7 @@ export function endTurnBtnListener(underworld: Underworld, e: MouseEvent) {
 }
 const sendMovePlayer = throttle((underworld: Underworld) => {
   if (globalThis.player) {
-    if (globalThis.player.isSpawned) {
+    if (globalThis.player.isSpawned && !inPortal(globalThis.player)) {
       underworld.pie.sendData({
         type: MESSAGE_TYPES.MOVE_PLAYER,
         ...Vec.clone(globalThis.player.unit),
