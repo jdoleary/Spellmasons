@@ -9,7 +9,6 @@
 - Make the trailer
 
 - Fix multiplayer
-    - maybe I could use a player's position of NaN NaN as being inPortal rather than having inPortal as it's own variable
     - Allow rejoining a server's room if disconnected and ensure the server keeps track of the gamestate
     - Show player latency
 - implement jakes UI icons
