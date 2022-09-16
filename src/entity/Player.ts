@@ -185,9 +185,6 @@ export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld)
   if (player.unit.image) {
     // Remove liquid mask which may be attached if the player died in liquid
     inLiquid.remove(player.unit);
-    // Restore player alpha which was 0.5 while player
-    // was looking for a spawn point
-    player.unit.image.sprite.alpha = 1.0;
   }
 
   // Remove all modifiers between levels
