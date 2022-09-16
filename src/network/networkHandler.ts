@@ -292,10 +292,6 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
         if (!(isNaN(payload.x) && isNaN(payload.y))) {
           Player.resetPlayerForNextLevel(fromPlayer, underworld);
           fromPlayer.isSpawned = true;
-          // Once a player spawns make sure to show their image as
-          // their image may be hidden if they are the non-current user
-          // player in multiplayer
-          Image.show(fromPlayer.unit.image);
           if (fromPlayer == globalThis.player) {
             if (elInstructions) {
               elInstructions.innerText = '';
@@ -307,6 +303,10 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
           // Animate effect of unit spawning from the sky
           skyBeam(fromPlayer.unit);
           playSFXKey('spawnFromSky');
+          // Once a player spawns make sure to show their image as
+          // their image may be hidden if they are the non-current user
+          // player in multiplayer
+          Image.show(fromPlayer.unit.image);
         } else {
           console.error('Cannot spawn player at NaN')
         }
