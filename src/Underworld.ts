@@ -1748,18 +1748,24 @@ export default class Underworld {
   chooseUpgrade(player: Player.IPlayer, upgrade: Upgrade.IUpgrade) {
     if (upgrade.type == 'card') {
       if (player.upgradesLeftToChoose <= 0) {
+        // if current player, manage the visibility of the upgrade screen
+        if (player == globalThis.player) {
         console.log('Cannot choose another upgrade');
         // Clear upgrades when current player has picked one
         document.body?.classList.toggle(showUpgradesClassName, false);
         return;
       }
+      }
       player.upgradesLeftToChoose--;
     } else {
       if (player.perksLeftToChoose <= 0) {
+        // if current player, manage the visibility of the upgrade screen
+        if (player == globalThis.player) {
         console.log('Cannot choose another perk');
         // Clear upgrades when current player has picked one
         document.body?.classList.toggle(showUpgradesClassName, false);
         return;
+      }
       }
       player.perksLeftToChoose--;
     }
@@ -1773,6 +1779,7 @@ export default class Underworld {
       this.showUpgrades();
 
     }
+
   }
 
   showUpgrades() {
