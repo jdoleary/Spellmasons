@@ -504,8 +504,7 @@ kbd {
 body.HUD-hidden .doob-stats,
 body.HUD-hidden #websocketpie-connection-status,
 body.HUD-hidden #version,
-body.HUD-hidden #inspector-tooltip,
-body.HUD-hidden #toolbar {
+body.HUD-hidden #inspector-tooltip {
   display: none;
 }
 
@@ -516,8 +515,7 @@ body.HUD-hidden #PIXI-holder {
 /* Hide a subset of HUD */
 body.recording #inventory-icon,
 body.recording #end-turn-btn,
-body.recording #version,
-body.recording #toolbar {
+body.recording #version {
   display: none !important;
 }
 
@@ -916,27 +914,6 @@ body.view-GameOver #game-over {
   margin: 12px 8px;
   white-space: nowrap;
   padding: 0 15px;
-}
-
-body.view-Game #toolbar {
-  display: block;
-}
-
-#toolbar {
-  display: none;
-  position: absolute;
-  left: 8px;
-  top: 8px;
-  z-index: 1;
-  color: white;
-}
-
-body.auto-camera #center-cam-tooltip {
-  display: none;
-}
-
-body:not(.auto-camera) #center-cam-info {
-  display: none;
 }
 
 td:first-child {
