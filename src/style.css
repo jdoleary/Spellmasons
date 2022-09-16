@@ -509,8 +509,6 @@ kbd {
 
 /* Hide HUD */
 body.HUD-hidden .doob-stats,
-body.HUD-hidden #websocketpie-connection-status,
-body.HUD-hidden #version,
 body.HUD-hidden #inspector-tooltip {
   display: none;
 }
@@ -521,8 +519,8 @@ body.HUD-hidden #PIXI-holder {
 
 /* Hide a subset of HUD */
 body.recording #inventory-icon,
-body.recording #end-turn-btn,
-body.recording #version {
+body.recording #inspector-tooltip,
+body.recording #end-turn-btn {
   display: none !important;
 }
 
@@ -806,13 +804,21 @@ body.your-turn #end-turn-btn {
   }
 }
 
+
+.view-Menu #version,
+.view-Disconnected #version {
+  display: block;
+}
+
 #version {
+  display: none;
   color: white;
   position: absolute;
-  top: 8px;
+  top: 25px;
   right: 8px;
   font-size: 25px;
   text-align: right;
+  z-index: 1;
 }
 
 
