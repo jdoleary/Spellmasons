@@ -707,11 +707,26 @@ export function registerAdminContextMenuOptions(underworld: Underworld) {
       domQueryContainer: '#menu-spawn'
     })),
     {
+      label: 'Kill all Enemies',
+      action: () => {
+        // Remove without blood, remember clean up will just
+        // flag them for deletion, they will be removed from the array
+        // at the start of the next turn.
+        underworld.units.filter(u => u.faction == Faction.ENEMY).forEach(u => {
+          Unit.die(u, underworld, false);
+        });
+      },
+      supportInMultiplayer: true,
+      domQueryContainer: '#menu-global'
+    },
+    {
       label: 'Delete all Enemies',
       action: () => {
         // Remove without blood, remember clean up will just
         // flag them for deletion, they will be removed from the array
         // at the start of the next turn.
+        // Note: This may prevent portal from spawning since they are just removed
+        // but do not die
         underworld.units.filter(u => u.faction == Faction.ENEMY).forEach(u => {
           Unit.cleanup(u);
         });
