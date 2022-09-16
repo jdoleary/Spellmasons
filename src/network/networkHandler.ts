@@ -290,7 +290,6 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
     case MESSAGE_TYPES.SPAWN_PLAYER:
       if (fromPlayer) {
         if (!(isNaN(payload.x) && isNaN(payload.y))) {
-          Player.resetPlayerForNextLevel(fromPlayer, underworld);
           fromPlayer.isSpawned = true;
           if (fromPlayer == globalThis.player) {
             if (elInstructions) {
