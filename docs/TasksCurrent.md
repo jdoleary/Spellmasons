@@ -26,7 +26,6 @@ Object { title: "Expanding", type: "card", description: description(), thumbnail
 - Make the trailer
 
 - Fix multiplayer
-    - Allow rejoining a server's room if disconnected and ensure the server keeps track of the gamestate
     - Show player latency
 - implement jakes UI icons
 ## To fix from Brad playtest
