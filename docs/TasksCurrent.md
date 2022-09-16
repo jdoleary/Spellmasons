@@ -27,7 +27,6 @@ Object { title: "Expanding", type: "card", description: description(), thumbnail
 - implement jakes UI icons
 ## To fix from Brad playtest
 - Don't play turn end sound fx if you've already ended yoru turn
-- bug: after dying, quitting to main menu and starting new run, Brad kept his old spells
 - bug: he got "invalid target" when trying to cast on the top of a wall but he was using "expand" so it shoul've been valid cause there were targets in the radius
 - brad has two poisons on his spellbar
 - when portals spawned on us both we didn't get the spell pickup
