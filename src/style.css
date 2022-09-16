@@ -101,8 +101,7 @@ body.view-Menu #underworld-container {
   position: fixed;
   justify-content: center;
   flex-direction: column;
-  /* Leave room at the top for the menu button */
-  top: 35px;
+  top: 0;
   bottom: 0;
   left: 0;
   right: 0;
