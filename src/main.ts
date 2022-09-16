@@ -1,5 +1,4 @@
 // set window defaults, must be called before setupAll()
-import { setView, View } from './views';
 import { setupPixi } from './graphics/PixiUtils';
 import { initPlanningView } from './graphics/PlanningView';
 import { setupAudio, playNextSong, playSFX, playSFXKey, sfx } from './Audio';
@@ -7,9 +6,9 @@ import cookieConsentPopup from './cookieConsent';
 import { setupMonitoring } from './monitoring';
 import * as storage from './storage';
 import { version } from '../package.json';
-import * as Vec from './jmath/Vec';
 globalThis.SPELLMASONS_PACKAGE_VERSION = version;
 import './style.css';
+import './svelte-bundle.css';
 cookieConsentPopup(false);
 
 

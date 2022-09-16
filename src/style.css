@@ -804,7 +804,7 @@ body.your-turn #end-turn-btn {
 #version {
   color: white;
   position: absolute;
-  top: 40px;
+  top: 8px;
   right: 8px;
   font-size: 25px;
   text-align: right;
@@ -841,6 +841,8 @@ form {
   left: 0;
   right: 0;
   bottom: 0;
+  background-color: #171717;
+  color: white;
 }
 
 #menu.ready {
@@ -849,14 +851,6 @@ form {
 
 #menu.hidden {
   display: none;
-}
-
-#menu-inner {
-  background-color: cadetblue;
-  padding: 16px;
-  border-radius: 10px;
-  /* Display above card hand */
-  z-index: 1;
 }
 
 #game-over {
@@ -932,7 +926,7 @@ body.view-Game #toolbar {
   display: none;
   position: absolute;
   left: 8px;
-  top: 50px;
+  top: 8px;
   z-index: 1;
   color: white;
 }
