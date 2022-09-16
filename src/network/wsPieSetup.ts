@@ -126,7 +126,12 @@ function addHandlers(pie: PieClient, underworld: Underworld) {
     // The headless server's version
     const elVersionInfoHeadless = document.getElementById('version-info-headless-server')
     if (elVersionInfoHeadless) {
-      elVersionInfoHeadless.innerText = `Server v${o?.hostAppVersion}`;
+      if (o?.hostAppVersion) {
+        elVersionInfoHeadless.innerText = `Server v${o?.hostAppVersion}`;
+      } else {
+        elVersionInfoHeadless.innerText = '';
+
+      }
     }
     if (o?.hostAppVersion !== version) {
       console.warn('Host app version does not match client version');
