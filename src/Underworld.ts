@@ -854,6 +854,8 @@ export default class Underworld {
       Image.cleanup(x.image);
     }
     this.players = [];
+    globalThis.selectedPickup = undefined;
+    globalThis.selectedUnit = undefined;
 
     // Clear player
     globalThis.player = undefined;
