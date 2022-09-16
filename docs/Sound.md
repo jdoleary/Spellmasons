@@ -3,3 +3,19 @@
 - Deny / Wrong action sound
 - Unit damage sounds
 - Summoner summon sfx
+- opening inventory (opening old book sound)
+
+- From Jake: Need UI sound interactions
+    - Think of warcraft 3 frozen throne
+    - **not** for hover states
+    - button clicks
+    - left click
+    - spells
+    - book opening for inventory
+    - a "you died" (gta wasted)
+    - quieter end turn in multiplayer
+    - sounds that lets you know everyone is waiting on you
+    - warnings: out of stamina, no target, out of range (see breath of the wild)
+    - missing sfx for vulnerable/debilitate
+    - summoner cast sfx
+    - missing vampire hurt noise (when you push them into lava)

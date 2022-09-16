@@ -32,57 +32,30 @@ Object { title: "Expanding", type: "card", description: description(), thumbnail
 - when portals spawned on us both we didn't get the spell pickup
 ## Tasks 
 - Improve out of range targeting: if any part of a unit is in range, then targeting it must be allowed
----
-- Standalone server backlog
-    - When does stand alone server remove a room?
-        - it appears that when all players leave, if one rejoins it's a new game
-- decrease player unit move speed?
 ## Low hanging fruit
 - small bugs:
     - Sometimes it tries to path around things and wastes stamina if there isn't a straight line path
     - when your main mana bar has 0 mana left it doesn't show the diagonal lines
-    - if you pull something into you and you're standing on the edge of liquid you take damage as if you fell in the liquid (on blood level)
     - sometimes when you walk you get stuck on a wall and it wastes stamina
 # Bugs
-- push bloat hurt prediction resulted in weird prediction lines
 - Permanently fix liquid
     - weird liquid : 0.5211362200270263
 - chain through pickups?
-- fix AOE
 ## Tasks
-- Need UI sound interactions
-    - Think of warcraft 3 frozen throne
-    - **not** for hover states
-    - button clicks
-    - left click
-    - spells
-    - book opening for inventory
-    - a "you died" (gta wasted)
-    - quieter end turn in multiplayer
-    - sounds that lets you know everyone is waiting on you
-    - warnings: out of stamina, no target, out of range (see breath of the wild)
-    - missing sfx for vulnerable/debilitate
-    - summoner cast sfx
-    - missing vampire hurt noise (when you push them into lava)
-- Feature: perks
-- Feature: "Soul bind" - bound units share applied effects
-    - Use PIXI.SimpleRope https://pixijs.download/dev/docs/PIXI.SimpleRope.html
 - use card background for upgrades with different colors depending on rarity
 - rework expand, it's predictions are often way off.  Maybe it would do better to just increase the radius of all spells?
 - art: Spell Modifier effects visual representation to stay on units
     - debilitate
     - blood curse
 - If player joins mid enemy movement it will force reset them
-- on refresh (with only 1 client in room) the server reseeded level but my position stayed the same
-- rework exp
-- bug: when i quit a game and start over it gives me the resurrect optoin
-    - or it maintains some state, like all the spells in my inventory
 - Ensure hurt is presented in first spell picks
 - game slows down when there's a lot of blood on the screen and it's painint more
 - How does endgame scale now that strength doesn't depend on the levelIndex?
 - bug: Aoe + many hurt: the hurt sound effect only plays once, it's as if the many damage sound effects from the many targets clears it or something
 
 ## Stretch Content
+- Feature: perks
+- Feature: "Soul bind" - bound units share applied effects
 - Ghost archers: Arrow only hits target, no piercing
 - Piercing arrows as default for archers
 - perk: long range cast only
