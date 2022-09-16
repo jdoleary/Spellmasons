@@ -49,7 +49,7 @@ export interface IPlayer {
   cardUsageCounts: CardUsage;
 }
 export function inPortal(player: IPlayer): boolean {
-  return isNaN(player.unit.x) || isNaN(player.unit.y);
+  return isNaN(player.unit.x) || isNaN(player.unit.y) || player.unit.x === null || player.unit.y === null;
 }
 export function create(clientId: string, underworld: Underworld): IPlayer {
   const userSource = defaultPlayerUnit;
