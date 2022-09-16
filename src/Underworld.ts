@@ -1402,6 +1402,7 @@ export default class Underworld {
       `Level ${this.levelIndex + 1}`,
       'white'
     );
+    console.log('Setup: resetPlayerForNextLevel; reset all players')
     for (let player of this.players) {
       Player.resetPlayerForNextLevel(player, this);
     }
@@ -1434,7 +1435,7 @@ export default class Underworld {
     });
   }
   generateLevelDataSyncronous(levelIndex: number): LevelData {
-    console.log('Setup: generateLevelData', levelIndex);
+    console.log('Setup: generateLevelDataSyncronous', levelIndex);
     this.levelIndex = levelIndex;
     // Generate level
     let level;
@@ -1449,6 +1450,7 @@ export default class Underworld {
     return level;
   }
   async generateLevelData(levelIndex: number): Promise<LevelData> {
+    console.log('Setup: generateLevelData')
     return new Promise<LevelData>(resolve => {
       document.body?.classList.toggle('loading', true);
       // setTimeout allows the UI to refresh before locking up the CPU with
@@ -1843,6 +1845,7 @@ export default class Underworld {
       livingSpawnedPlayers.filter(Player.inPortal).length === livingSpawnedPlayers.length;
     // Advance the level if there are living players and they all are in the portal:
     if (livingSpawnedPlayers.length && areAllLivingPlayersInPortal) {
+      console.log('All living, spawned players are inPortal, go to the next level');
       // Invoke initLevel within a timeout so that this function
       // doesn't have to wait for level generation to complete before
       // returning
@@ -1850,8 +1853,10 @@ export default class Underworld {
         // Prepare the next level
         if (globalThis.isHost(this.pie)) {
           this.generateLevelData(++this.levelIndex);
+        } else {
+          console.log('This instance is not host, host will trigger next level generation.');
         }
-      }, 0)
+      }, 0);
       // Return of true signifies it went to the next level
       return true;
     }
