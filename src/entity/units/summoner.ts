@@ -7,7 +7,7 @@ import { oneOffImage } from '../../cards/cardUtils';
 import { containerUnits } from '../../graphics/PixiUtils';
 import { chooseObjectWithProbability } from '../../jmath/rand';
 
-const SUMMON_MANA_COST = 30;
+const manaCostToCast = 30;
 const unit: UnitSource = {
   id: 'summoner',
   info: {
@@ -29,20 +29,21 @@ const unit: UnitSource = {
     healthMax: 12,
     damage: 0,
     attackRange: 0,
+    manaCostToCast
   },
   spawnParams: {
     probability: 20,
     unavailableUntilLevelIndex: 6,
   },
   extraTooltipInfo: () => {
-    return `Mana cost per summon: ${SUMMON_MANA_COST}`;
+    return `Mana cost per summon: ${manaCostToCast}`;
   },
   action: async (unit: Unit.IUnit, _attackTarget, underworld: Underworld) => {
     // Summon unit
-    if (unit.mana >= SUMMON_MANA_COST) {
+    if (unit.mana >= unit.manaCostToCast) {
       // Summoners attack or move, not both; so clear their existing path
       unit.path = undefined;
-      unit.mana -= SUMMON_MANA_COST;
+      unit.mana -= unit.manaCostToCast;
       await Unit.playComboAnimation(unit, unit.animations.attack, async () => {
         const { sourceUnit, number: NUMBER_OF_SUMMONS } = chooseObjectWithProbability([
           {

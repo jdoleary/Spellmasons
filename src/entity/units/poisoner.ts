@@ -16,7 +16,8 @@ const unit: UnitSource = {
   unitProps: {
     attackRange: 210,
     bloodColor: bloodPoisoner,
-    healthMax: 6
+    healthMax: 6,
+    manaCostToCast: 15
   },
   spawnParams: {
     probability: 20,
@@ -42,7 +43,8 @@ const unit: UnitSource = {
     if (nonPoisonedEnemyUnits.length) {
       const chosenUnit = nonPoisonedEnemyUnits[0];
       if (chosenUnit) {
-        if (Unit.inRange(unit, chosenUnit)) {
+        if (Unit.inRange(unit, chosenUnit) && unit.mana >= unit.manaCostToCast) {
+          unit.mana - unit.manaCostToCast;
           // Poisoners attack or move, not both; so clear their existing path
           unit.path = undefined;
           await Unit.playAnimation(unit, unit.animations.attack);

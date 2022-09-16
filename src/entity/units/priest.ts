@@ -7,7 +7,7 @@ import Shield from '../../cards/shield';
 import { isVampire } from '../../cards/blood_curse';
 import Underworld from '../../Underworld';
 
-const CAST_MANA_COST = 30;
+const manaCostToCast = 30;
 async function animatePriestProjectileAndHit(self: Unit.IUnit, target: Unit.IUnit) {
   await createVisualFlyingProjectile(
     self,
@@ -26,7 +26,7 @@ async function healOneOf(self: Unit.IUnit, units: Unit.IUnit[], underworld: Unde
       // Heal for 2
       Unit.takeDamage(ally, -2, undefined, underworld, false, undefined);
       // Remove mana once the cast occurs
-      self.mana -= CAST_MANA_COST;
+      self.mana -= manaCostToCast;
       return true;
       break;
     }
@@ -44,6 +44,7 @@ const unit: UnitSource = {
   unitProps: {
     attackRange: 264,
     healthMax: 2,
+    manaCostToCast
   },
   spawnParams: {
     probability: 20,
@@ -60,13 +61,13 @@ const unit: UnitSource = {
     death: 'priestDeath',
   },
   extraTooltipInfo: () => {
-    return `Mana cost per cast: ${CAST_MANA_COST}`;
+    return `Mana cost per cast: ${manaCostToCast}`;
   },
   action: async (unit: Unit.IUnit, _attackTarget, underworld: Underworld) => {
     let didAction = false;
     const closestAlly = Unit.findClosestUnitInSameFaction(unit, underworld);
     // If they have enough mana
-    if (unit.mana >= CAST_MANA_COST) {
+    if (unit.mana >= manaCostToCast) {
       // Heal (in order to damage) enemy vampires
       const enemyVampires = underworld.units.filter(
         u => u.faction !== unit.faction && isVampire(u)
@@ -94,7 +95,7 @@ const unit: UnitSource = {
               // prediction is false because unit.action doesn't yet ever occur during a prediction
               Unit.addModifier(closestAlly, Shield.card.id, underworld, false);
               // Remove mana once the cast occurs
-              unit.mana -= CAST_MANA_COST;
+              unit.mana -= manaCostToCast;
               didAction = true;
             }
           }

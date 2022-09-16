@@ -7,7 +7,6 @@ import Underworld from '../../Underworld';
 import { bloodLobber } from '../../graphics/ui/colors';
 import * as config from '../../config';
 
-const attackManaCost = 15;
 const unit: UnitSource = {
   id: 'glop',
   info: {
@@ -20,6 +19,7 @@ const unit: UnitSource = {
     bloodColor: bloodLobber,
     healthMax: 8,
     damage: 2,
+    manaCostToCast: 15
   },
   spawnParams: {
     probability: 40,
@@ -42,8 +42,8 @@ const unit: UnitSource = {
   },
   action: async (unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, underworld: Underworld, canAttackTarget: boolean) => {
     // Attack
-    if (attackTarget && canAttackTarget && unit.mana >= attackManaCost) {
-      unit.mana -= attackManaCost;
+    if (attackTarget && canAttackTarget && unit.mana >= unit.manaCostToCast) {
+      unit.mana -= unit.manaCostToCast;
       // Attack or move, not both; so clear their existing path
       unit.path = undefined;
       Unit.orient(unit, attackTarget);

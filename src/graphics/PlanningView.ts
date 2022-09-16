@@ -449,7 +449,7 @@ export async function runPredictions(underworld: Underworld) {
             // if the target is the current player, because that's the only
             // player this function has to warn with an attention marker
             if (target === globalThis.player.unit) {
-              if (underworld.canUnitAttackTarget(u, target)) {
+              if (underworld.canUnitAttackTarget(u, target) && u.mana >= u.manaCostToCast) {
                 globalThis.attentionMarkers.push({ imagePath: Unit.subTypeToAttentionMarkerImage(u), pos: clone(u) });
               }
             }

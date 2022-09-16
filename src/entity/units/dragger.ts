@@ -7,6 +7,7 @@ import { bloodDragger } from '../../graphics/ui/colors';
 import type Underworld from '../../Underworld';
 import { pull } from '../../cards/pull';
 
+const manaCostToCast = 15;
 const unit: UnitSource = {
   id: 'dragger',
   info: {
@@ -16,7 +17,8 @@ const unit: UnitSource = {
   },
   unitProps: {
     attackRange: 420,
-    bloodColor: bloodDragger
+    bloodColor: bloodDragger,
+    manaCostToCast
   },
   spawnParams: {
     probability: 20,
@@ -61,7 +63,8 @@ const unit: UnitSource = {
     if (nonPoisonedEnemyUnits.length) {
       const chosenUnit = nonPoisonedEnemyUnits[0];
       if (chosenUnit) {
-        if (Unit.inRange(unit, chosenUnit)) {
+        if (Unit.inRange(unit, chosenUnit) && unit.mana >= unit.manaCostToCast) {
+          unit.mana - unit.manaCostToCast;
           // Poisoners attack or move, not both; so clear their existing path
           unit.path = undefined;
           await Unit.playAnimation(unit, unit.animations.attack);

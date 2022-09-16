@@ -94,6 +94,7 @@ export interface IUnit {
   healthMax: number;
   mana: number;
   manaMax: number;
+  manaCostToCast: number;
   manaPerTurn: number;
   alive: boolean;
   unitType: UnitType;
@@ -163,6 +164,7 @@ export function create(
       healthMax: health,
       mana,
       manaMax: mana,
+      manaCostToCast: 0,
       manaPerTurn: config.MANA_GET_PER_TURN,
       alive: true,
       immovable: false,

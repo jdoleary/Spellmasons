@@ -1522,12 +1522,6 @@ export default class Underworld {
         }
       }
     }
-    // Add mana to AI units
-    for (let unit of this.units.filter((u) => u.unitType === UnitType.AI && u.alive)) {
-      unit.mana += unit.manaPerTurn;
-      // Cap manaPerTurn at manaMax
-      unit.mana = Math.min(unit.mana, unit.manaMax);
-    }
     // Decrement card usage counts,
     // This makes spells less expensive
     for (let p of this.players) {
@@ -1583,6 +1577,12 @@ export default class Underworld {
         // Remove pickup
         Pickup.removePickup(p, this, false);
       }
+    }
+    // Add mana to AI units
+    for (let unit of this.units.filter((u) => u.unitType === UnitType.AI && u.alive)) {
+      unit.mana += unit.manaPerTurn;
+      // Cap manaPerTurn at manaMax
+      unit.mana = Math.min(unit.mana, unit.manaMax);
     }
 
     this.broadcastTurnPhase(turn_phase.PlayerTurns);
@@ -2040,7 +2040,7 @@ export default class Underworld {
       case UnitSubType.RANGED_LOS:
         return this.hasLineOfSight(u, attackTarget)
       case UnitSubType.RANGED_RADIUS:
-        return u.alive && Unit.inRange(u, attackTarget);
+        return u.alive && Unit.inRange(u, attackTarget) && u.mana > u.manaCostToCast;
       case UnitSubType.SUPPORT_CLASS:
         // Support classes (such as priests) dont attack
         return false;

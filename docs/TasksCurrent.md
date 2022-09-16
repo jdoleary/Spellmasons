@@ -20,7 +20,6 @@ Object { title: "Expanding", type: "card", description: description(), thumbnail
 - Write script for voice over and order
 - melee prediction is still off
 - archer LOS is drawn under walls which looks weird if it's under a wall but still gets to you because its the front of the wall
-- attack badge shouldn't show if unit doesn't have enough mana to cast
 - attack range shouldn't be red when explosion radius is red
 - do a playtest myself and record for trailer footage
 - Make the trailer
@@ -30,9 +29,6 @@ Object { title: "Expanding", type: "card", description: description(), thumbnail
 - Don't play turn end sound fx if you've already ended yoru turn
 - bug: after dying, quitting to main menu and starting new run, Brad kept his old spells
 - bug: he got "invalid target" when trying to cast on the top of a wall but he was using "expand" so it shoul've been valid cause there were targets in the radius
-- trap radius too big
-- "targeting self" comes up when using steal mana which is true but confusing
-- I can see him at 0,0 when he's choosing spawn and if he queues up a spwll it draws the green line
 - brad has two poisons on his spellbar
 - when portals spawned on us both we didn't get the spell pickup
 ## Tasks 
