@@ -98,8 +98,16 @@ function handleOnDataMessageSyncronously(d: OnDataArgs, underworld: Underworld) 
   onDataQueueContainer.queue.push(d);
   // 10 is an arbitrary limit which will report that something may be wrong
   // because it's unusual for the queue to get this large
-  if (onDataQueueContainer.queue.length > 10) {
-    console.error("onData queue is growing unusually large: ", onDataQueueContainer.queue.length, "stuck on message: ", MESSAGE_TYPES[currentlyProcessingOnDataMessage.payload.type], currentlyProcessingOnDataMessage, 'Payload Types:', onDataQueueContainer.queue.map(x => MESSAGE_TYPES[x.payload.type]));
+  const arbitraryQueueStuckLimit = 10;
+  if (onDataQueueContainer.queue.length > arbitraryQueueStuckLimit) {
+    const cachedQueue = JSON.stringify(onDataQueueContainer.queue.slice(0, arbitraryQueueStuckLimit));
+    setTimeout(() => {
+      if (cachedQueue == JSON.stringify(onDataQueueContainer.queue.slice(0, arbitraryQueueStuckLimit))) {
+        console.error("onData queue: growing unusually large: ", onDataQueueContainer.queue.length, "stuck on message: ", MESSAGE_TYPES[currentlyProcessingOnDataMessage.payload.type], currentlyProcessingOnDataMessage, 'Payload Types:', onDataQueueContainer.queue.map(x => MESSAGE_TYPES[x.payload.type]));
+      } else {
+        console.log('onData queue: Thought there might be a stuck queue but it resolved itself', cachedQueue, JSON.stringify(onDataQueueContainer.queue.slice(0, arbitraryQueueStuckLimit)));
+      }
+    }, 5000);
   }
   // process the "next" (the one that was just added) immediately
   processNextInQueueIfReady(underworld);

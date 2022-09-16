@@ -12,7 +12,6 @@
         - see 0:23:44 for him appearing at 0,0 while he's spawning
         - see 0:48:55 for when i get stuck post portal out of bounds
             - it looks like portal spawned on me, I went to 0,0, pickups flew too me, but it didn't end the game. ALSO WE HAD CLONES OUT, MAYBE THAT'S whY?
-        - false positive onData queue getting stuck with a bunch of MOVE_PLAYERS and END_TURNs?
             - going through the portal again fixed it.
         - Okay it looks like my guy went through the portal cause it spawned on him and brad when through his portal on his screen but not on my screen (he wasn't close enough)
   - (e) UI
