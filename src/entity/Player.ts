@@ -35,7 +35,6 @@ export interface IPlayer {
   clientId: string;
   clientConnected: boolean;
   unit: Unit.IUnit;
-  inPortal: boolean;
   isSpawned: boolean;
   // The spells that the player has on their toolbar
   cards: string[];
@@ -48,6 +47,9 @@ export interface IPlayer {
   // Note: call updateCardManaBadges() any time you modify cardUsageCounts so it will
   // be reflected in the UI
   cardUsageCounts: CardUsage;
+}
+export function inPortal(player: IPlayer): boolean {
+  return isNaN(player.unit.x) || isNaN(player.unit.y);
 }
 export function create(clientId: string, underworld: Underworld): IPlayer {
   const userSource = defaultPlayerUnit;
@@ -63,6 +65,8 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
     color: 0xffffff,
     unit: Unit.create(
       userSource.id,
+      // x,y of NaN denotes that the player unit is
+      // inPortal.  See the function inPortal for more
       NaN,
       NaN,
       Faction.ALLY,
@@ -73,7 +77,6 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
       undefined,
       underworld
     ),
-    inPortal: true,
     isSpawned: false,
     cards: Array(config.NUMBER_OF_TOOLBAR_SLOTS).fill(''),
     inventory: [],
@@ -163,8 +166,6 @@ export function setPlayerRobeColor(player: IPlayer, color: number | string) {
 
 }
 export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld) {
-  // Player is no longer in portal
-  player.inPortal = false;
   // Set the player so they can choose their next spawn
   player.isSpawned = false;
 
@@ -243,7 +244,7 @@ export function load(player: IPlayerSerialized, underworld: Underworld) {
     unit: reassignedUnit,
   };
   // Make sure player unit stays hidden if they are in a portal
-  if (playerLoaded.inPortal) {
+  if (inPortal(playerLoaded)) {
     playerLoaded.unit.x = NaN;
     playerLoaded.unit.y = NaN;
     Image.hide(playerLoaded.unit.image);
@@ -277,7 +278,6 @@ function syncLobby(underworld: Underworld) {
   }
 }
 export function enterPortal(player: IPlayer, underworld: Underworld) {
-  player.inPortal = true;
   Image.hide(player.unit.image);
   // Make sure to resolve the moving promise once they enter the portal or else 
   // the client queue will get stuck
@@ -292,9 +292,9 @@ export function enterPortal(player: IPlayer, underworld: Underworld) {
 }
 // Note: this is also used for AI targeting to ensure that AI don't target disabled plaeyrs
 export function ableToAct(player: IPlayer) {
-  const ableToTakeTurn = !player.inPortal && player.unit.alive && player.clientConnected;
+  const ableToTakeTurn = !inPortal(player) && player.unit.alive && player.clientConnected;
   if (!ableToTakeTurn) {
-    console.log(`Player ${player.clientId} unable to take turn`, 'inPortal:', player.inPortal, 'alive:', player.unit.alive, 'connected: ', player.clientConnected)
+    console.log(`Player ${player.clientId} unable to take turn`, 'inPortal:', inPortal(player), 'alive:', player.unit.alive, 'connected: ', player.clientConnected)
   }
   return ableToTakeTurn;
 }

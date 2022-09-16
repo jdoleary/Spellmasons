@@ -21,7 +21,6 @@
 - trap radius too big
 - "targeting self" comes up when using steal mana which is true but confusing
 - I can see him at 0,0 when he's choosing spawn and if he queues up a spwll it draws the green line
-- Game ending bug: When portals spawned I went to 0,0 and now I can't go through a portal so it won't end
 - brad has two poisons on his spellbar
 - when portals spawned on us both we didn't get the spell pickup
 ## Tasks 

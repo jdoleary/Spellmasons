@@ -12,6 +12,7 @@ import Underworld, { Biome } from '../Underworld';
 import { randFloat, randInt } from '../jmath/rand';
 import { IUnit } from '../entity/Unit';
 import { addMarginToRect, isWithinRect, Rect } from '../jmath/Rect';
+import { inPortal } from '../entity/Player';
 
 // if PIXI is finished setting up
 let isReady = false;
@@ -300,7 +301,7 @@ export function updateCameraPosition(underworld: Underworld) {
     case View.Game:
       if (globalThis.player) {
         if (utilProps.doCameraAutoFollow) {
-          if (!globalThis.player.inPortal && globalThis.player.unit.alive) {
+          if (!inPortal(globalThis.player) && globalThis.player.unit.alive) {
             // Follow current client player
             utilProps.camera = clone(globalThis.player.unit);
           } else {

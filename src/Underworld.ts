@@ -1831,13 +1831,18 @@ export default class Underworld {
   // Returns true if it goes to the next level
   checkForEndOfLevel(): boolean {
     // All living (and client connected) players
-    const livingPlayers = this.players.filter(
-      (p) => p.unit.alive && p.clientConnected,
+    // Also check if they are spawned, otherwise in multiplayer,
+    // it will cycle through level after level quickly and infinitely
+    // because all players are in the portal and alive.  Adding the isSpawned
+    // check ensures that it will only move on once all connected players have
+    // spawned and are in the portal
+    const livingSpawnedPlayers = this.players.filter(
+      (p) => p.unit.alive && p.clientConnected && p.isSpawned,
     );
     const areAllLivingPlayersInPortal =
-      livingPlayers.filter((p) => p.inPortal).length === livingPlayers.length;
+      livingSpawnedPlayers.filter(Player.inPortal).length === livingSpawnedPlayers.length;
     // Advance the level if there are living players and they all are in the portal:
-    if (livingPlayers.length && areAllLivingPlayersInPortal) {
+    if (livingSpawnedPlayers.length && areAllLivingPlayersInPortal) {
       // Invoke initLevel within a timeout so that this function
       // doesn't have to wait for level generation to complete before
       // returning
