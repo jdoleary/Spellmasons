@@ -25,8 +25,6 @@ Object { title: "Expanding", type: "card", description: description(), thumbnail
 - do a playtest myself and record for trailer footage
 - Make the trailer
 
-- Fix multiplayer
-    - Show player latency
 - implement jakes UI icons
 ## To fix from Brad playtest
 - Don't play turn end sound fx if you've already ended yoru turn

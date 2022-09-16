@@ -29,28 +29,35 @@ export function setupMonitoring() {
   }
 }
 
+let stats: Stats;
+const HIDE_STATS_CLASS = 'hide';
 globalThis.monitorFPS = () => {
-  const stats = new Stats();
-  // Add fps stats
-  function monitorFPS() {
-    stats.end();
+  if (stats) {
+    // Stats have already been created, unhide them
+    stats.dom.classList.toggle(HIDE_STATS_CLASS);
+  } else {
+    stats = new Stats();
+    // Add fps stats
+    function monitorFPS() {
+      stats.end();
+      stats.begin();
+      requestAnimationFrame(monitorFPS);
+    }
     stats.begin();
-    requestAnimationFrame(monitorFPS);
-  }
-  stats.begin();
-  monitorFPS();
+    monitorFPS();
 
-  // Add latency stats
-  stats.showPanel(3);
-  globalThis.latencyPanel = stats.addPanel(
-    new Stats.Panel('latency', '#ff8', '#221'),
-  );
-  // Add ms tracker for runPredictions function
-  stats.showPanel(4);
-  globalThis.runPredictionsPanel = stats.addPanel(
-    new Stats.Panel('runPredictions', '#ff8', '#221'),
-  );
-  stats.dom.classList.add('doob-stats');
-  document.body?.appendChild(stats.dom);
+    // Add ms tracker for runPredictions function
+    globalThis.runPredictionsPanel = stats.addPanel(
+      new Stats.Panel('runPredictions', '#ff8', '#221'),
+    );
+    // Add latency stats
+    globalThis.latencyPanel = stats.addPanel(
+      new Stats.Panel('latency', '#ff8', '#221'),
+    );
+    stats.dom.classList.add('doob-stats');
+    document.body?.appendChild(stats.dom);
+    // Show the latency panel
+    stats.showPanel(3);
+  }
 
 }

@@ -69,8 +69,12 @@ body.view-Menu #underworld-container {
   margin: 65px 0 0 8px;
 }
 
+.doob-stats.hide {
+  display: none;
+}
+
 .doob-stats {
-  margin-top: 70px;
+  margin-top: 10px;
   margin-left: 10px;
 }
 

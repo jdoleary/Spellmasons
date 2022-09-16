@@ -164,6 +164,8 @@ export function setupPieAndUnderworld() {
   } else {
     console.log('Client: Initialize PieClient');
     const pie = new PieClient();
+    // useStats must be true for latency information to come through
+    pie.useStats = true;
     console.log('Client: Initialize Underworld');
     const underworld = new Underworld(pie, Math.random().toString());
     globalThis.connect_to_wsPie_server = wsUri => connect_to_wsPie_server(wsUri, underworld).then(() => {
