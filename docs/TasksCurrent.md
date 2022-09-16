@@ -1,4 +1,21 @@
 
+- test if you can MOVE_PLAYER while a super long cast is being triggered.
+    - you cannot, find a way to handle this for multiplayer so it's communicated that you have to wait to cast until someone else has finished casting
+- bug: had a message come through where the fromPlayer wasn't set
+```
+ Handle ONDATA 10 CHOOSE_UPGRADE 
+Object { type: 8, upgrade: {…} }
+​
+type: 8
+​
+upgrade: Object { title: "Expanding", type: "card", thumbnail: "images/spell/spellIconExpanding.png", … }
+​
+<prototype>: Object { … }
+networkHandler.ts:136:12
+09:00:50.844
+Cannot choose upgrade, either the caster or upgrade does not exist undefined 
+Object { title: "Expanding", type: "card", description: description(), thumbnail: "images/spell/spellIconExpanding.png", maxCopies: 1, effect: effect(player), probability: 10, cost: {…} }
+```
 ## next up
 - Write script for voice over and order
 - melee prediction is still off
