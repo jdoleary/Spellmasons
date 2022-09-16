@@ -1,15 +1,13 @@
 import type * as PIXI from 'pixi.js';
 import { LineSegment } from './jmath/lineSegment';
 import floatingText from './graphics/FloatingText';
-import { Vec2, jitter } from './jmath/Vec';
+import { Vec2 } from './jmath/Vec';
 import Underworld from './Underworld';
 import * as Unit from './entity/Unit';
-import * as Units from './entity/units';
-import { Faction, UnitType } from './types/commonTypes';
+import { UnitType } from './types/commonTypes';
 import * as Cards from './cards';
 import { syncInventory } from './graphics/ui/CardUI';
 import { addCardToHand } from './entity/Player';
-import { moveWithCollisions } from './jmath/moveWithCollision';
 
 // Development helpers
 // Note: clicking on a unit will assign them to `selectedUnit` so they are available in the browser console

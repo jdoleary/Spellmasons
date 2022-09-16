@@ -512,6 +512,15 @@ async function handleSpell(caster: Player.IPlayer, payload: any, underworld: Und
 }
 
 export function setupNetworkHandlerGlobalFunctions(underworld: Underworld) {
+  globalThis.configPlayer = ({ color, name }: { color: number, name: string }) => {
+    storage.set(config.STORAGE_ID_PLAYER_COLOR, color);
+    storage.set(config.STORAGE_ID_PLAYER_NAME, name || '');
+    underworld.pie.sendData({
+      type: MESSAGE_TYPES.PLAYER_CONFIG,
+      color,
+      name
+    });
+  }
 
 
   const savePrefix = 'spellmasons-save-';
