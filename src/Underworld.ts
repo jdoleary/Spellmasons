@@ -1409,7 +1409,6 @@ export default class Underworld {
     for (let player of this.players) {
       Player.resetPlayerForNextLevel(player, this);
     }
-    this.postSetupLevel();
     // Change song now that level has changed:
     if (globalThis.playNextSong) {
       globalThis.playNextSong();
@@ -1426,6 +1425,11 @@ export default class Underworld {
     // Better to have the upgrade screen tied to the network message.
     // Note: Upgrades must come AFTER resetPlayerForNextLevel, see commit for explanation
     this.showUpgrades();
+
+    // NOTE: Any data that needs to be synced from host to clients from this function MUST
+    // be set BEFORE postSetupLevel is invoked because postSetupLevel will send a sync message
+    // that will override the clientside data.
+    this.postSetupLevel();
   }
   async createLevel(levelData: LevelData) {
     return new Promise<void>(resolve => {
@@ -1750,24 +1754,28 @@ export default class Underworld {
       if (player.upgradesLeftToChoose <= 0) {
         // if current player, manage the visibility of the upgrade screen
         if (player == globalThis.player) {
-        console.log('Cannot choose another upgrade');
-        // Clear upgrades when current player has picked one
-        document.body?.classList.toggle(showUpgradesClassName, false);
-        return;
+          console.log('Cannot choose another upgrade');
+          // Clear upgrades
+          document.body?.classList.toggle(showUpgradesClassName, false);
+          return;
+        }
       }
-      }
-      player.upgradesLeftToChoose--;
+      // Decrement and 
+      // Ensure it doesn't go negative
+      player.upgradesLeftToChoose = Math.max(0, player.upgradesLeftToChoose - 1);
     } else {
       if (player.perksLeftToChoose <= 0) {
         // if current player, manage the visibility of the upgrade screen
         if (player == globalThis.player) {
-        console.log('Cannot choose another perk');
-        // Clear upgrades when current player has picked one
-        document.body?.classList.toggle(showUpgradesClassName, false);
-        return;
+          console.log('Cannot choose another perk');
+          // Clear upgrades
+          document.body?.classList.toggle(showUpgradesClassName, false);
+          return;
+        }
       }
-      }
-      player.perksLeftToChoose--;
+      // Decrement and 
+      // Ensure it doesn't go negative
+      player.perksLeftToChoose = Math.max(0, player.perksLeftToChoose - 1);
     }
     upgrade.effect(player, this);
     player.upgrades.push(upgrade);
@@ -1790,6 +1798,7 @@ export default class Underworld {
     }
     // Return immediately if player has no upgrades that left to pick from
     if (player.upgradesLeftToChoose <= 0 && player.perksLeftToChoose <= 0) {
+      console.log('Closing upgrade screen, nothing left to pick')
       return;
     }
     const isPerk = player.upgradesLeftToChoose == 0;

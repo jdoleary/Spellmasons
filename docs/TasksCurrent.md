@@ -1,4 +1,11 @@
-
+- bug: I'm getting a "this spell will damage you" popup during enemy turn because the unit syncs their perk health upgrade but not the prediction unit
+- bug: when a new player joins if you're looking at the upgrade menu it regenerates them
+- if you choose a spawn position while another player is casting it waits and then spawns where you clicked, which can be confusing because it still looks like you can choose where to spawn
+- bug: collected scroll but it didn't show upgrade screen
+- bug: multiplayer, when a dead player chooses resurrect they appear where they were when they died, they should portal instead
+- choosing perks doesn't work `cannot choose another perk`
+    - okay it did work but it didn't sync right away
+---
 - test if you can MOVE_PLAYER while a super long cast is being triggered.
     - you cannot, find a way to handle this for multiplayer so it's communicated that you have to wait to cast until someone else has finished casting
 - bug: had a message come through where the fromPlayer wasn't set
@@ -51,6 +58,7 @@ Object { title: "Expanding", type: "card", description: description(), thumbnail
 
 ## Stretch Content
 - use card background for upgrades with different colors depending on rarity
+- Card: Mind Control (changes faction temporarily)
 - Feature: perks
 - Feature: "Soul bind" - bound units share applied effects
 - Ghost archers: Arrow only hits target, no piercing
