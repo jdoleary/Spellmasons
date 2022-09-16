@@ -10,7 +10,7 @@ export const RIGHT_CLICK_DOUBLE_DISTANCE_THRESHOLD = 30;
 export const PLAYER_BASE_HEALTH = 4;
 export const UNIT_MOVE_SPEED = 0.15;
 export const COLLISION_MESH_RADIUS = 32;
-// Caution: Changing this may make pickups that spawn in liquid
+// Caution: Changing this may make scroll pickups that spawn in liquid
 // due to units falling in liquid unobtainable without movement spells.
 // SELECTABLE_RADIUS determines the radius of both pickups and 
 // the radius within which a mouse will create a target for a spell

@@ -1466,7 +1466,7 @@ export default class Underworld {
       // this distance calculation uses neither the radius of the pickup
       // nor the radius of the unit.  It is hard coded to 2 COLLISION_MESH_RADIUSES
       // which is currently 64 px (or the average size of a unit);
-      if (math.distance(unit, pu) < config.COLLISION_MESH_RADIUS * 2) {
+      if (math.distance(unit, pu) < config.COLLISION_MESH_RADIUS) {
         Pickup.triggerPickup(pu, unit, this, prediction);
       }
     }
