@@ -1,7 +1,7 @@
 import seedrandom from 'seedrandom';
 import type { CardCost } from './cards/cardUtils';
-import { getCardRarityColor } from './graphics/ui/CardUI';
-import { chooseObjectWithProbability, probabilityToRarity } from './jmath/rand';
+import { cardRarityAsString, getCardRarityColor } from './graphics/ui/CardUI';
+import { chooseObjectWithProbability } from './jmath/rand';
 import { MESSAGE_TYPES } from './types/MessageTypes';
 import type { IPlayer } from './entity/Player';
 import Underworld from './Underworld';
@@ -74,7 +74,7 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underwo
     return;
   }
   const element = document.createElement('div');
-  element.classList.add('card', 'upgrade');
+  element.classList.add('card', 'upgrade', cardRarityAsString(upgrade));
   element.dataset.upgrade = upgrade.title;
   const elCardInner = document.createElement('div');
   elCardInner.classList.add('card-inner');
@@ -110,7 +110,7 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underwo
   const rarityText = document.createElement('div');
   rarityText.classList.add('card-rarity')
   rarityText.style.color = getCardRarityColor(upgrade);
-  rarityText.innerHTML = probabilityToRarity(upgrade.probability);
+  rarityText.innerHTML = cardRarityAsString(upgrade).toLocaleLowerCase();
   elCardInner.appendChild(rarityText);
 
   const desc = document.createElement('div');

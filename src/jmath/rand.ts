@@ -59,19 +59,3 @@ export function chooseObjectWithProbability<T extends objectWithProbability>(
   const roll = randInt(seedRandomInstance, 1, maxProbability);
   return _chooseObjectWithProbability(roll, source);
 }
-
-export function probabilityToRarity(probability: number): string {
-  if (probability >= 100) {
-    return 'Very Common';
-  } else if (probability >= 50) {
-    return 'Common';
-  } else if (probability >= 20) {
-    return 'Special';
-  } else if (probability >= 10) {
-    return 'Rare';
-  } else if (probability >= 5) {
-    return 'Super Rare';
-  } else {
-    return 'Forbidden'
-  }
-}

@@ -474,6 +474,9 @@ enum CardRarity {
   RARE,
   FORBIDDEN
 }
+export function cardRarityAsString(content: { probability: number }): string {
+  return CardRarity[cardProbabilityToRarity(content)] || '';
+}
 function cardProbabilityToRarity(content: { probability: number }): CardRarity {
   if (content.probability == 1) {
     // Super rare
@@ -553,12 +556,7 @@ function createNonCardInventoryElement(thumbnailPath: string, titleText: string)
 function createCardElement(content: Cards.ICard) {
   const element = document.createElement('div');
   element.classList.add('card');
-  const rarityString = CardRarity[cardProbabilityToRarity(content)]
-  if (rarityString) {
-    element.classList.add(`rarity-${rarityString.toLowerCase()}`);
-  } else {
-    console.error('Card does not have rarity string', content);
-  }
+  element.classList.add(cardRarityAsString(content));
   element.dataset.cardId = content.id;
   const elCardInner = document.createElement('div');
   elCardInner.classList.add('card-inner');
