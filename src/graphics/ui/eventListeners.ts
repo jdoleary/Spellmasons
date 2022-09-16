@@ -206,10 +206,15 @@ export function endTurnBtnListener(underworld: Underworld, e: MouseEvent) {
 }
 const sendMovePlayer = throttle((underworld: Underworld) => {
   if (globalThis.player) {
-    underworld.pie.sendData({
-      type: MESSAGE_TYPES.MOVE_PLAYER,
-      ...Vec.clone(globalThis.player.unit),
-    });
+    if (globalThis.player.isSpawned) {
+      underworld.pie.sendData({
+        type: MESSAGE_TYPES.MOVE_PLAYER,
+        ...Vec.clone(globalThis.player.unit),
+      });
+    } else {
+      console.log('Cancelling MOVE_PLAYER message because player is not spawned.');
+
+    }
   } else {
     console.error('Cannot send MOVE_PLAYER, globalThis.player is undefined')
   }
@@ -258,24 +263,28 @@ export function mouseMove(underworld: Underworld, e?: MouseEvent) {
     }
     if (globalThis.RMBDown) {
       if (underworld.isMyTurn()) {
-        // If player is able to move
-        if (Unit.canMove(globalThis.player.unit)) {
-          // Move towards mouseTarget, but stop pathing where the direct path intersects a wall
-          // This ensures that the player will always move in the direction of the mouse
-          // and won't path in an unexpected direction to attempt to get to the final destination.
-          const intersection = closestLineSegmentIntersection({ p1: globalThis.player.unit, p2: mouseTarget }, underworld.walls) || mouseTarget;
-          Unit._moveTowards(globalThis.player.unit, intersection, underworld);
-          // Send current player movements to server
-          sendMovePlayer(underworld);
+        if (globalThis.player.isSpawned) {
+          // If player is able to move
+          if (Unit.canMove(globalThis.player.unit)) {
+            // Move towards mouseTarget, but stop pathing where the direct path intersects a wall
+            // This ensures that the player will always move in the direction of the mouse
+            // and won't path in an unexpected direction to attempt to get to the final destination.
+            const intersection = closestLineSegmentIntersection({ p1: globalThis.player.unit, p2: mouseTarget }, underworld.walls) || mouseTarget;
+            Unit._moveTowards(globalThis.player.unit, intersection, underworld);
+            // Send current player movements to server
+            sendMovePlayer(underworld);
 
-        } else {
-          if (!globalThis.notifiedOutOfStamina) {
-            floatingText({
-              coords: mouseTarget,
-              text: 'Out of stamina',
-            });
-            globalThis.notifiedOutOfStamina = true;
+          } else {
+            if (!globalThis.notifiedOutOfStamina) {
+              floatingText({
+                coords: mouseTarget,
+                text: 'Out of stamina',
+              });
+              globalThis.notifiedOutOfStamina = true;
+            }
           }
+        } else {
+          console.log('Cannot move until player is spawned into the level.');
         }
       } else {
         floatingText({
