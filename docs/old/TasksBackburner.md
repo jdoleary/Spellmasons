@@ -1,3 +1,5 @@
+- Don't play turn end sound fx if you've already ended yoru turn
+- should I clear the underworld seed on cleanup?
 - sound from offscreen should be played quieter
 - don't allow `save` in console to work in viewmenu because it will overwrite the previous save with a not fully initialized underworld
 - there is a circumstance in multiplayer where a player's upgradeslefttochoose is 3 but they don't see the popup (happens in local)

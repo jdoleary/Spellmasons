@@ -17,7 +17,6 @@ Cannot choose upgrade, either the caster or upgrade does not exist undefined
 Object { title: "Expanding", type: "card", description: description(), thumbnail: "images/spell/spellIconExpanding.png", maxCopies: 1, effect: effect(player), probability: 10, cost: {…} }
 ```
 ## next up
-- Write script for voice over and order
 - melee prediction is still off
 - archer LOS is drawn under walls which looks weird if it's under a wall but still gets to you because its the front of the wall
 - attack range shouldn't be red when explosion radius is red
@@ -26,10 +25,8 @@ Object { title: "Expanding", type: "card", description: description(), thumbnail
 
 - implement jakes UI icons
 ## To fix from Brad playtest
-- Don't play turn end sound fx if you've already ended yoru turn
 - bug: he got "invalid target" when trying to cast on the top of a wall but he was using "expand" so it shoul've been valid cause there were targets in the radius
 - brad has two poisons on his spellbar
-- when portals spawned on us both we didn't get the spell pickup
 ## Tasks 
 - Improve out of range targeting: if any part of a unit is in range, then targeting it must be allowed
 ## Low hanging fruit
@@ -42,18 +39,18 @@ Object { title: "Expanding", type: "card", description: description(), thumbnail
     - weird liquid : 0.5211362200270263
 - chain through pickups?
 ## Tasks
-- use card background for upgrades with different colors depending on rarity
-- rework expand, it's predictions are often way off.  Maybe it would do better to just increase the radius of all spells?
 - art: Spell Modifier effects visual representation to stay on units
     - debilitate
     - blood curse
 - If player joins mid enemy movement it will force reset them
+    - this is still an issue: as of 2022-09-16
 - Ensure hurt is presented in first spell picks
 - game slows down when there's a lot of blood on the screen and it's painint more
 - How does endgame scale now that strength doesn't depend on the levelIndex?
 - bug: Aoe + many hurt: the hurt sound effect only plays once, it's as if the many damage sound effects from the many targets clears it or something
 
 ## Stretch Content
+- use card background for upgrades with different colors depending on rarity
 - Feature: perks
 - Feature: "Soul bind" - bound units share applied effects
 - Ghost archers: Arrow only hits target, no piercing
