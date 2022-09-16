@@ -142,6 +142,17 @@ body.view-Game.showUpgrades #upgrade-picker {
   margin: 8px;
 }
 
+
+
+#upgrade-picker .card-badge,
+#card-inspect .card-badge {
+  width: 44px;
+  height: 44px;
+  line-height: 44px;
+  border-radius: 44px;
+  font-size: 24px;
+}
+
 #upgrade-picker .card-inner,
 #card-inspect .card-inner {
   /* height matches the size of the backgroundimage */
