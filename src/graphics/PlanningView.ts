@@ -22,6 +22,7 @@ import { Graphics } from 'pixi.js';
 import { allCards } from '../cards';
 import { keyDown } from './ui/eventListeners';
 import * as CSSClasses from '../CSSClasses';
+import { inPortal } from '../entity/Player';
 
 const TEXT_OUT_OF_RANGE = 'Out of Range';
 // Graphics for rendering above board and walls but beneath units and doodads,
@@ -173,7 +174,7 @@ export function updatePlanningView(underworld: Underworld) {
       // Update tooltip for whatever is being hovered
       updateTooltipContent(underworld);
 
-      if (globalThis.player && globalThis.player.isSpawned) {
+      if (globalThis.player && globalThis.player.isSpawned && !inPortal(globalThis.player)) {
         // Only draw circle if player isn't moving to avoid UI thrashing
         if (equal(lastSpotCurrentPlayerTurnCircle, globalThis.player.unit)) {
           if (underworld.isMyTurn()) {
