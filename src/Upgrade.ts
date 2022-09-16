@@ -79,7 +79,6 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underwo
   const elCardInner = document.createElement('div');
   elCardInner.classList.add('card-inner');
   elCardInner.style.borderColor = getCardRarityColor(upgrade);
-  elCardInner.style.backgroundColor = getCardRarityColor(upgrade);
   element.appendChild(elCardInner);
   // Card costs
   const elCardBadgeHolder = document.createElement('div');
@@ -108,15 +107,17 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underwo
   title.classList.add('card-title');
   title.innerText = upgrade.title;
   elCardInner.appendChild(title);
+  const rarityText = document.createElement('div');
+  rarityText.classList.add('card-rarity')
+  rarityText.style.color = getCardRarityColor(upgrade);
+  rarityText.innerHTML = probabilityToRarity(upgrade.probability);
+  elCardInner.appendChild(rarityText);
 
   const desc = document.createElement('div');
   desc.classList.add('card-description');
   const descriptionText = document.createElement('div');
   descriptionText.innerHTML = upgrade.description(player);
   desc.appendChild(descriptionText);
-  const rarityText = document.createElement('div');
-  rarityText.innerHTML = `Rarity: ${probabilityToRarity(upgrade.probability)}`;
-  desc.appendChild(rarityText);
 
   elCardInner.appendChild(desc);
   element.addEventListener('click', (e) => {

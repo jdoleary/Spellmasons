@@ -144,23 +144,28 @@ body.view-Game.showUpgrades #upgrade-picker {
 
 #upgrade-picker .card-inner,
 #card-inspect .card-inner {
-  height: 500px;
-  width: 100%;
-  background-color: #333;
+  /* height matches the size of the backgroundimage */
+  height: 370px;
+  padding: 30px;
 }
 
 #upgrade-picker .card-title,
 #card-inspect .card-title {
   text-align: center;
   color: white;
-  height: 30px;
+  font-size: 24px;
+  margin: 0;
+  padding: 0;
+  height: unset;
 }
 
 #upgrade-picker .card-thumb,
 #card-inspect .card-thumb {
-  min-height: 180px;
+  min-height: 64px;
   width: 100%;
+  padding-top: 32px;
 }
+
 
 body #card-inspect {
   display: flex;
@@ -290,25 +295,12 @@ body.open-inventory #card-inspect {
   height: var(--selected-card-size);
 }
 
-/* .card.rarity-forbidden {
-  background-image: url('images/card-designs/cardStylized.png')
-}
+#upgrade-picker .card {
+  background-image: url('images/card-designs/cardResBigMoreRoom.png');
+  background-size: contain;
+  background-repeat: no-repeat;
 
-.card.rarity-rare {
-  background-image: url('images/card-designs/cardStylized.png')
 }
-
-.card.rarity-uncommon {
-  background-image: url('images/card-designs/cardStylized.png')
-}
-
-.card.rarity-special {
-  background-image: url('images/card-designs/bookStone.png')
-}
-
-.card.rarity-common {
-  background-image: url('images/card-designs/cardStylized.png')
-} */
 
 /* Disable dragging for card thumbnails */
 .card img {
@@ -448,7 +440,6 @@ kbd {
 }
 
 .card-thumb {
-  background-color: rgb(161, 161, 161);
   width: 64px;
   display: flex;
   justify-content: center;
@@ -466,9 +457,13 @@ kbd {
   image-rendering: pixelated;
 }
 
+.card-rarity {
+  text-align: center;
+  color: white;
+}
+
 .card-title {
   font-size: 12px;
-  flex-grow: 3;
   color: white;
   text-align: center;
   text-transform: capitalize;
@@ -487,8 +482,9 @@ kbd {
 .card-description {
   /* Only shows within card-inspect*/
   display: none;
-  flex-grow: 3;
-  padding: 8px;
+  flex-grow: 2;
+  padding: 28px;
+  padding-top: 5px;
   color: white;
   justify-content: space-between;
   flex-direction: column;

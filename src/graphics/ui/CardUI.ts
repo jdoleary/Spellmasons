@@ -496,6 +496,28 @@ function cardProbabilityToRarity(content: { probability: number }): CardRarity {
 }
 export function getCardRarityColor(content: { probability: number }): string {
   const rarity = cardProbabilityToRarity(content);
+  /*
+  // Copy this to css in VSCode to see the colors
+.t1 {
+  color: #241623;
+}
+
+.t2 {
+  color: #432534;
+}
+
+.t3 {
+  color: #004e64;
+}
+
+.t4 {
+  color: #19381F;
+}
+
+.t5 {
+  color: #3b322c;
+}
+  */
   switch (rarity) {
     case CardRarity.FORBIDDEN:
       return '#241623';
