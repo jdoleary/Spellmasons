@@ -686,7 +686,7 @@ export function updateCardBadges(underworld: Underworld) {
         if (card) {
           const elHotkeyBadge = card.querySelector('.hotkey-badge') as HTMLElement;
           if (elHotkeyBadge) {
-            elHotkeyBadge.innerHTML = `${key}`;
+            elHotkeyBadge.innerHTML = `Hotkey ${key}`;
           }
         }
       }
