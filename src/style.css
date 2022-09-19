@@ -831,47 +831,18 @@ body.your-turn #end-turn-btn {
   z-index: 1;
 }
 
-
-#menu input {
-  font-family: inherit;
-  font-size: inherit;
-  -webkit-padding: 0.4em 0;
-  padding: 0.4em;
-  margin: 0 0 0.5em 0;
-  box-sizing: border-box;
-  border: 1px solid #ccc;
-  border-radius: 2px;
+#logo {
   width: 100%;
+  margin: 0 auto;
 }
 
-form {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  width: 250px;
-  font-family: sans-serif;
-}
-
-#menu {
+#menu-app {
   /* menu starts out hidden until it is ready (due to it's dependencies) */
   display: none;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #171717;
-  color: white;
 }
 
-#menu.ready {
+.view-Menu #menu-app.ready {
   display: flex;
-}
-
-#menu.hidden {
-  display: none;
 }
 
 #game-over {

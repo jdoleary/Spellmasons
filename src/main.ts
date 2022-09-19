@@ -75,7 +75,7 @@ function setupAll() {
     console.error('Setup: Failed to setup pixi', e);
   });
 
-  const elMenu = document.getElementById('menu');
+  const elMenu = document.getElementById('menu-app');
   if (elMenu) {
     // Reveal the menu now that the global variables needed by svelte are set.
     elMenu.classList.add('ready');
