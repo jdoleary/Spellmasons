@@ -1,6 +1,4 @@
 - Store Page todos for this week
-    - Take photo of spell upgrade screen for steam page
-    - Add gifs with borders
     - Make trailer with "title cap" and "end cap"
 - Implement Jake's UI design for toolbar, inventory, tooltip, and player ready states
 - Spellmasons, copywrite needed?
@@ -9,6 +7,7 @@
 ---
 - test if you can MOVE_PLAYER while a super long cast is being triggered.
     - you cannot, find a way to handle this for multiplayer so it's communicated that you have to wait to cast until someone else has finished casting
+    - IMPORTANT: Change the store description:  `Spellmasons uses innovative faction-based turns: You and your fellow mages can all move, cast and act simultaneously.` if needed
 - bug: had a message come through where the fromPlayer wasn't set
 ```
  Handle ONDATA 10 CHOOSE_UPGRADE 

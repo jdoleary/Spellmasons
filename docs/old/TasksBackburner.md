@@ -1,3 +1,4 @@
+- Juice: it'd be cool if mage would stay in the last frame of the akira pose until the akira cast is done
 - network problem, if the server starts while a browser is trying to connect to it, it will never connect even after refresh
 - Brad marketing recommendations
   - Try adding 'Key Features' bullet points to store description like Into the Breach
