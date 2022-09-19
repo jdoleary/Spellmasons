@@ -26,7 +26,6 @@ Object { title: "Expanding", type: "card", description: description(), thumbnail
 ```
 ## next up
 - melee prediction is still off
-- archer LOS is drawn under walls which looks weird if it's under a wall but still gets to you because its the front of the wall
 - attack range shouldn't be red when explosion radius is red
 - bug: Brad got "invalid target" when trying to cast on the top of a wall but he was using "expand" so it shoul've been valid cause there were targets in the radius
 - brad has two poisons on his spellbar
@@ -49,7 +48,6 @@ Object { title: "Expanding", type: "card", description: description(), thumbnail
 - Ensure hurt is presented in first spell picks
 - game slows down when there's a lot of blood on the screen and it's painint more
 - How does endgame scale now that strength doesn't depend on the levelIndex?
-- bug: Aoe + many hurt: the hurt sound effect only plays once, it's as if the many damage sound effects from the many targets clears it or something
 
 ## Stretch Content
 - Card: Mind Control (changes faction temporarily)
