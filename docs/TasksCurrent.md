@@ -6,7 +6,6 @@
 - Spellmasons, copywrite needed?
 ---
 - bug: I'm getting a "this spell will damage you" popup during enemy turn because the unit syncs their perk health upgrade but not the prediction unit
-- bug: when a new player joins if you're looking at the upgrade menu it regenerates them
 - if you choose a spawn position while another player is casting it waits and then spawns where you clicked, which can be confusing because it still looks like you can choose where to spawn
 - bug: collected scroll but it didn't show upgrade screen
 - bug: multiplayer, when a dead player chooses resurrect they appear where they were when they died, they should "enterPortal" instead
@@ -58,7 +57,6 @@ Object { title: "Expanding", type: "card", description: description(), thumbnail
 - bug: Aoe + many hurt: the hurt sound effect only plays once, it's as if the many damage sound effects from the many targets clears it or something
 
 ## Stretch Content
-- use card background for upgrades with different colors depending on rarity
 - Card: Mind Control (changes faction temporarily)
 - Feature: perks
 - Feature: "Soul bind" - bound units share applied effects

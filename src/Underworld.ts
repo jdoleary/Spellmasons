@@ -1792,6 +1792,10 @@ export default class Underworld {
 
   showUpgrades() {
     const player = globalThis.player;
+    if (document.body?.classList.contains(showUpgradesClassName)) {
+      console.log('showUpgrades was called but it is already visible so this function returns immediately to avoid regenerating upgrades');
+      return;
+    }
     if (!player) {
       console.error('Cannot show upgrades, no globalThis.player');
       return
