@@ -1,26 +1,11 @@
 - Record trailer footage
 - Implement Jake's UI design for toolbar, inventory, tooltip, and player ready states
 ---
+## Multiplayer Enhancements
 - if you choose a spawn position while another player is casting it waits and then spawns where you clicked, which can be confusing because it still looks like you can choose where to spawn
----
-- test if you can MOVE_PLAYER while a super long cast is being triggered.
+- if you can MOVE_PLAYER while a super long cast is being triggered.
     - you cannot, find a way to handle this for multiplayer so it's communicated that you have to wait to cast until someone else has finished casting
     - IMPORTANT: Change the store description:  `Spellmasons uses innovative faction-based turns: You and your fellow mages can all move, cast and act simultaneously.` if needed
-- bug: had a message come through where the fromPlayer wasn't set
-```
- Handle ONDATA 10 CHOOSE_UPGRADE 
-Object { type: 8, upgrade: {…} }
-​
-type: 8
-​
-upgrade: Object { title: "Expanding", type: "card", thumbnail: "images/spell/spellIconExpanding.png", … }
-​
-<prototype>: Object { … }
-networkHandler.ts:136:12
-09:00:50.844
-Cannot choose upgrade, either the caster or upgrade does not exist undefined 
-Object { title: "Expanding", type: "card", description: description(), thumbnail: "images/spell/spellIconExpanding.png", maxCopies: 1, effect: effect(player), probability: 10, cost: {…} }
-```
 ## next up
 - melee prediction is still off
 - attack range shouldn't be red when explosion radius is red

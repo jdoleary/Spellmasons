@@ -1,3 +1,18 @@
+- bug: had a message come through where the fromPlayer wasn't set
+```
+ Handle ONDATA 10 CHOOSE_UPGRADE 
+Object { type: 8, upgrade: {…} }
+​
+type: 8
+​
+upgrade: Object { title: "Expanding", type: "card", thumbnail: "images/spell/spellIconExpanding.png", … }
+​
+<prototype>: Object { … }
+networkHandler.ts:136:12
+09:00:50.844
+Cannot choose upgrade, either the caster or upgrade does not exist undefined 
+Object { title: "Expanding", type: "card", description: description(), thumbnail: "images/spell/spellIconExpanding.png", maxCopies: 1, effect: effect(player), probability: 10, cost: {…} }
+```
 - Juice: it'd be cool if mage would stay in the last frame of the akira pose until the akira cast is done
 - network problem, if the server starts while a browser is trying to connect to it, it will never connect even after refresh
 - Brad marketing recommendations
