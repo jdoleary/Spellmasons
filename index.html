@@ -31,17 +31,6 @@
     Loading...
   </div>
   <div id="instructions"> </div>
-  <div id="game-content-holder">
-    <div id="inspector-tooltip">
-      <div id="inspector-tooltip-container">
-        <div class="text-center">
-          <img id="inspector-tooltip-image" src="" />
-        </div>
-        <p id="inspector-tooltip-content"></p>
-      </div>
-    </div>
-
-  </div>
   <div id="upgrade-picker">
     <div id="upgrade-picker-label">Choose a Card</div>
     <div id="upgrade-picker-content"></div>
@@ -62,46 +51,59 @@
       <div id="pie-reconnect-with-falloff"></div>
     </div>
     <div id="PIXI-holder"></div>
-    <div id="card-holders">
-      <div id="inventory-icon"></div>
-      <div id="card-holders-inner">
-        <div id="card-inspect"></div>
-        <div id="card-hand"></div>
-        <div id="health-mana-holder">
-          <div id="health-mana">
-            <div id="health" class="health-mana-bar">
-              <div class="fill"> </div>
-              <div class="fill"> </div>
-              <div class="cost"></div>
-              <div class="cost"></div>
-              <div class="label"></div>
-            </div>
-            <div id="stamina" class="health-mana-bar">
-              <div class="fill"></div>
-              <div class="label"></div>
-            </div>
-            <div id="mana" class="health-mana-bar">
-              <div class="fill"></div>
-              <div class="fill"></div>
-              <div class="fill"></div>
-              <div class="cost"></div>
-              <div class="cost"></div>
-              <div class="cost"></div>
-              <div class="label"></div>
+    <div id="inspector-tooltip">
+      <div id="inspector-tooltip-container">
+        <div class="text-center">
+          <img id="inspector-tooltip-image" src="" />
+        </div>
+        <p id="inspector-tooltip-content"></p>
+      </div>
+    </div>
+    <div id="ui-positioner">
+      <div id="ui-holder" class="gap-15">
+        <div id="card-holders" class="gap-15">
+          <div id="inventory-icon"></div>
+          <div id="card-holders-inner">
+            <div id="card-hand"></div>
+            <div id="health-mana-holder">
+              <div id="health-mana">
+                <div id="health" class="health-mana-bar">
+                  <div class="fill"> </div>
+                  <div class="fill"> </div>
+                  <div class="cost"></div>
+                  <div class="cost"></div>
+                  <div class="label"></div>
+                </div>
+                <div id="stamina" class="health-mana-bar">
+                  <div class="fill"></div>
+                  <div class="label"></div>
+                </div>
+                <div id="mana" class="health-mana-bar">
+                  <div class="fill"></div>
+                  <div class="fill"></div>
+                  <div class="fill"></div>
+                  <div class="cost"></div>
+                  <div class="cost"></div>
+                  <div class="cost"></div>
+                  <div class="label"></div>
+                </div>
+              </div>
             </div>
           </div>
+          <button type="button" class="jbutton" id="end-turn-btn">
+            End Turn
+            <div class="hotkey-badge-holder">
+              <kbd class="hotkey-badge">Spacebar</kbd>
+            </div>
+          </button>
         </div>
         <div id="selected-cards"> </div>
         <div id="inventory-content"></div>
+        <div id="card-inspect"></div>
       </div>
-      <button type="button" class="jbutton" id="end-turn-btn">
-        End Turn
-        <div class="hotkey-badge-holder">
-          <kbd class="hotkey-badge">Spacebar</kbd>
-        </div>
-      </button>
     </div>
   </div>
+
   <div id="version">
     spellmasons.com
     <br />

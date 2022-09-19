@@ -15,18 +15,11 @@ body {
 
 #PIXI-holder canvas {
   display: block;
-  /* This allows the parent to shrink when the window is resized */
-  position: absolute;
 }
 
 #underworld-container {
   min-height: 100vh;
   min-width: 100vw;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  position: fixed;
-  top: 0;
 }
 
 
@@ -55,18 +48,8 @@ body.loading.HUD-hidden #loading-screen {
 }
 
 /* Hide game content and underworld when the menu is open */
-body.view-Menu #game-content-holder,
 body.view-Menu #underworld-container {
   display: none;
-}
-
-#game-content-holder {
-  display: flex;
-  align-items: flex-start;
-  flex-direction: column;
-  height: 100vh;
-  pointer-events: none;
-  margin: 65px 0 0 8px;
 }
 
 .doob-stats.hide {
@@ -205,15 +188,30 @@ body.open-inventory #card-inspect {
   display: none;
 }
 
+#ui-positioner {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: end;
+  position: fixed;
+  bottom: 0;
+}
+
+#ui-holder {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-start;
+  margin: 0 auto;
+}
+
 #card-holders {
   user-select: none;
   display: flex;
   z-index: 1;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
   justify-content: center;
-  align-items: end;
+  align-items: center;
+  margin: 0 auto;
+  background-color: rgba(0, 0, 0, 0.7);
 }
 
 #card-holders-inner {
@@ -228,6 +226,11 @@ body.open-inventory #card-inspect {
 #card-holders #card-hand {
   display: flex;
   max-width: 100vw;
+}
+
+#card-holders #card-hand {
+  /* Leave room for the names of the spells */
+  padding-bottom: 20px;
 }
 
 /* Give selected spells a rounded look to differentiate them */
@@ -1005,6 +1008,8 @@ body.open-inventory #inventory-content {
 
 #inventory-content {
   background-color: rgba(0, 0, 0, 0.7);
+  /* Needed to display in front of pixi */
+  z-index: 1;
   max-width: 600px;
   display: none;
   flex-direction: column;
@@ -1030,6 +1035,7 @@ body.open-inventory #inventory-content {
 .slot {
   margin: 8px;
   width: 64px;
+  height: 64px;
 }
 
 .slot .card-inner,

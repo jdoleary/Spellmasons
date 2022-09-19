@@ -58,7 +58,6 @@ const dragstart = (ev: any) => {
   }
 
 }
-const cardHoldersPaddingLeft = 10;
 // Displays a full card with info on inspect-mode + hover of card
 const elCardInspect = document.getElementById('card-inspect');
 export function setupCardUIEventListeners(underworld: Underworld) {
@@ -70,7 +69,6 @@ export function setupCardUIEventListeners(underworld: Underworld) {
       e.stopPropagation();
       toggleInventory(undefined, undefined, underworld);
     });
-    elCardHolders.style['paddingLeft'] = `${cardHoldersPaddingLeft}px`;
     elCardHand.style['gap'] = `${gapBetweenCards}px`;
     elSelectedCards.style['gap'] = `${gapBetweenCards}px`;
 
