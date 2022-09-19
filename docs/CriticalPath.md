@@ -7,7 +7,7 @@
 # Major Tasks
   - (m) Marketing
   - (h) Fix liquid glitches perminantly
-  - Look into Trademark and Copywrite
+  - Look into Trademark and Copyright
   - Fix multiplayer
     - Fix player moving to 0,0 and getting stuck when portal was out, see footage Spellmasons\footage-video\first-working-multiplayer.mp4
         - see 0:23:44 for him appearing at 0,0 while he's spawning

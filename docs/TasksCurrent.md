@@ -1,7 +1,5 @@
-- Store Page todos for this week
-    - Make trailer with "title cap" and "end cap"
+- Record trailer footage
 - Implement Jake's UI design for toolbar, inventory, tooltip, and player ready states
-- Spellmasons, copywrite needed?
 ---
 - if you choose a spawn position while another player is casting it waits and then spawns where you clicked, which can be confusing because it still looks like you can choose where to spawn
 ---
