@@ -1757,6 +1757,8 @@ export default class Underworld {
           console.log('Cannot choose another upgrade');
           // Clear upgrades
           document.body?.classList.toggle(showUpgradesClassName, false);
+          // There may be perkss left to choose
+          this.showUpgrades();
           return;
         }
       }
@@ -1770,6 +1772,8 @@ export default class Underworld {
           console.log('Cannot choose another perk');
           // Clear upgrades
           document.body?.classList.toggle(showUpgradesClassName, false);
+          // There may be upgrades left to choose
+          this.showUpgrades();
           return;
         }
       }
