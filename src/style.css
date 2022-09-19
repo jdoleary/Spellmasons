@@ -215,7 +215,8 @@ body.open-inventory #card-inspect {
   justify-content: center;
   align-items: center;
   margin: 0 auto;
-  background-color: rgba(0, 0, 0, 0.7);
+  /* Same color as .ui-container's border */
+  background-color: #262324;
 }
 
 #card-holders-inner {
@@ -552,18 +553,49 @@ body.your-turn #end-turn-btn {
   opacity: 1.0;
 }
 
+body.your-turn #end-turn-btn:hover {
+  filter: brightness(145%);
+}
+
 #end-turn-btn {
+  border: 16px solid;
+  border-image-outset: 0;
+  border-image-repeat: stretch;
+  border-image-slice: 250;
+  border-image-source: url("/ui/Assets_Icon_Border_QtrCircle_1_Purple.png");
+  border-image-width: 1;
   /* z-index set explicitly to make sure it renders overtop of the cardhand so that it will
   change the cursor from a cursor-casting to just cursor */
   z-index: 2;
   opacity: 0.5;
   /* Match the size of the inventory icon so the toolbar remains centered */
-  width: 80px;
-  height: 106px;
+  /* Note the width should take into account the border so 80-16*2 = 48 */
+  width: 40px;
+  /* 106-16*2 = 74 */
+  height: 74px;
   white-space: normal;
   /* Overrides jbutton styles */
   /* Ensures that the toolbar remains centered on the screen */
   margin: 0;
+}
+
+#end-turn-btn-inner {
+  /* Matches border */
+  background-color: #483f8e;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  position: relative;
+  text-align: center;
+}
+
+#end-turn-btn-inner .hotkey-badge-holder {
+  bottom: -20px;
+  /* -5px keeps the hotkey badge centered in the end-turn button due to
+  the end turn inner button's small width */
+  left: -5px;
 }
 
 #end-turn-btn.highlight .hotkey-badge {
@@ -620,12 +652,14 @@ body.your-turn #end-turn-btn {
   right: 0;
 }
 
-#inspector-tooltip-container {
-  border: 30px solid;
-  border-image: url('images/border-diamonds.png') 30 / 1 / 0 stretch;
-  /* border-radius: 10px 10px; */
-  background-color: rgba(255, 255, 255, 0.7);
+#inspector-tooltip-inner {
+  /* Same color as .ui-container's border */
+  background-color: #262324;
   padding: 8px;
+}
+
+#inspector-tooltip-container {
+  color: white;
   width: 300px;
 }
 
@@ -1013,16 +1047,21 @@ body.draggingCamera {
   border-image: url('images/card-borders/cardRareBorder.png') 30 / 1 / 0 stretch;
 }
 
-body.open-inventory #inventory-content {
-  display: flex;
+body.open-inventory #inventory-container {
+  display: block;
+}
+
+#inventory-container {
+  display: none;
 }
 
 #inventory-content {
-  background-color: rgba(0, 0, 0, 0.7);
+  /* Same color as .ui-container's border */
+  background-color: #262324;
   /* Needed to display in front of pixi */
   z-index: 1;
   max-width: 600px;
-  display: none;
+  display: flex;
   flex-direction: column;
   flex-wrap: wrap;
   /* Always be at least big enough for 3 spells side-by-side. This is just visual appeal*/
@@ -1268,12 +1307,13 @@ body.view-Game #instructions {
   border-left: 1px solid black;
 }
 
+
 .ui-container {
-  border: 10px solid;
+  border: 16px solid;
   border-image-outset: 0;
   border-image-repeat: stretch;
-  border-image-slice: 30;
-  border-image-source: url("/ui/UI_Icon_Border_QtrCircle_3.png");
+  border-image-slice: 250;
+  border-image-source: url("/ui/Assets_Icon_Border_QtrCircle_1.png");
   border-image-width: 1;
 
 }
