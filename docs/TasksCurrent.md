@@ -6,7 +6,6 @@
 - Spellmasons, copywrite needed?
 ---
 - if you choose a spawn position while another player is casting it waits and then spawns where you clicked, which can be confusing because it still looks like you can choose where to spawn
-- bug: multiplayer, when a dead player chooses resurrect they appear where they were when they died, they should "enterPortal" instead
 ---
 - test if you can MOVE_PLAYER while a super long cast is being triggered.
     - you cannot, find a way to handle this for multiplayer so it's communicated that you have to wait to cast until someone else has finished casting

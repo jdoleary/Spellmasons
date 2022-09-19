@@ -1425,6 +1425,12 @@ export default class Underworld {
     // Better to have the upgrade screen tied to the network message.
     // Note: Upgrades must come AFTER resetPlayerForNextLevel, see commit for explanation
     this.showUpgrades();
+    // Reset diedDuringLevel now that we are starting a new level,
+    // this must be called AFTER showUpgrades so that the players
+    // that died will miss the chance to upgrade perks
+    this.players.forEach(p => {
+      p.diedDuringLevel = false;
+    });
 
     // NOTE: Any data that needs to be synced from host to clients from this function MUST
     // be set BEFORE postSetupLevel is invoked because postSetupLevel will send a sync message
@@ -1877,6 +1883,15 @@ export default class Underworld {
       // doesn't have to wait for level generation to complete before
       // returning
       setTimeout(() => {
+        // Make all dead players go "in portal" so they share the same state at the living players in
+        // preparation for the next level:
+        this.players.filter(p => !p.unit.alive).forEach(player => {
+          // Copied from Player.enterPortal. This code puts the dead-at-end-of-level players
+          // in the same state as portaled players so they don't show up at the next level where they died.
+          Image.hide(player.unit.image);
+          Unit.setLocation(player.unit, { x: NaN, y: NaN });
+          player.diedDuringLevel = true;
+        });
         // Prepare the next level
         if (globalThis.isHost(this.pie)) {
           this.generateLevelData(++this.levelIndex);

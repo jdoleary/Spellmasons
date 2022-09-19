@@ -3,7 +3,7 @@ import type { CardCost } from './cards/cardUtils';
 import { cardRarityAsString, getCardRarityColor } from './graphics/ui/CardUI';
 import { chooseObjectWithProbability } from './jmath/rand';
 import { MESSAGE_TYPES } from './types/MessageTypes';
-import type { IPlayer } from './entity/Player';
+import { IPlayer } from './entity/Player';
 import Underworld from './Underworld';
 export interface IUpgrade {
   title: string;
@@ -20,9 +20,9 @@ export interface IUpgrade {
 // Chooses a random card based on the card's probabilities
 // minimumProbability ensures that super rare cards won't be presented too early on
 // onlyStats: means it'll present stats upgrades instead of card upgrades
-export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, minimumProbability: number, onlyStats: boolean): IUpgrade[] {
+export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, minimumProbability: number, usePerks: boolean): IUpgrade[] {
   // Dead players choose special upgrades
-  if (!player.unit.alive) {
+  if (usePerks && player.diedDuringLevel) {
     return [...upgradeSourceWhenDead];
   }
   let upgrades: IUpgrade[] = [];
@@ -40,7 +40,7 @@ export function generateUpgrades(player: IPlayer, numberOfUpgrades: number, mini
   // Every other level, players get to choose from stas upgrades or card upgrades
   // Unless Player already has all of the upgrades, in which case they
   // only have stat upgrades to choose from
-  let upgradeList = filteredUpgradeCardsSource.length === 0 || onlyStats ? upgradeStatsSource.filter(filterUpgrades) : filteredUpgradeCardsSource;
+  let upgradeList = filteredUpgradeCardsSource.length === 0 || usePerks ? upgradeStatsSource.filter(filterUpgrades) : filteredUpgradeCardsSource;
   // Limit the rarity of cards that are possible to attain
   upgradeList = upgradeList.filter(u => u.probability >= minimumProbability);
 
@@ -137,7 +137,7 @@ export function getUpgradeByTitle(title: string): IUpgrade | undefined {
 export const upgradeSourceWhenDead: IUpgrade[] = [
   {
     title: 'Resurrect',
-    type: 'card',
+    type: 'perk',
     description: () => 'Resurrects you so the adventure can continue!',
     thumbnail: 'images/upgrades/resurrect.png',
     // Resurrection happens automatically at the start of each level
