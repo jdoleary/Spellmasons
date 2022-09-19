@@ -2,6 +2,10 @@
   --selected-card-size: 32px;
 }
 
+.pad-15 {
+  padding: 15px;
+}
+
 body {
   margin: 0;
   overflow: hidden;
@@ -553,6 +557,13 @@ body.your-turn #end-turn-btn {
   change the cursor from a cursor-casting to just cursor */
   z-index: 2;
   opacity: 0.5;
+  /* Match the size of the inventory icon so the toolbar remains centered */
+  width: 80px;
+  height: 106px;
+  white-space: normal;
+  /* Overrides jbutton styles */
+  /* Ensures that the toolbar remains centered on the screen */
+  margin: 0;
 }
 
 #end-turn-btn.highlight .hotkey-badge {
@@ -1014,7 +1025,8 @@ body.open-inventory #inventory-content {
   display: none;
   flex-direction: column;
   flex-wrap: wrap;
-  padding: 8px;
+  /* Always be at least big enough for 3 spells side-by-side. This is just visual appeal*/
+  min-width: 240px;
 }
 
 #inventory-content .category {
