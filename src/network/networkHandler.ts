@@ -309,7 +309,7 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
           tryFallInOutOfLiquid(fromPlayer.unit, underworld, false);
           // Animate effect of unit spawning from the sky
           skyBeam(fromPlayer.unit);
-          playSFXKey('spawnFromSky');
+          playSFXKey('summonDecoy');
           // Once a player spawns make sure to show their image as
           // their image may be hidden if they are the non-current user
           // player in multiplayer
