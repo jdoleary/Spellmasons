@@ -213,6 +213,7 @@ body.open-inventory #card-inspect {
   bottom: 0;
   width: 100%;
   justify-content: center;
+  align-items: end;
 }
 
 #card-holders-inner {
@@ -234,8 +235,10 @@ body.open-inventory #card-inspect {
   overflow: hidden;
 }
 
-#selected-cards:empty {
-  display: none;
+#selected-cards {
+  /* Selected cards should always have height even when empty so that the inventory doesn't move
+  when cards are added to this element */
+  min-height: 48px;
 }
 
 #card-hand .card img {
@@ -547,9 +550,6 @@ body.your-turn #end-turn-btn {
   change the cursor from a cursor-casting to just cursor */
   z-index: 2;
   opacity: 0.5;
-  position: absolute;
-  right: 8px;
-  bottom: 8px;
 }
 
 #end-turn-btn.highlight .hotkey-badge {
@@ -999,12 +999,6 @@ body.draggingCamera {
   border-image: url('images/card-borders/cardRareBorder.png') 30 / 1 / 0 stretch;
 }
 
-#inventory {
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-end;
-}
-
 body.open-inventory #inventory-content {
   display: flex;
 }
@@ -1016,10 +1010,6 @@ body.open-inventory #inventory-content {
   flex-direction: column;
   flex-wrap: wrap;
   padding: 8px;
-  /* Bandaid fix to selecting spells causing inventory reflow */
-  position: fixed;
-  left: 100px;
-  top: 178px;
 }
 
 #inventory-content .category {
@@ -1058,13 +1048,10 @@ body.open-inventory #inventory-content {
   height: 106px;
   background-image: url('images/card-designs/bookStone.png');
   transition: all 0.2s;
-  position: absolute;
-  left: 0;
-  bottom: 0;
 }
 
 body.open-inventory #inventory-icon {
-  opacity: 0.5;
+  filter: drop-shadow(0 0 0.4rem rgb(0, 243, 255));
 }
 
 #inventory-icon:hover {

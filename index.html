@@ -62,13 +62,8 @@
       <div id="pie-reconnect-with-falloff"></div>
     </div>
     <div id="PIXI-holder"></div>
-    <button type="button" class="jbutton" id="end-turn-btn">
-      End Turn
-      <div class="hotkey-badge-holder">
-        <kbd class="hotkey-badge">Spacebar</kbd>
-      </div>
-    </button>
     <div id="card-holders">
+      <div id="inventory-icon"></div>
       <div id="card-holders-inner">
         <div id="card-inspect"></div>
         <div id="card-hand"></div>
@@ -81,6 +76,10 @@
               <div class="cost"></div>
               <div class="label"></div>
             </div>
+            <div id="stamina" class="health-mana-bar">
+              <div class="fill"></div>
+              <div class="label"></div>
+            </div>
             <div id="mana" class="health-mana-bar">
               <div class="fill"></div>
               <div class="fill"></div>
@@ -90,18 +89,17 @@
               <div class="cost"></div>
               <div class="label"></div>
             </div>
-            <div id="stamina" class="health-mana-bar">
-              <div class="fill"></div>
-              <div class="label"></div>
-            </div>
           </div>
         </div>
         <div id="selected-cards"> </div>
-        <div id="inventory">
-          <div id="inventory-icon"></div>
-          <div id="inventory-content"></div>
-        </div>
+        <div id="inventory-content"></div>
       </div>
+      <button type="button" class="jbutton" id="end-turn-btn">
+        End Turn
+        <div class="hotkey-badge-holder">
+          <kbd class="hotkey-badge">Spacebar</kbd>
+        </div>
+      </button>
     </div>
   </div>
   <div id="version">
