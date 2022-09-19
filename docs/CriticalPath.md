@@ -1,21 +1,17 @@
 # Parallel Focuses
 - Record Trailer and start marketing
     - trailer should be more zoomed in
-- Record and Produce "end cap" video.  A short 5-10 second end cap for videos to intro the game and tell people where to find it
-- Make "Title cap"
-
 # Major Tasks
+  - (e) UI
   - (m) Marketing
   - (h) Fix liquid glitches perminantly
   - Look into Trademark and Copyright
   - Fix multiplayer
     - Fix player moving to 0,0 and getting stuck when portal was out, see footage Spellmasons\footage-video\first-working-multiplayer.mp4
-        - see 0:23:44 for him appearing at 0,0 while he's spawning
         - see 0:48:55 for when i get stuck post portal out of bounds
             - it looks like portal spawned on me, I went to 0,0, pickups flew too me, but it didn't end the game. ALSO WE HAD CLONES OUT, MAYBE THAT'S whY?
             - going through the portal again fixed it.
         - Okay it looks like my guy went through the portal cause it spawned on him and brad when through his portal on his screen but not on my screen (he wasn't close enough)
-  - (e) UI
   - (m) Integrate freestanding obstacles (tree, urn, etc)
   - Finalize
     - Rather than "targeted units" and "targeted pickups" use composition to do "movable", "damagable", "turnTakeable"

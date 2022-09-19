@@ -1,3 +1,68 @@
+- Make tests ensure that all poly functions handle maleformed polys gracefully
+- Should I send a pie message everytime i need to end a players turn so we never end up with desynced turn state? rather than f3c23e59c99362c6fc9229cfc19499c3789439a6
+- Optional: (M) Interactive terrain (grass spreads fire, water can be frozen to walk on, boulders can be destroyed)
+- Potential bug: This may not be a bug once overworld is replaced with Cauldron but currently voteForLevel waits until all clients have voted to move on, however, if a client disconnects without voting, the other clients will be stuck until another client votes
+- Potential bug: When player disconnects and reconnects, the game will call initializeTurnPhase and setRoute in order to reestablish the game state.  This MAY cause issues if the game is mid turn. See 1091b4dbb84118dd016bbba75f18a9273f1a656a for explanation.
+- (M) wsPie: how to handle reconnection
+  1. Reconnection when the server goes down and comes back up (loses room state)
+    - This currently puts the game in a buggy state
+  2. Reconnection when the client goes down and comes back up (keeps room?)
+    - How to handle user joining mid stage (say during overworld or during underworld)?
+- Restore replay
+- What should happen when you clone yourself?
+    - Right now the clone just attacks, but what if your soul could occupy the clone when you die?
+- Stresstest gamestate sync:
+    - If you delay messages on the backend are you sure they'll arrive in the right order?
+- What if it was in a dungeon instead of outside so there could be rooms?
+- Things to sync
+    - Add syncing for units
+        - when: At start of unit turn
+        - position, health, mana, spell effects?
+        - Send message at start of units turn which asserts RNG state and unit state; then all simulations calculate together
+    - Underworld
+        - when: ?
+        - Exludes Players, Units
+        - Syncing RNG
+        - turn state
+        - pickups
+    - Players
+        - when: at start of player turn
+        - this will also sync upgrades
+- Add tests / refactor into module for syncronous message processing to account for:
+    - messages arriving out of order
+- When a user disconnects on overworld it doesn't check if everyone has voted (this may not be a problem once
+i switch to the cauldron overworld)
+- Like how dying at start of turn didn't end turn until 24be49dfb4904bc81e683c903ffe0bdcdfc75065, maybe other death causing events wont end turn.  Maybe I should add a check in the unit code when they take damage to always see if it's a player
+- repelCircleFromLine doesn't handle corner cases such as vertical lines due to it using intersection of lines under the hood.  Improve intersectionOfLines cornercases.  I protect against this case by doing special handling of vertical lines in findWherePointIntersectLineSegmentAtRightAngle() which calls findWherePointIntersectLineAtRightAngle is the only place that uses intersectionOfLines
+- if the host disconnects in character selection mode, the other players get stuck and can't choose characters
+- If second client picks character first there is  a bug
+- Update server to send message number so clients can know when they both have the latest message.  This'll prevent false positive desync detection
+- (MAYBE ALREADY SOLVED)Address possible desync issues around projectile promise? same as with loading a game mid-movement
+    - shouldn't this not be an issue though if loading a game happens synchronously? 
+    - maybe it should happen synchronously for the sender and then it wont be a problem
+    - Also: desync often happens with moveTarget since moveTarget can be set mid way through executing a gamestate_hash check which would make the hashes not equal
+- (VERY OPTIONAL) Some kind of visible error mechanism to show when cards don't apply
+    - Don't let players cast fizzle spells (AOE or chain without damage)
+    - Like if you cast "Protection" on yourself and then AOE it does nothing because there are no targets to AOE off of
+    - Or if you cast cards out of order like Dicard without a card after it
+- Swap still seems to be broken with chain
+- Fixed i think: 
+    - Bug: Stuck on AI turn after archers killed resurrected golem
+- Maybe I want this?? Bug: Chain targets dead units
+- Every unit should always be trying to get in position to do damage
+- Swap should only swap with targets, it shouldn't allow arbitrary teleportation
+- Balance mana
+  - To make this challenging, players should often be on the verge of no mana, it should feel scarce so they have to pick carefully what spells they want to use.
+    - Maybe the answer to this is to make spells more expensive every time you use them
+      - Branch `log2mana`
+      - use log2 so it doesn't get absurdly more expensive
+- Brad pickuped cards and kept playing and was later suprised at his new cards. Make it obvious
+- I wish i could bring goons with me through the portal
+- Chaining too many units crashed the game (optimize chain)
+- Attack animation for cloned players is the same as the golem attack animation which is confusing visually
+- (maybe) Chain needs a radius to show how far away chaining will occur, maybe
+- Clone caused guys to spawn out of bounds
+- Check security message when running docker build
 - bug: had a message come through where the fromPlayer wasn't set
 ```
  Handle ONDATA 10 CHOOSE_UPGRADE 
@@ -32,6 +97,7 @@ Object { title: "Expanding", type: "card", description: description(), thumbnail
 - Camera shouldn't jerk around when you die
 - "Potential Cast Range" text doesn't scale when you zoom
 - bug: if you save while having picked 1 of the 3 starting spells, it loads and shows the picker before the player is synced, so just the text is out of date
+- Optimize: game slows down when there's a lot of blood on the screen and it's painint more
 - Optimize: Save files need not save unitsPrediction
 - player unit has a subsprite without an imagePath, what is it? it's saving as 'null' and then throwing an error when it tries to load it
 - Bug: Portal spawns when you prediction kill yourself on test level

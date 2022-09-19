@@ -1,20 +1,11 @@
 - Record trailer footage
 - Implement Jake's UI design for toolbar, inventory, tooltip, and player ready states
 ---
-## Multiplayer Enhancements / issues
-- if you choose a spawn position while another player is casting it waits and then spawns where you clicked, which can be confusing because it still looks like you can choose where to spawn
-- if you can MOVE_PLAYER while a super long cast is being triggered.
-    - you cannot, find a way to handle this for multiplayer so it's communicated that you have to wait to cast until someone else has finished casting
-    - IMPORTANT: Change the store description:  `Spellmasons uses innovative faction-based turns: You and your fellow mages can all move, cast and act simultaneously.` if needed
-- If player joins mid enemy movement it will force reset them
-    - this is still an issue: as of 2022-09-16
 ## next up
 - melee prediction is still off
 - attack range shouldn't be red when explosion radius is red
 - bug: Brad got "invalid target" when trying to cast on the top of a wall but he was using "expand" so it shoul've been valid cause there were targets in the radius
-- brad has two poisons on his spellbar
 - Improve out of range targeting: if any part of a unit is in range, then targeting it must be allowed
-## Low hanging fruit
 - small bugs:
     - Sometimes it tries to path around things and wastes stamina if there isn't a straight line path
     - when your main mana bar has 0 mana left it doesn't show the diagonal lines
@@ -28,8 +19,20 @@
     - debilitate
     - blood curse
 - Ensure hurt is presented in first spell picks
-- game slows down when there's a lot of blood on the screen and it's painint more
+
+# Long Term
 - How does endgame scale now that strength doesn't depend on the levelIndex?
+- What if cards could cost you things other than mana, like health, or even speed?? 0.o
+- Make pickups destructable (even portal - which could spawn in at another location if you destroy it - aim to plesantly suprise players)
+- Security
+    - Since I'm using electron, I should evaluate my dependencies for safety: https://www.electronjs.org/docs/latest/tutorial/security#security-is-everyones-responsibility
+    - [Security Recommendations](https://www.electronjs.org/docs/latest/tutorial/security#checklist-security-recommendations)
+- Polish
+    - [Add Juice](https://itch.io/b/1219/gamedev-pro)
+        - (M) Animate cards
+            - https://3dtransforms.desandro.com/perspective
+            - https://3dtransforms.desandro.com/card-flip
+            - Use transform3d functions to trigger hardware acceleration: "In essence, any transform that has a 3D operation as one of its functions will trigger hardware compositing, even when the actual transform is 2D, or not doing anything at all (such as translate3d(0,0,0)). Note this is just current behaviour, and could change in the future (which is why we don’t document or encourage it). But it is very helpful in some situations and can significantly improve redraw performance."
 
 ## Stretch Content
 - Card: Mind Control (changes faction temporarily)
@@ -72,6 +75,13 @@
 - Spell: Range, like aoe and chain but extends your range
 
 
+## Multiplayer Enhancements / issues
+- if you choose a spawn position while another player is casting it waits and then spawns where you clicked, which can be confusing because it still looks like you can choose where to spawn
+- if you can MOVE_PLAYER while a super long cast is being triggered.
+    - you cannot, find a way to handle this for multiplayer so it's communicated that you have to wait to cast until someone else has finished casting
+    - IMPORTANT: Change the store description:  `Spellmasons uses innovative faction-based turns: You and your fellow mages can all move, cast and act simultaneously.` if needed
+- If player joins mid enemy movement it will force reset them
+    - this is still an issue: as of 2022-09-16
 ## Misc
 - **critical** Improve sending castCards with targeting based on id not position
 - (wont do?) Make an overlay screen that blocks interaction while waiting for sync
