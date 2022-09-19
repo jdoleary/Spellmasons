@@ -1,12 +1,13 @@
 # Parallel Focuses
-- make gif for steam page asking them to wishlist now
 - Record Trailer and start marketing
     - trailer should be more zoomed in
 - Record and Produce "end cap" video.  A short 5-10 second end cap for videos to intro the game and tell people where to find it
+- Make "Title cap"
 
 # Major Tasks
   - (m) Marketing
   - (h) Fix liquid glitches perminantly
+  - Look into Trademark and Copywrite
   - Fix multiplayer
     - Fix player moving to 0,0 and getting stuck when portal was out, see footage Spellmasons\footage-video\first-working-multiplayer.mp4
         - see 0:23:44 for him appearing at 0,0 while he's spawning
@@ -30,7 +31,6 @@
 - September / October
     - Finish UI
     - Start Marketing
-        - Finish Steam Page (description with gifs) / Trailer
     - Reliable Multiplayer
 - November
     - Package as Electron App

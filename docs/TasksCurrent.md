@@ -1,8 +1,15 @@
+- Store Page todos for this week
+    - Take photo of spell upgrade screen for steam page
+    - Add gifs with borders
+    - Make trailer with "title cap" and "end cap"
+- Implement Jake's UI design for toolbar, inventory, tooltip, and player ready states
+- Spellmasons, copywrite needed?
+---
 - bug: I'm getting a "this spell will damage you" popup during enemy turn because the unit syncs their perk health upgrade but not the prediction unit
 - bug: when a new player joins if you're looking at the upgrade menu it regenerates them
 - if you choose a spawn position while another player is casting it waits and then spawns where you clicked, which can be confusing because it still looks like you can choose where to spawn
 - bug: collected scroll but it didn't show upgrade screen
-- bug: multiplayer, when a dead player chooses resurrect they appear where they were when they died, they should portal instead
+- bug: multiplayer, when a dead player chooses resurrect they appear where they were when they died, they should "enterPortal" instead
 - choosing perks doesn't work `cannot choose another perk`
     - okay it did work but it didn't sync right away
 ---
@@ -27,14 +34,8 @@ Object { title: "Expanding", type: "card", description: description(), thumbnail
 - melee prediction is still off
 - archer LOS is drawn under walls which looks weird if it's under a wall but still gets to you because its the front of the wall
 - attack range shouldn't be red when explosion radius is red
-- do a playtest myself and record for trailer footage
-- Make the trailer
-
-- implement jakes UI icons
-## To fix from Brad playtest
-- bug: he got "invalid target" when trying to cast on the top of a wall but he was using "expand" so it shoul've been valid cause there were targets in the radius
+- bug: Brad got "invalid target" when trying to cast on the top of a wall but he was using "expand" so it shoul've been valid cause there were targets in the radius
 - brad has two poisons on his spellbar
-## Tasks 
 - Improve out of range targeting: if any part of a unit is in range, then targeting it must be allowed
 ## Low hanging fruit
 - small bugs:

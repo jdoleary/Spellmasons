@@ -1,3 +1,6 @@
+- Brad marketing recommendations
+  - Try adding 'Key Features' bullet points to store description like Into the Breach
+  - Move the bottom coolest gif to the top
 - Don't play turn end sound fx if you've already ended yoru turn
 - should I clear the underworld seed on cleanup?
 - sound from offscreen should be played quieter
