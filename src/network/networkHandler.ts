@@ -314,6 +314,8 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
           // their image may be hidden if they are the non-current user
           // player in multiplayer
           Image.show(fromPlayer.unit.image);
+          fromPlayer.endedTurn = false;
+          underworld.syncTurnMessage();
         } else {
           console.error('Cannot spawn player at NaN')
         }
