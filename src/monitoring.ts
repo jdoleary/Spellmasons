@@ -24,6 +24,7 @@ export function setupMonitoring() {
       // We recommend adjusting this value in production
       tracesSampleRate: 1.0,
     });
+    Sentry.setTag("SpellmasonsRunner", "Browser");
   } else {
     console.log('Setup: Monitoring with Sentry disabled due to localhost')
   }

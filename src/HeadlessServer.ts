@@ -1,12 +1,25 @@
 // This file is the entrypoint for the headless server and must set globalThis.headless
 // to true to denote that there is no graphics nor audio code
 globalThis.headless = true;
+import * as Sentry from "@sentry/node";
+
+// Importing @sentry/tracing patches the global hub for tracing to work.
+import "@sentry/tracing";
 import { version } from '../package.json';
+const release = `spellmasons@${version}`;
+Sentry.init({
+    dsn: "https://4162d0e2c0a34b1aa44744ce94b4b21b@o1186256.ingest.sentry.io/6306205",
+    release,
+    // We recommend adjusting this value in production, or using tracesSampler
+    // for finer control
+    tracesSampleRate: 1.0,
+});
+Sentry.setTag("SpellmasonsRunner", "HeadlessServer");
+
 import './Shims';
-import { hostGiveClientGameState, IHostApp, onClientPresenceChanged } from './network/networkUtil';
+import { IHostApp, onClientPresenceChanged } from './network/networkUtil';
 import Underworld from './Underworld';
 import { onData } from './network/networkHandler';
-import { MESSAGE_TYPES } from './types/MessageTypes';
 const pie = require('@websocketpie/server');
 globalThis.SPELLMASONS_PACKAGE_VERSION = version;
 // Init underworld so that when clients join they can use it as the canonical
