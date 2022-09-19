@@ -1,11 +1,13 @@
 - Record trailer footage
 - Implement Jake's UI design for toolbar, inventory, tooltip, and player ready states
 ---
-## Multiplayer Enhancements
+## Multiplayer Enhancements / issues
 - if you choose a spawn position while another player is casting it waits and then spawns where you clicked, which can be confusing because it still looks like you can choose where to spawn
 - if you can MOVE_PLAYER while a super long cast is being triggered.
     - you cannot, find a way to handle this for multiplayer so it's communicated that you have to wait to cast until someone else has finished casting
     - IMPORTANT: Change the store description:  `Spellmasons uses innovative faction-based turns: You and your fellow mages can all move, cast and act simultaneously.` if needed
+- If player joins mid enemy movement it will force reset them
+    - this is still an issue: as of 2022-09-16
 ## next up
 - melee prediction is still off
 - attack range shouldn't be red when explosion radius is red
@@ -25,8 +27,6 @@
 - art: Spell Modifier effects visual representation to stay on units
     - debilitate
     - blood curse
-- If player joins mid enemy movement it will force reset them
-    - this is still an issue: as of 2022-09-16
 - Ensure hurt is presented in first spell picks
 - game slows down when there's a lot of blood on the screen and it's painint more
 - How does endgame scale now that strength doesn't depend on the levelIndex?
