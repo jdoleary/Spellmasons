@@ -76,14 +76,14 @@ async function animate(pos: Vec2, radius: number, underworld: Underworld) {
     for (let i = 0; i < iterations; i++) {
 
       setTimeout(() => {
-        if (predictionGraphics) {
-          predictionGraphics.clear();
-          predictionGraphics.lineStyle(2, colors.targetingSpellGreen, 1.0)
-          predictionGraphics.beginFill(colors.targetingSpellGreen, 0.2);
+        if (globalThis.predictionGraphics) {
+          globalThis.predictionGraphics.clear();
+          globalThis.predictionGraphics.lineStyle(2, colors.targetingSpellGreen, 1.0)
+          globalThis.predictionGraphics.beginFill(colors.targetingSpellGreen, 0.2);
 
           const animatedRadius = radius * easeOutCubic((i + 1) / iterations)
-          predictionGraphics.drawCircle(pos.x, pos.y, animatedRadius);
-          predictionGraphics.endFill();
+          globalThis.predictionGraphics.drawCircle(pos.x, pos.y, animatedRadius);
+          globalThis.predictionGraphics.endFill();
           // Draw circles around new targets
           let withinRadius: Vec2[] = [];
           withinRadius = withinRadius.concat(
@@ -98,7 +98,7 @@ async function animate(pos: Vec2, radius: number, underworld: Underworld) {
               false
             ));
           withinRadius.forEach(v => {
-            predictionGraphics?.drawCircle(v.x, v.y, config.COLLISION_MESH_RADIUS);
+            globalThis.predictionGraphics?.drawCircle(v.x, v.y, config.COLLISION_MESH_RADIUS);
           })
         }
         if (i >= iterations - 1) {
@@ -108,7 +108,7 @@ async function animate(pos: Vec2, radius: number, underworld: Underworld) {
       }, millisBetweenIterations * i)
     }
   })).then(() => {
-    predictionGraphics?.clear();
+    globalThis.predictionGraphics?.clear();
   });
 }
 export default spell;

@@ -129,26 +129,26 @@ async function animate(pos: Vec2, newTargets: Vec2[], oldTargets: Vec2[]) {
     for (let i = 0; i < iterations; i++) {
 
       setTimeout(() => {
-        if (predictionGraphics) {
-          predictionGraphics.clear();
-          predictionGraphics.lineStyle(2, colors.targetingSpellGreen, 1.0);
+        if (globalThis.predictionGraphics) {
+          globalThis.predictionGraphics.clear();
+          globalThis.predictionGraphics.lineStyle(2, colors.targetingSpellGreen, 1.0);
           // between 0 and 1;
           const proportionComplete = easeOutCubic((i + 1) / iterations);
           newTargets.forEach(target => {
 
-            predictionGraphics?.moveTo(pos.x, pos.y);
+            globalThis.predictionGraphics?.moveTo(pos.x, pos.y);
             const dist = distance(pos, target)
             const pointApproachingTarget = add(pos, similarTriangles(target.x - pos.x, target.y - pos.y, dist, dist * proportionComplete));
-            predictionGraphics?.lineTo(pointApproachingTarget.x, pointApproachingTarget.y);
+            globalThis.predictionGraphics?.lineTo(pointApproachingTarget.x, pointApproachingTarget.y);
             if (proportionComplete >= 1) {
-              predictionGraphics?.drawCircle(target.x, target.y, config.COLLISION_MESH_RADIUS);
+              globalThis.predictionGraphics?.drawCircle(target.x, target.y, config.COLLISION_MESH_RADIUS);
             }
           });
           // Draw completed lines and circles on old targets
           oldTargets.forEach(target => {
-            // predictionGraphics?.moveTo(pos.x, pos.y);
-            // predictionGraphics?.lineTo(target.x, target.y);
-            predictionGraphics?.drawCircle(target.x, target.y, config.COLLISION_MESH_RADIUS);
+            // globalThis.predictionGraphics?.moveTo(pos.x, pos.y);
+            // globalThis.predictionGraphics?.lineTo(target.x, target.y);
+            globalThis.predictionGraphics?.drawCircle(target.x, target.y, config.COLLISION_MESH_RADIUS);
           });
         }
         if (i >= iterations - 1) {
@@ -158,7 +158,7 @@ async function animate(pos: Vec2, newTargets: Vec2[], oldTargets: Vec2[]) {
       }, millisBetweenIterations * i)
     }
   })).then(() => {
-    predictionGraphics?.clear();
+    globalThis.predictionGraphics?.clear();
   });
 }
 export default spell;

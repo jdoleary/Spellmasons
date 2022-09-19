@@ -33,4 +33,12 @@ global.requestAnimationFrame = (callback) => {
 // Headless server plays no audio
 global.playSFX = (_string) => { };
 global.playSFXKey = (_string) => { };
+global.walkPathGraphics = undefined;
+global.debugGraphics = undefined;
+global.devDebugGraphics = undefined;
+global.radiusGraphics = undefined;
+global.thinkingPlayerGraphics = undefined;
+global.unitOverlayGraphics = undefined;
+global.predictionGraphics = undefined;
+global.planningViewGraphics = undefined;
 export { };
