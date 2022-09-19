@@ -203,11 +203,6 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
       break;
     case MESSAGE_TYPES.SYNC_PLAYERS:
       {
-        if (globalThis.isHost(underworld.pie)) {
-          // Host shouldn't sync with itself
-          console.log('Host: Skip sync with self')
-          break;
-        }
         console.log('sync: SYNC_PLAYERS; syncs units and players')
         const { units, players } = payload as {
           // Note: When syncing players, must also sync units

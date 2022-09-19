@@ -2349,6 +2349,11 @@ export default class Underworld {
     return this.units;
   }
   syncUnits(units: Unit.IUnitSerialized[]) {
+    if (globalThis.isHost(this.pie)) {
+      // Host shouldn't sync with itself
+      console.log('Host: Skip sync with self')
+      return
+    }
     console.log('sync: Syncing units', units.map(u => u.id), this.units.map(u => u.id));
     // Remove excess units if local copy of units has more units than the units it
     // should be syncing with
@@ -2462,6 +2467,11 @@ export default class Underworld {
     return newlyCreatedPlayers;
   }
   syncPlayers(players: Player.IPlayerSerialized[]) {
+    if (globalThis.isHost(this.pie)) {
+      // Host shouldn't sync with itself
+      console.log('Host: Skip sync with self')
+      return
+    }
     console.log('sync: Syncing players', JSON.stringify(players.map(p => p.clientId)));
     // Clear previous players array
     this.players = [];
