@@ -1,7 +1,11 @@
+- graphics bug under health status bars, colored line
+- clone, connect, pull didn't work on pickups: connect doesn't work on pickups
+- when recording, don't play turn sfx
+- player gold circle underline renders over top of player
 - trailer copy: "Each spell influences the next"
     - Noita 1.0 trailer as reference
 - Record trailer footage
-- Implement Jake's UI design for toolbar, inventory, tooltip, and player ready states
+- Implement Jake's UI design nplayer ready states
 ---
 ## next up
 - melee prediction is still off

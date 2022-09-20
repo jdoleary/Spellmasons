@@ -66,3 +66,25 @@
 
 # Gifs
 - "I feel like I'm painting with an increasingly expansive palette"
+
+
+# Clip order
+- blood: akira moment
+- water: archers hit me, pull clone potions
+- ether: rez 2 golems and let them attack my enemies
+- lava: pull 3 archers
+- water: swap with archer into water
+- ether: contageous poison
+- blood: clone archers
+- lava: chain rez
+- ether: I get attacked by vampire and grunts
+- water: summoner summons 3 archers
+- ether: inventory screen
+- lava: devise combinations
+- END CAP
+
+- lava: push archer and golem into lava
+- lava: pull 3 mana potions to me
+- blood: clone globs
+- water: pull dragger
+- lava: swap pull dragger
