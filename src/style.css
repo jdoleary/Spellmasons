@@ -547,7 +547,7 @@ body.recording #end-turn-btn {
   display: none !important;
 }
 
-.hide-card-holders #card-holders {
+.hide-card-holders #ui-positioner {
   display: none;
 }
 
