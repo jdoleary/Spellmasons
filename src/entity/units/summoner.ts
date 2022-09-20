@@ -57,7 +57,7 @@ const unit: UnitSource = {
             number: 3,
           },
           {
-            sourceUnit: allUnits.lobber,
+            sourceUnit: allUnits.glop,
             probability: 10,
             number: 2,
           },
@@ -89,9 +89,8 @@ const unit: UnitSource = {
             } else {
               console.log("Summoner could not find valid spawn");
             }
-          }
-          else {
-            console.error('summoner could not find unit source to summon from');
+          } else {
+            console.error('summoner could not find unit source to summon from. Has the unit\'s id changed?');
           }
         }
         await lastPromise;
