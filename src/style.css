@@ -699,6 +699,21 @@ body.your-turn #end-turn-btn:hover {
   background-color: #262324;
 }
 
+.health-mana-bar:after {
+  border: 16px solid;
+  border-image-outset: 0;
+  border-image-repeat: stretch;
+  border-image-slice: 250;
+  border-image-source: url("/ui/Assets_Icon_Border_QtrCircle_2_stats_bar.png");
+  border-image-width: 9px 14px;
+  content: "";
+  position: relative;
+  width: 235px;
+  display: inline-block;
+  position: absolute;
+  top: 0;
+}
+
 #health,
 #mana,
 #stamina {
