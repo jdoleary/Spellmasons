@@ -1,5 +1,7 @@
 :root {
   --selected-card-size: 32px;
+  --mana: #00268d;
+  --stats-bar-background: #262324;
 }
 
 .pad-15 {
@@ -216,7 +218,7 @@ body.open-inventory #card-inspect {
   align-items: center;
   margin: 0 auto;
   /* Same color as .ui-container's border */
-  background-color: #262324;
+  background-color: var(--stats-bar-background);
 }
 
 #card-holders-inner {
@@ -654,7 +656,7 @@ body.your-turn #end-turn-btn:hover {
 
 #inspector-tooltip-inner {
   /* Same color as .ui-container's border */
-  background-color: #262324;
+  background-color: var(--stats-bar-background);
   padding: 8px;
 }
 
@@ -695,8 +697,8 @@ body.your-turn #end-turn-btn:hover {
   height: 32px;
   flex: 1 1 0;
   border-radius: 3px;
-  border: 1px solid #262324;
-  background-color: #262324;
+  border: 1px solid var(--stats-bar-background);
+  background-color: var(--stats-bar-background);
 }
 
 .health-mana-bar:after {
@@ -736,7 +738,7 @@ body.your-turn #end-turn-btn:hover {
 }
 
 #health .fill {
-  background-color: #d55656;
+  background-color: #8d000d;
   position: absolute;
 }
 
@@ -755,12 +757,12 @@ body.your-turn #end-turn-btn:hover {
 }
 
 #stamina .fill {
-  background-color: #d5b356;
+  background-color: #a87c04;
 }
 
 
 #mana .fill {
-  background-color: #5656d5;
+  background-color: var(--mana);
   position: absolute;
 }
 
@@ -778,8 +780,8 @@ body.your-turn #end-turn-btn:hover {
 
 #mana .cost:nth-child(5) {
   background: repeating-linear-gradient(45deg,
-      #5656d5,
-      #5656d5 10px,
+      var(--mana),
+      var(--mana) 10px,
       rgba(0, 0, 0, 0.0) 10px,
       rgba(0, 0, 0, 0.0) 20px) fixed;
 }
@@ -1072,7 +1074,7 @@ body.open-inventory #inventory-container {
 
 #inventory-content {
   /* Same color as .ui-container's border */
-  background-color: #262324;
+  background-color: var(--stats-bar-background);
   /* Needed to display in front of pixi */
   z-index: 1;
   max-width: 600px;
