@@ -1,3 +1,5 @@
+- trailer copy: "Each spell influences the next"
+    - Noita 1.0 trailer as reference
 - Record trailer footage
 - Implement Jake's UI design for toolbar, inventory, tooltip, and player ready states
 ---
