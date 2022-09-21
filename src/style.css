@@ -231,7 +231,7 @@ invisibly blocked, change with caution! */
   justify-content: center;
   align-items: center;
   margin: 0 auto;
-  /* Same color as .ui-container's border */
+  /* Same color as .ui-border's border */
   background-color: var(--stats-bar-background);
 }
 
@@ -669,7 +669,7 @@ body.your-turn #end-turn-btn:hover {
 }
 
 #inspector-tooltip-inner {
-  /* Same color as .ui-container's border */
+  /* Same color as .ui-border's border */
   background-color: var(--stats-bar-background);
   padding: 8px;
 }
@@ -1089,7 +1089,7 @@ body.open-inventory #inventory-container {
 }
 
 #inventory-content {
-  /* Same color as .ui-container's border */
+  /* Same color as .ui-border's border */
   background-color: var(--stats-bar-background);
   /* Needed to display in front of pixi */
   z-index: 1;
@@ -1169,9 +1169,9 @@ body.open-inventory #inventory-icon {
   /* filter: drop-shadow(1px 0px 0px white); */
 }
 
-#lobby .ui-container {
+#lobby .ui-border {
   margin: 15px;
-  /* Smaller border than usual ui-container so more player names will fit */
+  /* Smaller border than usual ui-border so more player names will fit */
   border-width: 9px;
 }
 
@@ -1221,9 +1221,9 @@ body.casting.outOfRange {
 
 body.casting .card,
 body.casting #card-holders-border,
-/* Show regular cursor whenever mouse is over any ui-container because
+/* Show regular cursor whenever mouse is over any ui-border because
 then it is over a UI element and not the game space */
-body.casting .ui-container {
+body.casting .ui-border {
   cursor: url('cursor.png'), auto;
 }
 
@@ -1365,7 +1365,7 @@ body.view-Game #instructions {
 }
 
 
-.ui-container {
+.ui-border {
   border: 16px solid;
   border-image-outset: 0;
   border-image-repeat: stretch;

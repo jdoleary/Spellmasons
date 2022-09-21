@@ -285,7 +285,7 @@ export function syncLobby(underworld: Underworld) {
       } else if (p.endedTurn) {
         status = 'Waiting...';
       }
-      return `<div class="ui-container"><div class="player" style="color:#${(p.color || 0xffffff).toString(16)}"><span class="player-name">${p.name || (p == globalThis.player ? "You" : "Unnamed")}</span><span>${status}</span></div></div>`
+      return `<div class="ui-border"><div class="player" style="color:#${(p.color || 0xffffff).toString(16)}"><span class="player-name">${p.name || (p == globalThis.player ? "You" : "Unnamed")}</span><span>${status}</span></div></div>`
     }).join('');
   }
 }
