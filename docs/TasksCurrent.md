@@ -1,5 +1,4 @@
 - graphics bug under health status bars, colored line
-- when recording, don't play turn sfx
 - Implement Jake's UI design for player ready states
 - credits page
 

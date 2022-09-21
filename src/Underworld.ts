@@ -1648,7 +1648,10 @@ export default class Underworld {
       if (player == globalThis.player) {
         // Notify the current player that their turn is starting
         queueCenteredFloatingText(`Your Turn`);
-        playSFXKey('yourTurn');
+        // Don't play turn sfx when recording
+        if (!globalThis.isHUDHidden) {
+          playSFXKey('yourTurn');
+        }
       }
       // Trigger onTurnStart Events
       const onTurnStartEventResults: boolean[] = await Promise.all(player.unit.onTurnStartEvents.map(
@@ -1697,11 +1700,17 @@ export default class Underworld {
         // and stamina is still max
         // and player has not cast yet
         if (!globalThis.player.endedTurn && globalThis.player.unit.stamina == globalThis.player.unit.staminaMax && !globalThis.castThisTurn) {
-          affirm = await Jprompt({ text: 'Are you sure you want to end your turn without moving or casting?', noBtnText: 'Cancel', noBtnKey: 'Escape', yesText: 'End Turn', yesKey: 'Space', yesKeyText: 'Spacebar' });
+          // Don't prompt "are you sure" for end turn when recording
+          if (!globalThis.isHUDHidden) {
+            affirm = await Jprompt({ text: 'Are you sure you want to end your turn without moving or casting?', noBtnText: 'Cancel', noBtnKey: 'Escape', yesText: 'End Turn', yesKey: 'Space', yesKeyText: 'Spacebar' });
+          }
         }
         if (affirm) {
           console.log('endMyTurn: send END_TURN message');
-          playSFXKey('endTurn');
+          // Don't play turn sfx when recording
+          if (!globalThis.isHUDHidden) {
+            playSFXKey('endTurn');
+          }
           // When a user ends their turn, clear tints and spell effect projections
           // so they they don't cover the screen while AI take their turn
           clearSpellEffectProjection(this);
