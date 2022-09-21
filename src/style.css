@@ -711,6 +711,8 @@ body.your-turn #end-turn-btn:hover {
   content: "";
   position: relative;
   width: 235px;
+  /* Prevents a graphics glitch that shows a solid color line under the status bar */
+  height: 0.5px;
   display: inline-block;
   position: absolute;
   top: 0;

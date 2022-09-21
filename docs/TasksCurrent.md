@@ -1,4 +1,3 @@
-- graphics bug under health status bars, colored line
 - Implement Jake's UI design for player ready states
 - credits page
 
