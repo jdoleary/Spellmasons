@@ -399,7 +399,7 @@ export function mouseUpHandler(underworld: Underworld, e: MouseEvent) {
 // Used for UI to determine if which element is currently
 // being hovered by the mouse
 export function mouseOverHandler(_underworld: Underworld, e: MouseEvent) {
-  globalThis.hoverTarget = e.target;
+  globalThis.hoverTarget = e.target as HTMLElement;
 }
 export function onWindowBlur(_underworld: Underworld) {
   // Turn off keyboard and mouse flags when the document loses focus
