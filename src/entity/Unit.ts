@@ -599,7 +599,7 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
     return;
   }
   // Play death sfx
-  if (!prediction) {
+  if (!prediction && !unit.flaggedForRemoval) {
     playSFXKey(unit.sfx.death);
   }
   // Health should already be 0 but make sure it is for the sake of the UI bar
