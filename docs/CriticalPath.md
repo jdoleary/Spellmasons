@@ -2,7 +2,6 @@
 - Record Trailer and start marketing
     - trailer should be more zoomed in
 # Major Tasks
-  - (e) UI
   - (m) Marketing
   - (h) Fix liquid glitches perminantly
   - Look into Trademark and Copyright
@@ -25,9 +24,7 @@
     - (m) Add perks and spell level ups
 # Desired Schedule
 - September / October
-    - Finish UI
     - Start Marketing
-    - Reliable Multiplayer
 - November
     - Package as Electron App
     - Test on all 3 Operating Systems
