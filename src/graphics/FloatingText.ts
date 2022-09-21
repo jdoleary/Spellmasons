@@ -1,11 +1,11 @@
 import type * as PIXI from 'pixi.js';
-import type { Vec2 } from '../jmath/Vec';
+import { Vec2 } from '../jmath/Vec';
 import * as config from '../config';
 import { app, containerFloatingText, containerUIFixed, withinCameraBounds } from './PixiUtils';
 
 interface FText {
-  x: number;
-  y: number;
+  startPosition: Vec2;
+  dy: number;
   // velocity y
   vy: number;
   alpha: number;
@@ -38,9 +38,9 @@ export default function floatingText({
   // Keep floating text the same size regardless of camera zoom
   pixiText.scale.x = 1 / app.stage.scale.x;
   pixiText.scale.y = 1 / app.stage.scale.y;
-  const instance = {
-    x: pixiText.x,
-    y: pixiText.y,
+  const instance: FText = {
+    startPosition: coords,
+    dy: 0,
     pixiText,
     vy: 1,
     alpha: 1,
@@ -54,17 +54,17 @@ export default function floatingText({
 }
 function floatAway(instance: FText, resolve: (value: void) => void) {
   if (instance.alpha > 0) {
-    instance.y -= instance.vy;
+    instance.dy -= instance.vy;
     instance.vy = instance.vy * 0.97;
     instance.alpha -= Math.max(instance.valpha, 0);
     instance.valpha += 0.004;
     if (instance.keepWithinCameraBounds) {
-      const pos = withinCameraBounds(instance);
-      instance.pixiText.y = pos.y;
-      instance.pixiText.x = pos.x;
+      const adjustedPosition = withinCameraBounds(instance.startPosition);
+      instance.pixiText.y = adjustedPosition.y + instance.dy;
+      instance.pixiText.x = adjustedPosition.x;
     } else {
-      instance.pixiText.y = instance.y;
-      instance.pixiText.x = instance.x;
+      instance.pixiText.y = instance.startPosition.y + instance.dy;
+      instance.pixiText.x = instance.startPosition.x;
     }
     instance.pixiText.alpha = instance.alpha;
     // Once it's fully hidden / done animating
