@@ -1,5 +1,7 @@
 - credits page
 - ui: Fix escape button should go "back" in menu
+- bug: had an incorrect push prediction, see footage
+- when you click on a spell in your inventory the "insufficient mana" text now renders behind the inventory and so you can't see why you can't add it to the spell
 
 ## Trailer work
 - Film multiplayer
