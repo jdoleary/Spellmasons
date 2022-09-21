@@ -201,6 +201,9 @@ body.open-inventory #card-inspect {
   justify-content: end;
   position: fixed;
   bottom: 0;
+  /* ui-positioner will often invisibly obscure parts
+  of the screen and so it shouldn't block clicks */
+  pointer-events: none;
 }
 
 #ui-holder {
@@ -210,7 +213,18 @@ body.open-inventory #card-inspect {
   margin: 0 auto;
 }
 
+/* This block is very important to make sure input handling doesn't get
+invisibly blocked, change with caution! */
+#selected-cards,
+#inventory-container,
+#card-holders-border {
+  /* reenable pointer events so card holders can be interacted with
+  since it's parent #ui-positioner has pointer events off */
+  pointer-events: all;
+}
+
 #card-holders {
+  pointer-events: all;
   user-select: none;
   display: flex;
   z-index: 1;
