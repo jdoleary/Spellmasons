@@ -395,7 +395,13 @@ export function mouseUpHandler(underworld: Underworld, e: MouseEvent) {
     e.preventDefault();
   }
 }
-export function onWindowBlur(underworld: Underworld) {
+
+// Used for UI to determine if which element is currently
+// being hovered by the mouse
+export function mouseOverHandler(_underworld: Underworld, e: MouseEvent) {
+  globalThis.hoverTarget = e.target;
+}
+export function onWindowBlur(_underworld: Underworld) {
   // Turn off keyboard and mouse flags when the document loses focus
   // To protect against the case where a user has middle mouse down
   // while they alt tab, which - without the following line -

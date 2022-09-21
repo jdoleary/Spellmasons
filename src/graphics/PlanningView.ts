@@ -152,18 +152,21 @@ export function updatePlanningView(underworld: Underworld) {
         if (CardUI.areAnyCardsSelected()) {
           const outOfRange = isOutOfRange(globalThis.player, mouseTarget, true);
           if (outOfRange) {
-            globalThis.unitOverlayGraphics.lineStyle(3, colors.errorRed, 1.0);
-            globalThis.unitOverlayGraphics.drawCircle(
-              globalThis.player.unit.x,
-              globalThis.player.unit.y,
-              globalThis.player.unit.attackRange
-            );
-            if (labelText) {
-              labelText.text = TEXT_OUT_OF_RANGE;
-              labelText.style.fill = colors.errorRed;
-              const labelPosition = withinCameraBounds({ x: mouseTarget.x, y: mouseTarget.y - labelText.height * 2 }, labelText.width / 2);
-              labelText.x = labelPosition.x;
-              labelText.y = labelPosition.y;
+            // Only show outOfRange information if mouse is over the game canvas, not when it's over UI elements
+            if (globalThis.hoverTarget && globalThis.hoverTarget.closest('#PIXI-holder')) {
+              globalThis.unitOverlayGraphics.lineStyle(3, colors.errorRed, 1.0);
+              globalThis.unitOverlayGraphics.drawCircle(
+                globalThis.player.unit.x,
+                globalThis.player.unit.y,
+                globalThis.player.unit.attackRange
+              );
+              if (labelText) {
+                labelText.text = TEXT_OUT_OF_RANGE;
+                labelText.style.fill = colors.errorRed;
+                const labelPosition = withinCameraBounds({ x: mouseTarget.x, y: mouseTarget.y - labelText.height * 2 }, labelText.width / 2);
+                labelText.x = labelPosition.x;
+                labelText.y = labelPosition.y;
+              }
             }
           }
         }

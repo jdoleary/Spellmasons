@@ -41,4 +41,5 @@ global.thinkingPlayerGraphics = undefined;
 global.unitOverlayGraphics = undefined;
 global.predictionGraphics = undefined;
 global.planningViewGraphics = undefined;
+global.hoverTarget = undefined;
 export { };

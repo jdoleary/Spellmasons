@@ -1,3 +1,4 @@
+import { elPIXIHolder } from './graphics/FloatingText';
 import {
   addPixiContainersForView,
   resizePixi,
@@ -13,6 +14,7 @@ import {
   mouseUpHandler,
   mouseMove,
   onWindowBlur,
+  mouseOverHandler,
 } from './graphics/ui/eventListeners';
 import Underworld from './Underworld';
 
@@ -144,12 +146,12 @@ export function addUnderworldEventListeners(underworld: Underworld) {
         listener: contextmenuHandler.bind(undefined, underworld)
       },
       {
-        target: document.body,
+        target: elPIXIHolder,
         event: 'click',
         listener: clickHandler.bind(undefined, underworld)
       },
       {
-        target: globalThis,
+        target: document.body,
         event: 'mousedown',
         listener: mouseDownHandler.bind(undefined, underworld)
       },
@@ -157,6 +159,11 @@ export function addUnderworldEventListeners(underworld: Underworld) {
         target: globalThis,
         event: 'mouseup',
         listener: mouseUpHandler.bind(undefined, underworld)
+      },
+      {
+        target: document.body,
+        event: 'mouseover',
+        listener: mouseOverHandler.bind(undefined, underworld)
       },
       {
         target: globalThis,
