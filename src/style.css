@@ -920,6 +920,9 @@ body.your-turn #end-turn-btn:hover {
 #menu-app {
   /* menu starts out hidden until it is ready (due to it's dependencies) */
   display: none;
+  background-color: #171717;
+  height: 100vh;
+  color: white;
 }
 
 .view-Menu #menu-app.ready {
