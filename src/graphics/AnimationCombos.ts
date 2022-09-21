@@ -56,7 +56,7 @@ const combos: { [spritePath: string]: AnimationCombo } = {
         SFX: ['lobberAttack']
     },
     'units/archerAttack': {
-        keyFrame: 6,
+        keyFrame: 7,
         primaryAnimation: 'units/archerAttack',
         companionAnimations: [],
         SFX: ['archerAttack']
