@@ -1217,8 +1217,10 @@ body.casting.outOfRange {
 }
 
 body.casting .card,
-body.casting #inventory,
-body.casting #end-turn-btn {
+body.casting #card-holders-border,
+/* Show regular cursor whenever mouse is over any ui-container because
+then it is over a UI element and not the game space */
+body.casting .ui-container {
   cursor: url('cursor.png'), auto;
 }
 
