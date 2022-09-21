@@ -27,6 +27,9 @@ export enum View {
 }
 const elUpgradePicker = document.getElementById('upgrade-picker') as HTMLElement;
 let lastNonMenuView: View | undefined;
+export function clearLastNonMenuView() {
+  lastNonMenuView = undefined;
+}
 function closeMenu() {
   // Change to the last non menu view
   if (lastNonMenuView) {
@@ -43,12 +46,16 @@ function closeMenu() {
 }
 export function toggleMenu() {
   const elMenu = document.getElementById('menu') as HTMLElement;
-  const menuClosed = elMenu.classList.contains('hidden');
-  if (menuClosed) {
-    // Open it
-    setView(View.Menu);
+  if (elMenu) {
+    const menuClosed = elMenu.classList.contains('hidden');
+    if (menuClosed) {
+      // Open it
+      setView(View.Menu);
+    } else {
+      closeMenu();
+    }
   } else {
-    closeMenu();
+    console.warn('elMenu is falsey, this should not be so')
   }
 
 }

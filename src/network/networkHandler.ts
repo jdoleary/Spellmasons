@@ -20,6 +20,7 @@ import { IPickupSerialized, removePickup } from '../entity/Pickup';
 import { triggerAdminCommand } from '../graphics/ui/eventListeners';
 import { Vec2 } from '../jmath/Vec';
 import pingSprite from '../graphics/Ping';
+import { clearLastNonMenuView } from '../views';
 
 const messageLog: any[] = [];
 export const NO_LOG_LIST = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
@@ -569,6 +570,8 @@ export function setupNetworkHandlerGlobalFunctions(underworld: Underworld) {
     if (underworld) {
       underworld.cleanup();
     }
+    // This prevents 'esc' key from going "back" to viewGame after the underworld is cleaned up
+    clearLastNonMenuView();
     return typeGuardHostApp(underworld.pie) ? Promise.resolve() : underworld.pie.disconnect();
   }
 }

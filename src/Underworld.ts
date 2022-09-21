@@ -159,7 +159,7 @@ export default class Underworld {
     // Initialize content
     Cards.registerCards(this);
     Units.registerUnits();
-    // Add event listeners
+    // Add event listeners and store the remove function which is returned
     this.removeEventListeners = addUnderworldEventListeners(this);
     registerAdminContextMenuOptions(this);
 
@@ -814,19 +814,21 @@ export default class Underworld {
   isMyTurn() {
     return this.turn_phase == turn_phase.PlayerTurns;
   }
-  destroy() {
-    console.log('teardown: destroying underworld')
 
-    if (this.removeEventListeners) {
-      this.removeEventListeners();
-    }
-    // Prevent requestAnimationFrame from calling this method next time, since this underworld
-    // instance is being cleaned up
-    if (requestAnimationFrameGameLoopId !== undefined) {
-      cancelAnimationFrame(requestAnimationFrameGameLoopId);
-    }
+  // destroy is currently unused and may be uncommented if there is a need for it in the future
+  // destroy() {
+  //   console.log('teardown: destroying underworld')
 
-  }
+  //   if (this.removeEventListeners) {
+  //     this.removeEventListeners();
+  //   }
+  //   // Prevent requestAnimationFrame from calling this method next time, since this underworld
+  //   // instance is being cleaned up
+  //   if (requestAnimationFrameGameLoopId !== undefined) {
+  //     cancelAnimationFrame(requestAnimationFrameGameLoopId);
+  //   }
+  // }
+
   // Caution: Be careful when changing clean up code.  There are times when you just want to
   // clean up assets and then there are times when you want to clear and empty the arrays
   // Be sure not to confuse them.
