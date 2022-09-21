@@ -1,8 +1,4 @@
 - credits page
-- ui
-    - bug: you can cast "through" the toolbar if you click on it
-    - cast cursor should go away when overing over the toolbar
-    - "Out of range" message and spell prediction should go away when hovering over toolbar
 - ui: Fix escape button should go "back" in menu
 - bug: had an incorrect push prediction, see footage
 
