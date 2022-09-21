@@ -20,6 +20,7 @@ const unit: UnitSource = {
     walk: 'units/decoy',
   },
   sfx: {
+    damage: 'unitDamage',
     death: 'decoyDeath',
   },
   unitProps: {

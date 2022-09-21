@@ -56,6 +56,7 @@ export interface UnitAnimations {
 }
 export interface UnitSFX {
   death: string;
+  damage: string;
 }
 export function isUnit(maybeUnit: any): maybeUnit is IUnit {
   // unitSouceId only belongs to IUnit so it is a safe way to tell
@@ -677,7 +678,7 @@ export function takeDamage(unit: IUnit, amount: number, damageFromVec2: Vec2 | u
     // note: heals call takeDamage with a negative amount, so we don't want to play a hit animation when
     // player is healed
     if (amount > 0) {
-      playSFXKey(`${unit.unitSourceId}Damage`);
+      playSFXKey(unit.sfx.damage);
       playAnimation(unit, unit.animations.hit, { loop: false, animationSpeed: 0.2 });
       if (damageFromVec2) {
         startBloodParticleSplatter(underworld, damageFromVec2, unit);

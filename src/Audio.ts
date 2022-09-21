@@ -3,7 +3,6 @@ import * as storage from "./storage";
 import throttle from 'lodash.throttle';
 
 export const sfx: { [key: string]: string } = {
-    whoosh: './sound/sfx/whoosh.m4a',
     archerAttack: './sound/sfx-from-val/archer-attack.wav',
     archerDeath: './sound/sfx-from-val/archer-death.wav',
     bloatExplosion: './sound/sfx-from-val/bloat.wav',
@@ -25,7 +24,6 @@ export const sfx: { [key: string]: string } = {
     lobberDeath: './sound/sfx-from-val/lobber-death.wav',
     manaBurn: './sound/sfx-from-val/mana-burn.wav',
     manaSteal: './sound/sfx-from-val/mana-steal.wav',
-    playerUnitDamage: './sound/sfx-from-val/player-damage.wav',
     playerUnitDeath: './sound/sfx-from-val/player-character-death.wav',
     playerCharacterLargeCast2: './sound/sfx/playerAttackEpic.wav',
     playerCharacterLargeCast: './sound/sfx-from-val/player-character-large-cast.wav',
@@ -46,6 +44,7 @@ export const sfx: { [key: string]: string } = {
     summonDecoy: './sound/sfx-from-val/summon-decoy.wav',
     summonerDeath: './sound/sfx-from-val/summoner-death.wav',
     swap: './sound/sfx-from-val/swap.wav',
+    unitDamage: './sound/sfx-from-val/player-damage.wav',
     vampireAttack: './sound/sfx-from-val/vampire-attack.wav',
     vampireDeath: './sound/sfx-from-val/vampire-death.wav',
     yourTurn: './sound/sfx-from-val/your-turn.wav',

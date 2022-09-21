@@ -40,6 +40,7 @@ const unit: UnitSource = {
   },
   sfx: {
     death: 'playerUnitDeath',
+    damage: 'unitDamage',
   }
 };
 export default unit;

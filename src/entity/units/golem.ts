@@ -29,6 +29,7 @@ const unit: UnitSource = {
     walk: 'units/gruntWalk',
   },
   sfx: {
+    damage: 'unitDamage',
     death: 'golemDeath'
   },
   action,
