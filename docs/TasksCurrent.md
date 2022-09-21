@@ -1,6 +1,5 @@
 - graphics bug under health status bars, colored line
 - when recording, don't play turn sfx
-- bug: player gold circle underline renders over top of player
 - Implement Jake's UI design for player ready states
 - credits page
 

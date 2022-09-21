@@ -81,21 +81,21 @@ export function updatePlanningView(underworld: Underworld) {
             const attackLine = { p1: globalThis.selectedUnit, p2: archerTarget };
             const closestIntersection = closestLineSegmentIntersection(attackLine, underworld.walls);
 
-            planningViewGraphics.moveTo(attackLine.p1.x, attackLine.p1.y);
+            globalThis.unitOverlayGraphics.moveTo(attackLine.p1.x, attackLine.p1.y);
             if (closestIntersection) {
               // Draw a grey line  showing that the target is blocked
-              planningViewGraphics.lineStyle(3, colors.outOfRangeGrey, 0.7);
-              planningViewGraphics.lineTo(closestIntersection.x, closestIntersection.y);
-              planningViewGraphics.lineTo(attackLine.p2.x, attackLine.p2.y);
-              planningViewGraphics.drawCircle(attackLine.p2.x, attackLine.p2.y, 3);
+              globalThis.unitOverlayGraphics.lineStyle(3, colors.outOfRangeGrey, 0.7);
+              globalThis.unitOverlayGraphics.lineTo(closestIntersection.x, closestIntersection.y);
+              globalThis.unitOverlayGraphics.lineTo(attackLine.p2.x, attackLine.p2.y);
+              globalThis.unitOverlayGraphics.drawCircle(attackLine.p2.x, attackLine.p2.y, 3);
             } else {
               // If user's spell is currently out of range, mute the red LOS color so it doesn't draw attention away
               // from the out of range UI.
               const color = document.body.classList.contains(CSSClasses.outOfRange) ? colors.outOfRangeGrey : colors.healthRed;
               // Draw a red line, showing that you are in danger
-              planningViewGraphics.lineStyle(3, color, 0.7);
-              planningViewGraphics.lineTo(attackLine.p2.x, attackLine.p2.y);
-              planningViewGraphics.drawCircle(attackLine.p2.x, attackLine.p2.y, 3);
+              globalThis.unitOverlayGraphics.lineStyle(3, color, 0.7);
+              globalThis.unitOverlayGraphics.lineTo(attackLine.p2.x, attackLine.p2.y);
+              globalThis.unitOverlayGraphics.drawCircle(attackLine.p2.x, attackLine.p2.y, 3);
             }
           }
         } else {

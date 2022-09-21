@@ -120,9 +120,9 @@ if (globalThis.pixi && containerUI && app && containerRadiusUI) {
     containerBoard &&
     containerBloodSmear &&
     containerRadiusUI &&
+    containerPlanningView &&
     containerDoodads &&
     containerUnits &&
-    containerPlanningView &&
     containerSpells &&
     containerProjectiles &&
     containerPlayerThinking &&
@@ -137,9 +137,9 @@ if (globalThis.pixi && containerUI && app && containerRadiusUI) {
       containerBoard,
       containerBloodSmear,
       containerRadiusUI,
+      containerPlanningView,
       containerDoodads,
       containerUnits,
-      containerPlanningView,
       containerSpells,
       containerProjectiles,
       containerPlayerThinking,
