@@ -1,12 +1,11 @@
 - credits page
+- ui: Fix escape button should go "back" in menu
 
 ## Trailer work
 - Film multiplayer
-- Film inventory interaction
 - Add motion
 - Add title cards
 - copy: "Each spell influences the next"
-- Noita 1.0 trailer as reference
 ## next up
 - melee prediction is still off
 - attack range shouldn't be red when explosion radius is red

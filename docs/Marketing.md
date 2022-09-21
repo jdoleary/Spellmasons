@@ -38,7 +38,7 @@
     - https://partner.steamgames.com/doc/store/assets/standard#header_capsule
 - Tasks:
     - Make the trailer
-    - Once the marketing campain is launched aim to release 1 short a week
+    - Once the marketing campaign is launched aim to release 1 short a week
     - Contractors
         - COVER YOUR ASS LEGALLY HERE
         - "Spellmasons.com" voiceover

@@ -3,6 +3,7 @@
 - Deny / Wrong action sound
 - Unit damage sounds
 - Summoner summon sfx
+- Debilitate sfx
 - opening inventory (opening old book sound)
 
 - From Jake: Need UI sound interactions
