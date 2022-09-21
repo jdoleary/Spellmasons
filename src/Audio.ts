@@ -125,7 +125,7 @@ export function playSFX(path?: string) {
 
 }
 const demoSoundWhenChangingVolume = throttle(() => {
-    globalThis.playSFXKey('playerUnitDamage');
+    globalThis.playSFXKey('unitDamage');
 }, 150, { trailing: true })
 const STORAGE_OPTIONS = 'OPTIONS';
 export function setupAudio() {
