@@ -1147,8 +1147,15 @@ body.open-inventory #inventory-icon {
   width: 380px;
 }
 
+#lobby .player-name {
+  font-weight: bold;
+  /* filter: drop-shadow(1px 0px 0px white); */
+}
+
 #lobby .ui-container {
   margin: 15px;
+  /* Smaller border than usual ui-container so more player names will fit */
+  border-width: 9px;
 }
 
 #lobby .player {

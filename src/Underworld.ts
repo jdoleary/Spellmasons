@@ -1609,6 +1609,7 @@ export default class Underworld {
       }
     }
     document.body?.classList.toggle('your-turn', yourTurn);
+    Player.syncLobby(this);
 
   }
   async initializePlayerTurns() {

@@ -291,6 +291,7 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
           nameText.anchor.y = 0.5;
         }
         Player.setPlayerRobeColor(fromPlayer, color);
+        Player.syncLobby(underworld);
       } else {
         console.error('Cannot PLAYER_CONFIG, no associated player')
       }

@@ -29,7 +29,6 @@ export interface IPlayer {
   name: string;
   // color of robe
   color: number;
-  ready: boolean;
   endedTurn: boolean;
   // wsPie id
   clientId: string;
@@ -58,7 +57,6 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
   const userSource = defaultPlayerUnit;
   const player: IPlayer = {
     name: '',
-    ready: false,
     endedTurn: false,
     clientId,
     // init players as not connected.  clientConnected status
@@ -284,10 +282,10 @@ export function syncLobby(underworld: Underworld) {
         status = 'Disconnected';
       } else if (!p.isSpawned) {
         status = 'Picking Start Point';
-      } else if (p.ready) {
+      } else if (p.endedTurn) {
         status = 'Waiting...';
       }
-      return `<div class="ui-container"><div class="player" style="color:#${p.color.toString(16)}"><span>${p.name || "Unnamed"}</span><span>${status}</span></div></div>`
+      return `<div class="ui-container"><div class="player" style="color:#${p.color.toString(16)}"><span class="player-name">${p.name || (p == globalThis.player ? "You" : "Unnamed")}</span><span>${status}</span></div></div>`
     }).join('');
   }
 }
