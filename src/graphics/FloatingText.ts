@@ -59,7 +59,7 @@ function floatAway(instance: FText, resolve: (value: void) => void) {
     instance.alpha -= Math.max(instance.valpha, 0);
     instance.valpha += 0.004;
     if (instance.keepWithinCameraBounds) {
-      const adjustedPosition = withinCameraBounds(instance.startPosition);
+      const adjustedPosition = withinCameraBounds(instance.startPosition, instance.pixiText.width / 2);
       instance.pixiText.y = adjustedPosition.y + instance.dy;
       instance.pixiText.x = adjustedPosition.x;
     } else {

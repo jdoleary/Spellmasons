@@ -232,10 +232,10 @@ export function withinCameraBounds(position: Vec2, marginHoriz?: number): Vec2 {
   // globalThis.unitOverlayGraphics.drawCircle(cardHandRight, cardHandTop, 8);
 
   // Don't let the attention marker get obscured by the UI element
-  const cardHoldersInnerBox = UIElementToInGameSpace(utilProps.elCardHoldersBorder, pixiHolderRect, camX, camY, zoom);
+  const cardHoldersBorderBox = UIElementToInGameSpace(utilProps.elCardHoldersBorder, pixiHolderRect, camX, camY, zoom);
   // Move the position if it is obscured by the card-holder
-  if (isWithinRect(withinBoundsPos, cardHoldersInnerBox)) {
-    withinBoundsPos.y = cardHoldersInnerBox.top - margin;
+  if (isWithinRect({ x: withinBoundsPos.x - margin, y: withinBoundsPos.y }, cardHoldersBorderBox) || isWithinRect({ x: withinBoundsPos.x + margin, y: withinBoundsPos.y }, cardHoldersBorderBox)) {
+    withinBoundsPos.y = cardHoldersBorderBox.top - marginTop;
   }
   return withinBoundsPos;
 }
