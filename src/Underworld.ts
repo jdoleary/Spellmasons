@@ -1763,6 +1763,7 @@ export default class Underworld {
     } else {
       console.error("turn_phase must be PlayerTurns to end turn.  Cannot be ", this.turn_phase);
     }
+    Player.syncLobby(this);
   }
   chooseUpgrade(player: Player.IPlayer, upgrade: Upgrade.IUpgrade) {
     if (upgrade.type == 'card') {

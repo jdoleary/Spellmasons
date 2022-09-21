@@ -322,6 +322,7 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
       } else {
         console.error('Cannot SPAWN_PLAYER, fromPlayer is undefined.')
       }
+      Player.syncLobby(underworld);
       break;
     case MESSAGE_TYPES.MOVE_PLAYER:
       if (fromPlayer == globalThis.player) {

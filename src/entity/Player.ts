@@ -15,7 +15,7 @@ import Underworld from '../Underworld';
 import { lerp } from "../jmath/math"
 import * as inLiquid from '../inLiquid';
 
-const elLobbyBody = document.getElementById('lobby-body') as (HTMLElement | undefined);
+const elLobby = document.getElementById('lobby') as (HTMLElement | undefined);
 const elInstructions = document.getElementById('instructions') as (HTMLElement | undefined);
 // The serialized version of the interface changes the interface to allow only the data
 // that can be serialized in JSON.  It may exclude data that is not neccessary to
@@ -166,8 +166,6 @@ export function setPlayerRobeColor(player: IPlayer, color: number | string) {
       player.unit.image.sprite.filters.push(robeColorFilter);
     }
   }
-
-
 }
 export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld) {
   // Set the player so they can choose their next spawn
@@ -270,12 +268,27 @@ export function setClientConnected(player: IPlayer, connected: boolean, underwor
     // If they disconnect, end their turn
     underworld.endPlayerTurn(player.clientId);
   }
-  syncLobby(underworld)
+  syncLobby(underworld);
 }
-function syncLobby(underworld: Underworld) {
+export function syncLobby(underworld: Underworld) {
   // Update lobby element
-  if (elLobbyBody) {
-    elLobbyBody.innerHTML = underworld.players.map(p => `<tr><td>${p.clientId}</td><td>${p.clientConnected}</td></tr>`).join('');
+  if (elLobby) {
+    if (underworld.players.length == 1) {
+      // Do not show lobby if there is only one player connected
+      elLobby.innerHTML = '';
+      return;
+    }
+    elLobby.innerHTML = underworld.players.map(p => {
+      let status = '';
+      if (!p.clientConnected) {
+        status = 'Disconnected';
+      } else if (!p.isSpawned) {
+        status = 'Picking Start Point';
+      } else if (p.ready) {
+        status = 'Waiting...';
+      }
+      return `<div class="ui-container"><div class="player" style="color:#${p.color.toString(16)}"><span>${p.name || "Unnamed"}</span><span>${status}</span></div></div>`
+    }).join('');
   }
 }
 export function enterPortal(player: IPlayer, underworld: Underworld) {

@@ -1,4 +1,3 @@
-- Implement Jake's UI design for player ready states
 - credits page
 
 ## Trailer work
