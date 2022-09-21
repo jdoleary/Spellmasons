@@ -1,4 +1,7 @@
 - credits page
+- after quitting game, "Esc" key will send you back to a broken game view
+    - note: underworld.destroy is never called
+    - How to prevent going to View.Game without an underworld to see
 - ui: Fix escape button should go "back" in menu
 - bug: had an incorrect push prediction, see footage
 
