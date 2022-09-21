@@ -1099,6 +1099,9 @@ body.open-inventory #inventory-container {
   flex-wrap: wrap;
   /* Always be at least big enough for 3 spells side-by-side. This is just visual appeal*/
   min-width: 240px;
+  /* Prevent highlighting text, because no blocks of text should need to be copied and
+  it looks bad */
+  user-select: none;
 }
 
 #inventory-content .category {
