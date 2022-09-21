@@ -2,7 +2,9 @@ import type * as PIXI from 'pixi.js';
 import { addPixiSpriteAnimated, containerProjectiles } from '../graphics/PixiUtils';
 import { lerp, distance } from '../jmath/math';
 import type { Vec2 } from '../jmath/Vec';
+import * as Vec from '../jmath/Vec';
 import * as config from '../config';
+import * as math from '../jmath/math';
 import { raceTimeout } from '../Promise';
 
 interface Projectile {
@@ -50,7 +52,12 @@ export function createVisualFlyingProjectile(
   target: Vec2,
   imagePath: string,
 ): Promise<void> {
-  const instance = createProjectile(coords, target, imagePath);
+  // Use this similarTriangles calculation to make the projectile animation pretty so it doesn't originate from the exact center of the
+  // source but at the edge instead
+  const startPoint = math.distance(coords, target) <= config.COLLISION_MESH_RADIUS
+    ? coords
+    : Vec.subtract(coords, math.similarTriangles(coords.x - target.x, coords.y - target.y, math.distance(coords, target), config.COLLISION_MESH_RADIUS));
+  const instance = createProjectile(startPoint, target, imagePath);
   const time_in_flight =
     distance(instance, instance.target) /
     SPEED_PER_MILLI;
