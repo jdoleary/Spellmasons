@@ -1652,7 +1652,7 @@ export default class Underworld {
         // Notify the current player that their turn is starting
         queueCenteredFloatingText(`Your Turn`);
         // Don't play turn sfx when recording
-        if (!globalThis.isHUDHidden) {
+        if (!globalThis.isHUDHidden && !document.body?.classList.contains('hide-card-holders')) {
           playSFXKey('yourTurn');
         }
       }
@@ -1704,14 +1704,14 @@ export default class Underworld {
         // and player has not cast yet
         if (!globalThis.player.endedTurn && globalThis.player.unit.stamina == globalThis.player.unit.staminaMax && !globalThis.castThisTurn) {
           // Don't prompt "are you sure" for end turn when recording
-          if (!globalThis.isHUDHidden) {
+          if (!globalThis.isHUDHidden && !document.body?.classList.contains('hide-card-holders')) {
             affirm = await Jprompt({ text: 'Are you sure you want to end your turn without moving or casting?', noBtnText: 'Cancel', noBtnKey: 'Escape', yesText: 'End Turn', yesKey: 'Space', yesKeyText: 'Spacebar' });
           }
         }
         if (affirm) {
           console.log('endMyTurn: send END_TURN message');
           // Don't play turn sfx when recording
-          if (!globalThis.isHUDHidden) {
+          if (!globalThis.isHUDHidden && !document.body?.classList.contains('hide-card-holders')) {
             playSFXKey('endTurn');
           }
           // When a user ends their turn, clear tints and spell effect projections
