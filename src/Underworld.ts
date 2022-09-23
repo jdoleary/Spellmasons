@@ -755,7 +755,7 @@ export default class Underworld {
       const thinkingPlayer = this.players[thinkingPlayerIndex];
       if (thinkingPlayer && thinkingPlayer.isSpawned) {
         // Leave room for name tag
-        const yMargin = 5;
+        const yMargin = 10;
         let firstCard, lastCard;
         for (let i = 0; i < cardIds.length; i++) {
           const cardId = cardIds[i];
