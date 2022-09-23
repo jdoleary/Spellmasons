@@ -69,6 +69,8 @@
 - Spell: grappling hook (pulls your towards something)
 - Spell: Range, like aoe and chain but extends your range
 - Soul capture (1 use, like pokeball)
+    - works for pickups too
+- What if monsters that go through portal come to next level with you, but you don't get more mana after the portal spawns
 - protection (targeting spell)
 - totems
 - auras

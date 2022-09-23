@@ -12,3 +12,9 @@ Waiting to be contacted by
 # Questions for lawyer
 - What is the risk of trademark conflicts
 - What happens if my tradmark submission is rejected AFTER the game is published?
+
+## Alternate name ideas:
+-Wizard's Workshop
+-Spellcrafter
+-Enchanter's Lab
+-The Art of Magic
