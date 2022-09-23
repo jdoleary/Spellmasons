@@ -554,13 +554,12 @@ body.HUD-hidden #PIXI-holder {
   z-index: 3;
 }
 
-/* Hide a subset of HUD */
-body.recording #inventory-icon,
-body.recording #inspector-tooltip,
-body.recording #end-turn-btn {
-  display: none !important;
+
+body.view-Game.hide-lobby #lobby {
+  display: none;
 }
 
+body.view-Game.hide-card-holders #lobby,
 .hide-card-holders #ui-positioner {
   display: none;
 }

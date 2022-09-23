@@ -667,7 +667,7 @@ export function registerAdminContextMenuOptions(underworld: Underworld) {
       domQueryContainer: '#menu-self',
     },
     {
-      label: '🎥 Toggle HUD',
+      label: '🎥 Toggle game screen UI',
       action: () => {
         toggleHUD();
       },
@@ -675,17 +675,15 @@ export function registerAdminContextMenuOptions(underworld: Underworld) {
       domQueryContainer: '#menu-self',
     },
     {
-      label: '📹 Toggle UI for recording',
+      label: '📹 Toggle Player List Visibility',
       action: () => {
-        // Hides a portion of the UI but not all of it for recording or screenshots
-        document.body?.classList.toggle('recording');
-        globalThis.hidePlayerGoldCircle = !globalThis.hidePlayerGoldCircle;
+        document.body?.classList.toggle('hide-lobby');
       },
       supportInMultiplayer: false,
       domQueryContainer: '#menu-self',
     },
     {
-      label: '🃏 Toggle Card Holder Visibility',
+      label: '🃏 Toggle UI',
       action: () => {
         // Hides a portion of the UI but not all of it for recording or screenshots
         document.body?.classList.toggle('hide-card-holders');
