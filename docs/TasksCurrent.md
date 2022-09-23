@@ -1,5 +1,11 @@
 - credits page
 - bug: had an incorrect push prediction, see footage
+- bug: sometimes stamina can == NaN
+    - note: staminaMax is still valid
+- bug: after loading game I get these errors:
+    Cannot show upgrades, no globalThis.player Underworld.ts:1823:14
+    Missing subsprite data for imageName null Image.ts:329:14
+    Unable to init modifier with key Blood Curse
 
 ## Trailer work
 - Film multiplayer
