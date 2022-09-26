@@ -3,6 +3,7 @@ import { UnitSubType } from '../../types/commonTypes';
 import * as Unit from '../Unit';
 import * as math from '../../jmath/math';
 import Underworld from '../../Underworld';
+import * as hurt from '../../cards/hurt';
 
 const unit: UnitSource = {
   id: 'playerUnit',
@@ -19,7 +20,7 @@ const unit: UnitSource = {
       // Archers attack or move, not both; so clear their existing path
       unit.path = undefined;
       Unit.orient(unit, attackTarget);
-      const keyMoment = () => underworld.castCards({}, unit, ['hurt'], attackTarget, false, false);
+      const keyMoment = () => underworld.castCards({}, unit, [hurt.id], attackTarget, false, false);
       await Unit.playComboAnimation(unit, 'playerAttackSmall', keyMoment, { animationSpeed: 0.2, loop: false });
     }
     // Movement:

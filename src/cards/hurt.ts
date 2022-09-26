@@ -5,7 +5,7 @@ import { CardCategory } from '../types/commonTypes';
 import { oneOffImage, playDefaultSpellSFX } from './cardUtils';
 import { Spell } from './index';
 
-export const id = 'hurt';
+export const id = 'Slash';
 const damageDone = 2;
 export interface UnitDamage {
   id: number;
