@@ -1,4 +1,11 @@
 - credits page
+- integrate new Val Sfx
+- R feedback:
+    - save game
+    - mute button
+    - one damage spell at beginning
+    - tooltip for wasd and movement
+    - multiplayer server
 - jake playtest:
     - would like to see ally picking starting point
     - confusing: spell that I chose last round persisted
