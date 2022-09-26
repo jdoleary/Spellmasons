@@ -4,7 +4,7 @@ import { action } from './actions/golemAction';
 import * as config from '../../config'
 
 const unit: UnitSource = {
-  id: 'Golem',
+  id: 'golem',
   info: {
     description: 'A simple but persistant creature that will pursue its enemies and attack them if within arm\'s reach.',
     image: 'units/gruntIdle',
