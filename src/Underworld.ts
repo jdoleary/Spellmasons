@@ -2299,7 +2299,8 @@ export default class Underworld {
   async checkIfShouldSpawnPortal() {
     if (this.units.filter(u => u.faction == Faction.ENEMY).every(u => !u.alive)) {
       let timeBetweenPickupFly = 100;
-      const getFlyingPickupPromises = this.pickups.filter(p => ![Pickup.PICKUP_SPIKES_NAME, Pickup.PICKUP_PORTAL_NAME].includes(p.name)).map(pickup => {
+      // Make scroll pickups fly to player
+      const getFlyingPickupPromises = this.pickups.filter(p => p.name == Pickup.CARDS_PICKUP_NAME).map(pickup => {
         return new Promise<void>((resolve) => {
 
           timeBetweenPickupFly += 100;
