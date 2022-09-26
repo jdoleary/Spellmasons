@@ -1,7 +1,7 @@
 import { PLAYER_BASE_HEALTH } from '../config';
 import * as Unit from './Unit';
 import * as Image from '../graphics/Image';
-import type * as Upgrade from '../Upgrade';
+import * as Upgrade from '../Upgrade';
 import * as CardUI from '../graphics/ui/CardUI';
 import * as Cards from '../cards';
 import * as config from '../config';
@@ -98,20 +98,14 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
   player.unit.stamina = config.PLAYER_BASE_STAMINA;
 
   updateGlobalRefToCurrentClientPlayer(player, underworld);
-  // Add initial cards to hand
-  // CardUI.addCardToHand(allCards['hurt'], player);
-  // CardUI.addCardToHand(allCards['summon_decoy'], player);
-  // CardUI.addCardToHand(allCards['heal'], player);
-  // CardUI.addCardToHand(allCards['AOE'], player);
-  // CardUI.addCardToHand(allCards['chain'], player);
-  // CardUI.addCardToHand(allCards['purify'], player);
-  // CardUI.addCardToHand(allCards['mana_burn'], player);
-  // CardUI.addCardToHand(allCards['mana_steal'], player);
-  // CardUI.addCardToHand(allCards['poison'], player);
-  // CardUI.addCardToHand(allCards['protection'], player);
-  // CardUI.addCardToHand(allCards['resurrect'], player);
-  // CardUI.addCardToHand(allCards['shield'], player);
-  // CardUI.addCardToHand(allCards['vulnerable'], player);
+  // Add initial upgrades
+  const hurtCardUpgrade = Upgrade.upgradeCardsSource.find(u => u.title == 'hurt');
+  if (hurtCardUpgrade) {
+    underworld.chooseUpgrade(player, hurtCardUpgrade);
+  } else {
+    console.error('Could not start player with "hurt": upgrade not found');
+  }
+
   player.unit.health = PLAYER_BASE_HEALTH;
   player.unit.healthMax = PLAYER_BASE_HEALTH;
 

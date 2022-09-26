@@ -66,7 +66,6 @@
     - Sometimes it tries to path around things and wastes stamina if there isn't a straight line path
     - when your main mana bar has 0 mana left it doesn't show the diagonal lines
     - sometimes when you walk you get stuck on a wall and it wastes stamina
-- Ensure hurt is presented in first spell picks
 # Bugs
 - Permanently fix liquid
     - weird liquid : 0.5211362200270263

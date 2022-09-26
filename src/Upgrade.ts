@@ -12,6 +12,8 @@ export interface IUpgrade {
   thumbnail: string;
   // The maximum number of copies a player can have of this upgrade
   maxCopies?: number;
+  // note: effect shouldn't be called directly, use Underworld.chooseUpgrade instead so
+  // it will keep track of how many upgrades the player has left to choose
   effect: (player: IPlayer, underworld: Underworld) => void;
   // The probability of getting this as an upgrade
   probability: number;
