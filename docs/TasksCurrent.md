@@ -1,11 +1,49 @@
 - credits page
+- jake playtest:
+    - would like to see ally picking starting point
+    - confusing: spell that I chose last round persisted
+        - if i end my turn it should dequeue spells
+    - shield color in health bar is too bright
+    - liquid looks like you can't walk across
+    - when you're mana stealing it doesn't show the bars if it brings you to 0
+    - BUG: Instanced pickups flying to me killed me on my screen but not on his
+        - just have scrolls fly and just disappear other potions
+    - BUG: I swapped and it took me to -1000 -1000
+    - bug: "Your turn" text is too big when you zoom out
+    - write rarity on card
+    - don't show playerTHought when they hover over inventory
+    - shield graphic doesn't show if archer with shield was already hurt when it got shield
+    - idea: break potion to make pool
+        - to heal over time
+    - BUG: Summoner summoned units and then they disappeared (desync)
+    - expanding should cost more
+    - blood curse shows +9 health when healing
+    - check the tape: I didn't get full mana on new turn
+    - archer's shouldn't have infinite range
+    - GOt the "this spell will damage you" when healing
+    - idea: summoner spells like elden ring
+        - they split your stats
+    - enemy that debuffs blessings
+    - UX: SHould be able to drag order of spells in queued spells
+    - gets laggy with 'expand' 'pull' for lots of guys
+    - bug: ally dragger isn't pulling enemies
+    - Bug: I was dead but didn't die (visually but not stats) at timestamp 45:46
+    - Bug: when ally gives you a shield and you end your turn you get the "this spell will damage you" caution box
+    - UX: Text should float that says when blood curse reverses healing
+    - Fix "max shield" overlapping text
+    - Feedback:
+        - Spell variety
+        - Love idea of summon spells, creating things on the field
 - bug: had an incorrect push prediction, see footage
 - bug: sometimes stamina can == NaN
     - note: staminaMax is still valid
+    - after portaling?
 - bug: after loading game I get these errors:
     Cannot show upgrades, no globalThis.player Underworld.ts:1823:14
     Missing subsprite data for imageName null Image.ts:329:14
     Unable to init modifier with key Blood Curse
+- bug: got ` Uncaught TypeError: animationSprite2.parent is null` after triggering a pickup and quickly going through a portal before theanimation could finish
+- biomes persist for a while
 
 ## Trailer work
 - Film multiplayer
@@ -83,6 +121,7 @@
 - ricotche
 - task: Spell to trade mana for stamina
 - eagle eye
+- lance for targeting
 
 ## Multiplayer Enhancements / issues
 - if you choose a spawn position while another player is casting it waits and then spawns where you clicked, which can be confusing because it still looks like you can choose where to spawn
