@@ -1,7 +1,7 @@
 import type * as PIXI from 'pixi.js';
 import { GlowFilter } from '@pixi/filter-glow';
 import type { Vec2 } from '../jmath/Vec';
-import { addPixiSprite, app, containerFloatingText, containerUIFixed, withinCameraBounds } from './PixiUtils';
+import { addPixiSprite, app, containerFloatingText, withinCameraBounds } from './PixiUtils';
 
 interface DisappearingSprite {
   x: number;
