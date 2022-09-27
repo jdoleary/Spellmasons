@@ -1,7 +1,7 @@
 ## Sound Still Needed
 - Logo reveal sfx
-- opening inventory (opening old book sound)
 - sounds that lets you know everyone is waiting on you
+- opening inventory (opening old book sound)
 - UI SFX: Deny / Warnings: out of stamina, no target, out of range
 - UI SFX: Click
 - a "you died"/"game over" sound effect

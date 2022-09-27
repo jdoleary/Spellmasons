@@ -1,6 +1,10 @@
+- notify with floating text when AI units are out of mana
 - Today:
+
     - BUG: Summoner summoned units and then they disappeared (desync)
+        - could this be due to the seed and it choosing golems whose ids did not allow choosing
     - bug: ally dragger isn't pulling enemies
+        - maybe rework AI mana so that they get the full amount they need every turn just like you do as a player
     - Bug: I was dead but didn't die (visually but not stats) at timestamp 45:46
     - bug: sometimes stamina can == NaN
         - note: staminaMax is still valid
