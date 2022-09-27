@@ -55,14 +55,13 @@ const unit: UnitSource = {
     }
   },
   action: async (unit: Unit.IUnit, _attackTarget, underworld) => {
-    const nonPoisonedEnemyUnits = underworld.units.filter(
+    const livingEnemyUnits = underworld.units.filter(
       (u) =>
         u.faction !== unit.faction &&
-        u.alive &&
-        u.modifiers.poison === undefined,
+        u.alive
     );
-    if (nonPoisonedEnemyUnits.length) {
-      const chosenUnit = nonPoisonedEnemyUnits[0];
+    if (livingEnemyUnits.length) {
+      const chosenUnit = livingEnemyUnits[0];
       if (chosenUnit) {
         if (Unit.inRange(unit, chosenUnit) && unit.mana >= unit.manaCostToCast) {
           unit.mana - unit.manaCostToCast;
