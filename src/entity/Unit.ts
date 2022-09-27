@@ -726,7 +726,7 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
 
   const predictionPlayerUnit = underworld.unitsPrediction.find(u => u.id == unit.id);
   // Set the health cost bar that shows how much health will be changed if the spell is cast
-  if (predictionPlayerUnit && predictionPlayerUnit.health > 0) {
+  if (predictionPlayerUnit) {
     const losingHealth = predictionPlayerUnit.health < unit.health;
     const predictionPlayerShield = predictionPlayerUnit.modifiers.shield?.damage_block || 0
     const shieldLost = predictionPlayerShield < shieldAmount;
@@ -768,9 +768,6 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
       elHealthCostSheild.style['left'] = `${100 * shieldAmount / unit.healthMax}%`;
       elHealthCostSheild.style['width'] = `${100 * (predictionPlayerShield - shieldAmount) / unit.healthMax}%`;
     }
-  } else {
-    elHealthCost.style['left'] = '100%';
-    elHealthCost.style['width'] = '0';
   }
 
   // Set the 3 mana bars that show how much mana you currently have
