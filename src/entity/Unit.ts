@@ -789,7 +789,7 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
   }
 
   // Set the 3 mana cost bars that show how much mana will be removed if the spell is cast
-  if (predictionPlayerUnit && predictionPlayerUnit.mana > 0) {
+  if (predictionPlayerUnit) {
     // Show cost bar from current mana location minus whatever it's value is
     elManaCost.style['left'] = `${100 * predictionPlayerUnit.mana / unit.manaMax}%`;
     elManaCost.style['width'] = `${100 * Math.min(((unit.mana - predictionPlayerUnit.mana) / unit.manaMax), 1)}%`;
