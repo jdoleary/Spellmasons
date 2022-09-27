@@ -29,7 +29,8 @@ const unit: UnitSource = {
     walk: 'units/gruntWalk',
   },
   sfx: {
-    damage: 'unitDamage',
+    // Golem shares hurt sfx with archer intentionally
+    damage: 'archerHurt',
     death: 'golemDeath'
   },
   action,

@@ -2,7 +2,7 @@ import * as Unit from '../entity/Unit';
 import * as Image from '../graphics/Image';
 import { CardCategory } from '../types/commonTypes';
 import type Underworld from '../Underworld';
-import { playDefaultSpellAnimation } from './cardUtils';
+import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
 import { Spell } from './index';
 
 const id = 'Debilitate';
@@ -11,6 +11,7 @@ const spell: Spell = {
   card: {
     id,
     category: CardCategory.Curses,
+    sfx: 'debilitate',
     supportQuantity: true,
     manaCost: 20,
     healthCost: 0,
@@ -27,6 +28,7 @@ in the future.
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive);
       if (targets.length) {
+        playDefaultSpellSFX(card, prediction);
         await playDefaultSpellAnimation(card, targets, prediction);
         for (let unit of targets) {
           Unit.addModifier(unit, id, underworld, prediction);

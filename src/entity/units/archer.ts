@@ -31,8 +31,8 @@ const unit: UnitSource = {
     walk: 'units/archerWalk',
   },
   sfx: {
+    damage: 'archerHurt',
     death: 'archerDeath',
-    damage: 'unitDamage',
   },
   action: async (unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, underworld: Underworld, _canAttackTarget: boolean) => {
     const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit, underworld);

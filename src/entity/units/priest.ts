@@ -58,7 +58,7 @@ const unit: UnitSource = {
     walk: 'units/priestWalk',
   },
   sfx: {
-    damage: 'unitDamage',
+    damage: 'priestHurt',
     death: 'priestDeath',
   },
   extraTooltipInfo: () => {

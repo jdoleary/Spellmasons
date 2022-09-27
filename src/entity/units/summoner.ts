@@ -23,7 +23,7 @@ const unit: UnitSource = {
     walk: 'units/summonerWalk',
   },
   sfx: {
-    damage: 'unitDamage',
+    damage: 'summonerHurt',
     death: 'summonerDeath'
   },
   unitProps: {

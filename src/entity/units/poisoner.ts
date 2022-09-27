@@ -31,7 +31,7 @@ const unit: UnitSource = {
     walk: 'units/poisWalk',
   },
   sfx: {
-    damage: 'unitDamage',
+    damage: 'poisonerHurt',
     death: 'poisonerDeath'
   },
   action: async (unit: Unit.IUnit, _attackTarget, underworld) => {

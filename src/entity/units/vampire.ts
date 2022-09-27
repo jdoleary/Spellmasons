@@ -31,7 +31,7 @@ const unit: UnitSource = {
     walk: 'units/vampireWalk',
   },
   sfx: {
-    damage: 'unitDamage',
+    damage: 'vampireHurt',
     death: 'vampireDeath'
   },
   init: (unit: Unit.IUnit, underworld: Underworld) => {

@@ -2,7 +2,7 @@ import * as Unit from '../entity/Unit';
 import { Spell } from './index';
 import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
-import { playDefaultSpellAnimation } from './cardUtils';
+import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
 
 const id = 'purify';
 // Removes all curse modifiers
@@ -10,6 +10,7 @@ const spell: Spell = {
   card: {
     id,
     category: CardCategory.Blessings,
+    sfx: 'purify',
     manaCost: 20,
     healthCost: 0,
     expenseScaling: 1,
@@ -24,6 +25,7 @@ A curse is a harmful modifier that is attached to a unit: for example: poison, b
       // .filter: only target living units
       const targets = state.targetedUnits.filter(u => u.alive);
       if (targets.length) {
+        playDefaultSpellSFX(card, prediction);
         await playDefaultSpellAnimation(card, targets, prediction);
         for (let unit of targets) {
           apply(unit, underworld)
