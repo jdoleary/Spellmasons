@@ -14,9 +14,6 @@
     - liquid looks like you can't walk across
     - don't show playerTHought when they hover over inventory
     - shield graphic doesn't show if archer with shield was already hurt when it got shield
-    - idea: break potion to make pool
-        - to heal over time
-    - expanding should cost more
     - check the tape: I didn't get full mana on new turn
     - archer's shouldn't have infinite range
     - GOt the "this spell will damage you" when healing
