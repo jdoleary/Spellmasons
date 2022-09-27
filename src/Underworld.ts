@@ -1723,6 +1723,8 @@ export default class Underworld {
           }
         }
         if (affirm) {
+          // Clear your selected spells when ending your turn.  This is a user preference inspried by a playtest
+          CardUI.clearSelectedCards(this);
           console.log('endMyTurn: send END_TURN message');
           // Don't play turn sfx when recording
           if (!globalThis.isHUDHidden && !document.body?.classList.contains('hide-card-holders')) {

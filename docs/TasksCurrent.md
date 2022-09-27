@@ -11,8 +11,6 @@
     - multiplayer server
 - jake playtest:
     - would like to see ally picking starting point
-    - confusing: spell that I chose last round persisted
-        - if i end my turn it should dequeue spells
     - shield color in health bar is too bright
     - liquid looks like you can't walk across
     - don't show playerTHought when they hover over inventory
@@ -20,7 +18,6 @@
     - idea: break potion to make pool
         - to heal over time
     - expanding should cost more
-    - blood curse shows +9 health when healing
     - check the tape: I didn't get full mana on new turn
     - archer's shouldn't have infinite range
     - GOt the "this spell will damage you" when healing
