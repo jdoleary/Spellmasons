@@ -719,7 +719,8 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
   const shieldRatio = shieldAmount / unit.healthMax;
   elHealthBarSheild.style["width"] = `${100 * Math.min(shieldRatio, 1)}%`;
   if (shieldAmount) {
-    elHealthLabel.innerHTML = `${unit.health} + ${shieldAmount} / ${unit.healthMax}`;
+    const shieldText = `${unit.modifiers.shield?.damage_block} shield`;
+    elHealthLabel.innerHTML = `${shieldText} + ${unit.health} / ${unit.healthMax}`;
   } else {
     // Label health without shield
     elHealthLabel.innerHTML = `${unit.health}/${unit.healthMax}`;

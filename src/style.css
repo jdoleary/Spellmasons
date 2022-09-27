@@ -765,14 +765,14 @@ body.your-turn #end-turn-btn:hover {
 
 /* 2nd health fill is for shield */
 #health .fill:nth-child(2) {
-  background-color: #ffdaaf;
+  background-color: #714d33;
 }
 
 /* 2nd health cost is for shield */
 #health .cost:nth-child(4) {
   background: repeating-linear-gradient(45deg,
-      #f8d36b,
-      #f8d36b 10px,
+      #714d33,
+      #714d33 10px,
       rgba(0, 0, 0, 0.0) 10px,
       rgba(0, 0, 0, 0.0) 20px) fixed;
 }

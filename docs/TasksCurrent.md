@@ -11,7 +11,6 @@
     - multiplayer server
 - jake playtest:
     - would like to see ally picking starting point
-    - shield color in health bar is too bright
     - liquid looks like you can't walk across
     - don't show playerTHought when they hover over inventory
     - shield graphic doesn't show if archer with shield was already hurt when it got shield
