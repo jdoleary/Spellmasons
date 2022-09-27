@@ -2,15 +2,11 @@
 - Record Trailer and start marketing
     - trailer should be more zoomed in
 # Major Tasks
+  - (h) I want 2x as many spells (21 to 42) and 2x as many enemies (7 to 14)
+    - email Che for new work
+  - Trademark Process - ongoing
   - (m) Marketing
   - (h) Fix liquid glitches perminantly
-  - Look into Trademark and Copyright
-  - Fix multiplayer
-    - Fix player moving to 0,0 and getting stuck when portal was out, see footage Spellmasons\footage-video\first-working-multiplayer.mp4
-        - see 0:48:55 for when i get stuck post portal out of bounds
-            - it looks like portal spawned on me, I went to 0,0, pickups flew too me, but it didn't end the game. ALSO WE HAD CLONES OUT, MAYBE THAT'S whY?
-            - going through the portal again fixed it.
-        - Okay it looks like my guy went through the portal cause it spawned on him and brad when through his portal on his screen but not on my screen (he wasn't close enough)
   - (m) Integrate freestanding obstacles (tree, urn, etc)
   - Finalize
     - Rather than "targeted units" and "targeted pickups" use composition to do "movable", "damagable", "turnTakeable"
@@ -20,24 +16,24 @@
     - (?) Package for Electron
     - (e) Bug reporting
     - (m) Steam integration
-    - (h) I want 2x as many spells (21 to 42) and 2x as many enemies (7 to 14)
     - (m) Add perks and spell level ups
 # Desired Schedule
 - September / October
     - Start Marketing
 - November
     - Package as Electron App
+    - Convenient multiplayer lobbying via steam
     - Test on all 3 Operating Systems
     - "Explain Engine" (Adaptive Tutorial)
         - Gifs to introduce enemies
-    - Beta Testing
+    - [Beta Testing](https://partner.steamgames.com/doc/store/testing)
 - December / January
     - More content depending on how marketing is going
         - Perks
         - 2x spells
         - 2x enemies
     - Finish polish and reliability
-    - Steamdeck support
+    - Steamdeck support / Controller Support / Accessability
     - Release
 # Critical Path
 - Milestone | **Marketing** | Planning on September 1

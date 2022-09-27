@@ -1,3 +1,5 @@
+- fix archers having infinite range
+- add ghost archer
 - notify with floating text when AI units are out of mana
     - maybe rework AI mana so that they get the full amount they need every turn just like you do as a player
 - Improve jaggedy push 
