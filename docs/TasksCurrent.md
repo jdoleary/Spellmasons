@@ -4,27 +4,6 @@
     - maybe rework AI mana so that they get the full amount they need every turn just like you do as a player
 - Improve jaggedy push 
 - credits page
-- R feedback:
-    - save game
-    - mute button
-    - tooltip for wasd and movement
-    - multiplayer server
-- jake playtest:
-    - would like to see ally picking starting point
-    - liquid looks like you can't walk across
-    - don't show playerTHought when they hover over inventory
-    - shield graphic doesn't show if archer with shield was already hurt when it got shield
-    - check the tape: I didn't get full mana on new turn
-    - archer's shouldn't have infinite range
-    - GOt the "this spell will damage you" when healing
-    - idea: summoner spells like elden ring
-        - they split your stats
-    - enemy that debuffs blessings
-    - UX: SHould be able to drag order of spells in queued spells
-    - gets laggy with 'expand' 'pull' for lots of guys
-    - Feedback:
-        - Spell variety
-        - Love idea of summon spells, creating things on the field
 - bug: had an incorrect push prediction, see footage
 - bug: after loading game I get these errors:
     Cannot show upgrades, no globalThis.player Underworld.ts:1823:14
@@ -85,6 +64,9 @@
 - Change AOE behavior so that it just expands radius
     - This radius expansion should work for ANY spell that uses a radius: vortex, bloat, chain, etc
     - Maybe it only modifies the spell directly after it
+- idea: summoner spells like elden ring
+    - they split your stats
+- enemy that debuffs blessings
 
 ## New Spell Ideas
 - Card: Mind Control (changes faction temporarily)

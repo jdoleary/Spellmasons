@@ -1,3 +1,22 @@
+- R feedback:
+    - save game
+    - mute button
+    - tooltip for wasd and movement
+    - multiplayer server
+- jake playtest:
+    - would like to see ally picking starting point
+    - liquid looks like you can't walk across
+    - don't show playerTHought when they hover over inventory
+    - shield graphic doesn't show if archer with shield was already hurt when it got shield
+    - check the tape: I didn't get full mana on new turn
+    - archer's shouldn't have infinite range
+    - GOt the "this spell will damage you" when healing
+    - UX: SHould be able to drag order of spells in queued spells
+    - gets laggy with 'expand' 'pull' for lots of guys
+    - Feedback:
+        - Spell variety
+        - Love idea of summon spells, creating things on the field
+
 ## Brad playtest 2022-09-11
 - he likes having his name above his head even in singleplayer
 - How do i inspect things when I'm in spawn mode
