@@ -1,4 +1,11 @@
-  - Bug: when ally gives you a shield and you end your turn you get the "this spell will damage you" caution box
+
+- BUG: Summoner summoned units and then they disappeared (desync)
+    - could this be due to the seed and it choosing golems whose ids did not allow choosing
+- Bug: I was dead but didn't die (visually but not stats) at timestamp 45:46
+- bug: sometimes stamina can == NaN
+    - note: staminaMax is still valid
+    - after portaling?
+- Bug: when ally gives you a shield and you end your turn you get the "this spell will damage you" caution box
 - Fix color contract for player lobby
 - Make tests ensure that all poly functions handle maleformed polys gracefully
 - Should I send a pie message everytime i need to end a players turn so we never end up with desynced turn state? rather than f3c23e59c99362c6fc9229cfc19499c3789439a6
