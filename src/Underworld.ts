@@ -1744,7 +1744,6 @@ export default class Underworld {
       console.error('Cannot end turn, player with clientId:', clientId, 'does not exist');
       return;
     }
-    player.endedTurn = true;
     if (this.turn_phase != turn_phase.PlayerTurns) {
       // (A player "ending their turn" when it is not their turn
       // can occur when a client disconnects when it is not their turn)
@@ -1753,6 +1752,7 @@ export default class Underworld {
     }
     // Ensure players can only end the turn when it IS their turn
     if (this.turn_phase === turn_phase.PlayerTurns) {
+      player.endedTurn = true;
       // Trigger onTurnEnd Events
       await Promise.all(player.unit.onTurnEndEvents.map(
         async (eventName) => {
