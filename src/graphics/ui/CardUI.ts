@@ -303,11 +303,17 @@ export function syncInventory(slotModifyingIndex: number | undefined, underworld
 }
 export function toggleInventory(toolbarIndex: number | undefined, forceState: boolean | undefined, underworld: Underworld) {
   if (globalThis.headless) { return; }
+  const inventoryWasOpen = document.body?.classList.contains(openInvClass);
   document.body?.classList.toggle(openInvClass, forceState);
   if (globalThis.player && document.body?.classList.contains(openInvClass)) {
     // Create inventory
+    playSFXKey('inventory_open');
     syncInventory(toolbarIndex, underworld);
   } else {
+    // If inventory just closed, play sfx
+    if (inventoryWasOpen) {
+      playSFXKey('inventory_close');
+    }
     // When inventory closes, remove active toolbar element class
     document.querySelectorAll('.active-toolbar-element').forEach(e => e.classList.remove(ACTIVE_TOOLBAR_ELEMENT_CLASSNAME))
   }

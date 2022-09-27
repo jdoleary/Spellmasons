@@ -638,6 +638,7 @@ export function die(unit: IUnit, underworld: Underworld, prediction: boolean) {
     clearSpellEffectProjection(underworld);
     CardUI.clearSelectedCards(underworld);
     centeredFloatingText(`💀 You Died 💀`, 'red');
+    playSFXKey('game_over');
   }
   // In the event that this unit that just died is the selected unit,
   // this will remove the tooltip:

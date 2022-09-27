@@ -349,6 +349,7 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
                 coords: fromPlayer.unit,
                 text: 'Out of Stamina!'
               });
+              playSFXKey('deny_stamina');
             }
             // Clear player unit path when they are done moving so they get
             // to choose a new path next turn

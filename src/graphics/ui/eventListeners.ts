@@ -282,6 +282,7 @@ export function mouseMove(underworld: Underworld, e?: MouseEvent) {
                 coords: mouseTarget,
                 text: 'Out of stamina',
               });
+              playSFXKey('deny_stamina');
               globalThis.notifiedOutOfStamina = true;
             }
           }
@@ -427,6 +428,7 @@ export function clickHandler(underworld: Underworld, e: MouseEvent) {
       coords: mousePos,
       text: 'Out of bounds!'
     })
+    playSFXKey('deny');
     return;
   }
   // Get current client's player
@@ -439,7 +441,8 @@ export function clickHandler(underworld: Underworld, e: MouseEvent) {
       floatingText({
         coords: mousePos,
         text: 'Invalid Spawn Location'
-      })
+      });
+      playSFXKey('deny');
     } else {
       // Spawn player:
       underworld.pie.sendData({
@@ -500,7 +503,8 @@ export function clickHandler(underworld: Underworld, e: MouseEvent) {
           floatingText({
             coords: target,
             text: 'Out of Range!'
-          })
+          });
+          playSFXKey('deny_range');
           // Cancel Casting
           return;
         }
@@ -513,7 +517,8 @@ export function clickHandler(underworld: Underworld, e: MouseEvent) {
           floatingText({
             coords: target,
             text: 'No Target!'
-          })
+          });
+          playSFXKey('deny_target');
           // Cancel Casting
           return;
         }
@@ -527,7 +532,8 @@ export function clickHandler(underworld: Underworld, e: MouseEvent) {
             floatingText({
               coords: target,
               text: 'Invalid Target!'
-            })
+            });
+            playSFXKey('deny_target');
             // Cancel Casting
             return;
           }
@@ -535,6 +541,7 @@ export function clickHandler(underworld: Underworld, e: MouseEvent) {
 
         if (selfPlayer.unit.modifiers[Freeze.id]) {
           floatingText({ coords: selfPlayer.unit, text: 'Cannot Cast. Frozen.' })
+          playSFXKey('deny');
           // Cancel Casting
           return
         }
@@ -559,6 +566,7 @@ export function clickHandler(underworld: Underworld, e: MouseEvent) {
         coords: mousePos,
         text: 'You must wait for your turn to cast',
       });
+      playSFXKey('deny');
     }
   } else {
     updateTooltipSelection(mousePos, underworld);
