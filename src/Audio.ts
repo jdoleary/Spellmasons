@@ -66,10 +66,6 @@ export const sfx: { [key: string]: string } = {
     yourTurn: './sound/sfx-from-val/your-turn.wav',
 
 };
-export const sfxPageTurn = [
-    // './sound/sfx/page-turn-1.flac',
-    './sound/sfx/page-turn-2.flac',
-];
 const music = [
     './sound/music/ChainingSpells.m4a',
     './sound/music/FirstSteps.mp3',
