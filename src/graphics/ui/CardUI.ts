@@ -597,6 +597,11 @@ function createCardElement(content: Cards.ICard) {
   title.classList.add('card-title');
   title.innerHTML = content.id.split('_').join(' ');
   elCardInner.appendChild(title);
+  const rarityText = document.createElement('div');
+  rarityText.classList.add('card-rarity')
+  rarityText.style.color = getCardRarityColor(content);
+  rarityText.innerHTML = cardRarityAsString(content).toLocaleLowerCase();
+  elCardInner.appendChild(rarityText);
   const desc = document.createElement('div');
   desc.classList.add('card-description');
   if (content.description) {

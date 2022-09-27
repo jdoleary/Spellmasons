@@ -505,9 +505,15 @@ kbd {
 }
 
 .card-rarity {
+  display: none;
   text-align: center;
   color: white;
   text-transform: capitalize;
+}
+
+#upgrade-picker-content .card-rarity,
+#card-inspect .card-rarity {
+  display: block;
 }
 
 .card-title {

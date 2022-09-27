@@ -15,7 +15,6 @@
         - if i end my turn it should dequeue spells
     - shield color in health bar is too bright
     - liquid looks like you can't walk across
-    - write rarity on card
     - don't show playerTHought when they hover over inventory
     - shield graphic doesn't show if archer with shield was already hurt when it got shield
     - idea: break potion to make pool
