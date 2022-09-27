@@ -3,6 +3,7 @@ import throttle from 'lodash.throttle';
 import * as CardUI from './CardUI';
 import * as Unit from '../../entity/Unit';
 import * as Pickup from '../../entity/Pickup';
+import * as Player from '../../entity/Player';
 import * as storage from '../../storage';
 import floatingText from '../FloatingText';
 import {
@@ -22,7 +23,7 @@ import { getAdjustedCastTarget, isOutOfRange } from '../../PlayerUtils';
 import { vec2ToOneDimentionIndexPreventWrap } from '../../jmath/ArrayUtil';
 import * as Vec from '../../jmath/Vec';
 import { Vec2 } from '../../jmath/Vec';
-import Underworld, { showUpgradesClassName } from '../../Underworld';
+import Underworld, { biome_level_index_map, showUpgradesClassName } from '../../Underworld';
 import { toLineSegments } from '../../jmath/Polygon2';
 import { closestLineSegmentIntersection } from '../../jmath/lineSegment';
 import { allUnits } from '../../entity/units';
@@ -756,6 +757,58 @@ export function registerAdminContextMenuOptions(underworld: Underworld) {
       domQueryContainer: '#menu-global'
     },
     {
+      label: 'Skip to Water Biome',
+      action: () => {
+        if (globalThis.player) {
+          underworld.levelIndex = biome_level_index_map.water;
+          Player.enterPortal(globalThis.player, underworld);
+        }
+      },
+      supportInMultiplayer: false,
+      domQueryContainer: '#menu-global'
+    },
+    {
+      label: 'Skip to Lava Biome',
+      action: () => {
+        if (globalThis.player) {
+          underworld.levelIndex = biome_level_index_map.lava;
+          Player.enterPortal(globalThis.player, underworld);
+        }
+      },
+      supportInMultiplayer: false,
+      domQueryContainer: '#menu-global'
+    },
+    {
+      label: 'Skip to Blood Biome',
+      action: () => {
+        if (globalThis.player) {
+          underworld.levelIndex = biome_level_index_map.blood;
+          Player.enterPortal(globalThis.player, underworld);
+        }
+      },
+      supportInMultiplayer: false,
+      domQueryContainer: '#menu-global'
+    },
+    {
+      label: 'Skip to Ghost Biome',
+      action: () => {
+        if (globalThis.player) {
+          underworld.levelIndex = biome_level_index_map.ghost;
+          Player.enterPortal(globalThis.player, underworld);
+        }
+      },
+      supportInMultiplayer: false,
+      domQueryContainer: '#menu-global'
+    },
+    {
+      label: 'Regenerate Level',
+      action: () => {
+        underworld.generateLevelData(underworld.levelIndex);
+      },
+      supportInMultiplayer: false,
+      domQueryContainer: '#menu-global'
+    },
+    {
       label: '✖️ Delete',
       action: ({ selectedUnitid }) => {
         // Remove without blood, remember clean up will just
@@ -930,7 +983,18 @@ function createContextMenuOptions(menu: HTMLElement, underworld: Underworld) {
           selectedPickupLocation: globalThis.selectedPickup && Vec.clone(globalThis.selectedPickup)
         });
       } else {
-        action({ clientId: globalThis.clientId || '', pos });
+        // Non multiplayer supported options may only be triggered by the host (in singleplayer),
+        // this client is the host, in multiplayer it will always be another headless server
+        if (globalThis.isHost(underworld.pie)) {
+          action({ clientId: globalThis.clientId || '', pos });
+        } else {
+          const errMsg = 'This admin command is not supported in multiplayer';
+          if (globalThis.player) {
+            floatingText({ coords: globalThis.player.unit, style: { fill: 'red' }, text: errMsg })
+          } else {
+            alert(errMsg);
+          }
+        }
       }
       // Close the menu
       menu.remove();

@@ -9,8 +9,6 @@
     - bug: sometimes stamina can == NaN
         - note: staminaMax is still valid
         - after portaling?
-    - Biome persistance
-    - Admin tool for changing biome
 - Improve jaggedy push 
 - credits page
 - R feedback:
@@ -50,7 +48,6 @@
     Missing subsprite data for imageName null Image.ts:329:14
     Unable to init modifier with key Blood Curse
 - bug: got ` Uncaught TypeError: animationSprite2.parent is null` after triggering a pickup and quickly going through a portal before theanimation could finish
-- biomes persist for a while
 
 ## Trailer work
 - Film multiplayer

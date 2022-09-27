@@ -1036,8 +1036,22 @@ export default class Underworld {
       console.error('Missing caveSize for generating level')
       return;
     }
-    const biomes = ['blood', 'lava', 'water', 'ghost'];
-    const biome: Biome = biomes[Math.floor(Math.random() * biomes.length)] as Biome;
+
+    const biome_water: Biome = 'water';
+    const biome_lava: Biome = 'lava';
+    const biome_blood: Biome = 'blood';
+    const biome_ghost: Biome = 'ghost';
+    let biome: Biome = biome_water;
+    if (levelIndex >= biome_level_index_map.lava) {
+      biome = biome_lava;
+    }
+    if (levelIndex >= biome_level_index_map.blood) {
+      biome = biome_blood;
+    }
+    if (levelIndex >= biome_level_index_map.ghost) {
+      biome = biome_ghost;
+    }
+
     const { map, limits } = generateCave(levelIndex > 6 ? caveSizes.medium : caveSizes.small, biome, this);
     const { tiles, liquid, width } = map;
     const levelData: LevelData = {
@@ -2605,7 +2619,14 @@ function getEnemiesForAltitude(underworld: Underworld): string[] {
 }
 
 // Explicit list of biome types
-export type Biome = 'blood' | 'lava' | 'water' | 'ghost';
+export type Biome = 'water' | 'lava' | 'blood' | 'ghost';
+// Greather than X level index chooses the following biomes:
+export const biome_level_index_map: { [biome in Biome]: number } = {
+  water: 0,
+  lava: 3,
+  blood: 6,
+  ghost: 9
+}
 
 export function biomeTextColor(biome?: Biome): number | string {
   switch (biome) {
