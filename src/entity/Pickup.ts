@@ -12,6 +12,7 @@ import { Vec2 } from '../jmath/Vec';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import { manaBlue } from '../graphics/ui/colors';
 import Underworld from '../Underworld';
+import { hasBloodCurse } from '../cards/blood_curse';
 
 export const PICKUP_RADIUS = config.SELECTABLE_RADIUS;
 type IPickupEffect = ({ unit, player, pickup, prediction }: { unit?: IUnit; player?: Player.IPlayer, pickup: IPickup, underworld: Underworld, prediction: boolean }) => boolean | undefined;
@@ -374,7 +375,10 @@ export const pickups: IPickupSource[] = [
     singleUse: true,
     description: `Restores ${healthPotionRestoreAmount} health.`,
     effect: ({ player, underworld, prediction }) => {
-      if (player && player.unit.health < player.unit.healthMax) {
+      // Only trigger the health potion if the player will be affected by the health potion
+      // Normally that's when they have less than full health, but there's an exception where
+      // players that have blood curse will be damaged by healing so it should trigger for them too
+      if (player && (player.unit.health < player.unit.healthMax || hasBloodCurse(player.unit))) {
         takeDamage(player.unit, -healthPotionRestoreAmount, undefined, underworld, false);
         // Add spell effect animation
         Unit.addOneOffAnimation(player.unit, 'spell-effects/potionPickup', {}, { animationSpeed: 0.3, loop: false });

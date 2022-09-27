@@ -1,13 +1,14 @@
 import type { IUnit } from '../entity/Unit';
 import * as Image from '../graphics/Image';
 import { allCards, Spell } from './index';
-import { addCardToHand, removeCardsFromHand } from '../entity/Player';
+import { addCardToHand } from '../entity/Player';
 import * as Unit from '../entity/Unit';
 import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
+import floatingText from '../graphics/FloatingText';
 
 export const id = 'Blood Curse';
-export function isVampire(unit: IUnit): boolean {
+export function hasBloodCurse(unit: IUnit): boolean {
   return Object.keys(unit.modifiers).some(m => m === id)
 }
 const healthMultiplier = 2;
@@ -71,6 +72,9 @@ const spell: Spell = {
     onDamage: (unit: IUnit, amount: number, _underworld: Underworld, prediction: boolean, damageDealer?: IUnit) => {
       // Takes healing as damage
       if (amount < 0) {
+        if (!prediction) {
+          floatingText({ coords: unit, text: 'Blood Curse Damage!' });
+        }
         return -1 * amount;
       } else {
         // Takes regular damage just as damage

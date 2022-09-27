@@ -4,7 +4,7 @@ import { UnitSubType } from '../../types/commonTypes';
 import * as math from '../../jmath/math';
 import { createVisualFlyingProjectile } from '../Projectile';
 import Shield from '../../cards/shield';
-import { isVampire } from '../../cards/blood_curse';
+import { hasBloodCurse } from '../../cards/blood_curse';
 import Underworld from '../../Underworld';
 
 const manaCostToCast = 30;
@@ -71,7 +71,7 @@ const unit: UnitSource = {
     if (unit.mana >= manaCostToCast) {
       // Heal (in order to damage) enemy vampires
       const enemyVampires = underworld.units.filter(
-        u => u.faction !== unit.faction && isVampire(u)
+        u => u.faction !== unit.faction && hasBloodCurse(u)
       );
       if (enemyVampires.length) {
         // Heal to damage enemy vampires
@@ -82,7 +82,7 @@ const unit: UnitSource = {
           // Only select allies, that are alive, that are damaged, and that aren't SUPPORT_CLASS cause it's
           // annoying when priests heal each other.
           // Also exclude vampires because vampires take health as DAMAGE! And we don't want priests hurting their ally vampires
-          (u) => u.faction === unit.faction && u.alive && u.health < u.healthMax && u.unitSubType !== UnitSubType.SUPPORT_CLASS && !isVampire(u),
+          (u) => u.faction === unit.faction && u.alive && u.health < u.healthMax && u.unitSubType !== UnitSubType.SUPPORT_CLASS && !hasBloodCurse(u),
         );
         if (damagedAllys.length) {
           didAction = await healOneOf(unit, damagedAllys, underworld);
