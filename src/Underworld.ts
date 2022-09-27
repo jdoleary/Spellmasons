@@ -2055,7 +2055,7 @@ export default class Underworld {
         // Add unit action to the array of promises to wait for
         // TODO: Prevent golems from attacking if they are out of range
         // like when they are around a corner
-        let promise = raceTimeout(5000, `Unit.action; unit.id: ${u.id}; subType: ${u.unitSubType}`, unitSource.action(u, target, this, this.canUnitAttackTarget(u, target)));
+        let promise = raceTimeout(5000, `Unit.action; unitSourceId: ${u.unitSourceId}; subType: ${u.unitSubType}`, unitSource.action(u, target, this, this.canUnitAttackTarget(u, target)));
         animationPromises.push(promise);
       } else {
         console.error(
