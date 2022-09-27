@@ -1,7 +1,6 @@
 - Today:
     - integrate new Val Sfx
     - BUG: I swapped and it took me to -1000 -1000
-    - bug: "Your turn" text is too big when you zoom out
     - BUG: Summoner summoned units and then they disappeared (desync)
     - bug: ally dragger isn't pulling enemies
     - Bug: I was dead but didn't die (visually but not stats) at timestamp 45:46

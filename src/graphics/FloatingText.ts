@@ -35,9 +35,11 @@ export default function floatingText({
   pixiText.y = coords.y;
   pixiText.anchor.x = 0.5;
   pixiText.anchor.y = 0.5;
-  // Keep floating text the same size regardless of camera zoom
-  pixiText.scale.x = 1 / app.stage.scale.x;
-  pixiText.scale.y = 1 / app.stage.scale.y;
+  if (container !== containerUIFixed) {
+    // Keep floating text the same size regardless of camera zoom
+    pixiText.scale.x = 1 / app.stage.scale.x;
+    pixiText.scale.y = 1 / app.stage.scale.y;
+  }
   const instance: FText = {
     startPosition: coords,
     dy: 0,
@@ -65,6 +67,13 @@ function floatAway(instance: FText, resolve: (value: void) => void) {
     } else {
       instance.pixiText.y = instance.startPosition.y + instance.dy;
       instance.pixiText.x = instance.startPosition.x;
+    }
+    if (app) {
+      if (instance.pixiText.parent !== containerUIFixed) {
+        // Keep floating text the same size regardless of camera zoom
+        instance.pixiText.scale.x = 1 / app.stage.scale.x;
+        instance.pixiText.scale.y = 1 / app.stage.scale.y;
+      }
     }
     instance.pixiText.alpha = instance.alpha;
     // Once it's fully hidden / done animating
