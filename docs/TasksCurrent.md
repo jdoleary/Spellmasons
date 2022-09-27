@@ -1,5 +1,4 @@
 - Today:
-    - BUG: I swapped and it took me to -1000 -1000
     - BUG: Summoner summoned units and then they disappeared (desync)
     - bug: ally dragger isn't pulling enemies
     - Bug: I was dead but didn't die (visually but not stats) at timestamp 45:46

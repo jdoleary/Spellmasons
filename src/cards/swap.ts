@@ -47,13 +47,6 @@ Swaps the caster with the source target.
 
       }
 
-      const temporaryPosition = { x: -1000, y: -1000 };
-      // First swap pickups  to a temporary location so that they don't get "picked up" by a unit that
-      // hasn't swapped yet
-      for (let [pickup, _newLocation] of swapPickups) {
-        // Physically swap
-        Pickup.setPosition(pickup, temporaryPosition.x, temporaryPosition.y);
-      }
       for (let [unit, newLocation] of swapUnits) {
         // Physically swap
         Unit.setLocation(unit, newLocation);
