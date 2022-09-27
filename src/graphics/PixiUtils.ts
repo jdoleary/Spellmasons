@@ -257,12 +257,9 @@ export function getCamera() {
   return {
     x: !app ? 0 : -app.stage.x,
     y: !app ? 0 : -app.stage.y,
-    zoom: calculateCameraZoom(),
+    // scale.x and scale.y are the same
+    zoom: !app ? 1 : app.stage.scale.x
   }
-}
-function calculateCameraZoom() {
-
-  return !app ? 0 : app.stage.scale.x + ((globalThis.zoomTarget || 1) - app.stage.scale.x) / 8;
 }
 export function setCameraToMapCenter(underworld: Underworld) {
   // Set camera to the center of the map
@@ -279,7 +276,7 @@ export function updateCameraPosition(underworld: Underworld) {
   // Lerp zoom to target
   // Note: This must happen BEFORE the stage x and y is updated
   // or else it will get jumpy when zooming
-  const zoom = calculateCameraZoom();
+  const zoom = !app ? 0 : app.stage.scale.x + ((globalThis.zoomTarget || 1) - app.stage.scale.x) / 8;
 
   app.stage.scale.x = zoom;
   app.stage.scale.y = zoom;
