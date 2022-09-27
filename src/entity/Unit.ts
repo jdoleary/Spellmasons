@@ -728,6 +728,7 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
   // Set the health cost bar that shows how much health will be changed if the spell is cast
   if (predictionPlayerUnit) {
     const losingHealth = predictionPlayerUnit.health < unit.health;
+    const willDie = predictionPlayerUnit.health <= 0;
     const predictionPlayerShield = predictionPlayerUnit.modifiers.shield?.damage_block || 0
     const shieldLost = predictionPlayerShield < shieldAmount;
     if (elCautionBox) {
@@ -736,7 +737,11 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
         elCautionBoxText.innerText = '';
         const warnings = [];
         if (losingHealth || shieldLost) {
-          warnings.push('damage');
+          if (willDie) {
+            warnings.push('kill');
+          } else {
+            warnings.push('damage');
+          }
         }
 
         if (cursingSelf) {
