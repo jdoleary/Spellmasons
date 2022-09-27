@@ -6,6 +6,8 @@ import { CardCategory } from '../types/commonTypes';
 import type Underworld from '../Underworld';
 import { playDefaultSpellSFX } from './cardUtils';
 import * as config from '../config';
+import throttle from 'lodash.throttle';
+import { Vec2 } from '../jmath/Vec';
 
 export const id = 'shield';
 export const modifierImagePath = 'spell-effects/modifierShield.png';
@@ -98,6 +100,10 @@ Protects bearer from the next ${damageBlocked} damage that they would incur.
 
 };
 
+const notifyMaximumShield = throttle((coords: Vec2) => {
+  floatingText({ coords, text: `Maximum shield` });
+}, 1000, { trailing: true });
+
 function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, quantity: number = 1) {
   // First time setup
   let modifier = unit.modifiers[id];
@@ -119,7 +125,7 @@ function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, qu
     if (modifier.damage_block > maxBlock) {
       // Cap how much shield a unit can have
       modifier.damage_block = maxBlock;
-      floatingText({ coords: unit, text: `Maximum shield` });
+      notifyMaximumShield(unit);
     }
   }
 }

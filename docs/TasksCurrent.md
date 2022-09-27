@@ -6,7 +6,6 @@
     - bug: ally dragger isn't pulling enemies
     - Bug: I was dead but didn't die (visually but not stats) at timestamp 45:46
     - Bug: when ally gives you a shield and you end your turn you get the "this spell will damage you" caution box
-    - Fix "max shield" overlapping text
     - bug: sometimes stamina can == NaN
         - note: staminaMax is still valid
         - after portaling?
