@@ -1744,6 +1744,10 @@ export default class Underworld {
       console.error('Cannot end turn, player with clientId:', clientId, 'does not exist');
       return;
     }
+    if (player.endedTurn) {
+      console.log(`Player ${player.name || player.clientId} has already ended their turn and cannot end it again.`)
+      return;
+    }
     if (this.turn_phase != turn_phase.PlayerTurns) {
       // (A player "ending their turn" when it is not their turn
       // can occur when a client disconnects when it is not their turn)
