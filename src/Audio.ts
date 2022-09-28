@@ -33,7 +33,6 @@ export const sfx: { [key: string]: string } = {
     lobberHurt: './sound/sfx-from-val/glop-hurt.wav',
     manaBurn: './sound/sfx-from-val/mana-burn.wav',
     manaSteal: './sound/sfx-from-val/mana-steal.wav',
-    others_waiting_on_you: './sound/sfx-from-val/others_waiting_on_you.wav',
     playerCharacterLargeCast: './sound/sfx-from-val/player-character-large-cast.wav',
     playerCharacterLargeCast2: './sound/sfx/playerAttackEpic.wav',
     playerCharacterMediumCast: './sound/sfx-from-val/player-character-medium-cast.wav',

@@ -1759,14 +1759,6 @@ export default class Underworld {
     // Ensure players can only end the turn when it IS their turn
     if (this.turn_phase === turn_phase.PlayerTurns) {
       player.endedTurn = true;
-      // Notify if player is the last player left to end their turn:
-      const playersLeftToEndTurn = this.players.filter(p => !p.endedTurn)
-      if (playersLeftToEndTurn.length == 1 && playersLeftToEndTurn[0] == globalThis.player) {
-        if (globalThis.player?.unit) {
-          playSFXKey('others_waiting_on_you');
-          floatingText({ coords: globalThis.player.unit, text: 'Your allies are ready to end the turn.' })
-        }
-      }
       // Trigger onTurnEnd Events
       await Promise.all(player.unit.onTurnEndEvents.map(
         async (eventName) => {
