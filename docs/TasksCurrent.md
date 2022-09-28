@@ -1,3 +1,22 @@
+## Brad playtest
+    - Your allies are waiting for you happens when the 2nd player joins
+    - add footstep sfx
+    - change end turn button color when you're the last player
+    - bug: pressing 'alt' in chrome deselects the window and makes it stop accepting input
+    - camera can get wonky when following via 'z' when spawning
+    - bug: can't toggle off UI since it warns it's not supported in multi
+    - feedback loop for when you're in the portal but your teammate isnt
+    - bug: summoner summoned archers that had the images of golems, i could tell because they had the archer attention marker above their heads
+    - Brad couldn't see top of inventory due to resolution
+    - UI: Inventory should show up on the left side
+    - bug: saw +0 mana; desync bug; i moved when he cast.
+    - chain: targeted near by dead units above living ones, prefer living
+    - throttle "you must wait for your turn to move"
+    - recommends: persistant hotkeys badges (ref. wow)
+        - non intrusive but there if you need it
+    - ultra badass spell should put in wide-screen black bars and take over the camera
+        - and he could crouch and gather enegery
+---
 - fix archers having infinite range
 - add ghost archer
 - notify with floating text when AI units are out of mana
