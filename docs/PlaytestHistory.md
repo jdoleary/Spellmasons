@@ -1,3 +1,13 @@
+- Meeting with Rucin
+  - Similar games
+    - Wizards of Legend
+    - Magicka
+  - pre and post survey
+    - pre survey gathers information about participants
+    - post survey is about the game, features
+  - metric questions
+    - level of engagement / immersion / curiosity
+  - IDIs (In depth interviews)
 - R feedback:
     - save game
     - mute button
@@ -10,7 +20,7 @@
     - shield graphic doesn't show if archer with shield was already hurt when it got shield
     - check the tape: I didn't get full mana on new turn
     - archer's shouldn't have infinite range
-    - GOt the "this spell will damage you" when healing
+    - Got the "this spell will damage you" when healing
     - UX: SHould be able to drag order of spells in queued spells
     - gets laggy with 'expand' 'pull' for lots of guys
     - Feedback:

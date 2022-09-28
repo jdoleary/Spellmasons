@@ -2,6 +2,6 @@ Jordan O'Leary | Programming and Game Design
 theBlurryBox | Art and Animation
 Valentin Cochet | @coc_val | Sound Effect Design
 Jake O'Connell | UI Design
-Stina O'Connell | Music
+BananaMilk | Music
 Lost Lumens, Brad Clark | Audio Mastering
 Matt Sweda | Concept Ideation Assistance
