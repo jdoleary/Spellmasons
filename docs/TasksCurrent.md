@@ -1,19 +1,16 @@
+## Today
+    - chain: targeted near by dead units above living ones, prefer living
+        - maybe just do 3 rounds of it, the first targets units, if there's still not enough target the dead and if there's still not enough taget pickups.  OR only target same as original target? so if source target is dead, target more dead, etc.
 ## Brad playtest
     - Your allies are waiting for you happens when the 2nd player joins
     - add footstep sfx
     - change end turn button color when you're the last player
         - instead of sound
-    - bug: **important** pressing 'alt' in chrome deselects the window and makes it stop accepting input
-        - This doesn't happen in fullscreen
-        - Test in windowed mode on Electron
     - feedback loop for when you're in the portal but your teammate isnt
     - bug: summoner summoned archers that had the images of golems, i could tell because they had the archer attention marker above their heads
     - Brad couldn't see top of inventory due to resolution
     - UI: Inventory should show up on the left side
     - bug: saw +0 mana when he tried to mana steal from me; desync bug; i moved when he cast.
-    - chain: targeted near by dead units above living ones, prefer living
-    - ultra badass spell should put in wide-screen black bars and take over the camera
-        - and he could crouch and gather enegery
 ---
 - fix archers having infinite range
 - add ghost archer
@@ -46,6 +43,9 @@
 - Permanently fix liquid
     - weird liquid : 0.5211362200270263
 - chain through pickups?
+- bug: **important** pressing 'alt' in chrome deselects the window and makes it stop accepting input
+    - This doesn't happen in fullscreen
+    - Test in windowed mode on Electron
 
 # Long Term
 - How does endgame scale now that strength doesn't depend on the levelIndex?
@@ -85,6 +85,8 @@
 - idea: summoner spells like elden ring
     - they split your stats
 - enemy that debuffs blessings
+- juice: ultra badass spell should put in wide-screen black bars and take over the camera
+    - and he could crouch and gather enegery
 
 ## New Spell Ideas
 - Card: Mind Control (changes faction temporarily)
