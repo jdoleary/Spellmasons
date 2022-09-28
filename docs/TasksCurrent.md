@@ -50,6 +50,7 @@
 - Idea: Level up spells along with perks
     - Leveling up could auto increase quantity / lower mana cost / speed mana recovery
 - Idea: "overwatch" where some archers can shoot even not on their turn if you walk in their LOS
+- Idea: A spell to sacrifice ally unit immediately
 - What if potions drop from slain enemies instead of being just pickups on the ground, it would be more exciting if you needed one and it dropped.
 - whole bodies of liquid should be selectable so that they can be frozen
     - freezable liquid to walk over
