@@ -202,11 +202,15 @@ function repelCircleFromLine(mover: Circle, line: LineSegment, underworld: Under
     }
     // Test for intersection with the line segment endpoints
     if (distance(line.p1, mover) <= totalRepelDistance) {
-        repelCircles(mover, mover, { ...line.p1, radius: totalRepelDistance }, underworld, true);
+        // "- mover.radius" is because this needs to repel only the distance from the point to the mover and not consider
+        // the movers own radius which would result in jagged "over pushing"
+        repelCircles(mover, mover, { ...line.p1, radius: totalRepelDistance - mover.radius }, underworld, true);
         repelled = true;
     }
     if (distance(line.p2, mover) <= totalRepelDistance) {
-        repelCircles(mover, mover, { ...line.p2, radius: totalRepelDistance }, underworld, true);
+        // "- mover.radius" is because this needs to repel only the distance from the point to the mover and not consider
+        // the movers own radius which would result in jagged "over pushing"
+        repelCircles(mover, mover, { ...line.p2, radius: totalRepelDistance - mover.radius }, underworld, true);
         repelled = true;
     }
     return repelled;
