@@ -570,7 +570,7 @@ function createCardElement(content: Cards.ICard) {
   const elCardHotkeyBadgeHolder = document.createElement('div');
   elCardHotkeyBadgeHolder.classList.add('hotkey-badge-holder');
   element.appendChild(elCardHotkeyBadgeHolder);
-  const elCardHotkeyBadge = document.createElement('kbd');
+  const elCardHotkeyBadge = document.createElement('div');
   elCardHotkeyBadge.classList.add('hotkey-badge');
   elCardHotkeyBadge.innerHTML = ``;
 
@@ -697,7 +697,7 @@ export function updateCardBadges(underworld: Underworld) {
         if (card) {
           const elHotkeyBadge = card.querySelector('.hotkey-badge') as HTMLElement;
           if (elHotkeyBadge) {
-            elHotkeyBadge.innerHTML = `Hotkey ${key}`;
+            elHotkeyBadge.innerHTML = `${key}`;
           }
         }
       }

@@ -449,13 +449,13 @@ invisibly blocked, change with caution! */
   pointer-events: none;
 }
 
-.card:hover .hotkey-badge-holder {
-  visibility: visible;
-}
-
 .card .hotkey-badge-holder {
-  visibility: hidden;
-  bottom: -40px;
+  bottom: 0;
+  right: 2px;
+  left: auto;
+  text-shadow: #000 1px 0 1px, #000 -1px 0 1px, #000 0 1px 1px, #000 -0 -1px 1px;
+  color: white;
+  font-weight: bold;
 }
 
 .card .hotkey-badge-holder kbd {

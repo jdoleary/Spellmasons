@@ -13,8 +13,6 @@
     - bug: saw +0 mana when he tried to mana steal from me; desync bug; i moved when he cast.
     - chain: targeted near by dead units above living ones, prefer living
     - throttle "you must wait for your turn to move"
-    - recommends: persistant hotkeys badges (ref. wow)
-        - non intrusive but there if you need it
     - ultra badass spell should put in wide-screen black bars and take over the camera
         - and he could crouch and gather enegery
 ---
