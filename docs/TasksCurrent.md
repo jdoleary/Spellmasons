@@ -1,13 +1,12 @@
 ## Today
     - chain: targeted near by dead units above living ones, prefer living
         - maybe just do 3 rounds of it, the first targets units, if there's still not enough target the dead and if there's still not enough taget pickups.  OR only target same as original target? so if source target is dead, target more dead, etc.
+    - Send targeted list along with spell to resolve the following
+        - bug: saw +0 mana when he tried to mana steal from me; desync bug; i moved when he cast.
 ## Brad playtest
     - add footstep sfx
-    - feedback loop for when you're in the portal but your teammate isnt
-    - bug: summoner summoned archers that had the images of golems, i could tell because they had the archer attention marker above their heads
     - Brad couldn't see top of inventory due to resolution
-    - UI: Inventory should show up on the left side
-    - bug: saw +0 mana when he tried to mana steal from me; desync bug; i moved when he cast.
+        - UI: Inventory should show up on the left side
 ---
 - fix archers having infinite range
 - add ghost archer

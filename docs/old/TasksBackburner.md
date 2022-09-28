@@ -1,5 +1,6 @@
 
 
+- way to see easily that you're in the portal but your teammate isnt
 - Fix player moving to 0,0 and getting stuck when portal was out, see footage Spellmasons\footage-video\first-working-multiplayer.mp4
     - see 0:48:55 for when i get stuck post portal out of bounds
         - it looks like portal spawned on me, I went to 0,0, pickups flew too me, but it didn't end the game. ALSO WE HAD CLONES OUT, MAYBE THAT'S whY?
