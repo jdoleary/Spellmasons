@@ -6,6 +6,7 @@ import Underworld from '../../Underworld';
 import { oneOffImage } from '../../cards/cardUtils';
 import { containerUnits } from '../../graphics/PixiUtils';
 import { chooseObjectWithProbability } from '../../jmath/rand';
+import { PLAYER_BASE_ATTACK_RANGE } from '../../config';
 
 const manaCostToCast = 30;
 const unit: UnitSource = {
@@ -46,26 +47,16 @@ const unit: UnitSource = {
       unit.path = undefined;
       unit.mana -= unit.manaCostToCast;
       await Unit.playComboAnimation(unit, unit.animations.attack, async () => {
-        const { sourceUnit, number: NUMBER_OF_SUMMONS } = chooseObjectWithProbability([
-          {
-            sourceUnit: allUnits.golem,
-            probability: 100,
-            number: 5
-          },
-          {
-            sourceUnit: allUnits.archer,
-            probability: 50,
-            number: 3,
-          },
-          {
-            sourceUnit: allUnits.glop,
-            probability: 10,
-            number: 2,
-          },
-        ], underworld.random) || { sourceUnit: allUnits.golem, number: 5 };
+        let sourceUnit = allUnits.archer;
+        let numberOfSummons = 3;
+        const enemyIsClose = underworld.units.filter(u => u.faction !== unit.faction).some(u => math.distance(unit, u) <= PLAYER_BASE_ATTACK_RANGE)
+        if (enemyIsClose) {
+          sourceUnit = allUnits.golem;
+          numberOfSummons = 5;
+        }
         const spawns = underworld.findValidSpawns(unit, 20, 5);
         let lastPromise = Promise.resolve();
-        for (let i = 0; i < NUMBER_OF_SUMMONS; i++) {
+        for (let i = 0; i < numberOfSummons; i++) {
           if (sourceUnit) {
             const coords = spawns[i];
             if (coords) {
