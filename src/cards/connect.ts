@@ -6,12 +6,13 @@ import * as config from '../config';
 import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
 import { add, Vec2 } from '../jmath/Vec';
+import * as math from '../jmath/math';
 import { raceTimeout } from '../Promise';
 import { similarTriangles, distance } from '../jmath/math';
 import { easeOutCubic } from '../jmath/Easing';
 
 const id = 'Connect';
-const numberOfTargetsPerQuantity = 4;
+const numberOfTargetsPerQuantity = 2;
 const spell: Spell = {
   card: {
     id,
@@ -36,13 +37,6 @@ All connected beings will be affected by the following spells in your cast.
       for (let i = 0; i < length; i++) {
         const unit = state.targetedUnits[i];
         if (unit) {
-          // Draw visual circle for prediction
-          // - config.COLLISION_MESH_RADIUS / 2 accounts for the fact that the game logic
-          // will only connect units if their CENTER POINT falls within the radius; however,
-          // to the players eyes if any part of them is touching the circle it should connect
-          if (prediction) {
-            drawPredictionCircleFill(unit, range - config.COLLISION_MESH_RADIUS / 2);
-          }
           // Find all units touching the spell origin
           const chained_units = await getTouchingUnitsRecursive(
             unit.x,
@@ -51,10 +45,24 @@ All connected beings will be affected by the following spells in your cast.
             prediction,
             { limitTargetsLeft },
             0,
-            state.targetedUnits
+            state.targetedUnits.map(u => u.id)
           );
+          // Draw prediction lines so user can see how it chains
+          if (prediction) {
+            chained_units.forEach(chained_unit => {
+              drawPredictionLine(chained_unit.chainSource, chained_unit.unit);
+            });
+          } else {
+            const alreadyAnimated = [...state.targetedUnits];
+            for (let { chainSource, unit } of chained_units) {
+              await animate(chainSource, [unit], alreadyAnimated);
+              alreadyAnimated.push(unit);
+            }
+            // Draw all final circles for a moment before casting
+            await animate({ x: 0, y: 0 }, [], alreadyAnimated);
+          }
           // Update targetedUnits
-          chained_units.forEach(u => addUnitTarget(u, state))
+          chained_units.forEach(u => addUnitTarget(u.unit, state))
         }
       }
 
@@ -72,11 +80,20 @@ async function getTouchingUnitsRecursive(
   // It is an object instead of just a number so it will be passed by reference
   chainState: { limitTargetsLeft: number },
   recurseLevel: number,
-  ignore: Unit.IUnit[] = [],
-): Promise<Unit.IUnit[]> {
+  // Unit ids
+  ignore: number[] = [],
+): Promise<{ chainSource: Vec2, unit: Unit.IUnit }[]> {
   if (chainState.limitTargetsLeft <= 0) {
     return [];
   }
+  // Draw visual circle for prediction
+  // - config.COLLISION_MESH_RADIUS / 2 accounts for the fact that the game logic
+  // will only connect units if their CENTER POINT falls within the radius; however,
+  // to the players eyes if any part of them is touching the circle it should connect
+  if (prediction) {
+    drawPredictionCircleFill({ x, y }, range - config.COLLISION_MESH_RADIUS / 2);
+  }
+  const coords = { x, y }
   const units = prediction ? underworld.unitsPrediction : underworld.units;
   let touching = units.filter((u) => {
     return (
@@ -84,27 +101,19 @@ async function getTouchingUnitsRecursive(
       u.x >= x - range &&
       u.y <= y + range &&
       u.y >= y - range &&
-      !ignore.find((i) => i.x == u.x && i.y == u.y)
+      ignore.find((i) => i == u.id) === undefined
     );
   })
+    // Order by closest to coords
+    .sort((a, b) => math.distance(a, coords) - math.distance(b, coords))
+    // Sort dead units to the back, prefer selecting living units
+    .sort((a, b) => a.alive && b.alive ? 0 : a.alive ? -1 : 1)
     // Only select up to limitTargetsLeft
     .slice(0, chainState.limitTargetsLeft);
 
-  // Update limitTargets left by how many new targets were added
-  chainState.limitTargetsLeft -= touching.length;
+  ignore.push(...touching.map(u => u.id));
 
-  ignore.push(...touching);
-  // Draw prediction lines so user can see how it chains
-  const sourcePosition = { x, y };
-  if (prediction) {
-    touching.forEach(chained_unit => {
-      drawPredictionLine(sourcePosition, chained_unit);
-    });
-  } else {
-    const oldTargets = ignore.filter(o => !touching.includes(o));
-    await animate(sourcePosition, touching, oldTargets);
-  }
-
+  let connected: { chainSource: Vec2, unit: Unit.IUnit }[] = [];
   if (chainState.limitTargetsLeft > 0) {
     // Important: Using a regular for loop and cache the length instead of a for..of loop because 
     // the array being looped is modified in the interior of the loop and we only want it
@@ -113,12 +122,17 @@ async function getTouchingUnitsRecursive(
     for (let i = 0; i < length; i++) {
       const u = touching[i];
       if (u) {
+        if (chainState.limitTargetsLeft <= 0) {
+          break;
+        }
+        connected.push({ chainSource: coords, unit: u });
+        chainState.limitTargetsLeft--;
         const newTouching = await getTouchingUnitsRecursive(u.x, u.y, underworld, prediction, chainState, recurseLevel + 1, ignore)
-        touching = touching.concat(newTouching);
+        connected = connected.concat(newTouching);
       }
     }
   }
-  return touching;
+  return connected;
 }
 
 async function animate(pos: Vec2, newTargets: Vec2[], oldTargets: Vec2[]) {
