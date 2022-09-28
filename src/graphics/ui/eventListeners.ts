@@ -133,8 +133,18 @@ export function keydownListener(underworld: Underworld, event: KeyboardEvent) {
       });
       break;
     case 'KeyZ':
-      // Make camera follow player unit 
-      cameraAutoFollow(true)
+      if (globalThis.player?.isSpawned) {
+
+        // Make camera follow player unit 
+        cameraAutoFollow(true)
+      } else {
+        const mouseTarget = underworld.getMousePos();
+        floatingText({
+          coords: mouseTarget,
+          text: 'You must spawn first'
+        })
+        playSFXKey('deny');
+      }
       break;
     case 'KeyI':
       CardUI.toggleInventory(undefined, undefined, underworld);

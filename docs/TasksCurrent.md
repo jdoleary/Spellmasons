@@ -6,7 +6,6 @@
     - bug: pressing 'alt' in chrome deselects the window and makes it stop accepting input
         - This doesn't happen in fullscreen
         - Test in windowed mode on Electron
-    - camera can get wonky when following via 'z' when spawning
     - bug: can't toggle off UI since it warns it's not supported in multi
     - feedback loop for when you're in the portal but your teammate isnt
     - bug: summoner summoned archers that had the images of golems, i could tell because they had the archer attention marker above their heads
