@@ -3,7 +3,7 @@
     - add footstep sfx
     - change end turn button color when you're the last player
         - instead of sound
-    - bug: pressing 'alt' in chrome deselects the window and makes it stop accepting input
+    - bug: **important** pressing 'alt' in chrome deselects the window and makes it stop accepting input
         - This doesn't happen in fullscreen
         - Test in windowed mode on Electron
     - feedback loop for when you're in the portal but your teammate isnt
@@ -12,7 +12,6 @@
     - UI: Inventory should show up on the left side
     - bug: saw +0 mana when he tried to mana steal from me; desync bug; i moved when he cast.
     - chain: targeted near by dead units above living ones, prefer living
-    - throttle "you must wait for your turn to move"
     - ultra badass spell should put in wide-screen black bars and take over the camera
         - and he could crouch and gather enegery
 ---
