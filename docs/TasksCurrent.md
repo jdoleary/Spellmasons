@@ -6,12 +6,11 @@
     - bug: pressing 'alt' in chrome deselects the window and makes it stop accepting input
         - This doesn't happen in fullscreen
         - Test in windowed mode on Electron
-    - bug: can't toggle off UI since it warns it's not supported in multi
     - feedback loop for when you're in the portal but your teammate isnt
     - bug: summoner summoned archers that had the images of golems, i could tell because they had the archer attention marker above their heads
     - Brad couldn't see top of inventory due to resolution
     - UI: Inventory should show up on the left side
-    - bug: saw +0 mana; desync bug; i moved when he cast.
+    - bug: saw +0 mana when he tried to mana steal from me; desync bug; i moved when he cast.
     - chain: targeted near by dead units above living ones, prefer living
     - throttle "you must wait for your turn to move"
     - recommends: persistant hotkeys badges (ref. wow)
@@ -112,6 +111,7 @@
 - task: Spell to trade mana for stamina
 - eagle eye
 - lance for targeting
+- Idea: what about a targeting modifier that prefers living units, dead units, allies, enemies, pickups
 
 ## Multiplayer Enhancements / issues
 - if you choose a spawn position while another player is casting it waits and then spawns where you clicked, which can be confusing because it still looks like you can choose where to spawn

@@ -1001,18 +1001,17 @@ function createContextMenuOptions(menu: HTMLElement, underworld: Underworld) {
           selectedPickupLocation: globalThis.selectedPickup && Vec.clone(globalThis.selectedPickup)
         });
       } else {
-        // Non multiplayer supported options may only be triggered by the host (in singleplayer),
-        // this client is the host, in multiplayer it will always be another headless server
-        if (globalThis.isHost(underworld.pie)) {
-          action({ clientId: globalThis.clientId || '', pos });
-        } else {
-          const errMsg = 'This admin command is not supported in multiplayer';
+        // Warn when non supportInMultiplayer admin commands are executed to let the admin know
+        // that the command wont persist to the server.
+        if (!globalThis.isHost(underworld.pie)) {
+          const errMsg = 'This admin command is not broadcast to multiplayer';
           if (globalThis.player) {
             floatingText({ coords: globalThis.player.unit, style: { fill: 'red' }, text: errMsg })
           } else {
             alert(errMsg);
           }
         }
+        action({ clientId: globalThis.clientId || '', pos });
       }
       // Close the menu
       menu.remove();
