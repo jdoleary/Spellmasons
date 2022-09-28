@@ -1,11 +1,14 @@
 ## Today
     - chain: targeted near by dead units above living ones, prefer living
         - maybe just do 3 rounds of it, the first targets units, if there's still not enough target the dead and if there's still not enough taget pickups.  OR only target same as original target? so if source target is dead, target more dead, etc.
-    - Send targeted list along with spell to resolve the following
-        - bug: saw +0 mana when he tried to mana steal from me; desync bug; i moved when he cast.
+        - more thoughts: make connect stay with similar source, so if the first one is a pickup only connect to pickups, or if dead, only dead.
+    - Add ECS-like system for targeting with typeguard. "targetable is an underworld function that returns all targetable entities (units, pickups, doodads, etc), then a targeting spell consumes this and adds references to the effect state arrays: withHealth, withMana, collidable, turnTakable, etc and spells can make use of those arrays.  That was with "push" you get pickups and units pushable for free, without writing special code for both.  Same with "chain", "swap", etc.  It all comes for free.
 ## Brad playtest
+    - bug: saw +0 mana when he tried to mana steal from me; desync bug; i moved when he cast.
     - add footstep sfx
+    - Fix unit sync, when the summoner summoned random units it synced but the units' image didn't change and was wrong
     - Brad couldn't see top of inventory due to resolution
+        - maybe add pages?
         - UI: Inventory should show up on the left side
 ---
 - fix archers having infinite range
@@ -36,6 +39,7 @@
     - when your main mana bar has 0 mana left it doesn't show the diagonal lines
     - sometimes when you walk you get stuck on a wall and it wastes stamina
 # Bugs
+- bug: too many pushes or too fast can result in the unit clipping through walls.
 - Permanently fix liquid
     - weird liquid : 0.5211362200270263
 - chain through pickups?

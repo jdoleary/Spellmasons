@@ -8,3 +8,5 @@
     - blood curse
 
 - art for perks
+- a spellbook for inventory content with "tabs"
+    - I'm imagining the right half of an old book where you can only see one page.  That page is full of spells and there are "tabs" like bookmarks (like a dictionary) for pagination
