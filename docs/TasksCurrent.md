@@ -8,10 +8,8 @@
 ---
 - Spell text should be centered (see contaminate in your toolbar)
 - fix archers having infinite range
-- add ghost archer
 - notify with floating text when AI units are out of mana
     - maybe rework AI mana so that they get the full amount they need every turn just like you do as a player
-- Improve jaggedy push 
 - credits page
 - bug: had an incorrect push prediction, see footage
 - bug: after loading game I get these errors:
@@ -52,6 +50,7 @@
     - [Security Recommendations](https://www.electronjs.org/docs/latest/tutorial/security#checklist-security-recommendations)
 
 ## Stretch Content
+- add ghost archer
 - what attributes of a spell could be modified by other cards?
     - already: targets, quantity
     - new: radius, amount

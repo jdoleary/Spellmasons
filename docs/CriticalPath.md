@@ -6,9 +6,6 @@
   - (h) Fix liquid glitches perminantly
   - (m) Integrate freestanding obstacles (tree, urn, etc)
   - Finalize
-    - Rather than "targeted units" and "targeted pickups" use composition to do "movable", "damagable", "turnTakeable"
-        - This would enable "chain through pickups" for free, or freezing liquid without special conditions
-        - But, could the full object get passed to it's own handler so a "turnTakeable" liquid tile goes to Freeze.tile or Tile.turnTakable and a unit goes to Freeze.unit()?  I could use a simple type guard for this.
     - (m) Adaptive tutorial
     - (?) Package for Electron
     - (e) Bug reporting
