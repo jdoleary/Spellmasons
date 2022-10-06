@@ -70,8 +70,9 @@ import { setupDevGlobalFunctions } from './devUtils';
 import type PieClient from '@websocketpie/client';
 import { makeForcePush } from './cards/push';
 import { createVisualLobbingProjectile } from './entity/Projectile';
-import { getEndOfRange, isOutOfRange } from './PlayerUtils';
+import { isOutOfRange } from './PlayerUtils';
 import type { TilingSprite } from 'pixi.js';
+import { HasSpace } from './entity/Type';
 
 export enum turn_phase {
   PlayerTurns,
@@ -182,6 +183,16 @@ export default class Underworld {
     // - underworld
     processNextInQueueIfReady(this);
   }
+  // Returns all potentially targetable entities
+  // See cards/index.ts's getCurrentTargets() for the function that returns 
+  // the current targets of a spell.
+  getPotentialTargets(prediction: boolean): HasSpace[] {
+    if (prediction) {
+      return [...this.unitsPrediction, ...this.pickupsPrediction]
+    } else {
+      return [...this.units, ...this.pickups];
+    }
+  }
   reportEnemyKilled(enemyKilledPos: Vec2) {
     this.enemiesKilled++;
     // Check if should drop cards
@@ -219,7 +230,7 @@ export default class Underworld {
     // Headless does not use predictions because predictions are only for display
     if (globalThis.headless) { return; }
     this.unitsPrediction = this.units.map(u => Unit.copyForPredictionUnit(u, this));
-    globalThis.predictionPickups = this.pickups.map(Pickup.copyForPredictionPickup);
+    this.pickupsPrediction = this.pickups.map(Pickup.copyForPredictionPickup);
   }
   syncronizeRNG(RNGState: SeedrandomState | boolean) {
     if (elSeed) {
@@ -1490,7 +1501,7 @@ export default class Underworld {
     })
   }
   checkPickupCollisions(unit: Unit.IUnit, prediction: boolean) {
-    for (let pu of ((prediction && globalThis.predictionPickups) ? globalThis.predictionPickups : this.pickups)) {
+    for (let pu of ((prediction && this.pickupsPrediction) ? this.pickupsPrediction : this.pickups)) {
       // Note, units' radius is rather small (to allow for crowding), so
       // this distance calculation uses neither the radius of the pickup
       // nor the radius of the unit.  It is hard coded to 2 COLLISION_MESH_RADIUSES
@@ -2152,7 +2163,7 @@ export default class Underworld {
     prediction: boolean,
   ): Pickup.IPickup[] {
     const withinDistance: Pickup.IPickup[] = [];
-    const pickups = (prediction && globalThis.predictionPickups) ? globalThis.predictionPickups : this.pickups;
+    const pickups = (prediction && this.pickupsPrediction) ? this.pickupsPrediction : this.pickups;
     for (let pickup of pickups) {
       if (math.distance(pickup, target) <= distance) {
         withinDistance.push(pickup);
@@ -2191,7 +2202,7 @@ export default class Underworld {
     return this.getUnitsAt(coords, prediction)[0];
   }
   getPickupAt(coords: Vec2, prediction?: boolean): Pickup.IPickup | undefined {
-    const sortedByProximityToCoords = (prediction && globalThis.predictionPickups ? globalThis.predictionPickups : this.pickups)
+    const sortedByProximityToCoords = (prediction && this.pickupsPrediction ? this.pickupsPrediction : this.pickups)
       .filter(p => !isNaN(p.x) && !isNaN(p.y) && math.distance(coords, p) <= p.radius).sort((a, b) => math.distance(a, coords) - math.distance(b, coords));
     const closest = sortedByProximityToCoords[0]
     return closest;
@@ -2204,15 +2215,15 @@ export default class Underworld {
     }
   }
   removePickupFromArray(pickup: Pickup.IPickup, prediction: boolean) {
-    if (prediction && globalThis.predictionPickups) {
-      globalThis.predictionPickups = globalThis.predictionPickups.filter(p => p !== pickup);
+    if (prediction && this.pickupsPrediction) {
+      this.pickupsPrediction = this.pickupsPrediction.filter(p => p !== pickup);
     } else {
       this.pickups = this.pickups.filter((p) => p !== pickup);
     }
   }
   addPickupToArray(pickup: Pickup.IPickup, prediction: boolean) {
-    if (prediction && globalThis.predictionPickups) {
-      globalThis.predictionPickups.push(Pickup.copyForPredictionPickup(pickup))
+    if (prediction && this.pickupsPrediction) {
+      this.pickupsPrediction.push(Pickup.copyForPredictionPickup(pickup))
     } else {
       this.pickups.push(pickup);
     }

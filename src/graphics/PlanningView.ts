@@ -435,7 +435,7 @@ export async function runPredictions(underworld: Underworld) {
       // Send this client's intentions to the other clients so they can see what they're thinking
       underworld.sendPlayerThinking({ target, cardIds })
 
-      // Run onTurnStartEvents on predictionUnits:
+      // Run onTurnStartEvents on unitsPrediction:
       // Displays markers above units heads if they will attack the current client's unit
       // next turn
       globalThis.attentionMarkers = [];

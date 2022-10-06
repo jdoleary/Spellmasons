@@ -1,8 +1,3 @@
-## Today
-    - chain: targeted near by dead units above living ones, prefer living
-        - maybe just do 3 rounds of it, the first targets units, if there's still not enough target the dead and if there's still not enough taget pickups.  OR only target same as original target? so if source target is dead, target more dead, etc.
-        - more thoughts: make connect stay with similar source, so if the first one is a pickup only connect to pickups, or if dead, only dead.
-    - Add ECS-like system for targeting with typeguard. "targetable is an underworld function that returns all targetable entities (units, pickups, doodads, etc), then a targeting spell consumes this and adds references to the effect state arrays: withHealth, withMana, collidable, turnTakable, etc and spells can make use of those arrays.  That was with "push" you get pickups and units pushable for free, without writing special code for both.  Same with "chain", "swap", etc.  It all comes for free.
 ## Brad playtest
     - bug: saw +0 mana when he tried to mana steal from me; desync bug; i moved when he cast.
     - add footstep sfx

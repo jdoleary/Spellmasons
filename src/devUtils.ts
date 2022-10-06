@@ -94,7 +94,7 @@ export function setupDevGlobalFunctions(underworld: Underworld) {
             globalThis.player.unit.stamina = globalThis.player.unit.staminaMax;
             globalThis.player.unit.moveSpeed = 0.3;
             // Now that player's health and mana has changed we must sync
-            // predictionUnits so that the player's prediction copy
+            // unitsPrediction so that the player's prediction copy
             // has the same mana and health
             underworld.syncPredictionEntities();
             syncInventory(undefined, underworld);

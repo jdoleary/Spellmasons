@@ -1,6 +1,6 @@
 import type * as Player from '../entity/Player';
-import type * as Unit from '../entity/Unit';
-import type * as Pickup from '../entity/Pickup';
+import * as Unit from '../entity/Unit';
+import * as Pickup from '../entity/Pickup';
 import type { Vec2 } from '../jmath/Vec';
 import Events, {
   onDamage,
@@ -39,6 +39,7 @@ import { _getCardsFromIds } from './cardUtils';
 import { addCardToHand } from '../entity/Player';
 import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
+import { HasSpace } from '../entity/Type';
 export interface Modifiers {
   subsprite?: Subsprite;
   // run special init logic (usually for visuals) when a modifier is added or loaded
@@ -161,6 +162,12 @@ export interface EffectState {
     unitDamage: UnitDamage[],
   };
 }
+// Returns all current targets of an effect / spell
+// See underworld.getPotentialTargets for the function that returns all targetable
+// entities
+export function getCurrentTargets(state: EffectState): HasSpace[] {
+  return [...state.targetedUnits, ...state.targetedPickups];
+}
 export type EffectFn = {
   // Dry run is for displaying to the user what will happen if they cast
   (state: EffectState, card: ICard, quantity: number, underworld: Underworld, prediction: boolean, outOfRange?: boolean): Promise<EffectState>;
@@ -202,6 +209,15 @@ export function getCardsFromIds(cardIds: string[]): ICard[] {
   return _getCardsFromIds(cardIds, allCards);
 }
 
+export function addTarget(target: any, effectState: EffectState) {
+  if (Unit.isUnit(target)) {
+    addUnitTarget(target, effectState);
+  } else if (Pickup.isPickup(target)) {
+    addPickupTarget(target, effectState);
+  } else {
+    console.error('addTarget unsupported for ', target);
+  }
+}
 export function addUnitTarget(unit: Unit.IUnit, effectState: EffectState) {
   // Adds a unit to effectState.targetedUnits IF it is not already in unitTargets
   if (effectState.targetedUnits.indexOf(unit) === -1) {

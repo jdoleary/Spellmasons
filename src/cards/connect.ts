@@ -1,15 +1,16 @@
 import { drawPredictionCircleFill, drawPredictionLine } from '../graphics/PlanningView';
-import { addUnitTarget, Spell } from './index';
-import type * as Unit from '../entity/Unit';
+import { addTarget, addUnitTarget, getCurrentTargets, Spell } from './index';
+import * as Unit from '../entity/Unit';
 import * as colors from '../graphics/ui/colors';
 import * as config from '../config';
-import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
 import { add, Vec2 } from '../jmath/Vec';
 import * as math from '../jmath/math';
 import { raceTimeout } from '../Promise';
 import { similarTriangles, distance } from '../jmath/math';
 import { easeOutCubic } from '../jmath/Easing';
+import { IPickup, isPickup } from '../entity/Pickup';
+import { HasSpace } from '../entity/Type';
 
 const id = 'Connect';
 const numberOfTargetsPerQuantity = 2;
@@ -31,38 +32,55 @@ All connected beings will be affected by the following spells in your cast.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
       let limitTargetsLeft = numberOfTargetsPerQuantity * quantity;
+      const potentialTargets = underworld.getPotentialTargets(prediction);
       // Note: This loop must NOT be a for..of and it must cache the length because it
       // mutates state.targetedUnits as it iterates.  Otherwise it will continue to loop as it grows
-      const length = state.targetedUnits.length;
+      const targets = getCurrentTargets(state);
+      const length = targets.length;
       for (let i = 0; i < length; i++) {
-        const unit = state.targetedUnits[i];
-        if (unit) {
+        const target = targets[i];
+        if (target) {
+          const typeFilter = Unit.isUnit(target)
+            ? (target.alive
+              // If target is a living unit, only chain to other living units
+              ? (x: any) => x.alive
+              // If target is a dead unit, only chain to other dead units
+              : (x: any) => !x.alive)
+            : isPickup(target)
+              // If target is a pickup, only chain to other pickups
+              ? isPickup
+              : () => {
+                console.warn('Original target is neither unit nor pickup and is not yet supported in Connect spell');
+                return false;
+              };
+
           // Find all units touching the spell origin
-          const chained_units = await getTouchingUnitsRecursive(
-            unit.x,
-            unit.y,
-            underworld,
+          const chained = await getTouchingTargetableEntitiesRecursive(
+            target.x,
+            target.y,
+            potentialTargets,
             prediction,
             { limitTargetsLeft },
             0,
-            state.targetedUnits.map(u => u.id)
+            typeFilter,
+            targets
           );
           // Draw prediction lines so user can see how it chains
           if (prediction) {
-            chained_units.forEach(chained_unit => {
-              drawPredictionLine(chained_unit.chainSource, chained_unit.unit);
+            chained.forEach(chained_entity => {
+              drawPredictionLine(chained_entity.chainSource, chained_entity.entity);
             });
           } else {
-            const alreadyAnimated = [...state.targetedUnits];
-            for (let { chainSource, unit } of chained_units) {
-              await animate(chainSource, [unit], alreadyAnimated);
-              alreadyAnimated.push(unit);
+            const alreadyAnimated: HasSpace[] = [...state.targetedUnits];
+            for (let { chainSource, entity } of chained) {
+              await animate(chainSource, [entity], alreadyAnimated);
+              alreadyAnimated.push(entity);
             }
             // Draw all final circles for a moment before casting
             await animate({ x: 0, y: 0 }, [], alreadyAnimated);
           }
-          // Update targetedUnits
-          chained_units.forEach(u => addUnitTarget(u.unit, state))
+          // Update effectState targets
+          chained.forEach(u => addTarget(u.entity, state))
         }
       }
 
@@ -71,63 +89,65 @@ All connected beings will be affected by the following spells in your cast.
   },
 };
 const range = 105;
-async function getTouchingUnitsRecursive(
+async function getTouchingTargetableEntitiesRecursive(
   x: number,
   y: number,
-  underworld: Underworld,
+  potentialTargets: HasSpace[],
   prediction: boolean,
   // The number of targets left that it is able to add to the targets list
   // It is an object instead of just a number so it will be passed by reference
   chainState: { limitTargetsLeft: number },
   recurseLevel: number,
-  // Unit ids
-  ignore: number[] = [],
-): Promise<{ chainSource: Vec2, unit: Unit.IUnit }[]> {
+  // selects which type of entity to chain to
+  typeFilter: (x: any) => boolean,
+  // object references
+  ignore: HasSpace[] = [],
+): Promise<{ chainSource: Vec2, entity: HasSpace }[]> {
   if (chainState.limitTargetsLeft <= 0) {
     return [];
   }
   // Draw visual circle for prediction
   // - config.COLLISION_MESH_RADIUS / 2 accounts for the fact that the game logic
-  // will only connect units if their CENTER POINT falls within the radius; however,
+  // will only connect entities if their CENTER POINT falls within the radius; however,
   // to the players eyes if any part of them is touching the circle it should connect
   if (prediction) {
     drawPredictionCircleFill({ x, y }, range - config.COLLISION_MESH_RADIUS / 2);
   }
   const coords = { x, y }
-  const units = prediction ? underworld.unitsPrediction : underworld.units;
-  let touching = units.filter((u) => {
-    return (
-      u.x <= x + range &&
-      u.x >= x - range &&
-      u.y <= y + range &&
-      u.y >= y - range &&
-      ignore.find((i) => i == u.id) === undefined
-    );
-  })
+  let touching = potentialTargets
+    // Orders chaining priority
+    .filter(typeFilter)
+    .filter((u) => {
+      return (
+        ignore.find((i) => i == u) === undefined &&
+        u.x <= x + range &&
+        u.x >= x - range &&
+        u.y <= y + range &&
+        u.y >= y - range
+      );
+    })
     // Order by closest to coords
     .sort((a, b) => math.distance(a, coords) - math.distance(b, coords))
-    // Sort dead units to the back, prefer selecting living units
-    .sort((a, b) => a.alive && b.alive ? 0 : a.alive ? -1 : 1)
     // Only select up to limitTargetsLeft
     .slice(0, chainState.limitTargetsLeft);
 
-  ignore.push(...touching.map(u => u.id));
+  ignore.push(...touching);
 
-  let connected: { chainSource: Vec2, unit: Unit.IUnit }[] = [];
+  let connected: { chainSource: Vec2, entity: HasSpace }[] = [];
   if (chainState.limitTargetsLeft > 0) {
     // Important: Using a regular for loop and cache the length instead of a for..of loop because 
     // the array being looped is modified in the interior of the loop and we only want it
     // to loop the original array contents, not the contents that are added inside of the loop
     const length = touching.length
     for (let i = 0; i < length; i++) {
-      const u = touching[i];
-      if (u) {
+      const t = touching[i];
+      if (t) {
         if (chainState.limitTargetsLeft <= 0) {
           break;
         }
-        connected.push({ chainSource: coords, unit: u });
+        connected.push({ chainSource: coords, entity: t });
         chainState.limitTargetsLeft--;
-        const newTouching = await getTouchingUnitsRecursive(u.x, u.y, underworld, prediction, chainState, recurseLevel + 1, ignore)
+        const newTouching = await getTouchingTargetableEntitiesRecursive(t.x, t.y, potentialTargets, prediction, chainState, recurseLevel + 1, typeFilter, ignore)
         connected = connected.concat(newTouching);
       }
     }

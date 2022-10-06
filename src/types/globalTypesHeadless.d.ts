@@ -67,8 +67,6 @@ declare global {
     // var zoomTarget: any;
     // var enemyEncountered: undefined;
     // var superMe: undefined;
-    // var predictionUnits: undefined;
-    // var predictionPickups: undefined;
     // var attentionMarkers: undefined;
     // var resMarkers: undefined;
     // var castThisTurn: undefined;
@@ -164,10 +162,6 @@ declare global {
     var enemyEncountered: undefined | string[];
     // Make me superhuman (used for dev)
     var superMe: undefined | ((underworld: Underworld) => void);
-    // A local copy of underworld.units used to predict damage and mana use from casting a spell
-    var predictionUnits: Unit.IUnit[] | undefined;
-    // A local copy of underworld.pickups used to predict effect from casting a spell
-    var predictionPickups: IPickup[] | undefined;
     // Shows icons above the heads of enemies who will damage you next turn
     var attentionMarkers: undefined | { imagePath: string, pos: Vec2 }[];
     // Shows icon for units that will be successfully resurrected
