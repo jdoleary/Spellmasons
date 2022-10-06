@@ -594,8 +594,8 @@ function tryShowDevContextMenu(underworld: Underworld, e: MouseEvent, mousePos: 
   if (adminMode && e.shiftKey) {
     let menu = document.createElement("div") as HTMLElement;
     menu.id = "ctxmenu"
-    menu.style.top = `${e.pageY - 10}px`;
-    menu.style.left = `${e.pageX - 40}px`;
+    menu.style.top = `${Math.max(0, e.pageY - 100)}px`;
+    menu.style.left = `${Math.max(0, e.pageX - 400)}px`;
     menu.style.zIndex = '2';
     menu.onmouseleave = () => menu.outerHTML = '';
     menu.innerHTML = `
