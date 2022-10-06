@@ -8,7 +8,7 @@ import Underworld from '../Underworld';
 import * as config from '../config';
 import { easeOutCubic } from '../jmath/Easing';
 
-const id = 'Expanding';
+const id = 'Expand';
 const range = 140;
 const spell: Spell = {
   card: {
@@ -23,7 +23,7 @@ const spell: Spell = {
     requiresFollowingCard: true,
     description: `
 Adds a radius to the spell so it can affect more targets.
-"Expanding" can be cast multiple times in succession to stack it's effect.
+"${id}" can be cast multiple times in succession to stack it's effect.
     `,
     allowNonUnitTarget: true,
     effect: async (state, card, quantity, underworld, prediction, outOfRange) => {

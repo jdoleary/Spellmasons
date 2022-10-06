@@ -2226,7 +2226,7 @@ export default class Underworld {
     // If true, prevents removing mana when spell is cast.  This is used for "trap" card
     costPrepaid: boolean,
     // True if the cast is out of range, this can be used to draw UI elements differently
-    // (like the color of a radius circle in the "Expanding" card) to clue the user in to
+    // (like the color of a radius circle in the "Expand" card) to clue the user in to
     // the fact that the spell is out of range but it's showing them what would happen.
     outOfRange?: boolean,
   ): Promise<Cards.EffectState> {
