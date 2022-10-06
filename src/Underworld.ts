@@ -2,6 +2,7 @@ import seedrandom from 'seedrandom';
 import * as config from './config';
 import * as Unit from './entity/Unit';
 import * as Units from './entity/units';
+import * as Doodad from './entity/Doodad';
 import * as Pickup from './entity/Pickup';
 import * as Obstacle from './entity/Obstacle';
 import * as Player from './entity/Player';
@@ -118,6 +119,8 @@ export default class Underworld {
   unitsPrediction: Unit.IUnit[] = [];
   pickups: Pickup.IPickup[] = [];
   pickupsPrediction: Pickup.IPickup[] = [];
+  doodads: Doodad.IDoodad[] = [];
+  doodadsPrediction: Doodad.IDoodad[] = [];
   imageOnlyTiles: Tile[] = [];
   liquidSprites: TilingSprite[] = [];
   // line segments that prevent sight and movement
@@ -188,9 +191,9 @@ export default class Underworld {
   // the current targets of a spell.
   getPotentialTargets(prediction: boolean): HasSpace[] {
     if (prediction) {
-      return [...this.unitsPrediction, ...this.pickupsPrediction]
+      return [...this.unitsPrediction, ...this.pickupsPrediction, ...this.doodadsPrediction]
     } else {
-      return [...this.units, ...this.pickups];
+      return [...this.units, ...this.pickups, ...this.doodads];
     }
   }
   reportEnemyKilled(enemyKilledPos: Vec2) {
@@ -2207,6 +2210,23 @@ export default class Underworld {
     const closest = sortedByProximityToCoords[0]
     return closest;
   }
+  getDoodadAt(coords: Vec2, prediction?: boolean): Doodad.IDoodad | undefined {
+    const sortedByProximityToCoords = (prediction && this.doodadsPrediction ? this.doodadsPrediction : this.doodads)
+      // Filter for only valid doodads
+      .filter(d => !isNaN(d.x) && !isNaN(d.y))
+      // Filter for units within SELECTABLE_RADIUS of coordinates
+      .filter(d => math.distance(d, coords) <= config.SELECTABLE_RADIUS)
+      // Order by closest to coords
+      .sort((a, b) => math.distance(a, coords) - math.distance(b, coords))
+    return sortedByProximityToCoords[0];
+  }
+  addDoodadToArray(doodad: Doodad.IDoodad, prediction: boolean) {
+    if (prediction && this.doodadsPrediction) {
+      this.doodadsPrediction.push(Doodad.copyForPredictionDoodad(doodad))
+    } else {
+      this.doodads.push(doodad);
+    }
+  }
   addUnitToArray(unit: Unit.IUnit, prediction: boolean) {
     if (prediction && this.unitsPrediction) {
       this.unitsPrediction.push(Unit.copyForPredictionUnit(unit, this));
@@ -2246,12 +2266,14 @@ export default class Underworld {
     }
     const unitAtCastLocation = this.getUnitAt(castLocation, prediction);
     const pickupAtCastLocation = this.getPickupAt(castLocation, prediction);
+    const doodadAtCastLocation = this.getDoodadAt(castLocation, prediction);
     let effectState: Cards.EffectState = {
       cardIds,
       casterCardUsage,
       casterUnit,
       targetedUnits: unitAtCastLocation ? [unitAtCastLocation] : [],
       targetedPickups: pickupAtCastLocation ? [pickupAtCastLocation] : [],
+      targetedDoodads: doodadAtCastLocation ? [doodadAtCastLocation] : [],
       castLocation,
       aggregator: {
         unitDamage: [],

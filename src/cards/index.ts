@@ -1,6 +1,7 @@
 import type * as Player from '../entity/Player';
 import * as Unit from '../entity/Unit';
 import * as Pickup from '../entity/Pickup';
+import * as Doodad from '../entity/Doodad';
 import type { Vec2 } from '../jmath/Vec';
 import Events, {
   onDamage,
@@ -155,6 +156,7 @@ export interface EffectState {
   casterUnit: Unit.IUnit;
   targetedUnits: Unit.IUnit[];
   targetedPickups: Pickup.IPickup[];
+  targetedDoodads: Doodad.IDoodad[];
   castLocation: Vec2;
   // aggregator carries extra information that can be passed
   // between card effects.
@@ -166,7 +168,7 @@ export interface EffectState {
 // See underworld.getPotentialTargets for the function that returns all targetable
 // entities
 export function getCurrentTargets(state: EffectState): HasSpace[] {
-  return [...state.targetedUnits, ...state.targetedPickups];
+  return [...state.targetedUnits, ...state.targetedPickups, ...state.targetedDoodads];
 }
 export type EffectFn = {
   // Dry run is for displaying to the user what will happen if they cast
