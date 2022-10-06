@@ -20,6 +20,7 @@ import combos from '../graphics/AnimationCombos';
 import { raceTimeout } from '../Promise';
 import { closestLineSegmentIntersection } from '../jmath/lineSegment';
 import { bloodColorDefault } from '../graphics/ui/colors';
+import { HasLife, HasMana, HasSpace, HasStamina } from './Type';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -59,18 +60,14 @@ export interface UnitSFX {
   damage: string;
 }
 export function isUnit(maybeUnit: any): maybeUnit is IUnit {
-  // unitSouceId only belongs to IUnit so it is a safe way to tell
-  // TS that the object is a unit.  This WILL fail if another object
-  // is given a unitSourceId property
-  return maybeUnit.unitSourceId !== undefined;
+  return maybeUnit && maybeUnit.type == 'unit';
 }
-export interface IUnit {
+export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
+  type: 'unit';
   // A unique id so that units can be identified
   // across the network
   id: number;
   unitSourceId: string;
-  x: number;
-  y: number;
   // true if the unit was spawned at the beginning of the level and not
   // resurrected or cloned.  This prevents EXP scamming.
   originalLife: boolean;
@@ -78,9 +75,6 @@ export interface IUnit {
   moveSpeed: number;
   // A resolve callback for when a unit is done moving
   resolveDoneMoving: () => void;
-  radius: number;
-  stamina: number;
-  staminaMax: number;
   attackRange: number;
   name?: string;
   // Strength is a modifier which affects base stats used for scaling difficulty
@@ -91,13 +85,8 @@ export interface IUnit {
   shaderUniforms: { [key: string]: any };
   damage: number;
   bloodColor: number;
-  health: number;
-  healthMax: number;
-  mana: number;
-  manaMax: number;
   manaCostToCast: number;
   manaPerTurn: number;
-  alive: boolean;
   unitType: UnitType;
   unitSubType: UnitSubType;
   // Doesn't let other units push it
@@ -140,6 +129,7 @@ export function create(
   const sourceUnit = allUnits[unitSourceId];
   if (sourceUnit) {
     const unit: IUnit = Object.assign({
+      type: 'unit',
       id: ++underworld.lastUnitId,
       unitSourceId,
       x,

@@ -13,13 +13,15 @@ import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import { manaBlue } from '../graphics/ui/colors';
 import Underworld from '../Underworld';
 import { hasBloodCurse } from '../cards/blood_curse';
+import { HasSpace } from './Type';
 
 export const PICKUP_RADIUS = config.SELECTABLE_RADIUS;
 type IPickupEffect = ({ unit, player, pickup, prediction }: { unit?: IUnit; player?: Player.IPlayer, pickup: IPickup, underworld: Underworld, prediction: boolean }) => boolean | undefined;
-export interface IPickup {
-  x: number;
-  y: number;
-  radius: number;
+export function isPickup(maybePickup: any): maybePickup is IPickup {
+  return maybePickup && maybePickup.type == 'pickup';
+}
+export type IPickup = HasSpace & {
+  type: 'pickup';
   name: string;
   description: string;
   imagePath: string;
@@ -38,12 +40,6 @@ export interface IPickup {
   // for preventing one use health potions from triggering if the unit
   // already has max health
   effect: IPickupEffect
-}
-export function isPickup(maybePickup: any): maybePickup is IPickup {
-  // Take a select few of the pickup only properties and ensure that the object has them
-  // and then tell TS that it is a pickup.  This WILL fail if another non pickup object 
-  // is given these properties.
-  return maybePickup.singleUse !== undefined && maybePickup.playerOnly !== undefined;
 }
 interface IPickupSource {
   name: string;
@@ -72,6 +68,7 @@ export function create({ pos, pickupSource, onTurnsLeftDone }:
   const { name, description, imagePath, effect, scale, singleUse, animationSpeed, playerOnly = false, turnsLeftToGrab } = pickupSource;
   const { x, y } = pos
   const self: IPickup = {
+    type: 'pickup',
     x,
     y,
     radius: PICKUP_RADIUS,
