@@ -11,6 +11,7 @@
         - maybe add pages?
         - UI: Inventory should show up on the left side
 ---
+- Spell text should be centered (see contaminate in your toolbar)
 - fix archers having infinite range
 - add ghost archer
 - notify with floating text when AI units are out of mana
@@ -67,7 +68,6 @@
 - Idea: Level up spells along with perks
     - Leveling up could auto increase quantity / lower mana cost / speed mana recovery
 - Idea: "overwatch" where some archers can shoot even not on their turn if you walk in their LOS
-- Idea: A spell to sacrifice ally unit immediately
 - What if potions drop from slain enemies instead of being just pickups on the ground, it would be more exciting if you needed one and it dropped.
 - whole bodies of liquid should be selectable so that they can be frozen
     - freezable liquid to walk over
@@ -87,11 +87,12 @@
 - enemy that debuffs blessings
 - juice: ultra badass spell should put in wide-screen black bars and take over the camera
     - and he could crouch and gather enegery
+- "heat seaking" missle unit, explodes on contact
 
 ## New Spell Ideas
+- Idea: A spell to sacrifice ally unit immediately
 - Card: Mind Control (changes faction temporarily)
 - Feature: "Soul bind" - bound units share applied effects
-- Heavy damage spell: rend
 - Spell: A spell like AOE, but adds radius to existing spells
 - Jump card- to jump over walls
 - vortex card - to pull units in to a center location
@@ -110,7 +111,25 @@
 - task: Spell to trade mana for stamina
 - eagle eye
 - lance for targeting
-- Idea: what about a targeting modifier that prefers living units, dead units, allies, enemies, pickups
+- destroy a corpse for mana
+- soul capture (like pokeball)
+- generic summon (1 for each enemy, does bigger and better enemies depending on stack)
+- explode a corpse (same as bloat?)
+- split: like clone but each copy is smaller and has half of max stats (a curse so it can be undone)
+- grow a barrier
+- slow/ cripple: reduce max stamina
+- set fires on board that spreads
+- Displace: Teleports target to a random location
+- damage spells:
+    - Slice: basic / already have
+    - Rend: Does more damage as it stacks
+    - bleed: Does damage relative to how much health is missing
+    - mana burn
+    - suffocate: kill in 5 turns
+    - drown: deal massive damage if unit is submerged in liquid
+    - poison: dot
+    - stomp: more damage the closer they are
+- Tornado: Travells through the map throwing things around (maybe a good enemy ability)
 
 ## Multiplayer Enhancements / issues
 - if you choose a spawn position while another player is casting it waits and then spawns where you clicked, which can be confusing because it still looks like you can choose where to spawn

@@ -1,6 +1,3 @@
-# Parallel Focuses
-- Record Trailer and start marketing
-    - trailer should be more zoomed in
 # Major Tasks
   - (h) I want 2x as many spells (21 to 42) and 2x as many enemies (7 to 14)
     - email Che for new work
