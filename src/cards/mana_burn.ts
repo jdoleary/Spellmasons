@@ -1,6 +1,7 @@
 import * as Unit from '../entity/Unit';
 import { CardCategory } from '../types/commonTypes';
-import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
+import { playDefaultSpellSFX } from './cardUtils';
+import * as Image from '../graphics/Image';
 import { Spell } from './index';
 
 const id = 'mana_burn';
@@ -28,7 +29,7 @@ Burn up to ${mana_burnt} of the targets' mana and cause ${health_burn_ratio * 10
       // Play the animation and sfx
       for (let unit of targets) {
         playDefaultSpellSFX(card, prediction);
-        animationPromise = Unit.addOneOffAnimation(unit, 'spell-effects/spellManaBurn', { keyFrame: 12 });
+        animationPromise = Image.addOneOffAnimation(unit, 'spell-effects/spellManaBurn', { keyFrame: 12 });
       }
       await animationPromise;
       // Take damage and remove mana AFTER the animation and sfx has finished

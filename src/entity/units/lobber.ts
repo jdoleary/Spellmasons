@@ -6,6 +6,7 @@ import * as math from '../../jmath/math';
 import Underworld from '../../Underworld';
 import { bloodLobber } from '../../graphics/ui/colors';
 import * as config from '../../config';
+import * as Image from '../../graphics/Image';
 
 const unit: UnitSource = {
   id: 'glop',
@@ -57,7 +58,7 @@ const unit: UnitSource = {
           if (attackTarget) {
             Unit.takeDamage(attackTarget, unit.damage, attackTarget, underworld, false, undefined);
             // Add projectile hit animation
-            Unit.addOneOffAnimation(attackTarget, 'projectile/lobberProjectileHit');
+            Image.addOneOffAnimation(attackTarget, 'projectile/lobberProjectileHit');
           }
         });
 

@@ -503,7 +503,7 @@ export function playComboAnimation(unit: IUnit, key: string | undefined, keyMome
     // This is how these animations are attached to a primary animation, so if the primary animation ends early, so do
     // the currently playing animations with that flag.
     for (let animPath of combo.companionAnimations) {
-      addOneOffAnimation(unit, animPath, { doRemoveWhenPrimaryAnimationChanges: true }, options);
+      Image.addOneOffAnimation(unit, animPath, { doRemoveWhenPrimaryAnimationChanges: true }, options);
     }
   }));
 }
@@ -531,49 +531,6 @@ export function playAnimation(unit: IUnit, spritePath: string | undefined, optio
         }
       }
     });
-  }));
-}
-interface OneOffOptions {
-  doRemoveWhenPrimaryAnimationChanges?: boolean;
-  // a numbered frame during which the promise will resolve early (before the end of the animation).
-  // The animation will continue to the end, but it will no longer be blocking on await
-  keyFrame?: number;
-}
-
-// A one off animation is an animation that is attached to a unit but operates independently of the unit's primary animation and will
-// not be affected by changes to the unit's primary animation.  This useful for example for playing a healing animation over top of a unit,
-// and the healing animation will continue regardless of wether the unit's primary animations changes or not
-export function addOneOffAnimation(unit: IUnit, spritePath: string, oneOffOptions?: OneOffOptions, options?: PixiSpriteOptions): Promise<void> {
-  // Play animation and then remove it
-  // ---
-  // This timeout value is arbitrary, meant to prevent and report an await hang
-  // if somehow resolve is never called
-  return raceTimeout(6000, `addOneOffAnimation: ${spritePath}`, new Promise<void>((resolve) => {
-    if (!unit.image) {
-      return resolve();
-    }
-    const finishOnFrame = oneOffOptions?.keyFrame;
-    const onFrameChange = (finishOnFrame === undefined) ? undefined : (currentFrame: number) => {
-      if (currentFrame >= finishOnFrame) {
-        resolve();
-      }
-
-    }
-    const animationSprite = addPixiSpriteAnimated(spritePath, unit.image.sprite, {
-      loop: false,
-      ...options,
-      onFrameChange,
-      onComplete: () => {
-        if (unit.image && animationSprite) {
-          unit.image.sprite.removeChild(animationSprite);
-        }
-        resolve();
-      }
-    });
-    if (animationSprite) {
-      animationSprite.doRemoveWhenPrimaryAnimationChanges = oneOffOptions?.doRemoveWhenPrimaryAnimationChanges || false;
-      animationSprite.anchor.set(0.5);
-    }
   }));
 }
 

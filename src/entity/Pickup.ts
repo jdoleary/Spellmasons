@@ -378,7 +378,7 @@ export const pickups: IPickupSource[] = [
       if (player && (player.unit.health < player.unit.healthMax || hasBloodCurse(player.unit))) {
         takeDamage(player.unit, -healthPotionRestoreAmount, undefined, underworld, false);
         // Add spell effect animation
-        Unit.addOneOffAnimation(player.unit, 'spell-effects/potionPickup', {}, { animationSpeed: 0.3, loop: false });
+        Image.addOneOffAnimation(player.unit, 'spell-effects/potionPickup', {}, { animationSpeed: 0.3, loop: false });
         if (!prediction) {
           playSFXKey('potionPickupHealth');
         }

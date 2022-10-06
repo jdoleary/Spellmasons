@@ -6,6 +6,7 @@ import { createVisualFlyingProjectile } from '../Projectile';
 import Shield from '../../cards/shield';
 import { hasBloodCurse } from '../../cards/blood_curse';
 import Underworld from '../../Underworld';
+import * as Image from '../../graphics/Image';
 
 const manaCostToCast = 30;
 async function animatePriestProjectileAndHit(self: Unit.IUnit, target: Unit.IUnit) {
@@ -15,7 +16,7 @@ async function animatePriestProjectileAndHit(self: Unit.IUnit, target: Unit.IUni
     'projectile/priestProjectileCenter',
   );
   // Add projectile hit animation
-  Unit.addOneOffAnimation(target, 'projectile/priestProjectileHit');
+  Image.addOneOffAnimation(target, 'projectile/priestProjectileHit');
 }
 async function healOneOf(self: Unit.IUnit, units: Unit.IUnit[], underworld: Underworld): Promise<boolean> {
   playSFXKey('priestAttack');

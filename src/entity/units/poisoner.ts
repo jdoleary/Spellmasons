@@ -5,6 +5,7 @@ import * as Unit from '../Unit';
 import * as math from '../../jmath/math';
 import * as poison from '../../cards/poison';
 import { bloodPoisoner } from '../../graphics/ui/colors';
+import * as Image from '../../graphics/Image';
 
 const unit: UnitSource = {
   id: 'poisoner',
@@ -57,7 +58,7 @@ const unit: UnitSource = {
             // prediction is false because unit.action doesn't yet ever occur during a prediction
             Unit.addModifier(chosenUnit, poison.id, underworld, false);
             // Add projectile hit animation
-            Unit.addOneOffAnimation(chosenUnit, 'projectile/poisonerProjectileHit');
+            Image.addOneOffAnimation(chosenUnit, 'projectile/poisonerProjectileHit');
           });
         } else {
           // Only move if not in range

@@ -1,5 +1,6 @@
 import * as Unit from '../entity/Unit';
 import floatingText from '../graphics/FloatingText';
+import * as Image from '../graphics/Image';
 import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
 import { Spell } from './index';
@@ -41,7 +42,7 @@ Stackable.
         }
         playDefaultSpellSFX(card, prediction);
         Unit.takeDamage(unit, damage, undefined, underworld, prediction, state);
-        animationPromise = Unit.addOneOffAnimation(unit, 'spell-effects/potionPickup', {}, { loop: false, animationSpeed: 0.3 });
+        animationPromise = Image.addOneOffAnimation(unit, 'spell-effects/potionPickup', {}, { loop: false, animationSpeed: 0.3 });
       }
       await animationPromise;
       return state;
