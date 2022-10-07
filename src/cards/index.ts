@@ -24,7 +24,7 @@ import shield from './shield';
 import swap from './swap';
 import purify from './purify';
 import poison from './poison';
-import vulnerable from './debilitate';
+import debilitate from './debilitate';
 // import protection from './protection';
 import clone from './clone';
 import mana_burn from './mana_burn';
@@ -113,7 +113,7 @@ export function registerCards(underworld: Underworld) {
   register(poison, underworld);
   register(purify, underworld);
   register(swap, underworld);
-  register(vulnerable, underworld);
+  register(debilitate, underworld);
   // register(lance, underworld);
   // register(protection, underworld);
   // register(charge, underworld);

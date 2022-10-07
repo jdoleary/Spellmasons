@@ -6,7 +6,7 @@ import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
 import { Spell } from './index';
 
 const id = 'Debilitate';
-const imageName = 'vulnerable.png';
+const imageName = 'spellIconDebilitate.png';
 const spell: Spell = {
   card: {
     id,
@@ -47,8 +47,8 @@ in the future.
         y: 0,
       },
       scale: {
-        x: 0.5,
-        y: 0.5,
+        x: 0.25,
+        y: 0.25,
       },
     },
   },
