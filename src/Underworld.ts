@@ -595,12 +595,19 @@ export default class Underworld {
               globalThis.unitOverlayGraphics?.beginFill(colors.manaLostBlue, 1.0);
               const manaAfterSpell = predictionUnit.mana;
               const manaBarHurtProps = getUIBarProps(u.x, u.y, u.mana - manaAfterSpell, u.manaMax, zoom);
-              globalThis.unitOverlayGraphics?.drawRect(
-                // Show the manaBarHurtBar on the right side of the mana  bar
-                manaBarHurtProps.x + config.UNIT_UI_BAR_WIDTH / zoom * manaAfterSpell / u.manaMax,
-                manaBarHurtProps.y,
-                manaBarHurtProps.width,
-                manaBarHurtProps.height);
+              // Only render hurt mana bar if it dips below mana max
+              // (it can remain above mana max if mana is overfilled)
+              if (manaAfterSpell < u.manaMax) {
+                const hurtX = manaBarHurtProps.x + config.UNIT_UI_BAR_WIDTH / zoom * manaAfterSpell / u.manaMax;
+                globalThis.unitOverlayGraphics?.drawRect(
+                  // Show the manaBarHurtBar on the right side of the mana  bar
+                  hurtX,
+                  manaBarHurtProps.y,
+                  // Special width calculation required to prevent overfillmana
+                  // from rendering wrongly 
+                  manaBarProps.width - (hurtX - manaBarProps.x),
+                  manaBarHurtProps.height);
+              }
               // if (manaAfterSpell > u.mana) {
               //   globalThis.unitOverlayGraphics?.beginFill(manaBarHealColor, 1.0);
               // }

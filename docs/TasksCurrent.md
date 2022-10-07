@@ -1,11 +1,6 @@
 - Integrate doodad behavior
 - Fix liquid glitches with prebuild liquid sets
 - Update Expand to affect a radius property in EffectStatus so it can synergize with other spells like chain, bloat, vortex, (any spell that needs a radius);
-## Brad playtest
-    - bug: saw +0 mana when he tried to mana steal from me; desync bug; i moved when he cast.
-    - Brad couldn't see top of inventory due to resolution
-        - maybe add pages?
-        - UI: Inventory should show up on the left side
 ---
 - fix archers having infinite range
 - bug: had an incorrect push prediction, see footage
@@ -17,17 +12,21 @@
 
 
 ```
-
-## next up
-- melee prediction is still off
+# Bugs
+- Brad couldn't see top of inventory due to resolution
+    - maybe add pages?
+    - UI: Inventory should show up on the left side
 - small bugs:
     - Sometimes it tries to path around things and wastes stamina if there isn't a straight line path
     - sometimes when you walk you get stuck on a wall and it wastes stamina
-# Bugs
+- melee prediction is still off
+    - simplest solution is just to make sure that units cannot do damage to the player if they aren't warning of damage incoming on the start of the turn
 - bug: too many pushes or too fast can result in the unit clipping through walls.
 - bug: **important** pressing 'alt' in chrome deselects the window and makes it stop accepting input
     - This doesn't happen in fullscreen
     - Test in windowed mode on Electron
+- bug: saw +0 mana when he tried to mana steal from me; desync bug; i moved when he cast.
+    - this is a race condition because I'm still able to move freely after his cast triggers
 
 # Long Term
 - How does endgame scale now that strength doesn't depend on the levelIndex?
