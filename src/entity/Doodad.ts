@@ -87,7 +87,7 @@ export function load(doodad: IDoodadSerialized, underworld: Underworld, predicti
         Object.assign(newPickup, toCopy);
         return newPickup;
     } else {
-        console.error('Could not load pickup with path', doodad.imagePath);
+        console.error('Could not load doodad with path', doodad.imagePath);
         return undefined;
     }
 }
