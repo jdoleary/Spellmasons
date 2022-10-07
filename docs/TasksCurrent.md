@@ -3,12 +3,10 @@
 - Update Expand to affect a radius property in EffectStatus so it can synergize with other spells like chain, bloat, vortex, (any spell that needs a radius);
 ## Brad playtest
     - bug: saw +0 mana when he tried to mana steal from me; desync bug; i moved when he cast.
-    - add footstep sfx
     - Brad couldn't see top of inventory due to resolution
         - maybe add pages?
         - UI: Inventory should show up on the left side
 ---
-- Spell text should be centered (see contaminate in your toolbar)
 - fix archers having infinite range
 - credits page
 - bug: had an incorrect push prediction, see footage

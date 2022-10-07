@@ -526,6 +526,10 @@ kbd {
   /* For new card template */
   padding: 4px;
   height: 18px;
+  /* Allow text center even when text overflows */
+  /* https://stackoverflow.com/a/28233945/4418836 */
+  margin-left: -20%;
+  margin-right: -20%;
 }
 
 #card-inspect .card-title {
