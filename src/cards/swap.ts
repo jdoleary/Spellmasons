@@ -1,6 +1,6 @@
 import * as Unit from '../entity/Unit';
 import * as Pickup from '../entity/Pickup';
-import { Spell } from './index';
+import { getCurrentTargets, Spell } from './index';
 import type { Vec2 } from '../jmath/Vec';
 import * as config from '../config';
 import * as Vec from '../jmath/Vec';
@@ -8,6 +8,7 @@ import * as Obstacle from '../entity/Obstacle';
 import { CardCategory } from '../types/commonTypes';
 import { skyBeam } from '../VisualEffects';
 import { playDefaultSpellSFX } from './cardUtils';
+import { HasSpace } from '../entity/Type';
 
 const id = 'swap';
 const spell: Spell = {
@@ -24,47 +25,41 @@ const spell: Spell = {
 Swaps the caster with the source target.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
-      const { casterUnit, targetedUnits, targetedPickups } = state;
+      const { casterUnit } = state;
       playDefaultSpellSFX(card, prediction);
       // Loop through all targets and batch swap locations
-      const swapUnits: [Unit.IUnit, Vec2][] = [];
-      const swapPickups: [Pickup.IPickup, Vec2][] = [];
+      const swaps: [HasSpace, Vec2][] = [];
       const swapLocation = { x: casterUnit.x, y: casterUnit.y };
+      const targets = getCurrentTargets(state);
       // Swap the casterUnit
-      const casterSwapTarget = targetedUnits[0] || targetedPickups[0]
+      const casterSwapTarget = targets[0];
       if (casterSwapTarget) {
-        swapUnits.push([casterUnit, casterSwapTarget]);
+        swaps.push([casterUnit, casterSwapTarget]);
       }
       const swapLocations = [swapLocation, ...underworld.findValidSpawns(swapLocation, config.COLLISION_MESH_RADIUS / 4, 4)];
-      // The units at the target location
-      for (let targetUnit of targetedUnits) {
+
+      for (let targetUnit of targets) {
         if (targetUnit) {
-          swapUnits.push([targetUnit, swapLocations.shift() || swapLocation]);
+          swaps.push([targetUnit, swapLocations.shift() || swapLocation]);
         }
       }
-      for (let targetPickup of targetedPickups) {
-        swapPickups.push([targetPickup, swapLocations.shift() || swapLocation]);
 
-      }
-
-      for (let [unit, newLocation] of swapUnits) {
-        // Physically swap
-        Unit.setLocation(unit, newLocation);
+      for (let [entity, newLocation] of swaps) {
         if (!prediction) {
           // Animate effect of unit spawning from the sky
           skyBeam(newLocation);
         }
 
-        // Check to see if unit interacts with liquid
-        Obstacle.tryFallInOutOfLiquid(unit, underworld, prediction);
-      }
-      // Now that the units have swapped, put the pickups at their final resting place
-      for (let [pickup, newLocation] of swapPickups) {
-        // Physically swap
-        Pickup.setPosition(pickup, newLocation.x, newLocation.y);
-        if (!prediction) {
-          // Animate effect of unit spawning from the sky
-          skyBeam(newLocation);
+        if (Unit.isUnit(entity)) {
+          // Physically swap
+          Unit.setLocation(entity, newLocation);
+          // Check to see if unit interacts with liquid
+          Obstacle.tryFallInOutOfLiquid(entity, underworld, prediction);
+        } else if (Pickup.isPickup(entity)) {
+          Pickup.setPosition(entity, newLocation.x, newLocation.y);
+        } else {
+          entity.x = newLocation.x;
+          entity.y = newLocation.y;
         }
       }
       return state;
