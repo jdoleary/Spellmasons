@@ -120,7 +120,7 @@ export default class Underworld {
   pickups: Pickup.IPickup[] = [];
   pickupsPrediction: Pickup.IPickup[] = [];
   doodads: Doodad.IDoodad[] = [];
-  doodadsPrediction: Doodad.IPredictionDoodad[] = [];
+  doodadsPrediction: Doodad.IDoodad[] = [];
   imageOnlyTiles: Tile[] = [];
   liquidSprites: TilingSprite[] = [];
   // line segments that prevent sight and movement
