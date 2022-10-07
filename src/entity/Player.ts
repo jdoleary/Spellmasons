@@ -98,7 +98,6 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
   player.unit.staminaMax = config.PLAYER_BASE_STAMINA;
   player.unit.stamina = config.PLAYER_BASE_STAMINA;
 
-  updateGlobalRefToCurrentClientPlayer(player, underworld);
   // Add initial upgrades
   const hurtCardUpgrade = Upgrade.upgradeCardsSource.find(u => u.title == hurt.id);
   if (hurtCardUpgrade) {
@@ -111,6 +110,7 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
   player.unit.healthMax = PLAYER_BASE_HEALTH;
 
   underworld.players.push(player);
+  updateGlobalRefToCurrentClientPlayer(player, underworld);
   underworld.queueGameLoop();
   return player;
 }

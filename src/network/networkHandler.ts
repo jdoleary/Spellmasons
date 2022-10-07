@@ -370,14 +370,17 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
       break;
     case MESSAGE_TYPES.CHOOSE_UPGRADE:
       const upgrade = getUpgradeByTitle(payload.upgrade.title);
-      if (fromPlayer && upgrade) {
-        underworld.chooseUpgrade(fromPlayer, upgrade);
+      if (fromPlayer) {
+        if (upgrade) {
+          underworld.chooseUpgrade(fromPlayer, upgrade);
+        } else {
+          console.error(
+            'Cannot CHOOSE_UPGRADE, upgrade does not exist',
+            upgrade,
+          );
+        }
       } else {
-        console.error(
-          'Cannot choose upgrade, either the caster or upgrade does not exist',
-          fromPlayer,
-          upgrade,
-        );
+        console.error('Cannot CHOOSE_UPGRADE, fromPlayer is undefined', fromPlayer)
       }
       break;
     case MESSAGE_TYPES.END_TURN:
