@@ -194,6 +194,7 @@ export function updatePlanningView(underworld: Underworld) {
         lastSpotCurrentPlayerTurnCircle = clone(globalThis.player.unit);
       }
     }
+    const currentlyWarningOutOfRange = warnings.has(TEXT_OUT_OF_RANGE);
     // Draw warnings
     if (mouseLabelText && globalThis.player) {
       const text = Array.from(warnings).join('\n');
@@ -203,7 +204,7 @@ export function updatePlanningView(underworld: Underworld) {
       const labelPosition = withinCameraBounds({ x: mouseTarget.x, y: mouseTarget.y - mouseLabelText.height * 2 }, mouseLabelText.width / 2);
       mouseLabelText.x = labelPosition.x;
       mouseLabelText.y = labelPosition.y;
-      if (warnings.has(TEXT_OUT_OF_RANGE)) {
+      if (currentlyWarningOutOfRange) {
         // Override other graphics (like selected unit) when out of range info is showing
         labelText.text = '';
         globalThis.unitOverlayGraphics.clear();
@@ -216,6 +217,30 @@ export function updatePlanningView(underworld: Underworld) {
         );
 
       }
+    }
+    // Draw prediction circles
+    if (unitOverlayGraphics) {
+      for (let { target, color, radius, text } of uiCircles) {
+        // Draw color stored in predictionCircles unless the UI is currently warning that the user
+        // is aiming out of range, then override the color with grey
+        const colorOverride = currentlyWarningOutOfRange ? colors.outOfRangeGrey : color;
+        unitOverlayGraphics.lineStyle(2, colorOverride, 1.0)
+        unitOverlayGraphics.endFill();
+        unitOverlayGraphics.drawCircle(target.x, target.y, radius);
+        if (text && labelText) {
+          // Deprioritize text by making it grey if the UI is currently
+          // warning that the player is aiming out of range so that the out of
+          // range warning is more noticable than this text
+          if (currentlyWarningOutOfRange) {
+            labelText.style.fill = colors.outOfRangeGrey;
+          }
+          labelText.text = text;
+          const labelPosition = withinCameraBounds({ x: target.x, y: target.y + radius }, labelText.width / 2);
+          labelText.x = labelPosition.x;
+          labelText.y = labelPosition.y;
+        }
+      }
+
     }
   }
 }
@@ -525,6 +550,7 @@ export function clearSpellEffectProjection(underworld: Underworld) {
       containerSpells.removeChildren();
     }
     clearWarnings();
+    uiCircles = [];
   }
 }
 
@@ -535,22 +561,11 @@ export function drawPredictionLine(start: Vec2, end: Vec2) {
     predictionGraphics.lineTo(end.x, end.y);
   }
 }
-export function drawPredictionCircle(target: Vec2, radius: number, color: number, text?: string) {
-  if (predictionGraphics) {
-    predictionGraphics.lineStyle(2, color, 1.0)
-    predictionGraphics.endFill();
-    predictionGraphics.drawCircle(target.x, target.y, radius);
-    if (text && labelText) {
-      // Exception: Don't override label text if text is
-      // currently telling the user that they are aiming out of range
-      if (labelText.text !== TEXT_OUT_OF_RANGE) {
-        labelText.text = text;
-        const labelPosition = withinCameraBounds({ x: target.x, y: target.y + radius }, labelText.width / 2);
-        labelText.x = labelPosition.x;
-        labelText.y = labelPosition.y;
-      }
-    }
-  }
+let uiCircles: { target: Vec2, radius: number, color: number, text?: string }[] = [];
+export function drawUICircle(target: Vec2, radius: number, color: number, text?: string) {
+  uiCircles.push({ target, radius, color, text });
+  // Note: The actual drawing now happens inside of updatePlanningView so it can account for other UI
+  // circles and text that might need to take precedence.
 }
 export function setPredictionGraphicsLineStyle(color: number) {
   if (predictionGraphics) {

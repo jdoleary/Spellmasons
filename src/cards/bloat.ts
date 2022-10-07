@@ -2,15 +2,13 @@ import * as particles from '@pixi/particle-emitter'
 import { IUnit, takeDamage } from '../entity/Unit';
 import * as Unit from '../entity/Unit';
 import { Spell } from './index';
-import { drawPredictionCircle } from '../graphics/PlanningView';
+import { drawUICircle } from '../graphics/PlanningView';
 import { forcePush, velocityStartMagnitude } from './push';
 import type Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
-import { animateSpell } from './cardUtils';
 import { createParticleTexture, simpleEmitter } from '../graphics/Particles';
 import { Vec2 } from '../jmath/Vec';
 import * as colors from '../graphics/ui/colors';
-import * as CSSClasses from '../CSSClasses';
 
 const id = 'Bloat';
 const imageName = 'explode-on-death.png';
@@ -81,11 +79,8 @@ const spell: Spell = {
   events: {
     onDeath: async (unit: IUnit, underworld: Underworld, prediction: boolean) => {
       const quantity = unit.modifiers[id]?.quantity || 1;
-      // If user's spell is currently out of range, mute the red color so it doesn't draw attention away
-      // from the out of range UI.
-      const color = document.body.classList.contains(CSSClasses.outOfRange) ? colors.outOfRangeGrey : colors.healthRed;
       if (prediction) {
-        drawPredictionCircle(unit, range, color, 'Explosion Radius');
+        drawUICircle(unit, range, colors.healthRed, 'Explosion Radius');
       } else {
         playSFXKey('bloatExplosion');
       }

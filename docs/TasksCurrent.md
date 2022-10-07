@@ -20,11 +20,8 @@
 
 ## next up
 - melee prediction is still off
-- attack range shouldn't be red when explosion radius is red
-- Improve out of range targeting: if any part of a unit is in range, then targeting it must be allowed
 - small bugs:
     - Sometimes it tries to path around things and wastes stamina if there isn't a straight line path
-    - when your main mana bar has 0 mana left it doesn't show the diagonal lines
     - sometimes when you walk you get stuck on a wall and it wastes stamina
 # Bugs
 - bug: too many pushes or too fast can result in the unit clipping through walls.

@@ -1,5 +1,5 @@
 import { addPickupTarget, addTarget, addUnitTarget, getCurrentTargets, Spell } from './index';
-import { drawPredictionCircle } from '../graphics/PlanningView';
+import { drawUICircle } from '../graphics/PlanningView';
 import { CardCategory } from '../types/commonTypes';
 import * as colors from '../graphics/ui/colors';
 import { raceTimeout } from '../Promise';
@@ -41,9 +41,9 @@ Adds a radius to the spell so it can affect more targets.
         // Draw visual circle for prediction
         if (prediction) {
           if (outOfRange) {
-            drawPredictionCircle(target, adjustedRange, colors.outOfRangeGrey);
+            drawUICircle(target, adjustedRange, colors.outOfRangeGrey);
           } else {
-            drawPredictionCircle(target, adjustedRange, colors.targetingSpellGreen, 'Expand Radius');
+            drawUICircle(target, adjustedRange, colors.targetingSpellGreen, 'Expand Radius');
           }
         } else {
           await animate(target, adjustedRange, underworld);
