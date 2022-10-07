@@ -14,7 +14,6 @@
     Cannot show upgrades, no globalThis.player Underworld.ts:1823:14
     Missing subsprite data for imageName null Image.ts:329:14
     Unable to init modifier with key Blood Curse
-- bug: got ` Uncaught TypeError: animationSprite2.parent is null` after triggering a pickup and quickly going through a portal before theanimation could finish
 - optimize: Ihave duplicate units, pickups, and doodads in save due to serailizeForSaving having them in the underworld and extracting them to the top level too
 - bug: Getting weird load position for this save file:
 ```
@@ -37,7 +36,6 @@
 - bug: too many pushes or too fast can result in the unit clipping through walls.
 - Permanently fix liquid
     - weird liquid : 0.5211362200270263
-- chain through pickups?
 - bug: **important** pressing 'alt' in chrome deselects the window and makes it stop accepting input
     - This doesn't happen in fullscreen
     - Test in windowed mode on Electron

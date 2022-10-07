@@ -251,8 +251,7 @@ export const pickups: IPickupSource[] = [
             loop: false,
             animationSpeed: 0.2,
             onComplete: () => {
-              if (animationSprite2) {
-
+              if (animationSprite2?.parent) {
                 animationSprite2.parent.removeChild(animationSprite2);
               }
             }
