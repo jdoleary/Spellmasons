@@ -1,6 +1,7 @@
-import { Spell } from './index';
+import { getCurrentTargets, Spell } from './index';
 import * as Unit from '../entity/Unit';
 import * as Pickup from '../entity/Pickup';
+import * as Doodad from '../entity/Doodad';
 import { CardCategory, UnitSubType, UnitType } from '../types/commonTypes';
 import { jitter, Vec2 } from '../jmath/Vec';
 import * as config from '../config';
@@ -26,7 +27,7 @@ Clones each target
       // Batch find targets that should be cloned
       // Note: They need to be batched so that the new clones don't get cloned
       const clonePairs: Vec2[][] = [];
-      let targets: Vec2[] = [...state.targetedUnits, ...state.targetedPickups];
+      let targets: Vec2[] = getCurrentTargets(state);
       targets = targets.length ? targets : [state.castLocation];
       for (let target of targets) {
         clonePairs.push([target, { x: target.x, y: target.y }]);
@@ -35,17 +36,7 @@ Clones each target
       // Animate all the clonings
       for (let [target, cloneSourceCoords] of clonePairs) {
         if (target) {
-          const unit = underworld.getUnitAt(target, prediction);
-          // Since pickups aren't currently considered in prediction predictions just return undefined
-          // if this is a prediction or else it will ACTUALLY clone pickups when just making predictions
-          // 2022-05-09
-          const pickup = prediction ? undefined : underworld.getPickupAt(target, prediction);
-          if (unit) {
-            animationPromise = animateMitosis(unit.image);
-          }
-          if (pickup) {
-            animationPromise = animateMitosis(pickup.image);
-          }
+          animationPromise = animateMitosis((target as any).image);
         }
       }
       if (!prediction) {
@@ -57,19 +48,13 @@ Clones each target
       // Clone all the batched clone jobs
       for (let [target, cloneSourceCoords] of clonePairs) {
         if (target) {
-          const unit = underworld.getUnitAt(target, prediction);
-          // Since pickups aren't currently considered in prediction predictions just return undefined
-          // if this is a prediction or else it will ACTUALLY clone pickups when just making predictions
-          // 2022-05-09
-          const pickup = prediction ? undefined : underworld.getPickupAt(target, prediction);
-
           // If there is are clone coordinates to clone into
           if (cloneSourceCoords) {
-            if (unit) {
+            if (Unit.isUnit(target)) {
               // Jitter prevents multiple clones from spawning on top of each other
               const validSpawnCoords = underworld.findValidSpawn(jitter(cloneSourceCoords, config.COLLISION_MESH_RADIUS / 2, underworld.random), 5, 10);
               if (validSpawnCoords) {
-                const clone = Unit.load(Unit.serialize(unit), underworld, prediction);
+                const clone = Unit.load(Unit.serialize(target), underworld, prediction);
                 if (!prediction) {
                   // Change id of the clone so that it doesn't share the same
                   // 'supposed-to-be-unique' id of the original
@@ -85,12 +70,24 @@ Clones each target
                 clone.y = validSpawnCoords.y;
               }
             }
-            if (pickup) {
+            if (Pickup.isPickup(target)) {
               const validSpawnCoords = underworld.findValidSpawn(cloneSourceCoords, 5, 20)
               if (validSpawnCoords) {
-                const clone = Pickup.load(pickup, underworld, prediction);
+                const clone = Pickup.load(target, underworld, prediction);
                 if (clone) {
                   Pickup.setPosition(clone, validSpawnCoords.x, validSpawnCoords.y);
+                }
+              } else {
+                floatingText({ coords: cloneSourceCoords, text: 'No space to clone into!' });
+              }
+            }
+            if (Doodad.isDoodad(target)) {
+              const validSpawnCoords = underworld.findValidSpawn(cloneSourceCoords, 5, 20)
+              if (validSpawnCoords) {
+                const clone = Doodad.load(Doodad.serialize(target), underworld, prediction);
+                if (clone) {
+                  target.x = validSpawnCoords.x;
+                  target.y = validSpawnCoords.y;
                 }
               } else {
                 floatingText({ coords: cloneSourceCoords, text: 'No space to clone into!' });
