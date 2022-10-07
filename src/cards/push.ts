@@ -1,5 +1,5 @@
 import { Vec2, clone } from '../jmath/Vec';
-import { Spell } from './index';
+import { getCurrentTargets, Spell } from './index';
 import { distance, similarTriangles } from '../jmath/math';
 import type { Circle, ForceMove } from '../jmath/moveWithCollision';
 import { forceMoveColor } from '../graphics/ui/colors';
@@ -28,11 +28,9 @@ Pushes the target(s) away from the caster
       let promises = [];
       const awayFrom = state.casterUnit;
       playDefaultSpellSFX(card, prediction);
-      for (let unit of state.targetedUnits) {
-        promises.push(forcePush(unit, awayFrom, velocityStartMagnitude * quantity, underworld, prediction));
-      }
-      for (let pickup of state.targetedPickups) {
-        promises.push(forcePush(pickup, awayFrom, velocityStartMagnitude * quantity, underworld, prediction));
+      const targets = getCurrentTargets(state);
+      for (let entity of targets) {
+        promises.push(forcePush(entity, awayFrom, velocityStartMagnitude * quantity, underworld, prediction));
       }
       await Promise.all(promises);
       return state;
