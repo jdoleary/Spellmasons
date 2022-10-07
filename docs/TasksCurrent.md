@@ -1,3 +1,7 @@
+- bug: pickups and doodads don't get tinted when targeted with movement spells because of how they are assocaited with the real one
+    - either use ids or pass a reference to the real when copying to a prediction one
+- refactor spells to work on doodads, pickups, and units just like Connect now does
+    - push.ts is next
 ## Brad playtest
     - bug: saw +0 mana when he tried to mana steal from me; desync bug; i moved when he cast.
     - add footstep sfx

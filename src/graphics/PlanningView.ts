@@ -357,7 +357,7 @@ async function showCastCardsPrediction(underworld: Underworld, target: Vec2, cas
     // Show pickups as targeted with tint
     for (let targetedPickup of effectState.targetedPickups) {
       // Convert prediction pickup's associated real pickup
-      const realPickup = underworld.pickups.find(p => p.x == targetedPickup.x && p.y == targetedPickup.y && p.name == targetedPickup.name);
+      const realPickup = targetedPickup.real || targetedPickup;
       // don't change tint if HUD is hidden
       if (realPickup && realPickup.image && !globalThis.isHUDHidden) {
         if (outOfRange) {
@@ -370,7 +370,7 @@ async function showCastCardsPrediction(underworld: Underworld, target: Vec2, cas
     // Show doodads as targeted with tint
     for (let targetedDoodad of effectState.targetedDoodads) {
       // Convert prediction doodad's associated real doodad
-      const realDoodad = underworld.doodads.find(p => p.x == targetedDoodad.x && p.y == targetedDoodad.y && p.name == targetedDoodad.name);
+      const realDoodad = targetedDoodad.real || targetedDoodad;
       // don't change tint if HUD is hidden
       if (realDoodad && realDoodad.image && !globalThis.isHUDHidden) {
         if (outOfRange) {

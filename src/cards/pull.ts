@@ -1,5 +1,5 @@
 import { multiply, Vec2 } from '../jmath/Vec';
-import { Spell } from './index';
+import { getCurrentTargets, Spell } from './index';
 import type { Circle, ForceMove } from '../jmath/moveWithCollision';
 import { raceTimeout } from '../Promise';
 import Underworld from '../Underworld';
@@ -24,11 +24,9 @@ Pulls the target(s) towards the caster
     effect: async (state, card, quantity, underworld, prediction) => {
       let promises = [];
       playDefaultSpellSFX(card, prediction);
-      for (let unit of state.targetedUnits) {
-        promises.push(pull(unit, state.casterUnit, quantity, underworld, prediction));
-      }
-      for (let pickup of state.targetedPickups) {
-        promises.push(pull(pickup, state.casterUnit, quantity, underworld, prediction));
+      const targets = getCurrentTargets(state);
+      for (let entity of targets) {
+        promises.push(pull(entity, state.casterUnit, quantity, underworld, prediction));
       }
       await Promise.all(promises);
       return state;

@@ -26,6 +26,8 @@ export type IPickup = HasSpace & {
   description: string;
   imagePath: string;
   image?: Image.IImageAnimated;
+  // if this IPickup is a prediction copy, real is a reference to the real pickup that it is a copy of
+  real?: IPickup;
   // Only can be picked up once
   singleUse: boolean;
   // Only can be picked up by players
@@ -57,6 +59,7 @@ export function copyForPredictionPickup(p: IPickup): IPickup {
   // Remove image and text since prediction pickups won't be rendered
   const { image, text, ...rest } = p;
   return {
+    real: p,
     ...rest
   }
 }

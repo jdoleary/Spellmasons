@@ -11,6 +11,8 @@ export type IDoodad = HasSpace & {
     type: 'doodad';
     imagePath: string;
     image?: Image.IImageAnimated;
+    // if this IDoodad is a prediction copy, real is a reference to the real doodad that it is a copy of
+    real?: IDoodad
 }
 export function create({ pos, source }:
     {
@@ -35,6 +37,7 @@ export function copyForPredictionDoodad(d: IDoodad): IDoodad {
     // Remove image since prediction doodads won't be rendered
     const { image, ...rest } = d;
     return {
+        real: d,
         ...rest
     }
 }
