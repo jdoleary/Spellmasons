@@ -220,6 +220,8 @@ export function addTarget(target: any, effectState: EffectState) {
     addUnitTarget(target, effectState);
   } else if (Pickup.isPickup(target)) {
     addPickupTarget(target, effectState);
+  } else if (Doodad.isDoodad(target)) {
+    addDoodadTarget(target, effectState);
   } else {
     console.error('addTarget unsupported for ', target);
   }
@@ -234,5 +236,11 @@ export function addPickupTarget(pickup: Pickup.IPickup, effectState: EffectState
   // Adds a pickup to effectState.targetedPickups IF it is not already in targetedPickups
   if (effectState.targetedPickups.indexOf(pickup) === -1) {
     effectState.targetedPickups.push(pickup);
+  }
+}
+export function addDoodadTarget(doodad: Doodad.IDoodad, effectState: EffectState) {
+  // Adds a doodad to effectState.targetedDoodads IF it is not already in targetedDoodads
+  if (effectState.targetedDoodads.indexOf(doodad) === -1) {
+    effectState.targetedDoodads.push(doodad);
   }
 }
