@@ -170,6 +170,10 @@ export function changeSprite(image: IImageAnimated | undefined, imagePath: strin
     return undefined
   }
 }
+const ALLOW_NO_SERIALIZE_CHILDREN_JIDS = [
+  // NAME_TEXT need not be serialized
+  config.NAME_TEXT_ID
+]
 // Converts an Image entity into a serialized form
 // that can be saved as JSON and rehydrated later into
 // a full Image entity.
@@ -177,12 +181,18 @@ export function changeSprite(image: IImageAnimated | undefined, imagePath: strin
 // callbacks and complicated objects such as PIXI.Sprites
 // are removed
 export function serialize(image: IImageAnimated): IImageAnimatedSerialized {
-  // @ts-ignore: imagePath is a property that I added to identify currently playing animation or sprite.
-  const children = image.sprite.children.map(c => c.imagePath);
-  if (children.find(c => c == null || c == undefined || c == 'null')) {
+  const children = image.sprite.children.map(c => {
+    // Warn if unexpected child is unserializable because it's missing an imagePath
     // @ts-ignore: imagePath is a property that I added to identify currently playing animation or sprite.
-    console.error('Improperly serialized Image children, at least one child missing imagePath:', image.sprite.children.filter(c => !c.imagePath));
-  }
+    if (!c.imagePath && !ALLOW_NO_SERIALIZE_CHILDREN_JIDS.some(x => x == c.jid)) {
+      // @ts-ignore: jid is a custom identifier property that I added
+      console.warn(c.jid, c, 'does not have an imagePath and thus cannot be serialized.');
+    }
+    // @ts-ignore: imagePath is a property that I added to identify currently playing animation or sprite.
+    return c.imagePath
+  })
+    // remove nulls
+    .flatMap(x => x !== null && x !== undefined ? [x] : []);
   return {
     sprite: {
       x: image.sprite.x,
