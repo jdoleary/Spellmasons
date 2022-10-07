@@ -495,7 +495,10 @@ export default class Underworld {
               moveWithCollisions(u, stepTowardsTarget, aliveNPCs, this);
               moveDist = math.distance(originalPosition, u);
             }
-            u.stamina -= moveDist;
+
+            if (!isNaN(moveDist)) {
+              u.stamina -= moveDist;
+            }
             // Only do this check if they are already in the liquid because units will never enter liquid
             // just by moving themselves, they can only be forceMoved into liquid and that check happens 
             // elsewhere

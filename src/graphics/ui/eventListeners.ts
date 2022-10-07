@@ -221,6 +221,12 @@ export function endTurnBtnListener(underworld: Underworld, e: MouseEvent) {
 const sendMovePlayer = throttle((underworld: Underworld) => {
   if (globalThis.player) {
     if (globalThis.player.isSpawned && !inPortal(globalThis.player)) {
+      // This should never happen
+      if (isNaN(globalThis.player.unit.stamina)) {
+        // but if it does, report error and set stamina back to a valid number
+        console.error('Stamina is NaN!');
+        globalThis.player.unit.stamina = 0;
+      }
       underworld.pie.sendData({
         type: MESSAGE_TYPES.MOVE_PLAYER,
         ...Vec.clone(globalThis.player.unit),
