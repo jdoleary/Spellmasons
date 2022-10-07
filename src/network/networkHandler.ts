@@ -536,17 +536,23 @@ export function setupNetworkHandlerGlobalFunctions(underworld: Underworld) {
   globalThis.getAllSaveFiles = () => Object.keys(localStorage).filter(x => x.startsWith(savePrefix)).map(x => x.substring(savePrefix.length));
 
   globalThis.save = (title: string) => {
-    storage.set(
-      savePrefix + title,
-      JSON.stringify({
-        underworld: underworld.serializeForSaving(),
-        phase: underworld.turn_phase,
-        pickups: underworld.pickups.map(Pickup.serialize),
-        units: underworld.units.map(Unit.serialize),
-        players: underworld.players.map(Player.serialize),
-        doodads: underworld.doodads.map(Doodad.serialize),
-      }),
-    );
+    const saveObject = {
+      underworld: underworld.serializeForSaving(),
+      phase: underworld.turn_phase,
+      pickups: underworld.pickups.map(Pickup.serialize),
+      units: underworld.units.map(Unit.serialize),
+      players: underworld.players.map(Player.serialize),
+      doodads: underworld.doodads.map(Doodad.serialize),
+    };
+    try {
+      storage.set(
+        savePrefix + title,
+        JSON.stringify(saveObject),
+      );
+    } catch (e) {
+      console.error(e);
+      console.log('Failed to save', saveObject);
+    }
   };
   globalThis.load = async (title: string) => {
     const savedGameString = storage.get(savePrefix + title);
