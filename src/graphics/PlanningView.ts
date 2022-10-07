@@ -67,6 +67,26 @@ export function updatePlanningView(underworld: Underworld) {
       // Draw circle to show that pickup is selected
       drawCircleUnderTarget(globalThis.selectedPickup, underworld, 1.0, planningViewGraphics);
     }
+    // If the player has a spell ready and the mouse is beyond their max cast range
+    // show the players cast range so they user knows that they are out of range
+    if (globalThis.player) {
+      // Do not draw out of range information if player is viewing the walkRope so that
+      // they can see how far they can move unobstructed
+      if (!keyDown.showWalkRope) {
+        if (CardUI.areAnyCardsSelected()) {
+          const outOfRange = isOutOfRange(globalThis.player, mouseTarget, true);
+          if (outOfRange) {
+            // Only show outOfRange information if mouse is over the game canvas, not when it's over UI elements
+            if (globalThis.hoverTarget && globalThis.hoverTarget.closest('#PIXI-holder')) {
+              addWarningAtMouse(TEXT_OUT_OF_RANGE);
+            }
+          } else {
+            removeWarningAtMouse(TEXT_OUT_OF_RANGE);
+          }
+        }
+      }
+    }
+    const currentlyWarningOutOfRange = warnings.has(TEXT_OUT_OF_RANGE);
     // Draw UI for the globalThis.selectedUnit
     if (globalThis.selectedUnit) {
       if (
@@ -106,8 +126,11 @@ export function updatePlanningView(underworld: Underworld) {
         } else {
 
           if (globalThis.selectedUnit.attackRange > 0) {
-
-            const rangeCircleColor = globalThis.selectedUnit.faction == Faction.ALLY ? colors.attackRangeAlly : colors.attackRangeEnemy;
+            const rangeCircleColor = currentlyWarningOutOfRange
+              ? colors.outOfRangeGrey
+              : globalThis.selectedUnit.faction == Faction.ALLY
+                ? colors.attackRangeAlly
+                : colors.attackRangeEnemy;
             globalThis.unitOverlayGraphics.lineStyle(2, rangeCircleColor, 1.0);
             if (globalThis.selectedUnit.unitSubType === UnitSubType.RANGED_RADIUS) {
               globalThis.unitOverlayGraphics.drawCircle(
@@ -147,25 +170,6 @@ export function updatePlanningView(underworld: Underworld) {
         }
       }
     }
-    // If the player has a spell ready and the mouse is beyond their max cast range
-    // show the players cast range so they user knows that they are out of range
-    if (globalThis.player) {
-      // Do not draw out of range information if player is viewing the walkRope so that
-      // they can see how far they can move unobstructed
-      if (!keyDown.showWalkRope) {
-        if (CardUI.areAnyCardsSelected()) {
-          const outOfRange = isOutOfRange(globalThis.player, mouseTarget, true);
-          if (outOfRange) {
-            // Only show outOfRange information if mouse is over the game canvas, not when it's over UI elements
-            if (globalThis.hoverTarget && globalThis.hoverTarget.closest('#PIXI-holder')) {
-              addWarningAtMouse(TEXT_OUT_OF_RANGE);
-            }
-          } else {
-            removeWarningAtMouse(TEXT_OUT_OF_RANGE);
-          }
-        }
-      }
-    }
     // Draw a circle under the feet of the player whos current turn it is
     if (underworld) {
       // Update tooltip for whatever is being hovered
@@ -194,29 +198,11 @@ export function updatePlanningView(underworld: Underworld) {
         lastSpotCurrentPlayerTurnCircle = clone(globalThis.player.unit);
       }
     }
-    const currentlyWarningOutOfRange = warnings.has(TEXT_OUT_OF_RANGE);
-    // Draw warnings
-    if (mouseLabelText && globalThis.player) {
-      const text = Array.from(warnings).join('\n');
-      mouseLabelText.text = text;
-      mouseLabelText.style.fill = colors.errorRed;
-      mouseLabelText.style.align = 'center';
-      const labelPosition = withinCameraBounds({ x: mouseTarget.x, y: mouseTarget.y - mouseLabelText.height * 2 }, mouseLabelText.width / 2);
-      mouseLabelText.x = labelPosition.x;
-      mouseLabelText.y = labelPosition.y;
-      if (currentlyWarningOutOfRange) {
-        // Override other graphics (like selected unit) when out of range info is showing
-        labelText.text = '';
-        globalThis.unitOverlayGraphics.clear();
+    if (uiCircles.length || currentlyWarningOutOfRange) {
 
-        globalThis.unitOverlayGraphics.lineStyle(3, colors.errorRed, 1.0);
-        globalThis.unitOverlayGraphics.drawCircle(
-          globalThis.player.unit.x,
-          globalThis.player.unit.y,
-          globalThis.player.unit.attackRange
-        );
-
-      }
+      // Override other graphics (like selected unit) when out of range info is showing
+      labelText.text = '';
+      globalThis.unitOverlayGraphics.clear();
     }
     // Draw prediction circles
     if (unitOverlayGraphics) {
@@ -241,6 +227,25 @@ export function updatePlanningView(underworld: Underworld) {
         }
       }
 
+    }
+    // Draw warnings
+    if (mouseLabelText && globalThis.player) {
+      const text = Array.from(warnings).join('\n');
+      mouseLabelText.text = text;
+      mouseLabelText.style.fill = colors.errorRed;
+      mouseLabelText.style.align = 'center';
+      const labelPosition = withinCameraBounds({ x: mouseTarget.x, y: mouseTarget.y - mouseLabelText.height * 2 }, mouseLabelText.width / 2);
+      mouseLabelText.x = labelPosition.x;
+      mouseLabelText.y = labelPosition.y;
+      if (currentlyWarningOutOfRange) {
+        globalThis.unitOverlayGraphics.lineStyle(3, colors.errorRed, 1.0);
+        globalThis.unitOverlayGraphics.drawCircle(
+          globalThis.player.unit.x,
+          globalThis.player.unit.y,
+          globalThis.player.unit.attackRange
+        );
+
+      }
     }
   }
 }
