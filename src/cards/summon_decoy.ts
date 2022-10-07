@@ -3,8 +3,9 @@ import * as Unit from '../entity/Unit';
 import { CardCategory, Faction, UnitType } from '../types/commonTypes';
 import { allUnits } from '../entity/units';
 import { skyBeam } from '../VisualEffects';
-import * as config from '../config';
 import { playDefaultSpellSFX } from './cardUtils';
+import floatingText from '../graphics/FloatingText';
+import { addWarningAtMouse } from '../graphics/PlanningView';
 
 export const id = 'decoy';
 const spell: Spell = {
@@ -26,15 +27,28 @@ Multiple sequential decoy spells will create a decoy with more health.
     `,
     allowNonUnitTarget: true,
     effect: async (state, card, quantity, underworld, prediction) => {
-      playDefaultSpellSFX(card, prediction);
       const unitId = 'decoy';
       const sourceUnit = allUnits[unitId];
       if (sourceUnit) {
+        const summonLocation = {
+          x: state.castLocation.x,
+          y: state.castLocation.y
+        }
+        if (underworld.isCoordOnWallTile(summonLocation)) {
+          if (prediction) {
+            const WARNING = "Invalid Summon Location";
+            addWarningAtMouse(WARNING);
+          } else {
+            floatingText({ coords: summonLocation, text: 'Invalid summon location!', style: { fill: 'red' } });
+          }
+          return state;
+        }
+        playDefaultSpellSFX(card, prediction);
         const decoyUnit = Unit.create(
           sourceUnit.id,
-          state.castLocation.x,
+          summonLocation.x,
           // Place the decoy root (the post) where the click occurs, not the center of the decoy
-          state.castLocation.y - 22,
+          summonLocation.y - 22,
           Faction.ALLY,
           sourceUnit.info.image,
           UnitType.AI,

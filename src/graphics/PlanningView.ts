@@ -33,6 +33,7 @@ let predictionGraphics: PIXI.Graphics | undefined;
 // labelText is used to add a label to planningView circles 
 // so that the player knows what the circle is referencing.
 let labelText = !globalThis.pixi ? undefined : new globalThis.pixi.Text('', { fill: 'white', ...config.PIXI_TEXT_DROP_SHADOW });
+let mouseLabelText = !globalThis.pixi ? undefined : new globalThis.pixi.Text('', { fill: 'white', ...config.PIXI_TEXT_DROP_SHADOW });
 export function initPlanningView() {
   if (containerPlanningView && containerUI && globalThis.pixi) {
     planningViewGraphics = new globalThis.pixi.Graphics();
@@ -46,11 +47,17 @@ export function initPlanningView() {
       labelText.anchor.y = 0;
       containerUI.addChild(labelText);
     }
+    if (mouseLabelText) {
+      mouseLabelText.anchor.x = 0.5;
+      mouseLabelText.anchor.y = 0;
+      containerUI.addChild(mouseLabelText);
+    }
   }
 }
 let lastSpotCurrentPlayerTurnCircle: Vec2 = { x: 0, y: 0 };
 export function updatePlanningView(underworld: Underworld) {
   if (planningViewGraphics && globalThis.unitOverlayGraphics && labelText) {
+    const mouseTarget = underworld.getMousePos();
     planningViewGraphics.clear();
     if (labelText) {
       labelText.text = '';
@@ -89,9 +96,7 @@ export function updatePlanningView(underworld: Underworld) {
               globalThis.unitOverlayGraphics.lineTo(attackLine.p2.x, attackLine.p2.y);
               globalThis.unitOverlayGraphics.drawCircle(attackLine.p2.x, attackLine.p2.y, 3);
             } else {
-              // If user's spell is currently out of range, mute the red LOS color so it doesn't draw attention away
-              // from the out of range UI.
-              const color = document.body.classList.contains(CSSClasses.outOfRange) ? colors.outOfRangeGrey : colors.healthRed;
+              const color = colors.healthRed;
               // Draw a red line, showing that you are in danger
               globalThis.unitOverlayGraphics.lineStyle(3, color, 0.7);
               globalThis.unitOverlayGraphics.lineTo(attackLine.p2.x, attackLine.p2.y);
@@ -144,7 +149,6 @@ export function updatePlanningView(underworld: Underworld) {
     }
     // If the player has a spell ready and the mouse is beyond their max cast range
     // show the players cast range so they user knows that they are out of range
-    const mouseTarget = underworld.getMousePos();
     if (globalThis.player) {
       // Do not draw out of range information if player is viewing the walkRope so that
       // they can see how far they can move unobstructed
@@ -154,20 +158,10 @@ export function updatePlanningView(underworld: Underworld) {
           if (outOfRange) {
             // Only show outOfRange information if mouse is over the game canvas, not when it's over UI elements
             if (globalThis.hoverTarget && globalThis.hoverTarget.closest('#PIXI-holder')) {
-              globalThis.unitOverlayGraphics.lineStyle(3, colors.errorRed, 1.0);
-              globalThis.unitOverlayGraphics.drawCircle(
-                globalThis.player.unit.x,
-                globalThis.player.unit.y,
-                globalThis.player.unit.attackRange
-              );
-              if (labelText) {
-                labelText.text = TEXT_OUT_OF_RANGE;
-                labelText.style.fill = colors.errorRed;
-                const labelPosition = withinCameraBounds({ x: mouseTarget.x, y: mouseTarget.y - labelText.height * 2 }, labelText.width / 2);
-                labelText.x = labelPosition.x;
-                labelText.y = labelPosition.y;
-              }
+              addWarningAtMouse(TEXT_OUT_OF_RANGE);
             }
+          } else {
+            removeWarningAtMouse(TEXT_OUT_OF_RANGE);
           }
         }
       }
@@ -198,6 +192,29 @@ export function updatePlanningView(underworld: Underworld) {
           planningViewGraphics.endFill();
         }
         lastSpotCurrentPlayerTurnCircle = clone(globalThis.player.unit);
+      }
+    }
+    // Draw warnings
+    if (mouseLabelText && globalThis.player) {
+      const text = Array.from(warnings).join('\n');
+      mouseLabelText.text = text;
+      mouseLabelText.style.fill = colors.errorRed;
+      mouseLabelText.style.align = 'center';
+      const labelPosition = withinCameraBounds({ x: mouseTarget.x, y: mouseTarget.y - mouseLabelText.height * 2 }, mouseLabelText.width / 2);
+      mouseLabelText.x = labelPosition.x;
+      mouseLabelText.y = labelPosition.y;
+      if (warnings.has(TEXT_OUT_OF_RANGE)) {
+        // Override other graphics (like selected unit) when out of range info is showing
+        labelText.text = '';
+        globalThis.unitOverlayGraphics.clear();
+
+        globalThis.unitOverlayGraphics.lineStyle(3, colors.errorRed, 1.0);
+        globalThis.unitOverlayGraphics.drawCircle(
+          globalThis.player.unit.x,
+          globalThis.player.unit.y,
+          globalThis.player.unit.attackRange
+        );
+
       }
     }
   }
@@ -507,6 +524,7 @@ export function clearSpellEffectProjection(underworld: Underworld) {
     if (containerSpells) {
       containerSpells.removeChildren();
     }
+    clearWarnings();
   }
 }
 
@@ -744,6 +762,15 @@ export function getUIBarProps(x: number, y: number, numerator: number, denominat
     width: barWidth,
     height
   }
+}
 
-
+let warnings = new Set();
+export function addWarningAtMouse(warning: string) {
+  warnings.add(warning);
+}
+export function removeWarningAtMouse(warning: string) {
+  warnings.delete(warning);
+}
+export function clearWarnings() {
+  warnings.clear();
 }

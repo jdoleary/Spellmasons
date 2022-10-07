@@ -537,21 +537,6 @@ export function clickHandler(underworld: Underworld, e: MouseEvent) {
           return;
         }
 
-        // Prevent casting on wall
-        if (underworld.isCoordOnWallTile(mousePos)) {
-          // Deny casting on a wall tile unless there is a target (which may overlap the wall)
-          // 'allowNonUnitTarget' is specifically excluded from this check so that nonUnitTarget casts
-          // such as summon_decoy may not be cast on a wall
-          if (!hasTarget) {
-            floatingText({
-              coords: target,
-              text: 'Invalid Target!'
-            });
-            playSFXKey('deny_target');
-            // Cancel Casting
-            return;
-          }
-        }
 
         if (selfPlayer.unit.modifiers[Freeze.id]) {
           floatingText({ coords: selfPlayer.unit, text: 'Cannot Cast. Frozen.' })

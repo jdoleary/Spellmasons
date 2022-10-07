@@ -21,7 +21,6 @@
 ## next up
 - melee prediction is still off
 - attack range shouldn't be red when explosion radius is red
-- bug: Brad got "invalid target" when trying to cast on the top of a wall but he was using "expand" so it shoul've been valid cause there were targets in the radius
 - Improve out of range targeting: if any part of a unit is in range, then targeting it must be allowed
 - small bugs:
     - Sometimes it tries to path around things and wastes stamina if there isn't a straight line path

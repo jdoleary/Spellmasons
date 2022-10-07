@@ -392,6 +392,9 @@ export default class Underworld {
       if (CardUI.areAnyCardsSelected()) {
         const outOfRange = isOutOfRange(globalThis.player, this.getMousePos(), true)
         document.body?.classList.toggle(CSSClasses.outOfRange, outOfRange);
+      } else {
+        // If there are no cards selected, ensure the out of range class is removed
+        document.body?.classList.toggle(CSSClasses.outOfRange, false);
       }
       // Turn off casting and outOfRange view if the player is viewing the walk rope
       if (keyDown.showWalkRope) {
