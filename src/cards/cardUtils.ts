@@ -33,7 +33,7 @@ export async function playDefaultSpellAnimation(card: ICard, targets: Vec2[], pr
 }
 export async function animateSpell(target: Vec2, imagePath: string): Promise<void> {
     if (imagePath.indexOf('.png') !== -1) {
-        console.error('Cannot animate a still image, this function requires an animation path or else it will not "hide when complete"', imagePath);
+        console.error(`Cannot animate a still image ${imagePath}, this function requires an animation path or else it will not "hide when complete"`);
         return Promise.resolve();
     }
     // This timeout value is arbitrary, meant to prevent and report an await hang
