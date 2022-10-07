@@ -29,8 +29,6 @@
     - sometimes when you walk you get stuck on a wall and it wastes stamina
 # Bugs
 - bug: too many pushes or too fast can result in the unit clipping through walls.
-- Permanently fix liquid
-    - weird liquid : 0.5211362200270263
 - bug: **important** pressing 'alt' in chrome deselects the window and makes it stop accepting input
     - This doesn't happen in fullscreen
     - Test in windowed mode on Electron

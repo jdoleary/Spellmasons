@@ -1,6 +1,7 @@
 import { randInt } from "./jmath/rand";
 import { oneDimentionIndexToVec2, vec2ToOneDimentionIndexPreventWrap } from "./jmath/ArrayUtil";
 import Underworld from "./Underworld";
+import { distance } from "./jmath/math";
 export enum Material {
     EMPTY,
     LIQUID,
@@ -91,13 +92,30 @@ export function placeLiquidSources(tiles: Material[], widthOf2DArray: number, nu
             }
         }
     }
-    for (let i = 0; i < numberOfLiquidSources; i++) {
+    const chosenLiquidIndexes = [];
+    choose_random_liquid:
+    for (let i = 0; (i < tiles.length && chosenLiquidIndexes.length < numberOfLiquidSources); i++) {
         const chosenIndex = candidatesForLiquidSource[randInt(underworld.random, 0, candidatesForLiquidSource.length)];
 
         if (chosenIndex !== undefined && tiles[chosenIndex] !== undefined) {
-            tiles[chosenIndex] = Material.LIQUID;
+            for (let preLiquidIndex of chosenLiquidIndexes) {
+                const otherPosition = oneDimentionIndexToVec2(preLiquidIndex, widthOf2DArray);
+                const position = oneDimentionIndexToVec2(chosenIndex, widthOf2DArray);
+                const dist = distance(position, otherPosition);
+                if (dist <= Math.SQRT2 * 2 && dist > Math.SQRT2) {
+                    // Bad location, too close to other liquid (but not touching) and could cause abberant liquid borders
+                    continue choose_random_liquid;
+                }
+            }
+            chosenLiquidIndexes.push(chosenIndex);
+
         } else {
             console.error('Attempted to place liquid tile but undefined')
+        }
+    }
+    for (let index of chosenLiquidIndexes) {
+        if (index !== undefined && tiles[index] !== undefined) {
+            tiles[index] = Material.LIQUID
         }
     }
 }
