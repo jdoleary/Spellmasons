@@ -144,12 +144,14 @@ export function setPosition(pickup: IPickup, x: number, y: number) {
   pickup.y = y;
   Image.setPosition(pickup.image, { x, y });
 }
-export type IPickupSerialized = Omit<IPickup, "image" | "effect" | "text"> & {
+export type IPickupSerialized = Omit<IPickup, "image" | "effect" | "text" | "real"> & {
   image?: Image.IImageAnimatedSerialized
 };
 export function serialize(p: IPickup): IPickupSerialized {
   // effect is a callback and cannot be serialized
-  const { effect, text, ...rest } = p;
+  // real is a reference to self if self is not a prediction copy and cannot be serialized
+  // because it would be cyclical
+  const { effect, text, real, ...rest } = p;
   const serialized: IPickupSerialized = {
     ...rest,
     image: p.image ? Image.serialize(p.image) : undefined,

@@ -63,11 +63,11 @@ export const doodads: IDoodadSource[] = [
         imagePath: 'doodads/ghost_tree',
     },
 ];
-export type IDoodadSerialized = Omit<IDoodad, "image"> & {
+export type IDoodadSerialized = Omit<IDoodad, "image" | "real"> & {
     image?: Image.IImageAnimatedSerialized
 };
 export function serialize(p: IDoodad): IDoodadSerialized {
-    const { ...rest } = p;
+    const { real, ...rest } = p;
     const serialized: IDoodadSerialized = {
         ...rest,
         image: p.image ? Image.serialize(p.image) : undefined,
