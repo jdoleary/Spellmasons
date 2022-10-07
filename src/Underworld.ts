@@ -234,6 +234,7 @@ export default class Underworld {
     if (globalThis.headless) { return; }
     this.unitsPrediction = this.units.map(u => Unit.copyForPredictionUnit(u, this));
     this.pickupsPrediction = this.pickups.map(Pickup.copyForPredictionPickup);
+    this.doodadsPrediction = this.doodads.map(Doodad.copyForPredictionDoodad);
   }
   syncronizeRNG(RNGState: SeedrandomState | boolean) {
     if (elSeed) {
@@ -446,6 +447,14 @@ export default class Underworld {
           forceMoveInst.resolve();
           this.forceMove.splice(i, 1);
         }
+      }
+    }
+
+    for (let doodad of this.doodads) {
+      // Keep image in sync with position
+      if (doodad.image) {
+        doodad.image.sprite.x = doodad.x;
+        doodad.image.sprite.y = doodad.y;
       }
     }
 
@@ -1965,6 +1974,7 @@ export default class Underworld {
         phase: p,
         units: this.units.map(Unit.serialize),
         players: this.players.map(Player.serialize)
+        // TODO sync doodads here
       });
     }
   }
@@ -2267,6 +2277,7 @@ export default class Underworld {
     const unitAtCastLocation = this.getUnitAt(castLocation, prediction);
     const pickupAtCastLocation = this.getPickupAt(castLocation, prediction);
     const doodadAtCastLocation = this.getDoodadAt(castLocation, prediction);
+
     let effectState: Cards.EffectState = {
       cardIds,
       casterCardUsage,
@@ -2539,6 +2550,7 @@ export default class Underworld {
         type: MESSAGE_TYPES.SYNC_PLAYERS,
         units: this.units.map(Unit.serialize),
         players: this.players.map(Player.serialize)
+        // todo sync doodads here
       });
     }
     return newlyCreatedPlayers;
@@ -2588,6 +2600,7 @@ export default class Underworld {
       players: this.players.map(Player.serialize),
       units: this.units.map(Unit.serialize),
       pickups: this.pickups.map(Pickup.serialize),
+      doodads: this.doodads.map(Doodad.serialize),
       // the state of the Random Number Generator
       RNGState: this.random.state(),
     };
@@ -2623,12 +2636,13 @@ export default class Underworld {
   }
 }
 
-type IUnderworldSerialized = Omit<typeof Underworld, "pie" | "prototype" | "players" | "units" | "pickups" | "random" | "turnInterval" | "liquidSprites"
+type IUnderworldSerialized = Omit<typeof Underworld, "pie" | "prototype" | "players" | "units" | "pickups" | "doodads" | "random" | "turnInterval" | "liquidSprites"
   // walls and pathingPolygons are omitted because they are derived from obstacles when cacheWalls() in invoked
   | "walls" | "pathingPolygons"> & {
     players: Player.IPlayerSerialized[],
     units: Unit.IUnitSerialized[],
     pickups: Pickup.IPickupSerialized[],
+    doodads: Doodad.IDoodadSerialized[]
   };
 type NonFunctionPropertyNames<T> = { [K in keyof T]: T[K] extends Function ? never : K }[keyof T];
 type UnderworldNonFunctionProperties = Exclude<NonFunctionPropertyNames<Underworld>, null | undefined>;

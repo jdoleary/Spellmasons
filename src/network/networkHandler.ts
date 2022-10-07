@@ -7,6 +7,7 @@ import floatingText from '../graphics/FloatingText';
 import { getUpgradeByTitle } from '../Upgrade';
 import Underworld, { IUnderworldSerializedForSyncronize, LevelData, turn_phase } from '../Underworld';
 import * as Player from '../entity/Player';
+import * as Doodad from '../entity/Doodad';
 import * as Unit from '../entity/Unit';
 import * as Pickup from '../entity/Pickup';
 import * as messageQueue from '../messageQueue';
@@ -407,10 +408,11 @@ async function handleLoadGameState(payload: {
   phase: turn_phase,
   pickups: IPickupSerialized[],
   units: Unit.IUnitSerialized[],
-  players: Player.IPlayerSerialized[]
+  players: Player.IPlayerSerialized[],
+  doodads: Doodad.IDoodadSerialized[]
 }, underworld: Underworld) {
   console.log("Setup: Load game state", payload)
-  const { underworld: payloadUnderworld, phase, pickups, units, players } = payload
+  const { underworld: payloadUnderworld, phase, pickups, units, players, doodads } = payload
   // Sync underworld properties
   const loadedGameState: IUnderworldSerializedForSyncronize = { ...payloadUnderworld };
   const level = loadedGameState.lastLevelCreated;
@@ -472,6 +474,7 @@ async function handleLoadGameState(payload: {
   if (players) {
     underworld.syncPlayers(players);
   }
+  underworld.doodads = doodads.map(d => Doodad.load(d, underworld, false)).flatMap(x => x !== undefined ? [x] : []);
   // lastUnitId must be synced AFTER all of the units are synced since the synced
   // units are id aware
   underworld.lastUnitId = loadedGameState.lastUnitId;
@@ -540,7 +543,8 @@ export function setupNetworkHandlerGlobalFunctions(underworld: Underworld) {
         phase: underworld.turn_phase,
         pickups: underworld.pickups.map(Pickup.serialize),
         units: underworld.units.map(Unit.serialize),
-        players: underworld.players.map(Player.serialize)
+        players: underworld.players.map(Player.serialize),
+        doodads: underworld.doodads.map(Doodad.serialize),
       }),
     );
   };
@@ -550,11 +554,12 @@ export function setupNetworkHandlerGlobalFunctions(underworld: Underworld) {
 
       await globalThis.startSingleplayer?.();
 
-      const { underworld: savedUnderworld, phase, units, players, pickups } = JSON.parse(savedGameString);
+      const { underworld: savedUnderworld, phase, units, players, pickups, doodads } = JSON.parse(savedGameString);
       underworld.pie.sendData({
         type: MESSAGE_TYPES.LOAD_GAME_STATE,
         underworld: savedUnderworld,
         pickups,
+        doodads,
         phase,
         units,
         players

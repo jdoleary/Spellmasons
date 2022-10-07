@@ -32,6 +32,8 @@ import * as Freeze from '../../cards/freeze';
 import { collideWithLineSegments } from '../../jmath/moveWithCollision';
 import keyMapping from './keyMapping';
 import { inPortal } from '../../entity/Player';
+import * as Doodad from '../../entity/Doodad';
+import { hasTargetAtPosition } from '../../cards';
 
 export const keyDown = {
   showWalkRope: false,
@@ -524,9 +526,8 @@ export function clickHandler(underworld: Underworld, e: MouseEvent) {
         // Abort casting if there is no unitAtCastLocation
         // unless the first card (like AOE) specifically allows casting
         // on non unit targets
-        const unitAtCastLocation = underworld.getUnitAt(target);
-        const pickupAtCastLocation = underworld.getPickupAt(target);
-        if ((!unitAtCastLocation && !pickupAtCastLocation) && cards.length && cards[0] && !cards[0].allowNonUnitTarget) {
+        const hasTarget = hasTargetAtPosition(target, underworld);
+        if ((!hasTarget) && cards.length && cards[0] && !cards[0].allowNonUnitTarget) {
           floatingText({
             coords: target,
             text: 'No Target!'
@@ -541,7 +542,7 @@ export function clickHandler(underworld: Underworld, e: MouseEvent) {
           // Deny casting on a wall tile unless there is a target (which may overlap the wall)
           // 'allowNonUnitTarget' is specifically excluded from this check so that nonUnitTarget casts
           // such as summon_decoy may not be cast on a wall
-          if (!unitAtCastLocation && !pickupAtCastLocation) {
+          if (!hasTarget) {
             floatingText({
               coords: target,
               text: 'Invalid Target!'
@@ -616,6 +617,10 @@ function tryShowDevContextMenu(underworld: Underworld, e: MouseEvent, mousePos: 
     <div>
     <p>Spawn Pickup</p>
     <ul id='menu-spawn-pickup'></ul>
+    </div>
+    <div>
+    <p>Spawn Doodad</p>
+    <ul id='menu-spawn-doodad'></ul>
     </div>
     <div>
     <p>Self</p>
@@ -722,6 +727,16 @@ export function registerAdminContextMenuOptions(underworld: Underworld) {
       },
       supportInMultiplayer: true,
       domQueryContainer: '#menu-spawn-pickup'
+    })),
+    ...Doodad.doodads.map<AdminContextMenuOption>(d => ({
+      label: d.name,
+      action: ({ pos }) => {
+        if (pos) {
+          Doodad.create({ pos, source: d }, underworld, false);
+        }
+      },
+      supportInMultiplayer: true,
+      domQueryContainer: '#menu-spawn-doodad'
     })),
     ...Object.values(allUnits).map<AdminContextMenuOption>(u => ({
       label: u.id,

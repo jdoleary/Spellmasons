@@ -164,6 +164,12 @@ export interface EffectState {
     unitDamage: UnitDamage[],
   };
 }
+export function hasTargetAtPosition(position: Vec2, underworld: Underworld): boolean {
+  const unitAtCastLocation = underworld.getUnitAt(position);
+  const pickupAtCastLocation = underworld.getPickupAt(position);
+  const doodadAtCastLocation = underworld.getDoodadAt(position);
+  return !!unitAtCastLocation || !!pickupAtCastLocation || !!doodadAtCastLocation;
+}
 // Returns all current targets of an effect / spell
 // See underworld.getPotentialTargets for the function that returns all targetable
 // entities
