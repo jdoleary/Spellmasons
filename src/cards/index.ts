@@ -33,7 +33,6 @@ import vampire_bite from './blood_curse';
 import push from './push';
 import pull from './pull';
 import decoy from './summon_decoy';
-import trap from './delay';
 import explode from './bloat';
 import { IUpgrade, upgradeCardsSource } from '../Upgrade';
 import { _getCardsFromIds } from './cardUtils';
@@ -125,7 +124,6 @@ export function registerCards(underworld: Underworld) {
   register(push, underworld);
   register(pull, underworld);
   register(decoy, underworld);
-  register(trap, underworld);
   register(explode, underworld);
 }
 function cardToUpgrade(c: ICard, underworld: Underworld): IUpgrade {
