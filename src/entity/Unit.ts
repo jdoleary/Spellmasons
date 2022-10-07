@@ -21,6 +21,7 @@ import { raceTimeout } from '../Promise';
 import { closestLineSegmentIntersection } from '../jmath/lineSegment';
 import { bloodColorDefault } from '../graphics/ui/colors';
 import { HasLife, HasMana, HasSpace, HasStamina } from './Type';
+import { collideWithLineSegments } from '../jmath/moveWithCollision';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -128,12 +129,18 @@ export function create(
   const staminaMax = config.UNIT_BASE_STAMINA;
   const sourceUnit = allUnits[unitSourceId];
   if (sourceUnit) {
+    const spawnPoint = { x, y, radius: config.COLLISION_MESH_RADIUS }
+    // Ensure unit doesn't spawn inside wall
+    collideWithLineSegments(spawnPoint, underworld.walls, underworld);
+    if (underworld.isCoordOnWallTile(spawnPoint)) {
+      console.error('Spawned unit in invalid location, make sure unit spawn logic checks for invalid locations like summon_decoy does before spawning');
+    }
     const unit: IUnit = Object.assign({
       type: 'unit',
       id: ++underworld.lastUnitId,
       unitSourceId,
-      x,
-      y,
+      x: spawnPoint.x,
+      y: spawnPoint.y,
       strength,
       originalLife: false,
       radius: config.UNIT_BASE_RADIUS,

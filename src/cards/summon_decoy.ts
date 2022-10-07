@@ -47,8 +47,7 @@ Multiple sequential decoy spells will create a decoy with more health.
         const decoyUnit = Unit.create(
           sourceUnit.id,
           summonLocation.x,
-          // Place the decoy root (the post) where the click occurs, not the center of the decoy
-          summonLocation.y - 22,
+          summonLocation.y,
           Faction.ALLY,
           sourceUnit.info.image,
           UnitType.AI,
