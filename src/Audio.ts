@@ -135,9 +135,13 @@ export function playSFX(path?: string) {
     audioInstance.play();
 
 }
+let allowDemoSound = false;
+const demoSoundThrottle = 150;
 const demoSoundWhenChangingVolume = throttle(() => {
-    globalThis.playSFXKey('unitDamage');
-}, 150, { trailing: true })
+    if (allowDemoSound) {
+        globalThis.playSFXKey('unitDamage');
+    }
+}, demoSoundThrottle, { trailing: true })
 const STORAGE_OPTIONS = 'OPTIONS';
 export function setupAudio() {
     console.log('Setup: Audio');
@@ -178,4 +182,9 @@ export function setupAudio() {
             globalThis.changeVolumeGame(options.volumeGame);
         }
     }
+    // Now that volume has been initially set, play demo sound when user changes
+    // volume
+    setTimeout(() => {
+        allowDemoSound = true;
+    }, demoSoundThrottle * 2);
 }
