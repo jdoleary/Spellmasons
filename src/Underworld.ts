@@ -2169,6 +2169,16 @@ export default class Underworld {
         return undefined;
     }
   }
+  getEntitiesWithinDistanceOfTarget(target: Vec2, distance: number, prediction: boolean) {
+    const withinDistance: HasSpace[] = [];
+    const potentialTargets = this.getPotentialTargets(prediction);
+    for (let entity of potentialTargets) {
+      if (math.distance(entity, target) <= distance) {
+        withinDistance.push(entity);
+      }
+    }
+    return withinDistance;
+  }
 
   getPickupsWithinDistanceOfTarget(
     target: Vec2,
@@ -2594,7 +2604,8 @@ export default class Underworld {
   // callbacks and complicated objects such as PIXI.Sprites
   // are removed
   serializeForSaving(): IUnderworldSerialized {
-    const { pie, random, players, units, pickups, walls, pathingPolygons, liquidSprites, ...rest } = this;
+    const { pie, random, players, units, pickups, walls, pathingPolygons, liquidSprites,
+      unitsPrediction, pickupsPrediction, doodadsPrediction, ...rest } = this;
     return {
       ...rest,
       players: this.players.map(Player.serialize),
@@ -2636,7 +2647,7 @@ export default class Underworld {
   }
 }
 
-type IUnderworldSerialized = Omit<typeof Underworld, "pie" | "prototype" | "players" | "units" | "pickups" | "doodads" | "random" | "turnInterval" | "liquidSprites"
+type IUnderworldSerialized = Omit<typeof Underworld, "pie" | "prototype" | "players" | "units" | "unitsPrediction" | "pickups" | "pickupsPrediction" | "doodads" | "doodadsPrediction" | "random" | "turnInterval" | "liquidSprites"
   // walls and pathingPolygons are omitted because they are derived from obstacles when cacheWalls() in invoked
   | "walls" | "pathingPolygons"> & {
     players: Player.IPlayerSerialized[],
