@@ -1,19 +1,20 @@
 # Major Tasks
-  - (h) I want 2x as many spells (21 to 42) and 2x as many enemies (7 to 14)
-    - email Che for new work
-  - Trademark Process - ongoing
-  - (m) Marketing
-  - (h) Fix liquid glitches perminantly
   - (m) Integrate freestanding obstacles (tree, urn, etc)
+  - (h) Fix liquid glitches perminantly
+  - Get ready for Rucin beta test
+  - (e) Feedback button / beta survey 
+---
+  - (h) I want 2x as many spells (21 to 42) and 2x as many enemies (7 to 14)
   - Finalize
     - (m) Adaptive tutorial
     - (?) Package for Electron
-    - (e) Bug reporting
     - (m) Steam integration
     - (m) Add perks and spell level ups
+  - Trademark Process - ongoing
 # Desired Schedule
 - September / October
-    - Start Marketing
+    - Start Marketing to drive wishlists
+    - Due Oct 16: Prepare for multi-user playtesting
 - November
     - Package as Electron App
     - Convenient multiplayer lobbying via steam
@@ -33,9 +34,6 @@
 - Milestone | **Marketing** | Planning on September 1
     - Figure out how to separate audio tracks
         - https://obsproject.com/forum/resources/win-capture-audio.1338/
-        - discord on phone
-        - my voice on separate audio track in OBS
-        - Game audio in OBS
         - Remember
             - Vary the amound of zoom, you should be close enough for those viewing on a small screen
             - Do you want your mouse recorded?
@@ -45,7 +43,6 @@
     - Start marketing
 - Milestone | **Final Content**
     - Perks
-    - Fix liquid generation bugs
     - resurrection particles
     - add boulder
         - movable cover
@@ -89,13 +86,6 @@
     - Server customization (like Worms Armageddon)
         - Turn time
         - Pvp mode (more factions)
-    - Spell ideas:
-        - A "Long Shot" Spell that increases your cast range (but maybe you can't cast close so you're only a sniper)
-        - vortex
-        - grappling hook
-        - confuse
-        - Auras that combine with other spells (poison + aura = thorns aura or DOT)
-        - Bleed like blood seeker from Dota
     - Perks | "upgrades" with some random attributes
         - % chance to get more stamina on level start
         - start level with 2x mana
@@ -104,7 +94,6 @@
         - % chance to freeze on damage
         - one time: 50/50 chance to incrase max stat or decrease it
         - make 1 random spell permanently more expensive and another permanently cheaper
-        
     - More enemies
         - Color enemies different colors and give them different behavior. For example, a blue "poisoner" could be like the "smoker" from left4dead
         - Boss enemies
@@ -125,13 +114,6 @@
 - Able to loop the game indefinitely with satisfying difficulty curve
 - Enough random elements that different playthroughs feel somewhat unique
 
-## Deadlines
-Keeping to a hard deadline will ensure that I iterate and keep making more games and improving
-
-- ~~My part (gameplay) should be finished end of Feb 2022~~
-- ~~My part (gameplay) should be finished end of March 2022~~
-- ~~My part (gameplay) should be finished end of April 2022~~
-- DONE Core Gameplay done by 5/30
 ## Thoughts
 Don't get stuck on feature creep.  Finish the game and get it out so you can move on
 

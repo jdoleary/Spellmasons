@@ -1,19 +1,17 @@
-- bug: pickups and doodads don't get tinted when targeted with movement spells because of how they are assocaited with the real one
-    - either use ids or pass a reference to the real when copying to a prediction one
-- refactor spells to work on doodads, pickups, and units just like Connect now does
+- refactor all spells to work on doodads, pickups, and units just like Connect now does
     - push.ts is next
+- Integrate doodad behavior
+- Fix liquid glitches with prebuild liquid sets
+- Update Expand to affect a radius property in EffectStatus so it can synergize with other spells like chain, bloat, vortex, (any spell that needs a radius);
 ## Brad playtest
     - bug: saw +0 mana when he tried to mana steal from me; desync bug; i moved when he cast.
     - add footstep sfx
-    - Fix unit sync, when the summoner summoned random units it synced but the units' image didn't change and was wrong
     - Brad couldn't see top of inventory due to resolution
         - maybe add pages?
         - UI: Inventory should show up on the left side
 ---
 - Spell text should be centered (see contaminate in your toolbar)
 - fix archers having infinite range
-- notify with floating text when AI units are out of mana
-    - maybe rework AI mana so that they get the full amount they need every turn just like you do as a player
 - credits page
 - bug: had an incorrect push prediction, see footage
 - bug: after loading game I get these errors:
@@ -22,11 +20,6 @@
     Unable to init modifier with key Blood Curse
 - bug: got ` Uncaught TypeError: animationSprite2.parent is null` after triggering a pickup and quickly going through a portal before theanimation could finish
 
-## Trailer work
-- Film multiplayer
-- Add motion
-- Add title cards
-- copy: "Each spell influences the next"
 ## next up
 - melee prediction is still off
 - attack range shouldn't be red when explosion radius is red
@@ -55,6 +48,7 @@
 
 ## Stretch Content
 - add ghost archer
+- confuse spell
 - what attributes of a spell could be modified by other cards?
     - already: targets, quantity
     - new: radius, amount
@@ -140,3 +134,15 @@
 - **critical** Improve sending castCards with targeting based on id not position
 - (wont do?) Make an overlay screen that blocks interaction while waiting for sync
 - Unit movement desync occurred between clients when one client has CPU throttled, the non throttled client has the unit move much farther
+- Jake boss ideas:
+```
+Necromancer supreme. Conjura a bunch of guys to fight but is very fragile himself
+Think of the spider boss from Bloodborne
+A guy who wields a magical sword that can do ranged slices with it. Somewhat tankier I think. Maybe weak to electric stuff
+A mimic! A copy of you. Has your spells and such
+Dunno how well that'd work lol
+Gotta be a dragon
+Big slime? Keeps splitting into smaller slimes
+Maybe the final boss could be something ambiguous? Like "The Final Spell"
+And it's just ball of energy that can do weird stuff
+```
