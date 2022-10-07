@@ -1319,6 +1319,12 @@ export default class Underworld {
     })) {
       return false;
     }
+    // Ensure spawnPoint doesn't share coordinates with any other entity
+    // (This prevents units from spawning directly on top of each other)
+    const entities = this.getPotentialTargets(false);
+    if (entities.some(entity => Vec.equal(Vec.round(entity), Vec.round(spawnPoint)))) {
+      return false;
+    }
     return true;
 
   }
