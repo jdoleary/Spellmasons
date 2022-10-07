@@ -8,12 +8,7 @@
         - UI: Inventory should show up on the left side
 ---
 - fix archers having infinite range
-- credits page
 - bug: had an incorrect push prediction, see footage
-- bug: after loading game I get these errors:
-    Cannot show upgrades, no globalThis.player Underworld.ts:1823:14
-    Missing subsprite data for imageName null Image.ts:329:14
-    Unable to init modifier with key Blood Curse
 - optimize: Ihave duplicate units, pickups, and doodads in save due to serailizeForSaving having them in the underworld and extracting them to the top level too
 - bug: Getting weird load position for this save file:
 ```
