@@ -112,6 +112,11 @@ export function create({ pos, pickupSource, onTurnsLeftDone }:
   return self;
 }
 function addText(pickup: IPickup) {
+  if (pickup.real) {
+    // Pickup is a prediction copy and is not rendered.  This is known because it has a reference to
+    // the real instance.
+    return;
+  }
   // Value of text is set in sync()
   pickup.text = pixiText('', { fill: 'white', align: 'center', ...config.PIXI_TEXT_DROP_SHADOW });
   sync(pickup);
