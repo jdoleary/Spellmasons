@@ -1,5 +1,3 @@
-- refactor all spells to work on doodads, pickups, and units just like Connect now does
-    - push.ts is next
 - Integrate doodad behavior
 - Fix liquid glitches with prebuild liquid sets
 - Update Expand to affect a radius property in EffectStatus so it can synergize with other spells like chain, bloat, vortex, (any spell that needs a radius);
