@@ -1,4 +1,4 @@
-import { addPickupTarget, addUnitTarget, Spell } from './index';
+import { addPickupTarget, addTarget, addUnitTarget, getCurrentTargets, Spell } from './index';
 import { drawPredictionCircle } from '../graphics/PlanningView';
 import { CardCategory } from '../types/commonTypes';
 import * as colors from '../graphics/ui/colors';
@@ -30,7 +30,8 @@ Adds a radius to the spell so it can affect more targets.
       const adjustedRange = range * quantity;
       // Note: This loop must NOT be a for..of and it must cache the length because it
       // mutates state.targetedUnits as it iterates.  Otherwise it will continue to loop as it grows
-      const targets = state.targetedUnits.length ? state.targetedUnits : [state.castLocation];
+      let targets: Vec2[] = getCurrentTargets(state);
+      targets = targets.length ? targets : [state.castLocation];
       const length = targets.length;
       for (let i = 0; i < length; i++) {
         const target = targets[i];
@@ -47,21 +48,13 @@ Adds a radius to the spell so it can affect more targets.
         } else {
           await animate(target, adjustedRange, underworld);
         }
-        const withinRadius = underworld.getUnitsWithinDistanceOfTarget(
+        const withinRadius = underworld.getEntitiesWithinDistanceOfTarget(
           target,
           adjustedRange,
           prediction
         );
-        // Add units to target
-        withinRadius.forEach(unit => addUnitTarget(unit, state));
-
-        const pickupsWithinRadius = underworld.getPickupsWithinDistanceOfTarget(
-          target,
-          adjustedRange,
-          prediction
-        );
-        // Add pickups to target
-        pickupsWithinRadius.forEach(unit => addPickupTarget(unit, state));
+        // Add entities to target
+        withinRadius.forEach(e => addTarget(e, state));
       }
 
       return state;
@@ -85,18 +78,11 @@ async function animate(pos: Vec2, radius: number, underworld: Underworld) {
           globalThis.predictionGraphics.drawCircle(pos.x, pos.y, animatedRadius);
           globalThis.predictionGraphics.endFill();
           // Draw circles around new targets
-          let withinRadius: Vec2[] = [];
-          withinRadius = withinRadius.concat(
-            underworld.getUnitsWithinDistanceOfTarget(
-              pos,
-              animatedRadius,
-              false
-            ),
-            underworld.getPickupsWithinDistanceOfTarget(
-              pos,
-              animatedRadius,
-              false
-            ));
+          const withinRadius = underworld.getEntitiesWithinDistanceOfTarget(
+            pos,
+            animatedRadius,
+            false
+          );
           withinRadius.forEach(v => {
             globalThis.predictionGraphics?.drawCircle(v.x, v.y, config.COLLISION_MESH_RADIUS);
           })
