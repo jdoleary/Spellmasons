@@ -971,14 +971,16 @@ body.view-Menu .prompt {
   width: 100%;
   height: 100%;
   font-size: 24px;
+  /* White overlay to make prompt obvious */
   background-color: rgba(255, 255, 255, 0.4);
 }
 
 .prompt-inner {
-  background-color: antiquewhite;
   padding: 16px;
   border-radius: 5px;
   max-width: 600px;
+  background-color: #262324;
+  color: white;
 }
 
 .prompt-inner h1 {
