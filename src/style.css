@@ -976,8 +976,7 @@ body.view-Menu .prompt {
 }
 
 .prompt-inner {
-  padding: 16px;
-  border-radius: 5px;
+  padding: 15px;
   max-width: 600px;
   background-color: #262324;
   color: white;

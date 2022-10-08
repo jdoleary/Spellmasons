@@ -4,15 +4,16 @@ interface Prompt {
     noBtnText?: string;
     noBtnKey?: string;
     yesText: string;
-    yesKey: string;
-    yesKeyText: string;
+    yesKey?: string;
+    yesKeyText?: string;
     imageSrc?: string;
 }
 export default async function Jprompt(prompt: Prompt): Promise<boolean> {
-    const { text, noBtnText, noBtnKey, yesText, yesKey, yesKeyText, imageSrc } = prompt;
+    const { text, noBtnText, noBtnKey, yesText, yesKey, yesKeyText = '', imageSrc } = prompt;
     const el = document.createElement('div')
     el.classList.add('prompt');
     el.innerHTML = `
+<div class="ui-border">
 <div class="prompt-inner">
     ${imageSrc ? `<div class="text-center"><img src="${imageSrc}"/></div>` : ''}
     <p class="text">
@@ -24,12 +25,13 @@ export default async function Jprompt(prompt: Prompt): Promise<boolean> {
                 <kbd class="hotkey-badge">${noBtnKey}</kbd>
             </div>
         </button>` : ''}
-        <button class="yes jbutton" data-key="${yesKey}">${yesText}
+        <button class="yes jbutton" ${yesKey ? `data-key="${yesKey}"` : ''}>${yesText}
             <div class="hotkey-badge-holder">
                 <kbd class="hotkey-badge">${yesKeyText}</kbd>
             </div>
         </button>
     </div>
+</div>
 </div>
 `;
     document.body?.appendChild(el);
@@ -65,7 +67,7 @@ export function explainManaOverfill() {
             const MANA_INFO_STORAGE_KEY = 'mana-info';
             const YES = 'y'
             if (storage.get(MANA_INFO_STORAGE_KEY) != YES) {
-                Jprompt({ imageSrc: 'images/explain/mana-overfill.gif', text: 'You are able to fill your mana up to 3x its maximum amount using potions or spells.', yesText: 'Cool!', yesKey: 'Space', yesKeyText: 'Spacebar' });
+                Jprompt({ imageSrc: 'images/explain/mana-overfill.gif', text: 'You are able to fill your mana up to 3x its maximum amount using potions or spells.', yesText: 'Cool!' });
                 storage.set(MANA_INFO_STORAGE_KEY, YES);
             }
         }
