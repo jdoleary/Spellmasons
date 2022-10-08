@@ -101,12 +101,6 @@
         - Color enemies different colors and give them different behavior. For example, a blue "poisoner" could be like the "smoker" from left4dead
         - Boss enemies
 
-## Philosophy
-    - "rules for copy"
-        1. Does the word suggest more than what really happens. (ex: bite != damage)
-        2. Numbers are meaningless, use percentages instead. (ex: "Increase cast range by 10%")
-    - Explain everything, use popups more than once with a "do not show again" button
-    - This game will live or die on the reviews, make sure (like rustlang) that everything is explained well.
 
 ## Definition of Done
 - DONE Stable Multiplayer

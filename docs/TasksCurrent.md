@@ -1,6 +1,11 @@
 # Tasks
 - Prepare for playtest
     - Gifs to introduce enemies
+- Explain
+    - Move with RMB
+    - How to Cast
+    - Stacking spells
+    - Zoom
 ---
 - task: Start more zoomed in
 - bug: I heard priest sfx but no animation and no effect occurred
