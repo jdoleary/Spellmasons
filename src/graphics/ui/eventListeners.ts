@@ -37,10 +37,10 @@ import { hasTargetAtPosition } from '../../cards';
 
 export const keyDown = {
   showWalkRope: false,
-  w: false,
-  a: false,
-  s: false,
-  d: false
+  cameraUp: false,
+  cameraLeft: false,
+  cameraDown: false,
+  cameraRight: false
 }
 
 globalThis.addEventListener('keydown', nonUnderworldKeydownListener);
@@ -83,7 +83,7 @@ export function keydownListener(underworld: Underworld, event: KeyboardEvent) {
   }
 
   switch (event.code) {
-    case 'Escape':
+    case keyMapping.clearQueuedSpell:
       const thereWasTooltipActive = clearTooltipSelection();
       const thereWereCardsSelected = CardUI.areAnyCardsSelected();
       const thereWasInventoryOpen = document.body?.classList.contains(CardUI.openInvClass);
@@ -95,11 +95,11 @@ export function keydownListener(underworld: Underworld, event: KeyboardEvent) {
         toggleMenu();
       }
       break;
-    case 'Tab':
+    case keyMapping.openInventory:
       CardUI.toggleInventory(undefined, undefined, underworld);
       event.preventDefault();
       break;
-    case 'Backspace':
+    case keyMapping.dequeueSpell:
       CardUI.deselectLastCard();
       break;
     case keyMapping.showWalkRope:
@@ -110,23 +110,23 @@ export function keydownListener(underworld: Underworld, event: KeyboardEvent) {
       clearSpellEffectProjection(underworld);
       break;
     // Camera movement
-    case 'KeyW':
-      keyDown.w = true;
+    case keyMapping.cameraUp:
+      keyDown.cameraUp = true;
       cameraAutoFollow(false);
       break;
-    case 'KeyA':
-      keyDown.a = true;
+    case keyMapping.cameraLeft:
+      keyDown.cameraLeft = true;
       cameraAutoFollow(false);
       break;
-    case 'KeyS':
-      keyDown.s = true;
+    case keyMapping.cameraDown:
+      keyDown.cameraDown = true;
       cameraAutoFollow(false);
       break;
-    case 'KeyD':
-      keyDown.d = true;
+    case keyMapping.cameraRight:
+      keyDown.cameraRight = true;
       cameraAutoFollow(false);
       break;
-    case 'KeyC':
+    case keyMapping.ping:
       const mouseTarget = underworld.getMousePos();
       underworld.pie.sendData({
         type: MESSAGE_TYPES.PING,
@@ -134,7 +134,7 @@ export function keydownListener(underworld: Underworld, event: KeyboardEvent) {
         y: mouseTarget.y
       });
       break;
-    case 'KeyZ':
+    case keyMapping.recenterCamera:
       if (globalThis.player?.isSpawned) {
 
         // Make camera follow player unit 
@@ -148,40 +148,40 @@ export function keydownListener(underworld: Underworld, event: KeyboardEvent) {
         playSFXKey('deny');
       }
       break;
-    case 'KeyI':
+    case keyMapping.openInventory2:
       CardUI.toggleInventory(undefined, undefined, underworld);
       break;
-    case 'Space':
+    case keyMapping.endTurn:
       underworld.endMyTurn();
       break;
-    case 'Digit1':
+    case keyMapping.spell1:
       CardUI.selectCardByIndex(0);
       break;
-    case 'Digit2':
+    case keyMapping.spell2:
       CardUI.selectCardByIndex(1);
       break;
-    case 'Digit3':
+    case keyMapping.spell3:
       CardUI.selectCardByIndex(2);
       break;
-    case 'Digit4':
+    case keyMapping.spell4:
       CardUI.selectCardByIndex(3);
       break;
-    case 'Digit5':
+    case keyMapping.spell5:
       CardUI.selectCardByIndex(4);
       break;
-    case 'Digit6':
+    case keyMapping.spell6:
       CardUI.selectCardByIndex(5);
       break;
-    case 'Digit7':
+    case keyMapping.spell7:
       CardUI.selectCardByIndex(6);
       break;
-    case 'Digit8':
+    case keyMapping.spell8:
       CardUI.selectCardByIndex(7);
       break;
-    case 'Digit9':
+    case keyMapping.spell9:
       CardUI.selectCardByIndex(8);
       break;
-    case 'Digit0':
+    case keyMapping.spell10:
       CardUI.selectCardByIndex(9);
       break;
   }
@@ -198,16 +198,16 @@ export function keyupListener(underworld: Underworld, event: KeyboardEvent) {
       break;
     // Camera movement
     case 'KeyW':
-      keyDown.w = false;
+      keyDown.cameraUp = false;
       break;
     case 'KeyA':
-      keyDown.a = false;
+      keyDown.cameraLeft = false;
       break;
     case 'KeyS':
-      keyDown.s = false;
+      keyDown.cameraDown = false;
       break;
     case 'KeyD':
-      keyDown.d = false;
+      keyDown.cameraRight = false;
       break;
   }
 }

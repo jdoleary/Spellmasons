@@ -293,16 +293,16 @@ export function updateCameraPosition(underworld: Underworld) {
           }
         }
         // Allow camera movement via WSAD
-        if (keyDown.w) {
+        if (keyDown.cameraUp) {
           utilProps.camera.y -= config.CAMERA_BASE_SPEED;
         }
-        if (keyDown.s) {
+        if (keyDown.cameraDown) {
           utilProps.camera.y += config.CAMERA_BASE_SPEED;
         }
-        if (keyDown.d) {
+        if (keyDown.cameraRight) {
           utilProps.camera.x += config.CAMERA_BASE_SPEED;
         }
-        if (keyDown.a) {
+        if (keyDown.cameraLeft) {
           utilProps.camera.x -= config.CAMERA_BASE_SPEED;
         }
         // Clamp centerTarget so that there isn't a lot of empty space
