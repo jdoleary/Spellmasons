@@ -1,6 +1,5 @@
 import { Spell } from './index';
 import floatingText from '../graphics/FloatingText';
-import { explainManaOverfill } from '../graphics/Jprompt';
 import { addPixiSpriteAnimated } from '../graphics/PixiUtils';
 import { manaBlue } from '../graphics/ui/colors';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
@@ -8,6 +7,7 @@ import { makeManaTrail } from '../graphics/Particles';
 import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
 import * as config from '../config';
+import { explain, EXPLAIN_OVERFILL } from '../graphics/Explain';
 
 const id = 'mana_steal';
 const mana_stolen = 20;
@@ -77,7 +77,7 @@ Sacrifice some of own health to steal up to ${mana_stolen} mana from each target
                     );
                   }
                 }
-                explainManaOverfill();
+                explain(EXPLAIN_OVERFILL);
               }
             })
             );

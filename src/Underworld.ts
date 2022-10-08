@@ -74,6 +74,7 @@ import { createVisualLobbingProjectile } from './entity/Projectile';
 import { isOutOfRange } from './PlayerUtils';
 import type { TilingSprite } from 'pixi.js';
 import { HasSpace } from './entity/Type';
+import { explain, EXPLAIN_CAST, EXPLAIN_STACK, EXPLAIN_WALK } from './graphics/Explain';
 
 export enum turn_phase {
   PlayerTurns,
@@ -1093,7 +1094,15 @@ export default class Underworld {
       biome = biome_ghost;
     }
 
-    const { map, limits } = generateCave(levelIndex > 6 ? caveSizes.medium : caveSizes.small, biome, this);
+    const FIRST_TIME_PLAYING = 'first-time-playing';
+    const isFirstTimePlaying = storage.get(FIRST_TIME_PLAYING) !== 'y';
+    const caveParams = isFirstTimePlaying
+      ? caveSizes.tutorial
+      : (levelIndex > 6
+        ? caveSizes.medium
+        : caveSizes.small);
+
+    const { map, limits } = generateCave(caveParams || caveSizes.small, biome, this);
     const { tiles, liquid, width } = map;
     const levelData: LevelData = {
       levelIndex,
@@ -1114,8 +1123,28 @@ export default class Underworld {
     // flatMap removes undefineds
     levelData.imageOnlyTiles = tiles.flatMap(x => x == undefined ? [] : [x]);
 
+    // Spawn units at the start of the level
+    let unitIds = getEnemiesForAltitude(this);
+    if (globalThis.allowCookies && isFirstTimePlaying) {
+      const portalPickupIndex = Pickup.pickups.findIndex(p => p.name == Pickup.PICKUP_PORTAL_NAME);
+      if (portalPickupIndex !== -1) {
+        const validSpawnCoordsIndex = randInt(this.random, 0, validSpawnCoords.length - 1);
+        const coord = validSpawnCoords.splice(validSpawnCoordsIndex, 1)[0];
+        if (coord) {
+          levelData.pickups.push({ index: portalPickupIndex, coord })
+          unitIds = [];
+          this.levelIndex--;
+          explain(EXPLAIN_WALK);
+          storage.set(FIRST_TIME_PLAYING, 'y');
+        } else {
+          console.error('could not find valid spawn for portal')
+        }
+      } else {
+        console.error('Could not find portal pickup to spawn it for first time player')
+      }
+    }
     // TODO numberOfPickups should scale with level size
-    const numberOfPickups = 4;
+    const numberOfPickups = isFirstTimePlaying ? 0 : 4;
     for (let i = 0; i < numberOfPickups; i++) {
       if (validSpawnCoords.length == 0) { break; }
       const choice = chooseObjectWithProbability(Pickup.pickups.map((p, i) => ({ index: i, probability: p.probability })), this.random);
@@ -1128,8 +1157,6 @@ export default class Underworld {
         }
       }
     }
-    // Spawn units at the start of the level
-    const unitIds = getEnemiesForAltitude(this);
     if (validSpawnCoords.length == 0) {
       console.error('Not enough spawn coords to spawn ANY enemies');
       return undefined;
@@ -1139,7 +1166,6 @@ export default class Underworld {
       const validSpawnCoordsIndex = randInt(this.random, 0, validSpawnCoords.length - 1);
       const coord = validSpawnCoords.splice(validSpawnCoordsIndex, 1)[0];
       if (coord) {
-        const roll = randInt(this.random, 0, 100);
         levelData.enemies.push({ id, coord })
       }
     }
@@ -1441,6 +1467,14 @@ export default class Underworld {
 
     const { levelIndex, biome, limits, liquid, imageOnlyTiles, pickups, enemies, obstacles } = levelData;
     this.levelIndex = levelIndex;
+
+    if (this.levelIndex == 1) {
+      explain(EXPLAIN_CAST);
+    }
+    if (this.levelIndex == 2) {
+      explain(EXPLAIN_STACK);
+    }
+
     this.limits = limits;
 
     // Setup liquid

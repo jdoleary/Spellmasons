@@ -60,16 +60,3 @@ export default async function Jprompt(prompt: Prompt): Promise<boolean> {
         return result;
     });
 }
-
-export function explainManaOverfill() {
-    if (globalThis.player) {
-        if (globalThis.player.unit.mana > globalThis.player.unit.manaMax && globalThis.allowCookies) {
-            const MANA_INFO_STORAGE_KEY = 'mana-info';
-            const YES = 'y'
-            if (storage.get(MANA_INFO_STORAGE_KEY) != YES) {
-                Jprompt({ imageSrc: 'images/explain/mana-overfill.gif', text: 'You are able to fill your mana up to 3x its maximum amount using potions or spells.', yesText: 'Cool!' });
-                storage.set(MANA_INFO_STORAGE_KEY, YES);
-            }
-        }
-    }
-}

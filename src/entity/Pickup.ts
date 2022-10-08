@@ -4,16 +4,15 @@ import type * as Player from './Player';
 import { addPixiSprite, addPixiSpriteAnimated, containerUnits, pixiText } from '../graphics/PixiUtils';
 import { IUnit, takeDamage } from './Unit';
 import { checkIfNeedToClearTooltip } from '../graphics/PlanningView';
-import { explainManaOverfill } from '../graphics/Jprompt';
 import { MESSAGE_TYPES } from '../types/MessageTypes';
 import * as config from '../config';
-import * as Unit from './Unit';
 import { Vec2 } from '../jmath/Vec';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import { manaBlue } from '../graphics/ui/colors';
 import Underworld from '../Underworld';
 import { hasBloodCurse } from '../cards/blood_curse';
 import { HasSpace } from './Type';
+import { explain, EXPLAIN_OVERFILL } from '../graphics/Explain';
 
 export const PICKUP_RADIUS = config.SELECTABLE_RADIUS;
 type IPickupEffect = ({ unit, player, pickup, prediction }: { unit?: IUnit; player?: Player.IPlayer, pickup: IPickup, underworld: Underworld, prediction: boolean }) => boolean | undefined;
@@ -326,7 +325,7 @@ export const pickups: IPickupSource[] = [
     effect: ({ unit, player, underworld, prediction }) => {
       if (player) {
         player.unit.mana += manaPotionRestoreAmount;
-        explainManaOverfill();
+        explain(EXPLAIN_OVERFILL);
         if (!prediction) {
           playSFXKey('potionPickupMana');
         }

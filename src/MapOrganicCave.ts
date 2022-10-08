@@ -10,6 +10,13 @@ import type { IObstacle } from "./entity/Obstacle";
 import Underworld, { Biome } from "./Underworld";
 
 export const caveSizes: { [size: string]: CaveParams } = {
+    'tutorial': {
+        minThickness: config.OBSTACLE_SIZE,
+        startThickness: 150,
+        startPointJitter: 400,
+        iterations: 1,
+        velocity: 60
+    },
     'small': {
         minThickness: config.OBSTACLE_SIZE,
         startThickness: 150,
