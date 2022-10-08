@@ -37,7 +37,7 @@ const explainMap: { [key: string]: { condition?: () => boolean, prompt: () => vo
     },
     [EXPLAIN_CAST]: {
         prompt: () => {
-            Jprompt({ imageSrc: 'images/explain/cast.gif', text: `Click on a spell (or use its hotkey) to queue it up. Left click on a target to unleash the queued spell.  Press ${keyMapping.clearQueuedSpell} to clear a queued spell or ${keyMapping.dequeueSpell} to dequeue spells one at a time or click on a queued spell to remove it from the queue.`, yesText: 'Nice!' });
+            Jprompt({ imageSrc: 'images/explain/cast.gif', text: `Click on a spell (or use its hotkey) to queue it up. Left click on a target to unleash the queued spell.\n\nPress <kbd>${keyMapping.clearQueuedSpell}</kbd> to clear a queued spell or <kbd>${keyMapping.dequeueSpell}</kbd> to dequeue spells one at a time or click on a queued spell to remove it from the queue.`, yesText: 'Nice!' });
         }
     },
     [EXPLAIN_STACK]: {
