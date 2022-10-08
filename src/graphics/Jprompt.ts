@@ -65,7 +65,7 @@ export function explainManaOverfill() {
             const MANA_INFO_STORAGE_KEY = 'mana-info';
             const YES = 'y'
             if (storage.get(MANA_INFO_STORAGE_KEY) != YES) {
-                Jprompt({ imageSrc: 'images/pickups/mana-potion_1.png', text: 'You are able to fill your mana up to 3x its maximum amount using potions or spells.', yesText: 'Cool!', yesKey: 'Space', yesKeyText: 'Spacebar' });
+                Jprompt({ imageSrc: 'images/explain/mana-overfill.gif', text: 'You are able to fill your mana up to 3x its maximum amount using potions or spells.', yesText: 'Cool!', yesKey: 'Space', yesKeyText: 'Spacebar' });
                 storage.set(MANA_INFO_STORAGE_KEY, YES);
             }
         }
