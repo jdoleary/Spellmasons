@@ -34,6 +34,7 @@ import keyMapping from './keyMapping';
 import { inPortal } from '../../entity/Player';
 import * as Doodad from '../../entity/Doodad';
 import { hasTargetAtPosition } from '../../cards';
+import { explain, EXPLAIN_END_TURN } from '../Explain';
 
 export const keyDown = {
   showWalkRope: false,
@@ -306,6 +307,7 @@ export function mouseMove(underworld: Underworld, e?: MouseEvent) {
                 coords: mouseTarget,
                 text: 'Out of stamina',
               });
+              explain(EXPLAIN_END_TURN);
               playSFXKey('deny_stamina');
               globalThis.notifiedOutOfStamina = true;
             }

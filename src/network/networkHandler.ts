@@ -22,6 +22,7 @@ import { triggerAdminCommand } from '../graphics/ui/eventListeners';
 import { Vec2 } from '../jmath/Vec';
 import pingSprite from '../graphics/Ping';
 import { clearLastNonMenuView } from '../views';
+import { explain, EXPLAIN_END_TURN } from '../graphics/Explain';
 
 const messageLog: any[] = [];
 export const NO_LOG_LIST = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
@@ -350,6 +351,7 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
                 coords: fromPlayer.unit,
                 text: 'Out of Stamina!'
               });
+              explain(EXPLAIN_END_TURN);
               playSFXKey('deny_stamina');
             }
             // Clear player unit path when they are done moving so they get

@@ -1,5 +1,5 @@
 # Tasks
-- Explain
+- Stop walk animation when out of stamina
 ---
 - task: Start more zoomed in
 - bug: I heard priest sfx but no animation and no effect occurred

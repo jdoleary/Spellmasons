@@ -13,6 +13,7 @@ import { NUMBER_OF_TOOLBAR_SLOTS } from '../../config';
 import Underworld from '../../Underworld';
 import { CardCategory } from '../../types/commonTypes';
 import { MESSAGE_TYPES } from '../../types/MessageTypes';
+import { explain, EXPLAIN_END_TURN } from '../Explain';
 
 const elCardHolders = document.getElementById('card-holders') as HTMLElement;
 const elInvContent = document.getElementById('inventory-content') as HTMLElement;
@@ -421,6 +422,7 @@ function selectCard(player: Player.IPlayer, element: HTMLElement, cardId: string
           text: 'Insufficient Mana',
           style: { fill: colors.errorRed, fontSize: '50px', ...config.PIXI_TEXT_DROP_SHADOW }
         })
+        explain(EXPLAIN_END_TURN);
         deselectLastCard();
 
       }

@@ -33,6 +33,7 @@ export const EXPLAIN_OVERFILL = 'mana-overfill';
 export const EXPLAIN_CAST = 'cast';
 export const EXPLAIN_STACK = 'stack-spells';
 export const EXPLAIN_WALK_ROPE = 'walk-rope';
+export const EXPLAIN_END_TURN = 'end-turn';
 const explainMap: { [key: string]: { condition?: () => boolean, prompt: () => void } } = {
     [EXPLAIN_OVERFILL]: {
         condition: () => !!globalThis.player && globalThis.player.unit.mana > globalThis.player.unit.manaMax,
@@ -58,6 +59,11 @@ const explainMap: { [key: string]: { condition?: () => boolean, prompt: () => vo
     [EXPLAIN_WALK_ROPE]: {
         prompt: () => {
             Jprompt({ imageSrc: 'images/explain/walk-rope.gif', text: `Hold <kbd>${keyToHumanReadable(keyMapping.showWalkRope)}</kbd> to see how far you can go with the stamina that you have remaining.  The blue circle shows you what your cast range would be if you moved to that location.`, yesText: 'Okay' });
+        }
+    },
+    [EXPLAIN_END_TURN]: {
+        prompt: () => {
+            Jprompt({ imageSrc: 'images/explain/end-turn.gif', text: `Press <kbd>${keyToHumanReadable(keyMapping.endTurn)}</kbd> or click the End Turn button to have your mana and stamina refilled.`, yesText: 'Okay' });
         }
     },
 
