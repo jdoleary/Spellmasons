@@ -81,7 +81,6 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   // Strength is a modifier which affects base stats used for scaling difficulty
   strength: number;
   faction: Faction;
-  image?: Image.IImageAnimated;
   defaultImagePath: string;
   shaderUniforms: { [key: string]: any };
   damage: number;
@@ -109,7 +108,6 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
       [key: string]: any;
     };
   };
-  inLiquid: boolean;
 }
 export function create(
   unitSourceId: string,

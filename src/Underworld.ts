@@ -325,6 +325,11 @@ export default class Underworld {
         if (fmArray.find(fm => fm.pushedObject == other)) {
           continue;
         }
+        if (Doodad.isDoodad(pushedObject)) {
+          if (pushedObject.name == Doodad.DOODAD_ROCK_NAME) {
+            Unit.takeDamage(other, 2, pushedObject, this, prediction);
+          }
+        }
         // If they collide transfer force:
         // () => {}: No resolver needed for second order force pushes
         // All pushable objects have the same mass so when a collision happens they'll split the distance
@@ -344,8 +349,6 @@ export default class Underworld {
       // If the pushed object is a unit, check if it collides with any pickups
       // as it is pushed
       this.checkPickupCollisions(forceMoveInst.pushedObject, prediction);
-      // Check to see if unit has falled out of lava via a forcemove
-      Obstacle.tryFallInOutOfLiquid(forceMoveInst.pushedObject, this, prediction);
     } else if (Pickup.isPickup(forceMoveInst.pushedObject)) {
       // If the pushed object is a pickup, check if it collides with any units
       // as it is pushed
@@ -353,6 +356,8 @@ export default class Underworld {
         this.checkPickupCollisions(u, prediction);
       })
     }
+    // Check to see if unit has falled out of lava via a forcemove
+    Obstacle.tryFallInOutOfLiquid(forceMoveInst.pushedObject, this, prediction);
     return false;
 
   }
@@ -415,7 +420,7 @@ export default class Underworld {
         const done = this.runForceMove(forceMoveInst, false);
         const endPos = { x: forceMoveInst.pushedObject.x, y: forceMoveInst.pushedObject.y + unitImageYOffset };
         // Note bug: this will leavee a smear on pickups since pickups aren't alive
-        if (graphicsBloodSmear && forceMoveInst.pushedObject.health !== undefined && forceMoveInst.pushedObject.health <= 0) {
+        if (graphicsBloodSmear && Unit.isUnit(forceMoveInst.pushedObject) && forceMoveInst.pushedObject.health !== undefined && forceMoveInst.pushedObject.health <= 0) {
           const size = 3;
           for (let j of smearJitter) {
             // Multiple blood trails

@@ -8,6 +8,7 @@ export function isDoodad(maybeDoodad: any): maybeDoodad is IDoodad {
     return maybeDoodad && maybeDoodad.type == 'doodad';
 }
 export type IDoodad = HasSpace & {
+    name: string;
     type: 'doodad';
     imagePath: string;
     image?: Image.IImageAnimated;
@@ -21,6 +22,8 @@ export function create({ pos, source }:
     const { x, y } = pos
     const imagePath = source.imagePath;
     const self: IDoodad = {
+        name: source.name,
+        inLiquid: false,
         type: 'doodad',
         x,
         y,
@@ -45,9 +48,10 @@ interface IDoodadSource {
     name: string;
     imagePath: string;
 }
+export const DOODAD_ROCK_NAME = 'rock';
 export const doodads: IDoodadSource[] = [
     {
-        name: 'rock',
+        name: DOODAD_ROCK_NAME,
         imagePath: 'doodads/boulder_detail',
     },
     {

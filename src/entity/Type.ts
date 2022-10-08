@@ -1,7 +1,10 @@
+import * as Image from '../graphics/Image';
 export interface HasSpace {
     x: number;
     y: number;
     radius: number;
+    inLiquid: boolean;
+    image?: Image.IImageAnimated;
 }
 export function hasSpace(maybe: any): maybe is HasSpace {
     return maybe && typeof maybe.x == 'number' && typeof maybe.y == 'number' && typeof maybe.radius == 'number';

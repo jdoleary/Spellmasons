@@ -7,6 +7,7 @@ import { isVec2InsidePolygon, Polygon2 } from '../jmath/Polygon2';
 import { distance, similarTriangles } from '../jmath/math';
 import type Underworld from '../Underworld';
 import * as inLiquid from '../inLiquid';
+import { HasSpace } from './Type';
 export interface IObstacle {
   x: number;
   y: number;
@@ -81,18 +82,18 @@ export function findSafeFallInPoint(currentPosition: Vec2, nextPosition: Vec2, u
 
 }
 
-export function tryFallInOutOfLiquid(unit: IUnit, underworld: Underworld, prediction: boolean) {
+export function tryFallInOutOfLiquid(entity: HasSpace, underworld: Underworld, prediction: boolean) {
   if (underworld.liquidPolygons.length) {
     let insideLiquid = false;
     for (let poly of underworld.liquidPolygons) {
-      insideLiquid = isVec2InsidePolygon(unit, poly);
+      insideLiquid = isVec2InsidePolygon(entity, poly);
       if (insideLiquid) {
-        inLiquid.add(unit, underworld, prediction);
+        inLiquid.add(entity, underworld, prediction);
         break;
       }
     }
     if (!insideLiquid) {
-      inLiquid.remove(unit);
+      inLiquid.remove(entity);
     }
   }
 

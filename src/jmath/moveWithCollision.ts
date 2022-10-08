@@ -4,8 +4,9 @@ import { closestLineSegmentIntersection, findWherePointIntersectLineSegmentAtRig
 import * as config from '../config';
 import type * as Unit from '../entity/Unit';
 import Underworld from '../Underworld';
+import { HasSpace } from '../entity/Type';
 export interface ForceMove {
-    pushedObject: Circle;
+    pushedObject: HasSpace;
     canCreateSecondOrderPushes: boolean;
     velocity: Vec2;
     velocity_falloff: number;
@@ -15,8 +16,6 @@ export interface ForceMove {
 
 // Circle is used exclusively for force move objects
 export type Circle = {
-    health?: number;
-    bloodColor?: number;
     radius: number;
 } & Vec2;
 export function isVecIntersectingVecWithCustomRadius(c1: Vec2, c2: Vec2, radius: number): boolean {
