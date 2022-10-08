@@ -1,3 +1,4 @@
+- You should be able to push doodads into water
 - Integrate doodad behavior
 - Fix liquid glitches with prebuild liquid sets
 - Update Expand to affect a radius property in EffectStatus so it can synergize with other spells like chain, bloat, vortex, (any spell that needs a radius);
@@ -37,6 +38,8 @@
     - [Security Recommendations](https://www.electronjs.org/docs/latest/tutorial/security#checklist-security-recommendations)
 
 ## Stretch Content
+- thought: Spellmasons should have some element of risk/reward like 50% chance to double damage of next spell or something like that.  Think of my experience with slice and dice where I got a dice side that did 24 damage and affected the guy below.  If you could always have that it's no fun, too easy but because you can only sometimes get it when you're lucky is what makes it exciting.
+    - also one-use spells could work well
 - add ghost archer
 - confuse spell
 - what attributes of a spell could be modified by other cards?
