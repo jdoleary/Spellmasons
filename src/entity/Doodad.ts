@@ -27,7 +27,8 @@ export function create({ pos, source }:
         type: 'doodad',
         x,
         y,
-        radius: 30,
+        immovable: true,
+        radius: 64,
         imagePath,
         image: (!containerUnits || prediction) ? undefined : Image.create({ x, y }, imagePath, containerUnits, { animationSpeed: 0, loop: true }),
     };

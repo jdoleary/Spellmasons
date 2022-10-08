@@ -83,7 +83,7 @@ export function collideWithLineSegments(circle: Circle, lineSegments: LineSegmen
 // collisions with circles and eventaully lines.  Collisions may cause
 // both colliders to move
 // mover may not end up at destination if it collides
-export function moveWithCollisions(mover: Circle, destination: Vec2, circles: Unit.IUnit[], underworld: Underworld) {
+export function moveWithCollisions(mover: Circle, destination: Vec2, circles: HasSpace[], underworld: Underworld) {
     // Determine if the mover intersects with any "circles" as
     // it travels from mover to destination
     // We do this by adding mover.radius to the other circle's radius

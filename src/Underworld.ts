@@ -497,7 +497,7 @@ export default class Underworld {
               // AI collide with each other and walls
               const originalPosition = Vec.clone(u);
               // Only move other NPCs out of the way, never move player units
-              moveWithCollisions(u, stepTowardsTarget, aliveNPCs, this);
+              moveWithCollisions(u, stepTowardsTarget, [...aliveNPCs, ...this.doodads], this);
               moveDist = math.distance(originalPosition, u);
             }
 

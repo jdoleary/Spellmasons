@@ -76,6 +76,8 @@ export function create({ pos, pickupSource, onTurnsLeftDone }:
     y,
     radius: PICKUP_RADIUS,
     name,
+    immovable: true,
+    inLiquid: false,
     description,
     imagePath,
     // Pickups are stored in containerUnits so that they

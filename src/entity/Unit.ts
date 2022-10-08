@@ -89,8 +89,6 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   manaPerTurn: number;
   unitType: UnitType;
   unitSubType: UnitSubType;
-  // Doesn't let other units push it
-  immovable: boolean;
   // Note: flaggedForRemoval should ONLY be changed in Unit.cleanup
   flaggedForRemoval?: boolean;
   // A list of names that correspond to Events.ts functions
