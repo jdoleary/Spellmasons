@@ -1,6 +1,8 @@
 # Major Tasks
   - (m) Integrate freestanding obstacles (tree, urn, etc)
+    - Requires pathing improvements for movable objects
   - (h) Fix liquid glitches perminantly
+    - Requires refactor of level creation
   - Get ready for Rucin beta test
   - (e) Feedback button / beta survey 
 ---
