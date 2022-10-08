@@ -74,7 +74,7 @@ import { createVisualLobbingProjectile } from './entity/Projectile';
 import { isOutOfRange } from './PlayerUtils';
 import type { TilingSprite } from 'pixi.js';
 import { HasSpace } from './entity/Type';
-import { explain, EXPLAIN_CAST, EXPLAIN_STACK, EXPLAIN_WALK } from './graphics/Explain';
+import { explain, EXPLAIN_CAST, EXPLAIN_STACK, EXPLAIN_WALK, EXPLAIN_WALK_ROPE } from './graphics/Explain';
 
 export enum turn_phase {
   PlayerTurns,
@@ -1120,6 +1120,11 @@ export default class Underworld {
     };
     const finalTileImages = makeFinalTileImages(biome);
     let validSpawnCoords: Vec2[] = tiles.flatMap(t => t && t.image == finalTileImages.all_ground ? [t] : []);
+    if (validSpawnCoords.length == 0) {
+      // This block must occur BEFORE the "first time playing logic"
+      console.error('Not enough spawn coords to spawn ANY enemies or pickups');
+      return undefined;
+    }
     // flatMap removes undefineds
     levelData.imageOnlyTiles = tiles.flatMap(x => x == undefined ? [] : [x]);
 
@@ -1156,10 +1161,6 @@ export default class Underworld {
           levelData.pickups.push({ index, coord })
         }
       }
-    }
-    if (validSpawnCoords.length == 0) {
-      console.error('Not enough spawn coords to spawn ANY enemies');
-      return undefined;
     }
     for (let id of unitIds) {
       if (validSpawnCoords.length == 0) { break; }
@@ -1468,13 +1469,6 @@ export default class Underworld {
     const { levelIndex, biome, limits, liquid, imageOnlyTiles, pickups, enemies, obstacles } = levelData;
     this.levelIndex = levelIndex;
 
-    if (this.levelIndex == 1) {
-      explain(EXPLAIN_CAST);
-    }
-    if (this.levelIndex == 2) {
-      explain(EXPLAIN_STACK);
-    }
-
     this.limits = limits;
 
     // Setup liquid
@@ -1496,6 +1490,16 @@ export default class Underworld {
     }
     for (let e of enemies) {
       this.spawnEnemy(e.id, e.coord);
+    }
+
+    if (this.levelIndex == 1) {
+      explain(EXPLAIN_CAST);
+    }
+    if (this.levelIndex == 2) {
+      explain(EXPLAIN_STACK);
+    }
+    if (this.levelIndex == 3) {
+      explain(EXPLAIN_WALK_ROPE);
     }
     // Show text in center of screen for the new level
     queueCenteredFloatingText(

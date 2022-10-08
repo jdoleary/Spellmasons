@@ -81,6 +81,9 @@ export function conway(tiles: Material[], widthOf2DArray: number, state: ConwayS
     }
 }
 export function placeLiquidSources(tiles: Material[], widthOf2DArray: number, numberOfLiquidSources: number, underworld: Underworld) {
+    if (numberOfLiquidSources == 0) {
+        return;
+    }
     let candidatesForLiquidSource = [];
     for (let i = 0; i < tiles.length; i++) {
         const tile = tiles[i];

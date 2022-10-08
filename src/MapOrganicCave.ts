@@ -13,7 +13,7 @@ export const caveSizes: { [size: string]: CaveParams } = {
     'tutorial': {
         minThickness: config.OBSTACLE_SIZE,
         startThickness: 150,
-        startPointJitter: 400,
+        startPointJitter: 0,
         iterations: 1,
         velocity: 60
     },

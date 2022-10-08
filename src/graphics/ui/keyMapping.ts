@@ -22,3 +22,9 @@ export default {
     cameraLeft: 'KeyA',
     cameraRight: 'KeyD',
 }
+
+export function keyToHumanReadable(keyboardKey: string): string {
+    return keyboardKey
+        .split('Digit').join('')
+        .split('Key').join('');
+}
