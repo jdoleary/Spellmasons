@@ -1,3 +1,7 @@
+# Tasks
+- Prepare for playtest
+    - Gifs to introduce enemies
+---
 - task: Start more zoomed in
 - bug: I heard priest sfx but no animation and no effect occurred
 - bug: scroll didn't jump to me when it spawned from the last dead unit

@@ -15,23 +15,24 @@
   - Trademark Process - ongoing
 # Desired Schedule
 - September / October
-    - Start Marketing to drive wishlists
+    - "Explain Engine" (Adaptive Tutorial)
+        - Gifs to introduce enemies
     - Due Oct 16: Prepare for multi-user playtesting
 - November
     - Package as Electron App
     - Convenient multiplayer lobbying via steam
     - Test on all 3 Operating Systems
-    - "Explain Engine" (Adaptive Tutorial)
-        - Gifs to introduce enemies
     - [Beta Testing](https://partner.steamgames.com/doc/store/testing)
 - December / January
-    - More content depending on how marketing is going
+    - More content
         - Perks
         - 2x spells
         - 2x enemies
+        - Boss
     - Finish polish and reliability
     - Steamdeck support / Controller Support / Accessability
     - Release
+    - Localization / Language Support
 # Critical Path
 - Milestone | **Marketing** | Planning on September 1
     - Figure out how to separate audio tracks
