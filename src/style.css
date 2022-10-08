@@ -932,6 +932,8 @@ body.your-turn #end-turn-btn:hover {
   background-color: #171717;
   height: 100vh;
   color: white;
+  /* Disallow drag to select text */
+  user-select: none;
 }
 
 .view-Menu #menu-app.ready {
