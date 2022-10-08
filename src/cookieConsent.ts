@@ -11,10 +11,10 @@ export default function cookieConsentPopup(forcePopup: boolean) {
 <div id="cookie-consent">
     <div id="cookie-consent-inner">
         <p>
-        Spellmasons uses cookies, localStorage, and sessionStorage to save relevant information for playing Spellmasons such as your clientID (used to distinguish you from other online players), and the game state (which represents the information needed to play the game).
+        Spellmasons uses cookies, localStorage, and sessionStorage to save your game progress, hide the tutorial if you've already completed it, and to store other game-related data.
         </p>
         <p>
-        Please allow cookies for the best user experience
+        Please allow cookies for the best user experience.
         </P>
         <div>
             <button id="cookie-consent-allow" type="button">
