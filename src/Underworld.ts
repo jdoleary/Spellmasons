@@ -984,7 +984,7 @@ export default class Underworld {
     if (globalThis.enemyEncountered && !globalThis.enemyEncountered.includes(id)) {
       globalThis.enemyEncountered.push(id);
       storage.set(ENEMY_ENCOUNTERED_STORAGE_KEY, JSON.stringify(globalThis.enemyEncountered));
-      Jprompt({ imageSrc: Unit.getImagePathForUnitId(id), text: id + '\n' + sourceUnit.info.description, yesText: 'Okay!', yesKey: 'Space', yesKeyText: 'Spacebar' });
+      Jprompt({ imageSrc: Unit.getExplainPathForUnitId(id), text: `<h1>${id}</h1>` + '\n' + sourceUnit.info.description, yesText: 'Okay!', yesKey: 'Space', yesKeyText: 'Spacebar' });
     }
     let unit: Unit.IUnit = Unit.create(
       sourceUnit.id,

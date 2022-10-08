@@ -931,8 +931,8 @@ export function syncImage(unit: IUnit) {
     unit.image.sprite.y = unit.y;
   }
 }
-export function getImagePathForUnitId(id: string): string {
-  return "images/units/" + id + ".png";
+export function getExplainPathForUnitId(id: string): string {
+  return "images/explain/units/" + id + ".gif";
 }
 export function inRange(unit: IUnit, coords: Vec2): boolean {
   return math.distance(unit, coords) <= unit.attackRange;

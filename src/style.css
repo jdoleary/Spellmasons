@@ -955,6 +955,11 @@ body.view-GameOver #game-over {
   display: block;
 }
 
+body.view-Menu .prompt {
+  /* Hide prompt when menu is active */
+  display: none;
+}
+
 .prompt {
   display: flex;
   justify-content: center;
@@ -973,8 +978,11 @@ body.view-GameOver #game-over {
   background-color: antiquewhite;
   padding: 16px;
   border-radius: 5px;
-  max-width: 400px;
+  max-width: 600px;
+}
 
+.prompt-inner h1 {
+  text-align: center;
 }
 
 .prompt .button-holder {
