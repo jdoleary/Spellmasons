@@ -7,6 +7,7 @@ import { raceTimeout } from '../Promise';
 import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
+import { HasSpace } from '../entity/Type';
 
 export const id = 'push';
 export const velocityStartMagnitude = 10;
@@ -38,7 +39,7 @@ Pushes the target(s) away from the caster
   },
 };
 interface forcePushArgs {
-  pushedObject: Circle;
+  pushedObject: HasSpace;
   awayFrom: Vec2;
   velocityStartMagnitude: number;
   canCreateSecondOrderPushes: boolean;
@@ -48,7 +49,7 @@ export function makeForcePush(args: forcePushArgs, underworld: Underworld, predi
   const { pushedObject, awayFrom, resolve, velocityStartMagnitude, canCreateSecondOrderPushes } = args;
   const velocity = similarTriangles(pushedObject.x - awayFrom.x, pushedObject.y - awayFrom.y, distance(pushedObject, awayFrom), velocityStartMagnitude);
   const velocity_falloff = 0.93;
-  const forceMoveInst: ForceMove = { pushedObject, canCreateSecondOrderPushes, velocity, velocity_falloff, resolve }
+  const forceMoveInst: ForceMove = { pushedObject, alreadyCollided: [], canCreateSecondOrderPushes, velocity, velocity_falloff, resolve }
   if (prediction) {
     underworld.forceMovePrediction.push(forceMoveInst);
     underworld.fullySimulateForceMovePredictions();
@@ -58,7 +59,7 @@ export function makeForcePush(args: forcePushArgs, underworld: Underworld, predi
   return forceMoveInst;
 
 }
-export async function forcePush(pushedObject: Circle, awayFrom: Vec2, magnitude: number, underworld: Underworld, prediction: boolean): Promise<void> {
+export async function forcePush(pushedObject: HasSpace, awayFrom: Vec2, magnitude: number, underworld: Underworld, prediction: boolean): Promise<void> {
   let forceMoveInst: ForceMove;
   return await raceTimeout(3000, 'Push', new Promise<void>((resolve) => {
     forceMoveInst = makeForcePush({ pushedObject, awayFrom, velocityStartMagnitude: magnitude, resolve, canCreateSecondOrderPushes: true }, underworld, prediction);

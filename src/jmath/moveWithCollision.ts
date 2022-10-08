@@ -11,6 +11,8 @@ export interface ForceMove {
     velocity: Vec2;
     velocity_falloff: number;
     timedOut?: boolean;
+    // A list of other HasSpace entities that it has already collided with
+    alreadyCollided: HasSpace[];
     resolve: () => void;
 }
 

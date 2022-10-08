@@ -321,10 +321,10 @@ export default class Underworld {
       // recursion
       if (forceMoveInst.canCreateSecondOrderPushes && isVecIntersectingVecWithCustomRadius(pushedObject, other, config.COLLISION_MESH_RADIUS)) {
         // Don't collide with the same object more than once
-        const fmArray = prediction ? this.forceMovePrediction : this.forceMove;
-        if (fmArray.find(fm => fm.pushedObject == other)) {
+        if (forceMoveInst.alreadyCollided.includes(other)) {
           continue;
         }
+        forceMoveInst.alreadyCollided.push(other);
         if (Doodad.isDoodad(pushedObject)) {
           if (pushedObject.name == Doodad.DOODAD_ROCK_NAME) {
             Unit.takeDamage(other, 2, pushedObject, this, prediction);
