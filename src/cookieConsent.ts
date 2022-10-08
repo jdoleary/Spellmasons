@@ -17,7 +17,7 @@ export default function cookieConsentPopup(forcePopup: boolean) {
         Please allow cookies for the best user experience.
         </P>
         <div>
-            <button id="cookie-consent-allow" type="button">
+            <button id="cookie-consent-allow" type="button" style="width:100px;">
                 Allow
             </button>
             <button id="cookie-consent-deny" type="button">

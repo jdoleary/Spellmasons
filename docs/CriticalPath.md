@@ -15,8 +15,6 @@
   - Trademark Process - ongoing
 # Desired Schedule
 - September / October
-    - "Explain Engine" (Adaptive Tutorial)
-        - Gifs to introduce enemies
     - Due Oct 16: Prepare for multi-user playtesting
 - November
     - Package as Electron App
