@@ -22,8 +22,7 @@ export function explain(key: string) {
     }
 
 }
-// @ts-ignore For testing explain prompts
-window.explain = (key: string) => {
+globalThis.explain = (key: string) => {
     storage.set(key, undefined);
     explain(key);
 }
