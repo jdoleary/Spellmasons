@@ -1273,15 +1273,21 @@ body.view-Game #instructions {
   margin-bottom: 12px;
   text-shadow: 2px 2px 2px #000;
   position: absolute;
-  top: 220px;
+  top: 260px;
   z-index: 1;
-  width: 60%;
+  width: 600px;
   margin: 0 auto;
   left: 0;
   right: 0;
   pointer-events: none;
   background-color: rgba(0, 0, 0, 0.4);
   border-radius: 5px;
+}
+
+#instructions img {
+  /* matches font size */
+  height: 54px;
+  transform: translate(0, 9px);
 }
 
 /* Modified from https://codepen.io/hzlo/pen/VweYrLX */
