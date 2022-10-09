@@ -9,6 +9,9 @@
 - **weird bug**: player unit dead in liquid and was rezzed but not in playerrs array and not brad
     - theres player units in the units array
     - why are the id's so large, does chain resurrect increment the id for prediction units too??
+    - POSSIBLE SOLUTION: I think it's left over from previous playthroughs somehow
+        - VERIFIED: Player units persist between playthroughs if you die and then quit and start a new run
+        - It comes from SYNC_PLAYERS
 - Different skull icon for when you're killing an ally
 - Expanding should take longer to return to base mana like resurrect and summon decoy do
 - Perks: the more dimentions you add the better!

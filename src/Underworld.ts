@@ -898,6 +898,7 @@ export default class Underworld {
       Image.cleanup(x.image);
     }
     this.players = [];
+    this.units.forEach(u => Unit.cleanup(u));
     globalThis.selectedPickup = undefined;
     globalThis.selectedUnit = undefined;
 
