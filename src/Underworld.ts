@@ -1077,7 +1077,7 @@ export default class Underworld {
   // Returns undefined if it fails to make valid LevelData
   generateRandomLevelData(levelIndex: number): LevelData | undefined {
     console.log('Setup: generateRandomLevel', levelIndex);
-    if (!caveSizes.small || !caveSizes.medium) {
+    if (!caveSizes.tutorial || !caveSizes.small || !caveSizes.medium) {
       console.error('Missing caveSize for generating level')
       return;
     }
@@ -1098,7 +1098,7 @@ export default class Underworld {
     }
 
     const FIRST_TIME_PLAYING = 'first-time-playing';
-    const isFirstTimePlaying = storage.get(FIRST_TIME_PLAYING) !== 'y';
+    const isFirstTimePlaying = !globalThis.headless && storage.get(FIRST_TIME_PLAYING) !== 'y';
     const caveParams = isFirstTimePlaying
       ? caveSizes.tutorial
       : (levelIndex > 6
