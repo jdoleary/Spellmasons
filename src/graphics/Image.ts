@@ -326,6 +326,7 @@ export function setPosition(image: IImageAnimated | undefined, pos: Vec2) {
   image.sprite.x = pos.x;
   image.sprite.y = pos.y;
 }
+const EXCLUDE_WARN_MISSING_SUBSPRITE = ['playerAttack'];
 export function addSubSprite(image: IImageAnimated | undefined, imageName: string): PIXI.AnimatedSprite | PIXI.Sprite | undefined {
   if (!image) {
     return;
@@ -343,7 +344,14 @@ export function addSubSprite(image: IImageAnimated | undefined, imageName: strin
       sprite.scale.set(subSpriteData.scale.x, subSpriteData.scale.y);
       return sprite;
     } else {
-      console.error("Missing subsprite data for imageName", imageName)
+      // Squelch warning for missing subsprite for keywords that are not subsprites
+      // For example: if you clone yourself it will see that the cast magic is currently a child
+      // of your player characters image and try to add it as a subsprite but report it missing.
+      // This is okay and can be ignored because it's not a subsprite.  This "if" check prevents
+      // the false error reporting.
+      if (!EXCLUDE_WARN_MISSING_SUBSPRITE.some(exclude => imageName.includes(exclude))) {
+        console.error("Missing subsprite data for imageName", imageName)
+      }
     }
   }
   return;
