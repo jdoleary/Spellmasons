@@ -14,7 +14,7 @@ export default async function Jprompt(prompt: Prompt): Promise<boolean> {
     el.classList.add('prompt');
     el.innerHTML = `
 <div class="ui-border">
-<div class="prompt-inner">
+<div class="prompt-inner ${!imageSrc ? 'thin' : ''}">
     ${imageSrc ? `<div class="text-center"><img src="${imageSrc}"/></div>` : ''}
     <p class="text">
         ${text}

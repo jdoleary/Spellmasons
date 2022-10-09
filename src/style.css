@@ -981,6 +981,10 @@ body.view-Menu .prompt {
   color: white;
 }
 
+.prompt-inner.thin {
+  max-width: 450px;
+}
+
 .prompt-inner h1 {
   text-align: center;
 }
