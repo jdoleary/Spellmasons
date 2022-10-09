@@ -5,7 +5,6 @@
 - bug: saw "this spell will damage you" after heal then end turn immediately
 - **important**: completely destroy the underworld object between playthroughs rather than just cleaning it up
 - Fix melee prediction
-- Different skull icon for when you're killing an ally
 - Expanding should take longer to return to base mana like resurrect and summon decoy do
 - Perks: the more dimentions you add the better!
     - Skill tree

@@ -582,7 +582,8 @@ export default class Underworld {
               // Draw red death circle if a unit is currently alive, but wont be after cast
               if (u.alive && !predictionUnit.alive) {
                 const skullPosition = withinCameraBounds({ x: u.x, y: u.y - config.COLLISION_MESH_RADIUS * 2 + 8 });
-                ImmediateMode.draw('badgeDeath.png', skullPosition, (1 / zoom) + (Math.sin(Date.now() / 500) + 1) / 3);
+                const imagePath = globalThis.player && u.faction === globalThis.player.unit.faction ? 'badgeDeathAlly.png' : 'badgeDeath.png';
+                ImmediateMode.draw(imagePath, skullPosition, (1 / zoom) + (Math.sin(Date.now() / 500) + 1) / 3);
               }
             }
           }
