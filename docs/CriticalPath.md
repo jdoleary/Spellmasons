@@ -1,7 +1,8 @@
 # Major Tasks
-  - (m) Integrate freestanding obstacles (tree, urn, etc)
-    - Requires pathing improvements for movable objects
   - Get ready for Rucin beta test
+    - Fix melee prediction
+    - perks
+    - Make "Expand" affect radius of all spells
   - (e) Feedback button / beta survey 
 ---
   - (h) I want 2x as many spells (21 to 42) and 2x as many enemies (7 to 14)
@@ -10,7 +11,6 @@
     - (?) Package for Electron
     - (m) Steam integration
     - (m) Add perks and spell level ups
-  - Trademark Process - ongoing
   - Perks
 # Desired Schedule
 - September / October
@@ -30,17 +30,8 @@
     - Steamdeck support / Controller Support / Accessability
     - Release
     - Localization / Language Support
+- Trademark Process - ongoing
 # Critical Path
-- Milestone | **Marketing** | Planning on September 1
-    - Figure out how to separate audio tracks
-        - https://obsproject.com/forum/resources/win-capture-audio.1338/
-        - Remember
-            - Vary the amound of zoom, you should be close enough for those viewing on a small screen
-            - Do you want your mouse recorded?
-            - Music OFF, **REMEMBER MUSIC OFF WHEN RECORDING**
-    - Record multiplayer playtest
-    - Make Trailer
-    - Start marketing
 - Milestone | **Final Content**
     - Perks
     - resurrection particles

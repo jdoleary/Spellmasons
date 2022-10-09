@@ -1,3 +1,5 @@
+- (m) Integrate freestanding obstacles (tree, urn, etc)
+  - Requires pathing improvements for movable objects
 - Idea: Test arena
 - (h) Fix liquid glitches perminantly
   - Requires refactor of level creation
