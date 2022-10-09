@@ -1,5 +1,27 @@
+# Brad playtest
+
+- put box around the "choose spawn" playtest for visibility
+- prediction should factor in standing on pickups, see video
+- end turn prompt is too wide
+- bug: Dragger pulled him through a wall and without warning
+- bug: saw "this spell will damage you" after heal then end turn immediately
+- you should get notified at the start of turn when you take poison damage
+- **weird bug**: player unit dead in liquid and was rezzed but not in playerrs array and not brad
+    - theres player units in the units array
+    - why are the id's so large, does chain resurrect increment the id for prediction units too??
+- Different skull icon for when you're killing an ally
+- Expanding should take longer to return to base mana like resurrect and summon decoy do
+- Perks: the more dimentions you add the better!
+    - Skill tree
+    - Critical chances
+    - Time challenges - beat the level in less than 3 turns
+    - Make bets - risk / reward
+        - even with the difficulty of the next level
+    - pseudo class system
+    - item that makes your stronger but it randomizes your spawn
 # Tasks
 - Stop walk animation when out of stamina
+- cut up good parts of brad's latest playthrough
 ---
 - task: Start more zoomed in
 - bug: I heard priest sfx but no animation and no effect occurred
@@ -121,6 +143,7 @@
     - bleed: Does damage relative to how much health is missing
     - mana burn
     - suffocate: kill in 5 turns
+        - number of turns relative to health
     - drown: deal massive damage if unit is submerged in liquid
     - poison: dot
     - stomp: more damage the closer they are
