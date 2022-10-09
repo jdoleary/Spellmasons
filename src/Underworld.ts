@@ -501,6 +501,14 @@ export default class Underworld {
               // Only move other NPCs out of the way, never move player units
               moveWithCollisions(u, stepTowardsTarget, [...aliveNPCs, ...this.doodads], this);
               moveDist = math.distance(originalPosition, u);
+              // Prevent moving into negative stamina.  This occurs rarely when
+              // the stamina is a fraction but above 0 and the moveDist is greater than the stamina.
+              // This check prevents the false-negative melee attack predictions
+              if (u.stamina - moveDist < 0) {
+                u.x = originalPosition.x;
+                u.y = originalPosition.y;
+                u.stamina = 0;
+              }
             }
 
             if (!isNaN(moveDist)) {
@@ -2182,11 +2190,15 @@ export default class Underworld {
           // Returns true if melee unit WILL be within range once their done moving
           // (Note: Does not take into account dynamic obstacles)
           const lastPointInPath = u.path.points[u.path.points.length - 1]
-          if (lastPointInPath && math.distance(lastPointInPath, attackTarget) > config.COLLISION_MESH_RADIUS * 2) {
+          const test = lastPointInPath && math.distance(lastPointInPath, attackTarget) > config.COLLISION_MESH_RADIUS * 2;
+          // if (lastPointInPath && !withinMeleeRange({ ...u, ...lastPointInPath }, attackTarget)) {
+          const testNew = (lastPointInPath && !withinMeleeRange({ ...u, ...lastPointInPath }, attackTarget));
+          if (test) {
             // Note: a unit's path isn't guarunteed to include the target (if 
             // they can't find a valid path it won't include the target)
             // So if the lastPointInPath isn't relatively close to the target,
             // return false because the path doesn't make it all the way to the target
+            console.log('jtest', testNew);
             return false;
           }
           const maxPathDistance = u.attackRange + u.staminaMax;
