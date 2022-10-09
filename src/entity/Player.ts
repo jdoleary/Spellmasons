@@ -114,6 +114,7 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
   underworld.queueGameLoop();
   return player;
 }
+const ROBE_COLOR_FILTER_ID = 'robeColorFilter';
 // TODO: This creates a NEW MultiColorReplaceFilter,
 // there should be a better way of syncing filters.  This is a footgun if called
 // more than once on a player object.  As of this writing it is only called on new player objects
@@ -149,7 +150,6 @@ export function setPlayerRobeColor(player: IPlayer, color: number | string) {
         ],
         0.1
       );
-      const ROBE_COLOR_FILTER_ID = 'robeColorFilter';
       // @ts-ignore: jid is a custom identifier to differentiate this filter
       robeColorFilter.jid = ROBE_COLOR_FILTER_ID;
       // Remove previous robeColorFilters
@@ -157,7 +157,13 @@ export function setPlayerRobeColor(player: IPlayer, color: number | string) {
       player.unit.image.sprite.filters = player.unit.image.sprite.filters.filter(f => f.jid != ROBE_COLOR_FILTER_ID);
       // Add new robe color filter
       player.unit.image.sprite.filters.push(robeColorFilter);
+    } else {
+      // Remove robeColorFilters
+      // @ts-ignore: jid is a custom identifier to differentiate this filter
+      player.unit.image.sprite.filters = player.unit.image.sprite.filters.filter(f => f.jid != ROBE_COLOR_FILTER_ID);
     }
+  } else {
+    console.error('Attempted to set color but could not');
   }
 }
 export function resetPlayerForNextLevel(player: IPlayer, underworld: Underworld) {
