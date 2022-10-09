@@ -16,7 +16,6 @@
     - item that makes your stronger but it randomizes your spawn
 # Tasks
 - Ensure gameplay difficulty scales for multiple players
-- Stop walk animation when out of stamina
 - cut up good parts of brad's latest playthrough
 ---
 - task: Start more zoomed in

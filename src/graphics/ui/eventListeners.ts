@@ -307,6 +307,8 @@ export function mouseMove(underworld: Underworld, e?: MouseEvent) {
                 coords: mouseTarget,
                 text: 'Out of stamina',
               });
+              // Stop walk animation now that unit is out of stamina and not moving
+              Unit.returnToDefaultSprite(globalThis.player.unit);
               explain(EXPLAIN_END_TURN);
               playSFXKey('deny_stamina');
               globalThis.notifiedOutOfStamina = true;
