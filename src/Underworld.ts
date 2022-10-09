@@ -2110,10 +2110,6 @@ export default class Underworld {
           this.initializePlayerTurns();
           break;
         case turn_phase[turn_phase.NPC_ALLY]:
-          for (let u of this.units.filter(u => u.unitType == UnitType.AI && u.faction == Faction.ALLY)) {
-            // Reset stamina for non-player units so they can move again
-            u.stamina = u.staminaMax;
-          }
           // Clear enemy attentionMarkers since it's now their turn
           globalThis.attentionMarkers = [];
           // Run AI unit actions
@@ -2122,10 +2118,6 @@ export default class Underworld {
           this.broadcastTurnPhase(turn_phase.NPC_ENEMY)
           break;
         case turn_phase[turn_phase.NPC_ENEMY]:
-          for (let u of this.units.filter(u => u.unitType == UnitType.AI && u.faction == Faction.ENEMY)) {
-            // Reset stamina for non-player units so they can move again
-            u.stamina = u.staminaMax;
-          }
           // Clear enemy attentionMarkers since it's now their turn
           globalThis.attentionMarkers = [];
           // Run AI unit actions
@@ -2143,36 +2135,39 @@ export default class Underworld {
 
   async executeNPCTurn(faction: Faction) {
     console.log('game: executeNPCTurn', Faction[faction]);
-    const animationPromises: Promise<void>[] = [];
-    unitloop: for (let u of this.units.filter(
-      (u) => u.unitType === UnitType.AI && u.alive && u.faction == faction,
-    )) {
-      // Trigger onTurnStart Events
-      const abortTurn = await Unit.runTurnStartEvents(u, false, this);
-      if (abortTurn) {
-        continue unitloop;
+    for (let subTypes of [[UnitSubType.RANGED_LOS, UnitSubType.RANGED_RADIUS, UnitSubType.SUPPORT_CLASS], [UnitSubType.MELEE]]) {
+      const animationPromises: Promise<void>[] = [];
+      unitloop: for (let u of this.units.filter(
+        (u) => u.unitType === UnitType.AI && u.alive && u.faction == faction && subTypes.includes(u.unitSubType),
+      )) {
+        u.stamina = u.staminaMax;
+        // Trigger onTurnStart Events
+        const abortTurn = await Unit.runTurnStartEvents(u, false, this);
+        if (abortTurn) {
+          continue unitloop;
+        }
+        // If unit is now dead (due to turnStartEvents)
+        // abort their turn
+        if (!u.alive) {
+          continue unitloop;
+        }
+        const unitSource = allUnits[u.unitSourceId];
+        if (unitSource) {
+          const target = this.getUnitAttackTarget(u);
+          // Add unit action to the array of promises to wait for
+          // TODO: Prevent golems from attacking if they are out of range
+          // like when they are around a corner
+          let promise = raceTimeout(5000, `Unit.action; unitSourceId: ${u.unitSourceId}; subType: ${u.unitSubType}`, unitSource.action(u, target, this, this.canUnitAttackTarget(u, target)));
+          animationPromises.push(promise);
+        } else {
+          console.error(
+            'Could not find unit source data for',
+            u.unitSourceId,
+          );
+        }
       }
-      // If unit is now dead (due to turnStartEvents)
-      // abort their turn
-      if (!u.alive) {
-        continue unitloop;
-      }
-      const unitSource = allUnits[u.unitSourceId];
-      if (unitSource) {
-        const target = this.getUnitAttackTarget(u);
-        // Add unit action to the array of promises to wait for
-        // TODO: Prevent golems from attacking if they are out of range
-        // like when they are around a corner
-        let promise = raceTimeout(5000, `Unit.action; unitSourceId: ${u.unitSourceId}; subType: ${u.unitSubType}`, unitSource.action(u, target, this, this.canUnitAttackTarget(u, target)));
-        animationPromises.push(promise);
-      } else {
-        console.error(
-          'Could not find unit source data for',
-          u.unitSourceId,
-        );
-      }
+      await Promise.all(animationPromises);
     }
-    await Promise.all(animationPromises);
 
   }
   canUnitAttackTarget(u: Unit.IUnit, attackTarget?: Unit.IUnit): boolean {

@@ -24,7 +24,6 @@
     - Make doodads collidable (take up space)
     - Make doodads block arrows
     - fix fall in liquid so larger things (like rocks or vampires) fall in further so they don't overlap
-- Make ranged units fire before melee units move
 - Add a fullscreen button to options
 - Fix liquid glitches with prebuild liquid sets
 - Update Expand to affect a radius property in EffectStatus so it can synergize with other spells like chain, bloat, vortex, (any spell that needs a radius);
