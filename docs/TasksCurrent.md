@@ -1,12 +1,12 @@
 # Brad playtest
 
-- put box around the "choose spawn" playtest for visibility
 - prediction should factor in standing on pickups, see video
 - end turn prompt is too wide
 - bug: Dragger pulled him through a wall and without warning
 - bug: saw "this spell will damage you" after heal then end turn immediately
 - you should get notified at the start of turn when you take poison damage
 - **important**: completely destroy the underworld object between playthroughs rather than just cleaning it up
+- Fix melee prediction
 - Different skull icon for when you're killing an ally
 - Expanding should take longer to return to base mana like resurrect and summon decoy do
 - Perks: the more dimentions you add the better!
@@ -18,6 +18,7 @@
     - pseudo class system
     - item that makes your stronger but it randomizes your spawn
 # Tasks
+- Ensure gameplay difficulty scales for multiple players
 - Stop walk animation when out of stamina
 - cut up good parts of brad's latest playthrough
 ---

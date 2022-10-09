@@ -1280,6 +1280,8 @@ body.view-Game #instructions {
   left: 0;
   right: 0;
   pointer-events: none;
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 5px;
 }
 
 /* Modified from https://codepen.io/hzlo/pen/VweYrLX */
