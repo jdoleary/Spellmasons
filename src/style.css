@@ -1000,6 +1000,7 @@ body.view-Menu .prompt {
 }
 
 .prompt .text {
+  max-width: 600px;
   margin: auto 8px;
   white-space: pre-line;
 }
