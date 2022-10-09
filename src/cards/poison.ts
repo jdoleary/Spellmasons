@@ -6,6 +6,7 @@ import * as Unit from '../entity/Unit';
 import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
+import floatingText from '../graphics/FloatingText';
 
 export const id = 'poison';
 function init(unit: Unit.IUnit, underworld: Underworld, prediction: boolean) {
@@ -104,7 +105,12 @@ at the start of the unit's turn.
       // they assume prediction damage is only from their direct cast, not including the start of the next turn
       if (!prediction) {
         if (modifier) {
-          takeDamage(unit, modifier.stacks || 1, unit, underworld, prediction, undefined);
+          const damage = modifier.stacks || 1
+          takeDamage(unit, damage, unit, underworld, prediction, undefined);
+          floatingText({
+            coords: unit, text: `${damage} poison damage`,
+            style: { fill: '#44b944' },
+          });
         } else {
           console.error('Should have poison modifier on unit but it is missing')
         }

@@ -1,10 +1,8 @@
 # Brad playtest
 
 - prediction should factor in standing on pickups, see video
-- end turn prompt is too wide
 - bug: Dragger pulled him through a wall and without warning
 - bug: saw "this spell will damage you" after heal then end turn immediately
-- you should get notified at the start of turn when you take poison damage
 - **important**: completely destroy the underworld object between playthroughs rather than just cleaning it up
 - Fix melee prediction
 - Different skull icon for when you're killing an ally
