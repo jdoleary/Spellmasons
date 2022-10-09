@@ -24,12 +24,14 @@ export default function floatingText({
   coords,
   text,
   container = containerFloatingText,
-  style = { fill: 'white', ...config.PIXI_TEXT_DROP_SHADOW },
+  style = { fill: 'white' },
   keepWithinCameraBounds = true
 }: FloatingTextInsructions) {
   if (!(globalThis.pixi && app && container)) {
     return Promise.resolve();
   }
+  // Ensure style has drop shadow, but allow it to be overridden
+  style = Object.assign({ ...config.PIXI_TEXT_DROP_SHADOW }, style);
   const pixiText = new globalThis.pixi.Text(text, style);
   pixiText.x = coords.x;
   pixiText.y = coords.y;
