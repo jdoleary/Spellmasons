@@ -75,6 +75,7 @@ import { isOutOfRange } from './PlayerUtils';
 import type { TilingSprite } from 'pixi.js';
 import { HasSpace } from './entity/Type';
 import { explain, EXPLAIN_CAST, EXPLAIN_STACK, EXPLAIN_WALK, EXPLAIN_WALK_ROPE } from './graphics/Explain';
+import { calculateGameDifficulty } from './Difficulty';
 
 export enum turn_phase {
   PlayerTurns,
@@ -997,7 +998,7 @@ export default class Underworld {
       sourceUnit.info.image,
       UnitType.AI,
       sourceUnit.info.subtype,
-      calculateUnitStrength(this),
+      calculateGameDifficulty(this),
       sourceUnit.unitProps,
       this
     );
@@ -2594,15 +2595,15 @@ export default class Underworld {
     }
     // Since the player's array length has changed, recalculate all
     // unit strengths.  This must happen BEFORE clients are given the gamestate
-    const newStrength = calculateUnitStrength(this);
+    const newDifficulty = calculateGameDifficulty(this);
     this.units.forEach(unit => {
       // Adjust npc unit strength when the number of players changes
       // Do NOT adjust player unit strength
       if (unit.unitType !== UnitType.PLAYER_CONTROLLED) {
-        Unit.adjustUnitStrength(unit, newStrength);
+        Unit.adjustUnitStrength(unit, unit.strength, newDifficulty);
       }
     });
-    console.log('The number of players has changed, adjusting game difficulty via units\' strength to ', newStrength, ' for ', this.players.filter(p => p.clientConnected).length, ' connected players.');
+    console.log('The number of players has changed, adjusting game difficulty to ', newDifficulty, ' for ', this.players.filter(p => p.clientConnected).length, ' connected players.');
 
     // Send game state after units' strength has been recalculated
     for (let clientId of clientsToSendGameState) {
@@ -2721,10 +2722,6 @@ export type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, Underworl
 // TODO: enforce max units at level index
 // Idea: Higher probability of tougher units at certain levels
 const startingNumberOfUnits = 3;
-const bossEveryXLevels = 15;
-function calculateUnitStrength(underworld: Underworld) {
-  return underworld.players.filter(p => p.clientConnected).length / 2;
-}
 
 function getEnemiesForAltitude(underworld: Underworld): string[] {
   const { levelIndex } = underworld;

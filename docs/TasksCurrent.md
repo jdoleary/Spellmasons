@@ -15,7 +15,6 @@
     - pseudo class system
     - item that makes your stronger but it randomizes your spawn
 # Tasks
-- Ensure gameplay difficulty scales for multiple players
 - cut up good parts of brad's latest playthrough
 ---
 - task: Start more zoomed in

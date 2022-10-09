@@ -22,6 +22,7 @@ import { closestLineSegmentIntersection } from '../jmath/lineSegment';
 import { bloodColorDefault } from '../graphics/ui/colors';
 import { HasLife, HasMana, HasSpace, HasStamina } from './Type';
 import { collideWithLineSegments } from '../jmath/moveWithCollision';
+import { calculateGameDifficulty } from '../Difficulty';
 
 const elCautionBox = document.querySelector('#caution-box') as HTMLElement;
 const elCautionBoxText = document.querySelector('#caution-box-text') as HTMLElement;
@@ -176,7 +177,7 @@ export function create(
       inLiquid: false,
     }, sourceUnitProps);
 
-    adjustUnitStrength(unit, unit.strength);
+    adjustUnitStrength(unit, unit.strength, calculateGameDifficulty(underworld));
 
     // Since unit stats can be overridden with sourceUnitProps
     // Ensure that the unit starts will full mana and health
@@ -208,12 +209,12 @@ export function create(
 }
 
 // sets all the properties that depend on strength
-export function adjustUnitStrength(unit: IUnit, strength: number) {
+export function adjustUnitStrength(unit: IUnit, strength: number, difficulty: number) {
   unit.strength = strength;
   const source = allUnits[unit.unitSourceId];
   if (source) {
     unit.damage = Math.round(source.unitProps.damage !== undefined ? source.unitProps.damage : config.UNIT_BASE_DAMAGE * strength);
-    const health = Math.round(source.unitProps.healthMax !== undefined ? source.unitProps.healthMax : config.UNIT_BASE_HEALTH * strength);
+    const health = Math.round((source.unitProps.healthMax !== undefined ? source.unitProps.healthMax : config.UNIT_BASE_HEALTH) * difficulty);
     unit.healthMax = health;
     unit.health = health;
     const mana = Math.round(source.unitProps.manaMax !== undefined ? source.unitProps.manaMax : config.UNIT_BASE_MANA * strength);
