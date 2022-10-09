@@ -1,5 +1,6 @@
-
-
+- Idea: Test arena
+- (h) Fix liquid glitches perminantly
+  - Requires refactor of level creation
 - way to see easily that you're in the portal but your teammate isnt
 - Fix player moving to 0,0 and getting stuck when portal was out, see footage Spellmasons\footage-video\first-working-multiplayer.mp4
     - see 0:48:55 for when i get stuck post portal out of bounds

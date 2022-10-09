@@ -1,8 +1,6 @@
 # Major Tasks
   - (m) Integrate freestanding obstacles (tree, urn, etc)
     - Requires pathing improvements for movable objects
-  - (h) Fix liquid glitches perminantly
-    - Requires refactor of level creation
   - Get ready for Rucin beta test
   - (e) Feedback button / beta survey 
 ---
@@ -13,6 +11,7 @@
     - (m) Steam integration
     - (m) Add perks and spell level ups
   - Trademark Process - ongoing
+  - Perks
 # Desired Schedule
 - September / October
     - Due Oct 16: Prepare for multi-user playtesting
