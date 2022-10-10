@@ -1,7 +1,5 @@
 # Today
 - Expanding should take longer to return to base mana like resurrect and summon decoy do
-- bug: Dragger pulled him through a wall
-    - Make dragger LOS only
 - bug: does resurrecting a corpse in liquid apply the liquid mask?
 - VERIFY FIXED: **important** Fix melee prediction
     - FOUND AN EXAMPLE AT save "melee-bug"

@@ -13,7 +13,7 @@ const unit: UnitSource = {
   info: {
     description: 'A dragger will pull you into danger if it gets close enough to do so',
     image: 'units/poisIdle',
-    subtype: UnitSubType.RANGED_RADIUS,
+    subtype: UnitSubType.RANGED_LOS,
   },
   unitProps: {
     attackRange: 420,
