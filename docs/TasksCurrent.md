@@ -1,5 +1,9 @@
 # Today
 - Expanding should take longer to return to base mana like resurrect and summon decoy do
+- Add "+ radius" spell different from "Expand"?
+    - Refactor radius so that repel and vortex both have a starting select radius
+- See branch 'expand-to-additional-radius'
+- Change protection from direct cast to a blessing so it's less confusing
 # Brad playtest
 - prediction should factor in standing on pickups, see video
 - resurrect should take longer to return to base mana
@@ -14,6 +18,16 @@
         - even with the difficulty of the next level
     - pseudo class system
     - item that makes your stronger but it randomizes your spawn
+# Content todo
+- Rend
+    - new sfx
+    - new animation
+- Bleed
+    - new sfx
+    - new animation
+- Suffocate
+    - new sfx
+    - new animation
 # Tasks
 ---
 - task: Start more zoomed in
@@ -54,6 +68,9 @@
     - [Security Recommendations](https://www.electronjs.org/docs/latest/tutorial/security#checklist-security-recommendations)
 
 ## Stretch Content
+- Add `cooldown` to spells rather than expense scaling
+    - Add a spell that resets cooldowns
+    - Add a curse that increases cooldowns
 - idea: spell that triggers onDeath effects "Playdead"
 - thought: Spellmasons should have some element of risk/reward like 50% chance to double damage of next spell or something like that.  Think of my experience with slice and dice where I got a dice side that did 24 damage and affected the guy below.  If you could always have that it's no fun, too easy but because you can only sometimes get it when you're lucky is what makes it exciting.
     - also one-use spells could work well
