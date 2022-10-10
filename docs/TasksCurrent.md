@@ -1,4 +1,6 @@
 # Today
+- bug: clone / split yielded error: 'Failed to load player because cannot find associated unit with ID 0'
+- This save file is giving me critical errors `saveFile-with-errors.json`
 - bug: displaceX5 + vortex made me get stuck in a wall
 - Expanding should take longer to return to base mana like resurrect and summon decoy do
 - Find a way to make randomness fixed (like in spell "Displace" so that it doesn't get different random results on other people's screens
