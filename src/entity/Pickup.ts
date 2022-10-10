@@ -8,7 +8,7 @@ import { MESSAGE_TYPES } from '../types/MessageTypes';
 import * as config from '../config';
 import { Vec2 } from '../jmath/Vec';
 import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
-import { manaBlue } from '../graphics/ui/colors';
+import { manaBlue, stamina } from '../graphics/ui/colors';
 import Underworld from '../Underworld';
 import { hasBloodCurse } from '../cards/blood_curse';
 import { HasSpace } from './Type';
@@ -311,6 +311,64 @@ export const pickups: IPickupSource[] = [
       underworld.players.forEach(p => p.upgradesLeftToChoose++);
       underworld.showUpgrades();
       return true;
+    },
+  },
+  {
+    imagePath: 'pickups/staminaPotion',
+    animationSpeed: 0.2,
+    name: 'Stamina Potion',
+    description: `Restores stamina to 100%`,
+    probability: 40,
+    singleUse: true,
+    scale: 1.0,
+    playerOnly: true,
+    effect: ({ unit, player, underworld, prediction }) => {
+      if (player) {
+        player.unit.stamina = player.unit.staminaMax;
+        if (!prediction) {
+          playSFXKey('potionPickupMana');
+        }
+        // Animate
+        if (player.unit.image) {
+          // Note: This uses the lower-level addPixiSpriteAnimated directly so that it can get a reference to the sprite
+          // and add a filter; however, addOneOffAnimation is the higher level and more common for adding a simple
+          // "one off" animated sprite.  Use it instead of addPixiSpriteAnimated unless you need more direct control like
+          // we do here
+          const animationSprite = addPixiSpriteAnimated('spell-effects/potionPickup', player.unit.image.sprite, {
+            loop: false,
+            animationSpeed: 0.3,
+            onComplete: () => {
+              if (animationSprite && animationSprite.parent) {
+                animationSprite.parent.removeChild(animationSprite);
+              }
+            }
+          });
+          if (animationSprite) {
+            if (!animationSprite.filters) {
+              animationSprite.filters = [];
+            }
+            // Change the health color to yellow 
+            animationSprite.filters.push(
+              // @ts-ignore for some reason ts is flagging this as an error but it works fine
+              // in pixi.
+              new MultiColorReplaceFilter(
+                [
+                  [0xff0000, stamina],
+                ],
+                0.1
+              )
+            );
+          }
+        }
+
+        // Now that the player unit's stamina has increased,sync the new
+        // stamina state with the player's predictionUnit so it is properly
+        // refelcted in the stamina bar
+        // (note: this would be auto corrected on the next mouse move anyway)
+        underworld.syncPlayerPredictionUnitOnly();
+        return true;
+      }
+      return false;
     },
   },
   {
