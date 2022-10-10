@@ -1,4 +1,6 @@
 # Today
+- bug: displaceX5 + vortex made me get stuck in a wall
+- bug: Bleed can do decimal damage, should be whole
 - Expanding should take longer to return to base mana like resurrect and summon decoy do
 - Find a way to make randomness fixed (like in spell "Displace" so that it doesn't get different random results on other people's screens
  and so that it wont change after another player casts)
@@ -6,6 +8,7 @@
     - Refactor radius so that repel and vortex both have a starting select radius
 - See branch 'expand-to-additional-radius'
 - Change protection from direct cast to a blessing so it's less confusing
+- "Complex but not complicated"
 # Brad playtest
 - prediction should factor in standing on pickups, see video
 - resurrect should take longer to return to base mana
@@ -31,6 +34,7 @@
     - new sfx
     - new animation
 # Tasks
+- Explain camera movement with persistant popup about recentering so players don't get stuck if they hit WASD on accident
 ---
 - task: Start more zoomed in
 - bug: I heard priest sfx but no animation and no effect occurred
@@ -111,6 +115,7 @@
 - "heat seaking" missle unit, explodes on contact
 
 ## New Spell Ideas
+- What if you could hit enemies with your staff to do damage / bat them away
 - Idea: A spell to sacrifice ally unit immediately
 - Card: Mind Control (changes faction temporarily)
 - Feature: "Soul bind" - bound units share applied effects
