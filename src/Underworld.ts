@@ -560,7 +560,7 @@ export default class Underworld {
           const healthBarHealColor = u.faction == Faction.ALLY ? 0x23ff30 : 0xff2828;
           globalThis.unitOverlayGraphics?.lineStyle(0, 0x000000, 1.0);
           globalThis.unitOverlayGraphics?.beginFill(healthBarColor, 1.0);
-          const healthBarProps = getUIBarProps(u.x, u.y, u.health, u.healthMax, zoom);
+          const healthBarProps = getUIBarProps(u.x, u.y, u.health, u.healthMax, zoom, u);
           globalThis.unitOverlayGraphics?.drawRect(
             healthBarProps.x,
             // Stack the health bar above the mana bar
@@ -580,7 +580,7 @@ export default class Underworld {
                 globalThis.unitOverlayGraphics?.beginFill(healthBarHealColor, 1.0);
               }
               // const healthBarHurtWidth = Math.max(0, config.UNIT_UI_BAR_WIDTH * (u.health - healthAfterHurt) / u.healthMax);
-              const healthBarHurtProps = getUIBarProps(u.x, u.y, u.health - healthAfterHurt, u.healthMax, zoom);
+              const healthBarHurtProps = getUIBarProps(u.x, u.y, u.health - healthAfterHurt, u.healthMax, zoom, u);
               globalThis.unitOverlayGraphics?.drawRect(
                 // Show the healthBarHurtBar on the right side of the health  bar
                 healthBarHurtProps.x + config.UNIT_UI_BAR_WIDTH / zoom * healthAfterHurt / u.healthMax,
@@ -600,7 +600,7 @@ export default class Underworld {
           if (u.manaMax != 0) {
             globalThis.unitOverlayGraphics?.lineStyle(0, 0x000000, 1.0);
             globalThis.unitOverlayGraphics?.beginFill(colors.manaBlue, 1.0);
-            const manaBarProps = getUIBarProps(u.x, u.y, u.mana, u.manaMax, zoom);
+            const manaBarProps = getUIBarProps(u.x, u.y, u.mana, u.manaMax, zoom, u);
             globalThis.unitOverlayGraphics?.drawRect(
               manaBarProps.x,
               manaBarProps.y,
@@ -610,7 +610,7 @@ export default class Underworld {
             if (predictionUnit) {
               globalThis.unitOverlayGraphics?.beginFill(colors.manaLostBlue, 1.0);
               const manaAfterSpell = predictionUnit.mana;
-              const manaBarHurtProps = getUIBarProps(u.x, u.y, u.mana - manaAfterSpell, u.manaMax, zoom);
+              const manaBarHurtProps = getUIBarProps(u.x, u.y, u.mana - manaAfterSpell, u.manaMax, zoom, u);
               // Only render hurt mana bar if it dips below mana max
               // (it can remain above mana max if mana is overfilled)
               if (manaAfterSpell < u.manaMax) {
