@@ -2367,6 +2367,7 @@ export default class Underworld {
       castLocation,
       aggregator: {
         unitDamage: [],
+        additionalRadius: 0,
       },
     };
     if (!effectState.casterUnit.alive) {

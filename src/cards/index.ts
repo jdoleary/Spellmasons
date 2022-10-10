@@ -46,7 +46,7 @@ export interface Modifiers {
   // see 'poison' for example
   // init is inteded to be called within add.
   init?: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => void;
-  add?: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number) => void;
+  add?: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number, extra?: object) => void;
   remove?: (unit: Unit.IUnit, underworld: Underworld) => void;
 }
 export interface Spell {
@@ -160,6 +160,7 @@ export interface EffectState {
   // between card effects.
   aggregator: {
     unitDamage: UnitDamage[],
+    additionalRadius: number
   };
 }
 export function hasTargetAtPosition(position: Vec2, underworld: Underworld): boolean {

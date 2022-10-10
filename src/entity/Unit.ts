@@ -234,13 +234,13 @@ function setupShaders(unit: IUnit) {
   }
 }
 
-export function addModifier(unit: IUnit, key: string, underworld: Underworld, prediction: boolean, quantity: number = 1) {
+export function addModifier(unit: IUnit, key: string, underworld: Underworld, prediction: boolean, quantity: number = 1, extra?: object) {
   if (unit.alive) {
     // Call custom modifier's add function
     const modifier = allModifiers[key];
     if (modifier) {
       if (modifier.add) {
-        modifier.add(unit, underworld, prediction, quantity);
+        modifier.add(unit, underworld, prediction, quantity, extra);
       } else {
         console.error('No "add" modifier for ', key);
       }

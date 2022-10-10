@@ -13,13 +13,15 @@ import * as colors from '../graphics/ui/colors';
 const id = 'Bloat';
 const imageName = 'explode-on-death.png';
 const damage = 1;
-const range = 140;
-function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity: number) {
+const baseRadius = 140;
+function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity: number, extra?: { additionalRadius?: number }) {
+  const additionalRadius = extra && extra.additionalRadius || 0;
   // First time setup
   if (!unit.modifiers[id]) {
     unit.modifiers[id] = {
       isCurse: true,
-      quantity
+      quantity,
+      radius: baseRadius + additionalRadius
     };
     // Add event
     if (!unit.onDeathEvents.includes(id)) {
@@ -55,7 +57,7 @@ const spell: Spell = {
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       for (let unit of state.targetedUnits.filter(u => u.alive)) {
-        Unit.addModifier(unit, id, underworld, prediction, quantity);
+        Unit.addModifier(unit, id, underworld, prediction, quantity, { additionalRadius: state.aggregator.additionalRadius });
       }
       return state;
     },
@@ -78,16 +80,18 @@ const spell: Spell = {
   },
   events: {
     onDeath: async (unit: IUnit, underworld: Underworld, prediction: boolean) => {
-      const quantity = unit.modifiers[id]?.quantity || 1;
+      const modifier = unit.modifiers[id]
+      const quantity = modifier?.quantity || 1;
+      const adjustedRange = modifier?.radius || baseRadius;
       if (prediction) {
-        drawUICircle(unit, range, colors.healthRed, 'Explosion Radius');
+        drawUICircle(unit, adjustedRange, colors.healthRed, 'Explosion Radius');
       } else {
         playSFXKey('bloatExplosion');
       }
-      makeBloatExplosionWithParticles(unit, prediction);
+      makeBloatExplosionWithParticles(unit, prediction, adjustedRange / baseRadius);
       underworld.getUnitsWithinDistanceOfTarget(
         unit,
-        range,
+        adjustedRange,
         prediction
       ).forEach(u => {
         // Deal damage to units
@@ -97,7 +101,7 @@ const spell: Spell = {
       });
       underworld.getPickupsWithinDistanceOfTarget(
         unit,
-        range,
+        adjustedRange,
         prediction
       ).forEach(p => {
         // Push pickups away
@@ -106,7 +110,7 @@ const spell: Spell = {
     }
   }
 };
-function makeBloatExplosionWithParticles(position: Vec2, prediction: boolean) {
+function makeBloatExplosionWithParticles(position: Vec2, prediction: boolean, sizeProportionModifier: number = 1) {
   if (prediction) {
     // Don't show if just a prediction
     return
@@ -151,8 +155,8 @@ function makeBloatExplosionWithParticles(position: Vec2, prediction: boolean) {
         "max": 300
       },
       "lifetime": {
-        "min": 0.3,
-        "max": 0.3
+        "min": 0.3 * sizeProportionModifier,
+        "max": 0.3 * sizeProportionModifier
       },
       "blendMode": "normal",
       "frequency": 0.0001,
