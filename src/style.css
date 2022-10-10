@@ -980,6 +980,8 @@ body.view-Menu .prompt {
   padding: 15px;
   background-color: #262324;
   color: white;
+  /* prevent user from highlighting text or images in the prompt.  This is a game not a website, text shouldn't be copyable */
+  user-select: none;
 }
 
 .prompt-inner.thin {
