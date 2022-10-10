@@ -1,4 +1,5 @@
 # Today
+- bug: Scaled down units (due to split) may render z-index on top of bigger units that are lower than them
 - bug: loading game files somehow results in units at 0,0
 - bug: clone / split yielded error: 'Failed to load player because cannot find associated unit with ID 0'
 - This save file is giving me critical errors `saveFile-with-errors.json`
