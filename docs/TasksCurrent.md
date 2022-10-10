@@ -1,11 +1,11 @@
 # Today
 - Expanding should take longer to return to base mana like resurrect and summon decoy do
-- bug: does resurrecting a corpse in liquid apply the liquid mask?
 - VERIFY FIXED: **important** Fix melee prediction
     - FOUND AN EXAMPLE AT save "melee-bug"
 # Brad playtest
 - prediction should factor in standing on pickups, see video
 - resurrect should take longer to return to base mana
+    - this already is set but it didn't work in brad's playtest... hmm..
 - bug: saw "this spell will damage you" after heal then end turn immediately
 - **important**: completely destroy the underworld object between playthroughs rather than just cleaning it up
 - Perks: the more dimentions you add the better!

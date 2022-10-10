@@ -2189,6 +2189,7 @@ export default class Underworld {
         if (u.path && u.path.points.length) {
           // Returns true if melee unit WILL be within range once their done moving
           // (Note: Does not take into account dynamic obstacles)
+          // (Note: lastPointInPath may be beyond where the unit's stamina will allow them to go in one turn)
           const lastPointInPath = u.path.points[u.path.points.length - 1]
           const test = lastPointInPath && math.distance(lastPointInPath, attackTarget) > config.COLLISION_MESH_RADIUS * 2;
           // if (lastPointInPath && !withinMeleeRange({ ...u, ...lastPointInPath }, attackTarget)) {
