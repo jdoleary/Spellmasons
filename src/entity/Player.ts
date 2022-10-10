@@ -14,7 +14,7 @@ import { playerCastAnimationColor, playerCoatPrimary, playerCoatSecondary } from
 import Underworld from '../Underworld';
 import { lerp } from "../jmath/math"
 import * as inLiquid from '../inLiquid';
-import * as hurt from '../cards/hurt';
+import * as slash from '../cards/slash';
 
 const elLobby = document.getElementById('lobby') as (HTMLElement | undefined);
 const elInstructions = document.getElementById('instructions') as (HTMLElement | undefined);
@@ -99,7 +99,7 @@ export function create(clientId: string, underworld: Underworld): IPlayer {
   player.unit.stamina = config.PLAYER_BASE_STAMINA;
 
   // Add initial upgrades
-  const hurtCardUpgrade = Upgrade.upgradeCardsSource.find(u => u.title == hurt.id);
+  const hurtCardUpgrade = Upgrade.upgradeCardsSource.find(u => u.title == slash.id);
   if (hurtCardUpgrade) {
     underworld.chooseUpgrade(player, hurtCardUpgrade);
   } else {
