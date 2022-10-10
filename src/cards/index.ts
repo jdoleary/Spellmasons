@@ -15,6 +15,7 @@ import Subsprites, { Subsprite } from '../Subsprites';
 // Register spells:
 import slash, { UnitDamage } from './slash';
 import rend from './rend';
+import bleed from './bleed';
 import add_heal from './add_heal';
 import expand from './expand';
 import connect from './connect';
@@ -105,6 +106,7 @@ function register(spell: Spell, underworld: Underworld) {
 export function registerCards(underworld: Underworld) {
   register(slash, underworld);
   register(rend, underworld);
+  register(bleed, underworld);
   register(add_heal, underworld);
   register(expand, underworld);
   register(connect, underworld);
