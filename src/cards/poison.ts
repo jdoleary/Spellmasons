@@ -47,7 +47,7 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
   if (modifier) {
     modifier.stacks = (modifier.stacks || 0) + quantity;
   } else {
-    console.error('Poison modifier does not exist')
+    console.error(`${id} modifier does not exist`)
   }
 }
 
@@ -112,7 +112,7 @@ at the start of the unit's turn.
             style: { fill: '#44b944' },
           });
         } else {
-          console.error('Should have poison modifier on unit but it is missing')
+          console.error(`Should have ${id} modifier on unit but it is missing`);
         }
       }
       return false;
