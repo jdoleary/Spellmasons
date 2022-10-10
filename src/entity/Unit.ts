@@ -298,6 +298,8 @@ export function serialize(unit: IUnit): IUnitSerialized {
   const { resolveDoneMoving, ...rest } = unit
   return {
     ...rest,
+    // Deep copy modifiers so that serialized units don't share the object
+    modifiers: unit.modifiers ? JSON.parse(JSON.stringify(unit.modifiers)) : undefined,
     // Deep copy path so that the serialized object doesn't share the path object
     path: unit.path ? JSON.parse(JSON.stringify(unit.path)) : undefined,
     image: unit.image ? Image.serialize(unit.image) : undefined,
