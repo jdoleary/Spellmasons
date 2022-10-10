@@ -35,7 +35,7 @@ const spell: Spell = {
     manaCost: 10,
     healthCost: 0,
     expenseScaling: 1,
-    probability: 50,
+    probability: 5,
     thumbnail: 'unknown.png',
     animationPath,
     sfx: 'rend',

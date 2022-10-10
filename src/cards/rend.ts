@@ -1,12 +1,10 @@
 import * as Unit from '../entity/Unit';
 import { containerSpells } from '../graphics/PixiUtils';
-import { randFloat } from '../jmath/rand';
 import { CardCategory } from '../types/commonTypes';
 import { oneOffImage, playDefaultSpellSFX } from './cardUtils';
 import { Spell } from './index';
 
 export const id = 'Rend';
-const baseDamage = 1;
 function calculateRendDamage(stack: number): number {
   let damage = 0;
   for (let i = 1; i < stack + 1; i++) {
@@ -31,7 +29,7 @@ const spell: Spell = {
     manaCost: 10,
     healthCost: 0,
     expenseScaling: 1,
-    probability: 50,
+    probability: 20,
     thumbnail: 'unknown.png',
     animationPath,
     sfx: 'rend',
