@@ -34,6 +34,7 @@ const spell: Spell = {
   card: {
     id,
     category: CardCategory.Movement,
+    supportQuantity: true,
     sfx: 'swap',
     manaCost: 15,
     healthCost: 0,
@@ -45,44 +46,49 @@ Teleport the target to a random location.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
       playDefaultSpellSFX(card, prediction);
-      // Loop through all targets and batch swap locations
-      const swaps: [HasSpace, Vec2][] = [];
       const targets = getCurrentTargets(state);
 
       // Seed is set before targets are looped so that each target goes to a different location but
       // also so that it is consistent and seeded for a given cast
       const seed = seedrandom(`${underworld.turn_number}-${state.casterUnit.id}`);
-      for (let targetUnit of targets) {
-        if (targetUnit) {
-          const displaceLocation = findRandomDisplaceLocation(underworld, targetUnit.radius, seed);
-          swaps.push([targetUnit, displaceLocation || targetUnit]);
-        }
-      }
-
-      for (let [entity, newLocation] of swaps) {
-        if (!prediction) {
-          // Animate effect of unit spawning from the sky
-          skyBeam(newLocation);
+      for (let i = 0; i < quantity; i++) {
+        // Loop through all targets and batch swap locations
+        const swaps: [HasSpace, Vec2][] = [];
+        for (let targetUnit of targets) {
+          if (targetUnit) {
+            const displaceLocation = findRandomDisplaceLocation(underworld, targetUnit.radius, seed);
+            swaps.push([targetUnit, displaceLocation || targetUnit]);
+          }
         }
 
-        if (Unit.isUnit(entity)) {
+        for (let [entity, newLocation] of swaps) {
+          if (!prediction) {
+            // Animate effect of unit spawning from the sky
+            skyBeam(newLocation);
+          }
+
+          // Show prediction lines before the move actually occurs
           if (prediction && globalThis.predictionGraphics) {
             globalThis.predictionGraphics.lineStyle(4, colors.forceMoveColor, 1.0);
             globalThis.predictionGraphics.moveTo(entity.x, entity.y);
             globalThis.predictionGraphics.lineTo(newLocation.x, newLocation.y);
             // Draw circle at the end so the line path isn't a trail of rectangles with sharp edges
             globalThis.predictionGraphics.lineStyle(1, colors.forceMoveColor, 1.0);
-            globalThis.predictionGraphics.drawCircle(newLocation.x, newLocation.y, 1);
+            globalThis.predictionGraphics.beginFill(colors.forceMoveColor);
+            globalThis.predictionGraphics.drawCircle(newLocation.x, newLocation.y, 3);
+            globalThis.predictionGraphics.endFill();
           }
-          // Physically swap
-          Unit.setLocation(entity, newLocation);
-          // Check to see if unit interacts with liquid
-          Obstacle.tryFallInOutOfLiquid(entity, underworld, prediction);
-        } else if (Pickup.isPickup(entity)) {
-          Pickup.setPosition(entity, newLocation.x, newLocation.y);
-        } else {
-          entity.x = newLocation.x;
-          entity.y = newLocation.y;
+          if (Unit.isUnit(entity)) {
+            // Physically swap
+            Unit.setLocation(entity, newLocation);
+            // Check to see if unit interacts with liquid
+            Obstacle.tryFallInOutOfLiquid(entity, underworld, prediction);
+          } else if (Pickup.isPickup(entity)) {
+            Pickup.setPosition(entity, newLocation.x, newLocation.y);
+          } else {
+            entity.x = newLocation.x;
+            entity.y = newLocation.y;
+          }
         }
       }
       return state;
