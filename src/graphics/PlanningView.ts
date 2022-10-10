@@ -177,22 +177,10 @@ export function updatePlanningView(underworld: Underworld) {
       if (globalThis.player && globalThis.player.isSpawned && !inPortal(globalThis.player)) {
         // Only draw circle if player isn't moving to avoid UI thrashing
         if (equal(lastSpotCurrentPlayerTurnCircle, globalThis.player.unit)) {
-          if (underworld.isMyTurn()) {
-            // Yellow if it's you
-            planningViewGraphics.lineStyle(4, 0xffde5e);
-            planningViewGraphics.beginFill(0xffde5e, 0.3);
-          } else {
-            // Grey if it's other player's turn
-            planningViewGraphics.lineStyle(4, 0xdddddd);
-            planningViewGraphics.beginFill(0xdddddd, 0.3);
-          }
-          // offset ensures the circle is under the player's feet
-          // and is dependent on the animation's feet location
-          const arbitratyOffset = 10;
           if (!globalThis.hidePlayerGoldCircle) {
-            planningViewGraphics.drawEllipse(globalThis.player.unit.x, globalThis.player.unit.y + config.COLLISION_MESH_RADIUS - arbitratyOffset, config.COLLISION_MESH_RADIUS / 2, config.COLLISION_MESH_RADIUS / 3);
+            const fill = underworld.isMyTurn() ? 0xffde5e : 0xdddddd;
+            drawCircleUnderTarget(globalThis.player.unit, underworld, 1.0, planningViewGraphics, fill);
           }
-          planningViewGraphics.endFill();
         }
         lastSpotCurrentPlayerTurnCircle = clone(globalThis.player.unit);
       }
@@ -745,7 +733,7 @@ export function updateTooltipSelection(mousePos: Vec2, underworld: Underworld) {
 }
 
 // Draws a faint circle over things that can be clicked on
-export function drawCircleUnderTarget(mousePos: Vec2, underworld: Underworld, opacity: number, graphics: PIXI.Graphics | undefined) {
+export function drawCircleUnderTarget(mousePos: Vec2, underworld: Underworld, opacity: number, graphics: PIXI.Graphics | undefined, fill?: number) {
   if (!graphics) {
     // For headless
     return;
@@ -753,13 +741,14 @@ export function drawCircleUnderTarget(mousePos: Vec2, underworld: Underworld, op
   const targetUnit = underworld.getUnitAt(mousePos)
   const target: Vec2 | undefined = targetUnit || underworld.getPickupAt(mousePos);
   if (target) {
-    graphics.lineStyle(3, 0xaaaaaa, opacity);
+    graphics.lineStyle(3, fill || 0xaaaaaa, opacity);
     graphics.beginFill(0x000000, 0);
     // offset ensures the circle is under the player's feet
     // and is dependent on the animation's feet location
     const offsetX = targetUnit ? 0 : 0;
-    const offsetY = targetUnit ? -10 : -15;
-    graphics.drawEllipse(target.x + offsetX, target.y + config.COLLISION_MESH_RADIUS + offsetY, config.COLLISION_MESH_RADIUS / 2, config.COLLISION_MESH_RADIUS / 3);
+    const offsetY = targetUnit ? targetUnit.UITargetCircleOffsetY : -15;
+    const scaleY = targetUnit?.image?.sprite.scale.y || 1;
+    graphics.drawEllipse(target.x + offsetX, target.y + config.COLLISION_MESH_RADIUS * scaleY + offsetY * scaleY, (targetUnit?.image?.sprite.scale.x || 1) * config.COLLISION_MESH_RADIUS / 2, (targetUnit?.image?.sprite.scale.y || 1) * config.COLLISION_MESH_RADIUS / 3);
     graphics.endFill();
   }
 }

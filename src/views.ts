@@ -119,7 +119,7 @@ function zoom(underworld: Underworld, e: WheelEvent) {
   const zoomDelta = (zoomIn ? 1 + 1 * scrollFactor : 1 - 0.5 * scrollFactor);
   let newScale = app.stage.scale.x * zoomDelta;
   // Limit zoom out and in to sensible limits
-  newScale = Math.min(Math.max(0.3, newScale), 4);
+  newScale = Math.min(Math.max(0.3, newScale), 8);
 
   globalThis.zoomTarget = newScale;
 }

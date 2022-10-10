@@ -82,6 +82,7 @@ export type IUnit = HasSpace & HasLife & HasMana & HasStamina & {
   // Strength is a modifier which affects base stats used for scaling difficulty
   strength: number;
   faction: Faction;
+  UITargetCircleOffsetY: number;
   defaultImagePath: string;
   shaderUniforms: { [key: string]: any };
   damage: number;
@@ -175,6 +176,7 @@ export function create(
       animations: sourceUnit.animations,
       sfx: sourceUnit.sfx,
       inLiquid: false,
+      UITargetCircleOffsetY: -10
     }, sourceUnitProps);
 
     adjustUnitStrength(unit, unit.strength, calculateGameDifficulty(underworld));

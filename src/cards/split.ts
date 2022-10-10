@@ -1,11 +1,8 @@
 import { getCurrentTargets, Spell } from './index';
 import * as Unit from '../entity/Unit';
-import * as Pickup from '../entity/Pickup';
-import * as Doodad from '../entity/Doodad';
 import { CardCategory, UnitSubType, UnitType } from '../types/commonTypes';
 import { jitter, Vec2 } from '../jmath/Vec';
 import * as config from '../config';
-import floatingText from '../graphics/FloatingText';
 import { returnToDefaultSprite } from '../entity/Unit';
 import Underworld from '../Underworld';
 import { animateMitosis } from './clone';
@@ -27,7 +24,6 @@ function remove(unit: Unit.IUnit, underworld: Underworld) {
   if (unit.image) {
     unit.image.sprite.scale.x *= removeMultiplier;
     unit.image.sprite.scale.y *= removeMultiplier;
-    unit.image.sprite.anchor.y *= removeMultiplier;
   }
   changeStatWithCap(unit, 'health', removeMultiplier);
   changeStatWithCap(unit, 'healthMax', removeMultiplier);
@@ -44,20 +40,19 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
     unit.modifiers[id] = {
       isCurse: true,
     };
-    if (unit.image) {
-      unit.image.sprite.scale.x *= addMultiplier;
-      unit.image.sprite.scale.y *= addMultiplier;
-      unit.image.sprite.anchor.y *= addMultiplier;
-    }
-    changeStatWithCap(unit, 'health', addMultiplier);
-    changeStatWithCap(unit, 'healthMax', addMultiplier);
-    changeStatWithCap(unit, 'mana', addMultiplier);
-    changeStatWithCap(unit, 'manaMax', addMultiplier);
-    changeStatWithCap(unit, 'stamina', addMultiplier);
-    changeStatWithCap(unit, 'staminaMax', addMultiplier);
-    changeStatWithCap(unit, 'damage', addMultiplier);
-    unit.moveSpeed *= addMultiplier;
   }
+  if (unit.image) {
+    unit.image.sprite.scale.x *= addMultiplier;
+    unit.image.sprite.scale.y *= addMultiplier;
+  }
+  changeStatWithCap(unit, 'health', addMultiplier);
+  changeStatWithCap(unit, 'healthMax', addMultiplier);
+  changeStatWithCap(unit, 'mana', addMultiplier);
+  changeStatWithCap(unit, 'manaMax', addMultiplier);
+  changeStatWithCap(unit, 'stamina', addMultiplier);
+  changeStatWithCap(unit, 'staminaMax', addMultiplier);
+  changeStatWithCap(unit, 'damage', addMultiplier);
+  unit.moveSpeed *= addMultiplier;
 }
 const spell: Spell = {
   card: {
