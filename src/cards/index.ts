@@ -25,6 +25,7 @@ import freeze from './freeze';
 import raise_dead from './resurrect';
 import shield from './shield';
 import swap from './swap';
+import displace from './displace';
 import purify from './purify';
 import poison from './poison';
 import debilitate from './debilitate';
@@ -121,6 +122,7 @@ export function registerCards(underworld: Underworld) {
   register(poison, underworld);
   register(purify, underworld);
   register(swap, underworld);
+  register(displace, underworld);
   register(debilitate, underworld);
   register(protection, underworld);
   register(clone, underworld);

@@ -45,7 +45,7 @@ import type { Vec2 } from "./jmath/Vec";
 import * as Vec from "./jmath/Vec";
 import Events from './Events';
 import { allUnits } from './entity/units';
-import { clearSpellEffectProjection, clearTints, getUIBarProps, updateManaCostUI, updatePlanningView } from './graphics/PlanningView';
+import { clearSpellEffectProjection, clearTints, getUIBarProps, isOutOfBounds, updateManaCostUI, updatePlanningView } from './graphics/PlanningView';
 import { chooseObjectWithProbability, prng, randInt, SeedrandomState } from './jmath/rand';
 import { calculateCost } from './cards/cardUtils';
 import { lineSegmentIntersection, LineSegment, findWherePointIntersectLineSegmentAtRightAngle, closestLineSegmentIntersection } from './jmath/lineSegment';
@@ -2037,9 +2037,9 @@ export default class Underworld {
     }
     return false;
   }
-  getRandomCoordsWithinBounds(bounds: Limits): Vec2 {
-    const x = randInt(this.random, bounds.xMin || 0, bounds.xMax || 0);
-    const y = randInt(this.random, bounds.yMin || 0, bounds.yMax || 0);
+  getRandomCoordsWithinBounds(bounds: Limits, seed?: prng): Vec2 {
+    const x = randInt(seed || this.random, bounds.xMin || 0, bounds.xMax || 0);
+    const y = randInt(seed || this.random, bounds.yMin || 0, bounds.yMax || 0);
     return { x, y };
   }
   async broadcastTurnPhase(p: turn_phase) {

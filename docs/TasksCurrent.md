@@ -1,5 +1,7 @@
 # Today
 - Expanding should take longer to return to base mana like resurrect and summon decoy do
+- Find a way to make randomness fixed (like in spell "Displace" so that it doesn't get different random results on other people's screens
+ and so that it wont change after another player casts)
 - Add "+ radius" spell different from "Expand"?
     - Refactor radius so that repel and vortex both have a starting select radius
 - See branch 'expand-to-additional-radius'
