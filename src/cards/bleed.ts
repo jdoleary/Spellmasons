@@ -55,7 +55,7 @@ Target with full health will take no damage.
         if (!prediction) {
           playDefaultSpellSFX(card, prediction);
           for (let unit of targets) {
-            const damage = calculateDamageFromProportion(unit, calculateDamage(unit));
+            const damage = calculateDamageFromProportion(unit, Math.ceil(calculateDamage(unit)));
             oneOffImage(unit, animationPath, containerSpells, resolve);
             const spellEffectImage = oneOffImage(unit, animationPath, containerSpells, resolve);
             if (spellEffectImage) {
@@ -65,7 +65,7 @@ Target with full health will take no damage.
           }
         } else {
           for (let unit of targets) {
-            const damage = calculateDamageFromProportion(unit, calculateDamage(unit));
+            const damage = calculateDamageFromProportion(unit, Math.ceil(calculateDamage(unit)));
             Unit.takeDamage(unit, damage, state.casterUnit, underworld, prediction, state);
           }
           resolve();
