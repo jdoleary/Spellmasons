@@ -541,12 +541,13 @@ kbd {
   /* Only shows within card-inspect*/
   display: none;
   flex-grow: 2;
-  padding: 28px;
   padding-top: 5px;
   color: white;
   justify-content: space-between;
   flex-direction: column;
   height: 100%;
+  width: 100%;
+  white-space: pre-wrap;
 }
 
 #upgrade-picker-content .card-description,
