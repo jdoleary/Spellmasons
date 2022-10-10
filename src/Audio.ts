@@ -26,6 +26,7 @@ export const sfx: { [key: string]: string } = {
     golemDeath: './sound/sfx-from-val/golem-death.wav',
     heal: './sound/sfx-from-val/heal.wav',
     hurt: './sound/sfx-from-val/hurt.wav',
+    rend: './sound/sfx/rend.wav',
     inventory_close: './sound/sfx-from-val/inventory_close.wav',
     inventory_open: './sound/sfx-from-val/inventory_open.wav',
     lobberAttack: './sound/sfx-from-val/lobber-attack.wav',
