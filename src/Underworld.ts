@@ -1604,7 +1604,7 @@ export default class Underworld {
     const cellX = Math.round(coord.x / config.OBSTACLE_SIZE);
     const cellY = Math.round(coord.y / config.OBSTACLE_SIZE);
     const originalTile = this.lastLevelCreated?.imageOnlyTiles[vec2ToOneDimentionIndexPreventWrap({ x: cellX, y: cellY }, this.lastLevelCreated?.width)];
-    return !!originalTile && (originalTile.image == '' || originalTile.image.includes('wall'));
+    return !!originalTile && (originalTile.image === undefined || originalTile.image == '' || originalTile.image.includes('wall'));
   }
   getMousePos(): Vec2 {
     if (!(app && containerBoard)) {
