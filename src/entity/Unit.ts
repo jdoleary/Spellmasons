@@ -339,7 +339,7 @@ export function load(unit: IUnitSerialized, underworld: Underworld, prediction: 
       // such as there is in 'poison' will run
       modifier.init(loadedunit, underworld, false);
     } else {
-      console.error('Unable to init modifier with key', key)
+      console.warn('No init for modifier with key', key)
     }
   }
   setupShaders(loadedunit);
