@@ -41,6 +41,7 @@ import grapplingHook from './grapplinghook';
 import repel from './repel';
 import decoy from './summon_decoy';
 import explode from './bloat';
+import lastWill from './lastwill';
 import { IUpgrade, upgradeCardsSource } from '../Upgrade';
 import { _getCardsFromIds } from './cardUtils';
 import { addCardToHand } from '../entity/Player';
@@ -137,6 +138,7 @@ export function registerCards(underworld: Underworld) {
   register(repel, underworld);
   register(decoy, underworld);
   register(explode, underworld);
+  register(lastWill, underworld);
 }
 function cardToUpgrade(c: ICard, underworld: Underworld): IUpgrade {
   return {

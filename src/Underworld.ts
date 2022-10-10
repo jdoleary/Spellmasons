@@ -979,10 +979,10 @@ export default class Underworld {
     // same polygon.  This is a lot of extra data that is repeated.  Optimize if needed
     this.pathingLineSegments = this.pathingPolygons.map(toPolygon2LineSegments).flat();
   }
-  spawnPickup(index: number, coords: Vec2) {
+  spawnPickup(index: number, coords: Vec2, prediction?: boolean) {
     const pickup = Pickup.pickups[index];
     if (pickup) {
-      Pickup.create({ pos: coords, pickupSource: pickup }, this, false);
+      Pickup.create({ pos: coords, pickupSource: pickup }, this, !!prediction);
     } else {
       console.error('Could not find pickup with index', index);
     }
