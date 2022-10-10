@@ -100,7 +100,7 @@ Clones each target
     },
   },
 };
-async function animateMitosis(image?: IImageAnimated) {
+export async function animateMitosis(image?: IImageAnimated) {
   if (!image) {
     return;
   }
