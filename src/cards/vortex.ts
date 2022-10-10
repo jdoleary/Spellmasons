@@ -1,11 +1,7 @@
-import { multiply, Vec2 } from '../jmath/Vec';
 import { getCurrentTargets, Spell } from './index';
-import type { Circle, ForceMove } from '../jmath/moveWithCollision';
-import { raceTimeout } from '../Promise';
-import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
-import { HasSpace } from '../entity/Type';
+import { pull } from './pull';
 
 export const id = 'vortex';
 const spell: Spell = {
@@ -34,25 +30,4 @@ Pulls the target(s) towards the cast location.
     },
   },
 };
-const velocity_falloff = 0.93;
-export async function pull(pushedObject: HasSpace, towards: Vec2, quantity: number, underworld: Underworld, prediction: boolean): Promise<void> {
-  // Set the velocity so it's just enough to pull the unit into you
-  let velocity = multiply(1 - velocity_falloff, { x: towards.x - pushedObject.x, y: towards.y - pushedObject.y });
-  velocity = multiply(quantity, velocity);
-  let forceMoveInst: ForceMove;
-  return await raceTimeout(2000, 'Pull', new Promise<void>((resolve) => {
-    forceMoveInst = { canCreateSecondOrderPushes: true, alreadyCollided: [], pushedObject, velocity, velocity_falloff, resolve }
-    if (prediction) {
-      underworld.forceMovePrediction.push(forceMoveInst);
-      underworld.fullySimulateForceMovePredictions();
-    } else {
-      underworld.forceMove.push(forceMoveInst);
-    }
-  })).then(() => {
-    if (forceMoveInst) {
-      forceMoveInst.timedOut = true;
-    }
-  });
-
-}
 export default spell;
