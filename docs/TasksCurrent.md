@@ -1,7 +1,5 @@
 # Today
 - Expanding should take longer to return to base mana like resurrect and summon decoy do
-- VERIFY FIXED: **important** Fix melee prediction
-    - FOUND AN EXAMPLE AT save "melee-bug"
 # Brad playtest
 - prediction should factor in standing on pickups, see video
 - resurrect should take longer to return to base mana
