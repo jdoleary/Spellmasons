@@ -2191,15 +2191,11 @@ export default class Underworld {
           // (Note: Does not take into account dynamic obstacles)
           // (Note: lastPointInPath may be beyond where the unit's stamina will allow them to go in one turn)
           const lastPointInPath = u.path.points[u.path.points.length - 1]
-          const test = lastPointInPath && math.distance(lastPointInPath, attackTarget) > config.COLLISION_MESH_RADIUS * 2;
-          // if (lastPointInPath && !withinMeleeRange({ ...u, ...lastPointInPath }, attackTarget)) {
-          const testNew = (lastPointInPath && !withinMeleeRange({ ...u, ...lastPointInPath }, attackTarget));
-          if (test) {
+          if (lastPointInPath && !withinMeleeRange({ ...u, ...lastPointInPath }, attackTarget)) {
             // Note: a unit's path isn't guarunteed to include the target (if 
             // they can't find a valid path it won't include the target)
             // So if the lastPointInPath isn't relatively close to the target,
             // return false because the path doesn't make it all the way to the target
-            console.log('jtest', testNew);
             return false;
           }
           const maxPathDistance = u.attackRange + u.staminaMax;
