@@ -1381,6 +1381,10 @@ export default class Underworld {
     if (entities.some(entity => Vec.equal(Vec.round(entity), Vec.round(spawnPoint)))) {
       return false;
     }
+    // Ensure spawnPoint isn't out of bounds
+    if (this.isCoordOnWallTile(spawnPoint) || isOutOfBounds(spawnPoint, this)) {
+      return false;
+    }
     return true;
 
   }
