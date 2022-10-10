@@ -21,7 +21,6 @@ import { distance, getCoordsAtDistanceTowardsTarget } from '../jmath/math';
 import { Graphics } from 'pixi.js';
 import { allCards } from '../cards';
 import { keyDown } from './ui/eventListeners';
-import * as CSSClasses from '../CSSClasses';
 import { inPortal } from '../entity/Player';
 
 const TEXT_OUT_OF_RANGE = 'Out of Range';
