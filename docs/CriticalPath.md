@@ -15,6 +15,10 @@
 # Desired Schedule
 - September / October
     - Due Oct 16: Prepare for multi-user playtesting
+        - Playtest multiplayer again
+        - Finish menu
+        - Fix inventory on small resoltion
+        - notify how to recenter camera with unobtrusive label (like spawn notification but smaller and out of the way)
 - November
     - Package as Electron App
     - Convenient multiplayer lobbying via steam

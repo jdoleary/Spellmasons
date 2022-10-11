@@ -1,8 +1,8 @@
 # 10/11/2022
 - *: fix save /load unit spawn issue
+    - bug: loading game files somehow results in units at 0,0
 - *: fix inventory visibility on all resolutions
 - e: limit split lower bound
-- *: notify how to recenter camera with unobtrusive label (like spawn notification but smaller and out of the way)
 - *: make all explain prompts available via menu
 - *: Add save/load to menu
 - *: Test on different resolutions
@@ -20,7 +20,7 @@
 - fix liquid fall in
 - Finish menu design according to Jake prompts
 - Update twitter icon with brand guidelines
-- Split sprite sheet
+- Split sprite sheet for more efficient development
 - Add server history
 
 # Today
@@ -28,7 +28,6 @@
     - also don't get smaller once you're at 1 health
     - scale down blood
 - bug: Scaled down units (due to split) may render z-index on top of bigger units that are lower than them
-- bug: loading game files somehow results in units at 0,0
 - bug: clone / split yielded error: 'Failed to load player because cannot find associated unit with ID 0'
 - This save file is giving me critical errors `saveFile-with-errors.json`
 - bug: displaceX5 + vortex made me get stuck in a wall
