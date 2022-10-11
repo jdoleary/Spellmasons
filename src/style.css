@@ -1008,7 +1008,8 @@ body.view-Menu .prompt:not(.forceShow) {
 
 .prompt .text {
   max-width: 600px;
-  margin: auto 8px;
+  margin: 0 auto;
+  padding: 0 8px;
   white-space: pre-line;
 }
 
