@@ -1,4 +1,6 @@
 # 10/11/2022
+- e: make default placeholder spell animation for in-progress spells or use floating text
+---
 - *: fix save /load unit spawn issue
     - bug: loading game files somehow results in units at 0,0
 - *: fix inventory visibility on all resolutions
@@ -6,9 +8,6 @@
 - *: make all explain prompts available via menu
 - *: Add save/load to menu
 - *: Test on different resolutions
-- e: make svelte build auto copy into final location
-- e: make default placeholder spell animation for in-progress spells or use floating text
-- e: explain how mana cost changes
 ---
 - h: piercing archers
 - h: "Heat seeking" enemy or spell

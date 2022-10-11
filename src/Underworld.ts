@@ -74,7 +74,7 @@ import { createVisualLobbingProjectile } from './entity/Projectile';
 import { isOutOfRange } from './PlayerUtils';
 import type { TilingSprite } from 'pixi.js';
 import { HasSpace } from './entity/Type';
-import { explain, EXPLAIN_CAST, EXPLAIN_STACK, EXPLAIN_WALK, EXPLAIN_WALK_ROPE } from './graphics/Explain';
+import { explain, EXPLAIN_CAST, EXPLAIN_MANA_COST, EXPLAIN_STACK, EXPLAIN_WALK, EXPLAIN_WALK_ROPE } from './graphics/Explain';
 import { calculateGameDifficulty } from './Difficulty';
 
 export enum turn_phase {
@@ -1511,10 +1511,13 @@ export default class Underworld {
       explain(EXPLAIN_CAST);
     }
     if (this.levelIndex == 2) {
-      explain(EXPLAIN_STACK);
+      explain(EXPLAIN_MANA_COST);
     }
     if (this.levelIndex == 3) {
       explain(EXPLAIN_WALK_ROPE);
+    }
+    if (this.levelIndex == 4) {
+      explain(EXPLAIN_STACK);
     }
     // Show text in center of screen for the new level
     queueCenteredFloatingText(

@@ -33,13 +33,8 @@ export const EXPLAIN_CAST = 'Casting Spells';
 export const EXPLAIN_STACK = 'Stacking Spells';
 export const EXPLAIN_WALK_ROPE = 'Stamina';
 export const EXPLAIN_END_TURN = 'End Turn';
+export const EXPLAIN_MANA_COST = 'Mana Cost';
 const explainMap: { [key: string]: { condition?: () => boolean, prompt: () => void } } = {
-    [EXPLAIN_OVERFILL]: {
-        condition: () => !!globalThis.player && globalThis.player.unit.mana > globalThis.player.unit.manaMax,
-        prompt: () => {
-            Jprompt({ imageSrc: 'images/explain/mana-overfill.gif', text: 'You are able to fill your mana up to 3x its maximum amount using potions or spells.', yesText: 'Cool!' });
-        }
-    },
     [EXPLAIN_WALK]: {
         prompt: () => {
             Jprompt({ imageSrc: 'images/explain/walk.gif', text: '<h1>How to Move</h1>Hold right mouse button to walk towards your cursor. Your stamina bar will refill at the start of every turn.', yesText: 'Okay' });
@@ -63,6 +58,17 @@ const explainMap: { [key: string]: { condition?: () => boolean, prompt: () => vo
     [EXPLAIN_END_TURN]: {
         prompt: () => {
             Jprompt({ imageSrc: 'images/explain/end-turn.gif', text: `Press <kbd>${keyToHumanReadable(keyMapping.endTurn)}</kbd> or click the End Turn button to have your mana and stamina refilled.`, yesText: 'Okay' });
+        }
+    },
+    [EXPLAIN_OVERFILL]: {
+        condition: () => !!globalThis.player && globalThis.player.unit.mana > globalThis.player.unit.manaMax,
+        prompt: () => {
+            Jprompt({ imageSrc: 'images/explain/mana-overfill.gif', text: 'You are able to fill your mana up to 3x its maximum amount using potions or spells.', yesText: 'Cool!' });
+        }
+    },
+    [EXPLAIN_MANA_COST]: {
+        prompt: () => {
+            Jprompt({ imageSrc: 'images/explain/mana-cost.gif', text: 'As you use a spell it will cost more mana.  Every time you end your turn the spell will cost less mana until it returns to the original cost.', yesText: 'Okay' });
         }
     },
 }
