@@ -20,6 +20,7 @@
     - Convenient multiplayer lobbying via steam
     - Test on all 3 Operating Systems
     - [Beta Testing](https://partner.steamgames.com/doc/store/testing)
+    - Cooldowns instead of mana multiplier
 - December / January
     - More content
         - Perks

@@ -1,3 +1,29 @@
+# 10/11/2022
+- *: fix save /load unit spawn issue
+- *: fix inventory visibility on all resolutions
+- e: limit split lower bound
+- *: notify how to recenter camera with unobtrusive label (like spawn notification but smaller and out of the way)
+- *: make all explain prompts available via menu
+- *: Add save/load to menu
+- *: Test on different resolutions
+- e: make svelte build auto copy into final location
+- e: make default placeholder spell animation for in-progress spells or use floating text
+- e: explain how mana cost changes
+- e: make shield more transparent
+---
+- h: piercing archers
+- h: "Heat seeking" enemy or spell
+- m: cooldown instead of mana multiplier scaling
+- m: inventory should show current card cost and cooldown
+- m: Balance dragger
+- m: dragger cast animation
+- larger enemies for variation
+- fix liquid fall in
+- Finish menu design according to Jake prompts
+- Update twitter icon with brand guidelines
+- Split sprite sheet
+- Add server history
+
 # Today
 - bug: Need to be able to purify away multiple stacks of 'split'
     - also don't get smaller once you're at 1 health
