@@ -6,6 +6,7 @@ import type Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
 import { chooseObjectWithProbability } from '../jmath/rand';
 import seedrandom from 'seedrandom';
+import floatingText from '../graphics/FloatingText';
 
 const id = 'Last Will';
 const imageName = 'unknown.png';
@@ -20,11 +21,10 @@ function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity:
     if (!unit.onDeathEvents.includes(id)) {
       unit.onDeathEvents.push(id);
     }
-    // Add subsprite image
-    if (unit.image) {
-      // Visually "bloat" the image
-      unit.image.sprite.scale.x = 1.5;
-    }
+  }
+  // Temporarily use floating text until spell animation is finished
+  if (!prediction) {
+    floatingText({ coords: unit, text: id });
   }
 }
 function remove(unit: IUnit, underworld: Underworld) {
