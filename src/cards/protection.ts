@@ -1,6 +1,7 @@
 import { Spell } from './index';
 import * as Unit from '../entity/Unit'
 import { CardCategory, UnitType } from '../types/commonTypes';
+import floatingText from '../graphics/FloatingText';
 
 const id = 'protection';
 const spell: Spell = {
@@ -30,6 +31,10 @@ const spell: Spell = {
           for (let unit of state.targetedUnits) {
             if (unit == ally) {
               excludeTarget = unit;
+              // Temporarily use floating text until spell animation is finished
+              if (!prediction) {
+                floatingText({ coords: excludeTarget, text: id });
+              }
               // Only remove 1 target per use of this card
               break allyLoop;
             }

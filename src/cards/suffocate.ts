@@ -27,6 +27,8 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
       if (spell.modifiers?.subsprite) {
         Image.addSubSprite(unit.image, spell.modifiers.subsprite.imageName);
       }
+      // Temporarily use floating text until spell animation is finished
+      floatingText({ coords: unit, text: id });
     }
     updateTooltip(unit);
   }

@@ -1,5 +1,6 @@
 import { HasLife } from '../entity/Type';
 import * as Unit from '../entity/Unit';
+import floatingText from '../graphics/FloatingText';
 import { containerSpells } from '../graphics/PixiUtils';
 import { lerp } from '../jmath/math';
 import { CardCategory } from '../types/commonTypes';
@@ -62,6 +63,8 @@ Target with full health will take no damage.
               spellEffectImage.sprite.scale.x = -1;
             }
             Unit.takeDamage(unit, damage, state.casterUnit, underworld, prediction, state);
+            // Temporarily use floating text until spell animation is finished
+            floatingText({ coords: unit, text: id });
           }
         } else {
           for (let unit of targets) {
