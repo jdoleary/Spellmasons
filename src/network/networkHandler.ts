@@ -23,6 +23,7 @@ import { Vec2 } from '../jmath/Vec';
 import pingSprite from '../graphics/Ping';
 import { clearLastNonMenuView } from '../views';
 import { explain, EXPLAIN_END_TURN } from '../graphics/Explain';
+import { cameraAutoFollow } from '../graphics/PixiUtils';
 
 const messageLog: any[] = [];
 export const NO_LOG_LIST = [MESSAGE_TYPES.PING, MESSAGE_TYPES.PLAYER_THINKING];
@@ -307,6 +308,7 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
             if (elInstructions) {
               elInstructions.innerText = '';
             }
+            cameraAutoFollow(true);
           }
           Unit.setLocation(fromPlayer.unit, payload);
           // Detect if player spawns in liquid

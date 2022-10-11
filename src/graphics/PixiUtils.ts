@@ -13,6 +13,7 @@ import { randFloat, randInt } from '../jmath/rand';
 import { IUnit } from '../entity/Unit';
 import { addMarginToRect, isWithinRect, Rect } from '../jmath/Rect';
 import { inPortal } from '../entity/Player';
+import KeyMapping, { keyToHumanReadable } from './ui/keyMapping';
 
 // if PIXI is finished setting up
 let isReady = false;
@@ -249,8 +250,14 @@ export function moveCamera(x: number, y: number) {
 export function isCameraAutoFollowing(): boolean {
   return utilProps.doCameraAutoFollow;
 }
+const elCameraRecenterTip = document.getElementById('camera-recenter-tip');
 export function cameraAutoFollow(active: boolean) {
   utilProps.doCameraAutoFollow = active;
+  if (!utilProps.doCameraAutoFollow && elCameraRecenterTip) {
+    if (globalThis.player?.isSpawned) {
+      elCameraRecenterTip.innerText = `Press ${keyToHumanReadable(KeyMapping.recenterCamera)} to center the view on your player`;
+    }
+  }
   document.body?.classList.toggle('auto-camera', active);
 }
 export function getCamera() {
