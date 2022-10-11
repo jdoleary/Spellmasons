@@ -19,7 +19,7 @@ const spell: Spell = {
     animationPath: 'spell-effects/spellPurify',
     description: `
 Removes all curses from the target(s).
-A curse is a harmful modifier that is attached to a unit: for example: poison, bloat, freeze, blood curse are curses.
+A curse is a harmful modifier that is attached to a unit: for example: poison, bloat, and freeze are curses.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
