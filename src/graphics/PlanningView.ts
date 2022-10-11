@@ -635,8 +635,10 @@ export function updateTooltipContent(underworld: Underworld) {
         const unitSource = allUnits[globalThis.selectedUnit.unitSourceId]
         if (unitSource) {
           text += `\
-${unitSource.id}
-${unitSource.info.description}
+<h1>${unitSource.id}</h1>
+<hr/>
+<div>${unitSource.info.description.trim()}</div>
+<hr/>
 ${globalThis.selectedUnit.faction == Faction.ALLY ? '🤝' : '⚔️️'} ${Faction[globalThis.selectedUnit.faction]}
 🗡️ ${globalThis.selectedUnit.damage}
 ❤️ ${globalThis.selectedUnit.health}/${globalThis.selectedUnit.healthMax}
@@ -660,8 +662,10 @@ ${cards}
     case "pickup":
       if (globalThis.selectedPickup) {
         text += `\
-${globalThis.selectedPickup.name}
+<h1>${globalThis.selectedPickup.name}</h1>
+<hr/>
 ${globalThis.selectedPickup.description}
+<hr/>
       `;
       }
       break;

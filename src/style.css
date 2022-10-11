@@ -657,6 +657,15 @@ body.your-turn #end-turn-btn:hover {
   top: 110px;
 }
 
+#inspector-tooltip-content h1 {
+  text-transform: capitalize;
+  margin-bottom: 0;
+}
+
+#inspector-tooltip-content hr {
+  margin: 0;
+}
+
 #inspector-tooltip-content {
   white-space: pre-wrap;
 }
@@ -1099,8 +1108,8 @@ body.view-Menu #websocketpie-connection-status {
   display: none;
   z-index: 1;
   position: absolute;
-  top: 5px;
-  right: 5px;
+  top: 25px;
+  left: 25px;
 }
 
 /* Show that camera is being dragged with the mouse */
