@@ -916,7 +916,7 @@ body.your-turn #end-turn-btn:hover {
   color: white;
   position: absolute;
   top: 25px;
-  right: 8px;
+  right: 31px;
   font-size: 25px;
   text-align: right;
   z-index: 1;
