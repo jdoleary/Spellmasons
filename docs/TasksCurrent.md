@@ -1,13 +1,10 @@
 # 10/11/2022
-- e: make default placeholder spell animation for in-progress spells or use floating text
----
 - *: fix save /load unit spawn issue
     - bug: loading game files somehow results in units at 0,0
-- *: fix inventory visibility on all resolutions
 - e: limit split lower bound
-- *: make all explain prompts available via menu
 - *: Add save/load to menu
 - *: Test on different resolutions
+    - *: fix inventory visibility on all resolutions
 ---
 - h: piercing archers
 - h: "Heat seeking" enemy or spell
