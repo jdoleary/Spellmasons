@@ -957,8 +957,11 @@ body.view-GameOver #game-over {
   display: block;
 }
 
-body.view-Menu .prompt {
-  /* Hide prompt when menu is active */
+body.view-Menu .prompt:not(.forceShow) {
+  /* Hide prompt when menu is active
+  so long as the prompt doesn't have the class .forceShow, in which case allow it to
+  show over the menu
+   */
   display: none;
 }
 

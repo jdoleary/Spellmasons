@@ -2,15 +2,16 @@ import * as storage from '../storage';
 import Jprompt from './Jprompt';
 import keyMapping, { keyToHumanReadable } from './ui/keyMapping';
 const ALREADY_EXPLAINED = 'explained'
-export function explain(key: string) {
+export function explain(key: string, forceShow?: boolean) {
     const explainData = explainMap[key];
     if (globalThis.allowCookies) {
         if (explainData) {
             // If condition is met
-            if (!explainData.condition || explainData.condition()) {
+            if (forceShow || !explainData.condition || explainData.condition()) {
                 // If not already explained
-                if (storage.get(key) != ALREADY_EXPLAINED) {
+                if (forceShow || storage.get(key) != ALREADY_EXPLAINED) {
                     explainData.prompt();
+                    document.querySelectorAll('.prompt').forEach(el => el.classList.add('forceShow'));
                     storage.set(key, ALREADY_EXPLAINED);
                 }
             }
@@ -23,16 +24,15 @@ export function explain(key: string) {
 
 }
 globalThis.explain = (key: string) => {
-    storage.set(key, undefined);
-    explain(key);
+    explain(key, true);
 }
 
-export const EXPLAIN_WALK = 'walk';
-export const EXPLAIN_OVERFILL = 'mana-overfill';
-export const EXPLAIN_CAST = 'cast';
-export const EXPLAIN_STACK = 'stack-spells';
-export const EXPLAIN_WALK_ROPE = 'walk-rope';
-export const EXPLAIN_END_TURN = 'end-turn';
+export const EXPLAIN_WALK = 'How to Move';
+export const EXPLAIN_OVERFILL = 'Mana Overfill';
+export const EXPLAIN_CAST = 'Casting Spells';
+export const EXPLAIN_STACK = 'Stacking Spells';
+export const EXPLAIN_WALK_ROPE = 'Stamina';
+export const EXPLAIN_END_TURN = 'End Turn';
 const explainMap: { [key: string]: { condition?: () => boolean, prompt: () => void } } = {
     [EXPLAIN_OVERFILL]: {
         condition: () => !!globalThis.player && globalThis.player.unit.mana > globalThis.player.unit.manaMax,
@@ -65,5 +65,5 @@ const explainMap: { [key: string]: { condition?: () => boolean, prompt: () => vo
             Jprompt({ imageSrc: 'images/explain/end-turn.gif', text: `Press <kbd>${keyToHumanReadable(keyMapping.endTurn)}</kbd> or click the End Turn button to have your mana and stamina refilled.`, yesText: 'Okay' });
         }
     },
-
 }
+globalThis.explainKeys = Object.keys(explainMap);

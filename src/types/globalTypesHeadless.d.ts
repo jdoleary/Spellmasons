@@ -210,4 +210,5 @@ declare global {
     var hoverTarget: HTMLElement | undefined | null;
     // Used in dev to prompt tutorial popup
     var explain: (key: string) => void;
+    var explainKeys: string[];
 }
