@@ -9,7 +9,6 @@
 - e: make svelte build auto copy into final location
 - e: make default placeholder spell animation for in-progress spells or use floating text
 - e: explain how mana cost changes
-- e: make shield more transparent
 ---
 - h: piercing archers
 - h: "Heat seeking" enemy or spell

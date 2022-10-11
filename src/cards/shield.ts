@@ -53,7 +53,7 @@ Protects bearer from the next ${damageBlocked} damage that they would incur.
     add,
     subsprite: {
       imageName: modifierImagePath,
-      alpha: 1.0,
+      alpha: 0.5,
       anchor: {
         x: 0.5,
         y: 0.5,
