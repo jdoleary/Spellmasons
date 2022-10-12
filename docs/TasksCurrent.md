@@ -1,21 +1,39 @@
-# 10/11/2022
-- *: fix save /load unit spawn issue
-    - bug: loading game files somehow results in units at 0,0
-- e: limit split lower bound
-- *: Add save/load to menu
+# From Dad playtest
+- explain inventory when you get your 11th spell
+- explain intent icons
+- remind players not to miss scroll pickups
+- Explain that decoy needs to be closer
+- fix: potential cast range moves the end of the white walk rope instead of staying put when you're at 0 stamina
+- explain walk rope should only happen after you spawn
+- explain camera movement
+- explain liquid damage
+- rename spike pit
+- bloat copy has newline error in it
+- explain overkill
+- fix: archers shouldn't spawn on level 1
+- explain scroll picup
+- explain curse cards better, their copy is hard to understand out of context
+- I saw "spell will damage you" when he was casting on an already dying guy after the portal spanwed
+
+# 2022.10.12
+- Add new Che icons
 - *: Test on different resolutions
     - *: fix inventory visibility on all resolutions
+- Change protection from direct cast to a blessing so it's less confusing
+- menu: extract back button and setRoute to global
+- fix: Limit max force move speed so units don't go through walls or fix collision detection
 ---
-- h: piercing archers
-- h: "Heat seeking" enemy or spell
-- m: cooldown instead of mana multiplier scaling
-- m: inventory should show current card cost and cooldown
+- *: fix save /load unit spawn issue
+    - bug: loading game files somehow results in units at 0,0
 - m: Balance dragger
 - m: dragger cast animation
+- e: limit split lower bound
+- *: Add save/load to menu
+- m: cooldown instead of mana multiplier scaling
+- m: inventory should show current card cost and cooldown
+---
 - larger enemies for variation
 - fix liquid fall in
-- Finish menu design according to Jake prompts
-- Update twitter icon with brand guidelines
 - Split sprite sheet for more efficient development
 - Add server history
 
@@ -28,12 +46,12 @@
 - This save file is giving me critical errors `saveFile-with-errors.json`
 - bug: displaceX5 + vortex made me get stuck in a wall
 - Expanding should take longer to return to base mana like resurrect and summon decoy do
+    - Do this with cooldowns
 - Find a way to make randomness fixed (like in spell "Displace" so that it doesn't get different random results on other people's screens
  and so that it wont change after another player casts)
 - Add "+ radius" spell different from "Expand"?
     - Refactor radius so that repel and vortex both have a starting select radius
 - See branch 'expand-to-additional-radius'
-- Change protection from direct cast to a blessing so it's less confusing
 - "Complex but not complicated"
 # Brad playtest
 - prediction should factor in standing on pickups, see video
@@ -103,6 +121,8 @@
 - Add `cooldown` to spells rather than expense scaling
     - Add a spell that resets cooldowns
     - Add a curse that increases cooldowns
+- h: piercing archers
+- h: "Heat seeking" enemy or spell
 - idea: spell that triggers onDeath effects "Playdead"
 - thought: Spellmasons should have some element of risk/reward like 50% chance to double damage of next spell or something like that.  Think of my experience with slice and dice where I got a dice side that did 24 damage and affected the guy below.  If you could always have that it's no fun, too easy but because you can only sometimes get it when you're lucky is what makes it exciting.
     - also one-use spells could work well

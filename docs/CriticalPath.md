@@ -1,24 +1,18 @@
 # Major Tasks
   - Get ready for Rucin beta test
-    - Fix melee prediction
     - perks
     - Make "Expand" affect radius of all spells
-  - (e) Feedback button / beta survey 
----
+    - (e) Feedback button / beta survey 
   - (h) I want 2x as many spells (21 to 42) and 2x as many enemies (7 to 14)
   - Finalize
-    - (m) Adaptive tutorial
     - (?) Package for Electron
     - (m) Steam integration
-    - (m) Add perks and spell level ups
-  - Perks
 # Desired Schedule
 - September / October
     - Due Oct 16: Prepare for multi-user playtesting
         - Playtest multiplayer again
         - Finish menu
         - Fix inventory on small resoltion
-        - notify how to recenter camera with unobtrusive label (like spawn notification but smaller and out of the way)
 - November
     - Package as Electron App
     - Convenient multiplayer lobbying via steam
@@ -32,9 +26,8 @@
         - 2x enemies
         - Boss
     - Finish polish and reliability
-    - Steamdeck support / Controller Support / Accessability
+    - Steamdeck support / Controller Support / Accessability / Localization Language Support
     - Release
-    - Localization / Language Support
 - Trademark Process - ongoing
 # Critical Path
 - Milestone | **Final Content**
