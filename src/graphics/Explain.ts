@@ -18,7 +18,7 @@ export function explain(key: string, forceShow?: boolean) {
     }
 
 }
-globalThis.explain = (key: string) => {
+globalThis.devExplain = (key: string) => {
     explain(key, true);
 }
 function isAlreadyExplained(key: string): boolean {

@@ -17,7 +17,7 @@ import * as inLiquid from '../inLiquid';
 import * as slash from '../cards/slash';
 import * as push from '../cards/push';
 import * as pull from '../cards/pull';
-import { EXPLAIN_LIQUID_DAMAGE } from '../graphics/Explain';
+import { explain, EXPLAIN_LIQUID_DAMAGE } from '../graphics/Explain';
 
 const elLobby = document.getElementById('lobby') as (HTMLElement | undefined);
 const elInstructions = document.getElementById('instructions') as (HTMLElement | undefined);
