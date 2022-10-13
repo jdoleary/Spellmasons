@@ -14,7 +14,7 @@ const spell: Spell = {
     manaCost: 10,
     healthCost: 0,
     expenseScaling: 1,
-    probability: 20,
+    probability: 10,
     thumbnail: 'unknown.png',
     description: `
 Pushes the target(s) away from the cast location.

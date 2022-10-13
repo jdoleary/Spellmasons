@@ -13,7 +13,7 @@ const spell: Spell = {
     manaCost: 10,
     healthCost: 0,
     expenseScaling: 1,
-    probability: 20,
+    probability: 10,
     thumbnail: 'unknown.png',
     description: `
 Pulls the target(s) towards the cast location.
