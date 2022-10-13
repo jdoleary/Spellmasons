@@ -473,6 +473,7 @@ these badges only belong on cards in the hand */
 }
 
 kbd {
+  text-shadow: none;
   background-color: #eee;
   border-radius: 3px;
   border: 1px solid #b4b4b4;

@@ -24,7 +24,8 @@ export default {
 }
 
 export function keyToHumanReadable(keyboardKey: string): string {
-    return keyboardKey
+    const keyString = keyboardKey
         .split('Digit').join('')
         .split('Key').join('');
+    return `<kbd>${keyString}</kbd>`;
 }
