@@ -62,7 +62,7 @@ const spell: Spell = {
     healthCost: 0,
     probability: 1,
     expenseScaling: 2,
-    thumbnail: 'unknown.png',
+    thumbnail: 'spellIconSplit.png',
     description: `
 Splits the unit into 2 smaller weaker versions of itself.
     `,

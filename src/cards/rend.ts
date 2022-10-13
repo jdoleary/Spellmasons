@@ -30,7 +30,7 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 1,
     probability: 20,
-    thumbnail: 'unknown.png',
+    thumbnail: 'spellIconRend.png',
     animationPath,
     sfx: 'rend',
     description: `

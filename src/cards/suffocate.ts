@@ -51,7 +51,7 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 1,
     probability: 10,
-    thumbnail: 'unknown.png',
+    thumbnail: 'spellIconSuffocate.png',
     // animationPath: 'spell-effects/TODO',
     description: `
 A curse that causes sudden death after a number of turns have passed.
