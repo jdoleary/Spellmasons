@@ -267,7 +267,9 @@ export function drawWalkRope(target: Vec2, underworld: Underworld) {
 
     let lastPoint: Vec2 = globalThis.player.unit;
     let distanceCovered = 0;
-    let pointAtWhichUnitOutOfStamina: Vec2 | undefined;
+    // Default to current unit position, in the event that they have no stamina this will be the point
+    // at which they are out of stamina.  If they do have stamina it will be reassigned later
+    let pointAtWhichUnitOutOfStamina: Vec2 = globalThis.player.unit;
     const distanceLeftToMove = globalThis.player.unit.stamina;
     for (let i = 0; i < currentPlayerPath.length; i++) {
       const point = currentPlayerPath[i];
@@ -292,7 +294,7 @@ export function drawWalkRope(target: Vec2, underworld: Underworld) {
         lastPoint = point;
       }
     }
-    drawCastRangeCircle(pointAtWhichUnitOutOfStamina || lastPoint, globalThis.player.unit.attackRange, globalThis.walkPathGraphics, 'Potential Cast Range');
+    drawCastRangeCircle(pointAtWhichUnitOutOfStamina, globalThis.player.unit.attackRange, globalThis.walkPathGraphics, 'Potential Cast Range');
     // Draw the points along the path at which the unit will stop on each turn
     for (let i = 0; i < turnStopPoints.length; i++) {
       if (i == 0 && distanceLeftToMove > 0) {

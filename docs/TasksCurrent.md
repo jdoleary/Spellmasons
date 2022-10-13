@@ -1,6 +1,5 @@
 # From Dad playtest
 - Explain that decoy needs to be closer
-- fix: potential cast range moves the end of the white walk rope instead of staying put when you're at 0 stamina
 - explain liquid damage
 - bloat copy has newline error in it
 - explain overkill
