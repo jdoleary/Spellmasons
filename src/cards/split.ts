@@ -20,19 +20,24 @@ function changeStatWithCap(unit: Unit.IUnit, statKey: 'health' | 'healthMax' | '
 }
 const addMultiplier = 0.5;
 const removeMultiplier = 1 / addMultiplier;
+const scaleMultiplier = 0.75;
+const removeScaleMultiplier = 1 / scaleMultiplier;
 function remove(unit: Unit.IUnit, underworld: Underworld) {
-  if (unit.image) {
-    unit.image.sprite.scale.x *= removeMultiplier;
-    unit.image.sprite.scale.y *= removeMultiplier;
+  const stacks = unit.modifiers[id]?.stacks || 1;
+  for (let i = 0; i < stacks; i++) {
+    if (unit.image) {
+      unit.image.sprite.scale.x *= removeScaleMultiplier;
+      unit.image.sprite.scale.y *= removeScaleMultiplier;
+    }
+    changeStatWithCap(unit, 'health', removeMultiplier);
+    changeStatWithCap(unit, 'healthMax', removeMultiplier);
+    changeStatWithCap(unit, 'mana', removeMultiplier);
+    changeStatWithCap(unit, 'manaMax', removeMultiplier);
+    changeStatWithCap(unit, 'stamina', removeMultiplier);
+    changeStatWithCap(unit, 'staminaMax', removeMultiplier);
+    changeStatWithCap(unit, 'damage', removeMultiplier);
+    unit.moveSpeed *= removeMultiplier;
   }
-  changeStatWithCap(unit, 'health', removeMultiplier);
-  changeStatWithCap(unit, 'healthMax', removeMultiplier);
-  changeStatWithCap(unit, 'mana', removeMultiplier);
-  changeStatWithCap(unit, 'manaMax', removeMultiplier);
-  changeStatWithCap(unit, 'stamina', removeMultiplier);
-  changeStatWithCap(unit, 'staminaMax', removeMultiplier);
-  changeStatWithCap(unit, 'damage', removeMultiplier);
-  unit.moveSpeed *= removeMultiplier;
 }
 function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) {
   // First time setup
@@ -42,8 +47,8 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
     };
   }
   if (unit.image) {
-    unit.image.sprite.scale.x *= addMultiplier;
-    unit.image.sprite.scale.y *= addMultiplier;
+    unit.image.sprite.scale.x *= scaleMultiplier;
+    unit.image.sprite.scale.y *= scaleMultiplier;
   }
   changeStatWithCap(unit, 'health', addMultiplier);
   changeStatWithCap(unit, 'healthMax', addMultiplier);
@@ -53,6 +58,14 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
   changeStatWithCap(unit, 'staminaMax', addMultiplier);
   changeStatWithCap(unit, 'damage', addMultiplier);
   unit.moveSpeed *= addMultiplier;
+  // Increment the number of stacks
+  const modifier = unit.modifiers[id];
+  if (modifier) {
+    modifier.stacks = (modifier.stacks || 0) + quantity;
+    console.log('jtest 2 stacks', modifier.stacks);
+  } else {
+    console.error(`${id} modifier does not exist`)
+  }
 }
 const spell: Spell = {
   card: {

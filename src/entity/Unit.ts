@@ -256,6 +256,13 @@ export function addModifier(unit: IUnit, key: string, underworld: Underworld, pr
 
 export function removeModifier(unit: IUnit, key: string, underworld: Underworld) {
   const modifier = allModifiers[key];
+
+  // Call custom modifier's remove function
+  const customRemoveFn = allModifiers[key]?.remove;
+  if (customRemoveFn) {
+    customRemoveFn(unit, underworld);
+  }
+
   if (modifier && modifier.subsprite) {
     Image.removeSubSprite(unit.image, modifier.subsprite.imageName);
   }
@@ -266,12 +273,6 @@ export function removeModifier(unit: IUnit, key: string, underworld: Underworld)
   unit.onTurnStartEvents = unit.onTurnStartEvents.filter((e) => e !== key);
   unit.onTurnEndEvents = unit.onTurnEndEvents.filter((e) => e !== key);
   delete unit.modifiers[key];
-
-  // Call custom modifier's remove function
-  const customRemoveFn = allModifiers[key]?.remove;
-  if (customRemoveFn) {
-    customRemoveFn(unit, underworld);
-  }
 
 }
 
