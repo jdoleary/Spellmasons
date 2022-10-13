@@ -217,7 +217,7 @@ const manaPotionRestoreAmount = 40;
 const healthPotionRestoreAmount = 5;
 const spike_damage = 3;
 export const CARDS_PICKUP_NAME = 'Spells';
-export const PICKUP_SPIKES_NAME = 'Spike Pit';
+export const PICKUP_SPIKES_NAME = 'Trap';
 export const PICKUP_PORTAL_NAME = 'Portal';
 export const pickups: IPickupSource[] = [
   {
@@ -228,7 +228,7 @@ export const pickups: IPickupSource[] = [
     name: PICKUP_SPIKES_NAME,
     probability: 70,
     scale: 1,
-    description: `Deals ${spike_damage} to any unit (including NPCs) that touches it`,
+    description: `Deals ${spike_damage} to any unit that touches it`,
     effect: ({ unit, player, pickup, prediction, underworld }) => {
       if (unit) {
         // Play trap spring animation

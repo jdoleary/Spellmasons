@@ -7,7 +7,6 @@
 - explain walk rope should only happen after you spawn
 - explain camera movement
 - explain liquid damage
-- rename spike pit
 - bloat copy has newline error in it
 - explain overkill
 - fix: archers shouldn't spawn on level 1
