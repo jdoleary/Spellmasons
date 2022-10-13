@@ -4,7 +4,6 @@
 - explain liquid damage
 - bloat copy has newline error in it
 - explain overkill
-- fix: archers shouldn't spawn on level 1
 - copy: explain curse cards better, their copy is hard to understand out of context
 - I saw "spell will damage you" when he was casting on an already dying guy after the portal spanwed
 
