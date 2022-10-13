@@ -1,9 +1,9 @@
-# From Dad playtest
-- Explain that decoy needs to be closer
-- copy: explain curse cards better, their copy is hard to understand out of context
-- I saw "spell will damage you" when he was casting on an already dying guy after the portal spanwed
-
+# To do before Playtest
+- m: dragger cast animation
+- bug: Scaled down units (due to split) may render z-index on top of bigger units that are lower than them
+- bug: clone / split yielded error: 'Failed to load player because cannot find associated unit with ID 0'
 # 2022.10.12
+- copy: explain curse cards better, their copy is hard to understand out of context
 - *: Test on different resolutions
     - *: fix inventory visibility on all resolutions
 - Change protection from direct cast to a blessing so it's less confusing
@@ -13,7 +13,6 @@
 - *: fix save /load unit spawn issue
     - bug: loading game files somehow results in units at 0,0
 - m: Balance dragger
-- m: dragger cast animation
 - e: limit split lower bound
 - *: Add save/load to menu
 - m: cooldown instead of mana multiplier scaling
@@ -25,11 +24,6 @@
 - Add server history
 
 # Today
-- bug: Need to be able to purify away multiple stacks of 'split'
-    - also don't get smaller once you're at 1 health
-    - scale down blood
-- bug: Scaled down units (due to split) may render z-index on top of bigger units that are lower than them
-- bug: clone / split yielded error: 'Failed to load player because cannot find associated unit with ID 0'
 - This save file is giving me critical errors `saveFile-with-errors.json`
 - bug: displaceX5 + vortex made me get stuck in a wall
 - Expanding should take longer to return to base mana like resurrect and summon decoy do
@@ -65,6 +59,7 @@
     - new sfx
     - new animation
 # Tasks
+- bug: inLiquid is lost when load occurs
 - Explain camera movement with persistant popup about recentering so players don't get stuck if they hit WASD on accident
 ---
 - task: Start more zoomed in

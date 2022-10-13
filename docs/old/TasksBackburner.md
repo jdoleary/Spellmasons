@@ -1,3 +1,4 @@
+- SPlit: Scale down blood effects for split units
 - (m) Integrate freestanding obstacles (tree, urn, etc)
   - Requires pathing improvements for movable objects
 - Idea: Test arena
