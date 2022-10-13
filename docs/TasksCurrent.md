@@ -4,7 +4,6 @@
 - I saw "spell will damage you" when he was casting on an already dying guy after the portal spanwed
 
 # 2022.10.12
-- Add new Che icons
 - *: Test on different resolutions
     - *: fix inventory visibility on all resolutions
 - Change protection from direct cast to a blessing so it's less confusing

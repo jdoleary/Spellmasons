@@ -2,6 +2,7 @@
   - Get ready for Rucin beta test
     - perks
     - Make "Expand" affect radius of all spells
+    - Improve "Protection" blessing
     - (e) Feedback button / beta survey 
   - (h) I want 2x as many spells (21 to 42) and 2x as many enemies (7 to 14)
   - Finalize
