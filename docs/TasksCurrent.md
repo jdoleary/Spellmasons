@@ -1,12 +1,9 @@
 # To do before Playtest
 - m: dragger cast animation
-- bug: Scaled down units (due to split) may render z-index on top of bigger units that are lower than them
-- bug: clone / split yielded error: 'Failed to load player because cannot find associated unit with ID 0'
 # 2022.10.12
 - copy: explain curse cards better, their copy is hard to understand out of context
 - *: Test on different resolutions
     - *: fix inventory visibility on all resolutions
-- Change protection from direct cast to a blessing so it's less confusing
 - menu: extract back button and setRoute to global
 - fix: Limit max force move speed so units don't go through walls or fix collision detection
 ---

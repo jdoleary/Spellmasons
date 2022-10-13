@@ -29,7 +29,7 @@ import displace from './displace';
 import purify from './purify';
 import poison from './poison';
 import debilitate from './debilitate';
-import protection from './protection';
+import * as protection from './protection';
 import clone from './clone';
 import mana_burn from './mana_burn';
 import mana_steal from './mana_steal';
@@ -51,6 +51,7 @@ import { addCardToHand } from '../entity/Player';
 import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
 import { HasSpace } from '../entity/Type';
+import floatingText from '../graphics/FloatingText';
 export interface Modifiers {
   subsprite?: Subsprite;
   // run special init logic (usually for visuals) when a modifier is added or loaded
@@ -129,7 +130,7 @@ export function registerCards(underworld: Underworld) {
   register(swap, underworld);
   register(displace, underworld);
   register(debilitate, underworld);
-  register(protection, underworld);
+  register(protection.default, underworld);
   register(clone, underworld);
   register(mana_burn, underworld);
   register(mana_steal, underworld);

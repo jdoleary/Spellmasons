@@ -14,6 +14,7 @@ import * as Image from './graphics/Image';
 import * as storage from './storage';
 import * as ImmediateMode from './graphics/ImmediateModeSprites';
 import * as colors from './graphics/ui/colors';
+import * as protection from './cards/protection';
 import * as resurrect from './cards/resurrect';
 import * as shield from './cards/shield';
 import * as CSSClasses from './CSSClasses';
@@ -2351,22 +2352,32 @@ export default class Underworld {
     if (!prediction && casterUnit == (globalThis.player && globalThis.player.unit)) {
       globalThis.castThisTurn = true;
     }
-    const unitAtCastLocation = this.getUnitAt(castLocation, prediction);
-    const pickupAtCastLocation = this.getPickupAt(castLocation, prediction);
-    const doodadAtCastLocation = this.getDoodadAt(castLocation, prediction);
 
     let effectState: Cards.EffectState = {
       cardIds,
       casterCardUsage,
       casterUnit,
-      targetedUnits: unitAtCastLocation ? [unitAtCastLocation] : [],
-      targetedPickups: pickupAtCastLocation ? [pickupAtCastLocation] : [],
-      targetedDoodads: doodadAtCastLocation ? [doodadAtCastLocation] : [],
+      targetedUnits: [],
+      targetedPickups: [],
+      targetedDoodads: [],
       castLocation,
       aggregator: {
         unitDamage: [],
       },
     };
+    const unitAtCastLocation = this.getUnitAt(castLocation, prediction);
+    if (unitAtCastLocation) {
+      Cards.addTarget(unitAtCastLocation, effectState);
+    }
+    const pickupAtCastLocation = this.getPickupAt(castLocation, prediction);
+    if (pickupAtCastLocation) {
+      Cards.addTarget(pickupAtCastLocation, effectState);
+    }
+    const doodadAtCastLocation = this.getDoodadAt(castLocation, prediction);
+    if (doodadAtCastLocation) {
+      Cards.addTarget(doodadAtCastLocation, effectState);
+    }
+
     if (!effectState.casterUnit.alive) {
       // Prevent dead players from casting
       return effectState;
@@ -2401,6 +2412,7 @@ export default class Underworld {
     // "quantity" is the number of identical cards cast in a row. Rather than casting the card sequentially
     // quantity allows the card to have a unique scaling effect when cast sequentially after itself.
     let quantity = 1;
+    let excludedTargets: Unit.IUnit[] = [];
     for (let index = 0; index < effectState.cardIds.length; index++) {
       const cardId = effectState.cardIds[index];
       if (cardId === undefined) {
@@ -2421,6 +2433,20 @@ export default class Underworld {
           }
         }
 
+        // Refactor notice: This hard-coded "Protection" should be refactored out into
+        // an isTargeted callback if there become more uses for preventing or modifying 
+        // targeting when it occurs. But for now since it's the only use, "Protection"
+        // is hard-coded here
+        excludedTargets = excludedTargets.concat(effectState.targetedUnits.filter(u => {
+          const excluded = !!u.modifiers[protection.id];
+          if (excluded) {
+            protection.notifyProtected(u);
+            Unit.removeModifier(u, protection.id, this);
+          }
+          return excluded;
+        }));
+        // Filter out protected units
+        effectState.targetedUnits = effectState.targetedUnits.filter(u => !excludedTargets.includes(u));
 
         effectState = await card.effect(effectState, card, quantity, this, prediction, outOfRange);
 

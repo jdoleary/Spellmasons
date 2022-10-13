@@ -1,9 +1,24 @@
 import { Spell } from './index';
 import * as Unit from '../entity/Unit'
-import { CardCategory, UnitType } from '../types/commonTypes';
+import { CardCategory } from '../types/commonTypes';
+import Underworld from '../Underworld';
+import throttle from 'lodash.throttle';
+import { Vec2 } from '../jmath/Vec';
 import floatingText from '../graphics/FloatingText';
 
-const id = 'protection';
+export const id = 'protection';
+function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, quantity: number = 1) {
+  // First time setup
+  let modifier = unit.modifiers[id];
+  if (!modifier) {
+    unit.modifiers[id] = {
+      isCurse: false,
+    };
+  }
+}
+export const notifyProtected = throttle((coords: Vec2) => {
+  floatingText({ coords, text: `Protection!` });
+}, 1000, { trailing: true });
 const spell: Spell = {
   card: {
     id,
@@ -13,39 +28,18 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: 10,
     thumbnail: 'spellIconProtection.png',
-    description: 'Protects yourself and allies from being effected by the spell you are about to cast.  Will protect 1 allied unit (including self) per use.  Prioritizes protecting yourself, then ally wizards, then other allies.  Multiple stacks of this spell will protect multiple people.  This spell must be cast AFTER an ally is targeted by a previous spell.',
+    description: 'Prevents unit from being targeted by magic once',
     effect: async (state, card, quantity, underworld, prediction) => {
-      const allies = [
-        // Prioritize self over all other allies
-        state.casterUnit,
-        ...Unit.livingUnitsInSameFaction(state.casterUnit, underworld)
-          .sort((a, b) => {
-            // Prioritize PLAYER_CONTROLLED allies over AI controlled allies
-            return a.unitType == UnitType.PLAYER_CONTROLLED && b.unitType == UnitType.PLAYER_CONTROLLED ? 0 :
-              a.unitType == UnitType.PLAYER_CONTROLLED ? -1 : 1
-          })];
-      let excludeTarget: Unit.IUnit;
-      // For all the allies, find the first ally that matches a target
-      allyLoop: {
-        for (let ally of allies) {
-          for (let unit of state.targetedUnits) {
-            if (unit == ally) {
-              excludeTarget = unit;
-              // Temporarily use floating text until spell animation is finished
-              if (!prediction) {
-                floatingText({ coords: excludeTarget, text: id });
-              }
-              // Only remove 1 target per use of this card
-              break allyLoop;
-            }
-          }
-        }
+      // .filter: only target living units
+      const targets = state.targetedUnits.filter(u => u.alive);
+      for (let unit of targets) {
+        Unit.addModifier(unit, id, underworld, prediction);
       }
-      // Remove target
-      state.targetedUnits = state.targetedUnits.filter(u => u !== excludeTarget);
-
       return state;
     },
+  },
+  modifiers: {
+    add,
   },
 };
 export default spell;

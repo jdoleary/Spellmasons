@@ -1,3 +1,5 @@
+- bug: Scaled down units (due to split) may render z-index on top of bigger units that are lower than them
+- bug: clone / split yielded error: 'Failed to load player because cannot find associated unit with ID 0'
 - SPlit: Scale down blood effects for split units
 - (m) Integrate freestanding obstacles (tree, urn, etc)
   - Requires pathing improvements for movable objects
