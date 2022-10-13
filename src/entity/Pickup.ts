@@ -12,7 +12,7 @@ import { manaBlue, stamina } from '../graphics/ui/colors';
 import Underworld from '../Underworld';
 import { hasBloodCurse } from '../cards/blood_curse';
 import { HasSpace } from './Type';
-import { explain, EXPLAIN_OVERFILL } from '../graphics/Explain';
+import { explain, EXPLAIN_INVENTORY, EXPLAIN_OVERFILL } from '../graphics/Explain';
 
 export const PICKUP_RADIUS = config.SELECTABLE_RADIUS;
 type IPickupEffect = ({ unit, player, pickup, prediction }: { unit?: IUnit; player?: Player.IPlayer, pickup: IPickup, underworld: Underworld, prediction: boolean }) => boolean | undefined;
@@ -310,6 +310,11 @@ export const pickups: IPickupSource[] = [
       // All players get to pick a new upgrade when one picks up the scroll.
       underworld.players.forEach(p => p.upgradesLeftToChoose++);
       underworld.showUpgrades();
+      if (player && player == globalThis.player) {
+        if (player.inventory.length > 10) {
+          explain(EXPLAIN_INVENTORY);
+        }
+      }
       return true;
     },
   },

@@ -74,7 +74,7 @@ import { createVisualLobbingProjectile } from './entity/Projectile';
 import { isOutOfRange } from './PlayerUtils';
 import type { TilingSprite } from 'pixi.js';
 import { HasSpace } from './entity/Type';
-import { explain, EXPLAIN_CAST, EXPLAIN_MANA_COST, EXPLAIN_STACK, EXPLAIN_WALK, EXPLAIN_WALK_ROPE } from './graphics/Explain';
+import { explain, EXPLAIN_MISSED_SCROLL, EXPLAIN_SCROLL, EXPLAIN_WALK } from './graphics/Explain';
 import { calculateGameDifficulty } from './Difficulty';
 
 export enum turn_phase {
@@ -212,6 +212,7 @@ export default class Underworld {
     }
     if (numberOfEnemiesKilledNeededForNextDrop <= this.enemiesKilled) {
       console.log('Pickup: Drop scroll pickup', this.cardDropsDropped, this.enemiesKilled, numberOfEnemiesKilledNeededForNextDrop)
+      explain(EXPLAIN_SCROLL);
       this.cardDropsDropped++;
       const pickupSource = Pickup.pickups.find(p => p.name == Pickup.CARDS_PICKUP_NAME)
       if (pickupSource) {
@@ -1150,7 +1151,6 @@ export default class Underworld {
           levelData.pickups.push({ index: portalPickupIndex, coord })
           unitIds = [];
           this.levelIndex--;
-          explain(EXPLAIN_WALK);
           storage.set(FIRST_TIME_PLAYING, 'y');
         } else {
           console.error('could not find valid spawn for portal')
@@ -1507,18 +1507,6 @@ export default class Underworld {
       this.spawnEnemy(e.id, e.coord);
     }
 
-    if (this.levelIndex == 1) {
-      explain(EXPLAIN_CAST);
-    }
-    if (this.levelIndex == 2) {
-      explain(EXPLAIN_MANA_COST);
-    }
-    if (this.levelIndex == 3) {
-      explain(EXPLAIN_WALK_ROPE);
-    }
-    if (this.levelIndex == 4) {
-      explain(EXPLAIN_STACK);
-    }
     // Show text in center of screen for the new level
     queueCenteredFloatingText(
       `Level ${this.levelIndex + 1}`,
@@ -1705,6 +1693,9 @@ export default class Underworld {
         // Trigger custom behavior
         if (p.onTurnsLeftDone) {
           await p.onTurnsLeftDone(p);
+        }
+        if (p.name == Pickup.CARDS_PICKUP_NAME) {
+          explain(EXPLAIN_MISSED_SCROLL);
         }
         // Remove pickup
         Pickup.removePickup(p, this, false);

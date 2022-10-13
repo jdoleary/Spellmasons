@@ -1,17 +1,11 @@
 # From Dad playtest
-- explain inventory when you get your 11th spell
-- explain intent icons
-- remind players not to miss scroll pickups
 - Explain that decoy needs to be closer
 - fix: potential cast range moves the end of the white walk rope instead of staying put when you're at 0 stamina
-- explain walk rope should only happen after you spawn
-- explain camera movement
 - explain liquid damage
 - bloat copy has newline error in it
 - explain overkill
 - fix: archers shouldn't spawn on level 1
-- explain scroll picup
-- explain curse cards better, their copy is hard to understand out of context
+- copy: explain curse cards better, their copy is hard to understand out of context
 - I saw "spell will damage you" when he was casting on an already dying guy after the portal spanwed
 
 # 2022.10.12

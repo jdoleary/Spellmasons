@@ -22,7 +22,7 @@ import { triggerAdminCommand } from '../graphics/ui/eventListeners';
 import { Vec2 } from '../jmath/Vec';
 import pingSprite from '../graphics/Ping';
 import { clearLastNonMenuView } from '../views';
-import { explain, EXPLAIN_END_TURN } from '../graphics/Explain';
+import { autoExplain, explain, EXPLAIN_END_TURN } from '../graphics/Explain';
 import { cameraAutoFollow } from '../graphics/PixiUtils';
 
 const messageLog: any[] = [];
@@ -302,6 +302,9 @@ async function handleOnDataMessage(d: OnDataArgs, underworld: Underworld): Promi
       break;
     case MESSAGE_TYPES.SPAWN_PLAYER:
       if (fromPlayer) {
+        if (fromPlayer == globalThis.player) {
+          autoExplain();
+        }
         if (!(isNaN(payload.x) && isNaN(payload.y))) {
           fromPlayer.isSpawned = true;
           if (fromPlayer == globalThis.player) {
