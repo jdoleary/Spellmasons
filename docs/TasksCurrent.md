@@ -1,7 +1,5 @@
 # From Dad playtest
 - Explain that decoy needs to be closer
-- bloat copy has newline error in it
-- explain overkill
 - copy: explain curse cards better, their copy is hard to understand out of context
 - I saw "spell will damage you" when he was casting on an already dying guy after the portal spanwed
 

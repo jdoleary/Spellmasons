@@ -49,9 +49,8 @@ const spell: Spell = {
     expenseScaling: 1,
     probability: 50,
     thumbnail: 'spellIconBloat.png',
-    description: `Cursed targets explode when they die dealing ${damage} damage to all units within the
-    explosion radius.
-    Multiple stacks of bloat will increase the amount of damage done when the unit explodes.`,
+    description: `Cursed targets explode when they die dealing ${damage} damage to all units within the explosion radius.
+Multiple stacks of bloat will increase the amount of damage done when the unit explodes.`,
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       for (let unit of state.targetedUnits.filter(u => u.alive)) {
