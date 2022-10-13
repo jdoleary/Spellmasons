@@ -711,7 +711,7 @@ export function syncPlayerHealthManaUI(underworld: Underworld) {
         }
 
         // Make visible if it has a message to share
-        elCautionBox.classList.toggle('visible', warnings.length > 0);
+        elCautionBox.classList.toggle('visible', underworld.isMyTurn() && warnings.length > 0);
       }
     }
     if (losingHealth) {
