@@ -43,6 +43,8 @@ import decoy from './summon_decoy';
 import explode from './bloat';
 import lastWill from './lastwill';
 import split from './split';
+import drown from './drown';
+
 import { IUpgrade, upgradeCardsSource } from '../Upgrade';
 import { _getCardsFromIds } from './cardUtils';
 import { addCardToHand } from '../entity/Player';
@@ -141,6 +143,7 @@ export function registerCards(underworld: Underworld) {
   register(explode, underworld);
   register(lastWill, underworld);
   register(split, underworld);
+  register(drown, underworld);
 }
 function cardToUpgrade(c: ICard, underworld: Underworld): IUpgrade {
   return {
