@@ -49,6 +49,7 @@ export const EXPLAIN_CAMERA = 'Camera Movement';
 export const EXPLAIN_INVENTORY = 'Inventory';
 export const EXPLAIN_SCROLL = 'Getting New Spells';
 export const EXPLAIN_MISSED_SCROLL = 'Missing Scroll Pickups';
+export const EXPLAIN_LIQUID_DAMAGE = 'Liquid Damage';
 interface ExplainData {
     condition?: () => boolean;
     prompt: () => void;
@@ -128,6 +129,13 @@ Click and drag a spell to your toolbar to make it easily accessible.`, yesText: 
         prompt: () => {
             Jprompt({
                 imageSrc: 'images/explain/scroll.gif', text: `<h1>A Scroll has disappeared!</h1>Remember: Scrolls disappear after a number of turns have passed.  It is very important to pick them up before it is too late so you can get new spells.`, yesText: 'Bummer'
+            });
+        }
+    },
+    [EXPLAIN_LIQUID_DAMAGE]: {
+        prompt: () => {
+            Jprompt({
+                imageSrc: 'images/explain/liquid-damage.gif', text: `Units that fall into bodies of liquid will take damage.  Some units are stronger than others and will survive.`, yesText: 'Yikes!'
             });
         }
     },

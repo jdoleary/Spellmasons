@@ -15,6 +15,9 @@ import Underworld from '../Underworld';
 import { lerp } from "../jmath/math"
 import * as inLiquid from '../inLiquid';
 import * as slash from '../cards/slash';
+import * as push from '../cards/push';
+import * as pull from '../cards/pull';
+import { EXPLAIN_LIQUID_DAMAGE } from '../graphics/Explain';
 
 const elLobby = document.getElementById('lobby') as (HTMLElement | undefined);
 const elInstructions = document.getElementById('instructions') as (HTMLElement | undefined);
@@ -324,6 +327,9 @@ export function addCardToHand(card: Cards.ICard | undefined, player: IPlayer | u
   // Players may not have more than 1 of a particular card, because now, cards are
   // not removed when cast
   if (!player.inventory.includes(card.id)) {
+    if (card.id == push.id || card.id == pull.id) {
+      explain(EXPLAIN_LIQUID_DAMAGE);
+    }
     player.inventory.push(card.id);
     const emptySlotIndex = player.cards.indexOf('');
     if (emptySlotIndex !== -1) {

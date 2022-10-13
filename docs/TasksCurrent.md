@@ -1,6 +1,5 @@
 # From Dad playtest
 - Explain that decoy needs to be closer
-- explain liquid damage
 - bloat copy has newline error in it
 - explain overkill
 - copy: explain curse cards better, their copy is hard to understand out of context
