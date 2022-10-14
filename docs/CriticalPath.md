@@ -1,18 +1,7 @@
-# Major Tasks
-  - Get ready for Rucin beta test
-    - Make "Expand" affect radius of all spells
-    - Improve "Protection" blessing
-    - (e) Feedback button / beta survey 
-  - (h) I want 2x as many spells (21 to 42) and 2x as many enemies (7 to 14)
-  - Finalize
-    - perks
-    - (?) Package for Electron
-    - (m) Steam integration
 # Desired Schedule
 - September / October
     - Due Oct 16: Prepare for multi-user playtesting
         - Playtest multiplayer again
-        - Finish menu
         - Fix inventory on small resoltion
 - November
     - Package as Electron App
@@ -21,12 +10,7 @@
     - [Beta Testing](https://partner.steamgames.com/doc/store/testing)
     - Cooldowns instead of mana multiplier
 - December / January
-    - More content
-        - Perks
-        - 2x spells
-        - 2x enemies
-        - Boss
-    - Finish polish and reliability
+    - More content: Spells, enemies, boss, perks
     - Steamdeck support / Controller Support / Accessability / Localization Language Support
     - Release
 - Trademark Process - ongoing

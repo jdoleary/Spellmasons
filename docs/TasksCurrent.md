@@ -1,16 +1,16 @@
 # To do before Playtest
-- m: dragger cast animation
-# 2022.10.12
-- copy: explain curse cards better, their copy is hard to understand out of context
 - *: Test on different resolutions
     - *: fix inventory visibility on all resolutions
+- copy: explain curse cards better, their copy is hard to understand out of context
 - menu: extract back button and setRoute to global
 - fix: Limit max force move speed so units don't go through walls or fix collision detection
+- m: Balance dragger
+- e: limit split lower bound
+# 2022.10.12
+- m: dragger cast animation
 ---
 - *: fix save /load unit spawn issue
     - bug: loading game files somehow results in units at 0,0
-- m: Balance dragger
-- e: limit split lower bound
 - *: Add save/load to menu
 - m: cooldown instead of mana multiplier scaling
 - m: inventory should show current card cost and cooldown
