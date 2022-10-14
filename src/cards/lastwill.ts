@@ -43,7 +43,7 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 1,
     probability: 50,
-    thumbnail: 'unknown.png',
+    thumbnail: 'spellIconLastWill.png',
     description: `Drop a random potion on death.`,
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units

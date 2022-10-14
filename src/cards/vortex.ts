@@ -14,7 +14,7 @@ const spell: Spell = {
     healthCost: 0,
     expenseScaling: 1,
     probability: 10,
-    thumbnail: 'unknown.png',
+    thumbnail: 'spellIconVortex.png',
     description: `
 Pulls the target(s) towards the cast location.
     `,

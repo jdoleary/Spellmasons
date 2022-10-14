@@ -40,7 +40,7 @@ const spell: Spell = {
     healthCost: 0,
     probability: 5,
     expenseScaling: 1,
-    thumbnail: 'unknown.png',
+    thumbnail: 'spellIconDisplace.png',
     description: `
 Teleport the target to a random location.
     `,
