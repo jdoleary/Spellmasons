@@ -255,7 +255,7 @@ export function cameraAutoFollow(active: boolean) {
   utilProps.doCameraAutoFollow = active;
   if (!utilProps.doCameraAutoFollow && elCameraRecenterTip) {
     if (globalThis.player?.isSpawned) {
-      elCameraRecenterTip.innerHTML = `Press ${keyToHumanReadable(KeyMapping.recenterCamera)} to center the view on your player`;
+      elCameraRecenterTip.innerHTML = `Press ${keyToHumanReadable(KeyMapping.recenterCamera)} to make the view auto follow you`;
     }
   }
   document.body?.classList.toggle('auto-camera', active);

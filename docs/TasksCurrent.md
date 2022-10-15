@@ -9,7 +9,6 @@
 - Menu list for features to explain extra things
 - Late game version of lobber: moves and casts in the same turn.  Make sure to get prediction right
 - Archer range limit
-- Change "z to center camera" to "auto follow" because it doesn't tecnically center you
 - Tutorial: SHould explain that you need to self cast when you get blessings
 - Prediction error with melee on live build!!! 0.117.0
 - Blood splatter shouldn't show up in void
