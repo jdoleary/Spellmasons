@@ -15,7 +15,7 @@ import { calculateCost, CardCost } from '../cards/cardUtils';
 import { closestLineSegmentIntersection } from '../jmath/lineSegment';
 import { getBestRangedLOSTarget } from '../entity/units/actions/rangedAction';
 import * as colors from './ui/colors';
-import { getAdjustedCastTarget, isOutOfRange } from '../PlayerUtils';
+import { isOutOfRange } from '../PlayerUtils';
 import { pointsEveryXDistanceAlongPath } from '../jmath/Pathfinding';
 import { distance, getCoordsAtDistanceTowardsTarget } from '../jmath/math';
 import { Graphics } from 'pixi.js';
@@ -73,7 +73,7 @@ export function updatePlanningView(underworld: Underworld) {
       // they can see how far they can move unobstructed
       if (!keyDown.showWalkRope) {
         if (CardUI.areAnyCardsSelected()) {
-          const outOfRange = isOutOfRange(globalThis.player, mouseTarget, true);
+          const outOfRange = isOutOfRange(globalThis.player, mouseTarget, underworld);
           if (outOfRange) {
             // Only show outOfRange information if mouse is over the game canvas, not when it's over UI elements
             if (globalThis.hoverTarget && globalThis.hoverTarget.closest('#PIXI-holder')) {
@@ -472,7 +472,7 @@ export async function runPredictions(underworld: Underworld) {
       underworld.syncPredictionEntities();
       updateManaCostUI(underworld);
       // Dry run cast so the user can see what effect it's going to have
-      const target = getAdjustedCastTarget(globalThis.player, mousePos);
+      const target = mousePos;
       const casterUnit = underworld.unitsPrediction.find(u => u.id == globalThis.player?.unit.id)
       if (!casterUnit) {
         console.error('Critical Error, caster unit not found');
@@ -480,7 +480,7 @@ export async function runPredictions(underworld: Underworld) {
       }
       const cardIds = CardUI.getSelectedCardIds();
       if (cardIds.length) {
-        const outOfRange = isOutOfRange(globalThis.player, target, true);
+        const outOfRange = isOutOfRange(globalThis.player, target, underworld);
         await showCastCardsPrediction(underworld, target, casterUnit, cardIds, outOfRange);
       } else {
         // If there are no cards ready to cast, clear unit tints (which symbolize units that are targeted by the active spell)

@@ -2,10 +2,8 @@
 - Vortex should have it's own radius or not be allowed until a targeting spell is aquired
 - "All targets" copy is confusing if player doesn't understand targeting
 - Explain backspace to remove one spell
-- !!Fix out of range issue - If any part of a unit is in range then all of them is in range
 - Liquid: blood could apply a curse when you fall in, like slowed movement
 - Menu list for features to explain extra things
-- Late game version of lobber: moves and casts in the same turn.  Make sure to get prediction right
 - Archer range limit
 - Tutorial: SHould explain that you need to self cast when you get blessings
 - Prediction error with melee on live build!!! 0.117.0
@@ -123,6 +121,7 @@
 - h: piercing archers
 - h: "Heat seeking" enemy or spell
 - idea: spell that triggers onDeath effects "Playdead"
+- Late game version of lobber: moves and casts in the same turn.  Make sure to get prediction right
 - Idea: Blessing that blocks all damage for one turn. "Fortify"
 - thought: Spellmasons should have some element of risk/reward like 50% chance to double damage of next spell or something like that.  Think of my experience with slice and dice where I got a dice side that did 24 damage and affected the guy below.  If you could always have that it's no fun, too easy but because you can only sometimes get it when you're lucky is what makes it exciting.
     - also one-use spells could work well

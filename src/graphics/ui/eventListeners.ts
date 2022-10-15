@@ -19,7 +19,7 @@ import {
 import { toggleMenu, View } from '../../views';
 import * as config from '../../config';
 import { cameraAutoFollow, getCamera, graphicsBloodSmear, moveCamera, toggleHUD } from '../PixiUtils';
-import { getAdjustedCastTarget, isOutOfRange } from '../../PlayerUtils';
+import { isOutOfRange } from '../../PlayerUtils';
 import { vec2ToOneDimentionIndexPreventWrap } from '../../jmath/ArrayUtil';
 import * as Vec from '../../jmath/Vec';
 import { Vec2 } from '../../jmath/Vec';
@@ -494,7 +494,7 @@ export function clickHandler(underworld: Underworld, e: MouseEvent) {
       // If the player casting is the current client player
       if (selfPlayer) {
         // cast the spell
-        const target = getAdjustedCastTarget(selfPlayer, mousePos);
+        const target = mousePos;
         const cardIds = CardUI.getSelectedCardIds();
         const cards = CardUI.getSelectedCards();
 
@@ -523,7 +523,7 @@ export function clickHandler(underworld: Underworld, e: MouseEvent) {
           // Then cancel casting:
           return
         }
-        if (isOutOfRange(selfPlayer, mousePos, true)) {
+        if (isOutOfRange(selfPlayer, mousePos, underworld)) {
           // If there is no target at end range, just show that they are trying to cast out of range
           floatingText({
             coords: target,

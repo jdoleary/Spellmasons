@@ -400,7 +400,7 @@ export default class Underworld {
     if (globalThis.player) {
       document.body?.classList.toggle(CSSClasses.casting, CardUI.areAnyCardsSelected());
       if (CardUI.areAnyCardsSelected()) {
-        const outOfRange = isOutOfRange(globalThis.player, this.getMousePos(), true)
+        const outOfRange = isOutOfRange(globalThis.player, this.getMousePos(), this)
         document.body?.classList.toggle(CSSClasses.outOfRange, outOfRange);
       } else {
         // If there are no cards selected, ensure the out of range class is removed
