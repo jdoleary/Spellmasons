@@ -130,6 +130,9 @@ export function createUpgradeElement(upgrade: IUpgrade, player: IPlayer, underwo
       upgrade,
     });
   });
+  element.addEventListener('mouseenter', (e) => {
+    playSFXKey('click');
+  });
   return element;
 }
 export function getUpgradeByTitle(title: string): IUpgrade | undefined {

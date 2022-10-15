@@ -11,6 +11,7 @@ export const sfx: { [key: string]: string } = {
     archerDeath: './sound/sfx-from-val/archer-death.wav',
     archerHurt: './sound/sfx-from-val/archer-hurt.wav',
     bloatExplosion: './sound/sfx-from-val/bloat.wav',
+    click: './sound/sfx-from-val/click.wav',
     clone: './sound/sfx-from-val/clone.wav',
     contageousSplat: './sound/sfx-from-val/contageous.wav',
     debilitate: './sound/sfx-from-val/debilitate.wav',
