@@ -1,6 +1,5 @@
 # 2022.10.15 Playtest
 - Hover sound when choosing upgrade
-- Copy: "Perk" -> "Upgrade"
 - Show unit gif in tooltip
 - "How to use magic" -> "How to forge spells"
 - Too many golems on level 1

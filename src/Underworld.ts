@@ -1953,7 +1953,7 @@ export default class Underworld {
       }
     } else {
       if (elUpgradePickerLabel) {
-        elUpgradePickerLabel.innerHTML = isPerk ? 'Pick a Perk' : 'Pick a spell';
+        elUpgradePickerLabel.innerHTML = isPerk ? 'Pick an Upgrade' : 'Pick a spell';
       }
     }
     // Now that level is complete, move to the Upgrade view where players can choose upgrades
