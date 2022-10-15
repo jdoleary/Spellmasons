@@ -1,5 +1,4 @@
-import * as storage from '../storage';
-interface Prompt {
+export interface PromptArgs {
     text: string;
     noBtnText?: string;
     noBtnKey?: string;
@@ -7,11 +6,16 @@ interface Prompt {
     yesKey?: string;
     yesKeyText?: string;
     imageSrc?: string;
+    // Render inside
+    portal?: HTMLElement;
 }
-export default async function Jprompt(prompt: Prompt): Promise<boolean> {
-    const { text, noBtnText, noBtnKey, yesText, yesKey, yesKeyText = '', imageSrc } = prompt;
+export default async function Jprompt(prompt: PromptArgs): Promise<boolean> {
+    const { text, noBtnText, noBtnKey, yesText, yesKey, yesKeyText = '', imageSrc, portal } = prompt;
     const el = document.createElement('div')
     el.classList.add('prompt');
+    if (portal) {
+        el.classList.add('in-portal');
+    }
     el.innerHTML = `
 <div class="ui-border">
 <div class="prompt-inner ${!imageSrc ? 'thin' : ''}">
@@ -34,7 +38,11 @@ export default async function Jprompt(prompt: Prompt): Promise<boolean> {
 </div>
 </div>
 `;
-    document.body?.appendChild(el);
+    if (portal) {
+        portal.appendChild(el);
+    } else {
+        document.body?.appendChild(el);
+    }
 
     return new Promise<boolean>((res) => {
         const noBtn = el.querySelector('.no') as (HTMLElement | undefined);
@@ -56,7 +64,7 @@ export default async function Jprompt(prompt: Prompt): Promise<boolean> {
             });
         }
     }).then((result) => {
-        document.body?.removeChild(el);
+        el.remove();
         return result;
     });
 }

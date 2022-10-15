@@ -17,12 +17,10 @@
 - targeting spells should be available sooner
     - New smaller targeting spell
 - Stamina potion should allow overfill
-- Idea: Blessing that blocks all damage for one turn. "Fortify"
 - Permanent "you died" screen.
 - For move tutorial, specify that yellow shows your remaining stamina
 - "As you force a spell repeatedly it will cost more..." for "mana cost". Make a second gif for every time you end your turn spells get cheaper
 - Introduce melee agro tut sooner
-- help page: no white wash and click on each to go through quickly
 - UI: More padding for divider on top
 # To do before Playtest
 - *: Test on different resolutions
@@ -128,6 +126,7 @@
 - h: piercing archers
 - h: "Heat seeking" enemy or spell
 - idea: spell that triggers onDeath effects "Playdead"
+- Idea: Blessing that blocks all damage for one turn. "Fortify"
 - thought: Spellmasons should have some element of risk/reward like 50% chance to double damage of next spell or something like that.  Think of my experience with slice and dice where I got a dice side that did 24 damage and affected the guy below.  If you could always have that it's no fun, too easy but because you can only sometimes get it when you're lucky is what makes it exciting.
     - also one-use spells could work well
 - add ghost archer

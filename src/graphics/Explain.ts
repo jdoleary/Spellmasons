@@ -1,5 +1,5 @@
 import * as storage from '../storage';
-import Jprompt from './Jprompt';
+import Jprompt, { PromptArgs } from './Jprompt';
 import keyMapping, { keyToHumanReadable } from './ui/keyMapping';
 const ALREADY_EXPLAINED = 'explained'
 export function explain(key: string, forceShow?: boolean) {
@@ -8,7 +8,13 @@ export function explain(key: string, forceShow?: boolean) {
         if (explainData) {
             // If condition is met
             if (forceShow || !explainData.condition || explainData.condition()) {
-                explainData.prompt();
+                let portal = document.getElementById('explain-portal');
+                if (portal) {
+                    // Clear previous explain if this is a forceShow (meaning it's coming from the help screen)
+                    // and rendering into a portal
+                    portal.innerHTML = "";
+                }
+                Jprompt({ ...explainData.prompt(), portal: forceShow ? (portal || undefined) : undefined });
                 document.querySelectorAll('.prompt').forEach(el => el.classList.add('forceShow'));
                 storage.set(key, ALREADY_EXPLAINED);
             }
@@ -52,92 +58,77 @@ export const EXPLAIN_MISSED_SCROLL = 'Missing Scroll Pickups';
 export const EXPLAIN_LIQUID_DAMAGE = 'Liquid Damage';
 interface ExplainData {
     condition?: () => boolean;
-    prompt: () => void;
+    // Returns args to pass into Jprompt
+    prompt: () => PromptArgs;
 };
 
 const explainMap: { [key: string]: ExplainData } = {
     [EXPLAIN_WALK]: {
-        prompt: () => {
-            Jprompt({ imageSrc: 'images/explain/walk.gif', text: '<h1>How to Move</h1>Hold right mouse button to walk towards your cursor. Your stamina bar will refill at the start of every turn.', yesText: 'Okay' });
-        }
+        prompt: () => ({ imageSrc: 'images/explain/walk.gif', text: '<h1>How to Move</h1>Hold right mouse button to walk towards your cursor. Your stamina bar will refill at the start of every turn.', yesText: 'Okay' })
     },
     [EXPLAIN_CAST]: {
-        prompt: () => {
-            Jprompt({ imageSrc: 'images/explain/cast.gif', text: `<h1>How to Forge Spells!</h1>Click on a spell or use its keyboard hotkey to queue it up. Left click on a target to unleash the queued spell.<br/><br/>Or if you change your mind, press ${keyToHumanReadable(keyMapping.clearQueuedSpell)} to clear a queued spell.`, yesText: 'Nice!' });
-        }
+        prompt: () => ({ imageSrc: 'images/explain/cast.gif', text: `<h1>How to Forge Spells!</h1>Click on a spell or use its keyboard hotkey to queue it up. Left click on a target to unleash the queued spell.<br/><br/>Or if you change your mind, press ${keyToHumanReadable(keyMapping.clearQueuedSpell)} to clear a queued spell.`, yesText: 'Nice!' })
     },
     [EXPLAIN_STACK]: {
-        prompt: () => {
-            Jprompt({ imageSrc: 'images/explain/stack-spells.gif', text: 'Many spells become more powerful if you stack multiple in a row.  Try combining different spells to find out how they might interact.', yesText: 'Intriguing...' });
-        }
+        prompt: () => ({ imageSrc: 'images/explain/stack-spells.gif', text: 'Many spells become more powerful if you stack multiple in a row.  Try combining different spells to find out how they might interact.', yesText: 'Intriguing...' })
+
     },
     [EXPLAIN_WALK_ROPE]: {
-        prompt: () => {
-            Jprompt({ imageSrc: 'images/explain/walk-rope.gif', text: `Hold ${keyToHumanReadable(keyMapping.showWalkRope)} to see how far you can go with the stamina that you have remaining.  The blue circle shows you what your cast range would be if you moved to that location.`, yesText: 'Okay' });
-        }
+        prompt: () => ({ imageSrc: 'images/explain/walk-rope.gif', text: `Hold ${keyToHumanReadable(keyMapping.showWalkRope)} to see how far you can go with the stamina that you have remaining.The blue circle shows you what your cast range would be if you moved to that location.`, yesText: 'Okay' })
+
     },
     [EXPLAIN_END_TURN]: {
-        prompt: () => {
-            Jprompt({ imageSrc: 'images/explain/end-turn.gif', text: `Press ${keyToHumanReadable(keyMapping.endTurn)} or click the End Turn button to have your mana and stamina refilled.`, yesText: 'Okay' });
-        }
+        prompt: () => ({ imageSrc: 'images/explain/end-turn.gif', text: `Press ${keyToHumanReadable(keyMapping.endTurn)} or click the End Turn button to have your mana and stamina refilled.`, yesText: 'Okay' })
+
     },
     [EXPLAIN_OVERFILL]: {
         condition: () => !!globalThis.player && globalThis.player.unit.mana > globalThis.player.unit.manaMax,
-        prompt: () => {
-            Jprompt({ imageSrc: 'images/explain/mana-overfill.gif', text: 'You are able to fill your mana up to 3x its maximum amount using potions or spells.', yesText: 'Cool!' });
-        }
+        prompt: () => ({ imageSrc: 'images/explain/mana-overfill.gif', text: 'You are able to fill your mana up to 3x its maximum amount using potions or spells.', yesText: 'Cool!' })
+
     },
     [EXPLAIN_MANA_COST]: {
-        prompt: () => {
-            Jprompt({ imageSrc: 'images/explain/mana-cost.gif', text: 'As you use a spell it will cost more mana.  Every time you end your turn the spell will cost less mana until it returns to the original cost.', yesText: 'Okay' });
-        }
+        prompt: () => ({ imageSrc: 'images/explain/mana-cost.gif', text: 'As you use a spell it will cost more mana.  Every time you end your turn the spell will cost less mana until it returns to the original cost.', yesText: 'Okay' })
+
     },
     [EXPLAIN_ATTENTION_MARKER_MELEE]: {
-        prompt: () => {
-            Jprompt({ imageSrc: 'images/explain/attentionMarkerMelee.gif', text: 'An icon will appear above the head of a melee enemy if you are close enough for them to attack you next turn.', yesText: 'Okay' });
-        }
+        prompt: () => ({ imageSrc: 'images/explain/attentionMarkerMelee.gif', text: 'An icon will appear above the head of a melee enemy if you are close enough for them to attack you next turn.', yesText: 'Okay' })
+
     },
     [EXPLAIN_ATTENTION_MARKER_RANGED]: {
-        prompt: () => {
-            Jprompt({ imageSrc: 'images/explain/attentionMarkerRanged.gif', text: 'An icon will appear above the head of an archer when they can see you; which means they will attack you next turn.', yesText: 'Okay' });
-        }
+        prompt: () => ({ imageSrc: 'images/explain/attentionMarkerRanged.gif', text: 'An icon will appear above the head of an archer when they can see you; which means they will attack you next turn.', yesText: 'Okay' })
+
     },
     [EXPLAIN_CAMERA]: {
-        prompt: () => {
-            Jprompt({
-                imageSrc: 'images/explain/camera-movement.gif', text: `Move the camera by clicking and dragging Middle Mouse Button or by pressing ${keyToHumanReadable(keyMapping.cameraUp)}, ${keyToHumanReadable(keyMapping.cameraLeft)}, ${keyToHumanReadable(keyMapping.cameraDown)}, or ${keyToHumanReadable(keyMapping.cameraRight)}.
+        prompt: () => ({
+            imageSrc: 'images/explain/camera-movement.gif', text: `Move the camera by clicking and dragging Middle Mouse Button or by pressing ${keyToHumanReadable(keyMapping.cameraUp)}, ${keyToHumanReadable(keyMapping.cameraLeft)}, ${keyToHumanReadable(keyMapping.cameraDown)}, or ${keyToHumanReadable(keyMapping.cameraRight)}.
             To make the camera auto follow your player again, press ${keyToHumanReadable(keyMapping.recenterCamera)}.`, yesText: 'Okay'
-            });
-        }
+        })
+
     },
     [EXPLAIN_INVENTORY]: {
-        prompt: () => {
-            Jprompt({
-                imageSrc: 'images/explain/inventory.gif', text: `Spells are stored in your inventory.  Open your inventory by clicking on the Spell Book or by pressing ${keyToHumanReadable(keyMapping.openInventory)}.
+        prompt: () => ({
+            imageSrc: 'images/explain/inventory.gif', text: `Spells are stored in your inventory.Open your inventory by clicking on the Spell Book or by pressing ${keyToHumanReadable(keyMapping.openInventory)}.
 Click and drag a spell to your toolbar to make it easily accessible.`, yesText: 'I\'m so organized!'
-            });
-        }
+        })
+
     },
     [EXPLAIN_SCROLL]: {
-        prompt: () => {
-            Jprompt({
-                imageSrc: 'images/explain/scroll.gif', text: `Move onto the Scroll Pickup to aquire new spells.  Scroll Pickups will disappear after a number of turns have passed so be careful to pick them up before it's too late!`, yesText: 'Okay'
-            });
-        }
+        prompt: () => ({
+            imageSrc: 'images/explain/scroll.gif', text: `Move onto the Scroll Pickup to aquire new spells.Scroll Pickups will disappear after a number of turns have passed so be careful to pick them up before it's too late!`, yesText: 'Okay'
+        })
+
     },
     [EXPLAIN_MISSED_SCROLL]: {
-        prompt: () => {
-            Jprompt({
-                imageSrc: 'images/explain/scroll-disappear.gif', text: `<h1>A Scroll has disappeared!</h1>Remember: Scrolls disappear after a number of turns have passed.  It is very important to pick them up before it is too late so you can get new spells.`, yesText: 'Bummer'
-            });
-        }
+        prompt: () => ({
+            imageSrc: 'images/explain/scroll-disappear.gif', text: `<h1>A Scroll has disappeared!</h1>Remember: Scrolls disappear after a number of turns have passed.  It is very important to pick them up before it is too late so you can get new spells.`, yesText: 'Bummer'
+        })
+
     },
     [EXPLAIN_LIQUID_DAMAGE]: {
-        prompt: () => {
-            Jprompt({
-                imageSrc: 'images/explain/liquid-damage.gif', text: `Units that fall into bodies of liquid will take damage.  Some units are stronger than others and will survive.`, yesText: 'Yikes!'
-            });
-        }
+        prompt: () => ({
+            imageSrc: 'images/explain/liquid-damage.gif', text: `Units that fall into bodies of liquid will take damage.  Some units are stronger than others and will survive.`, yesText: 'Yikes!'
+        })
+
     },
 }
 globalThis.explainKeys = Object.keys(explainMap);

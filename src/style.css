@@ -990,6 +990,11 @@ body.view-Menu .prompt:not(.forceShow) {
   background-color: rgba(255, 255, 255, 0.4);
 }
 
+.prompt.in-portal {
+  position: relative;
+  background-color: transparent;
+}
+
 .prompt-inner {
   padding: 15px;
   background-color: #262324;
