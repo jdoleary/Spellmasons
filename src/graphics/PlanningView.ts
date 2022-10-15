@@ -557,7 +557,8 @@ export function drawPredictionLine(start: Vec2, end: Vec2) {
 }
 let uiCircles: { target: Vec2, radius: number, color: number, text?: string }[] = [];
 export function drawUICircle(target: Vec2, radius: number, color: number, text?: string) {
-  uiCircles.push({ target, radius, color, text });
+  // clone target so it's not a reference, it should draw what the value was when it was passed into this function
+  uiCircles.push({ target: Vec.clone(target), radius, color, text });
   // Note: The actual drawing now happens inside of updatePlanningView so it can account for other UI
   // circles and text that might need to take precedence.
 }

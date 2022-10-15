@@ -17,7 +17,6 @@
 - targeting spells should be available sooner
     - New smaller targeting spell
 - Stamina potion should allow overfill
-- !! explosion radius and push prediction explosion in wrong location
 - Dragger had intent icon but moved instead of attacking
 - Idea: Blessing that blocks all damage for one turn. "Fortify"
 - Permanent "you died" screen.
