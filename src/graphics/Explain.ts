@@ -128,7 +128,7 @@ Click and drag a spell to your toolbar to make it easily accessible.`, yesText: 
     [EXPLAIN_MISSED_SCROLL]: {
         prompt: () => {
             Jprompt({
-                imageSrc: 'images/explain/scroll.gif', text: `<h1>A Scroll has disappeared!</h1>Remember: Scrolls disappear after a number of turns have passed.  It is very important to pick them up before it is too late so you can get new spells.`, yesText: 'Bummer'
+                imageSrc: 'images/explain/scroll-disappear.gif', text: `<h1>A Scroll has disappeared!</h1>Remember: Scrolls disappear after a number of turns have passed.  It is very important to pick them up before it is too late so you can get new spells.`, yesText: 'Bummer'
             });
         }
     },

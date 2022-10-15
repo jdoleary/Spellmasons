@@ -18,6 +18,7 @@ import * as protection from './cards/protection';
 import * as resurrect from './cards/resurrect';
 import * as shield from './cards/shield';
 import * as CSSClasses from './CSSClasses';
+import { MultiColorReplaceFilter } from '@pixi/filter-multi-color-replace';
 import { MESSAGE_TYPES } from './types/MessageTypes';
 import {
   app,
@@ -1688,6 +1689,28 @@ export default class Underworld {
         p.turnsLeftToGrab--;
         if (p.text) {
           p.text.text = `${p.turnsLeftToGrab}`;
+        }
+        if (p.turnsLeftToGrab == 1) {
+          // @ts-ignore: jid is a custom identifier to differentiate this child sprite
+          const timeCircleSprite = p.image?.sprite.children.find(c => c.jid == Pickup.TIME_CIRCLE_JID);
+          if (timeCircleSprite) {
+            // @ts-ignore for some reason ts is flagging this as an error but it works fine
+            // in pixi.
+            const timeCircleColorFilter = new MultiColorReplaceFilter(
+              [
+                // Change to red to warn the player that it's about to disappear
+                [0x306082, 0xff0000],
+              ],
+              0.1
+            );
+            if (!timeCircleSprite.filters) {
+
+              timeCircleSprite.filters = [];
+            }
+            timeCircleSprite.filters.push(timeCircleColorFilter);
+
+          }
+
         }
       }
       if (p.turnsLeftToGrab !== undefined && p.turnsLeftToGrab < 0) {

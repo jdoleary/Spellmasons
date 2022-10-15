@@ -62,6 +62,7 @@ export function copyForPredictionPickup(p: IPickup): IPickup {
     ...rest
   }
 }
+export const TIME_CIRCLE_JID = 'timeCircle';
 
 export function create({ pos, pickupSource, onTurnsLeftDone }:
   {
@@ -100,6 +101,8 @@ export function create({ pos, pickupSource, onTurnsLeftDone }:
 
       const timeCircle = addPixiSprite('time-circle.png', self.image.sprite);
       if (timeCircle) {
+        // @ts-ignore jid is a custom identifier to id the text element used for the player name
+        timeCircle.jid = TIME_CIRCLE_JID;
         timeCircle.anchor.x = 0;
         timeCircle.anchor.y = 0;
       }
