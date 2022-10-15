@@ -78,7 +78,11 @@ const explainMap: { [key: string]: ExplainData } = {
 
     },
     [EXPLAIN_END_TURN]: {
-        prompt: () => ({ imageSrc: 'images/explain/end-turn.gif', text: `Press ${keyToHumanReadable(keyMapping.endTurn)} or click the End Turn button to have your mana and stamina refilled.`, yesText: 'Okay' })
+        prompt: () => ({
+            imageSrc: 'images/explain/end-turn.gif', text: `Press ${keyToHumanReadable(keyMapping.endTurn)} or click the End Turn button to have your mana and stamina refilled.
+        
+Note: You may still cast even when you are out of stamina.`, yesText: 'Okay'
+        })
 
     },
     [EXPLAIN_OVERFILL]: {

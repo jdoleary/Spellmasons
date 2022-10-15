@@ -1,7 +1,6 @@
 # 2022.10.15 Playtest
 - Too many golems on level 1
 - Vortex should have it's own radius or not be allowed until a targeting spell is aquired
-- Make out of stamina tooltip explain that you can still cast
 - "All targets" copy is confusing if player doesn't understand targeting
 - Explain backspace to remove one spell
 - Fix out of range issue - If any part of a unit is in range then all of them is in range
