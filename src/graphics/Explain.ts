@@ -74,7 +74,7 @@ const explainMap: { [key: string]: ExplainData } = {
 
     },
     [EXPLAIN_WALK_ROPE]: {
-        prompt: () => ({ imageSrc: 'images/explain/walk-rope.gif', text: `Hold ${keyToHumanReadable(keyMapping.showWalkRope)} to see how far you can go with the stamina that you have remaining.The blue circle shows you what your cast range would be if you moved to that location.`, yesText: 'Okay' })
+        prompt: () => ({ imageSrc: 'images/explain/walk-rope.gif', text: `Hold ${keyToHumanReadable(keyMapping.showWalkRope)} to see how far you can go with the stamina (the yellow line) that you have remaining. The blue circle shows you what your cast range would be if you moved to that location.`, yesText: 'Okay' })
 
     },
     [EXPLAIN_END_TURN]: {

@@ -17,7 +17,6 @@
 - targeting spells should be available sooner
     - New smaller targeting spell
 - Permanent "you died" screen.
-- For move tutorial, specify that yellow shows your remaining stamina
 - "As you force a spell repeatedly it will cost more..." for "mana cost". Make a second gif for every time you end your turn spells get cheaper
 - Introduce melee agro tut sooner
 - UI: More padding for divider on top
