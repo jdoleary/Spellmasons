@@ -1,5 +1,4 @@
 # 2022.10.15 Playtest
-- "How to use magic" -> "How to forge spells"
 - Too many golems on level 1
 - Vortex should have it's own radius or not be allowed until a targeting spell is aquired
 - Make out of stamina tooltip explain that you can still cast

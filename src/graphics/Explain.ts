@@ -38,7 +38,7 @@ function isAlreadyExplained(key: string): boolean {
 
 export const EXPLAIN_WALK = 'How to Move';
 export const EXPLAIN_OVERFILL = 'Mana Overfill';
-export const EXPLAIN_CAST = 'Casting Spells';
+export const EXPLAIN_CAST = 'Forging Spells';
 export const EXPLAIN_STACK = 'Stacking Spells';
 export const EXPLAIN_WALK_ROPE = 'Stamina';
 export const EXPLAIN_END_TURN = 'End Turn';
@@ -63,7 +63,7 @@ const explainMap: { [key: string]: ExplainData } = {
     },
     [EXPLAIN_CAST]: {
         prompt: () => {
-            Jprompt({ imageSrc: 'images/explain/cast.gif', text: `<h1>How to use Magic!</h1>Click on a spell or use its keyboard hotkey to queue it up. Left click on a target to unleash the queued spell.<br/><br/>Or if you change your mind, press ${keyToHumanReadable(keyMapping.clearQueuedSpell)} to clear a queued spell.`, yesText: 'Nice!' });
+            Jprompt({ imageSrc: 'images/explain/cast.gif', text: `<h1>How to Forge Spells!</h1>Click on a spell or use its keyboard hotkey to queue it up. Left click on a target to unleash the queued spell.<br/><br/>Or if you change your mind, press ${keyToHumanReadable(keyMapping.clearQueuedSpell)} to clear a queued spell.`, yesText: 'Nice!' });
         }
     },
     [EXPLAIN_STACK]: {
