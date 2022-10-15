@@ -6,9 +6,9 @@ import Underworld from '../../Underworld';
 import * as slash from '../../cards/slash';
 
 const unit: UnitSource = {
-  id: 'playerUnit',
+  id: 'Spellmason',
   info: {
-    description: '',
+    description: 'You and your kin are Spellmasons: mighty wizards that forge magic with nothing but a bit of ingenuity and some mana.',
     image: 'units/playerIdle',
     subtype: UnitSubType.PLAYER_CONTROLLED,
   },
