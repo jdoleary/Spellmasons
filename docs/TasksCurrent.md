@@ -16,7 +16,6 @@
 - movement lines are spazzing out on Chrome
 - targeting spells should be available sooner
     - New smaller targeting spell
-- Stamina potion should allow overfill
 - Permanent "you died" screen.
 - For move tutorial, specify that yellow shows your remaining stamina
 - "As you force a spell repeatedly it will cost more..." for "mana cost". Make a second gif for every time you end your turn spells get cheaper

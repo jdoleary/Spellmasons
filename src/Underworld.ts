@@ -2133,7 +2133,11 @@ export default class Underworld {
 
           for (let u of this.units.filter(u => u.unitType == UnitType.PLAYER_CONTROLLED)) {
             // Reset stamina for player units so they can move again
-            u.stamina = u.staminaMax;
+            // Allow overfill with stamina potion so this only sets it UP to
+            // staminaMax, it won't lower it
+            if (u.stamina < u.staminaMax) {
+              u.stamina = u.staminaMax;
+            }
           }
           // Lastly, initialize the player turns.
           // Note, it is possible that calling this will immediately end

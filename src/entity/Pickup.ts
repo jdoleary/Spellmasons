@@ -332,7 +332,7 @@ export const pickups: IPickupSource[] = [
     playerOnly: true,
     effect: ({ unit, player, underworld, prediction }) => {
       if (player) {
-        player.unit.stamina = player.unit.staminaMax;
+        player.unit.stamina += player.unit.staminaMax;
         if (!prediction) {
           playSFXKey('potionPickupMana');
         }
