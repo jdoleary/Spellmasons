@@ -22,14 +22,12 @@
 - For move tutorial, specify that yellow shows your remaining stamina
 - "As you force a spell repeatedly it will cost more..." for "mana cost". Make a second gif for every time you end your turn spells get cheaper
 - Introduce melee agro tut sooner
-- escape should do 'back' on credits page
 - help page: no white wash and click on each to go through quickly
 - UI: More padding for divider on top
 # To do before Playtest
 - *: Test on different resolutions
     - *: fix inventory visibility on all resolutions
 - copy: explain curse cards better, their copy is hard to understand out of context
-- menu: extract back button and setRoute to global
 - fix: Limit max force move speed so units don't go through walls or fix collision detection
 - m: Balance dragger
 - e: limit split lower bound
