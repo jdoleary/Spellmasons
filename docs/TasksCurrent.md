@@ -1,3 +1,39 @@
+# 2022.10.15 Playtest
+- Hover sound when choosing upgrade
+- Copy: "Perk" -> "Upgrade"
+- Show unit gif in tooltip
+- "How to use magic" -> "How to forge spells"
+- Too many golems on level 1
+- Vortex should have it's own radius or not be allowed until a targeting spell is aquired
+- Make out of stamina tooltip explain that you can still cast
+- "All targets" copy is confusing if player doesn't understand targeting
+- Explain backspace to remove one spell
+- Fix out of range issue - If any part of a unit is in range then all of them is in range
+- Liquid: blood could apply a curse when you fall in, like slowed movement
+- Menu list for features to explain extra things
+- Late game version of lobber: moves and casts in the same turn.  Make sure to get prediction right
+- Archer range limit
+- Change "z to center camera" to "auto follow" because it doesn't tecnically center you
+- Tutorial: SHould explain that you need to self cast when you get blessings
+- Prediction error with melee on live build!!! 0.117.0
+- Blood splatter shouldn't show up in void
+- how to show how much damage a queued spell will do
+- movement lines are spazzing out on Chrome
+- targeting spells should be available sooner
+    - New smaller targeting spell
+- Stamina potion should allow overfill
+- !! explosion radius and push prediction explosion in wrong location
+- Dragger had intent icon but moved instead of attacking
+- Idea: Blessing that blocks all damage for one turn. "Fortify"
+- Permanent "you died" screen.
+- For move tutorial, specify that yellow shows your remaining stamina
+- "As you force a spell repeatedly it will cost more..." for "mana cost". Make a second gif for every time you end your turn spells get cheaper
+- Introduce melee agro tut sooner
+- Disappear scroll tut should show 0
+- make it more obvious when a scroll is gunna disappear
+- escape should do 'back' on credits page
+- help page: no white wash and click on each to go through quickly
+- UI: More padding for divider on top
 # To do before Playtest
 - *: Test on different resolutions
     - *: fix inventory visibility on all resolutions
