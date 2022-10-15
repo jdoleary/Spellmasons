@@ -1,9 +1,8 @@
 # 2022.10.15 Playtest
-- Too many golems on level 1
 - Vortex should have it's own radius or not be allowed until a targeting spell is aquired
 - "All targets" copy is confusing if player doesn't understand targeting
 - Explain backspace to remove one spell
-- Fix out of range issue - If any part of a unit is in range then all of them is in range
+- !!Fix out of range issue - If any part of a unit is in range then all of them is in range
 - Liquid: blood could apply a curse when you fall in, like slowed movement
 - Menu list for features to explain extra things
 - Late game version of lobber: moves and casts in the same turn.  Make sure to get prediction right
@@ -19,6 +18,7 @@
 - "As you force a spell repeatedly it will cost more..." for "mana cost". Make a second gif for every time you end your turn spells get cheaper
 - Introduce melee agro tut sooner
 - UI: More padding for divider on top
+- Had trouble clicking spell like dad, maybe account for that???
 # To do before Playtest
 - *: Test on different resolutions
     - *: fix inventory visibility on all resolutions

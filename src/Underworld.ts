@@ -1108,9 +1108,8 @@ export default class Underworld {
       biome = biome_ghost;
     }
 
-    const FIRST_TIME_PLAYING = 'first-time-playing';
-    const isFirstTimePlaying = !globalThis.headless && storage.get(FIRST_TIME_PLAYING) !== 'y';
-    const caveParams = isFirstTimePlaying
+    const useTutorialStartLevel = isFirstTimePlaying() && levelIndex == 0
+    const caveParams = useTutorialStartLevel
       ? caveSizes.tutorial
       : (levelIndex > 6
         ? caveSizes.medium
@@ -1144,7 +1143,7 @@ export default class Underworld {
 
     // Spawn units at the start of the level
     let unitIds = getEnemiesForAltitude(this);
-    if (globalThis.allowCookies && isFirstTimePlaying) {
+    if (globalThis.allowCookies && useTutorialStartLevel) {
       const portalPickupIndex = Pickup.pickups.findIndex(p => p.name == Pickup.PICKUP_PORTAL_NAME);
       if (portalPickupIndex !== -1) {
         const validSpawnCoordsIndex = randInt(this.random, 0, validSpawnCoords.length - 1);
@@ -1153,7 +1152,6 @@ export default class Underworld {
           levelData.pickups.push({ index: portalPickupIndex, coord })
           unitIds = [];
           this.levelIndex--;
-          storage.set(FIRST_TIME_PLAYING, 'y');
         } else {
           console.error('could not find valid spawn for portal')
         }
@@ -1162,7 +1160,7 @@ export default class Underworld {
       }
     }
     // TODO numberOfPickups should scale with level size
-    const numberOfPickups = isFirstTimePlaying ? 0 : 4;
+    const numberOfPickups = useTutorialStartLevel ? 0 : 4;
     for (let i = 0; i < numberOfPickups; i++) {
       if (validSpawnCoords.length == 0) { break; }
       const choice = chooseObjectWithProbability(Pickup.pickups.map((p, i) => ({ index: i, probability: p.probability })), this.random);
@@ -2781,14 +2779,15 @@ export type IUnderworldSerializedForSyncronize = Omit<Pick<Underworld, Underworl
 
 // TODO: enforce max units at level index
 // Idea: Higher probability of tougher units at certain levels
-const startingNumberOfUnits = 3;
 
 function getEnemiesForAltitude(underworld: Underworld): string[] {
   const { levelIndex } = underworld;
+
+  const numberOfUnits = levelIndex == 1 && isFirstTimePlaying() ? 2 : 3 + levelIndex;
   const possibleUnitsToChoose = Object.values(allUnits)
     .filter(u => u.spawnParams && u.spawnParams.unavailableUntilLevelIndex <= levelIndex)
     .map(u => ({ id: u.id, probability: u.spawnParams ? u.spawnParams.probability : 0 }))
-  const unitIds = Array(startingNumberOfUnits + levelIndex).fill(null)
+  const unitIds = Array(numberOfUnits).fill(null)
     // flatMap is used to remove any undefineds
     .flatMap(() => {
       const chosenUnit = chooseObjectWithProbability(possibleUnitsToChoose, underworld.random)
@@ -2839,4 +2838,15 @@ export interface LevelData {
     id: string,
     coord: Vec2,
   }[];
+}
+const FIRST_TIME_PLAYING = 'first-time-playing';
+let cachedFirstTimePlaying: boolean | undefined = undefined;
+// Returns a value that remains the same as the first time this function was invoked for the duration of the play session
+function isFirstTimePlaying() {
+  if (cachedFirstTimePlaying === undefined) {
+    const NO = 'no';
+    cachedFirstTimePlaying = !globalThis.headless && storage.get(FIRST_TIME_PLAYING) !== NO;
+    storage.set(FIRST_TIME_PLAYING, NO);
+  }
+  return cachedFirstTimePlaying
 }
