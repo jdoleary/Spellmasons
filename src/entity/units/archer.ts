@@ -14,7 +14,7 @@ const unit: UnitSource = {
     subtype: UnitSubType.RANGED_LOS,
   },
   unitProps: {
-    attackRange: 10000,
+    attackRange: 500,
     manaMax: 0,
     damage: 1,
     healthMax: 4,
@@ -35,6 +35,8 @@ const unit: UnitSource = {
     death: 'archerDeath',
   },
   action: async (unit: Unit.IUnit, attackTarget: Unit.IUnit | undefined, underworld: Underworld, _canAttackTarget: boolean) => {
+    // Archer just checks attackTarget, not canAttackTarget to know if it can attack because getBestRangedLOSTarget() will return undefined
+    // if it can't attack any targets
     const closestEnemy = Unit.findClosestUnitInDifferentFaction(unit, underworld);
     // Attack
     if (attackTarget) {

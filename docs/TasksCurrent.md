@@ -1,4 +1,3 @@
-- Archer range limit
 - **Prediction error with melee on live build!!! 0.117.0**
 - Vortex should have it's own radius or not be allowed until a targeting spell is aquired
 
@@ -87,7 +86,6 @@ cond gif for every time you end your turn spells get cheaper
 - Fix liquid glitches with prebuild liquid sets
 - Update Expand to affect a radius property in EffectStatus so it can synergize with other spells like chain, bloat, vortex, (any spell that needs a radius);
 ---
-- fix archers having infinite range
 - bug: had an incorrect push prediction, see footage
 - optimize: Ihave duplicate units, pickups, and doodads in save due to serailizeForSaving having them in the underworld and extracting them to the top level too
 # Bugs

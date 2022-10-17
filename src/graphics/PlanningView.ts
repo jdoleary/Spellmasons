@@ -100,28 +100,37 @@ export function updatePlanningView(underworld: Underworld) {
           // If they don't have a target they can actually attack
           // draw a line to the closest enemy that they would target if
           // they had LOS
+          let canAttack = true;
           if (!archerTarget) {
             archerTarget = Unit.findClosestUnitInDifferentFaction(globalThis.selectedUnit, underworld);
+            // If getBestRangedLOSTarget returns undefined, the archer doesn't have a valid attack target
+            canAttack = false;
           }
           if (archerTarget) {
             const attackLine = { p1: globalThis.selectedUnit, p2: archerTarget };
-            const closestIntersection = closestLineSegmentIntersection(attackLine, underworld.walls);
-
             globalThis.unitOverlayGraphics.moveTo(attackLine.p1.x, attackLine.p1.y);
-            if (closestIntersection) {
-              // Draw a grey line  showing that the target is blocked
-              globalThis.unitOverlayGraphics.lineStyle(3, colors.outOfRangeGrey, 0.7);
-              globalThis.unitOverlayGraphics.lineTo(closestIntersection.x, closestIntersection.y);
-              globalThis.unitOverlayGraphics.lineTo(attackLine.p2.x, attackLine.p2.y);
-              globalThis.unitOverlayGraphics.drawCircle(attackLine.p2.x, attackLine.p2.y, 3);
-            } else {
+            if (canAttack) {
               const color = colors.healthRed;
               // Draw a red line, showing that you are in danger
               globalThis.unitOverlayGraphics.lineStyle(3, color, 0.7);
               globalThis.unitOverlayGraphics.lineTo(attackLine.p2.x, attackLine.p2.y);
               globalThis.unitOverlayGraphics.drawCircle(attackLine.p2.x, attackLine.p2.y, 3);
+            } else {
+              // Draw a grey line  showing that the target is blocked
+              globalThis.unitOverlayGraphics.lineStyle(3, colors.outOfRangeGrey, 0.7);
+              globalThis.unitOverlayGraphics.lineTo(attackLine.p2.x, attackLine.p2.y);
+              globalThis.unitOverlayGraphics.drawCircle(attackLine.p2.x, attackLine.p2.y, 3);
             }
           }
+          globalThis.unitOverlayGraphics.drawCircle(
+            globalThis.selectedUnit.x,
+            globalThis.selectedUnit.y,
+            globalThis.selectedUnit.attackRange
+          );
+          labelText.text = 'Attack Range';
+          const labelPosition = withinCameraBounds({ x: globalThis.selectedUnit.x, y: globalThis.selectedUnit.y + globalThis.selectedUnit.attackRange }, labelText.width / 2);
+          labelText.x = labelPosition.x;
+          labelText.y = labelPosition.y;
         } else {
 
           if (globalThis.selectedUnit.attackRange > 0) {

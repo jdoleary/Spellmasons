@@ -2249,7 +2249,7 @@ export default class Underworld {
           return withinMeleeRange(u, attackTarget)
         }
       case UnitSubType.RANGED_LOS:
-        return this.hasLineOfSight(u, attackTarget)
+        return u.alive && this.hasLineOfSight(u, attackTarget) && Unit.inRange(u, attackTarget);
       case UnitSubType.RANGED_RADIUS:
         return u.alive && Unit.inRange(u, attackTarget) && u.mana > u.manaCostToCast;
       case UnitSubType.SUPPORT_CLASS:
