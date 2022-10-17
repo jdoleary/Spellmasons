@@ -406,6 +406,10 @@ export function mouseDownHandler(underworld: Underworld, e: MouseEvent) {
     e.preventDefault();
   } else if (e.button == 2) {
     e.preventDefault();
+    if (e.target && (e.target as HTMLElement).closest?.('#card-holders')) {
+      // Prevent right click from moving player if right clicking on toolbar
+      return;
+    }
     globalThis.setRMBDown?.(true, underworld);
   }
 }

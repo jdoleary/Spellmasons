@@ -1,7 +1,6 @@
 - Archer range limit
 - **Prediction error with melee on live build!!! 0.117.0**
 - Vortex should have it's own radius or not be allowed until a targeting spell is aquired
-- fix: right clicking on toolbar causes you to move
 
 # 2022.10.15 Playtest
 - "All targets" copy is confusing if player doesn't understand targeting
