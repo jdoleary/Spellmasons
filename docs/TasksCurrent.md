@@ -3,7 +3,6 @@
 
 # 2022.10.15 Playtest
 - "All targets" copy is confusing if player doesn't understand targeting
-- Explain backspace to remove one spell
 - Liquid: blood could apply a curse when you fall in, like slowed movement
 - Menu list for features to explain extra things
 - Blood splatter shouldn't show up in void

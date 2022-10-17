@@ -57,6 +57,7 @@ export const EXPLAIN_SCROLL = 'Getting New Spells';
 export const EXPLAIN_MISSED_SCROLL = 'Missing Scroll Pickups';
 export const EXPLAIN_LIQUID_DAMAGE = 'Liquid Damage';
 export const EXPLAIN_BLESSINGS = 'Blessings';
+export const EXPLAIN_REMOVE_SPELLS = 'Remove Spells';
 interface ExplainData {
     condition?: () => boolean;
     // Returns args to pass into Jprompt
@@ -138,6 +139,11 @@ Click and drag a spell to your toolbar to make it easily accessible.`, yesText: 
             imageSrc: 'images/explain/bless-ally.gif', text: `Cast blessings on yourself or your allies to help them survive.`, yesText: 'Got it!'
         })
     },
+    [EXPLAIN_REMOVE_SPELLS]: {
+        prompt: () => ({
+            imageSrc: 'images/explain/delete-queued-spells.gif', text: `Click on a spell to remove it or press ${keyToHumanReadable(keyMapping.dequeueSpell)} to remove the last spell.`, yesText: 'Okay'
+        })
+    },
 }
 globalThis.explainKeys = Object.keys(explainMap);
 export const autoExplains = [
@@ -149,6 +155,7 @@ export const autoExplains = [
     EXPLAIN_STACK,
     EXPLAIN_ATTENTION_MARKER_RANGED,
     EXPLAIN_CAMERA,
+    EXPLAIN_REMOVE_SPELLS
 ]
 export function autoExplain() {
     for (let e of autoExplains) {
