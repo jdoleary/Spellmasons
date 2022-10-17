@@ -188,7 +188,7 @@
             <key type="filename">images/badgeArcher.png</key>
             <key type="filename">images/badgeDeath.png</key>
             <key type="filename">images/badgeDeathAlly.png</key>
-            <key type="filename">images/badgeNonArcher.png</key>
+            <key type="filename">images/badgeMagic.png</key>
             <key type="filename">images/badgeSword.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>

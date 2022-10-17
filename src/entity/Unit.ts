@@ -1037,14 +1037,19 @@ export function isUnitsTurnPhase(unit: IUnit, underworld: Underworld): boolean {
 
 const subTypeAttentionMarkerMapping = {
   [UnitSubType.MELEE]: 'badgeSword.png',
-  [UnitSubType.RANGED_LOS]: 'badgeArcher.png',
-  [UnitSubType.RANGED_RADIUS]: 'badgeNonArcher.png',
-  [UnitSubType.SUPPORT_CLASS]: 'badgeNonArcher.png',
-  [UnitSubType.PLAYER_CONTROLLED]: 'badgeNonArcher.png',
+  [UnitSubType.RANGED_LOS]: 'badgeMagic.png',
+  [UnitSubType.RANGED_RADIUS]: 'badgeMagic.png',
+  [UnitSubType.SUPPORT_CLASS]: 'badgeMagic.png',
+  [UnitSubType.PLAYER_CONTROLLED]: 'badgeMagic.png',
 
 }
 export function subTypeToAttentionMarkerImage(unit: IUnit): string {
-  return subTypeAttentionMarkerMapping[unit.unitSubType];
+  if (unit.unitSourceId == 'archer') {
+    // Return a special archer badge for archers since they are ranged but don't use magic
+    return 'badgeArcher.png';
+  } else {
+    return subTypeAttentionMarkerMapping[unit.unitSubType];
+  }
 }
 export function findLOSLocation(unit: IUnit, target: Vec2, underworld: Underworld): Vec2[] {
   const dist = distance(unit, target);
