@@ -4,8 +4,6 @@
 # 2022.10.15 Playtest
 - "All targets" copy is confusing if player doesn't understand targeting
 - Liquid: blood could apply a curse when you fall in, like slowed movement
-- Menu list for features to explain extra things
-- Blood splatter shouldn't show up in void
 - how to show how much damage a queued spell will do
 - **movement lines are spazzing out on Chrome**
 - targeting spells should be available sooner
@@ -13,7 +11,6 @@
 - Permanent "you died" screen.
 - "As you force a spell repeatedly it will cost more..." for "mana cost". Make a se
 cond gif for every time you end your turn spells get cheaper
-- Introduce melee agro tut sooner
 - UI: More padding for divider on top
 - Had trouble clicking spell like dad, maybe account for that???
 # To do before Playtest
