@@ -1,8 +1,8 @@
 import { add, magnitude, subtract, Vec2 } from './Vec';
 import { distance, similarTriangles } from "./math";
-import { closestLineSegmentIntersection, findWherePointIntersectLineSegmentAtRightAngle, LineSegment } from "./lineSegment";
+import { closestLineSegmentIntersection, findWherePointIntersectLineSegmentAtRightAngle, LineSegment, lineSegmentIntersection } from "./lineSegment";
 import * as config from '../config';
-import type * as Unit from '../entity/Unit';
+import * as math from './math';
 import Underworld from '../Underworld';
 import { HasSpace } from '../entity/Type';
 export interface ForceMove {
@@ -76,6 +76,27 @@ export function collideWithLineSegments(circle: Circle, lineSegments: LineSegmen
         }
     }
     return collisionDidOccur;
+}
+
+// Returns true if it prevented a movement through a wall
+// Handle super fast moving objects.  If an object is moving fast enough it *would* pass through
+// solid walls, this function prevents that and stops the unit where it would collide with the wall if it were 
+// moving slower
+export function forceMovePreventForceThroughWall(forceMoveInst: ForceMove, underworld: Underworld): boolean {
+    const { pushedObject, velocity } = forceMoveInst;
+    if (magnitude(velocity) >= pushedObject.radius) {
+        for (let wall of underworld.walls) {
+            const intersection = lineSegmentIntersection({ p1: pushedObject, p2: add(pushedObject, velocity) }, wall);
+            if (intersection) {
+                const newPos = math.getCoordsAtDistanceTowardsTarget(intersection, pushedObject, pushedObject.radius)
+                pushedObject.x = newPos.x;
+                pushedObject.y = newPos.y;
+                return true;
+            }
+        }
+    }
+    return false;
+
 }
 
 

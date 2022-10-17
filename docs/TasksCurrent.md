@@ -22,7 +22,6 @@ cond gif for every time you end your turn spells get cheaper
 - *: Test on different resolutions
     - *: fix inventory visibility on all resolutions
 - copy: explain curse cards better, their copy is hard to understand out of context
-- fix: Limit max force move speed so units don't go through walls or fix collision detection
 - m: Balance dragger
 - e: limit split lower bound
 # 2022.10.12

@@ -56,7 +56,7 @@ import { calculateDistanceOfVec2Array, findPath } from './jmath/Pathfinding';
 import { addUnderworldEventListeners, setView, View } from './views';
 import { keyDown, mouseMove, registerAdminContextMenuOptions } from './graphics/ui/eventListeners';
 import Jprompt from './graphics/Jprompt';
-import { collideWithLineSegments, ForceMove, isVecIntersectingVecWithCustomRadius, moveWithCollisions } from './jmath/moveWithCollision';
+import { collideWithLineSegments, ForceMove, forceMovePreventForceThroughWall, isVecIntersectingVecWithCustomRadius, moveWithCollisions } from './jmath/moveWithCollision';
 import { ENEMY_ENCOUNTERED_STORAGE_KEY } from './config';
 import { getBestRangedLOSTarget } from './entity/units/actions/rangedAction';
 import { hostGiveClientGameState, IHostApp } from './network/networkUtil';
@@ -311,9 +311,28 @@ export default class Underworld {
       return true;
     }
     const aliveUnits = ((prediction && this.unitsPrediction) ? this.unitsPrediction : this.units).filter(u => u.alive);
-    const newPosition = Vec.add(pushedObject, velocity)
-    pushedObject.x = newPosition.x;
-    pushedObject.y = newPosition.y;
+    const handled = forceMovePreventForceThroughWall(forceMoveInst, this);
+    if (handled) {
+      // If striking the wall hard enough to pass through it, deal damage if the
+      // pushed object is a unit and stop velocity:
+      if (Unit.isUnit(pushedObject)) {
+        Unit.takeDamage(pushedObject, 2, Vec.add(pushedObject, { x: velocity.x, y: velocity.y }), this, prediction);
+        if (!prediction) {
+          floatingText({ coords: pushedObject, text: 'Impact damage!' });
+        }
+      }
+      velocity.x = 0;
+      velocity.y = 0;
+    } else {
+      // If forceMove wasn't going to drive the pushedObject through a wall,
+      // move it according to it's velocity
+      // Note: This is the normal case, "handled" occurs
+      // under special circumstances when the object is moving so fast
+      // that it would pass through solid walls
+      const newPosition = Vec.add(pushedObject, velocity);
+      pushedObject.x = newPosition.x;
+      pushedObject.y = newPosition.y;
+    }
     for (let other of aliveUnits) {
       if (other == forceMoveInst.pushedObject) {
         // Don't collide with self
