@@ -1,12 +1,13 @@
-# 2022.10.15 Playtest
+- Archer range limit
+- **Prediction error with melee on live build!!! 0.117.0**
 - Vortex should have it's own radius or not be allowed until a targeting spell is aquired
+- fix: right clicking on toolbar causes you to move
+
+# 2022.10.15 Playtest
 - "All targets" copy is confusing if player doesn't understand targeting
 - Explain backspace to remove one spell
 - Liquid: blood could apply a curse when you fall in, like slowed movement
 - Menu list for features to explain extra things
-- Archer range limit
-- Tutorial: SHould explain that you need to self cast when you get blessings
-- **Prediction error with melee on live build!!! 0.117.0**
 - Blood splatter shouldn't show up in void
 - how to show how much damage a queued spell will do
 - **movement lines are spazzing out on Chrome**

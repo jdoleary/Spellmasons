@@ -56,6 +56,7 @@ export const EXPLAIN_INVENTORY = 'Inventory';
 export const EXPLAIN_SCROLL = 'Getting New Spells';
 export const EXPLAIN_MISSED_SCROLL = 'Missing Scroll Pickups';
 export const EXPLAIN_LIQUID_DAMAGE = 'Liquid Damage';
+export const EXPLAIN_BLESSINGS = 'Blessings';
 interface ExplainData {
     condition?: () => boolean;
     // Returns args to pass into Jprompt
@@ -83,7 +84,6 @@ const explainMap: { [key: string]: ExplainData } = {
         
 Note: You may still cast even when you are out of stamina.`, yesText: 'Okay'
         })
-
     },
     [EXPLAIN_OVERFILL]: {
         condition: () => !!globalThis.player && globalThis.player.unit.mana > globalThis.player.unit.manaMax,
@@ -132,7 +132,11 @@ Click and drag a spell to your toolbar to make it easily accessible.`, yesText: 
         prompt: () => ({
             imageSrc: 'images/explain/liquid-damage.gif', text: `Units that fall into bodies of liquid will take damage.  Some units are stronger than others and will survive.`, yesText: 'Yikes!'
         })
-
+    },
+    [EXPLAIN_BLESSINGS]: {
+        prompt: () => ({
+            imageSrc: 'images/explain/bless-ally.gif', text: `Cast blessings on yourself or your allies to help them survive.`, yesText: 'Got it!'
+        })
     },
 }
 globalThis.explainKeys = Object.keys(explainMap);

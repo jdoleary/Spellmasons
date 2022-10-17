@@ -5,7 +5,7 @@ import * as Upgrade from '../Upgrade';
 import * as CardUI from '../graphics/ui/CardUI';
 import * as Cards from '../cards';
 import * as config from '../config';
-import { Faction, UnitType } from '../types/commonTypes';
+import { CardCategory, Faction, UnitType } from '../types/commonTypes';
 import { clearTooltipSelection } from '../graphics/PlanningView';
 import defaultPlayerUnit from './units/playerUnit';
 import { MESSAGE_TYPES } from '../types/MessageTypes';
@@ -17,7 +17,7 @@ import * as inLiquid from '../inLiquid';
 import * as slash from '../cards/slash';
 import * as push from '../cards/push';
 import * as pull from '../cards/pull';
-import { explain, EXPLAIN_LIQUID_DAMAGE } from '../graphics/Explain';
+import { explain, EXPLAIN_BLESSINGS, EXPLAIN_LIQUID_DAMAGE } from '../graphics/Explain';
 
 const elLobby = document.getElementById('lobby') as (HTMLElement | undefined);
 const elInstructions = document.getElementById('instructions') as (HTMLElement | undefined);
@@ -329,6 +329,8 @@ export function addCardToHand(card: Cards.ICard | undefined, player: IPlayer | u
   if (!player.inventory.includes(card.id)) {
     if (card.id == push.id || card.id == pull.id) {
       explain(EXPLAIN_LIQUID_DAMAGE);
+    } else if (card.category == CardCategory.Blessings) {
+      explain(EXPLAIN_BLESSINGS);
     }
     player.inventory.push(card.id);
     const emptySlotIndex = player.cards.indexOf('');
