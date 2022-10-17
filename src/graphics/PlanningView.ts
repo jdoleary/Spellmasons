@@ -278,7 +278,7 @@ export function drawWalkRope(target: Vec2, underworld: Underworld) {
     let distanceCovered = 0;
     // Default to current unit position, in the event that they have no stamina this will be the point
     // at which they are out of stamina.  If they do have stamina it will be reassigned later
-    let pointAtWhichUnitOutOfStamina: Vec2 = globalThis.player.unit;
+    let lastStaminaPoint: Vec2 = globalThis.player.unit;
     const distanceLeftToMove = globalThis.player.unit.stamina;
     for (let i = 0; i < currentPlayerPath.length; i++) {
       const point = currentPlayerPath[i];
@@ -289,10 +289,11 @@ export function drawWalkRope(target: Vec2, underworld: Underworld) {
           globalThis.walkPathGraphics?.lineTo(point.x, point.y);
         } else {
           globalThis.walkPathGraphics?.lineStyle(4, colors.stamina, 1.0);
+          lastStaminaPoint = point;
           if (distanceCovered + thisLineDistance > distanceLeftToMove) {
             // Draw up to the firstStop with the stamina color
-            pointAtWhichUnitOutOfStamina = getCoordsAtDistanceTowardsTarget(lastPoint, point, distanceLeftToMove - distanceCovered);
-            globalThis.walkPathGraphics?.lineTo(pointAtWhichUnitOutOfStamina.x, pointAtWhichUnitOutOfStamina.y);
+            lastStaminaPoint = getCoordsAtDistanceTowardsTarget(lastPoint, point, distanceLeftToMove - distanceCovered);
+            globalThis.walkPathGraphics?.lineTo(lastStaminaPoint.x, lastStaminaPoint.y);
             globalThis.walkPathGraphics?.lineStyle(4, 0xffffff, 1.0);
             globalThis.walkPathGraphics?.lineTo(point.x, point.y);
           } else {
@@ -303,7 +304,7 @@ export function drawWalkRope(target: Vec2, underworld: Underworld) {
         lastPoint = point;
       }
     }
-    drawCastRangeCircle(pointAtWhichUnitOutOfStamina, globalThis.player.unit.attackRange, globalThis.walkPathGraphics, 'Potential Cast Range');
+    drawCastRangeCircle(lastStaminaPoint, globalThis.player.unit.attackRange, globalThis.walkPathGraphics, 'Potential Cast Range');
     // Draw the points along the path at which the unit will stop on each turn
     for (let i = 0; i < turnStopPoints.length; i++) {
       if (i == 0 && distanceLeftToMove > 0) {
