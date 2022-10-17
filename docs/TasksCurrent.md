@@ -9,8 +9,6 @@
 - targeting spells should be available sooner
     - New smaller targeting spell
 - Permanent "you died" screen.
-- "As you force a spell repeatedly it will cost more..." for "mana cost". Make a se
-cond gif for every time you end your turn spells get cheaper
 - UI: More padding for divider on top
 - Had trouble clicking spell like dad, maybe account for that???
 # To do before Playtest

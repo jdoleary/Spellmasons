@@ -92,7 +92,7 @@ Note: You may still cast even when you are out of stamina.`, yesText: 'Okay'
 
     },
     [EXPLAIN_MANA_COST]: {
-        prompt: () => ({ imageSrc: 'images/explain/mana-cost.gif', text: 'As you use a spell it will cost more mana.  Every time you end your turn the spell will cost less mana until it returns to the original cost.', yesText: 'Okay' })
+        prompt: () => ({ imageSrc: 'images/explain/mana-cost.gif', text: 'Spells cost more mana each time they are cast.  When you end your turn, the spells\' mana costs decrease until they return to the original cost.', yesText: 'Okay' })
 
     },
     [EXPLAIN_ATTENTION_MARKER_MELEE]: {
