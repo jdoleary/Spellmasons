@@ -622,7 +622,7 @@ export function composeOnDamageEvents(unit: IUnit, damage: number, underworld: U
 
 }
 // damageFromVec2 is the location that the damage came from and is used for blood splatter
-export function takeDamage(unit: IUnit, amount: number, damageFromVec2: Vec2 | undefined, underworld: Underworld, prediction: boolean, state?: EffectState) {
+export function takeDamage(unit: IUnit, amount: number, damageFromVec2: Vec2 | undefined, underworld: Underworld, prediction: boolean, state?: EffectState, options?: { thinBloodLine: boolean }) {
   amount = composeOnDamageEvents(unit, amount, underworld, prediction);
   if (amount == 0) {
     return;
@@ -640,7 +640,11 @@ export function takeDamage(unit: IUnit, amount: number, damageFromVec2: Vec2 | u
       playSFXKey(unit.sfx.damage);
       playAnimation(unit, unit.animations.hit, { loop: false, animationSpeed: 0.2 });
       if (damageFromVec2) {
-        startBloodParticleSplatter(underworld, damageFromVec2, unit);
+        if (options?.thinBloodLine) {
+          startBloodParticleSplatter(underworld, damageFromVec2, unit, { maxRotationOffset: Math.PI / 16, numberOfParticles: 30 });
+        } else {
+          startBloodParticleSplatter(underworld, damageFromVec2, unit);
+        }
       }
     }
   }

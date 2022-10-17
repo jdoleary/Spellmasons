@@ -47,7 +47,7 @@ const unit: UnitSource = {
           attackTarget,
           'projectile/arrow',
         ).then(() => {
-          Unit.takeDamage(attackTarget, unit.damage, unit, underworld, false, undefined);
+          Unit.takeDamage(attackTarget, unit.damage, unit, underworld, false, undefined, { thinBloodLine: true });
         })
 
       });
