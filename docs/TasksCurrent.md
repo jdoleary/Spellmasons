@@ -6,14 +6,15 @@
 - Menu list for features to explain extra things
 - Archer range limit
 - Tutorial: SHould explain that you need to self cast when you get blessings
-- Prediction error with melee on live build!!! 0.117.0
+- **Prediction error with melee on live build!!! 0.117.0**
 - Blood splatter shouldn't show up in void
 - how to show how much damage a queued spell will do
-- movement lines are spazzing out on Chrome
+- **movement lines are spazzing out on Chrome**
 - targeting spells should be available sooner
     - New smaller targeting spell
 - Permanent "you died" screen.
-- "As you force a spell repeatedly it will cost more..." for "mana cost". Make a second gif for every time you end your turn spells get cheaper
+- "As you force a spell repeatedly it will cost more..." for "mana cost". Make a se
+cond gif for every time you end your turn spells get cheaper
 - Introduce melee agro tut sooner
 - UI: More padding for divider on top
 - Had trouble clicking spell like dad, maybe account for that???
