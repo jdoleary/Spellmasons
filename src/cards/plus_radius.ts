@@ -16,7 +16,7 @@ const spell: Spell = {
     requiresFollowingCard: true,
     description: `
 Increases the radius of the impact of other spells.
-Works well with Bloat, Contageous, Expand, Connect, etc.
+Works well with Bloat, Contageous, and Targeting Spells.
 Note ${id} only affects spells that are forged AFTER it.
 For example: ${id} then Connect will increase the Connect Radius.
     `,

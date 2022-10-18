@@ -8,7 +8,7 @@ import Underworld from '../Underworld';
 import * as config from '../config';
 import { easeOutCubic } from '../jmath/Easing';
 
-const id = 'Expand';
+const id = 'Target Circle';
 const baseRadius = 140;
 const spell: Spell = {
   card: {
@@ -43,7 +43,7 @@ Adds a radius to the spell so it can affect more targets.
           if (outOfRange) {
             drawUICircle(target, adjustedRange, colors.outOfRangeGrey);
           } else {
-            drawUICircle(target, adjustedRange, colors.targetingSpellGreen, 'Expand Radius');
+            drawUICircle(target, adjustedRange, colors.targetingSpellGreen, 'Target Radius');
           }
         } else {
           await animate(target, adjustedRange, underworld);

@@ -18,7 +18,7 @@ import rend from './rend';
 import bleed from './bleed';
 import suffocate from './suffocate';
 import add_heal from './add_heal';
-import expand from './expand';
+import target_circle from './target_circle';
 import connect from './connect';
 import contagious from './contagious';
 import freeze from './freeze';
@@ -122,7 +122,7 @@ export function registerCards(underworld: Underworld) {
   register(bleed, underworld);
   register(suffocate, underworld);
   register(add_heal, underworld);
-  register(expand, underworld);
+  register(target_circle, underworld);
   register(connect, underworld);
   register(contagious, underworld);
   register(freeze, underworld);
