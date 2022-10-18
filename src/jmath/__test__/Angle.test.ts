@@ -9,6 +9,9 @@ describe('Angle', () => {
             [-90, 0, 270],
             // floating point error, but it works good enough:
             [-90, 359, 271.00000000000006],
+            [-80, -30, 310],
+            // floating point error, but it works good enough:
+            [-30, -80, 49.99999999999999],
         ];
         for (let [from, to, expected] of testPairs) {
             it(`should return the angle ${expected} going counterclockwise between the angles ${from} and ${to}`, () => {
@@ -50,10 +53,10 @@ describe('Angle', () => {
         const testGroups: [number, number, number, boolean][] = [
             [0, -Math.PI / 2, Math.PI / 2, false],
             [2 * Math.PI - 0.1, -Math.PI / 2, Math.PI / 2, false],
-            // [0, Math.PI / 2, -Math.PI / 2, true],
-            // [Math.PI, Math.PI / 2, -Math.PI / 2, false],
-            // [-3 * Math.PI / 4, Math.PI / 2, 0, false],
-            // [-91 * Math.PI / 180, -90 * Math.PI / 180, 0, true]
+            [0, Math.PI / 2, -Math.PI / 2, true],
+            [Math.PI, Math.PI / 2, -Math.PI / 2, false],
+            [-3 * Math.PI / 4, Math.PI / 2, 0, false],
+            [-91 * Math.PI / 180, -90 * Math.PI / 180, 0, true]
 
         ];
         for (let [testAngle, angleLowerBound, angleUpperBound, expected] of testGroups) {
