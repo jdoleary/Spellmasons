@@ -194,7 +194,7 @@ export function updatePlanningView(underworld: Underworld) {
         lastSpotCurrentPlayerTurnCircle = clone(globalThis.player.unit);
       }
     }
-    if (uiCones.length || uiCircles.length || currentlyWarningOutOfRange) {
+    if (uiPolys.length || uiCones.length || uiCircles.length || currentlyWarningOutOfRange) {
 
       // Override other graphics (like selected unit) when out of range info is showing
       labelText.text = '';
@@ -202,6 +202,14 @@ export function updatePlanningView(underworld: Underworld) {
     }
     // Draw prediction circles
     if (unitOverlayGraphics) {
+      for (let { points, color, text } of uiPolys) {
+        // Draw color stored in prediction unless the UI is currently warning that the user
+        // is aiming out of range, then override the color with grey
+        const colorOverride = currentlyWarningOutOfRange ? colors.outOfRangeGrey : color;
+        unitOverlayGraphics.lineStyle(2, colorOverride, 1.0)
+        unitOverlayGraphics.endFill();
+        unitOverlayGraphics.drawPolygon(points);
+      }
       for (let { target, color, radius, startArc, endArc, text } of uiCones) {
         // Draw color stored in prediction unless the UI is currently warning that the user
         // is aiming out of range, then override the color with grey
@@ -570,6 +578,7 @@ export function clearSpellEffectProjection(underworld: Underworld) {
     clearWarnings();
     uiCircles = [];
     uiCones = [];
+    uiPolys = [];
   }
 }
 
@@ -582,6 +591,13 @@ export function drawPredictionLine(start: Vec2, end: Vec2) {
 }
 let uiCones: { target: Vec2, radius: number, startArc: number, endArc: number, color: number, text?: string }[] = [];
 let uiCircles: { target: Vec2, radius: number, color: number, text?: string }[] = [];
+let uiPolys: { points: Vec2[], color: number, text?: string }[] = [];
+export function drawUIPoly(points: Vec2[], color: number, text?: string) {
+  // clone target so it's not a reference, it should draw what the value was when it was passed into this function
+  uiPolys.push({ points: points.map(Vec.clone), color, text });
+  // Note: The actual drawing now happens inside of updatePlanningView so it can account for other UI
+  // circles and text that might need to take precedence.
+}
 export function drawUICone(target: Vec2, radius: number, startArc: number, endArc: number, color: number, text?: string) {
   // clone target so it's not a reference, it should draw what the value was when it was passed into this function
   uiCones.push({ target: Vec.clone(target), radius, startArc, endArc, color, text });

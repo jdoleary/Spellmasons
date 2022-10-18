@@ -84,6 +84,9 @@ export function clone(p: Vec2): Vec2 {
 export function round(v: Vec2): Vec2 {
     return { x: Math.round(v.x), y: Math.round(v.y) };
 }
+export function invert(v: Vec2): Vec2 {
+    return { x: v.y, y: -v.x };
+}
 // CAUTION: NOT YET TESTED
 export function average_mean(vs: Vec2[]) {
     return multiply(1 / vs.length, vs.reduce((acc, cur) => {
