@@ -1,13 +1,6 @@
 - remove animate up toolbar spell to try to eliminate click issue, make it glow instead?? on hover
-- Refactor radius so that repel and vortex both have a starting select radius
 - animate target cone
-- I need better targeting spells
-    - Target by proximity with no limit?
-        - Quantum link
-    - Target ALL units with ... some unifying feature
-    - All shapes, cone, line, etc
 - **Prediction error with melee on live build!!! 0.117.0**
-- Vortex should have it's own radius or not be allowed until a targeting spell is aquired
 
 # 2022.10.15 Playtest
 - "All targets" copy is confusing if player doesn't understand targeting
@@ -118,6 +111,10 @@
 - h: piercing archers
 - h: "Heat seeking" enemy or spell
 - idea: spell that triggers onDeath effects "Playdead"
+- I need better targeting spells
+    - Target by proximity with no limit?
+        - Quantum link
+    - Target ALL units with ... some unifying feature
 - Late game version of lobber: moves and casts in the same turn.  Make sure to get prediction right
 - Idea: Blessing that blocks all damage for one turn. "Fortify"
 - thought: Spellmasons should have some element of risk/reward like 50% chance to double damage of next spell or something like that.  Think of my experience with slice and dice where I got a dice side that did 24 damage and affected the guy below.  If you could always have that it's no fun, too easy but because you can only sometimes get it when you're lucky is what makes it exciting.
