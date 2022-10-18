@@ -33,14 +33,14 @@ Adds targets to the spell in a cone shape.
       let targets: Vec2[] = getCurrentTargets(state);
       targets = targets.length ? targets : [state.castLocation];
       const length = targets.length;
+      const projectAngle = getAngleBetweenVec2s(state.casterUnit, state.castLocation);
+      const startAngle = projectAngle + adjustedAngle / 2;
+      const endAngle = projectAngle - adjustedAngle / 2;
       for (let i = 0; i < length; i++) {
         const target = targets[i];
         if (!target) {
           continue;
         }
-        const projectAngle = getAngleBetweenVec2s(state.casterUnit, state.castLocation);
-        const startAngle = projectAngle + adjustedAngle / 2;
-        const endAngle = projectAngle - adjustedAngle / 2;
         // Draw visual circle for prediction
         if (prediction) {
           const color = outOfRange ? colors.outOfRangeGrey : colors.targetingSpellGreen
