@@ -7,6 +7,7 @@ import { forcePush } from './push';
 import { drawUICircle } from '../graphics/PlanningView';
 import * as colors from '../graphics/ui/colors';
 import floatingText from '../graphics/FloatingText';
+import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
 
 export const id = 'shove';
 export const velocityStartMagnitude = 50;
@@ -20,7 +21,7 @@ const spell: Spell = {
     manaCost: 10,
     healthCost: 0,
     expenseScaling: 1,
-    probability: 50,
+    probability: probabilityMap[CardRarity.COMMON],
     thumbnail: 'unknown.png',
     description: `
 A magical shove!

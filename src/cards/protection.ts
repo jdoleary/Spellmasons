@@ -5,6 +5,7 @@ import Underworld from '../Underworld';
 import throttle from 'lodash.throttle';
 import { Vec2 } from '../jmath/Vec';
 import floatingText from '../graphics/FloatingText';
+import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
 
 export const id = 'protection';
 function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, quantity: number = 1) {
@@ -26,7 +27,7 @@ const spell: Spell = {
     manaCost: 20,
     healthCost: 0,
     expenseScaling: 1,
-    probability: 10,
+    probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconProtection.png',
     description: 'Prevents unit from being targeted by magic once',
     effect: async (state, card, quantity, underworld, prediction) => {

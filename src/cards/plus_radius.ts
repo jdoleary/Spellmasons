@@ -1,5 +1,6 @@
 import { Spell } from './index';
 import { CardCategory } from '../types/commonTypes';
+import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
 
 const id = '+ Radius';
 const radiusIncreaseAmount = 50;
@@ -11,7 +12,7 @@ const spell: Spell = {
     manaCost: 40,
     healthCost: 0,
     expenseScaling: 1,
-    probability: 10,
+    probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'unknown.png',
     requiresFollowingCard: true,
     description: `

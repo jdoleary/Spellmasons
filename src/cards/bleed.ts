@@ -6,6 +6,7 @@ import { lerp } from '../jmath/math';
 import { CardCategory } from '../types/commonTypes';
 import { oneOffImage, playDefaultSpellSFX } from './cardUtils';
 import { Spell } from './index';
+import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
 
 export const id = 'Bleed';
 export interface UnitDamage {
@@ -36,7 +37,7 @@ const spell: Spell = {
     manaCost: 10,
     healthCost: 0,
     expenseScaling: 1,
-    probability: 5,
+    probability: probabilityMap[CardRarity.RARE],
     thumbnail: 'spellIconBleed.png',
     animationPath,
     sfx: 'rend',

@@ -2,6 +2,7 @@ import { getCurrentTargets, Spell } from './index';
 import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
 import { pull } from './pull';
+import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
 
 export const id = 'vortex';
 const spell: Spell = {
@@ -13,7 +14,7 @@ const spell: Spell = {
     manaCost: 10,
     healthCost: 0,
     expenseScaling: 1,
-    probability: 10,
+    probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconVortex.png',
     description: `
 Pulls the target(s) towards the cast location.

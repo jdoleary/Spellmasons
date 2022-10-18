@@ -8,6 +8,7 @@ import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
 import { HasSpace } from '../entity/Type';
+import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
 
 export const id = 'push';
 export const velocityStartMagnitude = 10;
@@ -20,7 +21,7 @@ const spell: Spell = {
     manaCost: 10,
     healthCost: 0,
     expenseScaling: 1,
-    probability: 50,
+    probability: probabilityMap[CardRarity.COMMON],
     thumbnail: 'spellIconPush.png',
     description: `
 Pushes the target(s) away from the caster 

@@ -3,6 +3,7 @@ import { ColorOverlayFilter } from '@pixi/filter-color-overlay';
 import { Spell } from './index';
 import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
+import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
 
 const id = 'resurrect';
 export const thumbnail = 'spellIconResurrect.png';
@@ -16,7 +17,7 @@ const spell: Spell = {
     manaCost: 80,
     healthCost: 0,
     expenseScaling: 2,
-    probability: 5,
+    probability: probabilityMap[CardRarity.RARE],
     thumbnail,
     description: `
 Resurrects a dead unit and converts them to the caster's faction.

@@ -7,6 +7,7 @@ import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
 import floatingText from '../graphics/FloatingText';
+import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
 
 export const id = 'poison';
 function init(unit: Unit.IUnit, underworld: Underworld, prediction: boolean) {
@@ -60,7 +61,7 @@ const spell: Spell = {
     manaCost: 20,
     healthCost: 0,
     expenseScaling: 1,
-    probability: 10,
+    probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconPoison.png',
     animationPath: 'spell-effects/spellPoison',
     description: `

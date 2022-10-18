@@ -6,6 +6,7 @@ import * as Unit from '../entity/Unit';
 import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
 import floatingText from '../graphics/FloatingText';
+import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
 
 export const id = 'Blood Curse';
 export function hasBloodCurse(unit: IUnit): boolean {
@@ -52,7 +53,7 @@ const spell: Spell = {
     manaCost: 20,
     healthCost: 0,
     expenseScaling: 1,
-    probability: 10,
+    probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconBloodCurse.png',
     description: `2x max health but healing is taken as damage`,
     effect: async (state, card, quantity, underworld, prediction) => {

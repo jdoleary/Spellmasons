@@ -6,6 +6,7 @@ import { skyBeam } from '../VisualEffects';
 import { playDefaultSpellSFX } from './cardUtils';
 import floatingText from '../graphics/FloatingText';
 import { addWarningAtMouse } from '../graphics/PlanningView';
+import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
 
 export const id = 'decoy';
 const spell: Spell = {
@@ -17,7 +18,7 @@ const spell: Spell = {
     manaCost: 60,
     healthCost: 0,
     expenseScaling: 3,
-    probability: 50,
+    probability: probabilityMap[CardRarity.COMMON],
     thumbnail: 'spellIconDecoy.png',
     description: `
 Summons a decoy.

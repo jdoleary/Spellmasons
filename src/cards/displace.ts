@@ -11,6 +11,7 @@ import Underworld from '../Underworld';
 import seedrandom from 'seedrandom';
 import * as colors from '../graphics/ui/colors';
 import { prng } from '../jmath/rand';
+import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
 
 function findRandomDisplaceLocation(underworld: Underworld, radius: number, seed: prng): Vec2 | undefined {
   let isValid = false;
@@ -38,7 +39,7 @@ const spell: Spell = {
     sfx: 'swap',
     manaCost: 15,
     healthCost: 0,
-    probability: 5,
+    probability: probabilityMap[CardRarity.RARE],
     expenseScaling: 1,
     thumbnail: 'spellIconDisplace.png',
     description: `

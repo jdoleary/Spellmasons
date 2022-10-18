@@ -7,6 +7,7 @@ import { returnToDefaultSprite } from '../entity/Unit';
 import Underworld from '../Underworld';
 import { animateMitosis } from './clone';
 
+import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
 const id = 'split';
 function changeStatWithCap(unit: Unit.IUnit, statKey: 'health' | 'healthMax' | 'mana' | 'manaMax' | 'stamina' | 'staminaMax' | 'moveSpeed' | 'damage', multiplier: number) {
   if (unit[statKey] && typeof unit[statKey] === 'number') {
@@ -73,7 +74,7 @@ const spell: Spell = {
     category: CardCategory.Curses,
     manaCost: 80,
     healthCost: 0,
-    probability: 1,
+    probability: probabilityMap[CardRarity.FORBIDDEN],
     expenseScaling: 2,
     thumbnail: 'spellIconSplit.png',
     description: `

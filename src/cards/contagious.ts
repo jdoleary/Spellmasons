@@ -9,6 +9,7 @@ import * as colors from '../graphics/ui/colors';
 import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
 import { drawUICircle } from '../graphics/PlanningView';
+import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
 
 const id = 'contaminate';
 
@@ -19,7 +20,7 @@ const spell: Spell = {
     manaCost: 50,
     healthCost: 0,
     expenseScaling: 1,
-    probability: 5,
+    probability: probabilityMap[CardRarity.RARE],
     thumbnail: 'spellIconContagious.png',
     description: `
 Immediately spreads this unit's curses to other nearby units.

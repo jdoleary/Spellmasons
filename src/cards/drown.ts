@@ -3,6 +3,7 @@ import { CardCategory } from '../types/commonTypes';
 import { oneOffImage, playDefaultSpellSFX } from './cardUtils';
 import { Spell } from './index';
 import * as Unit from '../entity/Unit';
+import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
 
 export const id = 'Drown';
 export interface UnitDamage {
@@ -22,7 +23,7 @@ const spell: Spell = {
     manaCost: 10,
     healthCost: 0,
     expenseScaling: 1,
-    probability: 20,
+    probability: probabilityMap[CardRarity.SPECIAL],
     thumbnail: 'spellIconDrown.png',
     sfx: 'rend',
     description: `

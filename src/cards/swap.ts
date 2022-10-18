@@ -9,6 +9,7 @@ import { CardCategory } from '../types/commonTypes';
 import { skyBeam } from '../VisualEffects';
 import { playDefaultSpellSFX } from './cardUtils';
 import { HasSpace } from '../entity/Type';
+import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
 
 const id = 'swap';
 const spell: Spell = {
@@ -18,7 +19,7 @@ const spell: Spell = {
     sfx: 'swap',
     manaCost: 15,
     healthCost: 0,
-    probability: 5,
+    probability: probabilityMap[CardRarity.RARE],
     expenseScaling: 1,
     thumbnail: 'spellIconSwap.png',
     description: `

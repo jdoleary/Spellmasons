@@ -6,6 +6,7 @@ import { CardCategory, UnitType } from '../types/commonTypes';
 import * as config from '../config'
 import type Underworld from '../Underworld';
 import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
+import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
 
 export const id = 'freeze';
 const imageName = 'spell-effects/spellFreeze_still.png';
@@ -18,7 +19,7 @@ const spell: Spell = {
     manaCost: 25,
     healthCost: 0,
     expenseScaling: 2,
-    probability: 50,
+    probability: probabilityMap[CardRarity.COMMON],
     thumbnail: 'spellIconFreeze.png',
     animationPath: 'spell-effects/spellFreeze',
     description: `

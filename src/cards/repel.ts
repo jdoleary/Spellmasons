@@ -2,6 +2,7 @@ import { getCurrentTargets, Spell } from './index';
 import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
 import { forcePush } from './push';
+import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
 
 export const id = 'repel';
 export const velocityStartMagnitude = 10;
@@ -14,7 +15,7 @@ const spell: Spell = {
     manaCost: 10,
     healthCost: 0,
     expenseScaling: 1,
-    probability: 10,
+    probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconRepel.png',
     description: `
 Pushes the target(s) away from the cast location.

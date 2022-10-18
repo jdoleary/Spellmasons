@@ -5,6 +5,7 @@ import * as colors from '../graphics/ui/colors';
 import { getAngleBetweenVec2s, Vec2 } from '../jmath/Vec';
 import { isAngleBetweenAngles } from '../jmath/Angle';
 import { distance } from '../jmath/math';
+import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
 
 const id = 'Target Cone';
 const range = 240;
@@ -17,7 +18,7 @@ const spell: Spell = {
     manaCost: 40,
     healthCost: 0,
     expenseScaling: 1,
-    probability: 10,
+    probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'unknown.png',
     requiresFollowingCard: true,
     description: `

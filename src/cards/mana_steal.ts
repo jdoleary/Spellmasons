@@ -8,6 +8,7 @@ import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
 import * as config from '../config';
 import { explain, EXPLAIN_OVERFILL } from '../graphics/Explain';
+import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
 
 const id = 'mana_steal';
 const mana_stolen = 20;
@@ -21,7 +22,7 @@ const spell: Spell = {
     manaCost: 0,
     healthCost: health_burn,
     expenseScaling: 1,
-    probability: 20,
+    probability: probabilityMap[CardRarity.SPECIAL],
     thumbnail: 'spellIconManaSteal.png',
     description: `
 Sacrifice some of own health to steal up to ${mana_stolen} mana from each target.

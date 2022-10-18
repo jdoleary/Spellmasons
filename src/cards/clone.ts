@@ -9,6 +9,7 @@ import floatingText from '../graphics/FloatingText';
 import { returnToDefaultSprite } from '../entity/Unit';
 import { IImageAnimated } from '../graphics/Image';
 import { raceTimeout } from '../Promise';
+import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
 
 const id = 'clone';
 const spell: Spell = {
@@ -17,7 +18,7 @@ const spell: Spell = {
     category: CardCategory.Primary,
     manaCost: 80,
     healthCost: 0,
-    probability: 1,
+    probability: probabilityMap[CardRarity.FORBIDDEN],
     expenseScaling: 2,
     thumbnail: 'spellIconClone.png',
     description: `

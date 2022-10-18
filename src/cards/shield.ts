@@ -8,6 +8,7 @@ import { playDefaultSpellSFX } from './cardUtils';
 import * as config from '../config';
 import throttle from 'lodash.throttle';
 import { Vec2 } from '../jmath/Vec';
+import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
 
 export const id = 'shield';
 export const modifierImagePath = 'spell-effects/modifierShield.png';
@@ -22,7 +23,7 @@ const spell: Spell = {
     manaCost: 60,
     healthCost: 0,
     expenseScaling: 1,
-    probability: 20,
+    probability: probabilityMap[CardRarity.SPECIAL],
     thumbnail: 'spellIconShield.png',
     animationPath: 'spell-effects/spellShield',
     description: `

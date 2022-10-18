@@ -7,6 +7,7 @@ import { isAngleBetweenAngles } from '../jmath/Angle';
 import { distance } from '../jmath/math';
 import { moveAlongVector, normalizedVector } from '../jmath/moveWithCollision';
 import { isVec2InsidePolygon } from '../jmath/Polygon2';
+import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
 
 const id = 'Target Column';
 const range = 200;
@@ -19,7 +20,7 @@ const spell: Spell = {
     manaCost: 40,
     healthCost: 0,
     expenseScaling: 1,
-    probability: 10,
+    probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'unknown.png',
     requiresFollowingCard: true,
     description: `

@@ -7,6 +7,7 @@ import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
 import floatingText from '../graphics/FloatingText';
 import * as colors from '../graphics/ui/colors';
+import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
 
 export const id = 'suffocate';
 function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) {
@@ -50,7 +51,7 @@ const spell: Spell = {
     manaCost: 20,
     healthCost: 0,
     expenseScaling: 1,
-    probability: 10,
+    probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconSuffocate.png',
     // animationPath: 'spell-effects/TODO',
     description: `

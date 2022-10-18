@@ -3,6 +3,7 @@ import { Spell } from './index';
 import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
+import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
 
 const id = 'purify';
 // Removes all curse modifiers
@@ -14,7 +15,7 @@ const spell: Spell = {
     manaCost: 20,
     healthCost: 0,
     expenseScaling: 1,
-    probability: 10,
+    probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconPurify.png',
     animationPath: 'spell-effects/spellPurify',
     description: `

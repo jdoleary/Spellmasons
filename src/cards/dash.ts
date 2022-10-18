@@ -2,6 +2,7 @@ import { getCurrentTargets, Spell } from './index';
 import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
 import { pull } from './pull';
+import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
 
 export const id = 'Dash';
 const spell: Spell = {
@@ -13,7 +14,7 @@ const spell: Spell = {
     manaCost: 10,
     healthCost: 0,
     expenseScaling: 1,
-    probability: 50,
+    probability: probabilityMap[CardRarity.COMMON],
     thumbnail: 'unknown.png',
     description: `
 Pulls the caster towards the target(s).

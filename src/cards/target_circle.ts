@@ -7,6 +7,7 @@ import { Vec2 } from '../jmath/Vec';
 import Underworld from '../Underworld';
 import * as config from '../config';
 import { easeOutCubic } from '../jmath/Easing';
+import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
 
 const id = 'Target Circle';
 const baseRadius = 140;
@@ -18,7 +19,7 @@ const spell: Spell = {
     manaCost: 40,
     healthCost: 0,
     expenseScaling: 1,
-    probability: 10,
+    probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconExpanding.png',
     requiresFollowingCard: true,
     description: `

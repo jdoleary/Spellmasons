@@ -9,6 +9,7 @@ import { CardCategory } from '../types/commonTypes';
 import { createParticleTexture, simpleEmitter } from '../graphics/Particles';
 import { Vec2 } from '../jmath/Vec';
 import * as colors from '../graphics/ui/colors';
+import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
 
 const id = 'Bloat';
 const imageName = 'explode-on-death.png';
@@ -48,7 +49,7 @@ const spell: Spell = {
     manaCost: 15,
     healthCost: 0,
     expenseScaling: 1,
-    probability: 50,
+    probability: probabilityMap[CardRarity.COMMON],
     thumbnail: 'spellIconBloat.png',
     description: `Cursed targets explode when they die dealing ${damage} damage to all units within the explosion radius.
 Multiple stacks of bloat will increase the amount of damage done when the unit explodes.`,

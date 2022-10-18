@@ -7,6 +7,7 @@ import { CardCategory } from '../types/commonTypes';
 import { chooseObjectWithProbability } from '../jmath/rand';
 import seedrandom from 'seedrandom';
 import floatingText from '../graphics/FloatingText';
+import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
 
 const id = 'Last Will';
 const imageName = 'unknown.png';
@@ -38,7 +39,7 @@ const spell: Spell = {
     manaCost: 15,
     healthCost: 0,
     expenseScaling: 1,
-    probability: 50,
+    probability: probabilityMap[CardRarity.COMMON],
     thumbnail: 'spellIconLastWill.png',
     description: `Drop a random potion on death.`,
     effect: async (state, card, quantity, underworld, prediction) => {

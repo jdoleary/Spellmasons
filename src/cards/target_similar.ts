@@ -5,6 +5,7 @@ import * as math from '../jmath/math';
 import { isUnit } from '../entity/Unit';
 import { isPickup } from '../entity/Pickup';
 import { isDoodad } from '../entity/Doodad';
+import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
 
 const id = 'Target Similar';
 const spell: Spell = {
@@ -15,7 +16,7 @@ const spell: Spell = {
     manaCost: 40,
     healthCost: 0,
     expenseScaling: 1,
-    probability: 10,
+    probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'unknown.png',
     requiresFollowingCard: true,
     description: `

@@ -4,6 +4,7 @@ import { CardCategory } from '../types/commonTypes';
 import type Underworld from '../Underworld';
 import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
 import { Spell } from './index';
+import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
 
 const id = 'Debilitate';
 const imageName = 'spellIconDebilitate.png';
@@ -16,7 +17,7 @@ const spell: Spell = {
     manaCost: 20,
     healthCost: 0,
     expenseScaling: 1,
-    probability: 10,
+    probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconDebilitate.png',
     animationPath: 'spell-effects/spellDebilitate',
     description: `

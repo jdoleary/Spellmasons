@@ -473,34 +473,36 @@ export function clearSelectedCards(underworld: Underworld) {
   // Now that there are no more selected cards, update the spell effect projection
   runPredictions(underworld);
 }
-enum CardRarity {
+export enum CardRarity {
   COMMON,
   SPECIAL,
   UNCOMMON,
   RARE,
   FORBIDDEN
 }
+export const probabilityMap: Record<CardRarity, number> = {
+  [CardRarity.COMMON]: 50,
+  [CardRarity.SPECIAL]: 20,
+  [CardRarity.UNCOMMON]: 10,
+  [CardRarity.RARE]: 5,
+  [CardRarity.FORBIDDEN]: 1
+
+}
 export function cardRarityAsString(content: { probability: number }): string {
   return CardRarity[cardProbabilityToRarity(content)] || '';
 }
 function cardProbabilityToRarity(content: { probability: number }): CardRarity {
-  if (content.probability == 1) {
-    // Super rare
+  if (content.probability == probabilityMap[CardRarity.FORBIDDEN]) {
     return CardRarity.FORBIDDEN;
-  } else if (content.probability < 5) {
-    // Rare
+  } else if (content.probability <= probabilityMap[CardRarity.RARE]) {
     return CardRarity.RARE;
-  } else if (content.probability < 10) {
-    // Uncommon
+  } else if (content.probability <= probabilityMap[CardRarity.UNCOMMON]) {
     return CardRarity.UNCOMMON
-  } else if (content.probability < 20) {
-    // Special
+  } else if (content.probability <= probabilityMap[CardRarity.SPECIAL]) {
     return CardRarity.SPECIAL;
-  } else if (content.probability < 50) {
-    // Semi-common
+  } else if (content.probability <= probabilityMap[CardRarity.COMMON]) {
     return CardRarity.COMMON;
   }
-  // Highly-common
   return CardRarity.COMMON;
 }
 export function getCardRarityColor(content: { probability: number }): string {

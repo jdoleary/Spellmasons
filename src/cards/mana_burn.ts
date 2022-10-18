@@ -3,6 +3,7 @@ import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
 import * as Image from '../graphics/Image';
 import { Spell } from './index';
+import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
 
 const id = 'mana_burn';
 const mana_burnt = 30;
@@ -15,7 +16,7 @@ const spell: Spell = {
     manaCost: 20,
     healthCost: 0,
     expenseScaling: 1,
-    probability: 10,
+    probability: probabilityMap[CardRarity.UNCOMMON],
     thumbnail: 'spellIconManaBurn.png',
     animationPath: 'spell-effects/spellManaBurn',
     description: `
