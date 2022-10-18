@@ -44,6 +44,7 @@ import explode from './bloat';
 import lastWill from './lastwill';
 import split from './split';
 import drown from './drown';
+import target_similar from './target_similar';
 
 import { IUpgrade, upgradeCardsSource } from '../Upgrade';
 import { _getCardsFromIds } from './cardUtils';
@@ -145,6 +146,7 @@ export function registerCards(underworld: Underworld) {
   register(lastWill, underworld);
   register(split, underworld);
   register(drown, underworld);
+  register(target_similar, underworld);
 }
 function cardToUpgrade(c: ICard, underworld: Underworld): IUpgrade {
   return {
