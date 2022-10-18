@@ -9,7 +9,7 @@ import * as config from '../config';
 import { easeOutCubic } from '../jmath/Easing';
 
 const id = 'Expand';
-const range = 140;
+const baseRadius = 140;
 const spell: Spell = {
   card: {
     id,
@@ -27,7 +27,7 @@ Adds a radius to the spell so it can affect more targets.
     `,
     allowNonUnitTarget: true,
     effect: async (state, card, quantity, underworld, prediction, outOfRange) => {
-      const adjustedRange = range * quantity;
+      const adjustedRange = baseRadius * quantity + state.aggregator.radius;
       // Note: This loop must NOT be a for..of and it must cache the length because it
       // mutates state.targetedUnits as it iterates.  Otherwise it will continue to loop as it grows
       let targets: Vec2[] = getCurrentTargets(state);

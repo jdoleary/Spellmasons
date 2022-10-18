@@ -46,6 +46,7 @@ import split from './split';
 import drown from './drown';
 import target_similar from './target_similar';
 import target_cone from './target_cone';
+import plus_radius from './plus_radius';
 
 import { IUpgrade, upgradeCardsSource } from '../Upgrade';
 import { _getCardsFromIds } from './cardUtils';
@@ -59,7 +60,7 @@ export interface Modifiers {
   // see 'poison' for example
   // init is inteded to be called within add.
   init?: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean) => void;
-  add?: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number) => void;
+  add?: (unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number, extra?: object) => void;
   remove?: (unit: Unit.IUnit, underworld: Underworld) => void;
 }
 export interface Spell {
@@ -148,6 +149,7 @@ export function registerCards(underworld: Underworld) {
   register(drown, underworld);
   register(target_similar, underworld);
   register(target_cone, underworld);
+  register(plus_radius, underworld);
 }
 function cardToUpgrade(c: ICard, underworld: Underworld): IUpgrade {
   return {
@@ -183,6 +185,7 @@ export interface EffectState {
   // between card effects.
   aggregator: {
     unitDamage: UnitDamage[],
+    radius: number;
   };
 }
 export function hasTargetAtPosition(position: Vec2, underworld: Underworld): boolean {

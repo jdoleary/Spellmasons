@@ -13,13 +13,14 @@ import * as colors from '../graphics/ui/colors';
 const id = 'Bloat';
 const imageName = 'explode-on-death.png';
 const damage = 1;
-const range = 140;
-function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity: number) {
+const baseRadius = 140;
+function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity: number, extra?: any) {
   // First time setup
   if (!unit.modifiers[id]) {
     unit.modifiers[id] = {
       isCurse: true,
-      quantity
+      quantity,
+      radius: extra && extra.radius || 0
     };
     // Add event
     if (!unit.onDeathEvents.includes(id)) {
@@ -54,7 +55,7 @@ Multiple stacks of bloat will increase the amount of damage done when the unit e
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       for (let unit of state.targetedUnits.filter(u => u.alive)) {
-        Unit.addModifier(unit, id, underworld, prediction, quantity);
+        Unit.addModifier(unit, id, underworld, prediction, quantity, { radius: state.aggregator.radius });
       }
       return state;
     },
@@ -78,15 +79,16 @@ Multiple stacks of bloat will increase the amount of damage done when the unit e
   events: {
     onDeath: async (unit: IUnit, underworld: Underworld, prediction: boolean) => {
       const quantity = unit.modifiers[id]?.quantity || 1;
+      const adjustedRadius = baseRadius + unit.modifiers[id]?.radius || 0;
       if (prediction) {
-        drawUICircle(unit, range, colors.healthRed, 'Explosion Radius');
+        drawUICircle(unit, adjustedRadius, colors.healthRed, 'Explosion Radius');
       } else {
         playSFXKey('bloatExplosion');
       }
       makeBloatExplosionWithParticles(unit, prediction);
       underworld.getUnitsWithinDistanceOfTarget(
         unit,
-        range,
+        adjustedRadius,
         prediction
       ).forEach(u => {
         // Deal damage to units
@@ -96,7 +98,7 @@ Multiple stacks of bloat will increase the amount of damage done when the unit e
       });
       underworld.getPickupsWithinDistanceOfTarget(
         unit,
-        range,
+        adjustedRadius,
         prediction
       ).forEach(p => {
         // Push pickups away

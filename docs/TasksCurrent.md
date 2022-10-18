@@ -1,4 +1,5 @@
 - remove animate up toolbar spell to try to eliminate click issue, make it glow instead?? on hover
+- Refactor radius so that repel and vortex both have a starting select radius
 - animate target cone
 - I need better targeting spells
     - Target by proximity with no limit?
@@ -45,9 +46,6 @@
     - Do this with cooldowns
 - Find a way to make randomness fixed (like in spell "Displace" so that it doesn't get different random results on other people's screens
  and so that it wont change after another player casts)
-- Add "+ radius" spell different from "Expand"?
-    - Refactor radius so that repel and vortex both have a starting select radius
-- See branch 'expand-to-additional-radius'
 - "Complex but not complicated"
 # Brad playtest
 - prediction should factor in standing on pickups, see video

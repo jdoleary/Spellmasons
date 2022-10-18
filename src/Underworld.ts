@@ -2407,6 +2407,7 @@ export default class Underworld {
       castLocation,
       aggregator: {
         unitDamage: [],
+        radius: 0,
       },
     };
     const unitAtCastLocation = this.getUnitAt(castLocation, prediction);

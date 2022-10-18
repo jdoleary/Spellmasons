@@ -27,7 +27,7 @@ Immediately spreads this unit's curses to other nearby units.
     effect: async (state, card, quantity, underworld, prediction) => {
       // .filter: only target living units
       for (let unit of state.targetedUnits.filter(u => u.alive)) {
-        await spreadCurses(unit, underworld, prediction);
+        await spreadCurses(unit, underworld, state.aggregator.radius, prediction);
       }
       return state;
     },
@@ -35,8 +35,8 @@ Immediately spreads this unit's curses to other nearby units.
 };
 export default spell;
 
-async function spreadCurses(unit: IUnit, underworld: Underworld, prediction: boolean) {
-  const range = COLLISION_MESH_RADIUS * 4;
+async function spreadCurses(unit: IUnit, underworld: Underworld, extraRadius: number, prediction: boolean) {
+  const range = COLLISION_MESH_RADIUS * 4 + extraRadius;
   drawUICircle(unit, range, colors.targetingSpellGreen, 'Contagion Radius');
   const nearByUnits = underworld.getUnitsWithinDistanceOfTarget(unit, range, prediction)
     // Filter out undefineds

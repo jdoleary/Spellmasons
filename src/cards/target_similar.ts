@@ -7,7 +7,6 @@ import { isPickup } from '../entity/Pickup';
 import { isDoodad } from '../entity/Doodad';
 
 const id = 'Target Similar';
-const range = 140;
 const spell: Spell = {
   card: {
     id,

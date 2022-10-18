@@ -2,11 +2,7 @@ import { addTarget, getCurrentTargets, Spell } from './index';
 import { drawUICone } from '../graphics/PlanningView';
 import { CardCategory } from '../types/commonTypes';
 import * as colors from '../graphics/ui/colors';
-import { raceTimeout } from '../Promise';
 import { getAngleBetweenVec2s, Vec2 } from '../jmath/Vec';
-import Underworld from '../Underworld';
-import * as config from '../config';
-import { easeOutCubic } from '../jmath/Easing';
 import { isAngleBetweenAngles } from '../jmath/Angle';
 import { distance } from '../jmath/math';
 
@@ -30,7 +26,7 @@ Adds targets to the spell in a cone shape.
     `,
     allowNonUnitTarget: true,
     effect: async (state, card, quantity, underworld, prediction, outOfRange) => {
-      const adjustedRange = range;
+      const adjustedRange = range + state.aggregator.radius;
       const adjustedAngle = coneAngle * quantity;
       // Note: This loop must NOT be a for..of and it must cache the length because it
       // mutates state.targetedUnits as it iterates.  Otherwise it will continue to loop as it grows

@@ -9,11 +9,12 @@ import * as math from '../jmath/math';
 import { raceTimeout } from '../Promise';
 import { similarTriangles, distance } from '../jmath/math';
 import { easeOutCubic } from '../jmath/Easing';
-import { IPickup, isPickup } from '../entity/Pickup';
+import { isPickup } from '../entity/Pickup';
 import { HasSpace } from '../entity/Type';
 
 const id = 'Connect';
 const numberOfTargetsPerQuantity = 2;
+const baseRadius = 105;
 const spell: Spell = {
   card: {
     id,
@@ -59,6 +60,7 @@ All connected beings will be affected by the following spells in your cast.
             target.x,
             target.y,
             potentialTargets,
+            baseRadius + state.aggregator.radius,
             prediction,
             { limitTargetsLeft },
             0,
@@ -88,11 +90,11 @@ All connected beings will be affected by the following spells in your cast.
     },
   },
 };
-const range = 105;
 async function getTouchingTargetableEntitiesRecursive(
   x: number,
   y: number,
   potentialTargets: HasSpace[],
+  radius: number,
   prediction: boolean,
   // The number of targets left that it is able to add to the targets list
   // It is an object instead of just a number so it will be passed by reference
@@ -111,7 +113,7 @@ async function getTouchingTargetableEntitiesRecursive(
   // will only connect entities if their CENTER POINT falls within the radius; however,
   // to the players eyes if any part of them is touching the circle it should connect
   if (prediction) {
-    drawPredictionCircleFill({ x, y }, range - config.COLLISION_MESH_RADIUS / 2);
+    drawPredictionCircleFill({ x, y }, radius - config.COLLISION_MESH_RADIUS / 2);
   }
   const coords = { x, y }
   let touching = potentialTargets
@@ -120,10 +122,10 @@ async function getTouchingTargetableEntitiesRecursive(
     .filter((u) => {
       return (
         ignore.find((i) => i == u) === undefined &&
-        u.x <= x + range &&
-        u.x >= x - range &&
-        u.y <= y + range &&
-        u.y >= y - range
+        u.x <= x + radius &&
+        u.x >= x - radius &&
+        u.y <= y + radius &&
+        u.y >= y - radius
       );
     })
     // Order by closest to coords
@@ -147,7 +149,7 @@ async function getTouchingTargetableEntitiesRecursive(
         }
         connected.push({ chainSource: coords, entity: t });
         chainState.limitTargetsLeft--;
-        const newTouching = await getTouchingTargetableEntitiesRecursive(t.x, t.y, potentialTargets, prediction, chainState, recurseLevel + 1, typeFilter, ignore)
+        const newTouching = await getTouchingTargetableEntitiesRecursive(t.x, t.y, potentialTargets, radius, prediction, chainState, recurseLevel + 1, typeFilter, ignore)
         connected = connected.concat(newTouching);
       }
     }
