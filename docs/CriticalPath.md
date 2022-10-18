@@ -28,8 +28,7 @@
         - pull/push
     - Liquid Splash Animation
         - Lava, blood, Water
-    - Rework "Expand" / AOE so that if affects the radius of any radius using spell (e.g. Bloat)
-- Milestone | **Beta Testing** | Planning on October 1
+ Milestone | **Beta Testing** | Planning on October 1
     - Tutorial / Explain prompts based on user actions
     - Optimize game
         - setPath is constantly being called by all enemies

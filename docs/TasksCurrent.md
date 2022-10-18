@@ -1,13 +1,12 @@
 - animate target cone
 - **Prediction error with melee on live build!!! 0.117.0**
+- Improve UX for shove so that it's clear when you're not close enough
 
 # 2022.10.15 Playtest
 - "All targets" copy is confusing if player doesn't understand targeting
 - Liquid: blood could apply a curse when you fall in, like slowed movement
 - how to show how much damage a queued spell will do
 - **movement lines are spazzing out on Chrome**
-- targeting spells should be available sooner
-    - New smaller targeting spell
 - Permanent "you died" screen.
 - UI: More padding for divider on top
 # To do before Playtest
@@ -74,7 +73,6 @@
     - fix fall in liquid so larger things (like rocks or vampires) fall in further so they don't overlap
 - Add a fullscreen button to options
 - Fix liquid glitches with prebuild liquid sets
-- Update Expand to affect a radius property in EffectStatus so it can synergize with other spells like chain, bloat, vortex, (any spell that needs a radius);
 ---
 - bug: had an incorrect push prediction, see footage
 - optimize: Ihave duplicate units, pickups, and doodads in save due to serailizeForSaving having them in the underworld and extracting them to the top level too
@@ -163,8 +161,6 @@
 - Content: A spell to destroy corpses
     - and grant you mana, or health, or stamina?
     - corpse as currency
-- Spell: grappling hook (pulls your towards something)
-- Spell: Range, like aoe and chain but extends your range
 - Soul capture (1 use, like pokeball)
     - works for pickups too
 - What if monsters that go through portal come to next level with you, but you don't get more mana after the portal spawns
@@ -179,20 +175,10 @@
 - soul capture (like pokeball)
 - generic summon (1 for each enemy, does bigger and better enemies depending on stack)
 - explode a corpse (same as bloat?)
-- split: like clone but each copy is smaller and has half of max stats (a curse so it can be undone)
 - grow a barrier
 - slow/ cripple: reduce max stamina
 - set fires on board that spreads
-- Displace: Teleports target to a random location
 - damage spells:
-    - Slice: basic / already have
-    - Rend: Does more damage as it stacks
-    - bleed: Does damage relative to how much health is missing
-    - mana burn
-    - suffocate: kill in 5 turns
-        - number of turns relative to health
-    - drown: deal massive damage if unit is submerged in liquid
-    - poison: dot
     - stomp: more damage the closer they are
 - Tornado: Travells through the map throwing things around (maybe a good enemy ability)
 
