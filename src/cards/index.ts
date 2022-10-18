@@ -37,7 +37,7 @@ import vampire_bite from './blood_curse';
 import push from './push';
 import pull from './pull';
 import vortex from './vortex';
-import grapplingHook from './grapplinghook';
+import dash from './dash';
 import repel from './repel';
 import decoy from './summon_decoy';
 import explode from './bloat';
@@ -140,7 +140,7 @@ export function registerCards(underworld: Underworld) {
   register(push, underworld);
   register(pull, underworld);
   register(vortex, underworld);
-  register(grapplingHook, underworld);
+  register(dash, underworld);
   register(repel, underworld);
   register(decoy, underworld);
   register(explode, underworld);

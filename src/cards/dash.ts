@@ -3,7 +3,7 @@ import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
 import { pull } from './pull';
 
-export const id = 'Grappling Hook';
+export const id = 'Dash';
 const spell: Spell = {
   card: {
     id,
