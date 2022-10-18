@@ -22,10 +22,6 @@ function add(unit: IUnit, underworld: Underworld, prediction: boolean, quantity:
       unit.onDeathEvents.push(id);
     }
   }
-  // Temporarily use floating text until spell animation is finished
-  if (!prediction) {
-    floatingText({ coords: unit, text: id });
-  }
 }
 function remove(unit: IUnit, underworld: Underworld) {
   if (unit.image) {
@@ -81,6 +77,9 @@ const spell: Spell = {
           const { index } = choice;
           if (coord) {
             underworld.spawnPickup(index, coord, prediction);
+            if (!prediction) {
+              floatingText({ coords: coord, text: id });
+            }
           } else {
             console.warn(`Could not find spawn for pickup from ${id}`);
           }
