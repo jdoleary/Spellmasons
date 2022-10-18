@@ -25,12 +25,13 @@ const spell: Spell = {
     thumbnail: 'unknown.png',
     requiresFollowingCard: true,
     description: `
-    Adds targets to the spell in a cone shape
-"${id}" can be cast multiple times in succession to reach farther.
+Adds targets to the spell in a cone shape.
+"${id}" can be cast multiple times in succession to expand the angle of the cone.
     `,
     allowNonUnitTarget: true,
     effect: async (state, card, quantity, underworld, prediction, outOfRange) => {
-      const adjustedRange = range * quantity;
+      const adjustedRange = range;
+      const adjustedAngle = coneAngle * quantity;
       // Note: This loop must NOT be a for..of and it must cache the length because it
       // mutates state.targetedUnits as it iterates.  Otherwise it will continue to loop as it grows
       let targets: Vec2[] = getCurrentTargets(state);
@@ -42,8 +43,8 @@ const spell: Spell = {
           continue;
         }
         const projectAngle = getAngleBetweenVec2s(state.casterUnit, state.castLocation);
-        const startAngle = projectAngle + coneAngle / 2;
-        const endAngle = projectAngle - coneAngle / 2;
+        const startAngle = projectAngle + adjustedAngle / 2;
+        const endAngle = projectAngle - adjustedAngle / 2;
         // Draw visual circle for prediction
         if (prediction) {
           const color = outOfRange ? colors.outOfRangeGrey : colors.targetingSpellGreen
