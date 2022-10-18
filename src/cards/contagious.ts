@@ -9,7 +9,7 @@ import * as colors from '../graphics/ui/colors';
 import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
 import { drawUICircle } from '../graphics/PlanningView';
-import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
+import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 const id = 'contaminate';
 

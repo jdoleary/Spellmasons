@@ -9,7 +9,7 @@ import { CardCategory } from '../types/commonTypes';
 import { skyBeam } from '../VisualEffects';
 import { playDefaultSpellSFX } from './cardUtils';
 import { HasSpace } from '../entity/Type';
-import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
+import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 const id = 'swap';
 const spell: Spell = {

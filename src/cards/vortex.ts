@@ -2,7 +2,7 @@ import { getCurrentTargets, Spell } from './index';
 import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
 import { pull } from './pull';
-import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
+import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 export const id = 'vortex';
 const spell: Spell = {

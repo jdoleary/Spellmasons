@@ -6,7 +6,7 @@ import { CardCategory, UnitType } from '../types/commonTypes';
 import * as config from '../config'
 import type Underworld from '../Underworld';
 import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
-import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
+import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 export const id = 'freeze';
 const imageName = 'spell-effects/spellFreeze_still.png';

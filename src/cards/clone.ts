@@ -9,7 +9,7 @@ import floatingText from '../graphics/FloatingText';
 import { returnToDefaultSprite } from '../entity/Unit';
 import { IImageAnimated } from '../graphics/Image';
 import { raceTimeout } from '../Promise';
-import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
+import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 const id = 'clone';
 const spell: Spell = {

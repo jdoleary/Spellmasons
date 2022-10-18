@@ -6,7 +6,7 @@ import { skyBeam } from '../VisualEffects';
 import { playDefaultSpellSFX } from './cardUtils';
 import floatingText from '../graphics/FloatingText';
 import { addWarningAtMouse } from '../graphics/PlanningView';
-import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
+import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 export const id = 'decoy';
 const spell: Spell = {

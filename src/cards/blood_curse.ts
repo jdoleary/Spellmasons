@@ -6,7 +6,7 @@ import * as Unit from '../entity/Unit';
 import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
 import floatingText from '../graphics/FloatingText';
-import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
+import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 export const id = 'Blood Curse';
 export function hasBloodCurse(unit: IUnit): boolean {

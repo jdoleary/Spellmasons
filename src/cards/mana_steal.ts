@@ -8,7 +8,7 @@ import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
 import * as config from '../config';
 import { explain, EXPLAIN_OVERFILL } from '../graphics/Explain';
-import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
+import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 const id = 'mana_steal';
 const mana_stolen = 20;

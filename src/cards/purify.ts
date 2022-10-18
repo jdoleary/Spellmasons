@@ -3,7 +3,7 @@ import { Spell } from './index';
 import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
-import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
+import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 const id = 'purify';
 // Removes all curse modifiers

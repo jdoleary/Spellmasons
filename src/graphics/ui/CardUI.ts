@@ -11,7 +11,7 @@ import floatingText, { centeredFloatingText } from '../FloatingText';
 import { composeOnDamageEvents, copyForPredictionUnit } from '../../entity/Unit';
 import { NUMBER_OF_TOOLBAR_SLOTS } from '../../config';
 import Underworld from '../../Underworld';
-import { CardCategory } from '../../types/commonTypes';
+import { CardCategory, CardRarity, probabilityMap } from '../../types/commonTypes';
 import { MESSAGE_TYPES } from '../../types/MessageTypes';
 import { explain, EXPLAIN_END_TURN } from '../Explain';
 
@@ -472,21 +472,6 @@ export function clearSelectedCards(underworld: Underworld) {
   });
   // Now that there are no more selected cards, update the spell effect projection
   runPredictions(underworld);
-}
-export enum CardRarity {
-  COMMON,
-  SPECIAL,
-  UNCOMMON,
-  RARE,
-  FORBIDDEN
-}
-export const probabilityMap: Record<CardRarity, number> = {
-  [CardRarity.COMMON]: 50,
-  [CardRarity.SPECIAL]: 20,
-  [CardRarity.UNCOMMON]: 10,
-  [CardRarity.RARE]: 5,
-  [CardRarity.FORBIDDEN]: 1
-
 }
 export function cardRarityAsString(content: { probability: number }): string {
   return CardRarity[cardProbabilityToRarity(content)] || '';

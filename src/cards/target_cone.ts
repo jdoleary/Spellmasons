@@ -5,7 +5,7 @@ import * as colors from '../graphics/ui/colors';
 import { getAngleBetweenVec2s, Vec2 } from '../jmath/Vec';
 import { isAngleBetweenAngles } from '../jmath/Angle';
 import { distance } from '../jmath/math';
-import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
+import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 const id = 'Target Cone';
 const range = 240;

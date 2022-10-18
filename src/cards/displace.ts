@@ -11,7 +11,7 @@ import Underworld from '../Underworld';
 import seedrandom from 'seedrandom';
 import * as colors from '../graphics/ui/colors';
 import { prng } from '../jmath/rand';
-import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
+import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 function findRandomDisplaceLocation(underworld: Underworld, radius: number, seed: prng): Vec2 | undefined {
   let isValid = false;

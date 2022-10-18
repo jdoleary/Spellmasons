@@ -7,7 +7,7 @@ import { CardCategory } from '../types/commonTypes';
 import { chooseObjectWithProbability } from '../jmath/rand';
 import seedrandom from 'seedrandom';
 import floatingText from '../graphics/FloatingText';
-import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
+import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 const id = 'Last Will';
 const imageName = 'unknown.png';

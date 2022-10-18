@@ -4,7 +4,7 @@ import { CardCategory } from '../types/commonTypes';
 import type Underworld from '../Underworld';
 import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
 import { Spell } from './index';
-import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
+import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 const id = 'Debilitate';
 const imageName = 'spellIconDebilitate.png';

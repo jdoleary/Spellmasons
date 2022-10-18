@@ -7,7 +7,7 @@ import { isAngleBetweenAngles } from '../jmath/Angle';
 import { distance } from '../jmath/math';
 import { moveAlongVector, normalizedVector } from '../jmath/moveWithCollision';
 import { isVec2InsidePolygon } from '../jmath/Polygon2';
-import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
+import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 const id = 'Target Column';
 const range = 200;

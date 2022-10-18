@@ -7,7 +7,7 @@ import { forcePush } from './push';
 import { drawUICircle } from '../graphics/PlanningView';
 import * as colors from '../graphics/ui/colors';
 import floatingText from '../graphics/FloatingText';
-import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
+import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 export const id = 'shove';
 export const velocityStartMagnitude = 50;

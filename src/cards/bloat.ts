@@ -9,7 +9,7 @@ import { CardCategory } from '../types/commonTypes';
 import { createParticleTexture, simpleEmitter } from '../graphics/Particles';
 import { Vec2 } from '../jmath/Vec';
 import * as colors from '../graphics/ui/colors';
-import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
+import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 const id = 'Bloat';
 const imageName = 'explode-on-death.png';

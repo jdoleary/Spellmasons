@@ -3,7 +3,7 @@ import { containerSpells } from '../graphics/PixiUtils';
 import { CardCategory } from '../types/commonTypes';
 import { oneOffImage, playDefaultSpellSFX } from './cardUtils';
 import { Spell } from './index';
-import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
+import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 export const id = 'Rend';
 function calculateRendDamage(stack: number): number {

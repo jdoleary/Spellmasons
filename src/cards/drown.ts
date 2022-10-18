@@ -3,7 +3,7 @@ import { CardCategory } from '../types/commonTypes';
 import { oneOffImage, playDefaultSpellSFX } from './cardUtils';
 import { Spell } from './index';
 import * as Unit from '../entity/Unit';
-import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
+import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 export const id = 'Drown';
 export interface UnitDamage {

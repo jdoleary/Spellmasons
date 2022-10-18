@@ -5,7 +5,7 @@ import * as math from '../jmath/math';
 import { isUnit } from '../entity/Unit';
 import { isPickup } from '../entity/Pickup';
 import { isDoodad } from '../entity/Doodad';
-import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
+import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 const id = 'Target Similar';
 const spell: Spell = {

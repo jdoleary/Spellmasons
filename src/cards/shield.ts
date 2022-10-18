@@ -8,7 +8,7 @@ import { playDefaultSpellSFX } from './cardUtils';
 import * as config from '../config';
 import throttle from 'lodash.throttle';
 import { Vec2 } from '../jmath/Vec';
-import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
+import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 export const id = 'shield';
 export const modifierImagePath = 'spell-effects/modifierShield.png';

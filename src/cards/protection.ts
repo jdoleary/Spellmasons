@@ -5,7 +5,7 @@ import Underworld from '../Underworld';
 import throttle from 'lodash.throttle';
 import { Vec2 } from '../jmath/Vec';
 import floatingText from '../graphics/FloatingText';
-import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
+import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 export const id = 'protection';
 function add(unit: Unit.IUnit, _underworld: Underworld, _prediction: boolean, quantity: number = 1) {

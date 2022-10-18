@@ -7,7 +7,7 @@ import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellAnimation, playDefaultSpellSFX } from './cardUtils';
 import floatingText from '../graphics/FloatingText';
-import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
+import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 export const id = 'poison';
 function init(unit: Unit.IUnit, underworld: Underworld, prediction: boolean) {

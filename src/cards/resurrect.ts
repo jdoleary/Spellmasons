@@ -3,7 +3,7 @@ import { ColorOverlayFilter } from '@pixi/filter-color-overlay';
 import { Spell } from './index';
 import { CardCategory } from '../types/commonTypes';
 import { playDefaultSpellSFX } from './cardUtils';
-import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
+import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 const id = 'resurrect';
 export const thumbnail = 'spellIconResurrect.png';

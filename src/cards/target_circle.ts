@@ -7,7 +7,7 @@ import { Vec2 } from '../jmath/Vec';
 import Underworld from '../Underworld';
 import * as config from '../config';
 import { easeOutCubic } from '../jmath/Easing';
-import { CardRarity, probabilityMap } from '../graphics/ui/CardUI';
+import { CardRarity, probabilityMap } from '../types/commonTypes';
 
 const id = 'Target Circle';
 const baseRadius = 140;
