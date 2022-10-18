@@ -4,9 +4,6 @@
         - Quantum link
     - Target ALL units with ... some unifying feature
     - All shapes, cone, line, etc
-- Keywords in descriptions should be highlighted in blue like a link and if you click on them it pops up an explain modal
-    - Entity
-    - Target
 - **Prediction error with melee on live build!!! 0.117.0**
 - Vortex should have it's own radius or not be allowed until a targeting spell is aquired
 

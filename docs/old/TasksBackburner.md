@@ -1,3 +1,9 @@
+- Keywords in descriptions should be highlighted in blue like a link and if you click on them it pops up an explain modal
+    - Note: THis might not work since card inspect only shows up on hover
+    - Entity
+    - Target
+    - Radius
+    
 - Blood splatter shouldn't show up in void
 - bug: Scaled down units (due to split) may render z-index on top of bigger units that are lower than them
 - bug: clone / split yielded error: 'Failed to load player because cannot find associated unit with ID 0'
