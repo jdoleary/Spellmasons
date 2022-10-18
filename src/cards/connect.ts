@@ -21,7 +21,7 @@ const spell: Spell = {
     manaCost: 20,
     healthCost: 0,
     expenseScaling: 1,
-    probability: 20,
+    probability: 30,
     thumbnail: 'spellIconConnect.png',
     supportQuantity: true,
     requiresFollowingCard: true,
