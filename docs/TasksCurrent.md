@@ -1,6 +1,5 @@
+- animate target cone
 - I need better targeting spells
-    - Target by kind?
-        - Target kin
     - Target by proximity with no limit?
         - Quantum link
     - Target ALL units with ... some unifying feature
