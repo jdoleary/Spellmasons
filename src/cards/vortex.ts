@@ -17,6 +17,7 @@ const spell: Spell = {
     thumbnail: 'spellIconVortex.png',
     description: `
 Pulls the target(s) towards the cast location.
+Note: ${id} is best used with a Targeting spell so that the cast location is far away from the target.  Try using it with Connect or Target Cone to get a feel for how it works.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
       let promises = [];
