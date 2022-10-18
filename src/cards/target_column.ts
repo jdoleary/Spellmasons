@@ -10,6 +10,7 @@ import { isVec2InsidePolygon } from '../jmath/Polygon2';
 
 const id = 'Target Column';
 const range = 200;
+const baseWidth = 20;
 const spell: Spell = {
   card: {
     id,
@@ -28,7 +29,7 @@ Adds targets to the spell in a column.
     allowNonUnitTarget: true,
     effect: async (state, card, quantity, underworld, prediction, outOfRange) => {
       const depth = range + state.aggregator.radius;
-      const width = 30 * quantity;
+      const width = baseWidth * quantity;
       // Note: This loop must NOT be a for..of and it must cache the length because it
       // mutates state.targetedUnits as it iterates.  Otherwise it will continue to loop as it grows
       let targets: Vec2[] = getCurrentTargets(state);
