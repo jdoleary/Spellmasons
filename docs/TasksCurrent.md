@@ -1,4 +1,3 @@
-- remove animate up toolbar spell to try to eliminate click issue, make it glow instead?? on hover
 - animate target cone
 - **Prediction error with melee on live build!!! 0.117.0**
 
@@ -11,7 +10,6 @@
     - New smaller targeting spell
 - Permanent "you died" screen.
 - UI: More padding for divider on top
-- Had trouble clicking spell like dad, maybe account for that???
 # To do before Playtest
 - *: Test on different resolutions
     - *: fix inventory visibility on all resolutions

@@ -280,7 +280,7 @@ invisibly blocked, change with caution! */
 
 
 .card:hover {
-  transform: translate(0, -5px);
+  filter: drop-shadow(0 0 0.4rem rgb(255, 255, 255));
 }
 
 .card {
@@ -1195,7 +1195,7 @@ body.open-inventory #inventory-container {
   width: 80px;
   height: 106px;
   background-image: url('images/card-designs/bookStone.png');
-  transition: all 0.2s;
+  /* transition: all 0.1s; */
 }
 
 body.open-inventory #inventory-icon {
@@ -1203,7 +1203,7 @@ body.open-inventory #inventory-icon {
 }
 
 #inventory-icon:hover {
-  transform: translate(0, -8px);
+  filter: drop-shadow(0 0 0.4rem rgb(255, 255, 255));
 }
 
 /* Glow to signify that this toolbar element is active and will change if an inventory item is selected */
