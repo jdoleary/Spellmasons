@@ -16,7 +16,8 @@ const spell: Spell = {
     probability: 50,
     thumbnail: 'unknown.png',
     description: `
-Pulls the caster towards the target(s)
+Pulls the caster towards the target(s).
+${id} must be cast on a target such as a unit or pickup.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
       const targets = getCurrentTargets(state);
