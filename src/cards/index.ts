@@ -47,6 +47,7 @@ import drown from './drown';
 import target_similar from './target_similar';
 import target_cone from './target_cone';
 import plus_radius from './plus_radius';
+import shove from './shove';
 
 import { IUpgrade, upgradeCardsSource } from '../Upgrade';
 import { _getCardsFromIds } from './cardUtils';
@@ -150,6 +151,7 @@ export function registerCards(underworld: Underworld) {
   register(target_similar, underworld);
   register(target_cone, underworld);
   register(plus_radius, underworld);
+  register(shove, underworld);
 }
 function cardToUpgrade(c: ICard, underworld: Underworld): IUpgrade {
   return {
