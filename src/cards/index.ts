@@ -188,6 +188,7 @@ export interface EffectState {
   aggregator: {
     unitDamage: UnitDamage[],
     radius: number;
+    lastSpellCost: number;
   };
 }
 export function hasTargetAtPosition(position: Vec2, underworld: Underworld): boolean {

@@ -2408,6 +2408,7 @@ export default class Underworld {
       aggregator: {
         unitDamage: [],
         radius: 0,
+        lastSpellCost: 0,
       },
     };
     const unitAtCastLocation = this.getUnitAt(castLocation, prediction);
@@ -2430,6 +2431,7 @@ export default class Underworld {
     if (!costPrepaid) {
       const cards = Cards.getCardsFromIds(cardIds);
       const spellCost = calculateCost(cards, casterCardUsage);
+      effectState.aggregator.lastSpellCost = spellCost.manaCost;
       // Apply mana and health cost to caster
       // Note: it is important that this is done BEFORE a card is actually cast because
       // the card may affect the caster's mana
