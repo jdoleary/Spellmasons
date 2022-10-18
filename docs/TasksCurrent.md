@@ -1,3 +1,4 @@
+- remove animate up toolbar spell to try to eliminate click issue, make it glow instead?? on hover
 - animate target cone
 - I need better targeting spells
     - Target by proximity with no limit?
