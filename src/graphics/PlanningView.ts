@@ -194,7 +194,7 @@ export function updatePlanningView(underworld: Underworld) {
         lastSpotCurrentPlayerTurnCircle = clone(globalThis.player.unit);
       }
     }
-    if (uiCircles.length || currentlyWarningOutOfRange) {
+    if (uiCones.length || uiCircles.length || currentlyWarningOutOfRange) {
 
       // Override other graphics (like selected unit) when out of range info is showing
       labelText.text = '';
@@ -202,6 +202,20 @@ export function updatePlanningView(underworld: Underworld) {
     }
     // Draw prediction circles
     if (unitOverlayGraphics) {
+      for (let { target, color, radius, startArc, endArc, text } of uiCones) {
+        // Draw color stored in prediction unless the UI is currently warning that the user
+        // is aiming out of range, then override the color with grey
+        const colorOverride = currentlyWarningOutOfRange ? colors.outOfRangeGrey : color;
+        unitOverlayGraphics.lineStyle(2, colorOverride, 1.0)
+        unitOverlayGraphics.endFill();
+        unitOverlayGraphics.arc(target.x, target.y, radius, startArc, endArc);
+        unitOverlayGraphics.moveTo(target.x, target.y);
+        const startArcPoint = math.getPosAtAngleAndDistance(target, startArc, radius);
+        unitOverlayGraphics.lineTo(startArcPoint.x, startArcPoint.y);
+        unitOverlayGraphics.moveTo(target.x, target.y);
+        const endArcPoint = math.getPosAtAngleAndDistance(target, endArc, radius);
+        unitOverlayGraphics.lineTo(endArcPoint.x, endArcPoint.y);
+      }
       for (let { target, color, radius, text } of uiCircles) {
         // Draw color stored in predictionCircles unless the UI is currently warning that the user
         // is aiming out of range, then override the color with grey
@@ -555,6 +569,7 @@ export function clearSpellEffectProjection(underworld: Underworld) {
     }
     clearWarnings();
     uiCircles = [];
+    uiCones = [];
   }
 }
 
@@ -565,7 +580,14 @@ export function drawPredictionLine(start: Vec2, end: Vec2) {
     predictionGraphics.lineTo(end.x, end.y);
   }
 }
+let uiCones: { target: Vec2, radius: number, startArc: number, endArc: number, color: number, text?: string }[] = [];
 let uiCircles: { target: Vec2, radius: number, color: number, text?: string }[] = [];
+export function drawUICone(target: Vec2, radius: number, startArc: number, endArc: number, color: number, text?: string) {
+  // clone target so it's not a reference, it should draw what the value was when it was passed into this function
+  uiCones.push({ target: Vec.clone(target), radius, startArc, endArc, color, text });
+  // Note: The actual drawing now happens inside of updatePlanningView so it can account for other UI
+  // circles and text that might need to take precedence.
+}
 export function drawUICircle(target: Vec2, radius: number, color: number, text?: string) {
   // clone target so it's not a reference, it should draw what the value was when it was passed into this function
   uiCircles.push({ target: Vec.clone(target), radius, color, text });

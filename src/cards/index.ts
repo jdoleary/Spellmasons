@@ -45,6 +45,7 @@ import lastWill from './lastwill';
 import split from './split';
 import drown from './drown';
 import target_similar from './target_similar';
+import target_cone from './target_cone';
 
 import { IUpgrade, upgradeCardsSource } from '../Upgrade';
 import { _getCardsFromIds } from './cardUtils';
@@ -52,7 +53,6 @@ import { addCardToHand } from '../entity/Player';
 import Underworld from '../Underworld';
 import { CardCategory } from '../types/commonTypes';
 import { HasSpace } from '../entity/Type';
-import floatingText from '../graphics/FloatingText';
 export interface Modifiers {
   subsprite?: Subsprite;
   // run special init logic (usually for visuals) when a modifier is added or loaded
@@ -147,6 +147,7 @@ export function registerCards(underworld: Underworld) {
   register(split, underworld);
   register(drown, underworld);
   register(target_similar, underworld);
+  register(target_cone, underworld);
 }
 function cardToUpgrade(c: ICard, underworld: Underworld): IUpgrade {
   return {
