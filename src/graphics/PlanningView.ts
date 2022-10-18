@@ -208,7 +208,7 @@ export function updatePlanningView(underworld: Underworld) {
         const colorOverride = currentlyWarningOutOfRange ? colors.outOfRangeGrey : color;
         unitOverlayGraphics.lineStyle(2, colorOverride, 1.0)
         unitOverlayGraphics.endFill();
-        unitOverlayGraphics.drawPolygon(points);
+        unitOverlayGraphics.drawPolygon(points as PIXI.Point[]);
       }
       for (let { target, color, radius, startArc, endArc, text } of uiCones) {
         // Draw color stored in prediction unless the UI is currently warning that the user
