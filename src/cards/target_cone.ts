@@ -69,7 +69,7 @@ Adds targets to the spell in a cone shape.
 // Returns true if target is within cone
 function withinCone(origin: Vec2, coneStartPoint: Vec2, radius: number, startAngle: number, endAngle: number, target: Vec2): boolean {
   // and within angle:
-  const targetAngle = getAngleBetweenVec2s(origin, target);
+  const targetAngle = getAngleBetweenVec2s(coneStartPoint, target);
   const distanceToOrigin = distance(origin, target);
   const distanceToConeStart = distance(origin, coneStartPoint);
   return distanceToOrigin >= distanceToConeStart && distanceToOrigin - distanceToConeStart <= radius
