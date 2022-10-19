@@ -12,7 +12,7 @@ const resStatAmount = 1.0;
 const spell: Spell = {
   card: {
     id,
-    category: CardCategory.Primary,
+    category: CardCategory.Other,
     sfx: 'resurrect',
     manaCost: 80,
     healthCost: 0,

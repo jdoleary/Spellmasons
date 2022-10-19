@@ -26,13 +26,13 @@ const animationPath = 'spell-effects/spellHurtCuts';
 const spell: Spell = {
   card: {
     id,
-    category: CardCategory.Primary,
+    category: CardCategory.Damage,
     supportQuantity: true,
     manaCost: 10,
     healthCost: 0,
     expenseScaling: 1,
     probability: probabilityMap[CardRarity.RARE],
-    thumbnail: 'unknown.png',
+    thumbnail: 'spellIconBurst.png',
     animationPath,
     sfx: 'rend',
     description: `

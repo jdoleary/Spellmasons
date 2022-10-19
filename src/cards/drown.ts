@@ -18,7 +18,7 @@ const damageDone = 4;
 const spell: Spell = {
   card: {
     id,
-    category: CardCategory.Primary,
+    category: CardCategory.Damage,
     supportQuantity: false,
     manaCost: 10,
     healthCost: 0,

@@ -12,7 +12,7 @@ export const id = 'decoy';
 const spell: Spell = {
   card: {
     id,
-    category: CardCategory.Primary,
+    category: CardCategory.Other,
     sfx: 'summonDecoy',
     supportQuantity: true,
     manaCost: 60,

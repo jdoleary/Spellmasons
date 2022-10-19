@@ -25,7 +25,7 @@ const animationPath = 'spell-effects/spellHurtCuts';
 const spell: Spell = {
   card: {
     id,
-    category: CardCategory.Primary,
+    category: CardCategory.Damage,
     supportQuantity: true,
     manaCost: 10,
     healthCost: 0,

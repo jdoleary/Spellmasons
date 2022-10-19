@@ -16,12 +16,13 @@ export enum Faction {
 }
 
 export enum CardCategory {
+  Damage,
   Movement,
   Targeting,
   Mana,
   Curses,
   Blessings,
-  Primary
+  Other
 }
 export enum CardRarity {
   COMMON = 'COMMON',
