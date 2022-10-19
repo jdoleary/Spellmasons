@@ -5,7 +5,6 @@
 - Got it stuck where when I middle mouse, the camera flees away to the south
 - animate target cone
 - Improve UX for shove so that it's clear when you're not close enough
-- Make Discord, put link in the game
 
 # 2022.10.15 Playtest
 - "All targets" copy is confusing if player doesn't understand targeting
