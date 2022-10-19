@@ -316,9 +316,11 @@ export default class Underworld {
       // If striking the wall hard enough to pass through it, deal damage if the
       // pushed object is a unit and stop velocity:
       if (Unit.isUnit(pushedObject)) {
-        Unit.takeDamage(pushedObject, 2, Vec.add(pushedObject, { x: velocity.x, y: velocity.y }), this, prediction);
+        const magnitude = Vec.magnitude(velocity);
+        const damage = Math.ceil(Math.log(magnitude));
+        Unit.takeDamage(pushedObject, damage, Vec.add(pushedObject, { x: velocity.x, y: velocity.y }), this, prediction);
         if (!prediction) {
-          floatingText({ coords: pushedObject, text: 'Impact damage!' });
+          floatingText({ coords: pushedObject, text: `${damage} Impact damage!` });
         }
       }
       velocity.x = 0;
