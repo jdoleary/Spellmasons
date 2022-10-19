@@ -18,9 +18,10 @@ export interface UnitDamage {
 
 }
 function calculateDamageFromProportion(unit: HasLife, proportionDamage: number): number {
-  const damage = unit.healthMax * proportionDamage
+  const damage = Math.ceil(unit.healthMax * proportionDamage);
   return damage;
 }
+// Deals up to 30% damage
 const instantKillProportion = 0.30;
 function calculateDamage(unit: HasLife): number {
   // proportion is a percentage expressed as 0.0 - 1.0
@@ -57,7 +58,7 @@ Target with full health will take no damage.
         if (!prediction) {
           playDefaultSpellSFX(card, prediction);
           for (let unit of targets) {
-            const damage = calculateDamageFromProportion(unit, Math.ceil(calculateDamage(unit)));
+            const damage = calculateDamageFromProportion(unit, calculateDamage(unit));
             oneOffImage(unit, animationPath, containerSpells, resolve);
             const spellEffectImage = oneOffImage(unit, animationPath, containerSpells, resolve);
             if (spellEffectImage) {
@@ -69,7 +70,7 @@ Target with full health will take no damage.
           }
         } else {
           for (let unit of targets) {
-            const damage = calculateDamageFromProportion(unit, Math.ceil(calculateDamage(unit)));
+            const damage = calculateDamageFromProportion(unit, calculateDamage(unit));
             Unit.takeDamage(unit, damage, state.casterUnit, underworld, prediction, state);
           }
           resolve();

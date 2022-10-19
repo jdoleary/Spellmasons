@@ -1,4 +1,3 @@
-- bug: Issue with Bleed, killed a vamp who had high health
 - Split summoners don't have enough mana to cast
 - Loweer limit on split
 - bug: Many split summoners, then purify caused them to get super wide and normal tall.  I might have split in different casts
