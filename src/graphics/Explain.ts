@@ -119,7 +119,7 @@ Click and drag a spell to your toolbar to make it easily accessible.`, yesText: 
     },
     [EXPLAIN_SCROLL]: {
         prompt: () => ({
-            imageSrc: 'images/explain/scroll.gif', text: `Move onto the Scroll Pickup to aquire new spells.Scroll Pickups will disappear after a number of turns have passed so be careful to pick them up before it's too late!`, yesText: 'Okay'
+            imageSrc: 'images/explain/scroll.gif', text: `Move onto a Scroll Pickup to aquire new spells. Scroll Pickups will disappear after a number of turns have passed so be careful to pick them up before it's too late!`, yesText: 'Okay'
         })
 
     },
