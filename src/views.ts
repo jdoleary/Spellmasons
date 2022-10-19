@@ -112,6 +112,10 @@ function zoom(underworld: Underworld, e: WheelEvent) {
   if (!app) {
     return;
   }
+  if (e.target && (e.target as HTMLElement).closest('#inventory-container')) {
+    console.log('Abort scrolling due to mouse on inventory-container')
+    return;
+  }
   // TODO: This value could be customizable in the menu later:
   const scrollSensitivity = 200;
   const scrollFactor = Math.abs(e.deltaY / scrollSensitivity);

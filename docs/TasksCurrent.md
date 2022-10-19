@@ -10,7 +10,6 @@
 - Permanent "you died" screen.
 # To do before Playtest
 - *: Test on different resolutions
-    - *: fix inventory visibility on all resolutions
 - copy: explain curse cards better, their copy is hard to understand out of context
 - m: Balance dragger
 # 2022.10.12

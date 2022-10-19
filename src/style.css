@@ -211,6 +211,8 @@ body.open-inventory #card-inspect {
   flex-direction: column-reverse;
   align-items: flex-start;
   margin: 0 auto;
+  height: 100%;
+  overflow-y: hidden;
 }
 
 /* This block is very important to make sure input handling doesn't get
@@ -1141,7 +1143,9 @@ body.open-inventory #inventory-container {
 
 #inventory-container {
   display: none;
+  overflow-y: hidden;
 }
+
 
 #inventory-content {
   /* Same color as .ui-border's border */
@@ -1151,12 +1155,14 @@ body.open-inventory #inventory-container {
   max-width: 600px;
   display: flex;
   flex-direction: column;
-  flex-wrap: wrap;
   /* Always be at least big enough for 3 spells side-by-side. This is just visual appeal*/
   min-width: 240px;
   /* Prevent highlighting text, because no blocks of text should need to be copied and
   it looks bad */
   user-select: none;
+  height: 100%;
+  box-sizing: border-box;
+  overflow-y: scroll;
 }
 
 #inventory-content .category {
@@ -1172,6 +1178,21 @@ body.open-inventory #inventory-container {
 
 #inventory-content .category-label.visible {
   display: block;
+}
+
+/* Custom scrollbar for inventory */
+#inventory-content::-webkit-scrollbar {
+  width: 0.5em;
+  cursor: pointer;
+}
+
+#inventory-content::-webkit-scrollbar-track {
+  background-color: #464646
+}
+
+#inventory-content::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
 }
 
 .slot {
@@ -1446,5 +1467,11 @@ body.auto-camera #camera-recenter-tip {
   border-image-slice: 250;
   border-image-source: url("/ui/Assets_Icon_Border_QtrCircle_3.png");
   border-image-width: 1;
+  box-sizing: border-box;
+}
 
+/* Supports a limited size so that the inventory will have a scrollbar */
+#inventory-container .ui-border {
+  height: 100%;
+  overflow-y: hidden;
 }
