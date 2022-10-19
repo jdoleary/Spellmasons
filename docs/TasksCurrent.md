@@ -1,3 +1,4 @@
+- movement prediction is off when doing "clone + push" (something to do with the copy being added as a target?)
 - Split summoners don't have enough mana to cast
 - Got it stuck where when I middle mouse, the camera flees away to the south
 - animate target cone

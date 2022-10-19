@@ -1,4 +1,4 @@
-import { getCurrentTargets, Spell } from './index';
+import { addTarget, getCurrentTargets, Spell } from './index';
 import * as Unit from '../entity/Unit';
 import * as Pickup from '../entity/Pickup';
 import * as Doodad from '../entity/Doodad';
@@ -52,8 +52,7 @@ Clones each target
           // If there is are clone coordinates to clone into
           if (cloneSourceCoords) {
             if (Unit.isUnit(target)) {
-              // Jitter prevents multiple clones from spawning on top of each other
-              const validSpawnCoords = underworld.findValidSpawn(jitter(cloneSourceCoords, config.COLLISION_MESH_RADIUS / 2, underworld.random), 5, 10);
+              const validSpawnCoords = underworld.findValidSpawn(cloneSourceCoords, 5, 10);
               if (validSpawnCoords) {
                 const clone = Unit.load(Unit.serialize(target), underworld, prediction);
                 if (!prediction) {
@@ -69,6 +68,8 @@ Clones each target
                 }
                 clone.x = validSpawnCoords.x;
                 clone.y = validSpawnCoords.y;
+                // Add the clone as a target
+                addTarget(clone, state);
               }
             }
             if (Pickup.isPickup(target)) {

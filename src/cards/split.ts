@@ -1,4 +1,4 @@
-import { getCurrentTargets, Spell } from './index';
+import { addTarget, getCurrentTargets, Spell } from './index';
 import * as Unit from '../entity/Unit';
 import { CardCategory, UnitSubType, UnitType } from '../types/commonTypes';
 import { jitter, Vec2 } from '../jmath/Vec';
@@ -138,8 +138,7 @@ Cannot split further than ${splitLimit} times.
           // If there is are clone coordinates to clone into
           if (cloneSourceCoords) {
             if (Unit.isUnit(target)) {
-              // Jitter prevents multiple clones from spawning on top of each other
-              const validSpawnCoords = underworld.findValidSpawn(jitter(cloneSourceCoords, config.COLLISION_MESH_RADIUS / 2, underworld.random), 5, 10);
+              const validSpawnCoords = underworld.findValidSpawn(cloneSourceCoords, 5, 10);
               if (validSpawnCoords) {
                 const clone = Unit.load(Unit.serialize(target), underworld, prediction);
                 if (!prediction) {
@@ -155,6 +154,8 @@ Cannot split further than ${splitLimit} times.
                 }
                 clone.x = validSpawnCoords.x;
                 clone.y = validSpawnCoords.y;
+                // Add the clone as a target
+                addTarget(clone, state);
 
                 // Add the curse to both the target and the clone
                 Unit.addModifier(target, id, underworld, prediction, quantity);
