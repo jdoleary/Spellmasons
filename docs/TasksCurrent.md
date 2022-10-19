@@ -1,12 +1,14 @@
-- Issue with Bleed, killed a vamp who had high health
+- bug: Issue with Bleed, killed a vamp who had high health
+- Split summoners don't have enough mana to cast
+- Loweer limit on split
+- bug: Many split summoners, then purify caused them to get super wide and normal tall.  I might have split in different casts
+    - scale:  { _x: 17.757726633812588, _y: 1
+- clean: ' jtest 2 stacks 3'
 - Got it stuck where when I middle mouse, the camera flees away to the south
 - animate target cone
 - **Prediction error with melee on live build!!! 0.117.0**
 - Improve UX for shove so that it's clear when you're not close enough
 - Make Discord, put link in the game
-- Split summoners don't have enough mana to cast
-- Loweer limit on split
-- bug: Many split summoners, then purify caused them to get super wide and normal tall.  I might have split in different casts
 
 # 2022.10.15 Playtest
 - "All targets" copy is confusing if player doesn't understand targeting
