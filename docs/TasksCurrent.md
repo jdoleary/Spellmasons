@@ -1,4 +1,3 @@
-- **important** movement prediction is off when doing "clone + push" (something to do with the copy being added as a target?)
 - animate target cone
 - Improve UX for shove so that it's clear when you're not close enough
 
@@ -25,14 +24,15 @@
 
 # Today
 - This save file is giving me critical errors `saveFile-with-errors.json`
-- bug: displaceX5 + vortex made me get stuck in a wall
 - Expanding should take longer to return to base mana like resurrect and summon decoy do
     - Do this with cooldowns
 - Find a way to make randomness fixed (like in spell "Displace" so that it doesn't get different random results on other people's screens
  and so that it wont change after another player casts)
-- "Complex but not complicated"
-# Brad playtest
+
+# Prediction issues
 - prediction should factor in standing on pickups, see video
+- **important** movement prediction is off when doing "clone + push" (something to do with the copy being added as a target?)
+# Brad playtest
 - resurrect should take longer to return to base mana
     - this already is set but it didn't work in brad's playtest... hmm..
 - bug: saw "this spell will damage you" after heal then end turn immediately
