@@ -1,5 +1,6 @@
+- Optimize: targeting spells seem pretty slow in prediction
+- Prevent target snapping, it's frusterating as a user when trying to line up targeting spells
 - Record new trailer footage
-- animate target column, similar
 - animate rend
 - Improve UX for shove so that it's clear when you're not close enough
 # 2022.10.15 Playtest

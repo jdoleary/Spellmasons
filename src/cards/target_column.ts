@@ -1,13 +1,16 @@
+import type * as PIXI from 'pixi.js';
 import { addTarget, getCurrentTargets, Spell } from './index';
-import { drawUICone, drawUIPoly } from '../graphics/PlanningView';
+import { drawUIPoly } from '../graphics/PlanningView';
 import { CardCategory } from '../types/commonTypes';
 import * as colors from '../graphics/ui/colors';
-import { getAngleBetweenVec2s, getEndpointOfMagnitudeAlongVector, invert, Vec2 } from '../jmath/Vec';
-import { isAngleBetweenAngles } from '../jmath/Angle';
-import { distance } from '../jmath/math';
+import { invert, Vec2 } from '../jmath/Vec';
 import { moveAlongVector, normalizedVector } from '../jmath/moveWithCollision';
 import { isVec2InsidePolygon } from '../jmath/Polygon2';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
+import type Underworld from '../Underworld';
+import { raceTimeout } from '../Promise';
+import { easeOutCubic } from '../jmath/Easing';
+import * as config from '../config';
 
 const id = 'Target Column';
 const range = 200;
@@ -37,11 +40,7 @@ Adds targets to the spell in a column.
       targets = targets.length ? targets : [state.castLocation];
       const length = targets.length;
       const vector = normalizedVector(state.casterUnit, state.castLocation).vector || { x: 0, y: 0 };
-      const p1 = moveAlongVector(state.castLocation, invert(vector), -width);
-      const p2 = moveAlongVector(state.castLocation, invert(vector), width);
-      const p3 = moveAlongVector(p2, vector, depth);
-      const p4 = moveAlongVector(p1, vector, depth);
-      const targetingColumn = [p1, p2, p3, p4]
+      const targetingColumn = getColumnPoints(state.castLocation, vector, width, depth);
       for (let i = 0; i < length; i++) {
         const target = targets[i];
         if (!target) {
@@ -52,8 +51,7 @@ Adds targets to the spell in a column.
           const color = outOfRange ? colors.outOfRangeGrey : colors.targetingSpellGreen
           drawUIPoly(targetingColumn, color);
         } else {
-          // TODO animate 
-          // await animate(target, adjustedRange, underworld);
+          await animate(state.castLocation, vector, width, depth, underworld);
         }
         const withinColumn = underworld.getPotentialTargets(
           prediction
@@ -68,5 +66,49 @@ Adds targets to the spell in a column.
     },
   },
 };
+function getColumnPoints(castLocation: Vec2, vector: Vec2, width: number, depth: number): Vec2[] {
+  const p1 = moveAlongVector(castLocation, invert(vector), -width);
+  const p2 = moveAlongVector(castLocation, invert(vector), width);
+  const p3 = moveAlongVector(p2, vector, depth);
+  const p4 = moveAlongVector(p1, vector, depth);
+  return [p1, p2, p3, p4];
+}
 
+async function animate(castLocation: Vec2, vector: Vec2, width: number, depth: number, underworld: Underworld) {
+  const iterations = 100;
+  const millisBetweenIterations = 8;
+  // "iterations + 10" gives it a little extra time so it doesn't timeout right when the animation would finish on time
+  return raceTimeout(millisBetweenIterations * (iterations + 10), 'animatedExpand', new Promise<void>(resolve => {
+    for (let i = 0; i < iterations; i++) {
+
+      setTimeout(() => {
+        if (globalThis.predictionGraphics) {
+          globalThis.predictionGraphics.clear();
+          globalThis.predictionGraphics.beginFill(colors.targetingSpellGreen, 0.2);
+
+          const animatedDepth = depth * easeOutCubic((i + 1) / iterations);
+
+          const targetingColumn = getColumnPoints(castLocation, vector, width, animatedDepth);
+          globalThis.predictionGraphics.lineStyle(2, colors.targetingSpellGreen, 1.0)
+          globalThis.predictionGraphics.drawPolygon(targetingColumn as PIXI.Point[]);
+          globalThis.predictionGraphics.endFill();
+          const withinColumn = underworld.getPotentialTargets(
+            false
+          ).filter(t => {
+            return isVec2InsidePolygon(t, targetingColumn);
+          });
+          withinColumn.forEach(v => {
+            globalThis.predictionGraphics?.drawCircle(v.x, v.y, config.COLLISION_MESH_RADIUS);
+          })
+        }
+        if (i >= iterations - 1) {
+          resolve();
+        }
+
+      }, millisBetweenIterations * i)
+    }
+  })).then(() => {
+    globalThis.predictionGraphics?.clear();
+  });
+}
 export default spell;

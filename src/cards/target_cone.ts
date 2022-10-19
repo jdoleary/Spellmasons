@@ -6,7 +6,7 @@ import { getAngleBetweenVec2s, Vec2 } from '../jmath/Vec';
 import { isAngleBetweenAngles } from '../jmath/Angle';
 import { distance } from '../jmath/math';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
-import Underworld from '../Underworld';
+import type Underworld from '../Underworld';
 import { raceTimeout } from '../Promise';
 import { easeOutCubic } from '../jmath/Easing';
 import * as config from '../config';
