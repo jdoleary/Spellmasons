@@ -1,3 +1,4 @@
+- Split summoners don't have enough mana to cast
 - **Prediction error with melee on live build!!! 0.117.0**
 - Keywords in descriptions should be highlighted in blue like a link and if you click on them it pops up an explain modal
     - Note: THis might not work since card inspect only shows up on hover

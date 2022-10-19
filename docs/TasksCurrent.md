@@ -1,12 +1,10 @@
 - movement prediction is off when doing "clone + push" (something to do with the copy being added as a target?)
-- Split summoners don't have enough mana to cast
 - Got it stuck where when I middle mouse, the camera flees away to the south
 - animate target cone
 - Improve UX for shove so that it's clear when you're not close enough
 
 # 2022.10.15 Playtest
 - "All targets" copy is confusing if player doesn't understand targeting
-- Liquid: blood could apply a curse when you fall in, like slowed movement
 - how to show how much damage a queued spell will do
 - **movement lines are spazzing out on Chrome**
 - Permanent "you died" screen.
@@ -107,6 +105,7 @@
 - h: piercing archers
 - h: "Heat seeking" enemy or spell
 - idea: spell that triggers onDeath effects "Playdead"
+- Liquid: blood could apply a curse when you fall in, like slowed movement
 - I need better targeting spells
     - Target by proximity with no limit?
         - Quantum link
