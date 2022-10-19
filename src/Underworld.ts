@@ -1989,11 +1989,11 @@ export default class Underworld {
       // Limit starting cards to a probability of 10 or more
       minimumProbability = 10;
       if (elUpgradePickerLabel) {
-        elUpgradePickerLabel.innerHTML = `Pick ${player.upgradesLeftToChoose > 1 ? `${player.upgradesLeftToChoose} spells` : `${player.upgradesLeftToChoose} spell`}`;
+        elUpgradePickerLabel.innerHTML = `Pick a Spell`;
       }
     } else {
       if (elUpgradePickerLabel) {
-        elUpgradePickerLabel.innerHTML = isPerk ? 'Pick an Upgrade' : 'Pick a spell';
+        elUpgradePickerLabel.innerHTML = isPerk ? 'Pick an Upgrade' : 'Pick a Spell';
       }
     }
     // Now that level is complete, move to the Upgrade view where players can choose upgrades
