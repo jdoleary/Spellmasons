@@ -1,4 +1,5 @@
-- animate target cone
+- animate target cone, column, similar
+- animate rend
 - Improve UX for shove so that it's clear when you're not close enough
 
 # 2022.10.15 Playtest
@@ -57,7 +58,6 @@
     - new animation
 # Tasks
 - bug: inLiquid is lost when load occurs
-- Explain camera movement with persistant popup about recentering so players don't get stuck if they hit WASD on accident
 ---
 - task: Start more zoomed in
 - bug: I heard priest sfx but no animation and no effect occurred
