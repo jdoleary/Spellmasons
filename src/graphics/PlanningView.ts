@@ -214,15 +214,7 @@ export function updatePlanningView(underworld: Underworld) {
         // Draw color stored in prediction unless the UI is currently warning that the user
         // is aiming out of range, then override the color with grey
         const colorOverride = currentlyWarningOutOfRange ? colors.outOfRangeGrey : color;
-        unitOverlayGraphics.lineStyle(2, colorOverride, 1.0)
-        unitOverlayGraphics.endFill();
-        unitOverlayGraphics.arc(target.x, target.y, radius, startArc, endArc);
-        unitOverlayGraphics.moveTo(target.x, target.y);
-        const startArcPoint = math.getPosAtAngleAndDistance(target, startArc, radius);
-        unitOverlayGraphics.lineTo(startArcPoint.x, startArcPoint.y);
-        unitOverlayGraphics.moveTo(target.x, target.y);
-        const endArcPoint = math.getPosAtAngleAndDistance(target, endArc, radius);
-        unitOverlayGraphics.lineTo(endArcPoint.x, endArcPoint.y);
+        rawDrawUICone(target, radius, startArc, endArc, colorOverride, unitOverlayGraphics);
       }
       for (let { target, color, radius, text } of uiCircles) {
         // Draw color stored in predictionCircles unless the UI is currently warning that the user
@@ -603,6 +595,19 @@ export function drawUICone(target: Vec2, radius: number, startArc: number, endAr
   uiCones.push({ target: Vec.clone(target), radius, startArc, endArc, color, text });
   // Note: The actual drawing now happens inside of updatePlanningView so it can account for other UI
   // circles and text that might need to take precedence.
+}
+export function rawDrawUICone(target: Vec2, radius: number, startArc: number, endArc: number, color: number, graphics: PIXI.Graphics) {
+  graphics.lineStyle(2, color, 1.0)
+  graphics.endFill();
+  // Note: endAngle corresponds to startArc and startAngle corresponds to endArc because
+  // how pixi.js draws arcs is opposite to how I think of angles (going counterclockwise)
+  graphics.arc(target.x, target.y, radius, endArc, startArc);
+  graphics.moveTo(target.x, target.y);
+  const startArcPoint = math.getPosAtAngleAndDistance(target, startArc, radius);
+  graphics.lineTo(startArcPoint.x, startArcPoint.y);
+  graphics.moveTo(target.x, target.y);
+  const endArcPoint = math.getPosAtAngleAndDistance(target, endArc, radius);
+  graphics.lineTo(endArcPoint.x, endArcPoint.y);
 }
 export function drawUICircle(target: Vec2, radius: number, color: number, text?: string) {
   // clone target so it's not a reference, it should draw what the value was when it was passed into this function

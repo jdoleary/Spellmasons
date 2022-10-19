@@ -1,11 +1,15 @@
 import { addTarget, getCurrentTargets, Spell } from './index';
-import { drawUICone } from '../graphics/PlanningView';
+import { drawUICone, rawDrawUICone } from '../graphics/PlanningView';
 import { CardCategory } from '../types/commonTypes';
 import * as colors from '../graphics/ui/colors';
 import { getAngleBetweenVec2s, Vec2 } from '../jmath/Vec';
 import { isAngleBetweenAngles } from '../jmath/Angle';
 import { distance } from '../jmath/math';
 import { CardRarity, probabilityMap } from '../types/commonTypes';
+import Underworld from '../Underworld';
+import { raceTimeout } from '../Promise';
+import { easeOutCubic } from '../jmath/Easing';
+import * as config from '../config';
 
 const id = 'Target Cone';
 const range = 240;
@@ -45,20 +49,14 @@ Adds targets to the spell in a cone shape.
         // Draw visual circle for prediction
         if (prediction) {
           const color = outOfRange ? colors.outOfRangeGrey : colors.targetingSpellGreen
-          drawUICone(target, adjustedRange, endAngle, startAngle, color);
+          drawUICone(target, adjustedRange, startAngle, endAngle, color);
         } else {
-          // TODO animate target cone
-          // await animate(target, adjustedRange, underworld);
+          await animate(state.casterUnit, state.castLocation, adjustedRange, startAngle, endAngle, underworld);
         }
-        const withinRadiusAndAngle = underworld.getEntitiesWithinDistanceOfTarget(
-          target,
-          adjustedRange,
+        const withinRadiusAndAngle = underworld.getPotentialTargets(
           prediction
         ).filter(t => {
-          // and within angle:
-          const targetAngle = getAngleBetweenVec2s(state.casterUnit, t);
-          return distance(state.casterUnit, t) >= distance(state.casterUnit, state.castLocation)
-            && isAngleBetweenAngles(targetAngle, startAngle, endAngle);
+          return withinCone(state.casterUnit, state.castLocation, adjustedRange, startAngle, endAngle, t);
         });
         // Add entities to target
         withinRadiusAndAngle.forEach(e => addTarget(e, state));
@@ -68,5 +66,51 @@ Adds targets to the spell in a cone shape.
     },
   },
 };
+// Returns true if target is within cone
+function withinCone(origin: Vec2, coneStartPoint: Vec2, radius: number, startAngle: number, endAngle: number, target: Vec2): boolean {
+  // and within angle:
+  const targetAngle = getAngleBetweenVec2s(origin, target);
+  const distanceToOrigin = distance(origin, target);
+  const distanceToConeStart = distance(origin, coneStartPoint);
+  return distanceToOrigin >= distanceToConeStart && distanceToOrigin - distanceToConeStart <= radius
+    && isAngleBetweenAngles(targetAngle, startAngle, endAngle);
 
+}
+
+async function animate(origin: Vec2, coneStartPoint: Vec2, radius: number, startAngle: number, endAngle: number, underworld: Underworld) {
+  const iterations = 100;
+  const millisBetweenIterations = 8;
+  // "iterations + 10" gives it a little extra time so it doesn't timeout right when the animation would finish on time
+  return raceTimeout(millisBetweenIterations * (iterations + 10), 'animatedExpand', new Promise<void>(resolve => {
+    for (let i = 0; i < iterations; i++) {
+
+      setTimeout(() => {
+        if (globalThis.predictionGraphics) {
+          globalThis.predictionGraphics.clear();
+          globalThis.predictionGraphics.beginFill(colors.targetingSpellGreen, 0.2);
+
+          const animatedRadius = radius * easeOutCubic((i + 1) / iterations);
+
+          rawDrawUICone(coneStartPoint, animatedRadius, startAngle, endAngle, colors.targetingSpellGreen, globalThis.predictionGraphics);
+          globalThis.predictionGraphics.endFill();
+          // Draw circles around new targets
+          const withinRadiusAndAngle = underworld.getPotentialTargets(
+            false
+          ).filter(t => {
+            return withinCone(origin, coneStartPoint, animatedRadius, startAngle, endAngle, t);
+          });
+          withinRadiusAndAngle.forEach(v => {
+            globalThis.predictionGraphics?.drawCircle(v.x, v.y, config.COLLISION_MESH_RADIUS);
+          })
+        }
+        if (i >= iterations - 1) {
+          resolve();
+        }
+
+      }, millisBetweenIterations * i)
+    }
+  })).then(() => {
+    globalThis.predictionGraphics?.clear();
+  });
+}
 export default spell;

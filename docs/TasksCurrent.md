@@ -1,4 +1,5 @@
-- animate target cone, column, similar
+- Record new trailer footage
+- animate target column, similar
 - animate rend
 - Improve UX for shove so that it's clear when you're not close enough
 # 2022.10.15 Playtest
