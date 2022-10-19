@@ -9,6 +9,7 @@ import { animateMitosis } from './clone';
 
 import { CardRarity, probabilityMap } from '../types/commonTypes';
 const id = 'split';
+const splitLimit = 4;
 function changeStatWithCap(unit: Unit.IUnit, statKey: 'health' | 'healthMax' | 'mana' | 'manaMax' | 'stamina' | 'staminaMax' | 'moveSpeed' | 'damage', multiplier: number) {
   if (unit[statKey] && typeof unit[statKey] === 'number') {
 
@@ -20,33 +21,63 @@ function changeStatWithCap(unit: Unit.IUnit, statKey: 'health' | 'healthMax' | '
 
 }
 const addMultiplier = 0.5;
-const removeMultiplier = 1 / addMultiplier;
 const scaleMultiplier = 0.75;
-const removeScaleMultiplier = 1 / scaleMultiplier;
 function remove(unit: Unit.IUnit, underworld: Underworld) {
-  const stacks = unit.modifiers[id]?.stacks || 1;
-  for (let i = 0; i < stacks; i++) {
-    if (unit.image) {
-      unit.image.sprite.scale.x *= removeScaleMultiplier;
-      unit.image.sprite.scale.y *= removeScaleMultiplier;
-    }
-    changeStatWithCap(unit, 'health', removeMultiplier);
-    changeStatWithCap(unit, 'healthMax', removeMultiplier);
-    changeStatWithCap(unit, 'mana', removeMultiplier);
-    changeStatWithCap(unit, 'manaMax', removeMultiplier);
-    changeStatWithCap(unit, 'stamina', removeMultiplier);
-    changeStatWithCap(unit, 'staminaMax', removeMultiplier);
-    changeStatWithCap(unit, 'damage', removeMultiplier);
-    unit.moveSpeed *= removeMultiplier;
+  if (!unit.modifiers[id]) {
+    console.error(`Missing modifier object for ${id}; cannot remove.  This should never happen`);
+    return;
   }
+  // Safely restore unit's original properties
+  const { scale, healthMax, manaMax, staminaMax, damage, moveSpeed } = unit.modifiers[id].originalStats;
+  if (unit.image) {
+    unit.image.sprite.scale.x = scale;
+    unit.image.sprite.scale.y = scale;
+  }
+  const healthChange = healthMax / unit.healthMax;
+  unit.health *= healthChange;
+  unit.healthMax = healthMax;
+  // Prevent unexpected overflow
+  unit.health = Math.min(healthMax, unit.health);
+
+  // || 1 prevents div by 0 since some units don't have mana
+  const manaChange = manaMax / (unit.manaMax || 1);
+  unit.mana *= manaChange;
+  unit.manaMax = manaMax;
+  // Prevent unexpected overflow
+  unit.mana = Math.min(manaMax, unit.mana);
+
+  const staminaChange = staminaMax / unit.staminaMax;
+  unit.stamina *= staminaChange;
+  unit.staminaMax = staminaMax;
+  // Prevent unexpected overflow
+  unit.stamina = Math.min(staminaMax, unit.stamina);
+
+  unit.damage = damage;
+  unit.moveSpeed = moveSpeed;
 }
 function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quantity: number = 1) {
   // First time setup
   if (!unit.modifiers[id]) {
+    const { healthMax, manaMax, staminaMax, damage, moveSpeed } = unit;
     unit.modifiers[id] = {
       isCurse: true,
+      originalStats: {
+        scale: unit.image && unit.image.sprite.scale.x || 1,
+        healthMax,
+        manaMax,
+        staminaMax,
+        damage,
+        moveSpeed
+      }
     };
   }
+  const modifier = unit.modifiers[id];
+  // if (modifier.stacks && modifier.stacks >= 4) {
+  //   if (!prediction) {
+  //     floatingText({ coords: unit, text: 'Cannot split further' });
+  //   }
+  //   return;
+  // }
   if (unit.image) {
     unit.image.sprite.scale.x *= scaleMultiplier;
     unit.image.sprite.scale.y *= scaleMultiplier;
@@ -60,7 +91,6 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
   changeStatWithCap(unit, 'damage', addMultiplier);
   unit.moveSpeed *= addMultiplier;
   // Increment the number of stacks
-  const modifier = unit.modifiers[id];
   if (modifier) {
     modifier.stacks = (modifier.stacks || 0) + quantity;
   } else {
@@ -78,6 +108,7 @@ const spell: Spell = {
     thumbnail: 'spellIconSplit.png',
     description: `
 Splits the unit into 2 smaller weaker versions of itself.
+Cannot split further than ${splitLimit} times.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
       // Batch find targets that should be cloned

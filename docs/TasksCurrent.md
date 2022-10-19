@@ -1,7 +1,4 @@
 - Split summoners don't have enough mana to cast
-- Loweer limit on split
-- bug: Many split summoners, then purify caused them to get super wide and normal tall.  I might have split in different casts
-    - scale:  { _x: 17.757726633812588, _y: 1
 - Got it stuck where when I middle mouse, the camera flees away to the south
 - animate target cone
 - Improve UX for shove so that it's clear when you're not close enough
@@ -17,7 +14,6 @@
     - *: fix inventory visibility on all resolutions
 - copy: explain curse cards better, their copy is hard to understand out of context
 - m: Balance dragger
-- e: limit split lower bound
 # 2022.10.12
 - m: dragger cast animation
 ---
