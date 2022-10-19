@@ -1,13 +1,10 @@
 - animate target cone, column, similar
 - animate rend
 - Improve UX for shove so that it's clear when you're not close enough
-
 # 2022.10.15 Playtest
 - "All targets" copy is confusing if player doesn't understand targeting
 - how to show how much damage a queued spell will do
 - Permanent "you died" screen.
-# To do before Playtest
-- Test on different resolutions
 # 2022.10.12
 - m: dragger cast animation
 - m: Balance dragger
@@ -23,7 +20,6 @@
 - Split sprite sheet for more efficient development
 - Add server history
 
-# Today
 - This save file is giving me critical errors `saveFile-with-errors.json`
 - Expanding should take longer to return to base mana like resurrect and summon decoy do
     - Do this with cooldowns
@@ -66,9 +62,6 @@
 - bug: had an incorrect push prediction, see footage
 - optimize: Ihave duplicate units, pickups, and doodads in save due to serailizeForSaving having them in the underworld and extracting them to the top level too
 # Bugs
-- Brad couldn't see top of inventory due to resolution
-    - maybe add pages?
-    - UI: Inventory should show up on the left side
 - small bugs:
     - Sometimes it tries to path around things and wastes stamina if there isn't a straight line path
     - sometimes when you walk you get stuck on a wall and it wastes stamina
