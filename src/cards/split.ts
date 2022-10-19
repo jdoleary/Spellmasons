@@ -63,7 +63,6 @@ function add(unit: Unit.IUnit, underworld: Underworld, prediction: boolean, quan
   const modifier = unit.modifiers[id];
   if (modifier) {
     modifier.stacks = (modifier.stacks || 0) + quantity;
-    console.log('jtest 2 stacks', modifier.stacks);
   } else {
     console.error(`${id} modifier does not exist`)
   }
