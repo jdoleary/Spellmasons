@@ -4,7 +4,6 @@
     - scale:  { _x: 17.757726633812588, _y: 1
 - Got it stuck where when I middle mouse, the camera flees away to the south
 - animate target cone
-- **Prediction error with melee on live build!!! 0.117.0**
 - Improve UX for shove so that it's clear when you're not close enough
 - Make Discord, put link in the game
 
@@ -14,7 +13,6 @@
 - how to show how much damage a queued spell will do
 - **movement lines are spazzing out on Chrome**
 - Permanent "you died" screen.
-- UI: More padding for divider on top
 # To do before Playtest
 - *: Test on different resolutions
     - *: fix inventory visibility on all resolutions
