@@ -1,5 +1,4 @@
 - movement prediction is off when doing "clone + push" (something to do with the copy being added as a target?)
-- Got it stuck where when I middle mouse, the camera flees away to the south
 - animate target cone
 - Improve UX for shove so that it's clear when you're not close enough
 

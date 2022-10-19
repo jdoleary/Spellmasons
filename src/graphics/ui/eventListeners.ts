@@ -439,6 +439,10 @@ export function onWindowBlur(_underworld: Underworld) {
   // would mean that it's stuck "up" when they return to the game
   // if they were to release it when this document wasn't focused
   globalThis.setMMBDown?.(false);
+  // Revert all keydown flags so they don't get stuck
+  (Object.keys(keyDown) as Array<keyof typeof keyDown>).forEach(key => {
+    keyDown[key] = false;
+  })
 }
 // Handle clicks on the game board
 export function clickHandler(underworld: Underworld, e: MouseEvent) {
