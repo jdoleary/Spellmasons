@@ -1,18 +1,16 @@
-- movement prediction is off when doing "clone + push" (something to do with the copy being added as a target?)
+- **important** movement prediction is off when doing "clone + push" (something to do with the copy being added as a target?)
 - animate target cone
 - Improve UX for shove so that it's clear when you're not close enough
 
 # 2022.10.15 Playtest
 - "All targets" copy is confusing if player doesn't understand targeting
 - how to show how much damage a queued spell will do
-- **movement lines are spazzing out on Chrome**
 - Permanent "you died" screen.
 # To do before Playtest
-- *: Test on different resolutions
-- copy: explain curse cards better, their copy is hard to understand out of context
-- m: Balance dragger
+- Test on different resolutions
 # 2022.10.12
 - m: dragger cast animation
+- m: Balance dragger
 ---
 - *: fix save /load unit spawn issue
     - bug: loading game files somehow results in units at 0,0

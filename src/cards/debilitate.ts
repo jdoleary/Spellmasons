@@ -21,8 +21,7 @@ const spell: Spell = {
     thumbnail: 'spellIconDebilitate.png',
     animationPath: 'spell-effects/spellDebilitate',
     description: `
-Makes the target(s) take double damage whenever they receive damage
-in the future.
+Makes the target(s) take double damage whenever they receive damage.
 "Debilitate" can be cast multiple times in succession to stack it's effect.
     `,
     effect: async (state, card, quantity, underworld, prediction) => {
