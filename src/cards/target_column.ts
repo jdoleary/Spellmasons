@@ -20,10 +20,10 @@ const spell: Spell = {
     id,
     category: CardCategory.Targeting,
     supportQuantity: true,
-    manaCost: 40,
+    manaCost: 20,
     healthCost: 0,
     expenseScaling: 1,
-    probability: probabilityMap[CardRarity.UNCOMMON],
+    probability: probabilityMap[CardRarity.SPECIAL],
     thumbnail: 'unknown.png',
     requiresFollowingCard: true,
     description: `
