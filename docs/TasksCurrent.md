@@ -59,7 +59,6 @@
 # Tasks
 - bug: inLiquid is lost when load occurs
 ---
-- task: Start more zoomed in
 - bug: I heard priest sfx but no animation and no effect occurred
 - Integrate doodad behavior
     - Make doodads collidable (take up space)
